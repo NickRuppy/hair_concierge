@@ -1,7 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { selectPlanProductRows } from "../src/app/profile/page"
 import { PROFILE_FIELD_CONFIG } from "../src/lib/profile/section-config"
 import type { HairProfile } from "../src/lib/types"
 
@@ -45,10 +44,6 @@ test("present-but-empty drying routes reads as answered none", () => {
   assert.equal(dryingMethodField.getValue(null, { dryingRoutes: [] }), "Nichts davon")
 })
 
-test("undefined drying routes stays null", () => {
-  assert.equal(dryingMethodField.getValue(null, {}), null)
-})
-
 test("unanswered plan leaves value null", () => {
   assert.equal(towelMaterialField.getValue(null, null), null)
   assert.equal(towelMaterialField.getValue(null, {}), null)
@@ -86,11 +81,6 @@ test("towel material and technique resolve as a unit — pure plan no_towel", ()
   assert.equal(towelTechniqueField.getValue(null, plan), "Keine Trocknungstechnik")
 })
 
-test("plan-derived no_towel material implies no technique needed", () => {
-  const value = towelTechniqueField.getValue(null, { towel: { material: "no_towel" } })
-  assert.equal(value, "Keine Trocknungstechnik")
-})
-
 test("plan additional heat tools map to Alltag/Styling labels", () => {
   assert.deepEqual(stylingToolsField.getValue(null, { additionalHeatTools: ["straightener"] }), [
     "Glätteisen",
@@ -101,28 +91,4 @@ test("plan night protection maps to existing labels", () => {
   assert.deepEqual(nightProtectionField.getValue(null, { nightProtection: ["pineapple"] }), [
     "Pineapple",
   ])
-})
-
-const samplePlanProduct = {
-  categoryLabel: "Shampoo",
-  name: "Testprodukt",
-  purposeLabel: "Reinigung",
-  state: "owned" as const,
-  cadenceLabel: "2x pro Woche",
-}
-
-test("selectPlanProductRows falls back to routine products when legacy rows are empty", () => {
-  assert.deepEqual(selectPlanProductRows(0, [samplePlanProduct]), [samplePlanProduct])
-})
-
-test("selectPlanProductRows stays null when legacy rows exist", () => {
-  assert.equal(selectPlanProductRows(1, [samplePlanProduct]), null)
-})
-
-test("selectPlanProductRows stays null without an active routine", () => {
-  assert.equal(selectPlanProductRows(0, null), null)
-})
-
-test("selectPlanProductRows falls through to the empty state for a present-but-empty routine", () => {
-  assert.equal(selectPlanProductRows(0, []), null)
 })

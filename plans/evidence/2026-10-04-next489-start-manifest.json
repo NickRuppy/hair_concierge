@@ -1,0 +1,329 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "counts": {
+    "before": 141,
+    "transferred": 141,
+    "cut": 130
+  },
+  "cuts": [
+    {
+      "id": "C1",
+      "donor": "S1258",
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "a single card keeps all four data attributes on its outer article — no nested wrapper",
+      "line": 1258,
+      "keepers": [
+        {
+          "key": "S1248",
+          "file": "tests/personal-plan-start-ui.test.tsx",
+          "line": 1248,
+          "name": "the card leads with the product name and a type-plus-price subline"
+        }
+      ],
+      "operativeInputProof": "Identical NeedCard(card({product:{...productFixture}})) SSR input.",
+      "assertionUnion": "Entire root article/class/four data attributes, one card hook, no group attribute copied onto existing html."
+    },
+    {
+      "id": "C2",
+      "donor": "S867",
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "group renders one shell with a single kicker and full member anatomy",
+      "line": 867,
+      "keepers": [
+        {
+          "key": "S904",
+          "file": "tests/personal-plan-start-ui.test.tsx",
+          "line": 904,
+          "name": "each group member opens its own detail sheet"
+        }
+      ],
+      "operativeInputProof": "Identical planWithMixedOilTiers, same ordered three preview objects, same restricted optional group NeedPlanScreen render.",
+      "assertionUnion": "Group identity/member count/order plus entire single-shell/single-kicker/member anatomy/subline/divider SSR union. Keep two existing sheet-body renders; no click claim."
+    },
+    {
+      "id": "C3",
+      "donor": "S524",
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "two same-tier oil roles group into one card, each with its own role cadence",
+      "line": 524,
+      "keepers": [
+        {
+          "key": "S684",
+          "file": "tests/personal-plan-start-ui.test.tsx",
+          "line": 684,
+          "name": "a role card inside a group renders the role in its subline and keeps the category styling"
+        }
+      ],
+      "operativeInputProof": "Identical oilPlan and [oilPreWash,oilDryFinish] actual projection; keeper already renders resulting second member.",
+      "assertionUnion": "All donor group/category/status/member identities, product/name/price/image/alt/fallback and role-specific target/purpose/pills/frequency/detailBlocks copied verbatim."
+    },
+    {
+      "id": "C4",
+      "donor": "S619",
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "the basis count keeps counting categories after the per-role expansion",
+      "line": 619,
+      "keepers": [
+        {
+          "key": "S403",
+          "file": "tests/personal-plan-start-ui.test.tsx",
+          "line": 403,
+          "name": "same-tier roles of a multi-role category group into one card, each wearing its own role copy"
+        }
+      ],
+      "operativeInputProof": "Same readyPlan and same two Shampoo recommendations; payload order reversed. Actual adapter sorts by roleRank before generating same final cards; keeper already asserts canonical member order.",
+      "assertionUnion": "Both final basis length 2 and literal 2 Kategorien added; all original member ordering assertions retained."
+    },
+    {
+      "id": "C5",
+      "donor": "S1037",
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "single-role categories are byte-identical to before: no id change, no group, category copy kept",
+      "line": 1037,
+      "keepers": [
+        {
+          "key": "S231",
+          "file": "tests/personal-plan-start-ui.test.tsx",
+          "line": 231,
+          "name": "binds only source-matched authority previews to their exact category cards"
+        }
+      ],
+      "operativeInputProof": "Same readyPlan and sole Conditioner/rinse_out/light product. Differences in image/commerce/reasoning/authority fields affect separate projected fields, not sole-entry count/group/id/category-copy branch; keeper already proves richer exact payload delivery and stale hash rejection.",
+      "assertionUnion": "Exact final [shampoo,conditioner] ids and Sanft reinigend transferred; findCard invokes asCard on found result (asserts non-group); same product name already established by whole product deep equality."
+    },
+    {
+      "id": "C6",
+      "donor": "S1466",
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "renders paused cards as visible included categories with need details",
+      "line": 1466,
+      "keepers": [
+        {
+          "key": "S1501",
+          "file": "tests/personal-plan-start-ui.test.tsx",
+          "line": 1501,
+          "name": "keeps Optional and Pausiert as explicit status text without replacing category styling"
+        }
+      ],
+      "operativeInputProof": "Identical NeedCard(asCard(readyPlan.optional.cards[0])) SSR exists as keeper paused render.",
+      "assertionUnion": "paused=true and dialog trigger transferred; Pausiert/Aktuell nicht anwenden already literal keeper assertions."
+    },
+    {
+      "id": "C7",
+      "donor": "S1560",
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "Idealplan surfaces retire the 5-stage bar: it narrates a sequence that ends right after them (founder field test 27.08.2026)",
+      "line": 1560,
+      "keepers": [
+        {
+          "key": "S1387",
+          "file": "tests/personal-plan-start-ui.test.tsx",
+          "line": 1387,
+          "name": "renders the signed-off Basis shell with folded cards and example-preview geometry"
+        },
+        {
+          "key": "S1431",
+          "file": "tests/personal-plan-start-ui.test.tsx",
+          "line": 1431,
+          "name": "Optional Idealplan uses the shared header Back and a forward-only safe-area dock"
+        },
+        {
+          "key": "S1544",
+          "file": "tests/personal-plan-start-ui.test.tsx",
+          "line": 1544,
+          "name": "renders loading and retry states without questions or legacy destinations"
+        },
+        {
+          "key": "S1590",
+          "file": "tests/personal-plan-start-ui.test.tsx",
+          "line": 1590,
+          "name": "renders compact unavailable state H with profile and support exits"
+        }
+      ],
+      "operativeInputProof": "All five donor SSR calls already exist byte-equivalent in four keepers: Basis, Optional with onContinue, Loading, Retry, Unavailable.",
+      "assertionUnion": "Both retired stagebar negative literals copied to each existing result; Basis wordmark copied; Optional Zur Basis already asserted. No new loop/input/render."
+    },
+    {
+      "id": "C8",
+      "donor": "S1840",
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "preserves paused included categories from the saved snapshot",
+      "line": 1840,
+      "keepers": [
+        {
+          "key": "S1715",
+          "file": "tests/personal-plan-start-ui.test.tsx",
+          "line": 1715,
+          "name": "does not substitute category-only images for live authority previews"
+        }
+      ],
+      "operativeInputProof": "Identical computed answers oily+irritated; keeper replaces only productPreviews via withPreviews. Adapter validates preview shape but never reads preview values in cardFromDecision/paused merge; same saved decision rows drive paused output.",
+      "assertionUnion": "Positive non-group paused card existence plus exact Pausiert/Aktuell nicht anwenden copied before existing response interpretation/render."
+    },
+    {
+      "id": "C9",
+      "donor": "P2248",
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "two-product Shampoo submits one complete category assignment replacement",
+      "line": 2248,
+      "keepers": [
+        {
+          "key": "P2651",
+          "file": "tests/personal-plan-stage3-flow.test.tsx",
+          "line": 2651,
+          "name": "role finalization shows saving immediately and suppresses duplicate actions"
+        }
+      ],
+      "operativeInputProof": "Same Shampoo requirement/authority, same two catalog selections +weekly2, same first-product everyday role. Plan/version ids opaque equality keys; no metadata branch. Keeper extends same final save with defer+duplicate action; after release base mutate and decision preparation resume.",
+      "assertionUnion": "Observe showAddAnotherProduct before existing action, actual gateway mutation type receipt and final ProductFitComparison after existing settle; existing single-flight/count/saving assertions unchanged."
+    },
+    {
+      "id": "C10",
+      "donor": "P5526",
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "three oil use cases render as one grouped screen with pre-checked cases",
+      "line": 5526,
+      "keepers": [
+        {
+          "key": "P5560",
+          "file": "tests/personal-plan-stage3-flow.test.tsx",
+          "line": 5560,
+          "name": "committing the full group records one local choice per member and advances past all oil subjects"
+        }
+      ],
+      "operativeInputProof": "Same threeUseCaseOilEntryContext apart from opaque plan/refined keys, same default catalog capture/roles; observer records later intents only. Same initial OilGroupReview and ProductFitComparison before existing commit.",
+      "assertionUnion": "Entire initial titles/checked3/uniform=true and anchor undefined overrides, position1,total1,roleLabel null copied; group existence already asserted."
+    },
+    {
+      "id": "C11",
+      "donor": "P5978",
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "the grouped Öl use cases are exposed as one labelled checkbox group",
+      "line": 5978,
+      "keepers": [
+        {
+          "key": "P5425",
+          "file": "tests/personal-plan-stage3-flow.test.tsx",
+          "line": 5425,
+          "name": "the grouped Öl screen lists every named use case pre-checked under one commit action"
+        }
+      ],
+      "operativeInputProof": "Same OilGroupReview nonempty checked-group outer boundary. Current role/group labelled wrapper is unconditional, independent of cardinality/role fields; one vs three items affects children only, not either donor assertion.",
+      "assertionUnion": "Both role=group and exact aria-labelledby association copied to existing three-case SSR; no new one-case fixture/render."
+    }
+  ],
+  "keepers": [
+    {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "the card leads with the product name and a type-plus-price subline",
+      "line": 1248
+    },
+    {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "each group member opens its own detail sheet",
+      "line": 904
+    },
+    {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "a role card inside a group renders the role in its subline and keeps the category styling",
+      "line": 684
+    },
+    {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "same-tier roles of a multi-role category group into one card, each wearing its own role copy",
+      "line": 403
+    },
+    {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "binds only source-matched authority previews to their exact category cards",
+      "line": 231
+    },
+    {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "keeps Optional and Pausiert as explicit status text without replacing category styling",
+      "line": 1501
+    },
+    {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "renders the signed-off Basis shell with folded cards and example-preview geometry",
+      "line": 1387
+    },
+    {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "Optional Idealplan uses the shared header Back and a forward-only safe-area dock",
+      "line": 1431
+    },
+    {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "renders loading and retry states without questions or legacy destinations",
+      "line": 1544
+    },
+    {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "renders compact unavailable state H with profile and support exits",
+      "line": 1590
+    },
+    {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "does not substitute category-only images for live authority previews",
+      "line": 1715
+    },
+    {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "role finalization shows saving immediately and suppresses duplicate actions",
+      "line": 2651
+    },
+    {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "committing the full group records one local choice per member and advances past all oil subjects",
+      "line": 5560
+    },
+    {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "the grouped Öl screen lists every named use case pre-checked under one commit action",
+      "line": 5425
+    }
+  ],
+  "files": {
+    "tests/personal-plan-stage3-flow.test.tsx": {
+      "before": {
+        "path": "/tmp/test-audit-start-stage3-staged/before/tests/personal-plan-stage3-flow.test.tsx",
+        "sha256": "f7701fbfc816de61dfc5ac93a18a8b97cd77e44d4543e31e83d5a0899455fe98"
+      },
+      "transferred": {
+        "path": "/tmp/test-audit-start-stage3-staged/transferred/tests/personal-plan-stage3-flow.test.tsx",
+        "sha256": "666b3f726430b53f31d8adffb40aac79255822da3d0276a95456e2a23eb76f75"
+      },
+      "cut": {
+        "path": "/tmp/test-audit-start-stage3-staged/cut/tests/personal-plan-stage3-flow.test.tsx",
+        "sha256": "45c094abaad0d9690f9d762bb7014506bf32d7679ccae6dcabb0ab0e8d7265fe"
+      }
+    },
+    "tests/personal-plan-start-ui.test.tsx": {
+      "before": {
+        "path": "/tmp/test-audit-start-stage3-staged/before/tests/personal-plan-start-ui.test.tsx",
+        "sha256": "40174c4097d9e8e56999ff0c38d2dbbc42d0011a339b211ab2c05acb0d4ca8a0"
+      },
+      "transferred": {
+        "path": "/tmp/test-audit-start-stage3-staged/transferred/tests/personal-plan-start-ui.test.tsx",
+        "sha256": "b88523872c152cf3114072c553f86bf16dbdeaacd95a7eb6b99829c1627eb7d5"
+      },
+      "cut": {
+        "path": "/tmp/test-audit-start-stage3-staged/cut/tests/personal-plan-start-ui.test.tsx",
+        "sha256": "0300614754df430a1476db47dfb5ab23ec56469ca6bf22cbe2304b7a87629e8f"
+      }
+    }
+  },
+  "sourceHashes": {
+    "src/components/personal-plan-start/snapshot-adapter.ts": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "src/components/personal-plan-start/need-card.tsx": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4",
+    "src/components/personal-plan-start/need-plan-screen.tsx": "aef2027e8ba788faab32c1113e638421f61bfbaf11e81a263bc4da4849be0679",
+    "src/components/personal-plan-start/plan-start-flow.tsx": "ebdfd12eb051c082a10501370256537fe25ab391370ee90046d247a969048f40",
+    "src/components/personal-plan-start/plan-start-cards.ts": "efb0714531d7597a4d43e90fa51f8d2999f919c391816b246ddd08163e83935b",
+    "src/components/personal-plan-products/stage3-products-flow.tsx": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "src/components/personal-plan-products/oil-group-review.tsx": "d5239dee71b520b38fb0271ae89f5b8f0d58325fde2f4fa1adebe02b5910cf55",
+    "src/components/personal-plan-products/use-stage3-category-capture-controller.ts": "d30898c19b094f20cba983336d2c22f36438f8baf53868d02d4b77ce18cd6941",
+    "src/lib/personal-plan/products/fixture-gateway.ts": "cf02c764b93fe935d7e6f29d9c1b5fed6b4be7b34c6467739fc01005ab4f9981",
+    "src/app/plan-start/page.tsx": "e6ebf8b770c94fe4be6b65b411bf0d1b5314fb88ea3fdcbdc0a1c89860ee89af"
+  }
+}

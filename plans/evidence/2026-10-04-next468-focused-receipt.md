@@ -1,0 +1,7 @@
+# Next468 focused receipt
+
+Original declaration denominator 11,892; current 11,424 (10,899 Node + 525 Playwright): **468 net removed**, 3.9354%; 1,911 remain toward target 2,379. This batch removes 37 declarations across context7, journey7, scanner17, validator6, with no new inputs, owner calls, callbacks, or production edits.
+
+Same sixteen-file native cohort: before593 PASS, transferred593 PASS, cut556 PASS, formatted556 PASS; zero failure/skip/cancellation. Separate unchanged runtime fit-schema keeper: before1 PASS, after1 PASS. Counts reconcile 37 removals. All85 new actual-owner controls (context22/journey21/scanner32/validator10) were inspected by main: each exactly1 clean pass, intended assertion failure under a syntactically valid owner fault, exact source restoration, exactly1 pass again. Seven old weak-oracle controls passed under their faults; the held malformed extra-field diagnostic also passed and earned no removal credit. Detailed receipts are adjacent next468 control JSONs.
+
+Guarded four-cohort cuts matched pinned transfer hashes, source/config dependency guards, callback-body preservation and declaration counts. Prettier changed only scanner formatting after cuts; native suite rerun. Typecheck and lint passed (five existing warnings); git diff --check passed. Build/full native/c8 and whole-branch review pending. The latest completed whole-tree coverage receipt remains final413; it is not claimed as final468 proof.

@@ -1,0 +1,361 @@
+{
+  "phase": "transfer",
+  "verified": 4,
+  "cleanRuns": 8,
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "sourceGuards": [
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
+    {
+      "file": ".nvmrc",
+      "sha": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "file": "docs/free-trial-launch-runbook.md",
+      "sha": "a1c60fbc2dc832110fbff6566df0cde37ba3e167debb5cf747f0e0afe9fba668"
+    },
+    {
+      "file": "docs/trial-notices-and-claims-operations.md",
+      "sha": "965c7d487f796c49b3b92c65874cccaa583b7340dbd508459d29561b2077ab04"
+    },
+    {
+      "file": "package-lock.json",
+      "sha": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799"
+    },
+    {
+      "file": "package.json",
+      "sha": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": "scripts/billing/trial-history-backfill.ts",
+      "sha": "d793f381e2498057504346cd6fcbcef3b378c26d6c89ed7a3eb67219c2f77028"
+    },
+    {
+      "file": "scripts/billing/trial-identity-rights.ts",
+      "sha": "0979f567332b1c47d6467a5d8db1082a8c031d1adf6aa8cb98bc337690bb3416"
+    },
+    {
+      "file": "scripts/billing/trial-payment-reconciliation.ts",
+      "sha": "0dc2642aed572123066eb4204666dbb32150dbeefc55cd60238bbf4c0d4e2281"
+    },
+    {
+      "file": "src/app/api/billing/membership/route.ts",
+      "sha": "decca8220b32471d6c76037e67268190c7de093830ee53e94d4db733da4a1328"
+    },
+    {
+      "file": "src/app/api/billing/trial-cancellation/reconcile/route.ts",
+      "sha": "5fadb29f61566c1e18398e0c92134f2d75e15423c65feaa122767d17077cadfe"
+    },
+    {
+      "file": "src/app/api/billing/trial-cancellation/route.ts",
+      "sha": "49fc858b1e3ae04ca219b8dfc8230204c26230fb95580fab37631b2bef986046"
+    },
+    {
+      "file": "src/app/api/billing/trial-management/route.ts",
+      "sha": "3b27ba8b1478a37f9ae70c0735dc8b1558cb27b77da9fb8748f310997c2e27f2"
+    },
+    {
+      "file": "src/app/api/billing/trial-paid-cancellation/route.ts",
+      "sha": "240d45f60196df1fdfcb842c853e079a556f77d7ab5da8789535e9266487bd12"
+    },
+    {
+      "file": "src/app/api/billing/trial-paid-recovery/route.ts",
+      "sha": "2b03ec794f55036252e71704c46630694082a2aace29c60393e4dc181e2d0547"
+    },
+    {
+      "file": "src/app/api/billing/trial-required-notices/reconcile/route.ts",
+      "sha": "a4f95b1283d16177e0df7e63cd0ef4ae0dacd830ddeae7b5a3c9d6e3333fc0a8"
+    },
+    {
+      "file": "src/components/billing/trial-offer.tsx",
+      "sha": "4051ca8d025e47a2d1bd1d32796bdba7791953087493980148d672837a05374a"
+    },
+    {
+      "file": "src/components/quiz/result-offer-pricing.tsx",
+      "sha": "461bf77fd54505e7fdcaa10c0630bfc942803fdb13ddc546ba7c745c6e91d33a"
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/customerio.ts",
+      "sha": "901525211d4267c62f57504167c75b2b06a5bc6b21874cfb1b0a64e339adff5c"
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/meta-capi.ts",
+      "sha": "ad26d75c65085e730d105abb929483bde3f73769e14af3bff8ec36209e5d81f1"
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/posthog-server.ts",
+      "sha": "1ad0407338d9e27d8a0a3f55a15bfbbfb5274ef806af21862e2bcd0a2158887c"
+    },
+    {
+      "file": "src/lib/billing/subscriptions.ts",
+      "sha": "a6ba77a92481e13f6f03bc7b1c8d7fee75c02facfeb8ce747493bc64ecca995c"
+    },
+    {
+      "file": "src/lib/billing/trial-access-projection.ts",
+      "sha": "6bd7a205a589005d2301cf77511709b26f63076538f953e1da77d57e567ba17f"
+    },
+    {
+      "file": "src/lib/billing/trial-admission.ts",
+      "sha": "00dea2cbb5dad16446ee405f289aa7912c9cb895774653512d549ddea02d0017"
+    },
+    {
+      "file": "src/lib/billing/trial-analytics-context.ts",
+      "sha": "8fa707d663a6c657540fc45715f5a6a4e8022604ad0ccdad5cee777eb6bd0647"
+    },
+    {
+      "file": "src/lib/billing/trial-cancellation-declarations.ts",
+      "sha": "d8d5ebe26c29137f6c5e024dc91307c857fe493946db1fcb9a0ce3323fb5b7f7"
+    },
+    {
+      "file": "src/lib/billing/trial-cancellation-reconcile.ts",
+      "sha": "2680be571a30e235678c6b5e072bffc73b509db2d567d6ef56ae5132c2a33b31"
+    },
+    {
+      "file": "src/lib/billing/trial-checkout-attempt.ts",
+      "sha": "84ba2d9f52efceb8bc64a499176c5d2c24b479d9907185b8998da05320ac76a9"
+    },
+    {
+      "file": "src/lib/billing/trial-identity-claims.ts",
+      "sha": "7e04ea1029da7e6c2c2864b860926fa83297d46c7174ea7310130d2c3536e963"
+    },
+    {
+      "file": "src/lib/billing/trial-management-operations.ts",
+      "sha": "d89bcbcea01fc6e5cb1ec864212c32e2277cfceea6ff0ab21b3a4149a28d6e3c"
+    },
+    {
+      "file": "src/lib/billing/trial-membership.ts",
+      "sha": "1e5a8d19e1bd9e04ecc4d727a3460b28bfa70a6af955b355e605c79aaf4fdc05"
+    },
+    {
+      "file": "src/lib/billing/trial-offer.ts",
+      "sha": "14083f0eb5677db3063e22ab585ca9779a51fac4e04ab8852ee2e11f087d4725"
+    },
+    {
+      "file": "src/lib/billing/trial-paid-cancellation.ts",
+      "sha": "de39001781de5e37e204a4482ce5637f81ecb9bb68547ce91209261d041c0993"
+    },
+    {
+      "file": "src/lib/billing/trial-paid-recovery-operations.ts",
+      "sha": "ffed95f6ff851cacb280993434f17d354d223f8a6c8fb77bc4e97caa891d6089"
+    },
+    {
+      "file": "src/lib/billing/trial-payment-events.ts",
+      "sha": "4118cf4fca3745bc1aced3cf8a3f86e4ec684733f8f565bf1d61071dabb4bc9c"
+    },
+    {
+      "file": "src/lib/billing/trial-policy.ts",
+      "sha": "a88f33d5abfefd705629a0ca8ef739b893dd1908aeec639627916fc815daef02"
+    },
+    {
+      "file": "src/lib/billing/trial-prior-paid-history.ts",
+      "sha": "d95863b5c82dbdf4e88a28a6cc6f49ac4016da6f7316e0b4c160fd20fda8b904"
+    },
+    {
+      "file": "src/lib/billing/trial-required-notices-delivery.ts",
+      "sha": "a3373f462b91cbd8cb3cd4aa0ce73bbe9b95012fb098a2e9bea8196934539b83"
+    },
+    {
+      "file": "src/lib/billing/trial-required-notices-terms.ts",
+      "sha": "266b22ba746208ead6de85b15a2bddb63c7f1111680d782cc22be35d6724197a"
+    },
+    {
+      "file": "src/lib/billing/trial-required-notices.ts",
+      "sha": "c7b2d3f9b9818a2cd5d72839f6c772c8ceb48b7a5aa4442c0eefdc200837a7fa"
+    },
+    {
+      "file": "src/lib/billing/trial-runtime.ts",
+      "sha": "0dae1fdc8a90e3b71a6faf4a20fafa9c655c165650fbe952a3b36e66b29bffe0"
+    },
+    {
+      "file": "src/lib/billing/types.ts",
+      "sha": "f99c6f799c5c79a4218a2425fbd1b4ad4565c7f0592d1419b45ae6cb09e5047b"
+    },
+    {
+      "file": "src/lib/customerio/transactional.ts",
+      "sha": "5756d3bda21c0be6cbc1ed8885846a646edd8560f22c8b7fc5ac6601c62b95e2"
+    },
+    {
+      "file": "src/lib/paypal/prior-paid-history.ts",
+      "sha": "841d3317bd0cc74fe967a3067f86eceac952fe4e0a45ab2628dcbc58aef59f50"
+    },
+    {
+      "file": "src/lib/paypal/subscription-shapes.ts",
+      "sha": "bb879599956c47bb212a7b83fafa991403adb2a71c34c3b423190eb9f04217f5"
+    },
+    {
+      "file": "src/lib/paypal/trial-collection-start.ts",
+      "sha": "d22659e8282e0f18b69971b8948ba5afc4b284774aa1d2330f434ed3358513bc"
+    },
+    {
+      "file": "src/lib/stripe/trial-cancellation.ts",
+      "sha": "6e8da65a276dc23ac3ce4face961c1059b533cde765705ecb005a8f0a958fcaf"
+    },
+    {
+      "file": "src/lib/stripe/trial-prior-paid-history.ts",
+      "sha": "422692df369d638699e4d232c73143ea6b664d65ae96ccb325f047656e4afaf0"
+    },
+    {
+      "file": "supabase/migrations/20260527_add_billing_subscriptions.sql",
+      "sha": "164b2a27a91e9ed5dd9447da3c87c9d6f56f2e6c4737f48c0202cc8c8d528593"
+    },
+    {
+      "file": "supabase/migrations/20260603120000_add_provider_subscriber_email.sql",
+      "sha": "68f1830be9952abf83da17ae64ceb1d6026ffcf328b95c67931ab714492ce8ac"
+    },
+    {
+      "file": "supabase/migrations/20260708133700_billing_analytics_outbox.sql",
+      "sha": "02f8ca1df907dc85c56b1d8b60db49bd3e7b2cc3c272ee9f45344bc89f9ed351"
+    },
+    {
+      "file": "supabase/migrations/20260716120000_add_billing_cancel_scheduled_at.sql",
+      "sha": "bef71345afea323075bc24b5d6ddad0ec41ebccdb9f6b7f425e160638b32fca3"
+    },
+    {
+      "file": "supabase/migrations/20260822140000_billing_subscriptions_classified_views.sql",
+      "sha": "403092c7d01154ac3651c11fab860e07cf3320ce80c430e14984d287eb0b8ee6"
+    },
+    {
+      "file": "supabase/migrations/20260828104243_personal_plan_paid_migration_admission.sql",
+      "sha": "258af22e01b0287330b59753d645c13b51ab4da8ae564bcd2576c9e02086d39a"
+    },
+    {
+      "file": "supabase/migrations/20260914044650_trial_admission_foundation.sql",
+      "sha": "a791ee5abfeb6d9b7c240460f6271cae7a7953148bdfe928b72d4771e70b86f9"
+    },
+    {
+      "file": "supabase/migrations/20260914051220_trial_access_projection.sql",
+      "sha": "d412662b0e8a1ef162bec731a4603e82a23a0d3d11b97379a3d4771da1bf1c2f"
+    },
+    {
+      "file": "supabase/migrations/20260914051731_trial_paid_migration_authority.sql",
+      "sha": "d23a8823cbd0e91e9eec6e423c319e5cecafb8cecb3b467c033d3949efd57686"
+    },
+    {
+      "file": "supabase/migrations/20260914085036_trial_started_analytics.sql",
+      "sha": "e5ac05d7cd1288660b64912cea067569f6510b8811db44d4371874532215a90a"
+    },
+    {
+      "file": "supabase/migrations/20260914090614_trial_cancellation_declarations.sql",
+      "sha": "3d018b95ea5475b7011934dc2855427c6c16b9b27de395da2115a882d8d21c5f"
+    },
+    {
+      "file": "supabase/migrations/20260914091103_trial_checkout_attempt.sql",
+      "sha": "3548399f50d88186ccd586a47833dfa3f418d58145fc9968311e60f5a262d6e7"
+    },
+    {
+      "file": "supabase/migrations/20260914093927_trial_cancellation_provider_operations.sql",
+      "sha": "d3ef6379140aed99d2d076ccad0cef655fbfbaae82535171644454105b1b376c"
+    },
+    {
+      "file": "supabase/migrations/20260914094203_trial_payment_events.sql",
+      "sha": "7d1118c8ffb7b7dc0af7531dc9ece12b9019f7d60dcfa4ce526bb4f206cd8cb0"
+    },
+    {
+      "file": "supabase/migrations/20260914101500_trial_cancellation_provider_retry.sql",
+      "sha": "f9527c1be1b115e9f62a3c7545dbc78175e50d3c691c887f0b8f3512f0fb5c8d"
+    },
+    {
+      "file": "supabase/migrations/20260914135114_stripe_trial_continuation_operations.sql",
+      "sha": "8b12c0e8aa57b18b64f84096751a21202e09797f82d3df6560230a4ae9bbe4da"
+    },
+    {
+      "file": "supabase/migrations/20260914135123_trial_paid_continuation_links.sql",
+      "sha": "a6e36ae7ac72e5c8b15422758c5ce1eb9d7104ddab770129e2f26ad490db1d97"
+    },
+    {
+      "file": "supabase/migrations/20260914135527_trial_required_notices.sql",
+      "sha": "9dc9fac57e78c164dfc3e8d15b83324e21cab18c6595c7fdbf8edef33b899e5f"
+    },
+    {
+      "file": "supabase/migrations/20260914140320_trial_management_operations.sql",
+      "sha": "06fa6573682fc8ea8bfb405f8c199603c03ec0517b5cf47f7a408d3fcdd9810f"
+    },
+    {
+      "file": "supabase/migrations/20260914141036_trial_required_notice_revisions.sql",
+      "sha": "b2ac556ee86803e31acab647a8303c5aa885ca33300f3a1629867840ff303d94"
+    },
+    {
+      "file": "supabase/migrations/20260914141149_trial_effective_payment_contract.sql",
+      "sha": "452b54ef8e2be6277912120b1a6c42cdedc9b76af053c49f59181bd52a5215fc"
+    },
+    {
+      "file": "supabase/migrations/20260914141408_trial_effective_cancellation_contract.sql",
+      "sha": "52a12b0bd5bde59a7e8fdbada7a8f901fdfca826bf2b7e8734cb91d5766a2f96"
+    },
+    {
+      "file": "supabase/migrations/20260914142559_trial_prior_paid_claims.sql",
+      "sha": "de396becc8297ae95546eb978b5929532d5140ea680ef4b4dda4f4c2e1038575"
+    },
+    {
+      "file": "supabase/migrations/20260914142808_trial_paid_recovery_operations.sql",
+      "sha": "71ddb560ffd3f2c7ea8ebbdd72faf1b871fa09fbcdc9a5c4dfa0744b862edf8d"
+    },
+    {
+      "file": "supabase/migrations/20260914143515_trial_paid_recovery_ledger.sql",
+      "sha": "7e27fb0f78a1e5c7640ecb36325f2d8c461ee1d0ed2b933d11402735b6f5333f"
+    },
+    {
+      "file": "supabase/migrations/20260914143741_trial_paid_recovery_continuation_transition.sql",
+      "sha": "838e2c09c50f129fec7869238278be2db2e50edc6bc262c278a42ebc8544f0c5"
+    },
+    {
+      "file": "supabase/migrations/20260914144351_trial_identity_rights_lifecycle.sql",
+      "sha": "7c14fc04f91285d166d4a9171b3b2e1565b1b6827831e2b3e8ec1c6587c792ec"
+    },
+    {
+      "file": "supabase/migrations/20260914144833_trial_paid_cancellation_declarations.sql",
+      "sha": "9deb62bb7bfbfe779d13766bd977782fead7589d521916816c7e32c225c90ec6"
+    },
+    {
+      "file": "supabase/migrations/20260914151514_stripe_trial_lifecycle_cancellation_fence.sql",
+      "sha": "80470b30f8cb01f1abb94a7143e827b3b1b9efd463ba5c45e45d622d7805b4ca"
+    },
+    {
+      "file": "supabase/migrations/20260914153229_trial_identity_key_registry_safe_updates.sql",
+      "sha": "88459b8920871613f6e5cfe39bfff5e78d731f47d7e3fa5640ef41b8add17a25"
+    },
+    {
+      "file": "supabase/migrations/20260915070715_admission_recovery_reason.sql",
+      "sha": "6182065bdc7d835e1374cc9628f2bbf3eb12e92838bf52952cb863c6a72aaae0"
+    },
+    {
+      "file": "supabase/migrations/20260915113126_trial_lifecycle_analytics.sql",
+      "sha": "bb6a715b37376f351c704df612a61316476c36e2043b25401e7fef0ce187da52"
+    },
+    {
+      "file": "supabase/migrations/20260915141251_openai_ads_consent_context.sql",
+      "sha": "61c286bba22f14e1ba4b00834f21ff9f9b65dd5325fbec15934bf9cb57cd3a6d"
+    },
+    {
+      "file": "supabase/migrations/20260915141328_openai_ads_billing_delivery.sql",
+      "sha": "825003754dc66bfdd496f8c371affeebc463193d4a1593c6a74ccba2ab2fbaf1"
+    },
+    {
+      "file": "supabase/migrations/20260915145322_openai_ads_canonical_test_exclusion.sql",
+      "sha": "ae22b68365a7304960fd108d71c2cf04c114dc094a8eb2637fbd50a2a5a9b1f8"
+    },
+    {
+      "file": "supabase/migrations/20260915145501_trial_access_first_collection_bridge.sql",
+      "sha": "c8405c7e85401a0ab3538ba886a8ff0f238cf67b87e6ae58c2c6926f797b1c95"
+    },
+    {
+      "file": "supabase/migrations/20260915190000_paypal_trial_frozen_end.sql",
+      "sha": "a594cc604734bb54126fc0232b84ec6453b68c06a9c0f0a7d8fadc22e85b4558"
+    },
+    {
+      "file": "tests/helpers/customerio-liquid.ts",
+      "sha": "8d3d288cc309fed2a4b9d4347db8da6fac37dd5a405aef15a7c426bad72bfb6d"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    },
+    {
+      "file": "tsconfig.json",
+      "sha": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd"
+    }
+  ]
+}

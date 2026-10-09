@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from "next/navigation"
 import { useCallback, useEffect, useReducer, useRef, useState } from "react"
 
+import { BudgetQuestion } from "@/components/budget/budget-question"
 import { usePlanSelection } from "@/components/checkout/use-plan-selection"
 import { PremiumSheetCheckout } from "@/components/premium-sheet/premium-sheet-checkout"
 import {
@@ -216,6 +217,11 @@ export function PremiumSheet({
         })
         return "settled"
       }
+      if (payload?.status === "budget_required") {
+        // Paid and entitled; the Routine waits for the budget answer (C7). Never polled.
+        dispatchPurchase({ type: "verification_budget_required", sessionId })
+        return "settled"
+      }
       if (payload?.status === "pending") {
         dispatchPurchase({ type: "verification_pending", sessionId })
         return "settled"
@@ -317,7 +323,10 @@ export function PremiumSheet({
    * verified completion needs no sheet, it unlocks the surface and toasts.
    */
   const reopenForPhase =
-    purchase.phase === "pending" || purchase.phase === "failed" || purchase.phase === "provisioning"
+    purchase.phase === "pending" ||
+    purchase.phase === "failed" ||
+    purchase.phase === "provisioning" ||
+    purchase.phase === "budget"
       ? purchase.phase
       : null
   const reopenRequestedRef = useRef<string | null>(null)
@@ -412,6 +421,9 @@ export function PremiumSheet({
    */
   const provisioningActive = purchase.phase === "provisioning"
   const accessAppliedRef = useRef(false)
+  // Access was applied client-side but the server-rendered gates were deliberately not
+  // refreshed yet (budget phase) — settled by the final unlock or by closing the sheet.
+  const accessRefreshPendingRef = useRef(false)
   useEffect(() => {
     if (!provisioningActive || accessAppliedRef.current) return
     accessAppliedRef.current = true
@@ -430,6 +442,40 @@ export function PremiumSheet({
    * replaces the whole gated subtree this sheet lives in — which used to kill the toast a
    * few hundred ms in (fix round 1, F3).
    */
+  /**
+   * Paid, entitled, Routine waiting for the budget answer (C7). The unlock is real, so its
+   * confirmation moment comes first — access applied, „Alles freigeschaltet" — and the budget
+   * question follows inside the still-open sheet. Once only, like every unlock side effect.
+   */
+  const budgetActive = purchase.phase === "budget"
+  const unlockToastShownRef = useRef(false)
+  useEffect(() => {
+    if (!budgetActive || unlockToastShownRef.current) return
+    unlockToastShownRef.current = true
+    if (!accessAppliedRef.current) {
+      accessAppliedRef.current = true
+      // No `router.refresh()` here: the server re-render of a paid buyer whose Routine is
+      // not built yet replaces the gated subtree this sheet lives in (e.g. /routine ->
+      // RoutineUnavailableState), unmounting the budget question and the completion that
+      // follows it. The refresh happens after the final unlock, or when the buyer closes
+      // the sheet (`closeSheet`).
+      accessRefreshPendingRef.current = true
+      onUnlocked?.()
+    }
+    toast({ title: PREMIUM_SHEET_PURCHASE_COPY.unlockToast })
+  }, [budgetActive, onUnlocked, toast])
+
+  /**
+   * The budget is saved: the same Session is completed again, which now builds the Routine and
+   * moves the purchase on (unlocked, or the honest in-progress states). A transport error parks
+   * it at `pending`, whose poll keeps completing — never a failure over money that moved.
+   */
+  const budgetSessionId = purchase.phase === "budget" ? purchase.sessionId : null
+  const completeAfterBudget = useCallback(async () => {
+    if (!budgetSessionId) return
+    await verify(budgetSessionId, { treatErrorAsPending: true })
+  }, [budgetSessionId, verify])
+
   const unlockedRoutineReady = purchase.phase === "unlocked" ? purchase.routineReady : null
   // Once, ever. Openers pass inline callbacks, so every re-render changes this effect's
   // deps — and `router.refresh()` itself causes one, which would make the unlock a refresh
@@ -438,16 +484,31 @@ export function PremiumSheet({
   useEffect(() => {
     if (unlockedRoutineReady === null || unlockHandledRef.current) return
     unlockHandledRef.current = true
+    accessRefreshPendingRef.current = false
     onUnlocked?.()
     router.refresh()
-    toast({
-      title: PREMIUM_SHEET_PURCHASE_COPY.unlockToast,
-      ...(unlockedRoutineReady
-        ? {}
-        : { description: PREMIUM_SHEET_PURCHASE_COPY.unlockToastRoutinePending }),
-    })
+    // After the budget step the confirmation was already raised; never a second toast.
+    if (!unlockToastShownRef.current) {
+      unlockToastShownRef.current = true
+      toast({
+        title: PREMIUM_SHEET_PURCHASE_COPY.unlockToast,
+        ...(unlockedRoutineReady
+          ? {}
+          : { description: PREMIUM_SHEET_PURCHASE_COPY.unlockToastRoutinePending }),
+      })
+    }
     onClose()
   }, [unlockedRoutineReady, router, onClose, onUnlocked, toast])
+
+  // Every buyer-initiated close goes through here: leaving the budget question must still
+  // pick up the entitlement the deferred refresh would have applied.
+  const closeSheet = useCallback(() => {
+    if (accessRefreshPendingRef.current) {
+      accessRefreshPendingRef.current = false
+      router.refresh()
+    }
+    onClose()
+  }, [onClose, router])
 
   const startCheckout = useCallback(() => {
     // A fresh attempt owns the memo: any Session id left over from an abandoned one must not
@@ -484,7 +545,7 @@ export function PremiumSheet({
     <BottomSheet
       open={open}
       onOpenChange={(next) => {
-        if (!next) onClose()
+        if (!next) closeSheet()
       }}
     >
       <BottomSheetContent
@@ -506,7 +567,7 @@ export function PremiumSheet({
                 className="w-full"
                 data-premium-sheet-cta="true"
                 data-premium-sheet-selected-interval={selectedInterval}
-                onClick={isSubscriptionAlreadyActiveFailure ? onClose : startCheckout}
+                onClick={isSubscriptionAlreadyActiveFailure ? closeSheet : startCheckout}
               >
                 {/* After a failure the CTA is a retry, not a fresh offer — the repo-wide
                     „Erneut versuchen" (fix round 1, F2) — except `subscription_already_active`,
@@ -524,7 +585,7 @@ export function PremiumSheet({
             <button
               type="button"
               data-premium-sheet-dismiss="true"
-              onClick={showsCheckout ? backToPlans : onClose}
+              onClick={showsCheckout ? backToPlans : closeSheet}
               className="min-h-[44px] w-full text-[13px] font-semibold text-muted-foreground"
             >
               {showsCheckout ? PREMIUM_SHEET_PURCHASE_COPY.backToPlans : dismissLabel}
@@ -551,6 +612,29 @@ export function PremiumSheet({
           >
             {PREMIUM_SHEET_PURCHASE_COPY.verifying}
           </p>
+        ) : purchase.phase === "budget" ? (
+          <div data-premium-sheet-purchase-phase="budget">
+            {purchase.cancelled ? (
+              <p
+                data-premium-sheet-budget-cancelled="true"
+                role="status"
+                className="mb-4 rounded-[14px] bg-[var(--brand-plum-ice)] px-4 py-3 text-[13px] font-semibold leading-snug text-[var(--brand-plum-darkest)]"
+              >
+                {PREMIUM_SHEET_PURCHASE_COPY.budgetCancelled}
+              </p>
+            ) : null}
+            {/* After „Abbrechen" the question stays right here — the buyer can still answer,
+                or leave with the sheet's own escape below. */}
+            <BudgetQuestion
+              key={purchase.cancelled ? "after-cancel" : "first"}
+              onSaved={completeAfterBudget}
+              onCancel={
+                purchase.cancelled
+                  ? undefined
+                  : () => dispatchPurchase({ type: "budget_question_cancelled" })
+              }
+            />
+          </div>
         ) : purchase.phase === "pending" || purchase.phase === "provisioning" ? (
           <div
             data-premium-sheet-purchase-phase={purchase.phase}

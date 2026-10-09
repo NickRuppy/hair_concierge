@@ -1,0 +1,48 @@
+{
+  "templatePins": "9fbdea960d87acb674473172b4d6d797f49496d8b8faafad0aad0b24cb4f6ad5",
+  "strictProofPolicy": "Free67/refinement final decoded message and FIRST outer assertion frame prefix unchanged",
+  "files": [
+    {
+      "file": "operator-guard.cjs",
+      "template": "/tmp/test-audit-free67-tools-phkvfcm3/operator-guard.cjs",
+      "templateSHA256": "1b4b20d2ddd513790e3ce880ae0217b627ac3b58ac16bf55271282ea000d42ea",
+      "preparedTemplateSHA256": "c717d889712ea25bd1d65249b60e14ebb2c43c6e9172b09f9a39156f7fabef0d"
+    },
+    {
+      "file": "operator-edit.cjs",
+      "template": "/tmp/test-audit-free67-tools-phkvfcm3/operator-edit.cjs",
+      "templateSHA256": "6b45132ad37e1583695c047469e6232b286a0619ed8d2db3a335432ef0455d6c",
+      "preparedTemplateSHA256": "557cc0821a2c18742845763501877e46f22343cb1f68d0d58bbf56fad1a04de0"
+    },
+    {
+      "file": "operator-run-controls.cjs",
+      "template": "/tmp/test-audit-free67-tools-phkvfcm3/operator-run-controls.cjs",
+      "templateSHA256": "b883327d047f4152cfdcaa1dddd9a81c4d6c93ae540ac191e3430a582d8b0a91",
+      "preparedTemplateSHA256": "2b4d701c001db7573ca1777f47a5c05b37968d0ce7b309d8cbbedcf3cd0d2424"
+    },
+    {
+      "file": "operator-proof.cjs",
+      "template": "/tmp/test-audit-free67-tools-phkvfcm3/operator-proof.cjs",
+      "templateSHA256": "9784400ba6f2ce2fb4ecc35e1027ffb3351e978f00ae087ecfd180ba09e88d15",
+      "preparedTemplateSHA256": "8bf57575777342db25b87980f3fa408c9cb24db334b60505255c1875af106cc6"
+    },
+    {
+      "file": "operator-readonly-preload.cjs",
+      "template": "/tmp/test-audit-free67-tools-phkvfcm3/operator-readonly-preload.cjs",
+      "templateSHA256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+      "preparedTemplateSHA256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e"
+    },
+    {
+      "file": "proof-attestation.cjs",
+      "template": "/tmp/test-audit-free67-tools-phkvfcm3/proof-attestation.cjs",
+      "templateSHA256": "e93ef378ec8c2bac28f8617710c4edf661857c7d6988faa1d6b4f2cd2db4ae48",
+      "preparedTemplateSHA256": "a4ac9783ed943be5303f133aed212f441c429c4ede71b5c0974508bf036804f4"
+    },
+    {
+      "file": "operator-native-proof.cjs",
+      "template": "/tmp/test-audit-free67-tools-phkvfcm3/operator-native-proof.cjs",
+      "templateSHA256": "549f54e76cb4a6f344899c3b9c510e1f2cc275851b61acdd31b1554e72fc028f",
+      "preparedTemplateSHA256": "9f1ff64339fed2990e9f07fed697d9dce5ae228444b5dc9c0fbc201b591dacea"
+    }
+  ]
+}

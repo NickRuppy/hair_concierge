@@ -280,7 +280,7 @@ function input(
       resolution: "resolved",
       needTier: "basis",
       roles: [role],
-      target: state === "unsupported" ? null : TARGETS[category],
+      target: state === "unsupported" ? null : structuredClone(TARGETS[category]),
       frequency: null,
       reasons: [],
       executionState: "available",
@@ -426,6 +426,9 @@ for (const category of [
     assert.deepEqual(result.allowedActions, ["leave_uncovered"])
     assert.equal(result.recommendation, null)
     assert.equal(result.productFactFingerprint, null)
+    if (category === "bondbuilder") {
+      assert.equal(result.recommendationFactFingerprint, null)
+    }
   })
 }
 
@@ -543,6 +546,79 @@ test("a single ideal Bondbuilder candidate keeps the standalone rule, not the ti
   assert.ok(result.criteria.every((entry) => entry.criterionId !== "bondbuilder.equal_shortlist"))
 })
 
+function trustedBondbuilder(productId: string, claimTrustLevel: string | null) {
+  const candidate = bondbuilderCandidate(productId, productId)
+  candidate.spec = { ...candidate.spec, claimTrustLevel }
+  return candidate
+}
+
+test("a more trusted ideal Bondbuilder wins outright, without the tie default or shortlist", () => {
+  const result = evaluateStage3Authority(
+    bondbuilderGapInput([
+      trustedBondbuilder(BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "medium"),
+      trustedBondbuilder("olaplex-no3", "high"),
+      trustedBondbuilder("loreal", "low"),
+    ]),
+  )
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "ideal")
+  assert.equal(result.recommendation?.productId, "olaplex-no3")
+  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.validated_standalone")
+  assert.equal(result.recommendationFactFingerprint, "facts-olaplex-no3")
+  assert.ok(result.criteria.every((entry) => entry.criterionId !== "bondbuilder.equal_shortlist"))
+})
+
+test("the production Bondbuilder set resolves to K18 among the three high-trust products", () => {
+  const result = evaluateStage3Authority(
+    bondbuilderGapInput([
+      trustedBondbuilder("loreal-elvital-bond", "medium"),
+      trustedBondbuilder("ogx-sealing-serum", "low"),
+      trustedBondbuilder("redken-acidic-bonding", "medium"),
+      trustedBondbuilder("olaplex-3plus", "high"),
+      trustedBondbuilder("epres", "high"),
+      trustedBondbuilder("aveda", "low"),
+      trustedBondbuilder(BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "high"),
+      trustedBondbuilder("kerastase-premiere", "medium"),
+    ]),
+  )
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.recommendation?.productId, BONDBUILDER_TIE_DEFAULT_PRODUCT_ID)
+  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.tie_default")
+  assert.ok(result.criteria.some((entry) => entry.criterionId === "bondbuilder.equal_shortlist"))
+})
+
+test("a high-trust tie without K18 stays uncovered even when K18 is less trusted", () => {
+  const result = evaluateStage3Authority(
+    bondbuilderGapInput([
+      trustedBondbuilder("olaplex-no3", "high"),
+      trustedBondbuilder("epres", "high"),
+      trustedBondbuilder(BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "medium"),
+    ]),
+  )
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.recommendation, null)
+  assert.deepEqual(result.allowedActions, ["leave_uncovered"])
+  assert.ok(result.criteria.some((entry) => entry.criterionId === "bondbuilder.equal_shortlist"))
+})
+
+test("trust never lifts a non-ideal Bondbuilder above an ideal one", () => {
+  const unverified = trustedBondbuilder("unverified-high", "high")
+  unverified.protocols = []
+  const result = evaluateStage3Authority(
+    bondbuilderGapInput([unverified, trustedBondbuilder("verified-low", "low")]),
+  )
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.recommendation?.productId, "verified-low")
+})
+
 test("only owned-fit authority policies advance for this semantic correction", () => {
   assert.deepEqual(
     Object.fromEntries(
@@ -560,7 +636,7 @@ test("only owned-fit authority policies advance for this semantic correction", (
       mask: "personal-plan.mask.v4",
       scalp_care: "personal-plan.scalp-care.v3",
       dry_shampoo: "personal-plan.dry-shampoo.v2",
-      bondbuilder: "personal-plan.bondbuilder.v2",
+      bondbuilder: "personal-plan.bondbuilder.v3",
       deep_cleansing_shampoo: "personal-plan.deep-cleansing.v2",
     },
   )
@@ -1252,7 +1328,7 @@ const MASK_CARE_DIRECTION_FIXTURES: Array<{
 
 function maskCareDirectionInput(fixture: (typeof MASK_CARE_DIRECTION_FIXTURES)[number]) {
   const maskInput = input("mask", "known") as Stage3AuthorityInput<"mask">
-  // input() shares the TARGETS object by reference; never mutate it across fixtures.
+  // Keep this R12 fixture's explicit copy before overriding its target axes.
   maskInput.categoryDecision.target = structuredClone(maskInput.categoryDecision.target)
   if (maskInput.categoryDecision.target?.category !== "mask") throw new Error("expected target")
   if (maskInput.productFacts?.category !== "mask") throw new Error("expected Mask fixture")
@@ -1537,6 +1613,40 @@ test("standalone Heat does not require a suitable-thickness fact", () => {
   if (result.status !== "known") return
   assert.equal(result.verdict, "ideal")
   assert.deepEqual(result.allowedActions, ["keep_owned"])
+})
+
+test("Bondbuilder category suitability covers every diameter without inventing producer verification", () => {
+  for (const hairThickness of ["fine", "normal", "coarse", undefined] as const) {
+    for (const suitableThicknesses of [null, [], ["normal"]] as const) {
+      const owned = input("bondbuilder", "known")
+      if (owned.productFacts?.category !== "bondbuilder") throw new Error("fixture")
+      owned.hairThickness = hairThickness
+      owned.productFacts.suitableThicknesses =
+        suitableThicknesses === null ? null : [...suitableThicknesses]
+      const result = evaluateStage3Authority(owned)
+      assert.equal(result.status, "known", `${hairThickness}/${suitableThicknesses}`)
+      if (result.status !== "known") continue
+      assert.equal(result.verdict, "ideal")
+      assert.deepEqual(result.allowedActions, ["keep_owned"])
+      const diameter = result.criteria.find(
+        (entry) => entry.criterionId === "bondbuilder.thickness",
+      )
+      assert.equal(diameter?.result, "pass")
+      assert.doesNotMatch(diameter?.explanation ?? "", /verifiziert/)
+    }
+  }
+  const candidate = bondbuilderCandidate("reviewed-entry-point", "Bond Treatment")
+  candidate.suitableThicknesses = []
+  const gap = bondbuilderGapInput([candidate])
+  gap.hairThickness = "coarse"
+  const recommended = evaluateStage3Authority(gap)
+  assert.equal(recommended.status, "known")
+  if (recommended.status !== "known") throw new Error("expected recommendation")
+  assert.equal(recommended.recommendation?.productId, candidate.productId)
+  candidate.recommendable = false
+  const unreviewed = evaluateStage3Authority(gap)
+  assert.equal(unreviewed.status, "known")
+  if (unreviewed.status === "known") assert.equal(unreviewed.recommendation, null)
 })
 
 test("Dry Shampoo does not fabricate or require a hair-thickness fit dimension", () => {
@@ -1829,22 +1939,6 @@ test("Heat candidate selection leaves a non-UUID tie unresolved", () => {
   if (result.status !== "known") return
   assert.equal(result.recommendation, null)
   assert.deepEqual(result.allowedActions, ["leave_uncovered"])
-})
-
-test("bondbuilder without a suitable candidate remains unknown", () => {
-  const bondbuilderInput = input("bondbuilder", "known")
-  bondbuilderInput.capturedProductId = null
-  bondbuilderInput.subjectIdentity = null
-  bondbuilderInput.productFacts = null
-
-  const result = evaluateStage3Authority(bondbuilderInput)
-  assert.equal(result.status, "known")
-  if (result.status !== "known") return
-  assert.equal(result.verdict, "unknown")
-  assert.deepEqual(result.allowedActions, ["leave_uncovered"])
-  assert.equal(result.recommendation, null)
-  assert.equal(result.productFactFingerprint, null)
-  assert.equal(result.recommendationFactFingerprint, null)
 })
 
 test("Conditioner recommendation ranking prefers ideal authority before catalog order", () => {

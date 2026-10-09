@@ -1,0 +1,62 @@
+[
+  {
+    "id": "D1-ratio",
+    "file": "src/lib/tracking/aggregation.ts",
+    "sha256": "657c128065c8c126ab7613e3280a15fb84b36cecbfbea69e8fbdb2cab3300332",
+    "find": "return washes / weeks.size",
+    "replace": "return washes / (weeks.size + 1)",
+    "occurrences": 1,
+    "keeperFile": "tests/tracker-aggregation.test.ts",
+    "keeperTitle": "shampoo cadence is the measured wash rhythm, not the self-report",
+    "expected": "keeper shampoo.weeklyCadence literal 2 fails; donor also fails before cut",
+    "restore": "Parent must save original bytes, run one actual-owner mutant serially, restore byte-for-byte in finally and verify SHA256. No mutation was applied or executed by this lane."
+  },
+  {
+    "id": "D2-missing-observation",
+    "file": "src/lib/tracking/aggregation.ts",
+    "sha256": "657c128065c8c126ab7613e3280a15fb84b36cecbfbea69e8fbdb2cab3300332",
+    "find": "if (weeks.size < 2) return null",
+    "replace": "if (weeks.size < 2) return 0",
+    "occurrences": 1,
+    "keeperFile": "tests/tracker-aggregation.test.ts",
+    "keeperTitle": "shampoo emits no cadence when wash rhythm is unobserved (sparse logging)",
+    "expected": "keeper finds emitted shampoo instead of undefined; donor null also fails before cut",
+    "restore": "Parent must save original bytes, run one actual-owner mutant serially, restore byte-for-byte in finally and verify SHA256. No mutation was applied or executed by this lane."
+  },
+  {
+    "id": "C1-basis",
+    "file": "src/lib/tracking/aggregation.ts",
+    "sha256": "657c128065c8c126ab7613e3280a15fb84b36cecbfbea69e8fbdb2cab3300332",
+    "find": "      basis: \"day_level\",",
+    "replace": "      basis: \"wash_share\",",
+    "occurrences": 1,
+    "keeperFile": "tests/tracker-aggregation.test.ts",
+    "keeperTitle": "custom and unconfirmed days do not affect cadence denominators or category usage",
+    "expected": "transferred mask.basis day_level fails; original keeper without transfer stays green for this isolated projection fault",
+    "restore": "Parent must save original bytes, run one actual-owner mutant serially, restore byte-for-byte in finally and verify SHA256. No mutation was applied or executed by this lane."
+  },
+  {
+    "id": "C1-anchor",
+    "file": "src/lib/tracking/aggregation.ts",
+    "sha256": "657c128065c8c126ab7613e3280a15fb84b36cecbfbea69e8fbdb2cab3300332",
+    "find": "      anchorSource: null,",
+    "replace": "      anchorSource: \"self_reported\",",
+    "occurrences": 1,
+    "keeperFile": "tests/tracker-aggregation.test.ts",
+    "keeperTitle": "custom and unconfirmed days do not affect cadence denominators or category usage",
+    "expected": "transferred mask.anchorSource null fails; original keeper without transfer stays green",
+    "restore": "Parent must save original bytes, run one actual-owner mutant serially, restore byte-for-byte in finally and verify SHA256. No mutation was applied or executed by this lane."
+  },
+  {
+    "id": "C2-returned-direction",
+    "file": "src/lib/tracking/nudges.ts",
+    "sha256": "01d34c6d21825ad729f24ce8cc1a9fe13ee3d54290b8935e6373039b8dc0092e",
+    "find": "      direction,\n      observedWeekly:",
+    "replace": "      direction: \"increase\",\n      observedWeekly:",
+    "occurrences": 1,
+    "keeperFile": "tests/tracker-nudges.test.ts",
+    "keeperTitle": "dismissed direction stays hidden; other direction still fires",
+    "expected": "otherDirection still length 1, transferred direction decrease fails; original keeper stays green",
+    "restore": "Parent must save original bytes, run one actual-owner mutant serially, restore byte-for-byte in finally and verify SHA256. No mutation was applied or executed by this lane."
+  }
+]

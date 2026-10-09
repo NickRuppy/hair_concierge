@@ -1,0 +1,23 @@
+{
+  "status": "READY_FOR_MAIN_INSPECTION_STATIC_ONLY",
+  "directory": "/tmp/test-audit-email94-tools-c435q0q0",
+  "proposalManifestSHA256": "682498b63ba6b141d5a88ce476fa824e0a2e623156d8d1cefb94f24459b627ea",
+  "pinsSHA256": "d78a79b4a1411f0b004711bf14e2a7793a190b85221467d1489bf36ad1f41e90",
+  "staticReceiptSHA256": "e8c0e2702317cd56c25bb7718e2679460049e009c874646f56bbb345e67f021f",
+  "toolCodeHashesSHA256": "413e94f5a2aaae8e4aefa7c05e72d74873a87b93723a7e0beb93471d0dd918f1",
+  "ownedCounts": [
+    94,
+    94,
+    90
+  ],
+  "withSupportCounts": [
+    105,
+    105,
+    101
+  ],
+  "controlsPrepared": 20,
+  "controlsExecutedByWorker": 0,
+  "repositoryWrites": 0,
+  "heldPPAlternative": "UNCHANGED_AND_EXCLUDED",
+  "nextAction": "Main inspect template delta and complete tools; execute read-only checks, transfer, native proof, 20 serial controls, receipt-gated cut, native proof."
+}

@@ -1,0 +1,1993 @@
+{
+  "checked_at": "2026-10-04T08:12:59.290053+00:00",
+  "products": [
+    {
+      "product": {
+        "id": "4e9428b9-8cc9-4db2-89b1-cb272aa9a4d6",
+        "name": "Herbal Essences Aloe Vera Conditioner",
+        "tags": [
+          "conditioner (drogerie)"
+        ],
+        "brand": "Herbal Essences",
+        "origin": "curated",
+        "brand_id": "0cc5893c-4658-4799-a0ac-b1ba273c9581",
+        "category": "Conditioner",
+        "currency": "EUR",
+        "tom_take": null,
+        "embedding": "[0.008706919,0.0488684,-0.018546155,0.05811764,0.019630793,-0.047438107,0.016078895,-0.05673502,-0.029607099,0.02660348,-0.07270665,-0.02158553,-0.023504509,-0.058260668,-0.040000573,-0.0033731116,-0.039595325,0.008236113,0.025077833,0.05187202,-0.050966166,0.04164541,0.031228099,0.010101456,0.029297203,0.024887126,0.008712878,0.006692587,0.00963661,-0.0093863085,-0.038760986,-0.05149061,0.029678615,0.09282612,-0.079619735,0.03466081,0.026961055,0.051442932,0.015947785,0.04491125,0.017497271,0.025888333,-0.070990294,-0.023552185,0.019904934,-0.06069217,0.07494744,0.029726291,0.042956516,0.0182005,-0.04834396,-0.028272158,0.016519902,-0.04314722,-0.076377735,0.109274514,-0.015923947,0.30722728,-0.034398586,0.057259463,-0.080477916,0.021776237,-0.02308734,0.07232523,-0.012538916,0.00814672,0.10851169,-0.016770205,0.092254005,0.061645698,0.020024125,0.009350551,-0.077474296,-0.02553076,0.0019502663,-0.009731963,-0.036591705,-0.030536791,0.0068236976,-0.054112814,0.03709231,0.054780286,-0.011865486,0.019690389,0.04302803,-0.07957206,-0.007574602,-0.07418462,-0.011072865,0.05068011,-0.07804641,0.002918695,0.015947785,-0.05740249,-0.004222349,0.009422066,0.047128208,0.04085875,-0.010196809,-0.051919695,0.021919265,-0.035876557,-0.048296284,0.04426762,0.021835832,0.1169981,0.046746798,-0.060215406,0.05196737,-0.060501464,-0.066604055,-0.015471021,0.032229304,0.025363892,0.06889252,0.03952381,-0.08410133,-0.04629387,-0.041454706,0.04178844,-0.04734275,-0.06302832,0.031824056,0.07447068,0.077998735,0.052444138,-0.051919695,-0.017950198,0.12443563,-0.012097909,-0.11823769,0.059261873,-0.058451373,0.11776093,-0.04996496,0.05158596,0.09916709,0.043218736,0.026102878,0.022705927,-0.020965736,-0.041001778,0.083147794,0.007455411,0.0032151833,-0.0642679,-0.030465275,0.001996453,-0.0642679,-0.0165795,0.08443506,-0.0036532108,-0.046079326,-0.083386175,0.01098943,0.009350551,0.04224137,-0.10145557,-0.016782124,-0.05444655,0.042980354,0.0339695,0.0067819804,0.02320653,0.052253433,0.00230635,0.020632,0.06846344,0.0047169924,0.04915446,-0.015161123,0.016627176,0.04669912,-0.046889827,0.021478258,0.062503874,0.017664138,-0.07694985,-0.031585675,-0.048081737,0.02104917,0.04953587,0.056448963,-0.0048391637,0.0100716585,-0.009892872,0.016925152,0.009177724,-0.024195818,0.020441294,-0.035375953,0.06474467,0.011221853,0.06178873,-0.014898903,0.05358837,-0.051347576,0.05959561,0.044625193,0.010697412,-0.025316216,-0.0930645,-0.016960911,0.053016257,-0.032777585,-0.04753346,0.069130905,0.0642679,0.051109195,0.04929749,0.002090316,0.030584468,-0.029654775,0.01983342,-0.013420931,-0.0007345159,-0.0046782554,0.0030632145,-0.03652019,0.10116951,0.020095639,0.0005512594,-0.08004882,-0.05540008,0.03547131,-0.03952381,-0.0156140495,-0.019177867,0.044315297,0.118428394,0.028701246,0.034017175,0.039952897,-0.031585675,0.0069130906,0.058403697,0.053826757,-0.112897925,0.00013008605,0.09454247,-0.011281449,-0.0018906707,0.0078845,0.014136079,-0.006126429,-0.06016773,0.041454706,-0.036496352,-0.007973893,0.051633637,-0.0648877,0.043266412,-0.021943104,0.062503874,0.088487566,0.08433971,0.0656982,-0.020322103,-0.06565052,0.02267017,0.035209086,0.0034118488,0.047962546,-0.029821644,-0.043671664,-0.02417198,0.00733622,-0.023576023,-0.023504509,-0.018891808,0.0648877,0.048510827,0.029321041,0.07504279,0.009964386,0.030536791,-0.024315009,0.07857085,0.070370495,-0.03547131,-0.022074213,-0.043361764,0.05687805,0.028272158,0.026794186,-0.021645125,0.008194396,-0.024529554,0.040381987,-0.038665634,-0.029249525,0.088153824,0.014815468,-0.15618818,-0.037569072,-0.051347576,0.027771555,0.07628238,0.029654775,0.06317135,-0.05034637,-0.024934804,0.05554311,0.013015681,0.050870813,0.07232523,-0.0061443076,-0.061073583,-0.07790338,-0.019809581,-0.053063933,-0.03096588,-0.013552042,-0.056687344,-0.02092998,0.026698833,0.02077503,-0.008015609,0.04185996,0.07094262,-0.0021826893,0.029249525,-0.036615543,0.017449595,0.007538845,0.097641446,-0.09592509,0.013504365,0.12786834,0.023909759,-0.086389795,0.0480579,0.02253906,0.033063646,0.02157361,-0.010959633,0.014136079,-0.020822706,-0.047581136,-0.06340973,-0.06855879,0.0043385606,0.034732323,-0.05783158,0.048916075,-0.04441065,0.07790338,-0.087009594,0.023373399,0.010423272,0.00090063864,-0.05821299,-0.023170773,-0.017366162,0.040906426,-0.034517776,0.024505716,-0.011561548,0.03272991,0.075519554,0.007252786,0.013480527,-0.07447068,-0.06517376,0.067366876,-0.02348067,0.006340973,0.049249813,0.05768855,0.04002441,-0.027509334,0.025483083,0.071371704,-0.003040866,-0.03313516,0.015494859,0.121288985,-0.023945516,0.024458038,0.0071633924,-0.039595325,0.1009788,0.013218306,-0.018665345]",
+        "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-01/4e9428b9-8cc9-4db2-89b1-cb272aa9a4d6/27-4e9428b9-8cc9-4db2-89b1-cb272aa9a4d6-herbal-essences-herbal-essences-aloe-vera-9520a33413fe.webp",
+        "is_active": true,
+        "price_eur": 3.95,
+        "created_at": "2026-03-03T12:33:54.441394+00:00",
+        "sort_order": 20,
+        "updated_at": "2026-08-15T07:47:02.932579+00:00",
+        "description": "Herbal Essences Aloe Vera (Silikone) ist ein Conditioner (Drogerie) von Herbal Essences, empfohlen für mittelstarkes Haar bei Feuchtigkeitsbedarf.",
+        "category_key": "conditioner",
+        "affiliate_link": "https://www.dm.de/p/d/1409620/herbal-essences-conditioner-feuchtigkeit-aloe-vera",
+        "product_line_id": null,
+        "lifecycle_status": "active",
+        "net_content_unit": null,
+        "price_checked_at": "2026-06-11T00:00:00+00:00",
+        "net_content_value": null,
+        "short_description": null,
+        "suitable_concerns": [
+          "feuchtigkeit",
+          "dryness"
+        ],
+        "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/9520a33413fe67756ea5ad80e775cec4a514a7ec1903b3054a1c86204936c293.webp",
+        "purchase_link_status": "available",
+        "suitable_thicknesses": [
+          "normal"
+        ],
+        "is_chaarlie_recommended": true,
+        "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+      },
+      "identifiers": [
+        {
+          "id": "91c953f0-1d06-4b8b-94e4-aa211c11c115",
+          "source": "scanner-catalog-coverage-2026-08-26",
+          "created_at": "2026-08-28T08:43:05.287777+00:00",
+          "product_id": "4e9428b9-8cc9-4db2-89b1-cb272aa9a4d6",
+          "updated_at": "2026-08-28T08:43:05.287777+00:00",
+          "identifier_type": "ean",
+          "canonical_gtin14": "08700216211598",
+          "identifier_value": "8700216211598",
+          "normalized_identifier_value": "8700216211598"
+        }
+      ],
+      "product_fingerprint": "6f101d76d6455d069d8e58ff0a8ffa0d",
+      "protected_fingerprint": "e2010ce7b70b2301227442a2276b3546",
+      "identifier_fingerprint": "6b18e1ae6bd1d61dc6e081eca0e0a114"
+    },
+    {
+      "product": {
+        "id": "efaff579-e411-41eb-972a-2734a8517356",
+        "name": "Hitzeschutzspray Schutzengel",
+        "tags": [],
+        "brand": "got2b",
+        "origin": "curated",
+        "brand_id": "a286e2c2-6b44-41f3-a37b-f57d4ed1e93c",
+        "category": "heat_protectant",
+        "currency": "EUR",
+        "tom_take": null,
+        "embedding": null,
+        "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-enrichment/personal-plan-launch-v1/heat/got2b-schutzengel-200ml/dm-packshot.webp",
+        "is_active": true,
+        "price_eur": 4.95,
+        "created_at": "2026-08-10T09:44:02.62441+00:00",
+        "sort_order": 0,
+        "updated_at": "2026-08-15T07:49:54.652656+00:00",
+        "description": null,
+        "category_key": "heat_protectant",
+        "affiliate_link": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+        "product_line_id": null,
+        "lifecycle_status": "active",
+        "net_content_unit": null,
+        "price_checked_at": "2026-08-09T09:23:08+00:00",
+        "net_content_value": null,
+        "short_description": null,
+        "suitable_concerns": [],
+        "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/310a0cd0a0dde7789ba499fcc048e6acb218bc982d09da45794ce23270740765.webp",
+        "purchase_link_status": "available",
+        "suitable_thicknesses": [],
+        "is_chaarlie_recommended": true,
+        "purchase_link_checked_at": "2026-08-09T09:23:08+00:00"
+      },
+      "identifiers": [
+        {
+          "id": "5149c84c-b9dd-4591-ba72-5dfe188ce1e9",
+          "source": "dm",
+          "created_at": "2026-08-10T09:44:02.62441+00:00",
+          "product_id": "efaff579-e411-41eb-972a-2734a8517356",
+          "updated_at": "2026-08-10T09:44:02.62441+00:00",
+          "identifier_type": "retailer_url",
+          "canonical_gtin14": null,
+          "identifier_value": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+          "normalized_identifier_value": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel"
+        },
+        {
+          "id": "9881d44f-1cdc-4804-bc74-58958bb20e95",
+          "source": "dm",
+          "created_at": "2026-08-10T09:44:02.62441+00:00",
+          "product_id": "efaff579-e411-41eb-972a-2734a8517356",
+          "updated_at": "2026-08-10T09:44:02.62441+00:00",
+          "identifier_type": "retailer_sku",
+          "canonical_gtin14": null,
+          "identifier_value": "dm:1267310",
+          "normalized_identifier_value": "dm:1267310"
+        },
+        {
+          "id": "dc295986-ce59-470f-87f7-a56cd7608c8e",
+          "source": "dm",
+          "created_at": "2026-08-10T09:44:02.62441+00:00",
+          "product_id": "efaff579-e411-41eb-972a-2734a8517356",
+          "updated_at": "2026-08-10T09:44:02.62441+00:00",
+          "identifier_type": "ean",
+          "canonical_gtin14": "04015100800128",
+          "identifier_value": "4015100800128",
+          "normalized_identifier_value": "4015100800128"
+        }
+      ],
+      "product_fingerprint": "2e1ca904f0c14c5c260cd395fe1a9e17",
+      "protected_fingerprint": "df643e80306bffc078df0c8e6d83600c",
+      "identifier_fingerprint": "218ec07ae1804b3fbf928109159c1d43"
+    }
+  ],
+  "catalog_fingerprints": [
+    {
+      "id": "0017381a-84ba-46dd-9b6e-7ef457e8b5b4",
+      "product_fingerprint": "c458acdfe425692f0761f4ad28735f2a",
+      "identifier_fingerprint": "3a69b0a945e2480c33569546a6427605"
+    },
+    {
+      "id": "007a0b35-2372-4836-9aa5-fd089cd588d4",
+      "product_fingerprint": "333868d23f5a457c728f387eeee48a40",
+      "identifier_fingerprint": "c214855261cfb80e70c834768de553d7"
+    },
+    {
+      "id": "010cf825-4892-4f78-bf20-26ad72122c60",
+      "product_fingerprint": "511e382041fa913edb1ed0e67b017829",
+      "identifier_fingerprint": "0e05b697315efdba0f6865da74016282"
+    },
+    {
+      "id": "01b11043-5c87-43d2-95b5-f1cabd845423",
+      "product_fingerprint": "55428d6a03091d4189d022db6825f9c7",
+      "identifier_fingerprint": "a4270c18081e2b5e3b1f54cb02c7f0d7"
+    },
+    {
+      "id": "02113cc7-80c4-45a5-a56b-738ac96f4f02",
+      "product_fingerprint": "05603be0787dd8245c7743584c1bb977",
+      "identifier_fingerprint": "0d60432cad12794f2a69146d0e8fbb97"
+    },
+    {
+      "id": "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+      "product_fingerprint": "55eabef7d4156c1eb21eb478c6d1800e",
+      "identifier_fingerprint": "fb1feb3c62ea07c9c69240578bb26d0a"
+    },
+    {
+      "id": "0307c903-84f9-46b4-8f1f-a51c2b1f38ff",
+      "product_fingerprint": "7fd22e6bc85ebd999ccbf5b4201d5058",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "03b847e5-01b9-40e5-950a-98efc73abb3a",
+      "product_fingerprint": "88494e9e9f7a4d1c7ce1bfa1335bf9ec",
+      "identifier_fingerprint": "34de434245a770b64156b7d2413403e6"
+    },
+    {
+      "id": "05753f93-907f-427d-a4dc-0a690ff3a76d",
+      "product_fingerprint": "bbb8b561bf315554f6ba7c0017368175",
+      "identifier_fingerprint": "bc6a637b5885f7b6f6369dd5767e0c37"
+    },
+    {
+      "id": "0585c8b1-159b-43d3-8432-a91b9973c7b6",
+      "product_fingerprint": "1d024743a59d731ce28e133c3d5ce0d2",
+      "identifier_fingerprint": "56c6a06ed63c31fe35d64dafaed05f65"
+    },
+    {
+      "id": "05e68c32-f096-457f-8b88-5cd3c0934873",
+      "product_fingerprint": "53f40a23557b06ea5cab9cc63be37593",
+      "identifier_fingerprint": "a83edc6c5cfeb4517d69532e49ce7674"
+    },
+    {
+      "id": "07058418-0a6a-4fda-89a2-4c263f09c5c9",
+      "product_fingerprint": "e5e1baf437f7d3c98ba8117dbd19fee9",
+      "identifier_fingerprint": "160e44aff6893ad373ff4d55f1ca36c5"
+    },
+    {
+      "id": "07120c73-0171-4a2a-9d07-facd9ce90d8c",
+      "product_fingerprint": "c9c88fd7d07618912d92719c2465b2fd",
+      "identifier_fingerprint": "54eb5eb78d0136ce6d8008211a6cae69"
+    },
+    {
+      "id": "0756a919-5fab-4b6c-a5da-8cb810869b6f",
+      "product_fingerprint": "4a25fb3eda11ed34ef5a0fb924684537",
+      "identifier_fingerprint": "0210065f296d2898cadc424ccf334e8e"
+    },
+    {
+      "id": "077a94ae-fede-4773-9435-17022c2b89c0",
+      "product_fingerprint": "3e8e09bf3651def2507b39de862cd288",
+      "identifier_fingerprint": "c1ab888bb49ad562d3e5ec56f8218397"
+    },
+    {
+      "id": "07895098-a301-4137-b5c6-9061589b1800",
+      "product_fingerprint": "43b152e701f0bc4dc07835eac57e64c8",
+      "identifier_fingerprint": "137647645691f84bc2ede0cf355e653d"
+    },
+    {
+      "id": "088b1427-ed22-424e-8cfd-ea2578120ae6",
+      "product_fingerprint": "f1021a245ca8295cb8e97e37e6579c5b",
+      "identifier_fingerprint": "0352b6a649f56c6100cacee27233f46d"
+    },
+    {
+      "id": "0ab645f9-d46d-4cf2-96a5-b5e00f74cae2",
+      "product_fingerprint": "dc58c9f4f42f8a57b06514d482c93624",
+      "identifier_fingerprint": "0d189416ad20ea9f2ce96d2258029b43"
+    },
+    {
+      "id": "0b21f996-bb42-4b10-89bd-4881c4346d53",
+      "product_fingerprint": "30e676e77f9a5fe80c7adecfdd3f8ff9",
+      "identifier_fingerprint": "7841ece5515c4f8a9d0cb2e40610eab7"
+    },
+    {
+      "id": "0ba22032-a5b1-4a0a-a8a2-b49861d00fb8",
+      "product_fingerprint": "d247ecfc21b58269470af3fa63005e9a",
+      "identifier_fingerprint": "441218108c4d5d668a0f1fb3564c2a6c"
+    },
+    {
+      "id": "0c80efd5-0462-46fa-ad15-2c736f5ef269",
+      "product_fingerprint": "e6a4f03dcde8c20111ce3b117ecaf7c2",
+      "identifier_fingerprint": "69a265e3baef40e7250e462f93168ba7"
+    },
+    {
+      "id": "0d341836-96b3-4364-9319-a7f0884b3da9",
+      "product_fingerprint": "8dcc176d59ee5446eb483c01c3a24d0b",
+      "identifier_fingerprint": "24a2736564bf7bc0fcd373e2d260294e"
+    },
+    {
+      "id": "0d5a4af5-d046-4378-b608-515c9d1d66ec",
+      "product_fingerprint": "ff4af806d0464384c797d27d6f9f19cc",
+      "identifier_fingerprint": "e6e2c875d78d67b904d9ddd8b6a41bf7"
+    },
+    {
+      "id": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+      "product_fingerprint": "6123e1d2c3de4fa92f9bf9a255ea0398",
+      "identifier_fingerprint": "5127cf0829211a8bb50f1a5069770e2c"
+    },
+    {
+      "id": "0f71ff9d-bf1e-4d76-883a-e1a9e6a2094c",
+      "product_fingerprint": "98798c01ac35127be9bfa3971f6c23ff",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "106aaea7-cbdf-400c-bf3c-7cf7ce268577",
+      "product_fingerprint": "ca0402143b471276847a1c3ea5942bb9",
+      "identifier_fingerprint": "dfc0c8cc59beef7303d33d12970eceac"
+    },
+    {
+      "id": "109acbf6-51c5-42fc-8982-7a55b5ad2200",
+      "product_fingerprint": "0932885ea644fe666451c1fbe1b586f4",
+      "identifier_fingerprint": "cbe5dc504b14cb3fef9150118e2dcec2"
+    },
+    {
+      "id": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc",
+      "product_fingerprint": "c0eb17a0822c9502e6e86f2acc39fbb1",
+      "identifier_fingerprint": "bcf8daa55a715985501aeb371c413d53"
+    },
+    {
+      "id": "11a099f7-eabe-4bdb-bfd3-995f35cb6ee4",
+      "product_fingerprint": "d6c191ac95b84da1358712d4c24aa0fe",
+      "identifier_fingerprint": "6d4d35c89a715d11a94c8657293038bf"
+    },
+    {
+      "id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+      "product_fingerprint": "706f976bd2060a120e0f7e0d39bb7cfe",
+      "identifier_fingerprint": "e7a4c2b220ee24703d3ec235d5ec5e77"
+    },
+    {
+      "id": "13a1acb9-c824-4410-b4b6-ed358be30c37",
+      "product_fingerprint": "ddf4eafd4fe3a6c8d4d77dffbf8a277b",
+      "identifier_fingerprint": "0a8dc2fc6c676fdd2f9ef561fe46ba46"
+    },
+    {
+      "id": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+      "product_fingerprint": "203161c8805a9373c522ef8c518384ab",
+      "identifier_fingerprint": "186bc48370dfd24166e1d06a70a228d2"
+    },
+    {
+      "id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+      "product_fingerprint": "01cddb0d211292ed53b93d0b322c7297",
+      "identifier_fingerprint": "d4de342a546e17bce1c4d4d9bc4ccbc3"
+    },
+    {
+      "id": "169be6d1-bd8c-4902-ba1d-3db349cb4854",
+      "product_fingerprint": "ea12cb292c5d7544c6a389dc15482021",
+      "identifier_fingerprint": "204a1289564b424d498b17441a6d45d8"
+    },
+    {
+      "id": "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+      "product_fingerprint": "b72cc6fd02938cc02da7fedc81139c7e",
+      "identifier_fingerprint": "4b49919211efad3fe7b7c1f93f06929b"
+    },
+    {
+      "id": "17b6d50e-ca5b-4f66-bdd7-39bd19afe748",
+      "product_fingerprint": "ea8f73f95bdafc8da99a9dd308453b65",
+      "identifier_fingerprint": "b13ad853b430e7905160e9098be35066"
+    },
+    {
+      "id": "17c50884-3c17-479a-848a-10447464e086",
+      "product_fingerprint": "8a45521c9154a6ec151e21e417c38048",
+      "identifier_fingerprint": "02e6d00b2e164cba70dc3c8231609b06"
+    },
+    {
+      "id": "19aea9c4-4b90-4ec4-8cb6-90cb270010f7",
+      "product_fingerprint": "16334bd9b28efe61713287e4dedaab67",
+      "identifier_fingerprint": "a6c6795397901c2406d892b2265b3509"
+    },
+    {
+      "id": "1a6d62c7-c5e5-45aa-a45f-2cfba4aeccb5",
+      "product_fingerprint": "1428706357009d99dc0e759e7b6309b6",
+      "identifier_fingerprint": "24a8446586e5912313de361ce7e63cab"
+    },
+    {
+      "id": "1a6e731e-8fb2-43b4-9f4c-2d7f6dd06dca",
+      "product_fingerprint": "f5dbd6c7fb430bfdffecb628c7c756ab",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "1adb5c17-fca0-4967-a199-756d500b0104",
+      "product_fingerprint": "6228a01e71336429256cef61534bb16f",
+      "identifier_fingerprint": "f8ebe7eb6bd3ef004dc6f08b1ca2efd4"
+    },
+    {
+      "id": "1b8f56b9-b186-4bed-a65c-f582ac0e9453",
+      "product_fingerprint": "eff02b07e7a256b814a1218f8cf19085",
+      "identifier_fingerprint": "3b19e36471d52df8e9db901fc4b90ecf"
+    },
+    {
+      "id": "1bf36485-3fe8-4fe0-9a03-b2bf7b451f0c",
+      "product_fingerprint": "90eb46b762cde1ff4c4f72ad253149c6",
+      "identifier_fingerprint": "2d11bd374719f8e7d07802b08a1a86bf"
+    },
+    {
+      "id": "1bfa5b02-26d9-457b-a5e6-445cc2284490",
+      "product_fingerprint": "da62c41bd4891c7ccf988c22899cbe66",
+      "identifier_fingerprint": "858570eb0913744db5e01a935edbcc25"
+    },
+    {
+      "id": "1c43bc07-e3c6-4b8a-9b62-943147052e07",
+      "product_fingerprint": "d334d8c3e13dee49d6f15646d2a4f5e1",
+      "identifier_fingerprint": "a73913058a9f8e92e7d0c6a554f750da"
+    },
+    {
+      "id": "1dce2c18-6a45-4017-a748-e3a7f1cba36f",
+      "product_fingerprint": "965fa97b2f42b213333b9258f7cfc820",
+      "identifier_fingerprint": "bb8647a0edfa69e594ff481ccb2a26b3"
+    },
+    {
+      "id": "1e61a644-94b0-4356-ab55-f58572fa1e18",
+      "product_fingerprint": "27cb9e8394f414d0aa327c098b5a5fc5",
+      "identifier_fingerprint": "f522d74182c387582c940d367c789b9c"
+    },
+    {
+      "id": "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf",
+      "product_fingerprint": "f49e3126876163320d0dd4ed28ae1288",
+      "identifier_fingerprint": "3d2069764053577a1909c0c74a47059b"
+    },
+    {
+      "id": "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+      "product_fingerprint": "024fb6c22e8cfc868577be5e22d129e1",
+      "identifier_fingerprint": "b0227d9546c88f6ee01baf3d56d38d66"
+    },
+    {
+      "id": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+      "product_fingerprint": "05dc63385baa5618acd88fb6045bdec5",
+      "identifier_fingerprint": "067df1adb58f914b7404e990057adea5"
+    },
+    {
+      "id": "1f51a69f-c946-4898-9091-2fd2c59fb467",
+      "product_fingerprint": "a146f12bc03d2bbd6599b56c01681570",
+      "identifier_fingerprint": "7012e5a7a8abc355796e30b51515a7a2"
+    },
+    {
+      "id": "215522e5-95a6-469f-bc34-1fa74b311a23",
+      "product_fingerprint": "bf17f3e7aa60ab27cfaa2c83bf193983",
+      "identifier_fingerprint": "003f28448f9b1358fd3cbedebc57778a"
+    },
+    {
+      "id": "21a94166-3813-4c0f-8912-508fb8f704f1",
+      "product_fingerprint": "c82b75c43b9e9559784d4ceede9559ef",
+      "identifier_fingerprint": "f50eef8c4c5b48aeecf1c3aee6751d88"
+    },
+    {
+      "id": "22d41784-5fc6-40bb-a4dc-92841322f933",
+      "product_fingerprint": "8f33a00bd9776ebef9f007ea493e4587",
+      "identifier_fingerprint": "92afe310d8967e53fa4b4b1a8e8e3ee2"
+    },
+    {
+      "id": "22f95dcb-12de-4d62-b206-f03dbd6e94a0",
+      "product_fingerprint": "a713db470f2473f91bb204e7fa28fff2",
+      "identifier_fingerprint": "89d3c2065bcd30a3b39260409c3d76bc"
+    },
+    {
+      "id": "240c4e9d-d417-42ce-b8b6-d1cc005eed26",
+      "product_fingerprint": "8c433ae73f6259af9a7beccaae3b97e0",
+      "identifier_fingerprint": "15f679a3a6449894215063a5a5e9cab4"
+    },
+    {
+      "id": "25359379-8a85-4f2f-a338-2a7361b747a7",
+      "product_fingerprint": "f84637dec7592ca1ad7420e9deca5833",
+      "identifier_fingerprint": "707bfbb426100f59d6e11baa24c7c81b"
+    },
+    {
+      "id": "2544de60-e295-47ec-98a1-6b4ca58ce4be",
+      "product_fingerprint": "1356ac0f61484c5eb33448e4abc9e832",
+      "identifier_fingerprint": "230011bbef58c895fe9d2a86cfe2d580"
+    },
+    {
+      "id": "25931499-63ac-4076-b88c-8c23a38f0fa5",
+      "product_fingerprint": "eb626d2d4e5318dfa31db1134c5a3320",
+      "identifier_fingerprint": "bceac78068d1c7ebcd0488e4857246ca"
+    },
+    {
+      "id": "25a545c5-91c3-4338-baf9-63b3d5c155e3",
+      "product_fingerprint": "3c7dba5038fb595f753a20f23c81aa78",
+      "identifier_fingerprint": "bce15bc9050d5029954bce5a393d9a46"
+    },
+    {
+      "id": "261e5c9f-d312-4206-82da-fbd0ab6f3614",
+      "product_fingerprint": "82ccb56cb994ff9855bc07a7cdf29b15",
+      "identifier_fingerprint": "f0da78e38ea4cb2b3c633830b1d752fd"
+    },
+    {
+      "id": "262de7f7-71d1-4a60-a5f4-1a91debdbf12",
+      "product_fingerprint": "2d4c0834d7bde0b8e43493840ac60ad6",
+      "identifier_fingerprint": "5c3d69582af9f206e0ca9065133a0b09"
+    },
+    {
+      "id": "26985fdd-1b41-46e3-9c9a-94b98f92310a",
+      "product_fingerprint": "e0fe33524b6d00d37a4a393e8ded37ee",
+      "identifier_fingerprint": "e9f580f94c060bbfdda11deb9ad2ea5b"
+    },
+    {
+      "id": "2781bccb-4a3f-4ffe-aa2f-f32f7b820c03",
+      "product_fingerprint": "52010a938ac781e0ba62f2b5e865c150",
+      "identifier_fingerprint": "8174e6a16640febeaf2f57b179248d46"
+    },
+    {
+      "id": "27a2dd61-6e54-4746-8e24-a698dbafbf91",
+      "product_fingerprint": "b68e340c13133c374dfc4e7aa239127f",
+      "identifier_fingerprint": "da93c6cebc02ea3fe1c6ec7721debe8f"
+    },
+    {
+      "id": "27fafbbd-9a89-4335-aed0-5cf5a081ef5c",
+      "product_fingerprint": "93c24bedf90cff031ff83f85f56eb9b5",
+      "identifier_fingerprint": "9ee6b533d9f34a4ec520eaa0eb387bc8"
+    },
+    {
+      "id": "27fe4310-c1b8-4b02-a59e-cb9aa1f3314a",
+      "product_fingerprint": "b871f004aba82a352f4722373ea4e85f",
+      "identifier_fingerprint": "a04273b0347845c61adf1f7f43638b75"
+    },
+    {
+      "id": "2858a8b6-018b-4949-ae58-eedc348d20b4",
+      "product_fingerprint": "7cfe80d6a9adecae0186f929212d2e95",
+      "identifier_fingerprint": "ec0b4648f81fcb2b0afac8ccbce04714"
+    },
+    {
+      "id": "286071ba-9c9a-4c60-979c-7e51df949fbf",
+      "product_fingerprint": "480c1f1597ae8f42ff4899094720fd36",
+      "identifier_fingerprint": "9a21d128d750a5c77aea1e534ccdc6cf"
+    },
+    {
+      "id": "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+      "product_fingerprint": "dd9ee8fde07dae5dc17c690066dba9cd",
+      "identifier_fingerprint": "ad8c9f2569d920054cfbaf0f52a3d34f"
+    },
+    {
+      "id": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+      "product_fingerprint": "f13e2eb8d819f45a90dd5891564bc7ca",
+      "identifier_fingerprint": "db1e73e73b5e3cb0c49bde3ee36b339c"
+    },
+    {
+      "id": "2a159694-6799-4be7-a0aa-572757c94801",
+      "product_fingerprint": "e7c43b5537b7115fed100c67e1e84019",
+      "identifier_fingerprint": "f696d2721a070040ba1099f3ca6a097d"
+    },
+    {
+      "id": "2a8ae385-17c9-440b-ab89-87fe1e6350a4",
+      "product_fingerprint": "ce0a76806572c0f3994b501481b1560d",
+      "identifier_fingerprint": "bfee2206ff2cfd15e67095661c4b2c7c"
+    },
+    {
+      "id": "2b2161a2-6c09-435f-adbb-49da44d434ae",
+      "product_fingerprint": "cbd86bda046b6b8d2926a64ed83ae6cc",
+      "identifier_fingerprint": "1cd3e1cbc58e890bf3bb758edc497b04"
+    },
+    {
+      "id": "2b7db7e3-2058-4178-8a03-7d05f4a1d447",
+      "product_fingerprint": "ee5363c8540ef82d0304b253ccbfb1df",
+      "identifier_fingerprint": "4c40b6733ad1bc26878057372ce925ef"
+    },
+    {
+      "id": "2bafeb7e-6610-4efc-a8e8-a402071b2ed9",
+      "product_fingerprint": "e23efc8e2fd61c045eb10902ba9ba13f",
+      "identifier_fingerprint": "5c9eaf57f27582f7758575dd4cc20a2e"
+    },
+    {
+      "id": "2be1a34f-5c80-4b14-a0f5-b56bebe861a8",
+      "product_fingerprint": "c23f610c8024670a02369f9d1599c825",
+      "identifier_fingerprint": "fdf870db20d2110b226731f76502f95f"
+    },
+    {
+      "id": "2e887538-3b92-4344-9bbd-1761383ba4a6",
+      "product_fingerprint": "d096587b3c8f6560ed19f8e03fa3c483",
+      "identifier_fingerprint": "9c3d5333da5389a5310f73e1df0a1040"
+    },
+    {
+      "id": "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+      "product_fingerprint": "f355cd20cdc4b8fee8f856fb88072983",
+      "identifier_fingerprint": "f042df5bd9ec45a8ec58ef7a0f2cd02b"
+    },
+    {
+      "id": "2ffeae68-c625-4df5-be02-0c1b620aa0fc",
+      "product_fingerprint": "b772d418f95f92b94016d75aa95d04f7",
+      "identifier_fingerprint": "c597568406596c02ebe683d4f9e86838"
+    },
+    {
+      "id": "303b4c0c-53a4-46de-883d-c29e448ee590",
+      "product_fingerprint": "08d7e5b58cd1a8b13bf3667c7e5e3f02",
+      "identifier_fingerprint": "a592380fc5a68262097f5615cb579e23"
+    },
+    {
+      "id": "314d9881-4fcc-47b5-81e1-58e41779081e",
+      "product_fingerprint": "9176b88fca8fdf3443420490620da70e",
+      "identifier_fingerprint": "0ddac7d1b0209f624164639b6921c268"
+    },
+    {
+      "id": "315ae9f5-ad1a-4159-b307-2413338c8052",
+      "product_fingerprint": "e95cbf95f04ffd77ec3b755152533653",
+      "identifier_fingerprint": "91a399bfd6c0956b075f06d15039277b"
+    },
+    {
+      "id": "3175b0a5-1be7-430f-b3d9-22ab3b4c11d2",
+      "product_fingerprint": "08dc706c687feae5b6feb758dc89e4ac",
+      "identifier_fingerprint": "1e7600164359a3542196aca784135723"
+    },
+    {
+      "id": "3405f33b-ae5f-4185-b72b-68c9a87f7c06",
+      "product_fingerprint": "aab2c64fc05bcb792fb8db81343cf629",
+      "identifier_fingerprint": "a7a5c892e2fdfdfe7eead9d9e9b6ab4a"
+    },
+    {
+      "id": "35a372b6-c7ef-45cb-be0b-99cef476f247",
+      "product_fingerprint": "05112ae6c4bd7d1cbc74aa97f312c407",
+      "identifier_fingerprint": "cc24a4fcd3d178959e52d7d344ba2387"
+    },
+    {
+      "id": "35ae622e-1458-42bf-a44d-1b23ecfd5516",
+      "product_fingerprint": "e70fb083a8db8b3574b719983d71dd82",
+      "identifier_fingerprint": "6276aa8afce0dc81d739d4b661bae54f"
+    },
+    {
+      "id": "35d2cc66-6d5a-49c1-9a9f-c03bf6942ab0",
+      "product_fingerprint": "8fb5c195ec119c1f0d444d9e6294a117",
+      "identifier_fingerprint": "bb7b661df0f64a117ff1e80788e7228b"
+    },
+    {
+      "id": "35d81c4a-dbb0-474b-a068-2e1562adb0a8",
+      "product_fingerprint": "de3a43a3d6ada6cb142f08136107613f",
+      "identifier_fingerprint": "b06519d4a986193f9186f54b90a09372"
+    },
+    {
+      "id": "375ee7a0-3262-4b99-8e48-4f327c6e09aa",
+      "product_fingerprint": "df0e53991b02f572e1e3e6d3548bb634",
+      "identifier_fingerprint": "89efac84da38584e1d34bd55d1288d76"
+    },
+    {
+      "id": "37c65daf-cc2e-44ba-a976-ac0239c11f7d",
+      "product_fingerprint": "cc28ea1c65e408325a56b4ee21ce6d94",
+      "identifier_fingerprint": "4a0731b40be8d0d6c2ff0696bc3bfd22"
+    },
+    {
+      "id": "380fec2b-6ecd-499d-987e-d273ad3085b1",
+      "product_fingerprint": "917bdf79b6aa218c0123714576f8fbb7",
+      "identifier_fingerprint": "3a9120eedd31b912f9bce49da6d03c10"
+    },
+    {
+      "id": "38886b62-2c45-4b34-9a24-7d831e97946e",
+      "product_fingerprint": "532174fa6e6d8a8c0cc177ecbdecdbbe",
+      "identifier_fingerprint": "11b6b9bc93a7472c50df819b5363092e"
+    },
+    {
+      "id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+      "product_fingerprint": "363a4c01d2264ca7c7c6b134dc960b8f",
+      "identifier_fingerprint": "3486a10ad4ea4b94c923b0708156ada8"
+    },
+    {
+      "id": "3901b2cf-6888-4363-9d5b-a695c0b3170b",
+      "product_fingerprint": "f968c939511b784630d85306895e0420",
+      "identifier_fingerprint": "42d4280593dd6571e54224c1e949a373"
+    },
+    {
+      "id": "39ec1b2d-4aa0-4c4e-b581-9b6d5efea530",
+      "product_fingerprint": "b0d90f0b2a85e4ef808101e91e582a8f",
+      "identifier_fingerprint": "438f103bb16aba7ad8773896b8b99953"
+    },
+    {
+      "id": "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b",
+      "product_fingerprint": "18ab0d9c093198f48d202518b6eae734",
+      "identifier_fingerprint": "f64282f3c478aee9c6a4c8ee04ef7112"
+    },
+    {
+      "id": "3c769f60-283f-48c3-9549-cf84b73115d7",
+      "product_fingerprint": "4be69d1e3c06f48a1ea60d65b3c9cd32",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+      "product_fingerprint": "e3e6fdb67c0a9189476dd06696988575",
+      "identifier_fingerprint": "92dda7db271f28785933feca91ad34cb"
+    },
+    {
+      "id": "3d94c017-9edb-4ba0-accd-4772e262f012",
+      "product_fingerprint": "1a5021587b36be465b930bf75559c99c",
+      "identifier_fingerprint": "ae549fdf0bf6c0e68cbdbeff54a3b86f"
+    },
+    {
+      "id": "3dc24d67-e6c0-4239-a273-058a87d13553",
+      "product_fingerprint": "e2e13b314c08ee359f8847b40fa86074",
+      "identifier_fingerprint": "24a26ee803c061bb8fde112c56d799df"
+    },
+    {
+      "id": "3eb198a5-9aab-4f28-9df1-c4869c6a12db",
+      "product_fingerprint": "f7acf181eaec14979aa34d6a3e55efd6",
+      "identifier_fingerprint": "60c5f379d97a1fd76d4cd0150e4d76e1"
+    },
+    {
+      "id": "3f3542c0-e82b-4306-a9e0-85df313a78cf",
+      "product_fingerprint": "7e1e0fcbced661c39cc2076ca33ad738",
+      "identifier_fingerprint": "362d1cd39a411b68c2411fe18f8b9aff"
+    },
+    {
+      "id": "3f3c7d89-9e7b-4e91-85f7-d3c58d304918",
+      "product_fingerprint": "be8c514e37b03c08b434b1c1ab034efe",
+      "identifier_fingerprint": "7701920b4923f689e8f666b51fe275d0"
+    },
+    {
+      "id": "3f75e6f8-7659-42ce-bcd9-3c21af5d2de4",
+      "product_fingerprint": "b8c5ec6ff95b78a444c3f3e63914ed63",
+      "identifier_fingerprint": "895174e0c92430433285582449c14e17"
+    },
+    {
+      "id": "3f9328d8-1f6a-44e9-affd-fc219d1e691a",
+      "product_fingerprint": "93f9ac04f9fd1f37f2d4ab2dbdfc040d",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "404fb3e4-04c4-4089-8120-8c3e92300a3a",
+      "product_fingerprint": "f385b0704453b7134eec6cba9a645d7d",
+      "identifier_fingerprint": "ef261c6d789a6467a33941b67f02a2e2"
+    },
+    {
+      "id": "41b99629-5a1c-402f-a486-d41780e89e66",
+      "product_fingerprint": "53fc0b2df977f6b45c7556fa90ef87cb",
+      "identifier_fingerprint": "455413324beef3dae752182831793b17"
+    },
+    {
+      "id": "41e09958-5a1f-4997-b99b-f8384b7a8c0c",
+      "product_fingerprint": "ae2bfb862b08046f626be460a8be9878",
+      "identifier_fingerprint": "d5f08b33628be5241f91ad3b0c501e6e"
+    },
+    {
+      "id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+      "product_fingerprint": "76085eff1a4c51eca49c3a88537a8c33",
+      "identifier_fingerprint": "3df6aeed677de6fc04db9cc5c71a706f"
+    },
+    {
+      "id": "42b9eba7-d0e3-4d02-ae2b-7a1612a561fe",
+      "product_fingerprint": "44dfe8c412eef8bf5945994eca10c8ea",
+      "identifier_fingerprint": "09b498f5279b100a08f68446db14c82d"
+    },
+    {
+      "id": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+      "product_fingerprint": "f31fdb87377ead28b8bcaefb5c96ad76",
+      "identifier_fingerprint": "a956b84de00cb5a9a7558d94c86dc163"
+    },
+    {
+      "id": "43cb9fbf-4b04-4554-a86a-7cb168536233",
+      "product_fingerprint": "4d1b6beebf73d699eed934c200e46a4a",
+      "identifier_fingerprint": "b9f36cae0f3e5a60c5ec84235a4da338"
+    },
+    {
+      "id": "4417217b-2843-47aa-8815-04a125b08341",
+      "product_fingerprint": "bd43c59f8bb34f3e4c73fd47591c37d4",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "4506954b-128a-473c-866f-54a300ff23f4",
+      "product_fingerprint": "dbaaf1bcbef01a00fb8f65febe8e1bcd",
+      "identifier_fingerprint": "6caf127b5933b1c7f455ddb0c8f6f884"
+    },
+    {
+      "id": "45f4fe15-c439-476d-8a86-3b2aac5053bd",
+      "product_fingerprint": "135bdfc725135f32a6606e59d73773c6",
+      "identifier_fingerprint": "01916b039d21fe0f785b275db58d4391"
+    },
+    {
+      "id": "47795618-40e7-4ef6-8034-0fd8eb747575",
+      "product_fingerprint": "c099a333e2745b5fadf8a6217741f862",
+      "identifier_fingerprint": "65d9546581882f31c7ebbdae7d3fdeaa"
+    },
+    {
+      "id": "4827c174-92e9-4121-ab70-843d5c037ad0",
+      "product_fingerprint": "71e3e8b2a5a37e0d2b3ef3b2aa5626d0",
+      "identifier_fingerprint": "4f44170a13e429075ce03bd1ecaeb2f1"
+    },
+    {
+      "id": "483b41d6-632c-4efe-9bcc-488c80bf5bb7",
+      "product_fingerprint": "433d91ed747474201376290a4a9ee702",
+      "identifier_fingerprint": "d6e2c89d57dfc1f1ca04aa1360f9eeff"
+    },
+    {
+      "id": "488685e8-4718-4cb5-a826-9bcb75014b34",
+      "product_fingerprint": "8690adee42f64fdf1ed25cef9a5cb8ed",
+      "identifier_fingerprint": "4d145c0f986353f8684bf96e743a6772"
+    },
+    {
+      "id": "4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946",
+      "product_fingerprint": "00f28f5239930a37d402e82ff9a08054",
+      "identifier_fingerprint": "059c20355f94c8c5d9515106b8ddb61c"
+    },
+    {
+      "id": "4a45948b-53a6-48ac-9c02-20718c1d19c4",
+      "product_fingerprint": "d265c0e179c9e3195aca183803540a9e",
+      "identifier_fingerprint": "78609c4aa31800ce61b82e06e5083d97"
+    },
+    {
+      "id": "4a7b5b38-ff8b-4e0a-aaa2-4f5031797ee3",
+      "product_fingerprint": "d64a1df7c61d7b2abcd51e911938a176",
+      "identifier_fingerprint": "3612e390ec59c970629cb0a9a172f575"
+    },
+    {
+      "id": "4a95e1de-54e9-4fcd-b227-72a5824d13c1",
+      "product_fingerprint": "fa793661c44625e66c3ab125bd47d2b2",
+      "identifier_fingerprint": "26340250a8e2fa1afabc0e128a654ef2"
+    },
+    {
+      "id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+      "product_fingerprint": "4cad685263c0a10c28b89a7615bf1db0",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "4c4980b7-99e0-4225-90fb-d55082a1f264",
+      "product_fingerprint": "1799c8acfb5e99886e30c010fe8132ea",
+      "identifier_fingerprint": "4a1c34265c76a24b5468595744806339"
+    },
+    {
+      "id": "4c9bde95-3594-4ce7-bb02-29394ab7ed08",
+      "product_fingerprint": "ee63fd2c0af6cffbf0a62f208b23599b",
+      "identifier_fingerprint": "c7a366816901db64c348dae68ebc3eb2"
+    },
+    {
+      "id": "4e76bb70-b521-48e1-9708-4edc48b17c73",
+      "product_fingerprint": "c82b17f05025c1ada76277c80cdd71b4",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "4e9428b9-8cc9-4db2-89b1-cb272aa9a4d6",
+      "product_fingerprint": "6f101d76d6455d069d8e58ff0a8ffa0d",
+      "identifier_fingerprint": "6b18e1ae6bd1d61dc6e081eca0e0a114"
+    },
+    {
+      "id": "4e99706a-2232-4ee6-ba1b-9ca1029a7364",
+      "product_fingerprint": "4789a8caf5614edeb40785c4db00e54b",
+      "identifier_fingerprint": "bac20e1b2729748a60944200aa54382b"
+    },
+    {
+      "id": "4eddfc54-3704-4a3e-a9b7-0cff91538863",
+      "product_fingerprint": "bf1058c9bf17afa4562039312896cace",
+      "identifier_fingerprint": "6bdccf16446981d60be22ee18636406c"
+    },
+    {
+      "id": "4f373d4f-fef8-4434-91c7-055133d8427f",
+      "product_fingerprint": "aba63d5c0902ae0b400a12703fcfd6eb",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "4f67cb6d-4b28-490b-9817-e8fc8e91b010",
+      "product_fingerprint": "31f45afa11d45967de20c04e36f03a8e",
+      "identifier_fingerprint": "da137c2e646137c880648254e3be2746"
+    },
+    {
+      "id": "4f6dc4e4-d163-405d-9c68-3b2467090078",
+      "product_fingerprint": "2c557346f0dcef698e9467c4d8514da4",
+      "identifier_fingerprint": "36460ac6128f67e0f7901b9e3138bb18"
+    },
+    {
+      "id": "4fca59e5-fbc4-4132-a821-dac6ff0cdb68",
+      "product_fingerprint": "61a56def52ad88fce2d25e9d1485e41d",
+      "identifier_fingerprint": "b15a1029c03b50b0ea5375e14b484c94"
+    },
+    {
+      "id": "4fd5f4c3-83b2-4893-be8c-ada29b8ca718",
+      "product_fingerprint": "3a936eee11d2490df8220e20185fb1ff",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "50951ef2-e16a-4a51-85c5-a709aa64c03a",
+      "product_fingerprint": "798e06f34314dfe8076aab32897aadbc",
+      "identifier_fingerprint": "fe467eec673b613182937dea4c1ee244"
+    },
+    {
+      "id": "5122791e-6572-4ed0-b4c4-a7183912b7cf",
+      "product_fingerprint": "85e981a007723934f37745f2392da583",
+      "identifier_fingerprint": "045db9db988198f37c0d3804c8433dd9"
+    },
+    {
+      "id": "514ffd65-e4a5-4f7f-96c5-0f194e3b3b36",
+      "product_fingerprint": "eb9f7249fb804a8f535b831a3dee30ee",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "515de93c-1c77-465d-ae0d-2a8d6ddb3d73",
+      "product_fingerprint": "e16ea7325f7d7fa4b593356d40ab34c1",
+      "identifier_fingerprint": "0529e1d536dd420581121ad22e4203b4"
+    },
+    {
+      "id": "517dca50-5d55-4038-ba1d-f9b745708327",
+      "product_fingerprint": "32de6f2551b1bdff952b6a1c18a6c4c4",
+      "identifier_fingerprint": "a42b276cecfc4333bc9658ddb8026b67"
+    },
+    {
+      "id": "51a0b647-2794-49a3-96e1-e7695432561e",
+      "product_fingerprint": "ec6c8d005b8448a6f7f86b5815f7855a",
+      "identifier_fingerprint": "306eea18666bc8c99134ca6e0d98a95a"
+    },
+    {
+      "id": "52264c47-f339-49db-9fb2-207d1ad3b470",
+      "product_fingerprint": "dc46106167a90dd775b4ef8fc97e3b23",
+      "identifier_fingerprint": "ae27186b322ba5d52f8c518c15dd02a7"
+    },
+    {
+      "id": "5516009a-eecb-42dd-87f6-07c560161136",
+      "product_fingerprint": "e7a56fc5ae9eb3a0bf44a474d1cccb30",
+      "identifier_fingerprint": "d08b0262260e1190d77fb14f0e761855"
+    },
+    {
+      "id": "55727898-2a5e-4f01-ace1-bd91521d98ab",
+      "product_fingerprint": "1f4cd84be851635c154a661a4b602ce8",
+      "identifier_fingerprint": "7f0a733ebe47e33b0c18b242fae58236"
+    },
+    {
+      "id": "55c39339-bac0-4899-9499-ee96fa0bdad8",
+      "product_fingerprint": "3ce49ffe8ca2ffc2031a95b5c42efc60",
+      "identifier_fingerprint": "79c6ce6dcbab54479f8abc1711e42496"
+    },
+    {
+      "id": "5767f7a6-757c-40fa-b990-8e0a1abaea17",
+      "product_fingerprint": "ca96a34b1d6bb0f5193fade4d67d041a",
+      "identifier_fingerprint": "2447e6cc7af394495eca60562cc0b99d"
+    },
+    {
+      "id": "57848cf2-6113-4aa4-af9f-2f980ccc5850",
+      "product_fingerprint": "e5ac7eacb704471151ea45b8b02d4b89",
+      "identifier_fingerprint": "46f111fef78da1efaf29da54ea314166"
+    },
+    {
+      "id": "57bae8c8-0ebd-4722-b955-c760d8ffcdbb",
+      "product_fingerprint": "31e11757c586d390b3e43ad086dee3ec",
+      "identifier_fingerprint": "9f6406da8806d68793825b1593d1c266"
+    },
+    {
+      "id": "57ec7a8e-aa1b-4260-81d6-7ec3dbc899b8",
+      "product_fingerprint": "a92aa5aa632b7884d97fb3e7853bf6f3",
+      "identifier_fingerprint": "8cfb8b95b3498b8fe76e185d214f4ef0"
+    },
+    {
+      "id": "5827a3b9-a488-4c74-b13a-4d655f94f1c3",
+      "product_fingerprint": "d33b98cfbb7822d39da6183243cdf90a",
+      "identifier_fingerprint": "94a0f24191b9ef21116df58d2eb14b91"
+    },
+    {
+      "id": "58aa2f19-b23a-4e09-ab0f-68c359371c9e",
+      "product_fingerprint": "81733b4c2c86bbc82eeaa277d10c4ea8",
+      "identifier_fingerprint": "48f91d0c6f5a04968dc8e95d2d8b7365"
+    },
+    {
+      "id": "5a0b573e-bd4a-40a6-a328-9ceb8024109b",
+      "product_fingerprint": "4c28d6617e13c7467c3f8c70e94e5e4f",
+      "identifier_fingerprint": "a82747cd2cbd83b72034993bdf1e516c"
+    },
+    {
+      "id": "5a9f4b7b-69d9-4e9a-8bbd-2dfbae9a5df3",
+      "product_fingerprint": "5ccd35cd89c0bc7a1472ae6eafd182fc",
+      "identifier_fingerprint": "806cc4db85d290426444976d99e40be2"
+    },
+    {
+      "id": "5ad6c978-fd27-469e-9f26-ff3f05b9f67a",
+      "product_fingerprint": "1687291d90e01022f446c9a2982058ef",
+      "identifier_fingerprint": "05457efba52fa6c9a6d810dfceb97468"
+    },
+    {
+      "id": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
+      "product_fingerprint": "2bb071e73bc83386d265e4644b0c00cb",
+      "identifier_fingerprint": "d6935df9aca7256745236d1a956e4066"
+    },
+    {
+      "id": "5effc311-25d7-44dd-8c16-b93c182068d3",
+      "product_fingerprint": "badd3acd85805293dd86efc6e34d677b",
+      "identifier_fingerprint": "43e664e9884dcacc3e24e0cf2fdfb322"
+    },
+    {
+      "id": "5f4f1300-bc15-4ce0-9ed8-035feb606bde",
+      "product_fingerprint": "f3a134f8fd6346730b0c57730a94d3c1",
+      "identifier_fingerprint": "17a24e1c496a2e24878df46b75bb3331"
+    },
+    {
+      "id": "62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d",
+      "product_fingerprint": "5ab0aecf63b4d8d2d4f86d039d743b91",
+      "identifier_fingerprint": "9b0adc54f438fc1e0c48937797fe1bd9"
+    },
+    {
+      "id": "63239c38-5633-4062-9e8d-d528ee71502a",
+      "product_fingerprint": "adb5acff9796d6fa92589f126b356877",
+      "identifier_fingerprint": "57047975ad7343243981cda15ca04dc7"
+    },
+    {
+      "id": "648ba537-5180-440e-81ad-2b310b447d87",
+      "product_fingerprint": "5400eeb4b63d7c5303f578146f40cfbd",
+      "identifier_fingerprint": "dc05080985c3f6f63aeacd5581dc9412"
+    },
+    {
+      "id": "64fb44d5-8701-46ab-bcba-f1747f071e48",
+      "product_fingerprint": "04e9500a85d0d8416b4060841972ae74",
+      "identifier_fingerprint": "8a4249ff7efa1c733d8c4d8975781392"
+    },
+    {
+      "id": "6513692a-b54f-4acc-9c77-5799d3dd200c",
+      "product_fingerprint": "6848f446b48619a0c6208b0f760c5a9b",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "663acf09-7090-40d8-9411-71154b9d60f3",
+      "product_fingerprint": "1f7ad3dda1390cc6cfb7b538ee94dfbc",
+      "identifier_fingerprint": "d450c0b2dce76c5ecf75021b32e50f58"
+    },
+    {
+      "id": "678119a0-9070-4faf-b9ed-7c0ac008767e",
+      "product_fingerprint": "5c9dca832d56f484473a00efb4d00436",
+      "identifier_fingerprint": "e2f0d8661e66b12faf138709c5d5a78d"
+    },
+    {
+      "id": "67d95443-490d-47fb-876e-8d9eecf015ae",
+      "product_fingerprint": "686ddf82fe7d24531b17a13fdd727dab",
+      "identifier_fingerprint": "4e7ba3780bad5d97a5d6f4175a871bec"
+    },
+    {
+      "id": "686df4f6-4e8f-48e7-b823-5b1e89dd9cf2",
+      "product_fingerprint": "71a4f7d7e8cdab5ccfb0fb55c0f8c358",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "694c4568-9235-4893-ab54-96a75b3c4f27",
+      "product_fingerprint": "27be6d7dc39821da22817850a66e156a",
+      "identifier_fingerprint": "49397cc2d93c7d1bd51c82559a84f678"
+    },
+    {
+      "id": "695414e1-3435-4304-943b-76677408980c",
+      "product_fingerprint": "3f829174847ff75ddf874d6bbbd88d6b",
+      "identifier_fingerprint": "ad6b60702fe332eb5d378134e3ef1360"
+    },
+    {
+      "id": "696401be-16b5-4261-836f-28b57c1ecd59",
+      "product_fingerprint": "3fde73b45bd8fca64c2cb147ca437bb2",
+      "identifier_fingerprint": "dfdc9839724283252795f82520d2fda6"
+    },
+    {
+      "id": "6a1116a0-731f-46bb-9dd6-a0db89de5a13",
+      "product_fingerprint": "d18e681d8bfa8469c7bd0cb81f695229",
+      "identifier_fingerprint": "8ce1f8aee99e859da7d61fb129ba993f"
+    },
+    {
+      "id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+      "product_fingerprint": "323af695ca193be7492e603f385f2397",
+      "identifier_fingerprint": "e683e0f76eac6005a21495716825ba8b"
+    },
+    {
+      "id": "6b01025d-9e72-4514-b42e-bbb6065fbe1c",
+      "product_fingerprint": "286a28c5fe78d4197b6e2422c2eb4bd5",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "6c51a883-85ae-4778-bb17-2f1318e3c969",
+      "product_fingerprint": "39587c3af1a0e6adeedb8b99e4f9d053",
+      "identifier_fingerprint": "05123370690f22615d4c92890c30ecf7"
+    },
+    {
+      "id": "6d6c3ff2-9d12-4f27-a56f-b5b72cf53318",
+      "product_fingerprint": "011066ecbe9d59b23fedb76f348848dc",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+      "product_fingerprint": "262084767cd3dae77bad81af0fbd09b8",
+      "identifier_fingerprint": "d54e167b7dbc50a71b84bbf48abd8fcf"
+    },
+    {
+      "id": "6fde3fe2-3850-4502-b9f2-ebb17eb13bad",
+      "product_fingerprint": "b082f5689bc18c9852cb7c41c71b3e82",
+      "identifier_fingerprint": "1ca58f6f049e5e14e98a89be071c1ba3"
+    },
+    {
+      "id": "70ea52bc-2194-4bb3-82a8-3f4a2aede041",
+      "product_fingerprint": "bf8e277a91fd66705bc0c6f36b80c8e6",
+      "identifier_fingerprint": "6c19f358840cabd56a7ff45da7fe652b"
+    },
+    {
+      "id": "71302fae-decd-4b10-80ea-148d5998e2fa",
+      "product_fingerprint": "ccc4b625e792410829bba0239e31f5c5",
+      "identifier_fingerprint": "0547f350bbad3a958f75670e8e61f71c"
+    },
+    {
+      "id": "716a4f4e-6ba4-4742-a1cf-75e90ae1da3f",
+      "product_fingerprint": "22399c5f44557bffd57a35f76a1517ee",
+      "identifier_fingerprint": "148a32a59005485e81439c298e7ea414"
+    },
+    {
+      "id": "71d9bccb-74c7-499c-b5de-13ceef57ecde",
+      "product_fingerprint": "9a4bd1e8f4b04cd28f7c420fe5772312",
+      "identifier_fingerprint": "ad552cfa9b523097f8ca4ac6f18748b5"
+    },
+    {
+      "id": "7200bb0b-7463-433b-86c8-744f5c1431de",
+      "product_fingerprint": "ff849436759d0371ef1a4835914a4921",
+      "identifier_fingerprint": "b3dc7633e2d2562a73a0563323a004eb"
+    },
+    {
+      "id": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18",
+      "product_fingerprint": "4561df323470579de29e2ad7b2008ec5",
+      "identifier_fingerprint": "d292d3ee1ed68a5c5193fa7f28f1b770"
+    },
+    {
+      "id": "744de604-d266-453b-a56b-eea92c5ca565",
+      "product_fingerprint": "261e6d38d12ca36aa8f10347551f26fd",
+      "identifier_fingerprint": "1f6741e6115004616822aab81601a1d6"
+    },
+    {
+      "id": "7539ab79-f4f6-49d7-9269-08034ef4de96",
+      "product_fingerprint": "8ef8333eccfc9a146dc593c9de96e5da",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "75a3dc03-a2d1-4a5a-aa66-50edff642c41",
+      "product_fingerprint": "1f27f5f9fd9be7acfb16302b297abf07",
+      "identifier_fingerprint": "3af76199eba08a4bcc7057011395ba07"
+    },
+    {
+      "id": "76f3611b-2dda-4a90-bd3c-c9b1577ec5aa",
+      "product_fingerprint": "2f30da07e3aa409c1190ecfc508e5cc8",
+      "identifier_fingerprint": "158aa08c8834dd0ab0e2cdb8fd0e8c16"
+    },
+    {
+      "id": "770ee16b-154e-4c60-adf8-e9831718f6da",
+      "product_fingerprint": "e295ea1a3caa04c72961f222e8e209bf",
+      "identifier_fingerprint": "2d7a4637d8fb30fe0fdfd4d41445724c"
+    },
+    {
+      "id": "786a1396-914e-4739-a32c-1c3ead39a3d1",
+      "product_fingerprint": "a6d93a0ac4b1b19e5e33607108de1a0c",
+      "identifier_fingerprint": "ba9b2edbfa37f09615332610df402f38"
+    },
+    {
+      "id": "78e6f1b2-7262-46af-b689-a92af6702739",
+      "product_fingerprint": "8e881931ddc5921e1ab38a3601c5cba9",
+      "identifier_fingerprint": "8b5c8223a5531de1155c571d69a92e61"
+    },
+    {
+      "id": "7964b930-7e88-4f93-89d3-fa437f8e753c",
+      "product_fingerprint": "bf13b39094bd1ee811f8a7b093fa456d",
+      "identifier_fingerprint": "7a2619fe3186ee497011e16283c34dc9"
+    },
+    {
+      "id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+      "product_fingerprint": "f1604c9658bddb56a864fccc2957008f",
+      "identifier_fingerprint": "abc838908d87c90d20c0f7104ccdfc4a"
+    },
+    {
+      "id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+      "product_fingerprint": "5d695b7881d86e9146fe88ac093abfe3",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6",
+      "product_fingerprint": "c6b3094d539ed6f64aacc880fcb340ab",
+      "identifier_fingerprint": "ed6786a7e44c2894f70582ab061b9bba"
+    },
+    {
+      "id": "7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+      "product_fingerprint": "75abcf4e35c29b6d30028d46078c622b",
+      "identifier_fingerprint": "baaa5f47ff1002c494cc23203eab901a"
+    },
+    {
+      "id": "7b5ff358-1b3b-411d-9220-5e6d30543235",
+      "product_fingerprint": "6ec1c4d207ab4a5ccc7240ead0c7dc61",
+      "identifier_fingerprint": "ea71e8da19c5995b50633e05914bacd3"
+    },
+    {
+      "id": "7bd5f94a-fb02-4505-a53a-2b100c265a5b",
+      "product_fingerprint": "2d2481e27dbaf393f0406ec3605dbdb1",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "7c057f58-3e9b-4347-b4c1-f04cc4213f94",
+      "product_fingerprint": "78557482884732ecb129298119da56dd",
+      "identifier_fingerprint": "3c925a636248cf5a7402c173ce32cbf7"
+    },
+    {
+      "id": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8",
+      "product_fingerprint": "12f8093f35c8aa84d176fa88011a776f",
+      "identifier_fingerprint": "d1749d92c9f84e1fca127432ed9505f9"
+    },
+    {
+      "id": "7d65ed50-898c-40c3-8865-ebe5688774c8",
+      "product_fingerprint": "144c216ce6c7b15706551ed4ba5e918c",
+      "identifier_fingerprint": "90ca6305333ef5f25fa2aad22fa43536"
+    },
+    {
+      "id": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12",
+      "product_fingerprint": "b910ad3001e58cb97bd43a82764f787b",
+      "identifier_fingerprint": "a2cdfd5c7454c235f84c7c5fa0eedfce"
+    },
+    {
+      "id": "7db2bb60-0af6-4198-adec-28fad13251a6",
+      "product_fingerprint": "1ca51756aea897344ff0fdc98e1c1f6b",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "7dcde56c-40e7-4e84-86b7-f6ac3d407a9d",
+      "product_fingerprint": "775a8e14b732c812922ac88e32a50b28",
+      "identifier_fingerprint": "7f2e5a9af57020d88e721b87cc09fae4"
+    },
+    {
+      "id": "7e95671b-41a7-4f5c-9188-e535e46678ba",
+      "product_fingerprint": "5c4688dc6f7c7eaebf6f3364654667cc",
+      "identifier_fingerprint": "24211aa4d8d3e41a190ab0f4d39d368b"
+    },
+    {
+      "id": "7f5207e6-d281-416e-922c-3135dd9a8cc8",
+      "product_fingerprint": "f59b310f8c511ffa63dd49be76421e0a",
+      "identifier_fingerprint": "39eaa4a3300f30564efc4bebb1997777"
+    },
+    {
+      "id": "7fb31d10-ff21-410b-9dc2-2d1ad34b9130",
+      "product_fingerprint": "b0f6403c6b465241e64d24815fcc6427",
+      "identifier_fingerprint": "d3d7bf7dde7302e44851773df844d2dd"
+    },
+    {
+      "id": "8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe",
+      "product_fingerprint": "9742981ef56d8ddaf1aa706092ef94f0",
+      "identifier_fingerprint": "5a70f6ae1865ad30f459072ca75e1378"
+    },
+    {
+      "id": "82a0d0bd-784f-4be0-aa6e-2d929b088912",
+      "product_fingerprint": "17eadacbe46362c3cc248bdd986dce65",
+      "identifier_fingerprint": "96d16c4f5ddc54e316efb2ec6779cb24"
+    },
+    {
+      "id": "82f9dcba-0422-4932-a879-c2bec0113e55",
+      "product_fingerprint": "7953804868b0a9c8170cd474363109c2",
+      "identifier_fingerprint": "c7d0a94a32f131bda24ac403b224acbc"
+    },
+    {
+      "id": "838884a1-5586-4c7f-9294-7c9606a4ef1d",
+      "product_fingerprint": "6a4a77ac4cfcaab4ff37df5e69d7bc8c",
+      "identifier_fingerprint": "daff17f84cf0ce5661eb5d1e0f444c4c"
+    },
+    {
+      "id": "8686e8b6-3b9b-4770-b0f0-c8d9f5eb3a59",
+      "product_fingerprint": "e172cfc50dd8bbc3b83903f23e42b1be",
+      "identifier_fingerprint": "0a707bb79fe9b937ae6c5a8d0b05343b"
+    },
+    {
+      "id": "869abd97-a499-4f39-97e5-2722773e46ae",
+      "product_fingerprint": "e44ce1ba5a305a380c7890a681efee6a",
+      "identifier_fingerprint": "8e10407423f2aeb1310ab1f4dc4aab3f"
+    },
+    {
+      "id": "86f44889-b2c9-40a1-9190-58d7f738b6ca",
+      "product_fingerprint": "7b097e33ce9a250241834eae54aa4512",
+      "identifier_fingerprint": "58f5bc43b910411366281b6eb8efa03e"
+    },
+    {
+      "id": "8715f0f5-9104-46ec-b450-e73f1441c1fa",
+      "product_fingerprint": "f8a603ebe6fe4bdef8bf0607b4a28300",
+      "identifier_fingerprint": "16ede11ffea5468f4a1d3eb669847633"
+    },
+    {
+      "id": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
+      "product_fingerprint": "d3f234dc5f5151fcf20c4111eaebd5e1",
+      "identifier_fingerprint": "93f7a5d94ff36f544991830ad6e3a4e5"
+    },
+    {
+      "id": "898a5a1e-1cf1-4812-8f9e-f14563a740ca",
+      "product_fingerprint": "7f7eb5ed462198c854ee25f7d04ddb77",
+      "identifier_fingerprint": "7753ddcb38301845a66716c98982b905"
+    },
+    {
+      "id": "8a1f6818-84c7-4ed8-929a-221f0352b971",
+      "product_fingerprint": "1f2769863dc7913faf437f28bbed2914",
+      "identifier_fingerprint": "f240750bccea6dfca252cc3f6523b3ab"
+    },
+    {
+      "id": "8c3eda97-5009-40bb-959b-1a7d90f48b09",
+      "product_fingerprint": "ddeebcbcd119ce64eda9911077c41d19",
+      "identifier_fingerprint": "b3bb284b2f9a7649e0af945c80545eeb"
+    },
+    {
+      "id": "8df49303-e1c9-4519-9a5f-4f9bc276ab5a",
+      "product_fingerprint": "3533fff271109be911b412c93f3e557b",
+      "identifier_fingerprint": "a1fceed54b9cd8728e8ec4f24d2c9db5"
+    },
+    {
+      "id": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+      "product_fingerprint": "0bf6aea5c746f6bf00524ead4091178a",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "8f84eae5-222d-4bbf-9ab0-f30361882a95",
+      "product_fingerprint": "c2d0daf696f138ed3501091ea2a4165e",
+      "identifier_fingerprint": "f6a8ffcffff682133001acabb613834f"
+    },
+    {
+      "id": "90e10088-8226-4e07-b197-3eab6b61d7a2",
+      "product_fingerprint": "f1fc03b40685fc6b78328c45422b25a8",
+      "identifier_fingerprint": "b144d378c2538419fffc814e4504f06c"
+    },
+    {
+      "id": "915aa362-6479-41f2-bb59-0260493b3d58",
+      "product_fingerprint": "f944273284a062a3b29f930da50b6a53",
+      "identifier_fingerprint": "e1386ea8b7f2ed11d294044ef9d48dca"
+    },
+    {
+      "id": "917786d2-cf02-43d4-8a9f-7f872528d581",
+      "product_fingerprint": "9366dde8201dc70bee5de1df2884d210",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "931892fb-cc29-4e50-b402-6aae0a494389",
+      "product_fingerprint": "20a49e8a80a60b52e72355f0b8af3017",
+      "identifier_fingerprint": "c4b21e34f78f0844a30115cb42560164"
+    },
+    {
+      "id": "945ecca3-c4f0-4426-9af5-a5a8482b3b27",
+      "product_fingerprint": "8dfde28031f6ec053fbd495c74b4bd58",
+      "identifier_fingerprint": "2e7367c66fe93f744ed8758386c95bf1"
+    },
+    {
+      "id": "94cf6959-a53b-421b-9f0f-05efc239171c",
+      "product_fingerprint": "0f41678784cb2cd89a4f47a79227f3d9",
+      "identifier_fingerprint": "e97d1fd6b7b799b7349f68813a2a66a9"
+    },
+    {
+      "id": "952a4834-e451-4dc3-ba19-ebb8927eb5e4",
+      "product_fingerprint": "b9c1427baf4ee7d9085788a66cfd5cc5",
+      "identifier_fingerprint": "0b57ab917c290b583eedf9b5afbbcff0"
+    },
+    {
+      "id": "958c37a5-7581-4b3a-9fcb-9d086238316e",
+      "product_fingerprint": "98e624aadf08f0eb2b43949c828095b3",
+      "identifier_fingerprint": "6b24653d6633116467c33d1fefd227e0"
+    },
+    {
+      "id": "95e47992-b45b-4847-ba87-b8c3e608fc63",
+      "product_fingerprint": "46150c3a87123a8e1e56eca14f36e2b7",
+      "identifier_fingerprint": "a481e65c99eca967941bd4c72a1f3276"
+    },
+    {
+      "id": "961e3935-f823-44e7-8601-900c62855d3d",
+      "product_fingerprint": "d65f08c243517873ac5458eb29009448",
+      "identifier_fingerprint": "d4aef4f24d74e2d5f7bf2ed02e7240a9"
+    },
+    {
+      "id": "96f4cf13-7a71-4924-b44e-9d5612d55d32",
+      "product_fingerprint": "53a8bc6bae885ec0315fca57a658d085",
+      "identifier_fingerprint": "5656c843e54d151d17c060cd96eb228b"
+    },
+    {
+      "id": "970aff48-a7a7-46e8-bad5-4f0600631329",
+      "product_fingerprint": "7caa63697e2d3c4b1fb6492ff4241199",
+      "identifier_fingerprint": "41fbe390e9cbcd65a190aa241e880387"
+    },
+    {
+      "id": "98d08c22-97d2-4e06-872f-9f9447530452",
+      "product_fingerprint": "fe678b47ce3da120d3265c5c2437d4e1",
+      "identifier_fingerprint": "9a2d7cb68ff587648e1127bfeacde77f"
+    },
+    {
+      "id": "993f0e55-2450-4557-853d-e6e23ec0d1a9",
+      "product_fingerprint": "9d1c51d7c92a0a92758d84361f6146fa",
+      "identifier_fingerprint": "deff4ef673394871307d3560a4c67428"
+    },
+    {
+      "id": "996eaa2a-ea4c-4dfb-b455-2782e82d9a44",
+      "product_fingerprint": "b6ef297cc17f92b430f3845a37829f4d",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "99de5b38-3e80-4360-889c-2505f46a7243",
+      "product_fingerprint": "92afe08da985b9a43efdc14b736cbc79",
+      "identifier_fingerprint": "227708fdb7edea07fcf3c50520abaa55"
+    },
+    {
+      "id": "9b664b11-fd11-47e3-9b7e-76e34736b43e",
+      "product_fingerprint": "72141e8139fa2772efb3b824c65e3a4f",
+      "identifier_fingerprint": "86e615bdebf2ab7f01573567b67f860a"
+    },
+    {
+      "id": "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+      "product_fingerprint": "04ef61215e19f256cfdfb780a57ac6b9",
+      "identifier_fingerprint": "2654dac2bef314af9bbbc6cc0ba44ab2"
+    },
+    {
+      "id": "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a",
+      "product_fingerprint": "e076d1f43200be103c4a5930ba83115d",
+      "identifier_fingerprint": "562fe0aca3d068b7cf0ae03d5142f733"
+    },
+    {
+      "id": "9d7141bf-bb7e-41e8-a206-38ee5c42fdc6",
+      "product_fingerprint": "5e9b8daca0c9b878b5c8854f252736d6",
+      "identifier_fingerprint": "68e7a0c80d7f41de9863d80569f242af"
+    },
+    {
+      "id": "9d8d4709-4041-495e-98ee-e0261fa30e27",
+      "product_fingerprint": "233c15943c011adafed906475bbbcee5",
+      "identifier_fingerprint": "2dd66cb1983e6805a5d42dd6c494eb78"
+    },
+    {
+      "id": "9e1442c9-4ab8-4819-a851-66859a98ed80",
+      "product_fingerprint": "d74d2d6417c5d60caff43064ea539a39",
+      "identifier_fingerprint": "4a1b5042768901f6414f1ec943da3ad2"
+    },
+    {
+      "id": "9f1ee875-95a2-4ab0-8bc5-23d1f12bd6f9",
+      "product_fingerprint": "2704f3029507752f03013f637e325562",
+      "identifier_fingerprint": "0382041007ec6c4ec882506544f85716"
+    },
+    {
+      "id": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+      "product_fingerprint": "fe75208c77b4ec7826fb0884f798c495",
+      "identifier_fingerprint": "3821767d790f0cac83f33eec5fc9a749"
+    },
+    {
+      "id": "9f94c225-61ec-455d-b303-f39e885e222a",
+      "product_fingerprint": "7675d1edaecce613cd0cc7835e974ad3",
+      "identifier_fingerprint": "f7b4646a51b6a2fb41a5c7edb312dd02"
+    },
+    {
+      "id": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+      "product_fingerprint": "e58cfa0ee734dd8db468eb8a063b7377",
+      "identifier_fingerprint": "a6d2c9ed2c68a34b13e079a780e7aa67"
+    },
+    {
+      "id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+      "product_fingerprint": "6c60504824dc7e1670facba461c3d704",
+      "identifier_fingerprint": "1daa23435515061824ee572c135d61c6"
+    },
+    {
+      "id": "a11855eb-64e5-438f-8880-1d3573efa9fa",
+      "product_fingerprint": "ae343bc44bbb02fd55c28c2ffd22a083",
+      "identifier_fingerprint": "dafbca6675048c0bd24b9fec783e8546"
+    },
+    {
+      "id": "a17d3783-2854-4911-bbfa-b2f3ef7f95a8",
+      "product_fingerprint": "ed80618150e2f5551fbdf26dd409a2c0",
+      "identifier_fingerprint": "3a17109553b4c0000dfb737db1b31178"
+    },
+    {
+      "id": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+      "product_fingerprint": "df4f2978b6f353a3afbf4fe6043796fc",
+      "identifier_fingerprint": "51bde805c44a2e5a3aa10e5593487197"
+    },
+    {
+      "id": "a1d705b4-b973-486d-b853-2c795b6db681",
+      "product_fingerprint": "73da4092df9ee28ef6e711f31f78d3f4",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "a3b21686-fe35-46f1-b560-b8a563dc96ae",
+      "product_fingerprint": "ff0572b3f8abaf7a5f6deeb7f0a3fa7f",
+      "identifier_fingerprint": "7bf64eee049119306dbe140f46a96613"
+    },
+    {
+      "id": "a62ae91c-69c6-466e-827e-350f518d73b5",
+      "product_fingerprint": "97b46b951d6655ede91e51fa0ebf53bb",
+      "identifier_fingerprint": "890b214959ab410b59b5180bd94f99fb"
+    },
+    {
+      "id": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+      "product_fingerprint": "fcafce3543a9dfda09dfa7e5b03fee42",
+      "identifier_fingerprint": "6b07edced21928fa87aba6f31d377202"
+    },
+    {
+      "id": "a67c4125-2195-4cb6-a6d0-8bcd495a74d4",
+      "product_fingerprint": "2c7a08e01aa514aa96f2de88040ff43e",
+      "identifier_fingerprint": "8923fc85b3e6cbeeb0c0bcf6c36d7ca6"
+    },
+    {
+      "id": "a72d630d-547a-465f-9846-3006b38af0a2",
+      "product_fingerprint": "b6616363d402ea53854985cbd9de938d",
+      "identifier_fingerprint": "9c32fcb01c41dfe1b2232db855741205"
+    },
+    {
+      "id": "a79513be-e34b-4a1e-b7eb-b3d4b58160be",
+      "product_fingerprint": "6ea4f5cc42d9f8d118a31563851ee813",
+      "identifier_fingerprint": "20ac9d743dea431bf545911698f2b910"
+    },
+    {
+      "id": "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+      "product_fingerprint": "cd98059dbd73a77789b2f11fdc729aa6",
+      "identifier_fingerprint": "45e3e63cec5e601f51c3f7482f9810c0"
+    },
+    {
+      "id": "a8abcd37-f0cc-4b31-91d9-7ec786a6abde",
+      "product_fingerprint": "250d20679f092b427357642ce63512e7",
+      "identifier_fingerprint": "9e55af8cf918c6a66e8c9e213da4fae4"
+    },
+    {
+      "id": "a9fc4fb5-0152-40dd-9a01-6ecf0155709f",
+      "product_fingerprint": "eae46d613a9a810bd3f9ede464b953b8",
+      "identifier_fingerprint": "74472768a0fce42982da3752c7797418"
+    },
+    {
+      "id": "aa349c07-1add-44d4-9161-d99190182e5c",
+      "product_fingerprint": "b2784f797f51d65c8208ba1169abf4b8",
+      "identifier_fingerprint": "0ba0cabb5572e585858f56d664f38f54"
+    },
+    {
+      "id": "aadbbab5-bcf5-4b46-b38a-5533648bcb1d",
+      "product_fingerprint": "ee2ad3b629482eb50a33ad656a871996",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "acf9d5cd-76e4-49c7-9c04-0af1f20506ad",
+      "product_fingerprint": "3ac280b83d41a6e402281766b5b85b62",
+      "identifier_fingerprint": "c18d21b51b7781a88b8a5e335e54aa16"
+    },
+    {
+      "id": "ae0e9d21-1e16-4c03-9792-773dbdc2fd18",
+      "product_fingerprint": "2eaa3c699c17e0ba84a5602c82aba4cc",
+      "identifier_fingerprint": "cc6eff8f879a52f647c769b83d76f1d0"
+    },
+    {
+      "id": "b000d235-1fc6-434c-9ba1-f1207d36cded",
+      "product_fingerprint": "cc41e689257bb722987cb0b6588f2c17",
+      "identifier_fingerprint": "4dd6b0a45832d21848e9d4f4437c706d"
+    },
+    {
+      "id": "b139d4e8-6f26-4096-a1b9-d9efcb02d2ec",
+      "product_fingerprint": "60d0fbc52ae3b495000143c358e8ed59",
+      "identifier_fingerprint": "a8f36c5256ec78f5e3f965b12ad5f861"
+    },
+    {
+      "id": "b1712c80-75a9-4d85-89c3-e12421f208e8",
+      "product_fingerprint": "42e0c0a5bfb35f66b796a785bfb53709",
+      "identifier_fingerprint": "d7979b4459129703bf3174028b17c731"
+    },
+    {
+      "id": "b281d528-b312-4e44-98be-3e01f7e56644",
+      "product_fingerprint": "8eec2ce5d673e646ffe48f360bc9b1a7",
+      "identifier_fingerprint": "1ad7900454abc3059b646f353bdaa0f5"
+    },
+    {
+      "id": "b2e7e679-a6ba-4ba3-93d7-1fd35f6e6c75",
+      "product_fingerprint": "efe5b9b63a948df818a3775dc69d2531",
+      "identifier_fingerprint": "ddad11270befb140578f678347d9e72d"
+    },
+    {
+      "id": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+      "product_fingerprint": "fccc33df81e35c7899ddcb09a4c94965",
+      "identifier_fingerprint": "eeb9121ac81e2efe8e9ffe7072371409"
+    },
+    {
+      "id": "b3ddfac2-ae06-42dd-9caf-822a2941c6f2",
+      "product_fingerprint": "09d3b554200bc9af04d83bf354bebab8",
+      "identifier_fingerprint": "33d448bc1f40df13739c0206aa6b8239"
+    },
+    {
+      "id": "b4bcb392-22a7-4642-bcdf-1949ca959f67",
+      "product_fingerprint": "a8f69c2708645991ecee5865ec853c2b",
+      "identifier_fingerprint": "aa7b7e18a8f6d24021ef7f9e5ee38de0"
+    },
+    {
+      "id": "b5b595d2-9ba3-4c99-8f99-b2b79d29eb56",
+      "product_fingerprint": "9bd27eb3c08015e719c8b17549148c1e",
+      "identifier_fingerprint": "b63deb0df89ebfbb10316493cd9d0e18"
+    },
+    {
+      "id": "b761256d-c0d2-4413-9fa5-8ab950ef69bf",
+      "product_fingerprint": "a63c4c23668327d1a7a7465fc1796ef1",
+      "identifier_fingerprint": "0d08ad2d7e0dae28ff2a516637605486"
+    },
+    {
+      "id": "b89a5ced-700a-4cdb-be89-c85c212e4eca",
+      "product_fingerprint": "d960777f596902e0a56bec1dcfb9f728",
+      "identifier_fingerprint": "fe156a9a4d8876232637fc04a14f812e"
+    },
+    {
+      "id": "b916efff-8b80-47d4-82cf-d8148d1eff53",
+      "product_fingerprint": "fe3a8fec697b371876cbb918410a64ba",
+      "identifier_fingerprint": "f45b18e6b55accc8dbcfa3a7411d9ff6"
+    },
+    {
+      "id": "ba326dab-99d8-4b82-a1c5-de9aee2578a4",
+      "product_fingerprint": "aa718ad4dfbe04494a6144f527cd60ee",
+      "identifier_fingerprint": "eee92f18539c8bc90333d412f19226dd"
+    },
+    {
+      "id": "bb1b029f-a8fa-4276-8268-f6ce418128c7",
+      "product_fingerprint": "934ff896489282c6d5f018232f6dd0e6",
+      "identifier_fingerprint": "6c6a85dd678e9ef580b859d6bbd9abce"
+    },
+    {
+      "id": "bbfd8b03-d219-48bb-9ab3-b7c14bcae3dd",
+      "product_fingerprint": "3c35112806456da8ea06dff47111682d",
+      "identifier_fingerprint": "64acc3b50c09f62d0c44aea5f3dc6593"
+    },
+    {
+      "id": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+      "product_fingerprint": "5dbbc03512dd788f8b8a896032264355",
+      "identifier_fingerprint": "0d810fa097a077d655246e3176a73dfc"
+    },
+    {
+      "id": "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+      "product_fingerprint": "97692c168d31ee91505a21c59d8c00ab",
+      "identifier_fingerprint": "69e8a4871fa9aabd9b177b30dac40474"
+    },
+    {
+      "id": "bf3c797d-680f-44b4-8826-b5c45cf045ae",
+      "product_fingerprint": "7acd527e91c2dde364326aadfae6c3ec",
+      "identifier_fingerprint": "bc1825f179e0ff56a1160d3ba9a8f77a"
+    },
+    {
+      "id": "c05773dd-9656-4381-a0ab-8e9fc310c520",
+      "product_fingerprint": "a02bd70f123b1916f30cfa0bc4d69b0e",
+      "identifier_fingerprint": "02bc78ba1724d347067c1aea2f264553"
+    },
+    {
+      "id": "c07a181b-3d55-4d47-ad68-9c1e324d4496",
+      "product_fingerprint": "51b6068c30fa469dea360e128a5322d4",
+      "identifier_fingerprint": "e1be7cb5abb372f3b29af82dbdd7f0c6"
+    },
+    {
+      "id": "c2d7eb89-9a2e-4476-bb89-c0f33a2aa501",
+      "product_fingerprint": "1cdf58747e0ddc51ba5103e58068d334",
+      "identifier_fingerprint": "7a23139d905faf85a1cd744b3f3298e4"
+    },
+    {
+      "id": "c320750f-6a1e-420d-8594-409f04e05319",
+      "product_fingerprint": "e229ee8e2bd0f18d88dfee0666d7f197",
+      "identifier_fingerprint": "90cdd1de9a741f26ba04dc867779a421"
+    },
+    {
+      "id": "c4b9eaef-dfeb-41ea-9d28-9901660406b7",
+      "product_fingerprint": "1f47a413893ff0dbd8bae8086fad5685",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "c574ee6f-ad22-45c0-b936-57b847d93433",
+      "product_fingerprint": "59d601a2d59552fac1fd5b83979679f2",
+      "identifier_fingerprint": "414d0bfd94e72c609efebb96d706f9a6"
+    },
+    {
+      "id": "c6e80f39-20ba-401e-b041-6ee7c89a5996",
+      "product_fingerprint": "e65b6927d494e235ced17abeabeaeca6",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "c7326c6b-6175-4ec2-865f-68baf476c986",
+      "product_fingerprint": "f1b78e213eb231ffa26ed94d62ecdd61",
+      "identifier_fingerprint": "0c02615b647e401758ed2cc56f1365fd"
+    },
+    {
+      "id": "c9b231ee-77b5-45b7-8127-7a85d3ae7dd0",
+      "product_fingerprint": "54ec99e2289e5a01b83e3440146195a1",
+      "identifier_fingerprint": "7ed61ae872ddf95e7098f6205046177c"
+    },
+    {
+      "id": "c9ded02d-0bd8-4dc2-a7cc-c98f36dfe076",
+      "product_fingerprint": "4ab4d2848c3a9ab62e070c966b035a06",
+      "identifier_fingerprint": "8c1026371850203ce35f8bea4bf68dd5"
+    },
+    {
+      "id": "ca4ae209-79d2-4f4d-8e44-46e586cec62d",
+      "product_fingerprint": "6095b2f09ed122e16ac15f9a44882741",
+      "identifier_fingerprint": "592664f4e0828e25790def1221badf58"
+    },
+    {
+      "id": "caa94951-57d9-441d-bd46-5d7debbf365f",
+      "product_fingerprint": "6fc29840734ca5d14952a6dcdc25620f",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "cb228f9d-4e46-4302-9a6f-92c393eda1bd",
+      "product_fingerprint": "90cdf761e6c8415b34d405074e296e7f",
+      "identifier_fingerprint": "e7e698b62fbc3ea6b2b292f889eb1bde"
+    },
+    {
+      "id": "cc9318d2-13af-4c83-8b5e-7effb687c92f",
+      "product_fingerprint": "c4e141ac36cbf6c1948246cca9fe63f3",
+      "identifier_fingerprint": "612080dc03aca78be97da261b3e0a935"
+    },
+    {
+      "id": "cce6346c-8c92-4a17-b39b-cc7f300e84de",
+      "product_fingerprint": "f13a040d614325b29333ef5257476a43",
+      "identifier_fingerprint": "47b75d248af1191d7f7d242377e06751"
+    },
+    {
+      "id": "cd00a357-413f-41f4-aa68-2e451661f1dd",
+      "product_fingerprint": "c972640349daf10338d44b64890281ea",
+      "identifier_fingerprint": "2310ca6d6fc2a3d37a37fdc2171efbea"
+    },
+    {
+      "id": "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+      "product_fingerprint": "ce233d2bed67cbbfdbb271cec5385465",
+      "identifier_fingerprint": "0c66544b8c1a1f47c336f0a88d17ff59"
+    },
+    {
+      "id": "cd76afea-d332-4b1d-b44b-7de5bef9034f",
+      "product_fingerprint": "144ed64e0d0b224e0f36dca8eb6fa3f2",
+      "identifier_fingerprint": "18ccafedd5247bc4f06de33efea561c0"
+    },
+    {
+      "id": "cfeab4b2-fdd6-4348-bf2b-aca58e686869",
+      "product_fingerprint": "df380f6b15c54b1d14627d581ec7658a",
+      "identifier_fingerprint": "115c8135b837e5b6f7e427f75520e375"
+    },
+    {
+      "id": "d0180955-c3a0-4f53-8744-fbeb2c241688",
+      "product_fingerprint": "4df8150818eb8ee6e3860e4d4fe18968",
+      "identifier_fingerprint": "e4b5f1d6b80d09c4fb69125a941b5d85"
+    },
+    {
+      "id": "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+      "product_fingerprint": "331d31b0c875fa3551a23b2e8478af68",
+      "identifier_fingerprint": "ae2c9d19bf8f3575bbd95dd83d9dbf4d"
+    },
+    {
+      "id": "d0936238-7412-40bc-ba7a-3c268f17d0f4",
+      "product_fingerprint": "be945fdead213a20772268b09152cb19",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
+      "product_fingerprint": "3dbc2e2dda7f1b711aba4113d2894209",
+      "identifier_fingerprint": "476ee4f597008ab55c2e012557fd69da"
+    },
+    {
+      "id": "d105d245-5993-4b89-b45d-1bf0a86650e3",
+      "product_fingerprint": "caf6150fe0e3ea6d2026805c4a789245",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "d28643c8-c340-4514-826a-6c1ac8419fe9",
+      "product_fingerprint": "c7a31e20bf5d26676a296d97280c6b84",
+      "identifier_fingerprint": "e951691ee83f3d32ae2345075b8235f5"
+    },
+    {
+      "id": "d2936db6-6865-4375-8060-95995b96b804",
+      "product_fingerprint": "06dbe90ae9c414ca11373f6dba628630",
+      "identifier_fingerprint": "a2c5f8f9323443d400b580e6f9a98128"
+    },
+    {
+      "id": "d2bb79a8-add1-4b74-9d4f-c03449175147",
+      "product_fingerprint": "48e7976c5eb50eb262ebf46e1929470d",
+      "identifier_fingerprint": "36592fffcb36470c7513cc639e610ad2"
+    },
+    {
+      "id": "d33543b0-6011-45f1-9bb2-125289ac849a",
+      "product_fingerprint": "8d0b383581e26faa5e84ff362f89edc2",
+      "identifier_fingerprint": "27da5565922f9bf0472f2010407d8f2e"
+    },
+    {
+      "id": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+      "product_fingerprint": "5876ba49b42ed76c6b047c5e2a94674a",
+      "identifier_fingerprint": "8057c63eba1538ddea05ffde003b91d6"
+    },
+    {
+      "id": "d46c16fa-1ca6-45dd-bab4-af96217c5480",
+      "product_fingerprint": "8b181b80ff79d6b87554d30ca3e6bc36",
+      "identifier_fingerprint": "cf8aec81034c4a96e12f871720bf7e1d"
+    },
+    {
+      "id": "d5d67009-7aac-4299-938b-7218b8635a0c",
+      "product_fingerprint": "f2b837e08371b9bde8ef9befd5be32f2",
+      "identifier_fingerprint": "52adf05be2e0a525af203a82b0626147"
+    },
+    {
+      "id": "d6cde507-1c34-4dea-8239-abd097d50818",
+      "product_fingerprint": "36a737f40d2e5f7d55d685d348afac7c",
+      "identifier_fingerprint": "9f4327772a6add256be25b4d0a1f4b7c"
+    },
+    {
+      "id": "d70fdc25-2cdc-4b8a-b005-c4c719d88c33",
+      "product_fingerprint": "36d4d6dd1245d414cc42d56774cb2bdb",
+      "identifier_fingerprint": "462993dc47246fd5296b6e8720ce66c1"
+    },
+    {
+      "id": "d81e8069-82aa-4ac4-a719-4614640a45df",
+      "product_fingerprint": "fab7c195f89f239abed0d098b68e33fd",
+      "identifier_fingerprint": "18b53ac0e21c2dc2adad0f8d56c599a5"
+    },
+    {
+      "id": "d840b368-3416-4104-9ccb-0e5a656a4929",
+      "product_fingerprint": "9621256bd700e329a9238ae3ee11e108",
+      "identifier_fingerprint": "f4841a119fd49f7e4c1bf65acb4cebe3"
+    },
+    {
+      "id": "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66",
+      "product_fingerprint": "e09955ccd1813ba8f0e8b65398e2d920",
+      "identifier_fingerprint": "655c0da4d1e9ef23b68bd041cbcd9ae2"
+    },
+    {
+      "id": "d9825ad6-f549-4b02-a62a-eaa3bf917936",
+      "product_fingerprint": "f47b028f512a5f93692596cfd09c00e4",
+      "identifier_fingerprint": "0708b0a980c1104f342e9bde4a09837e"
+    },
+    {
+      "id": "dc8b8d4a-8ca9-452c-8d04-03b785b63275",
+      "product_fingerprint": "fd795e124c5f4522a30ed6b93fa92e1a",
+      "identifier_fingerprint": "a07f78f1e506948bd2fa41da4e78ed09"
+    },
+    {
+      "id": "dc9f6662-b51b-4011-91ae-494c2d254f11",
+      "product_fingerprint": "ab4594796978824154e078e57f5ba53a",
+      "identifier_fingerprint": "6cc66b77d21868fc7c8b153a9a79f045"
+    },
+    {
+      "id": "e1ad37be-9330-49b4-8add-872a30324122",
+      "product_fingerprint": "0df3503c09f09d803f8a092954a53f80",
+      "identifier_fingerprint": "bf74c8521101b904f5447f47cfa87263"
+    },
+    {
+      "id": "e3571e45-1126-4431-bef8-43153ef64c20",
+      "product_fingerprint": "98e3314f5159edc88abe3f7c53360645",
+      "identifier_fingerprint": "be815fd3335d6d1d6eb5407a01e4b007"
+    },
+    {
+      "id": "e3c4b607-8f81-462c-8a2b-e45c8b3a2976",
+      "product_fingerprint": "8644ad400160a0d55c4357a8c48013fc",
+      "identifier_fingerprint": "32365986d3cabfed14589a4f5a89e3f2"
+    },
+    {
+      "id": "e482e42a-bdac-4f5e-bd3b-489e702c0c4b",
+      "product_fingerprint": "2309105dbcaa91c1baaf176a2238f1f9",
+      "identifier_fingerprint": "0375a5d2ac95231b322db683686989b7"
+    },
+    {
+      "id": "e4e4fd05-33fd-4048-9553-76815bff5d43",
+      "product_fingerprint": "d3760ef01c763621b15e099fc259d484",
+      "identifier_fingerprint": "3a8d9188707279ddac0a050abb0b5c48"
+    },
+    {
+      "id": "e51cfce0-fd76-4873-a868-cc3ca0301cbc",
+      "product_fingerprint": "9f27d2dd2747805d56383edc4aebd8aa",
+      "identifier_fingerprint": "8586f6b512f62801923a1bbef642b1ff"
+    },
+    {
+      "id": "e5cfad78-ea22-49a5-911a-cb1f3109fa1c",
+      "product_fingerprint": "4952d24639ecb1d7ac558142ef422e13",
+      "identifier_fingerprint": "591f751212b8328f0f50f674a9b19050"
+    },
+    {
+      "id": "e6896862-523b-42b3-967d-41cbd16acf64",
+      "product_fingerprint": "4a3ae729a6aa4b3e33f1489e29f2e991",
+      "identifier_fingerprint": "04609515132fcd68ac8d8137d40adea0"
+    },
+    {
+      "id": "e6b87909-6104-4a9a-a3ef-e1c64a1b15b1",
+      "product_fingerprint": "7937eebe70eedc6250b225a0437637f2",
+      "identifier_fingerprint": "09c57709d518cc4215747ef7a5f7f382"
+    },
+    {
+      "id": "e75b6978-d9ca-4601-b40a-8eb8cc974b45",
+      "product_fingerprint": "4c00eeffc7b770c594357c69131ebd07",
+      "identifier_fingerprint": "b6a5a364cce56809341534fcbab78537"
+    },
+    {
+      "id": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "product_fingerprint": "d781e85433e81f1a9bd65c3762097207",
+      "identifier_fingerprint": "0d91238bc665743aff33b36bcf07cbe0"
+    },
+    {
+      "id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+      "product_fingerprint": "191fd52c5ec16428749a2a74befff293",
+      "identifier_fingerprint": "34c2c6be38dd4038b549a11368c12fbc"
+    },
+    {
+      "id": "e7bfd306-b128-4735-a9f8-0eeacdbd5013",
+      "product_fingerprint": "496b877071e9db1306f6c73c137ea8f0",
+      "identifier_fingerprint": "3ab4d57f5db7afe8677052db4422c271"
+    },
+    {
+      "id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+      "product_fingerprint": "6ab781ab59b2bf8392d29c4c955394c6",
+      "identifier_fingerprint": "7e376d07ad51a2741cb8bd295399cf60"
+    },
+    {
+      "id": "e859d6e0-e991-4081-84b5-b81862c82475",
+      "product_fingerprint": "53f231d223c2897531e1191438b80187",
+      "identifier_fingerprint": "e208869f9cdfa524c48e52d0c421a448"
+    },
+    {
+      "id": "e937c8aa-fc99-4731-b848-e5bd988fcc17",
+      "product_fingerprint": "de22743c4b9b66b490e43ad62404f6c5",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "e93d522b-6a07-42c8-8858-75a830d809b9",
+      "product_fingerprint": "8d593ed1e10f2475af274f621b437055",
+      "identifier_fingerprint": "b4d39f95dbfd7c89113ca242dc5d8a54"
+    },
+    {
+      "id": "ea353b65-544d-48a8-a057-c3e733b66326",
+      "product_fingerprint": "42c6bfa513a753e40bf8351631943d4d",
+      "identifier_fingerprint": "2401deff05a69bd58c5f2d3788ce09d4"
+    },
+    {
+      "id": "ea88a333-b11c-45c3-bbda-c51f912ee56f",
+      "product_fingerprint": "f9b925c3f8ea6a1281b9cd5ebb4d4928",
+      "identifier_fingerprint": "b28b972d05e3b40305cdfd61d0885563"
+    },
+    {
+      "id": "ea9d38a1-25ce-4c01-868b-960cc5ee4397",
+      "product_fingerprint": "bc291a333cf1498b9436758467698c2e",
+      "identifier_fingerprint": "d7f68babea3801a36066527c63a474f5"
+    },
+    {
+      "id": "ead1333b-6839-464d-b272-673d39bb95a4",
+      "product_fingerprint": "499f6647ec8de5b266ac4f3fca78167f",
+      "identifier_fingerprint": "cf8c6513b20ed7d4dedcf0a4ff8de95e"
+    },
+    {
+      "id": "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+      "product_fingerprint": "00dea15154491ffb59a9e369a8ff9da1",
+      "identifier_fingerprint": "ef96bb7020a35643a212583618fb1d01"
+    },
+    {
+      "id": "eb99d805-20d4-4dbb-9651-17c9e954a769",
+      "product_fingerprint": "ceb81d2a647fc38b4f5fdc8f3f9e5b58",
+      "identifier_fingerprint": "9e3b0ee1db1ecd11f1fc799d8541dd73"
+    },
+    {
+      "id": "ed382d40-6166-4d39-be2d-eab5a24793a6",
+      "product_fingerprint": "8bba3b1840ddffb5a0d0b73b94a1db3f",
+      "identifier_fingerprint": "4ef8cd90cd8c477549f0477d9b87fdd6"
+    },
+    {
+      "id": "ee4aab21-5696-4286-aad1-7811b997dd30",
+      "product_fingerprint": "91ecb8e35179ba8d971f7ae93cefbc8b",
+      "identifier_fingerprint": "296f91c40361057fa9a03a64ca75ea16"
+    },
+    {
+      "id": "efaff579-e411-41eb-972a-2734a8517356",
+      "product_fingerprint": "2e1ca904f0c14c5c260cd395fe1a9e17",
+      "identifier_fingerprint": "218ec07ae1804b3fbf928109159c1d43"
+    },
+    {
+      "id": "f0168972-dcd4-4593-aeb5-38d12343468a",
+      "product_fingerprint": "70075d7e79b7e07c8269356ac957cca5",
+      "identifier_fingerprint": "abd16c95a8506b85404acc9136c76f71"
+    },
+    {
+      "id": "f033afbe-281a-419e-a245-3ad83d721bd0",
+      "product_fingerprint": "372bd76bf8ef8e3df1981e063bb102e4",
+      "identifier_fingerprint": "81e2ff70202d3121ca8df93f5fe97685"
+    },
+    {
+      "id": "f042a36c-88d5-41ae-87fe-a816ea608bc6",
+      "product_fingerprint": "8f8e89180856fe299eb36993d381c114",
+      "identifier_fingerprint": "08f2a354ac4040cba41cd7cad13ee4fc"
+    },
+    {
+      "id": "f069970e-12fb-48c6-ac8e-51f50dc46c31",
+      "product_fingerprint": "5aa699554cf5acb3818c348f0b8895c5",
+      "identifier_fingerprint": "665a256a339793e07a431fa4b2c908d5"
+    },
+    {
+      "id": "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
+      "product_fingerprint": "34aff75f60ac026258fa43121b145650",
+      "identifier_fingerprint": "5c84e9579fccb455a2fa4633e1084587"
+    },
+    {
+      "id": "f212a8ff-0a03-404a-aad5-773d5bb6f7c9",
+      "product_fingerprint": "6036861f84fc2b8198e623b581ff9d82",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "f41badc9-16e3-41c1-ab6c-23541fffade0",
+      "product_fingerprint": "91e0dc43b0d353461f37a04d432929d8",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "f66f2f93-a1f2-43fb-8647-48d49cdae7d3",
+      "product_fingerprint": "ef657b2dcfff5707ff7b86f0aa9edc69",
+      "identifier_fingerprint": "07ff8c099d380d3494225fc21b9fd8c1"
+    },
+    {
+      "id": "f7144789-8302-42b1-a5b1-e761402c1b7c",
+      "product_fingerprint": "2a0c82c4ac07379f353eab0890aad748",
+      "identifier_fingerprint": "a206f51ebd1bb5812ecd8ae20f31825d"
+    },
+    {
+      "id": "f7f28e1c-e177-4505-906d-c59f4291ba6b",
+      "product_fingerprint": "962a301f668637371e8cef26b944d3a0",
+      "identifier_fingerprint": "d5909d5f30e4fcf4ce9d69cf7087d85c"
+    },
+    {
+      "id": "f89c1edc-cb71-4ec6-ac86-dc27c515568e",
+      "product_fingerprint": "f97c5505f4faaac55937a45ef78f69ce",
+      "identifier_fingerprint": "e8d192cb69edb13847e8ab365c2be4d3"
+    },
+    {
+      "id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+      "product_fingerprint": "7f2fbe586af6da6e1e8b7855f790fac5",
+      "identifier_fingerprint": "342a83707b5e19a8db145bfe3de4517f"
+    },
+    {
+      "id": "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
+      "product_fingerprint": "7c11c92071522b6cc43da93be9847472",
+      "identifier_fingerprint": "4bde79a834f675247f489ff1565d6120"
+    },
+    {
+      "id": "f8c47bf8-a075-4568-a9ab-aa336b7ae50a",
+      "product_fingerprint": "f0905e5f17d64df6c351f16b35c0434e",
+      "identifier_fingerprint": "f694407d76246fb9fbf0ec20b7b61213"
+    },
+    {
+      "id": "f8f3b51d-8e64-487d-bad5-4a47c58862ed",
+      "product_fingerprint": "156d06bcb5750a6f4e07803be497406d",
+      "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": "f9595d2c-d86d-4bdb-9758-c98d1e213f3c",
+      "product_fingerprint": "5e7ae497144dc4190774129d58dbdd91",
+      "identifier_fingerprint": "4d0077d84b8b4d398e0ec35febc960b7"
+    },
+    {
+      "id": "fcbc469f-93c8-4be5-85db-e789b09189c7",
+      "product_fingerprint": "7e834f2668c00b658343137413369702",
+      "identifier_fingerprint": "9ed6c9bd3aa29e0f527eef7593e88e7c"
+    },
+    {
+      "id": "fd1792c0-8f8c-40b0-960d-27ac21470bb8",
+      "product_fingerprint": "341c3ac6a3f61a23051f41ca3dce684d",
+      "identifier_fingerprint": "be3be9610fa0e9c9fd2cfb721b24283b"
+    },
+    {
+      "id": "fd83b493-f7be-4071-9642-3d5b92e30dc2",
+      "product_fingerprint": "1bc8811dbceed40693c8e18107788df3",
+      "identifier_fingerprint": "a65a4577af59c37ce54f98babf86a2bd"
+    },
+    {
+      "id": "fe974387-b487-470e-9799-69bb4249070b",
+      "product_fingerprint": "b4f92f11fa710e6228e2dd5dac38a71b",
+      "identifier_fingerprint": "be47454d8fe5dc3d3f462b1ae235995b"
+    },
+    {
+      "id": "ff13bc3a-8bc6-49df-85a0-7a67add26926",
+      "product_fingerprint": "0daaa03a0f0c8d3f38f1fde0d14a7e4c",
+      "identifier_fingerprint": "962598fb62bb49bc3eca0745fb129e5b"
+    },
+    {
+      "id": "ff309c8a-ecd5-415c-9016-1b726c9fb3a4",
+      "product_fingerprint": "261d78e9df5b426a8f5a6a9fc6f32999",
+      "identifier_fingerprint": "5407a42593a6b5bd857bc295c7e1016e"
+    },
+    {
+      "id": "ffd37427-0cb6-4d6a-8b83-ea904bf2b1d7",
+      "product_fingerprint": "158d6fdc2cd301fa96eeb0544aefe872",
+      "identifier_fingerprint": "80d38183fb01fa026967e0da9a35322f"
+    }
+  ]
+}

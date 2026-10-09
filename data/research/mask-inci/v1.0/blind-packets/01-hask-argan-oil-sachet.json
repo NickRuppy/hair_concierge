@@ -1,0 +1,19 @@
+{
+  "productId": "01-hask-argan-oil-sachet",
+  "identity": {
+    "brand": "HASK",
+    "productName": "HASK Haarkur Argan Oil, Sachet, 50 ml (dm.de also lists as \"HASK Kursachet Argan Oil\")",
+    "packSize": "50 ml sachet",
+    "gtinEan": "071164333068",
+    "market": "DE (dm.de, dm.at)"
+  },
+  "rawInci": "AQUA, CETEARYL ALCOHOL, LANOLIN, CETRIMONIUM CHLORIDE, QUATERNIUM-18, PARFUM, ARGANIA SPINOSA KERNEL OIL, HYDROXYPROPYLTRIMONIUM HYDROLYZED ORYZA SATIVA PROTEIN/SILOXYSILICATE, ORYZA SATIVA EXTRACT, HYDROLYZED COLLAGEN, HYDROLYZED KERATIN, SILK AMINO ACIDS, HYDROLYZED SOY PROTEIN, SODIUM LAUROYL OAT AMINO ACIDS, JUGLANS NIGRA LEAF EXTRACT, LEUCONOSTOC/RADISH ROOT FERMENT FILTRATE, POPULUS TREMULOIDES BARK EXTRACT, CITRIC ACID, GLYCERIN, PANTHENOL, ISOPROPYL PALMITATE, SODIUM PCA, TETRASODIUM EDTA, DMDM HYDANTOIN, BUTYLENE GLYCOL, ETHYLHEXYLGLYCERIN, SODIUM BENZOATE, PHENOXYETHANOL, BENZYL ALCOHOL, POTASSIUM SORBATE, BENZYL BENZOATE, LIMONENE, CARAMEL, CI 19140",
+  "directions": {
+    "text": "Nach der Haarwäsche in das handtuchtrockene/nasse Haar einmassieren und bis zu 10 Minuten einwirken lassen, danach gründlich ausspülen. Zur Anwendung 1-2 Mal pro Woche. Ein Sachet (50 ml) reicht für ca. 5-8 Anwendungen (bzw. laut anderer Quelle 2-3 Anwendungen).",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "up to 10 (exact wording varies by source: 'bis zu 10 Minuten')",
+    "source": "Aggregated from dm.de listing copy and secondary retailer/review sites (pinkmelon.de, kaufland.de) via search - NOT independently verified by a direct verbatim fetch of the dm.de product page, since that page is JS-rendered and did not return body content this pass.",
+    "confidence": "moderate - contact time is corroborated across multiple independent retail copy blocks but not confirmed by a single primary-source verbatim fetch"
+  },
+  "note": "Blind calibration packet. Contains identity, formula of record, and authoritative directions only. No archetype labels, no claims summaries, no prior assessments."
+}

@@ -1,7 +1,7 @@
 "use client"
 
 import { Check, ChevronLeft, ChevronRight, CircleHelp, ImageIcon, Minus, X } from "lucide-react"
-import { type ReactElement, useState } from "react"
+import { type ReactElement, type ReactNode, useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import type {
@@ -15,8 +15,16 @@ import {
   type Stage3FitEvidenceRow,
   type Stage3SelectedComparisonCandidate,
 } from "@/lib/personal-plan/products/fit-comparison"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 import { cn } from "@/lib/utils"
-import { categorySelectionHeading } from "./stage3-product-copy"
+import {
+  budgetCardLabel,
+  budgetLineValue,
+  budgetNoticeCopy,
+  categorySelectionHeading,
+  STAGE3_BUDGET_COPY,
+  type Stage3BudgetLabelKind,
+} from "./stage3-product-copy"
 import { Stage3StickyAction } from "./stage3-sticky-action"
 
 /** The one planning CTA a single review screen offers for a product it can plan. */
@@ -25,7 +33,47 @@ export const STAGE3_PLAN_PRODUCT_ACTION_LABEL = "Dieses Produkt einplanen"
 type ReviewProduct = {
   displayName: string
   presentationImageUrl?: string | null
-  presentation?: { priceLabel: string | null; netContentLabel: string | null }
+  presentation?: {
+    priceLabel: string | null
+    netContentLabel: string | null
+    /** Budget fields: present only on budgeted alternatives. */
+    overBudget?: boolean
+    labelKind?: Stage3BudgetLabelKind
+    /**
+     * Drogerie/Profi badge hook. The server does not emit it yet; the badge renders only once
+     * the presentation actually carries it — never inferred client-side.
+     */
+    marketSegment?: "drugstore" | "professional"
+  }
+}
+
+/** Card label of the first recommendation when a no-ceiling budget keeps the neutral order. */
+const BUDGET_NEUTRAL_FIRST_LABEL = "Passende Option"
+
+/**
+ * A comparison shaped by a saved budget. The server emits `defaultProductId` (string or null)
+ * exactly when a budget allocation exists, and omits every budget field otherwise.
+ */
+export function comparisonHasBudgetAllocation(comparison: Stage3FitComparison): boolean {
+  return comparison.defaultProductId !== undefined
+}
+
+/**
+ * The candidate a recommendation review preselects: the budget's default when the comparison
+ * carries one (`null` = nothing preselected), else the first fit-ranked alternative.
+ */
+export function defaultRecommendationCandidate(
+  comparison: Stage3FitComparison,
+  alternatives: readonly Stage3SelectedComparisonCandidate[] = comparison.alternatives.slice(
+    0,
+    STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
+  ),
+): Stage3SelectedComparisonCandidate | null {
+  if (comparison.defaultProductId === undefined) return alternatives[0] ?? null
+  if (comparison.defaultProductId === null) return null
+  return (
+    alternatives.find((candidate) => candidate.productId === comparison.defaultProductId) ?? null
+  )
 }
 
 export type ProductFitComparisonSelection = {
@@ -61,6 +109,10 @@ type ProductFitComparisonProps = {
   /** Replaces the primary action's label without changing which action it invokes. */
   primaryActionLabelOverride?: string
   recoveryMessage?: string
+  /** The saved budget behind a budgeted comparison; needed for the budget line and notices. */
+  budget?: ShoppingBudget | null
+  /** Opens the budget step; the budget line shows „Ändern“ only when this is provided. */
+  onEditBudget?: () => void
   onAction: (
     action: ProductFitComparisonAction,
     selectedCandidate?: ProductFitComparisonSelection,
@@ -87,6 +139,8 @@ export function ProductFitComparison({
   scopeContextLine,
   primaryActionLabelOverride,
   recoveryMessage,
+  budget = null,
+  onEditBudget,
   onAction,
   onRetry,
 }: ProductFitComparisonProps): ReactElement {
@@ -108,8 +162,8 @@ export function ProductFitComparison({
   const isUncoveredReview = currentProduct === null
   const selectedRecommendation =
     alternatives.find((candidate) => candidate.productId === selectedRecommendationProductId) ??
-    alternatives[0] ??
-    null
+    defaultRecommendationCandidate(comparison, alternatives)
+  const budgetAllocated = comparisonHasBudgetAllocation(comparison)
   const selectedAlternative = selectedComparisonCandidate(comparison, {
     displayedAlternativeIndex,
     selectedRecommendationProductId,
@@ -118,8 +172,22 @@ export function ProductFitComparison({
   // do not expose select_replacement through allowedActions.
   const replacementAllowed = selectedAlternative !== null
   const authorityPrimaryAction = primaryActionFor({ evaluation, replacementAllowed })
-  const uncoveredRetryIsPrimary = isUncoveredReview && !selectedAlternative && Boolean(onRetry)
-  const primaryAction = isUncoveredReview && !selectedAlternative ? null : authorityPrimaryAction
+  // A budget may preselect nothing (strict, nothing affordable). Then continuing without a new
+  // product is the honest primary action instead of a dead CTA.
+  const budgetLeaveFallback =
+    budgetAllocated &&
+    isUncoveredReview &&
+    !selectedAlternative &&
+    alternatives.length > 0 &&
+    allowedActions.has("leave_uncovered")
+  const uncoveredRetryIsPrimary =
+    isUncoveredReview && !selectedAlternative && Boolean(onRetry) && !budgetLeaveFallback
+  const primaryAction =
+    isUncoveredReview && !selectedAlternative
+      ? budgetLeaveFallback
+        ? ({ kind: "leave_uncovered", label: "Vorerst ohne Produkt fortfahren" } as const)
+        : null
+      : authorityPrimaryAction
   const quietActions = quietActionsFor({
     allowedActions,
     selectedAlternative,
@@ -129,14 +197,24 @@ export function ProductFitComparison({
   const directReplacementAction = quietActions.find(
     (action) => action.kind === "select_replacement",
   )
-  const visiblePrimaryAction = primaryAction?.kind === "leave_uncovered" ? null : primaryAction
+  const visiblePrimaryAction =
+    primaryAction?.kind === "leave_uncovered" && !budgetLeaveFallback ? null : primaryAction
   const otherQuietActions = quietActions.filter(
     (action) => action.kind !== "select_replacement" && action.kind !== "leave_uncovered",
   )
-  const leaveUncoveredAction =
-    primaryAction?.kind === "leave_uncovered"
+  const leaveUncoveredAction = budgetLeaveFallback
+    ? undefined
+    : primaryAction?.kind === "leave_uncovered"
       ? primaryAction
       : quietActions.find((action) => action.kind === "leave_uncovered")
+  const budgetSummary = budgetAllocated ? (
+    <BudgetSummary
+      comparison={comparison}
+      budget={budget}
+      onEditBudget={onEditBudget}
+      disabled={disabled}
+    />
+  ) : null
   const hasTruthfulAction =
     !hasUnexpectedTargetlessEvidence &&
     (uncoveredRetryIsPrimary || primaryAction !== null || quietActions.length > 0)
@@ -196,6 +274,7 @@ export function ProductFitComparison({
         onRetry={onRetry}
         headingOverride={headingOverride}
         scopeContextLine={scopeContextLine}
+        budgetSummary={budgetSummary}
       />
     )
   } else if (isUnknownFit) {
@@ -252,6 +331,7 @@ export function ProductFitComparison({
         }
         headingOverride={headingOverride}
         scopeContextLine={scopeContextLine}
+        budgetSummary={budgetSummary}
       />
     )
   }
@@ -405,6 +485,7 @@ function ComparisonReview({
   onSelectReplacement,
   headingOverride,
   scopeContextLine,
+  budgetSummary,
 }: {
   contextLabel: string
   categoryLabel: string
@@ -420,6 +501,7 @@ function ComparisonReview({
   onSelectReplacement: (() => void) | null
   headingOverride?: string
   scopeContextLine?: string
+  budgetSummary?: ReactNode
 }) {
   const alternativeProduct = selectedAlternative
     ? (comparison.products.find((product) => product.productId === selectedAlternative.productId) ??
@@ -438,6 +520,7 @@ function ComparisonReview({
         title={headingOverride ?? `Dein ${categoryLabel || "Produkt"} im Vergleich`}
         scopeContextLine={scopeContextLine}
       />
+      {budgetSummary}
       <OverallVerdict
         evaluation={evaluation}
         count={count}
@@ -449,9 +532,10 @@ function ComparisonReview({
         <ProductCard
           product={alternativeProduct}
           label={
-            selectedAlternative?.verdict === "supportive"
+            budgetCardLabel(alternativeProduct?.presentation?.labelKind) ??
+            (selectedAlternative?.verdict === "supportive"
               ? "Alternative · passt mit Einschränkung"
-              : "Passende Alternative"
+              : "Passende Alternative")
           }
           alternativeVerdict={selectedAlternative?.verdict ?? null}
         />
@@ -700,6 +784,7 @@ function UncoveredRecommendationReview({
   onRetry,
   headingOverride,
   scopeContextLine,
+  budgetSummary,
 }: {
   contextLabel: string
   categoryLabel: string
@@ -713,9 +798,22 @@ function UncoveredRecommendationReview({
   onRetry?: () => void
   headingOverride?: string
   scopeContextLine?: string
+  budgetSummary?: ReactNode
 }) {
   const first = alternatives[0] ?? null
-  const secondaryIndex = alternatives.length > 1 ? (selectedIndex > 0 ? selectedIndex : 1) : null
+  const budgetAllocated = comparisonHasBudgetAllocation(comparison)
+  // A budget default outside the first card is shown as the second card until the user pages.
+  const defaultIndex = selectedProductId
+    ? alternatives.findIndex((candidate) => candidate.productId === selectedProductId)
+    : -1
+  const secondaryIndex =
+    alternatives.length > 1
+      ? selectedIndex > 0
+        ? selectedIndex
+        : defaultIndex > 0
+          ? defaultIndex
+          : 1
+      : null
   const secondary = secondaryIndex === null ? null : (alternatives[secondaryIndex] ?? null)
   const firstProduct = first
     ? (comparison.products.find((product) => product.productId === first.productId) ?? null)
@@ -723,10 +821,35 @@ function UncoveredRecommendationReview({
   const secondaryProduct = secondary
     ? (comparison.products.find((product) => product.productId === secondary.productId) ?? null)
     : null
-  const firstLabel = first?.verdict === "ideal" ? "Beste Passung" : "Beste verfügbare Option"
+  // Budget order is not best-fit order, so a budgeted review never claims „Beste Passung“.
+  const firstLabel = budgetAllocated
+    ? first
+      ? recommendationCardLabel(
+          budgetCardLabel(firstProduct?.presentation?.labelKind) ?? BUDGET_NEUTRAL_FIRST_LABEL,
+          first,
+        )
+      : BUDGET_NEUTRAL_FIRST_LABEL
+    : first?.verdict === "ideal"
+      ? "Beste Passung"
+      : "Beste verfügbare Option"
   const secondaryBaseLabel = secondaryIndex === null ? null : `Alternative ${secondaryIndex}`
+  const secondaryBudgetLabel = budgetAllocated
+    ? budgetCardLabel(secondaryProduct?.presentation?.labelKind)
+    : null
   const secondaryLabel =
-    secondary && secondaryBaseLabel ? recommendationCardLabel(secondaryBaseLabel, secondary) : null
+    secondary && secondaryBaseLabel
+      ? recommendationCardLabel(secondaryBudgetLabel ?? secondaryBaseLabel, secondary)
+      : null
+  // Evidence columns must tell the two products apart: two cards can carry the same budget
+  // label („Alternative“/„Im Budget“), so the first column then falls back to the neutral name.
+  const firstBudgetLabel = budgetAllocated
+    ? budgetCardLabel(firstProduct?.presentation?.labelKind)
+    : null
+  const firstColumnLabel = budgetAllocated
+    ? firstBudgetLabel && firstBudgetLabel !== secondaryBudgetLabel
+      ? firstBudgetLabel
+      : BUDGET_NEUTRAL_FIRST_LABEL
+    : firstLabel
   const visibleRows = visibleEvidenceRows(
     comparison.evidenceRows ?? [],
     first?.productId,
@@ -747,6 +870,7 @@ function UncoveredRecommendationReview({
         }
         scopeContextLine={scopeContextLine}
       />
+      {first ? budgetSummary : null}
       {first ? (
         <>
           <div className={cn("grid min-w-0 gap-2", secondary && "grid-cols-2")}>
@@ -783,13 +907,13 @@ function UncoveredRecommendationReview({
               rows={visibleRows}
               firstProductId={first.productId}
               secondProductId={secondary.productId}
-              firstLabel={firstLabel}
+              firstLabel={firstColumnLabel}
               secondLabel={secondaryBaseLabel ?? "Alternative"}
             />
           ) : (
             <CompactRecommendationEvidence
               first={first}
-              firstLabel={firstLabel}
+              firstLabel={firstColumnLabel}
               second={secondary}
               secondLabel={secondaryLabel}
             />
@@ -985,9 +1109,88 @@ function ProductCardContent({
               ) : null}
             </p>
           ) : null}
+          <ProductBadges presentation={product?.presentation} />
         </div>
       </div>
     </>
+  )
+}
+
+const MARKET_SEGMENT_LABELS = { drugstore: "Drogerie", professional: "Profi" } as const
+
+function ProductBadges({ presentation }: { presentation?: ReviewProduct["presentation"] }) {
+  const segment = presentation?.marketSegment
+  if (!segment && !presentation?.overBudget) return null
+  return (
+    <p className="mt-1.5 flex flex-wrap justify-center gap-1 sm:justify-start">
+      {segment ? (
+        <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+          {MARKET_SEGMENT_LABELS[segment]}
+        </span>
+      ) : null}
+      {presentation?.overBudget ? (
+        <span className="rounded-full bg-[var(--status-pending-bg)] px-2 py-0.5 text-[10px] font-medium text-[var(--status-pending-text)]">
+          {STAGE3_BUDGET_COPY.overBudgetBadge}
+        </span>
+      ) : null}
+    </p>
+  )
+}
+
+/**
+ * The compact saved-budget line (with „Ändern“) and the comparison's budget notice. Notices are
+ * information, never warnings, so they reuse the neutral plum info tone.
+ */
+function BudgetSummary({
+  comparison,
+  budget,
+  onEditBudget,
+  disabled,
+}: {
+  comparison: Stage3FitComparison
+  budget: ShoppingBudget | null
+  onEditBudget?: () => void
+  disabled: boolean
+}) {
+  const notice = comparison.budgetNotice
+    ? budgetNoticeCopy({
+        notice: comparison.budgetNotice,
+        budget,
+        improvedDimensionIds: comparison.budgetException?.improvedDimensionIds,
+        dimensionLabel: (dimensionId) =>
+          comparison.evidenceRows?.find((row) => row.rowId === dimensionId)?.label ?? null,
+      })
+    : null
+  if (!budget && !notice) return null
+  return (
+    <div className="mb-4 grid gap-2">
+      {budget ? (
+        <div className="flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-2.5 text-sm">
+          <p className="min-w-0 text-muted-foreground">
+            Budget: <span className="font-semibold text-foreground">{budgetLineValue(budget)}</span>
+          </p>
+          {onEditBudget ? (
+            <Button
+              type="button"
+              variant="link"
+              className="h-auto min-h-8 shrink-0 p-0 text-sm text-[var(--brand-plum)] underline underline-offset-4"
+              disabled={disabled}
+              onClick={onEditBudget}
+            >
+              {STAGE3_BUDGET_COPY.editLabel}
+            </Button>
+          ) : null}
+        </div>
+      ) : null}
+      {notice ? (
+        <p
+          role="status"
+          className="rounded-xl bg-[var(--brand-plum-ice)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-plum-darkest)]"
+        >
+          {notice}
+        </p>
+      ) : null}
+    </div>
   )
 }
 
@@ -1662,9 +1865,7 @@ export function selectedComparisonCandidate(
     return (
       alternatives.find(
         (candidate) => candidate.productId === focus.selectedRecommendationProductId,
-      ) ??
-      alternatives[0] ??
-      null
+      ) ?? defaultRecommendationCandidate(comparison, alternatives)
     )
   }
   return (

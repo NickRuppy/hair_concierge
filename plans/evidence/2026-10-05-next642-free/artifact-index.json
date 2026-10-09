@@ -1,0 +1,2630 @@
+[
+  {
+    "original": "/tmp/test-audit-free-provisioning67/README.md",
+    "archived": "proposal/README.md",
+    "sha256": "139533bd7a4a133e55a1fd51e1ecfc19d2e72d8cfa4adddd16778e2b97bc35ef",
+    "bytes": 3140
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/artifact-hashes.json",
+    "archived": "proposal/artifact-hashes.json",
+    "sha256": "1c46dea2a5aeecb35a2bf4cbd380a1d97f5bcce4bcd8253247b20504f1ae0ca0",
+    "bytes": 42862
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/build-output.json",
+    "archived": "proposal/build-output.json",
+    "sha256": "c38ba7b89eba384044a7035554a155662797ed188ac78f1af9f19849d6124433",
+    "bytes": 2253
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/build-packet.cjs",
+    "archived": "proposal/build-packet.cjs.txt",
+    "sha256": "120e121707523d318032c765b13904a98aa169410db2937092a4405e5266dd71",
+    "bytes": 9264
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/caller-search.txt",
+    "archived": "proposal/caller-search.txt",
+    "sha256": "83740ea8dd5ca71a4ef368c4b5dab122dc88e0d778af57ec93b745e5b141debf",
+    "bytes": 11509
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/candidates.json",
+    "archived": "proposal/candidates.json",
+    "sha256": "d452f00b5aa5982b2ca02f7fece8422612b3471932b40789c3f939fe1df2aec8",
+    "bytes": 7219
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/app/api/stripe/create-checkout-session/route.ts",
+    "archived": "proposal/closure-snapshots/src/app/api/stripe/create-checkout-session/route.ts.txt",
+    "sha256": "fc8db1376b2825ae31976913eaab2e963175e8ee3c643aea93dd3165e4027a79",
+    "bytes": 83628
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/app/labs/personal-plan-stage-1-2/fixture.ts",
+    "archived": "proposal/closure-snapshots/src/app/labs/personal-plan-stage-1-2/fixture.ts.txt",
+    "sha256": "cfd07a1d0ba3dfe5d202e95018605e0c599af59235c1922b18a8d5da1ad37352",
+    "bytes": 891
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/app/registrierung/free-registration-client.tsx",
+    "archived": "proposal/closure-snapshots/src/app/registrierung/free-registration-client.tsx.txt",
+    "sha256": "81cb4c3b6f623c18a9182ceeb0e451e1828d27886ce438b8c7299c1ed0e424c1",
+    "bytes": 19431
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/components/ui/button.tsx",
+    "archived": "proposal/closure-snapshots/src/components/ui/button.tsx.txt",
+    "sha256": "7328a21e4aa02dad2cb657ae7af61280b71288b16ae4d38c5d31895c9d6535df",
+    "bytes": 3199
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/components/ui/icon.tsx",
+    "archived": "proposal/closure-snapshots/src/components/ui/icon.tsx.txt",
+    "sha256": "4db2f41605245aae7210dd610d5ee26423f8b1883e6b0e632c50f6a28c7b953e",
+    "bytes": 9806
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/components/ui/input.tsx",
+    "archived": "proposal/closure-snapshots/src/components/ui/input.tsx.txt",
+    "sha256": "a030050630b6734d394812c864a1b8560db63c112ab03b26430a1cc11a5f0203",
+    "bytes": 796
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/funnels/packages.json",
+    "archived": "proposal/closure-snapshots/src/funnels/packages.json",
+    "sha256": "fd299fc9fd61f06531fcc9b66fd497fd14c25a38214f8db241dab4e3a0131811",
+    "bytes": 1582
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/funnels/quizzes/registry.json",
+    "archived": "proposal/closure-snapshots/src/funnels/quizzes/registry.json",
+    "sha256": "4dce2f7f0eaf19ba28dc063b8a9cd70884a8a468bb401b8ff214853601c44947",
+    "bytes": 378
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/funnels/quizzes/registry.ts",
+    "archived": "proposal/closure-snapshots/src/funnels/quizzes/registry.ts.txt",
+    "sha256": "225fa3638b4406aa711b4afda77ef748e24dd35e6b29bcd46f4d3ac6fe320bbe",
+    "bytes": 4306
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/analytics/meta-capi.ts",
+    "archived": "proposal/closure-snapshots/src/lib/analytics/meta-capi.ts.txt",
+    "sha256": "1219f337cca4e3c7141a2048f022f8f1c913dd16094a0d69d75e11e9e3c7e5cd",
+    "bytes": 7878
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/auth/free-registration-recovery.ts",
+    "archived": "proposal/closure-snapshots/src/lib/auth/free-registration-recovery.ts.txt",
+    "sha256": "d89f4e058513b230964e122ee5dc6e5500b7af2adf8cd03bbf57ee798970dbd1",
+    "bytes": 8852
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/auth/free-registration.ts",
+    "archived": "proposal/closure-snapshots/src/lib/auth/free-registration.ts.txt",
+    "sha256": "daabd541a5c2553f02058b501e48afb00820f32466729e132c6b6de91bbaae6e",
+    "bytes": 18731
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/auth/intake-state.ts",
+    "archived": "proposal/closure-snapshots/src/lib/auth/intake-state.ts.txt",
+    "sha256": "536e205c575026bd76a56fec5e25b62c234bae0ac05e18797e918fd26c11eab2",
+    "bytes": 4781
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/auth/route-classification.ts",
+    "archived": "proposal/closure-snapshots/src/lib/auth/route-classification.ts.txt",
+    "sha256": "6a5c8c0a283054ab108779a6a8f23764a4919b67adea2f0a94cb389abb4d57a6",
+    "bytes": 7133
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/auth/unauthenticated-redirect.ts",
+    "archived": "proposal/closure-snapshots/src/lib/auth/unauthenticated-redirect.ts.txt",
+    "sha256": "bd6703ab7d835709100f2870c7ad950b1b66837f6e2f0b9f78836f8cdb6a1231",
+    "bytes": 1775
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/billing/offer-products.ts",
+    "archived": "proposal/closure-snapshots/src/lib/billing/offer-products.ts.txt",
+    "sha256": "3e2c7f6195974480280792b94dd7c27ab3fcd75dc3f12eae7538e5c7382b22b8",
+    "bytes": 2164
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/billing/payment-runtime-config.ts",
+    "archived": "proposal/closure-snapshots/src/lib/billing/payment-runtime-config.ts.txt",
+    "sha256": "2f5f9414aee446b43f337e5fa3ade5e5a2b6a7e6d1b0685dcf4ed611fcfd0e07",
+    "bytes": 589
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/billing/personal-plan-one-time-consent-copy.ts",
+    "archived": "proposal/closure-snapshots/src/lib/billing/personal-plan-one-time-consent-copy.ts.txt",
+    "sha256": "de99a4ad49ef4720b0f5bf08420b1805ceb691b670a575bba1aa89fc87b25fc9",
+    "bytes": 482
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/billing/personal-plan-one-time-consents.ts",
+    "archived": "proposal/closure-snapshots/src/lib/billing/personal-plan-one-time-consents.ts.txt",
+    "sha256": "9780ca72927361d64c493de99f1780e7b9a58800e3fb52ea0fbad8227b97a544",
+    "bytes": 7589
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/billing/pricing-catalog.ts",
+    "archived": "proposal/closure-snapshots/src/lib/billing/pricing-catalog.ts.txt",
+    "sha256": "bf01815cb824ef9cd3346be051d8f94868c9b916c593b2d2cd8e1140bc8dfae7",
+    "bytes": 709
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/billing/purchases.ts",
+    "archived": "proposal/closure-snapshots/src/lib/billing/purchases.ts.txt",
+    "sha256": "3c4ef0bc20b982ec38e7eff8f3a1e00b40b47412fc5d822151e117e85e53a6b6",
+    "bytes": 9853
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/billing/subscriptions.ts",
+    "archived": "proposal/closure-snapshots/src/lib/billing/subscriptions.ts.txt",
+    "sha256": "a6ba77a92481e13f6f03bc7b1c8d7fee75c02facfeb8ce747493bc64ecca995c",
+    "bytes": 17458
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/billing/trial-access-projection.ts",
+    "archived": "proposal/closure-snapshots/src/lib/billing/trial-access-projection.ts.txt",
+    "sha256": "6bd7a205a589005d2301cf77511709b26f63076538f953e1da77d57e567ba17f",
+    "bytes": 3958
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/billing/trial-admission.ts",
+    "archived": "proposal/closure-snapshots/src/lib/billing/trial-admission.ts.txt",
+    "sha256": "00dea2cbb5dad16446ee405f289aa7912c9cb895774653512d549ddea02d0017",
+    "bytes": 6384
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/billing/trial-analytics-context.ts",
+    "archived": "proposal/closure-snapshots/src/lib/billing/trial-analytics-context.ts.txt",
+    "sha256": "8fa707d663a6c657540fc45715f5a6a4e8022604ad0ccdad5cee777eb6bd0647",
+    "bytes": 1356
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/billing/trial-checkout-attempt.ts",
+    "archived": "proposal/closure-snapshots/src/lib/billing/trial-checkout-attempt.ts.txt",
+    "sha256": "84ba2d9f52efceb8bc64a499176c5d2c24b479d9907185b8998da05320ac76a9",
+    "bytes": 4242
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/billing/trial-eligibility.ts",
+    "archived": "proposal/closure-snapshots/src/lib/billing/trial-eligibility.ts.txt",
+    "sha256": "e911749fe703ff1cdc48fab0f7c6be3eb5ef9faf99fe33e36c4da8cb840734f1",
+    "bytes": 3776
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/billing/trial-identity-claims.ts",
+    "archived": "proposal/closure-snapshots/src/lib/billing/trial-identity-claims.ts.txt",
+    "sha256": "7e04ea1029da7e6c2c2864b860926fa83297d46c7174ea7310130d2c3536e963",
+    "bytes": 3962
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/billing/trial-management-operations.ts",
+    "archived": "proposal/closure-snapshots/src/lib/billing/trial-management-operations.ts.txt",
+    "sha256": "d89bcbcea01fc6e5cb1ec864212c32e2277cfceea6ff0ab21b3a4149a28d6e3c",
+    "bytes": 8667
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/billing/trial-offer.ts",
+    "archived": "proposal/closure-snapshots/src/lib/billing/trial-offer.ts.txt",
+    "sha256": "14083f0eb5677db3063e22ab585ca9779a51fac4e04ab8852ee2e11f087d4725",
+    "bytes": 4039
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/billing/trial-policy.ts",
+    "archived": "proposal/closure-snapshots/src/lib/billing/trial-policy.ts.txt",
+    "sha256": "a88f33d5abfefd705629a0ca8ef739b893dd1908aeec639627916fc815daef02",
+    "bytes": 6604
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/billing/trial-runtime.ts",
+    "archived": "proposal/closure-snapshots/src/lib/billing/trial-runtime.ts.txt",
+    "sha256": "0dae1fdc8a90e3b71a6faf4a20fafa9c655c165650fbe952a3b36e66b29bffe0",
+    "bytes": 5261
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/billing/types.ts",
+    "archived": "proposal/closure-snapshots/src/lib/billing/types.ts.txt",
+    "sha256": "f99c6f799c5c79a4218a2425fbd1b4ad4565c7f0592d1419b45ae6cb09e5047b",
+    "bytes": 7319
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/bondbuilder/constants.ts",
+    "archived": "proposal/closure-snapshots/src/lib/bondbuilder/constants.ts.txt",
+    "sha256": "f08d9c9133b6a3a937be2591d5ccc3d9520303049e256bfe8adf96d809d95400",
+    "bytes": 927
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/checkout/payment-feedback.ts",
+    "archived": "proposal/closure-snapshots/src/lib/checkout/payment-feedback.ts.txt",
+    "sha256": "88e3803bd9c586499b24492fabe48491810ed0f437a0343e02027322deabe95f",
+    "bytes": 9182
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/conditioner/constants.ts",
+    "archived": "proposal/closure-snapshots/src/lib/conditioner/constants.ts.txt",
+    "sha256": "755f034a482a19d41e25bcfaef244227ea3884f6a410983b63011d8b7cb065bb",
+    "bytes": 1761
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/deep-cleansing-shampoo/constants.ts",
+    "archived": "proposal/closure-snapshots/src/lib/deep-cleansing-shampoo/constants.ts.txt",
+    "sha256": "1b332ae25648ec77cd7ad3a30a2fde906630bf265614506a52dc0dfd1381a25f",
+    "bytes": 2185
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/discovery/flag.ts",
+    "archived": "proposal/closure-snapshots/src/lib/discovery/flag.ts.txt",
+    "sha256": "899bfb16057f87e035f0ee3f114dd0c223acf99059d16de000663fa36d26926f",
+    "bytes": 400
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/discovery/participant.ts",
+    "archived": "proposal/closure-snapshots/src/lib/discovery/participant.ts.txt",
+    "sha256": "2e46130e2b8329f74873be55915632ca658a45c399e7b41e915b1cef053386c1",
+    "bytes": 3282
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/dry-shampoo/constants.ts",
+    "archived": "proposal/closure-snapshots/src/lib/dry-shampoo/constants.ts.txt",
+    "sha256": "c2a05fc0941545369abe2cbc996eb9367e7a33227ca9305a9e14479201b5c25f",
+    "bytes": 844
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/email-deliverability-shared.ts",
+    "archived": "proposal/closure-snapshots/src/lib/email-deliverability-shared.ts.txt",
+    "sha256": "97928eee799f71cb6a2fc3b01f9506e410d31b630bcb29f633f7c45e067a2afa",
+    "bytes": 5070
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/entitlements/access.ts",
+    "archived": "proposal/closure-snapshots/src/lib/entitlements/access.ts.txt",
+    "sha256": "57b8489a23e69849cfeaa1f4a82df9ba7845c8a52cbcd96cea8c19e6a4657083",
+    "bytes": 8956
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/entitlements/entitlements.ts",
+    "archived": "proposal/closure-snapshots/src/lib/entitlements/entitlements.ts.txt",
+    "sha256": "faa22816f34f6a818bbf80bdebac6b627aaa1a12470cef7ae7ead627cb49cf59",
+    "bytes": 1756
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/entitlements/flag.ts",
+    "archived": "proposal/closure-snapshots/src/lib/entitlements/flag.ts.txt",
+    "sha256": "77e346855d4d309cb4cf87044f64a7a26478382875e8145ce64d3dd263937214",
+    "bytes": 402
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/entitlements/index.ts",
+    "archived": "proposal/closure-snapshots/src/lib/entitlements/index.ts.txt",
+    "sha256": "3fd0df6a57b4a211830d17917e166fffe9337e7aeaa4de8cc66f2fad6fb48087",
+    "bytes": 31
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/freemium/checkout-metadata.ts",
+    "archived": "proposal/closure-snapshots/src/lib/freemium/checkout-metadata.ts.txt",
+    "sha256": "dc761d436c0d10906da2fc1ed2e94e5ed495ede90b03c0bd0a635a534c5a644c",
+    "bytes": 1474
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/freemium/checkout-return.ts",
+    "archived": "proposal/closure-snapshots/src/lib/freemium/checkout-return.ts.txt",
+    "sha256": "70ddd2ca8499e4de2031e885ce76a7124590e68fcbd5f04c5695857dbb3b6f62",
+    "bytes": 2694
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/freemium/plan-provisioning-supabase.ts",
+    "archived": "proposal/closure-snapshots/src/lib/freemium/plan-provisioning-supabase.ts.txt",
+    "sha256": "38f307e885e199f17ca35b5fbb4f6113fa36d942d62fc3715116185f80b6191f",
+    "bytes": 13582
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/freemium/plan-provisioning.ts",
+    "archived": "proposal/closure-snapshots/src/lib/freemium/plan-provisioning.ts.txt",
+    "sha256": "53fd0187e2f49cfaa3db0605631ec7a8860b4b0cbfe1fcf96924a78a922d49aa",
+    "bytes": 9218
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/funnel/cookie.ts",
+    "archived": "proposal/closure-snapshots/src/lib/funnel/cookie.ts.txt",
+    "sha256": "522741b96f60560c02f92a5445428380de02231b2b3724b4143dfc6da14f7b48",
+    "bytes": 4798
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/funnel/flags.ts",
+    "archived": "proposal/closure-snapshots/src/lib/funnel/flags.ts.txt",
+    "sha256": "981bd9436dae7c1fc7cbd8d6dc60e3d6bbaa9dc3bea994e0a33fac525f02528d",
+    "bytes": 2498
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/funnel/journey-kind.ts",
+    "archived": "proposal/closure-snapshots/src/lib/funnel/journey-kind.ts.txt",
+    "sha256": "6088e7e2554b37b0d2da5231dd5361fdeed8cd2ebf1dae5286e107d7543efe88",
+    "bytes": 295
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/funnel/offer-presentation.ts",
+    "archived": "proposal/closure-snapshots/src/lib/funnel/offer-presentation.ts.txt",
+    "sha256": "e38f85f885a9e94b35abef31ed3a73368fb24a8c23bcebe3ba88e5d6602eb4f4",
+    "bytes": 513
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/funnel/organic-offer-media-experiment.ts",
+    "archived": "proposal/closure-snapshots/src/lib/funnel/organic-offer-media-experiment.ts.txt",
+    "sha256": "8e0882803faa756e7c103c53a16b857a73db8ac9e5f9c261ea013743f7902887",
+    "bytes": 1292
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/funnel/packages.ts",
+    "archived": "proposal/closure-snapshots/src/lib/funnel/packages.ts.txt",
+    "sha256": "66cab34518f29604a37c7a32721f74ca5c930f82a12dcf293db69e3b90a080be",
+    "bytes": 3650
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/funnel/personal-plan-pricing-experiment.ts",
+    "archived": "proposal/closure-snapshots/src/lib/funnel/personal-plan-pricing-experiment.ts.txt",
+    "sha256": "2df4e53841c87e421524c1cbaaeb0daeed9ac6d2a467cd8ae4da849faf2af516",
+    "bytes": 1131
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/funnel/personal-plan-pricing-qa-token.ts",
+    "archived": "proposal/closure-snapshots/src/lib/funnel/personal-plan-pricing-qa-token.ts.txt",
+    "sha256": "ac0fce778e1594083573a8b4fdb1f8ed5aa00e8d9427338856f8ae22781a0cf4",
+    "bytes": 3587
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/funnel/server.ts",
+    "archived": "proposal/closure-snapshots/src/lib/funnel/server.ts.txt",
+    "sha256": "775feb24b57ae2c7d71c4dec2f5ef4a8781fefaf355699331718fc44f92380dd",
+    "bytes": 21865
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/help/info-tips.ts",
+    "archived": "proposal/closure-snapshots/src/lib/help/info-tips.ts.txt",
+    "sha256": "897afb7bd7bbf9f336fe01b66ad95b8872cf6b7a264313716b88e4c338abfe1e",
+    "bytes": 4535
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/leave-in/constants.ts",
+    "archived": "proposal/closure-snapshots/src/lib/leave-in/constants.ts.txt",
+    "sha256": "9ccffc3c5faaa69ab6ed436f7af56aa0fa867ae6e898a71f2bd8a7d78410a7f4",
+    "bytes": 5957
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/mask/constants.ts",
+    "archived": "proposal/closure-snapshots/src/lib/mask/constants.ts.txt",
+    "sha256": "f557bc2ae0818d96819360ac4c015ac3fa53c580352ba024993465503911b63c",
+    "bytes": 940
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/observability/checkout.ts",
+    "archived": "proposal/closure-snapshots/src/lib/observability/checkout.ts.txt",
+    "sha256": "34c41d9cc134da4df6762251af4ba11dcffd5180f21bffd1bb5e8b5f8484d49d",
+    "bytes": 9602
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/observability/free-registration.ts",
+    "archived": "proposal/closure-snapshots/src/lib/observability/free-registration.ts.txt",
+    "sha256": "938847fa0013dd23090265e130a29e98268db3443664a95a0b8184bd75ae73b3",
+    "bytes": 4039
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/observability/offer-experiment.ts",
+    "archived": "proposal/closure-snapshots/src/lib/observability/offer-experiment.ts.txt",
+    "sha256": "9c0d5f6b8038b8dcbeafa3ac0efd7de126965e50022dbed7d2117e606ea20487",
+    "bytes": 2179
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/observability/payment-server-core.ts",
+    "archived": "proposal/closure-snapshots/src/lib/observability/payment-server-core.ts.txt",
+    "sha256": "8b06f22e39bed2ae6d8b4e3dfa6f8aca6c799bfac6b9134c43333144f05d2a4a",
+    "bytes": 4141
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/observability/payment-server.ts",
+    "archived": "proposal/closure-snapshots/src/lib/observability/payment-server.ts.txt",
+    "sha256": "fa47b3ddec1601bf85f5d65d481f0bfa13043b3f9fae79d046ec3eaf6be2b172",
+    "bytes": 954
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/observability/payment.ts",
+    "archived": "proposal/closure-snapshots/src/lib/observability/payment.ts.txt",
+    "sha256": "866ebbd656bcd23b9d46efa8804b99ae39cbe7cef4424f64cc86b031e7c9f316",
+    "bytes": 11167
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/observability/sentry-scrubbing.ts",
+    "archived": "proposal/closure-snapshots/src/lib/observability/sentry-scrubbing.ts.txt",
+    "sha256": "3980e1d096344f18c4288226d63f9577037fc486bb049a67316d8e157b6a8c60",
+    "bytes": 6625
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/oil/constants.ts",
+    "archived": "proposal/closure-snapshots/src/lib/oil/constants.ts.txt",
+    "sha256": "eada5f14cff4a56fb7b43ad8eb1c6def195a1f27f30bcb98165ca6f418036286",
+    "bytes": 2493
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/paypal/trial-collection-start.ts",
+    "archived": "proposal/closure-snapshots/src/lib/paypal/trial-collection-start.ts.txt",
+    "sha256": "d22659e8282e0f18b69971b8948ba5afc4b284774aa1d2330f434ed3358513bc",
+    "bytes": 4315
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/peeling/constants.ts",
+    "archived": "proposal/closure-snapshots/src/lib/peeling/constants.ts.txt",
+    "sha256": "856037856c8fecabe9f3b03040f5c80318e77222786bf4f4d47c0dd85d99a4ce",
+    "bytes": 517
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/categories/bondbuilder.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/categories/bondbuilder.ts.txt",
+    "sha256": "eb8708468838e41be8639d82ec5f76dfb31f761a58db92ddf29c65cbfbd2b008",
+    "bytes": 5741
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/categories/conditioner.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/categories/conditioner.ts.txt",
+    "sha256": "1b7eff19ee348d21259cf6627cfcc9d73fa0d4010b5b225fb15c66640a2ac948",
+    "bytes": 10228
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/categories/deep-cleansing.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/categories/deep-cleansing.ts.txt",
+    "sha256": "f67e39e7b71ff657d7ce74421dd849b7e12c6dc3a66ed89552b3fab81ffb677c",
+    "bytes": 3829
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/categories/dry-shampoo.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/categories/dry-shampoo.ts.txt",
+    "sha256": "c3702c9e006d85ac5a92d01f27c548425d45d92e0dbdc51a33977ae671945a95",
+    "bytes": 2954
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/categories/heat-protectant.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/categories/heat-protectant.ts.txt",
+    "sha256": "954ddca783f5add18b9474eb1c7a8ed921463b4e1bc185e81f2d440174681e84",
+    "bytes": 2931
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/categories/leave-in.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/categories/leave-in.ts.txt",
+    "sha256": "60d4bae5d58b444e2dd8d1be4cf89130695aab45bfd878f0da587fceea8c8720",
+    "bytes": 10779
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/categories/mask.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/categories/mask.ts.txt",
+    "sha256": "2174f2693764f805acb6476ca5390261fb9fbf45706f8f9924c620161970a319",
+    "bytes": 10642
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/categories/oil.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/categories/oil.ts.txt",
+    "sha256": "fd6f808c9e9c60610dfcab5af8c29f640eb32c2a7c0faa6e6d51210b8bfa04e2",
+    "bytes": 10813
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/categories/scalp-care.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/categories/scalp-care.ts.txt",
+    "sha256": "6993f65a0719275a8abb017392b167433073987187704b119567f7d5bb5fb606",
+    "bytes": 6194
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/categories/shampoo.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/categories/shampoo.ts.txt",
+    "sha256": "3935814efcd21647610854dd8f56b040edad26930c8714586ea04ab5f4d9e14b",
+    "bytes": 4886
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/compute-stage1.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/compute-stage1.ts.txt",
+    "sha256": "3618dbc5d3e1c035ea60b79dffe6a356ced57c3e19b8d591c512d688936a4bcc",
+    "bytes": 4272
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/decision-presentation.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/decision-presentation.ts.txt",
+    "sha256": "59f31da07e7dc79be68ef3f5ebe9bf66073ecdab6168559a25646616475edbf5",
+    "bytes": 10233
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/direct-acceptance/accept.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/direct-acceptance/accept.ts.txt",
+    "sha256": "4505a95912e96178aa412db827656bf7f74c857228c165eea55558a46a0b8afb",
+    "bytes": 19654
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/direct-acceptance/defaults.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/direct-acceptance/defaults.ts.txt",
+    "sha256": "3609a4a566f8650e8b9f7b4f4c4576eef549901ad08e846a97403a6772eb1cf3",
+    "bytes": 1926
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/enrollment.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/enrollment.ts.txt",
+    "sha256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "bytes": 17762
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/freemium-enrollment.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/freemium-enrollment.ts.txt",
+    "sha256": "c0f4f0d3f45f97001365ffc1bc492e9ded164d09f6f2ab7708198cd43c217b50",
+    "bytes": 5564
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/frontier-routing-loader.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/frontier-routing-loader.ts.txt",
+    "sha256": "3602786d58e9ad2ac489a148b52ada98fb2f0b3f3fff2b915e8bc2ebfd57c135",
+    "bytes": 6479
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/frontier-routing.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/frontier-routing.ts.txt",
+    "sha256": "532aaf2f53973c532b1f5269cb81cb74c3f1483ad29c35fa27766b4d7b5489aa",
+    "bytes": 2439
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/input.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/input.ts.txt",
+    "sha256": "22743980e01019fc9834a5a5f6ad3ef566def3757be3b17a2c5994f11ac95c6f",
+    "bytes": 9148
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+    "bytes": 21991
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/journey-access.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/journey-access.ts.txt",
+    "sha256": "abf839a86f4c28178223b97d43fed5d579e7317a78f8d8e95ccf29f7fcec2baf",
+    "bytes": 4640
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/legacy-prefill.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/legacy-prefill.ts.txt",
+    "sha256": "309514fe296a23f6b0ee4943874bf7af4beef3ce9b857b665ccd7aae3ec262ce",
+    "bytes": 11479
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/lifecycle/repository.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/lifecycle/repository.ts.txt",
+    "sha256": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "bytes": 9783
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/migration-admission.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/migration-admission.ts.txt",
+    "sha256": "c55ef64c0bbe0322694b490f7645f08198854c0bac9791d6321ae92bc9b39140",
+    "bytes": 7321
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/navigation-access.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/navigation-access.ts.txt",
+    "sha256": "419d254254478cd628089a24064c3afcbec5d68f8e597fa3b5c4f1d2a3f4ca2b",
+    "bytes": 16465
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/needs.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/needs.ts.txt",
+    "sha256": "e79fb582f70dbd85f78c5771f3f32b350c503e365540e2f43e9a8d8541f1e1af",
+    "bytes": 9772
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/oil-heat-context.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/oil-heat-context.ts.txt",
+    "sha256": "a2f40e58447f39af89129b00911bb53ea3a2e99975f5d955a3b34f85d9665adc",
+    "bytes": 1982
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/persistence/free-snapshot-service.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/persistence/free-snapshot-service.ts.txt",
+    "sha256": "74da0d680db66ec32d2d2ab505225b7b4c9eb2b206f57f12923d11612a76c222",
+    "bytes": 10476
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/persistence/free-snapshot-supabase.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/persistence/free-snapshot-supabase.ts.txt",
+    "sha256": "a7e00ff93b88a1d9df5780189d0a46e4630fca604b62dbbaa6791717f663dc92",
+    "bytes": 5400
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/persistence/index.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/persistence/index.ts.txt",
+    "sha256": "c8200edcb8b4ad98a218f659b44190227092b047c89ad3c7914e134a7e8eba5b",
+    "bytes": 3231
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/persistence/stage1-service.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/persistence/stage1-service.ts.txt",
+    "sha256": "aa383e1b9be24658a5b16bbfa817e6a3ff8c5ce2edd59c1701751e604b445438",
+    "bytes": 7504
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/persistence/stage2-refinement-service.ts.txt",
+    "sha256": "9aa1af4895e7ebc9976879f42c8160a8800e1f084e38a8cb923261a156d11aa6",
+    "bytes": 14485
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/persistence/stage2-refinement-supabase.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/persistence/stage2-refinement-supabase.ts.txt",
+    "sha256": "9da3baa346175deb49f5c9b9759e281d9accb068fbcf455ce1ea82d27fda9cbc",
+    "bytes": 12622
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/portfolio.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/portfolio.ts.txt",
+    "sha256": "3ac73a406d694767684066bf9e3caa1c8d9eec7ab1279ddb3e0dc977c0917146",
+    "bytes": 6639
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/product-preview-contract.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/product-preview-contract.ts.txt",
+    "sha256": "8e75e3be77b6ac7d61a1ea41b7aef280e9210b6fa271deb4d9f5cb57141e6995",
+    "bytes": 7784
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/product-previews.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/product-previews.ts.txt",
+    "sha256": "7c0b484dcb14e2704c5b67aaca17c1e7b5e735c816ec1279530ce5b04f406f0c",
+    "bytes": 13677
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/authorities.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/authorities.ts.txt",
+    "sha256": "46722afc73e14c5f10b83fd220bc4e5f82c3de001086881190cd1fb769b91e2b",
+    "bytes": 4532
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/authority/catalog-batching.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/authority/catalog-batching.ts.txt",
+    "sha256": "32ec67618c9750051803cc9e3be628bbcbbc475d49beb613d07471e66ae805e1",
+    "bytes": 4511
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/authority/catalog-facts.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/authority/catalog-facts.ts.txt",
+    "sha256": "b9a8edeb5c656644fd877a47c157c305b67e178bd59cf172cdb668f0b12864f0",
+    "bytes": 47171
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/authority/categories/axis-fit.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/authority/categories/axis-fit.ts.txt",
+    "sha256": "10ad21613384fc1316dfb8ef209adee0e25015aae8b0587e14545718ce3a96fb",
+    "bytes": 2330
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/authority/categories/bondbuilder.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/authority/categories/bondbuilder.ts.txt",
+    "sha256": "6983634f2da4d3c3fabbafe319f131fc3f58f3b3467b2a0c3ebea3f407beedc5",
+    "bytes": 8807
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/authority/categories/conditioner.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/authority/categories/conditioner.ts.txt",
+    "sha256": "810cae1dbcf14b696e6a8af57ae7ed2df822336210b5ab0b4313519edcec549d",
+    "bytes": 8122
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/authority/categories/deep-cleansing-shampoo.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/authority/categories/deep-cleansing-shampoo.ts.txt",
+    "sha256": "755c8081e2a3ebf6b9a2cbd705f8bfb607882da70d963fe6d62a74cb6bb7d2da",
+    "bytes": 5363
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/authority/categories/dry-shampoo.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/authority/categories/dry-shampoo.ts.txt",
+    "sha256": "94e4793bd0ad3eb15f70edcd0c80a6a00c12c6cc3675ce8e65e6b6797fb0b354",
+    "bytes": 5861
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/authority/categories/heat-protectant.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/authority/categories/heat-protectant.ts.txt",
+    "sha256": "ab49ebd3d9abc083fb4253450c6a4bb39a1a539d660d03e6183948dcfeead33c",
+    "bytes": 7029
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/authority/categories/leave-in.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/authority/categories/leave-in.ts.txt",
+    "sha256": "64cb24981836f777f5f5da176e1f6ebf7b156b87199c83a7956312c27aaf74be",
+    "bytes": 9628
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/authority/categories/mask.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/authority/categories/mask.ts.txt",
+    "sha256": "b46752474c4a905706b66b150ab7caa44abf584794183d577f0f2d528e8e525b",
+    "bytes": 11654
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/authority/categories/oil.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/authority/categories/oil.ts.txt",
+    "sha256": "8fa2b25d1f6d85192074d624b5f90fde8079fd322c27300be42b8b3ec36ac188",
+    "bytes": 9335
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/authority/categories/scalp-care.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/authority/categories/scalp-care.ts.txt",
+    "sha256": "c06b5770e787518e07aa23724ab0f71cf033f7794379eb7409cddad8709a3a95",
+    "bytes": 6540
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/authority/categories/shampoo-spec-target.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/authority/categories/shampoo-spec-target.ts.txt",
+    "sha256": "b2dc806b5a32f053398ac380f890708b1f0e956238b5e4f761ba15df6eed86cb",
+    "bytes": 1179
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/authority/categories/shampoo.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/authority/categories/shampoo.ts.txt",
+    "sha256": "e5384f86847aed2c4692016fc518f4bd3ca1db5e9eb37151b48c0b1814bbbaf0",
+    "bytes": 9098
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/authority/category-decision-schema.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/authority/category-decision-schema.ts.txt",
+    "sha256": "1d006b79ebce50904ab195fb80f3885e59a34956efdca1a57a95641c6cf6a425",
+    "bytes": 12402
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/authority/contracts.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/authority/contracts.ts.txt",
+    "sha256": "300032e978090b8226f72f4880c6cdf310beb95438786b9e966d594bc3416781",
+    "bytes": 8049
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/authority/evaluate.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/authority/evaluate.ts.txt",
+    "sha256": "878ee44a482141dffe20a944ff9a16a03aff1b91d01ce7ec604fa10782f52eaa",
+    "bytes": 1698
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/authority/shared.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/authority/shared.ts.txt",
+    "sha256": "ea6f846f838c39a8a00e56371d628159c1773141f7c1b65221002b3619abeb16",
+    "bytes": 3733
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/authority/snapshot.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/authority/snapshot.ts.txt",
+    "sha256": "e155d2e6918a31d86b5275b3b10874f7d202cded2a7d13220723db4025755f65",
+    "bytes": 8939
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts.txt",
+    "sha256": "03ef27cb44d397b40d859d5e5c9ff1667797ad8b5196668453540478dead8790",
+    "bytes": 1240
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/candidate-ranking.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/candidate-ranking.ts.txt",
+    "sha256": "bdf223c43ea9f15a3c76148692e249be65f0b819f3eee6a0366141a5fdf95bce",
+    "bytes": 1467
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/comparison-dimensions.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/comparison-dimensions.ts.txt",
+    "sha256": "1f7ab06b6e33e59512d95d57c8de3b1ed73a165d4a8cdd86a7757f4a42d85a54",
+    "bytes": 19300
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/contracts.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/contracts.ts.txt",
+    "sha256": "bc4291e12db65a3e220c884344255403e4ea3c3eb19d24fb3c5a4605ae011366",
+    "bytes": 52077
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/fit-comparison-schema.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/fit-comparison-schema.ts.txt",
+    "sha256": "1c857dcd3399fed695aecc0f2e7f6848eb0b3fec9ecca95de9df4e412606ac5b",
+    "bytes": 1810
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/fit-comparison.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/fit-comparison.ts.txt",
+    "sha256": "9d805c246fed2e938937d09863b084f0ab995ed4f5e382dded4c703e23e9c3cb",
+    "bytes": 28206
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/gateway.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/gateway.ts.txt",
+    "sha256": "bff434c8d3a4c80124987b3326ff5df926c3d9b11cad6defc48ac869690b1f59",
+    "bytes": 9706
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/inventory-search.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/inventory-search.ts.txt",
+    "sha256": "8944a738db96f5dcd9f61ee248ef7ab98ffd4fcd35ffaf3bf4f33a56f64a9612",
+    "bytes": 555
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/legacy-inventory-entry.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/legacy-inventory-entry.ts.txt",
+    "sha256": "b37b99402d991cea00c8bbd9e5aa4bb2e86af99ba5d1a4458a45ab162f3a3537",
+    "bytes": 2547
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/portfolio.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/portfolio.ts.txt",
+    "sha256": "def1694650494cb397b4b8cee4ab828efda3b2a9f3fbab8b1613902d36cb7ac3",
+    "bytes": 10991
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/product-load-resolution.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/product-load-resolution.ts.txt",
+    "sha256": "871f29da53673db8995f477cc61b8e13a2497935d24544d2357fbf4dd09d6059",
+    "bytes": 31127
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/production-persistence-gateway.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/production-persistence-gateway.ts.txt",
+    "sha256": "ff627d68d5172015d33b6c049a8611a2155e4d79fff5bab4d7b88112379c161a",
+    "bytes": 66669
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/recovery-desired-state.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/recovery-desired-state.ts.txt",
+    "sha256": "556da32412ee4b65411600a0d7c87e8d556845cac2b5721a5f5c0b870937ff3b",
+    "bytes": 3667
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/stage2-entry-adapter.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/stage2-entry-adapter.ts.txt",
+    "sha256": "db84e42db42b11bb2031b6f75eb7b918f9034d49f0f3b7c3d6d0d42e3dc48e6a",
+    "bytes": 8391
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/stage3-bootstrap-review-contract.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/stage3-bootstrap-review-contract.ts.txt",
+    "sha256": "7a72ade9c72e4eb533c15708d1fa5093ff25e687978406804fb5cf59e96aeda2",
+    "bytes": 2702
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/stage3-persistence-supabase.ts.txt",
+    "sha256": "7b1e5b2b8668b973a1d2dc208e19273fb481fad8cd9bf042cf05e4c04a927ea3",
+    "bytes": 42184
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/products/state-machine.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/products/state-machine.ts.txt",
+    "sha256": "9f6180af77fcdb0decb53daa806d9f1e5330e63aa98839b2167637030ea6f6f3",
+    "bytes": 44624
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/reasons.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/reasons.ts.txt",
+    "sha256": "c631f3d70952947e3acf5cc0a5b93c394f8f57ad2ca1be8fde2c94b65008d3f4",
+    "bytes": 584
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/refinement/answer-provenance.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/refinement/answer-provenance.ts.txt",
+    "sha256": "40602c54408d6698ae801265981ece7b021f35212fba6a8eeb7f6c19e6f80a9e",
+    "bytes": 2932
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/refinement/assumed-defaults.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/refinement/assumed-defaults.ts.txt",
+    "sha256": "cb345e2890e715e51055fea93f7f5867dfc46cb0f2e13be5ad7db0ff2b830ff0",
+    "bytes": 18792
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/refinement/gateway.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/refinement/gateway.ts.txt",
+    "sha256": "0cf71dd3e743200625c79818846e1a42a2a5d211b3ae76e3ed3ab8b4673f2aa4",
+    "bytes": 3429
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/refinement/heat-events.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/refinement/heat-events.ts.txt",
+    "sha256": "310d834790d9b61a1e5de03be6371ee3e92ab927a902bf3b8afb2f3f567f5e7c",
+    "bytes": 3292
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/refinement/module-status.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/refinement/module-status.ts.txt",
+    "sha256": "0d5e6b0d50555c348beb5a56c38134fb5da4627de4fcd6f95674b8f8c3e1b82e",
+    "bytes": 2417
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/refinement/production-persistence-gateway.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/refinement/production-persistence-gateway.ts.txt",
+    "sha256": "04c5180fdb3d1845f448cd441ba3f1b48c28ccc4cff1a788ea08e31b8fe34d69",
+    "bytes": 3086
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/refinement/question-path.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/refinement/question-path.ts.txt",
+    "sha256": "cea18c0b65de59d4b2e2c1b502c81d4c2f1886e564235041334932b2e8be56c1",
+    "bytes": 12439
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/refinement/session.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/refinement/session.ts.txt",
+    "sha256": "2988e410830d68e04a380934fd7f3ac51236901e10c91d629e1cf6a2fcac0712",
+    "bytes": 6400
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/refinement/stage1-adapter.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/refinement/stage1-adapter.ts.txt",
+    "sha256": "e894e1b2a8a898f31157665af548cc145b897f58eebe2664b0fd1d6efd6f458c",
+    "bytes": 3516
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/refinement/types.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/refinement/types.ts.txt",
+    "sha256": "9d19d1249ac0ee2f43fbcaa8ff03417df5afd143f3fb6e9da26be0618db24f04",
+    "bytes": 6121
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/release.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/release.ts.txt",
+    "sha256": "92d24c0e4c010e20e13f75db0c561cf9da8f490a17de4a0e4cbbf10691a8d55c",
+    "bytes": 3346
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/rollout-access.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/rollout-access.ts.txt",
+    "sha256": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+    "bytes": 4691
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/routine/cadence-authority.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/routine/cadence-authority.ts.txt",
+    "sha256": "47963bd799293399568ebefed0eae54de58ff57c966fc6c69302200a689d558f",
+    "bytes": 1595
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/routine/cadence.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/routine/cadence.ts.txt",
+    "sha256": "0bdcd8ba171ba21dff3570de738996adc65a415b982025a0cd0e7dfec1a3fa0c",
+    "bytes": 7951
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/routine/canonicalize.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/routine/canonicalize.ts.txt",
+    "sha256": "e4121a385e6c86c957143147994132d9ec1695de1cc7d51d3801d0ad51b451ae",
+    "bytes": 642
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/routine/commerce.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/routine/commerce.ts.txt",
+    "sha256": "54887c47fed101a272b7b61bf8b9c36aad54dba3723f77476316a6cfd71bf0ed",
+    "bytes": 3414
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/routine/diff.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/routine/diff.ts.txt",
+    "sha256": "b893394ec965315d96689b1e56d097ae5651195d95d47138e5bbd2d09c470d59",
+    "bytes": 2357
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/routine/editor.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/routine/editor.ts.txt",
+    "sha256": "456a2db8fe593d486457eba1c1297f52156fca89db465a96274181921894ddff",
+    "bytes": 6575
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/routine-proposal-stager.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/routine-proposal-stager.ts.txt",
+    "sha256": "d3c010b03572ef4a593484da0fb7f3463b2c1bd4d78e5bd6c8b41be42e57408b",
+    "bytes": 8666
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/stage5-access.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/stage5-access.ts.txt",
+    "sha256": "b9e58bda03ed7f9c0f01b5ad546b807abfc9abc42db13026aa1248b474ed884b",
+    "bytes": 292
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/transition-performance.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/transition-performance.ts.txt",
+    "sha256": "fc737132f2d7a77b361f4690789bdd4dcb36364a4dcd5d0a4344527c9cdf8b18",
+    "bytes": 809
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan/types.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan/types.ts.txt",
+    "sha256": "40297a7f5b93d2ae223603fe818111f8a546c21299579d4eaf1da3d6089e2389",
+    "bytes": 17171
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan-field-test/errors.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan-field-test/errors.ts.txt",
+    "sha256": "1e9b1f458e6adb52ee76ecf725c3a6007e91aab6ccb5f89a6dd00232691c93a1",
+    "bytes": 1708
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan-field-test/moderator-contract.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan-field-test/moderator-contract.ts.txt",
+    "sha256": "d0b5f90ae45555be0e52945a2ff11c510ff8a98acee369eefd26b7c1e7fb8e9c",
+    "bytes": 1955
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan-field-test/moderator.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan-field-test/moderator.ts.txt",
+    "sha256": "dba5f364f8111b31ab8e640c3b2aab237ca6e0186f0ba5b3de86e2653d4ca628",
+    "bytes": 17262
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan-quiz/offer-adapter.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan-quiz/offer-adapter.ts.txt",
+    "sha256": "67cce9c3515c8bb2aff287131fda1be77c7c81188732b3fc9e66b1e3afefa6f4",
+    "bytes": 12530
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan-quiz/persistence.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan-quiz/persistence.ts.txt",
+    "sha256": "9783d531cfaf8ed1b8d91b133b030758fd2bf3c128b5eee10cd4b0e6f5883335",
+    "bytes": 6959
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan-quiz/primary-concern.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan-quiz/primary-concern.ts.txt",
+    "sha256": "3f6757b22ae9ba0c1c1951f1813c13c9c3102cfdd8f02c929fdefbbfbde456df",
+    "bytes": 920
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/personal-plan-quiz/types.ts",
+    "archived": "proposal/closure-snapshots/src/lib/personal-plan-quiz/types.ts.txt",
+    "sha256": "19565073dbad675141bcbbb94a796a73da7727569164a01e0622a4e471736c46",
+    "bytes": 3694
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/premium-sheet/pricing.ts",
+    "archived": "proposal/closure-snapshots/src/lib/premium-sheet/pricing.ts.txt",
+    "sha256": "30de9f064cb467c1ed61832b3ea7beffe855fd1703377f80c04e104957f60432",
+    "bytes": 3512
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/product-identity/brand-resolution.ts",
+    "archived": "proposal/closure-snapshots/src/lib/product-identity/brand-resolution.ts.txt",
+    "sha256": "5182615a8419b477e73b0a00e05e78bb9436d8b7ad9c3c7f2d35850f65e48b8a",
+    "bytes": 13993
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/product-identity/index.ts",
+    "archived": "proposal/closure-snapshots/src/lib/product-identity/index.ts.txt",
+    "sha256": "fd7c23ab66221159b693d8f3c076ad1169160e1d2ed1cd1de7b923d1e3a82d46",
+    "bytes": 4791
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/product-identity/normalize.ts",
+    "archived": "proposal/closure-snapshots/src/lib/product-identity/normalize.ts.txt",
+    "sha256": "817e15aed0f145308fb7e971ac9ab6171ddb0d3f0b2c043e9e06377b765d69db",
+    "bytes": 3441
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/product-specs/constants.ts",
+    "archived": "proposal/closure-snapshots/src/lib/product-specs/constants.ts.txt",
+    "sha256": "3c9c5637b689901f7995aa04da9e41bc34d34b91fc85e474489e02cd6e62613d",
+    "bytes": 5097
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/product-usage/shampoo-fallback.ts",
+    "archived": "proposal/closure-snapshots/src/lib/product-usage/shampoo-fallback.ts.txt",
+    "sha256": "2480aea9af037a2217ffd5a6e3d3014a7d42e01c3a760a383680ee30a5ba3c07",
+    "bytes": 2676
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/quiz/completion.ts",
+    "archived": "proposal/closure-snapshots/src/lib/quiz/completion.ts.txt",
+    "sha256": "7915034821dac7078888f084451ac86984007a736cbce379673585ba6a169b33",
+    "bytes": 1326
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/quiz/diagnostic-input.ts",
+    "archived": "proposal/closure-snapshots/src/lib/quiz/diagnostic-input.ts.txt",
+    "sha256": "964652bf5d3e3d8cd9bc233b18977e59e3cf7264a97ec7de5d5c4ac6cea7149e",
+    "bytes": 3239
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/quiz/link-to-profile.ts",
+    "archived": "proposal/closure-snapshots/src/lib/quiz/link-to-profile.ts.txt",
+    "sha256": "5813a8c45eb51d5b3e0e2f8b712d1c2e8e2169cd878c09647da2d7914da3132a",
+    "bytes": 13680
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/quiz/normalization.ts",
+    "archived": "proposal/closure-snapshots/src/lib/quiz/normalization.ts.txt",
+    "sha256": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239",
+    "bytes": 11376
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/quiz/primary-concern.ts",
+    "archived": "proposal/closure-snapshots/src/lib/quiz/primary-concern.ts.txt",
+    "sha256": "fc33b4465dec57bcc2797ca11ab7d521280189c97495ba8c30b41dd4671207d1",
+    "bytes": 2638
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/quiz/types.ts",
+    "archived": "proposal/closure-snapshots/src/lib/quiz/types.ts.txt",
+    "sha256": "11ec81f1d6f0e5480132ec892301a2437852c2fc80bf95c22abf2207e6b1fce2",
+    "bytes": 2854
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/reactivation/checkout-recovery.ts",
+    "archived": "proposal/closure-snapshots/src/lib/reactivation/checkout-recovery.ts.txt",
+    "sha256": "ae4dc3a9ae881a89fb372cc72f12e4f32a07fdf1094ffb4f24b9a6cbe5957dd9",
+    "bytes": 1940
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/reactivation/checkout-reservations.ts",
+    "archived": "proposal/closure-snapshots/src/lib/reactivation/checkout-reservations.ts.txt",
+    "sha256": "e1e14f2ad3c5ce5a511cf4918f561af1568d924426dc2eb1c18d735ca1eb2377",
+    "bytes": 9015
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/reactivation/return-destination.ts",
+    "archived": "proposal/closure-snapshots/src/lib/reactivation/return-destination.ts.txt",
+    "sha256": "48b88020e14c0e29db0744e616ce9a94d4399d8e52952c2eed95233d307807ab",
+    "bytes": 3811
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/reactivation/stripe-checkout-context.ts",
+    "archived": "proposal/closure-snapshots/src/lib/reactivation/stripe-checkout-context.ts.txt",
+    "sha256": "c4d51565dd34601e2fb1e5858470c79439f6ddcc8a1ec8ab9589e07604350389",
+    "bytes": 9026
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/reactivation/stripe-checkout-recovery.ts",
+    "archived": "proposal/closure-snapshots/src/lib/reactivation/stripe-checkout-recovery.ts.txt",
+    "sha256": "95f2390c0d83060576590bde47a9e3d32ec4ac11cfe9123312fd5aa69e7e313c",
+    "bytes": 5919
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/recommendation-engine/contracts.ts",
+    "archived": "proposal/closure-snapshots/src/lib/recommendation-engine/contracts.ts.txt",
+    "sha256": "c057d4aa0c25c44bdb60432a11b1cda1521a0d59d533826f6383dfd639c4d30e",
+    "bytes": 6107
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/recommendation-engine/types.ts",
+    "archived": "proposal/closure-snapshots/src/lib/recommendation-engine/types.ts.txt",
+    "sha256": "4d945a6198871e362ead2b1f575b3907ccce8e61b804e2add40fbc3de674a648",
+    "bytes": 19364
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/routines/personal-plan/application/contracts.ts",
+    "archived": "proposal/closure-snapshots/src/lib/routines/personal-plan/application/contracts.ts.txt",
+    "sha256": "752971bf0c26f18e8ef4ba9ec282b2652a96c25a20206d5467ea8f3751aecf68",
+    "bytes": 11744
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/scan/profile-context.ts",
+    "archived": "proposal/closure-snapshots/src/lib/scan/profile-context.ts.txt",
+    "sha256": "897769a982848d5b5ebb27b47502190be45a26fb85dc6c94a10f72e820774aea",
+    "bytes": 1734
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/scan/scanner-context-supabase.ts",
+    "archived": "proposal/closure-snapshots/src/lib/scan/scanner-context-supabase.ts.txt",
+    "sha256": "895b2afc2c1c3893601715da2236ae7b8e903292369e67203d159d2c6a0ab539",
+    "bytes": 2535
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/scan/scanner-context.ts",
+    "archived": "proposal/closure-snapshots/src/lib/scan/scanner-context.ts.txt",
+    "sha256": "f77e2a27db12dc68cc8b4deab30c25c45e12796053b32bf43fd71f7d4b7e73ce",
+    "bytes": 22633
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/shampoo/constants.ts",
+    "archived": "proposal/closure-snapshots/src/lib/shampoo/constants.ts.txt",
+    "sha256": "9959a578b18747184e176ff52756cae5950bff1a723a027d8e1ac0fd3a7b7ca6",
+    "bytes": 2977
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/stripe/checkout-session-params.ts",
+    "archived": "proposal/closure-snapshots/src/lib/stripe/checkout-session-params.ts.txt",
+    "sha256": "985f472524ca69289513989e59f39068cde6a1234c0b0a7429f15da343b595b9",
+    "bytes": 5282
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/stripe/client.ts",
+    "archived": "proposal/closure-snapshots/src/lib/stripe/client.ts.txt",
+    "sha256": "1d608c0c43185db993cbfb4a9219b2bf7e28b8f8d641a92f1d7dd429cb645f68",
+    "bytes": 3361
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/stripe/intervals.ts",
+    "archived": "proposal/closure-snapshots/src/lib/stripe/intervals.ts.txt",
+    "sha256": "c6bc97592febb4666b6e9ae9f85e5ce3ffbcaf8bc9cfeaef5db0bde41c3d568a",
+    "bytes": 516
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/stripe/pricing-plans.ts",
+    "archived": "proposal/closure-snapshots/src/lib/stripe/pricing-plans.ts.txt",
+    "sha256": "5852bc9d1f9da7d76a0620df8f2e329cb641f044018804ff832140249bb4b90b",
+    "bytes": 3276
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/stripe/trial-catalog.ts",
+    "archived": "proposal/closure-snapshots/src/lib/stripe/trial-catalog.ts.txt",
+    "sha256": "257b15dfcc196342adde6eb919f026fff2944aa5e6ccb635272ef1ddc0a782e0",
+    "bytes": 4134
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/stripe/trial-checkout-session-params.ts",
+    "archived": "proposal/closure-snapshots/src/lib/stripe/trial-checkout-session-params.ts.txt",
+    "sha256": "9341b1b612522030f2272dcb75a455ea914792c6810567aa2f176dd73ebb51c3",
+    "bytes": 1903
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/stripe/trial-checkout.ts",
+    "archived": "proposal/closure-snapshots/src/lib/stripe/trial-checkout.ts.txt",
+    "sha256": "eaf7543533f25be9182842f1bb4678ce6e4a0f405e60d5c8e968d215f28dd408",
+    "bytes": 8137
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/supabase/admin.ts",
+    "archived": "proposal/closure-snapshots/src/lib/supabase/admin.ts.txt",
+    "sha256": "bd6ec1538d65a01f82b3f55b2839f0ac347d617c6de29d13cea4b0eff737386a",
+    "bytes": 307
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/supabase/middleware.ts",
+    "archived": "proposal/closure-snapshots/src/lib/supabase/middleware.ts.txt",
+    "sha256": "b46773cf21b880cb35d2967d4a882be1c5c59c53f2416607b60d3cb8a4c862a7",
+    "bytes": 36657
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/supabase/server.ts",
+    "archived": "proposal/closure-snapshots/src/lib/supabase/server.ts.txt",
+    "sha256": "ab2e4b8ccc17f8fb4a43d2a755a563a8549f2ea02feedb9df44ee2112501aa9a",
+    "bytes": 770
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/types.ts",
+    "archived": "proposal/closure-snapshots/src/lib/types.ts.txt",
+    "sha256": "80ce0439bebeb683290f086cc1bab20f3d03a29c577e750ceaa8f73d48243d93",
+    "bytes": 40494
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/utils.ts",
+    "archived": "proposal/closure-snapshots/src/lib/utils.ts.txt",
+    "sha256": "7c8c3dfc0cdd370d44932828eb067ef771c8fe7996693221d5d4b90af6d54f2d",
+    "bytes": 166
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/vocabulary/concerns-goals.ts",
+    "archived": "proposal/closure-snapshots/src/lib/vocabulary/concerns-goals.ts.txt",
+    "sha256": "f588c309f78685855551f8270f8dec4fc5e046d5c1165d734a63f168315f28e8",
+    "bytes": 1565
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/vocabulary/errors.ts",
+    "archived": "proposal/closure-snapshots/src/lib/vocabulary/errors.ts.txt",
+    "sha256": "79aa0a1fe9ddc787d7f487df6d91d608a2c8d2cb9ea2ac4f06411683395b68aa",
+    "bytes": 581
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/vocabulary/frequencies.ts",
+    "archived": "proposal/closure-snapshots/src/lib/vocabulary/frequencies.ts.txt",
+    "sha256": "d79bb3584473a8f6541feecff58a40633736f9376981ff190b645114dc0eb3a9",
+    "bytes": 6217
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/vocabulary/hair-length.ts",
+    "archived": "proposal/closure-snapshots/src/lib/vocabulary/hair-length.ts.txt",
+    "sha256": "3dd675892cb15b6021d7365203bdc225e86805bfb15beec305cc90e83d74c9e4",
+    "bytes": 918
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/vocabulary/hair-types.ts",
+    "archived": "proposal/closure-snapshots/src/lib/vocabulary/hair-types.ts.txt",
+    "sha256": "36c517006e2cf2717a7f9527fe0484c7c117ba7caa8b7ed7008445950cd79b72",
+    "bytes": 1153
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/vocabulary/index.ts",
+    "archived": "proposal/closure-snapshots/src/lib/vocabulary/index.ts.txt",
+    "sha256": "5e011545b7a6a94b96720af7b225dc12c025dbf0509f8b20cdd352bbcfa3109b",
+    "bytes": 3427
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/vocabulary/onboarding-care.ts",
+    "archived": "proposal/closure-snapshots/src/lib/vocabulary/onboarding-care.ts.txt",
+    "sha256": "e5f92f3ec2571da3d821d7b9df75db34939a103d4cb1de7ce972bf54d0a8e547",
+    "bytes": 3838
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/vocabulary/onboarding-goals.ts",
+    "archived": "proposal/closure-snapshots/src/lib/vocabulary/onboarding-goals.ts.txt",
+    "sha256": "71ead0b61b4aeffeb47b53c63acb6fe84acae797e18ea774fa25104854c8a098",
+    "bytes": 1410
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/vocabulary/profile-labels.ts",
+    "archived": "proposal/closure-snapshots/src/lib/vocabulary/profile-labels.ts.txt",
+    "sha256": "e0e8d5df461dc19c3e0eb1a85a8dbac8c5f32316c12cd90352bcec506ac5e466",
+    "bytes": 4702
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/src/lib/vocabulary/source-labels.ts",
+    "archived": "proposal/closure-snapshots/src/lib/vocabulary/source-labels.ts.txt",
+    "sha256": "b4cce749ac8d49b3f0dd3a9a2e1e6e9cea64f6ae76858bc161d7f173b22475f1",
+    "bytes": 543
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/tests/free-registration-recovery-terminal.test.ts",
+    "archived": "proposal/closure-snapshots/tests/free-registration-recovery-terminal.test.ts.txt",
+    "sha256": "903a0e389c7ab73bb60b21e9249987151ea7a5c5ade0149888844a7f52eac96b",
+    "bytes": 7382
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/tests/free-registration-screen.test.tsx",
+    "archived": "proposal/closure-snapshots/tests/free-registration-screen.test.tsx.txt",
+    "sha256": "0aff0ae2200f513fb6242e184ce15e4c1d28ebd4a87a3673f4438cdb00e17dd6",
+    "bytes": 5661
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/tests/free-snapshot-provisioning-acceptance.test.ts",
+    "archived": "proposal/closure-snapshots/tests/free-snapshot-provisioning-acceptance.test.ts.txt",
+    "sha256": "cc4765672e906b578d45a7253f8db085ff057b79d057ca1f5390e52e32e53f25",
+    "bytes": 19038
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/tests/freemium-cutover-journey.test.ts",
+    "archived": "proposal/closure-snapshots/tests/freemium-cutover-journey.test.ts.txt",
+    "sha256": "360ae4cd4604994101dedc5e8318f5bc3ab9bc39b18fa87f5e90b601d1cbdd03",
+    "bytes": 8366
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/tests/freemium-plan-provisioning.test.ts",
+    "archived": "proposal/closure-snapshots/tests/freemium-plan-provisioning.test.ts.txt",
+    "sha256": "4710c88b7969671ec6aa0ec3a8e6d80660c53d4d623d6ab8dbf33c0f6e8ab5f4",
+    "bytes": 11524
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/tests/freemium-sheet-checkout-contract.test.ts",
+    "archived": "proposal/closure-snapshots/tests/freemium-sheet-checkout-contract.test.ts.txt",
+    "sha256": "dd1a82ac9c6ff51b5ccbd94e0bf9619ada16d4f5e32fc1da19fcf1cf87438dfb",
+    "bytes": 8393
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/tests/helpers/scanner-context-rpc.ts",
+    "archived": "proposal/closure-snapshots/tests/helpers/scanner-context-rpc.ts.txt",
+    "sha256": "7fa0cd7442fc184830e74b51b0236e677418f4111d983c39482165295bda0c70",
+    "bytes": 2925
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/tests/personal-plan/fixtures.ts",
+    "archived": "proposal/closure-snapshots/tests/personal-plan/fixtures.ts.txt",
+    "sha256": "39f439962a62f1f9f9d789d171f84cb2e951386d8b2a72c5a7a31549356d2890",
+    "bytes": 891
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/tests/personal-plan/persistence/free-snapshot-service.test.ts",
+    "archived": "proposal/closure-snapshots/tests/personal-plan/persistence/free-snapshot-service.test.ts.txt",
+    "sha256": "02a3bf1db18fc39e1c6b987673d329904612f5a26cda8e4253b64e68c93e4173",
+    "bytes": 6915
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure-snapshots/tests/server-only-register.cjs",
+    "archived": "proposal/closure-snapshots/tests/server-only-register.cjs.txt",
+    "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+    "bytes": 391
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/closure.cjs",
+    "archived": "proposal/closure.cjs.txt",
+    "sha256": "579121600394e3498f7f2cb826870814b73ed6b6bd73c1c9f4cc108fc67d1672",
+    "bytes": 2806
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/commands.json",
+    "archived": "proposal/commands.json",
+    "sha256": "8418349449ed5c096a8aed0b5c61f156b3b857edfeff1e97d63bbf59f18e6add",
+    "bytes": 791
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/complete-ledger.md",
+    "archived": "proposal/complete-ledger.md",
+    "sha256": "d8d7b248b4beca44268e4ef32ca3cdfa44b539e95817a07d50e4ce19489632fc",
+    "bytes": 23363
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/complete.diff",
+    "archived": "proposal/complete.diff",
+    "sha256": "71013a46aaed739dc4b5ce22a4bb454d263830088cb7fed5c53fcaecd3335cfd",
+    "bytes": 1202
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/controls.json",
+    "archived": "proposal/controls.json",
+    "sha256": "301beb3e0a4c440cc25c23c01db8d74c0d49a327188500bedb489c6107e2da3d",
+    "bytes": 6044
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/extract.cjs",
+    "archived": "proposal/extract.cjs.txt",
+    "sha256": "3f2488085c384cdcaf6b0c8038512773f8d0e2c83d0db670ba0cf41d77771e88",
+    "bytes": 1518
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/files.json",
+    "archived": "proposal/files.json",
+    "sha256": "e13524663bb6043418248e5c1171e4a2682b3b4cf1d21b1845eb0856b5162c05",
+    "bytes": 369
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/final-static-receipt.txt",
+    "archived": "proposal/final-static-receipt.txt",
+    "sha256": "501526f0f5506939604b9e1a8d85adc4a8232a273d18f5ed4a7866f13802279a",
+    "bytes": 612
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/final-static.cjs",
+    "archived": "proposal/final-static.cjs.txt",
+    "sha256": "8b6942104883975630f77399734ed3194c64e0e73b30630867e0b70ac97a0fa6",
+    "bytes": 2839
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/freeze-read.py",
+    "archived": "proposal/freeze-read.py.txt",
+    "sha256": "e030a428d9df7e0dd80b1c9e462ad5eacbb5e12a151d1b5e3c6eec3201073e4a",
+    "bytes": 454
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/handoff.json",
+    "archived": "proposal/handoff.json",
+    "sha256": "5437899e0ab6a8da0c6a4841c1e96503e08e6c07ec6b59394794a7271ab5ca30",
+    "bytes": 1562
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/history.txt",
+    "archived": "proposal/history.txt",
+    "sha256": "c1445cae1c19483b38a8ff0fea1e6bcfed97ce45b30e6f18fc454b49ac281b8f",
+    "bytes": 663
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/identity-receipt.json",
+    "archived": "proposal/identity-receipt.json",
+    "sha256": "02b61512bacab651f6556da724c22e458e1e11594e7c5ce1831cb9e3548a362d",
+    "bytes": 307
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/layer-plan.md",
+    "archived": "proposal/layer-plan.md",
+    "sha256": "2913b3f237dfe8a6cb9609ec8d24b212c18c76077e0ebacd35258e61f80c65dc",
+    "bytes": 9505
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/ledger.json",
+    "archived": "proposal/ledger.json",
+    "sha256": "0cc76f11a6e375b0a2d6baaaff81b61219945dff1eb3416624f8631d14f0d5d7",
+    "bytes": 146291
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/local-import-closure.json",
+    "archived": "proposal/local-import-closure.json",
+    "sha256": "9f6e43427ce521b87900bbd6d97f569680df9fad59bf03c97133f548f3ede9bd",
+    "bytes": 177933
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/manifest.json",
+    "archived": "proposal/manifest.json",
+    "sha256": "c93ab0f88ad471a0bddda81ebeef2db9b5c0cccecbbbb20b039bc000e9c041a1",
+    "bytes": 42533
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/prior-evidence-search.txt",
+    "archived": "proposal/prior-evidence-search.txt",
+    "sha256": "6d1039a106ec71735d12209d15e2b40b3ad1d959ffe0cca54219b86badcca1a4",
+    "bytes": 849
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/prior-tmp-search.txt",
+    "archived": "proposal/prior-tmp-search.txt",
+    "sha256": "21a483c0498b284e76deb7a1a5271163dec23600463639c93b0b0679f283a57f",
+    "bytes": 677
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/prospective-source-cleanup.diff",
+    "archived": "proposal/prospective-source-cleanup.diff",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/read-depth.md",
+    "archived": "proposal/read-depth.md",
+    "sha256": "a17a6c086068a87b79568c82d1f2ca4f9d39d0bd05aaf54520201a236c98539e",
+    "bytes": 5410
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readonly-preload.cjs",
+    "archived": "proposal/readonly-preload.cjs.txt",
+    "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/.github/workflows/ci.yml",
+    "archived": "proposal/readset-snapshots/.github/workflows/ci.yml",
+    "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+    "bytes": 17598
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/.nvmrc",
+    "archived": "proposal/readset-snapshots/.nvmrc",
+    "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+    "bytes": 3
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/node_modules/@supabase/postgrest-js/src/PostgrestBuilder.ts",
+    "archived": "proposal/readset-snapshots/node_modules/@supabase/postgrest-js/src/PostgrestBuilder.ts.txt",
+    "sha256": "2ce38ea1551e3fa2bfa49c1311e21191797b10b0ea0f7660da3b825bb37fe3ec",
+    "bytes": 21086
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/node_modules/@types/react-dom/server.d.ts",
+    "archived": "proposal/readset-snapshots/node_modules/@types/react-dom/server.d.ts.txt",
+    "sha256": "b25350193e103ae90423c5418ddb0ad1168dc9c393c9295ef34980b990030617",
+    "bytes": 6500
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js",
+    "archived": "proposal/readset-snapshots/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js.txt",
+    "sha256": "e0a591b81f983794366bbc8338df0ebbbc7add48fdcee772870e226eadcda9ce",
+    "bytes": 395194
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/node_modules/stripe/esm/resources/Checkout/Sessions.d.ts",
+    "archived": "proposal/readset-snapshots/node_modules/stripe/esm/resources/Checkout/Sessions.d.ts.txt",
+    "sha256": "56b556db5061b0ff674cc06a708d7c6674f05f03de1c94d29c52cee5ed86922f",
+    "bytes": 308263
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/package-lock.json",
+    "archived": "proposal/readset-snapshots/package-lock.json.txt",
+    "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799",
+    "bytes": 590438
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/package.json",
+    "archived": "proposal/readset-snapshots/package.json.txt",
+    "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+    "bytes": 25353
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/scripts/ci/run-personal-plan-nested.mjs",
+    "archived": "proposal/readset-snapshots/scripts/ci/run-personal-plan-nested.mjs.txt",
+    "sha256": "25be2a1ac68687ae8e76baf40a0b1cfd189817951f4d0804cf2433c35c6be740",
+    "bytes": 1156
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/app/api/freemium/purchase/complete/route.ts",
+    "archived": "proposal/readset-snapshots/src/app/api/freemium/purchase/complete/route.ts.txt",
+    "sha256": "31ce59eb6ba968fdfdd36c9654dbaca545c15faad2fc100bbe636efc00c73575",
+    "bytes": 22138
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/app/api/stripe/create-checkout-session/route.ts",
+    "archived": "proposal/readset-snapshots/src/app/api/stripe/create-checkout-session/route.ts.txt",
+    "sha256": "fc8db1376b2825ae31976913eaab2e963175e8ee3c643aea93dd3165e4027a79",
+    "bytes": 83628
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/app/auth/confirm/route.ts",
+    "archived": "proposal/readset-snapshots/src/app/auth/confirm/route.ts.txt",
+    "sha256": "00170301a97f17888e15dd83fd7e93dc45c98313878213a8953bd9c7042f15e2",
+    "bytes": 19318
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/app/labs/personal-plan-stage-1-2/fixture.ts",
+    "archived": "proposal/readset-snapshots/src/app/labs/personal-plan-stage-1-2/fixture.ts.txt",
+    "sha256": "cfd07a1d0ba3dfe5d202e95018605e0c599af59235c1922b18a8d5da1ad37352",
+    "bytes": 891
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/app/registrierung/free-registration-client.tsx",
+    "archived": "proposal/readset-snapshots/src/app/registrierung/free-registration-client.tsx.txt",
+    "sha256": "81cb4c3b6f623c18a9182ceeb0e451e1828d27886ce438b8c7299c1ed0e424c1",
+    "bytes": 19431
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/app/registrierung/page.tsx",
+    "archived": "proposal/readset-snapshots/src/app/registrierung/page.tsx.txt",
+    "sha256": "e6453a85d4a400bef42a6a8356d39557a2a3b5cd650011a237197a43c4a96259",
+    "bytes": 1306
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/app/scan/page.tsx",
+    "archived": "proposal/readset-snapshots/src/app/scan/page.tsx.txt",
+    "sha256": "75e9c236984262b4322dd1f5ec568541f80720d1938756beb6d04541c457cc5d",
+    "bytes": 4103
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/components/ui/button.tsx",
+    "archived": "proposal/readset-snapshots/src/components/ui/button.tsx.txt",
+    "sha256": "7328a21e4aa02dad2cb657ae7af61280b71288b16ae4d38c5d31895c9d6535df",
+    "bytes": 3199
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/components/ui/input.tsx",
+    "archived": "proposal/readset-snapshots/src/components/ui/input.tsx.txt",
+    "sha256": "a030050630b6734d394812c864a1b8560db63c112ab03b26430a1cc11a5f0203",
+    "bytes": 796
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/auth/free-registration-recovery.ts",
+    "archived": "proposal/readset-snapshots/src/lib/auth/free-registration-recovery.ts.txt",
+    "sha256": "d89f4e058513b230964e122ee5dc6e5500b7af2adf8cd03bbf57ee798970dbd1",
+    "bytes": 8852
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/auth/free-registration.ts",
+    "archived": "proposal/readset-snapshots/src/lib/auth/free-registration.ts.txt",
+    "sha256": "daabd541a5c2553f02058b501e48afb00820f32466729e132c6b6de91bbaae6e",
+    "bytes": 18731
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/auth/route-classification.ts",
+    "archived": "proposal/readset-snapshots/src/lib/auth/route-classification.ts.txt",
+    "sha256": "6a5c8c0a283054ab108779a6a8f23764a4919b67adea2f0a94cb389abb4d57a6",
+    "bytes": 7133
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/billing/pricing-catalog.ts",
+    "archived": "proposal/readset-snapshots/src/lib/billing/pricing-catalog.ts.txt",
+    "sha256": "bf01815cb824ef9cd3346be051d8f94868c9b916c593b2d2cd8e1140bc8dfae7",
+    "bytes": 709
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/entitlements/access.ts",
+    "archived": "proposal/readset-snapshots/src/lib/entitlements/access.ts.txt",
+    "sha256": "57b8489a23e69849cfeaa1f4a82df9ba7845c8a52cbcd96cea8c19e6a4657083",
+    "bytes": 8956
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/entitlements/entitlements.ts",
+    "archived": "proposal/readset-snapshots/src/lib/entitlements/entitlements.ts.txt",
+    "sha256": "faa22816f34f6a818bbf80bdebac6b627aaa1a12470cef7ae7ead627cb49cf59",
+    "bytes": 1756
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/entitlements/flag.ts",
+    "archived": "proposal/readset-snapshots/src/lib/entitlements/flag.ts.txt",
+    "sha256": "77e346855d4d309cb4cf87044f64a7a26478382875e8145ce64d3dd263937214",
+    "bytes": 402
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/entitlements/index.ts",
+    "archived": "proposal/readset-snapshots/src/lib/entitlements/index.ts.txt",
+    "sha256": "3fd0df6a57b4a211830d17917e166fffe9337e7aeaa4de8cc66f2fad6fb48087",
+    "bytes": 31
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/freemium/checkout-metadata.ts",
+    "archived": "proposal/readset-snapshots/src/lib/freemium/checkout-metadata.ts.txt",
+    "sha256": "dc761d436c0d10906da2fc1ed2e94e5ed495ede90b03c0bd0a635a534c5a644c",
+    "bytes": 1474
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/freemium/checkout-return.ts",
+    "archived": "proposal/readset-snapshots/src/lib/freemium/checkout-return.ts.txt",
+    "sha256": "70ddd2ca8499e4de2031e885ce76a7124590e68fcbd5f04c5695857dbb3b6f62",
+    "bytes": 2694
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/freemium/plan-provisioning-supabase.ts",
+    "archived": "proposal/readset-snapshots/src/lib/freemium/plan-provisioning-supabase.ts.txt",
+    "sha256": "38f307e885e199f17ca35b5fbb4f6113fa36d942d62fc3715116185f80b6191f",
+    "bytes": 13582
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/freemium/plan-provisioning.ts",
+    "archived": "proposal/readset-snapshots/src/lib/freemium/plan-provisioning.ts.txt",
+    "sha256": "53fd0187e2f49cfaa3db0605631ec7a8860b4b0cbfe1fcf96924a78a922d49aa",
+    "bytes": 9218
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/paypal/freemium-webhook-provisioning.ts",
+    "archived": "proposal/readset-snapshots/src/lib/paypal/freemium-webhook-provisioning.ts.txt",
+    "sha256": "73a5c89dd0416fe8c5482d846e138f7278ba5f963c1d0cff97823e645588b6c7",
+    "bytes": 11209
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/personal-plan/compute-stage1.ts",
+    "archived": "proposal/readset-snapshots/src/lib/personal-plan/compute-stage1.ts.txt",
+    "sha256": "3618dbc5d3e1c035ea60b79dffe6a356ced57c3e19b8d591c512d688936a4bcc",
+    "bytes": 4272
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/personal-plan/navigation-access.ts",
+    "archived": "proposal/readset-snapshots/src/lib/personal-plan/navigation-access.ts.txt",
+    "sha256": "419d254254478cd628089a24064c3afcbec5d68f8e597fa3b5c4f1d2a3f4ca2b",
+    "bytes": 16465
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/personal-plan/persistence/free-snapshot-service.ts",
+    "archived": "proposal/readset-snapshots/src/lib/personal-plan/persistence/free-snapshot-service.ts.txt",
+    "sha256": "74da0d680db66ec32d2d2ab505225b7b4c9eb2b206f57f12923d11612a76c222",
+    "bytes": 10476
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/personal-plan/persistence/free-snapshot-supabase.ts",
+    "archived": "proposal/readset-snapshots/src/lib/personal-plan/persistence/free-snapshot-supabase.ts.txt",
+    "sha256": "a7e00ff93b88a1d9df5780189d0a46e4630fca604b62dbbaa6791717f663dc92",
+    "bytes": 5400
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/personal-plan/persistence/index.ts",
+    "archived": "proposal/readset-snapshots/src/lib/personal-plan/persistence/index.ts.txt",
+    "sha256": "c8200edcb8b4ad98a218f659b44190227092b047c89ad3c7914e134a7e8eba5b",
+    "bytes": 3231
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/personal-plan/persistence/stage1-service.ts",
+    "archived": "proposal/readset-snapshots/src/lib/personal-plan/persistence/stage1-service.ts.txt",
+    "sha256": "aa383e1b9be24658a5b16bbfa817e6a3ff8c5ce2edd59c1701751e604b445438",
+    "bytes": 7504
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/premium-sheet/pricing.ts",
+    "archived": "proposal/readset-snapshots/src/lib/premium-sheet/pricing.ts.txt",
+    "sha256": "30de9f064cb467c1ed61832b3ea7beffe855fd1703377f80c04e104957f60432",
+    "bytes": 3512
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/scan/profile-context.ts",
+    "archived": "proposal/readset-snapshots/src/lib/scan/profile-context.ts.txt",
+    "sha256": "897769a982848d5b5ebb27b47502190be45a26fb85dc6c94a10f72e820774aea",
+    "bytes": 1734
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/scan/scanner-context-supabase.ts",
+    "archived": "proposal/readset-snapshots/src/lib/scan/scanner-context-supabase.ts.txt",
+    "sha256": "895b2afc2c1c3893601715da2236ae7b8e903292369e67203d159d2c6a0ab539",
+    "bytes": 2535
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/scan/scanner-context.ts",
+    "archived": "proposal/readset-snapshots/src/lib/scan/scanner-context.ts.txt",
+    "sha256": "f77e2a27db12dc68cc8b4deab30c25c45e12796053b32bf43fd71f7d4b7e73ce",
+    "bytes": 22633
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/stripe/checkout-session-params.ts",
+    "archived": "proposal/readset-snapshots/src/lib/stripe/checkout-session-params.ts.txt",
+    "sha256": "985f472524ca69289513989e59f39068cde6a1234c0b0a7429f15da343b595b9",
+    "bytes": 5282
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/stripe/client.ts",
+    "archived": "proposal/readset-snapshots/src/lib/stripe/client.ts.txt",
+    "sha256": "1d608c0c43185db993cbfb4a9219b2bf7e28b8f8d641a92f1d7dd429cb645f68",
+    "bytes": 3361
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/stripe/pricing-plans.ts",
+    "archived": "proposal/readset-snapshots/src/lib/stripe/pricing-plans.ts.txt",
+    "sha256": "5852bc9d1f9da7d76a0620df8f2e329cb641f044018804ff832140249bb4b90b",
+    "bytes": 3276
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/stripe/webhook-handlers.ts",
+    "archived": "proposal/readset-snapshots/src/lib/stripe/webhook-handlers.ts.txt",
+    "sha256": "611ec5966703c23c01beb04982fff17715a801afb808ec9b80117ae0462e7041",
+    "bytes": 44308
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/src/lib/supabase/middleware.ts",
+    "archived": "proposal/readset-snapshots/src/lib/supabase/middleware.ts.txt",
+    "sha256": "b46773cf21b880cb35d2967d4a882be1c5c59c53f2416607b60d3cb8a4c862a7",
+    "bytes": 36657
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/tests/helpers/scanner-context-rpc.ts",
+    "archived": "proposal/readset-snapshots/tests/helpers/scanner-context-rpc.ts.txt",
+    "sha256": "7fa0cd7442fc184830e74b51b0236e677418f4111d983c39482165295bda0c70",
+    "bytes": 2925
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/tests/personal-plan/fixtures.ts",
+    "archived": "proposal/readset-snapshots/tests/personal-plan/fixtures.ts.txt",
+    "sha256": "39f439962a62f1f9f9d789d171f84cb2e951386d8b2a72c5a7a31549356d2890",
+    "bytes": 891
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/tests/server-only-register.cjs",
+    "archived": "proposal/readset-snapshots/tests/server-only-register.cjs.txt",
+    "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+    "bytes": 391
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/tsconfig.json",
+    "archived": "proposal/readset-snapshots/tsconfig.json",
+    "sha256": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd",
+    "bytes": 770
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/sites.json",
+    "archived": "proposal/sites.json",
+    "sha256": "2a3ff1457543d690cd64b88ea85b5fb844702696eb8c8c7593bd26cef05fc93b",
+    "bytes": 102584
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/snapshots/before/tests/free-registration-recovery-terminal.test.ts",
+    "archived": "proposal/snapshots/before/tests/free-registration-recovery-terminal.test.ts.txt",
+    "sha256": "903a0e389c7ab73bb60b21e9249987151ea7a5c5ade0149888844a7f52eac96b",
+    "bytes": 7382
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/snapshots/before/tests/free-registration-screen.test.tsx",
+    "archived": "proposal/snapshots/before/tests/free-registration-screen.test.tsx.txt",
+    "sha256": "0aff0ae2200f513fb6242e184ce15e4c1d28ebd4a87a3673f4438cdb00e17dd6",
+    "bytes": 5661
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/snapshots/before/tests/free-snapshot-provisioning-acceptance.test.ts",
+    "archived": "proposal/snapshots/before/tests/free-snapshot-provisioning-acceptance.test.ts.txt",
+    "sha256": "cc4765672e906b578d45a7253f8db085ff057b79d057ca1f5390e52e32e53f25",
+    "bytes": 19038
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/snapshots/before/tests/freemium-cutover-journey.test.ts",
+    "archived": "proposal/snapshots/before/tests/freemium-cutover-journey.test.ts.txt",
+    "sha256": "360ae4cd4604994101dedc5e8318f5bc3ab9bc39b18fa87f5e90b601d1cbdd03",
+    "bytes": 8366
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/snapshots/before/tests/freemium-plan-provisioning.test.ts",
+    "archived": "proposal/snapshots/before/tests/freemium-plan-provisioning.test.ts.txt",
+    "sha256": "4710c88b7969671ec6aa0ec3a8e6d80660c53d4d623d6ab8dbf33c0f6e8ab5f4",
+    "bytes": 11524
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/snapshots/before/tests/freemium-sheet-checkout-contract.test.ts",
+    "archived": "proposal/snapshots/before/tests/freemium-sheet-checkout-contract.test.ts.txt",
+    "sha256": "dd1a82ac9c6ff51b5ccbd94e0bf9619ada16d4f5e32fc1da19fcf1cf87438dfb",
+    "bytes": 8393
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/snapshots/before/tests/personal-plan/persistence/free-snapshot-service.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan/persistence/free-snapshot-service.test.ts.txt",
+    "sha256": "02a3bf1db18fc39e1c6b987673d329904612f5a26cda8e4253b64e68c93e4173",
+    "bytes": 6915
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/snapshots/cut/tests/free-registration-recovery-terminal.test.ts",
+    "archived": "proposal/snapshots/cut/tests/free-registration-recovery-terminal.test.ts.txt",
+    "sha256": "903a0e389c7ab73bb60b21e9249987151ea7a5c5ade0149888844a7f52eac96b",
+    "bytes": 7382
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/snapshots/cut/tests/free-registration-screen.test.tsx",
+    "archived": "proposal/snapshots/cut/tests/free-registration-screen.test.tsx.txt",
+    "sha256": "0aff0ae2200f513fb6242e184ce15e4c1d28ebd4a87a3673f4438cdb00e17dd6",
+    "bytes": 5661
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/snapshots/cut/tests/free-snapshot-provisioning-acceptance.test.ts",
+    "archived": "proposal/snapshots/cut/tests/free-snapshot-provisioning-acceptance.test.ts.txt",
+    "sha256": "cc4765672e906b578d45a7253f8db085ff057b79d057ca1f5390e52e32e53f25",
+    "bytes": 19038
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/snapshots/cut/tests/freemium-cutover-journey.test.ts",
+    "archived": "proposal/snapshots/cut/tests/freemium-cutover-journey.test.ts.txt",
+    "sha256": "360ae4cd4604994101dedc5e8318f5bc3ab9bc39b18fa87f5e90b601d1cbdd03",
+    "bytes": 8366
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/snapshots/cut/tests/freemium-plan-provisioning.test.ts",
+    "archived": "proposal/snapshots/cut/tests/freemium-plan-provisioning.test.ts.txt",
+    "sha256": "4710c88b7969671ec6aa0ec3a8e6d80660c53d4d623d6ab8dbf33c0f6e8ab5f4",
+    "bytes": 11524
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/snapshots/cut/tests/freemium-sheet-checkout-contract.test.ts",
+    "archived": "proposal/snapshots/cut/tests/freemium-sheet-checkout-contract.test.ts.txt",
+    "sha256": "2a863fd1dd1fd38ec45ea361505b1be6034b61e61cdb1521f13801c6be55a8b5",
+    "bytes": 8164
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/snapshots/cut/tests/personal-plan/persistence/free-snapshot-service.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan/persistence/free-snapshot-service.test.ts.txt",
+    "sha256": "02a3bf1db18fc39e1c6b987673d329904612f5a26cda8e4253b64e68c93e4173",
+    "bytes": 6915
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/snapshots/transfer/tests/free-registration-recovery-terminal.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/free-registration-recovery-terminal.test.ts.txt",
+    "sha256": "903a0e389c7ab73bb60b21e9249987151ea7a5c5ade0149888844a7f52eac96b",
+    "bytes": 7382
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/snapshots/transfer/tests/free-registration-screen.test.tsx",
+    "archived": "proposal/snapshots/transfer/tests/free-registration-screen.test.tsx.txt",
+    "sha256": "0aff0ae2200f513fb6242e184ce15e4c1d28ebd4a87a3673f4438cdb00e17dd6",
+    "bytes": 5661
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/snapshots/transfer/tests/free-snapshot-provisioning-acceptance.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/free-snapshot-provisioning-acceptance.test.ts.txt",
+    "sha256": "cc4765672e906b578d45a7253f8db085ff057b79d057ca1f5390e52e32e53f25",
+    "bytes": 19038
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/snapshots/transfer/tests/freemium-cutover-journey.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/freemium-cutover-journey.test.ts.txt",
+    "sha256": "360ae4cd4604994101dedc5e8318f5bc3ab9bc39b18fa87f5e90b601d1cbdd03",
+    "bytes": 8366
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/snapshots/transfer/tests/freemium-plan-provisioning.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/freemium-plan-provisioning.test.ts.txt",
+    "sha256": "4710c88b7969671ec6aa0ec3a8e6d80660c53d4d623d6ab8dbf33c0f6e8ab5f4",
+    "bytes": 11524
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/snapshots/transfer/tests/freemium-sheet-checkout-contract.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/freemium-sheet-checkout-contract.test.ts.txt",
+    "sha256": "57cd08ca5255928d35b7ec719132f0d7cf33bcf4edd96759f2170d17ae30ba43",
+    "bytes": 8545
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/snapshots/transfer/tests/personal-plan/persistence/free-snapshot-service.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan/persistence/free-snapshot-service.test.ts.txt",
+    "sha256": "02a3bf1db18fc39e1c6b987673d329904612f5a26cda8e4253b64e68c93e4173",
+    "bytes": 6915
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/static-receipt.json",
+    "archived": "proposal/static-receipt.json",
+    "sha256": "ceafa8c6e370609644624176e90f4d114df3d96418af213a8a65120dca4cdf29",
+    "bytes": 511
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/transfer.diff",
+    "archived": "proposal/transfer.diff",
+    "sha256": "e11cca2d4122b394f6963464f2d655b367e1293c69082c49b4b9b0d19529660f",
+    "bytes": 482
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67/write-ledger.py",
+    "archived": "proposal/write-ledger.py.txt",
+    "sha256": "766ac3504879b2e213c125d9496aa49852332db5abf9649cf4b25cf392f05827",
+    "bytes": 18048
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/HANDOFF.json",
+    "archived": "tools/HANDOFF.json",
+    "sha256": "1edb986d6d2d65ab6bc7491b72dc461e3c1a57e2d5aa1e4adff5546b78f59627",
+    "bytes": 3033
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/README.md",
+    "archived": "tools/README.md",
+    "sha256": "b200c0e6b744be4c00ebdc86cad88a2a37109102aadf8d8de5ad508fa0e5ff9d",
+    "bytes": 7490
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/artifact-hashes.json",
+    "archived": "tools/artifact-hashes.json",
+    "sha256": "e84bc241eea802d6b6ec52baac87548c5251f4ab925c7763d5a427f88c15662c",
+    "bytes": 4038
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/final-provenance.json",
+    "archived": "tools/final-provenance.json",
+    "sha256": "16cfd0e401493e82a23b2c4b58223699202fa193d2bc334daf857d8e4518de8b",
+    "bytes": 1729
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/full-native-command.json",
+    "archived": "tools/full-native-command.json",
+    "sha256": "16c64769a5808064a1cf7f6d5d423be41eb03502ba7833f904fd7aa4acaa6462",
+    "bytes": 641
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/identity-block-receipt.json",
+    "archived": "tools/identity-block-receipt.json",
+    "sha256": "c2d181f3627c64b155dc0d99a7054d3b9fc8b0283dd0b3dd6116e94f275daf66",
+    "bytes": 538
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-apply-cut-1rtn0C/intent.json",
+    "archived": "tools/operator-apply-cut-1rtn0C/intent.json",
+    "sha256": "d6b3e257b006639a9aa6506324e1b5009ac6dc9c7837f8de9d08950df261758e",
+    "bytes": 2279
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-apply-cut-1rtn0C/originals/tests/free-registration-recovery-terminal.test.ts",
+    "archived": "tools/operator-apply-cut-1rtn0C/originals/tests/free-registration-recovery-terminal.test.ts.txt",
+    "sha256": "903a0e389c7ab73bb60b21e9249987151ea7a5c5ade0149888844a7f52eac96b",
+    "bytes": 7382
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-apply-cut-1rtn0C/originals/tests/free-registration-screen.test.tsx",
+    "archived": "tools/operator-apply-cut-1rtn0C/originals/tests/free-registration-screen.test.tsx.txt",
+    "sha256": "0aff0ae2200f513fb6242e184ce15e4c1d28ebd4a87a3673f4438cdb00e17dd6",
+    "bytes": 5661
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-apply-cut-1rtn0C/originals/tests/free-snapshot-provisioning-acceptance.test.ts",
+    "archived": "tools/operator-apply-cut-1rtn0C/originals/tests/free-snapshot-provisioning-acceptance.test.ts.txt",
+    "sha256": "cc4765672e906b578d45a7253f8db085ff057b79d057ca1f5390e52e32e53f25",
+    "bytes": 19038
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-apply-cut-1rtn0C/originals/tests/freemium-cutover-journey.test.ts",
+    "archived": "tools/operator-apply-cut-1rtn0C/originals/tests/freemium-cutover-journey.test.ts.txt",
+    "sha256": "360ae4cd4604994101dedc5e8318f5bc3ab9bc39b18fa87f5e90b601d1cbdd03",
+    "bytes": 8366
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-apply-cut-1rtn0C/originals/tests/freemium-plan-provisioning.test.ts",
+    "archived": "tools/operator-apply-cut-1rtn0C/originals/tests/freemium-plan-provisioning.test.ts.txt",
+    "sha256": "4710c88b7969671ec6aa0ec3a8e6d80660c53d4d623d6ab8dbf33c0f6e8ab5f4",
+    "bytes": 11524
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-apply-cut-1rtn0C/originals/tests/freemium-sheet-checkout-contract.test.ts",
+    "archived": "tools/operator-apply-cut-1rtn0C/originals/tests/freemium-sheet-checkout-contract.test.ts.txt",
+    "sha256": "57cd08ca5255928d35b7ec719132f0d7cf33bcf4edd96759f2170d17ae30ba43",
+    "bytes": 8545
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-apply-cut-1rtn0C/originals/tests/personal-plan/persistence/free-snapshot-service.test.ts",
+    "archived": "tools/operator-apply-cut-1rtn0C/originals/tests/personal-plan/persistence/free-snapshot-service.test.ts.txt",
+    "sha256": "02a3bf1db18fc39e1c6b987673d329904612f5a26cda8e4253b64e68c93e4173",
+    "bytes": 6915
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-apply-cut-1rtn0C/receipt.json",
+    "archived": "tools/operator-apply-cut-1rtn0C/receipt.json",
+    "sha256": "ede8016c7d18d74425003776c7a2f555bcb3e2912788fbee7a817281ee9857d5",
+    "bytes": 1559
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-apply-transfer-ByaU2p/intent.json",
+    "archived": "tools/operator-apply-transfer-ByaU2p/intent.json",
+    "sha256": "5e2abd9db1486b9a5efd97fe7dd42639fa783f711b71ef634f837d74bf034600",
+    "bytes": 2043
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-apply-transfer-ByaU2p/originals/tests/free-registration-recovery-terminal.test.ts",
+    "archived": "tools/operator-apply-transfer-ByaU2p/originals/tests/free-registration-recovery-terminal.test.ts.txt",
+    "sha256": "903a0e389c7ab73bb60b21e9249987151ea7a5c5ade0149888844a7f52eac96b",
+    "bytes": 7382
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-apply-transfer-ByaU2p/originals/tests/free-registration-screen.test.tsx",
+    "archived": "tools/operator-apply-transfer-ByaU2p/originals/tests/free-registration-screen.test.tsx.txt",
+    "sha256": "0aff0ae2200f513fb6242e184ce15e4c1d28ebd4a87a3673f4438cdb00e17dd6",
+    "bytes": 5661
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-apply-transfer-ByaU2p/originals/tests/free-snapshot-provisioning-acceptance.test.ts",
+    "archived": "tools/operator-apply-transfer-ByaU2p/originals/tests/free-snapshot-provisioning-acceptance.test.ts.txt",
+    "sha256": "cc4765672e906b578d45a7253f8db085ff057b79d057ca1f5390e52e32e53f25",
+    "bytes": 19038
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-apply-transfer-ByaU2p/originals/tests/freemium-cutover-journey.test.ts",
+    "archived": "tools/operator-apply-transfer-ByaU2p/originals/tests/freemium-cutover-journey.test.ts.txt",
+    "sha256": "360ae4cd4604994101dedc5e8318f5bc3ab9bc39b18fa87f5e90b601d1cbdd03",
+    "bytes": 8366
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-apply-transfer-ByaU2p/originals/tests/freemium-plan-provisioning.test.ts",
+    "archived": "tools/operator-apply-transfer-ByaU2p/originals/tests/freemium-plan-provisioning.test.ts.txt",
+    "sha256": "4710c88b7969671ec6aa0ec3a8e6d80660c53d4d623d6ab8dbf33c0f6e8ab5f4",
+    "bytes": 11524
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-apply-transfer-ByaU2p/originals/tests/freemium-sheet-checkout-contract.test.ts",
+    "archived": "tools/operator-apply-transfer-ByaU2p/originals/tests/freemium-sheet-checkout-contract.test.ts.txt",
+    "sha256": "dd1a82ac9c6ff51b5ccbd94e0bf9619ada16d4f5e32fc1da19fcf1cf87438dfb",
+    "bytes": 8393
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-apply-transfer-ByaU2p/originals/tests/personal-plan/persistence/free-snapshot-service.test.ts",
+    "archived": "tools/operator-apply-transfer-ByaU2p/originals/tests/personal-plan/persistence/free-snapshot-service.test.ts.txt",
+    "sha256": "02a3bf1db18fc39e1c6b987673d329904612f5a26cda8e4253b64e68c93e4173",
+    "bytes": 6915
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-apply-transfer-ByaU2p/receipt.json",
+    "archived": "tools/operator-apply-transfer-ByaU2p/receipt.json",
+    "sha256": "3df7d915b9e2458ce84538a8835d562b5fb58434fb4cdf7a9918418825f33676",
+    "bytes": 1333
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-candidates.json",
+    "archived": "tools/operator-candidates.json",
+    "sha256": "99de1d59cda29098494c4be07ace54239d3812e4b8d040a3357f08fc7b46489b",
+    "bytes": 4408
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-controls-normalized.json",
+    "archived": "tools/operator-controls-normalized.json",
+    "sha256": "e48dac970d7d135d96ea72add1a40ad4cf1d5de075030e0b951a66971700a30b",
+    "bytes": 5688
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-edit.cjs",
+    "archived": "tools/operator-edit.cjs.txt",
+    "sha256": "6b45132ad37e1583695c047469e6232b286a0619ed8d2db3a335432ef0455d6c",
+    "bytes": 3639
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-evidence.json",
+    "archived": "tools/operator-evidence.json",
+    "sha256": "21f870bb4fe499953697561c9c60b7ace93e5fd3d640503b4ea5a3ca760b7fa0",
+    "bytes": 24980
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-guard.cjs",
+    "archived": "tools/operator-guard.cjs.txt",
+    "sha256": "1b4b20d2ddd513790e3ce880ae0217b627ac3b58ac16bf55271282ea000d42ea",
+    "bytes": 15791
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/C1-launch-false/originals/src/app/api/stripe/create-checkout-session/route.ts",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/C1-launch-false/originals/src/app/api/stripe/create-checkout-session/route.ts.txt",
+    "sha256": "fc8db1376b2825ae31976913eaab2e963175e8ee3c643aea93dd3165e4027a79",
+    "bytes": 83628
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/C1-launch-false-after.command.json",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/C1-launch-false-after.command.json",
+    "sha256": "12f91293b7f69e95741997692171a05fad9519f11c7abb2c4c5683db8824061d",
+    "bytes": 463
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/C1-launch-false-after.tap",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/C1-launch-false-after.tap",
+    "sha256": "fb26ce6e0aa025f8a77d4aa47b92b8693fbb97a6e91cece42acf7a95314eb534",
+    "bytes": 326
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/C1-launch-false-before.command.json",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/C1-launch-false-before.command.json",
+    "sha256": "12f91293b7f69e95741997692171a05fad9519f11c7abb2c4c5683db8824061d",
+    "bytes": 463
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/C1-launch-false-before.tap",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/C1-launch-false-before.tap",
+    "sha256": "7f711707092501c38de4ecb4c2e0699950eb7eb0f53fb84e4cf6a0de5434bf1c",
+    "bytes": 327
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/C1-launch-false-fault.command.json",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/C1-launch-false-fault.command.json",
+    "sha256": "12f91293b7f69e95741997692171a05fad9519f11c7abb2c4c5683db8824061d",
+    "bytes": 463
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/C1-launch-false-fault.tap",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/C1-launch-false-fault.tap",
+    "sha256": "16c541b7d7db15ee14a6ef0c63d4b1b13a34cf100fae41eaa099c155ff0bb794",
+    "bytes": 1193
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/C1-launch-true/originals/src/app/api/stripe/create-checkout-session/route.ts",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/C1-launch-true/originals/src/app/api/stripe/create-checkout-session/route.ts.txt",
+    "sha256": "fc8db1376b2825ae31976913eaab2e963175e8ee3c643aea93dd3165e4027a79",
+    "bytes": 83628
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/C1-launch-true-after.command.json",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/C1-launch-true-after.command.json",
+    "sha256": "12f91293b7f69e95741997692171a05fad9519f11c7abb2c4c5683db8824061d",
+    "bytes": 463
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/C1-launch-true-after.tap",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/C1-launch-true-after.tap",
+    "sha256": "1cea2807a7e5d13b4d8b3fb9fcb2dc6b6f907e8e785e2e309ed409a312e6c2d8",
+    "bytes": 327
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/C1-launch-true-before.command.json",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/C1-launch-true-before.command.json",
+    "sha256": "12f91293b7f69e95741997692171a05fad9519f11c7abb2c4c5683db8824061d",
+    "bytes": 463
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/C1-launch-true-before.tap",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/C1-launch-true-before.tap",
+    "sha256": "30eefb4d83d4d45b282eeb63beb9d8cd5b69dd2c8c00e1ef9b302722eff9c99f",
+    "bytes": 327
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/C1-launch-true-fault.command.json",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/C1-launch-true-fault.command.json",
+    "sha256": "12f91293b7f69e95741997692171a05fad9519f11c7abb2c4c5683db8824061d",
+    "bytes": 463
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/C1-launch-true-fault.tap",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/C1-launch-true-fault.tap",
+    "sha256": "625ba03e9680798a459a650a12dcfb1f92a7bba5649f3d149e67caff9d321e4f",
+    "bytes": 1187
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/all-originals/src/app/api/stripe/create-checkout-session/route.ts",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/all-originals/src/app/api/stripe/create-checkout-session/route.ts.txt",
+    "sha256": "fc8db1376b2825ae31976913eaab2e963175e8ee3c643aea93dd3165e4027a79",
+    "bytes": 83628
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/all-originals/tests/free-registration-recovery-terminal.test.ts",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/all-originals/tests/free-registration-recovery-terminal.test.ts.txt",
+    "sha256": "903a0e389c7ab73bb60b21e9249987151ea7a5c5ade0149888844a7f52eac96b",
+    "bytes": 7382
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/all-originals/tests/free-registration-screen.test.tsx",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/all-originals/tests/free-registration-screen.test.tsx.txt",
+    "sha256": "0aff0ae2200f513fb6242e184ce15e4c1d28ebd4a87a3673f4438cdb00e17dd6",
+    "bytes": 5661
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/all-originals/tests/free-snapshot-provisioning-acceptance.test.ts",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/all-originals/tests/free-snapshot-provisioning-acceptance.test.ts.txt",
+    "sha256": "cc4765672e906b578d45a7253f8db085ff057b79d057ca1f5390e52e32e53f25",
+    "bytes": 19038
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/all-originals/tests/freemium-cutover-journey.test.ts",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/all-originals/tests/freemium-cutover-journey.test.ts.txt",
+    "sha256": "360ae4cd4604994101dedc5e8318f5bc3ab9bc39b18fa87f5e90b601d1cbdd03",
+    "bytes": 8366
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/all-originals/tests/freemium-plan-provisioning.test.ts",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/all-originals/tests/freemium-plan-provisioning.test.ts.txt",
+    "sha256": "4710c88b7969671ec6aa0ec3a8e6d80660c53d4d623d6ab8dbf33c0f6e8ab5f4",
+    "bytes": 11524
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/all-originals/tests/freemium-sheet-checkout-contract.test.ts",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/all-originals/tests/freemium-sheet-checkout-contract.test.ts.txt",
+    "sha256": "57cd08ca5255928d35b7ec719132f0d7cf33bcf4edd96759f2170d17ae30ba43",
+    "bytes": 8545
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/all-originals/tests/personal-plan/persistence/free-snapshot-service.test.ts",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/all-originals/tests/personal-plan/persistence/free-snapshot-service.test.ts.txt",
+    "sha256": "02a3bf1db18fc39e1c6b987673d329904612f5a26cda8e4253b64e68c93e4173",
+    "bytes": 6915
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/complete.json",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/complete.json",
+    "sha256": "144328e7f57ce2f3b44e2d8e6c8ff8a996bf81ab7d35f1360d20bcd384848033",
+    "bytes": 37850
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/intent.json",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/intent.json",
+    "sha256": "84a90d391e14bb22d27748b07239fd3078ae097021ed37d6da9c402e7ca34b06",
+    "bytes": 1181
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-mutations-transfer-YMPCJp/receipt.json",
+    "archived": "tools/operator-mutations-transfer-YMPCJp/receipt.json",
+    "sha256": "e99deef82ccf7e3b43faa08737508013c744fd54a999b2ed41ac1b83ec2cad70",
+    "bytes": 121942
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-native-proof.cjs",
+    "archived": "tools/operator-native-proof.cjs.txt",
+    "sha256": "549f54e76cb4a6f344899c3b9c510e1f2cc275851b61acdd31b1554e72fc028f",
+    "bytes": 1877
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-pins.json",
+    "archived": "tools/operator-pins.json",
+    "sha256": "9fbdea960d87acb674473172b4d6d797f49496d8b8faafad0aad0b24cb4f6ad5",
+    "bytes": 2291883
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-proof.cjs",
+    "archived": "tools/operator-proof.cjs.txt",
+    "sha256": "9784400ba6f2ce2fb4ecc35e1027ffb3351e978f00ae087ecfd180ba09e88d15",
+    "bytes": 5725
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-readonly-preload.cjs",
+    "archived": "tools/operator-readonly-preload.cjs.txt",
+    "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-run-controls.cjs",
+    "archived": "tools/operator-run-controls.cjs.txt",
+    "sha256": "b883327d047f4152cfdcaa1dddd9a81c4d6c93ae540ac191e3430a582d8b0a91",
+    "bytes": 8050
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/operator-selected-closure.json",
+    "archived": "tools/operator-selected-closure.json",
+    "sha256": "ef9ccb5fd17a1e10cb51a150e0eea947d4abbddb9a7437f473208a173bd25dca",
+    "bytes": 173458
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/packed-policy-adoption.json",
+    "archived": "tools/packed-policy-adoption.json",
+    "sha256": "f4b7fd548e606f8a993842379e4ca6f36ade56554bf5f55a2f9f5a729c0cd233",
+    "bytes": 651
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/packed-refs-search-receipt.json",
+    "archived": "tools/packed-refs-search-receipt.json",
+    "sha256": "647e4e1f913127e59fe4972ea66b2b8939c1905f9246c9d8f39c47573073f874",
+    "bytes": 2812
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/preparation-final-receipt.txt",
+    "archived": "tools/preparation-final-receipt.txt",
+    "sha256": "9fd4afa90870c1eaaba6b75f5aca479a086bdd91c09fb2c4bc4acbe103b6b012",
+    "bytes": 513
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/preparation-first-refusal.txt",
+    "archived": "tools/preparation-first-refusal.txt",
+    "sha256": "7c69ef8618b95ba42c2364085505a4ed7e31fffc0dd9ab50304894a85ee914c0",
+    "bytes": 591
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/preparation-receipt.txt",
+    "archived": "tools/preparation-receipt.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/preparation-second-receipt.txt",
+    "archived": "tools/preparation-second-receipt.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/prepare-pins.cjs",
+    "archived": "tools/prepare-pins.cjs.txt",
+    "sha256": "92a738a817feb9552dcd3787082a73e698084c27971bcfdb5a6b608d2d5debda",
+    "bytes": 16185
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/prepare-tools.py",
+    "archived": "tools/prepare-tools.py.txt",
+    "sha256": "2c869cb087ac92098561a69b3d54f4fcf44e2d492c52eb68aad7575ea0a6383f",
+    "bytes": 6607
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/preseal-syntax-receipt.txt",
+    "archived": "tools/preseal-syntax-receipt.txt",
+    "sha256": "12a5ee5a19c8b540a3f9dbbe32e7959d82d772c6858ae60b1405da4b735308b5",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/proof-attestation-receipt.txt",
+    "archived": "tools/proof-attestation-receipt.txt",
+    "sha256": "3848e47640b0604b3ae0802582c9a703e2da800e67589734c1ce605f86ab0a99",
+    "bytes": 421
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/proof-attestation.cjs",
+    "archived": "tools/proof-attestation.cjs.txt",
+    "sha256": "e93ef378ec8c2bac28f8617710c4edf661857c7d6988faa1d6b4f2cd2db4ae48",
+    "bytes": 4028
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/static-controls-receipt.txt",
+    "archived": "tools/static-controls-receipt.txt",
+    "sha256": "0d992495d875e23c4833b71900a569ba96fdcdfa693b995dad6074ff7fd97e9c",
+    "bytes": 410
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/static-editor-receipt.txt",
+    "archived": "tools/static-editor-receipt.txt",
+    "sha256": "412b5bf61faf2afc4634a035a673d112cb62b185c9949a24480c3209d5c7fe8b",
+    "bytes": 461
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/static-integrity-receipt.txt",
+    "archived": "tools/static-integrity-receipt.txt",
+    "sha256": "b97fd470434ea380c75a9b5cfc6f07cef5f1f2dac9b936932a5cc11717f00dbd",
+    "bytes": 842
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/static-integrity.cjs",
+    "archived": "tools/static-integrity.cjs.txt",
+    "sha256": "601979520c35982b7c7b7ef01a71c64acea09bbfdef4d1c8bcd77f3d048eea79",
+    "bytes": 2886
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/template-delta.patch",
+    "archived": "tools/template-delta.patch",
+    "sha256": "7f8efa59fced4524916464c94de3e750800508b54e47462f31e4c978d1bb1197",
+    "bytes": 41577
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/template-originals/operator-edit.cjs",
+    "archived": "tools/template-originals/operator-edit.cjs.txt",
+    "sha256": "a5a57635cbbef3a27fc3ea9d4abb78e8f99db142ff900979f3942e827187c67c",
+    "bytes": 3640
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/template-originals/operator-guard.cjs",
+    "archived": "tools/template-originals/operator-guard.cjs.txt",
+    "sha256": "fc5f27d3c7f0c9f6e226b91e542c6db5d3e3e746af454aeacf2415c20e01f168",
+    "bytes": 13904
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/template-originals/operator-pins.json",
+    "archived": "tools/template-originals/operator-pins.json",
+    "sha256": "ffb6b2428bdceb285246596cafeba5e3b1a6870ec0ce885b875531178b10f0cd",
+    "bytes": 1532925
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/template-originals/operator-proof.cjs",
+    "archived": "tools/template-originals/operator-proof.cjs.txt",
+    "sha256": "6aec16c6468794c9d3b87d69b21b4661e3082a3d48ed44caaaf7c4cf7346eecf",
+    "bytes": 5736
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/template-originals/operator-readonly-preload.cjs",
+    "archived": "tools/template-originals/operator-readonly-preload.cjs.txt",
+    "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/template-originals/operator-run-controls.cjs",
+    "archived": "tools/template-originals/operator-run-controls.cjs.txt",
+    "sha256": "1bc3271bd6a646e60482390708f7571c27b5201d8729d050ef5937a124b2f8fd",
+    "bytes": 8053
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/template-originals/prepare-pins.cjs",
+    "archived": "tools/template-originals/prepare-pins.cjs.txt",
+    "sha256": "fa00ebe6d04616d0433f8e9007c2d0ba492ba4dcf780486ec804e7e78be0c019",
+    "bytes": 14689
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/template-originals/proof-attestation.cjs",
+    "archived": "tools/template-originals/proof-attestation.cjs.txt",
+    "sha256": "3a689b380987267a37926c527eee829ce6c4a86c105a818cabf06393a72f782b",
+    "bytes": 4029
+  },
+  {
+    "original": "/tmp/test-audit-free67-tools-phkvfcm3/template-provenance.json",
+    "archived": "tools/template-provenance.json",
+    "sha256": "4f44f627389cba75bc6ba0621aa1fd423ff00724f0a406f350ce47e1298ac5d4",
+    "bytes": 2205
+  },
+  {
+    "original": "/tmp/test-audit-packed-refs-relevant-policy-9crva_8q/actual-static-checks.json",
+    "archived": "packed-policy/actual-static-checks.json",
+    "sha256": "b1267bf6eadf8e9861fbe24686d5f287aea16aaa96b30e9419dd41611169ff80",
+    "bytes": 151
+  },
+  {
+    "original": "/tmp/test-audit-packed-refs-relevant-policy-9crva_8q/disposition.json",
+    "archived": "packed-policy/disposition.json",
+    "sha256": "903587ed8a72b5f2955c0355a69770c7a4dceffe6a1c39a2eccd55f235d19103",
+    "bytes": 1050
+  },
+  {
+    "original": "/tmp/test-audit-packed-refs-relevant-policy-9crva_8q/policy.cjs",
+    "archived": "packed-policy/policy.cjs.txt",
+    "sha256": "b1622277836750342cc6efe96c11bdf140d36fc7b76e7356d1c25869ab887bcd",
+    "bytes": 1585
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67-independent-sites.json",
+    "archived": "independent/test-audit-free-provisioning67-independent-sites.json",
+    "sha256": "9422d17463a77a2b9f9ee1c8e56cc44dfc7a44b3b38a910b0cdd9d87d8bbf20b",
+    "bytes": 50131
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67-independent-static.cjs",
+    "archived": "independent/test-audit-free-provisioning67-independent-static.cjs.txt",
+    "sha256": "ac4b14cacf9a94f76a9bd8dbbbb6a77db3d4c43adb6f9fce61acccaf2fecf6a3",
+    "bytes": 9510
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67-independent-preservation.md",
+    "archived": "independent/test-audit-free-provisioning67-independent-preservation.md",
+    "sha256": "61172fc3c44b2a00458b26979ce8c58a4f1b3637433723732024094580e3cb2d",
+    "bytes": 21300
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67-independent-read-depth.json",
+    "archived": "independent/test-audit-free-provisioning67-independent-read-depth.json",
+    "sha256": "bdb7f0082f220d65a704d614d16870c82138e58ef388454d62749d4bbfa87ac6",
+    "bytes": 9717
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67-independent-receipt.json",
+    "archived": "independent/test-audit-free-provisioning67-independent-receipt.json",
+    "sha256": "84db66b27ae18dacaf3632648348dd5dafd8888ba997d6387bba5b684e141f33",
+    "bytes": 2032
+  },
+  {
+    "original": "/tmp/test-audit-free-provisioning67-independent-static.json",
+    "archived": "independent/test-audit-free-provisioning67-independent-static.json",
+    "sha256": "21d465daf1bbf62241deb996b88444bfb05c0cd70b6cb9b05b426fab4bb4579c",
+    "bytes": 2533
+  },
+  {
+    "original": "/tmp/test-audit-free68-main-native-command.json",
+    "archived": "native/test-audit-free68-main-native-command.json",
+    "sha256": "f0dc71463ad2fd26d954d44768cf1cd0c180744ff7803ea8fcbabe1744c50ee6",
+    "bytes": 629
+  },
+  {
+    "original": "/tmp/test-audit-free68-main-before-native.command.json",
+    "archived": "native/test-audit-free68-main-before-native.command.json",
+    "sha256": "f0dc71463ad2fd26d954d44768cf1cd0c180744ff7803ea8fcbabe1744c50ee6",
+    "bytes": 629
+  },
+  {
+    "original": "/tmp/test-audit-free68-main-before-native.tap",
+    "archived": "native/test-audit-free68-main-before-native.tap",
+    "sha256": "0cf11dc099b1f78e2a3b579ad2610113314e0136ec0522c1762388594b364f2c",
+    "bytes": 15191
+  },
+  {
+    "original": "/tmp/test-audit-free68-main-before-native.result.json",
+    "archived": "native/test-audit-free68-main-before-native.result.json",
+    "sha256": "61495de9e57f5fc3bfad5ec4fa792c9c29d730002f36341448650b1ba6a3959d",
+    "bytes": 170
+  },
+  {
+    "original": "/tmp/test-audit-free68-main-transfer-native.command.json",
+    "archived": "native/test-audit-free68-main-transfer-native.command.json",
+    "sha256": "f0dc71463ad2fd26d954d44768cf1cd0c180744ff7803ea8fcbabe1744c50ee6",
+    "bytes": 629
+  },
+  {
+    "original": "/tmp/test-audit-free68-main-transfer-native.tap",
+    "archived": "native/test-audit-free68-main-transfer-native.tap",
+    "sha256": "cd25d7289a0e75c2a2747150f05679bc1fed4ee42c59f2798faacf4aeb0011d4",
+    "bytes": 15195
+  },
+  {
+    "original": "/tmp/test-audit-free68-main-transfer-native.result.json",
+    "archived": "native/test-audit-free68-main-transfer-native.result.json",
+    "sha256": "61495de9e57f5fc3bfad5ec4fa792c9c29d730002f36341448650b1ba6a3959d",
+    "bytes": 170
+  },
+  {
+    "original": "/tmp/test-audit-free67-main-cut-native.command.json",
+    "archived": "native/test-audit-free67-main-cut-native.command.json",
+    "sha256": "f0dc71463ad2fd26d954d44768cf1cd0c180744ff7803ea8fcbabe1744c50ee6",
+    "bytes": 629
+  },
+  {
+    "original": "/tmp/test-audit-free67-main-cut-native.tap",
+    "archived": "native/test-audit-free67-main-cut-native.tap",
+    "sha256": "e259ef5a4d2d0fdb791604071eb55438fab75f5fae56b464e160eea4fcc4cb81",
+    "bytes": 14974
+  },
+  {
+    "original": "/tmp/test-audit-free67-main-cut-native.result.json",
+    "archived": "native/test-audit-free67-main-cut-native.result.json",
+    "sha256": "1170382bb1cded716460742a39b2e2d7165a722e2c1b8464e0a24553b0215c8d",
+    "bytes": 170
+  }
+]

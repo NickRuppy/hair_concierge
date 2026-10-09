@@ -1,0 +1,176 @@
+{
+  "status": "PASS_STATIC_ONLY_NOT_ACCEPTANCE_OR_RUNTIME",
+  "pinsSHA256": "67f792bcbb94f1a2f6f807cddd4403c08da414aeec3748c71ad49d5bd28ccb89",
+  "proposalManifestSHA256": "946a680f03ce84419ba6e3dc31e6c155cbecb2d96d10f36b2ee3a1dc6cec1a9b",
+  "proposalHandoffSHA256": "d926359a52cb978c073d649af31c99a2ca5ca3c5d6f9c54d8839a0355f8a6000",
+  "templatePinsSHA256": "b1619bebc5540a7ee42e2ed0ec18431cc2f9a52c43c471b3cefe9290c1d04d5f",
+  "counts": {
+    "before": 102,
+    "transfer": 102,
+    "cut": 101,
+    "unrelated": 100,
+    "heldF": 4,
+    "files": 7,
+    "fullPhaseFiles": 21,
+    "actualOwnerFaultDescriptors": 13
+  },
+  "original83Exact": true,
+  "existingIdentityDependenciesPoliciesUnchanged": true,
+  "strictDecodedFullMessageFirstOuterFramePredicateByteExact": true,
+  "staticResults": {
+    "edit-check": {
+      "sha256": "5a2735daf0bb00bda1bfa68ef885ccd601419c99884c4703ccdfdd1eaa180397",
+      "result": {
+        "mode": "check",
+        "phase": "before",
+        "counts": {
+          "before": 102,
+          "transfer": 102,
+          "cut": 101
+        },
+        "unrelatedCallbacks": 100,
+        "unchangedRetainedCallbacks": 100,
+        "parsedPhaseFiles": 21,
+        "sourceControlsParsed": 13,
+        "readsetGuards": 195,
+        "dependencyFiles": 5020,
+        "repositoryWrites": 0,
+        "childrenStarted": 0
+      },
+      "preload": [
+        {
+          "staticReadOnlyEnforced": true,
+          "attemptedWrites": 0,
+          "attemptedChildren": 0
+        },
+        {
+          "attemptedOwnerImports": 0,
+          "attemptedNetworkCalls": 0
+        }
+      ]
+    },
+    "controls-check": {
+      "sha256": "2e33ccea54166de58dacf135959f6e0e203f79e3e140bf4efd186b397e477a9b",
+      "result": {
+        "mode": "check",
+        "phase": "before",
+        "controls": 13,
+        "tsMutantsParsed": 13,
+        "sqlByteRecipes": 0,
+        "allControlsPrepared": true,
+        "phaseOracles": "exact assertion startLine and text in transfer/cut",
+        "selectedTestCount": 1,
+        "repositoryWrites": 0,
+        "runtimeRuns": 0,
+        "childrenStarted": 0
+      },
+      "preload": [
+        {
+          "staticReadOnlyEnforced": true,
+          "attemptedWrites": 0,
+          "attemptedChildren": 0
+        },
+        {
+          "attemptedOwnerImports": 0,
+          "attemptedNetworkCalls": 0
+        }
+      ]
+    },
+    "static-integrity": {
+      "sha256": "7bc93dfc0e204d2b327d5928f0a04d2dc1ba56d49d788a62eaced51edafd3efb",
+      "result": {
+        "status": "PASS_STATIC",
+        "pinsSHA": "67f792bcbb94f1a2f6f807cddd4403c08da414aeec3748c71ad49d5bd28ccb89",
+        "parsedToolFiles": [
+          "operator-edit.cjs",
+          "operator-guard.cjs",
+          "operator-native-proof.cjs",
+          "operator-proof.cjs",
+          "operator-readonly-preload.cjs",
+          "operator-run-controls.cjs",
+          "prepare-pins.cjs",
+          "proof-attestation.cjs",
+          "static-integrity.cjs"
+        ],
+        "original83GuardsUnchanged": true,
+        "templateIdentityRuntimeDependenciesUnchanged": true,
+        "strictProofPredicateDecoderByteIdentical": true,
+        "sourceControls": 13,
+        "repositoryWrites": 0,
+        "children": 0,
+        "ownerImports": 0,
+        "nativeRuns": 0
+      },
+      "preload": [
+        {
+          "staticReadOnlyEnforced": true,
+          "attemptedWrites": 0,
+          "attemptedChildren": 0
+        },
+        {
+          "attemptedOwnerImports": 0,
+          "attemptedNetworkCalls": 0
+        }
+      ]
+    },
+    "proof-attestation": {
+      "sha256": "3d660219f82af88dbbb7101bc22e995d679af87fe2d675b157e52d7e734cb24b",
+      "result": {
+        "status": "PASS_STATIC_SYNTHETIC_PARSER_ONLY",
+        "controls": 13,
+        "phases": 2,
+        "assertions": 468,
+        "children": 0,
+        "ownerImports": 0,
+        "repositoryWrites": 0,
+        "runtimeClaims": 0,
+        "note": "Diagnostic-shape rejection checks only, not native fault sensitivity or real TAP evidence."
+      },
+      "preload": [
+        {
+          "staticReadOnlyEnforced": true,
+          "attemptedWrites": 0,
+          "attemptedChildren": 0
+        },
+        {
+          "attemptedOwnerImports": 0,
+          "attemptedNetworkCalls": 0
+        }
+      ]
+    }
+  },
+  "preparation": {
+    "directory": "/tmp/test-audit-care102-tools-fz8_q695",
+    "pinSHA": "67f792bcbb94f1a2f6f807cddd4403c08da414aeec3748c71ad49d5bd28ccb89",
+    "originalGuards": 83,
+    "phases": {
+      "before": 102,
+      "transfer": 102,
+      "cut": 101
+    },
+    "nativeCounts": {
+      "before": 102,
+      "transfer": 102,
+      "cut": 101
+    },
+    "readset": 195,
+    "localClosure": 167,
+    "dependencies": 5020,
+    "dependencyTrees": 32,
+    "controls": 13,
+    "tsMutants": 13,
+    "nonliteralImports": [],
+    "attemptedRepositoryWrites": 0,
+    "attemptedChildren": 0,
+    "attemptedOwnerImports": 0,
+    "attemptedNetworkCalls": 0
+  },
+  "limits": [
+    "No native tests, source faults, compiler/typecheck, owner imports, network, DB or provider activity.",
+    "Parser and literal expected-value diagnostic construction only; 468 synthetic checks do not establish real fault sensitivity.",
+    "195 guards include new mechanical import closure; no new semantic reading credit.",
+    "Root must inspect, accept and run all before/transfer/cut native and 13 transfer plus 13 cut control cycles after other runners close.",
+    "Shared lock guards operator peers only; main must sequence ordinary native/coverage runners.",
+    "Conditional independent preservation review and main acceptance remain external to this kit."
+  ]
+}

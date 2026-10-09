@@ -1,0 +1,12 @@
+{
+  "phase": "before",
+  "controls": [
+    "retirement-response-status"
+  ],
+  "originalHashes": {
+    "src/lib/funnel/server.ts": "d664770e0103972242ab81c3a3573243695f901e68ecfe4461e61d0410360df6",
+    "src/app/api/stripe/create-checkout-session/route.ts": "0808a083b02a9611deab703bf9fc7a9b3cecb5dce2b5be1889003a0cd06a9bd8",
+    "tests/personal-plan-pricing-experiment.test.ts": "1f3abe43446c8ec3d487bbbec3692b49454dba7ba1310d8bdaa85e8faa252f31"
+  },
+  "pinsSHA": "693f7db9ff92ae74f9541de924803d5c98322d38e9ddf3c5d9e4f7ba5ab0147f"
+}

@@ -1,0 +1,384 @@
+{
+  "run_id": "bondbuilder-validation-2026-10-02-v0.4",
+  "products": 4,
+  "method_locked": false,
+  "database_writes": 0,
+  "activation": false,
+  "verdict": "bounded applicability slice passed with one source-preparation correction and explicit serialization/confidence adjudication; not full engine validation or runtime readiness",
+  "results": [
+    {
+      "slot_id": "V01",
+      "name": "Curlsmith Bond Curl Rehab Salve 237 ml",
+      "boundary": "in_scope",
+      "technology": "gluconamide_gluconate",
+      "trust": "low",
+      "trust_basis": "owner_default",
+      "recommended": false,
+      "curated_candidate": false,
+      "remaining": [
+        "actual-pack/catalog binding unverified",
+        "physical texture unstated",
+        "conditional porosity branch must not be flattened",
+        "diameter fit unknown"
+      ]
+    },
+    {
+      "slot_id": "V02",
+      "name": "Balea Professional Keratin Repair 300 ml",
+      "boundary": "out_of_scope",
+      "technology": null,
+      "trust": null,
+      "trust_basis": null,
+      "recommended": false,
+      "curated_candidate": false,
+      "remaining": [
+        "placement relative to shampoo unstated",
+        "physical texture unstated",
+        "diameter fit unknown",
+        "ordinary repair routing belongs to other intake category, not this research slice"
+      ]
+    },
+    {
+      "slot_id": "V03",
+      "name": "Garnier Pro-Keratin Filler Deep Repair Intensive Haarkur 200 ml",
+      "boundary": "out_of_scope",
+      "technology": null,
+      "trust": null,
+      "trust_basis": null,
+      "recommended": false,
+      "curated_candidate": false,
+      "remaining": [
+        "physical texture and cadence unstated",
+        "diameter fit unknown",
+        "ordinary repair routing not executed"
+      ]
+    },
+    {
+      "slot_id": "V04",
+      "name": "L'Oréal Professionnel Absolut Repair Molecular Rinse-Off Serum DE source version",
+      "boundary": "category_review",
+      "technology": null,
+      "trust": null,
+      "trust_basis": null,
+      "recommended": false,
+      "curated_candidate": false,
+      "remaining": [
+        "unrecognized technology mapping held; no lexicon expansion",
+        "size/GTIN/actual pack unverified",
+        "cadence and diameter fit unknown",
+        "optional mask dose/dwell/rinse not supplied",
+        "runtime mapping not evaluated"
+      ]
+    }
+  ],
+  "metrics": {
+    "unique_products": 4,
+    "lanes": 2,
+    "stage_a_marker_agreement": "4/4",
+    "stage_a_candidate_set_agreement": "4/4",
+    "boundary_family_policy_admission_recommendation_agreement": "4/4",
+    "in_scope_default_low_policy_compliance": "1/1",
+    "excluded_or_review_not_falsely_finalized": "3/3",
+    "initial_protocol_checks_per_lane": {
+      "pass": 17,
+      "total": 18,
+      "source_preparation_omission": 1
+    },
+    "corrected_protocol_checks_per_lane": {
+      "pass": 18,
+      "total": 18,
+      "supplemental_affected_product": 1
+    },
+    "independent_current_product_efficacy_validation": false,
+    "positive_technology_coverage": "1/5 families",
+    "overall_confidence_each_lane": {
+      "high": 0,
+      "moderate": 3,
+      "low": 1
+    },
+    "null_fit_values_per_lane": 12,
+    "unknown_cadences_per_lane": 2,
+    "unknown_physical_formats_per_lane": 3
+  },
+  "protocol_checklist": [
+    {
+      "slot_id": "V01",
+      "check_id": "V01-P1",
+      "criterion": "three porosity branches, current middle 20 minutes not editorial 30",
+      "initial_lane_a": "pass",
+      "initial_lane_b": "pass",
+      "after_amendment_01": "pass",
+      "root_source_review": "pass",
+      "source_ids": [
+        "S01",
+        "S02"
+      ]
+    },
+    {
+      "slot_id": "V01",
+      "check_id": "V01-P2",
+      "criterion": "pre-shampoo wet unwashed root-tip generous",
+      "initial_lane_a": "pass",
+      "initial_lane_b": "pass",
+      "after_amendment_01": "pass",
+      "root_source_review": "pass",
+      "source_ids": [
+        "S01",
+        "S02"
+      ]
+    },
+    {
+      "slot_id": "V01",
+      "check_id": "V01-P3",
+      "criterion": "rinse before shampoo and conditioner",
+      "initial_lane_a": "pass",
+      "initial_lane_b": "pass",
+      "after_amendment_01": "pass",
+      "root_source_review": "pass",
+      "source_ids": [
+        "S01",
+        "S02"
+      ]
+    },
+    {
+      "slot_id": "V01",
+      "check_id": "V01-P4",
+      "criterion": "no numeric dose or inferred cream texture",
+      "initial_lane_a": "pass",
+      "initial_lane_b": "pass",
+      "after_amendment_01": "pass",
+      "root_source_review": "pass",
+      "source_ids": [
+        "S01",
+        "S02"
+      ]
+    },
+    {
+      "slot_id": "V02",
+      "check_id": "V02-P1",
+      "criterion": "damp lengths/ends",
+      "initial_lane_a": "pass",
+      "initial_lane_b": "pass",
+      "after_amendment_01": "pass",
+      "root_source_review": "pass",
+      "source_ids": [
+        "S03"
+      ]
+    },
+    {
+      "slot_id": "V02",
+      "check_id": "V02-P2",
+      "criterion": "2-3 minute dwell",
+      "initial_lane_a": "pass",
+      "initial_lane_b": "pass",
+      "after_amendment_01": "pass",
+      "root_source_review": "pass",
+      "source_ids": [
+        "S03"
+      ]
+    },
+    {
+      "slot_id": "V02",
+      "check_id": "V02-P3",
+      "criterion": "1-2 times weekly",
+      "initial_lane_a": "pass",
+      "initial_lane_b": "pass",
+      "after_amendment_01": "pass",
+      "root_source_review": "pass",
+      "source_ids": [
+        "S03"
+      ]
+    },
+    {
+      "slot_id": "V02",
+      "check_id": "V02-P4",
+      "criterion": "no invented wash placement",
+      "initial_lane_a": "pass",
+      "initial_lane_b": "pass",
+      "after_amendment_01": "pass",
+      "root_source_review": "pass",
+      "source_ids": [
+        "S03"
+      ]
+    },
+    {
+      "slot_id": "V03",
+      "check_id": "V03-P1",
+      "criterion": "before OR after shampoo",
+      "initial_lane_a": "pass",
+      "initial_lane_b": "pass",
+      "after_amendment_01": "pass",
+      "root_source_review": "pass",
+      "source_ids": [
+        "S04"
+      ]
+    },
+    {
+      "slot_id": "V03",
+      "check_id": "V03-P2",
+      "criterion": "damp lengths/ends",
+      "initial_lane_a": "pass",
+      "initial_lane_b": "pass",
+      "after_amendment_01": "pass",
+      "root_source_review": "pass",
+      "source_ids": [
+        "S04"
+      ]
+    },
+    {
+      "slot_id": "V03",
+      "check_id": "V03-P3",
+      "criterion": "5 minute dwell then rinse",
+      "initial_lane_a": "pass",
+      "initial_lane_b": "pass",
+      "after_amendment_01": "pass",
+      "root_source_review": "pass",
+      "source_ids": [
+        "S04"
+      ]
+    },
+    {
+      "slot_id": "V03",
+      "check_id": "V03-P4",
+      "criterion": "cadence unknown",
+      "initial_lane_a": "pass",
+      "initial_lane_b": "pass",
+      "after_amendment_01": "pass",
+      "root_source_review": "pass",
+      "source_ids": [
+        "S04"
+      ]
+    },
+    {
+      "slot_id": "V04",
+      "check_id": "V04-P1",
+      "criterion": "serum physical texture",
+      "initial_lane_a": "pass",
+      "initial_lane_b": "pass",
+      "after_amendment_01": "pass",
+      "root_source_review": "pass",
+      "source_ids": [
+        "S05",
+        "S12"
+      ]
+    },
+    {
+      "slot_id": "V04",
+      "check_id": "V04-P2",
+      "criterion": "post-shampoo wet 2-3 pumps per section",
+      "initial_lane_a": "pass",
+      "initial_lane_b": "pass",
+      "after_amendment_01": "pass",
+      "root_source_review": "pass",
+      "source_ids": [
+        "S05",
+        "S12"
+      ]
+    },
+    {
+      "slot_id": "V04",
+      "check_id": "V04-P3",
+      "criterion": "1-2 minute working time is not extra dwell; no separate wait",
+      "initial_lane_a": "pass",
+      "initial_lane_b": "pass",
+      "after_amendment_01": "pass",
+      "root_source_review": "pass",
+      "source_ids": [
+        "S05",
+        "S12"
+      ]
+    },
+    {
+      "slot_id": "V04",
+      "check_id": "V04-P4",
+      "criterion": "rinse and optional subsequent mask",
+      "initial_lane_a": "partial_source_packet_omission",
+      "initial_lane_b": "partial_source_packet_omission",
+      "after_amendment_01": "pass",
+      "root_source_review": "pass",
+      "source_ids": [
+        "S05",
+        "S13"
+      ]
+    },
+    {
+      "slot_id": "V04",
+      "check_id": "V04-P5",
+      "criterion": "cadence unknown",
+      "initial_lane_a": "pass",
+      "initial_lane_b": "pass",
+      "after_amendment_01": "pass",
+      "root_source_review": "pass",
+      "source_ids": [
+        "S05",
+        "S12"
+      ]
+    },
+    {
+      "slot_id": "V04",
+      "check_id": "V04-P6",
+      "criterion": "system/15-application evidence not generic one-use proof",
+      "initial_lane_a": "pass",
+      "initial_lane_b": "pass",
+      "after_amendment_01": "pass",
+      "root_source_review": "pass",
+      "source_ids": [
+        "S05",
+        "S12"
+      ]
+    }
+  ],
+  "adjudications": [
+    {
+      "id": "AD01",
+      "type": "source_preparation_defect",
+      "finding": "S05 source observations omitted explicit aftercare order from maker text. Both lanes correctly refused to invent it.",
+      "resolution": "Preserve initial packets/outputs; frozen source-amendment-01 adds S13 with serum rinse -> optional Metal DX mask -> recommended matching leave-in. Two fresh small supplemental extractions agree; no category/trust/fit change.",
+      "proof": [
+        "source-amendment-01-freeze.json",
+        "lane-a/source-amendment-01.json",
+        "lane-b/source-amendment-01.json",
+        "source-amendment-01-seal.json"
+      ],
+      "closed": true,
+      "limits": "No invented mask dose/dwell/rinse. This is not independent new-product holdout or a pure causal method experiment."
+    },
+    {
+      "id": "AD02",
+      "type": "wire_representation_ambiguity",
+      "finding": "V04 no_wait uses numeric 0/0 in lane-a and null/null in lane-b. Both explicitly describe no additional dwell, not zero total contact.",
+      "resolution": "Canonical prospective projection: kind=no_wait; numeric contact bounds null; working-time bounds 1/2. No new producer duration or a timing change. Preserve both sealed outputs; require adapter canonicalization proof before DB mapping.",
+      "closed_for_research": true,
+      "implementation_proven": false
+    },
+    {
+      "id": "AD03",
+      "type": "confidence_scope_disagreement",
+      "finding": "V01 protocol confidence moderate/high; V02/V03 technology confidence high/null. Boundary, owner policy and underlying deterministic facts agree.",
+      "resolution": "For the root adjudicated record retain conservative V01 protocol moderate and final-technology confidence null for excluded V02/V03. Anonymous marker/absence confidence remains high; boundary/exclusion confidence remains high. Does not change product labels, directions or any trust grade.",
+      "closed_for_research": true,
+      "implementation_proven": false
+    },
+    {
+      "id": "AD04",
+      "type": "non_material_serialization",
+      "finding": "Two lanes phrase/partition steps and matching shampoo/conditioner partner entries differently, and represent detangling in state versus sequence.",
+      "resolution": "Semantically equivalent source-backed actions; do not claim byte-for-byte record equivalence or a finished production canonicalizer.",
+      "closed_for_research": true
+    }
+  ],
+  "recognition": {
+    "both_lanes": "possible commercial formula associations V01/V03/V04 logged; no established identity used by reported receipts/limits",
+    "limits": "Process blinding, not an efficacy experiment; packets had no product names or owner-specific per-product rulings."
+  },
+  "coverage_limits": [
+    "Only gluconamide/gluconate has a new positive example; other four families not validated outside calibration.",
+    "No overnight, layering, incomplete/conflicting INCI or legacy-transfer fixture in this four-product slice.",
+    "Preregistered root expected outcomes are source-preparer oracles, hidden from independent lanes, not independent scientific labels.",
+    "No model claims empirical tier discovery, runtime scheduling, storage, exact catalog identity, intake readiness or activation."
+  ],
+  "next_gate": "Prepare exact additive storage/adapter/intake compatibility contract; method lock and remaining positive-family/negative-fixture coverage limitations must be resolved explicitly before activation.",
+  "eight_pilot_enrichment_scope": "All eight original rows by Nick's latest request; unchanged grades, no automatic recommendation promotion or DB apply. No new test row promoted into this owner-approved scope.",
+  "verification_scope": "Run-local structural/hash/read/source/default-policy verifier; root manual producer/checklist review; supplemental read/hash/shape/source verification. No runtime adapter, DB, catalog, browser or production CI proof."
+}
+

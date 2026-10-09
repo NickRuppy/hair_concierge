@@ -1,0 +1,352 @@
+[
+  {
+    "id": "recovery-forward-link",
+    "file": "src/app/routine/page.tsx",
+    "sourceSha256": "298522d8399b3638fdd03d1d4605df4e3b74d766e7b2947ea71e01331ca0b8de",
+    "anchor": {
+      "kind": "file",
+      "from": "href=\"/plan-start\"",
+      "to": "href=\"/routine\""
+    },
+    "testFile": "tests/personal-plan-stage4-route-ui.test.tsx",
+    "testName": "Routine unavailable recovery offers an explicit reload action",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^Routine\\ unavailable\\ recovery\\ offers\\ an\\ explicit\\ reload\\ action$",
+      "tests/personal-plan-stage4-route-ui.test.tsx"
+    ],
+    "expectedAssertion": "Forward CTA /plan-start exact href regex fails; retry remains present.",
+    "execution": "NOT RUN; main must require selected baseline green, intended red and byte-exact restore plus restored green"
+  },
+  {
+    "id": "portfolio-scope-id",
+    "file": "src/lib/personal-plan/routine/portfolio-presentation.ts",
+    "sourceSha256": "4c677c8272a0b0db20ae25d2a7eab4abca805dcd6736ef2652f0fbfa48a382a6",
+    "anchor": {
+      "kind": "file",
+      "from": ".eq(\"id\", portfolioVersionId)",
+      "to": ".eq(\"id\", \"incorrect-scope\")"
+    },
+    "testFile": "tests/personal-plan-portfolio-presentation.test.ts",
+    "testName": "profile presentation API authenticates, owner-scopes its active portfolio, and returns JSON-safe arrays",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^profile\\ presentation\\ API\\ authenticates,\\ owner\\-scopes\\ its\\ active\\ portfolio,\\ and\\ returns\\ JSON\\-safe\\ arrays$",
+      "tests/personal-plan-portfolio-presentation.test.ts"
+    ],
+    "expectedAssertion": "Exact ordered portfolioCalls receipt differs; stub still returns valid same snapshot, so failure is query-owner scope observation.",
+    "execution": "NOT RUN; main must require selected baseline green, intended red and byte-exact restore plus restored green"
+  },
+  {
+    "id": "portfolio-scope-user_id",
+    "file": "src/lib/personal-plan/routine/portfolio-presentation.ts",
+    "sourceSha256": "4c677c8272a0b0db20ae25d2a7eab4abca805dcd6736ef2652f0fbfa48a382a6",
+    "anchor": {
+      "kind": "file",
+      "from": ".eq(\"user_id\", userId)",
+      "to": ".eq(\"user_id\", \"incorrect-scope\")"
+    },
+    "testFile": "tests/personal-plan-portfolio-presentation.test.ts",
+    "testName": "profile presentation API authenticates, owner-scopes its active portfolio, and returns JSON-safe arrays",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^profile\\ presentation\\ API\\ authenticates,\\ owner\\-scopes\\ its\\ active\\ portfolio,\\ and\\ returns\\ JSON\\-safe\\ arrays$",
+      "tests/personal-plan-portfolio-presentation.test.ts"
+    ],
+    "expectedAssertion": "Exact ordered portfolioCalls receipt differs; stub still returns valid same snapshot, so failure is query-owner scope observation.",
+    "execution": "NOT RUN; main must require selected baseline green, intended red and byte-exact restore plus restored green"
+  },
+  {
+    "id": "portfolio-scope-personal_plan_id",
+    "file": "src/lib/personal-plan/routine/portfolio-presentation.ts",
+    "sourceSha256": "4c677c8272a0b0db20ae25d2a7eab4abca805dcd6736ef2652f0fbfa48a382a6",
+    "anchor": {
+      "kind": "file",
+      "from": ".eq(\"personal_plan_id\", planId)",
+      "to": ".eq(\"personal_plan_id\", \"incorrect-scope\")"
+    },
+    "testFile": "tests/personal-plan-portfolio-presentation.test.ts",
+    "testName": "profile presentation API authenticates, owner-scopes its active portfolio, and returns JSON-safe arrays",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^profile\\ presentation\\ API\\ authenticates,\\ owner\\-scopes\\ its\\ active\\ portfolio,\\ and\\ returns\\ JSON\\-safe\\ arrays$",
+      "tests/personal-plan-portfolio-presentation.test.ts"
+    ],
+    "expectedAssertion": "Exact ordered portfolioCalls receipt differs; stub still returns valid same snapshot, so failure is query-owner scope observation.",
+    "execution": "NOT RUN; main must require selected baseline green, intended red and byte-exact restore plus restored green"
+  },
+  {
+    "id": "portfolio-schema-delivery",
+    "file": "src/lib/personal-plan/routine/portfolio-presentation.ts",
+    "sourceSha256": "4c677c8272a0b0db20ae25d2a7eab4abca805dcd6736ef2652f0fbfa48a382a6",
+    "anchor": {
+      "kind": "file",
+      "from": "    schemaVersion: portfolio.schemaVersion,",
+      "to": "    schemaVersion: 2,"
+    },
+    "testFile": "tests/personal-plan-portfolio-presentation.test.ts",
+    "testName": "profile presentation API authenticates, owner-scopes its active portfolio, and returns JSON-safe arrays",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^profile\\ presentation\\ API\\ authenticates,\\ owner\\-scopes\\ its\\ active\\ portfolio,\\ and\\ returns\\ JSON\\-safe\\ arrays$",
+      "tests/personal-plan-portfolio-presentation.test.ts"
+    ],
+    "expectedAssertion": "body.presentation.schemaVersion 2 != 3; status and retained-name outputs preserved.",
+    "execution": "NOT RUN; main must require selected baseline green, intended red and byte-exact restore plus restored green"
+  },
+  {
+    "id": "products-negative",
+    "file": "src/components/routine/personal-plan/routine-page.tsx",
+    "sourceSha256": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b",
+    "anchor": {
+      "kind": "file",
+      "from": "          {banner}\n",
+      "to": "          {banner}\n          {!refinementBanner ? <span>Mach deinen Plan genauer.</span> : null}\n"
+    },
+    "testFile": "tests/personal-plan-stage4-ui.test.tsx",
+    "testName": "Task 2.6: the plan-updated toast is absent without the signal",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^Task\\ 2\\.6:\\ the\\ plan\\-updated\\ toast\\ is\\ absent\\ without\\ the\\ signal$",
+      "tests/personal-plan-stage4-ui.test.tsx"
+    ],
+    "expectedAssertion": "Transferred withoutFlag negative rejects leaked Mach deinen Plan genauer.; no callback/effect execution is claimed.",
+    "execution": "NOT RUN; main must require selected baseline green, intended red and byte-exact restore plus restored green"
+  },
+  {
+    "id": "habits-negative",
+    "file": "src/components/routine/personal-plan/routine-page.tsx",
+    "sourceSha256": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b",
+    "anchor": {
+      "kind": "file",
+      "from": "          {banner}\n",
+      "to": "          {banner}\n          {!refinementBanner ? <span>Noch ein Schritt: deine Gewohnheiten.</span> : null}\n"
+    },
+    "testFile": "tests/personal-plan-stage4-ui.test.tsx",
+    "testName": "Task 2.6: the plan-updated toast is absent without the signal",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^Task\\ 2\\.6:\\ the\\ plan\\-updated\\ toast\\ is\\ absent\\ without\\ the\\ signal$",
+      "tests/personal-plan-stage4-ui.test.tsx"
+    ],
+    "expectedAssertion": "Transferred withoutFlag negative rejects leaked Noch ein Schritt: deine Gewohnheiten.; no callback/effect execution is claimed.",
+    "execution": "NOT RUN; main must require selected baseline green, intended red and byte-exact restore plus restored green"
+  },
+  {
+    "id": "dismiss-negative",
+    "file": "src/components/routine/personal-plan/routine-page.tsx",
+    "sourceSha256": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b",
+    "anchor": {
+      "kind": "file",
+      "from": "          {banner}\n",
+      "to": "          {banner}\n          {!refinementBanner ? <span>Hinweis schließen</span> : null}\n"
+    },
+    "testFile": "tests/personal-plan-stage4-ui.test.tsx",
+    "testName": "Task 2.6: the plan-updated toast is absent without the signal",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^Task\\ 2\\.6:\\ the\\ plan\\-updated\\ toast\\ is\\ absent\\ without\\ the\\ signal$",
+      "tests/personal-plan-stage4-ui.test.tsx"
+    ],
+    "expectedAssertion": "Transferred withoutFlag negative rejects leaked Hinweis schließen; no callback/effect execution is claimed.",
+    "execution": "NOT RUN; main must require selected baseline green, intended red and byte-exact restore plus restored green"
+  },
+  {
+    "id": "progress-negative",
+    "file": "src/components/routine/personal-plan/routine-page.tsx",
+    "sourceSha256": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b",
+    "anchor": {
+      "kind": "file",
+      "from": "          {banner}\n",
+      "to": "          {banner}\n          {!refinementBanner ? <span>3 von 4</span> : null}\n"
+    },
+    "testFile": "tests/personal-plan-stage4-ui.test.tsx",
+    "testName": "Task 2.6: the plan-updated toast is absent without the signal",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^Task\\ 2\\.6:\\ the\\ plan\\-updated\\ toast\\ is\\ absent\\ without\\ the\\ signal$",
+      "tests/personal-plan-stage4-ui.test.tsx"
+    ],
+    "expectedAssertion": "Transferred withoutFlag negative rejects leaked 3 von 4; no callback/effect execution is claimed.",
+    "execution": "NOT RUN; main must require selected baseline green, intended red and byte-exact restore plus restored green"
+  },
+  {
+    "id": "toast-status",
+    "file": "src/components/routine/personal-plan/routine-plan-updated-toast.tsx",
+    "sourceSha256": "d38fd896a878b8c0040d7b8980bf74efcfdedf99ce52db113c3e4b497901e9b5",
+    "anchor": {
+      "kind": "file",
+      "from": "role=\"status\"",
+      "to": "role=\"alert\""
+    },
+    "testFile": "tests/personal-plan-stage4-ui.test.tsx",
+    "testName": "Task 2.6: the plan-updated toast and the refinement banner can render on the same visit",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^Task\\ 2\\.6:\\ the\\ plan\\-updated\\ toast\\ and\\ the\\ refinement\\ banner\\ can\\ render\\ on\\ the\\ same\\ visit$",
+      "tests/personal-plan-stage4-ui.test.tsx"
+    ],
+    "expectedAssertion": "Transferred role=status regex fails; no blocking Basis gap or banner status role is present in this exact keeper.",
+    "execution": "NOT RUN; main must require selected baseline green, intended red and byte-exact restore plus restored green"
+  },
+  {
+    "id": "toast-above-basis",
+    "file": "src/components/routine/personal-plan/routine-page.tsx",
+    "sourceSha256": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b",
+    "anchor": {
+      "kind": "file",
+      "from": "          {showPlanUpdatedToast && onDismissPlanUpdatedToast ? (\n            <RoutinePlanUpdatedToast onDismiss={onDismissPlanUpdatedToast} />\n          ) : null}\n          {banner}\n          <RoutineSection\n            title=\"Deine Basis\"\n            items={basisItems}\n            emptyLabel=\"Deine Basis wird aus deiner Haaranalyse aufgebaut.\"\n            onItemDetail={onItemDetail}\n            presentation={portfolioPresentation}\n            productPresentation={view.productPresentation}\n          />\n",
+      "to": "          <RoutineSection\n            title=\"Deine Basis\"\n            items={basisItems}\n            emptyLabel=\"Deine Basis wird aus deiner Haaranalyse aufgebaut.\"\n            onItemDetail={onItemDetail}\n            presentation={portfolioPresentation}\n            productPresentation={view.productPresentation}\n          />\n          {showPlanUpdatedToast && onDismissPlanUpdatedToast ? (\n            <RoutinePlanUpdatedToast onDismiss={onDismissPlanUpdatedToast} />\n          ) : null}\n          {banner}\n"
+    },
+    "testFile": "tests/personal-plan-stage4-ui.test.tsx",
+    "testName": "Task 2.6: the plan-updated toast and the refinement banner can render on the same visit",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^Task\\ 2\\.6:\\ the\\ plan\\-updated\\ toast\\ and\\ the\\ refinement\\ banner\\ can\\ render\\ on\\ the\\ same\\ visit$",
+      "tests/personal-plan-stage4-ui.test.tsx"
+    ],
+    "expectedAssertion": "Both slots move after Basis, preserving toast-before-banner original assertion. Transferred toast-before-Basis assertion now fails.",
+    "execution": "NOT RUN; main must require selected baseline green, intended red and byte-exact restore plus restored green"
+  },
+  {
+    "id": "habits-above-basis",
+    "file": "src/components/routine/personal-plan/routine-page.tsx",
+    "sourceSha256": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b",
+    "anchor": {
+      "kind": "file",
+      "from": "          {showPlanUpdatedToast && onDismissPlanUpdatedToast ? (\n            <RoutinePlanUpdatedToast onDismiss={onDismissPlanUpdatedToast} />\n          ) : null}\n          {banner}\n          <RoutineSection\n            title=\"Deine Basis\"\n            items={basisItems}\n            emptyLabel=\"Deine Basis wird aus deiner Haaranalyse aufgebaut.\"\n            onItemDetail={onItemDetail}\n            presentation={portfolioPresentation}\n            productPresentation={view.productPresentation}\n          />\n",
+      "to": "          {showPlanUpdatedToast && onDismissPlanUpdatedToast ? (\n            <RoutinePlanUpdatedToast onDismiss={onDismissPlanUpdatedToast} />\n          ) : null}\n          <RoutineSection\n            title=\"Deine Basis\"\n            items={basisItems}\n            emptyLabel=\"Deine Basis wird aus deiner Haaranalyse aufgebaut.\"\n            onItemDetail={onItemDetail}\n            presentation={portfolioPresentation}\n            productPresentation={view.productPresentation}\n          />\n          {banner}\n"
+    },
+    "testFile": "tests/personal-plan-stage4-ui.test.tsx",
+    "testName": "Task 2.6: the plan-updated toast and the refinement banner can render on the same visit",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^Task\\ 2\\.6:\\ the\\ plan\\-updated\\ toast\\ and\\ the\\ refinement\\ banner\\ can\\ render\\ on\\ the\\ same\\ visit$",
+      "tests/personal-plan-stage4-ui.test.tsx"
+    ],
+    "expectedAssertion": "Toast remains above Basis and banner; only transferred habits-before-Basis assertion fails.",
+    "execution": "NOT RUN; main must require selected baseline green, intended red and byte-exact restore plus restored green"
+  },
+  {
+    "id": "habits-progress",
+    "file": "src/components/routine/personal-plan/routine-refinement-banner.tsx",
+    "sourceSha256": "8b37e2bffee1bfd52a41e54fa1f91c781c03cd8a0f894dc1ad2386a592b74d0a",
+    "anchor": {
+      "kind": "file",
+      "from": "{completedSteps} von {totalSteps}",
+      "to": "{completedSteps + 1} von {totalSteps}"
+    },
+    "testFile": "tests/personal-plan-stage4-ui.test.tsx",
+    "testName": "Task 2.6: the plan-updated toast and the refinement banner can render on the same visit",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^Task\\ 2\\.6:\\ the\\ plan\\-updated\\ toast\\ and\\ the\\ refinement\\ banner\\ can\\ render\\ on\\ the\\ same\\ visit$",
+      "tests/personal-plan-stage4-ui.test.tsx"
+    ],
+    "expectedAssertion": "Transferred >3 von 4< regex fails as4of4; original title and ordering remain.",
+    "execution": "NOT RUN; main must require selected baseline green, intended red and byte-exact restore plus restored green"
+  },
+  {
+    "id": "habits-duration",
+    "file": "src/components/routine/personal-plan/routine-refinement-banner.tsx",
+    "sourceSha256": "8b37e2bffee1bfd52a41e54fa1f91c781c03cd8a0f894dc1ad2386a592b74d0a",
+    "anchor": {
+      "kind": "file",
+      "from": "habits: { title: \"Noch ein Schritt: deine Gewohnheiten.\", ctaMinutes: 3 }",
+      "to": "habits: { title: \"Noch ein Schritt: deine Gewohnheiten.\", ctaMinutes: 4 }"
+    },
+    "testFile": "tests/personal-plan-stage4-ui.test.tsx",
+    "testName": "Task 2.6: the plan-updated toast and the refinement banner can render on the same visit",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^Task\\ 2\\.6:\\ the\\ plan\\-updated\\ toast\\ and\\ the\\ refinement\\ banner\\ can\\ render\\ on\\ the\\ same\\ visit$",
+      "tests/personal-plan-stage4-ui.test.tsx"
+    ],
+    "expectedAssertion": "Transferred Weiter · 3 Min regex fails; title/order unchanged.",
+    "execution": "NOT RUN; main must require selected baseline green, intended red and byte-exact restore plus restored green"
+  }
+]

@@ -1,0 +1,52 @@
+{
+  "verifiedIdentity": {
+    "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+    "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+    "branch": "codex/test-audit-pruning",
+    "gitDir": "/Users/nick/AI_work/hair_conscierge/.git/worktrees/test-audit-pruning",
+    "commonDir": "/Users/nick/AI_work/hair_conscierge/.git"
+  },
+  "targetBranchConfig": {
+    "branch.codex/test-audit-pruning.remote": "origin",
+    "branch.codex/test-audit-pruning.merge": "refs/heads/main"
+  },
+  "files": [
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/.git",
+      "expected": "69e02fc729005e92d3757e955eb4f5055ea0caed30ed863b1b6d231fee910d84",
+      "current": "69e02fc729005e92d3757e955eb4f5055ea0caed30ed863b1b6d231fee910d84",
+      "same": true
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.git/worktrees/test-audit-pruning/HEAD",
+      "expected": "24bd58e4073c4e8dc40d79db6c3953fd44021496ab5c29f29ed07f9df2049037",
+      "current": "24bd58e4073c4e8dc40d79db6c3953fd44021496ab5c29f29ed07f9df2049037",
+      "same": true
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.git/worktrees/test-audit-pruning/commondir",
+      "expected": "340ddcb67a6204f742cd1e28e5b462622dde7daaa8ee36001897196aacdc6d47",
+      "current": "340ddcb67a6204f742cd1e28e5b462622dde7daaa8ee36001897196aacdc6d47",
+      "same": true
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.git/config",
+      "expected": "2253b6840e7873e8035e82d6176ab2b7eec30374199874b551cc70fc77bbdeb1",
+      "current": "0c8e95adf438f1a7ff98d364731136030b301dc9b96d949904ed64520b12fcb0",
+      "same": false
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.git/refs/heads/codex/test-audit-pruning",
+      "expected": null,
+      "current": null,
+      "same": true
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.git/packed-refs",
+      "expected": "e1c4bf1d8f62deff84b449eff0e35459de5e13d9936e881f71b1162d61c12d28",
+      "current": "e1c4bf1d8f62deff84b449eff0e35459de5e13d9936e881f71b1162d61c12d28",
+      "same": true
+    }
+  ],
+  "disposition": "Adopt only changed shared config hash for newly prepared tools. Actual origin of unrelated branch metadata not asserted; prior config bytes unavailable. All other identity pins and target head/branch/config values verified unchanged. No source, tests, dependencies or refs mutated."
+}

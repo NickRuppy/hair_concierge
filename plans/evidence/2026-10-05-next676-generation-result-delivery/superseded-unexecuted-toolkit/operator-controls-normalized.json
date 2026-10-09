@@ -1,0 +1,1311 @@
+[
+  {
+    "id": "C1-unknown-heat-state",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/lib/personal-plan/needs.ts",
+    "sourceSha256": "e79fb582f70dbd85f78c5771f3f32b350c503e365540e2f43e9a8d8541f1e1af",
+    "mutatedSha256": "a5e6167d9d67f680cc5ef06fc1c4eea7e895ef583bce8107a29ef92bbf81ab5e",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/personal-plan/needs.ts",
+      "scopeSha256": "e79fb582f70dbd85f78c5771f3f32b350c503e365540e2f43e9a8d8541f1e1af",
+      "expectedOccurrences": 1
+    },
+    "from": "return { knowledgeState: \"unknown\", state: \"unknown\", events: [], sourceFacts: [] }",
+    "to": "return { knowledgeState: \"unknown\", state: \"absent\", events: [], sourceFacts: [] }",
+    "fullMutantPath": "/tmp/test-audit-generation157-tools-xwq0stb7/mutants/C1-unknown-heat-state/src/lib/personal-plan/needs.ts",
+    "test": {
+      "file": "tests/personal-plan/needs.test.ts",
+      "name": "INITIAL-02: quiz-led Shampoo cadence keeps current behavior unknown",
+      "registrationName": "INITIAL-02: quiz-led Shampoo cadence keeps current behavior unknown"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^INITIAL-02: quiz-led Shampoo cadence keeps current behavior unknown$",
+      "tests/personal-plan/needs.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 39,
+        "text": "assert.deepEqual(assessment.heatExposure, {\n    knowledgeState: \"unknown\",\n    state: \"unknown\",\n    events: [],\n    sourceFacts: [],\n  })",
+        "keeperSha256": "3422e1dc8a2a01d005b6f49a275554316191d12d85e1e6845eac3a61078d8a35",
+        "testFileSha256": "e4d6b2b972b4dc3ba82e9cc314e7be4860c23bcab67e727ea5e913b065f57917"
+      },
+      "cut": {
+        "startLine": 39,
+        "text": "assert.deepEqual(assessment.heatExposure, {\n    knowledgeState: \"unknown\",\n    state: \"unknown\",\n    events: [],\n    sourceFacts: [],\n  })",
+        "keeperSha256": "3422e1dc8a2a01d005b6f49a275554316191d12d85e1e6845eac3a61078d8a35",
+        "testFileSha256": "9c52c4068dc0a33ff4c1186cba3135f109ab571d83c20fccd450547311d823af"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": {
+      "knowledgeState": "unknown",
+      "state": "unknown",
+      "events": [],
+      "sourceFacts": []
+    },
+    "actualValue": {
+      "knowledgeState": "unknown",
+      "state": "absent",
+      "events": [],
+      "sourceFacts": []
+    },
+    "diagnosticReady": true,
+    "diagnosticKind": "full predicted literal error message",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    events: [],\n    knowledgeState: 'unknown',\n    sourceFacts: [],\n+   state: 'absent'\n-   state: 'unknown'\n  }",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(assessment.heatExposure, {\n    knowledgeState: \"unknown\",\n    state: \"unknown\",\n    events: [],\n    sourceFacts: [],\n  })",
+    "limits": "No runtime evidence. Full decoded message and FIRST keeper assertion required. D1-required-thickness cannot pass this version; no fabricated successful envelope."
+  },
+  {
+    "id": "C2-default-reason",
+    "candidates": [
+      "C2"
+    ],
+    "file": "src/lib/personal-plan/types.ts",
+    "sourceSha256": "40297a7f5b93d2ae223603fe818111f8a546c21299579d4eaf1da3d6089e2389",
+    "mutatedSha256": "9ffbcd57fde30bfde482357a6b988ac0ad8d2dcd9ff34076509be91c6a7af2b8",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/personal-plan/types.ts",
+      "scopeSha256": "40297a7f5b93d2ae223603fe818111f8a546c21299579d4eaf1da3d6089e2389",
+      "expectedOccurrences": 1
+    },
+    "from": "scalpIrritationState: { state: \"unknown\", reason: \"scalp_irritation_detail\" },",
+    "to": "scalpIrritationState: { state: \"unknown\", reason: \"heat_tool_use\" },",
+    "fullMutantPath": "/tmp/test-audit-generation157-tools-xwq0stb7/mutants/C2-default-reason/src/lib/personal-plan/types.ts",
+    "test": {
+      "file": "tests/personal-plan/input.test.ts",
+      "name": "INITIAL-01: a valid V3 paid quiz becomes a quiz-faithful initial profile",
+      "registrationName": "INITIAL-01: a valid V3 paid quiz becomes a quiz-faithful initial profile"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^INITIAL-01: a valid V3 paid quiz becomes a quiz-faithful initial profile$",
+      "tests/personal-plan/input.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 28,
+        "text": "assert.deepEqual(profile.routine, {\n    currentProductLoad: { state: \"unknown\", reason: \"current_product_load\" },\n    shampooFrequency: { state: \"unknown\", reason: \"shampoo_frequency\" },\n    heatToolUse: { state: \"unknown\", reason: \"heat_tool_use\" },\n    mechanicalExposureSignals: [],\n    dryShampooBridgePreference: {\n      state: \"unknown\",\n      reason: \"dry_shampoo_bridge_preference\",\n    },\n    scalpIrritationState: { state: \"unknown\", reason: \"scalp_irritation_detail\" },\n  })",
+        "keeperSha256": "c1f6ebdb1dd78aa904c0af5b6b03b65e4621865f09c90e4822ce8e9620c54817",
+        "testFileSha256": "3ec287d48ce75c8a3b9456ee436ddd44775186de5c490f4f3d5846f699d058f1"
+      },
+      "cut": {
+        "startLine": 28,
+        "text": "assert.deepEqual(profile.routine, {\n    currentProductLoad: { state: \"unknown\", reason: \"current_product_load\" },\n    shampooFrequency: { state: \"unknown\", reason: \"shampoo_frequency\" },\n    heatToolUse: { state: \"unknown\", reason: \"heat_tool_use\" },\n    mechanicalExposureSignals: [],\n    dryShampooBridgePreference: {\n      state: \"unknown\",\n      reason: \"dry_shampoo_bridge_preference\",\n    },\n    scalpIrritationState: { state: \"unknown\", reason: \"scalp_irritation_detail\" },\n  })",
+        "keeperSha256": "c1f6ebdb1dd78aa904c0af5b6b03b65e4621865f09c90e4822ce8e9620c54817",
+        "testFileSha256": "d7f2214accabf836566675c1078907bcdba2c781dd8518995a8aec09688215d6"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": {
+      "currentProductLoad": {
+        "state": "unknown",
+        "reason": "current_product_load"
+      },
+      "shampooFrequency": {
+        "state": "unknown",
+        "reason": "shampoo_frequency"
+      },
+      "heatToolUse": {
+        "state": "unknown",
+        "reason": "heat_tool_use"
+      },
+      "mechanicalExposureSignals": [],
+      "dryShampooBridgePreference": {
+        "state": "unknown",
+        "reason": "dry_shampoo_bridge_preference"
+      },
+      "scalpIrritationState": {
+        "state": "unknown",
+        "reason": "scalp_irritation_detail"
+      }
+    },
+    "actualValue": {
+      "currentProductLoad": {
+        "state": "unknown",
+        "reason": "current_product_load"
+      },
+      "shampooFrequency": {
+        "state": "unknown",
+        "reason": "shampoo_frequency"
+      },
+      "heatToolUse": {
+        "state": "unknown",
+        "reason": "heat_tool_use"
+      },
+      "mechanicalExposureSignals": [],
+      "dryShampooBridgePreference": {
+        "state": "unknown",
+        "reason": "dry_shampoo_bridge_preference"
+      },
+      "scalpIrritationState": {
+        "state": "unknown",
+        "reason": "heat_tool_use"
+      }
+    },
+    "diagnosticReady": true,
+    "diagnosticKind": "full predicted literal error message",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    currentProductLoad: {\n      reason: 'current_product_load',\n      state: 'unknown'\n    },\n...\n    scalpIrritationState: {\n+     reason: 'heat_tool_use',\n-     reason: 'scalp_irritation_detail',\n      state: 'unknown'\n    },\n    shampooFrequency: {\n      reason: 'shampoo_frequency',\n      state: 'unknown'",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(profile.routine, {\n    currentProductLoad: { state: \"unknown\", reason: \"current_product_load\" },\n    shampooFrequency: { state: \"unknown\", reason: \"shampoo_frequency\" },\n    heatToolUse: { state: \"unknown\", reason: \"heat_tool_use\" },\n    mechanicalExposureSignals: [],\n    dryShampooBridgePreference: {\n      state: \"unknown\",\n      reason: \"dry_shampoo_bridge_preference\",\n    },\n    scalpIrritationState: { state: \"unknown\", reason: \"scalp_irritation_detail\" },\n  })",
+    "limits": "No runtime evidence. Full decoded message and FIRST keeper assertion required. D1-required-thickness cannot pass this version; no fabricated successful envelope."
+  },
+  {
+    "id": "C3-ip-prefix",
+    "candidates": [
+      "C3"
+    ],
+    "file": "src/lib/rate-limit.ts",
+    "sourceSha256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+    "mutatedSha256": "a3ae6e5c7648363e83924e603d3e31258365ad9d7980f09f888277dec820f7d3",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/rate-limit.ts",
+      "scopeSha256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+      "expectedOccurrences": 1
+    },
+    "from": "prefix: \"personal-plan-prepare-ip\",\n  limit: 100,\n  windowMs: 10_000,",
+    "to": "prefix: \"personal-plan-prepare-ip-wrong\",\n  limit: 100,\n  windowMs: 10_000,",
+    "fullMutantPath": "/tmp/test-audit-generation157-tools-xwq0stb7/mutants/C3-ip-prefix/src/lib/rate-limit.ts",
+    "test": {
+      "file": "tests/personal-plan-prepare-route.test.ts",
+      "name": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity",
+      "registrationName": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^prepare applies the IP ceiling before journey resolution and persists the browser replay identity$",
+      "tests/personal-plan-prepare-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 160,
+        "text": "assert.deepEqual(fixture.rateConfigs, [\n    { prefix: \"personal-plan-prepare-ip\", limit: 100, windowMs: 10_000 },\n    { prefix: \"personal-plan-prepare-journey\", limit: 10, windowMs: 10_000 },\n  ])",
+        "keeperSha256": "a2bd4fcb4b2f4bbfb6824a9d7cd5ffcdbce6471fc6c62db68592eff5c61ca6c1",
+        "testFileSha256": "6e12f85e9f0997318e69936280de90a766e2324e508fbb38af129a9e351bc548"
+      },
+      "cut": {
+        "startLine": 147,
+        "text": "assert.deepEqual(fixture.rateConfigs, [\n    { prefix: \"personal-plan-prepare-ip\", limit: 100, windowMs: 10_000 },\n    { prefix: \"personal-plan-prepare-journey\", limit: 10, windowMs: 10_000 },\n  ])",
+        "keeperSha256": "a2bd4fcb4b2f4bbfb6824a9d7cd5ffcdbce6471fc6c62db68592eff5c61ca6c1",
+        "testFileSha256": "5c7ce27f59015eaf903f5beea1402e735638d654ec4f3c87ce2f61985a43d25e"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": [
+      {
+        "prefix": "personal-plan-prepare-ip",
+        "limit": 100,
+        "windowMs": 10000
+      },
+      {
+        "prefix": "personal-plan-prepare-journey",
+        "limit": 10,
+        "windowMs": 10000
+      }
+    ],
+    "actualValue": [
+      {
+        "prefix": "personal-plan-prepare-ip-wrong",
+        "limit": 100,
+        "windowMs": 10000
+      },
+      {
+        "prefix": "personal-plan-prepare-journey",
+        "limit": 10,
+        "windowMs": 10000
+      }
+    ],
+    "diagnosticReady": true,
+    "diagnosticKind": "full predicted literal error message",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    {\n      limit: 100,\n+     prefix: 'personal-plan-prepare-ip-wrong',\n-     prefix: 'personal-plan-prepare-ip',\n      windowMs: 10000\n    },\n    {\n      limit: 10,\n      prefix: 'personal-plan-prepare-journey',",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(fixture.rateConfigs, [\n    { prefix: \"personal-plan-prepare-ip\", limit: 100, windowMs: 10_000 },\n    { prefix: \"personal-plan-prepare-journey\", limit: 10, windowMs: 10_000 },\n  ])",
+    "limits": "No runtime evidence. Full decoded message and FIRST keeper assertion required. D1-required-thickness cannot pass this version; no fabricated successful envelope."
+  },
+  {
+    "id": "C3-ip-limit",
+    "candidates": [
+      "C3"
+    ],
+    "file": "src/lib/rate-limit.ts",
+    "sourceSha256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+    "mutatedSha256": "f194151f15ece16335b6cc50d0ac8776a09ed4ec2f1674310812371894e92bd3",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/rate-limit.ts",
+      "scopeSha256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+      "expectedOccurrences": 1
+    },
+    "from": "prefix: \"personal-plan-prepare-ip\",\n  limit: 100,\n  windowMs: 10_000,",
+    "to": "prefix: \"personal-plan-prepare-ip\",\n  limit: 101,\n  windowMs: 10_000,",
+    "fullMutantPath": "/tmp/test-audit-generation157-tools-xwq0stb7/mutants/C3-ip-limit/src/lib/rate-limit.ts",
+    "test": {
+      "file": "tests/personal-plan-prepare-route.test.ts",
+      "name": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity",
+      "registrationName": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^prepare applies the IP ceiling before journey resolution and persists the browser replay identity$",
+      "tests/personal-plan-prepare-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 160,
+        "text": "assert.deepEqual(fixture.rateConfigs, [\n    { prefix: \"personal-plan-prepare-ip\", limit: 100, windowMs: 10_000 },\n    { prefix: \"personal-plan-prepare-journey\", limit: 10, windowMs: 10_000 },\n  ])",
+        "keeperSha256": "a2bd4fcb4b2f4bbfb6824a9d7cd5ffcdbce6471fc6c62db68592eff5c61ca6c1",
+        "testFileSha256": "6e12f85e9f0997318e69936280de90a766e2324e508fbb38af129a9e351bc548"
+      },
+      "cut": {
+        "startLine": 147,
+        "text": "assert.deepEqual(fixture.rateConfigs, [\n    { prefix: \"personal-plan-prepare-ip\", limit: 100, windowMs: 10_000 },\n    { prefix: \"personal-plan-prepare-journey\", limit: 10, windowMs: 10_000 },\n  ])",
+        "keeperSha256": "a2bd4fcb4b2f4bbfb6824a9d7cd5ffcdbce6471fc6c62db68592eff5c61ca6c1",
+        "testFileSha256": "5c7ce27f59015eaf903f5beea1402e735638d654ec4f3c87ce2f61985a43d25e"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": [
+      {
+        "prefix": "personal-plan-prepare-ip",
+        "limit": 100,
+        "windowMs": 10000
+      },
+      {
+        "prefix": "personal-plan-prepare-journey",
+        "limit": 10,
+        "windowMs": 10000
+      }
+    ],
+    "actualValue": [
+      {
+        "prefix": "personal-plan-prepare-ip",
+        "limit": 101,
+        "windowMs": 10000
+      },
+      {
+        "prefix": "personal-plan-prepare-journey",
+        "limit": 10,
+        "windowMs": 10000
+      }
+    ],
+    "diagnosticReady": true,
+    "diagnosticKind": "full predicted literal error message",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    {\n+     limit: 101,\n-     limit: 100,\n      prefix: 'personal-plan-prepare-ip',\n      windowMs: 10000\n    },\n    {\n      limit: 10,",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(fixture.rateConfigs, [\n    { prefix: \"personal-plan-prepare-ip\", limit: 100, windowMs: 10_000 },\n    { prefix: \"personal-plan-prepare-journey\", limit: 10, windowMs: 10_000 },\n  ])",
+    "limits": "No runtime evidence. Full decoded message and FIRST keeper assertion required. D1-required-thickness cannot pass this version; no fabricated successful envelope."
+  },
+  {
+    "id": "C3-ip-window",
+    "candidates": [
+      "C3"
+    ],
+    "file": "src/lib/rate-limit.ts",
+    "sourceSha256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+    "mutatedSha256": "f9fefa59704989f69d9d02fa93466dd7659dcff21c9d658668251c8c8acc4022",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/rate-limit.ts",
+      "scopeSha256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+      "expectedOccurrences": 1
+    },
+    "from": "prefix: \"personal-plan-prepare-ip\",\n  limit: 100,\n  windowMs: 10_000,",
+    "to": "prefix: \"personal-plan-prepare-ip\",\n  limit: 100,\n  windowMs: 11_000,",
+    "fullMutantPath": "/tmp/test-audit-generation157-tools-xwq0stb7/mutants/C3-ip-window/src/lib/rate-limit.ts",
+    "test": {
+      "file": "tests/personal-plan-prepare-route.test.ts",
+      "name": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity",
+      "registrationName": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^prepare applies the IP ceiling before journey resolution and persists the browser replay identity$",
+      "tests/personal-plan-prepare-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 160,
+        "text": "assert.deepEqual(fixture.rateConfigs, [\n    { prefix: \"personal-plan-prepare-ip\", limit: 100, windowMs: 10_000 },\n    { prefix: \"personal-plan-prepare-journey\", limit: 10, windowMs: 10_000 },\n  ])",
+        "keeperSha256": "a2bd4fcb4b2f4bbfb6824a9d7cd5ffcdbce6471fc6c62db68592eff5c61ca6c1",
+        "testFileSha256": "6e12f85e9f0997318e69936280de90a766e2324e508fbb38af129a9e351bc548"
+      },
+      "cut": {
+        "startLine": 147,
+        "text": "assert.deepEqual(fixture.rateConfigs, [\n    { prefix: \"personal-plan-prepare-ip\", limit: 100, windowMs: 10_000 },\n    { prefix: \"personal-plan-prepare-journey\", limit: 10, windowMs: 10_000 },\n  ])",
+        "keeperSha256": "a2bd4fcb4b2f4bbfb6824a9d7cd5ffcdbce6471fc6c62db68592eff5c61ca6c1",
+        "testFileSha256": "5c7ce27f59015eaf903f5beea1402e735638d654ec4f3c87ce2f61985a43d25e"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": [
+      {
+        "prefix": "personal-plan-prepare-ip",
+        "limit": 100,
+        "windowMs": 10000
+      },
+      {
+        "prefix": "personal-plan-prepare-journey",
+        "limit": 10,
+        "windowMs": 10000
+      }
+    ],
+    "actualValue": [
+      {
+        "prefix": "personal-plan-prepare-ip",
+        "limit": 100,
+        "windowMs": 11000
+      },
+      {
+        "prefix": "personal-plan-prepare-journey",
+        "limit": 10,
+        "windowMs": 10000
+      }
+    ],
+    "diagnosticReady": true,
+    "diagnosticKind": "full predicted literal error message",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    {\n      limit: 100,\n      prefix: 'personal-plan-prepare-ip',\n+     windowMs: 11000\n-     windowMs: 10000\n    },\n    {\n      limit: 10,\n      prefix: 'personal-plan-prepare-journey',\n      windowMs: 10000",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(fixture.rateConfigs, [\n    { prefix: \"personal-plan-prepare-ip\", limit: 100, windowMs: 10_000 },\n    { prefix: \"personal-plan-prepare-journey\", limit: 10, windowMs: 10_000 },\n  ])",
+    "limits": "No runtime evidence. Full decoded message and FIRST keeper assertion required. D1-required-thickness cannot pass this version; no fabricated successful envelope."
+  },
+  {
+    "id": "C3-journey-prefix",
+    "candidates": [
+      "C3"
+    ],
+    "file": "src/lib/rate-limit.ts",
+    "sourceSha256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+    "mutatedSha256": "cbcdaa8de4211f3c35369c59313b98dae4b33c013d1aad8723c7f44d9ae25170",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/rate-limit.ts",
+      "scopeSha256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+      "expectedOccurrences": 1
+    },
+    "from": "prefix: \"personal-plan-prepare-journey\",\n  limit: 10,\n  windowMs: 10_000,",
+    "to": "prefix: \"personal-plan-prepare-journey-wrong\",\n  limit: 10,\n  windowMs: 10_000,",
+    "fullMutantPath": "/tmp/test-audit-generation157-tools-xwq0stb7/mutants/C3-journey-prefix/src/lib/rate-limit.ts",
+    "test": {
+      "file": "tests/personal-plan-prepare-route.test.ts",
+      "name": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity",
+      "registrationName": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^prepare applies the IP ceiling before journey resolution and persists the browser replay identity$",
+      "tests/personal-plan-prepare-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 160,
+        "text": "assert.deepEqual(fixture.rateConfigs, [\n    { prefix: \"personal-plan-prepare-ip\", limit: 100, windowMs: 10_000 },\n    { prefix: \"personal-plan-prepare-journey\", limit: 10, windowMs: 10_000 },\n  ])",
+        "keeperSha256": "a2bd4fcb4b2f4bbfb6824a9d7cd5ffcdbce6471fc6c62db68592eff5c61ca6c1",
+        "testFileSha256": "6e12f85e9f0997318e69936280de90a766e2324e508fbb38af129a9e351bc548"
+      },
+      "cut": {
+        "startLine": 147,
+        "text": "assert.deepEqual(fixture.rateConfigs, [\n    { prefix: \"personal-plan-prepare-ip\", limit: 100, windowMs: 10_000 },\n    { prefix: \"personal-plan-prepare-journey\", limit: 10, windowMs: 10_000 },\n  ])",
+        "keeperSha256": "a2bd4fcb4b2f4bbfb6824a9d7cd5ffcdbce6471fc6c62db68592eff5c61ca6c1",
+        "testFileSha256": "5c7ce27f59015eaf903f5beea1402e735638d654ec4f3c87ce2f61985a43d25e"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": [
+      {
+        "prefix": "personal-plan-prepare-ip",
+        "limit": 100,
+        "windowMs": 10000
+      },
+      {
+        "prefix": "personal-plan-prepare-journey",
+        "limit": 10,
+        "windowMs": 10000
+      }
+    ],
+    "actualValue": [
+      {
+        "prefix": "personal-plan-prepare-ip",
+        "limit": 100,
+        "windowMs": 10000
+      },
+      {
+        "prefix": "personal-plan-prepare-journey-wrong",
+        "limit": 10,
+        "windowMs": 10000
+      }
+    ],
+    "diagnosticReady": true,
+    "diagnosticKind": "full predicted literal error message",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  [\n    {\n      limit: 100,\n      prefix: 'personal-plan-prepare-ip',\n      windowMs: 10000\n...\n      limit: 10,\n+     prefix: 'personal-plan-prepare-journey-wrong',\n-     prefix: 'personal-plan-prepare-journey',\n      windowMs: 10000\n    }\n  ]",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(fixture.rateConfigs, [\n    { prefix: \"personal-plan-prepare-ip\", limit: 100, windowMs: 10_000 },\n    { prefix: \"personal-plan-prepare-journey\", limit: 10, windowMs: 10_000 },\n  ])",
+    "limits": "No runtime evidence. Full decoded message and FIRST keeper assertion required. D1-required-thickness cannot pass this version; no fabricated successful envelope."
+  },
+  {
+    "id": "C3-journey-limit",
+    "candidates": [
+      "C3"
+    ],
+    "file": "src/lib/rate-limit.ts",
+    "sourceSha256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+    "mutatedSha256": "2287093a978e1231837665364f769f6f061890b605637c2050d5060fe5e096df",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/rate-limit.ts",
+      "scopeSha256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+      "expectedOccurrences": 1
+    },
+    "from": "prefix: \"personal-plan-prepare-journey\",\n  limit: 10,\n  windowMs: 10_000,",
+    "to": "prefix: \"personal-plan-prepare-journey\",\n  limit: 11,\n  windowMs: 10_000,",
+    "fullMutantPath": "/tmp/test-audit-generation157-tools-xwq0stb7/mutants/C3-journey-limit/src/lib/rate-limit.ts",
+    "test": {
+      "file": "tests/personal-plan-prepare-route.test.ts",
+      "name": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity",
+      "registrationName": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^prepare applies the IP ceiling before journey resolution and persists the browser replay identity$",
+      "tests/personal-plan-prepare-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 160,
+        "text": "assert.deepEqual(fixture.rateConfigs, [\n    { prefix: \"personal-plan-prepare-ip\", limit: 100, windowMs: 10_000 },\n    { prefix: \"personal-plan-prepare-journey\", limit: 10, windowMs: 10_000 },\n  ])",
+        "keeperSha256": "a2bd4fcb4b2f4bbfb6824a9d7cd5ffcdbce6471fc6c62db68592eff5c61ca6c1",
+        "testFileSha256": "6e12f85e9f0997318e69936280de90a766e2324e508fbb38af129a9e351bc548"
+      },
+      "cut": {
+        "startLine": 147,
+        "text": "assert.deepEqual(fixture.rateConfigs, [\n    { prefix: \"personal-plan-prepare-ip\", limit: 100, windowMs: 10_000 },\n    { prefix: \"personal-plan-prepare-journey\", limit: 10, windowMs: 10_000 },\n  ])",
+        "keeperSha256": "a2bd4fcb4b2f4bbfb6824a9d7cd5ffcdbce6471fc6c62db68592eff5c61ca6c1",
+        "testFileSha256": "5c7ce27f59015eaf903f5beea1402e735638d654ec4f3c87ce2f61985a43d25e"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": [
+      {
+        "prefix": "personal-plan-prepare-ip",
+        "limit": 100,
+        "windowMs": 10000
+      },
+      {
+        "prefix": "personal-plan-prepare-journey",
+        "limit": 10,
+        "windowMs": 10000
+      }
+    ],
+    "actualValue": [
+      {
+        "prefix": "personal-plan-prepare-ip",
+        "limit": 100,
+        "windowMs": 10000
+      },
+      {
+        "prefix": "personal-plan-prepare-journey",
+        "limit": 11,
+        "windowMs": 10000
+      }
+    ],
+    "diagnosticReady": true,
+    "diagnosticKind": "full predicted literal error message",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    {\n      limit: 100,\n      prefix: 'personal-plan-prepare-ip',\n      windowMs: 10000\n    },\n    {\n+     limit: 11,\n-     limit: 10,\n      prefix: 'personal-plan-prepare-journey',\n      windowMs: 10000\n    }\n  ]",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(fixture.rateConfigs, [\n    { prefix: \"personal-plan-prepare-ip\", limit: 100, windowMs: 10_000 },\n    { prefix: \"personal-plan-prepare-journey\", limit: 10, windowMs: 10_000 },\n  ])",
+    "limits": "No runtime evidence. Full decoded message and FIRST keeper assertion required. D1-required-thickness cannot pass this version; no fabricated successful envelope."
+  },
+  {
+    "id": "C3-journey-window",
+    "candidates": [
+      "C3"
+    ],
+    "file": "src/lib/rate-limit.ts",
+    "sourceSha256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+    "mutatedSha256": "5c5b8841a80d1629cfb39b7ad52ee0b2538e7251946034610999e6b838e814bf",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/rate-limit.ts",
+      "scopeSha256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+      "expectedOccurrences": 1
+    },
+    "from": "prefix: \"personal-plan-prepare-journey\",\n  limit: 10,\n  windowMs: 10_000,",
+    "to": "prefix: \"personal-plan-prepare-journey\",\n  limit: 10,\n  windowMs: 11_000,",
+    "fullMutantPath": "/tmp/test-audit-generation157-tools-xwq0stb7/mutants/C3-journey-window/src/lib/rate-limit.ts",
+    "test": {
+      "file": "tests/personal-plan-prepare-route.test.ts",
+      "name": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity",
+      "registrationName": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^prepare applies the IP ceiling before journey resolution and persists the browser replay identity$",
+      "tests/personal-plan-prepare-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 160,
+        "text": "assert.deepEqual(fixture.rateConfigs, [\n    { prefix: \"personal-plan-prepare-ip\", limit: 100, windowMs: 10_000 },\n    { prefix: \"personal-plan-prepare-journey\", limit: 10, windowMs: 10_000 },\n  ])",
+        "keeperSha256": "a2bd4fcb4b2f4bbfb6824a9d7cd5ffcdbce6471fc6c62db68592eff5c61ca6c1",
+        "testFileSha256": "6e12f85e9f0997318e69936280de90a766e2324e508fbb38af129a9e351bc548"
+      },
+      "cut": {
+        "startLine": 147,
+        "text": "assert.deepEqual(fixture.rateConfigs, [\n    { prefix: \"personal-plan-prepare-ip\", limit: 100, windowMs: 10_000 },\n    { prefix: \"personal-plan-prepare-journey\", limit: 10, windowMs: 10_000 },\n  ])",
+        "keeperSha256": "a2bd4fcb4b2f4bbfb6824a9d7cd5ffcdbce6471fc6c62db68592eff5c61ca6c1",
+        "testFileSha256": "5c7ce27f59015eaf903f5beea1402e735638d654ec4f3c87ce2f61985a43d25e"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": [
+      {
+        "prefix": "personal-plan-prepare-ip",
+        "limit": 100,
+        "windowMs": 10000
+      },
+      {
+        "prefix": "personal-plan-prepare-journey",
+        "limit": 10,
+        "windowMs": 10000
+      }
+    ],
+    "actualValue": [
+      {
+        "prefix": "personal-plan-prepare-ip",
+        "limit": 100,
+        "windowMs": 10000
+      },
+      {
+        "prefix": "personal-plan-prepare-journey",
+        "limit": 10,
+        "windowMs": 11000
+      }
+    ],
+    "diagnosticReady": true,
+    "diagnosticKind": "full predicted literal error message",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  [\n    {\n      limit: 100,\n      prefix: 'personal-plan-prepare-ip',\n      windowMs: 10000\n...\n      prefix: 'personal-plan-prepare-journey',\n+     windowMs: 11000\n-     windowMs: 10000\n    }\n  ]",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(fixture.rateConfigs, [\n    { prefix: \"personal-plan-prepare-ip\", limit: 100, windowMs: 10_000 },\n    { prefix: \"personal-plan-prepare-journey\", limit: 10, windowMs: 10_000 },\n  ])",
+    "limits": "No runtime evidence. Full decoded message and FIRST keeper assertion required. D1-required-thickness cannot pass this version; no fabricated successful envelope."
+  },
+  {
+    "id": "C3-lead-namespace",
+    "candidates": [
+      "C3"
+    ],
+    "file": "src/lib/rate-limit.ts",
+    "sourceSha256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+    "mutatedSha256": "4fadd6670ff498f370866f0b0ba8518d3d554665be56c4908d92a5f4763cb55b",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/rate-limit.ts",
+      "scopeSha256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+      "expectedOccurrences": 1
+    },
+    "from": "prefix: \"quiz-lead\",",
+    "to": "prefix: \"personal-plan-prepare-ip\",",
+    "fullMutantPath": "/tmp/test-audit-generation157-tools-xwq0stb7/mutants/C3-lead-namespace/src/lib/rate-limit.ts",
+    "test": {
+      "file": "tests/personal-plan-prepare-route.test.ts",
+      "name": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity",
+      "registrationName": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^prepare applies the IP ceiling before journey resolution and persists the browser replay identity$",
+      "tests/personal-plan-prepare-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 164,
+        "text": "assert.notEqual(fixture.rateConfigs[0].prefix, QUIZ_LEAD_RATE_LIMIT.prefix)",
+        "keeperSha256": "a2bd4fcb4b2f4bbfb6824a9d7cd5ffcdbce6471fc6c62db68592eff5c61ca6c1",
+        "testFileSha256": "6e12f85e9f0997318e69936280de90a766e2324e508fbb38af129a9e351bc548"
+      },
+      "cut": {
+        "startLine": 151,
+        "text": "assert.notEqual(fixture.rateConfigs[0].prefix, QUIZ_LEAD_RATE_LIMIT.prefix)",
+        "keeperSha256": "a2bd4fcb4b2f4bbfb6824a9d7cd5ffcdbce6471fc6c62db68592eff5c61ca6c1",
+        "testFileSha256": "5c7ce27f59015eaf903f5beea1402e735638d654ec4f3c87ce2f61985a43d25e"
+      }
+    },
+    "expectedOperator": "notStrictEqual",
+    "expectedValue": "personal-plan-prepare-ip",
+    "actualValue": "personal-plan-prepare-ip",
+    "diagnosticReady": true,
+    "diagnosticKind": "full predicted literal error message",
+    "errorMessageIncludes": [
+      "Expected \"actual\" to be strictly unequal to:\n\n'personal-plan-prepare-ip'",
+      "Expected \"actual\" to be strictly unequal to:"
+    ],
+    "intendedAssertion": "assert.notEqual(fixture.rateConfigs[0].prefix, QUIZ_LEAD_RATE_LIMIT.prefix)",
+    "limits": "No runtime evidence. Full decoded message and FIRST keeper assertion required. D1-required-thickness cannot pass this version; no fabricated successful envelope."
+  },
+  {
+    "id": "C4-progressbar",
+    "candidates": [
+      "C4"
+    ],
+    "file": "src/app/plan-bereit/plan-ready-arrival.tsx",
+    "sourceSha256": "3ffe8425b73ea809f4113cfb6326750b503aec5a3206a661614b992a56f9fd81",
+    "mutatedSha256": "fb4103634783108ab7e8fc0000101a8666e681194d17b59a34792d3fb03a13ef",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/app/plan-bereit/plan-ready-arrival.tsx",
+      "scopeSha256": "3ffe8425b73ea809f4113cfb6326750b503aec5a3206a661614b992a56f9fd81",
+      "expectedOccurrences": 1
+    },
+    "from": "<PersonalPlanJourneyHeader currentStage={1} centeredBrand />",
+    "to": "<PersonalPlanJourneyHeader currentStage={1} centeredBrand moduleProgress={{ completedSteps: 1, totalSteps: 5 }} />",
+    "fullMutantPath": "/tmp/test-audit-generation157-tools-xwq0stb7/mutants/C4-progressbar/src/app/plan-bereit/plan-ready-arrival.tsx",
+    "test": {
+      "file": "tests/personal-plan-ready-server-first.test.tsx",
+      "name": "server-first pending envelope renders approved static copy and no-JS recovery",
+      "registrationName": "server-first pending envelope renders approved static copy and no-JS recovery"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^server-first pending envelope renders approved static copy and no-JS recovery$",
+      "tests/personal-plan-ready-server-first.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 99,
+        "text": "assert.doesNotMatch(html, /role=\"progressbar\"/, \"non-ready header must omit the stage progressbar\")",
+        "keeperSha256": "80392e863bc9bae42ddb155533f183f0abb9aa99e4c53a7feb1a327f8500035c",
+        "testFileSha256": "01841faf00bd6e234c9b0a58160e4778c5d3121817834a53e9eec42b3c5f048b"
+      },
+      "cut": {
+        "startLine": 99,
+        "text": "assert.doesNotMatch(html, /role=\"progressbar\"/, \"non-ready header must omit the stage progressbar\")",
+        "keeperSha256": "80392e863bc9bae42ddb155533f183f0abb9aa99e4c53a7feb1a327f8500035c",
+        "testFileSha256": "3b9bc5117db26f4add91a4bd676f789910b1514c5941f771317d9d4ff0fe513d"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "expectedValue": "/role=\"progressbar\"/",
+    "actualValue": "rendered initial checking HTML contains role=\"progressbar\"",
+    "diagnosticReady": true,
+    "diagnosticKind": "exact custom SSR assertion message, not full actual HTML",
+    "errorMessageIncludes": [
+      "non-ready header must omit the stage progressbar",
+      "non-ready header must omit the stage progressbar"
+    ],
+    "intendedAssertion": "assert.doesNotMatch(html, /role=\"progressbar\"/, \"non-ready header must omit the stage progressbar\")",
+    "limits": "No runtime evidence. Full decoded message and FIRST keeper assertion required. D1-required-thickness cannot pass this version; no fabricated successful envelope."
+  },
+  {
+    "id": "C4-retry-progressbar",
+    "candidates": [
+      "C4"
+    ],
+    "file": "src/app/plan-bereit/personal-plan-ready-client.tsx",
+    "sourceSha256": "c06111b4f92e188cc7eafab8d2e30c181a543b3049dfbc125f0a373bbdc6803b",
+    "mutatedSha256": "acc23351ca0a5b46362b29d8d0d360787886f98200c09b6acf4cafc420c05804",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/app/plan-bereit/personal-plan-ready-client.tsx",
+      "scopeSha256": "c06111b4f92e188cc7eafab8d2e30c181a543b3049dfbc125f0a373bbdc6803b",
+      "expectedOccurrences": 1
+    },
+    "from": "<PersonalPlanJourneyHeader currentStage={1} centeredBrand />",
+    "to": "<PersonalPlanJourneyHeader currentStage={1} centeredBrand moduleProgress={{ completedSteps: 1, totalSteps: 5 }} />",
+    "fullMutantPath": "/tmp/test-audit-generation157-tools-xwq0stb7/mutants/C4-retry-progressbar/src/app/plan-bereit/personal-plan-ready-client.tsx",
+    "test": {
+      "file": "tests/personal-plan-ready-server-first.test.tsx",
+      "name": "timeout and transient states lead with a retry state instead of a live check",
+      "registrationName": "timeout and transient states lead with a retry state instead of a live check"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^timeout and transient states lead with a retry state instead of a live check$",
+      "tests/personal-plan-ready-server-first.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 242,
+        "text": "assert.doesNotMatch(html, /role=\"progressbar\"/, \"non-ready header must omit the stage progressbar\")",
+        "keeperSha256": "c8c918e131aaf13e1d642b1509d8c1a64f50533419f0a49a3625b7b06829a083",
+        "testFileSha256": "01841faf00bd6e234c9b0a58160e4778c5d3121817834a53e9eec42b3c5f048b"
+      },
+      "cut": {
+        "startLine": 242,
+        "text": "assert.doesNotMatch(html, /role=\"progressbar\"/, \"non-ready header must omit the stage progressbar\")",
+        "keeperSha256": "c8c918e131aaf13e1d642b1509d8c1a64f50533419f0a49a3625b7b06829a083",
+        "testFileSha256": "3b9bc5117db26f4add91a4bd676f789910b1514c5941f771317d9d4ff0fe513d"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "expectedValue": "/role=\"progressbar\"/",
+    "actualValue": "rendered timeout HTML contains role=\"progressbar\"",
+    "diagnosticReady": true,
+    "diagnosticKind": "exact custom SSR assertion message, not full actual HTML",
+    "errorMessageIncludes": [
+      "non-ready header must omit the stage progressbar",
+      "non-ready header must omit the stage progressbar"
+    ],
+    "intendedAssertion": "assert.doesNotMatch(html, /role=\"progressbar\"/, \"non-ready header must omit the stage progressbar\")",
+    "limits": "No runtime evidence. Full decoded message and FIRST keeper assertion required. D1-required-thickness cannot pass this version; no fabricated successful envelope."
+  },
+  {
+    "id": "C4-retired-label",
+    "candidates": [
+      "C4"
+    ],
+    "file": "src/components/personal-plan-journey/journey-header.tsx",
+    "sourceSha256": "82b306804db19852b829dbda63193db876abacf72db2b4f828c449c317d51bb6",
+    "mutatedSha256": "1ceb3100b315c25a0f28a55f84a6c022d994b2d59710427257e6581041aa3783",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/components/personal-plan-journey/journey-header.tsx",
+      "scopeSha256": "82b306804db19852b829dbda63193db876abacf72db2b4f828c449c317d51bb6",
+      "expectedOccurrences": 1
+    },
+    "from": "data-personal-plan-journey-header=\"true\"\n    >",
+    "to": "data-personal-plan-journey-header=\"true\"\n    >\n      <span>Personal-Plan-Stufen</span>",
+    "fullMutantPath": "/tmp/test-audit-generation157-tools-xwq0stb7/mutants/C4-retired-label/src/components/personal-plan-journey/journey-header.tsx",
+    "test": {
+      "file": "tests/personal-plan-ready-server-first.test.tsx",
+      "name": "missing source facts ask for the fact without claiming no action is needed",
+      "registrationName": "missing source facts ask for the fact without claiming no action is needed"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^missing source facts ask for the fact without claiming no action is needed$",
+      "tests/personal-plan-ready-server-first.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 188,
+        "text": "assert.doesNotMatch(html, /Personal-Plan-Stufen/, \"non-ready header must omit retired stage labels\")",
+        "keeperSha256": "fb2983efdfa900c753607391fa4b6ce918d4f14c2f16efed5dad156eaf36e26b",
+        "testFileSha256": "01841faf00bd6e234c9b0a58160e4778c5d3121817834a53e9eec42b3c5f048b"
+      },
+      "cut": {
+        "startLine": 188,
+        "text": "assert.doesNotMatch(html, /Personal-Plan-Stufen/, \"non-ready header must omit retired stage labels\")",
+        "keeperSha256": "fb2983efdfa900c753607391fa4b6ce918d4f14c2f16efed5dad156eaf36e26b",
+        "testFileSha256": "3b9bc5117db26f4add91a4bd676f789910b1514c5941f771317d9d4ff0fe513d"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "expectedValue": "/Personal-Plan-Stufen/",
+    "actualValue": "rendered missing-fact HTML contains Personal-Plan-Stufen",
+    "diagnosticReady": true,
+    "diagnosticKind": "exact custom SSR assertion message, not full actual HTML",
+    "errorMessageIncludes": [
+      "non-ready header must omit retired stage labels",
+      "non-ready header must omit retired stage labels"
+    ],
+    "intendedAssertion": "assert.doesNotMatch(html, /Personal-Plan-Stufen/, \"non-ready header must omit retired stage labels\")",
+    "limits": "No runtime evidence. Full decoded message and FIRST keeper assertion required. D1-required-thickness cannot pass this version; no fabricated successful envelope."
+  },
+  {
+    "id": "C4-wordmark",
+    "candidates": [
+      "C4"
+    ],
+    "file": "src/components/personal-plan-journey/journey-header.tsx",
+    "sourceSha256": "82b306804db19852b829dbda63193db876abacf72db2b4f828c449c317d51bb6",
+    "mutatedSha256": "42c7fa2071186ea0fb7d05af95cb834b63e32f7ed909e10a425db80d65ec9b8b",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/components/personal-plan-journey/journey-header.tsx",
+      "scopeSha256": "82b306804db19852b829dbda63193db876abacf72db2b4f828c449c317d51bb6",
+      "expectedOccurrences": 1
+    },
+    "from": "              chaarlie\n",
+    "to": "              haarplan\n",
+    "fullMutantPath": "/tmp/test-audit-generation157-tools-xwq0stb7/mutants/C4-wordmark/src/components/personal-plan-journey/journey-header.tsx",
+    "test": {
+      "file": "tests/personal-plan-ready-server-first.test.tsx",
+      "name": "forbidden and invalid states show support without waiting or payment claims",
+      "registrationName": "forbidden and invalid states show support without waiting or payment claims"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^forbidden and invalid states show support without waiting or payment claims$",
+      "tests/personal-plan-ready-server-first.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 215,
+        "text": "assert.match(html, />chaarlie</, \"non-ready header must retain the chaarlie wordmark\")",
+        "keeperSha256": "90fbf17ea39dde3bc293e63c1415de7defdc0205ea877b5e0ff80985964078b3",
+        "testFileSha256": "01841faf00bd6e234c9b0a58160e4778c5d3121817834a53e9eec42b3c5f048b"
+      },
+      "cut": {
+        "startLine": 215,
+        "text": "assert.match(html, />chaarlie</, \"non-ready header must retain the chaarlie wordmark\")",
+        "keeperSha256": "90fbf17ea39dde3bc293e63c1415de7defdc0205ea877b5e0ff80985964078b3",
+        "testFileSha256": "3b9bc5117db26f4add91a4bd676f789910b1514c5941f771317d9d4ff0fe513d"
+      }
+    },
+    "expectedOperator": "match",
+    "expectedValue": "/>chaarlie</",
+    "actualValue": "rendered forbidden HTML has haarplan in place of chaarlie",
+    "diagnosticReady": true,
+    "diagnosticKind": "exact custom SSR assertion message, not full actual HTML",
+    "errorMessageIncludes": [
+      "non-ready header must retain the chaarlie wordmark",
+      "non-ready header must retain the chaarlie wordmark"
+    ],
+    "intendedAssertion": "assert.match(html, />chaarlie</, \"non-ready header must retain the chaarlie wordmark\")",
+    "limits": "No runtime evidence. Full decoded message and FIRST keeper assertion required. D1-required-thickness cannot pass this version; no fabricated successful envelope."
+  },
+  {
+    "id": "D1-typed-failure",
+    "candidates": [
+      "D1"
+    ],
+    "file": "src/lib/personal-plan/input.ts",
+    "sourceSha256": "22743980e01019fc9834a5a5f6ad3ef566def3757be3b17a2c5994f11ac95c6f",
+    "mutatedSha256": "873b23629ef8eef1a4f39002ff25d18e13edb88f86a6cdf0fbd206fb7bfb6f95",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/personal-plan/input.ts",
+      "scopeSha256": "22743980e01019fc9834a5a5f6ad3ef566def3757be3b17a2c5994f11ac95c6f",
+      "expectedOccurrences": 1
+    },
+    "from": ": { ok: false, error: { code: \"invalid_quiz_envelope\", quizVersion: 3 } }",
+    "to": ": { ok: false, error: { code: \"unsupported_quiz_version\", quizVersion: 3 } }",
+    "fullMutantPath": "/tmp/test-audit-generation157-tools-xwq0stb7/mutants/D1-typed-failure/src/lib/personal-plan/input.ts",
+    "test": {
+      "file": "tests/personal-plan/input.test.ts",
+      "name": "mask-missing-thickness: required Mask target input fails closed at the shared parser",
+      "registrationName": "`mask-missing-${field}: required Mask target input fails closed at the shared parser`"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^mask-missing-thickness: required Mask target input fails closed at the shared parser$",
+      "tests/personal-plan/input.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 87,
+        "text": "assert.deepEqual(parsed, {\n      ok: false,\n      error: { code: \"invalid_quiz_envelope\", quizVersion: 3 },\n    })",
+        "keeperSha256": "e06d9d4e828ca3bc25e0afe31049172277632833a66a0e8f0f679429f147ed58",
+        "testFileSha256": "3ec287d48ce75c8a3b9456ee436ddd44775186de5c490f4f3d5846f699d058f1"
+      },
+      "cut": {
+        "startLine": 77,
+        "text": "assert.deepEqual(parsed, {\n      ok: false,\n      error: { code: \"invalid_quiz_envelope\", quizVersion: 3 },\n    })",
+        "keeperSha256": "e06d9d4e828ca3bc25e0afe31049172277632833a66a0e8f0f679429f147ed58",
+        "testFileSha256": "d7f2214accabf836566675c1078907bcdba2c781dd8518995a8aec09688215d6"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": {
+      "ok": false,
+      "error": {
+        "code": "invalid_quiz_envelope",
+        "quizVersion": 3
+      }
+    },
+    "actualValue": {
+      "ok": false,
+      "error": {
+        "code": "unsupported_quiz_version",
+        "quizVersion": 3
+      }
+    },
+    "diagnosticReady": true,
+    "diagnosticKind": "full predicted literal error message",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    error: {\n+     code: 'unsupported_quiz_version',\n-     code: 'invalid_quiz_envelope',\n      quizVersion: 3\n    },\n    ok: false\n  }",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(parsed, {\n      ok: false,\n      error: { code: \"invalid_quiz_envelope\", quizVersion: 3 },\n    })",
+    "limits": "No runtime evidence. Full decoded message and FIRST keeper assertion required. D1-required-thickness cannot pass this version; no fabricated successful envelope."
+  },
+  {
+    "id": "D1-required-thickness",
+    "candidates": [
+      "D1"
+    ],
+    "file": "src/lib/personal-plan-quiz/persistence.ts",
+    "sourceSha256": "9783d531cfaf8ed1b8d91b133b030758fd2bf3c128b5eee10cd4b0e6f5883335",
+    "mutatedSha256": "6d7ab0f87ebc589159841ce2985602e77a50bcebdf998e7d2a7ce2312fb2e1f7",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/personal-plan-quiz/persistence.ts",
+      "scopeSha256": "9783d531cfaf8ed1b8d91b133b030758fd2bf3c128b5eee10cd4b0e6f5883335",
+      "expectedOccurrences": 1
+    },
+    "from": "    thickness: z.enum([\"fine\", \"normal\", \"coarse\"]),",
+    "to": "    thickness: z.enum([\"fine\", \"normal\", \"coarse\"]).optional(),",
+    "fullMutantPath": "/tmp/test-audit-generation157-tools-xwq0stb7/mutants/D1-required-thickness/src/lib/personal-plan-quiz/persistence.ts",
+    "test": {
+      "file": "tests/personal-plan/input.test.ts",
+      "name": "mask-missing-thickness: required Mask target input fails closed at the shared parser",
+      "registrationName": "`mask-missing-${field}: required Mask target input fails closed at the shared parser`"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^mask-missing-thickness: required Mask target input fails closed at the shared parser$",
+      "tests/personal-plan/input.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 87,
+        "text": "assert.deepEqual(parsed, {\n      ok: false,\n      error: { code: \"invalid_quiz_envelope\", quizVersion: 3 },\n    })",
+        "keeperSha256": "e06d9d4e828ca3bc25e0afe31049172277632833a66a0e8f0f679429f147ed58",
+        "testFileSha256": "3ec287d48ce75c8a3b9456ee436ddd44775186de5c490f4f3d5846f699d058f1"
+      },
+      "cut": {
+        "startLine": 77,
+        "text": "assert.deepEqual(parsed, {\n      ok: false,\n      error: { code: \"invalid_quiz_envelope\", quizVersion: 3 },\n    })",
+        "keeperSha256": "e06d9d4e828ca3bc25e0afe31049172277632833a66a0e8f0f679429f147ed58",
+        "testFileSha256": "d7f2214accabf836566675c1078907bcdba2c781dd8518995a8aec09688215d6"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": {
+      "ok": false,
+      "error": {
+        "code": "invalid_quiz_envelope",
+        "quizVersion": 3
+      }
+    },
+    "actualValue": "ok=true,envelope=existing COMPLETE_V3_PLAN_ENVELOPE with thickness undefined; full decoded actual must be inspected by main, not accepted merely for any failure",
+    "diagnosticReady": false,
+    "diagnosticKind": "unresolved successful payload diagnostic",
+    "errorMessageIncludes": [
+      "UNRESOLVED: D1-required-thickness complete successful envelope diagnostic must be reviewed by root; no acceptance from any generic failure.",
+      "UNRESOLVED: D1-required-thickness complete successful envelope diagnostic must be reviewed by root; no acceptance from any generic failure."
+    ],
+    "intendedAssertion": "assert.deepEqual(parsed, {\n      ok: false,\n      error: { code: \"invalid_quiz_envelope\", quizVersion: 3 },\n    })",
+    "limits": "No runtime evidence. Full decoded message and FIRST keeper assertion required. D1-required-thickness cannot pass this version; no fabricated successful envelope."
+  },
+  {
+    "id": "D2-numeric-message-id",
+    "candidates": [
+      "D2"
+    ],
+    "file": "src/lib/customerio/personal-plan-result-artifact.ts",
+    "sourceSha256": "3baa0cb7cb2f0a8da27dfb0df946cb5c12de81e1d369f7169f96e219c645b587",
+    "mutatedSha256": "d3e72bdc48107bff6a007494224b7ef91e25984d02404cfd7d64d7631ea6aff8",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/customerio/personal-plan-result-artifact.ts",
+      "scopeSha256": "3baa0cb7cb2f0a8da27dfb0df946cb5c12de81e1d369f7169f96e219c645b587",
+      "expectedOccurrences": 1
+    },
+    "from": "return /^\\d+$/.test(configured) ? Number(configured) : configured",
+    "to": "return /^\\d+$/.test(configured) ? configured : configured",
+    "fullMutantPath": "/tmp/test-audit-generation157-tools-xwq0stb7/mutants/D2-numeric-message-id/src/lib/customerio/personal-plan-result-artifact.ts",
+    "test": {
+      "file": "tests/quiz-result-artifact-route.test.ts",
+      "name": "claims, sends, and marks the result artifact email sent",
+      "registrationName": "claims, sends, and marks the result artifact email sent"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^claims, sends, and marks the result artifact email sent$",
+      "tests/quiz-result-artifact-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 184,
+        "text": "assert.equal(sends[0].transactionalMessageId, 42)",
+        "keeperSha256": "75c1ab58b34df69ec2ae39980c4fc79e22441c337ea3321f1a70674aedc463ee",
+        "testFileSha256": "0ce1dda16e9b89888c2e30d6b7873fa50479b1b6bdc4d58fd0a97fe8e915d6c8"
+      },
+      "cut": {
+        "startLine": 184,
+        "text": "assert.equal(sends[0].transactionalMessageId, 42)",
+        "keeperSha256": "75c1ab58b34df69ec2ae39980c4fc79e22441c337ea3321f1a70674aedc463ee",
+        "testFileSha256": "83e2747a442e04b2cb78ad30a006f271364a3518c67206920c5263a6d79672d2"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": 42,
+    "actualValue": "42",
+    "diagnosticReady": true,
+    "diagnosticKind": "full predicted literal error message",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\n'42' !== 42",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal(sends[0].transactionalMessageId, 42)",
+    "limits": "No runtime evidence. Full decoded message and FIRST keeper assertion required. D1-required-thickness cannot pass this version; no fabricated successful envelope."
+  },
+  {
+    "id": "D3-null-claim-result",
+    "candidates": [
+      "D3"
+    ],
+    "file": "src/lib/customerio/result-artifact-service.ts",
+    "sourceSha256": "b86f1fe35d378513dc7c9ff4b4d2e9906ea50124dcb9dfd54a7635e72d7d7f47",
+    "mutatedSha256": "d9e418f50e3bf8733be5e61a47d1385c8c7b3a898b08f2629263cf7f45d6cc3e",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/customerio/result-artifact-service.ts",
+      "scopeSha256": "b86f1fe35d378513dc7c9ff4b4d2e9906ea50124dcb9dfd54a7635e72d7d7f47",
+      "expectedOccurrences": 1
+    },
+    "from": "if (!lead) {\n    return { sent: false, skipped: true }\n  }",
+    "to": "if (!lead) {\n    return { sent: false, skipped: false }\n  }",
+    "fullMutantPath": "/tmp/test-audit-generation157-tools-xwq0stb7/mutants/D3-null-claim-result/src/lib/customerio/result-artifact-service.ts",
+    "test": {
+      "file": "tests/quiz-result-artifact-route.test.ts",
+      "name": "skips a failed result artifact email until manual retry resets it",
+      "registrationName": "skips a failed result artifact email until manual retry resets it"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^skips a failed result artifact email until manual retry resets it$",
+      "tests/quiz-result-artifact-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 386,
+        "text": "assert.deepEqual(response.body, { sent: false, skipped: true })",
+        "keeperSha256": "deb4d21f9de70e445082fb0ca27b44d61166965565245a4227da4a30f3c37835",
+        "testFileSha256": "0ce1dda16e9b89888c2e30d6b7873fa50479b1b6bdc4d58fd0a97fe8e915d6c8"
+      },
+      "cut": {
+        "startLine": 368,
+        "text": "assert.deepEqual(response.body, { sent: false, skipped: true })",
+        "keeperSha256": "deb4d21f9de70e445082fb0ca27b44d61166965565245a4227da4a30f3c37835",
+        "testFileSha256": "83e2747a442e04b2cb78ad30a006f271364a3518c67206920c5263a6d79672d2"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": {
+      "sent": false,
+      "skipped": true
+    },
+    "actualValue": {
+      "sent": false,
+      "skipped": false
+    },
+    "diagnosticReady": true,
+    "diagnosticKind": "full predicted literal error message",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    sent: false,\n+   skipped: false\n-   skipped: true\n  }",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(response.body, { sent: false, skipped: true })",
+    "limits": "No runtime evidence. Full decoded message and FIRST keeper assertion required. D1-required-thickness cannot pass this version; no fabricated successful envelope."
+  },
+  {
+    "id": "D3-production-null-filter",
+    "candidates": [
+      "D3"
+    ],
+    "file": "src/app/api/quiz/result-artifact/route.ts",
+    "sourceSha256": "8b24f4964d21d8c24359bbbdc9b102f740d3f5fe2c757c174a9f638466c797ba",
+    "mutatedSha256": "7a21b076be57ef742294f2454e350c10f408692007094db483cedb321f4b4eff",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/app/api/quiz/result-artifact/route.ts",
+      "scopeSha256": "8b24f4964d21d8c24359bbbdc9b102f740d3f5fe2c757c174a9f638466c797ba",
+      "expectedOccurrences": 1
+    },
+    "from": "        .is(\"artifact_email_status\", null)\n",
+    "to": "",
+    "fullMutantPath": "/tmp/test-audit-generation157-tools-xwq0stb7/mutants/D3-production-null-filter/src/app/api/quiz/result-artifact/route.ts",
+    "test": {
+      "file": "tests/quiz-result-artifact-route.test.ts",
+      "name": "the production claim excludes moderator-owned legacy leads",
+      "registrationName": "the production claim excludes moderator-owned legacy leads"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^the production claim excludes moderator-owned legacy leads$",
+      "tests/quiz-result-artifact-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 155,
+        "text": "assert.deepEqual(filters, [\n    [\"eq\", \"id\", leadId],\n    [\"is\", \"artifact_email_status\", null],\n    [\"eq\", \"quiz_kind\", \"legacy\"],\n    [\"is\", \"moderator_campaign_id\", null],\n  ])",
+        "keeperSha256": "2fad2a45692c4847938f5a06bdea6d48496e4f3feaab05508abac6ff91731f3e",
+        "testFileSha256": "0ce1dda16e9b89888c2e30d6b7873fa50479b1b6bdc4d58fd0a97fe8e915d6c8"
+      },
+      "cut": {
+        "startLine": 155,
+        "text": "assert.deepEqual(filters, [\n    [\"eq\", \"id\", leadId],\n    [\"is\", \"artifact_email_status\", null],\n    [\"eq\", \"quiz_kind\", \"legacy\"],\n    [\"is\", \"moderator_campaign_id\", null],\n  ])",
+        "keeperSha256": "2fad2a45692c4847938f5a06bdea6d48496e4f3feaab05508abac6ff91731f3e",
+        "testFileSha256": "83e2747a442e04b2cb78ad30a006f271364a3518c67206920c5263a6d79672d2"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": [
+      [
+        "eq",
+        "id",
+        "550e8400-e29b-41d4-a716-446655440000"
+      ],
+      [
+        "is",
+        "artifact_email_status",
+        null
+      ],
+      [
+        "eq",
+        "quiz_kind",
+        "legacy"
+      ],
+      [
+        "is",
+        "moderator_campaign_id",
+        null
+      ]
+    ],
+    "actualValue": [
+      [
+        "eq",
+        "id",
+        "550e8400-e29b-41d4-a716-446655440000"
+      ],
+      [
+        "eq",
+        "quiz_kind",
+        "legacy"
+      ],
+      [
+        "is",
+        "moderator_campaign_id",
+        null
+      ]
+    ],
+    "diagnosticReady": true,
+    "diagnosticKind": "full predicted literal error message",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    [\n      'eq',\n      'id',\n      '550e8400-e29b-41d4-a716-446655440000'\n    ],\n    [\n-     'is',\n-     'artifact_email_status',\n-     null\n-   ],\n-   [\n      'eq',\n      'quiz_kind',\n      'legacy'\n    ],\n    [",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(filters, [\n    [\"eq\", \"id\", leadId],\n    [\"is\", \"artifact_email_status\", null],\n    [\"eq\", \"quiz_kind\", \"legacy\"],\n    [\"is\", \"moderator_campaign_id\", null],\n  ])",
+    "limits": "No runtime evidence. Full decoded message and FIRST keeper assertion required. D1-required-thickness cannot pass this version; no fabricated successful envelope."
+  }
+]

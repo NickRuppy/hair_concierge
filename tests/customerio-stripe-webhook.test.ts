@@ -818,30 +818,42 @@ test("Stripe invoice failure reports once without exposing an invoice reference"
   const { deps } = stubDeps()
   const reported: Array<Record<string, unknown>> = []
 
-  await withEnv("VERCEL_ENV", "production", () =>
-    withEnv("STRIPE_SECRET_KEY", "sk_live_test", async () => {
-      await handleStripeWebhookEvent(
-        {
-          id: "evt_invoice_failed",
-          type: "invoice.payment_failed",
-          data: {
-            object: {
-              id: "in_failed",
-              parent: { subscription_details: { metadata: { is_internal_test: "true" } } },
+  let warningCount = 0
+  const originalWarn = console.warn
+  console.warn = () => {
+    warningCount += 1
+  }
+  try {
+    await withEnv("VERCEL_ENV", "production", () =>
+      withEnv("STRIPE_SECRET_KEY", "sk_live_test", async () => {
+        await handleStripeWebhookEvent(
+          {
+            id: "evt_invoice_failed",
+            type: "invoice.payment_failed",
+            data: {
+              object: {
+                id: "in_failed",
+                customer: "cus_1",
+                attempt_count: 2,
+                parent: { subscription_details: { metadata: { is_internal_test: "true" } } },
+              },
             },
+          } as any,
+          {
+            capturePaymentFailure(details: Record<string, unknown>) {
+              reported.push(details)
+            },
+            stripe: deps.stripe,
+            supabase: deps.supabase,
           },
-        } as any,
-        {
-          capturePaymentFailure(details: Record<string, unknown>) {
-            reported.push(details)
-          },
-          stripe: deps.stripe,
-          supabase: deps.supabase,
-        },
-      )
-    }),
-  )
+        )
+      }),
+    )
+  } finally {
+    console.warn = originalWarn
+  }
 
+  assert.equal(warningCount, 1)
   assert.equal(reported.length, 1)
   assert.equal(reported[0].signal, "provider_payment_failed")
   assert.equal(reported[0].providerReferencePresent, true)

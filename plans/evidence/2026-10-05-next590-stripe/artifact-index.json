@@ -1,0 +1,1166 @@
+[
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/artifact-pins.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/artifact-pins.json",
+    "sha256": "7be3d0ce12684051ae014d5564c9ad2e94df0e5f71f2006c2fb7a5e01c758631",
+    "bytes": 5725
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/before/tests/stripe-trial-account-activation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/before/tests/stripe-trial-account-activation.test.ts.txt",
+    "sha256": "7891ab86622d9d708a75e8d92b964cb8c3f7c4498d2c228830c9979056968ab4",
+    "bytes": 23305
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/before/tests/stripe-trial-authorization.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/before/tests/stripe-trial-authorization.test.ts.txt",
+    "sha256": "cc503f5aaffafde6c89351aaafcb05a002c94294807bd6e621c4329778d625ba",
+    "bytes": 14747
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/before/tests/stripe-trial-cancellation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/before/tests/stripe-trial-cancellation.test.ts.txt",
+    "sha256": "aa683f1e596ff838934812921ce7d2baf5ea081ff8a2db515ab9ec9255705767",
+    "bytes": 8303
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/before/tests/stripe-trial-catalog.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/before/tests/stripe-trial-catalog.test.ts.txt",
+    "sha256": "7d69cb89ee4618f690fcfd1d542a569959716a0cf9754867edcef152219ad2e7",
+    "bytes": 4916
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/before/tests/stripe-trial-checkout-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/before/tests/stripe-trial-checkout-route.test.ts.txt",
+    "sha256": "9ecb370408c14ef478200373ac33bc74b583294b23da2f7e18681ab2a187d571",
+    "bytes": 3836
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/before/tests/stripe-trial-checkout-session-params.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/before/tests/stripe-trial-checkout-session-params.test.ts.txt",
+    "sha256": "a6924fe6bcff65baecb70a7845d7293c4190c76cd6fad0a16fa1ff1ff51e9066",
+    "bytes": 4545
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/before/tests/stripe-trial-checkout.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/before/tests/stripe-trial-checkout.test.ts.txt",
+    "sha256": "b7ca67b634e0381d0a60a56fa1b2f977a9e43530868b4719b1dffa58e1f95292",
+    "bytes": 11550
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/before/tests/stripe-trial-continuation-reconcile.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/before/tests/stripe-trial-continuation-reconcile.test.ts.txt",
+    "sha256": "2fb3d2e2b1813994b02b581dbe0e338f8b18b5802d827274af28fbe49789d250",
+    "bytes": 18375
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/before/tests/stripe-trial-continuation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/before/tests/stripe-trial-continuation.test.ts.txt",
+    "sha256": "2adaa26b3787d1b866360f06f5a7b5325701bc673cddd106a9e43c40a52dc036",
+    "bytes": 12127
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/before/tests/stripe-trial-invoice.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/before/tests/stripe-trial-invoice.test.ts.txt",
+    "sha256": "4e801d34fe02adbb862106f9c328c7404eef12113c5ee591107f7b6175b13d51",
+    "bytes": 24055
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/before/tests/stripe-trial-management.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/before/tests/stripe-trial-management.test.ts.txt",
+    "sha256": "fdcc0443934d110adc0adbaa2e3b003432ebef2cc5efa7b745bba3e6ac0d2855",
+    "bytes": 11172
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/before/tests/stripe-trial-prior-paid-history.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/before/tests/stripe-trial-prior-paid-history.test.ts.txt",
+    "sha256": "6b24bb9eae7e2fb3b1c2ece6f43532d809b64766cceae626c6d81eef81ad87f7",
+    "bytes": 7931
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/before/tests/stripe-trial-subscription-lifecycle.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/before/tests/stripe-trial-subscription-lifecycle.test.ts.txt",
+    "sha256": "fa5206bb4626cdb32c5c6a7f4e1d18c0f19522d98aa34ec881fc26c06c524651",
+    "bytes": 25964
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/candidates.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/candidates.json",
+    "sha256": "2b775e04e7cd0f3af8019c42bcbc9e21f168fdc28e0879e9351d921dd35d3445",
+    "bytes": 49902
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/control-oracles.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/control-oracles.json",
+    "sha256": "e254cae584dc02023c3b63a288bcb232b724900b784e968d3416547092864b68",
+    "bytes": 15731
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/controls.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/controls.json",
+    "sha256": "e17aab0508d7643d00b2964655532cb400f524240f4e85b6ddb338c019eb6d93",
+    "bytes": 11175
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/cut/tests/stripe-trial-account-activation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/cut/tests/stripe-trial-account-activation.test.ts.txt",
+    "sha256": "e3fc44ca68bbbabd28a2dcf2c79ae5826f4e2fc43d5979a5d6ce846867746e47",
+    "bytes": 23082
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/cut/tests/stripe-trial-authorization.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/cut/tests/stripe-trial-authorization.test.ts.txt",
+    "sha256": "b11893cf101df492ab4f0440798a4d94f9ef2ae8e0905c0ca73c060f8214ebd2",
+    "bytes": 14651
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/cut/tests/stripe-trial-cancellation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/cut/tests/stripe-trial-cancellation.test.ts.txt",
+    "sha256": "aa683f1e596ff838934812921ce7d2baf5ea081ff8a2db515ab9ec9255705767",
+    "bytes": 8303
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/cut/tests/stripe-trial-catalog.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/cut/tests/stripe-trial-catalog.test.ts.txt",
+    "sha256": "7d69cb89ee4618f690fcfd1d542a569959716a0cf9754867edcef152219ad2e7",
+    "bytes": 4916
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/cut/tests/stripe-trial-checkout-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/cut/tests/stripe-trial-checkout-route.test.ts.txt",
+    "sha256": "9ecb370408c14ef478200373ac33bc74b583294b23da2f7e18681ab2a187d571",
+    "bytes": 3836
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/cut/tests/stripe-trial-checkout-session-params.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/cut/tests/stripe-trial-checkout-session-params.test.ts.txt",
+    "sha256": "a6924fe6bcff65baecb70a7845d7293c4190c76cd6fad0a16fa1ff1ff51e9066",
+    "bytes": 4545
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/cut/tests/stripe-trial-checkout.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/cut/tests/stripe-trial-checkout.test.ts.txt",
+    "sha256": "b7ca67b634e0381d0a60a56fa1b2f977a9e43530868b4719b1dffa58e1f95292",
+    "bytes": 11550
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/cut/tests/stripe-trial-continuation-reconcile.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/cut/tests/stripe-trial-continuation-reconcile.test.ts.txt",
+    "sha256": "2fb3d2e2b1813994b02b581dbe0e338f8b18b5802d827274af28fbe49789d250",
+    "bytes": 18375
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/cut/tests/stripe-trial-continuation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/cut/tests/stripe-trial-continuation.test.ts.txt",
+    "sha256": "2adaa26b3787d1b866360f06f5a7b5325701bc673cddd106a9e43c40a52dc036",
+    "bytes": 12127
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/cut/tests/stripe-trial-invoice.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/cut/tests/stripe-trial-invoice.test.ts.txt",
+    "sha256": "b1aaf4a84a836bb658817d56a2e5b7fa7ec9ff67fbf5158069e04db9453defbf",
+    "bytes": 23500
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/cut/tests/stripe-trial-management.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/cut/tests/stripe-trial-management.test.ts.txt",
+    "sha256": "fdcc0443934d110adc0adbaa2e3b003432ebef2cc5efa7b745bba3e6ac0d2855",
+    "bytes": 11172
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/cut/tests/stripe-trial-prior-paid-history.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/cut/tests/stripe-trial-prior-paid-history.test.ts.txt",
+    "sha256": "6b24bb9eae7e2fb3b1c2ece6f43532d809b64766cceae626c6d81eef81ad87f7",
+    "bytes": 7931
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/cut/tests/stripe-trial-subscription-lifecycle.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/cut/tests/stripe-trial-subscription-lifecycle.test.ts.txt",
+    "sha256": "fa5206bb4626cdb32c5c6a7f4e1d18c0f19522d98aa34ec881fc26c06c524651",
+    "bytes": 25964
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/cut.diff",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/cut.diff",
+    "sha256": "575e3a60e35e33c1a29f01e363807b784f46b60cedc1f9b80c6efcdd7fda1f27",
+    "bytes": 3706
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/layer-plan.md",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/layer-plan.md",
+    "sha256": "3686dbffbf4171bb8049cec5c0975f3a17e41e344583da73ee3481373f17980d",
+    "bytes": 15662
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/ledger.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/ledger.json",
+    "sha256": "c7446d52b2133dc47156616dbf903371daea5b28b6052cfc133ab688cdb5003e",
+    "bytes": 295077
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/main-commands.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/main-commands.json",
+    "sha256": "f02b651a8b95a2944333998e1290c5495c9c8f31ce1d46093811ae460ba2b700",
+    "bytes": 6500
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/manifest.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/manifest.json",
+    "sha256": "bf1a7c25fb6d176ddee7270fab6d03c27686cc778ad75a9d7678ee6403742129",
+    "bytes": 15667
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/oracles.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/oracles.json",
+    "sha256": "697d7c81c9a6c60e32342bc6da223f5c958a2a2ba8f72056990009e3dd53f4c2",
+    "bytes": 2130
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/read-scope.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/read-scope.json",
+    "sha256": "33dc3d168e6bcb0b6a323c1e994a3751e9c3984cd9fde76bf71de4bcbf27c84b",
+    "bytes": 9312
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/transfer/tests/stripe-trial-account-activation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/transfer/tests/stripe-trial-account-activation.test.ts.txt",
+    "sha256": "b501af7ceb20a13b51776bc55659f9d911b0c1e44a81bd0ed042afd6fb9e8fb2",
+    "bytes": 24366
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/transfer/tests/stripe-trial-authorization.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/transfer/tests/stripe-trial-authorization.test.ts.txt",
+    "sha256": "2892f7bd5e3ec2e4e8f9888d89b6a3d4808c9a19603eede5fa8d305a5a391f35",
+    "bytes": 15213
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/transfer/tests/stripe-trial-cancellation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/transfer/tests/stripe-trial-cancellation.test.ts.txt",
+    "sha256": "aa683f1e596ff838934812921ce7d2baf5ea081ff8a2db515ab9ec9255705767",
+    "bytes": 8303
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/transfer/tests/stripe-trial-catalog.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/transfer/tests/stripe-trial-catalog.test.ts.txt",
+    "sha256": "7d69cb89ee4618f690fcfd1d542a569959716a0cf9754867edcef152219ad2e7",
+    "bytes": 4916
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/transfer/tests/stripe-trial-checkout-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/transfer/tests/stripe-trial-checkout-route.test.ts.txt",
+    "sha256": "9ecb370408c14ef478200373ac33bc74b583294b23da2f7e18681ab2a187d571",
+    "bytes": 3836
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/transfer/tests/stripe-trial-checkout-session-params.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/transfer/tests/stripe-trial-checkout-session-params.test.ts.txt",
+    "sha256": "a6924fe6bcff65baecb70a7845d7293c4190c76cd6fad0a16fa1ff1ff51e9066",
+    "bytes": 4545
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/transfer/tests/stripe-trial-checkout.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/transfer/tests/stripe-trial-checkout.test.ts.txt",
+    "sha256": "b7ca67b634e0381d0a60a56fa1b2f977a9e43530868b4719b1dffa58e1f95292",
+    "bytes": 11550
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/transfer/tests/stripe-trial-continuation-reconcile.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/transfer/tests/stripe-trial-continuation-reconcile.test.ts.txt",
+    "sha256": "2fb3d2e2b1813994b02b581dbe0e338f8b18b5802d827274af28fbe49789d250",
+    "bytes": 18375
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/transfer/tests/stripe-trial-continuation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/transfer/tests/stripe-trial-continuation.test.ts.txt",
+    "sha256": "2adaa26b3787d1b866360f06f5a7b5325701bc673cddd106a9e43c40a52dc036",
+    "bytes": 12127
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/transfer/tests/stripe-trial-invoice.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/transfer/tests/stripe-trial-invoice.test.ts.txt",
+    "sha256": "6d0cb2013d4c46a2c2ecc544934238e882f231897d2ef33168439fd90976a31d",
+    "bytes": 24105
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/transfer/tests/stripe-trial-management.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/transfer/tests/stripe-trial-management.test.ts.txt",
+    "sha256": "fdcc0443934d110adc0adbaa2e3b003432ebef2cc5efa7b745bba3e6ac0d2855",
+    "bytes": 11172
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/transfer/tests/stripe-trial-prior-paid-history.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/transfer/tests/stripe-trial-prior-paid-history.test.ts.txt",
+    "sha256": "6b24bb9eae7e2fb3b1c2ece6f43532d809b64766cceae626c6d81eef81ad87f7",
+    "bytes": 7931
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/transfer/tests/stripe-trial-subscription-lifecycle.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/transfer/tests/stripe-trial-subscription-lifecycle.test.ts.txt",
+    "sha256": "fa5206bb4626cdb32c5c6a7f4e1d18c0f19522d98aa34ec881fc26c06c524651",
+    "bytes": 25964
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-proposal-74Xu81/transfer.diff",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/proposal/transfer.diff",
+    "sha256": "ebb7cc3310e05ae72919a9d00ccc1005910d7676b831f1987c6ea5b4fcfdcb36",
+    "bytes": 3148
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/C1-clock-prospective-owner.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/C1-clock-prospective-owner.ts.txt",
+    "sha256": "dd103bfec496ae2b65e9a6b048f4d27f54c04390c89f0d7987fcc2c26c367b57",
+    "bytes": 10468
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/C1-fingerprint-prospective-owner.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/C1-fingerprint-prospective-owner.ts.txt",
+    "sha256": "8c54d49930c44b10b0960cd9dd48ecab6470aa2820997618c403b048c053f155",
+    "bytes": 10451
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/C2-error-code-prospective-owner.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/C2-error-code-prospective-owner.ts.txt",
+    "sha256": "5b4ed65c880a910746f88d47e3687e824ac8d5522dec8c307436977ef0be8927",
+    "bytes": 10100
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/C2-no-invoice-prospective-owner.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/C2-no-invoice-prospective-owner.ts.txt",
+    "sha256": "f27ef34a855b722cf8847fb6cd647be69bf721e689565016169c36d9a1b3c713",
+    "bytes": 10093
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/C2-release-prospective-owner.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/C2-release-prospective-owner.ts.txt",
+    "sha256": "109f804e1c14c59eca65d80b6632891fdf394b66c8f10ab39348a7ea75cb0517",
+    "bytes": 10006
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/C3-cause-prospective-owner.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/C3-cause-prospective-owner.ts.txt",
+    "sha256": "614157be317aae437eeba09d36beda72e1671f33af38812f3c9bdf49b5f9d266",
+    "bytes": 10128
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/C4-outcome-prospective-owner.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/C4-outcome-prospective-owner.ts.txt",
+    "sha256": "37a8ac7bbca0161388426b96c3bc2c898b2870142bb6877669ea732554a861f8",
+    "bytes": 14010
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/C4-phase-prospective-owner.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/C4-phase-prospective-owner.ts.txt",
+    "sha256": "1a6fa569bdbe96a7e60e9305b0672b3af1dbd7001310ba84094f170208475d48",
+    "bytes": 14116
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/C5-no-intent-prospective-owner.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/C5-no-intent-prospective-owner.ts.txt",
+    "sha256": "49e7f9acbad31b670a7ed4cb0194f4e55f4ceb8f4816ac5f808f4af658b90c54",
+    "bytes": 14113
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/README.md",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/README.md",
+    "sha256": "2da12ea9066b83a30dbea5ddd27a2ea6e0bc9327c87e4713ed068264159d1099",
+    "bytes": 6909
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/bounded-readset-evidence.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/bounded-readset-evidence.json",
+    "sha256": "c9034e09c99c972c76da05b6f6b7292e6c9c8c93d0a42fd6b973624f581ad9e7",
+    "bytes": 24334
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/bounded-scope.diff",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/bounded-scope.diff",
+    "sha256": "380acf39808b6ab075685c4c6deed42090f43523262dd0682f93d2a30bd8c98b",
+    "bytes": 15610
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/driver-static-check.log",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/driver-static-check.log",
+    "sha256": "4a6c835a02fdc26ce46e36886270bea621f7b8e3d46f1e4ea9931bc45c4bf655",
+    "bytes": 363
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/editor-static-check.log",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/editor-static-check.log",
+    "sha256": "052742f297846c2ff22e79a0052b40fd8857b7eaff8404ea9caa81246f138e55",
+    "bytes": 412
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-cut-eAul3M/intent.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-cut-eAul3M/intent.json",
+    "sha256": "ae081a66e57c2969cc0f7fd3c66f4ad4b01120553f02a40b2c3863a4750c2b6e",
+    "bytes": 3684
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-cut-eAul3M/originals/tests/stripe-trial-account-activation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-cut-eAul3M/originals/tests/stripe-trial-account-activation.test.ts.txt",
+    "sha256": "b501af7ceb20a13b51776bc55659f9d911b0c1e44a81bd0ed042afd6fb9e8fb2",
+    "bytes": 24366
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-cut-eAul3M/originals/tests/stripe-trial-authorization.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-cut-eAul3M/originals/tests/stripe-trial-authorization.test.ts.txt",
+    "sha256": "2892f7bd5e3ec2e4e8f9888d89b6a3d4808c9a19603eede5fa8d305a5a391f35",
+    "bytes": 15213
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-cut-eAul3M/originals/tests/stripe-trial-cancellation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-cut-eAul3M/originals/tests/stripe-trial-cancellation.test.ts.txt",
+    "sha256": "aa683f1e596ff838934812921ce7d2baf5ea081ff8a2db515ab9ec9255705767",
+    "bytes": 8303
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-cut-eAul3M/originals/tests/stripe-trial-catalog.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-cut-eAul3M/originals/tests/stripe-trial-catalog.test.ts.txt",
+    "sha256": "7d69cb89ee4618f690fcfd1d542a569959716a0cf9754867edcef152219ad2e7",
+    "bytes": 4916
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-cut-eAul3M/originals/tests/stripe-trial-checkout-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-cut-eAul3M/originals/tests/stripe-trial-checkout-route.test.ts.txt",
+    "sha256": "9ecb370408c14ef478200373ac33bc74b583294b23da2f7e18681ab2a187d571",
+    "bytes": 3836
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-cut-eAul3M/originals/tests/stripe-trial-checkout-session-params.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-cut-eAul3M/originals/tests/stripe-trial-checkout-session-params.test.ts.txt",
+    "sha256": "a6924fe6bcff65baecb70a7845d7293c4190c76cd6fad0a16fa1ff1ff51e9066",
+    "bytes": 4545
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-cut-eAul3M/originals/tests/stripe-trial-checkout.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-cut-eAul3M/originals/tests/stripe-trial-checkout.test.ts.txt",
+    "sha256": "b7ca67b634e0381d0a60a56fa1b2f977a9e43530868b4719b1dffa58e1f95292",
+    "bytes": 11550
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-cut-eAul3M/originals/tests/stripe-trial-continuation-reconcile.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-cut-eAul3M/originals/tests/stripe-trial-continuation-reconcile.test.ts.txt",
+    "sha256": "2fb3d2e2b1813994b02b581dbe0e338f8b18b5802d827274af28fbe49789d250",
+    "bytes": 18375
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-cut-eAul3M/originals/tests/stripe-trial-continuation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-cut-eAul3M/originals/tests/stripe-trial-continuation.test.ts.txt",
+    "sha256": "2adaa26b3787d1b866360f06f5a7b5325701bc673cddd106a9e43c40a52dc036",
+    "bytes": 12127
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-cut-eAul3M/originals/tests/stripe-trial-invoice.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-cut-eAul3M/originals/tests/stripe-trial-invoice.test.ts.txt",
+    "sha256": "6d0cb2013d4c46a2c2ecc544934238e882f231897d2ef33168439fd90976a31d",
+    "bytes": 24105
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-cut-eAul3M/originals/tests/stripe-trial-management.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-cut-eAul3M/originals/tests/stripe-trial-management.test.ts.txt",
+    "sha256": "fdcc0443934d110adc0adbaa2e3b003432ebef2cc5efa7b745bba3e6ac0d2855",
+    "bytes": 11172
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-cut-eAul3M/originals/tests/stripe-trial-prior-paid-history.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-cut-eAul3M/originals/tests/stripe-trial-prior-paid-history.test.ts.txt",
+    "sha256": "6b24bb9eae7e2fb3b1c2ece6f43532d809b64766cceae626c6d81eef81ad87f7",
+    "bytes": 7931
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-cut-eAul3M/originals/tests/stripe-trial-subscription-lifecycle.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-cut-eAul3M/originals/tests/stripe-trial-subscription-lifecycle.test.ts.txt",
+    "sha256": "fa5206bb4626cdb32c5c6a7f4e1d18c0f19522d98aa34ec881fc26c06c524651",
+    "bytes": 25964
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-cut-eAul3M/receipt.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-cut-eAul3M/receipt.json",
+    "sha256": "3cb862d07d64ae434a6c0a5e11d77e1b87630ad7e1535dec0e9c3dbd0b04aca8",
+    "bytes": 2339
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-transfer-t2BpNV/intent.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-transfer-t2BpNV/intent.json",
+    "sha256": "fcede746233395e4db822b0734e9d6e7f6a3053d6c3e500fab946c2cd08e8ae9",
+    "bytes": 3438
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-account-activation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-account-activation.test.ts.txt",
+    "sha256": "7891ab86622d9d708a75e8d92b964cb8c3f7c4498d2c228830c9979056968ab4",
+    "bytes": 23305
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-authorization.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-authorization.test.ts.txt",
+    "sha256": "cc503f5aaffafde6c89351aaafcb05a002c94294807bd6e621c4329778d625ba",
+    "bytes": 14747
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-cancellation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-cancellation.test.ts.txt",
+    "sha256": "aa683f1e596ff838934812921ce7d2baf5ea081ff8a2db515ab9ec9255705767",
+    "bytes": 8303
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-catalog.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-catalog.test.ts.txt",
+    "sha256": "7d69cb89ee4618f690fcfd1d542a569959716a0cf9754867edcef152219ad2e7",
+    "bytes": 4916
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-checkout-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-checkout-route.test.ts.txt",
+    "sha256": "9ecb370408c14ef478200373ac33bc74b583294b23da2f7e18681ab2a187d571",
+    "bytes": 3836
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-checkout-session-params.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-checkout-session-params.test.ts.txt",
+    "sha256": "a6924fe6bcff65baecb70a7845d7293c4190c76cd6fad0a16fa1ff1ff51e9066",
+    "bytes": 4545
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-checkout.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-checkout.test.ts.txt",
+    "sha256": "b7ca67b634e0381d0a60a56fa1b2f977a9e43530868b4719b1dffa58e1f95292",
+    "bytes": 11550
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-continuation-reconcile.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-continuation-reconcile.test.ts.txt",
+    "sha256": "2fb3d2e2b1813994b02b581dbe0e338f8b18b5802d827274af28fbe49789d250",
+    "bytes": 18375
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-continuation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-continuation.test.ts.txt",
+    "sha256": "2adaa26b3787d1b866360f06f5a7b5325701bc673cddd106a9e43c40a52dc036",
+    "bytes": 12127
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-invoice.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-invoice.test.ts.txt",
+    "sha256": "4e801d34fe02adbb862106f9c328c7404eef12113c5ee591107f7b6175b13d51",
+    "bytes": 24055
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-management.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-management.test.ts.txt",
+    "sha256": "fdcc0443934d110adc0adbaa2e3b003432ebef2cc5efa7b745bba3e6ac0d2855",
+    "bytes": 11172
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-prior-paid-history.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-prior-paid-history.test.ts.txt",
+    "sha256": "6b24bb9eae7e2fb3b1c2ece6f43532d809b64766cceae626c6d81eef81ad87f7",
+    "bytes": 7931
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-subscription-lifecycle.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-transfer-t2BpNV/originals/tests/stripe-trial-subscription-lifecycle.test.ts.txt",
+    "sha256": "fa5206bb4626cdb32c5c6a7f4e1d18c0f19522d98aa34ec881fc26c06c524651",
+    "bytes": 25964
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-transfer-t2BpNV/receipt.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-apply-transfer-t2BpNV/receipt.json",
+    "sha256": "1665dc3e2dc0909416730553eef3ee8fc6bae0879d1118ed2a83010860eebb25",
+    "bytes": 2103
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-controls-normalized.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-controls-normalized.json",
+    "sha256": "82b7a6a7cfa45cd55c87d2ad8afc51f3b8451ea47ae394c5afcabdce5a4c06fc",
+    "bytes": 21658
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-edit.cjs",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-edit.cjs.txt",
+    "sha256": "73400bac76200b2a91a0119190f8f2ed3a2670364e2a66030fe1d67fd945a602",
+    "bytes": 3509
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-guard.cjs",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-guard.cjs.txt",
+    "sha256": "d37772838b504902df690b86beeea1f13614ed642f610bd3126747e3e14010ab",
+    "bytes": 11495
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C1-clock/originals/src/lib/stripe/trial-authorization.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C1-clock/originals/src/lib/stripe/trial-authorization.ts.txt",
+    "sha256": "a399a889fc879d52020ad3285e54925885211da3529682fa3ab281dcf7fdda73",
+    "bytes": 10470
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C1-clock-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C1-clock-after.command.json",
+    "sha256": "e140fe160d875632904197f48f47497f133f9e801a9ca6aa1658a51fad8ce643",
+    "bytes": 462
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C1-clock-after.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C1-clock-after.tap",
+    "sha256": "a94277a0dadf0960ebf28d744dfb8eac579409feb689f1bb428d4c722cd65d3a",
+    "bytes": 325
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C1-clock-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C1-clock-before.command.json",
+    "sha256": "e140fe160d875632904197f48f47497f133f9e801a9ca6aa1658a51fad8ce643",
+    "bytes": 462
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C1-clock-before.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C1-clock-before.tap",
+    "sha256": "82ad93c0e39833a51730ba9d7c6d332b9e320e87f7ec396d1fe03d9d78653c5d",
+    "bytes": 324
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C1-clock-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C1-clock-fault.command.json",
+    "sha256": "e140fe160d875632904197f48f47497f133f9e801a9ca6aa1658a51fad8ce643",
+    "bytes": 462
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C1-clock-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C1-clock-fault.tap",
+    "sha256": "5de8132ec9e7e21fbd0dd435ed7301f11488bc692a46d04e3afeecdc2c59fbee",
+    "bytes": 2231
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C1-fingerprint/originals/src/lib/stripe/trial-authorization.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C1-fingerprint/originals/src/lib/stripe/trial-authorization.ts.txt",
+    "sha256": "a399a889fc879d52020ad3285e54925885211da3529682fa3ab281dcf7fdda73",
+    "bytes": 10470
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C1-fingerprint-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C1-fingerprint-after.command.json",
+    "sha256": "e140fe160d875632904197f48f47497f133f9e801a9ca6aa1658a51fad8ce643",
+    "bytes": 462
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C1-fingerprint-after.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C1-fingerprint-after.tap",
+    "sha256": "a51ce7c6cfdc798b997cdc7d98d2ff7adc34f414e5b3bc15964b7f05c97a6e6b",
+    "bytes": 325
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C1-fingerprint-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C1-fingerprint-before.command.json",
+    "sha256": "e140fe160d875632904197f48f47497f133f9e801a9ca6aa1658a51fad8ce643",
+    "bytes": 462
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C1-fingerprint-before.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C1-fingerprint-before.tap",
+    "sha256": "31d109a4bc8cc19892f8949f11ade44cf3e6f81cf9df0bca6b1e6920b79a7caa",
+    "bytes": 325
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C1-fingerprint-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C1-fingerprint-fault.command.json",
+    "sha256": "e140fe160d875632904197f48f47497f133f9e801a9ca6aa1658a51fad8ce643",
+    "bytes": 462
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C1-fingerprint-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C1-fingerprint-fault.tap",
+    "sha256": "dc53e17db2cfd64e71bc1d831634968f1557e6ff85c63f4410305bbb647e5c44",
+    "bytes": 2252
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C2-error-code/originals/src/lib/stripe/trial-account-admission.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C2-error-code/originals/src/lib/stripe/trial-account-admission.ts.txt",
+    "sha256": "36267f9ff61d48e48bebc4278d8606e0a7c677b05c3b425639fc4da35d7a50c0",
+    "bytes": 10094
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C2-error-code-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C2-error-code-after.command.json",
+    "sha256": "ad9505716fe7051dad724ffccf5fe7e25dea1dcb8aa9014b5b236680a5440d5a",
+    "bytes": 485
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C2-error-code-after.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C2-error-code-after.tap",
+    "sha256": "112604541ab6787b40eb8d61f9312e02283ac55cc7c33aba200c2644abb3b553",
+    "bytes": 521
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C2-error-code-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C2-error-code-before.command.json",
+    "sha256": "ad9505716fe7051dad724ffccf5fe7e25dea1dcb8aa9014b5b236680a5440d5a",
+    "bytes": 485
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C2-error-code-before.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C2-error-code-before.tap",
+    "sha256": "4c3a63afdeb586763286de4702f20349dd88b92db2cad64a3d8c2695c7b33215",
+    "bytes": 521
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C2-error-code-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C2-error-code-fault.command.json",
+    "sha256": "ad9505716fe7051dad724ffccf5fe7e25dea1dcb8aa9014b5b236680a5440d5a",
+    "bytes": 485
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C2-error-code-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C2-error-code-fault.tap",
+    "sha256": "ce0aabfa439dba82877b6b6f3877230792fc13d1a929d732d40777686cf7499c",
+    "bytes": 1563
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C2-no-invoice/originals/src/lib/stripe/trial-account-admission.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C2-no-invoice/originals/src/lib/stripe/trial-account-admission.ts.txt",
+    "sha256": "36267f9ff61d48e48bebc4278d8606e0a7c677b05c3b425639fc4da35d7a50c0",
+    "bytes": 10094
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C2-no-invoice-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C2-no-invoice-after.command.json",
+    "sha256": "ad9505716fe7051dad724ffccf5fe7e25dea1dcb8aa9014b5b236680a5440d5a",
+    "bytes": 485
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C2-no-invoice-after.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C2-no-invoice-after.tap",
+    "sha256": "51c08ca1c5c87d542de802bcff66f03bf223a6f39c34e988540c186ba26bfa1c",
+    "bytes": 521
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C2-no-invoice-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C2-no-invoice-before.command.json",
+    "sha256": "ad9505716fe7051dad724ffccf5fe7e25dea1dcb8aa9014b5b236680a5440d5a",
+    "bytes": 485
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C2-no-invoice-before.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C2-no-invoice-before.tap",
+    "sha256": "a53e18e4540ae671e13ab0e5070b3ed17a6fb61e5df03c3da3f0ff548a20e298",
+    "bytes": 522
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C2-no-invoice-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C2-no-invoice-fault.command.json",
+    "sha256": "ad9505716fe7051dad724ffccf5fe7e25dea1dcb8aa9014b5b236680a5440d5a",
+    "bytes": 485
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C2-no-invoice-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C2-no-invoice-fault.tap",
+    "sha256": "7a78c1a5638c435a6b92a5498b95d7013aacd7273c1bad57f1d3c9e3ef4ab928",
+    "bytes": 1518
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C2-release/originals/src/lib/stripe/trial-account-admission.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C2-release/originals/src/lib/stripe/trial-account-admission.ts.txt",
+    "sha256": "36267f9ff61d48e48bebc4278d8606e0a7c677b05c3b425639fc4da35d7a50c0",
+    "bytes": 10094
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C2-release-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C2-release-after.command.json",
+    "sha256": "ad9505716fe7051dad724ffccf5fe7e25dea1dcb8aa9014b5b236680a5440d5a",
+    "bytes": 485
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C2-release-after.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C2-release-after.tap",
+    "sha256": "5179fead97eb0894ff15d8eee9e4cfeb4e78da5ee03d88be3b55f9b3bd839f92",
+    "bytes": 521
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C2-release-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C2-release-before.command.json",
+    "sha256": "ad9505716fe7051dad724ffccf5fe7e25dea1dcb8aa9014b5b236680a5440d5a",
+    "bytes": 485
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C2-release-before.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C2-release-before.tap",
+    "sha256": "219d6703ab702200800604af323636483586dc5af34a4738b9dfaf4d4f1170fe",
+    "bytes": 520
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C2-release-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C2-release-fault.command.json",
+    "sha256": "ad9505716fe7051dad724ffccf5fe7e25dea1dcb8aa9014b5b236680a5440d5a",
+    "bytes": 485
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C2-release-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C2-release-fault.tap",
+    "sha256": "9ee274a642ff1858b6357667187c80d5d199d67ee33d197ce59e7e6674d342cb",
+    "bytes": 1145
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C3-cause/originals/src/lib/stripe/trial-account-admission.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C3-cause/originals/src/lib/stripe/trial-account-admission.ts.txt",
+    "sha256": "36267f9ff61d48e48bebc4278d8606e0a7c677b05c3b425639fc4da35d7a50c0",
+    "bytes": 10094
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C3-cause-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C3-cause-after.command.json",
+    "sha256": "2ea7c87dd61f184d2169bcfdff89cd4dc964a94b233d423d123ec91d4bb16171",
+    "bytes": 495
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C3-cause-after.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C3-cause-after.tap",
+    "sha256": "651a77c952a1f52c0a60caeb501f55b08773bbba1e999edecaf7fcd020231bd4",
+    "bytes": 861
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C3-cause-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C3-cause-before.command.json",
+    "sha256": "2ea7c87dd61f184d2169bcfdff89cd4dc964a94b233d423d123ec91d4bb16171",
+    "bytes": 495
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C3-cause-before.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C3-cause-before.tap",
+    "sha256": "beac8cacca51a67a94c00d11dcd3d8a471ff79e0f043bd83035062eb5b328078",
+    "bytes": 861
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C3-cause-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C3-cause-fault.command.json",
+    "sha256": "2ea7c87dd61f184d2169bcfdff89cd4dc964a94b233d423d123ec91d4bb16171",
+    "bytes": 495
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C3-cause-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C3-cause-fault.tap",
+    "sha256": "5f6729c51c850c174aa0c7783b97acf305f3f94da19297cd50b5b62f38e45bde",
+    "bytes": 1533
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C4-outcome/originals/src/lib/stripe/trial-invoice.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C4-outcome/originals/src/lib/stripe/trial-invoice.ts.txt",
+    "sha256": "85e094f3d91b771acecddca5ed9468fa170807836399baea9b560294ed35f8c2",
+    "bytes": 14036
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C4-outcome-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C4-outcome-after.command.json",
+    "sha256": "7a60b13cffc4a01c4841f5a541cd34bc85e0d7ad5b2947b9efceadd5d819c9be",
+    "bytes": 476
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C4-outcome-after.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C4-outcome-after.tap",
+    "sha256": "7e5c3779ac09a4c1efb0f126373ec925ff9c9d9a9464eef1d321c62b052ed033",
+    "bytes": 364
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C4-outcome-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C4-outcome-before.command.json",
+    "sha256": "7a60b13cffc4a01c4841f5a541cd34bc85e0d7ad5b2947b9efceadd5d819c9be",
+    "bytes": 476
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C4-outcome-before.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C4-outcome-before.tap",
+    "sha256": "653ce325dcda099f3dd4620ff5717fad76784f71f60002f921d83d479bd1631d",
+    "bytes": 365
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C4-outcome-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C4-outcome-fault.command.json",
+    "sha256": "7a60b13cffc4a01c4841f5a541cd34bc85e0d7ad5b2947b9efceadd5d819c9be",
+    "bytes": 476
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C4-outcome-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C4-outcome-fault.tap",
+    "sha256": "03d9f627e75e8ccc1540db434b261ebc3fb6086f60b880669de1ce7e8b811afb",
+    "bytes": 1051
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C4-phase/originals/src/lib/stripe/trial-invoice.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C4-phase/originals/src/lib/stripe/trial-invoice.ts.txt",
+    "sha256": "85e094f3d91b771acecddca5ed9468fa170807836399baea9b560294ed35f8c2",
+    "bytes": 14036
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C4-phase-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C4-phase-after.command.json",
+    "sha256": "7a60b13cffc4a01c4841f5a541cd34bc85e0d7ad5b2947b9efceadd5d819c9be",
+    "bytes": 476
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C4-phase-after.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C4-phase-after.tap",
+    "sha256": "25dbc9092cc689030bfe9bdff9f73e9cde39ed242a5aa2e51b3e9e6a3cba765c",
+    "bytes": 364
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C4-phase-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C4-phase-before.command.json",
+    "sha256": "7a60b13cffc4a01c4841f5a541cd34bc85e0d7ad5b2947b9efceadd5d819c9be",
+    "bytes": 476
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C4-phase-before.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C4-phase-before.tap",
+    "sha256": "b546186d1f52201f6c251b9d41557bde7302df773868705db16b7dc84aa67fc3",
+    "bytes": 364
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C4-phase-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C4-phase-fault.command.json",
+    "sha256": "7a60b13cffc4a01c4841f5a541cd34bc85e0d7ad5b2947b9efceadd5d819c9be",
+    "bytes": 476
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C4-phase-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C4-phase-fault.tap",
+    "sha256": "18b83d200bd53ab6c9d3b18fe5f5ad29917f9fcbde18bc5b4149818f005cb230",
+    "bytes": 1182
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C5-no-intent/originals/src/lib/stripe/trial-invoice.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C5-no-intent/originals/src/lib/stripe/trial-invoice.ts.txt",
+    "sha256": "85e094f3d91b771acecddca5ed9468fa170807836399baea9b560294ed35f8c2",
+    "bytes": 14036
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C5-no-intent-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C5-no-intent-after.command.json",
+    "sha256": "507b6ac40d526e55fd53dd1172d9a002ad0d2c35b31bd042d28193fb6963a92d",
+    "bytes": 469
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C5-no-intent-after.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C5-no-intent-after.tap",
+    "sha256": "ae485a2c51306a85908429f106b3c91785e24d54c98575f3cffd37d656a06c39",
+    "bytes": 349
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C5-no-intent-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C5-no-intent-before.command.json",
+    "sha256": "507b6ac40d526e55fd53dd1172d9a002ad0d2c35b31bd042d28193fb6963a92d",
+    "bytes": 469
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C5-no-intent-before.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C5-no-intent-before.tap",
+    "sha256": "1567c2ed6d394c3b18ec4a1fc9de7e25e13acf6e05d46d74075ea5be9e2610c8",
+    "bytes": 351
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C5-no-intent-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C5-no-intent-fault.command.json",
+    "sha256": "507b6ac40d526e55fd53dd1172d9a002ad0d2c35b31bd042d28193fb6963a92d",
+    "bytes": 469
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/C5-no-intent-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/C5-no-intent-fault.tap",
+    "sha256": "42bf0741229014364dfecaa4e57dd45cad10dc5cee4dab7316e1ae8c6376785c",
+    "bytes": 989
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/all-originals/src/lib/stripe/trial-account-admission.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/all-originals/src/lib/stripe/trial-account-admission.ts.txt",
+    "sha256": "36267f9ff61d48e48bebc4278d8606e0a7c677b05c3b425639fc4da35d7a50c0",
+    "bytes": 10094
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/all-originals/src/lib/stripe/trial-authorization.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/all-originals/src/lib/stripe/trial-authorization.ts.txt",
+    "sha256": "a399a889fc879d52020ad3285e54925885211da3529682fa3ab281dcf7fdda73",
+    "bytes": 10470
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/all-originals/src/lib/stripe/trial-invoice.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/all-originals/src/lib/stripe/trial-invoice.ts.txt",
+    "sha256": "85e094f3d91b771acecddca5ed9468fa170807836399baea9b560294ed35f8c2",
+    "bytes": 14036
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-account-activation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-account-activation.test.ts.txt",
+    "sha256": "b501af7ceb20a13b51776bc55659f9d911b0c1e44a81bd0ed042afd6fb9e8fb2",
+    "bytes": 24366
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-authorization.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-authorization.test.ts.txt",
+    "sha256": "2892f7bd5e3ec2e4e8f9888d89b6a3d4808c9a19603eede5fa8d305a5a391f35",
+    "bytes": 15213
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-cancellation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-cancellation.test.ts.txt",
+    "sha256": "aa683f1e596ff838934812921ce7d2baf5ea081ff8a2db515ab9ec9255705767",
+    "bytes": 8303
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-catalog.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-catalog.test.ts.txt",
+    "sha256": "7d69cb89ee4618f690fcfd1d542a569959716a0cf9754867edcef152219ad2e7",
+    "bytes": 4916
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-checkout-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-checkout-route.test.ts.txt",
+    "sha256": "9ecb370408c14ef478200373ac33bc74b583294b23da2f7e18681ab2a187d571",
+    "bytes": 3836
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-checkout-session-params.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-checkout-session-params.test.ts.txt",
+    "sha256": "a6924fe6bcff65baecb70a7845d7293c4190c76cd6fad0a16fa1ff1ff51e9066",
+    "bytes": 4545
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-checkout.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-checkout.test.ts.txt",
+    "sha256": "b7ca67b634e0381d0a60a56fa1b2f977a9e43530868b4719b1dffa58e1f95292",
+    "bytes": 11550
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-continuation-reconcile.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-continuation-reconcile.test.ts.txt",
+    "sha256": "2fb3d2e2b1813994b02b581dbe0e338f8b18b5802d827274af28fbe49789d250",
+    "bytes": 18375
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-continuation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-continuation.test.ts.txt",
+    "sha256": "2adaa26b3787d1b866360f06f5a7b5325701bc673cddd106a9e43c40a52dc036",
+    "bytes": 12127
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-invoice.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-invoice.test.ts.txt",
+    "sha256": "6d0cb2013d4c46a2c2ecc544934238e882f231897d2ef33168439fd90976a31d",
+    "bytes": 24105
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-management.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-management.test.ts.txt",
+    "sha256": "fdcc0443934d110adc0adbaa2e3b003432ebef2cc5efa7b745bba3e6ac0d2855",
+    "bytes": 11172
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-prior-paid-history.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-prior-paid-history.test.ts.txt",
+    "sha256": "6b24bb9eae7e2fb3b1c2ece6f43532d809b64766cceae626c6d81eef81ad87f7",
+    "bytes": 7931
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-subscription-lifecycle.test.ts",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/all-originals/tests/stripe-trial-subscription-lifecycle.test.ts.txt",
+    "sha256": "fa5206bb4626cdb32c5c6a7f4e1d18c0f19522d98aa34ec881fc26c06c524651",
+    "bytes": 25964
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/complete.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/complete.json",
+    "sha256": "4e4abf4264c3822030fc0f54dc48f69d4e97a4cbe6e6e083b4eaf33f2e532ff1",
+    "bytes": 44477
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/intent.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/intent.json",
+    "sha256": "b4a518ee02bc8f70af743cda12eeabe5fab0dba697dee47ef57494a93ec8b12c",
+    "bytes": 2183
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-mutations-transfer-9JDQBV/receipt.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-mutations-transfer-9JDQBV/receipt.json",
+    "sha256": "6056ea1f6a8abc7c37f3c689c0cc8dab03a48b6c33ffc008521bd5cfd4ec45b5",
+    "bytes": 632566
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-pins.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-pins.json",
+    "sha256": "2b8a775ac83ec817b274a8e881aa782e011f7109065645b947208414b53eff8c",
+    "bytes": 1254768
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-proof.cjs",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-proof.cjs.txt",
+    "sha256": "e95ab4a73297c219a54822a02ab048cd5d5b4ad468d9476885df72b7447802c5",
+    "bytes": 4927
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-readonly-preload.cjs",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-readonly-preload.cjs.txt",
+    "sha256": "47dac6cfe5ba900ca08fed8a9ac7c33915c40f0b533a4cbfa23ace5d442620bd",
+    "bytes": 1276
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-run-controls.cjs",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/operator-run-controls.cjs.txt",
+    "sha256": "34ff235452d8ed5ce4d0bd3143f87fe368b8c179bf0a8d7efb8cd05623aff910",
+    "bytes": 8058
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/prepare-pins.cjs",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/prepare-pins.cjs.txt",
+    "sha256": "b9a5e64e4ed35e3336479252b76b3e1d251627d1ce0453881d7a964e83eba2ae",
+    "bytes": 11929
+  },
+  {
+    "source": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/static-receipt.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/tools/static-receipt.json",
+    "sha256": "61883f21b092c2f06a100887fcd5cf5e16f51fffb67890b35c9de7910e922d3c",
+    "bytes": 3092
+  },
+  {
+    "source": "/tmp/test-audit-stripe128-independent-preservation.md",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/test-audit-stripe128-independent-preservation.md",
+    "sha256": "54996410ca08ef4fe530306da80ca258318daf2eda43651a857a8d8b76c85bbf",
+    "bytes": 14271
+  },
+  {
+    "source": "/tmp/test-audit-stripe128-independent-static.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/test-audit-stripe128-independent-static.json",
+    "sha256": "2410f963d7577bd70d2a9e2f306b50affb48c3966dd007226d9140194178f806",
+    "bytes": 37622
+  },
+  {
+    "source": "/tmp/test-audit-stripe128-main-before.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/test-audit-stripe128-main-before.tap",
+    "sha256": "c21f021bf9a92f5f210ea792620d28134da73b32c65c7f60602dc638d71ace05",
+    "bytes": 41597
+  },
+  {
+    "source": "/tmp/test-audit-stripe128-main-transfer.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/test-audit-stripe128-main-transfer.tap",
+    "sha256": "3c4664773939de41ebbccde164da6de81a42a0b78443c3ab654d3f59da7d4917",
+    "bytes": 41622
+  },
+  {
+    "source": "/tmp/test-audit-stripe128-main-cut.tap",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/test-audit-stripe128-main-cut.tap",
+    "sha256": "2f27d18fc486478dd8d5695a5c88350e7d39e479a0c20f3004d9d3eff22b48ff",
+    "bytes": 40201
+  },
+  {
+    "source": "/tmp/test-audit-stripe128-main-controls.log",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/test-audit-stripe128-main-controls.log",
+    "sha256": "5e2c73e9787be87671978c39c1e0d37fb4fe2fc9fe82e59e278472db2537e026",
+    "bytes": 774
+  },
+  {
+    "source": "/tmp/test-audit-stripe128-main-formatted-verification.json",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/test-audit-stripe128-main-formatted-verification.json",
+    "sha256": "1ed02aa8db225ee43347c48dfc6fd16143b99ea52173d27a9657dcf253114c46",
+    "bytes": 1778
+  },
+  {
+    "source": "/tmp/test-audit-next590-partner-transfer-typecheck.log",
+    "archive": "plans/evidence/2026-10-05-next590-stripe/test-audit-next590-partner-transfer-typecheck.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  }
+]

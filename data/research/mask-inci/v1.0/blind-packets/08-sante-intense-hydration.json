@@ -1,0 +1,19 @@
+{
+  "productId": "08-sante-intense-hydration",
+  "identity": {
+    "brand": "Sante Naturkosmetik",
+    "productName": "Intense Hydration Maske Hyaluron + 3-Fach Protein Komplex",
+    "packSize": "150 ml (jar)",
+    "gtinEan": "4055297220682",
+    "market": "DE (brand-direct sante.de, pro-biomarkt.de and other Naturkosmetik retailers)"
+  },
+  "rawInci": "Aqua (Water), Cetearyl Alcohol, Glycerin, Distearoylethyl Dimonium Chloride, Behenyl Alcohol, Betaine, Hydrolyzed Corn Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Lactic Acid, Arginine, Sodium Lactate, Sodium Hyaluronate, Aloe Barbadensis Leaf Juice Powder*, Leuconostoc/Radish Root Ferment Filtrate, Tocopherol, Helianthus Annuus (Sunflower) Seed Oil, Potassium Sorbate, Parfum (Fragrance)**, Linalool**, Benzyl Salicylate**",
+  "directions": {
+    "text": "Maske in feuchten Haarlängen verteilen. 1 Minute einwirken lassen. Ausspülen. Fertig.",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "1",
+    "source": "sante.de official product page (direct fetch, verbatim)",
+    "confidence": "high"
+  },
+  "note": "Blind calibration packet. Contains identity, formula of record, and authoritative directions only. No archetype labels, no claims summaries, no prior assessments."
+}

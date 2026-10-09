@@ -1,0 +1,24 @@
+{
+  "mode": "cut",
+  "from": "transfer",
+  "phase": "cut",
+  "counts": {
+    "before": 61,
+    "transfer": 61,
+    "cut": 60
+  },
+  "changed": [
+    "tests/discovery-pdf-page.test.tsx"
+  ],
+  "allTestHashes": {
+    "tests/discovery-consult-brief-api.test.ts": "bd131e0d5436a2d2d04bb275999e5c74a918a1b180150e82483035c59f0dac78",
+    "tests/discovery-consult-input.test.ts": "6074583c57012864da5af74c62d6a2b992faa12530c88598fc27f3fafb008df1",
+    "tests/discovery-pdf-page.test.tsx": "8dc5de1a365ad1ff6067a56e1a29ad5ceb4a6cd12840741916159ef1056f0dec",
+    "tests/discovery-consult-eval.test.ts": "fc6db01518a21a1d06d9a4153ae305b8be9b48b9c984a7581a73ef9b362ee9a7",
+    "tests/discovery-pdf-images.test.tsx": "c277efa9cf1074547fefd888fd9641a771f1fb39c9647008ec0bc1458b8470e0",
+    "tests/discovery-pdf-usage.test.tsx": "3093a243ebb656cc0e7f6b322d4e54a8ba3091e8b9fce5ae0d91c2a529c46821"
+  },
+  "sourceWrites": 0,
+  "testsRun": 0,
+  "originals": "/tmp/test-audit-discovery-consult-pdf61-apply-cut-srC7lc/originals"
+}

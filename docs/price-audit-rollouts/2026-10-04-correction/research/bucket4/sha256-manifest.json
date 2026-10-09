@@ -1,0 +1,227 @@
+[
+  {
+    "file": "HANDBACK.md",
+    "bytes": 5696,
+    "sha256": "d57af18d8e794153aead2b1e3090fed3aedfffe78e5009f50ebe36fbdcefd16e"
+  },
+  {
+    "file": "amazon-innersense.html",
+    "bytes": 2340,
+    "sha256": "4b5ed3570b85fc6eb4bff432eab4023ad4190376649dbd0af8091e9a8094a916"
+  },
+  {
+    "file": "amazon-innersense.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "file": "brand-home.html",
+    "bytes": 641552,
+    "sha256": "6df33e77587cfdad41d247e7650519b95b5b05cb71b4cd14c1cca5305bd887a4"
+  },
+  {
+    "file": "brand-home.txt",
+    "bytes": 4487,
+    "sha256": "132b446e33c25720ac6da859cbe638e13f4feb35ffb3ead96d94308abcd7ef4d"
+  },
+  {
+    "file": "bucket4-current-research-candidates.json",
+    "bytes": 19485,
+    "sha256": "eec6d8b22de25f4a38fd40328c069ecf688654eed84312a7ecf1920fe1d404a1"
+  },
+  {
+    "file": "build-receipt.py",
+    "bytes": 12150,
+    "sha256": "eff262402f77885dbce03c6abe90e4beac5a6eff19063bd702f360015a20a9f3"
+  },
+  {
+    "file": "dm-fresh.json",
+    "bytes": 80109,
+    "sha256": "40856154a681a360af5c9cf050e727b6dc94224a9eeca3f78f9f7b37161573fd"
+  },
+  {
+    "file": "dm-parsed.json",
+    "bytes": 72695,
+    "sha256": "93ac9c1528d580e4f6d32e367f51c6d5548791ab536f7718be58160a7d41fa34"
+  },
+  {
+    "file": "finalize-receipt.py",
+    "bytes": 4939,
+    "sha256": "8ef872d8e9f3ecdeb579dd1947c96fe1e74a5ae388f03fb5b8dbea2002c8163b"
+  },
+  {
+    "file": "herbal-dm.html",
+    "bytes": 11376,
+    "sha256": "a9dbbd8f66cca56be8eeacdacb6dd79224e467b1089accc193e6941742fe28e0"
+  },
+  {
+    "file": "herbal-dm.txt",
+    "bytes": 52,
+    "sha256": "c025249c0c406627ace29ee6e856d531ebe9fc75630d58a0d22e2fa9e160374b"
+  },
+  {
+    "file": "herbal-israel.html",
+    "bytes": 448,
+    "sha256": "ae63dfecec06e0e187fe9908a9c07b648282e342d21300c4567f26e7ac49d22b"
+  },
+  {
+    "file": "herbal-mueller.html",
+    "bytes": 355205,
+    "sha256": "a1d6dd51bd1e18a0db17ceeb2cea0e3d2ff857e944215559df525a406f2f4835"
+  },
+  {
+    "file": "herbal-mueller.txt",
+    "bytes": 3435,
+    "sha256": "d58b03c75a36e93649e28f4248d3bd63a222f5267208a14ef56243a534a25a66"
+  },
+  {
+    "file": "herbal-ordered-inci-comparison.json",
+    "bytes": 4778,
+    "sha256": "d0d6500a6aa60da42f4d20527eef80a1fe04204c674f66699114a9eeb66a8fed"
+  },
+  {
+    "file": "herbal-stored-back-large.jpg",
+    "bytes": 134465,
+    "sha256": "355a2fd321e87997ac3ca34acf42e639a847dfdf489fb62599911bc675e651a2"
+  },
+  {
+    "file": "herbal-stored-pack-1.jpg",
+    "bytes": 27561,
+    "sha256": "f103ef6015018dbe7df6a750a9b9f7c717d300bf1e68e59fdd43403322af52c5"
+  },
+  {
+    "file": "herbal-stored-pack-2.jpg",
+    "bytes": 40242,
+    "sha256": "8a1b2d349e75b0125cb1f997b80241f314ea8c74b88ad3d0bf52f23c1a12cd9a"
+  },
+  {
+    "file": "herbal-stored-pack-3.jpg",
+    "bytes": 112747,
+    "sha256": "2322add5ab5498b82d57865789e7bbe4e5fb37f2c69229f8a0cf440cc21b4c98"
+  },
+  {
+    "file": "history-manifest.json",
+    "bytes": 3125,
+    "sha256": "5d1a81f4516a5612e5bb280ce6b6fc462f6517f48b436026c9f5efef1ce31b8c"
+  },
+  {
+    "file": "http-manifest.json",
+    "bytes": 4033,
+    "sha256": "c53fb7f72d55e60622b3fd527093273af4493c65c84f2898f7262dbc0b709341"
+  },
+  {
+    "file": "innersense-belladonna.html",
+    "bytes": 1001411,
+    "sha256": "49a339bcd4ea22f0331e766bbaa030f09cf07d90d296144f7073f4a661e9374c"
+  },
+  {
+    "file": "innersense-belladonna.txt",
+    "bytes": 30900,
+    "sha256": "456c717f359876af08e644aac5e27868434486e92a190954b5913fd20a8efb75"
+  },
+  {
+    "file": "innersense-brand-json.html",
+    "bytes": 9056,
+    "sha256": "1c87de14dfce10dc39a19794eed757695571089a98d6cbd35e7df11b7d2d93d2"
+  },
+  {
+    "file": "innersense-brand.html",
+    "bytes": 840097,
+    "sha256": "aea4ffb35f60d5e96827f78e7083302a02a7d284a36f833bf600ba0b03471bfb"
+  },
+  {
+    "file": "innersense-brand.txt",
+    "bytes": 10777,
+    "sha256": "4ee4e4ddf1c6b0d35b551c957d51f3c51929e502c9996a69ade5b53aa8648f98"
+  },
+  {
+    "file": "innersense-hagel118.html",
+    "bytes": 368815,
+    "sha256": "dcf80506ad23c9db3d68f4ff21cdd858e56c6dd5286dee066b2d29525bcc9f7d"
+  },
+  {
+    "file": "innersense-hagel118.txt",
+    "bytes": 9497,
+    "sha256": "3b7dbbd6e99a9e6c0a80af47ba39cd6c24458c88d09563cd21339e8a51089d1f"
+  },
+  {
+    "file": "innersense-hagel29.html",
+    "bytes": 371403,
+    "sha256": "5fc4fdf3e53fb61827f9603869d65a7e407c340111da9a5b9a9cd5ccf42248af"
+  },
+  {
+    "file": "innersense-hagel29.txt",
+    "bytes": 9514,
+    "sha256": "2a5124a0ca7122ab7d3512acad7d36bc7f812d7359e1e9656bf5f7c35e12ab91"
+  },
+  {
+    "file": "innersense-pack.webp",
+    "bytes": 54142,
+    "sha256": "34b425cf2dc1ae7758d9ed8c228eb40dddf3145b055942f61d152cd85abd546c"
+  },
+  {
+    "file": "innersense-second.webp",
+    "bytes": 52954,
+    "sha256": "7c2c55614d99d49a8c766f731f34a568eb1921cf1be5d245ad4143517d42af2b"
+  },
+  {
+    "file": "innersense-shipping.html",
+    "bytes": 563872,
+    "sha256": "bd3228233ee910175811287d4779828a1903d44011bf5fc8fb56b4817b2bfff8"
+  },
+  {
+    "file": "innersense-shipping.txt",
+    "bytes": 2983,
+    "sha256": "b75bfbaadf683a54009ce18266ab8fc9c24011f1c3f1b54930a1db9583227b22"
+  },
+  {
+    "file": "lovely-brand-history.html",
+    "bytes": 149935,
+    "sha256": "687c530adefa3051fee33024d3f8b0ac164e5c24309bce46c0732ec49fe641df"
+  },
+  {
+    "file": "lovely-brand-history.txt",
+    "bytes": 4950,
+    "sha256": "dca94c0c6174c5033968b7971a9527ab6dc2067e20df314d56ba260f3b5fc41f"
+  },
+  {
+    "file": "lovely-dm.html",
+    "bytes": 11376,
+    "sha256": "a9dbbd8f66cca56be8eeacdacb6dd79224e467b1089accc193e6941742fe28e0"
+  },
+  {
+    "file": "lovely-dm.txt",
+    "bytes": 52,
+    "sha256": "c025249c0c406627ace29ee6e856d531ebe9fc75630d58a0d22e2fa9e160374b"
+  },
+  {
+    "file": "lovely-old-dm.html",
+    "bytes": 11376,
+    "sha256": "a9dbbd8f66cca56be8eeacdacb6dd79224e467b1089accc193e6941742fe28e0"
+  },
+  {
+    "file": "lovely-old-dm.txt",
+    "bytes": 52,
+    "sha256": "c025249c0c406627ace29ee6e856d531ebe9fc75630d58a0d22e2fa9e160374b"
+  },
+  {
+    "file": "mueller-innersense.html",
+    "bytes": 326799,
+    "sha256": "7ec4fe4b1df66afb5334d49237533b2f89ac596bfdc5fa7d6a20f76db030c5df"
+  },
+  {
+    "file": "mueller-innersense.txt",
+    "bytes": 2195,
+    "sha256": "b4b120c14ffc2f28634cff3d558c78d10bd60c7a58c236817d47ff96742df6ab"
+  },
+  {
+    "file": "rossmann-innersense.html",
+    "bytes": 3038,
+    "sha256": "32ed63159c77e21ee19ca1b9aa3213ccf0218eb59539560b132a8e68ef0e18ea"
+  },
+  {
+    "file": "rossmann-innersense.txt",
+    "bytes": 317,
+    "sha256": "c84ee0d95c2e633e06c187bcaf078a1ea447a2b5422822c05ee36b71225d16a8"
+  }
+]

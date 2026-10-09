@@ -310,6 +310,32 @@ export const SCENARIOS: EvalScenario[] = [
   },
 
   {
+    id: "shampoo-saved-budget-strict",
+    name: "Shampoo request respects a saved strict 5 € budget",
+    description:
+      "Saved budget capped at 5 € per product (needs SHOPPING_BUDGET_ENABLED=true on the eval server): the recommendation must lead with within-budget products, label anything pricier as such, and never call a product affordable beyond the saved limit",
+    hair_profile: {
+      ...FULL_PROFILE,
+      shopping_preferences: { budget: { kind: "capped", limitEur: 5, allowExceptions: false } },
+    },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
+    turns: [
+      {
+        message: "Welches Shampoo empfiehlst du mir?",
+        metadata: {
+          response_mode: ["recommend_and_refine", "answer_direct"],
+          product_count_min: 1,
+        },
+        content: { must_be_german: true },
+        judge: {
+          expected_behavior:
+            "The user saved a strict budget of 5 EUR per product. The answer should recommend a shampoo priced at or below 5 EUR first. A product above 5 EUR may only appear as a clearly labelled, pricier alternative and must never be described as cheap, affordable or within budget. The answer must not offer to change the saved budget itself; if it mentions changing it, it only points to the budget setting in the plan.",
+        },
+      },
+    ],
+  },
+
+  {
     id: "leave-in-offer-confirmation",
     name: "Leave-in recommendation follow-up confirmation",
     description:
@@ -564,7 +590,7 @@ export const SCENARIOS: EvalScenario[] = [
         content: {
           must_be_german: true,
           required_keywords: ["Bond", "Bruch"],
-          forbidden_keywords: ["wie neu", "dauerhaft reparieren", "heilt"],
+          forbidden_claims: ["wie neu", "dauerhaft reparieren", "heilt"],
         },
         judge: {
           expected_behavior:
@@ -672,7 +698,7 @@ export const SCENARIOS: EvalScenario[] = [
         message: "Meine Locken verknoten stark. Was hilft?",
         content: {
           must_be_german: true,
-          required_keywords: ["Sektionen"],
+          required_keywords: ["Sektionen", "Partien"],
           forbidden_keywords: ["Slip"],
         },
         judge: {

@@ -1,4 +1,7 @@
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
+
 import type {
+  Stage3BootstrapBudgetEnvelope,
   Stage3CompleteResponse,
   Stage3DraftResponse,
   Stage3MutationResponse,
@@ -29,9 +32,14 @@ import {
   type Stage3CapturedProduct,
   type Stage3RoleAssignment,
 } from "./contracts"
+import { allocateBudgetPortfolio } from "./budget-policy"
+import type { FixtureStage3BudgetScenario } from "./fixture-scenarios"
 import { createProposedProductPortfolio } from "./portfolio"
 import { stage3DraftsSemanticallyEqual } from "./recovery-desired-state"
-import { stage3ReviewDecisionSubjects } from "./stage3-bootstrap-review-contract"
+import {
+  stage3BootstrapIsDecisionReady,
+  stage3ReviewDecisionSubjects,
+} from "./stage3-bootstrap-review-contract"
 import {
   addCapturedProduct,
   assignProductRoles,
@@ -114,12 +122,11 @@ const FIXTURE_CATALOG: FixtureCatalogRecord[] = [
   },
 ]
 
-export type FixtureGatewayFailureOperation = "search" | "mutate" | "complete"
+export type FixtureGatewayFailureOperation = "search" | "mutate" | "complete" | "save_budget"
 
 export type FixtureStage3GatewayOptions = {
   /** Local QA only: resume a controlled persisted-draft fixture. */
   initialDraft?: { draft: Stage3ProductDraft; requirements: Stage3CategoryRequirement[] }
-  now?: () => string
   searchDelayMs?: number
   /** Optional Labs-only catalog for browser scenarios that need controlled search breadth. */
   catalog?: readonly Stage3CatalogCandidate[]
@@ -127,6 +134,8 @@ export type FixtureStage3GatewayOptions = {
   failOnce?: readonly FixtureGatewayFailureOperation[]
   /** Mirrors the server start gate; persisted envelopes are never hidden. */
   inventoryAuthorityV2Enabled?: boolean
+  /** Labs-only budget gate (in memory). Omitted: no budget state and unchanged comparisons. */
+  budget?: FixtureStage3BudgetScenario
 }
 
 export class FixtureGatewaySimulatedError extends Error {
@@ -178,6 +187,11 @@ export type FixtureStage3Gateway = Omit<Stage3ProductsGateway, "search"> & {
     expectedRevision: number
     intent: Stage3AuthoritySemanticIntent
   }): Promise<Stage3MutationResponse>
+  /** `null` without a budget option (gate off), like the server with the flag off. */
+  loadShoppingBudget(input: { draftId: string }): Promise<Stage3BootstrapBudgetEnvelope | null>
+  saveShoppingBudget(
+    budget: ShoppingBudget,
+  ): Promise<{ status: "saved"; budget: ShoppingBudget } | { status: "unavailable" }>
 }
 
 /** Labs-shaped equivalent of the production plural review bundle contract. */
@@ -189,7 +203,6 @@ export type FixtureStage3DecisionReviewBundle = {
 export function createFixtureStage3Gateway(
   options: FixtureStage3GatewayOptions = {},
 ): FixtureStage3Gateway {
-  const now = options.now ?? (() => new Date().toISOString())
   const searchDelayMs = options.searchDelayMs ?? DEFAULT_SEARCH_DELAY_MS
   const catalog = options.catalog ?? FIXTURE_CATALOG
   const inventoryAuthorityV2Enabled = options.inventoryAuthorityV2Enabled ?? false
@@ -203,6 +216,7 @@ export function createFixtureStage3Gateway(
     string,
     Extract<FixtureCompleteResponse, { status: "ready_for_routine" }>
   >()
+  let savedBudget: ShoppingBudget | null = options.budget?.saved ?? null
   let nextCapturedProduct = 1
   let nextPortfolio = 1
   let nextRoutineProposal = 1
@@ -213,13 +227,17 @@ export function createFixtureStage3Gateway(
     const existing = drafts.get(input.draftId)
     if (existing) {
       if (existing.refinedVersionId !== input.refinedVersionId && existing.status !== "completed") {
-        const stale = invalidateDraftForRefinedVersion(existing, input.refinedVersionId, now())
+        const stale = invalidateDraftForRefinedVersion(
+          existing,
+          input.refinedVersionId,
+          new Date().toISOString(),
+        )
         drafts.set(stale.draftId, stale)
         return { status: "stale", draft: stale, requirements: input.requirements }
       }
       return { status: existing.status, draft: existing, requirements: input.requirements }
     }
-    const draft = createStage3Draft({ ...input, now: now() })
+    const draft = createStage3Draft({ ...input, now: new Date().toISOString() })
     drafts.set(draft.draftId, draft)
     requirementsByDraftId.set(draft.draftId, input.requirements)
     return { status: "active", draft, requirements: input.requirements }
@@ -273,7 +291,7 @@ export function createFixtureStage3Gateway(
         requirements,
         () => `fixture-captured-${nextCapturedProduct++}`,
       ),
-      updatedAt: now(),
+      updatedAt: new Date().toISOString(),
     }
     if (
       !inventoryAuthorityV2Enabled &&
@@ -296,7 +314,11 @@ export function createFixtureStage3Gateway(
     const draft = requireDraft(drafts, input.draftId)
     const requirements = requirementsByDraftId.get(input.draftId)
     if (!requirements) throw new Error(`missing requirements for draft ${input.draftId}`)
-    const next = invalidateDraftForRefinedVersion(draft, input.refinedVersionId, now())
+    const next = invalidateDraftForRefinedVersion(
+      draft,
+      input.refinedVersionId,
+      new Date().toISOString(),
+    )
     drafts.set(next.draftId, next)
     return { status: next.status, draft: next, requirements }
   }
@@ -317,14 +339,14 @@ export function createFixtureStage3Gateway(
       const portfolioVersionId = `fixture-portfolio-${nextPortfolio++}`
       const portfolio = createProposedProductPortfolio(draft, requirements, {
         portfolioVersionId,
-        createdAt: now(),
+        createdAt: new Date().toISOString(),
       })
       const completedDraft: Stage3ProductDraft = {
         ...draft,
         status: "completed",
         pass: "ready_for_routine",
         revision: draft.revision + 1,
-        updatedAt: now(),
+        updatedAt: new Date().toISOString(),
       }
       const completed: Extract<FixtureCompleteResponse, { status: "ready_for_routine" }> = {
         status: "ready_for_routine",
@@ -367,11 +389,35 @@ export function createFixtureStage3Gateway(
     if (draft.status !== "active") return []
     return stage3ReviewDecisionSubjects(draft).map((subject) => {
       const authorityEvaluation = evaluateFixtureDecision(draft, subject)
+      const fitComparison = fixtureFitComparison(draft, subject, authorityEvaluation)
       return {
         authorityEvaluation,
-        fitComparison: fixtureFitComparison(draft, subject, authorityEvaluation),
+        fitComparison:
+          options.budget && savedBudget
+            ? fixtureBudgetedComparison(fitComparison, options.budget.prices, savedBudget)
+            : fitComparison,
       }
     })
+  }
+
+  async function loadShoppingBudget(input: {
+    draftId: string
+  }): Promise<Stage3BootstrapBudgetEnvelope | null> {
+    if (!options.budget) return null
+    const draft = requireDraft(drafts, input.draftId)
+    if (!stage3BootstrapIsDecisionReady(draft)) return null
+    return savedBudget
+      ? { status: "saved", value: savedBudget }
+      : { status: "budget_required", suggestion: options.budget.suggestion }
+  }
+
+  async function saveShoppingBudget(budget: ShoppingBudget) {
+    if (pendingFailures.has("save_budget")) {
+      pendingFailures.delete("save_budget")
+      return { status: "unavailable" as const }
+    }
+    savedBudget = budget
+    return { status: "saved" as const, budget }
   }
 
   async function previewDecisionBundles(input: {
@@ -448,7 +494,7 @@ export function createFixtureStage3Gateway(
         draft,
         fixtureAuthorityDecision(draft, subject, evaluation, input.intent, selectedReplacement),
       ),
-      updatedAt: now(),
+      updatedAt: new Date().toISOString(),
     }
     drafts.set(next.draftId, next)
     return { status: "saved", draft: next }
@@ -469,7 +515,97 @@ export function createFixtureStage3Gateway(
     reviewDecisionBundles,
     previewDecisionBundles,
     resolveDecision,
+    loadShoppingBudget,
+    saveShoppingBudget,
   }
+}
+
+/**
+ * Applies the real budget policy to a fixture Conditioner comparison: the fixture only supplies
+ * package prices (by fit position) and one graded need distance; order, default, labels and the
+ * notice come from `allocateBudgetPortfolio`, exactly as the server composes them.
+ */
+function fixtureBudgetedComparison(
+  comparison: Stage3FitComparison,
+  prices: readonly number[],
+  budget: ShoppingBudget,
+): Stage3FitComparison {
+  if (comparison.category !== "conditioner" || comparison.alternatives.length === 0) {
+    return comparison
+  }
+  const priceById = new Map(
+    comparison.alternatives.map((candidate, index) => [candidate.productId, prices[index] ?? null]),
+  )
+  const allocation = allocateBudgetPortfolio({
+    budget,
+    roles: [
+      {
+        roleKey: comparison.subjectKey,
+        ranked: comparison.alternatives.map((candidate, index) => ({
+          productId: candidate.productId,
+          priceEur: priceById.get(candidate.productId) ?? null,
+          verdict: candidate.verdict === "supportive" ? "supportive" : "ideal",
+          cautionCount: candidate.criteria.filter((criterion) => criterion.result === "caution")
+            .length,
+          needDistances: { "conditioner.weight": index === 0 ? 0 : 1 },
+        })),
+        required: true,
+        ownedKept: false,
+        preserved: null,
+      },
+    ],
+    mainConcernDimensions: new Set(),
+    displayLimit: comparison.alternatives.length,
+  }).roles[0]!
+  const views = new Map(allocation.candidates.map((view) => [view.productId, view]))
+  const alternatives = allocation.candidates.flatMap((view) => {
+    const candidate = comparison.alternatives.find((item) => item.productId === view.productId)
+    return candidate ? [candidate] : []
+  })
+  // Keep the evidence table honest with the fixture distances: only the first-ranked candidate
+  // is on the weight target, every other candidate sits one step off ("Mittel").
+  const offTarget = new Set(
+    comparison.alternatives.slice(1).map((candidate) => candidate.productId),
+  )
+  const evidenceRows = comparison.evidenceRows?.map((row) =>
+    row.label !== "Pflegegewicht"
+      ? row
+      : {
+          ...row,
+          productValues: row.productValues.map((value) =>
+            offTarget.has(value.productId)
+              ? { ...value, valueLabel: "Mittel", relation: "outside_target" as const }
+              : value,
+          ),
+        },
+  )
+  return {
+    ...comparison,
+    alternatives,
+    ...(evidenceRows ? { evidenceRows } : {}),
+    products: comparison.products.map((product) => {
+      const view = views.get(product.productId)
+      const price = priceById.get(product.productId) ?? null
+      if (product.source !== "alternative" || !view) return product
+      return {
+        ...product,
+        presentation: {
+          priceLabel: price === null ? null : formatFixtureEuro(price),
+          netContentLabel: "200 ml",
+          packagePriceEur: price,
+          overBudget: view.overBudget,
+          labelKind: view.label,
+        },
+      }
+    }),
+    defaultProductId: allocation.defaultProductId,
+    budgetNotice: allocation.notice,
+    budgetException: allocation.exception,
+  }
+}
+
+function formatFixtureEuro(value: number): string {
+  return `${new Intl.NumberFormat("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value)} €`
 }
 
 function evaluateFixtureDecision(

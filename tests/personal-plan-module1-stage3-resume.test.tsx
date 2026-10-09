@@ -3,12 +3,10 @@ import test from "node:test"
 
 import {
   planStartRefinementExitDestination,
-  planStartSuppressesChapterCeremony,
   stage3CompletionRoutineHref,
 } from "../src/components/personal-plan-start/plan-start-flow"
 import { resolvePlanStartPageState, type PlanStartPageDeps } from "../src/app/plan-start/page"
 import { loadModule1Stage3Resume } from "../src/lib/personal-plan/refinement/module1-stage3-resume"
-import { withRoutinePlanUpdatedSignal } from "../src/lib/personal-plan/routine/plan-updated-signal"
 import type { Stage2RefinementSession } from "../src/lib/personal-plan/refinement/session"
 
 /**
@@ -120,18 +118,6 @@ function makeClient(tables: Record<string, Row[]>) {
 const resumeFor = (tables: Record<string, Row[]>) =>
   loadModule1Stage3Resume(makeClient(tables) as never, ids.user)
 
-test("the products module handoff plus its live Stage-3 draft resume Stage 3", async () => {
-  assert.deepEqual(
-    await resumeFor({
-      personal_plans: [planRow()],
-      personal_plan_need_versions: [needVersionRow()],
-      personal_plan_refinement_drafts: [refinementDraftRow()],
-      personal_plan_product_drafts: [stage3DraftRow()],
-    }),
-    { refinedVersionId: ids.refined },
-  )
-})
-
 test("reloading on the bridge — handoff done, Stage-3 draft not created yet — resumes Stage 3", async () => {
   // The Stage-3 journey bootstrap creates the draft itself (today's tap-"weiter"
   // path), so an absent draft is the pre-tap reload point, not a blocker.
@@ -171,20 +157,6 @@ test("an open draft still wins when a stale row for the same version is lying ar
         stage3DraftRow({ id: "66666666-6666-4666-8666-666666666666", status: "stale" }),
         stage3DraftRow(),
       ],
-    }),
-    { refinedVersionId: ids.refined },
-  )
-})
-
-test("another owner's Stage-3 draft neither resumes nor blocks — it is simply not read", async () => {
-  // Owner scoping only: the foreign row is invisible, so this falls back to the
-  // bridge-reload case (no draft of this owner yet) and resumes.
-  assert.deepEqual(
-    await resumeFor({
-      personal_plans: [planRow()],
-      personal_plan_need_versions: [needVersionRow()],
-      personal_plan_refinement_drafts: [refinementDraftRow()],
-      personal_plan_product_drafts: [stage3DraftRow({ user_id: "someone-else" })],
     }),
     { refinedVersionId: ids.refined },
   )
@@ -440,44 +412,32 @@ function depsWithResume(
 }
 
 test("reload after the Modul-1 handoff resumes Stage 3, not Stage 2", async () => {
-  assert.deepEqual(
-    await resolvePlanStartPageState(
-      depsWithResume(async () => ({ refinedVersionId: ids.refined })),
-    ),
-    {
-      state: "production",
-      // `refineModule: "products"` is what this state IS — the resumed leg of an
-      // explicit products-module run. It keeps the retired chapter ceremony
-      // suppressed across an undirected reload (founder ruling 27.08.2026).
-      initialJourney: {
-        stage: "stage3",
-        refinedVersionId: ids.refined,
-        refineModule: "products",
-        // ORIGIN: this cohort came from the Routine banner, so its plan is
-        // already activated — that is what earns the /routine exit and the
-        // „Plan aktualisiert“ signal below.
-        planAccepted: true,
-      },
-      personalPlanId: ids.plan,
-      initialRefinementSession: inProgressSession(),
-    },
-  )
-})
-
-test("the resumed Stage-3 leg keeps the module exit and suppresses the ceremony", async () => {
   const state = await resolvePlanStartPageState(
     depsWithResume(async () => ({ refinedVersionId: ids.refined })),
   )
+  assert.deepEqual(state, {
+    state: "production",
+    // `refineModule: "products"` is what this state IS — the resumed leg of an
+    // explicit products-module run. It keeps the retired chapter ceremony
+    // suppressed across an undirected reload (founder ruling 27.08.2026).
+    initialJourney: {
+      stage: "stage3",
+      refinedVersionId: ids.refined,
+      refineModule: "products",
+      // ORIGIN: this cohort came from the Routine banner, so its plan is
+      // already activated — that is what earns the /routine exit and the
+      // „Plan aktualisiert“ signal below.
+      planAccepted: true,
+    },
+    personalPlanId: ids.plan,
+    initialRefinementSession: inProgressSession(),
+  })
   assert.equal(state.state, "production")
-  const initialJourney = state.state === "production" ? state.initialJourney : null
-  assert.ok(initialJourney)
-  // The undirected reload must behave exactly like the module entry it resumes:
-  // exit to /routine, no chapter screens, and the "Plan aktualisiert" signal.
-  assert.equal(planStartRefinementExitDestination(initialJourney), "routine")
-  assert.equal(planStartSuppressesChapterCeremony(initialJourney), true)
+  assert.ok(state.state === "production")
+  assert.equal(planStartRefinementExitDestination(state.initialJourney), "routine")
   assert.equal(
-    stage3CompletionRoutineHref(initialJourney, "/routine"),
-    withRoutinePlanUpdatedSignal("/routine"),
+    stage3CompletionRoutineHref(state.initialJourney, "/routine"),
+    "/routine?planUpdated=1",
   )
 })
 
@@ -511,18 +471,9 @@ test("a pending proposal alone is not acceptance — no origin, no „aktualisie
     refinedVersionId: ids.refined,
     refineModule: "products",
   })
-  // Module SCOPE is unaffected — this is still a directed module run.
-  assert.equal(planStartSuppressesChapterCeremony(initialJourney), true)
   // ORIGIN is absent, so no toast and no /routine exit.
   assert.equal(stage3CompletionRoutineHref(initialJourney, "/routine"), "/routine")
   assert.equal(planStartRefinementExitDestination(initialJourney), "stage1")
-})
-
-test("a Stage-3 entry with no module marker still gets the full creation funnel", () => {
-  const linear = { stage: "stage3", refinedVersionId: ids.refined } as const
-  assert.equal(planStartSuppressesChapterCeremony(linear), false)
-  assert.equal(planStartRefinementExitDestination(linear), "stage1")
-  assert.equal(stage3CompletionRoutineHref(linear, "/routine"), "/routine")
 })
 
 test("without a handoff resume the in-progress draft still resolves to Stage 2", async () => {

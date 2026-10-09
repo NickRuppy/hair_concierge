@@ -1,0 +1,18 @@
+{
+  "authority": "parent explicit bounded metadata adoption",
+  "oldPinsSHA256": "7655b21eb599e48cb79ab706e59287b0f253986ef1ad0e391097ceb15019e6b5",
+  "newPinsSHA256": "53a0eef9d6f320b4e07ca6987d9b8c995dfbc459e349f3fe2384cf94475a9d76",
+  "changed": [
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.git/config",
+      "oldSHA256": "70c63e8c0a3215a4fae7e4ce3157e36e08c6649054e14886c0034cb0a134b6d0",
+      "newSHA256": "2253b6840e7873e8035e82d6176ab2b7eec30374199874b551cc70fc77bbdeb1"
+    }
+  ],
+  "otherIdentityFilesUnchanged": 7,
+  "sourceTestDependencyArtifactGuardsChanged": 0,
+  "originalConfigBytesUnavailable": true,
+  "contentDiffClaim": false,
+  "entrypointChanges": "PIN_SHA literals only",
+  "archive": "/tmp/test-audit-reactivation83-tools-huh910i2/identity-refresh-original"
+}

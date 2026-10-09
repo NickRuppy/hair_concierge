@@ -3,25 +3,7 @@ import test from "node:test"
 
 import { personalPlanOfferDashboard } from "../scripts/analytics/personal-plan-offer-dashboard"
 
-const { o1, o2, o3, o5, o6, o7 } = personalPlanOfferDashboard.insights
-const authoritativeInsights = [o1, o2, o3, o5]
-
-test("authoritative insights share a strict, exact Personal Plan offer cohort", () => {
-  for (const insight of authoritativeInsights) {
-    assert.match(insight.query, /properties\.funnel_package_key = 'meta_personal_plan_v1'/)
-    assert.match(insight.query, /event = 'offer_viewed'/)
-    assert.match(insight.query, /properties\.offer_variant = 'personal-plan-v1'/)
-    assert.match(insight.query, /properties\.offer_revision = 'personal_plan_v2'/)
-    assert.match(
-      insight.query,
-      /notEmpty\(ifNull\(toString\(properties\.funnel_session_id\), ''\)\)/,
-    )
-    assert.match(insight.query, /INNER JOIN eligible ON/)
-    assert.match(insight.query, /\{filters\.dateRange\.from\}/)
-    assert.match(insight.query, /\{filters\.dateRange\.to\}/)
-    assert.doesNotMatch(insight.query, /distinct_id/)
-  }
-})
+const { o1, o3, o5, o6, o7 } = personalPlanOfferDashboard.insights
 
 test("generic CTA funnel stage means checkout intent, never pricing navigation", () => {
   assert.match(o1.title, /Checkout-Intent/)
@@ -36,45 +18,6 @@ test("generic CTA funnel stage means checkout intent, never pricing navigation",
 
   assert.match(o5.query, /properties\.destination = 'checkout'/)
   assert.doesNotMatch(o5.query, /sticky_header/)
-})
-
-test("reach and checkout-intent diagnostics use actual payment-option exposure", () => {
-  for (const insight of [o1, o2, o5]) {
-    assert.match(insight.query, /offer_payment_option_viewed/)
-  }
-  assert.match(o2.query, /05 Vorher und nachher/)
-  assert.match(o2.query, /15 Zahlungsart gewählt/)
-  assert.match(o2.description, /mindestens 50 % für 750 ms sichtbar/)
-  assert.match(o5.query, /zahlungsoption_gesehen/)
-})
-
-test("downstream outcome sets remain bounded to eligible package and revision events", () => {
-  for (const insight of [o1, o5]) {
-    assert.match(
-      insight.query,
-      /\([a-z_]+\.event = 'purchase_completed' OR [a-z_]+\.properties\.offer_revision = 'personal_plan_v2'\)/,
-    )
-    assert.match(insight.query, /properties\.funnel_package_key = 'meta_personal_plan_v1'/)
-    assert.match(insight.query, /properties\.offer_variant = 'personal-plan-v1'/)
-    assert.match(insight.query, /INNER JOIN eligible ON/)
-  }
-})
-
-test("purchase visibility keeps the historical revision exception while retaining package and session scope", () => {
-  for (const insight of [o1, o5]) {
-    assert.match(insight.query, /event = 'purchase_completed'/)
-    assert.match(insight.query, /properties\.funnel_package_key = 'meta_personal_plan_v1'/)
-    assert.match(insight.query, /INNER JOIN eligible ON/)
-  }
-})
-
-test("funnel stages exclude earlier same-session history before the relevant offer or checkout intent", () => {
-  for (const insight of [o1, o2, o3, o5]) {
-    assert.match(insight.query, /min\(timestamp\) AS offer_viewed_at/)
-    assert.match(insight.query, /timestamp >= eligible\.offer_viewed_at/)
-  }
-  assert.match(o5.query, /min\(click_event\.timestamp\) AS checkout_intent_at/)
-  assert.match(o5.query, /outcome_events\.timestamp >= click_sessions\.checkout_intent_at/)
 })
 
 test("attribution quality reports missing required offer context outside conversion denominators", () => {

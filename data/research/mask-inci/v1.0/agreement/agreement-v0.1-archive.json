@@ -1,0 +1,1035 @@
+{
+  "generated": "2026-09-05",
+  "cells": [
+    {
+      "productId": "01-hask-argan-oil-sachet",
+      "field": "conditioningLevel",
+      "key": "high",
+      "blind": "high",
+      "match": true
+    },
+    {
+      "productId": "01-hask-argan-oil-sachet",
+      "field": "weightPotential",
+      "key": "high",
+      "blind": "high",
+      "match": true
+    },
+    {
+      "productId": "01-hask-argan-oil-sachet",
+      "field": "careDirection",
+      "key": "moisture",
+      "blind": "moisture",
+      "match": true
+    },
+    {
+      "productId": "01-hask-argan-oil-sachet",
+      "field": "repairSupportLevel",
+      "key": "low",
+      "blind": "low",
+      "match": true
+    },
+    {
+      "productId": "01-hask-argan-oil-sachet",
+      "field": "primaryFocus",
+      "key": "general",
+      "blind": "general",
+      "match": true
+    },
+    {
+      "productId": "01-hask-argan-oil-sachet",
+      "field": "secondaryFocus",
+      "key": [],
+      "blind": [],
+      "match": true
+    },
+    {
+      "productId": "01-hask-argan-oil-sachet",
+      "field": "hairThicknessFit",
+      "key": [
+        "coarse",
+        "normal"
+      ],
+      "blind": [
+        "coarse",
+        "normal"
+      ],
+      "match": true
+    },
+    {
+      "productId": "01-hask-argan-oil-sachet",
+      "field": "damageFit",
+      "key": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "blind": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "match": true
+    },
+    {
+      "productId": "01-hask-argan-oil-sachet",
+      "field": "textureFit",
+      "key": [
+        "coily",
+        "curly",
+        "wavy"
+      ],
+      "blind": [
+        "coily",
+        "curly",
+        "wavy"
+      ],
+      "match": true
+    },
+    {
+      "productId": "02-gliss-7sekunden-express-repair",
+      "field": "conditioningLevel",
+      "key": "moderate",
+      "blind": "moderate",
+      "match": true
+    },
+    {
+      "productId": "02-gliss-7sekunden-express-repair",
+      "field": "weightPotential",
+      "key": "low",
+      "blind": "low",
+      "match": true
+    },
+    {
+      "productId": "02-gliss-7sekunden-express-repair",
+      "field": "careDirection",
+      "key": "moisture",
+      "blind": "moisture",
+      "match": true
+    },
+    {
+      "productId": "02-gliss-7sekunden-express-repair",
+      "field": "repairSupportLevel",
+      "key": "low",
+      "blind": "low",
+      "match": true
+    },
+    {
+      "productId": "02-gliss-7sekunden-express-repair",
+      "field": "primaryFocus",
+      "key": "lightness",
+      "blind": "lightness",
+      "match": true
+    },
+    {
+      "productId": "02-gliss-7sekunden-express-repair",
+      "field": "secondaryFocus",
+      "key": [],
+      "blind": [],
+      "match": true
+    },
+    {
+      "productId": "02-gliss-7sekunden-express-repair",
+      "field": "hairThicknessFit",
+      "key": [
+        "fine",
+        "normal"
+      ],
+      "blind": [
+        "fine",
+        "normal"
+      ],
+      "match": true
+    },
+    {
+      "productId": "02-gliss-7sekunden-express-repair",
+      "field": "damageFit",
+      "key": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "blind": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "match": true
+    },
+    {
+      "productId": "02-gliss-7sekunden-express-repair",
+      "field": "textureFit",
+      "key": [
+        "straight",
+        "wavy"
+      ],
+      "blind": [
+        "straight",
+        "wavy"
+      ],
+      "match": true
+    },
+    {
+      "productId": "03-bali-curls-sos-protein-treatment",
+      "field": "conditioningLevel",
+      "key": "high",
+      "blind": "high",
+      "match": true
+    },
+    {
+      "productId": "03-bali-curls-sos-protein-treatment",
+      "field": "weightPotential",
+      "key": "high",
+      "blind": "high",
+      "match": true
+    },
+    {
+      "productId": "03-bali-curls-sos-protein-treatment",
+      "field": "careDirection",
+      "key": "moisture",
+      "blind": "moisture",
+      "match": true
+    },
+    {
+      "productId": "03-bali-curls-sos-protein-treatment",
+      "field": "repairSupportLevel",
+      "key": "low",
+      "blind": "low",
+      "match": true
+    },
+    {
+      "productId": "03-bali-curls-sos-protein-treatment",
+      "field": "primaryFocus",
+      "key": "general",
+      "blind": "general",
+      "match": true
+    },
+    {
+      "productId": "03-bali-curls-sos-protein-treatment",
+      "field": "secondaryFocus",
+      "key": [],
+      "blind": [],
+      "match": true
+    },
+    {
+      "productId": "03-bali-curls-sos-protein-treatment",
+      "field": "hairThicknessFit",
+      "key": [
+        "coarse",
+        "normal"
+      ],
+      "blind": [
+        "coarse",
+        "normal"
+      ],
+      "match": true
+    },
+    {
+      "productId": "03-bali-curls-sos-protein-treatment",
+      "field": "damageFit",
+      "key": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "blind": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "match": true
+    },
+    {
+      "productId": "03-bali-curls-sos-protein-treatment",
+      "field": "textureFit",
+      "key": [
+        "coily",
+        "curly",
+        "wavy"
+      ],
+      "blind": [
+        "coily",
+        "curly",
+        "wavy"
+      ],
+      "match": true
+    },
+    {
+      "productId": "04-gliss-liquid-silk-4in1",
+      "field": "conditioningLevel",
+      "key": "high",
+      "blind": "high",
+      "match": true
+    },
+    {
+      "productId": "04-gliss-liquid-silk-4in1",
+      "field": "weightPotential",
+      "key": "moderate",
+      "blind": "moderate",
+      "match": true
+    },
+    {
+      "productId": "04-gliss-liquid-silk-4in1",
+      "field": "careDirection",
+      "key": "balanced",
+      "blind": "balanced",
+      "match": true
+    },
+    {
+      "productId": "04-gliss-liquid-silk-4in1",
+      "field": "repairSupportLevel",
+      "key": "high",
+      "blind": "high",
+      "match": true
+    },
+    {
+      "productId": "04-gliss-liquid-silk-4in1",
+      "field": "primaryFocus",
+      "key": "repair",
+      "blind": "repair",
+      "match": true
+    },
+    {
+      "productId": "04-gliss-liquid-silk-4in1",
+      "field": "secondaryFocus",
+      "key": [],
+      "blind": [],
+      "match": true
+    },
+    {
+      "productId": "04-gliss-liquid-silk-4in1",
+      "field": "hairThicknessFit",
+      "key": [
+        "coarse",
+        "fine",
+        "normal"
+      ],
+      "blind": [
+        "coarse",
+        "fine",
+        "normal"
+      ],
+      "match": true
+    },
+    {
+      "productId": "04-gliss-liquid-silk-4in1",
+      "field": "damageFit",
+      "key": [
+        "highly_damaged",
+        "moderately_damaged"
+      ],
+      "blind": [
+        "highly_damaged",
+        "moderately_damaged"
+      ],
+      "match": true
+    },
+    {
+      "productId": "04-gliss-liquid-silk-4in1",
+      "field": "textureFit",
+      "key": [
+        "curly",
+        "straight",
+        "wavy"
+      ],
+      "blind": [
+        "curly",
+        "straight",
+        "wavy"
+      ],
+      "match": true
+    },
+    {
+      "productId": "05-isana-mandelmilch-3in1",
+      "field": "conditioningLevel",
+      "key": "high",
+      "blind": "high",
+      "match": true
+    },
+    {
+      "productId": "05-isana-mandelmilch-3in1",
+      "field": "weightPotential",
+      "key": "high",
+      "blind": "high",
+      "match": true
+    },
+    {
+      "productId": "05-isana-mandelmilch-3in1",
+      "field": "careDirection",
+      "key": "balanced",
+      "blind": "balanced",
+      "match": true
+    },
+    {
+      "productId": "05-isana-mandelmilch-3in1",
+      "field": "repairSupportLevel",
+      "key": "medium",
+      "blind": "medium",
+      "match": true
+    },
+    {
+      "productId": "05-isana-mandelmilch-3in1",
+      "field": "primaryFocus",
+      "key": "repair",
+      "blind": "repair",
+      "match": true
+    },
+    {
+      "productId": "05-isana-mandelmilch-3in1",
+      "field": "secondaryFocus",
+      "key": [],
+      "blind": [],
+      "match": true
+    },
+    {
+      "productId": "05-isana-mandelmilch-3in1",
+      "field": "hairThicknessFit",
+      "key": [
+        "coarse",
+        "normal"
+      ],
+      "blind": [
+        "coarse",
+        "normal"
+      ],
+      "match": true
+    },
+    {
+      "productId": "05-isana-mandelmilch-3in1",
+      "field": "damageFit",
+      "key": [
+        "highly_damaged",
+        "moderately_damaged"
+      ],
+      "blind": [
+        "highly_damaged",
+        "moderately_damaged"
+      ],
+      "match": true
+    },
+    {
+      "productId": "05-isana-mandelmilch-3in1",
+      "field": "textureFit",
+      "key": [
+        "coily",
+        "curly",
+        "wavy"
+      ],
+      "blind": [
+        "coily",
+        "curly",
+        "wavy"
+      ],
+      "match": true
+    },
+    {
+      "productId": "06-monday-smooth-anti-frizz",
+      "field": "conditioningLevel",
+      "key": "high",
+      "blind": "high",
+      "match": true
+    },
+    {
+      "productId": "06-monday-smooth-anti-frizz",
+      "field": "weightPotential",
+      "key": "moderate",
+      "blind": "moderate",
+      "match": true
+    },
+    {
+      "productId": "06-monday-smooth-anti-frizz",
+      "field": "careDirection",
+      "key": "moisture",
+      "blind": "moisture",
+      "match": true
+    },
+    {
+      "productId": "06-monday-smooth-anti-frizz",
+      "field": "repairSupportLevel",
+      "key": "low",
+      "blind": "low",
+      "match": true
+    },
+    {
+      "productId": "06-monday-smooth-anti-frizz",
+      "field": "primaryFocus",
+      "key": "smoothing",
+      "blind": "smoothing",
+      "match": true
+    },
+    {
+      "productId": "06-monday-smooth-anti-frizz",
+      "field": "secondaryFocus",
+      "key": [],
+      "blind": [],
+      "match": true
+    },
+    {
+      "productId": "06-monday-smooth-anti-frizz",
+      "field": "hairThicknessFit",
+      "key": [
+        "coarse",
+        "fine",
+        "normal"
+      ],
+      "blind": [
+        "coarse",
+        "fine",
+        "normal"
+      ],
+      "match": true
+    },
+    {
+      "productId": "06-monday-smooth-anti-frizz",
+      "field": "damageFit",
+      "key": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "blind": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "match": true
+    },
+    {
+      "productId": "06-monday-smooth-anti-frizz",
+      "field": "textureFit",
+      "key": [
+        "curly",
+        "straight",
+        "wavy"
+      ],
+      "blind": [
+        "curly",
+        "straight",
+        "wavy"
+      ],
+      "match": true
+    },
+    {
+      "productId": "07-pantene-molecular-bond-repair",
+      "field": "conditioningLevel",
+      "key": "moderate",
+      "blind": "moderate",
+      "match": true
+    },
+    {
+      "productId": "07-pantene-molecular-bond-repair",
+      "field": "weightPotential",
+      "key": "moderate",
+      "blind": "moderate",
+      "match": true
+    },
+    {
+      "productId": "07-pantene-molecular-bond-repair",
+      "field": "careDirection",
+      "key": "moisture",
+      "blind": "moisture",
+      "match": true
+    },
+    {
+      "productId": "07-pantene-molecular-bond-repair",
+      "field": "repairSupportLevel",
+      "key": "low",
+      "blind": "low",
+      "match": true
+    },
+    {
+      "productId": "07-pantene-molecular-bond-repair",
+      "field": "primaryFocus",
+      "key": "smoothing",
+      "blind": "smoothing",
+      "match": true
+    },
+    {
+      "productId": "07-pantene-molecular-bond-repair",
+      "field": "secondaryFocus",
+      "key": [],
+      "blind": [],
+      "match": true
+    },
+    {
+      "productId": "07-pantene-molecular-bond-repair",
+      "field": "hairThicknessFit",
+      "key": [
+        "coarse",
+        "fine",
+        "normal"
+      ],
+      "blind": [
+        "coarse",
+        "fine",
+        "normal"
+      ],
+      "match": true
+    },
+    {
+      "productId": "07-pantene-molecular-bond-repair",
+      "field": "damageFit",
+      "key": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "blind": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "match": true
+    },
+    {
+      "productId": "07-pantene-molecular-bond-repair",
+      "field": "textureFit",
+      "key": [
+        "curly",
+        "straight",
+        "wavy"
+      ],
+      "blind": [
+        "curly",
+        "straight",
+        "wavy"
+      ],
+      "match": true
+    },
+    {
+      "productId": "08-sante-intense-hydration",
+      "field": "conditioningLevel",
+      "key": "moderate",
+      "blind": "moderate",
+      "match": true
+    },
+    {
+      "productId": "08-sante-intense-hydration",
+      "field": "weightPotential",
+      "key": "moderate",
+      "blind": "moderate",
+      "match": true
+    },
+    {
+      "productId": "08-sante-intense-hydration",
+      "field": "careDirection",
+      "key": "balanced",
+      "blind": "balanced",
+      "match": true
+    },
+    {
+      "productId": "08-sante-intense-hydration",
+      "field": "repairSupportLevel",
+      "key": "medium",
+      "blind": "medium",
+      "match": true
+    },
+    {
+      "productId": "08-sante-intense-hydration",
+      "field": "primaryFocus",
+      "key": "repair",
+      "blind": "repair",
+      "match": true
+    },
+    {
+      "productId": "08-sante-intense-hydration",
+      "field": "secondaryFocus",
+      "key": [
+        "moisture"
+      ],
+      "blind": [
+        "moisture"
+      ],
+      "match": true
+    },
+    {
+      "productId": "08-sante-intense-hydration",
+      "field": "hairThicknessFit",
+      "key": [
+        "coarse",
+        "fine",
+        "normal"
+      ],
+      "blind": [
+        "coarse",
+        "fine",
+        "normal"
+      ],
+      "match": true
+    },
+    {
+      "productId": "08-sante-intense-hydration",
+      "field": "damageFit",
+      "key": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "blind": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "match": true
+    },
+    {
+      "productId": "08-sante-intense-hydration",
+      "field": "textureFit",
+      "key": [
+        "curly",
+        "straight",
+        "wavy"
+      ],
+      "blind": [
+        "curly",
+        "straight",
+        "wavy"
+      ],
+      "match": true
+    },
+    {
+      "productId": "09-balea-professional-aqua-hyaluron",
+      "field": "conditioningLevel",
+      "key": "moderate",
+      "blind": "moderate",
+      "match": true
+    },
+    {
+      "productId": "09-balea-professional-aqua-hyaluron",
+      "field": "weightPotential",
+      "key": "moderate",
+      "blind": "moderate",
+      "match": true
+    },
+    {
+      "productId": "09-balea-professional-aqua-hyaluron",
+      "field": "careDirection",
+      "key": "moisture",
+      "blind": "moisture",
+      "match": true
+    },
+    {
+      "productId": "09-balea-professional-aqua-hyaluron",
+      "field": "repairSupportLevel",
+      "key": "low",
+      "blind": "low",
+      "match": true
+    },
+    {
+      "productId": "09-balea-professional-aqua-hyaluron",
+      "field": "primaryFocus",
+      "key": "moisture",
+      "blind": "moisture",
+      "match": true
+    },
+    {
+      "productId": "09-balea-professional-aqua-hyaluron",
+      "field": "secondaryFocus",
+      "key": [],
+      "blind": [],
+      "match": true
+    },
+    {
+      "productId": "09-balea-professional-aqua-hyaluron",
+      "field": "hairThicknessFit",
+      "key": [
+        "coarse",
+        "fine",
+        "normal"
+      ],
+      "blind": [
+        "coarse",
+        "fine",
+        "normal"
+      ],
+      "match": true
+    },
+    {
+      "productId": "09-balea-professional-aqua-hyaluron",
+      "field": "damageFit",
+      "key": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "blind": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "match": true
+    },
+    {
+      "productId": "09-balea-professional-aqua-hyaluron",
+      "field": "textureFit",
+      "key": [
+        "curly",
+        "straight",
+        "wavy"
+      ],
+      "blind": [
+        "curly",
+        "straight",
+        "wavy"
+      ],
+      "match": true
+    },
+    {
+      "productId": "10-bali-curls-deep-repair-mask",
+      "field": "conditioningLevel",
+      "key": "high",
+      "blind": "high",
+      "match": true
+    },
+    {
+      "productId": "10-bali-curls-deep-repair-mask",
+      "field": "weightPotential",
+      "key": "high",
+      "blind": "high",
+      "match": true
+    },
+    {
+      "productId": "10-bali-curls-deep-repair-mask",
+      "field": "careDirection",
+      "key": "moisture",
+      "blind": "moisture",
+      "match": true
+    },
+    {
+      "productId": "10-bali-curls-deep-repair-mask",
+      "field": "repairSupportLevel",
+      "key": "low",
+      "blind": "low",
+      "match": true
+    },
+    {
+      "productId": "10-bali-curls-deep-repair-mask",
+      "field": "primaryFocus",
+      "key": "general",
+      "blind": "moisture",
+      "match": false
+    },
+    {
+      "productId": "10-bali-curls-deep-repair-mask",
+      "field": "secondaryFocus",
+      "key": [],
+      "blind": [],
+      "match": true
+    },
+    {
+      "productId": "10-bali-curls-deep-repair-mask",
+      "field": "hairThicknessFit",
+      "key": [
+        "coarse",
+        "normal"
+      ],
+      "blind": [
+        "coarse",
+        "normal"
+      ],
+      "match": true
+    },
+    {
+      "productId": "10-bali-curls-deep-repair-mask",
+      "field": "damageFit",
+      "key": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "blind": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "match": true
+    },
+    {
+      "productId": "10-bali-curls-deep-repair-mask",
+      "field": "textureFit",
+      "key": [
+        "coily",
+        "curly",
+        "wavy"
+      ],
+      "blind": [
+        "coily",
+        "curly",
+        "wavy"
+      ],
+      "match": true
+    },
+    {
+      "productId": "11-elvital-glycolic-gloss",
+      "field": "conditioningLevel",
+      "key": "moderate",
+      "blind": "moderate",
+      "match": true
+    },
+    {
+      "productId": "11-elvital-glycolic-gloss",
+      "field": "weightPotential",
+      "key": "moderate",
+      "blind": "moderate",
+      "match": true
+    },
+    {
+      "productId": "11-elvital-glycolic-gloss",
+      "field": "careDirection",
+      "key": "moisture",
+      "blind": "moisture",
+      "match": true
+    },
+    {
+      "productId": "11-elvital-glycolic-gloss",
+      "field": "repairSupportLevel",
+      "key": "low",
+      "blind": "low",
+      "match": true
+    },
+    {
+      "productId": "11-elvital-glycolic-gloss",
+      "field": "primaryFocus",
+      "key": "shine",
+      "blind": "shine",
+      "match": true
+    },
+    {
+      "productId": "11-elvital-glycolic-gloss",
+      "field": "secondaryFocus",
+      "key": [],
+      "blind": [],
+      "match": true
+    },
+    {
+      "productId": "11-elvital-glycolic-gloss",
+      "field": "hairThicknessFit",
+      "key": [
+        "coarse",
+        "fine",
+        "normal"
+      ],
+      "blind": [
+        "coarse",
+        "fine",
+        "normal"
+      ],
+      "match": true
+    },
+    {
+      "productId": "11-elvital-glycolic-gloss",
+      "field": "damageFit",
+      "key": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "blind": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "match": true
+    },
+    {
+      "productId": "11-elvital-glycolic-gloss",
+      "field": "textureFit",
+      "key": [
+        "curly",
+        "straight",
+        "wavy"
+      ],
+      "blind": [
+        "curly",
+        "straight",
+        "wavy"
+      ],
+      "match": true
+    }
+  ],
+  "g0": [
+    {
+      "productId": "01-hask-argan-oil-sachet",
+      "key": "in_category",
+      "blind": "in_category",
+      "match": true
+    },
+    {
+      "productId": "02-gliss-7sekunden-express-repair",
+      "key": "in_category",
+      "blind": "in_category",
+      "match": true
+    },
+    {
+      "productId": "03-bali-curls-sos-protein-treatment",
+      "key": "in_category",
+      "blind": "in_category",
+      "match": true
+    },
+    {
+      "productId": "04-gliss-liquid-silk-4in1",
+      "key": "in_category",
+      "blind": "in_category",
+      "match": true
+    },
+    {
+      "productId": "05-isana-mandelmilch-3in1",
+      "key": "in_category",
+      "blind": "in_category",
+      "match": true
+    },
+    {
+      "productId": "06-monday-smooth-anti-frizz",
+      "key": "in_category",
+      "blind": "in_category",
+      "match": true
+    },
+    {
+      "productId": "07-pantene-molecular-bond-repair",
+      "key": "in_category",
+      "blind": "in_category",
+      "match": true
+    },
+    {
+      "productId": "08-sante-intense-hydration",
+      "key": "in_category",
+      "blind": "in_category",
+      "match": true
+    },
+    {
+      "productId": "09-balea-professional-aqua-hyaluron",
+      "key": "in_category",
+      "blind": "in_category",
+      "match": true
+    },
+    {
+      "productId": "10-bali-curls-deep-repair-mask",
+      "key": "in_category",
+      "blind": "in_category",
+      "match": true
+    },
+    {
+      "productId": "11-elvital-glycolic-gloss",
+      "key": "in_category",
+      "blind": "in_category",
+      "match": true
+    },
+    {
+      "productId": "12-guhl-panthenol-reparatur-2in1",
+      "key": "in_category",
+      "blind": "excluded_product_form",
+      "match": false
+    },
+    {
+      "productId": "13-olaplex-no3-hair-perfector",
+      "key": "excluded_product_form",
+      "blind": "excluded_product_form",
+      "match": true
+    }
+  ],
+  "metrics": {
+    "g0Cells": 13,
+    "g0Exact": 12,
+    "g0Disagreement": "12-guhl: key=in_category (mode-scoped, AP-12-CHARTERFLIP) vs blind=excluded (applied charter named exclusion while flagging its ground contradicts the frozen directions) — the charter question itself, routed to Nick",
+    "profileCells": 99,
+    "profileExact": 98,
+    "profileExactPct": 99.0,
+    "disagreements": [
+      {
+        "productId": "10-bali-curls-deep-repair-mask",
+        "field": "primaryFocus",
+        "key": "general",
+        "blind": "moisture",
+        "match": false
+      }
+    ],
+    "caveats": [
+      "Both lanes are same-model-family agents applying the same freshly written text; high agreement is repeatability evidence, not truth (§3 of the standard).",
+      "Blind independence is compromised for 6 products named in the standard's worked examples (blind-notes §3) — future cohorts need example-disjoint products.",
+      "Only 11 products are profile-comparable (#12 profiled by key only, provisional; #13 excluded by both).",
+      "maleate and peptide bond_route branches remain untested in-category (Olaplex maleate observed only as boundary evidence)."
+    ]
+  }
+}

@@ -1,5 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+
+import { JSDOM } from "jsdom"
 import { AppRouterContext } from "next/dist/shared/lib/app-router-context.shared-runtime"
 import React from "react"
 import { renderToStaticMarkup } from "react-dom/server"
@@ -1097,7 +1099,10 @@ test("score helpers: staircase scales onto the gap, German decimals, strict pars
   assert.equal(parseRunsheetPoints("viel"), null)
   assert.equal(parseRunsheetBaseline("4"), 4)
   assert.equal(parseRunsheetBaseline("11"), null)
-  assert.equal(parseRunsheetBaseline("4,5"), null)
+  assert.equal(parseRunsheetBaseline("4,5"), 4.5)
+  assert.equal(parseRunsheetBaseline("7.5"), 7.5)
+  assert.equal(parseRunsheetBaseline("4,25"), null)
+  assert.equal(parseRunsheetBaseline("0,5"), null)
 })
 
 test("touchpoint dates: +2/+4 weeks as ISO dates, shown as German dates", () => {
@@ -1520,6 +1525,63 @@ test("frequency chips: a product whose frequency was never asked gets none", asy
       }),
   })
   assert.ok(!markup.includes(CHIP_MARK))
+})
+
+// --- the „Wie oft" row: her answer next to the Idealplan's rhythm, on every product ----
+
+/** An entry's visible text, as a parser reads it (React's text separators drop out). */
+function entryTextOf(markup: string, categoryLabel: string): string {
+  return JSDOM.fragment(entryOf(markup, categoryLabel)).textContent ?? ""
+}
+
+test("frequency row: every product of hers shows her answer next to the Idealplan's rhythm", async () => {
+  const markup = await renderPage({ loadModel: async () => frequencyModel() })
+  const shampoo = entryTextOf(markup, "Shampoo")
+  assert.ok(shampoo.includes("Angabe: 2× pro Woche"), shampoo)
+  assert.ok(shampoo.includes("Idealplan: 1×/Woche"), shampoo)
+  // The verdict stays the step chip, inside the row.
+  assert.ok(shampoo.includes("2×/Wo · Ziel 1×/Wo — zu oft"), shampoo)
+  const conditioner = entryTextOf(markup, "Conditioner")
+  assert.ok(conditioner.includes("Angabe: 1× pro Woche"), conditioner)
+  assert.ok(conditioner.includes("Idealplan: nach jeder Haarwäsche"), conditioner)
+  assert.ok(!markup.includes("nicht vergleichbar"))
+})
+
+test("frequency row: a rhythm without a band shows both sides and „nicht vergleichbar“", async () => {
+  const markup = await renderPage({
+    loadModel: async () =>
+      model({
+        steps: [{ ...shampooStep, frequencyLabel: "nach Bedarf" }],
+        items: [{ ...shampooItem, frequency: "daily_1x" }],
+      }),
+  })
+  const shampoo = entryTextOf(markup, "Shampoo")
+  assert.ok(shampoo.includes("Angabe: Täglich"), shampoo)
+  assert.ok(shampoo.includes("Idealplan: nach Bedarf"), shampoo)
+  assert.ok(shampoo.includes("nicht vergleichbar"), shampoo)
+  assert.ok(!markup.includes(CHIP_MARK))
+})
+
+test("frequency row: „Weiß ich nicht“ and never asked are named, with no verdict", async () => {
+  const unknown = entryTextOf(
+    await renderPage({ loadModel: async () => frequencyModel({ shampoo: "unknown" }) }),
+    "Shampoo",
+  )
+  assert.ok(unknown.includes("Angabe: Weiß ich nicht"), unknown)
+  assert.ok(!unknown.includes("nicht vergleichbar"), unknown)
+  const neverAsked = entryTextOf(
+    await renderPage({
+      loadModel: async () =>
+        model({
+          steps: [{ ...shampooStep, frequencyLabel: "1×/Woche" }],
+          items: [{ ...shampooItem, frequency: undefined }],
+        }),
+    }),
+    "Shampoo",
+  )
+  assert.ok(neverAsked.includes("Angabe: keine Angabe"), neverAsked)
+  assert.ok(neverAsked.includes("Idealplan: 1×/Woche"), neverAsked)
+  assert.ok(!neverAsked.includes("nicht vergleichbar"), neverAsked)
 })
 
 test("frequency chips: weekly bands read compactly", () => {

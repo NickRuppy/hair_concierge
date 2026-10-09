@@ -3,32 +3,8 @@ import test from "node:test"
 
 import {
   isFreemiumAdmittedRoutePath,
-  requiresSubscriptionPath,
   shouldRedirectToReactivation,
 } from "../src/lib/supabase/middleware"
-
-// --- isFreemiumAdmittedRoutePath --------------------------------------------
-
-test("isFreemiumAdmittedRoutePath admits the app-shell page prefixes and /api/scan", () => {
-  for (const pathname of [
-    "/anwendung",
-    "/anwendung/wash_day",
-    "/chat",
-    "/chat/verlauf",
-    "/routine",
-    "/routine/current",
-    "/scan",
-    "/scan/ergebnis",
-    "/api/scan",
-    "/api/scan/analyze",
-    "/profile",
-    "/profile/edit",
-    "/tracker",
-    "/tracker/entries",
-  ]) {
-    assert.equal(isFreemiumAdmittedRoutePath(pathname), true, pathname)
-  }
-})
 
 test("isFreemiumAdmittedRoutePath does NOT admit any other /api/* prefix", () => {
   for (const pathname of [
@@ -52,76 +28,6 @@ test("isFreemiumAdmittedRoutePath does not admit onboarding, plan-start or unrel
   assert.equal(isFreemiumAdmittedRoutePath("/quiz"), false)
   assert.equal(isFreemiumAdmittedRoutePath("/reactivate"), false)
   assert.equal(isFreemiumAdmittedRoutePath("/admin"), false)
-})
-
-test("every admitted page prefix is itself still SUB_REQUIRED (admission is a carve-out, not a removal)", () => {
-  for (const pathname of [
-    "/anwendung",
-    "/chat",
-    "/routine",
-    "/scan",
-    "/api/scan",
-    "/profile",
-    "/tracker",
-  ]) {
-    assert.equal(requiresSubscriptionPath(pathname), true, pathname)
-  }
-})
-
-// --- shouldRedirectToReactivation -------------------------------------------
-
-test("expired trial history cannot enter free previews or keepsake APIs", () => {
-  for (const pathname of [
-    "/scan",
-    "/profile",
-    "/routine",
-    "/api/scan",
-    "/api/personal-plan/state",
-  ]) {
-    assert.equal(
-      shouldRedirectToReactivation({
-        pathname,
-        method: "GET",
-        freemiumScannerFirstEnabled: true,
-        hasTrialBillingHistory: true,
-      }),
-      true,
-      pathname,
-    )
-  }
-})
-
-test("flag off: always redirects to reactivation, admitted or not", () => {
-  assert.equal(
-    shouldRedirectToReactivation({ pathname: "/scan", freemiumScannerFirstEnabled: false }),
-    true,
-  )
-  assert.equal(
-    shouldRedirectToReactivation({ pathname: "/api/scan", freemiumScannerFirstEnabled: false }),
-    true,
-  )
-  assert.equal(
-    shouldRedirectToReactivation({ pathname: "/chat", freemiumScannerFirstEnabled: false }),
-    true,
-  )
-})
-
-test("flag on: admitted routes are exempted from the reactivation redirect", () => {
-  for (const pathname of [
-    "/anwendung",
-    "/chat",
-    "/routine",
-    "/scan",
-    "/api/scan",
-    "/profile",
-    "/tracker",
-  ]) {
-    assert.equal(
-      shouldRedirectToReactivation({ pathname, freemiumScannerFirstEnabled: true }),
-      false,
-      pathname,
-    )
-  }
 })
 
 test("flag on: non-admitted routes still redirect to reactivation", () => {

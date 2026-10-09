@@ -1,0 +1,55 @@
+[
+  {
+    "id": "image-clean-halo-minimum",
+    "lane": "image",
+    "phase": "new",
+    "intended": "assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)",
+    "source": "scripts/product-images/batch-run.ts",
+    "selectedTest": {
+      "file": "tests/product-images-batch-run.test.ts",
+      "name": "a clean high-res source is ok with no reason at all"
+    },
+    "originalHash": "ce470ce7d24e838e5c552875981896986e8fab503ba5d6c236bcb022333fe2c2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next564-image-mutations-new/image-clean-halo-minimum-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next564-image-mutations-new/image-clean-halo-minimum-fault.tap"
+    },
+    "restoredHash": "ce470ce7d24e838e5c552875981896986e8fab503ba5d6c236bcb022333fe2c2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next564-image-mutations-new/image-clean-halo-minimum-after.tap"
+    },
+    "keeperAssertionLines": [
+      151,
+      152,
+      153,
+      156
+    ],
+    "assertionStacks": [
+      156
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  }
+]

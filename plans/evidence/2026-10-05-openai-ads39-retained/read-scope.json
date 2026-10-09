@@ -1,0 +1,627 @@
+{
+  "files": [
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+      "lines": 423,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          140,
+          166
+        ]
+      ]
+    },
+    {
+      "file": ".nvmrc",
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+      "lines": 1,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "file": "docs/openai-ads-setup.md",
+      "sha256": "617e03b3d4e646f6cb76b0051c2b18488d897584e3ad02f9680cdf26f0714145",
+      "lines": 61,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          61
+        ]
+      ]
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/dist/pglite-CntadC_p.d.ts",
+      "sha256": "aa4bc50bc6ba80c59ad64dd2f58112b873b6b2f255e383dae69f3c4abb4a753b",
+      "lines": 1034,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          809,
+          847
+        ]
+      ]
+    },
+    {
+      "file": "node_modules/@supabase/postgrest-js/src/PostgrestClient.ts",
+      "sha256": "50121d8145aa9fd4b4f6b9382270db0343a6fdd6e2f56b5f0e8c872dc683d9c8",
+      "lines": 447,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          374,
+          455
+        ]
+      ]
+    },
+    {
+      "file": "node_modules/@types/node/crypto.d.ts",
+      "sha256": "4c829ab315f57c5442c6667b53769975acbf92003a66aef19bce151987675bd1",
+      "lines": 4545,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          255,
+          279
+        ],
+        [
+          2457,
+          2480
+        ]
+      ]
+    },
+    {
+      "file": "node_modules/esbuild/lib/main.d.ts",
+      "sha256": "161c8e0690c46021506e32fda85956d785b70f309ae97011fd27374c065cac9b",
+      "lines": 716,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          134,
+          149
+        ],
+        [
+          217,
+          233
+        ]
+      ]
+    },
+    {
+      "file": "node_modules/esbuild/lib/main.js",
+      "sha256": "bce772de103e1cbb118f1b7313916caa81f0e85461b3b6e3531607e7ed75ec85",
+      "lines": 2532,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          1190,
+          1205
+        ]
+      ]
+    },
+    {
+      "file": "node_modules/playwright-core/lib/client/browserContext.js",
+      "sha256": "5dfbb73458c765459cc6a538644e9cb1b0db3d046ee38c6ec194055710cc9daa",
+      "lines": 563,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          200,
+          230
+        ],
+        [
+          310,
+          342
+        ]
+      ]
+    },
+    {
+      "file": "node_modules/playwright-core/lib/client/network.js",
+      "sha256": "f4af0d2bc3bf0c57a55965480702e3d7e1fa750c444afce117631f97b337e1db",
+      "lines": 750,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          255,
+          314
+        ]
+      ]
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+      "lines": 275,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          9,
+          11
+        ],
+        [
+          49,
+          49
+        ]
+      ]
+    },
+    {
+      "file": "plans/openai-ads-conversions.md",
+      "sha256": "2e50029b7827c3fcaa91c57b5879549bbc7e7ba69d3520f8eb4f4c855b82b48c",
+      "lines": 55,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          55
+        ]
+      ]
+    },
+    {
+      "file": "src/app/api/billing/reconcile/route.ts",
+      "sha256": "961323aa73cfedd70c40597e205201c454d06f7007c568025edd78b01310a297",
+      "lines": 491,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          110,
+          135
+        ],
+        [
+          370,
+          430
+        ]
+      ]
+    },
+    {
+      "file": "src/app/api/openai-ads/context/route.ts",
+      "sha256": "62054bfc9d4cb3b4fc76d18253d10cb8729b9876e1e32779df2f44edd52cf222",
+      "lines": 11,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          11
+        ]
+      ]
+    },
+    {
+      "file": "src/app/layout.tsx",
+      "sha256": "cb59fbca704acc3352087e1dc3057b43690f510f8d40fc7c01319249b9846466",
+      "lines": 61,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          61
+        ]
+      ]
+    },
+    {
+      "file": "src/components/checkout/paypal-one-time-button.tsx",
+      "sha256": "a60cf97517aa398c79d87eb6132a72430708474bf81054c35496be911ffaa07b",
+      "lines": 895,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          558,
+          594
+        ]
+      ]
+    },
+    {
+      "file": "src/components/checkout/paypal-subscription-button.tsx",
+      "sha256": "df81932a397efbe358f595927ce40ad73425bcdf0e64aeafc2fe7fd9db11fae1",
+      "lines": 978,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          890,
+          930
+        ]
+      ]
+    },
+    {
+      "file": "src/components/quiz/result-offer-pricing.tsx",
+      "sha256": "461bf77fd54505e7fdcaa10c0630bfc942803fdb13ddc546ba7c745c6e91d33a",
+      "lines": 1720,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          1285,
+          1325
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/auth/route-classification.ts",
+      "sha256": "6a5c8c0a283054ab108779a6a8f23764a4919b67adea2f0a94cb389abb4d57a6",
+      "lines": 220,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          58,
+          77
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/openai-capi.ts",
+      "sha256": "56d1c371daa47f9ac41b57f311b61b5db9a34fce7b59f56d342bd79ffe575767",
+      "lines": 41,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          41
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/types.ts",
+      "sha256": "7e6a656110c62d2c7796c190153082319abce75013ccada4df1cade8eeac22ec",
+      "lines": 29,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          29
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/billing/analytics-outbox.ts",
+      "sha256": "e81d7519e58438a54760efac9aa1b92227f028077fef049595facc84d480bef2",
+      "lines": 506,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          506
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/billing/types.ts",
+      "sha256": "f99c6f799c5c79a4218a2425fbd1b4ad4565c7f0592d1419b45ae6cb09e5047b",
+      "lines": 255,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          255
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/cookie-consent.ts",
+      "sha256": "d5759e5e356628f91ffc58a37cd8ad25720078f60499c5a260bfd4c14094161c",
+      "lines": 47,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          47
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/funnel/client.ts",
+      "sha256": "9c3728cffff3810d829afd198c2406e35cf6edb3d4c68dbfc5a1cfa845e100a8",
+      "lines": 213,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          213
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/funnel/cookie.ts",
+      "sha256": "522741b96f60560c02f92a5445428380de02231b2b3724b4143dfc6da14f7b48",
+      "lines": 165,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          165
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/funnel/packages.ts",
+      "sha256": "66cab34518f29604a37c7a32721f74ca5c930f82a12dcf293db69e3b90a080be",
+      "lines": 94,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          1,
+          65
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/openai-ads/browser.ts",
+      "sha256": "30c0a0b871aac8a5bf6f2131d7c48a6643f71dc7c31cca298196bed4ab288ab3",
+      "lines": 280,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          280
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/openai-ads/event-payload.ts",
+      "sha256": "62b7d2a3ee91cd3eb5d760394542f852da678400864549944199313ba58c670b",
+      "lines": 169,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          169
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/openai-ads/server/capi.ts",
+      "sha256": "fa4134a2a470d3b54dfd85677b3d7d71c1f3c6b2e873df6f446eb5d97c43ef53",
+      "lines": 98,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          98
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/openai-ads/server/consent-cookie.ts",
+      "sha256": "2de7b268ec1e0af155449ff4dcb16bf096b54799ff12226abfb29d36f15a0a7e",
+      "lines": 43,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          43
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/openai-ads/server/context.ts",
+      "sha256": "f1768e840ee30bf873a5becd515f3dc7fb59226aeb54ba0b12bd9d64c0a4bbc0",
+      "lines": 227,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          227
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/supabase/admin.ts",
+      "sha256": "bd6ec1538d65a01f82b3f55b2839f0ac347d617c6de29d13cea4b0eff737386a",
+      "lines": 14,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          14
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/supabase/middleware.ts",
+      "sha256": "b46773cf21b880cb35d2967d4a882be1c5c59c53f2416607b60d3cb8a4c862a7",
+      "lines": 922,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          62,
+          85
+        ]
+      ]
+    },
+    {
+      "file": "src/providers/openai-ads-provider.tsx",
+      "sha256": "2dc7f9b0fff2c165e9c43fb086b08eab9acc04d31b9bf2e9d23b88ace2354234",
+      "lines": 21,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          21
+        ]
+      ]
+    },
+    {
+      "file": "supabase/migrations/20260915141251_openai_ads_consent_context.sql",
+      "sha256": "61c286bba22f14e1ba4b00834f21ff9f9b65dd5325fbec15934bf9cb57cd3a6d",
+      "lines": 107,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          107
+        ]
+      ]
+    },
+    {
+      "file": "supabase/migrations/20260915141328_openai_ads_billing_delivery.sql",
+      "sha256": "825003754dc66bfdd496f8c371affeebc463193d4a1593c6a74ccba2ab2fbaf1",
+      "lines": 70,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          70
+        ]
+      ]
+    },
+    {
+      "file": "supabase/migrations/20260915145322_openai_ads_canonical_test_exclusion.sql",
+      "sha256": "ae22b68365a7304960fd108d71c2cf04c114dc094a8eb2637fbd50a2a5a9b1f8",
+      "lines": 37,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          37
+        ]
+      ]
+    },
+    {
+      "file": "tests/billing-analytics-outbox.test.ts",
+      "sha256": "d1fcd8bf8b29dc818b043ddded2fc9977239818400ededba0fdccb0bbb6e5242",
+      "lines": 817,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          685,
+          780
+        ]
+      ]
+    },
+    {
+      "file": "tests/billing-reconcile-analytics.test.ts",
+      "sha256": "8a8e25f2fc0fe25d2785fb163d1278fd1b7793698c78806484a18e1f8a4791dc",
+      "lines": 718,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          680,
+          724
+        ]
+      ]
+    },
+    {
+      "file": "tests/openai-ads-browser-integration.test.ts",
+      "sha256": "79bec4c6528447448c437d0b62dd2422e0314adb105d5e3c9c31338c6407da74",
+      "lines": 275,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          275
+        ]
+      ]
+    },
+    {
+      "file": "tests/openai-ads-browser.test.ts",
+      "sha256": "853c8174781df2bc02643c4670a27689229fa9bf05fbf4dacfa1309941c951d7",
+      "lines": 249,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          249
+        ]
+      ]
+    },
+    {
+      "file": "tests/openai-ads-capi.test.ts",
+      "sha256": "37f05512230822da2f55ae588e09fd4504ee0ea929c763597ff1a492d55e3f63",
+      "lines": 249,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          249
+        ]
+      ]
+    },
+    {
+      "file": "tests/openai-ads-consent-cookie.test.ts",
+      "sha256": "a7e331e2582b73560eb16f3b781550ff26d216bce7488c49573d7691b75dd3c5",
+      "lines": 24,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          24
+        ]
+      ]
+    },
+    {
+      "file": "tests/openai-ads-context-postgres.test.ts",
+      "sha256": "6f71e8abf2c6745df293a6f1d112679de27ac506b9ad09e45dec71d304fc86a0",
+      "lines": 142,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          142
+        ]
+      ]
+    },
+    {
+      "file": "tests/openai-ads-context-route.test.ts",
+      "sha256": "c3a5b4c7286a3e6ba850ca429682f4d831a67949e872f43f0da6909a3399a186",
+      "lines": 160,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          160
+        ]
+      ]
+    },
+    {
+      "file": "tests/openai-ads-event-payload.test.ts",
+      "sha256": "c1bc131cd9816082b1b43b2b6a4640d42509fc86ffbbc2548ac38fcfe5523fc4",
+      "lines": 185,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          185
+        ]
+      ]
+    },
+    {
+      "file": "tests/openai-ads-live-postgres.test.ts",
+      "sha256": "d8e70ba913504e9188afb2408399c3d4615db7f78e49a421efe18102a62db89c",
+      "lines": 315,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          315
+        ]
+      ]
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+      "lines": 10,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          10
+        ]
+      ]
+    }
+  ],
+  "limits": [
+    "No native/Chromium/PGlite/live Postgres execution, source mutation, compiler/build, product/test module import, provider request, DB connection or environment-value/file inspection. Only static TypeScript parser library loaded.",
+    "Full eight test files including every fixture/table/helper and all nine nested bodies; full five Ads owner modules, browser consent/funnel support, three actual migrations, live provider/route/adapter and billing outbox/type owners.",
+    "Checkout, middleware/reconcile, package registry and previously audited billing test siblings are operative slices only. No new whole billing/Stripe/PayPal semantic credit or transitive all-import closure.",
+    "Actual installed Playwright routing/fulfill, esbuild output transport/types, Node crypto types, PostgREST rpc source and PGlite query/exec types inspected. Native engines, browser executable, ICU currency tables, SQL engine internals, full Supabase/Auth/Next dependency closure and remote OpenAI SDK were not audited.",
+    "Browser SDK and context API are locally implemented stubs; the real browser helper/consent code is bundled. Live Postgres uses a disposable database with synthetic predecessor tables and actual migrations, not a production schema copy. Optional invocation gates remain.",
+    "No D because supported pending activation is documented and current production callers exist. Historical production/migration/verification claims in commit6364b47e are history only and were not reverified remotely.",
+    "No C means no intended-fault run or control recipe is needed/proposed. Held F fixes require separate authorization/scope, including new inputs/observations; no repairs included.",
+    "Every before/transfer/cut file is identical. This is a no-cut receipt, not deletion credit. Root current607/coverage status is parent-owned and unchanged."
+  ],
+  "history": {
+    "commit": "6364b47e7375e196b68ccf5537cbb2f3ac54f1d1",
+    "read": "bounded git log and full commit message/stat for Ads owners/tests/migrations; current docs/plan read fully",
+    "meaning": "Feature added for consent-respecting trial/purchase reporting and public landing measurement; activation pending does not establish retirement."
+  }
+}

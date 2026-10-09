@@ -1,0 +1,153 @@
+{
+  "directory": "/tmp/test-audit-scanner119-tools-e5gg36wq",
+  "status": "Prepared main-only conditional tooling; independent acceptance/runtime pending; no removal credit",
+  "pinsSHA256": "b1619bebc5540a7ee42e2ed0ec18431cc2f9a52c43c471b3cefe9290c1d04d5f",
+  "proposal": "/tmp/test-audit-scanner-residual119",
+  "proposalManifestSHA256": "8f982b06fbe8e5481e90c5723c02ab18ebe9d26e46b4e5975f5937e849151048",
+  "counts": {
+    "files": 21,
+    "snapshots": 63,
+    "beforeAST": 119,
+    "transferAST": 119,
+    "cutAST": 105,
+    "beforeNativeLiteral": 128,
+    "transferNativeLiteral": 128,
+    "cutNativeLiteral": 114,
+    "candidates": 14,
+    "keepers": 7,
+    "changedKeepers": 5,
+    "unrelatedExact": 98,
+    "allUnchangedSurvivors": 100,
+    "heldFExact": 2,
+    "controls": 18,
+    "TsMutantsSyntaxParsed": 16,
+    "SqlTextRecipesOnly": 2
+  },
+  "guards": {
+    "original76Exact": true,
+    "readset": 230,
+    "localClosure": 236,
+    "dependencyFiles": 5020,
+    "distributionTrees": 32,
+    "knownDormantSourceCut": "Explicit accepted first-time current closure capture; no oldFree67 source guards imported; original76 unchanged",
+    "identityPolicies": "Exact inherited Node/Git/TypeScript/shared-config and packed policy9crva_8q"
+  },
+  "staticChecks": [
+    {
+      "path": "/tmp/test-audit-scanner119-tools-e5gg36wq/final-static-check-1.txt",
+      "sha256": "1eaa0971596bd09abf9c202caf87076ac84dda3c0fa1b64b4a85ffe5beb0ff96",
+      "exit": 0
+    },
+    {
+      "path": "/tmp/test-audit-scanner119-tools-e5gg36wq/final-static-check-2.txt",
+      "sha256": "df68ec7bb8d9604c3cfe46eb885df10f5b0c467b48df7cea681b5b9fd9d0b467",
+      "exit": 0
+    },
+    {
+      "path": "/tmp/test-audit-scanner119-tools-e5gg36wq/final-static-check-3.txt",
+      "sha256": "22415ceae40912cac57d6d379d9af0ac7c72a99c73dfb2dea30ead4b0d6e8736",
+      "exit": 0
+    },
+    {
+      "path": "/tmp/test-audit-scanner119-tools-e5gg36wq/final-static-check-4.txt",
+      "sha256": "c91efb7d43c0a0ab11cc25627d186cc791ff21954d0515936516e52f72fc3a87",
+      "exit": 0
+    }
+  ],
+  "syntheticShapes": 650,
+  "repositoryWrites": 0,
+  "nativeTests": 0,
+  "ownerImports": 0,
+  "network": 0,
+  "childrenStartedByTools": 0,
+  "runtimeAcceptance": "All18 actual intended assertion controls and full128/128/114 native remain main-owned. SQL recipes must fail at final count assertion, not setup. M13 explicit message plus operator/FIRST frame; main inspects actual:null expected:true fields.",
+  "readableFinalCode": "/tmp/test-audit-scanner119-tools-e5gg36wq/final-code-current.txt",
+  "finalCodeDiff": "/tmp/test-audit-scanner119-tools-e5gg36wq/final-code-current.diff",
+  "earlierCodePreviewLimit": "Pinned full-final-code.txt/final-template-delta.patch predate final PIN_SHA substitution only. final-code-current files show exact final entrypoint seals.",
+  "toolFiles": [
+    {
+      "file": "operator-guard.cjs",
+      "sha256": "c717d889712ea25bd1d65249b60e14ebb2c43c6e9172b09f9a39156f7fabef0d"
+    },
+    {
+      "file": "operator-edit.cjs",
+      "sha256": "465be39962f79701f8f59d4a55bfd301789c840b94d490ef2c027f514b1407c1"
+    },
+    {
+      "file": "operator-proof.cjs",
+      "sha256": "8bf57575777342db25b87980f3fa408c9cb24db334b60505255c1875af106cc6"
+    },
+    {
+      "file": "operator-run-controls.cjs",
+      "sha256": "5f75556b152053a4a6c8ab12fb280a8a5c833d4c484e16c46a29fb369f1681e0"
+    },
+    {
+      "file": "operator-readonly-preload.cjs",
+      "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e"
+    },
+    {
+      "file": "operator-native-proof.cjs",
+      "sha256": "12a42b13f8f20091f6db09fb40774a066c216ce7d53a27d2ed8db77a782a3efc"
+    },
+    {
+      "file": "proof-attestation.cjs",
+      "sha256": "ca8af9a7f477930554c86e4bc91c22fee7a9f4ffbd446fa8679465caa2cf3d9f"
+    },
+    {
+      "file": "static-integrity.cjs",
+      "sha256": "e2640bceec9cf2ea1df4d381b66497a7493104b810e26ab6ae1ce1bd9de511bf"
+    },
+    {
+      "file": "prepare-tools.py",
+      "sha256": "d4b2c6771c22dfa8c862a8918d0bbf610e39660304fd285947439e95afb08494"
+    },
+    {
+      "file": "prepare-pins.cjs",
+      "sha256": "946fc90748b75a657447c3c667ffbc98fde789038f1dd7c6c8cd8b2e985c5362"
+    },
+    {
+      "file": "finalize-tools.cjs",
+      "sha256": "cfdbe263e8c629ecb9b4ac2b48a698ead297087b0ce4465c79374aaa05c2b57d"
+    },
+    {
+      "file": "README.md",
+      "sha256": "f5ca8588b3b2ff2c7c952a27ed2ec36a85ae42e3770edfec986587d4070f8440"
+    },
+    {
+      "file": "operator-pins.json",
+      "sha256": "b1619bebc5540a7ee42e2ed0ec18431cc2f9a52c43c471b3cefe9290c1d04d5f"
+    },
+    {
+      "file": "operator-controls-normalized.json",
+      "sha256": "c530ab4b8f64072cc54f192a9f4f316345010313338e1df8e2f395be57bdba92"
+    },
+    {
+      "file": "operator-candidates.json",
+      "sha256": "0a42724b7d30b0aa1eb917600e0fc9c2a1a0e33532ea8a025311919ca493a1d1"
+    },
+    {
+      "file": "operator-evidence.json",
+      "sha256": "66ead2f73d38f6b7f0eb270eb5fcb7e948b4ef25285ea97f9858266261b2d108"
+    },
+    {
+      "file": "known-dormant-cut-disposition.json",
+      "sha256": "116d9cf31c51a9552bd779308db309756d2ead9f01f02e1dd786daeae15de72f"
+    },
+    {
+      "file": "finalization-receipt.json",
+      "sha256": "67c9cc778e21b974856b22e46181883f226f6decbf808d2593def054e4f232a7"
+    },
+    {
+      "file": "full-native-command.json",
+      "sha256": "bf70ece74f898fa2171593901b39f7ec6788b80a515065b9c7ef4945893b4cee"
+    },
+    {
+      "file": "final-code-current.txt",
+      "sha256": "e14cfdab3f94ebcdac3fafb6fe9ef33051225441a49a1f5541c2725a4d565abd"
+    },
+    {
+      "file": "final-code-current.diff",
+      "sha256": "1db884d46fe162f55dbcfd305fc38e7c091dd468343757f803ab977710e63d2a"
+    }
+  ]
+}

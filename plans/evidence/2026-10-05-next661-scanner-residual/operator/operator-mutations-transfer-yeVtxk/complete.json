@@ -1,0 +1,975 @@
+{
+  "phase": "transfer",
+  "verified": 18,
+  "controlIds": [
+    "M01",
+    "M02",
+    "M03",
+    "M04",
+    "M05",
+    "M06",
+    "M07",
+    "M08",
+    "M09",
+    "M10",
+    "M11",
+    "M12",
+    "M13",
+    "M14",
+    "M15",
+    "M16",
+    "M17",
+    "M18"
+  ],
+  "cleanRuns": 36,
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA": "b1619bebc5540a7ee42e2ed0ec18431cc2f9a52c43c471b3cefe9290c1d04d5f",
+  "receiptSHA256": "6d1f6dc0d58dfc8675425d09072ec05f17a262e22a56093f088af8b7368ee8b5",
+  "allTestHashes": {
+    "tests/scan-alternative-comparison.test.ts": "f14accb79b547b8e2ae03d2209ca488c5293d68b26de9761759dd81a6f800778",
+    "tests/scan-analytics.test.ts": "1dff0ddbcec5ca5f07d4cd404ac43b419c6b077e85cbf6c39982390e7934871e",
+    "tests/scan-catalog-search-typo.test.ts": "07e11e116311151d810306a03a939a3b65761113ca4eb48040c98608e7fd9897",
+    "tests/scan-masked-alternative.test.ts": "1fd31b18c08166145bd3cd145c5c7e0ae5a7e099936b389d8d40a2154cfd3494",
+    "tests/scan-name-only-submission-migration.test.ts": "567dab97d0a1046a414ff62e3e5c88d448ec2d60b125f668a8270eaf57abc618",
+    "tests/scan-observability.test.ts": "4fad30a5f6d04dbae371b31b687373186c846d2d59a84bcef5c1044144058782",
+    "tests/scan-pending-submission.test.ts": "ce3ae6eec1ea9c7744d429f42ae6745a1897576d768a97d698334021aad0a5b3",
+    "tests/scan-presentation-rows.test.ts": "224e8072febd335de814e1e0404d59fddb47bd3674b22298bf9943d47fabf8e8",
+    "tests/scan-product-presentation.test.ts": "df169295dd5af81c3f1ff27050f1ceba23902530f09a6eb2ec80606289453d8b",
+    "tests/scan-profile-context.test.ts": "db1d57b6d6c5e0d2bdf5fd491380b9de5fa013155140ecb777d8569c593bb301",
+    "tests/scan-resolve-anti-leak.test.ts": "0ee63b96304474779ef557c2e0681de50820143e10e532434f29762b0a602954",
+    "tests/scan-role-selection.test.ts": "29d0c60a38ec3e47102da2fa4c130dfa3f7c01ff5232d8fd99a9e43c32adeb12",
+    "tests/scan-submit-dm-event-log.test.ts": "03ca04ca2493e7065d49908e2a7abc0c73dc12ecaefcb71a1f0af8f3147dfbbb",
+    "tests/scan-trigger-cards-ui.test.tsx": "7316d3546d9d53002c5db75a42b5c8ba05f89bad6f8a5636bba6a28a273f1ec3",
+    "tests/scan-trigger-session-marker.test.ts": "d02e7219d09ec8d31f287cceda5f11dd99f91be3835a48400fd0bfbfc712ae1f",
+    "tests/scan-verdict-access.test.ts": "9995cb859942dd65316448cff235f9d9781d6f09c56517048f816b4783d6a0b8",
+    "tests/scanner-analytics-context.test.ts": "5919aab593441fca35598b5169dc38530325fe0a4e35c47879f07220b89e2e5e",
+    "tests/scanner-offer-analytics.test.ts": "9e54b9c2cfc4b0b95ff3a339bf92158b9d43dbe35d9c73b73d2745401cb43282",
+    "tests/scanner-quiz-view.test.ts": "ff83b01c9de59739fbbfcbd3f80e3142e22f1ff576094a6b428b93ba56d93fa7",
+    "tests/scanner-result-artifact-email.test.ts": "fc43bac2b3ee3199d55e3e9db3d464c489a4c2a0fbaaac00ef30133cdb554455",
+    "tests/scanner-trial-offer.test.tsx": "054d6897fd9a11c332562d8a5052295b2f668e3677ba4bd155706a0467081205"
+  },
+  "sourceGuards": [
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
+    {
+      "file": ".nvmrc",
+      "sha": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/package.json",
+      "sha": "a540c379fd1d820810793681d25fa7ad5dadfcee2b190d14a6553fdb469cfe3c"
+    },
+    {
+      "file": "node_modules/next/dist/server/web/spec-extension/response.js",
+      "sha": "68a5a07540d57a4beb3275fddd0502fd5ef9a42986b414c0bcee99a3f9033366"
+    },
+    {
+      "file": "node_modules/typescript/lib/typescript.js",
+      "sha": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675"
+    },
+    {
+      "file": "node_modules/typescript/package.json",
+      "sha": "822ef7ca6452205657b6288b066481ecf508bfbf43455d715cf7d3ec457561e6"
+    },
+    {
+      "file": "package-lock.json",
+      "sha": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799"
+    },
+    {
+      "file": "package.json",
+      "sha": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": "plans/freemium-scanner-first/plan.md",
+      "sha": "a5a795fabb557e03aed778067b75cb06b7039f4e991cc4ef072872e34ce4894b"
+    },
+    {
+      "file": "scripts/mobile/profile-fixture.ts",
+      "sha": "f95b44a03e3d58db43e518224b0c969245ff1a94a07cc800f21fe14c0e270ed7"
+    },
+    {
+      "file": "src/app/api/funnel/session/route.ts",
+      "sha": "da657d3e0ab9db46f2c569ae06c08d4a10d98ca64e7dcb8eb336d3513f11ea3d"
+    },
+    {
+      "file": "src/app/api/scan/resolve/route.ts",
+      "sha": "9502eac574fbc19276f1c994b47a82f9c7c22e29a4f7bf89438203ed5a835ad4"
+    },
+    {
+      "file": "src/app/api/scan/search/route.ts",
+      "sha": "98cb7df79a80ae7ab18e3a85cbdceb1c8b48b7ac110d5b1c08adc2ff41f8ef2e"
+    },
+    {
+      "file": "src/app/api/scan/submit/route.ts",
+      "sha": "b509ae15cc10aee607e086ac10c843d77668386dc546a6c640a167cb729c2dad"
+    },
+    {
+      "file": "src/components/billing/scanner-trial-offer.tsx",
+      "sha": "cdc36a0c78ba3d8d599836b6192416699f6d56d3983b2f334946713cfffdc58f"
+    },
+    {
+      "file": "src/components/billing/trial-offer.tsx",
+      "sha": "4051ca8d025e47a2d1bd1d32796bdba7791953087493980148d672837a05374a"
+    },
+    {
+      "file": "src/components/personal-plan-products/stage3-product-copy.ts",
+      "sha": "e20722dc17605dbab0c49a7302f3f93691ed95cfda05596f3cc75e083cd868c2"
+    },
+    {
+      "file": "src/components/scan/scan-flow.tsx",
+      "sha": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876"
+    },
+    {
+      "file": "src/components/scan/scan-trigger-cards.tsx",
+      "sha": "47d4a89f7588d586b0838ded266aeb447262dd9f326496c15f43c4c4ea271662"
+    },
+    {
+      "file": "src/components/ui/icon.tsx",
+      "sha": "4db2f41605245aae7210dd610d5ee26423f8b1883e6b0e632c50f6a28c7b953e"
+    },
+    {
+      "file": "src/funnels/packages.json",
+      "sha": "fd299fc9fd61f06531fcc9b66fd497fd14c25a38214f8db241dab4e3a0131811"
+    },
+    {
+      "file": "src/funnels/quizzes/registry.json",
+      "sha": "4dce2f7f0eaf19ba28dc063b8a9cd70884a8a468bb401b8ff214853601c44947"
+    },
+    {
+      "file": "src/funnels/quizzes/registry.ts",
+      "sha": "225fa3638b4406aa711b4afda77ef748e24dd35e6b29bcd46f4d3ac6fe320bbe"
+    },
+    {
+      "file": "src/lib/analytics/destinations/customerio.ts",
+      "sha": "06847f20cd2c8c2e0f11947469c787cbb8d357eefc9b65a241efec5bc4c6543b"
+    },
+    {
+      "file": "src/lib/analytics/destinations/meta.ts",
+      "sha": "5988b93df2bc11dba72bc719cc9d7b098190fa4d09267b5f12c6c2d2372227f0"
+    },
+    {
+      "file": "src/lib/analytics/destinations/posthog.ts",
+      "sha": "50a10cb0bdebec1ae539d8fbf83e1987b632995758d6a7bc5b1f3bd6d49db766"
+    },
+    {
+      "file": "src/lib/analytics/events.ts",
+      "sha": "48ce55be88f197549909df5014cfd51334d3238efc6b7ecb63456b48ad137238"
+    },
+    {
+      "file": "src/lib/analytics/page-url.ts",
+      "sha": "1cdde9d294fca5daf861b63bfb178a4458a6b8fd44d14b37b3d30d05a4551428"
+    },
+    {
+      "file": "src/lib/analytics/routes.ts",
+      "sha": "b1ea998155308a84bb64fe1a0c96469cb431dfc0992dbc29b9e2d7efdaa9acf2"
+    },
+    {
+      "file": "src/lib/analytics/runtime/bounded-fifo.ts",
+      "sha": "43f423d96bb6125c6255d3aa7569053761122cdf304a39805ffdeb5882bcbed4"
+    },
+    {
+      "file": "src/lib/analytics/runtime/environment.ts",
+      "sha": "ff05a8672de300fddd0779669947a4ee0f2b0e62276c881fa94d525d48f11a4f"
+    },
+    {
+      "file": "src/lib/analytics/runtime/posthog.ts",
+      "sha": "0d2152292c62cec544e5bcb44f07f5c28238684ef1d1272826cf14f575c04591"
+    },
+    {
+      "file": "src/lib/analytics/scanner-quiz-view.ts",
+      "sha": "07ebf5a6869d33b52110f7ffd969b012cdf955ff1e84c0b934dd8dba2534e9db"
+    },
+    {
+      "file": "src/lib/analytics/track-app-event.ts",
+      "sha": "d72b4009f31a5f4fbbfc953956e46a5962282d72bf9d9daf0382500eadf4969d"
+    },
+    {
+      "file": "src/lib/auth/intake-state.ts",
+      "sha": "536e205c575026bd76a56fec5e25b62c234bae0ac05e18797e918fd26c11eab2"
+    },
+    {
+      "file": "src/lib/auth/route-classification.ts",
+      "sha": "6a5c8c0a283054ab108779a6a8f23764a4919b67adea2f0a94cb389abb4d57a6"
+    },
+    {
+      "file": "src/lib/auth/unauthenticated-redirect.ts",
+      "sha": "bd6703ab7d835709100f2870c7ad950b1b66837f6e2f0b9f78836f8cdb6a1231"
+    },
+    {
+      "file": "src/lib/billing/personal-plan-one-time-consent-copy.ts",
+      "sha": "de99a4ad49ef4720b0f5bf08420b1805ceb691b670a575bba1aa89fc87b25fc9"
+    },
+    {
+      "file": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "sha": "9780ca72927361d64c493de99f1780e7b9a58800e3fb52ea0fbad8227b97a544"
+    },
+    {
+      "file": "src/lib/billing/pricing-catalog.ts",
+      "sha": "bf01815cb824ef9cd3346be051d8f94868c9b916c593b2d2cd8e1140bc8dfae7"
+    },
+    {
+      "file": "src/lib/billing/purchases.ts",
+      "sha": "3c4ef0bc20b982ec38e7eff8f3a1e00b40b47412fc5d822151e117e85e53a6b6"
+    },
+    {
+      "file": "src/lib/billing/subscriptions.ts",
+      "sha": "a6ba77a92481e13f6f03bc7b1c8d7fee75c02facfeb8ce747493bc64ecca995c"
+    },
+    {
+      "file": "src/lib/billing/trial-access-projection.ts",
+      "sha": "6bd7a205a589005d2301cf77511709b26f63076538f953e1da77d57e567ba17f"
+    },
+    {
+      "file": "src/lib/billing/trial-offer.ts",
+      "sha": "14083f0eb5677db3063e22ab585ca9779a51fac4e04ab8852ee2e11f087d4725"
+    },
+    {
+      "file": "src/lib/billing/trial-policy.ts",
+      "sha": "a88f33d5abfefd705629a0ca8ef739b893dd1908aeec639627916fc815daef02"
+    },
+    {
+      "file": "src/lib/billing/types.ts",
+      "sha": "f99c6f799c5c79a4218a2425fbd1b4ad4565c7f0592d1419b45ae6cb09e5047b"
+    },
+    {
+      "file": "src/lib/bondbuilder/constants.ts",
+      "sha": "f08d9c9133b6a3a937be2591d5ccc3d9520303049e256bfe8adf96d809d95400"
+    },
+    {
+      "file": "src/lib/conditioner/constants.ts",
+      "sha": "755f034a482a19d41e25bcfaef244227ea3884f6a410983b63011d8b7cb065bb"
+    },
+    {
+      "file": "src/lib/cookie-consent.ts",
+      "sha": "d5759e5e356628f91ffc58a37cd8ad25720078f60499c5a260bfd4c14094161c"
+    },
+    {
+      "file": "src/lib/customerio-tracking.ts",
+      "sha": "499afed0161ee2fabaae9d89d4b96934bb697258638b01261e91f20b58e0c93a"
+    },
+    {
+      "file": "src/lib/customerio/result-artifact-service.ts",
+      "sha": "b86f1fe35d378513dc7c9ff4b4d2e9906ea50124dcb9dfd54a7635e72d7d7f47"
+    },
+    {
+      "file": "src/lib/customerio/scanner-result-artifact.ts",
+      "sha": "65f0881a0652eb7b5a8d017ede32be35ef63a9078e9949e0d6b6750c229b8314"
+    },
+    {
+      "file": "src/lib/customerio/transactional.ts",
+      "sha": "5756d3bda21c0be6cbc1ed8885846a646edd8560f22c8b7fc5ac6601c62b95e2"
+    },
+    {
+      "file": "src/lib/deep-cleansing-shampoo/constants.ts",
+      "sha": "1b332ae25648ec77cd7ad3a30a2fde906630bf265614506a52dc0dfd1381a25f"
+    },
+    {
+      "file": "src/lib/discovery/flag.ts",
+      "sha": "899bfb16057f87e035f0ee3f114dd0c223acf99059d16de000663fa36d26926f"
+    },
+    {
+      "file": "src/lib/discovery/participant.ts",
+      "sha": "2e46130e2b8329f74873be55915632ca658a45c399e7b41e915b1cef053386c1"
+    },
+    {
+      "file": "src/lib/dry-shampoo/constants.ts",
+      "sha": "c2a05fc0941545369abe2cbc996eb9367e7a33227ca9305a9e14479201b5c25f"
+    },
+    {
+      "file": "src/lib/email-deliverability-shared.ts",
+      "sha": "97928eee799f71cb6a2fc3b01f9506e410d31b630bcb29f633f7c45e067a2afa"
+    },
+    {
+      "file": "src/lib/entitlements/access.ts",
+      "sha": "57b8489a23e69849cfeaa1f4a82df9ba7845c8a52cbcd96cea8c19e6a4657083"
+    },
+    {
+      "file": "src/lib/entitlements/entitlements.ts",
+      "sha": "faa22816f34f6a818bbf80bdebac6b627aaa1a12470cef7ae7ead627cb49cf59"
+    },
+    {
+      "file": "src/lib/entitlements/flag.ts",
+      "sha": "77e346855d4d309cb4cf87044f64a7a26478382875e8145ce64d3dd263937214"
+    },
+    {
+      "file": "src/lib/entitlements/free-reveal.ts",
+      "sha": "9e0adf219ce1576f080bcf959a7d7c5b47d8a7a29bac3dae4a9ba5ca168ff93e"
+    },
+    {
+      "file": "src/lib/entitlements/index.ts",
+      "sha": "3fd0df6a57b4a211830d17917e166fffe9337e7aeaa4de8cc66f2fad6fb48087"
+    },
+    {
+      "file": "src/lib/funnel/analytics-context.ts",
+      "sha": "a866f7429ea693f0a0fd1a4e1c471e7c3922448a4904548fcc6018b212ae7aa6"
+    },
+    {
+      "file": "src/lib/funnel/client.ts",
+      "sha": "9c3728cffff3810d829afd198c2406e35cf6edb3d4c68dbfc5a1cfa845e100a8"
+    },
+    {
+      "file": "src/lib/funnel/cookie.ts",
+      "sha": "522741b96f60560c02f92a5445428380de02231b2b3724b4143dfc6da14f7b48"
+    },
+    {
+      "file": "src/lib/funnel/flags.ts",
+      "sha": "981bd9436dae7c1fc7cbd8d6dc60e3d6bbaa9dc3bea994e0a33fac525f02528d"
+    },
+    {
+      "file": "src/lib/funnel/journey-kind.ts",
+      "sha": "6088e7e2554b37b0d2da5231dd5361fdeed8cd2ebf1dae5286e107d7543efe88"
+    },
+    {
+      "file": "src/lib/funnel/offer-presentation.ts",
+      "sha": "e38f85f885a9e94b35abef31ed3a73368fb24a8c23bcebe3ba88e5d6602eb4f4"
+    },
+    {
+      "file": "src/lib/funnel/organic-offer-media-experiment.ts",
+      "sha": "8e0882803faa756e7c103c53a16b857a73db8ac9e5f9c261ea013743f7902887"
+    },
+    {
+      "file": "src/lib/funnel/packages.ts",
+      "sha": "66cab34518f29604a37c7a32721f74ca5c930f82a12dcf293db69e3b90a080be"
+    },
+    {
+      "file": "src/lib/funnel/personal-plan-pricing-experiment.ts",
+      "sha": "2df4e53841c87e421524c1cbaaeb0daeed9ac6d2a467cd8ae4da849faf2af516"
+    },
+    {
+      "file": "src/lib/funnel/personal-plan-pricing-qa-token.ts",
+      "sha": "ac0fce778e1594083573a8b4fdb1f8ed5aa00e8d9427338856f8ae22781a0cf4"
+    },
+    {
+      "file": "src/lib/funnel/server.ts",
+      "sha": "775feb24b57ae2c7d71c4dec2f5ef4a8781fefaf355699331718fc44f92380dd"
+    },
+    {
+      "file": "src/lib/help/info-tips.ts",
+      "sha": "897afb7bd7bbf9f336fe01b66ad95b8872cf6b7a264313716b88e4c338abfe1e"
+    },
+    {
+      "file": "src/lib/leave-in/constants.ts",
+      "sha": "9ccffc3c5faaa69ab6ed436f7af56aa0fa867ae6e898a71f2bd8a7d78410a7f4"
+    },
+    {
+      "file": "src/lib/mask/constants.ts",
+      "sha": "f557bc2ae0818d96819360ac4c015ac3fa53c580352ba024993465503911b63c"
+    },
+    {
+      "file": "src/lib/meta-pixel.ts",
+      "sha": "56bc9d532d658f0a2d9d8278d01a437b1ec10b9e781ec8ec4476396f3569016c"
+    },
+    {
+      "file": "src/lib/observability/offer-experiment.ts",
+      "sha": "9c0d5f6b8038b8dcbeafa3ac0efd7de126965e50022dbed7d2117e606ea20487"
+    },
+    {
+      "file": "src/lib/observability/scan.ts",
+      "sha": "ef86d2acf76deb1a0862d0118a8d64d6c0dc889f4687b517e490337bce525e1d"
+    },
+    {
+      "file": "src/lib/oil/constants.ts",
+      "sha": "eada5f14cff4a56fb7b43ad8eb1c6def195a1f27f30bcb98165ca6f418036286"
+    },
+    {
+      "file": "src/lib/paypal/trial-collection-start.ts",
+      "sha": "d22659e8282e0f18b69971b8948ba5afc4b284774aa1d2330f434ed3358513bc"
+    },
+    {
+      "file": "src/lib/peeling/constants.ts",
+      "sha": "856037856c8fecabe9f3b03040f5c80318e77222786bf4f4d47c0dd85d99a4ce"
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/moderator-contract.ts",
+      "sha": "d0b5f90ae45555be0e52945a2ff11c510ff8a98acee369eefd26b7c1e7fb8e9c"
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/moderator.ts",
+      "sha": "dba5f364f8111b31ab8e640c3b2aab237ca6e0186f0ba5b3de86e2653d4ca628"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "sha": "67cce9c3515c8bb2aff287131fda1be77c7c81188732b3fc9e66b1e3afefa6f4"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/persistence.ts",
+      "sha": "9783d531cfaf8ed1b8d91b133b030758fd2bf3c128b5eee10cd4b0e6f5883335"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/primary-concern.ts",
+      "sha": "3f6757b22ae9ba0c1c1951f1813c13c9c3102cfdd8f02c929fdefbbfbde456df"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/types.ts",
+      "sha": "19565073dbad675141bcbbb94a796a73da7727569164a01e0622a4e471736c46"
+    },
+    {
+      "file": "src/lib/personal-plan/categories/bondbuilder.ts",
+      "sha": "eb8708468838e41be8639d82ec5f76dfb31f761a58db92ddf29c65cbfbd2b008"
+    },
+    {
+      "file": "src/lib/personal-plan/categories/conditioner.ts",
+      "sha": "1b7eff19ee348d21259cf6627cfcc9d73fa0d4010b5b225fb15c66640a2ac948"
+    },
+    {
+      "file": "src/lib/personal-plan/categories/deep-cleansing.ts",
+      "sha": "f67e39e7b71ff657d7ce74421dd849b7e12c6dc3a66ed89552b3fab81ffb677c"
+    },
+    {
+      "file": "src/lib/personal-plan/categories/dry-shampoo.ts",
+      "sha": "c3702c9e006d85ac5a92d01f27c548425d45d92e0dbdc51a33977ae671945a95"
+    },
+    {
+      "file": "src/lib/personal-plan/categories/heat-protectant.ts",
+      "sha": "954ddca783f5add18b9474eb1c7a8ed921463b4e1bc185e81f2d440174681e84"
+    },
+    {
+      "file": "src/lib/personal-plan/categories/leave-in.ts",
+      "sha": "60d4bae5d58b444e2dd8d1be4cf89130695aab45bfd878f0da587fceea8c8720"
+    },
+    {
+      "file": "src/lib/personal-plan/categories/mask.ts",
+      "sha": "2174f2693764f805acb6476ca5390261fb9fbf45706f8f9924c620161970a319"
+    },
+    {
+      "file": "src/lib/personal-plan/categories/oil.ts",
+      "sha": "fd6f808c9e9c60610dfcab5af8c29f640eb32c2a7c0faa6e6d51210b8bfa04e2"
+    },
+    {
+      "file": "src/lib/personal-plan/categories/scalp-care.ts",
+      "sha": "6993f65a0719275a8abb017392b167433073987187704b119567f7d5bb5fb606"
+    },
+    {
+      "file": "src/lib/personal-plan/categories/shampoo.ts",
+      "sha": "3935814efcd21647610854dd8f56b040edad26930c8714586ea04ab5f4d9e14b"
+    },
+    {
+      "file": "src/lib/personal-plan/compute-stage1.ts",
+      "sha": "3618dbc5d3e1c035ea60b79dffe6a356ced57c3e19b8d591c512d688936a4bcc"
+    },
+    {
+      "file": "src/lib/personal-plan/decision-presentation.ts",
+      "sha": "59f31da07e7dc79be68ef3f5ebe9bf66073ecdab6168559a25646616475edbf5"
+    },
+    {
+      "file": "src/lib/personal-plan/frontier-routing-loader.ts",
+      "sha": "3602786d58e9ad2ac489a148b52ada98fb2f0b3f3fff2b915e8bc2ebfd57c135"
+    },
+    {
+      "file": "src/lib/personal-plan/frontier-routing.ts",
+      "sha": "532aaf2f53973c532b1f5269cb81cb74c3f1483ad29c35fa27766b4d7b5489aa"
+    },
+    {
+      "file": "src/lib/personal-plan/input.ts",
+      "sha": "22743980e01019fc9834a5a5f6ad3ef566def3757be3b17a2c5994f11ac95c6f"
+    },
+    {
+      "file": "src/lib/personal-plan/needs.ts",
+      "sha": "e79fb582f70dbd85f78c5771f3f32b350c503e365540e2f43e9a8d8541f1e1af"
+    },
+    {
+      "file": "src/lib/personal-plan/oil-heat-context.ts",
+      "sha": "a2f40e58447f39af89129b00911bb53ea3a2e99975f5d955a3b34f85d9665adc"
+    },
+    {
+      "file": "src/lib/personal-plan/persistence/index.ts",
+      "sha": "c8200edcb8b4ad98a218f659b44190227092b047c89ad3c7914e134a7e8eba5b"
+    },
+    {
+      "file": "src/lib/personal-plan/persistence/stage1-service.ts",
+      "sha": "aa383e1b9be24658a5b16bbfa817e6a3ff8c5ce2edd59c1701751e604b445438"
+    },
+    {
+      "file": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "sha": "9aa1af4895e7ebc9976879f42c8160a8800e1f084e38a8cb923261a156d11aa6"
+    },
+    {
+      "file": "src/lib/personal-plan/portfolio.ts",
+      "sha": "3ac73a406d694767684066bf9e3caa1c8d9eec7ab1279ddb3e0dc977c0917146"
+    },
+    {
+      "file": "src/lib/personal-plan/product-preview-contract.ts",
+      "sha": "8e75e3be77b6ac7d61a1ea41b7aef280e9210b6fa271deb4d9f5cb57141e6995"
+    },
+    {
+      "file": "src/lib/personal-plan/product-previews.ts",
+      "sha": "7c0b484dcb14e2704c5b67aaca17c1e7b5e735c816ec1279530ce5b04f406f0c"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authorities.ts",
+      "sha": "46722afc73e14c5f10b83fd220bc4e5f82c3de001086881190cd1fb769b91e2b"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/catalog-batching.ts",
+      "sha": "32ec67618c9750051803cc9e3be628bbcbbc475d49beb613d07471e66ae805e1"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "sha": "b9a8edeb5c656644fd877a47c157c305b67e178bd59cf172cdb668f0b12864f0"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/axis-fit.ts",
+      "sha": "10ad21613384fc1316dfb8ef209adee0e25015aae8b0587e14545718ce3a96fb"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/bondbuilder.ts",
+      "sha": "6983634f2da4d3c3fabbafe319f131fc3f58f3b3467b2a0c3ebea3f407beedc5"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/conditioner.ts",
+      "sha": "810cae1dbcf14b696e6a8af57ae7ed2df822336210b5ab0b4313519edcec549d"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/deep-cleansing-shampoo.ts",
+      "sha": "755c8081e2a3ebf6b9a2cbd705f8bfb607882da70d963fe6d62a74cb6bb7d2da"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/dry-shampoo.ts",
+      "sha": "94e4793bd0ad3eb15f70edcd0c80a6a00c12c6cc3675ce8e65e6b6797fb0b354"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/heat-protectant.ts",
+      "sha": "ab49ebd3d9abc083fb4253450c6a4bb39a1a539d660d03e6183948dcfeead33c"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/leave-in.ts",
+      "sha": "64cb24981836f777f5f5da176e1f6ebf7b156b87199c83a7956312c27aaf74be"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/mask.ts",
+      "sha": "b46752474c4a905706b66b150ab7caa44abf584794183d577f0f2d528e8e525b"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/oil.ts",
+      "sha": "8fa2b25d1f6d85192074d624b5f90fde8079fd322c27300be42b8b3ec36ac188"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/scalp-care.ts",
+      "sha": "c06b5770e787518e07aa23724ab0f71cf033f7794379eb7409cddad8709a3a95"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/shampoo-spec-target.ts",
+      "sha": "b2dc806b5a32f053398ac380f890708b1f0e956238b5e4f761ba15df6eed86cb"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "sha": "e5384f86847aed2c4692016fc518f4bd3ca1db5e9eb37151b48c0b1814bbbaf0"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/contracts.ts",
+      "sha": "300032e978090b8226f72f4880c6cdf310beb95438786b9e966d594bc3416781"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "sha": "878ee44a482141dffe20a944ff9a16a03aff1b91d01ce7ec604fa10782f52eaa"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/shared.ts",
+      "sha": "ea6f846f838c39a8a00e56371d628159c1773141f7c1b65221002b3619abeb16"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts",
+      "sha": "03ef27cb44d397b40d859d5e5c9ff1667797ad8b5196668453540478dead8790"
+    },
+    {
+      "file": "src/lib/personal-plan/products/candidate-ranking.ts",
+      "sha": "bdf223c43ea9f15a3c76148692e249be65f0b819f3eee6a0366141a5fdf95bce"
+    },
+    {
+      "file": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "sha": "1f7ab06b6e33e59512d95d57c8de3b1ed73a165d4a8cdd86a7757f4a42d85a54"
+    },
+    {
+      "file": "src/lib/personal-plan/products/contracts.ts",
+      "sha": "bc4291e12db65a3e220c884344255403e4ea3c3eb19d24fb3c5a4605ae011366"
+    },
+    {
+      "file": "src/lib/personal-plan/products/fit-comparison-schema.ts",
+      "sha": "1c857dcd3399fed695aecc0f2e7f6848eb0b3fec9ecca95de9df4e412606ac5b"
+    },
+    {
+      "file": "src/lib/personal-plan/products/fit-comparison.ts",
+      "sha": "9d805c246fed2e938937d09863b084f0ab995ed4f5e382dded4c703e23e9c3cb"
+    },
+    {
+      "file": "src/lib/personal-plan/reasons.ts",
+      "sha": "c631f3d70952947e3acf5cc0a5b93c394f8f57ad2ca1be8fde2c94b65008d3f4"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/answer-provenance.ts",
+      "sha": "40602c54408d6698ae801265981ece7b021f35212fba6a8eeb7f6c19e6f80a9e"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/assumed-defaults.ts",
+      "sha": "cb345e2890e715e51055fea93f7f5867dfc46cb0f2e13be5ad7db0ff2b830ff0"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/gateway.ts",
+      "sha": "0cf71dd3e743200625c79818846e1a42a2a5d211b3ae76e3ed3ab8b4673f2aa4"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/heat-events.ts",
+      "sha": "310d834790d9b61a1e5de03be6371ee3e92ab927a902bf3b8afb2f3f567f5e7c"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/module-status.ts",
+      "sha": "0d5e6b0d50555c348beb5a56c38134fb5da4627de4fcd6f95674b8f8c3e1b82e"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/production-persistence-gateway.ts",
+      "sha": "04c5180fdb3d1845f448cd441ba3f1b48c28ccc4cff1a788ea08e31b8fe34d69"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/question-path.ts",
+      "sha": "cea18c0b65de59d4b2e2c1b502c81d4c2f1886e564235041334932b2e8be56c1"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/session.ts",
+      "sha": "2988e410830d68e04a380934fd7f3ac51236901e10c91d629e1cf6a2fcac0712"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/stage1-adapter.ts",
+      "sha": "e894e1b2a8a898f31157665af548cc145b897f58eebe2664b0fd1d6efd6f458c"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/types.ts",
+      "sha": "9d19d1249ac0ee2f43fbcaa8ff03417df5afd143f3fb6e9da26be0618db24f04"
+    },
+    {
+      "file": "src/lib/personal-plan/release.ts",
+      "sha": "7fff03697221fa4281c0a3756c3cfab618460c536e60cb05e060e38d2693fdd0"
+    },
+    {
+      "file": "src/lib/personal-plan/rollout-access.ts",
+      "sha": "b4efd27a848a803c60848cf16ac8b9d0c845ae22dabb84a09cc912472eeb206c"
+    },
+    {
+      "file": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "sha": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034"
+    },
+    {
+      "file": "src/lib/personal-plan/routine-proposal-stager.ts",
+      "sha": "d3c010b03572ef4a593484da0fb7f3463b2c1bd4d78e5bd6c8b41be42e57408b"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/cadence.ts",
+      "sha": "0bdcd8ba171ba21dff3570de738996adc65a415b982025a0cd0e7dfec1a3fa0c"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/canonicalize.ts",
+      "sha": "e4121a385e6c86c957143147994132d9ec1695de1cc7d51d3801d0ad51b451ae"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/commerce.ts",
+      "sha": "54887c47fed101a272b7b61bf8b9c36aad54dba3723f77476316a6cfd71bf0ed"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/contracts.ts",
+      "sha": "9ab203657876cd2b7834690a44a14dd73cb96679a0f601a7f48136c38ef781a6"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/diff.ts",
+      "sha": "b893394ec965315d96689b1e56d097ae5651195d95d47138e5bbd2d09c470d59"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/editor.ts",
+      "sha": "456a2db8fe593d486457eba1c1297f52156fca89db465a96274181921894ddff"
+    },
+    {
+      "file": "src/lib/personal-plan/types.ts",
+      "sha": "40297a7f5b93d2ae223603fe818111f8a546c21299579d4eaf1da3d6089e2389"
+    },
+    {
+      "file": "src/lib/premium-sheet/context.ts",
+      "sha": "6b42505f8b3e5ad10411d7586f6133b1a1fefba238109948bc7f73622a37a6ae"
+    },
+    {
+      "file": "src/lib/product-identity/brand-resolution.ts",
+      "sha": "5182615a8419b477e73b0a00e05e78bb9436d8b7ad9c3c7f2d35850f65e48b8a"
+    },
+    {
+      "file": "src/lib/product-identity/display-title.ts",
+      "sha": "b3227a1c978a5e704bba7413087b75e97cd0b99b62aed25d05a3d6100e23c5cf"
+    },
+    {
+      "file": "src/lib/product-identity/index.ts",
+      "sha": "fd7c23ab66221159b693d8f3c076ad1169160e1d2ed1cd1de7b923d1e3a82d46"
+    },
+    {
+      "file": "src/lib/product-identity/normalize.ts",
+      "sha": "817e15aed0f145308fb7e971ac9ab6171ddb0d3f0b2c043e9e06377b765d69db"
+    },
+    {
+      "file": "src/lib/product-intake/errors.ts",
+      "sha": "71c735c4bb3c303cff2e914b17265bc70b30a1d710c4883363d0c1eed958c6e9"
+    },
+    {
+      "file": "src/lib/product-intake/product-matching.ts",
+      "sha": "216efda432f30a2bfebcc6a1f6cf3a3557605e61d3ae733b743c898b74294f29"
+    },
+    {
+      "file": "src/lib/product-intake/repository-types.ts",
+      "sha": "c382335f44a76883829036a831c7c3611e86a9decfee0f741297737e6370ba67"
+    },
+    {
+      "file": "src/lib/product-intake/schemas.ts",
+      "sha": "4677e315cf32dbcdc4af1b7b0e55ea601979d1cfb7e9cf6a80177fbc1fe43eba"
+    },
+    {
+      "file": "src/lib/product-intake/submissions.ts",
+      "sha": "3098f48d86d40549f982a2a96c465e34f4278c59b593da4ef182f81d0df6fcf3"
+    },
+    {
+      "file": "src/lib/product-intake/types.ts",
+      "sha": "3d21c662b45fb8f12c8b59b763303dc371e7dc531e6985ead4fbb479a7c9f996"
+    },
+    {
+      "file": "src/lib/product-intake/upload-paths.ts",
+      "sha": "a5a096b823218cf583b96075710badf8744f701d833212828de6e266929fdd44"
+    },
+    {
+      "file": "src/lib/product-specs/constants.ts",
+      "sha": "3c9c5637b689901f7995aa04da9e41bc34d34b91fc85e474489e02cd6e62613d"
+    },
+    {
+      "file": "src/lib/quiz/completion.ts",
+      "sha": "7915034821dac7078888f084451ac86984007a736cbce379673585ba6a169b33"
+    },
+    {
+      "file": "src/lib/quiz/diagnostic-input.ts",
+      "sha": "964652bf5d3e3d8cd9bc233b18977e59e3cf7264a97ec7de5d5c4ac6cea7149e"
+    },
+    {
+      "file": "src/lib/quiz/normalization.ts",
+      "sha": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239"
+    },
+    {
+      "file": "src/lib/quiz/primary-concern.ts",
+      "sha": "fc33b4465dec57bcc2797ca11ab7d521280189c97495ba8c30b41dd4671207d1"
+    },
+    {
+      "file": "src/lib/quiz/types.ts",
+      "sha": "11ec81f1d6f0e5480132ec892301a2437852c2fc80bf95c22abf2207e6b1fce2"
+    },
+    {
+      "file": "src/lib/rate-limit.ts",
+      "sha": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08"
+    },
+    {
+      "file": "src/lib/reactivation/return-destination.ts",
+      "sha": "48b88020e14c0e29db0744e616ce9a94d4399d8e52952c2eed95233d307807ab"
+    },
+    {
+      "file": "src/lib/recommendation-engine/contracts.ts",
+      "sha": "c057d4aa0c25c44bdb60432a11b1cda1521a0d59d533826f6383dfd639c4d30e"
+    },
+    {
+      "file": "src/lib/recommendation-engine/types.ts",
+      "sha": "4d945a6198871e362ead2b1f575b3907ccce8e61b804e2add40fbc3de674a648"
+    },
+    {
+      "file": "src/lib/routines/personal-plan/application/contracts.ts",
+      "sha": "752971bf0c26f18e8ef4ba9ec282b2652a96c25a20206d5467ea8f3751aecf68"
+    },
+    {
+      "file": "src/lib/scan/alternative-comparison.ts",
+      "sha": "074e0f0696e2bc956cc534d069aad9c4afc520575dc1ef56e3b7d8266e7888ac"
+    },
+    {
+      "file": "src/lib/scan/catalog-eligibility.ts",
+      "sha": "0bcee33a0110e82bf580ac2a978866670829a91a592c1261fe9242ec6500741d"
+    },
+    {
+      "file": "src/lib/scan/catalog-search.ts",
+      "sha": "12d36f3026d9c7d711e89fda9e2fabcbcf86f3c2f3922d456252b7f349f547b6"
+    },
+    {
+      "file": "src/lib/scan/enrichment/dm-mcp-client.ts",
+      "sha": "fa02e011e6e79893ed3536a379891f7a4f4952a8366cf201e18d363c97da3b7b"
+    },
+    {
+      "file": "src/lib/scan/enrichment/flag.ts",
+      "sha": "1ff09f57c924f0392f177086264a78fe71b6eb148a803d6be4b3f2ccc6dc5f8d"
+    },
+    {
+      "file": "src/lib/scan/enrichment/resolve-enrichment.ts",
+      "sha": "3095cc18fb84cc650a33a42a92425ed986882446230e4e7275c3901f8509877f"
+    },
+    {
+      "file": "src/lib/scan/enrichment/suggest-category.ts",
+      "sha": "e529d63be689f70a6b2cc4f92d6107f902383ddfd3a2094c044117b7a995a26d"
+    },
+    {
+      "file": "src/lib/scan/enrichment/toon.ts",
+      "sha": "6100c37fffce7e2c1ebc2cb6feb740bac28a46f90971e39f48574441dc835471"
+    },
+    {
+      "file": "src/lib/scan/enrichment/types.ts",
+      "sha": "088127332ce2cb21ee1ac89a08d51fa6de0a2380024c8124409bbd1f354957ed"
+    },
+    {
+      "file": "src/lib/scan/identifier-lookup.ts",
+      "sha": "5770b9b643b39849dd1bc98f293ba9ca82de4ff968c82158c79558e8d95de403"
+    },
+    {
+      "file": "src/lib/scan/load-scan-verdict.ts",
+      "sha": "31770332de371dddaeb46d811dd1dffd42932b3ba5e9289f2035eb152e2d4f91"
+    },
+    {
+      "file": "src/lib/scan/masked-alternative.ts",
+      "sha": "f95f71134da0d508e8128190d94417d364591965ed49ccf2a69499b8686a5c4d"
+    },
+    {
+      "file": "src/lib/scan/pending-submission.ts",
+      "sha": "849cbb78f7fd710238aa91168c5ca67383fc825025c112ae779731b4d6f486fa"
+    },
+    {
+      "file": "src/lib/scan/presentation-rows.ts",
+      "sha": "da5ba1da58acdbee42f6cf2057c6c0ccb4ed6450ad325f76635bba91ae0592f8"
+    },
+    {
+      "file": "src/lib/scan/product-presentation.ts",
+      "sha": "3ea93de572b145c43007b3bb28373f3056438ea71ba698c7fd8a9293899b0177"
+    },
+    {
+      "file": "src/lib/scan/profile-context.ts",
+      "sha": "897769a982848d5b5ebb27b47502190be45a26fb85dc6c94a10f72e820774aea"
+    },
+    {
+      "file": "src/lib/scan/resolve-event-log.ts",
+      "sha": "cde316a0d8ecf6b25463cf79bffb8fc2304cbcba24b411a719d51ac63b65ba4d"
+    },
+    {
+      "file": "src/lib/scan/resolve-verdict.ts",
+      "sha": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd"
+    },
+    {
+      "file": "src/lib/scan/role-selection.ts",
+      "sha": "1e1d4f6cead65b02ddea3d00aff0fd94e2aedad28252e75c32d753b668426334"
+    },
+    {
+      "file": "src/lib/scan/route.ts",
+      "sha": "fe5d062ff939962807c453c1feaabaf6bde3cd4e76dac9b9831e9316b3efadb3"
+    },
+    {
+      "file": "src/lib/scan/saved-state.ts",
+      "sha": "873535b9d443df33d5821e1430ffc245f1f157e8a2be8220a264adcd6ca4674c"
+    },
+    {
+      "file": "src/lib/scan/scan-analytics.ts",
+      "sha": "f77c83e97d469283c053f6273c47799300f04d5eef005cd5b44a2efbf1ae8328"
+    },
+    {
+      "file": "src/lib/scan/scanner-context-supabase.ts",
+      "sha": "895b2afc2c1c3893601715da2236ae7b8e903292369e67203d159d2c6a0ab539"
+    },
+    {
+      "file": "src/lib/scan/scanner-context.ts",
+      "sha": "f77e2a27db12dc68cc8b4deab30c25c45e12796053b32bf43fd71f7d4b7e73ce"
+    },
+    {
+      "file": "src/lib/scan/submit-dm-event-log.ts",
+      "sha": "57e8cdc7975addcc9eb9758fb7137d413235eb438b39cb649554f58f0f8291e6"
+    },
+    {
+      "file": "src/lib/scan/triggers/session-marker.ts",
+      "sha": "01a191d366f973c73d47c96000303eec094ffd4239e7435038135343c3a7f405"
+    },
+    {
+      "file": "src/lib/scan/triggers/trigger-rules.ts",
+      "sha": "3fd155b1aec9fe6a7cd2d2f037e6d68c1f015a5f62e31e967f217794823014f2"
+    },
+    {
+      "file": "src/lib/scan/types.ts",
+      "sha": "dce26c3380df9386a8296b52c79cb702c47fc9a6ab49fb4f04ea1a250d2e2c02"
+    },
+    {
+      "file": "src/lib/scan/verdict-access.ts",
+      "sha": "7807e27e8048b6fb8ed8cf7d7e111025ee69692e8d2171ed3496ff9659519ab2"
+    },
+    {
+      "file": "src/lib/scan/verdict-labels.ts",
+      "sha": "badd8bce5f663a04afd98b11c8c3d30883d4d449bc6747cb18f95ad7be6d1b0c"
+    },
+    {
+      "file": "src/lib/shampoo/constants.ts",
+      "sha": "9959a578b18747184e176ff52756cae5950bff1a723a027d8e1ac0fd3a7b7ca6"
+    },
+    {
+      "file": "src/lib/stripe/intervals.ts",
+      "sha": "c6bc97592febb4666b6e9ae9f85e5ce3ffbcaf8bc9cfeaef5db0bde41c3d568a"
+    },
+    {
+      "file": "src/lib/stripe/pricing-plans.ts",
+      "sha": "5852bc9d1f9da7d76a0620df8f2e329cb641f044018804ff832140249bb4b90b"
+    },
+    {
+      "file": "src/lib/supabase/admin.ts",
+      "sha": "bd6ec1538d65a01f82b3f55b2839f0ac347d617c6de29d13cea4b0eff737386a"
+    },
+    {
+      "file": "src/lib/supabase/middleware.ts",
+      "sha": "b46773cf21b880cb35d2967d4a882be1c5c59c53f2416607b60d3cb8a4c862a7"
+    },
+    {
+      "file": "src/lib/supabase/server.ts",
+      "sha": "ab2e4b8ccc17f8fb4a43d2a755a563a8549f2ea02feedb9df44ee2112501aa9a"
+    },
+    {
+      "file": "src/lib/types.ts",
+      "sha": "80ce0439bebeb683290f086cc1bab20f3d03a29c577e750ceaa8f73d48243d93"
+    },
+    {
+      "file": "src/lib/vocabulary/concerns-goals.ts",
+      "sha": "f588c309f78685855551f8270f8dec4fc5e046d5c1165d734a63f168315f28e8"
+    },
+    {
+      "file": "src/lib/vocabulary/errors.ts",
+      "sha": "79aa0a1fe9ddc787d7f487df6d91d608a2c8d2cb9ea2ac4f06411683395b68aa"
+    },
+    {
+      "file": "src/lib/vocabulary/frequencies.ts",
+      "sha": "d79bb3584473a8f6541feecff58a40633736f9376981ff190b645114dc0eb3a9"
+    },
+    {
+      "file": "src/lib/vocabulary/hair-length.ts",
+      "sha": "3dd675892cb15b6021d7365203bdc225e86805bfb15beec305cc90e83d74c9e4"
+    },
+    {
+      "file": "src/lib/vocabulary/hair-types.ts",
+      "sha": "36c517006e2cf2717a7f9527fe0484c7c117ba7caa8b7ed7008445950cd79b72"
+    },
+    {
+      "file": "src/lib/vocabulary/index.ts",
+      "sha": "5e011545b7a6a94b96720af7b225dc12c025dbf0509f8b20cdd352bbcfa3109b"
+    },
+    {
+      "file": "src/lib/vocabulary/onboarding-care.ts",
+      "sha": "e5f92f3ec2571da3d821d7b9df75db34939a103d4cb1de7ce972bf54d0a8e547"
+    },
+    {
+      "file": "src/lib/vocabulary/onboarding-goals.ts",
+      "sha": "71ead0b61b4aeffeb47b53c63acb6fe84acae797e18ea774fa25104854c8a098"
+    },
+    {
+      "file": "src/lib/vocabulary/profile-labels.ts",
+      "sha": "e0e8d5df461dc19c3e0eb1a85a8dbac8c5f32316c12cd90352bcec506ac5e466"
+    },
+    {
+      "file": "src/lib/vocabulary/source-labels.ts",
+      "sha": "b4cce749ac8d49b3f0dd3a9a2e1e6e9cea64f6ae76858bc161d7f173b22475f1"
+    },
+    {
+      "file": "supabase/migrations/20260920160000_scan_name_only_submission_intake.sql",
+      "sha": "c01148513fac0f5b9fc5def2e27ed3b43789c228cea7e47d474d38165b73ff7c"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    }
+  ]
+}

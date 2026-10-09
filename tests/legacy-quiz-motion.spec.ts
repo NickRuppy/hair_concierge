@@ -3,6 +3,12 @@ import { expect, test, type Page } from "@playwright/test"
 const baseUrl = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000"
 
 type TransitionSnapshot = {
+  activeAnimationName: string
+  activeAnimationDuration: string
+  outgoingAnimationName: string
+  outgoingAnimationDuration: string
+  progressTransitionProperty: string | null
+  progressTransitionTimingFunction: string | null
   activeDirection: string | null
   activeHeading: string | null
   duplicateIds: string[]
@@ -60,6 +66,16 @@ async function armTransitionCapture(page: Page) {
         window.clearTimeout(timeoutId)
         observer.disconnect()
         resolve({
+          activeAnimationName: window.getComputedStyle(active).animationName,
+          activeAnimationDuration: window.getComputedStyle(active).animationDuration,
+          outgoingAnimationName: window.getComputedStyle(outgoing).animationName,
+          outgoingAnimationDuration: window.getComputedStyle(outgoing).animationDuration,
+          progressTransitionProperty: progressFill
+            ? window.getComputedStyle(progressFill).transitionProperty
+            : null,
+          progressTransitionTimingFunction: progressFill
+            ? window.getComputedStyle(progressFill).transitionTimingFunction
+            : null,
           activeDirection: active.getAttribute("data-personal-plan-transition-direction"),
           activeHeading: active.querySelector("h1,h2")?.textContent ?? null,
           duplicateIds: ids.filter((id, index) => ids.indexOf(id) !== index),
@@ -121,7 +137,18 @@ test.describe("@ci legacy quiz motion", () => {
       outgoingOptionOpacity: "1",
       progressInitialWidth: "10%",
       progressTransitionDuration: "0.5s",
+      progressTransitionProperty: "width",
+      progressTransitionTimingFunction: "cubic-bezier(0, 0, 0.2, 1)",
     })
+
+    expect(transition?.activeAnimationName).not.toBe("none")
+    expect(Number.parseFloat(transition?.activeAnimationDuration ?? "0")).toBeGreaterThan(0)
+    expect(transition?.outgoingAnimationName).not.toBe("none")
+    expect(Number.parseFloat(transition?.outgoingAnimationDuration ?? "0")).toBeGreaterThan(0)
+    const activeProgress = page.locator(
+      '[data-personal-plan-transition-layer="active"] [data-legacy-quiz-progress-fill]',
+    )
+    await expect.poll(() => activeProgress.evaluate((element) => element.style.width)).toBe("20%")
 
     await expect(page.locator('[data-personal-plan-transition-layer="outgoing"]')).toHaveCount(0)
     await armTransitionCapture(page)
@@ -136,13 +163,32 @@ test.describe("@ci legacy quiz motion", () => {
       outgoingOptionAnimationName: "none",
       outgoingOptionOpacity: "1",
       progressInitialWidth: "20%",
+      progressTransitionDuration: "0.5s",
+      progressTransitionProperty: "width",
+      progressTransitionTimingFunction: "cubic-bezier(0, 0, 0.2, 1)",
     })
+    expect(backTransition?.activeAnimationName).not.toBe("none")
+    expect(Number.parseFloat(backTransition?.activeAnimationDuration ?? "0")).toBeGreaterThan(0)
+    expect(backTransition?.outgoingAnimationName).not.toBe("none")
+    expect(Number.parseFloat(backTransition?.outgoingAnimationDuration ?? "0")).toBeGreaterThan(0)
+    await expect.poll(() => activeProgress.evaluate((element) => element.style.width)).toBe("10%")
   })
 
   test("renders a labelled real profile image on the organic landing", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 })
     await page.goto(`${baseUrl}/`, { waitUntil: "networkidle" })
-    await expect(page.getByRole("img", { name: "Beispielprofil mit welligem Haar" })).toBeVisible()
+    const portrait = page.getByRole("img", {
+      name: "Beispielprofil mit welligem Haar",
+      exact: true,
+    })
+    await expect(portrait).toBeVisible()
+    const portraitPath = await portrait.evaluate((image) => {
+      const source = image.getAttribute("src")
+      if (!source) throw new Error("Profile portrait has no source")
+      const url = new URL(source, window.location.href)
+      return url.searchParams.get("url") ?? url.pathname
+    })
+    expect(portraitPath).toBe("/images/funnels/personal-plan-quiz/profile-summary/wavy-medium.webp")
     await expect(page.getByText("Beispielprofil", { exact: true })).toBeVisible()
     const width = await page.evaluate(() => ({
       client: document.documentElement.clientWidth,

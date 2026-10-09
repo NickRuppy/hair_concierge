@@ -11,11 +11,14 @@ import {
   diagnosticsV1Schema,
   factsProvenanceSchema,
   quizContextV1Schema,
+  shoppingPreferencesV1Schema,
   type CareHabitsV1,
   type DiagnosticsV1,
   type FactsProvenance,
   type QuizContextV1,
+  type ShoppingPreferencesV1,
 } from "./schema"
+import { knownCareAnswers, type KnownCareAnswers } from "./known-care-answers"
 import { toStage1Source } from "./stage1-source"
 
 export { toStage1Source } from "./stage1-source"
@@ -38,6 +41,8 @@ export type UserFacts = {
   diagnostics: DiagnosticsV1 | null
   careHabits: CareHabitsV1 | null
   quizContext: QuizContextV1 | null
+  /** `null` = never collected (a budget is NOT implied as "uncapped"). */
+  shoppingPreferences: ShoppingPreferencesV1 | null
   provenance: FactsProvenance
   revision: number
   /** The two legacy columns the completeness defaults consult when no facts document carries
@@ -62,7 +67,7 @@ function parseDomain<Schema extends z.ZodType>(
   return result.data
 }
 
-/** Loads the four `hair_profiles` fact columns for one user. Returns `null` only when the row
+/** Loads the `hair_profiles` fact columns for one user. Returns `null` only when the row
  * itself does not exist — a row with an empty/null domain still returns a `UserFacts` with
  * `null` for that domain. */
 export async function loadUserFacts(
@@ -72,7 +77,7 @@ export async function loadUserFacts(
   const { data, error } = await admin
     .from("hair_profiles")
     .select(
-      "user_id, diagnostics, care_habits, quiz_context, facts_provenance, facts_revision, density, hair_length",
+      "user_id, diagnostics, care_habits, quiz_context, shopping_preferences, facts_provenance, facts_revision, density, hair_length",
     )
     .eq("user_id", userId)
     .maybeSingle()
@@ -92,6 +97,7 @@ export type UserFactsRow = {
   diagnostics?: unknown
   care_habits?: unknown
   quiz_context?: unknown
+  shopping_preferences?: unknown
   facts_provenance?: unknown
   facts_revision?: unknown
   density?: unknown
@@ -107,6 +113,12 @@ export function parseUserFactsRow(userId: string, data: UserFactsRow): UserFacts
   const diagnostics = parseDomain(diagnosticsV1Schema, data.diagnostics, "diagnostics", userId)
   const careHabits = parseDomain(careHabitsV1Schema, data.care_habits, "care_habits", userId)
   const quizContext = parseDomain(quizContextV1Schema, data.quiz_context, "quiz_context", userId)
+  const shoppingPreferences = parseDomain(
+    shoppingPreferencesV1Schema,
+    data.shopping_preferences,
+    "shopping_preferences",
+    userId,
+  )
 
   const provenanceResult = factsProvenanceSchema.safeParse(data.facts_provenance ?? {})
   if (!provenanceResult.success) {
@@ -121,6 +133,7 @@ export function parseUserFactsRow(userId: string, data: UserFactsRow): UserFacts
     diagnostics,
     careHabits,
     quizContext,
+    shoppingPreferences,
     provenance: provenanceResult.data,
     revision: typeof data.facts_revision === "number" ? data.facts_revision : 0,
     legacyColumns: {
@@ -140,6 +153,18 @@ export function toRefinementAnswers(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- destructured only to drop it
   const { brushesCombs, ...refinementAnswers } = facts.careHabits
   return refinementAnswers
+}
+
+/** The member's stored care answers an assumption must not replace (see `knownCareAnswers`). */
+export async function loadKnownCareAnswers(
+  admin: SupabaseClient,
+  userId: string,
+): Promise<KnownCareAnswers> {
+  const facts = await loadUserFacts(admin, userId)
+  return knownCareAnswers({
+    careHabits: facts?.careHabits ?? null,
+    fields: facts?.provenance.care_habits?.fields,
+  })
 }
 
 /** Re-emits the Stage-1 source for a loaded facts record (F26), delegating to Task-1's

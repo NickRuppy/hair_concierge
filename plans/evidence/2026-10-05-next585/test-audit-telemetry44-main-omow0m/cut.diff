@@ -1,0 +1,52 @@
+--- tests/analytics-runtime.test.ts (transfer)
++++ tests/analytics-runtime.test.ts (cut)
+@@ -1,7 +1,6 @@
+ import assert from "node:assert/strict"
+ import test from "node:test"
+ 
+-import { createBoundedFifo } from "../src/lib/analytics/runtime/bounded-fifo"
+ import {
+   createCustomerIoBrowserLoader,
+   createCustomerIoRuntime,
+@@ -19,22 +18,6 @@
+ } from "../src/lib/analytics/runtime/posthog"
+ import { scheduleAfterFirstPaint } from "../src/lib/analytics/runtime/post-paint"
+ 
+-test("bounded FIFO drops the oldest item and warns when full", () => {
+-  const warnings: string[] = []
+-  const queue = createBoundedFifo<number>({
+-    label: "test",
+-    limit: 2,
+-    warn: (message) => warnings.push(message),
+-  })
+-
+-  queue.push(1)
+-  queue.push(2)
+-  queue.push(3)
+-
+-  assert.deepEqual(queue.drain(), [2, 3])
+-  assert.equal(warnings.length, 1)
+-})
+-
+ test("post-paint scheduling releases only after two animation frames", () => {
+   const frames: FrameRequestCallback[] = []
+   const calls: string[] = []
+--- tests/app-performance-telemetry.test.ts (transfer)
++++ tests/app-performance-telemetry.test.ts (cut)
+@@ -128,16 +128,3 @@
+   assert.equal(outcomeForResponseStatus(503), "transient_error")
+ })
+ 
+-test("accepts only generated UUID v4 correlation identifiers", () => {
+-  assert.throws(
+-    () =>
+-      createAppPerformanceEvent({
+-        routeGroup: "routine",
+-        operation: "proxy_access",
+-        outcome: "success",
+-        durationMs: 1,
+-        correlationId: "request-correlation-id",
+-      }),
+-    /correlationId/,
+-  )
+-})

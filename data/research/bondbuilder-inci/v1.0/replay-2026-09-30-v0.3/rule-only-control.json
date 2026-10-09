@@ -1,0 +1,11 @@
+{
+  "schema_version": "bondbuilder-rule-only-control-v0.3",
+  "standard_version": "bondbuilder-inci-v0.3",
+  "instruction": "StageB: v0.3 with only original named facts plus own fresh original-input StageA; seal before amended named facts. No prior lane transcripts.",
+  "base_packet_path": "../pilot-2026-09-30/evidence-packet.v0.1.json",
+  "base_packet_sha256": "d550115248bf129fd90ac6a9ed2f5fcb50039318e6f0ed1528fc466094aacd35",
+  "pilot_anchor_ids": [
+    "P01"
+  ],
+  "activation": false
+}

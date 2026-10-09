@@ -16,6 +16,7 @@ import {
   type PendingStage3RecoveryScope,
 } from "../../../src/lib/personal-plan/products/pending-recovery"
 import type { Stage3ProductDraft } from "../../../src/lib/personal-plan/products/contracts"
+import { parseStage3GatewayErrorCode } from "../../../src/lib/personal-plan/products/http-gateway"
 import { classifyStage3DesiredState } from "../../../src/lib/personal-plan/products/recovery-desired-state"
 
 test("only uncertain transport outcomes enter canonical write recovery", () => {
@@ -30,6 +31,11 @@ test("only uncertain transport outcomes enter canonical write recovery", () => {
     classifyPendingStage3RecoveryError("stale_authority_snapshot"),
     "reconfirm_current_choice",
   )
+})
+
+test("budget_required survives the HTTP gateway and never enters the unknown-outcome loop", () => {
+  assert.equal(parseStage3GatewayErrorCode({ error: "budget_required" }), "budget_required")
+  assert.equal(classifyPendingStage3RecoveryError("budget_required"), "reopen_incomplete_decision")
 })
 
 const scope: PendingStage3RecoveryScope = {

@@ -1,0 +1,1670 @@
+[
+  {
+    "original": "/tmp/test-audit-discovery-operational163/artifact-hashes.json",
+    "archived": "proposal/artifact-hashes.json",
+    "sha256": "11310743bda3f5c022c81a3bafd091c8ccc537909ecaf128c6acc69ffa639d90",
+    "bytes": 15251
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/build.cjs",
+    "archived": "proposal/build.cjs.txt",
+    "sha256": "f41cefc4895a73cbd99ec5b7ace745f55f0e5770eb6d5d90da929d40b0967958",
+    "bytes": 15904
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/callers.txt",
+    "archived": "proposal/callers.txt",
+    "sha256": "9c6526b47a45bf169b482514ef55c14a6774ae46922e15af85b7c7ad243eb617",
+    "bytes": 6170
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/candidates.json",
+    "archived": "proposal/candidates.json",
+    "sha256": "9af49ab911a81456b871348776d4e576e3e98bb43344b965614ea4fbd594eb9f",
+    "bytes": 38781
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/complete.diff",
+    "archived": "proposal/complete.diff",
+    "sha256": "46e99ad5f57baf6c49130eb3f359a86b6ff41f2c70176a73838ceaf9c755dcf7",
+    "bytes": 6396
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/controls.json",
+    "archived": "proposal/controls.json",
+    "sha256": "95cdfa5ecd42cbba7eead0980aae6632c60d4127695cb204c757cd7bf85fc83d",
+    "bytes": 8504
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/final-static-check.json",
+    "archived": "proposal/final-static-check.json",
+    "sha256": "8eb8cf5f3013b865707124405fd08f4e9097949e8a77af90880dc7f90060ea8a",
+    "bytes": 314
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/handoff.md",
+    "archived": "proposal/handoff.md",
+    "sha256": "2497f23ed4dab4c1e699c1e7ca3ad3d18360af20b29c4f52f3f424c29413ec6c",
+    "bytes": 1586
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/candidate-owners.txt",
+    "archived": "proposal/history/candidate-owners.txt",
+    "sha256": "56ce355b1eb9d79ed55b7ea4026b3ab8cace114710433c5f51e218d1e621b567",
+    "bytes": 1882
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-call-toolkit-migration.test.ts.txt",
+    "archived": "proposal/history/discovery-call-toolkit-migration.test.ts.txt",
+    "sha256": "491ab03e3658bc6b3ce416a89ecdeb65d07db4a28460c7492591a0b5a9ae55e3",
+    "bytes": 148
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-call-toolkit-sql-execution.test.ts.txt",
+    "archived": "proposal/history/discovery-call-toolkit-sql-execution.test.ts.txt",
+    "sha256": "491ab03e3658bc6b3ce416a89ecdeb65d07db4a28460c7492591a0b5a9ae55e3",
+    "bytes": 148
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-call-tracking.test.ts.txt",
+    "archived": "proposal/history/discovery-call-tracking.test.ts.txt",
+    "sha256": "5a22f1540f60837dfe81f88598ecc6c79123e524421fbead9f14f437bd085a53",
+    "bytes": 122
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-checklist-categories.test.tsx.txt",
+    "archived": "proposal/history/discovery-checklist-categories.test.tsx.txt",
+    "sha256": "faf8a80258a5ea28af3150a5b95b457400c93db02b0afaf2a70bce71d3d09803",
+    "bytes": 439
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-checklist-projection.test.ts.txt",
+    "archived": "proposal/history/discovery-checklist-projection.test.ts.txt",
+    "sha256": "491ab03e3658bc6b3ce416a89ecdeb65d07db4a28460c7492591a0b5a9ae55e3",
+    "bytes": 148
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-cockpit-complexity-dom.test.tsx.txt",
+    "archived": "proposal/history/discovery-cockpit-complexity-dom.test.tsx.txt",
+    "sha256": "81445b80b2151fb81262f1e82d0f379f6060c76fc46b98dc807b443985dafef2",
+    "bytes": 343
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-cockpit-depth.test.ts.txt",
+    "archived": "proposal/history/discovery-cockpit-depth.test.ts.txt",
+    "sha256": "7124788ada3aa1f70c8bde41fcfa8db9837946ca720da2210fa76d4c025078f9",
+    "bytes": 308
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-enrollment-optional-email-migration.test.ts.txt",
+    "archived": "proposal/history/discovery-enrollment-optional-email-migration.test.ts.txt",
+    "sha256": "cba749c9263f8cd9c881b786bb9f162f1598010a7e7b056f5f89ead22f7abbda",
+    "bytes": 285
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-frequency.test.ts.txt",
+    "archived": "proposal/history/discovery-frequency.test.ts.txt",
+    "sha256": "2f00c4b0f9e6c5e92587c4c04b94bde769a04935de0ed0259ff6050343ccdd4f",
+    "bytes": 157
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-heat-flow.test.ts.txt",
+    "archived": "proposal/history/discovery-heat-flow.test.ts.txt",
+    "sha256": "2f00c4b0f9e6c5e92587c4c04b94bde769a04935de0ed0259ff6050343ccdd4f",
+    "bytes": 157
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-heat-styling.test.ts.txt",
+    "archived": "proposal/history/discovery-heat-styling.test.ts.txt",
+    "sha256": "2f00c4b0f9e6c5e92587c4c04b94bde769a04935de0ed0259ff6050343ccdd4f",
+    "bytes": 157
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-intake-item-image.test.tsx.txt",
+    "archived": "proposal/history/discovery-intake-item-image.test.tsx.txt",
+    "sha256": "6a106c221715e13ec8a309e282bfafbfcb8de5b196d35ad8bcbdcb04cfa68764",
+    "bytes": 609
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-middleware-gate.test.ts.txt",
+    "archived": "proposal/history/discovery-middleware-gate.test.ts.txt",
+    "sha256": "491ab03e3658bc6b3ce416a89ecdeb65d07db4a28460c7492591a0b5a9ae55e3",
+    "bytes": 148
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-participant-routing.test.ts.txt",
+    "archived": "proposal/history/discovery-participant-routing.test.ts.txt",
+    "sha256": "491ab03e3658bc6b3ce416a89ecdeb65d07db4a28460c7492591a0b5a9ae55e3",
+    "bytes": 148
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-product-label.test.ts.txt",
+    "archived": "proposal/history/discovery-product-label.test.ts.txt",
+    "sha256": "59c2d892818b3f4a4681e7fdac05652a8cbbca040ca4c0672a2dd46b788a55ca",
+    "bytes": 249
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-products-loading.test.tsx.txt",
+    "archived": "proposal/history/discovery-products-loading.test.tsx.txt",
+    "sha256": "014acfe1279b62628a5732e332df6ff0d72da2a267fd986b7130c5120c3a0629",
+    "bytes": 154
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-quiz-answers.test.ts.txt",
+    "archived": "proposal/history/discovery-quiz-answers.test.ts.txt",
+    "sha256": "59534fc152e8607afcf968dc568da1d5a832a1db3156fe7ed3e954f09d5b2258",
+    "bytes": 139
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-quiz-identity.test.ts.txt",
+    "archived": "proposal/history/discovery-quiz-identity.test.ts.txt",
+    "sha256": "e9d2f6c4231b67cbcd60aace4515eac02672553b42e04d9fafb3b1cdca5c4d6d",
+    "bytes": 302
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-reconcile.test.ts.txt",
+    "archived": "proposal/history/discovery-reconcile.test.ts.txt",
+    "sha256": "491ab03e3658bc6b3ce416a89ecdeb65d07db4a28460c7492591a0b5a9ae55e3",
+    "bytes": 148
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-refined-usage.test.ts.txt",
+    "archived": "proposal/history/discovery-refined-usage.test.ts.txt",
+    "sha256": "bad0c59b0a43363a689427802ebbe47971dd0c9a83971c2d6834fa27b74056a2",
+    "bytes": 497
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-runsheet-locked-in-dom.test.tsx.txt",
+    "archived": "proposal/history/discovery-runsheet-locked-in-dom.test.tsx.txt",
+    "sha256": "9751304ae0337750038951ab35ac3a43af9cd9e8bb554374e8d97095bb554c62",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-search-sheet-props.test.tsx.txt",
+    "archived": "proposal/history/discovery-search-sheet-props.test.tsx.txt",
+    "sha256": "05a53d48c71cc9a5576e3b48070be053a85d0a8ea5aac3a97f85adb70af4fa80",
+    "bytes": 305
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-swap-sort.test.ts.txt",
+    "archived": "proposal/history/discovery-swap-sort.test.ts.txt",
+    "sha256": "49da687e952d692cc54f0298f53f25d080333fe8bb3af79c6256f742bac3749d",
+    "bytes": 197
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/history/discovery-unanswered-categories.test.tsx.txt",
+    "archived": "proposal/history/discovery-unanswered-categories.test.tsx.txt",
+    "sha256": "f1345acb924630f096c0cc9441af3955b8c102a38ae1dc81ead75dfc97ebc5a5",
+    "bytes": 579
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/import-edges.json",
+    "archived": "proposal/import-edges.json",
+    "sha256": "d54e8c7bb1f577236b9285610e84f2fcf871eeb2e79a253354750f607d482ac6",
+    "bytes": 11620
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/inventory.cjs",
+    "archived": "proposal/inventory.cjs.txt",
+    "sha256": "d114536557da88ed954c4910b8f6815518912c387eb8d6a799e267a854efbb4e",
+    "bytes": 1408
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/inventory.json",
+    "archived": "proposal/inventory.json",
+    "sha256": "7742bca6189334e771f4b9aeacc05df56e86999af67a9333b5d318c72fcab8bc",
+    "bytes": 182738
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/layer-plan.md",
+    "archived": "proposal/layer-plan.md",
+    "sha256": "0d8cc8522b96f6f065c9746c08f9a38b6187a26e1326b39e1dd00d58ab439830",
+    "bytes": 19131
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/ledger.json",
+    "archived": "proposal/ledger.json",
+    "sha256": "ad0e1d821fa5e92e7fe1951c3e870a9af1cd9d814c3a86824567c90c0ff9445a",
+    "bytes": 307572
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/ledger.md",
+    "archived": "proposal/ledger.md",
+    "sha256": "01df7cd462fa5ac4870be91f7cf7d6ea7108f5b39b5e44e9d65fbe53d963d6f1",
+    "bytes": 34331
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/ledger.py",
+    "archived": "proposal/ledger.py.txt",
+    "sha256": "3afff17be73fbbfdf57a11d1296fd9d59a9a4bcd3cfd2b134de70295450c19a2",
+    "bytes": 18142
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/main-commands.md",
+    "archived": "proposal/main-commands.md",
+    "sha256": "0ed22e99b6792beda231310563eca738ed64d07f85ba69b73e21137d7fffbec2",
+    "bytes": 3672
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/manifest.json",
+    "archived": "proposal/manifest.json",
+    "sha256": "fdaac17a025a772f2127cdd2d69a1885ee53585a12e58564f8d776e4b49bb2e5",
+    "bytes": 43996
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/mutants/C1/src/app/beratung/produkte/loading.tsx",
+    "archived": "proposal/mutants/C1/src/app/beratung/produkte/loading.tsx.txt",
+    "sha256": "759feec81bb4a25bc40e914b5a33dc6bcad2dbc9418259a04f8aa42f3a71843f",
+    "bytes": 4240
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/mutants/C2/src/components/discovery/cockpit/discovery-call-cockpit.tsx",
+    "archived": "proposal/mutants/C2/src/components/discovery/cockpit/discovery-call-cockpit.tsx.txt",
+    "sha256": "279265cc86456c29264984292d3a0c2dfd1f6e942221de8ce1ac87142738c16f",
+    "bytes": 51488
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/mutants/C3/src/components/discovery/cockpit/discovery-call-cockpit.tsx",
+    "archived": "proposal/mutants/C3/src/components/discovery/cockpit/discovery-call-cockpit.tsx.txt",
+    "sha256": "e09e3d995f01b82e353d9252e5af1b75af71d68664133a48065c4f8af1eff200",
+    "bytes": 51487
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/mutants/C4/src/lib/discovery/refined-routine.ts",
+    "archived": "proposal/mutants/C4/src/lib/discovery/refined-routine.ts.txt",
+    "sha256": "2250d2273a5ec8c0679d0f4706d3031bf76ac8cd6cb89c34d4b003cb64889bf9",
+    "bytes": 28420
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/mutants/C5/src/app/admin/beratung/[enrollmentId]/page.tsx",
+    "archived": "proposal/mutants/C5/src/app/admin/beratung/[enrollmentId]/page.tsx.txt",
+    "sha256": "e64b91d9dc9d2aa64b14ff534cc6b9dca4280151e10d62404dd36d0ddd36bf64",
+    "bytes": 21758
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/owner-snapshots/src/app/admin/beratung/[enrollmentId]/page.tsx",
+    "archived": "proposal/owner-snapshots/src/app/admin/beratung/[enrollmentId]/page.tsx.txt",
+    "sha256": "586f0276c8add490377ab3340ce08c9045ea76b029ea7a07389a82fef0cc7eb5",
+    "bytes": 21760
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/owner-snapshots/src/app/beratung/produkte/loading.tsx",
+    "archived": "proposal/owner-snapshots/src/app/beratung/produkte/loading.tsx.txt",
+    "sha256": "740f4a80b796a766d1981dba5dd2b184f5f1ba769ffeee523a93463711347551",
+    "bytes": 4234
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/owner-snapshots/src/components/discovery/cockpit/discovery-call-cockpit.tsx",
+    "archived": "proposal/owner-snapshots/src/components/discovery/cockpit/discovery-call-cockpit.tsx.txt",
+    "sha256": "2d0adde32589464e10ba2b9a1bb9d13263ca40bbfada8b9d4ab82a1572d68071",
+    "bytes": 51492
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/owner-snapshots/src/lib/discovery/refined-routine.ts",
+    "archived": "proposal/owner-snapshots/src/lib/discovery/refined-routine.ts.txt",
+    "sha256": "79a8321c4bb5c53a9594b0664cc708f326bca7ff058c6aeba4faa18cd821ee00",
+    "bytes": 28434
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/phase-map.json",
+    "archived": "proposal/phase-map.json",
+    "sha256": "6d0752c3f4ff09369feefa9dc2a651b417511379535ee18447d062aa22a2031b",
+    "bytes": 548244
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-call-toolkit-migration.test.ts",
+    "archived": "proposal/snapshots/before/tests/discovery-call-toolkit-migration.test.ts.txt",
+    "sha256": "1ee51c75306d8775ff4cee05dd02b3852da087b14c6a425dce4b70ac28946abf",
+    "bytes": 4814
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-call-toolkit-sql-execution.test.ts",
+    "archived": "proposal/snapshots/before/tests/discovery-call-toolkit-sql-execution.test.ts.txt",
+    "sha256": "49403f1fd2e947a6c9f0499632674a63c66b6a115c493c5fe706765113aa9bce",
+    "bytes": 9892
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-call-tracking.test.ts",
+    "archived": "proposal/snapshots/before/tests/discovery-call-tracking.test.ts.txt",
+    "sha256": "9c3ea13ed20f209f05bc169eb41a28e16b705a86ea79fb9854ec2f68373b0099",
+    "bytes": 7474
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-checklist-categories.test.tsx",
+    "archived": "proposal/snapshots/before/tests/discovery-checklist-categories.test.tsx.txt",
+    "sha256": "bc5834985d03ee1835737c3287af4f329ff59d6e5d24f5565667098da298569f",
+    "bytes": 3389
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-checklist-projection.test.ts",
+    "archived": "proposal/snapshots/before/tests/discovery-checklist-projection.test.ts.txt",
+    "sha256": "b8c7060865a6e50ff49cd8ce318e973f7424c15e9fa79a841cdf0d097b21ee4b",
+    "bytes": 3921
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-cockpit-complexity-dom.test.tsx",
+    "archived": "proposal/snapshots/before/tests/discovery-cockpit-complexity-dom.test.tsx.txt",
+    "sha256": "22ab2c345408788bcfa34f0d20571f3b445305a008e40a6cba471d64417a5c3b",
+    "bytes": 14335
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-cockpit-depth.test.ts",
+    "archived": "proposal/snapshots/before/tests/discovery-cockpit-depth.test.ts.txt",
+    "sha256": "41ea1bfde884c29a287dd497cb76a8e9f70c4316db8ea55a6b3e91929436d6b3",
+    "bytes": 10800
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-enrollment-optional-email-migration.test.ts",
+    "archived": "proposal/snapshots/before/tests/discovery-enrollment-optional-email-migration.test.ts.txt",
+    "sha256": "5632475e27c720306b3e899e54f8166f1ab61bb74111c47175ca243cf13bc41b",
+    "bytes": 3732
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-frequency.test.ts",
+    "archived": "proposal/snapshots/before/tests/discovery-frequency.test.ts.txt",
+    "sha256": "b2d14aeccd279edbec7d90bd4cf9e8d8ed16c827a0284f3940d2ce2fb0c68a39",
+    "bytes": 2746
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-heat-flow.test.ts",
+    "archived": "proposal/snapshots/before/tests/discovery-heat-flow.test.ts.txt",
+    "sha256": "117f0297375f6073bba712fedc432e5f6dbebd0fc3858df1bdd59f6513ef515a",
+    "bytes": 3415
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-heat-styling.test.ts",
+    "archived": "proposal/snapshots/before/tests/discovery-heat-styling.test.ts.txt",
+    "sha256": "10e30cbd1d7485fc393d4cad449101fd581451a665b86da1fe4cba3914518286",
+    "bytes": 5765
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-intake-item-image.test.tsx",
+    "archived": "proposal/snapshots/before/tests/discovery-intake-item-image.test.tsx.txt",
+    "sha256": "fe2662597e5e5e7af21af338f2cbdd6fafd6431597fa28d5d8523ed5e18920da",
+    "bytes": 2896
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-middleware-gate.test.ts",
+    "archived": "proposal/snapshots/before/tests/discovery-middleware-gate.test.ts.txt",
+    "sha256": "da83933377ce4bf204795e1d58e837d105e9df8ab520386076bbfc294f6dee70",
+    "bytes": 9557
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-participant-routing.test.ts",
+    "archived": "proposal/snapshots/before/tests/discovery-participant-routing.test.ts.txt",
+    "sha256": "b3d1dd51358ae192f933baf5a8dc77c0d753c5084af04aa5c787a68434af4d04",
+    "bytes": 10223
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-product-label.test.ts",
+    "archived": "proposal/snapshots/before/tests/discovery-product-label.test.ts.txt",
+    "sha256": "1587b2aa9cc8a22ce8a1963aa836cfdd9416eb6fcfc6e547965cb955b7e60473",
+    "bytes": 4195
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-products-loading.test.tsx",
+    "archived": "proposal/snapshots/before/tests/discovery-products-loading.test.tsx.txt",
+    "sha256": "1099b32f2ca074920f61b00968061c4aff868ad0c213fbf8e183ed513af58d2d",
+    "bytes": 2239
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-quiz-answers.test.ts",
+    "archived": "proposal/snapshots/before/tests/discovery-quiz-answers.test.ts.txt",
+    "sha256": "f381faacfaaeec77e6052a7198dcde8b624a372326c17b6d4abb36b5bd0c63ba",
+    "bytes": 10681
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-quiz-identity.test.ts",
+    "archived": "proposal/snapshots/before/tests/discovery-quiz-identity.test.ts.txt",
+    "sha256": "8a6275533ad9d6ebd61ba67c4672ad87f2f1c5e711e0166a9b12750e6c920aa3",
+    "bytes": 11471
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-reconcile.test.ts",
+    "archived": "proposal/snapshots/before/tests/discovery-reconcile.test.ts.txt",
+    "sha256": "bae78027c1ea52bd3523aaac4fcd95c74cfc6f54d4950280ad281bef4eb4cdf9",
+    "bytes": 21150
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-refined-usage.test.ts",
+    "archived": "proposal/snapshots/before/tests/discovery-refined-usage.test.ts.txt",
+    "sha256": "de8e01d744a436c48cead5794d20f56357b42015e5ef41c761bd8e6ac1778b0c",
+    "bytes": 13259
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-runsheet-locked-in-dom.test.tsx",
+    "archived": "proposal/snapshots/before/tests/discovery-runsheet-locked-in-dom.test.tsx.txt",
+    "sha256": "1cf7c86ee20881ff829e4f3941193c24b04f67a0e1e94e2713518eb95f0851f5",
+    "bytes": 9746
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-search-sheet-props.test.tsx",
+    "archived": "proposal/snapshots/before/tests/discovery-search-sheet-props.test.tsx.txt",
+    "sha256": "b9cfcc0d1f2a641d36d249283c2bdc9f0e55970932cc27b39351b5111cf38ea1",
+    "bytes": 13998
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-swap-sort.test.ts",
+    "archived": "proposal/snapshots/before/tests/discovery-swap-sort.test.ts.txt",
+    "sha256": "a4ecc1d9bd281ba636c1c6247dd24cb1cc6f19b31d3b813e1951fcd3a8b767cc",
+    "bytes": 2856
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-unanswered-categories.test.tsx",
+    "archived": "proposal/snapshots/before/tests/discovery-unanswered-categories.test.tsx.txt",
+    "sha256": "530863ab6739a2d8109c2834f9bd527e4ebcb039f513ef6d96371652491e1866",
+    "bytes": 12178
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-call-toolkit-migration.test.ts",
+    "archived": "proposal/snapshots/cut/tests/discovery-call-toolkit-migration.test.ts.txt",
+    "sha256": "1ee51c75306d8775ff4cee05dd02b3852da087b14c6a425dce4b70ac28946abf",
+    "bytes": 4814
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-call-toolkit-sql-execution.test.ts",
+    "archived": "proposal/snapshots/cut/tests/discovery-call-toolkit-sql-execution.test.ts.txt",
+    "sha256": "49403f1fd2e947a6c9f0499632674a63c66b6a115c493c5fe706765113aa9bce",
+    "bytes": 9892
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-call-tracking.test.ts",
+    "archived": "proposal/snapshots/cut/tests/discovery-call-tracking.test.ts.txt",
+    "sha256": "9c3ea13ed20f209f05bc169eb41a28e16b705a86ea79fb9854ec2f68373b0099",
+    "bytes": 7474
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-checklist-categories.test.tsx",
+    "archived": "proposal/snapshots/cut/tests/discovery-checklist-categories.test.tsx.txt",
+    "sha256": "bc5834985d03ee1835737c3287af4f329ff59d6e5d24f5565667098da298569f",
+    "bytes": 3389
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-checklist-projection.test.ts",
+    "archived": "proposal/snapshots/cut/tests/discovery-checklist-projection.test.ts.txt",
+    "sha256": "b8c7060865a6e50ff49cd8ce318e973f7424c15e9fa79a841cdf0d097b21ee4b",
+    "bytes": 3921
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-cockpit-complexity-dom.test.tsx",
+    "archived": "proposal/snapshots/cut/tests/discovery-cockpit-complexity-dom.test.tsx.txt",
+    "sha256": "63c655cac89d4336acc6fda7434466c7c772e7851ac48ae03b974611eb960b04",
+    "bytes": 14081
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-cockpit-depth.test.ts",
+    "archived": "proposal/snapshots/cut/tests/discovery-cockpit-depth.test.ts.txt",
+    "sha256": "41ea1bfde884c29a287dd497cb76a8e9f70c4316db8ea55a6b3e91929436d6b3",
+    "bytes": 10800
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-enrollment-optional-email-migration.test.ts",
+    "archived": "proposal/snapshots/cut/tests/discovery-enrollment-optional-email-migration.test.ts.txt",
+    "sha256": "5632475e27c720306b3e899e54f8166f1ab61bb74111c47175ca243cf13bc41b",
+    "bytes": 3732
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-frequency.test.ts",
+    "archived": "proposal/snapshots/cut/tests/discovery-frequency.test.ts.txt",
+    "sha256": "b2d14aeccd279edbec7d90bd4cf9e8d8ed16c827a0284f3940d2ce2fb0c68a39",
+    "bytes": 2746
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-heat-flow.test.ts",
+    "archived": "proposal/snapshots/cut/tests/discovery-heat-flow.test.ts.txt",
+    "sha256": "117f0297375f6073bba712fedc432e5f6dbebd0fc3858df1bdd59f6513ef515a",
+    "bytes": 3415
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-heat-styling.test.ts",
+    "archived": "proposal/snapshots/cut/tests/discovery-heat-styling.test.ts.txt",
+    "sha256": "10e30cbd1d7485fc393d4cad449101fd581451a665b86da1fe4cba3914518286",
+    "bytes": 5765
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-intake-item-image.test.tsx",
+    "archived": "proposal/snapshots/cut/tests/discovery-intake-item-image.test.tsx.txt",
+    "sha256": "fe2662597e5e5e7af21af338f2cbdd6fafd6431597fa28d5d8523ed5e18920da",
+    "bytes": 2896
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-middleware-gate.test.ts",
+    "archived": "proposal/snapshots/cut/tests/discovery-middleware-gate.test.ts.txt",
+    "sha256": "da83933377ce4bf204795e1d58e837d105e9df8ab520386076bbfc294f6dee70",
+    "bytes": 9557
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-participant-routing.test.ts",
+    "archived": "proposal/snapshots/cut/tests/discovery-participant-routing.test.ts.txt",
+    "sha256": "b3d1dd51358ae192f933baf5a8dc77c0d753c5084af04aa5c787a68434af4d04",
+    "bytes": 10223
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-product-label.test.ts",
+    "archived": "proposal/snapshots/cut/tests/discovery-product-label.test.ts.txt",
+    "sha256": "1587b2aa9cc8a22ce8a1963aa836cfdd9416eb6fcfc6e547965cb955b7e60473",
+    "bytes": 4195
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-products-loading.test.tsx",
+    "archived": "proposal/snapshots/cut/tests/discovery-products-loading.test.tsx.txt",
+    "sha256": "2b8184eb0aa8ebf763f6f044a4f64fef47a5791db9b6230e2098df583965e5a0",
+    "bytes": 2094
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-quiz-answers.test.ts",
+    "archived": "proposal/snapshots/cut/tests/discovery-quiz-answers.test.ts.txt",
+    "sha256": "f381faacfaaeec77e6052a7198dcde8b624a372326c17b6d4abb36b5bd0c63ba",
+    "bytes": 10681
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-quiz-identity.test.ts",
+    "archived": "proposal/snapshots/cut/tests/discovery-quiz-identity.test.ts.txt",
+    "sha256": "8a6275533ad9d6ebd61ba67c4672ad87f2f1c5e711e0166a9b12750e6c920aa3",
+    "bytes": 11471
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-reconcile.test.ts",
+    "archived": "proposal/snapshots/cut/tests/discovery-reconcile.test.ts.txt",
+    "sha256": "bae78027c1ea52bd3523aaac4fcd95c74cfc6f54d4950280ad281bef4eb4cdf9",
+    "bytes": 21150
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-refined-usage.test.ts",
+    "archived": "proposal/snapshots/cut/tests/discovery-refined-usage.test.ts.txt",
+    "sha256": "55fbffd7795be751f465158b9d3927b5e2612fac4df8236d4845440d5d69f6c4",
+    "bytes": 13286
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-runsheet-locked-in-dom.test.tsx",
+    "archived": "proposal/snapshots/cut/tests/discovery-runsheet-locked-in-dom.test.tsx.txt",
+    "sha256": "1cf7c86ee20881ff829e4f3941193c24b04f67a0e1e94e2713518eb95f0851f5",
+    "bytes": 9746
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-search-sheet-props.test.tsx",
+    "archived": "proposal/snapshots/cut/tests/discovery-search-sheet-props.test.tsx.txt",
+    "sha256": "b9cfcc0d1f2a641d36d249283c2bdc9f0e55970932cc27b39351b5111cf38ea1",
+    "bytes": 13998
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-swap-sort.test.ts",
+    "archived": "proposal/snapshots/cut/tests/discovery-swap-sort.test.ts.txt",
+    "sha256": "a4ecc1d9bd281ba636c1c6247dd24cb1cc6f19b31d3b813e1951fcd3a8b767cc",
+    "bytes": 2856
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-unanswered-categories.test.tsx",
+    "archived": "proposal/snapshots/cut/tests/discovery-unanswered-categories.test.tsx.txt",
+    "sha256": "fa0775cf1524e0d8cba67ef6c81c1dce8f4b5d242d69fc5bc79dfc8a91825cdf",
+    "bytes": 12156
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-call-toolkit-migration.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/discovery-call-toolkit-migration.test.ts.txt",
+    "sha256": "1ee51c75306d8775ff4cee05dd02b3852da087b14c6a425dce4b70ac28946abf",
+    "bytes": 4814
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-call-toolkit-sql-execution.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/discovery-call-toolkit-sql-execution.test.ts.txt",
+    "sha256": "49403f1fd2e947a6c9f0499632674a63c66b6a115c493c5fe706765113aa9bce",
+    "bytes": 9892
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-call-tracking.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/discovery-call-tracking.test.ts.txt",
+    "sha256": "9c3ea13ed20f209f05bc169eb41a28e16b705a86ea79fb9854ec2f68373b0099",
+    "bytes": 7474
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-checklist-categories.test.tsx",
+    "archived": "proposal/snapshots/transfer/tests/discovery-checklist-categories.test.tsx.txt",
+    "sha256": "bc5834985d03ee1835737c3287af4f329ff59d6e5d24f5565667098da298569f",
+    "bytes": 3389
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-checklist-projection.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/discovery-checklist-projection.test.ts.txt",
+    "sha256": "b8c7060865a6e50ff49cd8ce318e973f7424c15e9fa79a841cdf0d097b21ee4b",
+    "bytes": 3921
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-cockpit-complexity-dom.test.tsx",
+    "archived": "proposal/snapshots/transfer/tests/discovery-cockpit-complexity-dom.test.tsx.txt",
+    "sha256": "8d5b43ccf7a711bf8c866a19b00294f55b2897c06b7eac1f95f8f1d5032855cd",
+    "bytes": 15150
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-cockpit-depth.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/discovery-cockpit-depth.test.ts.txt",
+    "sha256": "41ea1bfde884c29a287dd497cb76a8e9f70c4316db8ea55a6b3e91929436d6b3",
+    "bytes": 10800
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-enrollment-optional-email-migration.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/discovery-enrollment-optional-email-migration.test.ts.txt",
+    "sha256": "5632475e27c720306b3e899e54f8166f1ab61bb74111c47175ca243cf13bc41b",
+    "bytes": 3732
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-frequency.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/discovery-frequency.test.ts.txt",
+    "sha256": "b2d14aeccd279edbec7d90bd4cf9e8d8ed16c827a0284f3940d2ce2fb0c68a39",
+    "bytes": 2746
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-heat-flow.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/discovery-heat-flow.test.ts.txt",
+    "sha256": "117f0297375f6073bba712fedc432e5f6dbebd0fc3858df1bdd59f6513ef515a",
+    "bytes": 3415
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-heat-styling.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/discovery-heat-styling.test.ts.txt",
+    "sha256": "10e30cbd1d7485fc393d4cad449101fd581451a665b86da1fe4cba3914518286",
+    "bytes": 5765
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-intake-item-image.test.tsx",
+    "archived": "proposal/snapshots/transfer/tests/discovery-intake-item-image.test.tsx.txt",
+    "sha256": "fe2662597e5e5e7af21af338f2cbdd6fafd6431597fa28d5d8523ed5e18920da",
+    "bytes": 2896
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-middleware-gate.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/discovery-middleware-gate.test.ts.txt",
+    "sha256": "da83933377ce4bf204795e1d58e837d105e9df8ab520386076bbfc294f6dee70",
+    "bytes": 9557
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-participant-routing.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/discovery-participant-routing.test.ts.txt",
+    "sha256": "b3d1dd51358ae192f933baf5a8dc77c0d753c5084af04aa5c787a68434af4d04",
+    "bytes": 10223
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-product-label.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/discovery-product-label.test.ts.txt",
+    "sha256": "1587b2aa9cc8a22ce8a1963aa836cfdd9416eb6fcfc6e547965cb955b7e60473",
+    "bytes": 4195
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-products-loading.test.tsx",
+    "archived": "proposal/snapshots/transfer/tests/discovery-products-loading.test.tsx.txt",
+    "sha256": "cc8b83d3e6e8d672417d9c04ae868bc89d0f8aeade78cf129fd804cff17086a2",
+    "bytes": 2441
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-quiz-answers.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/discovery-quiz-answers.test.ts.txt",
+    "sha256": "f381faacfaaeec77e6052a7198dcde8b624a372326c17b6d4abb36b5bd0c63ba",
+    "bytes": 10681
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-quiz-identity.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/discovery-quiz-identity.test.ts.txt",
+    "sha256": "8a6275533ad9d6ebd61ba67c4672ad87f2f1c5e711e0166a9b12750e6c920aa3",
+    "bytes": 11471
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-reconcile.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/discovery-reconcile.test.ts.txt",
+    "sha256": "bae78027c1ea52bd3523aaac4fcd95c74cfc6f54d4950280ad281bef4eb4cdf9",
+    "bytes": 21150
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-refined-usage.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/discovery-refined-usage.test.ts.txt",
+    "sha256": "1a4965fd9db1aa6d8aca434bda2de4b65a4ef11fd2c13e29a80d82eb98a26815",
+    "bytes": 13705
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-runsheet-locked-in-dom.test.tsx",
+    "archived": "proposal/snapshots/transfer/tests/discovery-runsheet-locked-in-dom.test.tsx.txt",
+    "sha256": "1cf7c86ee20881ff829e4f3941193c24b04f67a0e1e94e2713518eb95f0851f5",
+    "bytes": 9746
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-search-sheet-props.test.tsx",
+    "archived": "proposal/snapshots/transfer/tests/discovery-search-sheet-props.test.tsx.txt",
+    "sha256": "b9cfcc0d1f2a641d36d249283c2bdc9f0e55970932cc27b39351b5111cf38ea1",
+    "bytes": 13998
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-swap-sort.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/discovery-swap-sort.test.ts.txt",
+    "sha256": "a4ecc1d9bd281ba636c1c6247dd24cb1cc6f19b31d3b813e1951fcd3a8b767cc",
+    "bytes": 2856
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-unanswered-categories.test.tsx",
+    "archived": "proposal/snapshots/transfer/tests/discovery-unanswered-categories.test.tsx.txt",
+    "sha256": "0d6adadde489969f63e027e45aa890ccb85805320febd9ffa1b03133bd5c6537",
+    "bytes": 12789
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/static-receipt.json",
+    "archived": "proposal/static-receipt.json",
+    "sha256": "cf5bab87c46ac404ccf048ee4ae935e2fde014872f6337baca24178e5f5569f2",
+    "bytes": 731
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163/verify.cjs",
+    "archived": "proposal/verify.cjs.txt",
+    "sha256": "bc6d413098cf1279fd5659dcf1645948abf3fc4c6e08b0c5e84594aa9d58a662",
+    "bytes": 4302
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/README.md",
+    "archived": "operator/README.md",
+    "sha256": "452e4b7c0c0fe6ca145e18d3559bf48f15b046f26c85454027b77fd661f10687",
+    "bytes": 8811
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/adapt.py",
+    "archived": "operator/adapt.py.txt",
+    "sha256": "f7e9ea7ca5662528e5651fbc5f3391e917f8deeff8f518435d443ca5e3d75d5f",
+    "bytes": 6750
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/controls-check.log",
+    "archived": "operator/controls-check.log",
+    "sha256": "6ab44f7849b441f5ba1e68fcd8fa9e05d36c1cf1856fe3531f09c22ccb6e8feb",
+    "bytes": 417
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/editor-check.log",
+    "archived": "operator/editor-check.log",
+    "sha256": "85eeb9f1ab3e69c766b1bb2c0dfc9bf9a9257f7b30685c9b1a80b000069e358a",
+    "bytes": 466
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/make-preparer.py",
+    "archived": "operator/make-preparer.py.txt",
+    "sha256": "2260d2ef7007974ccf55033f784265822705bd1f8545b8c422c7a38abdd4aba1",
+    "bytes": 6391
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/intent.json",
+    "archived": "operator/operator-apply-cut-2BElU5/intent.json",
+    "sha256": "509db2847a192f0e43ecb38b35bc91c63400aa079b262cc3e400a631817423bc",
+    "bytes": 6292
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-call-toolkit-migration.test.ts",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-call-toolkit-migration.test.ts.txt",
+    "sha256": "1ee51c75306d8775ff4cee05dd02b3852da087b14c6a425dce4b70ac28946abf",
+    "bytes": 4814
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-call-toolkit-sql-execution.test.ts",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-call-toolkit-sql-execution.test.ts.txt",
+    "sha256": "49403f1fd2e947a6c9f0499632674a63c66b6a115c493c5fe706765113aa9bce",
+    "bytes": 9892
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-call-tracking.test.ts",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-call-tracking.test.ts.txt",
+    "sha256": "9c3ea13ed20f209f05bc169eb41a28e16b705a86ea79fb9854ec2f68373b0099",
+    "bytes": 7474
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-checklist-categories.test.tsx",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-checklist-categories.test.tsx.txt",
+    "sha256": "bc5834985d03ee1835737c3287af4f329ff59d6e5d24f5565667098da298569f",
+    "bytes": 3389
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-checklist-projection.test.ts",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-checklist-projection.test.ts.txt",
+    "sha256": "b8c7060865a6e50ff49cd8ce318e973f7424c15e9fa79a841cdf0d097b21ee4b",
+    "bytes": 3921
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-cockpit-complexity-dom.test.tsx",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-cockpit-complexity-dom.test.tsx.txt",
+    "sha256": "8d5b43ccf7a711bf8c866a19b00294f55b2897c06b7eac1f95f8f1d5032855cd",
+    "bytes": 15150
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-cockpit-depth.test.ts",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-cockpit-depth.test.ts.txt",
+    "sha256": "41ea1bfde884c29a287dd497cb76a8e9f70c4316db8ea55a6b3e91929436d6b3",
+    "bytes": 10800
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-enrollment-optional-email-migration.test.ts",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-enrollment-optional-email-migration.test.ts.txt",
+    "sha256": "5632475e27c720306b3e899e54f8166f1ab61bb74111c47175ca243cf13bc41b",
+    "bytes": 3732
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-frequency.test.ts",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-frequency.test.ts.txt",
+    "sha256": "b2d14aeccd279edbec7d90bd4cf9e8d8ed16c827a0284f3940d2ce2fb0c68a39",
+    "bytes": 2746
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-heat-flow.test.ts",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-heat-flow.test.ts.txt",
+    "sha256": "117f0297375f6073bba712fedc432e5f6dbebd0fc3858df1bdd59f6513ef515a",
+    "bytes": 3415
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-heat-styling.test.ts",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-heat-styling.test.ts.txt",
+    "sha256": "10e30cbd1d7485fc393d4cad449101fd581451a665b86da1fe4cba3914518286",
+    "bytes": 5765
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-intake-item-image.test.tsx",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-intake-item-image.test.tsx.txt",
+    "sha256": "fe2662597e5e5e7af21af338f2cbdd6fafd6431597fa28d5d8523ed5e18920da",
+    "bytes": 2896
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-middleware-gate.test.ts",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-middleware-gate.test.ts.txt",
+    "sha256": "da83933377ce4bf204795e1d58e837d105e9df8ab520386076bbfc294f6dee70",
+    "bytes": 9557
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-participant-routing.test.ts",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-participant-routing.test.ts.txt",
+    "sha256": "b3d1dd51358ae192f933baf5a8dc77c0d753c5084af04aa5c787a68434af4d04",
+    "bytes": 10223
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-product-label.test.ts",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-product-label.test.ts.txt",
+    "sha256": "1587b2aa9cc8a22ce8a1963aa836cfdd9416eb6fcfc6e547965cb955b7e60473",
+    "bytes": 4195
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-products-loading.test.tsx",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-products-loading.test.tsx.txt",
+    "sha256": "cc8b83d3e6e8d672417d9c04ae868bc89d0f8aeade78cf129fd804cff17086a2",
+    "bytes": 2441
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-quiz-answers.test.ts",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-quiz-answers.test.ts.txt",
+    "sha256": "f381faacfaaeec77e6052a7198dcde8b624a372326c17b6d4abb36b5bd0c63ba",
+    "bytes": 10681
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-quiz-identity.test.ts",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-quiz-identity.test.ts.txt",
+    "sha256": "8a6275533ad9d6ebd61ba67c4672ad87f2f1c5e711e0166a9b12750e6c920aa3",
+    "bytes": 11471
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-reconcile.test.ts",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-reconcile.test.ts.txt",
+    "sha256": "bae78027c1ea52bd3523aaac4fcd95c74cfc6f54d4950280ad281bef4eb4cdf9",
+    "bytes": 21150
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-refined-usage.test.ts",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-refined-usage.test.ts.txt",
+    "sha256": "1a4965fd9db1aa6d8aca434bda2de4b65a4ef11fd2c13e29a80d82eb98a26815",
+    "bytes": 13705
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-runsheet-locked-in-dom.test.tsx",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-runsheet-locked-in-dom.test.tsx.txt",
+    "sha256": "1cf7c86ee20881ff829e4f3941193c24b04f67a0e1e94e2713518eb95f0851f5",
+    "bytes": 9746
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-search-sheet-props.test.tsx",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-search-sheet-props.test.tsx.txt",
+    "sha256": "b9cfcc0d1f2a641d36d249283c2bdc9f0e55970932cc27b39351b5111cf38ea1",
+    "bytes": 13998
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-swap-sort.test.ts",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-swap-sort.test.ts.txt",
+    "sha256": "a4ecc1d9bd281ba636c1c6247dd24cb1cc6f19b31d3b813e1951fcd3a8b767cc",
+    "bytes": 2856
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/originals/tests/discovery-unanswered-categories.test.tsx",
+    "archived": "operator/operator-apply-cut-2BElU5/originals/tests/discovery-unanswered-categories.test.tsx.txt",
+    "sha256": "0d6adadde489969f63e027e45aa890ccb85805320febd9ffa1b03133bd5c6537",
+    "bytes": 12789
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-cut-2BElU5/receipt.json",
+    "archived": "operator/operator-apply-cut-2BElU5/receipt.json",
+    "sha256": "273198134cd19f4094901a772992692822dc1033e55fb57e8be20b402f5af96f",
+    "bytes": 3673
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/intent.json",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/intent.json",
+    "sha256": "b006f7c8945e27fe5b4fd84e5cfc0714cdd82855ff595fea0a653f35c7be0c43",
+    "bytes": 6049
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-call-toolkit-migration.test.ts",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-call-toolkit-migration.test.ts.txt",
+    "sha256": "1ee51c75306d8775ff4cee05dd02b3852da087b14c6a425dce4b70ac28946abf",
+    "bytes": 4814
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-call-toolkit-sql-execution.test.ts",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-call-toolkit-sql-execution.test.ts.txt",
+    "sha256": "49403f1fd2e947a6c9f0499632674a63c66b6a115c493c5fe706765113aa9bce",
+    "bytes": 9892
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-call-tracking.test.ts",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-call-tracking.test.ts.txt",
+    "sha256": "9c3ea13ed20f209f05bc169eb41a28e16b705a86ea79fb9854ec2f68373b0099",
+    "bytes": 7474
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-checklist-categories.test.tsx",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-checklist-categories.test.tsx.txt",
+    "sha256": "bc5834985d03ee1835737c3287af4f329ff59d6e5d24f5565667098da298569f",
+    "bytes": 3389
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-checklist-projection.test.ts",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-checklist-projection.test.ts.txt",
+    "sha256": "b8c7060865a6e50ff49cd8ce318e973f7424c15e9fa79a841cdf0d097b21ee4b",
+    "bytes": 3921
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-cockpit-complexity-dom.test.tsx",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-cockpit-complexity-dom.test.tsx.txt",
+    "sha256": "22ab2c345408788bcfa34f0d20571f3b445305a008e40a6cba471d64417a5c3b",
+    "bytes": 14335
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-cockpit-depth.test.ts",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-cockpit-depth.test.ts.txt",
+    "sha256": "41ea1bfde884c29a287dd497cb76a8e9f70c4316db8ea55a6b3e91929436d6b3",
+    "bytes": 10800
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-enrollment-optional-email-migration.test.ts",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-enrollment-optional-email-migration.test.ts.txt",
+    "sha256": "5632475e27c720306b3e899e54f8166f1ab61bb74111c47175ca243cf13bc41b",
+    "bytes": 3732
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-frequency.test.ts",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-frequency.test.ts.txt",
+    "sha256": "b2d14aeccd279edbec7d90bd4cf9e8d8ed16c827a0284f3940d2ce2fb0c68a39",
+    "bytes": 2746
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-heat-flow.test.ts",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-heat-flow.test.ts.txt",
+    "sha256": "117f0297375f6073bba712fedc432e5f6dbebd0fc3858df1bdd59f6513ef515a",
+    "bytes": 3415
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-heat-styling.test.ts",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-heat-styling.test.ts.txt",
+    "sha256": "10e30cbd1d7485fc393d4cad449101fd581451a665b86da1fe4cba3914518286",
+    "bytes": 5765
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-intake-item-image.test.tsx",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-intake-item-image.test.tsx.txt",
+    "sha256": "fe2662597e5e5e7af21af338f2cbdd6fafd6431597fa28d5d8523ed5e18920da",
+    "bytes": 2896
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-middleware-gate.test.ts",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-middleware-gate.test.ts.txt",
+    "sha256": "da83933377ce4bf204795e1d58e837d105e9df8ab520386076bbfc294f6dee70",
+    "bytes": 9557
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-participant-routing.test.ts",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-participant-routing.test.ts.txt",
+    "sha256": "b3d1dd51358ae192f933baf5a8dc77c0d753c5084af04aa5c787a68434af4d04",
+    "bytes": 10223
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-product-label.test.ts",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-product-label.test.ts.txt",
+    "sha256": "1587b2aa9cc8a22ce8a1963aa836cfdd9416eb6fcfc6e547965cb955b7e60473",
+    "bytes": 4195
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-products-loading.test.tsx",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-products-loading.test.tsx.txt",
+    "sha256": "1099b32f2ca074920f61b00968061c4aff868ad0c213fbf8e183ed513af58d2d",
+    "bytes": 2239
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-quiz-answers.test.ts",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-quiz-answers.test.ts.txt",
+    "sha256": "f381faacfaaeec77e6052a7198dcde8b624a372326c17b6d4abb36b5bd0c63ba",
+    "bytes": 10681
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-quiz-identity.test.ts",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-quiz-identity.test.ts.txt",
+    "sha256": "8a6275533ad9d6ebd61ba67c4672ad87f2f1c5e711e0166a9b12750e6c920aa3",
+    "bytes": 11471
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-reconcile.test.ts",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-reconcile.test.ts.txt",
+    "sha256": "bae78027c1ea52bd3523aaac4fcd95c74cfc6f54d4950280ad281bef4eb4cdf9",
+    "bytes": 21150
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-refined-usage.test.ts",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-refined-usage.test.ts.txt",
+    "sha256": "de8e01d744a436c48cead5794d20f56357b42015e5ef41c761bd8e6ac1778b0c",
+    "bytes": 13259
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-runsheet-locked-in-dom.test.tsx",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-runsheet-locked-in-dom.test.tsx.txt",
+    "sha256": "1cf7c86ee20881ff829e4f3941193c24b04f67a0e1e94e2713518eb95f0851f5",
+    "bytes": 9746
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-search-sheet-props.test.tsx",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-search-sheet-props.test.tsx.txt",
+    "sha256": "b9cfcc0d1f2a641d36d249283c2bdc9f0e55970932cc27b39351b5111cf38ea1",
+    "bytes": 13998
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-swap-sort.test.ts",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-swap-sort.test.ts.txt",
+    "sha256": "a4ecc1d9bd281ba636c1c6247dd24cb1cc6f19b31d3b813e1951fcd3a8b767cc",
+    "bytes": 2856
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/originals/tests/discovery-unanswered-categories.test.tsx",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/originals/tests/discovery-unanswered-categories.test.tsx.txt",
+    "sha256": "530863ab6739a2d8109c2834f9bd527e4ebcb039f513ef6d96371652491e1866",
+    "bytes": 12178
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-apply-transfer-Q5ekEF/receipt.json",
+    "archived": "operator/operator-apply-transfer-Q5ekEF/receipt.json",
+    "sha256": "7bcf8ac0f52d4894fd4f8bb62fb15b880a5d4c29b5ca91005f9283d6b1c0c082",
+    "bytes": 3440
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-candidates.json",
+    "archived": "operator/operator-candidates.json",
+    "sha256": "d990c756c53d47d886192cb45e46ca98c7d62f640a34d36ecfa3f68f8fdfe62d",
+    "bytes": 16743
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-controls-normalized.json",
+    "archived": "operator/operator-controls-normalized.json",
+    "sha256": "fcb083ad353ae1493f9bbb459a3e04f08a8d71f9735a44eb55eb9346d3d58af3",
+    "bytes": 11170
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-edit.cjs",
+    "archived": "operator/operator-edit.cjs.txt",
+    "sha256": "5c4a4bdb43f7f1f818fa3aa7fa398030ac7753ce26f17cadcb0e49b829075bfd",
+    "bytes": 3639
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-evidence.json",
+    "archived": "operator/operator-evidence.json",
+    "sha256": "610b1b24447abe2626fd340ed3a0fba856d7e0a5efa8f34a6a663e56b51036b6",
+    "bytes": 20530
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-guard.cjs",
+    "archived": "operator/operator-guard.cjs.txt",
+    "sha256": "fda51c060377a3566172dff9e51c0081a68d79d3a3f0913c49a005474a6e3a2c",
+    "bytes": 13565
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C1/originals/src/app/beratung/produkte/loading.tsx",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C1/originals/src/app/beratung/produkte/loading.tsx.txt",
+    "sha256": "740f4a80b796a766d1981dba5dd2b184f5f1ba769ffeee523a93463711347551",
+    "bytes": 4234
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C1-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C1-after.command.json",
+    "sha256": "dec068171ad9d3d572bf65d5a1dbc43d476ce511c2950082a8accc5ea711a7b1",
+    "bytes": 432
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C1-after.tap",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C1-after.tap",
+    "sha256": "43a450a2f84876e09ca9ca2e70246e1b3713871ccf3f65439857d4891335d898",
+    "bytes": 332
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C1-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C1-before.command.json",
+    "sha256": "dec068171ad9d3d572bf65d5a1dbc43d476ce511c2950082a8accc5ea711a7b1",
+    "bytes": 432
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C1-before.tap",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C1-before.tap",
+    "sha256": "943b331786f02ff2e17da0e8dde5ab3af0591b0bd288f4e6ece093ea352dd06f",
+    "bytes": 332
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C1-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C1-fault.command.json",
+    "sha256": "dec068171ad9d3d572bf65d5a1dbc43d476ce511c2950082a8accc5ea711a7b1",
+    "bytes": 432
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C1-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C1-fault.tap",
+    "sha256": "04e55e54e65b08cafe50dda769f2c634fcc25a6fd8b2a12acb12259159b88e5a",
+    "bytes": 1636
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C2/originals/src/components/discovery/cockpit/discovery-call-cockpit.tsx",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C2/originals/src/components/discovery/cockpit/discovery-call-cockpit.tsx.txt",
+    "sha256": "2d0adde32589464e10ba2b9a1bb9d13263ca40bbfada8b9d4ab82a1572d68071",
+    "bytes": 51492
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C2-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C2-after.command.json",
+    "sha256": "6c0e75c8858333be0acd8fc4d41be4a7711b102cccae2eedfa20c3e119e4b03f",
+    "bytes": 449
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C2-after.tap",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C2-after.tap",
+    "sha256": "876a2f9f5414e6ee65cb93f551efad3485c4352923fd1a46619b00c28effce0b",
+    "bytes": 355
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C2-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C2-before.command.json",
+    "sha256": "6c0e75c8858333be0acd8fc4d41be4a7711b102cccae2eedfa20c3e119e4b03f",
+    "bytes": 449
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C2-before.tap",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C2-before.tap",
+    "sha256": "e4c5252aae8df3b30e4a7469f6f05a8a421feec76a90ff2dd70faa3b5a78a1fb",
+    "bytes": 355
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C2-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C2-fault.command.json",
+    "sha256": "6c0e75c8858333be0acd8fc4d41be4a7711b102cccae2eedfa20c3e119e4b03f",
+    "bytes": 449
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C2-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C2-fault.tap",
+    "sha256": "bf0fc56600265f0a19d5124f72bea076443f32685961762b17c719c07f2953d6",
+    "bytes": 1053
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C3/originals/src/components/discovery/cockpit/discovery-call-cockpit.tsx",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C3/originals/src/components/discovery/cockpit/discovery-call-cockpit.tsx.txt",
+    "sha256": "2d0adde32589464e10ba2b9a1bb9d13263ca40bbfada8b9d4ab82a1572d68071",
+    "bytes": 51492
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C3-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C3-after.command.json",
+    "sha256": "3fdc5480327aafa28de9df7fb07c68845744188aaf29e70d5045de46d443ca41",
+    "bytes": 455
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C3-after.tap",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C3-after.tap",
+    "sha256": "c034e126d63b6e8508f105d0613b2d4ec753606d037891057311146625275842",
+    "bytes": 360
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C3-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C3-before.command.json",
+    "sha256": "3fdc5480327aafa28de9df7fb07c68845744188aaf29e70d5045de46d443ca41",
+    "bytes": 455
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C3-before.tap",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C3-before.tap",
+    "sha256": "abcc8c48644cd1b119e8ee6184ab3b79f9b9e48676df56a2030d73fca0423001",
+    "bytes": 358
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C3-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C3-fault.command.json",
+    "sha256": "3fdc5480327aafa28de9df7fb07c68845744188aaf29e70d5045de46d443ca41",
+    "bytes": 455
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C3-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C3-fault.tap",
+    "sha256": "d41ae85175cf42cbde2b348039072de08b47f9b378ecdd164fa72de0a5ab25e1",
+    "bytes": 1078
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C4/originals/src/lib/discovery/refined-routine.ts",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C4/originals/src/lib/discovery/refined-routine.ts.txt",
+    "sha256": "79a8321c4bb5c53a9594b0664cc708f326bca7ff058c6aeba4faa18cd821ee00",
+    "bytes": 28434
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C4-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C4-after.command.json",
+    "sha256": "33686dd7bd955d144dc28872363614cd6adc4f20bc51da4d9ece76df280d592b",
+    "bytes": 444
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C4-after.tap",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C4-after.tap",
+    "sha256": "034643940330ea1f63239479fcca3eb77e26ba828550ffb0ad7dc68ff9243135",
+    "bytes": 363
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C4-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C4-before.command.json",
+    "sha256": "33686dd7bd955d144dc28872363614cd6adc4f20bc51da4d9ece76df280d592b",
+    "bytes": 444
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C4-before.tap",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C4-before.tap",
+    "sha256": "fea865bf78c20852838edb168dfc677b61b1542f70909b5196bb52795e8ad6b8",
+    "bytes": 364
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C4-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C4-fault.command.json",
+    "sha256": "33686dd7bd955d144dc28872363614cd6adc4f20bc51da4d9ece76df280d592b",
+    "bytes": 444
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C4-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C4-fault.tap",
+    "sha256": "773fd85b698672dbced45b3ba223b2307d6cb9bb82bd703648d3eefeca566ad4",
+    "bytes": 1057
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C5/originals/src/app/admin/beratung/[enrollmentId]/page.tsx",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C5/originals/src/app/admin/beratung/[enrollmentId]/page.tsx.txt",
+    "sha256": "586f0276c8add490377ab3340ce08c9045ea76b029ea7a07389a82fef0cc7eb5",
+    "bytes": 21760
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C5-after.command.json",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C5-after.command.json",
+    "sha256": "522aefcd1fd23ab62aa59e479215b2c7646db049668b7e47d237dec78fef1c60",
+    "bytes": 445
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C5-after.tap",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C5-after.tap",
+    "sha256": "b898592fd9f9c8838ba959004119212a7fb96cb40e7638e22950a67825082f66",
+    "bytes": 1186
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C5-before.command.json",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C5-before.command.json",
+    "sha256": "522aefcd1fd23ab62aa59e479215b2c7646db049668b7e47d237dec78fef1c60",
+    "bytes": 445
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C5-before.tap",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C5-before.tap",
+    "sha256": "bd242c1c0222abc1e4de01fb83e8b00ee51d5207bb32b8c37f0b11187d63d4c6",
+    "bytes": 1186
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C5-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C5-fault.command.json",
+    "sha256": "522aefcd1fd23ab62aa59e479215b2c7646db049668b7e47d237dec78fef1c60",
+    "bytes": 445
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/C5-fault.tap",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/C5-fault.tap",
+    "sha256": "6b735b3e3c64463e4bd69d759eb87eb285879c083084e056fea9bfcd83f2ca07",
+    "bytes": 1832
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/src/app/admin/beratung/[enrollmentId]/page.tsx",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/src/app/admin/beratung/[enrollmentId]/page.tsx.txt",
+    "sha256": "586f0276c8add490377ab3340ce08c9045ea76b029ea7a07389a82fef0cc7eb5",
+    "bytes": 21760
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/src/app/beratung/produkte/loading.tsx",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/src/app/beratung/produkte/loading.tsx.txt",
+    "sha256": "740f4a80b796a766d1981dba5dd2b184f5f1ba769ffeee523a93463711347551",
+    "bytes": 4234
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/src/components/discovery/cockpit/discovery-call-cockpit.tsx",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/src/components/discovery/cockpit/discovery-call-cockpit.tsx.txt",
+    "sha256": "2d0adde32589464e10ba2b9a1bb9d13263ca40bbfada8b9d4ab82a1572d68071",
+    "bytes": 51492
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/src/lib/discovery/refined-routine.ts",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/src/lib/discovery/refined-routine.ts.txt",
+    "sha256": "79a8321c4bb5c53a9594b0664cc708f326bca7ff058c6aeba4faa18cd821ee00",
+    "bytes": 28434
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-call-toolkit-migration.test.ts",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-call-toolkit-migration.test.ts.txt",
+    "sha256": "1ee51c75306d8775ff4cee05dd02b3852da087b14c6a425dce4b70ac28946abf",
+    "bytes": 4814
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-call-toolkit-sql-execution.test.ts",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-call-toolkit-sql-execution.test.ts.txt",
+    "sha256": "49403f1fd2e947a6c9f0499632674a63c66b6a115c493c5fe706765113aa9bce",
+    "bytes": 9892
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-call-tracking.test.ts",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-call-tracking.test.ts.txt",
+    "sha256": "9c3ea13ed20f209f05bc169eb41a28e16b705a86ea79fb9854ec2f68373b0099",
+    "bytes": 7474
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-checklist-categories.test.tsx",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-checklist-categories.test.tsx.txt",
+    "sha256": "bc5834985d03ee1835737c3287af4f329ff59d6e5d24f5565667098da298569f",
+    "bytes": 3389
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-checklist-projection.test.ts",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-checklist-projection.test.ts.txt",
+    "sha256": "b8c7060865a6e50ff49cd8ce318e973f7424c15e9fa79a841cdf0d097b21ee4b",
+    "bytes": 3921
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-cockpit-complexity-dom.test.tsx",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-cockpit-complexity-dom.test.tsx.txt",
+    "sha256": "8d5b43ccf7a711bf8c866a19b00294f55b2897c06b7eac1f95f8f1d5032855cd",
+    "bytes": 15150
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-cockpit-depth.test.ts",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-cockpit-depth.test.ts.txt",
+    "sha256": "41ea1bfde884c29a287dd497cb76a8e9f70c4316db8ea55a6b3e91929436d6b3",
+    "bytes": 10800
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-enrollment-optional-email-migration.test.ts",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-enrollment-optional-email-migration.test.ts.txt",
+    "sha256": "5632475e27c720306b3e899e54f8166f1ab61bb74111c47175ca243cf13bc41b",
+    "bytes": 3732
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-frequency.test.ts",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-frequency.test.ts.txt",
+    "sha256": "b2d14aeccd279edbec7d90bd4cf9e8d8ed16c827a0284f3940d2ce2fb0c68a39",
+    "bytes": 2746
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-heat-flow.test.ts",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-heat-flow.test.ts.txt",
+    "sha256": "117f0297375f6073bba712fedc432e5f6dbebd0fc3858df1bdd59f6513ef515a",
+    "bytes": 3415
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-heat-styling.test.ts",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-heat-styling.test.ts.txt",
+    "sha256": "10e30cbd1d7485fc393d4cad449101fd581451a665b86da1fe4cba3914518286",
+    "bytes": 5765
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-intake-item-image.test.tsx",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-intake-item-image.test.tsx.txt",
+    "sha256": "fe2662597e5e5e7af21af338f2cbdd6fafd6431597fa28d5d8523ed5e18920da",
+    "bytes": 2896
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-middleware-gate.test.ts",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-middleware-gate.test.ts.txt",
+    "sha256": "da83933377ce4bf204795e1d58e837d105e9df8ab520386076bbfc294f6dee70",
+    "bytes": 9557
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-participant-routing.test.ts",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-participant-routing.test.ts.txt",
+    "sha256": "b3d1dd51358ae192f933baf5a8dc77c0d753c5084af04aa5c787a68434af4d04",
+    "bytes": 10223
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-product-label.test.ts",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-product-label.test.ts.txt",
+    "sha256": "1587b2aa9cc8a22ce8a1963aa836cfdd9416eb6fcfc6e547965cb955b7e60473",
+    "bytes": 4195
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-products-loading.test.tsx",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-products-loading.test.tsx.txt",
+    "sha256": "cc8b83d3e6e8d672417d9c04ae868bc89d0f8aeade78cf129fd804cff17086a2",
+    "bytes": 2441
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-quiz-answers.test.ts",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-quiz-answers.test.ts.txt",
+    "sha256": "f381faacfaaeec77e6052a7198dcde8b624a372326c17b6d4abb36b5bd0c63ba",
+    "bytes": 10681
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-quiz-identity.test.ts",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-quiz-identity.test.ts.txt",
+    "sha256": "8a6275533ad9d6ebd61ba67c4672ad87f2f1c5e711e0166a9b12750e6c920aa3",
+    "bytes": 11471
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-reconcile.test.ts",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-reconcile.test.ts.txt",
+    "sha256": "bae78027c1ea52bd3523aaac4fcd95c74cfc6f54d4950280ad281bef4eb4cdf9",
+    "bytes": 21150
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-refined-usage.test.ts",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-refined-usage.test.ts.txt",
+    "sha256": "1a4965fd9db1aa6d8aca434bda2de4b65a4ef11fd2c13e29a80d82eb98a26815",
+    "bytes": 13705
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-runsheet-locked-in-dom.test.tsx",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-runsheet-locked-in-dom.test.tsx.txt",
+    "sha256": "1cf7c86ee20881ff829e4f3941193c24b04f67a0e1e94e2713518eb95f0851f5",
+    "bytes": 9746
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-search-sheet-props.test.tsx",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-search-sheet-props.test.tsx.txt",
+    "sha256": "b9cfcc0d1f2a641d36d249283c2bdc9f0e55970932cc27b39351b5111cf38ea1",
+    "bytes": 13998
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-swap-sort.test.ts",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-swap-sort.test.ts.txt",
+    "sha256": "a4ecc1d9bd281ba636c1c6247dd24cb1cc6f19b31d3b813e1951fcd3a8b767cc",
+    "bytes": 2856
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-unanswered-categories.test.tsx",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/all-originals/tests/discovery-unanswered-categories.test.tsx.txt",
+    "sha256": "0d6adadde489969f63e027e45aa890ccb85805320febd9ffa1b03133bd5c6537",
+    "bytes": 12789
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/complete.json",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/complete.json",
+    "sha256": "c2938eeb335245a33bf62cf7f35833ade20644f908327d420894dd5e2ac62cb4",
+    "bytes": 54368
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/intent.json",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/intent.json",
+    "sha256": "a23c44ed72309628bd4fb576647067c04fa5a1f0b0d57ff05c6592285f08f1eb",
+    "bytes": 3490
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-mutations-transfer-6kTa8F/receipt.json",
+    "archived": "operator/operator-mutations-transfer-6kTa8F/receipt.json",
+    "sha256": "5c095597f5a25b3543a067635b0490dcb7dba49f9b5d340f7ac27d2100aaabc8",
+    "bytes": 417184
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-pins.json",
+    "archived": "operator/operator-pins.json",
+    "sha256": "3fca83bc5a719ae90107a6ae8408aa2d8f45c511701b31ce2ac5ff279c8efdac",
+    "bytes": 1487785
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-proof.cjs",
+    "archived": "operator/operator-proof.cjs.txt",
+    "sha256": "4508d0b31d5194a4024a690f0fd2abbd7018db057c23b3bfea1f10bcb27eeebc",
+    "bytes": 4929
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-readonly-preload.cjs",
+    "archived": "operator/operator-readonly-preload.cjs.txt",
+    "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-run-controls.cjs",
+    "archived": "operator/operator-run-controls.cjs.txt",
+    "sha256": "f6f500bcc511f04f92bc5efd9b48f924d455d897b7667bb1e07c70ee4a30bd80",
+    "bytes": 8058
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-selected-closure.json",
+    "archived": "operator/operator-selected-closure.json",
+    "sha256": "124a3f2f5c81e4c3f64f8feb6778ef80d35be4765873468dcd09510819f6336a",
+    "bytes": 206483
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/preparation-final-receipt.json",
+    "archived": "operator/preparation-final-receipt.json",
+    "sha256": "69129f12b4c536b6a389ac91e60aca2ab03d331f97690c12620851acf4558020",
+    "bytes": 1121
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/preparation-receipt.json",
+    "archived": "operator/preparation-receipt.json",
+    "sha256": "082df4b1d4e0232e933d4795ec563dc874cf4cae220fcc3aeda48ccd973f89a6",
+    "bytes": 1121
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/prepare-pins.cjs",
+    "archived": "operator/prepare-pins.cjs.txt",
+    "sha256": "8f259b2c91b11f5d64abc2bf8e2ce8ce7b1cf6d0d4ac0d20a8290612c20d3a22",
+    "bytes": 14296
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/proof-attestation.cjs",
+    "archived": "operator/proof-attestation.cjs.txt",
+    "sha256": "5d258a515a15dbe7f7e4440446a5d542c4a703e934d213a9c7cd12254c24a1e0",
+    "bytes": 2908
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/proof-attestation.log",
+    "archived": "operator/proof-attestation.log",
+    "sha256": "c48fc8db64fc7b1e7bfc74918bdb3521b9f443a4b8059b76b80024b1d72dba43",
+    "bytes": 422
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/static-receipt.json",
+    "archived": "operator/static-receipt.json",
+    "sha256": "e418de5329b6c3392841c0c3f79d313f49be1ae570215c14fc8eab507daa3a7f",
+    "bytes": 1595
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/template-delta.patch",
+    "archived": "operator/template-delta.patch",
+    "sha256": "8baaff37ad7f9c70baea0869cef1b5bf75db20d8906c25f75e70a36073d1832c",
+    "bytes": 38897
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/template-provenance.json",
+    "archived": "operator/template-provenance.json",
+    "sha256": "e50360b27f287b3c8b171f2c6bd1ffac2780794879eb53405163c8e539959205",
+    "bytes": 2085
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-tools-70q2q9t7/tool-code-hashes.json",
+    "archived": "operator/tool-code-hashes.json",
+    "sha256": "f7d947baebce03b50f9d628672ea0350a14c2e2378497dad8c7f061174592484",
+    "bytes": 2088
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163-independent-preservation.md",
+    "archived": "independent/test-audit-discovery-operational163-independent-preservation.md",
+    "sha256": "a20f650e00695ea99fbba73e40a00226376a96d4063cfbfad04c9059b6f189b4",
+    "bytes": 12121
+  },
+  {
+    "original": "/tmp/test-audit-discovery-operational163-independent-receipt.json",
+    "archived": "independent/test-audit-discovery-operational163-independent-receipt.json",
+    "sha256": "f396f47aa60f4e05eb73f19c0fd9eeceb6ec443739f6613247047aa9b9476225",
+    "bytes": 100460
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-main-before.tap",
+    "archived": "native/test-audit-discovery163-main-before.tap",
+    "sha256": "75c9f736356a270395874c67da99db10d39d97dfa15f516c373e3484f24089fe",
+    "bytes": 38020
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-main-before.command.json",
+    "archived": "native/test-audit-discovery163-main-before.command.json",
+    "sha256": "5104e7e4b8cae2d6b85432894ba844281467073a9a2ed5c4a263382a6751e6ed",
+    "bytes": 1407
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-main-transfer.tap",
+    "archived": "native/test-audit-discovery163-main-transfer.tap",
+    "sha256": "59b23bc5067f4b5d2aed65e804e440081798c3798fa13f2ca8c4d6444a5d7bbb",
+    "bytes": 37997
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-main-transfer.command.json",
+    "archived": "native/test-audit-discovery163-main-transfer.command.json",
+    "sha256": "5104e7e4b8cae2d6b85432894ba844281467073a9a2ed5c4a263382a6751e6ed",
+    "bytes": 1407
+  },
+  {
+    "original": "/tmp/test-audit-discovery163-main-transfer.result.json",
+    "archived": "native/test-audit-discovery163-main-transfer.result.json",
+    "sha256": "f9018bf9fee5df83085fd65cb4906325cdf066b3b4a1d05f8e056b4be1cb60a3",
+    "bytes": 173
+  },
+  {
+    "original": "/tmp/test-audit-discovery158-main-cut.tap",
+    "archived": "native/test-audit-discovery158-main-cut.tap",
+    "sha256": "51789e5b4a502a6d2dffe248a1506ab2e34be83c5c8f765e7978af460c4f8aa2",
+    "bytes": 36089
+  },
+  {
+    "original": "/tmp/test-audit-discovery158-main-cut.command.json",
+    "archived": "native/test-audit-discovery158-main-cut.command.json",
+    "sha256": "5104e7e4b8cae2d6b85432894ba844281467073a9a2ed5c4a263382a6751e6ed",
+    "bytes": 1407
+  },
+  {
+    "original": "/tmp/test-audit-discovery158-main-cut.result.json",
+    "archived": "native/test-audit-discovery158-main-cut.result.json",
+    "sha256": "d4f7ee07f6f0043a103f0dc35c24bae2f822f030aac58c42b008954a3b79a1b2",
+    "bytes": 173
+  }
+]

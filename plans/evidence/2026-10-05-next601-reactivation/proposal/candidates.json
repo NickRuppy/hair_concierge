@@ -1,0 +1,256 @@
+[
+  {
+    "id": "C1",
+    "donor": {
+      "file": "tests/reactivation-retained-account-activation.test.ts",
+      "title": "duplicate completed webhook retains account and never grants initial-password capability",
+      "line": 288,
+      "start": 9944,
+      "end": 10440,
+      "declaration": "test(\"duplicate completed webhook retains account and never grants initial-password capability\", async () => {\n  const f = fixture()\n  const first = await ensureCheckoutAccount(f.session, f.deps)\n  f.reservation.status = \"completed\"\n  const second = await ensureCheckoutAccount(f.session, f.deps)\n  assert.equal(first.userId, userId)\n  assert.equal(second.userId, userId)\n  assert.equal(second.canSetInitialPassword, false)\n  assert.equal(f.billing.length, 1)\n  assert.equal(f.users.length, 1)\n})",
+      "body": "async () => {\n  const f = fixture()\n  const first = await ensureCheckoutAccount(f.session, f.deps)\n  f.reservation.status = \"completed\"\n  const second = await ensureCheckoutAccount(f.session, f.deps)\n  assert.equal(first.userId, userId)\n  assert.equal(second.userId, userId)\n  assert.equal(second.canSetInitialPassword, false)\n  assert.equal(f.billing.length, 1)\n  assert.equal(f.users.length, 1)\n}",
+      "sha256": "1c15399a6d30d3a7d43e2caf3546cfac286030d5ad938ddbd1977c83016d9d74"
+    },
+    "keeper": {
+      "file": "tests/reactivation-retained-account-activation.test.ts",
+      "title": "Stripe duplicate webhook safely repeats completion of the same bound reservation",
+      "declaration": "test(\"Stripe duplicate webhook safely repeats completion of the same bound reservation\", async () => {\n  const f = fixture()\n  await handleCheckoutSessionCompleted(f.session, f.deps)\n  await handleCheckoutSessionCompleted(f.session, f.deps)\n  assert.equal(f.reservation.status, \"completed\")\n  assert.equal(f.billing.length, 1)\n  assert.equal(f.users.length, 1)\n})",
+      "body": "async () => {\n  const f = fixture()\n  await handleCheckoutSessionCompleted(f.session, f.deps)\n  await handleCheckoutSessionCompleted(f.session, f.deps)\n  assert.equal(f.reservation.status, \"completed\")\n  assert.equal(f.billing.length, 1)\n  assert.equal(f.users.length, 1)\n}",
+      "sha256": "8c7297a807dbeef2a53c5f99848d382dfd736d1c4c0a64cf0aa347dab09be5a6",
+      "calls": [
+        "fixture()",
+        "handleCheckoutSessionCompleted(f.session, f.deps)",
+        "handleCheckoutSessionCompleted(f.session, f.deps)"
+      ],
+      "assertions": [
+        {
+          "text": "assert.equal(f.reservation.status, \"completed\")",
+          "line": 227
+        },
+        {
+          "text": "assert.equal(f.billing.length, 1)",
+          "line": 228
+        },
+        {
+          "text": "assert.equal(f.users.length, 1)",
+          "line": 229
+        }
+      ]
+    },
+    "reason": "Exact ensureCheckoutAccount replay already executed through the direct production webhook delegate; transfer returned account/password capability assertions into its two existing calls.",
+    "keeperAfterTransfer": {
+      "file": "tests/reactivation-retained-account-activation.test.ts",
+      "title": "Stripe duplicate webhook safely repeats completion of the same bound reservation",
+      "declaration": "test(\"Stripe duplicate webhook safely repeats completion of the same bound reservation\", async () => {\n  const f = fixture()\n  const first = await handleCheckoutSessionCompleted(f.session, f.deps)\n  const second = await handleCheckoutSessionCompleted(f.session, f.deps)\n  assert.equal(first.userId, userId)\n  assert.equal(second.userId, userId)\n  assert.equal(second.canSetInitialPassword, false)\n  assert.equal(f.reservation.status, \"completed\")\n  assert.equal(f.billing.length, 1)\n  assert.equal(f.users.length, 1)\n})",
+      "body": "async () => {\n  const f = fixture()\n  const first = await handleCheckoutSessionCompleted(f.session, f.deps)\n  const second = await handleCheckoutSessionCompleted(f.session, f.deps)\n  assert.equal(first.userId, userId)\n  assert.equal(second.userId, userId)\n  assert.equal(second.canSetInitialPassword, false)\n  assert.equal(f.reservation.status, \"completed\")\n  assert.equal(f.billing.length, 1)\n  assert.equal(f.users.length, 1)\n}",
+      "sha256": "e66d911e4332f29f6d43e77753256ec590ac77def0774b12ed83c909a3d13f06",
+      "calls": [
+        "fixture()",
+        "handleCheckoutSessionCompleted(f.session, f.deps)",
+        "handleCheckoutSessionCompleted(f.session, f.deps)"
+      ],
+      "assertions": [
+        {
+          "text": "assert.equal(first.userId, userId)",
+          "line": 227
+        },
+        {
+          "text": "assert.equal(second.userId, userId)",
+          "line": 228
+        },
+        {
+          "text": "assert.equal(second.canSetInitialPassword, false)",
+          "line": 229
+        },
+        {
+          "text": "assert.equal(f.reservation.status, \"completed\")",
+          "line": 230
+        },
+        {
+          "text": "assert.equal(f.billing.length, 1)",
+          "line": 231
+        },
+        {
+          "text": "assert.equal(f.users.length, 1)",
+          "line": 232
+        }
+      ]
+    },
+    "keeperAfterCut": {
+      "file": "tests/reactivation-retained-account-activation.test.ts",
+      "title": "Stripe duplicate webhook safely repeats completion of the same bound reservation",
+      "declaration": "test(\"Stripe duplicate webhook safely repeats completion of the same bound reservation\", async () => {\n  const f = fixture()\n  const first = await handleCheckoutSessionCompleted(f.session, f.deps)\n  const second = await handleCheckoutSessionCompleted(f.session, f.deps)\n  assert.equal(first.userId, userId)\n  assert.equal(second.userId, userId)\n  assert.equal(second.canSetInitialPassword, false)\n  assert.equal(f.reservation.status, \"completed\")\n  assert.equal(f.billing.length, 1)\n  assert.equal(f.users.length, 1)\n})",
+      "body": "async () => {\n  const f = fixture()\n  const first = await handleCheckoutSessionCompleted(f.session, f.deps)\n  const second = await handleCheckoutSessionCompleted(f.session, f.deps)\n  assert.equal(first.userId, userId)\n  assert.equal(second.userId, userId)\n  assert.equal(second.canSetInitialPassword, false)\n  assert.equal(f.reservation.status, \"completed\")\n  assert.equal(f.billing.length, 1)\n  assert.equal(f.users.length, 1)\n}",
+      "sha256": "e66d911e4332f29f6d43e77753256ec590ac77def0774b12ed83c909a3d13f06",
+      "calls": [
+        "fixture()",
+        "handleCheckoutSessionCompleted(f.session, f.deps)",
+        "handleCheckoutSessionCompleted(f.session, f.deps)"
+      ],
+      "assertions": [
+        {
+          "text": "assert.equal(first.userId, userId)",
+          "line": 227
+        },
+        {
+          "text": "assert.equal(second.userId, userId)",
+          "line": 228
+        },
+        {
+          "text": "assert.equal(second.canSetInitialPassword, false)",
+          "line": 229
+        },
+        {
+          "text": "assert.equal(f.reservation.status, \"completed\")",
+          "line": 230
+        },
+        {
+          "text": "assert.equal(f.billing.length, 1)",
+          "line": 231
+        },
+        {
+          "text": "assert.equal(f.users.length, 1)",
+          "line": 232
+        }
+      ]
+    }
+  },
+  {
+    "id": "C2",
+    "donor": {
+      "file": "tests/reactivation-retained-account-activation.test.ts",
+      "title": "late conflicting billing owner cannot grant access through the profile mirror",
+      "line": 440,
+      "start": 15458,
+      "end": 15989,
+      "declaration": "test(\"late conflicting billing owner cannot grant access through the profile mirror\", async () => {\n  const f = fixture()\n  const originalProfile = { ...f.profiles[0] }\n  f.raceBilling(() =>\n    f.billing.push({\n      provider: \"stripe\",\n      provider_subscription_id: \"sub_reactivation\",\n      user_id: \"other-owner\",\n    }),\n  )\n  await assert.rejects(ensureCheckoutAccount(f.session, f.deps), {\n    code: \"checkout_ownership_conflict\",\n  })\n  assert.deepEqual(f.profiles[0], originalProfile)\n  assert.deepEqual(f.writes, [])\n})",
+      "body": "async () => {\n  const f = fixture()\n  const originalProfile = { ...f.profiles[0] }\n  f.raceBilling(() =>\n    f.billing.push({\n      provider: \"stripe\",\n      provider_subscription_id: \"sub_reactivation\",\n      user_id: \"other-owner\",\n    }),\n  )\n  await assert.rejects(ensureCheckoutAccount(f.session, f.deps), {\n    code: \"checkout_ownership_conflict\",\n  })\n  assert.deepEqual(f.profiles[0], originalProfile)\n  assert.deepEqual(f.writes, [])\n}",
+      "sha256": "98afcf3b8fb87102d824b56f489d929d9fc79f189fa6c818d01f3b178a2e06de"
+    },
+    "keeper": {
+      "file": "tests/reactivation-retained-account-activation.test.ts",
+      "title": "competing subscription insert is adopted only for the same immutable account",
+      "declaration": "test(\"competing subscription insert is adopted only for the same immutable account\", async () => {\n  for (const owner of [userId, \"other-owner\"]) {\n    const f = fixture()\n    f.raceBilling(() =>\n      f.billing.push({\n        provider: \"stripe\",\n        provider_subscription_id: \"sub_reactivation\",\n        user_id: owner,\n      }),\n    )\n    if (owner === userId)\n      assert.equal((await ensureCheckoutAccount(f.session, f.deps)).userId, userId)\n    else\n      await assert.rejects(ensureCheckoutAccount(f.session, f.deps), {\n        code: \"checkout_ownership_conflict\",\n      })\n    assert.equal(f.billing.length, 1)\n    assert.equal(f.billing[0].user_id, owner)\n    assert.equal(f.users.length, 1)\n  }\n})",
+      "body": "async () => {\n  for (const owner of [userId, \"other-owner\"]) {\n    const f = fixture()\n    f.raceBilling(() =>\n      f.billing.push({\n        provider: \"stripe\",\n        provider_subscription_id: \"sub_reactivation\",\n        user_id: owner,\n      }),\n    )\n    if (owner === userId)\n      assert.equal((await ensureCheckoutAccount(f.session, f.deps)).userId, userId)\n    else\n      await assert.rejects(ensureCheckoutAccount(f.session, f.deps), {\n        code: \"checkout_ownership_conflict\",\n      })\n    assert.equal(f.billing.length, 1)\n    assert.equal(f.billing[0].user_id, owner)\n    assert.equal(f.users.length, 1)\n  }\n}",
+      "sha256": "bf5bc553e1e0ab89adcadab43ddcf47372b4e0fca857d7e4f90b44b7ec9278dc",
+      "calls": [
+        "fixture()",
+        "f.raceBilling(() =>\n      f.billing.push({\n        provider: \"stripe\",\n        provider_subscription_id: \"sub_reactivation\",\n        user_id: owner,\n      }),\n    )",
+        "f.billing.push({\n        provider: \"stripe\",\n        provider_subscription_id: \"sub_reactivation\",\n        user_id: owner,\n      })",
+        "ensureCheckoutAccount(f.session, f.deps)",
+        "ensureCheckoutAccount(f.session, f.deps)"
+      ],
+      "assertions": [
+        {
+          "text": "assert.equal((await ensureCheckoutAccount(f.session, f.deps)).userId, userId)",
+          "line": 429
+        },
+        {
+          "text": "assert.rejects(ensureCheckoutAccount(f.session, f.deps), {\n        code: \"checkout_ownership_conflict\",\n      })",
+          "line": 431
+        },
+        {
+          "text": "assert.equal(f.billing.length, 1)",
+          "line": 434
+        },
+        {
+          "text": "assert.equal(f.billing[0].user_id, owner)",
+          "line": 435
+        },
+        {
+          "text": "assert.equal(f.users.length, 1)",
+          "line": 436
+        }
+      ]
+    },
+    "reason": "Identical existing other-owner insertion-race branch; transfer whole original profile equality and zero-write assertions before its remaining immutable-owner assertions.",
+    "keeperAfterTransfer": {
+      "file": "tests/reactivation-retained-account-activation.test.ts",
+      "title": "competing subscription insert is adopted only for the same immutable account",
+      "declaration": "test(\"competing subscription insert is adopted only for the same immutable account\", async () => {\n  for (const owner of [userId, \"other-owner\"]) {\n    const f = fixture()\n    const originalProfile = { ...f.profiles[0] }\n    f.raceBilling(() =>\n      f.billing.push({\n        provider: \"stripe\",\n        provider_subscription_id: \"sub_reactivation\",\n        user_id: owner,\n      }),\n    )\n    if (owner === userId)\n      assert.equal((await ensureCheckoutAccount(f.session, f.deps)).userId, userId)\n    else {\n      await assert.rejects(ensureCheckoutAccount(f.session, f.deps), {\n        code: \"checkout_ownership_conflict\",\n      })\n      assert.deepEqual(f.profiles[0], originalProfile)\n      assert.deepEqual(f.writes, [])\n    }\n    assert.equal(f.billing.length, 1)\n    assert.equal(f.billing[0].user_id, owner)\n    assert.equal(f.users.length, 1)\n  }\n})",
+      "body": "async () => {\n  for (const owner of [userId, \"other-owner\"]) {\n    const f = fixture()\n    const originalProfile = { ...f.profiles[0] }\n    f.raceBilling(() =>\n      f.billing.push({\n        provider: \"stripe\",\n        provider_subscription_id: \"sub_reactivation\",\n        user_id: owner,\n      }),\n    )\n    if (owner === userId)\n      assert.equal((await ensureCheckoutAccount(f.session, f.deps)).userId, userId)\n    else {\n      await assert.rejects(ensureCheckoutAccount(f.session, f.deps), {\n        code: \"checkout_ownership_conflict\",\n      })\n      assert.deepEqual(f.profiles[0], originalProfile)\n      assert.deepEqual(f.writes, [])\n    }\n    assert.equal(f.billing.length, 1)\n    assert.equal(f.billing[0].user_id, owner)\n    assert.equal(f.users.length, 1)\n  }\n}",
+      "sha256": "0c65afb057557a9a70c1167b86cc8ccd65638e9abaa5adda1490b96a351acba3",
+      "calls": [
+        "fixture()",
+        "f.raceBilling(() =>\n      f.billing.push({\n        provider: \"stripe\",\n        provider_subscription_id: \"sub_reactivation\",\n        user_id: owner,\n      }),\n    )",
+        "f.billing.push({\n        provider: \"stripe\",\n        provider_subscription_id: \"sub_reactivation\",\n        user_id: owner,\n      })",
+        "ensureCheckoutAccount(f.session, f.deps)",
+        "ensureCheckoutAccount(f.session, f.deps)"
+      ],
+      "assertions": [
+        {
+          "text": "assert.equal((await ensureCheckoutAccount(f.session, f.deps)).userId, userId)",
+          "line": 433
+        },
+        {
+          "text": "assert.rejects(ensureCheckoutAccount(f.session, f.deps), {\n        code: \"checkout_ownership_conflict\",\n      })",
+          "line": 435
+        },
+        {
+          "text": "assert.deepEqual(f.profiles[0], originalProfile)",
+          "line": 438
+        },
+        {
+          "text": "assert.deepEqual(f.writes, [])",
+          "line": 439
+        },
+        {
+          "text": "assert.equal(f.billing.length, 1)",
+          "line": 441
+        },
+        {
+          "text": "assert.equal(f.billing[0].user_id, owner)",
+          "line": 442
+        },
+        {
+          "text": "assert.equal(f.users.length, 1)",
+          "line": 443
+        }
+      ]
+    },
+    "keeperAfterCut": {
+      "file": "tests/reactivation-retained-account-activation.test.ts",
+      "title": "competing subscription insert is adopted only for the same immutable account",
+      "declaration": "test(\"competing subscription insert is adopted only for the same immutable account\", async () => {\n  for (const owner of [userId, \"other-owner\"]) {\n    const f = fixture()\n    const originalProfile = { ...f.profiles[0] }\n    f.raceBilling(() =>\n      f.billing.push({\n        provider: \"stripe\",\n        provider_subscription_id: \"sub_reactivation\",\n        user_id: owner,\n      }),\n    )\n    if (owner === userId)\n      assert.equal((await ensureCheckoutAccount(f.session, f.deps)).userId, userId)\n    else {\n      await assert.rejects(ensureCheckoutAccount(f.session, f.deps), {\n        code: \"checkout_ownership_conflict\",\n      })\n      assert.deepEqual(f.profiles[0], originalProfile)\n      assert.deepEqual(f.writes, [])\n    }\n    assert.equal(f.billing.length, 1)\n    assert.equal(f.billing[0].user_id, owner)\n    assert.equal(f.users.length, 1)\n  }\n})",
+      "body": "async () => {\n  for (const owner of [userId, \"other-owner\"]) {\n    const f = fixture()\n    const originalProfile = { ...f.profiles[0] }\n    f.raceBilling(() =>\n      f.billing.push({\n        provider: \"stripe\",\n        provider_subscription_id: \"sub_reactivation\",\n        user_id: owner,\n      }),\n    )\n    if (owner === userId)\n      assert.equal((await ensureCheckoutAccount(f.session, f.deps)).userId, userId)\n    else {\n      await assert.rejects(ensureCheckoutAccount(f.session, f.deps), {\n        code: \"checkout_ownership_conflict\",\n      })\n      assert.deepEqual(f.profiles[0], originalProfile)\n      assert.deepEqual(f.writes, [])\n    }\n    assert.equal(f.billing.length, 1)\n    assert.equal(f.billing[0].user_id, owner)\n    assert.equal(f.users.length, 1)\n  }\n}",
+      "sha256": "0c65afb057557a9a70c1167b86cc8ccd65638e9abaa5adda1490b96a351acba3",
+      "calls": [
+        "fixture()",
+        "f.raceBilling(() =>\n      f.billing.push({\n        provider: \"stripe\",\n        provider_subscription_id: \"sub_reactivation\",\n        user_id: owner,\n      }),\n    )",
+        "f.billing.push({\n        provider: \"stripe\",\n        provider_subscription_id: \"sub_reactivation\",\n        user_id: owner,\n      })",
+        "ensureCheckoutAccount(f.session, f.deps)",
+        "ensureCheckoutAccount(f.session, f.deps)"
+      ],
+      "assertions": [
+        {
+          "text": "assert.equal((await ensureCheckoutAccount(f.session, f.deps)).userId, userId)",
+          "line": 422
+        },
+        {
+          "text": "assert.rejects(ensureCheckoutAccount(f.session, f.deps), {\n        code: \"checkout_ownership_conflict\",\n      })",
+          "line": 424
+        },
+        {
+          "text": "assert.deepEqual(f.profiles[0], originalProfile)",
+          "line": 427
+        },
+        {
+          "text": "assert.deepEqual(f.writes, [])",
+          "line": 428
+        },
+        {
+          "text": "assert.equal(f.billing.length, 1)",
+          "line": 430
+        },
+        {
+          "text": "assert.equal(f.billing[0].user_id, owner)",
+          "line": 431
+        },
+        {
+          "text": "assert.equal(f.users.length, 1)",
+          "line": 432
+        }
+      ]
+    }
+  }
+]

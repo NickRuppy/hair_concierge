@@ -1,0 +1,139 @@
+{
+  "cohort": "masks_treatments",
+  "purpose": "Live outlier correction receipt. These findings are advisory evidence only and do not alter catalog or aggregate evidence.",
+  "generated_at": "2026-10-02T15:08:53.941Z",
+  "records": [
+    {
+      "id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+      "name": "K18 Leave-In Molecular Repair Hair Mask",
+      "target": "50 ml signature mask only; exclude K18 Professional Hair Mist.",
+      "verdict": "current_buyable_preferred_offer_confirmed",
+      "current_offer": {
+        "retailer": "flaconi.de",
+        "url": "https://www.flaconi.de/haare/k18/leave-in-molecular/k18-leave-in-molecular-repair-hair-mask-haarkur.html?variant=80074805-50",
+        "price_eur": 56.25,
+        "package_value": 50,
+        "package_unit": "ml",
+        "observed_barcode": "858511001128",
+        "availability": "In den Warenkorb; delivery shown Di., 6. Oktober - Mi., 7. Oktober; free shipping and returns shown."
+      },
+      "source_quote": "Live Flaconi DOM: K18 Leave-In Molecular Repair Hair Mask, Haarkur, 56,25 €, 50 ml; In den Warenkorb; delivery Di., 6. Oktober - Mi., 7. Oktober. Serialized selected variant 80074805-50 states price 5625 and gtin13 858511001128.",
+      "alternate_checks": [
+        {
+          "retailer": "hagel-shop.de",
+          "price_eur": 60,
+          "package": "50 ml",
+          "barcode": "858511001128",
+          "availability": "2-4 Werktage shown; page has a professional-product acknowledgement and cart state was hydration-dependent."
+        }
+      ],
+      "source_access_limits": "Flaconi generic Product JSON-LD initially described a default variant price rather than selected 50 ml. The visible selected-variant DOM and serialized selected-variant data are the source for this offer."
+    },
+    {
+      "id": "17c50884-3c17-479a-848a-10447464e086",
+      "name": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+      "target": "single 340 ml pack, GTIN 3600542510271.",
+      "verdict": "proposed_3_eur_not_qualifying_online_offer",
+      "current_offer": {
+        "retailer": "dm.de",
+        "url": "https://www.dm.de/p/d/1679241/wahre-schaetze-haarkur-1-minute-aktivkohle-fettige-kopfhaut",
+        "price_eur": 4.95,
+        "package_value": 340,
+        "package_unit": "ml",
+        "observed_barcode": "3600542510271",
+        "availability": "Nicht lieferbar; add-to-cart disabled; no dm-market availability displayed."
+      },
+      "source_quote": "Live dm DOM: Wahre Schätze Haarkur 1-Minute Aktivkohle, fettige Kopfhaut, 340 ml; 4,95 €; 0,34 l; GTIN 3600542510271; Nicht lieferbar; Produkt kann nicht zum Warenkorb hinzugefügt werden.",
+      "alternate_checks": [
+        {
+          "retailer": "produkte.globus.de",
+          "price_eur": 3,
+          "package": "0.34 l single unit",
+          "barcode": "3600542510271",
+          "availability": "schema Offer explicitly availableDeliveryMethod OnSitePickup; visible page says Im Sortiment im Markt GLOBUS."
+        }
+      ],
+      "source_access_limits": "The €3 Globus result is exact GTIN and a single 340 ml pack, so it is not a multipack mismatch; it is store-pickup-only and cannot support a standard online offer. The dm page is a direct live page but currently not buyable."
+    },
+    {
+      "id": "7c057f58-3e9b-4347-b4c1-f04cc4213f94",
+      "name": "HASK Argan Conditioning Treatment Haarkur",
+      "target": "50 ml sachet, GTIN 071164333068.",
+      "verdict": "baseline_current_buyable_offer_confirmed_proposed_1_99_out_of_stock",
+      "current_offer": {
+        "retailer": "hagel-shop.de",
+        "url": "https://www.hagel-shop.de/hask-argan-oil-repairing-deep-conditioner-sachet-50-ml.html",
+        "price_eur": 2.95,
+        "package_value": 50,
+        "package_unit": "ml",
+        "observed_barcode": "071164333068",
+        "availability": "Live hydrated page shows In den Warenkorb enabled and Lieferzeit 2-4 Werktage."
+      },
+      "source_quote": "Live Hagel DOM: HASK ARGAN OIL REPAIRING DEEP CONDITIONER SACHET 50 ML; 2,95 €; 50 ml; Lieferzeit 2-4 Werktage; enabled In den Warenkorb; EAN 71164333068.",
+      "alternate_checks": [
+        {
+          "retailer": "gtworld.de",
+          "price_eur": 1.99,
+          "package": "50 ml",
+          "barcode": "071164333068",
+          "availability": "JSON-LD Offer OutOfStock and visible page Ausverkauft."
+        },
+        {
+          "retailer": "dm.de",
+          "price_eur": 2.55,
+          "package": "50 ml",
+          "barcode": "071164333068",
+          "availability": "Nicht lieferbar; package shipping impossible."
+        }
+      ],
+      "source_access_limits": "Hagel first render briefly had a disabled cart before page hydration; a subsequent live DOM observation showed the cart enabled. No cart/checkout action was taken."
+    },
+    {
+      "id": "e3571e45-1126-4431-bef8-43153ef64c20",
+      "name": "alverde NATURKOSMETIK Haarkur 4in1 Repair & Care Wunderkur",
+      "target": "200 ml, GTIN 4067796145861.",
+      "verdict": "price_identity_confirmed_current_purchase_state_conflicted_and_not_online_buyable",
+      "current_offer": {
+        "retailer": "dm.de",
+        "url": "https://www.dm.de/p/d/1412268/alverde-naturkosmetik-haarkur-4in1-repair-und-care-wunderkur",
+        "price_eur": 3.25,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_barcode": "4067796145861",
+        "availability": "Current purchase component: Nicht lieferbar; add-to-cart disabled; Keine Anzeige für die Verfügbarkeit im dm-Markt möglich."
+      },
+      "source_quote": "Live dm DOM purchase component: 3,25 €, 0,2 l, Nicht lieferbar, disabled In den Warenkorb, no market-availability display. Same page description separately says: Dieser Artikel ist für Express-Bestellungen verfügbar oder in unseren dm-Märkten erhältlich.",
+      "alternate_checks": [],
+      "source_access_limits": "The direct live page contains contradictory static descriptive text and current transactional availability. Treat the current disabled purchase component as the operative availability; do not claim confirmed Express/store buyability without a selectable delivery/store context."
+    },
+    {
+      "id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+      "name": "Gliss Aqua Revive",
+      "target": "Aqua Revive 4-in-1 Bonding Haarmaske single 400 ml; expected GTIN 4015100813555.",
+      "verdict": "current_buyable_single_pack_offer_confirmed_at_douglas_but_price_not_4_75",
+      "current_offer": {
+        "retailer": "douglas.de (Douglas Partner)",
+        "url": "https://www.douglas.de/de/p/m003070896",
+        "price_eur": 12.98,
+        "package_value": 400,
+        "package_unit": "ml",
+        "observed_barcode": null,
+        "availability": "Verfügbar; Online auf Lager; IN DEN WARENKORB shown; delivery window Di., 06.10.2026 to Do., 08.10.2026."
+      },
+      "identity_basis": "Current Douglas PDP names Schwarzkopf GLISS AQUA REVIVE Maske and 400 ml. The prior canonical Rossmann product URL embeds 4015100813555; a barcode lookup independently maps 4015100813555 to Gliss 4-in-1 Aqua Revive hair mask, 400 ml. Douglas did not display a GTIN in the live DOM.",
+      "source_quote": "Live Douglas DOM: SCHWARZKOPF HAARMASKE GLISS AQUA REVIVE MASKE; 12,98 €; 400 ml; Verfügbarkeit: Verfügbar; Online: auf Lager; IN DEN WARENKORB; delivery window 06.10.2026–08.10.2026. Page labels it Versand durch Douglas Partner.",
+      "alternate_checks": [
+        {
+          "retailer": "rossmann.de",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-gliss-aqua-revive-feuchtigkeit-4-in-1-bonding-haarmaske/p/4015100813555",
+          "price_eur": null,
+          "package": "unavailable",
+          "barcode": "4015100813555 (in legacy canonical URL)",
+          "availability": "Direct live retailer page returns Hoppla - nichts gefunden; no current offer was exposed."
+        }
+      ],
+      "source_access_limits": "The direct Rossmann URL being unavailable is evidence of no current PDP at that URL, not a conclusion about global availability. Douglas is a live buyable single 400 ml offer but a Partner fulfillment offer. No live page supplied the GTIN, so barcode identity is corroborated separately and is not claimed as displayed by Douglas.",
+      "checked_at": "2026-10-02T15:08:53.940Z"
+    }
+  ]
+}

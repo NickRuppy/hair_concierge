@@ -1029,28 +1029,6 @@ test("Stage 3 GET preserves stale refined authority as a recoverable conflict", 
   )
 })
 
-test("Stage 3 GET returns a refined-source restart when draft creation sees a moved pointer", async () => {
-  const response = await createStage3RouteHandlers(
-    deps({
-      gatewayFor: (userId) => ({
-        ...deps().gatewayFor(userId),
-        loadOrCreate: async () => {
-          throw new Stage3AuthoritySnapshotError("stale_refined_source")
-        },
-      }),
-    }),
-  ).GET(
-    new Request(
-      `http://test/api/personal-plan/stage-3?personalPlanId=${draft.personalPlanId}&refinedVersionId=${draft.refinedVersionId}`,
-    ),
-  )
-
-  assert.deepEqual(
-    [response!.status, await response!.json()],
-    [409, { error: "stale_refined_source" }],
-  )
-})
-
 test("Stage 3 completion returns a refined-source restart rather than a revision conflict", async () => {
   const handler = createStage3CompleteRouteHandler({
     enabled: () => true,

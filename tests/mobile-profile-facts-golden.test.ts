@@ -9,7 +9,7 @@ import {
   completeMobileRegistration,
 } from "../src/lib/mobile/registration-completion"
 import type { ProfileEditRequest } from "../src/lib/mobile/profile-edit-contract"
-import { buildProfilePrimaryConcern } from "../src/lib/quiz/link-to-profile"
+import { buildProfilePrimaryConcern } from "../src/lib/quiz/legacy-profile-projection"
 import { projectQuizAnswersToLegacyVocabulary } from "../src/lib/quiz/normalization"
 import { projectLegacyLeadToFacts } from "../src/lib/user-facts/project-legacy-lead"
 import type { QuizAnswers } from "../src/lib/quiz/types"

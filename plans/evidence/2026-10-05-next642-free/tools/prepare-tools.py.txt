@@ -1,0 +1,71 @@
+"""Fresh TMP adapter; no repository writes, product imports or child processes."""
+from pathlib import Path
+import hashlib,json,difflib
+D=Path(__file__).parent;T=Path('/tmp/test-audit-refinement37-tools-5ce9vx77');P='/tmp/test-audit-free-provisioning67'
+sha=lambda b:hashlib.sha256(b).hexdigest()
+assert D.resolve().parent==Path('/tmp').resolve()
+assert sha((T/'operator-pins.json').read_bytes())=='ffb6b2428bdceb285246596cafeba5e3b1a6870ec0ce885b875531178b10f0cd'
+assert sha(Path(P+'/manifest.json').read_bytes())=='c93ab0f88ad471a0bddda81ebeef2db9b5c0cccecbbbb20b039bc000e9c041a1'
+assert sha(Path(P+'/handoff.json').read_bytes())=='5437899e0ab6a8da0c6a4841c1e96503e08e6c07ec6b59394794a7271ab5ca30'
+old=json.loads((T/'operator-pins.json').read_bytes())
+def write(p,b):
+ assert p.parent.resolve().is_relative_to(D.resolve())
+ if p.exists():
+  assert p.read_bytes()==b,p
+ else:
+  with p.open('xb') as f:f.write(b)
+def once(s,a,b):
+ assert s.count(a)==1,a
+ return s.replace(a,b)
+(D/'template-originals').mkdir(exist_ok=True);provenance=[]
+for n in ['operator-pins.json','operator-guard.cjs','operator-edit.cjs','operator-run-controls.cjs','operator-proof.cjs','operator-readonly-preload.cjs','proof-attestation.cjs','prepare-pins.cjs']:
+ b=(T/n).read_bytes();write(D/'template-originals'/n,b)
+ if n in ['operator-pins.json','prepare-pins.cjs']:continue
+ if n in ['operator-edit.cjs','operator-run-controls.cjs']:
+  normalized=b.decode().replace("const PIN_SHA='ffb6b2428bdceb285246596cafeba5e3b1a6870ec0ce885b875531178b10f0cd'","const PIN_SHA='PIN_SHA_PLACEHOLDER'")
+  aliases=[h for p,h in old['entrypointTemplateHashes'].items() if Path(p).resolve()==(T/n).resolve()]
+  assert aliases and all(h==sha(normalized.encode()) for h in aliases),n
+ else:
+  aliases=[h for p,h in old['artifactHashes'].items() if Path(p).resolve()==(T/n).resolve()]
+  assert aliases and all(h==sha(b) for h in aliases),n
+ s=b.decode().replace(str(T)+'/operator',str(D)+'/operator').replace('/tmp/test-audit-refinement-status37',P).replace("const PIN_SHA='ffb6b2428bdceb285246596cafeba5e3b1a6870ec0ce885b875531178b10f0cd'","const PIN_SHA='PIN_SHA_PLACEHOLDER'")
+ if n=='operator-guard.cjs':
+  for a,z in [('candidates.length!==7||controls.length!==13','candidates.length!==1||controls.length!==2'),("keepers.size!==7)fail('Seven unique keepers required')","keepers.size!==1)fail('One unique keeper required')"),("replaceOnce(k.after,'  '+k.addedAssertions[0]+'\\n'","replaceOnce(k.after,'    '+k.addedAssertions[0]+'\\n'"),("Object.keys(snapshots).length!==5||JSON.stringify(counts)!=='{\"before\":37,\"transfer\":37,\"cut\":30}'||unrelated!==23||unchangedRetained!==28||changedKeepers!==2","Object.keys(snapshots).length!==7||JSON.stringify(counts)!=='{\"before\":67,\"transfer\":67,\"cut\":66}'||unrelated!==65||unchangedRetained!==65||changedKeepers!==1"),("ledger.filter(j=>j.mark==='F').length!==0","ledger.filter(j=>j.mark==='F').length!==1")]:s=once(s,a,z)
+  anchor="  for(const c of candidates){\n    const donor="
+  extra='''  // All whole-file assertion sites and the sole literal two-registration loop remain exact.
+  const literalCounts={},assertionCounts={}
+  for(const phase of ['before','transfer','cut']){
+    let native=0,assertions=0,literalLoops=0
+    for(const file of Object.keys(snapshots)){
+      const sf=parse(ts,file,snapshots[file][phase].bytes.toString())
+      function visit(n){
+        if(ts.isCallExpression(n)&&n.expression.getText(sf).startsWith('assert.'))assertions++
+        if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test'){
+          let weight=1
+          for(let p=n.parent;p;p=p.parent)if(ts.isForOfStatement(p)){
+            const array=ts.isAsExpression(p.expression)?p.expression.expression:p.expression
+            if(!ts.isArrayLiteralExpression(array)||array.elements.length!==2)fail('Unknown registration multiplicity')
+            weight*=2;literalLoops++
+          }
+          native+=weight
+        }
+        ts.forEachChild(n,visit)
+      }visit(sf)
+    }
+    if(literalLoops!==1)fail('One existing two-row registration loop required')
+    literalCounts[phase]=native;assertionCounts[phase]=assertions
+  }
+  if(JSON.stringify(literalCounts)!=='{"before":68,"transfer":68,"cut":67}'||JSON.stringify(assertionCounts)!=='{"before":193,"transfer":194,"cut":193}')fail('Literal runtime/assertion conservation mismatch')
+  for(const held of ledger.filter(j=>j.mark==='F'))for(const phase of ['before','transfer','cut'])if(snapshots[held.file][phase].rows.get(held.title)?.statement!==held.body)fail('Held F callback bytes changed')
+'''
+  s=once(s,anchor,extra+anchor)
+  s=once(s,"  } else if (sha(bytes) !== pin.sha) fail('Pinned file drift: ' + pin.path)","  } else if (pin.sharedPackedTargetRef || pin.sharedPackedRelevantSHA) {\n    const policyPath='/tmp/test-audit-packed-refs-relevant-policy-9crva_8q/policy.cjs'\n    if(sha(fs.readFileSync(policyPath))!=='b1622277836750342cc6efe96c11bdf140d36fc7b76e7356d1c25869ab887bcd')fail('Packed policy drift')\n    require(policyPath).check(pin,bytes)\n  } else if (sha(bytes) !== pin.sha) fail('Pinned file drift: ' + pin.path)")
+ if n=='operator-edit.cjs':s=once(s,'parsedPhaseFiles:15,sourceControlsParsed:13','parsedPhaseFiles:21,sourceControlsParsed:2')
+ if n=='operator-run-controls.cjs':
+  s=once(s,'tsMutantsParsed:13,allControlsPrepared:prepared.size===13','tsMutantsParsed:2,allControlsPrepared:prepared.size===2').replace('ALL5 test','ALL7 test').replace('receipts.length===13','receipts.length===2')
+ if n=='operator-proof.cjs':
+  for a,z in [('complete.verified!==13','complete.verified!==2'),('complete.cleanRuns!==26','complete.cleanRuns!==4'),('Required13','Required2'),('length!==5','length!==7'),('records.length!==13','records.length!==2'),('Thirteen records required','Two records required'),('verified:13,logFiles:39','verified:2,logFiles:6')]:s=once(s,a,z)
+ if n=='proof-attestation.cjs':s=once(s,'controls:13','controls:2')
+ write(D/n,s.encode());provenance.append({'file':n,'template':str(T/n),'templateSHA256':sha(b),'preparedTemplateSHA256':sha(s.encode())})
+write(D/'template-provenance.json',(json.dumps({'templatePins':'ffb6b2428bdceb285246596cafeba5e3b1a6870ec0ce885b875531178b10f0cd','proofPolicy':'Refinement37 final strict decoded message and FIRST outer assertion frame; unchanged predicate','files':provenance},indent=2)+'\n').encode())
+write(D/'template-delta.patch',''.join(''.join(difflib.unified_diff((D/'template-originals'/x['file']).read_text().splitlines(True),(D/x['file']).read_text().splitlines(True),fromfile=x['template'],tofile=str(D/x['file']))) for x in provenance).encode())

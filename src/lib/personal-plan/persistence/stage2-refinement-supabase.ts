@@ -55,7 +55,7 @@ export function createSupabaseStage2RefinementPersistence(
     const { data: current, error: currentError } = await client
       .from("personal_plan_refinement_drafts")
       .select(
-        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,module_projections,revision,status,result_refined_need_version_id",
+        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,module_projections,revision,status,result_refined_need_version_id,direct_acceptance_owned",
       )
       .eq("personal_plan_id", plan.id)
       .eq("base_initial_need_version_id", initial.id)
@@ -67,7 +67,7 @@ export function createSupabaseStage2RefinementPersistence(
     const { data: completed, error: completedError } = await client
       .from("personal_plan_refinement_drafts")
       .select(
-        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,module_projections,revision,status,result_refined_need_version_id",
+        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,module_projections,revision,status,result_refined_need_version_id,direct_acceptance_owned",
       )
       .eq("personal_plan_id", plan.id)
       .eq("base_initial_need_version_id", initial.id)
@@ -101,7 +101,7 @@ export function createSupabaseStage2RefinementPersistence(
           answer_provenance: {},
         })
         .select(
-          "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,module_projections,revision,status,result_refined_need_version_id",
+          "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,module_projections,revision,status,result_refined_need_version_id,direct_acceptance_owned",
         )
         .single()
       if (!createError && created) return mapDraft(created, triggerContext, initial)
@@ -110,7 +110,7 @@ export function createSupabaseStage2RefinementPersistence(
       const { data: raced, error: racedError } = await client
         .from("personal_plan_refinement_drafts")
         .select(
-          "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,module_projections,revision,status,result_refined_need_version_id",
+          "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,module_projections,revision,status,result_refined_need_version_id,direct_acceptance_owned",
         )
         .eq("personal_plan_id", plan.id)
         .eq("base_initial_need_version_id", initial.id)
@@ -133,7 +133,7 @@ export function createSupabaseStage2RefinementPersistence(
         revision: draft.revision,
       }
       const columns =
-        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,module_projections,revision,status,result_refined_need_version_id"
+        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,module_projections,revision,status,result_refined_need_version_id,direct_acceptance_owned"
       const { data: created, error } = await client
         .from("personal_plan_refinement_drafts")
         .insert(insert)
@@ -156,7 +156,10 @@ export function createSupabaseStage2RefinementPersistence(
       return mapDraft(raced, draft.triggerContext, initial)
     },
     async save(input) {
-      const { data, error } = await client.rpc("personal_plan_save_refinement_draft", {
+      const rpc = input.directAcceptance
+        ? "personal_plan_save_direct_acceptance_draft"
+        : "personal_plan_save_refinement_draft"
+      const { data, error } = await client.rpc(rpc, {
         p_user_id: input.userId,
         p_draft_id: input.draft.id,
         p_expected_revision: input.expectedRevision,
@@ -288,5 +291,7 @@ export function mapDraft(
       typeof row.result_refined_need_version_id === "string"
         ? row.result_refined_need_version_id
         : null,
+    directAcceptanceOwned:
+      typeof row.direct_acceptance_owned === "boolean" ? row.direct_acceptance_owned : null,
   }
 }

@@ -1,0 +1,19 @@
+{
+  "directory": "/private/tmp/test-audit-billing125-tools-svsmm1u3",
+  "pinSHA": "873f158cc84d4346588d02675130a9c33a5da5178536c744e106b1626affd09b",
+  "originalGuards": 55,
+  "phaseTests": 13,
+  "snapshots": 39,
+  "readset": 165,
+  "localClosure": 160,
+  "dependencies": 3495,
+  "dependencyTrees": 28,
+  "controls": 5,
+  "nonliteralImports": [],
+  "repositoryWrites": 0,
+  "attemptedRepositoryWrites": 0,
+  "childrenStarted": 0,
+  "attemptedChildren": 0,
+  "attemptedOwnerImports": 0,
+  "attemptedNetworkCalls": 0
+}

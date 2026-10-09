@@ -1,0 +1,834 @@
+[
+  {
+    "file": "tests/personal-plan-offer-motion.spec.ts",
+    "sha256": "56e17fcbbc4950bcc618a1f21b10934b0f9126a8805faca5a655f1a0772271c7",
+    "count": 19,
+    "sites": [
+      {
+        "ordinal": 1,
+        "title": "\"sticky header keeps its footprint and page containment across the viewport matrix\"",
+        "line": 122,
+        "start": 4010,
+        "end": 6093,
+        "body": "test(\"sticky header keeps its footprint and page containment across the viewport matrix\", async ({\n    page,\n  }) => {\n    for (const viewport of offerViewports) {\n      await page.setViewportSize(viewport)\n      await openPersonalPlanLab(page, \"membership\")\n      const stickyCta = page.locator(\"[data-offer-sticky-cta]\")\n      const beforeBox = await stickyCta.boundingBox()\n\n      await revealPricing(page)\n      const afterBox = await stickyCta.boundingBox()\n      const geometry = await page.evaluate(() => {\n        const header = document.querySelector(\"main > div.sticky\")\n        const wordmark = header?.querySelector(\"a\")\n        const cta = header?.querySelector<HTMLElement>(\"[data-offer-sticky-cta]\")\n        const rect = (element: Element | null | undefined) => element?.getBoundingClientRect()\n        const wordmarkRect = rect(wordmark)\n        const ctaRect = rect(cta)\n        return {\n          clientWidth: document.documentElement.clientWidth,\n          scrollWidth: document.documentElement.scrollWidth,\n          wordmarkRight: wordmarkRect?.right,\n          ctaLeft: ctaRect?.left,\n        }\n      })\n\n      expect(beforeBox).not.toBeNull()\n      expect(afterBox).not.toBeNull()\n      expect(afterBox!.width).toBeCloseTo(beforeBox!.width, 1)\n      expect(afterBox!.height).toBeCloseTo(beforeBox!.height, 1)\n      expect(beforeBox!.height).toBeCloseTo(44, 1)\n      if (viewport.width >= 640) expect(beforeBox!.width).toBeCloseTo(160, 1)\n      expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.clientWidth)\n      expect(geometry.wordmarkRight).toBeLessThanOrEqual(geometry.ctaLeft ?? 0)\n\n      await page.waitForTimeout(650)\n      const repeatingMotion = await page.evaluate(() =>\n        document\n          .getAnimations()\n          .filter(\n            (animation) =>\n              animation.playState === \"running\" &&\n              animation.effect?.getTiming().iterations === Number.POSITIVE_INFINITY,\n          )\n          .map((animation) => animation.effect?.getTiming().iterations),\n      )\n      expect(repeatingMotion).toEqual([])\n    }\n  })",
+        "sha256": "27c69df82424e61329b91bff4c972773fc6aed4f54cbd547ee79c1989cbffc61"
+      },
+      {
+        "ordinal": 2,
+        "title": "\"membership sticky CTA keeps fixed mobile geometry and switches from pricing to checkout\"",
+        "line": 172,
+        "start": 6097,
+        "end": 8114,
+        "body": "test(\"membership sticky CTA keeps fixed mobile geometry and switches from pricing to checkout\", async ({\n    page,\n  }) => {\n    await page.setViewportSize({ width: 320, height: 740 })\n    await stubCheckoutEligibility(page)\n    await openPersonalPlanLab(page, \"membership\")\n\n    const stickyCta = page.locator(\"[data-offer-sticky-cta]\")\n    await expect(stickyCta).toHaveAttribute(\"data-offer-destination\", \"pricing\")\n    await expect(stickyCta).toHaveAttribute(\"data-offer-cta\", \"sticky_header\")\n    await expect(stickyCta).toHaveAttribute(\"data-offer-source-section\", \"hero\")\n    await expect(stickyCta).toHaveAttribute(\"data-offer-sticky-state\", \"before_pricing\")\n    await expect(stickyCta).toHaveText(\"Angebot ansehen\")\n    const beforeBox = await stickyCta.boundingBox()\n    expect(beforeBox?.width).toBeGreaterThanOrEqual(142)\n    expect(beforeBox?.width).toBeLessThanOrEqual(146)\n\n    await stickyCta.click()\n    await expect(page.locator(\"#pricing\")).toBeFocused({ timeout: 2_000 })\n    await expect(stickyCta).toHaveAttribute(\"data-offer-sticky-state\", \"after_pricing\")\n\n    await expect(stickyCta).toHaveAttribute(\"data-offer-destination\", \"checkout\")\n    await expect(stickyCta).toHaveAttribute(\"data-offer-cta\", \"sticky_header\")\n    await expect(stickyCta).toHaveAttribute(\"data-offer-source-section\", \"pricing\")\n    await expect(stickyCta).toHaveAttribute(\"data-offer-selected-interval\", \"quarter\")\n    await expect(stickyCta).toContainText(\"Quartal · €34,99\")\n    await expect(stickyCta).toContainText(\"Zur Zahlung\")\n    const afterBox = await stickyCta.boundingBox()\n    expect(afterBox?.width).toBeCloseTo(beforeBox?.width ?? 144, 1)\n\n    await page.getByRole(\"button\", { name: /Monatlich/ }).click()\n    await expect(stickyCta).toHaveAttribute(\"data-offer-selected-interval\", \"month\")\n    await expect(stickyCta).toContainText(\"Monatlich · €14,99\")\n\n    await stickyCta.click()\n    await expect(page.getByRole(\"dialog\", { name: \"Sicher bezahlen\" })).toBeVisible({\n      timeout: 10_000,\n    })\n  })",
+        "sha256": "987c475c6f2377ba99140049d29a84eef25619cc59c651e65f63495e4334ed91"
+      },
+      {
+        "ordinal": 3,
+        "title": "\"membership readiness stays pristine for immediate close and plan change\"",
+        "line": 212,
+        "start": 8118,
+        "end": 9467,
+        "body": "test(\"membership readiness stays pristine for immediate close and plan change\", async ({\n    page,\n  }) => {\n    await page.setViewportSize({ width: 390, height: 844 })\n    await stubCheckoutEligibility(page)\n    await page.route(\"**/api/stripe/create-checkout-session\", async (route) => {\n      await route.fulfill({\n        body: JSON.stringify({ error: \"synthetic lab response\" }),\n        contentType: \"application/json\",\n        status: 503,\n      })\n    })\n    await openPersonalPlanLab(page, \"membership\")\n    await revealPricing(page)\n\n    const stickyCta = page.locator(\"[data-offer-sticky-cta]\")\n    await stickyCta.click()\n    let checkout = page.getByRole(\"dialog\", { name: \"Sicher bezahlen\" })\n    await expect(checkout).toBeVisible({ timeout: 10_000 })\n    await checkout.getByRole(\"button\", { name: \"Zahlung schließen\" }).click()\n    await expect(checkout).toBeHidden()\n    await expect(page.getByRole(\"alertdialog\", { name: \"Zahlung abbrechen?\" })).toHaveCount(0)\n\n    await stickyCta.click()\n    checkout = page.getByRole(\"dialog\", { name: \"Sicher bezahlen\" })\n    await expect(checkout).toBeVisible({ timeout: 10_000 })\n    await checkout.getByRole(\"button\", { name: \"Plan ändern\" }).click()\n    await expect(checkout).toBeHidden()\n    await expect(page.getByRole(\"alertdialog\", { name: \"Zahlung abbrechen?\" })).toHaveCount(0)\n  })",
+        "sha256": "2a543d456cea09dfa0b352e8026ab45d4fc324671025537e6d3fe0e172b217d1"
+      },
+      {
+        "ordinal": 4,
+        "title": "\"one-time sticky CTA never invents a billing interval after pricing is reached\"",
+        "line": 243,
+        "start": 9471,
+        "end": 10584,
+        "body": "test(\"one-time sticky CTA never invents a billing interval after pricing is reached\", async ({\n    page,\n  }) => {\n    await page.setViewportSize({ width: 320, height: 740 })\n    await openPersonalPlanLab(page, \"one_time\")\n\n    const stickyCta = page.locator(\"[data-offer-sticky-cta]\")\n    await expect(stickyCta).toHaveAttribute(\"data-offer-destination\", \"pricing\")\n    await expect(stickyCta).toHaveAttribute(\"data-offer-cta\", \"sticky_header\")\n    await expect(stickyCta).toHaveAttribute(\"data-offer-source-section\", \"hero\")\n    await revealPricing(page)\n    await expect(stickyCta).toHaveAttribute(\"data-offer-destination\", \"checkout\")\n    await expect(stickyCta).toHaveAttribute(\"data-offer-cta\", \"sticky_header\")\n    await expect(stickyCta).toHaveAttribute(\"data-offer-source-section\", \"pricing\")\n    await expect(stickyCta).not.toHaveAttribute(\"data-offer-selected-interval\")\n    await expect(stickyCta).toContainText(\"Haarplan\")\n    await expect(stickyCta.locator(\"s\")).toHaveText(\"49,99 €\")\n    await expect(stickyCta).toContainText(\"29,99 €\")\n    await expect(stickyCta).toContainText(\"Zur Zahlung\")\n  })",
+        "sha256": "fb6d7c3fef2f57934b5ef96d1eec0b457bd312e2532cc4af85cedbf83abfd396"
+      },
+      {
+        "ordinal": 5,
+        "title": "\"personal-plan offer never starts provider work before checkout opens\"",
+        "line": 264,
+        "start": 10588,
+        "end": 11610,
+        "body": "test(\"personal-plan offer never starts provider work before checkout opens\", async ({ page }) => {\n    await page.setViewportSize({ width: 390, height: 844 })\n    await enableApplePayCapability(page)\n    let checkoutPreparationRequests = 0\n    let stripeSdkRequests = 0\n    page.on(\"request\", (request) => {\n      if (request.resourceType() === \"script\" && isStripeSdkScriptUrl(request.url())) {\n        stripeSdkRequests += 1\n      }\n    })\n    await page.route(\"**/api/stripe/create-checkout-session\", async (route) => {\n      checkoutPreparationRequests += 1\n      await route.fulfill({\n        body: JSON.stringify({ error: \"synthetic lab response\" }),\n        contentType: \"application/json\",\n        status: 503,\n      })\n    })\n\n    for (const pricingArm of [\"one_time\", \"membership\"] as const) {\n      await openPersonalPlanLab(page, pricingArm)\n      await revealPricing(page)\n      await page.waitForTimeout(500)\n      expect(stripeSdkRequests).toBe(0)\n    }\n\n    expect(checkoutPreparationRequests).toBe(0)\n  })",
+        "sha256": "52fdead4d5f48b3b3ffb6a82185883c9281c967b38ceb24ec5e87a714ea63e68"
+      },
+      {
+        "ordinal": 6,
+        "title": "`one-time Stripe containment is PayPal-only with ${disabledGate} off`",
+        "line": 294,
+        "start": 11680,
+        "end": 13182,
+        "body": "test(`one-time Stripe containment is PayPal-only with ${disabledGate} off`, async ({\n      page,\n    }) => {\n      await page.setViewportSize({ width: 390, height: 844 })\n      await stubPayPalSdk(page)\n      let stripeRequests = 0\n      await page.route(\"**/api/stripe/create-checkout-session\", async (route) => {\n        stripeRequests += 1\n        await route.abort()\n      })\n      await openPersonalPlanLab(\n        page,\n        \"one_time\",\n        disabledGate === \"express\" ? { expressElements: \"off\" } : { overlay: \"off\" },\n      )\n\n      const openCheckout = page.getByRole(\"button\", {\n        name: \"Haarplan für €29,99 freischalten\",\n      })\n      await openCheckout.scrollIntoViewIfNeeded()\n      await openCheckout.click()\n      const checkout = page.getByRole(\"dialog\", { name: \"Sicher bezahlen\" })\n\n      await expect(checkout.locator('[data-offer-payment-option=\"paypal\"]')).toBeVisible()\n      await expect(checkout.locator('[data-offer-payment-placeholder=\"paypal\"]')).toHaveCount(0)\n      await expect(checkout.locator('[data-offer-payment-placeholder=\"apple_pay\"]')).toHaveCount(0)\n      await expect(checkout.getByRole(\"button\", { name: \"Mit Karte bezahlen\" })).toHaveCount(0)\n      await expect(checkout.getByRole(\"checkbox\")).toHaveCount(0)\n      await expect(checkout.locator('[data-offer-payment-placeholder=\"paypal\"]')).toHaveCount(0)\n      await expect(checkout.getByRole(\"button\", { name: \"PayPal\", exact: true })).toBeVisible()\n      expect(stripeRequests).toBe(0)\n    })",
+        "sha256": "f84b21262004b89daf5fe5cb8f5d5c45056fea79253ac924b3d74b5ac20a2421"
+      },
+      {
+        "ordinal": 7,
+        "title": "\"one-time checkout dismisses pristine state directly and protects provider engagement\"",
+        "line": 328,
+        "start": 13190,
+        "end": 15620,
+        "body": "test(\"one-time checkout dismisses pristine state directly and protects provider engagement\", async ({\n    page,\n  }) => {\n    await page.setViewportSize({ width: 390, height: 844 })\n    await blockStripeSdk(page)\n    await stubPayPalSdk(page)\n    await page.route(\"**/api/stripe/create-checkout-session\", async (route) => {\n      await route.fulfill({\n        body: JSON.stringify({ error: \"synthetic lab response\" }),\n        contentType: \"application/json\",\n        status: 503,\n      })\n    })\n    await page.route(\"**/api/paypal/create-order-intent\", async (route) => {\n      await route.fulfill({\n        body: JSON.stringify({ error: \"synthetic lab response\" }),\n        contentType: \"application/json\",\n        status: 503,\n      })\n    })\n    await openPersonalPlanLab(page, \"one_time\")\n    const openCheckout = page.getByRole(\"button\", {\n      name: \"Haarplan für €29,99 freischalten\",\n    })\n    await openCheckout.scrollIntoViewIfNeeded()\n\n    await openCheckout.click()\n    let checkout = page.getByRole(\"dialog\", { name: \"Sicher bezahlen\" })\n    await expect(checkout).toBeVisible()\n    await checkout.getByRole(\"button\", { name: \"Zahlung schließen\" }).last().click()\n    await expect(checkout).toBeHidden()\n    await expect(page.getByRole(\"alertdialog\", { name: \"Zahlung abbrechen?\" })).toHaveCount(0)\n\n    await openCheckout.click()\n    checkout = page.getByRole(\"dialog\", { name: \"Sicher bezahlen\" })\n    await expect(checkout.getByRole(\"checkbox\")).toHaveCount(0)\n    await checkout.getByRole(\"button\", { name: \"PayPal\", exact: true }).click()\n    await checkout.getByRole(\"button\", { name: \"Zahlung schließen\" }).last().click()\n    const confirmation = page.getByRole(\"alertdialog\", { name: \"Zahlung abbrechen?\" })\n    await expect(confirmation).toBeVisible()\n    await page.getByRole(\"button\", { name: \"Weiter bezahlen\" }).click()\n    await expect(checkout).toBeVisible()\n    await checkout.getByRole(\"button\", { name: \"Zahlung schließen\" }).last().click()\n    await page.getByRole(\"button\", { name: \"Zahlung abbrechen\" }).click()\n    await expect(checkout).toBeHidden()\n\n    await openCheckout.click()\n    checkout = page.getByRole(\"dialog\", { name: \"Sicher bezahlen\" })\n    await expect(checkout.getByRole(\"checkbox\")).toHaveCount(0)\n    await checkout.getByRole(\"button\", { name: \"Zahlung schließen\" }).last().click()\n    await expect(checkout).toBeHidden()\n    await expect(confirmation).toHaveCount(0)\n  })",
+        "sha256": "5615b3fe19207631ca6665bcac3293d38dc5d580d900ece8b3188369bc6ee97b"
+      },
+      {
+        "ordinal": 8,
+        "title": "\"PayPal SDK uncertainty stays pending on the same mounted attempt\"",
+        "line": 382,
+        "start": 15624,
+        "end": 19984,
+        "body": "test(\"PayPal SDK uncertainty stays pending on the same mounted attempt\", async ({ page }) => {\n    await page.setViewportSize({ width: 390, height: 844 })\n    await stubPayPalSdk(page)\n    let createOrderCalls = 0\n    let statusCalls = 0\n    let stripePreparationCalls = 0\n    let stripeSdkRequests = 0\n    page.on(\"request\", (request) => {\n      if (request.resourceType() === \"script\" && isStripeSdkScriptUrl(request.url())) {\n        stripeSdkRequests += 1\n      }\n    })\n    await page.route(\n      (url) => isStripeSdkScriptUrl(url.toString()),\n      async (route) => {\n        await route.fulfill({\n          body: \"window.Stripe = function () { return {}; }; window.Stripe.version = 'dahlia';\",\n          contentType: \"application/javascript\",\n          status: 200,\n        })\n      },\n    )\n    let releaseStripePreparation = () => {}\n    const stripePreparationReleased = new Promise<void>((resolve) => {\n      releaseStripePreparation = resolve\n    })\n    await page.route(\"**/api/stripe/create-checkout-session\", async (route) => {\n      stripePreparationCalls += 1\n      await stripePreparationReleased\n      await route.fulfill({\n        body: JSON.stringify({\n          status: \"prepared\",\n          client_secret: \"pi_late_stripe_prepare_secret_test\",\n          expires_at: Date.now() + 60_000,\n          preparation_token: \"late-stripe-preparation-token\",\n          session_id: \"cs_late_stripe_prepare\",\n        }),\n        contentType: \"application/json\",\n        status: 200,\n      })\n    })\n    await page.route(\"**/api/paypal/create-order-intent\", async (route) => {\n      createOrderCalls += 1\n      await route.fulfill({\n        body: JSON.stringify({\n          orderId: \"PAYPAL-ORDER-RECOVERY-1\",\n          token: \"paypal-recovery-token\",\n        }),\n        contentType: \"application/json\",\n        status: 200,\n      })\n    })\n    await page.route(\"**/api/billing/one-time-activation-status?**\", async (route) => {\n      statusCalls += 1\n      await route.fulfill({\n        body: JSON.stringify({ status: \"pending\" }),\n        contentType: \"application/json\",\n        status: 200,\n      })\n    })\n\n    await openPersonalPlanLab(page, \"one_time\")\n    const openCheckout = page.getByRole(\"button\", {\n      name: \"Haarplan für €29,99 freischalten\",\n    })\n    await openCheckout.scrollIntoViewIfNeeded()\n    expect(stripeSdkRequests).toBe(0)\n    await openCheckout.click()\n    const checkout = page.getByRole(\"dialog\", { name: \"Sicher bezahlen\" })\n    const paypalButton = checkout.getByRole(\"button\", { name: \"PayPal\", exact: true })\n    await expect.poll(() => stripePreparationCalls).toBe(1)\n    await expect.poll(() => stripeSdkRequests).toBe(1)\n    await paypalButton.click()\n    await expect.poll(() => createOrderCalls).toBe(1)\n    const paypalOwnedAttempt = checkout.getByText(\n      \"Dieser Zahlungsversuch bleibt PayPal zugeordnet. Nutze unten PayPal, um ihn fortzusetzen.\",\n    )\n    await expect(paypalOwnedAttempt).toBeVisible()\n\n    releaseStripePreparation()\n    await expect(paypalOwnedAttempt).toBeVisible()\n\n    await page.evaluate(() => {\n      const paypalWindow = window as typeof window & {\n        __chaarliePayPalOptions?: { onError?: (error: Error) => void }\n      }\n      paypalWindow.__chaarliePayPalOptions?.onError?.(new Error(\"synthetic SDK failure\"))\n    })\n\n    await expect(checkout.getByText(\"Wir prüfen deine PayPal-Zahlung\")).toBeVisible()\n    await expect.poll(() => statusCalls, { timeout: 15_000 }).toBe(3)\n    await expect(checkout.getByText(\"Noch keine Zahlung bestätigt\")).toBeVisible({\n      timeout: 5_000,\n    })\n    await expect(paypalOwnedAttempt).toBeVisible()\n    await expect(checkout.getByText(\"Schließe die Zahlung dort ab.\")).toHaveCount(0)\n    await expect(paypalButton).toBeVisible()\n    await expect\n      .poll(() =>\n        page.evaluate(\n          () =>\n            (window as typeof window & { __chaarliePayPalMountCount?: number })\n              .__chaarliePayPalMountCount,\n        ),\n      )\n      .toBe(1)\n    await expect(checkout.getByText(\"Zahlung erfolgreich\")).toHaveCount(0)\n\n    const manualCheck = checkout.getByRole(\"button\", { name: \"Status erneut prüfen\" })\n    await expect(manualCheck).toBeDisabled()\n    await expect(manualCheck).toBeEnabled({ timeout: 4_000 })\n    await page.screenshot({\n      path: \"/tmp/chaarlie-payment-recovery-pending.png\",\n    })\n  })",
+        "sha256": "0fbf2068c45c95a75af6d5631219db8747971cecfa01fe173ab0a75614874272"
+      },
+      {
+        "ordinal": 9,
+        "title": "\"a failed speculative Stripe SDK load retries automatically for the checkout child\"",
+        "line": 498,
+        "start": 19988,
+        "end": 22386,
+        "body": "test(\"a failed speculative Stripe SDK load retries automatically for the checkout child\", async ({\n    page,\n  }) => {\n    await page.setViewportSize({ width: 390, height: 844 })\n    await stubPayPalSdk(page)\n\n    let stripeSdkRequests = 0\n    let prepareCalls = 0\n    let releasePreparation = () => {}\n    const preparationReleased = new Promise<void>((resolve) => {\n      releasePreparation = resolve\n    })\n    const firstStripeRequestFailed = page.waitForEvent(\"requestfailed\", {\n      predicate: (request) => isStripeSdkScriptUrl(request.url()),\n    })\n\n    await page.route(\n      (url) => isStripeSdkScriptUrl(url.toString()),\n      async (route) => {\n        stripeSdkRequests += 1\n        if (stripeSdkRequests === 1) {\n          await route.abort()\n          return\n        }\n        await route.continue()\n      },\n    )\n    await page.route(\"**/api/stripe/create-checkout-session\", async (route) => {\n      const body = route.request().postDataJSON() as { action?: unknown }\n      expect(body.action).toBe(\"prepare\")\n      prepareCalls += 1\n      await preparationReleased\n      await route.fulfill({\n        body: JSON.stringify({\n          client_secret: \"cs_test_speculative_retry_secret\",\n          expires_at: Date.now() + 5 * 60_000,\n          preparation_token: \"speculative-retry-token\",\n          session_id: \"cs_test_speculative_retry\",\n          status: \"prepared\",\n        }),\n        contentType: \"application/json\",\n        status: 200,\n      })\n    })\n\n    await openPersonalPlanLab(page, \"one_time\")\n    const openCheckout = page.getByRole(\"button\", {\n      name: \"Haarplan für €29,99 freischalten\",\n    })\n    await openCheckout.scrollIntoViewIfNeeded()\n    expect(stripeSdkRequests).toBe(0)\n    await openCheckout.click()\n\n    const checkout = page.getByRole(\"dialog\", { name: \"Sicher bezahlen\" })\n    await expect(checkout.getByRole(\"button\", { name: \"PayPal\", exact: true })).toBeVisible()\n    await expect.poll(() => prepareCalls).toBe(1)\n    await expect.poll(() => stripeSdkRequests).toBe(1)\n    await firstStripeRequestFailed\n\n    releasePreparation()\n\n    await expect.poll(() => stripeSdkRequests).toBe(2)\n    await expect(checkout.getByRole(\"button\", { name: \"Mit Karte bezahlen\" })).toBeVisible({\n      timeout: 10_000,\n    })\n    await expect(checkout.getByRole(\"button\", { name: \"PayPal\", exact: true })).toBeVisible()\n    expect(prepareCalls).toBe(1)\n  })",
+        "sha256": "7452732712db35d5fa817896904b820d803a6bfa10434197cfc4ed0e93a4bef4"
+      },
+      {
+        "ordinal": 10,
+        "title": "\"@payment-feedback-v2 existing one-time access stops payment and carries the Chaarlie email into login\"",
+        "line": 567,
+        "start": 22390,
+        "end": 24562,
+        "body": "test(\"@payment-feedback-v2 existing one-time access stops payment and carries the Chaarlie email into login\", async ({\n    page,\n  }) => {\n    await page.setViewportSize({ width: 390, height: 844 })\n    await blockStripeSdk(page)\n    await stubPayPalSdk(page)\n    await page.route(\"**/api/stripe/create-checkout-session\", async (route) => {\n      await route.fulfill({\n        body: JSON.stringify({\n          error: \"checkout_access_already_exists\",\n          email: \"lea@example.com\",\n        }),\n        contentType: \"application/json\",\n        status: 409,\n      })\n    })\n\n    await openPersonalPlanLab(page, \"one_time\")\n    const openCheckout = page.getByRole(\"button\", {\n      name: \"Haarplan für €29,99 freischalten\",\n    })\n    await openCheckout.scrollIntoViewIfNeeded()\n    await openCheckout.click()\n\n    const checkout = page.getByRole(\"dialog\", { name: \"Sicher bezahlen\" })\n    await expect(checkout.getByRole(\"button\", { name: \"PayPal\", exact: true })).toHaveCount(0)\n    await expect(checkout.getByRole(\"button\", { name: \"Mit Karte bezahlen\" })).toHaveCount(0)\n\n    if (process.env.NEXT_PUBLIC_PAYMENT_FEEDBACK_V2_ENABLED === \"true\") {\n      const existingAccess = checkout.getByRole(\"status\", { name: \"Zugang bereits aktiv\" })\n      await expect(existingAccess).toBeVisible()\n      await expect(existingAccess).toContainText(\n        \"Für deine E-Mail ist bereits ein Zugang aktiv. Melde dich jetzt ein.\",\n      )\n      await expect(existingAccess).toContainText(\"Keine neue Zahlung gestartet\")\n      await page.screenshot({ path: \"/tmp/chaarlie-payment-existing-access.png\" })\n      await existingAccess.getByRole(\"button\", { name: \"Mit E-Mail einloggen\" }).click()\n      await expect(page).toHaveURL(/\\/auth\\?email=lea%40example\\.com$/)\n    } else {\n      const existingAccess = page.getByRole(\"dialog\", { name: \"Aktiver Zugang gefunden\" })\n      await expect(existingAccess).toBeVisible()\n      await expect(existingAccess.getByText(\"lea@example.com\", { exact: true })).toBeVisible()\n      await expect(existingAccess.getByRole(\"link\", { name: \"Einloggen\" })).toHaveAttribute(\n        \"href\",\n        \"/auth?email=lea%40example.com\",\n      )\n    }\n  })",
+        "sha256": "9d3d91023a10eefebf0ea60a1a64a36e8d99a7ae0d00c6030880a67173ad1b6e"
+      },
+      {
+        "ordinal": 11,
+        "title": "\"membership existing access recovers before any provider or session work\"",
+        "line": 616,
+        "start": 24566,
+        "end": 26865,
+        "body": "test(\"membership existing access recovers before any provider or session work\", async ({\n    page,\n  }) => {\n    await page.setViewportSize({ width: 390, height: 844 })\n    let stripeSdkRequests = 0\n    let payPalSdkRequests = 0\n    let providerRequests = 0\n    page.on(\"request\", (request) => {\n      if (request.resourceType() === \"script\" && isStripeSdkScriptUrl(request.url())) {\n        stripeSdkRequests += 1\n      }\n      if (request.resourceType() === \"script\" && request.url().includes(\"paypal.com/sdk/js\")) {\n        payPalSdkRequests += 1\n      }\n    })\n    await page.route(\"**/api/checkout/eligibility\", async (route) => {\n      await route.fulfill({\n        body: JSON.stringify({\n          status: \"existing_access\",\n          activationPending: false,\n          recovery: \"login\",\n        }),\n        contentType: \"application/json\",\n        status: 200,\n      })\n    })\n    await page.route(\"**/api/stripe/create-checkout-session\", async (route) => {\n      providerRequests += 1\n      await route.abort()\n    })\n    await page.route(\"**/api/paypal/create-subscription-intent\", async (route) => {\n      providerRequests += 1\n      await route.abort()\n    })\n    await page.route(\"**/sdk/js?**\", async (route) => {\n      providerRequests += 1\n      await route.abort()\n    })\n\n    await openPersonalPlanLab(page, \"membership\")\n    await revealPricing(page)\n    await page.locator(\"[data-offer-sticky-cta]\").click()\n\n    const checkout = page.getByRole(\"dialog\", { name: \"Dein Zugang\" })\n    const existingAccess = checkout.getByRole(\"status\")\n    await expect(existingAccess).toContainText(\"Du hast bereits Zugang\")\n    await expect(checkout).toContainText(\"Keine neue Zahlung gestartet\")\n    await expect(checkout.getByRole(\"button\", { name: \"PayPal\", exact: true })).toHaveCount(0)\n    await expect(checkout.getByRole(\"button\", { name: \"Mit Karte bezahlen\" })).toHaveCount(0)\n    expect(providerRequests).toBe(0)\n    expect(stripeSdkRequests).toBe(0)\n    expect(payPalSdkRequests).toBe(0)\n\n    await checkout.getByRole(\"button\", { name: \"Einloggen und weiter\" }).click()\n    await expect(page).toHaveURL(/\\/auth\\?force=login&next=%2Fchat%3Fcheckout_recovery%3D1$/)\n    expect(providerRequests).toBe(0)\n    expect(stripeSdkRequests).toBe(0)\n    expect(payPalSdkRequests).toBe(0)\n  })",
+        "sha256": "e30b251a9ee40b292785edc821be641ad3fc5ccef0e435cb484e12241b2a2232"
+      },
+      {
+        "ordinal": 12,
+        "title": "\"membership eligibility failure retries before provider initialization\"",
+        "line": 676,
+        "start": 26869,
+        "end": 28902,
+        "body": "test(\"membership eligibility failure retries before provider initialization\", async ({\n    page,\n  }) => {\n    await page.setViewportSize({ width: 390, height: 844 })\n    await blockStripeSdk(page)\n    await stubPayPalSdk(page)\n    let eligibilityCalls = 0\n    let sessionCalls = 0\n    let stripeSdkRequests = 0\n    page.on(\"request\", (request) => {\n      if (request.resourceType() === \"script\" && isStripeSdkScriptUrl(request.url())) {\n        stripeSdkRequests += 1\n      }\n    })\n    await page.route(\"**/api/checkout/eligibility\", async (route) => {\n      eligibilityCalls += 1\n      await route.fulfill({\n        body: JSON.stringify(\n          eligibilityCalls === 1\n            ? { error: \"synthetic preflight failure\" }\n            : { status: \"eligible\" },\n        ),\n        contentType: \"application/json\",\n        status: eligibilityCalls === 1 ? 503 : 200,\n      })\n    })\n    await page.route(\"**/api/stripe/create-checkout-session\", async (route) => {\n      sessionCalls += 1\n      await route.fulfill({\n        body: JSON.stringify({ error: \"synthetic checkout session response\" }),\n        contentType: \"application/json\",\n        status: 503,\n      })\n    })\n\n    await openPersonalPlanLab(page, \"membership\")\n    await revealPricing(page)\n    await page.locator(\"[data-offer-sticky-cta]\").click()\n\n    const checkout = page.getByRole(\"dialog\", { name: \"Dein Zugang\" })\n    await expect(checkout.getByRole(\"status\")).toContainText(\"Zugang konnte nicht geprüft werden\")\n    await expect(checkout.getByRole(\"button\", { name: \"PayPal\", exact: true })).toHaveCount(0)\n    expect(sessionCalls).toBe(0)\n    expect(stripeSdkRequests).toBe(0)\n    await checkout.getByRole(\"button\", { name: \"Erneut prüfen\" }).click()\n    await expect.poll(() => eligibilityCalls).toBe(2)\n    await expect(page.getByRole(\"dialog\", { name: \"Sicher bezahlen\" })).toBeVisible()\n    await expect.poll(() => stripeSdkRequests).toBeGreaterThan(0)\n    await expect(checkout.getByRole(\"button\", { name: \"Zurück zum Ergebnis\" })).toHaveCount(0)\n  })",
+        "sha256": "8ac31038640a8c0b646df7e53a86a5ae27391f889b0eced6b05c3906c3f545fc"
+      },
+      {
+        "ordinal": 13,
+        "title": "\"a terminal PayPal recovery state hands the customer to support without another payment\"",
+        "line": 727,
+        "start": 28906,
+        "end": 31353,
+        "body": "test(\"a terminal PayPal recovery state hands the customer to support without another payment\", async ({\n    page,\n  }) => {\n    await page.setViewportSize({ width: 390, height: 844 })\n    await blockStripeSdk(page)\n    await stubPayPalSdk(page)\n    await page.route(\"**/api/paypal/create-order-intent\", async (route) => {\n      await route.fulfill({\n        body: JSON.stringify({\n          orderId: \"PAYPAL-ORDER-SUPPORT-1\",\n          token: \"paypal-support-token\",\n        }),\n        contentType: \"application/json\",\n        status: 200,\n      })\n    })\n    await page.route(\"**/api/billing/one-time-activation-status?**\", async (route) => {\n      await route.fulfill({\n        body: JSON.stringify({ status: \"failed_permanent\" }),\n        contentType: \"application/json\",\n        status: 400,\n      })\n    })\n\n    await openPersonalPlanLab(page, \"one_time\")\n    const openCheckout = page.getByRole(\"button\", {\n      name: \"Haarplan für €29,99 freischalten\",\n    })\n    await openCheckout.scrollIntoViewIfNeeded()\n    await openCheckout.click()\n    const checkout = page.getByRole(\"dialog\", { name: \"Sicher bezahlen\" })\n    await checkout.getByRole(\"button\", { name: \"PayPal\", exact: true }).click()\n    await expect(\n      checkout.getByText(\n        \"Dieser Zahlungsversuch bleibt PayPal zugeordnet. Nutze unten PayPal, um ihn fortzusetzen.\",\n      ),\n    ).toBeVisible()\n\n    await page.evaluate(() => {\n      const paypalWindow = window as typeof window & {\n        __chaarliePayPalOptions?: { onError?: (error: Error) => void }\n      }\n      paypalWindow.__chaarliePayPalOptions?.onError?.(new Error(\"synthetic SDK failure\"))\n    })\n\n    await page.waitForURL(\n      \"/welcome?provider=paypal&purchase=one_time&token=paypal-support-token&return_state=failed_permanent\",\n      { timeout: 10_000 },\n    )\n    await expect(page.getByRole(\"heading\", { name: \"Wir prüfen deinen Zugang\" })).toBeVisible()\n    await expect(\n      page.getByText(\n        \"Wir konnten deinen Zugang nicht automatisch prüfen. Unser Support hilft dir weiter. Bitte bewahre deine Bestellbestätigung auf.\",\n      ),\n    ).toBeVisible()\n    await expect(page.getByRole(\"link\", { name: \"Support kontaktieren\" })).toBeVisible()\n    await expect(page.getByRole(\"button\", { name: \"Status erneut prüfen\" })).toHaveCount(0)\n    await expect(page.getByText(\"Zahlung erneut\")).toHaveCount(0)\n    await page.screenshot({ path: \"/tmp/chaarlie-payment-support-handoff.png\" })\n  })",
+        "sha256": "5e2e6b895db38ee44cf7cab73b86603c8053cc8a3a34979573aef599d2b0b9b0"
+      },
+      {
+        "ordinal": 14,
+        "title": "\"a newly activated customer can choose a login link\"",
+        "line": 788,
+        "start": 31357,
+        "end": 32810,
+        "body": "test(\"a newly activated customer can choose a login link\", async ({ page }) => {\n    await page.setViewportSize({ width: 390, height: 844 })\n    let magicLinkRequests = 0\n    await page.route(\"**/api/auth/send-magic-link\", async (route) => {\n      magicLinkRequests += 1\n      await route.fulfill({\n        body: JSON.stringify({ ok: true }),\n        contentType: \"application/json\",\n        status: 200,\n      })\n    })\n\n    await page.goto(\"/labs/offer-page?variant=payment-welcome\", {\n      waitUntil: \"domcontentloaded\",\n    })\n    await expect(page.getByText(\"Zahlung erfolgreich\", { exact: true })).toHaveCount(0)\n    await expect(page.getByRole(\"heading\", { name: \"Zugang einrichten\" })).toBeVisible()\n    await expect(page.getByLabel(\"Chaarlie-E-Mail\")).toHaveValue(\"lea@example.com\")\n    await expect(page.getByRole(\"heading\", { name: \"Mit Passwort\", exact: true })).toBeVisible()\n    await expect(page.getByRole(\"heading\", { name: \"Mit Login-Link\", exact: true })).toBeVisible()\n    await page.screenshot({ path: \"/tmp/chaarlie-payment-activation-choice.png\" })\n\n    await page.getByRole(\"button\", { name: \"Login-Link senden\" }).click()\n    await expect(page.getByRole(\"heading\", { name: \"Check deine E-Mails\" })).toBeVisible()\n    await expect(page.getByText(\"Wir haben dir einen Login-Link geschickt.\")).toBeVisible()\n    expect(magicLinkRequests).toBe(1)\n    await page.screenshot({ path: \"/tmp/chaarlie-payment-magic-link-sent.png\" })\n  })",
+        "sha256": "e4e2fb1da221529d22b0fef01e99b7f7d877a4f5fa6874ce72d19be3df6c97dd"
+      },
+      {
+        "ordinal": 15,
+        "title": "\"an authenticated returning customer continues into the app instead of payment\"",
+        "line": 817,
+        "start": 32814,
+        "end": 33782,
+        "body": "test(\"an authenticated returning customer continues into the app instead of payment\", async ({\n    page,\n  }) => {\n    test.skip(\n      process.env.PLAYWRIGHT_EXPECT_LOCAL_DEV_LOGIN !== \"true\",\n      \"run against a local server with LOCAL_DEV_LOGIN_ENABLED=1\",\n    )\n    await page.setViewportSize({ width: 390, height: 844 })\n    await page.goto(\"/api/dev/login?next=/profile?membership=reactivated\")\n    await page.waitForURL(\"/profile?membership=reactivated\", { timeout: 15_000 })\n    await expect(page.getByRole(\"heading\", { name: \"Mein Profil\", level: 1 })).toBeVisible()\n    await expect(page.getByRole(\"heading\", { name: \"Produkte\", level: 2 })).toBeVisible({\n      timeout: 10_000,\n    })\n    await expect(page.getByText(\"9/10 vollständig\", { exact: true })).toBeVisible({\n      timeout: 10_000,\n    })\n    await expect(page.getByText(\"Zahlung erneut\")).toHaveCount(0)\n    await page.screenshot({ path: \"/tmp/chaarlie-payment-authenticated-handoff.png\" })\n  })",
+        "sha256": "babc346ff2ced5cc3b5910175866c796b5bf506a325405e12f17775ad879967f"
+      },
+      {
+        "ordinal": 16,
+        "title": "\"one-time card selection is single-flight and keeps PayPal available before claim\"",
+        "line": 838,
+        "start": 33786,
+        "end": 35749,
+        "body": "test(\"one-time card selection is single-flight and keeps PayPal available before claim\", async ({\n    page,\n  }) => {\n    await page.setViewportSize({ width: 390, height: 844 })\n    await stubPayPalSdk(page)\n    let prepareCalls = 0\n    await page.route(\"**/api/stripe/create-checkout-session\", async (route) => {\n      const body = route.request().postDataJSON() as { action?: unknown }\n      if (body.action !== \"prepare\") {\n        await route.fulfill({\n          body: JSON.stringify({ error: \"unexpected action\" }),\n          contentType: \"application/json\",\n          status: 400,\n        })\n        return\n      }\n      prepareCalls += 1\n      await page.waitForTimeout(100)\n      await route.fulfill({\n        body: JSON.stringify({\n          client_secret: \"cs_test_single_flight_secret\",\n          expires_at: Date.now() + 5 * 60_000,\n          preparation_token: \"prepared-token\",\n          session_id: \"cs_test_single_flight\",\n          status: \"prepared\",\n        }),\n        contentType: \"application/json\",\n        status: 200,\n      })\n    })\n\n    await openPersonalPlanLab(page, \"one_time\")\n    const openCheckout = page.getByRole(\"button\", {\n      name: \"Haarplan für €29,99 freischalten\",\n    })\n    await openCheckout.scrollIntoViewIfNeeded()\n    await openCheckout.click()\n    const checkout = page.getByRole(\"dialog\", { name: \"Sicher bezahlen\" })\n\n    const cardButton = checkout.getByRole(\"button\", { name: \"Mit Karte bezahlen\" })\n    await expect(cardButton).toBeVisible({ timeout: 10_000 })\n    await page.setViewportSize({ width: 391, height: 844 })\n    await page.setViewportSize({ width: 390, height: 844 })\n    await expect.poll(() => prepareCalls).toBe(1)\n\n    await cardButton.click()\n    await expect(checkout.getByRole(\"button\", { name: \"PayPal\", exact: true })).toBeVisible()\n    await expect(\n      checkout.getByRole(\"button\", { name: \"Stattdessen PayPal verwenden\" }),\n    ).toBeVisible()\n    expect(prepareCalls).toBe(1)\n  })",
+        "sha256": "d1e88d619bc02566355f0b279f533d554ad6319434ce68fa68a8843ee43b370d"
+      },
+      {
+        "ordinal": 17,
+        "title": "\"one-time card selection remains available when the PayPal build flag is disabled\"",
+        "line": 891,
+        "start": 35753,
+        "end": 37107,
+        "body": "test(\"one-time card selection remains available when the PayPal build flag is disabled\", async ({\n    page,\n  }) => {\n    test.skip(\n      process.env.PLAYWRIGHT_EXPECT_PAYPAL_DISABLED !== \"true\",\n      \"run against a server built with NEXT_PUBLIC_PAYPAL_ENABLED=false\",\n    )\n    let prepareCalls = 0\n    await page.route(\"**/api/stripe/create-checkout-session\", async (route) => {\n      prepareCalls += 1\n      await route.fulfill({\n        body: JSON.stringify({\n          client_secret: \"cs_test_paypal_disabled_secret\",\n          expires_at: Date.now() + 5 * 60_000,\n          preparation_token: \"prepared-token\",\n          session_id: \"cs_test_paypal_disabled\",\n          status: \"prepared\",\n        }),\n        contentType: \"application/json\",\n        status: 200,\n      })\n    })\n\n    await openPersonalPlanLab(page, \"one_time\")\n    const openCheckout = page.getByRole(\"button\", {\n      name: \"Haarplan für €29,99 freischalten\",\n    })\n    await openCheckout.scrollIntoViewIfNeeded()\n    await openCheckout.click()\n    const checkout = page.getByRole(\"dialog\", { name: \"Sicher bezahlen\" })\n\n    await expect(checkout.getByRole(\"button\", { name: \"Mit Karte bezahlen\" })).toBeVisible({\n      timeout: 10_000,\n    })\n    await expect(checkout.getByRole(\"button\", { name: \"PayPal\", exact: true })).toHaveCount(0)\n    expect(prepareCalls).toBe(1)\n  })",
+        "sha256": "1b15f2495fb3c3b10efa74ea36de40699fcce0459115d087bc113b4448e215df"
+      },
+      {
+        "ordinal": 18,
+        "title": "\"FAQ disclosure remains native and supports keyboard reversal\"",
+        "line": 929,
+        "start": 37111,
+        "end": 37930,
+        "body": "test(\"FAQ disclosure remains native and supports keyboard reversal\", async ({ page }) => {\n    await page.setViewportSize({ width: 390, height: 844 })\n    await openPersonalPlanLab(page, \"membership\")\n\n    const faq = page.locator(\"[data-offer-faq='new-shampoo-not-enough']\")\n    const summary = faq.locator(\"summary\")\n    await expect(faq).not.toHaveAttribute(\"open\")\n    await summary.focus()\n    await page.keyboard.press(\"Enter\")\n    await expect(faq).toHaveAttribute(\"open\", \"\")\n    await expect(faq).toHaveAttribute(\"data-offer-faq-state\", \"open\")\n\n    await page.keyboard.press(\" \")\n    await expect(faq).not.toHaveAttribute(\"open\")\n    await expect(faq).toHaveAttribute(\"data-offer-faq-state\", \"closed\")\n\n    await summary.click()\n    await summary.click()\n    await expect(faq).not.toHaveAttribute(\"open\")\n  })",
+        "sha256": "7fbe4fa3804d0ff8d15ebc190f467a1a1bd7e50fe796493210ec46d2d7e76108"
+      },
+      {
+        "ordinal": 19,
+        "title": "\"reduced motion keeps pricing, sticky summary, and FAQ state changes immediate\"",
+        "line": 950,
+        "start": 37934,
+        "end": 38928,
+        "body": "test(\"reduced motion keeps pricing, sticky summary, and FAQ state changes immediate\", async ({\n    page,\n  }) => {\n    await page.emulateMedia({ reducedMotion: \"reduce\" })\n    await page.setViewportSize({ width: 390, height: 844 })\n    await openPersonalPlanLab(page, \"membership\")\n    await revealPricing(page)\n\n    const stickySummary = page.locator(\"[data-offer-sticky-summary]\")\n    await expect(stickySummary).toHaveCSS(\"animation-name\", \"none\")\n    await page.getByRole(\"button\", { name: /Monatlich/ }).click()\n    await expect(page.locator(\"[data-offer-plan-cta-content]\")).toHaveCSS(\"animation-name\", \"none\")\n\n    const faq = page.locator(\"[data-offer-faq='new-shampoo-not-enough']\")\n    await faq.locator(\"summary\").click()\n    await expect(faq).toHaveAttribute(\"open\", \"\")\n    await expect(faq).toHaveCSS(\"transition-duration\", \"0s\")\n    expect(await faq.getAttribute(\"style\")).toBeNull()\n    await faq.locator(\"summary\").click()\n    await expect(faq).not.toHaveAttribute(\"open\")\n  })",
+        "sha256": "70446526c719ec0fd1d9019c382d8bcbdff797772c91820e86ad424cad3fa818"
+      }
+    ]
+  },
+  {
+    "file": "tests/personal-plan-pricing-experiment.test.ts",
+    "sha256": "1f3abe43446c8ec3d487bbbec3692b49454dba7ba1310d8bdaa85e8faa252f31",
+    "count": 14,
+    "sites": [
+      {
+        "ordinal": 1,
+        "title": "\"personal-plan pricing allocation is deterministic and has exclusive pricing modes\"",
+        "line": 30,
+        "start": 969,
+        "end": 1690,
+        "body": "test(\"personal-plan pricing allocation is deterministic and has exclusive pricing modes\", () => {\n  const arm = assignPersonalPlanPricingExperimentVariant(sessionId)\n  assert.equal(arm, assignPersonalPlanPricingExperimentVariant(sessionId))\n  assert.ok(isPersonalPlanPricingExperimentVariant(arm))\n  assert.equal(\n    isPersonalPlanPricingExperimentVariant(PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant),\n    false,\n  )\n  assert.equal(\n    resolvePersonalPlanPricingMode(PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant),\n    \"membership\",\n  )\n  assert.equal(resolvePersonalPlanPricingMode(\"personal-plan-one-time-v1\"), \"one_time\")\n  assert.equal(resolvePersonalPlanPricingMode(\"personal-plan-membership-v1\"), \"membership\")\n})",
+        "sha256": "b2ad6e132393fdb3a745d5acc63d344e40e55aa49567e0b9c609f6558d29971d"
+      },
+      {
+        "ordinal": 2,
+        "title": "\"retired one-time arm is never assigned to a new Personal Plan session\"",
+        "line": 46,
+        "start": 1692,
+        "end": 1954,
+        "body": "test(\"retired one-time arm is never assigned to a new Personal Plan session\", () => {\n  for (const id of [\"new-session-a\", \"new-session-b\", \"new-session-c\"]) {\n    assert.equal(assignPersonalPlanPricingExperimentVariant(id), \"personal-plan-membership-v1\")\n  }\n})",
+        "sha256": "a3ab8c0eeafdc18f4e9c20f6d8082a2742f19503a7fe3efc66c5508d69e85822"
+      },
+      {
+        "ordinal": 3,
+        "title": "\"personal-plan pricing experiment flag is enabled only by exact true\"",
+        "line": 52,
+        "start": 1956,
+        "end": 2698,
+        "body": "test(\"personal-plan pricing experiment flag is enabled only by exact true\", () => {\n  const previous = process.env.PERSONAL_PLAN_PRICING_EXPERIMENT_ENABLED\n  try {\n    delete process.env.PERSONAL_PLAN_PRICING_EXPERIMENT_ENABLED\n    assert.equal(isPersonalPlanPricingExperimentEnabled(), false)\n    process.env.PERSONAL_PLAN_PRICING_EXPERIMENT_ENABLED = \"TRUE\"\n    assert.equal(isPersonalPlanPricingExperimentEnabled(), false)\n    process.env.PERSONAL_PLAN_PRICING_EXPERIMENT_ENABLED = \"true\"\n    assert.equal(isPersonalPlanPricingExperimentEnabled(), true)\n  } finally {\n    if (previous === undefined) delete process.env.PERSONAL_PLAN_PRICING_EXPERIMENT_ENABLED\n    else process.env.PERSONAL_PLAN_PRICING_EXPERIMENT_ENABLED = previous\n  }\n})",
+        "sha256": "16487ce697f8af42410546c32a7e85f3978f72901597aba331a1c0ba885505e1"
+      },
+      {
+        "ordinal": 4,
+        "title": "\"personal-plan launch pricing flag defaults off and enables only for exact true\"",
+        "line": 67,
+        "start": 2700,
+        "end": 3417,
+        "body": "test(\"personal-plan launch pricing flag defaults off and enables only for exact true\", () => {\n  const previous = process.env.PERSONAL_PLAN_LAUNCH_PRICING_ENABLED\n  try {\n    delete process.env.PERSONAL_PLAN_LAUNCH_PRICING_ENABLED\n    assert.equal(isPersonalPlanLaunchPricingEnabled(), false)\n    process.env.PERSONAL_PLAN_LAUNCH_PRICING_ENABLED = \"TRUE\"\n    assert.equal(isPersonalPlanLaunchPricingEnabled(), false)\n    process.env.PERSONAL_PLAN_LAUNCH_PRICING_ENABLED = \"true\"\n    assert.equal(isPersonalPlanLaunchPricingEnabled(), true)\n  } finally {\n    if (previous === undefined) delete process.env.PERSONAL_PLAN_LAUNCH_PRICING_ENABLED\n    else process.env.PERSONAL_PLAN_LAUNCH_PRICING_ENABLED = previous\n  }\n})",
+        "sha256": "d4eacd0784f983a957ab84a39d3fff56b8916c8d937edf7bb2cf1c118e45d723"
+      },
+      {
+        "ordinal": 5,
+        "title": "\"QA token helper defaults to a five-minute TTL when the option is omitted\"",
+        "line": 82,
+        "start": 3419,
+        "end": 4182,
+        "body": "test(\"QA token helper defaults to a five-minute TTL when the option is omitted\", () => {\n  const result = spawnSync(\n    process.execPath,\n    [\n      \"--import\",\n      \"tsx\",\n      fileURLToPath(\n        new URL(\"../scripts/create-personal-plan-one-time-qa-token.ts\", import.meta.url),\n      ),\n      \"--lead-id\",\n      leadId,\n      \"--session-id\",\n      sessionId,\n    ],\n    {\n      encoding: \"utf8\",\n      env: {\n        ...process.env,\n        PERSONAL_PLAN_ONE_TIME_QA_SIGNING_SECRET: \"test-secret\",\n      },\n    },\n  )\n  assert.equal(result.status, 0, result.stderr)\n  const claims = JSON.parse(\n    Buffer.from(result.stdout.split(\".\")[0], \"base64url\").toString(\"utf8\"),\n  ) as { exp: number; iat: number }\n  assert.equal(claims.exp - claims.iat, 300)\n})",
+        "sha256": "16004e37a97df2bfc69000bf2ff509ecd0e814fea7709316d644efa9288ec6cc"
+      },
+      {
+        "ordinal": 6,
+        "title": "\"personal-plan resolver uses the historical base for disabled, missing, viewed-base, and ineligible sessions\"",
+        "line": 111,
+        "start": 4184,
+        "end": 5522,
+        "body": "test(\"personal-plan resolver uses the historical base for disabled, missing, viewed-base, and ineligible sessions\", async () => {\n  const base = PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant\n  assert.equal(await resolvePersonalPlanPricingExperiment({ enabled: true, session: null }), base)\n  assert.equal(\n    await resolvePersonalPlanPricingExperiment({\n      enabled: true,\n      session: {\n        sessionId,\n        packageKey: \"default_organic\",\n        offerVariant: base,\n        offerViewedAt: null,\n      },\n    }),\n    base,\n  )\n  assert.equal(\n    await resolvePersonalPlanPricingExperiment({\n      enabled: true,\n      session: {\n        sessionId,\n        packageKey: \"meta_personal_plan_v1\",\n        offerVariant: \"unexpected-offer\",\n        offerViewedAt: null,\n      },\n    }),\n    base,\n  )\n  assert.equal(\n    await resolvePersonalPlanPricingExperiment({\n      enabled: false,\n      session: {\n        sessionId,\n        packageKey: \"meta_personal_plan_v1\",\n        offerVariant: base,\n        offerViewedAt: null,\n      },\n    }),\n    base,\n  )\n  assert.equal(\n    await resolvePersonalPlanPricingExperiment({\n      enabled: true,\n      session: {\n        sessionId,\n        packageKey: \"meta_personal_plan_v1\",\n        offerVariant: base,\n        offerViewedAt: \"2026-07-31T10:00:00Z\",\n      },\n    }),\n    base,\n  )\n})",
+        "sha256": "581d9601e111ff77aa1ee789c6617c1bdf0d9286b50ec9728684cdc59be344ae"
+      },
+      {
+        "ordinal": 7,
+        "title": "\"personal-plan resolver persists an enabled unviewed assignment against the base identity\"",
+        "line": 164,
+        "start": 5524,
+        "end": 7501,
+        "body": "test(\"personal-plan resolver persists an enabled unviewed assignment against the base identity\", async () => {\n  let write: string | null = null\n  let updateId: string | null = null\n  let offerViewedAtGuard: unknown = \"unset\"\n  let storedVariantGuard: string | null = null\n  const client = {\n    from: () => ({\n      update: (values: { offer_variant: string }) => {\n        write = values.offer_variant\n        return {\n          eq: (column: string, value: string) => {\n            updateId = column === \"id\" ? value : null\n            return {\n              is: (guardColumn: string, guardValue: null) => {\n                offerViewedAtGuard = guardColumn === \"offer_viewed_at\" ? guardValue : \"wrong-column\"\n                return {\n                  eq: (variantColumn: string, variantValue: string) => {\n                    storedVariantGuard =\n                      variantColumn === \"offer_variant\" ? variantValue : \"wrong-column\"\n                    return {\n                      select: () => ({\n                        maybeSingle: async () => ({\n                          data: { offer_variant: values.offer_variant },\n                          error: null,\n                        }),\n                      }),\n                    }\n                  },\n                }\n              },\n            }\n          },\n        }\n      },\n      select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: null, error: null }) }) }),\n    }),\n  }\n  const assigned = await resolvePersonalPlanPricingExperiment({\n    enabled: true,\n    client: client as never,\n    session: {\n      sessionId,\n      packageKey: \"meta_personal_plan_v1\",\n      offerVariant: \"personal-plan-v1\",\n      offerViewedAt: null,\n    },\n  })\n  assert.equal(write, assigned)\n  assert.ok(isPersonalPlanPricingExperimentVariant(assigned))\n  assert.equal(updateId, sessionId)\n  assert.equal(offerViewedAtGuard, null)\n  assert.equal(storedVariantGuard, PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant)\n})",
+        "sha256": "637caeef1f394e60ff29b5a911ccdde71497cf94ae013f8590829ca14c15c0a4"
+      },
+      {
+        "ordinal": 8,
+        "title": "\"persisted retired one-time arms resolve to the subscription presentation\"",
+        "line": 218,
+        "start": 7503,
+        "end": 8639,
+        "body": "test(\"persisted retired one-time arms resolve to the subscription presentation\", async () => {\n  for (const session of [\n    {\n      sessionId,\n      packageKey: \"meta_personal_plan_v1\",\n      offerVariant: \"personal-plan-one-time-v1\",\n      offerViewedAt: \"2026-07-31T10:00:00Z\",\n    },\n    {\n      sessionId,\n      packageKey: \"meta_personal_plan_v1\",\n      offerVariant: \"personal-plan-one-time-v1\",\n      offerViewedAt: null,\n      checkoutStartedAt: \"2026-07-31T10:00:00Z\",\n    },\n    {\n      sessionId,\n      packageKey: \"meta_personal_plan_v1\",\n      offerVariant: \"personal-plan-one-time-v1\",\n      offerViewedAt: null,\n      isInternalTest: true,\n    },\n  ]) {\n    assert.equal(\n      await resolvePersonalPlanPricingExperiment({ enabled: false, session }),\n      PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant,\n    )\n  }\n  assert.equal(\n    await resolvePersonalPlanPricingExperiment({\n      enabled: true,\n      session: {\n        sessionId,\n        packageKey: \"meta_personal_plan_v1\",\n        offerVariant: \"personal-plan-membership-v1\",\n        offerViewedAt: null,\n      },\n    }),\n    \"personal-plan-membership-v1\",\n  )\n})",
+        "sha256": "a91e28c8a54950396bb4593056188800dcdaae24d9f12676b9d3b668c38975bf"
+      },
+      {
+        "ordinal": 9,
+        "title": "\"a persisted retired arm is left intact for historic reporting\"",
+        "line": 260,
+        "start": 8641,
+        "end": 9940,
+        "body": "test(\"a persisted retired arm is left intact for historic reporting\", async () => {\n  let updateValue: string | null = null\n  let storedVariantGuard: string | null = null\n  const client = {\n    from: () => ({\n      update: (values: { offer_variant: string }) => ({\n        eq: () => ({\n          is: () => ({\n            eq: (_column: string, value: string) => {\n              updateValue = values.offer_variant\n              storedVariantGuard = value\n              return {\n                select: () => ({\n                  maybeSingle: async () => ({\n                    data: { offer_variant: values.offer_variant },\n                    error: null,\n                  }),\n                }),\n              }\n            },\n          }),\n        }),\n      }),\n      select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: null, error: null }) }) }),\n    }),\n  }\n  const resolved = await resolvePersonalPlanPricingExperiment({\n    enabled: false,\n    client: client as never,\n    session: {\n      sessionId,\n      packageKey: \"meta_personal_plan_v1\",\n      offerVariant: \"personal-plan-one-time-v1\",\n      offerViewedAt: null,\n    },\n  })\n\n  assert.equal(resolved, PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant)\n  assert.equal(updateValue, null)\n  assert.equal(storedVariantGuard, null)\n})",
+        "sha256": "c864d34818c157c962a6790c6379bbdbcd91a7249ddc9640ab051c64b584cbeb"
+      },
+      {
+        "ordinal": 10,
+        "title": "\"a persisted retired arm does not attempt a reset or database read\"",
+        "line": 302,
+        "start": 9942,
+        "end": 10882,
+        "body": "test(\"a persisted retired arm does not attempt a reset or database read\", async () => {\n  const raceClient = {\n    from: () => ({\n      update: () => ({\n        eq: () => ({\n          is: () => ({\n            eq: () => ({\n              select: () => ({ maybeSingle: async () => ({ data: null, error: null }) }),\n            }),\n          }),\n        }),\n      }),\n      select: () => ({\n        eq: () => ({\n          maybeSingle: async () => ({\n            data: { offer_variant: \"personal-plan-membership-v1\" },\n            error: null,\n          }),\n        }),\n      }),\n    }),\n  }\n  const session = {\n    sessionId,\n    packageKey: \"meta_personal_plan_v1\",\n    offerVariant: \"personal-plan-one-time-v1\",\n    offerViewedAt: null,\n  }\n  assert.equal(\n    await resolvePersonalPlanPricingExperiment({\n      enabled: false,\n      client: raceClient as never,\n      session,\n    }),\n    PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant,\n  )\n})",
+        "sha256": "fa5f89bcdc242cf9fe6869480c06de878af37f852f2e9ff92ac55e21018ea3d3"
+      },
+      {
+        "ordinal": 11,
+        "title": "\"assignment races use the persisted winner while assignment failures stay on the base\"",
+        "line": 340,
+        "start": 10884,
+        "end": 12724,
+        "body": "test(\"assignment races use the persisted winner while assignment failures stay on the base\", async () => {\n  const session = {\n    sessionId,\n    packageKey: \"meta_personal_plan_v1\",\n    offerVariant: PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant,\n    offerViewedAt: null,\n  }\n  const raceClient = {\n    from: () => ({\n      update: () => ({\n        eq: () => ({\n          is: () => ({\n            eq: () => ({\n              select: () => ({ maybeSingle: async () => ({ data: null, error: null }) }),\n            }),\n          }),\n        }),\n      }),\n      select: () => ({\n        eq: () => ({\n          maybeSingle: async () => ({\n            data: { offer_variant: \"personal-plan-one-time-v1\" },\n            error: null,\n          }),\n        }),\n      }),\n    }),\n  }\n  assert.equal(\n    await resolvePersonalPlanPricingExperiment({\n      enabled: true,\n      client: raceClient as never,\n      session,\n    }),\n    PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant,\n  )\n\n  let capturedFallback: string | null = null\n  const errorClient = {\n    from: () => ({\n      update: () => ({\n        eq: () => ({\n          is: () => ({\n            eq: () => ({\n              select: () => ({\n                maybeSingle: async () => ({ data: null, error: new Error(\"unavailable\") }),\n              }),\n            }),\n          }),\n        }),\n      }),\n      select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: null, error: null }) }) }),\n    }),\n  }\n  assert.equal(\n    await resolvePersonalPlanPricingExperiment({\n      enabled: true,\n      client: errorClient as never,\n      captureFailure: (_error, details) => {\n        capturedFallback = details.fallbackVariant\n      },\n      session,\n    }),\n    PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant,\n  )\n  assert.equal(capturedFallback, PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant)\n})",
+        "sha256": "1be9a13cd3179e356ae5e7d2eb50748199f1e4a0a37fff93f440156dacb54b14"
+      },
+      {
+        "ordinal": 12,
+        "title": "\"QA token validation binds the atomic assignment to one lead/session/package\"",
+        "line": 408,
+        "start": 12726,
+        "end": 13999,
+        "body": "test(\"QA token validation binds the atomic assignment to one lead/session/package\", async () => {\n  const secret = \"test-secret\"\n  const token = createPersonalPlanOneTimeQaToken({\n    secret,\n    leadId,\n    sessionId,\n    packageKey: \"meta_personal_plan_v1\",\n    arm: \"personal-plan-one-time-v1\",\n    now: 1_000,\n    ttlSeconds: 120,\n    jti: \"30000000-0000-4000-8000-000000000003\",\n  })\n  assert.equal(verifyPersonalPlanOneTimeQaToken(token, secret, 1_050)?.leadId, leadId)\n  assert.equal(verifyPersonalPlanOneTimeQaToken(token, \"wrong\", 1_050), null)\n  assert.equal(verifyPersonalPlanOneTimeQaToken(token, secret, 1_200), null)\n  let args: Record<string, unknown> | null = null\n  assert.equal(\n    await assignPersonalPlanOneTimeQa({\n      enabled: true,\n      secret,\n      now: 1_050,\n      token,\n      leadId,\n      session: {\n        sessionId,\n        packageKey: \"meta_personal_plan_v1\",\n        offerVariant: \"personal-plan-v1\",\n        offerViewedAt: null,\n      },\n      rpc: async (input) => {\n        args = input\n        return { data: true, error: null }\n      },\n    }),\n    true,\n  )\n  assert.deepEqual(args, {\n    p_lead_id: leadId,\n    p_session_id: sessionId,\n    p_package_key: \"meta_personal_plan_v1\",\n    p_arm: \"personal-plan-one-time-v1\",\n  })\n})",
+        "sha256": "696ddbb5c7de31b0360bb877b6581f22aef3434faa0cf6fee1c57b8999e4d237"
+      },
+      {
+        "ordinal": 13,
+        "title": "\"one-time checkout authorization uses only the canonical stored session\"",
+        "line": 452,
+        "start": 14001,
+        "end": 15352,
+        "body": "test(\"one-time checkout authorization uses only the canonical stored session\", async () => {\n  const canonical = {\n    id: sessionId,\n    lead_id: leadId,\n    visitor_id: \"50000000-0000-4000-8000-000000000005\",\n    package_key: \"meta_personal_plan_v1\",\n    offer_variant: \"personal-plan-one-time-v1\",\n    offer_viewed_at: \"2026-07-31T10:00:00Z\",\n    first_seen_at: \"2026-07-31T09:30:00Z\",\n    is_internal_test: true,\n  }\n  assert.deepEqual(\n    await assertPersonalPlanOneTimeCheckoutAuthorized({\n      leadId,\n      funnelSessionId: sessionId,\n      fetchSession: async () => ({ data: canonical, error: null }),\n    }),\n    {\n      sessionId,\n      leadId,\n      visitorId: \"50000000-0000-4000-8000-000000000005\",\n      packageKey: \"meta_personal_plan_v1\",\n      offerVariant: \"personal-plan-one-time-v1\",\n      issuedAt: Date.parse(\"2026-07-31T09:30:00Z\"),\n      isInternalTest: true,\n    },\n  )\n  for (const row of [\n    { ...canonical, offer_variant: \"personal-plan-membership-v1\" },\n    { ...canonical, lead_id: \"10000000-0000-4000-8000-000000000004\" },\n    { ...canonical, offer_viewed_at: null },\n  ]) {\n    await assert.rejects(\n      assertPersonalPlanOneTimeCheckoutAuthorized({\n        leadId,\n        funnelSessionId: sessionId,\n        fetchSession: async () => ({ data: row, error: null }),\n      }),\n      /not authorized/,\n    )\n  }\n})",
+        "sha256": "4b54bc6eaecae39a88f73c75c1d71350e2623651e47141f7420d504acfd3591f"
+      },
+      {
+        "ordinal": 14,
+        "title": "\"one-time checkout authorization distinguishes lookup failure from expected denial\"",
+        "line": 495,
+        "start": 15354,
+        "end": 16139,
+        "body": "test(\"one-time checkout authorization distinguishes lookup failure from expected denial\", async () => {\n  await assert.rejects(\n    assertPersonalPlanOneTimeCheckoutAuthorized({\n      leadId,\n      funnelSessionId: sessionId,\n      fetchSession: async () => ({ data: null, error: new Error(\"database unavailable\") }),\n    }),\n    (error) =>\n      error instanceof PersonalPlanOneTimeCheckoutAuthorizationError &&\n      error.reason === \"lookup_failed\",\n  )\n\n  await assert.rejects(\n    assertPersonalPlanOneTimeCheckoutAuthorized({\n      leadId,\n      funnelSessionId: sessionId,\n      fetchSession: async () => ({ data: null, error: null }),\n    }),\n    (error) =>\n      error instanceof PersonalPlanOneTimeCheckoutAuthorizationError &&\n      error.reason === \"not_authorized\",\n  )\n})",
+        "sha256": "8c91d98db14a44c54c9099bbe26703423b73a06d86d58f23b2105b9468ee4dbe"
+      }
+    ]
+  },
+  {
+    "file": "tests/free-reveal.test.ts",
+    "sha256": "c2e6a44a32c5a6a983143d4417fdadd12a0d4ae93a4ee3d4b9ed5c36fa8c0ad8",
+    "count": 13,
+    "sites": [
+      {
+        "ordinal": 1,
+        "title": "\"hasUsedFreeReveal: false when no row exists for the user\"",
+        "line": 80,
+        "start": 2261,
+        "end": 2492,
+        "body": "test(\"hasUsedFreeReveal: false when no row exists for the user\", async () => {\n  const { client } = createFakeFreeRevealClient()\n\n  const result = await hasUsedFreeReveal(client as never, \"user-1\")\n\n  assert.equal(result, false)\n})",
+        "sha256": "7645548ea34a920d54bb238258af620af897ad67285bb1e06514ad170f423fdc"
+      },
+      {
+        "ordinal": 2,
+        "title": "\"hasUsedFreeReveal: true once a reveal has been consumed\"",
+        "line": 88,
+        "start": 2494,
+        "end": 2812,
+        "body": "test(\"hasUsedFreeReveal: true once a reveal has been consumed\", async () => {\n  const { client } = createFakeFreeRevealClient()\n\n  await consumeFreeReveal(client as never, { userId: \"user-1\", productId: \"product-a\" })\n  const result = await hasUsedFreeReveal(client as never, \"user-1\")\n\n  assert.equal(result, true)\n})",
+        "sha256": "a9f96f25efe94992311fabe25244917b587e512c2acce3404c11dbada86b1d71"
+      },
+      {
+        "ordinal": 3,
+        "title": "\"hasUsedFreeReveal: does not leak across users\"",
+        "line": 97,
+        "start": 2814,
+        "end": 3172,
+        "body": "test(\"hasUsedFreeReveal: does not leak across users\", async () => {\n  const { client } = createFakeFreeRevealClient()\n\n  await consumeFreeReveal(client as never, { userId: \"user-1\", productId: \"product-a\" })\n\n  assert.equal(await hasUsedFreeReveal(client as never, \"user-1\"), true)\n  assert.equal(await hasUsedFreeReveal(client as never, \"user-2\"), false)\n})",
+        "sha256": "4619faf6cb82579e473cdb4b0cfe71df452c2767bc93f9fa1c08e3d3a5bdecee"
+      },
+      {
+        "ordinal": 4,
+        "title": "\"consumeFreeReveal: first consume for a user returns consumed\"",
+        "line": 106,
+        "start": 3174,
+        "end": 3554,
+        "body": "test(\"consumeFreeReveal: first consume for a user returns consumed\", async () => {\n  const { client, rows } = createFakeFreeRevealClient()\n\n  const result = await consumeFreeReveal(client as never, {\n    userId: \"user-1\",\n    productId: \"product-a\",\n  })\n\n  assert.equal(result, \"consumed\")\n  assert.deepEqual(rows.get(\"user-1\"), { user_id: \"user-1\", product_id: \"product-a\" })\n})",
+        "sha256": "c068a2992d63d4c00370c306bf636f67064461a1bb345c0d2dd2d04ce27f3760"
+      },
+      {
+        "ordinal": 5,
+        "title": "\"consumeFreeReveal: second consume for the same user returns already_used\"",
+        "line": 118,
+        "start": 3556,
+        "end": 4201,
+        "body": "test(\"consumeFreeReveal: second consume for the same user returns already_used\", async () => {\n  const { client, rows } = createFakeFreeRevealClient()\n\n  const first = await consumeFreeReveal(client as never, {\n    userId: \"user-1\",\n    productId: \"product-a\",\n  })\n  const second = await consumeFreeReveal(client as never, {\n    userId: \"user-1\",\n    productId: \"product-b\",\n  })\n\n  assert.equal(first, \"consumed\")\n  assert.equal(second, \"already_used\")\n  // The original row stands -- a second consume never overwrites what the\n  // credit was spent on.\n  assert.deepEqual(rows.get(\"user-1\"), { user_id: \"user-1\", product_id: \"product-a\" })\n})",
+        "sha256": "e8f87971ed29e8f2fe97570fce0528f762d3ab8bb2a82458ab5064e6026d4e38"
+      },
+      {
+        "ordinal": 6,
+        "title": "\"consumeFreeReveal: relies on the insert's own PK conflict, never reads first\"",
+        "line": 137,
+        "start": 4203,
+        "end": 4610,
+        "body": "test(\"consumeFreeReveal: relies on the insert's own PK conflict, never reads first\", async () => {\n  const fake = createFakeFreeRevealClient()\n\n  await consumeFreeReveal(fake.client as never, { userId: \"user-1\", productId: \"product-a\" })\n  await consumeFreeReveal(fake.client as never, { userId: \"user-1\", productId: \"product-b\" })\n\n  assert.equal(fake.insertCalls, 2)\n  assert.equal(fake.selectCalls, 0)\n})",
+        "sha256": "fa4721375faea849dc7ce721f06ab2780b0b9572d1d35cbf56f4b6c61e84fe48"
+      },
+      {
+        "ordinal": 7,
+        "title": "\"consumeFreeReveal: different users each get their own one-time credit\"",
+        "line": 147,
+        "start": 4612,
+        "end": 5062,
+        "body": "test(\"consumeFreeReveal: different users each get their own one-time credit\", async () => {\n  const { client } = createFakeFreeRevealClient()\n\n  const userOne = await consumeFreeReveal(client as never, {\n    userId: \"user-1\",\n    productId: \"product-a\",\n  })\n  const userTwo = await consumeFreeReveal(client as never, {\n    userId: \"user-2\",\n    productId: \"product-b\",\n  })\n\n  assert.equal(userOne, \"consumed\")\n  assert.equal(userTwo, \"consumed\")\n})",
+        "sha256": "81490db6208c7809fe0a4e2e26d3874e874e760fe24f8adad0797a057e8ae309"
+      },
+      {
+        "ordinal": 8,
+        "title": "\"hasUsedFreeReveal: throws on an unexpected lookup error\"",
+        "line": 163,
+        "start": 5064,
+        "end": 5471,
+        "body": "test(\"hasUsedFreeReveal: throws on an unexpected lookup error\", async () => {\n  const client = {\n    from: () => ({\n      select: () => ({\n        eq: () => ({\n          maybeSingle: async () => ({ data: null, error: { message: \"connection reset\" } }),\n        }),\n      }),\n    }),\n  }\n\n  await assert.rejects(\n    () => hasUsedFreeReveal(client as never, \"user-1\"),\n    /free_reveal_lookup_failed/,\n  )\n})",
+        "sha256": "579583a92f1b53bef77fa51b3e3b77f8c09f599e18bf12ba22ce1020de10b2cf"
+      },
+      {
+        "ordinal": 9,
+        "title": "\"loadFreeRevealRecord: null when no row exists for the user\"",
+        "line": 180,
+        "start": 5473,
+        "end": 5708,
+        "body": "test(\"loadFreeRevealRecord: null when no row exists for the user\", async () => {\n  const { client } = createFakeFreeRevealClient()\n\n  const result = await loadFreeRevealRecord(client as never, \"user-1\")\n\n  assert.equal(result, null)\n})",
+        "sha256": "8f0367f570b73dcf47051adf938fe3eafb93a4e5eacef19c769e8c19ae3597eb"
+      },
+      {
+        "ordinal": 10,
+        "title": "\"loadFreeRevealRecord: returns the ledgered productId once a reveal has been consumed\"",
+        "line": 188,
+        "start": 5710,
+        "end": 6086,
+        "body": "test(\"loadFreeRevealRecord: returns the ledgered productId once a reveal has been consumed\", async () => {\n  const { client } = createFakeFreeRevealClient()\n\n  await consumeFreeReveal(client as never, { userId: \"user-1\", productId: \"product-a\" })\n  const result = await loadFreeRevealRecord(client as never, \"user-1\")\n\n  assert.deepEqual(result, { productId: \"product-a\" })\n})",
+        "sha256": "16e9a7c1f249e0fc430a0a9b3911a37b7189b810b93ac5729da0b0f51c126a00"
+      },
+      {
+        "ordinal": 11,
+        "title": "\"loadFreeRevealRecord: does not leak across users\"",
+        "line": 197,
+        "start": 6088,
+        "end": 6487,
+        "body": "test(\"loadFreeRevealRecord: does not leak across users\", async () => {\n  const { client } = createFakeFreeRevealClient()\n\n  await consumeFreeReveal(client as never, { userId: \"user-1\", productId: \"product-a\" })\n\n  assert.deepEqual(await loadFreeRevealRecord(client as never, \"user-1\"), {\n    productId: \"product-a\",\n  })\n  assert.equal(await loadFreeRevealRecord(client as never, \"user-2\"), null)\n})",
+        "sha256": "fbb163102d0817dcb665302df9f0ec7876b35e35bbb8682ccec75861e3f50b73"
+      },
+      {
+        "ordinal": 12,
+        "title": "\"loadFreeRevealRecord: throws on an unexpected lookup error\"",
+        "line": 208,
+        "start": 6489,
+        "end": 6902,
+        "body": "test(\"loadFreeRevealRecord: throws on an unexpected lookup error\", async () => {\n  const client = {\n    from: () => ({\n      select: () => ({\n        eq: () => ({\n          maybeSingle: async () => ({ data: null, error: { message: \"connection reset\" } }),\n        }),\n      }),\n    }),\n  }\n\n  await assert.rejects(\n    () => loadFreeRevealRecord(client as never, \"user-1\"),\n    /free_reveal_lookup_failed/,\n  )\n})",
+        "sha256": "4d660744857ead50ba9928ee4ef3b1f8a12dcb118771e8520d21e28b144f7cb4"
+      },
+      {
+        "ordinal": 13,
+        "title": "\"consumeFreeReveal: throws on an unexpected insert error\"",
+        "line": 225,
+        "start": 6904,
+        "end": 7277,
+        "body": "test(\"consumeFreeReveal: throws on an unexpected insert error\", async () => {\n  const client = {\n    from: () => ({\n      insert: async () => ({ error: { code: \"42501\", message: \"permission denied\" } }),\n    }),\n  }\n\n  await assert.rejects(\n    () => consumeFreeReveal(client as never, { userId: \"user-1\", productId: \"product-a\" }),\n    /free_reveal_consume_failed/,\n  )\n})",
+        "sha256": "e70b9ec33351239351ec63682dbbf653f6a425cfe93d5c50350a86bdb2e8dbdc"
+      }
+    ]
+  },
+  {
+    "file": "tests/meta-offer-view.test.ts",
+    "sha256": "5ca1e19f63335ccc257f8f4c055c54d8dfbc82fb34abad9ee6ddb831e7736ea6",
+    "count": 11,
+    "sites": [
+      {
+        "ordinal": 1,
+        "title": "\"Meta offer endpoint validates, limits, and passes only request-bound delivery data\"",
+        "line": 37,
+        "start": 1019,
+        "end": 2318,
+        "body": "test(\"Meta offer endpoint validates, limits, and passes only request-bound delivery data\", async () => {\n  const rateLimitCalls: Array<{ identifier: string; prefix: string }> = []\n  const deliveries: unknown[] = []\n  const dependencies: MetaOfferViewRouteDependencies = {\n    enabled: true,\n    checkRateLimit: async (identifier, config) => {\n      rateLimitCalls.push({ identifier, prefix: config.prefix })\n      return { allowed: true }\n    },\n    deliver: async (input) => {\n      deliveries.push(input)\n      return { ok: true }\n    },\n  }\n  const canonical = await canonicalPayload()\n  const result = await handleMetaOfferViewRequest(\n    request(canonical, {\n      cookie: \"_fbp=fb.1.1720000000000.123456; _fbc=fb.1.1720000000000.click-123\",\n      \"user-agent\": \"ExampleBrowser/1.0\",\n    }),\n    dependencies,\n  )\n\n  assert.deepEqual(result, { body: { ok: true }, status: 202 })\n  assert.deepEqual(rateLimitCalls, [\n    { identifier: \"203.0.113.7\", prefix: \"meta-offer-view-ip\" },\n    { identifier: payload.leadId, prefix: \"meta-offer-view-lead\" },\n  ])\n  assert.deepEqual(deliveries, [\n    {\n      ...canonical,\n      clientIpAddress: \"203.0.113.7\",\n      clientUserAgent: \"ExampleBrowser/1.0\",\n      fbc: \"fb.1.1720000000000.click-123\",\n      fbp: \"fb.1.1720000000000.123456\",\n    },\n  ])\n})",
+        "sha256": "784656ac16f3ec023e20ed964139492e0f0ea4df6a0ff7701b6a513892c944eb"
+      },
+      {
+        "ordinal": 2,
+        "title": "\"Meta offer endpoint is a benign no-op while its flag is off\"",
+        "line": 76,
+        "start": 2320,
+        "end": 2765,
+        "body": "test(\"Meta offer endpoint is a benign no-op while its flag is off\", async () => {\n  let deliveries = 0\n  const result = await handleMetaOfferViewRequest(request(payload), {\n    enabled: false,\n    checkRateLimit: async () => ({ allowed: true }),\n    deliver: async () => {\n      deliveries += 1\n      return { ok: true }\n    },\n  })\n\n  assert.deepEqual(result, { body: { ok: true, skipped: true }, status: 202 })\n  assert.equal(deliveries, 0)\n})",
+        "sha256": "b5907004a086636d86e8147eda39cd609d92b0b26daac35b8ab73859aafe2acb"
+      },
+      {
+        "ordinal": 3,
+        "title": "\"Meta offer endpoint rejects forged context, unknown keys, and malformed IDs\"",
+        "line": 91,
+        "start": 2767,
+        "end": 3466,
+        "body": "test(\"Meta offer endpoint rejects forged context, unknown keys, and malformed IDs\", async () => {\n  const dependencies: MetaOfferViewRouteDependencies = {\n    enabled: true,\n    checkRateLimit: async () => ({ allowed: true }),\n    deliver: async () => ({ ok: true }),\n  }\n\n  for (const invalid of [\n    { ...payload, entryContext: \"result_email\" },\n    { ...payload, entryContext: \"quiz_return\" },\n    { ...payload, extra: \"not-allowed\" },\n    { ...payload, metaEventId: \"not-a-uuid\" },\n    { ...payload, leadId: \"not-a-uuid\" },\n  ]) {\n    assert.deepEqual(await handleMetaOfferViewRequest(request(invalid), dependencies), {\n      body: { error: \"invalid_payload\" },\n      status: 400,\n    })\n  }\n})",
+        "sha256": "facd85976b1c870c317b30d646d368dec9911a653e86cef7f0d2ec63ed23c287"
+      },
+      {
+        "ordinal": 4,
+        "title": "\"Meta offer endpoint rejects non-canonical UUIDs before rate limiting or delivery\"",
+        "line": 112,
+        "start": 3468,
+        "end": 4107,
+        "body": "test(\"Meta offer endpoint rejects non-canonical UUIDs before rate limiting or delivery\", async () => {\n  let checks = 0\n  let deliveries = 0\n  const result = await handleMetaOfferViewRequest(\n    request({ ...payload, metaEventId: \"30000000-0000-8000-8000-000000000001\" }),\n    {\n      enabled: true,\n      checkRateLimit: async () => {\n        checks += 1\n        return { allowed: true }\n      },\n      deliver: async () => {\n        deliveries += 1\n        return { ok: true }\n      },\n    },\n  )\n\n  assert.deepEqual(result, { body: { error: \"invalid_payload\" }, status: 400 })\n  assert.equal(checks, 0)\n  assert.equal(deliveries, 0)\n})",
+        "sha256": "c66fa418c9a173bc835ba901a5f045a89bebde3e488c031c60355cc5e4798830"
+      },
+      {
+        "ordinal": 5,
+        "title": "\"Meta offer endpoint accepts only the deterministic UUID-v8 event ID used by the client\"",
+        "line": 135,
+        "start": 4109,
+        "end": 4686,
+        "body": "test(\"Meta offer endpoint accepts only the deterministic UUID-v8 event ID used by the client\", async () => {\n  let deliveredEventId: string | undefined\n  const canonical = await canonicalPayload()\n  const result = await handleMetaOfferViewRequest(request(canonical), {\n    enabled: true,\n    checkRateLimit: async () => ({ allowed: true }),\n    deliver: async (input) => {\n      deliveredEventId = input.metaEventId\n      return { ok: true }\n    },\n  })\n\n  assert.deepEqual(result, { body: { ok: true }, status: 202 })\n  assert.equal(deliveredEventId, canonical.metaEventId)\n})",
+        "sha256": "0edd92fc3f19e48474e73192b0e1106e1c86f5b3eb160a6a1216d2c4200946a1"
+      },
+      {
+        "ordinal": 6,
+        "title": "\"Meta offer endpoint rejects missing server-owned lead evidence\"",
+        "line": 151,
+        "start": 4688,
+        "end": 5093,
+        "body": "test(\"Meta offer endpoint rejects missing server-owned lead evidence\", async () => {\n  const result = await handleMetaOfferViewRequest(request(await canonicalPayload()), {\n    enabled: true,\n    checkRateLimit: async () => ({ allowed: true }),\n    deliver: async () => ({ ok: false, reason: \"lead_not_eligible\" }),\n  })\n\n  assert.deepEqual(result, { body: { error: \"lead_not_eligible\" }, status: 404 })\n})",
+        "sha256": "d32f413eef6d0635454ca3db33e88c3c452815161b0f2b0493489b6add6e0944"
+      },
+      {
+        "ordinal": 7,
+        "title": "\"Meta offer delivery requires recent quiz evidence and constructs the canonical event\"",
+        "line": 161,
+        "start": 5095,
+        "end": 6590,
+        "body": "test(\"Meta offer delivery requires recent quiz evidence and constructs the canonical event\", async () => {\n  const conversions: unknown[] = []\n  const missing = await deliverMetaOfferView(\n    { ...payload, clientIpAddress: \"203.0.113.7\" },\n    {\n      now: () => new Date(\"2026-07-17T12:00:00.000Z\"),\n      findEligibleLead: async (_leadId, createdAfter) => {\n        assert.equal(createdAfter, \"2026-07-16T12:00:00.000Z\")\n        return null\n      },\n      deliver: async () => {\n        throw new Error(\"must not send without proof\")\n      },\n    },\n  )\n  assert.deepEqual(missing, { ok: false, reason: \"lead_not_eligible\" })\n\n  const delivered = await deliverMetaOfferView(\n    { ...payload, clientIpAddress: \"203.0.113.7\" },\n    {\n      findEligibleLead: async () => ({ email: \"person@example.com\", name: \"Änne Müller\" }),\n      deliver: async (conversion) => {\n        conversions.push(conversion)\n        return { ok: true, status: 200 }\n      },\n    },\n  )\n\n  assert.deepEqual(delivered, { ok: true })\n  assert.deepEqual(conversions, [\n    {\n      eventName: \"ViewContent\",\n      eventId: payload.metaEventId,\n      eventSourceUrl: \"https://chaarlie.de/result\",\n      user: {\n        clientIpAddress: \"203.0.113.7\",\n        clientUserAgent: undefined,\n        email: \"person@example.com\",\n        externalId: payload.leadId,\n        fbc: undefined,\n        fbp: undefined,\n        name: \"Änne Müller\",\n      },\n      customData: { content_name: \"quiz_result_offer_view\" },\n    },\n  ])\n})",
+        "sha256": "23f26b67e97390b64d13f1c1bac838f4b176c7e216f54e9e24aefe0479941e23"
+      },
+      {
+        "ordinal": 8,
+        "title": "\"Meta offer endpoint bounds streamed bodies before rate limiting\"",
+        "line": 209,
+        "start": 6592,
+        "end": 7179,
+        "body": "test(\"Meta offer endpoint bounds streamed bodies before rate limiting\", async () => {\n  let checks = 0\n  const dependencies: MetaOfferViewRouteDependencies = {\n    enabled: true,\n    checkRateLimit: async () => {\n      checks += 1\n      return { allowed: true }\n    },\n    deliver: async () => ({ ok: true }),\n  }\n  const oversized = request({ ...payload, padding: \"x\".repeat(17_000) }, { \"content-length\": \"1\" })\n\n  assert.deepEqual(await handleMetaOfferViewRequest(oversized, dependencies), {\n    body: { error: \"payload_too_large\" },\n    status: 413,\n  })\n  assert.equal(checks, 0)\n})",
+        "sha256": "ade74561d368a3772f80e1a99eb68be4b50b3dceaaab1ad83282a39a08bbfe03"
+      },
+      {
+        "ordinal": 9,
+        "title": "\"Meta offer endpoint isolates delivery failures from its validated request contract\"",
+        "line": 228,
+        "start": 7181,
+        "end": 7602,
+        "body": "test(\"Meta offer endpoint isolates delivery failures from its validated request contract\", async () => {\n  const result = await handleMetaOfferViewRequest(request(await canonicalPayload()), {\n    enabled: true,\n    checkRateLimit: async () => ({ allowed: true }),\n    deliver: async () => ({ ok: false, reason: \"delivery_failed\" }),\n  })\n\n  assert.deepEqual(result, { body: { error: \"delivery_failed\" }, status: 503 })\n})",
+        "sha256": "4205eea22340eead9c396beea16d73fe44eec9b028be094f11096853a6e8b3b3"
+      },
+      {
+        "ordinal": 10,
+        "title": "\"Meta offer lookup preserves legacy quiz evidence and requires an attached personal plan\"",
+        "line": 238,
+        "start": 7604,
+        "end": 8369,
+        "body": "test(\"Meta offer lookup preserves legacy quiz evidence and requires an attached personal plan\", async () => {\n  const source = await readFile(\n    new URL(\"../src/app/api/analytics/meta-offer-view/route.ts\", import.meta.url),\n    \"utf8\",\n  )\n\n  assert.match(\n    source,\n    /\\.eq\\(\"id\", leadId\\)\\s*\\.in\\(\"quiz_kind\", \\[\"legacy\", \"personal_plan\"\\]\\)\\s*\\.gte\\(\"created_at\", createdAfter\\)/,\n  )\n  assert.match(source, /\\.select\\(\"email, name, quiz_answers, quiz_kind\"\\)/)\n  assert.match(source, /data\\.quiz_kind === \"legacy\"[\\s\\S]*Object\\.keys\\(answers\\)\\.length === 0/)\n  assert.match(\n    source,\n    /data\\.quiz_kind === \"personal_plan\"[\\s\\S]*\\.from\\(\"personal_plan_prepared_artifacts\"\\)[\\s\\S]*\\.eq\\(\"lead_id\", leadId\\)[\\s\\S]*\\.eq\\(\"status\", \"attached\"\\)/,\n  )\n})",
+        "sha256": "4e549a65beef4e34f744389f296c2970406386ced276c5e3ab64e19ce0902cb6"
+      },
+      {
+        "ordinal": 11,
+        "title": "\"offer CAPI uses the eligible lead's server-resolved package behind its existing flag\"",
+        "line": 256,
+        "start": 8371,
+        "end": 9311,
+        "body": "test(\"offer CAPI uses the eligible lead's server-resolved package behind its existing flag\", async () => {\n  const previous = process.env.FUNNEL_META_CUSTOM_DATA_ENABLED\n  try {\n    for (const enabled of [false, true]) {\n      process.env.FUNNEL_META_CUSTOM_DATA_ENABLED = String(enabled)\n      let customData: unknown\n      await deliverMetaOfferView(payload, {\n        findEligibleLead: async () => ({ email: null, name: null, funnelPackageKey: \"scan_v1\" }),\n        deliver: async (conversion) => {\n          customData = conversion.customData\n          return { ok: true, status: 200 }\n        },\n      })\n      assert.deepEqual(customData, {\n        content_name: \"quiz_result_offer_view\",\n        ...(enabled ? { funnel_package_key: \"scan_v1\" } : {}),\n      })\n    }\n  } finally {\n    if (previous === undefined) delete process.env.FUNNEL_META_CUSTOM_DATA_ENABLED\n    else process.env.FUNNEL_META_CUSTOM_DATA_ENABLED = previous\n  }\n})",
+        "sha256": "dd2270b715f2e6102b9b09106f6f5f7c56c32f06ca5b6ac4fc88571743da386c"
+      }
+    ]
+  },
+  {
+    "file": "tests/organic-offer-media-experiment.test.ts",
+    "sha256": "429e96be662296b1f76bee7e8044ae3ff8a7d4bd4cfb3f498271a50d73048a41",
+    "count": 11,
+    "sites": [
+      {
+        "ordinal": 1,
+        "title": "\"the no-access organic result resolves its media experiment before recording the offer view\"",
+        "line": 18,
+        "start": 571,
+        "end": 1199,
+        "body": "test(\"the no-access organic result resolves its media experiment before recording the offer view\", () => {\n  assert.match(resultPageSource, /resolveOrganicOfferMediaExperiment\\(/)\n  assert.match(\n    resultPageSource,\n    /excluded:\\s*moderatorTest \\|\\|\\s*partnerIntent \\|\\|\\s*Boolean\\(regularFieldTestState\\.authorization\\) \\|\\|\\s*regularFieldTestState\\.unavailable/,\n  )\n  assert.match(resultPageSource, /hasAccess\\s*\\? \"organic-plan-v1\"/)\n  assert.ok(\n    resultPageSource.indexOf(\"resolveOrganicOfferMediaExperiment\") <\n      resultPageSource.indexOf(\"await recordLeadOfferView(leadId, funnelContext, offerVariant)\"),\n  )\n})",
+        "sha256": "44586feb9885db78e406f112e7b66a9c34b873b87842d4b402e342aaba3c4222"
+      },
+      {
+        "ordinal": 2,
+        "title": "\"organic media allocation is deterministic and accepts exactly its two arms\"",
+        "line": 31,
+        "start": 1201,
+        "end": 1961,
+        "body": "test(\"organic media allocation is deterministic and accepts exactly its two arms\", () => {\n  const arm = assignOrganicOfferMediaExperimentVariant(\"session-a\")\n  assert.equal(arm, assignOrganicOfferMediaExperimentVariant(\"session-a\"))\n  assert.equal(arm, ORGANIC_OFFER_MEDIA_EXPERIMENT.treatmentVariant)\n  assert.equal(\n    assignOrganicOfferMediaExperimentVariant(\"session-b\"),\n    ORGANIC_OFFER_MEDIA_EXPERIMENT.baseVariant,\n  )\n  assert.ok(isOrganicOfferMediaExperimentVariant(arm))\n  assert.ok(isOrganicOfferMediaExperimentVariant(ORGANIC_OFFER_MEDIA_EXPERIMENT.baseVariant))\n  assert.ok(isOrganicOfferMediaExperimentVariant(ORGANIC_OFFER_MEDIA_EXPERIMENT.treatmentVariant))\n  assert.equal(isOrganicOfferMediaExperimentVariant(\"unexpected-offer\"), false)\n})",
+        "sha256": "04ddcfa9e6d752049dbdc993f8cfba495592969af790872ab5c906e3caef46ca"
+      },
+      {
+        "ordinal": 3,
+        "title": "\"organic media flag is enabled only by exact true\"",
+        "line": 45,
+        "start": 1963,
+        "end": 2668,
+        "body": "test(\"organic media flag is enabled only by exact true\", () => {\n  const previous = process.env.ORGANIC_OFFER_MEDIA_EXPERIMENT_ENABLED\n  try {\n    delete process.env.ORGANIC_OFFER_MEDIA_EXPERIMENT_ENABLED\n    assert.equal(isOrganicOfferMediaExperimentEnabled(), false)\n    process.env.ORGANIC_OFFER_MEDIA_EXPERIMENT_ENABLED = \"TRUE\"\n    assert.equal(isOrganicOfferMediaExperimentEnabled(), false)\n    process.env.ORGANIC_OFFER_MEDIA_EXPERIMENT_ENABLED = \"true\"\n    assert.equal(isOrganicOfferMediaExperimentEnabled(), true)\n  } finally {\n    if (previous === undefined) delete process.env.ORGANIC_OFFER_MEDIA_EXPERIMENT_ENABLED\n    else process.env.ORGANIC_OFFER_MEDIA_EXPERIMENT_ENABLED = previous\n  }\n})",
+        "sha256": "c597c7a7aa7498ca65129818269e13d11002cde9f191cd6c060fd9d3622ee8ec"
+      },
+      {
+        "ordinal": 4,
+        "title": "\"enabled organic media assignment persists from the current video control before the offer is viewed\"",
+        "line": 119,
+        "start": 4602,
+        "end": 5312,
+        "body": "test(\"enabled organic media assignment persists from the current video control before the offer is viewed\", async () => {\n  const { client, writes } = createAssignmentClient({\n    stored: ORGANIC_OFFER_MEDIA_EXPERIMENT.baseVariant,\n  })\n  const assigned = await resolveOrganicOfferMediaExperiment({\n    enabled: true,\n    session: baseSession,\n    client: client as never,\n  })\n  assert.equal(assigned, assignOrganicOfferMediaExperimentVariant(baseSession.sessionId))\n  assert.deepEqual(writes, [\n    {\n      value: assigned,\n      guards: [\n        [\"id\", baseSession.sessionId],\n        [\"offer_viewed_at\", null],\n        [\"offer_variant\", ORGANIC_OFFER_MEDIA_EXPERIMENT.baseVariant],\n      ],\n    },\n  ])\n})",
+        "sha256": "6654938f62912b23b8cdc71a44d47f7b20b6b0aed7b83e9de054904150843402"
+      },
+      {
+        "ordinal": 5,
+        "title": "\"a deterministic control allocation does not rewrite the existing control row\"",
+        "line": 141,
+        "start": 5314,
+        "end": 5916,
+        "body": "test(\"a deterministic control allocation does not rewrite the existing control row\", async () => {\n  const state = createAssignmentClient({ stored: ORGANIC_OFFER_MEDIA_EXPERIMENT.baseVariant })\n  assert.equal(\n    assignOrganicOfferMediaExperimentVariant(\"session-b\"),\n    ORGANIC_OFFER_MEDIA_EXPERIMENT.baseVariant,\n  )\n  assert.equal(\n    await resolveOrganicOfferMediaExperiment({\n      enabled: true,\n      session: { ...baseSession, sessionId: \"session-b\" },\n      client: state.client as never,\n    }),\n    ORGANIC_OFFER_MEDIA_EXPERIMENT.baseVariant,\n  )\n  assert.equal(state.writes.length, 0)\n})",
+        "sha256": "e02f4d2e364edd7a114d9278822d799a72d4e0bb324450d823cdf82d4f9789b1"
+      },
+      {
+        "ordinal": 6,
+        "title": "\"organic media resolver never reassigns a viewed or checkout-started video control\"",
+        "line": 158,
+        "start": 5918,
+        "end": 6541,
+        "body": "test(\"organic media resolver never reassigns a viewed or checkout-started video control\", async () => {\n  for (const session of [\n    { ...baseSession, offerViewedAt: \"2026-08-31T10:00:00Z\" },\n    { ...baseSession, checkoutStartedAt: \"2026-08-31T10:00:00Z\" },\n  ]) {\n    const state = createAssignmentClient({ stored: ORGANIC_OFFER_MEDIA_EXPERIMENT.baseVariant })\n    assert.equal(\n      await resolveOrganicOfferMediaExperiment({\n        enabled: true,\n        session,\n        client: state.client as never,\n      }),\n      ORGANIC_OFFER_MEDIA_EXPERIMENT.baseVariant,\n    )\n    assert.equal(state.writes.length, 0)\n  }\n})",
+        "sha256": "538d22284406d7411b1d7d1c409de8c87aab81c54f5ebe16d0171217b47e661d"
+      },
+      {
+        "ordinal": 7,
+        "title": "\"disabled rollout leaves an unviewed video control untouched\"",
+        "line": 176,
+        "start": 6543,
+        "end": 6971,
+        "body": "test(\"disabled rollout leaves an unviewed video control untouched\", async () => {\n  const state = createAssignmentClient({ stored: ORGANIC_OFFER_MEDIA_EXPERIMENT.baseVariant })\n  assert.equal(\n    await resolveOrganicOfferMediaExperiment({\n      enabled: false,\n      session: baseSession,\n      client: state.client as never,\n    }),\n    ORGANIC_OFFER_MEDIA_EXPERIMENT.baseVariant,\n  )\n  assert.equal(state.writes.length, 0)\n})",
+        "sha256": "70bb89612ca05414c34767cae2bce08472fd989507db1d9e7b5510f3a04117b7"
+      },
+      {
+        "ordinal": 8,
+        "title": "\"organic media resolver uses concurrent persisted winners and fails closed on persistence errors\"",
+        "line": 189,
+        "start": 6973,
+        "end": 8180,
+        "body": "test(\"organic media resolver uses concurrent persisted winners and fails closed on persistence errors\", async () => {\n  const race = createAssignmentClient({\n    stored: ORGANIC_OFFER_MEDIA_EXPERIMENT.baseVariant,\n    update: \"race\",\n    readBack: ORGANIC_OFFER_MEDIA_EXPERIMENT.treatmentVariant,\n  })\n  assert.equal(\n    await resolveOrganicOfferMediaExperiment({\n      enabled: true,\n      session: baseSession,\n      client: race.client as never,\n    }),\n    ORGANIC_OFFER_MEDIA_EXPERIMENT.treatmentVariant,\n  )\n\n  let captured: { experimentId: string; packageKey: string | null | undefined } | null = null\n  const failure = createAssignmentClient({\n    stored: ORGANIC_OFFER_MEDIA_EXPERIMENT.baseVariant,\n    update: \"error\",\n  })\n  assert.equal(\n    await resolveOrganicOfferMediaExperiment({\n      enabled: true,\n      session: baseSession,\n      client: failure.client as never,\n      captureFailure: (_error, details) => {\n        captured = { experimentId: details.experimentId, packageKey: details.packageKey }\n      },\n    }),\n    ORGANIC_OFFER_MEDIA_EXPERIMENT.baseVariant,\n  )\n  assert.deepEqual(captured, {\n    experimentId: \"organic_offer_media_v1\",\n    packageKey: \"default_organic\",\n  })\n})",
+        "sha256": "acc2a215dfdde54b5c8792501455fd800945d64fa11bc5fad6dee37e25f7f706"
+      },
+      {
+        "ordinal": 9,
+        "title": "\"disabled rollout resets only unviewed image treatment and preserves viewed or checkout assignments\"",
+        "line": 226,
+        "start": 8182,
+        "end": 9351,
+        "body": "test(\"disabled rollout resets only unviewed image treatment and preserves viewed or checkout assignments\", async () => {\n  const reset = createAssignmentClient({ stored: ORGANIC_OFFER_MEDIA_EXPERIMENT.treatmentVariant })\n  assert.equal(\n    await resolveOrganicOfferMediaExperiment({\n      enabled: false,\n      session: { ...baseSession, offerVariant: ORGANIC_OFFER_MEDIA_EXPERIMENT.treatmentVariant },\n      client: reset.client as never,\n    }),\n    ORGANIC_OFFER_MEDIA_EXPERIMENT.baseVariant,\n  )\n  assert.equal(reset.writes.length, 1)\n  assert.deepEqual(reset.writes[0].guards.at(-1), [\n    \"offer_variant\",\n    ORGANIC_OFFER_MEDIA_EXPERIMENT.treatmentVariant,\n  ])\n\n  for (const session of [\n    {\n      ...baseSession,\n      offerVariant: ORGANIC_OFFER_MEDIA_EXPERIMENT.treatmentVariant,\n      offerViewedAt: \"2026-08-31T10:00:00Z\",\n    },\n    {\n      ...baseSession,\n      offerVariant: ORGANIC_OFFER_MEDIA_EXPERIMENT.treatmentVariant,\n      checkoutStartedAt: \"2026-08-31T10:00:00Z\",\n    },\n  ]) {\n    assert.equal(\n      await resolveOrganicOfferMediaExperiment({ enabled: false, session }),\n      ORGANIC_OFFER_MEDIA_EXPERIMENT.treatmentVariant,\n    )\n  }\n})",
+        "sha256": "80f256cbb51bf21945c5a0ca528fa19d987391bba8bfda8b87f987a122259146"
+      },
+      {
+        "ordinal": 10,
+        "title": "\"ineligible organic sessions force video without a mutation\"",
+        "line": 261,
+        "start": 9353,
+        "end": 10184,
+        "body": "test(\"ineligible organic sessions force video without a mutation\", async () => {\n  for (const { session, excluded } of [\n    { session: null, excluded: false },\n    { session: { ...baseSession, packageKey: \"meta_personal_plan_v1\" }, excluded: false },\n    { session: { ...baseSession, testKind: \"field_test\" }, excluded: false },\n    { session: { ...baseSession, offerVariant: null }, excluded: false },\n    { session: baseSession, excluded: true },\n  ]) {\n    const state = createAssignmentClient({ stored: ORGANIC_OFFER_MEDIA_EXPERIMENT.baseVariant })\n    assert.equal(\n      await resolveOrganicOfferMediaExperiment({\n        enabled: true,\n        excluded,\n        session,\n        client: state.client as never,\n      }),\n      ORGANIC_OFFER_MEDIA_EXPERIMENT.baseVariant,\n    )\n    assert.equal(state.writes.length, 0)\n  }\n})",
+        "sha256": "58ce2c20f8d9d4f1d04a94f10f626c7b5cefa926480adf767c398dc115fbcf83"
+      },
+      {
+        "ordinal": 11,
+        "title": "\"stored retired legacy arms remain attribution authority and are never enrolled\"",
+        "line": 283,
+        "start": 10186,
+        "end": 10677,
+        "body": "test(\"stored retired legacy arms remain attribution authority and are never enrolled\", async () => {\n  for (const offerVariant of [\"default\", \"guided-story\"]) {\n    const state = createAssignmentClient({ stored: offerVariant })\n    assert.equal(\n      await resolveOrganicOfferMediaExperiment({\n        enabled: true,\n        session: { ...baseSession, offerVariant },\n        client: state.client as never,\n      }),\n      offerVariant,\n    )\n    assert.equal(state.writes.length, 0)\n  }\n})",
+        "sha256": "da7d8cda7946b8f7e13d3b0a5818cde91aa1cc52a4f52fc0a3a46c0467b9451d"
+      }
+    ]
+  },
+  {
+    "file": "tests/meta-offer-view-client.test.ts",
+    "sha256": "7c4d0831d19962626e38a47b8350909059599611663f034faa11d4a9f13316cd",
+    "count": 9,
+    "sites": [
+      {
+        "ordinal": 1,
+        "title": "\"offer provider keeps internal views separate from the dedicated Meta path\"",
+        "line": 21,
+        "start": 553,
+        "end": 964,
+        "body": "test(\"offer provider keeps internal views separate from the dedicated Meta path\", () => {\n  const source = readFileSync(\n    new URL(\"../src/components/quiz/offer-tracking-provider.tsx\", import.meta.url),\n    \"utf8\",\n  )\n  assert.match(source, /trackAppEvent\\(\"offer_viewed\"/)\n  assert.match(source, /entryContext !== \"quiz_completion\" \\|\\| !leadId/)\n  assert.match(source, /void trackMetaOfferViewOnce\\(\\{/)\n})",
+        "sha256": "2dfd4a69ca6584eb8932e4f4efdfb7dc9ecd7f94b8d2cdc9a5cd96d694db9c00"
+      },
+      {
+        "ordinal": 2,
+        "title": "\"Meta offer view is claimed once per browser funnel and variant\"",
+        "line": 40,
+        "start": 1190,
+        "end": 1611,
+        "body": "test(\"Meta offer view is claimed once per browser funnel and variant\", () => {\n  const storage = memoryStorage()\n\n  assert.equal(claimMetaOfferView(identity, storage), true)\n  assert.equal(claimMetaOfferView(identity, storage), false)\n  assert.equal(claimMetaOfferView({ ...identity, offerVariant: \"alternate\" }, storage), true)\n  assert.match(metaOfferViewStorageKey(identity), /10000000-0000-4000-8000-000000000093/)\n})",
+        "sha256": "39390bb29117d8c8bf573b9d22162186fcc360b1f7e37fec02a1d7fdcac3caef"
+      },
+      {
+        "ordinal": 3,
+        "title": "\"Meta offer view fails closed when local storage is unavailable\"",
+        "line": 49,
+        "start": 1613,
+        "end": 2109,
+        "body": "test(\"Meta offer view fails closed when local storage is unavailable\", () => {\n  assert.equal(claimMetaOfferView(identity, null), false)\n  assert.equal(\n    claimMetaOfferView(identity, {\n      getItem: () => {\n        throw new Error(\"storage blocked\")\n      },\n      setItem: () => undefined,\n    }),\n    false,\n  )\n  assert.equal(\n    claimMetaOfferView(identity, {\n      getItem: () => null,\n      setItem: () => {\n        throw new Error(\"storage blocked\")\n      },\n    }),\n    false,\n  )\n})",
+        "sha256": "e61cda1d272527c7ef27e7cf1c4dcf10ad747a6779e8024c7248c2d877821aa3"
+      },
+      {
+        "ordinal": 4,
+        "title": "\"Meta offer view derives one UUID-shaped id from stable identity\"",
+        "line": 71,
+        "start": 2111,
+        "end": 3084,
+        "body": "test(\"Meta offer view derives one UUID-shaped id from stable identity\", async () => {\n  const first = await deriveMetaOfferViewEventId(identity)\n  const second = await deriveMetaOfferViewEventId(identity)\n  const sameLeadOtherFunnel = await deriveMetaOfferViewEventId({\n    ...identity,\n    funnelSessionId: \"20000000-0000-4000-8000-000000000094\",\n    offerRevision: \"product_led_v3\",\n    offerVariant: \"alternate\",\n  })\n  const sameLeadUppercase = await deriveMetaOfferViewEventId({\n    ...identity,\n    leadId: identity.leadId.toUpperCase(),\n  })\n  const other = await deriveMetaOfferViewEventId({\n    ...identity,\n    leadId: \"10000000-0000-4000-8000-000000000094\",\n  })\n\n  assert.equal(first, second)\n  assert.equal(first, sameLeadOtherFunnel)\n  assert.equal(first, sameLeadUppercase)\n  assert.notEqual(first, other)\n  assert.match(first, /^[0-9a-f]{8}-[0-9a-f]{4}-8[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/)\n  assert.equal(first.includes(identity.leadId), false)\n})",
+        "sha256": "7117d011a307c89fb428c49978b1113e71079609e2adb716d59d0ab8d3ea5337"
+      },
+      {
+        "ordinal": 5,
+        "title": "\"event-id derivation failure leaves the browser claim available for retry\"",
+        "line": 97,
+        "start": 3086,
+        "end": 3445,
+        "body": "test(\"event-id derivation failure leaves the browser claim available for retry\", async () => {\n  const storage = memoryStorage()\n  assert.equal(\n    await trackMetaOfferViewOnce(identity, {\n      deriveEventId: async () => {\n        throw new Error(\"crypto unavailable\")\n      },\n      storage,\n    }),\n    false,\n  )\n  assert.equal(storage.values.size, 0)\n})",
+        "sha256": "5be2dd737fc5c91ec61f36c80a047465dba10a6eff402204105aa2fd006e71b1"
+      },
+      {
+        "ordinal": 6,
+        "title": "\"Meta offer view sends Pixel and endpoint with the identical id\"",
+        "line": 111,
+        "start": 3447,
+        "end": 4391,
+        "body": "test(\"Meta offer view sends Pixel and endpoint with the identical id\", async () => {\n  const storage = memoryStorage()\n  const pixelIds: string[] = []\n  const requests: Array<{ body: string; keepalive?: boolean }> = []\n\n  const tracked = await trackMetaOfferViewOnce(identity, {\n    storage,\n    trackPixel: (metaEventId) => {\n      pixelIds.push(metaEventId)\n      return true\n    },\n    send: async (_input, init) => {\n      requests.push({ body: String(init?.body), keepalive: init?.keepalive })\n      return new Response(null, { status: 202 })\n    },\n  })\n\n  assert.equal(tracked, true)\n  assert.equal(pixelIds.length, 1)\n  assert.equal(requests.length, 1)\n  assert.equal(requests[0]?.keepalive, true)\n  assert.deepEqual(JSON.parse(requests[0]?.body ?? \"{}\"), {\n    entryContext: \"quiz_completion\",\n    leadId: identity.leadId,\n    metaEventId: pixelIds[0],\n  })\n  assert.equal(await trackMetaOfferViewOnce(identity, { storage }), false)\n})",
+        "sha256": "6dded4b2e1f303d3d8ec60c47d1fa24796969bffa5e7d5b3a13e1afb213e5963"
+      },
+      {
+        "ordinal": 7,
+        "title": "\"non-completion entries never claim or send the primary Meta offer view\"",
+        "line": 140,
+        "start": 4393,
+        "end": 5043,
+        "body": "test(\"non-completion entries never claim or send the primary Meta offer view\", async () => {\n  for (const entryContext of [\"result_email\", \"quiz_return\"] as const) {\n    const storage = memoryStorage()\n    let sends = 0\n    const tracked = await trackMetaOfferViewOnce(\n      { ...identity, entryContext },\n      {\n        storage,\n        trackPixel: () => {\n          sends += 1\n          return true\n        },\n        send: async () => {\n          sends += 1\n          return new Response(null, { status: 202 })\n        },\n      },\n    )\n\n    assert.equal(tracked, false)\n    assert.equal(sends, 0)\n    assert.equal(storage.values.size, 0)\n  }\n})",
+        "sha256": "17eb6496e5f0f5ce6116ca07a9b03a2be23bc81c53349973b95441e98e50effd"
+      },
+      {
+        "ordinal": 8,
+        "title": "\"a transport failure never rejects the offer render path\"",
+        "line": 165,
+        "start": 5045,
+        "end": 5342,
+        "body": "test(\"a transport failure never rejects the offer render path\", async () => {\n  const tracked = await trackMetaOfferViewOnce(identity, {\n    storage: memoryStorage(),\n    trackPixel: () => true,\n    send: async () => {\n      throw new Error(\"offline\")\n    },\n  })\n\n  assert.equal(tracked, true)\n})",
+        "sha256": "6b6d73623e1c9567288a8283bcaaa13cc6ab5e7aa7bcc744b4aaca7471f04095"
+      },
+      {
+        "ordinal": 9,
+        "title": "\"a Pixel failure does not suppress the matching server request\"",
+        "line": 177,
+        "start": 5344,
+        "end": 5772,
+        "body": "test(\"a Pixel failure does not suppress the matching server request\", async () => {\n  let requests = 0\n  const tracked = await trackMetaOfferViewOnce(identity, {\n    storage: memoryStorage(),\n    trackPixel: () => {\n      throw new Error(\"pixel blocked\")\n    },\n    send: async () => {\n      requests += 1\n      return new Response(null, { status: 202 })\n    },\n  })\n\n  assert.equal(tracked, true)\n  assert.equal(requests, 1)\n})",
+        "sha256": "3e4912109e4d545a072dcfc0e2d8ebaf6a3a17a0b0cef0e512f70ff8d90b3d4c"
+      }
+    ]
+  },
+  {
+    "file": "tests/personal-plan-transition-motion.test.tsx",
+    "sha256": "482ca59f56dbbf4d2ecb72df4c776fafec98701cb548d8e91268344a385a57d4",
+    "count": 10,
+    "sites": [
+      {
+        "ordinal": 1,
+        "title": "\"Anwendung has no journey header — Bottom-Nav carries orientation, the day view keeps a quiet in-page Back (Task 2.7 + fix round 1 I-2)\"",
+        "line": 47,
+        "start": 1484,
+        "end": 2535,
+        "body": "test(\"Anwendung has no journey header — Bottom-Nav carries orientation, the day view keeps a quiet in-page Back (Task 2.7 + fix round 1 I-2)\", () => {\n  const overview = renderToStaticMarkup(<ApplicationPage view={{ state: \"ready\", days }} />)\n  assert.match(overview, /data-personal-plan-view-transition=\"quiz\"/)\n  assert.match(overview, /data-application-navigation=\"day\"/)\n  assert.match(overview, /href=\"\\/anwendung\\/wash_day\"/)\n  assert.doesNotMatch(overview, /data-personal-plan-journey-header/)\n\n  const detail = renderToStaticMarkup(\n    <ApplicationPage view={{ state: \"ready\", days, selectedDayType: \"wash_day\" }} />,\n  )\n  assert.match(detail, /data-personal-plan-view-transition=\"quiz\"/)\n  assert.doesNotMatch(detail, /data-personal-plan-journey-header/)\n  assert.doesNotMatch(detail, /role=\"progressbar\"/)\n  assert.doesNotMatch(detail, /data-application-navigation=\"overview\"/)\n  // I-2: a quiet in-page Back replaces the retired header's \"Alle Tage\" link.\n  assert.match(detail, /<a class=\"[^\"]*\" href=\"\\/anwendung\">← Anwendung<\\/a>/)\n})",
+        "sha256": "9d1c2a08615fdf841e2a825fb9810c02f8cefb0c0c1e5d941f9d7fe350266f1a"
+      },
+      {
+        "ordinal": 2,
+        "title": "\"non-ready Anwendung surfaces never claim a successful view transition\"",
+        "line": 65,
+        "start": 2537,
+        "end": 2836,
+        "body": "test(\"non-ready Anwendung surfaces never claim a successful view transition\", () => {\n  const unavailable = renderToStaticMarkup(\n    <ApplicationPage view={{ state: \"day_unavailable\", overviewHref: \"/anwendung\" }} />,\n  )\n  assert.doesNotMatch(unavailable, /data-personal-plan-view-transition=/)\n})",
+        "sha256": "e12bda36ae2478159e88f0f4c6c68b4876353ed3edc1b5f8f1a8abd75e8633d9"
+      },
+      {
+        "ordinal": 3,
+        "title": "\"malformed Anwendung day segments fall back without throwing during render\"",
+        "line": 72,
+        "start": 2838,
+        "end": 3171,
+        "body": "test(\"malformed Anwendung day segments fall back without throwing during render\", () => {\n  const html = renderToStaticMarkup(\n    <ApplicationPage view={{ state: \"ready\", days }} currentPathname=\"/anwendung/%E0%A4%A\" />,\n  )\n\n  assert.match(html, /application-overview-title/)\n  assert.doesNotMatch(html, /application-day-title/)\n})",
+        "sha256": "e0ff4bace47449cbc9eda5acb0fbe28dadc5e4103521a08ac888fb132ca7ee60"
+      },
+      {
+        "ordinal": 4,
+        "title": "\"Bedarfsplan keeps its Journey header outside a bounded depth surface\"",
+        "line": 81,
+        "start": 3173,
+        "end": 3898,
+        "body": "test(\"Bedarfsplan keeps its Journey header outside a bounded depth surface\", () => {\n  const screen = {\n    overline: \"Dein Plan\",\n    title: \"Deine Basis\",\n    lead: \"Das ist dein Ausgangspunkt.\",\n    sectionTitle: \"Basis\",\n    countLabel: \"0 Bausteine\",\n    cards: [],\n  }\n  const html = renderToStaticMarkup(\n    <PlanStartFlow\n      state=\"ready\"\n      plan={{\n        basis: { ...screen, kind: \"basis\", progress: 50 },\n        optional: { ...screen, kind: \"optional\", title: \"Optional\", progress: 100 },\n      }}\n    />,\n  )\n\n  assert.equal(html.match(/data-personal-plan-stage=\"1\"/g)?.length, 1)\n  assert.match(html, /data-personal-plan-view-transition=\"quiz\"/)\n  assert.match(html, /data-plan-start-screen=\"basis\"/)\n})",
+        "sha256": "27e60463bbc404a90b7971e5cbb87d108ae8fb5556571bc8c3b141294ca783f7"
+      },
+      {
+        "ordinal": 5,
+        "title": "\"Feinschliff keeps its Journey header outside the ordered-question depth surface\"",
+        "line": 105,
+        "start": 3900,
+        "end": 4812,
+        "body": "test(\"Feinschliff keeps its Journey header outside the ordered-question depth surface\", () => {\n  const session = createStage2RefinementSession({\n    pathVersion: \"transition-test\",\n    triggerContext: {\n      relevantCategories: [\"shampoo\"],\n      hasReportedIrritatedScalp: false,\n      dryShampooBridgeEligibility: \"ineligible\",\n    },\n  })\n  const html = renderToStaticMarkup(\n    <RefinementFlow gateway={{} as never} initialSession={session} />,\n  )\n\n  assert.equal(html.match(/data-personal-plan-stage=\"2\"/g)?.length, 1)\n  assert.equal(html.match(/personal-plan-cookie-clearance/g)?.length, 1)\n  assert.match(html, /min-h-\\[calc\\(100dvh-71px\\)\\]/)\n  assert.match(html, /data-personal-plan-view-transition=\"quiz\"/)\n  assert.match(html, /data-personal-plan-transition-focus/)\n  // Task 2.7: Stage 2 keeps minimal chrome (Back + wordmark), no 5-stage bar.\n  assert.doesNotMatch(html, /role=\"progressbar\"/)\n})",
+        "sha256": "a08208c40c1180f69b527f4d26970a9b2a7d14fa2cb9e5e76c88d046e7817060"
+      },
+      {
+        "ordinal": 6,
+        "title": "\"stage navigation intent is destination-bound, single-use, and time-bounded\"",
+        "line": 127,
+        "start": 4814,
+        "end": 5924,
+        "body": "test(\"stage navigation intent is destination-bound, single-use, and time-bounded\", () => {\n  const values = new Map<string, string>()\n  const storage = {\n    getItem: (key: string) => values.get(key) ?? null,\n    setItem: (key: string, value: string) => values.set(key, value),\n    removeItem: (key: string) => values.delete(key),\n  }\n\n  assert.equal(writePersonalPlanStageNavigationIntent(storage, \"/routine\", 1_000), true)\n  assert.equal(consumePersonalPlanStageNavigationIntent(storage, \"/routine\", 1_001), true)\n  assert.equal(consumePersonalPlanStageNavigationIntent(storage, \"/routine\", 1_002), false)\n\n  writePersonalPlanStageNavigationIntent(storage, \"/routine\", 2_000)\n  assert.equal(consumePersonalPlanStageNavigationIntent(storage, \"/anwendung\", 2_001), false)\n  assert.equal(consumePersonalPlanStageNavigationIntent(storage, \"/routine\", 2_002), false)\n\n  writePersonalPlanStageNavigationIntent(storage, \"/routine\", 3_000)\n  assert.equal(\n    consumePersonalPlanStageNavigationIntent(\n      storage,\n      \"/routine\",\n      3_000 + PERSONAL_PLAN_STAGE_NAVIGATION_TTL_MS + 1,\n    ),\n    false,\n  )\n})",
+        "sha256": "d0150fdc1befe034d6c07e949b7dbea916011c4cd935b064f0bb4b2b876da636"
+      },
+      {
+        "ordinal": 7,
+        "title": "\"manual scroll restoration ownership is nested, idempotent, and cleanup-safe\"",
+        "line": 154,
+        "start": 5926,
+        "end": 6624,
+        "body": "test(\"manual scroll restoration ownership is nested, idempotent, and cleanup-safe\", () => {\n  const history = { scrollRestoration: \"auto\" as History[\"scrollRestoration\"] }\n  const releaseFirst = acquireManualScrollRestoration(history)\n  const releaseSecond = acquireManualScrollRestoration(history)\n\n  assert.equal(history.scrollRestoration, \"manual\")\n  releaseFirst()\n  releaseFirst()\n  assert.equal(history.scrollRestoration, \"manual\")\n  releaseSecond()\n  assert.equal(history.scrollRestoration, \"auto\")\n\n  history.scrollRestoration = \"manual\"\n  const releaseExistingManual = acquireManualScrollRestoration(history)\n  releaseExistingManual()\n  assert.equal(history.scrollRestoration, \"manual\")\n})",
+        "sha256": "37fde99370d1b2e2901ed5c352bd7cad8d69a4bfebf72a30edd7f717ed419688"
+      },
+      {
+        "ordinal": 8,
+        "title": "\"stage navigation intent fails closed when storage is unavailable\"",
+        "line": 172,
+        "start": 6626,
+        "end": 7093,
+        "body": "test(\"stage navigation intent fails closed when storage is unavailable\", () => {\n  const storage = {\n    getItem: () => {\n      throw new Error(\"blocked\")\n    },\n    setItem: () => {\n      throw new Error(\"blocked\")\n    },\n    removeItem: () => {\n      throw new Error(\"blocked\")\n    },\n  }\n  assert.equal(writePersonalPlanStageNavigationIntent(storage, \"/plan-start\"), false)\n  assert.equal(consumePersonalPlanStageNavigationIntent(storage, \"/plan-start\"), false)\n})",
+        "sha256": "8e99da50092e50470c44cafd4ed62bb469bfe27436a7e82304ba9573c4434a27"
+      },
+      {
+        "ordinal": 9,
+        "title": "\"successful Stage 3 handoff marks Routine before invoking client route replacement\"",
+        "line": 188,
+        "start": 7095,
+        "end": 7505,
+        "body": "test(\"successful Stage 3 handoff marks Routine before invoking client route replacement\", () => {\n  const calls: string[] = []\n  performPersonalPlanRoutineHandoff({ next: { href: \"/routine\" } } as never, {\n    markNavigation: (destination) => calls.push(`mark:${destination}`),\n    replaceRoute: (href) => calls.push(`replace:${href}`),\n  })\n\n  assert.deepEqual(calls, [\"mark:/routine\", \"replace:/routine\"])\n})",
+        "sha256": "82e9bf4e6f41d576b2d2361c7d3eb0ccf5aaf2ef568ab09d581f46343c86b8d7"
+      },
+      {
+        "ordinal": 10,
+        "title": "\"automatic Stage 3 bootstrap keeps the direct products-prep bridge visible\"",
+        "line": 198,
+        "start": 7507,
+        "end": 8922,
+        "body": "test(\"automatic Stage 3 bootstrap keeps the direct products-prep bridge visible\", () => {\n  const session = createStage2RefinementSession({\n    pathVersion: \"transition-complete\",\n    triggerContext: {\n      relevantCategories: [\"shampoo\"],\n      hasReportedIrritatedScalp: false,\n      dryShampooBridgeEligibility: \"ineligible\",\n    },\n    answers: {\n      currentProductCategories: [],\n      wetWashFrequency: \"weekly_1x\",\n      towel: { material: \"no_towel\" },\n      dryingRoutes: [],\n      additionalHeatTools: [],\n      nightProtection: [],\n    },\n    completedQuestionIds: [\n      \"current_product_categories\",\n      \"wet_wash_frequency\",\n      \"towel_handling\",\n      \"drying_routes\",\n      \"additional_heat_tools\",\n      \"night_protection\",\n    ],\n    completedHandoff: { refinedVersionId: \"refined-transition\", nextHref: \"/plan-start\" },\n    status: \"complete\",\n  })\n  const html = renderToStaticMarkup(\n    <RefinementFlow\n      gateway={{} as never}\n      initialSession={session}\n      onHandoff={() => new Promise(() => {})}\n      autoHandoff\n    />,\n  )\n\n  assert.match(html, /Feinschliff gespeichert/)\n  assert.match(html, /Deine Produkte werden vorbereitet\\./)\n  assert.match(html, /Wir bringen dich direkt zur Produktauswahl\\./)\n  assert.doesNotMatch(html, /data-personal-plan-chapter=\"3\"/)\n  assert.doesNotMatch(html, /Produkte erfassen/)\n  assert.doesNotMatch(html, /Wir laden deinen Stand\\./)\n})",
+        "sha256": "c080f2dd5e837feb94d044bf9ff87518691d737d4a2dfa0334fb948979cf1548"
+      }
+    ]
+  }
+]

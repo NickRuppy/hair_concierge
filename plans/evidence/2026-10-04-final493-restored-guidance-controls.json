@@ -1,0 +1,332 @@
+[
+  {
+    "id": "restored-guidance-1",
+    "lane": "restored",
+    "phase": "new",
+    "intended": "Actual tone-and-format.md must retain /Do not invent a user preference/",
+    "source": "data/agent-v2/guidance/base/tone-and-format.md",
+    "selectedTest": {
+      "file": "tests/agent-v2-guidance-compiler.spec.ts",
+      "name": "AgentV2 base guidance preserves profile grounding and calm structure guidance"
+    },
+    "originalHash": "4303b079f99c7a173672e7f907d72ad08585cd4ea53c4d9b0b6a365cf0e52f95",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-final493-restored-mutations-new/restored-guidance-1-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-final493-restored-mutations-new/restored-guidance-1-fault.tap"
+    },
+    "restoredHash": "4303b079f99c7a173672e7f907d72ad08585cd4ea53c4d9b0b6a365cf0e52f95",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-final493-restored-mutations-new/restored-guidance-1-after.tap"
+    },
+    "keeperAssertionLines": [
+      376,
+      377,
+      378,
+      379,
+      380,
+      381
+    ],
+    "assertionStacks": [
+      376
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "restored-guidance-2",
+    "lane": "restored",
+    "phase": "new",
+    "intended": "Actual tone-and-format.md must retain /Avoid stacking many bold subheaders/",
+    "source": "data/agent-v2/guidance/base/tone-and-format.md",
+    "selectedTest": {
+      "file": "tests/agent-v2-guidance-compiler.spec.ts",
+      "name": "AgentV2 base guidance preserves profile grounding and calm structure guidance"
+    },
+    "originalHash": "4303b079f99c7a173672e7f907d72ad08585cd4ea53c4d9b0b6a365cf0e52f95",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-final493-restored-mutations-new/restored-guidance-2-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-final493-restored-mutations-new/restored-guidance-2-fault.tap"
+    },
+    "restoredHash": "4303b079f99c7a173672e7f907d72ad08585cd4ea53c4d9b0b6a365cf0e52f95",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-final493-restored-mutations-new/restored-guidance-2-after.tap"
+    },
+    "keeperAssertionLines": [
+      376,
+      377,
+      378,
+      379,
+      380,
+      381
+    ],
+    "assertionStacks": [
+      377
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "restored-guidance-3",
+    "lane": "restored",
+    "phase": "new",
+    "intended": "Actual routine-building.md must retain /profile facts/",
+    "source": "data/agent-v2/guidance/base/routine-building.md",
+    "selectedTest": {
+      "file": "tests/agent-v2-guidance-compiler.spec.ts",
+      "name": "AgentV2 base guidance preserves profile grounding and calm structure guidance"
+    },
+    "originalHash": "942640bac61c1111b53aa45771d2693224d337907f5e6bb5ed43ba56fd83ac97",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-final493-restored-mutations-new/restored-guidance-3-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-final493-restored-mutations-new/restored-guidance-3-fault.tap"
+    },
+    "restoredHash": "942640bac61c1111b53aa45771d2693224d337907f5e6bb5ed43ba56fd83ac97",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-final493-restored-mutations-new/restored-guidance-3-after.tap"
+    },
+    "keeperAssertionLines": [
+      376,
+      377,
+      378,
+      379,
+      380,
+      381
+    ],
+    "assertionStacks": [
+      378
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "restored-guidance-4",
+    "lane": "restored",
+    "phase": "new",
+    "intended": "Actual routine-building.md must retain /drying method/",
+    "source": "data/agent-v2/guidance/base/routine-building.md",
+    "selectedTest": {
+      "file": "tests/agent-v2-guidance-compiler.spec.ts",
+      "name": "AgentV2 base guidance preserves profile grounding and calm structure guidance"
+    },
+    "originalHash": "942640bac61c1111b53aa45771d2693224d337907f5e6bb5ed43ba56fd83ac97",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-final493-restored-mutations-new/restored-guidance-4-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-final493-restored-mutations-new/restored-guidance-4-fault.tap"
+    },
+    "restoredHash": "942640bac61c1111b53aa45771d2693224d337907f5e6bb5ed43ba56fd83ac97",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-final493-restored-mutations-new/restored-guidance-4-after.tap"
+    },
+    "keeperAssertionLines": [
+      376,
+      377,
+      378,
+      379,
+      380,
+      381
+    ],
+    "assertionStacks": [
+      379
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "restored-guidance-5",
+    "lane": "restored",
+    "phase": "new",
+    "intended": "Actual product-recommendation.md must retain /wash rhythm/",
+    "source": "data/agent-v2/guidance/base/product-recommendation.md",
+    "selectedTest": {
+      "file": "tests/agent-v2-guidance-compiler.spec.ts",
+      "name": "AgentV2 base guidance preserves profile grounding and calm structure guidance"
+    },
+    "originalHash": "fb9bd5d1359ffc9fc7e609a94edcd848a6f85521ff488fd536590862bbab4433",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-final493-restored-mutations-new/restored-guidance-5-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-final493-restored-mutations-new/restored-guidance-5-fault.tap"
+    },
+    "restoredHash": "fb9bd5d1359ffc9fc7e609a94edcd848a6f85521ff488fd536590862bbab4433",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-final493-restored-mutations-new/restored-guidance-5-after.tap"
+    },
+    "keeperAssertionLines": [
+      376,
+      377,
+      378,
+      379,
+      380,
+      381
+    ],
+    "assertionStacks": [
+      380
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "restored-guidance-6",
+    "lane": "restored",
+    "phase": "new",
+    "intended": "Actual product-recommendation.md must retain /usage cadence/",
+    "source": "data/agent-v2/guidance/base/product-recommendation.md",
+    "selectedTest": {
+      "file": "tests/agent-v2-guidance-compiler.spec.ts",
+      "name": "AgentV2 base guidance preserves profile grounding and calm structure guidance"
+    },
+    "originalHash": "fb9bd5d1359ffc9fc7e609a94edcd848a6f85521ff488fd536590862bbab4433",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-final493-restored-mutations-new/restored-guidance-6-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-final493-restored-mutations-new/restored-guidance-6-fault.tap"
+    },
+    "restoredHash": "fb9bd5d1359ffc9fc7e609a94edcd848a6f85521ff488fd536590862bbab4433",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-final493-restored-mutations-new/restored-guidance-6-after.tap"
+    },
+    "keeperAssertionLines": [
+      376,
+      377,
+      378,
+      379,
+      380,
+      381
+    ],
+    "assertionStacks": [
+      381
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  }
+]

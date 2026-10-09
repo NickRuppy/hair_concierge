@@ -18,6 +18,7 @@ import {
 } from "./stage3-bootstrap-review-contract"
 export type { Stage3DecisionReviewBundle } from "./stage3-bootstrap-review-contract"
 import type {
+  Stage3BootstrapBudgetEnvelope,
   Stage3CompletionReceiptResponse,
   Stage3CompleteResponse,
   Stage3DecisionReviewProjection,
@@ -52,7 +53,12 @@ import {
 import {
   isPersonalPlanStage3InventoryAuthorityV2Enabled,
   isPersonalPlanStage3ThumbnailsEnabled,
+  isShoppingBudgetEnabled,
 } from "@/lib/personal-plan/release"
+import { resolveStatedPersonalPlanConcern } from "@/lib/personal-plan-quiz/primary-concern"
+import { PERSONAL_PLAN_QUIZ_KIND, PERSONAL_PLAN_QUIZ_VERSION } from "@/lib/personal-plan-quiz/types"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
+import { DIAGNOSTIC_CONCERNS, type DiagnosticConcern } from "@/lib/quiz/diagnostic-input"
 import type {
   RoutineCandidateCompiler,
   RoutineProposalStager,
@@ -77,7 +83,23 @@ import {
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 import { expectedShampooBucket, expectedShampooSpecTarget } from "./authority/categories/shampoo"
 import { classifyStage3DesiredState, stage3DraftsSemanticallyEqual } from "./recovery-desired-state"
-import { buildStage3FitComparison, type Stage3SelectedComparisonCandidate } from "./fit-comparison"
+import {
+  buildStage3FitComparison,
+  candidateTrustRank,
+  rankStage3ComparisonCandidates,
+  STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
+  usablePackagePriceEur,
+  type Stage3RankedComparisonCandidate,
+  type Stage3SelectedComparisonCandidate,
+} from "./fit-comparison"
+import { budgetNeedDistances } from "./comparison-dimensions"
+import {
+  allocateBudgetPortfolio,
+  CONCERN_DIMENSIONS,
+  inferBudgetSuggestion,
+  type BudgetRoleAllocation,
+  type BudgetRoleInput,
+} from "./budget-policy"
 
 export type Stage3AssessmentSearchContext = {
   hairThickness: "fine" | "normal" | "coarse"
@@ -207,6 +229,25 @@ export type Stage3ProductionPersistence = {
     context: Stage3EvaluationContext
   }): Promise<Stage3AuthorityFactBundle>
   loadDraft(input: { userId: string; draftId: string }): Promise<Stage3ProductDraft | null>
+  /**
+   * One narrow read of the saved budget (null when none was collected — never implied
+   * "uncapped") and the stated concerns from the saved diagnostics.
+   */
+  loadShoppingContext(userId: string): Promise<Stage3ShoppingContext>
+  /** One batch read of catalog package prices (commerce only) for the budget suggestion. */
+  loadCatalogPackagePrices(productIds: string[]): Promise<Stage3CatalogPackagePrice[]>
+}
+
+export type Stage3CatalogPackagePrice = {
+  productId: string
+  priceEur: number | null
+  purchaseLinkStatus: "available" | "unavailable" | null
+}
+
+export type Stage3ShoppingContext = {
+  budget: ShoppingBudget | null
+  currentConcerns: string[]
+  primaryConcern: string | null
 }
 
 export type Stage3ProductionGatewayOptions = {
@@ -219,6 +260,13 @@ export type Stage3ProductionGatewayOptions = {
   now?: () => string
   inventoryAuthorityV2Enabled?: boolean
   thumbnailsEnabled?: boolean
+  shoppingBudgetEnabled?: boolean
+  /**
+   * User-initiated writes (default) refuse a new purchase while the budget is missing. The
+   * background refinement recompute is not a user edit and opts out: without a saved budget it
+   * keeps the budget-blind (unknown-budget) ranking, never a stalled routine.
+   */
+  requireBudgetForNewPurchases?: boolean
 }
 
 export type Stage3AuthorityProductionGateway = Stage3ProductsGateway & {
@@ -226,6 +274,13 @@ export type Stage3AuthorityProductionGateway = Stage3ProductsGateway & {
   prepareLoadedDraft(input: Stage3DraftResponse): Promise<Stage3DraftResponse>
   evaluateDecisions(input: { draftId: string }): Promise<Stage3AuthorityEvaluation[]>
   reviewDecisionBundles(input: { draftId: string }): Promise<Stage3DecisionReviewBundle[]>
+  /**
+   * The bootstrap budget envelope: null with the gate off, `saved` with the saved budget, or
+   * `budget_required` with the suggestion inferred from the draft's captured products.
+   */
+  shoppingBudgetEnvelope(input: {
+    draft: Stage3ProductDraft
+  }): Promise<Stage3BootstrapBudgetEnvelope | null>
   previewDecisionBundles(input: {
     draftId: string
     expectedRevision: number
@@ -261,6 +316,12 @@ export function createProductionStage3ProductsGateway(
   const inventoryAuthorityV2Enabled =
     options.inventoryAuthorityV2Enabled ?? isPersonalPlanStage3InventoryAuthorityV2Enabled()
   const thumbnailsEnabled = options.thumbnailsEnabled ?? isPersonalPlanStage3ThumbnailsEnabled()
+  const shoppingBudgetEnabled = options.shoppingBudgetEnabled ?? isShoppingBudgetEnabled()
+  // One allocation per proposal and evaluation context (one context per gateway call).
+  const allocationMemo = new WeakMap<
+    Stage3EvaluationContext,
+    Map<string, Promise<Stage3ProposalAllocation>>
+  >()
   let cached: { draft: Stage3ProductDraft; requirements: Stage3CategoryRequirement[] } | null = null
 
   async function repairLoadedDraft(input: {
@@ -436,11 +497,15 @@ export function createProductionStage3ProductsGateway(
     }
   }
 
-  async function authoritativeReview(
+  /** Price-neutral authority input and evaluation for one subject. */
+  async function rawAuthorityAssessment(
     draft: Stage3ProductDraft,
     subjectKey: string,
     context: Stage3EvaluationContext,
-  ): Promise<Stage3DecisionReviewBundle & { authorityInput: Stage3AuthorityInput }> {
+  ): Promise<{
+    authorityInput: Stage3AuthorityInput
+    authorityEvaluation: Stage3AuthorityEvaluation
+  }> {
     const snapshot = requireCurrentAuthoritySnapshot(draft)
 
     const subject = deriveStage3DecisionSubjects(draft).find(
@@ -478,11 +543,170 @@ export function createProductionStage3ProductsGateway(
       ...facts,
     } as Stage3AuthorityInput
     const authorityEvaluation = evaluateStage3Authority(authorityInput)
+    return { authorityInput, authorityEvaluation }
+  }
+
+  /** The price-neutral review: fit evidence and ranking only, never the saved budget. */
+  async function rawAuthoritativeReview(
+    draft: Stage3ProductDraft,
+    subjectKey: string,
+    context: Stage3EvaluationContext,
+  ): Promise<Stage3DecisionReviewBundle & { authorityInput: Stage3AuthorityInput }> {
+    const { authorityInput, authorityEvaluation } = await rawAuthorityAssessment(
+      draft,
+      subjectKey,
+      context,
+    )
+    const stored = draft.decisions.find((decision) => decision.decisionKey === subjectKey)
+    const keepCandidateId =
+      stored && authorityActionForDecision(stored) === "select_replacement"
+        ? (stored.recommendation?.productId ?? null)
+        : null
     return {
       authorityInput,
       authorityEvaluation,
-      fitComparison: buildStage3FitComparison(authorityInput, authorityEvaluation, context),
+      fitComparison: buildStage3FitComparison(authorityInput, authorityEvaluation, context, {
+        keepCandidateId,
+      }),
     }
+  }
+
+  /**
+   * Every review path (bundles, preview, projected Heat, resolve, evaluateDecisions, completion,
+   * candidate validation and the decision writer) goes through here, so all of them see the same
+   * proposal-wide budget allocation. Without a known budget this is exactly the raw review.
+   */
+  async function authoritativeReview(
+    draft: Stage3ProductDraft,
+    subjectKey: string,
+    context: Stage3EvaluationContext,
+    pendingIntents: readonly Stage3AuthoritySemanticIntent[] = [],
+  ): Promise<Stage3DecisionReviewBundle & { authorityInput: Stage3AuthorityInput }> {
+    if (!context.budget) return rawAuthoritativeReview(draft, subjectKey, context)
+    const slice = (await proposalAllocation(draft, context, pendingIntents)).get(subjectKey)
+    if (!slice) return rawAuthoritativeReview(draft, subjectKey, context)
+    return {
+      authorityInput: slice.authorityInput,
+      authorityEvaluation: slice.noNewPurchase
+        ? slice.authorityEvaluation
+        : budgetedEvaluation(slice.authorityEvaluation, slice),
+      fitComparison: buildStage3FitComparison(
+        slice.authorityInput,
+        slice.authorityEvaluation,
+        context,
+        { budgetAllocation: slice.allocation, rankedCandidates: slice.ranked },
+      ),
+    }
+  }
+
+  /**
+   * Memoized per evaluation context by draft identity, revision, the decision-relevant draft
+   * state (projected drafts share a revision), the budget and the pending choices.
+   */
+  function proposalAllocation(
+    draft: Stage3ProductDraft,
+    context: Stage3EvaluationContext,
+    pendingIntents: readonly Stage3AuthoritySemanticIntent[],
+  ): Promise<Stage3ProposalAllocation> {
+    const key = JSON.stringify({
+      draftId: draft.draftId,
+      revision: draft.revision,
+      decisions: draft.decisions.map((decision) => [
+        decision.decisionKey,
+        decision.choiceState,
+        decision.resolutionAction ?? null,
+        decision.recommendation?.productId ?? null,
+      ]),
+      roleAssignments: draft.roleAssignments,
+      uncoveredRoles: draft.uncoveredRoles,
+      budget: context.budget,
+      pending: pendingIntents.map((intent) => [
+        intent.subjectKey,
+        intent.action,
+        intent.selectedCandidateId ?? null,
+      ]),
+    })
+    let memo = allocationMemo.get(context)
+    if (!memo) {
+      memo = new Map()
+      allocationMemo.set(context, memo)
+    }
+    const existing = memo.get(key)
+    if (existing) return existing
+    const computed = computeProposalAllocation(draft, context, pendingIntents)
+    memo.set(key, computed)
+    computed.catch(() => memo.delete(key))
+    return computed
+  }
+
+  async function computeProposalAllocation(
+    draft: Stage3ProductDraft,
+    context: Stage3EvaluationContext,
+    pendingIntents: readonly Stage3AuthoritySemanticIntent[],
+  ): Promise<Stage3ProposalAllocation> {
+    const budget = context.budget!
+    const subjects = authorityDecisionSubjects(draft)
+    const assessments = await Promise.all(
+      subjects.map((subject) => rawAuthorityAssessment(draft, subject.decisionKey, context)),
+    )
+    const categoryDecisions = effectiveStage3CategoryDecisions(draft)
+    const decisionsByKey = new Map(
+      draft.decisions.map((decision) => [decision.decisionKey, decision]),
+    )
+    const intentsByKey = new Map(pendingIntents.map((intent) => [intent.subjectKey, intent]))
+
+    const prepared = subjects.map((subject, index) => {
+      const { authorityInput, authorityEvaluation } = assessments[index]!
+      const ranked = rankStage3ComparisonCandidates(authorityInput, authorityEvaluation, "web")
+      const choice = budgetChoiceFor(
+        subject,
+        decisionsByKey.get(subject.decisionKey) ?? null,
+        intentsByKey.get(subject.decisionKey) ?? null,
+        authorityEvaluation,
+      )
+      // Bondbuilders pair the most trusted affordable product with the most trusted one overall
+      // (Nick, 2026-10-09); trust also guards the uncapped price-mix swaps.
+      const trustPair = subject.category === "bondbuilder"
+      const role: BudgetRoleInput = {
+        roleKey: subject.decisionKey,
+        ranked: ranked.map((candidate) => ({
+          productId: candidate.productId,
+          priceEur: usablePackagePriceEur(candidate.facts),
+          verdict: candidate.verdict,
+          cautionCount: candidate.cautionCount,
+          needDistances: budgetNeedDistances(authorityInput, candidate.facts),
+          ...(trustPair ? { trustRank: candidateTrustRank(candidate.facts) } : {}),
+        })),
+        ...(trustPair ? { displayMode: "trust_pair" as const } : {}),
+        required: isRequiredPurchase(
+          categoryDecisions.find((decision) => decision.category === subject.category),
+          subject.role,
+        ),
+        ownedKept: choice.ownedKept,
+        preserved: choice.preserved,
+      }
+      return { subject, authorityInput, authorityEvaluation, ranked, role }
+    })
+
+    const result = allocateBudgetPortfolio({
+      budget,
+      roles: prepared.map((item) => item.role),
+      mainConcernDimensions: statedMainConcernDimensions(context),
+      displayLimit: STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
+    })
+    const allocationsByKey = new Map(result.roles.map((role) => [role.roleKey, role]))
+    return new Map(
+      prepared.map((item) => [
+        item.subject.decisionKey,
+        {
+          authorityInput: item.authorityInput,
+          authorityEvaluation: item.authorityEvaluation,
+          ranked: item.ranked,
+          noNewPurchase: item.role.ownedKept,
+          allocation: allocationsByKey.get(item.subject.decisionKey)!,
+        },
+      ]),
+    )
   }
 
   function authorityDecisionSubjects(draft: Stage3ProductDraft) {
@@ -497,11 +721,28 @@ export function createProductionStage3ProductsGateway(
     return (await authoritativeReview(draft, subjectKey, context)).authorityEvaluation
   }
 
+  /**
+   * With the gate on, a new purchase is never persisted without a saved budget: the review would
+   * fall back to the budget-blind ranking. Kept, pending and skipped choices are unaffected.
+   */
+  function assertBudgetKnownForNewPurchase(
+    context: Stage3EvaluationContext,
+    actions: readonly (Stage3AuthoritySemanticIntent["action"] | null)[],
+  ) {
+    if (!shoppingBudgetEnabled || context.budget) return
+    if (options.requireBudgetForNewPurchases === false) return
+    if (
+      actions.some((action) => action === "plan_recommendation" || action === "select_replacement")
+    ) {
+      throw new Stage3AuthorityMutationError("budget_required")
+    }
+  }
+
   async function loadEvaluationContext(
     draft: Stage3ProductDraft,
   ): Promise<Stage3EvaluationContext> {
     const authoritySnapshot = requireCurrentAuthoritySnapshot(draft)
-    const [currentRefinedVersionId, refinedNeedSnapshot] = await Promise.all([
+    const [currentRefinedVersionId, refinedNeedSnapshot, shopping] = await Promise.all([
       options.persistence.loadCurrentRefinedVersionId({
         userId: options.userId,
         personalPlanId: draft.personalPlanId,
@@ -511,6 +752,9 @@ export function createProductionStage3ProductsGateway(
         personalPlanId: draft.personalPlanId,
         refinedVersionId: draft.refinedVersionId,
       }),
+      shoppingBudgetEnabled
+        ? options.persistence.loadShoppingContext(options.userId)
+        : Promise.resolve(null),
     ])
     const projection = refinedNeedSnapshot?.profile?.source?.projection
     const hairThickness = refinedNeedSnapshot?.profile?.hair?.thickness
@@ -527,6 +771,16 @@ export function createProductionStage3ProductsGateway(
       currentRefinedVersionId,
       refinedNeedSnapshot,
       hairThickness,
+      // Flag off: the key is absent, so the context and every review stay byte-identical.
+      ...(shopping
+        ? {
+            budget: shopping.budget,
+            statedConcerns: {
+              currentConcerns: shopping.currentConcerns,
+              primaryConcern: shopping.primaryConcern,
+            },
+          }
+        : {}),
     }
   }
 
@@ -583,9 +837,18 @@ export function createProductionStage3ProductsGateway(
       const action = authorityActionForDecision(decision)
       if (!action) return false
       if (action === "select_replacement") {
-        const candidate = review.fitComparison.alternatives.find(
-          (item) => item.productId === decision.recommendation?.productId,
-        )
+        // A stored choice is revalidated against the full eligible fit ranking, not only the
+        // bounded display list: a ranking change (e.g. Bondbuilder trust order, 2026-10-09) may
+        // push a still-eligible, unchanged product out of the shown shortlist. New picks stay
+        // restricted to the displayed alternatives (`validateSelectedCandidate`).
+        const productId = decision.recommendation?.productId
+        const candidate =
+          review.fitComparison.alternatives.find((item) => item.productId === productId) ??
+          rankStage3ComparisonCandidates(
+            review.authorityInput,
+            review.authorityEvaluation,
+            "web",
+          ).find((item) => item.productId === productId)
         return (
           candidate !== undefined &&
           decision.authorityEvidence?.recommendationFactFingerprint === candidate.factFingerprint
@@ -853,12 +1116,13 @@ export function createProductionStage3ProductsGateway(
             throw new Stage3AuthorityMutationError("stage3_authority_candidate_invalid")
           }
           const context = await loadEvaluationContext(next)
+          // Status-only capture validation: the budget never changes an evaluation's status, so
+          // this deliberately skips the proposal-wide allocation (it would load every subject).
           const evaluatedSubjects = await Promise.all(
             subjects.map((subject) =>
-              authoritativeEvaluation(next, subject.decisionKey, context).then((evaluation) => ({
-                subject,
-                evaluation,
-              })),
+              rawAuthorityAssessment(next, subject.decisionKey, context).then(
+                ({ authorityEvaluation: evaluation }) => ({ subject, evaluation }),
+              ),
             ),
           )
           const productsById = new Map(
@@ -952,6 +1216,10 @@ export function createProductionStage3ProductsGateway(
             personalPlanId: draft.personalPlanId,
           }),
         ])
+        assertBudgetKnownForNewPurchase(
+          context,
+          rehydrated.decisions.map(authorityActionForDecision),
+        )
         if (!(await completionDecisionsRemainCurrent(rehydrated, context))) {
           return { status: "not_ready", draft }
         }
@@ -1067,6 +1335,15 @@ export function createProductionStage3ProductsGateway(
         ),
       )
     },
+    async shoppingBudgetEnvelope(input) {
+      if (!shoppingBudgetEnabled) return null
+      const { budget } = await options.persistence.loadShoppingContext(options.userId)
+      if (budget) return { status: "saved", value: budget }
+      return {
+        status: "budget_required",
+        suggestion: await capturedBudgetSuggestion(options.persistence, input.draft),
+      }
+    },
     async reviewDecisionBundles(input) {
       const loaded = await current(input.draftId)
       if (loaded.draft.status !== "active") return []
@@ -1171,6 +1448,12 @@ export function createProductionStage3ProductsGateway(
     if (desired === "different" || draft.revision !== input.expectedRevision) {
       return { status: "conflict", latestDraft: draft }
     }
+    if (!preview) {
+      assertBudgetKnownForNewPurchase(
+        context,
+        input.intents.map((intent) => intent.action),
+      )
+    }
     const subjectsByKey = new Map(
       deriveStage3DecisionSubjects(draft).map((subject) => [subject.decisionKey, subject]),
     )
@@ -1188,7 +1471,7 @@ export function createProductionStage3ProductsGateway(
     phaseStartedAt = performance.now()
     const nonHeatReviews = await Promise.all(
       nonHeatIntentIndexes.map((index) =>
-        authoritativeReview(draft, subjects[index]!.decisionKey, context),
+        authoritativeReview(draft, subjects[index]!.decisionKey, context, input.intents),
       ),
     )
     reportPersonalPlanTransitionTiming({
@@ -1244,7 +1527,12 @@ export function createProductionStage3ProductsGateway(
           omittedProjectedHeatIntentIndexes.add(intentIndex)
           continue
         }
-        const projectedReview = await authoritativeReview(projected, subjectKey, context)
+        const projectedReview = await authoritativeReview(
+          projected,
+          subjectKey,
+          context,
+          input.intents,
+        )
         decisionsByIndex.set(
           intentIndex,
           decisionFor(input.intents[intentIndex]!, projectedSubject, projectedReview),
@@ -1328,7 +1616,9 @@ export class Stage3AuthorityMutationError extends Error {
       | "stage3_authority_candidate_invalid"
       | "stage3_replacement_candidate_invalid"
       | "stage3_need_revision_invalid"
-      | "stage3_inventory_disposition_invalid",
+      | "stage3_inventory_disposition_invalid"
+      /** Shopping-budget gate on, no saved budget, and the write would persist a new purchase. */
+      | "budget_required",
   ) {
     super(code)
     this.name = "Stage3AuthorityMutationError"
@@ -1340,6 +1630,181 @@ export class Stage3ProductionUnavailableError extends Error {
     super("temporarily_unavailable")
     this.name = "Stage3ProductionUnavailableError"
   }
+}
+
+type Stage3ProposalSubjectAllocation = {
+  authorityInput: Stage3AuthorityInput
+  authorityEvaluation: Stage3AuthorityEvaluation
+  ranked: Stage3RankedComparisonCandidate[]
+  /** Kept own product or skipped role: no new purchase, so the evaluation is never re-pointed. */
+  noNewPurchase: boolean
+  allocation: BudgetRoleAllocation
+}
+
+type Stage3ProposalAllocation = Map<string, Stage3ProposalSubjectAllocation>
+
+/**
+ * How a subject enters the budget portfolio. The effective choice is the pending intent, else the
+ * stored decision, else the evaluation's default:
+ * - kept own product (`keep_owned`, `acknowledge_override`, `keep_pending`, or an undecided
+ *   captured product whose evaluation offers keeping it) → `ownedKept`, no new purchase;
+ * - a deliberately skipped role (`leave_uncovered`) → also `ownedKept`: the policy's no-purchase
+ *   semantics (never in N, no exception, no default), and its recommendation is not swapped;
+ * - a chosen product (`select_replacement`, `plan_recommendation`) → preserved; explicit for a
+ *   user-picked replacement and for every pending intent, not for an accepted recommendation;
+ * - anything else (undecided gap, an owned mismatch) → an ordinary role.
+ */
+function budgetChoiceFor(
+  subject: Stage3DecisionSubject,
+  decision: Stage3ProductDecision | null,
+  intent: Stage3AuthoritySemanticIntent | null,
+  evaluation: Stage3AuthorityEvaluation,
+): Pick<BudgetRoleInput, "ownedKept" | "preserved"> {
+  const action = intent?.action ?? (decision ? authorityActionForDecision(decision) : null)
+  if (
+    action === "keep_owned" ||
+    action === "acknowledge_override" ||
+    action === "keep_pending" ||
+    action === "leave_uncovered"
+  ) {
+    return { ownedKept: true, preserved: null }
+  }
+  if (action === "select_replacement" || action === "plan_recommendation") {
+    const productId = intent ? intent.selectedCandidateId : decision?.recommendation?.productId
+    return {
+      ownedKept: false,
+      preserved: productId
+        ? { productId, explicit: intent !== null || action === "select_replacement" }
+        : null,
+    }
+  }
+  if (action) return { ownedKept: false, preserved: null }
+  const keepsOwned =
+    subject.capturedProductId !== null &&
+    (evaluation.allowedActions.includes("keep_owned" as never) ||
+      evaluation.allowedActions.includes("keep_pending" as never))
+  return { ownedKept: keepsOwned, preserved: null }
+}
+
+/**
+ * The evaluation with the budget-allocated default as its recommendation. Only evaluations that
+ * offer `plan_recommendation` carry a recommendation; others are returned unchanged. A strict
+ * budget without an affordable product yields no recommendation and no `plan_recommendation`.
+ * For an empty slot the verdict and criteria follow the recommended product, as the authority's
+ * own recommendation does.
+ */
+function budgetedEvaluation(
+  evaluation: Stage3AuthorityEvaluation,
+  slice: Stage3ProposalSubjectAllocation,
+): Stage3AuthorityEvaluation {
+  if (evaluation.status !== "known" || !evaluation.allowedActions.includes("plan_recommendation")) {
+    return evaluation
+  }
+  const defaultProductId = slice.allocation.defaultProductId
+  if (defaultProductId === null) {
+    return {
+      ...evaluation,
+      recommendation: null,
+      recommendationFactFingerprint: null,
+      allowedActions: evaluation.allowedActions.filter(
+        (action) => action !== "plan_recommendation",
+      ),
+    }
+  }
+  const chosen = slice.ranked.find((candidate) => candidate.productId === defaultProductId)
+  if (!chosen || chosen.productId === evaluation.recommendation?.productId) return evaluation
+  return {
+    ...evaluation,
+    ...(slice.authorityInput.capturedProductId === null
+      ? { verdict: chosen.verdict, criteria: chosen.criteria }
+      : {}),
+    recommendation: chosen.recommendation,
+    recommendationFactFingerprint: chosen.factFingerprint,
+  }
+}
+
+/**
+ * The budget suggestion from what the user already owns: every captured product counts, a
+ * pending submission (no catalog product yet) as unpriced, and a catalog product only with a
+ * usable package price (buyable link, finite positive EUR price).
+ */
+async function capturedBudgetSuggestion(
+  persistence: Stage3ProductionPersistence,
+  draft: Stage3ProductDraft,
+): Promise<5 | 15 | null> {
+  const productIds = [
+    ...new Set(
+      draft.products.flatMap((product) =>
+        product.identity.kind === "catalog_product" ? [product.identity.productId] : [],
+      ),
+    ),
+  ]
+  const prices = new Map(
+    (productIds.length > 0 ? await persistence.loadCatalogPackagePrices(productIds) : []).map(
+      (price) => [price.productId, usablePackagePriceEur(price)],
+    ),
+  )
+  return inferBudgetSuggestion(
+    draft.products.map((product) => {
+      const productId =
+        product.identity.kind === "catalog_product" ? product.identity.productId : null
+      return {
+        productId,
+        category: product.identity.category,
+        priceEur: productId ? (prices.get(productId) ?? null) : null,
+      }
+    }),
+  )
+}
+
+/**
+ * Only a required purchase can claim a necessary-gap exception: the role is one of the category
+ * decision's roles and the category is not an optional need. Empty optional cards are never gaps.
+ */
+function isRequiredPurchase(
+  decision: { needTier: string | null; roles: readonly string[] } | undefined,
+  role: string,
+): boolean {
+  return decision !== undefined && decision.needTier !== "optional" && decision.roles.includes(role)
+}
+
+const DIAGNOSTIC_CONCERN_SET: ReadonlySet<string> = new Set(DIAGNOSTIC_CONCERNS)
+
+function diagnosticConcern(value: string | null | undefined): DiagnosticConcern | undefined {
+  return value && DIAGNOSTIC_CONCERN_SET.has(value) ? (value as DiagnosticConcern) : undefined
+}
+
+/**
+ * Need dimensions of the stated main concern. The saved diagnostics (current concerns plus the
+ * explicit pick) decide; only when they carry no concerns does the refined snapshot stand in
+ * (its concerns, plus the pick of a v3 Personal Plan quiz source). A stale pick is dropped by the
+ * resolver. Without a statement there is no main concern and no priority.
+ */
+export function statedMainConcernDimensions(
+  context: Pick<Stage3EvaluationContext, "statedConcerns" | "refinedNeedSnapshot">,
+): ReadonlySet<string> {
+  const stated = context.statedConcerns
+  const statedConcerns = (stated?.currentConcerns ?? []).flatMap((value) => {
+    const concern = diagnosticConcern(value)
+    return concern ? [concern] : []
+  })
+  const snapshot = context.refinedNeedSnapshot
+  const source = snapshot?.sourceQuiz
+  const concern =
+    statedConcerns.length > 0
+      ? resolveStatedPersonalPlanConcern({
+          currentConcerns: statedConcerns,
+          primaryConcern: diagnosticConcern(stated?.primaryConcern),
+        })
+      : resolveStatedPersonalPlanConcern({
+          currentConcerns: snapshot?.profile?.concerns ?? [],
+          primaryConcern:
+            source?.kind === PERSONAL_PLAN_QUIZ_KIND &&
+            source.version === PERSONAL_PLAN_QUIZ_VERSION
+              ? source.answers.primaryConcern
+              : undefined,
+        })
+  return new Set(concern ? (CONCERN_DIMENSIONS[concern] ?? []) : [])
 }
 
 function qualifyingHeatRoutes(

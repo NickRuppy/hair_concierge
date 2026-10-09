@@ -1,0 +1,1541 @@
+{
+  "snapshot_at": "2026-10-02T14:26:08.770Z",
+  "products": [
+    {
+      "id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+      "name": "Alverde Conditioner Glanz",
+      "brand": "Alverde",
+      "gtins": [
+        {
+          "value": "4066447592085",
+          "canonical_gtin14": "04066447592085"
+        }
+      ],
+      "price_eur": 1.35,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1714048/alverde-naturkosmetik-conditioner-glanz-rosenbluetenwasser-und-pflanzlichem-protein",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "483b41d6-632c-4efe-9bcc-488c80bf5bb7",
+      "name": "Balea Med Ultra Sensitive Conditioner",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4066447966022",
+          "canonical_gtin14": "04066447966022"
+        }
+      ],
+      "price_eur": 1.75,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1587731/balea-med-conditioner-ultra-sensitive",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:02:45.28+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "007a0b35-2372-4836-9aa5-fd089cd588d4",
+      "name": "Balea Natural Beauty Hibiskus",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4066447238952",
+          "canonical_gtin14": "04066447238952"
+        }
+      ],
+      "price_eur": 1.45,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1625969/balea-conditioner-natural-beauty-hibiskus-extrakt-und-kokosmilch",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+      "name": "Balea Professional Aqua Hyaluron Conditioner",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4066447342055",
+          "canonical_gtin14": "04066447342055"
+        }
+      ],
+      "price_eur": 1.25,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/balea-professional-conditioner-aqua-hyaluron-p4066447342055.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:08:55.697+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+      "name": "Balea Professional Oil Repair Intensiv Spülung",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4066447365443",
+          "canonical_gtin14": "04066447365443"
+        }
+      ],
+      "price_eur": 1.25,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/balea-professional-spuelung-oil-repair-intensiv-p4066447365443.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "63239c38-5633-4062-9e8d-d528ee71502a",
+      "name": "Bali Curls Moisturising Conditioner",
+      "brand": "Bali Curls",
+      "gtins": [
+        {
+          "value": "4262391990056",
+          "canonical_gtin14": "04262391990056"
+        }
+      ],
+      "price_eur": 8.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/3070316/bali-curls-conditioner-moisturising",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-30T20:04:46.627+00:00",
+      "net_content_value": 250,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66",
+      "name": "Cantu Conditioner Cream",
+      "brand": "Cantu",
+      "gtins": [
+        {
+          "value": "810006945478",
+          "canonical_gtin14": "00810006945478"
+        }
+      ],
+      "price_eur": 6.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1675021/cantu-conditioner-cream",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "3901b2cf-6888-4363-9d5b-a695c0b3170b",
+      "name": "Dejan Garz The Foundation Conditioner",
+      "brand": "Dejan Garz",
+      "gtins": [
+        {
+          "value": "4270004570113",
+          "canonical_gtin14": "04270004570113"
+        }
+      ],
+      "price_eur": 9.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/3063725/dejan-garz-conditioner-the-foundation",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:01:57.921+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+      "name": "Garnier Hair Food Macadamia",
+      "brand": "Garnier",
+      "gtins": [],
+      "price_eur": 5.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske-p3600542511612.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "5516009a-eecb-42dd-87f6-07c560161136",
+      "name": "Garnier Fructis Hair Food Aloe Vera Feuchtigkeits-Spülung",
+      "brand": "Garnier Fructis",
+      "gtins": [
+        {
+          "value": "3600542398022",
+          "canonical_gtin14": "03600542398022"
+        }
+      ],
+      "price_eur": 3.99,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-feuchtigkeits-aloe-vera-hair-food-spuelung/p/3600542398022",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": 400,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "99de5b38-3e80-4360-889c-2505f46a7243",
+      "name": "Garnier Wahre Schätze Argan-Mandelcreme Spülung",
+      "brand": "Garnier Wahre Schätze",
+      "gtins": [
+        {
+          "value": "3600542462594",
+          "canonical_gtin14": "03600542462594"
+        }
+      ],
+      "price_eur": 2.49,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-reichhaltige-creme-spuelung-argan-mandelcreme/p/3600542462594",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "8c3eda97-5009-40bb-959b-1a7d90f48b09",
+      "name": "Garnier Wahre Schätze Kokosmilch & Macadamia Nährende Spülung",
+      "brand": "Garnier Wahre Schätze",
+      "gtins": [
+        {
+          "value": "3600542462327",
+          "canonical_gtin14": "03600542462327"
+        },
+        {
+          "value": "3600542462839",
+          "canonical_gtin14": "03600542462839"
+        }
+      ],
+      "price_eur": 2.49,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-spuelung-kokosmilch-und-macadamia-normales-und-trockenes-haar/p/3600542462327",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-10-02T12:19:27.673+00:00",
+      "net_content_value": 200,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-10-02T12:19:27.673+00:00"
+    },
+    {
+      "id": "02113cc7-80c4-45a5-a56b-738ac96f4f02",
+      "name": "Gliss Kur Aqua Revive Conditioner",
+      "brand": "Gliss",
+      "gtins": [
+        {
+          "value": "4015100812336",
+          "canonical_gtin14": "04015100812336"
+        }
+      ],
+      "price_eur": 2.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1633094/schwarzkopf-gliss-conditioner-aqua-revive",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:58:35.748+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "82f9dcba-0422-4932-a879-c2bec0113e55",
+      "name": "Gliss Ultimate Repair Spülung",
+      "brand": "Gliss",
+      "gtins": [
+        {
+          "value": "4015100812237",
+          "canonical_gtin14": "04015100812237"
+        }
+      ],
+      "price_eur": 2.99,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-gliss-ultimate-repair-spuelung/p/4015100812237",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-27T14:38:36.157+00:00"
+    },
+    {
+      "id": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+      "name": "Guhl Bond+ Reparatur Spülung",
+      "brand": "Guhl",
+      "gtins": [
+        {
+          "value": "4072600701218",
+          "canonical_gtin14": "04072600701218"
+        }
+      ],
+      "price_eur": 5.99,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.amazon.de/Guhl-BOND-REPARATUR-Sp%C3%BClung-Rotalgenextrakt/dp/B0CWJHVKV5",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+      "name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "brand": "Guhl",
+      "gtins": [
+        {
+          "value": "4072600703403",
+          "canonical_gtin14": "04072600703403"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.mueller.de/p/guhl-panthenol-reparatur-2in1-kur-spuelung-IPN3052207/",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "4506954b-128a-473c-866f-54a300ff23f4",
+      "name": "Hair Biology Full & Shining Conditioner",
+      "brand": "Hair Biology",
+      "gtins": [
+        {
+          "value": "8001841216997",
+          "canonical_gtin14": "08001841216997"
+        }
+      ],
+      "price_eur": 4.99,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1585350/hair-biology-conditioner-full-und-shining",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "b4bcb392-22a7-4642-bcdf-1949ca959f67",
+      "name": "Hask Argan Oil Repairing Conditioner",
+      "brand": "Hask",
+      "gtins": [
+        {
+          "value": "0071164343265",
+          "canonical_gtin14": "00071164343265"
+        }
+      ],
+      "price_eur": 6.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1475001/hask-conditioner-repairing-argan-oil",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "37c65daf-cc2e-44ba-a976-ac0239c11f7d",
+      "name": "Hask Curl Care Conditioner",
+      "brand": "Hask",
+      "gtins": [
+        {
+          "value": "071164304211",
+          "canonical_gtin14": "00071164304211"
+        }
+      ],
+      "price_eur": 6.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1622385/hask-conditioner-curl-care",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "4e9428b9-8cc9-4db2-89b1-cb272aa9a4d6",
+      "name": "Herbal Essences Aloe Vera Conditioner",
+      "brand": "Herbal Essences",
+      "gtins": [
+        {
+          "value": "8700216211598",
+          "canonical_gtin14": "08700216211598"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1409620/herbal-essences-conditioner-feuchtigkeit-aloe-vera",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "7964b930-7e88-4f93-89d3-fa437f8e753c",
+      "name": "Isana Professional Arganöl & Pflege Spülung",
+      "brand": "Isana",
+      "gtins": [
+        {
+          "value": "4305615624945",
+          "canonical_gtin14": "04305615624945"
+        }
+      ],
+      "price_eur": 1.29,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-arganoel-und-pflege/p/4305615624945",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "e1ad37be-9330-49b4-8add-872a30324122",
+      "name": "Jean&Len Conditioner Keratin/Mandel",
+      "brand": "Jean&Len",
+      "gtins": [
+        {
+          "value": "4262500781575",
+          "canonical_gtin14": "04262500781575"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1551254/jean-und-len-conditioner-keratin-mandel",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": 300,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "d0180955-c3a0-4f53-8744-fbeb2c241688",
+      "name": "Anti-Haarverlust Spülung",
+      "brand": "L'Oréal Paris",
+      "gtins": [
+        {
+          "value": "3600524189983",
+          "canonical_gtin14": "03600524189983"
+        }
+      ],
+      "price_eur": 6.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/2976313/l-oreal-paris-elvital-conditioner-fiber-booster-anti-haarverlust",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "35d81c4a-dbb0-474b-a068-2e1562adb0a8",
+      "name": "Langhaarmädchen Beautiful Curls Conditioner",
+      "brand": "Langhaarmädchen",
+      "gtins": [
+        {
+          "value": "4070765004663",
+          "canonical_gtin14": "04070765004663"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1678991/langhaarmaedchen-conditioner-beautiful-curls",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:01:30.85+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "2a159694-6799-4be7-a0aa-572757c94801",
+      "name": "Langhaarmädchen Lovely Long Conditioner",
+      "brand": "Langhaarmädchen",
+      "gtins": [
+        {
+          "value": "4066447864717",
+          "canonical_gtin14": "04066447864717"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/langhaarmaedchen-conditioner-lovely-long-p4058172702136.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:00:48.216+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "ffd37427-0cb6-4d6a-8b83-ea904bf2b1d7",
+      "name": "Monday Moisture Conditioner",
+      "brand": "Monday",
+      "gtins": [
+        {
+          "value": "4897097266404",
+          "canonical_gtin14": "04897097266404"
+        }
+      ],
+      "price_eur": 5.75,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1893701/monday-conditioner-moisture-feuchtigkeit",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "95e47992-b45b-4847-ba87-b8c3e608fc63",
+      "name": "Neqi Moisture Mystery Conditioner",
+      "brand": "Neqi",
+      "gtins": [
+        {
+          "value": "4063528078315",
+          "canonical_gtin14": "04063528078315"
+        }
+      ],
+      "price_eur": 8.99,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-neqi-moisture-mystery-conditioner/p/4063528078315",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "35ae622e-1458-42bf-a44d-1b23ecfd5516",
+      "name": "Neqi Repair Reveal Conditioner",
+      "brand": "Neqi",
+      "gtins": [
+        {
+          "value": "4063528078223",
+          "canonical_gtin14": "04063528078223"
+        },
+        {
+          "value": "4063528093127",
+          "canonical_gtin14": "04063528093127"
+        }
+      ],
+      "price_eur": 9.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/neqi-conditioner-repair-reveal-p4063528078223.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:01:10.599+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "952a4834-e451-4dc3-ba19-ebb8927eb5e4",
+      "name": "Neqi Volume Victory Conditioner",
+      "brand": "Neqi",
+      "gtins": [
+        {
+          "value": "4063528078407",
+          "canonical_gtin14": "04063528078407"
+        }
+      ],
+      "price_eur": 9.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-neqi-nq-volume-victory-conditioner-250ml/p/4063528078407",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "215522e5-95a6-469f-bc34-1fa74b311a23",
+      "name": "Nivea Power Repair Conditioner",
+      "brand": "Nivea",
+      "gtins": [
+        {
+          "value": "4006000192598",
+          "canonical_gtin14": "04006000192598"
+        }
+      ],
+      "price_eur": 2.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1620990/nivea-conditioner-power-repair",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:00:32.949+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "26985fdd-1b41-46e3-9c9a-94b98f92310a",
+      "name": "Nivea Volumen & Kraft",
+      "brand": "Nivea",
+      "gtins": [
+        {
+          "value": "4005900918031",
+          "canonical_gtin14": "04005900918031"
+        }
+      ],
+      "price_eur": 2.25,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/nivea-conditioner-volumen-und-kraft-p4005900918031.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": null,
+      "net_content_value": null,
+      "purchase_link_status": "unavailable",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "4fca59e5-fbc4-4132-a821-dac6ff0cdb68",
+      "name": "OGX Biotin & Collagen Conditioner",
+      "brand": "OGX",
+      "gtins": [
+        {
+          "value": "3574661799506",
+          "canonical_gtin14": "03574661799506"
+        }
+      ],
+      "price_eur": 6.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1443632/ogx-conditioner-thick-und-full-biotin-und-collagen",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:03:35.191+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "1bfa5b02-26d9-457b-a5e6-445cc2284490",
+      "name": "OGX Bond Protein Repair Conditioner",
+      "brand": "OGX",
+      "gtins": [
+        {
+          "value": "3574661818467",
+          "canonical_gtin14": "03574661818467"
+        }
+      ],
+      "price_eur": 6.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/3068101/ogx-conditioner-bond-protein-repair",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:00:12.07+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "c2d7eb89-9a2e-4476-bb89-c0f33a2aa501",
+      "name": "OGX Renewing Argan Oil of Morocco Conditioner",
+      "brand": "OGX",
+      "gtins": [
+        {
+          "value": "3574661799162",
+          "canonical_gtin14": "03574661799162"
+        }
+      ],
+      "price_eur": 6.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1442294/ogx-conditioner-renewing-argan-oil-of-marocco",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:10:12.638+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "71d9bccb-74c7-499c-b5de-13ceef57ecde",
+      "name": "Pantene Pro-V Miracles Bond Repair Conditioner",
+      "brand": "Pantene",
+      "gtins": [
+        {
+          "value": "8700216151535",
+          "canonical_gtin14": "08700216151535"
+        }
+      ],
+      "price_eur": 5.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1336165/pantene-pro-v-conditioner-miracles-bond-repair",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "98d08c22-97d2-4e06-872f-9f9447530452",
+      "name": "Pantene Pro-V Miracles Hydra Glow Conditioner",
+      "brand": "Pantene",
+      "gtins": [
+        {
+          "value": "8700216151412",
+          "canonical_gtin14": "08700216151412"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1647565/pantene-pro-v-conditioner-miracles-hydra-glow",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:07:23.004+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "970aff48-a7a7-46e8-bad5-4f0600631329",
+      "name": "Pomélo+Co Molecular Repair Conditioner",
+      "brand": "Pomélo+Co",
+      "gtins": [
+        {
+          "value": "4260625262832",
+          "canonical_gtin14": "04260625262832"
+        }
+      ],
+      "price_eur": 9.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/2971600/pomelo-co-conditioner-molecular-repair",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:07:11.875+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "25931499-63ac-4076-b88c-8c23a38f0fa5",
+      "name": "Pomélo+Co Shine Therapy Conditioner",
+      "brand": "Pomélo+Co",
+      "gtins": [
+        {
+          "value": "4260625261989",
+          "canonical_gtin14": "04260625261989"
+        }
+      ],
+      "price_eur": 8.99,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-pomeloco-shine-therapy-conditioner/p/4260625261989",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "01b11043-5c87-43d2-95b5-f1cabd845423",
+      "name": "SANTE Deep Repair Conditioner",
+      "brand": "Sante",
+      "gtins": [
+        {
+          "value": "4055297220088",
+          "canonical_gtin14": "04055297220088"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1335946/sante-naturally-conditioner-deep-repair",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "d2bb79a8-add1-4b74-9d4f-c03449175147",
+      "name": "Sante Intense Hydration Conditioner",
+      "brand": "Sante",
+      "gtins": [
+        {
+          "value": "4055297220866",
+          "canonical_gtin14": "04055297220866"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1334054/sante-naturally-conditioner-intense-hydration",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "a62ae91c-69c6-466e-827e-350f518d73b5",
+      "name": "Syoss Intense Curls Conditioner",
+      "brand": "Syoss",
+      "gtins": [
+        {
+          "value": "4015100860887",
+          "canonical_gtin14": "04015100860887"
+        }
+      ],
+      "price_eur": 3.99,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1666690/syoss-conditioner-intense-curls",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "ed382d40-6166-4d39-be2d-eab5a24793a6",
+      "name": "Syoss Intense Keratin Conditioner",
+      "brand": "Syoss",
+      "gtins": [
+        {
+          "value": "4015100860467",
+          "canonical_gtin14": "04015100860467"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1666649/syoss-conditioner-intense-keratin",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "07058418-0a6a-4fda-89a2-4c263f09c5c9",
+      "name": "alverde NATURKOSMETIK Conditioner Feuchtigkeit",
+      "brand": "alverde NATURKOSMETIK",
+      "gtins": [
+        {
+          "value": "4066447919028",
+          "canonical_gtin14": "04066447919028"
+        }
+      ],
+      "price_eur": 1.25,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1704296/alverde-naturkosmetik-conditioner-feuchtigkeit",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 200,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "838884a1-5586-4c7f-9294-7c9606a4ef1d",
+      "name": "alverde NATURKOSMETIK Conditioner Nutri Care",
+      "brand": "alverde NATURKOSMETIK",
+      "gtins": [
+        {
+          "value": "4066447975321",
+          "canonical_gtin14": "04066447975321"
+        }
+      ],
+      "price_eur": 1.25,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/3114892/alverde-naturkosmetik-conditioner-nutri-care",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 200,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "ee4aab21-5696-4286-aad1-7811b997dd30",
+      "name": "Aussie Conditioner Bouncy Curls",
+      "brand": "Aussie",
+      "gtins": [
+        {
+          "value": "8006530325448",
+          "canonical_gtin14": "08006530325448"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/3135994/aussie-conditioner-bouncy-curls",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 200,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe",
+      "name": "Bali Curls Moisturising Conditioner 75 ml",
+      "brand": "Bali Curls",
+      "gtins": [
+        {
+          "value": "4262391991626",
+          "canonical_gtin14": "04262391991626"
+        }
+      ],
+      "price_eur": 3.75,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/3123188/bali-curls-conditioner-moisturing-reisegroesse",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-08-21T11:27:05.574+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-08-21T11:27:05.574+00:00"
+    },
+    {
+      "id": "109acbf6-51c5-42fc-8982-7a55b5ad2200",
+      "name": "Being Bye Bye Frizz Conditioner",
+      "brand": "Being",
+      "gtins": [
+        {
+          "value": "4895248005933",
+          "canonical_gtin14": "04895248005933"
+        }
+      ],
+      "price_eur": 6.79,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-being-bye-bye-frizz-conditioner/p/4895248005933",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 354,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "cfeab4b2-fdd6-4348-bf2b-aca58e686869",
+      "name": "Being Curl Power Locken Conditioner",
+      "brand": "Being",
+      "gtins": [
+        {
+          "value": "4895248005940",
+          "canonical_gtin14": "04895248005940"
+        }
+      ],
+      "price_eur": 6.79,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-being-curl-power-locken-conditioner/p/4895248005940",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 354,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "262de7f7-71d1-4a60-a5f4-1a91debdbf12",
+      "name": "Garnier Fructis Conditioner Locken Methode Feuchtigkeit",
+      "brand": "Garnier Fructis",
+      "gtins": [
+        {
+          "value": "3600542656924",
+          "canonical_gtin14": "03600542656924"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/3115735/garnier-fructis-conditioner-locken-methode-feuchtigkeit",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 200,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "314d9881-4fcc-47b5-81e1-58e41779081e",
+      "name": "Garnier Wahre Schätze Conditioner Traube Hydraboost",
+      "brand": "Garnier Wahre Schätze",
+      "gtins": [
+        {
+          "value": "3600542656412",
+          "canonical_gtin14": "03600542656412"
+        }
+      ],
+      "price_eur": 2.75,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/wahre-schaetze-conditioner-traube-hydraboost-p3600542656320.html",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 250,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "57848cf2-6113-4aa4-af9f-2f980ccc5850",
+      "name": "Herbal Essences Conditioner Fiji mit Kokosnussextrakt",
+      "brand": "Herbal Essences",
+      "gtins": [
+        {
+          "value": "8006530290005",
+          "canonical_gtin14": "08006530290005"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/3131494/herbal-essences-conditioner-fiji-mit-kokosnussextrakt",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 250,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "240c4e9d-d417-42ce-b8b6-d1cc005eed26",
+      "name": "Herbal Essences Conditioner Limettenduft, Tiefenreinigung & Glanz",
+      "brand": "Herbal Essences",
+      "gtins": [
+        {
+          "value": "8006530123433",
+          "canonical_gtin14": "08006530123433"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/3115709/herbal-essences-conditioner-limettenduft-tiefenreinigung-und-glanz",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 250,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "d81e8069-82aa-4ac4-a719-4614640a45df",
+      "name": "ISANA Spülung Feuchtigkeit",
+      "brand": "ISANA",
+      "gtins": [
+        {
+          "value": "4068134071149",
+          "canonical_gtin14": "04068134071149"
+        }
+      ],
+      "price_eur": 0.65,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-feuchtigkeit/p/4068134071149",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 300,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "0585c8b1-159b-43d3-8432-a91b9973c7b6",
+      "name": "ISANA Spülung Oil Repair Marulaöl",
+      "brand": "ISANA",
+      "gtins": [
+        {
+          "value": "4068134071125",
+          "canonical_gtin14": "04068134071125"
+        }
+      ],
+      "price_eur": 0.65,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-oil-repair-marulaoel/p/4068134071125",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 300,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "2be1a34f-5c80-4b14-a0f5-b56bebe861a8",
+      "name": "ISANA Spülung Seidenglanz",
+      "brand": "ISANA",
+      "gtins": [
+        {
+          "value": "4305615566207",
+          "canonical_gtin14": "04305615566207"
+        }
+      ],
+      "price_eur": 0.65,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-seidenglanz/p/4305615566207",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 300,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "4c9bde95-3594-4ce7-bb02-29394ab7ed08",
+      "name": "ISANA PROFESSIONAL Plex Spülung",
+      "brand": "ISANA PROFESSIONAL",
+      "gtins": [
+        {
+          "value": "4305615975924",
+          "canonical_gtin14": "04305615975924"
+        }
+      ],
+      "price_eur": 1.99,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-spuelung/p/4305615975924",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 250,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "d6cde507-1c34-4dea-8239-abd097d50818",
+      "name": "ISANA PROFESSIONAL Spülung Keratin & Repair",
+      "brand": "ISANA PROFESSIONAL",
+      "gtins": [
+        {
+          "value": "4305615830957",
+          "canonical_gtin14": "04305615830957"
+        }
+      ],
+      "price_eur": 1.29,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-keratin-und-repair/p/4305615830957",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 200,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "90e10088-8226-4e07-b197-3eab6b61d7a2",
+      "name": "ISANA PROFESSIONAL Spülung Locken Traum",
+      "brand": "ISANA PROFESSIONAL",
+      "gtins": [
+        {
+          "value": "4305615846958",
+          "canonical_gtin14": "04305615846958"
+        }
+      ],
+      "price_eur": 1.29,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-locken-traum/p/4305615846958",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 200,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "4f67cb6d-4b28-490b-9817-e8fc8e91b010",
+      "name": "Jean&Len Colorglow Granatapfel Rose Conditioner",
+      "brand": "Jean&Len",
+      "gtins": [
+        {
+          "value": "4262401738883",
+          "canonical_gtin14": "04262401738883"
+        }
+      ],
+      "price_eur": 4.29,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.jeanlen.de/en/color-conditioner-granatapfel-rose",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-26T14:10:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-06-26T14:10:00+00:00"
+    },
+    {
+      "id": "fd1792c0-8f8c-40b0-960d-27ac21470bb8",
+      "name": "Jean&Len Conditioner Hydration Pfirsich Chia",
+      "brand": "Jean&Len",
+      "gtins": [
+        {
+          "value": "4262401738906",
+          "canonical_gtin14": "04262401738906"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/3100946/jean-und-len-conditioner-hydration-pfirsich-chia",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 300,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d",
+      "name": "John Frieda Frizz Ease Wunder-Reparatur Conditioner",
+      "brand": "John Frieda",
+      "gtins": [
+        {
+          "value": "5037156298697",
+          "canonical_gtin14": "05037156298697"
+        }
+      ],
+      "price_eur": 9.99,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-john-frieda-frizz-ease-wunder-reparatur-wunder-reparatur-conditioner/p/5037156298697",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-07-02T07:50:29.423+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-07-02T07:50:29.423+00:00"
+    },
+    {
+      "id": "169be6d1-bd8c-4902-ba1d-3db349cb4854",
+      "name": "John Frieda Go Blonder Conditioner",
+      "brand": "John Frieda",
+      "gtins": [
+        {
+          "value": "5037156296204",
+          "canonical_gtin14": "05037156296204"
+        }
+      ],
+      "price_eur": 14.39,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-john-frieda-go-blonder-go-blonder-conditioner/p/5037156296204",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 500,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "f069970e-12fb-48c6-ac8e-51f50dc46c31",
+      "name": "L'Oréal Paris Elvital Conditioner Hydra Hyaluronic, feuchtigkeitsversiegelnd",
+      "brand": "L'Oréal Paris Elvital",
+      "gtins": [
+        {
+          "value": "3600524142384",
+          "canonical_gtin14": "03600524142384"
+        }
+      ],
+      "price_eur": 3.45,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/3044952/l-oreal-paris-elvital-conditioner-hydra-hyaluronic-feuchtigkeitsversiegelnd",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 200,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "cd00a357-413f-41f4-aa68-2e451661f1dd",
+      "name": "Langhaarmädchen Conditioner Intense Repair",
+      "brand": "Langhaarmädchen",
+      "gtins": [
+        {
+          "value": "4070765004588",
+          "canonical_gtin14": "04070765004588"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1539684/langhaarmaedchen-conditioner-intense-repair",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 250,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "5f4f1300-bc15-4ce0-9ed8-035feb606bde",
+      "name": "Neqi Diamond Glass Conditioner",
+      "brand": "Neqi",
+      "gtins": [
+        {
+          "value": "4063528097613",
+          "canonical_gtin14": "04063528097613"
+        }
+      ],
+      "price_eur": 12.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/3101240/neqi-conditioner-diamond-glass",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-07-05T19:49:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-07-05T19:49:00+00:00"
+    },
+    {
+      "id": "f042a36c-88d5-41ae-87fe-a816ea608bc6",
+      "name": "Nivea Hairmilk Shine Glanzspülung",
+      "brand": "Nivea",
+      "gtins": [
+        {
+          "value": "4006000192673",
+          "canonical_gtin14": "04006000192673"
+        }
+      ],
+      "price_eur": 2.49,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-nivea-hairmilk-shine-glanzspuelung/p/4006000192673",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 200,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "8686e8b6-3b9b-4770-b0f0-c8d9f5eb3a59",
+      "name": "OGX Conditioner Coconut Miracle Oil",
+      "brand": "OGX",
+      "gtins": [
+        {
+          "value": "0022796972217",
+          "canonical_gtin14": "00022796972217"
+        }
+      ],
+      "price_eur": 6.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/2201293/ogx-conditioner-coconut-miracle-oil",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 385,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "931892fb-cc29-4e50-b402-6aae0a494389",
+      "name": "Pantene Pro-V Moisture Boost Pflegespülung",
+      "brand": "Pantene",
+      "gtins": [
+        {
+          "value": "08700216939140",
+          "canonical_gtin14": "08700216939140"
+        }
+      ],
+      "price_eur": 8.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.mueller.de/p/pantene-pro-v-moisture-boost-pflegespuelung-PPN3150289/",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:45:59.388+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-30T19:45:59.388+00:00"
+    },
+    {
+      "id": "f7144789-8302-42b1-a5b1-e761402c1b7c",
+      "name": "Pantene Pro-V Conditioner Grow Abundant",
+      "brand": "Pantene Pro-V",
+      "gtins": [
+        {
+          "value": "8006530059299",
+          "canonical_gtin14": "08006530059299"
+        }
+      ],
+      "price_eur": 7.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/3115707/pantene-pro-v-conditioner-grow-abundant-anti-haarverlust",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 250,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "2781bccb-4a3f-4ffe-aa2f-f32f7b820c03",
+      "name": "Pantene Pro-V Conditioner Repair & Care",
+      "brand": "Pantene Pro-V",
+      "gtins": [
+        {
+          "value": "8700216422116",
+          "canonical_gtin14": "08700216422116"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1554190/pantene-pro-v-conditioner-repair-und-care",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 200,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "7fb31d10-ff21-410b-9dc2-2d1ad34b9130",
+      "name": "Schwarzkopf GLISS Liquid Silk Spülung",
+      "brand": "Schwarzkopf",
+      "gtins": [
+        {
+          "value": "4015100812350",
+          "canonical_gtin14": "04015100812350"
+        }
+      ],
+      "price_eur": 2.99,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-gliss-liquid-silk-spuelung/p/4015100812350",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-07-03T13:30:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-07-03T13:30:00+00:00"
+    },
+    {
+      "id": "1adb5c17-fca0-4967-a199-756d500b0104",
+      "name": "Schwarzkopf Gliss Conditioner Total Repair",
+      "brand": "Schwarzkopf Gliss",
+      "gtins": [
+        {
+          "value": "4015100812275",
+          "canonical_gtin14": "04015100812275"
+        }
+      ],
+      "price_eur": 2.95,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/p/d/1430910/schwarzkopf-gliss-conditioner-total-repair",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 200,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "9f1ee875-95a2-4ab0-8bc5-23d1f12bd6f9",
+      "name": "Syoss Tiefenspülung Intense Repair",
+      "brand": "Syoss",
+      "gtins": [
+        {
+          "value": "4015100860986",
+          "canonical_gtin14": "04015100860986"
+        }
+      ],
+      "price_eur": 3.49,
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-syoss-tiefenspuelung-intense-repair/p/4015100860986",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 250,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    }
+  ]
+}

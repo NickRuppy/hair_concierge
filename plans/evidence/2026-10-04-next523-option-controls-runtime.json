@@ -1,0 +1,450 @@
+{
+  "mode": "faults",
+  "phase": "transfer",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "manifestSha": "0fdbcab32fbf19cf2f91ffca712c1064ec94b428c20f9866380e8d0040e867d3",
+  "startedAt": "2026-10-04T10:23:45.416Z",
+  "controls": [
+    {
+      "id": "C01-grid",
+      "phase": "transfer",
+      "baseline": "1 pass",
+      "intendedRed": true,
+      "restoredByteExact": true,
+      "restoredGreen": true,
+      "errors": [],
+      "interrupted": null,
+      "before": {
+        "process": {
+          "log": "/tmp/quiz-option-layer-run-OEWwbF/C01-grid-before.tap",
+          "code": 0,
+          "signal": null,
+          "boundedFailure": null,
+          "spawnError": null,
+          "args": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern",
+            "^quiz option card keeps trailing info outside the selectable card button$",
+            "tests/quiz-option-card.test.tsx"
+          ]
+        },
+        "tap": "TAP version 13\n# Subtest: quiz option card keeps trailing info outside the selectable card button\nok 1 - quiz option card keeps trailing info outside the selectable card button\n  ---\n  duration_ms: 9.5505\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 261.440875\n"
+      },
+      "fault": {
+        "process": {
+          "log": "/tmp/quiz-option-layer-run-OEWwbF/C01-grid-fault.tap",
+          "code": 1,
+          "signal": null,
+          "boundedFailure": null,
+          "spawnError": null,
+          "args": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern",
+            "^quiz option card keeps trailing info outside the selectable card button$",
+            "tests/quiz-option-card.test.tsx"
+          ]
+        },
+        "tap": "TAP version 13\n# Subtest: quiz option card keeps trailing info outside the selectable card button\nnot ok 1 - quiz option card keeps trailing info outside the selectable card button\n  ---\n  duration_ms: 10.7255\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/quiz-option-card.test.tsx:2:2772'\n  failureType: 'testCodeFailure'\n  error: |-\n    The input did not match the regular expression /grid-cols-\\[auto_minmax\\(0,1fr\\)_auto\\]/. Input:\n    \n    '<div class=\"animate-fade-in-up\" style=\"animation-delay:0ms\"><div class=\"personal-plan-option-card quiz-card transition duration-200 cursor-pointer\"><button type=\"button\" aria-labelledby=\"_R_0_\" aria-describedby=\"_R_0H1_\" aria-pressed=\"false\" class=\"absolute inset-0 z-0 rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[rgba(var(--brand-plum-rgb),0.35)] disabled:cursor-not-allowed\"></button><div class=\"pointer-events-none relative z-10 grid grid-cols-2 items-center gap-3\"><div class=\"flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-plum-ice)]\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-droplets text-[var(--brand-plum)]\" aria-hidden=\"true\"><path d=\"M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z\"></path><path d=\"M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97\"></path></svg></div><div class=\"flex-1 min-w-0\"><p id=\"_R_0_\" class=\"break-words hyphens-auto text-[15px] font-semibold leading-snug text-[var(--brand-plum-darkest)]\">Conditioner</p><p id=\"_R_0H1_\" class=\"mt-1 text-sm leading-5 text-[var(--text-sub)]\">Pflege nach dem Shampoo</p></div><div class=\"flex shrink-0 items-center justify-end gap-2 pointer-events-auto min-w-[4.25rem]\"><button type=\"button\">i</button><span aria-hidden=\"true\" class=\"h-5 w-5 shrink-0 border border-[var(--brand-plum-light)] bg-white rounded-full\"></span></div></div></div></div>'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual: '<div class=\"animate-fade-in-up\" style=\"animation-delay:0ms\"><div class=\"personal-plan-option-card quiz-card transition duration-200 cursor-pointer\"><button type=\"button\" aria-labelledby=\"_R_0_\" aria-describedby=\"_R_0H1_\" aria-pressed=\"false\" class=\"absolute inset-0 z-0 rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[rgba(var(--brand-plum-rgb),0.35)] disabled:cursor-not-allowed\"></button><div class=\"pointer-events-none relative z-10 grid grid-cols-2 items-center gap-3\"><div class=\"flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-plum-ice)]\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-droplets text-[var(--brand-plum)]\" aria-hidden=\"true\"><path d=\"M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z\"></path><path d=\"M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97\"></path></svg></div><div class=\"flex-1 min-w-0\"><p id=\"_R_0_\" class=\"break-words hyphens-auto text-[15px] font-semibold leading-snug text-[var(--brand-plum-darkest)]\">Conditioner</p><p id=\"_R_0H1_\" class=\"mt-1 text-sm leading-5 text-[var(--text-sub)]\">Pflege nach dem Shampoo</p></div><div class=\"flex shrink-0 items-center justify-end gap-2 pointer-events-auto min-w-[4.25rem]\"><button type=\"button\">i</button><span aria-hidden=\"true\" class=\"h-5 w-5 shrink-0 border border-[var(--brand-plum-light)] bg-white rounded-full\"></span></div></div></div></div>'\n  operator: 'match'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/quiz-option-card.test.tsx:82:10)\n    async Test.run (node:internal/test_runner/test:935:9)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 265.229\n"
+      },
+      "restored": {
+        "process": {
+          "log": "/tmp/quiz-option-layer-run-OEWwbF/C01-grid-restored.tap",
+          "code": 0,
+          "signal": null,
+          "boundedFailure": null,
+          "spawnError": null,
+          "args": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern",
+            "^quiz option card keeps trailing info outside the selectable card button$",
+            "tests/quiz-option-card.test.tsx"
+          ]
+        },
+        "tap": "TAP version 13\n# Subtest: quiz option card keeps trailing info outside the selectable card button\nok 1 - quiz option card keeps trailing info outside the selectable card button\n  ---\n  duration_ms: 9.486\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 231.444417\n"
+      }
+    },
+    {
+      "id": "C02-alignment",
+      "phase": "transfer",
+      "baseline": "1 pass",
+      "intendedRed": true,
+      "restoredByteExact": true,
+      "restoredGreen": true,
+      "errors": [],
+      "interrupted": null,
+      "before": {
+        "process": {
+          "log": "/tmp/quiz-option-layer-run-OEWwbF/C02-alignment-before.tap",
+          "code": 0,
+          "signal": null,
+          "boundedFailure": null,
+          "spawnError": null,
+          "args": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern",
+            "^quiz option card keeps trailing info outside the selectable card button$",
+            "tests/quiz-option-card.test.tsx"
+          ]
+        },
+        "tap": "TAP version 13\n# Subtest: quiz option card keeps trailing info outside the selectable card button\nok 1 - quiz option card keeps trailing info outside the selectable card button\n  ---\n  duration_ms: 9.564083\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 232.986458\n"
+      },
+      "fault": {
+        "process": {
+          "log": "/tmp/quiz-option-layer-run-OEWwbF/C02-alignment-fault.tap",
+          "code": 1,
+          "signal": null,
+          "boundedFailure": null,
+          "spawnError": null,
+          "args": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern",
+            "^quiz option card keeps trailing info outside the selectable card button$",
+            "tests/quiz-option-card.test.tsx"
+          ]
+        },
+        "tap": "TAP version 13\n# Subtest: quiz option card keeps trailing info outside the selectable card button\nnot ok 1 - quiz option card keeps trailing info outside the selectable card button\n  ---\n  duration_ms: 10.899375\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/quiz-option-card.test.tsx:2:2772'\n  failureType: 'testCodeFailure'\n  error: |-\n    The input was expected to not match the regular expression /\\bitems-start\\b/. Input:\n    \n    '<div class=\"animate-fade-in-up\" style=\"animation-delay:0ms\"><div class=\"personal-plan-option-card quiz-card transition duration-200 cursor-pointer\"><button type=\"button\" aria-labelledby=\"_R_0_\" aria-describedby=\"_R_0H1_\" aria-pressed=\"false\" class=\"absolute inset-0 z-0 rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[rgba(var(--brand-plum-rgb),0.35)] disabled:cursor-not-allowed\"></button><div class=\"pointer-events-none relative z-10 grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-3\"><div class=\"flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-plum-ice)]\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-droplets text-[var(--brand-plum)]\" aria-hidden=\"true\"><path d=\"M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z\"></path><path d=\"M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97\"></path></svg></div><div class=\"flex-1 min-w-0\"><p id=\"_R_0_\" class=\"break-words hyphens-auto text-[15px] font-semibold leading-snug text-[var(--brand-plum-darkest)]\">Conditioner</p><p id=\"_R_0H1_\" class=\"mt-1 text-sm leading-5 text-[var(--text-sub)]\">Pflege nach dem Shampoo</p></div><div class=\"flex shrink-0 items-center justify-end gap-2 pointer-events-auto min-w-[4.25rem]\"><button type=\"button\">i</button><span aria-hidden=\"true\" class=\"h-5 w-5 shrink-0 border border-[var(--brand-plum-light)] bg-white rounded-full\"></span></div></div></div></div>'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual: '<div class=\"animate-fade-in-up\" style=\"animation-delay:0ms\"><div class=\"personal-plan-option-card quiz-card transition duration-200 cursor-pointer\"><button type=\"button\" aria-labelledby=\"_R_0_\" aria-describedby=\"_R_0H1_\" aria-pressed=\"false\" class=\"absolute inset-0 z-0 rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[rgba(var(--brand-plum-rgb),0.35)] disabled:cursor-not-allowed\"></button><div class=\"pointer-events-none relative z-10 grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-3\"><div class=\"flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-plum-ice)]\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-droplets text-[var(--brand-plum)]\" aria-hidden=\"true\"><path d=\"M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z\"></path><path d=\"M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97\"></path></svg></div><div class=\"flex-1 min-w-0\"><p id=\"_R_0_\" class=\"break-words hyphens-auto text-[15px] font-semibold leading-snug text-[var(--brand-plum-darkest)]\">Conditioner</p><p id=\"_R_0H1_\" class=\"mt-1 text-sm leading-5 text-[var(--text-sub)]\">Pflege nach dem Shampoo</p></div><div class=\"flex shrink-0 items-center justify-end gap-2 pointer-events-auto min-w-[4.25rem]\"><button type=\"button\">i</button><span aria-hidden=\"true\" class=\"h-5 w-5 shrink-0 border border-[var(--brand-plum-light)] bg-white rounded-full\"></span></div></div></div></div>'\n  operator: 'doesNotMatch'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/quiz-option-card.test.tsx:84:10)\n    async Test.run (node:internal/test_runner/test:935:9)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 271.54075\n"
+      },
+      "restored": {
+        "process": {
+          "log": "/tmp/quiz-option-layer-run-OEWwbF/C02-alignment-restored.tap",
+          "code": 0,
+          "signal": null,
+          "boundedFailure": null,
+          "spawnError": null,
+          "args": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern",
+            "^quiz option card keeps trailing info outside the selectable card button$",
+            "tests/quiz-option-card.test.tsx"
+          ]
+        },
+        "tap": "TAP version 13\n# Subtest: quiz option card keeps trailing info outside the selectable card button\nok 1 - quiz option card keeps trailing info outside the selectable card button\n  ---\n  duration_ms: 9.25825\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 227.612708\n"
+      }
+    },
+    {
+      "id": "C03-rail",
+      "phase": "transfer",
+      "baseline": "1 pass",
+      "intendedRed": true,
+      "restoredByteExact": true,
+      "restoredGreen": true,
+      "errors": [],
+      "interrupted": null,
+      "before": {
+        "process": {
+          "log": "/tmp/quiz-option-layer-run-OEWwbF/C03-rail-before.tap",
+          "code": 0,
+          "signal": null,
+          "boundedFailure": null,
+          "spawnError": null,
+          "args": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern",
+            "^quiz option card keeps trailing info outside the selectable card button$",
+            "tests/quiz-option-card.test.tsx"
+          ]
+        },
+        "tap": "TAP version 13\n# Subtest: quiz option card keeps trailing info outside the selectable card button\nok 1 - quiz option card keeps trailing info outside the selectable card button\n  ---\n  duration_ms: 10.651417\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 263.154292\n"
+      },
+      "fault": {
+        "process": {
+          "log": "/tmp/quiz-option-layer-run-OEWwbF/C03-rail-fault.tap",
+          "code": 1,
+          "signal": null,
+          "boundedFailure": null,
+          "spawnError": null,
+          "args": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern",
+            "^quiz option card keeps trailing info outside the selectable card button$",
+            "tests/quiz-option-card.test.tsx"
+          ]
+        },
+        "tap": "TAP version 13\n# Subtest: quiz option card keeps trailing info outside the selectable card button\nnot ok 1 - quiz option card keeps trailing info outside the selectable card button\n  ---\n  duration_ms: 11.048583\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/quiz-option-card.test.tsx:2:2772'\n  failureType: 'testCodeFailure'\n  error: |-\n    The input did not match the regular expression /min-w-\\[4\\.25rem\\]/. Input:\n    \n    '<div class=\"animate-fade-in-up\" style=\"animation-delay:0ms\"><div class=\"personal-plan-option-card quiz-card transition duration-200 cursor-pointer\"><button type=\"button\" aria-labelledby=\"_R_0_\" aria-describedby=\"_R_0H1_\" aria-pressed=\"false\" class=\"absolute inset-0 z-0 rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[rgba(var(--brand-plum-rgb),0.35)] disabled:cursor-not-allowed\"></button><div class=\"pointer-events-none relative z-10 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3\"><div class=\"flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-plum-ice)]\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-droplets text-[var(--brand-plum)]\" aria-hidden=\"true\"><path d=\"M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z\"></path><path d=\"M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97\"></path></svg></div><div class=\"flex-1 min-w-0\"><p id=\"_R_0_\" class=\"break-words hyphens-auto text-[15px] font-semibold leading-snug text-[var(--brand-plum-darkest)]\">Conditioner</p><p id=\"_R_0H1_\" class=\"mt-1 text-sm leading-5 text-[var(--text-sub)]\">Pflege nach dem Shampoo</p></div><div class=\"flex shrink-0 items-center justify-end gap-2 pointer-events-auto min-w-0\"><button type=\"button\">i</button><span aria-hidden=\"true\" class=\"h-5 w-5 shrink-0 border border-[var(--brand-plum-light)] bg-white rounded-full\"></span></div></div></div></div>'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual: '<div class=\"animate-fade-in-up\" style=\"animation-delay:0ms\"><div class=\"personal-plan-option-card quiz-card transition duration-200 cursor-pointer\"><button type=\"button\" aria-labelledby=\"_R_0_\" aria-describedby=\"_R_0H1_\" aria-pressed=\"false\" class=\"absolute inset-0 z-0 rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[rgba(var(--brand-plum-rgb),0.35)] disabled:cursor-not-allowed\"></button><div class=\"pointer-events-none relative z-10 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3\"><div class=\"flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-plum-ice)]\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-droplets text-[var(--brand-plum)]\" aria-hidden=\"true\"><path d=\"M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z\"></path><path d=\"M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97\"></path></svg></div><div class=\"flex-1 min-w-0\"><p id=\"_R_0_\" class=\"break-words hyphens-auto text-[15px] font-semibold leading-snug text-[var(--brand-plum-darkest)]\">Conditioner</p><p id=\"_R_0H1_\" class=\"mt-1 text-sm leading-5 text-[var(--text-sub)]\">Pflege nach dem Shampoo</p></div><div class=\"flex shrink-0 items-center justify-end gap-2 pointer-events-auto min-w-0\"><button type=\"button\">i</button><span aria-hidden=\"true\" class=\"h-5 w-5 shrink-0 border border-[var(--brand-plum-light)] bg-white rounded-full\"></span></div></div></div></div>'\n  operator: 'match'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/quiz-option-card.test.tsx:85:10)\n    async Test.run (node:internal/test_runner/test:935:9)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 257.273291\n"
+      },
+      "restored": {
+        "process": {
+          "log": "/tmp/quiz-option-layer-run-OEWwbF/C03-rail-restored.tap",
+          "code": 0,
+          "signal": null,
+          "boundedFailure": null,
+          "spawnError": null,
+          "args": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern",
+            "^quiz option card keeps trailing info outside the selectable card button$",
+            "tests/quiz-option-card.test.tsx"
+          ]
+        },
+        "tap": "TAP version 13\n# Subtest: quiz option card keeps trailing info outside the selectable card button\nok 1 - quiz option card keeps trailing info outside the selectable card button\n  ---\n  duration_ms: 9.374666\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 232.553834\n"
+      }
+    },
+    {
+      "id": "C03-justify",
+      "phase": "transfer",
+      "baseline": "1 pass",
+      "intendedRed": true,
+      "restoredByteExact": true,
+      "restoredGreen": true,
+      "errors": [],
+      "interrupted": null,
+      "before": {
+        "process": {
+          "log": "/tmp/quiz-option-layer-run-OEWwbF/C03-justify-before.tap",
+          "code": 0,
+          "signal": null,
+          "boundedFailure": null,
+          "spawnError": null,
+          "args": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern",
+            "^quiz option card keeps trailing info outside the selectable card button$",
+            "tests/quiz-option-card.test.tsx"
+          ]
+        },
+        "tap": "TAP version 13\n# Subtest: quiz option card keeps trailing info outside the selectable card button\nok 1 - quiz option card keeps trailing info outside the selectable card button\n  ---\n  duration_ms: 9.438834\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 232.901333\n"
+      },
+      "fault": {
+        "process": {
+          "log": "/tmp/quiz-option-layer-run-OEWwbF/C03-justify-fault.tap",
+          "code": 1,
+          "signal": null,
+          "boundedFailure": null,
+          "spawnError": null,
+          "args": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern",
+            "^quiz option card keeps trailing info outside the selectable card button$",
+            "tests/quiz-option-card.test.tsx"
+          ]
+        },
+        "tap": "TAP version 13\n# Subtest: quiz option card keeps trailing info outside the selectable card button\nnot ok 1 - quiz option card keeps trailing info outside the selectable card button\n  ---\n  duration_ms: 10.800542\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/quiz-option-card.test.tsx:2:2772'\n  failureType: 'testCodeFailure'\n  error: |-\n    The input did not match the regular expression /\\bjustify-end\\b/. Input:\n    \n    '<div class=\"animate-fade-in-up\" style=\"animation-delay:0ms\"><div class=\"personal-plan-option-card quiz-card transition duration-200 cursor-pointer\"><button type=\"button\" aria-labelledby=\"_R_0_\" aria-describedby=\"_R_0H1_\" aria-pressed=\"false\" class=\"absolute inset-0 z-0 rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[rgba(var(--brand-plum-rgb),0.35)] disabled:cursor-not-allowed\"></button><div class=\"pointer-events-none relative z-10 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3\"><div class=\"flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-plum-ice)]\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-droplets text-[var(--brand-plum)]\" aria-hidden=\"true\"><path d=\"M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z\"></path><path d=\"M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97\"></path></svg></div><div class=\"flex-1 min-w-0\"><p id=\"_R_0_\" class=\"break-words hyphens-auto text-[15px] font-semibold leading-snug text-[var(--brand-plum-darkest)]\">Conditioner</p><p id=\"_R_0H1_\" class=\"mt-1 text-sm leading-5 text-[var(--text-sub)]\">Pflege nach dem Shampoo</p></div><div class=\"flex shrink-0 items-center justify-start gap-2 pointer-events-auto min-w-[4.25rem]\"><button type=\"button\">i</button><span aria-hidden=\"true\" class=\"h-5 w-5 shrink-0 border border-[var(--brand-plum-light)] bg-white rounded-full\"></span></div></div></div></div>'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual: '<div class=\"animate-fade-in-up\" style=\"animation-delay:0ms\"><div class=\"personal-plan-option-card quiz-card transition duration-200 cursor-pointer\"><button type=\"button\" aria-labelledby=\"_R_0_\" aria-describedby=\"_R_0H1_\" aria-pressed=\"false\" class=\"absolute inset-0 z-0 rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[rgba(var(--brand-plum-rgb),0.35)] disabled:cursor-not-allowed\"></button><div class=\"pointer-events-none relative z-10 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3\"><div class=\"flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-plum-ice)]\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-droplets text-[var(--brand-plum)]\" aria-hidden=\"true\"><path d=\"M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z\"></path><path d=\"M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97\"></path></svg></div><div class=\"flex-1 min-w-0\"><p id=\"_R_0_\" class=\"break-words hyphens-auto text-[15px] font-semibold leading-snug text-[var(--brand-plum-darkest)]\">Conditioner</p><p id=\"_R_0H1_\" class=\"mt-1 text-sm leading-5 text-[var(--text-sub)]\">Pflege nach dem Shampoo</p></div><div class=\"flex shrink-0 items-center justify-start gap-2 pointer-events-auto min-w-[4.25rem]\"><button type=\"button\">i</button><span aria-hidden=\"true\" class=\"h-5 w-5 shrink-0 border border-[var(--brand-plum-light)] bg-white rounded-full\"></span></div></div></div></div>'\n  operator: 'match'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/quiz-option-card.test.tsx:86:10)\n    async Test.run (node:internal/test_runner/test:935:9)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 255.728459\n"
+      },
+      "restored": {
+        "process": {
+          "log": "/tmp/quiz-option-layer-run-OEWwbF/C03-justify-restored.tap",
+          "code": 0,
+          "signal": null,
+          "boundedFailure": null,
+          "spawnError": null,
+          "args": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern",
+            "^quiz option card keeps trailing info outside the selectable card button$",
+            "tests/quiz-option-card.test.tsx"
+          ]
+        },
+        "tap": "TAP version 13\n# Subtest: quiz option card keeps trailing info outside the selectable card button\nok 1 - quiz option card keeps trailing info outside the selectable card button\n  ---\n  duration_ms: 9.635916\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 228.65625\n"
+      }
+    },
+    {
+      "id": "C03-label",
+      "phase": "transfer",
+      "baseline": "1 pass",
+      "intendedRed": true,
+      "restoredByteExact": true,
+      "restoredGreen": true,
+      "errors": [],
+      "interrupted": null,
+      "before": {
+        "process": {
+          "log": "/tmp/quiz-option-layer-run-OEWwbF/C03-label-before.tap",
+          "code": 0,
+          "signal": null,
+          "boundedFailure": null,
+          "spawnError": null,
+          "args": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern",
+            "^quiz option card keeps trailing info outside the selectable card button$",
+            "tests/quiz-option-card.test.tsx"
+          ]
+        },
+        "tap": "TAP version 13\n# Subtest: quiz option card keeps trailing info outside the selectable card button\nok 1 - quiz option card keeps trailing info outside the selectable card button\n  ---\n  duration_ms: 9.446625\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 228.28225\n"
+      },
+      "fault": {
+        "process": {
+          "log": "/tmp/quiz-option-layer-run-OEWwbF/C03-label-fault.tap",
+          "code": 1,
+          "signal": null,
+          "boundedFailure": null,
+          "spawnError": null,
+          "args": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern",
+            "^quiz option card keeps trailing info outside the selectable card button$",
+            "tests/quiz-option-card.test.tsx"
+          ]
+        },
+        "tap": "TAP version 13\n# Subtest: quiz option card keeps trailing info outside the selectable card button\nnot ok 1 - quiz option card keeps trailing info outside the selectable card button\n  ---\n  duration_ms: 10.554792\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/quiz-option-card.test.tsx:2:2772'\n  failureType: 'testCodeFailure'\n  error: |-\n    The input did not match the regular expression /<p id=\"[^\"]+\" class=\"break-words hyphens-auto/. Input:\n    \n    '<div class=\"animate-fade-in-up\" style=\"animation-delay:0ms\"><div class=\"personal-plan-option-card quiz-card transition duration-200 cursor-pointer\"><button type=\"button\" aria-labelledby=\"_R_0_\" aria-describedby=\"_R_0H1_\" aria-pressed=\"false\" class=\"absolute inset-0 z-0 rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[rgba(var(--brand-plum-rgb),0.35)] disabled:cursor-not-allowed\"></button><div class=\"pointer-events-none relative z-10 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3\"><div class=\"flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-plum-ice)]\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-droplets text-[var(--brand-plum)]\" aria-hidden=\"true\"><path d=\"M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z\"></path><path d=\"M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97\"></path></svg></div><div class=\"flex-1 min-w-0\"><p id=\"_R_0_\" class=\"hyphens-auto text-[15px] font-semibold leading-snug text-[var(--brand-plum-darkest)]\">Conditioner</p><p id=\"_R_0H1_\" class=\"mt-1 text-sm leading-5 text-[var(--text-sub)]\">Pflege nach dem Shampoo</p></div><div class=\"flex shrink-0 items-center justify-end gap-2 pointer-events-auto min-w-[4.25rem]\"><button type=\"button\">i</button><span aria-hidden=\"true\" class=\"h-5 w-5 shrink-0 border border-[var(--brand-plum-light)] bg-white rounded-full\"></span></div></div></div></div>'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual: '<div class=\"animate-fade-in-up\" style=\"animation-delay:0ms\"><div class=\"personal-plan-option-card quiz-card transition duration-200 cursor-pointer\"><button type=\"button\" aria-labelledby=\"_R_0_\" aria-describedby=\"_R_0H1_\" aria-pressed=\"false\" class=\"absolute inset-0 z-0 rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[rgba(var(--brand-plum-rgb),0.35)] disabled:cursor-not-allowed\"></button><div class=\"pointer-events-none relative z-10 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3\"><div class=\"flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-plum-ice)]\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-droplets text-[var(--brand-plum)]\" aria-hidden=\"true\"><path d=\"M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z\"></path><path d=\"M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97\"></path></svg></div><div class=\"flex-1 min-w-0\"><p id=\"_R_0_\" class=\"hyphens-auto text-[15px] font-semibold leading-snug text-[var(--brand-plum-darkest)]\">Conditioner</p><p id=\"_R_0H1_\" class=\"mt-1 text-sm leading-5 text-[var(--text-sub)]\">Pflege nach dem Shampoo</p></div><div class=\"flex shrink-0 items-center justify-end gap-2 pointer-events-auto min-w-[4.25rem]\"><button type=\"button\">i</button><span aria-hidden=\"true\" class=\"h-5 w-5 shrink-0 border border-[var(--brand-plum-light)] bg-white rounded-full\"></span></div></div></div></div>'\n  operator: 'match'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/quiz-option-card.test.tsx:87:10)\n    async Test.run (node:internal/test_runner/test:935:9)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 258.781459\n"
+      },
+      "restored": {
+        "process": {
+          "log": "/tmp/quiz-option-layer-run-OEWwbF/C03-label-restored.tap",
+          "code": 0,
+          "signal": null,
+          "boundedFailure": null,
+          "spawnError": null,
+          "args": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern",
+            "^quiz option card keeps trailing info outside the selectable card button$",
+            "tests/quiz-option-card.test.tsx"
+          ]
+        },
+        "tap": "TAP version 13\n# Subtest: quiz option card keeps trailing info outside the selectable card button\nok 1 - quiz option card keeps trailing info outside the selectable card button\n  ---\n  duration_ms: 9.536042\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 232.505959\n"
+      }
+    },
+    {
+      "id": "C04-portrait",
+      "phase": "transfer",
+      "baseline": "1 pass",
+      "intendedRed": true,
+      "restoredByteExact": true,
+      "restoredGreen": true,
+      "errors": [],
+      "interrupted": null,
+      "before": {
+        "process": {
+          "log": "/tmp/quiz-option-layer-run-OEWwbF/C04-portrait-before.tap",
+          "code": 0,
+          "signal": null,
+          "boundedFailure": null,
+          "spawnError": null,
+          "args": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern",
+            "^grid portrait cards fit the complete silhouette to the fixed media height$",
+            "tests/quiz-option-card.test.tsx"
+          ]
+        },
+        "tap": "TAP version 13\n# Subtest: grid portrait cards fit the complete silhouette to the fixed media height\nok 1 - grid portrait cards fit the complete silhouette to the fixed media height\n  ---\n  duration_ms: 9.334125\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 234.355042\n"
+      },
+      "fault": {
+        "process": {
+          "log": "/tmp/quiz-option-layer-run-OEWwbF/C04-portrait-fault.tap",
+          "code": 1,
+          "signal": null,
+          "boundedFailure": null,
+          "spawnError": null,
+          "args": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern",
+            "^grid portrait cards fit the complete silhouette to the fixed media height$",
+            "tests/quiz-option-card.test.tsx"
+          ]
+        },
+        "tap": "TAP version 13\n# Subtest: grid portrait cards fit the complete silhouette to the fixed media height\nnot ok 1 - grid portrait cards fit the complete silhouette to the fixed media height\n  ---\n  duration_ms: 11.424709\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/quiz-option-card.test.tsx:2:5365'\n  failureType: 'testCodeFailure'\n  error: |-\n    The input did not match the regular expression /class=\"flex h-full w-full items-center justify-center scale-\\[0\\.9\\]\" data-hair-portrait-art=\"true\"/. Input:\n    \n    '<div class=\"animate-fade-in-up\" style=\"animation-delay:0ms\"><button aria-describedby=\"_R_1H1_\" aria-labelledby=\"_R_1_\" aria-pressed=\"false\" class=\"personal-plan-option-card group relative flex h-[184px] w-full flex-col overflow-hidden rounded-2xl border bg-white text-left shadow-[0_12px_34px_-28px_rgba(var(--brand-plum-rgb),0.6)] transition duration-200 focus:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 sm:h-full sm:min-h-[184px] [@media(max-height:700px)]:h-[152px] [@media(max-height:700px)]:min-h-0 focus-visible:ring-[var(--brand-plum)] border-[var(--brand-plum-light)] hover:-translate-y-0.5 hover:border-[var(--brand-plum)]\" data-hair-length-card=\"true\" data-selection-variant=\"regular\" type=\"button\"><span class=\"relative h-[140px] w-full shrink-0 overflow-hidden bg-[var(--brand-plum-ice)] [@media(max-height:700px)]:h-28\" data-hair-portrait-media=\"true\"><span class=\"flex h-full w-full items-center justify-center scale-[1]\" data-hair-portrait-art=\"true\"><div class=\"relative aspect-square w-full p-2 h-full !w-auto\"><svg aria-hidden=\"true\" class=\"absolute inset-0 h-full w-full overflow-visible\" preserveAspectRatio=\"xMidYMid meet\" viewBox=\"0 0 1024 1024\"><path class=\"fill-none stroke-[#8f84a8] stroke-[7] [stroke-linecap:round] [stroke-linejoin:round]\" d=\"M448 560 C446 610 438 652 424 684\"></path><path class=\"fill-none stroke-[#8f84a8] stroke-[7] [stroke-linecap:round] [stroke-linejoin:round]\" d=\"M576 560 C578 610 586 652 600 684\"></path><path class=\"fill-none stroke-[#8f84a8] stroke-[7] [stroke-linecap:round] [stroke-linejoin:round]\" d=\"M424 684 C330 704 240 736 186 780 C160 802 140 836 128 880\"></path><path class=\"fill-none stroke-[#8f84a8] stroke-[7] [stroke-linecap:round] [stroke-linejoin:round]\" d=\"M600 684 C694 704 784 736 838 780 C864 802 884 836 896 880\"></path></svg><img alt=\"\" loading=\"lazy\" width=\"720\" height=\"720\" decoding=\"async\" data-nimg=\"1\" class=\"relative block h-full w-full object-contain\" style=\"color:transparent\" src=\"/images/quiz/hair-portrait/wavy-very-long.webp\"/></div></span></span><span class=\"flex h-11 min-w-0 flex-1 items-center gap-3 px-3 py-1.5 sm:h-auto sm:items-start sm:p-4 [@media(max-height:700px)]:h-10 [@media(max-height:700px)]:px-2.5 [@media(max-height:700px)]:py-1\"><span class=\"min-w-0 flex-1\"><span class=\"block break-words hyphens-auto text-[15px] font-semibold leading-snug text-[var(--brand-plum-darkest)]\" id=\"_R_1_\">Sehr lang</span><span class=\"mt-1 block text-sm leading-5 text-[var(--text-sub)] hidden sm:block\" id=\"_R_1H1_\">Taille oder l\u00e4nger.</span></span><span aria-hidden=\"true\" class=\"personal-plan-option-check flex shrink-0 items-center justify-center rounded-full border h-5 w-5 border-[var(--brand-plum-light)] bg-white text-transparent\"><svg class=\"h-3 w-3\" fill=\"none\" viewBox=\"0 0 12 12\"><path d=\"M2.5 6L5 8.5L9.5 4\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1.5\"></path></svg></span></span></button></div>'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual: '<div class=\"animate-fade-in-up\" style=\"animation-delay:0ms\"><button aria-describedby=\"_R_1H1_\" aria-labelledby=\"_R_1_\" aria-pressed=\"false\" class=\"personal-plan-option-card group relative flex h-[184px] w-full flex-col overflow-hidden rounded-2xl border bg-white text-left shadow-[0_12px_34px_-28px_rgba(var(--brand-plum-rgb),0.6)] transition duration-200 focus:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 sm:h-full sm:min-h-[184px] [@media(max-height:700px)]:h-[152px] [@media(max-height:700px)]:min-h-0 focus-visible:ring-[var(--brand-plum)] border-[var(--brand-plum-light)] hover:-translate-y-0.5 hover:border-[var(--brand-plum)]\" data-hair-length-card=\"true\" data-selection-variant=\"regular\" type=\"button\"><span class=\"relative h-[140px] w-full shrink-0 overflow-hidden bg-[var(--brand-plum-ice)] [@media(max-height:700px)]:h-28\" data-hair-portrait-media=\"true\"><span class=\"flex h-full w-full items-center justify-center scale-[1]\" data-hair-portrait-art=\"true\"><div class=\"relative aspect-square w-full p-2 h-full !w-auto\"><svg aria-hidden=\"true\" class=\"absolute inset-0 h-full w-full overflow-visible\" preserveAspectRatio=\"xMidYMid meet\" viewBox=\"0 0 1024 1024\"><path class=\"fill-none stroke-[#8f84a8] stroke-[7] [stroke-linecap:round] [stroke-linejoin:round]\" d=\"M448 560 C446 610 438 652 424 684\"></path><path class=\"fill-none stroke-[#8f84a8] stroke-[7] [stroke-linecap:round] [stroke-linejoin:round]\" d=\"M576 560 C578 610 586 652 600 684\"></path><path class=\"fill-none stroke-[#8f84a8] stroke-[7] [stroke-linecap:round] [stroke-linejoin:round]\" d=\"M424 684 C330 704 240 736 186 780 C160 802 140 836 128 880\"></path><path class=\"fill-none stroke-[#8f84a8] stroke-[7] [stroke-linecap:round] [stroke-linejoin:round]\" d=\"M600 684 C694 704 784 736 838 780 C864 802 884 836 896 880\"></path></svg><img alt=\"\" loading=\"lazy\" width=\"720\" height=\"720\" decoding=\"async\" data-nimg=\"1\" class=\"relative block h-full w-full object-contain\" style=\"color:transparent\" src=\"/images/quiz/hair-portrait/wavy-very-long.webp\"/></div></span></span><span class=\"flex h-11 min-w-0 flex-1 items-center gap-3 px-3 py-1.5 sm:h-auto sm:items-start sm:p-4 [@media(max-height:700px)]:h-10 [@media(max-height:700px)]:px-2.5 [@media(max-height:700px)]:py-1\"><span class=\"min-w-0 flex-1\"><span class=\"block break-words hyphens-auto text-[15px] font-semibold leading-snug text-[var(--brand-plum-darkest)]\" id=\"_R_1_\">Sehr lang</span><span class=\"mt-1 block text-sm leading-5 text-[var(--text-sub)] hidden sm:block\" id=\"_R_1H1_\">Taille oder l\u00e4nger.</span></span><span aria-hidden=\"true\" class=\"personal-plan-option-check flex shrink-0 items-center justify-center rounded-full border h-5 w-5 border-[var(--brand-plum-light)] bg-white text-transparent\"><svg class=\"h-3 w-3\" fill=\"none\" viewBox=\"0 0 12 12\"><path d=\"M2.5 6L5 8.5L9.5 4\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1.5\"></path></svg></span></span></button></div>'\n  operator: 'match'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/quiz-option-card.test.tsx:142:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 262.950625\n"
+      },
+      "restored": {
+        "process": {
+          "log": "/tmp/quiz-option-layer-run-OEWwbF/C04-portrait-restored.tap",
+          "code": 0,
+          "signal": null,
+          "boundedFailure": null,
+          "spawnError": null,
+          "args": [
+            "--import",
+            "./tests/server-only-register.cjs",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-reporter=tap",
+            "--test-name-pattern",
+            "^grid portrait cards fit the complete silhouette to the fixed media height$",
+            "tests/quiz-option-card.test.tsx"
+          ]
+        },
+        "tap": "TAP version 13\n# Subtest: grid portrait cards fit the complete silhouette to the fixed media height\nok 1 - grid portrait cards fit the complete silhouette to the fixed media height\n  ---\n  duration_ms: 9.294125\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 229.561459\n"
+      }
+    }
+  ],
+  "completedAt": "2026-10-04T10:24:00.430Z",
+  "success": true,
+  "mainInspectedIntendedFailures": true
+}

@@ -65,7 +65,7 @@ function deriveLaneHints(damage: DamageAssessment): {
 
 export interface BondbuilderFitSpec {
   bond_repair_intensity: "maintenance" | "intensive" | null
-  application_mode: "pre_shampoo" | "post_wash_leave_in" | null
+  application_mode: "pre_shampoo" | "post_wash_leave_in" | "bedtime_leave_in" | null
   bond_repair_axis?: "disulfide_crosslink" | "peptide_chain" | null
   treatment_mode?: "rinse_out" | "leave_in" | null
   product_format?:

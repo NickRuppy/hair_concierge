@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import React, { type ReactElement, type ReactNode } from "react"
 
+import { BudgetQuestion } from "@/components/budget/budget-question"
 import { BottomSheetContent } from "@/components/ui/bottom-sheet"
 import { PremiumSheet } from "@/components/premium-sheet/premium-sheet"
 import { PREMIUM_SHEET_PURCHASE_COPY } from "@/lib/premium-sheet/purchase-copy"
@@ -905,4 +906,113 @@ test("R3: a rate-limited poll surfaces a non-terminal notice and never fails the
       0,
     "the rate limit is surfaced, not silently swallowed",
   )
+})
+
+/* ------------------------------------------------------------------------- *
+ * C7 — the Routine waits for the buyer's budget answer.
+ * ------------------------------------------------------------------------- */
+
+function budgetQuestionIn(tree: ReactNode): AnyElement | undefined {
+  return sheetParts(tree).flatMap((part) =>
+    findAll(part, (element) => element.type === BudgetQuestion),
+  )[0]
+}
+
+test("C7: budget_required confirms the unlock, asks the budget, and completes again after the save", async () => {
+  // Keyed on the saved budget rather than a call counter: earlier suites' poll timers may
+  // still fire into this test's routed fetch.
+  let budgetSaved = false
+  let completionsAfterSave = 0
+  const sheet = await mountSheet({
+    completion: () => {
+      if (!budgetSaved) return json({ status: "budget_required" })
+      completionsAfterSave += 1
+      return json({ status: "complete", routineReady: true })
+    },
+    search: `?freemium_checkout=${SESSION_ID}`,
+    open: true,
+    context: REMEMBERED,
+  })
+
+  // The confirmation moment comes first: access applied, „Alles freigeschaltet“ — and the
+  // sheet stays open on the budget question.
+  assert.deepEqual(sheet.toasts, [{ title: PREMIUM_SHEET_PURCHASE_COPY.unlockToast }])
+  assert.ok(sheet.calls.includes("unlocked"))
+  // The server refresh would swap the gated subtree (this sheet included) for the
+  // unavailable state mid-question, so it waits for the final unlock.
+  assert.equal(sheet.calls.includes("refresh"), false, "no refresh while the budget is asked")
+  assert.equal(sheet.open, true)
+  const question = budgetQuestionIn(sheet.tree)
+  assert.ok(question, "the budget question is shown")
+  assert.equal(byData(sheet.tree, "data-premium-sheet-recheck").length, 0, "nothing to poll")
+
+  // Saved → the same Session is completed again, which now accepts the Routine.
+  budgetSaved = true
+  await question.props.onSaved({ kind: "capped", limitEur: 15, allowExceptions: false })
+  await sheet.settle()
+  await sheet.settle()
+  assert.ok(completionsAfterSave >= 1)
+  assert.equal(sheet.open, false)
+  assert.ok(sheet.calls.includes("refresh"), "the final unlock refreshes the gates once")
+  // One confirmation for one purchase — no second toast on the final unlock.
+  assert.deepEqual(sheet.toasts, [{ title: PREMIUM_SHEET_PURCHASE_COPY.unlockToast }])
+})
+
+test("C7: leaving the sheet while the budget is open still applies the entitlement refresh", async () => {
+  const sheet = await mountSheet({
+    completion: () => json({ status: "budget_required" }),
+    search: `?freemium_checkout=${SESSION_ID}`,
+    open: true,
+    context: REMEMBERED,
+  })
+  assert.equal(sheet.calls.includes("refresh"), false)
+  const dismiss = byData(sheet.tree, "data-premium-sheet-dismiss")[0]
+  dismiss.props.onClick()
+  assert.equal(sheet.open, false)
+  assert.equal(
+    sheet.calls.filter((call) => call === "refresh").length,
+    1,
+    "closing refreshes once so the paid access shows",
+  )
+})
+
+test("C7: cancelling the budget question leaves a short line and the question — no dead end", async () => {
+  const sheet = await mountSheet({
+    completion: () => json({ status: "budget_required" }),
+    search: `?freemium_checkout=${SESSION_ID}`,
+    open: true,
+    context: REMEMBERED,
+  })
+  const first = budgetQuestionIn(sheet.tree)
+  assert.ok(first?.props.onCancel, "the first question offers „Abbrechen“")
+  first.props.onCancel()
+  await sheet.settle()
+
+  const line = byData(sheet.tree, "data-premium-sheet-budget-cancelled")[0]
+  assert.equal(textContent(line), PREMIUM_SHEET_PURCHASE_COPY.budgetCancelled)
+  assert.equal(
+    textContent(line),
+    "Deine Routine erstellen wir, sobald du dein Budget angegeben hast.",
+  )
+  const again = budgetQuestionIn(sheet.tree)
+  assert.ok(again, "the budget action stays available")
+  assert.equal(again.props.onCancel, undefined)
+  // Money moved: no plan rows, no retry CTA, and the escape still closes the sheet.
+  assert.equal(byData(sheet.tree, "data-premium-sheet-plans").length, 0)
+  assert.equal(byData(sheet.tree, "data-premium-sheet-cta").length, 0)
+  assert.equal(byData(sheet.tree, "data-premium-sheet-dismiss").length, 1)
+})
+
+test("C7: a redirect return that lands on budget_required reopens the sheet on the question", async () => {
+  const sheet = await mountSheet({
+    completion: () => json({ status: "budget_required" }),
+    search: `?freemium_checkout=${SESSION_ID}`,
+    storage: memoryStorage({
+      "chaarlie.premium-sheet.checkout-context": JSON.stringify(REMEMBERED),
+    }),
+    open: false,
+    context: null,
+  })
+  assert.ok(sheet.calls.includes("requestOpen"))
+  assert.equal(sheet.open, true)
 })

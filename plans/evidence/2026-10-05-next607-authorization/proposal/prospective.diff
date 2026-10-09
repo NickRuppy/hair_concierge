@@ -1,0 +1,353 @@
+--- a/src/lib/funnel/server.ts
++++ b/src/lib/funnel/server.ts
+@@ -457,91 +457,13 @@
+   }
+ }
+ 
+-export type PersonalPlanOneTimeCheckoutAuthorization = {
+-  sessionId: string
+-  leadId: string
+-  visitorId: string
+-  packageKey: "meta_personal_plan_v1"
+-  offerVariant: "personal-plan-one-time-v1"
+-  issuedAt: number
+-  isInternalTest: boolean
+-}
+-
+-export class PersonalPlanOneTimeCheckoutAuthorizationError extends Error {
+-  constructor(
+-    readonly reason: "lookup_failed" | "not_authorized",
+-    options?: ErrorOptions,
+-  ) {
+-    super(
+-      reason === "lookup_failed"
+-        ? "Personal-plan one-time checkout authorization lookup failed"
+-        : "Personal-plan one-time checkout is not authorized",
+-      options,
+-    )
+-    this.name = "PersonalPlanOneTimeCheckoutAuthorizationError"
+-  }
+-}
+-
+-type PersonalPlanOneTimeCheckoutSession = {
+-  id: string
+-  lead_id: string | null
+-  visitor_id: string
+-  package_key: string
+-  offer_variant: string | null
+-  offer_viewed_at: string | null
+-  first_seen_at: string
+-  is_internal_test: boolean
+-}
+-
+-export async function assertPersonalPlanOneTimeCheckoutAuthorized(input: {
+-  leadId: string
+-  funnelSessionId?: string | null
+-  fetchSession?: () => PromiseLike<{
+-    data: PersonalPlanOneTimeCheckoutSession | null
+-    error: unknown
+-  }>
+-}): Promise<PersonalPlanOneTimeCheckoutAuthorization> {
+-  const fetchSession =
+-    input.fetchSession ??
+-    (() => {
+-      let query = createAdminClient()
+-        .from("funnel_sessions")
+-        .select(
+-          "id, lead_id, visitor_id, package_key, offer_variant, offer_viewed_at, first_seen_at, is_internal_test",
+-        )
+-        .eq("lead_id", input.leadId)
+-        .eq("package_key", PERSONAL_PLAN_PRICING_EXPERIMENT.packageKey)
+-        .eq("offer_variant", "personal-plan-one-time-v1")
+-        .order("first_seen_at", { ascending: false })
+-        .limit(1)
+-      if (input.funnelSessionId) query = query.eq("id", input.funnelSessionId)
+-      return query.maybeSingle()
+-    })
+-  const { data, error } = await fetchSession()
+-  if (error) {
+-    throw new PersonalPlanOneTimeCheckoutAuthorizationError("lookup_failed", { cause: error })
+-  }
+-  if (
+-    !data ||
+-    data.id !== (input.funnelSessionId ?? data.id) ||
+-    data.lead_id !== input.leadId ||
+-    data.package_key !== PERSONAL_PLAN_PRICING_EXPERIMENT.packageKey ||
+-    data.offer_variant !== "personal-plan-one-time-v1" ||
+-    !data.offer_viewed_at ||
+-    !data.visitor_id ||
+-    !Number.isFinite(Date.parse(data.first_seen_at))
+-  )
+-    throw new PersonalPlanOneTimeCheckoutAuthorizationError("not_authorized")
+-  return {
+-    sessionId: data.id,
+-    leadId: input.leadId,
+-    visitorId: data.visitor_id,
+-    packageKey: PERSONAL_PLAN_PRICING_EXPERIMENT.packageKey,
+-    offerVariant: "personal-plan-one-time-v1",
+-    issuedAt: Date.parse(data.first_seen_at),
+-    isInternalTest: data.is_internal_test,
+-  }
+-}
++
++
++
++
++
++
++
+ 
+ export async function resolvePendingFunnelTouch(
+   request: NextRequest,
+--- a/src/app/api/stripe/create-checkout-session/route.ts
++++ b/src/app/api/stripe/create-checkout-session/route.ts
+@@ -15,8 +15,6 @@
+ import type { FunnelCookieContext } from "@/lib/funnel/cookie"
+ import {
+   recordFunnelEvent,
+-  assertPersonalPlanOneTimeCheckoutAuthorized,
+-  PersonalPlanOneTimeCheckoutAuthorizationError,
+   resolveFunnelCookieContext,
+   resolveFunnelContextForLead,
+   lookupFunnelContextForLead,
+@@ -37,7 +35,6 @@
+ } from "@/lib/freemium/checkout-metadata"
+ import {
+   bindPersonalPlanOneTimeConsentProviderReference,
+-  createPersonalPlanOneTimeCheckoutConsent,
+ } from "@/lib/billing/personal-plan-one-time-consents"
+ import { getStripe, getStripePriceId, resolveStripePriceId } from "@/lib/stripe/client"
+ import { buildStripeCheckoutSessionParams } from "@/lib/stripe/checkout-session-params"
+@@ -619,143 +616,10 @@
+       adminSupabase ??= createBillingAdminClient()
+       return adminSupabase
+     }
+-    let oneTimeConsentId: string | null = null
+-    let oneTimeProviderLocked: "stripe" | null = null
+-
+-    if (isOneTimePurchase) {
+-      // Re-fetches the persisted arm; browser fields only select this guarded path.
+-      let authorization
+-      try {
+-        authorization = await assertPersonalPlanOneTimeCheckoutAuthorized({
+-          leadId: leadId!,
+-          funnelSessionId,
+-        })
+-      } catch (error) {
+-        if (
+-          !(error instanceof PersonalPlanOneTimeCheckoutAuthorizationError) ||
+-          error.reason !== "not_authorized"
+-        ) {
+-          throw error
+-        }
+-        return isPreparation
+-          ? await preparedCheckoutUnavailable({
+-              ...preparedControlContext(),
+-              cause: "authorization_unavailable",
+-            })
+-          : NextResponse.json({ error: "not found" }, { status: 404 })
+-      }
+-      checkoutIsInternalTest = authorization.isInternalTest
+-      if (isPreparation) {
+-        const { data: existing, error: lookupError } = await getAdminSupabase()
+-          .from("personal_plan_one_time_checkout_consents")
+-          .select("id, stripe_checkout_session_id, paypal_order_id")
+-          .eq("lead_id", authorization.leadId)
+-          .eq("funnel_session_id", authorization.sessionId)
+-          .eq("product_kind", PERSONAL_PLAN_ONCE_KIND)
+-          .maybeSingle()
+-        if (lookupError) throw lookupError
+-        if (existing?.paypal_order_id) {
+-          await preparedCheckoutProviderLocked(preparedControlContext(), "paypal")
+-          return NextResponse.json(
+-            { error: "payment provider already selected", provider_locked: "paypal" },
+-            { status: 409 },
+-          )
+-        }
+-        if (existing?.stripe_checkout_session_id) {
+-          oneTimeProviderLocked = "stripe"
+-          const existingSession = await getStripe().checkout.sessions.retrieve(
+-            existing.stripe_checkout_session_id,
+-          )
+-          const recovery = classifyOneTimeStripeSessionRecovery(existingSession)
+-          if (recovery.type === "reuse") {
+-            return NextResponse.json({
+-              status: "recovered",
+-              client_secret: recovery.clientSecret,
+-              session_id: existingSession.id,
+-              expires_at: preparedCheckoutApplicationExpiresAt(existingSession.expires_at),
+-              provider_locked: "stripe",
+-            })
+-          }
+-          if (recovery.type === "complete") {
+-            return NextResponse.json({ error: "checkout already completed" }, { status: 409 })
+-          }
+-          if (recovery.type !== "replace") {
+-            throw new Error("Existing one-time Stripe Session is not recoverable")
+-          }
+-        }
+-      } else {
+-        try {
+-          const consent = await createPersonalPlanOneTimeCheckoutConsent(getAdminSupabase(), {
+-            leadId: authorization.leadId,
+-            funnelSessionId: authorization.sessionId,
+-            offerVariant: authorization.offerVariant,
+-            userId: authenticatedUserId ?? null,
+-          })
+-          oneTimeConsentId = consent.id
+-        } catch (error) {
+-          // A retry must recover the immutable evidence/session, never create a second consent.
+-          const { data: existing, error: lookupError } = await getAdminSupabase()
+-            .from("personal_plan_one_time_checkout_consents")
+-            .select("id, stripe_checkout_session_id, paypal_order_id")
+-            .eq("lead_id", authorization.leadId)
+-            .eq("funnel_session_id", authorization.sessionId)
+-            .eq("product_kind", PERSONAL_PLAN_ONCE_KIND)
+-            .maybeSingle()
+-          if (lookupError || !existing) throw error
+-          if (existing.paypal_order_id) {
+-            await preparedCheckoutProviderLocked(preparedControlContext(), "paypal")
+-            return NextResponse.json(
+-              { error: "payment provider already selected", provider_locked: "paypal" },
+-              { status: 409 },
+-            )
+-          }
+-          if (existing.stripe_checkout_session_id) {
+-            if (action === "claim") {
+-              if (existing.stripe_checkout_session_id === preparedSessionId) {
+-                oneTimeConsentId = existing.id
+-              } else {
+-                const existingSession = await getStripe().checkout.sessions.retrieve(
+-                  existing.stripe_checkout_session_id,
+-                )
+-                const recovery = classifyOneTimeStripeSessionRecovery(existingSession)
+-                if (recovery.type === "complete") {
+-                  return NextResponse.json({ error: "checkout already completed" }, { status: 409 })
+-                }
+-                if (recovery.type !== "replace") {
+-                  await preparedCheckoutProviderLocked(preparedControlContext(), "stripe")
+-                  return NextResponse.json(
+-                    { error: "payment provider already selected" },
+-                    { status: 409 },
+-                  )
+-                }
+-                oneTimeConsentId = existing.id
+-              }
+-            } else if (action === "create") {
+-              const existingSession = await getStripe().checkout.sessions.retrieve(
+-                existing.stripe_checkout_session_id,
+-              )
+-              const recovery = classifyOneTimeStripeSessionRecovery(existingSession)
+-              if (recovery.type === "reuse") {
+-                return NextResponse.json({ client_secret: recovery.clientSecret })
+-              }
+-              if (recovery.type === "complete") {
+-                return NextResponse.json({ error: "checkout already completed" }, { status: 409 })
+-              }
+-              if (recovery.type !== "replace") {
+-                throw new Error("Existing one-time Stripe Session is not reusable")
+-              }
+-            } else {
+-              await preparedCheckoutProviderLocked(preparedControlContext(), "stripe")
+-              return NextResponse.json(
+-                { error: "payment provider already selected" },
+-                { status: 409 },
+-              )
+-            }
+-          }
+-          oneTimeConsentId = existing.id
+-        }
+-      }
+-    }
++    const oneTimeConsentId: string | null = null
++    const oneTimeProviderLocked: "stripe" | null = null
++
++    
+ 
+     if (checkoutContext === "membership_reactivation") {
+       if (!authenticatedUserId || !checkoutAttemptId || leadId) {
+--- a/tests/personal-plan-pricing-experiment.test.ts
++++ b/tests/personal-plan-pricing-experiment.test.ts
+@@ -18,9 +18,7 @@
+   verifyPersonalPlanOneTimeQaToken,
+ } from "../src/lib/funnel/personal-plan-pricing-qa-token"
+ import {
+-  assertPersonalPlanOneTimeCheckoutAuthorized,
+   assignPersonalPlanOneTimeQa,
+-  PersonalPlanOneTimeCheckoutAuthorizationError,
+   resolvePersonalPlanPricingExperiment,
+ } from "../src/lib/funnel/server"
+ 
+@@ -449,69 +447,6 @@
+   })
+ })
+ 
+-test("one-time checkout authorization uses only the canonical stored session", async () => {
+-  const canonical = {
+-    id: sessionId,
+-    lead_id: leadId,
+-    visitor_id: "50000000-0000-4000-8000-000000000005",
+-    package_key: "meta_personal_plan_v1",
+-    offer_variant: "personal-plan-one-time-v1",
+-    offer_viewed_at: "2026-07-31T10:00:00Z",
+-    first_seen_at: "2026-07-31T09:30:00Z",
+-    is_internal_test: true,
+-  }
+-  assert.deepEqual(
+-    await assertPersonalPlanOneTimeCheckoutAuthorized({
+-      leadId,
+-      funnelSessionId: sessionId,
+-      fetchSession: async () => ({ data: canonical, error: null }),
+-    }),
+-    {
+-      sessionId,
+-      leadId,
+-      visitorId: "50000000-0000-4000-8000-000000000005",
+-      packageKey: "meta_personal_plan_v1",
+-      offerVariant: "personal-plan-one-time-v1",
+-      issuedAt: Date.parse("2026-07-31T09:30:00Z"),
+-      isInternalTest: true,
+-    },
+-  )
+-  for (const row of [
+-    { ...canonical, offer_variant: "personal-plan-membership-v1" },
+-    { ...canonical, lead_id: "10000000-0000-4000-8000-000000000004" },
+-    { ...canonical, offer_viewed_at: null },
+-  ]) {
+-    await assert.rejects(
+-      assertPersonalPlanOneTimeCheckoutAuthorized({
+-        leadId,
+-        funnelSessionId: sessionId,
+-        fetchSession: async () => ({ data: row, error: null }),
+-      }),
+-      /not authorized/,
+-    )
+-  }
+-})
+-
+-test("one-time checkout authorization distinguishes lookup failure from expected denial", async () => {
+-  await assert.rejects(
+-    assertPersonalPlanOneTimeCheckoutAuthorized({
+-      leadId,
+-      funnelSessionId: sessionId,
+-      fetchSession: async () => ({ data: null, error: new Error("database unavailable") }),
+-    }),
+-    (error) =>
+-      error instanceof PersonalPlanOneTimeCheckoutAuthorizationError &&
+-      error.reason === "lookup_failed",
+-  )
+-
+-  await assert.rejects(
+-    assertPersonalPlanOneTimeCheckoutAuthorized({
+-      leadId,
+-      funnelSessionId: sessionId,
+-      fetchSession: async () => ({ data: null, error: null }),
+-    }),
+-    (error) =>
+-      error instanceof PersonalPlanOneTimeCheckoutAuthorizationError &&
+-      error.reason === "not_authorized",
+-  )
+-})
++
++
++

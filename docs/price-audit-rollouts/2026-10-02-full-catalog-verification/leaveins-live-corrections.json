@@ -1,0 +1,184 @@
+{
+  "checked_at": "2026-10-02T15:09:50Z",
+  "scope": "Fresh, bounded recheck of the eight cached-search-only leave-in/heat records, the approved 50 ml Moroccanoil base, and two later parent-requested corrections. This file is corrective evidence only; it does not mutate catalog or aggregate evidence.",
+  "records": [
+    {
+      "id": "7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6",
+      "product": "Moroccanoil All In One Leave-In Conditioner",
+      "approved_base_package": {
+        "value": 50,
+        "unit": "ml"
+      },
+      "source_url": "https://www.number-one.de/Moroccanoil-All-in-One-Leave-In-Conditioner-50ml",
+      "source_method": "fresh direct retailer HTML GET, HTTP 200, 2026-10-02T15:04:36Z",
+      "price_eur": 14.40,
+      "package": {
+        "value": 50,
+        "unit": "ml"
+      },
+      "observed_barcode": "7290113142954",
+      "availability": "available",
+      "source_quote": "EAN Barcode: 7290113142954; 14,40 €; verfügbar; Lieferzeit: 1 - 5 Tage; In den Warenkorb.",
+      "outcome": "live_exact_offer",
+      "note": "Replaces the prior 160 ml proposal as the evidence lead. The approved 50 ml base is preserved."
+    },
+    {
+      "id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+      "product": "Neqi Diamond Glass Ultimate Styling Spray",
+      "source_url": "https://www.maquibeauty.de/neqi-diamond-glass-stylingspray-styling-spray-ultimate-p-91427.html",
+      "source_method": "fresh direct retailer HTML GET, HTTP 200, 2026-10-02T15:04:36Z",
+      "price_eur": 11.01,
+      "package": {
+        "value": 180,
+        "unit": "ml"
+      },
+      "observed_barcode": "4063528094575",
+      "availability": "in_stock",
+      "source_quote": "EAN: 4063528094575; product price 11,01€; cart add form; schema.org availability InStock.",
+      "outcome": "live_exact_offer_price_changed",
+      "note": "Fresh whole-package price is €11.01, replacing the prior cached €12.95 lead."
+    },
+    {
+      "id": "cb228f9d-4e46-4302-9a6f-92c393eda1bd",
+      "product": "Hydra Protect Hitzeschutzspray (current GTIN resolves to Taft Aloe Boost)",
+      "source_url": "https://www.budni.de/sortiment/produkte/6933086003",
+      "source_method": "fresh direct retailer HTML GET, HTTP 200, 2026-10-02T15:04:36Z",
+      "price_eur": 3.99,
+      "package": {
+        "value": 150,
+        "unit": "ml"
+      },
+      "observed_barcode": "4015100893403",
+      "availability": "store_selection_required",
+      "source_quote": "Taft Hitzeschutz-Spray Aloe Boost; 3,99 €; 0,15 L; 4015100893403; page asks 'Filiale auswählen' to show prices and availability.",
+      "outcome": "live_identity_and_price_only",
+      "note": "Fresh exact identity/price is confirmed, but the direct page does not expose a general online purchase or delivery status before a store is selected. Do not claim buyability."
+    },
+    {
+      "id": "0b21f996-bb42-4b10-89bd-4881c4346d53",
+      "product": "ISANA PROFESSIONAL Leave-In Conditioner Hyaluron & Panthenol",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-leave-in-conditioner-hyaluron-und-care/p/4305615946733",
+      "source_method": "fresh direct GET attempted 2026-10-02T15:04:36Z; Rossmann returned HTTP 200 bot/interstitial shell without product price, cart, stock, or GTIN fields; Fresh Store fallback redirected repeatedly",
+      "price_eur": null,
+      "package": {
+        "value": 100,
+        "unit": "ml"
+      },
+      "observed_barcode": "4305615946733",
+      "availability": "not_confirmed_live",
+      "source_quote": "No current primary product data was exposed in the live Rossmann HTML response.",
+      "outcome": "source_access_limitation",
+      "note": "The cached €2.49/1-day assertion remains uncorroborated; no unavailable conclusion is warranted."
+    },
+    {
+      "id": "993f0e55-2450-4557-853d-e6e23ec0d1a9",
+      "product": "OUAI Leave In Conditioner",
+      "source_url": "https://www.sephora.de/p/leave-in-conditioner-426531.html",
+      "source_method": "fresh direct GET attempted 2026-10-02T15:04:36Z; Sephora returned HTTP 403 WAF response",
+      "price_eur": null,
+      "package": {
+        "value": 140,
+        "unit": "ml"
+      },
+      "observed_barcode": null,
+      "availability": "not_confirmed_live",
+      "source_quote": "HTTP 403; no current primary price, stock, or cart state was exposed.",
+      "outcome": "source_access_limitation",
+      "note": "Prior cached Sephora €26.45 availability is not fresh proof. The direct page also did not previously display a barcode, so live identity confirmation must preserve the registered GTIN absence caveat."
+    },
+    {
+      "id": "67d95443-490d-47fb-876e-8d9eecf015ae",
+      "product": "Jean&Len Leave-In Haarmaske Peptide Intense Repair",
+      "source_url": "https://www.dm.de/p/d/3086348/jean-und-len-leave-in-haarmaske-peptide-intense-repair",
+      "source_method": "fresh direct dm GET attempted 2026-10-02T15:04:36Z (HTTP 200 client shell); fresh dm MCP exact-GTIN/name helper search at 2026-10-02T15:05:10.393Z returned no matching registered-GTIN row",
+      "price_eur": null,
+      "package": {
+        "value": 100,
+        "unit": "ml"
+      },
+      "observed_barcode": "4262500780288",
+      "availability": "not_confirmed_live",
+      "source_quote": "Live dm HTML did not expose product data; current helper search had no matching GTIN row.",
+      "outcome": "source_access_limitation",
+      "note": "The older cached €5.25/Lieferbar result is not re-confirmed. A zero exact-name search result is not evidence of discontinuation or unavailability."
+    },
+    {
+      "id": "d840b368-3416-4104-9ccb-0e5a656a4929",
+      "product": "Schwarzkopf Gliss Haarkur Night Elixier Ultimate Repair",
+      "source_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
+      "source_method": "fresh direct dm GET attempted 2026-10-02T15:04:36Z (HTTP 200 client shell); fresh dm MCP exact-GTIN/name helper search at 2026-10-02T15:05:10.393Z returned no matching registered-GTIN row",
+      "price_eur": null,
+      "package": {
+        "value": 100,
+        "unit": "ml"
+      },
+      "observed_barcode": "4015100813951",
+      "availability": "not_confirmed_live",
+      "source_quote": "Live dm HTML did not expose product data; current helper search had no matching GTIN row.",
+      "outcome": "source_access_limitation",
+      "note": "The older cached €7.45/Lieferbar result is not re-confirmed; no unavailability claim follows from the helper miss."
+    },
+    {
+      "id": "dc9f6662-b51b-4011-91ae-494c2d254f11",
+      "product": "Wahre Schätze Leave-In Haarkur Avocado",
+      "source_url": "https://www.dm.de/p/d/2976366/wahre-schaetze-leave-in-haarkur-avocado",
+      "source_method": "fresh direct dm GET attempted 2026-10-02T15:04:36Z (HTTP 200 client shell); fresh dm MCP exact-GTIN/name helper search at 2026-10-02T15:05:10.393Z returned no matching registered-GTIN row",
+      "price_eur": null,
+      "package": {
+        "value": 200,
+        "unit": "ml"
+      },
+      "observed_barcode": "3600542639200",
+      "availability": "not_confirmed_live",
+      "source_quote": "Live dm HTML did not expose product data; current helper search had no matching GTIN row.",
+      "outcome": "source_access_limitation",
+      "note": "The older cached €2.95/Lieferbar result is not re-confirmed; no unavailability claim follows from the helper miss."
+    },
+    {
+      "id": "8715f0f5-9104-46ec-b450-e73f1441c1fa",
+      "product": "Curlsmith Weightless Air Dry Cream",
+      "source_url": "https://eu.curlsmith.com/products/weightless-air-dry-cream",
+      "source_method": "fresh direct Curlsmith EU Shopify PDP GET, HTTP 200, 2026-10-02T15:09:50Z; Douglas direct PDP https://www.douglas.de/de/p/5012033089 returned HTTP 400 in this environment; Flaconi/Douglas discovery results were cached-only and not used as offer proof",
+      "price_eur": 21.00,
+      "package": {
+        "value": 237,
+        "unit": "ml"
+      },
+      "observed_barcode": "850048197626",
+      "availability": "available",
+      "source_quote": "Live variant JSON: name Weightless Air Dry Cream - Full 237 ml; price 2100; available true; barcode 850048197626. Shopify analytics: price 21.00; variant Full 237 ml; available true.",
+      "outcome": "live_exact_offer_brand_direct",
+      "note": "A current exact, one-time brand-direct offer is confirmed at €21.00. The page also contains a subscription discount, which is excluded; price recorded is the ordinary whole-package €21.00 price. This replaces neither any approved catalog choice nor a preferred-retailer offer."
+    },
+    {
+      "id": "94cf6959-a53b-421b-9f0f-05efc239171c",
+      "product": "Wella Professionals Ultimate Repair Protective Leave-In",
+      "source_url": "https://www.wella.com/professional/de-DE/products/haarpflege/ultimate-repair/ultimate-repair-protective-leave-in",
+      "source_method": "fresh direct Wella DE official PDP GET, HTTP 200, 2026-10-02T15:09:50Z; fresh Hagel/Flaconi/Douglas exact-GTIN/name searches found no qualifying 140 ml preferred-shop PDP; direct specialist SalonLine PDP was also checked and exposes current product object stock_status out_of_stock",
+      "price_eur": null,
+      "package": {
+        "value": 140,
+        "unit": "ml"
+      },
+      "observed_barcode": "4064666580098",
+      "availability": "no_current_qualifying_offer_confirmed",
+      "source_quote": "Wella PDP: data-mm-ids=4064666580098 and variant size 140ml. SalonLine live product object: gtin 4064666580098; stock_status out_of_stock; Stock 0. Parent live-fetch evidence separately reports current DocMorris €24.89 via marketplace seller ShopFriseur, which is not selected here.",
+      "outcome": "preferred_replacement_not_confirmed",
+      "note": "Official identity and 140 ml package are fresh-confirmed, but no buyable preferred/specialist exact offer was independently confirmed. Do not retain prior €24.63: parent live fetch found €24.89 at DocMorris and third-party marketplace seller ShopFriseur."
+    }
+  ],
+  "not_rechecked_as_cached_search_only": [
+    {
+      "id": "bbfd8b03-d219-48bb-9ab3-b7c14bcae3dd",
+      "reason": "NEQI Mist had an opened Hagel primary page in the earlier pass, so it was outside the eight cached-search-only targets."
+    },
+    {
+      "id": "f8f3b51d-8e64-487d-bad5-4a47c58862ed",
+      "reason": "Pantene 7in1 had an opened Rossmann primary page in the earlier pass, so it was outside the eight cached-search-only targets."
+    },
+    {
+      "id": "3175b0a5-1be7-430f-b3d9-22ab3b4c11d2",
+      "reason": "Being Major Moisture had an opened Hagel primary page in the earlier pass, so it was outside the eight cached-search-only targets."
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+from pathlib import Path
+import hashlib,difflib
+D=Path(__file__).parent;T=D/'template-originals'
+def put(n,s): (D/n).write_text(s)
+g=(T/'operator-guard.cjs').read_text();a=g.index('function load(pinSHA)');b=g.index('function atomicCAS(')
+prefix=g[:a].replace('/tmp/test-audit-refinement37-tools-5ce9vx77/operator',str(D)+'/operator').replace('/tmp/test-audit-refinement-status37','/tmp/test-audit-dormant-rollout-closure')
+custom=r'''function activate(c,phase){
+ const p=c.phases[phase];if(!p)fail('Unknown source phase');return {...c,sourceSha256:p.sourceSha256,mutatedSha256:p.mutatedSha256,command:c.commands[phase],test:{file:c.test.file,name:c.test.names[phase]}}
+}
+function load(pinSHA){
+ const raw=fs.readFileSync(BASE+'-pins.json');if(sha(raw)!==pinSHA)fail('Tool pins changed');const pins=JSON.parse(raw);identity(pins)
+ function artifacts(){
+  for(const p of pins.dependencies)checkFile(p)
+  for(const t of pins.dependencyTrees)if(JSON.stringify(inventory(t.path))!==JSON.stringify(t.names))fail('Installed dependency membership drift')
+  for(const[f,h]of Object.entries(pins.artifactHashes))if(sha(fs.readFileSync(f))!==h)fail('Artifact drift: '+f)
+  for(const[f,h]of Object.entries(pins.entrypointTemplateHashes))if(sha(fs.readFileSync(f,'utf8').replace(/const PIN_SHA='[a-f0-9]{64}'/,"const PIN_SHA='PIN_SHA_PLACEHOLDER'"))!==h)fail('Entrypoint drift')
+ }
+ artifacts();const evidence=readJSON(BASE+'-evidence.json'),candidates=readJSON(PROPOSAL+'/candidates.json'),controls=readJSON(BASE+'-controls-normalized.json'),ts=require(ROOT+'/node_modules/typescript')
+ if(evidence.root!==ROOT||evidence.head!==pins.head||evidence.branch!==pins.branch||candidates.length!==6||controls.length!==14||ts.version!==pins.typescriptVersion)fail('Proposal identity/count drift')
+ const snapshots={},counts={before:0,transfer:0,cut:0};let unchangedRetained=0,modifiedRetained=0,deleted=0,changedFiles=0
+ const edits=readJSON(BASE+'-phase-edits.json')
+ for(const file of evidence.files){snapshots[file]={};for(const phase of Object.keys(counts)){const p=evidence.phases[phase].find(p=>p.file===file),bytes=fs.readFileSync(p.path);if(sha(bytes)!==p.sha256)fail('Phase snapshot drift');parse(ts,file,bytes.toString());const rows=file.startsWith('tests/')?registrations(ts,file,bytes.toString()):new Map();snapshots[file][phase]={bytes,rows};counts[phase]+=rows.size}
+  const s=snapshots[file];if(!s.before.bytes.equals(s.transfer.bytes))fail('Unchanged transfer required');if(!s.before.bytes.equals(s.cut.bytes))changedFiles++
+  // Explicit original byte ranges rederive the entire prospective cut, including source and support.
+  let cursor=0,parts=[];for(const e of edits[file]||[]){if(!Number.isInteger(e.start)||!Number.isInteger(e.end)||e.start<cursor||e.end<e.start||s.before.bytes.toString().slice(e.start,e.end)!==e.before)fail('Owned edit range drift');parts.push(s.before.bytes.toString().slice(cursor,e.start),e.after);cursor=e.end}parts.push(s.before.bytes.toString().slice(cursor));if(parts.join('')!==s.cut.bytes.toString())fail('Complete cut reconstruction mismatch')
+  for(const[name,row]of s.before.rows){const map=evidence.testMapping.find(x=>x.file===file&&x.title===name);if(!map||sha(row.callback)!==map.beforeBodySHA)fail('Original callback identity');if(s.transfer.rows.get(name)?.statement!==row.statement)fail('Transfer callback changed');if(!map.cutTitle){if(s.cut.rows.has(name)||map.decision!=='D-conditional'||!candidates.some(c=>c.file===file&&c.title===name))fail('Donor closure mismatch');deleted++;continue}
+   const after=s.cut.rows.get(map.cutTitle);if(!after||sha(after.callback)!==map.cutBodySHA)fail('Retained callback mismatch');if(map.unchangedCallback){if(row.callback!==after.callback)fail('Unchanged callback drift');unchangedRetained++}else modifiedRetained++
+   if(JSON.stringify(row.assertions.map(a=>a.text))!==JSON.stringify(map.originalAssertions.map(a=>a.text))||JSON.stringify(after.assertions.map(a=>a.text))!==JSON.stringify(map.cutAssertions.map(a=>a.text)))fail('Full assertion union accounting drift')
+   let pool=row.assertions.map(a=>a.text);for(const a of after.assertions){const i=pool.indexOf(a.text);if(i<0)fail('New assertion');pool.splice(i,1)}if(JSON.stringify(pool)!==JSON.stringify(map.removedAssertions))fail('Unaccounted assertion removal')
+  }
+ }
+ if(Object.keys(snapshots).length!==10||changedFiles!==9||JSON.stringify(counts)!=='{"before":103,"transfer":103,"cut":97}'||unchangedRetained!==92||modifiedRetained!==5||deleted!==6)fail('Exact phase conservation failed')
+ function guards(overrides={}){identity(pins);artifacts();for(const[f,h]of Object.entries(overrides))if(!controls.some(c=>c.file===f&&Object.values(c.phases).some(p=>p.mutatedSha256===h)))fail('Unowned source override');for(const r of pins.readset)if(sha(fs.readFileSync(path.join(ROOT,r.file)))!==(overrides[r.file]||r.sha))fail('Readset drift: '+r.file)}
+ function current(overrides={}){guards(overrides);const bytes=Object.fromEntries(evidence.files.map(f=>[f,fs.readFileSync(path.join(ROOT,f))]));const matches=['transfer','cut'].filter(phase=>Object.entries(bytes).every(([f,b])=>overrides[f]?sha(b)===overrides[f]&&controls.some(c=>c.file===f&&c.phases[phase].mutatedSha256===overrides[f]):b.equals(snapshots[f][phase].bytes)));if(matches.length!==1)fail('Mixed/unknown source and test phase');const phase=matches[0];for(const[f,h]of Object.entries(overrides))if(!controls.some(c=>c.file===f&&c.phases[phase].mutatedSha256===h))fail('Mutant belongs to wrong phase');return{phase,phaseAliases:phase==='transfer'?['before','transfer']:['cut'],bytes}}
+ function checkCohort(expected){for(const[f,b]of Object.entries(expected))if(!fs.readFileSync(path.join(ROOT,f)).equals(b))fail('Cohort CAS drift: '+f)}
+ return{pins,evidence,candidates,controls,ts,snapshots,counts,unrelated:92,unchangedRetained,modifiedRetained,guards,current,checkCohort}
+}
+function fault(ctx,control,phase){
+ const c=activate(control,phase),escaped=c.test.name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),exact=['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-concurrency=1','--test-name-pattern=^'+escaped+'$',c.test.file]
+ if(JSON.stringify(c.command)!==JSON.stringify(exact))fail('Exact keeper command changed');const row=ctx.snapshots[c.test.file][phase].rows.get(c.test.name),o=c.oracles[phase],matches=row?.assertions.filter(a=>a.text===o.text)||[]
+ if(!row||sha(row.statement)!==o.keeperSha256||sha(ctx.snapshots[c.test.file][phase].bytes)!==o.testFileSha256||matches.length!==1||matches[0].startLine!==o.startLine)fail('Full scoped keeper/first assertion mismatch')
+ const original=ctx.snapshots[c.file]?.[phase].bytes||fs.readFileSync(path.join(ROOT,c.file));if(sha(original)!==c.sourceSha256)fail('Phase owner drift');const mutated=Buffer.from(replaceOnce(original.toString(),c.from,c.to,c.id));parse(ctx.ts,c.file,mutated.toString());if(sha(mutated)!==c.mutatedSha256)fail('Phase mutant drift');return{original,mutated}
+}
+'''
+suffix=g[b:].replace('load,fault,atomicCAS','load,fault,activate,atomicCAS')
+put('operator-guard.cjs',prefix+custom+suffix)
+p=(T/'operator-proof.cjs').read_text();p=p[:p.index('function validateTransferReceipt(')]
+p+=r'''function ownedDir(dir,kind){if(!dir||!new RegExp('^'+g.BASE.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'-'+kind+'-[A-Za-z0-9]+$').test(dir)||path.dirname(fs.realpathSync(dir))!==fs.realpathSync(path.dirname(g.BASE)))g.fail('Exact owned receipt directory required')}
+function completion(ctx,pinSHA,dir,hash){if(!/^[a-f0-9]{64}$/.test(hash||''))g.fail('Exact completion SHA required');const raw=fs.readFileSync(path.join(dir,'complete.json'));if(g.sha(raw)!==hash)g.fail('Completion drift');const c=JSON.parse(raw);if(c.pinsSHA!==pinSHA||c.root!==g.ROOT||c.head!==ctx.pins.head||c.branch!==ctx.pins.branch)g.fail('Completion identity');const r=fs.readFileSync(path.join(dir,'receipt.json'));if(g.sha(r)!==c.receiptSHA256)g.fail('Receipt drift');if(Object.keys(c.allFileHashes||{}).length!==10)g.fail('All ten files required');for(const[f,h]of Object.entries(c.allFileHashes))if(h!==g.sha(ctx.snapshots[f]?.[c.phase]?.bytes||''))g.fail('Whole source/test phase mismatch');return{c,records:JSON.parse(r)}}
+function reload(dir,record,label,control){const p=path.join(dir,control.id+'-'+label+'.tap'),commandPath=path.join(dir,control.id+'-'+label+'.command.json');if(record.log!==p||g.sha(fs.readFileSync(p))!==record.logSHA256)g.fail('TAP path/hash drift');const raw=fs.readFileSync(commandPath);if(g.sha(raw)!==record.commandSHA256)g.fail('Command hash drift');const cmd=JSON.parse(raw);if(cmd.executable!==process.execPath||cmd.cwd!==g.ROOT||JSON.stringify(cmd.args)!==JSON.stringify(control.command.slice(1))||cmd.timeoutMs!==45000||cmd.detached!==true)g.fail('Command/timeout differs');const text=fs.readFileSync(p,'utf8');return{...record,...parseTAP(text),text}}
+function validateControlsReceipt(ctx,pinSHA,dir,hash,phase){ownedDir(dir,'mutations-'+phase);const{c,records}=completion(ctx,pinSHA,dir,hash);if(c.phase!==phase||c.verified!==14||c.cleanRuns!==28||records.length!==14||JSON.stringify(c.controlIds)!==JSON.stringify(ctx.controls.map(c=>c.id)))g.fail('All14 ordered controls required');for(let i=0;i<14;i++){const control=g.activate(ctx.controls[i],phase),r=records[i];if(r.id!==control.id||r.phase!==phase||r.verified!==true||r.sourceBefore!==control.sourceSha256||r.sourceFault!==control.mutatedSha256||r.actualSourceFault!==control.mutatedSha256||r.sourceRestored!==control.sourceSha256||r.byteExactRestored!==true)g.fail('Phase-aware original/mutant/restore mismatch');for(const p of ctx.pins.readset)if(r.readsetBefore?.[p.file]!==p.sha||r.readsetAfter?.[p.file]!==p.sha)g.fail('Readset proof missing');if(!clean(control,reload(dir,r.before,'before',control))||!intended(control,reload(dir,r.fault,'fault',control),phase).accepted||!clean(control,reload(dir,r.after,'after',control)))g.fail('Clean/red/restore oracle failed: '+control.id)}return{dir,completionSHA:hash,phase,verified:14,logFiles:42}}
+function cohortCommand(ctx){return['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-concurrency=1',...ctx.evidence.files.filter(f=>f.startsWith('tests/'))]}
+function cohortClean(ctx,run,phase){const n=ctx.counts[phase],actual=[...run.text.matchAll(/^# Subtest: (.+)$/gm)].map(m=>m[1]).sort(),expected=Object.entries(ctx.snapshots).flatMap(([f,s])=>f.startsWith('tests/')?[...s[phase].rows.keys()]:[]).sort();return run.status===0&&run.signal===null&&!run.timedOut&&!run.spawnError&&run.tests===n&&run.pass===n&&run.fail===0&&run.skipped===0&&run.cancelled===0&&run.todo===0&&JSON.stringify(actual)===JSON.stringify(expected)}
+function validateCohortReceipt(ctx,pinSHA,dir,hash,phase){ownedDir(dir,'cohort-'+phase);const{c,records}=completion(ctx,pinSHA,dir,hash);if(c.phase!==phase||c.verified!==ctx.counts[phase]||records.length!==1)g.fail('Complete bounded cohort proof required');const control={id:'cohort',command:cohortCommand(ctx)},run=reload(dir,records[0],'full',control);if(!cohortClean(ctx,run,phase))g.fail('Full cohort count/selection/clean mismatch');return{dir,completionSHA:hash,phase,verified:ctx.counts[phase]}}
+function validateTransferReceipt(ctx,pinSHA,cohortDir,cohortSHA,controlsDir,controlsSHA){return{cohort:validateCohortReceipt(ctx,pinSHA,cohortDir,cohortSHA,'transfer'),controls:validateControlsReceipt(ctx,pinSHA,controlsDir,controlsSHA,'transfer')}}
+module.exports={parseTAP,named,clean,errorMessage,intended,validateTransferReceipt,validateControlsReceipt,cohortCommand,cohortClean,validateCohortReceipt}
+'''
+put('operator-proof.cjs',p)
+e=(T/'operator-edit.cjs').read_text().replace("const PIN_SHA='ffb6b2428bdceb285246596cafeba5e3b1a6870ec0ce885b875531178b10f0cd'","const PIN_SHA='PIN_SHA_PLACEHOLDER'")
+e=e.replace("process.argv.length!==5","process.argv.length!==7").replace('cut <transfer-receipt-dir> <completion-sha256>','cut <full103-dir> <sha> <all14-before-dir> <sha>').replace('for(const c of context.controls)g.fault(context,c)','for(const c of context.controls)for(const p of [\'transfer\',\'cut\'])g.fault(context,c,p)').replace('parsedPhaseFiles:15,sourceControlsParsed:13','parsedPhaseFiles:30,sourceControlsParsed:28').replace("const from=mode==='transfer'?'before':'transfer'","const from='transfer' // before and transfer snapshots are identical; canonical phase is transfer")
+e=e.replace('process.argv[3],process.argv[4])','process.argv[3],process.argv[4],process.argv[5],process.argv[6])').replace('allTestHashes:','allFileHashes:').replace('sourceWrites:0','sourceWrites:written.filter(o=>o.file.startsWith(\'src/\')).length')
+put('operator-edit.cjs',e)
+r=(T/'operator-run-controls.cjs').read_text().replace("const PIN_SHA='ffb6b2428bdceb285246596cafeba5e3b1a6870ec0ce885b875531178b10f0cd'","const PIN_SHA='PIN_SHA_PLACEHOLDER'")
+r=r.replace("const context=g.load(PIN_SHA),controls=selectedId?context.controls.filter(c=>c.id===selectedId):context.controls","const context=g.load(PIN_SHA),initial=context.current(),phase=initial.phase,controls=(selectedId?context.controls.filter(c=>c.id===selectedId):context.controls).map(c=>g.activate(c,phase))")
+r=r.replace("const prepared=new Map(context.controls.map(c=>[c.id,g.fault(context,c)])),initial=context.current()","for(const c of context.controls)for(const p of ['transfer','cut'])g.fault(context,c,p)\nconst prepared=new Map(context.controls.map(c=>[c.id,g.fault(context,c,phase)]))")
+r=r.replace('tsMutantsParsed:13','tsMutantsParsed:28').replace('prepared.size===13','prepared.size===14').replace('const phase=initial.phase,unlock=g.lock(),receipts=[]','const unlock=g.lock(),receipts=[]').replace('ALL5 test originals','ALL10 source/test originals').replace("for(const control of context.controls)originals.set(control.file,prepared.get(control.id).original)","for(const control of context.controls)originals.set(control.file,prepared.get(control.id).original)").replace('allTestHashes:','allFileHashes:').replace('receipts.length===13','receipts.length===14').replace('Transfer/cut phase required; no original false-pass claim','Known before/transfer or cut phase required')
+put('operator-run-controls.cjs',r)
+# Reuse the reviewed detached-child runner and owned-group cleanup for full cohorts.
+a=r.index('let activeChild=null');b=r.index('\nconst clean=proof.clean');runner=r[a:b]
+cohort="""'use strict'
+// Main-only full bounded cohort; --check has no writes/children.
+const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process'),g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs')
+const PIN_SHA='PIN_SHA_PLACEHOLDER'
+const mode=(process.argv[2]||'check').replace(/^--/,'');if(!['check','run'].includes(mode)||process.argv.length>3)g.fail('Use --check | run')
+const context=g.load(PIN_SHA),initial=context.current(),phase=initial.phase
+if(mode==='check'){console.log(JSON.stringify({mode,phase,expected:context.counts[phase],command:proof.cohortCommand(context),repositoryWrites:0,childrenStarted:0}));process.exit(0)}
+for(const key of ['TRIAL_ADMISSION_MUTANT','TRIAL_ACCESS_MUTANT','NODE_OPTIONS','TSX_TSCONFIG_PATH'])if(process.env[key])g.fail('Existing harness override: '+key)
+const unlock=g.lock(),receipts=[];let dir=null
+"""+runner+"""
+;(async()=>{try{
+ dir=fs.mkdtempSync(g.BASE+'-cohort-'+phase+'-');ensurePhase()
+ for(const[file,bytes]of Object.entries(initial.bytes)){const p=path.join(dir,'all-originals',file);fs.mkdirSync(path.dirname(p),{recursive:true});fs.writeFileSync(p,bytes,{flag:'wx',mode:0o444})}
+ const control={id:'cohort',command:proof.cohortCommand(context)},result=await run(control,'full');const{text,...compact}=result;receipts.push(compact);record();ensurePhase()
+ if(!proof.cohortClean(context,result,phase))g.fail('Bounded whole cohort did not pass exact count/selection')
+ const complete={phase,verified:context.counts[phase],root:g.ROOT,head:context.pins.head,branch:context.pins.branch,pinsSHA:PIN_SHA,receiptSHA256:g.sha(fs.readFileSync(path.join(dir,'receipt.json'))),allFileHashes:Object.fromEntries(Object.entries(initial.bytes).map(([f,b])=>[f,g.sha(b)]))};const raw=JSON.stringify(complete,null,2)+'\\n';fs.writeFileSync(path.join(dir,'complete.json'),raw,{flag:'wx'});console.log(JSON.stringify({receiptDir:dir,completionSHA256:g.sha(raw),verified:complete.verified}))
+ }finally{killOwnedGroup('SIGKILL');process.off('SIGINT',stop);process.off('SIGTERM',stop);unlock()}
+})().catch(error=>{record();if(dir)fs.writeFileSync(path.join(dir,'failure.json'),JSON.stringify({error:String(error),interrupted},null,2)+'\\n',{flag:'wx'});console.error(error);process.exitCode=1})
+"""
+put('operator-run-cohort.cjs',cohort)
+put('operator-verify.cjs',r''' 'use strict'
+// Read-only final receipt verification; never applies a cut or starts children.
+const g=require('./operator-guard.cjs'),p=require('./operator-proof.cjs')
+const PIN_SHA='PIN_SHA_PLACEHOLDER'
+const ctx=g.load(PIN_SHA),state=ctx.current()
+if(process.argv.length===3&&process.argv[2]==='--check'){console.log(JSON.stringify({phase:state.phase,readOnly:true,acceptance:false,runtimeProof:false}));process.exit(0)}
+if(process.argv.length!==10)g.fail('Use <before-cohort-dir> <sha> <before-controls-dir> <sha> <cut-cohort-dir> <sha> <cut-controls-dir> <sha>')
+if(state.phase!=='cut')g.fail('Exact complete cut phase required')
+const a=process.argv.slice(2),before=p.validateTransferReceipt(ctx,PIN_SHA,...a.slice(0,4)),after={cohort:p.validateCohortReceipt(ctx,PIN_SHA,a[4],a[5],'cut'),controls:p.validateControlsReceipt(ctx,PIN_SHA,a[6],a[7],'cut')}
+ctx.current();console.log(JSON.stringify({boundedProofVerified:true,pinsSHA:PIN_SHA,before,after,limits:'Only exact103/97 cohort and28 actual owner controls; independent acceptance/type/full campaign coverage remain separate.'},null,2))
+'''.lstrip())
+# Strict parser synthetic cases retained, selecting each phase's exact title/command.
+a=(T/'proof-attestation.cjs').read_text().replace("controls=JSON.parse", "g=require('./operator-guard.cjs'),controls=JSON.parse")
+a=a.replace("for(const c of controls)for(const phase of ['transfer','cut']){","for(const base of controls)for(const phase of ['transfer','cut']){\n const c=g.activate(base,phase);").replace('controls:13','controls:14')
+put('proof-attestation.cjs',a)

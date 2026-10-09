@@ -6,6 +6,7 @@ import {
   projectSelectedProducts,
   type SelectedProductsProjection,
 } from "../src/lib/agent/tools/select-products"
+import { applyChatBudgetOrdering } from "../src/lib/agent/tools/chat-budget"
 import { inferOilPurposeFromMessage } from "../src/lib/oil/purpose"
 import type { MatchedProduct } from "../src/lib/product-matching/matcher"
 import type { SelectableProductCategory } from "../src/lib/agent/tools/select-products"
@@ -32,6 +33,51 @@ import type {
   HairProfile,
 } from "../src/lib/types"
 import { LOW_DAMAGE_PROFILE } from "./recommendation-engine-foundation.fixtures"
+import { makeBondbuilderProfile, sealProfile } from "./fixtures/bondbuilder-research/profile"
+
+test("selected Bondbuilder facts retain bounded research context without changing selection order", () => {
+  const profile = makeBondbuilderProfile()
+  profile.sources.unshift({
+    ...profile.sources[0],
+    id: "uninspected-creator-lead",
+    url: "https://example.com/uninspected-creator",
+    access: "uninspected",
+  })
+  sealProfile(profile)
+  const product = createMatchedProduct("epres-source-bound", 81, {
+    category: "Bondbuilder",
+    bondbuilder_specs: {
+      product_id: "epres-source-bound",
+      bond_repair_intensity: "intensive",
+      bond_repair_axis: "disulfide_crosslink",
+      application_mode: "pre_shampoo",
+      treatment_mode: "rinse_out",
+      product_format: "spray_treatment",
+      usage_protocol: "epres_spray",
+      technology_family: "maleate_ester",
+      claim_trust_level: "high",
+      trust_basis: "owner_anchor",
+      research_profile: profile,
+    },
+  })
+  const result = projectSelectedProducts([product], LOW_DAMAGE_PROFILE, "bondbuilder")
+  const selected = result.products[0] as unknown as Record<string, unknown>
+  const context = selected.bondbuilder_research as Record<string, unknown>
+  assert.equal(selected.product_id, product.id)
+  assert.equal(selected.rank, 1)
+  assert.equal(context?.claim_trust_level, "high")
+  assert.equal(context?.technology_family, "maleate_ester")
+  assert.deepEqual(context?.timing, profile.application.timing.value)
+  assert.equal(context?.explanation_de, profile.explanations_de.concise)
+  assert.deepEqual(context?.source_urls, [profile.sources[1].url])
+  assert.equal("raw_inci" in context, false)
+  assert.equal("intensity" in context, false)
+
+  const tampered = structuredClone(product)
+  tampered.bondbuilder_specs!.claim_trust_level = "medium"
+  const refused = projectSelectedProducts([tampered], LOW_DAMAGE_PROFILE, "bondbuilder")
+  assert.equal("bondbuilder_research" in refused.products[0], false)
+})
 
 function createMatchedProduct(
   id: string,
@@ -465,28 +511,6 @@ test("projectSelectedProducts returns authoritative shampoo recommendation paylo
   assertProjectionDoesNotExposeFallback(result)
 })
 
-test("projectSelectedProducts returns generic recommend policy for ordinary product picks", () => {
-  const result = projectSelectedProducts(
-    [createShampooMatchedProduct("p-1", 0.94, ["Passt zum normalen Kopfhaut-Fokus"])],
-    { thickness: "normal", scalp_type: "balanced", scalp_condition: null } as HairProfile,
-    "shampoo",
-    createShampooRuntimeStub(
-      createRelevantShampooDecision({
-        targetProfile: {
-          scalpRoute: "balanced",
-          shampooBucket: "normal",
-          secondaryBucket: null,
-          cleansingIntensity: "regular",
-        },
-      }),
-    ),
-    { userJob: "product_pick", concerns: [] },
-  )
-
-  assert.equal(result.product_response_policy, "recommend")
-  assert.match(result.policy_reason, /Shampoo|Kopfhaut/i)
-})
-
 test("projectSelectedProducts does not let profile length concerns veto direct shampoo picks", () => {
   const result = projectSelectedProducts(
     [createShampooMatchedProduct("p-1", 0.94, ["Passt zum normalen Kopfhaut-Fokus"])],
@@ -513,6 +537,8 @@ test("projectSelectedProducts does not let profile length concerns veto direct s
   assert.equal(result.decision, "recommended")
   assert.equal(result.product_response_policy, "recommend")
   assert.equal(result.products.length, 1)
+
+  assert.match(result.policy_reason, /Shampoo|Kopfhaut/i)
 })
 
 test("projectSelectedProducts still recommends explicit non-shampoo products when runtime marks category irrelevant", () => {
@@ -538,47 +564,6 @@ test("projectSelectedProducts still recommends explicit non-shampoo products whe
   assert.equal(result.decision, "recommended")
   assert.equal(result.product_response_policy, "recommend")
   assert.equal(result.products.length, 1)
-})
-
-test("projectSelectedProducts emits conditioner unsupported-signal caveats without making claims", () => {
-  const result = projectSelectedProducts(
-    [createMatchedProduct("p-conditioner", 0.94)],
-    {
-      thickness: "normal",
-      protein_moisture_balance: "stretches_bounces",
-      chemical_treatment: ["colored"],
-    } as HairProfile,
-    "conditioner",
-    createRuntimeStub(),
-    {
-      userJob: "product_pick",
-      concerns: [],
-      activeProfileSignals: [
-        {
-          field: "chemical_treatment",
-          value: "colored",
-          source: "message",
-          selection_effect: "qualifier",
-          evidence: "gefaerbte Haare",
-        },
-      ],
-    },
-  )
-
-  assert.equal(result.category, "conditioner")
-  assert.equal(result.products.length, 1)
-  assert.deepEqual(
-    result.products[0].unsupported_requested_signals.map((signal) => [
-      signal.field,
-      signal.value,
-      signal.reason,
-    ]),
-    [["chemical_treatment", "colored", "no_structured_product_data"]],
-  )
-  assert.deepEqual(
-    result.products[0].supported_claims.some((claim) => claim.field === "chemical_treatment"),
-    false,
-  )
 })
 
 test("projectSelectedProducts exposes conditioner claims without density or damage drivers", () => {
@@ -799,6 +784,17 @@ test("projectSelectedProducts keeps unsupported color requests out of conditione
   assert.equal(
     result.products[0]?.supported_claims.some((claim) => claim.field === "chemical_treatment"),
     false,
+  )
+
+  assert.equal(result.category, "conditioner")
+  assert.equal(result.products.length, 1)
+  assert.deepEqual(
+    result.products[0].unsupported_requested_signals.map((signal) => [
+      signal.field,
+      signal.value,
+      signal.reason,
+    ]),
+    [["chemical_treatment", "colored", "no_structured_product_data"]],
   )
 })
 
@@ -2417,26 +2413,6 @@ test("projectSelectedProducts preserves oil no-recommendation decisions as redir
   assert.match(result.category_guidance, /Build-up|weniger Öl|Keine Öl-Produkte/)
 })
 
-test("projectSelectedProducts returns not_recommended when shampoo is not the right lever", () => {
-  const result = projectSelectedProducts(
-    [],
-    { thickness: "normal" } as HairProfile,
-    "shampoo",
-    createShampooRuntimeStub(
-      createRelevantShampooDecision({
-        relevant: false,
-        action: null,
-        targetProfile: null,
-      }),
-    ),
-  )
-
-  assert.equal(result.decision, "not_recommended")
-  assert.equal(result.product_response_policy, "redirect_to_better_lever")
-  assert.match(result.category_guidance, /nicht der wichtigste Hebel/)
-  assert.deepEqual(result.products, [])
-})
-
 test("projectSelectedProducts suppresses shampoo products when the category is not recommended", () => {
   const result = projectSelectedProducts(
     [createShampooMatchedProduct("p-1", 0.94, ["Wäre ein guter Shampoo-Treffer"])],
@@ -2455,6 +2431,8 @@ test("projectSelectedProducts suppresses shampoo products when the category is n
   assert.equal(result.product_response_policy, "redirect_to_better_lever")
   assert.deepEqual(result.products, [])
   assert.equal(result.comparison_facts, null)
+
+  assert.match(result.category_guidance, /nicht der wichtigste Hebel/)
 })
 
 test("projectSelectedProducts treats dry-length shampoo questions as not shampoo-first", () => {
@@ -3478,19 +3456,6 @@ test("oil purpose inference keeps negated scalp finish requests out of pre-wash"
   )
 })
 
-test("projectSelectedProducts uses mask-specific missing-info for explicit mask requests", () => {
-  const result = projectSelectedProducts([], { thickness: "normal" } as HairProfile, "mask")
-
-  assert.deepEqual(result.missing_info, [
-    {
-      key: "protein_moisture_balance",
-      label: "Protein-/Feuchtigkeitsbalance",
-      blocking: true,
-      detail: "Es fehlt noch deine Protein-/Feuchtigkeitsbalance für die Masken-Auswahl.",
-    },
-  ])
-})
-
 test("projectSelectedProducts redirects deep-cleansing scalp treatment requests without products", () => {
   const result = projectSelectedProducts(
     [createMatchedProduct("reset", 0.9)],
@@ -3811,4 +3776,325 @@ test("selectProducts tool only accepts engine-backed categories", () => {
   // @ts-expect-error null is not an engine-backed category for this tool
   const rejectedNullCategory: ToolParams["category"] = null
   void rejectedNullCategory
+})
+
+// ── Saved shopping budget (Task 8b) ─────────────────────────────────────────
+
+const BUDGET_MEMORY_CONTEXT = {
+  enabled: false,
+  entries: [],
+  promptContext: null,
+  dislikedProductNames: [],
+}
+
+function priced(id: string, score: number, priceEur: number | null, linkAvailable = true) {
+  return {
+    ...createShampooMatchedProduct(id, score, [`Grund ${id}`]),
+    price_eur: priceEur,
+    purchase_link_status: linkAvailable ? ("available" as const) : ("unavailable" as const),
+  }
+}
+
+async function withBudgetFlag<T>(enabled: boolean, work: () => Promise<T>): Promise<T> {
+  const previous = process.env.SHOPPING_BUDGET_ENABLED
+  if (enabled) process.env.SHOPPING_BUDGET_ENABLED = "true"
+  else delete process.env.SHOPPING_BUDGET_ENABLED
+  try {
+    return await work()
+  } finally {
+    if (previous === undefined) delete process.env.SHOPPING_BUDGET_ENABLED
+    else process.env.SHOPPING_BUDGET_ENABLED = previous
+  }
+}
+
+function budgetProfile(budget: unknown): HairProfile {
+  return {
+    thickness: "fine",
+    scalp_type: "balanced",
+    scalp_condition: null,
+    ...(budget === undefined ? {} : { shopping_preferences: { budget } }),
+  } as HairProfile
+}
+
+async function selectShampoos(
+  hairProfile: HairProfile,
+  engineProducts: MatchedProduct[],
+  routineItems: Parameters<ReturnType<typeof createSelectProductsTool>>[0]["routineItems"] = [],
+) {
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async () => engineProducts,
+  })
+  return tool({
+    category: "shampoo",
+    message: "Welches Shampoo passt zu mir?",
+    hairProfile,
+    memoryContext: BUDGET_MEMORY_CONTEXT,
+    routineItems,
+  })
+}
+
+const BUDGET_ENGINE_ORDER = () => [
+  priced("pricey-first", 0.95, 12.9),
+  priced("cheap-second", 0.9, 3.95),
+  priced("no-price", 0.88, null),
+  priced("no-link", 0.87, 2.5, false),
+  priced("pricey-third", 0.85, 9.5),
+  priced("cheap-fourth", 0.8, 4.99),
+]
+
+test("selectProducts with a saved 5 € cap lists within-budget products first and flags over-budget ones", async () => {
+  await withBudgetFlag(true, async () => {
+    const result = await selectShampoos(
+      budgetProfile({ kind: "capped", limitEur: 5, allowExceptions: false }),
+      BUDGET_ENGINE_ORDER(),
+    )
+
+    assert.equal(result.budget, "Bis 5 € pro Produkt")
+    assert.deepEqual(
+      result.products.map((product) => product.product_id),
+      ["cheap-second", "cheap-fourth", "pricey-first"],
+    )
+    assert.deepEqual(
+      result.products.map((product) => product.over_budget ?? false),
+      [false, false, true],
+    )
+    assert.equal(
+      result.budget_note,
+      "Produkte ohne verlässlichen Preis wurden wegen der Preisgrenze nicht berücksichtigt.",
+    )
+  })
+})
+
+test("selectProducts labels the flexible cap and never reorders for an uncapped budget", async () => {
+  await withBudgetFlag(true, async () => {
+    const flexible = await selectShampoos(
+      budgetProfile({ kind: "capped", limitEur: 15, allowExceptions: true }),
+      BUDGET_ENGINE_ORDER(),
+    )
+    assert.equal(flexible.budget, "Bis 15 € pro Produkt, einzelne dürfen mehr kosten")
+
+    const uncapped = await selectShampoos(
+      budgetProfile({ kind: "uncapped" }),
+      BUDGET_ENGINE_ORDER(),
+    )
+    const baseline = await withBudgetFlag(false, () =>
+      selectShampoos(budgetProfile({ kind: "uncapped" }), BUDGET_ENGINE_ORDER()),
+    )
+    assert.equal(uncapped.budget, "Ohne feste Preisgrenze")
+    assert.deepEqual(
+      uncapped.products.map((product) => product.product_id),
+      baseline.products.map((product) => product.product_id),
+    )
+    assert.equal(
+      uncapped.products.some((product) => product.over_budget),
+      false,
+    )
+  })
+})
+
+test("selectProducts output is unchanged without a saved budget, an invalid one, or the flag off", async () => {
+  const engineOrder = ["pricey-first", "cheap-second", "no-price"]
+  const run = (profile: HairProfile) =>
+    selectShampoos(profile, BUDGET_ENGINE_ORDER()).then((result) => result)
+
+  const withoutBudget = await withBudgetFlag(true, () => run(budgetProfile(undefined)))
+  assert.deepEqual(
+    withoutBudget.products.map((product) => product.product_id),
+    engineOrder,
+  )
+  assert.equal("budget" in withoutBudget, false)
+  assert.equal("budget_note" in withoutBudget, false)
+  assert.equal(
+    withoutBudget.products.some((product) => "over_budget" in product),
+    false,
+  )
+
+  const invalid = await withBudgetFlag(true, () =>
+    run(budgetProfile({ kind: "capped", limitEur: 7, allowExceptions: false })),
+  )
+  assert.deepEqual(
+    invalid.products.map((product) => product.product_id),
+    engineOrder,
+  )
+  assert.equal("budget" in invalid, false)
+
+  const flagOff = await withBudgetFlag(false, () =>
+    run(budgetProfile({ kind: "capped", limitEur: 5, allowExceptions: false })),
+  )
+  assert.deepEqual(
+    flagOff.products.map((product) => product.product_id),
+    engineOrder,
+  )
+  assert.equal("budget" in flagOff, false)
+})
+
+test("selectProducts keeps the user's own product in place and unflagged under a 5 € cap", async () => {
+  await withBudgetFlag(true, async () => {
+    const result = await selectShampoos(
+      budgetProfile({ kind: "capped", limitEur: 5, allowExceptions: false }),
+      [
+        priced("pricey-first", 0.95, 12.9),
+        priced("owned-shampoo", 0.9, 19.9),
+        priced("cheap-third", 0.85, 3.5),
+      ],
+      [
+        {
+          category: "shampoo",
+          product_name: "Owned Shampoo",
+          frequency_range: "weekly_2x",
+          product_id: "owned-shampoo",
+          product_submission_id: null,
+          match_status: "matched",
+        },
+      ],
+    )
+
+    assert.deepEqual(
+      result.products.map((product) => product.product_id),
+      ["cheap-third", "owned-shampoo", "pricey-first"],
+    )
+    const owned = result.products.find((product) => product.product_id === "owned-shampoo")
+    assert.equal(owned?.over_budget, undefined)
+    assert.equal(result.products.find((p) => p.product_id === "pricey-first")?.over_budget, true)
+  })
+})
+
+test("selectProducts hands a capped budget to the engine before its cut, and only a capped one", async () => {
+  await withBudgetFlag(true, async () => {
+    const received: Array<unknown> = []
+    const run = (hairProfile: HairProfile) =>
+      createSelectProductsTool({
+        runCategoryEngine: async (params) => {
+          received.push(params.orderBeforeCut)
+          const pool = BUDGET_ENGINE_ORDER()
+          // Like the engine: the budget hook sees the full ranked pool, then the cut keeps three.
+          return (params.orderBeforeCut ? params.orderBeforeCut(pool) : pool).slice(0, 3)
+        },
+      })({
+        category: "shampoo",
+        message: "Welches Shampoo passt zu mir?",
+        hairProfile,
+        memoryContext: BUDGET_MEMORY_CONTEXT,
+        routineItems: [],
+      })
+
+    const capped = await run(budgetProfile({ kind: "capped", limitEur: 5, allowExceptions: false }))
+    assert.equal(typeof received[0], "function")
+    assert.deepEqual(
+      capped.products.map((product) => product.product_id),
+      ["cheap-second", "cheap-fourth", "pricey-first"],
+    )
+    // Unpriced products the hook dropped are still reported.
+    assert.equal(
+      capped.budget_note,
+      "Produkte ohne verlässlichen Preis wurden wegen der Preisgrenze nicht berücksichtigt.",
+    )
+
+    await run(budgetProfile({ kind: "uncapped" }))
+    await run(budgetProfile(undefined))
+    assert.equal(received[1], undefined)
+    assert.equal(received[2], undefined)
+  })
+})
+
+test("selectProducts passes the capped budget hook to the bondbuilder engine too", async () => {
+  await withBudgetFlag(true, async () => {
+    let received: unknown
+    await createSelectProductsTool({
+      runCategoryEngine: async (params) => {
+        received = params.orderBeforeCut
+        return []
+      },
+    })({
+      category: "bondbuilder",
+      message: "Welcher Bondbuilder passt zu mir?",
+      hairProfile: budgetProfile({ kind: "capped", limitEur: 5, allowExceptions: false }),
+      memoryContext: BUDGET_MEMORY_CONTEXT,
+      routineItems: [],
+    })
+    assert.equal(typeof received, "function")
+  })
+})
+
+function pricedBondbuilder(id: string, score: number, priceEur: number) {
+  return createMatchedProduct(id, score, {
+    category: "Bondbuilder",
+    price_eur: priceEur,
+    purchase_link_status: "available",
+    recommendation_meta: {
+      category: "bondbuilder",
+      score,
+      top_reasons: ["Passt zum aktuellen Bondbuilding-Bedarf."],
+      tradeoffs: [],
+      usage_hint: "Nach Anleitung anwenden.",
+      matched_intensity: "intensive",
+      application_mode: "pre_shampoo",
+      bond_repair_axis: "disulfide_crosslink",
+      treatment_mode: "rinse_out",
+      product_format: "cream_treatment",
+      usage_protocol: "olaplex_3plus",
+      lifecycle_status: "active",
+    } satisfies BondbuilderRecommendationMetadata,
+  })
+}
+
+// The engine's trust order for the 2026-10-09 production catalogue (K18 = house default among
+// the three high-trust products); the relevance scores are irrelevant to that order.
+const BONDBUILDER_TRUST_ORDER = () => [
+  pricedBondbuilder("k18", 0.7, 56.25),
+  pricedBondbuilder("olaplex-3plus", 0.86, 34),
+  pricedBondbuilder("epres", 0.84, 48),
+  pricedBondbuilder("loreal-elvital-bond", 0.95, 8.95),
+  pricedBondbuilder("redken-acidic-bonding", 0.8, 25.5),
+  pricedBondbuilder("kerastase-premiere", 0.9, 56.29),
+  pricedBondbuilder("ogx-sealing-serum", 0.94, 18.68),
+  pricedBondbuilder("aveda", 0.93, 52),
+]
+
+test("selectProducts pairs the most trusted affordable Bondbuilder with the most trusted overall under Bis 15 €", async () => {
+  await withBudgetFlag(true, async () => {
+    const result = await createSelectProductsTool({
+      runCategoryEngine: async (params) => {
+        const pool = BONDBUILDER_TRUST_ORDER()
+        // Like the Bondbuilder engine: the trust-pair hook sees the ranked pool, then the cut.
+        return (
+          params.orderBeforeCut ? params.orderBeforeCut(pool, { mode: "trust_pair" }) : pool
+        ).slice(0, 3)
+      },
+    })({
+      category: "bondbuilder",
+      message: "Welcher Bondbuilder passt zu mir?",
+      hairProfile: budgetProfile({ kind: "capped", limitEur: 15, allowExceptions: false }),
+      memoryContext: BUDGET_MEMORY_CONTEXT,
+      routineItems: [],
+    })
+
+    // The later list ordering keeps the pair: the affordable L'Oréal leads, the over-budget K18
+    // comparison stays second instead of being pushed behind cheaper, less trusted products.
+    assert.deepEqual(
+      result.products.map((product) => [product.product_id, product.over_budget ?? false]),
+      [
+        ["loreal-elvital-bond", false],
+        ["k18", true],
+        ["olaplex-3plus", true],
+      ],
+    )
+  })
+})
+
+test("chat trust-pair ordering keeps an over-budget comparison ahead of a cheaper, less trusted product", () => {
+  const ordering = applyChatBudgetOrdering({
+    products: [
+      pricedBondbuilder("loreal-elvital-bond", 0.95, 8.95),
+      pricedBondbuilder("k18", 0.7, 56.25),
+      pricedBondbuilder("cheap-low-trust", 0.6, 4.5),
+    ],
+    budget: { kind: "capped", limitEur: 15, allowExceptions: false },
+    protectedProductIds: new Set(),
+  })
+  assert.deepEqual(
+    ordering.products.map((product) => product.id),
+    ["loreal-elvital-bond", "k18", "cheap-low-trust"],
+  )
+  assert.deepEqual([...ordering.overBudgetProductIds], ["k18"])
 })

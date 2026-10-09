@@ -1,0 +1,150 @@
+{
+  "status": "static-only PASS",
+  "phase": "before",
+  "proofCounts": {
+    "before": 58,
+    "transfer": 58,
+    "cut": 54
+  },
+  "targetCounts": {
+    "before": 42,
+    "transfer": 42,
+    "cut": 38
+  },
+  "untouchedCallbacks": 53,
+  "snapshots": 21,
+  "controls": 7,
+  "sqlControlsNotExecuted": 5,
+  "selectors": [
+    {
+      "id": "closing-lineage-disabled",
+      "phase": "before",
+      "selected": 1,
+      "rawGlobalTitleMatches": 1
+    },
+    {
+      "id": "closing-lineage-disabled",
+      "phase": "transfer",
+      "selected": 1,
+      "rawGlobalTitleMatches": 1
+    },
+    {
+      "id": "closing-lineage-disabled",
+      "phase": "cut",
+      "selected": 1,
+      "rawGlobalTitleMatches": 1
+    },
+    {
+      "id": "module-projection-disabled",
+      "phase": "before",
+      "selected": 1,
+      "rawGlobalTitleMatches": 2
+    },
+    {
+      "id": "module-projection-disabled",
+      "phase": "transfer",
+      "selected": 1,
+      "rawGlobalTitleMatches": 2
+    },
+    {
+      "id": "module-projection-disabled",
+      "phase": "cut",
+      "selected": 1,
+      "rawGlobalTitleMatches": 1
+    },
+    {
+      "id": "provenance-flag-ignored",
+      "phase": "before",
+      "selected": 1,
+      "rawGlobalTitleMatches": 1
+    },
+    {
+      "id": "provenance-flag-ignored",
+      "phase": "transfer",
+      "selected": 1,
+      "rawGlobalTitleMatches": 1
+    },
+    {
+      "id": "provenance-flag-ignored",
+      "phase": "cut",
+      "selected": 1,
+      "rawGlobalTitleMatches": 1
+    },
+    {
+      "id": "provenance-clears-active",
+      "phase": "before",
+      "selected": 1,
+      "rawGlobalTitleMatches": 1
+    },
+    {
+      "id": "provenance-clears-active",
+      "phase": "transfer",
+      "selected": 1,
+      "rawGlobalTitleMatches": 1
+    },
+    {
+      "id": "provenance-clears-active",
+      "phase": "cut",
+      "selected": 1,
+      "rawGlobalTitleMatches": 1
+    },
+    {
+      "id": "provenance-bumps-cas",
+      "phase": "before",
+      "selected": 1,
+      "rawGlobalTitleMatches": 1
+    },
+    {
+      "id": "provenance-bumps-cas",
+      "phase": "transfer",
+      "selected": 1,
+      "rawGlobalTitleMatches": 1
+    },
+    {
+      "id": "provenance-bumps-cas",
+      "phase": "cut",
+      "selected": 1,
+      "rawGlobalTitleMatches": 1
+    },
+    {
+      "id": "adapter-rejects-null-receipt",
+      "phase": "before",
+      "selected": 1,
+      "rawGlobalTitleMatches": 1
+    },
+    {
+      "id": "adapter-rejects-null-receipt",
+      "phase": "transfer",
+      "selected": 1,
+      "rawGlobalTitleMatches": 1
+    },
+    {
+      "id": "adapter-rejects-null-receipt",
+      "phase": "cut",
+      "selected": 1,
+      "rawGlobalTitleMatches": 1
+    },
+    {
+      "id": "adapter-drops-provenance-flag",
+      "phase": "before",
+      "selected": 1,
+      "rawGlobalTitleMatches": 1
+    },
+    {
+      "id": "adapter-drops-provenance-flag",
+      "phase": "transfer",
+      "selected": 1,
+      "rawGlobalTitleMatches": 1
+    },
+    {
+      "id": "adapter-drops-provenance-flag",
+      "phase": "cut",
+      "selected": 1,
+      "rawGlobalTitleMatches": 1
+    }
+  ],
+  "readset": 34,
+  "dependencies": 374,
+  "childrenSpawned": 0,
+  "writes": 0
+}

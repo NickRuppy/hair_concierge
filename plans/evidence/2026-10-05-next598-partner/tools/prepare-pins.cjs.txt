@@ -1,0 +1,67 @@
+'use strict'
+// Static preparation only. Reads source as text and uses TypeScript's parser; never imports product/tests.
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto')
+const R='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning',D=__dirname,P='/tmp/test-audit-partner-access84'
+const sha=x=>crypto.createHash('sha256').update(x).digest('hex'),read=p=>JSON.parse(fs.readFileSync(p,'utf8')),fail=s=>{throw Error(s)}
+const receipt=read(P+'/handoff-receipt.json');if(sha(fs.readFileSync(P+'/handoff-receipt.json'))!=='52c9fa29f47e207a9a4765c27ff97327307717ee1714b0a098cb1edad7a75b63')fail('Authorized receipt drift')
+for(const[f,h]of Object.entries(receipt.artifacts))if(sha(fs.readFileSync(P+'/'+f))!==h)fail('Artifact drift '+f)
+const M=read(P+'/manifest.json');for(const[f,h]of Object.entries(M.readset))if(sha(fs.readFileSync(R+'/'+f))!==h)fail('Readset drift '+f)
+const old=read('/tmp/test-audit-billing-trial210-tools-ybzravna/operator-editor-pins.json')
+// Main explicitly approved this one shared-metadata update after independently verifying task ref/HEAD.
+const metadataDisposition={file:old.commonDir+'/packed-refs',oldSHA:'cfc2751a25445bec7bb6ea01774d158e5d2c898957f16875f5f69e4f156d4050',newSHA:'e1c4bf1d8f62deff84b449eff0e35459de5e13d9936e881f71b1162d61c12d28',authorization:'Main explicit message: adopt ONLY this current metadata hash; target branch/HEAD unchanged; loose target ref absent'}
+const packed=old.identityFiles.find(p=>p.path===metadataDisposition.file)
+if(packed?.sha!==metadataDisposition.oldSHA)fail('Prior metadata pin mismatch')
+packed.sha=metadataDisposition.newSHA
+function pin(p){return fs.existsSync(p)?{path:p,realpath:fs.realpathSync(p),sha:sha(fs.readFileSync(p))}:{path:p,realpath:null,sha:null}}
+for(const p of old.identityFiles){const x=pin(p.path);if(x.sha!==p.sha||x.realpath!==p.realpath)fail('Git identity changed '+p.path)}
+const ts=require(R+'/node_modules/typescript'),g=require('./operator-guard.cjs')
+const controls=read(P+'/controls.json').map(c=>{
+ const text=fs.readFileSync(R+'/'+c.file,'utf8'),sf=g.parse(ts,c.file,text),found=[]
+ function walk(n){if(ts.isFunctionDeclaration(n)&&n.name&&n.getText(sf).includes(c.from))found.push(n);ts.forEachChild(n,walk)}walk(sf)
+ if(found.length!==1||text.split(c.from).length!==2||sha(text)!==c.sourceSha256||sha(text.replace(c.from,c.to))!==c.mutantSha256)fail('Fault anchor '+c.id)
+ g.parse(ts,c.file,text.replace(c.from,c.to))
+ const oracles={}
+ for(const phase of ['transfer','cut']){const s=fs.readFileSync(P+'/snapshots/'+phase+'/'+c.testFile,'utf8'),rows=g.registrations(ts,c.testFile,s),row=rows.get(c.testName),o=c.oracles[phase]
+ if(!row?.assertions.some(a=>a.startLine===o.line&&a.text===o.text))fail('Oracle '+c.id)
+ oracles[phase]={startLine:o.line,text:o.text,keeperSha256:sha(row.statement),testFileSha256:sha(s)} }
+ const expectedOperator=c.id.startsWith('C7-')?(c.id==='C7-noncommercial-copy'?'doesNotMatch':'match'):(c.id==='C4-unstamped-lookup'||c.id==='C5-unpaid-restart'||c.id==='C6-new-account-billing-read'||c.id==='C8-mail-status'?'strictEqual':'deepStrictEqual')
+ let errorMessageIncludes=expectedOperator==='deepStrictEqual'?['Expected values to be strictly deep-equal:']:expectedOperator==='strictEqual'?['Expected values to be strictly equal:']:['The input','match the regular expression']
+ if(c.id==='C1-no-session-not-outage')errorMessageIncludes.push('unavailable','none')
+ if(c.id.startsWith('C2-'))errorMessageIncludes.push(c.id.slice('C2-projection-'.length),'audit-wrong-')
+ if(c.id==='C3-auth-fault-not-none'||c.id==='C4-stamped-read-fault')errorMessageIncludes.push('unavailable','none')
+ if(c.id==='C4-unstamped-lookup')errorMessageIncludes.push('1 !== 0')
+ if(c.id==='C5-unpaid-restart')errorMessageIncludes.push('false !== true')
+ if(c.id==='C6-new-account-billing-read')errorMessageIncludes.push('503 !== 200')
+ if(c.id==='C8-mail-status')errorMessageIncludes.push('200 !== 202')
+ if(c.id==='C8-mail-required')errorMessageIncludes.push('requiresEmail','false','true')
+ if(c.id==='C8-mail-address')errorMessageIncludes.push('other@example.test','lea@example.test')
+ if(c.id==='C8-release-before-mail')errorMessageIncludes.push('reserve','release','magicLink')
+ if(c.id==='C7-visible-email')errorMessageIncludes.push('lea@example')
+ if(c.id==='C7-change-email-copy')errorMessageIncludes.push('Nicht deine E-Mail')
+ if(c.id==='C7-start-copy')errorMessageIncludes.push('Los geht')
+ if(c.id==='C7-account-copy')errorMessageIncludes.push('Damit erstellst du dein Chaarlie Konto')
+ if(c.id==='C7-noncommercial-copy')errorMessageIncludes.push('Abo|Zahlung|lebenslang|Produkttest|kostenlos')
+ const escaped=c.testName.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
+ return {id:c.id,candidate:c.id.slice(0,2),file:c.file,sourceSha256:c.sourceSha256,mutatedSha256:c.mutantSha256,from:c.from,to:c.to,anchor:{kind:'function',scope:found[0].name.text,scopeSha256:sha(found[0].getText(sf)),expectedOccurrences:1},test:{file:c.testFile,name:c.testName},command:['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-name-pattern=^'+escaped+'$',c.testFile],oracles,intendedAssertion:c.reason,expectedOperator,errorMessageIncludes}
+})
+fs.writeFileSync(D+'/operator-controls-normalized.json',JSON.stringify(controls,null,2)+'\n',{flag:'wx'})
+const dependencyNames=['tsx','esbuild','get-tsconfig','resolve-pkg-maps','fsevents','@esbuild/darwin-arm64','react','react-dom','zod','@supabase/auth-js/dist','@supabase/ssr/dist','@supabase/supabase-js/dist','@supabase/postgrest-js/dist','@supabase/realtime-js/dist','@supabase/storage-js/dist','@supabase/functions-js/dist','next/dist/server/web','next/dist/shared/lib','next/dist/compiled/@edge-runtime/cookies'].filter(n=>fs.existsSync(R+'/node_modules/'+n))
+const dependencyTrees=dependencyNames.map(n=>({path:R+'/node_modules/'+n,names:g.inventory(R+'/node_modules/'+n)}))
+const dependencyFiles=new Set(dependencyTrees.flatMap(t=>t.names.map(n=>t.path+'/'+n)))
+for(const n of ['typescript/package.json','typescript/lib/typescript.js','next/package.json','next/server.js','next/headers.js','next/dist/api/headers.js','next/dist/client/components/headers.js','server-only/package.json','server-only/index.js','@supabase/auth-js/package.json','@supabase/ssr/package.json','@supabase/supabase-js/package.json','@supabase/postgrest-js/package.json','@supabase/realtime-js/package.json','@supabase/storage-js/package.json','@supabase/functions-js/package.json'])if(fs.existsSync(R+'/node_modules/'+n))dependencyFiles.add(R+'/node_modules/'+n)
+for(const f of Object.keys(M.readset))if(f.startsWith('node_modules/'))dependencyFiles.add(R+'/'+f)
+const dependencies=[...dependencyFiles].sort().map(pin)
+const repositoryTreePaths=['src/lib/partner-access','src/app/api/partner-access','src/app/partner/einladung','src/lib/supabase','src/lib/billing','src/lib/funnel']
+const repositoryTrees=repositoryTreePaths.map(p=>({path:p,names:g.inventory(R+'/'+p)}))
+const cohort=new Set(Object.keys(M.phases.before)),readset=new Map(Object.entries(M.readset).filter(([f])=>!cohort.has(f)))
+for(const t of repositoryTrees)for(const n of t.names)readset.set(t.path+'/'+n,sha(fs.readFileSync(R+'/'+t.path+'/'+n)))
+for(const f of ['.nvmrc','package-lock.json','tsconfig.json'])readset.set(f,sha(fs.readFileSync(R+'/'+f)))
+const artifactHashes={};for(const f of ['handoff-receipt.json',...Object.keys(receipt.artifacts)])artifactHashes[P+'/'+f]=sha(fs.readFileSync(P+'/'+f))
+for(const [phase,files]of Object.entries(M.phases))for(const[f,h]of Object.entries(files)){const p=P+'/snapshots/'+phase+'/'+f;if(sha(fs.readFileSync(p))!==h)fail('Snapshot drift');artifactHashes[p]=h}
+for(const f of ['operator-guard.cjs','operator-proof.cjs','operator-readonly-preload.cjs','operator-controls-normalized.json'])artifactHashes[D+'/'+f]=sha(fs.readFileSync(D+'/'+f))
+const entrypointTemplateHashes={};for(const f of ['operator-edit.cjs','operator-run-controls.cjs'])entrypointTemplateHashes[D+'/'+f]=sha(fs.readFileSync(D+'/'+f))
+const node={version:process.version,realpath:fs.realpathSync(process.execPath),sha:sha(fs.readFileSync(process.execPath))};if(JSON.stringify(node)!==JSON.stringify(old.node))fail('Node pin differs from tested runtime')
+const pins={root:R,head:M.head,branch:M.branch,gitDir:old.gitDir,commonDir:old.commonDir,identityFiles:old.identityFiles,metadataDisposition,node,typescriptVersion:ts.version,authorizedReceiptSHA:'52c9fa29f47e207a9a4765c27ff97327307717ee1714b0a098cb1edad7a75b63',originalReadset64:M.readset,readset:[...readset].sort(([a],[b])=>a.localeCompare(b)).map(([file,sha])=>({file,sha})),dependencies,dependencyTrees,repositoryTrees,artifactHashes,entrypointTemplateHashes}
+const raw=JSON.stringify(pins,null,2)+'\n',pinSHA=sha(raw);fs.writeFileSync(D+'/operator-pins.json',raw,{flag:'wx'})
+for(const f of ['operator-edit.cjs','operator-run-controls.cjs'])fs.writeFileSync(D+'/'+f,fs.readFileSync(D+'/'+f,'utf8').replace("const PIN_SHA='PIN_SHA_PLACEHOLDER'","const PIN_SHA='"+pinSHA+"'"))
+console.log(JSON.stringify({dir:D,pinSHA,controls:controls.length,dependencies:dependencies.length,readset:readset.size,repositoryWrites:0,applicationImports:0,runtimeRuns:0},null,2))

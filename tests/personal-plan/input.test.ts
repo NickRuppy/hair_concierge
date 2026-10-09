@@ -25,6 +25,17 @@ test("INITIAL-01: a valid V3 paid quiz becomes a quiz-faithful initial profile",
   assert.deepEqual(profile.scalp.concerns, [])
   assert.equal(profile.routine.shampooFrequency.state, "unknown")
   assert.equal(profile.routine.heatToolUse.state, "unknown")
+  assert.deepEqual(profile.routine, {
+    currentProductLoad: { state: "unknown", reason: "current_product_load" },
+    shampooFrequency: { state: "unknown", reason: "shampoo_frequency" },
+    heatToolUse: { state: "unknown", reason: "heat_tool_use" },
+    mechanicalExposureSignals: [],
+    dryShampooBridgePreference: {
+      state: "unknown",
+      reason: "dry_shampoo_bridge_preference",
+    },
+    scalpIrritationState: { state: "unknown", reason: "scalp_irritation_detail" },
+  })
 })
 
 test("INITIAL-12: V2 concerns normalize once without inventing breakage", () => {
@@ -52,18 +63,6 @@ test("INITIAL-12: V2 concerns normalize once without inventing breakage", () => 
   assert.deepEqual(profile.concernRecurrence, {
     state: "unknown",
     reason: "concern_recurrence",
-  })
-})
-
-test("malformed mandatory quiz facts return a typed incomplete input", () => {
-  const parsed = parseSupportedPersonalPlanQuizEnvelope({
-    ...COMPLETE_V3_PLAN_ENVELOPE,
-    answers: { ...COMPLETE_V3_PLAN_ENVELOPE.answers, thickness: undefined },
-  })
-
-  assert.deepEqual(parsed, {
-    ok: false,
-    error: { code: "invalid_quiz_envelope", quizVersion: 3 },
   })
 })
 

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import { readFileSync } from "node:fs"
 import test from "node:test"
+import { JSDOM } from "jsdom"
 import React, { type ReactElement, type ReactNode } from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 
@@ -77,25 +78,29 @@ test("ProfileLockBadge is decorative and never covers content (no interactive ro
 
 // --- HaarCheckEditControl (fix round 1: F1 corner-lock fix, F2 byte-identity, F3 extraction) --
 
-test("HaarCheckEditControl free tier: the corner lock renders as a Button SIBLING, not a child — proves F1", () => {
-  const root = HaarCheckEditControl({ tier: "free", onEdit: () => {} }) as AnyElement
-
-  assert.equal(root.type, "span")
-  assert.match(root.props.className as string, /relative/)
-  assert.match(root.props.className as string, /inline-flex/)
-
-  const [buttonChild, badgeChild] = childrenOf(root) as AnyElement[]
-  assert.equal(buttonChild.type, Button, "first child is the Button")
-  assert.equal(badgeChild.type, ProfileLockBadge, "second child is the lock badge, as a SIBLING")
-
-  // The badge must not be inside the Button — that's the exact bug F1 fixed: Button's
-  // `[&_svg]:size-4` beats the badge's own icon sizing when the badge is a child.
-  const buttonOwnChildren = childrenOf(buttonChild)
-  assert.deepEqual(buttonOwnChildren, ["Haar-Check bearbeiten"])
-})
-
 test("HaarCheckEditControl free tier: rendered markup places the lock <svg> after the Button closes, not inside it", () => {
   const html = renderToStaticMarkup(<HaarCheckEditControl tier="free" onEdit={() => {}} />)
+  const dom = new JSDOM(html)
+  try {
+    const wrapper = dom.window.document.body.firstElementChild
+    assert.equal(wrapper?.tagName, "SPAN")
+    assert.ok(wrapper?.classList.contains("relative"), "the corner badge has a positioned wrapper")
+    assert.ok(
+      wrapper?.classList.contains("inline-flex"),
+      "the corner badge stays beside the control",
+    )
+    const buttons = wrapper?.querySelectorAll("button")
+    assert.equal(buttons?.length, 1)
+    const button = buttons![0]!
+    assert.equal(button.textContent, "Haar-Check bearbeiten")
+    assert.equal(button.getAttribute("aria-label"), "Haar-Check bearbeiten — Premium")
+    const badge = wrapper?.querySelector('[data-profile-lock-badge="true"]')
+    assert.ok(badge, "the free control renders its corner lock badge")
+    assert.equal(button.parentElement, wrapper)
+    assert.equal(badge.parentElement, wrapper, "the corner lock remains the button's sibling")
+  } finally {
+    dom.window.close()
+  }
 
   const buttonClose = html.indexOf("</button>")
   const svgOpen = html.indexOf("<svg")
@@ -105,13 +110,6 @@ test("HaarCheckEditControl free tier: rendered markup places the lock <svg> afte
     svgOpen > buttonClose,
     "the lock glyph's <svg> must render after </button> — a sibling, never a descendant",
   )
-})
-
-test("HaarCheckEditControl free tier: carries the accessible Premium name", () => {
-  const root = HaarCheckEditControl({ tier: "free", onEdit: () => {} }) as AnyElement
-  const [buttonChild] = childrenOf(root) as AnyElement[]
-
-  assert.equal(buttonChild.props["aria-label"], "Haar-Check bearbeiten — Premium")
 })
 
 test("HaarCheckEditControl premium tier: renders the bare Button, byte-identical to pre-T15 markup — proves F2", () => {
@@ -310,10 +308,10 @@ test("the layout resolves tier server-side via the same route-agnostic loader /s
     layoutSource,
     /import \{ loadAuthenticatedAppPageTier \} from "@\/lib\/auth\/authenticated-app-route-access"/,
   )
-  assert.match(layoutSource, /const \[navigation, tier\] = await Promise\.all\(\[/)
+  assert.match(layoutSource, /const \[navigation, tier(?:, \w+)*\] = await Promise\.all\(\[/)
   assert.match(layoutSource, /loadAuthenticatedAppPageTier\(\)/)
   assert.match(
     layoutSource,
-    /<ProfilePageTierProvider tier=\{tier\}>\{children\}<\/ProfilePageTierProvider>/,
+    /<ProfilePageTierProvider tier=\{tier\}>[\s\S]*\{children\}[\s\S]*<\/ProfilePageTierProvider>/,
   )
 })

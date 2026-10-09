@@ -1,0 +1,57 @@
+{
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "node": {
+    "version": "v22.12.0",
+    "realpath": "/usr/local/bin/node",
+    "sha": "9c40e9b16cacab464b63e45731ffd020830144a14c50d440b59b90e22709fe80"
+  },
+  "readOnly": [
+    "/usr/local/bin/node --require /var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/operator-readonly-preload.cjs /var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/operator-edit.cjs --check",
+    "/usr/local/bin/node --require /var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/operator-readonly-preload.cjs /var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/operator-run-controls.cjs --check",
+    "/usr/local/bin/node --require /var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/operator-readonly-preload.cjs /var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/proof-attestation.cjs",
+    "/usr/local/bin/node --require /var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/operator-readonly-preload.cjs /var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/static-integrity.cjs"
+  ],
+  "fullNativeCommand": {
+    "executable": "/usr/local/bin/node",
+    "args": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "tests/funnel-api.test.ts",
+      "tests/funnel-client.test.ts",
+      "tests/funnel-cookie.test.ts",
+      "tests/funnel-migration.test.ts",
+      "tests/funnel-rate-limit.test.ts",
+      "tests/funnel-route.test.ts",
+      "tests/funnel-server.test.ts",
+      "tests/gated-example-pages.test.tsx",
+      "tests/gated-pages-zero-mutation.test.tsx",
+      "tests/gated-preview-component.test.tsx",
+      "tests/editorial-pages.test.tsx",
+      "tests/landing-client-import-boundary.test.ts"
+    ],
+    "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning"
+  },
+  "fullNativeShell": "/usr/local/bin/node --import ./tests/server-only-register.cjs --import tsx --test --test-concurrency=1 tests/funnel-api.test.ts tests/funnel-client.test.ts tests/funnel-cookie.test.ts tests/funnel-migration.test.ts tests/funnel-rate-limit.test.ts tests/funnel-route.test.ts tests/funnel-server.test.ts tests/gated-example-pages.test.tsx tests/gated-pages-zero-mutation.test.tsx tests/gated-preview-component.test.tsx tests/editorial-pages.test.tsx tests/landing-client-import-boundary.test.ts",
+  "transfer": "/usr/local/bin/node /var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/operator-edit.cjs transfer",
+  "controlsEachPhase": "/usr/local/bin/node /var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/operator-run-controls.cjs run",
+  "cut": "/usr/local/bin/node /var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/operator-edit.cjs cut <exact-transfer-receipt-directory> <completion-sha256>",
+  "fullNativeValidate": "/usr/local/bin/node /var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/operator-native-proof.cjs <before|transfer|cut> <closed-native.tap> <command.json>",
+  "sequence": [
+    "root review plus independent preservation acceptance",
+    "no other root runner active",
+    "readonly checks",
+    "full79 before closed0 and receipt validation",
+    "transfer CAS",
+    "full79 transfer closed0 and receipt validation",
+    "all20 transfer clean-red-restored-clean",
+    "cut CAS gated by exact all20 receipt and logs",
+    "full74 cut closed0 and receipt validation",
+    "all20 cut clean-red-restored-clean",
+    "root fresh whole CI and coverage"
+  ],
+  "limits": "No command has been run for native, editing, source faults or provider/DB/browser work. Main is sole operator. Manual runner sequencing is required; shared lock guards only participating tools."
+}

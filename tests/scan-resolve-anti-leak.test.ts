@@ -189,6 +189,8 @@ function baseDeps(overrides: Partial<ScanResolveRouteDeps> = {}): ScanResolveRou
     isProductSearchQuarantined: async () => false,
     loadQuarantinedProductIdsAmong: async () => new Set<string>(),
     loadScanEvaluationContext: async () => context,
+    isShoppingBudgetEnabled: () => false,
+    loadShoppingBudget: async () => null,
     loadScanProductFacts: async () => null,
     loadRecommendationCandidates: async (_client, input) =>
       Object.fromEntries(input.roles.map((role) => [role, []])),
@@ -311,16 +313,8 @@ test("anti-leak: a masked response contains none of the withheld alternatives' i
         )
       }
     })
-  })
-})
 
-test("anti-leak: no alternative entry carries an identity/resolvable key at any depth", async () => {
-  await withFlag("true", async () => {
-    const handler = createScanResolveRouteHandler(baseDeps())
-    const response = await handler(request({ productId }))
-    const body = await response.json()
     assert.equal(body.alternatives.length, 2)
-
     const keysSeen = new Set<string>()
     everyKey(body.alternatives, keysSeen)
     for (const forbidden of FORBIDDEN_ALTERNATIVE_KEYS) {
@@ -340,18 +334,12 @@ test("anti-leak: no alternative entry carries an identity/resolvable key at any 
       "verdict",
       "verdictLabel",
     ])
-  })
-})
-
-test("anti-leak: comparison row labels come only from the fixture's generic criterion labels, never product names", async () => {
-  await withFlag("true", async () => {
-    const handler = createScanResolveRouteHandler(baseDeps())
-    const response = await handler(request({ productId }))
-    const body = await response.json()
     const labels = (
       body.alternatives as Array<{ comparison: { rows: Array<{ label: string }> } }>
     ).flatMap((alternative) => alternative.comparison.rows.map((row) => row.label))
     assert.deepEqual(labels.sort(), ["Kopfhaut-Fokus", "Reinigungsstärke"].sort())
+    assert.equal(body.alternatives[1].verdict, "supportive")
+    assert.equal(body.alternatives[1].verdictLabel, "Passt eingeschränkt")
   })
 })
 

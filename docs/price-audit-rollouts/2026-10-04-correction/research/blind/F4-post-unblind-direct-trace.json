@@ -1,0 +1,506 @@
+{
+  "candidate": "F4",
+  "standard_version": "conditioner-classification-v1.6",
+  "properties": {
+    "conditioning_deposition_potential": {
+      "value": "higher",
+      "decision_type": "formula_potential",
+      "confidence": "moderate",
+      "evidence_level": "E2",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "High conditioning potential is supported by a clear fatty-alcohol/long-chain quat base plus an early ester and an oil cluster, with a separate hydrolyzed keratin film candidate.",
+      "formula_observations": [
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride",
+        "#4 Isopropyl Palmitate",
+        "#8-12 nonvolatile oil cluster"
+      ],
+      "product_inferences": [
+        "High conditioning potential is supported by a clear fatty-alcohol/long-chain quat base plus an early ester and an oil cluster, with a separate hydrolyzed keratin film candidate."
+      ],
+      "supporting_signals": [
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride",
+        "#4 Isopropyl Palmitate",
+        "#8-12 nonvolatile oil cluster"
+      ],
+      "counter_signals": [
+        "High is a formula-potential ceiling, not measured slip/softness; glycerin #2 and rinse-out dilution prevent predicting a fixed delivered dose."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F4.json"
+      ],
+      "shared_mechanism_ids": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "wet_slip_detangling_potential": {
+      "value": "higher",
+      "decision_type": "formula_potential",
+      "confidence": "moderate",
+      "evidence_level": "E2",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Candidate wet slip from cationic/fatty base with emollient support; higher F4 is the qualitative formula prior behind its high-slip architecture, not an independently measured endpoint.",
+      "formula_observations": [
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride",
+        "#4 Isopropyl Palmitate",
+        "#8-12 nonvolatile oil cluster"
+      ],
+      "product_inferences": [
+        "Candidate wet slip from cationic/fatty base with emollient support; higher F4 is the qualitative formula prior behind its high-slip architecture, not an independently measured endpoint."
+      ],
+      "supporting_signals": [
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride",
+        "#4 Isopropyl Palmitate",
+        "#8-12 nonvolatile oil cluster"
+      ],
+      "counter_signals": [
+        "No wet-tress force endpoint or delivered cationic dose. All M1 observations describe one family, not several independent technologies."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F4.json"
+      ],
+      "shared_mechanism_ids": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "dry_combability_potential": {
+      "value": "moderate",
+      "decision_type": "formula_potential",
+      "confidence": "moderate",
+      "evidence_level": "E2",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Moderate dry-combability potential from coherent retained-film/lubrication routes; not inferred from wet-combing data.",
+      "formula_observations": [
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride",
+        "#4 Isopropyl Palmitate",
+        "#8-12 nonvolatile oil cluster"
+      ],
+      "product_inferences": [
+        "Moderate dry-combability potential from coherent retained-film/lubrication routes; not inferred from wet-combing data."
+      ],
+      "supporting_signals": [
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride",
+        "#4 Isopropyl Palmitate",
+        "#8-12 nonvolatile oil cluster"
+      ],
+      "counter_signals": [
+        "No dry-tress endpoint; unknown retention limits a higher endpoint-specific conclusion."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F4.json"
+      ],
+      "shared_mechanism_ids": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "surface_lubrication_softness_potential": {
+      "value": "moderate",
+      "decision_type": "formula_potential",
+      "confidence": "moderate",
+      "evidence_level": "E2",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Moderate surface lubrication/softness potential from nonvolatile emollients in a conditioning base.",
+      "formula_observations": [
+        "#4 Isopropyl Palmitate",
+        "#8-12 nonvolatile oil cluster",
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride"
+      ],
+      "product_inferences": [
+        "Moderate surface lubrication/softness potential from nonvolatile emollients in a conditioning base."
+      ],
+      "supporting_signals": [
+        "#4 Isopropyl Palmitate",
+        "#8-12 nonvolatile oil cluster",
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride"
+      ],
+      "counter_signals": [
+        "Actual friction and perceived softness are separate, unmeasured endpoints; early order does not prove sensory intensity."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F4.json"
+      ],
+      "shared_mechanism_ids": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "smoothing_frizz_control_potential": {
+      "value": "moderate",
+      "decision_type": "formula_potential",
+      "confidence": "moderate",
+      "evidence_level": "E2",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Moderate surface-control potential from a coherent emollient/conditioning route beyond baseline fatty alcohol alone.",
+      "formula_observations": [
+        "#4 Isopropyl Palmitate",
+        "#8-12 nonvolatile oil cluster",
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride"
+      ],
+      "product_inferences": [
+        "Moderate surface-control potential from a coherent emollient/conditioning route beyond baseline fatty alcohol alone."
+      ],
+      "supporting_signals": [
+        "#4 Isopropyl Palmitate",
+        "#8-12 nonvolatile oil cluster",
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride"
+      ],
+      "counter_signals": [
+        "No humidity protocol or proof of weatherproof frizz control; not upgraded independently from general conditioning."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F4.json"
+      ],
+      "shared_mechanism_ids": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "shine_potential": {
+      "value": "moderate",
+      "decision_type": "formula_potential",
+      "confidence": "moderate",
+      "evidence_level": "E2",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Possible moderate alignment/film shine route, sharing the emollient surface mechanism.",
+      "formula_observations": [
+        "#4 Isopropyl Palmitate",
+        "#8-12 nonvolatile oil cluster"
+      ],
+      "product_inferences": [
+        "Possible moderate alignment/film shine route, sharing the emollient surface mechanism."
+      ],
+      "supporting_signals": [
+        "#4 Isopropyl Palmitate",
+        "#8-12 nonvolatile oil cluster"
+      ],
+      "counter_signals": [
+        "No distinct optical test; this route is not counted again as a secondary shine focus."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F4.json"
+      ],
+      "shared_mechanism_ids": [
+        "M3_OPTICAL_ALIGNMENT_FILM"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "weight_deposition_potential": {
+      "value": "higher",
+      "decision_type": "formula_potential",
+      "confidence": "moderate",
+      "evidence_level": "E2",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "High weight potential is the best provisional whole-formula prior: early nonvolatile ester supplements the cationic/fatty base and contiguous oil payload in a rinse-out product without a cleansing reset chassis.",
+      "formula_observations": [
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride",
+        "#4 Isopropyl Palmitate",
+        "#8-12 nonvolatile oil cluster"
+      ],
+      "product_inferences": [
+        "High weight potential is the best provisional whole-formula prior: early nonvolatile ester supplements the cationic/fatty base and contiguous oil payload in a rinse-out product without a cleansing reset chassis."
+      ],
+      "supporting_signals": [
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride",
+        "#4 Isopropyl Palmitate",
+        "#8-12 nonvolatile oil cluster"
+      ],
+      "counter_signals": [
+        "Moderate remains realistic if ester/oils are low-dose or readily rinsed; final finish is hidden, so weight remains uncertain pending source reconciliation. No exact-product contradictory finish evidence is available to trigger section 10.1 fallback."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F4.json"
+      ],
+      "shared_mechanism_ids": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "rinse_behavior": {
+      "value": "unknown",
+      "decision_type": "abstention",
+      "confidence": "high",
+      "evidence_level": "E0",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Unknown: no exact finished-product rinse protocol or endpoint.",
+      "formula_observations": [
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride",
+        "#4 Isopropyl Palmitate",
+        "#8-12 nonvolatile oil cluster"
+      ],
+      "product_inferences": [],
+      "supporting_signals": [],
+      "counter_signals": [
+        "INCI cannot establish quick, balanced or tenacious rinsing."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F4.json"
+      ],
+      "shared_mechanism_ids": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "cumulative_residue_risk": {
+      "value": "indeterminate",
+      "decision_type": "abstention",
+      "confidence": "high",
+      "evidence_level": "E0",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Indeterminate: a candidate one-use deposit does not prove cumulative buildup.",
+      "formula_observations": [
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride",
+        "#4 Isopropyl Palmitate",
+        "#8-12 nonvolatile oil cluster"
+      ],
+      "product_inferences": [],
+      "supporting_signals": [],
+      "counter_signals": [
+        "No repeated apply/rinse/wash/removal arm."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F4.json"
+      ],
+      "shared_mechanism_ids": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "body_lightness_potential": {
+      "value": "likely_depositing",
+      "decision_type": "formula_potential",
+      "confidence": "moderate",
+      "evidence_level": "E2",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Likely-depositing provisional body prior from high weight; this is not measured flattening.",
+      "formula_observations": [
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride",
+        "#4 Isopropyl Palmitate",
+        "#8-12 nonvolatile oil cluster"
+      ],
+      "product_inferences": [
+        "Likely-depositing provisional body prior from high weight; this is not measured flattening."
+      ],
+      "supporting_signals": [
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride",
+        "#4 Isopropyl Palmitate",
+        "#8-12 nonvolatile oil cluster"
+      ],
+      "counter_signals": [
+        "Unknown dosage and retained mass; revisit with weight uncertainty, never from packaging or silicone absence."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F4.json"
+      ],
+      "shared_mechanism_ids": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "repair_lubrication_protection": {
+      "value": "candidate",
+      "decision_type": "formula_potential",
+      "confidence": "moderate",
+      "evidence_level": "E2",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Candidate lubrication-mediated manageability/breakage-protection route only.",
+      "formula_observations": [
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride",
+        "#4 Isopropyl Palmitate",
+        "#8-12 nonvolatile oil cluster"
+      ],
+      "product_inferences": [
+        "Candidate lubrication-mediated manageability/breakage-protection route only."
+      ],
+      "supporting_signals": [
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride",
+        "#4 Isopropyl Palmitate",
+        "#8-12 nonvolatile oil cluster"
+      ],
+      "counter_signals": [
+        "No repeated-combing breakage endpoint and no structural repair claim."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F4.json"
+      ],
+      "shared_mechanism_ids": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "repair_surface_film": {
+      "value": "candidate",
+      "decision_type": "formula_potential",
+      "confidence": "moderate",
+      "evidence_level": "E2",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Distinct temporary protein fibre-film candidate in a plausible conditioning delivery context.",
+      "formula_observations": [
+        "#7 Hydrolyzed Keratin",
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride"
+      ],
+      "product_inferences": [
+        "Distinct temporary protein fibre-film candidate in a plausible conditioning delivery context."
+      ],
+      "supporting_signals": [
+        "#7 Hydrolyzed Keratin",
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride"
+      ],
+      "counter_signals": [
+        "Protein grade, substantivity and film continuity unknown; no penetration or cortex restoration inferred."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F4.json"
+      ],
+      "shared_mechanism_ids": [
+        "M2_TEMPORARY_FILM_SUPPORT"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "bond_specific_support": {
+      "value": "unknown",
+      "decision_type": "abstention",
+      "confidence": "high",
+      "evidence_level": "E0",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "No recognized named bond chemistry or exact-product bond substantiation visible.",
+      "formula_observations": [
+        "#7 Hydrolyzed Keratin"
+      ],
+      "product_inferences": [],
+      "supporting_signals": [],
+      "counter_signals": [
+        "Neither protein naming nor ordinary acids establish bond repair; claims hidden."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F4.json"
+      ],
+      "shared_mechanism_ids": [
+        "M4_CLAIM_ONLY_PROPRIETARY"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "color_chemical_damage_protection": {
+      "value": "general_conditioning",
+      "decision_type": "formula_potential",
+      "confidence": "moderate",
+      "evidence_level": "E2",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Only general conditioning support for fibres; no color-specific protection conclusion.",
+      "formula_observations": [
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride",
+        "#4 Isopropyl Palmitate",
+        "#8-12 nonvolatile oil cluster"
+      ],
+      "product_inferences": [
+        "Only general conditioning support for fibres; no color-specific protection conclusion."
+      ],
+      "supporting_signals": [
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride",
+        "#4 Isopropyl Palmitate",
+        "#8-12 nonvolatile oil cluster"
+      ],
+      "counter_signals": [
+        "No exact color endpoint or anti-fade evidence; acid context does not create one."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F4.json"
+      ],
+      "shared_mechanism_ids": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "fragrance_scalp_exposure": {
+      "value": "fragrance_declared",
+      "decision_type": "formula_potential",
+      "confidence": "high",
+      "evidence_level": "E1",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Fragrance exposure is explicitly listed; F2 also lists aromatic essential oil.",
+      "formula_observations": [
+        "#13 Parfum",
+        "#17 Tetramethyl Acetyloctahydronaphthalenes"
+      ],
+      "product_inferences": [],
+      "supporting_signals": [
+        "#13 Parfum",
+        "#17 Tetramethyl Acetyloctahydronaphthalenes"
+      ],
+      "counter_signals": [
+        "Exposure is not an irritation diagnosis, allergy guarantee, or scalp-placement instruction."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F4.json"
+      ],
+      "shared_mechanism_ids": [
+        "R8_EXPOSURE"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    }
+  },
+  "profile_source": "F4-post-unblind-envelope.json",
+  "anti_double_counting": "M1 supplies related candidate endpoints but does not count as separate technologies or independently compound a score. None of these endpoints is measured.",
+  "concentration": "unknown",
+  "rinse_behavior": "unknown",
+  "cumulative_residue_risk": "indeterminate",
+  "post_unblind_overlay": {
+    "weight_deposition_potential_retained": "higher",
+    "lean_weight_fallback": "moderate",
+    "source": "https://www.dm.de/p/d/1703916/balea-professional-conditioner-oil-repair-intensiv",
+    "reason": "§10.1 intended-finish conflict; direct formula prior not rewritten to match marketing."
+  }
+}

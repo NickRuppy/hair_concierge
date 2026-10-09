@@ -1,0 +1,49 @@
+{
+  "status": "PREPARED_BLOCKED_ON_D1_DIAGNOSTIC_NOT_APPROVED_OR_EXECUTED",
+  "directory": "/tmp/test-audit-generation157-tools-xwq0stb7",
+  "pinsSHA256": "04fa5cb7e922f757827213f81d5eda7421e159408c146a11da8ea5e53a669a50",
+  "artifactSealSHA256": "d9cd7a7ea96a89ca157e0fbc2e4cd3b687a9b181119c52b4d00ff56570759ca6",
+  "staticReceiptSHA256": "dcf90e72402c0bfdcf8e76894f75141b7399bc30b0e86d2fe70add482ca69b76",
+  "proposal": {
+    "directory": "/tmp/test-audit-plan-generation157-R7hJl1",
+    "manifestSHA256": "5a1b8e56f7e6fc31b1f972fa98d91d8746169261702e5a3bef33f9f6ce74abcd",
+    "handoffSHA256": "504f0497b4ce931fe86b5ae449d547a410102a75d803f09115c939c96928003a",
+    "unchanged": true
+  },
+  "keyHashes": {
+    "operator-guard.cjs": "0c8f3395577b12f93ca001c63a520637ddd036ca0ccd4a46757eb1b9880d1993",
+    "operator-edit.cjs": "27f1b602bafd1ed827dcb499c9cabd2e281a8f4d1f76b53708a2187b7f7c611f",
+    "operator-run-controls.cjs": "ff60f9a315cfc864ba216220dcbbe270ff2d163175a4b9021fbfbfeb37ef93c5",
+    "operator-proof.cjs": "0d970504c316a9b4c063601c43360d414b947ae7afcf02c2c74a27805c5c772d",
+    "operator-readonly-preload.cjs": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "operator-native-proof.cjs": "c29b7eefd0fc8995cb1c8cac31f2ffde8fe7bab257a479eeb48b7988b301c1e8",
+    "prepare-pins.cjs": "909e1a64cb91abb53c432f800c8cdf534bffd6bdc6a69a1a3eae2ee8eb46e6e3",
+    "operator-controls-normalized.json": "303bc877cceb80a5536c0c225d665142d60b113928c5f9979e43efd24abbcf4b",
+    "diagnostic-uncertainty.json": "6b61e98206a03a5f493b157e2d8e688261c80823817741ed7829a5f9743cccff",
+    "final-template-delta.patch": "fc24e76c2703c486ef543c304786857dbd4b4801318bbbe4493d5b20fb7b5a2c",
+    "README.md": "3374141db895575116c0c7c7ad4872a56b22d92952cf80f91210ae8f61effd55",
+    "main-commands.json": "4fbcadc8127b48040d35ab9ee79e2d9c8e0aaa6e6fed4b1a8b32c40bb604a636"
+  },
+  "counts": {
+    "originalReadsets": 109,
+    "phaseFiles": 81,
+    "AST": [
+      157,
+      157,
+      150
+    ],
+    "nativeTitles": [
+      158,
+      158,
+      151
+    ],
+    "unchangedRetained": 143,
+    "heldF": 11,
+    "controls": 18,
+    "readyDiagnostics": 17
+  },
+  "staticVerification": "Four final readonly checks closed0;622 synthetic assertions; zero checked-code writes/children/owner imports/network. No native or mutation execution.",
+  "sealingOrder": "Final pins and entrypoint constants existed before delta/seal. No code/pin reseal occurred after delta creation.",
+  "remaining": "Root/independent semantic acceptance and root-approved D1 diagnostic representation in a new immutable version; actual native/18 transfer and18 postcut controls remain unrun.",
+  "cutEligibility": false
+}

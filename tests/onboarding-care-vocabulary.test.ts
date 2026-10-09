@@ -41,12 +41,6 @@ test("night protection canonicalizes legacy loose braid and bun values", () => {
   assert.deepEqual(normalizeNightProtectionValues(["loose_braid", "loose_bun"]), ["loose_tied"])
 })
 
-test("night protection options expose only the canonical loose tied value", () => {
-  assert.ok(NIGHT_PROTECTIONS.includes("loose_tied"))
-  assert.ok(!NIGHT_PROTECTIONS.includes("loose_braid" as never))
-  assert.ok(!NIGHT_PROTECTIONS.includes("loose_bun" as never))
-})
-
 test("night protection options include length tip accessory and remove tight hairstyles", () => {
   assert.deepEqual(NIGHT_PROTECTIONS, [
     "silk_satin_pillow",

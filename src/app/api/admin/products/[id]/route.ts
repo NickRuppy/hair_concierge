@@ -1,4 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
+import { validateBondbuilderResearchProfile } from "@/lib/bondbuilder-research/production-adapter"
 import { productSchema } from "@/lib/validators"
 import { ERR_UNAUTHORIZED, ERR_FORBIDDEN, ERR_INVALID_DATA, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
@@ -70,6 +72,62 @@ function getObsoleteStructuredSpecTables(category: string | null) {
   })
 }
 
+async function enrichBondbuilderResearchProfile(input: {
+  supabase: ReturnType<typeof createAdminClient>
+  productId: string
+  profile: unknown
+  reviewedBy: string
+  productPayload: Record<string, unknown>
+  /** `undefined` means the form did not send the key. */
+  marketSegment?: "drugstore" | "professional" | null
+}): Promise<{ product: Record<string, unknown> } | null> {
+  const validation = validateBondbuilderResearchProfile(input.profile)
+  if (!validation.success) return null
+  const { data: preimage, error: preimageError } = await input.supabase.rpc(
+    "bondbuilder_research_preimage_v1",
+    { p_product_id: input.productId },
+  )
+  if (preimageError || !preimage || typeof preimage !== "object") return null
+  const existingProduct = (preimage as { product?: Record<string, unknown> }).product
+  if (!existingProduct) return null
+  // The receipt preimage deliberately omits `market_segment` (historical receipts stay equal),
+  // so it is compared against the live column instead.
+  if (input.marketSegment !== undefined) {
+    const { data: segmentRow, error: segmentError } = await input.supabase
+      .from("products")
+      .select("market_segment")
+      .eq("id", input.productId)
+      .single()
+    if (segmentError || !segmentRow) return null
+    if ((segmentRow.market_segment ?? null) !== input.marketSegment) return null
+  }
+  // A research-only operation must not smuggle spine/lifecycle/fit changes.
+  // The complete CAS preimage is checked again inside the transactional RPC.
+  for (const [key, value] of Object.entries(input.productPayload)) {
+    const existingValue =
+      key === "price_eur" && existingProduct[key] !== null
+        ? Number(existingProduct[key])
+        : existingProduct[key]
+    if (JSON.stringify(value) !== JSON.stringify(existingValue)) return null
+  }
+
+  const { error } = await input.supabase.rpc("bondbuilder_research_enrich_v1", {
+    p_product_id: input.productId,
+    p_profile: validation.profile,
+    p_expected_preimage: preimage,
+    p_request_id: crypto.randomUUID(),
+    p_reviewed_by: input.reviewedBy,
+  })
+  if (error) return null
+  const { data: specs, error: specsError } = await input.supabase
+    .from("product_bondbuilder_specs")
+    .select("*")
+    .eq("product_id", input.productId)
+    .single()
+  if (specsError || !specs) return null
+  return { product: { ...existingProduct, bondbuilder_specs: specs } }
+}
+
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 
@@ -131,11 +189,36 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     deep_cleansing_shampoo_specs,
     dry_shampoo_specs,
     peeling_specs,
-    ...productPayload
+    market_segment: requestedMarketSegment,
+    ...productPayloadWithoutSegment
   } = parsed.data
+  const productPayload =
+    requestedMarketSegment === undefined
+      ? productPayloadWithoutSegment
+      : { ...productPayloadWithoutSegment, market_segment: requestedMarketSegment }
 
   const nextCategory = parsed.data.category
   const updatedAt = new Date().toISOString()
+
+  if (isBondbuilderCategory(nextCategory) && bondbuilder_specs?.research_profile != null) {
+    const enriched = await enrichBondbuilderResearchProfile({
+      supabase: createAdminClient(),
+      productId: id,
+      profile: bondbuilder_specs.research_profile,
+      reviewedBy: user.id,
+      productPayload: productPayloadWithoutSegment,
+      marketSegment: requestedMarketSegment,
+    })
+    return enriched
+      ? NextResponse.json(enriched)
+      : NextResponse.json(
+          {
+            error:
+              "Die Forschungsanreicherung benötigt unveränderte Produktdaten und einen gültigen geprüften Forschungsstand. Andere Änderungen bitte getrennt speichern.",
+          },
+          { status: 409 },
+        )
+  }
 
   if (isConditionerCategory(nextCategory) && conditioner_specs) {
     const { error: conditionerSpecsError } = await supabase
@@ -187,11 +270,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   if (isBondbuilderCategory(nextCategory) && bondbuilder_specs) {
     const { error: bondbuilderSpecsError } = await supabase
       .from("product_bondbuilder_specs")
-      .upsert({
-        product_id: id,
-        ...bondbuilder_specs,
-        updated_at: updatedAt,
-      })
+      .upsert({ product_id: id, ...bondbuilder_specs, updated_at: updatedAt })
 
     if (bondbuilderSpecsError) {
       return NextResponse.json(

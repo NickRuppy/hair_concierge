@@ -4,18 +4,10 @@ import test from "node:test"
 
 const read = (path: string) => fs.readFileSync(new URL(`../${path}`, import.meta.url), "utf8")
 
-test("waitlist UI preserves the standalone conversion and privacy boundaries", () => {
-  const form = read("src/components/waitlist/waitlist-form.tsx")
+test("historic waitlist survey preserves recovery and completion tracking", () => {
   const survey = read("src/components/waitlist/waitlist-survey.tsx")
   const layout = read("src/app/warteliste/layout.tsx")
 
-  assert.match(form, /marketingConsent: true/)
-  assert.match(form, /attribution: readWaitlistAttribution\(\)/)
-  assert.match(form, /const metaEventId = crypto\.randomUUID\(\)/)
-  assert.match(form, /if \(body\.duplicate === false\)/)
-  assert.match(form, /trackMetaWaitlistLeadCaptured\(metaEventId\)/)
-  assert.match(form, /WAITLIST_SURVEY_TOKEN_STORAGE_KEY/)
-  assert.doesNotMatch(form, /sessionStorage\.setItem\([^)]*email/)
   assert.match(survey, /opaqueToken \? \{ opaqueToken \} : \{\}\), responseId/)
   assert.doesNotMatch(survey, /Umfrage überspringen/)
   assert.match(survey, /waitlist_survey_completed/)
@@ -73,26 +65,4 @@ test("waitlist entry retires new registration without changing historic survey r
   assert.match(legacyEntry, /WaitlistPage/)
   assert.match(surveyPage, /WaitlistSurvey/)
   assert.match(thanks, /WaitlistProgress/)
-})
-
-test("quiz-gate signup tracks exactly one Lead only for a new token-bearing waitlist signup", () => {
-  const modal = read("src/components/waitlist/quiz-gate-modal.tsx")
-
-  assert.match(modal, /fetch\("\/api\/waitlist"/)
-  assert.match(modal, /attribution: readWaitlistAttribution\(\)/)
-  assert.match(modal, /const metaEventId = crypto\.randomUUID\(\)/)
-  assert.match(
-    modal,
-    /if \(body\.duplicate === false\) trackMetaQuizGateLeadCaptured\(metaEventId\)/,
-  )
-  assert.match(
-    modal,
-    /if \(body\.duplicate !== false \|\| body\.surveyAlreadyCompleted \|\| !body\.surveyToken\) \{\s*return router\.push\("\/warteliste\/danke"\)/,
-  )
-  assert.match(
-    modal,
-    /sessionStorage\.setItem\(WAITLIST_SURVEY_TOKEN_STORAGE_KEY, body\.surveyToken\)/,
-  )
-  assert.doesNotMatch(modal, /router\.push\("\/warteliste\/umfrage"\)/)
-  assert.doesNotMatch(modal, /trackMetaWaitlistLeadCaptured/)
 })

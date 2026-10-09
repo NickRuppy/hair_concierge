@@ -1,0 +1,146 @@
+{
+  "mode": "transfer",
+  "from": "before",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA": "b41d3a0d1a4021f978e0458b7e7a6c21881541ff195bb662c28e0d59ea917d70",
+  "prerequisite": null,
+  "files": [
+    {
+      "file": "tests/personal-plan-email-precheck.test.ts",
+      "before": "dd5d72f1d9307e60237ecb1534a0b12ad3edc393a5044b65563956a39884037e",
+      "after": "dd5d72f1d9307e60237ecb1534a0b12ad3edc393a5044b65563956a39884037e"
+    },
+    {
+      "file": "tests/personal-plan-preparation-client.test.ts",
+      "before": "2a0baf0c0ab469da52d20c9a5b71272fd3126466c1abdb4f217ed347445dc2ab",
+      "after": "2a0baf0c0ab469da52d20c9a5b71272fd3126466c1abdb4f217ed347445dc2ab"
+    },
+    {
+      "file": "tests/personal-plan-prepare-idempotency-migration.test.ts",
+      "before": "a06512a49e79d98c56305529cde103d5f28de52e27b74a17c6890a3d0c9133f7",
+      "after": "a06512a49e79d98c56305529cde103d5f28de52e27b74a17c6890a3d0c9133f7"
+    },
+    {
+      "file": "tests/personal-plan-prepare-route.test.ts",
+      "before": "877b1044ca62b836f91c9b8b6fd68d907fb6d3b3964d435b2c8367712b0e0d85",
+      "after": "6e12f85e9f0997318e69936280de90a766e2324e508fbb38af129a9e351bc548"
+    },
+    {
+      "file": "tests/personal-plan-prepared-plan.test.ts",
+      "before": "d169b5836d3744ee636fa0bb02b98e71dcbf93f2834b1d74b26e2a4b4c4ebad2",
+      "after": "d169b5836d3744ee636fa0bb02b98e71dcbf93f2834b1d74b26e2a4b4c4ebad2"
+    },
+    {
+      "file": "tests/personal-plan-production-client.test.ts",
+      "before": "a76fa0ac115076c1bceb29455b131b70d7c444028788fe097ab0a556880e9d11",
+      "after": "a76fa0ac115076c1bceb29455b131b70d7c444028788fe097ab0a556880e9d11"
+    },
+    {
+      "file": "tests/personal-plan-ready-server-first.test.tsx",
+      "before": "5d074f8212e9eaa8883d06ec1208198bbb7a4158b6ef91a0b4bf214c15bd74df",
+      "after": "01841faf00bd6e234c9b0a58160e4778c5d3121817834a53e9eec42b3c5f048b"
+    },
+    {
+      "file": "tests/personal-plan-ready-transition.test.ts",
+      "before": "379a372b9c98fb7b6350332b12f0ba1f4ea7a96b4e3ab99a90988cdf9c9ec3df",
+      "after": "379a372b9c98fb7b6350332b12f0ba1f4ea7a96b4e3ab99a90988cdf9c9ec3df"
+    },
+    {
+      "file": "tests/personal-plan-result-artifact-email.test.ts",
+      "before": "7da1abc6bc8624e560051eb4d64316168dc405f5e59cd25ea4a66a37290b0c3f",
+      "after": "7da1abc6bc8624e560051eb4d64316168dc405f5e59cd25ea4a66a37290b0c3f"
+    },
+    {
+      "file": "tests/personal-plan-result-artifact-route.test.ts",
+      "before": "f9cd9040a004d9716ef112f827e54b1314f7b49b186936d58624b34f4b507d1b",
+      "after": "f9cd9040a004d9716ef112f827e54b1314f7b49b186936d58624b34f4b507d1b"
+    },
+    {
+      "file": "tests/personal-plan-result-return-migration.test.ts",
+      "before": "93c7a6ed0f5e827ec930a5b7c959fa04f28225d536b764497a05174b92b44a72",
+      "after": "93c7a6ed0f5e827ec930a5b7c959fa04f28225d536b764497a05174b92b44a72"
+    },
+    {
+      "file": "tests/personal-plan-result-return-reset.test.ts",
+      "before": "9d152d796a1510474c214339224b4f64ebdcea328a69b1e6cd7bb1f23d139780",
+      "after": "9d152d796a1510474c214339224b4f64ebdcea328a69b1e6cd7bb1f23d139780"
+    },
+    {
+      "file": "tests/personal-plan-result-return.test.ts",
+      "before": "92a7adace8d6f279faa164ca03107ee4cb79b42d8cb46004239e55f5b01ac9ed",
+      "after": "92a7adace8d6f279faa164ca03107ee4cb79b42d8cb46004239e55f5b01ac9ed"
+    },
+    {
+      "file": "tests/personal-plan-result-reveal.test.ts",
+      "before": "f557697054fd90dba7d3aba22ff70845616717c38fbb49fda7c3b517dce1eb7e",
+      "after": "f557697054fd90dba7d3aba22ff70845616717c38fbb49fda7c3b517dce1eb7e"
+    },
+    {
+      "file": "tests/personal-plan-return-artifact-repair-postgres.test.ts",
+      "before": "773e16e3130b7a1d64fca0f0bfc096815ac4694bb46e7c8d3f3123c163a0ea35",
+      "after": "773e16e3130b7a1d64fca0f0bfc096815ac4694bb46e7c8d3f3123c163a0ea35"
+    },
+    {
+      "file": "tests/personal-plan-return-artifact-repair.test.ts",
+      "before": "88588a67df14f2c0dd6cc2d28be4d97a31196a3cb665e2f324bd24855cf2471f",
+      "after": "88588a67df14f2c0dd6cc2d28be4d97a31196a3cb665e2f324bd24855cf2471f"
+    },
+    {
+      "file": "tests/quiz-result-artifact-email.test.ts",
+      "before": "715dead62a208b08843e150e2d6873b26ac82371f0fdef3a1c3664c2a924c6ab",
+      "after": "715dead62a208b08843e150e2d6873b26ac82371f0fdef3a1c3664c2a924c6ab"
+    },
+    {
+      "file": "tests/quiz-result-artifact-route.test.ts",
+      "before": "0ce1dda16e9b89888c2e30d6b7873fa50479b1b6bdc4d58fd0a97fe8e915d6c8",
+      "after": "0ce1dda16e9b89888c2e30d6b7873fa50479b1b6bdc4d58fd0a97fe8e915d6c8"
+    },
+    {
+      "file": "tests/quiz-result-artifact-trigger.test.ts",
+      "before": "2a4be3d570acbbe88ca902d21bcf6463b3860178f3705fa160a480e001906ed4",
+      "after": "2a4be3d570acbbe88ca902d21bcf6463b3860178f3705fa160a480e001906ed4"
+    },
+    {
+      "file": "tests/personal-plan-api-stage1.test.ts",
+      "before": "4aef3f35e04889d6ae1a415a972192ae5fc1d0c40da683ca1eca118a3ac93995",
+      "after": "4aef3f35e04889d6ae1a415a972192ae5fc1d0c40da683ca1eca118a3ac93995"
+    },
+    {
+      "file": "tests/personal-plan-stage1-source.test.ts",
+      "before": "9b0976ded838caafd51b0a29a79e8cb6a1cd56f05720c72195673110742d516e",
+      "after": "9b0976ded838caafd51b0a29a79e8cb6a1cd56f05720c72195673110742d516e"
+    },
+    {
+      "file": "tests/personal-plan/input.test.ts",
+      "before": "6709a9de62c09178694cc36b42d52c03515c54c4c1cab23fbdef1c3bee9a13cd",
+      "after": "3ec287d48ce75c8a3b9456ee436ddd44775186de5c490f4f3d5846f699d058f1"
+    },
+    {
+      "file": "tests/personal-plan/needs.test.ts",
+      "before": "45d72732a8930751174a0d087856ca154dba0fc30e3596e963818f2c8d5e5952",
+      "after": "e4d6b2b972b4dc3ba82e9cc314e7be4860c23bcab67e727ea5e913b065f57917"
+    },
+    {
+      "file": "tests/personal-plan/portfolio.test.ts",
+      "before": "d9954b10ffe2da2e88cbc8047a9b5c090003b062c06e529b31453c27ab446731",
+      "after": "d9954b10ffe2da2e88cbc8047a9b5c090003b062c06e529b31453c27ab446731"
+    },
+    {
+      "file": "tests/personal-plan/reasons.test.ts",
+      "before": "548e5e1c2ba3be9ada1da2f7b003d8eb7435465dc62fa29ffb2258bd6f0d310d",
+      "after": "548e5e1c2ba3be9ada1da2f7b003d8eb7435465dc62fa29ffb2258bd6f0d310d"
+    },
+    {
+      "file": "tests/personal-plan/types.test.ts",
+      "before": "5c5347e83e0cfad5f54fb3af0a64109a50dd0b20cfd552dff533afa3ea143f23",
+      "after": "5c5347e83e0cfad5f54fb3af0a64109a50dd0b20cfd552dff533afa3ea143f23"
+    },
+    {
+      "file": "tests/personal-plan/persistence/stage1-service.test.ts",
+      "before": "bd87dc699bd68081a0d76a3447b200978c63a6b932ea25cab9fcd240221864ef",
+      "after": "bd87dc699bd68081a0d76a3447b200978c63a6b932ea25cab9fcd240221864ef"
+    }
+  ]
+}

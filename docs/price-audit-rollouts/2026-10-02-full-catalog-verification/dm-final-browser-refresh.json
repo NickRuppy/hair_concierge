@@ -1,0 +1,65 @@
+{
+  "method": "Exact PDP DOM; fresh selected price/pack/GTIN; explicit hydrated stock and standard-delivery controls. Page-not-found is recorded separately from out of stock.",
+  "records": [
+    {
+      "id": "f7144789-8302-42b1-a5b1-e761402c1b7c",
+      "url": "https://www.dm.de/p/d/3115707/pantene-pro-v-conditioner-grow-abundant-anti-haarverlust",
+      "checked_at": "2026-10-03T10:51:24.266Z",
+      "price_eur": null,
+      "package_value": null,
+      "package_unit": null,
+      "observed_barcode": null,
+      "availability": "page_not_found"
+    },
+    {
+      "id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+      "url": "https://www.dm.de/p/d/1688048/schaebens-haarmaske-arganoel",
+      "checked_at": "2026-10-03T10:54:59Z",
+      "price_eur": 1.45,
+      "package_value": 20,
+      "package_unit": "ml",
+      "observed_barcode": "4003573025018",
+      "availability": "unavailable"
+    },
+    {
+      "id": "c6e80f39-20ba-401e-b041-6ee7c89a5996",
+      "url": "https://www.dm.de/p/d/1417521/balea-professional-haarmaske-3in1-aqua-hyaluron",
+      "checked_at": "2026-10-03T10:51:40Z",
+      "price_eur": 2.75,
+      "package_value": 150,
+      "package_unit": "ml",
+      "observed_barcode": "4066447668315",
+      "availability": "unavailable"
+    },
+    {
+      "id": "67d95443-490d-47fb-876e-8d9eecf015ae",
+      "url": "https://www.dm.de/p/d/3086348/jean-und-len-leave-in-haarmaske-peptide-intense-repair",
+      "checked_at": "2026-10-03T10:52:29Z",
+      "price_eur": 5.25,
+      "package_value": 100,
+      "package_unit": "ml",
+      "observed_barcode": "4262500780288",
+      "availability": "available"
+    },
+    {
+      "id": "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a",
+      "url": "https://www.dm.de/p/d/1459848/dmbio-natives-olivenoel-extra",
+      "checked_at": "2026-10-03T10:52:29Z",
+      "price_eur": 6.95,
+      "package_value": 750,
+      "package_unit": "ml",
+      "observed_barcode": "4066447918687",
+      "availability": "available"
+    },
+    {
+      "id": "efaff579-e411-41eb-972a-2734a8517356",
+      "url": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+      "checked_at": "2026-10-03T10:52:29.424Z",
+      "price_eur": 4.95,
+      "package_value": 200,
+      "package_unit": "ml",
+      "observed_barcode": "4015100894141",
+      "availability": "available"
+    }
+  ]
+}

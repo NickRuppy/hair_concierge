@@ -1,0 +1,247 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "scope": "Two files, 20 registration sites only",
+  "dispositions": {
+    "R": 17,
+    "F": 3,
+    "C": 0,
+    "D": 0
+  },
+  "counts": {
+    "before": 20,
+    "transfer": 20,
+    "cut": 20
+  },
+  "decision": "No cut proposed; all 20 retained unchanged",
+  "snapshots": [
+    {
+      "file": "tests/personal-plan-quiz-server-draft-client.test.ts",
+      "phase": "before",
+      "path": "/tmp/test-audit-quiz-serverdraft20/before/tests/personal-plan-quiz-server-draft-client.test.ts",
+      "sha256": "657d7c1ece13d8f59f9adcb9856b8f34a57445a5e10d54312a49b5d8bd5434f1",
+      "registrations": 13
+    },
+    {
+      "file": "tests/personal-plan-quiz-server-draft-client.test.ts",
+      "phase": "transfer",
+      "path": "/tmp/test-audit-quiz-serverdraft20/transfer/tests/personal-plan-quiz-server-draft-client.test.ts",
+      "sha256": "657d7c1ece13d8f59f9adcb9856b8f34a57445a5e10d54312a49b5d8bd5434f1",
+      "registrations": 13
+    },
+    {
+      "file": "tests/personal-plan-quiz-server-draft-client.test.ts",
+      "phase": "cut",
+      "path": "/tmp/test-audit-quiz-serverdraft20/cut/tests/personal-plan-quiz-server-draft-client.test.ts",
+      "sha256": "657d7c1ece13d8f59f9adcb9856b8f34a57445a5e10d54312a49b5d8bd5434f1",
+      "registrations": 13
+    },
+    {
+      "file": "tests/personal-plan-quiz-server-draft.test.ts",
+      "phase": "before",
+      "path": "/tmp/test-audit-quiz-serverdraft20/before/tests/personal-plan-quiz-server-draft.test.ts",
+      "sha256": "7c9ca13f2db07e7e2a42461198ad5a78f9a785dfb9f8fbd7a0ae19e1c327f6cb",
+      "registrations": 7
+    },
+    {
+      "file": "tests/personal-plan-quiz-server-draft.test.ts",
+      "phase": "transfer",
+      "path": "/tmp/test-audit-quiz-serverdraft20/transfer/tests/personal-plan-quiz-server-draft.test.ts",
+      "sha256": "7c9ca13f2db07e7e2a42461198ad5a78f9a785dfb9f8fbd7a0ae19e1c327f6cb",
+      "registrations": 7
+    },
+    {
+      "file": "tests/personal-plan-quiz-server-draft.test.ts",
+      "phase": "cut",
+      "path": "/tmp/test-audit-quiz-serverdraft20/cut/tests/personal-plan-quiz-server-draft.test.ts",
+      "sha256": "7c9ca13f2db07e7e2a42461198ad5a78f9a785dfb9f8fbd7a0ae19e1c327f6cb",
+      "registrations": 7
+    }
+  ],
+  "readset": [
+    {
+      "file": "AGENTS.md",
+      "sha256": "9072f0e4ef99aef972395aab4b26e4718be6ab7cac755a0fc303746d8ee162f8",
+      "readScope": "full"
+    },
+    {
+      "file": "tests/personal-plan-quiz-server-draft-client.test.ts",
+      "sha256": "657d7c1ece13d8f59f9adcb9856b8f34a57445a5e10d54312a49b5d8bd5434f1",
+      "readScope": "full"
+    },
+    {
+      "file": "tests/personal-plan-quiz-server-draft.test.ts",
+      "sha256": "7c9ca13f2db07e7e2a42461198ad5a78f9a785dfb9f8fbd7a0ae19e1c327f6cb",
+      "readScope": "full"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/server-draft.ts",
+      "sha256": "ab6b88fa762756c3af1bc4a15154b7d8335728644edca577859a53cad5d1a576",
+      "readScope": "full"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/server-draft-client.ts",
+      "sha256": "2f528abcd79e7bbc81a3dde00f1dab5bfa44da3df0324fb14bf14d0c4e445da9",
+      "readScope": "full"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/draft.ts",
+      "sha256": "0e7229ba64337d19f8704790819dffdc3a98daca633860db330e21247bd5a60a",
+      "readScope": "full"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/types.ts",
+      "sha256": "19565073dbad675141bcbbb94a796a73da7727569164a01e0622a4e471736c46",
+      "readScope": "full"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/index.ts",
+      "sha256": "d64ffbed216a9dcbcc0cd73495e2f022d3ba9f8efba674cdbf308da3f969b8be",
+      "readScope": "full"
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-draft/route.ts",
+      "sha256": "8dfb645529879cac85e6cf9f62539270094c14b2a6d6b0a774724a081b6fd384",
+      "readScope": "full"
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-draft/resume/route.ts",
+      "sha256": "e680907d3e92b488aadbc866ba334da81c42878d3a9c1f072c6f54d570447092",
+      "readScope": "full"
+    },
+    {
+      "file": "supabase/migrations/20260731124000_add_personal_plan_quiz_drafts.sql",
+      "sha256": "9370362161a30228bd49431aaf3ab04f51f866b8421cb86f8ce877c8b03ce296",
+      "readScope": "full"
+    },
+    {
+      "file": "supabase/migrations/20260902120000_personal_plan_quiz_draft_idempotent_replay.sql",
+      "sha256": "3b7e3bf9e2e5dcb68717601dc3c80feee3dbace337eaaf84a7d3c95634d9b565",
+      "readScope": "full"
+    },
+    {
+      "file": "tests/personal-plan-quiz-draft-migration.pglite.test.ts",
+      "sha256": "2800837ee62ee2e745cb8e4afddb7d06c26f72febe476837091e2386f2fe0aac",
+      "readScope": "full"
+    },
+    {
+      "file": "tests/personal-plan-quiz-resume-entry.test.ts",
+      "sha256": "f947322fb0bd0fd7544d51ce5a90646c9ef268fb1ce05902833bc9eebddd1251",
+      "readScope": "full"
+    },
+    {
+      "file": "tests/personal-plan-quiz-funnel-entry.test.ts",
+      "sha256": "69895d850749036a8edf87a07af67c570ba80d5e44956b33c8860ec5b34fe99c",
+      "readScope": "full"
+    },
+    {
+      "file": "src/lib/supabase/admin.ts",
+      "sha256": "bd6ec1538d65a01f82b3f55b2839f0ac347d617c6de29d13cea4b0eff737386a",
+      "readScope": "full"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+      "readScope": "full"
+    },
+    {
+      "file": "node_modules/next/dist/server/web/spec-extension/request.js",
+      "sha256": "2490a352d271fb39e1fccce06ee6887999dffa7909ccfd5ca0cc8bab8008065b",
+      "readScope": "full"
+    },
+    {
+      "file": "node_modules/next/dist/server/web/spec-extension/response.js",
+      "sha256": "68a5a07540d57a4beb3275fddd0502fd5ef9a42986b414c0bcee99a3f9033366",
+      "readScope": "full"
+    },
+    {
+      "file": "node_modules/next/dist/server/web/spec-extension/cookies.js",
+      "sha256": "efa0edcee4a20833a62098d94f5b9d1f0f0782bdfc132b2f9063ab7e0ea4c2b1",
+      "readScope": "full"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/persistence.ts",
+      "sha256": "9783d531cfaf8ed1b8d91b133b030758fd2bf3c128b5eee10cd4b0e6f5883335",
+      "readScope": "imports and actual credential/hash helpers 189-201, not full persistence"
+    },
+    {
+      "file": "src/lib/quiz/diagnostic-input.ts",
+      "sha256": "964652bf5d3e3d8cd9bc233b18977e59e3cf7264a97ec7de5d5c4ac6cea7149e",
+      "readScope": "taxonomy/types 1-115"
+    },
+    {
+      "file": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "sha256": "03c62d161ba8d95900b91307782de9cbd33ac786047e744adc1017cc08ec8ebd",
+      "readScope": "live hydration/session/persistence/pagehide 2220-2375 plus caller navigation search, not full UI"
+    },
+    {
+      "file": "src/app/lp/[slug]/page.tsx",
+      "sha256": "c986d0de667d792caf017dd92d97ea9a946d85812340af9006768da532b01cec",
+      "readScope": "entry/resume ordering 85-175, not full unrelated rendering"
+    },
+    {
+      "file": "src/lib/funnel/flags.ts",
+      "sha256": "981bd9436dae7c1fc7cbd8d6dc60e3d6bbaa9dc3bea994e0a33fac525f02528d",
+      "readScope": "exact-true resume flag 68-70"
+    },
+    {
+      "file": "tests/personal-plan-quiz.test.ts",
+      "sha256": "ba5504b797c71475feafd987efc94ce316d5ed05e11710005d24ae214e80e680",
+      "readScope": "storage overlap 312-354"
+    },
+    {
+      "file": "tests/personal-plan-quiz-primary-concern.test.ts",
+      "sha256": "3266caea2ad1fc7445488ba38aa5e9fb337b9ea53d475d55eef3fc36b88d3fbf",
+      "readScope": "server parser overlap 118-151"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+      "readScope": "quality-node lane 147-165; broader file previously read in campaign, no new broad CI audit"
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+      "readScope": "test:node/test:personal-plan commands and dependency versions"
+    },
+    {
+      "file": "node_modules/zod/index.cjs",
+      "sha256": "2a3455cecff4f7021c92d0a3e2e5fc170c0448dc5cc261160127e08f4888a9c2",
+      "readScope": "root resolves installed v4 classic, not v3"
+    },
+    {
+      "file": "node_modules/zod/v4/classic/schemas.cjs",
+      "sha256": "fbb612b8ec2f7408653908aec137a855e6763f92fbab19d4bd61c5be13341db5",
+      "readScope": "strict->never catchall 855-925"
+    },
+    {
+      "file": "node_modules/zod/v4/core/schemas.cjs",
+      "sha256": "cd1cd83d15bb681ff414fd95de6145de88a91e0ef38df3d3f5deb594007a221c",
+      "readScope": "handleCatchall 790-828"
+    },
+    {
+      "file": "node_modules/zod/v4/core/parse.cjs",
+      "sha256": "78c3851f57bfeb5e0f4464d3dfe62781ba8292e89692e52b4fc00195d4b02251",
+      "readScope": "safeParse 59-73"
+    },
+    {
+      "file": "node_modules/next/dist/compiled/@edge-runtime/cookies/index.js",
+      "sha256": "078a208032232fcedaa17a3471421688e4be15f5cb71cb1f189d0514b393ed94",
+      "readScope": "request cookie parsing 174-202, response serialization/set 32-66 and253-328"
+    },
+    {
+      "file": "node_modules/@types/node/crypto.d.ts",
+      "sha256": "4c829ab315f57c5442c6667b53769975acbf92003a66aef19bce151987675bd1",
+      "readScope": "randomBytes/HMAC signatures and timingSafeEqual contract, not native crypto source"
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/dist/index.cjs.map",
+      "sha256": "af9f64e861763113df03e067851e5d2a645bdf1f58675e9aead1a70379419851",
+      "readScope": "earlier campaign inspected actual query/exec source; refreshed hash only in this sublane"
+    }
+  ],
+  "runtime": false,
+  "sourceMutations": false,
+  "repoWrites": 0,
+  "parse": "No compiler/parser/import execution; declaration boundaries identified from full human-read simple top-level test syntax and text registration matches."
+}

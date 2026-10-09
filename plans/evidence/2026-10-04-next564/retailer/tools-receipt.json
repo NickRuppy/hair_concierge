@@ -1,0 +1,34 @@
+{
+  "phase": "before",
+  "currentGuardMismatches": [],
+  "staticChecks": {
+    "counts": [
+      99,
+      99,
+      87
+    ],
+    "parsedSnapshots": 27,
+    "untouchedCallbacks": 83,
+    "controls": 41,
+    "repoReadsets": 32,
+    "dependencyReadsets": 6,
+    "repositoryWrites": 0,
+    "runtimeRuns": 0
+  },
+  "C02Amendment": "Only2newduplicateassertionsremoved; originals preserved; first-row faults scoped to row0",
+  "artifactHashes": {
+    "/tmp/test-audit-retailer-boundary99-edit.cjs": "589c7203fa29d789a8e08eabad12663dd7c63f225dbda879c73e6b744657d964",
+    "/tmp/test-audit-retailer-boundary99-run-controls.cjs": "7544f5f9941e481aa45aa55d3489c2b04c96ba6ff21985ad2e06cc3628ae7203",
+    "/tmp/test-audit-retailer-boundary99-guard.cjs": "0d1747c04ae8e24b340fb79f0c16ab3ece0dac44bd67e7c6a4f92450e7594ec4",
+    "/tmp/test-audit-retailer-boundary99-editor-pins.json": "8ff37ce9710edf91565d2e8c1784f70b416b99d6a9ae523a4db9bc6408283ee7",
+    "/tmp/test-audit-retailer-boundary99-controls-normalized.json": "f3b5e10fcc02e11277a5cfbae6a07967ac56e75474b40838aa58e255b1c47b9c",
+    "/tmp/test-audit-retailer-boundary99-controls.json": "0261ce8206b4c28f726d70545607c22558d05113846fa4f34c60cd263b6b863b",
+    "/tmp/test-audit-retailer-boundary99-manifest.json": "eed07d41e2b875fab90c880370b5a16928616a2040aa177bdcad0f5dced4039e",
+    "/tmp/test-audit-retailer-boundary99-candidates.json": "83d68be659a63d6a5bd4a655fd2505b9a79df260990adf572d4e495b87b1ffae",
+    "/tmp/test-audit-retailer-boundary99-complete.diff": "53010914fb65b4c28d6da5c16fa4abc38bf5fab3c8c4f3f69f64960b8becc3eb",
+    "/tmp/test-audit-retailer-boundary99-ledger.md": "02f8d3deac26a68869aab9e49c076fd892dd472c287ea9a5fd65ccfe38a0ad07",
+    "/tmp/test-audit-retailer-boundary99-judgments.json": "cbbcd308fabfd6f946fef4b41708bdefd4d42cb6ee6241ec649e306e7881e17f",
+    "/tmp/test-audit-retailer-boundary99-layer-plan.md": "da4c603e7c83da791e3d66ad8ca3d59b57fcc77db3f46f0ea489eeb80066d47e",
+    "/tmp/test-audit-retailer-boundary99-tools.md": "fa062310ed55aef697992046def95ae6a3ebbd894c496fff1b2d769e2312fe0d"
+  }
+}

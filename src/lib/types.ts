@@ -184,6 +184,9 @@ export interface HairProfile {
   /** The stored diagnostics facts document (quiz vocabulary); read it through
    * `readProfileDiagnostics` (`src/lib/user-facts/profile-diagnostics.ts`). */
   diagnostics?: unknown
+  /** The stored shopping-preferences facts document (budget); written only through
+   * `user_facts_save_v1`, read through `loadUserFacts`. */
+  shopping_preferences?: unknown
   created_at: string
   updated_at: string
 }
@@ -270,6 +273,8 @@ export interface Product {
   is_active: boolean
   lifecycle_status?: ProductLifecycleStatus | null
   is_chaarlie_recommended?: boolean | null
+  /** Market bucket shown as Drogerie/Profi badge; not a quality grade. */
+  market_segment?: "drugstore" | "professional" | null
   sort_order: number
   conditioner_specs?: ProductConditionerSpecs | null
   leave_in_specs?: ProductLeaveInSpecs | null
@@ -305,6 +310,7 @@ export type ProductSummary = Pick<
   | "suitable_concerns"
   | "is_active"
   | "lifecycle_status"
+  | "market_segment"
   | "sort_order"
   | "created_at"
   | "updated_at"

@@ -1,0 +1,14 @@
+{
+  "status": "PASS_SYNTHETIC_SHAPES_ONLY",
+  "controls": 3,
+  "phases": 2,
+  "checks": 258,
+  "repositoryWrites": 0,
+  "children": 0,
+  "ownerImports": 0,
+  "network": 0,
+  "nativeRuns": 0,
+  "limits": "Synthetic hand-authored HTML and TAP only. Does not prove real SSR output length, native formatter compatibility or fault sensitivity."
+}
+{"staticReadOnlyEnforced":true,"attemptedWrites":0,"attemptedChildren":0}
+{"attemptedOwnerImports":0,"attemptedNetworkCalls":0}

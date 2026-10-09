@@ -1,0 +1,19 @@
+{
+  "directory": "/private/tmp/test-audit-free67-tools-phkvfcm3",
+  "pinSHA": "9fbdea960d87acb674473172b4d6d797f49496d8b8faafad0aad0b24cb4f6ad5",
+  "originalGuards": 247,
+  "phaseTests": 7,
+  "snapshots": 21,
+  "readset": 240,
+  "localClosure": 231,
+  "dependencies": 5018,
+  "dependencyTrees": 32,
+  "controls": 2,
+  "nonliteralImports": [],
+  "repositoryWrites": 0,
+  "attemptedRepositoryWrites": 0,
+  "childrenStarted": 0,
+  "attemptedChildren": 0,
+  "attemptedOwnerImports": 0,
+  "attemptedNetworkCalls": 0
+}

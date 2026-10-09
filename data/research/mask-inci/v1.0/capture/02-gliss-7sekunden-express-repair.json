@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "mask-inci-capture-v1",
+  "productNumber": 2,
+  "role": "primary",
+  "archetypeSlots": ["2 - light express Kur <=1 min (F2), 7 sec is the extreme low-dwell case"],
+  "identity": {
+    "brand": "Schwarzkopf Gliss Kur",
+    "productName": "7 Sekunden Express-Repair Kur, Ultimate Repair",
+    "packSize": "200 ml",
+    "gtinEan": "4015100433456",
+    "eanSourceNote": "Proposal figure, matches the dm.de URL slug (dm.de/schwarzkopf-gliss-kur-haarkur-express-repair-7sec-ultimate-repair-p4015100433456.html). SEE CONFLICT: several independent ingredient databases (incidecoder.com, openbeautyfacts.org) list a DIFFERENT EAN, 4015100813319, for a product with an identical name and pack size ('GLISS 7sec Express Repair - Ultimate Repair', Schwarzkopf, 200ml).",
+    "market": "DE"
+  },
+  "rawInci": "PROPYLENE GLYCOL, ALCOHOL DENAT., MYRISTYL ALCOHOL, DICAPRYLYL CARBONATE, AQUA, GLYCERIN, CAPRYLIC/CAPRIC TRIGLYCERIDE, CETRIMONIUM CHLORIDE, PARFUM, PEG-7 GLYCERYL COCOATE, HYDROLYZED PEARL, HYDROLYZED KERATIN, CETYL ALCOHOL, CITRIC ACID, LAURYL ALCOHOL, SORBIC ACID, POTASSIUM SORBATE, PHENOXYETHANOL, GERANIOL, BENZYL ALCOHOL, LINALOOL, LIMONENE, ALPHA-ISOMETHYL IONONE, HEXYL CINNAMAL, BENZYL SALICYLATE",
+  "inciSource": {
+    "url": "https://www.hautschutzengel.de/gliss-7-sec-ultimate-repair-express-kur-inhaltsstoffe/produkt/138746.html",
+    "accessDate": "2026-09-04",
+    "tier": "hautschutzengel (fallback)",
+    "notes": "dm.de and Rossmann.de direct fetches both failed this pass (dm.de: JS header-only; Rossmann.de: Cloudflare 'Client Challenge' block). This exact ingredient list was cross-corroborated via incidecoder.com/products/schwarzkopf-gliss-7sec-express-repair-treatment-ultimate-repair (original, non-redirected incidecoder.com domain used only as last-resort corroboration per the hard source rules, flagged here) and openbeautyfacts.org/product/4015100813319 (both agree on the same ingredient list under EAN 4015100813319). Two earlier fetch attempts against similarly-named hautschutzengel/schwarzkopf.de pages returned the WRONG variant (the 'Oil Nutritive' Kur, and a leave-in spray called 'Express Ultimate Repair') and were discarded - not used."
+  },
+  "directions": {
+    "text": "Nach dem Shampoonieren auf das handtuchtrockene/feuchte Haar auftragen, bis sich eine cremige Textur bildet, 7 Sekunden einwirken lassen, gründlich ausspülen.",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "7 seconds (the product's defining marketing claim - 'as effective as a 5-minute treatment in 7 seconds')",
+    "source": "Aggregated from schwarzkopf.de and multiple independent retailer copy blocks (all consistent on '7 Sekunden' as both product name and contact time) - schwarzkopf.de direct fetch did not render the Anwendung body text, so this is search-aggregated rather than a single verbatim page fetch, but the figure is the universal branded claim, not disputed anywhere found.",
+    "confidence": "high - the contact time is literally the product's name and is repeated identically across every independent source found"
+  },
+  "claims": [
+    "100% stärkeres Haar",
+    "7x weniger Haarbruch",
+    "silikonfrei",
+    "flüssiges Keratin & Perlenextrakt (HaptIQ System)",
+    "wirkt wie eine 5-Minuten-Kur in nur 7 Sekunden"
+  ],
+  "conflicts": [
+    {
+      "type": "EAN",
+      "description": "Proposal/dm.de use EAN 4015100433456. Independent ingredient databases (incidecoder.com original domain, openbeautyfacts.org) list EAN 4015100813319 for what appears by name, pack size, and formula description to be the identical product ('GLISS 7sec Express Repair - Ultimate Repair', Schwarzkopf, 200ml). Both EANs were searched independently and each resolves consistently to this same product name across multiple sources - suggests either a barcode reissue/repack over time, or a market/batch variant, not two different formulas.",
+      "resolution": "unresolved - recording both EANs; using 4015100433456 (dm.de-sourced, matches proposal) as the primary identifier since it is the higher-tier source"
+    }
+  ],
+  "status": "captured_with_conflict",
+  "statusNotes": "INCI and directions both captured with reasonable confidence, but the EAN discrepancy above is unresolved and should be checked by the orchestrator before freezing (does not affect the ingredient content, which is consistent across all sources for this product name)."
+}

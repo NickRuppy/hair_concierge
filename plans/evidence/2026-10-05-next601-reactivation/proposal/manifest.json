@@ -1,0 +1,490 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "expectedHead": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "expectedBranch": "codex/test-audit-pruning",
+  "files": [
+    {
+      "file": "tests/reactivation-stripe-context-postgres.test.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/before/tests/reactivation-stripe-context-postgres.test.ts",
+          "sha256": "386b328b8478e40597058348a792890627f573e3df9a6697ed7e1723fc54a270",
+          "count": 18,
+          "assertions": 67
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/transfer/tests/reactivation-stripe-context-postgres.test.ts",
+          "sha256": "386b328b8478e40597058348a792890627f573e3df9a6697ed7e1723fc54a270",
+          "count": 18,
+          "assertions": 67
+        },
+        "cut": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/cut/tests/reactivation-stripe-context-postgres.test.ts",
+          "sha256": "386b328b8478e40597058348a792890627f573e3df9a6697ed7e1723fc54a270",
+          "count": 18,
+          "assertions": 67
+        }
+      }
+    },
+    {
+      "file": "tests/reactivation-checkout-metadata.test.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/before/tests/reactivation-checkout-metadata.test.ts",
+          "sha256": "784478263208522bf37bb2dffc1f4e816811d0b08c45f345e4d5aca92b76bd3e",
+          "count": 15,
+          "assertions": 61
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/transfer/tests/reactivation-checkout-metadata.test.ts",
+          "sha256": "784478263208522bf37bb2dffc1f4e816811d0b08c45f345e4d5aca92b76bd3e",
+          "count": 15,
+          "assertions": 61
+        },
+        "cut": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/cut/tests/reactivation-checkout-metadata.test.ts",
+          "sha256": "784478263208522bf37bb2dffc1f4e816811d0b08c45f345e4d5aca92b76bd3e",
+          "count": 15,
+          "assertions": 61
+        }
+      }
+    },
+    {
+      "file": "tests/reactivation-retained-account-activation.test.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/before/tests/reactivation-retained-account-activation.test.ts",
+          "sha256": "8ef221ef187d867ab2941c5bb5205e49af67439e33b3c529e14cdb53bbb288d7",
+          "count": 15,
+          "assertions": 56
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/transfer/tests/reactivation-retained-account-activation.test.ts",
+          "sha256": "f17b5ef299ee814826530918c1f412ade5e6368cc83b29f5b075a35ab013c890",
+          "count": 15,
+          "assertions": 61
+        },
+        "cut": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/cut/tests/reactivation-retained-account-activation.test.ts",
+          "sha256": "1cfbd182a19d4408e704de5d28ef3ddee7517873c0fd549f2651bb8835aa3573",
+          "count": 13,
+          "assertions": 53
+        }
+      }
+    },
+    {
+      "file": "tests/reactivation-stripe-context-runtime.test.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/before/tests/reactivation-stripe-context-runtime.test.ts",
+          "sha256": "257a4a472930539e71266d8320dffd60f175b091749ba5c74caae4ebf75e84e9",
+          "count": 9,
+          "assertions": 41
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/transfer/tests/reactivation-stripe-context-runtime.test.ts",
+          "sha256": "257a4a472930539e71266d8320dffd60f175b091749ba5c74caae4ebf75e84e9",
+          "count": 9,
+          "assertions": 41
+        },
+        "cut": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/cut/tests/reactivation-stripe-context-runtime.test.ts",
+          "sha256": "257a4a472930539e71266d8320dffd60f175b091749ba5c74caae4ebf75e84e9",
+          "count": 9,
+          "assertions": 41
+        }
+      }
+    },
+    {
+      "file": "tests/reactivation-helpers.test.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/before/tests/reactivation-helpers.test.ts",
+          "sha256": "6639b8910ac9253d87b2b008fb5e53c3f38e335511a518b6dcb97fa7dea39ab7",
+          "count": 8,
+          "assertions": 20
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/transfer/tests/reactivation-helpers.test.ts",
+          "sha256": "6639b8910ac9253d87b2b008fb5e53c3f38e335511a518b6dcb97fa7dea39ab7",
+          "count": 8,
+          "assertions": 20
+        },
+        "cut": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/cut/tests/reactivation-helpers.test.ts",
+          "sha256": "6639b8910ac9253d87b2b008fb5e53c3f38e335511a518b6dcb97fa7dea39ab7",
+          "count": 8,
+          "assertions": 20
+        }
+      }
+    },
+    {
+      "file": "tests/reactivation-checkout-recovery.spec.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/before/tests/reactivation-checkout-recovery.spec.ts",
+          "sha256": "82f0c6591d955477440721ee865bfa370055d12b9066b0f8c881ab86aa401a8a",
+          "count": 6,
+          "assertions": 0
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/transfer/tests/reactivation-checkout-recovery.spec.ts",
+          "sha256": "82f0c6591d955477440721ee865bfa370055d12b9066b0f8c881ab86aa401a8a",
+          "count": 6,
+          "assertions": 0
+        },
+        "cut": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/cut/tests/reactivation-checkout-recovery.spec.ts",
+          "sha256": "82f0c6591d955477440721ee865bfa370055d12b9066b0f8c881ab86aa401a8a",
+          "count": 6,
+          "assertions": 0
+        }
+      }
+    },
+    {
+      "file": "tests/reactivation-trial-management.test.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/before/tests/reactivation-trial-management.test.ts",
+          "sha256": "c8f04e9cbc7d85c908b7e9a59fc753a42c3cad7bd8156f9075b24222c984d637",
+          "count": 5,
+          "assertions": 24
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/transfer/tests/reactivation-trial-management.test.ts",
+          "sha256": "c8f04e9cbc7d85c908b7e9a59fc753a42c3cad7bd8156f9075b24222c984d637",
+          "count": 5,
+          "assertions": 24
+        },
+        "cut": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/cut/tests/reactivation-trial-management.test.ts",
+          "sha256": "c8f04e9cbc7d85c908b7e9a59fc753a42c3cad7bd8156f9075b24222c984d637",
+          "count": 5,
+          "assertions": 24
+        }
+      }
+    },
+    {
+      "file": "tests/reactivation-auth-return.test.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/before/tests/reactivation-auth-return.test.ts",
+          "sha256": "0438dc495f5c5c01c6f0ee0ed6406cfaafc359d8086fe0debe5f99bfbd35b17d",
+          "count": 4,
+          "assertions": 19
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/transfer/tests/reactivation-auth-return.test.ts",
+          "sha256": "0438dc495f5c5c01c6f0ee0ed6406cfaafc359d8086fe0debe5f99bfbd35b17d",
+          "count": 4,
+          "assertions": 19
+        },
+        "cut": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/cut/tests/reactivation-auth-return.test.ts",
+          "sha256": "0438dc495f5c5c01c6f0ee0ed6406cfaafc359d8086fe0debe5f99bfbd35b17d",
+          "count": 4,
+          "assertions": 19
+        }
+      }
+    },
+    {
+      "file": "tests/reactivation-routing.test.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/before/tests/reactivation-routing.test.ts",
+          "sha256": "72b7affede80ab62f0db66e4c73e42f8c3ac532ed6e2100c46172f0bcf998623",
+          "count": 3,
+          "assertions": 11
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/transfer/tests/reactivation-routing.test.ts",
+          "sha256": "72b7affede80ab62f0db66e4c73e42f8c3ac532ed6e2100c46172f0bcf998623",
+          "count": 3,
+          "assertions": 11
+        },
+        "cut": {
+          "path": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/cut/tests/reactivation-routing.test.ts",
+          "sha256": "72b7affede80ab62f0db66e4c73e42f8c3ac532ed6e2100c46172f0bcf998623",
+          "count": 3,
+          "assertions": 11
+        }
+      }
+    }
+  ],
+  "counts": {
+    "before": 83,
+    "transfer": 83,
+    "cut": 81
+  },
+  "untouched": 79,
+  "readset": [
+    {
+      "file": "tests/reactivation-stripe-context-postgres.test.ts",
+      "sha256": "386b328b8478e40597058348a792890627f573e3df9a6697ed7e1723fc54a270"
+    },
+    {
+      "file": "tests/reactivation-checkout-metadata.test.ts",
+      "sha256": "784478263208522bf37bb2dffc1f4e816811d0b08c45f345e4d5aca92b76bd3e"
+    },
+    {
+      "file": "tests/reactivation-retained-account-activation.test.ts",
+      "sha256": "8ef221ef187d867ab2941c5bb5205e49af67439e33b3c529e14cdb53bbb288d7"
+    },
+    {
+      "file": "tests/reactivation-stripe-context-runtime.test.ts",
+      "sha256": "257a4a472930539e71266d8320dffd60f175b091749ba5c74caae4ebf75e84e9"
+    },
+    {
+      "file": "tests/reactivation-helpers.test.ts",
+      "sha256": "6639b8910ac9253d87b2b008fb5e53c3f38e335511a518b6dcb97fa7dea39ab7"
+    },
+    {
+      "file": "tests/reactivation-checkout-recovery.spec.ts",
+      "sha256": "82f0c6591d955477440721ee865bfa370055d12b9066b0f8c881ab86aa401a8a"
+    },
+    {
+      "file": "tests/reactivation-trial-management.test.ts",
+      "sha256": "c8f04e9cbc7d85c908b7e9a59fc753a42c3cad7bd8156f9075b24222c984d637"
+    },
+    {
+      "file": "tests/reactivation-auth-return.test.ts",
+      "sha256": "0438dc495f5c5c01c6f0ee0ed6406cfaafc359d8086fe0debe5f99bfbd35b17d"
+    },
+    {
+      "file": "tests/reactivation-routing.test.ts",
+      "sha256": "72b7affede80ab62f0db66e4c73e42f8c3ac532ed6e2100c46172f0bcf998623"
+    },
+    {
+      "file": "src/lib/reactivation/checkout-recovery.ts",
+      "sha256": "ae4dc3a9ae881a89fb372cc72f12e4f32a07fdf1094ffb4f24b9a6cbe5957dd9"
+    },
+    {
+      "file": "src/lib/reactivation/checkout-reservations.ts",
+      "sha256": "e1e14f2ad3c5ce5a511cf4918f561af1568d924426dc2eb1c18d735ca1eb2377"
+    },
+    {
+      "file": "src/lib/reactivation/profile-quiz-answers.ts",
+      "sha256": "4892919a1dc7486a0054644fc6d51704c9d3bee27be845948e039e99109a6bb9"
+    },
+    {
+      "file": "src/lib/reactivation/return-destination.ts",
+      "sha256": "48b88020e14c0e29db0744e616ce9a94d4399d8e52952c2eed95233d307807ab"
+    },
+    {
+      "file": "src/lib/reactivation/stripe-checkout-context.ts",
+      "sha256": "c4d51565dd34601e2fb1e5858470c79439f6ddcc8a1ec8ab9589e07604350389"
+    },
+    {
+      "file": "src/lib/reactivation/stripe-checkout-recovery.ts",
+      "sha256": "95f2390c0d83060576590bde47a9e3d32ec4ac11cfe9123312fd5aa69e7e313c"
+    },
+    {
+      "file": "src/app/reactivate/page.tsx",
+      "sha256": "ca6d462430c6fa257b7233de5a86b532904e418d2640d4949d964ec1ec312ca9"
+    },
+    {
+      "file": "src/components/reactivation/membership-reactivation-checkout.tsx",
+      "sha256": "65633082b1b404f7c5f66f64307f75cbee99be431ba71c3f99f5f0a976fd0412"
+    },
+    {
+      "file": "src/components/checkout/payment-method-checkout.tsx",
+      "sha256": "93a3cc1c82fc6b0e8db03ec6af00b48a863496ccea37faaed17f5f9ce289f3b4"
+    },
+    {
+      "file": "src/lib/auth/route-classification.ts",
+      "sha256": "6a5c8c0a283054ab108779a6a8f23764a4919b67adea2f0a94cb389abb4d57a6"
+    },
+    {
+      "file": "src/lib/auth/unauthenticated-redirect.ts",
+      "sha256": "bd6703ab7d835709100f2870c7ad950b1b66837f6e2f0b9f78836f8cdb6a1231"
+    },
+    {
+      "file": "src/lib/billing/checkout-success-redirect.ts",
+      "sha256": "ffe58e6d3b90a278e882101a674c7f3d65ce241c0d6c0bbea21321c5bd935092"
+    },
+    {
+      "file": "src/lib/billing/trial-membership.ts",
+      "sha256": "1e5a8d19e1bd9e04ecc4d727a3460b28bfa70a6af955b355e605c79aaf4fdc05"
+    },
+    {
+      "file": "src/lib/billing/trial-effective-contract.ts",
+      "sha256": "8700806b915a6472297eee6b523671fbcaa924a7eb4f4c02edf47bf6d5d40d96"
+    },
+    {
+      "file": "src/lib/billing/trial-returning-customer.ts",
+      "sha256": "901d4e91e87b39e0394b95410c786beff3123dbc52f340e79955f5d5e8b8c99a"
+    },
+    {
+      "file": "src/lib/billing/moderator-reset-cutoff.ts",
+      "sha256": "b7f4cfcf738472d0d7eab0adbd758acde100e78d99b9e7fa6eecbabed322802a"
+    },
+    {
+      "file": "src/lib/paypal/plans.ts",
+      "sha256": "08d36facaadaf6d9beb3e1433c3dcd0fbacd48f99b00fc0dd1e24a1b1045ca1a"
+    },
+    {
+      "file": "src/lib/stripe/checkout-session-params.ts",
+      "sha256": "985f472524ca69289513989e59f39068cde6a1234c0b0a7429f15da343b595b9"
+    },
+    {
+      "file": "src/lib/stripe/trial-checkout-session-params.ts",
+      "sha256": "9341b1b612522030f2272dcb75a455ea914792c6810567aa2f176dd73ebb51c3"
+    },
+    {
+      "file": "src/lib/quiz/offer-preview.ts",
+      "sha256": "d436af030c92a7189c79db4d974fe13e5c1e602d94bfc23d3276f96926ab10e4"
+    },
+    {
+      "file": "supabase/migrations/20260714200000_membership_reactivation_checkout_reservations.sql",
+      "sha256": "0627a8ba0d27a43f024a60ac8b655158e614acbc146f709180d81390d225e4c4"
+    },
+    {
+      "file": "supabase/migrations/20260715200000_paypal_reactivation_intent_uniqueness.sql",
+      "sha256": "5e01f36c4ff43d771d20afa23a70d2d19e3f4fd9dcbc6afe81cb2278c90cb3aa"
+    },
+    {
+      "file": "supabase/migrations/20260913202413_membership_reactivation_stripe_context.sql",
+      "sha256": "0e1923a5b51c6119be2691cfc4f5a258b3c8900c95ecc3c8d04d52d8fd41a3c1"
+    },
+    {
+      "file": "playwright.config.ts",
+      "sha256": "1bae952413616dc389aad1ebe4278173df2ea9e51add59045d72c24501f85aa9"
+    },
+    {
+      "file": "scripts/ci/path-rules.mjs",
+      "sha256": "e74b1ea820f04881ede4b5140251af7b456d327c57137ae72f2a48ad94d4d7f5"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    },
+    {
+      "file": "src/lib/stripe/checkout-activation.ts",
+      "sha256": "f33ca66366ec59a915fdeba82bb397ad20891dd837495de25c6bf4e51deb8bdc"
+    },
+    {
+      "file": "src/lib/stripe/webhook-handlers.ts",
+      "sha256": "611ec5966703c23c01beb04982fff17715a801afb808ec9b80117ae0462e7041"
+    },
+    {
+      "file": "src/lib/billing/subscriptions.ts",
+      "sha256": "a6ba77a92481e13f6f03bc7b1c8d7fee75c02facfeb8ce747493bc64ecca995c"
+    },
+    {
+      "file": "src/lib/stripe/trial-account-admission.ts",
+      "sha256": "36267f9ff61d48e48bebc4278d8606e0a7c677b05c3b425639fc4da35d7a50c0"
+    },
+    {
+      "file": "src/lib/supabase/middleware.ts",
+      "sha256": "b46773cf21b880cb35d2967d4a882be1c5c59c53f2416607b60d3cb8a4c862a7"
+    },
+    {
+      "file": "src/lib/paypal/checkout-intents.ts",
+      "sha256": "a26c67160595e5d4f620d461d42141009dbe4a4ee26f666d1d11246becb25765"
+    },
+    {
+      "file": "src/app/api/paypal/create-subscription-intent/route.ts",
+      "sha256": "cdc24635c7668e5976f8cf812af8dc02109e27d134f71855edb93cf794a12a63"
+    },
+    {
+      "file": "src/app/api/stripe/create-checkout-session/route.ts",
+      "sha256": "0808a083b02a9611deab703bf9fc7a9b3cecb5dce2b5be1889003a0cd06a9bd8"
+    },
+    {
+      "file": "src/components/checkout/paypal-subscription-button.tsx",
+      "sha256": "df81932a397efbe358f595927ce40ad73425bcdf0e64aeafc2fe7fd9db11fae1"
+    },
+    {
+      "file": "src/lib/openai-ads/browser.ts",
+      "sha256": "30c0a0b871aac8a5bf6f2131d7c48a6643f71dc7c31cca298196bed4ab288ab3"
+    },
+    {
+      "file": "src/lib/quiz/normalization.ts",
+      "sha256": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239"
+    },
+    {
+      "file": "src/lib/billing/trial-runtime.ts",
+      "sha256": "0dae1fdc8a90e3b71a6faf4a20fafa9c655c165650fbe952a3b36e66b29bffe0"
+    },
+    {
+      "file": "src/app/api/stripe/webhook/route.ts",
+      "sha256": "83c74462ffda261d3a044467d68a918b034febbefca9f6aad4ae131dd84f35ab"
+    },
+    {
+      "file": "src/app/welcome/page.tsx",
+      "sha256": "e6c5c768deee6f4f304e1dc5a4ed27ba8c0a186938069fec0c579ed560fda24e"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": "node_modules/@supabase/postgrest-js/src/PostgrestTransformBuilder.ts",
+      "sha256": "3483dce13f52a70e35149044b424112bce6f0a4f3140da9130d9dcf71deb4f95"
+    },
+    {
+      "file": "node_modules/@supabase/postgrest-js/src/PostgrestBuilder.ts",
+      "sha256": "2ce38ea1551e3fa2bfa49c1311e21191797b10b0ea0f7660da3b825bb37fe3ec"
+    },
+    {
+      "file": "node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js",
+      "sha256": "e0a591b81f983794366bbc8338df0ebbbc7add48fdcee772870e226eadcda9ce"
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/dist/index.cjs.map",
+      "sha256": "af9f64e861763113df03e067851e5d2a645bdf1f58675e9aead1a70379419851"
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799"
+    },
+    {
+      "file": "tsconfig.json",
+      "sha256": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd"
+    },
+    {
+      "file": ".nvmrc",
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "file": "node_modules/typescript/package.json",
+      "sha256": "822ef7ca6452205657b6288b066481ecf508bfbf43455d715cf7d3ec457561e6"
+    },
+    {
+      "file": "node_modules/typescript/lib/typescript.js",
+      "sha256": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675"
+    },
+    {
+      "file": "node_modules/react/package.json",
+      "sha256": "ce01a280a6109d1a837e88ce99784f318785079dbffda086a870aad61adc94e1"
+    },
+    {
+      "file": "node_modules/react-dom/package.json",
+      "sha256": "92aa96480eaab724565c5bb8a4b1dd355114506e5babd36c48c783407ff9937d"
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/package.json",
+      "sha256": "a540c379fd1d820810793681d25fa7ad5dadfcee2b190d14a6553fdb469cfe3c"
+    },
+    {
+      "file": "node_modules/@playwright/test/package.json",
+      "sha256": "6a1bfbf979df620c080e4b0b0506e6fc53a070e2280a971b189839b1a481ac01"
+    },
+    {
+      "file": "node_modules/tsx/package.json",
+      "sha256": "6e764b21991c21595441f82387c1451ccd10a3e7a3f0973cc5e3649a12dea7d2"
+    },
+    {
+      "file": "node_modules/esbuild/package.json",
+      "sha256": "9ce21c976ffbbb95001f460e9e8af7c6d719f748eb70441e617a14dd0b68a5b8"
+    },
+    {
+      "file": "node_modules/@supabase/postgrest-js/package.json",
+      "sha256": "395783968ba3868bbc44b14d3e5b97b308f0acae074bdf2a5ff18d0cbe1e2798"
+    }
+  ]
+}

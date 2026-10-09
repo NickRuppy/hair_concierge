@@ -1,0 +1,133 @@
+{
+  "productId": "06-monday-smooth-anti-frizz",
+  "lane": "blind-v1",
+  "standardVersion": "mask-inci-v0.5",
+  "classifiedAt": "2026-10-06",
+  "attestation": {
+    "prohibitedFilesAccessed": false,
+    "inputsRead": [
+      "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1.md",
+      "docs/research/mask-inci/v1.0/02_evidence_lexicon.v0.1.md",
+      "docs/research/mask-inci/v1.0/00_category_charter.md",
+      "docs/research/mask-inci/v1.0/01_property-set-v0.md",
+      "data/research/mask-inci/v1.0/blind-packets/01-hask-argan-oil-sachet.json",
+      "data/research/mask-inci/v1.0/blind-packets/02-gliss-7sekunden-express-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets/03-bali-curls-sos-protein-treatment.json",
+      "data/research/mask-inci/v1.0/blind-packets/04-gliss-liquid-silk-4in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/05-isana-mandelmilch-3in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/06-monday-smooth-anti-frizz.json",
+      "data/research/mask-inci/v1.0/blind-packets/07-pantene-molecular-bond-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets/08-sante-intense-hydration.json",
+      "data/research/mask-inci/v1.0/blind-packets/09-balea-professional-aqua-hyaluron.json",
+      "data/research/mask-inci/v1.0/blind-packets/10-bali-curls-deep-repair-mask.json",
+      "data/research/mask-inci/v1.0/blind-packets/11-elvital-glycolic-gloss.json",
+      "data/research/mask-inci/v1.0/blind-packets/12-guhl-panthenol-reparatur-2in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/13-olaplex-no3-hair-perfector.json"
+    ]
+  },
+  "g0": {
+    "value": "in_category",
+    "modeScoped": false,
+    "coveredMode": "post_shampoo_rinse_out_mask",
+    "rationale": "Directions: on damp/towel-dried hair (post-wash use), lengths and ends, 10 minutes, rinse. All three G0 conjuncts clear.",
+    "evidenceSignals": [
+      "'feuchtes/handtuchtrockenes Haar'",
+      "10 min",
+      "'ausspülen'"
+    ]
+  },
+  "tailMarker": {
+    "ingredient": "PHENOXYETHANOL",
+    "index": 11,
+    "status": "unresolved",
+    "note": "Earliest tail-class species is PHENOXYETHANOL @11, which outranks the formula's sole cationic Behentrimonium Chloride @12 — an architecture-establishing species. §3.1.1 limb 1 → implausible → unresolved (tail_marker_unresolved). Parfum @15 is the next fragrance-class species."
+  },
+  "bondRoute": "none",
+  "profile": {
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Read on own merits. S1 fails on the entire list (Behentrimonium Chloride @12 is the only cationic), so high is unreachable. S2: Cetearyl Alcohol @3 → not low. → moderate, capped at moderate by the unresolved marker.",
+      "evidenceSignals": [
+        "S2: Cetearyl Alcohol @3"
+      ],
+      "counterSignals": [
+        "tail_marker unresolved",
+        "single cationic on full list"
+      ]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Heavy-lipid core: Butyrospermum Parkii Butter @7, Cocos Nucifera Oil @8 — ranked above every tail-class species and above the formula's own sole cationic @12, so the core is read on ordinal merits rather than solely on the (unresolved) marker. Completers both present: cetearyl-class Cetearyl Alcohol @3 (top three) and an occlusive Dimethicone @4 + Dimethiconol @5 pair. → high; confidence capped at moderate by the unresolved marker; review.",
+      "evidenceSignals": [
+        "R4b: Shea @7, Coconut @8",
+        "dense base: Cetearyl @3",
+        "occlusive stack: Dimethicone @4 + Dimethiconol @5"
+      ],
+      "counterSignals": [
+        "tail_marker unresolved (Phenoxyethanol @11)"
+      ]
+    },
+    "careDirection": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No R5 species anywhere. Balanced (b) fails clause 3: an R4 lipid stack (IPM @6, Shea @7, Coconut @8, Jojoba @9, Almond @10) is a leading moisture leg even though a silicone system (@4/@5) is present. → moisture; confidence capped by the unresolved marker.",
+      "evidenceSignals": [
+        "lipid/emollient base @6–10",
+        "Glycerin @2"
+      ],
+      "counterSignals": [
+        "silicone system @4/@5 (film route present but does not lead)",
+        "tail_marker unresolved"
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No protein/peptide route and no bond token; silicones and oils are explicit non-upgraders. Capped at moderate by the unresolved marker.",
+      "evidenceSignals": [
+        "no R5",
+        "bond_route none"
+      ],
+      "counterSignals": []
+    },
+    "primaryFocus": {
+      "value": "smoothing",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Steps 3–5 clear nothing (no R5/bond; humectants above any boundary: Glycerin @2 only — Diglycerin @13 not on the R9 list; shine criterion 1 fails because R4b is present). Step 6 smoothing: architecture extends materially beyond the base via a distinct Dimethicone @4 / Dimethiconol @5 silicone system; 'Smooth Anti-Frizz' positioning corroborates. focus_care_verdict: not_applicable.",
+      "evidenceSignals": [
+        "silicone system @4/@5"
+      ],
+      "counterSignals": [
+        "tail_marker unresolved",
+        "competing: general"
+      ]
+    },
+    "secondaryFocus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Shine would only reuse the smoothing film (§6 rule 2) and fails criterion 1; no humectant cluster.",
+      "evidenceSignals": [],
+      "counterSignals": []
+    }
+  },
+  "hinweise": {
+    "fired": [
+      {
+        "flag": "tail_marker",
+        "value": "unresolved (Phenoxyethanol @11 outranks sole cationic Behentrimonium Chloride @12)",
+        "note": "Implausible marker: neither qualifies nor disqualifies; all fields capped at moderate; routes to human review."
+      }
+    ]
+  },
+  "reviewTriggers": [
+    "tail_marker_unresolved"
+  ]
+}

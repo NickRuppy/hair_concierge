@@ -1,0 +1,50 @@
+TAP version 13
+# scan_resolve_attempt_start_failed { message: 'boom' }
+# scan_resolve_attempt_start_failed {
+#   cause: Error: boom
+#       at Object.recordScanResolveAttempt (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/resolve-event-log.ts:131:13)
+#       at async <anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/api/scan/resolve/route.ts:208:9)
+#       at async Promise.all (index 0)
+#       at async waitForActual (node:assert:533:5)
+#       at async Function.doesNotReject (node:assert:674:33)
+#       at async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-route.test.ts:1095:3)
+#       at async Test.run (node:internal/test_runner/test:935:9)
+#       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+# }
+# Subtest: attempt telemetry: an attempt-log write failure reaches Sentry through the route's injected captureScanException
+not ok 1 - attempt telemetry: an attempt-log write failure reaches Sentry through the route's injected captureScanException
+  ---
+  duration_ms: 21.146
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-route.test.ts:2:36929'
+  failureType: 'testCodeFailure'
+  error: |-
+    Got unwanted rejection: attempt-log insert errors must not reject the route deferred drain
+    Actual message: "boom"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  actual:
+  error: 'boom'
+  stack: |-
+    Object.recordScanResolveAttempt (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/resolve-event-log.ts:131:13)
+    async <anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/api/scan/resolve/route.ts:208:9)
+    async Promise.all (index 0)
+    async waitForActual (node:assert:533:5)
+    async Function.doesNotReject (node:assert:674:33)
+    async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-route.test.ts:1095:3)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  operator: 'doesNotReject'
+  stack: |-
+    async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-route.test.ts:1095:3)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 847.45625

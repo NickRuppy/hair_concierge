@@ -2,13 +2,6 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { writeAccountLinkFacts } from "@/lib/user-facts/account-link"
 import type { QuizAnswers } from "./types"
 
-export {
-  buildProfileDataFromPersonalPlanCanonicalProfile,
-  buildProfileDataFromQuizAnswers,
-  buildProfilePrimaryConcern,
-  resolveProfileDensityFromQuizAnswers,
-} from "./legacy-profile-projection"
-
 export function canLinkDirectQuizLead(
   lead: { email: string; userId: string | null },
   account: { email?: string; userId: string },

@@ -1,0 +1,2308 @@
+[
+  {
+    "id": "single-card-root",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred articleOpenTag existence fails; no browser geometry claim.",
+    "source": "src/components/personal-plan-start/need-card.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "the card leads with the product name and a type-plus-price subline"
+    },
+    "originalHash": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/single-card-root-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/single-card-root-fault.tap"
+    },
+    "restoredHash": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/single-card-root-after.tap"
+    },
+    "keeperAssertionLines": [
+      1331,
+      1332,
+      1333,
+      1334,
+      1335,
+      1342,
+      1343,
+      1344,
+      1345,
+      1346,
+      1347,
+      1349,
+      1351
+    ],
+    "assertionStacks": [
+      1342
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "single-card-preview-hook",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred outer article preview=example fails.",
+    "source": "src/components/personal-plan-start/need-card.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "the card leads with the product name and a type-plus-price subline"
+    },
+    "originalHash": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/single-card-preview-hook-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/single-card-preview-hook-fault.tap"
+    },
+    "restoredHash": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/single-card-preview-hook-after.tap"
+    },
+    "keeperAssertionLines": [
+      1331,
+      1332,
+      1333,
+      1334,
+      1335,
+      1342,
+      1343,
+      1344,
+      1345,
+      1346,
+      1347,
+      1349,
+      1351
+    ],
+    "assertionStacks": [
+      1347
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "group-kicker-duplication",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred exactly one Haaröl/Optional kicker fails.",
+    "source": "src/components/personal-plan-start/need-card.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "each group member opens its own detail sheet"
+    },
+    "originalHash": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/group-kicker-duplication-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/group-kicker-duplication-fault.tap"
+    },
+    "restoredHash": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/group-kicker-duplication-after.tap"
+    },
+    "keeperAssertionLines": [
+      965,
+      966,
+      968,
+      969,
+      976,
+      977,
+      984,
+      985,
+      987,
+      988,
+      989,
+      990,
+      991,
+      992,
+      994,
+      998,
+      1004,
+      1005,
+      1006,
+      1007
+    ],
+    "assertionStacks": [
+      984
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "group-divider-missing",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred divider count 1 fails.",
+    "source": "src/components/personal-plan-start/need-card.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "each group member opens its own detail sheet"
+    },
+    "originalHash": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/group-divider-missing-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/group-divider-missing-fault.tap"
+    },
+    "restoredHash": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/group-divider-missing-after.tap"
+    },
+    "keeperAssertionLines": [
+      965,
+      966,
+      968,
+      969,
+      976,
+      977,
+      984,
+      985,
+      987,
+      988,
+      989,
+      990,
+      991,
+      992,
+      994,
+      998,
+      1004,
+      1005,
+      1006,
+      1007
+    ],
+    "assertionStacks": [
+      994
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "group-tone-delivery",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred exact optional group-id/tone pair fails.",
+    "source": "src/components/personal-plan-start/need-card.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "each group member opens its own detail sheet"
+    },
+    "originalHash": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/group-tone-delivery-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/group-tone-delivery-fault.tap"
+    },
+    "restoredHash": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/group-tone-delivery-after.tap"
+    },
+    "keeperAssertionLines": [
+      965,
+      966,
+      968,
+      969,
+      976,
+      977,
+      984,
+      985,
+      987,
+      988,
+      989,
+      990,
+      991,
+      992,
+      994,
+      998,
+      1004,
+      1005,
+      1006,
+      1007
+    ],
+    "assertionStacks": [
+      977
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "oil-product-price",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred secondary.product.priceLabel exact24,90€ fails.",
+    "source": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "a role card inside a group renders the role in its subline and keeps the category styling"
+    },
+    "originalHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-product-price-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-product-price-fault.tap"
+    },
+    "restoredHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-product-price-after.tap"
+    },
+    "keeperAssertionLines": [
+      699,
+      703,
+      704,
+      705,
+      708,
+      709,
+      710,
+      711,
+      714,
+      715,
+      716,
+      717,
+      718,
+      719,
+      720,
+      721,
+      722,
+      723,
+      729,
+      730,
+      731,
+      732,
+      733,
+      747,
+      748,
+      749,
+      751,
+      752
+    ],
+    "assertionStacks": [
+      720
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "oil-image-alt",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred secondary.imageAlt exact Produktbild: Leichtes Finish-Öl fails.",
+    "source": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "a role card inside a group renders the role in its subline and keeps the category styling"
+    },
+    "originalHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-image-alt-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-image-alt-fault.tap"
+    },
+    "restoredHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-image-alt-after.tap"
+    },
+    "keeperAssertionLines": [
+      699,
+      703,
+      704,
+      705,
+      708,
+      709,
+      710,
+      711,
+      714,
+      715,
+      716,
+      717,
+      718,
+      719,
+      720,
+      721,
+      722,
+      723,
+      729,
+      730,
+      731,
+      732,
+      733,
+      747,
+      748,
+      749,
+      751,
+      752
+    ],
+    "assertionStacks": [
+      722
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "oil-image-url",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred secondary.imageUrl exact oil-dry-finish.webp fails.",
+    "source": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "a role card inside a group renders the role in its subline and keeps the category styling"
+    },
+    "originalHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-image-url-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-image-url-fault.tap"
+    },
+    "restoredHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-image-url-after.tap"
+    },
+    "keeperAssertionLines": [
+      699,
+      703,
+      704,
+      705,
+      708,
+      709,
+      710,
+      711,
+      714,
+      715,
+      716,
+      717,
+      718,
+      719,
+      720,
+      721,
+      722,
+      723,
+      729,
+      730,
+      731,
+      732,
+      733,
+      747,
+      748,
+      749,
+      751,
+      752
+    ],
+    "assertionStacks": [
+      721
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "oil-fallback-note",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred secondary fallbackNote null fails.",
+    "source": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "a role card inside a group renders the role in its subline and keeps the category styling"
+    },
+    "originalHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-fallback-note-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-fallback-note-fault.tap"
+    },
+    "restoredHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-fallback-note-after.tap"
+    },
+    "keeperAssertionLines": [
+      699,
+      703,
+      704,
+      705,
+      708,
+      709,
+      710,
+      711,
+      714,
+      715,
+      716,
+      717,
+      718,
+      719,
+      720,
+      721,
+      722,
+      723,
+      729,
+      730,
+      731,
+      732,
+      733,
+      747,
+      748,
+      749,
+      751,
+      752
+    ],
+    "assertionStacks": [
+      723
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "oil-product-reasoning",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred secondary.detailBlocks fixed productCriteria fails.",
+    "source": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "a role card inside a group renders the role in its subline and keeps the category styling"
+    },
+    "originalHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-product-reasoning-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-product-reasoning-fault.tap"
+    },
+    "restoredHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-product-reasoning-after.tap"
+    },
+    "keeperAssertionLines": [
+      699,
+      703,
+      704,
+      705,
+      708,
+      709,
+      710,
+      711,
+      714,
+      715,
+      716,
+      717,
+      718,
+      719,
+      720,
+      721,
+      722,
+      723,
+      729,
+      730,
+      731,
+      732,
+      733,
+      747,
+      748,
+      749,
+      751,
+      752
+    ],
+    "assertionStacks": [
+      733
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "oil-fit-reasoning",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred secondary.detailBlocks fixed fit fails.",
+    "source": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "a role card inside a group renders the role in its subline and keeps the category styling"
+    },
+    "originalHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-fit-reasoning-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-fit-reasoning-fault.tap"
+    },
+    "restoredHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-fit-reasoning-after.tap"
+    },
+    "keeperAssertionLines": [
+      699,
+      703,
+      704,
+      705,
+      708,
+      709,
+      710,
+      711,
+      714,
+      715,
+      716,
+      717,
+      718,
+      719,
+      720,
+      721,
+      722,
+      723,
+      729,
+      730,
+      731,
+      732,
+      733,
+      747,
+      748,
+      749,
+      751,
+      752
+    ],
+    "assertionStacks": [
+      733
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "oil-role-purpose",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred secondary.purpose fixed Finish copy fails.",
+    "source": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "a role card inside a group renders the role in its subline and keeps the category styling"
+    },
+    "originalHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-role-purpose-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-role-purpose-fault.tap"
+    },
+    "restoredHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-role-purpose-after.tap"
+    },
+    "keeperAssertionLines": [
+      699,
+      703,
+      704,
+      705,
+      708,
+      709,
+      710,
+      711,
+      714,
+      715,
+      716,
+      717,
+      718,
+      719,
+      720,
+      721,
+      722,
+      723,
+      729,
+      730,
+      731,
+      732,
+      733,
+      747,
+      748,
+      749,
+      751,
+      752
+    ],
+    "assertionStacks": [
+      730
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "oil-role-pill",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred secondary.pills [Finish & Glanz] fails.",
+    "source": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "a role card inside a group renders the role in its subline and keeps the category styling"
+    },
+    "originalHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-role-pill-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-role-pill-fault.tap"
+    },
+    "restoredHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-role-pill-after.tap"
+    },
+    "keeperAssertionLines": [
+      699,
+      703,
+      704,
+      705,
+      708,
+      709,
+      710,
+      711,
+      714,
+      715,
+      716,
+      717,
+      718,
+      719,
+      720,
+      721,
+      722,
+      723,
+      729,
+      730,
+      731,
+      732,
+      733,
+      747,
+      748,
+      749,
+      751,
+      752
+    ],
+    "assertionStacks": [
+      731
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "oil-role-cadence",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred per-role primary/secondary frequency differs from payload generic cadence.",
+    "source": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "a role card inside a group renders the role in its subline and keeps the category styling"
+    },
+    "originalHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-role-cadence-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-role-cadence-fault.tap"
+    },
+    "restoredHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-role-cadence-after.tap"
+    },
+    "keeperAssertionLines": [
+      699,
+      703,
+      704,
+      705,
+      708,
+      709,
+      710,
+      711,
+      714,
+      715,
+      716,
+      717,
+      718,
+      719,
+      720,
+      721,
+      722,
+      723,
+      729,
+      730,
+      731,
+      732,
+      733,
+      747,
+      748,
+      749,
+      751,
+      752
+    ],
+    "assertionStacks": [
+      711
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "basis-count-groups",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred countLabel 2 Kategorien fails with3; number of actual cards remains2.",
+    "source": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "same-tier roles of a multi-role category group into one card, each wearing its own role copy"
+    },
+    "originalHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/basis-count-groups-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/basis-count-groups-fault.tap"
+    },
+    "restoredHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/basis-count-groups-after.tap"
+    },
+    "keeperAssertionLines": [
+      421,
+      426,
+      427,
+      428,
+      434,
+      435,
+      436,
+      437,
+      438,
+      439,
+      441,
+      442
+    ],
+    "assertionStacks": [
+      442
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "single-role-id-copy",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred final ids [shampoo,conditioner] fails because Conditioner gets role id.",
+    "source": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "binds only source-matched authority previews to their exact category cards"
+    },
+    "originalHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/single-role-id-copy-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/single-role-id-copy-fault.tap"
+    },
+    "restoredHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/single-role-id-copy-after.tap"
+    },
+    "keeperAssertionLines": [
+      272,
+      274,
+      275,
+      276,
+      277,
+      278,
+      288,
+      300,
+      304
+    ],
+    "assertionStacks": [
+      272
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "single-role-target-copy",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred targetType Sanft reinigend fails while ids/product preserved.",
+    "source": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "binds only source-matched authority previews to their exact category cards"
+    },
+    "originalHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/single-role-target-copy-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/single-role-target-copy-fault.tap"
+    },
+    "restoredHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/single-role-target-copy-after.tap"
+    },
+    "keeperAssertionLines": [
+      272,
+      274,
+      275,
+      276,
+      277,
+      278,
+      288,
+      300,
+      304
+    ],
+    "assertionStacks": [
+      275
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "paused-card-hook",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred paused=true actual SSR assertion fails.",
+    "source": "src/components/personal-plan-start/need-card.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "keeps Optional and Pausiert as explicit status text without replacing category styling"
+    },
+    "originalHash": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/paused-card-hook-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/paused-card-hook-fault.tap"
+    },
+    "restoredHash": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/paused-card-hook-after.tap"
+    },
+    "keeperAssertionLines": [
+      1619,
+      1620,
+      1621,
+      1622,
+      1623,
+      1625,
+      1626,
+      1627,
+      1628,
+      1629,
+      1630,
+      1632,
+      1633
+    ],
+    "assertionStacks": [
+      1632
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "paused-dialog-affordance",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred paused SSR dialog affordance missing.",
+    "source": "src/components/personal-plan-start/need-card.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "keeps Optional and Pausiert as explicit status text without replacing category styling"
+    },
+    "originalHash": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/paused-dialog-affordance-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/paused-dialog-affordance-fault.tap"
+    },
+    "restoredHash": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/paused-dialog-affordance-after.tap"
+    },
+    "keeperAssertionLines": [
+      1619,
+      1620,
+      1621,
+      1622,
+      1623,
+      1625,
+      1626,
+      1627,
+      1628,
+      1629,
+      1630,
+      1632,
+      1633
+    ],
+    "assertionStacks": [
+      1633
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "retired-stagebar-header",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred exact stagebar aria-label absence fails on actual Basis SSR. Also run S1431/S1544(retry)/S1590 if verifying every transferred subject.",
+    "source": "src/components/personal-plan-start/need-plan-screen.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "renders the signed-off Basis shell with folded cards and example-preview geometry"
+    },
+    "originalHash": "aef2027e8ba788faab32c1113e638421f61bfbaf11e81a263bc4da4849be0679",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/retired-stagebar-header-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/retired-stagebar-header-fault.tap"
+    },
+    "restoredHash": "aef2027e8ba788faab32c1113e638421f61bfbaf11e81a263bc4da4849be0679",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/retired-stagebar-header-after.tap"
+    },
+    "keeperAssertionLines": [
+      1486,
+      1487,
+      1488,
+      1489,
+      1490,
+      1491,
+      1492,
+      1493,
+      1494,
+      1495,
+      1496,
+      1497,
+      1498,
+      1503,
+      1504,
+      1506
+    ],
+    "assertionStacks": [
+      1504
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "retired-stagebar-loading",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred loading stagebar absence fails; direct PlanStartLoading owner.",
+    "source": "src/components/personal-plan-start/plan-start-flow.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "renders loading and retry states without questions or legacy destinations"
+    },
+    "originalHash": "ebdfd12eb051c082a10501370256537fe25ab391370ee90046d247a969048f40",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/retired-stagebar-loading-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/retired-stagebar-loading-fault.tap"
+    },
+    "restoredHash": "ebdfd12eb051c082a10501370256537fe25ab391370ee90046d247a969048f40",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/retired-stagebar-loading-after.tap"
+    },
+    "keeperAssertionLines": [
+      1658,
+      1659,
+      1660,
+      1661,
+      1662,
+      1663,
+      1664,
+      1666,
+      1667,
+      1669,
+      1670
+    ],
+    "assertionStacks": [
+      1667
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "paused-snapshot-status",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred paused.statusLabel exact Pausiert fails.",
+    "source": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "does not substitute category-only images for live authority previews"
+    },
+    "originalHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/paused-snapshot-status-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/paused-snapshot-status-fault.tap"
+    },
+    "restoredHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/paused-snapshot-status-after.tap"
+    },
+    "keeperAssertionLines": [
+      1862,
+      1863,
+      1866,
+      1867,
+      1868,
+      1869,
+      1871,
+      1872,
+      1873,
+      1879,
+      1882,
+      1883,
+      1884
+    ],
+    "assertionStacks": [
+      1872
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "paused-snapshot-target",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred paused.targetType Aktuell nicht anwenden fails.",
+    "source": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "does not substitute category-only images for live authority previews"
+    },
+    "originalHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/paused-snapshot-target-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/paused-snapshot-target-fault.tap"
+    },
+    "restoredHash": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/paused-snapshot-target-after.tap"
+    },
+    "keeperAssertionLines": [
+      1862,
+      1863,
+      1866,
+      1867,
+      1868,
+      1869,
+      1871,
+      1872,
+      1873,
+      1879,
+      1882,
+      1883,
+      1884
+    ],
+    "assertionStacks": [
+      1873
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "shampoo-add-another",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred firstCapture.showAddAnotherProduct true fails before manual action still available.",
+    "source": "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "role finalization shows saving immediately and suppresses duplicate actions"
+    },
+    "originalHash": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/shampoo-add-another-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/shampoo-add-another-fault.tap"
+    },
+    "restoredHash": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/shampoo-add-another-after.tap"
+    },
+    "keeperAssertionLines": [
+      2694,
+      2707,
+      2714,
+      2724,
+      2725,
+      2726,
+      2727,
+      2730,
+      2731
+    ],
+    "assertionStacks": [
+      2694
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "successful-category-review-missing",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred final ProductFitComparison positive assertion fails after release; successful mutation still occurs.",
+    "source": "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "role finalization shows saving immediately and suppresses duplicate actions"
+    },
+    "originalHash": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/successful-category-review-missing-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/successful-category-review-missing-fault.tap"
+    },
+    "restoredHash": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/successful-category-review-missing-after.tap"
+    },
+    "keeperAssertionLines": [
+      2694,
+      2707,
+      2714,
+      2724,
+      2725,
+      2726,
+      2727,
+      2730,
+      2731
+    ],
+    "assertionStacks": [
+      2730
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "oil-group-titles",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred exact3 roleTitles fails before commit.",
+    "source": "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "committing the full group records one local choice per member and advances past all oil subjects"
+    },
+    "originalHash": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-titles-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-titles-fault.tap"
+    },
+    "restoredHash": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-titles-after.tap"
+    },
+    "keeperAssertionLines": [
+      5579,
+      5580,
+      5584,
+      5585,
+      5590,
+      5591,
+      5592,
+      5593,
+      5594,
+      5595,
+      5596,
+      5610,
+      5611
+    ],
+    "assertionStacks": [
+      5580
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "oil-group-default-selection",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred checkedKeys.size3 fails before existing commit.",
+    "source": "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "committing the full group records one local choice per member and advances past all oil subjects"
+    },
+    "originalHash": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-default-selection-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-default-selection-fault.tap"
+    },
+    "restoredHash": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-default-selection-after.tap"
+    },
+    "keeperAssertionLines": [
+      5579,
+      5580,
+      5584,
+      5585,
+      5590,
+      5591,
+      5592,
+      5593,
+      5594,
+      5595,
+      5596,
+      5610,
+      5611
+    ],
+    "assertionStacks": [
+      5584
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "oil-group-uniform",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred uniformProposition=true fails before commit.",
+    "source": "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "committing the full group records one local choice per member and advances past all oil subjects"
+    },
+    "originalHash": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-uniform-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-uniform-fault.tap"
+    },
+    "restoredHash": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-uniform-after.tap"
+    },
+    "keeperAssertionLines": [
+      5579,
+      5580,
+      5584,
+      5585,
+      5590,
+      5591,
+      5592,
+      5593,
+      5594,
+      5595,
+      5596,
+      5610,
+      5611
+    ],
+    "assertionStacks": [
+      5585
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "oil-group-heading",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred headingOverride undefined fails.",
+    "source": "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "committing the full group records one local choice per member and advances past all oil subjects"
+    },
+    "originalHash": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-heading-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-heading-fault.tap"
+    },
+    "restoredHash": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-heading-after.tap"
+    },
+    "keeperAssertionLines": [
+      5579,
+      5580,
+      5584,
+      5585,
+      5590,
+      5591,
+      5592,
+      5593,
+      5594,
+      5595,
+      5596,
+      5610,
+      5611
+    ],
+    "assertionStacks": [
+      5591
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "oil-group-scope",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred scopeContextLine undefined fails.",
+    "source": "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "committing the full group records one local choice per member and advances past all oil subjects"
+    },
+    "originalHash": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-scope-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-scope-fault.tap"
+    },
+    "restoredHash": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-scope-after.tap"
+    },
+    "keeperAssertionLines": [
+      5579,
+      5580,
+      5584,
+      5585,
+      5590,
+      5591,
+      5592,
+      5593,
+      5594,
+      5595,
+      5596,
+      5610,
+      5611
+    ],
+    "assertionStacks": [
+      5592
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "oil-group-action-label",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred primaryActionLabelOverride undefined fails.",
+    "source": "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "committing the full group records one local choice per member and advances past all oil subjects"
+    },
+    "originalHash": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-action-label-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-action-label-fault.tap"
+    },
+    "restoredHash": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-action-label-after.tap"
+    },
+    "keeperAssertionLines": [
+      5579,
+      5580,
+      5584,
+      5585,
+      5590,
+      5591,
+      5592,
+      5593,
+      5594,
+      5595,
+      5596,
+      5610,
+      5611
+    ],
+    "assertionStacks": [
+      5593
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "oil-group-position",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred reviewPosition1 fails.",
+    "source": "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "committing the full group records one local choice per member and advances past all oil subjects"
+    },
+    "originalHash": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-position-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-position-fault.tap"
+    },
+    "restoredHash": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-position-after.tap"
+    },
+    "keeperAssertionLines": [
+      5579,
+      5580,
+      5584,
+      5585,
+      5590,
+      5591,
+      5592,
+      5593,
+      5594,
+      5595,
+      5596,
+      5610,
+      5611
+    ],
+    "assertionStacks": [
+      5594
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "oil-group-total",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred reviewTotal1 fails.",
+    "source": "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "committing the full group records one local choice per member and advances past all oil subjects"
+    },
+    "originalHash": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-total-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-total-fault.tap"
+    },
+    "restoredHash": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-total-after.tap"
+    },
+    "keeperAssertionLines": [
+      5579,
+      5580,
+      5584,
+      5585,
+      5590,
+      5591,
+      5592,
+      5593,
+      5594,
+      5595,
+      5596,
+      5610,
+      5611
+    ],
+    "assertionStacks": [
+      5595
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "oil-group-role-kicker",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred roleLabel null fails.",
+    "source": "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "committing the full group records one local choice per member and advances past all oil subjects"
+    },
+    "originalHash": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-role-kicker-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-role-kicker-fault.tap"
+    },
+    "restoredHash": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/oil-group-role-kicker-after.tap"
+    },
+    "keeperAssertionLines": [
+      5579,
+      5580,
+      5584,
+      5585,
+      5590,
+      5591,
+      5592,
+      5593,
+      5594,
+      5595,
+      5596,
+      5610,
+      5611
+    ],
+    "assertionStacks": [
+      5596
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "group-accessible-name",
+    "lane": "start",
+    "phase": "new",
+    "intended": "Transferred role/group aria-labelledby association fails while checkbox contents remain.",
+    "source": "src/components/personal-plan-products/oil-group-review.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "the grouped Öl screen lists every named use case pre-checked under one commit action"
+    },
+    "originalHash": "d5239dee71b520b38fb0271ae89f5b8f0d58325fde2f4fa1adebe02b5910cf55",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/group-accessible-name-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next489-start-mutations-new/group-accessible-name-fault.tap"
+    },
+    "restoredHash": "d5239dee71b520b38fb0271ae89f5b8f0d58325fde2f4fa1adebe02b5910cf55",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next489-start-mutations-new/group-accessible-name-after.tap"
+    },
+    "keeperAssertionLines": [
+      5467,
+      5468,
+      5469,
+      5470,
+      5471,
+      5472,
+      5473,
+      5479,
+      5480
+    ],
+    "assertionStacks": [
+      5480
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  }
+]

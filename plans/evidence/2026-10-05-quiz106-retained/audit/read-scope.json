@@ -1,0 +1,1321 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "entries": [
+    {
+      "file": "tests/quiz-normalization.test.ts",
+      "sha256": "b5e39a58c6c37cccc15e61e6d04d50c01820c9d5b417843b1b03bece1ef36340",
+      "bytes": 8821,
+      "lineCount": 256,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          256
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-normalization.test.ts"
+    },
+    {
+      "file": "tests/quiz-primary-concern.test.ts",
+      "sha256": "74b59aef6b5b9de05b6367b25989ead41b17d308cff8709772aaf0897298c9b7",
+      "bytes": 13155,
+      "lineCount": 388,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          388
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-primary-concern.test.ts"
+    },
+    {
+      "file": "tests/quiz-validators.test.ts",
+      "sha256": "526e02cb3341ecc27136f329e99e804ddd730cfab5dc94a381d0c697db4bf7ee",
+      "bytes": 4808,
+      "lineCount": 176,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          176
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-validators.test.ts"
+    },
+    {
+      "file": "tests/quiz-draft.test.ts",
+      "sha256": "e3c92705b912d3596f1e75568dbb1ba63d5cbe75cc96fb1aced50899b1524c68",
+      "bytes": 12168,
+      "lineCount": 448,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          448
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-draft.test.ts"
+    },
+    {
+      "file": "tests/quiz-screen-order.test.ts",
+      "sha256": "877d50b822e2838babc191574bbccc816ee97b86e70563b63ebfd52c458a245c",
+      "bytes": 10080,
+      "lineCount": 300,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          300
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-screen-order.test.ts"
+    },
+    {
+      "file": "tests/quiz-preparation.test.ts",
+      "sha256": "2a0d0da8403687934e18e9c148cd505163783b63f46ce5ad25f2bc8978b23f3a",
+      "bytes": 5645,
+      "lineCount": 196,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          196
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-preparation.test.ts"
+    },
+    {
+      "file": "tests/quiz-need-lane.test.ts",
+      "sha256": "91f87dc6aaaad8d4fa624d1c3620cb1b8a08fa28143516140aac93a67bd472d4",
+      "bytes": 2947,
+      "lineCount": 115,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          115
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-need-lane.test.ts"
+    },
+    {
+      "file": "tests/quiz-result-routing.test.ts",
+      "sha256": "39a199e1b2f57d293d9ad871c4b2d896f46a6f051ffdf1458d3892c0b3e02537",
+      "bytes": 2254,
+      "lineCount": 76,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          76
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-result-routing.test.ts"
+    },
+    {
+      "file": "tests/quiz-email-return-selection.test.ts",
+      "sha256": "67b77db34c94ed5bb7a8739a274c5f6af64a27cea2502de6bacd66673d5c639b",
+      "bytes": 2842,
+      "lineCount": 86,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          86
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-email-return-selection.test.ts"
+    },
+    {
+      "file": "tests/quiz-email-return-choice.test.ts",
+      "sha256": "755b4d7808f1d6fd69c54aa5ff8af509a13d4d171ac98dc4fa9a45c6909c218c",
+      "bytes": 4593,
+      "lineCount": 115,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          115
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-email-return-choice.test.ts"
+    },
+    {
+      "file": "tests/quiz-email-return-edit.test.ts",
+      "sha256": "06fdcb0875fd631ce115c8686e270ebeff3a0b8fbf4aec2b3a9dd91db3c1f3f4",
+      "bytes": 2570,
+      "lineCount": 66,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          66
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-email-return-edit.test.ts"
+    },
+    {
+      "file": "src/lib/quiz/normalization.ts",
+      "sha256": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239",
+      "bytes": 11376,
+      "lineCount": 343,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          343
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/normalization.ts"
+    },
+    {
+      "file": "src/lib/quiz/primary-concern.ts",
+      "sha256": "fc33b4465dec57bcc2797ca11ab7d521280189c97495ba8c30b41dd4671207d1",
+      "bytes": 2638,
+      "lineCount": 62,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          62
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/primary-concern.ts"
+    },
+    {
+      "file": "src/lib/quiz/validators.ts",
+      "sha256": "5f972cfa650604ad0255d2cff6879849d34347df650a0d46b1bfc067adcca1e0",
+      "bytes": 4017,
+      "lineCount": 125,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          125
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/validators.ts"
+    },
+    {
+      "file": "src/lib/quiz/draft.ts",
+      "sha256": "ade503f1a6baebb94afbcb7c5b59225c1b06a0cdfca8a2eeba7ad7bf8e1d0177",
+      "bytes": 4218,
+      "lineCount": 151,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          151
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/draft.ts"
+    },
+    {
+      "file": "src/lib/quiz/screen-order.ts",
+      "sha256": "78bc469add4d51a92b8b9e19b2d9376553453b5595c9ac1661e037c60630e204",
+      "bytes": 6490,
+      "lineCount": 169,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          169
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/screen-order.ts"
+    },
+    {
+      "file": "src/lib/quiz/store.ts",
+      "sha256": "8245d784856dc36fc11c4fad35a1c400a65adf55fb994ad415408a94644f91f5",
+      "bytes": 6040,
+      "lineCount": 156,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          156
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/store.ts"
+    },
+    {
+      "file": "src/lib/quiz/browser-history.ts",
+      "sha256": "863b56c24773eaacf833af9af33ebfc7133d07824fd77b33047fb8cef8024a91",
+      "bytes": 2924,
+      "lineCount": 84,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          84
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/browser-history.ts"
+    },
+    {
+      "file": "src/lib/quiz/questions.ts",
+      "sha256": "49d978c9ad9f02c716213e81fdf0abe392ed9e8803f8dbea69c9e07576acf683",
+      "bytes": 10293,
+      "lineCount": 305,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          305
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/questions.ts"
+    },
+    {
+      "file": "src/lib/quiz/types.ts",
+      "sha256": "11ec81f1d6f0e5480132ec892301a2437852c2fc80bf95c22abf2207e6b1fce2",
+      "bytes": 2854,
+      "lineCount": 91,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          91
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/types.ts"
+    },
+    {
+      "file": "src/lib/quiz/diagnostic-input.ts",
+      "sha256": "964652bf5d3e3d8cd9bc233b18977e59e3cf7264a97ec7de5d5c4ac6cea7149e",
+      "bytes": 3239,
+      "lineCount": 96,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          96
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/diagnostic-input.ts"
+    },
+    {
+      "file": "src/lib/quiz/need-lane.ts",
+      "sha256": "01e69e7f79db4d5919a629f2a568c140bdb1a17e05aaf88cbeec387123251344",
+      "bytes": 5649,
+      "lineCount": 155,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          155
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/need-lane.ts"
+    },
+    {
+      "file": "src/lib/quiz/result-narrative.ts",
+      "sha256": "1cc0a22b9baeb3552e304b902776b650355767cd624a73bd34764ac103652e50",
+      "bytes": 33317,
+      "lineCount": 1045,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          1045
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/result-narrative.ts"
+    },
+    {
+      "file": "src/lib/quiz/offer-preview.ts",
+      "sha256": "d436af030c92a7189c79db4d974fe13e5c1e602d94bfc23d3276f96926ab10e4",
+      "bytes": 10165,
+      "lineCount": 273,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          273
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/offer-preview.ts"
+    },
+    {
+      "file": "src/lib/quiz/link-to-profile.ts",
+      "sha256": "5813a8c45eb51d5b3e0e2f8b712d1c2e8e2169cd878c09647da2d7914da3132a",
+      "bytes": 13680,
+      "lineCount": 384,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          384
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/link-to-profile.ts"
+    },
+    {
+      "file": "src/lib/quiz/email-return-credential.ts",
+      "sha256": "9abe0200239d08bba30a797b4f543d0147e507c5317b74706dced5737b90733c",
+      "bytes": 12100,
+      "lineCount": 355,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          355
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/email-return-credential.ts"
+    },
+    {
+      "file": "src/lib/quiz/email-return-edit.ts",
+      "sha256": "d572c29439be368819e9e5496bf4dfc1bbf78634456447e981204597d6d3455a",
+      "bytes": 1123,
+      "lineCount": 41,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          41
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/email-return-edit.ts"
+    },
+    {
+      "file": "src/components/quiz/quiz-preparation.tsx",
+      "sha256": "301aafc3cdd1b517a6c0ad6a41221ae99b8bcea07da36caf76c55b738e3bbc6f",
+      "bytes": 8278,
+      "lineCount": 274,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          274
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/components/quiz/quiz-preparation.tsx"
+    },
+    {
+      "file": "src/components/quiz/quiz-results.tsx",
+      "sha256": "836bf1a4b1e11f09b281f23dd7c045c1d331c07b94edc1d7ab88a0b6b3a9ae3b",
+      "bytes": 8678,
+      "lineCount": 278,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          278
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/components/quiz/quiz-results.tsx"
+    },
+    {
+      "file": "src/components/personal-plan-quiz/quiz-data.ts",
+      "sha256": "aa4e80b540d84cb6205235ba671ed53b1c6045b50df6bb3a1c269dac3a954b58",
+      "bytes": 21996,
+      "lineCount": 704,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          704
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/components/personal-plan-quiz/quiz-data.ts"
+    },
+    {
+      "file": "src/app/api/quiz/email-return/choose/route.ts",
+      "sha256": "39175962afc94e53edffe41da10d44b5b2cab05b32984f16cc4a512a3b9150fa",
+      "bytes": 5763,
+      "lineCount": 161,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          161
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/app/api/quiz/email-return/choose/route.ts"
+    },
+    {
+      "file": "src/app/api/quiz/email-return/context/route.ts",
+      "sha256": "2828ca1c0e6edc3c4acb4664ec3cff286fff2ac1089fb75b675f3113d5d68181",
+      "bytes": 2812,
+      "lineCount": 80,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          80
+        ]
+      ],
+      "originalStartPin": true,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/app/api/quiz/email-return/context/route.ts"
+    },
+    {
+      "file": "src/lib/onboarding/goal-flow.ts",
+      "sha256": "18d310d2dbd9382b54aa068d453d480c8a3d5fdf9d0a0c8d82c064371bf5ccea",
+      "bytes": 608,
+      "lineCount": 13,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          13
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/onboarding/goal-flow.ts"
+    },
+    {
+      "file": "src/lib/profile/chemical-treatment.ts",
+      "sha256": "b50c624c6955692ace304835c40632ce4176e5fda20603ec9170a9394ada9382",
+      "bytes": 2446,
+      "lineCount": 67,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          67
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/profile/chemical-treatment.ts"
+    },
+    {
+      "file": "src/lib/quiz/offer-preview-products.ts",
+      "sha256": "e9b527dc1c8e30a8905bd93d7e8bfbc3e6e0aeff3a6a0001abb4ee826f17b6d1",
+      "bytes": 22555,
+      "lineCount": 528,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          528
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/offer-preview-products.ts"
+    },
+    {
+      "file": "src/lib/quiz/offer-preview-types.ts",
+      "sha256": "d96d432053eb464859bbecb7b4c10a62e32fc75d93728dd9b343939bce4d49b4",
+      "bytes": 2198,
+      "lineCount": 93,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          93
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/offer-preview-types.ts"
+    },
+    {
+      "file": "src/lib/quiz/email-return-context.ts",
+      "sha256": "6613c5c7cb21c21cd6b63c6e5a1d03e42b1f88a63018f8513c338801bb2cbd26",
+      "bytes": 2145,
+      "lineCount": 61,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          61
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/email-return-context.ts"
+    },
+    {
+      "file": "src/lib/quiz/email-return-constants.ts",
+      "sha256": "e7d8922c1364f7562652439426e5868d6caf95bae7f2d93480772d5f820bb14c",
+      "bytes": 221,
+      "lineCount": 3,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          3
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/email-return-constants.ts"
+    },
+    {
+      "file": "src/lib/quiz/email-return-server.ts",
+      "sha256": "3972f47ca4d6188ff6f74c956bdd070f5dd512a8618eaea99f98322a4f610fec",
+      "bytes": 2727,
+      "lineCount": 84,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          84
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/email-return-server.ts"
+    },
+    {
+      "file": "src/lib/quiz/email-return-prefill.ts",
+      "sha256": "73fa51284354cc6998e425164133f76a50f794ce38e1e83ba9e6ac9ae44e9c7e",
+      "bytes": 2797,
+      "lineCount": 65,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          65
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/email-return-prefill.ts"
+    },
+    {
+      "file": "src/lib/quiz/result-navigation.ts",
+      "sha256": "a543e752d5c6f7291177585f6b5b1b8a0dcab2a28437db83ec5f778297c838ed",
+      "bytes": 1648,
+      "lineCount": 64,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          64
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/result-navigation.ts"
+    },
+    {
+      "file": "src/lib/quiz/lead-capture-mode.ts",
+      "sha256": "b7bc45bd5f06b200b15e746bd2619890e2e07735b0414c57fe07734057455c78",
+      "bytes": 847,
+      "lineCount": 18,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          18
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/lead-capture-mode.ts"
+    },
+    {
+      "file": "src/lib/quiz/migration-prefill-init.ts",
+      "sha256": "d47951d219de5a338224c01bcd0f11e1fccef09013a251962f0c87e8fef1d052",
+      "bytes": 5143,
+      "lineCount": 138,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          138
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/migration-prefill-init.ts"
+    },
+    {
+      "file": "src/lib/funnel/cookie.ts",
+      "sha256": "522741b96f60560c02f92a5445428380de02231b2b3724b4143dfc6da14f7b48",
+      "bytes": 4798,
+      "lineCount": 165,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          165
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/funnel/cookie.ts"
+    },
+    {
+      "file": "src/lib/supabase/admin.ts",
+      "sha256": "bd6ec1538d65a01f82b3f55b2839f0ac347d617c6de29d13cea4b0eff737386a",
+      "bytes": 307,
+      "lineCount": 14,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          14
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/supabase/admin.ts"
+    },
+    {
+      "file": "src/app/quiz/page.tsx",
+      "sha256": "d2ada32e0a4cebbd2c5201d434739a4d78200de6522096e56c7edca7d688a60f",
+      "bytes": 16212,
+      "lineCount": 436,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          436
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/app/quiz/page.tsx"
+    },
+    {
+      "file": "src/components/quiz/quiz-concerns-question.tsx",
+      "sha256": "f4bb9b5adb3e92d94c7521e5691f8382d8cf0214e1c05db8eef85025b0c90773",
+      "bytes": 9203,
+      "lineCount": 222,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          222
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/components/quiz/quiz-concerns-question.tsx"
+    },
+    {
+      "file": "src/app/result/[leadId]/page.tsx",
+      "sha256": "83ce34fd0d9d356a66b9e4201a3676236d11c7e06ec09563e0742ee91ca36ae1",
+      "bytes": 22548,
+      "lineCount": 619,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          619
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/app/result/[leadId]/page.tsx"
+    },
+    {
+      "file": "src/lib/vocabulary/index.ts",
+      "sha256": "5e011545b7a6a94b96720af7b225dc12c025dbf0509f8b20cdd352bbcfa3109b",
+      "bytes": 3427,
+      "lineCount": 142,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          142
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/vocabulary/index.ts"
+    },
+    {
+      "file": "src/lib/vocabulary/concerns-goals.ts",
+      "sha256": "f588c309f78685855551f8270f8dec4fc5e046d5c1165d734a63f168315f28e8",
+      "bytes": 1565,
+      "lineCount": 67,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          67
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/vocabulary/concerns-goals.ts"
+    },
+    {
+      "file": "src/lib/vocabulary/onboarding-goals.ts",
+      "sha256": "71ead0b61b4aeffeb47b53c63acb6fe84acae797e18ea774fa25104854c8a098",
+      "bytes": 1410,
+      "lineCount": 39,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          39
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/vocabulary/onboarding-goals.ts"
+    },
+    {
+      "file": "src/lib/vocabulary/hair-types.ts",
+      "sha256": "36c517006e2cf2717a7f9527fe0484c7c117ba7caa8b7ed7008445950cd79b72",
+      "bytes": 1153,
+      "lineCount": 41,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          41
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/vocabulary/hair-types.ts"
+    },
+    {
+      "file": "src/lib/vocabulary/hair-length.ts",
+      "sha256": "3dd675892cb15b6021d7365203bdc225e86805bfb15beec305cc90e83d74c9e4",
+      "bytes": 918,
+      "lineCount": 24,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          24
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/vocabulary/hair-length.ts"
+    },
+    {
+      "file": "src/lib/vocabulary/frequencies.ts",
+      "sha256": "d79bb3584473a8f6541feecff58a40633736f9376981ff190b645114dc0eb3a9",
+      "bytes": 6217,
+      "lineCount": 233,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          233
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/vocabulary/frequencies.ts"
+    },
+    {
+      "file": "tests/quiz-result-narrative.test.ts",
+      "sha256": "d33028de4355b1cc91008a7e111284f583b27e8dd0c83d4b21bd83b8936cf02a",
+      "bytes": 22549,
+      "lineCount": 628,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          628
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-result-narrative.test.ts"
+    },
+    {
+      "file": "tests/quiz-offer-preview.test.ts",
+      "sha256": "c81dbd9650f3fb25ad4afc2c6bdfb234fcfcf06976546d7c344fb02a351f6835",
+      "bytes": 6986,
+      "lineCount": 208,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          208
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-offer-preview.test.ts"
+    },
+    {
+      "file": "tests/quiz-email-return-credential.test.ts",
+      "sha256": "32ddc15cd8935497c142ec08ff8bd5dce75ab035c9f4a716117435fe24e0b263",
+      "bytes": 7818,
+      "lineCount": 233,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          233
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-email-return-credential.test.ts"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+      "bytes": 391,
+      "lineCount": 10,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          10
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/server-only-register.cjs"
+    },
+    {
+      "file": "node_modules/zustand/vanilla.js",
+      "sha256": "15dcb1e8a40b51ef580fbb27e05bac872ff0e71f2f2ad4d316d7fb344319453e",
+      "bytes": 1027,
+      "lineCount": 26,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          26
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/zustand/vanilla.js"
+    },
+    {
+      "file": "node_modules/zustand/react.js",
+      "sha256": "4193ec2661359a71f870eb4fe4f8002505d2014934432bd9900afafd3c9f9f96",
+      "bytes": 785,
+      "lineCount": 25,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          25
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/zustand/react.js"
+    },
+    {
+      "file": "node_modules/zod/package.json",
+      "sha256": "c630bd10b52dcf71c112a2bf78dbf2734b9db58d62de663b8d86c2ec2c8cda2e",
+      "bytes": 3796,
+      "lineCount": 135,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          135
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/zod/package.json"
+    },
+    {
+      "file": "node_modules/zod/index.cjs",
+      "sha256": "2a3455cecff4f7021c92d0a3e2e5fc170c0448dc5cc261160127e08f4888a9c2",
+      "bytes": 1486,
+      "lineCount": 33,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          33
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/zod/index.cjs"
+    },
+    {
+      "file": "node_modules/zod/v4/classic/parse.cjs",
+      "sha256": "0fb97825ed1c15a1f6a238df9506e23f2e720edeae4774aa46a60ce7b2a75319",
+      "bytes": 2271,
+      "lineCount": 41,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          41
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/zod/v4/classic/parse.cjs"
+    },
+    {
+      "file": "node_modules/next/dist/server/web/spec-extension/response.d.ts",
+      "sha256": "74b2a5e5197bd0f2e0077a1ea7c07455bbea67b87b0869d9786d55104006784f",
+      "bytes": 1610,
+      "lineCount": 43,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          43
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/next/dist/server/web/spec-extension/response.d.ts"
+    },
+    {
+      "file": "node_modules/next/dist/server/web/spec-extension/response.js",
+      "sha256": "68a5a07540d57a4beb3275fddd0502fd5ef9a42986b414c0bcee99a3f9033366",
+      "bytes": 4977,
+      "lineCount": 136,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          136
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/next/dist/server/web/spec-extension/response.js"
+    },
+    {
+      "file": "node_modules/next/dist/server/web/spec-extension/cookies.d.ts",
+      "sha256": "3b414b99a73171e1c4b7b7714e26b87d6c5cb03d200352da5342ab4088a54c85",
+      "bytes": 110,
+      "lineCount": 1,
+      "readMode": "complete",
+      "ranges": [
+        [
+          1,
+          1
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/next/dist/server/web/spec-extension/cookies.d.ts"
+    },
+    {
+      "file": "src/components/quiz/quiz-lead-capture.tsx",
+      "sha256": "2708d0f076e24e474ff30587080e92200f8f112dff52ecb9a338820cd1a1efb9",
+      "bytes": 31154,
+      "lineCount": 806,
+      "readMode": "slices",
+      "ranges": [
+        [
+          220,
+          340
+        ],
+        [
+          380,
+          475
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/components/quiz/quiz-lead-capture.tsx"
+    },
+    {
+      "file": "src/app/api/quiz/lead/route.ts",
+      "sha256": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+      "bytes": 28830,
+      "lineCount": 754,
+      "readMode": "slices",
+      "ranges": [
+        [
+          110,
+          170
+        ],
+        [
+          308,
+          368
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/app/api/quiz/lead/route.ts"
+    },
+    {
+      "file": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "sha256": "03c62d161ba8d95900b91307782de9cbd33ac786047e744adc1017cc08ec8ebd",
+      "bytes": 118811,
+      "lineCount": 3124,
+      "readMode": "slices",
+      "ranges": [
+        [
+          2820,
+          2870
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/components/personal-plan-quiz/personal-plan-quiz.tsx"
+    },
+    {
+      "file": "src/lib/personal-plan/input.ts",
+      "sha256": "22743980e01019fc9834a5a5f6ad3ef566def3757be3b17a2c5994f11ac95c6f",
+      "bytes": 9148,
+      "lineCount": 286,
+      "readMode": "slices",
+      "ranges": [
+        [
+          75,
+          145
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/personal-plan/input.ts"
+    },
+    {
+      "file": "src/lib/recommendation-engine/categories/shared.ts",
+      "sha256": "d9c09d91541fa50a1fd22cbb132060ff65fa967264c154af6b3ab3b8a5e63c8b",
+      "bytes": 6928,
+      "lineCount": 240,
+      "readMode": "slices",
+      "ranges": [
+        [
+          1,
+          75
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/recommendation-engine/categories/shared.ts"
+    },
+    {
+      "file": "src/lib/recommendation-engine/shampoo-cadence.ts",
+      "sha256": "5dff9e6d423e674e7e232bdfeece6e344dc6aa5fd64c158fa72ce8a7f5c317c9",
+      "bytes": 8783,
+      "lineCount": 311,
+      "readMode": "slices",
+      "ranges": [
+        [
+          1,
+          175
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/recommendation-engine/shampoo-cadence.ts"
+    },
+    {
+      "file": "src/lib/vocabulary/profile-labels.ts",
+      "sha256": "e0e8d5df461dc19c3e0eb1a85a8dbac8c5f32316c12cd90352bcec506ac5e466",
+      "bytes": 4702,
+      "lineCount": 154,
+      "readMode": "slices",
+      "ranges": [
+        [
+          1,
+          150
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/vocabulary/profile-labels.ts"
+    },
+    {
+      "file": "src/app/quiz/quiz-shell.tsx",
+      "sha256": "d1d3e2a68116e12d9008d553973a3c181693ef374cfd097a474dfbb3fed8a66b",
+      "bytes": 10004,
+      "lineCount": 244,
+      "readMode": "slices",
+      "ranges": [
+        [
+          1,
+          110
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/app/quiz/quiz-shell.tsx"
+    },
+    {
+      "file": "src/components/quiz/quiz-question.tsx",
+      "sha256": "172dac405bc349fd011be368ed26ed24b2cddb0339c235bba8d23a8ae2b72de5",
+      "bytes": 6792,
+      "lineCount": 201,
+      "readMode": "slices",
+      "ranges": [
+        [
+          1,
+          128
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/components/quiz/quiz-question.tsx"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+      "bytes": 17598,
+      "lineCount": 423,
+      "readMode": "slices",
+      "ranges": [
+        [
+          120,
+          165
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/.github/workflows/ci.yml"
+    },
+    {
+      "file": "plans/discovery-refinement-b7/plan.md",
+      "sha256": "3d38c63740d81a5422789c9805d7d55c6dfef2d1316bf90a00b5179f0f73677e",
+      "bytes": 26813,
+      "lineCount": 154,
+      "readMode": "slices",
+      "ranges": [
+        [
+          1,
+          41
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/plans/discovery-refinement-b7/plan.md"
+    },
+    {
+      "file": "node_modules/zod/v4/classic/schemas.cjs",
+      "sha256": "fbb612b8ec2f7408653908aec137a855e6763f92fbab19d4bd61c5be13341db5",
+      "bytes": 56344,
+      "lineCount": 1511,
+      "readMode": "slices",
+      "ranges": [
+        [
+          190,
+          250
+        ],
+        [
+          866,
+          889
+        ],
+        [
+          1461,
+          1464
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/zod/v4/classic/schemas.cjs"
+    },
+    {
+      "file": "node_modules/zod/v4/core/schemas.cjs",
+      "sha256": "cd1cd83d15bb681ff414fd95de6145de88a91e0ef38df3d3f5deb594007a221c",
+      "bytes": 85629,
+      "lineCount": 2270,
+      "readMode": "slices",
+      "ranges": [
+        [
+          785,
+          837
+        ],
+        [
+          1686,
+          1712
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/zod/v4/core/schemas.cjs"
+    },
+    {
+      "file": "node_modules/zod/v4/core/api.cjs",
+      "sha256": "df63ac3f2809bbb806c7bf371baadb21923e9be527e4e02ca27e88c238e1c1fa",
+      "bytes": 31685,
+      "lineCount": 1227,
+      "readMode": "slices",
+      "ranges": [
+        [
+          1102,
+          1138
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/zod/v4/core/api.cjs"
+    },
+    {
+      "file": "node_modules/zod/v4/core/parse.cjs",
+      "sha256": "78c3851f57bfeb5e0f4464d3dfe62781ba8292e89692e52b4fc00195d4b02251",
+      "bytes": 6481,
+      "lineCount": 131,
+      "readMode": "slices",
+      "ranges": [
+        [
+          1,
+          87
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/zod/v4/core/parse.cjs"
+    },
+    {
+      "file": "node_modules/next/dist/compiled/@edge-runtime/cookies/index.d.ts",
+      "sha256": "0d891735a21edc75df51f3eb995e18149e119d1ce22fd40db2b260c5960b914e",
+      "bytes": 9669,
+      "lineCount": 201,
+      "readMode": "slices",
+      "ranges": [
+        [
+          167,
+          201
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/next/dist/compiled/@edge-runtime/cookies/index.d.ts"
+    },
+    {
+      "file": "node_modules/@types/node/test.d.ts",
+      "sha256": "c8d3e5a18ba35629954e48c4cc8f11dc88224650067a172685c736b27a34a4dc",
+      "bytes": 101442,
+      "lineCount": 2163,
+      "readMode": "slices",
+      "ranges": [
+        [
+          1800,
+          1827
+        ],
+        [
+          1903,
+          1944
+        ]
+      ],
+      "originalStartPin": false,
+      "snapshot": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/@types/node/test.d.ts"
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+      "bytes": 25353,
+      "lineCount": 275,
+      "readMode": "mechanical-only",
+      "ranges": [],
+      "originalStartPin": false
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799",
+      "bytes": 590438,
+      "lineCount": 17255,
+      "readMode": "mechanical-only",
+      "ranges": [],
+      "originalStartPin": false
+    },
+    {
+      "file": "tsconfig.json",
+      "sha256": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd",
+      "bytes": 770,
+      "lineCount": 35,
+      "readMode": "mechanical-only",
+      "ranges": [],
+      "originalStartPin": false
+    },
+    {
+      "file": "node_modules/typescript/lib/typescript.js",
+      "sha256": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675",
+      "bytes": 9112572,
+      "lineCount": 200276,
+      "readMode": "mechanical-only",
+      "ranges": [],
+      "originalStartPin": false
+    }
+  ],
+  "limits": [
+    "Complete 11 owned tests and all their inline fixtures/helpers/tables are read. Three overlapping tests are read only as comparison evidence, not assigned new campaign classifications.",
+    "Complete operative quiz core modules and result/preparation/return route owners are read; large consumer files are explicitly scoped to listed slices.",
+    "No full recursive dependency or caller-graph semantic audit. Zod/Zustand/NextResponse implementation and named installed type slices inspected, not executed.",
+    "No browser, native, compile, owner import, source fault, network, provider, environment-file or database operation performed. Baseline is UNRUN in this lane.",
+    "Historical memory was navigation only; current draft source explicitly uses v2 records with v1 compatibility and 14-day TTL.",
+    "Existing broad migration/mobile/billing/free/refinement/scanner/dormant cohorts are excluded. Reading common pure callees does not confer their cohort credit.",
+    "All source pins are guard evidence, not evidence of full human reads outside the stated ranges. No live deployment/provider fact is inferred from local source."
+  ]
+}

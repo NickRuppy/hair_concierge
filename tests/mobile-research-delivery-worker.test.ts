@@ -242,21 +242,6 @@ test("lost prepare lease never contacts the provider", async () => {
   assert.deepEqual(f.sends(), { email: 0, push: 0 })
 })
 
-test("an APNs credential fault is tagged for the outbox refund and retried slowly", async () => {
-  const f = fixture({ channels: ["push"] })
-  f.deps.preparePush = () => async () => ({
-    state: "retryable",
-    apnsId: "apns-receipt",
-    reason: "InvalidProviderToken",
-    retryAfterSeconds: 3600,
-  })
-  const result = await reconcileMobileResearchDeliveries(f.client, f.deps)
-  assert.equal(result.retry, 1)
-  const settled = f.calls.find((call) => call.name === "finish_mobile_research_delivery")
-  assert.equal(settled?.args.p_error_code, "push_provider_credentials")
-  assert.equal(Date.parse(String(settled?.args.p_next_attempt_at)) - f.deps.now(), 3600 * 1000)
-})
-
 test("a fifth APNs credential fault reports the refunded retry rather than a terminal failure", async () => {
   const f = fixture({ channels: ["push"], sendAttempts: 4 })
   f.deps.preparePush = () => async () => ({
@@ -268,6 +253,9 @@ test("a fifth APNs credential fault reports the refunded retry rather than a ter
   const result = await reconcileMobileResearchDeliveries(f.client, f.deps)
   assert.equal(result.retry, 1)
   assert.equal(result.failed_terminal, 0)
+  const settled = f.calls.find((call) => call.name === "finish_mobile_research_delivery")
+  assert.equal(settled?.args.p_error_code, "push_provider_credentials")
+  assert.equal(Date.parse(String(settled?.args.p_next_attempt_at)) - f.deps.now(), 3600 * 1000)
   assert.equal(f.states.get("push"), "retry")
 })
 

@@ -1,0 +1,1510 @@
+{
+  "roots": [
+    "/Users/nick/AI_work/hair_conscierge",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning"
+  ],
+  "dirs": [
+    "/tmp/test-audit-merge-main-baseline-final",
+    "/tmp/test-audit-merge-integrated-final"
+  ],
+  "metrics": {
+    "lines": {
+      "before": {
+        "total": 465011,
+        "covered": 328666,
+        "skipped": 0,
+        "pct": 70.67
+      },
+      "after": {
+        "total": 455023,
+        "covered": 323461,
+        "skipped": 0,
+        "pct": 71.08
+      },
+      "actualDeltaPP": 0.40754804061279515,
+      "originalDenominatorLowerBound": {
+        "covered": 323461,
+        "denominator": 465018,
+        "pct": 69.5588127771398,
+        "deltaPP": -1.1203754571170208
+      }
+    },
+    "statements": {
+      "before": {
+        "total": 465011,
+        "covered": 328666,
+        "skipped": 0,
+        "pct": 70.67
+      },
+      "after": {
+        "total": 455023,
+        "covered": 323461,
+        "skipped": 0,
+        "pct": 71.08
+      },
+      "actualDeltaPP": 0.40754804061279515,
+      "originalDenominatorLowerBound": {
+        "covered": 323461,
+        "denominator": 465018,
+        "pct": 69.5588127771398,
+        "deltaPP": -1.1203754571170208
+      }
+    },
+    "functions": {
+      "before": {
+        "total": 26405,
+        "covered": 22055,
+        "skipped": 0,
+        "pct": 83.52
+      },
+      "after": {
+        "total": 25870,
+        "covered": 21658,
+        "skipped": 0,
+        "pct": 83.71
+      },
+      "actualDeltaPP": 0.19274558743347825,
+      "originalDenominatorLowerBound": {
+        "covered": 21658,
+        "denominator": 26419,
+        "pct": 81.9788788372005,
+        "deltaPP": -1.54696854019015
+      }
+    },
+    "branches": {
+      "before": {
+        "total": 91264,
+        "covered": 74824,
+        "skipped": 0,
+        "pct": 81.98
+      },
+      "after": {
+        "total": 90085,
+        "covered": 73884,
+        "skipped": 0,
+        "pct": 82.01
+      },
+      "actualDeltaPP": 0.029548511180919945,
+      "originalDenominatorLowerBound": {
+        "covered": 73884,
+        "denominator": 91365,
+        "pct": 80.8668527335413,
+        "deltaPP": -1.1194726521529503
+      }
+    }
+  },
+  "deletedCoveragePaths": [
+    "apps/product-intake-review/app/api/submissions/[submissionId]/publish/final-image-handoff.ts",
+    "scripts/research-leave-in-specs.ts",
+    "scripts/research-shampoo-specs.ts",
+    "scripts/test-hybrid-retrieval.ts",
+    "scripts/test-mask-flow.ts",
+    "src/components/quiz/app-value-stack-proof.tsx",
+    "src/components/quiz/app-value-stack-routine.tsx",
+    "src/components/quiz/guided-story-analysis.tsx",
+    "src/components/quiz/guided-story-chat-demo.tsx",
+    "src/components/quiz/guided-story-routine.tsx",
+    "src/components/quiz/guided-story-support.tsx",
+    "src/components/quiz/guided-story-tracker-proof.tsx",
+    "src/components/quiz/quiz-brand-panel.tsx",
+    "src/components/quiz/quiz-card.tsx",
+    "src/components/quiz/quiz-profile-card.tsx",
+    "src/components/quiz/result-offer-countdown.tsx",
+    "src/components/quiz/use-guided-story-flow.ts",
+    "src/components/ui/accordion.tsx",
+    "src/components/ui/dropdown-menu.tsx",
+    "src/components/ui/label.tsx",
+    "src/components/ui/progress.tsx",
+    "src/components/ui/scroll-area.tsx",
+    "src/components/ui/select.tsx",
+    "src/components/ui/separator.tsx",
+    "src/components/ui/sheet.tsx",
+    "src/components/ui/toast.tsx",
+    "src/components/waitlist/quiz-gate-landing.tsx",
+    "src/components/waitlist/quiz-gate-modal.tsx",
+    "src/components/waitlist/waitlist-form.tsx",
+    "src/lib/agent/compare/held-out-turns.ts",
+    "src/lib/agent/compare/run-compare.ts",
+    "src/lib/agent/compare/scenarios.ts",
+    "src/lib/paypal/trial-plan-shape.ts",
+    "src/lib/personal-plan/products/index.ts",
+    "src/lib/quiz/app-value-stack-copy.ts",
+    "src/lib/quiz/brand-panel-content.ts",
+    "src/lib/quiz/display-name.ts",
+    "src/lib/quiz/guided-story-chat.ts",
+    "src/lib/quiz/guided-story-flow.ts",
+    "src/lib/quiz/guided-story-preview.ts",
+    "src/lib/quiz/guided-story-routine-copy.ts",
+    "src/lib/quiz/guided-story-tracker.ts",
+    "src/lib/quiz/result-card-data.ts",
+    "src/lib/quiz/results-lookup.ts",
+    "src/lib/routines/product-attachments.ts"
+  ],
+  "newCoveragePaths": [],
+  "survivingDeclines": [
+    {
+      "path": "scripts/ingest-markdown.ts",
+      "metric": "lines",
+      "deltaPP": -25.22179974651457,
+      "before": {
+        "total": 789,
+        "covered": 535,
+        "skipped": 0,
+        "pct": 67.8
+      },
+      "after": {
+        "total": 789,
+        "covered": 336,
+        "skipped": 0,
+        "pct": 42.58
+      }
+    },
+    {
+      "path": "scripts/scanner-catalog-coverage/readiness-export.ts",
+      "metric": "lines",
+      "deltaPP": -2.3047175961595485,
+      "before": {
+        "total": 376,
+        "covered": 193,
+        "skipped": 0,
+        "pct": 51.32
+      },
+      "after": {
+        "total": 359,
+        "covered": 176,
+        "skipped": 0,
+        "pct": 49.02
+      }
+    },
+    {
+      "path": "src/lib/agent/compare/run-shadow-agent.ts",
+      "metric": "lines",
+      "deltaPP": -14.285714285714285,
+      "before": {
+        "total": 364,
+        "covered": 52,
+        "skipped": 0,
+        "pct": 14.28
+      },
+      "after": {
+        "total": 314,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      }
+    },
+    {
+      "path": "src/lib/agent/orchestrator/model-client.ts",
+      "metric": "lines",
+      "deltaPP": -35.81395348837209,
+      "before": {
+        "total": 430,
+        "covered": 154,
+        "skipped": 0,
+        "pct": 35.81
+      },
+      "after": {
+        "total": 430,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      }
+    },
+    {
+      "path": "src/lib/analytics/meta-capi.ts",
+      "metric": "lines",
+      "deltaPP": -2.5531914893617085,
+      "before": {
+        "total": 235,
+        "covered": 110,
+        "skipped": 0,
+        "pct": 46.8
+      },
+      "after": {
+        "total": 235,
+        "covered": 104,
+        "skipped": 0,
+        "pct": 44.25
+      }
+    },
+    {
+      "path": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "metric": "lines",
+      "deltaPP": -3.075609377425863,
+      "before": {
+        "total": 285,
+        "covered": 121,
+        "skipped": 0,
+        "pct": 42.45
+      },
+      "after": {
+        "total": 226,
+        "covered": 89,
+        "skipped": 0,
+        "pct": 39.38
+      }
+    },
+    {
+      "path": "src/lib/billing/purchases.ts",
+      "metric": "lines",
+      "deltaPP": -2.5781020780446724,
+      "before": {
+        "total": 283,
+        "covered": 182,
+        "skipped": 0,
+        "pct": 64.31
+      },
+      "after": {
+        "total": 277,
+        "covered": 171,
+        "skipped": 0,
+        "pct": 61.73
+      }
+    },
+    {
+      "path": "src/lib/billing/trial-access-projection.ts",
+      "metric": "lines",
+      "deltaPP": -2.3809523809523725,
+      "before": {
+        "total": 126,
+        "covered": 52,
+        "skipped": 0,
+        "pct": 41.26
+      },
+      "after": {
+        "total": 126,
+        "covered": 49,
+        "skipped": 0,
+        "pct": 38.88
+      }
+    },
+    {
+      "path": "src/lib/billing/trial-management-operations.ts",
+      "metric": "lines",
+      "deltaPP": -5.179282868525895,
+      "before": {
+        "total": 251,
+        "covered": 113,
+        "skipped": 0,
+        "pct": 45.01
+      },
+      "after": {
+        "total": 251,
+        "covered": 100,
+        "skipped": 0,
+        "pct": 39.84
+      }
+    },
+    {
+      "path": "src/lib/billing/trial-runtime.ts",
+      "metric": "lines",
+      "deltaPP": -3.0487804878048763,
+      "before": {
+        "total": 164,
+        "covered": 80,
+        "skipped": 0,
+        "pct": 48.78
+      },
+      "after": {
+        "total": 164,
+        "covered": 75,
+        "skipped": 0,
+        "pct": 45.73
+      }
+    },
+    {
+      "path": "src/lib/funnel/cookie.ts",
+      "metric": "lines",
+      "deltaPP": -4.242424242424242,
+      "before": {
+        "total": 165,
+        "covered": 91,
+        "skipped": 0,
+        "pct": 55.15
+      },
+      "after": {
+        "total": 165,
+        "covered": 84,
+        "skipped": 0,
+        "pct": 50.9
+      }
+    },
+    {
+      "path": "src/lib/openai/chat.ts",
+      "metric": "lines",
+      "deltaPP": -39.21568627450981,
+      "before": {
+        "total": 51,
+        "covered": 20,
+        "skipped": 0,
+        "pct": 39.21
+      },
+      "after": {
+        "total": 51,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      }
+    },
+    {
+      "path": "src/lib/paypal/order-intents.ts",
+      "metric": "lines",
+      "deltaPP": -11.50499935073367,
+      "before": {
+        "total": 302,
+        "covered": 242,
+        "skipped": 0,
+        "pct": 80.13
+      },
+      "after": {
+        "total": 153,
+        "covered": 105,
+        "skipped": 0,
+        "pct": 68.62
+      }
+    },
+    {
+      "path": "src/lib/paypal/subscription-shapes.ts",
+      "metric": "lines",
+      "deltaPP": -2.205882352941181,
+      "before": {
+        "total": 272,
+        "covered": 118,
+        "skipped": 0,
+        "pct": 43.38
+      },
+      "after": {
+        "total": 272,
+        "covered": 112,
+        "skipped": 0,
+        "pct": 41.17
+      }
+    },
+    {
+      "path": "src/lib/paypal/trial-checkout-attempt.ts",
+      "metric": "lines",
+      "deltaPP": -2.258064516129032,
+      "before": {
+        "total": 310,
+        "covered": 174,
+        "skipped": 0,
+        "pct": 56.12
+      },
+      "after": {
+        "total": 310,
+        "covered": 167,
+        "skipped": 0,
+        "pct": 53.87
+      }
+    },
+    {
+      "path": "src/lib/personal-plan-quiz/loading-timeline.ts",
+      "metric": "lines",
+      "deltaPP": -6.666666666666671,
+      "before": {
+        "total": 28,
+        "covered": 28,
+        "skipped": 0,
+        "pct": 100
+      },
+      "after": {
+        "total": 15,
+        "covered": 14,
+        "skipped": 0,
+        "pct": 93.33
+      }
+    },
+    {
+      "path": "src/lib/personal-plan/persistence/index.ts",
+      "metric": "lines",
+      "deltaPP": -2.6793916505052664,
+      "before": {
+        "total": 202,
+        "covered": 197,
+        "skipped": 0,
+        "pct": 97.52
+      },
+      "after": {
+        "total": 97,
+        "covered": 92,
+        "skipped": 0,
+        "pct": 94.84
+      }
+    },
+    {
+      "path": "src/lib/reactivation/stripe-checkout-recovery.ts",
+      "metric": "lines",
+      "deltaPP": -19.74522292993631,
+      "before": {
+        "total": 157,
+        "covered": 64,
+        "skipped": 0,
+        "pct": 40.76
+      },
+      "after": {
+        "total": 157,
+        "covered": 33,
+        "skipped": 0,
+        "pct": 21.01
+      }
+    },
+    {
+      "path": "scripts/ingest-markdown.ts",
+      "metric": "statements",
+      "deltaPP": -25.22179974651457,
+      "before": {
+        "total": 789,
+        "covered": 535,
+        "skipped": 0,
+        "pct": 67.8
+      },
+      "after": {
+        "total": 789,
+        "covered": 336,
+        "skipped": 0,
+        "pct": 42.58
+      }
+    },
+    {
+      "path": "scripts/scanner-catalog-coverage/readiness-export.ts",
+      "metric": "statements",
+      "deltaPP": -2.3047175961595485,
+      "before": {
+        "total": 376,
+        "covered": 193,
+        "skipped": 0,
+        "pct": 51.32
+      },
+      "after": {
+        "total": 359,
+        "covered": 176,
+        "skipped": 0,
+        "pct": 49.02
+      }
+    },
+    {
+      "path": "src/lib/agent/compare/run-shadow-agent.ts",
+      "metric": "statements",
+      "deltaPP": -14.285714285714285,
+      "before": {
+        "total": 364,
+        "covered": 52,
+        "skipped": 0,
+        "pct": 14.28
+      },
+      "after": {
+        "total": 314,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      }
+    },
+    {
+      "path": "src/lib/agent/orchestrator/model-client.ts",
+      "metric": "statements",
+      "deltaPP": -35.81395348837209,
+      "before": {
+        "total": 430,
+        "covered": 154,
+        "skipped": 0,
+        "pct": 35.81
+      },
+      "after": {
+        "total": 430,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      }
+    },
+    {
+      "path": "src/lib/analytics/meta-capi.ts",
+      "metric": "statements",
+      "deltaPP": -2.5531914893617085,
+      "before": {
+        "total": 235,
+        "covered": 110,
+        "skipped": 0,
+        "pct": 46.8
+      },
+      "after": {
+        "total": 235,
+        "covered": 104,
+        "skipped": 0,
+        "pct": 44.25
+      }
+    },
+    {
+      "path": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "metric": "statements",
+      "deltaPP": -3.075609377425863,
+      "before": {
+        "total": 285,
+        "covered": 121,
+        "skipped": 0,
+        "pct": 42.45
+      },
+      "after": {
+        "total": 226,
+        "covered": 89,
+        "skipped": 0,
+        "pct": 39.38
+      }
+    },
+    {
+      "path": "src/lib/billing/purchases.ts",
+      "metric": "statements",
+      "deltaPP": -2.5781020780446724,
+      "before": {
+        "total": 283,
+        "covered": 182,
+        "skipped": 0,
+        "pct": 64.31
+      },
+      "after": {
+        "total": 277,
+        "covered": 171,
+        "skipped": 0,
+        "pct": 61.73
+      }
+    },
+    {
+      "path": "src/lib/billing/trial-access-projection.ts",
+      "metric": "statements",
+      "deltaPP": -2.3809523809523725,
+      "before": {
+        "total": 126,
+        "covered": 52,
+        "skipped": 0,
+        "pct": 41.26
+      },
+      "after": {
+        "total": 126,
+        "covered": 49,
+        "skipped": 0,
+        "pct": 38.88
+      }
+    },
+    {
+      "path": "src/lib/billing/trial-management-operations.ts",
+      "metric": "statements",
+      "deltaPP": -5.179282868525895,
+      "before": {
+        "total": 251,
+        "covered": 113,
+        "skipped": 0,
+        "pct": 45.01
+      },
+      "after": {
+        "total": 251,
+        "covered": 100,
+        "skipped": 0,
+        "pct": 39.84
+      }
+    },
+    {
+      "path": "src/lib/billing/trial-runtime.ts",
+      "metric": "statements",
+      "deltaPP": -3.0487804878048763,
+      "before": {
+        "total": 164,
+        "covered": 80,
+        "skipped": 0,
+        "pct": 48.78
+      },
+      "after": {
+        "total": 164,
+        "covered": 75,
+        "skipped": 0,
+        "pct": 45.73
+      }
+    },
+    {
+      "path": "src/lib/funnel/cookie.ts",
+      "metric": "statements",
+      "deltaPP": -4.242424242424242,
+      "before": {
+        "total": 165,
+        "covered": 91,
+        "skipped": 0,
+        "pct": 55.15
+      },
+      "after": {
+        "total": 165,
+        "covered": 84,
+        "skipped": 0,
+        "pct": 50.9
+      }
+    },
+    {
+      "path": "src/lib/openai/chat.ts",
+      "metric": "statements",
+      "deltaPP": -39.21568627450981,
+      "before": {
+        "total": 51,
+        "covered": 20,
+        "skipped": 0,
+        "pct": 39.21
+      },
+      "after": {
+        "total": 51,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      }
+    },
+    {
+      "path": "src/lib/paypal/order-intents.ts",
+      "metric": "statements",
+      "deltaPP": -11.50499935073367,
+      "before": {
+        "total": 302,
+        "covered": 242,
+        "skipped": 0,
+        "pct": 80.13
+      },
+      "after": {
+        "total": 153,
+        "covered": 105,
+        "skipped": 0,
+        "pct": 68.62
+      }
+    },
+    {
+      "path": "src/lib/paypal/subscription-shapes.ts",
+      "metric": "statements",
+      "deltaPP": -2.205882352941181,
+      "before": {
+        "total": 272,
+        "covered": 118,
+        "skipped": 0,
+        "pct": 43.38
+      },
+      "after": {
+        "total": 272,
+        "covered": 112,
+        "skipped": 0,
+        "pct": 41.17
+      }
+    },
+    {
+      "path": "src/lib/paypal/trial-checkout-attempt.ts",
+      "metric": "statements",
+      "deltaPP": -2.258064516129032,
+      "before": {
+        "total": 310,
+        "covered": 174,
+        "skipped": 0,
+        "pct": 56.12
+      },
+      "after": {
+        "total": 310,
+        "covered": 167,
+        "skipped": 0,
+        "pct": 53.87
+      }
+    },
+    {
+      "path": "src/lib/personal-plan-quiz/loading-timeline.ts",
+      "metric": "statements",
+      "deltaPP": -6.666666666666671,
+      "before": {
+        "total": 28,
+        "covered": 28,
+        "skipped": 0,
+        "pct": 100
+      },
+      "after": {
+        "total": 15,
+        "covered": 14,
+        "skipped": 0,
+        "pct": 93.33
+      }
+    },
+    {
+      "path": "src/lib/personal-plan/persistence/index.ts",
+      "metric": "statements",
+      "deltaPP": -2.6793916505052664,
+      "before": {
+        "total": 202,
+        "covered": 197,
+        "skipped": 0,
+        "pct": 97.52
+      },
+      "after": {
+        "total": 97,
+        "covered": 92,
+        "skipped": 0,
+        "pct": 94.84
+      }
+    },
+    {
+      "path": "src/lib/reactivation/stripe-checkout-recovery.ts",
+      "metric": "statements",
+      "deltaPP": -19.74522292993631,
+      "before": {
+        "total": 157,
+        "covered": 64,
+        "skipped": 0,
+        "pct": 40.76
+      },
+      "after": {
+        "total": 157,
+        "covered": 33,
+        "skipped": 0,
+        "pct": 21.01
+      }
+    },
+    {
+      "path": "scripts/ingest-markdown.ts",
+      "metric": "functions",
+      "deltaPP": -13.043478260869563,
+      "before": {
+        "total": 23,
+        "covered": 13,
+        "skipped": 0,
+        "pct": 56.52
+      },
+      "after": {
+        "total": 23,
+        "covered": 10,
+        "skipped": 0,
+        "pct": 43.47
+      }
+    },
+    {
+      "path": "scripts/scanner-catalog-coverage/readiness-export.ts",
+      "metric": "functions",
+      "deltaPP": -3.0075187969924855,
+      "before": {
+        "total": 21,
+        "covered": 15,
+        "skipped": 0,
+        "pct": 71.42
+      },
+      "after": {
+        "total": 19,
+        "covered": 13,
+        "skipped": 0,
+        "pct": 68.42
+      }
+    },
+    {
+      "path": "src/app/api/stripe/create-checkout-session/route.ts",
+      "metric": "functions",
+      "deltaPP": -2.0103952142787023,
+      "before": {
+        "total": 99,
+        "covered": 76,
+        "skipped": 0,
+        "pct": 76.76
+      },
+      "after": {
+        "total": 103,
+        "covered": 77,
+        "skipped": 0,
+        "pct": 74.75
+      }
+    },
+    {
+      "path": "src/components/checkout/stripe-offer-elements-checkout.tsx",
+      "metric": "functions",
+      "deltaPP": -2.070393374741201,
+      "before": {
+        "total": 46,
+        "covered": 36,
+        "skipped": 0,
+        "pct": 78.26
+      },
+      "after": {
+        "total": 42,
+        "covered": 32,
+        "skipped": 0,
+        "pct": 76.19
+      }
+    },
+    {
+      "path": "src/components/quiz/quiz-analysis.tsx",
+      "metric": "functions",
+      "deltaPP": -2.1818181818181728,
+      "before": {
+        "total": 25,
+        "covered": 21,
+        "skipped": 0,
+        "pct": 84
+      },
+      "after": {
+        "total": 22,
+        "covered": 18,
+        "skipped": 0,
+        "pct": 81.81
+      }
+    },
+    {
+      "path": "src/lib/agent/compare/run-shadow-agent.ts",
+      "metric": "functions",
+      "deltaPP": -16.666666666666664,
+      "before": {
+        "total": 24,
+        "covered": 4,
+        "skipped": 0,
+        "pct": 16.66
+      },
+      "after": {
+        "total": 1,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      }
+    },
+    {
+      "path": "src/lib/agent/orchestrator/model-client.ts",
+      "metric": "functions",
+      "deltaPP": -25,
+      "before": {
+        "total": 16,
+        "covered": 4,
+        "skipped": 0,
+        "pct": 25
+      },
+      "after": {
+        "total": 1,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      }
+    },
+    {
+      "path": "src/lib/auth/free-registration.ts",
+      "metric": "functions",
+      "deltaPP": -2.7777777777777857,
+      "before": {
+        "total": 36,
+        "covered": 30,
+        "skipped": 0,
+        "pct": 83.33
+      },
+      "after": {
+        "total": 36,
+        "covered": 29,
+        "skipped": 0,
+        "pct": 80.55
+      }
+    },
+    {
+      "path": "src/lib/openai/chat.ts",
+      "metric": "functions",
+      "deltaPP": -44.44444444444444,
+      "before": {
+        "total": 9,
+        "covered": 4,
+        "skipped": 0,
+        "pct": 44.44
+      },
+      "after": {
+        "total": 1,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      }
+    },
+    {
+      "path": "src/lib/paypal/client.ts",
+      "metric": "functions",
+      "deltaPP": -2.0935960591133025,
+      "before": {
+        "total": 28,
+        "covered": 17,
+        "skipped": 0,
+        "pct": 60.71
+      },
+      "after": {
+        "total": 29,
+        "covered": 17,
+        "skipped": 0,
+        "pct": 58.62
+      }
+    },
+    {
+      "path": "src/lib/paypal/trial-checkout-attempt.ts",
+      "metric": "functions",
+      "deltaPP": -3.5021888680425235,
+      "before": {
+        "total": 39,
+        "covered": 28,
+        "skipped": 0,
+        "pct": 71.79
+      },
+      "after": {
+        "total": 41,
+        "covered": 28,
+        "skipped": 0,
+        "pct": 68.29
+      }
+    },
+    {
+      "path": "src/lib/personal-plan-quiz/loading-timeline.ts",
+      "metric": "functions",
+      "deltaPP": -27.5,
+      "before": {
+        "total": 8,
+        "covered": 7,
+        "skipped": 0,
+        "pct": 87.5
+      },
+      "after": {
+        "total": 5,
+        "covered": 3,
+        "skipped": 0,
+        "pct": 60
+      }
+    },
+    {
+      "path": "src/lib/personal-plan/direct-acceptance/defaults.ts",
+      "metric": "functions",
+      "deltaPP": -4.761904761904773,
+      "before": {
+        "total": 14,
+        "covered": 10,
+        "skipped": 0,
+        "pct": 71.42
+      },
+      "after": {
+        "total": 12,
+        "covered": 8,
+        "skipped": 0,
+        "pct": 66.66
+      }
+    },
+    {
+      "path": "src/lib/personal-plan/products/inventory-search.ts",
+      "metric": "functions",
+      "deltaPP": -2.3076923076923066,
+      "before": {
+        "total": 26,
+        "covered": 24,
+        "skipped": 0,
+        "pct": 92.3
+      },
+      "after": {
+        "total": 10,
+        "covered": 9,
+        "skipped": 0,
+        "pct": 90
+      }
+    },
+    {
+      "path": "src/lib/personal-plan/refinement/module-scope.ts",
+      "metric": "functions",
+      "deltaPP": -3.7037037037036953,
+      "before": {
+        "total": 27,
+        "covered": 26,
+        "skipped": 0,
+        "pct": 96.29
+      },
+      "after": {
+        "total": 27,
+        "covered": 25,
+        "skipped": 0,
+        "pct": 92.59
+      }
+    },
+    {
+      "path": "src/lib/personal-plan/refinement/refinement-status.ts",
+      "metric": "functions",
+      "deltaPP": -10,
+      "before": {
+        "total": 10,
+        "covered": 8,
+        "skipped": 0,
+        "pct": 80
+      },
+      "after": {
+        "total": 10,
+        "covered": 7,
+        "skipped": 0,
+        "pct": 70
+      }
+    },
+    {
+      "path": "src/lib/recommendation-engine/chat.ts",
+      "metric": "functions",
+      "deltaPP": -2.4471635150166833,
+      "before": {
+        "total": 31,
+        "covered": 20,
+        "skipped": 0,
+        "pct": 64.51
+      },
+      "after": {
+        "total": 29,
+        "covered": 18,
+        "skipped": 0,
+        "pct": 62.06
+      }
+    },
+    {
+      "path": "src/lib/shampoo/eligibility.ts",
+      "metric": "functions",
+      "deltaPP": -7.142857142857153,
+      "before": {
+        "total": 14,
+        "covered": 13,
+        "skipped": 0,
+        "pct": 92.85
+      },
+      "after": {
+        "total": 14,
+        "covered": 12,
+        "skipped": 0,
+        "pct": 85.71
+      }
+    },
+    {
+      "path": "apps/product-intake-review/app/api/_lib/service-client.ts",
+      "metric": "branches",
+      "deltaPP": -3.8461538461538396,
+      "before": {
+        "total": 26,
+        "covered": 22,
+        "skipped": 0,
+        "pct": 84.61
+      },
+      "after": {
+        "total": 26,
+        "covered": 21,
+        "skipped": 0,
+        "pct": 80.76
+      }
+    },
+    {
+      "path": "scripts/ingest-markdown.ts",
+      "metric": "branches",
+      "deltaPP": -15,
+      "before": {
+        "total": 92,
+        "covered": 69,
+        "skipped": 0,
+        "pct": 75
+      },
+      "after": {
+        "total": 40,
+        "covered": 24,
+        "skipped": 0,
+        "pct": 60
+      }
+    },
+    {
+      "path": "scripts/ingest-products.ts",
+      "metric": "branches",
+      "deltaPP": -6.25,
+      "before": {
+        "total": 36,
+        "covered": 27,
+        "skipped": 0,
+        "pct": 75
+      },
+      "after": {
+        "total": 32,
+        "covered": 22,
+        "skipped": 0,
+        "pct": 68.75
+      }
+    },
+    {
+      "path": "src/app/partner/einladung/partner-invitation-client.tsx",
+      "metric": "branches",
+      "deltaPP": -2.1428571428571317,
+      "before": {
+        "total": 21,
+        "covered": 12,
+        "skipped": 0,
+        "pct": 57.14
+      },
+      "after": {
+        "total": 20,
+        "covered": 11,
+        "skipped": 0,
+        "pct": 55
+      }
+    },
+    {
+      "path": "src/components/quiz/hair-length-option-card.tsx",
+      "metric": "branches",
+      "deltaPP": -5.668016194331983,
+      "before": {
+        "total": 26,
+        "covered": 22,
+        "skipped": 0,
+        "pct": 84.61
+      },
+      "after": {
+        "total": 19,
+        "covered": 15,
+        "skipped": 0,
+        "pct": 78.94
+      }
+    },
+    {
+      "path": "src/funnels/landing/registry.ts",
+      "metric": "branches",
+      "deltaPP": -8.57142857142857,
+      "before": {
+        "total": 14,
+        "covered": 11,
+        "skipped": 0,
+        "pct": 78.57
+      },
+      "after": {
+        "total": 10,
+        "covered": 7,
+        "skipped": 0,
+        "pct": 70
+      }
+    },
+    {
+      "path": "src/lib/agent/compare/run-shadow-agent.ts",
+      "metric": "branches",
+      "deltaPP": -75,
+      "before": {
+        "total": 8,
+        "covered": 6,
+        "skipped": 0,
+        "pct": 75
+      },
+      "after": {
+        "total": 1,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      }
+    },
+    {
+      "path": "src/lib/agent/orchestrator/model-client.ts",
+      "metric": "branches",
+      "deltaPP": -75,
+      "before": {
+        "total": 8,
+        "covered": 6,
+        "skipped": 0,
+        "pct": 75
+      },
+      "after": {
+        "total": 1,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      }
+    },
+    {
+      "path": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "metric": "branches",
+      "deltaPP": -6.933744221879806,
+      "before": {
+        "total": 59,
+        "covered": 47,
+        "skipped": 0,
+        "pct": 79.66
+      },
+      "after": {
+        "total": 44,
+        "covered": 32,
+        "skipped": 0,
+        "pct": 72.72
+      }
+    },
+    {
+      "path": "src/lib/gated-preview/gate.ts",
+      "metric": "branches",
+      "deltaPP": -2.9761904761904816,
+      "before": {
+        "total": 21,
+        "covered": 19,
+        "skipped": 0,
+        "pct": 90.47
+      },
+      "after": {
+        "total": 16,
+        "covered": 14,
+        "skipped": 0,
+        "pct": 87.5
+      }
+    },
+    {
+      "path": "src/lib/openai/chat.ts",
+      "metric": "branches",
+      "deltaPP": -75,
+      "before": {
+        "total": 8,
+        "covered": 6,
+        "skipped": 0,
+        "pct": 75
+      },
+      "after": {
+        "total": 1,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      }
+    },
+    {
+      "path": "src/lib/personal-plan/rollout-access.ts",
+      "metric": "branches",
+      "deltaPP": -14.529914529914521,
+      "before": {
+        "total": 26,
+        "covered": 24,
+        "skipped": 0,
+        "pct": 92.3
+      },
+      "after": {
+        "total": 9,
+        "covered": 7,
+        "skipped": 0,
+        "pct": 77.77
+      }
+    },
+    {
+      "path": "src/lib/personal-plan/types.ts",
+      "metric": "branches",
+      "deltaPP": -4.615384615384613,
+      "before": {
+        "total": 13,
+        "covered": 11,
+        "skipped": 0,
+        "pct": 84.61
+      },
+      "after": {
+        "total": 10,
+        "covered": 8,
+        "skipped": 0,
+        "pct": 80
+      }
+    },
+    {
+      "path": "src/lib/personal-plan-field-test/token.ts",
+      "metric": "branches",
+      "deltaPP": -2.884615384615387,
+      "before": {
+        "total": 16,
+        "covered": 14,
+        "skipped": 0,
+        "pct": 87.5
+      },
+      "after": {
+        "total": 13,
+        "covered": 11,
+        "skipped": 0,
+        "pct": 84.61
+      }
+    },
+    {
+      "path": "src/lib/personal-plan-quiz/loading-timeline.ts",
+      "metric": "branches",
+      "deltaPP": -27.5,
+      "before": {
+        "total": 16,
+        "covered": 14,
+        "skipped": 0,
+        "pct": 87.5
+      },
+      "after": {
+        "total": 5,
+        "covered": 3,
+        "skipped": 0,
+        "pct": 60
+      }
+    },
+    {
+      "path": "src/lib/personal-plan/direct-acceptance/defaults.ts",
+      "metric": "branches",
+      "deltaPP": -4.901960784313715,
+      "before": {
+        "total": 17,
+        "covered": 15,
+        "skipped": 0,
+        "pct": 88.23
+      },
+      "after": {
+        "total": 12,
+        "covered": 10,
+        "skipped": 0,
+        "pct": 83.33
+      }
+    },
+    {
+      "path": "src/lib/personal-plan/routine/portfolio-presentation.ts",
+      "metric": "branches",
+      "deltaPP": -4.6070460704607115,
+      "before": {
+        "total": 45,
+        "covered": 35,
+        "skipped": 0,
+        "pct": 77.77
+      },
+      "after": {
+        "total": 41,
+        "covered": 30,
+        "skipped": 0,
+        "pct": 73.17
+      }
+    },
+    {
+      "path": "src/lib/product-intake/upload-paths.ts",
+      "metric": "branches",
+      "deltaPP": -2.6785714285714306,
+      "before": {
+        "total": 16,
+        "covered": 13,
+        "skipped": 0,
+        "pct": 81.25
+      },
+      "after": {
+        "total": 14,
+        "covered": 11,
+        "skipped": 0,
+        "pct": 78.57
+      }
+    },
+    {
+      "path": "src/lib/product-matching/product-list-chunks.ts",
+      "metric": "branches",
+      "deltaPP": -11.42857142857143,
+      "before": {
+        "total": 28,
+        "covered": 20,
+        "skipped": 0,
+        "pct": 71.42
+      },
+      "after": {
+        "total": 20,
+        "covered": 12,
+        "skipped": 0,
+        "pct": 60
+      }
+    },
+    {
+      "path": "src/lib/scan/profile-context.ts",
+      "metric": "branches",
+      "deltaPP": -2.051282051282058,
+      "before": {
+        "total": 15,
+        "covered": 13,
+        "skipped": 0,
+        "pct": 86.66
+      },
+      "after": {
+        "total": 13,
+        "covered": 11,
+        "skipped": 0,
+        "pct": 84.61
+      }
+    },
+    {
+      "path": "src/lib/waitlist/tokens.ts",
+      "metric": "branches",
+      "deltaPP": -8.888888888888886,
+      "before": {
+        "total": 15,
+        "covered": 13,
+        "skipped": 0,
+        "pct": 86.66
+      },
+      "after": {
+        "total": 9,
+        "covered": 7,
+        "skipped": 0,
+        "pct": 77.77
+      }
+    }
+  ],
+  "budgetPassed": true,
+  "freeze": [
+    {
+      "sameHead": true,
+      "sameMembership": true,
+      "changedInputs": []
+    },
+    {
+      "sameHead": true,
+      "sameMembership": true,
+      "changedInputs": []
+    }
+  ],
+  "native": [
+    {
+      "result": {
+        "status": 1,
+        "signal": null,
+        "elapsedMs": 983301
+      },
+      "summary": "\n1..13058\n# tests 13138\n# suites 1\n# pass 13096\n# fail 27\n# cancelled 0\n# skipped 15\n# todo 0\n# duration_ms 896913.78425\n",
+      "failures": [
+        "selectProducts applies leave-in thickness overrides and surfaces profile deviation",
+        "selectProducts includes owned verified non-recommended products for assessment",
+        "selectProducts narrows product-detail assessment grounding to target product ids",
+        "selectProducts preserves resolved assessment target when engine returns no products",
+        "selectProducts applies leave-in texture and density overrides with profile notices",
+        "selectProducts applies leave-in heat tool overrides to the runtime",
+        "selectProducts builds a leave-in target for explicit heat requests on otherwise quiet profiles",
+        "selectProducts builds a leave-in heat target from generic Hitzeschutz wording",
+        "selectProducts treats separate heat protectant as a leave-in bonus for blow-dry-only requests",
+        "selectProducts marks exact leave-in heat temperatures unsupported",
+        "selectProducts recommends conditioner for low-need balanced profile with existing conditioner",
+        "selectProducts keeps silicone-free unsupported while still recommending conditioner",
+        "selectProducts keeps silicone-free unsupported while still recommending shampoo",
+        "selectProducts tool carries unsupported ingredient caveats for leave-in requests",
+        "selectProducts tool passes request-aware mask runtime into category engine",
+        "selectProducts asks for oil purpose when a product pick lacks inferred purpose",
+        "selectProducts carries unsupported ingredient caveats for live oil requests",
+        "selectProducts still returns explicit oil products while exposing CareBalance decrease-frequency framing",
+        "selectProducts preserves supplied effective care context in runtime and care balance output",
+        "selectProducts applies oil thickness overrides to hard-gated oil selection",
+        "selectProducts applies oil density overrides to density-weight caution",
+        "selectProducts treats non-greasy fine-hair oil wording as a light finish target",
+        "selectProducts passes explicit dry-shampoo bridge context into category engine",
+        "selectProducts redirects message-stated frequent dry-shampoo use instead of recommending more",
+        "selectProducts treats dry-shampoo routine need questions as guidance-only, not dry-hair hard-nos",
+        "selectProducts does not treat oily-root product wording as a dry-shampoo bridge",
+        "legacy product-list chunk ingestion flag proceeds past the guard"
+      ]
+    },
+    {
+      "result": {
+        "status": 1,
+        "signal": null,
+        "elapsedMs": 932329
+      },
+      "summary": "\n1..12372\n# tests 12452\n# suites 1\n# pass 12411\n# fail 26\n# cancelled 0\n# skipped 15\n# todo 0\n# duration_ms 863382.835625\n",
+      "failures": [
+        "selectProducts applies leave-in thickness overrides and surfaces profile deviation",
+        "selectProducts includes owned verified non-recommended products for assessment",
+        "selectProducts narrows product-detail assessment grounding to target product ids",
+        "selectProducts preserves resolved assessment target when engine returns no products",
+        "selectProducts applies leave-in texture and density overrides with profile notices",
+        "selectProducts applies leave-in heat tool overrides to the runtime",
+        "selectProducts builds a leave-in target for explicit heat requests on otherwise quiet profiles",
+        "selectProducts builds a leave-in heat target from generic Hitzeschutz wording",
+        "selectProducts treats separate heat protectant as a leave-in bonus for blow-dry-only requests",
+        "selectProducts marks exact leave-in heat temperatures unsupported",
+        "selectProducts recommends conditioner for low-need balanced profile with existing conditioner",
+        "selectProducts keeps silicone-free unsupported while still recommending conditioner",
+        "selectProducts keeps silicone-free unsupported while still recommending shampoo",
+        "selectProducts tool carries unsupported ingredient caveats for leave-in requests",
+        "selectProducts tool passes request-aware mask runtime into category engine",
+        "selectProducts asks for oil purpose when a product pick lacks inferred purpose",
+        "selectProducts carries unsupported ingredient caveats for live oil requests",
+        "selectProducts still returns explicit oil products while exposing CareBalance decrease-frequency framing",
+        "selectProducts preserves supplied effective care context in runtime and care balance output",
+        "selectProducts applies oil thickness overrides to hard-gated oil selection",
+        "selectProducts applies oil density overrides to density-weight caution",
+        "selectProducts treats non-greasy fine-hair oil wording as a light finish target",
+        "selectProducts passes explicit dry-shampoo bridge context into category engine",
+        "selectProducts redirects message-stated frequent dry-shampoo use instead of recommending more",
+        "selectProducts treats dry-shampoo routine need questions as guidance-only, not dry-hair hard-nos",
+        "selectProducts does not treat oily-root product wording as a dry-shampoo bridge"
+      ]
+    }
+  ],
+  "newFailureNames": []
+}

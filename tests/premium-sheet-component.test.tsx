@@ -10,7 +10,6 @@ import {
   type PremiumFeatureId,
   type PremiumSheetContext,
 } from "@/lib/premium-sheet/context"
-import { orderedBenefits } from "@/lib/premium-sheet/ordered-benefits"
 import { premiumSheetPlan } from "@/lib/premium-sheet/pricing"
 
 /**
@@ -202,15 +201,16 @@ function contentOf(tree: ReactNode): AnyElement {
 
 // --- header + benefits ------------------------------------------------------
 
-test("header is the approved „Chaarlie Premium — Alles für dein Haar.“ line", () => {
-  const content = contentOf(renderSheet().render())
-  const header = textContent(content.props.header as ReactNode)
-
-  assert.match(header, /Chaarlie Premium/)
-  assert.match(header, /Alles für dein Haar\./)
-})
-
 test("every feature shows exactly three registry benefits, tapped first and plum-accented", () => {
+  const expectedBenefits: Record<PremiumFeatureId, PremiumFeatureId[]> = {
+    routine: ["routine", "empfehlungen", "chat"],
+    empfehlungen: ["empfehlungen", "routine", "chat"],
+    chat: ["chat", "routine", "empfehlungen"],
+    anwendung: ["anwendung", "routine", "empfehlungen"],
+    merkliste: ["merkliste", "routine", "empfehlungen"],
+    haarcheck: ["haarcheck", "routine", "empfehlungen"],
+    verfeinerung: ["verfeinerung", "routine", "empfehlungen"],
+  }
   const features = Object.keys(PREMIUM_FEATURES) as PremiumFeatureId[]
   assert.equal(features.length, 7)
 
@@ -221,10 +221,15 @@ test("every feature shows exactly three registry benefits, tapped first and plum
     assert.equal(benefits.length, 3, `${feature}: the sheet always shows exactly three benefits`)
     assert.deepEqual(
       benefits.map((item) => item.props["data-premium-sheet-benefit"]),
-      orderedBenefits({ feature, source: "scan:verdict" }),
-      `${feature}: consumes orderedBenefits verbatim`,
+      expectedBenefits[feature],
+      `${feature}: renders the approved fixed benefit order`,
     )
     assert.equal(benefits[0].props["data-premium-sheet-benefit"], feature)
+    assert.equal(
+      new Set(benefits.map((item) => item.props["data-premium-sheet-benefit"])).size,
+      benefits.length,
+      `${feature}: no duplicate benefit IDs`,
+    )
 
     // Copy comes from the registry, never rewritten in the component.
     benefits.forEach((item) => {
@@ -249,7 +254,7 @@ test("a null context still shows three benefits (the core order)", () => {
   const benefits = byData(renderSheet({ context: null }).render(), "data-premium-sheet-benefit")
   assert.deepEqual(
     benefits.map((item) => item.props["data-premium-sheet-benefit"]),
-    orderedBenefits(null),
+    ["routine", "empfehlungen", "chat"],
   )
 })
 
@@ -298,16 +303,20 @@ test("closing holds the last context steady through the exit animation (F1)", ()
 
 // --- plan rows --------------------------------------------------------------
 
-test("plan rows are Jährlich · Vierteljährlich (Beliebteste Wahl, preselected) · Monatlich", () => {
-  const tree = renderSheet().render()
-  const rows = byData(tree, "data-premium-sheet-plan")
+test("tapping a plan row moves the selection and the CTA label with it", () => {
+  const harness = renderSheet()
+  const before = harness.render()
+  const header = textContent(contentOf(before).props.header as ReactNode)
+  assert.match(header, /Chaarlie Premium/)
+  assert.match(header, /Alles für dein Haar\./)
+  const initialRows = byData(before, "data-premium-sheet-plan")
 
   assert.deepEqual(
-    rows.map((row) => row.props["data-premium-sheet-plan"]),
+    initialRows.map((row) => row.props["data-premium-sheet-plan"]),
     ["year", "quarter", "month"],
   )
   assert.deepEqual(
-    rows.map((row) => textContent(row).replace(/\s+/g, " ")),
+    initialRows.map((row) => textContent(row).replace(/\s+/g, " ")),
     [
       "Jährlich~€8,33 / Monat · 44% sparen99,99 €",
       "VierteljährlichBeliebteste Wahl~€11,66 / Monat · 22% sparen34,99 €",
@@ -319,12 +328,12 @@ test("plan rows are Jährlich · Vierteljährlich (Beliebteste Wahl, preselected
   // Docket rework R2 (ruling A3): Vierteljährlich is preselected and is the only row
   // carrying the marker — Jährlich no longer recommends itself.
   assert.deepEqual(
-    rows.map((row) => row.props["data-premium-sheet-plan-selected"]),
+    initialRows.map((row) => row.props["data-premium-sheet-plan-selected"]),
     ["false", "true", "false"],
   )
-  assert.equal(rows[1].props["aria-pressed"], true)
+  assert.equal(initialRows[1].props["aria-pressed"], true)
   assert.equal(
-    rows.filter((row) => textContent(row).includes("Beliebteste Wahl")).length,
+    initialRows.filter((row) => textContent(row).includes("Beliebteste Wahl")).length,
     1,
     "only Vierteljährlich is marked Beliebteste Wahl",
   )
@@ -332,21 +341,16 @@ test("plan rows are Jährlich · Vierteljährlich (Beliebteste Wahl, preselected
   // „empfohlen" it replaced, and as a plain inline pill it broke INSIDE itself into two
   // half-pills („BELIEBTESTE" / „WAHL"). It moves to the next line whole instead.
   const badge = findAll(
-    rows[1],
+    initialRows[1],
     (element) => textContent(element).trim() === "Beliebteste Wahl",
   ).at(-1)!
   assert.match(badge.props.className as string, /whitespace-nowrap/)
   assert.match(badge.props.className as string, /inline-block/)
   assert.equal(
-    rows.filter((row) => textContent(row).includes("empfohlen")).length,
+    initialRows.filter((row) => textContent(row).includes("empfohlen")).length,
     0,
     "the old empfohlen marker is gone from every row",
   )
-})
-
-test("tapping a plan row moves the selection and the CTA label with it", () => {
-  const harness = renderSheet()
-  const before = harness.render()
   assert.equal(
     requireOne(before, "data-premium-sheet-cta").props["data-premium-sheet-selected-interval"],
     "quarter",
@@ -399,27 +403,18 @@ test("dismissing always escapes: the escape button and onOpenChange(false)", () 
   assert.equal(closed, 2, "re-opening must not call onClose")
 })
 
-test("T14: the CTA opens checkout in place — it neither closes the sheet nor navigates", () => {
-  let closed = 0
-  const harness = renderSheet({ onClose: () => (closed += 1) })
-
-  requireOne(harness.render(), "data-premium-sheet-cta").props.onClick()
-  const paying = harness.render()
-
-  assert.equal(closed, 0, "starting a payment must never close the sheet")
-  // Plan rows and the CTA give way to the checkout body; the escape stays.
-  assert.equal(byData(paying, "data-premium-sheet-plans").length, 0)
-  assert.equal(byData(paying, "data-premium-sheet-cta").length, 0)
-  assert.ok(findByType(contentOf(paying), PremiumSheetCheckout), "checkout is mounted in the body")
-  assert.equal(textContent(requireOne(paying, "data-premium-sheet-dismiss")), "Plan ändern")
-})
-
 test("T14: the mid-payment escape returns to the plan rows instead of closing the sheet", () => {
   let closed = 0
   const harness = renderSheet({ onClose: () => (closed += 1) })
   requireOne(harness.render(), "data-premium-sheet-cta").props.onClick()
 
-  requireOne(harness.render(), "data-premium-sheet-dismiss").props.onClick()
+  const paying = harness.render()
+  assert.equal(closed, 0, "starting a payment must never close the sheet")
+  assert.equal(byData(paying, "data-premium-sheet-plans").length, 0)
+  assert.equal(byData(paying, "data-premium-sheet-cta").length, 0)
+  assert.ok(findByType(contentOf(paying), PremiumSheetCheckout), "checkout is mounted in the body")
+  assert.equal(textContent(requireOne(paying, "data-premium-sheet-dismiss")), "Plan ändern")
+  requireOne(paying, "data-premium-sheet-dismiss").props.onClick()
   const back = harness.render()
 
   assert.equal(closed, 0, "the free session is never ended by backing out of a payment")

@@ -1,0 +1,121 @@
+import pathlib,json,hashlib,difflib,collections
+D=pathlib.Path('/tmp/test-audit-moderator-fieldtest183');root=pathlib.Path('/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning'); sha=lambda b:hashlib.sha256(b).hexdigest()
+pins=json.loads((D/'start-pins.json').read_text());rows=json.loads((D/'judgments.json').read_text());phases=json.loads((D/'phase-files.json').read_text())
+partial={
+'src/components/personal-plan-quiz/personal-plan-quiz.tsx':[[360,381],[1770,2035],[2260,2344]],
+'src/components/personal-plan-quiz/personal-plan-quiz-entry.tsx':[[1,142]],
+'src/app/api/quiz/lead/route.ts':[[1,535],[660,780]],
+'src/app/api/quiz/personal-plan-lead/route.ts':[[135,290]],
+'src/app/lp/[slug]/page.tsx':[[70,125]],
+'src/app/quiz/page.tsx':[[160,220]],
+'src/lib/quiz/result-narrative.ts':[[1,210],[900,1045]],
+'src/lib/analytics/destinations/posthog.ts':[[1,135],[350,635]],
+'node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js':[[5040,5138],[5480,5535],[9845,9875]],
+'node_modules/react-dom/cjs/react-dom-server-legacy.node.production.js':[[4185,4225],[6670,6687]],
+'node_modules/@types/react-dom/server.d.ts':[[109,136]],
+'node_modules/@supabase/supabase-js/src/SupabaseClient.ts':[[375,390],[433,469]],
+'node_modules/@supabase/postgrest-js/src/PostgrestFilterBuilder.ts':[[157,177]],
+'node_modules/@supabase/postgrest-js/src/PostgrestTransformBuilder.ts':[[683,709]],
+'node_modules/@electric-sql/pglite/dist/pglite-CntadC_p.d.ts':[[809,852]],
+'.github/workflows/ci.yml':[[140,168]],
+'package.json':[[1,100]],
+}
+full=set(r['file'] for r in pins['files'])|{i['file'] for r in pins['files'] for i in r['ownerImports'] if i['file'] not in partial}
+full.update('''src/lib/personal-plan-field-test/server.ts
+src/lib/personal-plan-field-test/campaign-cookie.ts
+src/lib/personal-plan-field-test/regular-quiz-campaign-cookie.ts
+src/lib/personal-plan-field-test/lifecycle.ts
+src/lib/personal-plan-field-test/token.ts
+src/lib/personal-plan-field-test/errors.ts
+src/app/api/personal-plan/field-test/moderator/activate-organic/route.ts
+src/components/personal-plan-quiz/personal-plan-quiz-first-screen.tsx
+src/components/organic-plan-offer/organic-plan-offer.tsx
+src/app/result/[leadId]/page.tsx
+src/app/quiz/layout.tsx
+src/app/test/quiz/session/layout.tsx
+src/app/test/haarplan/konto/moderator-account-entry.tsx
+src/app/test/haarplan/beendet/page.tsx
+src/app/quiz/quiz-shell.tsx
+src/lib/funnel/journey-kind.ts
+src/lib/quiz/normalization.ts
+tests/server-only-register.cjs
+node_modules/react-dom/server.node.js
+supabase/migrations/20260810120016_personal_plan_field_test_access.sql
+supabase/migrations/20260811120000_regular_quiz_field_test_access.sql
+supabase/migrations/20260813091352_regular_quiz_field_test_personal_plan_routing.sql
+supabase/migrations/20260827100624_personal_plan_moderator_email_bound_access.sql
+supabase/migrations/20260827150340_personal_plan_moderator_organic_access.sql
+supabase/migrations/20260728130000_add_personal_plan_prepared_artifacts.sql
+supabase/migrations/20260801100000_customerio_profile_sync_outbox.sql'''.splitlines())
+reads=[]
+for f in sorted(full|set(partial)):
+ p=root/f
+ if not p.exists():raise Exception(f)
+ data=p.read_bytes(); reads.append({'file':f,'sha256':sha(data),'bytes':len(data),'lineCount':len(data.splitlines()),'read':'complete' if f in full else 'operative_slices_only','ranges':[[1,len(data.splitlines())]] if f in full else partial[f]})
+limits=['All 27 test files and their in-file fixtures/helper functions fully read (7,367 lines); each of 183 declarations has one judgment and extracted assertion list. Hashing alone is never counted as human reading.',
+'All named field-test/moderator owners, reset/maintenance/probe scripts, complete candidate renderer/leaf, complete offer renderers and seven listed migrations were read. Large unrelated quiz/lead composition and narrative/analytics mapping helpers are limited to listed operative slices; no recursive all-import or all-dependency semantic closure is claimed.',
+'PGlite tests run generated/reset SQL or selected actual migration functions on a synthetic predecessor schema with stub auth.uid and deterministic UUID fixtures. They do not prove production schema parity, provider auth/RLS, real concurrent hosted sessions, or remote delivery. Seven full migration reads do not certify the complete migration chain.',
+'Supabase from/rpc/eq/maybeSingle implementation excerpts and PGlite query/exec types were read. No full SDK/Auth/PostgREST/Next runtime audit or protocol execution; fake query fixtures do not implement database filtering/security.',
+'React actual development and production renderer excerpts plus server entry/type signatures support C1 nested function-component execution. The registration hook stubs only server-only; no leaf/React substitution. Runtime proof remains unrun.',
+'History was read via bounded git logs and candidate introduction diff; prior field-test UI source-only challenge and presentation reachability findings are reconciled. No claim to re-audit the whole historical branch or all sibling cohorts.',
+'No repository edits, native tests, browser tests, compiler, product/test module imports, source faults, provider calls, database connections, or environment-file/value inspection. Only static parser library loaded. All generated files live in this /tmp directory.',
+'Current parent context is 607 integrated removals with full native running; this prospective single removal is not credited. Coverage last reported by parent was 585; this author measured no coverage.']
+(D/'read-scope.json').write_text(json.dumps({'files':reads,'limits':limits,'historicalEvidence':[
+'/tmp/test-audit-navigation598-report.md','/tmp/test-audit-profile-personal-plan-static-challenge.md','/tmp/test-audit-presentation-prop-reachability.md','/tmp/test-audit-conversation-preservation-review.md','plans/evidence/2026-10-03-next431-static-challenge.md'],
+'historyNotes':['02a84108 secure Personal Plan field-test access introduced the leaf and route tests.','69f1651d fresh email-bound moderator run; 0a2c3130 organic moderator journey; 97e7da78 partner accounts and later scanner changes keep access branches live.','Bounded git log current paths and full git show 02a84108 -- tests/personal-plan-field-test-ui.test.tsx read: both exact donor and keeper originated together in secure field-test access; later moderator modes remain live.']},indent=2)+'\n')
+# Exact patch text from complete frozen files, not applied to repository.
+for out,a,b in [('transfer.diff','before','transfer'),('cut.diff','transfer','cut'),('complete.diff','before','cut')]:
+ chunks=[]
+ for r in pins['files']:
+  f=r['file'];x=(D/'snapshots'/a/f).read_text();y=(D/'snapshots'/b/f).read_text()
+  chunks.extend(difflib.unified_diff(x.splitlines(True),y.splitlines(True),fromfile='a/'+f,tofile='b/'+f))
+ (D/out).write_text(''.join(chunks))
+ledger=['# Moderator and field-test access: complete 183-site ledger','', 'Read-only proposal: **169 R / 13 held F / 1 conditional C / 0 D** across exactly 27 files. F remains in every phase and earns no repair/removal credit. Native baseline, mutations, final proof and independent preservation are main-owned and pending.','', 'Each source location refers to the before snapshot. Full callbacks and extracted assertion expressions/hashes are in judgments.json and ast-mapping.json. Row evidence names the actual observation, credible regression or specific unproved claim.','']
+for f,rr in __import__('itertools').groupby(rows,key=lambda r:r['file']):
+ ledger+=['## '+f,'','| Line | Mark | Existing declaration | Contract / credible regression / gap |','|---:|:---:|---|---|']
+ for r in rr:ledger.append('| '+str(r['line'])+' | '+r['mark']+' | '+r['title'].replace('|','\\|')+' | '+r['judgment'].replace('|','\\|')+' |')
+ ledger.append('')
+(D/'complete-ledger.md').write_text('\n'.join(ledger)+'\n')
+(D/'layer-plan.md').write_text('''# Moderator / field-test access183: second-layer plan
+
+One conditional consolidation is proposed: default ended-surface copy moves into the existing actual ResultPageClient unavailable-render keeper. **183 → 183 → 182**, 27 files in every phase, one test file changed, 181 unrelated callbacks exact, 13 held F exact. No retired production file, export, hook, provider seam or test helper. No new test call, input, fixture row, parameter table, skip or registration.
+
+## C1: default ended surface into real result-client composition
+
+Donor: `tests/personal-plan-field-test-ui.test.tsx:95`, “dedicated field-test end surface stays concise and payment-free”. Keeper: same file:76, “lost field-test authorization renders a dedicated non-commercial end state”. Read both complete callbacks and the entire file, including source-read globals and offer fixtures. The donor calls real React renderToStaticMarkup on `<PersonalPlanFieldTestEnded />`. The keeper already renders actual ResultPageClient with personal_plan, hasAccess=false, fieldTestUnavailable=true, focusRoutine=false, name=Lea, fixed lead UUID, and null offer/answers.
+
+`src/app/result/[leadId]/result-client.tsx:130–138` returns exactly `<PersonalPlanFieldTestEnded />` before offer recovery. The leaf (`src/components/personal-plan-field-test/personal-plan-field-test-ended.tsx:1–19`) destructures default unavailable=false; it has no hook, I/O, state, time, context or data read. Both executions therefore reach the same leaf with `{}` and default false. Parent props not forwarded to it cannot create a different leaf input. React's actual function-component SSR invokes components and recursively renders their returned child; the test preload replaces only server-only. This is output delivery through the actual component, not a mocked receipt.
+
+Transfer both donor assertions verbatim: `/Testzeitraum ist beendet oder der Zugang wurde geschlossen/` and the full negative `/Abo|Zahlung|Stripe|PayPal|Preis/`. Keep the existing heading, team and `/Stripe|PayPal|Plan sichern|reactivate|checkout/i` assertions. The original negative is not claimed to subsume Abo/Zahlung/Preis. After positive preservation proof, cut only the donor and unused direct test import. The production leaf stays live: result client, server result/LP/account recovery and ended page use its default and unavailable=true variants. No dead-feature claim.
+
+Two actual-owner fault recipes in controls.json preserve all old keeper observations and break one transferred assertion each: default paragraph replacement (match) and appended Abo (doesNotMatch). Exactly one keeper must run and fail at the listed first assertion frame, with ERR_ASSERTION and intended operator/message. Setup/import/render crashes or zero tests do not count. Restore byte-exact and require green before cut. These recipes are statically parsed, **unrun**.
+
+## Retained layers and rejected consolidations
+
+- Token/cookie/lifecycle ownership stays with actual server helpers. Route tests independently guard browser identity, recoverable cookies, origin/rate-limit/rollout responses and caller ordering. Identical-looking Personal Plan and regular guest adapters use different metadata, RPCs and projection contracts; no consolidation.
+- Moderator contract/journey/start/activation layers guard account proof, persisted identity, state-prefix replay, new-admission versus return behavior and schema-complete writes. Existing fake dependencies cannot replace real SQL persistence, and synthetic SQL cannot replace route/cookie contracts.
+- Reset/maintenance tests guard manifest/runtime fingerprint, clock/restriction windows, private output, exact ownership, transactional rollback and recovery journals. Actual applyMaintenance journal consumption does not assert the separate SQL header; no new read is added to collapse them.
+- Hosted probe tests exercise actual orchestration against fake operations. They protect refusal/cleanup/evidence handling, but do not establish real hosted authorization/concurrency. Their incomplete controls are held F, not deletion candidates.
+- Seven migration source contracts retain public tables, grants, wrapper privileges, source shape and historical compatibility. Runtime SQL uses synthetic predecessor/auth fixtures and cannot replace privilege/architecture guards simply because its title says real SQL.
+- Personal Plan and regular banners/renderers retain distinct output attributes and modes. The direct regular activation card omits identityMode while organic offer supplies explicit guest; a default-prop regression is independent. Email-bound copy, 90-day account persistence, legacy unavailable state and partner click concurrency remain separate.
+- All analytics remain: field-test PostHog capture, Customer.io admission/traits and partner distinction. Both Meta negative cases are masked by unsupported-event fallback and held F; no supported-event replacement input or repair credit.
+
+## Reconciled earlier reading
+
+Navigation598 documented missing *complete current per-declaration ledger*, not unread files. The prior source-inspection challenge explicitly covered field-test UI:101 and :112 only; both held F remain. Prior presentation-prop scan retained the live unavailable variant; C1 leaves that production branch untouched and only moves default-variant assertions. Conversation leaf cutover covered the retired token comparator and retained hashing, not a whole semantic re-review of these server/route files. Completed regular lead25, access4, primitives4 and readiness1 stay outside this 27-file cohort. No prior removal is counted again.
+
+## Scope, verification and stop
+
+All 183 registration bodies, fixture tables and in-file helpers were read; read-scope.json distinguishes complete owner reads, operative slices and dependency limits. No exhaustive transitive dependency or whole-migration audit is claimed. Native baseline is not available from this author. Static parsing, assertion union, phase counts and byte guards are in static-check.json; they prove the proposed edit shape, not behavior.
+
+Main alone must freeze exact before pins, run the 27-file native baseline, apply only transfer, run that phase, run both guarded owner controls sequentially and inspect TAP, restore byte-exact and pass, then cut and rerun. Independent preservation must inspect both full callbacks and actual component path. Any drift, unexpected baseline failure, setup-only red or missing intended frame stops the cut. Full native/coverage/review gates remain campaign-owned. No source files or production lines are proposed for removal.
+''')
+commands={'cwd':str(root),'execution':'NOT RUN; main-only instructions, no autoapply tooling','baselineAndEachPhase':['node','--import','./tests/server-only-register.cjs','--import','tsx','--test']+[r['file'] for r in pins['files']], 'exactKeeper':['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-name-pattern=^lost field-test authorization renders a dedicated non-commercial end state$','tests/personal-plan-field-test-ui.test.tsx'],'gates':['Verify checkout/branch/HEAD and phase/readset hashes; no concurrent runner or writer','Baseline before phase: all 183 registrations, expected nested-count must be reconciled separately','Transfer keeps 183 declarations; full cohort green before owner faults','Both controls exact intended assertion red and byte-exact restored keeper green','Cut leaves 182 declarations; full cohort and repository checks then campaign full proof','No apply script provided; main sole writer/operator']}
+(D/'main-commands.json').write_text(json.dumps(commands,indent=2)+'\n')
+manifest={'schema':1,'root':str(root),'branch':'codex/test-audit-pruning','HEAD':'21e0e41fa996ec6a725c258ab3766971f0edb94d','decision':'prospective only; no runtime or repo mutation','counts':{'before':183,'transfer':183,'cut':182,'unrelatedExact':181,'R':169,'F':13,'C':1,'D':0},'phaseFiles':phases,'readSet':reads,'artifacts':[]}
+for p in sorted(D.iterdir()):
+ if p.is_file() and p.name not in ['manifest.json','handoff-receipt.json']:
+  manifest['artifacts'].append({'path':p.name,'sha256':sha(p.read_bytes()),'bytes':p.stat().st_size})
+(D/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+receipt={'manifest':str(D/'manifest.json'),'manifestSha256':sha((D/'manifest.json').read_bytes()),'status':'READONLY_STATIC_HANDOFF_CONDITIONAL_C1','repoWrites':0,'testsRun':0,'sourceFaultsRun':0,'phaseCounts':manifest['counts'],'snapshotFiles':81,'hashes':{p:sha((D/p).read_bytes()) for p in ['layer-plan.md','complete-ledger.md','candidates.json','controls.json','static-check.json','complete.diff','read-scope.json']}}
+(D/'handoff-receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(receipt,indent=2))

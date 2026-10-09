@@ -1,0 +1,729 @@
+{
+  "nativeTests": [
+    "tests/personal-plan/refinement/module-status.test.ts",
+    "tests/personal-plan/refinement/refinement-status.test.ts",
+    "tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+    "tests/personal-plan-refinement-presentation-route.test.ts",
+    "tests/personal-plan-refinement-status-route.test.ts"
+  ],
+  "selectedTests": [
+    "tests/personal-plan-refinement-status-route.test.ts",
+    "tests/personal-plan/refinement/module-status.test.ts",
+    "tests/personal-plan-refinement-presentation-route.test.ts"
+  ],
+  "localFiles": [
+    "src/app/api/personal-plan/refinement-presentation/route.ts",
+    "src/app/api/personal-plan/refinement-status/route.ts",
+    "src/lib/personal-plan-quiz/types.ts",
+    "src/lib/personal-plan/direct-acceptance/defaults.ts",
+    "src/lib/personal-plan/lifecycle/repository.ts",
+    "src/lib/personal-plan/persistence/index.ts",
+    "src/lib/personal-plan/persistence/refinement-status-read.ts",
+    "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+    "src/lib/personal-plan/persistence/stage2-refinement-supabase.ts",
+    "src/lib/personal-plan/products/authorities.ts",
+    "src/lib/personal-plan/products/authority/contracts.ts",
+    "src/lib/personal-plan/products/contracts.ts",
+    "src/lib/personal-plan/refinement/answer-provenance.ts",
+    "src/lib/personal-plan/refinement/assumed-defaults.ts",
+    "src/lib/personal-plan/refinement/gateway.ts",
+    "src/lib/personal-plan/refinement/heat-events.ts",
+    "src/lib/personal-plan/refinement/module-status.ts",
+    "src/lib/personal-plan/refinement/question-path.ts",
+    "src/lib/personal-plan/refinement/refinement-status-loader.ts",
+    "src/lib/personal-plan/refinement/refinement-status.ts",
+    "src/lib/personal-plan/refinement/session.ts",
+    "src/lib/personal-plan/refinement/stage1-adapter.ts",
+    "src/lib/personal-plan/refinement/types.ts",
+    "src/lib/personal-plan/routine/cadence.ts",
+    "src/lib/personal-plan/routine/contracts.ts",
+    "src/lib/personal-plan/routine/labels.ts",
+    "src/lib/personal-plan/routine/load-view.ts",
+    "src/lib/personal-plan/routine/repository.ts",
+    "src/lib/personal-plan/types.ts",
+    "src/lib/quiz/diagnostic-input.ts",
+    "src/lib/routines/personal-plan/application/contracts.ts",
+    "src/lib/supabase/admin.ts",
+    "src/lib/supabase/server.ts",
+    "src/lib/vocabulary/frequencies.ts",
+    "src/lib/vocabulary/onboarding-care.ts",
+    "tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+    "tests/personal-plan-refinement-presentation-route.test.ts",
+    "tests/personal-plan-refinement-status-route.test.ts",
+    "tests/personal-plan/refinement/module-status.test.ts",
+    "tests/personal-plan/refinement/refinement-status.test.ts",
+    "tests/server-only-register.cjs"
+  ],
+  "edges": [
+    {
+      "from": "tests/personal-plan/refinement/module-status.test.ts",
+      "to": "src/lib/personal-plan/direct-acceptance/defaults.ts",
+      "spec": "@/lib/personal-plan/direct-acceptance/defaults",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan/refinement/module-status.test.ts",
+      "to": "src/lib/personal-plan/refinement/answer-provenance.ts",
+      "spec": "@/lib/personal-plan/refinement/answer-provenance",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan/refinement/module-status.test.ts",
+      "to": "src/lib/personal-plan/refinement/module-status.ts",
+      "spec": "@/lib/personal-plan/refinement/module-status",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan/refinement/module-status.test.ts",
+      "to": "src/lib/personal-plan/refinement/question-path.ts",
+      "spec": "@/lib/personal-plan/refinement/question-path",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan/refinement/module-status.test.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "@/lib/personal-plan/refinement/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "tests/personal-plan/refinement/refinement-status.test.ts",
+      "to": "src/lib/personal-plan/refinement/refinement-status.ts",
+      "spec": "@/lib/personal-plan/refinement/refinement-status",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan/refinement/refinement-status.test.ts",
+      "to": "src/lib/personal-plan/lifecycle/repository.ts",
+      "spec": "@/lib/personal-plan/lifecycle/repository",
+      "kind": "type-only"
+    },
+    {
+      "from": "tests/personal-plan/refinement/refinement-status.test.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "@/lib/personal-plan/refinement/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+      "to": "src/lib/personal-plan/direct-acceptance/defaults.ts",
+      "spec": "@/lib/personal-plan/direct-acceptance/defaults",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "@/lib/personal-plan/refinement/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "tests/personal-plan-refinement-presentation-route.test.ts",
+      "to": "src/app/api/personal-plan/refinement-presentation/route.ts",
+      "spec": "../src/app/api/personal-plan/refinement-presentation/route",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan-refinement-status-route.test.ts",
+      "to": "src/app/api/personal-plan/refinement-status/route.ts",
+      "spec": "../src/app/api/personal-plan/refinement-status/route",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan-refinement-status-route.test.ts",
+      "to": "src/lib/personal-plan/lifecycle/repository.ts",
+      "spec": "../src/lib/personal-plan/lifecycle/repository",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/direct-acceptance/defaults.ts",
+      "to": "src/lib/personal-plan/refinement/assumed-defaults.ts",
+      "spec": "../refinement/assumed-defaults",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/direct-acceptance/defaults.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "../refinement/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/answer-provenance.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/module-status.ts",
+      "to": "src/lib/personal-plan/refinement/answer-provenance.ts",
+      "spec": "./answer-provenance",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/module-status.ts",
+      "to": "src/lib/personal-plan/refinement/assumed-defaults.ts",
+      "spec": "./assumed-defaults",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/module-status.ts",
+      "to": "src/lib/personal-plan/refinement/question-path.ts",
+      "spec": "./question-path",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/module-status.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/question-path.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/question-path.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/question-path.ts",
+      "to": "src/lib/vocabulary/onboarding-care.ts",
+      "spec": "@/lib/vocabulary/onboarding-care",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/question-path.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/question-path.ts",
+      "to": "src/lib/personal-plan/refinement/heat-events.ts",
+      "spec": "./heat-events",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/types.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/types.ts",
+      "to": "src/lib/vocabulary/onboarding-care.ts",
+      "spec": "@/lib/vocabulary/onboarding-care",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/refinement-status.ts",
+      "to": "src/lib/personal-plan/lifecycle/repository.ts",
+      "spec": "@/lib/personal-plan/lifecycle/repository",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/refinement-status.ts",
+      "to": "src/lib/personal-plan/refinement/module-status.ts",
+      "spec": "./module-status",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/refinement-status.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/lifecycle/repository.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "@/lib/personal-plan/refinement/types",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/personal-plan/refinement-presentation/route.ts",
+      "to": "src/lib/personal-plan/routine/cadence.ts",
+      "spec": "@/lib/personal-plan/routine/cadence",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/personal-plan/refinement-presentation/route.ts",
+      "to": "src/lib/personal-plan/routine/contracts.ts",
+      "spec": "@/lib/personal-plan/routine/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/app/api/personal-plan/refinement-presentation/route.ts",
+      "to": "src/lib/personal-plan/routine/labels.ts",
+      "spec": "@/lib/personal-plan/routine/labels",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/personal-plan/refinement-presentation/route.ts",
+      "to": "src/lib/personal-plan/routine/load-view.ts",
+      "spec": "@/lib/personal-plan/routine/load-view",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/personal-plan/refinement-presentation/route.ts",
+      "to": "src/lib/personal-plan/routine/repository.ts",
+      "spec": "@/lib/personal-plan/routine/repository",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/app/api/personal-plan/refinement-presentation/route.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "@/lib/personal-plan/refinement/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/app/api/personal-plan/refinement-presentation/route.ts",
+      "to": "src/lib/supabase/admin.ts",
+      "spec": "@/lib/supabase/admin",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/personal-plan/refinement-presentation/route.ts",
+      "to": "src/lib/supabase/server.ts",
+      "spec": "@/lib/supabase/server",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/personal-plan/refinement-status/route.ts",
+      "to": "src/lib/personal-plan/refinement/refinement-status-loader.ts",
+      "spec": "@/lib/personal-plan/refinement/refinement-status-loader",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/personal-plan/refinement-status/route.ts",
+      "to": "src/lib/supabase/admin.ts",
+      "spec": "@/lib/supabase/admin",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/personal-plan/refinement-status/route.ts",
+      "to": "src/lib/supabase/server.ts",
+      "spec": "@/lib/supabase/server",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/assumed-defaults.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/assumed-defaults.ts",
+      "to": "src/lib/vocabulary/onboarding-care.ts",
+      "spec": "@/lib/vocabulary/onboarding-care",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/assumed-defaults.ts",
+      "to": "src/lib/personal-plan/refinement/heat-events.ts",
+      "spec": "./heat-events",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/assumed-defaults.ts",
+      "to": "src/lib/personal-plan/refinement/question-path.ts",
+      "spec": "./question-path",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/assumed-defaults.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/heat-events.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/heat-events.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/heat-events.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/heat-events.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/cadence.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../products/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/cadence.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/contracts.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../products/contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/labels.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../products/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/load-view.ts",
+      "to": "src/lib/personal-plan/routine/contracts.ts",
+      "spec": "./contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/load-view.ts",
+      "to": "src/lib/personal-plan/routine/repository.ts",
+      "spec": "./repository",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/repository.ts",
+      "to": "src/lib/routines/personal-plan/application/contracts.ts",
+      "spec": "@/lib/routines/personal-plan/application/contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/refinement-status-loader.ts",
+      "to": "src/lib/personal-plan/lifecycle/repository.ts",
+      "spec": "@/lib/personal-plan/lifecycle/repository",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/refinement-status-loader.ts",
+      "to": "src/lib/personal-plan/persistence/refinement-status-read.ts",
+      "spec": "@/lib/personal-plan/persistence/refinement-status-read",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/refinement-status-loader.ts",
+      "to": "src/lib/personal-plan/refinement/refinement-status.ts",
+      "spec": "./refinement-status",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "./authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./authority/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/types.ts",
+      "to": "src/lib/personal-plan-quiz/types.ts",
+      "spec": "@/lib/personal-plan-quiz/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/types.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/refinement-status-read.ts",
+      "to": "src/lib/personal-plan/refinement/stage1-adapter.ts",
+      "spec": "@/lib/personal-plan/refinement/stage1-adapter",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/refinement-status-read.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "@/lib/personal-plan/refinement/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/refinement-status-read.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/refinement-status-read.ts",
+      "to": "src/lib/personal-plan/persistence/stage2-refinement-supabase.ts",
+      "spec": "./stage2-refinement-supabase",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authorities.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authorities.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/contracts.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/contracts.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/types.ts",
+      "to": "src/lib/quiz/diagnostic-input.ts",
+      "spec": "@/lib/quiz/diagnostic-input",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/stage1-adapter.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/stage1-adapter.ts",
+      "to": "src/lib/personal-plan/refinement/heat-events.ts",
+      "spec": "./heat-events",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/stage1-adapter.ts",
+      "to": "src/lib/personal-plan/refinement/question-path.ts",
+      "spec": "./question-path",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/stage1-adapter.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-supabase.ts",
+      "to": "src/lib/personal-plan/refinement/stage1-adapter.ts",
+      "spec": "@/lib/personal-plan/refinement/stage1-adapter",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-supabase.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "@/lib/personal-plan/refinement/types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-supabase.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-supabase.ts",
+      "to": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "spec": "./stage2-refinement-service",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "to": "src/lib/personal-plan/refinement/session.ts",
+      "spec": "@/lib/personal-plan/refinement/session",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "to": "src/lib/personal-plan/refinement/question-path.ts",
+      "spec": "@/lib/personal-plan/refinement/question-path",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "to": "src/lib/personal-plan/refinement/module-status.ts",
+      "spec": "@/lib/personal-plan/refinement/module-status",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "to": "src/lib/personal-plan/refinement/answer-provenance.ts",
+      "spec": "@/lib/personal-plan/refinement/answer-provenance",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "to": "src/lib/personal-plan/refinement/assumed-defaults.ts",
+      "spec": "@/lib/personal-plan/refinement/assumed-defaults",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "@/lib/personal-plan/refinement/types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "to": "src/lib/personal-plan/refinement/gateway.ts",
+      "spec": "@/lib/personal-plan/refinement/gateway",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "to": "src/lib/personal-plan/persistence/index.ts",
+      "spec": "./index",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/session.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/session.ts",
+      "to": "src/lib/personal-plan/refinement/question-path.ts",
+      "spec": "./question-path",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/session.ts",
+      "to": "src/lib/personal-plan/refinement/gateway.ts",
+      "spec": "./gateway",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/gateway.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/gateway.ts",
+      "to": "src/lib/personal-plan/refinement/session.ts",
+      "spec": "./session",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/index.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../products/contracts",
+      "kind": "static"
+    }
+  ],
+  "externalPins": [
+    {
+      "specifier": "@electric-sql/pglite",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@electric-sql/pglite/dist/index.cjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@electric-sql/pglite/package.json"
+    },
+    {
+      "specifier": "zod",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/zod/index.cjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/zod/package.json"
+    },
+    {
+      "specifier": "next/server",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/server.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/package.json"
+    },
+    {
+      "specifier": "@supabase/supabase-js",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/dist/index.cjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/package.json"
+    },
+    {
+      "specifier": "@supabase/ssr",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/ssr/dist/main/index.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/ssr/package.json"
+    },
+    {
+      "specifier": "next/headers",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/headers.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/package.json"
+    },
+    {
+      "specifier": "typescript",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/typescript.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/package.json"
+    },
+    {
+      "specifier": "tsx",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/loader.mjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/package.json"
+    }
+  ],
+  "nonliteralImports": [],
+  "pinOrigins": {
+    "tests/server-only-register.cjs": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/direct-acceptance/defaults.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/refinement/answer-provenance.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/refinement/module-status.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/refinement/question-path.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/refinement/types.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/refinement/refinement-status.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/lifecycle/repository.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/app/api/personal-plan/refinement-presentation/route.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/app/api/personal-plan/refinement-status/route.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/refinement/assumed-defaults.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/vocabulary/onboarding-care.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/vocabulary/frequencies.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/refinement/heat-events.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/routine/cadence.ts": "first-time native local closure pin",
+    "src/lib/personal-plan/routine/contracts.ts": "first-time native local closure pin",
+    "src/lib/personal-plan/routine/labels.ts": "first-time native local closure pin",
+    "src/lib/personal-plan/routine/load-view.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/routine/repository.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/supabase/admin.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/supabase/server.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/refinement/refinement-status-loader.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/contracts.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/types.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/routines/personal-plan/application/contracts.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/persistence/refinement-status-read.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authorities.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authority/contracts.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan-quiz/types.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/refinement/stage1-adapter.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/persistence/stage2-refinement-supabase.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/quiz/diagnostic-input.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/persistence/stage2-refinement-service.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/refinement/session.ts": "first-time native local closure pin",
+    "src/lib/personal-plan/refinement/gateway.ts": "first-time native local closure pin",
+    "src/lib/personal-plan/persistence/index.ts": "preserved original proposal or reviewed runtime source pin"
+  },
+  "limits": "Entire five-file native static local import closure, including type imports, pinned but not semantically reread. Literal resolution only; no product imports. Prior3489 dependency pins/28 distribution trees preserved; selected external entry/package pins added only when absent. Not a full transitive vendor guarantee."
+}

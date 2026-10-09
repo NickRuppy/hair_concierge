@@ -61,7 +61,13 @@ function productStep(block: CompiledProductBlock): ApplicationOuterStepView {
     imageUrl: block.imageUrl ?? null,
     categoryLabelDe: categoryLabelDe(block.category),
     purposeDe: purposeDe(block),
-    actions: block.steps.map((step) => ({ actionKey: step.stepKey, copyDe: step.copyDe })),
+    actions: block.steps.map((step) => ({
+      actionKey: step.stepKey,
+      copyDe: step.copyDe,
+      ...(step.action === "section" && step.stepKey.startsWith("method-")
+        ? { kind: "variant_heading" as const }
+        : {}),
+    })),
     coverageNoteDe: block.noteDe,
     status: block.status,
     provisionalReason: block.provisionalReason ?? null,

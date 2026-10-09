@@ -1,0 +1,1 @@
+04f35c113bec804c4c1d218225df6690107d3797 2026-09-22 feat(analytics): tracking parity for the discovery-call funnel (#597)

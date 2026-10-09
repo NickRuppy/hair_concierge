@@ -1,0 +1,34 @@
+{
+  "code": 0,
+  "signal": null,
+  "spawnError": null,
+  "timeout": false,
+  "stopReason": null,
+  "durationMs": 1434,
+  "dir": "/tmp/test-audit-chat18-controls-q0Mukt/C1-return-null/after",
+  "command": {
+    "executable": "/usr/local/bin/node",
+    "argv": [
+      "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@playwright/test/cli.js",
+      "test",
+      "--config",
+      "/tmp/test-audit-chat18-main-R6uLyX/playwright.config.cjs",
+      "--grep",
+      "manual edits clear hidden product metadata and rebuild cache$",
+      "--reporter=json",
+      "--output",
+      "/tmp/test-audit-chat18-controls-q0Mukt/C1-return-null/after/browser-output"
+    ],
+    "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+    "timeoutMs": 90000,
+    "reporterFile": "/tmp/test-audit-chat18-controls-q0Mukt/C1-return-null/after/report.json",
+    "environmentOverrides": {
+      "PLAYWRIGHT_JSON_OUTPUT_FILE": "/tmp/test-audit-chat18-controls-q0Mukt/C1-return-null/after/report.json",
+      "FORCE_COLOR": "0",
+      "NO_COLOR": "1"
+    },
+    "environmentRemoved": [
+      "NODE_V8_COVERAGE"
+    ]
+  }
+}

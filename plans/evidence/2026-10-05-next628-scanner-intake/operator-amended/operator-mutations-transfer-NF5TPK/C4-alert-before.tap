@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)
+ok 1 - ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)
+  ---
+  duration_ms: 9.405292
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 263.766041

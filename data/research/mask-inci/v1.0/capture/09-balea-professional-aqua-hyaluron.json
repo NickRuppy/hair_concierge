@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "mask-inci-capture-v1",
+  "productNumber": 9,
+  "role": "primary",
+  "archetypeSlots": ["8 - moisture/humectant-forward Feuchtigkeitsmaske"],
+  "identity": {
+    "brand": "Balea Professional (dm own brand)",
+    "productName": "Haarmaske 3in1 Aqua Hyaluron",
+    "packSize": "150 ml",
+    "gtinEan": "4066447668315",
+    "eanSourceNote": "Carried from the proposal; not independently re-confirmed this pass. dm.de product page was tried at both known URL patterns (slug-based and /p/d/1417521/ ID-based) and both returned JS header-only markup with no product content.",
+    "market": "DE (dm own brand)"
+  },
+  "rawInci": "AQUA, CETEARYL ALCOHOL, GLYCERIN, DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE, PANTHENOL, ALOE BARBADENSIS LEAF JUICE POWDER, SODIUM HYALURONATE, HELIANTHUS ANNUUS HYBRID OIL, PARFUM, ISOAMYL LAURATE, BEHENTRIMONIUM CHLORIDE, CETRIMONIUM CHLORIDE, ISOPROPYL ALCOHOL, SODIUM BENZOATE, CITRIC ACID",
+  "inciSource": {
+    "url": "https://www.hautschutzengel.de/balea-professional-haarmaske-3in1-aqua-hyaluron-150-ml-inhaltsstoffe/produkt/312508.html",
+    "accessDate": "2026-09-04",
+    "tier": "hautschutzengel (fallback - dm.de JS-blocked on both known URL patterns, consistent with the proposal's own §4.6 note)",
+    "notes": "Sodium Hyaluronate confirmed present, plus Aloe Barbadensis Leaf Juice Powder - moisture/humectant archetype marker confirmed."
+  },
+  "directions": {
+    "text": "Als Haarmaske: auf das nasse Haar auftragen, 3 Minuten einwirken lassen und gründlich ausspülen. Als Leave-in-Pflege: eine kleine Menge in das handtuchtrockene/trockene Haar einmassieren, nicht ausspülen. Auch als Over-Night-Pflege verwendbar.",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "3 (mask mode)",
+    "source": "Aggregated retailer/dm-marketing copy via web search - not a single verbatim page fetch.",
+    "confidence": "moderate"
+  },
+  "claims": [
+    "feuchtigkeitsspendende Pflegeformel",
+    "verbessert die Kämmbarkeit",
+    "geschmeidiges und glänzendes Haar",
+    "ohne Mikroplastik und wasserlösliche rein synthetische Polymere"
+  ],
+  "conflicts": [],
+  "status": "captured",
+  "statusNotes": "dm.de's JS-rendering block persisted across both URL patterns this pass, consistent with the proposal's own flag - relying on hautschutzengel as documented fallback. EAN not independently re-verified."
+}

@@ -1,0 +1,33 @@
+{
+  "executable": "/usr/local/bin/node",
+  "args": [
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-concurrency=1",
+    "tests/scan-alternative-comparison.test.ts",
+    "tests/scan-analytics.test.ts",
+    "tests/scan-catalog-search-typo.test.ts",
+    "tests/scan-masked-alternative.test.ts",
+    "tests/scan-name-only-submission-migration.test.ts",
+    "tests/scan-observability.test.ts",
+    "tests/scan-pending-submission.test.ts",
+    "tests/scan-presentation-rows.test.ts",
+    "tests/scan-product-presentation.test.ts",
+    "tests/scan-profile-context.test.ts",
+    "tests/scan-resolve-anti-leak.test.ts",
+    "tests/scan-role-selection.test.ts",
+    "tests/scan-submit-dm-event-log.test.ts",
+    "tests/scan-trigger-cards-ui.test.tsx",
+    "tests/scan-trigger-session-marker.test.ts",
+    "tests/scan-verdict-access.test.ts",
+    "tests/scanner-analytics-context.test.ts",
+    "tests/scanner-offer-analytics.test.ts",
+    "tests/scanner-quiz-view.test.ts",
+    "tests/scanner-result-artifact-email.test.ts",
+    "tests/scanner-trial-offer.test.tsx"
+  ],
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning"
+}

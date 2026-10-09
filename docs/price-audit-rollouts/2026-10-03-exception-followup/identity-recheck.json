@@ -1,0 +1,632 @@
+{
+  "method": "Read-only identity review. Current dm direct GTIN details used for exact candidate title/INCI only; historic INCI was required for formula continuity and absent unless stated. Retailer redirects prove article lineage but do not prove unchanged formula.",
+  "checked_at": "2026-10-03T13:15:41.238Z",
+  "counts": {
+    "uncertain": 11,
+    "different_formula": 2,
+    "unavailable": 4
+  },
+  "records": [
+    {
+      "id": "27fe4310-c1b8-4b02-a59e-cb9aa1f3314a",
+      "name": "Trockenshampoo Schaum Kopfhaut Sensitive",
+      "verdict": "uncertain",
+      "old_gtins": [
+        "4067796069556"
+      ],
+      "candidates": [
+        {
+          "gtin": "4066447989540",
+          "found": "true",
+          "dan": "2974661",
+          "title": "Trockenshampoo Schaum Kopfhaut Sensitive, 150 ml",
+          "brand": "Balea",
+          "inci": "Ingredients: AQUA, ALCOHOL DENAT., BUTANE, ORYZA SATIVA STARCH, PROPANE, COCO-GLUCOSIDE, COCAMIDOPROPYL BETAINE, PHENOXYETHANOL, XANTHAN GUM, PANTHENOL, CETRIMONIUM CHLORIDE."
+        }
+      ],
+      "commerce": {
+        "url": "https://www.dm.de/p/d/2974661/balea-trockenshampoo-schaum-kopfhaut-sensitive",
+        "price_eur": 1.45,
+        "package_value": 150,
+        "package_unit": "ml",
+        "availability": {
+          "purchasable": true,
+          "sellout": false
+        },
+        "checked_at": "2026-10-03T10:41:36.184Z"
+      },
+      "preferred_source": "dm",
+      "cross_ownership": "No candidate GTIN is owned by any of the 371 products in 2026-10-03 pre-apply readback.",
+      "reason": "dm historical search tied old 4067796069556 to the same named 150 ml foam; current 4066447989540 is exact current dm article DAN 2974661. No preserved old INCI exists for comparison.",
+      "action": "Hold candidate GTIN; do not add identifier or change formula/category."
+    },
+    {
+      "id": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "name": "Langhaarmädchen Lovely Long",
+      "verdict": "uncertain",
+      "old_gtins": [
+        "4067796002621"
+      ],
+      "candidates": [
+        {
+          "gtin": "4066447864694",
+          "found": "true",
+          "dan": "1559584",
+          "title": "Shampoo Lovely Long, 300 ml",
+          "brand": "LANGHAARMÄDCHEN",
+          "inci": "Ingredients: AQUA | SODIUM LAURETH SULFATE | COCAMIDOPROPYL BETAINE | SODIUM CHLORIDE | GLYCERIN | HYDROLYZED WHEAT PROTEIN | ARGANIA SPINOSA KERNEL OIL | GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE | BIS|(ISOSTEAROYL/OLEOYL ISOPROPYL) DIMONIUM METHOSULFATE | COCO|GLUCOSIDE | PRUNUS AMYGDALUS DULCIS FLOWER EXTRACT | PISUM SATIVUM SPROUT EXTRACT | CITRIC ACID | BENZOIC ACID | GLYCOL DISTEARATE | HYDROGENATED CASTOR OIL | LAURETH|2 | PARFUM | HEXYL CINNAMAL | SODIUM BENZOATE | PHENOXYETHANOL."
+        }
+      ],
+      "commerce": {
+        "url": "https://www.dm.de/p/d/1559584/langhaarmaedchen-shampoo-lovely-long",
+        "price_eur": 4.95,
+        "package_value": 300,
+        "package_unit": "ml",
+        "availability": {
+          "purchasable": true,
+          "sellout": false
+        },
+        "checked_at": "2026-10-03T10:41:39.312Z"
+      },
+      "preferred_source": "dm",
+      "cross_ownership": "No candidate GTIN is owned by any of the 371 products in 2026-10-03 pre-apply readback.",
+      "reason": "Old-GTIN dm URL redirected on 2026-10-02 to current article DAN 1559584; current 4066447864694 is Lovely Long 300 ml with INCI. This is retailer article lineage, not an old-versus-new INCI comparison.",
+      "action": "Hold candidate GTIN; do not add identifier or change formula/category."
+    },
+    {
+      "id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+      "name": "Langhaarmädchen Beautiful Curls Shampoo",
+      "verdict": "uncertain",
+      "old_gtins": [
+        "4067796150735"
+      ],
+      "candidates": [
+        {
+          "gtin": "4070765004649",
+          "found": "true",
+          "dan": "1678985",
+          "title": "Shampoo Beautiful Curls, 300 ml",
+          "brand": "LANGHAARMÄDCHEN",
+          "inci": "Ingredients: Aqua, Aloe Barbadensis Leaf Juice, Cocamidopropyl Betaine, Sodium Cocoyl Isethionate, Sodium Chloride, Arginine, Serine, Linum Usitatissimum Seed Extract, Parfum, Glycerin, Glyceryl Oleate, PCA, Glycine, Histidine, Coconut Acid, Glycol Distearate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Isethionate, Coco-Glucoside, Sodium PCA, Glyceryl Stearate, Aspartic Acid, Alanine, Valine, Isoleucine, Proline, Threonine, Phenylalanine, Phenoxyethanol, Ethylhexylglycerin, Benzoic Acid, Citric Acid, Sodium Lactate"
+        }
+      ],
+      "commerce": {
+        "url": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+        "price_eur": 4.95,
+        "package_value": 300,
+        "package_unit": "ml",
+        "availability": {
+          "purchasable": true,
+          "sellout": false
+        },
+        "checked_at": "2026-10-03T10:41:39.319Z"
+      },
+      "preferred_source": "dm",
+      "cross_ownership": "No candidate GTIN is owned by any of the 371 products in 2026-10-03 pre-apply readback.",
+      "reason": "Old-GTIN dm URL redirected on 2026-10-02 to current article DAN 1678985; current 4070765004649 is Beautiful Curls Shampoo 300 ml with INCI. Formula continuity is not proven.",
+      "action": "Hold candidate GTIN; do not add identifier or change formula/category."
+    },
+    {
+      "id": "3d94c017-9edb-4ba0-accd-4772e262f012",
+      "name": "Lavera Basis Sensitiv",
+      "verdict": "unavailable",
+      "old_gtins": [
+        "4021457666768"
+      ],
+      "candidates": [
+        {
+          "gtin": "4021457637416",
+          "found": "true",
+          "dan": "1606484",
+          "title": "Bodylotion Basis Sensitiv Express, 250 ml",
+          "brand": "lavera NATURKOSMETIK",
+          "inci": "Ingredients: Water (Aqua), Alcohol* denat., Glycerin, Glycine Soja (Soybean) Oil*, Myristyl Alcohol, Glyceryl Stearate Citrate, Cetearyl Alcohol, Simmondsia Chinensis (Jojoba) Seed Oil*, Aloe Barbadensis Leaf Juice*, Aloe Barbadensis Leaf Juice Powder*, Melissa Officinalis (Lemon Balm) Leaf Extract*, Calendula Officinalis (Calendula) Flower Extract*, Tridecane, Isoamyl Laurate, Coco- Caprylate, Xanthan Gum, Undecane, Glyceryl Undecylenate, Levulinic Acid, Sodium Levulinate, Lactic Acid, Lecithin, Tocopherol, Helianthus Annuus (Sunflower) Seed Oil, Ascorbyl Palmitate, Hydrogenated Palm Glycerides, Hydrogenated Lecithin, Citric Acid, Butyrospermum Parkii (Shea) Butter*, Brassica Campestris (Rapeseed) Sterols, Fragrance (Parfum)**, Limonene**, Linalool**, Citronellol**, Geraniol**, Citral**, Benzyl Salicylate**  * ingredients from certified organic agriculture ** from natural essential oils"
+        },
+        {
+          "gtin": "4021457649853",
+          "found": "true",
+          "dan": "1689859",
+          "title": "Gesichtscreme Basis Sensitiv beruhigend, 50 ml",
+          "brand": "lavera NATURKOSMETIK",
+          "inci": "Ingredients: Water (Aqua), Glycerin, Helianthus Annuus Hybrid Oil*, Pentylene Glycol, Isoamyl Laurate, Glyceryl Stearate Citrate, Cetearyl Alcohol, Dicaprylyl Ether, Myristyl Myristate, Aloe Barbadensis Leaf Juice*, Ectoin, Butyrospermum Parkii (Shea) Butter*, Aloe Barbadensis Leaf Juice Powder*, Hamamelis Virginiana (Witch Hazel) Leaf Extract*, Melissa Officinalis (Lemon Balm) Leaf Extract*, Prunus Amygdalus Dulcis (Sweet Almond) Oil*, Glycine Soja (Soybean) Oil*, Olea Europaea (Olive) Fruit Oil*, Helianthus Annuus (Sunflower) Seed Oil, Levulinic Acid, Xanthan Gum, Bisabolol*, Decyl Cocoate, Squalane, Sodium Levulinate, Dipotassium Glycyrrhizate, Lecithin, Tocopherol, Sodium Anisate, Sodium Hydroxide, Xylitylglucoside, Anhydroxylitol, Maltodextrin, Caprylhydroxamic Acid, Hydrogenated Lecithin, Xylitol, Biosaccharide Gum-1, Citric Acid  * ingredients from certified organic agriculture"
+        },
+        {
+          "gtin": "4021457649976",
+          "found": "true",
+          "dan": "1562937",
+          "title": "Gesichtscreme Basis Sensitiv trockene Haut, 50 ml",
+          "brand": "lavera NATURKOSMETIK",
+          "inci": "Ingredients: Water (Aqua), Alcohol* denat., Glycerin, Glycine Soja (Soybean) Oil*, Dicaprylyl Ether, Butyrospermum Parkii (Shea) Butter*, Glyceryl Stearate Citrate, Helianthus Annuus (Sunflower) Hybrid Oil*, Cetearyl Alcohol, Cetyl Alcohol, Squalane, Melissa Officinalis Leaf Extract*, Hamamelis Virginiana (Witch Hazel) Leaf Extract*, Simmondsia Chinensis (Jojoba) Seed Oil*, Helianthus Annuus (Sunflower) Seed Oil*, Aloe Barbadensis Leaf Juice*, Dehydroxanthan Gum, Glyceryl Undecylenate, Levulinic Acid, Hydrogenated Palm Glycerides, Sodium Levulinate, Tocopherol, Xylitylglucoside, Hydrogenated Lecithin, Anhydroxylitol, Brassica Campestris (Rapeseed) Sterols, Xylitol, Biosaccharide Gum-1, Glyceryl Caprylate, Sodium Anisate, Fragrance (Parfum)**, Limonene**, Linalool**, Citronellol**, Geraniol**, Citral**, Benzyl Salicylate**  * ingredients from certified organic agriculture  ** from natural essential oils"
+        },
+        {
+          "gtin": "4021457650033",
+          "found": "true",
+          "dan": "1562940",
+          "title": "Waschgel Basis Sensitiv, 125 ml",
+          "brand": "lavera NATURKOSMETIK",
+          "inci": "Ingredients: Water (Aqua), Coco-Glucoside, Glycerin, Alcohol* denat., Aloe Barbadensis Leaf Juice*, Xanthan Gum, Aloe Barbadensis Leaf Juice Powder*, Hamamelis Virginiana (Witch Hazel) Leaf Extract*, Melissa Officinalis (Lemon Balm) Leaf Extract*, Simmondsia Chinensis (Jojoba) Seed Extract, Glyceryl Oleate, Sodium Cocoyl Glutamate, Disodium Cocoyl Glutamate, Xylitylglucoside, Anhydroxylitol, Biosaccharide Gum-1, Xylitol, Glyceryl Caprylate, Tocopherol, Hydrogenated Palm Glycerides Citrate, Citric Acid, Lactic Acid, Levulinic Acid, Sodium Levulinate, Sodium Anisate, Fragrance (Parfum)**, Limonene**, Linalool**, Citronellol**, Geraniol**, Citral**  * ingredients from certified organic agriculture ** from natural essential oils"
+        },
+        {
+          "gtin": "4021457648412",
+          "found": "true",
+          "dan": "1635246",
+          "title": "Pflegedusche Basis Sensitiv 2in1, 250 ml",
+          "brand": "lavera NATURKOSMETIK",
+          "inci": "Ingredients: Water (Aqua), Sodium Coco-Sulfate, Glycerin, Coco-Glucoside, Lauryl Glucoside, Aloe Barbadensis Leaf Juice*, Citric Acid, Sea Salt (Maris Sal), Aloe Barbadensis Leaf Juice Powder*, Melissa Officinalis (Lemon Balm) Leaf Extract*, Hamamelis Virginiana (Witch Hazel) Leaf Extract*, Disodium Cocoyl Glutamate, Glyceryl Oleate, Sodium Cocoyl Glutamate, Sodium Anisate, Hydrolyzed Corn Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Lactobacillus Ferment, Tocopherol, Hydrogenated Palm Glycerides Citrate, Fragrance (Parfum)**, Limonene**, Citrus Aurantium Peel Oil**, Linalool**, Citrus Limon Peel Oil**, Pinene**, Linalyl Acetate**, Citronellol**, Citrus Aurantium Bergamia Peel Oil**, Geraniol**   * ingredients from certified organic agriculture  ** from natural essential oils"
+        },
+        {
+          "gtin": "4021457638307",
+          "found": "true",
+          "dan": "1296736",
+          "title": "Anti Falten Feuchtigkeitscreme Q10 Basis Sensitiv, 50 ml",
+          "brand": "lavera NATURKOSMETIK",
+          "inci": "Ingredients: Water (Aqua), Dicaprylyl Ether, Crambe Abyssinica (Abyssinian) Seed Oil, Helianthus Annuus Hybrid Oil*, Glycerin, Alcohol* denat., Glyceryl Stearate Citrate, Cetearyl Alcohol, Glyceryl Stearate, Olea Europaea (Olive) Oil Unsaponifiables, Oryza Sativa (Rice) Powder*, Mangifera Indica (Mango) Seed Butter, Simmondsia Chinensis (Jojoba) Seed Oil*, Melissa Officinalis (Lemon Balm) Leaf Extract*, Gossypium Hirsutum (Cotton) Extract*, Butyrospermum Parkii (Shea) Butter*, Olea Europaea (Olive) Fruit Oil*, Aloe Barbadensis Leaf Juice*, Aloe Barbadensis Leaf Juice Powder*, Glycine Soja (Soybean) Oil*, Helianthus Annuus (Sunflower) Seed Oil, Xanthan Gum, Glyceryl Undecylenate, Levulinic Acid, Sodium Levulinate, Hydrogenated Palm Glycerides, Sodium Hydroxide, Tocopherol, Ubiquinone, Lactic Acid, Hydrogenated Lecithin, Ascorbyl Palmitate, Brassica Campestris (Rapeseed) Sterols, Citric Acid,  Fragrance (Parfum)**, Limonene**, Linalool**, Citronellol**, Geraniol**, Citral**  * ingredients from certified organic agriculture ** from natural essential oils"
+        },
+        {
+          "gtin": "4021457650064",
+          "found": "true",
+          "dan": "1562939",
+          "title": "Reinigungsmilch Basis Sensitiv, 125 ml",
+          "brand": "lavera NATURKOSMETIK",
+          "inci": "Ingredients: Water (Aqua), Glycerin, Caprylic/Capric Triglyceride, Alcohol* denat., Cocos Nucifera (Coconut) Oil*, Octyldodecanol, Cetearyl Alcohol, Glyceryl Stearate Citrate, Myristyl Alcohol, Butyrospermum Parkii (Shea) Butter*, Aloe Barbadensis Leaf Juice*, Aloe Barbadensis Leaf Juice Powder*, Hamamelis Virginiana (Witch Hazel) Leaf Extract*, Melissa Officinalis (Lemon Balm) Leaf Extract*, Potassium Cetyl Phosphate, Xanthan Gum, Sodium Cocoyl Glutamate, Disodium Cocoyl Glutamate, Tocopherol, Helianthus Annuus (Sunflower) Seed Oil, Xylitylglucoside, Anhydroxylitol, Biosaccharide Gum-1, Xylitol, Ascorbyl Palmitate, Glyceryl Caprylate, Levulinic Acid, Sodium Levulinate, Lactic Acid, Sodium Anisate, Citric Acid, Fragrance (Parfum)**, Limonene**, Linalool**, Citronellol**, Geraniol**, Citral**, Benzyl Salicylate**  * ingredients from certified organic agriculture ** from natural essential oils"
+        },
+        {
+          "gtin": "4021457664139",
+          "found": "true",
+          "dan": "1689756",
+          "title": "Cremedusche Basis Sensitive Aloe Vera & Mandelöl, 250 ml",
+          "brand": "lavera NATURKOSMETIK",
+          "inci": "Ingredients: Water (Aqua), Sodium Coco-Sulfate, Glycerin, Lauryl Glucoside, Coco-Glucoside, Aloe Barbadensis Leaf Juice*, Citric Acid, Cetearyl Alcohol, Prunus Amygdalus Dulcis (Sweet Almond) Oil*, Aloe Barbadensis Leaf Juice Powder*, Hamamelis Virginiana (Witch Hazel) Leaf Extract*, Melissa Officinalis (Lemon Balm) Leaf Extract*, Tocopherol, Helianthus Annuus (Sunflower) Seed Oil, Sodium Cetearyl Sulfate, Disodium Cocoyl Glutamate, Sea Salt (Maris Sal), Tridecane, Glyceryl Oleate, Levulinic Acid, Caprylyl/Capryl Glucoside, Sodium Levulinate, Undecane, Sodium Cocoyl Glutamate, Sodium Anisate, Sodium Sulfate, Sodium Chloride, Hydrogenated Palm Glycerides Citrate, Fragrance (Parfum)**, Limonene**, Citrus Aurantium Peel Oil**, Geraniol**, Citrus Aurantium Bergamia (Bergamot) Peel Oil**, Linalool**, Linalyl Acetate**, Pinene**, Citronellol**, Citrus Limon (Lemon) Peel Oil**, Geranyl Acetate**, Citral**  * ingredients from certified organic agriculture  ** from natural essential oils"
+        },
+        {
+          "gtin": "4021457665501",
+          "found": "true",
+          "dan": "3103624",
+          "title": "Lippenbalsam Basis Sensitiv, 4,5 g",
+          "brand": "lavera NATURKOSMETIK",
+          "inci": "Ingredients: Ricinus Communis (Castor) Seed Oil*, Euphorbia Cerifera (Candelilla) Wax, Cera Alba*, Copernicia Cerifera (Carnauba) Wax*, Glycine Soja (Soybean) Oil*, Polyglyceryl-3 Polyricinoleate, Simmondsia Chinensis (Jojoba) Seed Oil*, Prunus Amygdalus Dulcis (Sweet Almond) Oil*, Hippophae Rhamnoides (Sea Buckthorn) Fruit Extract*, Calendula Officinalis (Calendula) Flower Extract*, Arnica Montana (Arnica) Flower Extract*, Rosmarinus Officinalis (Rosemary) Leaf Extract*, Helianthus Annuus (Sunflower) Seed Oil, Dipotassium Glycyrrhizate, Tocopherol, Fragrance (Parfum)**, Vanillin**, Benzyl Alcohol**\n\n* ingredients from certified organic agriculture / ingrédients issus de l'agriculture biologique certifiée\n** from natural essential oils / composants naturels des huiles essentielles"
+        },
+        {
+          "gtin": "4021457638338",
+          "found": "true",
+          "dan": "1443589",
+          "title": "Nachtcreme Anti Falten Q10 Basis Sensitiv, 50 ml",
+          "brand": "lavera NATURKOSMETIK",
+          "inci": "Ingredients: Water (Aqua), Alcohol* denat., Glycerin, Helianthus Annuus Hybrid Oil*, Glycine Soja (Soybean) Oil*, Caprylic/Capric Triglyceride, Cetearyl Alcohol, Decyl Cocoate, Olea Europaea (Olive) Fruit Oil*, Glyceryl Stearate Citrate, Simmondsia Chinensis (Jojoba) Seed Oil*, Glyceryl Stearate, Butyrospermum Parkii (Shea) Butter*, Olea Europaea (Olive) Oil Unsaponifiables, Ubiquinone, Melissa Officinalis (Lemon Balm) Leaf Extract*, Gossypium Hirsutum (Cotton) Extract*, Aloe Barbadensis Leaf Juice*, Aloe Barbadensis Leaf Juice Powder*, Glyceryl Undecylenate, Hydrogenated Palm Glycerides, Levulinic Acid, Xanthan Gum, Crambe Abyssinica (Abyssinian) Seed Oil, Sodium Levulinate, Hydrogenated Lecithin, Tocopherol, Lactic Acid, Brassica Campestris (Rapeseed) Sterols, Helianthus Annuus (Sunflower) Seed Oil, Ascorbyl Palmitate, Citric Acid, Fragrance (Parfum)**, Limonene**, Linalool**, Citronellol**, Geraniol**, Citral**, Benzyl Salicylate**, Citrus Aurantium Peel Oil**, Linalyl Acetate**, Pinene**, Citrus Limon (Lemon) Peel Oil**, Citrus Aurantium Bergamia (Bergamot) Peel Oil**, Juniperus Virginiana (Eastern Red Cedar) Oil**, Lavandula Oil/Extract**, Vanillin**, Terpineol**, Camphor**, Beta-Caryophyllene**, Geranyl Acetate**, Lemongrass Oil**  * ingredients from certified organic agriculture ** from natural essential oils"
+        },
+        {
+          "gtin": "4021457638369",
+          "found": "true",
+          "dan": "1445087",
+          "title": "Anti Falten Augencreme Q10  Basis Sensitiv, 15 ml",
+          "brand": "lavera NATURKOSMETIK",
+          "inci": "Ingredients: Water (Aqua), Alcohol* denat., Glycerin, Dicaprylyl Ether, Crambe Abyssinica (Abyssinian) Seed Oil, Decyl Cocoate, Glyceryl Stearate Citrate, Cetearyl Alcohol, Glyceryl Stearate, Helianthus Annuus Hybrid Oil*, Mangifera Indica (Mango) Seed Butter,  Simmondsia Chinensis (Jojoba) Seed Oil*, Olea Europaea (Olive) Oil Unsaponifiables, Malva Sylvestris (Mallow) Flower Extract*, Gossypium Hirsutum (Cotton) Extract*, Melissa Officinalis (Lemon Balm) Leaf Extract*, Glycine Soja (Soybean) Oil*, Olea Europaea (Olive) Fruit Oil*, Butyrospermum Parkii (Shea) Butter*, Aloe Barbadensis Leaf Juice*, Aloe Barbadensis Leaf Juice Powder*, Glyceryl Undecylenate, Levulinic Acid, Xanthan Gum, Sodium Levulinate, Dipalmitoyl Hydroxyproline, Sodium Hyaluronate, Hydrogenated Palm Glycerides, Tocopherol, Ubiquinone, Hydrogenated Lecithin, Helianthus Annuus (Sunflower) Seed Oil, Ascorbyl Palmitate, Sodium Hydroxide, Brassica Campestris (Rapeseed) Sterols, Lactic Acid, Citric Acid  * ingredients from certified organic agriculture"
+        },
+        {
+          "gtin": "4021457645022",
+          "found": "true",
+          "dan": "1621745",
+          "title": "Handcreme Basis, 75 ml",
+          "brand": "lavera NATURKOSMETIK",
+          "inci": "Ingredients: Water (Aqua), Glycine Soja (Soybean) Oil, Hydrogenated Palm Glycerides, Alcohol* denat., Butyrospermum Parkii (Shea) Butter*, Caprylic/Capric Triglyceride, Glycerin, Stearic Acid, Simmondsia Chinensis (Jojoba) Seed Oil*, Cellulose, Aloe Barbadensis Leaf Juice*, Prunus Amygdalus Dulcis (Sweet Almond) Oil*, Calendula Officinalis (Calendula) Flower Extract*, Chamomilla Recutita (Matricaria) Flower Extract*, Xanthan Gum, Glyceryl Undecylenate, Tocopheryl Acetate, Levulinic Acid, Sodium Levulinate, Hydrogenated Lecithin, Tocopherol, Helianthus Annuus (Sunflower) Seed Oil, Brassica Campestris (Rapeseed) Sterols, Ascorbyl Palmitate, Lactic Acid, Citric Acid, Fragrance (Parfum)**, Limonene**, Linalool**, Geraniol**, Citral**, Citronellol**, Farnesol**  * ingredients from certified organic agriculture  ** from natural essential oils"
+        },
+        {
+          "gtin": "4021457613700",
+          "found": "true",
+          "dan": "1450662",
+          "title": "Fußcreme Basis Sensitiv, 75 ml",
+          "brand": "lavera NATURKOSMETIK",
+          "inci": "Ingredients: Water (Aqua), Glycine Soja (Soybean) Oil*, Alcohol* denat., Glycerin, Myristyl Alcohol, Cera Alba*, Macadamia Integrifolia (Macadamia) Seed Oil*, Cellulose, Glyceryl Stearate Citrate, Cetearyl Alcohol, Myrtus Communis Leaf Water*, Lanolin, Hectorite, Squalane, Loess, Xanthan Gum, Levulinic Acid, Lanolin Alcohol, Sodium Levulinate, Hydrogenated Palm Glycerides, Calendula Officinalis (Calendula) Flower Extract*, Betula Alba Leaf Extract*, Tocopherol, Helianthus Annuus (Sunflower) Seed Oil, Eucalyptus Globulus (Eucalyptus) Leaf Oil, Butyrospermum Parkii (Shea) Butter*, Hydrogenated Lecithin, Brassica Campestris (Rapeseed) Sterols, Ascorbyl Palmitate, Lactic Acid, Fragrance (Parfum)**, Limonene**, Linalool**, Geraniol**, Citral**, Benzyl Salicylate**, Citronellol**, Farnesol**  * ingredients from certified organic agriculture  ** from natural essential oils"
+        },
+        {
+          "gtin": "4021457638758",
+          "found": "true",
+          "dan": "1585665",
+          "title": "Deo Roll-on Natural & Sensitive, 50 ml",
+          "brand": "lavera NATURKOSMETIK",
+          "inci": "Ingredients: Water (Aqua), Aloe Barbadensis Leaf Juice*, Triethyl Citrate, Zinc PCA, Glyceryl Caprylate, Glyceryl Stearate Citrate, Helianthus Annuus Hybrid Oil*, Simmondsia Chinensis (Jojoba) Seed Oil*, Glycine Soja (Soybean) Oil*, Verbena Officinalis Leaf Extract*, Hamamelis Virginiana (Witch Hazel) Leaf Extract*, Cetearyl Alcohol, Coco-Caprylate/Caprate, Glycerin, Levulinic Acid, Xanthan Gum, Sodium Caproyl/Lauroyl Lactylate, Polyglyceryl-2 Caprate, Sodium Levulinate, Decyl Cocoate, Sodium Anisate, Gellan Gum,  Calcium Lactate, Sea Salt (Maris Sal), Hydrogenated Lecithin, Tocopherol, Helianthus Annuus (Sunflower) Seed Oil, Fragrance (Parfum)**, Limonene**, Linalool**, Citronellol**, Geraniol**, Citral**, Benzyl Salicylate**, Farnesol**, Benzyl Benzoate**  * ingredients from certified organic agriculture ** from natural essential oils"
+        },
+        {
+          "gtin": "4067796274509",
+          "found": "true",
+          "dan": "1626107",
+          "title": "Sonnencreme sensitiv LSF 50, 75 ml",
+          "brand": "alverde NATURKOSMETIK",
+          "inci": "INGREDIENTS: Coco-Caprylate, Zinc Oxide (nano), Titanium Dioxide (nano), Aloe Barbadensis Leaf Juice*, Aqua, Polyglyceryl-3 Polyricinoleate, Glycerin, Polyhydroxystearic Acid, Cocos Nucifera Oil*, Caprylic/Capric/Myristic/Stearic Triglyceride, Silica, Helianthus Annuus Hybrid Oil*, Glyceryl Oleate, Stearic Acid, Alumina, Glyceryl Caprylate, Magnesium Sulfate, Zinc Stearate, Isostearic Acid, Caprylyl Glycol, Polyglyceryl-2 Oleate, Butyrospermum Parkii Butter*, Prunus Amygdalus Dulcis Oil*, Simmondsia Chinensis Seed Oil*, Tocopherol, Polyglyceryl-2 Stearate, Helianthus Annuus Seed Oil, Sodium Hydroxide, Citric Acid, Ascorbyl Palmitate, Lecithin, Hydrogenated Palm Glycerides Citrate, Isoamyl Laurate, Glycine Soja Oil*, Caprylic/Capric Triglyceride, Propanediol * ingredients from certified organic agriculture"
+        }
+      ],
+      "commerce": {
+        "url": null,
+        "price_eur": null,
+        "package_value": null,
+        "package_unit": null,
+        "availability": "not_verified",
+        "checked_at": "2026-10-02T14:54:36.623Z"
+      },
+      "preferred_source": "none",
+      "cross_ownership": "No candidate GTIN is owned by any of the 371 products in 2026-10-03 pre-apply readback.",
+      "reason": "The only old GTIN 4021457666768 still resolves to a Basis Sensitive Hydrate & Care shampoo; the 15 proposed candidate GTINs resolve to unrelated lavera/alverde products. No candidate exists.",
+      "action": "Hold commerce/identifier update; seek a fresh exact offer."
+    },
+    {
+      "id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+      "name": "Alverde Conditioner Glanz",
+      "verdict": "uncertain",
+      "old_gtins": [
+        "4066447592085"
+      ],
+      "candidates": [
+        {
+          "gtin": "4066447919202",
+          "found": "true",
+          "dan": "1714048",
+          "title": "Conditioner Glanz, 200 ml",
+          "brand": "alverde NATURKOSMETIK",
+          "inci": "Ingredients: Aqua, Cetearyl Alcohol, Helianthus Annuus Hybrid Oil1, Glycerin, Betaine, Arginine, Hydrolyzed Wheat Protein, Rosa Damascena Flower Water 1, Parfum, Pelargonium Graveolens Flower Oil, Brassica Alcohol, Sodium Levulinate, Cetearyl Glucoside, Alcohol, Levulinic Acid, Glyceryl Caprylate, p-Anisic Acid, Brassicyl Isoleucinate Esylate, Citric Acid, Sodium Hydroxide"
+        }
+      ],
+      "commerce": {
+        "url": null,
+        "price_eur": null,
+        "package_value": 200,
+        "package_unit": "ml",
+        "availability": "unavailable",
+        "checked_at": "2026-10-02T00:00:00.000Z"
+      },
+      "preferred_source": "none",
+      "cross_ownership": "No candidate GTIN is owned by any of the 371 products in 2026-10-03 pre-apply readback.",
+      "reason": "Current 4066447919202 is Conditioner Glanz 200 ml with INCI; old 4066447592085 is retired and no old formula or retailer redirect bridge is preserved.",
+      "action": "Hold candidate GTIN; do not add identifier or change formula/category."
+    },
+    {
+      "id": "007a0b35-2372-4836-9aa5-fd089cd588d4",
+      "name": "Balea Natural Beauty Hibiskus",
+      "verdict": "unavailable",
+      "old_gtins": [
+        "4066447238952"
+      ],
+      "candidates": [
+        {
+          "gtin": "4058172926181",
+          "found": "false",
+          "dan": "",
+          "title": "",
+          "brand": "",
+          "inci": ""
+        }
+      ],
+      "commerce": {
+        "url": null,
+        "price_eur": null,
+        "package_value": 350,
+        "package_unit": "ml",
+        "availability": "unavailable",
+        "checked_at": "2026-10-02T00:00:00.000Z"
+      },
+      "preferred_source": "none",
+      "cross_ownership": "No candidate GTIN is owned by any of the 371 products in 2026-10-03 pre-apply readback.",
+      "reason": "Both old 4066447238952 and proposed 4058172926181 return not found from dm direct GTIN details. No live candidate is established.",
+      "action": "Hold commerce/identifier update; seek a fresh exact offer."
+    },
+    {
+      "id": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+      "name": "Balea Professional Aqua Hyaluron Conditioner",
+      "verdict": "uncertain",
+      "old_gtins": [
+        "4066447342055"
+      ],
+      "candidates": [
+        {
+          "gtin": "4070765001662",
+          "found": "true",
+          "dan": "1675522",
+          "title": "Conditioner Aqua Hyaluron, 200 ml",
+          "brand": "Balea PROFESSIONAL",
+          "inci": "AQUA, CETEARYL ALCOHOL, STEARAMIDOPROPYL DIMETHYLAMINE, GLYCERIN, LACTIC ACID, SODIUM CETEARYL SULFATE, PARFUM, SODIUM BENZOATE, ALOE BARBADENSIS LEAF JUICE POWDER, POTASSIUM SORBATE, SODIUM HYALURONATE, DISODIUM PHOSPHATE, POTASSIUM PHOSPHATE."
+        }
+      ],
+      "commerce": {
+        "url": "https://www.dm.de/p/d/1675522/balea-professional-conditioner-aqua-hyaluron",
+        "price_eur": 1.25,
+        "package_value": 200,
+        "package_unit": "ml",
+        "availability": {
+          "purchasable": true,
+          "sellout": false
+        },
+        "checked_at": "2026-10-03T10:41:43.509Z"
+      },
+      "preferred_source": "dm",
+      "cross_ownership": "No candidate GTIN is owned by any of the 371 products in 2026-10-03 pre-apply readback.",
+      "reason": "Old-GTIN dm slug 4066447342055 redirected to current DAN 1675522; current 4070765001662 is Aqua Hyaluron 200 ml with INCI. This proves retailer article lineage only.",
+      "action": "Hold candidate GTIN; do not add identifier or change formula/category."
+    },
+    {
+      "id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+      "name": "Balea Professional Oil Repair Intensiv Spülung",
+      "verdict": "uncertain",
+      "old_gtins": [
+        "4066447365443"
+      ],
+      "candidates": [
+        {
+          "gtin": "4070765001402",
+          "found": "true",
+          "dan": "1703916",
+          "title": "Conditioner Oil Repair Intensiv, 200 ml",
+          "brand": "Balea PROFESSIONAL",
+          "inci": "Ingredients: Aqua, Glycerin, Cetearyl Alcohol, Isopropyl Palmitate, Behentrimonium Chloride, Panthenol, Hydrolyzed Keratin, Helianthus Annuus Hybrid Oil, Ricinus Communis Seed Oil, Argania Spinosa Kernel Oil, Orbignya Oleifera Seed Oil, Sclerocarya Birrea Seed Oil, Parfum, Isopropyl Alcohol, Sodium Benzoate, Potassium Sorbate, Tetramethyl Acetyloctahydronaphthalenes, Citric Acid"
+        }
+      ],
+      "commerce": {
+        "url": "https://www.dm.de/p/d/1703916/balea-professional-conditioner-oil-repair-intensiv",
+        "price_eur": 1.25,
+        "package_value": 200,
+        "package_unit": "ml",
+        "availability": {
+          "purchasable": true,
+          "sellout": false
+        },
+        "checked_at": "2026-10-03T10:41:43.513Z"
+      },
+      "preferred_source": "dm",
+      "cross_ownership": "No candidate GTIN is owned by any of the 371 products in 2026-10-03 pre-apply readback.",
+      "reason": "Current 4070765001402 is Oil Repair Intensiv 200 ml with INCI; retired old 4066447365443 has no retained formula/redirect bridge.",
+      "action": "Hold candidate GTIN; do not add identifier or change formula/category."
+    },
+    {
+      "id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+      "name": "Garnier Hair Food Macadamia",
+      "verdict": "different_formula",
+      "old_gtins": [],
+      "candidates": [],
+      "commerce": {
+        "url": null,
+        "price_eur": null,
+        "package_value": 400,
+        "package_unit": "ml",
+        "availability": "Douglas candidate live in stock, but exact registered identity unresolved.",
+        "checked_at": "2026-10-02T15:27:48.312Z"
+      },
+      "preferred_source": "none",
+      "cross_ownership": "No candidate GTIN is owned by any of the 371 products in 2026-10-03 pre-apply readback.",
+      "reason": "The Douglas 400 ml candidate publishes an INCI that conflicts with the dm identity; neither this category record nor its paired Macadamia record may absorb that offer.",
+      "action": "Hold candidate GTIN; do not add identifier or change formula/category."
+    },
+    {
+      "id": "4e9428b9-8cc9-4db2-89b1-cb272aa9a4d6",
+      "name": "Herbal Essences Aloe Vera Conditioner",
+      "verdict": "uncertain",
+      "old_gtins": [
+        "8700216211598"
+      ],
+      "candidates": [
+        {
+          "gtin": "8700216210546",
+          "found": "true",
+          "dan": "1409620",
+          "title": "Conditioner Feuchtigkeit Aloe Vera, 250 ml",
+          "brand": "Herbal Essences",
+          "inci": "Ingredients: Aqua, Stearyl Alcohol, Behentrimonium Chloride, Bis-Aminopropyl Dimethicone, Cetyl Alcohol, Parfum, Isopropyl Alcohol, Benzyl Alcohol, Sodium Benzoate, Disodium EDTA, Polysorbate 20, Citric Acid, Limonene, Histidine, Aloe Barbadensis Leaf Juice, Hydroxycitronellal, Geraniol, Alpha-Isomethyl Ionone, Linalool, Citronellol, Citral"
+        }
+      ],
+      "commerce": {
+        "url": null,
+        "price_eur": null,
+        "package_value": 250,
+        "package_unit": "ml",
+        "availability": "available",
+        "checked_at": "2026-10-02T00:00:00.000Z"
+      },
+      "preferred_source": "none",
+      "cross_ownership": "No candidate GTIN is owned by any of the 371 products in 2026-10-03 pre-apply readback.",
+      "reason": "Current 8700216210546 is Herbal Essences Aloe Vera 250 ml with INCI; old 8700216211598 is retired and lacks a comparison formula or official transition statement.",
+      "action": "Hold candidate GTIN; do not add identifier or change formula/category."
+    },
+    {
+      "id": "35d81c4a-dbb0-474b-a068-2e1562adb0a8",
+      "name": "Langhaarmädchen Beautiful Curls Conditioner",
+      "verdict": "unavailable",
+      "old_gtins": [
+        "4070765004663"
+      ],
+      "candidates": [
+        {
+          "gtin": "4067796150643",
+          "found": "false",
+          "dan": "",
+          "title": "",
+          "brand": "",
+          "inci": ""
+        }
+      ],
+      "commerce": {
+        "url": "https://www.dm.de/p/d/1678991/langhaarmaedchen-conditioner-beautiful-curls",
+        "price_eur": 4.95,
+        "package_value": 250,
+        "package_unit": "ml",
+        "availability": {
+          "purchasable": true,
+          "sellout": false
+        },
+        "checked_at": "2026-10-03T10:41:44.546Z"
+      },
+      "preferred_source": "dm",
+      "cross_ownership": "No candidate GTIN is owned by any of the 371 products in 2026-10-03 pre-apply readback.",
+      "reason": "The registered 4070765004663 is itself the current dm Beautiful Curls Conditioner 250 ml article/DAN 1678991. Proposed 4067796150643 is now not found; do not add it.",
+      "action": "Hold commerce/identifier update; seek a fresh exact offer."
+    },
+    {
+      "id": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+      "name": "Balea Professional Glow & Shine",
+      "verdict": "unavailable",
+      "old_gtins": [
+        "4067796166453"
+      ],
+      "candidates": [
+        {
+          "gtin": "4066447883039",
+          "found": "false",
+          "dan": "",
+          "title": "",
+          "brand": "",
+          "inci": ""
+        }
+      ],
+      "commerce": {
+        "url": "https://www.dm.de/p/d/3050111/balea-professional-haarkur-glow-und-shine",
+        "price_eur": 2.75,
+        "package_value": 200,
+        "package_unit": "ml",
+        "availability": true,
+        "checked_at": "2026-10-02T14:32:06.443Z"
+      },
+      "preferred_source": "dm",
+      "cross_ownership": "No candidate GTIN is owned by any of the 371 products in 2026-10-03 pre-apply readback.",
+      "reason": "Both old 4067796166453 and proposed 4066447883039 are not found in current dm direct details.",
+      "action": "Hold commerce/identifier update; seek a fresh exact offer."
+    },
+    {
+      "id": "e5cfad78-ea22-49a5-911a-cb1f3109fa1c",
+      "name": "Jean&Len Rosemary/Ginger Hair Mask Hydration Rosemary/Ginger",
+      "verdict": "uncertain",
+      "old_gtins": [],
+      "candidates": [
+        {
+          "gtin": "4262401735639",
+          "found": "false",
+          "dan": "",
+          "title": "",
+          "brand": "",
+          "inci": ""
+        }
+      ],
+      "commerce": {
+        "url": "https://www.jeanlen.de/en/haarmaske-feuchtigkeit-rosemary-ginger",
+        "price_eur": 7.99,
+        "package_value": 200,
+        "package_unit": "ml",
+        "availability": "https://schema.org/InStock",
+        "checked_at": "2026-10-03T10:38:57.825999+00:00"
+      },
+      "preferred_source": "brand-direct",
+      "cross_ownership": "No candidate GTIN is owned by any of the 371 products in 2026-10-03 pre-apply readback.",
+      "reason": "Brand PDP gives current 4262401735639 and 200 ml/€7.99, but catalog has no old GTIN and no retained older formula bridge.",
+      "action": "Hold candidate GTIN; do not add identifier or change formula/category."
+    },
+    {
+      "id": "efaff579-e411-41eb-972a-2734a8517356",
+      "name": "Hitzeschutzspray Schutzengel",
+      "verdict": "uncertain",
+      "old_gtins": [
+        "4015100800128"
+      ],
+      "candidates": [
+        {
+          "gtin": "4015100894141",
+          "found": "true",
+          "dan": "1267310",
+          "title": "Hitzeschutzspray Schutzengel, 200 ml",
+          "brand": "got2b",
+          "inci": "Ingredients: Aqua (Water, Eau), VP/VA Copolymer, Laurdimonium Hydroxypropyl Hydrolyzed Wheat Protein, Sodium Benzoate, PEG-40 Hydrogenated Castor Oil, Cetrimonium Chloride, Parfum (Fragrance), Lactic Acid, Hexyl Cinnamal, Soy Amino Acids, Wheat Amino Acids, Phenoxyethanol, Linalool, Potassium Sorbate, Serine, Threonine, Arginine HCl, Linalyl Acetate, Benzyl Salicylate, Benzyl Alcohol, Acetyl Cedrene, Limonene, Citrus Aurantium Peel Oil"
+        }
+      ],
+      "commerce": {
+        "url": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+        "price_eur": 4.95,
+        "package_value": 200,
+        "package_unit": "ml",
+        "availability": "available",
+        "checked_at": "2026-10-03T10:52:29.424Z"
+      },
+      "preferred_source": "dm",
+      "cross_ownership": "No candidate GTIN is owned by any of the 371 products in 2026-10-03 pre-apply readback.",
+      "reason": "Current 4015100894141 is Schutzengel 200 ml on the same dm DAN 1267310; old 4015100800128 is retired. Same retail article/name/package is insufficient to establish formula continuity.",
+      "action": "Hold candidate GTIN; do not add identifier or change formula/category."
+    },
+    {
+      "id": "a72d630d-547a-465f-9846-3006b38af0a2",
+      "name": "Garnier Hair Food Macadamia",
+      "verdict": "different_formula",
+      "old_gtins": [
+        "3600542511612"
+      ],
+      "candidates": [],
+      "commerce": {
+        "url": null,
+        "price_eur": null,
+        "package_value": 400,
+        "package_unit": "ml",
+        "availability": "Douglas candidate live in stock, but exact registered identity unresolved.",
+        "checked_at": "2026-10-02T15:27:48.312Z"
+      },
+      "preferred_source": "none",
+      "cross_ownership": "No candidate GTIN is owned by any of the 371 products in 2026-10-03 pre-apply readback.",
+      "reason": "Paired Macadamia record: dm identity and Douglas candidate have conflicting INCI. Hold; no GTIN is to be added.",
+      "action": "Hold candidate GTIN; do not add identifier or change formula/category."
+    },
+    {
+      "id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+      "name": "Hitzeschutzspray 2-Phasen",
+      "verdict": "uncertain",
+      "old_gtins": [
+        "4070765073546"
+      ],
+      "candidates": [
+        {
+          "gtin": "4070765016758",
+          "found": "true",
+          "dan": "1460813",
+          "title": "Hitzeschutzspray, 200 ml",
+          "brand": "Balea",
+          "inci": "AQUA, ISODODECANE, ALCOHOL DENAT., POLYQUATERNIUM-68, PANTHENOL, UNDECANE, CITRIC ACID, GLYCERYL CAPRATE, TRIDECANE, ETHYLHEXYLGLYCERIN, CETRIMONIUM CHLORIDE, PARFUM, HYDROLYZED RICE PROTEIN, AMMONIA, PHENOXYETHANOL, LIMONENE, LINALOOL, SODIUM BENZOATE, GERANIOL, CITRAL, TOCOPHEROL, HELIANTHUS ANNUUS SEED OIL."
+        }
+      ],
+      "commerce": {
+        "url": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray",
+        "price_eur": 1.95,
+        "package_value": 200,
+        "package_unit": "ml",
+        "availability": {
+          "purchasable": true,
+          "sellout": false
+        },
+        "checked_at": "2026-10-03T10:41:56.618Z"
+      },
+      "preferred_source": "dm",
+      "cross_ownership": "No candidate GTIN is owned by any of the 371 products in 2026-10-03 pre-apply readback.",
+      "reason": "Current 4070765016758 is Balea Hitzeschutzspray 200 ml with INCI; old 4070765073546 is retired and no formula/official transition bridge was found.",
+      "action": "Hold candidate GTIN; do not add identifier or change formula/category."
+    },
+    {
+      "id": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12",
+      "name": "Olaplex No.7 Bonding Oil",
+      "verdict": "uncertain",
+      "old_gtins": [
+        "0850045076085"
+      ],
+      "candidates": [
+        {
+          "gtin": "850018802895",
+          "found": "false",
+          "dan": "",
+          "title": "",
+          "brand": "",
+          "inci": ""
+        }
+      ],
+      "commerce": {
+        "url": "https://olaplex.de/products/olaplex-no-7-bonding-oil?variant=45098439213322",
+        "price_eur": 32,
+        "package_value": 30,
+        "package_unit": "ml",
+        "availability": "http://schema.org/InStock",
+        "checked_at": "2026-10-03T10:39:10.731003+00:00"
+      },
+      "preferred_source": "none",
+      "cross_ownership": "No candidate GTIN is owned by any of the 371 products in 2026-10-03 pre-apply readback.",
+      "reason": "Official Olaplex 30 ml page publishes 850018802895 while registered 0850045076085 is corroborated as 30 ml by Flaconi. No primary source compares the two formulas or states they are aliases.",
+      "action": "Hold candidate GTIN; do not add identifier or change formula/category."
+    }
+  ]
+}

@@ -1,0 +1,423 @@
+{
+  "status": "STATIC_PREPARATION_ONLY_PASS",
+  "pinsSHA256": "3be17f0d28861a6791fb575d3550eed571275aaae9b7c5f7c295002bfe87cecd",
+  "checks": [
+    {
+      "name": "edit-check",
+      "exitCode": 0,
+      "log": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/edit-check.txt",
+      "sha256": "61034d07a0e88b5e74df6d90047a14768aad41f50b1f490e1afb8bbdff16d672",
+      "result": {
+        "mode": "check",
+        "phase": "before",
+        "counts": {
+          "before": 66,
+          "transfer": 66,
+          "cut": 63
+        },
+        "unrelatedCallbacks": 60,
+        "unchangedRetainedCallbacks": 60,
+        "parsedPhaseFiles": 36,
+        "sourceControlsParsed": 20,
+        "readsetGuards": 333,
+        "dependencyFiles": 5037,
+        "repositoryWrites": 0,
+        "childrenStarted": 0
+      },
+      "preload": [
+        {
+          "staticReadOnlyEnforced": true,
+          "attemptedWrites": 0,
+          "attemptedChildren": 0
+        },
+        {
+          "attemptedOwnerImports": 0,
+          "attemptedNetworkCalls": 0
+        }
+      ]
+    },
+    {
+      "name": "controls-check",
+      "exitCode": 0,
+      "log": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/controls-check.txt",
+      "sha256": "473db837239eadc50e5e17da55aab2dccf06a5922831d439a3615705b389849d",
+      "result": {
+        "mode": "check",
+        "phase": "before",
+        "controls": 20,
+        "tsMutantsParsed": 20,
+        "sqlByteRecipes": 0,
+        "allControlsPrepared": true,
+        "phaseOracles": "exact assertion startLine and text in transfer/cut",
+        "selectedTestCount": 1,
+        "repositoryWrites": 0,
+        "runtimeRuns": 0,
+        "childrenStarted": 0
+      },
+      "preload": [
+        {
+          "staticReadOnlyEnforced": true,
+          "attemptedWrites": 0,
+          "attemptedChildren": 0
+        },
+        {
+          "attemptedOwnerImports": 0,
+          "attemptedNetworkCalls": 0
+        }
+      ]
+    },
+    {
+      "name": "proof-attestation",
+      "exitCode": 0,
+      "log": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/proof-attestation.txt",
+      "sha256": "a3f94ef06d250cbe5d5c5bdf598a0f020120b22668bcd82664d9bc5d39041307",
+      "result": {
+        "status": "PASS_STATIC_SYNTHETIC_PARSER_ONLY",
+        "controls": 20,
+        "phases": 2,
+        "assertions": 1200,
+        "children": 0,
+        "ownerImports": 0,
+        "repositoryWrites": 0,
+        "runtimeClaims": 0,
+        "limits": "Synthetic literal diagnostic shapes, including full/explicitly truncated prefix and omitted undefined. Not actual SSR bytes or native fault evidence."
+      },
+      "preload": [
+        {
+          "staticReadOnlyEnforced": true,
+          "attemptedWrites": 0,
+          "attemptedChildren": 0
+        },
+        {
+          "attemptedOwnerImports": 0,
+          "attemptedNetworkCalls": 0
+        }
+      ]
+    },
+    {
+      "name": "static-integrity",
+      "exitCode": 0,
+      "log": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/static-integrity.txt",
+      "sha256": "91541250a58d8a8875de79e076256fbf63a594e9f1d8075d1588909a35e805ee",
+      "result": {
+        "status": "PASS_STATIC",
+        "pinsSHA": "3be17f0d28861a6791fb575d3550eed571275aaae9b7c5f7c295002bfe87cecd",
+        "parsedToolFiles": [
+          "operator-edit.cjs",
+          "operator-guard.cjs",
+          "operator-native-proof.cjs",
+          "operator-proof.cjs",
+          "operator-readonly-preload.cjs",
+          "operator-run-controls.cjs",
+          "prepare-pins.cjs",
+          "proof-attestation.cjs",
+          "static-integrity.cjs"
+        ],
+        "original97GuardsUnchanged": true,
+        "templateIdentityRuntimeDependenciesUnchanged": true,
+        "catalogTypedDecoderByteIdentical": true,
+        "careCleanCounterErrorDecoderByteIdentical": true,
+        "sourceControls": 20,
+        "uniqueMutants": 14,
+        "controlOnlyAmendments": 9,
+        "repositoryWrites": 0,
+        "children": 0,
+        "ownerImports": 0,
+        "nativeRuns": 0,
+        "limits": "Static byte/AST invariants and synthetic diagnostic policy; no acceptance or native fault claim."
+      },
+      "preload": [
+        {
+          "staticReadOnlyEnforced": true,
+          "attemptedWrites": 0,
+          "attemptedChildren": 0
+        },
+        {
+          "attemptedOwnerImports": 0,
+          "attemptedNetworkCalls": 0
+        }
+      ]
+    }
+  ],
+  "originalProposalManifestSHA256": "152177b98efeb7dd05c261323a8eaec59f1bf6cabb690a122c1e645414552b9a",
+  "originalProposalHandoffSHA256": "c4a22b53082fc6edf7c06d7781f788af9dce0d0767ce1c365bdcdeb60450cf85",
+  "sourceTestRepositoryWrites": 0,
+  "nativeRuns": 0,
+  "childProcessesFromCheckedCode": 0,
+  "ownerImports": 0,
+  "networkOperations": 0,
+  "originalGuards": 97,
+  "readsetPins": 333,
+  "localClosurePins": 303,
+  "runtimeDependencyPins": 5037,
+  "preservedTemplateRuntimePins": 5020,
+  "runtimeDistributionMembershipGuards": 32,
+  "ASTCounts": {
+    "before": 66,
+    "transfer": 66,
+    "cut": 63
+  },
+  "nativeExpectedCounts": {
+    "before": 79,
+    "transfer": 79,
+    "cut": 74
+  },
+  "unrelatedCallbacks": 60,
+  "heldFUnchanged": 9,
+  "wholeUnchangedTestFiles": 9,
+  "controls": 20,
+  "uniqueMutants": 14,
+  "controlOnlyC3Amendments": 9,
+  "intendedFrames": [
+    {
+      "id": "C1-01",
+      "test": {
+        "file": "tests/gated-preview-component.test.tsx",
+        "name": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+        "registrationName": "renders the frame, the Beispiel band, the benefit line and exactly one CTA"
+      },
+      "operator": "match",
+      "diagnostic": "regex-scalar",
+      "transfer": 141,
+      "cut": 141
+    },
+    {
+      "id": "C1-02",
+      "test": {
+        "file": "tests/gated-preview-component.test.tsx",
+        "name": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+        "registrationName": "renders the frame, the Beispiel band, the benefit line and exactly one CTA"
+      },
+      "operator": "match",
+      "diagnostic": "regex-scalar",
+      "transfer": 143,
+      "cut": 143
+    },
+    {
+      "id": "C1-03",
+      "test": {
+        "file": "tests/gated-preview-component.test.tsx",
+        "name": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+        "registrationName": "renders the frame, the Beispiel band, the benefit line and exactly one CTA"
+      },
+      "operator": "strictEqual",
+      "diagnostic": "scalar",
+      "transfer": 146,
+      "cut": 146
+    },
+    {
+      "id": "C1-04",
+      "test": {
+        "file": "tests/gated-preview-component.test.tsx",
+        "name": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+        "registrationName": "renders the frame, the Beispiel band, the benefit line and exactly one CTA"
+      },
+      "operator": "strictEqual",
+      "diagnostic": "omitted-undefined",
+      "transfer": 150,
+      "cut": 150
+    },
+    {
+      "id": "C1-05",
+      "test": {
+        "file": "tests/gated-preview-component.test.tsx",
+        "name": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+        "registrationName": "renders the frame, the Beispiel band, the benefit line and exactly one CTA"
+      },
+      "operator": "strictEqual",
+      "diagnostic": "scalar",
+      "transfer": 151,
+      "cut": 151
+    },
+    {
+      "id": "C1-06",
+      "test": {
+        "file": "tests/gated-preview-component.test.tsx",
+        "name": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+        "registrationName": "renders the frame, the Beispiel band, the benefit line and exactly one CTA"
+      },
+      "operator": "==",
+      "diagnostic": "scalar",
+      "transfer": 152,
+      "cut": 152
+    },
+    {
+      "id": "C1-07",
+      "test": {
+        "file": "tests/gated-preview-component.test.tsx",
+        "name": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+        "registrationName": "renders the frame, the Beispiel band, the benefit line and exactly one CTA"
+      },
+      "operator": "strictEqual",
+      "diagnostic": "scalar",
+      "transfer": 153,
+      "cut": 153
+    },
+    {
+      "id": "C1-08",
+      "test": {
+        "file": "tests/gated-preview-component.test.tsx",
+        "name": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+        "registrationName": "renders the frame, the Beispiel band, the benefit line and exactly one CTA"
+      },
+      "operator": "strictEqual",
+      "diagnostic": "scalar",
+      "transfer": 156,
+      "cut": 156
+    },
+    {
+      "id": "C1-09",
+      "test": {
+        "file": "tests/gated-preview-component.test.tsx",
+        "name": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+        "registrationName": "renders the frame, the Beispiel band, the benefit line and exactly one CTA"
+      },
+      "operator": "strictEqual",
+      "diagnostic": "scalar",
+      "transfer": 159,
+      "cut": 159
+    },
+    {
+      "id": "C2-01",
+      "test": {
+        "file": "tests/gated-example-pages.test.tsx",
+        "name": "the Chat example is a short, capability-true transcript through the real bubbles",
+        "registrationName": "the Chat example is a short, capability-true transcript through the real bubbles"
+      },
+      "operator": "strictEqual",
+      "diagnostic": "scalar",
+      "transfer": 294,
+      "cut": 294
+    },
+    {
+      "id": "C2-02",
+      "test": {
+        "file": "tests/gated-example-pages.test.tsx",
+        "name": "the Chat example is a short, capability-true transcript through the real bubbles",
+        "registrationName": "the Chat example is a short, capability-true transcript through the real bubbles"
+      },
+      "operator": "doesNotMatch",
+      "diagnostic": "regex-prefix",
+      "transfer": 296,
+      "cut": 296
+    },
+    {
+      "id": "C3-01",
+      "test": {
+        "file": "tests/gated-pages-zero-mutation.test.tsx",
+        "name": "gated routine renders without touching the network",
+        "registrationName": "`gated ${name} renders without touching the network`"
+      },
+      "operator": "doesNotMatch",
+      "diagnostic": "regex-prefix",
+      "transfer": 137,
+      "cut": 137
+    },
+    {
+      "id": "C3-02",
+      "test": {
+        "file": "tests/gated-pages-zero-mutation.test.tsx",
+        "name": "gated routine renders without touching the network",
+        "registrationName": "`gated ${name} renders without touching the network`"
+      },
+      "operator": "doesNotMatch",
+      "diagnostic": "regex-prefix",
+      "transfer": 138,
+      "cut": 138
+    },
+    {
+      "id": "C3-03",
+      "test": {
+        "file": "tests/gated-pages-zero-mutation.test.tsx",
+        "name": "gated routine renders without touching the network",
+        "registrationName": "`gated ${name} renders without touching the network`"
+      },
+      "operator": "doesNotMatch",
+      "diagnostic": "regex-prefix",
+      "transfer": 139,
+      "cut": 139
+    },
+    {
+      "id": "C3-04",
+      "test": {
+        "file": "tests/gated-pages-zero-mutation.test.tsx",
+        "name": "gated anwendung renders without touching the network",
+        "registrationName": "`gated ${name} renders without touching the network`"
+      },
+      "operator": "doesNotMatch",
+      "diagnostic": "regex-prefix",
+      "transfer": 137,
+      "cut": 137
+    },
+    {
+      "id": "C3-05",
+      "test": {
+        "file": "tests/gated-pages-zero-mutation.test.tsx",
+        "name": "gated anwendung renders without touching the network",
+        "registrationName": "`gated ${name} renders without touching the network`"
+      },
+      "operator": "doesNotMatch",
+      "diagnostic": "regex-prefix",
+      "transfer": 138,
+      "cut": 138
+    },
+    {
+      "id": "C3-06",
+      "test": {
+        "file": "tests/gated-pages-zero-mutation.test.tsx",
+        "name": "gated anwendung renders without touching the network",
+        "registrationName": "`gated ${name} renders without touching the network`"
+      },
+      "operator": "doesNotMatch",
+      "diagnostic": "regex-prefix",
+      "transfer": 139,
+      "cut": 139
+    },
+    {
+      "id": "C3-07",
+      "test": {
+        "file": "tests/gated-pages-zero-mutation.test.tsx",
+        "name": "gated chat renders without touching the network",
+        "registrationName": "`gated ${name} renders without touching the network`"
+      },
+      "operator": "doesNotMatch",
+      "diagnostic": "regex-prefix",
+      "transfer": 137,
+      "cut": 137
+    },
+    {
+      "id": "C3-08",
+      "test": {
+        "file": "tests/gated-pages-zero-mutation.test.tsx",
+        "name": "gated chat renders without touching the network",
+        "registrationName": "`gated ${name} renders without touching the network`"
+      },
+      "operator": "doesNotMatch",
+      "diagnostic": "regex-prefix",
+      "transfer": 138,
+      "cut": 138
+    },
+    {
+      "id": "C3-09",
+      "test": {
+        "file": "tests/gated-pages-zero-mutation.test.tsx",
+        "name": "gated chat renders without touching the network",
+        "registrationName": "`gated ${name} renders without touching the network`"
+      },
+      "operator": "doesNotMatch",
+      "diagnostic": "regex-prefix",
+      "transfer": 139,
+      "cut": 139
+    }
+  ],
+  "presealCorrection": "Static decoder equality extraction initially included the adjacent wrapper comment; corrected to compare exact function source. Initial reporter search hit unrelated memo undefined check; corrected to jsToYaml range129-132. No repository or runtime change. Final four checks above all closed0.",
+  "templateDeltaNote": "Pinned final-template-delta.patch records the preseal entrypoint PIN literal. Final entrypoints differ only by replacement with the final pins SHA; normalized entrypoint hashes were revalidated.",
+  "limits": [
+    "No actual owner sensitivity, SSR actual bytes or native output asserted.",
+    "SSR diagnostic policy accepts exact regex header plus typed printed string/prefix containing prohibited regex/token; unseen tail is not observed.",
+    "C1-04 omitted-undefined exception only exact frozen assertion/keeper; rest requires typed expected.",
+    "Import closure and byte hashes are mechanical guards, not added semantic review.",
+    "No browser/DB/provider or arbitrary dynamic closure proof.",
+    "Root review and actual20 transfer plus20 cut controls remain required."
+  ]
+}

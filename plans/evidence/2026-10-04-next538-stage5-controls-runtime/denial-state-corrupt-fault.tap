@@ -1,0 +1,37 @@
+TAP version 13
+# Subtest: journey denial happens before any Routine, profile, catalog, or content read
+not ok 1 - journey denial happens before any Routine, profile, catalog, or content read
+  ---
+  duration_ms: 2.816625
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-stage5-route.test.tsx:2:8067'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+    +   state: 'no_active_routine'
+    -   state: 'feature_disabled'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    state: 'feature_disabled'
+  actual:
+    state: 'no_active_routine'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-stage5-route.test.tsx:244:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 846.853709

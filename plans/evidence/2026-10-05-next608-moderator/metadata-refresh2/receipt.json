@@ -1,0 +1,28 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "oldConfigSha": "0c8e95adf438f1a7ff98d364731136030b301dc9b96d949904ed64520b12fcb0",
+  "newConfigSha": "fa8f253ad47c8a699de1f682fe6c4198b11441933be1bd66cfd998863bbf0986",
+  "disposition": "Main adopts only shared config metadata drift. Other five identity pins, task branch tracking, all fixed readsets, installed dependencies and immutable proposal artifacts independently verified unchanged. Previous config bytes/provenance unavailable. No source/test/dependency/ref writes. Preserve original tool pins/entrypoints, replace only identity config pin and entrypoint pin digest, append this disposition to artifact guard.",
+  "tools": [
+    {
+      "directory": "/tmp/test-audit-moderator183-tools-p18tq7i2",
+      "priorPinsSha256": "40b28a91dfe702eb9b16efdd9fef248075a84be66444db1312ae701928b07d61",
+      "currentPinsSha256": "d91f665b1db983e127884d01bb171b510cddb4fc7ec58606ae86396b24740432",
+      "backups": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-main-metadata-refresh2-cy95wbmi/test-audit-moderator183-tools-p18tq7i2"
+    },
+    {
+      "directory": "/tmp/test-audit-discovery163-tools-70q2q9t7",
+      "priorPinsSha256": "7886fcb73b5fc3b0396595668c23a84c75f37cf9586c3692862662e09d2e652f",
+      "currentPinsSha256": "014b77aea202bc5fbf01029c9462c3fe809a14fd926755479da3b5dffef8e325",
+      "backups": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-main-metadata-refresh2-cy95wbmi/test-audit-discovery163-tools-70q2q9t7"
+    },
+    {
+      "directory": "/tmp/test-audit-email94-tools-c435q0q0",
+      "priorPinsSha256": "d78a79b4a1411f0b004711bf14e2a7793a190b85221467d1489bf36ad1f41e90",
+      "currentPinsSha256": "6216824dfb0ecfd4c3d46757e762b80dc8cc1ab6d92d9f442ca734829b4c2220",
+      "backups": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-main-metadata-refresh2-cy95wbmi/test-audit-email94-tools-c435q0q0"
+    }
+  ]
+}

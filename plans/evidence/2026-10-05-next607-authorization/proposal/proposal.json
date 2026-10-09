@@ -1,0 +1,311 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "node": "v22.12.0",
+  "proposalOnly": true,
+  "sourceRetirementRequired": true,
+  "counts": {
+    "pricingBefore": 14,
+    "pricingAfter": 12,
+    "conditionalD": 2,
+    "credit": 0
+  },
+  "phases": {
+    "before": [
+      {
+        "file": "src/lib/funnel/server.ts",
+        "path": "/tmp/test-audit-offer-experiments87-authorization-closure/phases/before/src/lib/funnel/server.ts",
+        "sha256": "d664770e0103972242ab81c3a3573243695f901e68ecfe4461e61d0410360df6"
+      },
+      {
+        "file": "src/app/api/stripe/create-checkout-session/route.ts",
+        "path": "/tmp/test-audit-offer-experiments87-authorization-closure/phases/before/src/app/api/stripe/create-checkout-session/route.ts",
+        "sha256": "0808a083b02a9611deab703bf9fc7a9b3cecb5dce2b5be1889003a0cd06a9bd8"
+      },
+      {
+        "file": "tests/personal-plan-pricing-experiment.test.ts",
+        "path": "/tmp/test-audit-offer-experiments87-authorization-closure/phases/before/tests/personal-plan-pricing-experiment.test.ts",
+        "sha256": "1f3abe43446c8ec3d487bbbec3692b49454dba7ba1310d8bdaa85e8faa252f31"
+      }
+    ],
+    "cut": [
+      {
+        "file": "src/lib/funnel/server.ts",
+        "path": "/tmp/test-audit-offer-experiments87-authorization-closure/phases/cut/src/lib/funnel/server.ts",
+        "sha256": "aec7ac4e2ec1c193f1d5e8145e76e58084c0c779c04aaef16f3223e232bcd3ba"
+      },
+      {
+        "file": "src/app/api/stripe/create-checkout-session/route.ts",
+        "path": "/tmp/test-audit-offer-experiments87-authorization-closure/phases/cut/src/app/api/stripe/create-checkout-session/route.ts",
+        "sha256": "2b4d0e46ea8558bcd54b04124bf57ccf9b6d6b2eb6afe6aacb140c63c8400946"
+      },
+      {
+        "file": "tests/personal-plan-pricing-experiment.test.ts",
+        "path": "/tmp/test-audit-offer-experiments87-authorization-closure/phases/cut/tests/personal-plan-pricing-experiment.test.ts",
+        "sha256": "bb971461b6198bbff84b75885d43c8dd492322521f74d72ad02c7065a8d0ae7f"
+      }
+    ]
+  },
+  "removed": [
+    {
+      "file": "src/lib/funnel/server.ts",
+      "start": 16090,
+      "end": 16332,
+      "name": "PersonalPlanOneTimeCheckoutAuthorization",
+      "line": 460,
+      "body": "export type PersonalPlanOneTimeCheckoutAuthorization = {\n  sessionId: string\n  leadId: string\n  visitorId: string\n  packageKey: \"meta_personal_plan_v1\"\n  offerVariant: \"personal-plan-one-time-v1\"\n  issuedAt: number\n  isInternalTest: boolean\n}",
+      "sha256": "93590751e82ecd2f066b4a787d553cd394c8db2e5eab55fa6b63b29cb4bed869"
+    },
+    {
+      "file": "src/lib/funnel/server.ts",
+      "start": 16334,
+      "end": 16784,
+      "name": "PersonalPlanOneTimeCheckoutAuthorizationError",
+      "line": 470,
+      "body": "export class PersonalPlanOneTimeCheckoutAuthorizationError extends Error {\n  constructor(\n    readonly reason: \"lookup_failed\" | \"not_authorized\",\n    options?: ErrorOptions,\n  ) {\n    super(\n      reason === \"lookup_failed\"\n        ? \"Personal-plan one-time checkout authorization lookup failed\"\n        : \"Personal-plan one-time checkout is not authorized\",\n      options,\n    )\n    this.name = \"PersonalPlanOneTimeCheckoutAuthorizationError\"\n  }\n}",
+      "sha256": "4adb2254dd130892ac01b3fcbe7e908048932feebf7878c62f71b8f8d4507510"
+    },
+    {
+      "file": "src/lib/funnel/server.ts",
+      "start": 16786,
+      "end": 17028,
+      "name": "PersonalPlanOneTimeCheckoutSession",
+      "line": 485,
+      "body": "type PersonalPlanOneTimeCheckoutSession = {\n  id: string\n  lead_id: string | null\n  visitor_id: string\n  package_key: string\n  offer_variant: string | null\n  offer_viewed_at: string | null\n  first_seen_at: string\n  is_internal_test: boolean\n}",
+      "sha256": "402110096637ef380e06e5eddd15bf0105de5879f3819f7ccdc3ed2e7464f921"
+    },
+    {
+      "file": "src/lib/funnel/server.ts",
+      "start": 17030,
+      "end": 18843,
+      "name": "assertPersonalPlanOneTimeCheckoutAuthorized",
+      "line": 496,
+      "body": "export async function assertPersonalPlanOneTimeCheckoutAuthorized(input: {\n  leadId: string\n  funnelSessionId?: string | null\n  fetchSession?: () => PromiseLike<{\n    data: PersonalPlanOneTimeCheckoutSession | null\n    error: unknown\n  }>\n}): Promise<PersonalPlanOneTimeCheckoutAuthorization> {\n  const fetchSession =\n    input.fetchSession ??\n    (() => {\n      let query = createAdminClient()\n        .from(\"funnel_sessions\")\n        .select(\n          \"id, lead_id, visitor_id, package_key, offer_variant, offer_viewed_at, first_seen_at, is_internal_test\",\n        )\n        .eq(\"lead_id\", input.leadId)\n        .eq(\"package_key\", PERSONAL_PLAN_PRICING_EXPERIMENT.packageKey)\n        .eq(\"offer_variant\", \"personal-plan-one-time-v1\")\n        .order(\"first_seen_at\", { ascending: false })\n        .limit(1)\n      if (input.funnelSessionId) query = query.eq(\"id\", input.funnelSessionId)\n      return query.maybeSingle()\n    })\n  const { data, error } = await fetchSession()\n  if (error) {\n    throw new PersonalPlanOneTimeCheckoutAuthorizationError(\"lookup_failed\", { cause: error })\n  }\n  if (\n    !data ||\n    data.id !== (input.funnelSessionId ?? data.id) ||\n    data.lead_id !== input.leadId ||\n    data.package_key !== PERSONAL_PLAN_PRICING_EXPERIMENT.packageKey ||\n    data.offer_variant !== \"personal-plan-one-time-v1\" ||\n    !data.offer_viewed_at ||\n    !data.visitor_id ||\n    !Number.isFinite(Date.parse(data.first_seen_at))\n  )\n    throw new PersonalPlanOneTimeCheckoutAuthorizationError(\"not_authorized\")\n  return {\n    sessionId: data.id,\n    leadId: input.leadId,\n    visitorId: data.visitor_id,\n    packageKey: PERSONAL_PLAN_PRICING_EXPERIMENT.packageKey,\n    offerVariant: \"personal-plan-one-time-v1\",\n    issuedAt: Date.parse(data.first_seen_at),\n    isInternalTest: data.is_internal_test,\n  }\n}",
+      "sha256": "2b8faa6638f205e89439d03b6f5d4991e02ac89ae1b11b591a82667987b61d13"
+    },
+    {
+      "file": "src/app/api/stripe/create-checkout-session/route.ts",
+      "start": 23619,
+      "end": 29609,
+      "name": "dominated isOneTimePurchase caller block",
+      "line": 625,
+      "endLine": 758,
+      "body": "if (isOneTimePurchase) {\n      // Re-fetches the persisted arm; browser fields only select this guarded path.\n      let authorization\n      try {\n        authorization = await assertPersonalPlanOneTimeCheckoutAuthorized({\n          leadId: leadId!,\n          funnelSessionId,\n        })\n      } catch (error) {\n        if (\n          !(error instanceof PersonalPlanOneTimeCheckoutAuthorizationError) ||\n          error.reason !== \"not_authorized\"\n        ) {\n          throw error\n        }\n        return isPreparation\n          ? await preparedCheckoutUnavailable({\n              ...preparedControlContext(),\n              cause: \"authorization_unavailable\",\n            })\n          : NextResponse.json({ error: \"not found\" }, { status: 404 })\n      }\n      checkoutIsInternalTest = authorization.isInternalTest\n      if (isPreparation) {\n        const { data: existing, error: lookupError } = await getAdminSupabase()\n          .from(\"personal_plan_one_time_checkout_consents\")\n          .select(\"id, stripe_checkout_session_id, paypal_order_id\")\n          .eq(\"lead_id\", authorization.leadId)\n          .eq(\"funnel_session_id\", authorization.sessionId)\n          .eq(\"product_kind\", PERSONAL_PLAN_ONCE_KIND)\n          .maybeSingle()\n        if (lookupError) throw lookupError\n        if (existing?.paypal_order_id) {\n          await preparedCheckoutProviderLocked(preparedControlContext(), \"paypal\")\n          return NextResponse.json(\n            { error: \"payment provider already selected\", provider_locked: \"paypal\" },\n            { status: 409 },\n          )\n        }\n        if (existing?.stripe_checkout_session_id) {\n          oneTimeProviderLocked = \"stripe\"\n          const existingSession = await getStripe().checkout.sessions.retrieve(\n            existing.stripe_checkout_session_id,\n          )\n          const recovery = classifyOneTimeStripeSessionRecovery(existingSession)\n          if (recovery.type === \"reuse\") {\n            return NextResponse.json({\n              status: \"recovered\",\n              client_secret: recovery.clientSecret,\n              session_id: existingSession.id,\n              expires_at: preparedCheckoutApplicationExpiresAt(existingSession.expires_at),\n              provider_locked: \"stripe\",\n            })\n          }\n          if (recovery.type === \"complete\") {\n            return NextResponse.json({ error: \"checkout already completed\" }, { status: 409 })\n          }\n          if (recovery.type !== \"replace\") {\n            throw new Error(\"Existing one-time Stripe Session is not recoverable\")\n          }\n        }\n      } else {\n        try {\n          const consent = await createPersonalPlanOneTimeCheckoutConsent(getAdminSupabase(), {\n            leadId: authorization.leadId,\n            funnelSessionId: authorization.sessionId,\n            offerVariant: authorization.offerVariant,\n            userId: authenticatedUserId ?? null,\n          })\n          oneTimeConsentId = consent.id\n        } catch (error) {\n          // A retry must recover the immutable evidence/session, never create a second consent.\n          const { data: existing, error: lookupError } = await getAdminSupabase()\n            .from(\"personal_plan_one_time_checkout_consents\")\n            .select(\"id, stripe_checkout_session_id, paypal_order_id\")\n            .eq(\"lead_id\", authorization.leadId)\n            .eq(\"funnel_session_id\", authorization.sessionId)\n            .eq(\"product_kind\", PERSONAL_PLAN_ONCE_KIND)\n            .maybeSingle()\n          if (lookupError || !existing) throw error\n          if (existing.paypal_order_id) {\n            await preparedCheckoutProviderLocked(preparedControlContext(), \"paypal\")\n            return NextResponse.json(\n              { error: \"payment provider already selected\", provider_locked: \"paypal\" },\n              { status: 409 },\n            )\n          }\n          if (existing.stripe_checkout_session_id) {\n            if (action === \"claim\") {\n              if (existing.stripe_checkout_session_id === preparedSessionId) {\n                oneTimeConsentId = existing.id\n              } else {\n                const existingSession = await getStripe().checkout.sessions.retrieve(\n                  existing.stripe_checkout_session_id,\n                )\n                const recovery = classifyOneTimeStripeSessionRecovery(existingSession)\n                if (recovery.type === \"complete\") {\n                  return NextResponse.json({ error: \"checkout already completed\" }, { status: 409 })\n                }\n                if (recovery.type !== \"replace\") {\n                  await preparedCheckoutProviderLocked(preparedControlContext(), \"stripe\")\n                  return NextResponse.json(\n                    { error: \"payment provider already selected\" },\n                    { status: 409 },\n                  )\n                }\n                oneTimeConsentId = existing.id\n              }\n            } else if (action === \"create\") {\n              const existingSession = await getStripe().checkout.sessions.retrieve(\n                existing.stripe_checkout_session_id,\n              )\n              const recovery = classifyOneTimeStripeSessionRecovery(existingSession)\n              if (recovery.type === \"reuse\") {\n                return NextResponse.json({ client_secret: recovery.clientSecret })\n              }\n              if (recovery.type === \"complete\") {\n                return NextResponse.json({ error: \"checkout already completed\" }, { status: 409 })\n              }\n              if (recovery.type !== \"replace\") {\n                throw new Error(\"Existing one-time Stripe Session is not reusable\")\n              }\n            } else {\n              await preparedCheckoutProviderLocked(preparedControlContext(), \"stripe\")\n              return NextResponse.json(\n                { error: \"payment provider already selected\" },\n                { status: 409 },\n              )\n            }\n          }\n          oneTimeConsentId = existing.id\n        }\n      }\n    }",
+      "sha256": "a5f478ccba73d4b5a63252de296c2c57bcc1b61fbe306f8f528360437ae404ff"
+    },
+    {
+      "file": "tests/personal-plan-pricing-experiment.test.ts",
+      "start": 15354,
+      "end": 16139,
+      "name": "one-time checkout authorization distinguishes lookup failure from expected denial",
+      "line": 495,
+      "body": "test(\"one-time checkout authorization distinguishes lookup failure from expected denial\", async () => {\n  await assert.rejects(\n    assertPersonalPlanOneTimeCheckoutAuthorized({\n      leadId,\n      funnelSessionId: sessionId,\n      fetchSession: async () => ({ data: null, error: new Error(\"database unavailable\") }),\n    }),\n    (error) =>\n      error instanceof PersonalPlanOneTimeCheckoutAuthorizationError &&\n      error.reason === \"lookup_failed\",\n  )\n\n  await assert.rejects(\n    assertPersonalPlanOneTimeCheckoutAuthorized({\n      leadId,\n      funnelSessionId: sessionId,\n      fetchSession: async () => ({ data: null, error: null }),\n    }),\n    (error) =>\n      error instanceof PersonalPlanOneTimeCheckoutAuthorizationError &&\n      error.reason === \"not_authorized\",\n  )\n})",
+      "sha256": "8c91d98db14a44c54c9099bbe26703423b73a06d86d58f23b2105b9468ee4dbe"
+    },
+    {
+      "file": "tests/personal-plan-pricing-experiment.test.ts",
+      "start": 14001,
+      "end": 15352,
+      "name": "one-time checkout authorization uses only the canonical stored session",
+      "line": 452,
+      "body": "test(\"one-time checkout authorization uses only the canonical stored session\", async () => {\n  const canonical = {\n    id: sessionId,\n    lead_id: leadId,\n    visitor_id: \"50000000-0000-4000-8000-000000000005\",\n    package_key: \"meta_personal_plan_v1\",\n    offer_variant: \"personal-plan-one-time-v1\",\n    offer_viewed_at: \"2026-07-31T10:00:00Z\",\n    first_seen_at: \"2026-07-31T09:30:00Z\",\n    is_internal_test: true,\n  }\n  assert.deepEqual(\n    await assertPersonalPlanOneTimeCheckoutAuthorized({\n      leadId,\n      funnelSessionId: sessionId,\n      fetchSession: async () => ({ data: canonical, error: null }),\n    }),\n    {\n      sessionId,\n      leadId,\n      visitorId: \"50000000-0000-4000-8000-000000000005\",\n      packageKey: \"meta_personal_plan_v1\",\n      offerVariant: \"personal-plan-one-time-v1\",\n      issuedAt: Date.parse(\"2026-07-31T09:30:00Z\"),\n      isInternalTest: true,\n    },\n  )\n  for (const row of [\n    { ...canonical, offer_variant: \"personal-plan-membership-v1\" },\n    { ...canonical, lead_id: \"10000000-0000-4000-8000-000000000004\" },\n    { ...canonical, offer_viewed_at: null },\n  ]) {\n    await assert.rejects(\n      assertPersonalPlanOneTimeCheckoutAuthorized({\n        leadId,\n        funnelSessionId: sessionId,\n        fetchSession: async () => ({ data: row, error: null }),\n      }),\n      /not authorized/,\n    )\n  }\n})",
+      "sha256": "4b54bc6eaecae39a88f73c75c1d71350e2623651e47141f7420d504acfd3591f"
+    }
+  ],
+  "keeper": {
+    "file": "tests/stripe-checkout-session-route-contract.test.ts",
+    "title": "retired one-time purchase requests stop before account or provider work",
+    "line": 94,
+    "body": "test(\"retired one-time purchase requests stop before account or provider work\", async () => {\n  for (const action of [\"prepare\", \"claim\"] as const) {\n    const body = {\n      purchaseKind: \"personal_plan_once\",\n      leadId: validRequest.leadId,\n      funnelSessionId: \"7a9675fe-f955-46a2-84dc-0ef5e94009d2\",\n      source: \"quiz_result_offer\",\n      presentation: \"offer_overlay_elements\",\n      action,\n      preparationId,\n      preparationToken,\n      ...(action === \"claim\"\n        ? { preparedSessionId: \"cs_retired\", checkoutAttemptId, funnelEventId }\n        : {}),\n    }\n    assert.equal(StripeCheckoutSessionRequestSchema.safeParse(body).success, true)\n    const response = await POST(\n      new NextRequest(\"http://localhost/api/stripe/create-checkout-session\", {\n        method: \"POST\",\n        headers: { \"Content-Type\": \"application/json\" },\n        body: JSON.stringify(body),\n      }),\n    )\n    assert.equal(response.status, 410)\n    assert.deepEqual(await response.json(), { error: \"one_time_purchase_retired\" })\n  }\n})",
+    "sha256": "61e3aaa9ed9d373bd4152f9dc45bad82d8d816b5cf7a1c724fa3276539a5010c",
+    "wholeFileSha256": "b966b1716f13172213e841b6a3528154579c2fde3bdc63e0758f7734860e12b2"
+  },
+  "guards": [
+    {
+      "file": "src/lib/funnel/server.ts",
+      "sha256": "d664770e0103972242ab81c3a3573243695f901e68ecfe4461e61d0410360df6"
+    },
+    {
+      "file": "src/app/api/stripe/create-checkout-session/route.ts",
+      "sha256": "0808a083b02a9611deab703bf9fc7a9b3cecb5dce2b5be1889003a0cd06a9bd8"
+    },
+    {
+      "file": "tests/personal-plan-pricing-experiment.test.ts",
+      "sha256": "1f3abe43446c8ec3d487bbbec3692b49454dba7ba1310d8bdaa85e8faa252f31"
+    },
+    {
+      "file": "tests/stripe-checkout-session-route-contract.test.ts",
+      "sha256": "b966b1716f13172213e841b6a3528154579c2fde3bdc63e0758f7734860e12b2"
+    },
+    {
+      "file": "src/app/api/analytics/meta-offer-view/route.ts",
+      "sha256": "8b2008675f27a002eea4d9ff2ae61d5733dad963185b3d2baf240e287af0f927"
+    },
+    {
+      "file": "src/app/api/billing/payment-support/route.ts",
+      "sha256": "f33d08ef477d7dd2c91bb44d155475d2aeaf39218812f43dcacb386db04c1a76"
+    },
+    {
+      "file": "src/app/api/funnel/session/route.ts",
+      "sha256": "da657d3e0ab9db46f2c569ae06c08d4a10d98ca64e7dcb8eb336d3513f11ea3d"
+    },
+    {
+      "file": "src/app/api/paypal/create-subscription-intent/route.ts",
+      "sha256": "cdc24635c7668e5976f8cf812af8dc02109e27d134f71855edb93cf794a12a63"
+    },
+    {
+      "file": "src/app/api/personal-plan/field-test/activate/route.ts",
+      "sha256": "cc81676e5f7352f30fafcb84acb7acc5cb65ef36d162bef9aa7138f18c9f6cd9"
+    },
+    {
+      "file": "src/app/api/personal-plan/field-test/moderator/activate/route.ts",
+      "sha256": "e039eb061eaa680ea07b2d8a3548232ccba7f1556cf84fff5bc5ffdfcde90186"
+    },
+    {
+      "file": "src/app/api/personal-plan/field-test/moderator/start/route.ts",
+      "sha256": "b2603bf9278f809233de2e031dde951d9347b152399f62814fc5b55f9f77fbad"
+    },
+    {
+      "file": "src/app/api/quiz/email-return/choose/route.ts",
+      "sha256": "39175962afc94e53edffe41da10d44b5b2cab05b32984f16cc4a512a3b9150fa"
+    },
+    {
+      "file": "src/app/api/quiz/email-return/context/route.ts",
+      "sha256": "2828ca1c0e6edc3c4acb4664ec3cff286fff2ac1089fb75b675f3113d5d68181"
+    },
+    {
+      "file": "src/app/api/quiz/field-test/activate/route.ts",
+      "sha256": "4a13e5b3862b1572fb1aeb699ef43051e5cc9e3e1949990c973265e01538520d"
+    },
+    {
+      "file": "src/app/api/quiz/lead/route.ts",
+      "sha256": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e"
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-draft/resume/route.ts",
+      "sha256": "e680907d3e92b488aadbc866ba334da81c42878d3a9c1f072c6f54d570447092"
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-draft/route.ts",
+      "sha256": "8dfb645529879cac85e6cf9f62539270094c14b2a6d6b0a774724a081b6fd384"
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-lead/route.ts",
+      "sha256": "305fda288afd763743b050c9a5f620ad3742286d4397f49ea657bf7939c52595"
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-prepare/route.ts",
+      "sha256": "1c4b9507d665d79c6451a138e1237077bf1f8aaf9f2e6a94054dc019ad7ddf1f"
+    },
+    {
+      "file": "src/app/lp/[slug]/page.tsx",
+      "sha256": "c986d0de667d792caf017dd92d97ea9a946d85812340af9006768da532b01cec"
+    },
+    {
+      "file": "src/app/plan-bereit/page.tsx",
+      "sha256": "3266d35f5b0a8f5312e6415d40bc52224dc660a830134dc44089600343d96289"
+    },
+    {
+      "file": "src/app/plan-bereit/readiness.ts",
+      "sha256": "aec3ee617b8d3eecc9e60116a00214d08a481b28981c20f707f342d299bea08e"
+    },
+    {
+      "file": "src/app/plan-bereit/status/route.ts",
+      "sha256": "1b8f09e7bde788b2ec359a3d937fc84a58fa1ae1b14aa9c7d79c997260f22bff"
+    },
+    {
+      "file": "src/app/result/[leadId]/page.tsx",
+      "sha256": "83ce34fd0d9d356a66b9e4201a3676236d11c7e06ec09563e0742ee91ca36ae1"
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/funnel.ts",
+      "sha256": "7c6d71e7eeb0ec6af41020df967b0126e6ced1436c715d9914674e8dda4ef6bb"
+    },
+    {
+      "file": "src/lib/quiz/funnel-package-context.ts",
+      "sha256": "69f13a89706944ae8dc09d179e25ab7e75d9c9012d01df8ada8b23bc8ed80d66"
+    },
+    {
+      "file": "tests/funnel-server.test.ts",
+      "sha256": "84aec887c25617e6504b6e574b3dac815c03b96aac69f74556ce73abb956c8fc"
+    },
+    {
+      "file": "tests/organic-offer-media-experiment.test.ts",
+      "sha256": "429e96be662296b1f76bee7e8044ae3ff8a7d4bd4cfb3f498271a50d73048a41"
+    },
+    {
+      "file": "src/lib/stripe/checkout-activation.ts",
+      "sha256": "f33ca66366ec59a915fdeba82bb397ad20891dd837495de25c6bf4e51deb8bdc"
+    },
+    {
+      "file": "src/lib/paypal/order-activation.ts",
+      "sha256": "f3bce8ac0eed4b1db6517e1a0b63bb942023661c0149a0ed438d4d6c70852435"
+    },
+    {
+      "file": "src/lib/billing/personal-plan-one-time-activation.ts",
+      "sha256": "1efa98c6055012f5912c22c5e7420b36331ffc702b52344a2db40bc2ade458eb"
+    },
+    {
+      "file": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "sha256": "9780ca72927361d64c493de99f1780e7b9a58800e3fb52ea0fbad8227b97a544"
+    },
+    {
+      "file": "src/app/api/billing/one-time-activation-status/route.ts",
+      "sha256": "fab9ef797b506b624e565238129b3ffcc3b82a9830d4f3bdb4a36efa5778d149"
+    },
+    {
+      "file": "src/app/api/paypal/create-order-intent/route.ts",
+      "sha256": "2e339bc67b9a8bdf0a7f9783a8115bc4bc4d536d57905f0ab6833dfba8796b43"
+    },
+    {
+      "file": "src/app/api/paypal/capture-order/route.ts",
+      "sha256": "e7a7f460c96f21ea4a40dcef06f3f1b5b2c8834b6645ba24a60b06ce788fe968"
+    },
+    {
+      "file": "src/app/welcome/page.tsx",
+      "sha256": "e6c5c768deee6f4f304e1dc5a4ed27ba8c0a186938069fec0c579ed560fda24e"
+    },
+    {
+      "file": "scripts/billing/one-time-recover.ts",
+      "sha256": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75"
+    },
+    {
+      "file": "plans/free-trial-launch/plan.md",
+      "sha256": "a59520782fdb03e1226ae322d687ed6408ed0e2c39cd37727fe1a62b6ebefde0"
+    },
+    {
+      "file": "docs/free-trial-launch-runbook.md",
+      "sha256": "a1c60fbc2dc832110fbff6566df0cde37ba3e167debb5cf747f0e0afe9fba668"
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799"
+    },
+    {
+      "file": "tests/funnel-variants.test.ts",
+      "sha256": "5a48c8448af9fa1be9effbe4ee3411a1ad61081a97d8a154d48c6a8bb4779c4e"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    },
+    {
+      "file": "node_modules/typescript/lib/typescript.js",
+      "sha256": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675"
+    },
+    {
+      "file": "src/lib/funnel/api.ts",
+      "sha256": "b1180f5324e78983f63b1a73b1f98f7cd02aabacba1271165446588370356679"
+    },
+    {
+      "file": "src/lib/funnel/client.ts",
+      "sha256": "9c3728cffff3810d829afd198c2406e35cf6edb3d4c68dbfc5a1cfa845e100a8"
+    }
+  ],
+  "limits": "Static TS parse only; no runtime or source writes. No full one-time subtree retirement claimed. Three-file minimum cleanup leaves already-unreachable neighboring classifiers/consent creation for separately owned closure; preserves all stored-consent/read/fulfillment/provider recovery."
+}

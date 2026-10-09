@@ -1,0 +1,85 @@
+[
+  {
+    "id": "C1-retained-password-capability",
+    "candidate": "C1",
+    "from": "canSetInitialPassword = !retainedAccount && canSetPasswordForAuthUser(authUser, valid.id)",
+    "to": "canSetInitialPassword = canSetPasswordForAuthUser(authUser, valid.id)",
+    "assertion": "assert.equal(second.canSetInitialPassword, false)",
+    "operator": "strictEqual",
+    "message": "Expected values to be strictly equal: true !== false",
+    "file": "src/lib/stripe/checkout-activation.ts",
+    "sourceSHA256": "f33ca66366ec59a915fdeba82bb397ad20891dd837495de25c6bf4e51deb8bdc",
+    "mutatedSHA256": "7b566fd8e06bf83639ca04d5523ac3fda6b6ca32aafb838dadc19f0c97bcff07",
+    "scope": "ensureCheckoutAccount",
+    "scopeSHA256": "053b42899beeb1fc15fb48d3419c58cc54c9344bb757c13e6c0b81e8cc7e83c1",
+    "test": {
+      "file": "tests/reactivation-retained-account-activation.test.ts",
+      "name": "Stripe duplicate webhook safely repeats completion of the same bound reservation"
+    },
+    "oracles": {
+      "transfer": {
+        "startLine": 229,
+        "text": "assert.equal(second.canSetInitialPassword, false)",
+        "keeperSHA256": "e66d911e4332f29f6d43e77753256ec590ac77def0774b12ed83c909a3d13f06"
+      },
+      "cut": {
+        "startLine": 229,
+        "text": "assert.equal(second.canSetInitialPassword, false)",
+        "keeperSHA256": "e66d911e4332f29f6d43e77753256ec590ac77def0774b12ed83c909a3d13f06"
+      }
+    },
+    "prospectiveOwner": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/C1-retained-password-capability-prospective-owner.ts",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^Stripe duplicate webhook safely repeats completion of the same bound reservation$",
+      "tests/reactivation-retained-account-activation.test.ts"
+    ]
+  },
+  {
+    "id": "C2-billing-before-profile",
+    "candidate": "C2",
+    "from": "if (!retainedAccount && !trial) await writeProfile()\n\n  await measureCheckoutStep(\"billing.upsertSubscription\", () =>\n    (retainedAccount || trial ? upsertRetainedBillingSubscription : upsertBillingSubscription)(\n      deps.supabase,\n      {\n        user_id: userId,\n        provider: \"stripe\",\n        provider_customer_id: valid.customerId,\n        provider_subscription_id: sub.id,\n        provider_status: sub.status ?? \"active\",\n        entitlement_status: stripeEntitlementStatus(sub.status),\n        interval,\n        current_period_end: trial?.authorization.trialEndAt ?? subPeriodEndIso(sub),\n        cancel_at_period_end: trial?.subscription.cancel_at_period_end ?? false,\n        ...(trial ? { trial_enrollment_id: trial.enrollment.id } : {}),\n        metadata: {\n          checkout_session_id: valid.id,\n          payment_status: session.payment_status ?? \"unknown\",\n          ...stripePricingMetadata(price.id),\n          ...(trial\n            ? { trial_cohort: \"trial_v1\", trial_offer_version: trial.offer.offerVersion }\n            : {}),\n        },\n      },\n    ),\n  )\n\n  if (retainedAccount || trial) await writeProfile()",
+    "to": "if (!trial) await writeProfile()\n\n  await measureCheckoutStep(\"billing.upsertSubscription\", () =>\n    (retainedAccount || trial ? upsertRetainedBillingSubscription : upsertBillingSubscription)(\n      deps.supabase,\n      {\n        user_id: userId,\n        provider: \"stripe\",\n        provider_customer_id: valid.customerId,\n        provider_subscription_id: sub.id,\n        provider_status: sub.status ?? \"active\",\n        entitlement_status: stripeEntitlementStatus(sub.status),\n        interval,\n        current_period_end: trial?.authorization.trialEndAt ?? subPeriodEndIso(sub),\n        cancel_at_period_end: trial?.subscription.cancel_at_period_end ?? false,\n        ...(trial ? { trial_enrollment_id: trial.enrollment.id } : {}),\n        metadata: {\n          checkout_session_id: valid.id,\n          payment_status: session.payment_status ?? \"unknown\",\n          ...stripePricingMetadata(price.id),\n          ...(trial\n            ? { trial_cohort: \"trial_v1\", trial_offer_version: trial.offer.offerVersion }\n            : {}),\n        },\n      },\n    ),\n  )\n\n  if (trial) await writeProfile()",
+    "assertion": "assert.deepEqual(f.profiles[0], originalProfile)",
+    "operator": "deepStrictEqual",
+    "message": "Expected values to be strictly deep-equal; extra subscription fields and changed stripe_customer_id prove forbidden early profile write",
+    "mutationNote": "Moves the existing retained-account profile write before billing ownership, exactly once. The two condition replacements form one ordering fault. Keeping the later profile write would make the same-owner row fail for an unrelated stale CAS; this recipe avoids that false oracle.",
+    "file": "src/lib/stripe/checkout-activation.ts",
+    "sourceSHA256": "f33ca66366ec59a915fdeba82bb397ad20891dd837495de25c6bf4e51deb8bdc",
+    "mutatedSHA256": "2ff27caf78b782a67bff7fee000c60382849012c8ab844e8bb7a77058e084409",
+    "scope": "ensureCheckoutAccount",
+    "scopeSHA256": "053b42899beeb1fc15fb48d3419c58cc54c9344bb757c13e6c0b81e8cc7e83c1",
+    "test": {
+      "file": "tests/reactivation-retained-account-activation.test.ts",
+      "name": "competing subscription insert is adopted only for the same immutable account"
+    },
+    "oracles": {
+      "transfer": {
+        "startLine": 438,
+        "text": "assert.deepEqual(f.profiles[0], originalProfile)",
+        "keeperSHA256": "0c65afb057557a9a70c1167b86cc8ccd65638e9abaa5adda1490b96a351acba3"
+      },
+      "cut": {
+        "startLine": 427,
+        "text": "assert.deepEqual(f.profiles[0], originalProfile)",
+        "keeperSHA256": "0c65afb057557a9a70c1167b86cc8ccd65638e9abaa5adda1490b96a351acba3"
+      }
+    },
+    "prospectiveOwner": "/tmp/test-audit-reactivation83-proposal-Zzh1n4/C2-billing-before-profile-prospective-owner.ts",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^competing subscription insert is adopted only for the same immutable account$",
+      "tests/reactivation-retained-account-activation.test.ts"
+    ]
+  }
+]

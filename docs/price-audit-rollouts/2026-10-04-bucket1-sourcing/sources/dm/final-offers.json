@@ -1,0 +1,290 @@
+{
+  "collected_at": "2026-10-04T08:37:24Z–2026-10-04T08:39:00Z",
+  "scope": "Six assigned physical legacy dm private-brand products; historical pause dispositions are revoked.",
+  "rule": "No DB/catalog/recommendation mutation is proposed. A current dm-MCP `purchasable:false`, a search miss, or a blocked transport response does not establish discontinuation or authorize a status stamp.",
+  "checks": {
+    "dm": "Fresh official public dm MCP: exact GTIN and exact-name queries, new client per query.",
+    "Rossmann_Mueller_Amazon": "Fresh exact-GTIN/name site searches at 08:38–08:39Z returned zero indexed results. They are recorded as unverified, not absence proof.",
+    "brand_direct": "Balea and alverde are dm private brands, so dm is the brand-direct route; no invented separate brand shop."
+  },
+  "items": [
+    {
+      "legacy": {
+        "name": "Balea Trockenshampoo Kopfhaut Sensitive",
+        "gtin": "4066447438789",
+        "category": "dry_shampoo"
+      },
+      "exact_checks": [
+        {
+          "host": "dm/brand-direct",
+          "at": "2026-10-04T08:37:26Z",
+          "url": "https://www.dm.de/applink/p/d/1711758/balea-trockenshampoo-kopfhaut-sensitive?appPageType=productdetails&appProductId=1711758",
+          "pack": "200 ml",
+          "price_eur": 1.95,
+          "cart": "purchasable=false"
+        },
+        {
+          "host": "Rossmann,Müller,Amazon DE",
+          "at": "2026-10-04T08:38Z",
+          "query": "site searches for 4066447438789",
+          "outcome": "zero indexed results; unverified"
+        }
+      ],
+      "resolution": "replacement_candidate_evidence_complete_not_activated",
+      "replacement": {
+        "name": "Batiste Trockenshampoo Sensible Kopfhaut, leichter Duft",
+        "category": "dry_shampoo",
+        "gtin": "5010724004777",
+        "size": "200 ml",
+        "price_eur": 3.95,
+        "link": "https://www.dm.de/p/d/3048778/batiste-trockenshampoo-sensible-kopfhaut-leichter-duft",
+        "cart": "dm MCP current purchasable=true",
+        "difference": "different brand/formula; retains dry-shampoo and sensitive-scalp positioning",
+        "evidence_ref": "unique_candidate_evidence.Batiste_5010724004777"
+      }
+    },
+    {
+      "legacy": {
+        "name": "Balea PROFESSIONAL Ultimate Volume",
+        "gtin": "4067796075021",
+        "category": "shampoo"
+      },
+      "exact_checks": [
+        {
+          "host": "dm/brand-direct",
+          "at": "2026-10-04T08:37:26Z",
+          "query": "exact GTIN and name",
+          "cart": "no buyable exact match"
+        },
+        {
+          "host": "Rossmann,Müller,Amazon DE",
+          "at": "2026-10-04T08:38Z",
+          "query": "site searches for 4067796075021/name",
+          "outcome": "zero indexed results; unverified"
+        }
+      ],
+      "resolution": "replacement_candidate_evidence_complete_not_activated",
+      "replacement": {
+        "name": "Balea PROFESSIONAL Shampoo Hydra Volume",
+        "category": "shampoo",
+        "gtin": "4066447990126",
+        "size": "250 ml",
+        "price_eur": 1.35,
+        "link": "https://www.dm.de/p/d/3126236/balea-professional-shampoo-hydra-volume",
+        "cart": "dm MCP current purchasable=true",
+        "difference": "same brand/category and volume focus; current Hydra Volume identity is distinct from legacy Ultimate Volume",
+        "evidence_ref": "unique_candidate_evidence.HydraVolume_4066447990126"
+      }
+    },
+    {
+      "legacy": {
+        "name": "Balea Natural Beauty 3in1 Locken",
+        "gtin": "4066447704709",
+        "category": "mask"
+      },
+      "exact_checks": [
+        {
+          "host": "dm/brand-direct",
+          "at": "2026-10-04T08:37:27Z",
+          "query": "exact GTIN and name",
+          "cart": "no buyable exact match"
+        },
+        {
+          "host": "Rossmann,Müller,Amazon DE",
+          "at": "2026-10-04T08:38Z",
+          "query": "site searches for 4066447704709/name",
+          "outcome": "zero indexed results; unverified"
+        }
+      ],
+      "resolution": "replacement_candidate_evidence_complete_not_activated",
+      "replacement": {
+        "name": "Balea Haarmaske Intensivpflege 3in1",
+        "category": "mask",
+        "gtin": "4066447982817",
+        "size": "300 ml",
+        "price_eur": 1.95,
+        "link": "https://www.dm.de/p/d/1671219/balea-haarmaske-intensivpflege-3in1",
+        "cart": "dm MCP current purchasable=true",
+        "difference": "same 3in1 mask use, but repair/Mandelöl-Vanille positioning instead of curl-focused Natural Beauty",
+        "evidence_ref": "unique_candidate_evidence.Intensivpflege_4066447982817"
+      }
+    },
+    {
+      "legacy": {
+        "name": "Balea PROFESSIONAL Aqua Hyaluron 3in1",
+        "gtin": "4066447668315",
+        "categories": [
+          "mask",
+          "leave_in"
+        ]
+      },
+      "exact_checks": [
+        {
+          "host": "dm/brand-direct",
+          "at": "2026-10-04T08:37:27Z",
+          "query": "exact GTIN and name",
+          "cart": "no buyable exact match"
+        },
+        {
+          "host": "Rossmann,Müller,Amazon DE",
+          "at": "2026-10-04T08:38Z",
+          "query": "site searches for 4066447668315/name",
+          "outcome": "zero indexed results; unverified"
+        }
+      ],
+      "resolution": "category_specific_replacement_evidence_complete_not_activated",
+      "replacements": [
+        {
+          "for_category": "mask",
+          "name": "Balea Haarmaske Intensivpflege 3in1",
+          "gtin": "4066447982817",
+          "size": "300 ml",
+          "price_eur": 1.95,
+          "link": "https://www.dm.de/p/d/1671219/balea-haarmaske-intensivpflege-3in1",
+          "cart": "purchasable=true",
+          "difference": "same 3in1 mask class; repair rather than Aqua-Hyaluron moisture positioning",
+          "evidence_ref": "unique_candidate_evidence.Intensivpflege_4066447982817"
+        },
+        {
+          "for_category": "leave_in",
+          "name": "Balea PROFESSIONAL Feuchtigkeitsfiller Aqua Hyaluron",
+          "gtin": "4070765026894",
+          "size": "50 ml",
+          "price_eur": 2.95,
+          "link": "https://www.dm.de/p/d/3151631/balea-professional-feuchtigkeitsfiller-aqua-hyaluron",
+          "cart": "purchasable=true",
+          "difference": "same brand and Aqua-Hyaluron moisture purpose, but a filler/leave-in rather than 3in1 mask",
+          "evidence_ref": "unique_candidate_evidence.AquaFiller_4070765026894"
+        }
+      ]
+    },
+    {
+      "legacy": {
+        "name": "alverde NATURKOSMETIK Haarkur 4in1 Repair & Care Wunderkur",
+        "gtin": "4067796145861",
+        "category": "mask"
+      },
+      "exact_checks": [
+        {
+          "host": "dm/brand-direct",
+          "at": "2026-10-04T08:37:27Z",
+          "query": "exact GTIN and name",
+          "cart": "no buyable exact match"
+        },
+        {
+          "host": "Rossmann,Müller,Amazon DE",
+          "at": "2026-10-04T08:39Z",
+          "query": "site searches for 4067796145861/name",
+          "outcome": "zero indexed results; unverified"
+        }
+      ],
+      "resolution": "replacement_candidate_evidence_complete_not_activated",
+      "replacement": {
+        "name": "Schwarzkopf GLISS Haarmaske 4in1 Total Repair",
+        "category": "mask",
+        "gtin": "4015100813517",
+        "size": "400 ml",
+        "price_eur": 5.75,
+        "link": "https://www.dm.de/p/d/1431891/schwarzkopf-gliss-haarmaske-4in1-total-repair",
+        "cart": "dm MCP current purchasable=true",
+        "difference": "same 4in1 repair-mask use; distinct non-natural-cosmetics formula and larger pack",
+        "evidence_ref": "unique_candidate_evidence.GlissTotalRepair_4015100813517"
+      }
+    },
+    {
+      "legacy": {
+        "name": "alverde NATURKOSMETIK Haarmaske Hydro Feuchtigkeit",
+        "gtin": "4066447918946",
+        "category": "mask"
+      },
+      "exact_checks": [
+        {
+          "host": "dm/brand-direct",
+          "at": "2026-10-04T08:37:28Z",
+          "url": "https://www.dm.de/applink/p/d/1704280/alverde-naturkosmetik-haarmaske-hydro-feuchtigkeit?appPageType=productdetails&appProductId=1704280",
+          "pack": "20 ml",
+          "price_eur": 0.95,
+          "cart": "purchasable=false"
+        },
+        {
+          "host": "Rossmann,Müller,Amazon DE",
+          "at": "2026-10-04T08:39Z",
+          "query": "site searches for 4066447918946/name",
+          "outcome": "zero indexed results; unverified"
+        }
+      ],
+      "resolution": "replacement_candidate_evidence_complete_not_activated",
+      "replacement": {
+        "name": "L'ORÉAL PARiS ELVITAL Haarmaske Hydra Hyaluronic",
+        "category": "mask",
+        "gtin": "3600524245849",
+        "size": "300 ml",
+        "price_eur": 4.95,
+        "link": "https://www.dm.de/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic",
+        "cart": "dm MCP current purchasable=true",
+        "difference": "same moisture-mask purpose and hyaluron positioning; distinct brand and non-natural-cosmetics formula",
+        "evidence_ref": "unique_candidate_evidence.ElvitalHydra_3600524245849"
+      }
+    }
+  ],
+  "unique_candidate_evidence": {
+    "collected_at": "2026-10-04T08:42:06Z–2026-10-04T08:42:27Z",
+    "source": "official dm MCP getProductDetails([gtin]); fresh client per request",
+    "Batiste_5010724004777": {
+      "identity": "Batiste Trockenshampoo Sensible Kopfhaut, leichter Duft, 200 ml",
+      "url": "https://www.dm.de/applink/p/d/3048778/batiste-trockenshampoo-sensible-kopfhaut-leichter-duft?appPageType=productdetails&appProductId=3048778",
+      "front_image": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1747497016/assets/pas/images/eec0b6b5-924d-40c1-8783-070914d540ea/batiste-trockenshampoo-sensible-kopfhaut-leichter-duft",
+      "inci": "Butane, Isobutane, Propane, Alcohol Denat., Oryza Sativa Starch, Parfum, Caprylic/Capric Triglyceride, Aloe Barbadensis Leaf Extract, Distearyldimonium Chloride, Cetrimonium Chloride.",
+      "directions": "Shake; section hair and spray at roots from 30 cm; massage with fingertips; brush excess out."
+    },
+    "HydraVolume_4066447990126": {
+      "identity": "Balea PROFESSIONAL Shampoo Hydra Volume, 250 ml",
+      "url": "https://www.dm.de/applink/p/d/3126236/balea-professional-shampoo-hydra-volume?appPageType=productdetails&appProductId=3126236",
+      "front_image": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1777678730/assets/pas/images/0d87d023-70d9-40d9-8207-855fcecdee6e/balea-professional-shampoo-hydra-volume",
+      "inci": "AQUA | SODIUM LAURETH SULFATE | COCAMIDOPROPYL HYDROXYSULTAINE | SODIUM CHLORIDE | COCO-GLUCOSIDE | SODIUM HYALURONATE | NIACINAMIDE | KAOLIN | GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE | CITRIC ACID | PARFUM | METHYL BENZOATE | SODIUM BENZOATE.",
+      "directions": "Massage gently into scalp and wet hair; rinse carefully with lukewarm water."
+    },
+    "Intensivpflege_4066447982817": {
+      "identity": "Balea Haarmaske Intensivpflege 3in1, 300 ml",
+      "url": "https://www.dm.de/applink/p/d/1671219/balea-haarmaske-intensivpflege-3in1?appPageType=productdetails&appProductId=1671219",
+      "front_image": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1776466226/assets/pas/images/7f22c993-d6ac-43fe-ba62-d5dca011fbae/balea-haarmaske-intensivpflege-3in1",
+      "inci": "Aqua, Cetearyl Alcohol, Behentrimonium Chloride, Dicaprylyl Ether, Ricinus Communis Seed Oil, Panthenol, Niacinamide, Helianthus Annuus Hybrid Oil, Prunus Amygdalus Dulcis Oil, Parfum, Distearoylethyl Hydroxyethylmonium Methosulfate, Isopropyl Alcohol, Sodium Benzoate, Potassium Sorbate, Vanillin, Tetramethyl Acetyloctahydronaphthalenes, Citric Acid.",
+      "directions": "Conditioner: massage into wet hair then rinse. Mask: leave 3 minutes then rinse. Leave-in: small amount into towel-dried hair; do not rinse."
+    },
+    "AquaFiller_4070765026894": {
+      "identity": "Balea PROFESSIONAL Feuchtigkeitsfiller Aqua Hyaluron, 50 ml",
+      "url": "https://www.dm.de/applink/p/d/3151631/balea-professional-feuchtigkeitsfiller-aqua-hyaluron?appPageType=productdetails&appProductId=3151631",
+      "front_image": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1785715290/assets/pas/images/aca4297b-9286-4625-9f53-37da53655749/balea-professional-feuchtigkeitsfiller-aqua-hyaluron",
+      "inci": "AQUA, PEG-40 HYDROGENATED CASTOR OIL, GLYCERIN, HYDROXYPROPYL GUAR, AMODIMETHICONE, SODIUM BENZOATE, PANTHENOL, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, HYDROXYPROPYLGLUCONAMIDE, PARFUM, XANTHAN GUM, ALOE BARBADENSIS LEAF JUICE POWDER, LACTIC ACID, HYDROXYPROPYLAMMONIUM GLUCONATE, POTASSIUM SORBATE, CETRIMONIUM CHLORIDE, TRIDECETH-15, TRIDECETH-3, SODIUM HYALURONATE, TARTARIC ACID, ALCOHOL DENAT., BENZYL ALCOHOL, PHENOXYETHANOL, ACETIC ACID.",
+      "directions": "After washing, work into damp lengths; do not rinse."
+    },
+    "GlissTotalRepair_4015100813517": {
+      "identity": "Schwarzkopf GLISS Haarmaske 4in1 Total Repair, 400 ml",
+      "url": "https://www.dm.de/applink/p/d/1431891/schwarzkopf-gliss-haarmaske-4in1-total-repair?appPageType=productdetails&appProductId=1431891",
+      "front_image": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1789682270/assets/pas/images/c015e211-8fb5-4e63-8b4a-e8dee946c9bd/schwarzkopf-gliss-haarmaske-4in1-total-repair",
+      "inci": "Aqua, Cetearyl Alcohol, Glycerin, Behentrimonium Chloride, Distearoylethyl Hydroxyethylmonium Methosulfate, Isopropyl Myristate, Behenamidopropyl Dimethylamine, Hydroxypropylgluconamide, Hydrolyzed Keratin, Lactic Acid, Parfum, Amodimethicone, Shea Butter, Apricot Kernel Oil, Sodium Benzoate, Limonene, Phenoxyethanol, Benzyl Alcohol, Potassium Sorbate.",
+      "directions": "Use pre-shampoo, conditioner, mask (leave 2–3 minutes, 2–3 times weekly), or leave-in; rinse the first three applications."
+    },
+    "ElvitalHydra_3600524245849": {
+      "identity": "L'ORÉAL PARiS ELVITAL Haarmaske Hydra Hyaluronic, 300 ml",
+      "url": "https://www.dm.de/applink/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic?appPageType=productdetails&appProductId=3122676",
+      "front_image": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1774393906/assets/pas/images/324cdc2e-e287-46ba-aa77-fb6ab012c404/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic",
+      "inci": "AQUA/WATER, GLYCERIN, CETEARYL ALCOHOL, STEARAMIDOPROPYL DIMETHYLAMINE, PARFUM, SORBITAN ISOSTEARATE, MYRISTYL ALCOHOL, LACTIC ACID, COCO-BETAINE, SODIUM HYALURONATE, SODIUM CHLORIDE, PHENOXYETHANOL, AMODIMETHICONE, TARTARIC ACID, CITRIC ACID, COUMARIN.",
+      "directions": "Distribute through lengths and ends after washing, leave 3 minutes, then rinse thoroughly."
+    }
+  },
+  "raw_mcp_detail_receipts": "/Users/nick/AI_work/hair_conscierge/.worktrees/price-audit-rollout-receipt/docs/price-audit-rollouts/2026-10-04-bucket1-sourcing/sources/dm/dm-mcp-detail-receipts.json",
+  "alverde_preference_check": {
+    "at": "2026-10-04T08:42:18Z",
+    "result": "No available natural-cosmetics hair mask was returned: alverde Hydro exact GTIN was purchasable=false. Elvital Hydra Hyaluronic is an available moisture-specific mask and is the better Hydro replacement candidate than repair-focused Intensivpflege; retain GLISS Total Repair only for the Repair Wunderkur slot."
+  },
+  "summary": {
+    "physical_items": 6,
+    "candidate_slots": 7,
+    "unique_products": 6,
+    "exact_maintained_offers": 0,
+    "available_preferred_shop_replacement_candidates": 7,
+    "source_complete_candidates": 6,
+    "activation_ready_candidates": 0
+  }
+}

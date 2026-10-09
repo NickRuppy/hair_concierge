@@ -1,0 +1,260 @@
+{
+  "schemaVersion": "mask-research-record-v0.1",
+  "lane": "blind",
+  "productId": "10-bali-curls-deep-repair-mask",
+  "g0": {
+    "value": "eligible",
+    "modeScoped": false,
+    "multiUse": false,
+    "rationale": "Single stated mode, verbatim-sourced, with explicit P5-conformant placement: applied to washed, towel-dry hair, into lengths and ends ('in die Laengen und Spitzen des gewaschenen, handtuchtrockenen Haares'), product-stated contact time (2-3 minutes), then rinsed. Every leg of section 2.1 is met verbatim. Section 2.2 is not triggered.",
+    "evidenceSignals": [
+      "directions: 'Trage die Haarmaske in die Laengen und Spitzen des gewaschenen, handtuchtrockenen Haares auf'",
+      "directions: 'lasse sie 2-3 Minuten einwirken' then 'Spuele sie dann im Anschluss gruendlich aus'",
+      "directions source: bali-care.com/de-de official German product page, direct fetch, verbatim",
+      "identity: GTIN 4262391990001, 200 ml; the packet records an unresolved retail-channel question (a dm.de listing found in search but not confirmed live) and a naming conflict - neither affects formula identity or directions",
+      "The 2-3 minute contact time is protocol metadata with zero classification credit"
+    ]
+  },
+  "tailMarker": {
+    "ingredient": "SODIUM BENZOATE",
+    "rank": 12,
+    "anomalyNote": "Resolved, no anomaly. The marker is a preservative at rank 12, one rank BEFORE PARFUM at 13 - section 3.1 takes the earliest tail-class member, so Sodium Benzoate governs. This one-rank detail is decisive for the whole profile: PANTHENOL sits at rank 11, just inside the above-tail segment, and it is the third member of the humectant cluster that carries primary_focus. Compare packet 03 (same brand, near-identical base): there the marker is Parfum at 10 and Panthenol at 11 falls just outside, so the cluster fails and the focus is general. Two sibling formulas separated by one rank land on different primary focuses."
+  },
+  "profile": {
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Above-tail segment (ranks 1-11) of the exact-market INCI; formula-only structural position.",
+      "rationale": "All three section 9.1 structural signals are satisfied on an eleven-entry above-tail segment, with lipid breadth at four distinct species. E2 ceiling: architecture, not delivered conditioning.",
+      "evidenceSignals": [
+        "S1 satisfied: CETRIMONIUM CHLORIDE (8) and BEHENTRIMONIUM METHOSULFATE (10) - two distinct long-chain cationic species above the tail",
+        "S2 satisfied: CETEARYL ALCOHOL at rank 2, immediately after AQUA",
+        "S3 satisfied four-fold: BUTYROSPERMUM PARKII BUTTER (4), COCOS NUCIFERA OIL (5), GLYCINE SOJA OIL (6), PERSEA GRATISSIMA OIL (7)",
+        "Not counted (tail-side): HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE (14)",
+        "Not counted (family 10 emulsifier): GLYCERYL STEARATE SE (15)"
+      ],
+      "derivation": "Section 9.1 S1/S2/S3 counting on the above-tail slice; 3 of 3 -> high.",
+      "thresholdReasoning": [
+        "Why high, not moderate: three independent signals against a >= 2 threshold, with the lipid axis exceeded twofold.",
+        "Why high, not low: every leg of the low anchor is falsified.",
+        "The 'no material counter-signal' clause holds: the only counter-signals present (a lipid-looking emulsifier, a tail-side cationic polymer) are false-signal-register items that cannot move the value."
+      ],
+      "counterSignals": [
+        "GLYCERYL STEARATE SE reads lipid-like but is an emulsifier - zero credit",
+        "LACTIC ACID (17) and CITRIC ACID (19) are tail-side pH context; with no amidoamine in the formula, the neutraliser reading is not needed, but neither is an active reading"
+      ],
+      "limitations": [
+        "Section 9.1's honest limitation applies; this product sits comfortably inside high rather than near a boundary."
+      ]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Above-tail segment (ranks 1-11); ingredient-informed matching prior, not a prediction of visible flattening.",
+      "rationale": "The required rich base holds and two independent R4b heavy lipids sit at ranks 4 and 5, high above the tail. E2 ceiling.",
+      "evidenceSignals": [
+        "Required base leg 1: CETRIMONIUM CHLORIDE (8) and BEHENTRIMONIUM METHOSULFATE (10) - two distinct cationics above the tail",
+        "Required base leg 2: CETEARYL ALCOHOL at rank 2",
+        "Supporting alternative (a): BUTYROSPERMUM PARKII BUTTER (4), a butter in the lexicon's heavy band, and COCOS NUCIFERA OIL (5), named in the standard's R4b heavy-triglyceride list - both in the head/early-upper band",
+        "Supporting alternative (b) absent: no silicone anywhere in the formula"
+      ],
+      "derivation": "Section 9.2 ruled anchors: base plus at least one alternative -> high.",
+      "thresholdReasoning": [
+        "Why high, not moderate: the base and alternative (a) both hold, and the heavy lipids are at ranks 4 and 5 rather than marginally above the marker - so this does not turn on a boundary-band rank judgment.",
+        "Why high, not low: all three legs of the low anchor are falsified.",
+        "Conflict fallback not applied: no lightness positioning is available in the packet, and nothing in the directions claims a light finish."
+      ],
+      "counterSignals": [
+        "No silicone at all - silicone-free proves nothing about lightness",
+        "'Deep Repair' positioning is not a richness claim and would not be weight evidence if it were"
+      ],
+      "limitations": [
+        "Rank is qualitative only; nothing supports a statement about how much butter or oil is present.",
+        "The section 9.2 anchors remain provisional and are first in line for calibration."
+      ]
+    },
+    "careDirection": {
+      "value": "moisture",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Full ingredient list; comparative emphasis only, never a user-state assertion (G6).",
+      "rationale": "There is no protein-class species anywhere in this formula, so no R5 route is possible and the material direction is the coherent conditioning/humectant/emollient base - D6's honest default. E2 ceiling; the humectant leg is a comparative direction only, never a hydration claim.",
+      "evidenceSignals": [
+        "Zero hydrolyzed proteins, peptides, keratin tokens, or cationised proteins at any rank - notable on a product named 'Deep Repair', and a real difference from its sibling packet 03, which at least carries two hydrolysates (tail-side)",
+        "Coherent above-tail architecture: CETEARYL ALCOHOL (2), GLYCERIN (3), four lipids (4-7), two cationics (8, 10), BETAINE (9), PANTHENOL (11)"
+      ],
+      "derivation": "Section 9.3: material-R5 test fails at its first condition (no qualifying species exists); balanced is gated on the same route; -> moisture.",
+      "thresholdReasoning": [
+        "Why moisture, not protein: no protein-class species exists at any rank.",
+        "Why moisture, not balanced: balanced requires the material R5 route as a precondition. This formula would satisfy both of the balanced test's second-leg branches (a three-member humectant cluster AND S3 four times over) - and still cannot be balanced, because the protein leg is absent. That is the rule working as designed: balanced is never a 'rich and hydrating' bucket.",
+        "Confidence high: resolved tail marker, complete list, vacuous protein side, D4 does not fire."
+      ],
+      "counterSignals": [
+        "'Deep Repair' naming with zero protein and zero bond chemistry - recorded as E0 claim context",
+        "Section 9.3.1 restated: care_direction moisture and primary_focus moisture are different tests, and this product happens to clear both - see the primary_focus caveat"
+      ],
+      "limitations": [
+        "No claims summary; claims may not influence care_direction in any case."
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "low",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Full ingredient list; comparative route potential, never measured repair.",
+      "rationale": "No bond token and no protein species of any kind, so both upgrade gates fail despite explicit 'Deep Repair' positioning. E2 ceiling.",
+      "evidenceSignals": [
+        "bond_route = none: no maleate, no gluconamide pair, no bond-positioned peptide",
+        "No R5 species at any rank",
+        "Explicit non-upgraders present: HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE (14, cationic polymer, tail-side), PANTHENOL (11), the plant oils, LACTIC ACID (17), CITRIC ACID (19)"
+      ],
+      "derivation": "Section 9.4: high fails (no bond token), medium fails (no R5 route) -> low.",
+      "thresholdReasoning": [
+        "Why low, not medium: no protein/peptide/keratin film route exists at any rank.",
+        "Why low, not high: no named bond chemistry.",
+        "All three mask-delta inflation risks are live and closed: this product is conditioning_level high and weight_potential high (being a rich mask is not repair), it has a stated dwell (dwell is not repair), and it is named 'Deep Repair' (naming is E0)."
+      ],
+      "counterSignals": [
+        "The gap between the product name and the formula is the widest in the set alongside packet 07"
+      ],
+      "limitations": []
+    },
+    "primaryFocus": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Above-tail humectant cluster plus the section 9.5.2 hierarchy; humectant-forward comparative direction only.",
+      "rationale": "No richer special-purpose route wins and the D5 cluster guard is met at exactly its bar - three distinct humectants above the tail, two of them non-glycerin. E2 wording, binding: a humectant-forward comparative direction, never proven hydration. This is my least comfortable focus call in the eligible set and is listed in uncertain_fields - see limitations.",
+      "evidenceSignals": [
+        "Step 3 repair fails: no R5, no bond token; 'Deep Repair' naming is E0 and cannot create a route",
+        "Step 3 curl_support fails: the slip route is the category-baseline two-cationic base; the only cationic polymer is tail-side (14); curl positioning could corroborate but never create",
+        "Step 3 color_care fails: no candidate, no positioning",
+        "Step 3 lightness fails: weight_potential is high",
+        "Step 4 moisture, criterion 1 satisfied at exactly the bar: GLYCERIN (3), BETAINE (9), PANTHENOL (11) - three distinct R9 humectants above the tail, two of them non-glycerin",
+        "Criterion 2: the formula IS a rich R1/R4 architecture, but the three cluster members are M5 water-binding species distinct from the four lipids and the fatty alcohol, so this is not the 'one glycerin on an emollient base' case section 6 rule 3 excludes",
+        "Criterion 3 satisfied: no richer special-purpose route wins - repair, curl_support, color_care and lightness all failed",
+        "Criterion 4 satisfied: no hydrolyzed proteins exist to be miscounted",
+        "Step 5 shine, step 6 smoothing, step 7 detangling all fail: no silicone, no above-tail polymer, and emollient richness is not dry surface control"
+      ],
+      "derivation": "Section 9.5.2 steps 1-4 in order; the D5 guard of section 9.5.3 applied in full. focus_care_verdict = moisture_supported, with the cluster at exactly its threshold.",
+      "thresholdReasoning": [
+        "Why moisture, not general: the guard's four criteria are all met on the written text. Criterion 1 is met exactly - three members, two non-glycerin - with no margin.",
+        "Why this is uncomfortable: two of the three cluster members (BETAINE 9, PANTHENOL 11) sit in the last three ranks before the marker at 12, inside what the lexicon calls the boundary band, and the lexicon warns not to let a single rank either side of the marker flip a value. Compare packet 03: the same brand's near-identical base with Panthenol one rank below its marker fails criterion 1 and lands on general. One rank separates the two primary focuses.",
+        "Why moisture, not smoothing: step 6's dry-surface conjunct fails - there is no film former in the formula.",
+        "Confidence held at moderate rather than the high the section 9.5.3 confidence rule would allow: the rule's three conditions (>= 3 humectants, one within the first five ranks - GLYCERIN at 3 - resolved marker, no competing route) are all technically met, but a value that flips on one boundary-band rank does not satisfy section 4.1's definition of high ('reasonable unknowns would not move the value'). Realistic unknowns plainly could move it, which is the definition of moderate.",
+        "claim_role = not_applicable: no claims summary, and no claim-permitted leg was live."
+      ],
+      "counterSignals": [
+        "The cluster's two non-glycerin members are both in the boundary band immediately above the marker",
+        "Glycerin's rank carries no moisture signal on its own; without it the cluster would fail, so the guard's '>= 2 non-glycerin' is doing exactly what it should - but only just",
+        "This is a butter- and oil-led rich curl mask, and 'moisture' as its research headline reads as a thin description of it. The competing description (emollient richness) has no vocabulary value",
+        "Hair-fibre hydration outcomes are weakly evidenced (lexicon W1)"
+      ],
+      "limitations": [
+        "Listed in uncertain_fields. The adjacent value is general, and it is one rank away.",
+        "I would have wanted a claims source only to record the E0 positioning properly; under the rules it could not have created or blocked the moisture route."
+      ]
+    },
+    "secondaryFocus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Same hierarchy pass as primary_focus.",
+      "rationale": "No further candidate clears its own threshold. E2 ceiling.",
+      "evidenceSignals": [
+        "curl_support rejected: baseline slip, tail-side polymer, and positioning may only corroborate",
+        "smoothing rejected: no dry-surface film architecture",
+        "detangling rejected: slip is category baseline (section 6 rule 1 - the rich R1+R4 base is one M1 observation)"
+      ],
+      "derivation": "Section 9.5.2 secondary rule plus section 6 G3 rule 1.",
+      "thresholdReasoning": [
+        "Why zero secondaries: every remaining candidate is a facet of the same M1 deposition observation."
+      ],
+      "counterSignals": [],
+      "limitations": [
+        "As with packet 03, the emollient richness that most characterises this product has no vocabulary home."
+      ]
+    },
+    "hairThicknessFit": {
+      "value": ["normal", "coarse"],
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Deterministic derivation from weight_potential; desired-finish/dosage prior.",
+      "rationale": "weight_potential: high maps to normal + coarse under the section 9.6 table. E2 ceiling inherited.",
+      "evidenceSignals": ["weight_potential = high (high confidence)"],
+      "derivation": "Section 9.6 table row 'high'.",
+      "thresholdReasoning": [
+        "Why not fine+normal+coarse: keyed to weight_potential moderate; the base-plus-alternative anchor is satisfied with margin.",
+        "Why not fine+normal: keyed to weight_potential low, falsified on all three legs."
+      ],
+      "counterSignals": [
+        "A soft preference with a stated reason, never 'fine hair must avoid masks'"
+      ],
+      "limitations": []
+    },
+    "damageFit": {
+      "value": ["healthy", "moderately_damaged"],
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Deterministic derivation from conditioning_level plus the specialist-route test; broad product prior.",
+      "rationale": "conditioning_level: high without a qualifying specialist route maps to exactly healthy + moderately_damaged. E2 ceiling inherited.",
+      "evidenceSignals": [
+        "conditioning_level = high",
+        "No qualifying specialist route: repair_support_level = low, bond_route = none, no corroborated exceptional protection, no exact-product test"
+      ],
+      "derivation": "Section 9.7 table row 'high without a qualifying specialist route'.",
+      "thresholdReasoning": [
+        "Why not moderately_damaged + highly_damaged: no specialist route. A 'Deep Repair' product landing outside the specialist bucket is the rule working as intended.",
+        "Why not exactly healthy: keyed to conditioning_level low.",
+        "The specialist result replaces the general-high set; all three values are never emitted."
+      ],
+      "counterSignals": [
+        "Repair naming is the only pull toward the specialist set and it is entirely E0"
+      ],
+      "limitations": []
+    },
+    "textureFit": {
+      "value": ["wavy", "curly", "coily"],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Deterministic derivation from weight_potential plus a slip-route check; research-only.",
+      "rationale": "weight_potential: high with a coherent R1 high-slip route maps to wavy + curly + coily. E2 ceiling inherited.",
+      "evidenceSignals": [
+        "weight_potential = high",
+        "Coherent R1 slip route above the tail: CETRIMONIUM CHLORIDE (8) + BEHENTRIMONIUM METHOSULFATE (10) on a rank-2 cetearyl network",
+        "R3 cationic polymer present but tail-side (14) - not counted"
+      ],
+      "derivation": "Section 9.8 table row 'high-slip, high-deposition architecture'.",
+      "thresholdReasoning": [
+        "Why not straight+wavy+curly: keyed to weight_potential moderate.",
+        "Why not straight+wavy: keyed to weight_potential low.",
+        "The R1/R3 disjunction is read as satisfied by R1 alone."
+      ],
+      "counterSignals": [
+        "Curl branding alone never determines the result - the value is derived from weight architecture and the brand identity was not used. That the derived answer happens to match the brand's positioning is a coincidence, not evidence"
+      ],
+      "limitations": [
+        "Section 9.8 gives no row for 'weight high but slip route only baseline'; my reading is the permissive one."
+      ]
+    }
+  },
+  "bondRoute": {
+    "value": "none",
+    "token": null,
+    "rank": null
+  },
+  "uncertainFields": [
+    "primaryFocus"
+  ],
+  "assumptionNotes": [
+    "Tail marker taken as SODIUM BENZOATE (12), the earliest tail-class member, not PARFUM (13). This one-rank decision admits PANTHENOL (11) to the humectant cluster and thereby determines primary_focus.",
+    "GLYCERYL STEARATE SE treated as a family-10 emulsifier with zero credit.",
+    "BETAINE counted as an R9 humectant (it is on the R9 list). CANANGA ODORATA FLOWER EXTRACT (21) treated as tail-side aromatic material with no credit.",
+    "PERSEA GRATISSIMA OIL and GLYCINE SOJA OIL treated as mid-band plant triglycerides (S3 credit, no independent R4b heavy credit); the heavy alternative rests on shea butter and coconut oil.",
+    "Curl-brand identity deliberately not used to create curl_support; under step 3 and step 9 it could only corroborate, and the formula leg (high slip beyond baseline) fails.",
+    "Review triggers I would fire: none of the mask-specific triggers is engaged. I would however flag this product to the first-set review paired with packet 03, because the two sibling formulas differ by one rank in the tail marker and land on different primary focuses - a direct test of how sensitive the D5 guard is to boundary-band placement.",
+    "No claims summary supplied; no claim-permitted leg was live."
+  ]
+}

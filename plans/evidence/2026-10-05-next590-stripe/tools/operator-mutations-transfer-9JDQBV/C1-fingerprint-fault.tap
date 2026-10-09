@@ -1,0 +1,60 @@
+TAP version 13
+# Subtest: retrieves provider authorities itself before returning verified trial facts
+not ok 1 - retrieves provider authorities itself before returning verified trial facts
+  ---
+  duration_ms: 4.470167
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/stripe-trial-authorization.test.ts:2:10666'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        authorizationSucceededAt: '2026-09-13T12:00:00.000Z',
+    +   cardFingerprint: 'incorrect',
+    -   cardFingerprint: 'fp_server_only',
+        customerId: 'cus_trial_customer',
+        enrollmentId: '892ae2a0-4a3c-45db-bf22-2f38c3bf0e49',
+        paymentMethodId: 'pm_trial_card',
+        providerAgreementId: 'sub_trial_agreement',
+        trialEndAt: '2026-09-20T12:00:00.000Z',
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    enrollmentId: '892ae2a0-4a3c-45db-bf22-2f38c3bf0e49'
+    providerAgreementId: 'sub_trial_agreement'
+    authorizationSucceededAt: '2026-09-13T12:00:00.000Z'
+    trialEndAt: '2026-09-20T12:00:00.000Z'
+    customerId: 'cus_trial_customer'
+    paymentMethodId: 'pm_trial_card'
+    cardFingerprint: 'fp_server_only'
+    unverifiedFutureInvoiceObligations:
+      0: 'verify_first_paid_invoice_amount'
+      1: 'verify_renewal_invoice_amount'
+  actual:
+    enrollmentId: '892ae2a0-4a3c-45db-bf22-2f38c3bf0e49'
+    providerAgreementId: 'sub_trial_agreement'
+    authorizationSucceededAt: '2026-09-13T12:00:00.000Z'
+    trialEndAt: '2026-09-20T12:00:00.000Z'
+    customerId: 'cus_trial_customer'
+    paymentMethodId: 'pm_trial_card'
+    cardFingerprint: 'incorrect'
+    unverifiedFutureInvoiceObligations:
+      0: 'verify_first_paid_invoice_amount'
+      1: 'verify_renewal_invoice_amount'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/stripe-trial-authorization.test.ts:397:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 318.436959

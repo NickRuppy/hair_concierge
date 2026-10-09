@@ -1,0 +1,240 @@
+{
+  "version": "conditioner-research-envelope-v1.6",
+  "researchMethod": {
+    "policyId": "conditioner-classification-v1.6",
+    "modelVersion": "conditioner-inci-v1.6",
+    "policySha256": "688ca25ca534f98789d0b300fbc5f3008a5c0652fe63af276dfda6ced79f3135",
+    "runbookSha256": "6a66780ef23a7595cfbeab07fe9f671a92a58d177b92c734a8d6f736833165e8"
+  },
+  "identity": {
+    "researchId": "F4",
+    "market": "DE/EU",
+    "exactProductName": "Balea PROFESSIONAL Conditioner Oil Repair Intensiv, 200 ml",
+    "categoryBoundaryStatus": "eligible",
+    "confidence": "high",
+    "sourceIds": [
+      "https://www.dm.de/p/d/1703916/balea-professional-conditioner-oil-repair-intensiv"
+    ]
+  },
+  "formula": {
+    "status": "verified",
+    "rawInci": "AQUA, GLYCERIN, CETEARYL ALCOHOL, ISOPROPYL PALMITATE, BEHENTRIMONIUM CHLORIDE, PANTHENOL, HYDROLYZED KERATIN, HELIANTHUS ANNUUS HYBRID OIL, RICINUS COMMUNIS SEED OIL, ARGANIA SPINOSA KERNEL OIL, ORBIGNYA OLEIFERA SEED OIL, SCLEROCARYA BIRREA SEED OIL, PARFUM, ISOPROPYL ALCOHOL, SODIUM BENZOATE, POTASSIUM SORBATE, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, CITRIC ACID",
+    "normalizedIngredients": [
+      "AQUA",
+      "GLYCERIN",
+      "CETEARYL ALCOHOL",
+      "ISOPROPYL PALMITATE",
+      "BEHENTRIMONIUM CHLORIDE",
+      "PANTHENOL",
+      "HYDROLYZED KERATIN",
+      "HELIANTHUS ANNUUS HYBRID OIL",
+      "RICINUS COMMUNIS SEED OIL",
+      "ARGANIA SPINOSA KERNEL OIL",
+      "ORBIGNYA OLEIFERA SEED OIL",
+      "SCLEROCARYA BIRREA SEED OIL",
+      "PARFUM",
+      "ISOPROPYL ALCOHOL",
+      "SODIUM BENZOATE",
+      "POTASSIUM SORBATE",
+      "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+      "CITRIC ACID"
+    ],
+    "formulaFingerprintSha256": "4abdeaebe4941e4143545e1d6edf0d70986ca1bc60958f1f8fdb9fc3dbdde5b0",
+    "rawInciSha256": "0dc4ff2fbf577993f64b5c6facd491e4aac0cadb20d9777875518a9ecb020476",
+    "sourceIds": [
+      "https://www.dm.de/p/d/1703916/balea-professional-conditioner-oil-repair-intensiv",
+      "blind:F4-normalization-trace.json"
+    ]
+  },
+  "profile": {
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High conditioning potential is supported by a clear fatty-alcohol/long-chain quat base plus an early ester and an oil cluster, with a separate hydrolyzed keratin film candidate.",
+      "evidenceSignals": [
+        "#3 Cetearyl Alcohol",
+        "#4 Isopropyl Palmitate",
+        "#5 Behentrimonium Chloride",
+        "#7 Hydrolyzed Keratin",
+        "#8-12 nonvolatile oils"
+      ],
+      "derivation": "R1 and R4 converge on higher M1 conditioning; M2 recorded separately, not multiplied into several endpoint scores.",
+      "thresholdReasoning": [
+        "Moderate is a credible neighboring result if actual actives are low, but early cationic base and ester with the oil payload favor high potential.",
+        "High is a formula-potential ceiling, not measured slip/softness; glycerin #2 and rinse-out dilution prevent predicting a fixed delivered dose."
+      ],
+      "limitations": [
+        "INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data."
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate is the prescribed lean matching fallback: blind formula-only higher deposition was already uncertain, and the exact current product explicitly describes a finish without weighing hair down. Preserve the direct higher-potential trace and uncertainty; this claim does not prove low deposition.",
+      "evidenceSignals": [
+        "#3 Cetearyl Alcohol",
+        "#4 Isopropyl Palmitate",
+        "#5 Behentrimonium Chloride",
+        "#8-12 oil cluster",
+        "Exact product description: finish without weighing hair down; source https://www.dm.de/p/d/1703916/balea-professional-conditioner-oil-repair-intensiv"
+      ],
+      "derivation": "Conditioner Standard v1.6 section 10.1: conflict-tagged formula-only higher + materially contradictory exact-product intended finish + no finished-product resolution -> moderate lean fallback.",
+      "thresholdReasoning": [
+        "Low is not supported: early ester #4 plus cationic/fatty base #3/#5 and oil cluster #8-12 remain a substantive payload.",
+        "High would turn the unresolved formula-versus-intended-finish conflict into restrictive matching; the standard explicitly requires moderate fallback here."
+      ],
+      "limitations": [
+        "INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data."
+      ]
+    },
+    "careDirection": {
+      "value": "balanced",
+      "confidence": "moderate",
+      "rationale": "Balanced comparative care: a distinct hydrolyzed keratin route coexists with prominent glycerin/panthenol and a coherent ester/oil softness architecture.",
+      "evidenceSignals": [
+        "#2 Glycerin",
+        "#4 Isopropyl Palmitate",
+        "#6 Panthenol",
+        "#7 Hydrolyzed Keratin",
+        "#8-12 oils"
+      ],
+      "derivation": "Section 10.2 substantive R5 plus substantive moisture-softness architecture -> balanced.",
+      "thresholdReasoning": [
+        "Moisture alone understates the distinct named keratin film candidate in a plausible cationic delivery context.",
+        "Protein alone does not capture the earlier humectant/emollient pattern; order cannot quantify route dominance."
+      ],
+      "limitations": [
+        "INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data."
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "medium",
+      "confidence": "moderate",
+      "rationale": "Medium temporary fibre-film support potential from hydrolyzed keratin in a cationic conditioning chassis.",
+      "evidenceSignals": [
+        "#7 Hydrolyzed Keratin",
+        "#5 Behentrimonium Chloride"
+      ],
+      "derivation": "Distinct R5 -> medium under section 10.2; E2 only.",
+      "thresholdReasoning": [
+        "Low would ignore the specific protein route beyond lubrication.",
+        "High is rejected because no materially stronger named bond route is visible; keratin naming does not prove structural repair."
+      ],
+      "limitations": [
+        "INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data."
+      ]
+    },
+    "primaryFocus": {
+      "value": "repair",
+      "confidence": "moderate",
+      "rationale": "Repair is the provisional research headline because a distinct hydrolyzed keratin film route clears the specialist threshold; dry smoothing is also substantively supported. Exact Oil Repair positioning now corroborates the already identified R5 route; marketed breakage percentage is not treated as tested-product evidence without protocol/data.",
+      "evidenceSignals": [
+        "#7 Hydrolyzed Keratin",
+        "#3 Cetearyl Alcohol",
+        "#5 Behentrimonium Chloride"
+      ],
+      "derivation": "Section 10.3 special-purpose R5 route considered before generic dry-control focus.",
+      "thresholdReasoning": [
+        "General would omit the specialist route; baseline wet detangling alone does not dominate.",
+        "Smoothing is a plausible competing headline; exact positioning is hidden and can corroborate but not manufacture either route."
+      ],
+      "limitations": [
+        "INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data."
+      ]
+    },
+    "secondaryFocus": {
+      "value": [
+        "smoothing"
+      ],
+      "confidence": "moderate",
+      "rationale": "Smoothing is a useful secondary dry-surface endpoint from the ester/oil payload beyond R1, separate from the keratin-film headline.",
+      "evidenceSignals": [
+        "#4 Isopropyl Palmitate",
+        "#8-12 oils",
+        "#5 Behentrimonium Chloride"
+      ],
+      "derivation": "Section 10.3 secondary endpoint; no duplicate optical benefit from same M1 route.",
+      "thresholdReasoning": [
+        "Empty would omit the pronounced emollient surface-control architecture.",
+        "Shine would double-count a film/alignment endpoint without distinct optical evidence; curl support needs more endpoint-specific corroboration to displace this choice."
+      ],
+      "limitations": [
+        "INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data."
+      ]
+    },
+    "hairThicknessFit": {
+      "value": [
+        "fine",
+        "medium",
+        "coarse"
+      ],
+      "confidence": "moderate",
+      "rationale": "All three diameter priors follow the moderate lean weight fallback; fine is retained while the deposition conflict is unresolved.",
+      "evidenceSignals": [
+        "derived: weightPotential=moderate under section 10.1 fallback"
+      ],
+      "derivation": "Section 10.4 moderate weight -> fine + medium + coarse.",
+      "thresholdReasoning": [
+        "Retaining only medium/coarse would retain the restrictive high-weight consequence after selecting the mandatory moderate fallback.",
+        "This broad prior is not proof of universally light finish; dosage and unresolved deposition remain relevant."
+      ],
+      "limitations": [
+        "INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data."
+      ]
+    },
+    "damageFit": {
+      "value": [
+        "moderately_damaged",
+        "highly_damaged"
+      ],
+      "confidence": "moderate",
+      "rationale": "The exact specialist damage set is moderately/highly damaged because high conditioning combines with a distinct hydrolyzed keratin fibre-film route.",
+      "evidenceSignals": [
+        "derived: conditioningLevel=high",
+        "#7 Hydrolyzed Keratin"
+      ],
+      "derivation": "Section 10.4 specialist high condition: replace general high set; do not append a third value.",
+      "thresholdReasoning": [
+        "Healthy + moderately_damaged is the general-high set and omits the qualifying R5 route.",
+        "All three values are explicitly forbidden; the selected pair is a broad product prior, not measured repair efficacy."
+      ],
+      "limitations": [
+        "INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data."
+      ]
+    },
+    "textureFit": {
+      "value": [
+        "straight",
+        "wavy",
+        "curly"
+      ],
+      "confidence": "moderate",
+      "rationale": "Balanced architecture texture prior follows the moderate lean deposition fallback while high conditioning remains; coily is not established by high conditioning alone.",
+      "evidenceSignals": [
+        "derived: weightPotential=moderate",
+        "derived: conditioningLevel=high"
+      ],
+      "derivation": "Section 10.4 balanced architecture -> straight + wavy + curly; high-deposition conjunct is unresolved.",
+      "thresholdReasoning": [
+        "Straight/wavy-only would incorrectly apply the low-weight/lightness branch.",
+        "Wavy/curly/coily requires high slip plus high deposition; retaining that set would ignore the resolved lean weight fallback."
+      ],
+      "limitations": [
+        "INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data."
+      ]
+    },
+    "uncertainFields": [
+      "weight_potential",
+      "hair_thickness_fit",
+      "texture_fit",
+      "care_direction"
+    ],
+    "assumptionNotes": [
+      "Exact current DE identity and raw INCI freshly rechecked by root at 2026-10-04T08:03:58.486Z; no historical alias continuity asserted.",
+      "Original source bytes preserved in frozen packet; cleaned adapter derivative and hashes documented separately.",
+      "INCI-only E2; no measured performance, concentration, final pH or repeated-use evidence.",
+      "Blind profile was frozen before source/claims revealed; post-unblind changes are explicit in post-unblind-delta.json.",
+      "One blind assessor; independent repeatability has not been measured."
+    ]
+  }
+}

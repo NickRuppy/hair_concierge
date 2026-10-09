@@ -1,0 +1,98 @@
+'use strict';
+// MAIN ONLY. --check is read-only, does not load a project owner, and never spawns children.
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const guardPath='/tmp/test-audit-recompute-integration42/guard.cjs';
+if(crypto.createHash('sha256').update(fs.readFileSync(guardPath)).digest('hex')!=='d43a29b7fc60c9a4d9ce55f93b64be66b8866d1e67afa49a9542e87cb1f8b2bd')throw Error('guard tool changed');
+const g=require(guardPath),mode=process.argv[2],selectedId=process.argv[3];
+g.must(['--check','run'].includes(mode)&&process.argv.length<=4,'usage: node run-controls.cjs --check|run [control-id]');
+const controls=selectedId?g.controls.filter(c=>c.id===selectedId):g.controls;
+g.must(controls.length>0,'unknown control id');
+const phase=g.phase();
+const prepared=new Map(controls.map(c=>{const original=g.read(g.abs(c.file));return[c.id,{original,mutant:Buffer.from(original.toString('utf8').replace(c.from,c.to))}];}));
+if(mode==='--check') {
+  console.log(JSON.stringify({status:'static-only PASS',phase,controls:controls.length,...g.proposal,selectorMatches:controls.map(c=>c.id),sourceGuards:Object.keys(g.manifest.readset).length,dependencyGuards:Object.keys(g.pins.dependencies).length,childrenSpawned:0,writes:0,limits:'Five SQL faults exact-anchor checked, not parsed/executed; two TS faults syntax parsed. No runtime evidence.'},null,2));
+  process.exit(0);
+}
+g.must(['transfer','cut'].includes(phase),'controls require full transfer or cut phase');
+const cp=require('node:child_process'); // reached only in explicit run mode
+const release=g.lock('controls-'+phase);
+let dir,activeChild=null,interrupted=null;
+const rows=[];
+function killOwnedGroup(signal) {if(activeChild?.pid)try{process.kill(-activeChild.pid,signal);}catch(e){if(e.code!=='ESRCH')throw e;}}
+function stop(signal){interrupted=signal;killOwnedGroup('SIGKILL');}
+function ensure(overrides={}) {g.must(!interrupted,'operator interrupted: '+interrupted);return g.live(phase,overrides);}
+function save(){if(dir)fs.writeFileSync(path.join(dir,'receipt.json'),JSON.stringify(rows,null,2)+'\n');}
+function tapCounts(s) {
+  const n=key=>{const hits=[...s.matchAll(new RegExp('^# '+key+' (\\d+)$','gm'))];return hits.length===1?Number(hits[0][1]):null;};
+  return {tests:n('tests'),pass:n('pass'),fail:n('fail'),cancelled:n('cancelled'),skipped:n('skipped')};
+}
+async function run(c,label) {
+  const log=path.join(dir,c.id+'-'+label+'.tap'),fd=fs.openSync(log,'wx');
+  let timer,status=null,signal=null,spawnError=null,timedOut=false;
+  try {
+    g.must(!interrupted,'interrupted before child');
+    const child=cp.spawn(process.execPath,c.command,{cwd:g.ROOT,stdio:['ignore',fd,fd],detached:true});activeChild=child;
+    timer=setTimeout(()=>{timedOut=true;killOwnedGroup('SIGKILL');},45000);
+    const result=await new Promise(resolve=>{child.once('error',e=>{spawnError=String(e);resolve({status:null,signal:null});});child.once('close',(status,signal)=>resolve({status,signal}));});
+    status=result.status;signal=result.signal;
+  }finally{
+    clearTimeout(timer);killOwnedGroup('SIGKILL');activeChild=null;fs.closeSync(fd);
+  }
+  const text=fs.readFileSync(log,'utf8');
+  return{status,signal,spawnError,timedOut,...tapCounts(text),log,logSha256:g.hash(text),text};
+}
+function clean(r){return r.status===0&&r.signal===null&&!r.spawnError&&!r.timedOut&&r.tests===1&&r.pass===1&&r.fail===0&&r.cancelled===0&&r.skipped===0;}
+function field(s,key){
+  const lines=s.split('\n'),i=lines.findIndex(x=>new RegExp('^\\s+'+key+':').test(x));if(i<0)return '';
+  const indent=lines[i].match(/^\s*/)[0].length;let value=lines[i].slice(lines[i].indexOf(':')+1).trim();
+  for(let j=i+1;j<lines.length;j++){if(lines[j].trim() && lines[j].match(/^\s*/)[0].length<=indent)break;value+='\n'+lines[j];}
+  return value;
+}
+function intended(c,r) {
+  const oracle=c.oracles[phase],error=field(r.text,'error');
+  const stack=field(r.text,'stack');const firstFrame=stack.split('\n').find(x=>/:\d+:\d+\)?\s*$/.test(x))||'';
+  const frameToken=c.testFile+':'+oracle.line+':';
+  const operator=field(r.text,'operator').trim().replace(/^['"]|['"]$/g,'');
+  const code=field(r.text,'code').trim().replace(/^['"]|['"]$/g,'');
+  const failureType=field(r.text,'failureType').trim().replace(/^['"]|['"]$/g,'');
+  const named=r.text.includes('# Subtest: '+c.testName+'\n');
+  const messageMatches=error.includes(c.requiredMessage);
+  const accepted=r.status===1&&r.signal===null&&!r.spawnError&&!r.timedOut&&r.tests===1&&r.pass===0&&r.fail===1&&r.cancelled===0&&r.skipped===0&&code==='ERR_ASSERTION'&&failureType==='testCodeFailure'&&operator===c.requiredOperator&&messageMatches&&named&&firstFrame.includes(frameToken);
+  return{accepted,code,failureType,operator,requiredOperator:c.requiredOperator,error,requiredMessage:c.requiredMessage,messageMatches,named,firstFrame,frameToken,oracle};
+}
+function compact(r){const{text,...rest}=r;return rest;}
+process.on('SIGINT',stop);process.on('SIGTERM',stop);
+(async()=>{
+ try {
+  ensure();dir=g.backup('controls-'+phase,Object.fromEntries([...new Set(controls.map(c=>c.file))].map(f=>[f,g.read(g.abs(f))])));
+  for(const c of controls) {
+    const bytes=prepared.get(c.id),beforeGuards=ensure();
+    const row={id:c.id,phase,proofKind:c.proofKind,testFile:c.testFile,testName:c.testName,command:[process.execPath,...c.command],source:c.file,sourceBefore:g.hash(bytes.original),sourceFault:g.hash(bytes.mutant),guardsBefore:beforeGuards,intendedOracle:c.oracles[phase]};rows.push(row);save();
+    const before=await run(c,'before');row.before=compact(before);save();g.must(clean(before),'clean-one before failed: '+c.id);
+    let fault;
+    try {
+      ensure();g.cas(c.file,c.sourceSha256,bytes.mutant);
+      ensure({[c.file]:c.mutantSha256});
+      row.observedMutant=g.hash(g.read(g.abs(c.file)));save();
+      fault=await run(c,'fault');row.fault=compact(fault);row.assertion=intended(c,fault);save();
+    } finally {
+      // Even setup/import/assertion errors or timeout restore only bytes owned by this invocation.
+      const now=g.read(g.abs(c.file));
+      if(now.equals(bytes.mutant))g.cas(c.file,c.mutantSha256,bytes.original);
+      row.sourceRestored=g.hash(g.read(g.abs(c.file)));
+      row.byteExactRestored=row.sourceRestored===c.sourceSha256;save();
+    }
+    g.must(row.byteExactRestored,'owned restoration refused; preserve concurrent bytes and inspect originals: '+c.id);
+    ensure();const after=await run(c,'after');row.after=compact(after);row.guardsAfter=ensure();save();
+    g.must(clean(after),'clean-one after failed: '+c.id);
+    g.must(row.assertion?.accepted,'intended ERR_ASSERTION message/operator/first-frame not proved: '+c.id+'; SQL/import/setup/timeout errors rejected');
+    row.verified=true;save();console.log(c.id+': clean1 / intended assertion red1 / byte-exact restore / clean1');
+  }
+  ensure();const complete={status:'verified',phase,head:g.pins.head,root:g.ROOT,verified:rows.length,controlIds:rows.map(x=>x.id),cleanRuns:rows.length*2,driverSha256:g.hash(g.read(__filename)),guardSha256:g.hash(g.read(guardPath)),controlSha256:g.hash(g.read(path.join(g.DIR,'controls-normalized.json'))),receiptSha256:g.hash(g.read(path.join(dir,'receipt.json'))),testPhaseHashes:g.manifest.phases[phase]};
+  fs.writeFileSync(path.join(dir,'complete.json'),JSON.stringify(complete,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({receiptDir:dir,...complete},null,2));
+ } catch(error) {
+  save();if(dir)fs.writeFileSync(path.join(dir,'failure.json'),JSON.stringify({error:String(error),interrupted},null,2)+'\n');throw error;
+ } finally {
+  killOwnedGroup('SIGKILL');process.off('SIGINT',stop);process.off('SIGTERM',stop);release();
+ }
+})().catch(error=>{console.error(error);process.exitCode=1;});

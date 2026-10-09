@@ -1,0 +1,25 @@
+{
+  "depositionLoad": "moderate",
+  "persistence": "moderate",
+  "resetCapacity": "weak",
+  "evidence_positions": {
+    "cationic_guar": 17,
+    "glyceryl_oleate": 11,
+    "glyceryl_stearate": 21,
+    "capb": 3,
+    "sci": 4
+  },
+  "counterevidence": [
+    "rinse-off dilution",
+    "no silicone",
+    "no persistent rich quat/fatty-alcohol conditioning chassis"
+  ],
+  "unresolved": [
+    "actual deposition",
+    "concentrations",
+    "polymer molecular weight",
+    "finished-product rinse/removal performance"
+  ],
+  "whyThisBand": "One substantive cationic-guar route with refatting esters and weak reset makes bounded deposition plausible; no silicone, butter or rich conditioner chassis supports high. Low is a realistic neighboring possibility because deposition amount is unknown; moderate is a provisional whole-formula call, not a polymer-presence rule.",
+  "whyNotNeighborBand": "High lacks convergent rich persistent systems; low remains a plausible adjacent outcome needing blind recheck."
+}

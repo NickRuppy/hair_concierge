@@ -1,0 +1,12 @@
+import pathlib,json,hashlib,difflib
+p=pathlib.Path('/tmp/test-audit-offer-experiments87-authorization-closure');j=json.loads((p/'proposal.json').read_text());root=pathlib.Path(j['root']);h=lambda b:hashlib.sha256(b).hexdigest()
+diff=''
+for f in j['phases']['before']:
+ file=f['file'];a=(p/'phases/before'/file).read_text();b=(p/'phases/cut'/file).read_text();diff+=''.join(difflib.unified_diff(a.splitlines(True),b.splitlines(True),fromfile='a/'+file,tofile='b/'+file))
+(p/'prospective.diff').write_text(diff)
+route='src/app/api/stripe/create-checkout-session/route.ts';t=(root/route).read_text();find='return NextResponse.json({ error: "one_time_purchase_retired" }, { status: 410 })';assert t.count(find)==1
+mut=t.replace(find,find.replace('410','409'));(p/'retirement-response-mutant.ts').write_text(mut)
+keeper=j['keeper'];kt=(root/keeper['file']).read_text();ks=kt.index(keeper['body']);oracle=ks+keeper['body'].index('assert.equal(response.status, 410)');control={'id':'retirement-response-status','source':route,'beforeSha256':h(t.encode()),'find':find,'replace':find.replace('410','409'),'mutantPath':str(p/'retirement-response-mutant.ts'),'mutantSha256':h(mut.encode()),'keeperFile':keeper['file'],'keeperTitle':keeper['title'],'firstKeeperAssertionLine':kt[:oracle].count('\n')+1,'code':'ERR_ASSERTION','operator':'strictEqual','actual':409,'expected':410,'limit':'Representative unchanged early-response contract. Do not delete/bypass gate as a fault; that would enter framework/provider setup.'}
+(p/'control.json').write_text(json.dumps(control,indent=2)+'\n')
+commands={'cwd':str(root),'nativeRetainedBoundary':'node --import ./tests/server-only-register.cjs --import tsx --test --test-name-pattern="^retired one-time purchase requests stop before account or provider work$" tests/stripe-checkout-session-route-contract.test.ts','nativePricing':'node --import ./tests/server-only-register.cjs --import tsx --test tests/personal-plan-pricing-experiment.test.ts','broaderMainOwned':'Relevant retained Stripe route, prepared-claim, existing one-time activation/consent/status/welcome and recovery contracts; full campaign native/c8 plus normal CI. No script here invokes them. Typecheck/lint/build remain main-only.','counts':{'pricingBefore':14,'pricingAfter':12,'retirementBoundarySelected':1,'retirementBoundaryExistingRows':2},'sourceRetirementNeedsMainAcceptance':True,'credit':0}
+(p/'main-commands.json').write_text(json.dumps(commands,indent=2)+'\n')

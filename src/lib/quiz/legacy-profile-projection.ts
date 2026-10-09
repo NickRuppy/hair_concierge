@@ -6,12 +6,12 @@ import { resolveStatedPrimaryConcern } from "./primary-concern"
 import type { QuizAnswers } from "./types"
 
 /**
- * The legacy `hair_profiles` column projection of quiz answers — what the quiz link, the paid
- * activation and the iOS publishers wrote into the columns directly before the clean switch
- * (plan 2026-09-30). Pure; moved out of `link-to-profile.ts` unchanged so the one-time user-facts
- * backfill can recompute what those old writers stored (task 7: a column that differs from it
- * was edited by hand) without importing the account-link I/O. `link-to-profile.ts` re-exports
- * every function here.
+ * Frozen reproduction of what the pre-central-profile writers stored in the `hair_profiles`
+ * columns. Nothing writes the profile through this projection any more; facts are written
+ * only through `user_facts_save_v1`.
+ * Remaining consumers: the Plan-bereit completeness gate (`src/app/plan-bereit/readiness.ts`),
+ * the backfill's hand-edit detection (`src/lib/user-facts/backfill/detect-hand-edits.ts`),
+ * golden/oracle tests and `scripts/mobile/profile-edit-postgres-check.ts`. Do not add new callers.
  */
 
 export function resolveProfileDensityFromQuizAnswers(answers: QuizAnswers): string | undefined {

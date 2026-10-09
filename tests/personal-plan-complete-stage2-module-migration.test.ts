@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { mapModuleProjections } from "../src/lib/personal-plan/persistence/stage2-refinement-supabase"
 import test from "node:test"
 
 import {
@@ -228,6 +229,76 @@ test("a closed draft (status <> in_progress) maps to revision_conflict, never a 
     inputHash: "b".repeat(64),
   })
   assert.equal(result.outcome, "revision_conflict")
+
+  // A recorded projection must not short-circuit the closed-draft guard.
+  // Keep the existing stale/no-projection case above; use the donor's revision 2
+  // and products answers for this completed/recorded state.
+  await pg.query(
+    `UPDATE public.personal_plan_refinement_drafts
+        SET status = 'in_progress', revision = 2,
+            answers = '{"currentProductCategories":[],"wetWashFrequency":"daily_1x"}'::jsonb,
+            completed_question_ids = ARRAY['current_product_categories','wet_wash_frequency'],
+            answer_provenance = '{"current_product_categories":"user","wet_wash_frequency":"user"}'::jsonb
+      WHERE id = $1`,
+    [draftId],
+  )
+  const projectionSql = `SELECT public.personal_plan_complete_stage2_module(
+    $1::uuid, $2::uuid, $3::uuid, 'products', 2::bigint, 1, 'test', $4,
+    '{}'::jsonb, '{}'::jsonb
+  ) AS result`
+  const projectionArgs = [USER_ID, initial.personalPlanId, draftId, "a".repeat(64)]
+  const firstProjection = await pg.query<{
+    result: { outcome: string; refinedNeedVersionId: string; stage3Handoff: boolean }
+  }>(projectionSql, projectionArgs)
+  const first = firstProjection.rows[0]!.result
+  assert.equal(first.outcome, "completed")
+  assert.equal(first.stage3Handoff, true)
+  assert.ok(first.refinedNeedVersionId)
+  const beforeReplay = await pg.query<{
+    status: string
+    module_projections: Record<string, unknown>
+  }>(
+    "SELECT status, module_projections FROM public.personal_plan_refinement_drafts WHERE id = $1",
+    [draftId],
+  )
+  assert.equal(beforeReplay.rows[0]!.status, "in_progress")
+  assert.deepEqual(mapModuleProjections(beforeReplay.rows[0]!.module_projections), {
+    products: {
+      needVersionId: first.refinedNeedVersionId,
+      projectedAtRevision: 2,
+      stage3Handoff: true,
+    },
+  })
+  const recorded = beforeReplay.rows[0]!.module_projections.products as {
+    needVersionId: string
+    projectedAtRevision: number
+    stage3Handoff: boolean
+  }
+  assert.equal(recorded.needVersionId, first.refinedNeedVersionId)
+  assert.equal(recorded.projectedAtRevision, 2)
+  assert.equal(recorded.stage3Handoff, true)
+
+  await pg.query(
+    "UPDATE public.personal_plan_refinement_drafts SET status = 'complete', result_refined_need_version_id = $2 WHERE id = $1",
+    [draftId, first.refinedNeedVersionId],
+  )
+  const replay = await pg.query<{ result: { outcome: string; currentRevision: number } }>(
+    projectionSql,
+    projectionArgs,
+  )
+  assert.deepEqual(replay.rows[0]!.result, { outcome: "revision_conflict", currentRevision: 2 })
+  const versions = await pg.query(
+    "SELECT id FROM public.personal_plan_need_versions WHERE kind = 'refined'",
+  )
+  assert.equal(versions.rows.length, 1)
+  const afterReplay = await pg.query<{ module_projections: Record<string, unknown> }>(
+    "SELECT module_projections FROM public.personal_plan_refinement_drafts WHERE id = $1",
+    [draftId],
+  )
+  assert.deepEqual(
+    afterReplay.rows[0]!.module_projections,
+    beforeReplay.rows[0]!.module_projections,
+  )
 })
 
 test("stale_source is checked BEFORE the replay short-circuit: a moved Stage-1 source always reloads", async (t) => {
@@ -285,6 +356,15 @@ test("stale_source is checked BEFORE the replay short-circuit: a moved Stage-1 s
     versions.rows.length,
     1,
     "still just the one version from the earlier completed call",
+  )
+  const lineage = await pg.query<{
+    module_projections: { products: { needVersionId: string } }
+  }>("SELECT module_projections FROM public.personal_plan_refinement_drafts WHERE id = $1", [
+    draftId,
+  ])
+  assert.equal(
+    lineage.rows[0]!.module_projections.products.needVersionId,
+    first.refinedNeedVersionId,
   )
 })
 

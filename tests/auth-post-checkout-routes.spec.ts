@@ -11,7 +11,7 @@ import {
 import { buildPasswordRecoveryRedirect } from "../src/components/auth/auth-form"
 import { buildAuthenticatedAppRedirectUrl } from "../src/lib/supabase/middleware"
 import { handleSendMagicLink } from "../src/app/api/auth/send-magic-link/route"
-import { handleSendSetupLink } from "../src/app/api/auth/send-setup-link/route"
+import { POST as sendSetupLinkPOST } from "../src/app/api/auth/send-setup-link/route"
 import { handleSetCheckoutPassword } from "../src/app/api/auth/set-checkout-password/route"
 import { CheckoutRecoveryError } from "../src/lib/auth/checkout-activation-outcome"
 import { CheckoutActivationError } from "../src/lib/stripe/checkout-activation"
@@ -352,13 +352,26 @@ test("password-reset emails stamp the explicit PKCE recovery destination", () =>
 })
 
 test("rejects missing request body before rate limiting or Stripe work", async () => {
-  const { calls, deps } = stubDeps()
+  let rateLimitCalls = 0
+  let checkoutVerifierCalls = 0
+  const { calls, deps } = stubDeps({
+    checkRateLimit: async () => {
+      rateLimitCalls += 1
+      return { allowed: true }
+    },
+    verifyCheckoutSessionForActivation: async () => {
+      checkoutVerifierCalls += 1
+      return checkoutSession()
+    },
+  })
 
   const response = await handleSetCheckoutPassword({}, deps)
 
   expect(response.status).toBe(400)
   expect(response.body.error).toContain("Session")
   expect(calls).toEqual([])
+  expect(rateLimitCalls).toBe(0)
+  expect(checkoutVerifierCalls).toBe(0)
 })
 
 test("rejects weak passwords before changing anything", async () => {
@@ -1642,14 +1655,12 @@ test("send magic link requires only session_id and reports non-leaky German erro
   expect(response.body.error).toBe("Bitte öffne den Aktivierungslink erneut.")
 })
 
-test("deprecated setup link route returns 410 without side effects", async () => {
-  const response = await handleSendSetupLink()
+test("deprecated setup link POST returns 410 with its German error", async () => {
+  const response = sendSetupLinkPOST()
 
-  expect(response).toEqual({
-    status: 410,
-    body: {
-      error: "Dieser Link wird nicht mehr verwendet. Bitte kehre zur Kontoaktivierung zurück.",
-    },
+  expect(response.status).toBe(410)
+  expect(await response.json()).toEqual({
+    error: "Dieser Link wird nicht mehr verwendet. Bitte kehre zur Kontoaktivierung zurück.",
   })
 })
 

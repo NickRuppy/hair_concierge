@@ -1,0 +1,240 @@
+--- /tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-guard.cjs
++++ /tmp/test-audit-reactivation83-tools-huh910i2/operator-guard.cjs
+@@ -4,8 +4,8 @@
+ const path = require('node:path')
+ const crypto = require('node:crypto')
+ const ROOT = '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning'
+-const BASE = '/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator'
+-const PROPOSAL = '/tmp/test-audit-stripe-trial128-proposal-74Xu81'
++const BASE = '/tmp/test-audit-reactivation83-tools-huh910i2/operator'
++const PROPOSAL = '/tmp/test-audit-reactivation83-proposal-Zzh1n4'
+ const LOCK = '/tmp/test-audit-pruning-operator-lock'
+ const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex')
+ const fail = message => { throw Error(message) }
+@@ -83,20 +83,20 @@
+   guardArtifactsAndDependencies()
+   const evidence = readJSON(PROPOSAL+'/manifest.json'), candidates = readJSON(PROPOSAL+'/candidates.json'), controls = readJSON(BASE+'-controls-normalized.json')
+   const ts = require(ROOT+'/node_modules/typescript')
+-  if (evidence.root !== ROOT || evidence.head !== pins.head || evidence.branch !== pins.branch || candidates.length !== 5 || controls.length !== 9 || ts.version !== pins.typescriptVersion) fail('Proposal identity/count mismatch')
++  if (evidence.root !== ROOT || evidence.expectedHead !== pins.head || evidence.expectedBranch !== pins.branch || candidates.length !== 2 || controls.length !== 2 || ts.version !== pins.typescriptVersion) fail('Proposal identity/count mismatch')
+   const snapshots = {}, counts = {before:0,transfer:0,cut:0}
+   let unrelated = 0, unchangedRetained = 0
+   for (const f of evidence.files) {
+     snapshots[f.file] = {}
+     for (const phase of Object.keys(counts)) {
+       const bytes = fs.readFileSync(path.join(PROPOSAL,phase,f.file)), rows = registrations(ts,f.file,bytes.toString())
+-      if (sha(bytes) !== f.sha256[phase] || rows.size !== f.sites[phase]) fail('Phase bytes/count: '+f.file)
++      if (sha(bytes) !== f.phases[phase].sha256 || rows.size !== f.phases[phase].count) fail('Phase bytes/count: '+f.file)
+       snapshots[f.file][phase] = {bytes,rows}
+       counts[phase] += rows.size
+     }
+     const {before,transfer,cut} = snapshots[f.file]
+     let reconstructed = before.bytes.toString()
+-    for (const c of candidates.filter(c => c.file === f.file)) {
++    for (const c of candidates.filter(c => c.donor.file === f.file)) {
+       const donor = before.rows.get(c.donor.title), keeper = before.rows.get(c.keeper.title)
+       const t = transfer.rows.get(c.keeper.title), k = cut.rows.get(c.keeper.title)
+       if (donor?.statement !== c.donor.declaration || donor.callback !== c.donor.body || sha(donor.statement) !== c.donor.sha256) fail('Donor identity: '+c.id)
+@@ -107,11 +107,11 @@
+       reconstructed = replaceOnce(reconstructed,keeper.statement,t.statement,c.id)
+     }
+     if (reconstructed !== transfer.bytes.toString()) fail('Transfer changed unsupported bytes: '+f.file)
+-    for (const c of candidates.filter(c => c.file === f.file)) reconstructed = replaceOnce(reconstructed,c.donor.declaration,'',c.id)
++    for (const c of candidates.filter(c => c.donor.file === f.file)) reconstructed = replaceOnce(reconstructed,c.donor.declaration+'\n','',c.id)
+     if (reconstructed !== cut.bytes.toString()) fail('Cut changed unsupported bytes: '+f.file)
+     for (const [name,row] of before.rows) {
+-      const donor = candidates.some(c => c.file === f.file && c.donor.title === name)
+-      const keeper = candidates.some(c => c.file === f.file && c.keeper.title === name)
++      const donor = candidates.some(c => c.donor.file === f.file && c.donor.title === name)
++      const keeper = candidates.some(c => c.donor.file === f.file && c.keeper.title === name)
+       const t = transfer.rows.get(name), k = cut.rows.get(name)
+       if (!keeper && t?.statement !== row.statement) fail('Unrelated transfer declaration changed')
+       if (donor) { if (k) fail('Donor survived cut') }
+@@ -122,9 +122,10 @@
+       }
+     }
+     function withoutCallbacks(p) { let s=p.bytes.toString();for(const r of [...p.rows.values()].sort((a,b)=>b.start-a.start))s=s.slice(0,r.start)+s.slice(r.end);return s }
+-    if (withoutCallbacks(before)!==withoutCallbacks(transfer) || withoutCallbacks(before)!==withoutCallbacks(cut)) fail('Support/fixture bytes changed')
++    // Cut support conservation is established by exact whole-file donor-plus-one-newline reconstruction above.
++    if (withoutCallbacks(before)!==withoutCallbacks(transfer)) fail('Transfer support/fixture bytes changed')
+   }
+-  if (Object.keys(snapshots).length!==13 || JSON.stringify(counts)!=='{"before":128,"transfer":128,"cut":123}' || unrelated!==118 || unchangedRetained!==119) fail('Phase conservation mismatch')
++  if (Object.keys(snapshots).length!==9 || JSON.stringify(counts)!=='{"before":83,"transfer":83,"cut":81}' || unrelated!==79 || unchangedRetained!==79) fail('Phase conservation mismatch')
+   function guards(overrides={}) {
+     identity(pins)
+     guardArtifactsAndDependencies()
+--- /tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-edit.cjs
++++ /tmp/test-audit-reactivation83-tools-huh910i2/operator-edit.cjs
+@@ -2,14 +2,14 @@
+ // Main only. --check is zero-write/no-child; mutation modes are never invoked by worker.
+ const fs=require('node:fs'),path=require('node:path')
+ const g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs')
+-const PIN_SHA='2b8a775ac83ec817b274a8e881aa782e011f7109065645b947208414b53eff8c'
++const PIN_SHA='7655b21eb599e48cb79ab706e59287b0f253986ef1ad0e391097ceb15019e6b5'
+ const mode=(process.argv[2]||'check').replace(/^--/,'')
+ if(!['check','transfer','cut'].includes(mode)||(mode!=='cut'&&process.argv.length>3)||(mode==='cut'&&process.argv.length!==5))g.fail('Use --check | transfer | cut <transfer-receipt-dir> <completion-sha256>')
+ const context=g.load(PIN_SHA)
+ for(const c of context.controls)g.fault(context,c)
+ const initial=context.current()
+ if(mode==='check'){
+- console.log(JSON.stringify({mode,phase:initial.phase,counts:context.counts,unrelatedCallbacks:context.unrelated,unchangedRetainedCallbacks:context.unchangedRetained,parsedPhaseFiles:39,sourceControlsParsed:9,readsetGuards:context.pins.readset.length,dependencyFiles:context.pins.dependencies.length,repositoryWrites:0,childrenStarted:0},null,2));process.exit(0)
++ console.log(JSON.stringify({mode,phase:initial.phase,counts:context.counts,unrelatedCallbacks:context.unrelated,unchangedRetainedCallbacks:context.unchangedRetained,parsedPhaseFiles:27,sourceControlsParsed:2,readsetGuards:context.pins.readset.length,dependencyFiles:context.pins.dependencies.length,repositoryWrites:0,childrenStarted:0},null,2));process.exit(0)
+ }
+ const from=mode==='transfer'?'before':'transfer'
+ if(initial.phase!==from)g.fail('Expected '+from+', found '+initial.phase)
+--- /tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-proof.cjs
++++ /tmp/test-audit-reactivation83-tools-huh910i2/operator-proof.cjs
+@@ -19,15 +19,15 @@
+  return {accepted:run.status===1&&run.signal===null&&!run.timedOut&&!run.spawnError&&run.tests===1&&run.pass===0&&run.fail===1&&run.skipped===0&&run.cancelled===0&&run.todo===0&&codes.length===1&&codes[0]==='ERR_ASSERTION'&&named(control,run)&&operator===control.expectedOperator&&messageMatches&&firstFrame.includes(stackToken),operator,message,messageMatches,firstFrame,stackToken,expected:oracle}
+ }
+ function validateTransferReceipt(ctx,pinSHA,dir,completionSHA){
+- if(!dir||!/^\/tmp\/test-audit-stripe-trial128-tools-ptnotcxj\/operator-mutations-transfer-[A-Za-z0-9]+$/.test(dir)||path.dirname(fs.realpathSync(dir))!==fs.realpathSync(path.dirname(g.BASE)))g.fail('Exact owned transfer receipt directory required')
++ if(!dir||!/^\/tmp\/test-audit-reactivation83-tools-huh910i2\/operator-mutations-transfer-[A-Za-z0-9]+$/.test(dir)||path.dirname(fs.realpathSync(dir))!==fs.realpathSync(path.dirname(g.BASE)))g.fail('Exact owned transfer receipt directory required')
+  if(!/^[a-f0-9]{64}$/.test(completionSHA||''))g.fail('Main must provide exact completion SHA256')
+  const raw=fs.readFileSync(path.join(dir,'complete.json'));if(g.sha(raw)!==completionSHA)g.fail('Completion receipt hash mismatch')
+  const complete=JSON.parse(raw),receiptBytes=fs.readFileSync(path.join(dir,'receipt.json'))
+- if(complete.pinsSHA!==pinSHA||complete.root!==g.ROOT||complete.head!==ctx.pins.head||complete.branch!==ctx.pins.branch||complete.phase!=='transfer'||complete.verified!==9||complete.cleanRuns!==18||g.sha(receiptBytes)!==complete.receiptSHA256)g.fail('Incomplete/wrong transfer proof')
+- if(JSON.stringify(complete.controlIds)!==JSON.stringify(ctx.controls.map(c=>c.id)))g.fail('Required nine controls absent or out of order')
++ if(complete.pinsSHA!==pinSHA||complete.root!==g.ROOT||complete.head!==ctx.pins.head||complete.branch!==ctx.pins.branch||complete.phase!=='transfer'||complete.verified!==2||complete.cleanRuns!==4||g.sha(receiptBytes)!==complete.receiptSHA256)g.fail('Incomplete/wrong transfer proof')
++ if(JSON.stringify(complete.controlIds)!==JSON.stringify(ctx.controls.map(c=>c.id)))g.fail('Required two controls absent or out of order')
+  for(const[file,hash]of Object.entries(complete.allTestHashes||{})){if(!ctx.snapshots[file]||hash!==g.sha(ctx.snapshots[file].transfer.bytes))g.fail('Receipt test phase mismatch')}
+- if(Object.keys(complete.allTestHashes||{}).length!==13)g.fail('Full cohort proof missing')
+- const records=JSON.parse(receiptBytes);if(records.length!==9)g.fail('Nine records required')
++ if(Object.keys(complete.allTestHashes||{}).length!==9)g.fail('Full cohort proof missing')
++ const records=JSON.parse(receiptBytes);if(records.length!==2)g.fail('Two records required')
+  function reload(record,label,c){
+   const p=path.join(dir,c.id+'-'+label+'.tap')
+   if(record.log!==p||!record.logSHA256||g.sha(fs.readFileSync(p))!==record.logSHA256)g.fail('TAP path/hash drift')
+@@ -42,6 +42,6 @@
+   for(const readset of ctx.pins.readset)if(r.readsetBefore?.[readset.file]!==readset.sha||r.readsetAfter?.[readset.file]!==readset.sha)g.fail('Readset proof mismatch: '+c.id)
+   if(!clean(c,reload(r.before,'before',c))||!intended(c,reload(r.fault,'fault',c),'transfer').accepted||!clean(c,reload(r.after,'after',c)))g.fail('Required clean1/red1/restored clean1 not proved: '+c.id)
+  }
+- return {dir,completionSHA,verified:9,logFiles:27,phase:'transfer'}
++ return {dir,completionSHA,verified:2,logFiles:6,phase:'transfer'}
+ }
+ module.exports={parseTAP,named,clean,intended,validateTransferReceipt}
+--- /tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-run-controls.cjs
++++ /tmp/test-audit-reactivation83-tools-huh910i2/operator-run-controls.cjs
+@@ -2,7 +2,7 @@
+ // Main-only serial actual-owner faults. --check never starts a child or writes repository bytes.
+ const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process')
+ const g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs')
+-const PIN_SHA='2b8a775ac83ec817b274a8e881aa782e011f7109065645b947208414b53eff8c'
++const PIN_SHA='7655b21eb599e48cb79ab706e59287b0f253986ef1ad0e391097ceb15019e6b5'
+ const mode=(process.argv[2]||'check').replace(/^--/,'')
+ const selectedId=process.argv[3]
+ if(!['check','run'].includes(mode)||process.argv.length>4)g.fail('Use --check [control-id] | run [control-id]')
+@@ -10,7 +10,7 @@
+ if(!controls.length)g.fail('Unknown control ID')
+ const prepared=new Map(context.controls.map(c=>[c.id,g.fault(context,c)])),initial=context.current()
+ if(mode==='check'){
+-  console.log(JSON.stringify({mode,phase:initial.phase,controls:controls.length,allUniqueOwnersParsed:true,allControlsParsed:prepared.size===9,phaseOracles:'exact assertion startLine and text in transfer/cut',selectedTestCount:1,repositoryWrites:0,runtimeRuns:0,childrenStarted:0},null,2));process.exit(0)
++  console.log(JSON.stringify({mode,phase:initial.phase,controls:controls.length,allUniqueOwnersParsed:true,allControlsParsed:prepared.size===2,phaseOracles:'exact assertion startLine and text in transfer/cut',selectedTestCount:1,repositoryWrites:0,runtimeRuns:0,childrenStarted:0},null,2));process.exit(0)
+ }
+ if(!['transfer','cut'].includes(initial.phase))g.fail('Transfer/cut phase required; no original false-pass claim')
+ for(const key of ['TRIAL_ADMISSION_MUTANT','TRIAL_ACCESS_MUTANT','NODE_OPTIONS','TSX_TSCONFIG_PATH','NODE_PATH','RETURNING_CHECKOUT_ROUTE_BASELINE'])if(process.env[key])g.fail('Existing harness mutant is active: '+key)
+@@ -50,7 +50,7 @@
+ function compact(run){const{text,...receipt}=run;return receipt}
+ ;(async()=>{
+  try{
+-  // Snapshot ALL13 test originals and ALL unique mutant-owner originals before first child/write.
++  // Snapshot ALL9 test originals and ALL unique mutant-owner originals before first child/write.
+   ensurePhase()
+   const originals=new Map(Object.entries(initial.bytes))
+   for(const control of context.controls)originals.set(control.file,prepared.get(control.id).original)
+@@ -91,6 +91,6 @@
+   const complete={phase,verified:receipts.length,controlIds:receipts.map(r=>r.id),cleanRuns:receipts.length*2,root:g.ROOT,head:context.pins.head,branch:context.pins.branch,pinsSHA:PIN_SHA,receiptSHA256:g.sha(fs.readFileSync(path.join(dir,'receipt.json'))),allTestHashes:Object.fromEntries(Object.entries(final.bytes).map(([f,b])=>[f,g.sha(b)])),sourceGuards:context.pins.readset}
+   const completeBytes=JSON.stringify(complete,null,2)+'\n'
+   fs.writeFileSync(path.join(dir,'complete.json'),completeBytes,{flag:'wx'})
+-  console.log(JSON.stringify({receiptDir:dir,completionSHA256:g.sha(completeBytes),verified:receipts.length,eligibleForCut:phase==='transfer'&&receipts.length===9},null,2))
++  console.log(JSON.stringify({receiptDir:dir,completionSHA256:g.sha(completeBytes),verified:receipts.length,eligibleForCut:phase==='transfer'&&receipts.length===2},null,2))
+  }finally{killOwnedGroup('SIGKILL');process.off('SIGINT',stop);process.off('SIGTERM',stop);unlock()}
+ })().catch(error=>{record();fs.writeFileSync(path.join(dir,'failure.json'),JSON.stringify({error:String(error),interrupted},null,2)+'\n',{flag:'wx'});console.error(error);process.exitCode=1})
+--- /tmp/test-audit-stripe-trial128-tools-ptnotcxj/prepare-pins.cjs
++++ /tmp/test-audit-reactivation83-tools-huh910i2/prepare-pins.cjs
+@@ -1,62 +1,55 @@
+ 'use strict'
+ // Static preparation only: read bytes / parse AST; writes are exclusively beneath DIR.
+ const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto')
+-const DIR='/tmp/test-audit-stripe-trial128-tools-ptnotcxj',BASE=DIR+'/operator',ROOT='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning',P='/tmp/test-audit-stripe-trial128-proposal-74Xu81'
++const DIR='/tmp/test-audit-reactivation83-tools-huh910i2',BASE=DIR+'/operator',ROOT='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning',P='/tmp/test-audit-reactivation83-proposal-Zzh1n4'
+ const sha=x=>crypto.createHash('sha256').update(x).digest('hex'),json=p=>JSON.parse(fs.readFileSync(p,'utf8'))
+-if(sha(fs.readFileSync(P+'/manifest.json'))!=='bf1a7c25fb6d176ddee7270fab6d03c27686cc778ad75a9d7678ee6403742129')throw Error('Final proposal changed')
+-const m=json(P+'/manifest.json'),raw=json(P+'/control-oracles.json'),ts=require(ROOT+'/node_modules/typescript'),g=require(DIR+'/operator-guard.cjs')
++if(sha(fs.readFileSync(P+'/manifest.json'))!=='87ceba4ac9d6819ea70ad95daaead398035d3b383742fc8c892e6a6b885ac0e3')throw Error('Final proposal changed')
++const m=json(P+'/manifest.json'),raw=json(P+'/controls.json'),ts=require(ROOT+'/node_modules/typescript'),g=require(DIR+'/operator-guard.cjs')
+ const diagnostic={
+- 'C1-fingerprint':['deepStrictEqual',['Expected values to be strictly deep-equal:','fp_server_only','incorrect']],
+- 'C1-clock':['deepStrictEqual',['Expected values to be strictly deep-equal:','2026-09-13T12:00:00.000Z','2026-09-20T12:00:00.000Z']],
+- 'C2-no-invoice':['deepStrictEqual',['Expected values to be strictly deep-equal:','invoice_now','true','false']],
+- 'C2-error-code':['strictEqual',['Expected values to be strictly equal:','trial_checkout_conflict','trial_unavailable']],
+- 'C2-release':['==',['denied trial must release its reserved claim']],
+- 'C3-cause':['match',['The input did not match the regular expression','provider timeout','lost provider cause']],
+- 'C4-phase':['deepStrictEqual',['Expected values to be strictly deep-equal:','stripe:purchase_completed:in_1','stripe:payment_completed:in_1']],
+- 'C4-outcome':['strictEqual',['Expected values to be strictly equal:','failed','succeeded']],
+- 'C5-no-intent':['strictEqual',['Expected values to be strictly equal:','true !== false']]
++ 'C1-retained-password-capability':['strictEqual',['Expected values to be strictly equal:','true !== false']],
++ 'C2-billing-before-profile':['deepStrictEqual',['Expected values to be strictly deep-equal:','stripe_customer_id','cus_missing','cus_replacement']]
+ }
+ const controls=raw.map(c=>{
+- const source=fs.readFileSync(ROOT+'/'+c.file,'utf8');if(sha(source)!==c.sourceSha256||source.split(c.from).length!==2)throw Error('Source guard')
++ const source=fs.readFileSync(ROOT+'/'+c.file,'utf8');if(sha(source)!==c.sourceSHA256||source.split(c.from).length!==2)throw Error('Source guard')
+  const sf=g.parse(ts,c.file,source),owners=[]
+- function visit(n){if(ts.isFunctionDeclaration(n)&&n.name?.text===c.owner&&n.getText(sf).includes(c.from))owners.push(n);ts.forEachChild(n,visit)}visit(sf)
+- if(owners.length!==1)throw Error('Source function guard')
++ function visit(n){if(ts.isFunctionDeclaration(n)&&n.name?.text===c.scope&&n.getText(sf).includes(c.from))owners.push(n);ts.forEachChild(n,visit)}visit(sf)
++ if(owners.length!==1||sha(owners[0].getText(sf))!==c.scopeSHA256)throw Error('Complete source function guard')
+  const mutant=source.replace(c.from,()=>c.to);g.parse(ts,c.file,mutant)
+- if(fs.readFileSync(DIR+'/'+c.id+'-prospective-owner.ts','utf8')!==mutant)throw Error('Existing prospective fault changed')
++ if(sha(mutant)!==c.mutatedSHA256||fs.readFileSync(c.prospectiveOwner,'utf8')!==mutant)throw Error('Final prospective fault changed')
++ fs.writeFileSync(DIR+'/'+c.id+'-prospective-owner.ts',mutant,{flag:'wx',mode:0o444})
+  const oracles={}
+  for(const phase of['transfer','cut']){
+-  const text=fs.readFileSync(P+'/'+phase+'/'+c.keeperFile,'utf8'),row=g.registrations(ts,c.keeperFile,text).get(c.keeperName)
+-  const matching=row.assertions.filter(a=>a.startLine===c.expectedFirstTestFrame.lines[phase]);if(matching.length!==1)throw Error('Oracle guard')
+-  oracles[phase]={startLine:matching[0].startLine,text:matching[0].text,keeperSha256:sha(row.statement),testFileSha256:sha(text)}
++  const text=fs.readFileSync(P+'/'+phase+'/'+c.test.file,'utf8'),row=g.registrations(ts,c.test.file,text).get(c.test.name),o=c.oracles[phase]
++  const matching=row.assertions.filter(a=>a.startLine===o.startLine&&a.text===o.text);if(matching.length!==1||sha(row.statement)!==o.keeperSHA256)throw Error('Oracle guard')
++  oracles[phase]={startLine:o.startLine,text:o.text,keeperSha256:o.keeperSHA256,testFileSha256:sha(text)}
+  }
+- const command=[process.execPath,'--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-reporter=tap','--test-name-pattern','^'+c.keeperName.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'$',c.keeperFile]
+- return {id:c.id,candidate:c.candidateId,file:c.file,sourceSha256:c.sourceSha256,from:c.from,to:c.to,mutatedSha256:sha(mutant),anchor:{kind:'function',scope:c.owner,scopeSha256:sha(owners[0].getText(sf)),expectedOccurrences:1},test:{file:c.keeperFile,name:c.keeperName},command,oracles,intendedAssertion:c.expectedIntendedAssertion,expectedOperator:diagnostic[c.id][0],errorMessageIncludes:diagnostic[c.id][1]}
++ const command=[process.execPath,'--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-reporter=tap','--test-name-pattern','^'+c.test.name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'$',c.test.file]
++ return {id:c.id,candidate:c.candidate,file:c.file,sourceSha256:c.sourceSHA256,from:c.from,to:c.to,mutatedSha256:c.mutatedSHA256,anchor:{kind:'function',scope:c.scope,scopeSha256:c.scopeSHA256,expectedOccurrences:1},test:c.test,command,oracles,intendedAssertion:c.assertion,expectedOperator:diagnostic[c.id][0],errorMessageIncludes:diagnostic[c.id][1]}
+ })
+-if(fs.readFileSync(BASE+'-controls-normalized.json','utf8')!==JSON.stringify(controls,null,2)+'\n')throw Error('Existing normalized controls changed')
++fs.writeFileSync(BASE+'-controls-normalized.json',JSON.stringify(controls,null,2)+'\n',{flag:'wx',mode:0o444})
+ const pin=file=>({path:file,sha:fs.existsSync(file)?sha(fs.readFileSync(file)):null,realpath:fs.existsSync(file)?fs.realpathSync(file):null})
+ const gitDir=path.resolve(ROOT,fs.readFileSync(ROOT+'/.git','utf8').trim().replace(/^gitdir: /,'')),commonDir=path.resolve(gitDir,fs.readFileSync(gitDir+'/commondir','utf8').trim())
+-const identityFiles=[ROOT+'/.git',gitDir+'/HEAD',gitDir+'/commondir',gitDir+'/gitdir',gitDir+'/config.worktree',commonDir+'/config',commonDir+'/refs/heads/'+m.branch,commonDir+'/packed-refs'].map(pin)
++const identityFiles=[ROOT+'/.git',gitDir+'/HEAD',gitDir+'/commondir',gitDir+'/gitdir',gitDir+'/config.worktree',commonDir+'/config',commonDir+'/refs/heads/'+m.expectedBranch,commonDir+'/packed-refs'].map(pin)
+ const repositoryTrees=[],readsetMap=new Map(),cohort=new Set(m.files.map(f=>f.file))
+-for(const r of m.guards){if(sha(fs.readFileSync(ROOT+'/'+r.file))!==r.sha256)throw Error('Final readset drift '+r.file);if(!cohort.has(r.file))readsetMap.set(r.file,r.sha256)}
++for(const r of m.readset){if(sha(fs.readFileSync(ROOT+'/'+r.file))!==r.sha256)throw Error('Final readset drift '+r.file);if(!cohort.has(r.file))readsetMap.set(r.file,r.sha256)}
+ for(const f of ['.nvmrc','tsconfig.json','next-env.d.ts','tests/server-only-register.cjs','package.json','package-lock.json'])if(fs.existsSync(ROOT+'/'+f))readsetMap.set(f,sha(fs.readFileSync(ROOT+'/'+f)))
+-// Literal local import graph only; custom test loader's dynamic Stripe route is an explicit root.
++// Literal local import graph from eight native cohort tests only. Original 67 guards also preserve browser/source/SQL contracts.
+ // No whole-source/data/migrations freeze and no recursive vendor package dependency closure.
+-const pending=[...m.files.map(f=>f.file),...m.guards.map(f=>f.file).filter(f=>/\.[cm]?[jt]sx?$/.test(f)),'src/app/api/stripe/create-checkout-session/route.ts'],visited=new Set(),bareEntries=new Set(),dynamicExpressions=[]
++const pending=m.files.map(f=>f.file).filter(f=>f.endsWith('.test.ts')),visited=new Set(),bareEntries=new Set(),dynamicExpressions=[]
+ function localModule(spec,parent){const base=spec.startsWith('@/')?path.join(ROOT,'src',spec.slice(2)):path.resolve(path.dirname(path.join(ROOT,parent)),spec);const variants=[base,...['.ts','.tsx','.js','.cjs','.mjs','.json','/index.ts','/index.tsx','/index.js'].map(e=>base+e)];if(/\.[cm]?js$/.test(base))variants.push(base.replace(/\.[cm]?js$/,'.ts'));return variants.find(p=>fs.existsSync(p)&&fs.statSync(p).isFile())}
+ while(pending.length){const file=pending.pop();if(visited.has(file))continue;visited.add(file);const p=path.join(ROOT,file),text=fs.readFileSync(p,'utf8');if(!cohort.has(file))readsetMap.set(file,sha(text));if(!/\.[cm]?[jt]sx?$/.test(file))continue;const sf=ts.createSourceFile(file,text,ts.ScriptTarget.Latest,true);function v(n){let lit;if((ts.isImportDeclaration(n)||ts.isExportDeclaration(n))&&n.moduleSpecifier)lit=n.moduleSpecifier;else if(ts.isCallExpression(n)&&(n.expression.kind===ts.SyntaxKind.ImportKeyword||n.expression.getText(sf)==='require')){lit=n.arguments[0];if(lit&&!ts.isStringLiteralLike(lit))dynamicExpressions.push({file,expression:n.getText(sf)})}if(lit&&ts.isStringLiteralLike(lit)){const spec=lit.text;if(spec.startsWith('@/')||spec.startsWith('.')){const resolved=localModule(spec,file);if(resolved&&resolved.startsWith(ROOT+'/'))pending.push(path.relative(ROOT,resolved))}else if(!spec.startsWith('node:')){try{const entry=require.resolve(spec,{paths:[path.dirname(p)]});if(entry.startsWith(ROOT+'/node_modules/'))bareEntries.add(entry)}catch{}}}ts.forEachChild(n,v)}v(sf)}
+-// Exact SQL fixtures named by these already-retained PGlite callbacks, not all migrations.
+-for(const f of ['tests/stripe-trial-continuation-reconcile.test.ts','tests/stripe-trial-subscription-lifecycle.test.ts'])for(const match of fs.readFileSync(ROOT+'/'+f,'utf8').matchAll(/["'](20\d{12}_[a-z0-9_]+)(\.sql)?["']/g)){const file='supabase/migrations/'+match[1]+'.sql';if(!fs.existsSync(ROOT+'/'+file))throw Error('Missing selected SQL fixture');readsetMap.set(file,sha(fs.readFileSync(ROOT+'/'+file)))}
++// The final proposal pins the exact three migration fixtures; no migration-tree crawl.
+ const dependencyNames=['tsx','esbuild','get-tsconfig','resolve-pkg-maps','fsevents','@esbuild/darwin-arm64','react','react-dom','zod','@electric-sql/pglite','stripe/cjs','@supabase/auth-js/dist','@supabase/ssr/dist','@supabase/supabase-js/dist','@supabase/postgrest-js/dist','@supabase/realtime-js/dist','@supabase/storage-js/dist','@supabase/functions-js/dist','next/dist/server/web','next/dist/shared/lib','next/dist/server/request','next/dist/server/after','next/dist/compiled/@edge-runtime/cookies'].filter(n=>fs.existsSync(ROOT+'/node_modules/'+n))
+ const dependencyTrees=dependencyNames.map(n=>({path:ROOT+'/node_modules/'+n,names:g.inventory(ROOT+'/node_modules/'+n)}))
+ const depFiles=new Map();for(const t of dependencyTrees)for(const n of t.names){const f=t.path+'/'+n;depFiles.set(f,pin(f))}
+ for(const n of ['typescript/package.json','typescript/lib/typescript.js','next/package.json','next/server.js','next/headers.js','next/dist/api/headers.js','next/dist/client/components/headers.js','server-only/package.json','server-only/index.js','stripe/package.json','stripe/types/index.d.ts','stripe/types/Subscriptions.d.ts','stripe/types/Invoices.d.ts','stripe/types/Checkout/Sessions.d.ts','@supabase/auth-js/package.json','@supabase/ssr/package.json','@supabase/supabase-js/package.json','@supabase/postgrest-js/package.json','@supabase/realtime-js/package.json','@supabase/storage-js/package.json','@supabase/functions-js/package.json']){const f=ROOT+'/node_modules/'+n;if(fs.existsSync(f))depFiles.set(f,pin(f))}
+ for(const entry of bareEntries){depFiles.set(entry,pin(entry));let dir=path.dirname(entry);while(dir.startsWith(ROOT+'/node_modules/')){if(fs.existsSync(dir+'/package.json')){depFiles.set(dir+'/package.json',pin(dir+'/package.json'));break}dir=path.dirname(dir)}}
+-fs.writeFileSync(DIR+'/bounded-readset-evidence.json',JSON.stringify({originalGuards:m.guards,localImportGraphFiles:[...visited].sort(),dynamicExpressions,bareRuntimeEntries:[...bareEntries].sort(),selectedDistributions:dependencyNames,limits:['Literal repository import graph is an overapproximation and includes type-only source references; no whole-source semantic read claim.','Custom returning-checkout loader route is explicitly rooted to Stripe; dynamic nonliteral expressions are recorded and not silently treated as resolved.','Installed runtime distributions and actual bare import entries are byte guards. Unselected SDK vendor transitives, platform conditions and dev/build tools are not comprehensively frozen. Package-lock and package manifests remain pinned.','No .env or secret files inspected. No whole data tree or unconsumed migrations frozen.']},null,2)+'\n',{flag:'wx'})
++fs.writeFileSync(DIR+'/bounded-readset-evidence.json',JSON.stringify({originalGuards:m.readset,localImportGraphFiles:[...visited].sort(),dynamicExpressions,bareRuntimeEntries:[...bareEntries].sort(),selectedDistributions:dependencyNames,limits:['Literal repository import graph is an overapproximation and includes type-only source references; no whole-source semantic read claim.','Nonliteral dynamic expressions are recorded, not silently resolved. The existing 67 guards independently pin the configured browser and route source inputs; this driver only executes two native keepers.','Installed runtime distributions and actual bare import entries are byte guards. Unselected SDK vendor transitives, platform conditions and dev/build tools are not comprehensively frozen. Package-lock and package manifests remain pinned.','No .env or secret files inspected. No whole data tree or unconsumed migrations frozen.']},null,2)+'\n',{flag:'wx'})
+ const artifactFiles=[];function artifacts(dir){for(const d of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,d.name);if(d.isDirectory())artifacts(p);else artifactFiles.push(p)}}artifacts(P)
+ artifactFiles.push(DIR+'/bounded-readset-evidence.json',BASE+'-guard.cjs',BASE+'-proof.cjs',BASE+'-readonly-preload.cjs',BASE+'-controls-normalized.json',DIR+'/prepare-pins.cjs',...controls.map(c=>DIR+'/'+c.id+'-prospective-owner.ts'))
+ const artifactHashes=Object.fromEntries(artifactFiles.map(p=>[p,sha(fs.readFileSync(p))]))
+ const entrypointTemplateHashes=Object.fromEntries(['edit','run-controls'].map(n=>[BASE+'-'+n+'.cjs',sha(fs.readFileSync(BASE+'-'+n+'.cjs'))]))
+-const pins={root:ROOT,head:m.head,branch:m.branch,gitDir,commonDir,identityFiles,node:{version:process.version,realpath:fs.realpathSync(process.execPath),sha:sha(fs.readFileSync(process.execPath))},typescriptVersion:ts.version,readset:[...readsetMap].sort().map(([file,sha])=>({file,sha})),repositoryTrees,dependencies:[...depFiles.values()].sort((a,b)=>a.path.localeCompare(b.path)),dependencyTrees:dependencyTrees.sort((a,b)=>a.path.localeCompare(b.path)),artifactHashes,entrypointTemplateHashes,counts:m.counts,controls:9,lock:g.LOCK,dependencyScope:'Explicit selected installed runtime distributions, their membership, and resolved direct bare import entries/manifests. See bounded-readset-evidence.json for selected paths, local TS/JS closure, dynamic limits; no recursive whole-vendor dependency/peer traversal.'}
++const pins={root:ROOT,head:m.expectedHead,branch:m.expectedBranch,gitDir,commonDir,identityFiles,node:{version:process.version,realpath:fs.realpathSync(process.execPath),sha:sha(fs.readFileSync(process.execPath))},typescriptVersion:ts.version,readset:[...readsetMap].sort().map(([file,sha])=>({file,sha})),repositoryTrees,dependencies:[...depFiles.values()].sort((a,b)=>a.path.localeCompare(b.path)),dependencyTrees:dependencyTrees.sort((a,b)=>a.path.localeCompare(b.path)),artifactHashes,entrypointTemplateHashes,counts:m.counts,controls:2,lock:g.LOCK,dependencyScope:'Explicit selected installed runtime distributions, their membership, and resolved direct bare import entries/manifests. See bounded-readset-evidence.json for selected paths, local TS/JS closure, dynamic limits; no recursive whole-vendor dependency/peer traversal.'}
+ const bytes=JSON.stringify(pins,null,2)+'\n';fs.writeFileSync(BASE+'-pins.json',bytes,{flag:'wx',mode:0o444});const hash=sha(bytes)
+ for(const n of['edit','run-controls']){const p=BASE+'-'+n+'.cjs',text=fs.readFileSync(p,'utf8');if(text.split('PIN_SHA_PLACEHOLDER').length!==2)throw Error('Already pinned');fs.writeFileSync(p,text.replace('PIN_SHA_PLACEHOLDER',hash))}
+ console.log(JSON.stringify({dir:DIR,pinSHA:hash,readsets:pins.readset.length,repositoryTrees:repositoryTrees.length,dependencyFiles:pins.dependencies.length,dependencyPackages:dependencyTrees.length,identityFiles:identityFiles.length},null,2))

@@ -1,0 +1,229 @@
+--- before/tests/scan-resolve-event-log.test.ts
++++ cut/tests/scan-resolve-event-log.test.ts
+@@ -167,9 +167,11 @@
+   assert.equal((inserted() as { canonical_value: unknown }).canonical_value, null)
+ })
+ 
+-test("fail-open: an insert error never throws", async () => {
+-  resetAttemptLogCaptureThrottleForTests()
+-  const { client } = stubClient({ error: { message: "boom" } })
++test("fail-open: a thrown client error never propagates", async () => {
++  resetAttemptLogCaptureThrottleForTests()
++  const { client } = stubClient(() => {
++    throw new Error("network down")
++  })
+   const { capture } = stubCapture()
+ 
+   await assert.doesNotReject(
+@@ -186,28 +188,24 @@
+   )
+ })
+ 
+-test("fail-open: a thrown client error never propagates", async () => {
+-  resetAttemptLogCaptureThrottleForTests()
+-  const { client } = stubClient(() => {
+-    throw new Error("network down")
+-  })
+-  const { capture } = stubCapture()
+-
+-  await assert.doesNotReject(
+-    recordScanResolveAttempt(
+-      client as never,
+-      {
+-        attemptId: "00000000-0000-4000-8000-000000000001",
+-        userId: "user-1",
+-        identifierType: "ean",
+-        rawValue: "4012345678901",
+-      },
+-      capture,
+-    ),
+-  )
+-})
+-
+-test("fail-open: a completion error never propagates", async () => {
++test("an explicit createdAt is written as the row's created_at", async () => {
++  const { client, inserted } = stubClient({ error: null })
++
++  await recordScanResolveAttempt(client as never, {
++    attemptId: "00000000-0000-4000-8000-000000000001",
++    userId: "user-1",
++    identifierType: "ean",
++    rawValue: "0022796976116",
++    createdAt: "2026-09-04T10:00:00.000Z",
++  })
++
++  // The insert runs in the route's deferred `after` drain, so the column default would
++  // stamp the drain time — after the completion's own completed_at. The route passes the
++  // request-start timestamp instead.
++  assert.equal((inserted() as { created_at?: string }).created_at, "2026-09-04T10:00:00.000Z")
++})
++
++test("a completion-write failure also captures to Sentry", async () => {
+   resetAttemptLogCaptureThrottleForTests()
+   const client = {
+     from() {
+@@ -224,7 +222,7 @@
+       }
+     },
+   }
+-  const { capture } = stubCapture()
++  const { capture, captured } = stubCapture()
+ 
+   await assert.doesNotReject(
+     completeScanResolveAttempt(
+@@ -238,94 +236,7 @@
+       },
+       capture,
+     ),
+-  )
+-})
+-
+-test("an explicit createdAt is written as the row's created_at", async () => {
+-  const { client, inserted } = stubClient({ error: null })
+-
+-  await recordScanResolveAttempt(client as never, {
+-    attemptId: "00000000-0000-4000-8000-000000000001",
+-    userId: "user-1",
+-    identifierType: "ean",
+-    rawValue: "0022796976116",
+-    createdAt: "2026-09-04T10:00:00.000Z",
+-  })
+-
+-  // The insert runs in the route's deferred `after` drain, so the column default would
+-  // stamp the drain time — after the completion's own completed_at. The route passes the
+-  // request-start timestamp instead.
+-  assert.equal((inserted() as { created_at?: string }).created_at, "2026-09-04T10:00:00.000Z")
+-})
+-
+-test("without an explicit createdAt the row keeps the column default", async () => {
+-  const { client, inserted } = stubClient({ error: null })
+-
+-  await recordScanResolveAttempt(client as never, {
+-    attemptId: "00000000-0000-4000-8000-000000000001",
+-    userId: "user-1",
+-    identifierType: "ean",
+-    rawValue: "0022796976116",
+-  })
+-
+-  assert.equal("created_at" in (inserted() as Record<string, unknown>), false)
+-})
+-
+-test("a start-write failure captures once to Sentry with the attempt_log_write_failed reason", async () => {
+-  resetAttemptLogCaptureThrottleForTests()
+-  const { client } = stubClient({ error: { message: "boom" } })
+-  const { capture, captured } = stubCapture()
+-
+-  await recordScanResolveAttempt(
+-    client as never,
+-    {
+-      attemptId: "00000000-0000-4000-8000-000000000001",
+-      userId: "user-1",
+-      identifierType: "ean",
+-      rawValue: "4012345678901",
+-    },
+-    capture,
+-  )
+-
+-  assert.equal(captured.length, 1)
+-  assert.deepEqual((captured[0] as { details: unknown }).details, {
+-    route: "resolve",
+-    status: 200,
+-    reason: "attempt_log_write_failed",
+-    // Fail-open telemetry: warning, not error (plan §5 task 5).
+-    level: "warning",
+-  })
+-})
+-
+-test("a completion-write failure also captures to Sentry", async () => {
+-  resetAttemptLogCaptureThrottleForTests()
+-  const client = {
+-    from() {
+-      return {
+-        update() {
+-          return {
+-            eq() {
+-              return {
+-                is: async () => ({ error: { message: "completion unavailable" } }),
+-              }
+-            },
+-          }
+-        },
+-      }
+-    },
+-  }
+-  const { capture, captured } = stubCapture()
+-
+-  await completeScanResolveAttempt(
+-    client as never,
+-    {
+-      attemptId: "00000000-0000-4000-8000-000000000001",
+-      lookupOutcome: "miss",
+-      terminalOutcome: "unknown_product",
+-      matchedProductId: null,
+-      failureStage: null,
+-    },
+-    capture,
++    "attempt-log completion errors must not reject",
+   )
+ 
+   assert.equal(captured.length, 1)
+--- before/tests/scan-resolve-events-migration.test.ts
++++ cut/tests/scan-resolve-events-migration.test.ts
+@@ -54,16 +54,6 @@
+   }
+   assert.doesNotMatch(sql, /drop column[^;]*outcome/)
+   assert.doesNotMatch(sql, /drop constraint[^;]*scan_resolve_events_outcome_check/)
+-})
+-
+-test("backfills every legacy event as terminal-unknown, never as a proven resolution", () => {
+-  const sql = migration()
+-
+-  assert.match(
+-    sql,
+-    /update public\.scan_resolve_events[\s\S]*set telemetry_version = 1,[\s\S]*terminal_outcome = 'legacy_unknown'/,
+-  )
+-  assert.doesNotMatch(sql, /terminal_outcome\s*=\s*'resolved'[\s\S]{0,250}legacy/)
+ })
+ 
+ test("materializes only non-PII aggregates before raw data deletion and remains idempotent", () => {
+--- before/tests/scan-resolve-auto-save.test.ts
++++ cut/tests/scan-resolve-auto-save.test.ts
+@@ -191,24 +191,6 @@
+   })
+ })
+ 
+-test("scan resolve auto-save: the response reflects the predicted post-save state, not the stale pre-save read (F3)", async () => {
+-  await withFlag("true", async () => {
+-    const { after } = afterQueue()
+-    const handler = createScanResolveRouteHandler(
+-      baseDeps({
+-        resolvePaidAccess: async () => "allowed",
+-        loadScanSavedState: async () => ({ state: null, managedByScan: false }),
+-        autoSaveScanWishlist: async () => {},
+-        after,
+-      }),
+-    )
+-    const response = await handler(request())
+-    assert.equal(response.status, 200)
+-    const body = (await response.json()) as { savedState?: unknown }
+-    assert.deepEqual(body.savedState, { state: "merkliste", managedByScan: true })
+-  })
+-})
+-
+ test("scan resolve auto-save: an already-saved product's response state is carried through unchanged", async () => {
+   await withFlag("true", async () => {
+     const { after } = afterQueue()
+--- before/tests/scan-resolve-route.test.ts
++++ cut/tests/scan-resolve-route.test.ts
+@@ -1092,7 +1092,10 @@
+   )
+   const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
+   assert.equal(response.status, 200)
+-  await Promise.all(queued.splice(0).map((task) => task()))
++  await assert.doesNotReject(
++    Promise.all(queued.splice(0).map((task) => task())),
++    "attempt-log insert errors must not reject the route deferred drain",
++  )
+   assert.deepEqual(captured, [
+     // Fail-open telemetry: warning, not error (plan §5 task 5).
+     { route: "resolve", status: 200, reason: "attempt_log_write_failed", level: "warning" },

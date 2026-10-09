@@ -32,6 +32,8 @@ export type ScanCatalogPresentationRow = {
   affiliateLink: string | null
   purchaseLinkStatus: "available" | "unavailable" | null
   priceCheckedAt: string | null
+  /** Carried for a later badge task; no presentation output uses it yet. */
+  marketSegment?: "drugstore" | "professional" | null
 }
 
 function commerceFor(row: ScanCatalogPresentationRow) {
@@ -87,6 +89,15 @@ export function presentScanVerdictPayload(
         netContentLabel: alternative.netContentLabel,
         verdict: alternative.verdict,
         verdictLabel: alternative.verdictLabel,
+        // Task 7 optional metadata: spelled out and only when set, so budget-less / flag-off
+        // responses keep their exact key set.
+        ...(alternative.overBudget !== undefined ? { overBudget: alternative.overBudget } : {}),
+        ...(alternative.budgetLimitEur !== undefined
+          ? { budgetLimitEur: alternative.budgetLimitEur }
+          : {}),
+        ...(alternative.marketSegment !== undefined
+          ? { marketSegment: alternative.marketSegment }
+          : {}),
         brand: row?.brand ?? null,
         purchaseUrl: row ? commerceFor(row).productUrl : null,
       }

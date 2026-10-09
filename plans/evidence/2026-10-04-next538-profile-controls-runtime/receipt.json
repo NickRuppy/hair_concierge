@@ -1,0 +1,106 @@
+{
+  "mode": "faults",
+  "phase": "before",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "manifestSha": "553a5c6316afd8e22b32e0f44ec38b90c770325f28eb104937aad74048f9d850",
+  "startedAt": "2026-10-04T10:40:48.093Z",
+  "controls": [
+    {
+      "id": "D1-missing-drying-answer",
+      "phase": "before",
+      "testFile": "tests/profile-plan-overlay.test.ts",
+      "keeper": "unanswered plan leaves value null",
+      "assertion": "assert.equal(dryingMethodField.getValue(null, {}), null)",
+      "assertionLines": [
+        57,
+        57
+      ],
+      "originalSha256": "32801fdf7049e318cb6190eeda67eb75acd07704c03eae384f1e28add37be74a",
+      "restoredSha256": "32801fdf7049e318cb6190eeda67eb75acd07704c03eae384f1e28add37be74a",
+      "baseline": "1 pass",
+      "intendedRed": true,
+      "restoredByteExact": true,
+      "restoredGreen": true,
+      "errors": [],
+      "interrupted": null
+    },
+    {
+      "id": "D2-no-towel-technique",
+      "phase": "before",
+      "testFile": "tests/profile-plan-overlay.test.ts",
+      "keeper": "towel material and technique resolve as a unit — pure plan no_towel",
+      "assertion": "assert.equal(towelTechniqueField.getValue(null, plan), \"Keine Trocknungstechnik\")",
+      "assertionLines": [
+        86,
+        86
+      ],
+      "originalSha256": "32801fdf7049e318cb6190eeda67eb75acd07704c03eae384f1e28add37be74a",
+      "restoredSha256": "32801fdf7049e318cb6190eeda67eb75acd07704c03eae384f1e28add37be74a",
+      "baseline": "1 pass",
+      "intendedRed": true,
+      "restoredByteExact": true,
+      "restoredGreen": true,
+      "errors": [],
+      "interrupted": null
+    },
+    {
+      "id": "D3-omit-loose_tied",
+      "phase": "before",
+      "testFile": "tests/onboarding-care-vocabulary.test.ts",
+      "keeper": "night protection options include length tip accessory and remove tight hairstyles",
+      "assertion": "assert.deepEqual(NIGHT_PROTECTIONS, [\n    \"silk_satin_pillow\",\n    \"silk_satin_bonnet\",\n    \"loose_tied\",\n    \"pineapple\",\n    \"length_tip_accessory\",\n  ])",
+      "assertionLines": [
+        51,
+        57
+      ],
+      "originalSha256": "e5f92f3ec2571da3d821d7b9df75db34939a103d4cb1de7ce972bf54d0a8e547",
+      "restoredSha256": "e5f92f3ec2571da3d821d7b9df75db34939a103d4cb1de7ce972bf54d0a8e547",
+      "baseline": "1 pass",
+      "intendedRed": true,
+      "restoredByteExact": true,
+      "restoredGreen": true,
+      "errors": [],
+      "interrupted": null
+    },
+    {
+      "id": "D3-allow-loose_braid",
+      "phase": "before",
+      "testFile": "tests/onboarding-care-vocabulary.test.ts",
+      "keeper": "night protection options include length tip accessory and remove tight hairstyles",
+      "assertion": "assert.deepEqual(NIGHT_PROTECTIONS, [\n    \"silk_satin_pillow\",\n    \"silk_satin_bonnet\",\n    \"loose_tied\",\n    \"pineapple\",\n    \"length_tip_accessory\",\n  ])",
+      "assertionLines": [
+        51,
+        57
+      ],
+      "originalSha256": "e5f92f3ec2571da3d821d7b9df75db34939a103d4cb1de7ce972bf54d0a8e547",
+      "restoredSha256": "e5f92f3ec2571da3d821d7b9df75db34939a103d4cb1de7ce972bf54d0a8e547",
+      "baseline": "1 pass",
+      "intendedRed": true,
+      "restoredByteExact": true,
+      "restoredGreen": true,
+      "errors": [],
+      "interrupted": null
+    },
+    {
+      "id": "D3-allow-loose_bun",
+      "phase": "before",
+      "testFile": "tests/onboarding-care-vocabulary.test.ts",
+      "keeper": "night protection options include length tip accessory and remove tight hairstyles",
+      "assertion": "assert.deepEqual(NIGHT_PROTECTIONS, [\n    \"silk_satin_pillow\",\n    \"silk_satin_bonnet\",\n    \"loose_tied\",\n    \"pineapple\",\n    \"length_tip_accessory\",\n  ])",
+      "assertionLines": [
+        51,
+        57
+      ],
+      "originalSha256": "e5f92f3ec2571da3d821d7b9df75db34939a103d4cb1de7ce972bf54d0a8e547",
+      "restoredSha256": "e5f92f3ec2571da3d821d7b9df75db34939a103d4cb1de7ce972bf54d0a8e547",
+      "baseline": "1 pass",
+      "intendedRed": true,
+      "restoredByteExact": true,
+      "restoredGreen": true,
+      "errors": [],
+      "interrupted": null
+    }
+  ],
+  "success": true,
+  "completedAt": "2026-10-04T10:40:59.281Z"
+}

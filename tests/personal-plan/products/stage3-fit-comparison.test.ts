@@ -15,7 +15,7 @@ import type {
 } from "../../../src/lib/personal-plan/products/contracts"
 import {
   buildStage3FitComparison,
-  findStage3SelectedComparisonCandidate,
+  rankStage3ComparisonCandidates,
   stage3CriterionEvidenceRelation,
   STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
 } from "../../../src/lib/personal-plan/products/fit-comparison"
@@ -138,7 +138,7 @@ for (const category of Object.keys(CATEGORY_ROLE_POLICIES) as PersonalPlanCatego
 
       if (RICH_COMPARISON_CATEGORY_ROLES.has(`${category}/${role}`)) {
         assert.equal(comparison.mode, "comparison")
-        assert.ok(comparison.dimensions.length > 0)
+        if (category !== "bondbuilder") assert.ok(comparison.dimensions.length > 0)
       } else {
         assert.equal(comparison.mode, "compact")
         assert.deepEqual(comparison.dimensions, [])
@@ -259,35 +259,20 @@ test("comparison orders current product first, then current recommendation, idea
     comparison.alternatives.map((alternative) => alternative.factFingerprint),
     ["facts-ideal-a", "facts-ideal-b", "facts-supportive-1"],
   )
-})
 
-test("selected candidate lookup returns exact current data for alternative number three", () => {
-  const input = authorityInput("conditioner", "conditioner_rinse_out", {
-    productFacts: factsFor("conditioner", "conditioner_rinse_out", "owned", {
-      recommendable: false,
-      weight: "rich",
-    }),
-    candidates: [
-      factsFor("conditioner", "conditioner_rinse_out", "ideal-1", { sortOrder: 1 }),
-      factsFor("conditioner", "conditioner_rinse_out", "ideal-2", { sortOrder: 2 }),
-      factsFor("conditioner", "conditioner_rinse_out", "supportive-3", {
-        fingerprint: "facts-supportive-3",
-        sortOrder: 3,
-        weight: "medium",
-      }),
-    ],
-  })
-
-  const selected = findStage3SelectedComparisonCandidate(input, "supportive-3")
-
+  // The actual transported third alternative owns the public selected-candidate projection.
+  const selected = comparison.alternatives[2]
   assert.ok(selected)
-  assert.equal(selected.productId, "supportive-3")
-  assert.equal(selected.factFingerprint, "facts-supportive-3")
+  assert.equal(selected.productId, "supportive-sort-1")
+  assert.equal(selected.factFingerprint, "facts-supportive-1")
   assert.equal(selected.verdict, "supportive")
-  assert.equal(selected.recommendation.productId, "supportive-3")
+  assert.equal(selected.recommendation.productId, "supportive-sort-1")
   assert.equal(selected.recommendation.role, "conditioner_rinse_out")
   assert.ok(selected.criteria.length > 0)
-  assert.equal(findStage3SelectedComparisonCandidate(input, "owned"), null)
+  assert.equal(
+    comparison.alternatives.find((candidate) => candidate.productId === "owned") ?? null,
+    null,
+  )
   assert.deepEqual(Object.keys(selected).sort(), [
     "category",
     "criteria",
@@ -318,7 +303,9 @@ for (const [category, role] of [
     })
 
     const comparison = buildStage3FitComparison(input)
-    const selected = findStage3SelectedComparisonCandidate(input, "supportive-uncovered")
+    const selected =
+      comparison.alternatives.find((candidate) => candidate.productId === "supportive-uncovered") ??
+      null
 
     assert.deepEqual(
       comparison.alternatives.map((candidate) => [candidate.productId, candidate.verdict]),
@@ -366,7 +353,8 @@ test("uncovered roles rank ideal verdict above tied supportive candidates, then 
     ],
   )
   assert.equal(
-    findStage3SelectedComparisonCandidate(input, "supportive-1")?.productId,
+    (comparison.alternatives.find((candidate) => candidate.productId === "supportive-1") ?? null)
+      ?.productId,
     "supportive-1",
   )
 })
@@ -461,7 +449,7 @@ test("a stale or missing check date never blanks the stored price; a missing pri
   )
 })
 
-test("selected candidate lookup rejects eligible candidates outside the transported allowlist", () => {
+test("comparison rejects eligible candidates outside the transported allowlist", () => {
   const input = authorityInput("conditioner", "conditioner_rinse_out", {
     productFacts: factsFor("conditioner", "conditioner_rinse_out", "owned", {
       recommendable: false,
@@ -480,7 +468,10 @@ test("selected candidate lookup rejects eligible candidates outside the transpor
     comparison.alternatives.map((candidate) => candidate.productId),
     ["candidate-1", "candidate-2", "candidate-3"],
   )
-  assert.equal(findStage3SelectedComparisonCandidate(input, "candidate-4"), null)
+  assert.equal(
+    comparison.alternatives.find((candidate) => candidate.productId === "candidate-4") ?? null,
+    null,
+  )
 })
 
 test("Deep Cleansing preserves the exact mineral-reset role in selectable recommendations", () => {
@@ -505,12 +496,17 @@ test("Deep Cleansing preserves the exact mineral-reset role in selectable recomm
     [["mineral-alternative", "mineral_reset"]],
   )
   assert.equal(
-    findStage3SelectedComparisonCandidate(input, "mineral-alternative")?.recommendation.role,
+    (
+      comparison.alternatives.find((candidate) => candidate.productId === "mineral-alternative") ??
+      null
+    )?.recommendation.role,
     "mineral_reset",
   )
   assert.equal(
-    findStage3SelectedComparisonCandidate(input, "mineral-alternative")?.recommendation
-      .recommendationId,
+    (
+      comparison.alternatives.find((candidate) => candidate.productId === "mineral-alternative") ??
+      null
+    )?.recommendation.recommendationId,
     "recommendation:deep-cleansing:mineral_reset:mineral-alternative",
   )
 })
@@ -729,7 +725,9 @@ for (const scenario of [
     })
 
     const comparison = buildStage3FitComparison(input)
-    const selected = findStage3SelectedComparisonCandidate(input, "supportive-candidate")
+    const selected =
+      comparison.alternatives.find((candidate) => candidate.productId === "supportive-candidate") ??
+      null
 
     assert.deepEqual(
       comparison.alternatives.map((candidate) => [candidate.productId, candidate.verdict]),
@@ -758,8 +756,14 @@ for (const scenario of [
       ],
     })
 
-    assert.deepEqual(buildStage3FitComparison(input).alternatives, [])
-    assert.equal(findStage3SelectedComparisonCandidate(input, "supportive-candidate"), null)
+    const comparison = buildStage3FitComparison(input)
+
+    assert.equal(
+      comparison.alternatives.find((candidate) => candidate.productId === "supportive-candidate") ??
+        null,
+      null,
+    )
+    assert.deepEqual(comparison.alternatives, [])
   })
 }
 
@@ -776,7 +780,9 @@ test("uncovered Shampoo now ranks in a supportive candidate for the everyday rol
   })
 
   const comparison = buildStage3FitComparison(input)
-  const selected = findStage3SelectedComparisonCandidate(input, "supportive-candidate")
+  const selected =
+    comparison.alternatives.find((candidate) => candidate.productId === "supportive-candidate") ??
+    null
 
   assert.deepEqual(
     comparison.alternatives.map((candidate) => [candidate.productId, candidate.verdict]),
@@ -801,8 +807,14 @@ test("uncovered Shampoo dandruff role remains strict for the same supportive can
     ],
   })
 
-  assert.deepEqual(buildStage3FitComparison(input).alternatives, [])
-  assert.equal(findStage3SelectedComparisonCandidate(input, "supportive-candidate"), null)
+  const comparison = buildStage3FitComparison(input)
+
+  assert.equal(
+    comparison.alternatives.find((candidate) => candidate.productId === "supportive-candidate") ??
+      null,
+    null,
+  )
+  assert.deepEqual(comparison.alternatives, [])
 })
 
 test("uncovered Mask now ranks in the best-available supportive candidate for a required tier", () => {
@@ -816,7 +828,9 @@ test("uncovered Mask now ranks in the best-available supportive candidate for a 
   })
 
   const comparison = buildStage3FitComparison(input)
-  const selected = findStage3SelectedComparisonCandidate(input, "supportive-candidate")
+  const selected =
+    comparison.alternatives.find((candidate) => candidate.productId === "supportive-candidate") ??
+    null
 
   assert.deepEqual(
     comparison.alternatives.map((candidate) => [candidate.productId, candidate.verdict]),
@@ -838,7 +852,9 @@ test("uncovered Oil now ranks in an adjacent-weight supportive candidate", () =>
   })
 
   const comparison = buildStage3FitComparison(input)
-  const selected = findStage3SelectedComparisonCandidate(input, "supportive-candidate")
+  const selected =
+    comparison.alternatives.find((candidate) => candidate.productId === "supportive-candidate") ??
+    null
 
   assert.deepEqual(
     comparison.alternatives.map((candidate) => [candidate.productId, candidate.verdict]),
@@ -861,8 +877,14 @@ test("complete comparison excludes a two-step Oil weight gap from supportive alt
     ],
   })
 
-  assert.deepEqual(buildStage3FitComparison(input).alternatives, [])
-  assert.equal(findStage3SelectedComparisonCandidate(input, "far-weight-candidate"), null)
+  const comparison = buildStage3FitComparison(input)
+
+  assert.equal(
+    comparison.alternatives.find((candidate) => candidate.productId === "far-weight-candidate") ??
+      null,
+    null,
+  )
+  assert.deepEqual(comparison.alternatives, [])
 })
 
 for (const scenario of [
@@ -871,12 +893,6 @@ for (const scenario of [
     category: "mask" as const,
     role: "intensive_conditioning_mask" as const,
     overrides: { weight: "medium" },
-  },
-  {
-    name: "Bondbuilder",
-    category: "bondbuilder" as const,
-    role: "specialized_bond_treatment" as const,
-    overrides: { relationship: "add_on" as const },
   },
 ]) {
   test(`complete comparison rejects a ${scenario.name} candidate that excludes the confirmed thickness`, () => {
@@ -892,8 +908,15 @@ for (const scenario of [
       ],
     })
 
-    assert.deepEqual(buildStage3FitComparison(input).alternatives, [])
-    assert.equal(findStage3SelectedComparisonCandidate(input, "wrong-thickness-candidate"), null)
+    const comparison = buildStage3FitComparison(input)
+
+    assert.equal(
+      comparison.alternatives.find(
+        (candidate) => candidate.productId === "wrong-thickness-candidate",
+      ) ?? null,
+      null,
+    )
+    assert.deepEqual(comparison.alternatives, [])
   })
 }
 
@@ -1024,7 +1047,10 @@ test("uncovered Conditioner ranks the candidate covering the confirmed thickness
     ],
   )
   assert.equal(
-    findStage3SelectedComparisonCandidate(input, "covers-thickness")?.recommendation.productId,
+    (
+      comparison.alternatives.find((candidate) => candidate.productId === "covers-thickness") ??
+      null
+    )?.recommendation.productId,
     "covers-thickness",
   )
 })
@@ -1216,7 +1242,7 @@ for (const role of [
   })
 }
 
-test("Bondbuilder compares application and thickness instead of engine criterion labels", () => {
+test("Bondbuilder compares application without a non-differentiating diameter axis", () => {
   const comparison = buildStage3FitComparison(
     authorityInput("bondbuilder", "specialized_bond_treatment", {
       productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned"),
@@ -1232,17 +1258,17 @@ test("Bondbuilder compares application and thickness instead of engine criterion
   assert.equal(comparison.mode, "comparison")
   assert.deepEqual(
     comparison.dimensions.map((dimension) => dimension.dimensionId),
-    ["bondbuilder.suitable_thicknesses"],
+    [],
   )
 
   const rows = comparison.evidenceRows ?? []
   assert.deepEqual(
     rows.map((row) => row.rowId),
-    ["bondbuilder.application", "bondbuilder.suitable_thicknesses"],
+    ["bondbuilder.application"],
   )
   assert.deepEqual(
     rows.map((row) => row.label),
-    ["Anwendung", "Geeignete Haardicke"],
+    ["Anwendung"],
   )
   assert.equal(
     rows.some((row) =>
@@ -1253,18 +1279,39 @@ test("Bondbuilder compares application and thickness instead of engine criterion
 
   const application = rows[0]
   assert.ok(application)
-  assert.equal(application.target?.valueLabel, "beides möglich")
+  assert.equal(application.target?.valueLabel, "nach deinem Alltag")
   assert.deepEqual(application.productValues, [
     { productId: "owned", valueLabel: "Vorwäsche, ausspülen", relation: "in_target" },
     { productId: "candidate", valueLabel: "Leave-in nach der Wäsche", relation: "in_target" },
   ])
+})
 
-  const thickness = rows[1]
-  assert.ok(thickness)
-  assert.equal(thickness.target?.valueLabel, "mittel")
-  assert.deepEqual(
-    thickness.productValues.map((value) => value.valueLabel),
-    ["fein, mittel", "fein, mittel"],
+test("Bondbuilder bedtime leave-in is distinct from post-wash use and never overrides a contradictory rinse", () => {
+  const comparison = buildStage3FitComparison(
+    authorityInput("bondbuilder", "specialized_bond_treatment", {
+      productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned"),
+      candidates: [
+        factsFor("bondbuilder", "specialized_bond_treatment", "overnight", {
+          applicationMode: "bedtime_leave_in",
+          treatmentMode: "leave_in",
+        }),
+        factsFor("bondbuilder", "specialized_bond_treatment", "contradictory", {
+          applicationMode: "bedtime_leave_in",
+          treatmentMode: "rinse_out",
+        }),
+      ],
+    }),
+  )
+  const values = comparison.evidenceRows?.find(
+    (row) => row.rowId === "bondbuilder.application",
+  )?.productValues
+  assert.equal(
+    values?.find((value) => value.productId === "overnight")?.valueLabel,
+    "Abends, über Nacht im Haar",
+  )
+  assert.equal(
+    values?.find((value) => value.productId === "contradictory")?.valueLabel,
+    "Ausspülen",
   )
 })
 
@@ -1287,6 +1334,7 @@ test("Bondbuilder shows the standalone row only when a displayed product is an a
       candidates: [
         factsFor("bondbuilder", "specialized_bond_treatment", "add-on-candidate", {
           relationship: "add_on",
+          suitableThicknesses: ["coarse"],
         }),
       ],
     }),
@@ -1379,6 +1427,71 @@ test("Bondbuilder tie-default pin decides the order only after verdict, coverage
   assert.deepEqual(
     comparison.alternatives.map((candidate) => candidate.productId),
     [BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "olaplex-no3", "epres"],
+  )
+})
+
+function trustedBondbuilderFacts(
+  productId: string,
+  claimTrustLevel: string | null,
+  overrides: Parameters<typeof factsFor>[3] = {},
+) {
+  const facts = factsFor("bondbuilder", "specialized_bond_treatment", productId, overrides)
+  return { ...facts, spec: { ...facts.spec, claimTrustLevel } }
+}
+
+test("Bondbuilder comparison ranks by trust tier, then the K18 default, before catalog order", () => {
+  const input = authorityInput("bondbuilder", "specialized_bond_treatment", {
+    productFacts: null,
+    capturedProductId: null,
+    subjectIdentity: null,
+    candidates: [
+      trustedBondbuilderFacts("loreal-elvital-bond", "medium", { sortOrder: 1, priceEur: 8.95 }),
+      trustedBondbuilderFacts("ogx-sealing-serum", "low", { sortOrder: 2, priceEur: 18.68 }),
+      trustedBondbuilderFacts("redken-acidic-bonding", "medium", { sortOrder: 3, priceEur: 25.5 }),
+      trustedBondbuilderFacts("olaplex-3plus", "high", { sortOrder: 4, priceEur: 34 }),
+      trustedBondbuilderFacts("epres", "high", { sortOrder: 5, priceEur: 48 }),
+      trustedBondbuilderFacts("aveda", "low", { sortOrder: 6, priceEur: 52 }),
+      trustedBondbuilderFacts(BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "high", {
+        sortOrder: 7,
+        priceEur: 56.25,
+      }),
+      trustedBondbuilderFacts("kerastase-premiere", "medium", { sortOrder: 8, priceEur: 56.29 }),
+    ],
+  })
+
+  assert.deepEqual(
+    rankStage3ComparisonCandidates(input as unknown as Stage3AuthorityInput).map(
+      (candidate) => candidate.productId,
+    ),
+    [
+      BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+      "olaplex-3plus",
+      "epres",
+      "loreal-elvital-bond",
+      "redken-acidic-bonding",
+      "kerastase-premiere",
+      "ogx-sealing-serum",
+      "aveda",
+    ],
+  )
+})
+
+test("Bondbuilder comparison never ranks a more trusted add-on above a standalone ideal product", () => {
+  const input = authorityInput("bondbuilder", "specialized_bond_treatment", {
+    productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned"),
+    candidates: [
+      trustedBondbuilderFacts("add-on-high", "high", { relationship: "add_on", sortOrder: 1 }),
+      trustedBondbuilderFacts("standalone-low", "low", { sortOrder: 2 }),
+    ],
+  })
+
+  const ranked = rankStage3ComparisonCandidates(input as unknown as Stage3AuthorityInput)
+  assert.deepEqual(
+    ranked.map((candidate) => [candidate.productId, candidate.verdict]),
+    [
+      ["standalone-low", "ideal"],
+      ["add-on-high", "supportive"],
+    ],
   )
 })
 
@@ -1645,7 +1758,8 @@ test("comparison ranks target coverage before recommendation and verdict tie-bre
     ["two-of-three-a", "two-of-three-b", "one-of-three"],
   )
   assert.equal(
-    findStage3SelectedComparisonCandidate(input, "two-of-three-a")?.productId,
+    (comparison.alternatives.find((candidate) => candidate.productId === "two-of-three-a") ?? null)
+      ?.productId,
     "two-of-three-a",
   )
 })
@@ -1675,7 +1789,10 @@ test("comparison excludes a known Leave-in candidate with zero displayed target 
     comparison.alternatives.map((candidate) => candidate.productId),
     ["one-of-three"],
   )
-  assert.equal(findStage3SelectedComparisonCandidate(input, "zero-of-three"), null)
+  assert.equal(
+    comparison.alternatives.find((candidate) => candidate.productId === "zero-of-three") ?? null,
+    null,
+  )
 })
 
 // Regression: production bug where an uncovered leave-in role pinned the authority's
@@ -2257,4 +2374,80 @@ test("mask evidence row names the full accepted care-direction set as the target
   assert.equal(row?.target?.valueLabel, "Feuchtigkeit · ausgeglichen ok")
   assert.equal(row?.productValues[0]?.valueLabel, "ausgeglichen")
   assert.equal(row?.productValues[0]?.relation, "in_target")
+})
+
+function withMarketSegmentDisplay<T>(enabled: boolean, run: () => T): T {
+  const previous = process.env.PRODUCT_MARKET_SEGMENT_DISPLAY_ENABLED
+  if (enabled) process.env.PRODUCT_MARKET_SEGMENT_DISPLAY_ENABLED = "true"
+  else delete process.env.PRODUCT_MARKET_SEGMENT_DISPLAY_ENABLED
+  try {
+    return run()
+  } finally {
+    if (previous === undefined) delete process.env.PRODUCT_MARKET_SEGMENT_DISPLAY_ENABLED
+    else process.env.PRODUCT_MARKET_SEGMENT_DISPLAY_ENABLED = previous
+  }
+}
+
+function segmentedConditionerInput() {
+  return authorityInput("conditioner", "conditioner_rinse_out", {
+    productFacts: {
+      ...factsFor("conditioner", "conditioner_rinse_out", "owned", { recommendable: false }),
+      marketSegment: "drugstore",
+    },
+    candidates: [
+      {
+        ...factsFor("conditioner", "conditioner_rinse_out", "salon", { sortOrder: 1 }),
+        marketSegment: "professional",
+      },
+      {
+        ...factsFor("conditioner", "conditioner_rinse_out", "unsegmented", { sortOrder: 2 }),
+        marketSegment: null,
+      },
+    ],
+  })
+}
+
+test("display flag on: shampoo/conditioner/mask presentations carry a known market segment", () => {
+  const comparison = withMarketSegmentDisplay(true, () =>
+    buildStage3FitComparison(segmentedConditionerInput()),
+  )
+  const segments = new Map(
+    comparison.products.map((product) => [product.productId, product.presentation]),
+  )
+  assert.equal(segments.get("owned")?.marketSegment, "drugstore")
+  assert.equal(segments.get("salon")?.marketSegment, "professional")
+  assert.equal(segments.has("unsegmented"), true)
+  assert.equal("marketSegment" in segments.get("unsegmented")!, false)
+})
+
+test("display flag off or a category outside the badge scope leaves the presentation unchanged", () => {
+  const off = withMarketSegmentDisplay(false, () =>
+    buildStage3FitComparison(segmentedConditionerInput()),
+  )
+  assert.ok(
+    off.products.every(
+      (product) =>
+        JSON.stringify(Object.keys(product.presentation ?? {})) ===
+        JSON.stringify(["priceLabel", "netContentLabel"]),
+    ),
+  )
+
+  const leaveIn = withMarketSegmentDisplay(true, () =>
+    buildStage3FitComparison(
+      authorityInput("leave_in", "post_wash_leave_in", {
+        productFacts: {
+          ...factsFor("leave_in", "post_wash_leave_in", "owned", { recommendable: false }),
+          marketSegment: "professional",
+        },
+        candidates: [
+          {
+            ...factsFor("leave_in", "post_wash_leave_in", "salon", { sortOrder: 1 }),
+            marketSegment: "professional",
+          },
+        ],
+      }),
+    ),
+  )
+  assert.ok(leaveIn.products.length > 0)
+  assert.ok(leaveIn.products.every((product) => !("marketSegment" in (product.presentation ?? {}))))
 })

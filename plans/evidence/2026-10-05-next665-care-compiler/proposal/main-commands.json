@@ -1,0 +1,33 @@
+{
+  "status": "UNRUN; arguments for main only after checkout freeze release and acceptance",
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "beforeTransferAfterArgs": [
+    "node",
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "tests/recommendation-engine-shampoo-cadence.test.ts",
+    "tests/care-balance-frequency-targets.test.ts",
+    "tests/personal-plan-routine-candidate-compiler.test.ts",
+    "tests/personal-plan-routine-cadence.test.ts",
+    "tests/personal-plan/product-previews.test.ts",
+    "tests/personal-plan-exact-catalog-bundle.test.ts",
+    "tests/personal-plan-stage3-contracts.test.ts"
+  ],
+  "keeperArgs": [
+    "node",
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-name-pattern=^initial Routine compilation is deterministic and excludes volatile portfolio metadata$",
+    "tests/personal-plan-routine-candidate-compiler.test.ts"
+  ],
+  "guardRequirement": "Full source/test/readset CAS and exclusive checkout mutation lock; no runner or mutations supplied by this audit packet",
+  "notes": "Main must use its reviewed strict selected-test TAP proof infrastructure; no test-name-only red proof."
+}

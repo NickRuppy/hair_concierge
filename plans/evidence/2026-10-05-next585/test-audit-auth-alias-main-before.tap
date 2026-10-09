@@ -1,0 +1,310 @@
+TAP version 13
+# Subtest: tracker boundary only checks the authenticated user
+ok 1 - tracker boundary only checks the authenticated user
+  ---
+  duration_ms: 0.72925
+  ...
+# Subtest: tracker boundary fails closed without an authenticated user
+ok 2 - tracker boundary fails closed without an authenticated user
+  ---
+  duration_ms: 0.078541
+  ...
+# Subtest: tracker boundary fails closed when the authenticated-user read is unavailable
+ok 3 - tracker boundary fails closed when the authenticated-user read is unavailable
+  ---
+  duration_ms: 0.0705
+  ...
+# Subtest: scan boundary allows an authenticated user with a completed quiz
+ok 4 - scan boundary allows an authenticated user with a completed quiz
+  ---
+  duration_ms: 0.141167
+  ...
+# Subtest: scan boundary redirects without an authenticated user
+ok 5 - scan boundary redirects without an authenticated user
+  ---
+  duration_ms: 0.054084
+  ...
+# Subtest: scan boundary redirects when the quiz diagnostics are incomplete
+ok 6 - scan boundary redirects when the quiz diagnostics are incomplete
+  ---
+  duration_ms: 0.104959
+  ...
+# Subtest: scan boundary redirects when a single quiz field is missing
+ok 7 - scan boundary redirects when a single quiz field is missing
+  ---
+  duration_ms: 0.192042
+  ...
+# Subtest: scan boundary fails closed when the authenticated-user read is unavailable
+ok 8 - scan boundary fails closed when the authenticated-user read is unavailable
+  ---
+  duration_ms: 0.0555
+  ...
+# Subtest: scan boundary fails closed when the hair-profile read is unavailable
+ok 9 - scan boundary fails closed when the hair-profile read is unavailable
+  ---
+  duration_ms: 0.224583
+  ...
+# Subtest: scan page tier: a paid-access composite of 'denied' is free
+ok 10 - scan page tier: a paid-access composite of 'denied' is free
+  ---
+  duration_ms: 0.372041
+  ...
+# Subtest: scan page tier: an email-only manual/moderator grant is premium (C1 repro) — the nav classification's id-only lookup would have called this user free
+ok 11 - scan page tier: an email-only manual/moderator grant is premium (C1 repro) — the nav classification's id-only lookup would have called this user free
+  ---
+  duration_ms: 0.08625
+  ...
+# Subtest: scan page tier: a field-test guest is passed through to the paid-access composite
+ok 12 - scan page tier: a field-test guest is passed through to the paid-access composite
+  ---
+  duration_ms: 0.061291
+  ...
+# Subtest: scan page tier: fails closed to premium (never free) when the paid-access composite is unavailable
+ok 13 - scan page tier: fails closed to premium (never free) when the paid-access composite is unavailable
+  ---
+  duration_ms: 0.043834
+  ...
+# Subtest: scan page tier: no authenticated user is premium (never free)
+ok 14 - scan page tier: no authenticated user is premium (never free)
+  ---
+  duration_ms: 0.035542
+  ...
+# Subtest: lapsed = composite denied AND an accepted Routine version exists
+ok 15 - lapsed = composite denied AND an accepted Routine version exists
+  ---
+  duration_ms: 0.697333
+  ...
+# Subtest: a premium tier never performs the keepsake read at all
+ok 16 - a premium tier never performs the keepsake read at all
+  ---
+  duration_ms: 0.069917
+  ...
+# Subtest: both lookups fail closed, in opposite directions
+ok 17 - both lookups fail closed, in opposite directions
+  ---
+  duration_ms: 0.116667
+  ...
+# Subtest: keepsake evidence is an ACCEPTED routine version, never a pending proposal
+ok 18 - keepsake evidence is an ACCEPTED routine version, never a pending proposal
+  ---
+  duration_ms: 0.328208
+  ...
+# Subtest: the keepsake read is owner-scoped and surfaces query errors instead of swallowing them
+ok 19 - the keepsake read is owner-scoped and surfaces query errors instead of swallowing them
+  ---
+  duration_ms: 0.2145
+  ...
+# Subtest: Z2: lapsed evidence is ANY paid-era artifact — plan, own Merkliste rows, or own chat
+ok 20 - Z2: lapsed evidence is ANY paid-era artifact — plan, own Merkliste rows, or own chat
+  ---
+  duration_ms: 0.3605
+  ...
+# Subtest: V5: a fresh FREE registrant's own plan row is not paid-era evidence
+ok 21 - V5: a fresh FREE registrant's own plan row is not paid-era evidence
+  ---
+  duration_ms: 0.124
+  ...
+# Subtest: Z2: the evidence probes short-circuit on the first hit and surface query errors
+ok 22 - Z2: the evidence probes short-circuit on the first hit and surface query errors
+  ---
+  duration_ms: 0.068125
+  ...
+# Subtest: Z2: a routine-less lapsed user gets the honest empty Routine, never the Beispiel
+ok 23 - Z2: a routine-less lapsed user gets the honest empty Routine, never the Beispiel
+  ---
+  duration_ms: 0.314584
+  ...
+# Subtest: Z2: the routine-less keepsake render keeps the Merkliste readable and drops the Beispiel
+ok 24 - Z2: the routine-less keepsake render keeps the Merkliste readable and drops the Beispiel
+  ---
+  duration_ms: 0.435167
+  ...
+# Subtest: Z2: both keepsake gates read the widened evidence, not the accepted-Routine content
+ok 25 - Z2: both keepsake gates read the widened evidence, not the accepted-Routine content
+  ---
+  duration_ms: 0.122167
+  ...
+# Subtest: the page mode maps the three access states onto the three renders
+ok 26 - the page mode maps the three access states onto the three renders
+  ---
+  duration_ms: 0.2925
+  ...
+# Subtest: the keepsake Routine reads the owner's own accepted version, with the proposal machinery off
+ok 27 - the keepsake Routine reads the owner's own accepted version, with the proposal machinery off
+  ---
+  duration_ms: 0.088041
+  ...
+# Subtest: the keepsake Routine refuses to render the OWNER'S ROUTINE without both halves of the evidence
+ok 28 - the keepsake Routine refuses to render the OWNER'S ROUTINE without both halves of the evidence
+  ---
+  duration_ms: 0.102
+  ...
+# Subtest: the Routine page renders the REAL client for keepsake and the Beispiel only for free
+ok 29 - the Routine page renders the REAL client for keepsake and the Beispiel only for free
+  ---
+  duration_ms: 0.127084
+  ...
+# Subtest: keepsake mode removes every write path from the Routine client and locks the edit entry
+ok 30 - keepsake mode removes every write path from the Routine client and locks the edit entry
+  ---
+  duration_ms: 0.288125
+  ...
+# Subtest: keepsake mode removes every write path from the chat container and locks the composer
+ok 31 - keepsake mode removes every write path from the chat container and locks the composer
+  ---
+  duration_ms: 0.321375
+  ...
+# Subtest: Z4: keepsake history renders the interactive chat cards statically — no failing POST is reachable
+ok 32 - Z4: keepsake history renders the interactive chat cards statically — no failing POST is reachable
+  ---
+  duration_ms: 0.308583
+  ...
+# Subtest: the Gemerkt section drops both write affordances when read-only
+ok 33 - the Gemerkt section drops both write affordances when read-only
+  ---
+  duration_ms: 0.075291
+  ...
+# Subtest: Merkliste GET: premium unchanged, lapsed reads, never-paid still 403
+ok 34 - Merkliste GET: premium unchanged, lapsed reads, never-paid still 403
+  ---
+  duration_ms: 4.092875
+  ...
+# Subtest: Merkliste MUTATIONS are untouched by the keepsake read
+ok 35 - Merkliste MUTATIONS are untouched by the keepsake read
+  ---
+  duration_ms: 0.096334
+  ...
+# Subtest: the keepsake read carve-out is scoped to GET on /api/chat and nothing else
+ok 36 - the keepsake read carve-out is scoped to GET on /api/chat and nothing else
+  ---
+  duration_ms: 0.125041
+  ...
+# Subtest: the frontier bypass fires only for a lapsed owner on an admitted read surface
+ok 37 - the frontier bypass fires only for a lapsed owner on an admitted read surface
+  ---
+  duration_ms: 0.075708
+  ...
+# Subtest: flag on: a lapsed owner mid-journey is NOT bounced off /routine or /anwendung
+ok 38 - flag on: a lapsed owner mid-journey is NOT bounced off /routine or /anwendung
+  ---
+  duration_ms: 2.064083
+  ...
+# Subtest: flag off: the same lapsed owner is turned away by the paywall itself (byte-identical)
+ok 39 - flag off: the same lapsed owner is turned away by the paywall itself (byte-identical)
+  ---
+  duration_ms: 1.352875
+  ...
+# Subtest: flag on: a never-paid free user's frontier is legacy, so nothing about their routing changes
+ok 40 - flag on: a never-paid free user's frontier is legacy, so nothing about their routing changes
+  ---
+  duration_ms: 0.264666
+  ...
+# Subtest: flag on: a PAID mid-journey owner is still routed by the frontier
+ok 41 - flag on: a PAID mid-journey owner is still routed by the frontier
+  ---
+  duration_ms: 0.263959
+  ...
+# Subtest: the keepsake Anwendung sources the plan from keepsake evidence, never from journey access
+ok 42 - the keepsake Anwendung sources the plan from keepsake evidence, never from journey access
+  ---
+  duration_ms: 0.280916
+  ...
+# Subtest: keepsake mode without evidence yields no_active_routine, never a journey fallback
+ok 43 - keepsake mode without evidence yields no_active_routine, never a journey fallback
+  ---
+  duration_ms: 0.062
+  ...
+# Subtest: the nav paid-access signal is the email-aware composite, not a user-id-only lookup
+ok 44 - the nav paid-access signal is the email-aware composite, not a user-id-only lookup
+  ---
+  duration_ms: 0.2795
+  ...
+# Subtest: an unreadable entitlement source fails closed to premium in the nav, never to a lock
+ok 45 - an unreadable entitlement source fails closed to premium in the nav, never to a lock
+  ---
+  duration_ms: 0.085125
+  ...
+# Subtest: the nav's paid-access read is still only reached behind the freemium flag
+ok 46 - the nav's paid-access read is still only reached behind the freemium flag
+  ---
+  duration_ms: 0.142084
+  ...
+# Subtest: with the freemium flag off the tier resolves premium without any lookup
+ok 47 - with the freemium flag off the tier resolves premium without any lookup
+  ---
+  duration_ms: 0.555125
+  ...
+# Subtest: app/routine/page.tsx gates on the server tier before it renders the real page
+ok 48 - app/routine/page.tsx gates on the server tier before it renders the real page
+  ---
+  duration_ms: 0.164459
+  ...
+# Subtest: app/anwendung/page.tsx gates on the server tier before it renders the real page
+ok 49 - app/anwendung/page.tsx gates on the server tier before it renders the real page
+  ---
+  duration_ms: 0.12025
+  ...
+# Subtest: app/chat/page.tsx gates on the server tier before it renders the real page
+ok 50 - app/chat/page.tsx gates on the server tier before it renders the real page
+  ---
+  duration_ms: 0.064583
+  ...
+# Subtest: app/chat/[conversationId]/page.tsx gates on the server tier before it renders the real page
+ok 51 - app/chat/[conversationId]/page.tsx gates on the server tier before it renders the real page
+  ---
+  duration_ms: 0.062666
+  ...
+# Subtest: routine and anwendung resolve the tier concurrently with their own page data (F2)
+ok 52 - routine and anwendung resolve the tier concurrently with their own page data (F2)
+  ---
+  duration_ms: 0.187
+  ...
+# Subtest: /chat streams the tier check behind Suspense only when the flag is on; flag off stays branch-free (X2)
+ok 53 - /chat streams the tier check behind Suspense only when the flag is on; flag off stays branch-free (X2)
+  ---
+  duration_ms: 0.133125
+  ...
+# Subtest: each page has its own benefit line, never the sheet's own copy and never a generic pitch
+ok 54 - each page has its own benefit line, never the sheet's own copy and never a generic pitch
+  ---
+  duration_ms: 0.125958
+  ...
+# Subtest: the sheet context is the page's own
+ok 55 - the sheet context is the page's own
+  ---
+  duration_ms: 0.443542
+  ...
+# Subtest: the Routine example is the real Routine page, filled with real catalog products
+ok 56 - the Routine example is the real Routine page, filled with real catalog products
+  ---
+  duration_ms: 14.573875
+  ...
+# Subtest: the Anwendung example shows populated days, not empty ones
+ok 57 - the Anwendung example shows populated days, not empty ones
+  ---
+  duration_ms: 4.291834
+  ...
+# Subtest: the Chat example is a short, capability-true transcript through the real bubbles
+ok 58 - the Chat example is a short, capability-true transcript through the real bubbles
+  ---
+  duration_ms: 10.61075
+  ...
+# Subtest: no example message carries a timestamp — a formatted one would mismatch on hydration
+ok 59 - no example message carries a timestamp — a formatted one would mismatch on hydration
+  ---
+  duration_ms: 3.8345
+  ...
+# Subtest: every example is framed by GatedPreview with its own label, benefit and one CTA
+ok 60 - every example is framed by GatedPreview with its own label, benefit and one CTA
+  ---
+  duration_ms: 8.818333
+  ...
+1..60
+# tests 60
+# suites 0
+# pass 60
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3054.784208

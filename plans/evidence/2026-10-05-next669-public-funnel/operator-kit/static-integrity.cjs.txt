@@ -1,0 +1,18 @@
+'use strict';
+const fs=require('node:fs'),vm=require('node:vm'),crypto=require('node:crypto');
+const D=__dirname,P='/tmp/test-audit-public-funnel66-c69uzpx6',sha=b=>crypto.createHash('sha256').update(b).digest('hex'),read=p=>JSON.parse(fs.readFileSync(p));
+const old=read(D+'/template-originals/operator-pins.json'),pins=read(D+'/operator-pins.json');
+const parsed=[];for(const n of fs.readdirSync(D).filter(n=>n.endsWith('.cjs'))){new vm.Script(fs.readFileSync(D+'/'+n,'utf8'),{filename:n});parsed.push(n)}
+const proof=fs.readFileSync(D+'/operator-proof.cjs','utf8'),catalog=fs.readFileSync(D+'/template-originals/catalog-operator-proof.cjs','utf8'),care=fs.readFileSync(D+'/template-originals/operator-proof.cjs','utf8');
+const decoder=s=>{const start=s.indexOf('function diagnosticValue(');return s.slice(start,s.indexOf('\n}\n',start)+3)};if(decoder(proof)!==decoder(catalog))throw Error('Catalog typed value decoder changed');
+const base=s=>s.slice(s.indexOf('function parseTAP('),s.indexOf('function intended('));if(base(proof).slice(0,base(care).length)!==base(care))throw Error('Base counters/clean/error decoder changed');
+if(JSON.stringify(pins.original97Guards)!==JSON.stringify(read(P+'/read-scope.json').entries))throw Error('Original97 repinned');
+for(const k of ['head','branch','gitDir','commonDir','node','typescriptVersion','metadataPolicy','identityFiles'])if(JSON.stringify(pins[k])!==JSON.stringify(old[k]))throw Error('Existing identity/policy drift '+k);
+for(const p of old.dependencies)if(!pins.dependencies.some(q=>JSON.stringify(p)===JSON.stringify(q)))throw Error('Existing dependency changed');
+if(JSON.stringify(old.dependencyTrees)!==JSON.stringify(pins.dependencyTrees))throw Error('Existing distribution changed');
+const controls=read(D+'/operator-controls-normalized.json');if(controls.length!==20||new Set(controls.map(x=>x.mutatedSha256)).size!==14)throw Error('20 controls/14 unique mutants');
+for(const c of controls)if(sha(fs.readFileSync(c.fullMutantPath))!==c.mutatedSha256)throw Error('Full mutant drift');
+const amendments=read(D+'/control-amendments.json');if(amendments.amendments.length!==9||controls.filter(c=>c.controlAmended).length!==9)throw Error('Only nine C3 control amendments');
+for(const c of controls.filter(c=>!c.controlAmended))if(c.originalDescriptorMutantSHA256!==c.mutatedSha256)throw Error('Unapproved control amendment');
+if(!proof.includes("names.length===1&&names[0]==='AssertionError'")||!proof.includes('&&firstFrame.includes(stackToken)&&diagnostic.accepted'))throw Error('Strict first frame/name/value conjunction lost');
+console.log(JSON.stringify({status:'PASS_STATIC',pinsSHA:sha(fs.readFileSync(D+'/operator-pins.json')),parsedToolFiles:parsed,original97GuardsUnchanged:true,templateIdentityRuntimeDependenciesUnchanged:true,catalogTypedDecoderByteIdentical:true,careCleanCounterErrorDecoderByteIdentical:true,sourceControls:20,uniqueMutants:14,controlOnlyAmendments:9,repositoryWrites:0,children:0,ownerImports:0,nativeRuns:0,limits:'Static byte/AST invariants and synthetic diagnostic policy; no acceptance or native fault claim.'},null,2));

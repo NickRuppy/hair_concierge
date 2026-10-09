@@ -15,6 +15,7 @@ import {
 } from "@/lib/recommendation-engine"
 import type { PersistenceRoutineItemRow } from "@/lib/recommendation-engine/adapters/from-persistence"
 import type { RecommendationEngineRuntime } from "@/lib/recommendation-engine/runtime"
+import type { EngineBudgetOrder } from "@/lib/recommendation-engine/selection"
 import type { CategoryDecision, EffectiveCareContext } from "@/lib/recommendation-engine/types"
 import {
   buildCareBalanceToolContext,
@@ -23,6 +24,10 @@ import {
 } from "@/lib/agent/tools/care-balance-context"
 import { applyProductMemoryConstraints } from "@/lib/chat-runtime/user-memory"
 import type { MatchedProduct } from "@/lib/product-matching/matcher"
+import {
+  projectBondbuilderResearchForChat,
+  type BondbuilderChatResearch,
+} from "@/lib/bondbuilder/research-facts"
 import { isMatchedRoutineUsage } from "@/lib/product-usage/routine-identity"
 import type { UserMemoryContext } from "@/lib/chat-runtime/user-memory"
 import { attachProductLineNamesToProducts } from "@/lib/product-lines/display"
@@ -50,6 +55,12 @@ import {
   CONDITIONER_WEIGHT_LABELS,
 } from "@/lib/conditioner/constants"
 import { OIL_PURPOSE_LABELS, OIL_SUBTYPE_LABELS } from "@/lib/oil/constants"
+import {
+  applyChatBudgetOrdering,
+  createChatBudgetEngineOrder,
+  describeShoppingBudget,
+  readSavedShoppingBudget,
+} from "@/lib/agent/tools/chat-budget"
 import {
   LEAVE_IN_CONDITIONER_RELATIONSHIP_LABELS,
   LEAVE_IN_FORMAT_LABELS,
@@ -189,6 +200,9 @@ export interface SelectedProductResult {
   caveat: string | null
   supported_claims: SupportedProductClaim[]
   unsupported_requested_signals: UnsupportedRequestedSignal[]
+  bondbuilder_research?: BondbuilderChatResearch
+  /** Only set (true) when a capped saved budget applies and this product exceeds it. */
+  over_budget?: true
 }
 
 export interface SelectedProductsMissingInfo {
@@ -230,6 +244,10 @@ export interface SelectedProductsProjection {
   care_balance_context?: ProductCareBalanceContext | null
   missing_info: SelectedProductsMissingInfo[]
   unsupported_requested_signals: UnsupportedRequestedSignal[]
+  /** The user's saved per-package budget (German label); absent when none is saved. */
+  budget?: string
+  /** Set when products without a usable price were left out under a capped budget. */
+  budget_note?: string
 }
 
 export type ProductCareBalanceContext = CareBalanceToolContext
@@ -302,6 +320,9 @@ function projectDisplayableProduct(
   const meta = product.recommendation_meta
   const caveat = mapDisplayableCaveat(meta?.tradeoffs?.[0] ?? null)
   const supportedClaims = buildSupportedProductClaims(product)
+  const bondbuilderResearch = projectBondbuilderResearchForChat(
+    product.bondbuilder_specs ? { ...product.bondbuilder_specs } : null,
+  )
   const unsupportedRequestedSignals = [
     ...buildUnsupportedRequestedSignals(routeContext?.activeProfileSignals ?? [], supportedClaims),
     ...(meta?.category === "shampoo" ||
@@ -328,6 +349,7 @@ function projectDisplayableProduct(
     caveat,
     supported_claims: supportedClaims,
     unsupported_requested_signals: unsupportedRequestedSignals,
+    ...(bondbuilderResearch ? { bondbuilder_research: bondbuilderResearch } : {}),
   }
 }
 
@@ -3235,6 +3257,8 @@ async function runCategoryEngine(params: {
   runtime: RecommendationEngineRuntime
   includeProductIds?: string[]
   preserveProductIds?: string[]
+  /** Capped chat budget: orders the ranked pool before the engine's final result cut. */
+  orderBeforeCut?: EngineBudgetOrder
 }): Promise<MatchedProduct[]> {
   const {
     category,
@@ -3244,6 +3268,7 @@ async function runCategoryEngine(params: {
     runtime,
     includeProductIds,
     preserveProductIds,
+    orderBeforeCut,
   } = params
 
   switch (category) {
@@ -3254,6 +3279,7 @@ async function runCategoryEngine(params: {
         routineItems,
         includeProductIds,
         preserveProductIds,
+        orderBeforeCut,
       })
     case "conditioner":
       return selectConditionerProductsWithEngine({
@@ -3263,6 +3289,7 @@ async function runCategoryEngine(params: {
         runtime,
         includeProductIds,
         preserveProductIds,
+        orderBeforeCut,
       })
     case "leave_in":
       return selectLeaveInProductsWithEngine({
@@ -3272,6 +3299,7 @@ async function runCategoryEngine(params: {
         runtime,
         includeProductIds,
         preserveProductIds,
+        orderBeforeCut,
       })
     case "mask":
       return selectMaskProductsWithEngine({
@@ -3281,6 +3309,7 @@ async function runCategoryEngine(params: {
         runtime,
         includeProductIds,
         preserveProductIds,
+        orderBeforeCut,
       })
     case "oil":
       return selectOilProductsWithEngine({
@@ -3290,6 +3319,7 @@ async function runCategoryEngine(params: {
         runtime,
         includeProductIds,
         preserveProductIds,
+        orderBeforeCut,
       })
     case "bondbuilder":
       return selectBondbuilderProductsWithEngine({
@@ -3299,6 +3329,7 @@ async function runCategoryEngine(params: {
         runtime,
         includeProductIds,
         preserveProductIds,
+        orderBeforeCut,
       })
     case "deep_cleansing_shampoo":
       return selectDeepCleansingShampooProductsWithEngine({
@@ -3308,6 +3339,7 @@ async function runCategoryEngine(params: {
         runtime,
         includeProductIds,
         preserveProductIds,
+        orderBeforeCut,
       })
     case "dry_shampoo":
       return selectDryShampooProductsWithEngine({
@@ -3317,6 +3349,7 @@ async function runCategoryEngine(params: {
         runtime,
         includeProductIds,
         preserveProductIds,
+        orderBeforeCut,
       })
     case "peeling":
       return selectPeelingProductsWithEngine({
@@ -3326,6 +3359,7 @@ async function runCategoryEngine(params: {
         runtime,
         includeProductIds,
         preserveProductIds,
+        orderBeforeCut,
       })
     default:
       unsupportedCategory(String(category))
@@ -3592,6 +3626,16 @@ export function createSelectProductsTool(
       ...ownedProductIdsForCategory(routineItems, category),
       ...(targetProductIds ?? []),
     ])
+    const targetProductIdSet = new Set(uniqueNonEmpty(targetProductIds ?? []))
+    // Chat respects (never changes) the saved budget. Assessments of named/owned products and
+    // uncapped or missing budgets keep today's output.
+    const savedBudget = targetProductIdSet.size > 0 ? null : readSavedShoppingBudget(hairProfile)
+    const protectedProductIds = new Set(includeProductIds)
+    // The engine keeps only its top few products, so a capped budget is applied to its full
+    // ranked pool before that cut; the ordering below then only labels and re-checks.
+    const engineBudgetOrder = savedBudget
+      ? createChatBudgetEngineOrder({ budget: savedBudget, protectedProductIds })
+      : null
     const engineProducts = await (options.runCategoryEngine ?? runCategoryEngine)({
       category,
       message,
@@ -3600,6 +3644,7 @@ export function createSelectProductsTool(
       runtime,
       includeProductIds,
       preserveProductIds: uniqueNonEmpty(targetProductIds ?? []),
+      ...(engineBudgetOrder ? { orderBeforeCut: engineBudgetOrder.order } : {}),
     })
     const productsWithLineNames = await attachProductLineNamesToProducts(
       engineProducts,
@@ -3610,11 +3655,17 @@ export function createSelectProductsTool(
       },
     )
     const constrainedProducts = applyProductMemoryConstraints(productsWithLineNames, memoryContext)
-    const targetProductIdSet = new Set(uniqueNonEmpty(targetProductIds ?? []))
+    const budgetOrdering = savedBudget
+      ? applyChatBudgetOrdering({
+          products: constrainedProducts,
+          budget: savedBudget,
+          protectedProductIds,
+        })
+      : null
     const productsForProjection =
       targetProductIdSet.size > 0
         ? constrainedProducts.filter((product) => targetProductIdSet.has(product.id))
-        : constrainedProducts
+        : (budgetOrdering?.products ?? constrainedProducts)
     const projection = projectSelectedProducts(
       productsForProjection,
       effectiveHairProfile,
@@ -3647,6 +3698,21 @@ export function createSelectProductsTool(
             targetProductIds,
           }) ?? projection)
         : projection
+    if (savedBudget && budgetOrdering) {
+      effectiveProjection.budget = describeShoppingBudget(savedBudget)
+      if (
+        budgetOrdering.droppedUnpricedCount + (engineBudgetOrder?.droppedProductIds.size ?? 0) >
+        0
+      ) {
+        effectiveProjection.budget_note =
+          "Produkte ohne verlässlichen Preis wurden wegen der Preisgrenze nicht berücksichtigt."
+      }
+      for (const product of effectiveProjection.products) {
+        if (budgetOrdering.overBudgetProductIds.has(product.product_id)) {
+          product.over_budget = true
+        }
+      }
+    }
 
     options.onResult?.({
       projection: effectiveProjection,

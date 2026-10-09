@@ -1,0 +1,907 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "branch": "codex/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "decision": "NO_CUT_RETAIN_SUPPORTED_BOUNDARIES",
+  "census": {
+    "R": 34,
+    "F": 5,
+    "C": 0,
+    "D": 0,
+    "before": 39,
+    "transfer": 39,
+    "cut": 39
+  },
+  "nested": {
+    "R": 8,
+    "F": 1,
+    "count": 9,
+    "censusExcluded": true
+  },
+  "phaseFiles": [
+    {
+      "phase": "before",
+      "file": "tests/openai-ads-browser-integration.test.ts",
+      "sha256": "79bec4c6528447448c437d0b62dd2422e0314adb105d5e3c9c31338c6407da74",
+      "bytes": 11218,
+      "lines": 275,
+      "censusSites": 1,
+      "nestedSites": 3
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/openai-ads-browser-integration.test.ts",
+      "sha256": "79bec4c6528447448c437d0b62dd2422e0314adb105d5e3c9c31338c6407da74",
+      "bytes": 11218,
+      "lines": 275,
+      "censusSites": 1,
+      "nestedSites": 3
+    },
+    {
+      "phase": "cut",
+      "file": "tests/openai-ads-browser-integration.test.ts",
+      "sha256": "79bec4c6528447448c437d0b62dd2422e0314adb105d5e3c9c31338c6407da74",
+      "bytes": 11218,
+      "lines": 275,
+      "censusSites": 1,
+      "nestedSites": 3
+    },
+    {
+      "phase": "before",
+      "file": "tests/openai-ads-browser.test.ts",
+      "sha256": "853c8174781df2bc02643c4670a27689229fa9bf05fbf4dacfa1309941c951d7",
+      "bytes": 7429,
+      "lines": 249,
+      "censusSites": 9,
+      "nestedSites": 0
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/openai-ads-browser.test.ts",
+      "sha256": "853c8174781df2bc02643c4670a27689229fa9bf05fbf4dacfa1309941c951d7",
+      "bytes": 7429,
+      "lines": 249,
+      "censusSites": 9,
+      "nestedSites": 0
+    },
+    {
+      "phase": "cut",
+      "file": "tests/openai-ads-browser.test.ts",
+      "sha256": "853c8174781df2bc02643c4670a27689229fa9bf05fbf4dacfa1309941c951d7",
+      "bytes": 7429,
+      "lines": 249,
+      "censusSites": 9,
+      "nestedSites": 0
+    },
+    {
+      "phase": "before",
+      "file": "tests/openai-ads-capi.test.ts",
+      "sha256": "37f05512230822da2f55ae588e09fd4504ee0ea929c763597ff1a492d55e3f63",
+      "bytes": 7232,
+      "lines": 249,
+      "censusSites": 10,
+      "nestedSites": 0
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/openai-ads-capi.test.ts",
+      "sha256": "37f05512230822da2f55ae588e09fd4504ee0ea929c763597ff1a492d55e3f63",
+      "bytes": 7232,
+      "lines": 249,
+      "censusSites": 10,
+      "nestedSites": 0
+    },
+    {
+      "phase": "cut",
+      "file": "tests/openai-ads-capi.test.ts",
+      "sha256": "37f05512230822da2f55ae588e09fd4504ee0ea929c763597ff1a492d55e3f63",
+      "bytes": 7232,
+      "lines": 249,
+      "censusSites": 10,
+      "nestedSites": 0
+    },
+    {
+      "phase": "before",
+      "file": "tests/openai-ads-consent-cookie.test.ts",
+      "sha256": "a7e331e2582b73560eb16f3b781550ff26d216bce7488c49573d7691b75dd3c5",
+      "bytes": 1283,
+      "lines": 24,
+      "censusSites": 2,
+      "nestedSites": 0
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/openai-ads-consent-cookie.test.ts",
+      "sha256": "a7e331e2582b73560eb16f3b781550ff26d216bce7488c49573d7691b75dd3c5",
+      "bytes": 1283,
+      "lines": 24,
+      "censusSites": 2,
+      "nestedSites": 0
+    },
+    {
+      "phase": "cut",
+      "file": "tests/openai-ads-consent-cookie.test.ts",
+      "sha256": "a7e331e2582b73560eb16f3b781550ff26d216bce7488c49573d7691b75dd3c5",
+      "bytes": 1283,
+      "lines": 24,
+      "censusSites": 2,
+      "nestedSites": 0
+    },
+    {
+      "phase": "before",
+      "file": "tests/openai-ads-context-postgres.test.ts",
+      "sha256": "6f71e8abf2c6745df293a6f1d112679de27ac506b9ad09e45dec71d304fc86a0",
+      "bytes": 5806,
+      "lines": 142,
+      "censusSites": 4,
+      "nestedSites": 0
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/openai-ads-context-postgres.test.ts",
+      "sha256": "6f71e8abf2c6745df293a6f1d112679de27ac506b9ad09e45dec71d304fc86a0",
+      "bytes": 5806,
+      "lines": 142,
+      "censusSites": 4,
+      "nestedSites": 0
+    },
+    {
+      "phase": "cut",
+      "file": "tests/openai-ads-context-postgres.test.ts",
+      "sha256": "6f71e8abf2c6745df293a6f1d112679de27ac506b9ad09e45dec71d304fc86a0",
+      "bytes": 5806,
+      "lines": 142,
+      "censusSites": 4,
+      "nestedSites": 0
+    },
+    {
+      "phase": "before",
+      "file": "tests/openai-ads-context-route.test.ts",
+      "sha256": "c3a5b4c7286a3e6ba850ca429682f4d831a67949e872f43f0da6909a3399a186",
+      "bytes": 5819,
+      "lines": 160,
+      "censusSites": 5,
+      "nestedSites": 0
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/openai-ads-context-route.test.ts",
+      "sha256": "c3a5b4c7286a3e6ba850ca429682f4d831a67949e872f43f0da6909a3399a186",
+      "bytes": 5819,
+      "lines": 160,
+      "censusSites": 5,
+      "nestedSites": 0
+    },
+    {
+      "phase": "cut",
+      "file": "tests/openai-ads-context-route.test.ts",
+      "sha256": "c3a5b4c7286a3e6ba850ca429682f4d831a67949e872f43f0da6909a3399a186",
+      "bytes": 5819,
+      "lines": 160,
+      "censusSites": 5,
+      "nestedSites": 0
+    },
+    {
+      "phase": "before",
+      "file": "tests/openai-ads-event-payload.test.ts",
+      "sha256": "c1bc131cd9816082b1b43b2b6a4640d42509fc86ffbbc2548ac38fcfe5523fc4",
+      "bytes": 6020,
+      "lines": 185,
+      "censusSites": 7,
+      "nestedSites": 0
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/openai-ads-event-payload.test.ts",
+      "sha256": "c1bc131cd9816082b1b43b2b6a4640d42509fc86ffbbc2548ac38fcfe5523fc4",
+      "bytes": 6020,
+      "lines": 185,
+      "censusSites": 7,
+      "nestedSites": 0
+    },
+    {
+      "phase": "cut",
+      "file": "tests/openai-ads-event-payload.test.ts",
+      "sha256": "c1bc131cd9816082b1b43b2b6a4640d42509fc86ffbbc2548ac38fcfe5523fc4",
+      "bytes": 6020,
+      "lines": 185,
+      "censusSites": 7,
+      "nestedSites": 0
+    },
+    {
+      "phase": "before",
+      "file": "tests/openai-ads-live-postgres.test.ts",
+      "sha256": "d8e70ba913504e9188afb2408399c3d4615db7f78e49a421efe18102a62db89c",
+      "bytes": 14591,
+      "lines": 315,
+      "censusSites": 1,
+      "nestedSites": 6
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/openai-ads-live-postgres.test.ts",
+      "sha256": "d8e70ba913504e9188afb2408399c3d4615db7f78e49a421efe18102a62db89c",
+      "bytes": 14591,
+      "lines": 315,
+      "censusSites": 1,
+      "nestedSites": 6
+    },
+    {
+      "phase": "cut",
+      "file": "tests/openai-ads-live-postgres.test.ts",
+      "sha256": "d8e70ba913504e9188afb2408399c3d4615db7f78e49a421efe18102a62db89c",
+      "bytes": 14591,
+      "lines": 315,
+      "censusSites": 1,
+      "nestedSites": 6
+    }
+  ],
+  "readSet": [
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+      "lines": 423,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          140,
+          166
+        ]
+      ]
+    },
+    {
+      "file": ".nvmrc",
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+      "lines": 1,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "file": "docs/openai-ads-setup.md",
+      "sha256": "617e03b3d4e646f6cb76b0051c2b18488d897584e3ad02f9680cdf26f0714145",
+      "lines": 61,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          61
+        ]
+      ]
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/dist/pglite-CntadC_p.d.ts",
+      "sha256": "aa4bc50bc6ba80c59ad64dd2f58112b873b6b2f255e383dae69f3c4abb4a753b",
+      "lines": 1034,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          809,
+          847
+        ]
+      ]
+    },
+    {
+      "file": "node_modules/@supabase/postgrest-js/src/PostgrestClient.ts",
+      "sha256": "50121d8145aa9fd4b4f6b9382270db0343a6fdd6e2f56b5f0e8c872dc683d9c8",
+      "lines": 447,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          374,
+          455
+        ]
+      ]
+    },
+    {
+      "file": "node_modules/@types/node/crypto.d.ts",
+      "sha256": "4c829ab315f57c5442c6667b53769975acbf92003a66aef19bce151987675bd1",
+      "lines": 4545,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          255,
+          279
+        ],
+        [
+          2457,
+          2480
+        ]
+      ]
+    },
+    {
+      "file": "node_modules/esbuild/lib/main.d.ts",
+      "sha256": "161c8e0690c46021506e32fda85956d785b70f309ae97011fd27374c065cac9b",
+      "lines": 716,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          134,
+          149
+        ],
+        [
+          217,
+          233
+        ]
+      ]
+    },
+    {
+      "file": "node_modules/esbuild/lib/main.js",
+      "sha256": "bce772de103e1cbb118f1b7313916caa81f0e85461b3b6e3531607e7ed75ec85",
+      "lines": 2532,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          1190,
+          1205
+        ]
+      ]
+    },
+    {
+      "file": "node_modules/playwright-core/lib/client/browserContext.js",
+      "sha256": "5dfbb73458c765459cc6a538644e9cb1b0db3d046ee38c6ec194055710cc9daa",
+      "lines": 563,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          200,
+          230
+        ],
+        [
+          310,
+          342
+        ]
+      ]
+    },
+    {
+      "file": "node_modules/playwright-core/lib/client/network.js",
+      "sha256": "f4af0d2bc3bf0c57a55965480702e3d7e1fa750c444afce117631f97b337e1db",
+      "lines": 750,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          255,
+          314
+        ]
+      ]
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+      "lines": 275,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          9,
+          11
+        ],
+        [
+          49,
+          49
+        ]
+      ]
+    },
+    {
+      "file": "plans/openai-ads-conversions.md",
+      "sha256": "2e50029b7827c3fcaa91c57b5879549bbc7e7ba69d3520f8eb4f4c855b82b48c",
+      "lines": 55,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          55
+        ]
+      ]
+    },
+    {
+      "file": "src/app/api/billing/reconcile/route.ts",
+      "sha256": "961323aa73cfedd70c40597e205201c454d06f7007c568025edd78b01310a297",
+      "lines": 491,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          110,
+          135
+        ],
+        [
+          370,
+          430
+        ]
+      ]
+    },
+    {
+      "file": "src/app/api/openai-ads/context/route.ts",
+      "sha256": "62054bfc9d4cb3b4fc76d18253d10cb8729b9876e1e32779df2f44edd52cf222",
+      "lines": 11,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          11
+        ]
+      ]
+    },
+    {
+      "file": "src/app/layout.tsx",
+      "sha256": "cb59fbca704acc3352087e1dc3057b43690f510f8d40fc7c01319249b9846466",
+      "lines": 61,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          61
+        ]
+      ]
+    },
+    {
+      "file": "src/components/checkout/paypal-one-time-button.tsx",
+      "sha256": "a60cf97517aa398c79d87eb6132a72430708474bf81054c35496be911ffaa07b",
+      "lines": 895,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          558,
+          594
+        ]
+      ]
+    },
+    {
+      "file": "src/components/checkout/paypal-subscription-button.tsx",
+      "sha256": "df81932a397efbe358f595927ce40ad73425bcdf0e64aeafc2fe7fd9db11fae1",
+      "lines": 978,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          890,
+          930
+        ]
+      ]
+    },
+    {
+      "file": "src/components/quiz/result-offer-pricing.tsx",
+      "sha256": "461bf77fd54505e7fdcaa10c0630bfc942803fdb13ddc546ba7c745c6e91d33a",
+      "lines": 1720,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          1285,
+          1325
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/auth/route-classification.ts",
+      "sha256": "6a5c8c0a283054ab108779a6a8f23764a4919b67adea2f0a94cb389abb4d57a6",
+      "lines": 220,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          58,
+          77
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/openai-capi.ts",
+      "sha256": "56d1c371daa47f9ac41b57f311b61b5db9a34fce7b59f56d342bd79ffe575767",
+      "lines": 41,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          41
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/types.ts",
+      "sha256": "7e6a656110c62d2c7796c190153082319abce75013ccada4df1cade8eeac22ec",
+      "lines": 29,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          29
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/billing/analytics-outbox.ts",
+      "sha256": "e81d7519e58438a54760efac9aa1b92227f028077fef049595facc84d480bef2",
+      "lines": 506,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          506
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/billing/types.ts",
+      "sha256": "f99c6f799c5c79a4218a2425fbd1b4ad4565c7f0592d1419b45ae6cb09e5047b",
+      "lines": 255,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          255
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/cookie-consent.ts",
+      "sha256": "d5759e5e356628f91ffc58a37cd8ad25720078f60499c5a260bfd4c14094161c",
+      "lines": 47,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          47
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/funnel/client.ts",
+      "sha256": "9c3728cffff3810d829afd198c2406e35cf6edb3d4c68dbfc5a1cfa845e100a8",
+      "lines": 213,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          213
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/funnel/cookie.ts",
+      "sha256": "522741b96f60560c02f92a5445428380de02231b2b3724b4143dfc6da14f7b48",
+      "lines": 165,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          165
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/funnel/packages.ts",
+      "sha256": "66cab34518f29604a37c7a32721f74ca5c930f82a12dcf293db69e3b90a080be",
+      "lines": 94,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          1,
+          65
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/openai-ads/browser.ts",
+      "sha256": "30c0a0b871aac8a5bf6f2131d7c48a6643f71dc7c31cca298196bed4ab288ab3",
+      "lines": 280,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          280
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/openai-ads/event-payload.ts",
+      "sha256": "62b7d2a3ee91cd3eb5d760394542f852da678400864549944199313ba58c670b",
+      "lines": 169,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          169
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/openai-ads/server/capi.ts",
+      "sha256": "fa4134a2a470d3b54dfd85677b3d7d71c1f3c6b2e873df6f446eb5d97c43ef53",
+      "lines": 98,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          98
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/openai-ads/server/consent-cookie.ts",
+      "sha256": "2de7b268ec1e0af155449ff4dcb16bf096b54799ff12226abfb29d36f15a0a7e",
+      "lines": 43,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          43
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/openai-ads/server/context.ts",
+      "sha256": "f1768e840ee30bf873a5becd515f3dc7fb59226aeb54ba0b12bd9d64c0a4bbc0",
+      "lines": 227,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          227
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/supabase/admin.ts",
+      "sha256": "bd6ec1538d65a01f82b3f55b2839f0ac347d617c6de29d13cea4b0eff737386a",
+      "lines": 14,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          14
+        ]
+      ]
+    },
+    {
+      "file": "src/lib/supabase/middleware.ts",
+      "sha256": "b46773cf21b880cb35d2967d4a882be1c5c59c53f2416607b60d3cb8a4c862a7",
+      "lines": 922,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          62,
+          85
+        ]
+      ]
+    },
+    {
+      "file": "src/providers/openai-ads-provider.tsx",
+      "sha256": "2dc7f9b0fff2c165e9c43fb086b08eab9acc04d31b9bf2e9d23b88ace2354234",
+      "lines": 21,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          21
+        ]
+      ]
+    },
+    {
+      "file": "supabase/migrations/20260915141251_openai_ads_consent_context.sql",
+      "sha256": "61c286bba22f14e1ba4b00834f21ff9f9b65dd5325fbec15934bf9cb57cd3a6d",
+      "lines": 107,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          107
+        ]
+      ]
+    },
+    {
+      "file": "supabase/migrations/20260915141328_openai_ads_billing_delivery.sql",
+      "sha256": "825003754dc66bfdd496f8c371affeebc463193d4a1593c6a74ccba2ab2fbaf1",
+      "lines": 70,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          70
+        ]
+      ]
+    },
+    {
+      "file": "supabase/migrations/20260915145322_openai_ads_canonical_test_exclusion.sql",
+      "sha256": "ae22b68365a7304960fd108d71c2cf04c114dc094a8eb2637fbd50a2a5a9b1f8",
+      "lines": 37,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          37
+        ]
+      ]
+    },
+    {
+      "file": "tests/billing-analytics-outbox.test.ts",
+      "sha256": "d1fcd8bf8b29dc818b043ddded2fc9977239818400ededba0fdccb0bbb6e5242",
+      "lines": 817,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          685,
+          780
+        ]
+      ]
+    },
+    {
+      "file": "tests/billing-reconcile-analytics.test.ts",
+      "sha256": "8a8e25f2fc0fe25d2785fb163d1278fd1b7793698c78806484a18e1f8a4791dc",
+      "lines": 718,
+      "readDepth": "operative_slices",
+      "ranges": [
+        [
+          680,
+          724
+        ]
+      ]
+    },
+    {
+      "file": "tests/openai-ads-browser-integration.test.ts",
+      "sha256": "79bec4c6528447448c437d0b62dd2422e0314adb105d5e3c9c31338c6407da74",
+      "lines": 275,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          275
+        ]
+      ]
+    },
+    {
+      "file": "tests/openai-ads-browser.test.ts",
+      "sha256": "853c8174781df2bc02643c4670a27689229fa9bf05fbf4dacfa1309941c951d7",
+      "lines": 249,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          249
+        ]
+      ]
+    },
+    {
+      "file": "tests/openai-ads-capi.test.ts",
+      "sha256": "37f05512230822da2f55ae588e09fd4504ee0ea929c763597ff1a492d55e3f63",
+      "lines": 249,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          249
+        ]
+      ]
+    },
+    {
+      "file": "tests/openai-ads-consent-cookie.test.ts",
+      "sha256": "a7e331e2582b73560eb16f3b781550ff26d216bce7488c49573d7691b75dd3c5",
+      "lines": 24,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          24
+        ]
+      ]
+    },
+    {
+      "file": "tests/openai-ads-context-postgres.test.ts",
+      "sha256": "6f71e8abf2c6745df293a6f1d112679de27ac506b9ad09e45dec71d304fc86a0",
+      "lines": 142,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          142
+        ]
+      ]
+    },
+    {
+      "file": "tests/openai-ads-context-route.test.ts",
+      "sha256": "c3a5b4c7286a3e6ba850ca429682f4d831a67949e872f43f0da6909a3399a186",
+      "lines": 160,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          160
+        ]
+      ]
+    },
+    {
+      "file": "tests/openai-ads-event-payload.test.ts",
+      "sha256": "c1bc131cd9816082b1b43b2b6a4640d42509fc86ffbbc2548ac38fcfe5523fc4",
+      "lines": 185,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          185
+        ]
+      ]
+    },
+    {
+      "file": "tests/openai-ads-live-postgres.test.ts",
+      "sha256": "d8e70ba913504e9188afb2408399c3d4615db7f78e49a421efe18102a62db89c",
+      "lines": 315,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          315
+        ]
+      ]
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+      "lines": 10,
+      "readDepth": "full",
+      "ranges": [
+        [
+          1,
+          10
+        ]
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "build-report.py",
+      "sha256": "03845d57d2d5335af3ca8c0c5a1f7843c5e67be5748379122fa0fd2ffefea434"
+    },
+    {
+      "path": "build-static.cjs",
+      "sha256": "2495e2dd3694214f64146679215c295b2c03e7d462676650053618b7f3a8347d"
+    },
+    {
+      "path": "candidates.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "complete-ledger.md",
+      "sha256": "88dc55272478ee0bf914b7b86d0ebc4098c4a3deadb4822387a88a6bb6260a3d"
+    },
+    {
+      "path": "complete.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "controls.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "cut.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "inventory.json",
+      "sha256": "f568cd3e4978ea637a7a626a8e4f02f6ab12a262efa44c667c80367d994b66c0"
+    },
+    {
+      "path": "judgments.json",
+      "sha256": "5fadba86988e4bcc04846843da4ec27e01980ef6d4ccebb9800e96bae02d55c6"
+    },
+    {
+      "path": "layer-plan.md",
+      "sha256": "8fbdecbb7a2cfaf6c0e5f11900833836e45352e40ebf0c5978997cf80af18ad3"
+    },
+    {
+      "path": "phase-files.json",
+      "sha256": "77c2ba0698e728a4cf963de3cef7301e6ccf5f1a2d24210283effaa86e86d187"
+    },
+    {
+      "path": "read-scope.json",
+      "sha256": "894fcc491531dbbf2281a1c349f77c5304f9f0aec65720199487532c85e0b565"
+    },
+    {
+      "path": "static-check.json",
+      "sha256": "67d7681737a87103bc6ae65568c065c7d19cd4723e5a555ada582007b11fcd48"
+    },
+    {
+      "path": "transfer.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

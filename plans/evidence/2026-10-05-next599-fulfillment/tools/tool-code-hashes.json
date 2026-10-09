@@ -1,0 +1,22 @@
+{
+  "files": {
+    "README.md": "334905f2ba7eadfc310353b11bf7631ef015130c98eb96c58cc385bc8bb8c620",
+    "operator-before.ts": "69887834dd8e2df03dd0a5ebe426f02951d55acecfe2749d4e5cdfbe3e194d05",
+    "operator-controls-normalized.json": "3e579d81a96cc1b5e843aec3edcf4fc1eaa6c5d25f557b437d5b7a527883f18b",
+    "operator-cut.ts": "b0ef567977d3953a99cf3c36f2836a947003e577ab0a84aa61fb08f3bd8e29d4",
+    "operator-edit.cjs": "fe142eecf525a10a1976d1bdf654302d5a9c6d1c047dda52ac8fc4f1f9674071",
+    "operator-evidence.json": "c90deafb69cc4be59284351ea0b39e3c68d81ac79bfb72be1b72aca896f15fc6",
+    "operator-guard.cjs": "e0ba8f46c380d43ecb04a6f08a443fb59fd3977ca8668bcfba658284f970132c",
+    "operator-pins.json": "c03eb01e9d76ae5743ec83f15a64de8a486803caf7f1ce4e0dc37478be4f59d9",
+    "operator-proof.cjs": "e690f74786c7ed7e209b112997d0f28b51c7db6fbce41d7e3a359e9387444531",
+    "operator-readonly-preload.cjs": "47dac6cfe5ba900ca08fed8a9ac7c33915c40f0b533a4cbfa23ace5d442620bd",
+    "operator-run-controls.cjs": "90a6bd62a67bc052ee4a5fcd0be124c9912394886ce977b55ee738778d07af2a",
+    "operator-selected-closure.json": "01045a1e337ceedca5dee2922dd811aad3c1c00723e9aadc223f5641d093761e",
+    "operator-transfer.ts": "65dbdc081adbad4392c95dccb9908585525f2e859236bc96a481cc11875f0a6b",
+    "prepare-pins.cjs": "e0048c7064693f04fb8a8fc9f6ec9c1a28229d77fa5269149e0ac0a5d9a24755"
+  },
+  "allJavaScriptParsed": true,
+  "ownerImports": 0,
+  "nativeRuns": 0,
+  "repositoryWrites": 0
+}

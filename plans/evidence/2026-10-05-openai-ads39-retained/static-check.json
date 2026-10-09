@@ -1,0 +1,24 @@
+{
+  "mode": "NO_CUT_ALL_PHASES_IDENTICAL",
+  "censusCounts": {
+    "before": 39,
+    "transfer": 39,
+    "cut": 39
+  },
+  "nestedCallbacksEachPhase": 9,
+  "totalCallbacksEachPhase": 48,
+  "files": 8,
+  "snapshots": 24,
+  "allWholeFilesByteExact": true,
+  "allCallbacksByteExact": true,
+  "newInputs": 0,
+  "newCalls": 0,
+  "newRows": 0,
+  "newSkips": 0,
+  "sourceEdits": 0,
+  "testsRun": 0,
+  "faultsRun": 0,
+  "productImports": 0,
+  "parseDiagnostics": 0,
+  "currentMatchesNavigation": true
+}

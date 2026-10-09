@@ -1,39 +1,18 @@
 type PersonalPlanAppReleaseEnvironment = {
   [key: string]: string | undefined
-  PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS?: string
   PERSONAL_PLAN_APP_V1_NEW_BUYER_CUTOFF?: string
   PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED?: string
   PERSONAL_PLAN_STAGE3_INVENTORY_AUTHORITY_V2?: string
   PERSONAL_PLAN_STAGE3_THUMBNAILS_ENABLED?: string
+  SHOPPING_BUDGET_ENABLED?: string
+  PRODUCT_MARKET_SEGMENT_DISPLAY_ENABLED?: string
 }
-
-export type PersonalPlanAppV1Rollout = "off" | "internal" | "all"
 
 export function resolvePersonalPlanAppV1Rollout(
   _environment: PersonalPlanAppReleaseEnvironment = process.env,
-): PersonalPlanAppV1Rollout {
+): "all" {
   void _environment
   return "all"
-}
-
-export function canAccessPersonalPlanAppV1Rollout(input: {
-  appEnabled: boolean
-  rollout: PersonalPlanAppV1Rollout
-  isInternal: boolean
-}): boolean {
-  if (!input.appEnabled || input.rollout === "off") return false
-  return input.rollout === "all" || input.isInternal
-}
-
-export function resolvePersonalPlanAppV1InternalEmails(
-  environment: PersonalPlanAppReleaseEnvironment = process.env,
-): ReadonlySet<string> {
-  return new Set(
-    (environment.PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS ?? "")
-      .split(",")
-      .map((email) => email.trim().toLowerCase())
-      .filter((email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)),
-  )
 }
 
 export function isPersonalPlanStage2Enabled(
@@ -63,6 +42,21 @@ export function isPersonalPlanStage3ThumbnailsEnabled(
 ): boolean {
   return environment.PERSONAL_PLAN_STAGE3_THUMBNAILS_ENABLED === "true"
 }
+
+/** Default-off gate for collecting and applying the saved per-package shopping budget. */
+export function isShoppingBudgetEnabled(
+  environment: PersonalPlanAppReleaseEnvironment = process.env,
+): boolean {
+  return environment.SHOPPING_BUDGET_ENABLED === "true"
+}
+
+/** Default-off gate for the Drogerie/Profi badges on Shampoo, Conditioner and Mask products. */
+export function isProductMarketSegmentDisplayEnabled(
+  environment: PersonalPlanAppReleaseEnvironment = process.env,
+): boolean {
+  return environment.PRODUCT_MARKET_SEGMENT_DISPLAY_ENABLED === "true"
+}
+
 export function isPersonalPlanStage4Enabled(
   _environment: PersonalPlanAppReleaseEnvironment = process.env,
 ): boolean {

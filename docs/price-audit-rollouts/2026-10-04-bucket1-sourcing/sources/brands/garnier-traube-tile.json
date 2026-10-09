@@ -1,0 +1,110 @@
+{
+  "checked_at": "2026-10-04T08:43:11.943393+00:00",
+  "source": "https://products.dm.de/product/products/tiles/DE/dans/3115711",
+  "product": {
+    "a11yLabel": "Marke: Wahre Schätze; Produktname: Haarkur 1-Minute Traube, 340 ml; Preis: 4,95 €; Grundpreis: 0,34 l (14,56 € je 1 l)",
+    "brand": {
+      "name": "Wahre Schätze"
+    },
+    "dan": 3115711,
+    "gtin": 3600542656191,
+    "hideCouponEyecatcher": false,
+    "images": [
+      {
+        "alt": "Haarkur 1-Minute Traube Wahre Schätze",
+        "backgroundColor": "#F9F1F3",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1764672892/assets/pas/images/513ce4aa-7073-408d-86cf-b8f6aa27490f/wahre-schaetze-haarkur-1-minute-traube"
+      },
+      {
+        "alt": "Haarkur 1-Minute Traube Wahre Schätze",
+        "backgroundColor": "#F9F1F3",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1764672882/assets/pas/images/8c102270-abed-45e0-9e0b-50219cbdddb2/wahre-schaetze-haarkur-1-minute-traube"
+      },
+      {
+        "alt": "Haarkur 1-Minute Traube Wahre Schätze",
+        "backgroundColor": "#F9F1F3",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1764672927/assets/pas/images/500ec3f6-d60e-4247-b52c-fbac6d91f900/wahre-schaetze-haarkur-1-minute-traube"
+      },
+      {
+        "alt": "Haarkur 1-Minute Traube Wahre Schätze",
+        "backgroundColor": "#F9F3F1",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1764672900/assets/pas/images/2bf2b9d5-7687-41f2-84b3-237b3acc8cb7/wahre-schaetze-haarkur-1-minute-traube"
+      },
+      {
+        "alt": "Haarkur 1-Minute Traube Wahre Schätze",
+        "backgroundColor": "#F9F1F3",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1764672913/assets/pas/images/dc9f4039-ad2a-42fb-b330-a8b93000aa5e/wahre-schaetze-haarkur-1-minute-traube"
+      },
+      {
+        "alt": "Haarkur 1-Minute Traube Wahre Schätze",
+        "backgroundColor": "#F9F1F2",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1764672970/assets/pas/images/8f35a25e-40a5-47af-9199-066d230f9c37/wahre-schaetze-haarkur-1-minute-traube"
+      },
+      {
+        "alt": "Haarkur 1-Minute Traube Wahre Schätze",
+        "backgroundColor": "#F9F3F1",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1764672947/assets/pas/images/94e6d46e-7778-433c-bfa6-e1422e294c9f/wahre-schaetze-haarkur-1-minute-traube"
+      },
+      {
+        "alt": "Haarkur 1-Minute Traube Wahre Schätze",
+        "backgroundColor": "#F9F1F2",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1764672959/assets/pas/images/25608139-8286-4cd5-b577-ee610f63025c/wahre-schaetze-haarkur-1-minute-traube"
+      },
+      {
+        "alt": "Haarkur 1-Minute Traube Wahre Schätze",
+        "backgroundColor": "#F9F1F3",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1764672936/assets/pas/images/b70f74f4-704e-4b47-a234-562f7ecb8feb/wahre-schaetze-haarkur-1-minute-traube"
+      }
+    ],
+    "infoHint": {
+      "text": "Hinweise"
+    },
+    "isPharmacy": false,
+    "netPrice": {
+      "prefix": "Einzelpreis",
+      "price": {
+        "current": {
+          "value": "4,16 €"
+        }
+      },
+      "tileInfos": [
+        "0,34 l (12,24 € je 1 l)"
+      ]
+    },
+    "price": {
+      "prefix": "Einzelpreis",
+      "price": {
+        "current": {
+          "value": "4,95 €"
+        }
+      },
+      "tileInfos": [
+        "0,34 l (14,56 € je 1 l)"
+      ]
+    },
+    "self": "/p/d/3115711/wahre-schaetze-haarkur-1-minute-traube",
+    "title": {
+      "tileHeadline": "Haarkur 1-Minute Traube, 340 ml"
+    },
+    "trackingData": {
+      "brand": "Wahre Schätze",
+      "categories": [
+        "Haarkur & Haarmaske"
+      ],
+      "currency": "EUR",
+      "isPharmacy": false,
+      "price": 4.95
+    }
+  },
+  "raw_front_image_source": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1000,w_1000/v1764672892/assets/pas/images/513ce4aa-7073-408d-86cf-b8f6aa27490f/wahre-schaetze-haarkur-1-minute-traube",
+  "raw_front_image_path": "/Users/nick/AI_work/hair_conscierge/.worktrees/price-audit-rollout-receipt/docs/price-audit-rollouts/2026-10-04-bucket1-sourcing/sources/brands/garnier-traube-front.webp"
+}

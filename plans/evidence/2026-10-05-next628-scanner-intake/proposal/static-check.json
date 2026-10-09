@@ -1,0 +1,25 @@
+{
+  "counts": {
+    "before": 26,
+    "transfer": 26,
+    "cut": 22
+  },
+  "phasesParsed": 6,
+  "unrelatedCallbacksExact": 20,
+  "changedKeepers": 2,
+  "donors": 4,
+  "heldFExact": 1,
+  "fullAssertionMultisetPreserved": true,
+  "normalization": "Only C4 renderToStaticMarkup(tree.value) expression reuses keeper existing markup; no new SSR call. Other13 donor assertions verbatim.",
+  "ownerFixtureRenderAndEventCallsAdded": 0,
+  "observationCallsMoved": {
+    "C2": "Existing pure findAll input observation and its declaration moved from donor into keeper; not a new owner call."
+  },
+  "mutationDescriptors": 14,
+  "runtimeTests": 0,
+  "actualMutations": 0,
+  "repositoryWrites": 0,
+  "mutantsSyntaxParsed": 14,
+  "exactKeeperSelectionsChecked": 28,
+  "navigationPinsUnchanged": true
+}

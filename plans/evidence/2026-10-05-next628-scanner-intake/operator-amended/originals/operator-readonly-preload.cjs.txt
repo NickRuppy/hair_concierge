@@ -1,0 +1,13 @@
+'use strict'
+// Static-only audit harness: reject filesystem mutations and child creation.
+const fs=require('node:fs'),cp=require('node:child_process'),wt=require('node:worker_threads'),mod=require('node:module')
+let writes=0,children=0
+for(const name of['writeFileSync','appendFileSync','renameSync','unlinkSync','mkdirSync','rmdirSync','rmSync','copyFileSync','truncateSync','chmodSync','chownSync','symlinkSync','linkSync','utimesSync','mkdtempSync'])fs[name]=()=>{writes++;throw Error('Read-only check attempted '+name)}
+for(const name of ['open','cp','cpSync','writeFile','appendFile','rename','unlink','mkdir','rmdir','rm','copyFile','truncate','ftruncate','ftruncateSync','chmod','fchmod','fchmodSync','chown','fchown','fchownSync','symlink','link','utimes','futimes','futimesSync','mkdtemp','createWriteStream'])fs[name]=()=>{writes++;throw Error('Read-only check attempted '+name)}
+for(const name of ['write','writeSync','writev','writevSync']){const original=fs[name];fs[name]=function(fd,...args){if(fd!==1&&fd!==2){writes++;throw Error('Read-only check attempted '+name+' fd '+fd)}return original.call(this,fd,...args)}}
+const originalOpen=fs.openSync
+fs.openSync=function(file,flags,...rest){if(typeof flags!=='string'||!['r','rs'].includes(flags)){writes++;throw Error('Read-only check attempted open '+flags)}return originalOpen.call(this,file,flags,...rest)}
+for(const name of['writeFile','appendFile','rename','unlink','mkdir','rmdir','rm','copyFile','truncate','chmod','chown','symlink','link','utimes','mkdtemp','open'])fs.promises[name]=async()=>{writes++;throw Error('Read-only check attempted async '+name)}
+for(const name of['spawn','spawnSync','exec','execSync','execFile','execFileSync','fork'])cp[name]=()=>{children++;throw Error('Read-only check attempted child '+name)}
+wt.Worker=function(){children++;throw Error('Read-only check attempted worker')};mod.syncBuiltinESMExports()
+process.on('exit',()=>process.stdout.write(JSON.stringify({staticReadOnlyEnforced:true,attemptedWrites:writes,attemptedChildren:children})+'\n'))

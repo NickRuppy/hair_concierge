@@ -4,7 +4,6 @@ import test from "node:test"
 
 import {
   beginPayPalOneTimeRecoveryCheck,
-  cancelPayPalOneTimeRecovery,
   completePayPalOneTimeRecoveryCheck,
   createInitialPayPalOneTimeRecoveryState,
   derivePayPalOneTimeRecoveryView,
@@ -509,24 +508,13 @@ test("PayPal recovery poll uses HTTP parser and no-token SDK failures keep provi
   )
 })
 
-test("hidden state suppresses only visual output and cancellation stops late checks", () => {
+test("hidden state suppresses only visual output", () => {
   const started = startWithToken()
 
   assert.equal(derivePayPalOneTimeRecoveryView(started.state, { visible: false }), null)
   assert.deepEqual(derivePayPalOneTimeRecoveryView(started.state, { visible: true }), {
     kind: "checking",
   })
-
-  const cancelled = cancelPayPalOneTimeRecovery(started.state)
-  assert.equal(cancelled.state.phase, "cancelled")
-
-  const lateBegin = beginPayPalOneTimeRecoveryCheck(cancelled.state, {
-    source: "automatic",
-    index: 0,
-    now: 1_000,
-  })
-  assert.equal(lateBegin.state, cancelled.state)
-  assert.deepEqual(lateBegin.effects, [])
 })
 
 test("PayPal onError clears busy before ignored SDK-error branches", () => {

@@ -1,0 +1,23 @@
+{
+  "mode": "transfer",
+  "from": "before",
+  "phase": "transfer",
+  "counts": {
+    "before": 26,
+    "transfer": 26,
+    "cut": 22
+  },
+  "pinsSHA": "bfbedb7adb1865d0cc2ada97d9e74fe934645326654e6001273713495e390a5c",
+  "prerequisite": null,
+  "changed": [
+    "tests/scan-unknown-flow-ui.test.tsx",
+    "tests/scan-research-intake-form-ui.test.tsx"
+  ],
+  "allTestHashes": {
+    "tests/scan-unknown-flow-ui.test.tsx": "d38009049b28480a4e7c2ffef32a0bb32c1aebf214b330f7e676833e3c87f965",
+    "tests/scan-research-intake-form-ui.test.tsx": "dce07ca36f7520d19358c7638d5ed6e3810231d73b17cfed6e16f24d874782cb"
+  },
+  "sourceWrites": 0,
+  "testsRun": 0,
+  "originals": "/tmp/test-audit-scanner-intake26-tools-y8mclofg/operator-apply-transfer-bVfhbG/originals"
+}

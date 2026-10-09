@@ -1,0 +1,27 @@
+import json, subprocess, sys, pathlib, re, os
+
+assert os.environ.get('PERSONAL_PLAN_RETURN_REPAIR_POSTGRES_TEST') != '1', 'Opt-in PostgreSQL must remain disabled'
+command = json.loads(pathlib.Path(sys.argv[1]).read_text())
+target = pathlib.Path(sys.argv[2])
+expected = int(sys.argv[3])
+with open(str(target) + '.command.json', 'x') as stream:
+    json.dump(command, stream, indent=2)
+    stream.write('\n')
+with open(str(target) + '.tap', 'x') as stream:
+    process = subprocess.run(command['argv'], cwd=command['cwd'], stdout=stream, stderr=subprocess.STDOUT)
+tap = pathlib.Path(str(target) + '.tap').read_text()
+summary = {}
+for key in ['tests', 'pass', 'fail', 'cancelled', 'skipped', 'todo']:
+    values = re.findall(r'^# ' + key + r' (\d+)$', tap, re.M)
+    summary[key] = int(values[0]) if len(values) == 1 else None
+skipped = re.findall(r'^ok \d+ - (.+?) # SKIP(?: .*)?$', tap, re.M)
+passed = process.returncode == 0 and summary == {
+    'tests': expected, 'pass': expected - 1, 'fail': 0, 'cancelled': 0, 'skipped': 1, 'todo': 0
+} and skipped == ['real PostgreSQL serializes parallel repairs and rejects a concurrent source change']
+result = {'exit': process.returncode, 'summary': summary, 'expected': expected,
+          'unchangedSkippedTitle': skipped, 'pass': passed}
+with open(str(target) + '.result.json', 'x') as stream:
+    json.dump(result, stream, indent=2)
+    stream.write('\n')
+print(json.dumps(result))
+sys.exit(0 if passed else 1)

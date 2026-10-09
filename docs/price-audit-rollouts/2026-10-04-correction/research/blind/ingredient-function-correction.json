@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-10-04T08:11:17.002571+00:00",
+  "candidate": "F2",
+  "correction": "Brassicyl Isoleucinate Esylate is a non-quat cationic amino lipid; frozen text calling it esterquat was inaccurate.",
+  "sources": [
+    "https://www.inolex.com/products/emulsense-hc",
+    "https://www.inolex.com/learn/science/liquid-crystalline-phase-behavior-of-amino-lipids"
+  ],
+  "evidence_scope": "Primary ingredient-supplier chemistry/function description, not F2 product efficacy or proof that F2 uses a named commercial blend.",
+  "impact": "Terminology corrected in post-unblind envelope and trace only. No enum change; no concentration, lamellar phase or product-performance conclusion imported."
+}

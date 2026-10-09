@@ -26,25 +26,6 @@ function build(generatedAt = "2026-08-26T00:00:00.000Z") {
   return buildExistingCoverageLedger({ baseline, readiness, e1, e2, generatedAt })
 }
 
-test("existing catalog coverage ledger closes the complete 259-product partition", () => {
-  const ledger = build()
-  assert.deepEqual(ledger.reconciliation.by_partition, {
-    already_scan_result_ready: 26,
-    safe_e1: 20,
-    safe_e2: 22,
-    ready_for_gtin_research: 150,
-    authority_repair: 41,
-  })
-  assert.equal(ledger.rows.length, 259)
-  assert.equal(new Set(ledger.rows.map((row) => row.product_id)).size, 259)
-  assert.equal(ledger.reconciliation.linked_baseline_products, 38)
-  assert.deepEqual(ledger.reconciliation.by_category, EXISTING_CATALOG_CATEGORY_TOTALS)
-  assert.equal(
-    ledger.rows.find((row) => row.product_id === "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace")?.partition,
-    "authority_repair",
-  )
-})
-
 test("research lanes are complete, category-disjoint, and stable", () => {
   const first = build()
   const second = build("2030-01-01T00:00:00.000Z")
@@ -70,5 +51,21 @@ test("research lanes are complete, category-disjoint, and stable", () => {
   assert.deepEqual(
     lanes.map((lane) => lane.content_fingerprint),
     buildResearchLanes(first, "2030-01-01T00:00:00.000Z").map((lane) => lane.content_fingerprint),
+  )
+
+  assert.deepEqual(first.reconciliation.by_partition, {
+    already_scan_result_ready: 26,
+    safe_e1: 20,
+    safe_e2: 22,
+    ready_for_gtin_research: 150,
+    authority_repair: 41,
+  })
+  assert.equal(first.rows.length, 259)
+  assert.equal(new Set(first.rows.map((row) => row.product_id)).size, 259)
+  assert.equal(first.reconciliation.linked_baseline_products, 38)
+  assert.deepEqual(first.reconciliation.by_category, EXISTING_CATALOG_CATEGORY_TOTALS)
+  assert.equal(
+    first.rows.find((row) => row.product_id === "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace")?.partition,
+    "authority_repair",
   )
 })

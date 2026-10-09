@@ -1,0 +1,50 @@
+'use strict';
+const fs=require('node:fs'),p=require('./operator-proof.cjs'),typed=require('./diagnostic-projection.cjs'),controls=JSON.parse(fs.readFileSync(__dirname+'/operator-controls-normalized.json'));
+let assertions=0;function ok(v,m){assertions++;if(!v)throw Error(m)}
+function serialize(key,value,indent=2){const pad=' '.repeat(indent);if(value.kind==='map')return pad+key+':\n'+value.entries.map(e=>serialize(e.key,e.value,indent+2)).join('');return pad+key+': '+(value.kind==='null'?'~':JSON.stringify(value.value))+'\n'}
+function tap(c,phase){const o=c.oracles[phase],actual=c.typedPolicy==='ssr-custom'?serialize('actual',typed.project('<section>'+c.actualStringWitness+'</section>')):serialize('actual',c.actualProjection),message=c.id==='D1-required-thickness'?c.predictedMessageEvidence:c.errorMessageIncludes[0];return `TAP version 13\n# Subtest: ${c.test.name}\nnot ok 1 - ${c.test.name}\n  ---\n  error: |-\n    ${message.replaceAll('\n','\n    ')}\n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n${serialize('expected',c.expectedProjection)}${actual}  operator: '${c.expectedOperator}'\n  stack: |-\n    TestContext.<anonymous> (${c.test.file}:${o.startLine}:10)\n    Test.run (node:internal/test_runner/test:1000:1)\n  ...\n1..1\n# tests 1\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n`}
+const run=(text,extra={})=>({status:1,signal:null,timedOut:false,spawnError:null,...p.parseTAP(text),text,...extra});
+for(const c of controls)for(const phase of ['transfer','cut']){
+ const text=tap(c,phase),accepted=x=>p.intended(c,run(x),phase).accepted;
+ ok(accepted(text),c.id+' full synthetic projection '+phase);
+ for(const extra of[{timedOut:true},{signal:'SIGKILL'},{spawnError:'bad'},{status:0}])ok(!p.intended(c,run(text,extra),phase).accepted,'process rejection');
+ for(const[from,to]of[["code: 'ERR_ASSERTION'","code: 'ERR_MODULE_NOT_FOUND'"],["name: 'AssertionError'","name: 'TypeError'"],["operator: '"+c.expectedOperator+"'","operator: '!='"],['# tests 1','# tests 0'],['# skipped 0','# skipped 1'],['# cancelled 0','# cancelled 1'],['# todo 0','# todo 1'],['# Subtest: '+c.test.name,'# Subtest: Unrelated'],['  error: |-','  error: >-'],[c.test.file+':'+c.oracles[phase].startLine+':10',c.test.file+':1:10']])ok(!accepted(text.replace(from,to)),c.id+' rejects '+from);
+ for(const key of ['actual','expected']){
+  ok(!accepted(text.replace(new RegExp('^  '+key+':[^\\n]*\\n(?: {4,}[^\\n]*\\n)*','m'),'')),'missing '+key);
+  ok(!accepted(text.replace(new RegExp('^  '+key+':','m'),'  '+key+':\n  '+key+':')),'duplicate top-level '+key);
+  ok(!accepted(text.replace(new RegExp('^  '+key+':[^\\n]*\\n(?: {4,}[^\\n]*\\n)*','m'),'  '+key+': &unknown\n')),'unsupported scalar '+key);
+ }
+ for(const piece of c.errorMessageIncludes)ok(!accepted(text.replace(piece.replaceAll('\n','\n    '),'wrong diagnostic')),'full scalar/custom message or exact D1 witness required');
+ const wrongOuter=text.replace(c.test.file+':'+c.oracles[phase].startLine+':10',c.test.file+':1:10').replace('  operator:','  auxiliary:\n    stack: |-\n      TestContext.<anonymous> ('+c.test.file+':'+c.oracles[phase].startLine+':10)\n  operator:');ok(!accepted(wrongOuter),'nested frame cannot rescue first outer');
+ ok(!accepted(text.replace('    TestContext.<anonymous>','    setup (src/setup.ts:1:1)\n    TestContext.<anonymous>')),'earlier helper first frame rejected');
+ ok(!accepted(text.replace('  operator:', '\n    unexpected: true\n  operator:')),'hidden continuation after blank rejected');
+ if(c.typedPolicy==='ssr-custom'){
+  ok(!accepted(text.replace(/^  actual:.*\n/m,'  actual: "<section>unrelated</section>"\n')),'missing SSR witness');
+  const prefix='<section>'+c.actualStringWitness+'</section>'+'x'.repeat(10000-('<section>'+c.actualStringWitness+'</section>').length);
+  ok(accepted(text.replace(/^  actual:.*\n/m,'  actual: '+JSON.stringify(prefix)+'... 731 more characters\n')),'supported SSR prefix only');
+  ok(!accepted(text.replace(/^  actual:.*\n/m,'  actual: '+JSON.stringify(c.actualStringWitness)+'... 731 more characters\n')),'unknown SSR truncation shape');
+  ok(!accepted(text.replace(/^  actual:.*\n/m,'  actual: '+c.actualStringWitness+'\n')),'unquoted SSR not supported');
+ }else{
+  for(const key of ['expected','actual']){
+   const original=key==='expected'?c.expectedProjection:c.actualProjection;
+   const paths=[];function visit(v,path=[]){paths.push(path);if(v.kind==='map')v.entries.forEach((e,i)=>visit(e.value,path.concat(i)))}visit(original);
+   const at=(v,path)=>path.reduce((x,i)=>x.entries[i].value,v);
+   for(const path of paths){
+    const changed=structuredClone(original),v=at(changed,path);
+    if(v.kind==='map')v.entries.push({key:'unexpected_key',value:{kind:'boolean',value:true}});else if(v.kind==='number'){v.kind='string';v.value=String(v.value)}else if(v.kind==='boolean')v.value=!v.value;else if(v.kind==='null'){v.kind='string';v.value='null'}else v.value+='wrong';
+    const replacement=serialize(key,changed),pattern=new RegExp('^  '+key+':[^\\n]*\\n(?: {4,}[^\\n]*\\n)*','m');ok(!accepted(text.replace(pattern,replacement)),c.id+' complete '+key+' rejects changed typed path '+path.join('.'));
+   }
+  }
+ }
+ if(c.id==='D1-required-thickness'){
+  for(const value of ['undefined','"undefined"','false','~'])ok(!accepted(text.replace('      answers:\n','      answers:\n        thickness: '+value+'\n')),'source-proved omission cannot become printed '+value);
+  ok(!accepted(text.replace('        texture: "wavy"\n','')),'missing known field');
+  ok(!accepted(text.replace('        texture: "wavy"\n','        texture: "wavy"\n        texture: "wavy"\n')),'duplicate nested field');
+  ok(!accepted(text.replace('        texture: "wavy"','        texture: "wavy"... 3 more characters')),'truncation rejected');
+  ok(!accepted(text.replace('        texture: "wavy"','       texture: "wavy"')),'odd indentation rejected');
+  ok(!p.intended({...c,mutatedSha256:'wrong'},run(text),phase).accepted,'D1 exact mutant binding');
+  const copied={...c,id:'another-control'};ok(!p.intended(copied,run(text),phase).accepted,'omission cannot escape D1');
+ }
+ const clean=`# Subtest: ${c.test.name}\nok 1 - ${c.test.name}\n# tests 1\n# pass 1\n# fail 0\n# skipped 0\n# cancelled 0\n# todo 0\n`;ok(p.clean(c,run(clean,{status:0})),'clean exactone');ok(!p.clean(c,run(clean.replace('# tests 1','# tests 0'),{status:0})),'clean zero rejected');
+}
+console.log(JSON.stringify({status:'PASS_STATIC_SYNTHETIC_ONLY',controls:18,phases:2,assertions,repositoryWrites:0,children:0,ownerImports:0,nativeRuns:0,limits:'Predicted literal reporter projections only. No actual owner, Zod or native execution. Object/array and undefined serialization limitations remain explicit.'},null,2));

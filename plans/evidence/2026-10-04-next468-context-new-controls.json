@@ -1,0 +1,1273 @@
+[
+  {
+    "id": "C1-status-role",
+    "lane": "context",
+    "phase": "new",
+    "intended": "Missing role=status assertion fails.",
+    "source": "src/components/chat/product-intake-card.tsx",
+    "selectedTest": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders persisted submitted state after reload"
+    },
+    "originalHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-status-role-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-status-role-fault.tap"
+    },
+    "restoredHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-status-role-after.tap"
+    },
+    "keeperAssertionLines": [
+      684,
+      685,
+      686,
+      687,
+      688,
+      689,
+      690,
+      691,
+      692,
+      693
+    ],
+    "assertionStacks": [
+      687
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "C1-polite-announcement",
+    "lane": "context",
+    "phase": "new",
+    "intended": "Missing polite accessibility assertion fails.",
+    "source": "src/components/chat/product-intake-card.tsx",
+    "selectedTest": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders persisted submitted state after reload"
+    },
+    "originalHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-polite-announcement-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-polite-announcement-fault.tap"
+    },
+    "restoredHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-polite-announcement-after.tap"
+    },
+    "keeperAssertionLines": [
+      684,
+      685,
+      686,
+      687,
+      688,
+      689,
+      690,
+      691,
+      692,
+      693
+    ],
+    "assertionStacks": [
+      688
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "C1-pending-headline",
+    "lane": "context",
+    "phase": "new",
+    "intended": "Existing pending headline assertion fails.",
+    "source": "src/components/chat/product-intake-card.tsx",
+    "selectedTest": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders persisted submitted state after reload"
+    },
+    "originalHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-pending-headline-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-pending-headline-fault.tap"
+    },
+    "restoredHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-pending-headline-after.tap"
+    },
+    "keeperAssertionLines": [
+      684,
+      685,
+      686,
+      687,
+      688,
+      689,
+      690,
+      691,
+      692,
+      693
+    ],
+    "assertionStacks": [
+      684
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "C1-pending-followup-copy",
+    "lane": "context",
+    "phase": "new",
+    "intended": "Transferred chat-notification promise assertion fails.",
+    "source": "src/components/chat/product-intake-card.tsx",
+    "selectedTest": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders persisted submitted state after reload"
+    },
+    "originalHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-pending-followup-copy-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-pending-followup-copy-fault.tap"
+    },
+    "restoredHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-pending-followup-copy-after.tap"
+    },
+    "keeperAssertionLines": [
+      684,
+      685,
+      686,
+      687,
+      688,
+      689,
+      690,
+      691,
+      692,
+      693
+    ],
+    "assertionStacks": [
+      689
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "C1-collapsed-field-0",
+    "lane": "context",
+    "phase": "new",
+    "intended": "Only this forbidden field is leaked; its retained absence assertion fails.",
+    "source": "src/components/chat/product-intake-card.tsx",
+    "selectedTest": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders persisted submitted state after reload"
+    },
+    "originalHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-collapsed-field-0-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-collapsed-field-0-fault.tap"
+    },
+    "restoredHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-collapsed-field-0-after.tap"
+    },
+    "keeperAssertionLines": [
+      684,
+      685,
+      686,
+      687,
+      688,
+      689,
+      690,
+      691,
+      692,
+      693
+    ],
+    "assertionStacks": [
+      686
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "C1-collapsed-field-1",
+    "lane": "context",
+    "phase": "new",
+    "intended": "Only this forbidden field is leaked; its retained absence assertion fails.",
+    "source": "src/components/chat/product-intake-card.tsx",
+    "selectedTest": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders persisted submitted state after reload"
+    },
+    "originalHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-collapsed-field-1-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-collapsed-field-1-fault.tap"
+    },
+    "restoredHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-collapsed-field-1-after.tap"
+    },
+    "keeperAssertionLines": [
+      684,
+      685,
+      686,
+      687,
+      688,
+      689,
+      690,
+      691,
+      692,
+      693
+    ],
+    "assertionStacks": [
+      690
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "C1-collapsed-field-2",
+    "lane": "context",
+    "phase": "new",
+    "intended": "Only this forbidden field is leaked; its retained absence assertion fails.",
+    "source": "src/components/chat/product-intake-card.tsx",
+    "selectedTest": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders persisted submitted state after reload"
+    },
+    "originalHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-collapsed-field-2-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-collapsed-field-2-fault.tap"
+    },
+    "restoredHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-collapsed-field-2-after.tap"
+    },
+    "keeperAssertionLines": [
+      684,
+      685,
+      686,
+      687,
+      688,
+      689,
+      690,
+      691,
+      692,
+      693
+    ],
+    "assertionStacks": [
+      691
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "C1-collapsed-field-3",
+    "lane": "context",
+    "phase": "new",
+    "intended": "Only this forbidden field is leaked; its retained absence assertion fails.",
+    "source": "src/components/chat/product-intake-card.tsx",
+    "selectedTest": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders persisted submitted state after reload"
+    },
+    "originalHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-collapsed-field-3-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-collapsed-field-3-fault.tap"
+    },
+    "restoredHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-collapsed-field-3-after.tap"
+    },
+    "keeperAssertionLines": [
+      684,
+      685,
+      686,
+      687,
+      688,
+      689,
+      690,
+      691,
+      692,
+      693
+    ],
+    "assertionStacks": [
+      692
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "C1-collapsed-field-4",
+    "lane": "context",
+    "phase": "new",
+    "intended": "Only this forbidden field is leaked; its retained absence assertion fails.",
+    "source": "src/components/chat/product-intake-card.tsx",
+    "selectedTest": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders persisted submitted state after reload"
+    },
+    "originalHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-collapsed-field-4-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-collapsed-field-4-fault.tap"
+    },
+    "restoredHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-collapsed-field-4-after.tap"
+    },
+    "keeperAssertionLines": [
+      684,
+      685,
+      686,
+      687,
+      688,
+      689,
+      690,
+      691,
+      692,
+      693
+    ],
+    "assertionStacks": [
+      693
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "C1-collapsed-field-5",
+    "lane": "context",
+    "phase": "new",
+    "intended": "Only this forbidden field is leaked; its retained absence assertion fails.",
+    "source": "src/components/chat/product-intake-card.tsx",
+    "selectedTest": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders persisted submitted state after reload"
+    },
+    "originalHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-collapsed-field-5-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-collapsed-field-5-fault.tap"
+    },
+    "restoredHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C1-collapsed-field-5-after.tap"
+    },
+    "keeperAssertionLines": [
+      684,
+      685,
+      686,
+      687,
+      688,
+      689,
+      690,
+      691,
+      692,
+      693
+    ],
+    "assertionStacks": [
+      685
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "C2-matched-headline",
+    "lane": "context",
+    "phase": "new",
+    "intended": "Existing matched headline assertion fails.",
+    "source": "src/components/chat/product-intake-card.tsx",
+    "selectedTest": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders resolved review state after approval"
+    },
+    "originalHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C2-matched-headline-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C2-matched-headline-fault.tap"
+    },
+    "restoredHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C2-matched-headline-after.tap"
+    },
+    "keeperAssertionLines": [
+      715,
+      716,
+      717,
+      718,
+      719
+    ],
+    "assertionStacks": [
+      715
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "C2-matched-followup-copy",
+    "lane": "context",
+    "phase": "new",
+    "intended": "Transferred exact matched followup assertion fails.",
+    "source": "src/components/chat/product-intake-card.tsx",
+    "selectedTest": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders resolved review state after approval"
+    },
+    "originalHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C2-matched-followup-copy-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C2-matched-followup-copy-fault.tap"
+    },
+    "restoredHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C2-matched-followup-copy-after.tap"
+    },
+    "keeperAssertionLines": [
+      715,
+      716,
+      717,
+      718,
+      719
+    ],
+    "assertionStacks": [
+      718
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "C2-matched-upload-leak",
+    "lane": "context",
+    "phase": "new",
+    "intended": "Transferred absence of editable upload action fails.",
+    "source": "src/components/chat/product-intake-card.tsx",
+    "selectedTest": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders resolved review state after approval"
+    },
+    "originalHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C2-matched-upload-leak-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C2-matched-upload-leak-fault.tap"
+    },
+    "restoredHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C2-matched-upload-leak-after.tap"
+    },
+    "keeperAssertionLines": [
+      715,
+      716,
+      717,
+      718,
+      719
+    ],
+    "assertionStacks": [
+      719
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "C3-fallback-creates-image",
+    "lane": "context",
+    "phase": "new",
+    "intended": "Same missing-image candidate renders img; transferred no-img assertion fails on real ChatMessage output. No browser fetch during static render.",
+    "source": "src/components/chat/product-image.tsx",
+    "selectedTest": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "assistant product lookup clarification renders an enabled structured selection action"
+    },
+    "originalHash": "c6a7836ed34f15d1b0721a3e5649d468cd93d67fffd7683ef8f02dba93ea6a30",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C3-fallback-creates-image-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C3-fallback-creates-image-fault.tap"
+    },
+    "restoredHash": "c6a7836ed34f15d1b0721a3e5649d468cd93d67fffd7683ef8f02dba93ea6a30",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C3-fallback-creates-image-after.tap"
+    },
+    "keeperAssertionLines": [
+      312,
+      313,
+      314,
+      315
+    ],
+    "assertionStacks": [
+      315
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "C4-photo-method-label",
+    "lane": "context",
+    "phase": "new",
+    "intended": "Initial existing-element HTML no longer has original photo method label.",
+    "source": "src/components/product-intake/product-intake-form-fields.tsx",
+    "selectedTest": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card reports submitted metadata to parent"
+    },
+    "originalHash": "67d0fea754cd303e0e1cc9e16bf0b053ec14ec2df458870e034bf38b7212afe7",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C4-photo-method-label-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C4-photo-method-label-fault.tap"
+    },
+    "restoredHash": "67d0fea754cd303e0e1cc9e16bf0b053ec14ec2df458870e034bf38b7212afe7",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C4-photo-method-label-after.tap"
+    },
+    "keeperAssertionLines": [
+      414,
+      457,
+      458,
+      459,
+      460,
+      465,
+      466,
+      470,
+      471,
+      472
+    ],
+    "assertionStacks": [
+      457
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "C4-manual-method-label",
+    "lane": "context",
+    "phase": "new",
+    "intended": "Initial existing-element HTML no longer has original manual method label.",
+    "source": "src/components/product-intake/product-intake-form-fields.tsx",
+    "selectedTest": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card reports submitted metadata to parent"
+    },
+    "originalHash": "67d0fea754cd303e0e1cc9e16bf0b053ec14ec2df458870e034bf38b7212afe7",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C4-manual-method-label-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C4-manual-method-label-fault.tap"
+    },
+    "restoredHash": "67d0fea754cd303e0e1cc9e16bf0b053ec14ec2df458870e034bf38b7212afe7",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C4-manual-method-label-after.tap"
+    },
+    "keeperAssertionLines": [
+      414,
+      457,
+      458,
+      459,
+      460,
+      465,
+      466,
+      470,
+      471,
+      472
+    ],
+    "assertionStacks": [
+      458
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "C4-unwanted-helper-copy-0",
+    "lane": "context",
+    "phase": "new",
+    "intended": "Initial normal-card helper-copy absence fails without changing input or submit lifecycle.",
+    "source": "src/components/chat/product-intake-card.tsx",
+    "selectedTest": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card reports submitted metadata to parent"
+    },
+    "originalHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C4-unwanted-helper-copy-0-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C4-unwanted-helper-copy-0-fault.tap"
+    },
+    "restoredHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C4-unwanted-helper-copy-0-after.tap"
+    },
+    "keeperAssertionLines": [
+      414,
+      457,
+      458,
+      459,
+      460,
+      465,
+      466,
+      470,
+      471,
+      472
+    ],
+    "assertionStacks": [
+      459
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "C4-unwanted-helper-copy-1",
+    "lane": "context",
+    "phase": "new",
+    "intended": "Initial normal-card helper-copy absence fails without changing input or submit lifecycle.",
+    "source": "src/components/chat/product-intake-card.tsx",
+    "selectedTest": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card reports submitted metadata to parent"
+    },
+    "originalHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C4-unwanted-helper-copy-1-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C4-unwanted-helper-copy-1-fault.tap"
+    },
+    "restoredHash": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/C4-unwanted-helper-copy-1-after.tap"
+    },
+    "keeperAssertionLines": [
+      414,
+      457,
+      458,
+      459,
+      460,
+      465,
+      466,
+      470,
+      471,
+      472
+    ],
+    "assertionStacks": [
+      460
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "D1-denies-all-routine-actions",
+    "lane": "context",
+    "phase": "new",
+    "intended": "Existing policy authorization keeper gets denied result instead of full authorized action.",
+    "source": "src/lib/agent-v2/pending-followup-action.ts",
+    "selectedTest": {
+      "file": "tests/agent-v2-pending-followup-action.spec.ts",
+      "name": "resolvePendingRoutineMutationPolicy authorizes short confirmations for routine mutation state"
+    },
+    "originalHash": "c81006b7573a8be14040900d411f2e73e0419faa0e5c430646aa0325239e8801",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/D1-denies-all-routine-actions-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-context-mutations-new/D1-denies-all-routine-actions-fault.tap"
+    },
+    "restoredHash": "c81006b7573a8be14040900d411f2e73e0419faa0e5c430646aa0325239e8801",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/D1-denies-all-routine-actions-after.tap"
+    },
+    "keeperAssertionLines": [
+      311
+    ],
+    "assertionStacks": [
+      311
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "D1-admits-product-offer-as-routine",
+    "lane": "context",
+    "phase": "new",
+    "intended": "Existing negative policy keeper product_recommendation row becomes authorized. Null row can still deny and is not sufficient.",
+    "source": "src/lib/agent-v2/pending-followup-action.ts",
+    "selectedTest": {
+      "file": "tests/agent-v2-pending-followup-action.spec.ts",
+      "name": "resolvePendingRoutineMutationPolicy denies short confirmations without routine mutation state"
+    },
+    "originalHash": "c81006b7573a8be14040900d411f2e73e0419faa0e5c430646aa0325239e8801",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/D1-admits-product-offer-as-routine-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-context-mutations-new/D1-admits-product-offer-as-routine-fault.tap"
+    },
+    "restoredHash": "c81006b7573a8be14040900d411f2e73e0419faa0e5c430646aa0325239e8801",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/D1-admits-product-offer-as-routine-after.tap"
+    },
+    "keeperAssertionLines": [
+      271,
+      283
+    ],
+    "assertionStacks": [
+      283
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "D2-removes-direct-object-protection",
+    "lane": "context",
+    "phase": "new",
+    "intended": "Keeper containing dann gains stale context and fails exact equality; original donor without referential cue still passes fallback, showing redundant weaker sensitivity.",
+    "source": "src/lib/agent-v2/runtime/product-tool-context.ts",
+    "selectedTest": {
+      "file": "tests/agent-v2-product-tool-context.spec.ts",
+      "name": "direct asks with a named object stay unchanged even with referential wording"
+    },
+    "originalHash": "7b102a089a0680524bc379937f193d8f420ce63dd98432c044e9b2b2f16283b3",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/D2-removes-direct-object-protection-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-context-mutations-new/D2-removes-direct-object-protection-fault.tap"
+    },
+    "restoredHash": "7b102a089a0680524bc379937f193d8f420ce63dd98432c044e9b2b2f16283b3",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/D2-removes-direct-object-protection-after.tap"
+    },
+    "keeperAssertionLines": [
+      28
+    ],
+    "assertionStacks": [
+      28
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  },
+  {
+    "id": "D3-rejects-fit-terminal-assessment",
+    "lane": "context",
+    "phase": "new",
+    "intended": "Real runtime validator rejects otherwise accepted fit payload; retained product_assessment/failure_stage/repair assertions fail. Must verify intended assertion, not schema-generation setup error.",
+    "source": "src/lib/agent-v2/contracts.ts",
+    "selectedTest": {
+      "file": "tests/agent-v2-responses-runtime.spec.ts",
+      "name": "AgentV2 runtime repairs ungrounded trusted product assessment by loading product facts"
+    },
+    "originalHash": "4fe98f5eeaf5ad7487ff3b44359d66035d63ecbee564b3746a6aad4e1f4f7cd2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/D3-rejects-fit-terminal-assessment-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-context-mutations-new/D3-rejects-fit-terminal-assessment-fault.tap"
+    },
+    "restoredHash": "4fe98f5eeaf5ad7487ff3b44359d66035d63ecbee564b3746a6aad4e1f4f7cd2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-context-mutations-new/D3-rejects-fit-terminal-assessment-after.tap"
+    },
+    "keeperAssertionLines": [
+      2309,
+      2310,
+      2311,
+      2312,
+      2316,
+      2321,
+      2322,
+      2323
+    ],
+    "assertionStacks": [
+      2309
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspection": "passed actual error/keeper assertion line"
+  }
+]

@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: the shell picks the five-tab nav (with locks) for a free-tier navigation object, exactly like a real Personal Plan owner
+not ok 1 - the shell picks the five-tab nav (with locks) for a free-tier navigation object, exactly like a real Personal Plan owner
+  ---
+  duration_ms: 12.621375
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-stage5-navigation.test.tsx:2:26045'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    4 !== 3
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 3
+  actual: 4
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-stage5-navigation.test.tsx:681:10)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 431.728417

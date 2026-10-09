@@ -1,0 +1,90 @@
+{
+  "receipt_version": "bondbuilder-pilot-freeze-v0.1",
+  "frozen_date": "2026-09-30",
+  "standard_version": "bondbuilder-inci-v0.1",
+  "lexicon_version": "bondbuilder-lexicon-v0.1",
+  "purpose": "learning pilot only; not engine-lock or publication receipt",
+  "pilot_ids": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08"
+  ],
+  "known_formula_holds": [
+    "P05",
+    "P06",
+    "P08"
+  ],
+  "source_target_scope": "Five complete source-listed research targets and three unresolved-market/identity/formula rows. No exact supplied pack/live catalog binding asserted.",
+  "lane_protocol": {
+    "count": 2,
+    "stage_a": "Only standard + anonymous formula packet; freeze blind records before named packet is supplied.",
+    "stage_b": "Same named evidence packet for both researchers; no web, peer outputs, report or prior grades."
+  },
+  "preregistered_pilot_metrics": {
+    "role": "diagnostic calibration, no pass-to-lock claim",
+    "denominator": "All eight slots remain in boundary/hold reporting. Trust exact agreement denominator is jointly assessable slots only; list excluded hold IDs and n explicitly.",
+    "compare": [
+      "recognized marker sets",
+      "technology candidate",
+      "boundary_status",
+      "claim_trust_level including null/hold",
+      "classification confidence separately",
+      "protocol facts and unsupported inference flags",
+      "research admission candidacy"
+    ],
+    "report": [
+      "all holds and disagreements",
+      "grade prevalence",
+      "raw exact overall and per-field agreement",
+      "conditional agreement where nondefault cases exist",
+      "chance-corrected diagnostic only if informative",
+      "cause: evidence gap, rule gap or lane deviation",
+      "seal/recognition incidents"
+    ],
+    "no_expected_brand_labels": true
+  },
+  "holdout": {
+    "status": "not yet preregistered or labeled",
+    "exclusion": "Pilot products, same-formula size variants and predecessor overlap cannot be unseen positives.",
+    "gate": "Reserve concrete identities/metrics before labels; unavailable positive-family coverage requires explicit review before lock."
+  },
+  "files": [
+    {
+      "path": "docs/research/bondbuilder-inci/v1.0/bondbuilder-classification-standard.v0.1.md",
+      "sha256": "712e629f0d92f4d9bafdf3f5fcce151628feb0819b777eb329ec3870c62a2968"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/v1.0/runbook.v0.1.md",
+      "sha256": "a67af12a53a8325d2deff1e0e0b99416b56fdf26c1a04f8321eb0aa129d085f2"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/v1.0/researcher-prompt.v0.1.md",
+      "sha256": "484e55045a218092c913bfa30551a710feb17f58a9caea8d1ec29edcb3aea125"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/blind-packet.v0.1.json",
+      "sha256": "8bf4726eaa5a96723ac9243369cbd1c93a713945cc103964c6a0add8bccd1c40"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/evidence-packet.v0.1.json",
+      "sha256": "d550115248bf129fd90ac6a9ed2f5fcb50039318e6f0ed1528fc466094aacd35"
+    }
+  ],
+  "verification": {
+    "packet_hash_parity": "pass",
+    "rows_unique": "pass",
+    "blind_no_brand_URL_or_grade": "pass",
+    "locant_and_alias_normalization": "pass",
+    "source_metadata_exclusion": "pass"
+  },
+  "production": {
+    "writes": 0,
+    "adapter_exists": false,
+    "intake_active": false
+  }
+}

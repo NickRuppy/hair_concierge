@@ -1,0 +1,55 @@
+import pathlib,hashlib,json,difflib
+D=pathlib.Path(__file__).parent; T=pathlib.Path('/tmp/test-audit-discovery163-tools-70q2q9t7'); E=pathlib.Path('/tmp/test-audit-email94-tools-c435q0q0'); P='/tmp/test-audit-scanner46-proposal-RDeysZ'
+sha=lambda b:hashlib.sha256(b).hexdigest()
+assert sha((T/'operator-pins.json').read_bytes())=='3fca83bc5a719ae90107a6ae8408aa2d8f45c511701b31ce2ac5ff279c8efdac'
+assert sha((T/'operator-guard.cjs').read_bytes())=='fda51c060377a3566172dff9e51c0081a68d79d3a3f0913c49a005474a6e3a2c'
+provenance=[]; delta=[]
+for name in ['operator-guard.cjs','operator-edit.cjs','operator-run-controls.cjs','operator-proof.cjs','operator-readonly-preload.cjs']:
+ src=(E if name=='operator-proof.cjs' else T)/name; orig=src.read_text(); s=orig.replace(str(T)+'/operator',str(D)+'/operator').replace('/tmp/test-audit-discovery-operational163',P)
+ s=s.replace("const PIN_SHA='3fca83bc5a719ae90107a6ae8408aa2d8f45c511701b31ce2ac5ff279c8efdac'","const PIN_SHA='PIN_SHA_PLACEHOLDER'")
+ if name=='operator-guard.cjs':
+  start=s.index('  if(evidence.root!==ROOT'); end=s.index('  function guards(overrides={})',start)
+  s=s[:start]+'''  if(evidence.root!==ROOT||evidence.head!==pins.head||evidence.branch!==pins.branch||candidates.length!==6||controls.length!==7||ts.version!==pins.typescriptVersion)fail('Proposal identity/count mismatch')
+  const snapshots={},counts={before:0,transfer:0,cut:0};let unrelated=0,ownedUnchanged=0
+  const keepers=new Map(candidates.map(c=>[c.keeper.file+'\\0'+c.keeper.name,c.keeper]));if(keepers.size!==5)fail('Five distinct keepers required')
+  for(const file of Object.keys(evidence.phases.before)){
+    snapshots[file]={}
+    for(const phase of Object.keys(counts)){
+      const bytes=fs.readFileSync(evidence.snapshotPaths[phase][file]),rows=registrations(ts,file,bytes.toString())
+      if(sha(bytes)!==evidence.phases[phase][file])fail('Phase bytes: '+file)
+      snapshots[file][phase]={bytes,rows};counts[phase]+=rows.size
+    }
+    const {before,transfer,cut}=snapshots[file];let reconstructed=before.bytes.toString()
+    const local=candidates.filter(c=>c.file===file)
+    for(const c of local)if(before.rows.get(c.donor.name)?.statement!==c.donor.body||sha(c.donor.body)!==c.donor.sha256)fail('Original donor identity')
+    for(const k of keepers.values())if(k.file===file){
+      if(before.rows.get(k.name)?.statement!==k.body||sha(k.body)!==k.sha256)fail('Original keeper identity')
+      if(k.body!==k.after)reconstructed=replaceOnce(reconstructed,k.body,k.after,'keeper transfer')
+    }
+    if(reconstructed!==transfer.bytes.toString())fail('Transfer changed unrelated bytes')
+    for(const c of local){const full=c.donor.body;if(reconstructed.includes(full+'\\n\\n'))reconstructed=replaceOnce(reconstructed,full+'\\n\\n','',c.id);else if(reconstructed.includes('\\n\\n'+full))reconstructed=replaceOnce(reconstructed,'\\n\\n'+full,'',c.id);else reconstructed=replaceOnce(reconstructed,full,'',c.id)}
+    if(reconstructed!==cut.bytes.toString())fail('Cut changed unrelated bytes')
+    for(const [name,row]of before.rows){const t=transfer.rows.get(name),k=cut.rows.get(name)
+      if(local.some(c=>c.donor.name===name)){if(k||t?.statement!==row.statement)fail('Donor phase mismatch');continue}
+      const keeper=keepers.get(file+'\\0'+name)
+      if(keeper&&keeper.body!==keeper.after){if(t?.statement!==keeper.after||k?.statement!==keeper.after)fail('Keeper phase mismatch');continue}
+      if(t?.statement!==row.statement||k?.statement!==row.statement)fail('Unrelated callback changed');unrelated++;if(evidence.ownedFiles.includes(file))ownedUnchanged++
+    }
+  }
+  if(Object.keys(snapshots).length!==6||JSON.stringify(counts)!=='{"before":90,"transfer":90,"cut":84}'||unrelated!==82||ownedUnchanged!==39)fail('Phase conservation mismatch')
+  const held=readJSON(PROPOSAL+'/ledger.json').sites.filter(j=>j.mark==='F');if(held.length!==5)fail('Held F count')
+  for(const j of held)for(const phase of Object.keys(counts))if(snapshots[j.file][phase].rows.get(j.title)?.statement!==snapshots[j.file].before.rows.get(j.title)?.statement)fail('Held F changed')
+  const unchangedRetained=unrelated
+''' + s[end:]
+  s=s.replace("const text=original.toString(),sf=parse(ctx.ts,c.file,text)","const text=original.toString(),sf=c.file.endsWith('.sql')?null:parse(ctx.ts,c.file,text)")
+  s=s.replace("}else if(c.anchor.kind==='file'&&c.anchor.scopeSha256===sha(original))", "}else if(['file','sql-bytes'].includes(c.anchor.kind)&&c.anchor.scopeSha256===sha(original))")
+  s=s.replace("  parse(ctx.ts,c.file,mutated.toString())", "  if(sf)parse(ctx.ts,c.file,mutated.toString());else if(c.anchor.kind!=='sql-bytes')fail('SQL raw-byte anchor required')")
+ if name=='operator-edit.cjs':s=s.replace('parsedPhaseFiles:72,sourceControlsParsed:5','parsedPhaseFiles:18,sourceControlsParsed:5,sqlByteControls:2')
+ if name=='operator-run-controls.cjs':
+  s=s.replace('allUniqueOwnersParsed:true,allControlsParsed:prepared.size===5','tsMutantsParsed:5,sqlRawByteMutants:2,allControlsPrepared:prepared.size===7').replace('ALL24 test','ALL6 test').replace("receipts.length===5","receipts.length===7")
+ if name=='operator-proof.cjs':
+  s=s.replace('complete.verified!==20','complete.verified!==7').replace('complete.cleanRuns!==40','complete.cleanRuns!==14').replace('Required20','Required7').replace('length!==18','length!==6').replace('records.length!==20','records.length!==7').replace('Twenty records required','Seven records required').replace('verified:20,logFiles:60','verified:7,logFiles:21')
+ (D/name).write_text(s)
+ provenance.append({'file':name,'template':str(src),'templateSHA256':sha(orig.encode()),'preparedSHA256':sha(s.encode())})
+ delta+=list(difflib.unified_diff(orig.splitlines(True),s.splitlines(True),fromfile=str(src),tofile=str(D/name)))
+(D/'template-provenance.json').write_text(json.dumps(provenance,indent=2)+'\n');(D/'template-delta.patch').write_text(''.join(delta))

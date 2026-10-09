@@ -37,6 +37,8 @@ import {
   rerankPeelingProductsWithEngine,
   rerankShampooProductsWithEngine,
 } from "../src/lib/recommendation-engine"
+import { createChatBudgetEngineOrder } from "../src/lib/agent/tools/chat-budget"
+import { BONDBUILDER_TIE_DEFAULT_PRODUCT_ID } from "../src/lib/personal-plan/products/authority/categories/bondbuilder"
 import type { MatchedProduct } from "../src/lib/product-matching/matcher"
 import {
   LOW_DAMAGE_PROFILE,
@@ -100,43 +102,6 @@ function createMaskDecision(
     notes: [],
   }
 }
-
-test("engine conditioner reranking prefers explicit target fit over higher semantic score", () => {
-  const runtime = buildRecommendationEngineRuntimeFromPersistence(SEVERE_DAMAGE_PROFILE, [])
-  const decision = runtime.categories.conditioner
-
-  const candidates = [
-    createMatchedProduct("ideal", "Conditioner", { combined_score: 0.72 }),
-    createMatchedProduct("mismatch", "Conditioner", { combined_score: 0.88 }),
-  ]
-
-  const specs: ProductConditionerRerankSpecs[] = [
-    {
-      product_id: "ideal",
-      weight: "medium",
-      repair_level: "high",
-      balance_direction: "moisture",
-      ingredient_flags: [],
-    },
-    {
-      product_id: "mismatch",
-      weight: "rich",
-      repair_level: "low",
-      balance_direction: "protein",
-      ingredient_flags: [],
-    },
-  ]
-
-  const reranked = rerankConditionerProductsWithEngine({
-    candidates,
-    specs,
-    decision,
-    hairProfile: SEVERE_DAMAGE_PROFILE,
-  })
-
-  assert.equal(reranked[0]?.id, "ideal")
-  assert.equal(reranked[0]?.recommendation_meta?.category, "conditioner")
-})
 
 test("engine conditioner reranking softly prefers lighter fits under CareBalance flat-load pressure", () => {
   const profile = {
@@ -238,6 +203,48 @@ test("engine conditioner reranking does not use CareBalance label without load-p
   assert.doesNotMatch(JSON.stringify(reranked[0]?.recommendation_meta), /care_balance/i)
 })
 
+test("engine conditioner reranking orders by a capped budget before the final cut", () => {
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(SEVERE_DAMAGE_PROFILE, [])
+  const decision = runtime.categories.conditioner
+  const ids = ["first", "second", "third", "fourth"]
+  const prices = [12.9, 11.5, 9.9, 4.5]
+  const candidates = ids.map((id, index) =>
+    createMatchedProduct(id, "Conditioner", {
+      combined_score: 0.9 - index * 0.01,
+      price_eur: prices[index],
+      purchase_link_status: "available",
+    }),
+  )
+  const specs: ProductConditionerRerankSpecs[] = ids.map((id) => ({
+    product_id: id,
+    weight: "medium",
+    repair_level: "high",
+    balance_direction: "moisture",
+    ingredient_flags: [],
+  }))
+  const rerank = (
+    orderBeforeCut?: Parameters<typeof rerankConditionerProductsWithEngine>[0]["orderBeforeCut"],
+  ) =>
+    rerankConditionerProductsWithEngine({
+      candidates,
+      specs,
+      decision,
+      hairProfile: SEVERE_DAMAGE_PROFILE,
+      ...(orderBeforeCut ? { orderBeforeCut } : {}),
+    }).map((product) => product.id)
+
+  // Without a budget the engine's own top three stay as they are: the 4th never shows.
+  assert.deepEqual(rerank(), ["first", "second", "third"])
+
+  const hook = createChatBudgetEngineOrder({
+    budget: { kind: "capped", limitEur: 5, allowExceptions: false },
+    protectedProductIds: new Set(),
+  })
+  assert.ok(hook)
+  // Only the 4th is within 5 EUR: it now reaches the cut and leads, the rest keep fit order.
+  assert.deepEqual(rerank(hook.order), ["fourth", "first", "second"])
+})
+
 test("engine conditioner reranking excludes mismatches when three non-mismatches exist", () => {
   const runtime = buildRecommendationEngineRuntimeFromPersistence(SEVERE_DAMAGE_PROFILE, [])
   const decision = runtime.categories.conditioner
@@ -299,6 +306,51 @@ test("engine conditioner reranking excludes mismatches when three non-mismatches
 
 test("engine conditioner reranking marks fallback mismatches when coverage is insufficient", () => {
   const runtime = buildRecommendationEngineRuntimeFromPersistence(SEVERE_DAMAGE_PROFILE, [])
+  const categories = runtime.categories
+  assert.equal(categories.shampoo.relevant, true)
+  assert.equal(categories.shampoo.action, "add")
+  assert.deepEqual(categories.shampoo.targetProfile, {
+    scalpRoute: "balanced",
+    shampooBucket: "normal",
+    secondaryBucket: null,
+    cleansingIntensity: "regular",
+  })
+
+  assert.equal(categories.conditioner.relevant, true)
+  assert.equal(categories.conditioner.action, "add")
+  assert.deepEqual(categories.conditioner.targetProfile, {
+    balance: "moisture",
+    repairLevel: "high",
+    weight: "medium",
+    thickness: "fine",
+    activeDamageDrivers: runtime.damage.activeDamageDrivers,
+  })
+
+  assert.equal(categories.mask.relevant, true)
+  assert.equal(categories.mask.action, "add")
+  assert.deepEqual(categories.mask.targetProfile, {
+    balance: "moisture",
+    repairLevel: "high",
+    weight: "light",
+    needStrength: 3,
+    role: "fixed",
+    intensityRequest: null,
+    thickness: "fine",
+    density: "medium",
+  })
+
+  assert.equal(categories.leaveIn.relevant, true)
+  assert.equal(categories.leaveIn.action, "add")
+  assert.equal(categories.leaveIn.targetProfile?.needBucket, "heat_protect")
+  assert.equal(categories.leaveIn.targetProfile?.stylingContext, "heat_style")
+  assert.equal(categories.leaveIn.targetProfile?.conditionerRelationship, "replacement_capable")
+  assert.deepEqual(categories.leaveIn.targetProfile?.careBenefits, [
+    "heat_protect",
+    "repair",
+    "detangle_smooth",
+  ])
+  assert.equal(categories.oil.relevant, false)
+
   const decision = runtime.categories.conditioner
 
   const candidates = [
@@ -330,6 +382,8 @@ test("engine conditioner reranking marks fallback mismatches when coverage is in
     hairProfile: SEVERE_DAMAGE_PROFILE,
   })
 
+  assert.equal(reranked[0]?.id, "ideal")
+  assert.equal(reranked[0]?.recommendation_meta?.category, "conditioner")
   assert.equal(reranked.length, 2)
   assert.equal(reranked[1]?.id, "mismatch")
   assert.match(reranked[1]?.recommendation_meta?.tradeoffs[0] ?? "", /^Fallback:/)
@@ -547,6 +601,9 @@ test("engine mask reranking prefers medium concentration for medium mask need", 
   })
 
   assert.equal(reranked[0]?.id, "medium")
+  const highMetadata = reranked.find((product) => product.id === "high")?.recommendation_meta
+  assert.ok(highMetadata?.category === "mask")
+  assert.equal(highMetadata.fit_status, "supportive")
   assert.match(reranked[1]?.recommendation_meta?.tradeoffs.join(" ") ?? "", /sparsam/)
   assert.equal("_fitReasonCodes" in reranked[0], false)
 })
@@ -591,14 +648,21 @@ test("engine mask reranking prioritizes light weight for light mask targets", ()
 })
 
 test("engine mask reranking uplifts explicit low-need intensive requests to medium concentration", () => {
-  const decision = createMaskDecision({
-    balance: "balanced",
-    repairLevel: "medium",
-    weight: "medium",
-    needStrength: 0,
-    role: "optional",
-    intensityRequest: "intensive",
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "mask",
+    message: "Welche intensive Maske passt zu mir?",
   })
+  const decision = buildRecommendationEngineRuntimeFromPersistence(
+    LOW_DAMAGE_PROFILE,
+    [],
+    requestContext,
+  ).categories.mask
+  assert.equal(requestContext.maskIntensityRequest, "intensive")
+  assert.equal(decision.relevant, true)
+  assert.equal(decision.targetProfile?.role, "optional")
+  assert.equal(decision.targetProfile?.repairLevel, "medium")
+  assert.equal(decision.targetProfile?.intensityRequest, "intensive")
+  assert.ok(decision.notes.includes("mask_explicit_intensive_request_uplift"))
 
   const candidates = [
     createMatchedProduct("low", "Maske", { combined_score: 0.9 }),
@@ -709,6 +773,9 @@ test("engine leave-in reranking strongly prefers heat-safe fit for heat styling 
   })
 
   assert.equal(reranked[0]?.id, "ideal")
+  const idealMetadata = reranked[0]?.recommendation_meta
+  assert.ok(idealMetadata?.category === "leave_in")
+  assert.equal(idealMetadata.fit_status, "supportive")
   assert.equal(reranked[0]?.recommendation_meta?.category, "leave_in")
 })
 
@@ -1226,8 +1293,13 @@ test("engine shampoo reranking keeps the primary treatment bucket ahead of the r
   const decision = runtime.categories.shampoo
 
   assert.equal(decision.relevant, true)
-  assert.equal(decision.targetProfile?.shampooBucket, "schuppen")
-  assert.equal(decision.targetProfile?.secondaryBucket, "dehydriert-fettig")
+  assert.equal(runtime.careNeeds.thermalProtectionNeed, "none")
+  assert.deepEqual(decision.targetProfile, {
+    scalpRoute: "dandruff",
+    shampooBucket: "schuppen",
+    secondaryBucket: "dehydriert-fettig",
+    cleansingIntensity: "regular",
+  })
 
   const candidates = [
     createMatchedProduct("rotation", "Shampoo", { combined_score: 0.86 }),
@@ -2036,6 +2108,310 @@ test("engine bondbuilder reranking exposes protocol metadata without ranking by 
   )
 })
 
+function bondbuilderBudgetFixture(
+  lanes: { chemicalCrosslinkLane: boolean; peptideChainLane: boolean },
+  products: Array<{
+    id: string
+    score: number
+    price: number
+    axis: "disulfide_crosslink" | "peptide_chain"
+  }>,
+) {
+  const decision: BondbuilderCategoryDecision = {
+    category: "bondbuilder",
+    relevant: true,
+    action: "add",
+    planReasonCodes: [],
+    currentInventory: null,
+    targetProfile: {
+      bondRepairIntensity: "intensive",
+      applicationMode: "pre_shampoo",
+      ...lanes,
+      mixedOrSevereCombo: false,
+      proteinBalanceSupportingOnly: false,
+      role: "recommended",
+    },
+    notes: [],
+  }
+  const candidates = products.map((product) =>
+    createMatchedProduct(product.id, "Bondbuilder", {
+      combined_score: product.score,
+      price_eur: product.price,
+      purchase_link_status: "available",
+    }),
+  )
+  const specs: ProductBondbuilderSpecs[] = products.map((product) => ({
+    product_id: product.id,
+    bond_repair_intensity: "intensive",
+    application_mode: "pre_shampoo",
+    bond_repair_axis: product.axis,
+    treatment_mode: "rinse_out",
+    product_format: "cream_treatment",
+    usage_protocol: "olaplex_3plus",
+  }))
+  const capped = createChatBudgetEngineOrder({
+    budget: { kind: "capped", limitEur: 5, allowExceptions: false },
+    protectedProductIds: new Set(),
+  })
+  assert.ok(capped)
+  const rerank = (withBudget: boolean) =>
+    rerankBondbuilderProductsWithEngine({
+      candidates,
+      specs,
+      decision,
+      ...(withBudget ? { orderBeforeCut: capped.order } : {}),
+    }).map((product) => product.id)
+  return rerank
+}
+
+test("engine bondbuilder reranking orders by a capped budget before the cut of two", () => {
+  const rerank = bondbuilderBudgetFixture(
+    { chemicalCrosslinkLane: true, peptideChainLane: false },
+    [
+      { id: "first", score: 0.9, price: 29.9, axis: "disulfide_crosslink" },
+      { id: "second", score: 0.89, price: 24.9, axis: "disulfide_crosslink" },
+      { id: "third", score: 0.88, price: 4.5, axis: "disulfide_crosslink" },
+    ],
+  )
+  assert.deepEqual(rerank(false), ["first", "second"])
+  // Equally trusted (all unrated) products are ordered cheaper first under a cap.
+  assert.deepEqual(rerank(true), ["third", "second"])
+})
+
+test("engine bondbuilder ranking ignores the repair lane: no forced pick per lane", () => {
+  const rerank = bondbuilderBudgetFixture({ chemicalCrosslinkLane: true, peptideChainLane: true }, [
+    { id: "crosslink-pricey", score: 0.9, price: 29.9, axis: "disulfide_crosslink" },
+    { id: "peptide-pricey", score: 0.85, price: 24.9, axis: "peptide_chain" },
+    { id: "crosslink-cheap", score: 0.88, price: 4.5, axis: "disulfide_crosslink" },
+  ])
+  // Type is worthless for ranking (Nick, 2026-10-09): no lane bonus, no dual-lane pick.
+  assert.deepEqual(rerank(false), ["crosslink-pricey", "crosslink-cheap"])
+  // With a cap: best affordable next to the cheapest equally trusted product, regardless of lane.
+  assert.deepEqual(rerank(true), ["crosslink-cheap", "peptide-pricey"])
+})
+
+// Production catalogue on 2026-10-09 (recommended + active), with its claim trust levels.
+const REAL_BONDBUILDERS: Array<{
+  id: string
+  price: number
+  trust: "high" | "medium" | "low"
+  intensity: "maintenance" | "intensive"
+  axis: "disulfide_crosslink" | "peptide_chain"
+  score: number
+}> = [
+  {
+    id: "loreal-elvital-bond",
+    price: 8.95,
+    trust: "medium",
+    intensity: "intensive",
+    axis: "disulfide_crosslink",
+    score: 0.95,
+  },
+  {
+    id: "ogx-sealing-serum",
+    price: 18.68,
+    trust: "low",
+    intensity: "intensive",
+    axis: "peptide_chain",
+    score: 0.94,
+  },
+  {
+    id: "redken-acidic-bonding",
+    price: 25.5,
+    trust: "medium",
+    intensity: "maintenance",
+    axis: "disulfide_crosslink",
+    score: 0.8,
+  },
+  {
+    id: "olaplex-3plus",
+    price: 34,
+    trust: "high",
+    intensity: "maintenance",
+    axis: "disulfide_crosslink",
+    score: 0.86,
+  },
+  {
+    id: "epres",
+    price: 48,
+    trust: "high",
+    intensity: "maintenance",
+    axis: "disulfide_crosslink",
+    score: 0.84,
+  },
+  {
+    id: "aveda-miraculous-oil",
+    price: 52,
+    trust: "low",
+    intensity: "intensive",
+    axis: "peptide_chain",
+    score: 0.93,
+  },
+  {
+    id: BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+    price: 56.25,
+    trust: "high",
+    intensity: "maintenance",
+    axis: "peptide_chain",
+    score: 0.7,
+  },
+  {
+    id: "kerastase-premiere",
+    price: 56.29,
+    trust: "medium",
+    intensity: "intensive",
+    axis: "disulfide_crosslink",
+    score: 0.9,
+  },
+]
+
+function realBondbuilderRerank(options: {
+  limitEur?: 5 | 15
+  mixedOrSevereCombo?: boolean
+  products?: typeof REAL_BONDBUILDERS
+  unpricedIds?: string[]
+}) {
+  const products = options.products ?? REAL_BONDBUILDERS
+  const decision: BondbuilderCategoryDecision = {
+    category: "bondbuilder",
+    relevant: true,
+    action: "add",
+    planReasonCodes: [],
+    currentInventory: null,
+    targetProfile: {
+      bondRepairIntensity: "intensive",
+      applicationMode: "pre_shampoo",
+      chemicalCrosslinkLane: true,
+      peptideChainLane: false,
+      mixedOrSevereCombo: options.mixedOrSevereCombo ?? false,
+      proteinBalanceSupportingOnly: false,
+      role: "recommended",
+    },
+    notes: [],
+  }
+  const candidates = products.map((product) =>
+    createMatchedProduct(product.id, "Bondbuilder", {
+      combined_score: product.score,
+      price_eur: options.unpricedIds?.includes(product.id) ? null : product.price,
+      purchase_link_status: "available",
+    }),
+  )
+  const specs: ProductBondbuilderSpecs[] = products.map((product) => ({
+    product_id: product.id,
+    bond_repair_intensity: product.intensity,
+    application_mode: "pre_shampoo",
+    bond_repair_axis: product.axis,
+    treatment_mode: "rinse_out",
+    product_format: "cream_treatment",
+    usage_protocol: "olaplex_3plus",
+    claim_trust_level: product.trust,
+  }))
+  const capped = options.limitEur
+    ? createChatBudgetEngineOrder({
+        budget: { kind: "capped", limitEur: options.limitEur, allowExceptions: false },
+        protectedProductIds: new Set(),
+      })
+    : null
+  return rerankBondbuilderProductsWithEngine({
+    candidates,
+    specs,
+    decision,
+    ...(capped ? { orderBeforeCut: capped.order } : {}),
+  }).map((product) => product.id)
+}
+
+test("engine bondbuilder ranking orders by trust, K18 among equals, not by intensity or relevance", () => {
+  // Without a budget: high trust first (K18 house default among the three high products), even
+  // though K18 has the lowest relevance and a mismatching intensity.
+  assert.deepEqual(realBondbuilderRerank({}), [BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "olaplex-3plus"])
+  assert.deepEqual(realBondbuilderRerank({ mixedOrSevereCombo: true }), [
+    BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+    "olaplex-3plus",
+    "epres",
+  ])
+})
+
+test("engine bondbuilder ranking without K18 keeps trust order and breaks ties by relevance", () => {
+  const withoutK18 = REAL_BONDBUILDERS.filter(
+    (product) => product.id !== BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+  )
+  assert.deepEqual(realBondbuilderRerank({ products: withoutK18, mixedOrSevereCombo: true }), [
+    "olaplex-3plus",
+    "epres",
+    "loreal-elvital-bond",
+  ])
+})
+
+test("engine bondbuilder Bis 15 € pairs the most trusted affordable product with the most trusted overall", () => {
+  // L'Oréal (8,95 €, medium) is the only affordable product. Under a cap the three high-trust
+  // products are ordered cheaper first (Nick, 2026-10-09), so Olaplex (34 €) is the comparison.
+  assert.deepEqual(realBondbuilderRerank({ limitEur: 15 }), [
+    "loreal-elvital-bond",
+    "olaplex-3plus",
+  ])
+  assert.deepEqual(realBondbuilderRerank({ limitEur: 15, mixedOrSevereCombo: true }), [
+    "loreal-elvital-bond",
+    "olaplex-3plus",
+    "epres",
+  ])
+})
+
+test("engine bondbuilder Bis 5 € with nothing affordable keeps the trust order, cheaper first", () => {
+  assert.deepEqual(realBondbuilderRerank({ limitEur: 5 }), ["olaplex-3plus", "epres"])
+})
+
+test("engine bondbuilder budget pairing never treats an unpriced product as affordable", () => {
+  // The unpriced L'Oréal drops under the cap instead of counting as within budget.
+  assert.deepEqual(realBondbuilderRerank({ limitEur: 15, unpricedIds: ["loreal-elvital-bond"] }), [
+    "olaplex-3plus",
+    "epres",
+  ])
+})
+
+test("engine bondbuilder ranking keeps a product without structured specs behind specified ones", () => {
+  const decision: BondbuilderCategoryDecision = {
+    category: "bondbuilder",
+    relevant: true,
+    action: "add",
+    planReasonCodes: [],
+    currentInventory: null,
+    targetProfile: {
+      bondRepairIntensity: "intensive",
+      applicationMode: "pre_shampoo",
+      chemicalCrosslinkLane: true,
+      peptideChainLane: false,
+      mixedOrSevereCombo: false,
+      proteinBalanceSupportingOnly: false,
+      role: "recommended",
+    },
+    notes: [],
+  }
+  const reranked = rerankBondbuilderProductsWithEngine({
+    candidates: [
+      createMatchedProduct("no-spec", "Bondbuilder", { combined_score: 0.99 }),
+      createMatchedProduct("low-trust", "Bondbuilder", { combined_score: 0.5 }),
+    ],
+    specs: [
+      {
+        product_id: "low-trust",
+        bond_repair_intensity: "maintenance",
+        application_mode: "pre_shampoo",
+        bond_repair_axis: "peptide_chain",
+        treatment_mode: "rinse_out",
+        product_format: "cream_treatment",
+        usage_protocol: "olaplex_3plus",
+        claim_trust_level: "low",
+      },
+    ],
+    decision,
+  })
+  assert.deepEqual(
+    reranked.map((product) => product.id),
+    ["low-trust", "no-spec"],
+  )
+  assert.equal("_trustRank" in reranked[0]!, false)
+})
+
 test("engine bondbuilder reranking excludes retired and add-on products from primary cards", () => {
   const decision: BondbuilderCategoryDecision = {
     category: "bondbuilder",
@@ -2715,7 +3091,7 @@ test("engine dry shampoo reranking understands current live dry-shampoo spec fie
   )
 })
 
-test("engine peeling reranking requires both scalp-focus and peeling-type alignment", () => {
+test("engine peeling reranking prefers peeling-type alignment when scalp focus is shared", () => {
   const decision: PeelingCategoryDecision = {
     category: "peeling",
     relevant: true,
@@ -2780,4 +3156,8 @@ test("engine selectors keep baseline conditioner active when shared engine is ot
   assert.equal(runtime.categories.mask.relevant, false)
   assert.equal(runtime.categories.leaveIn.relevant, false)
   assert.equal(runtime.categories.oil.relevant, false)
+  assert.equal(runtime.categories.bondbuilder.relevant, false)
+  assert.equal(runtime.categories.deepCleansingShampoo.relevant, false)
+  assert.equal(runtime.categories.dryShampoo.relevant, false)
+  assert.equal(runtime.categories.peeling.relevant, false)
 })

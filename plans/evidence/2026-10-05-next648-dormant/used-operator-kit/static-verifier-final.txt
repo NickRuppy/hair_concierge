@@ -1,0 +1,3 @@
+{"phase":"transfer","readOnly":true,"acceptance":false,"runtimeProof":false}
+{"staticReadOnlyEnforced":true,"attemptedWrites":0,"attemptedChildren":0}
+{"attemptedOwnerImports":0,"attemptedNetworkCalls":0}

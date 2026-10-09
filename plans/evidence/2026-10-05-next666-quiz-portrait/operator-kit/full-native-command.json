@@ -1,0 +1,22 @@
+{
+  "executable": "/usr/local/bin/node",
+  "args": [
+    "--experimental-test-isolation=none",
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-reporter=tap",
+    "tests/hair-length-option-card.test.tsx",
+    "tests/hair-portrait-assets.test.ts",
+    "tests/hair-portrait-gallery.test.tsx",
+    "tests/hair-portrait-length-progression.test.ts",
+    "tests/hair-portrait.test.tsx",
+    "tests/portrait-config.test.ts",
+    "tests/quiz-option-card.test.tsx",
+    "tests/quiz-motion-tokens.test.ts",
+    "tests/personal-plan-option-card-layout.test.ts"
+  ],
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning"
+}

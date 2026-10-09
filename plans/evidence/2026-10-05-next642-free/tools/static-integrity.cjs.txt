@@ -1,0 +1,18 @@
+'use strict';
+// Static only: source parsing/hash comparisons; no product/test imports or children.
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),crypto=require('node:crypto');
+const D=__dirname,sha=b=>crypto.createHash('sha256').update(b).digest('hex'),read=p=>JSON.parse(fs.readFileSync(p));
+const old=read(D+'/template-originals/operator-pins.json'),pins=read(D+'/operator-pins.json'),m=read('/tmp/test-audit-free-provisioning67/manifest.json');
+const parsed=[];for(const n of fs.readdirSync(D).filter(n=>n.endsWith('.cjs'))){new vm.Script(fs.readFileSync(D+'/'+n,'utf8'),{filename:n});parsed.push(n)}
+const prefix=s=>s.slice(0,s.indexOf('function validateTransferReceipt('));
+if(prefix(fs.readFileSync(D+'/operator-proof.cjs','utf8'))!==prefix(fs.readFileSync(D+'/template-originals/operator-proof.cjs','utf8')))throw Error('Strict decoder/FIRST outer assertion predicate changed');
+if(JSON.stringify(pins.original247Guards)!==JSON.stringify(m.readset))throw Error('Original guards repinned');
+for(const key of ['head','branch','gitDir','commonDir','node','typescriptVersion','metadataPolicy'])if(JSON.stringify(pins[key])!==JSON.stringify(old[key]))throw Error('Prior runtime/identity/policy changed '+key);
+const cleanIdentity=pins.identityFiles.map(p=>{const q={...p};delete q.sharedPackedTargetRef;delete q.sharedPackedRelevantSHA;return q});
+if(JSON.stringify(cleanIdentity)!==JSON.stringify(old.identityFiles))throw Error('Original identity fields repinned');
+const additions=pins.identityFiles.filter(p=>p.sharedPackedTargetRef||p.sharedPackedRelevantSHA);
+if(additions.length!==1||additions[0].path!=='/Users/nick/AI_work/hair_conscierge/.git/packed-refs'||additions[0].sha!=='e1c4bf1d8f62deff84b449eff0e35459de5e13d9936e881f71b1162d61c12d28'||additions[0].sharedPackedTargetRef!=='refs/heads/codex/test-audit-pruning'||additions[0].sharedPackedRelevantSHA!=='557ae083e10cb3cef98ece07555969daf56d6b8fe7fc8aa22594e6e9e6744348')throw Error('Packed policy outside bounded disposition');
+for(const p of old.dependencies)if(!pins.dependencies.some(q=>JSON.stringify(p)===JSON.stringify(q)))throw Error('Prior dependency changed '+p.path);
+for(const p of old.dependencyTrees)if(!pins.dependencyTrees.some(q=>JSON.stringify(p)===JSON.stringify(q)))throw Error('Prior dependency membership changed');
+const c=read(D+'/operator-controls-normalized.json');if(c.length!==2||new Set(c.map(x=>x.mutatedSha256)).size!==2)throw Error('Two unique controls required');
+console.log(JSON.stringify({status:'PASS_STATIC',pinsSHA:sha(fs.readFileSync(D+'/operator-pins.json')),parsedToolFiles:parsed,original247GuardsUnchanged:true,priorRuntimeIdentityConfigPolicyDependenciesUnchanged:true,approvedPackedPolicyOnly:true,strictProofPredicateAndDecoderByteIdentical:true,controls:2,uniqueMutants:2,repositoryWrites:0,children:0,ownerImports:0,nativeRuns:0},null,2));

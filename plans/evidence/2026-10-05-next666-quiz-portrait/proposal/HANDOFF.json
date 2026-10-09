@@ -1,0 +1,64 @@
+{
+  "status": "conditional proposal; main independent review and actual proof pending",
+  "directory": "/tmp/test-audit-quiz-portrait43-ygKLUS",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "manifestSHA256": "e8b4b24f8006005cee2ef25496b2ed9f8a78f171bf50883fd2fb84f765b1cff7",
+  "layerPlanSHA256": "9d8ba2f6612d089840d12e2a89613dbb9dbde8d3e65e111f4389c094251f0df5",
+  "ledgerSHA256": "33aa0baf9474495048ae03822224627f797410c4ff66c3fb7bb43812f3d70733",
+  "candidatesSHA256": "bcc0d13442aab637198580b88262bab3799fadf1fc0fc9d2402d90ce08a32793",
+  "controlsSHA256": "8c9989d3cf4f635a2f566ec165d68d3dc556157fbf5a67871ad7717900a07e44",
+  "diffSHA256": "23c2b2bb7386c97c06dcb5bb9a19e3a92c0c01371faad7efff57dff5a5151b61",
+  "staticReceiptSHA256": "4a94185b3a1f1786f2b2d59710bb763009391277460846e216133f25f4db9a09",
+  "artifactHashesSHA256": "37984a60a159d7945961a1d030ab3981cf147144571a949a45f1c3ae1db11d3e",
+  "counts": {
+    "files": 9,
+    "snapshots": 27,
+    "AST": {
+      "before": 43,
+      "transfer": 43,
+      "cut": 42
+    },
+    "nativeLiteral": {
+      "before": 46,
+      "transfer": 46,
+      "cut": 45
+    },
+    "originalCallbackAssertions": 189,
+    "transferAssertions": 197,
+    "cutAssertions": 187,
+    "donorOriginalAssertionUnion": 10,
+    "alreadyRetainedDonorAssertions": 2,
+    "newKeeperAssertions": 8,
+    "changedKeepers": 1,
+    "unchangedCallbacks": 41,
+    "R": 40,
+    "F": 2,
+    "C": 1,
+    "D": 0,
+    "guards": 82,
+    "actualOwnerControlsProspective": 3,
+    "sourceCleanup": 0,
+    "runtimeRuns": 0,
+    "removalCredit": 0
+  },
+  "readFirst": [
+    "layer-plan.md",
+    "ledger.md",
+    "complete.diff",
+    "candidates.json",
+    "controls.json",
+    "readset.json",
+    "prior-evidence.json",
+    "static-receipt.txt"
+  ],
+  "limitations": [
+    "No repository edits/native tests/owner imports/children/DB/network; only fresh TMP artifacts and static parse/hash checking.",
+    "Current full9 tests read; complete candidate operative owners and selected dependency semantics read; bounded other owner/dependency ranges labeled in readset.",
+    "No full browser,3124-line Personal Plan component or transitive vendor/domain re-audit claim; no proposed deletion depends on unread code.",
+    "Three representative source fault recipes are parsed, never executed; exact ERR_ASSERTION/operator/decoded header/typed actual/FIRST keeper-frame remains main proof gate.",
+    "Two F callbacks held byte-exact; neither repaired nor credited.",
+    "Original input difference coily vs wavy is explicit and protected by retained full manifest ownBody/filename and physical progression tests; no claim entire markup equals."
+  ]
+}

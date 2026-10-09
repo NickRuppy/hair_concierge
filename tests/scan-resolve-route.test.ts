@@ -86,6 +86,8 @@ function baseDeps(overrides: Partial<ScanResolveRouteDeps> = {}): ScanResolveRou
     isProductSearchQuarantined: async () => false,
     loadQuarantinedProductIdsAmong: async () => new Set<string>(),
     loadScanEvaluationContext: async () => context,
+    isShoppingBudgetEnabled: () => false,
+    loadShoppingBudget: async () => null,
     loadScanProductFacts: async () => null,
     loadRecommendationCandidates: async (_client, input) =>
       Object.fromEntries(input.roles.map((role) => [role, []])),
@@ -1092,7 +1094,10 @@ test("attempt telemetry: an attempt-log write failure reaches Sentry through the
   )
   const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
   assert.equal(response.status, 200)
-  await Promise.all(queued.splice(0).map((task) => task()))
+  await assert.doesNotReject(
+    Promise.all(queued.splice(0).map((task) => task())),
+    "attempt-log insert errors must not reject the route deferred drain",
+  )
   assert.deepEqual(captured, [
     // Fail-open telemetry: warning, not error (plan §5 task 5).
     { route: "resolve", status: 200, reason: "attempt_log_write_failed", level: "warning" },

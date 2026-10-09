@@ -9,7 +9,6 @@ import { CONSULT_GUARDRAILS_MARKDOWN } from "../src/lib/discovery/consult-brief/
 import {
   CONSULT_BOUNDARY_LINE,
   CONSULT_FORBIDDEN_PHRASES,
-  CONSULT_MARKET_BRANDS,
   findForbiddenPhrases,
   lintConsultBrief,
   type ConsultLintFinding,
@@ -457,16 +456,14 @@ test("a swap reason for a step that is not in the input fails", () => {
   assert.deepEqual(rules(lintConsultBrief(brief, nomiInput())), ["unknown_swap_key"])
 })
 
-test("the market brand list has no common German word in it", () => {
-  for (const brand of CONSULT_MARKET_BRANDS) {
-    assert.deepEqual(
-      lintConsultBrief(
-        { ...cleanBrief(), diagnose: "Sie wäscht täglich, föhnt heiß und bürstet nass." },
-        nomiInput(),
-      ).filter((finding) => finding.excerpt.includes(brand)),
-      [],
-    )
-  }
+test("ordinary German prose is not classified as a market product", () => {
+  assert.deepEqual(
+    lintConsultBrief(
+      { ...cleanBrief(), diagnose: "Sie wäscht täglich, föhnt heiß und bürstet nass." },
+      nomiInput(),
+    ),
+    [],
+  )
 })
 
 // --- G2 boundary ------------------------------------------------------------------------------

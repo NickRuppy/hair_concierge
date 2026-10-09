@@ -1,0 +1,63 @@
+{
+  "status": "FROZEN STATIC ONLY; main+independent acceptance and all runtime proof pending",
+  "directory": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1",
+  "pinsSHA": "76ba7677d1cd5e8d202cc00f1ce81757e25b5eaf5d18f7aadc2f18cc9a8ff847",
+  "proposalManifestSHA": "02516c9596630d774f74679bf46ee68270740b7df26ec658184c9bd3ae4cc8ef",
+  "templatePinsSHA": "ffb6b2428bdceb285246596cafeba5e3b1a6870ec0ce885b875531178b10f0cd",
+  "artifactHashesSHA": "d5c46444e1dc03e99c7914cc1799ecedfc4f9776daf3ea4679fe4176cf35c6f2",
+  "counts": {
+    "before": 103,
+    "transfer": 103,
+    "cut": 97
+  },
+  "sourceOwners": 3,
+  "wholeFiles": 10,
+  "changedFiles": 9,
+  "retirements": 6,
+  "unchangedRetainedCallbacks": 92,
+  "modifiedRetainedCallbacks": 5,
+  "originalReadsetPins": 56,
+  "staticLocalClosure": 428,
+  "nonPhaseReadsets": 450,
+  "selectedDependencies": 3507,
+  "dependencyTrees": 28,
+  "controlCountPerPhase": 14,
+  "phaseMutantsParsed": 28,
+  "syntheticDiagnosticChecks": 536,
+  "syntheticCohortChecks": 20,
+  "runtimeRuns": 0,
+  "sourceFaultsRun": 0,
+  "repositoryWrites": 0,
+  "childrenStarted": 0,
+  "ownerImports": 0,
+  "networkCalls": 0,
+  "readOnlyReceipts": [
+    "static-editor-final.txt",
+    "static-controls-final.txt",
+    "static-cohort-final.txt",
+    "static-verifier-final.txt",
+    "proof-attestation-final.txt",
+    "static-integrity-receipt.txt"
+  ],
+  "limits": [
+    "No product/test import or runtime/SQL/browser proof.",
+    "No semantic reread credit from closure hashing.",
+    "P5 variable timing values use frozen stable decoded fields rather than an invented clock.",
+    "Root must establish all native/coverage/build/fault runners are closed before mutation; common operator lock does not discover arbitrary runners.",
+    "Initial synthetic fragment replacement failed and was corrected only inside the error scalar; strict matcher unchanged."
+  ],
+  "keyHashes": {
+    "operator-guard.cjs": "670bd6218880850540b643edb442b43434eb2ffef317c8804ff53a54f2a0ec4a",
+    "operator-proof.cjs": "983b77bc48c3394a445951d803ba3c732e2746db2ed82a72b4366d2939da7a6f",
+    "operator-edit.cjs": "b00b6faa05e357af61e03e31339cde7f81295543c0394e23851218648eaba43d",
+    "operator-run-controls.cjs": "54fdd1a882a28bfd8b04720184603c1ed01b16877167000b13e996cbb4a635c3",
+    "operator-run-cohort.cjs": "edc7ffeae8b6a1ef7d2c93e13b0689235f7b5a03a02f690d888d383d1aae330b",
+    "operator-verify.cjs": "e03fcc6d595e045afd37aeab401164c542b80c1338f4f40e312333b9b359a6b0",
+    "operator-readonly-preload.cjs": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "README.md": "d8bfab2f6a910f58eec250dcc855ca3782f666a3e1f8ea87ad231be8646e892b",
+    "template-delta.patch": "535536c382bca96d9f91d1cd0e8861242075fa4a3732759cfccbc6a1024d70dc",
+    "prepare-pins.cjs": "a697b0f0488fec6822cc4a5ef6cf24ca08c67c02ebea2172894597b79607f2c7",
+    "prepare-tools.py": "29b2ededacd9d20a1ea854a064ed17f5261dc63d1aeb0d56f65d21eb012a5852",
+    "finalize-tools.cjs": "24caa731f1f0d97fec5af9c7d2447dcbd97c3c8a5dc02e57869627b4caf49415"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "scope": "git diff tracked code/test paths plus untracked tests; exclude plans/docs",
+  "groups": {
+    "application/tooling": {
+      "added": 66,
+      "deleted": 8974,
+      "paths": 117,
+      "netRemoved": 8908
+    },
+    "tests/support": {
+      "added": 3051,
+      "deleted": 12240,
+      "paths": 240,
+      "netRemoved": 9189
+    }
+  },
+  "netRemoved": 18097
+}

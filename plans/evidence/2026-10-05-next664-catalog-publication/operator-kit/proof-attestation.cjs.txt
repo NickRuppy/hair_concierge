@@ -1,0 +1,28 @@
+'use strict';
+// Synthetic diagnostic shapes only; no test/owner/native imports or child creation.
+const fs=require('node:fs'),util=require('node:util'),proof=require('./operator-proof.cjs');const controls=JSON.parse(fs.readFileSync(__dirname+'/operator-controls-normalized.json'));let checks=0;
+const ok=(x,m)=>{checks++;if(!x)throw Error(m)};
+function field(key,value){if(Array.isArray(value))return '  '+key+':\n'+value.map((x,i)=>'    '+i+': '+util.inspect(x,{colors:false,breakLength:Infinity})+'\n').join('');return '  '+key+': '+util.inspect(value,{colors:false,breakLength:Infinity})+'\n'}
+function tap(c,phase){const values=c.expectedOperator==='doesNotMatch'?'  expected:\n'+field('actual','{"is_chaarlie_recommended":false,"schema_version":"scan-db-expansion-batch-v1","items":[],"synthetic":"'+ 'x'.repeat(11000)+'"}'):field('expected',c.expectedValue)+field('actual',c.actualValue);return `TAP version 13\n# Subtest: ${c.test.name}\nnot ok 1 - ${c.test.name}\n  ---\n  error: |-\n    ${c.errorMessageIncludes.join('\n').replaceAll('\n','\n    ')}\n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n${values}  operator: '${c.expectedOperator}'\n  stack: |-\n    TestContext.<anonymous> (${c.test.file}:${c.oracles[phase].startLine}:10)\n    Test.run (node:internal/test_runner/test:1000:1)\n  ...\n1..1\n# tests 1\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n`}
+function run(text,extra={}){return{status:1,signal:null,timedOut:false,spawnError:null,...proof.parseTAP(text),text,...extra}}
+for(const c of controls)for(const phase of ['transfer','cut']){const t=tap(c,phase),token=c.test.file+':'+c.oracles[phase].startLine+':10';ok(proof.intended(c,run(t),phase).accepted,'intended '+c.id);
+ for(const[x,label]of[[{status:0},'wrong exit'],[{timedOut:true},'timeout'],[{signal:'SIGKILL'},'signal'],[{spawnError:'setup'},'spawn']])ok(!proof.intended(c,run(t,x),phase).accepted,label);
+ for(const[from,to]of[["code: 'ERR_ASSERTION'","code: 'ERR_TEST_FAILURE'"],["operator: '"+c.expectedOperator+"'","operator: '!='"],[token,c.test.file+':1:10'],['# tests 1','# tests 0'],['# skipped 0','# skipped 1'],['# cancelled 0','# cancelled 1'],['# Subtest: '+c.test.name,'# Subtest: wrong'],['  expected:','  unrelated:'],['  actual:','  unrelated:'],['  error: |-','  error: >-']])ok(!proof.intended(c,run(t.replace(from,to)),phase).accepted,'reject '+from);
+ const nested=t.replace('  stack: |-','  stack: |-\n    setup (src/unrelated.ts:1:1)');ok(!proof.intended(c,run(nested),phase).accepted,'later keeper frame cannot rescue first setup');
+ const wrongExpected=t.replace(/  expected:[\s\S]*?(?=  actual:)/,'  expected: "wrong"\n');ok(!proof.intended(c,run(wrongExpected),phase).accepted,'decoded expected wrong');
+ const wrongActual=t.replace(/  actual:[\s\S]*?(?=  operator:)/,'  actual: "wrong"\n');ok(!proof.intended(c,run(wrongActual),phase).accepted,'decoded actual wrong');
+ const nestedActual=t.replace(/  actual:[\s\S]*?(?=  operator:)/,'  actual:\n    error: intended\n    stack: |-\n      TestContext.<anonymous> ('+token+')\n');ok(!proof.intended(c,run(nestedActual),phase).accepted,'nested exception cannot rescue outer value');
+ for(const part of c.errorMessageIncludes)ok(!proof.intended(c,run(t.replace(part.replaceAll('\n','\n    '),'wrong message')),phase).accepted,'message fragment required');
+ if(c.expectedOperator==='doesNotMatch'){
+  const short=t.replace(/  actual:[\s\S]*?(?=  operator:)/,field('actual','{"is_chaarlie_recommended":false,"schema_version":"scan-db-expansion-batch-v1","items":[]}'));
+  ok(proof.intended(c,run(short),phase).accepted,'full short C3 actual accepted');
+  for(const[from,to]of[['/is_chaarlie_recommended/','/wrong_regex/'],['is_chaarlie_recommended":false','is_chaarlie_recommended":true'],['schema_version":"scan-db-expansion-batch-v1','schema_version":"wrong'],['... 1088 more characters','... 0 more characters']]){
+   if(t.includes(from))ok(!proof.intended(c,run(t.replace(from,to)),phase).accepted,'C3 reject '+from);
+  }
+  const invalidSuffix=t.replace(/\.\.\. \d+ more characters/,'... 0 more characters');ok(!proof.intended(c,run(invalidSuffix),phase).accepted,'bad truncation count');
+  const tooShort=t.replace(/  actual:[\s\S]*?(?=  operator:)/,'  actual: \'{"is_chaarlie_recommended":false,"schema_version":"scan-db-expansion-batch-v1",\'... 2 more characters\n');ok(!proof.intended(c,run(tooShort),phase).accepted,'prefix under 10000 cannot claim truncation');
+  const nestedRegex=t.replace('  expected:\n','  expected:\n    nested: "/is_chaarlie_recommended/"\n');ok(!proof.intended(c,run(nestedRegex),phase).accepted,'expected object must be empty');
+ }
+ const clean=`TAP version 13\n# Subtest: ${c.test.name}\nok 1 - ${c.test.name}\n1..1\n# tests 1\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n`;ok(proof.clean(c,run(clean,{status:0})),'clean1');ok(!proof.clean(c,run(clean.replace('# tests 1','# tests 0'),{status:0})),'reject zero clean');
+}
+console.log(JSON.stringify({status:'PASS_STATIC_SYNTHETIC_SHAPES_ONLY',controls:6,phases:2,checks,repositoryWrites:0,children:0,ownerImports:0,nativeRuns:0,limits:'Not a TAP serializer/native execution test. Actual serialization and all six faults remain main proof gates.'},null,2));

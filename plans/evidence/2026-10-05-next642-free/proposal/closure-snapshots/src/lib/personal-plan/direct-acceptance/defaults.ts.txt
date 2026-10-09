@@ -1,0 +1,44 @@
+import {
+  STAGE2_ASSUMED_DRY_SHAMPOO_BRIDGE_PREFERENCE,
+  STAGE2_ASSUMED_SCALP_IRRITATION_DETAIL,
+  STAGE2_ASSUMED_TOWEL_MATERIAL,
+  STAGE2_ASSUMED_TOWEL_TECHNIQUE,
+  STAGE2_ASSUMED_WET_WASH_FREQUENCY,
+  resolveAssumedAnswers,
+} from "../refinement/assumed-defaults"
+import type {
+  PersonalPlanRefinementAnswersV1,
+  Stage2QuestionId,
+  Stage2TriggerContext,
+} from "../refinement/types"
+
+/**
+ * Accepting a Stage-1 Idealplan without running Stage 2 interactively. The
+ * values themselves live in the typed default resolver
+ * (`refinement/assumed-defaults.ts`), which owns the full rule table with
+ * rationales; direct acceptance is the no-answers special case of it. Every
+ * default is deliberately conservative: it must never invent a need the
+ * Idealplan did not already show, and every assumption it makes has to be
+ * renderable to the user before they accept.
+ */
+
+export const DIRECT_ACCEPTANCE_WET_WASH_FREQUENCY = STAGE2_ASSUMED_WET_WASH_FREQUENCY
+export const DIRECT_ACCEPTANCE_TOWEL_MATERIAL = STAGE2_ASSUMED_TOWEL_MATERIAL
+export const DIRECT_ACCEPTANCE_TOWEL_TECHNIQUE = STAGE2_ASSUMED_TOWEL_TECHNIQUE
+export const DIRECT_ACCEPTANCE_SCALP_IRRITATION_DETAIL = STAGE2_ASSUMED_SCALP_IRRITATION_DETAIL
+export const DIRECT_ACCEPTANCE_DRY_SHAMPOO_BRIDGE_PREFERENCE =
+  STAGE2_ASSUMED_DRY_SHAMPOO_BRIDGE_PREFERENCE
+
+export type DirectAcceptanceStage2Defaults = {
+  answers: PersonalPlanRefinementAnswersV1
+  completedQuestionIds: Stage2QuestionId[]
+}
+
+export function buildDirectAcceptanceStage2Defaults(
+  triggerContext: Stage2TriggerContext,
+): DirectAcceptanceStage2Defaults {
+  // No user answers at all, so the resolver assumes the whole canonical path —
+  // which keeps the defaults complete by construction when the path changes.
+  const resolution = resolveAssumedAnswers({ triggerContext, answers: {} })
+  return { answers: resolution.answers, completedQuestionIds: resolution.orderedQuestionIds }
+}

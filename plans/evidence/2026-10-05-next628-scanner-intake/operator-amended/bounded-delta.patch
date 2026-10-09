@@ -1,0 +1,156 @@
+--- /tmp/test-audit-scanner-intake26-tools-y8mclofg/operator-guard.cjs
++++ /tmp/test-audit-scanner-intake26-isolation-dml82bss/operator-guard.cjs
+@@ -4,7 +4,7 @@
+ const path = require('node:path')
+ const crypto = require('node:crypto')
+ const ROOT = '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning'
+-const BASE = '/tmp/test-audit-scanner-intake26-tools-y8mclofg/operator'
++const BASE = '/tmp/test-audit-scanner-intake26-isolation-dml82bss/operator'
+ const PROPOSAL = '/tmp/test-audit-scanner-intake26'
+ const LOCK = '/tmp/test-audit-pruning-operator-lock'
+ const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex')
+@@ -151,7 +151,7 @@
+ }
+ function fault(ctx,c) {
+   const escaped=c.test.name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
+-  const exactCommand=['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-name-pattern=^'+escaped+'$',c.test.file]
++  const exactCommand=['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--experimental-test-isolation=none','--test-name-pattern=^'+escaped+'$',c.test.file]
+   if(JSON.stringify(c.command)!==JSON.stringify(exactCommand))fail('Control command is not exact pinned keeper')
+   const pattern=new RegExp('^'+escaped+'$')
+   for(const phase of ['before','transfer','cut'])if([...ctx.snapshots[c.test.file][phase].rows.keys()].filter(n=>pattern.test(n)).length!==1)fail('Exactly one keeper must match in every phase')
+--- /tmp/test-audit-scanner-intake26-tools-y8mclofg/operator-controls-normalized.json
++++ /tmp/test-audit-scanner-intake26-isolation-dml82bss/operator-controls-normalized.json
+@@ -23,6 +23,7 @@
+       "--import",
+       "tsx",
+       "--test",
++      "--experimental-test-isolation=none",
+       "--test-name-pattern=^ScanUnknownFlow: the bridge line sits under the headline, above the subline$",
+       "tests/scan-unknown-flow-ui.test.tsx"
+     ],
+@@ -73,6 +74,7 @@
+       "--import",
+       "tsx",
+       "--test",
++      "--experimental-test-isolation=none",
+       "--test-name-pattern=^ScanUnknownFlow: the bridge line sits under the headline, above the subline$",
+       "tests/scan-unknown-flow-ui.test.tsx"
+     ],
+@@ -123,6 +125,7 @@
+       "--import",
+       "tsx",
+       "--test",
++      "--experimental-test-isolation=none",
+       "--test-name-pattern=^ScanUnknownFlow: the bridge line sits under the headline, above the subline$",
+       "tests/scan-unknown-flow-ui.test.tsx"
+     ],
+@@ -173,6 +176,7 @@
+       "--import",
+       "tsx",
+       "--test",
++      "--experimental-test-isolation=none",
+       "--test-name-pattern=^ScanUnknownFlow: the bridge line sits under the headline, above the subline$",
+       "tests/scan-unknown-flow-ui.test.tsx"
+     ],
+@@ -222,6 +226,7 @@
+       "--import",
+       "tsx",
+       "--test",
++      "--experimental-test-isolation=none",
+       "--test-name-pattern=^ScanUnknownFlow: the bridge line sits under the headline, above the subline$",
+       "tests/scan-unknown-flow-ui.test.tsx"
+     ],
+@@ -272,6 +277,7 @@
+       "--import",
+       "tsx",
+       "--test",
++      "--experimental-test-isolation=none",
+       "--test-name-pattern=^ScanUnknownFlow: the bridge line sits under the headline, above the subline$",
+       "tests/scan-unknown-flow-ui.test.tsx"
+     ],
+@@ -322,6 +328,7 @@
+       "--import",
+       "tsx",
+       "--test",
++      "--experimental-test-isolation=none",
+       "--test-name-pattern=^ScanUnknownFlow: the bridge line sits under the headline, above the subline$",
+       "tests/scan-unknown-flow-ui.test.tsx"
+     ],
+@@ -372,6 +379,7 @@
+       "--import",
+       "tsx",
+       "--test",
++      "--experimental-test-isolation=none",
+       "--test-name-pattern=^ScanResearchIntakeForm: entering the intake state moves focus to the Marke field \\(task 6 a11y\\)$",
+       "tests/scan-research-intake-form-ui.test.tsx"
+     ],
+@@ -422,6 +430,7 @@
+       "--import",
+       "tsx",
+       "--test",
++      "--experimental-test-isolation=none",
+       "--test-name-pattern=^ScanResearchIntakeForm: entering the intake state moves focus to the Marke field \\(task 6 a11y\\)$",
+       "tests/scan-research-intake-form-ui.test.tsx"
+     ],
+@@ -472,6 +481,7 @@
+       "--import",
+       "tsx",
+       "--test",
++      "--experimental-test-isolation=none",
+       "--test-name-pattern=^ScanResearchIntakeForm: entering the intake state moves focus to the Marke field \\(task 6 a11y\\)$",
+       "tests/scan-research-intake-form-ui.test.tsx"
+     ],
+@@ -522,6 +532,7 @@
+       "--import",
+       "tsx",
+       "--test",
++      "--experimental-test-isolation=none",
+       "--test-name-pattern=^ScanResearchIntakeForm: entering the intake state moves focus to the Marke field \\(task 6 a11y\\)$",
+       "tests/scan-research-intake-form-ui.test.tsx"
+     ],
+@@ -572,6 +583,7 @@
+       "--import",
+       "tsx",
+       "--test",
++      "--experimental-test-isolation=none",
+       "--test-name-pattern=^ScanResearchIntakeForm: entering the intake state moves focus to the Marke field \\(task 6 a11y\\)$",
+       "tests/scan-research-intake-form-ui.test.tsx"
+     ],
+@@ -622,6 +634,7 @@
+       "--import",
+       "tsx",
+       "--test",
++      "--experimental-test-isolation=none",
+       "--test-name-pattern=^ScanResearchIntakeForm: entering the intake state moves focus to the Marke field \\(task 6 a11y\\)$",
+       "tests/scan-research-intake-form-ui.test.tsx"
+     ],
+@@ -672,6 +685,7 @@
+       "--import",
+       "tsx",
+       "--test",
++      "--experimental-test-isolation=none",
+       "--test-name-pattern=^ScanResearchIntakeForm: entering the intake state moves focus to the Marke field \\(task 6 a11y\\)$",
+       "tests/scan-research-intake-form-ui.test.tsx"
+     ],
+--- /tmp/test-audit-scanner-intake26-tools-y8mclofg/operator-edit.cjs
++++ /tmp/test-audit-scanner-intake26-isolation-dml82bss/operator-edit.cjs
+@@ -2,7 +2,7 @@
+ // Main only. --check is zero-write/no-child; mutation modes are never invoked by worker.
+ const fs=require('node:fs'),path=require('node:path')
+ const g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs')
+-const PIN_SHA='bfbedb7adb1865d0cc2ada97d9e74fe934645326654e6001273713495e390a5c'
++const PIN_SHA='68a3621c1a438274ec566d261ee5087b84f0a8d54424d85fc5ed81c8ffdd44bb'
+ const mode=(process.argv[2]||'check').replace(/^--/,'')
+ if(!['check','transfer','cut'].includes(mode)||(mode!=='cut'&&process.argv.length>3)||(mode==='cut'&&process.argv.length!==5))g.fail('Use --check | transfer | cut <transfer-receipt-dir> <completion-sha256>')
+ const context=g.load(PIN_SHA)
+--- /tmp/test-audit-scanner-intake26-tools-y8mclofg/operator-run-controls.cjs
++++ /tmp/test-audit-scanner-intake26-isolation-dml82bss/operator-run-controls.cjs
+@@ -2,7 +2,7 @@
+ // Main-only serial actual-owner faults. --check never starts a child or writes repository bytes.
+ const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process')
+ const g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs')
+-const PIN_SHA='bfbedb7adb1865d0cc2ada97d9e74fe934645326654e6001273713495e390a5c'
++const PIN_SHA='68a3621c1a438274ec566d261ee5087b84f0a8d54424d85fc5ed81c8ffdd44bb'
+ const mode=(process.argv[2]||'check').replace(/^--/,'')
+ const selectedId=process.argv[3]
+ if(!['check','run'].includes(mode)||process.argv.length>4)g.fail('Use --check [control-id] | run [control-id]')

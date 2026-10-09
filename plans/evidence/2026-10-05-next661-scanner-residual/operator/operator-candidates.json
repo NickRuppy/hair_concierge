@@ -1,0 +1,477 @@
+[
+  {
+    "id": "C1",
+    "mark": "C",
+    "file": "tests/scan-alternative-comparison.test.ts",
+    "donor": {
+      "name": "deriveAlternativeComparison: no criteria yields an empty comparison with a zero score",
+      "body": "test(\"deriveAlternativeComparison: no criteria yields an empty comparison with a zero score\", () => {\n  const comparison = deriveAlternativeComparison([])\n  assert.deepEqual(comparison, { rows: [], summaryScore: 0 })\n})",
+      "sha256": "bd11fa9fea1568f35fd3e40edb7da22a48f882bacc201e7e9ee9572e9645f7b6"
+    },
+    "keeper": {
+      "file": "tests/scan-masked-alternative.test.ts",
+      "name": "maskAlternative: an alternative with no carried criteria yields an empty comparison",
+      "body": "test(\"maskAlternative: an alternative with no carried criteria yields an empty comparison\", () => {\n  const masked = maskAlternative(alternative({ criteria: undefined }))\n  assert.deepEqual(masked.comparison, { rows: [], summaryScore: 0 })\n})",
+      "sha256": "0abfca9727993099427b024d820211a7223e3b487eed6c69d3c9e8411d4926e5",
+      "after": "test(\"maskAlternative: an alternative with no carried criteria yields an empty comparison\", () => {\n  const masked = maskAlternative(alternative({ criteria: undefined }))\n  assert.deepEqual(masked.comparison, { rows: [], summaryScore: 0 })\n})",
+      "reviewedEdits": []
+    },
+    "assertionUnion": [
+      {
+        "donorText": "assert.deepEqual(comparison, { rows: [], summaryScore: 0 })",
+        "keeperIndex": 0,
+        "keeperText": "assert.deepEqual(masked.comparison, { rows: [], summaryScore: 0 })",
+        "basis": "deepEqual whole comparison {rows:[],summaryScore:0} already exists."
+      }
+    ],
+    "equivalence": "Both inputs reaching deriveAlternativeComparison are []; keeper supplies criteria:undefined to actual maskAlternative, which calls deriveAlternativeComparison(alternative.criteria ?? []). No identity field enters the lower helper."
+  },
+  {
+    "id": "C2",
+    "mark": "C",
+    "file": "tests/scan-alternative-comparison.test.ts",
+    "donor": {
+      "name": "deriveAlternativeComparison: a pass criterion becomes a match row",
+      "body": "test(\"deriveAlternativeComparison: a pass criterion becomes a match row\", () => {\n  const comparison = deriveAlternativeComparison([criterion({ result: \"pass\" })])\n  assert.deepEqual(comparison.rows, [\n    { rowId: \"conditioner.care_direction\", label: \"Pflegerichtung\", state: \"match\" },\n  ])\n  assert.equal(comparison.summaryScore, 1)\n})",
+      "sha256": "467685d63abe628ae23b9dd5a6553b380d9f4ddfa6a421cfacc9c4f6e448bce1"
+    },
+    "keeper": {
+      "file": "tests/scan-masked-alternative.test.ts",
+      "name": "maskScanVerdictPayload: masks every alternative, leaves every other field untouched",
+      "body": "test(\"maskScanVerdictPayload: masks every alternative, leaves every other field untouched\", () => {\n  const masked = maskScanVerdictPayload(inCatalogVerdict)\n  assert.equal(masked.alternatives.length, 2)\n  assert.equal(masked.verdictTitle, inCatalogVerdict.verdictTitle)\n  assert.equal(masked.coverage, inCatalogVerdict.coverage)\n  assert.equal(masked.dimensions, inCatalogVerdict.dimensions)\n  for (const entry of masked.alternatives as ScanMaskedAlternative[]) {\n    assert.deepEqual(Object.keys(entry).sort(), [\"comparison\", \"verdict\", \"verdictLabel\"])\n  }\n})",
+      "sha256": "075ffd2af6a0cf8e878b29ea13147454cc75ca1b0ad82715e5539093751a3f7e",
+      "after": "test(\"maskScanVerdictPayload: masks every alternative, leaves every other field untouched\", () => {\n  const masked = maskScanVerdictPayload(inCatalogVerdict)\n  assert.equal(masked.alternatives.length, 2)\n  assert.equal(masked.verdictTitle, inCatalogVerdict.verdictTitle)\n  assert.equal(masked.coverage, inCatalogVerdict.coverage)\n  assert.equal(masked.dimensions, inCatalogVerdict.dimensions)\n  assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })\n  for (const entry of masked.alternatives as ScanMaskedAlternative[]) {\n    assert.deepEqual(Object.keys(entry).sort(), [\"comparison\", \"verdict\", \"verdictLabel\"])\n  }\n})",
+      "reviewedEdits": [
+        {
+          "from": "  assert.equal(masked.dimensions, inCatalogVerdict.dimensions)\n  for (const entry of masked.alternatives as ScanMaskedAlternative[]) {",
+          "to": "  assert.equal(masked.dimensions, inCatalogVerdict.dimensions)\n  assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })\n  for (const entry of masked.alternatives as ScanMaskedAlternative[]) {"
+        }
+      ]
+    },
+    "assertionUnion": [
+      {
+        "donorText": "assert.deepEqual(comparison.rows, [\n    { rowId: \"conditioner.care_direction\", label: \"Pflegerichtung\", state: \"match\" },\n  ])",
+        "keeperIndex": 4,
+        "keeperText": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+        "basis": "Add exact rows [{rowId:\"shampoo.scalp_route\",label:\"Kopfhaut-Fokus\",state:\"match\"}] and summaryScore1 as one whole-comparison deepEqual."
+      },
+      {
+        "donorText": "assert.equal(comparison.summaryScore, 1)",
+        "keeperIndex": 4,
+        "keeperText": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+        "basis": "Add exact rows [{rowId:\"shampoo.scalp_route\",label:\"Kopfhaut-Fokus\",state:\"match\"}] and summaryScore1 as one whole-comparison deepEqual."
+      }
+    ],
+    "equivalence": "Donor conditioner.care_direction/Pflegerichtung/pass and keeper shampoo.scalp_route/Kopfhaut-Fokus/pass are NOT byte-equal. Owner copies arbitrary criterionId/label and dispatches only result; neither category nor specific string is tested by any predicate. The existing keeper first alternative supplies the same single-pass operative shape."
+  },
+  {
+    "id": "C3",
+    "mark": "C",
+    "file": "tests/scan-alternative-comparison.test.ts",
+    "donor": {
+      "name": "deriveAlternativeComparison: a row never carries anything beyond rowId/label/state",
+      "body": "test(\"deriveAlternativeComparison: a row never carries anything beyond rowId/label/state\", () => {\n  const comparison = deriveAlternativeComparison([criterion()])\n  const row = comparison.rows[0] as ScanComparisonRow\n  assert.deepEqual(Object.keys(row).sort(), [\"label\", \"rowId\", \"state\"])\n})",
+      "sha256": "cd1fb731efb10eac375837ba8c22b0974fc84a68c3fbfb4554d375af39ec1f24"
+    },
+    "keeper": {
+      "file": "tests/scan-masked-alternative.test.ts",
+      "name": "maskScanVerdictPayload: masks every alternative, leaves every other field untouched",
+      "body": "test(\"maskScanVerdictPayload: masks every alternative, leaves every other field untouched\", () => {\n  const masked = maskScanVerdictPayload(inCatalogVerdict)\n  assert.equal(masked.alternatives.length, 2)\n  assert.equal(masked.verdictTitle, inCatalogVerdict.verdictTitle)\n  assert.equal(masked.coverage, inCatalogVerdict.coverage)\n  assert.equal(masked.dimensions, inCatalogVerdict.dimensions)\n  for (const entry of masked.alternatives as ScanMaskedAlternative[]) {\n    assert.deepEqual(Object.keys(entry).sort(), [\"comparison\", \"verdict\", \"verdictLabel\"])\n  }\n})",
+      "sha256": "075ffd2af6a0cf8e878b29ea13147454cc75ca1b0ad82715e5539093751a3f7e",
+      "after": "test(\"maskScanVerdictPayload: masks every alternative, leaves every other field untouched\", () => {\n  const masked = maskScanVerdictPayload(inCatalogVerdict)\n  assert.equal(masked.alternatives.length, 2)\n  assert.equal(masked.verdictTitle, inCatalogVerdict.verdictTitle)\n  assert.equal(masked.coverage, inCatalogVerdict.coverage)\n  assert.equal(masked.dimensions, inCatalogVerdict.dimensions)\n  assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })\n  for (const entry of masked.alternatives as ScanMaskedAlternative[]) {\n    assert.deepEqual(Object.keys(entry).sort(), [\"comparison\", \"verdict\", \"verdictLabel\"])\n  }\n})",
+      "reviewedEdits": [
+        {
+          "from": "  assert.equal(masked.dimensions, inCatalogVerdict.dimensions)\n  for (const entry of masked.alternatives as ScanMaskedAlternative[]) {",
+          "to": "  assert.equal(masked.dimensions, inCatalogVerdict.dimensions)\n  assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })\n  for (const entry of masked.alternatives as ScanMaskedAlternative[]) {"
+        }
+      ]
+    },
+    "assertionUnion": [
+      {
+        "donorText": "assert.deepEqual(Object.keys(row).sort(), [\"label\", \"rowId\", \"state\"])",
+        "keeperIndex": 4,
+        "keeperText": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+        "basis": "New whole-comparison deepEqual forbids every extra own row field, including the donor Object.keys assertion; it also preserves literal values."
+      }
+    ],
+    "equivalence": "Donor default single-pass row and keeper existing first single-pass row use same unconditional explicit row projection. Existing helper is not input-keyed on the differing id/label."
+  },
+  {
+    "id": "C4",
+    "mark": "C",
+    "file": "tests/scan-masked-alternative.test.ts",
+    "donor": {
+      "name": "maskAlternative: withholds identity, productId, image, price and net content",
+      "body": "test(\"maskAlternative: withholds identity, productId, image, price and net content\", () => {\n  const masked = maskAlternative(alternative())\n  assert.deepEqual(Object.keys(masked).sort(), [\"comparison\", \"verdict\", \"verdictLabel\"])\n})",
+      "sha256": "aea7852f96a98ff0aecd08d4e14da0f111ef9563fd17c81359b612f86c485994"
+    },
+    "keeper": {
+      "file": "tests/scan-masked-alternative.test.ts",
+      "name": "maskScanVerdictPayload: masks every alternative, leaves every other field untouched",
+      "body": "test(\"maskScanVerdictPayload: masks every alternative, leaves every other field untouched\", () => {\n  const masked = maskScanVerdictPayload(inCatalogVerdict)\n  assert.equal(masked.alternatives.length, 2)\n  assert.equal(masked.verdictTitle, inCatalogVerdict.verdictTitle)\n  assert.equal(masked.coverage, inCatalogVerdict.coverage)\n  assert.equal(masked.dimensions, inCatalogVerdict.dimensions)\n  for (const entry of masked.alternatives as ScanMaskedAlternative[]) {\n    assert.deepEqual(Object.keys(entry).sort(), [\"comparison\", \"verdict\", \"verdictLabel\"])\n  }\n})",
+      "sha256": "075ffd2af6a0cf8e878b29ea13147454cc75ca1b0ad82715e5539093751a3f7e",
+      "after": "test(\"maskScanVerdictPayload: masks every alternative, leaves every other field untouched\", () => {\n  const masked = maskScanVerdictPayload(inCatalogVerdict)\n  assert.equal(masked.alternatives.length, 2)\n  assert.equal(masked.verdictTitle, inCatalogVerdict.verdictTitle)\n  assert.equal(masked.coverage, inCatalogVerdict.coverage)\n  assert.equal(masked.dimensions, inCatalogVerdict.dimensions)\n  assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })\n  for (const entry of masked.alternatives as ScanMaskedAlternative[]) {\n    assert.deepEqual(Object.keys(entry).sort(), [\"comparison\", \"verdict\", \"verdictLabel\"])\n  }\n})",
+      "reviewedEdits": [
+        {
+          "from": "  assert.equal(masked.dimensions, inCatalogVerdict.dimensions)\n  for (const entry of masked.alternatives as ScanMaskedAlternative[]) {",
+          "to": "  assert.equal(masked.dimensions, inCatalogVerdict.dimensions)\n  assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })\n  for (const entry of masked.alternatives as ScanMaskedAlternative[]) {"
+        }
+      ]
+    },
+    "assertionUnion": [
+      {
+        "donorText": "assert.deepEqual(Object.keys(masked).sort(), [\"comparison\", \"verdict\", \"verdictLabel\"])",
+        "keeperIndex": 5,
+        "keeperText": "assert.deepEqual(Object.keys(entry).sort(), [\"comparison\", \"verdict\", \"verdictLabel\"])",
+        "basis": "Existing exact Object.keys(entry).sort() equals [comparison,verdict,verdictLabel] for every existing alternative. No transfer."
+      }
+    ],
+    "equivalence": "Donor alternative() is byte-identical to keeper first inCatalogVerdict.alternatives[0]; second differs only productId and is independently checked in existing loop."
+  },
+  {
+    "id": "C5",
+    "mark": "C",
+    "file": "tests/scan-masked-alternative.test.ts",
+    "donor": {
+      "name": "maskAlternative: keeps the alternative's own verdict and verdict label",
+      "body": "test(\"maskAlternative: keeps the alternative's own verdict and verdict label\", () => {\n  const masked = maskAlternative(\n    alternative({ verdict: \"supportive\", verdictLabel: \"Passt eingeschränkt\" }),\n  )\n  assert.equal(masked.verdict, \"supportive\")\n  assert.equal(masked.verdictLabel, \"Passt eingeschränkt\")\n})",
+      "sha256": "ba68a0355154eb3bce7a9813146e74c794fb9dad028e3f8978cae9d98ed427ed"
+    },
+    "keeper": {
+      "file": "tests/scan-resolve-anti-leak.test.ts",
+      "name": "anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree",
+      "body": "test(\"anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree\", async () => {\n  await withFlag(\"true\", async () => {\n    const handler = createScanResolveRouteHandler(baseDeps())\n    const response = await handler(request({ productId }))\n    assert.equal(response.status, 200)\n    const raw = await response.text()\n    const body = JSON.parse(raw)\n\n    for (const forbidden of FORBIDDEN_SUBSTRINGS) {\n      assert.equal(\n        raw.includes(forbidden),\n        false,\n        `masked response leaked \"${forbidden}\" somewhere in the raw JSON`,\n      )\n    }\n\n    // The scanned product's OWN identity is explicitly allowed — only the alternatives are\n    // masked (binding constraint). Confirms the walk above isn't vacuously trivial.\n    assert.ok(raw.includes(SCANNED_NAME))\n    assert.ok(raw.includes(SCANNED_BRAND))\n\n    everyStringLeaf(body, (leaf, path) => {\n      for (const forbidden of FORBIDDEN_SUBSTRINGS) {\n        assert.equal(\n          leaf.includes(forbidden),\n          false,\n          `string leaf at ${path} (\"${leaf}\") contains withheld value \"${forbidden}\"`,\n        )\n      }\n    })\n  })\n})",
+      "sha256": "59352288d570fdc3e3ad4bb4039088c6ac53986ac1992ba25dd7b16d15791aea",
+      "after": "test(\"anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree\", async () => {\n  await withFlag(\"true\", async () => {\n    const handler = createScanResolveRouteHandler(baseDeps())\n    const response = await handler(request({ productId }))\n    assert.equal(response.status, 200)\n    const raw = await response.text()\n    const body = JSON.parse(raw)\n\n    for (const forbidden of FORBIDDEN_SUBSTRINGS) {\n      assert.equal(\n        raw.includes(forbidden),\n        false,\n        `masked response leaked \"${forbidden}\" somewhere in the raw JSON`,\n      )\n    }\n\n    // The scanned product's OWN identity is explicitly allowed — only the alternatives are\n    // masked (binding constraint). Confirms the walk above isn't vacuously trivial.\n    assert.ok(raw.includes(SCANNED_NAME))\n    assert.ok(raw.includes(SCANNED_BRAND))\n\n    everyStringLeaf(body, (leaf, path) => {\n      for (const forbidden of FORBIDDEN_SUBSTRINGS) {\n        assert.equal(\n          leaf.includes(forbidden),\n          false,\n          `string leaf at ${path} (\"${leaf}\") contains withheld value \"${forbidden}\"`,\n        )\n      }\n    })\n\n    assert.equal(body.alternatives.length, 2)\n    const keysSeen = new Set<string>()\n    everyKey(body.alternatives, keysSeen)\n    for (const forbidden of FORBIDDEN_ALTERNATIVE_KEYS) {\n      assert.equal(\n        keysSeen.has(forbidden),\n        false,\n        `masked alternatives carried forbidden key \"${forbidden}\"`,\n      )\n    }\n    assert.deepEqual([...keysSeen].sort(), [\n      \"comparison\",\n      \"label\",\n      \"rowId\",\n      \"rows\",\n      \"state\",\n      \"summaryScore\",\n      \"verdict\",\n      \"verdictLabel\",\n    ])\n    const labels = (\n      body.alternatives as Array<{ comparison: { rows: Array<{ label: string }> } }>\n    ).flatMap((alternative) => alternative.comparison.rows.map((row) => row.label))\n    assert.deepEqual(labels.sort(), [\"Kopfhaut-Fokus\", \"Reinigungsstärke\"].sort())\n    assert.equal(body.alternatives[1].verdict, \"supportive\")\n    assert.equal(body.alternatives[1].verdictLabel, \"Passt eingeschränkt\")\n  })\n})",
+      "reviewedEdits": [
+        {
+          "from": "    })\n  })",
+          "to": "    })\n\n    assert.equal(body.alternatives.length, 2)\n    const keysSeen = new Set<string>()\n    everyKey(body.alternatives, keysSeen)\n    for (const forbidden of FORBIDDEN_ALTERNATIVE_KEYS) {\n      assert.equal(\n        keysSeen.has(forbidden),\n        false,\n        `masked alternatives carried forbidden key \"${forbidden}\"`,\n      )\n    }\n    assert.deepEqual([...keysSeen].sort(), [\n      \"comparison\",\n      \"label\",\n      \"rowId\",\n      \"rows\",\n      \"state\",\n      \"summaryScore\",\n      \"verdict\",\n      \"verdictLabel\",\n    ])\n    const labels = (\n      body.alternatives as Array<{ comparison: { rows: Array<{ label: string }> } }>\n    ).flatMap((alternative) => alternative.comparison.rows.map((row) => row.label))\n    assert.deepEqual(labels.sort(), [\"Kopfhaut-Fokus\", \"Reinigungsstärke\"].sort())\n    assert.equal(body.alternatives[1].verdict, \"supportive\")\n    assert.equal(body.alternatives[1].verdictLabel, \"Passt eingeschränkt\")\n  })"
+        }
+      ]
+    },
+    "assertionUnion": [
+      {
+        "donorText": "assert.equal(masked.verdict, \"supportive\")",
+        "keeperIndex": 9,
+        "keeperText": "assert.equal(body.alternatives[1].verdict, \"supportive\")",
+        "basis": "Add strictEqual body.alternatives[1].verdict supportive and verdictLabel Passt eingeschränkt to existing parsed response. Keep all scanned-identity and forbidden-string assertions."
+      },
+      {
+        "donorText": "assert.equal(masked.verdictLabel, \"Passt eingeschränkt\")",
+        "keeperIndex": 10,
+        "keeperText": "assert.equal(body.alternatives[1].verdictLabel, \"Passt eingeschränkt\")",
+        "basis": "Add strictEqual body.alternatives[1].verdict supportive and verdictLabel Passt eingeschränkt to existing parsed response. Keep all scanned-identity and forbidden-string assertions."
+      }
+    ],
+    "equivalence": "Both donor and existing real-route alternative B have verdict supportive and verdictLabel Passt eingeschränkt. Identity and criterion values differ, but those cannot alter either direct property copy in maskAlternative. Route external reads and core verdict are injected; actual masking/serialization run."
+  },
+  {
+    "id": "C6",
+    "mark": "C",
+    "file": "tests/scan-masked-alternative.test.ts",
+    "donor": {
+      "name": "maskAlternative: derives comparison rows from the alternative's own criteria",
+      "body": "test(\"maskAlternative: derives comparison rows from the alternative's own criteria\", () => {\n  const masked = maskAlternative(alternative())\n  assert.deepEqual(masked.comparison.rows, [\n    { rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" },\n  ])\n  assert.equal(masked.comparison.summaryScore, 1)\n})",
+      "sha256": "f5ea0c4c2aa355115d7b6030929465616582f1986e062e91d5afd043ce2bf66d"
+    },
+    "keeper": {
+      "file": "tests/scan-masked-alternative.test.ts",
+      "name": "maskScanVerdictPayload: masks every alternative, leaves every other field untouched",
+      "body": "test(\"maskScanVerdictPayload: masks every alternative, leaves every other field untouched\", () => {\n  const masked = maskScanVerdictPayload(inCatalogVerdict)\n  assert.equal(masked.alternatives.length, 2)\n  assert.equal(masked.verdictTitle, inCatalogVerdict.verdictTitle)\n  assert.equal(masked.coverage, inCatalogVerdict.coverage)\n  assert.equal(masked.dimensions, inCatalogVerdict.dimensions)\n  for (const entry of masked.alternatives as ScanMaskedAlternative[]) {\n    assert.deepEqual(Object.keys(entry).sort(), [\"comparison\", \"verdict\", \"verdictLabel\"])\n  }\n})",
+      "sha256": "075ffd2af6a0cf8e878b29ea13147454cc75ca1b0ad82715e5539093751a3f7e",
+      "after": "test(\"maskScanVerdictPayload: masks every alternative, leaves every other field untouched\", () => {\n  const masked = maskScanVerdictPayload(inCatalogVerdict)\n  assert.equal(masked.alternatives.length, 2)\n  assert.equal(masked.verdictTitle, inCatalogVerdict.verdictTitle)\n  assert.equal(masked.coverage, inCatalogVerdict.coverage)\n  assert.equal(masked.dimensions, inCatalogVerdict.dimensions)\n  assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })\n  for (const entry of masked.alternatives as ScanMaskedAlternative[]) {\n    assert.deepEqual(Object.keys(entry).sort(), [\"comparison\", \"verdict\", \"verdictLabel\"])\n  }\n})",
+      "reviewedEdits": [
+        {
+          "from": "  assert.equal(masked.dimensions, inCatalogVerdict.dimensions)\n  for (const entry of masked.alternatives as ScanMaskedAlternative[]) {",
+          "to": "  assert.equal(masked.dimensions, inCatalogVerdict.dimensions)\n  assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })\n  for (const entry of masked.alternatives as ScanMaskedAlternative[]) {"
+        }
+      ]
+    },
+    "assertionUnion": [
+      {
+        "donorText": "assert.deepEqual(masked.comparison.rows, [\n    { rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" },\n  ])",
+        "keeperIndex": 4,
+        "keeperText": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+        "basis": "Whole-comparison literal added for C2 also contains donor exact rows and score1; no extra case or call."
+      },
+      {
+        "donorText": "assert.equal(masked.comparison.summaryScore, 1)",
+        "keeperIndex": 4,
+        "keeperText": "assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" }],\n    summaryScore: 1,\n  })",
+        "basis": "Whole-comparison literal added for C2 also contains donor exact rows and score1; no extra case or call."
+      }
+    ],
+    "equivalence": "Donor alternative() is exactly keeper first alternative; same one shampoo criterion and explanation."
+  },
+  {
+    "id": "C7",
+    "mark": "C",
+    "file": "tests/scan-resolve-anti-leak.test.ts",
+    "donor": {
+      "name": "anti-leak: no alternative entry carries an identity/resolvable key at any depth",
+      "body": "test(\"anti-leak: no alternative entry carries an identity/resolvable key at any depth\", async () => {\n  await withFlag(\"true\", async () => {\n    const handler = createScanResolveRouteHandler(baseDeps())\n    const response = await handler(request({ productId }))\n    const body = await response.json()\n    assert.equal(body.alternatives.length, 2)\n\n    const keysSeen = new Set<string>()\n    everyKey(body.alternatives, keysSeen)\n    for (const forbidden of FORBIDDEN_ALTERNATIVE_KEYS) {\n      assert.equal(\n        keysSeen.has(forbidden),\n        false,\n        `masked alternatives carried forbidden key \"${forbidden}\"`,\n      )\n    }\n    assert.deepEqual([...keysSeen].sort(), [\n      \"comparison\",\n      \"label\",\n      \"rowId\",\n      \"rows\",\n      \"state\",\n      \"summaryScore\",\n      \"verdict\",\n      \"verdictLabel\",\n    ])\n  })\n})",
+      "sha256": "6ef3bbd23071b6c02b754e2c97ad0de2e83f2d6d646c883e58affaf6e3fc4c30"
+    },
+    "keeper": {
+      "file": "tests/scan-resolve-anti-leak.test.ts",
+      "name": "anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree",
+      "body": "test(\"anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree\", async () => {\n  await withFlag(\"true\", async () => {\n    const handler = createScanResolveRouteHandler(baseDeps())\n    const response = await handler(request({ productId }))\n    assert.equal(response.status, 200)\n    const raw = await response.text()\n    const body = JSON.parse(raw)\n\n    for (const forbidden of FORBIDDEN_SUBSTRINGS) {\n      assert.equal(\n        raw.includes(forbidden),\n        false,\n        `masked response leaked \"${forbidden}\" somewhere in the raw JSON`,\n      )\n    }\n\n    // The scanned product's OWN identity is explicitly allowed — only the alternatives are\n    // masked (binding constraint). Confirms the walk above isn't vacuously trivial.\n    assert.ok(raw.includes(SCANNED_NAME))\n    assert.ok(raw.includes(SCANNED_BRAND))\n\n    everyStringLeaf(body, (leaf, path) => {\n      for (const forbidden of FORBIDDEN_SUBSTRINGS) {\n        assert.equal(\n          leaf.includes(forbidden),\n          false,\n          `string leaf at ${path} (\"${leaf}\") contains withheld value \"${forbidden}\"`,\n        )\n      }\n    })\n  })\n})",
+      "sha256": "59352288d570fdc3e3ad4bb4039088c6ac53986ac1992ba25dd7b16d15791aea",
+      "after": "test(\"anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree\", async () => {\n  await withFlag(\"true\", async () => {\n    const handler = createScanResolveRouteHandler(baseDeps())\n    const response = await handler(request({ productId }))\n    assert.equal(response.status, 200)\n    const raw = await response.text()\n    const body = JSON.parse(raw)\n\n    for (const forbidden of FORBIDDEN_SUBSTRINGS) {\n      assert.equal(\n        raw.includes(forbidden),\n        false,\n        `masked response leaked \"${forbidden}\" somewhere in the raw JSON`,\n      )\n    }\n\n    // The scanned product's OWN identity is explicitly allowed — only the alternatives are\n    // masked (binding constraint). Confirms the walk above isn't vacuously trivial.\n    assert.ok(raw.includes(SCANNED_NAME))\n    assert.ok(raw.includes(SCANNED_BRAND))\n\n    everyStringLeaf(body, (leaf, path) => {\n      for (const forbidden of FORBIDDEN_SUBSTRINGS) {\n        assert.equal(\n          leaf.includes(forbidden),\n          false,\n          `string leaf at ${path} (\"${leaf}\") contains withheld value \"${forbidden}\"`,\n        )\n      }\n    })\n\n    assert.equal(body.alternatives.length, 2)\n    const keysSeen = new Set<string>()\n    everyKey(body.alternatives, keysSeen)\n    for (const forbidden of FORBIDDEN_ALTERNATIVE_KEYS) {\n      assert.equal(\n        keysSeen.has(forbidden),\n        false,\n        `masked alternatives carried forbidden key \"${forbidden}\"`,\n      )\n    }\n    assert.deepEqual([...keysSeen].sort(), [\n      \"comparison\",\n      \"label\",\n      \"rowId\",\n      \"rows\",\n      \"state\",\n      \"summaryScore\",\n      \"verdict\",\n      \"verdictLabel\",\n    ])\n    const labels = (\n      body.alternatives as Array<{ comparison: { rows: Array<{ label: string }> } }>\n    ).flatMap((alternative) => alternative.comparison.rows.map((row) => row.label))\n    assert.deepEqual(labels.sort(), [\"Kopfhaut-Fokus\", \"Reinigungsstärke\"].sort())\n    assert.equal(body.alternatives[1].verdict, \"supportive\")\n    assert.equal(body.alternatives[1].verdictLabel, \"Passt eingeschränkt\")\n  })\n})",
+      "reviewedEdits": [
+        {
+          "from": "    })\n  })",
+          "to": "    })\n\n    assert.equal(body.alternatives.length, 2)\n    const keysSeen = new Set<string>()\n    everyKey(body.alternatives, keysSeen)\n    for (const forbidden of FORBIDDEN_ALTERNATIVE_KEYS) {\n      assert.equal(\n        keysSeen.has(forbidden),\n        false,\n        `masked alternatives carried forbidden key \"${forbidden}\"`,\n      )\n    }\n    assert.deepEqual([...keysSeen].sort(), [\n      \"comparison\",\n      \"label\",\n      \"rowId\",\n      \"rows\",\n      \"state\",\n      \"summaryScore\",\n      \"verdict\",\n      \"verdictLabel\",\n    ])\n    const labels = (\n      body.alternatives as Array<{ comparison: { rows: Array<{ label: string }> } }>\n    ).flatMap((alternative) => alternative.comparison.rows.map((row) => row.label))\n    assert.deepEqual(labels.sort(), [\"Kopfhaut-Fokus\", \"Reinigungsstärke\"].sort())\n    assert.equal(body.alternatives[1].verdict, \"supportive\")\n    assert.equal(body.alternatives[1].verdictLabel, \"Passt eingeschränkt\")\n  })"
+        }
+      ]
+    },
+    "assertionUnion": [
+      {
+        "donorText": "assert.equal(body.alternatives.length, 2)",
+        "keeperIndex": 5,
+        "keeperText": "assert.equal(body.alternatives.length, 2)",
+        "basis": "Move alternatives.length2, everyKey traversal, all forbidden-key false assertions and exact sorted allowed-key list. Observation traversal moves; no production/handler/fixture calls added."
+      },
+      {
+        "donorText": "assert.equal(\n        keysSeen.has(forbidden),\n        false,\n        `masked alternatives carried forbidden key \"${forbidden}\"`,\n      )",
+        "keeperIndex": 6,
+        "keeperText": "assert.equal(\n        keysSeen.has(forbidden),\n        false,\n        `masked alternatives carried forbidden key \"${forbidden}\"`,\n      )",
+        "basis": "Move alternatives.length2, everyKey traversal, all forbidden-key false assertions and exact sorted allowed-key list. Observation traversal moves; no production/handler/fixture calls added."
+      },
+      {
+        "donorText": "assert.deepEqual([...keysSeen].sort(), [\n      \"comparison\",\n      \"label\",\n      \"rowId\",\n      \"rows\",\n      \"state\",\n      \"summaryScore\",\n      \"verdict\",\n      \"verdictLabel\",\n    ])",
+        "keeperIndex": 7,
+        "keeperText": "assert.deepEqual([...keysSeen].sort(), [\n      \"comparison\",\n      \"label\",\n      \"rowId\",\n      \"rows\",\n      \"state\",\n      \"summaryScore\",\n      \"verdict\",\n      \"verdictLabel\",\n    ])",
+        "basis": "Move alternatives.length2, everyKey traversal, all forbidden-key false assertions and exact sorted allowed-key list. Observation traversal moves; no production/handler/fixture calls added."
+      }
+    ],
+    "equivalence": "Donor and keeper both withFlag(true), createScanResolveRouteHandler(baseDeps()), handler(request({productId})); same fixture/arguments and actual response. Keeper already parses raw JSON; response.json and JSON.parse(response.text()) consume identical JSON bytes."
+  },
+  {
+    "id": "C8",
+    "mark": "C",
+    "file": "tests/scan-resolve-anti-leak.test.ts",
+    "donor": {
+      "name": "anti-leak: comparison row labels come only from the fixture's generic criterion labels, never product names",
+      "body": "test(\"anti-leak: comparison row labels come only from the fixture's generic criterion labels, never product names\", async () => {\n  await withFlag(\"true\", async () => {\n    const handler = createScanResolveRouteHandler(baseDeps())\n    const response = await handler(request({ productId }))\n    const body = await response.json()\n    const labels = (\n      body.alternatives as Array<{ comparison: { rows: Array<{ label: string }> } }>\n    ).flatMap((alternative) => alternative.comparison.rows.map((row) => row.label))\n    assert.deepEqual(labels.sort(), [\"Kopfhaut-Fokus\", \"Reinigungsstärke\"].sort())\n  })\n})",
+      "sha256": "98e1ad6cd83d90e832624d447f131146b94a405c2ed668ed8b240936858250aa"
+    },
+    "keeper": {
+      "file": "tests/scan-resolve-anti-leak.test.ts",
+      "name": "anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree",
+      "body": "test(\"anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree\", async () => {\n  await withFlag(\"true\", async () => {\n    const handler = createScanResolveRouteHandler(baseDeps())\n    const response = await handler(request({ productId }))\n    assert.equal(response.status, 200)\n    const raw = await response.text()\n    const body = JSON.parse(raw)\n\n    for (const forbidden of FORBIDDEN_SUBSTRINGS) {\n      assert.equal(\n        raw.includes(forbidden),\n        false,\n        `masked response leaked \"${forbidden}\" somewhere in the raw JSON`,\n      )\n    }\n\n    // The scanned product's OWN identity is explicitly allowed — only the alternatives are\n    // masked (binding constraint). Confirms the walk above isn't vacuously trivial.\n    assert.ok(raw.includes(SCANNED_NAME))\n    assert.ok(raw.includes(SCANNED_BRAND))\n\n    everyStringLeaf(body, (leaf, path) => {\n      for (const forbidden of FORBIDDEN_SUBSTRINGS) {\n        assert.equal(\n          leaf.includes(forbidden),\n          false,\n          `string leaf at ${path} (\"${leaf}\") contains withheld value \"${forbidden}\"`,\n        )\n      }\n    })\n  })\n})",
+      "sha256": "59352288d570fdc3e3ad4bb4039088c6ac53986ac1992ba25dd7b16d15791aea",
+      "after": "test(\"anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree\", async () => {\n  await withFlag(\"true\", async () => {\n    const handler = createScanResolveRouteHandler(baseDeps())\n    const response = await handler(request({ productId }))\n    assert.equal(response.status, 200)\n    const raw = await response.text()\n    const body = JSON.parse(raw)\n\n    for (const forbidden of FORBIDDEN_SUBSTRINGS) {\n      assert.equal(\n        raw.includes(forbidden),\n        false,\n        `masked response leaked \"${forbidden}\" somewhere in the raw JSON`,\n      )\n    }\n\n    // The scanned product's OWN identity is explicitly allowed — only the alternatives are\n    // masked (binding constraint). Confirms the walk above isn't vacuously trivial.\n    assert.ok(raw.includes(SCANNED_NAME))\n    assert.ok(raw.includes(SCANNED_BRAND))\n\n    everyStringLeaf(body, (leaf, path) => {\n      for (const forbidden of FORBIDDEN_SUBSTRINGS) {\n        assert.equal(\n          leaf.includes(forbidden),\n          false,\n          `string leaf at ${path} (\"${leaf}\") contains withheld value \"${forbidden}\"`,\n        )\n      }\n    })\n\n    assert.equal(body.alternatives.length, 2)\n    const keysSeen = new Set<string>()\n    everyKey(body.alternatives, keysSeen)\n    for (const forbidden of FORBIDDEN_ALTERNATIVE_KEYS) {\n      assert.equal(\n        keysSeen.has(forbidden),\n        false,\n        `masked alternatives carried forbidden key \"${forbidden}\"`,\n      )\n    }\n    assert.deepEqual([...keysSeen].sort(), [\n      \"comparison\",\n      \"label\",\n      \"rowId\",\n      \"rows\",\n      \"state\",\n      \"summaryScore\",\n      \"verdict\",\n      \"verdictLabel\",\n    ])\n    const labels = (\n      body.alternatives as Array<{ comparison: { rows: Array<{ label: string }> } }>\n    ).flatMap((alternative) => alternative.comparison.rows.map((row) => row.label))\n    assert.deepEqual(labels.sort(), [\"Kopfhaut-Fokus\", \"Reinigungsstärke\"].sort())\n    assert.equal(body.alternatives[1].verdict, \"supportive\")\n    assert.equal(body.alternatives[1].verdictLabel, \"Passt eingeschränkt\")\n  })\n})",
+      "reviewedEdits": [
+        {
+          "from": "    })\n  })",
+          "to": "    })\n\n    assert.equal(body.alternatives.length, 2)\n    const keysSeen = new Set<string>()\n    everyKey(body.alternatives, keysSeen)\n    for (const forbidden of FORBIDDEN_ALTERNATIVE_KEYS) {\n      assert.equal(\n        keysSeen.has(forbidden),\n        false,\n        `masked alternatives carried forbidden key \"${forbidden}\"`,\n      )\n    }\n    assert.deepEqual([...keysSeen].sort(), [\n      \"comparison\",\n      \"label\",\n      \"rowId\",\n      \"rows\",\n      \"state\",\n      \"summaryScore\",\n      \"verdict\",\n      \"verdictLabel\",\n    ])\n    const labels = (\n      body.alternatives as Array<{ comparison: { rows: Array<{ label: string }> } }>\n    ).flatMap((alternative) => alternative.comparison.rows.map((row) => row.label))\n    assert.deepEqual(labels.sort(), [\"Kopfhaut-Fokus\", \"Reinigungsstärke\"].sort())\n    assert.equal(body.alternatives[1].verdict, \"supportive\")\n    assert.equal(body.alternatives[1].verdictLabel, \"Passt eingeschränkt\")\n  })"
+        }
+      ]
+    },
+    "assertionUnion": [
+      {
+        "donorText": "assert.deepEqual(labels.sort(), [\"Kopfhaut-Fokus\", \"Reinigungsstärke\"].sort())",
+        "keeperIndex": 8,
+        "keeperText": "assert.deepEqual(labels.sort(), [\"Kopfhaut-Fokus\", \"Reinigungsstärke\"].sort())",
+        "basis": "Move labels flatMap and sorted literal [Kopfhaut-Fokus,Reinigungsstärke] onto already parsed keeper body."
+      }
+    ],
+    "equivalence": "Same route/deps/flag/request as C7, with existing two alternatives. Donor sort intentionally ignores order; retain that exact oracle."
+  },
+  {
+    "id": "C9",
+    "mark": "C",
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "donor": {
+      "name": "recordScanSession: the first call on fresh storage is session 1",
+      "body": "test(\"recordScanSession: the first call on fresh storage is session 1\", () => {\n  const storage = createMemoryScanTriggerStorage()\n  assert.equal(recordScanSession(storage, 1_000), 1)\n  assert.ok(storage.getItem(SCAN_SESSION_RECORD_KEY))\n})",
+      "sha256": "2997300c1974d8ab1ec53ea467cfb4991182f8d558a8dcd4a4c4aeb44c931b08"
+    },
+    "keeper": {
+      "file": "tests/scan-trigger-session-marker.test.ts",
+      "name": "recordScanSession: the count keeps climbing across further 30-minute gaps",
+      "body": "test(\"recordScanSession: the count keeps climbing across further 30-minute gaps\", () => {\n  const storage = createMemoryScanTriggerStorage()\n  recordScanSession(storage, 1_000)\n  recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES)\n  assert.equal(recordScanSession(storage, 1_000 + 2 * THIRTY_ONE_MINUTES), 3)\n})",
+      "sha256": "49b99c03857937e65b793e2c9cf8d8fcf0ad719e7a44029194c21014fd5f62a7",
+      "after": "test(\"recordScanSession: the count keeps climbing across further 30-minute gaps\", () => {\n  const storage = createMemoryScanTriggerStorage()\n  assert.equal(recordScanSession(storage, 1_000), 1)\n  assert.ok(storage.getItem(SCAN_SESSION_RECORD_KEY), \"fresh session must persist the session record\")\n  assert.equal(recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES), 2)\n  assert.equal(recordScanSession(storage, 1_000 + 2 * THIRTY_ONE_MINUTES), 3)\n})",
+      "reviewedEdits": [
+        {
+          "from": "  const storage = createMemoryScanTriggerStorage()\n  recordScanSession(storage, 1_000)\n  recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES)\n  assert.equal(recordScanSession(storage, 1_000 + 2 * THIRTY_ONE_MINUTES), 3)",
+          "to": "  const storage = createMemoryScanTriggerStorage()\n  assert.equal(recordScanSession(storage, 1_000), 1)\n  assert.ok(storage.getItem(SCAN_SESSION_RECORD_KEY), \"fresh session must persist the session record\")\n  assert.equal(recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES), 2)\n  assert.equal(recordScanSession(storage, 1_000 + 2 * THIRTY_ONE_MINUTES), 3)"
+        }
+      ]
+    },
+    "assertionUnion": [
+      {
+        "donorText": "assert.equal(recordScanSession(storage, 1_000), 1)",
+        "keeperIndex": 0,
+        "keeperText": "assert.equal(recordScanSession(storage, 1_000), 1)",
+        "basis": "Wrap existing first call in strictEqual(...,1); add existing donor getItem observation with explicit fresh-session message. No new storage adapter or record call."
+      },
+      {
+        "donorText": "assert.ok(storage.getItem(SCAN_SESSION_RECORD_KEY))",
+        "keeperIndex": 1,
+        "keeperText": "assert.ok(storage.getItem(SCAN_SESSION_RECORD_KEY), \"fresh session must persist the session record\")",
+        "basis": "Wrap existing first call in strictEqual(...,1); add existing donor getItem observation with explicit fresh-session message. No new storage adapter or record call."
+      }
+    ],
+    "equivalence": "Keeper already calls recordScanSession on newly-created same memory storage at1000. It previously ignored that return; donor observes return1 and marker existence at identical initial step."
+  },
+  {
+    "id": "C10",
+    "mark": "C",
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "donor": {
+      "name": "recordScanSession: a call more than 30 minutes later is session 2",
+      "body": "test(\"recordScanSession: a call more than 30 minutes later is session 2\", () => {\n  const storage = createMemoryScanTriggerStorage()\n  recordScanSession(storage, 1_000)\n  assert.equal(recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES), 2)\n})",
+      "sha256": "cf445376510670cf0d8125fe3bd9491f59e4c4b2e5051eab4f9ce3ebd59a63c8"
+    },
+    "keeper": {
+      "file": "tests/scan-trigger-session-marker.test.ts",
+      "name": "recordScanSession: the count keeps climbing across further 30-minute gaps",
+      "body": "test(\"recordScanSession: the count keeps climbing across further 30-minute gaps\", () => {\n  const storage = createMemoryScanTriggerStorage()\n  recordScanSession(storage, 1_000)\n  recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES)\n  assert.equal(recordScanSession(storage, 1_000 + 2 * THIRTY_ONE_MINUTES), 3)\n})",
+      "sha256": "49b99c03857937e65b793e2c9cf8d8fcf0ad719e7a44029194c21014fd5f62a7",
+      "after": "test(\"recordScanSession: the count keeps climbing across further 30-minute gaps\", () => {\n  const storage = createMemoryScanTriggerStorage()\n  assert.equal(recordScanSession(storage, 1_000), 1)\n  assert.ok(storage.getItem(SCAN_SESSION_RECORD_KEY), \"fresh session must persist the session record\")\n  assert.equal(recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES), 2)\n  assert.equal(recordScanSession(storage, 1_000 + 2 * THIRTY_ONE_MINUTES), 3)\n})",
+      "reviewedEdits": [
+        {
+          "from": "  const storage = createMemoryScanTriggerStorage()\n  recordScanSession(storage, 1_000)\n  recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES)\n  assert.equal(recordScanSession(storage, 1_000 + 2 * THIRTY_ONE_MINUTES), 3)",
+          "to": "  const storage = createMemoryScanTriggerStorage()\n  assert.equal(recordScanSession(storage, 1_000), 1)\n  assert.ok(storage.getItem(SCAN_SESSION_RECORD_KEY), \"fresh session must persist the session record\")\n  assert.equal(recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES), 2)\n  assert.equal(recordScanSession(storage, 1_000 + 2 * THIRTY_ONE_MINUTES), 3)"
+        }
+      ]
+    },
+    "assertionUnion": [
+      {
+        "donorText": "assert.equal(recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES), 2)",
+        "keeperIndex": 2,
+        "keeperText": "assert.equal(recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES), 2)",
+        "basis": "Wrap existing second call in strictEqual(...,2); no additional input/call."
+      }
+    ],
+    "equivalence": "Keeper existing first1000 and second1000+31minutes match donor calls and same newly-created storage. Further third call is retained unchanged."
+  },
+  {
+    "id": "C11",
+    "mark": "C",
+    "file": "tests/scan-profile-context.test.ts",
+    "donor": {
+      "name": "loadScanEvaluationContext: genuinely absent refined source falls back to compatible initial",
+      "body": "test(\"loadScanEvaluationContext: genuinely absent refined source falls back to compatible initial\", async () => {\n  const source = await fixture()\n  source.refined = null\n  const context = await loadScanEvaluationContext(stubClient(source) as never, \"owner\")\n  assert.equal(context?.snapshotSource, \"initial\")\n  assert.deepEqual(context?.snapshot.profile.hair, source.initial!.output_snapshot.profile.hair)\n})",
+      "sha256": "20af9d97b387a8ab231e9e243aa0549494d11b40fc5a2831edbf2f5793b18bc4"
+    },
+    "keeper": {
+      "file": "tests/scan-profile-context.test.ts",
+      "name": "loadScanEvaluationContext: initial fallback without refined head preserves initial category decisions",
+      "body": "test(\"loadScanEvaluationContext: initial fallback without refined head preserves initial category decisions\", async () => {\n  const source = await fixture()\n  source.plan!.current_refined_need_version_id = null\n  source.refined = null\n  const context = await loadScanEvaluationContext(stubClient(source) as never, \"owner\")\n  assert.equal(context?.snapshotSource, \"initial\")\n  assert.deepEqual(context?.snapshot.decisions, source.initial!.output_snapshot.decisions)\n})",
+      "sha256": "f60ada051bc4f323bd88940ebcca5b5a6e40b46402c08e3b4f522e3b2ab6cb61",
+      "after": "test(\"loadScanEvaluationContext: initial fallback without refined head preserves initial category decisions\", async () => {\n  const source = await fixture()\n  source.plan!.current_refined_need_version_id = null\n  source.refined = null\n  const context = await loadScanEvaluationContext(stubClient(source) as never, \"owner\")\n  assert.equal(context?.snapshotSource, \"initial\")\n  assert.deepEqual(context?.snapshot.decisions, source.initial!.output_snapshot.decisions)\n  assert.deepEqual(context?.snapshot.profile.hair, source.initial!.output_snapshot.profile.hair)\n})",
+      "reviewedEdits": [
+        {
+          "from": "  assert.deepEqual(context?.snapshot.decisions, source.initial!.output_snapshot.decisions)\n})",
+          "to": "  assert.deepEqual(context?.snapshot.decisions, source.initial!.output_snapshot.decisions)\n  assert.deepEqual(context?.snapshot.profile.hair, source.initial!.output_snapshot.profile.hair)\n})"
+        }
+      ]
+    },
+    "assertionUnion": [
+      {
+        "donorText": "assert.equal(context?.snapshotSource, \"initial\")",
+        "keeperIndex": 0,
+        "keeperText": "assert.equal(context?.snapshotSource, \"initial\")",
+        "basis": "Move exact deepEqual context.snapshot.profile.hair to source.initial.output_snapshot.profile.hair; source=initial and decisions assertions already present."
+      },
+      {
+        "donorText": "assert.deepEqual(context?.snapshot.profile.hair, source.initial!.output_snapshot.profile.hair)",
+        "keeperIndex": 2,
+        "keeperText": "assert.deepEqual(context?.snapshot.profile.hair, source.initial!.output_snapshot.profile.hair)",
+        "basis": "Move exact deepEqual context.snapshot.profile.hair to source.initial.output_snapshot.profile.hair; source=initial and decisions assertions already present."
+      }
+    ],
+    "equivalence": "Both source fixtures are generated by same real seed/builders and refined=null. Keeper additionally nulls plan.current_refined_need_version_id. eligiblePaid sees no edit; validNeed returns on !need before pointer access. Neither selected initial/source hash, output or publish arguments depends on that unused refined pointer."
+  },
+  {
+    "id": "C12",
+    "mark": "C",
+    "file": "tests/scan-pending-submission.test.ts",
+    "donor": {
+      "name": "findOpenScanSubmission: no open submission is null",
+      "body": "test(\"findOpenScanSubmission: no open submission is null\", async () => {\n  const { client } = stubClient({ data: null, error: null })\n\n  const result = await findOpenScanSubmission(client as never, \"user-1\", \"4006381333931\")\n\n  assert.equal(result, null)\n})",
+      "sha256": "bc87ee349f0c90a25154ecebd2a58a456adc59e45ccf30212accffe7694a62f7"
+    },
+    "keeper": {
+      "file": "tests/scan-pending-submission.test.ts",
+      "name": "findOpenScanSubmission: queries every GTIN spelling of the same number",
+      "body": "test(\"findOpenScanSubmission: queries every GTIN spelling of the same number\", async () => {\n  const { client, filters } = stubClient({ data: null, error: null })\n\n  await findOpenScanSubmission(client as never, \"user-1\", \"0022796976116\")\n\n  assert.deepEqual(filters.get(\"scanned_identifier_value\"), [\n    \"0022796976116\",\n    \"00022796976116\",\n    \"022796976116\",\n  ])\n})",
+      "sha256": "33a8b17835e38913e532f0dae8d444eb8d2b73812ecffd15378fef18081e89f2",
+      "after": "test(\"findOpenScanSubmission: queries every GTIN spelling of the same number\", async () => {\n  const { client, filters } = stubClient({ data: null, error: null })\n\n  assert.equal(\n    await findOpenScanSubmission(client as never, \"user-1\", \"0022796976116\"),\n    null,\n  )\n\n  assert.deepEqual(filters.get(\"scanned_identifier_value\"), [\n    \"0022796976116\",\n    \"00022796976116\",\n    \"022796976116\",\n  ])\n})",
+      "reviewedEdits": [
+        {
+          "from": "\n  await findOpenScanSubmission(client as never, \"user-1\", \"0022796976116\")\n",
+          "to": "\n  assert.equal(\n    await findOpenScanSubmission(client as never, \"user-1\", \"0022796976116\"),\n    null,\n  )\n"
+        }
+      ]
+    },
+    "assertionUnion": [
+      {
+        "donorText": "assert.equal(result, null)",
+        "keeperIndex": 0,
+        "keeperText": "assert.equal(\n    await findOpenScanSubmission(client as never, \"user-1\", \"0022796976116\"),\n    null,\n  )",
+        "basis": "Observe existing keeper await result with strictEqual(...,null), retaining three variant query assertions."
+      }
+    ],
+    "equivalence": "Donor single EAN4006381333931 and keeper0022796976116 generate different query values. Both stub responses data:null/error:null and same user. After awaited query the owner branches only on error/data; variants cannot distinguish null return. Query variant assertions remain complete."
+  },
+  {
+    "id": "D1",
+    "mark": "D",
+    "file": "tests/scan-name-only-submission-migration.test.ts",
+    "donor": {
+      "name": "scan name-only submission migration: identifier-based scan rows are unaffected (byte-identical EAN lane)",
+      "body": "test(\"scan name-only submission migration: identifier-based scan rows are unaffected (byte-identical EAN lane)\", async (t) => {\n  const pg = await database()\n  t.after(async () => pg.close())\n\n  await pg.query(\n    `INSERT INTO public.product_submissions\n       (user_id, category, source, status, scanned_identifier_type, scanned_identifier_value)\n     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'ean', '4006381333931')`,\n    [userA],\n  )\n  const rows = await pg.query(\"SELECT count(*)::int AS count FROM public.product_submissions\")\n  assert.equal((rows.rows[0] as { count: number }).count, 1)\n})",
+      "sha256": "3ebff1d75e7be6f4c55330f2fecec624dffec0c2c34a41f19510a30fbe469676"
+    },
+    "keeper": {
+      "file": "tests/scan-name-only-submission-migration.test.ts",
+      "name": "scan name-only submission migration: the name-only index never overlaps an identifier-based row for the same user+category",
+      "body": "test(\"scan name-only submission migration: the name-only index never overlaps an identifier-based row for the same user+category\", async (t) => {\n  const pg = await database()\n  t.after(async () => pg.close())\n\n  await pg.query(\n    `INSERT INTO public.product_submissions\n       (user_id, category, source, status, scanned_identifier_type, scanned_identifier_value)\n     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'ean', '4006381333931')`,\n    [userA],\n  )\n  // A name-only row for the same user/category is unaffected by the identifier-scoped\n  // index (scanned_identifier_value IS NULL predicate excludes it).\n  await pg.query(\n    `INSERT INTO public.product_submissions (user_id, category, source, status, brand_text, product_name_text)\n     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'Kérastase', 'Ciment Thermique')`,\n    [userA],\n  )\n\n  const rows = await pg.query(\"SELECT count(*)::int AS count FROM public.product_submissions\")\n  assert.equal((rows.rows[0] as { count: number }).count, 2)\n})",
+      "sha256": "ca7a42d9af7c7608f2046e2f0618dad57967c4c62b2cdb6c5e89204daf4caaa0",
+      "after": "test(\"scan name-only submission migration: the name-only index never overlaps an identifier-based row for the same user+category\", async (t) => {\n  const pg = await database()\n  t.after(async () => pg.close())\n\n  await pg.query(\n    `INSERT INTO public.product_submissions\n       (user_id, category, source, status, scanned_identifier_type, scanned_identifier_value)\n     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'ean', '4006381333931')`,\n    [userA],\n  )\n  // A name-only row for the same user/category is unaffected by the identifier-scoped\n  // index (scanned_identifier_value IS NULL predicate excludes it).\n  await pg.query(\n    `INSERT INTO public.product_submissions (user_id, category, source, status, brand_text, product_name_text)\n     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'Kérastase', 'Ciment Thermique')`,\n    [userA],\n  )\n\n  const rows = await pg.query(\"SELECT count(*)::int AS count FROM public.product_submissions\")\n  assert.equal((rows.rows[0] as { count: number }).count, 2)\n})",
+      "reviewedEdits": []
+    },
+    "assertionUnion": [
+      {
+        "donorText": "assert.equal((rows.rows[0] as { count: number }).count, 1)",
+        "keeperIndex": 0,
+        "keeperText": "assert.equal((rows.rows[0] as { count: number }).count, 2)",
+        "basis": "Existing count2 keeper plus successful both INSERTs subsumes count1 donor; unchanged keeper."
+      }
+    ],
+    "equivalence": "Keeper first INSERT has exact same table columns, values and userA as donor in identical empty pre-migration table after same actual SQL file. Final count2 observes persistence of first EAN and second name rows."
+  },
+  {
+    "id": "D2",
+    "mark": "D",
+    "file": "tests/scan-name-only-submission-migration.test.ts",
+    "donor": {
+      "name": "scan name-only submission migration: a name-only scan row (no identifier) is now accepted",
+      "body": "test(\"scan name-only submission migration: a name-only scan row (no identifier) is now accepted\", async (t) => {\n  const pg = await database()\n  t.after(async () => pg.close())\n\n  await pg.query(\n    `INSERT INTO public.product_submissions (user_id, category, source, status, brand_text, product_name_text)\n     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'Kérastase', 'Ciment Thermique')`,\n    [userA],\n  )\n  const rows = await pg.query(\"SELECT count(*)::int AS count FROM public.product_submissions\")\n  assert.equal((rows.rows[0] as { count: number }).count, 1)\n})",
+      "sha256": "3cf68cccf33d5e70aa92266afb6132117a2404de76026748ee5afc3a2a8434f5"
+    },
+    "keeper": {
+      "file": "tests/scan-name-only-submission-migration.test.ts",
+      "name": "scan name-only submission migration: the name-only index never overlaps an identifier-based row for the same user+category",
+      "body": "test(\"scan name-only submission migration: the name-only index never overlaps an identifier-based row for the same user+category\", async (t) => {\n  const pg = await database()\n  t.after(async () => pg.close())\n\n  await pg.query(\n    `INSERT INTO public.product_submissions\n       (user_id, category, source, status, scanned_identifier_type, scanned_identifier_value)\n     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'ean', '4006381333931')`,\n    [userA],\n  )\n  // A name-only row for the same user/category is unaffected by the identifier-scoped\n  // index (scanned_identifier_value IS NULL predicate excludes it).\n  await pg.query(\n    `INSERT INTO public.product_submissions (user_id, category, source, status, brand_text, product_name_text)\n     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'Kérastase', 'Ciment Thermique')`,\n    [userA],\n  )\n\n  const rows = await pg.query(\"SELECT count(*)::int AS count FROM public.product_submissions\")\n  assert.equal((rows.rows[0] as { count: number }).count, 2)\n})",
+      "sha256": "ca7a42d9af7c7608f2046e2f0618dad57967c4c62b2cdb6c5e89204daf4caaa0",
+      "after": "test(\"scan name-only submission migration: the name-only index never overlaps an identifier-based row for the same user+category\", async (t) => {\n  const pg = await database()\n  t.after(async () => pg.close())\n\n  await pg.query(\n    `INSERT INTO public.product_submissions\n       (user_id, category, source, status, scanned_identifier_type, scanned_identifier_value)\n     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'ean', '4006381333931')`,\n    [userA],\n  )\n  // A name-only row for the same user/category is unaffected by the identifier-scoped\n  // index (scanned_identifier_value IS NULL predicate excludes it).\n  await pg.query(\n    `INSERT INTO public.product_submissions (user_id, category, source, status, brand_text, product_name_text)\n     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'Kérastase', 'Ciment Thermique')`,\n    [userA],\n  )\n\n  const rows = await pg.query(\"SELECT count(*)::int AS count FROM public.product_submissions\")\n  assert.equal((rows.rows[0] as { count: number }).count, 2)\n})",
+      "reviewedEdits": []
+    },
+    "assertionUnion": [
+      {
+        "donorText": "assert.equal((rows.rows[0] as { count: number }).count, 1)",
+        "keeperIndex": 0,
+        "keeperText": "assert.equal((rows.rows[0] as { count: number }).count, 2)",
+        "basis": "Existing count2 after exact EAN/name inserts observes both; unchanged keeper."
+      }
+    ],
+    "equivalence": "Keeper second INSERT is exact same name row/user/category/status as donor. Prior EAN row has nonnull identifier and is excluded by name-only partial-index predicate; CHECK evaluates new row only. No existing trigger in harness. Independent fixture state difference traced, not claimed byte-identical."
+  }
+]

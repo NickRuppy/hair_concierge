@@ -1,0 +1,10 @@
+const fs=require('node:fs'),cp=require('node:child_process'),net=require('node:net'),http=require('node:http'),https=require('node:https');
+const deny=()=>{throw new Error('email94 read-only static check forbids writes/children/network')};
+for(const k of ['writeFile','writeFileSync','appendFile','appendFileSync','rename','renameSync','unlink','unlinkSync','mkdir','mkdirSync','rm','rmSync','rmdir','rmdirSync','copyFile','copyFileSync','createWriteStream','truncate','truncateSync','chmod','chmodSync'])if(k in fs)fs[k]=deny;
+for(const k of ['writeFile','appendFile','rename','unlink','mkdir','rm','rmdir','copyFile','truncate','chmod'])if(k in fs.promises)fs.promises[k]=deny;
+for(const k of ['exec','execSync','execFile','execFileSync','spawn','spawnSync','fork'])cp[k]=deny;
+net.connect=net.createConnection=deny;http.request=http.get=https.request=https.get=deny;globalThis.fetch=deny;
+
+const originalWriteSync=fs.writeSync, originalWrite=fs.write;
+fs.writeSync=function(fd,...args){if(fd!==1&&fd!==2)return deny();return originalWriteSync.call(fs,fd,...args)};
+fs.write=function(fd,...args){if(fd!==1&&fd!==2)return deny();return originalWrite.call(fs,fd,...args)};

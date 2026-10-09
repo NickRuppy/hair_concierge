@@ -36,13 +36,18 @@ export const PRODUCT_BOND_REPAIR_AXIS_LABELS = {
   peptide_chain: "Peptid-/Längsstruktur-Lane",
 } as const satisfies Record<ProductBondRepairAxis, string>
 
-export const PRODUCT_BOND_APPLICATION_MODES = ["pre_shampoo", "post_wash_leave_in"] as const
+export const PRODUCT_BOND_APPLICATION_MODES = [
+  "pre_shampoo",
+  "post_wash_leave_in",
+  "bedtime_leave_in",
+] as const
 
 export type ProductBondApplicationMode = (typeof PRODUCT_BOND_APPLICATION_MODES)[number]
 
 export const PRODUCT_BOND_APPLICATION_MODE_LABELS = {
   pre_shampoo: "Vor dem Waschen",
   post_wash_leave_in: "Nach der Wäsche / Leave-in",
+  bedtime_leave_in: "Abends / über Nacht im Haar",
 } as const satisfies Record<ProductBondApplicationMode, string>
 
 export const PRODUCT_BOND_TREATMENT_MODES = ["rinse_out", "leave_in"] as const
@@ -76,6 +81,7 @@ export const PRODUCT_BOND_USAGE_PROTOCOLS = [
   "olaplex_3_legacy",
   "k18_leave_in",
   "epres_spray",
+  "verified_product_protocol",
 ] as const
 
 export type ProductBondUsageProtocol = (typeof PRODUCT_BOND_USAGE_PROTOCOLS)[number]
@@ -86,6 +92,7 @@ export const PRODUCT_BOND_USAGE_PROTOCOL_LABELS = {
   olaplex_3_legacy: "OLAPLEX No.3 Legacy",
   k18_leave_in: "K18 Leave-in",
   epres_spray: "Epres Spray",
+  verified_product_protocol: "Verifiziertes produktspezifisches Protokoll",
 } as const satisfies Record<ProductBondUsageProtocol, string>
 
 export const PRODUCT_PEELING_TYPES = ["acid_serum", "physical_scrub"] as const

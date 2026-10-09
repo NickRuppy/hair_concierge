@@ -15,11 +15,12 @@ import type {
 import type { PersonalPlanCategory, Stage3DecisionDeferralReason } from "../products/contracts"
 import type { Stage3AuthorityProductionGateway } from "../products/production-persistence-gateway"
 import { createPersistedStage2RefinementGateway } from "../refinement/production-persistence-gateway"
-import { buildAssumedAnswerProvenance } from "../refinement/answer-provenance"
 import { Stage2RefinementError } from "../refinement/gateway"
 import type { Stage2RefinementHandoff } from "../refinement/session"
 import { semanticHash } from "../routine/canonicalize"
+import type { KnownCareAnswers } from "@/lib/user-facts/known-care-answers"
 import type { SaveUserFactsInput, SaveUserFactsResult } from "@/lib/user-facts/save"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 
 import {
   buildDirectAcceptanceStage2Defaults,
@@ -52,6 +53,12 @@ export type DirectAcceptanceErrorCode =
   | "refinement_in_progress"
   /** The plan already has an active Routine that direct acceptance did not create. */
   | "plan_already_accepted"
+  /**
+   * The shopping-budget gate is on, no budget is saved yet and the plan has no active Routine
+   * (`plan_already_accepted` wins). Raised before anything is written, so the Stage-2 draft's
+   * answers stay untouched; the caller asks the budget question and tries again.
+   */
+  | "budget_required"
 
 export class DirectAcceptanceError extends Error {
   constructor(
@@ -115,11 +122,25 @@ export type DirectAcceptancePlanStateReader = {
     userId: string
     personalPlanId: string
   }): Promise<string | null>
+  /** `personal_plans.unrefined_direct_accept`: the active Routine came from a direct accept. */
+  isUnrefinedDirectAccept(input: { userId: string; personalPlanId: string }): Promise<boolean>
 }
 
 export type AcceptIdealPlanDeps = {
   userId: string
-  flags: { stage2Enabled: boolean; stage3Enabled: boolean; stage4Enabled: boolean }
+  flags: {
+    stage2Enabled: boolean
+    stage3Enabled: boolean
+    stage4Enabled: boolean
+    /** `SHOPPING_BUDGET_ENABLED`; absent = off, the pre-budget behaviour. */
+    shoppingBudgetEnabled?: boolean
+  }
+  /**
+   * The saved per-package budget, or null when none was collected (never implied "uncapped").
+   * Read only while `flags.shoppingBudgetEnabled` is on, and required then. The budget itself
+   * reaches the products through the Stage-3 gateway's own evaluation context.
+   */
+  loadShoppingBudget?: (userId: string) => Promise<ShoppingBudget | null>
   refinementPersistence: Stage2RefinementPersistence
   planState: DirectAcceptancePlanStateReader
   stage3Gateway: DirectAcceptanceStage3Gateway
@@ -134,6 +155,12 @@ export type AcceptIdealPlanDeps = {
    * missing at the write point (M5) — it is never silently skipped.
    */
   saveFacts?: SaveCareHabitsFacts
+  /**
+   * The member's stored care answers an assumption must not replace (`knownCareAnswers` over
+   * her `care_habits` facts). Required, so every production caller — the accept route and
+   * post-purchase provisioning — builds the defaults on top of them.
+   */
+  loadKnownCareAnswers: (userId: string) => Promise<KnownCareAnswers>
   /** Injected clock for `provenance.at` (M2). Defaults to the real time. */
   now?: () => Date
 }
@@ -369,25 +396,93 @@ export async function acceptIdealPlan(
   }
 }
 
+/**
+ * With the shopping-budget gate on, the proposal is only defined once a budget is saved: the
+ * Stage-3 evaluation allocates it, and an accept without one would plan price-neutral products
+ * the person never agreed to pay for. A missing loader is a wiring bug, not a missing budget.
+ */
+async function assertShoppingBudgetSaved(deps: AcceptIdealPlanDeps): Promise<void> {
+  if (deps.flags.shoppingBudgetEnabled !== true) return
+  if (!deps.loadShoppingBudget) throw new Error("direct_accept_shopping_budget_loader_missing")
+  const budget = await deps.loadShoppingBudget(deps.userId)
+  if (!budget) throw new DirectAcceptanceError("budget_required")
+}
+
 /** A draft the user has not touched yet, or one holding only our own defaults. */
-function isDirectAcceptanceDraft(
+function isUntouchedDraft(draft: Stage2PersistedDraft): boolean {
+  return Object.keys(draft.answers).length === 0 && draft.completedQuestionIds.length === 0
+}
+
+/**
+ * The direct-acceptance snapshot this non-empty draft IS, or `null` when it is real Stage-2 work.
+ *
+ * - `directAcceptanceOwned === true`: direct acceptance saved it and no interactive save has
+ *   touched it since. Its own stored answers are the snapshot — whatever her facts say today.
+ * - `false`: a new row or one she saved herself. Never re-claimed, not even when her answers
+ *   equal the defaults (confirming a default is still her answer).
+ * - `null` / absent — rows that predate the column (20261006180100) only: the plain
+ *   all-assumed defaults, recognised by content as before, and only when no completed answer is
+ *   marked as hers.
+ */
+function directAcceptanceSnapshotOf(
   draft: Stage2PersistedDraft,
-  defaults: DirectAcceptanceStage2Defaults,
-): boolean {
-  const isUntouched =
-    Object.keys(draft.answers).length === 0 && draft.completedQuestionIds.length === 0
-  if (isUntouched) return true
-  // Key order survives a JSON round-trip unpredictably, so compare semantically.
-  return (
-    semanticHash({
+): DirectAcceptanceStage2Defaults | null {
+  if (draft.directAcceptanceOwned === true) {
+    return {
       answers: draft.answers,
-      completedQuestionIds: [...draft.completedQuestionIds].sort(),
-    }) ===
-    semanticHash({
-      answers: defaults.answers,
-      completedQuestionIds: [...defaults.completedQuestionIds].sort(),
+      completedQuestionIds: draft.completedQuestionIds,
+      answerProvenance: draft.answerProvenance,
+    }
+  }
+  if (draft.directAcceptanceOwned === false) return null
+  if (draft.completedQuestionIds.some((id) => draft.answerProvenance[id] === "user")) return null
+  const plain = buildDirectAcceptanceStage2Defaults(draft.triggerContext)
+  // Key order survives a JSON round-trip unpredictably, so compare semantically.
+  const isPlain =
+    semanticHash({ answers: draft.answers, ids: [...draft.completedQuestionIds].sort() }) ===
+    semanticHash({ answers: plain.answers, ids: [...plain.completedQuestionIds].sort() })
+  return isPlain ? plain : null
+}
+
+/**
+ * Direct acceptance publishes only what it ASSUMED. The answers it kept were read from her
+ * facts a moment earlier, so writing them back adds nothing — and would replace an edit she
+ * made in between with the stale copy (2026-10-06 review). It also keeps their historical
+ * provenance honest. `user_facts_save_v1` step 4b keeps the assumptions out of any real answer.
+ */
+function onlyAssumedFacts(saveFacts: SaveCareHabitsFacts): SaveCareHabitsFacts {
+  return (input) => {
+    const fields = input.provenance.fields ?? {}
+    const assumed = (key: string) => fields[key] === "assumed"
+    return saveFacts({
+      ...input,
+      patch: Object.fromEntries(
+        Object.entries(input.patch).filter(([key]) => assumed(key)),
+      ) as typeof input.patch,
+      provenance: {
+        ...input.provenance,
+        fields: Object.fromEntries(Object.entries(fields).filter(([key]) => assumed(key))),
+      },
     })
-  )
+  }
+}
+
+/**
+ * An unreadable facts row must not make the Idealplan unacceptable: the accept then assumes the
+ * whole path as it did before 2026-10-06, and `user_facts_save_v1` (step 4b) still keeps any
+ * stored real answer out of reach of those assumptions. Logged without the message, which
+ * carries the user id.
+ */
+async function loadKnownCareAnswersOrNothing(deps: AcceptIdealPlanDeps): Promise<KnownCareAnswers> {
+  try {
+    return await deps.loadKnownCareAnswers(deps.userId)
+  } catch (error) {
+    console.warn("personal_plan_direct_accept", {
+      event: "known_care_answers_unavailable",
+      error: error instanceof Error ? error.name : typeof error,
+    })
+    return { answers: {}, questionIds: [] }
+  }
 }
 
 /**
@@ -406,25 +501,44 @@ async function completeSyntheticRefinement(deps: AcceptIdealPlanDeps): Promise<{
   refinementRequiredCategories: ReadonlySet<PersonalPlanCategory>
 }> {
   const draft = await deps.refinementPersistence.loadOrCreate(deps.userId)
-  const defaults = buildDirectAcceptanceStage2Defaults(draft.triggerContext)
   // `save` replaces the whole answer object, so a partially answered real
   // Stage 2 would be silently overwritten — and the CAS would happily pass,
   // because the revision is current.
-  const ownedByDirectAcceptance = isDirectAcceptanceDraft(draft, defaults)
+  const untouched = isUntouchedDraft(draft)
+  const snapshot = untouched ? null : directAcceptanceSnapshotOf(draft)
+  const ownedByDirectAcceptance = untouched || snapshot !== null
   if (!ownedByDirectAcceptance && draft.status === "in_progress") {
     throw new DirectAcceptanceError("refinement_in_progress")
   }
 
   // An active Routine this flow did not create must not be relabelled as a
   // direct accept. The pure double-accept retry is exempt: its refinement draft
-  // is complete and still carries exactly these defaults.
+  // is a complete direct-acceptance snapshot AND the plan still carries the
+  // `unrefined_direct_accept` mark that activation set (any later accepted
+  // Routine clears it). Both callers treat `plan_already_accepted` as success.
   const activeRoutineVersionId = await deps.planState.loadActiveRoutineVersionId({
     userId: deps.userId,
     personalPlanId: draft.personalPlanId,
   })
-  if (activeRoutineVersionId && !(draft.status === "complete" && ownedByDirectAcceptance)) {
+  if (
+    activeRoutineVersionId &&
+    !(
+      draft.status === "complete" &&
+      ownedByDirectAcceptance &&
+      (await deps.planState.isUnrefinedDirectAccept({
+        userId: deps.userId,
+        personalPlanId: draft.personalPlanId,
+      }))
+    )
+  ) {
     throw new DirectAcceptanceError("plan_already_accepted")
   }
+
+  // The budget gate comes AFTER `plan_already_accepted` (an accepted plan is never asked for
+  // a budget: no new purchase happens there) and BEFORE any write — the draft's answers, the
+  // refined version and Stage 3 stay untouched (journey 5, C7). A plan whose active Routine is
+  // this flow's own (the idempotent double-accept replay) is accepted already, so it is exempt.
+  if (!activeRoutineVersionId) await assertShoppingBudgetSaved(deps)
 
   // Only computed once the guards above have let this accept through.
   const { previewedRoleKeys, refinementRequiredCategories } = stage1PreviewedRoleKeysForDraft(draft)
@@ -438,9 +552,16 @@ async function completeSyntheticRefinement(deps: AcceptIdealPlanDeps): Promise<{
     }
   }
 
-  // Every synthetic default this write produces is an assumption, never a real answer —
-  // see refinement/answer-provenance.ts. Computed once (M6).
-  const assumedProvenance = buildAssumedAnswerProvenance(defaults.completedQuestionIds)
+  // A fresh draft builds on her stored care answers (facts are read only here); an
+  // interrupted attempt resumes exactly the snapshot it already wrote. Stored answers the
+  // resolver kept are `user`, everything it filled in is `assumed`. Computed once (M6).
+  const defaults =
+    snapshot ??
+    buildDirectAcceptanceStage2Defaults(
+      draft.triggerContext,
+      await loadKnownCareAnswersOrNothing(deps),
+    )
+  const answerProvenance = defaults.answerProvenance
 
   const saved = await deps.refinementPersistence.save({
     userId: deps.userId,
@@ -448,7 +569,8 @@ async function completeSyntheticRefinement(deps: AcceptIdealPlanDeps): Promise<{
     expectedRevision: draft.revision,
     answers: defaults.answers,
     completedQuestionIds: defaults.completedQuestionIds,
-    answerProvenance: assumedProvenance,
+    answerProvenance,
+    directAcceptance: true,
   })
   if (saved.outcome !== "saved") throw new DirectAcceptanceError("conflict")
 
@@ -475,7 +597,7 @@ async function completeSyntheticRefinement(deps: AcceptIdealPlanDeps): Promise<{
     handoff = await createPersistedStage2RefinementGateway({
       userId: deps.userId,
       persistence: deps.refinementPersistence,
-      saveFacts: deps.saveFacts,
+      saveFacts: deps.saveFacts && onlyAssumedFacts(deps.saveFacts),
       now: deps.now,
     }).complete({ expectedRevision: saved.revision })
   } catch (error) {

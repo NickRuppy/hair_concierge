@@ -1,0 +1,21 @@
+{
+  "runtime": false,
+  "productImports": false,
+  "repositoryWrites": false,
+  "children": false,
+  "parser": "TypeScript.createSourceFile only",
+  "typescriptSHA": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675",
+  "manifestSHA": "02516c9596630d774f74679bf46ee68270740b7df26ec658184c9bd3ae4cc8ef",
+  "counts": {
+    "before": 103,
+    "transfer": 103,
+    "cut": 97
+  },
+  "unchangedCallbacks": 92,
+  "modifiedRetainedCallbacks": 5,
+  "removedCallbacks": 6,
+  "parseDiagnostics": 0,
+  "addedTestCalls": 0,
+  "addedAssertions": 0,
+  "liveOriginalHashesMatch": true
+}

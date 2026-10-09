@@ -1,0 +1,125 @@
+from pathlib import Path
+import json,hashlib,collections
+D=Path(__file__).parent;start=json.loads((D/'start-pins.json').read_text());R=Path(start['root']);inv=json.loads((D/'inventory.json').read_text());sha=lambda b:hashlib.sha256(b).hexdigest()
+def put(n,v):(D/n).write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n')
+reasons=[[
+'Oily scalp weekly_1x below high-band minimum; catches lower-bound comparison regression.',
+'Oily weekly_2x exactly lower edge; catches equality classified as below or preferred.',
+'Oily weekly_3_4x preferred; catches preferred-vs-edge precedence.',
+'Oily weekly_5_6x upper edge; catches max equality classified as above.',
+'Oily daily above maximum; catches upper-bound comparison regression.',
+'Balanced scalp medium band and all three explicit frequency endpoints; distinct default without modifiers.',
+'Irritated condition outranks oily type, retaining secondary oily caveat; catches precedence/explanation loss.',
+'Dandruff condition chooses high band and specific reason; distinct from generic concern fallback.',
+'Dry-flake condition low band and all endpoints; catches a dandruff conflation.',
+'Balanced plus oily concern shifts one band and retains base/reason; distinct concern modifier.',
+'Healthy-scalp goal shifts balanced once; catches goal signal lost independently of concern.',
+'Four upward modifiers on dry scalp cap at one band while all four reasons survive; catches cumulative overshoot/reason collapse.',
+'Curly plus breakage moves oily down; catches fragility modifier suppression.',
+'Frequent dry shampoo plus fragility keeps high base with both reasons and conflict caveat; catches unilateral modifier precedence.',
+'Oily empty shampoo inventory uses rare fallback and below/null position; distinct empty-input shape.',
+'Explicit rare shampoo item with present=false retains its frequency; distinct from absence and visible-null shape.',
+'Persistence hidden sentinel is invisible yet drives rare cadence through adapter/context; distinct integration and hidden-storage input.',
+'Visible shampoo item with null frequency uses rare fallback; cannot replace absent item/sentinel owner tests.',
+'Likely reset plus low-wash-load trigger shifts balanced upward; minimum supported reset level.',
+'Strong reset with heavy-residue trigger shifts balanced; separate trigger and reset level.',
+'Mineral-only strong reset leaves medium target and excludes cadence-relevant modifier; prevents environmental reset overreach.',
+'Weekly dry-shampoo use does not shift balanced; threshold lower neighbor.',
+'Twice-weekly dry shampoo shifts balanced once; threshold boundary.',
+'Dry-flake condition outranks broad dandruff concern with its own reason; condition/concern arbitration.',
+'Dandruff concern without specific condition selects high fallback; distinct lack-of-condition input.'
+],[
+'Persistence empty inventory retains null current frequency/present=false while projecting balanced shampoo target and missing delta; helper rare fallback is a different readset.',
+'Conditioner weekly_1x and shampoo weekly_3_4x both project complete balanced target; catches policy/mapper divergence.',
+'Curly dry/frizzy/tangled profile produces high Leave-in range with below delta; distinct needs path.',
+'Daily Mask/Oil both overused with different complete support ranges; retains both category outputs.',
+'Direct policy-only mapper receives explicit support/reset bands and returns full independent targets; runtime profile derivation does not subsume this public projection input.',
+'Daily flat-iron exposure and weekly_3_4x protection under-target; direct high-heat route.',
+'Once-weekly hot-air brush with no protection creates missing-needed weekly target; moderate-heat route boundary.',
+'Blow dryer/diffuser airflow alone yields not-relevant/null target; independent exclusion from high-heat tools.',
+'Never heat styling with a selected flat iron still yields null; frequency exclusion independent of tool classification.',
+'Severe damage daily Bondbuilder yields biweekly-to-twice-weekly range and above delta; fixture damage path.',
+'Strong buildup with low shampoo/high dry-shampoo/oil/mask load and no vulnerability permits weekly reset upper bound.',
+'Irritated scalp caps peeling to monthly and marks current weekly above; safety input distinct from reset demand.',
+'Daily dry shampoo remains overused bridge weekly1-to2 despite oily scalp; does not substitute wet cleansing.',
+'Actual runtime balanced shampoo projection serializes snake-case complete frequency target for agent context; distinct delivery adapter.'
+],[
+'Two existing compiles differ only in volatile portfolio timestamp; equal fingerprint/payload and actual authority version join. C1 keeper will additionally enforce the full default payload shape.',
+'Exact matching Bondbuilder cadence freezes into item and changed fact changes fingerprint; selected-product resolution plus hashing distinct from formatter alone.',
+'C1: identical existing compilerInput() result already exists as first in test1. Transfer all seven payload assertions before removing only this duplicate compile registration.',
+'Source revision7 vs8 must change fingerprint; keeper timestamp variance is not equivalent and cannot absorb without new input/call.',
+'Missing refined Conditioner decision must reject named category; distinct malformed portfolio linkage.',
+'Legacy v2 supplemental reset category outside renderedOrder must fail closed; distinct compatibility authority boundary.',
+'v3 same-role planned replacements must bind by decision key and retain exact assignment IDs; prevents role-only identity collision.',
+'v3 selected replacement takes precedence over pending source identity; exact planned product and assignment.',
+'v4 retained inventory cannot become routine item; distinct schema/version and presentation-only field.',
+'v1 pending assignment beside same-role planned purchase retains captured identity; legacy precedence differs from v3.',
+'Oil role basis vs optional overrides category aggregate; independent role-tier mapping.',
+'Scalp role with no tier inherits optional category assessment; inverse fallback to Oil per-role tier.'
+],[
+'Exact Bondbuilder selected product/category/role yields course copy and exact provenance. Compiler fixture uses product-bond, different caller input and adds fingerprinting; retain direct matching contract.',
+'Legacy Scalp manufacturer weekly range and category-fallback as-needed both normalize with different provenance.',
+'Mismatched product plus suitability-only kind cannot supply cadence, retains generic gap code; explicit user override takes precedence.',
+'Category Mask weekly cadence wins over exact daily label schedule; prevents manufacturer suitability widening category authority.',
+'Existing seven-row category formatting table covers seven kinds and category provenance; no new rows proposed.',
+'Existing two five-row canonical vocabularies permit exact copy only for delegated category; distinct Bondbuilder/Scalp allowlists.',
+'Existing six invalid/blank/type-only inputs plus wrong-role case fall back. Malformed legacy objects are supplied to Bondbuilder and do not prove the Scalp legacy range validator; retain this narrower category rejection contract.',
+'Duplicate matching exact rows produce generic fallback instead of arbitrary selection; ambiguity contract.',
+'Legacy Scalp daily manufacturer object produces fixed daily copy; separate legacy branch from canonical kind/copy.',
+'Old accepted payload null/displayKey and empty role-frequency legacy fallback copy; compatibility inputs absent resolved field.',
+'Actual authority reader propagates databaseError returned by fake terminal query; read failure contract only, not query authorization or live DB proof.'
+],[
+'RECOVERED: complete selected Conditioner product/image/commerce/reasoning response union.',
+'RECOVERED: selected recommendation without image falls back.',
+'RECOVERED: null currency suppresses price label.',
+'RECOVERED: complete candidate mode can select thirteenth irritation Shampoo.',
+'RECOVERED: supportive basis Conditioner accepted.',
+'RECOVERED: evaluates selected Oil recommendation rather than uncovered slot verdict.',
+'RECOVERED: evaluates complementary uncovered Scalp recommendation before image exposure.',
+'RECOVERED: exact Mask fit and unsuitable thickness fallback.',
+'RECOVERED: supportive Mask across optional/basis tiers.',
+'RECOVERED: Bondbuilder exact fit and unsuitable thickness fallback.',
+'RECOVERED: Bondbuilder tie uses selected authority product/image.',
+'RECOVERED: other-category candidate failure contains failure with surviving Shampoo.',
+'RECOVERED: two Shampoo roles yield two preview cards.',
+'RECOVERED: role-insensitive Oil shares one category load.',
+'RECOVERED: role-sensitive Shampoo performs distinct per-role loads.',
+'RECOVERED: auth denial precedes plan/catalog reads.',
+'RECOVERED: route source-bound response without Stage1 mutation.'
+],[
+'Foreign exact product scope is rejected by real Zod-backed bundle builder; one malformed foreign-ID case, not all incomplete scopes.',
+'Benefit-array permutation yields identical canonical JSON/hash; injected read-only preflight returns full explicit receipt.',
+'Leave-in same-role distinct application families accepted, duplicate family rejected, existing matching family replay accepted.',
+'Legacy V1 Leave-in family maps to V2 identity and detects source-label drift at that derived key.',
+'Exact replay accepted and each of five persisted authority fields independently rejects drift; complete existing loop retained.',
+'Only legacy Mask rendered-step source-text upgrade accepted; label drift still blocked with otherwise same legacy shape.',
+'F HELD: SQL source contains locking/conflict/privacy and source-upgrade phrases, but no execution proves atomicity/access/conflict behavior; p alias formatting is implementation-coupled. Keep all assertions unchanged until owner-level SQL proof exists.',
+'F HELD: migration text maps heat state/reapplication and contains privilege postamble, but removing EXECUTE v_definition would leave these assertions green. Preserve contract and source guard pending actual migration execution proof.',
+'F HELD: Oil insertion SQL/constraint and privilege phrases remain green if transformation execution is omitted. Preserve actual insert/access contract; no removal credit.',
+'F HELD: CLI source has git commands/error literals, but unused/commented checks satisfy it. Reviewed-head/clean-worktree behavior needs executable operator boundary proof; held unchanged.',
+'Published artifact contract runs real schema/canonicalization for every discovered bundle and checks cohort categories/global IDs. Current106 catalog products structurally inventoried; payload copy/provenance not fully human re-audited here.'
+],[
+'Canonical category order, explicit Oil/Scalp/Heat roles, Conditioner multiplicity and non-fixture authority provenance; public schema/version authority contract.',
+'All18 canonical roles have exactly one category owner; uniqueness/coverage invariant independent of exact lists.',
+'Captured product valid positive plus missing userProductId, invalid frequency and foreign category negatives; exact owned identity schema.',
+'Cross-category roles, missing qualifying heat routes, empty heat requirement positive, and explicit choice/verdict/acknowledgment gates.',
+'Replacement action and selected candidate/fact fingerprint retained in canonical recovery state; changed fingerprint and different semantic action rejected.',
+'Baseline valid, Conditioner multiple same-role owned products valid, duplicate Oil purpose invalid; multiplicity policy independent of subject rendering.',
+'Each assigned product-role and uncovered gap becomes exact ordered subject; forged decision key fails subject membership.',
+'Reopening category cannot reorder authority role/category order; same gaps permuted, exact two outputs retained.',
+'Need-revision pass plus pending inventory authority and inventory-only disposition accepted in actual draft schema.',
+'Unassigned captured inventory contributes one disposition subject after role subject, exact key/category/role/identity.',
+'Uncovered gap can be planned but not owned_active; schema/derived-subject guard.',
+'Pending source planned replacement requires select_replacement plus canonical evidence; dropping semantic action rejects.'
+]]
+owners=[['src/lib/recommendation-engine/shampoo-cadence.ts:1-311','src/lib/recommendation-engine/effective-care-context.ts:1-212','src/lib/recommendation-engine/adapters/from-persistence.ts:1-199'],['src/lib/recommendation-engine/runtime.ts:126-172','src/lib/recommendation-engine/care-balance/evaluators.ts:1-727','src/lib/recommendation-engine/care-balance/frequency-targets.ts:1-151','src/lib/agent/tools/care-balance-context.ts:119-186'],['src/lib/personal-plan/routine-candidate-compiler.ts:1-525','src/lib/personal-plan/products/contracts.ts:1098-1199','src/lib/personal-plan/routine/cadence.ts:1-233'],['src/lib/personal-plan/routine/cadence.ts:1-233','src/lib/personal-plan/routine/cadence-authority.ts:1-48'],['src/lib/personal-plan/product-previews.ts:1-350','src/app/api/personal-plan/stage-1/previews/route.ts:1-100'],['src/lib/product-intake/catalog-enrichment/stage5-catalog-bundle.ts:1-390','scripts/product-intake/catalog-enrichment/stage5-catalog-bundle-client.ts:1-110','src/lib/product-intake/catalog-enrichment/stage5-v2-builder.ts:1-349'],['src/lib/personal-plan/products/contracts.ts:1-1547','src/lib/personal-plan/products/authorities.ts:1-137','src/lib/personal-plan/products/recovery-desired-state.ts:1-108']]
+ledger=[];md=['# Residual deterministic care: 102 declarations','', '97 R / 4 F held unchanged / 1 conditional C / 0 D. Fresh full callback/helper/table review:85 declarations in six files. Recovered full prior current-byte ledger:17 product-preview declarations; direct current producer and route refreshed. This is not a fresh independent re-audit of those17. No runtime proof run.','']
+for i,f in enumerate(inv):
+ assert len(reasons[i])==len(f['rows'])
+ md+=['## '+f['file'],'',f"Original SHA256 `{f['sha256']}`; {len(f['rows'])} declarations.",'']
+ for j,r in enumerate(f['rows']):
+  mark='C' if i==2 and j==2 else 'F' if i==5 and 6<=j<=9 else 'R'
+  row=dict(file=f['file'],ordinal=r['ordinal'],line=r['line'],endLine=r['endLine'],title=r['title'],classification=mark,reason=reasons[i][j],ownerEvidence=owners[i],readDepth='recovered complete callback ledger with exact current test SHA; fresh complete direct producer/route' if i==4 else 'fresh full test/helper/table bodies; operative owners and bounded caller/dependency slices recorded separately',callbackSHA256=r['callbackSHA256'],assertions=r['assertions'],calls=r['calls'],keeper='same-file deterministic/volatile metadata test:184' if mark=='C' else 'this existing registration remains',runtime='UNRUN; actual runtime baseline belongs to main',fixtureReadLimit='Published JSON artifact structural identity/family table106 read; full provenance/copy strings not human re-audited' if i==5 and j==10 else None)
+  ledger.append(row);md+=[f"- **{mark} L{r['line']}** {r['title']}: {reasons[i][j]} Owner: {'; '.join(owners[i])}."]
+ md+=['']
+put('ledger.json',ledger);(D/'complete-ledger.md').write_text('\n'.join(md)+'\n');print(collections.Counter(x['classification'] for x in ledger))

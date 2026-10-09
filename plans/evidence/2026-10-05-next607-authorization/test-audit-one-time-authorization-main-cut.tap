@@ -1,0 +1,275 @@
+TAP version 13
+# Subtest: every package references registered landing, quiz, and offer variants
+ok 1 - every package references registered landing, quiz, and offer variants
+  ---
+  duration_ms: 0.461333
+  ...
+# Subtest: the two live flows register the organic and Personal Plan offers
+ok 2 - the two live flows register the organic and Personal Plan offers
+  ---
+  duration_ms: 0.063875
+  ...
+# Subtest: landing route owns tracking outside contributor variants
+ok 3 - landing route owns tracking outside contributor variants
+  ---
+  duration_ms: 0.177167
+  ...
+# Subtest: result client injects one shared pricing slot into the selected offer
+ok 4 - result client injects one shared pricing slot into the selected offer
+  ---
+  duration_ms: 0.265125
+  ...
+# Subtest: result route preserves trusted stored result context before recording an offer view
+ok 5 - result route preserves trusted stored result context before recording an offer view
+  ---
+  duration_ms: 0.092292
+  ...
+# Subtest: result route keeps fresh quiz completions distinct from saved-result visits
+ok 6 - result route keeps fresh quiz completions distinct from saved-result visits
+  ---
+  duration_ms: 0.100333
+  ...
+# Subtest: quiz completion hands no-access results to the canonical result route
+ok 7 - quiz completion hands no-access results to the canonical result route
+  ---
+  duration_ms: 0.104208
+  ...
+# Subtest: personal-plan pricing allocation is deterministic and has exclusive pricing modes
+ok 8 - personal-plan pricing allocation is deterministic and has exclusive pricing modes
+  ---
+  duration_ms: 0.5365
+  ...
+# Subtest: retired one-time arm is never assigned to a new Personal Plan session
+ok 9 - retired one-time arm is never assigned to a new Personal Plan session
+  ---
+  duration_ms: 0.05925
+  ...
+# Subtest: personal-plan pricing experiment flag is enabled only by exact true
+ok 10 - personal-plan pricing experiment flag is enabled only by exact true
+  ---
+  duration_ms: 0.106084
+  ...
+# Subtest: personal-plan launch pricing flag defaults off and enables only for exact true
+ok 11 - personal-plan launch pricing flag defaults off and enables only for exact true
+  ---
+  duration_ms: 0.05275
+  ...
+# Subtest: QA token helper defaults to a five-minute TTL when the option is omitted
+ok 12 - QA token helper defaults to a five-minute TTL when the option is omitted
+  ---
+  duration_ms: 163.573542
+  ...
+# Subtest: personal-plan resolver uses the historical base for disabled, missing, viewed-base, and ineligible sessions
+ok 13 - personal-plan resolver uses the historical base for disabled, missing, viewed-base, and ineligible sessions
+  ---
+  duration_ms: 0.196208
+  ...
+# Subtest: personal-plan resolver persists an enabled unviewed assignment against the base identity
+ok 14 - personal-plan resolver persists an enabled unviewed assignment against the base identity
+  ---
+  duration_ms: 0.1955
+  ...
+# Subtest: persisted retired one-time arms resolve to the subscription presentation
+ok 15 - persisted retired one-time arms resolve to the subscription presentation
+  ---
+  duration_ms: 0.0845
+  ...
+# Subtest: a persisted retired arm is left intact for historic reporting
+ok 16 - a persisted retired arm is left intact for historic reporting
+  ---
+  duration_ms: 0.177208
+  ...
+# Subtest: a persisted retired arm does not attempt a reset or database read
+ok 17 - a persisted retired arm does not attempt a reset or database read
+  ---
+  duration_ms: 0.280333
+  ...
+# Subtest: assignment races use the persisted winner while assignment failures stay on the base
+ok 18 - assignment races use the persisted winner while assignment failures stay on the base
+  ---
+  duration_ms: 0.222458
+  ...
+# Subtest: QA token validation binds the atomic assignment to one lead/session/package
+ok 19 - QA token validation binds the atomic assignment to one lead/session/package
+  ---
+  duration_ms: 0.774917
+  ...
+# Subtest: accepts the allowlisted Elements presentation only for quiz-result offers
+ok 20 - accepts the allowlisted Elements presentation only for quiz-result offers
+  ---
+  duration_ms: 1.620625
+  ...
+# Subtest: retired one-time purchase requests stop before account or provider work
+ok 21 - retired one-time purchase requests stop before account or provider work
+  ---
+  duration_ms: 3.9285
+  ...
+# Subtest: accepts only one-time prepare/claim and rejects direct creation or a missing lead
+ok 22 - accepts only one-time prepare/claim and rejects direct creation or a missing lead
+  ---
+  duration_ms: 1.010042
+  ...
+# Subtest: unsupported one-time direct creation stops at the request boundary
+ok 23 - unsupported one-time direct creation stops at the request boundary
+  ---
+  duration_ms: 0.589709
+  ...
+# Subtest: quiz-offer membership idempotency is stable within a Session attempt and fresh on retry
+ok 24 - quiz-offer membership idempotency is stable within a Session attempt and fresh on retry
+  ---
+  duration_ms: 0.165542
+  ...
+# Subtest: pinned offer attribution falls back only to the same signed cookie session
+ok 25 - pinned offer attribution falls back only to the same signed cookie session
+  ---
+  duration_ms: 0.066542
+  ...
+# Subtest: Customer.io return trial requires the signed session to be bound to the exact checkout lead
+ok 26 - Customer.io return trial requires the signed session to be bound to the exact checkout lead
+  ---
+  duration_ms: 0.253792
+  ...
+# Subtest: missing exact offer attribution is reported without identifiers or blocking checkout
+ok 27 - missing exact offer attribution is reported without identifiers or blocking checkout
+  ---
+  duration_ms: 0.180583
+  ...
+# Subtest: rejects generic UI modes and non-offer Elements presentation requests
+ok 28 - rejects generic UI modes and non-offer Elements presentation requests
+  ---
+  duration_ms: 0.434667
+  ...
+# Subtest: requires both public checkout flags before accepting an Elements session
+ok 29 - requires both public checkout flags before accepting an Elements session
+  ---
+  duration_ms: 0.286125
+  ...
+# Subtest: preparation never owns a checkout-start funnel event or touch consumption
+ok 30 - preparation never owns a checkout-start funnel event or touch consumption
+  ---
+  duration_ms: 0.05225
+  ...
+# Subtest: one-time checkout reuses only an open Stripe Session with a client secret
+ok 31 - one-time checkout reuses only an open Stripe Session with a client secret
+  ---
+  duration_ms: 0.136333
+  ...
+# Subtest: prepared and recovered one-time Sessions use a capped server-clock application deadline
+ok 32 - prepared and recovered one-time Sessions use a capped server-clock application deadline
+  ---
+  duration_ms: 0.059125
+  ...
+# Subtest: prepared checkout retries keep the provider idempotency proof stable until refresh
+ok 33 - prepared checkout retries keep the provider idempotency proof stable until refresh
+  ---
+  duration_ms: 0.094875
+  ...
+# Subtest: prepared checkout failures use one generic client payload
+ok 34 - prepared checkout failures use one generic client payload
+  ---
+  duration_ms: 0.036125
+  ...
+# Subtest: prepared checkout control outcomes capture a sanitized, correlated degradation signal
+ok 35 - prepared checkout control outcomes capture a sanitized, correlated degradation signal
+  ---
+  duration_ms: 0.433708
+  ...
+# Subtest: prepared checkout control telemetry failure is contained
+ok 36 - prepared checkout control telemetry failure is contained
+  ---
+  duration_ms: 0.120375
+  ...
+# Subtest: prepared checkout control telemetry flush does not delay the recovery response
+ok 37 - prepared checkout control telemetry flush does not delay the recovery response
+  ---
+  duration_ms: 4.05025
+  ...
+# Subtest: prepared checkout control telemetry does not schedule a flush without an event receipt
+ok 38 - prepared checkout control telemetry does not schedule a flush without an event receipt
+  ---
+  duration_ms: 0.088
+  ...
+# Subtest: checkout initialization failures retain only closed provider causes
+ok 39 - checkout initialization failures retain only closed provider causes
+  ---
+  duration_ms: 0.0905
+  ...
+# Subtest: unexpected checkout initialization failures capture once, flush once, and use live runtime truth
+ok 40 - unexpected checkout initialization failures capture once, flush once, and use live runtime truth
+  ---
+  duration_ms: 0.165292
+  ...
+# Subtest: rejects Elements presentation for membership reactivation inputs
+ok 41 - rejects Elements presentation for membership reactivation inputs
+  ---
+  duration_ms: 0.168084
+  ...
+# Subtest: keeps tightly-scoped subscription preparation only for the documented asset-drain window
+ok 42 - keeps tightly-scoped subscription preparation only for the documented asset-drain window
+  ---
+  duration_ms: 0.137167
+  ...
+# Subtest: requires an opaque token, matching Session reference, and real attempt IDs to claim
+ok 43 - requires an opaque token, matching Session reference, and real attempt IDs to claim
+  ---
+  duration_ms: 0.071833
+  ...
+# Subtest: accepts only the exact preparation token for an open, matching Session
+ok 44 - accepts only the exact preparation token for an open, matching Session
+  ---
+  duration_ms: 0.233958
+  ...
+# Subtest: rejects expired or non-open prepared Sessions
+ok 45 - rejects expired or non-open prepared Sessions
+  ---
+  duration_ms: 0.046792
+  ...
+# Subtest: rejects claim metadata and line-item mismatches
+ok 46 - rejects claim metadata and line-item mismatches
+  ---
+  duration_ms: 0.15675
+  ...
+# Subtest: derives a prepared launch claim from its allowlisted stored Price after flag-off
+ok 47 - derives a prepared launch claim from its allowlisted stored Price after flag-off
+  ---
+  duration_ms: 0.185958
+  ...
+# Subtest: rejects prepared subscription Prices with unknown or mismatched catalog metadata
+ok 48 - rejects prepared subscription Prices with unknown or mismatched catalog metadata
+  ---
+  duration_ms: 0.108583
+  ...
+# Subtest: accepts a pre-deploy standard prepared Session without catalog metadata
+ok 49 - accepts a pre-deploy standard prepared Session without catalog metadata
+  ---
+  duration_ms: 0.047042
+  ...
+# Subtest: allows only an idempotent same-attempt claim after a prepared Session is claimed
+ok 50 - allows only an idempotent same-attempt claim after a prepared Session is claimed
+  ---
+  duration_ms: 0.063916
+  ...
+# Subtest: claim updates are serialized by preparation id and only accept returned matching metadata
+ok 51 - claim updates are serialized by preparation id and only accept returned matching metadata
+  ---
+  duration_ms: 0.059458
+  ...
+# Subtest: one-time prepared claims use the accepted consent's funnel session over a later cookie
+ok 52 - one-time prepared claims use the accepted consent's funnel session over a later cookie
+  ---
+  duration_ms: 0.139041
+  ...
+# Subtest: already-complete one-time prepared claims repair only missing canonical consent metadata
+ok 53 - already-complete one-time prepared claims repair only missing canonical consent metadata
+  ---
+  duration_ms: 0.183041
+  ...
+1..53
+# tests 53
+# suites 0
+# pass 53
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1233.176916

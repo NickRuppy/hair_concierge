@@ -318,6 +318,89 @@ test("a swap must name a product the cockpit displayed for that very step", asyn
   )
 })
 
+test("an empty tie step accepts an equally ideal product and still refuses one nobody offered", async () => {
+  const BOND_KEY = "decision:bondbuilder:specialized_bond_treatment:gap"
+  const equal = "30000000-0000-4000-8000-0000000000e1"
+  const bondStep: DiscoveryIdealStep = {
+    decisionKey: BOND_KEY,
+    category: "bondbuilder",
+    role: "specialized_bond_treatment",
+    section: "basis",
+    categoryLabel: "Bondbuilder",
+    roleLabel: "Strukturpflege",
+    roleDescription: null,
+    frequencyLabel: "nach Herstellerangabe",
+    preview: {
+      kind: "recommendation",
+      category: "bondbuilder",
+      role: "specialized_bond_treatment",
+      decisionKey: BOND_KEY,
+      productId: ids.ideal,
+      productName: "K18 Leave-In",
+      imageUrl: "https://catalog.example/k18.jpg",
+      verdict: "ideal",
+      authorityVersion: "v1",
+      factFingerprint: "fp",
+      commerce: {
+        priceEur: null,
+        purchaseLinkStatus: null,
+        netContentValue: null,
+        netContentUnit: null,
+        priceLabel: null,
+        netContentLabel: null,
+        availabilityLabel: null,
+        productUrl: null,
+        affiliateDisclosure: null,
+      },
+      reasoning: { productCriteria: "Struktur.", fit: "Passt.", frequency: "nach Bedarf" },
+    },
+    equalOptions: [
+      {
+        productId: equal,
+        productName: "Elvital Pre-Shampoo",
+        priceLabel: "8,95 €",
+        imageUrl: null,
+      },
+    ],
+  }
+  const model: DiscoveryCockpitModel = {
+    ...readyModel(),
+    steps: [bondStep],
+    verdicts: [],
+    routine: composeDiscoveryRefinedRoutine({
+      steps: [bondStep],
+      items: [],
+      decisions: [],
+      swapProducts: [],
+    }),
+  }
+  const written: DiscoveryCallDecisionInput[] = []
+  const handler = createDiscoveryDecisionsHandler(
+    baseDeps({
+      loadModel: async () => model,
+      setDecision: async (input: DiscoveryCallDecisionInput) => {
+        written.push(input)
+        return stored(input)
+      },
+    }),
+  )
+  const chosen = await handler(
+    decisionRequest({ decisionKey: BOND_KEY, decision: "swap", swapProductId: equal }),
+    params,
+  )
+  assert.equal(chosen.status, 200)
+  const stranger = await handler(
+    decisionRequest({ decisionKey: BOND_KEY, decision: "swap", swapProductId: ids.stranger }),
+    params,
+  )
+  assert.equal(stranger.status, 400)
+  assert.equal(await code(stranger), "swap_not_offered")
+  assert.deepEqual(
+    written.map((entry) => entry.swapProductId),
+    [equal],
+  )
+})
+
 test("a decision key the Idealplan does not carry is refused", async () => {
   const response = await createDiscoveryDecisionsHandler(
     baseDeps({

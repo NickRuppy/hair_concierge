@@ -1,0 +1,3 @@
+{"status":"PASS_PRESEAL_SYNTAX_ONLY","parsedTools":9,"proofPrefixByteExact":true,"proofPrefixSHA256":"8fd1199bf6980cf2951420c82dfb978e6827e9566fe97df2622a5ec297d4bf38","nativeRuns":0,"identityDispositionPending":true}
+{"staticReadOnlyEnforced":true,"attemptedWrites":0,"attemptedChildren":0}
+{"attemptedOwnerImports":0,"attemptedNetworkCalls":0}

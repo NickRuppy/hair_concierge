@@ -210,9 +210,14 @@ test("Stage 2 save derives the owner server-side and maps validation, conflict a
 
 test("Stage 2 final save reuses one authorized gateway for durable save and completion", async () => {
   const calls: string[] = []
+  let recomputeCalls = 0
   const savedSession = { ...session, revision: 1 }
   const response = await createStage2RouteHandlers(
     deps({
+      runHabitsRecompute: async () => {
+        recomputeCalls += 1
+        return null
+      },
       gatewayFor: () =>
         gateway({
           saveAnswer: async () => {
@@ -238,6 +243,7 @@ test("Stage 2 final save reuses one authorized gateway for durable save and comp
   )
 
   assert.deepEqual(calls, ["save", "complete:1"])
+  assert.equal(recomputeCalls, 0)
   assert.deepEqual(await response.json(), {
     session: JSON.parse(JSON.stringify(savedSession)),
     handoff: { refinedVersionId: "refined-1", nextHref: "/plan-start" },
@@ -556,40 +562,6 @@ test("Stage 2 products module completion never runs the recompute lane", async (
   assert.deepEqual(await response.json(), {
     session: JSON.parse(JSON.stringify(savedSession)),
     moduleCompletion,
-  })
-})
-
-test("Stage 2 legacy completeAfterSave never runs the recompute lane", async () => {
-  const savedSession = { ...session, revision: 1 }
-  let calls = 0
-  const response = await createStage2RouteHandlers(
-    deps({
-      gatewayFor: () =>
-        gateway({
-          saveAnswer: async () => savedSession,
-          complete: async () => ({ refinedVersionId: "refined-legacy", nextHref: "/plan-start" }),
-        }),
-      runHabitsRecompute: async () => {
-        calls += 1
-        return null
-      },
-    }),
-  ).PATCH(
-    new Request("http://test/api/personal-plan/stage-2", {
-      method: "PATCH",
-      body: JSON.stringify({
-        questionId: "night_protection",
-        answer: [],
-        expectedRevision: 0,
-        completeAfterSave: true,
-      }),
-    }),
-  )
-
-  assert.equal(calls, 0)
-  assert.deepEqual(await response.json(), {
-    session: JSON.parse(JSON.stringify(savedSession)),
-    handoff: { refinedVersionId: "refined-legacy", nextHref: "/plan-start" },
   })
 })
 
@@ -1029,4 +1001,46 @@ test("Stage 2: only a successful habits module completion runs the facts lane", 
   )
 
   assert.equal(laneCalls, 0)
+})
+
+test("an unexpected Stage 2 load failure stays a generic 503 but reports its real cause", async () => {
+  const reports: Array<{ route: string; error: unknown }> = []
+  const failure = Object.assign(new Error("column hair_profiles.x does not exist"), {
+    code: "42703",
+  })
+  const response = await createStage2RouteHandlers(
+    deps({
+      gatewayFor: () =>
+        gateway({
+          load: async () => {
+            throw failure
+          },
+        }),
+      reportUnexpectedError: (route, error) => reports.push({ route, error }),
+    }),
+  ).GET()
+
+  assert.deepEqual(
+    [response.status, await response.json()],
+    [503, { error: "temporarily_unavailable" }],
+  )
+  assert.deepEqual(reports, [{ route: "stage2_load_or_save", error: failure }])
+})
+
+test("a typed Stage 2 error is answered without an unexpected-error report", async () => {
+  const reports: unknown[] = []
+  const response = await createStage2RouteHandlers(
+    deps({
+      gatewayFor: () =>
+        gateway({
+          load: async () => {
+            throw new Stage2RefinementError("revision_conflict")
+          },
+        }),
+      reportUnexpectedError: (_route, error) => reports.push(error),
+    }),
+  ).GET()
+
+  assert.equal(response.status, 409)
+  assert.deepEqual(reports, [])
 })

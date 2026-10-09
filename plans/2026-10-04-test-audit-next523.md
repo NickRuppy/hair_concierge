@@ -1,0 +1,15 @@
+# Next conditional test-audit cut: 504 → 523
+
+Outcome: remove up to19 least-useful existing declarations while preserving the complete original assertion union at existing equivalent owner inputs; no new cases, renders, calls or skip inflation. User already authorized the20% campaign and routine pruning. Original11,892; target2,379; measured504 remains the current coverage-verified result until this phase closes.
+
+Scope: Premium/checkout11, QuizOptionCard4, tooling4. All ten manual regression callbacks and request-interpretation JSON remain: two additional contract consumers invalidate the prior obsolete-fixture proposal. No application feature retirement, provider/DB writes, publication or commits.
+
+Settled decisions: keep customer/payment/persistence/security/default/negative/ARIA contracts; move donor clauses into already-produced outputs only. Seven benefit renders retain fixed independent literal expected arrays. Quiz clauses concern SSR markup/classes, not computed browser layout. Checkout harness deliberately skips effects and observes the parent starting state, not provider transport. Tooling uses isolated local Git fixtures; default two versus donor three feature commits are both multi-commit squash cases, and fresh independent full APPLY review now supports C2 on this ancestry/exact-tip/lease readset. No quota for expanded runtime cases or private-export cleanup.
+
+Evidence: full cohort ledgers27/13/74, complete callback/fixture/readset proofs and immutable guarded phase snapshots under next523 evidence. Main has read proposed unions and independent Premium/Option preflights. Baseline14 nativefiles135PASS, no skips/cancels. Tooling preflight C1/C3/D1 supports; the initial C2 input-cardinality objection was withdrawn after reading the default two-commit fixture and complete APPLY owner.
+
+Route: guarded before checks; assertion transfers while every other runner is closed; same native baseline remains green; serial22 Premium +6 Option +5 tooling actual-owner faults each require one intended assertion failure, exact restoration and one restored pass; main inspects every actual error before cuts. Cut only successful candidates, format, fresh AST count and focused native checks. Frozen full c8/native plus ci:verify then compare actual and conservative original-path coverage against2 percentage points. Original26 failure identities and15 skips must remain exact; inspect any new raw per-file declines. Restore only own changed bytes from unique snapshots if proof fails; do not overwrite unexpected concurrent bytes.
+
+Counterpart checkpoint: local Claude CLI unavailable (Not logged in, no API key); unchanged authentication failure is cached. No current counterpart approval or review-ready/publication claim. Local reversible proof proceeds; whole-branch counterpart review remains open.
+
+Expected if19 supported:11,369 declarations (Node10,844 + PW525),523 net removals,1,856 to target. This count is now measured and frozen full-proof verified; see evidence/2026-10-04-final523-coverage.md. Keep audit work moving after verification;20% outcome remains incomplete.

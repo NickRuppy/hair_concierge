@@ -1,0 +1,162 @@
+[
+  {
+    "id": "C1",
+    "donor": {
+      "file": "tests/personal-plan-refinement-recompute-activation.test.ts",
+      "name": "a module-driven recompute activates the successor immediately instead of proposing it",
+      "line": 252,
+      "start": 10531,
+      "end": 11463,
+      "body": "test(\"a module-driven recompute activates the successor immediately instead of proposing it\", async () => {\n  const world = emptyWorld(\"routine-active\")\n  const stager = createRoutineProposalStagerRpcAdapter({\n    client: createV2Client({\n      productDraftRefinedVersionId: \"refined-module-2\",\n      refinementDrafts: [\n        {\n          moduleProjections: { products: { needVersionId: \"refined-module-1\" } },\n          resultRefinedNeedVersionId: \"refined-module-2\",\n        },\n      ],\n      world,\n    }),\n  })\n\n  const result = await stager.stage(stageRequest)\n\n  assert.equal(result.status, \"completed\")\n  assert.equal(result.status === \"completed\" ? result.routineProposalId : \"unset\", null)\n  assert.equal(world.plan.activeRoutineVersionId, world.routineVersions.at(-1))\n  assert.equal(world.plan.pendingProposalId, null)\n  assert.deepEqual(\n    world.proposals.map((proposal) => proposal.status),\n    [\"accepted\"],\n  )\n})",
+      "sha256": "193dd8d8ad07fac1bf2f027e18b9fd0dfbe6bbfeb3ffb0907e4452c1fff2b534"
+    },
+    "keeper": {
+      "file": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+      "name": "the closing completion of a Modul-1-projected draft activates the successor immediately (result_refined_need_version_id branch)",
+      "line": 479,
+      "start": 17869,
+      "end": 21298,
+      "body": "test(\"the closing completion of a Modul-1-projected draft activates the successor immediately (result_refined_need_version_id branch)\", async (t) => {\n  const pg = await migratedPersonalPlanDatabase(t)\n  const initial = await seedPlan(pg, \"seed-2c\")\n\n  // First establish an ALREADY-ACTIVE Routine from an ordinary linear refined\n  // version, so the closing completion below has something to recompute.\n  const previousRefined = await linearRefinedVersion(pg, {\n    draftId: id(2, 2),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"b\".repeat(64),\n  })\n  const previousDraft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: previousRefined,\n  })\n  const beforePlan = await readPlan(pg, initial.personalPlanId)\n  const activated = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: previousDraft.id,\n    expectedDraftRevision: previousDraft.revision,\n    expectedSourceRevision: beforePlan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: previousRefined,\n      sourceDraftRevision: previousDraft.revision,\n    }),\n  })\n  assert.equal(activated.status, \"completed\")\n\n  // Canonical order: Modul-1 (products) projects a refined version WITHOUT\n  // closing the draft, then the draft is CLOSED. The refined version the\n  // Stage-3 completion below actually targets is the CLOSING one\n  // (result_refined_need_version_id), which never appears as a\n  // module_projections VALUE — only `refinement.result_refined_need_version_id\n  // = v_refined_id` can satisfy condition 1 here.\n  const closingRefined = await closingCompletionRefinedVersion(pg, {\n    draftId: id(3, 3),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    moduleInputHash: \"c\".repeat(64),\n    closeInputHash: \"d\".repeat(64),\n  })\n  const closingDraft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: closingRefined,\n  })\n  const midPlan = await readPlan(pg, initial.personalPlanId)\n\n  const result = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: closingDraft.id,\n    expectedDraftRevision: closingDraft.revision,\n    expectedSourceRevision: midPlan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: closingRefined,\n      sourceDraftRevision: closingDraft.revision,\n    }),\n  })\n  assert.equal(result.status, \"completed\")\n  assert.equal(\n    result.routineProposalId,\n    null,\n    \"staged AND confirmed within the same transaction — the closing draft still satisfies condition 1 via result_refined_need_version_id\",\n  )\n\n  const after = await readPlan(pg, initial.personalPlanId)\n  assert.equal(after.active_routine_version_id, result.routineVersionId)\n  assert.notEqual(after.active_routine_version_id, activated.routineVersionId)\n  assert.equal(after.pending_routine_proposal_id, null)\n\n  const proposalRows = await pg.query<{ status: string }>(\n    \"SELECT status FROM public.personal_plan_routine_proposals WHERE personal_plan_id = $1 ORDER BY created_at\",\n    [initial.personalPlanId],\n  )\n  assert.deepEqual(\n    proposalRows.rows.map((row) => row.status),\n    [\"accepted\"],\n  )\n})",
+      "sha256": "491d41882b7c9cf135c396181a4bf04ad5ddb4a8afaf891701e0702b8f1dad64"
+    },
+    "keeperAfter": {
+      "file": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+      "name": "the closing completion of a Modul-1-projected draft activates the successor immediately (result_refined_need_version_id branch)",
+      "line": 479,
+      "start": 17869,
+      "end": 21298,
+      "body": "test(\"the closing completion of a Modul-1-projected draft activates the successor immediately (result_refined_need_version_id branch)\", async (t) => {\n  const pg = await migratedPersonalPlanDatabase(t)\n  const initial = await seedPlan(pg, \"seed-2c\")\n\n  // First establish an ALREADY-ACTIVE Routine from an ordinary linear refined\n  // version, so the closing completion below has something to recompute.\n  const previousRefined = await linearRefinedVersion(pg, {\n    draftId: id(2, 2),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"b\".repeat(64),\n  })\n  const previousDraft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: previousRefined,\n  })\n  const beforePlan = await readPlan(pg, initial.personalPlanId)\n  const activated = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: previousDraft.id,\n    expectedDraftRevision: previousDraft.revision,\n    expectedSourceRevision: beforePlan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: previousRefined,\n      sourceDraftRevision: previousDraft.revision,\n    }),\n  })\n  assert.equal(activated.status, \"completed\")\n\n  // Canonical order: Modul-1 (products) projects a refined version WITHOUT\n  // closing the draft, then the draft is CLOSED. The refined version the\n  // Stage-3 completion below actually targets is the CLOSING one\n  // (result_refined_need_version_id), which never appears as a\n  // module_projections VALUE — only `refinement.result_refined_need_version_id\n  // = v_refined_id` can satisfy condition 1 here.\n  const closingRefined = await closingCompletionRefinedVersion(pg, {\n    draftId: id(3, 3),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    moduleInputHash: \"c\".repeat(64),\n    closeInputHash: \"d\".repeat(64),\n  })\n  const closingDraft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: closingRefined,\n  })\n  const midPlan = await readPlan(pg, initial.personalPlanId)\n\n  const result = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: closingDraft.id,\n    expectedDraftRevision: closingDraft.revision,\n    expectedSourceRevision: midPlan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: closingRefined,\n      sourceDraftRevision: closingDraft.revision,\n    }),\n  })\n  assert.equal(result.status, \"completed\")\n  assert.equal(\n    result.routineProposalId,\n    null,\n    \"staged AND confirmed within the same transaction — the closing draft still satisfies condition 1 via result_refined_need_version_id\",\n  )\n\n  const after = await readPlan(pg, initial.personalPlanId)\n  assert.equal(after.active_routine_version_id, result.routineVersionId)\n  assert.notEqual(after.active_routine_version_id, activated.routineVersionId)\n  assert.equal(after.pending_routine_proposal_id, null)\n\n  const proposalRows = await pg.query<{ status: string }>(\n    \"SELECT status FROM public.personal_plan_routine_proposals WHERE personal_plan_id = $1 ORDER BY created_at\",\n    [initial.personalPlanId],\n  )\n  assert.deepEqual(\n    proposalRows.rows.map((row) => row.status),\n    [\"accepted\"],\n  )\n})",
+      "sha256": "491d41882b7c9cf135c396181a4bf04ad5ddb4a8afaf891701e0702b8f1dad64"
+    },
+    "adapterKeeper": {
+      "file": "tests/personal-plan/persistence/routine-proposal-stager.test.ts",
+      "name": "activation-aware delegating RPC permits no proposal pointer for first activation",
+      "line": 98,
+      "start": 2942,
+      "end": 3874,
+      "body": "test(\"activation-aware delegating RPC permits no proposal pointer for first activation\", async () => {\n  const calls: Array<{ fn: string; args: Record<string, unknown> }> = []\n  const result = await createRoutineProposalStagerRpcAdapter({\n    client: {\n      async rpc(fn, args) {\n        calls.push({ fn, args })\n        return {\n          data: {\n            status: \"completed\",\n            portfolioVersionId: \"portfolio-1\",\n            routineVersionId: \"routine-1\",\n            routineProposalId: null,\n            revision: 5,\n          },\n          error: null,\n        }\n      },\n    },\n  }).stage(request)\n\n  assert.deepEqual(result, {\n    status: \"completed\",\n    portfolioVersionId: \"portfolio-1\",\n    routineVersionId: \"routine-1\",\n    routineProposalId: null,\n    revision: 5,\n  })\n  assert.equal(calls[0]?.fn, \"personal_plan_complete_draft_activate_v2\")\n  assert.equal(calls[0]?.args.p_expected_source_revision, 7)\n})",
+      "sha256": "5df2815e3234412fc428aebb42d6d53df1bbe4ea2504d78e4859811d08066014"
+    },
+    "status": "conditional: main native and actual-owner controls pending"
+  },
+  {
+    "id": "C2",
+    "donor": {
+      "file": "tests/personal-plan-refinement-recompute-activation.test.ts",
+      "name": "a module-1 projection activates immediately even before the closing module",
+      "line": 279,
+      "start": 11465,
+      "end": 12151,
+      "body": "test(\"a module-1 projection activates immediately even before the closing module\", async () => {\n  const world = emptyWorld(\"routine-active\")\n  const stager = createRoutineProposalStagerRpcAdapter({\n    client: createV2Client({\n      productDraftRefinedVersionId: \"refined-module-1\",\n      refinementDrafts: [\n        {\n          moduleProjections: { products: { needVersionId: \"refined-module-1\" } },\n          resultRefinedNeedVersionId: null,\n        },\n      ],\n      world,\n    }),\n  })\n\n  const result = await stager.stage(stageRequest)\n\n  assert.equal(result.status === \"completed\" ? result.routineProposalId : \"unset\", null)\n  assert.equal(world.plan.pendingProposalId, null)\n})",
+      "sha256": "3f35736ada2314539fd9863f09a4a1a78e01051c1db95df5373bdd9956546d79"
+    },
+    "keeper": {
+      "file": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+      "name": "a module-driven recompute activates the successor immediately instead of proposing it",
+      "line": 238,
+      "start": 8931,
+      "end": 11998,
+      "body": "test(\"a module-driven recompute activates the successor immediately instead of proposing it\", async (t) => {\n  const pg = await migratedPersonalPlanDatabase(t)\n  const initial = await seedPlan(pg, \"seed-2\")\n\n  // First establish an ALREADY-ACTIVE Routine from an ordinary linear refined\n  // version, so the module-driven completion below has something to recompute.\n  const previousRefined = await linearRefinedVersion(pg, {\n    draftId: id(2, 2),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"b\".repeat(64),\n  })\n  const previousDraft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: previousRefined,\n  })\n  const beforePlan = await readPlan(pg, initial.personalPlanId)\n  const activated = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: previousDraft.id,\n    expectedDraftRevision: previousDraft.revision,\n    expectedSourceRevision: beforePlan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: previousRefined,\n      sourceDraftRevision: previousDraft.revision,\n    }),\n  })\n  assert.equal(activated.status, \"completed\")\n\n  // Module completion writes lineage on a SEPARATE draft id — a second\n  // in_progress draft sharing the SAME base initial need is blocked by the\n  // partial unique index, so this uses a fresh draft row instead.\n  const moduleRefined = await moduleDrivenRefinedVersion(pg, {\n    draftId: id(3, 3),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"c\".repeat(64),\n  })\n  const moduleDraft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: moduleRefined,\n  })\n  const midPlan = await readPlan(pg, initial.personalPlanId)\n\n  const result = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: moduleDraft.id,\n    expectedDraftRevision: moduleDraft.revision,\n    expectedSourceRevision: midPlan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: moduleRefined,\n      sourceDraftRevision: moduleDraft.revision,\n    }),\n  })\n  assert.equal(result.status, \"completed\")\n  assert.equal(\n    result.routineProposalId,\n    null,\n    \"confirmed within the same transaction, not just proposed\",\n  )\n\n  const after = await readPlan(pg, initial.personalPlanId)\n  assert.equal(after.active_routine_version_id, result.routineVersionId)\n  assert.notEqual(after.active_routine_version_id, activated.routineVersionId)\n  assert.equal(after.pending_routine_proposal_id, null)\n\n  const proposalRows = await pg.query<{ status: string }>(\n    \"SELECT status FROM public.personal_plan_routine_proposals WHERE personal_plan_id = $1 ORDER BY created_at\",\n    [initial.personalPlanId],\n  )\n  assert.deepEqual(\n    proposalRows.rows.map((row) => row.status),\n    [\"accepted\"],\n  )\n})",
+      "sha256": "e1e5eb158aebc6f15ddd7e6ce87c796555fbf72854a9ec59f851aee74c69cdf7"
+    },
+    "keeperAfter": {
+      "file": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+      "name": "a module-driven recompute activates the successor immediately instead of proposing it",
+      "line": 238,
+      "start": 8931,
+      "end": 11998,
+      "body": "test(\"a module-driven recompute activates the successor immediately instead of proposing it\", async (t) => {\n  const pg = await migratedPersonalPlanDatabase(t)\n  const initial = await seedPlan(pg, \"seed-2\")\n\n  // First establish an ALREADY-ACTIVE Routine from an ordinary linear refined\n  // version, so the module-driven completion below has something to recompute.\n  const previousRefined = await linearRefinedVersion(pg, {\n    draftId: id(2, 2),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"b\".repeat(64),\n  })\n  const previousDraft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: previousRefined,\n  })\n  const beforePlan = await readPlan(pg, initial.personalPlanId)\n  const activated = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: previousDraft.id,\n    expectedDraftRevision: previousDraft.revision,\n    expectedSourceRevision: beforePlan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: previousRefined,\n      sourceDraftRevision: previousDraft.revision,\n    }),\n  })\n  assert.equal(activated.status, \"completed\")\n\n  // Module completion writes lineage on a SEPARATE draft id — a second\n  // in_progress draft sharing the SAME base initial need is blocked by the\n  // partial unique index, so this uses a fresh draft row instead.\n  const moduleRefined = await moduleDrivenRefinedVersion(pg, {\n    draftId: id(3, 3),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"c\".repeat(64),\n  })\n  const moduleDraft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: moduleRefined,\n  })\n  const midPlan = await readPlan(pg, initial.personalPlanId)\n\n  const result = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: moduleDraft.id,\n    expectedDraftRevision: moduleDraft.revision,\n    expectedSourceRevision: midPlan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: moduleRefined,\n      sourceDraftRevision: moduleDraft.revision,\n    }),\n  })\n  assert.equal(result.status, \"completed\")\n  assert.equal(\n    result.routineProposalId,\n    null,\n    \"confirmed within the same transaction, not just proposed\",\n  )\n\n  const after = await readPlan(pg, initial.personalPlanId)\n  assert.equal(after.active_routine_version_id, result.routineVersionId)\n  assert.notEqual(after.active_routine_version_id, activated.routineVersionId)\n  assert.equal(after.pending_routine_proposal_id, null)\n\n  const proposalRows = await pg.query<{ status: string }>(\n    \"SELECT status FROM public.personal_plan_routine_proposals WHERE personal_plan_id = $1 ORDER BY created_at\",\n    [initial.personalPlanId],\n  )\n  assert.deepEqual(\n    proposalRows.rows.map((row) => row.status),\n    [\"accepted\"],\n  )\n})",
+      "sha256": "e1e5eb158aebc6f15ddd7e6ce87c796555fbf72854a9ec59f851aee74c69cdf7"
+    },
+    "adapterKeeper": {
+      "file": "tests/personal-plan/persistence/routine-proposal-stager.test.ts",
+      "name": "activation-aware delegating RPC permits no proposal pointer for first activation",
+      "line": 98,
+      "start": 2942,
+      "end": 3874,
+      "body": "test(\"activation-aware delegating RPC permits no proposal pointer for first activation\", async () => {\n  const calls: Array<{ fn: string; args: Record<string, unknown> }> = []\n  const result = await createRoutineProposalStagerRpcAdapter({\n    client: {\n      async rpc(fn, args) {\n        calls.push({ fn, args })\n        return {\n          data: {\n            status: \"completed\",\n            portfolioVersionId: \"portfolio-1\",\n            routineVersionId: \"routine-1\",\n            routineProposalId: null,\n            revision: 5,\n          },\n          error: null,\n        }\n      },\n    },\n  }).stage(request)\n\n  assert.deepEqual(result, {\n    status: \"completed\",\n    portfolioVersionId: \"portfolio-1\",\n    routineVersionId: \"routine-1\",\n    routineProposalId: null,\n    revision: 5,\n  })\n  assert.equal(calls[0]?.fn, \"personal_plan_complete_draft_activate_v2\")\n  assert.equal(calls[0]?.args.p_expected_source_revision, 7)\n})",
+      "sha256": "5df2815e3234412fc428aebb42d6d53df1bbe4ea2504d78e4859811d08066014"
+    },
+    "status": "conditional: main native and actual-owner controls pending"
+  },
+  {
+    "id": "C3",
+    "donor": {
+      "file": "tests/personal-plan-refinement-recompute-activation.test.ts",
+      "name": "the direct-accept provenance is written by the same transaction that activates",
+      "line": 511,
+      "start": 19816,
+      "end": 20336,
+      "body": "test(\"the direct-accept provenance is written by the same transaction that activates\", async () => {\n  const world = emptyWorld(null)\n  const stager = createRoutineProposalStagerRpcAdapter({\n    client: createV2Client({\n      productDraftRefinedVersionId: \"refined-1\",\n      refinementDrafts: [],\n      world,\n    }),\n  })\n\n  await stager.stage({ ...stageRequest, markUnrefinedDirectAccept: true })\n\n  assert.equal(world.plan.unrefinedDirectAccept, true)\n  assert.equal(world.plan.activeRoutineVersionId, \"routine-1\")\n})",
+      "sha256": "24a4377705c27cd982039043b444f202c4d3fc9fdb8bceed4694d9f431ab6a5f"
+    },
+    "keeper": {
+      "file": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+      "name": "the direct-accept provenance write is atomic with activation",
+      "line": 638,
+      "start": 24007,
+      "end": 25352,
+      "body": "test(\"the direct-accept provenance write is atomic with activation\", async (t) => {\n  const pg = await migratedPersonalPlanDatabase(t)\n  const initial = await seedPlan(pg, \"seed-5\")\n  const refined = await linearRefinedVersion(pg, {\n    draftId: id(2, 2),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"b\".repeat(64),\n  })\n  const draft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: refined,\n  })\n  const plan = await readPlan(pg, initial.personalPlanId)\n  assert.equal(plan.unrefined_direct_accept, false)\n\n  const result = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: draft.id,\n    expectedDraftRevision: draft.revision,\n    expectedSourceRevision: plan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: refined,\n      sourceDraftRevision: draft.revision,\n    }),\n    markUnrefinedDirectAccept: true,\n  })\n  assert.equal(result.status, \"completed\")\n\n  const after = await readPlan(pg, initial.personalPlanId)\n  assert.equal(after.unrefined_direct_accept, true)\n  assert.equal(\n    after.revision,\n    result.revision,\n    \"the provenance write does not bump the plan revision again\",\n  )\n})",
+      "sha256": "c4cbadb4e0a765b38f9fc2510a767838bb975d44d9d53c5d55a3f8a34e347463"
+    },
+    "keeperAfter": {
+      "file": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+      "name": "the direct-accept provenance write is atomic with activation",
+      "line": 638,
+      "start": 24007,
+      "end": 25594,
+      "body": "test(\"the direct-accept provenance write is atomic with activation\", async (t) => {\n  const pg = await migratedPersonalPlanDatabase(t)\n  const initial = await seedPlan(pg, \"seed-5\")\n  const refined = await linearRefinedVersion(pg, {\n    draftId: id(2, 2),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"b\".repeat(64),\n  })\n  const draft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: refined,\n  })\n  const plan = await readPlan(pg, initial.personalPlanId)\n  assert.equal(plan.unrefined_direct_accept, false)\n\n  const result = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: draft.id,\n    expectedDraftRevision: draft.revision,\n    expectedSourceRevision: plan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: refined,\n      sourceDraftRevision: draft.revision,\n    }),\n    markUnrefinedDirectAccept: true,\n  })\n  assert.equal(result.status, \"completed\")\n\n  const after = await readPlan(pg, initial.personalPlanId)\n  assert.equal(after.unrefined_direct_accept, true)\n  assert.ok(after.active_routine_version_id, \"the provenance write leaves an active Routine\")\n  assert.equal(\n    after.active_routine_version_id,\n    result.routineVersionId,\n    \"the provenance write accompanies the activated Routine\",\n  )\n  assert.equal(\n    after.revision,\n    result.revision,\n    \"the provenance write does not bump the plan revision again\",\n  )\n})",
+      "sha256": "d775cdc5ca8c1a079268dfd20e30ad52dc974b4fa2f9e92fd502e82ea4b61b95"
+    },
+    "adapterKeeper": {
+      "file": "tests/personal-plan/persistence/routine-proposal-stager.test.ts",
+      "name": "routine-proposal adapter forwards the atomic direct-accept provenance flag",
+      "line": 170,
+      "start": 5109,
+      "end": 5839,
+      "body": "test(\"routine-proposal adapter forwards the atomic direct-accept provenance flag\", async () => {\n  const calls: Array<Record<string, unknown>> = []\n  const result = await createRoutineProposalStagerRpcAdapter({\n    client: {\n      async rpc(_fn, args) {\n        calls.push(args)\n        return {\n          data: {\n            status: \"completed\",\n            portfolioVersionId: \"portfolio-1\",\n            routineVersionId: \"routine-1\",\n            routineProposalId: null,\n            revision: 5,\n          },\n          error: null,\n        }\n      },\n    },\n  }).stage({ ...request, markUnrefinedDirectAccept: true })\n\n  assert.equal(result.status, \"completed\")\n  assert.equal(calls[0]?.p_mark_unrefined_direct_accept, true)\n})",
+      "sha256": "6ca818625a36d3264b384a51bad59da6a948f1f8c66838c5c9c69e1d40e2fc23"
+    },
+    "status": "conditional: main native and actual-owner controls pending"
+  },
+  {
+    "id": "C4",
+    "donor": {
+      "file": "tests/personal-plan-refinement-recompute-activation.test.ts",
+      "name": "the recompute-activation migration keeps the provenance write out of the revision CAS",
+      "line": 59,
+      "start": 2886,
+      "end": 3281,
+      "body": "test(\"the recompute-activation migration keeps the provenance write out of the revision CAS\", async () => {\n  const source = await readFile(migrationPath, \"utf8\")\n  const provenanceWrite = source.slice(source.indexOf(\"IF p_mark_unrefined_direct_accept THEN\"))\n\n  assert.match(provenanceWrite, /UPDATE public\\.personal_plans/)\n  assert.doesNotMatch(provenanceWrite, /revision = revision \\+ 1/)\n})",
+      "sha256": "f8a5a3f091893491f2d7177b2866bebe3db83897911915d2b1da78f557ec7d0e"
+    },
+    "keeper": {
+      "file": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+      "name": "the direct-accept provenance write is atomic with activation",
+      "line": 638,
+      "start": 24007,
+      "end": 25352,
+      "body": "test(\"the direct-accept provenance write is atomic with activation\", async (t) => {\n  const pg = await migratedPersonalPlanDatabase(t)\n  const initial = await seedPlan(pg, \"seed-5\")\n  const refined = await linearRefinedVersion(pg, {\n    draftId: id(2, 2),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"b\".repeat(64),\n  })\n  const draft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: refined,\n  })\n  const plan = await readPlan(pg, initial.personalPlanId)\n  assert.equal(plan.unrefined_direct_accept, false)\n\n  const result = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: draft.id,\n    expectedDraftRevision: draft.revision,\n    expectedSourceRevision: plan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: refined,\n      sourceDraftRevision: draft.revision,\n    }),\n    markUnrefinedDirectAccept: true,\n  })\n  assert.equal(result.status, \"completed\")\n\n  const after = await readPlan(pg, initial.personalPlanId)\n  assert.equal(after.unrefined_direct_accept, true)\n  assert.equal(\n    after.revision,\n    result.revision,\n    \"the provenance write does not bump the plan revision again\",\n  )\n})",
+      "sha256": "c4cbadb4e0a765b38f9fc2510a767838bb975d44d9d53c5d55a3f8a34e347463"
+    },
+    "keeperAfter": {
+      "file": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+      "name": "the direct-accept provenance write is atomic with activation",
+      "line": 638,
+      "start": 24007,
+      "end": 25594,
+      "body": "test(\"the direct-accept provenance write is atomic with activation\", async (t) => {\n  const pg = await migratedPersonalPlanDatabase(t)\n  const initial = await seedPlan(pg, \"seed-5\")\n  const refined = await linearRefinedVersion(pg, {\n    draftId: id(2, 2),\n    planId: initial.personalPlanId,\n    baseInitialNeedVersionId: initial.needVersionId,\n    inputHash: \"b\".repeat(64),\n  })\n  const draft = await loadProductDraft(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    refinedNeedVersionId: refined,\n  })\n  const plan = await readPlan(pg, initial.personalPlanId)\n  assert.equal(plan.unrefined_direct_accept, false)\n\n  const result = await activateV2(pg, {\n    userId: USER_ID,\n    planId: initial.personalPlanId,\n    productDraftId: draft.id,\n    expectedDraftRevision: draft.revision,\n    expectedSourceRevision: plan.source_revision,\n    portfolio: portfolioSnapshot({\n      personalPlanId: initial.personalPlanId,\n      refinedVersionId: refined,\n      sourceDraftRevision: draft.revision,\n    }),\n    markUnrefinedDirectAccept: true,\n  })\n  assert.equal(result.status, \"completed\")\n\n  const after = await readPlan(pg, initial.personalPlanId)\n  assert.equal(after.unrefined_direct_accept, true)\n  assert.ok(after.active_routine_version_id, \"the provenance write leaves an active Routine\")\n  assert.equal(\n    after.active_routine_version_id,\n    result.routineVersionId,\n    \"the provenance write accompanies the activated Routine\",\n  )\n  assert.equal(\n    after.revision,\n    result.revision,\n    \"the provenance write does not bump the plan revision again\",\n  )\n})",
+      "sha256": "d775cdc5ca8c1a079268dfd20e30ad52dc974b4fa2f9e92fd502e82ea4b61b95"
+    },
+    "adapterKeeper": {
+      "file": "tests/personal-plan/persistence/routine-proposal-stager.test.ts",
+      "name": "activation-aware delegating RPC permits no proposal pointer for first activation",
+      "line": 98,
+      "start": 2942,
+      "end": 3874,
+      "body": "test(\"activation-aware delegating RPC permits no proposal pointer for first activation\", async () => {\n  const calls: Array<{ fn: string; args: Record<string, unknown> }> = []\n  const result = await createRoutineProposalStagerRpcAdapter({\n    client: {\n      async rpc(fn, args) {\n        calls.push({ fn, args })\n        return {\n          data: {\n            status: \"completed\",\n            portfolioVersionId: \"portfolio-1\",\n            routineVersionId: \"routine-1\",\n            routineProposalId: null,\n            revision: 5,\n          },\n          error: null,\n        }\n      },\n    },\n  }).stage(request)\n\n  assert.deepEqual(result, {\n    status: \"completed\",\n    portfolioVersionId: \"portfolio-1\",\n    routineVersionId: \"routine-1\",\n    routineProposalId: null,\n    revision: 5,\n  })\n  assert.equal(calls[0]?.fn, \"personal_plan_complete_draft_activate_v2\")\n  assert.equal(calls[0]?.args.p_expected_source_revision, 7)\n})",
+      "sha256": "5df2815e3234412fc428aebb42d6d53df1bbe4ea2504d78e4859811d08066014"
+    },
+    "status": "conditional: main native and actual-owner controls pending"
+  }
+]

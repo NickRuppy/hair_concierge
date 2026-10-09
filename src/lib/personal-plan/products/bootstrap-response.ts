@@ -3,7 +3,8 @@ import { z } from "zod"
 import type { Stage3AuthorityEvaluation } from "./authority/contracts"
 import { stage3CategoryRequirementSchema, stage3ProductDraftSchema } from "./contracts"
 import type { Stage3FitComparison } from "./fit-comparison"
-import type { Stage3BootstrapResponse } from "./gateway"
+import type { Stage3BootstrapBudgetEnvelope, Stage3BootstrapResponse } from "./gateway"
+import { shoppingBudgetSchema } from "@/lib/user-facts/schema"
 import { hasCompleteStage3DecisionReviews } from "./stage3-bootstrap-review-contract"
 
 export const STAGE3_BOOTSTRAP_CONTRACT_VIOLATIONS = [
@@ -18,6 +19,7 @@ export const STAGE3_BOOTSTRAP_CONTRACT_VIOLATIONS = [
   "refined_version_mismatch",
   "missing_authority_snapshot",
   "incomplete_decision_reviews",
+  "invalid_budget_envelope",
 ] as const
 
 export type Stage3BootstrapContractViolation = (typeof STAGE3_BOOTSTRAP_CONTRACT_VIOLATIONS)[number]
@@ -36,6 +38,22 @@ export class Stage3BootstrapContractError extends Error {
     super("stage3_bootstrap_contract_violation")
     this.name = "Stage3BootstrapContractError"
   }
+}
+
+const budgetEnvelopeSchema = z.discriminatedUnion("status", [
+  z
+    .object({
+      status: z.literal("budget_required"),
+      suggestion: z.union([z.literal(5), z.literal(15), z.null()]),
+    })
+    .strict(),
+  z.object({ status: z.literal("saved"), value: shoppingBudgetSchema }).strict(),
+])
+
+function parseBudgetEnvelope(value: unknown): Stage3BootstrapBudgetEnvelope {
+  const parsed = budgetEnvelopeSchema.safeParse(value)
+  if (!parsed.success) throw new Stage3BootstrapContractError("invalid_budget_envelope")
+  return parsed.data
 }
 
 export function parseStage3BootstrapResponse(
@@ -79,11 +97,14 @@ export function parseStage3BootstrapResponse(
   if (!draft.data.authoritySnapshot) {
     throw new Stage3BootstrapContractError("missing_authority_snapshot")
   }
+  const budget = candidate.budget === undefined ? undefined : parseBudgetEnvelope(candidate.budget)
+  const budgetRequired = budget?.status === "budget_required"
   if (
     !hasCompleteStage3DecisionReviews({
       draft: draft.data,
       authorityEvaluations: candidate.authorityEvaluations as Stage3AuthorityEvaluation[],
       fitComparisons: candidate.fitComparisons as Stage3FitComparison[],
+      budgetRequired,
     })
   ) {
     throw new Stage3BootstrapContractError("incomplete_decision_reviews")
@@ -98,5 +119,6 @@ export function parseStage3BootstrapResponse(
     ...(candidate.catalogThumbnails
       ? { catalogThumbnails: candidate.catalogThumbnails as Record<string, string> }
       : {}),
+    ...(budget ? { budget } : {}),
   }
 }

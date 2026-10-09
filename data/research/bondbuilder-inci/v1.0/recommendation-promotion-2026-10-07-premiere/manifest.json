@@ -1,0 +1,17 @@
+{
+  "version": "bondbuilder-reviewed-promotion-v1",
+  "reviewed_date": "2026-10-07",
+  "baseline_preimage_sha256": "2e1f38d11fe2147b2fe99c407add1eec289a2ffd1b1919fdf61238ab21c082bd",
+  "source_sha256": "41d19fd743866d346523dbfb20cd8abea30ff626acccfb86ac66cd9a689eb3bf",
+  "original_profile_sha256": "09bb3960691a791c85b4d379e55fb8084bf4cc95b409eaf150a191e28db28a7c",
+  "decision_reference": "Nick 2026-10-07: Première also works without its matching shampoo; branded partner recommended, ordinary shampoo sequence retained.",
+  "items": [
+    {
+      "research_key": "P08",
+      "product_id": "2490911e-1c8c-413b-924c-0604f3f922e0",
+      "profile_sha256": "35bca80d3666810cc656b4eff3e80896ceba0624e35a5c4a3f5da4ab45501e92",
+      "artifact": "P08.json",
+      "artifact_sha256": "b76fe671efd435e973679a2991f4ad7505c2c20a198ed51916df5f75524b27e7"
+    }
+  ]
+}

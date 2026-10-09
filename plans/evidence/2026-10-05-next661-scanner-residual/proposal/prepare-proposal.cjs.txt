@@ -1,0 +1,65 @@
+// TMP-only prospective snapshots. Imports parser only, never test/production owners.
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto')
+const R='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning',P=__dirname,ts=require(R+'/node_modules/typescript'),sha=b=>crypto.createHash('sha256').update(b).digest('hex')
+const read=n=>JSON.parse(fs.readFileSync(P+'/'+n)),write=(n,x)=>{const p=P+'/'+n;fs.mkdirSync(path.dirname(p),{recursive:true});fs.writeFileSync(p,typeof x==='string'?x:JSON.stringify(x,null,2)+'\n',{flag:'wx'})},sites=read('sites.json'),files=read('original-files.json')
+const get=(suffix,index)=>{const a=sites.filter(s=>s.file==='tests/'+suffix);if(!a[index-1])throw Error('Missing site');return a[index-1]}
+const definitions=[
+ ['C1','scan-alternative-comparison.test.ts',1,'scan-masked-alternative.test.ts',4],
+ ['C2','scan-alternative-comparison.test.ts',2,'scan-masked-alternative.test.ts',6],
+ ['C3','scan-alternative-comparison.test.ts',6,'scan-masked-alternative.test.ts',6],
+ ['C4','scan-masked-alternative.test.ts',1,'scan-masked-alternative.test.ts',6],
+ ['C5','scan-masked-alternative.test.ts',2,'scan-resolve-anti-leak.test.ts',1],
+ ['C6','scan-masked-alternative.test.ts',3,'scan-masked-alternative.test.ts',6],
+ ['C7','scan-resolve-anti-leak.test.ts',2,'scan-resolve-anti-leak.test.ts',1],
+ ['C8','scan-resolve-anti-leak.test.ts',3,'scan-resolve-anti-leak.test.ts',1],
+ ['C9','scan-trigger-session-marker.test.ts',1,'scan-trigger-session-marker.test.ts',4],
+ ['C10','scan-trigger-session-marker.test.ts',2,'scan-trigger-session-marker.test.ts',4],
+ ['C11','scan-profile-context.test.ts',3,'scan-profile-context.test.ts',2],
+ ['C12','scan-pending-submission.test.ts',2,'scan-pending-submission.test.ts',3],
+ ['D1','scan-name-only-submission-migration.test.ts',1,'scan-name-only-submission-migration.test.ts',9],
+ ['D2','scan-name-only-submission-migration.test.ts',2,'scan-name-only-submission-migration.test.ts',9],
+]
+const candidates=definitions.map(([id,df,di,kf,ki])=>({id,classification:id[0],donor:get(df,di),keeperBefore:get(kf,ki)}));const after=new Map(candidates.map(c=>[c.keeperBefore.file+'\0'+c.keeperBefore.title,c.keeperBefore.body]));
+function once(text,from,to){if(text.split(from).length!==2)throw Error('Nonunique anchor '+from);return text.replace(from,()=>to)}
+function change(file,index,fn){const k=get(file,index),key=k.file+'\0'+k.title;after.set(key,fn(after.get(key)))}
+change('scan-masked-alternative.test.ts',6,s=>once(s,'  assert.equal(masked.dimensions, inCatalogVerdict.dimensions)\n','  assert.equal(masked.dimensions, inCatalogVerdict.dimensions)\n  assert.deepEqual(masked.alternatives[0].comparison, {\n    rows: [{ rowId: "shampoo.scalp_route", label: "Kopfhaut-Fokus", state: "match" }],\n    summaryScore: 1,\n  })\n'))
+change('scan-resolve-anti-leak.test.ts',1,s=>{const at=s.lastIndexOf('  })\n})');if(at<0)throw Error('Tail');return s.slice(0,at)+`
+    assert.equal(body.alternatives.length, 2)
+    const keysSeen = new Set<string>()
+    everyKey(body.alternatives, keysSeen)
+    for (const forbidden of FORBIDDEN_ALTERNATIVE_KEYS) {
+      assert.equal(
+        keysSeen.has(forbidden),
+        false,
+        \`masked alternatives carried forbidden key "\${forbidden}"\`,
+      )
+    }
+    assert.deepEqual([...keysSeen].sort(), [
+      "comparison",
+      "label",
+      "rowId",
+      "rows",
+      "state",
+      "summaryScore",
+      "verdict",
+      "verdictLabel",
+    ])
+    const labels = (
+      body.alternatives as Array<{ comparison: { rows: Array<{ label: string }> } }>
+    ).flatMap((alternative) => alternative.comparison.rows.map((row) => row.label))
+    assert.deepEqual(labels.sort(), ["Kopfhaut-Fokus", "Reinigungsstärke"].sort())
+    assert.equal(body.alternatives[1].verdict, "supportive")
+    assert.equal(body.alternatives[1].verdictLabel, "Passt eingeschränkt")
+`+s.slice(at)})
+change('scan-trigger-session-marker.test.ts',4,s=>once(once(s,'  recordScanSession(storage, 1_000)\n','  assert.equal(recordScanSession(storage, 1_000), 1)\n  assert.ok(storage.getItem(SCAN_SESSION_RECORD_KEY), "fresh session must persist the session record")\n'),'  recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES)\n','  assert.equal(recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES), 2)\n'))
+change('scan-profile-context.test.ts',2,s=>once(s,'  assert.deepEqual(context?.snapshot.decisions, source.initial!.output_snapshot.decisions)\n','  assert.deepEqual(context?.snapshot.decisions, source.initial!.output_snapshot.decisions)\n  assert.deepEqual(context?.snapshot.profile.hair, source.initial!.output_snapshot.profile.hair)\n'))
+change('scan-pending-submission.test.ts',3,s=>once(s,'  await findOpenScanSubmission(client as never, "user-1", "0022796976116")','  assert.equal(\n    await findOpenScanSubmission(client as never, "user-1", "0022796976116"),\n    null,\n  )'))
+function parse(file,text){const sf=ts.createSourceFile(file,text,ts.ScriptTarget.Latest,true,file.endsWith('.tsx')?ts.ScriptKind.TSX:ts.ScriptKind.TS);if(sf.parseDiagnostics.length)throw Error('Syntax');const a=[];function walk(n){if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test'){const name=n.arguments[0],body=n.getText(sf),assertions=[];function av(x){if(ts.isCallExpression(x)&&x.expression.getText(sf).startsWith('assert.'))assertions.push({text:x.getText(sf),line:sf.getLineAndCharacterOfPosition(x.getStart(sf)).line+1});ts.forEachChild(x,av)}av(n.arguments.at(-1));a.push({file,title:ts.isStringLiteralLike(name)?name.text:name.getText(sf),line:sf.getLineAndCharacterOfPosition(n.getStart(sf)).line+1,body,sha256:sha(body),assertions})}ts.forEachChild(n,walk)}walk(sf);return a}
+const counts={before:0,transfer:0,cut:0},phaseFiles=[],phaseSites={before:[],transfer:[],cut:[]},supportEdits=[];let unrelated=0
+for(const f of files){const before=fs.readFileSync(R+'/'+f.file,'utf8');if(sha(before)!==f.sha256)throw Error('617 original drift');let transfer=before;for(const [key,body]of after){const[file,title]=key.split('\0');if(file===f.file){const s=sites.find(x=>x.file===file&&x.title===title);transfer=once(transfer,s.body,body)}}let cut=transfer;for(const c of candidates.filter(c=>c.donor.file===f.file))cut=once(cut,c.donor.body+'\n\n','');if(f.file==='tests/scan-alternative-comparison.test.ts'){supportEdits.push({file:f.file,from:'  type ScanComparisonRow,\n',to:''});cut=once(cut,'  type ScanComparisonRow,\n','')}
+ for(const[phase,text]of Object.entries({before,transfer,cut})){const a=parse(f.file,text);counts[phase]+=a.length;phaseSites[phase].push(...a);write(phase+'/'+f.file,text);phaseFiles.push({phase,file:f.file,sha256:sha(text),sites:a.length})}
+ const afterRows=parse(f.file,cut);for(const s of afterRows){const original=sites.find(o=>o.file===f.file&&o.title===s.title),k=after.get(f.file+'\0'+s.title);if(s.body!==(k??original.body))throw Error('Unrelated statement drift');if(!k)unrelated++}
+}
+if(JSON.stringify(counts)!=='{"before":119,"transfer":119,"cut":105}')throw Error('Counts')
+for(const c of candidates){c.keeperTransfer=phaseSites.transfer.find(s=>s.file===c.keeperBefore.file&&s.title===c.keeperBefore.title);c.keeperCut=phaseSites.cut.find(s=>s.file===c.keeperBefore.file&&s.title===c.keeperBefore.title)}
+write('candidate-bodies.json',candidates);write('phase-files.json',phaseFiles);write('phase-sites.json',phaseSites);write('support-edits.json',supportEdits);write('static-receipt.json',{counts,files:21,snapshots:63,candidates:14,keepers:after.size,changedKeepers:[...after].filter(([key,body])=>sites.find(s=>s.file+'\0'+s.title===key).body!==body).length,unrelatedCallbacks:unrelated,syntaxParsedOnly:true,repositoryWrites:0,ownerImports:0,runtimeRuns:0});console.log({counts,unrelated,keepers:after.size})

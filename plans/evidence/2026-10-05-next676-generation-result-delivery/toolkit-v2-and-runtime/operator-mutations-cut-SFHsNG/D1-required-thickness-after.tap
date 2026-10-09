@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: mask-missing-thickness: required Mask target input fails closed at the shared parser
+ok 1 - mask-missing-thickness: required Mask target input fails closed at the shared parser
+  ---
+  duration_ms: 2.191584
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 290.482666

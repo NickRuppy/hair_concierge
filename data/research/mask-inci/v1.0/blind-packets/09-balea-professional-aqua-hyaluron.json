@@ -1,0 +1,19 @@
+{
+  "productId": "09-balea-professional-aqua-hyaluron",
+  "identity": {
+    "brand": "Balea Professional (dm own brand)",
+    "productName": "Haarmaske 3in1 Aqua Hyaluron",
+    "packSize": "150 ml",
+    "gtinEan": "4066447668315",
+    "market": "DE (dm own brand)"
+  },
+  "rawInci": "AQUA, CETEARYL ALCOHOL, GLYCERIN, DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE, PANTHENOL, ALOE BARBADENSIS LEAF JUICE POWDER, SODIUM HYALURONATE, HELIANTHUS ANNUUS HYBRID OIL, PARFUM, ISOAMYL LAURATE, BEHENTRIMONIUM CHLORIDE, CETRIMONIUM CHLORIDE, ISOPROPYL ALCOHOL, SODIUM BENZOATE, CITRIC ACID",
+  "directions": {
+    "text": "Als Haarmaske: auf das nasse Haar auftragen, 3 Minuten einwirken lassen und gründlich ausspülen. Als Leave-in-Pflege: eine kleine Menge in das handtuchtrockene/trockene Haar einmassieren, nicht ausspülen. Auch als Over-Night-Pflege verwendbar.",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "3 (mask mode)",
+    "source": "Aggregated retailer/dm-marketing copy via web search - not a single verbatim page fetch.",
+    "confidence": "moderate"
+  },
+  "note": "Blind calibration packet. Contains identity, formula of record, and authoritative directions only. No archetype labels, no claims summaries, no prior assessments."
+}

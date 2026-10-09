@@ -71,8 +71,10 @@ type Query = {
 export type ApplicationRoutineReadClient = { from(table: string): Query }
 const PRODUCT_PROTOCOL_SELECT =
   "product_id,category,role,guidance_payload,application_state,reapplication,source_url,source_text,updated_at"
+// `source_text` is required: `adaptReviewedProductApplicationPointersV2` keeps a generic
+// `bondbuilder_verified_product` pointer only with its reviewed source text.
 const PRODUCT_PROTOCOL_V2_SELECT =
-  "product_id,category,role,guidance_payload_v2,application_state,reapplication,source_url,updated_at"
+  "product_id,category,role,guidance_payload_v2,application_state,reapplication,source_url,source_text,updated_at"
 const first = <T>(value: unknown): T | null =>
   Array.isArray(value)
     ? value.length === 1
@@ -98,17 +100,9 @@ function factsFor(category: string, row: ProductRow) {
       : { facts: {}, provenance: {} }
   }
   if (category === "bondbuilder") {
-    const spec = first<{
-      application_mode: "pre_shampoo" | "post_wash_leave_in"
-      treatment_mode: "rinse_out" | "leave_in"
-      product_format: "cream_treatment" | "primer_treatment" | "leave_in_mask" | "spray_treatment"
-      usage_protocol:
-        | "olaplex_3plus"
-        | "olaplex_0_booster"
-        | "olaplex_3_legacy"
-        | "k18_leave_in"
-        | "epres_spray"
-    }>(row.product_bondbuilder_specs)
+    const spec = first<import("@/lib/bondbuilder/constants").ProductBondbuilderSpecs>(
+      row.product_bondbuilder_specs,
+    )
     return spec
       ? adaptCatalogApplicationFacts({ category: "bondbuilder", spec })
       : { facts: {}, provenance: {} }

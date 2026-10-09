@@ -33,6 +33,11 @@ export type RoutineEditorProps = {
   isSubmitting?: boolean
   retryMessage?: string | null
   submitLabel?: string
+  /**
+   * Keeps the editor mounted (its local operations intact) but out of sight while another step,
+   * the budget question, is in front of it. Absent = rendered exactly as before.
+   */
+  hidden?: boolean
   onCancel?: () => void
   onSubmitOperations: (operations: RoutineEditOperation[]) => void | Promise<void>
 }
@@ -214,6 +219,7 @@ export function RoutineEditor({
   isSubmitting = false,
   retryMessage,
   submitLabel = "Änderungen prüfen",
+  hidden,
   onCancel,
   onSubmitOperations,
 }: RoutineEditorProps) {
@@ -240,7 +246,7 @@ export function RoutineEditor({
   }, [onCancel])
 
   return (
-    <div className="min-h-dvh bg-[var(--background)]">
+    <div className="min-h-dvh bg-[var(--background)]" hidden={hidden || undefined}>
       <section
         aria-label="Routine bearbeiten"
         className="mx-auto w-full max-w-3xl space-y-6 px-4 py-6"

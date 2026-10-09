@@ -88,11 +88,14 @@ export function DiscoveryRoutineScreen({
   items,
   onEdit,
   onBack,
+  onAddMore = onBack,
   onConfirm,
 }: {
   items: DiscoveryIntakeItemView[]
   onEdit: (item: DiscoveryIntakeItemView) => void
   onBack: () => void
+  /** „Noch was ergänzen" always means "back to her products" (defaults to `onBack`). */
+  onAddMore?: () => void
   onConfirm: () => void
 }) {
   const days = composeDiscoveryRoutineDays(items)
@@ -113,7 +116,7 @@ export function DiscoveryRoutineScreen({
         <button type="button" onClick={onConfirm} className={CORAL_BUTTON}>
           {CONFIRM_LABEL}
         </button>
-        <button type="button" onClick={onBack} className={OUTLINE_BUTTON}>
+        <button type="button" onClick={onAddMore} className={OUTLINE_BUTTON}>
           {ADD_MORE_LABEL}
         </button>
       </div>

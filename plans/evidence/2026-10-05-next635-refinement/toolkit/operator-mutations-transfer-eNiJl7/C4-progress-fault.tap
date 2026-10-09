@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: both modules complete: 4/4
+not ok 1 - both modules complete: 4/4
+  ---
+  duration_ms: 5.532167
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-refinement-status-route.test.ts:2:6057'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+    +   completedSteps: 3,
+    -   completedSteps: 4,
+        totalSteps: 4
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    completedSteps: 4
+    totalSteps: 4
+  actual:
+    completedSteps: 3
+    totalSteps: 4
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-refinement-status-route.test.ts:241:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 341.175083

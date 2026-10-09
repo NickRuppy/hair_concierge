@@ -1,0 +1,40 @@
+{
+  "status": "STATIC PASS; conditional retirement only; independent review and main runtime proof pending",
+  "counts": {
+    "before": 103,
+    "transfer": 103,
+    "cut": 97
+  },
+  "changedFiles": [
+    "src/lib/personal-plan/rollout-access.ts",
+    "src/lib/personal-plan/journey-access-loader.ts",
+    "src/lib/personal-plan/release.ts",
+    "tests/personal-plan-journey-access-loader.test.ts",
+    "tests/personal-plan-stage3-release.test.ts",
+    "tests/freemium-enrollment-admission.test.ts",
+    "tests/personal-plan-trial-stage1-journey.test.ts",
+    "tests/personal-plan-field-test-access.test.ts",
+    "tests/personal-plan-rollout-access.test.ts"
+  ],
+  "phaseFilesChecked": 30,
+  "readsetPinsChecked": 56,
+  "sourceCallExpansion": false,
+  "testCallExpansion": false,
+  "assertionExpansion": false,
+  "retiredNamedReferencesInAllCutFiles": 0,
+  "originalGuardedFilesExact": true,
+  "transferWholeBytesIdentical": true,
+  "unchangedCallbacks": 92,
+  "modifiedRetainedCallbacks": 5,
+  "conditionalRetirements": 6,
+  "controlsUniqueAndParseChecked": 14,
+  "controlsRun": 0,
+  "syntaxOnly": true,
+  "semanticCompiler": false,
+  "productImports": false,
+  "repositoryWrites": false,
+  "childProcessesFromArtifactScripts": false,
+  "providers": false,
+  "DB": false,
+  "limitations": "Assertion first-frame and runtime message expectations are prospective, not observed. Hashing is not human reading. Source reference inventory does not certify arbitrary external consumers."
+}

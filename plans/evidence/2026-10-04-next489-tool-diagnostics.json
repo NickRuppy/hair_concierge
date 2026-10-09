@@ -1,0 +1,191 @@
+{
+  "oldPlanHash": "1a0c1036e8ad6b5e6110218841e45b5932023606d80a7ab11a0ceca8e35d2ee1",
+  "newPlanHash": "a50916e36766d5e4241586819db8438e183833b1bd1419c72515f709348f3da9",
+  "diagnostics": [
+    {
+      "candidate": "C1",
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "keeper": "tool-loop current frizz and tangling signals steer routine priority away from reset",
+      "condition": "initialMessage && typeof initialMessage.content === \"string\"",
+      "message": "Initial model message must contain serialized context"
+    },
+    {
+      "candidate": "C1",
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "keeper": "tool-loop current frizz and tangling signals steer routine priority away from reset",
+      "condition": "deliveredOverlay.active_concerns.some(\n      (signal) => signal.field === \"hair_texture\" && signal.value === \"curly\",\n    )",
+      "message": "Delivered context must include curly hair"
+    },
+    {
+      "candidate": "C1",
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "keeper": "tool-loop current frizz and tangling signals steer routine priority away from reset",
+      "condition": "deliveredOverlay.active_concerns.some(\n      (signal) => signal.field === \"concerns\" && signal.value === \"frizz\",\n    )",
+      "message": "Delivered context must include frizz"
+    },
+    {
+      "candidate": "C1",
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "keeper": "tool-loop current frizz and tangling signals steer routine priority away from reset",
+      "condition": "deliveredOverlay.active_concerns.some(\n      (signal) => signal.field === \"concerns\" && signal.value === \"tangling\",\n    )",
+      "message": "Delivered context must include tangling"
+    },
+    {
+      "candidate": "C2",
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "keeper": "tool-loop sends consultation brief before the model chooses tools",
+      "condition": "initialMessage && typeof initialMessage.content === \"string\"",
+      "message": "Initial model message must contain the serialized brief"
+    },
+    {
+      "candidate": "C2",
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "keeper": "tool-loop sends consultation brief before the model chooses tools",
+      "condition": "deliveredBrief",
+      "message": "Initial model request must deliver a consultation brief"
+    },
+    {
+      "candidate": "C2",
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "keeper": "tool-loop sends consultation brief before the model chooses tools",
+      "condition": "deliveredBrief.candidate_guidance.some((item) => item.id === \"topic:leave_in\")",
+      "message": "Delivered brief must include Leave-in guidance"
+    },
+    {
+      "candidate": "C2",
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "keeper": "tool-loop sends consultation brief before the model chooses tools",
+      "condition": "deliveredBrief.profile_overlays.some((item) => item.id === \"overlay:fine_hair\")",
+      "message": "Delivered brief must include the fine-hair overlay"
+    },
+    {
+      "candidate": "C2",
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "keeper": "tool-loop sends consultation brief before the model chooses tools",
+      "condition": "deliveredBrief.candidate_guidance.every((item) => item.content.length <= 1200)",
+      "message": "Delivered candidate guidance must stay within 1200 characters"
+    },
+    {
+      "candidate": "C3",
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "keeper": "tool loop normalizes routine basics state after build_or_fix_routine basics",
+      "condition": "initialMessage && typeof initialMessage.content === \"string\"",
+      "message": "Initial routine message must contain the serialized brief"
+    },
+    {
+      "candidate": "C3",
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "keeper": "tool loop normalizes routine basics state after build_or_fix_routine basics",
+      "condition": "deliveredBrief",
+      "message": "Initial routine request must deliver a consultation brief"
+    },
+    {
+      "candidate": "C3",
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "keeper": "tool loop normalizes routine basics state after build_or_fix_routine basics",
+      "condition": "deliveredBrief.routine_staging.some((line) => /shampoo/i.test(line))",
+      "message": "Delivered routine staging must include Shampoo"
+    },
+    {
+      "candidate": "C3",
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "keeper": "tool loop normalizes routine basics state after build_or_fix_routine basics",
+      "condition": "deliveredBrief.routine_staging.some((line) => /conditioner/i.test(line))",
+      "message": "Delivered routine staging must include Conditioner"
+    },
+    {
+      "candidate": "C3",
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "keeper": "tool loop normalizes routine basics state after build_or_fix_routine basics",
+      "condition": "deliveredBrief.routine_staging.some((line) => /highest-impact extra lever/i.test(line))",
+      "message": "Delivered routine staging must include the highest-impact extra lever"
+    },
+    {
+      "candidate": "C3",
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "keeper": "tool loop normalizes routine basics state after build_or_fix_routine basics",
+      "condition": "deliveredBrief.routine_staging.some((line) => /goals or problems/i.test(line))",
+      "message": "Delivered routine staging must include goals or problems"
+    },
+    {
+      "candidate": "C3",
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "keeper": "tool loop normalizes routine basics state after build_or_fix_routine basics",
+      "condition": "deliveredBrief.candidate_guidance.some((item) => item.id === \"playbook:build_or_fix_routine\")",
+      "message": "Delivered brief must include the routine playbook"
+    }
+  ],
+  "changedUniqueAssertions": 16,
+  "changedKeeperCallbacks": 3,
+  "counts": {
+    "before": 181,
+    "transfer": 181,
+    "cut": 171
+  },
+  "sourceGuardsUnchanged": true,
+  "beforeSnapshotsUnchanged": true,
+  "untargetedCallbackHashesUnchanged": true,
+  "phases": [
+    {
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-tool181-staging-le0k3my8/before/tests/agentic-tool-loop.spec.ts",
+          "sha256": "db5af31622623e46ea9167f82f3b56d8953a22acd7c3aba624ea90acf9c9f692",
+          "count": 93
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-tool181-diagnostics-staging-tIQgir/transfer/tests/agentic-tool-loop.spec.ts",
+          "sha256": "2978d3e9100b62a4a13fa6977245b71eb17e122576f777c86a0d5eed055c4352",
+          "count": 93
+        },
+        "cut": {
+          "path": "/tmp/test-audit-tool181-diagnostics-staging-tIQgir/cut/tests/agentic-tool-loop.spec.ts",
+          "sha256": "aae7076d39568120a5fb9e60dd0496cf3f4d7b4cc4cf6df08cb733d5ff77911b",
+          "count": 87
+        }
+      }
+    },
+    {
+      "file": "tests/agent-select-products-tool.spec.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-tool181-staging-le0k3my8/before/tests/agent-select-products-tool.spec.ts",
+          "sha256": "bda53591b8ccce5e89934e99a8e56b988a0b34d59f342c55b4f912926bae4c59",
+          "count": 88
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-tool181-staging-le0k3my8/transfer/tests/agent-select-products-tool.spec.ts",
+          "sha256": "4437aab8391d8345c9c2d6ab90b5055af61e90b8474ff0009e436b7312e93013",
+          "count": 88
+        },
+        "cut": {
+          "path": "/tmp/test-audit-tool181-staging-le0k3my8/cut/tests/agent-select-products-tool.spec.ts",
+          "sha256": "83fe950d183088e79c3f4c9b44716a7b377e5de52a9ba18a3fa1f217bdf5898a",
+          "count": 84
+        }
+      }
+    }
+  ],
+  "runtimeExecuted": false,
+  "staticChecks": {
+    "editorCheckExit": 0,
+    "readOnly": true,
+    "allProspectivePhasesParsed": true,
+    "assertionCountsUnchanged": true,
+    "conditionsUnchanged": true,
+    "newDiagnosticsAcrossTransferAndCut": 32,
+    "sourceGuards": 18,
+    "testGuards": 2,
+    "runtimeExecuted": false
+  },
+  "artifactHashes": {
+    "edit-plan.json": "a50916e36766d5e4241586819db8438e183833b1bd1419c72515f709348f3da9",
+    "edit.cjs": "147de95ef94260e42708d4095b85351ffd7cc8755c953bba3bfcbab2b8055edd",
+    "candidates.json": "48da7938805f4750e1dc99eb28ae260429aad088ae2d854443effefd53f313dd",
+    "complete.diff": "46d535aa0d7c846ad86951541258dff63b0e947fb93710711e71c29e70c80c49",
+    "layer-ledger.md": "1c1e6acc68427155d69cf11937403bdb330f84de5c6660eba9c7276cfad96abc",
+    "full-ledger.json": "4b7abc163b89ee84cbc1f415dfa9f67e077e04b044f5f7a5e2b42094f5aff984",
+    "controls.json": "60830998d69fb43ae2dfdaaa4005bb1f0e441d7531a0177cd3988dac09c19f64"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "oldPinSHA": "1f67eb774e13aa797f0b65bf2afe59982b58aec827dc944f4c4f06774d848045",
+  "pinSHA": "b1619bebc5540a7ee42e2ed0ec18431cc2f9a52c43c471b3cefe9290c1d04d5f",
+  "changedArtifacts": [
+    "proof-attestation.cjs",
+    "prepare-tools.py",
+    "README.md"
+  ],
+  "addedToolArtifacts": [
+    "final-template-delta.patch",
+    "full-final-code.txt",
+    "finalize-tools.cjs",
+    "pre-finalization-pins.json",
+    "static-shape-corrected.txt"
+  ],
+  "sourceDependencyIdentityPinsChanged": 0,
+  "strictProofPredicateChanged": false,
+  "reason": "Synthetic TAP must contain one actual message, not concatenated duplicate full-message and header fragments. Actual decoder/predicate unchanged.",
+  "repositoryWrites": 0,
+  "children": 0,
+  "ownerImports": 0
+}

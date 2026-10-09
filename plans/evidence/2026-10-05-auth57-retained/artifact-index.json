@@ -1,0 +1,278 @@
+[
+  {
+    "original": "/tmp/test-audit-auth-replay57/candidates.json",
+    "archived": "audit/candidates.json",
+    "sha256": "f0acf2e249da291aea9b66c1accf9205f2c69e3d33fc327d1e9253f23fbe3f88",
+    "bytes": 451
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/complete-ledger.md",
+    "archived": "audit/complete-ledger.md",
+    "sha256": "3a6c74ffb94cb33073fd45868590392a585956036b2ff652e5002c01eefe3c1c",
+    "bytes": 31677
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/complete.diff",
+    "archived": "audit/complete.diff",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/controls.json",
+    "archived": "audit/controls.json",
+    "sha256": "1add40086eaa4777777f24dbc298e98042461ec05d78718fcfe93e39ac6739e5",
+    "bytes": 5184
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/finalize.cjs",
+    "archived": "audit/finalize.cjs.txt",
+    "sha256": "73a85d8d4a513a1e538e052830d1d40028d781b239560fe7e60f40662e0186b7",
+    "bytes": 10792
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/handoff-receipt.json",
+    "archived": "audit/handoff-receipt.json",
+    "sha256": "53cd1bf4450279127adcb21bb41b70ec9bd54ed1d6d6eaed71e05eb73d88f0f5",
+    "bytes": 467
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/layer-plan.md",
+    "archived": "audit/layer-plan.md",
+    "sha256": "74b2e44ac5a963231c2d021dae1c9cde925dfef62d97869ab9b40e6b782dc52b",
+    "bytes": 7139
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/ledger.json",
+    "archived": "audit/ledger.json",
+    "sha256": "7bdfae018f8e9c9cc7fe402fbba4c66aba31678f06ae224f862586fed74a1cb4",
+    "bytes": 53468
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/manifest.json",
+    "archived": "audit/manifest.json",
+    "sha256": "c1bbef0e730049b85d7ff49160283d119ba9d8121772af4c15673a40e7c5eccd",
+    "bytes": 11159
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/prepare.cjs",
+    "archived": "audit/prepare.cjs.txt",
+    "sha256": "7a2bdbbe4d5df3996cbe6d10f442f3ff682f883bdc94933b3ef1a0fd699be32a",
+    "bytes": 20739
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/read-scope.json",
+    "archived": "audit/read-scope.json",
+    "sha256": "47769f2287dded9c3fe05d0600e85ccb902485629a429791ecc22afedbd9a222",
+    "bytes": 12468
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/before/tests/auth-confirm-replay.test.ts.txt",
+    "archived": "audit/snapshots/before/tests/auth-confirm-replay.test.ts.txt",
+    "sha256": "a16844e55372f363aa5f94e6999867aeec5654efdf96299cf47d7e5781a810af",
+    "bytes": 12609
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/before/tests/auth-middleware-query-cleanup.test.ts.txt",
+    "archived": "audit/snapshots/before/tests/auth-middleware-query-cleanup.test.ts.txt",
+    "sha256": "f3d694d58efb8f857770ef1bd54c4e7404717594f8ad6da7fd6eeaca2a4cbdb8",
+    "bytes": 1794
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/before/tests/auth-middleware-replay.test.ts.txt",
+    "archived": "audit/snapshots/before/tests/auth-middleware-replay.test.ts.txt",
+    "sha256": "84e49620009837392f66629cf084bb84aabad18f0e60910126a71efb1fd5cc0e",
+    "bytes": 3560
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/before/tests/auth-unauthenticated-redirect.test.ts.txt",
+    "archived": "audit/snapshots/before/tests/auth-unauthenticated-redirect.test.ts.txt",
+    "sha256": "011f1fc7b03972391d5a75e0597f93b977047eb6376f93255ca158d9c5e30175",
+    "bytes": 2140
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/before/tests/quiz-email-return-browser.spec.ts.txt",
+    "archived": "audit/snapshots/before/tests/quiz-email-return-browser.spec.ts.txt",
+    "sha256": "f9105766485689988f066e32f7568f68f3bbed48cc35c707fb7a776953c34116",
+    "bytes": 8169
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/before/tests/quiz-email-return-choice.test.ts.txt",
+    "archived": "audit/snapshots/before/tests/quiz-email-return-choice.test.ts.txt",
+    "sha256": "755b4d7808f1d6fd69c54aa5ff8af509a13d4d171ac98dc4fa9a45c6909c218c",
+    "bytes": 4593
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/before/tests/quiz-email-return-credential.test.ts.txt",
+    "archived": "audit/snapshots/before/tests/quiz-email-return-credential.test.ts.txt",
+    "sha256": "32ddc15cd8935497c142ec08ff8bd5dce75ab035c9f4a716117435fe24e0b263",
+    "bytes": 7818
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/before/tests/quiz-email-return-entry.test.ts.txt",
+    "archived": "audit/snapshots/before/tests/quiz-email-return-entry.test.ts.txt",
+    "sha256": "95212f04f53d17f495a903231eb2495d2d6d1f0939503918ce417222eee880c9",
+    "bytes": 2934
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/before/tests/quiz-email-return-postgres.test.ts.txt",
+    "archived": "audit/snapshots/before/tests/quiz-email-return-postgres.test.ts.txt",
+    "sha256": "6a4ed1927d46800fc81d7411bfb4b6409ca877cfc696216ea901bd02ac068fe0",
+    "bytes": 3662
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/before/tests/quiz-email-return-selection.test.ts.txt",
+    "archived": "audit/snapshots/before/tests/quiz-email-return-selection.test.ts.txt",
+    "sha256": "67b77db34c94ed5bb7a8739a274c5f6af64a27cea2502de6bacd66673d5c639b",
+    "bytes": 2842
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/before/tests/result-email-return-page.test.ts.txt",
+    "archived": "audit/snapshots/before/tests/result-email-return-page.test.ts.txt",
+    "sha256": "8fb62e830b6db97f7294345822305a3570b12669e1b2944b52c3ccca536cc2ba",
+    "bytes": 7734
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/cut/tests/auth-confirm-replay.test.ts.txt",
+    "archived": "audit/snapshots/cut/tests/auth-confirm-replay.test.ts.txt",
+    "sha256": "a16844e55372f363aa5f94e6999867aeec5654efdf96299cf47d7e5781a810af",
+    "bytes": 12609
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/cut/tests/auth-middleware-query-cleanup.test.ts.txt",
+    "archived": "audit/snapshots/cut/tests/auth-middleware-query-cleanup.test.ts.txt",
+    "sha256": "f3d694d58efb8f857770ef1bd54c4e7404717594f8ad6da7fd6eeaca2a4cbdb8",
+    "bytes": 1794
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/cut/tests/auth-middleware-replay.test.ts.txt",
+    "archived": "audit/snapshots/cut/tests/auth-middleware-replay.test.ts.txt",
+    "sha256": "84e49620009837392f66629cf084bb84aabad18f0e60910126a71efb1fd5cc0e",
+    "bytes": 3560
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/cut/tests/auth-unauthenticated-redirect.test.ts.txt",
+    "archived": "audit/snapshots/cut/tests/auth-unauthenticated-redirect.test.ts.txt",
+    "sha256": "011f1fc7b03972391d5a75e0597f93b977047eb6376f93255ca158d9c5e30175",
+    "bytes": 2140
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/cut/tests/quiz-email-return-browser.spec.ts.txt",
+    "archived": "audit/snapshots/cut/tests/quiz-email-return-browser.spec.ts.txt",
+    "sha256": "f9105766485689988f066e32f7568f68f3bbed48cc35c707fb7a776953c34116",
+    "bytes": 8169
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/cut/tests/quiz-email-return-choice.test.ts.txt",
+    "archived": "audit/snapshots/cut/tests/quiz-email-return-choice.test.ts.txt",
+    "sha256": "755b4d7808f1d6fd69c54aa5ff8af509a13d4d171ac98dc4fa9a45c6909c218c",
+    "bytes": 4593
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/cut/tests/quiz-email-return-credential.test.ts.txt",
+    "archived": "audit/snapshots/cut/tests/quiz-email-return-credential.test.ts.txt",
+    "sha256": "32ddc15cd8935497c142ec08ff8bd5dce75ab035c9f4a716117435fe24e0b263",
+    "bytes": 7818
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/cut/tests/quiz-email-return-entry.test.ts.txt",
+    "archived": "audit/snapshots/cut/tests/quiz-email-return-entry.test.ts.txt",
+    "sha256": "95212f04f53d17f495a903231eb2495d2d6d1f0939503918ce417222eee880c9",
+    "bytes": 2934
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/cut/tests/quiz-email-return-postgres.test.ts.txt",
+    "archived": "audit/snapshots/cut/tests/quiz-email-return-postgres.test.ts.txt",
+    "sha256": "6a4ed1927d46800fc81d7411bfb4b6409ca877cfc696216ea901bd02ac068fe0",
+    "bytes": 3662
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/cut/tests/quiz-email-return-selection.test.ts.txt",
+    "archived": "audit/snapshots/cut/tests/quiz-email-return-selection.test.ts.txt",
+    "sha256": "67b77db34c94ed5bb7a8739a274c5f6af64a27cea2502de6bacd66673d5c639b",
+    "bytes": 2842
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/cut/tests/result-email-return-page.test.ts.txt",
+    "archived": "audit/snapshots/cut/tests/result-email-return-page.test.ts.txt",
+    "sha256": "8fb62e830b6db97f7294345822305a3570b12669e1b2944b52c3ccca536cc2ba",
+    "bytes": 7734
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/transfer/tests/auth-confirm-replay.test.ts.txt",
+    "archived": "audit/snapshots/transfer/tests/auth-confirm-replay.test.ts.txt",
+    "sha256": "a16844e55372f363aa5f94e6999867aeec5654efdf96299cf47d7e5781a810af",
+    "bytes": 12609
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/transfer/tests/auth-middleware-query-cleanup.test.ts.txt",
+    "archived": "audit/snapshots/transfer/tests/auth-middleware-query-cleanup.test.ts.txt",
+    "sha256": "f3d694d58efb8f857770ef1bd54c4e7404717594f8ad6da7fd6eeaca2a4cbdb8",
+    "bytes": 1794
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/transfer/tests/auth-middleware-replay.test.ts.txt",
+    "archived": "audit/snapshots/transfer/tests/auth-middleware-replay.test.ts.txt",
+    "sha256": "84e49620009837392f66629cf084bb84aabad18f0e60910126a71efb1fd5cc0e",
+    "bytes": 3560
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/transfer/tests/auth-unauthenticated-redirect.test.ts.txt",
+    "archived": "audit/snapshots/transfer/tests/auth-unauthenticated-redirect.test.ts.txt",
+    "sha256": "011f1fc7b03972391d5a75e0597f93b977047eb6376f93255ca158d9c5e30175",
+    "bytes": 2140
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/transfer/tests/quiz-email-return-browser.spec.ts.txt",
+    "archived": "audit/snapshots/transfer/tests/quiz-email-return-browser.spec.ts.txt",
+    "sha256": "f9105766485689988f066e32f7568f68f3bbed48cc35c707fb7a776953c34116",
+    "bytes": 8169
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/transfer/tests/quiz-email-return-choice.test.ts.txt",
+    "archived": "audit/snapshots/transfer/tests/quiz-email-return-choice.test.ts.txt",
+    "sha256": "755b4d7808f1d6fd69c54aa5ff8af509a13d4d171ac98dc4fa9a45c6909c218c",
+    "bytes": 4593
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/transfer/tests/quiz-email-return-credential.test.ts.txt",
+    "archived": "audit/snapshots/transfer/tests/quiz-email-return-credential.test.ts.txt",
+    "sha256": "32ddc15cd8935497c142ec08ff8bd5dce75ab035c9f4a716117435fe24e0b263",
+    "bytes": 7818
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/transfer/tests/quiz-email-return-entry.test.ts.txt",
+    "archived": "audit/snapshots/transfer/tests/quiz-email-return-entry.test.ts.txt",
+    "sha256": "95212f04f53d17f495a903231eb2495d2d6d1f0939503918ce417222eee880c9",
+    "bytes": 2934
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/transfer/tests/quiz-email-return-postgres.test.ts.txt",
+    "archived": "audit/snapshots/transfer/tests/quiz-email-return-postgres.test.ts.txt",
+    "sha256": "6a4ed1927d46800fc81d7411bfb4b6409ca877cfc696216ea901bd02ac068fe0",
+    "bytes": 3662
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/transfer/tests/quiz-email-return-selection.test.ts.txt",
+    "archived": "audit/snapshots/transfer/tests/quiz-email-return-selection.test.ts.txt",
+    "sha256": "67b77db34c94ed5bb7a8739a274c5f6af64a27cea2502de6bacd66673d5c639b",
+    "bytes": 2842
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/snapshots/transfer/tests/result-email-return-page.test.ts.txt",
+    "archived": "audit/snapshots/transfer/tests/result-email-return-page.test.ts.txt",
+    "sha256": "8fb62e830b6db97f7294345822305a3570b12669e1b2944b52c3ccca536cc2ba",
+    "bytes": 7734
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/static-check.json",
+    "archived": "audit/static-check.json",
+    "sha256": "17ebc6274eec3702d510cffce3c84df63bd3d82ddb4d053c69aa47eb8141f18d",
+    "bytes": 2010
+  },
+  {
+    "original": "/tmp/test-audit-auth-replay57/wrapper-closure/brief.md",
+    "archived": "audit/wrapper-closure/brief.md",
+    "sha256": "2ce3f0e96a85b8827d3a49169228dd7ac1486617a179f189960101bea025f9a7",
+    "bytes": 3423
+  }
+]

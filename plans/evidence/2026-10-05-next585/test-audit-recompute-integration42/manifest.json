@@ -1,0 +1,80 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "phases": {
+    "before": {
+      "tests/personal-plan/refinement-recompute/routine-reactivation.test.ts": "fcd9e75768a52ea0ea64330cb7b3e10fc749bb42b8221ce946948beb09be9770",
+      "tests/personal-plan-refinement-recompute-activation.test.ts": "d74930b61b7e29279c75d30fc9bdd11a6b206eb285eb1ac77cad576b24c970be",
+      "tests/personal-plan/refinement-recompute/module-driven-classification.test.ts": "55c09128072e96daaacd755fd8dc37697402a30534bc763e2bc34ab0967fdd95",
+      "tests/personal-plan/refinement-recompute/production-deps.test.ts": "e95e7ad217ef60d1a0163391b05ccf15723b52e6a86d74c546b4e724a9f12a86",
+      "tests/personal-plan/refinement-recompute/production-lane.test.ts": "39e9ab0c2f55317e89829e5c6a900499344da9763787b519573cb01a3c9433de",
+      "tests/personal-plan-refinement-recompute-activation-migration.test.ts": "d0bf8a258e7c55764210ebda7ecea86a34c8f514807afd16cbddab7753ea3666",
+      "tests/personal-plan/persistence/routine-proposal-stager.test.ts": "a7eae65245e6ae21693f5dafa4fd5abd1d781a5f008de7df8d8989d762bf1f5e"
+    },
+    "transfer": {
+      "tests/personal-plan/refinement-recompute/routine-reactivation.test.ts": "fcd9e75768a52ea0ea64330cb7b3e10fc749bb42b8221ce946948beb09be9770",
+      "tests/personal-plan-refinement-recompute-activation.test.ts": "d74930b61b7e29279c75d30fc9bdd11a6b206eb285eb1ac77cad576b24c970be",
+      "tests/personal-plan/refinement-recompute/module-driven-classification.test.ts": "55c09128072e96daaacd755fd8dc37697402a30534bc763e2bc34ab0967fdd95",
+      "tests/personal-plan/refinement-recompute/production-deps.test.ts": "e95e7ad217ef60d1a0163391b05ccf15723b52e6a86d74c546b4e724a9f12a86",
+      "tests/personal-plan/refinement-recompute/production-lane.test.ts": "39e9ab0c2f55317e89829e5c6a900499344da9763787b519573cb01a3c9433de",
+      "tests/personal-plan-refinement-recompute-activation-migration.test.ts": "145ed952300cd34887513df866d4bbabda737436c3f1117e18e08d1144d93f4f",
+      "tests/personal-plan/persistence/routine-proposal-stager.test.ts": "a7eae65245e6ae21693f5dafa4fd5abd1d781a5f008de7df8d8989d762bf1f5e"
+    },
+    "cut": {
+      "tests/personal-plan/refinement-recompute/routine-reactivation.test.ts": "fcd9e75768a52ea0ea64330cb7b3e10fc749bb42b8221ce946948beb09be9770",
+      "tests/personal-plan-refinement-recompute-activation.test.ts": "219ac57e3c93058b8fdfc29a4e3796103de1c39398695e8720e71701f2484cc7",
+      "tests/personal-plan/refinement-recompute/module-driven-classification.test.ts": "55c09128072e96daaacd755fd8dc37697402a30534bc763e2bc34ab0967fdd95",
+      "tests/personal-plan/refinement-recompute/production-deps.test.ts": "e95e7ad217ef60d1a0163391b05ccf15723b52e6a86d74c546b4e724a9f12a86",
+      "tests/personal-plan/refinement-recompute/production-lane.test.ts": "39e9ab0c2f55317e89829e5c6a900499344da9763787b519573cb01a3c9433de",
+      "tests/personal-plan-refinement-recompute-activation-migration.test.ts": "145ed952300cd34887513df866d4bbabda737436c3f1117e18e08d1144d93f4f",
+      "tests/personal-plan/persistence/routine-proposal-stager.test.ts": "a7eae65245e6ae21693f5dafa4fd5abd1d781a5f008de7df8d8989d762bf1f5e"
+    }
+  },
+  "targetCounts": {
+    "before": 42,
+    "transfer": 42,
+    "cut": 38
+  },
+  "proofCohortCounts": {
+    "before": 58,
+    "transfer": 58,
+    "cut": 54
+  },
+  "readset": {
+    "tests/personal-plan/refinement-recompute/routine-reactivation.test.ts": "fcd9e75768a52ea0ea64330cb7b3e10fc749bb42b8221ce946948beb09be9770",
+    "tests/personal-plan-refinement-recompute-activation.test.ts": "d74930b61b7e29279c75d30fc9bdd11a6b206eb285eb1ac77cad576b24c970be",
+    "tests/personal-plan/refinement-recompute/module-driven-classification.test.ts": "55c09128072e96daaacd755fd8dc37697402a30534bc763e2bc34ab0967fdd95",
+    "tests/personal-plan/refinement-recompute/production-deps.test.ts": "e95e7ad217ef60d1a0163391b05ccf15723b52e6a86d74c546b4e724a9f12a86",
+    "tests/personal-plan/refinement-recompute/production-lane.test.ts": "39e9ab0c2f55317e89829e5c6a900499344da9763787b519573cb01a3c9433de",
+    "tests/personal-plan-refinement-recompute-activation-migration.test.ts": "d0bf8a258e7c55764210ebda7ecea86a34c8f514807afd16cbddab7753ea3666",
+    "tests/personal-plan/persistence/routine-proposal-stager.test.ts": "a7eae65245e6ae21693f5dafa4fd5abd1d781a5f008de7df8d8989d762bf1f5e",
+    "src/lib/personal-plan/refinement-recompute/routine-reactivation.ts": "6cce0e17c2aca486414b99b6dad259ac8db0ae4287100f7606c082c04535638a",
+    "src/lib/personal-plan/refinement-recompute/module-driven-classification.ts": "36a37652091dc0edded7424827aed9d8236844c25a5433ff899bf3f9b60efdc9",
+    "src/lib/personal-plan/refinement-recompute/production-deps.ts": "27daa53197b22f2cc105473c7076c85429c31a2de4ca3b319b0b5fbac9567b33",
+    "src/lib/personal-plan/refinement-recompute/orchestrator.ts": "7e335912cf964f3cfc24a476ecd5e2da6ea51c445a56ba976a951af4619a669a",
+    "src/lib/personal-plan/refinement-recompute/rehydration.ts": "058935d21525d5d64574954875ba73745d5b5fa810e61ec122f8392b8f2611f1",
+    "src/lib/personal-plan/refinement-recompute/intents.ts": "fd92e359998a61b23a5b3eec835649d6a67235a352dbd89d1b0f15e7935e8592",
+    "src/lib/personal-plan/refinement-recompute/types.ts": "42ddfc88cf2faecfc5bcae4ecfb4766fd51bfaca183c1e411973a44713467f83",
+    "src/lib/personal-plan/routine-proposal-stager.ts": "d3c010b03572ef4a593484da0fb7f3463b2c1bd4d78e5bd6c8b41be42e57408b",
+    "src/lib/personal-plan/routine/production-sync-service.ts": "7409b54889cd04c5f1f23c5de7b3aab7bc270d53eadf33be4f04cb90117b5058",
+    "src/lib/personal-plan/routine/repository.ts": "5573df42d2948ac531c040766336627b60621743519baf8c4291f36640facb25",
+    "src/lib/personal-plan/routine/contracts.ts": "9ab203657876cd2b7834690a44a14dd73cb96679a0f601a7f48136c38ef781a6",
+    "src/lib/personal-plan/routine/source-sync-service.ts": "d9230024ea21d5add08e53c4e9365298f3789f2bae8956ddb21efe3c54b950e7",
+    "src/lib/personal-plan/routine/acquisition.ts": "341fbc1d085ebb038143cf9ff4d5a477ab27ffcf4c6507fb7b7dcf1da0dad056",
+    "src/lib/personal-plan/persistence/stage2-refinement-supabase.ts": "9da3baa346175deb49f5c9b9759e281d9accb068fbcf455ce1ea82d27fda9cbc",
+    "src/lib/personal-plan/products/production-persistence-gateway.ts": "ff627d68d5172015d33b6c049a8611a2155e4d79fff5bab4d7b88112379c161a",
+    "src/app/api/personal-plan/stage-2/route.ts": "6bb8a2252349518846e421d17c721f9fb3af3d4185610695e66b1ba9bf54657a",
+    "src/app/api/personal-plan/routine/sync/route.ts": "bb55d1b9b50eab56cc7bcc5bf994fcb71f752da809bcc3706b3a8dd2ba01407c",
+    "tests/personal-plan-pglite-migration.fixtures.ts": "b3a3d60712e89fa9b8608d38f5d8803073553a0c1c5129d96acc01b5dcc74855",
+    "supabase/migrations/20260825140000_personal_plan_refinement_recompute_activation.sql": "7deb15f1ec8aa3cd2c62ff5198240a1535c96a6557025800c393fa9252691ecc",
+    "supabase/migrations/20260811154526_personal_plan_initial_routine_activation_v1.sql": "0fc4c99c3b6e9f47cc3b53e2f3658921d7b8d64cc3db91d4290525a6282a28a8",
+    "supabase/migrations/20260808062603_personal_plan_routine_backend.sql": "e0f938278f7682146ca55e14df58f1cc759c9d53a6c64bc07eb4eccc8fab48c6",
+    "scripts/ci/run-personal-plan-nested.mjs": "25be2a1ac68687ae8e76baf40a0b1cfd189817951f4d0804cf2433c35c6be740",
+    "package.json": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+    ".github/workflows/ci.yml": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+    "plans/2026-08-31-feinschliff-modular-exit.md": "87a9191c5805dbfad112544aa94804a4a6482d6ca2c3a022b52fa404967b0594",
+    "node_modules/@electric-sql/pglite/package.json": "a540c379fd1d820810793681d25fa7ad5dadfcee2b190d14a6553fdb469cfe3c",
+    "node_modules/@electric-sql/pglite/dist/pglite-CntadC_p.d.ts": "aa4bc50bc6ba80c59ad64dd2f58112b873b6b2f255e383dae69f3c4abb4a753b"
+  },
+  "untouchedCallbacks": 53
+}

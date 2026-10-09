@@ -1,0 +1,56 @@
+'use strict';
+const fs=require('node:fs'),crypto=require('node:crypto');
+const guardPath='/tmp/test-audit-recompute-integration42/guard.cjs';
+if(crypto.createHash('sha256').update(fs.readFileSync(guardPath)).digest('hex')!=='d43a29b7fc60c9a4d9ce55f93b64be66b8866d1e67afa49a9542e87cb1f8b2bd')throw Error('guard tool changed');
+const g=require(guardPath), mode=process.argv[2],controlReceiptDir=process.argv[3];
+g.must(['--check','transfer','cut'].includes(mode)&&process.argv.length===(mode==='cut'?4:3),'usage: node edit.cjs --check | transfer | cut <complete-seven-control-receipt-dir>');
+const current=g.phase();
+if(mode==='--check') {
+  console.log(JSON.stringify({status:'static-only PASS',phase:current,...g.proposal,readset:Object.keys(g.manifest.readset).length,dependencies:Object.keys(g.pins.dependencies).length,childrenSpawned:0,writes:0},null,2));
+} else {
+  const wanted=mode==='transfer'?'before':'transfer';g.must(current===wanted,'wrong starting phase');
+  if(mode==='cut') {
+    g.must(controlReceiptDir.startsWith(g.DIR+'/controls-transfer-'),'cut needs a local transfer control receipt');
+    const complete=JSON.parse(g.text(controlReceiptDir+'/complete.json'));
+    const body=g.read(controlReceiptDir+'/receipt.json'),rows=JSON.parse(body.toString('utf8'));
+    g.must(complete.status==='verified'&&complete.phase==='transfer'&&complete.root===g.ROOT&&complete.head===g.pins.head,'control completion identity');
+    g.must(complete.driverSha256===g.hash(g.read(g.DIR+'/run-controls.cjs'))&&complete.guardSha256===g.hash(g.read(guardPath))&&complete.controlSha256===g.hash(g.read(g.DIR+'/controls-normalized.json')),'control tooling changed');
+    g.must(complete.receiptSha256===g.hash(body)&&complete.verified===7&&complete.cleanRuns===14,'incomplete seven-control receipt');
+    g.must(JSON.stringify(complete.testPhaseHashes)===JSON.stringify(g.manifest.phases.transfer),'control test phase mismatch');
+    g.must(rows.length===7 && new Set(rows.map(r=>r.id)).size===7,'duplicate or missing controls');
+    for(const c of g.controls) {
+      const r=rows.find(x=>x.id===c.id);
+      g.must(r?.verified&&r.byteExactRestored&&r.sourceBefore===c.sourceSha256&&r.sourceFault===c.mutantSha256&&r.sourceRestored===c.sourceSha256,'source control proof missing '+c.id);
+      g.must(r.assertion?.accepted&&r.assertion.operator===c.requiredOperator&&r.assertion.requiredMessage===c.requiredMessage&&r.assertion.oracle.text===c.oracles.transfer.text&&r.assertion.oracle.line===c.oracles.transfer.line,'intended oracle mismatch '+c.id);
+      for(const stage of ['before','fault','after']) {
+        const run=r[stage];g.must(run.log===controlReceiptDir+'/'+c.id+'-'+stage+'.tap','unexpected receipt log');
+        g.must(g.hash(g.read(run.log))===run.logSha256,'control log changed '+c.id+' '+stage);
+        g.must(!run.timedOut&&!run.spawnError&&run.signal===null&&run.tests===1&&run.skipped===0&&run.cancelled===0,'invalid native control run');
+        g.must(run.status===(stage==='fault'?1:0)&&run.fail===(stage==='fault'?1:0)&&run.pass===(stage==='fault'?0:1),'invalid native control outcome');
+      }
+    }
+  }
+  const release=g.lock('edit-'+mode);let dir,done=[];
+  try {
+    g.live(wanted);
+    const originals=Object.fromEntries(g.files.map(f=>[f,g.read(g.abs(f))]));
+    const changes=g.files.filter(f=>g.manifest.phases[wanted][f]!==g.manifest.phases[mode][f]);
+    // All outputs were parsed and reconstructed during guard initialization, before ANY repository write.
+    dir=g.backup('edit-'+mode,originals);g.live(wanted);
+    for(const f of changes) {
+      const overrides=Object.fromEntries(done.map(x=>[x,g.manifest.phases[mode][x]]));g.live(wanted,overrides);
+      g.cas(f,g.manifest.phases[wanted][f],g.snapshots[mode][f]);done.push(f);
+    }
+    g.live(mode);
+    const receipt={status:'applied',from:wanted,to:mode,files:changes,head:g.pins.head,hashes:g.manifest.phases[mode],proofCounts:g.manifest.proofCohortCounts};
+    fs.writeFileSync(dir+'/receipt.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify({dir,...receipt},null,2));
+  } catch(error) {
+    const rollback=[];
+    for(const f of done.reverse()) {
+      try {g.cas(f,g.manifest.phases[mode][f],g.snapshots[wanted][f]);rollback.push({file:f,status:'restored owned bytes'});}
+      catch(e){rollback.push({file:f,status:'preserved unexpected concurrent bytes',error:String(e)});}
+    }
+    if(dir)fs.writeFileSync(dir+'/failure.json',JSON.stringify({error:String(error),rollback},null,2)+'\n');
+    throw error;
+  } finally {release();}
+}

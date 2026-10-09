@@ -1,5 +1,4 @@
 import { createHash } from "node:crypto"
-import { relative, resolve } from "node:path"
 
 import {
   PRODUCT_INTAKE_PRODUCT_ID_PLACEHOLDER,
@@ -105,6 +104,8 @@ export type CatalogContentInput = {
   is_active: true
   lifecycle_status: "active"
   is_chaarlie_recommended: boolean
+  /** Only present when the reviewed package carries one; absent keeps existing fingerprints. */
+  market_segment?: "drugstore" | "professional"
   brand_id: null
   product_line_id: null
   image_url: null
@@ -128,18 +129,6 @@ export function catalogEnrichmentFingerprint(value: unknown): string {
 
 function catalogEnrichmentContentFingerprint(manifest: Record<string, unknown>): string {
   return catalogEnrichmentFingerprint({ ...manifest, validation: undefined, review: undefined })
-}
-
-export function isCatalogEnrichmentManifestPath(path: string, cwd = process.cwd()): boolean {
-  const root = resolve(cwd, "data/catalog-enrichment")
-  const candidate = resolve(cwd, path)
-  const relativePath = relative(root, candidate)
-  return (
-    relativePath.length > 0 &&
-    !relativePath.startsWith("..") &&
-    !relativePath.includes("..\\") &&
-    !relativePath.startsWith("/")
-  )
 }
 
 function errorsForSensitiveData(value: unknown, path = "manifest"): string[] {
@@ -205,6 +194,7 @@ function catalogContentFromApprovedPayload(
     is_active: catalogState.is_active as true,
     lifecycle_status: catalogState.lifecycle_status as "active",
     is_chaarlie_recommended: catalogState.is_chaarlie_recommended as boolean,
+    ...(product.market_segment ? { market_segment: product.market_segment } : {}),
     brand_id: null,
     product_line_id: null,
     image_url: null,
@@ -678,56 +668,5 @@ export function generateCatalogEnrichmentIndex(manifests: readonly CatalogEnrich
       product_key: item.product_key,
       content_fingerprint: catalogEnrichmentContentFingerprint(item),
     })),
-  }
-}
-
-export function previewCatalogEnrichment(manifest: unknown, currentTarget?: CurrentCatalogTarget) {
-  const validation = validateCatalogEnrichmentManifest(manifest, currentTarget)
-  if (!validation.ok) {
-    return {
-      mode: "preview" as const,
-      writes: false,
-      schema_ok: false,
-      ready_for_handoff: false,
-      errors: validation.errors,
-    }
-  }
-
-  const record = manifest as Record<string, unknown>
-  const validationState = (record.validation as Record<string, unknown>).state
-  const reviewState = (record.review as Record<string, unknown>).state
-  const disposition = record.disposition as Record<string, unknown>
-  const dispositionState = disposition.state
-  const validationRecord = record.validation as Record<string, unknown>
-  const blockers = [validationRecord.blockers, validationRecord.errors]
-    .flatMap((value) => (Array.isArray(value) ? value : []))
-    .filter((value): value is string => typeof value === "string")
-
-  return {
-    mode: "preview" as const,
-    writes: false,
-    schema_ok: true,
-    ready_for_handoff:
-      validationState === "ready_for_handoff" &&
-      reviewState === "approved" &&
-      disposition.may_enter_deliverable_b === true &&
-      blockers.length === 0,
-    validation_state: validationState,
-    review_state: reviewState,
-    disposition_state: dispositionState,
-    blockers,
-    operations: orderCatalogEnrichmentOperations(validation.planned_operations),
-    deletes: validation.planned_operations
-      .filter(
-        (operation): operation is CatalogEnrichmentDeleteOperation => operation.type === "delete",
-      )
-      .map((operation) => ({ table: operation.table, rows: operation.rows })),
-    catalog_content: (
-      validation.planned_operations.find((operation) => operation.type === "insert_product") as
-        | Extract<CatalogEnrichmentOperation, { type: "insert_product" }>
-        | undefined
-    )?.catalog_content,
-    pending_b1_resolutions: ["brand_id", "product_line_id", "image_url"],
-    content_fingerprint: validation.content_fingerprint,
   }
 }

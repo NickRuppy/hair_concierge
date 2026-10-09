@@ -8,6 +8,7 @@ import type {
   UnsupportedRequestedSignal,
 } from "@/lib/agent/tools/select-products"
 import type { SelectableProductCategory } from "@/lib/agent/contracts"
+import type { BondbuilderChatResearch } from "@/lib/bondbuilder/research-facts"
 
 export interface AgentV2SelectProductsProjection {
   tool_name: "select_products"
@@ -28,11 +29,15 @@ export interface AgentV2SelectProductsProjection {
     caveat: string | null
     supported_claims: SupportedProductClaim[]
     unsupported_requested_signals: UnsupportedRequestedSignal[]
+    bondbuilder_research?: BondbuilderChatResearch
+    over_budget?: true
   }>
   missing_required_data: SelectedProductsMissingInfo[]
   constraint_blockers: UnsupportedRequestedSignal[]
   comparison_facts: Record<string, string[]> | null
   care_balance_context?: ProductCareBalanceContext | null
+  budget?: string
+  budget_note?: string
   allowed_claim_sources: string[]
   trace: {
     profile_basis: string[]
@@ -68,10 +73,16 @@ export function projectSelectProductsForAgentV2(
       caveat: product.caveat,
       supported_claims: product.supported_claims,
       unsupported_requested_signals: product.unsupported_requested_signals,
+      ...(product.bondbuilder_research
+        ? { bondbuilder_research: product.bondbuilder_research }
+        : {}),
+      ...(product.over_budget ? { over_budget: true as const } : {}),
     })),
     missing_required_data: projection.missing_info,
     constraint_blockers: [...projection.unsupported_requested_signals, ...productSignals],
     comparison_facts: projection.comparison_facts,
+    ...(projection.budget ? { budget: projection.budget } : {}),
+    ...(projection.budget_note ? { budget_note: projection.budget_note } : {}),
     ...(options.includeCareBalanceContext
       ? { care_balance_context: projection.care_balance_context ?? null }
       : {}),
@@ -81,6 +92,9 @@ export function projectSelectProductsForAgentV2(
       "selected_products.profile_basis",
       "selected_products.category_guidance",
       "selected_products.caveat",
+      ...(projection.products.some((product) => product.bondbuilder_research)
+        ? ["selected_products.bondbuilder_research"]
+        : []),
       ...(options.includeCareBalanceContext ? ["selected_products.care_balance_context"] : []),
     ],
     trace: {

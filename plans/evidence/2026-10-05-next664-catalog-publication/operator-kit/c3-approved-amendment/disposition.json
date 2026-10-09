@@ -1,0 +1,17 @@
+{
+  "authorization": "Parent /root approved bounded C3 recipe revision: put forbidden flag FIRST; preserve original bytes/pins and strict proof. No native run authorized to preparer.",
+  "originalProposal": "/tmp/test-audit-catalog-publication99-0f7kicd2",
+  "originalManifestSHA256": "d53bee703b3486be20d12d1e0cd61051efbd08b2f21501da88c87ac9ac52b87d",
+  "originalControlsSHA256": "38bbcf3ce9e95022b51ca9c0405af8138fe0f2606a12cf1dc41fc7abbdcd635e",
+  "originalMutantSHA256": "e0cdcd5302b1d29e66e7ffc0dcb74d9705f5417aface954f11c35c5cfe496984",
+  "revisedControlsSHA256": "c7b511585431eef2118599014bab4aa7c845730a7d0887cdebf646389ffbb865",
+  "revisedMutantSHA256": "298cc691179accd3dbf8391704fca25df81a45982ebe3a0ad0f8b5bc89e6ff36",
+  "changedFields": [
+    "C3.new",
+    "C3.mutantSHA256",
+    "C3.actualPredicate",
+    "C3.messagePredicate"
+  ],
+  "testsSourceReadsetsIdentityDependenciesChanged": false,
+  "originalProposalModified": false
+}

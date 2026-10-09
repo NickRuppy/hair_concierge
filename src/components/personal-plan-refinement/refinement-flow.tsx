@@ -22,7 +22,6 @@ import {
   type Stage2ModuleCompletionResult,
 } from "@/lib/personal-plan/refinement/gateway"
 import {
-  deriveStage2EntryMode,
   hostSessionFor,
   resolveStage2EntryModule,
   resolveStage2FlowEntryView,
@@ -135,12 +134,6 @@ function stage2BridgeMarkerProps(handoff: Stage2CompleteResult) {
     "data-refined-version-id": handoff.refinedVersionId,
     "data-stage2-next-href": handoff.nextHref,
   }
-}
-
-export function deriveRefinementEntryMode(
-  session: Stage2RefinementSession,
-): Extract<RefinementMode, "question" | "bridge"> {
-  return deriveStage2EntryMode(session)
 }
 
 /**

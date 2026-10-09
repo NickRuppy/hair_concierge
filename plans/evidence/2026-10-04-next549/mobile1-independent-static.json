@@ -1,0 +1,12 @@
+{
+  "counts": {
+    "before": 34,
+    "transfer": 34,
+    "cut": 33
+  },
+  "sourceReadset": 28,
+  "controlsParsed": 3,
+  "mismatches": [],
+  "snapshotOrder": "intended tag before fake state",
+  "noTestsOrMutations": true
+}

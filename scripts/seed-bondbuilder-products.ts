@@ -17,6 +17,7 @@ type BondbuilderSeedProduct = {
   affiliate_link: string
   price_eur: number | null
   currency: "EUR"
+  market_segment?: "drugstore" | "professional"
   tags: string[]
   suitable_concerns: string[]
   specs: Omit<ProductBondbuilderSpecs, "product_id">
@@ -216,6 +217,7 @@ async function main() {
       is_active: true,
       lifecycle_status: product.lifecycle_status,
       sort_order: product.default_card ? 0 : 50,
+      ...(product.market_segment ? { market_segment: product.market_segment } : {}),
     }
     const embeddingText = [
       payload.name,

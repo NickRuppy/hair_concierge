@@ -1,0 +1,61 @@
+{
+  "status": "PASS",
+  "guardSha": "fda51c060377a3566172dff9e51c0081a68d79d3a3f0913c49a005474a6e3a2c",
+  "policySha": "1ffae91f2e0ffc3d2fc37c4824e9128809295f477f1ee227343aed6c41255fc3",
+  "cases": [
+    {
+      "name": "saved bytes",
+      "accepted": true,
+      "expected": true
+    },
+    {
+      "name": "other branch tracking",
+      "accepted": true,
+      "expected": true
+    },
+    {
+      "name": "unrelated plain branch added",
+      "accepted": true,
+      "expected": true
+    },
+    {
+      "name": "target tracking change",
+      "accepted": false,
+      "expected": false
+    },
+    {
+      "name": "core change",
+      "accepted": false,
+      "expected": false
+    },
+    {
+      "name": "remote addition",
+      "accepted": false,
+      "expected": false
+    },
+    {
+      "name": "new independent section",
+      "accepted": false,
+      "expected": false
+    },
+    {
+      "name": "escaped branch header retained",
+      "accepted": false,
+      "expected": false
+    },
+    {
+      "name": "invalid UTF8",
+      "accepted": false,
+      "expected": false
+    },
+    {
+      "name": "missing identity file",
+      "accepted": false,
+      "expected": false
+    }
+  ],
+  "repositoryWrites": 0,
+  "ownerImports": 0,
+  "runtimeTests": 0,
+  "note": "In-memory actual guarded config function only; this is identity-policy validation, not product/runtime proof."
+}

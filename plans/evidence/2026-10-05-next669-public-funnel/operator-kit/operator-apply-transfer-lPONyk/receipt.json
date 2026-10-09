@@ -1,0 +1,34 @@
+{
+  "mode": "transfer",
+  "from": "before",
+  "phase": "transfer",
+  "counts": {
+    "before": 66,
+    "transfer": 66,
+    "cut": 63
+  },
+  "pinsSHA": "3be17f0d28861a6791fb575d3550eed571275aaae9b7c5f7c295002bfe87cecd",
+  "prerequisite": null,
+  "changed": [
+    "tests/gated-example-pages.test.tsx",
+    "tests/gated-pages-zero-mutation.test.tsx",
+    "tests/gated-preview-component.test.tsx"
+  ],
+  "allTestHashes": {
+    "tests/funnel-api.test.ts": "1cdb0c5a2551075e530f4b85a1f2f38c1757fff69f5b9090f01a6f63684e0e1e",
+    "tests/funnel-client.test.ts": "5e5ee42b9f87a309364f3eaa2335976eb7104ddf34c0eb05795c93cebcbf1cbc",
+    "tests/funnel-cookie.test.ts": "e75f3d09b2cf7fab486ba164ad68dfcb18a19dc24d6a4fd178e30b4dab283df5",
+    "tests/funnel-migration.test.ts": "f1f36110b05d3131c0d6af146962471d7969b142ddb73dc3695a973b6bbb1127",
+    "tests/funnel-rate-limit.test.ts": "e848153ff3c80ff0d429ca7f3a50e42aa6d3b87a85e1d5ec28d14db83077a6dd",
+    "tests/funnel-route.test.ts": "9afe9dfc97c2d708ca882d823926eb6ce36237c9df25d287a9a58b35d3cd46d1",
+    "tests/funnel-server.test.ts": "84aec887c25617e6504b6e574b3dac815c03b96aac69f74556ce73abb956c8fc",
+    "tests/gated-example-pages.test.tsx": "0e6038435de0e3fde13c7199eed1337002a17e42d78b8973a562194ad2f1891c",
+    "tests/gated-pages-zero-mutation.test.tsx": "6fe2d119cc61f31a89bab936a644a307182624fcd1d9b7b696ea47ab21d6cdde",
+    "tests/gated-preview-component.test.tsx": "587f2dd2b1f1e05f0f8cafeca3d7f547a29e35aca7d0546614249d83c668530a",
+    "tests/editorial-pages.test.tsx": "96ce7c5f2eee468668c4581b58aeb8a69ee959c593ab1059c20d9b3b0c48091e",
+    "tests/landing-client-import-boundary.test.ts": "67d144b38b889ebfcb4900a2d4357eea894eeabcf3af65e7d935f3525e742dfd"
+  },
+  "sourceWrites": 0,
+  "testsRun": 0,
+  "originals": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/operator-apply-transfer-lPONyk/originals"
+}

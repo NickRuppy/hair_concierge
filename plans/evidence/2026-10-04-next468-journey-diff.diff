@@ -1,0 +1,244 @@
+--- a/tests/personal-plan-journey-access-loader.test.ts
++++ b/tests/personal-plan-journey-access-loader.test.ts
+@@ -309,12 +309,14 @@
+   assert.deepEqual(excluded, { allowed: false })
+   assert.equal(entitlementReads, 0)
+ 
++  const timings: Array<{ operation: string; outcome: string; durationMs: number }> = []
+   let refinedReads = 0
+   let draftReads = 0
+   let stage3Reads = 0
+   let stage4Reads = 0
+   const access = await loadPersonalPlanStage2AccessWithDeps(
+     deps({
++      reportStage3AccessTiming: (timing) => timings.push(timing),
+       loadCurrentRefinedNeed: async () => {
+         refinedReads += 1
+         throw new Error("must not load refined need")
+@@ -339,6 +341,7 @@
+   assert.equal(draftReads, 0)
+   assert.equal(stage3Reads, 0)
+   assert.equal(stage4Reads, 0)
++  assert.deepEqual(timings, [])
+ })
+ 
+ test("Stage 2 access remains fail-closed for incomplete owner source facts and throws on reads", async () => {
+@@ -439,15 +442,6 @@
+   assert.equal(access.kind, "personal_plan")
+ })
+ 
+-test("loader derives the frontier only from owner-scoped entitlement, source, plan and current authority facts", async () => {
+-  const access = await loadPersonalPlanJourneyAccessWithDeps(deps(), "user-1")
+-  assert.equal(access.kind, "personal_plan")
+-  if (access.kind !== "personal_plan") throw new Error("expected Personal Plan access")
+-  assert.equal(access.frontier, "stage4")
+-  assert.equal(access.allowed.stage3, true)
+-  assert.equal(access.allowed.stage4, true)
+-})
+-
+ test("journey access accepts a current Stage 3 draft with a valid product-load overlay", async () => {
+   const { snapshot, draft } = productLoadOverlayFixture()
+   const projectedDraft = await projectJourneyDraft(draft)
+@@ -542,6 +536,10 @@
+   )
+ 
+   assert.equal(access.kind, "personal_plan")
++  if (access.kind !== "personal_plan") throw new Error("expected Personal Plan access")
++  assert.equal(access.frontier, "stage4")
++  assert.equal(access.allowed.stage3, true)
++  assert.equal(access.allowed.stage4, true)
+   assert.deepEqual(timings, [
+     { operation: "stage3_access_entitlement", outcome: "eligible", durationMs: 5 },
+     { operation: "stage3_access_artifact_plan", outcome: "ready", durationMs: 5 },
+@@ -600,19 +598,6 @@
+     { operation: "stage3_access_entitlement", outcome: "eligible", durationMs: 4 },
+     { operation: "stage3_access_artifact_plan", outcome: "error", durationMs: 7 },
+   ])
+-})
+-
+-test("the narrow Stage 2 access read never emits Stage 3 access timing", async () => {
+-  const timings: Array<{ operation: string; outcome: string; durationMs: number }> = []
+-
+-  assert.deepEqual(
+-    await loadPersonalPlanStage2AccessWithDeps(
+-      deps({ reportStage3AccessTiming: (timing) => timings.push(timing) }),
+-      "user-1",
+-    ),
+-    { allowed: true },
+-  )
+-  assert.deepEqual(timings, [])
+ })
+ 
+ test("loader starts independent current refined-need and product-draft reads together", async () => {
+--- a/tests/personal-plan-enrollment.test.ts
++++ b/tests/personal-plan-enrollment.test.ts
+@@ -321,41 +321,6 @@
+   }
+ }
+ 
+-test("a current Personal Plan membership resolves through its exact provider purchase and quiz lead", async () => {
+-  const admin = client({
+-    billing_one_time_purchases: [],
+-    billing_subscriptions: [subscription],
+-    funnel_sessions: [
+-      attributedSession({ provider: "paypal", purchaseReference: "I-PERSONAL-PLAN" }),
+-    ],
+-    leads: [
+-      {
+-        id: "44444444-4444-4444-8444-444444444444",
+-        quiz_kind: "personal_plan",
+-        user_id: "user-1",
+-      },
+-    ],
+-  })
+-
+-  assert.deepEqual(
+-    await findPersonalPlanEnrollmentForUser(admin as never, "user-1", new Date("2026-08-10")),
+-    {
+-      accessState: "active",
+-      sourceId: subscription.id,
+-      paidAt: "2026-08-09T12:46:16.000Z",
+-      qualifiedAt: "2026-08-09T12:46:16.000Z",
+-      artifactLeadId: "44444444-4444-4444-8444-444444444444",
+-      quizSourceKind: "personal_plan",
+-      sourceKind: "launch_subscription",
+-    },
+-  )
+-  assert.deepEqual(admin.queries.find((query) => query.table === "funnel_sessions")?.predicates, [
+-    ["user_id", "user-1"],
+-    ["purchase_provider", "paypal"],
+-    ["purchase_reference", "I-PERSONAL-PLAN"],
+-  ])
+-})
+-
+ test("Stripe launch memberships use the checkout session reference persisted at activation", async () => {
+   const stripeSubscription = {
+     ...subscription,
+@@ -421,7 +386,20 @@
+     "user-1",
+     new Date("2026-08-10"),
+   )
+-  assert.equal(enrollment.sourceId, subscription.id)
++  assert.deepEqual(enrollment, {
++    accessState: "active",
++    sourceId: subscription.id,
++    paidAt: "2026-08-09T12:46:16.000Z",
++    qualifiedAt: "2026-08-09T12:46:16.000Z",
++    artifactLeadId: "44444444-4444-4444-8444-444444444444",
++    quizSourceKind: "personal_plan",
++    sourceKind: "launch_subscription",
++  })
++  assert.deepEqual(admin.queries.find((query) => query.table === "funnel_sessions")?.predicates, [
++    ["user_id", "user-1"],
++    ["purchase_provider", "paypal"],
++    ["purchase_reference", "I-PERSONAL-PLAN"],
++  ])
+ })
+ 
+ test("standard subscriptions and membership purchases without exact Personal Plan attribution fail closed", async () => {
+@@ -570,47 +548,6 @@
+       ["revoked_at", null],
+     ],
+   )
+-})
+-
+-test("a claimed partner invitation without a lead binding or activation never grants access", async () => {
+-  const admin = client({
+-    billing_one_time_purchases: [],
+-    billing_subscriptions: [],
+-    partner_access_invitations: [
+-      {
+-        id: "partner-invitation-unbound",
+-        claimed_user_id: "user-1",
+-        lead_id: null,
+-        activated_at: null,
+-        revoked_at: null,
+-        current_manual_access_grant_id: "partner-grant-unbound",
+-        current_grant: {
+-          id: "partner-grant-unbound",
+-          user_id: "user-1",
+-          reason: "partner",
+-          expires_at: null,
+-          revoked_at: null,
+-          partner_access_invitation_id: "partner-invitation-unbound",
+-        },
+-      },
+-    ],
+-  })
+-
+-  const enrollment = await findPersonalPlanEnrollmentForUser(
+-    admin as never,
+-    "user-1",
+-    new Date("2026-09-13"),
+-  )
+-
+-  assert.deepEqual(enrollment, {
+-    accessState: "none",
+-    sourceId: null,
+-    paidAt: null,
+-    qualifiedAt: null,
+-    artifactLeadId: null,
+-    quizSourceKind: null,
+-    sourceKind: null,
+-  })
+ })
+ 
+ // The user must actually be a claimed partner (a partner_access_invitations
+--- a/tests/personal-plan-lifecycle-marks.test.ts
++++ b/tests/personal-plan-lifecycle-marks.test.ts
+@@ -107,15 +107,6 @@
+ 
+ // --- Module banner dismissal ------------------------------------------------
+ 
+-test("recording a module banner dismissal and reading it back reports that module dismissed", async () => {
+-  const { client } = createInMemoryLifecycleClient()
+-
+-  await recordModuleBannerDismissal(client, { userId: USER, module: "products", dismissedAt: NOW })
+-  const state = await loadModuleBannerDismissals(client, USER)
+-
+-  assert.equal(isModuleBannerDismissed(state, "products"), true)
+-})
+-
+ test("dismissing one module leaves the other module's banner un-dismissed (per-module independence, i.e. the reappear-once mechanism)", async () => {
+   const { client } = createInMemoryLifecycleClient()
+ 
+@@ -156,11 +147,6 @@
+   const state = await loadModuleBannerDismissals(client, USER)
+ 
+   assert.equal(isModuleBannerDismissed(state, "products"), false)
+-})
+-
+-test("a user with no dismissals reads as no modules dismissed", async () => {
+-  const { client } = createInMemoryLifecycleClient()
+-  const state = await loadModuleBannerDismissals(client, USER)
+   assert.deepEqual([...state.dismissedModules], [])
+ })
+ 
+@@ -198,17 +184,6 @@
+ 
+ // --- Nav-surface visited -----------------------------------------------------
+ 
+-test("recording a nav surface visit and reading it back reports that surface visited", async () => {
+-  const { client } = createInMemoryLifecycleClient()
+-
+-  await recordNavSurfaceVisited(client, { userId: USER, surface: "profile", visitedAt: NOW })
+-  const state = await loadVisitedNavSurfaces(client, USER)
+-
+-  assert.equal(state.available, true)
+-  assert.equal(isNavSurfaceVisited(state, "profile"), true)
+-  assert.equal(isNavSurfaceVisited(state, "application"), false)
+-})
+-
+ test("a user with no visits reads as available with nothing visited (every non-routine tab dots)", async () => {
+   const { client } = createInMemoryLifecycleClient()
+   const state = await loadVisitedNavSurfaces(client, USER)
+@@ -266,6 +241,9 @@
+ 
+   assert.deepEqual([...dismissals.dismissedModules], ["products"])
+   assert.deepEqual([...visited.visitedSurfaces], ["profile"])
++  assert.equal(visited.available, true)
++  assert.equal(isNavSurfaceVisited(visited, "profile"), true)
++  assert.equal(isNavSurfaceVisited(visited, "application"), false)
+ })
+ 
+ test("nav-visited read degrades to unavailable — no dots anywhere, NOT a dot on every tab — when the table is absent", async () => {

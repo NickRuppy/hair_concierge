@@ -1,0 +1,45 @@
+{
+  "kind": "Separate follow-up navigation pins; not a full semantic sibling ledger or accepted D",
+  "files": [
+    {
+      "file": "src/lib/personal-plan/release.ts",
+      "sha256": "92d24c0e4c010e20e13f75db0c561cf9da8f490a17de4a0e4cbbf10691a8d55c"
+    },
+    {
+      "file": "src/lib/personal-plan/rollout-access.ts",
+      "sha256": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c"
+    },
+    {
+      "file": "src/lib/personal-plan/journey-access-loader.ts",
+      "sha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d"
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/errors.ts",
+      "sha256": "1e9b1f458e6adb52ee76ecf725c3a6007e91aab6ccb5f89a6dd00232691c93a1"
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "sha256": "16b77c5f68870a0cda0ea86910b26408cae10f85f2213d6f8b219a74ff832e67"
+    },
+    {
+      "file": "tests/personal-plan-stage3-release.test.ts",
+      "sha256": "d25fd6ac50e6ba5a09c3870b83ae55cbc729a72b55cb0329b2d6c414b4dc2f1e"
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "sha256": "772d32f6e8bce05037c324ea7b11a9260d75c99c54bc00e6e4c13588e7129e24"
+    },
+    {
+      "file": "tests/freemium-enrollment-admission.test.ts",
+      "sha256": "fcc6c0f7c564fa5078c7c81823991341ab1859d414d6e00c33f72c369b8a2389"
+    },
+    {
+      "file": "tests/personal-plan-trial-stage1-journey.test.ts",
+      "sha256": "ce32342ee184872e96bc13191d0f5dc25d0d863a8acaa477e4ccd8df62bf9fc0"
+    },
+    {
+      "file": "tests/personal-plan-field-test-access.test.ts",
+      "sha256": "9b6b6880e409e68a531f1d281dbbc19054ec4cee05535f48e21df67a6b0b0e8a"
+    }
+  ]
+}

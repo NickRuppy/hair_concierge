@@ -1,0 +1,353 @@
+{
+  "packet_version": "bondbuilder-validation-input-v0.4",
+  "formula_packet": "anonymous.json",
+  "output_contract": "Stage B record exact keys:\n`slot_id, identity, boundary_status, technology_family, claim_trust_level, trust_basis, policy_reference, holds, classification_confidence, confidence_by_property, assessed_benefit, supporting_source_ids, counter_source_ids, applicability_bridge, evidence_limitations, research_admission_candidate, new_submission_recommended, application_facts, fit_assessment, manufacturer_positioning, intended_role, concise_de, deeper_de, stage_a_to_final_changes`.\nIdentity is the exact packet identity object, without added keys. Null family/trust/basis/policy is appropriate when not finalized applicable. A source-version identity is not a scanned bottle. The default recommendation fact is a simulation, not a database update. `holds` exact keys: `identity, boundary, claim_trust, protocol, fit`, each bounded string array. Confidence-by-property exact keys: `identity, boundary, technology, policy, protocol, fit`, each a confidence value or null if not applicable. Explanations/rationale max 2000 characters; concise German max 500, deeper German max 2500. Source arrays contain registered IDs, max 20. Changes and evidence limitations are bounded string arrays.\n\nApplication facts exact keys:\n`selected_direction_source_id, placement, physical_format, hair_state, application_area, amount, dilution, contact_time, working_time, sequence, conditioner, cadence, brand_partners, source_variants`.\nEach field except selected source, sequence and source_variants is a fact node `{value, source_ids, limitations}`. An unknown node has null (or the specified unknown-kind value), no invented fact, and a reason. A source fact must cite at least one applicable inspected source ID. The following value shapes are exact:\n- placement: `pre_shampoo | post_shampoo | before_or_after_shampoo | null`; do not infer placement where directions lack order.\n- physical_format, application_area, amount, dilution: string or null. A role/title alone is not physical texture.\n- hair_state: array of source-backed descriptors or null.\n- contact_time: `{kind, minutes_min, minutes_max, branches}`; kind `fixed | range | conditional | no_wait | unknown`; numbers nullable; branches `{condition, minutes_min, minutes_max}`. No inferred maximum or minimum.\n- working_time: `{minutes_min, minutes_max}` or null. Active massage time is distinct from extra dwell.\n- sequence: array of `{action, requirement, source_ids}`; requirement `instruction | recommended | optional`. Separate selected directions from optional partner recommendations.\n- conditioner: `{before, after, after_timing}` or null. Before/after strings bounded; do not infer a prohibition merely from absence.\n- cadence: `{kind, times_per_week_min, times_per_week_max, washes_min, washes_max, branches}`; kind `weekly | wash_interval | conditional | unknown`; numbers nullable; each branch `{condition, kind, times_per_week_min, times_per_week_max, washes_min, washes_max}`. Unknown cadence has all numbers null and empty branches. Conditional has top-level numbers null.\n- brand_partners: array of `{name_or_role, requirement}`, requirement `required | recommended | optional`. Empty if not stated, not evidence of equivalence.\n- source_variants: array of `{source_id, selected, summary}`; retain meaningful non-selected differing directions. Selected packet directions remain primary.\n\nFit exact keys: `fine, normal, coarse, rationale, source_ids`. Nullable booleans separate diameter from pattern/porosity; absence of evidence remains null. Do not convert generic maker positioning to proven all-diameter fit. Manufacturer positioning is bounded attributed text, not an independent assignment.\n\nUse selected direction sources for factual instructions regardless of boundary exclusion/review; an excluded category product can still have useful researched directions. No inferred dose, cadence, physical format, superiority, mandatory brand purchase, or scientific low-trust rationale. Preserve raw Stage A observations and explain candidate-to-final changes with source/rule references. Write `records.json` and `notes.md`; stop.\n",
+  "policy": {
+    "reference": "owner-submission-policy-2026-10-01",
+    "new_resolved_in_scope_trust": "low",
+    "trust_basis": "owner_default",
+    "new_submission_recommended": false,
+    "exact_owner_rulings": [],
+    "existing_catalog_matches": "not evaluated in this offline validation; preserve approvals and link instead of duplicating if matched later",
+    "enrichment_scope": "All eight original pilot products, unchanged exact trust. These four validation products are not approved new enrichment/recommendation targets."
+  },
+  "source_registry": [
+    {
+      "source_id": "S01",
+      "url": "https://eu.curlsmith.com/products/bond-curl-rehab-salve",
+      "publisher": "Curlsmith EU",
+      "accessed_at": "2026-10-02",
+      "access_level": "relevant_full_text_inspected",
+      "scope": "current EU Bond Curl Rehab Salve product page, 237 ml option",
+      "commercial_context": "publisher sells the described product or ingredient",
+      "observations": [
+        "Full English INCI transcribed into V01. Specific targeted pre-shampoo treatment claiming reinforcement of three bond types; no disclosed product concentration, pH or independent molecular endpoint.",
+        "Wet hair without washing first. Apply generously root to tip, coat evenly and detangle. Low porosity: 15 minutes every 4-5 washes; medium: 20 minutes every 3-4 washes; high: 30 minutes every 2-3 washes. Rinse, shampoo and condition."
+      ],
+      "limitations": [
+        "Actual pack not supplied; manufacturer warns that formula lists can change.",
+        "Product title salve does not itself establish an applied cream texture."
+      ],
+      "authority_tier": "local_manufacturer"
+    },
+    {
+      "source_id": "S02",
+      "url": "https://de.curlsmith.com/products/bond-curl-rehab-salve?variant=39480276746389",
+      "publisher": "Curlsmith DE",
+      "accessed_at": "2026-10-02",
+      "access_level": "relevant_full_text_inspected",
+      "scope": "DE 237 ml listing and translated formula/directions",
+      "commercial_context": "publisher sells the described product or ingredient",
+      "observations": [
+        "DE current ingredient sequence corroborates EU English sequence, including the gluconamide/gluconate pair and citric acid.",
+        "DE instructions corroborate the three porosity/time/wash-interval branches and rinse before shampoo and conditioner."
+      ],
+      "limitations": [
+        "Translated ingredient spelling is not proof of batch equality; no supplied pack."
+      ],
+      "authority_tier": "local_manufacturer"
+    },
+    {
+      "source_id": "S03",
+      "url": "https://www.dm.de/p/d/1688653/balea-professional-haarkur-keratin-repair",
+      "publisher": "dm / Balea",
+      "accessed_at": "2026-10-02",
+      "access_level": "relevant_full_text_inspected",
+      "scope": "DE Haarkur Keratin Repair 300 ml, article 1688653, listed GTIN 4070765002003",
+      "commercial_context": "publisher sells the described product or ingredient",
+      "observations": [
+        "Complete INCI transcribed into V02.",
+        "Claims concern keratin/peptides and a Pro-Strength label for damaged hair.",
+        "Spread gently through damp lengths and ends 1-2 times weekly, leave 2-3 minutes and rinse thoroughly. No explicit shampoo/conditioner ordering or physical texture in the inspected text."
+      ],
+      "limitations": [
+        "Listed GTIN is not a scanned pack; marketing name does not identify a distinct molecular ingredient."
+      ],
+      "authority_tier": "brand_owner_retailer"
+    },
+    {
+      "source_id": "S04",
+      "url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/schaden-loescher/pro-keratin-filler",
+      "publisher": "Garnier DE / L'Oréal",
+      "accessed_at": "2026-10-02",
+      "access_level": "relevant_full_text_inspected",
+      "scope": "DE Pro-Keratin Filler Deep Repair Intensive Haarkur 200 ml, formula 1261267 / Z70029743/2",
+      "commercial_context": "publisher sells the described product or ingredient",
+      "observations": [
+        "Complete INCI transcribed into V03.",
+        "Maker describes Pro-Keratin plus marula oil, conditioning, filling and strengthening hair; no specific calcium-management or citric-acid repair claim in this text.",
+        "Before OR after shampoo on damp hair, massage through lengths/ends, leave 5 minutes, optional towel/shower-cap warmth, rinse thoroughly with lukewarm water. Cadence and numerical dose unstated."
+      ],
+      "limitations": [
+        "Rich formula is a description, not enough to certify cream texture.",
+        "No actual pack."
+      ],
+      "authority_tier": "local_manufacturer"
+    },
+    {
+      "source_id": "S05",
+      "url": "https://www.lorealprofessionnel.de/alle-produkte/haarpflege/absolut-repair-molecular-serum",
+      "publisher": "L'Oréal Professionnel DE",
+      "accessed_at": "2026-10-02",
+      "access_level": "relevant_full_text_inspected",
+      "scope": "DE Absolut Repair Molecular Rinse-Off Serum current product-page version; size/GTIN unstated in inspected text",
+      "commercial_context": "publisher sells the described product or ingredient",
+      "observations": [
+        "Complete INCI transcribed into V04.",
+        "Maker claims 2% peptide bonders and five amino acids, molecular repair, a serum-like texture and suitability for damaged hair; this does not identify a listed sh-Oligopeptide-78 technology or an acid/calcium role.",
+        "Use in place of a rinse-out mask. Recommended after matching shampoo: detangle wet hair, divide into two sections, use 2-3 pumps on one section and repeat elsewhere. Normally lengths/ends; very damaged hair may receive root-to-tip application. Work through 1-2 minutes; no separate dwell required; rinse thoroughly. Optional intensive-care Metal DX mask and recommended matching leave-in.",
+        "Two-years-damage headline is footnoted to a shampoo+serum+leave-in instrumental system test; another molecular-repair claim refers to 15 serum applications, not proof of one-use superiority."
+      ],
+      "limitations": [
+        "Size and scanned pack unresolved; source-version identity, not exact bottle certification.",
+        "Concentration label is a branded complex claim, not ingredient dose.",
+        "No study protocol, comparator or data inspected."
+      ],
+      "authority_tier": "local_manufacturer"
+    },
+    {
+      "source_id": "S06",
+      "url": "https://eu.curlsmith.com/blogs/product-guides/bond-curl-rehab-salve",
+      "publisher": "Curlsmith / Sharley Butcher",
+      "accessed_at": "2026-10-02",
+      "access_level": "relevant_full_text_inspected",
+      "scope": "manufacturer editorial and historical study disclosure",
+      "commercial_context": "publisher sells the described product or ingredient",
+      "observations": [
+        "Mentions third-party data and an independent user study of 120 volunteers in January 2021; full study, comparator and formula equivalence unavailable.",
+        "Editorial says minimum 15 minutes, 30 for medium/high porosity, differing from current product-page medium 20 minutes. It recommends the same conditional wash intervals and matching shampoo/conditioner."
+      ],
+      "limitations": [
+        "Not an inspected peer-reviewed study.",
+        "Select current local product directions, retaining this differing editorial separately."
+      ],
+      "authority_tier": "manufacturer_editorial"
+    },
+    {
+      "source_id": "S07",
+      "url": "https://cms.chempoint.com/ChemPoint/media/ChemPointSiteMedia/PDF%20Docs/3-Minute-Hair-Strengthening-Rinse-off-Conditioner-Mask.PDF",
+      "publisher": "Ashland, hosted by distributor ChemPoint",
+      "accessed_at": "2026-10-02",
+      "access_level": "relevant_full_text_inspected",
+      "scope": "supplier demonstration formula Z351-25B, dated 2017-11-27",
+      "commercial_context": "publisher sells the described product or ingredient",
+      "observations": [
+        "Names FiberHance BM solution as Hydroxypropylgluconamide (and) Hydroxypropylammonium Gluconate in a supplier example mask."
+      ],
+      "limitations": [
+        "This is not Curlsmith's formulation, supplier verification or product dose.",
+        "Stability testing is not an efficacy trial."
+      ],
+      "authority_tier": "supplier_document"
+    },
+    {
+      "source_id": "S08",
+      "url": "https://investor.ashland.com/news-releases/news-release-details/ashland-honored-henkel-two-personal-care-supplier-awards",
+      "publisher": "Ashland",
+      "accessed_at": "2026-10-02",
+      "access_level": "relevant_full_text_inspected",
+      "scope": "supplier press release 2024-02-22, technology scope",
+      "commercial_context": "publisher sells the described product or ingredient",
+      "observations": [
+        "Describes glucose-derived FiberHance reinforcement through ionic/hydrogen interactions inside keratin and a Henkel supplier award."
+      ],
+      "limitations": [
+        "Commercial technology statement and award, not independent efficacy or proof of native-disulfide restoration.",
+        "No transfer of supplier magnitudes or dose into a current Curlsmith result."
+      ],
+      "authority_tier": "supplier_statement"
+    },
+    {
+      "source_id": "S09",
+      "url": "https://genamarie.co/2021/01/curlsmith-bond-curl-vs-olaplex-no-3-compared-giveaway/",
+      "publisher": "Gena Marie",
+      "accessed_at": "2026-10-02",
+      "access_level": "relevant_full_text_inspected",
+      "scope": "original written sponsored creator comparison, 2021-01-03",
+      "commercial_context": "sponsored post; affiliate links",
+      "observations": [
+        "Author reports tighter curl definition and shrinkage plus shine after Bond Curl, using a routine comparison against OLAPLEX No.3.",
+        "Sponsored post disclosed; practical single-person cosmetic observations do not measure molecular repair."
+      ],
+      "limitations": [
+        "Historical formula/market not bound to current EU version.",
+        "Article inspected; linked video not independently watched.",
+        "Not an Abbey Yung endorsement."
+      ],
+      "authority_tier": "original_creator_statement"
+    },
+    {
+      "source_id": "S10",
+      "url": "https://www.reddit.com/r/curlyhair/comments/1eebo4c/curlsmith_bond_curl_rehab_salve_hair_reacts/",
+      "publisher": "Reddit users",
+      "accessed_at": "2026-10-02",
+      "access_level": "relevant_full_text_inspected",
+      "scope": "original anecdotal discussion, historical unspecified pack",
+      "commercial_context": "commercial interests unknown; do not infer independence",
+      "observations": [
+        "Original poster reports dry feel and difficult detangling after Bond Curl; another user reports no similar problem.",
+        "Experiences and self-attribution to protein are not controlled causal evidence."
+      ],
+      "limitations": [
+        "Formula/market, routine and hair diameter not verified; do not derive a hard protein-overload or fit rule."
+      ],
+      "authority_tier": "user_anecdotes"
+    },
+    {
+      "source_id": "S11",
+      "url": "https://www.reddit.com/r/curlyhair/comments/1dkemma/curlsmith_bond_curl_rehab_salve/",
+      "publisher": "Reddit users",
+      "accessed_at": "2026-10-02",
+      "access_level": "relevant_full_text_inspected",
+      "scope": "historical anecdote with alternating treatment system",
+      "commercial_context": "commercial interests unknown",
+      "observations": [
+        "A commenter reports improved feel/curls while alternating Curlsmith and OLAPLEX; explicitly not complete erasure of bleach damage."
+      ],
+      "limitations": [
+        "Multi-product routine cannot isolate Curlsmith; pack/market/version unverified."
+      ],
+      "authority_tier": "user_anecdotes"
+    },
+    {
+      "source_id": "S12",
+      "url": "https://de.lorealpartnershop.com/on/demandware.static/-/Library-Sites-SharedLibrary-DE-AT/default/v77cf51bd2dcb790074b8ff32d44d6e0dc571be3a/ZIP_Download_Files/Digital_Toolkit/LP_Digital%20Toolkit/20230829_LP_Servicemen%C3%BC_ARM_A5_Druck.pdf?version=1,712,225,397,201",
+      "publisher": "L'Oréal Professionnel DE",
+      "accessed_at": "2026-10-02",
+      "access_level": "relevant_full_text_inspected",
+      "scope": "historical professional service leaflet",
+      "commercial_context": "publisher sells the described product or ingredient",
+      "observations": [
+        "Salon damage claim belongs to pre-treatment plus five shampoos; home-care statement is a two-week consumer test of shampoo+rinse-off serum+leave-in."
+      ],
+      "limitations": [
+        "Different test scopes retained, not combined as serum-alone results.",
+        "No original methods, full data or current formula equivalence inspected."
+      ],
+      "authority_tier": "manufacturer_professional_document"
+    }
+  ],
+  "records": [
+    {
+      "slot_id": "V01",
+      "identity": {
+        "manufacturer": "Curlsmith",
+        "name": "Bond Curl Rehab Salve",
+        "market": "EU with DE corroboration",
+        "size_ml": 237,
+        "gtin": null,
+        "source_version": "EU/DE pages accessed 2026-10-02",
+        "actual_pack_verified": false
+      },
+      "formula_source_id": "S01",
+      "selected_direction_source_id": "S01",
+      "supporting_source_ids": [
+        "S02",
+        "S06",
+        "S07",
+        "S08",
+        "S09",
+        "S10",
+        "S11"
+      ],
+      "identity_status": "resolved_source_version",
+      "conflicts": [
+        "S06 medium-porosity contact advice differs from S01/S02. S01/S02 own selected instructions; retain S06 as editorial variant."
+      ],
+      "manufacturer_positioning": "weak/damaged curls; generic all-type editorial claim is not approved fine/normal/coarse fit"
+    },
+    {
+      "slot_id": "V02",
+      "identity": {
+        "manufacturer": "dm / Balea",
+        "name": "Balea Professional Haarkur Keratin Repair",
+        "market": "DE",
+        "size_ml": 300,
+        "gtin": "4070765002003",
+        "source_version": "dm article 1688653 accessed 2026-10-02",
+        "actual_pack_verified": false
+      },
+      "formula_source_id": "S03",
+      "selected_direction_source_id": "S03",
+      "supporting_source_ids": [],
+      "identity_status": "resolved_source_version",
+      "conflicts": [],
+      "manufacturer_positioning": "brittle/structurally damaged hair; no independent diameter evidence"
+    },
+    {
+      "slot_id": "V03",
+      "identity": {
+        "manufacturer": "Garnier / L'Oréal",
+        "name": "Fructis Schadenlöscher Pro-Keratin Filler Deep Repair Intensive Haarkur",
+        "market": "DE",
+        "size_ml": 200,
+        "gtin": null,
+        "source_version": "formula 1261267 / FIL Z70029743/2, page accessed 2026-10-02",
+        "actual_pack_verified": false
+      },
+      "formula_source_id": "S04",
+      "selected_direction_source_id": "S04",
+      "supporting_source_ids": [],
+      "identity_status": "resolved_source_version",
+      "conflicts": [],
+      "manufacturer_positioning": "damaged hair; no independent diameter evidence"
+    },
+    {
+      "slot_id": "V04",
+      "identity": {
+        "manufacturer": "L'Oréal Professionnel",
+        "name": "Absolut Repair Molecular Rinse-Off Serum",
+        "market": "DE",
+        "size_ml": null,
+        "gtin": null,
+        "source_version": "exact named DE product page accessed 2026-10-02",
+        "actual_pack_verified": false
+      },
+      "formula_source_id": "S05",
+      "selected_direction_source_id": "S05",
+      "supporting_source_ids": [
+        "S12"
+      ],
+      "identity_status": "resolved_source_version",
+      "conflicts": [],
+      "manufacturer_positioning": "all damaged types/color states is attributed maker positioning; not diameter fit"
+    }
+  ],
+  "search_limits": {
+    "scope": "bounded new-product applicability slice; not exhaustive efficacy review or full family holdout",
+    "starting_panel": [
+      "Abbey Yung",
+      "Tom Hannemann / The Beautiful People",
+      "Dejan Garz"
+    ],
+    "queries": [
+      "site.curlsmith.com Bond Curl Rehab Salve ingredients Hydroxypropylgluconamide Europe",
+      "site.lorealprofessionnel.de absolut repair molecular serum inhaltsstoffe",
+      "site.dm.de Balea Professional Keratin Repair Haarmaske Inhaltsstoffe",
+      "site.garnier.de fructis hair filler pre shampoo reparatur inhaltsstoffe",
+      "site.croda.com FiberHance hydroxypropylgluconamide hydroxypropylammonium gluconate study",
+      "site.curlsmith.com \"Bond Curl\" \"Abbey\"",
+      "\"Absolut Repair Molecular\" \"Dejan Garz\" serum",
+      "\"Bond Curl\" \"Tom Hannemann\"",
+      "site.ashland.com \"FiberHance\" \"bonds\"",
+      "site.youtube.com \"Abbey Yung\" \"Curlsmith\" \"bond\"",
+      "site.youtube.com \"Absolut Repair Molecular\" \"Dejan\"",
+      "site.lorealprofessionnel.de \"Absolut Repair Molecular\" \"2%\"",
+      "\"Curlsmith Bond Curl Rehab Salve\" study trial review negative \"Gena\"",
+      "\"Curlsmith Bond Curl\" \"Abbey Yung\" review",
+      "\"Absolut Repair Molecular\" \"Tom Hannemann\"",
+      "\"Absolut Repair Molecular\" \"Abbey Yung\"",
+      "\"Curlsmith Bond Curl Rehab Salve\" clinical study independent hair strength",
+      "\"Balea\" \"Keratin Repair\" \"Abbey Yung\" \"Dejan Garz\"",
+      "\"Garnier\" \"Pro-Keratin Filler\" \"Tom Hannemann\" \"Dejan Garz\""
+    ],
+    "outcomes": [
+      "Inspected exact product pages and applicable technology/maker study disclosures.",
+      "Croda query did not identify the relevant supplier; corrected to primary Ashland. No Croda evidence used.",
+      "No exact original starting-panel opinion inspected. Search titles, summit attendance and third-party lists are not endorsements. Missing takes neutral.",
+      "Gena Marie original written sponsored comparison inspected; video not watched. Historical source scope retained.",
+      "No original independent peer-reviewed current-product efficacy trial inspected. No negative conclusion follows from this search limit.",
+      "For generic repair controls, only exact maker facts researched; no effort to promote their efficacy grade."
+    ]
+  }
+}

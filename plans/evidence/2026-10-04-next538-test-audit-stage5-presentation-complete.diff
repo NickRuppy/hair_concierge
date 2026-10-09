@@ -1,0 +1,221 @@
+--- /tmp/test-audit-stage5-presentation-snapshots/before/tests/personal-plan-stage5-navigation.test.tsx	2026-10-04 12:24:01
++++ /tmp/test-audit-stage5-presentation-snapshots/cut/tests/personal-plan-stage5-navigation.test.tsx	2026-10-04 12:24:01
+@@ -99,13 +99,8 @@
+   assert.deepEqual([...navigation.unvisitedNavSurfaces], [])
+ })
+ 
+-test("omitting the nav-visited state entirely also renders zero dots (safe default)", () => {
+-  const navigation = toAuthenticatedAppNavigationAccess(personalPlanAccess(true, true))
+-  assert.equal(navigation.kind, "personal_plan")
+-  if (navigation.kind !== "personal_plan") return
+-  assert.deepEqual([...navigation.unvisitedNavSurfaces], [])
+-})
+ 
++
+ test("resolveAuthenticatedAppNavigationAccess wires the nav-visited read through for a Personal Plan destination", async () => {
+   let loadNavVisitedStateCalls = 0
+   const navigation = await resolveAuthenticatedAppNavigationAccess({
+@@ -246,16 +241,7 @@
+   }
+ })
+ 
+-test("with no unvisited surfaces, no dot renders at all", () => {
+-  const navigation = toAuthenticatedAppNavigationAccess(personalPlanAccess(true, true))
+-  assert.equal(navigation.kind, "personal_plan")
+-  if (navigation.kind !== "personal_plan") return
+ 
+-  const html = renderToStaticMarkup(
+-    createElement(PersonalPlanNavigationView, { items: navigation.items, pathname: "/chat" }),
+-  )
+-  assert.doesNotMatch(html, /data-nav-unvisited-dot/)
+-})
+ 
+ test("legacy, paid-pending, and navigation read failures keep exactly one legacy Header", async () => {
+   assert.deepEqual(toAuthenticatedAppNavigationAccess({ kind: "legacy" }), { kind: "legacy" })
+@@ -329,6 +315,9 @@
+   assert.match(shellHtml, /pb-\[var\(--personal-plan-shell-bottom-padding\)\] md:pb-0/)
+   assert.doesNotMatch(shellHtml, /md:\[--personal-plan-shell-bottom-padding/)
+   assert.doesNotMatch(shellHtml, /Legacy/)
++
++  assert.doesNotMatch(navHtml, /data-nav-unvisited-dot/)
++  assert.doesNotMatch(navHtml, /data-nav-lock-badge/)
+ })
+ 
+ test("the server shell owns Header presentation without changing the shared Header", () => {
+@@ -355,6 +344,10 @@
+     const source = readFileSync(file, "utf8")
+     assert.doesNotMatch(source, /<Header\b/)
+     assert.doesNotMatch(source, /components\/layout\/header/)
++    if (file === "src/app/anwendung/loading.tsx") {
++      assert.doesNotMatch(source, /<Header/)
++      assert.doesNotMatch(source, /PersonalPlanNavigation/)
++    }
+   }
+ })
+ 
+@@ -604,27 +597,31 @@
+     if (navigation.kind !== "personal_plan") return
+     assert.equal(navigation.tier, "premium")
+   })
+-})
+-
+-test("premium tier renders zero lock markers", () => {
+-  const html = renderToStaticMarkup(
+-    createElement(PersonalPlanNavigationView, {
+-      items: freeTierFixedItems as PersonalPlanNavigationItem[],
+-      pathname: "/scan",
+-      tier: "premium",
+-    }),
+-  )
+-  assert.doesNotMatch(html, /data-nav-lock-badge/)
+ })
+ 
+-test("free tier renders the lock marker on exactly chat, routine, and anwendung — never scan or profile, and never on the desktop nav (no icons there)", () => {
++
++
++
++
++test("the shell picks the five-tab nav (with locks) for a free-tier navigation object, exactly like a real Personal Plan owner", () => {
++  const freeTierNavigation: AuthenticatedAppNavigationAccess = {
++    kind: "personal_plan",
++    items: freeTierFixedItems as PersonalPlanNavigationItem[],
++    hasPendingRoutineProposal: false,
++    hasRoutineAccess: false,
++    unvisitedNavSurfaces: new Set(),
++    tier: "free",
++  }
+   const html = renderToStaticMarkup(
+-    createElement(PersonalPlanNavigationView, {
+-      items: freeTierFixedItems as PersonalPlanNavigationItem[],
+-      pathname: "/scan",
+-      tier: "free",
++    createElement(AuthenticatedAppShell, {
++      navigation: freeTierNavigation,
++      legacyHeader: createElement("header", { "data-legacy-header": true }, "Legacy"),
++      children: createElement("main", null, "Inhalt"),
+     }),
+   )
++  assert.doesNotMatch(html, /data-legacy-header/)
++  assert.match(html, /aria-label="Personal-Plan-Navigation \(mobil\)"/)
++  assert.equal((html.match(/data-nav-lock-badge="true"/g) ?? []).length, 3)
+ 
+   const headerNav = html.match(
+     /<nav aria-label="Personal-Plan-Navigation"[^>]*>[\s\S]*?<\/nav>/,
+@@ -652,24 +649,3 @@
+     assert.doesNotMatch(link!, /data-nav-lock-badge/)
+   }
+ })
+-
+-test("the shell picks the five-tab nav (with locks) for a free-tier navigation object, exactly like a real Personal Plan owner", () => {
+-  const freeTierNavigation: AuthenticatedAppNavigationAccess = {
+-    kind: "personal_plan",
+-    items: freeTierFixedItems as PersonalPlanNavigationItem[],
+-    hasPendingRoutineProposal: false,
+-    hasRoutineAccess: false,
+-    unvisitedNavSurfaces: new Set(),
+-    tier: "free",
+-  }
+-  const html = renderToStaticMarkup(
+-    createElement(AuthenticatedAppShell, {
+-      navigation: freeTierNavigation,
+-      legacyHeader: createElement("header", { "data-legacy-header": true }, "Legacy"),
+-      children: createElement("main", null, "Inhalt"),
+-    }),
+-  )
+-  assert.doesNotMatch(html, /data-legacy-header/)
+-  assert.match(html, /aria-label="Personal-Plan-Navigation \(mobil\)"/)
+-  assert.equal((html.match(/data-nav-lock-badge="true"/g) ?? []).length, 3)
+-})
+--- /tmp/test-audit-stage5-presentation-snapshots/before/tests/personal-plan-stage5-route.test.tsx	2026-10-04 12:24:01
++++ /tmp/test-audit-stage5-presentation-snapshots/cut/tests/personal-plan-stage5-route.test.tsx	2026-10-04 12:24:01
+@@ -72,12 +72,7 @@
+   )
+ })
+ 
+-test("loading does not flash Anwendung navigation before owner eligibility is known", () => {
+-  const source = readFileSync("src/app/anwendung/loading.tsx", "utf8")
+ 
+-  assert.doesNotMatch(source, /<Header/)
+-  assert.doesNotMatch(source, /PersonalPlanNavigation/)
+-})
+ 
+ const DAY_KEYS: ApplicationDayTypeKey[] = [
+   "wash_day",
+@@ -245,38 +240,7 @@
+   assert.equal(privilegedReads, 0)
+ })
+ 
+-test("journey frontier denial happens before any Routine, profile, catalog, or content read", async () => {
+-  let privilegedReads = 0
+-  const view = await resolveAnwendungPage(
+-    readyDeps({
+-      loadJourneyAccess: async () => ({
+-        kind: "personal_plan",
+-        personalPlanId: "plan-1",
+-        frontier: "stage4",
+-        nextHref: "/routine",
+-        allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: false },
+-      }),
+-      loadRoutineVersion: async () => {
+-        privilegedReads += 1
+-        throw new Error("must not read")
+-      },
+-      adaptRoutine: async () => {
+-        privilegedReads += 1
+-        throw new Error("must not read")
+-      },
+-      loadProfile: async () => {
+-        privilegedReads += 1
+-        throw new Error("must not read")
+-      },
+-      loadContent: () => {
+-        privilegedReads += 1
+-        throw new Error("must not read")
+-      },
+-    } as never),
+-  )
+-  assert.deepEqual(view, { state: "feature_disabled" })
+-  assert.equal(privilegedReads, 0)
+-})
++
+ 
+ test("authorized Stage 5 overlaps the active Routine and shared content reads", async () => {
+   const calls: string[] = []
+--- /tmp/test-audit-stage5-presentation-snapshots/before/tests/personal-plan-stage5-view-adapter.test.ts	2026-10-04 12:24:01
++++ /tmp/test-audit-stage5-presentation-snapshots/cut/tests/personal-plan-stage5-view-adapter.test.ts	2026-10-04 12:24:01
+@@ -320,24 +320,8 @@
+   assert.match(html, /Regal: Shampoo: Mildes Shampoo/)
+   assert.doesNotMatch(html, /\(bestätigt\)/)
+ })
+-
+-test("uses a neutral contained fallback for nonstandard product imagery", () => {
+-  const compiled = compiledView()
+-  compiled.days[0]!.productBlocks[0]!.imageUrl = "https://owner.example/uploads/shampoo.jpg"
+-  const productStep = compiled.days[0]!.outerSequence.find((step) => step.kind === "product")
+-  if (productStep?.kind === "product") {
+-    productStep.block.imageUrl = "https://owner.example/uploads/shampoo.jpg"
+-  }
+ 
+-  const view = toApplicationPageView({ compiled, dayDefinitions: definitions })
+-  assert.equal(view.state, "ready")
+-  if (view.state !== "ready") return
+ 
+-  const html = renderToStaticMarkup(createElement(ApplicationPage, { view }))
+-  assert.match(html, /data-application-image-treatment="fallback"/)
+-  assert.match(html, /src="https:\/\/owner\.example\/uploads\/shampoo\.jpg"/)
+-  assert.doesNotMatch(html, /data-application-silhouette="shampoo"/)
+-})
+ 
+ test("keeps the provisional status data hook accessible for nonstandard product imagery", () => {
+   const compiled = compiledView()
+@@ -359,6 +343,10 @@
+   assert.match(html, /data-application-shelf-slot="provisional"/)
+   assert.match(html, /Regal: Shampoo: Mildes Shampoo/)
+   assert.doesNotMatch(html, /\(vorläufig\)/)
++
++  assert.match(html, /data-application-image-treatment="fallback"/)
++  assert.match(html, /src="https:\/\/owner\.example\/uploads\/shampoo\.jpg"/)
++  assert.doesNotMatch(html, /data-application-silhouette="shampoo"/)
+ })
+ 
+ test("renders the ten approved category-specific product silhouettes", () => {

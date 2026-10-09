@@ -1,0 +1,2523 @@
+{
+  "count": 45,
+  "controls": [
+    {
+      "id": "ordinary-sync-omitted",
+      "lane": "lead",
+      "phase": "new",
+      "intended": "Transferred syncs counter0!==1 while route response stays200.",
+      "source": "src/app/api/quiz/lead/route.ts",
+      "selectedTest": {
+        "file": "tests/regular-quiz-field-test-lead-route.test.ts",
+        "name": "ordinary lead reuse excludes a moderator-owned lead with the same email and answers"
+      },
+      "originalHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/ordinary-sync-omitted-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/ordinary-sync-omitted-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/ordinary-sync-omitted-after.tap"
+      },
+      "restoredHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+      "keeperAssertionLines": [
+        346,
+        347,
+        348,
+        349
+      ],
+      "assertionStacks": [
+        348
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "ordinary-meta-omitted",
+      "lane": "lead",
+      "phase": "new",
+      "intended": "Transferred metas counter0!==1 while route response stays200.",
+      "source": "src/app/api/quiz/lead/route.ts",
+      "selectedTest": {
+        "file": "tests/regular-quiz-field-test-lead-route.test.ts",
+        "name": "ordinary lead reuse excludes a moderator-owned lead with the same email and answers"
+      },
+      "originalHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/ordinary-meta-omitted-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/ordinary-meta-omitted-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/ordinary-meta-omitted-after.tap"
+      },
+      "restoredHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+      "keeperAssertionLines": [
+        346,
+        347,
+        348,
+        349
+      ],
+      "assertionStacks": [
+        349
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "partner-invitation",
+      "lane": "lead",
+      "phase": "new",
+      "intended": "Transferred complete private save payload deepEqual fails at invitation; existing200 response and saved ID remain.",
+      "source": "src/app/api/quiz/lead/route.ts",
+      "selectedTest": {
+        "file": "tests/regular-quiz-field-test-lead-route.test.ts",
+        "name": "a leftover moderator intent cookie never blocks an authorized partner lead"
+      },
+      "originalHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/partner-invitation-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/partner-invitation-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/partner-invitation-after.tap"
+      },
+      "restoredHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+      "keeperAssertionLines": [
+        970,
+        971,
+        972,
+        973,
+        982
+      ],
+      "assertionStacks": [
+        973
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "partner-owner",
+      "lane": "lead",
+      "phase": "new",
+      "intended": "Transferred complete private save payload deepEqual fails at owner; existing200 response and saved ID remain.",
+      "source": "src/app/api/quiz/lead/route.ts",
+      "selectedTest": {
+        "file": "tests/regular-quiz-field-test-lead-route.test.ts",
+        "name": "a leftover moderator intent cookie never blocks an authorized partner lead"
+      },
+      "originalHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/partner-owner-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/partner-owner-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/partner-owner-after.tap"
+      },
+      "restoredHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+      "keeperAssertionLines": [
+        970,
+        971,
+        972,
+        973,
+        982
+      ],
+      "assertionStacks": [
+        973
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "partner-session",
+      "lane": "lead",
+      "phase": "new",
+      "intended": "Transferred complete private save payload deepEqual fails at session; existing200 response and saved ID remain.",
+      "source": "src/app/api/quiz/lead/route.ts",
+      "selectedTest": {
+        "file": "tests/regular-quiz-field-test-lead-route.test.ts",
+        "name": "a leftover moderator intent cookie never blocks an authorized partner lead"
+      },
+      "originalHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/partner-session-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/partner-session-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/partner-session-after.tap"
+      },
+      "restoredHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+      "keeperAssertionLines": [
+        970,
+        971,
+        972,
+        973,
+        982
+      ],
+      "assertionStacks": [
+        973
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "partner-email",
+      "lane": "lead",
+      "phase": "new",
+      "intended": "Transferred complete private save payload deepEqual fails at email; existing200 response and saved ID remain.",
+      "source": "src/app/api/quiz/lead/route.ts",
+      "selectedTest": {
+        "file": "tests/regular-quiz-field-test-lead-route.test.ts",
+        "name": "a leftover moderator intent cookie never blocks an authorized partner lead"
+      },
+      "originalHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/partner-email-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/partner-email-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/partner-email-after.tap"
+      },
+      "restoredHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+      "keeperAssertionLines": [
+        970,
+        971,
+        972,
+        973,
+        982
+      ],
+      "assertionStacks": [
+        973
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "partner-name",
+      "lane": "lead",
+      "phase": "new",
+      "intended": "Transferred complete private save payload deepEqual fails at name; existing200 response and saved ID remain.",
+      "source": "src/app/api/quiz/lead/route.ts",
+      "selectedTest": {
+        "file": "tests/regular-quiz-field-test-lead-route.test.ts",
+        "name": "a leftover moderator intent cookie never blocks an authorized partner lead"
+      },
+      "originalHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/partner-name-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/partner-name-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/partner-name-after.tap"
+      },
+      "restoredHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+      "keeperAssertionLines": [
+        970,
+        971,
+        972,
+        973,
+        982
+      ],
+      "assertionStacks": [
+        973
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "partner-consent",
+      "lane": "lead",
+      "phase": "new",
+      "intended": "Transferred complete private save payload deepEqual fails at consent; existing200 response and saved ID remain.",
+      "source": "src/app/api/quiz/lead/route.ts",
+      "selectedTest": {
+        "file": "tests/regular-quiz-field-test-lead-route.test.ts",
+        "name": "a leftover moderator intent cookie never blocks an authorized partner lead"
+      },
+      "originalHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/partner-consent-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/partner-consent-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/partner-consent-after.tap"
+      },
+      "restoredHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+      "keeperAssertionLines": [
+        970,
+        971,
+        972,
+        973,
+        982
+      ],
+      "assertionStacks": [
+        973
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "partner-answers",
+      "lane": "lead",
+      "phase": "new",
+      "intended": "Transferred complete private save payload deepEqual fails at answers; existing200 response and saved ID remain.",
+      "source": "src/app/api/quiz/lead/route.ts",
+      "selectedTest": {
+        "file": "tests/regular-quiz-field-test-lead-route.test.ts",
+        "name": "a leftover moderator intent cookie never blocks an authorized partner lead"
+      },
+      "originalHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/partner-answers-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/partner-answers-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/partner-answers-after.tap"
+      },
+      "restoredHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+      "keeperAssertionLines": [
+        970,
+        971,
+        972,
+        973,
+        982
+      ],
+      "assertionStacks": [
+        973
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "active-resume-denied",
+      "lane": "lead",
+      "phase": "new",
+      "intended": "Existing active+stale keeper receives null instead of exact refinedVersionId.",
+      "source": "src/lib/personal-plan/refinement/module1-stage3-resume.ts",
+      "selectedTest": {
+        "file": "tests/personal-plan-module1-stage3-resume.test.tsx",
+        "name": "an open draft still wins when a stale row for the same version is lying around"
+      },
+      "originalHash": "92135680ac8e368f6f67ed1a7fcee6ceea5c1616add5ccb061aca8bd5305361e",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/active-resume-denied-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/active-resume-denied-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/active-resume-denied-after.tap"
+      },
+      "restoredHash": "92135680ac8e368f6f67ed1a7fcee6ceea5c1616add5ccb061aca8bd5305361e",
+      "keeperAssertionLines": [
+        164
+      ],
+      "assertionStacks": [
+        164
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "active-priority-reversed",
+      "lane": "lead",
+      "phase": "new",
+      "intended": "Actual query owner requests descending; fake applies order and picks stale; keeper null differs from exact version.",
+      "source": "src/lib/personal-plan/refinement/module1-stage3-resume.ts",
+      "selectedTest": {
+        "file": "tests/personal-plan-module1-stage3-resume.test.tsx",
+        "name": "an open draft still wins when a stale row for the same version is lying around"
+      },
+      "originalHash": "92135680ac8e368f6f67ed1a7fcee6ceea5c1616add5ccb061aca8bd5305361e",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/active-priority-reversed-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/active-priority-reversed-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/active-priority-reversed-after.tap"
+      },
+      "restoredHash": "92135680ac8e368f6f67ed1a7fcee6ceea5c1616add5ccb061aca8bd5305361e",
+      "keeperAssertionLines": [
+        164
+      ],
+      "assertionStacks": [
+        164
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "foreign-completed-filter-removed",
+      "lane": "lead",
+      "phase": "new",
+      "intended": "Retained foreign-completed keeper receives null; old foreign-active donor still succeeds. Run old donor separately to establish its insensitivity.",
+      "source": "src/lib/personal-plan/refinement/module1-stage3-resume.ts",
+      "selectedTest": {
+        "file": "tests/personal-plan-module1-stage3-resume.test.tsx",
+        "name": "a completed Stage-3 draft of another owner cannot block this owner's resume"
+      },
+      "originalHash": "92135680ac8e368f6f67ed1a7fcee6ceea5c1616add5ccb061aca8bd5305361e",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/foreign-completed-filter-removed-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/foreign-completed-filter-removed-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/foreign-completed-filter-removed-after.tap"
+      },
+      "restoredHash": "92135680ac8e368f6f67ed1a7fcee6ceea5c1616add5ccb061aca8bd5305361e",
+      "keeperAssertionLines": [
+        193
+      ],
+      "assertionStacks": [
+        193
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "accepted-exit-lost",
+      "lane": "lead",
+      "phase": "new",
+      "intended": "Transferred exit assertion stage1!==routine.",
+      "source": "src/components/personal-plan-start/plan-start-flow.tsx",
+      "selectedTest": {
+        "file": "tests/personal-plan-module1-stage3-resume.test.tsx",
+        "name": "reload after the Modul-1 handoff resumes Stage 3, not Stage 2"
+      },
+      "originalHash": "ebdfd12eb051c082a10501370256537fe25ab391370ee90046d247a969048f40",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/accepted-exit-lost-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/accepted-exit-lost-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/accepted-exit-lost-after.tap"
+      },
+      "restoredHash": "ebdfd12eb051c082a10501370256537fe25ab391370ee90046d247a969048f40",
+      "keeperAssertionLines": [
+        320,
+        340,
+        341,
+        342,
+        343
+      ],
+      "assertionStacks": [
+        342
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "linear-exit-wrong",
+      "lane": "lead",
+      "phase": "new",
+      "intended": "Transferred exit assertion routine!==stage1 for actual emitted linear journey.",
+      "source": "src/components/personal-plan-start/plan-start-flow.tsx",
+      "selectedTest": {
+        "file": "tests/personal-plan-start-resume.test.tsx",
+        "name": "plan-start re-entry selects Stage 3 when refinement is complete and current authority exists"
+      },
+      "originalHash": "ebdfd12eb051c082a10501370256537fe25ab391370ee90046d247a969048f40",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/linear-exit-wrong-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/linear-exit-wrong-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/linear-exit-wrong-after.tap"
+      },
+      "restoredHash": "ebdfd12eb051c082a10501370256537fe25ab391370ee90046d247a969048f40",
+      "keeperAssertionLines": [
+        286,
+        292,
+        293,
+        294
+      ],
+      "assertionStacks": [
+        293
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "accepted-updated-signal-lost",
+      "lane": "lead",
+      "phase": "new",
+      "intended": "Transferred fixed href assertion /routine!==/routine?planUpdated=1.",
+      "source": "src/components/personal-plan-start/plan-start-flow.tsx",
+      "selectedTest": {
+        "file": "tests/personal-plan-module1-stage3-resume.test.tsx",
+        "name": "reload after the Modul-1 handoff resumes Stage 3, not Stage 2"
+      },
+      "originalHash": "ebdfd12eb051c082a10501370256537fe25ab391370ee90046d247a969048f40",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/accepted-updated-signal-lost-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/accepted-updated-signal-lost-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/accepted-updated-signal-lost-after.tap"
+      },
+      "restoredHash": "ebdfd12eb051c082a10501370256537fe25ab391370ee90046d247a969048f40",
+      "keeperAssertionLines": [
+        320,
+        340,
+        341,
+        342,
+        343
+      ],
+      "assertionStacks": [
+        343
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "linear-updated-signal-added",
+      "lane": "lead",
+      "phase": "new",
+      "intended": "Transferred fixed href assertion /routine?planUpdated=1!==/routine.",
+      "source": "src/components/personal-plan-start/plan-start-flow.tsx",
+      "selectedTest": {
+        "file": "tests/personal-plan-start-resume.test.tsx",
+        "name": "plan-start re-entry selects Stage 3 when refinement is complete and current authority exists"
+      },
+      "originalHash": "ebdfd12eb051c082a10501370256537fe25ab391370ee90046d247a969048f40",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/linear-updated-signal-added-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/linear-updated-signal-added-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/linear-updated-signal-added-after.tap"
+      },
+      "restoredHash": "ebdfd12eb051c082a10501370256537fe25ab391370ee90046d247a969048f40",
+      "keeperAssertionLines": [
+        286,
+        292,
+        293,
+        294
+      ],
+      "assertionStacks": [
+        294
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "resume-marker-lost",
+      "lane": "lead",
+      "phase": "new",
+      "intended": "Existing full page-state assertion loses products marker before downstream helpers; proves actual producer remains exercised.",
+      "source": "src/app/plan-start/page.tsx",
+      "selectedTest": {
+        "file": "tests/personal-plan-module1-stage3-resume.test.tsx",
+        "name": "reload after the Modul-1 handoff resumes Stage 3, not Stage 2"
+      },
+      "originalHash": "e6ebf8b770c94fe4be6b65b411bf0d1b5314fb88ea3fdcbdc0a1c89860ee89af",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/resume-marker-lost-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/resume-marker-lost-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-lead-mutations-new/resume-marker-lost-after.tap"
+      },
+      "restoredHash": "e6ebf8b770c94fe4be6b65b411bf0d1b5314fb88ea3fdcbdc0a1c89860ee89af",
+      "keeperAssertionLines": [
+        320,
+        340,
+        341,
+        342,
+        343
+      ],
+      "assertionStacks": [
+        320
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "C1-badge-only-forces-remount",
+      "lane": "cockpit",
+      "phase": "new",
+      "intended": "New exact identityChanged false fails; job queued/status assertions still pass.",
+      "source": "src/app/api/admin/beratung/[enrollmentId]/research/route.ts",
+      "selectedTest": {
+        "file": "tests/discovery-cockpit-research.test.tsx",
+        "name": "an open submission without a live job is enqueued, and the new status comes back"
+      },
+      "originalHash": "ccd320dd65634dc6dab5705067d4a8d8762bb8932a4ebc9c9ae44134953bbd06",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C1-badge-only-forces-remount-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C1-badge-only-forces-remount-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C1-badge-only-forces-remount-after.tap"
+      },
+      "restoredHash": "ccd320dd65634dc6dab5705067d4a8d8762bb8932a4ebc9c9ae44134953bbd06",
+      "keeperAssertionLines": [
+        510,
+        511,
+        512,
+        517
+      ],
+      "assertionStacks": [
+        517
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "D1-grades-usage-instead-of-product",
+      "lane": "cockpit",
+      "phase": "new",
+      "intended": "Existing graded [conditioner] becomes [mask].",
+      "source": "src/lib/discovery/load-participant-verdicts.ts",
+      "selectedTest": {
+        "file": "tests/discovery-cockpit-usage.test.tsx",
+        "name": "F2: an approved-research conditioner she uses as a mask binds to the mask step with a product verdict"
+      },
+      "originalHash": "1c7c20e3747e82fc86ec7ed974bec92339532cc6ebee4786c7c8b09a758ebc28",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/D1-grades-usage-instead-of-product-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/D1-grades-usage-instead-of-product-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/D1-grades-usage-instead-of-product-after.tap"
+      },
+      "restoredHash": "1c7c20e3747e82fc86ec7ed974bec92339532cc6ebee4786c7c8b09a758ebc28",
+      "keeperAssertionLines": [
+        276,
+        278,
+        281,
+        282,
+        283,
+        285
+      ],
+      "assertionStacks": [
+        278
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "D1-omits-usage-difference",
+      "lane": "cockpit",
+      "phase": "new",
+      "intended": "Existing real composed mask.usageDifference exact object becomes null/undefined.",
+      "source": "src/lib/discovery/load-participant-verdicts.ts",
+      "selectedTest": {
+        "file": "tests/discovery-cockpit-usage.test.tsx",
+        "name": "F2: an approved-research conditioner she uses as a mask binds to the mask step with a product verdict"
+      },
+      "originalHash": "1c7c20e3747e82fc86ec7ed974bec92339532cc6ebee4786c7c8b09a758ebc28",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/D1-omits-usage-difference-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/D1-omits-usage-difference-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/D1-omits-usage-difference-after.tap"
+      },
+      "restoredHash": "1c7c20e3747e82fc86ec7ed974bec92339532cc6ebee4786c7c8b09a758ebc28",
+      "keeperAssertionLines": [
+        276,
+        278,
+        281,
+        282,
+        283,
+        285
+      ],
+      "assertionStacks": [
+        283
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "D2-omits-vacated-step",
+      "lane": "cockpit",
+      "phase": "new",
+      "intended": "Exact captured staleDecisionKeys loses old conditioner key while new mask remains.",
+      "source": "src/lib/discovery/cockpit.ts",
+      "selectedTest": {
+        "file": "tests/discovery-cockpit-usage.test.tsx",
+        "name": "usage route: the correction is one call carrying the stale decision keys"
+      },
+      "originalHash": "ce2975efba1d388ee27bb0724910dfa4aa3f17246033fe34e1033bb1ed081151",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/D2-omits-vacated-step-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/D2-omits-vacated-step-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/D2-omits-vacated-step-after.tap"
+      },
+      "restoredHash": "ce2975efba1d388ee27bb0724910dfa4aa3f17246033fe34e1033bb1ed081151",
+      "keeperAssertionLines": [
+        580,
+        581,
+        587
+      ],
+      "assertionStacks": [
+        587
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "D3-prematurely-binds-pending-product",
+      "lane": "cockpit",
+      "phase": "new",
+      "intended": "Existing successful type-open PATCH captured staleDecisionKeys is no longer []; real reducer lost its unresolved-product exclusion.",
+      "source": "src/lib/discovery/refined-routine.ts",
+      "selectedTest": {
+        "file": "tests/discovery-cockpit-usage.test.tsx",
+        "name": "usage route: a type only for a type-open item, and a type-open item needs one"
+      },
+      "originalHash": "79a8321c4bb5c53a9594b0664cc708f326bca7ff058c6aeba4faa18cd821ee00",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/D3-prematurely-binds-pending-product-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/D3-prematurely-binds-pending-product-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/D3-prematurely-binds-pending-product-after.tap"
+      },
+      "restoredHash": "79a8321c4bb5c53a9594b0664cc708f326bca7ff058c6aeba4faa18cd821ee00",
+      "keeperAssertionLines": [
+        558,
+        560,
+        561,
+        564,
+        565
+      ],
+      "assertionStacks": [
+        565
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "C2-product-column-label",
+      "lane": "cockpit",
+      "phase": "new",
+      "intended": "Full actual table loses literal Produkt header.",
+      "source": "src/components/discovery/cockpit/comparison-table.tsx",
+      "selectedTest": {
+        "file": "tests/discovery-comparison-table.test.tsx",
+        "name": "the cockpit shows her product as a comparison table instead of bars and text rows"
+      },
+      "originalHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C2-product-column-label-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C2-product-column-label-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C2-product-column-label-after.tap"
+      },
+      "restoredHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "keeperAssertionLines": [
+        369,
+        371,
+        375,
+        376,
+        380,
+        381,
+        385,
+        388,
+        391,
+        392,
+        393,
+        394,
+        396,
+        399,
+        401,
+        403,
+        404,
+        405,
+        406,
+        407,
+        409,
+        410,
+        414,
+        416,
+        421,
+        425,
+        427,
+        428,
+        430
+      ],
+      "assertionStacks": [
+        393
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "C2-target-header",
+      "lane": "cockpit",
+      "phase": "new",
+      "intended": "Full table literal plum Ziel header fails.",
+      "source": "src/components/discovery/cockpit/comparison-table.tsx",
+      "selectedTest": {
+        "file": "tests/discovery-comparison-table.test.tsx",
+        "name": "the cockpit shows her product as a comparison table instead of bars and text rows"
+      },
+      "originalHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C2-target-header-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C2-target-header-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C2-target-header-after.tap"
+      },
+      "restoredHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "keeperAssertionLines": [
+        369,
+        371,
+        375,
+        376,
+        380,
+        381,
+        385,
+        388,
+        391,
+        392,
+        393,
+        394,
+        396,
+        399,
+        401,
+        403,
+        404,
+        405,
+        406,
+        407,
+        409,
+        410,
+        414,
+        416,
+        421,
+        425,
+        427,
+        428,
+        430
+      ],
+      "assertionStacks": [
+        394
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "C2-header-chrome",
+      "lane": "cockpit",
+      "phase": "new",
+      "intended": "Full table real header-scoped background and uppercase assertions fail; the unknown row cannot satisfy the header oracle.",
+      "source": "src/components/discovery/cockpit/comparison-table.tsx",
+      "selectedTest": {
+        "file": "tests/discovery-comparison-table.test.tsx",
+        "name": "the cockpit shows her product as a comparison table instead of bars and text rows"
+      },
+      "originalHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C2-header-chrome-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C2-header-chrome-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C2-header-chrome-after.tap"
+      },
+      "restoredHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "keeperAssertionLines": [
+        369,
+        371,
+        375,
+        376,
+        380,
+        381,
+        385,
+        388,
+        391,
+        392,
+        393,
+        394,
+        396,
+        399,
+        401,
+        403,
+        404,
+        405,
+        406,
+        407,
+        409,
+        410,
+        414,
+        416,
+        421,
+        425,
+        427,
+        428,
+        430
+      ],
+      "assertionStacks": [
+        392
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "C3-status-order",
+      "lane": "cockpit",
+      "phase": "new",
+      "intended": "Full table exact four data-status values fails.",
+      "source": "src/components/discovery/cockpit/comparison-table.tsx",
+      "selectedTest": {
+        "file": "tests/discovery-comparison-table.test.tsx",
+        "name": "the cockpit shows her product as a comparison table instead of bars and text rows"
+      },
+      "originalHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C3-status-order-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C3-status-order-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C3-status-order-after.tap"
+      },
+      "restoredHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "keeperAssertionLines": [
+        369,
+        371,
+        375,
+        376,
+        380,
+        381,
+        385,
+        388,
+        391,
+        392,
+        393,
+        394,
+        396,
+        399,
+        401,
+        403,
+        404,
+        405,
+        406,
+        407,
+        409,
+        410,
+        414,
+        416,
+        421,
+        425,
+        427,
+        428,
+        430
+      ],
+      "assertionStacks": [
+        399
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "C3-mismatch-glyph",
+      "lane": "cockpit",
+      "phase": "new",
+      "intended": "Full table exact four data-glyph values fails.",
+      "source": "src/components/discovery/cockpit/comparison-table.tsx",
+      "selectedTest": {
+        "file": "tests/discovery-comparison-table.test.tsx",
+        "name": "the cockpit shows her product as a comparison table instead of bars and text rows"
+      },
+      "originalHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C3-mismatch-glyph-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C3-mismatch-glyph-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C3-mismatch-glyph-after.tap"
+      },
+      "restoredHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "keeperAssertionLines": [
+        369,
+        371,
+        375,
+        376,
+        380,
+        381,
+        385,
+        388,
+        391,
+        392,
+        393,
+        394,
+        396,
+        399,
+        401,
+        403,
+        404,
+        405,
+        406,
+        407,
+        409,
+        410,
+        414,
+        416,
+        421,
+        425,
+        427,
+        428,
+        430
+      ],
+      "assertionStacks": [
+        401
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "C3-pending-surface",
+      "lane": "cockpit",
+      "phase": "new",
+      "intended": "Full table pending surface assertion fails.",
+      "source": "src/components/discovery/cockpit/comparison-table.tsx",
+      "selectedTest": {
+        "file": "tests/discovery-comparison-table.test.tsx",
+        "name": "the cockpit shows her product as a comparison table instead of bars and text rows"
+      },
+      "originalHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C3-pending-surface-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C3-pending-surface-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C3-pending-surface-after.tap"
+      },
+      "restoredHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "keeperAssertionLines": [
+        369,
+        371,
+        375,
+        376,
+        380,
+        381,
+        385,
+        388,
+        391,
+        392,
+        393,
+        394,
+        396,
+        399,
+        401,
+        403,
+        404,
+        405,
+        406,
+        407,
+        409,
+        410,
+        414,
+        416,
+        421,
+        425,
+        427,
+        428,
+        430
+      ],
+      "assertionStacks": [
+        404
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "C3-mismatch-word",
+      "lane": "cockpit",
+      "phase": "new",
+      "intended": "Full table Protein red text assertion fails.",
+      "source": "src/components/discovery/cockpit/comparison-table.tsx",
+      "selectedTest": {
+        "file": "tests/discovery-comparison-table.test.tsx",
+        "name": "the cockpit shows her product as a comparison table instead of bars and text rows"
+      },
+      "originalHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C3-mismatch-word-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C3-mismatch-word-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C3-mismatch-word-after.tap"
+      },
+      "restoredHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "keeperAssertionLines": [
+        369,
+        371,
+        375,
+        376,
+        380,
+        381,
+        385,
+        388,
+        391,
+        392,
+        393,
+        394,
+        396,
+        399,
+        401,
+        403,
+        404,
+        405,
+        406,
+        407,
+        409,
+        410,
+        414,
+        416,
+        421,
+        425,
+        427,
+        428,
+        430
+      ],
+      "assertionStacks": [
+        406
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "C3-row-height",
+      "lane": "cockpit",
+      "phase": "new",
+      "intended": "Full table minimum52 class assertion fails; computed geometry is not claimed.",
+      "source": "src/components/discovery/cockpit/comparison-table.tsx",
+      "selectedTest": {
+        "file": "tests/discovery-comparison-table.test.tsx",
+        "name": "the cockpit shows her product as a comparison table instead of bars and text rows"
+      },
+      "originalHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C3-row-height-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C3-row-height-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C3-row-height-after.tap"
+      },
+      "restoredHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "keeperAssertionLines": [
+        369,
+        371,
+        375,
+        376,
+        380,
+        381,
+        385,
+        388,
+        391,
+        392,
+        393,
+        394,
+        396,
+        399,
+        401,
+        403,
+        404,
+        405,
+        406,
+        407,
+        409,
+        410,
+        414,
+        416,
+        421,
+        425,
+        427,
+        428,
+        430
+      ],
+      "assertionStacks": [
+        409
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "C4-accessible-target",
+      "lane": "cockpit",
+      "phase": "new",
+      "intended": "Exact literal aria readouts fail while visual header still correct.",
+      "source": "src/components/discovery/cockpit/comparison-table.tsx",
+      "selectedTest": {
+        "file": "tests/discovery-comparison-table.test.tsx",
+        "name": "the cockpit shows her product as a comparison table instead of bars and text rows"
+      },
+      "originalHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C4-accessible-target-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C4-accessible-target-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C4-accessible-target-after.tap"
+      },
+      "restoredHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "keeperAssertionLines": [
+        369,
+        371,
+        375,
+        376,
+        380,
+        381,
+        385,
+        388,
+        391,
+        392,
+        393,
+        394,
+        396,
+        399,
+        401,
+        403,
+        404,
+        405,
+        406,
+        407,
+        409,
+        410,
+        414,
+        416,
+        421,
+        425,
+        427,
+        428,
+        430
+      ],
+      "assertionStacks": [
+        414
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "C4-missing-target-dash",
+      "lane": "cockpit",
+      "phase": "new",
+      "intended": "Null target must visibly render plum en dash; exact target assertion fails.",
+      "source": "src/components/discovery/cockpit/comparison-table.tsx",
+      "selectedTest": {
+        "file": "tests/discovery-comparison-table.test.tsx",
+        "name": "the cockpit shows her product as a comparison table instead of bars and text rows"
+      },
+      "originalHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C4-missing-target-dash-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C4-missing-target-dash-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C4-missing-target-dash-after.tap"
+      },
+      "restoredHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "keeperAssertionLines": [
+        369,
+        371,
+        375,
+        376,
+        380,
+        381,
+        385,
+        388,
+        391,
+        392,
+        393,
+        394,
+        396,
+        399,
+        401,
+        403,
+        404,
+        405,
+        406,
+        407,
+        409,
+        410,
+        414,
+        416,
+        421,
+        425,
+        427,
+        428,
+        430
+      ],
+      "assertionStacks": [
+        425
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "C4-soft-hyphen",
+      "lane": "cockpit",
+      "phase": "new",
+      "intended": "Actual full table no longer contains soft-hyphen Pflegegewicht label.",
+      "source": "src/components/discovery/cockpit/comparison-table.tsx",
+      "selectedTest": {
+        "file": "tests/discovery-comparison-table.test.tsx",
+        "name": "the cockpit shows her product as a comparison table instead of bars and text rows"
+      },
+      "originalHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C4-soft-hyphen-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C4-soft-hyphen-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C4-soft-hyphen-after.tap"
+      },
+      "restoredHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "keeperAssertionLines": [
+        369,
+        371,
+        375,
+        376,
+        380,
+        381,
+        385,
+        388,
+        391,
+        392,
+        393,
+        394,
+        396,
+        399,
+        401,
+        403,
+        404,
+        405,
+        406,
+        407,
+        409,
+        410,
+        414,
+        416,
+        421,
+        425,
+        427,
+        428,
+        430
+      ],
+      "assertionStacks": [
+        427
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "C5-full-font",
+      "lane": "cockpit",
+      "phase": "new",
+      "intended": "Composed full table loses 13px bold value class.",
+      "source": "src/components/discovery/cockpit/comparison-table.tsx",
+      "selectedTest": {
+        "file": "tests/discovery-comparison-table.test.tsx",
+        "name": "the cockpit shows her product as a comparison table instead of bars and text rows"
+      },
+      "originalHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C5-full-font-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C5-full-font-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C5-full-font-after.tap"
+      },
+      "restoredHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "keeperAssertionLines": [
+        369,
+        371,
+        375,
+        376,
+        380,
+        381,
+        385,
+        388,
+        391,
+        392,
+        393,
+        394,
+        396,
+        399,
+        401,
+        403,
+        404,
+        405,
+        406,
+        407,
+        409,
+        410,
+        414,
+        416,
+        421,
+        425,
+        427,
+        428,
+        430
+      ],
+      "assertionStacks": [
+        430
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "C5-compact-font",
+      "lane": "cockpit",
+      "phase": "new",
+      "intended": "Existing compact keeper no13px bold assertion fails (12px header still exists, so positive12px alone is insufficient).",
+      "source": "src/components/discovery/cockpit/comparison-table.tsx",
+      "selectedTest": {
+        "file": "tests/discovery-comparison-table.test.tsx",
+        "name": "an alternative without her product: two columns, ALTERNATIVE | ZIEL"
+      },
+      "originalHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C5-compact-font-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C5-compact-font-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C5-compact-font-after.tap"
+      },
+      "restoredHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "keeperAssertionLines": [
+        126,
+        127,
+        128,
+        129,
+        134,
+        135,
+        136
+      ],
+      "assertionStacks": [
+        136
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "C6-removes-only-unreplaced-bar",
+      "lane": "cockpit",
+      "phase": "new",
+      "intended": "Transferred without bar-presence assertion fails; existing withTable suppression/prefix still holds.",
+      "source": "src/components/scan/scan-verdict-sections.tsx",
+      "selectedTest": {
+        "file": "tests/discovery-comparison-table.test.tsx",
+        "name": "only a cockpit-supplied comparison replaces the bars"
+      },
+      "originalHash": "65e52f0528559d66fb06f0809ed9dc0529521be455f22f2d31e4f1caf6649094",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C6-removes-only-unreplaced-bar-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C6-removes-only-unreplaced-bar-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C6-removes-only-unreplaced-bar-after.tap"
+      },
+      "restoredHash": "65e52f0528559d66fb06f0809ed9dc0529521be455f22f2d31e4f1caf6649094",
+      "keeperAssertionLines": [
+        272,
+        276,
+        280,
+        281,
+        284,
+        288
+      ],
+      "assertionStacks": [
+        284
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "C6-leaks-glyph-marker-to-scanner",
+      "lane": "cockpit",
+      "phase": "new",
+      "intended": "Transferred without no-data-glyph fails; comparison bars remain suppressed.",
+      "source": "src/components/scan/scan-verdict-sections.tsx",
+      "selectedTest": {
+        "file": "tests/discovery-comparison-table.test.tsx",
+        "name": "only a cockpit-supplied comparison replaces the bars"
+      },
+      "originalHash": "65e52f0528559d66fb06f0809ed9dc0529521be455f22f2d31e4f1caf6649094",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C6-leaks-glyph-marker-to-scanner-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C6-leaks-glyph-marker-to-scanner-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-cockpit-mutations-new/C6-leaks-glyph-marker-to-scanner-after.tap"
+      },
+      "restoredHash": "65e52f0528559d66fb06f0809ed9dc0529521be455f22f2d31e4f1caf6649094",
+      "keeperAssertionLines": [
+        272,
+        276,
+        280,
+        281,
+        284,
+        288
+      ],
+      "assertionStacks": [
+        288
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "profile-position",
+      "lane": "profile",
+      "phase": "new",
+      "intended": "Transferred real rendered position invariant fails.",
+      "source": "src/components/profile/haar-check-edit-control.tsx",
+      "selectedTest": {
+        "file": "tests/profile-haarcheck-verfeinerung-lock.test.tsx",
+        "name": "HaarCheckEditControl free tier: rendered markup places the lock <svg> after the Button closes, not inside it"
+      },
+      "originalHash": "6a3bb20b74bd399fc8f6271ef125923a314ee346e7ff550127c9e0910be69a13",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-profile-mutations-new/profile-position-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-profile-mutations-new/profile-position-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-profile-mutations-new/profile-position-after.tap"
+      },
+      "restoredHash": "6a3bb20b74bd399fc8f6271ef125923a314ee346e7ff550127c9e0910be69a13",
+      "keeperAssertionLines": [
+        103,
+        104,
+        105,
+        107,
+        109,
+        110,
+        112,
+        113,
+        114,
+        122,
+        123,
+        124
+      ],
+      "assertionStacks": [
+        104
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "profile-inline",
+      "lane": "profile",
+      "phase": "new",
+      "intended": "Transferred real rendered inline invariant fails.",
+      "source": "src/components/profile/haar-check-edit-control.tsx",
+      "selectedTest": {
+        "file": "tests/profile-haarcheck-verfeinerung-lock.test.tsx",
+        "name": "HaarCheckEditControl free tier: rendered markup places the lock <svg> after the Button closes, not inside it"
+      },
+      "originalHash": "6a3bb20b74bd399fc8f6271ef125923a314ee346e7ff550127c9e0910be69a13",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-profile-mutations-new/profile-inline-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-profile-mutations-new/profile-inline-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-profile-mutations-new/profile-inline-after.tap"
+      },
+      "restoredHash": "6a3bb20b74bd399fc8f6271ef125923a314ee346e7ff550127c9e0910be69a13",
+      "keeperAssertionLines": [
+        103,
+        104,
+        105,
+        107,
+        109,
+        110,
+        112,
+        113,
+        114,
+        122,
+        123,
+        124
+      ],
+      "assertionStacks": [
+        105
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "profile-visible-copy",
+      "lane": "profile",
+      "phase": "new",
+      "intended": "Transferred real rendered visible-copy invariant fails.",
+      "source": "src/components/profile/haar-check-edit-control.tsx",
+      "selectedTest": {
+        "file": "tests/profile-haarcheck-verfeinerung-lock.test.tsx",
+        "name": "HaarCheckEditControl free tier: rendered markup places the lock <svg> after the Button closes, not inside it"
+      },
+      "originalHash": "6a3bb20b74bd399fc8f6271ef125923a314ee346e7ff550127c9e0910be69a13",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-profile-mutations-new/profile-visible-copy-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-profile-mutations-new/profile-visible-copy-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-profile-mutations-new/profile-visible-copy-after.tap"
+      },
+      "restoredHash": "6a3bb20b74bd399fc8f6271ef125923a314ee346e7ff550127c9e0910be69a13",
+      "keeperAssertionLines": [
+        103,
+        104,
+        105,
+        107,
+        109,
+        110,
+        112,
+        113,
+        114,
+        122,
+        123,
+        124
+      ],
+      "assertionStacks": [
+        109
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "profile-aria-copy",
+      "lane": "profile",
+      "phase": "new",
+      "intended": "Transferred real rendered aria-copy invariant fails.",
+      "source": "src/components/profile/haar-check-edit-control.tsx",
+      "selectedTest": {
+        "file": "tests/profile-haarcheck-verfeinerung-lock.test.tsx",
+        "name": "HaarCheckEditControl free tier: rendered markup places the lock <svg> after the Button closes, not inside it"
+      },
+      "originalHash": "6a3bb20b74bd399fc8f6271ef125923a314ee346e7ff550127c9e0910be69a13",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-profile-mutations-new/profile-aria-copy-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-profile-mutations-new/profile-aria-copy-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-profile-mutations-new/profile-aria-copy-after.tap"
+      },
+      "restoredHash": "6a3bb20b74bd399fc8f6271ef125923a314ee346e7ff550127c9e0910be69a13",
+      "keeperAssertionLines": [
+        103,
+        104,
+        105,
+        107,
+        109,
+        110,
+        112,
+        113,
+        114,
+        122,
+        123,
+        124
+      ],
+      "assertionStacks": [
+        110
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "profile-badge-missing",
+      "lane": "profile",
+      "phase": "new",
+      "intended": "Transferred real rendered badge-missing invariant fails.",
+      "source": "src/components/profile/haar-check-edit-control.tsx",
+      "selectedTest": {
+        "file": "tests/profile-haarcheck-verfeinerung-lock.test.tsx",
+        "name": "HaarCheckEditControl free tier: rendered markup places the lock <svg> after the Button closes, not inside it"
+      },
+      "originalHash": "6a3bb20b74bd399fc8f6271ef125923a314ee346e7ff550127c9e0910be69a13",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-profile-mutations-new/profile-badge-missing-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-profile-mutations-new/profile-badge-missing-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-profile-mutations-new/profile-badge-missing-after.tap"
+      },
+      "restoredHash": "6a3bb20b74bd399fc8f6271ef125923a314ee346e7ff550127c9e0910be69a13",
+      "keeperAssertionLines": [
+        103,
+        104,
+        105,
+        107,
+        109,
+        110,
+        112,
+        113,
+        114,
+        122,
+        123,
+        124
+      ],
+      "assertionStacks": [
+        112
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "profile-badge-nested",
+      "lane": "profile",
+      "phase": "new",
+      "intended": "Transferred real rendered badge-nested invariant fails.",
+      "source": "src/components/profile/haar-check-edit-control.tsx",
+      "selectedTest": {
+        "file": "tests/profile-haarcheck-verfeinerung-lock.test.tsx",
+        "name": "HaarCheckEditControl free tier: rendered markup places the lock <svg> after the Button closes, not inside it"
+      },
+      "originalHash": "6a3bb20b74bd399fc8f6271ef125923a314ee346e7ff550127c9e0910be69a13",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-profile-mutations-new/profile-badge-nested-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-profile-mutations-new/profile-badge-nested-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-profile-mutations-new/profile-badge-nested-after.tap"
+      },
+      "restoredHash": "6a3bb20b74bd399fc8f6271ef125923a314ee346e7ff550127c9e0910be69a13",
+      "keeperAssertionLines": [
+        103,
+        104,
+        105,
+        107,
+        109,
+        110,
+        112,
+        113,
+        114,
+        122,
+        123,
+        124
+      ],
+      "assertionStacks": [
+        114
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "fork-accepted-effect",
+      "lane": "fork",
+      "phase": "new",
+      "intended": "Actual accepted effect deepEqual returns continue_refinement instead of open_routine /routine.",
+      "source": "src/components/personal-plan-journey/accept-ideal-plan.ts",
+      "selectedTest": {
+        "file": "tests/personal-plan-accept-ideal-plan.test.tsx",
+        "name": "a successful accept sends the user straight to the routine"
+      },
+      "originalHash": "fe28b5740c75c7bf45f11443d61432aa4c786abdfeab0e79b3803149fa9e4dc0",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-fork-mutations-new/fork-accepted-effect-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-fork-mutations-new/fork-accepted-effect-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-fork-mutations-new/fork-accepted-effect-after.tap"
+      },
+      "restoredHash": "fe28b5740c75c7bf45f11443d61432aa4c786abdfeab0e79b3803149fa9e4dc0",
+      "keeperAssertionLines": [
+        237,
+        238,
+        239
+      ],
+      "assertionStacks": [
+        237
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    },
+    {
+      "id": "fork-accept-label",
+      "lane": "fork",
+      "phase": "new",
+      "intended": "Actual rendered acceptance CTA lacks literal Zu deiner Routine and shows refine copy.",
+      "source": "src/components/personal-plan-start/need-plan-screen.tsx",
+      "selectedTest": {
+        "file": "tests/personal-plan-accept-ideal-plan.test.tsx",
+        "name": "the Idealplan CTA leads to the routine once acceptance is the only path"
+      },
+      "originalHash": "aef2027e8ba788faab32c1113e638421f61bfbaf11e81a263bc4da4849be0679",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-fork-mutations-new/fork-accept-label-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next431-fork-mutations-new/fork-accept-label-fault.tap"
+      },
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next431-fork-mutations-new/fork-accept-label-after.tap"
+      },
+      "restoredHash": "aef2027e8ba788faab32c1113e638421f61bfbaf11e81a263bc4da4849be0679",
+      "keeperAssertionLines": [
+        509,
+        510,
+        511
+      ],
+      "assertionStacks": [
+        509
+      ],
+      "requiresMainIntendedAssertionInspection": true,
+      "mainIntendedAssertionInspection": "passed; actual error and selected keeper assertion stack inspected"
+    }
+  ]
+}

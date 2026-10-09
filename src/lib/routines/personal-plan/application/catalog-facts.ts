@@ -1,3 +1,5 @@
+import type { ProductBondbuilderSpecs } from "@/lib/bondbuilder/constants"
+
 type FactProvenance = "catalog_spec" | "bond_usage_protocol"
 
 type LeaveInSpecRow = {
@@ -12,17 +14,10 @@ type DryShampooSpecRow = {
   format: "aerosol_spray" | "powder" | "foam_or_liquid"
 }
 
-type BondbuilderSpecRow = {
-  application_mode: "pre_shampoo" | "post_wash_leave_in"
-  treatment_mode: "rinse_out" | "leave_in"
-  product_format: "cream_treatment" | "primer_treatment" | "leave_in_mask" | "spray_treatment"
-  usage_protocol:
-    | "olaplex_3plus"
-    | "olaplex_0_booster"
-    | "olaplex_3_legacy"
-    | "k18_leave_in"
-    | "epres_spray"
-}
+type BondbuilderSpecRow = Pick<
+  ProductBondbuilderSpecs,
+  "application_mode" | "treatment_mode" | "product_format" | "usage_protocol"
+>
 
 export type CatalogApplicationFacts = {
   facts: Record<string, unknown>

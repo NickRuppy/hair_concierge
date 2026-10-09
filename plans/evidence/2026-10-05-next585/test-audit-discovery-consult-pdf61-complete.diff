@@ -1,0 +1,22 @@
+--- a/tests/discovery-pdf-page.test.tsx
++++ b/tests/discovery-pdf-page.test.tsx
+@@ -524,7 +524,7 @@
+   assert.ok(markup.includes("Schwarzkopf Klärendes Serum"))
+ })
+ 
+-test("the document is written to the participant, step by step", async () => {
++test("the shelf says what happens to every product she brought", async () => {
+   const markup = await renderPdf()
+ 
+   // Addressed to her, in her own words — no cockpit chrome anywhere on the paper.
+@@ -565,10 +565,6 @@
+   // The on-screen sheet shrinks to fit narrow viewports; that rule is screen-only, so the
+   // printed A4 page is untouched.
+   assert.ok(markup.includes("@media screen {\n  .dcp-page { width: 100%; max-width: 210mm; }"))
+-})
+-
+-test("the shelf says what happens to every product she brought", async () => {
+-  const markup = await renderPdf()
+ 
+   assert.ok(markup.includes("Deine bisherigen Produkte"))
+   // „in deiner Routine", not „geprüft": this counts only the step-bound products.

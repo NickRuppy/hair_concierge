@@ -1,0 +1,55 @@
+{
+  "packet": "/tmp/test-audit-scanner46-proposal-RDeysZ",
+  "classification": {
+    "R": 35,
+    "F": 5,
+    "C": 3,
+    "D": 3
+  },
+  "ownedAST": [
+    46,
+    46,
+    40
+  ],
+  "sixFileAST": [
+    90,
+    90,
+    84
+  ],
+  "snapshots": 18,
+  "controls": 7,
+  "sourceEditsProposed": 0,
+  "repoWrites": 0,
+  "runtime": false,
+  "files": {
+    "candidates.json": "bc06817e9182e0879d206be0697219197fd062ca9b6d5398f9959380fe0b7509",
+    "controls.json": "5909f015e213410a5094640a06b6097d3384d8b248ffa4a58e9d9f8907aa8221",
+    "transfer-cut.diff": "94b1d8ca6b3922335a9e3539965d25751af92589dd75d10f079e5fae0e2e1715",
+    "before-cut.diff": "8c26d6fefaad9fcb7b0c55d05d214d3a1b549116ad749731f7da0e635c530a86",
+    "report.md": "0abb7b95053bcf90bf672064f07af3b0a473226ddbd892df080e0844f40edabd",
+    "verify.cjs": "91699595c2ebbfccc05a518b90df5af8543867b483b2b693622fa210418fd415",
+    "manifest.json": "a9367b8fe81c65ebedd648184a6b09c5f1783b702fd6d3457d08925133919a43",
+    "before-transfer.diff": "b4ca7bb2c8b2f7714e219ba4b82364c71d52eadcdc868bb9e3afa77e4a30794e",
+    "ledger.md": "8666ce98728a87c97220bd1da4c45bf762e93427d1677db59f99eeb62dc679d5",
+    "ledger.json": "3c245d386e464c222263d6232674d50e94f8bf933397da0f8b0bbfa599844179",
+    "static-receipt.json": "ac7827458e2242ddd4b5a57a0a143aafe24fa9cb9e6431558f10907965cee6c5",
+    "transfer/tests/scan-wishlist-auto-save-postgres.test.ts": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9",
+    "transfer/tests/scan-resolve-route.test.ts": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add",
+    "transfer/tests/scan-resolve-event-log.test.ts": "8c6cdd84752d9ba41ca0d0879271796a838b602a23b4927874838df0e8e8aeba",
+    "transfer/tests/scan-resolve-auto-save.test.ts": "a1e6007c5d222f0de76fc8d91ccad753d8c9884dd8d156a24945eb72e47ae8cf",
+    "transfer/tests/scan-wishlist-route.test.ts": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a",
+    "transfer/tests/scan-resolve-events-migration.test.ts": "c1bd907dcb9ed28c82f6d0196f6531c4fab7ab02b255061b45c2fd2f59089189",
+    "cut/tests/scan-wishlist-auto-save-postgres.test.ts": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9",
+    "cut/tests/scan-resolve-route.test.ts": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add",
+    "cut/tests/scan-resolve-event-log.test.ts": "00316a1edf13965567845b2513b846a94d7ab3074f2fff05f5452ca87b0fce0e",
+    "cut/tests/scan-resolve-auto-save.test.ts": "de4d4d0a8bf10bcec4edcf2543e7fb759d06bce3e98f22d4e8e882d4a0fe4dba",
+    "cut/tests/scan-wishlist-route.test.ts": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a",
+    "cut/tests/scan-resolve-events-migration.test.ts": "bbf36aaadfe6ef1d0c335267e6f584a4eddce708820af1cf8887867c1b3aff8f",
+    "before/tests/scan-wishlist-auto-save-postgres.test.ts": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9",
+    "before/tests/scan-resolve-route.test.ts": "6f0ff0518c70ebf8e25d08e888c17742d15761762a06ad66820b59a4da949a88",
+    "before/tests/scan-resolve-event-log.test.ts": "321d812b581bedba43c2cd48022b870033300cdf5994a56546c5f4dab945e6cb",
+    "before/tests/scan-resolve-auto-save.test.ts": "a1e6007c5d222f0de76fc8d91ccad753d8c9884dd8d156a24945eb72e47ae8cf",
+    "before/tests/scan-wishlist-route.test.ts": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a",
+    "before/tests/scan-resolve-events-migration.test.ts": "c1bd907dcb9ed28c82f6d0196f6531c4fab7ab02b255061b45c2fd2f59089189"
+  }
+}

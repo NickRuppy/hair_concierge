@@ -1,0 +1,23 @@
+{
+  "directory": "/private/tmp/test-audit-catalog99-tools-k9e7uyhg",
+  "pinSHA": "4ac6d1b4344d4296e8c91668d9c62bc352869ce8636f4d2c54f42612bf118a3d",
+  "originalGuards": 111,
+  "phaseFiles": 16,
+  "snapshots": 48,
+  "nativeCounts": {
+    "before": 99,
+    "transfer": 99,
+    "cut": 96
+  },
+  "readset": 440,
+  "localClosure": 79,
+  "dependencies": 5197,
+  "dependencyTrees": 34,
+  "controls": 6,
+  "nonliteralImports": [],
+  "attemptedRepositoryWrites": 0,
+  "attemptedChildren": 0,
+  "attemptedOwnerImports": 0,
+  "attemptedNetworkCalls": 0,
+  "executionCredit": 0
+}

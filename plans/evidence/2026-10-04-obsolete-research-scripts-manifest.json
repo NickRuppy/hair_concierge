@@ -1,0 +1,18 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "mode": "source-only-conditional-deletion",
+  "astTestCredit": 0,
+  "candidates": [
+    {"path":"scripts/research-leave-in-specs.ts","sha256":"8e8f05f564613f01d1b13e19e51c61b9c7815d89b128cfa21c45e1fe12bed695","terms":["research-leave-in-specs","leave-in-specs-draft.json","leave-in-specs-draft-summary.json","leave-in-specs-upsert-candidates.json"]},
+    {"path":"scripts/research-shampoo-specs.ts","sha256":"3d313f893d82315121ce324ba44e754416a7b78d7c404e82f19e255db7ffde04","terms":["research-shampoo-specs","shampoo-specs-review-table.csv"]},
+    {"path":"scripts/export-leave-in-v1-canonical-specs.ts","sha256":"aae4e31c840866309d681e66c897714e857ca49b51ab09c4ddee7c24db1e7fa3","terms":["export-leave-in-v1-canonical-specs","leave-in-v1-canonical-specs.json","leave-in-v1-canonical-specs-summary.json","leave-in-v1-canonical-specs.md"]}
+  ],
+  "currentKeeperTests": {
+    "leaveIn": ["tests/leave-in-production-adapter.test.ts", "tests/leave-in-product-intake-adapter.test.ts", "tests/leave-in-research-fixture.test.ts"],
+    "shampoo": ["tests/product-list-chunks.test.ts", "tests/shampoo-production-light-adapter.test.ts"]
+  },
+  "historicalPlanReferencesExcludedFromClosure": [
+    "plans/2026-06-24-shampoo-eligibility-cleanup.md",
+    "plans/2026-06-24-shampoo-eligibility-cleanup.claude-review.md"
+  ]
+}

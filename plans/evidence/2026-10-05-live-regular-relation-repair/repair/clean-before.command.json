@@ -1,0 +1,15 @@
+{
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "argv": [
+    "node",
+    "--experimental-test-isolation=none",
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-concurrency=1",
+    "--test-name-pattern=^an unapplied regular-quiz field-test relation preserves ordinary enrollment$",
+    "tests/personal-plan-enrollment.test.ts"
+  ]
+}

@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: partitionDmSearchRows: an 11-digit gtin is padded to 12 and then maps
+ok 1 - partitionDmSearchRows: an 11-digit gtin is padded to 12 and then maps
+  ---
+  duration_ms: 0.981709
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 674.075916

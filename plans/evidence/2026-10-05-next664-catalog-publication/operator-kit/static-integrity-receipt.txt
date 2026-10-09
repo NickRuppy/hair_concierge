@@ -1,0 +1,23 @@
+{
+  "status": "PASS_STATIC_INTEGRITY",
+  "pinsSHA": "4ac6d1b4344d4296e8c91668d9c62bc352869ce8636f4d2c54f42612bf118a3d",
+  "parsed": [
+    "operator-edit.cjs",
+    "operator-guard.cjs",
+    "operator-native-proof.cjs",
+    "operator-proof.cjs",
+    "operator-readonly-preload.cjs",
+    "operator-run-controls.cjs",
+    "prepare-pins.cjs",
+    "proof-attestation.cjs",
+    "static-integrity.cjs"
+  ],
+  "original111GuardsExact": true,
+  "identityRuntimeDependenciesPreserved": true,
+  "strictBasePredicateUnchangedExceptAdditionalDecodedValueConjunction": true,
+  "repositoryWrites": 0,
+  "children": 0,
+  "ownerImports": 0
+}
+{"staticReadOnlyEnforced":true,"attemptedWrites":0,"attemptedChildren":0}
+{"attemptedOwnerImports":0,"attemptedNetworkCalls":0}

@@ -1,0 +1,21 @@
+TAP version 13
+# Partner journey lookup failed: Error: database unavailable
+#     at loadInvitation (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/partner-access-journey.test.ts:159:15)
+#     at resolvePartnerJourney (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/partner-access/journey.ts:58:24)
+#     at async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/partner-access-journey.test.ts:156:22)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+# Subtest: a read error is unavailable, not none or a thrown exception
+ok 1 - a read error is unavailable, not none or a thrown exception
+  ---
+  duration_ms: 2.172417
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 231.099375

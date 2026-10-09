@@ -1,0 +1,34 @@
+{
+  "status": "STATIC ONLY; no repository writes, native tests, owner execution or mutations",
+  "counts": {
+    "targetBefore": 42,
+    "targetTransfer": 42,
+    "targetCut": 38,
+    "R": 30,
+    "C": 4,
+    "F": 8,
+    "D": 0,
+    "proofBefore": 58,
+    "proofTransfer": 58,
+    "proofCut": 54
+  },
+  "snapshotsParsed": 21,
+  "untouchedCallbacks": 53,
+  "currentReadsetHashesMatch": 34,
+  "controls": {
+    "total": 7,
+    "typescriptParsed": 2,
+    "sqlUniqueAnchorOnly": 5,
+    "executed": 0
+  },
+  "artifacts": {
+    "complete-ledger.md": "bd786771e8c7466864889e6fe32e5c21a62e87c1483898b4844b63a843e3e625",
+    "layer-plan.md": "5e57da3fcd210e8e9e0e63a7ce9bc4b05a6d4eafe59eacafb197471903b70423",
+    "per-site-ledger.md": "1a837d5150d57d0197a2c1b6fc1e6f20b2fdd793690b11702af41ba79a484b32",
+    "judgments.json": "103955959891504e4edf859abdf72b01516a6cfe4675838a2453dc6a592042f3",
+    "candidates.json": "ebf13ec31c3a8ff14dba283904290c8da2dc9d243a1dc37929f65dacd8d2f605",
+    "manifest.json": "59c4589f2a4b9deb7b70ed603e8a6c5a865cc36071624259f8424fcce9bcbe13",
+    "controls.json": "c1ce96a719f518ed3080edd894eb739a2c726ace20c2c013ec80a8f46aa7cdb8",
+    "complete.diff": "b2c47358791d8fc279215833e778a5b21bbf016ccceb6d697dd85b4fd3010cac"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "candidate": "F2",
+  "market": "DE",
+  "category": "conventional_rinse_out_conditioner",
+  "raw_inci": "Ingredients: Aqua, Cetearyl Alcohol, Helianthus Annuus Hybrid Oil1, Glycerin, Betaine, Arginine, Hydrolyzed Wheat Protein, Rosa Damascena Flower Water 1, Parfum, Pelargonium Graveolens Flower Oil, Brassica Alcohol, Sodium Levulinate, Cetearyl Glucoside, Alcohol, Levulinic Acid, Glyceryl Caprylate, p-Anisic Acid, Brassicyl Isoleucinate Esylate, Citric Acid, Sodium Hydroxide",
+  "normalized_ingredients": [
+    "Aqua",
+    "Cetearyl Alcohol",
+    "Helianthus Annuus Hybrid Oil",
+    "Glycerin",
+    "Betaine",
+    "Arginine",
+    "Hydrolyzed Wheat Protein",
+    "Rosa Damascena Flower Water",
+    "Parfum",
+    "Pelargonium Graveolens Flower Oil",
+    "Brassica Alcohol",
+    "Sodium Levulinate",
+    "Cetearyl Glucoside",
+    "Alcohol",
+    "Levulinic Acid",
+    "Glyceryl Caprylate",
+    "p-Anisic Acid",
+    "Brassicyl Isoleucinate Esylate",
+    "Citric Acid",
+    "Sodium Hydroxide"
+  ],
+  "fingerprint": "ca52f423b555b7c648a1456dbc52fe47811a0e1261df2cffdba6fe0c19471e0f",
+  "instructions": "Fresh assessor receives no prior labels/claims; follow owning category standard. Mask has no engine."
+}

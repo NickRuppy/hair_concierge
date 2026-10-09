@@ -1,0 +1,31 @@
+{
+  "mode": "cut",
+  "from": "transfer",
+  "phase": "cut",
+  "counts": {
+    "before": 99,
+    "transfer": 99,
+    "cut": 87
+  },
+  "changed": [
+    "tests/scan-dm-mcp-client.test.ts",
+    "tests/scan-dm-toon.test.ts",
+    "tests/scan-identifier-lookup.test.ts",
+    "tests/scan-search-retailer-route.test.ts",
+    "tests/scan-search-route.test.ts"
+  ],
+  "allTestHashes": {
+    "tests/scan-dm-enrichment.test.ts": "ae6c4449a65c03978f4ceb474170b78e2bdab8e895041e441347d36a1c6c7b01",
+    "tests/scan-dm-mcp-client.test.ts": "b3d66aac6bb6199723343711657634efe6e93c068e23481ec5de85d18b7de846",
+    "tests/scan-dm-suggest-category.test.ts": "057ca6d225751f41064c5a4a2a8aae9d8ad84514a11111098d42b6c7d6c0f6b2",
+    "tests/scan-dm-telemetry-migration.test.ts": "6741c01852636ee0f85ced4747a2cc6a967d5bc7cbf1616bdf461d7c54407bf9",
+    "tests/scan-dm-telemetry-postgres.test.ts": "66a805ae185a6606f3e9ebe79127ce722fc08bf431ca26aa5b0bac50263cbf74",
+    "tests/scan-dm-toon.test.ts": "14e8a8104af7c97f947447c2c257373effbd70280371baa5b487a4f8bf6c4379",
+    "tests/scan-identifier-lookup.test.ts": "1e7f9ea2acdd5879bf7a5487f0307413b6815db864e0f30b88e2d3a47eae1583",
+    "tests/scan-search-retailer-route.test.ts": "500cb714a0ca91a04cfc4c40fbaef34ddfa57abe46400a0e7f180b05ab18c91c",
+    "tests/scan-search-route.test.ts": "e8bfd7706656b62f3db0c142093ef6a8c3d0ccda5aaceeb2d6f394993f461499"
+  },
+  "sourceWrites": 0,
+  "testsRun": 0,
+  "originals": "/tmp/test-audit-retailer-boundary99-apply-cut-btGXIh/originals"
+}

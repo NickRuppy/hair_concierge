@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: retrieves provider authorities itself before returning verified trial facts
+ok 1 - retrieves provider authorities itself before returning verified trial facts
+  ---
+  duration_ms: 1.998708
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 182.917333

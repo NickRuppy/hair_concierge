@@ -1,0 +1,1283 @@
+[
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "line": 107,
+    "runner": "node",
+    "name": "test",
+    "title": "\"dry-run parsing has no network and apply needs all exact gates\""
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "line": 131,
+    "runner": "node",
+    "name": "test",
+    "title": "\"rejects manifest count, duplicate identifiers, and mismatched email before calls\""
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "line": 161,
+    "runner": "node",
+    "name": "test",
+    "title": "\"missing or invalid JWT proof stops before logout\""
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "line": 185,
+    "runner": "node",
+    "name": "test",
+    "title": "\"unbanned ban response is rejected and needs manual recovery\""
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "line": 212,
+    "runner": "node",
+    "name": "test",
+    "title": "\"journal failure after confirmed ban preserves recovery state\""
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "line": 230,
+    "runner": "node",
+    "name": "test",
+    "title": "\"ban marker must round-trip while unrelated app metadata is preserved and never journaled\""
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "line": 265,
+    "runner": "node",
+    "name": "test",
+    "title": "\"ban marker must not replace pre-existing app metadata\""
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "line": 296,
+    "runner": "node",
+    "name": "test",
+    "title": "\"preflights every identity before a journal or mutation\""
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "line": 325,
+    "runner": "node",
+    "name": "test",
+    "title": "\"initial private journal failure prevents every mutation\""
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "line": 343,
+    "runner": "node",
+    "name": "test",
+    "title": "\"global logout precedes 24h ban and journals no secrets\""
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "line": 366,
+    "runner": "node",
+    "name": "test",
+    "title": "\"delayed restrictions extend the conservative reset deadline beyond minted token expiry\""
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "line": 400,
+    "runner": "node",
+    "name": "test",
+    "title": "\"mid-batch failure stops remaining accounts and never auto-unbans\""
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "line": 429,
+    "runner": "node",
+    "name": "test",
+    "title": "\"maintenance link identity mismatch prevents global logout and ban\""
+  },
+  {
+    "file": "tests/moderator-account-reset-execution.test.ts",
+    "line": 27,
+    "runner": "node",
+    "name": "test",
+    "title": "\"uses manifest bytes as the sole plan input and refuses blocked bytes before writing\""
+  },
+  {
+    "file": "tests/moderator-account-reset-execution.test.ts",
+    "line": 47,
+    "runner": "node",
+    "name": "test",
+    "title": "\"refuses repository output paths without writing a private artifact\""
+  },
+  {
+    "file": "tests/moderator-account-reset-execution.test.ts",
+    "line": 65,
+    "runner": "node",
+    "name": "test",
+    "title": "\"refuses main-root, symlinked, and not-yet-created worktree descendants\""
+  },
+  {
+    "file": "tests/moderator-account-reset-execution.test.ts",
+    "line": 91,
+    "runner": "node",
+    "name": "test",
+    "title": "\"requires an existing output parent to already be private\""
+  },
+  {
+    "file": "tests/moderator-account-reset-execution.test.ts",
+    "line": 112,
+    "runner": "node",
+    "name": "test",
+    "title": "\"production preparation refuses a missing, mismatched, or shortened maintenance journal\""
+  },
+  {
+    "file": "tests/moderator-account-reset-execution.test.ts",
+    "line": 165,
+    "runner": "node",
+    "name": "test",
+    "title": "\"production preparation binds a valid maintenance journal into the SQL header and receipt\""
+  },
+  {
+    "file": "tests/moderator-account-reset-execution.test.ts",
+    "line": 185,
+    "runner": "node",
+    "name": "test",
+    "title": "\"production preparation waits out a JWT that could be minted before a delayed ban\""
+  },
+  {
+    "file": "tests/moderator-account-reset-execution.test.ts",
+    "line": 215,
+    "runner": "node",
+    "name": "test",
+    "title": "\"production preparation consumes the actual applyMaintenance journal contract\""
+  },
+  {
+    "file": "tests/moderator-account-reset-execution.test.ts",
+    "line": 280,
+    "runner": "node",
+    "name": "test",
+    "title": "\"writes private SQL and a redacted receipt without applying or making a network call\""
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "line": 24,
+    "runner": "node",
+    "name": "test",
+    "title": "\"blocks incomplete private manifest proof instead of generating reset SQL\""
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "line": 39,
+    "runner": "node",
+    "name": "test",
+    "title": "\"blocks unclassified owner tables and billing-linked state\""
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "line": 56,
+    "runner": "node",
+    "name": "test",
+    "title": "\"production reset refuses missing payment replay cutoff proof\""
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "line": 66,
+    "runner": "node",
+    "name": "test",
+    "title": "\"the operational payment cutoff cannot be removed as legacy app metadata\""
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "line": 74,
+    "runner": "node",
+    "name": "test",
+    "title": "\"drains requests that may start immediately before the last JWT expires\""
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "line": 84,
+    "runner": "node",
+    "name": "test",
+    "title": "\"waits out tokens minted between global logout and the confirmed login restriction\""
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "line": 97,
+    "runner": "node",
+    "name": "test",
+    "title": "\"reset supports an exact fixture with no manual grants\""
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "line": 113,
+    "runner": "node",
+    "name": "test",
+    "title": "\"production SQL rechecks maintenance and clock inside the reset transaction\""
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "line": 163,
+    "runner": "node",
+    "name": "test",
+    "title": "\"generated guarded SQL resets app state and preserves login identity\""
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "line": 229,
+    "runner": "node",
+    "name": "test",
+    "title": "\"generated SQL aborts on count mismatch before deleting data\""
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "line": 250,
+    "runner": "node",
+    "name": "test",
+    "title": "\"generated SQL aborts on same-count runtime payload drift before deleting data\""
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "line": 274,
+    "runner": "node",
+    "name": "test",
+    "title": "\"cross-owner exact-email lead blocks reset and preserves both owners' state\""
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "line": 305,
+    "runner": "node",
+    "name": "test",
+    "title": "\"retain-zero billing and backup rows block reset without deleting evidence\""
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "line": 341,
+    "runner": "node",
+    "name": "test",
+    "title": "\"foreign funnel session or prepared artifact linked to an owned lead blocks reset\""
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "line": 377,
+    "runner": "node",
+    "name": "test",
+    "title": "\"child residual checks keep frozen conversation ownership after parent deletion\""
+  },
+  {
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "line": 200,
+    "runner": "node",
+    "name": "test",
+    "title": "\"dry run makes no hosted calls and reads no environment\""
+  },
+  {
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "line": 209,
+    "runner": "node",
+    "name": "test",
+    "title": "\"rejects wrong project, unsafe args, and non-production URL before apply\""
+  },
+  {
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "line": 244,
+    "runner": "node",
+    "name": "test",
+    "title": "\"happy path uses independent parallel activation calls and exact guarded cleanup\""
+  },
+  {
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "line": 283,
+    "runner": "node",
+    "name": "test",
+    "title": "\"cleanup refuses to delete when fixture identity marker mismatches\""
+  },
+  {
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "line": 300,
+    "runner": "node",
+    "name": "test",
+    "title": "\"wrong email progress change fails the probe even when rejected\""
+  },
+  {
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "line": 320,
+    "runner": "node",
+    "name": "test",
+    "title": "\"unexpected 4xx denials are not accepted as proof\""
+  },
+  {
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "line": 338,
+    "runner": "node",
+    "name": "test",
+    "title": "\"partial parallel activation response is recovered for cleanup but does not report success\""
+  },
+  {
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "line": 384,
+    "runner": "node",
+    "name": "test",
+    "title": "\"activation replay must have identical receipt fields and exact 2160 hour expiry\""
+  },
+  {
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "line": 409,
+    "runner": "node",
+    "name": "test",
+    "title": "\"final journal failure marks the probe unsuccessful after cleanup\""
+  },
+  {
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "line": 429,
+    "runner": "node",
+    "name": "test",
+    "title": "\"source keeps cleanup conservative around auth deletion and exact auth absence\""
+  },
+  {
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "line": 132,
+    "runner": "node",
+    "name": "test",
+    "title": "\"dry run makes no hosted calls\""
+  },
+  {
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "line": 140,
+    "runner": "node",
+    "name": "test",
+    "title": "\"rejects wrong project, unsafe user arguments, and a non-hosted production URL before calls\""
+  },
+  {
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "line": 161,
+    "runner": "node",
+    "name": "test",
+    "title": "\"optional expiry observation checkpoints then proves only explicit PostgREST JWT-expired 401s\""
+  },
+  {
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "line": 211,
+    "runner": "node",
+    "name": "test",
+    "title": "\"expired network failure cannot prove expiry and still cleans the fixture\""
+  },
+  {
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "line": 234,
+    "runner": "node",
+    "name": "test",
+    "title": "\"uses a verified maintenance JWT before the second ban and writes sanitized receipts\""
+  },
+  {
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "line": 262,
+    "runner": "node",
+    "name": "test",
+    "title": "\"failed residual read is not absence\""
+  },
+  {
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "line": 284,
+    "runner": "node",
+    "name": "test",
+    "title": "\"network failures cannot prove login restriction or refresh revocation\""
+  },
+  {
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "line": 307,
+    "runner": "node",
+    "name": "test",
+    "title": "\"failed initial journal stops the probe but still cleans the created fixture\""
+  },
+  {
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "line": 321,
+    "runner": "node",
+    "name": "test",
+    "title": "\"maintenance subject mismatch stops before logout and still cleans the exact fixture\""
+  },
+  {
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "line": 344,
+    "runner": "node",
+    "name": "test",
+    "title": "\"a thrown mid-probe operation still cleans fixture and writes a final receipt\""
+  },
+  {
+    "file": "tests/moderator-organic-fresh-start.test.ts",
+    "line": 20,
+    "runner": "node",
+    "name": "test",
+    "title": "\"new organic moderator start clears the legacy quiz draft once before restore\""
+  },
+  {
+    "file": "tests/moderator-organic-fresh-start.test.ts",
+    "line": 36,
+    "runner": "node",
+    "name": "test",
+    "title": "\"blocked browser storage fails closed\""
+  },
+  {
+    "file": "tests/moderator-organic-fresh-start.test.ts",
+    "line": 55,
+    "runner": "node",
+    "name": "test",
+    "title": "\"a failed first boundary can be safely initialized from the reused server session\""
+  },
+  {
+    "file": "tests/moderator-organic-fresh-start.test.ts",
+    "line": 79,
+    "runner": "node",
+    "name": "test",
+    "title": "\"response parsing allows progress-routed and older active returns without quiz state\""
+  },
+  {
+    "file": "tests/moderator-organic-fresh-start.test.ts",
+    "line": 90,
+    "runner": "node",
+    "name": "test",
+    "title": "\"server-confirmed resume does not clear a current quiz draft in a new tab\""
+  },
+  {
+    "file": "tests/moderator-organic-fresh-start.test.ts",
+    "line": 112,
+    "runner": "node",
+    "name": "test",
+    "title": "\"quiz response requires an explicit fresh-start flag\""
+  },
+  {
+    "file": "tests/moderator-quiz-draft-scope.test.ts",
+    "line": 8,
+    "runner": "node",
+    "name": "test",
+    "title": "\"fresh moderator draft scope cannot restore legacy or another start's answers\""
+  },
+  {
+    "file": "tests/moderator-quiz-draft-scope.test.ts",
+    "line": 30,
+    "runner": "node",
+    "name": "test",
+    "title": "\"authenticated moderator entry clears only known unscoped quiz data\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-activation-route.test.ts",
+    "line": 41,
+    "runner": "node",
+    "name": "test",
+    "title": "\"activation refuses an existing customer browser before creating or granting access\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-activation-route.test.ts",
+    "line": 68,
+    "runner": "node",
+    "name": "test",
+    "title": "\"activation creates and signs in one scoped guest before the exact service transaction\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-activation-route.test.ts",
+    "line": 105,
+    "runner": "node",
+    "name": "test",
+    "title": "\"activation failure preserves the new guest session cookie for an exact retry\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-activation-route.test.ts",
+    "line": 132,
+    "runner": "node",
+    "name": "test",
+    "title": "\"activation fails closed when the persistent rate limiter is unavailable\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-activation.test.ts",
+    "line": 9,
+    "runner": "node",
+    "name": "test",
+    "title": "\"guest creation uses a non-deliverable synthetic identity and never returns persisted credentials\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-activation.test.ts",
+    "line": 33,
+    "runner": "node",
+    "name": "test",
+    "title": "\"activation calls the service-only RPC with exact campaign, session, lead, guest, and event\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-analytics.test.ts",
+    "line": 22,
+    "runner": "node",
+    "name": "test",
+    "title": "\"field-test offer analytics stay in PostHog with test_kind and are rejected by Meta\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-analytics.test.ts",
+    "line": 39,
+    "runner": "node",
+    "name": "test",
+    "title": "\"all non-commercial journey kinds are rejected by Meta\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-analytics.test.ts",
+    "line": 45,
+    "runner": "node",
+    "name": "test",
+    "title": "\"Customer.io keeps established field-test routing and suppresses only partner events\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-analytics.test.ts",
+    "line": 64,
+    "runner": "node",
+    "name": "test",
+    "title": "\"Customer.io traits mark a field test as ineligible for commercial automation\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-analytics.test.ts",
+    "line": 97,
+    "runner": "node",
+    "name": "test",
+    "title": "\"Customer.io traits mark partner journeys as ineligible for commercial automation\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+    "line": 11,
+    "runner": "node",
+    "name": "test",
+    "title": "\"campaign command defaults to a non-writing create preview\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+    "line": 23,
+    "runner": "node",
+    "name": "test",
+    "title": "\"campaign command supports an explicit regular-quiz flow while preserving Personal Plan defaults\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+    "line": 44,
+    "runner": "node",
+    "name": "test",
+    "title": "\"email-bound Personal Plan campaigns require a roster and use the 90-day duration\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+    "line": 87,
+    "runner": "node",
+    "name": "test",
+    "title": "\"campaign writes require explicit apply, write gate, project confirmation, and matching URL\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+    "line": 110,
+    "runner": "node",
+    "name": "test",
+    "title": "\"inspect and revoke require an exact campaign id argument\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+    "line": 125,
+    "runner": "node",
+    "name": "test",
+    "title": "\"regular-quiz creation writes its flow kind and emits only the regular quiz link\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+    "line": 157,
+    "runner": "node",
+    "name": "test",
+    "title": "\"email-bound creation atomically creates a pending exact-account roster through the dedicated RPC\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+    "line": 201,
+    "runner": "node",
+    "name": "test",
+    "title": "\"regular-quiz revocation refuses a campaign from the Personal Plan flow\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-entry-route.test.ts",
+    "line": 12,
+    "runner": "node",
+    "name": "test",
+    "title": "\"valid bearer token is exchanged for signed HttpOnly cookies and a clean quiz URL\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-entry-route.test.ts",
+    "line": 47,
+    "runner": "node",
+    "name": "test",
+    "title": "\"unavailable token fails before issuing any campaign or funnel cookie\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-entry-route.test.ts",
+    "line": 62,
+    "runner": "node",
+    "name": "test",
+    "title": "\"email-bound token only routes to account authentication without issuing guest credentials\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-entry-route.test.ts",
+    "line": 89,
+    "runner": "node",
+    "name": "test",
+    "title": "\"activation reaches its signed route checks before any auth or subscription gate\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-entry-route.test.ts",
+    "line": 103,
+    "runner": "node",
+    "name": "test",
+    "title": "\"organic moderator activation reaches its account checks before the subscription gate\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-entry-route.test.ts",
+    "line": 140,
+    "runner": "node",
+    "name": "test",
+    "title": "\"authenticated active moderator invite return opens the saved plan instead of a fresh quiz prompt\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-entry-route.test.ts",
+    "line": 175,
+    "runner": "node",
+    "name": "test",
+    "title": "\"authenticated ready moderator invite still renders the fresh quiz start UI\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-entry-route.test.ts",
+    "line": 208,
+    "runner": "node",
+    "name": "test",
+    "title": "\"authenticated ended moderator invite returns the existing ended state\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-routing-migration.test.ts",
+    "line": 10,
+    "runner": "node",
+    "name": "test",
+    "title": "\"routing RPC exposes both exact field-test enrollment kinds without weakening paid provenance\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-routing-migration.test.ts",
+    "line": 29,
+    "runner": "node",
+    "name": "test",
+    "title": "\"routing RPC remains owner-scoped and exposes only its authenticated wrapper\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-schema.test.ts",
+    "line": 16,
+    "runner": "node",
+    "name": "test",
+    "title": "\"field-test schema is service-only and stores campaign credentials only as hashes\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-schema.test.ts",
+    "line": 46,
+    "runner": "node",
+    "name": "test",
+    "title": "\"field-test enrollments bind the exact campaign, funnel, lead, guest, grant, and artifact\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-schema.test.ts",
+    "line": 90,
+    "runner": "node",
+    "name": "test",
+    "title": "\"activation is a locked, private, service-role-only transaction with exact field-test correlations\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-schema.test.ts",
+    "line": 165,
+    "runner": "node",
+    "name": "test",
+    "title": "\"campaign revocation atomically ends enrollments and their tester grants\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "line": 34,
+    "runner": "node",
+    "name": "test",
+    "title": "\"campaign token lookup stores and compares only the SHA-256 hash\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "line": 56,
+    "runner": "node",
+    "name": "test",
+    "title": "\"an authenticated field guest may retry only the exact campaign, session, lead, and user\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "line": 82,
+    "runner": "node",
+    "name": "test",
+    "title": "\"campaign cookie is revalidated against current database lifecycle and capacity\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "line": 109,
+    "runner": "node",
+    "name": "test",
+    "title": "\"offer authorization requires the exact signed campaign, session, and lead\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "line": 157,
+    "runner": "node",
+    "name": "test",
+    "title": "\"persisted field-test offer intent survives campaign authorization loss\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "line": 182,
+    "runner": "node",
+    "name": "test",
+    "title": "\"missing pre-migration field-test columns do not break ordinary paid results\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "line": 200,
+    "runner": "node",
+    "name": "test",
+    "title": "\"unexpected persisted-intent lookup failures remain non-commercial\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "line": 214,
+    "runner": "node",
+    "name": "test",
+    "title": "\"lead binding uses only server-resolved campaign and funnel context\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "line": 259,
+    "runner": "node",
+    "name": "test",
+    "title": "\"unknown campaign identity modes never fall back to guest\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "line": 267,
+    "runner": "node",
+    "name": "test",
+    "title": "\"spent email-bound token can still reach account resolution without granting a new seat\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "line": 282,
+    "runner": "node",
+    "name": "test",
+    "title": "\"guest offer authorization cannot consume an email-bound campaign\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "line": 314,
+    "runner": "node",
+    "name": "test",
+    "title": "\"organic moderator offer authorization requires the exact email-bound organic campaign, session, and lead\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-ui.test.tsx",
+    "line": 20,
+    "runner": "node",
+    "name": "test",
+    "title": "\"field-test quiz presents the approved persistent German banner\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-ui.test.tsx",
+    "line": 27,
+    "runner": "node",
+    "name": "test",
+    "title": "\"field-test offer replaces all payment presentation with the free activation card\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-ui.test.tsx",
+    "line": 76,
+    "runner": "node",
+    "name": "test",
+    "title": "\"lost field-test authorization renders a dedicated non-commercial end state\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-ui.test.tsx",
+    "line": 95,
+    "runner": "node",
+    "name": "test",
+    "title": "\"dedicated field-test end surface stays concise and payment-free\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-ui.test.tsx",
+    "line": 101,
+    "runner": "node",
+    "name": "test",
+    "title": "\"field-test lead binding must succeed before the quiz can open a result\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-ui.test.tsx",
+    "line": 112,
+    "runner": "node",
+    "name": "test",
+    "title": "\"result routing preserves persisted field-test intent after authorization loss\""
+  },
+  {
+    "file": "tests/personal-plan-field-test-ui.test.tsx",
+    "line": 121,
+    "runner": "node",
+    "name": "test",
+    "title": "\"moderator offer promises account return and ninety days without guest-browser limits\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-activation-route.test.ts",
+    "line": 86,
+    "runner": "node",
+    "name": "test",
+    "title": "\"moderator activation requires an authenticated verified intent before allowing email-bound offer activation\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-activation-route.test.ts",
+    "line": 120,
+    "runner": "node",
+    "name": "test",
+    "title": "\"moderator activation never creates a guest and fails closed for wrong or missing accounts\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-activation-route.test.ts",
+    "line": 136,
+    "runner": "node",
+    "name": "test",
+    "title": "\"moderator activation replay for an active member does not depend on campaign admission capacity\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-activation-route.test.ts",
+    "line": 177,
+    "runner": "node",
+    "name": "test",
+    "title": "\"moderator activation rejects cross-origin posts before touching auth or activation\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-activation-route.test.ts",
+    "line": 198,
+    "runner": "node",
+    "name": "test",
+    "title": "\"moderator activation returns controlled unavailable JSON when auth lookup fails\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-activation-route.test.ts",
+    "line": 215,
+    "runner": "node",
+    "name": "test",
+    "title": "\"moderator activation distinguishes an absent session from an Auth outage\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-activation-route.test.ts",
+    "line": 223,
+    "runner": "node",
+    "name": "test",
+    "title": "\"organic moderator activation uses the owned legacy result and never the Meta package\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-contract.test.ts",
+    "line": 108,
+    "runner": "node",
+    "name": "test",
+    "title": "\"moderator member resolver returns ready only for the exact confirmed roster email\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-contract.test.ts",
+    "line": 153,
+    "runner": "node",
+    "name": "test",
+    "title": "\"moderator access resolves active, expired, and none without guest app metadata\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-contract.test.ts",
+    "line": 200,
+    "runner": "node",
+    "name": "test",
+    "title": "\"moderator access treats pre-migration missing roster as none and mismatched enrollment as ended\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-contract.test.ts",
+    "line": 250,
+    "runner": "node",
+    "name": "test",
+    "title": "\"moderator intent is signed to one user, funnel, and optional lead\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-contract.test.ts",
+    "line": 303,
+    "runner": "node",
+    "name": "test",
+    "title": "\"an expired invitation for a ready member is ended rather than the wrong account\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-contract.test.ts",
+    "line": 318,
+    "runner": "node",
+    "name": "test",
+    "title": "\"moderator intent accepts the organic quiz for the same roster account but rejects other packages\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-contract.test.ts",
+    "line": 344,
+    "runner": "node",
+    "name": "test",
+    "title": "\"organic RPC adapters send confirmed ownership and accept artifact-free activation\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-journey.test.ts",
+    "line": 51,
+    "runner": "node",
+    "name": "test",
+    "title": "\"moderator journey authorizes only verified account and passes exact result ownership to intent verification\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-journey.test.ts",
+    "line": 75,
+    "runner": "node",
+    "name": "test",
+    "title": "\"missing credentials or account proof cannot downgrade a persisted moderator funnel to commercial\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-journey.test.ts",
+    "line": 118,
+    "runner": "node",
+    "name": "test",
+    "title": "\"moderator journey treats database and authentication failures as unavailable\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-journey.test.ts",
+    "line": 142,
+    "runner": "node",
+    "name": "test",
+    "title": "\"ordinary visitors and legacy guest funnels do not require account proof\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-journey.test.ts",
+    "line": 162,
+    "runner": "node",
+    "name": "test",
+    "title": "\"result ownership lookup does not treat database failure or disabled analytics as no moderator context\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-journey.test.ts",
+    "line": 202,
+    "runner": "node",
+    "name": "test",
+    "title": "\"result account classification survives missing funnel context and fails closed on read errors\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-schema.test.ts",
+    "line": 15,
+    "runner": "node",
+    "name": "test",
+    "title": "\"moderator migration adds email-bound roster state without changing guest defaults\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-schema.test.ts",
+    "line": 41,
+    "runner": "node",
+    "name": "test",
+    "title": "\"moderator migration exposes service-only atomic roster and activation RPCs\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-schema.test.ts",
+    "line": 92,
+    "runner": "node",
+    "name": "test",
+    "title": "\"moderator migration fences existing guest RPCs away from email-bound campaigns\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+    "line": 32,
+    "runner": "node",
+    "name": "test",
+    "title": "\"moderator campaign creation is atomic and rolls back duplicate roster inserts\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+    "line": 124,
+    "runner": "node",
+    "name": "test",
+    "title": "\"moderator save and activation are replay-safe with stable expiry\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+    "line": 215,
+    "runner": "node",
+    "name": "test",
+    "title": "\"organic moderator save owns a legacy lead before any Customer.io outbox can dispatch\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+    "line": 305,
+    "runner": "node",
+    "name": "test",
+    "title": "\"organic moderator activation writes a legacy enrollment and routing source without an artifact\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+    "line": 392,
+    "runner": "node",
+    "name": "test",
+    "title": "\"personal-plan test enrollment source shape rejects mixed artifact contracts\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+    "line": 439,
+    "runner": "node",
+    "name": "test",
+    "title": "\"guest RPCs reject moderator campaigns while guest wrapper remains non-recursive\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+    "line": 891,
+    "runner": "node",
+    "name": "test",
+    "title": "\"repreparing a moderator quiz must not leave the previous result without account context\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+    "line": 922,
+    "runner": "node",
+    "name": "test",
+    "title": "\"campaign revocation includes moderator membership and rolls back all rows on failure\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-start-route.test.ts",
+    "line": 33,
+    "runner": "node",
+    "name": "test",
+    "title": "\"authenticated exact roster member gets a signed moderator intent and organic quiz destination\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-start-route.test.ts",
+    "line": 87,
+    "runner": "node",
+    "name": "test",
+    "title": "\"a valid ready organic intent reuses its session without creating or clearing a new start\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-start-route.test.ts",
+    "line": 138,
+    "runner": "node",
+    "name": "test",
+    "title": "\"moderator start persists a schema-complete canonical organic funnel row\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-start-route.test.ts",
+    "line": 177,
+    "runner": "node",
+    "name": "test",
+    "title": "\"wrong accounts and cross-origin requests never create a funnel or intent\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-start-route.test.ts",
+    "line": 195,
+    "runner": "node",
+    "name": "test",
+    "title": "\"missing signing configuration fails before creating a funnel row\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-start-route.test.ts",
+    "line": 215,
+    "runner": "node",
+    "name": "test",
+    "title": "\"rollout-off stops new ready members before a funnel row is created\""
+  },
+  {
+    "file": "tests/personal-plan-moderator-start-route.test.ts",
+    "line": 232,
+    "runner": "node",
+    "name": "test",
+    "title": "\"rollout-off preserves return routing for an already active moderator\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-activation-route.test.ts",
+    "line": 42,
+    "runner": "node",
+    "name": "test",
+    "title": "\"regular activation fails closed while the global field-test switch is disabled\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-activation-route.test.ts",
+    "line": 58,
+    "runner": "node",
+    "name": "test",
+    "title": "\"regular activation establishes a recoverable guest before atomic ownership and projection\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-activation-route.test.ts",
+    "line": 101,
+    "runner": "node",
+    "name": "test",
+    "title": "\"regular activation rejects an existing customer before guest or access writes\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-activation-route.test.ts",
+    "line": 128,
+    "runner": "node",
+    "name": "test",
+    "title": "\"regular activation preserves the guest session when profile projection fails\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-activation.test.ts",
+    "line": 9,
+    "runner": "node",
+    "name": "test",
+    "title": "\"regular quiz guest creation is synthetic and flow-scoped\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-activation.test.ts",
+    "line": 29,
+    "runner": "node",
+    "name": "test",
+    "title": "\"regular quiz activation uses only its service RPC and exact correlation\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-runtime.test.ts",
+    "line": 44,
+    "runner": "node",
+    "name": "test",
+    "title": "\"regular quiz field-test runtime is explicitly flag-gated and flow-scoped\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-runtime.test.ts",
+    "line": 80,
+    "runner": "node",
+    "name": "test",
+    "title": "\"regular offer authorization needs the exact campaign, organic session, and legacy lead\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-runtime.test.ts",
+    "line": 112,
+    "runner": "node",
+    "name": "test",
+    "title": "\"regular entry refuses authenticated browsers and only starts eligible regular campaigns\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-runtime.test.ts",
+    "line": 151,
+    "runner": "node",
+    "name": "test",
+    "title": "\"regular ended route is public and expired regular guests stay out of the Personal Plan ended surface\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-runtime.test.ts",
+    "line": 210,
+    "runner": "node",
+    "name": "test",
+    "title": "\"regular quiz rewrite never overrides authenticated routing and forces organic repackaging\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-runtime.test.ts",
+    "line": 254,
+    "runner": "node",
+    "name": "test",
+    "title": "\"only a signed regular campaign cookie enters the server-validated quiz shell\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-runtime.test.ts",
+    "line": 316,
+    "runner": "node",
+    "name": "test",
+    "title": "\"an invalid regular cookie is cleared only when signature validation is configured\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-runtime.test.ts",
+    "line": 338,
+    "runner": "node",
+    "name": "test",
+    "title": "\"lead binding runs only for exact regular field-test intent and organic context\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-schema.test.ts",
+    "line": 14,
+    "runner": "node",
+    "name": "test",
+    "title": "\"regular quiz campaigns are flow-scoped without changing Personal Plan defaults\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-schema.test.ts",
+    "line": 22,
+    "runner": "node",
+    "name": "test",
+    "title": "\"regular quiz enrollments are service-only and do not require a Personal Plan artifact\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-schema.test.ts",
+    "line": 59,
+    "runner": "node",
+    "name": "test",
+    "title": "\"regular quiz RPCs are service-only and enforce exact legacy/default-organic correlations\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-schema.test.ts",
+    "line": 107,
+    "runner": "node",
+    "name": "test",
+    "title": "\"campaign revocation branches by flow and revokes regular grants and enrollments\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "line": 34,
+    "runner": "node",
+    "name": "test",
+    "title": "\"regular quiz field-test banner uses the reviewed persistent German copy\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "line": 41,
+    "runner": "node",
+    "name": "test",
+    "title": "\"regular quiz field-test activation card is payment-free and targets the activation API\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "line": 57,
+    "runner": "node",
+    "name": "test",
+    "title": "\"regular quiz field-test activation consumes the exact server destination contract\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "line": 71,
+    "runner": "node",
+    "name": "test",
+    "title": "\"regular quiz field-test organic offer replaces all commercial conversion surfaces\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "line": 99,
+    "runner": "node",
+    "name": "test",
+    "title": "\"email-bound moderator organic offer remains free and uses its dedicated activation route\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "line": 128,
+    "runner": "node",
+    "name": "test",
+    "title": "\"partner organic offer keeps the ordinary journey and swaps only the payment position\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "line": 154,
+    "runner": "node",
+    "name": "test",
+    "title": "\"partner activation accepts only the canonical plan-ready destination\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "line": 162,
+    "runner": "node",
+    "name": "test",
+    "title": "\"partner activation shares one request and event across concurrent CTA clicks\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "line": 196,
+    "runner": "node",
+    "name": "test",
+    "title": "\"legacy result client fails closed when regular field-test intent lost authorization\""
+  },
+  {
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "line": 213,
+    "runner": "node",
+    "name": "test",
+    "title": "\"result and quiz routing consume only server-derived regular field-test state\""
+  }
+]

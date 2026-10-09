@@ -4,6 +4,7 @@ import React, { type ReactElement, type ReactNode } from "react"
 
 import { ScanActionFooter } from "../src/components/scan/scan-action-footer"
 import { ScanResultCard } from "../src/components/scan/scan-result-card"
+import { ScanProductThumb } from "../src/components/scan/scan-product-thumb"
 import { ScanWishlistTrigger } from "../src/components/scan/scan-wishlist-sheet"
 import type { ScanMaskedVerdictResult } from "../src/lib/scan/masked-alternative"
 import type {
@@ -14,9 +15,9 @@ import type {
 
 /**
  * The free tier's verdict states (T9), asserted on the element trees the components
- * return. All three components under test are hook-free, so they are called directly —
- * no dispatcher harness is needed here (unlike `tests/scan-flow-ui.test.tsx`, which
- * mounts the stateful `ScanFlow`).
+ * return. The entry components are called directly. Their stateful thumbnail boundary
+ * stays opaque; this helper makes no thumbnail hook/image-lifecycle claim.
+ * `tests/scan-flow-ui.test.tsx` mounts the stateful `ScanFlow`.
  *
  * Two invariants carry the whole task and are asserted in every state below:
  * - a masked verdict never renders an identity (the response carries none, so a leak
@@ -43,20 +44,19 @@ function textContent(node: ReactNode): string {
 /**
  * Expands nested function components in place, so an assertion can reach markup the card
  * delegates to (`ScanMaskedAlternatives`, the alternatives list, `ScanLockBadge`) without
- * a DOM. Every component in these trees is hook-free; one that is not simply stays an
- * unexpanded element rather than throwing the test.
+ * a DOM. ScanProductThumb is intentionally left opaque because it uses hooks.
+ * Unexpected exceptions from every expanded component must fail the test.
  */
 function deepRender(node: ReactNode, depth = 0): ReactNode {
   if (depth > 40) return node
   if (Array.isArray(node)) return node.map((child) => deepRender(child, depth))
   if (!React.isValidElement(node)) return node
   const element = node as AnyElement
+  // Thumbnail hook/image behavior is outside this helper. Keep this one
+  // existing boundary opaque; never swallow unexpected verdict-component errors.
+  if (element.type === ScanProductThumb) return element
   if (typeof element.type === "function") {
-    try {
-      return deepRender((element.type as (props: unknown) => ReactNode)(element.props), depth + 1)
-    } catch {
-      return element
-    }
+    return deepRender((element.type as (props: unknown) => ReactNode)(element.props), depth + 1)
   }
   const children = element.props.children
   if (children === undefined || children === null) return element
@@ -200,13 +200,7 @@ test("free verdict: the masked alternative's comparison rows are fully readable"
     (element) => element.props["aria-label"],
   )
   assert.deepEqual(markLabels, ["Im Ziel", "Im Ziel", "Passt mit Einschränkung", "Nicht bestätigt"])
-})
 
-test("free verdict: nothing in the masked tree names the alternative", () => {
-  const tree = renderCard({ result: maskedResult(true) })
-  const text = textContent(findByData(tree, "data-scan-masked-alternatives")[0])
-  // The scanned product's own identity is never masked, but it is also not part of the
-  // alternatives block — so no product name may appear inside it at all.
   assert.equal(text.includes("Lab Shampoo"), false)
   assert.equal(text.includes("9,99"), false)
 })
@@ -224,6 +218,11 @@ test('first „passt nicht": the one-lifetime reveal CTA is offered, verbatim an
 
   cta[0].props.onClick()
   assert.equal(revealed, 1)
+
+  assert.equal(
+    actionLabels(tree).some((label) => label.includes("Warum")),
+    false,
+  )
 })
 
 test("first reveal: the CTA is busy-disabled while the request is in flight", () => {
@@ -252,6 +251,11 @@ test("after the reveal: the full alternative card replaces the masked one, insid
   // No CTA survives the reveal: the user got what the credit bought.
   assert.equal(findByData(tree, "data-scan-reveal-cta").length, 0)
   assert.equal(findByData(tree, "data-scan-premium-cta").length, 0)
+
+  assert.equal(
+    actionLabels(tree).some((label) => label.includes("Warum")),
+    false,
+  )
 })
 
 test("fix round 1 (F2): a silent (background) re-serve renders the same card without the unblur", () => {
@@ -296,6 +300,11 @@ test('later „passt nicht": the spent credit turns the CTA into the Premium gat
 
   // The comparison table is still fully readable — the gate is on identity, not on proof.
   assert.ok(textContent(tree).includes("Pflegegewicht"))
+
+  assert.equal(
+    actionLabels(tree).some((label) => label.includes("Warum")),
+    false,
+  )
 })
 
 test("a 409 already_used mid-session flips the CTA even though the response said available", () => {
@@ -306,36 +315,7 @@ test("a 409 already_used mid-session flips the CTA even though the response said
 
 // --- no „Warum?" entry points ------------------------------------------------
 
-test('no free verdict state offers a „Warum?" entry point', () => {
-  for (const result of [maskedResult(true), maskedResult(false)]) {
-    for (const labels of [
-      actionLabels(renderCard({ result })),
-      actionLabels(renderCard({ result, revealedAlternatives: [FULL_ALTERNATIVE] })),
-    ]) {
-      assert.equal(
-        labels.some((label) => label.includes("Warum")),
-        false,
-        `unexpected „Warum?" affordance among ${JSON.stringify(labels)}`,
-      )
-    }
-  }
-})
-
 // --- premium / flag-off stays exactly today's UI ------------------------------
-
-test("premium: a response without the masking marker renders today's alternatives list", () => {
-  const tree = renderCard({ result: PREMIUM_RESULT })
-
-  assert.equal(findByData(tree, "data-scan-masked-alternatives").length, 0)
-  assert.equal(findByData(tree, "data-scan-revealed-alternatives").length, 0)
-  assert.equal(findByData(tree, "data-scan-reveal-cta").length, 0)
-  assert.equal(findByData(tree, "data-scan-premium-cta").length, 0)
-  assert.equal(findByClass(tree, "scan-reveal-unblur").length, 0)
-
-  const text = textContent(tree)
-  assert.ok(text.includes("Passende Alternativen"))
-  assert.ok(text.includes("Lab Shampoo Gamma"))
-})
 
 test("premium: the free-state props are inert even when a caller passes them", () => {
   // The gate is the response shape, never the props: a premium verdict handed the same
@@ -348,6 +328,15 @@ test("premium: the free-state props are inert even when a caller passes them", (
   })
   assert.equal(findByData(tree, "data-scan-revealed-alternatives").length, 0)
   assert.ok(textContent(tree).includes("Passende Alternativen"))
+
+  assert.equal(findByData(tree, "data-scan-masked-alternatives").length, 0)
+  assert.equal(findByData(tree, "data-scan-revealed-alternatives").length, 0)
+  assert.equal(findByData(tree, "data-scan-reveal-cta").length, 0)
+  assert.equal(findByData(tree, "data-scan-premium-cta").length, 0)
+  assert.equal(findByClass(tree, "scan-reveal-unblur").length, 0)
+  const text = textContent(tree)
+  assert.ok(text.includes("Passende Alternativen"))
+  assert.ok(text.includes("Lab Shampoo Gamma"))
 })
 
 // --- Merken lock -------------------------------------------------------------

@@ -1,0 +1,44 @@
+{
+  "kind": "Parser/hash checks only",
+  "sourceRoot": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "tests": 11,
+  "sites": {
+    "before": 57,
+    "transfer": 57,
+    "cut": 57
+  },
+  "classification": {
+    "R": 53,
+    "F": 4,
+    "C": 0,
+    "D": 0
+  },
+  "identicalWholePhaseFiles": 33,
+  "identicalCallbackRegistrations": 57,
+  "heldFUnchanged": 4,
+  "browserSitesRetained": 6,
+  "optInPostgresSitesRetained": 1,
+  "allOriginalHashesMatchNavigation": true,
+  "wholeTestDiffBytes": 0,
+  "actualOwnerMutationAnchors": 3,
+  "oracleDescriptions": 4,
+  "mutationParseDiagnostics": 0,
+  "runtimeExecutions": 0,
+  "productImports": 0,
+  "repositoryWrites": 0,
+  "childProcessesFromPreparation": 0,
+  "artifactHashes": {
+    "prepare.cjs": "7a2bdbbe4d5df3996cbe6d10f442f3ff682f883bdc94933b3ef1a0fd699be32a",
+    "finalize.cjs": "73a85d8d4a513a1e538e052830d1d40028d781b239560fe7e60f40662e0186b7",
+    "manifest.json": "c1bbef0e730049b85d7ff49160283d119ba9d8121772af4c15673a40e7c5eccd",
+    "ledger.json": "7bdfae018f8e9c9cc7fe402fbba4c66aba31678f06ae224f862586fed74a1cb4",
+    "complete-ledger.md": "3a6c74ffb94cb33073fd45868590392a585956036b2ff652e5002c01eefe3c1c",
+    "layer-plan.md": "74b2e44ac5a963231c2d021dae1c9cde925dfef62d97869ab9b40e6b782dc52b",
+    "candidates.json": "f0acf2e249da291aea9b66c1accf9205f2c69e3d33fc327d1e9253f23fbe3f88",
+    "complete.diff": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "read-scope.json": "47769f2287dded9c3fe05d0600e85ccb902485629a429791ecc22afedbd9a222",
+    "controls.json": "1add40086eaa4777777f24dbc298e98042461ec05d78718fcfe93e39ac6739e5",
+    "wrapper-closure/brief.md": "2ce3f0e96a85b8827d3a49169228dd7ac1486617a179f189960101bea025f9a7"
+  },
+  "limits": "No baseline/native/provider/browser/DB/compiler verification; TypeScript createSourceFile parses strings only. Scope source pins are current; tests additionally compare original navigation pins. No earlier source hash attestation beyond those inputs."
+}

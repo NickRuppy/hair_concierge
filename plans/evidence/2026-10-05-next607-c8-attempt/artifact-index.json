@@ -1,0 +1,92 @@
+[
+  {
+    "source": "/tmp/test-audit-retirement-final607-proof/command.json",
+    "archive": "plans/evidence/2026-10-05-next607-c8-attempt/command.json",
+    "sha256": "e7c5b4d4565e1dbb0758c51c58e6091c69f60a1d3f4433857b021cfa21774a52",
+    "archiveSHA256": "e7c5b4d4565e1dbb0758c51c58e6091c69f60a1d3f4433857b021cfa21774a52",
+    "bytes": 56253,
+    "archiveBytes": 56253,
+    "gzip": false
+  },
+  {
+    "source": "/tmp/test-audit-retirement-final607-proof/files.json",
+    "archive": "plans/evidence/2026-10-05-next607-c8-attempt/files.json",
+    "sha256": "9a948e96541a9efc5071dd497a00abafd0f18b21aa87309c597666d986e9e648",
+    "archiveSHA256": "9a948e96541a9efc5071dd497a00abafd0f18b21aa87309c597666d986e9e648",
+    "bytes": 52925,
+    "archiveBytes": 52925,
+    "gzip": false
+  },
+  {
+    "source": "/tmp/test-audit-retirement-final607-proof/result.json",
+    "archive": "plans/evidence/2026-10-05-next607-c8-attempt/result.json",
+    "sha256": "461cce207825f1f18113ba77ccb1350ab72fd7c9e0cefc16fe7486f9c356fc06",
+    "archiveSHA256": "461cce207825f1f18113ba77ccb1350ab72fd7c9e0cefc16fe7486f9c356fc06",
+    "bytes": 58,
+    "archiveBytes": 58,
+    "gzip": false
+  },
+  {
+    "source": "/tmp/test-audit-retirement-final607-proof/run.log",
+    "archive": "plans/evidence/2026-10-05-next607-c8-attempt/run.log",
+    "sha256": "58b9f99fbba23b4b691eb700fdbd8b3f7b6d02ac41f7479c3545997857ef4137",
+    "archiveSHA256": "58b9f99fbba23b4b691eb700fdbd8b3f7b6d02ac41f7479c3545997857ef4137",
+    "bytes": 319,
+    "archiveBytes": 319,
+    "gzip": false
+  },
+  {
+    "source": "/tmp/test-audit-retirement-final607-proof/tests.tap",
+    "archive": "plans/evidence/2026-10-05-next607-c8-attempt/tests.tap",
+    "sha256": "be94da5f476a732ca3cd69d56d39c525861d1908f3ad68a2f9cf4155d24f72a7",
+    "archiveSHA256": "be94da5f476a732ca3cd69d56d39c525861d1908f3ad68a2f9cf4155d24f72a7",
+    "bytes": 2724582,
+    "archiveBytes": 2724582,
+    "gzip": false
+  },
+  {
+    "source": "/tmp/test-audit-retirement-final607-proof/coverage-summary.json",
+    "archive": "plans/evidence/2026-10-05-next607-c8-attempt/coverage-summary.json",
+    "sha256": "02b6306055ad196a7979762895eed05dda26f57464ef00cc2b257782065eecee",
+    "archiveSHA256": "02b6306055ad196a7979762895eed05dda26f57464ef00cc2b257782065eecee",
+    "bytes": 670489,
+    "archiveBytes": 670489,
+    "gzip": false
+  },
+  {
+    "source": "/tmp/test-audit-retirement-final607-proof/coverage-final.json",
+    "archive": "plans/evidence/2026-10-05-next607-c8-attempt/coverage-final.json.gz",
+    "sha256": "a721af32e6060a39ed07bab4c3a2abe8a334831997460e9e4759849e13fa6ad7",
+    "archiveSHA256": "29cfe512fd2a082baba15ab9e27d24fe9b3a29e9319f3b4888a63846ca65f116",
+    "bytes": 55610795,
+    "archiveBytes": 6772663,
+    "gzip": true
+  },
+  {
+    "source": "/tmp/test-audit-retirement-final607-comparison.json",
+    "archive": "plans/evidence/2026-10-05-next607-c8-attempt/test-audit-retirement-final607-comparison.json",
+    "sha256": "65bfd1f0d6fee190e1793955a8036be2183979d75367893628f14b859a338529",
+    "archiveSHA256": "65bfd1f0d6fee190e1793955a8036be2183979d75367893628f14b859a338529",
+    "bytes": 93605,
+    "archiveBytes": 93605,
+    "gzip": false
+  },
+  {
+    "source": "/tmp/test-audit-final607-tree-verification.json",
+    "archive": "plans/evidence/2026-10-05-next607-c8-attempt/test-audit-final607-tree-verification.json",
+    "sha256": "a3b5df79666597b0866932f2ab4e79c0eb80119a8c0c9742bf3e53aa61b24640",
+    "archiveSHA256": "a3b5df79666597b0866932f2ab4e79c0eb80119a8c0c9742bf3e53aa61b24640",
+    "bytes": 150,
+    "archiveBytes": 150,
+    "gzip": false
+  },
+  {
+    "source": "/tmp/test-audit-authorization-stale-source-grep-diagnostic.json",
+    "archive": "plans/evidence/2026-10-05-next607-c8-attempt/test-audit-authorization-stale-source-grep-diagnostic.json",
+    "sha256": "12318914e343cc7794135f9bc24fdd8001ad328c64446cfe21af3c3e367da532",
+    "archiveSHA256": "12318914e343cc7794135f9bc24fdd8001ad328c64446cfe21af3c3e367da532",
+    "bytes": 1939,
+    "archiveBytes": 1939,
+    "gzip": false
+  }
+]

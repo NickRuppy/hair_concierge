@@ -1,11 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import {
-  consultBriefJsonSchemaFormat,
-  consultBriefSwapKeys,
-  toConsultBriefSections,
-} from "../src/lib/discovery/consult-brief/api-schema"
+import { toConsultBriefSections } from "../src/lib/discovery/consult-brief/api-schema"
 import {
   CONSULT_BRIEF_DEFAULT_MODEL,
   consultBriefModel,
@@ -16,7 +12,6 @@ import { consultSourceHash } from "../src/lib/discovery/consult-brief/hash"
 import type { ConsultInput } from "../src/lib/discovery/consult-brief/input"
 import { CONSULT_BOUNDARY_LINE } from "../src/lib/discovery/consult-brief/lint"
 import {
-  buildConsultBriefPrompt,
   CONSULT_BRIEF_PROMPT_VERSION,
   consultBriefSectionsSchema,
   type GeneratedConsultBriefSections,
@@ -144,65 +139,6 @@ function completing(...outputs: (string | Error)[]) {
   return { complete, calls }
 }
 
-// --- prompt -----------------------------------------------------------------------------------
-
-test("the prompt: German, guardrails as hard rules, the exact sections schema, the input", () => {
-  const { system, user } = buildConsultBriefPrompt(input())
-  assert.match(system, /Deutsch/)
-  assert.match(system, /## G1 — /)
-  for (const key of [
-    "mechanik",
-    "diagnose",
-    "hebel",
-    "bucket",
-    "swapReasons",
-    "callFragen",
-    "erwartungen",
-  ]) {
-    assert.ok(system.includes(`"${key}"`), key)
-  }
-  // zielLuecken is code-owned since v4: it never appears in the prompt's schema.
-  assert.equal(system.includes('"zielLuecken"'), false)
-  assert.equal(CONSULT_BRIEF_PROMPT_VERSION, "consult-brief-v5")
-  assert.match(system, /dritte[rn]? Person/)
-  assert.ok(user.includes(SHAMPOO_KEY))
-  assert.ok(user.includes("Glanzwerk Volumen Shampoo"))
-  assert.ok(user.includes("Womit entwirrst du?"))
-  // Evidence grades never reach the prompt (G5).
-  assert.doesNotMatch(user, /"evidence"/)
-})
-
-test("the prompt names the allowed swapReasons keys; the score arithmetic is the code's", () => {
-  const { user, system } = buildConsultBriefPrompt(input())
-  assert.ok(user.includes(`"${SHAMPOO_KEY}"`))
-  assert.ok(system.includes("Die Ziel-Rechnung und ihre Deckelung macht der Code"))
-})
-
-test("the v4 prompt: mechanik spec, bucket rule, gap-as-question rule, checklist item 5", () => {
-  const { system, user } = buildConsultBriefPrompt(input())
-  assert.ok(
-    system.includes(
-      '"mechanik": 2–3 Sätze, generisch und ohne Personenbezug: das Hauptproblem benannt, der Mechanismus dahinter, die typischen Ursachen',
-    ),
-  )
-  assert.ok(
-    system.includes(
-      'jeder mit "bucket": "produkt" für Produkt-Züge (Tausch, Neuzugang, Weglassen) oder "umgang" für Verhalten (Waschrhythmus, Hitze, Handling)',
-    ),
-  )
-  assert.ok(
-    system.includes(
-      "Liegen ihr Ziel und die realistische Erwartung auseinander, formuliere genau das als Frage",
-    ),
-  )
-  assert.ok(system.includes('"mechanik": ganz ohne Personenbezug'))
-  assert.ok(
-    user.includes(
-      '5. "hebel" und "callFragen" haben je 3 bis 5 Einträge, jeder Hebel den passenden "bucket", und jede Frage ändert den Plan.',
-    ),
-  )
-})
-
 test("the sections schema is strict: exactly the call sheet's shape", () => {
   assert.equal(consultBriefSectionsSchema.safeParse(validSections()).success, true)
   assert.equal(
@@ -245,11 +181,91 @@ test("a valid answer: brief + source hash, one completion with the configured mo
   assert.equal(result.sourceHash, consultSourceHash(input()))
   assert.equal(calls.length, 1)
   assert.equal(calls[0]!.model, "test-model")
-  assert.deepEqual(calls[0], {
-    ...buildConsultBriefPrompt(input()),
-    model: "test-model",
-    format: consultBriefJsonSchemaFormat([SHAMPOO_KEY]),
-  })
+  const { system, user, format } = calls[0]!
+  assert.match(system, /Deutsch/)
+  assert.match(system, /## G1 — /)
+  for (const key of [
+    "mechanik",
+    "diagnose",
+    "hebel",
+    "bucket",
+    "swapReasons",
+    "callFragen",
+    "erwartungen",
+  ]) {
+    assert.ok(system.includes(`"${key}"`), key)
+  }
+  // zielLuecken is code-owned since v4: it never appears in the prompt's schema.
+  assert.equal(system.includes('"zielLuecken"'), false)
+  assert.equal(CONSULT_BRIEF_PROMPT_VERSION, "consult-brief-v5")
+  assert.match(system, /dritte[rn]? Person/)
+  assert.ok(user.includes(SHAMPOO_KEY))
+  assert.ok(user.includes("Glanzwerk Volumen Shampoo"))
+  assert.ok(user.includes("Womit entwirrst du?"))
+  // Evidence grades never reach the prompt (G5).
+  assert.doesNotMatch(user, /"evidence"/)
+  assert.ok(user.includes(`"${SHAMPOO_KEY}"`))
+  assert.ok(system.includes("Die Ziel-Rechnung und ihre Deckelung macht der Code"))
+  assert.ok(
+    system.includes(
+      '"mechanik": 2–3 Sätze, generisch und ohne Personenbezug: das Hauptproblem benannt, der Mechanismus dahinter, die typischen Ursachen',
+    ),
+  )
+  assert.ok(
+    system.includes(
+      'jeder mit "bucket": "produkt" für Produkt-Züge (Tausch, Neuzugang, Weglassen) oder "umgang" für Verhalten (Waschrhythmus, Hitze, Handling)',
+    ),
+  )
+  assert.ok(
+    system.includes(
+      "Liegen ihr Ziel und die realistische Erwartung auseinander, formuliere genau das als Frage",
+    ),
+  )
+  assert.ok(system.includes('"mechanik": ganz ohne Personenbezug'))
+  assert.ok(
+    user.includes(
+      '5. "hebel" und "callFragen" haben je 3 bis 5 Einträge, jeder Hebel den passenden "bucket", und jede Frage ändert den Plan.',
+    ),
+  )
+  assert.equal(format.type, "json_schema")
+  assert.equal(format.strict, true)
+  const schema = format.schema as {
+    additionalProperties: boolean
+    required: string[]
+    properties: Record<string, Record<string, unknown>>
+  }
+  assert.equal(schema.additionalProperties, false)
+  assert.deepEqual(schema.required.toSorted(), Object.keys(schema.properties).toSorted())
+  assert.equal(schema.properties.hebel!.minItems, 3)
+  assert.equal(schema.properties.hebel!.maxItems, 5)
+  assert.equal(schema.properties.callFragen!.minItems, 3)
+  assert.equal(schema.properties.callFragen!.maxItems, 5)
+  const hebelItem = schema.properties.hebel!.items as {
+    required: string[]
+    additionalProperties: boolean
+    properties: { points: { type: string[] } }
+  }
+  assert.deepEqual(hebelItem.required, ["title", "note", "points", "bucket"])
+  assert.deepEqual(schema.required.toSorted(), [
+    "callFragen",
+    "diagnose",
+    "erwartungen",
+    "hebel",
+    "mechanik",
+    "swapReasons",
+  ])
+  assert.equal("zielLuecken" in schema.properties, false)
+  assert.equal(hebelItem.additionalProperties, false)
+  assert.deepEqual(hebelItem.properties.points.type, ["number", "null"])
+  const swap = schema.properties.swapReasons as {
+    type: string
+    maxItems: number
+    items: { required: string[]; properties: { key: { enum?: string[] } } }
+  }
+  assert.equal(swap.type, "array")
+  assert.equal(swap.maxItems, 1)
+  assert.deepEqual(swap.items.required, ["key", "reason"])
+  assert.deepEqual(swap.items.properties.key.enum, [SHAMPOO_KEY])
 })
 
 test("a v4 answer without mechanik or with a bucket-less Hebel → invalid_schema", async () => {
@@ -268,14 +284,6 @@ test("invalid JSON → error, no brief", async () => {
   const { complete } = completing("Hier ist dein Brief: {")
   const result = await generateConsultBrief(input(), { complete, model: "m" })
   assert.deepEqual(result, { error: { code: "invalid_json" } })
-})
-
-test("JSON that misses the schema → error, no brief", async () => {
-  const { complete } = completing(JSON.stringify({ diagnose: "x" }))
-  const result = await generateConsultBrief(input(), { complete, model: "m" })
-  assert.ok("error" in result)
-  assert.equal(result.error.code, "invalid_schema")
-  assert.equal("brief" in result, false)
 })
 
 test("a lint failure twice → lint_failed with the SECOND run's findings, no brief", async () => {
@@ -319,16 +327,6 @@ test("a lint failure, then a clean retry → the retried brief; the retry carrie
   assert.deepEqual(calls[1]!.format, calls[0]!.format)
 })
 
-test("at most two completions, even when every answer lints dirty", async () => {
-  const dirty = validSections()
-  dirty.diagnose += " Die Kur repariert die Längen."
-  const { complete, calls } = completing(JSON.stringify(apiAnswer(dirty)))
-  const result = await generateConsultBrief(input(), { complete, model: "m" })
-  assert.ok("error" in result)
-  assert.equal(result.error.code, "lint_failed")
-  assert.equal(calls.length, 2)
-})
-
 test("a schema failure on the retry → that error, no third call", async () => {
   const dirty = validSections()
   dirty.diagnose += " Die Kur repariert die Längen."
@@ -339,10 +337,14 @@ test("a schema failure on the retry → that error, no third call", async () => 
 })
 
 test("no retry for JSON, schema or LLM failures on the first call", async () => {
-  for (const output of ["{", JSON.stringify({ diagnose: "x" }), new Error("boom")]) {
+  for (const [output, code] of [
+    ["{", "invalid_json"],
+    [JSON.stringify({ diagnose: "x" }), "invalid_schema"],
+    [new Error("boom"), "llm_failed"],
+  ] as const) {
     const { complete, calls } = completing(output)
     const result = await generateConsultBrief(input(), { complete, model: "m" })
-    assert.ok("error" in result)
+    assert.deepEqual(result, { error: { code } })
     assert.equal(calls.length, 1)
   }
 })
@@ -374,60 +376,6 @@ test("the boundary line is not doubled when the model already wrote it (trim-com
   ])
 })
 
-// --- API schema -------------------------------------------------------------------------------
-
-test("the API schema: strict, every property required, hebel/callFragen 3–5, points nullable", () => {
-  const format = consultBriefJsonSchemaFormat([SHAMPOO_KEY])
-  assert.equal(format.type, "json_schema")
-  assert.equal(format.strict, true)
-  const schema = format.schema as {
-    additionalProperties: boolean
-    required: string[]
-    properties: Record<string, Record<string, unknown>>
-  }
-  assert.equal(schema.additionalProperties, false)
-  assert.deepEqual(schema.required.toSorted(), Object.keys(schema.properties).toSorted())
-  assert.equal(schema.properties.hebel!.minItems, 3)
-  assert.equal(schema.properties.hebel!.maxItems, 5)
-  assert.equal(schema.properties.callFragen!.minItems, 3)
-  assert.equal(schema.properties.callFragen!.maxItems, 5)
-  const hebelItem = schema.properties.hebel!.items as {
-    required: string[]
-    additionalProperties: boolean
-    properties: { points: { type: string[] } }
-  }
-  assert.deepEqual(hebelItem.required, ["title", "note", "points", "bucket"])
-  assert.deepEqual(schema.required.toSorted(), [
-    "callFragen",
-    "diagnose",
-    "erwartungen",
-    "hebel",
-    "mechanik",
-    "swapReasons",
-  ])
-  assert.equal("zielLuecken" in schema.properties, false)
-  assert.equal(hebelItem.additionalProperties, false)
-  assert.deepEqual(hebelItem.properties.points.type, ["number", "null"])
-  const swap = schema.properties.swapReasons as {
-    type: string
-    maxItems: number
-    items: { required: string[]; properties: { key: { enum?: string[] } } }
-  }
-  assert.equal(swap.type, "array")
-  assert.equal(swap.maxItems, 1)
-  assert.deepEqual(swap.items.required, ["key", "reason"])
-  assert.deepEqual(swap.items.properties.key.enum, [SHAMPOO_KEY])
-})
-
-test("the API schema with no allowed swap keys: no empty enum, the array capped at zero", () => {
-  const format = consultBriefJsonSchemaFormat([])
-  const swap = (format.schema as { properties: { swapReasons: Record<string, unknown> } })
-    .properties.swapReasons as { maxItems: number; items: { properties: { key: object } } }
-  assert.equal(swap.maxItems, 0)
-  assert.deepEqual(swap.items.properties.key, { type: "string" })
-  assert.equal(JSON.stringify(format).includes('"enum":[]'), false)
-})
-
 test("no swap keys end to end: an empty swapReasons array becomes an empty record", async () => {
   const noSwaps = input({ products: [] })
   const sections = validSections()
@@ -442,15 +390,16 @@ test("no swap keys end to end: an empty swapReasons array becomes an empty recor
   const result = await generateConsultBrief(noSwaps, { complete, model: "m" })
   assert.ok("brief" in result, JSON.stringify(result))
   assert.deepEqual(result.brief.swapReasons, {})
-  assert.deepEqual(calls[0]!.format, consultBriefJsonSchemaFormat([]))
-})
-
-test("the swap keys match the ones the prompt names", () => {
-  const keys = consultBriefSwapKeys(input())
-  assert.deepEqual(keys, [SHAMPOO_KEY])
-  const { user } = buildConsultBriefPrompt(input())
-  for (const key of keys) assert.ok(user.includes(`"${key}"`), key)
-  assert.deepEqual(consultBriefSwapKeys(input({ products: [] })), [])
+  const { format, user } = calls[0]!
+  const swap = (format.schema as { properties: { swapReasons: Record<string, unknown> } })
+    .properties.swapReasons as { maxItems: number; items: { properties: { key: object } } }
+  assert.equal(swap.maxItems, 0)
+  assert.deepEqual(swap.items.properties.key, { type: "string" })
+  assert.equal(JSON.stringify(format).includes('"enum":[]'), false)
+  assert.ok(
+    user.includes("<erlaubte_swapReasons_keys>[]</erlaubte_swapReasons_keys>"),
+    "the empty allowed-swap-key tag is delivered",
+  )
 })
 
 test("array → record: the stored shape; duplicates and malformed pass through unconverted", () => {

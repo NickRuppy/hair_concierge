@@ -1,0 +1,13 @@
+{
+  "phase": "transfer",
+  "counts": {
+    "before": 35,
+    "transfer": 35,
+    "cut": 33
+  },
+  "changed": [
+    "tests/discovery-invitation-card.test.tsx"
+  ],
+  "sourceWrites": 0,
+  "testsRun": 0
+}

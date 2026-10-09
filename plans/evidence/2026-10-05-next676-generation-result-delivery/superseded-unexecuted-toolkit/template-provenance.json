@@ -1,0 +1,17 @@
+{
+  "carePinsSHA256": "67f792bcbb94f1a2f6f807cddd4403c08da414aeec3748c71ad49d5bd28ccb89",
+  "source": "/tmp/test-audit-care102-tools-fz8_q695",
+  "files": {
+    "operator-guard.cjs": "afdd88d29d49aca99a0444c721f7e0e3a116ec67b73781beed90c9f91c2eff7d",
+    "operator-edit.cjs": "92c835a871a8e013246cfba68df079815be2dd30cb2e9ad37fd120ef1cad42a3",
+    "operator-run-controls.cjs": "0d46b1f26f65b7fd9eb5826bd0fe18fc629534a1decfba7db6799488a59021e5",
+    "operator-proof.cjs": "10c4e9e55aa0f9f20c16802b612519a65923e424f38222a6f83dd99cfd9c1b91",
+    "operator-readonly-preload.cjs": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "operator-native-proof.cjs": "a9e2988ad4fe424a9ccc7b1070e5d24ed7435ed77416e87f78c38545a37387db",
+    "prepare-pins.cjs": "640f267ae55df32cc17b92fc8affb5060a9eea40b33cad2b2c7696732d3beccb",
+    "proof-attestation.cjs": "51ea98b2c3c258bd0cd6539c7f281c8d4475dc2211865a34ac190fe0be9b683d",
+    "static-integrity.cjs": "3e07dc1baf769e3cbbd077f03d4b4cfdc480f6cfefd586542c1016f5dd04dd8c",
+    "operator-pins.json": "67f792bcbb94f1a2f6f807cddd4403c08da414aeec3748c71ad49d5bd28ccb89"
+  },
+  "limits": "Template provenance only; source/control semantic acceptance pending."
+}

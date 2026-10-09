@@ -1,0 +1,83 @@
+--- a/tests/expansion-apply-batch.test.ts
++++ b/tests/expansion-apply-batch.test.ts
+@@ -116,6 +116,8 @@
+   assert.ok(
+     result.batch.items.every((item) => !result.parked.some((p) => p.item_key === item.item_key)),
+   )
++  assert.ok(result.batch.items.length > 0)
++  assert.doesNotMatch(result.batchJson, /is_chaarlie_recommended/)
+ })
+ 
+ test("a deviation-flagged protocol parks the product for Nick's review (R4/F-06)", async () => {
+@@ -435,12 +437,7 @@
+   assert.deepEqual(protocolRoles(item), ["post_wash_leave_in"])
+ })
+ 
+-test("the emitted batch never carries a recommendation flag (R3)", async () => {
+-  const manifest = await maskManifest()
+-  const result = buildExpansionApplyBatch({ manifest, supplement: supplementFor(manifest) })
+-  assert.ok(result.batch.items.length > 0)
+-  assert.doesNotMatch(result.batchJson, /is_chaarlie_recommended/)
+-})
++
+ 
+ // ---------------------------------------------------------------------------
+ // The apply script's own execution gate (F-05, CLI half).
+--- a/tests/expansion-apply-templates.test.ts
++++ b/tests/expansion-apply-templates.test.ts
+@@ -95,35 +95,29 @@
+     )
+     assert.equal(payload.protocolFacts.workflowId, undefined, templateId)
+     assert.deepEqual(payload.evidence, EVIDENCE, templateId)
+-  }
+-})
+-
+-test("TPL-OIL-LEAVEON stamps only the reviewed wash-family day types", () => {
+-  const row = buildExpansionProtocolRow("TPL-OIL-LEAVEON", defaultSlots("TPL-OIL-LEAVEON"))
+-  const payload = parsePayload("TPL-OIL-LEAVEON", row)
+-
+-  assert.deepEqual(payload.compatibleDayTypes, [
+-    "wash_day",
+-    "intensive_care_day",
+-    "bond_repair_day",
+-    "clarifying_wash_day",
+-  ])
+-})
+-
+-test("row role/category come from EXPANSION_TEMPLATE_META, not the payload's semantic role", () => {
+-  for (const templateId of EXPANSION_TEMPLATE_IDS) {
+-    const row = buildExpansionProtocolRow(templateId, defaultSlots(templateId))
++    // Preserve the source-role vocabulary independently from semantic payload roles.
+     const meta = EXPANSION_TEMPLATE_META[templateId]
+     assert.equal(row.role, meta.role, templateId)
+     assert.equal(row.category, meta.category, templateId)
+-  }
+-
+-  // The two vocabularies genuinely differ — the mask row is `intensive_conditioning_mask`
+-  // while its payload keeps the markdown's semantic `intensive_care`.
+-  const maskRow = buildExpansionProtocolRow(MASK_TEMPLATE_ID, defaultSlots(MASK_TEMPLATE_ID))
+-  assert.equal(maskRow.role, "intensive_conditioning_mask")
+-  assert.equal((maskRow.guidance_payload as { role: string }).role, "intensive_care")
+-})
++    if (templateId === MASK_TEMPLATE_ID) {
++      const maskRow = row
++      assert.equal(maskRow.role, "intensive_conditioning_mask")
++      assert.equal((maskRow.guidance_payload as { role: string }).role, "intensive_care")
++    }
++    if (templateId === "TPL-OIL-LEAVEON") {
++      assert.deepEqual(payload.compatibleDayTypes, [
++        "wash_day",
++        "intensive_care_day",
++        "bond_repair_day",
++        "clarifying_wash_day",
++      ])
++    }
++  }
++})
++
++
++
++
+ 
+ test("§2.4 column ↔ payload invariants hold for all 11 templates", () => {
+   for (const templateId of EXPANSION_TEMPLATE_IDS) {

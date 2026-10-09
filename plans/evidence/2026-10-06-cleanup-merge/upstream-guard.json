@@ -1,0 +1,13 @@
+{
+  "files": 103,
+  "newCallbacks": 963,
+  "changedUpstreamCallbacks": 42,
+  "missing": [],
+  "nonidenticalNew": [],
+  "combinedChanges": [
+    {
+      "file": "tests/personal-plan-stage5-navigation.test.tsx",
+      "title": "\"the shell picks the five-tab nav (with locks) for a free-tier navigation object, exactly like a real Personal Plan owner\""
+    }
+  ]
+}

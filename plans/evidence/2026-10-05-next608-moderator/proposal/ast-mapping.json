@@ -1,0 +1,2564 @@
+[
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "title": "dry-run parsing has no network and apply needs all exact gates",
+    "originalLine": 107,
+    "before": "add7e94042e52ec0ea0206e3a7f719d61e2e6512dca1c49e6930be7ed8e2b84b",
+    "transfer": "add7e94042e52ec0ea0206e3a7f719d61e2e6512dca1c49e6930be7ed8e2b84b",
+    "cut": "add7e94042e52ec0ea0206e3a7f719d61e2e6512dca1c49e6930be7ed8e2b84b",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 107,
+      "transfer": 107,
+      "cut": 107
+    }
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "title": "rejects manifest count, duplicate identifiers, and mismatched email before calls",
+    "originalLine": 131,
+    "before": "20241a7be0a362c2bbc8954c1a2e947164f96d5424721dbae8e2bba7c29f6a11",
+    "transfer": "20241a7be0a362c2bbc8954c1a2e947164f96d5424721dbae8e2bba7c29f6a11",
+    "cut": "20241a7be0a362c2bbc8954c1a2e947164f96d5424721dbae8e2bba7c29f6a11",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 131,
+      "transfer": 131,
+      "cut": 131
+    }
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "title": "missing or invalid JWT proof stops before logout",
+    "originalLine": 161,
+    "before": "2d19e4b84c9e178ad9d0a6780a83d8cb449458774074a4448dff4ca9077fa000",
+    "transfer": "2d19e4b84c9e178ad9d0a6780a83d8cb449458774074a4448dff4ca9077fa000",
+    "cut": "2d19e4b84c9e178ad9d0a6780a83d8cb449458774074a4448dff4ca9077fa000",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 161,
+      "transfer": 161,
+      "cut": 161
+    }
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "title": "unbanned ban response is rejected and needs manual recovery",
+    "originalLine": 185,
+    "before": "f956484b3a5ffa94e5c2d1f37cf87241461de077605692a9de7ec94a68c0a60b",
+    "transfer": "f956484b3a5ffa94e5c2d1f37cf87241461de077605692a9de7ec94a68c0a60b",
+    "cut": "f956484b3a5ffa94e5c2d1f37cf87241461de077605692a9de7ec94a68c0a60b",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 185,
+      "transfer": 185,
+      "cut": 185
+    }
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "title": "journal failure after confirmed ban preserves recovery state",
+    "originalLine": 212,
+    "before": "fda74bb73d5b7c2c2630af8cb404016279b904101b243ab934abc85bd44ddb10",
+    "transfer": "fda74bb73d5b7c2c2630af8cb404016279b904101b243ab934abc85bd44ddb10",
+    "cut": "fda74bb73d5b7c2c2630af8cb404016279b904101b243ab934abc85bd44ddb10",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 212,
+      "transfer": 212,
+      "cut": 212
+    }
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "title": "ban marker must round-trip while unrelated app metadata is preserved and never journaled",
+    "originalLine": 230,
+    "before": "31cedf8db4a247856521ac35ae5529147e1600419fca167add5775b9c5fe6562",
+    "transfer": "31cedf8db4a247856521ac35ae5529147e1600419fca167add5775b9c5fe6562",
+    "cut": "31cedf8db4a247856521ac35ae5529147e1600419fca167add5775b9c5fe6562",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 230,
+      "transfer": 230,
+      "cut": 230
+    }
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "title": "ban marker must not replace pre-existing app metadata",
+    "originalLine": 265,
+    "before": "41edebd1cc1e5703ee2cfa52a33152159a25e0cda6c685cd4f1ce249a455c28c",
+    "transfer": "41edebd1cc1e5703ee2cfa52a33152159a25e0cda6c685cd4f1ce249a455c28c",
+    "cut": "41edebd1cc1e5703ee2cfa52a33152159a25e0cda6c685cd4f1ce249a455c28c",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 265,
+      "transfer": 265,
+      "cut": 265
+    }
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "title": "preflights every identity before a journal or mutation",
+    "originalLine": 296,
+    "before": "5e250f2bc54a2de6e6b1e4e2c3edff4c55af746323fd00fee0d3ee9c34c56b68",
+    "transfer": "5e250f2bc54a2de6e6b1e4e2c3edff4c55af746323fd00fee0d3ee9c34c56b68",
+    "cut": "5e250f2bc54a2de6e6b1e4e2c3edff4c55af746323fd00fee0d3ee9c34c56b68",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 296,
+      "transfer": 296,
+      "cut": 296
+    }
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "title": "initial private journal failure prevents every mutation",
+    "originalLine": 325,
+    "before": "e3317a9777b088b22a072f39b158fa277af92a0e8aa004a188cd5ad48d1ca160",
+    "transfer": "e3317a9777b088b22a072f39b158fa277af92a0e8aa004a188cd5ad48d1ca160",
+    "cut": "e3317a9777b088b22a072f39b158fa277af92a0e8aa004a188cd5ad48d1ca160",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 325,
+      "transfer": 325,
+      "cut": 325
+    }
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "title": "global logout precedes 24h ban and journals no secrets",
+    "originalLine": 343,
+    "before": "abff031b596ece9b8f217efaa493c69dec25736ffaedf6831b5a75f0352369d5",
+    "transfer": "abff031b596ece9b8f217efaa493c69dec25736ffaedf6831b5a75f0352369d5",
+    "cut": "abff031b596ece9b8f217efaa493c69dec25736ffaedf6831b5a75f0352369d5",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 343,
+      "transfer": 343,
+      "cut": 343
+    }
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "title": "delayed restrictions extend the conservative reset deadline beyond minted token expiry",
+    "originalLine": 366,
+    "before": "8417696581a065ec2886003ea35528d10f389ecced101c5a7e9747654c12bf5b",
+    "transfer": "8417696581a065ec2886003ea35528d10f389ecced101c5a7e9747654c12bf5b",
+    "cut": "8417696581a065ec2886003ea35528d10f389ecced101c5a7e9747654c12bf5b",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 366,
+      "transfer": 366,
+      "cut": 366
+    }
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "title": "mid-batch failure stops remaining accounts and never auto-unbans",
+    "originalLine": 400,
+    "before": "ff2022bd43311b41663c2ccfbc380a8f881d650271420c08f8115aa83ff3fde2",
+    "transfer": "ff2022bd43311b41663c2ccfbc380a8f881d650271420c08f8115aa83ff3fde2",
+    "cut": "ff2022bd43311b41663c2ccfbc380a8f881d650271420c08f8115aa83ff3fde2",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 400,
+      "transfer": 400,
+      "cut": 400
+    }
+  },
+  {
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "title": "maintenance link identity mismatch prevents global logout and ban",
+    "originalLine": 429,
+    "before": "fa43505bb6630bd764370a7aaa83dbc497e137ca2f8f9ab1958dcc3a57eebfb4",
+    "transfer": "fa43505bb6630bd764370a7aaa83dbc497e137ca2f8f9ab1958dcc3a57eebfb4",
+    "cut": "fa43505bb6630bd764370a7aaa83dbc497e137ca2f8f9ab1958dcc3a57eebfb4",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 429,
+      "transfer": 429,
+      "cut": 429
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset-execution.test.ts",
+    "title": "uses manifest bytes as the sole plan input and refuses blocked bytes before writing",
+    "originalLine": 27,
+    "before": "ebcb52bbff7472e187e8088d88aba2f123575d3755a446f8f241f792e4ffef89",
+    "transfer": "ebcb52bbff7472e187e8088d88aba2f123575d3755a446f8f241f792e4ffef89",
+    "cut": "ebcb52bbff7472e187e8088d88aba2f123575d3755a446f8f241f792e4ffef89",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 27,
+      "transfer": 27,
+      "cut": 27
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset-execution.test.ts",
+    "title": "refuses repository output paths without writing a private artifact",
+    "originalLine": 47,
+    "before": "3a75368e41ea4d6a707457d8670636615b5f0a2b6e8796c4482824df4a32bdc4",
+    "transfer": "3a75368e41ea4d6a707457d8670636615b5f0a2b6e8796c4482824df4a32bdc4",
+    "cut": "3a75368e41ea4d6a707457d8670636615b5f0a2b6e8796c4482824df4a32bdc4",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 47,
+      "transfer": 47,
+      "cut": 47
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset-execution.test.ts",
+    "title": "refuses main-root, symlinked, and not-yet-created worktree descendants",
+    "originalLine": 65,
+    "before": "d620a2e9f05e25e4f1b200f8c7be9b2816cb3cab369d328c737c6bcfbc57b362",
+    "transfer": "d620a2e9f05e25e4f1b200f8c7be9b2816cb3cab369d328c737c6bcfbc57b362",
+    "cut": "d620a2e9f05e25e4f1b200f8c7be9b2816cb3cab369d328c737c6bcfbc57b362",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 65,
+      "transfer": 65,
+      "cut": 65
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset-execution.test.ts",
+    "title": "requires an existing output parent to already be private",
+    "originalLine": 91,
+    "before": "6501690437dcc13906b6b8154ccc0cd461d076b15918e4e934d72777c04e5b14",
+    "transfer": "6501690437dcc13906b6b8154ccc0cd461d076b15918e4e934d72777c04e5b14",
+    "cut": "6501690437dcc13906b6b8154ccc0cd461d076b15918e4e934d72777c04e5b14",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 91,
+      "transfer": 91,
+      "cut": 91
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset-execution.test.ts",
+    "title": "production preparation refuses a missing, mismatched, or shortened maintenance journal",
+    "originalLine": 112,
+    "before": "0fc62dffafbf10402c2c0ea1d2f18e7d7b25f071b7a01e542e9c0ca40068c4e1",
+    "transfer": "0fc62dffafbf10402c2c0ea1d2f18e7d7b25f071b7a01e542e9c0ca40068c4e1",
+    "cut": "0fc62dffafbf10402c2c0ea1d2f18e7d7b25f071b7a01e542e9c0ca40068c4e1",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 112,
+      "transfer": 112,
+      "cut": 112
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset-execution.test.ts",
+    "title": "production preparation binds a valid maintenance journal into the SQL header and receipt",
+    "originalLine": 165,
+    "before": "5a584dc08aa487123e30fc9a343124e23fefd4963b6e196c7740ff3d5a03d2be",
+    "transfer": "5a584dc08aa487123e30fc9a343124e23fefd4963b6e196c7740ff3d5a03d2be",
+    "cut": "5a584dc08aa487123e30fc9a343124e23fefd4963b6e196c7740ff3d5a03d2be",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 165,
+      "transfer": 165,
+      "cut": 165
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset-execution.test.ts",
+    "title": "production preparation waits out a JWT that could be minted before a delayed ban",
+    "originalLine": 185,
+    "before": "2dbc1b9b10ab99e99b7ec9b4dffc82f933533c2ee97bd970ab2fd231bb9b41e8",
+    "transfer": "2dbc1b9b10ab99e99b7ec9b4dffc82f933533c2ee97bd970ab2fd231bb9b41e8",
+    "cut": "2dbc1b9b10ab99e99b7ec9b4dffc82f933533c2ee97bd970ab2fd231bb9b41e8",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 185,
+      "transfer": 185,
+      "cut": 185
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset-execution.test.ts",
+    "title": "production preparation consumes the actual applyMaintenance journal contract",
+    "originalLine": 215,
+    "before": "530a8f16d61ce9b4667345e7f898b5e261eae007668f43471e1d5691176d3dc5",
+    "transfer": "530a8f16d61ce9b4667345e7f898b5e261eae007668f43471e1d5691176d3dc5",
+    "cut": "530a8f16d61ce9b4667345e7f898b5e261eae007668f43471e1d5691176d3dc5",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 215,
+      "transfer": 215,
+      "cut": 215
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset-execution.test.ts",
+    "title": "writes private SQL and a redacted receipt without applying or making a network call",
+    "originalLine": 280,
+    "before": "814b5303964f21b5c0863d71e53caee299c56757974737c05bfc8f4b5843b57c",
+    "transfer": "814b5303964f21b5c0863d71e53caee299c56757974737c05bfc8f4b5843b57c",
+    "cut": "814b5303964f21b5c0863d71e53caee299c56757974737c05bfc8f4b5843b57c",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 280,
+      "transfer": 280,
+      "cut": 280
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "title": "blocks incomplete private manifest proof instead of generating reset SQL",
+    "originalLine": 24,
+    "before": "3d8eecd4932e62b8a16547b8429c73bfb930c3d02b36c8c2f33958eee260a608",
+    "transfer": "3d8eecd4932e62b8a16547b8429c73bfb930c3d02b36c8c2f33958eee260a608",
+    "cut": "3d8eecd4932e62b8a16547b8429c73bfb930c3d02b36c8c2f33958eee260a608",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 24,
+      "transfer": 24,
+      "cut": 24
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "title": "blocks unclassified owner tables and billing-linked state",
+    "originalLine": 39,
+    "before": "66da4b321916627fec01df3278add836eb924193cfdf2dbd71a575656418e269",
+    "transfer": "66da4b321916627fec01df3278add836eb924193cfdf2dbd71a575656418e269",
+    "cut": "66da4b321916627fec01df3278add836eb924193cfdf2dbd71a575656418e269",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 39,
+      "transfer": 39,
+      "cut": 39
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "title": "production reset refuses missing payment replay cutoff proof",
+    "originalLine": 56,
+    "before": "b8f348f8a117e458c947df1efc8be2b2d41ba8731c9258dc96790bae773b703a",
+    "transfer": "b8f348f8a117e458c947df1efc8be2b2d41ba8731c9258dc96790bae773b703a",
+    "cut": "b8f348f8a117e458c947df1efc8be2b2d41ba8731c9258dc96790bae773b703a",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 56,
+      "transfer": 56,
+      "cut": 56
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "title": "the operational payment cutoff cannot be removed as legacy app metadata",
+    "originalLine": 66,
+    "before": "0a0e2cb2ba87d93d5d920158d02ef01b5ecabd667943fd5fae9d1fedc66f5715",
+    "transfer": "0a0e2cb2ba87d93d5d920158d02ef01b5ecabd667943fd5fae9d1fedc66f5715",
+    "cut": "0a0e2cb2ba87d93d5d920158d02ef01b5ecabd667943fd5fae9d1fedc66f5715",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 66,
+      "transfer": 66,
+      "cut": 66
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "title": "drains requests that may start immediately before the last JWT expires",
+    "originalLine": 74,
+    "before": "6a585fbc46a17ad9dd397ecc3515f8be558abf6cb3bacb2aad727e9ab2317e07",
+    "transfer": "6a585fbc46a17ad9dd397ecc3515f8be558abf6cb3bacb2aad727e9ab2317e07",
+    "cut": "6a585fbc46a17ad9dd397ecc3515f8be558abf6cb3bacb2aad727e9ab2317e07",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 74,
+      "transfer": 74,
+      "cut": 74
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "title": "waits out tokens minted between global logout and the confirmed login restriction",
+    "originalLine": 84,
+    "before": "f355dae90f150ca7bb4b41c8617b5c80f67bb4464eb76773b26ac9d7104a0c9d",
+    "transfer": "f355dae90f150ca7bb4b41c8617b5c80f67bb4464eb76773b26ac9d7104a0c9d",
+    "cut": "f355dae90f150ca7bb4b41c8617b5c80f67bb4464eb76773b26ac9d7104a0c9d",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 84,
+      "transfer": 84,
+      "cut": 84
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "title": "reset supports an exact fixture with no manual grants",
+    "originalLine": 97,
+    "before": "4ca454d05395d4f9f8798b0d53ae38f8abb826312ecf2159b13db6ac4ee5abba",
+    "transfer": "4ca454d05395d4f9f8798b0d53ae38f8abb826312ecf2159b13db6ac4ee5abba",
+    "cut": "4ca454d05395d4f9f8798b0d53ae38f8abb826312ecf2159b13db6ac4ee5abba",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 97,
+      "transfer": 97,
+      "cut": 97
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "title": "production SQL rechecks maintenance and clock inside the reset transaction",
+    "originalLine": 113,
+    "before": "ce613255dc8b8bb61a2745bb439ea85e80976629e84226c109f9417a2c1c2562",
+    "transfer": "ce613255dc8b8bb61a2745bb439ea85e80976629e84226c109f9417a2c1c2562",
+    "cut": "ce613255dc8b8bb61a2745bb439ea85e80976629e84226c109f9417a2c1c2562",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 113,
+      "transfer": 113,
+      "cut": 113
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "title": "generated guarded SQL resets app state and preserves login identity",
+    "originalLine": 163,
+    "before": "eb36b1de68b887505cc90ada3e3221756b577e63aab3031a4bfb4073972b0ebd",
+    "transfer": "eb36b1de68b887505cc90ada3e3221756b577e63aab3031a4bfb4073972b0ebd",
+    "cut": "eb36b1de68b887505cc90ada3e3221756b577e63aab3031a4bfb4073972b0ebd",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 163,
+      "transfer": 163,
+      "cut": 163
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "title": "generated SQL aborts on count mismatch before deleting data",
+    "originalLine": 229,
+    "before": "488a48832a68c85c030007d8518b47250eddce3a139d657e32e51e5e13f16532",
+    "transfer": "488a48832a68c85c030007d8518b47250eddce3a139d657e32e51e5e13f16532",
+    "cut": "488a48832a68c85c030007d8518b47250eddce3a139d657e32e51e5e13f16532",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 229,
+      "transfer": 229,
+      "cut": 229
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "title": "generated SQL aborts on same-count runtime payload drift before deleting data",
+    "originalLine": 250,
+    "before": "287cfee57c5854bbe5df2443750f2287cc749c5f1bda803f18f2d8a02f84eaeb",
+    "transfer": "287cfee57c5854bbe5df2443750f2287cc749c5f1bda803f18f2d8a02f84eaeb",
+    "cut": "287cfee57c5854bbe5df2443750f2287cc749c5f1bda803f18f2d8a02f84eaeb",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 250,
+      "transfer": 250,
+      "cut": 250
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "title": "cross-owner exact-email lead blocks reset and preserves both owners' state",
+    "originalLine": 274,
+    "before": "7bda07097f769b976c6a3565b67f5a7c737f8edf73f5e8ba2a54fe6555413dca",
+    "transfer": "7bda07097f769b976c6a3565b67f5a7c737f8edf73f5e8ba2a54fe6555413dca",
+    "cut": "7bda07097f769b976c6a3565b67f5a7c737f8edf73f5e8ba2a54fe6555413dca",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 274,
+      "transfer": 274,
+      "cut": 274
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "title": "retain-zero billing and backup rows block reset without deleting evidence",
+    "originalLine": 305,
+    "before": "3edd439c40a8dacb7ad7f8ca187c6eed9966800551f2609c7f76e35e2cd94beb",
+    "transfer": "3edd439c40a8dacb7ad7f8ca187c6eed9966800551f2609c7f76e35e2cd94beb",
+    "cut": "3edd439c40a8dacb7ad7f8ca187c6eed9966800551f2609c7f76e35e2cd94beb",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 305,
+      "transfer": 305,
+      "cut": 305
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "title": "foreign funnel session or prepared artifact linked to an owned lead blocks reset",
+    "originalLine": 341,
+    "before": "df45f807a82de3814e160fdad3f2cabb0cb6e2f29cbef09b1746d83168541750",
+    "transfer": "df45f807a82de3814e160fdad3f2cabb0cb6e2f29cbef09b1746d83168541750",
+    "cut": "df45f807a82de3814e160fdad3f2cabb0cb6e2f29cbef09b1746d83168541750",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 341,
+      "transfer": 341,
+      "cut": 341
+    }
+  },
+  {
+    "file": "tests/moderator-account-reset.test.ts",
+    "title": "child residual checks keep frozen conversation ownership after parent deletion",
+    "originalLine": 377,
+    "before": "70cd8d0675ba36f73443d38a12e0cff77a31d9e65806dc5e9bb05ab9a392b0a6",
+    "transfer": "70cd8d0675ba36f73443d38a12e0cff77a31d9e65806dc5e9bb05ab9a392b0a6",
+    "cut": "70cd8d0675ba36f73443d38a12e0cff77a31d9e65806dc5e9bb05ab9a392b0a6",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 377,
+      "transfer": 377,
+      "cut": 377
+    }
+  },
+  {
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "title": "dry run makes no hosted calls and reads no environment",
+    "originalLine": 200,
+    "before": "2b519edeea9230411f65d7e98b0001696670f6a490fc49d106a455c0b90b90c4",
+    "transfer": "2b519edeea9230411f65d7e98b0001696670f6a490fc49d106a455c0b90b90c4",
+    "cut": "2b519edeea9230411f65d7e98b0001696670f6a490fc49d106a455c0b90b90c4",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 200,
+      "transfer": 200,
+      "cut": 200
+    }
+  },
+  {
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "title": "rejects wrong project, unsafe args, and non-production URL before apply",
+    "originalLine": 209,
+    "before": "ec25cc402cc4f6a29158da13f822c94ef9cf23e07dbaf8fee395a11ae0f522ef",
+    "transfer": "ec25cc402cc4f6a29158da13f822c94ef9cf23e07dbaf8fee395a11ae0f522ef",
+    "cut": "ec25cc402cc4f6a29158da13f822c94ef9cf23e07dbaf8fee395a11ae0f522ef",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 209,
+      "transfer": 209,
+      "cut": 209
+    }
+  },
+  {
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "title": "happy path uses independent parallel activation calls and exact guarded cleanup",
+    "originalLine": 244,
+    "before": "2f3b788ffc97fcd06ebdcf7d1dda10f7d45fda641e2610184e3de0f084ca9e50",
+    "transfer": "2f3b788ffc97fcd06ebdcf7d1dda10f7d45fda641e2610184e3de0f084ca9e50",
+    "cut": "2f3b788ffc97fcd06ebdcf7d1dda10f7d45fda641e2610184e3de0f084ca9e50",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 244,
+      "transfer": 244,
+      "cut": 244
+    }
+  },
+  {
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "title": "cleanup refuses to delete when fixture identity marker mismatches",
+    "originalLine": 283,
+    "before": "2922ad61ab11ecd275c73eb84576e396b406265d54206f327590b9da5c0077d7",
+    "transfer": "2922ad61ab11ecd275c73eb84576e396b406265d54206f327590b9da5c0077d7",
+    "cut": "2922ad61ab11ecd275c73eb84576e396b406265d54206f327590b9da5c0077d7",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 283,
+      "transfer": 283,
+      "cut": 283
+    }
+  },
+  {
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "title": "wrong email progress change fails the probe even when rejected",
+    "originalLine": 300,
+    "before": "993459dff74ec811a9a5b216c199036bd86a6030c09184e5e712f3275a61da8e",
+    "transfer": "993459dff74ec811a9a5b216c199036bd86a6030c09184e5e712f3275a61da8e",
+    "cut": "993459dff74ec811a9a5b216c199036bd86a6030c09184e5e712f3275a61da8e",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 300,
+      "transfer": 300,
+      "cut": 300
+    }
+  },
+  {
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "title": "unexpected 4xx denials are not accepted as proof",
+    "originalLine": 320,
+    "before": "b2d5f15dcf8ce7697fcf5b1c1b9653718adedc129e62792c46e4cfc21fdd6577",
+    "transfer": "b2d5f15dcf8ce7697fcf5b1c1b9653718adedc129e62792c46e4cfc21fdd6577",
+    "cut": "b2d5f15dcf8ce7697fcf5b1c1b9653718adedc129e62792c46e4cfc21fdd6577",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 320,
+      "transfer": 320,
+      "cut": 320
+    }
+  },
+  {
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "title": "partial parallel activation response is recovered for cleanup but does not report success",
+    "originalLine": 338,
+    "before": "eba10dbaccb634c5723e52067a2bddd63b8dd788cf6e5c2ed588eedfe69608dd",
+    "transfer": "eba10dbaccb634c5723e52067a2bddd63b8dd788cf6e5c2ed588eedfe69608dd",
+    "cut": "eba10dbaccb634c5723e52067a2bddd63b8dd788cf6e5c2ed588eedfe69608dd",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 338,
+      "transfer": 338,
+      "cut": 338
+    }
+  },
+  {
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "title": "activation replay must have identical receipt fields and exact 2160 hour expiry",
+    "originalLine": 384,
+    "before": "607fd9d70fa1513bd6948b0ed05a2ccc47da8f0dc168d576cc0cc3352e48bec7",
+    "transfer": "607fd9d70fa1513bd6948b0ed05a2ccc47da8f0dc168d576cc0cc3352e48bec7",
+    "cut": "607fd9d70fa1513bd6948b0ed05a2ccc47da8f0dc168d576cc0cc3352e48bec7",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 384,
+      "transfer": 384,
+      "cut": 384
+    }
+  },
+  {
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "title": "final journal failure marks the probe unsuccessful after cleanup",
+    "originalLine": 409,
+    "before": "83419fa460a28d02d175f3103d20f1d44a01ad56aaf2411c3f89ad2fc4fc5b6f",
+    "transfer": "83419fa460a28d02d175f3103d20f1d44a01ad56aaf2411c3f89ad2fc4fc5b6f",
+    "cut": "83419fa460a28d02d175f3103d20f1d44a01ad56aaf2411c3f89ad2fc4fc5b6f",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 409,
+      "transfer": 409,
+      "cut": 409
+    }
+  },
+  {
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "title": "source keeps cleanup conservative around auth deletion and exact auth absence",
+    "originalLine": 429,
+    "before": "d694cf80a9127ab9f953f4c8b841fc14f11ef7121bd7455f3014d3220f6c8a03",
+    "transfer": "d694cf80a9127ab9f953f4c8b841fc14f11ef7121bd7455f3014d3220f6c8a03",
+    "cut": "d694cf80a9127ab9f953f4c8b841fc14f11ef7121bd7455f3014d3220f6c8a03",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 429,
+      "transfer": 429,
+      "cut": 429
+    }
+  },
+  {
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "title": "dry run makes no hosted calls",
+    "originalLine": 132,
+    "before": "e2f3399162fbc61dfd84ddd5c395938792d7dd584c8764b31e9a4e3c23b88734",
+    "transfer": "e2f3399162fbc61dfd84ddd5c395938792d7dd584c8764b31e9a4e3c23b88734",
+    "cut": "e2f3399162fbc61dfd84ddd5c395938792d7dd584c8764b31e9a4e3c23b88734",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 132,
+      "transfer": 132,
+      "cut": 132
+    }
+  },
+  {
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "title": "rejects wrong project, unsafe user arguments, and a non-hosted production URL before calls",
+    "originalLine": 140,
+    "before": "bdf21572e52c32ff44bc6a558916a6e554b23419c0051a1538a41836fb93499c",
+    "transfer": "bdf21572e52c32ff44bc6a558916a6e554b23419c0051a1538a41836fb93499c",
+    "cut": "bdf21572e52c32ff44bc6a558916a6e554b23419c0051a1538a41836fb93499c",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 140,
+      "transfer": 140,
+      "cut": 140
+    }
+  },
+  {
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "title": "optional expiry observation checkpoints then proves only explicit PostgREST JWT-expired 401s",
+    "originalLine": 161,
+    "before": "c41244ee13561db20cbde553ed39422b35f62c8f0a7861396f047c419148ce3b",
+    "transfer": "c41244ee13561db20cbde553ed39422b35f62c8f0a7861396f047c419148ce3b",
+    "cut": "c41244ee13561db20cbde553ed39422b35f62c8f0a7861396f047c419148ce3b",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 161,
+      "transfer": 161,
+      "cut": 161
+    }
+  },
+  {
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "title": "expired network failure cannot prove expiry and still cleans the fixture",
+    "originalLine": 211,
+    "before": "34e0d5adc8e2ccd203e1ee51b6daa346d2627e568e4c3b7c3d78816cd38672e3",
+    "transfer": "34e0d5adc8e2ccd203e1ee51b6daa346d2627e568e4c3b7c3d78816cd38672e3",
+    "cut": "34e0d5adc8e2ccd203e1ee51b6daa346d2627e568e4c3b7c3d78816cd38672e3",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 211,
+      "transfer": 211,
+      "cut": 211
+    }
+  },
+  {
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "title": "uses a verified maintenance JWT before the second ban and writes sanitized receipts",
+    "originalLine": 234,
+    "before": "3b0435c81b9f6faa416d2c77d5f4a91a3dc8dce833090c166af5a05ea88df888",
+    "transfer": "3b0435c81b9f6faa416d2c77d5f4a91a3dc8dce833090c166af5a05ea88df888",
+    "cut": "3b0435c81b9f6faa416d2c77d5f4a91a3dc8dce833090c166af5a05ea88df888",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 234,
+      "transfer": 234,
+      "cut": 234
+    }
+  },
+  {
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "title": "failed residual read is not absence",
+    "originalLine": 262,
+    "before": "abec5f9fe50f6c126651362e11d2fe2b956853b949143cc6e99c43920bb0939d",
+    "transfer": "abec5f9fe50f6c126651362e11d2fe2b956853b949143cc6e99c43920bb0939d",
+    "cut": "abec5f9fe50f6c126651362e11d2fe2b956853b949143cc6e99c43920bb0939d",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 262,
+      "transfer": 262,
+      "cut": 262
+    }
+  },
+  {
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "title": "network failures cannot prove login restriction or refresh revocation",
+    "originalLine": 284,
+    "before": "8c5d969e27a954e0a5d7b682b2ba70587a113bdefd82171d4adb3a94fdd19dfc",
+    "transfer": "8c5d969e27a954e0a5d7b682b2ba70587a113bdefd82171d4adb3a94fdd19dfc",
+    "cut": "8c5d969e27a954e0a5d7b682b2ba70587a113bdefd82171d4adb3a94fdd19dfc",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 284,
+      "transfer": 284,
+      "cut": 284
+    }
+  },
+  {
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "title": "failed initial journal stops the probe but still cleans the created fixture",
+    "originalLine": 307,
+    "before": "ac31c0f5566d1a0ace7930005d06ead1096955f2ad0f95221e7de6b784c06763",
+    "transfer": "ac31c0f5566d1a0ace7930005d06ead1096955f2ad0f95221e7de6b784c06763",
+    "cut": "ac31c0f5566d1a0ace7930005d06ead1096955f2ad0f95221e7de6b784c06763",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 307,
+      "transfer": 307,
+      "cut": 307
+    }
+  },
+  {
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "title": "maintenance subject mismatch stops before logout and still cleans the exact fixture",
+    "originalLine": 321,
+    "before": "fe0d949c14eee8b9551d48361c94539419268f4423dd21bfcfa1211cd4eba28f",
+    "transfer": "fe0d949c14eee8b9551d48361c94539419268f4423dd21bfcfa1211cd4eba28f",
+    "cut": "fe0d949c14eee8b9551d48361c94539419268f4423dd21bfcfa1211cd4eba28f",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 321,
+      "transfer": 321,
+      "cut": 321
+    }
+  },
+  {
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "title": "a thrown mid-probe operation still cleans fixture and writes a final receipt",
+    "originalLine": 344,
+    "before": "673012e8608808b3ca45213c78df19643d63ad73b6faf3a8b310fe6314afcd66",
+    "transfer": "673012e8608808b3ca45213c78df19643d63ad73b6faf3a8b310fe6314afcd66",
+    "cut": "673012e8608808b3ca45213c78df19643d63ad73b6faf3a8b310fe6314afcd66",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 344,
+      "transfer": 344,
+      "cut": 344
+    }
+  },
+  {
+    "file": "tests/moderator-organic-fresh-start.test.ts",
+    "title": "new organic moderator start clears the legacy quiz draft once before restore",
+    "originalLine": 20,
+    "before": "25eb95bc52aecd61f6913475bf3f20155738cbd8a91aa24384e720c39c0f51be",
+    "transfer": "25eb95bc52aecd61f6913475bf3f20155738cbd8a91aa24384e720c39c0f51be",
+    "cut": "25eb95bc52aecd61f6913475bf3f20155738cbd8a91aa24384e720c39c0f51be",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 20,
+      "transfer": 20,
+      "cut": 20
+    }
+  },
+  {
+    "file": "tests/moderator-organic-fresh-start.test.ts",
+    "title": "blocked browser storage fails closed",
+    "originalLine": 36,
+    "before": "0772c71c113cc962513d05a70ed0a94d356d5bc51d4ac15c8947234d3abb5c9e",
+    "transfer": "0772c71c113cc962513d05a70ed0a94d356d5bc51d4ac15c8947234d3abb5c9e",
+    "cut": "0772c71c113cc962513d05a70ed0a94d356d5bc51d4ac15c8947234d3abb5c9e",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 36,
+      "transfer": 36,
+      "cut": 36
+    }
+  },
+  {
+    "file": "tests/moderator-organic-fresh-start.test.ts",
+    "title": "a failed first boundary can be safely initialized from the reused server session",
+    "originalLine": 55,
+    "before": "6efa6be893be057a8f673e3b5c543ae9381a21fde6ee30a89a5e65645eeae1f4",
+    "transfer": "6efa6be893be057a8f673e3b5c543ae9381a21fde6ee30a89a5e65645eeae1f4",
+    "cut": "6efa6be893be057a8f673e3b5c543ae9381a21fde6ee30a89a5e65645eeae1f4",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 55,
+      "transfer": 55,
+      "cut": 55
+    }
+  },
+  {
+    "file": "tests/moderator-organic-fresh-start.test.ts",
+    "title": "response parsing allows progress-routed and older active returns without quiz state",
+    "originalLine": 79,
+    "before": "545f7510fecd492cb06b1282da31e20843b29aab83f8f4b89f9622475bb40818",
+    "transfer": "545f7510fecd492cb06b1282da31e20843b29aab83f8f4b89f9622475bb40818",
+    "cut": "545f7510fecd492cb06b1282da31e20843b29aab83f8f4b89f9622475bb40818",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 79,
+      "transfer": 79,
+      "cut": 79
+    }
+  },
+  {
+    "file": "tests/moderator-organic-fresh-start.test.ts",
+    "title": "server-confirmed resume does not clear a current quiz draft in a new tab",
+    "originalLine": 90,
+    "before": "d01657ca3a19a2d454aa79c37127b7173260157f244482ffa49677f157bd1b1c",
+    "transfer": "d01657ca3a19a2d454aa79c37127b7173260157f244482ffa49677f157bd1b1c",
+    "cut": "d01657ca3a19a2d454aa79c37127b7173260157f244482ffa49677f157bd1b1c",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 90,
+      "transfer": 90,
+      "cut": 90
+    }
+  },
+  {
+    "file": "tests/moderator-organic-fresh-start.test.ts",
+    "title": "quiz response requires an explicit fresh-start flag",
+    "originalLine": 112,
+    "before": "ab4fccd47e720899386175347064f28454bb2b065955dfa8a858983215928f00",
+    "transfer": "ab4fccd47e720899386175347064f28454bb2b065955dfa8a858983215928f00",
+    "cut": "ab4fccd47e720899386175347064f28454bb2b065955dfa8a858983215928f00",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 112,
+      "transfer": 112,
+      "cut": 112
+    }
+  },
+  {
+    "file": "tests/moderator-quiz-draft-scope.test.ts",
+    "title": "fresh moderator draft scope cannot restore legacy or another start's answers",
+    "originalLine": 8,
+    "before": "36d6e205f43139218994278ce3bfdc41fd9d4cbdc24cccc8066c83921e79aaac",
+    "transfer": "36d6e205f43139218994278ce3bfdc41fd9d4cbdc24cccc8066c83921e79aaac",
+    "cut": "36d6e205f43139218994278ce3bfdc41fd9d4cbdc24cccc8066c83921e79aaac",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 8,
+      "transfer": 8,
+      "cut": 8
+    }
+  },
+  {
+    "file": "tests/moderator-quiz-draft-scope.test.ts",
+    "title": "authenticated moderator entry clears only known unscoped quiz data",
+    "originalLine": 30,
+    "before": "b2818c356d9f0a4c7c1c71f0e48b84a50e6f82ed2ee97969ad2326abf2789fe2",
+    "transfer": "b2818c356d9f0a4c7c1c71f0e48b84a50e6f82ed2ee97969ad2326abf2789fe2",
+    "cut": "b2818c356d9f0a4c7c1c71f0e48b84a50e6f82ed2ee97969ad2326abf2789fe2",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 30,
+      "transfer": 30,
+      "cut": 30
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-activation-route.test.ts",
+    "title": "activation refuses an existing customer browser before creating or granting access",
+    "originalLine": 41,
+    "before": "f459115cb1bb812541f3824650316db54252df0d0ed4514f5f5be731cdcc6b3f",
+    "transfer": "f459115cb1bb812541f3824650316db54252df0d0ed4514f5f5be731cdcc6b3f",
+    "cut": "f459115cb1bb812541f3824650316db54252df0d0ed4514f5f5be731cdcc6b3f",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 41,
+      "transfer": 41,
+      "cut": 41
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-activation-route.test.ts",
+    "title": "activation creates and signs in one scoped guest before the exact service transaction",
+    "originalLine": 68,
+    "before": "7280249ace2309266051263a7ab376d68f408ce95ab697f92e39def36eae6272",
+    "transfer": "7280249ace2309266051263a7ab376d68f408ce95ab697f92e39def36eae6272",
+    "cut": "7280249ace2309266051263a7ab376d68f408ce95ab697f92e39def36eae6272",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 68,
+      "transfer": 68,
+      "cut": 68
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-activation-route.test.ts",
+    "title": "activation failure preserves the new guest session cookie for an exact retry",
+    "originalLine": 105,
+    "before": "be7dee5278f42976d8e11adc59b5b073ffc890b4ec8b2d0d241e7027ae5a9c44",
+    "transfer": "be7dee5278f42976d8e11adc59b5b073ffc890b4ec8b2d0d241e7027ae5a9c44",
+    "cut": "be7dee5278f42976d8e11adc59b5b073ffc890b4ec8b2d0d241e7027ae5a9c44",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 105,
+      "transfer": 105,
+      "cut": 105
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-activation-route.test.ts",
+    "title": "activation fails closed when the persistent rate limiter is unavailable",
+    "originalLine": 132,
+    "before": "58fc8477a794e7631468b16ae892d4b012f3c9e6d54eb97c1fa1e47391fb748f",
+    "transfer": "58fc8477a794e7631468b16ae892d4b012f3c9e6d54eb97c1fa1e47391fb748f",
+    "cut": "58fc8477a794e7631468b16ae892d4b012f3c9e6d54eb97c1fa1e47391fb748f",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 132,
+      "transfer": 132,
+      "cut": 132
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-activation.test.ts",
+    "title": "guest creation uses a non-deliverable synthetic identity and never returns persisted credentials",
+    "originalLine": 9,
+    "before": "b1164ef6f83a3c3881492273e76d2c800c3eea7c4675d1c9027534d1e94ae3e5",
+    "transfer": "b1164ef6f83a3c3881492273e76d2c800c3eea7c4675d1c9027534d1e94ae3e5",
+    "cut": "b1164ef6f83a3c3881492273e76d2c800c3eea7c4675d1c9027534d1e94ae3e5",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 9,
+      "transfer": 9,
+      "cut": 9
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-activation.test.ts",
+    "title": "activation calls the service-only RPC with exact campaign, session, lead, guest, and event",
+    "originalLine": 33,
+    "before": "3fbde9da720b6c9da84967b13bb80c14e5e581a8f31bfcda50325e903cd78e8b",
+    "transfer": "3fbde9da720b6c9da84967b13bb80c14e5e581a8f31bfcda50325e903cd78e8b",
+    "cut": "3fbde9da720b6c9da84967b13bb80c14e5e581a8f31bfcda50325e903cd78e8b",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 33,
+      "transfer": 33,
+      "cut": 33
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-analytics.test.ts",
+    "title": "field-test offer analytics stay in PostHog with test_kind and are rejected by Meta",
+    "originalLine": 22,
+    "before": "55c6dcaa313a568678bdc726bb54c7b24764a549d8e17a08f49e257173a13014",
+    "transfer": "55c6dcaa313a568678bdc726bb54c7b24764a549d8e17a08f49e257173a13014",
+    "cut": "55c6dcaa313a568678bdc726bb54c7b24764a549d8e17a08f49e257173a13014",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 22,
+      "transfer": 22,
+      "cut": 22
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-analytics.test.ts",
+    "title": "all non-commercial journey kinds are rejected by Meta",
+    "originalLine": 39,
+    "before": "5939b82cc0a26a7a8dbd2a63212babd4f33b40478a2cc9f58a9de5074a85051e",
+    "transfer": "5939b82cc0a26a7a8dbd2a63212babd4f33b40478a2cc9f58a9de5074a85051e",
+    "cut": "5939b82cc0a26a7a8dbd2a63212babd4f33b40478a2cc9f58a9de5074a85051e",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 39,
+      "transfer": 39,
+      "cut": 39
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-analytics.test.ts",
+    "title": "Customer.io keeps established field-test routing and suppresses only partner events",
+    "originalLine": 45,
+    "before": "0299966398fbdddd0a358ee8023ab68e379768b83f996f205772fc7ad0efa029",
+    "transfer": "0299966398fbdddd0a358ee8023ab68e379768b83f996f205772fc7ad0efa029",
+    "cut": "0299966398fbdddd0a358ee8023ab68e379768b83f996f205772fc7ad0efa029",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 45,
+      "transfer": 45,
+      "cut": 45
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-analytics.test.ts",
+    "title": "Customer.io traits mark a field test as ineligible for commercial automation",
+    "originalLine": 64,
+    "before": "06f2bb8600bc2affc4f73a0581232dd3343d669b0549f1c488c234b682c4ecab",
+    "transfer": "06f2bb8600bc2affc4f73a0581232dd3343d669b0549f1c488c234b682c4ecab",
+    "cut": "06f2bb8600bc2affc4f73a0581232dd3343d669b0549f1c488c234b682c4ecab",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 64,
+      "transfer": 64,
+      "cut": 64
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-analytics.test.ts",
+    "title": "Customer.io traits mark partner journeys as ineligible for commercial automation",
+    "originalLine": 97,
+    "before": "6b3430f9cc2e8cb94ae8e7c219eab23df6f363c38a14f66d2a34585dc5d17342",
+    "transfer": "6b3430f9cc2e8cb94ae8e7c219eab23df6f363c38a14f66d2a34585dc5d17342",
+    "cut": "6b3430f9cc2e8cb94ae8e7c219eab23df6f363c38a14f66d2a34585dc5d17342",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 97,
+      "transfer": 97,
+      "cut": 97
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+    "title": "campaign command defaults to a non-writing create preview",
+    "originalLine": 11,
+    "before": "a2a18fcc5383e55fd348d704b4fa09f59bb9fd90adf159bcf5589a044cfb35c1",
+    "transfer": "a2a18fcc5383e55fd348d704b4fa09f59bb9fd90adf159bcf5589a044cfb35c1",
+    "cut": "a2a18fcc5383e55fd348d704b4fa09f59bb9fd90adf159bcf5589a044cfb35c1",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 11,
+      "transfer": 11,
+      "cut": 11
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+    "title": "campaign command supports an explicit regular-quiz flow while preserving Personal Plan defaults",
+    "originalLine": 23,
+    "before": "7a4f712e1b75579fa1c933445dde520a5a532477aea2b16998250269ea8a6eff",
+    "transfer": "7a4f712e1b75579fa1c933445dde520a5a532477aea2b16998250269ea8a6eff",
+    "cut": "7a4f712e1b75579fa1c933445dde520a5a532477aea2b16998250269ea8a6eff",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 23,
+      "transfer": 23,
+      "cut": 23
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+    "title": "email-bound Personal Plan campaigns require a roster and use the 90-day duration",
+    "originalLine": 44,
+    "before": "a3b3efb2b13229765c8b8da31523447099c0af38498cf87b09b6af89d631ed54",
+    "transfer": "a3b3efb2b13229765c8b8da31523447099c0af38498cf87b09b6af89d631ed54",
+    "cut": "a3b3efb2b13229765c8b8da31523447099c0af38498cf87b09b6af89d631ed54",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 44,
+      "transfer": 44,
+      "cut": 44
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+    "title": "campaign writes require explicit apply, write gate, project confirmation, and matching URL",
+    "originalLine": 87,
+    "before": "7ad7f96221039ae012531c832819666d30210b5184930464518a6d0699afad94",
+    "transfer": "7ad7f96221039ae012531c832819666d30210b5184930464518a6d0699afad94",
+    "cut": "7ad7f96221039ae012531c832819666d30210b5184930464518a6d0699afad94",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 87,
+      "transfer": 87,
+      "cut": 87
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+    "title": "inspect and revoke require an exact campaign id argument",
+    "originalLine": 110,
+    "before": "010b7083d937d61553f38e7a0975205a09ae8a015775f0179487affb8781c2e2",
+    "transfer": "010b7083d937d61553f38e7a0975205a09ae8a015775f0179487affb8781c2e2",
+    "cut": "010b7083d937d61553f38e7a0975205a09ae8a015775f0179487affb8781c2e2",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 110,
+      "transfer": 110,
+      "cut": 110
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+    "title": "regular-quiz creation writes its flow kind and emits only the regular quiz link",
+    "originalLine": 125,
+    "before": "3e05aa8fb9f7d309fa01f3a849309715077ee9423f0983918095783d290f8739",
+    "transfer": "3e05aa8fb9f7d309fa01f3a849309715077ee9423f0983918095783d290f8739",
+    "cut": "3e05aa8fb9f7d309fa01f3a849309715077ee9423f0983918095783d290f8739",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 125,
+      "transfer": 125,
+      "cut": 125
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+    "title": "email-bound creation atomically creates a pending exact-account roster through the dedicated RPC",
+    "originalLine": 157,
+    "before": "9ee4497d95ae5ce76e85e6f63e7ee915eb144c58f5f7712424d3169d9cd9017c",
+    "transfer": "9ee4497d95ae5ce76e85e6f63e7ee915eb144c58f5f7712424d3169d9cd9017c",
+    "cut": "9ee4497d95ae5ce76e85e6f63e7ee915eb144c58f5f7712424d3169d9cd9017c",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 157,
+      "transfer": 157,
+      "cut": 157
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+    "title": "regular-quiz revocation refuses a campaign from the Personal Plan flow",
+    "originalLine": 201,
+    "before": "73463f9d79e04232304b37b9d8d3a375166dfcd24f01e040803af7dff3b519a3",
+    "transfer": "73463f9d79e04232304b37b9d8d3a375166dfcd24f01e040803af7dff3b519a3",
+    "cut": "73463f9d79e04232304b37b9d8d3a375166dfcd24f01e040803af7dff3b519a3",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 201,
+      "transfer": 201,
+      "cut": 201
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-entry-route.test.ts",
+    "title": "valid bearer token is exchanged for signed HttpOnly cookies and a clean quiz URL",
+    "originalLine": 12,
+    "before": "b14d2ef1b8abda876b0e1e45aeebb0a38e711c70b878df8b8d6572eee8cae63f",
+    "transfer": "b14d2ef1b8abda876b0e1e45aeebb0a38e711c70b878df8b8d6572eee8cae63f",
+    "cut": "b14d2ef1b8abda876b0e1e45aeebb0a38e711c70b878df8b8d6572eee8cae63f",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 12,
+      "transfer": 12,
+      "cut": 12
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-entry-route.test.ts",
+    "title": "unavailable token fails before issuing any campaign or funnel cookie",
+    "originalLine": 47,
+    "before": "dc7694a841c0d303dd51207039150a19287dc36fefcaf1f94b0bf6c4a56c5555",
+    "transfer": "dc7694a841c0d303dd51207039150a19287dc36fefcaf1f94b0bf6c4a56c5555",
+    "cut": "dc7694a841c0d303dd51207039150a19287dc36fefcaf1f94b0bf6c4a56c5555",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 47,
+      "transfer": 47,
+      "cut": 47
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-entry-route.test.ts",
+    "title": "email-bound token only routes to account authentication without issuing guest credentials",
+    "originalLine": 62,
+    "before": "879f3d52963bfbd8db6f6b627b6dac72d05f26be494d64c85120eb920721ccfc",
+    "transfer": "879f3d52963bfbd8db6f6b627b6dac72d05f26be494d64c85120eb920721ccfc",
+    "cut": "879f3d52963bfbd8db6f6b627b6dac72d05f26be494d64c85120eb920721ccfc",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 62,
+      "transfer": 62,
+      "cut": 62
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-entry-route.test.ts",
+    "title": "activation reaches its signed route checks before any auth or subscription gate",
+    "originalLine": 89,
+    "before": "1711c33b008bf5f91fdcd7036e9384984f5fea50c407ac9b7fc2585f39d2fd8e",
+    "transfer": "1711c33b008bf5f91fdcd7036e9384984f5fea50c407ac9b7fc2585f39d2fd8e",
+    "cut": "1711c33b008bf5f91fdcd7036e9384984f5fea50c407ac9b7fc2585f39d2fd8e",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 89,
+      "transfer": 89,
+      "cut": 89
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-entry-route.test.ts",
+    "title": "organic moderator activation reaches its account checks before the subscription gate",
+    "originalLine": 103,
+    "before": "82a6f7f03baa12a23d2b420c6b2d3ed0bb9e8f0a9fc003a5d55e5d49debddf00",
+    "transfer": "82a6f7f03baa12a23d2b420c6b2d3ed0bb9e8f0a9fc003a5d55e5d49debddf00",
+    "cut": "82a6f7f03baa12a23d2b420c6b2d3ed0bb9e8f0a9fc003a5d55e5d49debddf00",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 103,
+      "transfer": 103,
+      "cut": 103
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-entry-route.test.ts",
+    "title": "authenticated active moderator invite return opens the saved plan instead of a fresh quiz prompt",
+    "originalLine": 140,
+    "before": "949a7a207dc36da00f8f7c735f1d44614bb4c901c6a44ee346412867b6a31562",
+    "transfer": "949a7a207dc36da00f8f7c735f1d44614bb4c901c6a44ee346412867b6a31562",
+    "cut": "949a7a207dc36da00f8f7c735f1d44614bb4c901c6a44ee346412867b6a31562",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 140,
+      "transfer": 140,
+      "cut": 140
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-entry-route.test.ts",
+    "title": "authenticated ready moderator invite still renders the fresh quiz start UI",
+    "originalLine": 175,
+    "before": "9696b3062b4a8336b2baafb202ba48483beda8a4b4430bf1107e07aff2737d54",
+    "transfer": "9696b3062b4a8336b2baafb202ba48483beda8a4b4430bf1107e07aff2737d54",
+    "cut": "9696b3062b4a8336b2baafb202ba48483beda8a4b4430bf1107e07aff2737d54",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 175,
+      "transfer": 175,
+      "cut": 175
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-entry-route.test.ts",
+    "title": "authenticated ended moderator invite returns the existing ended state",
+    "originalLine": 208,
+    "before": "fbb6973a2a9e4e5298a65cb03fd2fcc6093334ff63a8f74e28d98e8b273b0ea1",
+    "transfer": "fbb6973a2a9e4e5298a65cb03fd2fcc6093334ff63a8f74e28d98e8b273b0ea1",
+    "cut": "fbb6973a2a9e4e5298a65cb03fd2fcc6093334ff63a8f74e28d98e8b273b0ea1",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 208,
+      "transfer": 208,
+      "cut": 208
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-routing-migration.test.ts",
+    "title": "routing RPC exposes both exact field-test enrollment kinds without weakening paid provenance",
+    "originalLine": 10,
+    "before": "c6427cad98bf1fca59ee098fd22fd0f30a0cb9a6e90f5f205a5470e6b10b16fd",
+    "transfer": "c6427cad98bf1fca59ee098fd22fd0f30a0cb9a6e90f5f205a5470e6b10b16fd",
+    "cut": "c6427cad98bf1fca59ee098fd22fd0f30a0cb9a6e90f5f205a5470e6b10b16fd",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 10,
+      "transfer": 10,
+      "cut": 10
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-routing-migration.test.ts",
+    "title": "routing RPC remains owner-scoped and exposes only its authenticated wrapper",
+    "originalLine": 29,
+    "before": "54dd70941d0c50fd1dfd9353a141e703d53baed00b07d2d6476cfb5de2456c55",
+    "transfer": "54dd70941d0c50fd1dfd9353a141e703d53baed00b07d2d6476cfb5de2456c55",
+    "cut": "54dd70941d0c50fd1dfd9353a141e703d53baed00b07d2d6476cfb5de2456c55",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 29,
+      "transfer": 29,
+      "cut": 29
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-schema.test.ts",
+    "title": "field-test schema is service-only and stores campaign credentials only as hashes",
+    "originalLine": 16,
+    "before": "8a6e5dab21c2db6fb80d31d31de1093f755b9b59092f960aa274a6ffb6de0f0e",
+    "transfer": "8a6e5dab21c2db6fb80d31d31de1093f755b9b59092f960aa274a6ffb6de0f0e",
+    "cut": "8a6e5dab21c2db6fb80d31d31de1093f755b9b59092f960aa274a6ffb6de0f0e",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 16,
+      "transfer": 16,
+      "cut": 16
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-schema.test.ts",
+    "title": "field-test enrollments bind the exact campaign, funnel, lead, guest, grant, and artifact",
+    "originalLine": 46,
+    "before": "51a6a86e3ecd3826a57b1a74226b9a69914df6b5f1a9216f4ba3e8493652615d",
+    "transfer": "51a6a86e3ecd3826a57b1a74226b9a69914df6b5f1a9216f4ba3e8493652615d",
+    "cut": "51a6a86e3ecd3826a57b1a74226b9a69914df6b5f1a9216f4ba3e8493652615d",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 46,
+      "transfer": 46,
+      "cut": 46
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-schema.test.ts",
+    "title": "activation is a locked, private, service-role-only transaction with exact field-test correlations",
+    "originalLine": 90,
+    "before": "c1a9077dc4fe8fbe7f2c31a39b7e2c235ebfc7c1a365dbf3d237be5297040f58",
+    "transfer": "c1a9077dc4fe8fbe7f2c31a39b7e2c235ebfc7c1a365dbf3d237be5297040f58",
+    "cut": "c1a9077dc4fe8fbe7f2c31a39b7e2c235ebfc7c1a365dbf3d237be5297040f58",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 90,
+      "transfer": 90,
+      "cut": 90
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-schema.test.ts",
+    "title": "campaign revocation atomically ends enrollments and their tester grants",
+    "originalLine": 165,
+    "before": "ccd9da426d34b7069a24fd46b3b58d87783c69a7d4038cbb216d3719659df126",
+    "transfer": "ccd9da426d34b7069a24fd46b3b58d87783c69a7d4038cbb216d3719659df126",
+    "cut": "ccd9da426d34b7069a24fd46b3b58d87783c69a7d4038cbb216d3719659df126",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 165,
+      "transfer": 165,
+      "cut": 165
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "title": "campaign token lookup stores and compares only the SHA-256 hash",
+    "originalLine": 34,
+    "before": "5ff515e40cd473e347031450299873d9094ad166953bd02fc632a188047243ac",
+    "transfer": "5ff515e40cd473e347031450299873d9094ad166953bd02fc632a188047243ac",
+    "cut": "5ff515e40cd473e347031450299873d9094ad166953bd02fc632a188047243ac",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 34,
+      "transfer": 34,
+      "cut": 34
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "title": "an authenticated field guest may retry only the exact campaign, session, lead, and user",
+    "originalLine": 56,
+    "before": "982d88eaf6b924456fa41afba830d7d1c535462696743830a48e4d0bc26b7ffb",
+    "transfer": "982d88eaf6b924456fa41afba830d7d1c535462696743830a48e4d0bc26b7ffb",
+    "cut": "982d88eaf6b924456fa41afba830d7d1c535462696743830a48e4d0bc26b7ffb",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 56,
+      "transfer": 56,
+      "cut": 56
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "title": "campaign cookie is revalidated against current database lifecycle and capacity",
+    "originalLine": 82,
+    "before": "0c64c73313d23f15c4d26acb2fe72d4dd73fb2260f40393ac98d2c96e4fec9f3",
+    "transfer": "0c64c73313d23f15c4d26acb2fe72d4dd73fb2260f40393ac98d2c96e4fec9f3",
+    "cut": "0c64c73313d23f15c4d26acb2fe72d4dd73fb2260f40393ac98d2c96e4fec9f3",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 82,
+      "transfer": 82,
+      "cut": 82
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "title": "offer authorization requires the exact signed campaign, session, and lead",
+    "originalLine": 109,
+    "before": "6629df7bb83e4204f72972a918a173f71b346d2531a689af80a1b02b70ddd93c",
+    "transfer": "6629df7bb83e4204f72972a918a173f71b346d2531a689af80a1b02b70ddd93c",
+    "cut": "6629df7bb83e4204f72972a918a173f71b346d2531a689af80a1b02b70ddd93c",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 109,
+      "transfer": 109,
+      "cut": 109
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "title": "persisted field-test offer intent survives campaign authorization loss",
+    "originalLine": 157,
+    "before": "5e8d0e046ed28b3c427fee8797dc1a53b9e84921b9adcaad587273fc380ab6c2",
+    "transfer": "5e8d0e046ed28b3c427fee8797dc1a53b9e84921b9adcaad587273fc380ab6c2",
+    "cut": "5e8d0e046ed28b3c427fee8797dc1a53b9e84921b9adcaad587273fc380ab6c2",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 157,
+      "transfer": 157,
+      "cut": 157
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "title": "missing pre-migration field-test columns do not break ordinary paid results",
+    "originalLine": 182,
+    "before": "8195654ec6d2ab1adcb15e3ac451f4ca8e57b2a4d80b94d0917209bc4477680c",
+    "transfer": "8195654ec6d2ab1adcb15e3ac451f4ca8e57b2a4d80b94d0917209bc4477680c",
+    "cut": "8195654ec6d2ab1adcb15e3ac451f4ca8e57b2a4d80b94d0917209bc4477680c",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 182,
+      "transfer": 182,
+      "cut": 182
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "title": "unexpected persisted-intent lookup failures remain non-commercial",
+    "originalLine": 200,
+    "before": "4af2d536aaa669f1774d3444856f5ca856bf3f6b329bfc4e9ea3a1c0d2eed513",
+    "transfer": "4af2d536aaa669f1774d3444856f5ca856bf3f6b329bfc4e9ea3a1c0d2eed513",
+    "cut": "4af2d536aaa669f1774d3444856f5ca856bf3f6b329bfc4e9ea3a1c0d2eed513",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 200,
+      "transfer": 200,
+      "cut": 200
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "title": "lead binding uses only server-resolved campaign and funnel context",
+    "originalLine": 214,
+    "before": "2ef1a395b809a839ef19cf391efc218f3a9cc4f01cba5b097c06bffd05ce3f2c",
+    "transfer": "2ef1a395b809a839ef19cf391efc218f3a9cc4f01cba5b097c06bffd05ce3f2c",
+    "cut": "2ef1a395b809a839ef19cf391efc218f3a9cc4f01cba5b097c06bffd05ce3f2c",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 214,
+      "transfer": 214,
+      "cut": 214
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "title": "unknown campaign identity modes never fall back to guest",
+    "originalLine": 259,
+    "before": "b441d833b66cb81f0d76405ad0ed6f010ad1d97962ce21f4d82a556ad363a5d6",
+    "transfer": "b441d833b66cb81f0d76405ad0ed6f010ad1d97962ce21f4d82a556ad363a5d6",
+    "cut": "b441d833b66cb81f0d76405ad0ed6f010ad1d97962ce21f4d82a556ad363a5d6",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 259,
+      "transfer": 259,
+      "cut": 259
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "title": "spent email-bound token can still reach account resolution without granting a new seat",
+    "originalLine": 267,
+    "before": "2708987a6ead9a14637631224ee8594acc91dc37e351779ba8614c4214441a05",
+    "transfer": "2708987a6ead9a14637631224ee8594acc91dc37e351779ba8614c4214441a05",
+    "cut": "2708987a6ead9a14637631224ee8594acc91dc37e351779ba8614c4214441a05",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 267,
+      "transfer": 267,
+      "cut": 267
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "title": "guest offer authorization cannot consume an email-bound campaign",
+    "originalLine": 282,
+    "before": "f995bd44f20c827ffd29f14cfd42a0c3c19f5b02f55c8041b7298a5fae6eedce",
+    "transfer": "f995bd44f20c827ffd29f14cfd42a0c3c19f5b02f55c8041b7298a5fae6eedce",
+    "cut": "f995bd44f20c827ffd29f14cfd42a0c3c19f5b02f55c8041b7298a5fae6eedce",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 282,
+      "transfer": 282,
+      "cut": 282
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "title": "organic moderator offer authorization requires the exact email-bound organic campaign, session, and lead",
+    "originalLine": 314,
+    "before": "8affc45f5d537b0a8acb21fd60f1ce2340716e561ec5eeb0e088f5f70be1c45f",
+    "transfer": "8affc45f5d537b0a8acb21fd60f1ce2340716e561ec5eeb0e088f5f70be1c45f",
+    "cut": "8affc45f5d537b0a8acb21fd60f1ce2340716e561ec5eeb0e088f5f70be1c45f",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 314,
+      "transfer": 314,
+      "cut": 314
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-ui.test.tsx",
+    "title": "field-test quiz presents the approved persistent German banner",
+    "originalLine": 20,
+    "before": "6538d549d3edcacd53650abfd26a8632a6569f9c4b9efa639e49e4cbf61b3e86",
+    "transfer": "6538d549d3edcacd53650abfd26a8632a6569f9c4b9efa639e49e4cbf61b3e86",
+    "cut": "6538d549d3edcacd53650abfd26a8632a6569f9c4b9efa639e49e4cbf61b3e86",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 20,
+      "transfer": 20,
+      "cut": 19
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-ui.test.tsx",
+    "title": "field-test offer replaces all payment presentation with the free activation card",
+    "originalLine": 27,
+    "before": "043e802f094aa3fa245f01c4afa03c65c0f54be5c2a2da8dd974ad9bcaaafb3b",
+    "transfer": "043e802f094aa3fa245f01c4afa03c65c0f54be5c2a2da8dd974ad9bcaaafb3b",
+    "cut": "043e802f094aa3fa245f01c4afa03c65c0f54be5c2a2da8dd974ad9bcaaafb3b",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 27,
+      "transfer": 27,
+      "cut": 26
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-ui.test.tsx",
+    "title": "lost field-test authorization renders a dedicated non-commercial end state",
+    "originalLine": 76,
+    "before": "7ce3f9fd4409b403f50969d90052925850cde91ca62acba0ec9bf8c1c47eef20",
+    "transfer": "cfcc50f02f0240723d1c165b428036a6d1f32d25d7e52a5c2b770aafd38a91c0",
+    "cut": "cfcc50f02f0240723d1c165b428036a6d1f32d25d7e52a5c2b770aafd38a91c0",
+    "role": "keeper",
+    "phaseLines": {
+      "before": 76,
+      "transfer": 76,
+      "cut": 75
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-ui.test.tsx",
+    "title": "dedicated field-test end surface stays concise and payment-free",
+    "originalLine": 95,
+    "before": "610cb419acae6d41de5878ffd3936b85514f1d65daa976d1b4cac83abc66f0d4",
+    "transfer": "610cb419acae6d41de5878ffd3936b85514f1d65daa976d1b4cac83abc66f0d4",
+    "cut": null,
+    "role": "donor",
+    "phaseLines": {
+      "before": 95,
+      "transfer": 97,
+      "cut": null
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-ui.test.tsx",
+    "title": "field-test lead binding must succeed before the quiz can open a result",
+    "originalLine": 101,
+    "before": "099b14c89bac06dd6199e55a66db2bb26e7aca2e254aeee18546af28d679644f",
+    "transfer": "099b14c89bac06dd6199e55a66db2bb26e7aca2e254aeee18546af28d679644f",
+    "cut": "099b14c89bac06dd6199e55a66db2bb26e7aca2e254aeee18546af28d679644f",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 101,
+      "transfer": 103,
+      "cut": 96
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-ui.test.tsx",
+    "title": "result routing preserves persisted field-test intent after authorization loss",
+    "originalLine": 112,
+    "before": "677407e6c5c2dbfdbba151fa73166d51fd8785dc42d59773147a3281705aac12",
+    "transfer": "677407e6c5c2dbfdbba151fa73166d51fd8785dc42d59773147a3281705aac12",
+    "cut": "677407e6c5c2dbfdbba151fa73166d51fd8785dc42d59773147a3281705aac12",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 112,
+      "transfer": 114,
+      "cut": 107
+    }
+  },
+  {
+    "file": "tests/personal-plan-field-test-ui.test.tsx",
+    "title": "moderator offer promises account return and ninety days without guest-browser limits",
+    "originalLine": 121,
+    "before": "17b439eb1e97f9e2e5b67c2d99b330e4bdb9e0a4da64359a7e47683b676e3a36",
+    "transfer": "17b439eb1e97f9e2e5b67c2d99b330e4bdb9e0a4da64359a7e47683b676e3a36",
+    "cut": "17b439eb1e97f9e2e5b67c2d99b330e4bdb9e0a4da64359a7e47683b676e3a36",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 121,
+      "transfer": 123,
+      "cut": 116
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-activation-route.test.ts",
+    "title": "moderator activation requires an authenticated verified intent before allowing email-bound offer activation",
+    "originalLine": 86,
+    "before": "5f6511d86ce2861b63bcdee2cf43ee49880daa177b01c2f0bdcf37dc27c32a58",
+    "transfer": "5f6511d86ce2861b63bcdee2cf43ee49880daa177b01c2f0bdcf37dc27c32a58",
+    "cut": "5f6511d86ce2861b63bcdee2cf43ee49880daa177b01c2f0bdcf37dc27c32a58",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 86,
+      "transfer": 86,
+      "cut": 86
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-activation-route.test.ts",
+    "title": "moderator activation never creates a guest and fails closed for wrong or missing accounts",
+    "originalLine": 120,
+    "before": "a21be42b7a950530458ef8a2dee9ac0bd374de177ee176b98174a02b9ad616d9",
+    "transfer": "a21be42b7a950530458ef8a2dee9ac0bd374de177ee176b98174a02b9ad616d9",
+    "cut": "a21be42b7a950530458ef8a2dee9ac0bd374de177ee176b98174a02b9ad616d9",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 120,
+      "transfer": 120,
+      "cut": 120
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-activation-route.test.ts",
+    "title": "moderator activation replay for an active member does not depend on campaign admission capacity",
+    "originalLine": 136,
+    "before": "d7a00dc1d0cce536b57f03d4991f02637c07aafa5fac2acfd12be441cf7c235f",
+    "transfer": "d7a00dc1d0cce536b57f03d4991f02637c07aafa5fac2acfd12be441cf7c235f",
+    "cut": "d7a00dc1d0cce536b57f03d4991f02637c07aafa5fac2acfd12be441cf7c235f",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 136,
+      "transfer": 136,
+      "cut": 136
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-activation-route.test.ts",
+    "title": "moderator activation rejects cross-origin posts before touching auth or activation",
+    "originalLine": 177,
+    "before": "3069a25696606a541358e9501ee7b1f164e779008234fdb3c2dcb70d89c942fb",
+    "transfer": "3069a25696606a541358e9501ee7b1f164e779008234fdb3c2dcb70d89c942fb",
+    "cut": "3069a25696606a541358e9501ee7b1f164e779008234fdb3c2dcb70d89c942fb",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 177,
+      "transfer": 177,
+      "cut": 177
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-activation-route.test.ts",
+    "title": "moderator activation returns controlled unavailable JSON when auth lookup fails",
+    "originalLine": 198,
+    "before": "25e4e140d5d04d4d685396db619e87671c7362c9adb71ad6040abf8f2bab6aa0",
+    "transfer": "25e4e140d5d04d4d685396db619e87671c7362c9adb71ad6040abf8f2bab6aa0",
+    "cut": "25e4e140d5d04d4d685396db619e87671c7362c9adb71ad6040abf8f2bab6aa0",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 198,
+      "transfer": 198,
+      "cut": 198
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-activation-route.test.ts",
+    "title": "moderator activation distinguishes an absent session from an Auth outage",
+    "originalLine": 215,
+    "before": "3b00286ecf210dd770e5a764e6dfd8cb7aa376df941941cf8b11926dfcdfbe50",
+    "transfer": "3b00286ecf210dd770e5a764e6dfd8cb7aa376df941941cf8b11926dfcdfbe50",
+    "cut": "3b00286ecf210dd770e5a764e6dfd8cb7aa376df941941cf8b11926dfcdfbe50",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 215,
+      "transfer": 215,
+      "cut": 215
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-activation-route.test.ts",
+    "title": "organic moderator activation uses the owned legacy result and never the Meta package",
+    "originalLine": 223,
+    "before": "d08099c46aefaeaa96730f1554e0e1ab4ddf8eda9fd38635b9bf2909114ac684",
+    "transfer": "d08099c46aefaeaa96730f1554e0e1ab4ddf8eda9fd38635b9bf2909114ac684",
+    "cut": "d08099c46aefaeaa96730f1554e0e1ab4ddf8eda9fd38635b9bf2909114ac684",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 223,
+      "transfer": 223,
+      "cut": 223
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-contract.test.ts",
+    "title": "moderator member resolver returns ready only for the exact confirmed roster email",
+    "originalLine": 108,
+    "before": "f2762c16bb51e4063eb72690384b3d15e84ed9e6378835ebfdb2b3f26eea48a7",
+    "transfer": "f2762c16bb51e4063eb72690384b3d15e84ed9e6378835ebfdb2b3f26eea48a7",
+    "cut": "f2762c16bb51e4063eb72690384b3d15e84ed9e6378835ebfdb2b3f26eea48a7",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 108,
+      "transfer": 108,
+      "cut": 108
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-contract.test.ts",
+    "title": "moderator access resolves active, expired, and none without guest app metadata",
+    "originalLine": 153,
+    "before": "afa24e72a5be32430586a85ed586d4d9709c071f980fae7412d20929f395bc07",
+    "transfer": "afa24e72a5be32430586a85ed586d4d9709c071f980fae7412d20929f395bc07",
+    "cut": "afa24e72a5be32430586a85ed586d4d9709c071f980fae7412d20929f395bc07",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 153,
+      "transfer": 153,
+      "cut": 153
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-contract.test.ts",
+    "title": "moderator access treats pre-migration missing roster as none and mismatched enrollment as ended",
+    "originalLine": 200,
+    "before": "31aa45e66ca58b1f6ccd0f1b3ad39318605325e3cd65b5903783fdf5aa53bd58",
+    "transfer": "31aa45e66ca58b1f6ccd0f1b3ad39318605325e3cd65b5903783fdf5aa53bd58",
+    "cut": "31aa45e66ca58b1f6ccd0f1b3ad39318605325e3cd65b5903783fdf5aa53bd58",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 200,
+      "transfer": 200,
+      "cut": 200
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-contract.test.ts",
+    "title": "moderator intent is signed to one user, funnel, and optional lead",
+    "originalLine": 250,
+    "before": "fb16dcc0f7e8bbac7660477ce31831abbdd69fcd8c3491bc8febc2a026485d4a",
+    "transfer": "fb16dcc0f7e8bbac7660477ce31831abbdd69fcd8c3491bc8febc2a026485d4a",
+    "cut": "fb16dcc0f7e8bbac7660477ce31831abbdd69fcd8c3491bc8febc2a026485d4a",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 250,
+      "transfer": 250,
+      "cut": 250
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-contract.test.ts",
+    "title": "an expired invitation for a ready member is ended rather than the wrong account",
+    "originalLine": 303,
+    "before": "609d9f5ed4622cd93cd85259168f6aac31ec1ab66acb046c61bc40833634e44a",
+    "transfer": "609d9f5ed4622cd93cd85259168f6aac31ec1ab66acb046c61bc40833634e44a",
+    "cut": "609d9f5ed4622cd93cd85259168f6aac31ec1ab66acb046c61bc40833634e44a",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 303,
+      "transfer": 303,
+      "cut": 303
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-contract.test.ts",
+    "title": "moderator intent accepts the organic quiz for the same roster account but rejects other packages",
+    "originalLine": 318,
+    "before": "3e17960a1f1012e8afd663e81baee18c35b4787ac4d46d06c4a5146abe817eae",
+    "transfer": "3e17960a1f1012e8afd663e81baee18c35b4787ac4d46d06c4a5146abe817eae",
+    "cut": "3e17960a1f1012e8afd663e81baee18c35b4787ac4d46d06c4a5146abe817eae",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 318,
+      "transfer": 318,
+      "cut": 318
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-contract.test.ts",
+    "title": "organic RPC adapters send confirmed ownership and accept artifact-free activation",
+    "originalLine": 344,
+    "before": "91affaee247b4642cdb42ea11c473a9ce5af5b9c79a79e34008a62f19b54ae22",
+    "transfer": "91affaee247b4642cdb42ea11c473a9ce5af5b9c79a79e34008a62f19b54ae22",
+    "cut": "91affaee247b4642cdb42ea11c473a9ce5af5b9c79a79e34008a62f19b54ae22",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 344,
+      "transfer": 344,
+      "cut": 344
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-journey.test.ts",
+    "title": "moderator journey authorizes only verified account and passes exact result ownership to intent verification",
+    "originalLine": 51,
+    "before": "740a38c5ad426387c574f67d5a511cd144a3cd82a287d30d8ed5079b23b1a677",
+    "transfer": "740a38c5ad426387c574f67d5a511cd144a3cd82a287d30d8ed5079b23b1a677",
+    "cut": "740a38c5ad426387c574f67d5a511cd144a3cd82a287d30d8ed5079b23b1a677",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 51,
+      "transfer": 51,
+      "cut": 51
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-journey.test.ts",
+    "title": "missing credentials or account proof cannot downgrade a persisted moderator funnel to commercial",
+    "originalLine": 75,
+    "before": "2f1b0d83966ad91ca174417d739cb322a4244050ea79e6b695117544c8077cbf",
+    "transfer": "2f1b0d83966ad91ca174417d739cb322a4244050ea79e6b695117544c8077cbf",
+    "cut": "2f1b0d83966ad91ca174417d739cb322a4244050ea79e6b695117544c8077cbf",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 75,
+      "transfer": 75,
+      "cut": 75
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-journey.test.ts",
+    "title": "moderator journey treats database and authentication failures as unavailable",
+    "originalLine": 118,
+    "before": "6a6f20d71b3c1ed8fc2025f83743897893359b6238b464f9c5b160f4994f9b46",
+    "transfer": "6a6f20d71b3c1ed8fc2025f83743897893359b6238b464f9c5b160f4994f9b46",
+    "cut": "6a6f20d71b3c1ed8fc2025f83743897893359b6238b464f9c5b160f4994f9b46",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 118,
+      "transfer": 118,
+      "cut": 118
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-journey.test.ts",
+    "title": "ordinary visitors and legacy guest funnels do not require account proof",
+    "originalLine": 142,
+    "before": "2408961cb682dfb5b4b4fd0edd985de2d9e5a680b791abc4a3f7391dc31ecb8c",
+    "transfer": "2408961cb682dfb5b4b4fd0edd985de2d9e5a680b791abc4a3f7391dc31ecb8c",
+    "cut": "2408961cb682dfb5b4b4fd0edd985de2d9e5a680b791abc4a3f7391dc31ecb8c",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 142,
+      "transfer": 142,
+      "cut": 142
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-journey.test.ts",
+    "title": "result ownership lookup does not treat database failure or disabled analytics as no moderator context",
+    "originalLine": 162,
+    "before": "2a51ff6b7f642c10dd2af472d57cefda7bb045dca459076d806dcb01900f395e",
+    "transfer": "2a51ff6b7f642c10dd2af472d57cefda7bb045dca459076d806dcb01900f395e",
+    "cut": "2a51ff6b7f642c10dd2af472d57cefda7bb045dca459076d806dcb01900f395e",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 162,
+      "transfer": 162,
+      "cut": 162
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-journey.test.ts",
+    "title": "result account classification survives missing funnel context and fails closed on read errors",
+    "originalLine": 202,
+    "before": "66febfa0f4a6c9047a86f63c95edbd2c75243c98e07075b58212ad59d549a18c",
+    "transfer": "66febfa0f4a6c9047a86f63c95edbd2c75243c98e07075b58212ad59d549a18c",
+    "cut": "66febfa0f4a6c9047a86f63c95edbd2c75243c98e07075b58212ad59d549a18c",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 202,
+      "transfer": 202,
+      "cut": 202
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-schema.test.ts",
+    "title": "moderator migration adds email-bound roster state without changing guest defaults",
+    "originalLine": 15,
+    "before": "504776245baf7a55b922458e27bf24a46a3ffed0a224912caa42ef3c5e204d8f",
+    "transfer": "504776245baf7a55b922458e27bf24a46a3ffed0a224912caa42ef3c5e204d8f",
+    "cut": "504776245baf7a55b922458e27bf24a46a3ffed0a224912caa42ef3c5e204d8f",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 15,
+      "transfer": 15,
+      "cut": 15
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-schema.test.ts",
+    "title": "moderator migration exposes service-only atomic roster and activation RPCs",
+    "originalLine": 41,
+    "before": "2c5e738a734ece805f8c6889f4a47231072bc4bacb3dc57ea40bce6a56622561",
+    "transfer": "2c5e738a734ece805f8c6889f4a47231072bc4bacb3dc57ea40bce6a56622561",
+    "cut": "2c5e738a734ece805f8c6889f4a47231072bc4bacb3dc57ea40bce6a56622561",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 41,
+      "transfer": 41,
+      "cut": 41
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-schema.test.ts",
+    "title": "moderator migration fences existing guest RPCs away from email-bound campaigns",
+    "originalLine": 92,
+    "before": "e1fb2f98d929d5c9617ba1ecc7a5ce3ca1cb036de4d174584f09cd9cd2e2a1c2",
+    "transfer": "e1fb2f98d929d5c9617ba1ecc7a5ce3ca1cb036de4d174584f09cd9cd2e2a1c2",
+    "cut": "e1fb2f98d929d5c9617ba1ecc7a5ce3ca1cb036de4d174584f09cd9cd2e2a1c2",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 92,
+      "transfer": 92,
+      "cut": 92
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+    "title": "moderator campaign creation is atomic and rolls back duplicate roster inserts",
+    "originalLine": 32,
+    "before": "dcf54d22cf96a1973556d0d46e855aa638308768b3bb958e46afcdd6b11c6eff",
+    "transfer": "dcf54d22cf96a1973556d0d46e855aa638308768b3bb958e46afcdd6b11c6eff",
+    "cut": "dcf54d22cf96a1973556d0d46e855aa638308768b3bb958e46afcdd6b11c6eff",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 32,
+      "transfer": 32,
+      "cut": 32
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+    "title": "moderator save and activation are replay-safe with stable expiry",
+    "originalLine": 124,
+    "before": "061948201641315fe309061a21fca71b31f22e32109b365836b143f2546004f3",
+    "transfer": "061948201641315fe309061a21fca71b31f22e32109b365836b143f2546004f3",
+    "cut": "061948201641315fe309061a21fca71b31f22e32109b365836b143f2546004f3",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 124,
+      "transfer": 124,
+      "cut": 124
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+    "title": "organic moderator save owns a legacy lead before any Customer.io outbox can dispatch",
+    "originalLine": 215,
+    "before": "4ebbc98023668cd3acfa10a6b3da5e377cfb0354a7904d9025f5a03fd6082552",
+    "transfer": "4ebbc98023668cd3acfa10a6b3da5e377cfb0354a7904d9025f5a03fd6082552",
+    "cut": "4ebbc98023668cd3acfa10a6b3da5e377cfb0354a7904d9025f5a03fd6082552",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 215,
+      "transfer": 215,
+      "cut": 215
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+    "title": "organic moderator activation writes a legacy enrollment and routing source without an artifact",
+    "originalLine": 305,
+    "before": "5f7c3e1dc80baaf01dcc2caade5d0c7a59484f8518cab4b902f571dfcb35ce01",
+    "transfer": "5f7c3e1dc80baaf01dcc2caade5d0c7a59484f8518cab4b902f571dfcb35ce01",
+    "cut": "5f7c3e1dc80baaf01dcc2caade5d0c7a59484f8518cab4b902f571dfcb35ce01",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 305,
+      "transfer": 305,
+      "cut": 305
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+    "title": "personal-plan test enrollment source shape rejects mixed artifact contracts",
+    "originalLine": 392,
+    "before": "1e1ba5102f9206aedb86995590e24e62b61abc9045f9ca5b1d3bc41cfea3beb5",
+    "transfer": "1e1ba5102f9206aedb86995590e24e62b61abc9045f9ca5b1d3bc41cfea3beb5",
+    "cut": "1e1ba5102f9206aedb86995590e24e62b61abc9045f9ca5b1d3bc41cfea3beb5",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 392,
+      "transfer": 392,
+      "cut": 392
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+    "title": "guest RPCs reject moderator campaigns while guest wrapper remains non-recursive",
+    "originalLine": 439,
+    "before": "f2afde6912be26dd096ffa9c9f7846d9b7513de8fd14fcfd9f28913e8f42c44b",
+    "transfer": "f2afde6912be26dd096ffa9c9f7846d9b7513de8fd14fcfd9f28913e8f42c44b",
+    "cut": "f2afde6912be26dd096ffa9c9f7846d9b7513de8fd14fcfd9f28913e8f42c44b",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 439,
+      "transfer": 439,
+      "cut": 439
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+    "title": "repreparing a moderator quiz must not leave the previous result without account context",
+    "originalLine": 891,
+    "before": "75a2675138ca10051df2724b639d8ab936f7e7d70949c6665c2543c0110b8165",
+    "transfer": "75a2675138ca10051df2724b639d8ab936f7e7d70949c6665c2543c0110b8165",
+    "cut": "75a2675138ca10051df2724b639d8ab936f7e7d70949c6665c2543c0110b8165",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 891,
+      "transfer": 891,
+      "cut": 891
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+    "title": "campaign revocation includes moderator membership and rolls back all rows on failure",
+    "originalLine": 922,
+    "before": "87046567151d6db5190519632768b5249a6cb8b54d78a13cbf5c80adc9850619",
+    "transfer": "87046567151d6db5190519632768b5249a6cb8b54d78a13cbf5c80adc9850619",
+    "cut": "87046567151d6db5190519632768b5249a6cb8b54d78a13cbf5c80adc9850619",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 922,
+      "transfer": 922,
+      "cut": 922
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-start-route.test.ts",
+    "title": "authenticated exact roster member gets a signed moderator intent and organic quiz destination",
+    "originalLine": 33,
+    "before": "6823ab4386f395c86fe180c3506f100bc765d9267e9f48b386d6ba66caaecf98",
+    "transfer": "6823ab4386f395c86fe180c3506f100bc765d9267e9f48b386d6ba66caaecf98",
+    "cut": "6823ab4386f395c86fe180c3506f100bc765d9267e9f48b386d6ba66caaecf98",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 33,
+      "transfer": 33,
+      "cut": 33
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-start-route.test.ts",
+    "title": "a valid ready organic intent reuses its session without creating or clearing a new start",
+    "originalLine": 87,
+    "before": "ddb0a2adccc0ab529276d45f38edc3211490a5c053924c23cdbb5d5a65331dfc",
+    "transfer": "ddb0a2adccc0ab529276d45f38edc3211490a5c053924c23cdbb5d5a65331dfc",
+    "cut": "ddb0a2adccc0ab529276d45f38edc3211490a5c053924c23cdbb5d5a65331dfc",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 87,
+      "transfer": 87,
+      "cut": 87
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-start-route.test.ts",
+    "title": "moderator start persists a schema-complete canonical organic funnel row",
+    "originalLine": 138,
+    "before": "8da9a5c41b982c2fe192a2f375de69ab0687bddd12fc5f21a7f7352ccc1983ad",
+    "transfer": "8da9a5c41b982c2fe192a2f375de69ab0687bddd12fc5f21a7f7352ccc1983ad",
+    "cut": "8da9a5c41b982c2fe192a2f375de69ab0687bddd12fc5f21a7f7352ccc1983ad",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 138,
+      "transfer": 138,
+      "cut": 138
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-start-route.test.ts",
+    "title": "wrong accounts and cross-origin requests never create a funnel or intent",
+    "originalLine": 177,
+    "before": "01024a3f2f0b10eea685073729280426b22d6944a525eb46d72b3405ff614069",
+    "transfer": "01024a3f2f0b10eea685073729280426b22d6944a525eb46d72b3405ff614069",
+    "cut": "01024a3f2f0b10eea685073729280426b22d6944a525eb46d72b3405ff614069",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 177,
+      "transfer": 177,
+      "cut": 177
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-start-route.test.ts",
+    "title": "missing signing configuration fails before creating a funnel row",
+    "originalLine": 195,
+    "before": "6e7b4e325ecf28ec7e5dd8adcf76912ce38d318ab54b9bd3b468f5d3a61b363e",
+    "transfer": "6e7b4e325ecf28ec7e5dd8adcf76912ce38d318ab54b9bd3b468f5d3a61b363e",
+    "cut": "6e7b4e325ecf28ec7e5dd8adcf76912ce38d318ab54b9bd3b468f5d3a61b363e",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 195,
+      "transfer": 195,
+      "cut": 195
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-start-route.test.ts",
+    "title": "rollout-off stops new ready members before a funnel row is created",
+    "originalLine": 215,
+    "before": "65b62b28a133b17eca0b311c2fca5b45994a3150533381f1f9199c7acbe1c4a1",
+    "transfer": "65b62b28a133b17eca0b311c2fca5b45994a3150533381f1f9199c7acbe1c4a1",
+    "cut": "65b62b28a133b17eca0b311c2fca5b45994a3150533381f1f9199c7acbe1c4a1",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 215,
+      "transfer": 215,
+      "cut": 215
+    }
+  },
+  {
+    "file": "tests/personal-plan-moderator-start-route.test.ts",
+    "title": "rollout-off preserves return routing for an already active moderator",
+    "originalLine": 232,
+    "before": "c7206ab90535ab906a844ea2cea18272ce254ad89c5b6cabef1e597ccf9cce48",
+    "transfer": "c7206ab90535ab906a844ea2cea18272ce254ad89c5b6cabef1e597ccf9cce48",
+    "cut": "c7206ab90535ab906a844ea2cea18272ce254ad89c5b6cabef1e597ccf9cce48",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 232,
+      "transfer": 232,
+      "cut": 232
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-activation-route.test.ts",
+    "title": "regular activation fails closed while the global field-test switch is disabled",
+    "originalLine": 42,
+    "before": "a4e77f0a17bbadf919fb59bfb63b68409ae73c1544fce2aaf27844f99344d431",
+    "transfer": "a4e77f0a17bbadf919fb59bfb63b68409ae73c1544fce2aaf27844f99344d431",
+    "cut": "a4e77f0a17bbadf919fb59bfb63b68409ae73c1544fce2aaf27844f99344d431",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 42,
+      "transfer": 42,
+      "cut": 42
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-activation-route.test.ts",
+    "title": "regular activation establishes a recoverable guest before atomic ownership and projection",
+    "originalLine": 58,
+    "before": "4b67c2c59b41fe6da5564dadd1c53750dda6582287b4139894e274696366150f",
+    "transfer": "4b67c2c59b41fe6da5564dadd1c53750dda6582287b4139894e274696366150f",
+    "cut": "4b67c2c59b41fe6da5564dadd1c53750dda6582287b4139894e274696366150f",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 58,
+      "transfer": 58,
+      "cut": 58
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-activation-route.test.ts",
+    "title": "regular activation rejects an existing customer before guest or access writes",
+    "originalLine": 101,
+    "before": "89788ab8c4e7ee525c86b3b0977c3533cb1efc09297d3511a1b53c16c02a096f",
+    "transfer": "89788ab8c4e7ee525c86b3b0977c3533cb1efc09297d3511a1b53c16c02a096f",
+    "cut": "89788ab8c4e7ee525c86b3b0977c3533cb1efc09297d3511a1b53c16c02a096f",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 101,
+      "transfer": 101,
+      "cut": 101
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-activation-route.test.ts",
+    "title": "regular activation preserves the guest session when profile projection fails",
+    "originalLine": 128,
+    "before": "76696acfa4c6ddd35fe1c7c20b98b47f4ef84242263d0bb397f2b1cc6f833017",
+    "transfer": "76696acfa4c6ddd35fe1c7c20b98b47f4ef84242263d0bb397f2b1cc6f833017",
+    "cut": "76696acfa4c6ddd35fe1c7c20b98b47f4ef84242263d0bb397f2b1cc6f833017",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 128,
+      "transfer": 128,
+      "cut": 128
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-activation.test.ts",
+    "title": "regular quiz guest creation is synthetic and flow-scoped",
+    "originalLine": 9,
+    "before": "bf34f1e12487ea25b8730dfaa563d688969332f03c152f6cdee62f6000c684b1",
+    "transfer": "bf34f1e12487ea25b8730dfaa563d688969332f03c152f6cdee62f6000c684b1",
+    "cut": "bf34f1e12487ea25b8730dfaa563d688969332f03c152f6cdee62f6000c684b1",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 9,
+      "transfer": 9,
+      "cut": 9
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-activation.test.ts",
+    "title": "regular quiz activation uses only its service RPC and exact correlation",
+    "originalLine": 29,
+    "before": "b49aa5c82bf7a3138863f38a81ea26377bb2b7afeeab94fd1a71882db5713c17",
+    "transfer": "b49aa5c82bf7a3138863f38a81ea26377bb2b7afeeab94fd1a71882db5713c17",
+    "cut": "b49aa5c82bf7a3138863f38a81ea26377bb2b7afeeab94fd1a71882db5713c17",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 29,
+      "transfer": 29,
+      "cut": 29
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-runtime.test.ts",
+    "title": "regular quiz field-test runtime is explicitly flag-gated and flow-scoped",
+    "originalLine": 44,
+    "before": "545a7673b72fb450d7c8d8ce80035db30a0f0c95cbde88c1250a03780b6c351e",
+    "transfer": "545a7673b72fb450d7c8d8ce80035db30a0f0c95cbde88c1250a03780b6c351e",
+    "cut": "545a7673b72fb450d7c8d8ce80035db30a0f0c95cbde88c1250a03780b6c351e",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 44,
+      "transfer": 44,
+      "cut": 44
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-runtime.test.ts",
+    "title": "regular offer authorization needs the exact campaign, organic session, and legacy lead",
+    "originalLine": 80,
+    "before": "c373ef55bf9c64440abd384d6dbf673c66b66ce827ed168b30413b8388eca2e9",
+    "transfer": "c373ef55bf9c64440abd384d6dbf673c66b66ce827ed168b30413b8388eca2e9",
+    "cut": "c373ef55bf9c64440abd384d6dbf673c66b66ce827ed168b30413b8388eca2e9",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 80,
+      "transfer": 80,
+      "cut": 80
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-runtime.test.ts",
+    "title": "regular entry refuses authenticated browsers and only starts eligible regular campaigns",
+    "originalLine": 112,
+    "before": "aa5564c95230551e558120800c51388a5647673348a48cfaa0c36d00e66a2aea",
+    "transfer": "aa5564c95230551e558120800c51388a5647673348a48cfaa0c36d00e66a2aea",
+    "cut": "aa5564c95230551e558120800c51388a5647673348a48cfaa0c36d00e66a2aea",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 112,
+      "transfer": 112,
+      "cut": 112
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-runtime.test.ts",
+    "title": "regular ended route is public and expired regular guests stay out of the Personal Plan ended surface",
+    "originalLine": 151,
+    "before": "c38fe4f6fdfcdb42979e2e0a398121ed1ffb16af79700c8ab3fa712265e759ef",
+    "transfer": "c38fe4f6fdfcdb42979e2e0a398121ed1ffb16af79700c8ab3fa712265e759ef",
+    "cut": "c38fe4f6fdfcdb42979e2e0a398121ed1ffb16af79700c8ab3fa712265e759ef",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 151,
+      "transfer": 151,
+      "cut": 151
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-runtime.test.ts",
+    "title": "regular quiz rewrite never overrides authenticated routing and forces organic repackaging",
+    "originalLine": 210,
+    "before": "b6dbbf998134544c318e98c3054e54363a3227a0454b350de5ec1b5201b7f0a4",
+    "transfer": "b6dbbf998134544c318e98c3054e54363a3227a0454b350de5ec1b5201b7f0a4",
+    "cut": "b6dbbf998134544c318e98c3054e54363a3227a0454b350de5ec1b5201b7f0a4",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 210,
+      "transfer": 210,
+      "cut": 210
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-runtime.test.ts",
+    "title": "only a signed regular campaign cookie enters the server-validated quiz shell",
+    "originalLine": 254,
+    "before": "758fa5f889945166f3b0c80c99193dfd424cad4255c28e3bc1d037c4fa00623b",
+    "transfer": "758fa5f889945166f3b0c80c99193dfd424cad4255c28e3bc1d037c4fa00623b",
+    "cut": "758fa5f889945166f3b0c80c99193dfd424cad4255c28e3bc1d037c4fa00623b",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 254,
+      "transfer": 254,
+      "cut": 254
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-runtime.test.ts",
+    "title": "an invalid regular cookie is cleared only when signature validation is configured",
+    "originalLine": 316,
+    "before": "8e8b9eb25d9b2e9f2f6349bf7fc77375af89fe5a5b16616b68c23c265059e007",
+    "transfer": "8e8b9eb25d9b2e9f2f6349bf7fc77375af89fe5a5b16616b68c23c265059e007",
+    "cut": "8e8b9eb25d9b2e9f2f6349bf7fc77375af89fe5a5b16616b68c23c265059e007",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 316,
+      "transfer": 316,
+      "cut": 316
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-runtime.test.ts",
+    "title": "lead binding runs only for exact regular field-test intent and organic context",
+    "originalLine": 338,
+    "before": "123c21fe13d391bfb702d35c1193c2faeff52c032c7b4b2372597a028acd8781",
+    "transfer": "123c21fe13d391bfb702d35c1193c2faeff52c032c7b4b2372597a028acd8781",
+    "cut": "123c21fe13d391bfb702d35c1193c2faeff52c032c7b4b2372597a028acd8781",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 338,
+      "transfer": 338,
+      "cut": 338
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-schema.test.ts",
+    "title": "regular quiz campaigns are flow-scoped without changing Personal Plan defaults",
+    "originalLine": 14,
+    "before": "4d38a101ddbf022b8c8374e2ee4b003e878832d884fa7f1db4280a634f0b5538",
+    "transfer": "4d38a101ddbf022b8c8374e2ee4b003e878832d884fa7f1db4280a634f0b5538",
+    "cut": "4d38a101ddbf022b8c8374e2ee4b003e878832d884fa7f1db4280a634f0b5538",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 14,
+      "transfer": 14,
+      "cut": 14
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-schema.test.ts",
+    "title": "regular quiz enrollments are service-only and do not require a Personal Plan artifact",
+    "originalLine": 22,
+    "before": "82283f5f8228744fd306948ddef5e8249baaf45e8cab69e19dbcea0a0182d3b3",
+    "transfer": "82283f5f8228744fd306948ddef5e8249baaf45e8cab69e19dbcea0a0182d3b3",
+    "cut": "82283f5f8228744fd306948ddef5e8249baaf45e8cab69e19dbcea0a0182d3b3",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 22,
+      "transfer": 22,
+      "cut": 22
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-schema.test.ts",
+    "title": "regular quiz RPCs are service-only and enforce exact legacy/default-organic correlations",
+    "originalLine": 59,
+    "before": "4f39ef07a21c44233b2125a765303cca1da4c38fb9971686cc3d3dea5a3100c9",
+    "transfer": "4f39ef07a21c44233b2125a765303cca1da4c38fb9971686cc3d3dea5a3100c9",
+    "cut": "4f39ef07a21c44233b2125a765303cca1da4c38fb9971686cc3d3dea5a3100c9",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 59,
+      "transfer": 59,
+      "cut": 59
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-schema.test.ts",
+    "title": "campaign revocation branches by flow and revokes regular grants and enrollments",
+    "originalLine": 107,
+    "before": "8020910306ce103d80db07d0f0a9160ffbdeaec6466ea85c750f24919f74dde5",
+    "transfer": "8020910306ce103d80db07d0f0a9160ffbdeaec6466ea85c750f24919f74dde5",
+    "cut": "8020910306ce103d80db07d0f0a9160ffbdeaec6466ea85c750f24919f74dde5",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 107,
+      "transfer": 107,
+      "cut": 107
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "title": "regular quiz field-test banner uses the reviewed persistent German copy",
+    "originalLine": 34,
+    "before": "0a126cdb128b6f6f7331b2898adc4d56b89f4dd72a562d226833bb6f7a918bb1",
+    "transfer": "0a126cdb128b6f6f7331b2898adc4d56b89f4dd72a562d226833bb6f7a918bb1",
+    "cut": "0a126cdb128b6f6f7331b2898adc4d56b89f4dd72a562d226833bb6f7a918bb1",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 34,
+      "transfer": 34,
+      "cut": 34
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "title": "regular quiz field-test activation card is payment-free and targets the activation API",
+    "originalLine": 41,
+    "before": "f141e2feeea60455715556b4470a3b6afb1bc380bdffed8750798cabf2347829",
+    "transfer": "f141e2feeea60455715556b4470a3b6afb1bc380bdffed8750798cabf2347829",
+    "cut": "f141e2feeea60455715556b4470a3b6afb1bc380bdffed8750798cabf2347829",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 41,
+      "transfer": 41,
+      "cut": 41
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "title": "regular quiz field-test activation consumes the exact server destination contract",
+    "originalLine": 57,
+    "before": "fd7f396a7add06e2966793b7b38da6d9e1b27e9c05138d7c55836db975cdf2f2",
+    "transfer": "fd7f396a7add06e2966793b7b38da6d9e1b27e9c05138d7c55836db975cdf2f2",
+    "cut": "fd7f396a7add06e2966793b7b38da6d9e1b27e9c05138d7c55836db975cdf2f2",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 57,
+      "transfer": 57,
+      "cut": 57
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "title": "regular quiz field-test organic offer replaces all commercial conversion surfaces",
+    "originalLine": 71,
+    "before": "7c000cd9ae2104fd2077cd75889b0cd1a9ce66ac800c71bda5345284f4fe57e9",
+    "transfer": "7c000cd9ae2104fd2077cd75889b0cd1a9ce66ac800c71bda5345284f4fe57e9",
+    "cut": "7c000cd9ae2104fd2077cd75889b0cd1a9ce66ac800c71bda5345284f4fe57e9",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 71,
+      "transfer": 71,
+      "cut": 71
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "title": "email-bound moderator organic offer remains free and uses its dedicated activation route",
+    "originalLine": 99,
+    "before": "a8096f67e207f879f9fa3714df4121b9c631d5dde37928e0057edc1e1aad62cb",
+    "transfer": "a8096f67e207f879f9fa3714df4121b9c631d5dde37928e0057edc1e1aad62cb",
+    "cut": "a8096f67e207f879f9fa3714df4121b9c631d5dde37928e0057edc1e1aad62cb",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 99,
+      "transfer": 99,
+      "cut": 99
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "title": "partner organic offer keeps the ordinary journey and swaps only the payment position",
+    "originalLine": 128,
+    "before": "47b307834b76f676d2ded135feb99f530ea8dabfe09a657eeeffdfc786689e03",
+    "transfer": "47b307834b76f676d2ded135feb99f530ea8dabfe09a657eeeffdfc786689e03",
+    "cut": "47b307834b76f676d2ded135feb99f530ea8dabfe09a657eeeffdfc786689e03",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 128,
+      "transfer": 128,
+      "cut": 128
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "title": "partner activation accepts only the canonical plan-ready destination",
+    "originalLine": 154,
+    "before": "aab294f24d890c3acaafaa2ae35e4fb24e5425120024e12a94028b56330d550d",
+    "transfer": "aab294f24d890c3acaafaa2ae35e4fb24e5425120024e12a94028b56330d550d",
+    "cut": "aab294f24d890c3acaafaa2ae35e4fb24e5425120024e12a94028b56330d550d",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 154,
+      "transfer": 154,
+      "cut": 154
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "title": "partner activation shares one request and event across concurrent CTA clicks",
+    "originalLine": 162,
+    "before": "c0c8d58cf720dcd9336665cfbbfc10d36196ae49ce5f9786f7ffcb23f586686a",
+    "transfer": "c0c8d58cf720dcd9336665cfbbfc10d36196ae49ce5f9786f7ffcb23f586686a",
+    "cut": "c0c8d58cf720dcd9336665cfbbfc10d36196ae49ce5f9786f7ffcb23f586686a",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 162,
+      "transfer": 162,
+      "cut": 162
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "title": "legacy result client fails closed when regular field-test intent lost authorization",
+    "originalLine": 196,
+    "before": "7a8903a91f5069119e73a5cc679fafe24298f3599c8f24745ff02e8a6bce0604",
+    "transfer": "7a8903a91f5069119e73a5cc679fafe24298f3599c8f24745ff02e8a6bce0604",
+    "cut": "7a8903a91f5069119e73a5cc679fafe24298f3599c8f24745ff02e8a6bce0604",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 196,
+      "transfer": 196,
+      "cut": 196
+    }
+  },
+  {
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "title": "result and quiz routing consume only server-derived regular field-test state",
+    "originalLine": 213,
+    "before": "41fdcb84a292c9bd0f4964ce497906fc71722410fe287ad7795496b41a70f576",
+    "transfer": "41fdcb84a292c9bd0f4964ce497906fc71722410fe287ad7795496b41a70f576",
+    "cut": "41fdcb84a292c9bd0f4964ce497906fc71722410fe287ad7795496b41a70f576",
+    "role": "unchanged",
+    "phaseLines": {
+      "before": 213,
+      "transfer": 213,
+      "cut": 213
+    }
+  }
+]

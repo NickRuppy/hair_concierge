@@ -1,0 +1,13 @@
+'use strict';
+const fs=require('node:fs'),vm=require('node:vm'),crypto=require('node:crypto');
+const D=__dirname,P='/tmp/test-audit-plan-generation157-R7hJl1',sha=b=>crypto.createHash('sha256').update(b).digest('hex'),read=p=>JSON.parse(fs.readFileSync(p));
+const old=read(D+'/template-originals/operator-pins.json'),pins=read(D+'/operator-pins.json');
+const parsed=[];for(const n of fs.readdirSync(D).filter(n=>n.endsWith('.cjs'))){new vm.Script(fs.readFileSync(D+'/'+n,'utf8'),{filename:n});parsed.push(n)}
+const extract=s=>s.slice(s.indexOf('function parseTAP('),s.indexOf('function intended('));if(extract(fs.readFileSync(D+'/operator-proof.cjs','utf8'))!==extract(fs.readFileSync(D+'/template-originals/operator-proof.cjs','utf8')))throw Error('Base counter/clean/error decoder changed');
+if(JSON.stringify(pins.original109Guards)!==JSON.stringify(read(P+'/readsets.json')))throw Error('Original109 repinned');
+for(const k of ['head','branch','gitDir','commonDir','node','typescriptVersion','metadataPolicy','identityFiles'])if(JSON.stringify(pins[k])!==JSON.stringify(old[k]))throw Error('Existing identity/policy drift '+k);
+for(const p of old.dependencies)if(!pins.dependencies.some(q=>JSON.stringify(p)===JSON.stringify(q)))throw Error('Existing dependency changed');
+if(JSON.stringify(old.dependencyTrees)!==JSON.stringify(pins.dependencyTrees))throw Error('Existing distribution changed');
+const controls=read(D+'/operator-controls-normalized.json');if(controls.length!==18||new Set(controls.map(x=>x.mutatedSha256)).size!==18)throw Error('18 unique controls');
+for(const c of controls)if(sha(fs.readFileSync(c.fullMutantPath))!==c.mutatedSha256)throw Error('Full mutant drift');
+console.log(JSON.stringify({status:'PASS_STATIC',pinsSHA:sha(fs.readFileSync(D+'/operator-pins.json')),parsedToolFiles:parsed,original109GuardsUnchanged:true,templateIdentityRuntimeDependenciesUnchanged:true,baseCounterCleanDecoderByteIdentical:true,unresolvedDiagnosticBlocked:controls.filter(c=>!c.diagnosticReady).map(c=>c.id),sourceControls:18,repositoryWrites:0,children:0,ownerImports:0,nativeRuns:0},null,2));

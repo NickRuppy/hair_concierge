@@ -1,0 +1,174 @@
+{
+  "before": [
+    {
+      "name": "tracker boundary only checks the authenticated user",
+      "line": 41,
+      "body": "test(\"tracker boundary only checks the authenticated user\", async () => {\n  const result = await resolveTrackerRouteAccess(dependencies())\n  assert.deepEqual(result, { kind: \"allow\" })\n})",
+      "sha": "892bdcdc73ceaa87056af3b8394fae0b2f9abf81113d1c0857ed2057554ad410"
+    },
+    {
+      "name": "tracker boundary fails closed without an authenticated user",
+      "line": 46,
+      "body": "test(\"tracker boundary fails closed without an authenticated user\", async () => {\n  const result = await resolveTrackerRouteAccess(dependencies({ getUser: async () => null }))\n  assert.deepEqual(result, { kind: \"redirect\", href: \"/quiz\" })\n})",
+      "sha": "4b27c18ce1afb5518b44dc029ec691d70d4a09425147a3bed053e85fdb928853"
+    },
+    {
+      "name": "tracker boundary fails closed when the authenticated-user read is unavailable",
+      "line": 51,
+      "body": "test(\"tracker boundary fails closed when the authenticated-user read is unavailable\", async () => {\n  const result = await resolveTrackerRouteAccess(\n    dependencies({\n      getUser: async () => {\n        throw new Error(\"auth unavailable\")\n      },\n    }),\n  )\n  assert.deepEqual(result, { kind: \"redirect\", href: \"/quiz\" })\n})",
+      "sha": "c5f32f70e273233ce235fd128f1da28f66924a5009943e878f39ecaee37e2d43"
+    },
+    {
+      "name": "scan boundary allows an authenticated user with a completed quiz",
+      "line": 62,
+      "body": "test(\"scan boundary allows an authenticated user with a completed quiz\", async () => {\n  for (const profile of [completeQuizProfile, { ...completeQuizProfile, scalp_condition: null }]) {\n    const result = await resolveScanRouteAccess(\n      scanDependencies({ getHairProfile: async () => profile }),\n    )\n    assert.deepEqual(result, { kind: \"allow\" })\n  }\n})",
+      "sha": "0966a2481e959032991a9c80dbde6fece4e1caec84d3aa52f191f69be9c21f66"
+    },
+    {
+      "name": "scan boundary redirects without an authenticated user",
+      "line": 71,
+      "body": "test(\"scan boundary redirects without an authenticated user\", async () => {\n  const result = await resolveScanRouteAccess(scanDependencies({ getUser: async () => null }))\n  assert.deepEqual(result, { kind: \"redirect\", href: \"/quiz\" })\n})",
+      "sha": "dc6eb3a9bc98e87c5d4181e23aeb9fc2d4f1ce5972c2461d5a9b95edaf97058a"
+    },
+    {
+      "name": "scan boundary redirects when the quiz diagnostics are incomplete",
+      "line": 76,
+      "body": "test(\"scan boundary redirects when the quiz diagnostics are incomplete\", async () => {\n  const result = await resolveScanRouteAccess(\n    scanDependencies({ getHairProfile: async () => null }),\n  )\n  assert.deepEqual(result, { kind: \"redirect\", href: \"/quiz\" })\n})",
+      "sha": "908070503922a55674cafef765055cd85c8950319432c364e70d414b73bc9e10"
+    },
+    {
+      "name": "scan boundary redirects when a single quiz field is missing",
+      "line": 83,
+      "body": "test(\"scan boundary redirects when a single quiz field is missing\", async () => {\n  const missingDensityProfile: Partial<typeof completeQuizProfile> = { ...completeQuizProfile }\n  delete missingDensityProfile.density\n  for (const profile of [\n    missingDensityProfile,\n    { ...completeQuizProfile, density: null },\n    { ...completeQuizProfile, chemical_treatment: [] },\n    { ...completeQuizProfile, concerns: null },\n    { ...completeQuizProfile, concerns: undefined },\n  ]) {\n    const result = await resolveScanRouteAccess(\n      scanDependencies({ getHairProfile: async () => profile }),\n    )\n    assert.deepEqual(result, { kind: \"redirect\", href: \"/quiz\" })\n  }\n})",
+      "sha": "891c4421bfba29ab7fcd1aba18dbb8488c312bd843b69fa1476a99d8852886d1"
+    },
+    {
+      "name": "scan boundary fails closed when the authenticated-user read is unavailable",
+      "line": 100,
+      "body": "test(\"scan boundary fails closed when the authenticated-user read is unavailable\", async () => {\n  const result = await resolveScanRouteAccess(\n    scanDependencies({\n      getUser: async () => {\n        throw new Error(\"auth unavailable\")\n      },\n    }),\n  )\n  assert.deepEqual(result, { kind: \"redirect\", href: \"/quiz\" })\n})",
+      "sha": "262ef0c0e098633bffbae54dae4ad521523e76f591cb644075f2a381467e93ab"
+    },
+    {
+      "name": "scan boundary fails closed when the hair-profile read is unavailable",
+      "line": 111,
+      "body": "test(\"scan boundary fails closed when the hair-profile read is unavailable\", async () => {\n  const result = await resolveScanRouteAccess(\n    scanDependencies({\n      getHairProfile: async () => {\n        throw new Error(\"profile unavailable\")\n      },\n    }),\n  )\n  assert.deepEqual(result, { kind: \"redirect\", href: \"/quiz\" })\n})",
+      "sha": "b025efdf1c3385ed7ec55110f45b709bd572215040ba4daf47c4a1b0eb470c8d"
+    },
+    {
+      "name": "scan page tier: a paid-access composite of 'denied' is free",
+      "line": 132,
+      "body": "test(\"scan page tier: a paid-access composite of 'denied' is free\", async () => {\n  const tier = await resolveScanPageTier(\n    tierDependencies({ resolvePaidAccess: async () => \"denied\" }),\n  )\n  assert.equal(tier, \"free\")\n})",
+      "sha": "65d6c88c69087fcdd51ea18a57d5c8a2039ab225fcc9c1201855bcc34dca5753"
+    },
+    {
+      "name": "scan page tier: an email-only manual/moderator grant is premium (C1 repro) — the nav classification's id-only lookup would have called this user free",
+      "line": 139,
+      "body": "test(\"scan page tier: an email-only manual/moderator grant is premium (C1 repro) — the nav classification's id-only lookup would have called this user free\", async () => {\n  const seenArgs: Array<[string, string | null | undefined, boolean]> = []\n  const tier = await resolveScanPageTier(\n    tierDependencies({\n      getUser: async () => ({ id: \"user-1\", email: \"grant@example.com\" }),\n      resolvePaidAccess: async (userId, email, fieldTestGuest) => {\n        seenArgs.push([userId, email, fieldTestGuest])\n        // Simulates `resolvePaidAppAccess`: an email-keyed manual access grant with no\n        // `user_id` row resolves \"allowed\" only because `email` was threaded through.\n        return email === \"grant@example.com\" ? \"allowed\" : \"denied\"\n      },\n    }),\n  )\n  assert.equal(tier, \"premium\")\n  assert.deepEqual(seenArgs, [[\"user-1\", \"grant@example.com\", false]])\n})",
+      "sha": "e00a486e06674ff9b8182009d834d8592a515fd39f40183ed05a81f7eaef7d88"
+    },
+    {
+      "name": "scan page tier: a field-test guest is passed through to the paid-access composite",
+      "line": 156,
+      "body": "test(\"scan page tier: a field-test guest is passed through to the paid-access composite\", async () => {\n  let sawFieldTestGuest = false\n  await resolveScanPageTier(\n    tierDependencies({\n      getUser: async () => ({\n        id: \"user-1\",\n        email: null,\n        app_metadata: { access_kind: \"field_test\" },\n      }),\n      resolvePaidAccess: async (_userId, _email, fieldTestGuest) => {\n        sawFieldTestGuest = fieldTestGuest\n        return \"denied\"\n      },\n    }),\n  )\n  assert.equal(sawFieldTestGuest, true)\n})",
+      "sha": "b1edd8cfe65a09e776b8ce279c13ee52c0bc1aa1a990eca9773ffd458addbaf9"
+    },
+    {
+      "name": "scan page tier: fails closed to premium (never free) when the paid-access composite is unavailable",
+      "line": 174,
+      "body": "test(\"scan page tier: fails closed to premium (never free) when the paid-access composite is unavailable\", async () => {\n  const tier = await resolveScanPageTier(\n    tierDependencies({ resolvePaidAccess: async () => \"unavailable\" }),\n  )\n  assert.equal(tier, \"premium\")\n})",
+      "sha": "980f58258b134e718b705555d6abb5499a5521856417c9cf7689f812854730bd"
+    },
+    {
+      "name": "scan page tier: no authenticated user is premium (never free)",
+      "line": 181,
+      "body": "test(\"scan page tier: no authenticated user is premium (never free)\", async () => {\n  const tier = await resolveScanPageTier(tierDependencies({ getUser: async () => null }))\n  assert.equal(tier, \"premium\")\n})",
+      "sha": "924c92dfa0a4551feb0e434c810d90a7db53489827a6beddf1c305834344a787"
+    }
+  ],
+  "after": [
+    {
+      "name": "tracker boundary only checks the authenticated user",
+      "line": 41,
+      "body": "test(\"tracker boundary only checks the authenticated user\", async () => {\n  const result = await resolveTrackerRouteAccess(dependencies())\n  assert.deepEqual(result, { kind: \"allow\" })\n})",
+      "sha": "892bdcdc73ceaa87056af3b8394fae0b2f9abf81113d1c0857ed2057554ad410"
+    },
+    {
+      "name": "tracker boundary fails closed without an authenticated user",
+      "line": 46,
+      "body": "test(\"tracker boundary fails closed without an authenticated user\", async () => {\n  const result = await resolveTrackerRouteAccess(dependencies({ getUser: async () => null }))\n  assert.deepEqual(result, { kind: \"redirect\", href: \"/quiz\" })\n})",
+      "sha": "4b27c18ce1afb5518b44dc029ec691d70d4a09425147a3bed053e85fdb928853"
+    },
+    {
+      "name": "tracker boundary fails closed when the authenticated-user read is unavailable",
+      "line": 51,
+      "body": "test(\"tracker boundary fails closed when the authenticated-user read is unavailable\", async () => {\n  const result = await resolveTrackerRouteAccess(\n    dependencies({\n      getUser: async () => {\n        throw new Error(\"auth unavailable\")\n      },\n    }),\n  )\n  assert.deepEqual(result, { kind: \"redirect\", href: \"/quiz\" })\n})",
+      "sha": "c5f32f70e273233ce235fd128f1da28f66924a5009943e878f39ecaee37e2d43"
+    },
+    {
+      "name": "scan boundary allows an authenticated user with a completed quiz",
+      "line": 62,
+      "body": "test(\"scan boundary allows an authenticated user with a completed quiz\", async () => {\n  for (const profile of [completeQuizProfile, { ...completeQuizProfile, scalp_condition: null }]) {\n    const result = await resolveScanRouteAccess(\n      scanDependencies({ getHairProfile: async () => profile }),\n    )\n    assert.deepEqual(result, { kind: \"allow\" })\n  }\n})",
+      "sha": "0966a2481e959032991a9c80dbde6fece4e1caec84d3aa52f191f69be9c21f66"
+    },
+    {
+      "name": "scan boundary redirects without an authenticated user",
+      "line": 71,
+      "body": "test(\"scan boundary redirects without an authenticated user\", async () => {\n  const result = await resolveScanRouteAccess(scanDependencies({ getUser: async () => null }))\n  assert.deepEqual(result, { kind: \"redirect\", href: \"/quiz\" })\n})",
+      "sha": "dc6eb3a9bc98e87c5d4181e23aeb9fc2d4f1ce5972c2461d5a9b95edaf97058a"
+    },
+    {
+      "name": "scan boundary redirects when the quiz diagnostics are incomplete",
+      "line": 76,
+      "body": "test(\"scan boundary redirects when the quiz diagnostics are incomplete\", async () => {\n  const result = await resolveScanRouteAccess(\n    scanDependencies({ getHairProfile: async () => null }),\n  )\n  assert.deepEqual(result, { kind: \"redirect\", href: \"/quiz\" })\n})",
+      "sha": "908070503922a55674cafef765055cd85c8950319432c364e70d414b73bc9e10"
+    },
+    {
+      "name": "scan boundary redirects when a single quiz field is missing",
+      "line": 83,
+      "body": "test(\"scan boundary redirects when a single quiz field is missing\", async () => {\n  const missingDensityProfile: Partial<typeof completeQuizProfile> = { ...completeQuizProfile }\n  delete missingDensityProfile.density\n  for (const profile of [\n    missingDensityProfile,\n    { ...completeQuizProfile, density: null },\n    { ...completeQuizProfile, chemical_treatment: [] },\n    { ...completeQuizProfile, concerns: null },\n    { ...completeQuizProfile, concerns: undefined },\n  ]) {\n    const result = await resolveScanRouteAccess(\n      scanDependencies({ getHairProfile: async () => profile }),\n    )\n    assert.deepEqual(result, { kind: \"redirect\", href: \"/quiz\" })\n  }\n})",
+      "sha": "891c4421bfba29ab7fcd1aba18dbb8488c312bd843b69fa1476a99d8852886d1"
+    },
+    {
+      "name": "scan boundary fails closed when the authenticated-user read is unavailable",
+      "line": 100,
+      "body": "test(\"scan boundary fails closed when the authenticated-user read is unavailable\", async () => {\n  const result = await resolveScanRouteAccess(\n    scanDependencies({\n      getUser: async () => {\n        throw new Error(\"auth unavailable\")\n      },\n    }),\n  )\n  assert.deepEqual(result, { kind: \"redirect\", href: \"/quiz\" })\n})",
+      "sha": "262ef0c0e098633bffbae54dae4ad521523e76f591cb644075f2a381467e93ab"
+    },
+    {
+      "name": "scan boundary fails closed when the hair-profile read is unavailable",
+      "line": 111,
+      "body": "test(\"scan boundary fails closed when the hair-profile read is unavailable\", async () => {\n  const result = await resolveScanRouteAccess(\n    scanDependencies({\n      getHairProfile: async () => {\n        throw new Error(\"profile unavailable\")\n      },\n    }),\n  )\n  assert.deepEqual(result, { kind: \"redirect\", href: \"/quiz\" })\n})",
+      "sha": "b025efdf1c3385ed7ec55110f45b709bd572215040ba4daf47c4a1b0eb470c8d"
+    },
+    {
+      "name": "scan page tier: a paid-access composite of 'denied' is free",
+      "line": 132,
+      "body": "test(\"scan page tier: a paid-access composite of 'denied' is free\", async () => {\n  const tier = await resolveAuthenticatedAppPageTier(\n    tierDependencies({ resolvePaidAccess: async () => \"denied\" }),\n  )\n  assert.equal(tier, \"free\")\n})",
+      "sha": "47ad02b16e0133ce40bf32c03ba0adc27ed912de04e591aeb201fb2c14de0ba9"
+    },
+    {
+      "name": "scan page tier: an email-only manual/moderator grant is premium (C1 repro) — the nav classification's id-only lookup would have called this user free",
+      "line": 139,
+      "body": "test(\"scan page tier: an email-only manual/moderator grant is premium (C1 repro) — the nav classification's id-only lookup would have called this user free\", async () => {\n  const seenArgs: Array<[string, string | null | undefined, boolean]> = []\n  const tier = await resolveAuthenticatedAppPageTier(\n    tierDependencies({\n      getUser: async () => ({ id: \"user-1\", email: \"grant@example.com\" }),\n      resolvePaidAccess: async (userId, email, fieldTestGuest) => {\n        seenArgs.push([userId, email, fieldTestGuest])\n        // Simulates `resolvePaidAppAccess`: an email-keyed manual access grant with no\n        // `user_id` row resolves \"allowed\" only because `email` was threaded through.\n        return email === \"grant@example.com\" ? \"allowed\" : \"denied\"\n      },\n    }),\n  )\n  assert.equal(tier, \"premium\")\n  assert.deepEqual(seenArgs, [[\"user-1\", \"grant@example.com\", false]])\n})",
+      "sha": "8ae23508bba074efa59c1bcd0b6cff6b9da6ad4398b768ee9088a776f7b978e4"
+    },
+    {
+      "name": "scan page tier: a field-test guest is passed through to the paid-access composite",
+      "line": 156,
+      "body": "test(\"scan page tier: a field-test guest is passed through to the paid-access composite\", async () => {\n  let sawFieldTestGuest = false\n  await resolveAuthenticatedAppPageTier(\n    tierDependencies({\n      getUser: async () => ({\n        id: \"user-1\",\n        email: null,\n        app_metadata: { access_kind: \"field_test\" },\n      }),\n      resolvePaidAccess: async (_userId, _email, fieldTestGuest) => {\n        sawFieldTestGuest = fieldTestGuest\n        return \"denied\"\n      },\n    }),\n  )\n  assert.equal(sawFieldTestGuest, true)\n})",
+      "sha": "d0d211ee9d1924660b2a23f8ab5f549495b28c77d25b95373eb6605abf5effc1"
+    },
+    {
+      "name": "scan page tier: fails closed to premium (never free) when the paid-access composite is unavailable",
+      "line": 174,
+      "body": "test(\"scan page tier: fails closed to premium (never free) when the paid-access composite is unavailable\", async () => {\n  const tier = await resolveAuthenticatedAppPageTier(\n    tierDependencies({ resolvePaidAccess: async () => \"unavailable\" }),\n  )\n  assert.equal(tier, \"premium\")\n})",
+      "sha": "aba9fa2759f8954d16d2194d80cc387f5f1933182fbb6b737393b76e86c796e9"
+    },
+    {
+      "name": "scan page tier: no authenticated user is premium (never free)",
+      "line": 181,
+      "body": "test(\"scan page tier: no authenticated user is premium (never free)\", async () => {\n  const tier = await resolveAuthenticatedAppPageTier(tierDependencies({ getUser: async () => null }))\n  assert.equal(tier, \"premium\")\n})",
+      "sha": "6cf8e6ae04afcd96f96a331a8fcc3dba16394db8414826fc7d92ed90360430cb"
+    }
+  ]
+}

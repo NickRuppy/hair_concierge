@@ -1,0 +1,10 @@
+{
+  "phase": "transfer",
+  "verified": 3,
+  "planSHA": "78bd8b073b523977c59989fa0d714e85030a331ffa54a92d3fa53ee07431b2fc",
+  "controls": [
+    "C1-no-coral",
+    "C1-extra-plum",
+    "C2-no-fade"
+  ]
+}

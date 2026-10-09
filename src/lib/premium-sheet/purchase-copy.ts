@@ -28,6 +28,11 @@ export const PREMIUM_SHEET_PURCHASE_COPY = {
   provisioningBody: "Dein Plan wird vorbereitet. Das dauert einen Moment.",
   /** The same state, once retrying stopped helping — no false promise of a wait. */
   provisioningStalledBody: "Dein Plan ist noch nicht fertig. Wir kümmern uns darum.",
+  /**
+   * The buyer left the budget question after paying (C7): the Routine is built once the budget
+   * is given, and the question stays right below this line.
+   */
+  budgetCancelled: "Deine Routine erstellen wir, sobald du dein Budget angegeben hast.",
   /** Manual fallback whenever the automatic poll is running or exhausted. */
   recheck: "Status prüfen",
   /**

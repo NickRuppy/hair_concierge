@@ -1,0 +1,166 @@
+TAP version 13
+# Subtest: contract confirms actual accepted progression, Berlin deadline, cancellation and full withdrawal instruction
+not ok 1 - contract confirms actual accepted progression, Berlin deadline, cancellation and full withdrawal instruction
+  ---
+  duration_ms: 16.325084
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/billing-trial-required-notices.test.ts:2:3497'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /Die erste Zahlung ist zu diesem Zeitpunkt vorgesehen/. Input:
+    
+    'Chaarlie Jahresmitgliedschaft\n' +
+      'Vertragskennung: 11111111-1111-4111-8111-111111111111\n' +
+      'Vertragsbestätigung / Konditionen trial_launch_v1\n' +
+      'Autorisierung bestätigt am: 14. September 2026 um 12:00:00 MESZ\n' +
+      'Dein kostenloser Test dauert 7 Tage und endet am 21. September 2026 um 12:00:00 MESZ. Die erste Zahlung ist nach diesem Zeitpunkt vorgesehen, sofern du nicht vorher kündigst. Jetzt wurden 0,00 € berechnet.\n' +
+      'Für das erste bezahlte Jahr werden 69,99 € fällig; danach 99,99 € jährlich im Voraus. Nach dem ersten bezahlten Jahr läuft der Vertrag auf unbestimmte Zeit weiter. Eine Kündigung ist dann jederzeit mit einer Frist von höchstens einem Monat möglich; ungenutztes vorausgezahltes Entgelt nach dem wirksamen Vertragsende wird zeitanteilig erstattet. Es entsteht keine neue feste Jahresbindung.\n' +
+      'Alle genannten Beträge sind Gesamtpreise einschließlich anwendbarer Steuern. Zahlungsanbieter: Stripe. Die erste volle bezahlte Laufzeit beginnt erst nach erfolgreicher Zahlung. Während die erste Zahlung eingezogen wird, bleibt dein Zugang zunächst bestehen; bei fehlgeschlagener Zahlung endet der Zugang spätestens drei Tage nach dem oben genannten Testende und der Mitgliederinhalt bleibt bis zum bestätigten Zahlungserfolg gesperrt.\n' +
+      '\n' +
+      'Kündigung während des Tests: jederzeit bis zum oben genannten Testende. Der Zugang bleibt bis dahin bestehen; es beginnt kein bezahlter Zeitraum. Du kannst vor der ersten jährlichen Fortsetzung zum Ende des ersten bezahlten Jahres kündigen.\n' +
+      'Online kündigen: https://chaarlie.de/kuendigen\n' +
+      'Mitgliedschaft verwalten: https://chaarlie.de/profile\n' +
+      'Kontakt: info@chaarlie.de\n' +
+      '\n' +
+      'Leistung und weitere Vertragsbedingungen\n' +
+      'Anbieter: Haarmony LLC, 1111B S Governors Ave # 84075, Dover, DE 19904, USA, info@chaarlie.de.\n' +
+      'Chaarlie ist ein digitaler Beratungsservice für Haarpflege. Auf Grundlage deines Selbsttests erhältst du individuelle Haarpflege-Empfehlungen, konkrete Produktempfehlungen und einen KI-Berater. Die Empfehlungen basieren auf deinen Angaben; mache beim Selbsttest und bei der Anmeldung wahrheitsgemäße Angaben. Chaarlie ist kein medizinisches Produkt und ersetzt keine ärztliche oder dermatologische Beratung.\n' +
+      'Der Vertrag wird über den verbindlichen Bestellschritt beim Zahlungsanbieter geschlossen. Das kostenlose Testangebot gilt einmalig; ein fehlgeschlagener oder abgebrochener Versuch ohne aktivierten Test verbraucht es nicht. Eine Ablehnung des Tests löst keinen kostenpflichtigen Vertrag aus.\n' +
+      'Die Inhalte sind urheberrechtlich geschützt. Du erhältst ein einfaches, nicht übertragbares Nutzungsrecht für die Vertragsdauer. Die vereinbarten Konditionen anderer, bereits bestehender Verträge bleiben unverändert.\n' +
+      '\n' +
+      'Widerrufsbelehrung\n' +
+      'Du hast das Recht, binnen 14 Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen. Die Widerrufsfrist beträgt 14 Tage ab dem Tag des Vertragsschlusses. Der kostenlose Test ersetzt dieses Recht nicht; durch die Nutzung verzichtest du nicht darauf.\n' +
+      'Um dein Widerrufsrecht auszuüben, musst du Haarmony LLC, 1111B S Governors Ave # 84075, Dover, DE 19904, USA, E-Mail: info@chaarlie.de, mittels einer eindeutigen Erklärung (z. B. Brief oder E-Mail) über deinen Entschluss informieren. Online: https://chaarlie.de/widerruf/erklaeren. Zur Wahrung der Frist reicht es aus, dass du die Mitteilung vor Ablauf der Widerrufsfrist absendest.\n' +
+      'Wenn du diesen Vertrag widerrufst, zahlen wir alle von dir erhaltenen Zahlungen unverzüglich und spätestens binnen 14 Tagen ab Eingang der Mitteilung zurück. Wir verwenden dasselbe Zahlungsmittel wie bei der ursprünglichen Transaktion, sofern nicht ausdrücklich etwas anderes vereinbart wurde.\n' +
+      'Muster-Widerrufsformular (freiwillig):\n' +
+      'An Haarmony LLC, 1111B S Governors Ave # 84075, Dover, DE 19904, USA, info@chaarlie.de\n' +
+      'Hiermit widerrufe(n) ich/wir den von mir/uns abgeschlossenen Vertrag über die Erbringung der folgenden Dienstleistung:\n' +
+      'Bestellt am:\n' +
+      'Name und Anschrift des/der Verbraucher(s):\n' +
+      'Unterschrift (nur bei Mitteilung auf Papier):\n' +
+      'Datum:\n' +
+      '\n' +
+      'Allgemeine Geschäftsbedingungen (Stand September 2026)\n' +
+      '§ 1 Geltungsbereich\n' +
+      'Diese AGB gelten für alle Verträge zwischen der Haarmony LLC (nachfolgend „Anbieter“) und ihren Kundinnen und Kunden (nachfolgend „Nutzer“) über die Nutzung von Chaarlie und damit verbundener Dienste.\n' +
+      '§ 2 Vertragsgegenstand\n' +
+      'Chaarlie ist ein digitaler Beratungsservice für Haarpflege. Der Anbieter stellt eine Software zur Verfügung, die anhand eines Selbsttests eine individuelle Haarpflege-Empfehlung erstellt, ergänzt durch konkrete Produktvorschläge und eine persönliche Routine. Der Service ist als digitale Dienstleistung zu verstehen, nicht als medizinische Beratung.\n' +
+      '§ 3 Vertragsschluss\n' +
+      'Der Vertrag kommt zustande, wenn der Nutzer einen kostenpflichtigen Plan auswählt, die Zahlungsinformationen angibt und auf den entsprechenden Bestell-Button klickt. Der Anbieter bestätigt den Vertragsschluss umgehend per E-Mail.\n' +
+      '§ 4 Preise und Zahlung\n' +
+      'Es gelten die zum Zeitpunkt des Vertragsschlusses auf der Website angegebenen Preise. Alle Preise verstehen sich inklusive der gesetzlichen Mehrwertsteuer, sofern anwendbar. Die Zahlung erfolgt per Kreditkarte oder anderen angebotenen Zahlungsmitteln über die sicheren Zahlungsdienstleister Stripe oder PayPal.\n' +
+      'Für neue Mitgliedschaften mit kostenlosem Test gelten folgende Konditionen:\n' +
+      'Test: 7 Tage kostenlos ab erfolgreicher Autorisierung des Zahlungsmittels. Das genaue Testende und der vorgesehene erste Zahlungstermin werden beim Abschluss und in der Vertragsbestätigung genannt.\n' +
+      'Monatsplan: danach 9,99 € pro Monat.\n' +
+      'Jahresplan: 69,99 € für das erste bezahlte Jahr, danach 99,99 € jährlich. Der Einführungspreis gilt nur für das erste bezahlte Jahr.\n' +
+      'Der unmittelbar vor der verbindlichen Bestellung angezeigte Gesamtpreis ist maßgeblich. Die erste volle bezahlte Laufzeit beginnt erst mit erfolgreicher Zahlung. Ohne bestätigte Zahlung endet der Testzugang trotzdem zum ursprünglichen Testende. Das Testangebot gilt einmalig. Abgebrochene oder fehlgeschlagene Versuche ohne aktivierten Test verbrauchen es nicht. Eine Ablehnung des Tests löst keine Zahlung aus. Bei einer fehlerhaften Zuordnung hilft info@chaarlie.de.\n' +
+      'Für bereits bestehende Verträge bleiben die bei ihrem Abschluss vereinbarten Preise und Konditionen maßgeblich, einschließlich ausdrücklich bis zur Kündigung zugesagter Einführungspreise. Bereits gekaufte persönliche Haarpläne bleiben Einmalkäufe ohne automatische Verlängerung. Diese Bestimmungen bieten keinen neuen Quartalsplan oder Einmalkauf an und stellen bestehende Verträge nicht automatisch auf den kostenlosen Test um.\n' +
+      '§ 5 Laufzeit und Kündigung\n' +
+      'Während des kostenlosen Tests kannst du jederzeit bis zum angegebenen Testende kündigen. Dein Zugang bleibt bis dahin bestehen; anschließend beginnt kein kostenpflichtiger Zeitraum. Ohne Kündigung folgt die ausgewählte bezahlte Mitgliedschaft. Du kannst online über Verträge hier kündigen, über dein Konto oder per E-Mail an info@chaarlie.de kündigen. Wir bestätigen den Eingang deiner Kündigung und das Vertragsende in Textform.\n' +
+      'Beim Monatsplan beträgt die erste bezahlte Laufzeit einen Monat. Danach läuft der Vertrag auf unbestimmte Zeit weiter und ist jederzeit mit einer Frist von höchstens einem Monat kündbar.\n' +
+      'Beim Jahresplan beträgt die erste bezahlte Laufzeit ein Jahr. Du kannst zum Ende dieses ersten Jahres kündigen. Danach läuft der Vertrag auf unbestimmte Zeit weiter; es entsteht keine neue feste Jahresbindung. Die Abrechnung erfolgt weiterhin jährlich im Voraus mit 99,99 €. Nach dem ersten Jahr kannst du jederzeit mit einer Frist von höchstens einem Monat kündigen. Für die Zeit nach dem wirksamen Vertragsende erstatten wir ungenutztes, im Voraus gezahltes Entgelt zeitanteilig.\n' +
+      'Gesetzliche Widerrufsrechte und das Recht zur außerordentlichen Kündigung bleiben unberührt. Für ältere Verträge gelten die jeweils vereinbarten Bedingungen, soweit sie mit zwingendem Verbraucherrecht vereinbar sind.\n' +
+      '§ 6 Widerrufsrecht\n' +
+      'Verbraucher haben ein gesetzliches Widerrufsrecht von 14 Tagen ab Vertragsschluss. Der kostenlose Test ersetzt dieses Recht nicht. Die Nutzung des Tests bedeutet keinen Verzicht auf das Widerrufsrecht. Details siehe Widerrufsbelehrung.\n' +
+      'Für bereits abgeschlossene Einmalkäufe des persönlichen Haarplans gilt zusätzlich die bei Abschluss zugesagte 14-Tage-Geld-zurück-Garantie: Wenn Chaarlie für dich nicht hilfreich ist, erhältst du eine vollständige Rückerstattung. Gesetzliche Rechte werden dadurch nicht eingeschränkt.\n' +
+      '§ 7 Pflichten des Nutzers\n' +
+      'Der Nutzer ist verpflichtet, wahrheitsgemäße Angaben beim Selbsttest und bei der Anmeldung zu machen. Die Empfehlungen basieren auf den vom Nutzer angegebenen Informationen.\n' +
+      '§ 8 Haftung\n' +
+      'Chaarlie ist kein medizinisches Produkt. Die Empfehlungen ersetzen keine ärztliche oder dermatologische Beratung. Der Anbieter haftet nicht für Schäden, die durch die unsachgemäße Anwendung der empfohlenen Produkte entstehen. Die Haftung des Anbieters für Schäden ist auf Vorsatz und grobe Fahrlässigkeit beschränkt, soweit gesetzlich zulässig.\n' +
+      '§ 9 Geistiges Eigentum\n' +
+      'Alle Inhalte der App (Auswertungen, Routinen, Produktempfehlungen) sind urheberrechtlich geschützt. Für Mitgliedschaften erhält der Nutzer ein einfaches, nicht übertragbares Nutzungsrecht für die Dauer des Abonnements. Beim Einmalkauf des persönlichen Haarplans richtet sich der Zugang nach dem im Checkout beschriebenen Leistungsumfang.\n' +
+      '§ 10 Änderungen der AGB\n' +
+      'Der Anbieter kann diese AGB mit Wirkung für die Zukunft ändern. Die Nutzer werden über Änderungen mindestens 30 Tage im Voraus per E-Mail informiert. Widerspricht der Nutzer nicht innerhalb dieser Frist, gelten die neuen AGB als angenommen.\n' +
+      '§ 11 Anwendbares Recht und Gerichtsstand\n' +
+      'Für Verbraucher gilt das Recht ihres Wohnsitzlandes innerhalb der EU. Für Unternehmer gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts. Gerichtsstand für Unternehmer ist der Sitz des Anbieters.\n' +
+      '§ 12 Salvatorische Klausel\n' +
+      'Sollten einzelne Bestimmungen dieser AGB unwirksam sein, bleibt die Wirksamkeit der übrigen Bestimmungen unb'... 177 more characters
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    Chaarlie Jahresmitgliedschaft
+    Vertragskennung: 11111111-1111-4111-8111-111111111111
+    Vertragsbestätigung / Konditionen trial_launch_v1
+    Autorisierung bestätigt am: 14. September 2026 um 12:00:00 MESZ
+    Dein kostenloser Test dauert 7 Tage und endet am 21. September 2026 um 12:00:00 MESZ. Die erste Zahlung ist nach diesem Zeitpunkt vorgesehen, sofern du nicht vorher kündigst. Jetzt wurden 0,00 € berechnet.
+    Für das erste bezahlte Jahr werden 69,99 € fällig; danach 99,99 € jährlich im Voraus. Nach dem ersten bezahlten Jahr läuft der Vertrag auf unbestimmte Zeit weiter. Eine Kündigung ist dann jederzeit mit einer Frist von höchstens einem Monat möglich; ungenutztes vorausgezahltes Entgelt nach dem wirksamen Vertragsende wird zeitanteilig erstattet. Es entsteht keine neue feste Jahresbindung.
+    Alle genannten Beträge sind Gesamtpreise einschließlich anwendbarer Steuern. Zahlungsanbieter: Stripe. Die erste volle bezahlte Laufzeit beginnt erst nach erfolgreicher Zahlung. Während die erste Zahlung eingezogen wird, bleibt dein Zugang zunächst bestehen; bei fehlgeschlagener Zahlung endet der Zugang spätestens drei Tage nach dem oben genannten Testende und der Mitgliederinhalt bleibt bis zum bestätigten Zahlungserfolg gesperrt.
+    
+    Kündigung während des Tests: jederzeit bis zum oben genannten Testende. Der Zugang bleibt bis dahin bestehen; es beginnt kein bezahlter Zeitraum. Du kannst vor der ersten jährlichen Fortsetzung zum Ende des ersten bezahlten Jahres kündigen.
+    Online kündigen: https://chaarlie.de/kuendigen
+    Mitgliedschaft verwalten: https://chaarlie.de/profile
+    Kontakt: info@chaarlie.de
+    
+    Leistung und weitere Vertragsbedingungen
+    Anbieter: Haarmony LLC, 1111B S Governors Ave # 84075, Dover, DE 19904, USA, info@chaarlie.de.
+    Chaarlie ist ein digitaler Beratungsservice für Haarpflege. Auf Grundlage deines Selbsttests erhältst du individuelle Haarpflege-Empfehlungen, konkrete Produktempfehlungen und einen KI-Berater. Die Empfehlungen basieren auf deinen Angaben; mache beim Selbsttest und bei der Anmeldung wahrheitsgemäße Angaben. Chaarlie ist kein medizinisches Produkt und ersetzt keine ärztliche oder dermatologische Beratung.
+    Der Vertrag wird über den verbindlichen Bestellschritt beim Zahlungsanbieter geschlossen. Das kostenlose Testangebot gilt einmalig; ein fehlgeschlagener oder abgebrochener Versuch ohne aktivierten Test verbraucht es nicht. Eine Ablehnung des Tests löst keinen kostenpflichtigen Vertrag aus.
+    Die Inhalte sind urheberrechtlich geschützt. Du erhältst ein einfaches, nicht übertragbares Nutzungsrecht für die Vertragsdauer. Die vereinbarten Konditionen anderer, bereits bestehender Verträge bleiben unverändert.
+    
+    Widerrufsbelehrung
+    Du hast das Recht, binnen 14 Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen. Die Widerrufsfrist beträgt 14 Tage ab dem Tag des Vertragsschlusses. Der kostenlose Test ersetzt dieses Recht nicht; durch die Nutzung verzichtest du nicht darauf.
+    Um dein Widerrufsrecht auszuüben, musst du Haarmony LLC, 1111B S Governors Ave # 84075, Dover, DE 19904, USA, E-Mail: info@chaarlie.de, mittels einer eindeutigen Erklärung (z. B. Brief oder E-Mail) über deinen Entschluss informieren. Online: https://chaarlie.de/widerruf/erklaeren. Zur Wahrung der Frist reicht es aus, dass du die Mitteilung vor Ablauf der Widerrufsfrist absendest.
+    Wenn du diesen Vertrag widerrufst, zahlen wir alle von dir erhaltenen Zahlungen unverzüglich und spätestens binnen 14 Tagen ab Eingang der Mitteilung zurück. Wir verwenden dasselbe Zahlungsmittel wie bei der ursprünglichen Transaktion, sofern nicht ausdrücklich etwas anderes vereinbart wurde.
+    Muster-Widerrufsformular (freiwillig):
+    An Haarmony LLC, 1111B S Governors Ave # 84075, Dover, DE 19904, USA, info@chaarlie.de
+    Hiermit widerrufe(n) ich/wir den von mir/uns abgeschlossenen Vertrag über die Erbringung der folgenden Dienstleistung:
+    Bestellt am:
+    Name und Anschrift des/der Verbraucher(s):
+    Unterschrift (nur bei Mitteilung auf Papier):
+    Datum:
+    
+    Allgemeine Geschäftsbedingungen (Stand September 2026)
+    § 1 Geltungsbereich
+    Diese AGB gelten für alle Verträge zwischen der Haarmony LLC (nachfolgend „Anbieter“) und ihren Kundinnen und Kunden (nachfolgend „Nutzer“) über die Nutzung von Chaarlie und damit verbundener Dienste.
+    § 2 Vertragsgegenstand
+    Chaarlie ist ein digitaler Beratungsservice für Haarpflege. Der Anbieter stellt eine Software zur Verfügung, die anhand eines Selbsttests eine individuelle Haarpflege-Empfehlung erstellt, ergänzt durch konkrete Produktvorschläge und eine persönliche Routine. Der Service ist als digitale Dienstleistung zu verstehen, nicht als medizinische Beratung.
+    § 3 Vertragsschluss
+    Der Vertrag kommt zustande, wenn der Nutzer einen kostenpflichtigen Plan auswählt, die Zahlungsinformationen angibt und auf den entsprechenden Bestell-Button klickt. Der Anbieter bestätigt den Vertragsschluss umgehend per E-Mail.
+    § 4 Preise und Zahlung
+    Es gelten die zum Zeitpunkt des Vertragsschlusses auf der Website angegebenen Preise. Alle Preise verstehen sich inklusive der gesetzlichen Mehrwertsteuer, sofern anwendbar. Die Zahlung erfolgt per Kreditkarte oder anderen angebotenen Zahlungsmitteln über die sicheren Zahlungsdienstleister Stripe oder PayPal.
+    Für neue Mitgliedschaften mit kostenlosem Test gelten folgende Konditionen:
+    Test: 7 Tage kostenlos ab erfolgreicher Autorisierung des Zahlungsmittels. Das genaue Testende und der vorgesehene erste Zahlungstermin werden beim Abschluss und in der Vertragsbestätigung genannt.
+    Monatsplan: danach 9,99 € pro Monat.
+    Jahresplan: 69,99 € für das erste bezahlte Jahr, danach 99,99 € jährlich. Der Einführungspreis gilt nur für das erste bezahlte Jahr.
+    Der unmittelbar vor der verbindlichen Bestellung angezeigte Gesamtpreis ist maßgeblich. Die erste volle bezahlte Laufzeit beginnt erst mit erfolgreicher Zahlung. Ohne bestätigte Zahlung endet der Testzugang trotzdem zum ursprünglichen Testende. Das Testangebot gilt einmalig. Abgebrochene oder fehlgeschlagene Versuche ohne aktivierten Test verbrauchen es nicht. Eine Ablehnung des Tests löst keine Zahlung aus. Bei einer fehlerhaften Zuordnung hilft info@chaarlie.de.
+    Für bereits bestehende Verträge bleiben die bei ihrem Abschluss vereinbarten Preise und Konditionen maßgeblich, einschließlich ausdrücklich bis zur Kündigung zugesagter Einführungspreise. Bereits gekaufte persönliche Haarpläne bleiben Einmalkäufe ohne automatische Verlängerung. Diese Bestimmungen bieten keinen neuen Quartalsplan oder Einmalkauf an und stellen bestehende Verträge nicht automatisch auf den kostenlosen Test um.
+    § 5 Laufzeit und Kündigung
+    Während des kostenlosen Tests kannst du jederzeit bis zum angegebenen Testende kündigen. Dein Zugang bleibt bis dahin bestehen; anschließend beginnt kein kostenpflichtiger Zeitraum. Ohne Kündigung folgt die ausgewählte bezahlte Mitgliedschaft. Du kannst online über Verträge hier kündigen, über dein Konto oder per E-Mail an info@chaarlie.de kündigen. Wir bestätigen den Eingang deiner Kündigung und das Vertragsende in Textform.
+    Beim Monatsplan beträgt die erste bezahlte Laufzeit einen Monat. Danach läuft der Vertrag auf unbestimmte Zeit weiter und ist jederzeit mit einer Frist von höchstens einem Monat kündbar.
+    Beim Jahresplan beträgt die erste bezahlte Laufzeit ein Jahr. Du kannst zum Ende dieses ersten Jahres kündigen. Danach läuft der Vertrag auf unbestimmte Zeit weiter; es entsteht keine neue feste Jahresbindung. Die Abrechnung erfolgt weiterhin jährlich im Voraus mit 99,99 €. Nach dem ersten Jahr kannst du jederzeit mit einer Frist von höchstens einem Monat kündigen. Für die Zeit nach dem wirksamen Vertragsende erstatten wir ungenutztes, im Voraus gezahltes Entgelt zeitanteilig.
+    Gesetzliche Widerrufsrechte und das Recht zur außerordentlichen Kündigung bleiben unberührt. Für ältere Verträge gelten die jeweils vereinbarten Bedingungen, soweit sie mit zwingendem Verbraucherrecht vereinbar sind.
+    § 6 Widerrufsrecht
+    Verbraucher haben ein gesetzliches Widerrufsrecht von 14 Tagen ab Vertragsschluss. Der kostenlose Test ersetzt dieses Recht nicht. Die Nutzung des Tests bedeutet keinen Verzicht auf das Widerrufsrecht. Details siehe Widerrufsbelehrung.
+    Für bereits abgeschlossene Einmalkäufe des persönlichen Haarplans gilt zusätzlich die bei Abschluss zugesagte 14-Tage-Geld-zurück-Garantie: Wenn Chaarlie für dich nicht hilfreich ist, erhältst du eine vollständige Rückerstattung. Gesetzliche Rechte werden dadurch nicht eingeschränkt.
+    § 7 Pflichten des Nutzers
+    Der Nutzer ist verpflichtet, wahrheitsgemäße Angaben beim Selbsttest und bei der Anmeldung zu machen. Die Empfehlungen basieren auf den vom Nutzer angegebenen Informationen.
+    § 8 Haftung
+    Chaarlie ist kein medizinisches Produkt. Die Empfehlungen ersetzen keine ärztliche oder dermatologische Beratung. Der Anbieter haftet nicht für Schäden, die durch die unsachgemäße Anwendung der empfohlenen Produkte entstehen. Die Haftung des Anbieters für Schäden ist auf Vorsatz und grobe Fahrlässigkeit beschränkt, soweit gesetzlich zulässig.
+    § 9 Geistiges Eigentum
+    Alle Inhalte der App (Auswertungen, Routinen, Produktempfehlungen) sind urheberrechtlich geschützt. Für Mitgliedschaften erhält der Nutzer ein einfaches, nicht übertragbares Nutzungsrecht für die Dauer des Abonnements. Beim Einmalkauf des persönlichen Haarplans richtet sich der Zugang nach dem im Checkout beschriebenen Leistungsumfang.
+    § 10 Änderungen der AGB
+    Der Anbieter kann diese AGB mit Wirkung für die Zukunft ändern. Die Nutzer werden über Änderungen mindestens 30 Tage im Voraus per E-Mail informiert. Widerspricht der Nutzer nicht innerhalb dieser Frist, gelten die neuen AGB als angenommen.
+    § 11 Anwendbares Recht und Gerichtsstand
+    Für Verbraucher gilt das Recht ihres Wohnsitzlandes innerhalb der EU. Für Unternehmer gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts. Gerichtsstand für Unternehmer ist der Sitz des Anbieters.
+    § 12 Salvatorische Klausel
+    Sollten einzelne Bestimmungen dieser AGB unwirksam sein, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt.
+    
+    Weitere Informationen: https://chaarlie.de/agb und https://chaarlie.de/datenschutz. Bewahre diese E-Mail als dauerhafte Bestätigung deiner vereinbarten Konditionen auf.
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/billing-trial-required-notices.test.ts:82:10)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 682.679791

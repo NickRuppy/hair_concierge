@@ -1,0 +1,70 @@
+--- before/tests/stripe-trial-invoice.test.ts
++++ transfer/tests/stripe-trial-invoice.test.ts
+@@ -574,6 +574,7 @@
+   f.setBillingPresent(true)
+   assert.equal((await f.run())?.payment, null)
+   assert.equal(f.recorded.length, 0)
++  assert.equal(f.calls.includes("intent"), false)
+ })
+ 
+ for (const [name, mutate] of Object.entries({
+--- before/tests/stripe-trial-account-activation.test.ts
++++ transfer/tests/stripe-trial-account-activation.test.ts
+@@ -493,7 +493,18 @@
+ test("read-only Stripe return recovery exposes a released prior-use denial only after binding proof", async () => {
+   const f = fixture()
+   f.deny()
+-  await assert.rejects(ensureCheckoutAccount(f.session, f.deps))
++  await assert.rejects(ensureCheckoutAccount(f.session, f.deps), (error: unknown) => {
++    assert.ok(error instanceof CheckoutRecoveryError, "expected CheckoutRecoveryError for denied trial")
++    assert.equal(error.code, "trial_unavailable")
++    return true
++  })
++  assert.equal(f.tables.billing_subscriptions.length, 0)
++  assert.equal(f.tables.profiles[0].subscription_status, null)
++  assert.deepEqual(
++    f.effects.find((e) => e[0] === "cancel"),
++    ["cancel", "sub_trial", { invoice_now: false, prorate: false }],
++  )
++  assert.ok(f.effects.some((e) => e[0] === "release_trial_enrollment"), "denied trial must release its reserved claim")
+   const effectsBeforeRecoveryRead = [...f.effects]
+   assert.equal(
+     await getStripeTrialReturnRecoveryCode(f.session, {
+@@ -512,7 +523,14 @@
+   const cleanup = fixture()
+   cleanup.deny()
+   cleanup.failCancel()
+-  await assert.rejects(ensureCheckoutAccount(cleanup.session, cleanup.deps))
++  await assert.rejects(ensureCheckoutAccount(cleanup.session, cleanup.deps), (error: unknown) => {
++    assert.ok(error instanceof CheckoutRecoveryError, "expected CheckoutRecoveryError after neutralization timeout")
++    assert.equal(error.code, "trial_reconciliation_required")
++    assert.match(String(error.cause), /provider timeout/)
++    return true
++  })
++  assert.equal(cleanup.tables.billing_subscriptions.length, 0)
++  assert.ok(!cleanup.effects.some((e) => e[0] === "release_trial_enrollment"), "neutralization timeout must not release its reserved claim")
+   assert.equal(
+     await getStripeTrialReturnRecoveryCode(cleanup.session, {
+       supabase: cleanup.deps.supabase,
+--- before/tests/stripe-trial-authorization.test.ts
++++ transfer/tests/stripe-trial-authorization.test.ts
+@@ -394,6 +394,19 @@
+     NOW,
+     false,
+   )
++  assert.deepEqual(evidence?.authorization, {
++    enrollmentId: ENROLLMENT_ID,
++    providerAgreementId: SUBSCRIPTION_ID,
++    authorizationSucceededAt: "2026-09-13T12:00:00.000Z",
++    trialEndAt: "2026-09-20T12:00:00.000Z",
++    customerId: CUSTOMER_ID,
++    paymentMethodId: PAYMENT_METHOD_ID,
++    cardFingerprint: "fp_server_only",
++    unverifiedFutureInvoiceObligations: [
++      "verify_first_paid_invoice_amount",
++      "verify_renewal_invoice_amount",
++    ],
++  })
+   assert.equal(evidence?.authorization.providerAgreementId, SUBSCRIPTION_ID)
+   assert.equal(evidence?.session.id, "cs_trial")
+   assert.equal(evidence?.subscription.id, SUBSCRIPTION_ID)

@@ -1,0 +1,735 @@
+{
+  "scope": "Exactly nine delegated conditioner/mask/scalp-care offer recoveries; evidence only",
+  "generated_at": "2026-10-02T15:03:54.969Z",
+  "verification_window": {
+    "start": "2026-10-02T14:57:39.601Z",
+    "end": "2026-10-02T15:03:54.969Z"
+  },
+  "preferred_retailer_order": [
+    "dm.de",
+    "rossmann.de",
+    "mueller.de",
+    "brand-direct",
+    "trusted German specialists",
+    "Amazon DE fallback"
+  ],
+  "authority_notes": [
+    "No DB, app code, category, formula, GTIN registry, git, production or server mutations.",
+    "No existing evidence cohort files changed.",
+    "All offers require parent integration and exact human review before catalog writes.",
+    "Search snippets used only for discovery; current proposals use primary current web content, live browser DOM or live HTML structured data.",
+    "A web tool crawl marked today is current primary retrieval but is not a browser/network freshness guarantee. Explicit stale delivery dates were rejected until live corroboration.",
+    "Absent search results establish only that this search pass captured no offer, not global unavailability.",
+    "Garnier has no registered GTIN: acceptance uses existing-link product identity, exact name/variant and 400 ml; no barcode fabricated."
+  ],
+  "counts": {
+    "records": 9,
+    "verified_exact": 3,
+    "verified_name_variant_package": 1,
+    "identity_review_required": 2,
+    "no_usable_offer": 3
+  },
+  "records": [
+    {
+      "id": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+      "name": "Balea Professional Aqua Hyaluron Conditioner",
+      "registered_gtins": [
+        "4066447342055"
+      ],
+      "proposed_url": "https://www.dm.de/p/d/1675522/balea-professional-conditioner-aqua-hyaluron",
+      "price_eur": 1.25,
+      "package_value": 200,
+      "package_unit": "ml",
+      "observed_gtin": "4070765001662",
+      "availability": "available",
+      "classification": "identity_review_required",
+      "reason": "Current preferred dm offer has a different published GTIN. Same dm article number 1675522 and name/200 ml are evidence for a potential identifier transition, not authorization to replace the registered product. Hold all catalog/identifier writes for exact human identity review.",
+      "source_method": "primary_dm_web_open_follow_redirect",
+      "source_evidence": [
+        {
+          "source_url": "https://www.dm.de/p/d/1675522/balea-professional-conditioner-aqua-hyaluron",
+          "source_method": "web primary open, crawled today",
+          "source_facts": {
+            "title": "Balea PROFESSIONAL Conditioner Aqua Hyaluron, 200 ml",
+            "price_eur": 1.25,
+            "gtin": "4070765001662",
+            "availability": "Lieferbar",
+            "delivery": "2-3 Werktage",
+            "dm_article": "1675522"
+          },
+          "cache_limit": "Live/current primary observation; no search snippet used as current offer proof."
+        },
+        {
+          "source_url": "https://www.dm.de/p/d/1675522/balea-professional-spuelung-aqua-hyaluron",
+          "source_method": "web search discovery followed by primary open",
+          "source_facts": {
+            "search_gtin": "4066447342055",
+            "resolved_url": "https://www.dm.de/p/d/1675522/balea-professional-conditioner-aqua-hyaluron",
+            "current_gtin": "4070765001662"
+          },
+          "cache_limit": "Old indexed slug showed registered GTIN; opening it today redirects to current canonical page with new GTIN. Cached old identifier is not current offer proof."
+        }
+      ],
+      "query_checks": [
+        {
+          "query": "site:dm.de \"Conditioner Aqua Hyaluron\"",
+          "result": "Current preferred offer found.",
+          "source_urls": [
+            "https://www.dm.de/p/d/1675522/balea-professional-conditioner-aqua-hyaluron"
+          ]
+        },
+        {
+          "query": "\"Balea\" \"4066447342055\" kaufen Deutschland",
+          "result": "Old dm slug, foreign dm offers, eBay six-pack and comparison listings; no exact current German single-pack preferred offer for old barcode captured.",
+          "source_urls": []
+        }
+      ],
+      "proposal": "Review old-to-new identifier continuity; if confirmed, current dm 200 ml offer is EUR 1.25. Do not assume formula continuity solely from name/article.",
+      "checked_at": "2026-10-02T15:03:54.969Z",
+      "checked_at_meaning": "Evidence review completed at this timestamp; observations occurred within verification_window. Exact HTTP timestamps are included where captured.",
+      "currency": "EUR",
+      "whole_pack_price": true,
+      "production_write_authorized": false,
+      "source_urls": [
+        "https://www.dm.de/p/d/1675522/balea-professional-conditioner-aqua-hyaluron",
+        "https://www.dm.de/p/d/1675522/balea-professional-spuelung-aqua-hyaluron"
+      ]
+    },
+    {
+      "id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+      "name": "Balea Professional Oil Repair Intensiv Spülung",
+      "registered_gtins": [
+        "4066447365443"
+      ],
+      "proposed_url": "https://www.dm.de/p/d/1703916/balea-professional-conditioner-oil-repair-intensiv",
+      "price_eur": 1.25,
+      "package_value": 200,
+      "package_unit": "ml",
+      "observed_gtin": "4070765001402",
+      "availability": "available",
+      "classification": "identity_review_required",
+      "reason": "Preferred dm publishes new GTIN 4070765001402 versus registered 4066447365443. Name and 200 ml match; the barcode conflict prevents automatic offer promotion.",
+      "source_method": "primary_dm_web_open",
+      "source_evidence": [
+        {
+          "source_url": "https://www.dm.de/p/d/1703916/balea-professional-conditioner-oil-repair-intensiv",
+          "source_method": "web primary open, crawled today",
+          "source_facts": {
+            "title": "Balea PROFESSIONAL Conditioner Oil Repair Intensiv, 200 ml",
+            "price_eur": 1.25,
+            "gtin": "4070765001402",
+            "availability": "Lieferbar",
+            "delivery": "2-3 Werktage",
+            "dm_article": "1703916"
+          },
+          "cache_limit": "Live/current primary observation; no search snippet used as current offer proof."
+        }
+      ],
+      "query_checks": [
+        {
+          "query": "site:dm.de \"Oil Repair Intensiv\" Conditioner",
+          "result": "Current 200 ml conditioner found; 50 ml travel and 150 ml spray excluded.",
+          "source_urls": [
+            "https://www.dm.de/p/d/1703916/balea-professional-conditioner-oil-repair-intensiv"
+          ]
+        },
+        {
+          "query": "\"Balea\" \"Oil Repair\" \"4066447365443\"",
+          "result": "Foreign dm.hr/dm.pl pages and eBay retain old GTIN; no preferred German exact-old-GTIN offer captured.",
+          "source_urls": [
+            "https://www.dm.hr/p/d/1703916/balea-professional-oil-repair-intensiv-regenerator-za-kosu-za-ostecenu-i-suhu-kosu",
+            "https://www.ebay.de/itm/205148137810"
+          ]
+        },
+        {
+          "query": "\"Balea\" \"4066447365443\" site:amazon.de",
+          "result": "No usable exact single-pack Amazon DE primary result returned; comparison result was a mixed 600 ml bundle, excluded.",
+          "source_urls": []
+        }
+      ],
+      "proposal": "Hold for identity reconciliation; current dm 200 ml offer is EUR 1.25 only if new identifier is approved.",
+      "checked_at": "2026-10-02T15:03:54.969Z",
+      "checked_at_meaning": "Evidence review completed at this timestamp; observations occurred within verification_window. Exact HTTP timestamps are included where captured.",
+      "currency": "EUR",
+      "whole_pack_price": true,
+      "production_write_authorized": false,
+      "source_urls": [
+        "https://www.dm.de/p/d/1703916/balea-professional-conditioner-oil-repair-intensiv"
+      ]
+    },
+    {
+      "id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+      "name": "Garnier Hair Food Macadamia",
+      "registered_gtins": [],
+      "proposed_url": "https://www.douglas.de/de/p/5010035048",
+      "price_eur": 5.99,
+      "package_value": 400,
+      "package_unit": "ml",
+      "observed_gtin": null,
+      "availability": "available",
+      "classification": "verified_name_variant_package",
+      "reason": "Existing catalog link explicitly names Macadamia Hair Food 3in1 mask with URL barcode 3600542511612; dm and Garnier primary pages establish 400 ml and conditioner use. Live Douglas sells the same named 400 ml 3in1 product. No barcode is published in the observed Douglas page, so this is name/variant/package verification rather than registered-GTIN verification. No category or formula changes proposed.",
+      "source_method": "live_browser_DOM_Douglas_plus_primary_dm_and_brand_identity",
+      "source_evidence": [
+        {
+          "source_url": "https://www.douglas.de/de/p/5010035048",
+          "source_method": "live in-app browser DOM",
+          "source_facts": {
+            "title": "Garnier Haarkur Fructis Bändigendes Macadamia Hair Food",
+            "price_eur": 5.99,
+            "package": "400 ml",
+            "article": "1063413",
+            "availability": "Online: auf Lager",
+            "delivery": "05.10.2026–07.10.2026",
+            "gtin_published": false
+          },
+          "cache_limit": "Live/current primary observation; no search snippet used as current offer proof."
+        },
+        {
+          "source_url": "https://www.dm.de/p/d/1676326/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske",
+          "source_method": "primary web open",
+          "source_facts": {
+            "title": "Haarkur Macadamia Hair Food 3in1 Maske, 400 ml",
+            "price_eur": 5.95,
+            "gtin": "3600542511612",
+            "availability": "Nicht lieferbar"
+          },
+          "cache_limit": "Primary page returned three-day-old crawl; used as identity/preference evidence, not as proposed current purchasable offer."
+        },
+        {
+          "source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/hair-food/3in1-maske-fuer-trockenes-haar-angereichert-mit-macadamia",
+          "source_method": "primary brand web open, crawled today",
+          "source_facts": {
+            "title": "Garnier Fructis Bändigendes Macadamia Hair Food",
+            "package": "400 ml",
+            "uses": [
+              "Spülung",
+              "Maske",
+              "Leave-In"
+            ],
+            "direct_price": null
+          },
+          "cache_limit": "Live/current primary observation; no search snippet used as current offer proof."
+        }
+      ],
+      "query_checks": [
+        {
+          "query": "\"Macadamia\" \"Hair Food\" site:dm.de",
+          "result": "Exact existing-linked product recovered; not deliverable.",
+          "source_urls": [
+            "https://www.dm.de/p/d/1676326/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske"
+          ]
+        },
+        {
+          "query": "\"Garnier\" \"Macadamia\" \"Hair Food\" site:rossmann.de; Garnier Hair Food Macadamia 400 ml Rossmann Müller",
+          "result": "No exact current purchasable preferred PDP captured; other Hair Food variants excluded.",
+          "source_urls": []
+        },
+        {
+          "query": "\"Garnier\" \"Macadamia\" \"Hair Food\" site:flaconi.de; site:hagel-shop.de",
+          "result": "No concrete exact purchasable PDP returned.",
+          "source_urls": []
+        },
+        {
+          "query": "\"Garnier\" \"Macadamia\" \"Hair Food\" site:notino.de",
+          "result": "Notino mask page is 390 ml and out of stock; separate conditioner also exists, excluded.",
+          "source_urls": [
+            "https://www.notino.de/garnier/fructis-macadamia-hair-food-glaettende-maske-fuer-widerspenstiges-haar/"
+          ]
+        },
+        {
+          "query": "\"Garnier\" \"Macadamia Hair Food\" site:douglas.de",
+          "result": "400 ml candidate opened in live browser; current EUR 5.99 and October delivery verified.",
+          "source_urls": [
+            "https://www.douglas.de/de/p/5010035048"
+          ]
+        }
+      ],
+      "proposal": "Commerce-only offer proposal for existing 3in1 product: Douglas EUR 5.99/400 ml, retain existing category and do not register a barcode based solely on old URL.",
+      "checked_at": "2026-10-02T15:03:54.969Z",
+      "checked_at_meaning": "Evidence review completed at this timestamp; observations occurred within verification_window. Exact HTTP timestamps are included where captured.",
+      "currency": "EUR",
+      "whole_pack_price": true,
+      "production_write_authorized": false,
+      "source_urls": [
+        "https://www.douglas.de/de/p/5010035048",
+        "https://www.dm.de/p/d/1676326/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske",
+        "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/hair-food/3in1-maske-fuer-trockenes-haar-angereichert-mit-macadamia"
+      ]
+    },
+    {
+      "id": "26985fdd-1b41-46e3-9c9a-94b98f92310a",
+      "name": "Nivea Volumen & Kraft",
+      "registered_gtins": [
+        "4005900918031"
+      ],
+      "proposed_url": null,
+      "price_eur": null,
+      "package_value": 200,
+      "package_unit": "ml",
+      "observed_gtin": null,
+      "availability": "not_verified",
+      "classification": "not_verified",
+      "reason": "No current acceptable German purchase offer for the registered conditioner was verified. Preferred shops mainly return Volume Wonder/Volumen & Kraft shampoo, which is a different product. Official NIVEA conditioner assortment lists five other products. Foreign exact-barcode candidate is stale and contradictory; live fetch redirects in a loop. Do not infer global discontinuation or replace with shampoo.",
+      "source_method": "preferred_shop_and_exact_GTIN_discovery_primary_brand_open_alternate_fetch",
+      "source_evidence": [
+        {
+          "source_url": "https://www.nivea.de/produkte/haare/conditioner-kuren",
+          "source_method": "primary brand assortment open",
+          "source_facts": {
+            "observed_conditioners": [
+              "Hydration Hyaluron",
+              "Color Brilliance",
+              "Length Wonder",
+              "Hairmilk Shine",
+              "Power Repair"
+            ],
+            "exact_volumen_kraft_offer": false
+          },
+          "cache_limit": "Brand page returned last-month crawl; absence from this list is contextual only."
+        },
+        {
+          "source_url": "https://www.dm.de/nivea-conditioner-volumen-und-kraft-p4005900918031.html",
+          "source_method": "primary web open",
+          "source_facts": {
+            "result": "Tool internal error; no usable PDP"
+          },
+          "cache_limit": "Failure alone was not treated as unavailability."
+        },
+        {
+          "source_url": "https://www.fresh-store.eu/en/conditioner/3702-nivea-volume-strength-conditioner-200-ml-68-fl-oz-4005900918031.html",
+          "source_method": "primary web open then direct urllib fetch",
+          "source_facts": {
+            "gtin": "4005900918031",
+            "package": "200 ml",
+            "cached_price_eur": 4.91,
+            "cached_signals": [
+              "back in stock notification",
+              "2 pcs In Stock"
+            ],
+            "merchant": "FRESH STORE FOR YOU LIMITED, Ireland",
+            "live_fetch": "HTTP 302 redirect loop"
+          },
+          "cache_limit": "Web page crawl 10 months old; not acceptable current German specialist offer."
+        }
+      ],
+      "query_checks": [
+        {
+          "query": "\"4005900918031\"",
+          "result": "Exact identity at Polish pharmacy/Allegro and Fresh Store. Allegro title/body conflict with Intense Repair; excluded.",
+          "source_urls": []
+        },
+        {
+          "query": "\"Nivea\" \"Volumen\" \"Spülung\" site:dm.de / site:rossmann.de / site:mueller.de",
+          "result": "No matching conditioner offer; mostly shampoo and unrelated listings.",
+          "source_urls": []
+        },
+        {
+          "query": "\"Nivea\" \"Volumen\" \"Spülung\" site:nivea.de",
+          "result": "Official current assortment page found, no same conditioner.",
+          "source_urls": []
+        },
+        {
+          "query": "\"Nivea\" \"Volumen\" \"Spülung\" site:notino.de / site:flaconi.de / site:hagel-shop.de / site:douglas.de; \"Nivea\" \"Volumen Kraft\" conditioner site:amazon.de",
+          "result": "No usable exact primary offer captured.",
+          "source_urls": []
+        }
+      ],
+      "proposal": "Retain hold; source-confirmed re-listing or human choice of different product would be needed. 200 ml is identity context, not a proposed available package.",
+      "checked_at": "2026-10-02T15:03:54.969Z",
+      "checked_at_meaning": "Evidence review completed at this timestamp; observations occurred within verification_window. Exact HTTP timestamps are included where captured.",
+      "currency": "EUR",
+      "whole_pack_price": true,
+      "production_write_authorized": false,
+      "source_urls": [
+        "https://www.nivea.de/produkte/haare/conditioner-kuren",
+        "https://www.dm.de/nivea-conditioner-volumen-und-kraft-p4005900918031.html",
+        "https://www.fresh-store.eu/en/conditioner/3702-nivea-volume-strength-conditioner-200-ml-68-fl-oz-4005900918031.html"
+      ]
+    },
+    {
+      "id": "a62ae91c-69c6-466e-827e-350f518d73b5",
+      "name": "Syoss Intense Curls Conditioner",
+      "registered_gtins": [
+        "4015100860887"
+      ],
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-syoss-tiefenspuelung-intense-curls/p/4015100860887",
+      "price_eur": 3.49,
+      "package_value": 250,
+      "package_unit": "ml",
+      "observed_gtin": "4015100860887",
+      "availability": "available",
+      "classification": "verified_exact",
+      "reason": "Rossmann concrete PDP matches registered GTIN in URL, product name and 250 ml; refreshed primary page crawled today shows EUR 3.49 and delivery 06–07 October. Higher-preference dm exact-GTIN PDP is not deliverable.",
+      "source_method": "primary_Rossmann_web_open_find_refreshed_today",
+      "source_evidence": [
+        {
+          "source_url": "https://www.rossmann.de/de/pflege-und-duft-syoss-tiefenspuelung-intense-curls/p/4015100860887",
+          "source_method": "web primary find refreshed today",
+          "source_facts": {
+            "title": "Syoss Tiefenspülung Intense Curls",
+            "package": "250 ml",
+            "price_eur": 3.49,
+            "gtin_in_url": "4015100860887",
+            "availability": "delivery offered",
+            "delivery": "06.10.26–07.10.26",
+            "article": "178561"
+          },
+          "cache_limit": "Live/current primary observation; no search snippet used as current offer proof."
+        },
+        {
+          "source_url": "https://www.dm.de/p/d/3047028/syoss-conditioner-intense-curls",
+          "source_method": "web primary open, crawled today",
+          "source_facts": {
+            "package": "250 ml",
+            "price_eur": 2.95,
+            "gtin": "4015100860887",
+            "availability": "Nicht lieferbar"
+          },
+          "cache_limit": "Live/current primary observation; no search snippet used as current offer proof."
+        }
+      ],
+      "query_checks": [
+        {
+          "query": "site:dm.de \"Syoss\" \"Conditioner Intense Curls\"",
+          "result": "Correct dm article is 3047028; catalog article 1666690 was stale.",
+          "source_urls": [
+            "https://www.dm.de/p/d/3047028/syoss-conditioner-intense-curls"
+          ]
+        },
+        {
+          "query": "Syoss Intense Curls Tiefenspülung 250 ml Rossmann Müller",
+          "result": "Rossmann brand listing led to concrete exact-GTIN PDP; refreshed PDP determines price.",
+          "source_urls": [
+            "https://www.rossmann.de/de/pflege-und-duft-syoss-tiefenspuelung-intense-curls/p/4015100860887"
+          ]
+        }
+      ],
+      "proposal": "Rossmann EUR 3.49/250 ml after human review.",
+      "checked_at": "2026-10-02T15:03:54.969Z",
+      "checked_at_meaning": "Evidence review completed at this timestamp; observations occurred within verification_window. Exact HTTP timestamps are included where captured.",
+      "currency": "EUR",
+      "whole_pack_price": true,
+      "production_write_authorized": false,
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft-syoss-tiefenspuelung-intense-curls/p/4015100860887",
+        "https://www.dm.de/p/d/3047028/syoss-conditioner-intense-curls"
+      ]
+    },
+    {
+      "id": "47795618-40e7-4ef6-8034-0fd8eb747575",
+      "name": "Isana 3in1 Milchprotein & Mandel",
+      "registered_gtins": [
+        "4305615627441"
+      ],
+      "proposed_url": null,
+      "price_eur": null,
+      "package_value": 250,
+      "package_unit": "ml",
+      "observed_gtin": null,
+      "availability": "unavailable_at_preferred_shop",
+      "classification": "unavailable_verified_preferred_shop",
+      "reason": "Rossmann exact registered-barcode URL redirects to a category page with product.notAvailable.error. No current eligible alternate whole-pack EUR offer recovered. Old EUR 0.69 is expired comparison-site history, not a current price. This does not establish global unavailability.",
+      "source_method": "primary_Rossmann_redirect_plus_substantive_alternate_discovery",
+      "source_evidence": [
+        {
+          "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-isana-haarmaske-3in1-mandelmilch-milchprotein-und-mandel/p/4305615627441",
+          "source_method": "web primary open, crawled today",
+          "source_facts": {
+            "redirect_url": "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127?info=text.product.notAvailable.error",
+            "result": "No product offer; prices on destination belong to other products"
+          },
+          "cache_limit": "Live/current primary observation; no search snippet used as current offer proof."
+        },
+        {
+          "source_url": "https://bazaarica.com/de/product/isana-hair-mask-3-in-1-almond-milk-250-ml",
+          "source_method": "primary alternate open",
+          "source_facts": {
+            "package": "250 ml",
+            "gtin": "4305615627441",
+            "availability": "Ausverkauft",
+            "currency": "USD",
+            "identity_conflict": "Summary says Magnolie & Lotus while title says Mandel"
+          },
+          "cache_limit": "Three-week crawl; rejected for non-EUR/out-of-stock and contradictory variant description."
+        },
+        {
+          "source_url": "https://www.supermarktcheck.de/product/357186-isana-haarmaske-3in1-mandelmilch-milchprotein-mandel",
+          "source_method": "discovery only",
+          "source_facts": {
+            "package": "250 ml",
+            "historical_price_eur": 0.69,
+            "price_status": "abgelaufen"
+          },
+          "cache_limit": "Comparison site is not commercial proof; included only to explain why old price is rejected."
+        }
+      ],
+      "query_checks": [
+        {
+          "query": "\"4305615627441\" kaufen",
+          "result": "Polish Allegro and Turkish Trendyol listings, no eligible current German offer.",
+          "source_urls": []
+        },
+        {
+          "query": "\"ISANA\" \"Milchprotein\" \"Mandel\" site:rossmann.de; \"ISANA\" \"Mandelmilch\" site:rossmann.de",
+          "result": "No replacement exact PDP; existing URL redirects unavailable.",
+          "source_urls": []
+        },
+        {
+          "query": "\"ISANA\" \"Milchprotein\" \"Mandel\" haarmaske kaufen Deutschland; \"ISANA\" \"4305615627441\" site:amazon.de; \"ISANA\" \"Mandelmilch\" site:amazon.de",
+          "result": "Historical comparison pages and unavailable/non-EUR Bazaarica; no usable Amazon DE fallback.",
+          "source_urls": []
+        }
+      ],
+      "proposal": "Keep preferred-shop unavailable hold; no price update. 250 ml is secondary identity context, not a purchasable offer.",
+      "checked_at": "2026-10-02T15:03:54.969Z",
+      "checked_at_meaning": "Evidence review completed at this timestamp; observations occurred within verification_window. Exact HTTP timestamps are included where captured.",
+      "currency": "EUR",
+      "whole_pack_price": true,
+      "production_write_authorized": false,
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft-isana-isana-haarmaske-3in1-mandelmilch-milchprotein-und-mandel/p/4305615627441",
+        "https://bazaarica.com/de/product/isana-hair-mask-3-in-1-almond-milk-250-ml",
+        "https://www.supermarktcheck.de/product/357186-isana-haarmaske-3in1-mandelmilch-milchprotein-mandel"
+      ]
+    },
+    {
+      "id": "869abd97-a499-4f39-97e5-2722773e46ae",
+      "name": "Sante Intense Hydration",
+      "registered_gtins": [
+        "4055297220682"
+      ],
+      "proposed_url": null,
+      "price_eur": null,
+      "package_value": 150,
+      "package_unit": "ml",
+      "observed_gtin": "4055297220682",
+      "availability": "unavailable_at_verified_sources",
+      "classification": "unavailable_verified_preferred_sources",
+      "reason": "Exact registered 150 ml mask is OutOfStock in live manufacturer JSON-LD. Flaconi cached EUR 6.99/in-stock result is false-current: live browser page is not found. Ecco Verde current primary page says discontinued in its shop. Existing Rossmann URL refers to a different 20 ml GTIN and redirects unavailable. No current eligible purchasable offer verified.",
+      "source_method": "live_brand_HTML_JSONLD_and_live_browser_cache_reconciliation",
+      "source_evidence": [
+        {
+          "source_url": "https://www.sante.de/intense-hydration-maske-hyaluron-3-fach-protein-komplex/40628",
+          "source_method": "direct urllib live HTML JSON-LD at 2026-10-02T15:00:12.660054+00:00",
+          "source_facts": {
+            "type": "ProductGroup.hasVariant.Product",
+            "sku": "40628",
+            "gtin13": "4055297220682",
+            "package": "150 ml",
+            "price_eur": 6.99,
+            "availability": "https://schema.org/OutOfStock"
+          },
+          "cache_limit": "Live/current primary observation; no search snippet used as current offer proof."
+        },
+        {
+          "source_url": "https://www.flaconi.de/haare/sante/intense-hydration/sante-intense-hydration-haarmaske.html",
+          "source_method": "live in-app browser",
+          "source_facts": {
+            "heading": "Sorry! Leider können wir die Seite, die du suchst, nicht finden.",
+            "current_offer": null
+          },
+          "cache_limit": "Web open returned five-month-old EUR 6.99/in-stock page with May delivery; live browser supersedes cached result."
+        },
+        {
+          "source_url": "https://www.rossmann.de/de/pflege-und-duft-sante-intense-hydration-haarmaske/p/4025089005896",
+          "source_method": "primary open",
+          "source_facts": {
+            "redirect": "https://www.rossmann.de/de/pflege-und-duft/c/olcat1_2325036?info=text.product.notAvailable.error",
+            "url_gtin": "4025089005896",
+            "conflict": "20 ml sachet; registered mask is 150 ml"
+          },
+          "cache_limit": "Live/current primary observation; no search snippet used as current offer proof."
+        },
+        {
+          "source_url": "https://www.ecco-verde.de/sante-naturally/intense-hydration-maske?sai=59656",
+          "source_method": "primary web open, crawled today; direct HTTP 200 corroboration",
+          "source_facts": {
+            "availability": "Ausverkauft; Produkt wird in unserem Shop nicht mehr angeboten"
+          },
+          "cache_limit": "Old listing/category cache still advertised EUR 6.29 and September delivery; current PDP supersedes it."
+        }
+      ],
+      "query_checks": [
+        {
+          "query": "\"Sante\" \"Intense Hydration\" Haarmaske 150 ml dm Rossmann Müller; \"Sante\" \"4055297220682\" site:mueller.de",
+          "result": "No purchasable exact dm/Müller PDP captured; Rossmann existing link conflicts.",
+          "source_urls": []
+        },
+        {
+          "query": "\"Sante\" \"Intense Hydration\" Maske site:sante.de",
+          "result": "Exact brand page found; live OutOfStock.",
+          "source_urls": [
+            "https://www.sante.de/intense-hydration-maske-hyaluron-3-fach-protein-komplex/40628"
+          ]
+        },
+        {
+          "query": "\"Sante\" \"Intense Hydration\" site:flaconi.de / site:hagel-shop.de / site:notino.de / site:douglas.de; \"Sante\" \"4055297220682\" site:amazon.de",
+          "result": "Flaconi candidate stale; Hagel returns shampoos; no usable exact Notino/Douglas/Amazon offer.",
+          "source_urls": []
+        },
+        {
+          "query": "\"Sante\" \"4055297220682\" kaufen Deutschland",
+          "result": "Shop Apotheke marketplace MP Produkt EUR 24.90 and eBay EUR 13.99 discovered; not promoted as named trusted primary specialist offer.",
+          "source_urls": [
+            "https://www.shop-apotheke.com/beauty/8111391/sante-intense-hydration-maske-hyaluron.htm"
+          ]
+        },
+        {
+          "query": "\"Sante\" \"Intense Hydration\" \"150\" site:ecco-verde.de",
+          "result": "Live linked PDP says no longer offered.",
+          "source_urls": [
+            "https://www.ecco-verde.de/sante-naturally/intense-hydration-maske?sai=59656"
+          ]
+        }
+      ],
+      "proposal": "Do not reuse 20 ml Rossmann URL or cached Flaconi offer. Hold unavailable at checked sources; if broader merchant policy is approved, marketplace stock would need live seller/offer validation first.",
+      "checked_at": "2026-10-02T15:03:54.969Z",
+      "checked_at_meaning": "Evidence review completed at this timestamp; observations occurred within verification_window. Exact HTTP timestamps are included where captured.",
+      "currency": "EUR",
+      "whole_pack_price": true,
+      "production_write_authorized": false,
+      "source_urls": [
+        "https://www.sante.de/intense-hydration-maske-hyaluron-3-fach-protein-komplex/40628",
+        "https://www.flaconi.de/haare/sante/intense-hydration/sante-intense-hydration-haarmaske.html",
+        "https://www.rossmann.de/de/pflege-und-duft-sante-intense-hydration-haarmaske/p/4025089005896",
+        "https://www.ecco-verde.de/sante-naturally/intense-hydration-maske?sai=59656"
+      ]
+    },
+    {
+      "id": "cce6346c-8c92-4a17-b39b-cc7f300e84de",
+      "name": "Syoss Haarkur Lamination Intense Glaze",
+      "registered_gtins": [
+        "4015100867213"
+      ],
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-syoss-haar-laminierungs-kur-intense-glaze/p/4015100867213",
+      "price_eur": 4.99,
+      "package_value": 200,
+      "package_unit": "ml",
+      "observed_gtin": "4015100867213",
+      "availability": "available",
+      "classification": "verified_exact",
+      "reason": "Live Rossmann browser confirms exact registered-barcode PDP, matching 200 ml treatment, EUR 4.99 and current October delivery. dm is unavailable. Müller live exact-GTIN InStock offer also verifies identity but Rossmann wins retailer preference despite EUR 0.04 higher price.",
+      "source_method": "live_Rossmann_browser_DOM_plus_Mueller_live_JSONLD",
+      "source_evidence": [
+        {
+          "source_url": "https://www.rossmann.de/de/pflege-und-duft-syoss-haar-laminierungs-kur-intense-glaze/p/4015100867213",
+          "source_method": "live in-app browser DOM",
+          "source_facts": {
+            "title": "Syoss Haar-Laminierungs-Kur Intense Glaze",
+            "package": "200 ml",
+            "price_eur": 4.99,
+            "gtin_in_url": "4015100867213",
+            "article": "209467",
+            "availability": "In den Warenkorb button enabled; delivery offered",
+            "delivery": "06.10.26–07.10.26"
+          },
+          "cache_limit": "Initial web cache showed 28–29 September delivery; live DOM October delivery supersedes it."
+        },
+        {
+          "source_url": "https://www.dm.de/p/d/3119223/syoss-haarkur-lamination-intense-glaze",
+          "source_method": "web primary open/find crawled today",
+          "source_facts": {
+            "price_eur": 2.95,
+            "package": "200 ml",
+            "gtin": "4015100867213",
+            "availability": "Nicht lieferbar"
+          },
+          "cache_limit": "Live/current primary observation; no search snippet used as current offer proof."
+        },
+        {
+          "source_url": "https://www.mueller.de/p/syoss-haar-laminierungs-kur-intense-glaze-PPN3168455/",
+          "source_method": "direct live HTML Product/Offer JSON-LD at 2026-10-02T15:00:12.656176+00:00",
+          "source_facts": {
+            "name": "syoss Haar-Laminierungs-Kur Intense Glaze",
+            "sku": "3168455",
+            "gtin": "4015100867213",
+            "price": 4.95,
+            "priceCurrency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "package": "200 ml",
+            "shipping_country": "DE"
+          },
+          "cache_limit": "Live/current primary observation; no search snippet used as current offer proof."
+        }
+      ],
+      "query_checks": [
+        {
+          "query": "\"4015100867213\" kaufen; Syoss Haar Laminierungs Kur Intense Glaze Rossmann Müller",
+          "result": "dm and Rossmann exact-GTIN PDPs discovered.",
+          "source_urls": [
+            "https://www.dm.de/p/d/3119223/syoss-haarkur-lamination-intense-glaze",
+            "https://www.rossmann.de/de/pflege-und-duft-syoss-haar-laminierungs-kur-intense-glaze/p/4015100867213"
+          ]
+        },
+        {
+          "query": "\"Laminierungs\" \"Intense Glaze\" site:mueller.de",
+          "result": "Exact registered GTIN and current EUR offer confirmed in live JSON-LD.",
+          "source_urls": [
+            "https://www.mueller.de/p/syoss-haar-laminierungs-kur-intense-glaze-PPN3168455/"
+          ]
+        }
+      ],
+      "proposal": "Rossmann EUR 4.99/200 ml after human review. No assumed successor replacement; same registered GTIN verified.",
+      "checked_at": "2026-10-02T15:03:54.969Z",
+      "checked_at_meaning": "Evidence review completed at this timestamp; observations occurred within verification_window. Exact HTTP timestamps are included where captured.",
+      "currency": "EUR",
+      "whole_pack_price": true,
+      "production_write_authorized": false,
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft-syoss-haar-laminierungs-kur-intense-glaze/p/4015100867213",
+        "https://www.dm.de/p/d/3119223/syoss-haarkur-lamination-intense-glaze",
+        "https://www.mueller.de/p/syoss-haar-laminierungs-kur-intense-glaze-PPN3168455/"
+      ]
+    },
+    {
+      "id": "945ecca3-c4f0-4426-9af5-a5a8482b3b27",
+      "name": "Klärendes Serum",
+      "registered_gtins": [
+        "4015100892963"
+      ],
+      "proposed_url": "https://www.dm.de/p/d/3119228/schwarzkopf-gliss-haarserum-scalp-balance-klaerend",
+      "price_eur": 8.95,
+      "package_value": 100,
+      "package_unit": "ml",
+      "observed_gtin": "4015100892963",
+      "availability": "available",
+      "classification": "verified_exact",
+      "reason": "Existing preferred dm canonical PDP now directly exposes the exact registered GTIN, 100 ml, EUR 8.95 and Lieferbar. The prior generic-shell fetch was a retrieval limitation, not an absence of a commercial offer.",
+      "source_method": "primary_dm_web_open_find_crawled_today",
+      "source_evidence": [
+        {
+          "source_url": "https://www.dm.de/p/d/3119228/schwarzkopf-gliss-haarserum-scalp-balance-klaerend",
+          "source_method": "web primary open/find, crawled today",
+          "source_facts": {
+            "title": "Schwarzkopf GLISS Haarserum scalp balance, klärend, 100 ml",
+            "price_eur": 8.95,
+            "gtin": "4015100892963",
+            "availability": "Lieferbar",
+            "delivery": "2-3 Werktage",
+            "dm_article": "3119228"
+          },
+          "cache_limit": "Live/current primary observation; no search snippet used as current offer proof."
+        }
+      ],
+      "query_checks": [
+        {
+          "query": "Existing canonical dm PDP 3119228; find GTIN and lieferbar",
+          "result": "Exact preferred offer verified; no lower-ranked retailer needed.",
+          "source_urls": [
+            "https://www.dm.de/p/d/3119228/schwarzkopf-gliss-haarserum-scalp-balance-klaerend"
+          ]
+        }
+      ],
+      "proposal": "Retain dm EUR 8.95; source-confirmed package 100 ml for human review.",
+      "checked_at": "2026-10-02T15:03:54.969Z",
+      "checked_at_meaning": "Evidence review completed at this timestamp; observations occurred within verification_window. Exact HTTP timestamps are included where captured.",
+      "currency": "EUR",
+      "whole_pack_price": true,
+      "production_write_authorized": false,
+      "source_urls": [
+        "https://www.dm.de/p/d/3119228/schwarzkopf-gliss-haarserum-scalp-balance-klaerend"
+      ]
+    }
+  ]
+}

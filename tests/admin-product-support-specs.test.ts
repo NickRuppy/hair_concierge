@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { productSchema } from "../src/lib/validators"
+import { makeBondbuilderProfile } from "./fixtures/bondbuilder-research/profile"
 
 function buildBaseProduct(overrides: Record<string, unknown>) {
   return {
@@ -37,6 +38,53 @@ test("product schema accepts bondbuilder support specs", () => {
   )
 
   assert.equal(parsed.success, true)
+})
+
+test("product schema accepts a verified full Bondbuilder profile with nullable unmapped legacy fields", () => {
+  const profile = makeBondbuilderProfile()
+  const parsed = productSchema.safeParse(
+    buildBaseProduct({
+      category: "Bondbuilder",
+      bondbuilder_specs: {
+        technology_family: "maleate_ester",
+        claim_trust_level: "high",
+        trust_basis: "owner_anchor",
+        research_profile: profile,
+        application_mode: "pre_shampoo",
+        treatment_mode: "rinse_out",
+        bond_repair_intensity: null,
+        bond_repair_axis: null,
+        product_format: null,
+        usage_protocol: null,
+      },
+    }),
+  )
+
+  assert.equal(parsed.success, true)
+})
+
+test("product schema rejects a forged Bondbuilder scalar grade and incomplete new contract", () => {
+  const profile = makeBondbuilderProfile()
+  const forged = productSchema.safeParse(
+    buildBaseProduct({
+      category: "Bondbuilder",
+      bondbuilder_specs: {
+        technology_family: "maleate_ester",
+        claim_trust_level: "low",
+        trust_basis: "owner_default",
+        research_profile: profile,
+      },
+    }),
+  )
+  const incomplete = productSchema.safeParse(
+    buildBaseProduct({
+      category: "Bondbuilder",
+      bondbuilder_specs: { technology_family: "maleate_ester" },
+    }),
+  )
+
+  assert.equal(forged.success, false)
+  assert.equal(incomplete.success, false)
 })
 
 test("product schema accepts canonical leave-in fit specs", () => {
@@ -238,4 +286,23 @@ test("product schema allows dryness on shampoo", () => {
   )
 
   assert.equal(parsed.success, true)
+})
+
+test("product schema accepts an optional market segment and rejects unknown buckets", () => {
+  const base = {
+    category: "Maske",
+    mask_specs: { weight: "medium", concentration: "high", balance_direction: "moisture" },
+  }
+  for (const market_segment of ["drugstore", "professional", null]) {
+    const parsed = productSchema.safeParse(buildBaseProduct({ ...base, market_segment }))
+    assert.equal(parsed.success, true)
+    assert.equal(parsed.success && parsed.data.market_segment, market_segment)
+  }
+  const omitted = productSchema.safeParse(buildBaseProduct({ ...base }))
+  assert.equal(omitted.success, true)
+  assert.equal(omitted.success && "market_segment" in omitted.data, false)
+
+  const invalid = productSchema.safeParse(buildBaseProduct({ ...base, market_segment: "luxury" }))
+  assert.equal(invalid.success, false)
+  assert.ok(!invalid.success && invalid.error.issues.some((i) => i.path[0] === "market_segment"))
 })

@@ -1,0 +1,43 @@
+'use strict'
+// Main only. --check is zero-write/no-child; mutation modes are never invoked by worker.
+const fs=require('node:fs'),path=require('node:path')
+const g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs')
+const PIN_SHA='37dcec58febab9809b5a64510fd18a288f6b3756c9a19bb7a00cfadfbba8c20f'
+const mode=(process.argv[2]||'check').replace(/^--/,'')
+if(!['check','transfer','cut'].includes(mode)||(mode!=='cut'&&process.argv.length>3)||(mode==='cut'&&process.argv.length!==5))g.fail('Use --check | transfer | cut <transfer-receipt-dir> <completion-sha256>')
+const context=g.load(PIN_SHA)
+for(const c of context.controls)g.fault(context,c)
+const initial=context.current()
+if(mode==='check'){
+ console.log(JSON.stringify({mode,phase:initial.phase,counts:context.counts,unrelatedCallbacks:context.unrelated,unchangedRetainedCallbacks:context.unchangedRetained,parsedPhaseFiles:81,sourceControlsParsed:2,readsetGuards:context.pins.readset.length,dependencyFiles:context.pins.dependencies.length,repositoryWrites:0,childrenStarted:0},null,2));process.exit(0)
+}
+const from=mode==='transfer'?'before':'transfer'
+if(initial.phase!==from)g.fail('Expected '+from+', found '+initial.phase)
+let prerequisite=mode==='cut'?proof.validateTransferReceipt(context,PIN_SHA,process.argv[3],process.argv[4]):null
+const unlock=g.lock(),written=[]
+let dir=null
+const outputs=Object.keys(context.snapshots).map(file=>({file,original:initial.bytes[file],target:context.snapshots[file][mode].bytes}))
+const ownedState={...initial.bytes}
+try{
+ dir=fs.mkdtempSync(g.BASE+'-apply-'+mode+'-')
+ for(const o of outputs){const p=path.join(dir,'originals',o.file);fs.mkdirSync(path.dirname(p),{recursive:true});fs.writeFileSync(p,o.original,{flag:'wx',mode:0o444})}
+ fs.writeFileSync(path.join(dir,'intent.json'),JSON.stringify({mode,from,root:g.ROOT,head:context.pins.head,branch:context.pins.branch,pinsSHA:PIN_SHA,prerequisite,files:outputs.map(o=>({file:o.file,before:g.sha(o.original),after:g.sha(o.target)}))},null,2)+'\n',{flag:'wx'})
+ const fresh=context.current();if(fresh.phase!==from)g.fail('Phase changed before first write')
+ context.checkCohort(ownedState)
+ if(mode==='cut')prerequisite=proof.validateTransferReceipt(context,PIN_SHA,process.argv[3],process.argv[4])
+ for(const o of outputs){
+  if(o.original.equals(o.target))continue
+  context.guards();context.checkCohort(ownedState)
+  g.atomicCAS(o.file,o.original,o.target);written.push(o);ownedState[o.file]=o.target
+ }
+ const final=context.current();if(final.phase!==mode)g.fail('Postwrite phase mismatch')
+ fs.writeFileSync(path.join(dir,'receipt.json'),JSON.stringify({mode,from,phase:final.phase,counts:context.counts,pinsSHA:PIN_SHA,prerequisite,changed:written.map(o=>o.file),allTestHashes:Object.fromEntries(outputs.map(o=>[o.file,g.sha(o.target)])),sourceWrites:0,testsRun:0,originals:path.join(dir,'originals')},null,2)+'\n',{flag:'wx'})
+ console.log(JSON.stringify({mode,receiptDir:dir,changed:written.length,counts:context.counts},null,2))
+}catch(error){
+ const rollback=[]
+ for(const o of [...written].reverse()){
+  try{g.atomicCAS(o.file,o.target,o.original);rollback.push({file:o.file,restored:g.sha(fs.readFileSync(path.join(g.ROOT,o.file)))===g.sha(o.original)})}
+  catch(e){rollback.push({file:o.file,restored:false,error:String(e),note:'Concurrent bytes preserved; original backup retained'})}
+ }
+ if(dir)fs.writeFileSync(path.join(dir,'failure.json'),JSON.stringify({error:String(error),rollback},null,2)+'\n',{flag:'wx'});throw error
+}finally{unlock()}

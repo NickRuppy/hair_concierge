@@ -146,6 +146,19 @@ for (const sse of [false, true])
         deadlineMs: 1000,
       }).getProductDetails(["04001638530378"])
       assert.equal(rows.length, 10)
+      assert.equal(rows.filter((row) => row.found === "true").length, 6)
+      assert.equal(rows.find((row) => row.gtin === "4006381333931")?.found, "false")
+      const balea = rows.find((row) => row.gtin === "4066447982695")!
+      assert.equal(balea.productName, "Shampoo Pure Frische, 300 ml")
+      assert.equal(balea.brand, "Balea")
+      assert.equal(
+        balea.productUrl,
+        "https://www.dm.de/applink/p/d/1703587/balea-shampoo-pure-frische?appPageType=productdetails&appProductId=1703587&wt_mc=dm-mcp",
+      )
+      assert.equal(
+        balea.nonFoodIngredients,
+        "Ingredients: Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Panthenol, Menthol, Niacinamide, Parfum, Glycerin, Glycol Distearate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Laureth-4, Sodium Benzoate, Potassium Sorbate, Citric Acid, Sodium Hydroxide, Lactic Acid",
+      )
       assert.deepEqual(
         server.requests.map((r) => r.method),
         ["initialize", "notifications/initialized", "tools/call"],
@@ -189,33 +202,7 @@ test("absolute budget includes initialize, notification and tool call", async ()
     reason("timeout"),
   )
 })
-test(
-  "a stalled initialized notification aborts at deadline and never issues tools/call",
-  { timeout: 10_000 },
-  async (t) => {
-    t.mock.timers.enable({ apis: ["setTimeout"] })
-    let clock = 0
-    let notificationStarted!: () => void
-    const ready = new Promise<void>((resolve) => {
-      notificationStarted = resolve
-    })
-    const server = fakeServer({ stall: "notifications/initialized", onStall: notificationStarted })
-    const lookup = createDmMcpClient({
-      fetch: server.fetch,
-      deadlineMs: 30,
-      now: () => clock,
-    }).getProductDetails(["4001638530378"])
-    const rejected = assert.rejects(lookup, reason("timeout"))
-    await ready
-    assert.equal(server.counts().active, 1)
-    clock = 30
-    t.mock.timers.tick(30)
-    await rejected
-    assert.equal(server.counts().active, 0)
-    assert.equal(server.counts().aborted, 1)
-    assert.equal(server.counts().calls, 0)
-  },
-)
+
 test("retry shares the original budget", async () => {
   const server = fakeServer({ expire: 1, delays: [20, 20, 90] })
   await assert.rejects(
@@ -282,6 +269,27 @@ test("searchProducts sends a plain-string query and parses the captured OGX prob
     "OGX Argan Oil Shampoo",
   )
   assert.equal(rows.length, 15)
+  const ogx = rows[0]
+  assert.equal(ogx.dan, "1442074")
+  assert.equal(ogx.title, "Shampoo renewing, Argan Oil of marocco, 385 ml")
+  assert.equal(ogx.details, "")
+  assert.equal(ogx.price, "6,95 €")
+  assert.equal(
+    ogx.appLink,
+    "https://www.dm.de/applink/p/d/1442074/ogx-shampoo-renewing-argan-oil-of-marocco?appPageType=productdetails&appProductId=1442074&wt_mc=dm-mcp",
+  )
+  assert.equal(ogx.category, "Shampoo > Haarpflege")
+  assert.equal(
+    ogx.highlights,
+    "Haarshampoo, Mit marrokanischem Arganöl, Nährt und belebt das Haar, Feuchtigkeitsspendend, Mit LipiPro Shield Technologi",
+  )
+  assert.equal(ogx.alcoholFree, "true")
+  assert.equal(ogx.sulfateFree, "false")
+  assert.equal(ogx.purchasable, "true")
+  const last = rows[14]
+  assert.equal(last.gtin, "4072600282281")
+  assert.equal(last.brand, "GUHL")
+  assert.equal(last.title, "Shampoo Farbglanz Blond Faszination, 250 ml")
   assert.equal(rows[0].gtin, "3574661799438")
   assert.equal(rows[0].brand, "OGX")
   assert.deepEqual(

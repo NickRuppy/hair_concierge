@@ -1,0 +1,174 @@
+'use strict'
+// Main-only shared support. Loading/checking creates no children and writes no files.
+const fs = require('node:fs')
+const path = require('node:path')
+const crypto = require('node:crypto')
+const ROOT = '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning'
+const BASE = '/tmp/test-audit-discovery163-tools-70q2q9t7/operator'
+const PROPOSAL = '/tmp/test-audit-discovery-operational163'
+const LOCK = '/tmp/test-audit-pruning-operator-lock'
+const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex')
+const fail = message => { throw Error(message) }
+const readJSON = file => JSON.parse(fs.readFileSync(file, 'utf8'))
+function checkFile(pin) {
+  if (pin.sha === null) { if (fs.existsSync(pin.path)) fail('Previously absent identity file appeared: ' + pin.path); return }
+  if (!fs.existsSync(pin.path) || fs.realpathSync(pin.path) !== pin.realpath || sha(fs.readFileSync(pin.path)) !== pin.sha) fail('Pinned file drift: ' + pin.path)
+}
+function inventory(dir) {
+  const names = []
+  function visit(p) {
+    for (const d of fs.readdirSync(p, { withFileTypes: true }).sort((a,b) => a.name.localeCompare(b.name))) {
+      const full = path.join(p,d.name)
+      if (d.isDirectory()) visit(full)
+      else if (d.isFile() || d.isSymbolicLink()) names.push(path.relative(dir,full))
+      else fail('Unexpected file kind: ' + full)
+    }
+  }
+  visit(dir)
+  return names.sort()
+}
+function identity(pins) {
+  if (process.cwd() !== ROOT || fs.realpathSync(process.cwd()) !== ROOT || pins.root !== ROOT) fail('Exact real checkout required')
+  if (process.version !== pins.node.version || fs.realpathSync(process.execPath) !== pins.node.realpath || sha(fs.readFileSync(process.execPath)) !== pins.node.sha) fail('Pinned Node binary required')
+  for (const pin of pins.identityFiles) checkFile(pin)
+  const head = fs.readFileSync(path.join(pins.gitDir,'HEAD'),'utf8').trim()
+  if (head !== 'ref: refs/heads/' + pins.branch) fail('Branch drift')
+  const ref = path.join(pins.commonDir,'refs/heads',pins.branch)
+  const commit = fs.existsSync(ref) ? fs.readFileSync(ref,'utf8').trim() : fs.readFileSync(path.join(pins.commonDir,'packed-refs'),'utf8').split('\n').find(l => l.endsWith(' refs/heads/' + pins.branch))?.split(' ')[0]
+  if (commit !== pins.head) fail('HEAD drift')
+}
+function parse(ts,file,text) {
+  const sf = ts.createSourceFile(file,text,ts.ScriptTarget.Latest,true,file.endsWith('.tsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS)
+  if (sf.parseDiagnostics.length) fail('Syntax parse failed: ' + file)
+  return sf
+}
+function registrations(ts,file,text) {
+  const sf = parse(ts,file,text), rows = new Map()
+  function walk(n) {
+    if (ts.isCallExpression(n) && n.expression.getText(sf) === 'test') {
+      const cb = n.arguments.at(-1), title = n.arguments[0]
+      const name = ts.isStringLiteralLike(title) ? title.text : title.getText(sf)
+      if (!(ts.isArrowFunction(cb) || ts.isFunctionExpression(cb)) || rows.has(name)) fail('Unexpected duplicate registration: ' + file)
+      const assertions = []
+      function assertionWalk(x) {
+        if (ts.isCallExpression(x) && x.expression.getText(sf).startsWith('assert.')) assertions.push({startLine:sf.getLineAndCharacterOfPosition(x.getStart(sf)).line+1,text:x.getText(sf)})
+        ts.forEachChild(x,assertionWalk)
+      }
+      assertionWalk(cb)
+      rows.set(name,{name,statement:n.getText(sf),callback:cb.getText(sf),start:n.getStart(sf),end:n.end,assertions})
+    }
+    ts.forEachChild(n,walk)
+  }
+  walk(sf)
+  return rows
+}
+function replaceOnce(text,from,to,label) {
+  if (text.split(from).length !== 2) fail('Non-unique anchor: ' + label)
+  return text.replace(from,() => to)
+}
+function load(pinSHA) {
+  const raw = fs.readFileSync(BASE+'-pins.json')
+  if (sha(raw) !== pinSHA) fail('Tool pins changed')
+  const pins = JSON.parse(raw)
+  identity(pins)
+  function guardArtifactsAndDependencies() {
+    for (const pin of pins.dependencies) checkFile(pin)
+    for (const tree of pins.dependencyTrees) if (JSON.stringify(inventory(tree.path)) !== JSON.stringify(tree.names)) fail('Installed dependency membership drift: '+tree.path)
+    for (const [file,hash] of Object.entries(pins.artifactHashes)) if (sha(fs.readFileSync(file)) !== hash) fail('Artifact drift: '+file)
+    for (const [file,hash] of Object.entries(pins.entrypointTemplateHashes)) {
+      const template = fs.readFileSync(file,'utf8').replace(/const PIN_SHA='[a-f0-9]{64}'/,"const PIN_SHA='PIN_SHA_PLACEHOLDER'")
+      if (sha(template) !== hash) fail('Entrypoint drift: '+file)
+    }
+  }
+  guardArtifactsAndDependencies()
+  const evidence=readJSON(BASE+'-evidence.json'),candidates=readJSON(BASE+'-candidates.json'),controls=readJSON(BASE+'-controls-normalized.json')
+  const ts=require(ROOT+'/node_modules/typescript')
+  if(evidence.root!==ROOT||evidence.head!==pins.head||evidence.branch!==pins.branch||candidates.length!==5||controls.length!==5||ts.version!==pins.typescriptVersion)fail('Proposal identity/count mismatch')
+  const snapshots={},counts={before:0,transfer:0,cut:0};let unrelated=0
+  const keeperKey=c=>c.file+'\0'+c.keeper.name
+  const keepers=new Map(candidates.map(c=>[keeperKey(c),c]));if(keepers.size!==5)fail('Five distinct keepers required')
+  function assertionTokens(text){const scan=ts.createScanner(ts.ScriptTarget.Latest,true,ts.LanguageVariant.Standard,text),out=[];let t;while((t=scan.scan())!==ts.SyntaxKind.EndOfFileToken)out.push(scan.getTokenText());return out.join('\0')}
+  function assertionConditions(file,statement){const sf=parse(ts,file,statement),out=[];function walk(n){if(ts.isCallExpression(n)&&n.expression.getText(sf).startsWith('assert.')){const name=n.expression.getText(sf),arity=name==='assert.ok'?1:2;out.push(name+'('+n.arguments.slice(0,arity).map(a=>assertionTokens(a.getText(sf).replace(/textSequence\(real\)/g,'textSequence(realEmptyScreen())'))).join(',')+')')}ts.forEachChild(n,walk)}walk(sf);return out.sort()}
+  for(const file of Object.keys(evidence.phases.before)){
+    snapshots[file]={}
+    for(const phase of Object.keys(counts)){
+      const bytes=fs.readFileSync(evidence.snapshotPaths[phase][file]),rows=registrations(ts,file,bytes.toString())
+      if(sha(bytes)!==evidence.phases[phase][file])fail('Phase bytes: '+file)
+      snapshots[file][phase]={bytes,rows};counts[phase]+=rows.size
+    }
+    const {before,transfer,cut}=snapshots[file];let reconstructed=before.bytes.toString()
+    const local=candidates.filter(c=>c.file===file)
+    for(const c of local){if(before.rows.get(c.keeper.name)?.statement!==c.keeper.body||sha(c.keeper.body)!==c.keeper.sha256||before.rows.get(c.donor.name)?.statement!==c.donor.body||sha(c.donor.body)!==c.donor.sha256)fail('Original callback identity');reconstructed=replaceOnce(reconstructed,c.keeper.body,c.keeperAfter,'keeper union')}
+    if(reconstructed!==transfer.bytes.toString())fail('Transfer changed unrelated bytes')
+    for(const c of local)reconstructed=replaceOnce(reconstructed,c.donor.body,'',c.id)
+    if(reconstructed!==cut.bytes.toString())fail('Cut changed unrelated bytes')
+    for(const [name,row]of before.rows){const t=transfer.rows.get(name),k=cut.rows.get(name)
+      if(local.some(c=>c.donor.name===name)){if(k||t?.statement!==row.statement)fail('Donor phase mismatch');continue}
+      const candidate=keepers.get(file+'\0'+name)
+      if(candidate){if(t?.statement!==candidate.keeperAfter||k?.statement!==candidate.keeperAfter)fail('Keeper phase mismatch');continue}
+      if(t?.statement!==row.statement||k?.statement!==row.statement)fail('Unrelated callback changed');unrelated++
+    }
+  }
+  if(Object.keys(snapshots).length!==24||JSON.stringify(counts)!=='{"before":163,"transfer":163,"cut":158}'||unrelated!==153)fail('Phase conservation mismatch')
+  for(const c of candidates){const b=snapshots[c.file].before.rows,k=b.get(c.keeper.name),d=b.get(c.donor.name);const expected=[...assertionConditions(c.file,k.statement),...assertionConditions(c.file,d.statement)].sort();for(const phase of ['transfer','cut']){const actual=assertionConditions(c.file,snapshots[c.file][phase].rows.get(c.keeper.name).statement);if(JSON.stringify(actual)!==JSON.stringify(expected))fail('Complete assertion condition union lost')}}
+  const held=readJSON(PROPOSAL+'/ledger.json').filter(j=>j.classification==='F');if(held.length!==1)fail('Held F count')
+  for(const j of held)for(const phase of Object.keys(counts))if(sha(snapshots[j.file][phase].rows.get(JSON.parse(j.title))?.statement||'')!==j.sha256)fail('Held F changed')
+  const unchangedRetained=unrelated
+  function guards(overrides={}) {
+    identity(pins)
+    for(const [file,hash]of Object.entries(overrides))if(!controls.some(c=>c.file===file&&c.mutatedSha256===hash))fail("Unowned source override")
+    guardArtifactsAndDependencies()
+    for(const tree of pins.repositoryTrees) if(JSON.stringify(inventory(path.join(ROOT,tree.path)))!==JSON.stringify(tree.names)) fail('Repository readset membership drift: '+tree.path)
+    for(const r of pins.readset) if(sha(fs.readFileSync(path.join(ROOT,r.file)))!==(overrides[r.file]||r.sha)) fail('Readset drift/fault active: '+r.file)
+  }
+  function current(overrides={}) {
+    guards(overrides)
+    const bytes=Object.fromEntries(Object.keys(snapshots).map(f=>[f,fs.readFileSync(path.join(ROOT,f))]))
+    const matches=Object.keys(counts).filter(p=>Object.entries(bytes).every(([f,b])=>b.equals(snapshots[f][p].bytes)))
+    if(matches.length!==1)fail('Mixed or unknown test phase')
+    return {phase:matches[0],bytes}
+  }
+  function checkCohort(expected) { for(const[f,bytes]of Object.entries(expected))if(!fs.readFileSync(path.join(ROOT,f)).equals(bytes))fail('Cohort CAS drift: '+f) }
+  return {pins,evidence,candidates,controls,ts,snapshots,counts,unrelated,unchangedRetained,guards,current,checkCohort}
+}
+function fault(ctx,c) {
+  const escaped=c.test.name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
+  const exactCommand=['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-name-pattern=^'+escaped+'$',c.test.file]
+  if(JSON.stringify(c.command)!==JSON.stringify(exactCommand))fail('Control command is not exact pinned keeper')
+  const pattern=new RegExp('^'+escaped+'$')
+  for(const phase of ['before','transfer','cut'])if([...ctx.snapshots[c.test.file][phase].rows.keys()].filter(n=>pattern.test(n)).length!==1)fail('Exactly one keeper must match in every phase')
+  const original=fs.readFileSync(path.join(ROOT,c.file))
+  if(sha(original)!==c.sourceSha256)fail('Fault owner drift: '+c.id)
+  const text=original.toString(),sf=parse(ctx.ts,c.file,text)
+  let mutated
+  if(c.anchor.kind==='function'){
+    const found=[];function walk(n){if(ctx.ts.isFunctionDeclaration(n)&&n.name?.text===c.anchor.scope)found.push(n);ctx.ts.forEachChild(n,walk)}walk(sf)
+    if(found.length!==1||sha(found[0].getText(sf))!==c.anchor.scopeSha256||found[0].getText(sf).split(c.from).length!==2)fail('Unique function anchor drift')
+    const n=found[0];mutated=Buffer.from(text.slice(0,n.getStart(sf))+replaceOnce(n.getText(sf),c.from,c.to,c.id)+text.slice(n.end))
+  }else if(c.anchor.kind==='file'&&c.anchor.scopeSha256===sha(original))mutated=Buffer.from(replaceOnce(text,c.from,c.to,c.id))
+  else fail('Unsupported source anchor')
+  parse(ctx.ts,c.file,mutated.toString())
+  if(sha(mutated)!==c.mutatedSha256)fail('Prospective fault hash mismatch')
+  for(const phase of ['transfer','cut']){
+    const row=ctx.snapshots[c.test.file][phase].rows.get(c.test.name),o=c.oracles[phase]
+    const matches=row?.assertions.filter(a=>a.text===o.text)||[]
+    if(sha(row?.statement||'')!==o.keeperSha256||matches.length!==1||matches[0].startLine!==o.startLine)fail('Callback-scoped fault oracle drift')
+  }
+  return {original,mutated}
+}
+function atomicCAS(file,expected,next) {
+  const target=path.join(ROOT,file),temp=target+'.test-audit-'+process.pid+'-'+crypto.randomUUID()+'.tmp'
+  if(!fs.readFileSync(target).equals(expected))fail('Owned CAS refused: '+file)
+  try{
+    fs.writeFileSync(temp,next,{flag:'wx',mode:fs.statSync(target).mode})
+    if(!fs.readFileSync(target).equals(expected))fail('Pre-rename CAS refused: '+file)
+    fs.renameSync(temp,target)
+  }finally{if(fs.existsSync(temp))fs.unlinkSync(temp)}
+}
+function lock() {
+  const token=crypto.randomUUID()
+  fs.mkdirSync(LOCK)
+  fs.writeFileSync(path.join(LOCK,'owner.json'),JSON.stringify({token,pid:process.pid,root:ROOT,operator:BASE}),{flag:'wx'})
+  return()=>{const owner=readJSON(path.join(LOCK,'owner.json'));if(owner.token!==token)fail('Lock ownership changed; preserve it');fs.unlinkSync(path.join(LOCK,'owner.json'));fs.rmdirSync(LOCK)}
+}
+module.exports={ROOT,BASE,PROPOSAL,LOCK,sha,fail,checkFile,inventory,identity,parse,registrations,replaceOnce,load,fault,atomicCAS,lock}

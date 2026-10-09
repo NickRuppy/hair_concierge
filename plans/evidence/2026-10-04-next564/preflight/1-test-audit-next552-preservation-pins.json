@@ -1,0 +1,10 @@
+{
+  "tests/product-images-batch-run.test.ts": "1000ecb729d86e3b5bfd317d7427b46611cb387cf22e55f1194b192ae5c93309",
+  "scripts/product-images/batch-run.ts": "ce470ce7d24e838e5c552875981896986e8fab503ba5d6c236bcb022333fe2c2",
+  "tests/user-memory.spec.ts": "5370ba6a09e71830cf71cfc7030ed26feca84af06675bc42f07905af13807fdb",
+  "src/lib/chat-runtime/user-memory.ts": "dad4d98013840fc99bfac1d9d839f04e23c9196534e9a0f04004c7e3b403aab2",
+  "tests/message-context.test.ts": "ad540baf222a3e0eb6ee733b089878831781e53431710e758c069061e08374da",
+  "src/lib/chat-runtime/message-context.ts": "c433278aec3f0c5957da01e4fcbd039119410a6b8682b12b2ebd9c48513fb5f7",
+  "tests/scanner-catalog-coverage-readiness.test.ts": "20af0916fd719f6f482e32bea99b38c9ab4a236fdc408c8039a5265333733be8",
+  "scripts/scanner-catalog-coverage/readiness-export.ts": "1e6074e1e7655477a1286c49f94f4c58b9849ebea7cee86542eb9ed6a72ddc9d"
+}

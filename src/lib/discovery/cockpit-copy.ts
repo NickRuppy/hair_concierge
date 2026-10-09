@@ -260,8 +260,3 @@ export function cockpitVoice(text: string): string {
   }
   return text
 }
-
-/** `cockpitVoice` for the optional strings the cockpit's views carry. */
-export function cockpitVoiceOrNull(text: string | null | undefined): string | null {
-  return text == null ? null : cockpitVoice(text)
-}

@@ -79,40 +79,6 @@ test("Stage 2 service prunes server-side and persists the canonical next revisio
       .currentProductCategories,
     [],
   )
-})
-
-test("Stage 2 service marks a saved answer's provenance as user", async () => {
-  let saved: unknown
-  const service = createStage2RefinementService({
-    userId: "user-1",
-    snapshotBuilder: () => ({
-      inputSnapshot: {},
-      outputSnapshot: {},
-      inputHash: "a".repeat(64),
-      schemaVersion: 1,
-      computationVersion: "test",
-    }),
-    persistence: {
-      loadOrCreate: async () => draft(),
-      reopen: async ({ draft: current }) => ({
-        ...current,
-        status: "in_progress",
-        refinedVersionId: null,
-      }),
-      save: async (input) => {
-        saved = input
-        return { outcome: "saved" as const, revision: 1 }
-      },
-      complete: async () => ({ outcome: "completed" as const, refinedVersionId: "refined-1" }),
-      completeModule: notCalled,
-    },
-  })
-  await service.load()
-  await service.saveAnswer({
-    questionId: "current_product_categories",
-    answer: [],
-    expectedRevision: 0,
-  })
   assert.deepEqual((saved as { answerProvenance: Record<string, string> }).answerProvenance, {
     current_product_categories: "user",
   })

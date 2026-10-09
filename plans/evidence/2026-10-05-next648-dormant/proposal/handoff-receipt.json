@@ -1,0 +1,265 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "status": "STATIC PASS; conditional retirement only; independent review and main runtime proof pending",
+  "manifestSHA": "02516c9596630d774f74679bf46ee68270740b7df26ec658184c9bd3ae4cc8ef",
+  "staticSHA": "ee9557fcefce38c5f12cf211b13b5b58786ae7a61a6a70551047d3e1bf3c9e1b",
+  "counts": {
+    "before": 103,
+    "transfer": 103,
+    "cut": 97
+  },
+  "artifacts": [
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/all-code-named-references.json",
+      "sha256": "09fbf7cb470cc5a56fd95d78b4550cf3f8ba01a5ccafa6876d317ac0ff067161",
+      "bytes": 24206
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/assertion-accounting.json",
+      "sha256": "407b604fcc90c6153e8c92cb5a6418b4d8d8daeb2084eea1e03a40005334893a",
+      "bytes": 170966
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/candidates.json",
+      "sha256": "fccc8a7594c1575301283956fc706e1b66aae28d0671b41f367db8d9ac368250",
+      "bytes": 6381
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/closure-inventory.json",
+      "sha256": "6554ed74a7f3a7d695947d172ec667524b01c76e570fb72009feeaaca58c54fd",
+      "bytes": 20612
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/complete-ledger.json",
+      "sha256": "a5519c3c79e7eecdb5e539d516a670a34b210874dd6cbbe5e69f673a7978f01b",
+      "bytes": 190935
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/complete-ledger.md",
+      "sha256": "fbd3fd6c42d0400bbc7d66253da00c705278909cc30484a8d4cfc8c6f87e2e33",
+      "bytes": 28556
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/complete.diff",
+      "sha256": "64a5e6bb036eb75e638335488800afd38df527dac50803d26e2ce1899ddd8bfe",
+      "bytes": 22232
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/controls.json",
+      "sha256": "98374e239a524d90d5626f534b7b1aca8601f668d9df35a38dd45b788e807646",
+      "bytes": 33789
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/final-static-check.json",
+      "sha256": "ee9557fcefce38c5f12cf211b13b5b58786ae7a61a6a70551047d3e1bf3c9e1b",
+      "bytes": 1485
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/finalize.cjs",
+      "sha256": "d39f2d0cf586d9e6cd5425e7917788de3c8bb4e9401c7f3aba13557153276599",
+      "bytes": 17400
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/history-retirement.txt",
+      "sha256": "33c1be15cef8dda89eccef69fcdb4de47011b652391379441b4a5a7a9344c919",
+      "bytes": 8200
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/layer-plan.md",
+      "sha256": "bd97ba306828c752cb8ad14e8608b4eaf0e894c8abf93ac06b426ed3e4351a94",
+      "bytes": 12206
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/manifest.json",
+      "sha256": "02516c9596630d774f74679bf46ee68270740b7df26ec658184c9bd3ae4cc8ef",
+      "bytes": 190331
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/prepare.cjs",
+      "sha256": "31ae01e941d17314ef95e19aa7e105e812956c70bd27d66e30d1be349874001f",
+      "bytes": 9551
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/read-scope.json",
+      "sha256": "dc249be0a01fa3118cbf46377a1dc01edbe8daad7089e64fb2ecae3fc773a389",
+      "bytes": 13121
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/README.md",
+      "sha256": "2235be854b0d481ff8a2e0c2f2a26dbc03114cf7b43a03785dbdabb9d66f53e2",
+      "bytes": 1899
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/src/lib/personal-plan/journey-access-loader.ts.txt",
+      "sha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+      "bytes": 21991
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/src/lib/personal-plan/release.ts.txt",
+      "sha256": "92d24c0e4c010e20e13f75db0c561cf9da8f490a17de4a0e4cbbf10691a8d55c",
+      "bytes": 3346
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/src/lib/personal-plan/rollout-access.ts.txt",
+      "sha256": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+      "bytes": 4691
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/tests/auth-middleware-personal-plan-routine.test.ts.txt",
+      "sha256": "772d32f6e8bce05037c324ea7b11a9260d75c99c54bc00e6e4c13588e7129e24",
+      "bytes": 42307
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/tests/freemium-enrollment-admission.test.ts.txt",
+      "sha256": "fcc6c0f7c564fa5078c7c81823991341ab1859d414d6e00c33f72c369b8a2389",
+      "bytes": 10249
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/tests/personal-plan-field-test-access.test.ts.txt",
+      "sha256": "9b6b6880e409e68a531f1d281dbbc19054ec4cee05535f48e21df67a6b0b0e8a",
+      "bytes": 5892
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/tests/personal-plan-journey-access-loader.test.ts.txt",
+      "sha256": "16b77c5f68870a0cda0ea86910b26408cae10f85f2213d6f8b219a74ff832e67",
+      "bytes": 36647
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/tests/personal-plan-rollout-access.test.ts.txt",
+      "sha256": "108669d5b64d304c772e0a3b5878b19b18cc69a407b5792574f0b9b0c192dd41",
+      "bytes": 6398
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/tests/personal-plan-stage3-release.test.ts.txt",
+      "sha256": "d25fd6ac50e6ba5a09c3870b83ae55cbc729a72b55cb0329b2d6c414b4dc2f1e",
+      "bytes": 6797
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/tests/personal-plan-trial-stage1-journey.test.ts.txt",
+      "sha256": "ce32342ee184872e96bc13191d0f5dc25d0d863a8acaa477e4ccd8df62bf9fc0",
+      "bytes": 13002
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/src/lib/personal-plan/journey-access-loader.ts.txt",
+      "sha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+      "bytes": 20849
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/src/lib/personal-plan/release.ts.txt",
+      "sha256": "7fff03697221fa4281c0a3756c3cfab618460c536e60cb05e060e38d2693fdd0",
+      "bytes": 2571
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/src/lib/personal-plan/rollout-access.ts.txt",
+      "sha256": "b4efd27a848a803c60848cf16ac8b9d0c845ae22dabb84a09cc912472eeb206c",
+      "bytes": 187
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/tests/auth-middleware-personal-plan-routine.test.ts.txt",
+      "sha256": "772d32f6e8bce05037c324ea7b11a9260d75c99c54bc00e6e4c13588e7129e24",
+      "bytes": 42307
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/tests/freemium-enrollment-admission.test.ts.txt",
+      "sha256": "30e53eaa8a77054424780676bd341ea6aeb7821c652d36ea69faa8440c20b3e1",
+      "bytes": 10181
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/tests/personal-plan-field-test-access.test.ts.txt",
+      "sha256": "0701492072d7229a19c832017a5d46b708be3785a7839e9325eee3e5d1a7e963",
+      "bytes": 5820
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/tests/personal-plan-journey-access-loader.test.ts.txt",
+      "sha256": "7a18014ae40a06640e9fa54354a1109fd613986858c53c7ff072144ed175b6c8",
+      "bytes": 35233
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/tests/personal-plan-rollout-access.test.ts.txt",
+      "sha256": "3f9f358536dc36b6197100414281d55315a8c0d65b098c1433676edf925a1d18",
+      "bytes": 1905
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/tests/personal-plan-stage3-release.test.ts.txt",
+      "sha256": "b875712849799021f740e63ef79e82e8eadd355b09df66a62d12031c605a7bec",
+      "bytes": 6087
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/tests/personal-plan-trial-stage1-journey.test.ts.txt",
+      "sha256": "1af6fcb04a9e0d8e864fdcd1760bb325130fa3bea7f8104bb44996933679feb2",
+      "bytes": 12925
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/src/lib/personal-plan/journey-access-loader.ts.txt",
+      "sha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+      "bytes": 21991
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/src/lib/personal-plan/release.ts.txt",
+      "sha256": "92d24c0e4c010e20e13f75db0c561cf9da8f490a17de4a0e4cbbf10691a8d55c",
+      "bytes": 3346
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/src/lib/personal-plan/rollout-access.ts.txt",
+      "sha256": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+      "bytes": 4691
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/tests/auth-middleware-personal-plan-routine.test.ts.txt",
+      "sha256": "772d32f6e8bce05037c324ea7b11a9260d75c99c54bc00e6e4c13588e7129e24",
+      "bytes": 42307
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/tests/freemium-enrollment-admission.test.ts.txt",
+      "sha256": "fcc6c0f7c564fa5078c7c81823991341ab1859d414d6e00c33f72c369b8a2389",
+      "bytes": 10249
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/tests/personal-plan-field-test-access.test.ts.txt",
+      "sha256": "9b6b6880e409e68a531f1d281dbbc19054ec4cee05535f48e21df67a6b0b0e8a",
+      "bytes": 5892
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/tests/personal-plan-journey-access-loader.test.ts.txt",
+      "sha256": "16b77c5f68870a0cda0ea86910b26408cae10f85f2213d6f8b219a74ff832e67",
+      "bytes": 36647
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/tests/personal-plan-rollout-access.test.ts.txt",
+      "sha256": "108669d5b64d304c772e0a3b5878b19b18cc69a407b5792574f0b9b0c192dd41",
+      "bytes": 6398
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/tests/personal-plan-stage3-release.test.ts.txt",
+      "sha256": "d25fd6ac50e6ba5a09c3870b83ae55cbc729a72b55cb0329b2d6c414b4dc2f1e",
+      "bytes": 6797
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/tests/personal-plan-trial-stage1-journey.test.ts.txt",
+      "sha256": "ce32342ee184872e96bc13191d0f5dc25d0d863a8acaa477e4ccd8df62bf9fc0",
+      "bytes": 13002
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/source-call-topology.json",
+      "sha256": "1cd36121078af90a5314ed8bf54a654dcfa56ed83e5224aeebe52013a9427721",
+      "bytes": 15543
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/start-pins.json",
+      "sha256": "bfb2cd651ce85865f173e4c5008d73aa60028b6138ef5ce77c07812698ac5320",
+      "bytes": 3145
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/static-check.json",
+      "sha256": "302e9096d3a74a68d7244706a2840e552d278ce1d74845d938ea0975ad7f81fc",
+      "bytes": 587
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-closure/validate.cjs",
+      "sha256": "fb11b5c814a97a562c849b38cee1ecd14d3ee9bf3607673427c4c5e7f1438463",
+      "bytes": 4963
+    }
+  ]
+}

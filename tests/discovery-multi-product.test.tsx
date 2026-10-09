@@ -308,7 +308,12 @@ function sha256(value: string): string {
  * once — an accepted one-time drift for finalized sheets. Previous pin: e21b1bc4…0c4c0.
  */
 const SINGLE_HASH = "69f9974079d8f4fcd7c049402ea22d0f35f45c9adfd33f8cb1fd2fa992781e0d"
-const SINGLE_PDF_SHA = "038e9e0a87cab9411d1275f4b4855f9981cfaa2756058d3fd9d79125e9f2d812"
+/**
+ * Re-pinned in the Nomi consult finish (T3): the sheet's stylesheet gained the variant-heading
+ * rule (`.dcp-apply-variant`) — markup only, the fingerprint (`SINGLE_HASH`) is unchanged.
+ * Previous pin: 038e9e0a…2d812.
+ */
+const SINGLE_PDF_SHA = "00414474bd71009637eca32594c166f403f3c72963adc4434350d73be301c5d6"
 
 // --- D1: binding ------------------------------------------------------------------------
 
@@ -936,11 +941,12 @@ test("cockpit: two products in one step, each with its own radio group, „Wegla
   assert.deepEqual(checkedKeep, [`decision-${SH}:${ids.itemA}`])
 })
 
-test("cockpit: a single-product step shows no „Weglassen“ and no frequency line", () => {
+test("cockpit: a single-product step shows no „Weglassen“ but still her frequency", () => {
   const markup = renderCockpit(modelOf(SINGLE_ITEMS, SINGLE_DECISIONS))
   // No „Weglassen" choice (the runsheet's bucket heading is not one).
   assert.ok(!markup.includes('value="drop"'))
-  assert.ok(!markup.includes("2× pro Woche"))
+  // The „Wie oft" row names her answer on every product, one per step or not.
+  assert.ok(markup.includes("2× pro Woche"))
 })
 
 test("cockpit: a dropped entry starts selected on „Weglassen“; the refusals read as write errors", () => {

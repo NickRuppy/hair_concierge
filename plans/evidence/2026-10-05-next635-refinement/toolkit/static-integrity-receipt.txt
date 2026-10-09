@@ -1,0 +1,37 @@
+{
+  "status": "PASS_STATIC",
+  "pinsSHA": "ffb6b2428bdceb285246596cafeba5e3b1a6870ec0ce885b875531178b10f0cd",
+  "parsedToolFiles": [
+    "finalize-static.cjs",
+    "operator-edit.cjs",
+    "operator-guard.cjs",
+    "operator-proof.cjs",
+    "operator-readonly-preload.cjs",
+    "operator-run-controls.cjs",
+    "prepare-pins.cjs",
+    "proof-attestation.cjs",
+    "static-integrity.cjs"
+  ],
+  "original47GuardsUnchanged": true,
+  "nonArtifactPinFieldsUnchanged": true,
+  "strictProofPredicateAndDecoderByteIdentical": true,
+  "finalizationArtifactChanges": [
+    "/private/tmp/test-audit-refinement37-tools-5ce9vx77/template-delta.patch",
+    "/private/tmp/test-audit-refinement37-tools-5ce9vx77/proof-attestation.cjs",
+    "/private/tmp/test-audit-refinement37-tools-5ce9vx77/finalize-static.cjs"
+  ],
+  "controls": 13,
+  "uniqueMutants": 13,
+  "uniqueOwnerFiles": [
+    "src/lib/personal-plan/refinement/refinement-status.ts",
+    "src/lib/personal-plan/lifecycle/repository.ts",
+    "src/lib/personal-plan/refinement/module-status.ts",
+    "src/app/api/personal-plan/refinement-presentation/route.ts"
+  ],
+  "repositoryWrites": 0,
+  "children": 0,
+  "ownerImports": 0,
+  "nativeRuns": 0
+}
+{"staticReadOnlyEnforced":true,"attemptedWrites":0,"attemptedChildren":0}
+{"attemptedOwnerImports":0,"attemptedNetworkCalls":0}

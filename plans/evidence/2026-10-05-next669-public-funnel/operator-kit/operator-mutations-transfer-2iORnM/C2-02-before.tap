@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: the Chat example is a short, capability-true transcript through the real bubbles
+ok 1 - the Chat example is a short, capability-true transcript through the real bubbles
+  ---
+  duration_ms: 20.563583
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2490.854084

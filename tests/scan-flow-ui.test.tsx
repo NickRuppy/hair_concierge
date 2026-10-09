@@ -452,25 +452,6 @@ test("ScanFlow: opening and dismissing the search sheet during a camera-decode's
   assert.equal(resolveCalls, 2)
 })
 
-test("ScanFlow: a second decode inside the confirm window is ignored", async () => {
-  const bodies: string[] = []
-  const gate = deferred<Response>()
-  const flow = await mountFlow(async (_url, init) => {
-    bodies.push(String(init?.body))
-    return gate.promise
-  })
-
-  scannerProps(flow.tree).onDecoded({ type: "ean", value: "4006381333931" })
-  await flow.settle()
-  scannerProps(flow.tree).onDecoded({ type: "ean", value: "4005808298389" })
-  await flow.settle()
-
-  assert.equal(bodies.length, 1)
-  assert.equal(flow.events.filter((event) => event.name === "scan_decoded").length, 1)
-  gate.resolve(json(verdictResult()))
-  await flow.settle()
-})
-
 test("ScanFlow: two different decodes fired back-to-back without a settle between them only resolve once", async () => {
   // `stateRef` (the mirror `handleDecoded` reads `activeRequest` from) only catches up
   // once the passive effect runs after a render — deliberately not awaiting `settle()`
@@ -485,6 +466,9 @@ test("ScanFlow: two different decodes fired back-to-back without a settle betwee
 
   scannerProps(flow.tree).onDecoded({ type: "ean", value: "4006381333931" })
   scannerProps(flow.tree).onDecoded({ type: "ean", value: "4005808298389" })
+  await flow.settle()
+  // The same pending resolve must also reject a different decode after render.
+  scannerProps(flow.tree).onDecoded({ type: "ean", value: "4001234567890" })
   await flow.settle()
 
   assert.equal(bodies.length, 1)
@@ -585,6 +569,7 @@ test("ScanFlow: dismissing the unknown sheet before the submit lands leaves no p
       .scanInteractionId,
     flow.events.find((event) => event.name === "scan_not_found")!.payload.scanInteractionId,
   )
+  assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.submitting, false)
 })
 
 test("ScanFlow: a failed submission keeps the unknown sheet open with its error (F17)", async () => {
@@ -610,19 +595,19 @@ test("ScanFlow: a failed submission keeps the unknown sheet open with its error 
 
 test("ScanFlow: identified journey correlates confirmation and measures both waits without product data", async () => {
   const requests: unknown[] = []
+  const identifiedUnknownResult = {
+    ...unknownResult,
+    identified: {
+      source: "dm" as const,
+      dan: "1234567",
+      productName: "Secret product name",
+      brand: "BRAND",
+      imageUrl: null,
+      suggestedCategory: "shampoo" as const,
+    },
+  }
   const flow = await mountFlow(async (url, init) => {
-    if (url === "/api/scan/resolve")
-      return json({
-        ...unknownResult,
-        identified: {
-          source: "dm",
-          dan: "1234567",
-          productName: "Secret product name",
-          brand: "BRAND",
-          imageUrl: null,
-          suggestedCategory: "shampoo",
-        },
-      })
+    if (url === "/api/scan/resolve") return json(identifiedUnknownResult)
     if (url === "/api/scan/submit") {
       requests.push(JSON.parse(String(init?.body)))
       return json({ kind: "pending_submission", submissionId: "s1", headline: "Eingereicht!" })
@@ -632,6 +617,10 @@ test("ScanFlow: identified journey correlates confirmation and measures both wai
   scannerProps(flow.tree).onDecoded({ type: "ean", value: "4006381333931" })
   await delay(450)
   await flow.settle()
+  assert.deepEqual(
+    requireByType(flow.tree, ScanUnknownFlow, "ScanUnknownFlow").props.unknown,
+    identifiedUnknownResult,
+  )
   const found = flow.events.find((event) => event.name === "scan_not_found")!.payload
   assert.equal(found.identified, true)
   assert.equal(found.suggestedCategory, "shampoo")
@@ -758,6 +747,8 @@ for (const tileCase of TILE_CASES) {
 
     scannerProps(flow.tree).onUnavailable(tileCase.reason)
     await flow.settle()
+    assert.equal((flow.tree as AnyElement).props["data-scan-camera"], "unavailable")
+    assert.equal((flow.tree as AnyElement).props["data-scan-camera-reason"], tileCase.reason)
 
     assert.equal(findByType(flow.tree, Scanner), null)
     const notices = findAll(
@@ -877,12 +868,6 @@ test("ScanFlow: a dm-row tap in the search sheet closes it and resolves the tapp
   assert.equal(sheetProps(flow.tree).title, "Brauchst du nicht (p-dm)")
 })
 
-test("ScanFlow: a search-sheet submit sees no onSubmitIdentifier prop — the barcode path is gone", async () => {
-  const flow = await mountFlow(notFound)
-  const sheet = requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet")
-  assert.equal("onSubmitIdentifier" in sheet.props, false)
-})
-
 // --- T5: submitResearchFromSearch — the search-origin submit lifecycle ------------------
 
 const researchIntakeInput = {
@@ -890,29 +875,6 @@ const researchIntakeInput = {
   productNameText: "Ciment Thermique",
   category: "shampoo" as const,
 }
-
-test("ScanFlow: a pending research-intake submission closes the search auxiliary together with reaching the pending sheet", async () => {
-  const flow = await mountFlow(async (url) => {
-    if (url === "/api/scan/submit")
-      return json({ kind: "pending_submission", submissionId: "s1", headline: "Eingereicht!" })
-    return notFound()
-  })
-
-  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(true)
-  await flow.settle()
-  assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.open, true)
-
-  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onSubmitResearchIntake(
-    researchIntakeInput,
-  )
-  await flow.settle()
-
-  // The auxiliary is closed AND the pending step is showing — never both an open search
-  // sheet and the pending sheet at once (plan Rev. 6 final-review F3).
-  assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.open, false)
-  assert.equal(sheetProps(flow.tree).open, true)
-  assert.equal(sheetProps(flow.tree).title, "Eingereicht!")
-})
 
 test("ScanFlow: research-intake already_in_catalog closes the auxiliary before resolving the real verdict", async () => {
   const flow = await mountFlow(async (url, init) => {
@@ -1009,6 +971,7 @@ test("ScanFlow: a late SUCCESS after the search sheet was dismissed mid-submit i
   // No pending sheet opened over the viewfinder, and the search sheet was not reopened.
   assert.equal(sheetProps(flow.tree).open, false)
   assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.open, false)
+  assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.submitting, false)
 })
 
 test("ScanFlow: a late already_in_catalog after the search sheet was dismissed mid-submit does not resolve a verdict", async () => {
@@ -1114,29 +1077,6 @@ test("ScanFlow: reopening the search sheet after a cancelled submit and submitti
   assert.equal(sheetProps(flow.tree).title, "Eingereicht!")
 })
 
-test("ScanFlow: a successful research-intake submission tracks scan_submission_created with intakePath 'name_search'", async () => {
-  const flow = await mountFlow(async (url) => {
-    if (url === "/api/scan/submit")
-      return json({ kind: "pending_submission", submissionId: "s1", headline: "Eingereicht!" })
-    return notFound()
-  })
-
-  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(true)
-  await flow.settle()
-  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onSubmitResearchIntake(
-    researchIntakeInput,
-  )
-  await flow.settle()
-
-  const submitted = flow.events.find((event) => event.name === "scan_submission_created")
-  assert.ok(submitted)
-  assert.equal(submitted!.payload.intakePath, "name_search")
-  assert.equal(submitted!.payload.category, "shampoo")
-  assert.equal(submitted!.payload.selectionPath, "grid")
-  assert.equal(submitted!.payload.suggestedCategory, null)
-  assert.match(String(submitted!.payload.scanInteractionId), /^[0-9a-f-]{36}$/)
-})
-
 test("ScanFlow: the search-sheet body posts brandText/productNameText/category with no identifier key", async () => {
   const bodies: unknown[] = []
   const flow = await mountFlow(async (url, init) => {
@@ -1149,6 +1089,7 @@ test("ScanFlow: the search-sheet body posts brandText/productNameText/category w
 
   requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(true)
   await flow.settle()
+  assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.open, true)
   requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onSubmitResearchIntake(
     researchIntakeInput,
   )
@@ -1157,6 +1098,17 @@ test("ScanFlow: the search-sheet body posts brandText/productNameText/category w
   assert.deepEqual(bodies, [
     { category: "shampoo", brandText: "Kérastase", productNameText: "Ciment Thermique" },
   ])
+  assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.open, false)
+  assert.equal(sheetProps(flow.tree).open, true)
+  assert.equal(sheetProps(flow.tree).title, "Eingereicht!")
+
+  const submitted = flow.events.find((event) => event.name === "scan_submission_created")
+  assert.ok(submitted, "successful research submission emits its analytics receipt")
+  assert.equal(submitted!.payload.intakePath, "name_search")
+  assert.equal(submitted!.payload.category, "shampoo")
+  assert.equal(submitted!.payload.selectionPath, "grid")
+  assert.equal(submitted!.payload.suggestedCategory, null)
+  assert.match(String(submitted!.payload.scanInteractionId), /^[0-9a-f-]{36}$/)
 })
 
 test("ScanFlow: a stalled stream swaps in the restart tile", async () => {
@@ -1164,6 +1116,7 @@ test("ScanFlow: a stalled stream swaps in the restart tile", async () => {
 
   scannerProps(flow.tree).onStalled()
   await flow.settle()
+  assert.equal((flow.tree as AnyElement).props["data-scan-camera"], "stalled")
 
   assert.equal(findByType(flow.tree, Scanner), null)
   assert.equal(
@@ -1482,56 +1435,16 @@ function typeQuery(view: { tree: ReactElement | null; settle: () => Promise<any>
 test("ScanSearchSheet: default header is 'Produkt finden'; the timeout reason keeps its own header", async () => {
   const manual = await mountSearchSheet(notFound, { reason: "manual" })
   assert.equal(searchSheetHeaderText(manual.tree), "Produkt finden")
+  const input = queryInputProps(manual.tree)
+  assert.equal(input.enterKeyHint, "search")
+  assert.equal(input.autoCorrect, "off")
+  assert.equal(input.autoCapitalize, "none")
+  assert.equal(input.spellCheck, false)
 
   const timeout = await mountSearchSheet(notFound, { reason: "timeout" })
   const timeoutHeader = searchSheetHeaderText(timeout.tree)
   assert.ok(timeoutHeader.includes("Barcode nicht lesbar?"))
   assert.ok(timeoutHeader.includes("So findest du's trotzdem."))
-})
-
-test("ScanSearchSheet: a text submit renders both sections with exact labels", async () => {
-  const catalog = liveCatalogResult()
-  const retailer = retailerRow()
-  const view = await mountSearchSheet(
-    async (url) => {
-      if (url.startsWith("/api/scan/search?")) return json({ results: [catalog] })
-      if (url.startsWith("/api/scan/search-retailer?"))
-        return json({ catalog: [], retailer: [retailer], retailerOutcome: "ok" })
-      return json({ error: "unexpected_call" }, 500)
-    },
-    { retailerSearchEnabled: true },
-  )
-
-  await typeQuery(view, "gliss kur")
-  submitButton(view.tree).props.onClick()
-  await view.settle()
-
-  assert.deepEqual(sectionLabelTexts(view.tree), ["In deinem Chaarlie-Katalog", "Weitere Treffer"])
-  assert.ok(buttonLabels(view.tree).some((label) => label.includes(catalog.name)))
-  assert.ok(buttonLabels(view.tree).some((label) => label.includes(retailer.name)))
-})
-
-test("ScanSearchSheet: a GTIN-mapped retailer catalog hit renders once, deduped by id against the live rows", async () => {
-  const live = liveCatalogResult({ id: "shared-1", name: "Only Once Shampoo" })
-  const duplicate = liveCatalogResult({ id: "shared-1", name: "Only Once Shampoo" })
-  const appended = liveCatalogResult({ id: "new-1", name: "Brand New Catalog Match" })
-  const view = await mountSearchSheet(
-    async (url) => {
-      if (url.startsWith("/api/scan/search?")) return json({ results: [live] })
-      if (url.startsWith("/api/scan/search-retailer?"))
-        return json({ catalog: [duplicate, appended], retailer: [], retailerOutcome: "ok" })
-      return json({ error: "unexpected_call" }, 500)
-    },
-    { retailerSearchEnabled: true },
-  )
-
-  await typeQuery(view, "only once")
-  submitButton(view.tree).props.onClick()
-  await view.settle()
-
-  const labels = buttonLabels(view.tree)
-  assert.equal(labels.filter((label) => label.includes("Only Once Shampoo")).length, 1)
-  assert.equal(labels.filter((label) => label.includes("Brand New Catalog Match")).length, 1)
 })
 
 test("ScanSearchSheet: a dm-row tap calls onSelectRetailerResult with its GTIN", async () => {
@@ -1558,30 +1471,10 @@ test("ScanSearchSheet: a dm-row tap calls onSelectRetailerResult with its GTIN",
   assert.ok(row)
   row.props.onClick()
   assert.deepEqual(taps, ["4006381111116"])
-})
-
-test("ScanSearchSheet: a dm-lane failure leaves catalog results standing and shows the quiet unavailable line", async () => {
-  const catalog = liveCatalogResult({ id: "p-standing", name: "Standing Catalog Shampoo" })
-  const view = await mountSearchSheet(
-    async (url) => {
-      if (url.startsWith("/api/scan/search?")) return json({ results: [catalog] })
-      if (url.startsWith("/api/scan/search-retailer?"))
-        return json({ catalog: [], retailer: [], retailerOutcome: "unavailable" })
-      return json({ error: "unexpected_call" }, 500)
-    },
-    { retailerSearchEnabled: true },
-  )
-
-  await typeQuery(view, "standing")
-  submitButton(view.tree).props.onClick()
-  await view.settle()
-
-  assert.ok(buttonLabels(view.tree).some((label) => label.includes(catalog.name)))
-  assert.equal(
-    textContent(view.tree).includes("Die erweiterte Suche ist gerade nicht verfügbar."),
-    true,
-  )
-  assert.equal(textContent(view.tree).includes("Dazu haben wir nichts gefunden."), false)
+  const opened = view.events.filter((event) => event.name === "scan_retailer_result_opened")
+  assert.deepEqual(opened, [
+    { name: "scan_retailer_result_opened", payload: { categoryLabel: "Conditioner" } },
+  ])
 })
 
 test("ScanSearchSheet: retailerSearchEnabled=false never fetches the dm lane, even on submit", async () => {
@@ -1600,6 +1493,10 @@ test("ScanSearchSheet: retailerSearchEnabled=false never fetches the dm lane, ev
 
   assert.equal(
     urls.some((url) => url.includes("/api/scan/search-retailer")),
+    false,
+  )
+  assert.equal(
+    view.events.some((event) => event.name === "scan_retailer_search"),
     false,
   )
 })
@@ -1667,25 +1564,6 @@ test("ScanSearchSheet: submitting during a pending debounce issues exactly one c
   assert.equal(catalogCalls.length, 1)
 })
 
-test("ScanSearchSheet: dm lane enabled shows the quiet invitation for a 2-char query (below the auto-search minimum), not the terminal empty state", async () => {
-  const view = await mountSearchSheet(
-    async (url) => {
-      if (url.startsWith("/api/scan/search?")) return json({ results: [] })
-      return json({ error: "unexpected_call" }, 500)
-    },
-    { retailerSearchEnabled: true },
-  )
-
-  // F2: from 3 chars on the dm lane searches by itself — only a 2-char query still
-  // needs the explicit submit the invitation asks for.
-  await typeQuery(view, "ke")
-  await delay(300)
-  await view.settle()
-
-  assert.equal(textContent(view.tree).includes("Drück Suchen für mehr Treffer."), true)
-  assert.equal(textContent(view.tree).includes("Dazu haben wir nichts gefunden."), false)
-})
-
 test("ScanSearchSheet: dm lane disabled keeps the terminal empty state even before a submit", async () => {
   const view = await mountSearchSheet(async (url) => {
     if (url.startsWith("/api/scan/search?")) return json({ results: [] })
@@ -1717,6 +1595,7 @@ test("ScanSearchSheet: the post-submit empty state renders exactly one CTA and n
 
   const ctas = buttonLabels(view.tree).filter((label) => label === "Für dich prüfen lassen")
   assert.equal(ctas.length, 1)
+  assert.equal(textContent(view.tree).includes("Nicht dabei?"), false)
   assert.equal(textContent(view.tree).includes("Dazu haben wir nichts gefunden."), true)
   assert.equal(/dm/.test(textContent(view.tree)), false)
 
@@ -1840,48 +1719,6 @@ test("ScanSearchSheet: scan_retailer_search fires with outcome 'unavailable' on 
   assert.equal(disabledEvents[0].payload.outcome, "disabled")
 })
 
-test("ScanSearchSheet: retailerSearchEnabled=false never fires scan_retailer_search", async () => {
-  const view = await mountSearchSheet(async (url) => {
-    if (url.startsWith("/api/scan/search?")) return json({ results: [] })
-    return json({ error: "unexpected_call" }, 500)
-  })
-  await typeQuery(view, "kerastase")
-  submitButton(view.tree).props.onClick()
-  await view.settle()
-  assert.equal(
-    view.events.some((event) => event.name === "scan_retailer_search"),
-    false,
-  )
-})
-
-test("ScanSearchSheet: a dm-row tap fires scan_retailer_result_opened with the row's categoryLabel before resolving", async () => {
-  const retailer = retailerRow({ gtin: "4006381111116", categoryLabel: "Conditioner" })
-  const view = await mountSearchSheet(
-    async (url) => {
-      if (url.startsWith("/api/scan/search?")) return json({ results: [] })
-      if (url.startsWith("/api/scan/search-retailer?"))
-        return json({ catalog: [], retailer: [retailer], retailerOutcome: "ok" })
-      return json({ error: "unexpected_call" }, 500)
-    },
-    { retailerSearchEnabled: true },
-  )
-  await typeQuery(view, "aqua revive")
-  submitButton(view.tree).props.onClick()
-  await view.settle()
-
-  const row = findAll(
-    view.tree,
-    (element) => element.type === "button" && textContent(element).includes(retailer.name),
-  )[0]
-  assert.ok(row)
-  row.props.onClick()
-
-  const opened = view.events.filter((event) => event.name === "scan_retailer_result_opened")
-  assert.deepEqual(opened, [
-    { name: "scan_retailer_result_opened", payload: { categoryLabel: "Conditioner" } },
-  ])
-})
-
 test("ScanSearchSheet: submitting via the round button returns focus to the search field", async () => {
   const view = await mountSearchSheet(async (url) => {
     if (url.startsWith("/api/scan/search?")) return json({ results: [] })
@@ -1911,6 +1748,11 @@ test("ScanSearchSheet: Zurück returns focus to the search field", async () => {
 
   intakeFormProps(view.tree).onBack()
   await view.settle()
+
+  assert.equal(searchSheetHeaderText(view.tree), "Produkt finden")
+  assert.equal(queryInputProps(view.tree).value, "kerastase ciment")
+  assert.equal(textContent(view.tree).includes("Dazu haben wir nichts gefunden."), true)
+  assert.equal(findByType(view.tree, ScanResearchIntakeForm), null)
 
   const inputElement = findAll(
     view.tree,
@@ -1947,6 +1789,8 @@ test("ScanSearchSheet + ScanResearchIntakeForm: no user-facing copy leaks 'dm' (
   submitButton(view.tree).props.onClick()
   await view.settle()
   const resultsText = textContent(view.tree)
+  assert.ok(buttonLabels(view.tree).some((label) => label.includes(catalog.name)))
+  assert.ok(buttonLabels(view.tree).some((label) => label.includes(retailer.name)))
   chunks.push(resultsText)
   for (const copy of [
     "In deinem Chaarlie-Katalog",
@@ -1973,6 +1817,8 @@ test("ScanSearchSheet + ScanResearchIntakeForm: no user-facing copy leaks 'dm' (
   const unavailableText = textContent(unavailable.tree)
   chunks.push(unavailableText)
   assert.ok(unavailableText.includes("Die erweiterte Suche ist gerade nicht verfügbar."))
+  assert.ok(buttonLabels(unavailable.tree).some((label) => label.includes(catalog.name)))
+  assert.equal(unavailableText.includes("Dazu haben wir nichts gefunden."), false)
 
   // quiet invitation (2-char query: below the dm lane's auto-search minimum)
   const invitation = await mountSearchSheet(
@@ -1988,6 +1834,7 @@ test("ScanSearchSheet + ScanResearchIntakeForm: no user-facing copy leaks 'dm' (
   const invitationText = textContent(invitation.tree)
   chunks.push(invitationText)
   assert.ok(invitationText.includes("Drück Suchen für mehr Treffer."))
+  assert.equal(invitationText.includes("Dazu haben wir nichts gefunden."), false)
 
   // post-submit empty state + intake header (rendered by ScanSearchSheet itself)
   const { view: emptyView } = await mountSearchSheetAtEmptyState("kerastase ciment")
@@ -2094,7 +1941,7 @@ function openIntake(tree: ReactNode) {
 }
 
 test("ScanSearchSheet: the recovery CTA opens the intake form (heading swaps, search bar is gone)", async () => {
-  const { view } = await mountSearchSheetAtEmptyState("kerastase ciment")
+  const { view } = await mountSearchSheetAtEmptyState("  kerastase ciment thermique  ")
   openIntake(view.tree)
   await view.settle()
 
@@ -2107,13 +1954,6 @@ test("ScanSearchSheet: the recovery CTA opens the intake form (heading swaps, se
     0,
   )
   assert.ok(requireByType(view.tree, ScanResearchIntakeForm, "ScanResearchIntakeForm"))
-})
-
-test("ScanSearchSheet: intake prefills Produktname with the full trimmed query and leaves Marke empty", async () => {
-  const { view } = await mountSearchSheetAtEmptyState("  kerastase ciment thermique  ")
-  openIntake(view.tree)
-  await view.settle()
-
   assert.equal(intakeFormProps(view.tree).productNameText, "kerastase ciment thermique")
   assert.equal(intakeFormProps(view.tree).brandText, "")
 })
@@ -2166,20 +2006,6 @@ test("ScanSearchSheet: threads submitting/error into the intake form and forward
   ])
 })
 
-test("ScanSearchSheet: Zurück (onBack) returns to the results/empty state without losing the query", async () => {
-  const { view } = await mountSearchSheetAtEmptyState("kerastase ciment")
-  openIntake(view.tree)
-  await view.settle()
-
-  intakeFormProps(view.tree).onBack()
-  await view.settle()
-
-  assert.equal(searchSheetHeaderText(view.tree), "Produkt finden")
-  assert.equal(queryInputProps(view.tree).value, "kerastase ciment")
-  assert.equal(textContent(view.tree).includes("Dazu haben wir nichts gefunden."), true)
-  assert.equal(findByType(view.tree, ScanResearchIntakeForm), null)
-})
-
 // --- Task 8: the persistent recovery link ("Nicht dabei? Für dich prüfen lassen") ------
 //
 // dm's semantic search returns neighbor products for most real queries, so the terminal
@@ -2215,23 +2041,6 @@ test("Task 8: the persistent recovery link renders below dm-only results", async
   assert.equal(text.includes("Dazu haben wir nichts gefunden."), false)
 })
 
-test("Task 8: the persistent recovery link renders below catalog-only results with the retailer flag off", async () => {
-  const view = await mountSearchSheet(
-    async (url) => {
-      if (url.startsWith("/api/scan/search?")) return json({ results: [liveCatalogResult()] })
-      return json({ error: "unexpected_call" }, 500)
-    },
-    { onStartResearchIntake: () => {} },
-  )
-
-  await typeQuery(view, "gliss kur")
-  submitButton(view.tree).props.onClick()
-  await view.settle()
-
-  assert.ok(textContent(view.tree).includes("Nicht dabei? Für dich prüfen lassen"))
-  assert.equal(persistentRecoveryLinkButtons(view.tree).length, 1)
-})
-
 test("Batch 8 (supersedes Task 8 delta review Finding 2): a resubmit's reload keeps the stale rows AND the recovery link up, with no skeleton, until the new answer lands", async () => {
   // `catalogResults` persists across a resubmit's fresh loading cycle -- nothing clears it
   // until the NEW response lands. Batch 8 changed what that means on screen: instead of
@@ -2256,6 +2065,10 @@ test("Batch 8 (supersedes Task 8 delta review Finding 2): a resubmit's reload ke
   await typeQuery(view, "gliss kur")
   submitButton(view.tree).props.onClick()
   await view.settle()
+  assert.ok(
+    textContent(view.tree).includes("Nicht dabei? Für dich prüfen lassen"),
+    "catalog-only results retain the complete recovery copy",
+  )
   // First submit settled: the link is showing under real, rendered rows.
   assert.equal(persistentRecoveryLinkButtons(view.tree).length, 1)
 
@@ -2334,14 +2147,6 @@ test("Task 8: the persistent recovery link is NOT shown pre-submit, even while l
   assert.ok(textContent(view.tree).includes(liveCatalogResult().name))
   assert.equal(textContent(view.tree).includes("Nicht dabei?"), false)
   assert.equal(persistentRecoveryLinkButtons(view.tree).length, 0)
-})
-
-test("Task 8: the persistent recovery link is NOT shown in the terminal empty state (its own big CTA owns recovery there)", async () => {
-  const { view } = await mountSearchSheetAtEmptyState("kerastase ciment")
-
-  assert.equal(textContent(view.tree).includes("Nicht dabei?"), false)
-  // Exactly one "Für dich prüfen lassen" -- the big empty-state CTA, not the small link too.
-  assert.equal(persistentRecoveryLinkButtons(view.tree).length, 1)
 })
 
 test("Task 8: clicking the persistent recovery link opens the intake with the query prefilled", async () => {
@@ -2717,15 +2522,6 @@ test("F2: dm results append below the live rows — live rows keep their order, 
   assert.ok(text.indexOf("Weitere Treffer") < text.indexOf("Mapped C"))
 })
 
-test("F2: the search field carries the mobile search-keyboard attributes", async () => {
-  const view = await mountSearchSheet(notFound)
-  const input = queryInputProps(view.tree)
-  assert.equal(input.enterKeyHint, "search")
-  assert.equal(input.autoCorrect, "off")
-  assert.equal(input.autoCapitalize, "none")
-  assert.equal(input.spellCheck, false)
-})
-
 // --- T9: the free tier's verdict states, end to end through the flow ---------
 
 /**
@@ -2818,17 +2614,6 @@ test("fix round 1 (F1): the server-derived tier prop locks Merken before any sca
   assert.equal(wishlistTriggerProps(untiered.tree).locked, false)
 })
 
-test("free tier: a masked verdict locks Merken on both surfaces and offers the reveal", async () => {
-  const flow = await mountFlow(async () => json(maskedVerdict()))
-  await scanInto(flow)
-
-  assert.equal(cardProps(flow.tree).result.freeRevealAvailable, true)
-  assert.equal(cardProps(flow.tree).revealedAlternatives, null)
-  assert.equal(wishlistTriggerProps(flow.tree).locked, true)
-  assert.equal(footerProps(flow.tree).saveLocked, true)
-  assert.equal(premiumSheetProps(flow.tree).open, false)
-})
-
 test("free tier: the reveal posts the SCANNED product's id and unblurs into the full card", async () => {
   const revealBodies: string[] = []
   const flow = await mountFlow(async (url, init) => {
@@ -2840,6 +2625,12 @@ test("free tier: the reveal posts the SCANNED product's id and unblurs into the 
     return notFound()
   })
   await scanInto(flow)
+
+  assert.equal(cardProps(flow.tree).result.freeRevealAvailable, true)
+  assert.equal(cardProps(flow.tree).revealedAlternatives, null)
+  assert.equal(wishlistTriggerProps(flow.tree).locked, true)
+  assert.equal(footerProps(flow.tree).saveLocked, true)
+  assert.equal(premiumSheetProps(flow.tree).open, false)
 
   cardProps(flow.tree).onReveal()
   await flow.settle()
@@ -2885,15 +2676,20 @@ test("free tier: an empty reveal says so and leaves the unspent credit's CTA in 
 })
 
 test("free tier: the post-reveal CTA opens the Premium sheet for empfehlungen", async () => {
-  const flow = await mountFlow(async (url) => {
+  const revealBodies: string[] = []
+  const flow = await mountFlow(async (url, init) => {
     if (url === "/api/scan/resolve") return json(maskedVerdict("p-a", false))
     // Fix round 1 (F2): `freeRevealAvailable:false` now makes the flow attempt a silent
     // background reveal for this SAME product; here it belongs to a different one, so 409.
+    if (url === "/api/scan/reveal") revealBodies.push(String(init?.body))
     return json({ error: "already_used" }, 409)
   })
   await scanInto(flow)
 
   assert.equal(cardProps(flow.tree).result.freeRevealAvailable, false)
+  assert.deepEqual(JSON.parse(revealBodies[0]), { productId: "p-a" })
+  assert.equal(cardProps(flow.tree).revealedAlternatives, null)
+  assert.deepEqual(flow.toasts, [])
   cardProps(flow.tree).onPremiumAlternatives()
   await flow.settle()
 
@@ -2924,24 +2720,6 @@ test("fix round 1 (F2): a masked verdict with the credit spent re-serves the SAM
   assert.deepEqual(cardProps(flow.tree).revealedAlternatives, [REVEALED_ALTERNATIVE])
   // No unblur this time — nothing is being "revealed" to the user.
   assert.equal(cardProps(flow.tree).revealAnimates, false)
-  assert.deepEqual(flow.toasts, [])
-})
-
-test("fix round 1 (F2): a background re-serve attempt that 409s stays on the Premium gate, silently", async () => {
-  const revealBodies: string[] = []
-  const flow = await mountFlow(async (url, init) => {
-    if (url === "/api/scan/resolve") return json(maskedVerdict("p-a", false))
-    if (url === "/api/scan/reveal") {
-      revealBodies.push(String(init?.body))
-      return json({ error: "already_used" }, 409)
-    }
-    return notFound()
-  })
-  await scanInto(flow)
-
-  assert.deepEqual(JSON.parse(revealBodies[0]), { productId: "p-a" })
-  assert.equal(cardProps(flow.tree).revealedAlternatives, null)
-  // A background attempt failing must stay invisible — the Premium gate already shows.
   assert.deepEqual(flow.toasts, [])
 })
 
@@ -3142,19 +2920,6 @@ test("T16 premium + merklisteEnabled: the bookmark loads the Merkliste count and
   assert.equal(requireByType(flow.tree, ScanWishlistSheet, "ScanWishlistSheet").props.open, false)
 })
 
-test("T16 flag off: the bookmark never fetches a Merkliste count, even for a premium session", async () => {
-  const flow = await mountFlow(
-    async (url) => {
-      if (url === "/api/scan/wishlist") throw new Error("must not be called with the flag off")
-      return notFound()
-    },
-    { tier: "premium" },
-  )
-  await flow.settle()
-
-  assert.equal(wishlistTriggerProps(flow.tree).count, undefined)
-})
-
 test("T16 premium + merklisteEnabled: a load failure leaves the badge absent instead of showing a wrong count", async () => {
   const flow = await mountFlow(
     async (url) => {
@@ -3169,10 +2934,13 @@ test("T16 premium + merklisteEnabled: a load failure leaves the badge absent ins
 })
 
 test("T16 free tier + merklisteEnabled: never fetches a Merkliste count and the bookmark still opens the Premium sheet", async () => {
+  let wishlistCalls = 0
   const flow = await mountFlow(
     async (url) => {
-      if (url === "/api/scan/wishlist")
-        throw new Error("must not be called for a free-tier session")
+      if (url === "/api/scan/wishlist") {
+        wishlistCalls += 1
+        return json({ entries: [{ productId: "unexpected-product" }] })
+      }
       return notFound()
     },
     { tier: "free", merklisteEnabled: true },
@@ -3189,6 +2957,7 @@ test("T16 free tier + merklisteEnabled: never fetches a Merkliste count and the 
     source: "scan:verdict",
   })
   assert.deepEqual(flow.navigateCalls, [])
+  assert.equal(wishlistCalls, 0)
 })
 
 test("T16 premium + merklisteEnabled: a premium in-catalog resolve refreshes the badge (server auto-saved it)", async () => {
@@ -3226,15 +2995,21 @@ test("T16 premium + merklisteEnabled: a premium in-catalog resolve refreshes the
  * to keep doing exactly what it did before this branch — open the in-flow Merkliste sheet.
  */
 test("Z1 flag off: the unlocked bookmark opens the in-flow Merkliste sheet and never deep-links", async () => {
+  let wishlistCalls = 0
   const flow = await mountFlow(
     async (url) => {
-      if (url === "/api/scan/wishlist") throw new Error("must not be called with the flag off")
+      if (url === "/api/scan/wishlist") {
+        wishlistCalls += 1
+        return json({ entries: [{ productId: "unexpected-product" }] })
+      }
       return notFound()
     },
     { tier: "premium" },
   )
   await flow.settle()
 
+  assert.equal(wishlistTriggerProps(flow.tree).count, undefined)
+  assert.equal(wishlistCalls, 0)
   assert.equal(wishlistTriggerProps(flow.tree).locked, false)
   wishlistTriggerProps(flow.tree).onClick()
   await flow.settle()
@@ -3420,6 +3195,7 @@ test("F4: session 1 (no prior record) and session 3+ never show Wiederkehrer", a
     sessionRecordStorage: createMemoryScanTriggerStorage(),
   })
   await scanInto(sessionOne)
+  assert.equal(cardProps(sessionOne.tree).result.product.productId, "p-a")
   assert.equal(findByType(sessionOne.tree, ScanProactiveTriggerCard), null)
 
   // Session 3: the record already says count 2, so the next visit becomes session 3.
@@ -3430,6 +3206,7 @@ test("F4: session 1 (no prior record) and session 3+ never show Wiederkehrer", a
     sessionRecordStorage: sessionThreeStorage,
   })
   await scanInto(sessionThree)
+  assert.equal(cardProps(sessionThree.tree).result.product.productId, "p-a")
   assert.equal(findByType(sessionThree.tree, ScanProactiveTriggerCard), null)
 })
 
@@ -3619,6 +3396,13 @@ test("F5: premium and flag-off (no tier prop) cause zero trigger-storage activit
   await scanInto(premium)
   assert.equal(premiumRecord.calls, 0)
   assert.equal(premiumFatigue.calls, 0)
+  for (const attribute of SCAN_FLOW_DEBUG_ATTRIBUTES) {
+    assert.equal(
+      attribute in (premium.tree as AnyElement).props,
+      false,
+      `expected ${attribute} to be absent for premium`,
+    )
+  }
 
   // No `tier` prop at all is exactly what a flag-off mount looks like in production
   // (`navigation-access.ts` never assigns `tier: "free"` with the flag off).
@@ -3631,6 +3415,13 @@ test("F5: premium and flag-off (no tier prop) cause zero trigger-storage activit
   await scanInto(flagOff)
   assert.equal(flagOffRecord.calls, 0)
   assert.equal(flagOffFatigue.calls, 0)
+  for (const attribute of SCAN_FLOW_DEBUG_ATTRIBUTES) {
+    assert.equal(
+      attribute in (flagOff.tree as AnyElement).props,
+      false,
+      `expected ${attribute} to be absent for flag-off`,
+    )
+  }
 })
 
 // --- PR2 review fix (C4): premium/flag-off render-identity -------------------
@@ -3643,26 +3434,6 @@ const SCAN_FLOW_DEBUG_ATTRIBUTES = [
   "data-scan-active-trigger",
   "data-scan-zwei-scans-gleiche-kategorie",
 ] as const
-
-test("C4: a premium render never carries the T9/T10 debug attributes, even after a resolve and a Premium-gated action attempt", async () => {
-  const premium = await mountFlow(async () => json(verdictResultInCategory("p1", "shampoo")), {
-    tier: "premium",
-  })
-  await scanInto(premium)
-  const rootProps = (premium.tree as AnyElement).props
-  for (const attribute of SCAN_FLOW_DEBUG_ATTRIBUTES) {
-    assert.equal(attribute in rootProps, false, `expected ${attribute} to be absent for premium`)
-  }
-})
-
-test("C4: a flag-off render (no tier prop at all) never carries the T9/T10 debug attributes", async () => {
-  const flagOff = await mountFlow(async () => json(verdictResultInCategory("p1", "shampoo")))
-  await scanInto(flagOff)
-  const rootProps = (flagOff.tree as AnyElement).props
-  for (const attribute of SCAN_FLOW_DEBUG_ATTRIBUTES) {
-    assert.equal(attribute in rootProps, false, `expected ${attribute} to be absent for flag-off`)
-  }
-})
 
 test("C4: a free-tier render carries all five T9/T10 debug attributes", async () => {
   const free = await mountFlow(async () => json(maskedVerdict("p1")), { tier: "free" })

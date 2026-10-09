@@ -1,0 +1,576 @@
+{
+  "phase": "transfer",
+  "verified": 20,
+  "controlIds": [
+    "C1-no-session-not-outage",
+    "C2-projection-invitationId",
+    "C2-projection-userId",
+    "C2-projection-name",
+    "C2-projection-email",
+    "C2-projection-funnelSessionId",
+    "C3-auth-fault-not-none",
+    "C4-unstamped-lookup",
+    "C4-stamped-read-fault",
+    "C5-unpaid-restart",
+    "C6-new-account-billing-read",
+    "C7-visible-email",
+    "C7-change-email-copy",
+    "C7-start-copy",
+    "C7-account-copy",
+    "C7-noncommercial-copy",
+    "C8-mail-status",
+    "C8-mail-required",
+    "C8-mail-address",
+    "C8-release-before-mail"
+  ],
+  "cleanRuns": 40,
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA": "6380a72d33c51970b590adf15f647a859747d87fb4092661c19999394ed7c00b",
+  "receiptSHA256": "1c2abf2e624a80273923f34e61cd75a8223b3328a933174cf4f5081334901a01",
+  "allTestHashes": {
+    "tests/partner-access-sql-execution.test.ts": "4e1315f83f9df9f14304cda42c591f421a6f95c6a092f212753f51f5486f1ff9",
+    "tests/partner-access-journey.test.ts": "fef75b4b53499b42c3c27aa86966b2aa48132c736c300c62d5ab9d8e83a8aa84",
+    "tests/partner-access-claim-route.test.ts": "47daff78b59b56f64f1d4525b3e090e681ff615f166bc246afb5ad1d8b389fff",
+    "tests/partner-access-quiz-context.test.ts": "2e468aa3c52c715d2a3646c3cfafe70de7f5a08d50cf9840a47071a53dfb6961",
+    "tests/partner-access-service.test.ts": "dc5de9837541222717c5f48277bfc87ef8d53009c4b8f2038853c132239f771a",
+    "tests/partner-access-ui.test.tsx": "60bb4d0575be8472da12b4aeeaebe5b7a8099b72bbd81097326eb89c538030be",
+    "tests/partner-access-activation-route.test.ts": "46bba2d372476b5fd58b2257cd2726e31a90c7ac7cb21a78fb643051039a91fe",
+    "tests/partner-access-journey.spec.ts": "889805f45dc1af0a8cd39f7db77167060e1e9f31fab02023d7de4ba5a40b12a1",
+    "tests/partner-access-resolve-route.test.ts": "9e6ebb7689610dbbf2fc21dd01372acc8bcd66d6dff81b5127abdd0b4576ddf9",
+    "tests/partner-access-schema.test.ts": "b9ea53fb0e822199871d43965d658a563570b12404c7c3f866db6afed3ba7997",
+    "tests/partner-access-email-change-routes.test.ts": "b303e7a40a1ffa5916c228e1f2817abc4ad9aef4b0749b2c37066c57280c3c99",
+    "tests/partner-access-token.test.ts": "2c7259dc669c710c1b7df5623477be023e211388a73b3649c50dff80e48479d5",
+    "tests/partner-access-cli.test.ts": "d77afad18dcba58bef7b691892016648805b7901faab860aa327fd27681346c9",
+    "tests/admin-partner-access-page.test.tsx": "32f63e0dd983775226b8d8c2660d4e8aa8b03196f7817a0f83a7083a0b959605",
+    "tests/partner-access-email.test.ts": "039d7e4625cd87438e406ad27189c8b2dd28ff4b50a0ceb18595a9d830fe81c9",
+    "tests/partner-access-intent.test.ts": "087bcce92cdb44d6d1b008f1b2bad897a31c0914099f377cc69f8efdfdb02065"
+  },
+  "sourceGuards": [
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
+    {
+      "file": ".nvmrc",
+      "sha": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "file": "AGENTS.md",
+      "sha": "9072f0e4ef99aef972395aab4b26e4718be6ab7cac755a0fc303746d8ee162f8"
+    },
+    {
+      "file": "docs/local-qa-access.md",
+      "sha": "90aed62facb08033ff3a3a942e1b05480f578f0bc76e1291aade54a3e4c90c45"
+    },
+    {
+      "file": "docs/partner-access-operations.md",
+      "sha": "c09ecb41cadf5b3e9cba2fc6fe978751fb1f5b5d0f3768f728d4ecc4c90b509b"
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/dist/pglite-CntadC_p.d.ts",
+      "sha": "aa4bc50bc6ba80c59ad64dd2f58112b873b6b2f255e383dae69f3c4abb4a753b"
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/package.json",
+      "sha": "a540c379fd1d820810793681d25fa7ad5dadfcee2b190d14a6553fdb469cfe3c"
+    },
+    {
+      "file": "node_modules/@supabase/auth-js/src/GoTrueClient.ts",
+      "sha": "7a94d4fbf3bee35b694b6a88d68a2666605f98fdabae086ea45fca55211a5988"
+    },
+    {
+      "file": "node_modules/@supabase/auth-js/src/lib/errors.ts",
+      "sha": "81cf6a41179636905aa4810fae268ca15723283e7ebf7e143e0d8d1477b9b9ec"
+    },
+    {
+      "file": "node_modules/next/dist/server/web/spec-extension/response.js",
+      "sha": "68a5a07540d57a4beb3275fddd0502fd5ef9a42986b414c0bcee99a3f9033366"
+    },
+    {
+      "file": "node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js",
+      "sha": "e0a591b81f983794366bbc8338df0ebbbc7add48fdcee772870e226eadcda9ce"
+    },
+    {
+      "file": "package-lock.json",
+      "sha": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799"
+    },
+    {
+      "file": "package.json",
+      "sha": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": "plans/2026-09-01-partner-access.md",
+      "sha": "b77686d36203fa447f0a3dad31d63661dcaf85ea7398d8653b0510d678c3fcfa"
+    },
+    {
+      "file": "plans/2026-09-01-partner-journey-consistency.md",
+      "sha": "e1a1dc912bb73dc2675102cef8402c9a4c7a84da6015bc6aae1dd72191b8a439"
+    },
+    {
+      "file": "plans/partner-access-robust.md",
+      "sha": "a70cabda5535942a0ee13968156b5fac403f01716479832a40b6dc58209aaa79"
+    },
+    {
+      "file": "playwright.config.ts",
+      "sha": "1bae952413616dc389aad1ebe4278173df2ea9e51add59045d72c24501f85aa9"
+    },
+    {
+      "file": "scripts/partner-access.ts",
+      "sha": "7b7a7acd6f848e2efabddec61ee5285cf2904dd526292047991ed0b602527819"
+    },
+    {
+      "file": "src/app/admin/partner-access/page.tsx",
+      "sha": "3431ceffca4ebf005009d0dd621ace9a7e95be942b227a33ba5cbe3b72fa9292"
+    },
+    {
+      "file": "src/app/api/admin/partner-access/route.ts",
+      "sha": "0b4ad2294b85108160c2017f31c99527300d37afa628f9903046f100f9756b6a"
+    },
+    {
+      "file": "src/app/api/partner-access/activate/route.ts",
+      "sha": "2d75edef7c74a43d11da92ee772ac1454b2fb0e418195cc62f03536fb7e74228"
+    },
+    {
+      "file": "src/app/api/partner-access/claim/route.ts",
+      "sha": "d9349e8c887e3e9e4a77389c4fe890dcf9d1b6a17778cb08eeb7b6312d79908e"
+    },
+    {
+      "file": "src/app/api/partner-access/email-change/confirm/route.ts",
+      "sha": "918013edd745e3f50b6fced5191508eed324240d75f714a650f0654d58f6c688"
+    },
+    {
+      "file": "src/app/api/partner-access/email-change/route.ts",
+      "sha": "7d099bce59e88fa69487d1d43f60c3e215d3c0c6c17bd76691b52be8029d7fbd"
+    },
+    {
+      "file": "src/app/api/partner-access/quiz-context/route.ts",
+      "sha": "5c16602f8c6891fa0cc4a4852643691afb18eb724a85d755e993664cbbc5b346"
+    },
+    {
+      "file": "src/app/api/partner-access/resolve/route.ts",
+      "sha": "4a86999080d96ba5e5dacdab990587e25e982abfff15cd4f52d7ae637824979e"
+    },
+    {
+      "file": "src/app/api/quiz/lead/route.ts",
+      "sha": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e"
+    },
+    {
+      "file": "src/app/labs/partner-access/page.tsx",
+      "sha": "21b811cf8e289f75ec8a2ae444cd7dd795604cda25d71bd72cae78ca4b833feb"
+    },
+    {
+      "file": "src/app/labs/partner-access/partner-access-invitation-lab.tsx",
+      "sha": "d3e10fd180099a360be1b5c885eabcf2f5c2f450b0fd9eca637cdf0b81496ce7"
+    },
+    {
+      "file": "src/app/partner/einladung/page.tsx",
+      "sha": "d541f7d180d25fa2fb29c0ec2ed0b6836af8daa72293af2b1fadcc66f3e992a3"
+    },
+    {
+      "file": "src/app/partner/einladung/partner-invitation-client.tsx",
+      "sha": "602df4dbe7658b3d1f414ee6aa8c5a86f40f48db4928a8acb63c2bd72316ddb7"
+    },
+    {
+      "file": "src/components/quiz/quiz-lead-capture.tsx",
+      "sha": "2708d0f076e24e474ff30587080e92200f8f112dff52ecb9a338820cd1a1efb9"
+    },
+    {
+      "file": "src/lib/billing/admin-user-summary.ts",
+      "sha": "af32cab0a775c34f3bd40098c71e02288034b9f1f21d4fcaf802e5699ea0a551"
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/customerio.ts",
+      "sha": "901525211d4267c62f57504167c75b2b06a5bc6b21874cfb1b0a64e339adff5c"
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/funnel.ts",
+      "sha": "7c6d71e7eeb0ec6af41020df967b0126e6ced1436c715d9914674e8dda4ef6bb"
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/meta-capi.ts",
+      "sha": "ad26d75c65085e730d105abb929483bde3f73769e14af3bff8ec36209e5d81f1"
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/openai-capi.ts",
+      "sha": "56d1c371daa47f9ac41b57f311b61b5db9a34fce7b59f56d342bd79ffe575767"
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/posthog-server.ts",
+      "sha": "1ad0407338d9e27d8a0a3f55a15bfbbfb5274ef806af21862e2bcd0a2158887c"
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/types.ts",
+      "sha": "7e6a656110c62d2c7796c190153082319abce75013ccada4df1cade8eeac22ec"
+    },
+    {
+      "file": "src/lib/billing/analytics-events.ts",
+      "sha": "75b9dac77775ab503ef6389c13de33b71cc0f40dfaca4bbfa3a03f043d1ced75"
+    },
+    {
+      "file": "src/lib/billing/analytics-outbox.ts",
+      "sha": "e81d7519e58438a54760efac9aa1b92227f028077fef049595facc84d480bef2"
+    },
+    {
+      "file": "src/lib/billing/checkout-success-redirect.ts",
+      "sha": "ffe58e6d3b90a278e882101a674c7f3d65ce241c0d6c0bbea21321c5bd935092"
+    },
+    {
+      "file": "src/lib/billing/display.ts",
+      "sha": "d4945ac1ad7749a3f91ab3948647371a2d404aa5e89261a06b883a69cfbb78dd"
+    },
+    {
+      "file": "src/lib/billing/entitlements.ts",
+      "sha": "76f6fd8a1b7f075f57cad217d82ac23fdfca29a83e669f3962f5c6c4b818a56f"
+    },
+    {
+      "file": "src/lib/billing/moderator-reset-cutoff.ts",
+      "sha": "b7f4cfcf738472d0d7eab0adbd758acde100e78d99b9e7fa6eecbabed322802a"
+    },
+    {
+      "file": "src/lib/billing/offer-products.ts",
+      "sha": "3e2c7f6195974480280792b94dd7c27ab3fcd75dc3f12eae7538e5c7382b22b8"
+    },
+    {
+      "file": "src/lib/billing/one-time-fulfillment-reconcile.ts",
+      "sha": "2a73f737617dbe97dba7d032fcb29b723180b01c79f1403e9a8af7896683763d"
+    },
+    {
+      "file": "src/lib/billing/paid-access-monitor.ts",
+      "sha": "936283ffc2129a8194f2db44ec7e5f6dd8ca5a30cc9eb01b265aa7159a772ced"
+    },
+    {
+      "file": "src/lib/billing/payment-integrity-runtime.ts",
+      "sha": "ceb4c466b9e1693a20072f38e88640f9b0d46bc01bf1cf13f5d577d284d55bb6"
+    },
+    {
+      "file": "src/lib/billing/payment-integrity.ts",
+      "sha": "ba15949e9aa0bf1f17a399ffb178d735c0b487f7dd22be4c331c35f8a0629cd8"
+    },
+    {
+      "file": "src/lib/billing/payment-runtime-config.ts",
+      "sha": "2f5f9414aee446b43f337e5fa3ade5e5a2b6a7e6d1b0685dcf4ed611fcfd0e07"
+    },
+    {
+      "file": "src/lib/billing/payment-runtime.ts",
+      "sha": "234b4016fba3ae8c9800984a6226e66f890635ee6a49121fc14a5a764caf466b"
+    },
+    {
+      "file": "src/lib/billing/payment-support-delivery.ts",
+      "sha": "ba53abf2528f81ff4abf7c0453366b5f3ff13008e72daa6d9a96ecd352951033"
+    },
+    {
+      "file": "src/lib/billing/payment-support.ts",
+      "sha": "081d532abd2ea7a9872349f21d0efb82c7ebebe99183c49a925b189838b5cf5a"
+    },
+    {
+      "file": "src/lib/billing/personal-plan-one-time-activation.ts",
+      "sha": "1efa98c6055012f5912c22c5e7420b36331ffc702b52344a2db40bc2ade458eb"
+    },
+    {
+      "file": "src/lib/billing/personal-plan-one-time-consent-copy.ts",
+      "sha": "de99a4ad49ef4720b0f5bf08420b1805ceb691b670a575bba1aa89fc87b25fc9"
+    },
+    {
+      "file": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "sha": "9780ca72927361d64c493de99f1780e7b9a58800e3fb52ea0fbad8227b97a544"
+    },
+    {
+      "file": "src/lib/billing/personal-plan-one-time-first-access.ts",
+      "sha": "01048dbc75107e07f774615a8dfef0c0a401016658770ffc200344c4639e8231"
+    },
+    {
+      "file": "src/lib/billing/plan-change-client.ts",
+      "sha": "a71cb90d25c9580b7721d6e41968278c2796a40319cbadaf5d1f427c9668eb95"
+    },
+    {
+      "file": "src/lib/billing/plan-change.ts",
+      "sha": "0dd31b006ef41093ecc8abd4e7c340719c5d3d83dc30cc2af9ed98181052675c"
+    },
+    {
+      "file": "src/lib/billing/pricing-catalog.ts",
+      "sha": "bf01815cb824ef9cd3346be051d8f94868c9b916c593b2d2cd8e1140bc8dfae7"
+    },
+    {
+      "file": "src/lib/billing/public-contract-declaration-receipt-delivery.ts",
+      "sha": "7b9cc8ae9354bdd7353f90725a64aa8209409c2184e8c3e36277a527e75fe03f"
+    },
+    {
+      "file": "src/lib/billing/public-contract-declaration-request.ts",
+      "sha": "38f467ed4513f7b2c5f71c38e08ad0b096fb59e539ce9a618d4d749b68f036b6"
+    },
+    {
+      "file": "src/lib/billing/public-contract-declaration-resolution.ts",
+      "sha": "5b11105c416713eb1056e8871b507e47241c37d4adf2b433c79fdc096949c323"
+    },
+    {
+      "file": "src/lib/billing/public-contract-declaration.ts",
+      "sha": "953cc00da720d7548307949f0a360c50fc89606418169c2ef83a90abbf24f237"
+    },
+    {
+      "file": "src/lib/billing/public-contract-declarations.ts",
+      "sha": "caac5a06fa0bc87a71d6094442b160280c2820cbdf67a4a3922eea15fde66be0"
+    },
+    {
+      "file": "src/lib/billing/purchases.ts",
+      "sha": "3c4ef0bc20b982ec38e7eff8f3a1e00b40b47412fc5d822151e117e85e53a6b6"
+    },
+    {
+      "file": "src/lib/billing/subscriptions.ts",
+      "sha": "a6ba77a92481e13f6f03bc7b1c8d7fee75c02facfeb8ce747493bc64ecca995c"
+    },
+    {
+      "file": "src/lib/billing/tier-ids.ts",
+      "sha": "de7f84a244dc1180193de7afb59b6e8a667f2425cfc3dd287d7fdd6f0feb5adf"
+    },
+    {
+      "file": "src/lib/billing/trial-access-projection.ts",
+      "sha": "6bd7a205a589005d2301cf77511709b26f63076538f953e1da77d57e567ba17f"
+    },
+    {
+      "file": "src/lib/billing/trial-admission.ts",
+      "sha": "00dea2cbb5dad16446ee405f289aa7912c9cb895774653512d549ddea02d0017"
+    },
+    {
+      "file": "src/lib/billing/trial-analytics-context.ts",
+      "sha": "8fa707d663a6c657540fc45715f5a6a4e8022604ad0ccdad5cee777eb6bd0647"
+    },
+    {
+      "file": "src/lib/billing/trial-analytics.ts",
+      "sha": "88f13bb88644df1af05750f64228e17dc43ffc8c76061184209abdc343a47767"
+    },
+    {
+      "file": "src/lib/billing/trial-cancellation-declarations.ts",
+      "sha": "d8d5ebe26c29137f6c5e024dc91307c857fe493946db1fcb9a0ce3323fb5b7f7"
+    },
+    {
+      "file": "src/lib/billing/trial-cancellation-reconcile.ts",
+      "sha": "2680be571a30e235678c6b5e072bffc73b509db2d567d6ef56ae5132c2a33b31"
+    },
+    {
+      "file": "src/lib/billing/trial-checkout-attempt.ts",
+      "sha": "84ba2d9f52efceb8bc64a499176c5d2c24b479d9907185b8998da05320ac76a9"
+    },
+    {
+      "file": "src/lib/billing/trial-effective-contract.ts",
+      "sha": "8700806b915a6472297eee6b523671fbcaa924a7eb4f4c02edf47bf6d5d40d96"
+    },
+    {
+      "file": "src/lib/billing/trial-eligibility.ts",
+      "sha": "e911749fe703ff1cdc48fab0f7c6be3eb5ef9faf99fe33e36c4da8cb840734f1"
+    },
+    {
+      "file": "src/lib/billing/trial-identity-claims.ts",
+      "sha": "7e04ea1029da7e6c2c2864b860926fa83297d46c7174ea7310130d2c3536e963"
+    },
+    {
+      "file": "src/lib/billing/trial-identity-rights.ts",
+      "sha": "6d606b45d534af698e1c77d4f52af93f38a950336c92df086549b92f244a1d84"
+    },
+    {
+      "file": "src/lib/billing/trial-management-operations.ts",
+      "sha": "d89bcbcea01fc6e5cb1ec864212c32e2277cfceea6ff0ab21b3a4149a28d6e3c"
+    },
+    {
+      "file": "src/lib/billing/trial-membership.ts",
+      "sha": "1e5a8d19e1bd9e04ecc4d727a3460b28bfa70a6af955b355e605c79aaf4fdc05"
+    },
+    {
+      "file": "src/lib/billing/trial-notice-dispatch.ts",
+      "sha": "e01a48d540f0c5a14663fb190842bc4addaf3ff1b75b4b2fe896628e708f4790"
+    },
+    {
+      "file": "src/lib/billing/trial-offer.ts",
+      "sha": "14083f0eb5677db3063e22ab585ca9779a51fac4e04ab8852ee2e11f087d4725"
+    },
+    {
+      "file": "src/lib/billing/trial-paid-cancellation.ts",
+      "sha": "de39001781de5e37e204a4482ce5637f81ecb9bb68547ce91209261d041c0993"
+    },
+    {
+      "file": "src/lib/billing/trial-paid-recovery-operations.ts",
+      "sha": "ffed95f6ff851cacb280993434f17d354d223f8a6c8fb77bc4e97caa891d6089"
+    },
+    {
+      "file": "src/lib/billing/trial-payment-events.ts",
+      "sha": "4118cf4fca3745bc1aced3cf8a3f86e4ec684733f8f565bf1d61071dabb4bc9c"
+    },
+    {
+      "file": "src/lib/billing/trial-policy.ts",
+      "sha": "a88f33d5abfefd705629a0ca8ef739b893dd1908aeec639627916fc815daef02"
+    },
+    {
+      "file": "src/lib/billing/trial-prior-paid-history.ts",
+      "sha": "d95863b5c82dbdf4e88a28a6cc6f49ac4016da6f7316e0b4c160fd20fda8b904"
+    },
+    {
+      "file": "src/lib/billing/trial-reminders-delivery.ts",
+      "sha": "16417ecc3d002d9905e93302f8e09208d3e3bebaa3c46578d994e7a6f13eaf0e"
+    },
+    {
+      "file": "src/lib/billing/trial-reminders.ts",
+      "sha": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c"
+    },
+    {
+      "file": "src/lib/billing/trial-required-notices-delivery.ts",
+      "sha": "a3373f462b91cbd8cb3cd4aa0ce73bbe9b95012fb098a2e9bea8196934539b83"
+    },
+    {
+      "file": "src/lib/billing/trial-required-notices-terms.ts",
+      "sha": "266b22ba746208ead6de85b15a2bddb63c7f1111680d782cc22be35d6724197a"
+    },
+    {
+      "file": "src/lib/billing/trial-required-notices.ts",
+      "sha": "c7b2d3f9b9818a2cd5d72839f6c772c8ceb48b7a5aa4442c0eefdc200837a7fa"
+    },
+    {
+      "file": "src/lib/billing/trial-returning-customer.ts",
+      "sha": "901d4e91e87b39e0394b95410c786beff3123dbc52f340e79955f5d5e8b8c99a"
+    },
+    {
+      "file": "src/lib/billing/trial-runtime.ts",
+      "sha": "0dae1fdc8a90e3b71a6faf4a20fafa9c655c165650fbe952a3b36e66b29bffe0"
+    },
+    {
+      "file": "src/lib/billing/types.ts",
+      "sha": "f99c6f799c5c79a4218a2425fbd1b4ad4565c7f0592d1419b45ae6cb09e5047b"
+    },
+    {
+      "file": "src/lib/billing/webhook-events.ts",
+      "sha": "23c850dacc66d7cfbecf27c2aecc8057881c204a17138189938510806d938779"
+    },
+    {
+      "file": "src/lib/funnel/analytics-context.ts",
+      "sha": "a866f7429ea693f0a0fd1a4e1c471e7c3922448a4904548fcc6018b212ae7aa6"
+    },
+    {
+      "file": "src/lib/funnel/api.ts",
+      "sha": "b1180f5324e78983f63b1a73b1f98f7cd02aabacba1271165446588370356679"
+    },
+    {
+      "file": "src/lib/funnel/client.ts",
+      "sha": "9c3728cffff3810d829afd198c2406e35cf6edb3d4c68dbfc5a1cfa845e100a8"
+    },
+    {
+      "file": "src/lib/funnel/cookie.ts",
+      "sha": "522741b96f60560c02f92a5445428380de02231b2b3724b4143dfc6da14f7b48"
+    },
+    {
+      "file": "src/lib/funnel/flags.ts",
+      "sha": "981bd9436dae7c1fc7cbd8d6dc60e3d6bbaa9dc3bea994e0a33fac525f02528d"
+    },
+    {
+      "file": "src/lib/funnel/journey-kind.ts",
+      "sha": "6088e7e2554b37b0d2da5231dd5361fdeed8cd2ebf1dae5286e107d7543efe88"
+    },
+    {
+      "file": "src/lib/funnel/offer-presentation.ts",
+      "sha": "e38f85f885a9e94b35abef31ed3a73368fb24a8c23bcebe3ba88e5d6602eb4f4"
+    },
+    {
+      "file": "src/lib/funnel/organic-offer-media-experiment.ts",
+      "sha": "8e0882803faa756e7c103c53a16b857a73db8ac9e5f9c261ea013743f7902887"
+    },
+    {
+      "file": "src/lib/funnel/packages.ts",
+      "sha": "66cab34518f29604a37c7a32721f74ca5c930f82a12dcf293db69e3b90a080be"
+    },
+    {
+      "file": "src/lib/funnel/personal-plan-pricing-experiment.ts",
+      "sha": "2df4e53841c87e421524c1cbaaeb0daeed9ac6d2a467cd8ae4da849faf2af516"
+    },
+    {
+      "file": "src/lib/funnel/personal-plan-pricing-qa-token.ts",
+      "sha": "ac0fce778e1594083573a8b4fdb1f8ed5aa00e8d9427338856f8ae22781a0cf4"
+    },
+    {
+      "file": "src/lib/funnel/purchase-attribution.ts",
+      "sha": "b20b99299289ba056e1e18ab3c7371450fb0aed4c900b28cd17d9565935cef9a"
+    },
+    {
+      "file": "src/lib/funnel/scanner-refinement.ts",
+      "sha": "5c1405ba7d813b97003c9795b9bc314e3d6364273031bff63f0f4f939a97fb52"
+    },
+    {
+      "file": "src/lib/funnel/server.ts",
+      "sha": "d664770e0103972242ab81c3a3573243695f901e68ecfe4461e61d0410360df6"
+    },
+    {
+      "file": "src/lib/labs/offer-page-access.ts",
+      "sha": "6a1382da89073e84c54320a4531b8fe68ad89ad4c56c4384b211b36cdcf81ea4"
+    },
+    {
+      "file": "src/lib/partner-access/email-change.ts",
+      "sha": "97819f3f904507f7c167c408921e10e98739cb86382b1acfc909e2b572addf46"
+    },
+    {
+      "file": "src/lib/partner-access/email.ts",
+      "sha": "d84eed09d4c7504672d833ca1b129ebf97932218a124ef6a00462ff8f8ae2926"
+    },
+    {
+      "file": "src/lib/partner-access/intent.ts",
+      "sha": "121b4f5e4b131b74f600e07504b4998073010a8dbf8a0b92743d3fc52b24c788"
+    },
+    {
+      "file": "src/lib/partner-access/journey.ts",
+      "sha": "e622b693b63ff6c055af00b26ae05f6687bd1c98dc128151dad8364844288e3e"
+    },
+    {
+      "file": "src/lib/partner-access/offer.ts",
+      "sha": "b86ebd6eafed12f65edab4479ac88d488061992f5f2e9c4d3fb0108d980a316d"
+    },
+    {
+      "file": "src/lib/partner-access/quiz-context.ts",
+      "sha": "8b0810df71ba0ab3a2498e9ff40c5a33d89fc6fe507d706f02bce79271c15c77"
+    },
+    {
+      "file": "src/lib/partner-access/service.ts",
+      "sha": "8ed1f4961cd201dab72e3bb32bbde667e151ec33478e87d63823d19dd38f53bd"
+    },
+    {
+      "file": "src/lib/partner-access/token.ts",
+      "sha": "e35405585472124232f33c84924ffa0ca724e7ed7023d52841ccd3e547d04f8b"
+    },
+    {
+      "file": "src/lib/personal-plan/enrollment.ts",
+      "sha": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3"
+    },
+    {
+      "file": "src/lib/supabase/admin.ts",
+      "sha": "bd6ec1538d65a01f82b3f55b2839f0ac347d617c6de29d13cea4b0eff737386a"
+    },
+    {
+      "file": "src/lib/supabase/client.ts",
+      "sha": "9e7c8cdda0d092b7a15ff31ff543847aa00099a286a797e3933d2952a3945be4"
+    },
+    {
+      "file": "src/lib/supabase/middleware.ts",
+      "sha": "b46773cf21b880cb35d2967d4a882be1c5c59c53f2416607b60d3cb8a4c862a7"
+    },
+    {
+      "file": "src/lib/supabase/server.ts",
+      "sha": "ab2e4b8ccc17f8fb4a43d2a755a563a8549f2ea02feedb9df44ee2112501aa9a"
+    },
+    {
+      "file": "supabase/migrations/20260901120000_partner_access.sql",
+      "sha": "2f6a2a8c16b7f4de332f167ae415aae198d0d10cbe90ff3087b62cfefb9bd154"
+    },
+    {
+      "file": "supabase/migrations/20260913120000_partner_access_fresh_start.sql",
+      "sha": "eee27e2f9d76b8b7c963a1eb34eea5dd0e84ab0c152b259b90d64b447b2a3bd4"
+    },
+    {
+      "file": "tests/regular-quiz-field-test-lead-route.test.ts",
+      "sha": "768f5613fa276fdafa587b04a901df488fa2c1920f980a57ca6bfa9845ca5b7b"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    },
+    {
+      "file": "tsconfig.json",
+      "sha": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd"
+    }
+  ]
+}

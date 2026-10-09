@@ -1,0 +1,19 @@
+{
+  "productId": "10-bali-curls-deep-repair-mask",
+  "identity": {
+    "brand": "Bali Curls (by Hank Ge) / Bali Care",
+    "productName": "Deep Repair Mask (official current name per bali-care.com; see naming conflict below)",
+    "packSize": "200 ml",
+    "gtinEan": "4262391990001",
+    "market": "Primarily specialty curly-hair retail (brand site bali-care.com, Lockenbox, CurlyTools) per approved below-tier sourcing; a dm.de listing for this exact EAN was found in search results this pass but could not be confirmed live (see notes)."
+  },
+  "rawInci": "AQUA, CETEARYL ALCOHOL, GLYCERIN, BUTYROSPERMUM PARKII BUTTER, COCOS NUCIFERA OIL, GLYCINE SOJA OIL, PERSEA GRATISSIMA OIL, CETRIMONIUM CHLORIDE, BETAINE, BEHENTRIMONIUM METHOSULFATE, PANTHENOL, SODIUM BENZOATE, PARFUM, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, GLYCERYL STEARATE SE, POTASSIUM SORBATE, LACTIC ACID, LINALOOL, CITRIC ACID, LIMONENE, CANANGA ODORATA FLOWER EXTRACT, BENZOIC ACID",
+  "directions": {
+    "text": "Trage die Haarmaske in die Längen und Spitzen des gewaschenen, handtuchtrockenen Haares auf und lasse sie 2-3 Minuten einwirken. Spüle sie dann im Anschluss gründlich aus.",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "2-3",
+    "source": "bali-care.com/de-de official German product page (direct fetch, verbatim)",
+    "confidence": "high"
+  },
+  "note": "Blind calibration packet. Contains identity, formula of record, and authoritative directions only. No archetype labels, no claims summaries, no prior assessments."
+}

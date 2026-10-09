@@ -1,0 +1,61 @@
+{
+  "records": [
+    {
+      "key": "neqi",
+      "url": "https://neqi-hair.com/products/treatment-treasure-build-boost.js",
+      "collector_started_at": "2026-10-03T14:25:22.471386+00:00",
+      "checked_at": "2026-10-03T14:25:22.708501+00:00",
+      "status": 200,
+      "title": "Treatment Treasure Build Boost",
+      "vendor": "NEQI – Professional haircare",
+      "description": "<p>Entdecke die intensive 3 Minuten TREATMENT TREASURE Haarkur Build Boost – deine professionelle Haarpflege für Zuhause!<br><br>Das Intensiv-Treatment Build Boost<strong> mit Maleinsäure </strong>bietet einen <strong>aufbauenden Reparatureffekt</strong> und fördert somit die Haargesundheit. Der <strong>Kräftigungs-Komplex</strong> hilft geschädigte Haarlängen in nur 3 Minuten zu stärken.</p>\n<ul>\n<li><span data-teams=\"true\"><span dir=\"ltr\" class=\"ui-provider a b c d e f g h i j k l m n o p q r s t u v w x y z ab ac ae af ag ah ai aj ak\">4 % Strengthening Komplex mit Maleinsäure</span></span></li>\n<li>Speziell für blondiertes, coloriertes und stark geschädigtes Haar geeignet</li>\n<li>Vegan und Sulfatfrei</li>\n<li>Inhalt: 100ml</li>\n</ul>",
+      "variants": [
+        {
+          "id": 49565683122522,
+          "title": "Default Title",
+          "sku": "NQ-TT-BB-201",
+          "barcode": "4063528086303",
+          "price": 995,
+          "available": true,
+          "requires_shipping": true,
+          "requires_selling_plan": false,
+          "weight": 0
+        }
+      ]
+    },
+    {
+      "key": "cacay",
+      "url": "https://www.nutreeoil.com/products/nutreeoil-cacay-ol-30ml.js",
+      "collector_started_at": "2026-10-03T14:25:22.472538+00:00",
+      "checked_at": "2026-10-03T14:25:22.728884+00:00",
+      "status": 200,
+      "title": "Cacay Öl",
+      "vendor": "NUTREEOIL",
+      "description": "<h3>Das zu 100 % reine und reichhaltige Cacay Trockenöl</h3>\n<p><br>wird im schonenden Kaltpressverfahren aus der Nuss des Cacay-Baumes (bot. Name „caryodendron orinocense“) gewonnen.<br><br>Unser NUTREEOIL Cacay Öl ist für alle Hauttypen, sowie für die Haar- und Nagelpflege geeignet.</p>\n<h3>\n<br>Die Wirksamkeit wurde in Deutschland dermatologisch<br>getestet und bestätigt</h3>\n<ul>\n<li>reduziert Falten und glättet die Haut</li>\n<li>mindert Altersflecken und Augenringe</li>\n<li>spendet Feuchtigkeit und Spannkraft</li>\n<li>glättet die Struktur von Narben</li>\n<li>wirkt entzündungshemmend</li>\n<li>beugt Mitessern und Hautunreinheiten vor</li>\n<li>verleiht einen strahlenden Teint</li>\n</ul>\n<p> </p>\n<h3><span>Anwendung</span></h3>\n<p><br>Morgens und abends 2 bis 3 Tropfen Cacay Öl auf das frisch gereinigte und noch leicht feuchte Gesicht auftragen.<br>Sie können das Cacay Öl mit Ihrer Tages- oder Nachtcreme kombinieren.</p>",
+      "variants": [
+        {
+          "id": 39805170286640,
+          "title": "30ml",
+          "sku": "001",
+          "barcode": null,
+          "price": 3499,
+          "available": false,
+          "requires_shipping": true,
+          "requires_selling_plan": false,
+          "weight": 87
+        },
+        {
+          "id": 39805169467440,
+          "title": "15ml",
+          "sku": "002",
+          "barcode": "4260541540014",
+          "price": 2499,
+          "available": true,
+          "requires_shipping": true,
+          "requires_selling_plan": false,
+          "weight": 61
+        }
+      ]
+    }
+  ]
+}

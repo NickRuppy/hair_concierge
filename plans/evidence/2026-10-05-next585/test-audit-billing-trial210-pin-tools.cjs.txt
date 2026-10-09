@@ -1,0 +1,51 @@
+'use strict'
+// Static preparation: no product imports or child execution; /tmp writes only.
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto')
+const DIR=fs.readFileSync('/tmp/test-audit-billing-trial210-tools-path.txt','utf8').trim(),BASE=DIR+'/operator',PROPOSAL='/tmp/test-audit-billing-trial210-proposal-pj1NC1',ROOT='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning'
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex'),readJSON=p=>JSON.parse(fs.readFileSync(p))
+if(sha(fs.readFileSync(PROPOSAL+'/manifest.json'))!=='741867fbc7dd285c1942d7ed0d0c23044c44f77ee7eee35bb16c43cdbb12060a')throw Error('Frozen proposal manifest drift')
+const manifest=readJSON(PROPOSAL+'/manifest.json'),rawControls=readJSON(PROPOSAL+'/controls.json'),oracles=readJSON('/tmp/test-audit-billing-trial210-oracles.json'),commands=readJSON('/tmp/test-audit-billing-trial210-main-commands.json'),ts=require(ROOT+'/node_modules/typescript')
+const diagnostics={
+ 'C1-inclusive-authorization':['deepStrictEqual',['Expected values to be strictly deep-equal:','awaiting_authorization','authorization_pending','trial_active']],
+ 'C1-exclusive-end':['deepStrictEqual',['Expected values to be strictly deep-equal:','trial_active','first_collection_pending']],
+ 'C2-stripe-first-charge':['match',['The input did not match the regular expression','Die erste Zahlung ist zu diesem Zeitpunkt vorgesehen','Die erste Zahlung ist nach diesem Zeitpunkt vorgesehen']],
+ 'C3-accepted-offer-readback':['rejects',['Missing expected rejection']]
+}
+const controls=rawControls.map(c=>{
+ const original=fs.readFileSync(ROOT+'/'+c.file,'utf8');if(sha(original)!==c.sourceSha256||original.split(c.from).length!==2)throw Error('Original owner/anchor drift')
+ const sf=ts.createSourceFile(c.file,original,ts.ScriptTarget.Latest,true),owners=[]
+ function visit(n){if(ts.isFunctionDeclaration(n)&&n.name&&n.getText(sf).includes(c.from))owners.push(n);ts.forEachChild(n,visit)}visit(sf)
+ if(owners.length!==1)throw Error('Nonunique containing function')
+ const mutant=original.replace(c.from,c.to),msf=ts.createSourceFile(c.file,mutant,ts.ScriptTarget.Latest,true)
+ if(msf.parseDiagnostics.length)throw Error('Mutant parse')
+ fs.writeFileSync(DIR+'/'+c.id+'-prospective-owner.ts',mutant,{flag:'wx'})
+ const o=oracles.find(o=>o.id===c.id),command=commands.selected.find(x=>x.candidate===c.candidate).argv
+ if(!new RegExp(command.find(x=>x.startsWith('--test-name-pattern=')).slice('--test-name-pattern='.length)).test(c.keeperTitle))throw Error('Selection mismatch')
+ const phases={}
+ for(const phase of ['transfer','cut']){
+  const record=manifest.files.find(f=>f.file===c.keeperFile),text=fs.readFileSync(record.phases[phase].path,'utf8'),sf=ts.createSourceFile(c.keeperFile,text,ts.ScriptTarget.Latest,true),matches=[]
+  function v(n){if(ts.isCallExpression(n)&&n.expression.getText(sf).startsWith('assert.')&&sf.getLineAndCharacterOfPosition(n.getStart(sf)).line+1===o.phases[phase].assertionLine)matches.push(n);ts.forEachChild(n,v)}v(sf)
+  if(matches.length!==1)throw Error('Exact oracle match')
+  phases[phase]={startLine:o.phases[phase].assertionLine,text:matches[0].getText(sf),keeperSha256:o.phases[phase].keeperDeclarationSha256,testFileSha256:record.phases[phase].sha256}
+ }
+ return{id:c.id,candidate:c.candidate,file:c.file,sourceSha256:c.sourceSha256,mutatedSha256:sha(mutant),from:c.from,to:c.to,anchor:{kind:'function',scope:owners[0].name.text,scopeSha256:sha(owners[0].getText(sf)),expectedOccurrences:1},test:{file:c.keeperFile,name:c.keeperTitle},command,oracles:phases,intendedAssertion:c.expected,expectedOperator:diagnostics[c.id][0],errorMessageIncludes:diagnostics[c.id][1]}
+})
+fs.writeFileSync(BASE+'-controls-normalized.json',JSON.stringify(controls,null,2)+'\n',{flag:'wx'})
+const pin=file=>({path:file,sha:fs.existsSync(file)?sha(fs.readFileSync(file)):null,realpath:fs.existsSync(file)?fs.realpathSync(file):null})
+const gitDir=path.resolve(ROOT,fs.readFileSync(ROOT+'/.git','utf8').trim().replace(/^gitdir: /,'')),commonDir=path.resolve(gitDir,fs.readFileSync(gitDir+'/commondir','utf8').trim()),branch=fs.readFileSync(gitDir+'/HEAD','utf8').trim().replace(/^ref: refs\/heads\//,'')
+if(branch!==manifest.expectedBranch)throw Error('Branch drift')
+const identityFiles=[ROOT+'/.git',gitDir+'/HEAD',gitDir+'/commondir',gitDir+'/gitdir',gitDir+'/config.worktree',commonDir+'/config',commonDir+'/refs/heads/'+branch,commonDir+'/packed-refs'].map(pin)
+const dependencies=[];function tree(dir){for(const d of fs.readdirSync(dir,{withFileTypes:true})){const f=path.join(dir,d.name);if(d.isDirectory())tree(f);else if(d.isFile()||d.isSymbolicLink())dependencies.push(pin(f))}}
+for(const name of['tsx','esbuild','get-tsconfig','resolve-pkg-maps','react','react-dom','zod','@electric-sql/pglite'])tree(ROOT+'/node_modules/'+name)
+for(const d of fs.readdirSync(ROOT+'/node_modules/@esbuild',{withFileTypes:true}))if(d.isDirectory())tree(ROOT+'/node_modules/@esbuild/'+d.name)
+for(const f of['node_modules/typescript/package.json','node_modules/typescript/lib/typescript.js'])dependencies.push(pin(ROOT+'/'+f))
+const cohort=new Set(manifest.files.map(f=>f.file)),readset=[]
+for(const r of manifest.readset){if(sha(fs.readFileSync(ROOT+'/'+r.file))!==r.sha256)throw Error('Frozen readset drift '+r.file);if(!cohort.has(r.file))readset.push({file:r.file,sha:r.sha256})}
+if(!readset.some(r=>r.file==='tsconfig.json'))readset.push({file:'tsconfig.json',sha:sha(fs.readFileSync(ROOT+'/tsconfig.json'))})
+const artifacts=[PROPOSAL+'/manifest.json',PROPOSAL+'/candidates.json',PROPOSAL+'/controls.json',PROPOSAL+'/transfer.diff',PROPOSAL+'/cut.diff',...manifest.files.flatMap(f=>Object.values(f.phases).map(p=>p.path)),...['layer-plan.md','main-commands.json','oracles.json','ledger.md','ledger.json','read-scope.json'].map(s=>'/tmp/test-audit-billing-trial210-'+s),BASE+'-guard.cjs',BASE+'-readonly-preload.cjs',BASE+'-controls-normalized.json',...rawControls.map(c=>DIR+'/'+c.id+'-prospective-owner.ts'),'/tmp/test-audit-billing-trial210-pin-tools.cjs']
+const artifactHashes=Object.fromEntries(artifacts.map(p=>[p,sha(fs.readFileSync(p))]))
+const entrypointTemplateHashes=Object.fromEntries(['edit.cjs','run-controls.cjs'].map(s=>[BASE+'-'+s,sha(fs.readFileSync(BASE+'-'+s))]))
+const pins={root:ROOT,head:manifest.expectedHead,branch,gitDir,commonDir,identityFiles,node:{version:process.version,realpath:fs.realpathSync(process.execPath),sha:sha(fs.readFileSync(process.execPath))},typescriptVersion:ts.version,readset,dependencies,artifactHashes,entrypointTemplateHashes,counts:manifest.counts,untouched:206,controls:4,lock:'/tmp/test-audit-pruning-operator-lock'}
+const bytes=JSON.stringify(pins,null,2)+'\n';fs.writeFileSync(BASE+'-editor-pins.json',bytes,{flag:'wx'});const hash=sha(bytes)
+for(const suffix of['edit.cjs','run-controls.cjs']){const f=BASE+'-'+suffix,s=fs.readFileSync(f,'utf8');if(s.split('PIN_SHA_PLACEHOLDER').length!==2)throw Error('Not unpinned template');fs.writeFileSync(f,s.replace('PIN_SHA_PLACEHOLDER',hash))}
+console.log(JSON.stringify({dir:DIR,pinSHA:hash,readsets:readset.length,dependencyFiles:dependencies.length,identityFiles:identityFiles.length}))

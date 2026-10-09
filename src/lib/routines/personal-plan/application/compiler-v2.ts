@@ -4,7 +4,11 @@ import type {
   NormalizedApplicationInput,
   NormalizedRoutineItem,
 } from "./contracts"
-import type { ApplicationFamilyTemplateV2, ProductApplicationPointerV2 } from "./contracts-v2"
+import {
+  productApplicationPointerV2Schema,
+  type ApplicationFamilyTemplateV2,
+  type ProductApplicationPointerV2,
+} from "./contracts-v2"
 import { compileApplicationView } from "./compiler"
 
 export type ProductPointerIssueV2 = {
@@ -17,6 +21,7 @@ export type ProductPointerIssueV2 = {
     | "invalid_heat_facts"
     | "blocked_missing_verified_companion"
     | "required_companion_not_in_routine"
+    | "invalid_pointer"
 }
 
 const BETWEEN_WASH_LEAVE_IN_EVIDENCE = [
@@ -83,6 +88,8 @@ function germanDuration(
     return `${minutes} ${minutes === 1 ? "Minute" : "Minuten"}`
   }
   if (contactTime.kind === "seconds") return duration(contactTime.seconds)
+  if (contactTime.kind === "minimum_seconds")
+    return `Mindestens ${duration(contactTime.minimumSeconds)}`
   if (contactTime.kind === "maximum_seconds")
     return `Bis zu ${duration(contactTime.maximumSeconds)}`
   return `${duration(contactTime.minimumSeconds).replace(/ (Sekunden|Minuten?)$/, "")}–${duration(contactTime.maximumSeconds)}`
@@ -115,6 +122,7 @@ function conditionerRelationship(
     policy === "replaces_conditioner" ||
     policy === "conditioner_before" ||
     policy === "conditioner_after" ||
+    policy === "conditioner_optional_after" ||
     policy === "no_conditioner"
   ) {
     return policy
@@ -137,6 +145,8 @@ function amount(
   value: ProductApplicationPointerV2["facts"]["amount"],
 ): ApplicationGuidanceProtocolV1["protocolFacts"]["amount"] {
   if (!value) return null
+  if (value.kind === "starting_dose" || value.kind === "numeric") return value
+  if (value.kind === "source_instruction") return { kind: "qualitative", copyDe: value.copyDe }
   if (value.kind === "pumps") {
     return {
       kind: "qualitative",
@@ -181,7 +191,17 @@ function requiredFactIssue(
 }
 
 function exactProtocol(pointer: ProductApplicationPointerV2): ApplicationGuidanceProtocolV1 {
-  const workflow = EXACT_WORKFLOW_RUNTIME[pointer.workflowId!]
+  const generic = pointer.workflowId === "bondbuilder_verified_product"
+  const workflow = generic
+    ? {
+        compatibleDayTypes: ["bond_repair_day"],
+        anchor: pointer.applicationFamily.startsWith("pre_shampoo")
+          ? "pre_wash"
+          : pointer.applicationFamily === "post_shampoo_rinse_out_treatment"
+            ? "post_cleanse_rinse_off"
+            : "timed_treatment",
+      }
+    : EXACT_WORKFLOW_RUNTIME[pointer.workflowId as keyof typeof EXACT_WORKFLOW_RUNTIME]
   return applicationGuidanceProtocolSchema.parse({
     schemaVersion: 1,
     guidanceKey: `v2-exact-${pointer.workflowId}-${pointer.scope.productId}`,
@@ -204,6 +224,24 @@ function exactProtocol(pointer: ProductApplicationPointerV2): ApplicationGuidanc
       contactTimeSeconds:
         pointer.facts.contactTime?.kind === "seconds" ? pointer.facts.contactTime.seconds : null,
       conditionerRelationship: conditionerRelationship(pointer.facts.conditionerPolicy),
+      ...(generic
+        ? {
+            workflowId: pointer.workflowId,
+            applicationState: pointer.facts.applicationState,
+            treatmentRinse: pointer.facts.rinse,
+            ...(pointer.facts.contactTime ? { contactTime: pointer.facts.contactTime } : {}),
+          }
+        : {}),
+      ...(pointer.facts.dilution ? { dilution: pointer.facts.dilution } : {}),
+      ...(pointer.facts.overnightAllowed !== undefined
+        ? { overnightAllowed: pointer.facts.overnightAllowed }
+        : {}),
+      ...(pointer.facts.conditionerSequence
+        ? { conditionerSequence: pointer.facts.conditionerSequence }
+        : {}),
+      ...(pointer.facts.shampooAfterTreatment
+        ? { shampooAfterTreatment: pointer.facts.shampooAfterTreatment }
+        : {}),
       reapplication:
         pointer.facts.heat?.reapplication === "each_separate_heat_event"
           ? "each_separate_heat_event"
@@ -314,6 +352,12 @@ export function composeProductApplicationProtocolsV2(
 ):
   | { status: "resolved"; protocols: ApplicationGuidanceProtocolV1[] }
   | { status: "unresolved"; reason: ProductPointerIssueV2["reason"] } {
+  if (
+    pointer.workflowId === "bondbuilder_verified_product" &&
+    !productApplicationPointerV2Schema.safeParse(pointer).success
+  ) {
+    return { status: "unresolved", reason: "invalid_pointer" }
+  }
   const factIssue = requiredFactIssue(pointer)
   if (factIssue) return { status: "unresolved", reason: factIssue }
   if (pointer.workflowId !== null) {
@@ -450,6 +494,32 @@ export function compileApplicationViewV2({
 }) {
   const pointerIssues: ProductPointerIssueV2[] = []
   const protocols: ApplicationGuidanceProtocolV1[] = []
+  const hasVerifiedBondTreatment = productPointers.some(
+    (pointer) =>
+      pointer.workflowId === "bondbuilder_verified_product" &&
+      productApplicationPointerV2Schema.safeParse(pointer).success &&
+      pointer.runtimeBlockerCode === null &&
+      input.routineItems.some(
+        (item) =>
+          item.productId === pointer.scope.productId &&
+          item.category === "bondbuilder" &&
+          item.role === "bond_repair",
+      ),
+  )
+  // A rinse-out mask needs its intensive care day (cleanse + intensive_care). The canonical V2
+  // cleanse template is wash-day only, so without this the day never formed and every mask
+  // lost its instructions (Nomi consult finish T5) — mirrors the bond-repair extension below.
+  const hasRinseOutMask = productPointers.some(
+    (pointer) =>
+      pointer.applicationFamily === "post_shampoo_rinse_out_mask" &&
+      pointer.role === "intensive_care" &&
+      input.routineItems.some(
+        (item) =>
+          item.productId === pointer.scope.productId &&
+          item.category === pointer.scope.category &&
+          item.role === "intensive_care",
+      ),
+  )
   const routineItems = input.routineItems.flatMap((item) => {
     let matches = productPointers
       .filter(
@@ -491,6 +561,21 @@ export function compileApplicationViewV2({
           reason: composition.reason,
         })
         return []
+      }
+      if (
+        item.category === "shampoo" &&
+        pointer.applicationFamily === "standard_rinse_out_cleanse"
+      ) {
+        const extraDays = [
+          ...(hasVerifiedBondTreatment ? (["bond_repair_day"] as const) : []),
+          ...(hasRinseOutMask ? (["intensive_care_day"] as const) : []),
+        ]
+        if (extraDays.length > 0) {
+          composition.protocols = composition.protocols.map((protocol) => ({
+            ...protocol,
+            compatibleDayTypes: [...new Set([...protocol.compatibleDayTypes, ...extraDays])],
+          }))
+        }
       }
       protocols.push(...composition.protocols)
       const compatibleDayTypes = composition.protocols.flatMap(

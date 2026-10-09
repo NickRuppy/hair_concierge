@@ -1,0 +1,23 @@
+{
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "command": [
+    "node",
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-concurrency=1",
+    "tests/product-identity-normalize.test.ts",
+    "tests/product-identity-resolution.test.ts",
+    "tests/product-identity-schema.test.ts",
+    "tests/product-identity-title.test.ts",
+    "tests/product-identity-correction.test.ts"
+  ],
+  "counts": {
+    "before": 31,
+    "transfer": 31,
+    "cut": 30
+  },
+  "status": "NOT_RUN"
+}

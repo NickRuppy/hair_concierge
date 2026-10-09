@@ -1,5 +1,4 @@
 import assert from "node:assert/strict"
-import { readFileSync } from "node:fs"
 import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
 
@@ -622,17 +621,6 @@ test("without direct acceptance the CTA keeps naming the Feinschliff it opens", 
 
   assert.match(html, new RegExp(PLAN_START_REFINE_LABEL))
   assert.doesNotMatch(html, new RegExp(PLAN_START_ACCEPT_LABEL))
-})
-
-test("the Idealplan CTA accepts directly and never opens the fork that no longer exists", () => {
-  const source = readFileSync("src/components/personal-plan-start/plan-start-flow.tsx", "utf8")
-
-  assert.doesNotMatch(source, /"fork"/)
-  assert.doesNotMatch(source, /PlanForkScreen/)
-  assert.match(source, /acceptIdealPlanDirectly/)
-  assert.throws(() =>
-    readFileSync("src/components/personal-plan-journey/plan-fork-screen.tsx", "utf8"),
-  )
 })
 
 test("the preview contract rejects a payload whose acceptance verdict is missing or malformed", () => {

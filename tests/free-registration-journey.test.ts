@@ -8,8 +8,8 @@ import { createAuthConfirmGetHandler } from "../src/app/auth/confirm/route"
 import { createFreeSnapshotService } from "../src/lib/personal-plan/persistence/free-snapshot-service"
 import { createFreeSnapshotSupabaseDependencies } from "../src/lib/personal-plan/persistence/free-snapshot-supabase"
 import { loadScanEvaluationContext } from "../src/lib/scan/profile-context"
+import { buildProfileDataFromPersonalPlanCanonicalProfile } from "../src/lib/quiz/legacy-profile-projection"
 import {
-  buildProfileDataFromPersonalPlanCanonicalProfile,
   canLinkDirectQuizLead,
   type LinkQuizToProfileOptions,
 } from "../src/lib/quiz/link-to-profile"
@@ -286,6 +286,7 @@ function createJourney() {
   const db = createJourneyDatabase()
   const transport = createAuthTransport()
   const provisioned: { userId: string; email?: string }[] = []
+  const leadEmailWriteAttempts: { leadId: string; email: string }[] = []
   const linkCalls: {
     userId: string
     email?: string
@@ -308,6 +309,7 @@ function createJourney() {
       }
     },
     async updateLeadEmail(leadId, email) {
+      leadEmailWriteAttempts.push({ leadId, email })
       const row = db.leads.find((lead) => lead.id === leadId && lead.user_id === null)
       if (row) row.email = email
       return { updated: Boolean(row) }
@@ -423,6 +425,7 @@ function createJourney() {
     transport,
     provisioned,
     provisioningReports,
+    leadEmailWriteAttempts,
     linkCalls,
     setFlag: (value: boolean) => {
       flagEnabled = value
@@ -666,11 +669,13 @@ test("a lead that already belongs to an account cannot be re-registered", async 
   await journey.register(leadId)
   await journey.openLink(journey.transport.sent[0])
 
+  assert.equal(journey.leadEmailWriteAttempts.length, 0)
   const takeover = await journey.register(
     leadId,
     "angreifer@example.com",
     journey.capabilityFor(leadId),
   )
+  assert.equal(journey.leadEmailWriteAttempts.length, 0)
   assert.equal(takeover.status, 409)
   assert.equal(takeover.body.code, "lead_claimed")
   assert.equal(journey.db.leads[0].email, "lena@example.com")

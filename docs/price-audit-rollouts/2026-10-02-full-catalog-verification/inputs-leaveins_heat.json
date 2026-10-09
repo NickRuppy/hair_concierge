@@ -1,0 +1,1512 @@
+{
+  "snapshot_at": "2026-10-02T14:26:08.770Z",
+  "products": [
+    {
+      "id": "f66f2f93-a1f2-43fb-8647-48d49cdae7d3",
+      "name": "Hitzeschutzspray Ultralight",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4066447909562",
+          "canonical_gtin14": "04066447909562"
+        }
+      ],
+      "price_eur": 2.95,
+      "category_key": "heat_protectant",
+      "affiliate_link": "https://www.dm.de/p/d/3101587/balea-hitzeschutzspray-ultralight",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-08-09T09:23:08+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-08-09T09:23:08+00:00"
+    },
+    {
+      "id": "efaff579-e411-41eb-972a-2734a8517356",
+      "name": "Hitzeschutzspray Schutzengel",
+      "brand": "got2b",
+      "gtins": [
+        {
+          "value": "4015100800128",
+          "canonical_gtin14": "04015100800128"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "heat_protectant",
+      "affiliate_link": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-08-09T09:23:08+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-08-09T09:23:08+00:00"
+    },
+    {
+      "id": "1b8f56b9-b186-4bed-a65c-f582ac0e9453",
+      "name": "Hitzeschutzspray beat the heat",
+      "brand": "Jean&Len",
+      "gtins": [
+        {
+          "value": "4262500781476",
+          "canonical_gtin14": "04262500781476"
+        }
+      ],
+      "price_eur": 3.99,
+      "category_key": "heat_protectant",
+      "affiliate_link": "https://www.jeanlen.de/hitzeschutzspray-beat-the-heat",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-08-09T09:23:08+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-08-09T09:23:08+00:00"
+    },
+    {
+      "id": "71302fae-decd-4b10-80ea-148d5998e2fa",
+      "name": "Defeat the Heat Hitzeschutzspray",
+      "brand": "L'Oréal Paris",
+      "gtins": [
+        {
+          "value": "3600523966714",
+          "canonical_gtin14": "03600523966714"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "heat_protectant",
+      "affiliate_link": "https://www.dm.de/p/d/1571140/l-oreal-paris-elvital-hitzeschutzspray-dream-length-langes-und-glattes-haar",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-08-09T09:23:08+00:00"
+    },
+    {
+      "id": "f8c47bf8-a075-4568-a9ab-aa336b7ae50a",
+      "name": "Hitzeschutzspray",
+      "brand": "Schwarzkopf taft",
+      "gtins": [
+        {
+          "value": "4015100810400",
+          "canonical_gtin14": "04015100810400"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "heat_protectant",
+      "affiliate_link": "https://www.dm.de/p/d/1681631/schwarzkopf-taft-hitzeschutzspray-taft-x-gliss-lovely-long",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-08-09T09:23:08+00:00"
+    },
+    {
+      "id": "9b664b11-fd11-47e3-9b7e-76e34736b43e",
+      "name": "Alcina Hyaluron 2.0",
+      "brand": "Alcina",
+      "gtins": [
+        {
+          "value": "4008666199522",
+          "canonical_gtin14": "04008666199522"
+        }
+      ],
+      "price_eur": 14.9,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.hagel-shop.de/alcina-hyaluron-2-0-spray-125-ml.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:46:17.532+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "f9595d2c-d86d-4bdb-9758-c98d1e213f3c",
+      "name": "alverde Leave-In Sprühkur Express 7in1",
+      "brand": "alverde",
+      "gtins": [
+        {
+          "value": "4066447919387",
+          "canonical_gtin14": "04066447919387"
+        }
+      ],
+      "price_eur": 2.75,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/alverde-naturkosmetik-leave-in-spruehkur-express-7in1-p4067796199635.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:35:42.259+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "43cb9fbf-4b04-4554-a86a-7cb168536233",
+      "name": "Authentic Beauty Concept Hydrate Spray",
+      "brand": "Authentic Beauty Concept",
+      "gtins": [
+        {
+          "value": "42392606",
+          "canonical_gtin14": "00000042392606"
+        }
+      ],
+      "price_eur": 38.6,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.hagel-shop.de/authentic-beauty-concept-hydrate-spray-conditioner-250-ml.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:44:19.155+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "c6e80f39-20ba-401e-b041-6ee7c89a5996",
+      "name": "Balea Aqua Hyaluron 3in1",
+      "brand": "Balea Aqua",
+      "gtins": [],
+      "price_eur": 2.75,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/balea-professional-haarmaske-3in1-aqua-hyaluron-p4066447668315.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "e3c4b607-8f81-462c-8a2b-e45c8b3a2976",
+      "name": "Cantu Leave-In Repair Cream",
+      "brand": "Cantu",
+      "gtins": [
+        {
+          "value": "810006945430",
+          "canonical_gtin14": "00810006945430"
+        }
+      ],
+      "price_eur": 6.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/p/d/1685686/cantu-leave-in-haarkur-repair-creme",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:33:15.592+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "11a099f7-eabe-4bdb-bfd3-995f35cb6ee4",
+      "name": "Color WOW Money Mist",
+      "brand": "Color WOW",
+      "gtins": [
+        {
+          "value": "5060150185731",
+          "canonical_gtin14": "05060150185731"
+        }
+      ],
+      "price_eur": 31.99,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.douglas.de/de/p/5011499127",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:41:07.687+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "648ba537-5180-440e-81ad-2b310b447d87",
+      "name": "Curlsmith Hydrate & Plump Leave-In",
+      "brand": "Curlsmith",
+      "gtins": [
+        {
+          "value": "0850035298718",
+          "canonical_gtin14": "00850035298718"
+        }
+      ],
+      "price_eur": 21,
+      "category_key": "leave_in",
+      "affiliate_link": "https://eu.curlsmith.com/products/hydrate-plump-leave-in",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:54:52.492+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "2bafeb7e-6610-4efc-a8e8-a402071b2ed9",
+      "name": "Curlsmith Multitasking Conditioner 3 in 1",
+      "brand": "Curlsmith",
+      "gtins": [
+        {
+          "value": "0850005417781",
+          "canonical_gtin14": "00850005417781"
+        },
+        {
+          "value": "0850005417804",
+          "canonical_gtin14": "00850005417804"
+        },
+        {
+          "value": "850005417637",
+          "canonical_gtin14": "00850005417637"
+        }
+      ],
+      "price_eur": 17.85,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.hagel-shop.de/curlsmith-multi-tasking-conditioner-237ml-12128539.html",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-10-02T09:01:08.256+00:00",
+      "net_content_value": 237,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-10-02T09:01:08.256+00:00"
+    },
+    {
+      "id": "8715f0f5-9104-46ec-b450-e73f1441c1fa",
+      "name": "Curlsmith Weightless Air Dry Cream",
+      "brand": "Curlsmith",
+      "gtins": [
+        {
+          "value": "850048197626",
+          "canonical_gtin14": "00850048197626"
+        }
+      ],
+      "price_eur": 21,
+      "category_key": "leave_in",
+      "affiliate_link": "https://eu.curlsmith.com/products/weightless-air-dry-cream",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:55:02.763+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "b139d4e8-6f26-4096-a1b9-d9efcb02d2ec",
+      "name": "EVO Day of Grace Leave-In",
+      "brand": "EVO",
+      "gtins": [
+        {
+          "value": "9349769009598",
+          "canonical_gtin14": "09349769009598"
+        }
+      ],
+      "price_eur": 28,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.hagel-shop.de/evo-day-of-grace-pre-style-primer-200-ml-5826168.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:46:28.746+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "42b9eba7-d0e3-4d02-ae2b-7a1612a561fe",
+      "name": "EVO Happy Campers",
+      "brand": "EVO",
+      "gtins": [
+        {
+          "value": "9349769009550",
+          "canonical_gtin14": "09349769009550"
+        }
+      ],
+      "price_eur": 24.92,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.douglas.de/de/p/5010334176",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:42:34.492+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc",
+      "name": "EVO Head Mistress",
+      "brand": "EVO",
+      "gtins": [
+        {
+          "value": "9349769013144",
+          "canonical_gtin14": "09349769013144"
+        },
+        {
+          "value": "9349769020791",
+          "canonical_gtin14": "09349769020791"
+        }
+      ],
+      "price_eur": 24.92,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.douglas.de/de/p/5010334174",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:40:55.59+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "0307c903-84f9-46b4-8f1f-a51c2b1f38ff",
+      "name": "Garnier Hair Food Aloe Vera",
+      "brand": "Garnier",
+      "gtins": [],
+      "price_eur": 5.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar-p3600542511049.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:23:25.471+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "a72d630d-547a-465f-9846-3006b38af0a2",
+      "name": "Garnier Hair Food Macadamia",
+      "brand": "Garnier",
+      "gtins": [
+        {
+          "value": "3600542511612",
+          "canonical_gtin14": "03600542511612"
+        }
+      ],
+      "price_eur": 5.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske-p3600542511612.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
+      "name": "Gliss Ultimate Repair Sprüh-Conditioner",
+      "brand": "Gliss",
+      "gtins": [
+        {
+          "value": "4015100813494",
+          "canonical_gtin14": "04015100813494"
+        }
+      ],
+      "price_eur": 4.99,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-gliss-ultimate-repair-express-repair-spuelung/p/4015100813494",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:22:34.104+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-09T00:00:00+00:00"
+    },
+    {
+      "id": "5a9f4b7b-69d9-4e9a-8bbd-2dfbae9a5df3",
+      "name": "HASK Keratin 5-in-1 Spray",
+      "brand": "HASK",
+      "gtins": [
+        {
+          "value": "0071164302248",
+          "canonical_gtin14": "00071164302248"
+        }
+      ],
+      "price_eur": 7.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.hagel-shop.de/hask-keratin-protein-smoothing-5in1-leave-in-conditioner-175-ml.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:44:32.847+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "0b21f996-bb42-4b10-89bd-4881c4346d53",
+      "name": "ISANA PROFESSIONAL Leave-In Conditioner Hyaluron & Panthenol",
+      "brand": "Isana",
+      "gtins": [
+        {
+          "value": "4305615946733",
+          "canonical_gtin14": "04305615946733"
+        }
+      ],
+      "price_eur": 2.49,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-leave-in-conditioner-hyaluron-und-care/p/4305615946733",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:36:17.074+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "696401be-16b5-4261-836f-28b57c1ecd59",
+      "name": "It’s a 10 Miracle Leave-In",
+      "brand": "It’s",
+      "gtins": [
+        {
+          "value": "898571000211",
+          "canonical_gtin14": "00898571000211"
+        }
+      ],
+      "price_eur": 44,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.hagel-shop.de/it-s-a-10-miracle-leave-in-product-295-7-ml.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:44:50.51+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "7d65ed50-898c-40c3-8865-ebe5688774c8",
+      "name": "It’s a 10 Miracle Leave-In Lite",
+      "brand": "It’s",
+      "gtins": [
+        {
+          "value": "898571000433",
+          "canonical_gtin14": "00898571000433"
+        }
+      ],
+      "price_eur": 23,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.hagel-shop.de/it-s-a-10-miracle-leave-in-conditioner-lite-120-ml.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:45:48.977+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "8f84eae5-222d-4bbf-9ab0-f30361882a95",
+      "name": "K18 Hair Professional Molecular Repair Hair Mist",
+      "brand": "K18",
+      "gtins": [
+        {
+          "value": "858511001142",
+          "canonical_gtin14": "00858511001142"
+        },
+        {
+          "value": "858511001463",
+          "canonical_gtin14": "00858511001463"
+        }
+      ],
+      "price_eur": 62.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.look-beautiful.de/professional-molecular-repair-hair-mist-sw13531",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-10-02T10:02:21.039+00:00",
+      "net_content_value": 150,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-10-02T10:02:21.039+00:00"
+    },
+    {
+      "id": "6b01025d-9e72-4514-b42e-bbb6065fbe1c",
+      "name": "Midnight Serum",
+      "brand": "L'Oréal Paris",
+      "gtins": [],
+      "price_eur": 7.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/l-oreal-paris-elvital-haarserum-oel-magique-midnight-serum-p3600524135805.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:28:14.845+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "0756a919-5fab-4b6c-a5da-8cb810869b6f",
+      "name": "Living Proof Restore Repair Leave-In",
+      "brand": "Living Proof",
+      "gtins": [
+        {
+          "value": "858544005575",
+          "canonical_gtin14": "00858544005575"
+        }
+      ],
+      "price_eur": 27.99,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.douglas.de/de/p/5011050022",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:40:15.745+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "50951ef2-e16a-4a51-85c5-a709aa64c03a",
+      "name": "Maria Nila Coils & Curls Oil in Cream",
+      "brand": "Maria Nila",
+      "gtins": [
+        {
+          "value": "7391681403741",
+          "canonical_gtin14": "07391681403741"
+        }
+      ],
+      "price_eur": 22.5,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.flaconi.de/haare/maria-nila/coils-and-curls/maria-nila-coils-and-curls-oil-in-cream-leave-in-treatment.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "695414e1-3435-4304-943b-76677408980c",
+      "name": "Maria Nila Structure Repair Leave-In",
+      "brand": "Maria Nila",
+      "gtins": [
+        {
+          "value": "7391681036079",
+          "canonical_gtin14": "07391681036079"
+        }
+      ],
+      "price_eur": 23.25,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.flaconi.de/haare/maria-nila/structure-repair/maria-nila-structure-repair-leave-in-treatment.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:54:23.743+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6",
+      "name": "Moroccanoil All In One Leave In Conditioner",
+      "brand": "Moroccanoil",
+      "gtins": [
+        {
+          "value": "7290113142947",
+          "canonical_gtin14": "07290113142947"
+        },
+        {
+          "value": "7290113142954",
+          "canonical_gtin14": "07290113142954"
+        }
+      ],
+      "price_eur": 16,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.douglas.de/de/p/5011481841",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-10-01T07:58:06.119913+00:00",
+      "net_content_value": 50,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "bbfd8b03-d219-48bb-9ab3-b7c14bcae3dd",
+      "name": "Leave-In Moisturizing Mist",
+      "brand": "Neqi",
+      "gtins": [
+        {
+          "value": "4063528103222",
+          "canonical_gtin14": "04063528103222"
+        }
+      ],
+      "price_eur": 11.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-neqi-leave-in-mist/p/4063528103222",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-27T14:38:36.157+00:00"
+    },
+    {
+      "id": "9f94c225-61ec-455d-b303-f39e885e222a",
+      "name": "Neqi Build Boost Leave-In Balm",
+      "brand": "Neqi",
+      "gtins": [
+        {
+          "value": "4063528097651",
+          "canonical_gtin14": "04063528097651"
+        }
+      ],
+      "price_eur": 9.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://neqi-hair.com/products/build-boost-balm",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:56:49.373+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "e6896862-523b-42b3-967d-41cbd16acf64",
+      "name": "Neqi Moisture Mystery",
+      "brand": "Neqi",
+      "gtins": [
+        {
+          "value": "4063528078346",
+          "canonical_gtin14": "04063528078346"
+        }
+      ],
+      "price_eur": 9.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/neqi-leave-in-creme-moisture-mystery-p4063528078346.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:33:26.598+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "4827c174-92e9-4121-ab70-843d5c037ad0",
+      "name": "Olaplex No.5 Leave-In",
+      "brand": "Olaplex",
+      "gtins": [
+        {
+          "value": "850056933285",
+          "canonical_gtin14": "00850056933285"
+        }
+      ],
+      "price_eur": 34,
+      "category_key": "leave_in",
+      "affiliate_link": "https://olaplex.de/products/original-olaplex-n-5leave-in-conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:22:57.933+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-09T00:00:00+00:00"
+    },
+    {
+      "id": "4e99706a-2232-4ee6-ba1b-9ca1029a7364",
+      "name": "Olaplex No.6 Bond Smoother",
+      "brand": "Olaplex",
+      "gtins": [
+        {
+          "value": "850018802796",
+          "canonical_gtin14": "00850018802796"
+        }
+      ],
+      "price_eur": 32,
+      "category_key": "leave_in",
+      "affiliate_link": "https://olaplex.de/products/olaplex-no-6-bond-smoother",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:23:09.521+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-09T00:00:00+00:00"
+    },
+    {
+      "id": "993f0e55-2450-4557-853d-e6e23ec0d1a9",
+      "name": "OUAI Leave In Conditioner",
+      "brand": "OUAI",
+      "gtins": [
+        {
+          "value": "815402023119",
+          "canonical_gtin14": "00815402023119"
+        }
+      ],
+      "price_eur": 25.25,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.douglas.de/de/p/5002560059",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "35a372b6-c7ef-45cb-be0b-99cef476f247",
+      "name": "Pantene Bonding Leave-In",
+      "brand": "Pantene",
+      "gtins": [
+        {
+          "value": "8700216637374",
+          "canonical_gtin14": "08700216637374"
+        }
+      ],
+      "price_eur": 9.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/pantene-pro-v-miracles-molecular-bond-repair-wunder-haarcreme-leave-in-p8700216637374.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:26:20.317+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+      "name": "Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW",
+      "brand": "Pantene",
+      "gtins": [
+        {
+          "value": "8700216939768",
+          "canonical_gtin14": "08700216939768"
+        }
+      ],
+      "price_eur": 8.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/p/d/3088304/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:33:54.416+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "f8f3b51d-8e64-487d-bad5-4a47c58862ed",
+      "name": "Pantene Pro-V Miracles 7in1 Haaröl Spray",
+      "brand": "Pantene",
+      "gtins": [],
+      "price_eur": 8.99,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-miracles-schwereloses-7in1-haaroel-spray/p/8700216178402",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:39:21.264+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "915aa362-6479-41f2-bb59-0260493b3d58",
+      "name": "Paul Mitchell Full Circle Leave-In",
+      "brand": "Paul Mitchell",
+      "gtins": [
+        {
+          "value": "009531139159",
+          "canonical_gtin14": "00009531139159"
+        }
+      ],
+      "price_eur": 26.45,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.hagel-shop.de/paul-mitchell-full-circle-leave-in-cream-150-ml.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:46:01.705+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "a3b21686-fe35-46f1-b560-b8a563dc96ae",
+      "name": "Redken Acidic Color Gloss Leave-In",
+      "brand": "Redken",
+      "gtins": [
+        {
+          "value": "3474637174170",
+          "canonical_gtin14": "03474637174170"
+        }
+      ],
+      "price_eur": 26.99,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.douglas.de/de/p/5011356068",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:43:54.56+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "0d5a4af5-d046-4378-b608-515c9d1d66ec",
+      "name": "Redken All Soft Mega Curls Leave-In",
+      "brand": "Redken",
+      "gtins": [
+        {
+          "value": "3474637135638",
+          "canonical_gtin14": "03474637135638"
+        }
+      ],
+      "price_eur": 24.44,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.douglas.de/de/p/5010905038",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "2b7db7e3-2058-4178-8a03-7d05f4a1d447",
+      "name": "Redken Extreme Anti-Snap",
+      "brand": "Redken",
+      "gtins": [
+        {
+          "value": "884486453402",
+          "canonical_gtin14": "00884486453402"
+        }
+      ],
+      "price_eur": 25.99,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.douglas.de/de/p/5010083018",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:41:19.818+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "39ec1b2d-4aa0-4c4e-b581-9b6d5efea530",
+      "name": "Redken One United",
+      "brand": "Redken",
+      "gtins": [
+        {
+          "value": "3474637102555",
+          "canonical_gtin14": "03474637102555"
+        }
+      ],
+      "price_eur": 21.99,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.douglas.de/de/p/5002537033",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:42:04.151+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "45f4fe15-c439-476d-8a86-3b2aac5053bd",
+      "name": "Urban Alchemy Repair & Revive Leave-In Spray",
+      "brand": "Urban Alchemy",
+      "gtins": [
+        {
+          "value": "4063528079923",
+          "canonical_gtin14": "04063528079923"
+        }
+      ],
+      "price_eur": 22.9,
+      "category_key": "leave_in",
+      "affiliate_link": "https://urban-alchemy.com/products/repair-revive-leave-in-spray-150-ml",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:53:31.484+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "94cf6959-a53b-421b-9f0f-05efc239171c",
+      "name": "Wella Ultimate Repair Protective Leave-In",
+      "brand": "Wella Professionals",
+      "gtins": [
+        {
+          "value": "4064666580098",
+          "canonical_gtin14": "04064666580098"
+        }
+      ],
+      "price_eur": 18.51,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.wella.com/professional/de-DE/products/haarpflege/ultimate-repair/ultimate-repair-protective-leave-in",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+      "name": "Hitzeschutzspray 2-Phasen",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4070765073546",
+          "canonical_gtin14": "04070765073546"
+        }
+      ],
+      "price_eur": 1.95,
+      "category_key": "heat_protectant",
+      "affiliate_link": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-08-09T09:23:08+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "unavailable",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-08-09T09:23:08+00:00"
+    },
+    {
+      "id": "cb228f9d-4e46-4302-9a6f-92c393eda1bd",
+      "name": "Hydra Protect Hitzeschutzspray",
+      "brand": "Schwarzkopf taft",
+      "gtins": [
+        {
+          "value": "4015100893403",
+          "canonical_gtin14": "04015100893403"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "heat_protectant",
+      "affiliate_link": "https://www.dm.de/p/d/3121122/schwarzkopf-taft-hitzeschutzspray-aloe-boost",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-08-09T09:23:08+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "unavailable",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-08-09T09:23:08+00:00"
+    },
+    {
+      "id": "380fec2b-6ecd-499d-987e-d273ad3085b1",
+      "name": "Afrolocke Leave-In Haarkur, für lockiges Haar",
+      "brand": "Afrolocke",
+      "gtins": [
+        {
+          "value": "4270000814433",
+          "canonical_gtin14": "04270000814433"
+        }
+      ],
+      "price_eur": 16.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/afrolocke-leave-in-haarkur-fuer-lockiges-haar-p4270000814433.html",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 250,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "d70fdc25-2cdc-4b8a-b005-c4c719d88c33",
+      "name": "alverde NATURKOSMETIK Haarserum Nutri-Care",
+      "brand": "alverde NATURKOSMETIK",
+      "gtins": [
+        {
+          "value": "4066447975345",
+          "canonical_gtin14": "04066447975345"
+        }
+      ],
+      "price_eur": 2.75,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/p/d/3106844/alverde-naturkosmetik-haarserum-nutri-care",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 75,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "ba326dab-99d8-4b82-a1c5-de9aee2578a4",
+      "name": "AUSSIE SOS Leave-In Haarserum 100 Hours Hydration, 160 ml",
+      "brand": "AUSSIE",
+      "gtins": [
+        {
+          "value": "8006530085724",
+          "canonical_gtin14": "08006530085724"
+        }
+      ],
+      "price_eur": 8.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/p/d/3135991/aussie-leave-in-haarserum-100-hours-hydration",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-07-03T10:19:49+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-07-03T10:19:49+00:00"
+    },
+    {
+      "id": "ea88a333-b11c-45c3-bbda-c51f912ee56f",
+      "name": "Balea Professional Brilliant Blond Hair Sealer Leave-in Serum",
+      "brand": "Balea",
+      "gtins": [],
+      "price_eur": 5.59,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.duitsevoordeeldrogist.nl/balea-professional-leave-in-serum-brilliant-blond.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-07-01T08:55:05.052+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-07-01T08:55:05.052+00:00"
+    },
+    {
+      "id": "76f3611b-2dda-4a90-bd3c-c9b1577ec5aa",
+      "name": "Balea Professional Leave-In Haarmaske Molecular Care",
+      "brand": "Balea Professional",
+      "gtins": [
+        {
+          "value": "4066447910148",
+          "canonical_gtin14": "04066447910148"
+        }
+      ],
+      "price_eur": 2.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/p/d/3106685/balea-professional-leave-in-haarmaske-molecular-care",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 50,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "2a8ae385-17c9-440b-ab89-87fe1e6350a4",
+      "name": "Balea Professional Leave-In Serum Plex Care",
+      "brand": "Balea Professional",
+      "gtins": [
+        {
+          "value": "4070765006322",
+          "canonical_gtin14": "04070765006322"
+        }
+      ],
+      "price_eur": 2.75,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/p/d/1674699/balea-professional-leave-in-serum-plex-care",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 50,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "694c4568-9235-4893-ab54-96a75b3c4f27",
+      "name": "Bali Curls Bonding Repair Leave-In Cream N°3",
+      "brand": "Bali Curls",
+      "gtins": [
+        {
+          "value": "4262391991732",
+          "canonical_gtin14": "04262391991732"
+        }
+      ],
+      "price_eur": 13.9,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.bali-care.com/de-de/products/bonding-repair-leave-in-cream-n-3",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-07-05T21:50:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-07-05T21:50:00+00:00"
+    },
+    {
+      "id": "3175b0a5-1be7-430f-b3d9-22ab3b4c11d2",
+      "name": "Being Major Moisture Leave-In Conditioner",
+      "brand": "Being",
+      "gtins": [
+        {
+          "value": "4895248005988",
+          "canonical_gtin14": "04895248005988"
+        }
+      ],
+      "price_eur": 6.79,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-being-major-moisture-leave-in-conditioner/p/4895248005988",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-02T00:00:00+00:00",
+      "net_content_value": 354,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-02T00:00:00+00:00"
+    },
+    {
+      "id": "b89a5ced-700a-4cdb-be89-c85c212e4eca",
+      "name": "Dejan Garz Leave-In Cream The Foundation",
+      "brand": "Dejan Garz",
+      "gtins": [
+        {
+          "value": "4270004570120",
+          "canonical_gtin14": "04270004570120"
+        }
+      ],
+      "price_eur": 9.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/p/d/3063678/dejan-garz-leave-in-cream-the-foundation",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 100,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "bf3c797d-680f-44b4-8826-b5c45cf045ae",
+      "name": "Dejan Garz Leave-In Serum The Foundation",
+      "brand": "Dejan Garz",
+      "gtins": [
+        {
+          "value": "4270004570137",
+          "canonical_gtin14": "04270004570137"
+        }
+      ],
+      "price_eur": 9.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/p/d/3062977/dejan-garz-leave-in-serum-the-foundation",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 100,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "a9fc4fb5-0152-40dd-9a01-6ecf0155709f",
+      "name": "Garnier Fructis Leave-In Creme Aloe Air Dry",
+      "brand": "Garnier Fructis",
+      "gtins": [
+        {
+          "value": "3600542117593",
+          "canonical_gtin14": "03600542117593"
+        }
+      ],
+      "price_eur": 5.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/p/d/1538389/garnier-fructis-leave-in-creme-aloe-air-dry",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-02T00:00:00+00:00",
+      "net_content_value": 400,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-02T00:00:00+00:00"
+    },
+    {
+      "id": "b3ddfac2-ae06-42dd-9caf-822a2941c6f2",
+      "name": "Garnier Fructis Leave-In Creme Locken Methode Air Dry",
+      "brand": "Garnier Fructis",
+      "gtins": [
+        {
+          "value": "3600542657044",
+          "canonical_gtin14": "03600542657044"
+        }
+      ],
+      "price_eur": 5.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/p/d/3115736/garnier-fructis-leave-in-creme-locken-methode-air-dry",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 260,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "a8abcd37-f0cc-4b31-91d9-7ec786a6abde",
+      "name": "Herbal Essences Leave-In Spray Blütensanft Rosenduft",
+      "brand": "Herbal Essences",
+      "gtins": [
+        {
+          "value": "8700216631761",
+          "canonical_gtin14": "08700216631761"
+        }
+      ],
+      "price_eur": 5.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/p/d/3045328/herbal-essences-leave-in-spray-bluetensanft-rosenduft",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 145,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "958c37a5-7581-4b3a-9fcb-9d086238316e",
+      "name": "Herbal Essences Leave-In Spray Kamille",
+      "brand": "Herbal Essences",
+      "gtins": [
+        {
+          "value": "8700216631792",
+          "canonical_gtin14": "08700216631792"
+        }
+      ],
+      "price_eur": 5.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/p/d/3045337/herbal-essences-leave-in-spray-kamille",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 145,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "67d95443-490d-47fb-876e-8d9eecf015ae",
+      "name": "Jean&Len Leave-In Haarmaske Peptide Intense Repair",
+      "brand": "Jean&Len",
+      "gtins": [
+        {
+          "value": "4262500780288",
+          "canonical_gtin14": "04262500780288"
+        }
+      ],
+      "price_eur": 5.25,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/p/d/3086348/jean-und-len-leave-in-haarmaske-peptide-intense-repair",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 100,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "4c4980b7-99e0-4225-90fb-d55082a1f264",
+      "name": "L'Oréal Paris Elvital Leave-In Haarkur Hydra Hyaluron Aufpolsterndes Feuchtigkeitsserum",
+      "brand": "L'Oréal Paris Elvital",
+      "gtins": [
+        {
+          "value": "3600524030865",
+          "canonical_gtin14": "03600524030865"
+        }
+      ],
+      "price_eur": 6.99,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-leave-in-haarkur-hydra-hyaluron-aufpolsterndes-feuchtigkeitsserum/p/3600524030865",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-02T00:00:00+00:00",
+      "net_content_value": 150,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-02T00:00:00+00:00"
+    },
+    {
+      "id": "0c80efd5-0462-46fa-ad15-2c736f5ef269",
+      "name": "L'Oréal Paris Elvital Leave-In Haarserum Bond Repair, Anti-Haarschäden",
+      "brand": "L'Oréal Paris Elvital",
+      "gtins": [
+        {
+          "value": "3600524075576",
+          "canonical_gtin14": "03600524075576"
+        }
+      ],
+      "price_eur": 9.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-02T00:00:00+00:00",
+      "net_content_value": 150,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-02T00:00:00+00:00"
+    },
+    {
+      "id": "0ba22032-a5b1-4a0a-a8a2-b49861d00fb8",
+      "name": "L'Oréal Paris Elvital Leave-In Serum Glycolic Gloss",
+      "brand": "L'Oréal Paris Elvital",
+      "gtins": [
+        {
+          "value": "3600524135430",
+          "canonical_gtin14": "03600524135430"
+        }
+      ],
+      "price_eur": 9.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/p/d/1343857/l-oreal-paris-elvital-leave-in-serum-glycolic-gloss",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-02T00:00:00+00:00",
+      "net_content_value": 150,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-02T00:00:00+00:00"
+    },
+    {
+      "id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+      "name": "Neqi Diamond Glass Ultimate Styling Spray",
+      "brand": "Neqi",
+      "gtins": [
+        {
+          "value": "4063528094575",
+          "canonical_gtin14": "04063528094575"
+        }
+      ],
+      "price_eur": 12.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/p/d/3080142/neqi-leave-in-spray-diamond-glass-ultimate",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-07-05T22:20:54+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-07-05T22:20:54+00:00"
+    },
+    {
+      "id": "404fb3e4-04c4-4089-8120-8c3e92300a3a",
+      "name": "Plantur 39 Leave-In Sprühkur",
+      "brand": "Plantur 39",
+      "gtins": [
+        {
+          "value": "4008666752314",
+          "canonical_gtin14": "04008666752314"
+        }
+      ],
+      "price_eur": 6.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/p/d/1257393/plantur-39-leave-in-spruehkur",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 125,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "d840b368-3416-4104-9ccb-0e5a656a4929",
+      "name": "Schwarzkopf Gliss Haarkur Night Elixier Ultimate Repair",
+      "brand": "Schwarzkopf Gliss",
+      "gtins": [
+        {
+          "value": "4015100813951",
+          "canonical_gtin14": "04015100813951"
+        }
+      ],
+      "price_eur": 7.45,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-02T00:00:00+00:00",
+      "net_content_value": 100,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-02T00:00:00+00:00"
+    },
+    {
+      "id": "a67c4125-2195-4cb6-a6d0-8bcd495a74d4",
+      "name": "Schwarzkopf Gliss Sprüh-Conditioner Express-Repair Total Repair",
+      "brand": "Schwarzkopf Gliss",
+      "gtins": [
+        {
+          "value": "4015100813470",
+          "canonical_gtin14": "04015100813470"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/p/d/1430766/schwarzkopf-gliss-sprueh-conditioner-express-repair-total-repair",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 200,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "d2936db6-6865-4375-8060-95995b96b804",
+      "name": "Wahre Schätze Haarserum Honig reparierend",
+      "brand": "Wahre Schätze",
+      "gtins": [
+        {
+          "value": "3600542567329",
+          "canonical_gtin14": "03600542567329"
+        }
+      ],
+      "price_eur": 6.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-02T00:00:00+00:00",
+      "net_content_value": 115,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-02T00:00:00+00:00"
+    },
+    {
+      "id": "dc9f6662-b51b-4011-91ae-494c2d254f11",
+      "name": "Wahre Schätze Leave-In Haarkur Avocado",
+      "brand": "Wahre Schätze",
+      "gtins": [
+        {
+          "value": "3600542639200",
+          "canonical_gtin14": "03600542639200"
+        }
+      ],
+      "price_eur": 2.95,
+      "category_key": "leave_in",
+      "affiliate_link": "https://www.dm.de/p/d/2976366/wahre-schaetze-leave-in-haarkur-avocado",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 200,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    }
+  ]
+}

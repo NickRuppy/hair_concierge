@@ -1,0 +1,17 @@
+{
+  "researchesWithUsage": 100,
+  "tokens": {
+    "input_tokens": 5071894,
+    "cached_input_tokens": 4221952,
+    "output_tokens": 23340,
+    "reasoning_output_tokens": 0
+  },
+  "standardCreditEquivalent": 3.472,
+  "creditRatesPerMillion": {
+    "uncachedInput": 2.5,
+    "cachedInput": 0.25,
+    "output": 12.5
+  },
+  "pricingSource": "https://learn.chatgpt.com/docs/pricing#token-rates",
+  "note": "Token-equivalent estimate at Standard credit rates; not a measurement of subscription allowance used or an invoice."
+}

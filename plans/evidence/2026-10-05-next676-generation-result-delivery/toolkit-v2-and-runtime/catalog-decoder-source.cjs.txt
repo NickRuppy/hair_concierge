@@ -1,0 +1,32 @@
+function diagnosticValue(text,key){
+ const lines=text.split('\n'),found=lines.map((v,i)=>v.startsWith('  '+key+':')?i:-1).filter(i=>i>=0);if(found.length!==1)return{ok:false}
+ const i=found[0],tail=lines[i].slice(('  '+key+':').length).trimStart()
+ function scalar(value){
+   const quote=value[0]
+   if(["'",'"','`'].includes(quote)){
+     let out='',i=1,closed=false
+     for(;i<value.length;i++){
+       const char=value[i];if(char===quote){closed=true;i++;break}
+       if(char!=='\\'){out+=char;continue}
+       const e=value[++i],simple={'n':'\n','r':'\r','t':'\t','b':'\b','f':'\f','v':'\v','0':'\0','\\':'\\',"'":"'",'"':'"','`':'`'}
+       if(Object.hasOwn(simple,e)){out+=simple[e];continue}
+       if(e==='x'||e==='u'){const n=e==='x'?2:4,hex=value.slice(i+1,i+1+n);if(hex.length!==n||!/^[a-fA-F0-9]+$/.test(hex))return{ok:false};out+=String.fromCharCode(parseInt(hex,16));i+=n;continue}
+       return{ok:false}
+     }
+     if(!closed)return{ok:false}
+     const suffix=value.slice(i)
+     if(!suffix)return{ok:true,value:out,truncated:false}
+     const truncated=suffix.match(/^\.\.\. ([1-9]\d*) more characters$/)
+     if(truncated&&out.length===10000)return{ok:true,value:out,truncated:true,remainingCharacters:Number(truncated[1])}
+     return{ok:false}
+   }
+   if(value==='true'||value==='false'||value==='null')return{ok:true,value:JSON.parse(value)}
+   if(/^-?(?:0|[1-9]\d*)(?:\.\d+)?$/.test(value))return{ok:true,value:Number(value)}
+   if(value&&!/^[>|&*!{[]/.test(value))return{ok:true,value}
+   return{ok:false}
+ }
+ if(['|-','|','|+'].includes(tail)){const body=[];for(let k=i+1;k<lines.length;k++){if(lines[k].startsWith('    '))body.push(lines[k].slice(4));else if(lines[k]==='')body.push('');else break}return{ok:true,value:body.join('\n')}}
+ if(tail)return scalar(tail)
+ const values=[];for(let k=i+1;k<lines.length&&lines[k].startsWith('    ');k++){const m=lines[k].match(/^    (\d+): (.*)$/);if(!m||Number(m[1])!==values.length)return{ok:false};const v=scalar(m[2]);if(!v.ok)return v;values.push(v.value)}
+ return values.length?{ok:true,value:values}:{ok:true,value:{},emptyObject:true}
+}

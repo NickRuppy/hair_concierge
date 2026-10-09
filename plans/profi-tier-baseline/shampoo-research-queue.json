@@ -1,0 +1,1790 @@
+{
+  "manifest_version": "profi-shampoo-baseline-v1",
+  "status": "planning_only_not_research_or_publish_approval",
+  "created_at": "2026-10-02T09:46:42.406331+00:00",
+  "current_repo_sha": "3abfe00a7843882f01009de701affa7b1dff697f",
+  "historical_source": {
+    "path": "ops/product-intake-research/2026-07-30/profi-shampoo-wave/manifest.json",
+    "sha256": "0c11ae3e3f92b691e92f34e41d9698165ad0953e66d8caa5c4771ad5ac2e505d"
+  },
+  "category_lane": "unresolved_until_exact_product_boundary_check",
+  "research_layers": {
+    "base_properties": "shampoo-inci-v1.4",
+    "forward_focus": "shampoo-focus-v15-overlay-v1",
+    "production_projection": "shampoo-production-light-v1",
+    "compatibility": "Keep the v1.5 overlay separate and hash-bound to the v1.4 adjudication; never feed moisture or changed focus values into the frozen v1 adapter.",
+    "validation_commands": [
+      "npm run research:shampoo:production-light",
+      "npm run research:shampoo:focus-v15"
+    ]
+  },
+  "proposed_market_segment": "professional",
+  "owning_contracts": [
+    "docs/product-intake-research-ops.md",
+    "docs/research/shampoo-inci/v1.4/classification-standard.md",
+    "docs/research/shampoo-inci/v1.4/new-product-research-runbook.md",
+    "docs/product-intake-shampoo-production-light.md",
+    "src/lib/shampoo/focus-v15.ts",
+    "plans/scan-db-expansion/research/shampoo-v14/focus-v15-amendment-plan.md"
+  ],
+  "rules": {
+    "old_placements": "historical_comparison_only_not_production_constraints",
+    "old_status": "not_current_readiness",
+    "old_package": "historical_proposal_requires_current_DE_identity_formula_price_image_recheck",
+    "category": "Classify exact regular vs reset/deep-cleansing/other category before selecting engine; professional is not a category.",
+    "readiness": "property_lane_ready, catalog_intake_ready and global_recommendation_ready must be assessed separately",
+    "write_authority": "none",
+    "research_artifacts": "New versioned local root; leave July and frozen v1.4 evidence unchanged."
+  },
+  "candidates": [
+    {
+      "candidate_key": "glynt-derma-shampoo",
+      "historical_batch": "a",
+      "proposed_identity": {
+        "canonical_brand": "GLYNT",
+        "product_line": "DERMA",
+        "clean_name": "Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "fine",
+          "shampoo_bucket": "irritationen"
+        },
+        {
+          "thickness": "normal",
+          "shampoo_bucket": "irritationen"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "size": {
+          "amount": 250,
+          "unit": "ml"
+        },
+        "purchase_url": "https://www.hagel-shop.de/glynt-derma-shampoo-250-ml.html",
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4034348011134",
+            "source_url": "https://www.hagel-shop.de/glynt-derma-shampoo-250-ml.html"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "12094690",
+            "source_url": "https://www.hagel-shop.de/glynt-derma-shampoo-250-ml.html"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hagel-shop.de/glynt-derma-shampoo-250-ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "revlon-restart-balance-scalp-soothing-cleanser",
+      "historical_batch": "a",
+      "proposed_identity": {
+        "canonical_brand": "Revlon Professional",
+        "product_line": "RE/START",
+        "clean_name": "Balance Scalp Soothing Cleanser"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "fine",
+          "shampoo_bucket": "irritationen"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "size": {
+          "amount": 250,
+          "unit": "ml"
+        },
+        "purchase_url": "https://www.hagel-shop.de/revlon-restart-scalp-soothing-cleanser-250ml.html",
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "8432225114460",
+            "source_url": "https://www.hagel-shop.de/revlon-restart-scalp-soothing-cleanser-250ml.html"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "12088731",
+            "source_url": "https://www.hagel-shop.de/revlon-restart-scalp-soothing-cleanser-250ml.html"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hagel-shop.de/revlon-restart-scalp-soothing-cleanser-250ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "kerastase-genesis-bain-hydra-fortifiant",
+      "historical_batch": "a",
+      "proposed_identity": {
+        "canonical_brand": "Kérastase",
+        "product_line": "Genesis",
+        "clean_name": "Bain Hydra-Fortifiant"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "normal",
+          "shampoo_bucket": "normal"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "size": {
+          "amount": 250,
+          "unit": "ml"
+        },
+        "purchase_url": "https://www.hagel-shop.de/kerastase-genesis-bain-hydra-fortifiant-250-ml.html",
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3474636857814",
+            "source_url": "https://www.hagel-shop.de/kerastase-genesis-bain-hydra-fortifiant-250-ml.html"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "12077737",
+            "source_url": "https://www.hagel-shop.de/kerastase-genesis-bain-hydra-fortifiant-250-ml.html"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hagel-shop.de/kerastase-genesis-bain-hydra-fortifiant-250-ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "neutrea-5-urea-shampoo",
+      "historical_batch": "a",
+      "proposed_identity": {
+        "canonical_brand": "NEUTREA",
+        "product_line": null,
+        "clean_name": "5% Urea-Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "fine",
+          "shampoo_bucket": "trocken"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "size": {
+          "amount": 250,
+          "unit": "ml"
+        },
+        "purchase_url": "https://www.hagel-shop.de/neutrea-sensitiv-5-urea-shampoo-250-ml.html",
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4036279050640",
+            "source_url": "https://www.salontotal.com/product/elkaderm-neutrea-sensitive-5-urea-shampoo-250ml-42814"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "12009102",
+            "source_url": "https://www.hagel-shop.de/neutrea-sensitiv-5-urea-shampoo-250-ml.html"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hagel-shop.de/neutrea-sensitiv-5-urea-shampoo-250-ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "noberu-dandruff-shampoo-eucalyptus",
+      "historical_batch": "a",
+      "proposed_identity": {
+        "canonical_brand": "Nõberu of Sweden",
+        "product_line": null,
+        "clean_name": "Dandruff Shampoo Eucalyptus"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "normal",
+          "shampoo_bucket": "schuppen"
+        }
+      ],
+      "historical_research_status": "ambiguous",
+      "historical_ambiguity": "Exact current INCI for the purchasable 250 ml EU package needs confirmation before this can be approved beyond research.",
+      "package_proposal_from_july": {
+        "size": {
+          "amount": 250,
+          "unit": "ml"
+        },
+        "purchase_url": "https://themanhimself.de/en/products/noberu-of-sweden-dandruff-shampoo-no-106-eucalyptus-250ml",
+        "identifiers": [
+          {
+            "type": "retailer_sku",
+            "value": "NOB-42233",
+            "source_url": "https://themanhimself.de/en/products/noberu-of-sweden-dandruff-shampoo-no-106-eucalyptus-250ml"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://themanhimself.de/en/products/noberu-of-sweden-dandruff-shampoo-no-106-eucalyptus-250ml"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "gallinee-hair-cleansing-cream",
+      "historical_batch": "a",
+      "proposed_identity": {
+        "canonical_brand": "Gallinée",
+        "product_line": null,
+        "clean_name": "Hair Cleansing Cream"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "normal",
+          "shampoo_bucket": "dehydriert-fettig"
+        },
+        {
+          "thickness": "coarse",
+          "shampoo_bucket": "dehydriert-fettig"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "size": {
+          "amount": 200,
+          "unit": "ml"
+        },
+        "purchase_url": "https://www.gallinee.com/de/product/hair-cleansing-cream/",
+        "identifiers": [
+          {
+            "type": "brand_product_slug",
+            "value": "soothing-cleansing-cream",
+            "source_url": "https://www.gallinee.com/product/soothing-cleansing-cream/"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "36667076",
+            "source_url": "https://www.galaxus.ch/en/s6/product/gallinee-prebiotic-gentle-cleansing-cream-soothing-clean-sing-cream-200-ml-200-ml-shampoo-36667076"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.gallinee.com/de/product/hair-cleansing-cream/"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "om-original-detox-shampoo",
+      "historical_batch": "a",
+      "proposed_identity": {
+        "canonical_brand": "O&M",
+        "product_line": null,
+        "clean_name": "Original Detox Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "normal",
+          "shampoo_bucket": "dehydriert-fettig"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "size": {
+          "amount": 350,
+          "unit": "ml"
+        },
+        "purchase_url": "https://originalmineral.eu/products/original-detox-shampoo-350ml",
+        "identifiers": [
+          {
+            "type": "retailer_sku",
+            "value": "OM-100003",
+            "source_url": "https://originalmineral.eu/products/original-detox-shampoo-350ml"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://originalmineral.eu/products/original-detox-shampoo-350ml"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "antidotpro-cleanse-02",
+      "historical_batch": "a",
+      "proposed_identity": {
+        "canonical_brand": "AntidotPro",
+        "product_line": null,
+        "clean_name": "Cleanse 02"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "coarse",
+          "shampoo_bucket": "irritationen"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "size": {
+          "amount": 240,
+          "unit": "ml"
+        },
+        "purchase_url": "https://www.hagel-shop.de/antidotpro-cleanse-02-kopfhaut-therapie-shampoo-240-ml.html",
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "793588763336",
+            "source_url": "https://www.hagel-shop.de/antidotpro-cleanse-02-kopfhaut-therapie-shampoo-240-ml.html"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "12101184",
+            "source_url": "https://www.hagel-shop.de/antidotpro-cleanse-02-kopfhaut-therapie-shampoo-240-ml.html"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hagel-shop.de/antidotpro-cleanse-02-kopfhaut-therapie-shampoo-240-ml.html"
+          }
+        ]
+      },
+      "identity_decision": "User selected the 240 ml Hagel-Shop package; refresh that exact offer, do not substitute size silently.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "aveda-rosemary-mint-purifying-shampoo",
+      "historical_batch": "a",
+      "proposed_identity": {
+        "canonical_brand": "Aveda",
+        "product_line": "Rosemary Mint",
+        "clean_name": "Purifying Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "coarse",
+          "shampoo_bucket": "dehydriert-fettig"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "size": {
+          "amount": 250,
+          "unit": "ml"
+        },
+        "purchase_url": "https://www.hagel-shop.de/aveda-rosemary-mint-purifying-shampoo-250-ml.html",
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "018084998144",
+            "source_url": "https://www.hagel-shop.de/aveda-rosemary-mint-purifying-shampoo-250-ml.html"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "12068956",
+            "source_url": "https://www.hagel-shop.de/aveda-rosemary-mint-purifying-shampoo-250-ml.html"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hagel-shop.de/aveda-rosemary-mint-purifying-shampoo-250-ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "sebastian-dark-oil-silky-shine-shampoo",
+      "historical_batch": "a",
+      "proposed_identity": {
+        "canonical_brand": "Sebastian Professional",
+        "product_line": "Dark Oil",
+        "clean_name": "Silky Shine Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "coarse",
+          "shampoo_bucket": "trocken"
+        }
+      ],
+      "historical_research_status": "ambiguous",
+      "historical_ambiguity": "The locked German Wella professional-store page hides public EUR price, and the manifest trocken placement conflicts with source evidence that speaks to dry/stressed hair lengths rather than dry scalp.",
+      "package_proposal_from_july": {
+        "size": {
+          "amount": 280,
+          "unit": "ml"
+        },
+        "purchase_url": "https://de.wella.professionalstore.com/product/dark-oil-silky-shine-shampoo-280ml/000000099350189487",
+        "identifiers": [
+          {
+            "type": "retailer_sku",
+            "value": "000000099350189487",
+            "source_url": "https://de.wella.professionalstore.com/product/dark-oil-silky-shine-shampoo-280ml/000000099350189487"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://de.wella.professionalstore.com/product/dark-oil-silky-shine-shampoo-280ml/000000099350189487"
+          }
+        ]
+      },
+      "identity_decision": "User selected the newer Dark Oil Silky Shine 280 ml identity; refresh same current identity/image/PDP or flag material reformulation.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "paul-mitchell-tea-tree-special-shampoo",
+      "historical_batch": "b",
+      "proposed_identity": {
+        "canonical_brand": "Paul Mitchell",
+        "product_line": "Tea Tree Special",
+        "clean_name": "Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "fine",
+          "shampoo_bucket": "irritationen"
+        },
+        {
+          "thickness": "normal",
+          "shampoo_bucket": "irritationen"
+        }
+      ],
+      "historical_research_status": "ambiguous",
+      "historical_ambiguity": "Sheet placement uses `irritationen`, but current sources do not clearly support sensitive or irritated scalp; confirm whether this should stay irritated-route or move to another scalp bucket.",
+      "package_proposal_from_july": {
+        "size": "300 ml / 10.14 fl. oz.",
+        "purchase_url": "https://www.hair-shop.com/en/paul-mitchell-tea-tree-special-shampoo-300ml.html",
+        "identifiers": [
+          {
+            "type": "gtin",
+            "value": "009531137155",
+            "source": "official_variant"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "TTS-300",
+            "source": "official_variant"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hair-shop.com/en/paul-mitchell-tea-tree-special-shampoo-300ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "paul-mitchell-tea-tree-lemon-sage-thickening-shampoo",
+      "historical_batch": "b",
+      "proposed_identity": {
+        "canonical_brand": "Paul Mitchell",
+        "product_line": "Tea Tree Lemon Sage",
+        "clean_name": "Thickening Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "fine",
+          "shampoo_bucket": "normal"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "size": "300 ml / 10.14 fl. oz.",
+        "purchase_url": "https://www.hair-shop.com/en/paul-mitchell-tea-tree-lemon-sage-thickening-shampoo-300ml.html",
+        "identifiers": [
+          {
+            "type": "gtin",
+            "value": "009531136752",
+            "source": "official_variant"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "LTS-300",
+            "source": "official_variant"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hair-shop.com/en/paul-mitchell-tea-tree-lemon-sage-thickening-shampoo-300ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "paul-mitchell-tea-tree-lavender-mint-moisturizing-shampoo",
+      "historical_batch": "b",
+      "proposed_identity": {
+        "canonical_brand": "Paul Mitchell",
+        "product_line": "Tea Tree Lavender Mint",
+        "clean_name": "Moisturizing Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "coarse",
+          "shampoo_bucket": "trocken"
+        }
+      ],
+      "historical_research_status": "ambiguous",
+      "historical_ambiguity": "Sheet placement uses `trocken`, but current sources substantiate dry hair rather than dry scalp/dry flakes; confirm whether this product belongs in dry scalp route.",
+      "package_proposal_from_july": {
+        "size": "300 ml / 10.14 fl. oz.",
+        "purchase_url": "https://www.hair-shop.com/en/paul-mitchell-tea-tree-lavender-mint-moisturizing-shampoo-300ml.html",
+        "identifiers": [
+          {
+            "type": "gtin",
+            "value": "009531136707",
+            "source": "official_variant"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "LMMS-300",
+            "source": "official_variant"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hair-shop.com/en/paul-mitchell-tea-tree-lavender-mint-moisturizing-shampoo-300ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "evo-gluttony-volumising-shampoo",
+      "historical_batch": "b",
+      "proposed_identity": {
+        "canonical_brand": "evo",
+        "product_line": null,
+        "clean_name": "gluttony volumising shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "fine",
+          "shampoo_bucket": "normal"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "size": "300 ml / 10.1 fl. oz.",
+        "purchase_url": "https://www.hair-shop.com/en/evo-gluttony-volume-shampoo-300ml.html",
+        "identifiers": [
+          {
+            "type": "gtin",
+            "value": "9349769018491",
+            "source": "official_variant"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "39225",
+            "source": "official_variant"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hair-shop.com/en/evo-gluttony-volume-shampoo-300ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "evo-the-therapist-hydrating-shampoo",
+      "historical_batch": "b",
+      "proposed_identity": {
+        "canonical_brand": "evo",
+        "product_line": null,
+        "clean_name": "the therapist hydrating shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "fine",
+          "shampoo_bucket": "trocken"
+        }
+      ],
+      "historical_research_status": "ambiguous",
+      "historical_ambiguity": "Sheet placement uses `trocken`, but current sources substantiate dry hair rather than dry scalp/dry flakes; confirm whether this should remain dry scalp route.",
+      "package_proposal_from_july": {
+        "size": "300 ml / 10.1 fl. oz.",
+        "purchase_url": "https://www.hair-shop.com/en/evo-the-therapist-hydrating-shampoo-300ml.html",
+        "identifiers": [
+          {
+            "type": "gtin",
+            "value": "9349769008386",
+            "source": "official_variant"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "39221",
+            "source": "official_variant"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hair-shop.com/en/evo-the-therapist-hydrating-shampoo-300ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "evo-normal-persons-daily-shampoo",
+      "historical_batch": "b",
+      "proposed_identity": {
+        "canonical_brand": "evo",
+        "product_line": null,
+        "clean_name": "normal persons daily shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "normal",
+          "shampoo_bucket": "dehydriert-fettig"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "size": "300 ml / 10.1 fl. oz.",
+        "purchase_url": "https://www.hair-shop.com/en/evo-normal-persons-daily-shampoo-300ml.html",
+        "identifiers": [
+          {
+            "type": "gtin",
+            "value": "9349769018460",
+            "source": "official_variant"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "39223",
+            "source": "official_variant"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hair-shop.com/en/evo-normal-persons-daily-shampoo-300ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "evo-mane-tamer-smoothing-shampoo",
+      "historical_batch": "b",
+      "proposed_identity": {
+        "canonical_brand": "evo",
+        "product_line": null,
+        "clean_name": "mane tamer smoothing shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "coarse",
+          "shampoo_bucket": "normal"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "size": "300 ml / 10.1 fl. oz.",
+        "purchase_url": "https://www.hair-shop.com/en/evo-mane-tamer-smoothing-shampoo-300ml.html",
+        "identifiers": [
+          {
+            "type": "gtin",
+            "value": "9349769026366",
+            "source": "official_variant"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "39881A",
+            "source": "official_variant"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hair-shop.com/en/evo-mane-tamer-smoothing-shampoo-300ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "maria-nila-pure-volume-shampoo",
+      "historical_batch": "b",
+      "proposed_identity": {
+        "canonical_brand": "Maria Nila",
+        "product_line": "Pure Volume",
+        "clean_name": "Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "fine",
+          "shampoo_bucket": "normal"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "size": "350 ml",
+        "purchase_url": "https://www.hair-shop.com/en/maria-nila-pure-volume-shampoo-350ml.html",
+        "identifiers": [
+          {
+            "type": "gtin",
+            "value": "7391681036109",
+            "source": "official_variant"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "3610",
+            "source": "official_variant"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hair-shop.com/en/maria-nila-pure-volume-shampoo-350ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "maria-nila-purifying-cleanse-shampoo",
+      "historical_batch": "b",
+      "proposed_identity": {
+        "canonical_brand": "Maria Nila",
+        "product_line": "Purifying Cleanse",
+        "clean_name": "Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "fine",
+          "shampoo_bucket": "dehydriert-fettig"
+        },
+        {
+          "thickness": "normal",
+          "shampoo_bucket": "dehydriert-fettig"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "size": "350 ml",
+        "purchase_url": "https://www.hair-shop.com/en/maria-nila-purifying-cleanse-shampoo-350ml.html",
+        "identifiers": [
+          {
+            "type": "gtin",
+            "value": "7391681403772",
+            "source": "official_variant"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "3680",
+            "source": "official_variant"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hair-shop.com/en/maria-nila-purifying-cleanse-shampoo-350ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "maria-nila-coils-curls-co-wash",
+      "historical_batch": "b",
+      "proposed_identity": {
+        "canonical_brand": "Maria Nila",
+        "product_line": "Coils & Curls",
+        "clean_name": "Co-Wash"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "coarse",
+          "shampoo_bucket": "normal"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "size": "350 ml",
+        "purchase_url": "https://www.hair-shop.com/en/maria-nila-coils-curls-co-wash-350-ml.html",
+        "identifiers": [
+          {
+            "type": "gtin",
+            "value": "7391681403673",
+            "source": "official_variant"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "3670",
+            "source": "official_variant"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hair-shop.com/en/maria-nila-coils-curls-co-wash-350-ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "maria-nila-true-soft-shampoo",
+      "historical_batch": "b",
+      "proposed_identity": {
+        "canonical_brand": "Maria Nila",
+        "product_line": "True Soft",
+        "clean_name": "Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "coarse",
+          "shampoo_bucket": "normal"
+        },
+        {
+          "thickness": "coarse",
+          "shampoo_bucket": "trocken"
+        }
+      ],
+      "historical_research_status": "ambiguous",
+      "historical_ambiguity": "One manifest placement uses `trocken`, but current sources substantiate dry hair rather than dry scalp/dry flakes; confirm whether that dry-route row should remain.",
+      "package_proposal_from_july": {
+        "size": "350 ml",
+        "purchase_url": "https://www.hair-shop.com/en/maria-nila-true-soft-shampoo-350ml.html",
+        "identifiers": [
+          {
+            "type": "gtin",
+            "value": "7391681036307",
+            "source": "official_variant"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "3630",
+            "source": "official_variant"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hair-shop.com/en/maria-nila-true-soft-shampoo-350ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "davines-naturaltech-purifying-shampoo",
+      "historical_batch": "c",
+      "proposed_identity": {
+        "canonical_brand": "Davines",
+        "product_line": "Naturaltech",
+        "clean_name": "PURIFYING Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "fine",
+          "shampoo_bucket": "schuppen"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "purchase_url": "https://www.hagel-shop.de/davines-purifying-shampoo-pflege-bei-schuppen-250-ml-shampoo.html",
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "8004608236580"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "12024834"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hagel-shop.de/davines-purifying-shampoo-pflege-bei-schuppen-250-ml-shampoo.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "loreal-professionnel-scalp-advanced-anti-oiliness",
+      "historical_batch": "c",
+      "proposed_identity": {
+        "canonical_brand": "L'Oréal Professionnel",
+        "product_line": "Serie Expert Scalp Advanced",
+        "clean_name": "Anti-Oiliness Dermo-Purifier Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "fine",
+          "shampoo_bucket": "dehydriert-fettig"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "purchase_url": "https://www.hagel-shop.de/l-oreal-professionnel-paris-serie-expert-scalp-advanced-anti-oiliness-dermo-purifier-shampoo-300-ml.html",
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3474637106454"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "12108865"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hagel-shop.de/l-oreal-professionnel-paris-serie-expert-scalp-advanced-anti-oiliness-dermo-purifier-shampoo-300-ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "authentic-beauty-concept-hydrate-cleanser",
+      "historical_batch": "c",
+      "proposed_identity": {
+        "canonical_brand": "AUTHENTIC BEAUTY CONCEPT",
+        "product_line": "Hydrate",
+        "clean_name": "Hydrate Cleanser"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "fine",
+          "shampoo_bucket": "trocken"
+        },
+        {
+          "thickness": "normal",
+          "shampoo_bucket": "trocken"
+        }
+      ],
+      "historical_research_status": "ambiguous",
+      "historical_ambiguity": "Manifest uses shampoo_bucket trocken, but current official and retailer evidence supports dry hair/curly hair hydration rather than dry scalp or dry flakes. Exact package, formula, price, and image are otherwise resolved.",
+      "package_proposal_from_july": {
+        "purchase_url": "https://www.hagel-shop.de/authentic-beauty-concept-hydrate-cleanser-300-ml.html",
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "42392491"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "12072027"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hagel-shop.de/authentic-beauty-concept-hydrate-cleanser-300-ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "kevin-murphy-hydrate-me-wash",
+      "historical_batch": "c",
+      "proposed_identity": {
+        "canonical_brand": "KEVIN.MURPHY",
+        "product_line": "HYDRATE",
+        "clean_name": "HYDRATE-ME.WASH"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "normal",
+          "shampoo_bucket": "normal"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "purchase_url": "https://www.hagel-shop.de/kevin-murphy-hydrate-me-wash-250-ml.html",
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "9339341063933"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "12017615"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hagel-shop.de/kevin-murphy-hydrate-me-wash-250-ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "olaplex-no4-shampoo",
+      "historical_batch": "c",
+      "proposed_identity": {
+        "canonical_brand": "OLAPLEX",
+        "product_line": "Bond Maintenance",
+        "clean_name": "Nº.4 Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "coarse",
+          "shampoo_bucket": "normal"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "purchase_url": "https://www.hagel-shop.de/olaplex-no-4-bond-maintenance-shampoo-250-ml.html",
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "850018802598"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "12061897"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hagel-shop.de/olaplex-no-4-bond-maintenance-shampoo-250-ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "color-wow-curl-wow-hooked",
+      "historical_batch": "c",
+      "proposed_identity": {
+        "canonical_brand": "Color Wow",
+        "product_line": "Curl Wow",
+        "clean_name": "Hooked 100% Clean Shampoo for Curly Hair"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "coarse",
+          "shampoo_bucket": "dehydriert-fettig"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "purchase_url": "https://www.hagel-shop.de/color-wow-curl-wow-hooked-clean-shampoo-295-ml.html",
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "5060150185670"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "12110424"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hagel-shop.de/color-wow-curl-wow-hooked-clean-shampoo-295-ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "moroccanoil-moisture-repair-shampoo",
+      "historical_batch": "c",
+      "proposed_identity": {
+        "canonical_brand": "Moroccanoil",
+        "product_line": null,
+        "clean_name": "Moisture Repair Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "coarse",
+          "shampoo_bucket": "trocken"
+        }
+      ],
+      "historical_research_status": "ambiguous",
+      "historical_ambiguity": "Manifest uses shampoo_bucket trocken, but current official and retailer evidence supports moisture repair for damaged/weakened hair lengths rather than dry scalp or dry flakes. Exact package, formula, price, and image are otherwise resolved.",
+      "package_proposal_from_july": {
+        "purchase_url": "https://www.hagel-shop.de/moroccanoilr-moisture-repair-shampoo-250-ml.html",
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "7290011521196"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "12017283"
+          },
+          {
+            "type": "retailer_url",
+            "value": "https://www.hagel-shop.de/moroccanoilr-moisture-repair-shampoo-250-ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "system-professional-p4-purify-shampeeling",
+      "historical_batch": "d",
+      "proposed_identity": {
+        "canonical_brand": "System Professional",
+        "product_line": "Purify",
+        "clean_name": "P4 Purify Shampeeling"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "fine",
+          "shampoo_bucket": "dehydriert-fettig"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "purchase_url": "https://www.xhair.eu/system-professional-p4-purify-shampeeling-150-ml-intensive-schuppenentfernung_12861_4033",
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4064666302416",
+            "source_url": "https://www.xhair.eu/system-professional-p4-purify-shampeeling-150-ml-intensive-schuppenentfernung_12861_4033"
+          },
+          {
+            "type": "retailer_sku",
+            "value": "4033",
+            "source_url": "https://www.xhair.eu/haarpflege/shampoo"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "system-professional-p1-purify-shampoo",
+      "historical_batch": "d",
+      "proposed_identity": {
+        "canonical_brand": "System Professional",
+        "product_line": "Purify",
+        "clean_name": "P1 Purify Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "normal",
+          "shampoo_bucket": "schuppen"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "purchase_url": "https://www.lookfantastic.de/p/system-professional-purify-shampoo-250ml/11314979/",
+        "identifiers": [
+          {
+            "type": "retailer_sku",
+            "value": "11314979",
+            "source_url": "https://www.lookfantastic.de/p/system-professional-purify-shampoo-250ml/11314979/"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "system-professional-b1-balance-shampoo",
+      "historical_batch": "d",
+      "proposed_identity": {
+        "canonical_brand": "System Professional",
+        "product_line": "Balance",
+        "clean_name": "B1 Balance Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "coarse",
+          "shampoo_bucket": "irritationen"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "purchase_url": "https://www.xhair.eu/system-professional-b1-balance-shampoo-250-ml_12889_4061",
+        "identifiers": [
+          {
+            "type": "retailer_sku",
+            "value": "4061",
+            "source_url": "https://www.xhair.eu/system-professional-b1-balance-shampoo-250-ml_12889_4061"
+          },
+          {
+            "type": "retailer_item_id",
+            "value": "12889",
+            "source_url": "https://www.xhair.eu/system-professional-b1-balance-shampoo-250-ml_12889_4061"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "redken-volume-injection-shampoo",
+      "historical_batch": "d",
+      "proposed_identity": {
+        "canonical_brand": "Redken",
+        "product_line": "Volume Injection",
+        "clean_name": "Volume Injection Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "fine",
+          "shampoo_bucket": "normal"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "purchase_url": "https://www.bellaffair.com/redken-volume-injection-shampoo",
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3474636920266",
+            "source_url": "https://www.bellaffair.com/redken-volume-injection-shampoo"
+          },
+          {
+            "type": "retailer_product_number",
+            "value": "32121",
+            "source_url": "https://www.bellaffair.com/redken-volume-injection-shampoo"
+          },
+          {
+            "type": "upc",
+            "value": "884486453600",
+            "source_url": "https://www.redkenpro.com/products/hair-care/volume-injection-shampoo"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "redken-acidic-color-gloss-shampoo",
+      "historical_batch": "d",
+      "proposed_identity": {
+        "canonical_brand": "Redken",
+        "product_line": "Acidic Color Gloss",
+        "clean_name": "Acidic Color Gloss Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "normal",
+          "shampoo_bucket": "normal"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "purchase_url": "https://www.sephora.de/p/acidic-color-gloss-shampoo---shampoo-fuer-reinigung-farbschutz-und-glanz-P10057054.html",
+        "identifiers": [
+          {
+            "type": "upc",
+            "value": "884486516589",
+            "source_url": "https://www.redkenpro.com/products/hair-care/acidic-color-gloss-shampoo"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "redken-all-soft-mega-curls-shampoo",
+      "historical_batch": "d",
+      "proposed_identity": {
+        "canonical_brand": "Redken",
+        "product_line": "All Soft Mega Curls",
+        "clean_name": "All Soft Mega Curls Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "coarse",
+          "shampoo_bucket": "normal"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "purchase_url": "https://www.bellaffair.com/redken-all-soft-mega-curls-shampoo",
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3474637135676",
+            "source_url": "https://www.bellaffair.com/redken-all-soft-mega-curls-shampoo"
+          },
+          {
+            "type": "retailer_product_number",
+            "value": "32394",
+            "source_url": "https://www.bellaffair.com/redken-all-soft-mega-curls-shampoo"
+          },
+          {
+            "type": "upc",
+            "value": "884486510167",
+            "source_url": "https://www.redkenpro.com/products/hair-care/all-soft-mega-curl-shampoo"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "urban-alchemy-volume-vibrance-shampoo",
+      "historical_batch": "d",
+      "proposed_identity": {
+        "canonical_brand": "Urban Alchemy",
+        "product_line": "Beyond Care",
+        "clean_name": "Volume Vibrance Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "fine",
+          "shampoo_bucket": "normal"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "purchase_url": "https://urban-alchemy.com/products/volume-vibrance-shampoo?variant=40801785118778",
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4063528079985",
+            "source_url": "https://urban-alchemy.com/products/volume-vibrance-shampoo"
+          },
+          {
+            "type": "sku",
+            "value": "UA-BCV-SH-1",
+            "source_url": "https://urban-alchemy.com/products/volume-vibrance-shampoo"
+          },
+          {
+            "type": "shopify_variant_id",
+            "value": "40801785118778",
+            "source_url": "https://urban-alchemy.com/products/volume-vibrance-shampoo"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "urban-alchemy-moisture-mane-shampoo",
+      "historical_batch": "d",
+      "proposed_identity": {
+        "canonical_brand": "Urban Alchemy",
+        "product_line": "Beyond Care",
+        "clean_name": "Moisture Mane Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "normal",
+          "shampoo_bucket": "normal"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "purchase_url": "https://urban-alchemy.com/products/moisture-mane-shampoo?variant=40801735540794",
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4063528079794",
+            "source_url": "https://urban-alchemy.com/products/moisture-mane-shampoo"
+          },
+          {
+            "type": "sku",
+            "value": "UA-BCM-SH-1",
+            "source_url": "https://urban-alchemy.com/products/moisture-mane-shampoo"
+          },
+          {
+            "type": "shopify_variant_id",
+            "value": "40801735540794",
+            "source_url": "https://urban-alchemy.com/products/moisture-mane-shampoo"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "urban-alchemy-smooth-secret-shampoo",
+      "historical_batch": "d",
+      "proposed_identity": {
+        "canonical_brand": "Urban Alchemy",
+        "product_line": "Beyond Care",
+        "clean_name": "Smooth Secret Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "coarse",
+          "shampoo_bucket": "normal"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "purchase_url": "https://urban-alchemy.com/products/smooth-secret-shampoo?variant=40801783611450",
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4063528079930",
+            "source_url": "https://urban-alchemy.com/products/smooth-secret-shampoo"
+          },
+          {
+            "type": "sku",
+            "value": "UA-BCS-SH-1",
+            "source_url": "https://urban-alchemy.com/products/smooth-secret-shampoo"
+          },
+          {
+            "type": "shopify_variant_id",
+            "value": "40801783611450",
+            "source_url": "https://urban-alchemy.com/products/smooth-secret-shampoo"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "kms-moistrepair-shampoo",
+      "historical_batch": "d",
+      "proposed_identity": {
+        "canonical_brand": "KMS",
+        "product_line": "Moistrepair",
+        "clean_name": "Moistrepair Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "normal",
+          "shampoo_bucket": "normal"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "purchase_url": "https://www.salontotal.com/product/kms-moistrepair-shampoo-300ml-3857",
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4044897892504",
+            "source_url": "https://www.vitalityfit.cz/kms-moistrepair-shampoo-300-ml-p16700"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    },
+    {
+      "candidate_key": "kms-headremedy-anti-dandruff-shampoo",
+      "historical_batch": "d",
+      "proposed_identity": {
+        "canonical_brand": "KMS",
+        "product_line": "Headremedy",
+        "clean_name": "Headremedy Anti-Dandruff Shampoo"
+      },
+      "historical_sheet_placements": [
+        {
+          "thickness": "coarse",
+          "shampoo_bucket": "schuppen"
+        }
+      ],
+      "historical_research_status": "researched",
+      "historical_ambiguity": null,
+      "package_proposal_from_july": {
+        "purchase_url": "https://www.hagel-shop.at/kms-headremedy-anti-dandruff-shampoo-300-ml.html",
+        "identifiers": [
+          {
+            "type": "retailer_sku",
+            "value": "12054985",
+            "source_url": "https://www.hagel-shop.at/kms-headremedy-anti-dandruff-shampoo-300-ml.html"
+          }
+        ]
+      },
+      "identity_decision": "Retain July identity as a proposal; confirm the exact current German package and formula before research.",
+      "current_status": "requires_identity_and_category_refresh",
+      "current_readiness": {
+        "property_lane_ready": null,
+        "catalog_intake_ready": null,
+        "global_recommendation_ready": null
+      }
+    }
+  ],
+  "existing_records": [
+    {
+      "product_id": "514ffd65-e4a5-4f7f-96c5-0f194e3b3b36",
+      "current_category": "deep_cleansing_shampoo",
+      "name": "Serie Expert Metal DX Shampoo",
+      "brand": "L'Oreal Professionnel",
+      "status": "needs_category_boundary_and_exact_identity_audit",
+      "mutation_authority": "none",
+      "note": "Do not automatically reclassify as regular Shampoo or duplicate for tier."
+    },
+    {
+      "product_id": "caa94951-57d9-441d-bd46-5d7debbf365f",
+      "current_category": "deep_cleansing_shampoo",
+      "name": "Clarifying Shampoo",
+      "brand": "Moroccanoil",
+      "status": "needs_category_boundary_and_exact_identity_audit",
+      "mutation_authority": "none",
+      "note": "Do not automatically reclassify as regular Shampoo or duplicate for tier."
+    },
+    {
+      "product_id": "1a6e731e-8fb2-43b4-9f4c-2d7f6dd06dca",
+      "current_category": "deep_cleansing_shampoo",
+      "name": "No.4C Bond Maintenance Clarifying Shampoo",
+      "brand": "OLAPLEX",
+      "status": "needs_category_boundary_and_exact_identity_audit",
+      "mutation_authority": "none",
+      "note": "Do not automatically reclassify as regular Shampoo or duplicate for tier."
+    },
+    {
+      "product_id": "e937c8aa-fc99-4731-b848-e5bd988fcc17",
+      "current_category": "deep_cleansing_shampoo",
+      "name": "Detox Shampoo",
+      "brand": "OUAI",
+      "status": "needs_category_boundary_and_exact_identity_audit",
+      "mutation_authority": "none",
+      "note": "Do not automatically reclassify as regular Shampoo or duplicate for tier."
+    }
+  ],
+  "deferred": [
+    {
+      "source_name": "Kerastase Blond Absolue",
+      "reason": "Awaiting list creator: Bain Lumiere vs Bain Ultra-Violet"
+    },
+    {
+      "source_name": "Rene Furterer Neopur",
+      "reason": "Awaiting list creator: dry-dandruff vs oily-dandruff version"
+    },
+    {
+      "source_name": "Vichy Dercos Ultra Sensitive",
+      "reason": "Awaiting list creator: dry-hair vs oily-hair version"
+    }
+  ],
+  "excluded": [
+    {
+      "source_name": "Paul Mitchell Instant Moisture",
+      "reason": "Legacy shampoo absent from current brand range; user chose no substitution"
+    }
+  ],
+  "reconciliation_outside_47": [
+    {
+      "name": "Maria Nila Head & Hair Heal Shampoo",
+      "status": "not_in_47_source_manifest",
+      "action": "Check the earlier separately claimed research/package and live identity before deciding whether to add a new slot; not silently included."
+    }
+  ]
+}

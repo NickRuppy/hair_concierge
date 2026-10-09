@@ -1,0 +1,41 @@
+from pathlib import Path
+import json,hashlib
+P=Path('/tmp/test-audit-public-funnel66-c69uzpx6');R=Path(json.loads((P/'start-pins.json').read_text())['root']);sha=lambda x:hashlib.sha256(x).hexdigest();rp=json.loads((P/'read-pins.json').read_text()); extra={
+'src/components/quiz/result-offer-pricing.tsx':['374-468','684-776','1625-1720','literal search for Kein Risiko (zero matches); no full payment-handler audit'],
+'src/lib/types.ts':['1243-1257 Message shape only'],
+'src/components/application/application-types.ts':['full'],
+'src/funnels/landing/registry.generated.ts':['full'],
+'src/funnels/quizzes/registry.json':['full'],
+'package.json':['40-61 native runner routing only'],
+'.github/workflows/ci.yml':['135-177 quality-node and adjacent jobs only'],
+'plans/freemium-scanner-first/plan.md':['37,109-110,127,153 via exact bounded search; supporting T11/T12 contracts only'],
+'node_modules/react/cjs/react.development.js':['515-524 resolveDispatcher','1259-1268 useState delegates to dispatcher'],
+'node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js':['1551-1587 host generic serializer','3870-3955 SSR useReducer initial state','9696-9735 SSR hook dispatch including no-op effects'],
+'node_modules/next/dist/server/web/spec-extension/request.js':['full'],
+'node_modules/next/dist/server/web/spec-extension/response.js':['42-104 constructor/cookies/json'],
+'node_modules/next/dist/client/components/navigation.js':['117-159 pathname/router context consumption'],
+'node_modules/date-fns/format.js':['329-360 valid date precondition; formatter not invoked by clean empty-timestamp SSR'],
+'node_modules/@supabase/supabase-js/src/SupabaseClient.ts':['432-474 RPC forwarding, source/types only'],
+'node_modules/@supabase/postgrest-js/src/PostgrestClient.ts':['374-457 actual RPC POST/default argument serialization; no invocation'],
+'node_modules/@types/node/crypto.d.ts':['4385-4440 raw HMAC import/sign','4489-4511 HMAC verify boolean contract'],
+'node_modules/typescript/lib/typescript.d.ts':['9084,9098,9192 parser/import/export API signatures only']}
+entries=[]
+for f,pin in rp.items():
+ b=(R/f).read_bytes();assert sha(b)==pin['sha256'],f+' DRIFT; DO NOT REPIN';entries.append({'file':f,**pin,'readDepth':'full human source read; stitched numbered ranges where necessary','scope':'operative source/support; no execution'})
+for f,ranges in extra.items():
+ b=(R/f).read_bytes();dest=P/'selected-read-snapshots'/f;dest.parent.mkdir(parents=True,exist_ok=True)
+ if dest.exists():assert dest.read_bytes()==b,'immutable extra drift'
+ else:dest.write_bytes(b)
+ entries.append({'file':f,'sha256':sha(b),'bytes':len(b),'lines':len(b.splitlines()),'readDepth':'full' if ranges==['full'] else 'selected ranges only','humanReadRanges':ranges,'scope':'selected dependency/source contract; whole-byte pin is not full semantic credit'})
+for f in json.loads((P/'start-pins.json').read_text())['files']: assert sha((R/f['file']).read_bytes())==f['sha256'],'owned test drift'
+limits=[
+'No tests, native/Playwright/browser, owner imports, compiler/typechecker, DB/migration execution, provider/network or repository edits. Only owned TMP scripts, read-only source/Git commands and TypeScript createSourceFile AST parsing.',
+'All twelve original test files, all helpers/fixtures/table rows/callbacks read. Complete per-site ledger applies to66 declarations only, not their surrounding suites.',
+'Full immediate operative owner modules and real preview visual leaves read. Readset does not claim every transitive import/body, every SDK path, all application contracts or all payment/entitlement domain behavior; excluded owners remain outside semantic audit.',
+'Large result-offer-pricing only public copy/render slices and negative string search; payment state/effect branches not re-audited. Supporting registry/public dynamic resolution is read; no global dead-feature closure established.',
+'React/ReactDOM/Next/WebCrypto/Supabase/TypeScript/date-fns dependencies are exact named slices/types above, not full vendor audit. Stored whole files merely guard bytes.',
+'Import graph guards are independently retained, with F limitations. No claim that source graph proves dynamic write closure or mounted browser behavior.',
+'Prior freemium flag report explicitly only read first gated declarations/adjacent flag-off and partial remainder; prior selected scanner/funnel evidence and navigation inventories are context, not newly credited full reads. Historical verification text is historical and unrerun.',
+'Native counts statically expand only original fixed loops: GATED_ROUTES4 and COMPOSITIONS/COMPOSITION_ENTRIES3. AST66/native79 before and transfer; AST63/native74 cut. No native title inventory observed yet.',
+'Controls are frozen actual-owner recipes, not observed red. Root must establish exact full diagnostic/first-frame proof and clean restoration. No deletion credit until root accepts and proves.']
+(P/'read-scope.json').write_text(json.dumps({'originalTests':'start-pins.json','entries':entries,'entryCount':len(entries),'fullReadPinnedEntries':len(rp),'limits':limits,'history':['history-gated.txt','history-client.txt','history-import-boundary.txt'],'callerSearch':'caller-search.txt','priorRecovery':['/tmp/test-audit-navigation661-next-two.md','/tmp/test-audit-freemium-flag-layer-ledger.md:1-15, L4 closure section','/tmp/test-audit-scanner-ledger.md: exact funnel-filename search (no complete semantic ledger recovered)']},ensure_ascii=False,indent=2)+'\n');print(len(entries),'readset pins; originals all exact')

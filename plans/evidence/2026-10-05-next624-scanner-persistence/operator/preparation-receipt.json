@@ -1,0 +1,17 @@
+{
+  "directory": "/private/tmp/test-audit-scanner46-tools-xrqyw5u6",
+  "pinSHA": "1ed2961886a7dbc44def2cf72d3592f09d200c2f99266b4c5ee7395e85d460e4",
+  "phaseFiles": 6,
+  "snapshots": 18,
+  "originalGuards": 45,
+  "readset": 183,
+  "localClosure": 163,
+  "dependencies": 3489,
+  "dependencyTrees": 28,
+  "nonliteralImports": [],
+  "controls": 7,
+  "repositoryWrites": 0,
+  "attemptedRepositoryWrites": 0,
+  "childrenStarted": 0,
+  "attemptedChildren": 0
+}

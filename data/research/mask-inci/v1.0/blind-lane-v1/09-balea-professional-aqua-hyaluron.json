@@ -1,0 +1,123 @@
+{
+  "productId": "09-balea-professional-aqua-hyaluron",
+  "lane": "blind-v1",
+  "standardVersion": "mask-inci-v0.5",
+  "classifiedAt": "2026-10-06",
+  "attestation": {
+    "prohibitedFilesAccessed": false,
+    "inputsRead": [
+      "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1.md",
+      "docs/research/mask-inci/v1.0/02_evidence_lexicon.v0.1.md",
+      "docs/research/mask-inci/v1.0/00_category_charter.md",
+      "docs/research/mask-inci/v1.0/01_property-set-v0.md",
+      "data/research/mask-inci/v1.0/blind-packets/01-hask-argan-oil-sachet.json",
+      "data/research/mask-inci/v1.0/blind-packets/02-gliss-7sekunden-express-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets/03-bali-curls-sos-protein-treatment.json",
+      "data/research/mask-inci/v1.0/blind-packets/04-gliss-liquid-silk-4in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/05-isana-mandelmilch-3in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/06-monday-smooth-anti-frizz.json",
+      "data/research/mask-inci/v1.0/blind-packets/07-pantene-molecular-bond-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets/08-sante-intense-hydration.json",
+      "data/research/mask-inci/v1.0/blind-packets/09-balea-professional-aqua-hyaluron.json",
+      "data/research/mask-inci/v1.0/blind-packets/10-bali-curls-deep-repair-mask.json",
+      "data/research/mask-inci/v1.0/blind-packets/11-elvital-glycolic-gloss.json",
+      "data/research/mask-inci/v1.0/blind-packets/12-guhl-panthenol-reparatur-2in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/13-olaplex-no3-hair-perfector.json"
+    ]
+  },
+  "g0": {
+    "value": "in_category",
+    "modeScoped": true,
+    "coveredMode": "post_shampoo_rinse_out_mask",
+    "rationale": "Modes: 'Als Haarmaske' — wet hair, 3 min, rinse → qualifies (wet-hair rinse-out use read as post-cleansing). Leave-in and overnight modes are not rinsed. Exactly one qualifying mode → mode-scoped.",
+    "evidenceSignals": [
+      "mask mode: 3 min, 'gründlich ausspülen'",
+      "uncovered: leave-in, overnight"
+    ]
+  },
+  "tailMarker": {
+    "ingredient": "PARFUM",
+    "index": 9,
+    "status": "plausible",
+    "note": "Earliest tail-class species PARFUM @9 (Sodium Benzoate @14). Base species (Cetearyl @2, Distearoylethyl Hydroxyethylmonium Methosulfate @4, Sunflower Hybrid Oil @8) outrank it; Behentrimonium Chloride @11 and Cetrimonium Chloride @12 are secondary co-quats in the tail. Plausible (see review note). tail_index−1 = Helianthus Annuus Hybrid Oil @8."
+  },
+  "bondRoute": "none",
+  "profile": {
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "S1: only Distearoylethyl Hydroxyethylmonium Methosulfate @4 above tail → fails. S2: Cetearyl Alcohol @2. S3: Helianthus Annuus Hybrid Oil @8 only (Isoamyl Laurate @10 in tail) → fails. One signal → moderate.",
+      "evidenceSignals": [
+        "S2: Cetearyl @2"
+      ],
+      "counterSignals": [
+        "S1/S3 not met"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Low is withheld by conjunct 3: three cationic species on the full list (@4, @11, @12; E7). High would need Helianthus Annuus Hybrid Oil @8 to be an R4b heavy triglyceride; it is a conventional plant oil whose R4a/R4b band is not explicit in the standard and it sits at tail_index−1, so it is not treated as establishing a high core (an ambiguous band may not fail toward an extreme, §9.1 fallback/§1.1). → moderate either way.",
+      "evidenceSignals": [
+        "no unambiguous R4b above marker",
+        "no silicone"
+      ],
+      "counterSignals": [
+        "3 cationics on full list",
+        "Sunflower Hybrid Oil @8 band ambiguity at tail_index−1"
+      ]
+    },
+    "careDirection": {
+      "value": "moisture",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "No R5 species. Humectant cluster above tail: Glycerin @3, Panthenol @5, Aloe Juice Powder @6, Sodium Hyaluronate @7 → coherent humectant/conditioning base → moisture. Plausible marker, unambiguous separation.",
+      "evidenceSignals": [
+        "humectants @3/@5/@6/@7",
+        "base @2/@4"
+      ],
+      "counterSignals": []
+    },
+    "repairSupportLevel": {
+      "value": "low",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "No R5 route and no bond token → ordinary conditioning.",
+      "evidenceSignals": [
+        "no R5",
+        "bond_route none"
+      ],
+      "counterSignals": []
+    },
+    "primaryFocus": {
+      "value": "moisture",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "Step 3 clears nothing. D5 guard: criterion 1 — 4 distinct humectants above tail (Glycerin @3, Panthenol @5, Aloe @6 counted once, Sodium Hyaluronate @7), 3 non-glycerin; criterion 2 — not lipid-led (at most one plant oil, @8, ranked below the whole cluster); criterion 3 — no richer route. Confidence high: ≥3 humectants with Glycerin @3 and Panthenol @5 in the first five ranks, plausible marker, no competing route. focus_care_verdict: moisture_supported; claim_role: corroborating ('Aqua Hyaluron').",
+      "evidenceSignals": [
+        "humectant cluster @3/@5/@6/@7"
+      ],
+      "counterSignals": []
+    },
+    "secondaryFocus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No second distinct endpoint (no silicone/polymer, no protein).",
+      "evidenceSignals": [],
+      "counterSignals": []
+    }
+  },
+  "hinweise": {
+    "fired": [
+      {
+        "flag": "multi_use",
+        "value": "covered: post_shampoo_rinse_out_mask; uncovered: [leave_in, overnight]",
+        "note": "Profile describes only the 3-min rinse-out Haarmaske mode."
+      }
+    ]
+  },
+  "reviewTriggers": []
+}

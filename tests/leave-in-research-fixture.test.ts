@@ -26,49 +26,6 @@ async function withLabEnvironment(run: () => Promise<void>) {
   }
 }
 
-test("Leave-In fixture loads, validates and covers both batches", async () =>
-  withLabEnvironment(async () => {
-    const { getLeaveInResearchLabData } = await importAccess()
-    const data = getLeaveInResearchLabData()
-
-    // Batch 1 (gold-set, 13) + Batch 2 (unseen-test, 6) = 19.
-    assert.equal(data.summary.products, 19)
-    assert.equal(data.queueItems.length, 19)
-    // gold-set: 11 in-category + 2 excluded. unseen-test: 4 in-category
-    // (u1, u4, u5, u6) + 2 excluded (u2, u3). See unseen-test-report.md.
-    assert.equal(data.summary.inCategory, 15)
-    assert.equal(data.summary.excluded, 4)
-    assert.equal(data.summary.reviewCounts.needsReview, 19)
-    // Approval persistence key: kept at the v1.0-fixture stamp so approvals survive.
-    assert.equal(data.meta.standardVersion, "leave-in-inci-v0.4")
-    // The visible standard is the effective one (v1.1 = v1.0 + T20 overlay).
-    assert.equal(data.meta.effectiveStandard, "leave-in-inci-v1.1 (Standard v1.0 + T20-Overlay)")
-    assert.equal(
-      data.meta.effectiveStandardOverlay,
-      "docs/research/leave-in-inci/v1.1/leave-in-classification-overlay.v1.1.md",
-    )
-    assert.equal(data.initialDetail.effectiveStandard, data.meta.effectiveStandard)
-    assert.equal(data.meta.keyVersion, "reference-key-2026-09-05-r4")
-    assert.equal(data.meta.derivedFromRun, "reference-key-2026-09-04-r3")
-
-    const goldSet = data.queueItems.filter((item) => item.batch === "gold-set")
-    const unseenTest = data.queueItems.filter((item) => item.batch === "unseen-test")
-    assert.equal(goldSet.length, 13)
-    assert.equal(unseenTest.length, 6)
-    assert.deepEqual(
-      goldSet.map((item) => item.slot),
-      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-    )
-    assert.deepEqual(
-      unseenTest.map((item) => item.slot),
-      [14, 15, 16, 17, 18, 19],
-    )
-    assert.equal(goldSet.filter((item) => item.excluded).length, 2)
-    assert.equal(unseenTest.filter((item) => item.excluded).length, 2)
-    for (const item of unseenTest)
-      assert.ok(item.productId.startsWith("unseen-0"), `${item.productId} missing unseen-0N prefix`)
-  }))
-
 test("Leave-In fixture carries the trimmed v0.4 review surface", async () =>
   withLabEnvironment(async () => {
     const { getLeaveInResearchProductDetail, getLeaveInResearchLabData } = await importAccess()
@@ -181,7 +138,7 @@ test("Leave-In fixture carries no unseen-test adjudication points any more (T18 
     // re-derivation (rederived/u1-record.json, 3-source convergence —
     // Rossmann, parfumdreams, codecheck). This was the last open banner in
     // the fixture — the gold-set (Batch 1) banners were all retired earlier
-    // by T13-T16 (see the retired-registry history in the test below) — so
+    // by T13-T16 (see docs/research/leave-in-inci/v1.0/rule-changes.md) — so
     // the count now drops from one to zero.
     assert.deepEqual(data.openAdjudications, [])
 
@@ -208,92 +165,6 @@ test("Leave-In fixture carries no unseen-test adjudication points any more (T18 
         `${item.productId} (batch ${item.batch}, slot ${item.slot}) must carry no adjudication`,
       )
     }
-  }))
-
-test("Leave-In fixture carries no gold-set adjudication points any more", async () =>
-  withLabEnvironment(async () => {
-    const { getLeaveInResearchLabData, getLeaveInResearchProductDetail } = await importAccess()
-    const data = getLeaveInResearchLabData()
-    const goldSet = data.queueItems.filter((item) => item.batch === "gold-set")
-    // T13 (2026-09-10): focus_permissive_vs_conservative is removed. Nick's
-    // ruling T13b settles §10.2.1's general-vs-smoothing question as a
-    // standing rule (the permissive single-admissible-set reading), so it is
-    // no longer an open adjudication for a reviewer to decide per record —
-    // the banner count drops from four to three.
-    // T14 (2026-09-10): heat_retailer_tier_only is removed. Nick rules both
-    // halves it used to flag — Olaplex's (slot 10) via §2.4.1 rule 7's new
-    // cross-market claim exception, Cantu's (slot 3) by that exception's own
-    // guarding counter-example (its documented US/German formula split fails
-    // the identity prong) — so nothing is left open. The banner count drops
-    // from three to two.
-    // T15 (2026-09-10): neqi_boundary is removed. Nick rules slot 13
-    // in-category with HOLD incidental_film; the Maria-Nila-vs-Neqi
-    // worked-example pair is codified in §2.3.2/§7.7. The banner count
-    // drops from two to one.
-    // T16 (2026-09-11): repair_support_level_uncalibrated is removed. §3.1.1's
-    // tail-marker rule becomes conditional on the marker's own plausibility;
-    // slot 9 (Redken)'s marker is ruled implausible, so it may no longer
-    // disqualify the below-marker silane — R2 moves candidate, and slot 9
-    // becomes the gold set's first `repair_support_level: medium`. The
-    // §10.3.2 `medium` row is now demonstrably reachable, so the "applied but
-    // never exercised" adjudication is resolved. The banner count drops from
-    // one to zero.
-    assert.deepEqual(
-      data.openAdjudications.filter((entry) => entry.id !== "formula_source_conflict_rule"),
-      [],
-    )
-
-    const attachedBySlot = new Map<number, string[]>()
-    for (const item of goldSet) {
-      const detail = getLeaveInResearchProductDetail(item.productId)
-      assert.ok(detail)
-      const ids = detail.properties
-        .filter((property) => property.adjudication)
-        .map((property) => `${property.path}:${property.adjudication!.id}`)
-      if (ids.length) attachedBySlot.set(item.slot, ids)
-    }
-
-    // T13: no record carries a focus_permissive_vs_conservative adjudication
-    // any more — verify the badge is gone from every slot that used to carry
-    // it (2, 6, 8 secondary, 10), not just that the registry entry is absent.
-    for (const slot of [2, 6, 8, 10]) {
-      const ids = attachedBySlot.get(slot) ?? []
-      assert.ok(
-        !ids.some((id) => id.includes("focus_permissive_vs_conservative")),
-        `slot ${slot} still carries the removed focus_permissive_vs_conservative adjudication`,
-      )
-    }
-    // T14: no record carries a heat_retailer_tier_only adjudication any more
-    // — verify the badge is gone from both slots that used to carry it
-    // (Cantu, 3; Olaplex, 10), not just that the registry entry is absent.
-    for (const slot of [3, 10]) {
-      const ids = attachedBySlot.get(slot) ?? []
-      assert.ok(
-        !ids.some((id) => id.includes("heat_retailer_tier_only")),
-        `slot ${slot} still carries the removed heat_retailer_tier_only adjudication`,
-      )
-    }
-    // T15: no record carries a neqi_boundary adjudication any more — verify
-    // the badge is gone from slot 13 (g0 and hold), not just the registry.
-    {
-      const ids = attachedBySlot.get(13) ?? []
-      assert.ok(
-        !ids.some((id) => id.includes("neqi_boundary")),
-        "slot 13 still carries the removed neqi_boundary adjudication",
-      )
-    }
-    // T16: no record carries a repair_support_level_uncalibrated adjudication
-    // any more — verify the badge is gone from every slot that used to carry
-    // it (the bond-claim product and the two repair-positioned products).
-    for (const slot of [8, 9, 10]) {
-      const ids = attachedBySlot.get(slot) ?? []
-      assert.ok(
-        !ids.some((id) => id.includes("repair_support_level_uncalibrated")),
-        `slot ${slot} still carries the removed repair_support_level_uncalibrated adjudication`,
-      )
-    }
-    // No slot carries any adjudication at all any more.
-    assert.equal(attachedBySlot.size, 0)
   }))
 
 test("Leave-In fixture applies the T6 repair rule and the T7 hold capture (gold-set)", async () =>

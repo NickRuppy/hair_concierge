@@ -1,0 +1,396 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "files": {
+    "tests/scan-flow-state.test.ts": {
+      "before": {
+        "sha256": "0edbafbfc4aa532e4aae22abcc4a0fba7c62e738eb362666e2aaf70a235f9524",
+        "path": "/tmp/test-audit-scanner-current-staged/before/tests/scan-flow-state.test.ts"
+      },
+      "transferred": {
+        "sha256": "45f389b3694c51387f6cf2d65a01b9dc6c208053588d7aebdabbebe08a91b525",
+        "path": "/tmp/test-audit-scanner-current-staged/transferred/tests/scan-flow-state.test.ts"
+      },
+      "cut": {
+        "sha256": "b53ba1807123c7465c126d588cd5487e83ebeca1bd7263042d3f743590db1ff5",
+        "path": "/tmp/test-audit-scanner-current-staged/cut/tests/scan-flow-state.test.ts"
+      }
+    },
+    "tests/scan-flow-ui.test.tsx": {
+      "before": {
+        "sha256": "817d3055bf15e8dfec22981591ade68dc8450234d9236301e465f2e0e2f69106",
+        "path": "/tmp/test-audit-scanner-current-staged/before/tests/scan-flow-ui.test.tsx"
+      },
+      "transferred": {
+        "sha256": "b078037a9299bb0269758e2909c29a72ec9c6803763e1f9a8535bea721c74816",
+        "path": "/tmp/test-audit-scanner-current-staged/transferred/tests/scan-flow-ui.test.tsx"
+      },
+      "cut": {
+        "sha256": "16c119abccf129b19be08ca0edcc52fe8185f05ad5c2b45301aa4cf2d7ad127d",
+        "path": "/tmp/test-audit-scanner-current-staged/cut/tests/scan-flow-ui.test.tsx"
+      }
+    }
+  },
+  "sourceHashes": {
+    "src/components/scan/scan-flow.tsx": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "src/components/scan/scan-search-sheet.tsx": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "src/components/scan/scan-wishlist-sheet.tsx": "e737a9219334b3416b852f079e9f29b279f3f6733cc6f7d6ebd2cfdbe8cdf574",
+    "src/lib/scan/scan-flow-state.ts": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8",
+    "src/lib/scan/verdict-access.ts": "7807e27e8048b6fb8ed8cf7d7e111025ee69692e8d2171ed3496ff9659519ab2",
+    "src/lib/scan/use-latest-request.ts": "ff7431bbce6bf021e7ebbd6a4fe802740cb94cf926d25494a82aa97c6113e268",
+    "src/lib/scan/triggers/trigger-rules.ts": "3fd155b1aec9fe6a7cd2d2f037e6d68c1f015a5f62e31e967f217794823014f2",
+    "src/lib/scan/triggers/session-marker.ts": "01a191d366f973c73d47c96000303eec094ffd4239e7435038135343c3a7f405",
+    "src/app/scan/page.tsx": "75e9c236984262b4322dd1f5ec568541f80720d1938756beb6d04541c457cc5d",
+    "src/app/scan/scan-page-client.tsx": "8ce5c49efe2a9cf3454b4b52f8ddea2c0d8bfe2203ec2feaa01ff3f9b1e859d6"
+  },
+  "cuts": [
+    {
+      "id": "C01",
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 879,
+      "name": "ScanFlow: a pending research-intake submission closes the search auxiliary together with reaching the pending sheet",
+      "donorSha256": "ad08db5c9017da4cfa0197249fc22c1963292f0f09608f79aa72243b7b106873",
+      "keepers": [
+        {
+          "file": "tests/scan-flow-ui.test.tsx",
+          "line": 1126,
+          "name": "ScanFlow: the search-sheet body posts brandText/productNameText/category with no identifier key"
+        }
+      ],
+      "sameOperativeInput": "Same researchIntakeInput, same open/submit/settle sequence, same pending_submission s1 response; keeper only adds an observer of actual request body.",
+      "assertionUnion": "search open before submit; closed after; result sheet open with exact Eingereicht! headline"
+    },
+    {
+      "id": "C02",
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 1103,
+      "name": "ScanFlow: a successful research-intake submission tracks scan_submission_created with intakePath 'name_search'",
+      "donorSha256": "5972a7155c036e3aea56d83656232ceb38ace1b44c72b3d1dd8d06a25c13e9d2",
+      "keepers": [
+        {
+          "file": "tests/scan-flow-ui.test.tsx",
+          "line": 1126,
+          "name": "ScanFlow: the search-sheet body posts brandText/productNameText/category with no identifier key"
+        }
+      ],
+      "sameOperativeInput": "Same researchIntakeInput, same open/submit/settle sequence, same pending_submission s1 response; keeper only adds an observer of actual request body.",
+      "assertionUnion": "actual captured scan_submission_created exists; intakePath=name_search, category=shampoo, selectionPath=grid, suggestedCategory=null, 36-char UUID pattern"
+    },
+    {
+      "id": "C03",
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 1776,
+      "name": "ScanSearchSheet: a dm-row tap fires scan_retailer_result_opened with the row's categoryLabel before resolving",
+      "donorSha256": "e9387e8b8c65beae5f72663c6fa5eb33f8f25c97a4d405480624622d79cbd26a",
+      "keepers": [
+        {
+          "file": "tests/scan-flow-ui.test.tsx",
+          "line": 1479,
+          "name": "ScanSearchSheet: a dm-row tap calls onSelectRetailerResult with its GTIN"
+        }
+      ],
+      "sameOperativeInput": "Same aqua revive query, retailer=true, empty catalog, row GTIN4006381111116; default retailerRow.categoryLabel is already Conditioner. Observer callback adds no state.",
+      "assertionUnion": "exact one opened event with only categoryLabel Conditioner; existing GTIN callback assertion retained. Donor never observed ordering."
+    },
+    {
+      "id": "C04",
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 1762,
+      "name": "ScanSearchSheet: retailerSearchEnabled=false never fires scan_retailer_search",
+      "donorSha256": "448da0ab4bc72db0189ebcbb818cf2e2e6795590ea0adec50d281938e208ace9",
+      "keepers": [
+        {
+          "file": "tests/scan-flow-ui.test.tsx",
+          "line": 1505,
+          "name": "ScanSearchSheet: retailerSearchEnabled=false never fetches the dm lane, even on submit"
+        }
+      ],
+      "sameOperativeInput": "Same absent retailer flag, kerastase query, catalog empty, submit. Keeper includes the donor settle plus its existing longer wait.",
+      "assertionUnion": "no scan_retailer_search event, together with no retailer URL fetch"
+    },
+    {
+      "id": "C05",
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 1588,
+      "name": "ScanSearchSheet: dm lane enabled shows the quiet invitation for a 2-char query (below the auto-search minimum), not the terminal empty state",
+      "donorSha256": "d1020b05a3b5cbef01fa41bdc416e47be50df65bc1f7a89af3e802cc4c04cb10",
+      "keepers": [
+        {
+          "file": "tests/scan-flow-ui.test.tsx",
+          "line": 1844,
+          "name": "ScanSearchSheet + ScanResearchIntakeForm: no user-facing copy leaks 'dm' (word-boundary), and every §6 string matches verbatim, across every state incl. intake"
+        }
+      ],
+      "sameOperativeInput": "Same existing invitation view, query ke, retailer flagtrue, catalogempty,300mswait; no new copy-audit state.",
+      "assertionUnion": "invitation present and terminal empty absent"
+    },
+    {
+      "id": "C06",
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 2134,
+      "name": "Task 8: the persistent recovery link renders below catalog-only results with the retailer flag off",
+      "donorSha256": "1e46394f8d465362bcc7b8727a11210e3224f46af6730dd835d55d776b7053f4",
+      "keepers": [
+        {
+          "file": "tests/scan-flow-ui.test.tsx",
+          "line": 2151,
+          "name": "Batch 8 (supersedes Task 8 delta review Finding 2): a resubmit's reload keeps the stale rows AND the recovery link up, with no skeleton, until the new answer lands"
+        }
+      ],
+      "sameOperativeInput": "Identical first query gliss kur/defaultflag/catalog liveCatalogResult/onStart callback. Later deferred request is beyond donor observation.",
+      "assertionUnion": "exact complete recovery copy and one link before reload; keeper already one link"
+    },
+    {
+      "id": "C07",
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 2729,
+      "name": "free tier: a masked verdict locks Merken on both surfaces and offers the reveal",
+      "donorSha256": "e29431dc62ed34485c8a28644f99f2c6d0225df61c58f006a1f432d10883568d",
+      "keepers": [
+        {
+          "file": "tests/scan-flow-ui.test.tsx",
+          "line": 2740,
+          "name": "free tier: the reveal posts the SCANNED product's id and unblurs into the full card"
+        }
+      ],
+      "sameOperativeInput": "Identical maskedVerdict default p-a, credittrue and scanInto. Donor generic fetch and keeper explicit resolve both return same object on sole initial URL; reveal fixture inactive until later action.",
+      "assertionUnion": "five initial card/header/footer/paywall assertions before existing onReveal"
+    },
+    {
+      "id": "C08",
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 2838,
+      "name": "fix round 1 (F2): a background re-serve attempt that 409s stays on the Premium gate, silently",
+      "donorSha256": "84331fd1ced84784346e9a3ac7b45c4e689c8fe66c491f2393a8aca26b97e688",
+      "keepers": [
+        {
+          "file": "tests/scan-flow-ui.test.tsx",
+          "line": 2795,
+          "name": "free tier: the post-reveal CTA opens the Premium sheet for empfehlungen"
+        }
+      ],
+      "sameOperativeInput": "Same masked p-a spent-credit response triggers same silent background reveal and409 already_used; keeper observes identical prefix before its existing paywall click.",
+      "assertionUnion": "actual reveal request body p-a; no revealed alternatives; zero toast"
+    },
+    {
+      "id": "C09",
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 3053,
+      "name": "T16 flag off: the bookmark never fetches a Merkliste count, even for a premium session",
+      "donorSha256": "e9096a70d09ae2cd470fc471e91aa2e2b0fde64532a9f063a93180f766212121",
+      "keepers": [
+        {
+          "file": "tests/scan-flow-ui.test.tsx",
+          "line": 3145,
+          "name": "Z1 flag off: the unlocked bookmark opens the in-flow Merkliste sheet and never deep-links"
+        }
+      ],
+      "sameOperativeInput": "Same premiumprop/defaultmerklisteflagoff initial view and extra settle. Replace swallowed throwing fetch sentinel with donor valid unexpected response and monotonic observation; no new owner call.",
+      "assertionUnion": "count undefined + exactly zero GETs before existing bookmarkclick; routing assertions unchanged. F repair integrated, zero separate quota."
+    },
+    {
+      "id": "C10",
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 3566,
+      "name": "C4: a premium render never carries the T9/T10 debug attributes, even after a resolve and a Premium-gated action attempt",
+      "donorSha256": "cdb66fbfdca3d8c07b1b487f8f7f59ed495c59019652c67fbc0a2a9071d7a46e",
+      "keepers": [
+        {
+          "file": "tests/scan-flow-ui.test.tsx",
+          "line": 3530,
+          "name": "F5: premium and flag-off (no tier prop) cause zero trigger-storage activity"
+        }
+      ],
+      "sameOperativeInput": "Same explicitpremium/omittedtier and p1/shampoo response. Injected spy storage is never touched on this path and does not affect state; existing positive resolve stays.",
+      "assertionUnion": "all five exact root debug attributes absent; no invented action-attempt assertion"
+    },
+    {
+      "id": "C11",
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 3577,
+      "name": "C4: a flag-off render (no tier prop at all) never carries the T9/T10 debug attributes",
+      "donorSha256": "a000d197ec0a975af1a23aad0cb55fbdabf17537bf60f2efaed9c5089189ecfb",
+      "keepers": [
+        {
+          "file": "tests/scan-flow-ui.test.tsx",
+          "line": 3530,
+          "name": "F5: premium and flag-off (no tier prop) cause zero trigger-storage activity"
+        }
+      ],
+      "sameOperativeInput": "Same explicitpremium/omittedtier and p1/shampoo response. Injected spy storage is never touched on this path and does not affect state; existing positive resolve stays.",
+      "assertionUnion": "all five exact root debug attributes absent; no invented action-attempt assertion"
+    },
+    {
+      "id": "C12",
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 2085,
+      "name": "ScanSearchSheet: Zurück (onBack) returns to the results/empty state without losing the query",
+      "donorSha256": "1bbcc8e2ccfb8d5a0946bb44fe802a201021a88a3c1613b343204a505fef67df",
+      "keepers": [
+        {
+          "file": "tests/scan-flow-ui.test.tsx",
+          "line": 1826,
+          "name": "ScanSearchSheet: Zurück returns focus to the search field"
+        }
+      ],
+      "sameOperativeInput": "Exact same empty-state helper/query kerastase ciment, openIntake, settle, onBack, settle; keeper alone already invokes DOMref stand-in after shared point.",
+      "assertionUnion": "default header, unchanged query, terminal empty present, intake element absent; retains ref-focus receipt without adding ref calls"
+    },
+    {
+      "id": "C13",
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 2628,
+      "name": "F2: the search field carries the mobile search-keyboard attributes",
+      "donorSha256": "9cf0a3fbbc6a9bd2d5881feec058d809e88e0b2094dadb4c1266a160eaff2de2",
+      "keepers": [
+        {
+          "file": "tests/scan-flow-ui.test.tsx",
+          "line": 1469,
+          "name": "ScanSearchSheet: default header is 'Produkt finden'; the timeout reason keeps its own header"
+        }
+      ],
+      "sameOperativeInput": "mountSearchSheet default reason is manual; both initial manual render/notFound/queryempty. Keyboard attrs unconditional on reason and source inspected.",
+      "assertionUnion": "enterKeyHint search; autoCorrect off; autoCapitalize none; spellCheck false"
+    },
+    {
+      "id": "C14",
+      "file": "tests/scan-flow-state.test.ts",
+      "line": 151,
+      "name": "resolved: an in-catalog/not-needed verdict opens the result sheet",
+      "donorSha256": "9135fa553e52fb171bf0ef54d1790fe4c5d76c904abf2c32ac8cbcae01f277a9",
+      "keepers": [
+        {
+          "file": "tests/scan-flow-state.test.ts",
+          "line": 892,
+          "name": "resolved: omitting tier/sessionNumber fails closed to no trigger at all (every pre-T10 call site)"
+        }
+      ],
+      "sameOperativeInput": "Exactly resolving() token1 plus verdictResult() with tier/session omitted.",
+      "assertionUnion": "full result step payload and cleared activeRequest"
+    },
+    {
+      "id": "C15",
+      "file": "tests/scan-flow-state.test.ts",
+      "line": 159,
+      "name": "resolved: an open submission opens the pending sheet",
+      "donorSha256": "0048098ddfb927b3a0b96ed2f64aed963c28f5f80c6f124cd0207fd3b6e287d3",
+      "keepers": [
+        {
+          "file": "tests/scan-flow-state.test.ts",
+          "line": 941,
+          "name": "F2: a pending_submission resolve under would-be-qualifying conditions also leaves the budget unspent"
+        }
+      ],
+      "sameOperativeInput": "Same resolving state and pendingResult; tierfree/session2 affects gated trigger evaluation only, stepForResult reads only result.kind/payload and excludes pending from triggers.",
+      "assertionUnion": "entire pending step payload"
+    },
+    {
+      "id": "C16",
+      "file": "tests/scan-flow-state.test.ts",
+      "line": 930,
+      "name": "F2: an unknown_product resolve under would-be-qualifying conditions selects no trigger and leaves the budget unspent",
+      "donorSha256": "651a46ab85757029d7159142fc0cf6408301f126340b068d28d1cda0ff80d33f",
+      "keepers": [
+        {
+          "file": "tests/scan-flow-state.test.ts",
+          "line": 950,
+          "name": "F2: after an unknown resolve, the NEXT in_catalog resolve can still pitch (budget was never spent)"
+        }
+      ],
+      "sameOperativeInput": "Identical first two reducer actions of existing five-action sequence. Expose intermediate state without adding or repeating a reducer invocation.",
+      "assertionUnion": "activeProactiveTrigger null and proactiveTriggerShown null before existing return/next resolve"
+    },
+    {
+      "id": "C17",
+      "file": "tests/scan-flow-state.test.ts",
+      "line": 807,
+      "name": "resolved: an unknown/pending result leaves the category history untouched",
+      "donorSha256": "105b3aa05dd8871bd65cd0a002d02044b4a3f4e7c6d7503bdb899117be6e41eb",
+      "keepers": [
+        {
+          "file": "tests/scan-flow-state.test.ts",
+          "line": 950,
+          "name": "F2: after an unknown resolve, the NEXT in_catalog resolve can still pitch (budget was never spent)"
+        },
+        {
+          "file": "tests/scan-flow-state.test.ts",
+          "line": 941,
+          "name": "F2: a pending_submission resolve under would-be-qualifying conditions also leaves the budget unspent"
+        }
+      ],
+      "sameOperativeInput": "Same initial categoryhistoryempty and unknown/pending payload. categoryOfResult and append logic read kind/category only, not tier/session; qualifying gate values cannot make a non-result step append history.",
+      "assertionUnion": "categoriesScanned exactly [] after unknown and pending, at existing transitions"
+    }
+  ],
+  "keepers": [
+    {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 1126,
+      "name": "ScanFlow: the search-sheet body posts brandText/productNameText/category with no identifier key"
+    },
+    {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 1479,
+      "name": "ScanSearchSheet: a dm-row tap calls onSelectRetailerResult with its GTIN"
+    },
+    {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 1505,
+      "name": "ScanSearchSheet: retailerSearchEnabled=false never fetches the dm lane, even on submit"
+    },
+    {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 1844,
+      "name": "ScanSearchSheet + ScanResearchIntakeForm: no user-facing copy leaks 'dm' (word-boundary), and every §6 string matches verbatim, across every state incl. intake"
+    },
+    {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 2151,
+      "name": "Batch 8 (supersedes Task 8 delta review Finding 2): a resubmit's reload keeps the stale rows AND the recovery link up, with no skeleton, until the new answer lands"
+    },
+    {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 2740,
+      "name": "free tier: the reveal posts the SCANNED product's id and unblurs into the full card"
+    },
+    {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 2795,
+      "name": "free tier: the post-reveal CTA opens the Premium sheet for empfehlungen"
+    },
+    {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 3145,
+      "name": "Z1 flag off: the unlocked bookmark opens the in-flow Merkliste sheet and never deep-links"
+    },
+    {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 3530,
+      "name": "F5: premium and flag-off (no tier prop) cause zero trigger-storage activity"
+    },
+    {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 1826,
+      "name": "ScanSearchSheet: Zurück returns focus to the search field"
+    },
+    {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "line": 1469,
+      "name": "ScanSearchSheet: default header is 'Produkt finden'; the timeout reason keeps its own header"
+    },
+    {
+      "file": "tests/scan-flow-state.test.ts",
+      "line": 892,
+      "name": "resolved: omitting tier/sessionNumber fails closed to no trigger at all (every pre-T10 call site)"
+    },
+    {
+      "file": "tests/scan-flow-state.test.ts",
+      "line": 941,
+      "name": "F2: a pending_submission resolve under would-be-qualifying conditions also leaves the budget unspent"
+    },
+    {
+      "file": "tests/scan-flow-state.test.ts",
+      "line": 950,
+      "name": "F2: after an unknown resolve, the NEXT in_catalog resolve can still pitch (budget was never spent)"
+    }
+  ]
+}

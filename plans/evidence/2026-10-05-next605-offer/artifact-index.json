@@ -1,0 +1,776 @@
+[
+  {
+    "source": "/tmp/test-audit-offer-experiments87/build.cjs",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/build.cjs.txt",
+    "sha256": "0876e6b7d62ff84e4872eddaf8d17eedc418e6002660802afd2af9bdd060677a",
+    "bytes": 11670
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/candidates.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/candidates.json",
+    "sha256": "10e9772d6d3d0dd2dbca6558b7036a5a87d19525876be8e4ad2016e2d3b9a7de",
+    "bytes": 12434
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/check.cjs",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/check.cjs.txt",
+    "sha256": "276f620ca7742a0a2d4449c9374719e2bd17950ccda33a65ab407c2dc7778c25",
+    "bytes": 5164
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/controls.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/controls.json",
+    "sha256": "68fa8109303a9cadf60789139f568236b3194ba9da3309444078f3f95722ad5e",
+    "bytes": 6052
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/cut.diff",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/cut.diff",
+    "sha256": "8709690cc0f43fca8ef152ab9b79371fab94275613898fa99beaf869a7873fc2",
+    "bytes": 2976
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/finalize.py",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/finalize.py.txt",
+    "sha256": "90e2fe5eb3037b28953bc967e914f36032b333d4514c9588382781ca4d9800aa",
+    "bytes": 5228
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/handoff.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/handoff.json",
+    "sha256": "3c6298451c9f493accd36b5c3a63cb480944a72360e9c0d06d384badb0edda30",
+    "bytes": 5429
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/inventory.cjs",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/inventory.cjs.txt",
+    "sha256": "144a13bccb2d4ee1234165d53217e1cdbaab23ec3373aacb2e8dfa527990616a",
+    "bytes": 1527
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/inventory.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/inventory.json",
+    "sha256": "809070c6336b296c7651d09b61d8988ee777d954ed1d5df97a95babda0123a1f",
+    "bytes": 115608
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/judgments.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/judgments.json",
+    "sha256": "ee84aa3ac27e946c64b3800139cc81b784d9aa167d9d80a87b559998b79d0058",
+    "bytes": 58023
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/layer-plan.md",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/layer-plan.md",
+    "sha256": "86b32effd41d66809d6014f2c3ae0242f387f34b0af229410d66dc01a4e0f7f7",
+    "bytes": 11417
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/ledger.md",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/ledger.md",
+    "sha256": "0f442947256d7f22ce4b3f04442994a8844525f575d61f026a1787126589a51a",
+    "bytes": 25057
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/main-commands.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/main-commands.json",
+    "sha256": "b56cee59ec1a42be5c37b411ecbabcc5a4138ce3fb2bb8fa3b40f01cd18833f9",
+    "bytes": 1326
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/manifest.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/manifest.json",
+    "sha256": "2536b4d22c8694f616729ff29ca98948cd2a85f2eca708a1eb872bdadd62d071",
+    "bytes": 14784
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/mutants/C1.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/mutants/C1.ts.txt",
+    "sha256": "4c22ccd65f92a8fdb22e8543cd8d89679f3a1505cb3b40efaab773aa65caac01",
+    "bytes": 3253
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/mutants/C2.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/mutants/C2.ts.txt",
+    "sha256": "64e7a1deee8ea966e653dc713e0c7a6725598cf9187bc7b6141dfb1f0f9474bf",
+    "bytes": 3307
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/mutants/C3.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/mutants/C3.ts.txt",
+    "sha256": "63ffe5cf452f8e58ff28f93c94d52f273739e8f8f8379e366fe01e3817df6146",
+    "bytes": 3356
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/mutants/C4.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/mutants/C4.ts.txt",
+    "sha256": "2d35fb145fa5368fcd65ee04971b206141f70aec47161e1679564bce04e7fa18",
+    "bytes": 3262
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/phases/before/tests/free-reveal.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/phases/before/tests/free-reveal.test.ts.txt",
+    "sha256": "c2e6a44a32c5a6a983143d4417fdadd12a0d4ae93a4ee3d4b9ed5c36fa8c0ad8",
+    "bytes": 7278
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/phases/before/tests/meta-offer-view-client.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/phases/before/tests/meta-offer-view-client.test.ts.txt",
+    "sha256": "7c4d0831d19962626e38a47b8350909059599611663f034faa11d4a9f13316cd",
+    "bytes": 5773
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/phases/before/tests/meta-offer-view.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/phases/before/tests/meta-offer-view.test.ts.txt",
+    "sha256": "5ca1e19f63335ccc257f8f4c055c54d8dfbc82fb34abad9ee6ddb831e7736ea6",
+    "bytes": 9316
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/phases/before/tests/organic-offer-media-experiment.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/phases/before/tests/organic-offer-media-experiment.test.ts.txt",
+    "sha256": "429e96be662296b1f76bee7e8044ae3ff8a7d4bd4cfb3f498271a50d73048a41",
+    "bytes": 10678
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/phases/before/tests/personal-plan-offer-motion.spec.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/phases/before/tests/personal-plan-offer-motion.spec.ts.txt",
+    "sha256": "56e17fcbbc4950bcc618a1f21b10934b0f9126a8805faca5a655f1a0772271c7",
+    "bytes": 38985
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/phases/before/tests/personal-plan-pricing-experiment.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/phases/before/tests/personal-plan-pricing-experiment.test.ts.txt",
+    "sha256": "1f3abe43446c8ec3d487bbbec3692b49454dba7ba1310d8bdaa85e8faa252f31",
+    "bytes": 16140
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/phases/before/tests/personal-plan-transition-motion.test.tsx",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/phases/before/tests/personal-plan-transition-motion.test.tsx.txt",
+    "sha256": "482ca59f56dbbf4d2ecb72df4c776fafec98701cb548d8e91268344a385a57d4",
+    "bytes": 8928
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/phases/cut/tests/free-reveal.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/phases/cut/tests/free-reveal.test.ts.txt",
+    "sha256": "f996d4d961e0c744849017e3c82931c30d2ddc5713fc5595aa81e8d9b84e72ad",
+    "bytes": 5977
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/phases/cut/tests/meta-offer-view-client.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/phases/cut/tests/meta-offer-view-client.test.ts.txt",
+    "sha256": "7c4d0831d19962626e38a47b8350909059599611663f034faa11d4a9f13316cd",
+    "bytes": 5773
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/phases/cut/tests/meta-offer-view.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/phases/cut/tests/meta-offer-view.test.ts.txt",
+    "sha256": "5ca1e19f63335ccc257f8f4c055c54d8dfbc82fb34abad9ee6ddb831e7736ea6",
+    "bytes": 9316
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/phases/cut/tests/organic-offer-media-experiment.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/phases/cut/tests/organic-offer-media-experiment.test.ts.txt",
+    "sha256": "429e96be662296b1f76bee7e8044ae3ff8a7d4bd4cfb3f498271a50d73048a41",
+    "bytes": 10678
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/phases/cut/tests/personal-plan-offer-motion.spec.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/phases/cut/tests/personal-plan-offer-motion.spec.ts.txt",
+    "sha256": "56e17fcbbc4950bcc618a1f21b10934b0f9126a8805faca5a655f1a0772271c7",
+    "bytes": 38985
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/phases/cut/tests/personal-plan-pricing-experiment.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/phases/cut/tests/personal-plan-pricing-experiment.test.ts.txt",
+    "sha256": "1f3abe43446c8ec3d487bbbec3692b49454dba7ba1310d8bdaa85e8faa252f31",
+    "bytes": 16140
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/phases/cut/tests/personal-plan-transition-motion.test.tsx",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/phases/cut/tests/personal-plan-transition-motion.test.tsx.txt",
+    "sha256": "482ca59f56dbbf4d2ecb72df4c776fafec98701cb548d8e91268344a385a57d4",
+    "bytes": 8928
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/phases/transfer/tests/free-reveal.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/phases/transfer/tests/free-reveal.test.ts.txt",
+    "sha256": "637ba8ad5dbd1de05f92b862719929d899298bcd2f0d8ef5992df11b6c6a37f1",
+    "bytes": 7458
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/phases/transfer/tests/meta-offer-view-client.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/phases/transfer/tests/meta-offer-view-client.test.ts.txt",
+    "sha256": "7c4d0831d19962626e38a47b8350909059599611663f034faa11d4a9f13316cd",
+    "bytes": 5773
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/phases/transfer/tests/meta-offer-view.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/phases/transfer/tests/meta-offer-view.test.ts.txt",
+    "sha256": "5ca1e19f63335ccc257f8f4c055c54d8dfbc82fb34abad9ee6ddb831e7736ea6",
+    "bytes": 9316
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/phases/transfer/tests/organic-offer-media-experiment.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/phases/transfer/tests/organic-offer-media-experiment.test.ts.txt",
+    "sha256": "429e96be662296b1f76bee7e8044ae3ff8a7d4bd4cfb3f498271a50d73048a41",
+    "bytes": 10678
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/phases/transfer/tests/personal-plan-offer-motion.spec.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/phases/transfer/tests/personal-plan-offer-motion.spec.ts.txt",
+    "sha256": "56e17fcbbc4950bcc618a1f21b10934b0f9126a8805faca5a655f1a0772271c7",
+    "bytes": 38985
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/phases/transfer/tests/personal-plan-pricing-experiment.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/phases/transfer/tests/personal-plan-pricing-experiment.test.ts.txt",
+    "sha256": "1f3abe43446c8ec3d487bbbec3692b49454dba7ba1310d8bdaa85e8faa252f31",
+    "bytes": 16140
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/phases/transfer/tests/personal-plan-transition-motion.test.tsx",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/phases/transfer/tests/personal-plan-transition-motion.test.tsx.txt",
+    "sha256": "482ca59f56dbbf4d2ecb72df4c776fafec98701cb548d8e91268344a385a57d4",
+    "bytes": 8928
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/read-scope.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/read-scope.json",
+    "sha256": "2eae727f7282301809e9bf06307e48a4d4cf92348ca67ffb3b891b3efca02861",
+    "bytes": 10428
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/static-receipt.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/static-receipt.json",
+    "sha256": "792860dace21582cf2c42c66c6651e16629910bd90f1f9dbcb0c2cdf0ecc8f05",
+    "bytes": 642
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/transfer.diff",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/transfer.diff",
+    "sha256": "58772a94b646b5c37a50200e89f4aad9295b4b598fb34c72bd8663a5f3837758",
+    "bytes": 1037
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87/write-report.py",
+    "archive": "plans/evidence/2026-10-05-next605-offer/proposal/write-report.py.txt",
+    "sha256": "cab80bc568b8fde9779aba46bcf0f0d87a3714064900d80f3fe0ffff182e2ec5",
+    "bytes": 17965
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/README.md",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/README.md",
+    "sha256": "b9aa42591ede7af164b8a7ea55e135514faca06fdfb7c7beec9a01ef82588fd3",
+    "bytes": 6541
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/controls-check.log",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/controls-check.log",
+    "sha256": "f677b3e4b2a92062625e7fef61c91e45d9acd0a510d895164ae61f665b30016b",
+    "bytes": 363
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/editor-check.log",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/editor-check.log",
+    "sha256": "190ac665685a4bfd742152b59070d5081a30be1d9caea565155008f59d0ff1d4",
+    "bytes": 404
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-apply-cut-Lq4kFx/intent.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-apply-cut-Lq4kFx/intent.json",
+    "sha256": "94c950c6ba8ebc2ef10fa814b0bcda54ba127482fac27317d29159742ac8a624",
+    "bytes": 2223
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-apply-cut-Lq4kFx/originals/tests/free-reveal.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-apply-cut-Lq4kFx/originals/tests/free-reveal.test.ts.txt",
+    "sha256": "637ba8ad5dbd1de05f92b862719929d899298bcd2f0d8ef5992df11b6c6a37f1",
+    "bytes": 7458
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-apply-cut-Lq4kFx/originals/tests/meta-offer-view-client.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-apply-cut-Lq4kFx/originals/tests/meta-offer-view-client.test.ts.txt",
+    "sha256": "7c4d0831d19962626e38a47b8350909059599611663f034faa11d4a9f13316cd",
+    "bytes": 5773
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-apply-cut-Lq4kFx/originals/tests/meta-offer-view.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-apply-cut-Lq4kFx/originals/tests/meta-offer-view.test.ts.txt",
+    "sha256": "5ca1e19f63335ccc257f8f4c055c54d8dfbc82fb34abad9ee6ddb831e7736ea6",
+    "bytes": 9316
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-apply-cut-Lq4kFx/originals/tests/organic-offer-media-experiment.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-apply-cut-Lq4kFx/originals/tests/organic-offer-media-experiment.test.ts.txt",
+    "sha256": "429e96be662296b1f76bee7e8044ae3ff8a7d4bd4cfb3f498271a50d73048a41",
+    "bytes": 10678
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-apply-cut-Lq4kFx/originals/tests/personal-plan-offer-motion.spec.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-apply-cut-Lq4kFx/originals/tests/personal-plan-offer-motion.spec.ts.txt",
+    "sha256": "56e17fcbbc4950bcc618a1f21b10934b0f9126a8805faca5a655f1a0772271c7",
+    "bytes": 38985
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-apply-cut-Lq4kFx/originals/tests/personal-plan-pricing-experiment.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-apply-cut-Lq4kFx/originals/tests/personal-plan-pricing-experiment.test.ts.txt",
+    "sha256": "1f3abe43446c8ec3d487bbbec3692b49454dba7ba1310d8bdaa85e8faa252f31",
+    "bytes": 16140
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-apply-cut-Lq4kFx/originals/tests/personal-plan-transition-motion.test.tsx",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-apply-cut-Lq4kFx/originals/tests/personal-plan-transition-motion.test.tsx.txt",
+    "sha256": "482ca59f56dbbf4d2ecb72df4c776fafec98701cb548d8e91268344a385a57d4",
+    "bytes": 8928
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-apply-cut-Lq4kFx/receipt.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-apply-cut-Lq4kFx/receipt.json",
+    "sha256": "45ab3e8e150a985076756bfb63038387f985ba87c19c1bd2b9194881da9a94cf",
+    "bytes": 1483
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-apply-transfer-9U5QTG/intent.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-apply-transfer-9U5QTG/intent.json",
+    "sha256": "1d46bf1ccab905b758daf0796e5bcdf3d876db9152dcdc6b49c7f8013872260d",
+    "bytes": 1985
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-apply-transfer-9U5QTG/originals/tests/free-reveal.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-apply-transfer-9U5QTG/originals/tests/free-reveal.test.ts.txt",
+    "sha256": "c2e6a44a32c5a6a983143d4417fdadd12a0d4ae93a4ee3d4b9ed5c36fa8c0ad8",
+    "bytes": 7278
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-apply-transfer-9U5QTG/originals/tests/meta-offer-view-client.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-apply-transfer-9U5QTG/originals/tests/meta-offer-view-client.test.ts.txt",
+    "sha256": "7c4d0831d19962626e38a47b8350909059599611663f034faa11d4a9f13316cd",
+    "bytes": 5773
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-apply-transfer-9U5QTG/originals/tests/meta-offer-view.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-apply-transfer-9U5QTG/originals/tests/meta-offer-view.test.ts.txt",
+    "sha256": "5ca1e19f63335ccc257f8f4c055c54d8dfbc82fb34abad9ee6ddb831e7736ea6",
+    "bytes": 9316
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-apply-transfer-9U5QTG/originals/tests/organic-offer-media-experiment.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-apply-transfer-9U5QTG/originals/tests/organic-offer-media-experiment.test.ts.txt",
+    "sha256": "429e96be662296b1f76bee7e8044ae3ff8a7d4bd4cfb3f498271a50d73048a41",
+    "bytes": 10678
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-apply-transfer-9U5QTG/originals/tests/personal-plan-offer-motion.spec.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-apply-transfer-9U5QTG/originals/tests/personal-plan-offer-motion.spec.ts.txt",
+    "sha256": "56e17fcbbc4950bcc618a1f21b10934b0f9126a8805faca5a655f1a0772271c7",
+    "bytes": 38985
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-apply-transfer-9U5QTG/originals/tests/personal-plan-pricing-experiment.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-apply-transfer-9U5QTG/originals/tests/personal-plan-pricing-experiment.test.ts.txt",
+    "sha256": "1f3abe43446c8ec3d487bbbec3692b49454dba7ba1310d8bdaa85e8faa252f31",
+    "bytes": 16140
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-apply-transfer-9U5QTG/originals/tests/personal-plan-transition-motion.test.tsx",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-apply-transfer-9U5QTG/originals/tests/personal-plan-transition-motion.test.tsx.txt",
+    "sha256": "482ca59f56dbbf4d2ecb72df4c776fafec98701cb548d8e91268344a385a57d4",
+    "bytes": 8928
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-apply-transfer-9U5QTG/receipt.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-apply-transfer-9U5QTG/receipt.json",
+    "sha256": "8ca217060011f1fe0743bd3c7961c8ef3763fcd92dd6d640cb7d385446947737",
+    "bytes": 1255
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-before.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-before.ts.txt",
+    "sha256": "c2e6a44a32c5a6a983143d4417fdadd12a0d4ae93a4ee3d4b9ed5c36fa8c0ad8",
+    "bytes": 7278
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-candidates.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-candidates.json",
+    "sha256": "6bc54ea77afa8572031c579af77c62a2a803106365f1689b29ec53266248b354",
+    "bytes": 10055
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-controls-normalized.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-controls-normalized.json",
+    "sha256": "02f609b451ab07842f771ceb85e6eaa01c04e3acbf1fede0370c4c6ea477244f",
+    "bytes": 7889
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-cut.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-cut.ts.txt",
+    "sha256": "f996d4d961e0c744849017e3c82931c30d2ddc5713fc5595aa81e8d9b84e72ad",
+    "bytes": 5977
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-edit.cjs",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-edit.cjs.txt",
+    "sha256": "e76a94efcf3de91be76a45c45075c11cb4918897f936c4f082d3a13375df59c5",
+    "bytes": 3530
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-evidence.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-evidence.json",
+    "sha256": "3fedf6e88ff3afa01163c505c91ac6a03a00d995b0cd3a73e872e0dc84aeb43a",
+    "bytes": 2695
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-guard.cjs",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-guard.cjs.txt",
+    "sha256": "b31738faf3e4e1f6d63430079631d85e75209f3e02d2d7d58f007dc866f0130e",
+    "bytes": 11732
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C1/originals/src/lib/entitlements/free-reveal.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C1/originals/src/lib/entitlements/free-reveal.ts.txt",
+    "sha256": "9e0adf219ce1576f080bcf959a7d7c5b47d8a7a29bac3dae4a9ba5ca168ff93e",
+    "bytes": 3261
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C1-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C1-after.command.json",
+    "sha256": "334d5ec9664e17f551fe2362a91bce462a6d8b6af7d90821dbcc59b4daa9e04a",
+    "bytes": 383
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C1-after.tap",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C1-after.tap",
+    "sha256": "96fdf5030df081630ecd48cbecdb6d6f0d8cc1d70a4d328f842970a24f51cf91",
+    "bytes": 264
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C1-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C1-before.command.json",
+    "sha256": "334d5ec9664e17f551fe2362a91bce462a6d8b6af7d90821dbcc59b4daa9e04a",
+    "bytes": 383
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C1-before.tap",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C1-before.tap",
+    "sha256": "fbc10f994a067052778838ec227faab3c44959cbc8c51f70c925d14b5a09ebce",
+    "bytes": 265
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C1-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C1-fault.command.json",
+    "sha256": "334d5ec9664e17f551fe2362a91bce462a6d8b6af7d90821dbcc59b4daa9e04a",
+    "bytes": 383
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C1-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C1-fault.tap",
+    "sha256": "ad8559d18f0d98efbaec7653a204b1a931293f6dca4b01751eaef93cd15a5708",
+    "bytes": 884
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C2/originals/src/lib/entitlements/free-reveal.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C2/originals/src/lib/entitlements/free-reveal.ts.txt",
+    "sha256": "9e0adf219ce1576f080bcf959a7d7c5b47d8a7a29bac3dae4a9ba5ca168ff93e",
+    "bytes": 3261
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C2-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C2-after.command.json",
+    "sha256": "890a62d0545f9fe75853917c1479f85cfeac0b5c0370e597fe30d8e8718292d4",
+    "bytes": 410
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C2-after.tap",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C2-after.tap",
+    "sha256": "3cf281411e2a41963ecf456cad0ab714b4d0b6bf0519042a86bb3eddf2987e1a",
+    "bytes": 316
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C2-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C2-before.command.json",
+    "sha256": "890a62d0545f9fe75853917c1479f85cfeac0b5c0370e597fe30d8e8718292d4",
+    "bytes": 410
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C2-before.tap",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C2-before.tap",
+    "sha256": "d626e6d1e1c4169adef5d8f48ae8495b108f080e8f7f2b26515ef3f9b0acbb36",
+    "bytes": 317
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C2-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C2-fault.command.json",
+    "sha256": "890a62d0545f9fe75853917c1479f85cfeac0b5c0370e597fe30d8e8718292d4",
+    "bytes": 410
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C2-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C2-fault.tap",
+    "sha256": "27cb623e633892928220d702d2262591d716c8000ace1f927fe327e95791127d",
+    "bytes": 1156
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C3/originals/src/lib/entitlements/free-reveal.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C3/originals/src/lib/entitlements/free-reveal.ts.txt",
+    "sha256": "9e0adf219ce1576f080bcf959a7d7c5b47d8a7a29bac3dae4a9ba5ca168ff93e",
+    "bytes": 3261
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C3-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C3-after.command.json",
+    "sha256": "890a62d0545f9fe75853917c1479f85cfeac0b5c0370e597fe30d8e8718292d4",
+    "bytes": 410
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C3-after.tap",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C3-after.tap",
+    "sha256": "277e84eaa367ff1e3659214e94f69643c6f6dd3470c2295477ac655c0137ee8b",
+    "bytes": 317
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C3-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C3-before.command.json",
+    "sha256": "890a62d0545f9fe75853917c1479f85cfeac0b5c0370e597fe30d8e8718292d4",
+    "bytes": 410
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C3-before.tap",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C3-before.tap",
+    "sha256": "fbf21f27f74e1f275fa711205940d845b99ff9db8ab1f9ac77dcb158dce711a9",
+    "bytes": 319
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C3-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C3-fault.command.json",
+    "sha256": "890a62d0545f9fe75853917c1479f85cfeac0b5c0370e597fe30d8e8718292d4",
+    "bytes": 410
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C3-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C3-fault.tap",
+    "sha256": "a35c618970dfbcd600cfae97f787358a7ab26759f7f9d5c66c2ead96e4c2fe8b",
+    "bytes": 924
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C4/originals/src/lib/entitlements/free-reveal.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C4/originals/src/lib/entitlements/free-reveal.ts.txt",
+    "sha256": "9e0adf219ce1576f080bcf959a7d7c5b47d8a7a29bac3dae4a9ba5ca168ff93e",
+    "bytes": 3261
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C4-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C4-after.command.json",
+    "sha256": "aae73919d43da1712d6c603847ea32dad97b8a2b80a3b3cde9678596a40533f3",
+    "bytes": 386
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C4-after.tap",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C4-after.tap",
+    "sha256": "644881622cda622192c77d12eb89d94f8297220e570e9a50462876eef4e714b1",
+    "bytes": 271
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C4-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C4-before.command.json",
+    "sha256": "aae73919d43da1712d6c603847ea32dad97b8a2b80a3b3cde9678596a40533f3",
+    "bytes": 386
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C4-before.tap",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C4-before.tap",
+    "sha256": "15d092a727b563e88fced99e2c13977f7b8fb466a9747db3440d9a51de02d3ba",
+    "bytes": 271
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C4-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C4-fault.command.json",
+    "sha256": "aae73919d43da1712d6c603847ea32dad97b8a2b80a3b3cde9678596a40533f3",
+    "bytes": 386
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/C4-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/C4-fault.tap",
+    "sha256": "e951ec9d0dc8f2dd0b88090ae4180b6d23cac02d6a4ee302ef8439df00d85aef",
+    "bytes": 1032
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/all-originals/src/lib/entitlements/free-reveal.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/all-originals/src/lib/entitlements/free-reveal.ts.txt",
+    "sha256": "9e0adf219ce1576f080bcf959a7d7c5b47d8a7a29bac3dae4a9ba5ca168ff93e",
+    "bytes": 3261
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/all-originals/tests/free-reveal.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/all-originals/tests/free-reveal.test.ts.txt",
+    "sha256": "637ba8ad5dbd1de05f92b862719929d899298bcd2f0d8ef5992df11b6c6a37f1",
+    "bytes": 7458
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/all-originals/tests/meta-offer-view-client.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/all-originals/tests/meta-offer-view-client.test.ts.txt",
+    "sha256": "7c4d0831d19962626e38a47b8350909059599611663f034faa11d4a9f13316cd",
+    "bytes": 5773
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/all-originals/tests/meta-offer-view.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/all-originals/tests/meta-offer-view.test.ts.txt",
+    "sha256": "5ca1e19f63335ccc257f8f4c055c54d8dfbc82fb34abad9ee6ddb831e7736ea6",
+    "bytes": 9316
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/all-originals/tests/organic-offer-media-experiment.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/all-originals/tests/organic-offer-media-experiment.test.ts.txt",
+    "sha256": "429e96be662296b1f76bee7e8044ae3ff8a7d4bd4cfb3f498271a50d73048a41",
+    "bytes": 10678
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/all-originals/tests/personal-plan-offer-motion.spec.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/all-originals/tests/personal-plan-offer-motion.spec.ts.txt",
+    "sha256": "56e17fcbbc4950bcc618a1f21b10934b0f9126a8805faca5a655f1a0772271c7",
+    "bytes": 38985
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/all-originals/tests/personal-plan-pricing-experiment.test.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/all-originals/tests/personal-plan-pricing-experiment.test.ts.txt",
+    "sha256": "1f3abe43446c8ec3d487bbbec3692b49454dba7ba1310d8bdaa85e8faa252f31",
+    "bytes": 16140
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/all-originals/tests/personal-plan-transition-motion.test.tsx",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/all-originals/tests/personal-plan-transition-motion.test.tsx.txt",
+    "sha256": "482ca59f56dbbf4d2ecb72df4c776fafec98701cb548d8e91268344a385a57d4",
+    "bytes": 8928
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/complete.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/complete.json",
+    "sha256": "69554870da01299a5ac84e7e3259e836737076e6b43b3231cf21429dde701bfc",
+    "bytes": 9024
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/intent.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/intent.json",
+    "sha256": "ac465e29d0d6474612bb170ed24f69e28cfbc29e2474b5e4a7c85ea647d0ea13",
+    "bytes": 1102
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW/receipt.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-mutations-transfer-vVU3tW/receipt.json",
+    "sha256": "57a9074494828fa038b53521d04220aa95e366d043cf570832a3341855d39d04",
+    "bytes": 61896
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-pins.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-pins.json",
+    "sha256": "bad0288a008653b5714cbf3c1c3c32340fded754eda20eb468300c828ca18895",
+    "bytes": 53901
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-proof.cjs",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-proof.cjs.txt",
+    "sha256": "aa6ecbf3e6549bbc5482fb75a39792393784fece06b3448ebc1b133f8fe41594",
+    "bytes": 4927
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-readonly-preload.cjs",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-readonly-preload.cjs.txt",
+    "sha256": "47dac6cfe5ba900ca08fed8a9ac7c33915c40f0b533a4cbfa23ace5d442620bd",
+    "bytes": 1276
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-run-controls.cjs",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-run-controls.cjs.txt",
+    "sha256": "72c3c5ee0a25bda3abfbca7a809be9b2cd5526aa34fd4db00a8c1cfce70b56aa",
+    "bytes": 8057
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-selected-closure.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-selected-closure.json",
+    "sha256": "d4b9dcaa5318e39ffe6e5fedc61f4850f3915b31225bd09f945e37782f571b35",
+    "bytes": 2609
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-transfer.ts",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/operator-transfer.ts.txt",
+    "sha256": "637ba8ad5dbd1de05f92b862719929d899298bcd2f0d8ef5992df11b6c6a37f1",
+    "bytes": 7458
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/prepare-pins.cjs",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/prepare-pins.cjs.txt",
+    "sha256": "cdad5168b9a10d12365c99b862343c2371c53bdde57e8bfa74cf48fc2461d866",
+    "bytes": 9612
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/static-receipt.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/static-receipt.json",
+    "sha256": "5c6ff3e4e434d3a86b0e0fb7b3c781647c2df508ae7f2e29e3bae9e5539c61ce",
+    "bytes": 1874
+  },
+  {
+    "source": "/tmp/test-audit-offer87-tools-j3gv5ax6/tool-code-hashes.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/tools/tool-code-hashes.json",
+    "sha256": "e382e14c1204e0fb08766d068593de44526c4f3c9ac596af0456c22d9ef1bc20",
+    "bytes": 1755
+  },
+  {
+    "source": "/tmp/test-audit-offer87-independent-preservation.md",
+    "archive": "plans/evidence/2026-10-05-next605-offer/test-audit-offer87-independent-preservation.md",
+    "sha256": "f7fe23a48856d94035782aa7177c0061fdb6175846c5a128ca88faa2bd0e4d4e",
+    "bytes": 8533
+  },
+  {
+    "source": "/tmp/test-audit-offer87-independent-static.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/test-audit-offer87-independent-static.json",
+    "sha256": "923a64c2d3cf064cd425589699b5bc4c298b2fccaa4250e2aa50b570cc958609",
+    "bytes": 3074
+  },
+  {
+    "source": "/tmp/test-audit-offer87-main-before.tap",
+    "archive": "plans/evidence/2026-10-05-next605-offer/test-audit-offer87-main-before.tap",
+    "sha256": "e93edd20cef396d015712b03d6f02e6c77cbfe1a53104ad3621770d0c4a3309c",
+    "bytes": 13832
+  },
+  {
+    "source": "/tmp/test-audit-offer87-main-transfer.tap",
+    "archive": "plans/evidence/2026-10-05-next605-offer/test-audit-offer87-main-transfer.tap",
+    "sha256": "f9926a53f3a41470b0ea4b74fc5e0250c57e119cfb823d3d2f545a6e77aa43f6",
+    "bytes": 13832
+  },
+  {
+    "source": "/tmp/test-audit-offer87-main-cut.tap",
+    "archive": "plans/evidence/2026-10-05-next605-offer/test-audit-offer87-main-cut.tap",
+    "sha256": "20f25bd0115b304e0b7591dcaa8dd44fc42638df6f9aa61a04f82a0b2cdc3561",
+    "bytes": 13058
+  },
+  {
+    "source": "/tmp/test-audit-offer87-main-controls.log",
+    "archive": "plans/evidence/2026-10-05-next605-offer/test-audit-offer87-main-controls.log",
+    "sha256": "1701b747d75739b8e67c471a06ddb059a690e8ecbbe1c02af4444cfed92a81c2",
+    "bytes": 433
+  },
+  {
+    "source": "/tmp/test-audit-offer87-main-formatted-verification.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/test-audit-offer87-main-formatted-verification.json",
+    "sha256": "af4ed7e7267024c9d3843ebbb333c67fe7d144e738fabdb7bcae5afb2f982b0f",
+    "bytes": 935
+  },
+  {
+    "source": "/tmp/test-audit-offer87-main-preservation.md",
+    "archive": "plans/evidence/2026-10-05-next605-offer/test-audit-offer87-main-preservation.md",
+    "sha256": "a0125451c20368ddf032015689b479eb9d6e1e0abbad1506380508c6b5fd913d",
+    "bytes": 1610
+  },
+  {
+    "source": "/tmp/test-audit-next605-current-inventory.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/test-audit-next605-current-inventory.json",
+    "sha256": "06cac4c7dc88d92f7f1ecfd2bfa5e5a1ff3bff212d35762830291f8180127d06",
+    "bytes": 2491609
+  },
+  {
+    "source": "/tmp/test-audit-next605-counts.json",
+    "archive": "plans/evidence/2026-10-05-next605-offer/test-audit-next605-counts.json",
+    "sha256": "c579587ddc67ed40f03027935114e859268282b4465726858c4d3ed2d8746054",
+    "bytes": 81
+  }
+]

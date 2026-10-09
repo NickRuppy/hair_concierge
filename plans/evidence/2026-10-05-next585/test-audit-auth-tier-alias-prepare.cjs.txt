@@ -1,0 +1,23 @@
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+const cp = require('node:child_process');
+const root='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning';
+const ts=require(path.join(root,'node_modules/typescript'));
+const out='/tmp/test-audit-auth-tier-alias'; fs.mkdirSync(out,{recursive:true});
+const source='src/lib/auth/authenticated-app-route-access.ts'; const test='tests/authenticated-app-route-access.test.ts';
+const read=f=>fs.readFileSync(path.join(root,f),'utf8'); const hash=x=>crypto.createHash('sha256').update(x).digest('hex');
+const oldSource=read(source), oldTest=read(test);
+const removed=[`/**\n * Original PR2 name, kept as an alias: \`/scan\` was the first page to need this\n * composite, but nothing in it is scan-specific — T12's gated Routine/Anwendung/Chat\n * pages read the very same tier. Existing \`/scan\` callers and their tests keep\n * compiling against the old name.\n */\nexport type ScanPageTierDependencies = AuthenticatedAppPageTierDependencies\n\n`, `/** PR2 name for the route-agnostic resolver above; see \`ScanPageTierDependencies\`. */\nexport const resolveScanPageTier = resolveAuthenticatedAppPageTier\n\n`];
+let nextSource=oldSource; for(const x of removed){if(nextSource.split(x).length!==2)throw Error('source anchor');nextSource=nextSource.replace(x,'');}
+const nextTest=oldTest.replaceAll('resolveScanPageTier','resolveAuthenticatedAppPageTier').replaceAll('ScanPageTierDependencies','AuthenticatedAppPageTierDependencies');
+function sites(text,file){const sf=ts.createSourceFile(file,text,ts.ScriptTarget.Latest,true);if(sf.parseDiagnostics.length)throw Error('parse');return sf.statements.filter(n=>ts.isExpressionStatement(n)&&ts.isCallExpression(n.expression)&&n.expression.expression.getText(sf)==='test').map(n=>({name:n.expression.arguments[0].text,line:sf.getLineAndCharacterOfPosition(n.getStart(sf)).line+1,body:n.getText(sf),sha:hash(n.getText(sf))}));}
+const before=sites(oldTest,test),after=sites(nextTest,test);if(before.length!==14||after.length!==14)throw Error('count');
+for(let i=0;i<14;i++){if(before[i].name!==after[i].name||before[i].body.replaceAll('resolveScanPageTier','resolveAuthenticatedAppPageTier')!==after[i].body)throw Error('callback alteration');}
+sites(oldSource,source);sites(nextSource,source);
+const readset=[source,test,'src/lib/entitlements/index.ts','src/lib/entitlements/entitlements.ts','src/lib/entitlements/access.ts','src/lib/entitlements/flag.ts','src/lib/quiz/completion.ts','src/lib/supabase/middleware.ts','src/app/scan/page.tsx','src/app/tracker/layout.tsx','src/app/profile/layout.tsx','src/lib/gated-preview/gate.ts','tests/freemium-lapsed-user-matrix.test.ts','tests/gated-example-pages.test.tsx','tests/server-only-register.cjs','package.json','tsconfig.json','.github/workflows/ci.yml'];
+const receipt={root,head:cp.execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim(),branch:cp.execFileSync('git',['branch','--show-current'],{cwd:root,encoding:'utf8'}).trim(),status:'STATIC PROPOSAL ONLY; no test or application execution',counts:{before:14,after:14,R:14,F:0,C:0,D:0,quota:0},readset:Object.fromEntries(readset.map(f=>[f,hash(read(f))])),phases:{}};
+for(const [phase,s,t] of [['before',oldSource,oldTest],['after',nextSource,nextTest]]){const dir=path.join(out,phase);for(const [file,text] of [[source,s],[test,t]]){fs.mkdirSync(path.dirname(path.join(dir,file)),{recursive:true});fs.writeFileSync(path.join(dir,file),text);}receipt.phases[phase]={[source]:hash(s),[test]:hash(t)};}
+fs.writeFileSync(path.join(out,'sites.json'),JSON.stringify({before,after},null,2)+'\n');fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
+let diff='';for(const f of [source,test]){const r=cp.spawnSync('diff',['-u',path.join(out,'before',f),path.join(out,'after',f)],{encoding:'utf8'});if(![0,1].includes(r.status))throw Error('diff');diff+=r.stdout;}
+fs.writeFileSync(path.join(out,'complete.diff'),diff);console.log(JSON.stringify(receipt,null,2));

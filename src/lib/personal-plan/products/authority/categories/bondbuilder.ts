@@ -18,10 +18,12 @@ import {
 
 /**
  * K18 Leave-In Molecular Repair Hair Mask — Nick's explicit product decision
- * (2026-08-17): when several Bondbuilder candidates evaluate equally ideal,
+ * (2026-08-17): when several Bondbuilder candidates evaluate equally ideal
+ * (since 2026-10-09: equally ideal at the same, highest claim trust level),
  * this is the default pick. Production carries a permanent three-way ideal tie
- * (Olaplex No.3, Epres, K18), and without a default the category stayed
- * uncovered for every Stage-1 preview and every direct acceptance.
+ * (Olaplex No.3, Epres, K18 — all high trust), and without a default the
+ * category stayed uncovered for every Stage-1 preview and every direct
+ * acceptance.
  *
  * It is a default among equals, NOT a superiority claim: the tie keeps its
  * `bondbuilder.equal_shortlist` caution and the recommendation carries its own
@@ -35,6 +37,17 @@ import {
  * `tie_default` therefore sees only the direct-accept half of the cohort.
  */
 export const BONDBUILDER_TIE_DEFAULT_PRODUCT_ID = "38dace91-0fba-49ee-a93f-ac36e488fe4b"
+
+const BONDBUILDER_TRUST_RANKS: Readonly<Record<string, number>> = { high: 0, medium: 1, low: 2 }
+
+/**
+ * Nick's ranking rule (2026-10-09): Bondbuilders rank by the researched claim trust level
+ * (high > medium > low > none). Lower is better; an unknown or missing level ranks last. The
+ * repair axis (crosslink vs peptide) and the repair intensity never influence the ranking.
+ */
+export function bondbuilderTrustRank(level: string | null | undefined): number {
+  return (level ? BONDBUILDER_TRUST_RANKS[level] : undefined) ?? 3
+}
 
 export function recommendationForBondbuilder(product: Stage3BondbuilderFacts, supportive = false) {
   return {
@@ -95,37 +108,15 @@ function evaluateProduct(
         "Eine bekannte Reaktion verhindert die Empfehlung.",
       ),
     )
-  if (
-    product.suitableThicknesses === null ||
-    product.suitableThicknesses.length === 0 ||
-    !input.hairThickness
+  // Nick's category rule (2026-10-06), not inferred producer fit evidence.
+  criteria.push(
+    criterion(
+      "bondbuilder.thickness",
+      "Haarstärke",
+      "pass",
+      "Bondbuilder sind für feines, normales und dickes Haar geeignet.",
+    ),
   )
-    criteria.push(
-      criterion(
-        "bondbuilder.thickness",
-        "Haarstärke",
-        "unknown",
-        "Die Eignung für die Haarstärke ist nicht verifiziert.",
-      ),
-    )
-  else if (!product.suitableThicknesses.includes(input.hairThickness))
-    criteria.push(
-      criterion(
-        "bondbuilder.thickness",
-        "Haarstärke",
-        "fail",
-        "Das Produkt ist für die bestätigte Haarstärke nicht geeignet.",
-      ),
-    )
-  else
-    criteria.push(
-      criterion(
-        "bondbuilder.thickness",
-        "Haarstärke",
-        "pass",
-        "Die Eignung für die Haarstärke ist verifiziert.",
-      ),
-    )
   if (!product.isActive || product.lifecycleStatus !== "active")
     criteria.push(
       criterion("bondbuilder.lifecycle", "Produktstatus", "fail", "Das Produkt ist nicht aktiv."),
@@ -195,14 +186,22 @@ export function evaluateBondbuilderAuthority(
           candidate.recommendable && candidate.isActive && candidate.lifecycleStatus === "active",
       )
       .filter((candidate) => evaluateProduct(input, candidate).verdict === "ideal")
-    const multiple = ideal.length > 1
-    // A tie resolves to the house default only when that exact product is on
-    // the shortlist; any other tie keeps the need uncovered.
+    // Only the most trusted ideal candidates compete (Nick, 2026-10-09).
+    const bestTrust = Math.min(
+      ...ideal.map((candidate) => bondbuilderTrustRank(candidate.spec.claimTrustLevel)),
+    )
+    const mostTrusted = ideal.filter(
+      (candidate) => bondbuilderTrustRank(candidate.spec.claimTrustLevel) === bestTrust,
+    )
+    const multiple = mostTrusted.length > 1
+    // A tie among the most trusted resolves to the house default only when that exact product is
+    // on the shortlist; any other tie keeps the need uncovered.
     const tieDefault = multiple
-      ? (ideal.find((candidate) => candidate.productId === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID) ??
-        null)
+      ? (mostTrusted.find(
+          (candidate) => candidate.productId === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+        ) ?? null)
       : null
-    const selected = ideal.length === 1 ? ideal[0] : tieDefault
+    const selected = mostTrusted.length === 1 ? mostTrusted[0] : tieDefault
     return knownEvaluation(sharedInput, {
       verdict: ideal.length === 0 ? "unknown" : "ideal",
       criteria: multiple
@@ -225,7 +224,7 @@ export function evaluateBondbuilderAuthority(
       recommendationFactFingerprint: selected?.factFingerprint ?? null,
     })
   }
-  const missing = commonUnknownFacts(sharedInput)
+  const missing = commonUnknownFacts(sharedInput, { requiresSuitableThickness: false })
   if (missing.length > 0) return unknownEvaluation(sharedInput, missing)
   const assessment = evaluateProduct(input, input.productFacts)
   if (assessment.verdict === "unknown") {

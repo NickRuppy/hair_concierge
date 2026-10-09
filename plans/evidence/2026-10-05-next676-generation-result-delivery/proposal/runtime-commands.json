@@ -1,0 +1,276 @@
+{
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "all27": [
+    "node",
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-concurrency=1",
+    "tests/personal-plan-email-precheck.test.ts",
+    "tests/personal-plan-preparation-client.test.ts",
+    "tests/personal-plan-prepare-idempotency-migration.test.ts",
+    "tests/personal-plan-prepare-route.test.ts",
+    "tests/personal-plan-prepared-plan.test.ts",
+    "tests/personal-plan-production-client.test.ts",
+    "tests/personal-plan-ready-server-first.test.tsx",
+    "tests/personal-plan-ready-transition.test.ts",
+    "tests/personal-plan-result-artifact-email.test.ts",
+    "tests/personal-plan-result-artifact-route.test.ts",
+    "tests/personal-plan-result-return-migration.test.ts",
+    "tests/personal-plan-result-return-reset.test.ts",
+    "tests/personal-plan-result-return.test.ts",
+    "tests/personal-plan-result-reveal.test.ts",
+    "tests/personal-plan-return-artifact-repair-postgres.test.ts",
+    "tests/personal-plan-return-artifact-repair.test.ts",
+    "tests/quiz-result-artifact-email.test.ts",
+    "tests/quiz-result-artifact-route.test.ts",
+    "tests/quiz-result-artifact-trigger.test.ts",
+    "tests/personal-plan-api-stage1.test.ts",
+    "tests/personal-plan-stage1-source.test.ts",
+    "tests/personal-plan/input.test.ts",
+    "tests/personal-plan/needs.test.ts",
+    "tests/personal-plan/portfolio.test.ts",
+    "tests/personal-plan/reasons.test.ts",
+    "tests/personal-plan/types.test.ts",
+    "tests/personal-plan/persistence/stage1-service.test.ts"
+  ],
+  "controls": [
+    {
+      "id": "C1-unknown-heat-state",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^INITIAL\\-02:\\ quiz\\-led\\ Shampoo\\ cadence\\ keeps\\ current\\ behavior\\ unknown$",
+        "tests/personal-plan/needs.test.ts"
+      ]
+    },
+    {
+      "id": "C2-default-reason",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^INITIAL\\-01:\\ a\\ valid\\ V3\\ paid\\ quiz\\ becomes\\ a\\ quiz\\-faithful\\ initial\\ profile$",
+        "tests/personal-plan/input.test.ts"
+      ]
+    },
+    {
+      "id": "C3-ip-prefix",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^prepare\\ applies\\ the\\ IP\\ ceiling\\ before\\ journey\\ resolution\\ and\\ persists\\ the\\ browser\\ replay\\ identity$",
+        "tests/personal-plan-prepare-route.test.ts"
+      ]
+    },
+    {
+      "id": "C3-ip-limit",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^prepare\\ applies\\ the\\ IP\\ ceiling\\ before\\ journey\\ resolution\\ and\\ persists\\ the\\ browser\\ replay\\ identity$",
+        "tests/personal-plan-prepare-route.test.ts"
+      ]
+    },
+    {
+      "id": "C3-ip-window",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^prepare\\ applies\\ the\\ IP\\ ceiling\\ before\\ journey\\ resolution\\ and\\ persists\\ the\\ browser\\ replay\\ identity$",
+        "tests/personal-plan-prepare-route.test.ts"
+      ]
+    },
+    {
+      "id": "C3-journey-prefix",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^prepare\\ applies\\ the\\ IP\\ ceiling\\ before\\ journey\\ resolution\\ and\\ persists\\ the\\ browser\\ replay\\ identity$",
+        "tests/personal-plan-prepare-route.test.ts"
+      ]
+    },
+    {
+      "id": "C3-journey-limit",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^prepare\\ applies\\ the\\ IP\\ ceiling\\ before\\ journey\\ resolution\\ and\\ persists\\ the\\ browser\\ replay\\ identity$",
+        "tests/personal-plan-prepare-route.test.ts"
+      ]
+    },
+    {
+      "id": "C3-journey-window",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^prepare\\ applies\\ the\\ IP\\ ceiling\\ before\\ journey\\ resolution\\ and\\ persists\\ the\\ browser\\ replay\\ identity$",
+        "tests/personal-plan-prepare-route.test.ts"
+      ]
+    },
+    {
+      "id": "C3-lead-namespace",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^prepare\\ applies\\ the\\ IP\\ ceiling\\ before\\ journey\\ resolution\\ and\\ persists\\ the\\ browser\\ replay\\ identity$",
+        "tests/personal-plan-prepare-route.test.ts"
+      ]
+    },
+    {
+      "id": "C4-progressbar",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^server\\-first\\ pending\\ envelope\\ renders\\ approved\\ static\\ copy\\ and\\ no\\-JS\\ recovery$",
+        "tests/personal-plan-ready-server-first.test.tsx"
+      ]
+    },
+    {
+      "id": "C4-retry-progressbar",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^timeout\\ and\\ transient\\ states\\ lead\\ with\\ a\\ retry\\ state\\ instead\\ of\\ a\\ live\\ check$",
+        "tests/personal-plan-ready-server-first.test.tsx"
+      ]
+    },
+    {
+      "id": "C4-retired-label",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^missing\\ source\\ facts\\ ask\\ for\\ the\\ fact\\ without\\ claiming\\ no\\ action\\ is\\ needed$",
+        "tests/personal-plan-ready-server-first.test.tsx"
+      ]
+    },
+    {
+      "id": "C4-wordmark",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^forbidden\\ and\\ invalid\\ states\\ show\\ support\\ without\\ waiting\\ or\\ payment\\ claims$",
+        "tests/personal-plan-ready-server-first.test.tsx"
+      ]
+    },
+    {
+      "id": "D1-typed-failure",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^mask\\-missing\\-thickness:\\ required\\ Mask\\ target\\ input\\ fails\\ closed\\ at\\ the\\ shared\\ parser$",
+        "tests/personal-plan/input.test.ts"
+      ]
+    },
+    {
+      "id": "D1-required-thickness",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^mask\\-missing\\-thickness:\\ required\\ Mask\\ target\\ input\\ fails\\ closed\\ at\\ the\\ shared\\ parser$",
+        "tests/personal-plan/input.test.ts"
+      ]
+    },
+    {
+      "id": "D2-numeric-message-id",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^claims,\\ sends,\\ and\\ marks\\ the\\ result\\ artifact\\ email\\ sent$",
+        "tests/quiz-result-artifact-route.test.ts"
+      ]
+    },
+    {
+      "id": "D3-null-claim-result",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^skips\\ a\\ failed\\ result\\ artifact\\ email\\ until\\ manual\\ retry\\ resets\\ it$",
+        "tests/quiz-result-artifact-route.test.ts"
+      ]
+    },
+    {
+      "id": "D3-production-null-filter",
+      "argv": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=^the\\ production\\ claim\\ excludes\\ moderator\\-owned\\ legacy\\ leads$",
+        "tests/quiz-result-artifact-route.test.ts"
+      ]
+    }
+  ],
+  "note": "Commands for parent only. No runtime performed. PostgreSQL test retains its existing environment gate/skip; no Docker/DB setup authorized here."
+}

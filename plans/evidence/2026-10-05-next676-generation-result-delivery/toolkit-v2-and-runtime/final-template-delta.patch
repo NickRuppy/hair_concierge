@@ -1,0 +1,386 @@
+--- immutable-generation157-v1/operator-guard.cjs
++++ generation157-v2/operator-guard.cjs
+@@ -4,7 +4,7 @@
+ const path = require('node:path')
+ const crypto = require('node:crypto')
+ const ROOT = '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning'
+-const BASE = '/tmp/test-audit-generation157-tools-xwq0stb7/operator'
++const BASE = '/tmp/test-audit-generation157-tools-v2-orjded8b/operator'
+ const PROPOSAL = '/tmp/test-audit-plan-generation157-R7hJl1'
+ const LOCK = '/tmp/test-audit-pruning-operator-lock'
+ const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex')
+
+--- immutable-generation157-v1/operator-edit.cjs
++++ generation157-v2/operator-edit.cjs
+@@ -2,7 +2,7 @@
+ // Main only. --check is zero-write/no-child; mutation modes are never invoked by worker.
+ const fs=require('node:fs'),path=require('node:path')
+ const g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs')
+-const PIN_SHA='04fa5cb7e922f757827213f81d5eda7421e159408c146a11da8ea5e53a669a50'
++const PIN_SHA='b41d3a0d1a4021f978e0458b7e7a6c21881541ff195bb662c28e0d59ea917d70'
+ const mode=(process.argv[2]||'check').replace(/^--/,'')
+ if(!['check','transfer','cut'].includes(mode)||(mode!=='cut'&&process.argv.length>3)||(mode==='cut'&&process.argv.length!==5))g.fail('Use --check | transfer | cut <transfer-receipt-dir> <completion-sha256>')
+ const context=g.load(PIN_SHA)
+
+--- immutable-generation157-v1/operator-run-controls.cjs
++++ generation157-v2/operator-run-controls.cjs
+@@ -2,7 +2,7 @@
+ // Main-only serial actual-owner faults. --check never starts a child or writes repository bytes.
+ const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process')
+ const g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs')
+-const PIN_SHA='04fa5cb7e922f757827213f81d5eda7421e159408c146a11da8ea5e53a669a50'
++const PIN_SHA='b41d3a0d1a4021f978e0458b7e7a6c21881541ff195bb662c28e0d59ea917d70'
+ const mode=(process.argv[2]||'check').replace(/^--/,'')
+ const selectedId=process.argv[3]
+ if(!['check','run'].includes(mode)||process.argv.length>4)g.fail('Use --check [control-id] | run [control-id]')
+@@ -12,7 +12,6 @@
+ if(mode==='check'){
+   console.log(JSON.stringify({mode,phase:initial.phase,controls:controls.length,tsMutantsParsed:18,sqlByteRecipes:0,allControlsPrepared:prepared.size===18,phaseOracles:'exact assertion startLine and text in transfer/cut',selectedTestCount:1,repositoryWrites:0,runtimeRuns:0,childrenStarted:0},null,2));process.exit(0)
+ }
+-if(!selectedId&&context.controls.some(c=>!c.diagnosticReady))g.fail('Full run blocked: unresolved D1-required-thickness diagnostic. No automatic probe. Root may explicitly select it for controlled capture, which cannot pass or authorize cut.');
+ if(!['transfer','cut'].includes(initial.phase))g.fail('Transfer/cut phase required; no original false-pass claim')
+ for(const key of ['TRIAL_ADMISSION_MUTANT','TRIAL_ACCESS_MUTANT','NODE_OPTIONS','TSX_TSCONFIG_PATH'])if(process.env[key])g.fail('Existing harness mutant is active: '+key)
+ const phase=initial.phase,unlock=g.lock(),receipts=[]
+
+--- immutable-generation157-v1/operator-proof.cjs
++++ generation157-v2/operator-proof.cjs
+@@ -1,7 +1,7 @@
+ 'use strict'
+ // Shared read-only TAP proof validation. Cut revalidates logs instead of trusting a boolean.
+ const fs=require('node:fs'),path=require('node:path')
+-const g=require('./operator-guard.cjs')
++const g=require('./operator-guard.cjs'),typed=require('./diagnostic-projection.cjs')
+ function parseTAP(text){
+  const number=key=>{const all=[...text.matchAll(new RegExp('^# '+key+' (\\d+)$','gm'))];return all.length===1?Number(all[0][1]):null}
+  return {tests:number('tests'),pass:number('pass'),fail:number('fail'),skipped:number('skipped'),cancelled:number('cancelled'),todo:number('todo')}
+@@ -29,8 +29,9 @@
+  const message=errorMessage(run.text)
+  const codes=[...run.text.matchAll(/^\s{2}code:\s*['"]([^'"]+)['"]\s*$/gm)].map(m=>m[1])
+  const names=[...run.text.matchAll(/^\s{2}name:\s*['"]([^'"]+)['"]\s*$/gm)].map(m=>m[1])
++ const typedValues=typed.valueProof(control,run.text)
+  const messageMatches=typeof message==='string'&&control.errorMessageIncludes.length>=2&&control.errorMessageIncludes.every(t=>message.includes(t))
+- return {accepted:run.status===1&&run.signal===null&&!run.timedOut&&!run.spawnError&&run.tests===1&&run.pass===0&&run.fail===1&&run.skipped===0&&run.cancelled===0&&run.todo===0&&codes.length===1&&codes[0]==='ERR_ASSERTION'&&names.length===1&&names[0]==='AssertionError'&&control.diagnosticReady===true&&named(control,run)&&operator===control.expectedOperator&&messageMatches&&firstFrame.includes(stackToken),operator,message,messageMatches,firstFrame,stackToken,expected:oracle}
++ return {accepted:run.status===1&&run.signal===null&&!run.timedOut&&!run.spawnError&&run.tests===1&&run.pass===0&&run.fail===1&&run.skipped===0&&run.cancelled===0&&run.todo===0&&codes.length===1&&codes[0]==='ERR_ASSERTION'&&names.length===1&&names[0]==='AssertionError'&&control.diagnosticReady===true&&named(control,run)&&operator===control.expectedOperator&&messageMatches&&firstFrame.includes(stackToken)&&typedValues.accepted,operator,message,messageMatches,firstFrame,stackToken,expected:oracle,typedValues}
+ }
+ function validateTransferReceipt(ctx,pinSHA,dir,completionSHA){
+  if(!dir||!new RegExp('^'+g.BASE.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'-mutations-transfer-[A-Za-z0-9]+$').test(dir)||path.dirname(fs.realpathSync(dir))!==fs.realpathSync(path.dirname(g.BASE)))g.fail('Exact owned transfer receipt directory required')
+
+
+--- immutable-generation157-v1/operator-native-proof.cjs
++++ generation157-v2/operator-native-proof.cjs
+@@ -1,7 +1,7 @@
+ 'use strict';
+ // Main's read-only full-cohort receipt checker. Does not run native or import tests.
+ const fs=require('node:fs'),path=require('node:path'),g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs');
+-const PIN_SHA='04fa5cb7e922f757827213f81d5eda7421e159408c146a11da8ea5e53a669a50';
++const PIN_SHA='b41d3a0d1a4021f978e0458b7e7a6c21881541ff195bb662c28e0d59ea917d70';
+ if(process.argv.length!==5)g.fail('Use <before|transfer|cut> <closed-native.tap> <command.json>');
+ const [phase,logPath,commandPath]=process.argv.slice(2),ctx=g.load(PIN_SHA);
+ if(!['before','transfer','cut'].includes(phase)||ctx.current().phase!==phase)g.fail('Exact current native phase required');
+
+--- immutable-generation157-v1/proof-attestation.cjs
++++ generation157-v2/proof-attestation.cjs
+@@ -1,34 +1,50 @@
+ 'use strict';
+-// Static in-memory diagnostic-parser checks only. No owner/test execution or source writes.
+-const fs=require('node:fs'),proof=require('./operator-proof.cjs'),controls=JSON.parse(fs.readFileSync(__dirname+'/operator-controls-normalized.json','utf8'));
+-let assertions=0;function ok(value,message){assertions++;if(!value)throw Error(message)}
+-function tap(c,phase){const o=c.oracles[phase];return `TAP version 13\n# Subtest: ${c.test.name}\nnot ok 1 - ${c.test.name}\n  ---\n  error: |-\n    ${c.errorMessageIncludes[0].replaceAll('\n','\n    ')}\n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  operator: '${c.expectedOperator}'\n  stack: |-\n    TestContext.<anonymous> (${c.test.file}:${o.startLine}:10)\n    Test.run (node:internal/test_runner/test:1000:1)\n  ...\n1..1\n# tests 1\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n`}
+-function run(text,extra={}){return{status:1,signal:null,timedOut:false,spawnError:null,...proof.parseTAP(text),text,...extra}}
++const fs=require('node:fs'),p=require('./operator-proof.cjs'),typed=require('./diagnostic-projection.cjs'),controls=JSON.parse(fs.readFileSync(__dirname+'/operator-controls-normalized.json'));
++let assertions=0;function ok(v,m){assertions++;if(!v)throw Error(m)}
++function serialize(key,value,indent=2){const pad=' '.repeat(indent);if(value.kind==='map')return pad+key+':\n'+value.entries.map(e=>serialize(e.key,e.value,indent+2)).join('');return pad+key+': '+(value.kind==='null'?'~':JSON.stringify(value.value))+'\n'}
++function tap(c,phase){const o=c.oracles[phase],actual=c.typedPolicy==='ssr-custom'?serialize('actual',typed.project('<section>'+c.actualStringWitness+'</section>')):serialize('actual',c.actualProjection),message=c.id==='D1-required-thickness'?c.predictedMessageEvidence:c.errorMessageIncludes[0];return `TAP version 13\n# Subtest: ${c.test.name}\nnot ok 1 - ${c.test.name}\n  ---\n  error: |-\n    ${message.replaceAll('\n','\n    ')}\n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n${serialize('expected',c.expectedProjection)}${actual}  operator: '${c.expectedOperator}'\n  stack: |-\n    TestContext.<anonymous> (${c.test.file}:${o.startLine}:10)\n    Test.run (node:internal/test_runner/test:1000:1)\n  ...\n1..1\n# tests 1\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n`}
++const run=(text,extra={})=>({status:1,signal:null,timedOut:false,spawnError:null,...p.parseTAP(text),text,...extra});
+ for(const c of controls)for(const phase of ['transfer','cut']){
+- const text=tap(c,phase);if(!c.diagnosticReady){ok(!proof.intended(c,run(text),phase).accepted,'Unresolved thickness never accepted');continue}ok(proof.intended(c,run(text),phase).accepted,c.id+' intended');
+- ok(!proof.intended(c,run(text,{timedOut:true}),phase).accepted,'timeout rejected');
+- ok(!proof.intended(c,run(text,{signal:'SIGKILL'}),phase).accepted,'signal rejected');
+- ok(!proof.intended(c,run(text,{spawnError:'error'}),phase).accepted,'spawn rejected');
+- ok(!proof.intended(c,run(text.replace("code: 'ERR_ASSERTION'","code: 'ERR_MODULE_NOT_FOUND'")),phase).accepted,'import rejected');
+- ok(!proof.intended(c,run(text.replace("operator: '"+c.expectedOperator+"'","operator: '!='")),phase).accepted,'operator rejected');
+- ok(!proof.intended(c,run(text.replace(c.test.file+':'+c.oracles[phase].startLine+':10',c.test.file+':1:10')),phase).accepted,'first frame rejected');
+- ok(!proof.intended(c,run(text.replace('# tests 1','# tests 0')),phase).accepted,'zero rejected');
+- ok(!proof.intended(c,run(text.replace('# skipped 0','# skipped 1')),phase).accepted,'skip rejected');
+- ok(!proof.intended(c,run(text.replace('# Subtest: '+c.test.name,'# Subtest: Wrong test')),phase).accepted,'wrong name rejected');
+- for(const part of c.errorMessageIncludes)ok(!proof.intended(c,run(text.replace(part.replaceAll('\n','\n    '),'unrelated diagnostic')),phase).accepted,'required message fragment rejected');
+- const body=c.errorMessageIncludes[0];
+- for(const scalar of [JSON.stringify(body), ...(!body.includes("\n")?["'"+body.replaceAll("'", "''")+"'"]:[])]){
+-  const scalarText=text.replace(/  error: \|-\n(?:    [^\n]*\n)+?(?=  code:)/,'  error: '+scalar+'\n');
+-  ok(proof.intended(c,run(scalarText),phase).accepted,c.id+' decoded scalar accepted');
++ const text=tap(c,phase),accepted=x=>p.intended(c,run(x),phase).accepted;
++ ok(accepted(text),c.id+' full synthetic projection '+phase);
++ for(const extra of[{timedOut:true},{signal:'SIGKILL'},{spawnError:'bad'},{status:0}])ok(!p.intended(c,run(text,extra),phase).accepted,'process rejection');
++ for(const[from,to]of[["code: 'ERR_ASSERTION'","code: 'ERR_MODULE_NOT_FOUND'"],["name: 'AssertionError'","name: 'TypeError'"],["operator: '"+c.expectedOperator+"'","operator: '!='"],['# tests 1','# tests 0'],['# skipped 0','# skipped 1'],['# cancelled 0','# cancelled 1'],['# todo 0','# todo 1'],['# Subtest: '+c.test.name,'# Subtest: Unrelated'],['  error: |-','  error: >-'],[c.test.file+':'+c.oracles[phase].startLine+':10',c.test.file+':1:10']])ok(!accepted(text.replace(from,to)),c.id+' rejects '+from);
++ for(const key of ['actual','expected']){
++  ok(!accepted(text.replace(new RegExp('^  '+key+':[^\\n]*\\n(?: {4,}[^\\n]*\\n)*','m'),'')),'missing '+key);
++  ok(!accepted(text.replace(new RegExp('^  '+key+':','m'),'  '+key+':\n  '+key+':')),'duplicate top-level '+key);
++  ok(!accepted(text.replace(new RegExp('^  '+key+':[^\\n]*\\n(?: {4,}[^\\n]*\\n)*','m'),'  '+key+': &unknown\n')),'unsupported scalar '+key);
+  }
+- ok(!proof.intended(c,run(text.replace('  error: |-','  error: >-')),phase).accepted,'unknown scalar rejected');
+- const nestedWrong=text.replace("  operator: '"+c.expectedOperator+"'","  actual:\n    stack: |-\n      setup (src/unrelated.ts:1:1)\n  operator: '"+c.expectedOperator+"'");
+- ok(proof.intended(c,run(nestedWrong),phase).accepted,'nested actual stack ignored');
+- const wrongOuter=nestedWrong.replace(c.test.file+':'+c.oracles[phase].startLine+':10',c.test.file+':1:10').replace('setup (src/unrelated.ts:1:1)','TestContext.<anonymous> ('+c.test.file+':'+c.oracles[phase].startLine+':10)');
+- ok(!proof.intended(c,run(wrongOuter),phase).accepted,'correct nested frame cannot rescue wrong assertion frame');
+-
+- const cleanText=`TAP version 13\n# Subtest: ${c.test.name}\nok 1 - ${c.test.name}\n1..1\n# tests 1\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n`;
+- ok(proof.clean(c,run(cleanText,{status:0})),'clean accepted');
+- ok(!proof.clean(c,run(cleanText.replace('# tests 1','# tests 0'),{status:0})),'zero clean rejected');
++ for(const piece of c.errorMessageIncludes)ok(!accepted(text.replace(piece.replaceAll('\n','\n    '),'wrong diagnostic')),'full scalar/custom message or exact D1 witness required');
++ const wrongOuter=text.replace(c.test.file+':'+c.oracles[phase].startLine+':10',c.test.file+':1:10').replace('  operator:','  auxiliary:\n    stack: |-\n      TestContext.<anonymous> ('+c.test.file+':'+c.oracles[phase].startLine+':10)\n  operator:');ok(!accepted(wrongOuter),'nested frame cannot rescue first outer');
++ ok(!accepted(text.replace('    TestContext.<anonymous>','    setup (src/setup.ts:1:1)\n    TestContext.<anonymous>')),'earlier helper first frame rejected');
++ ok(!accepted(text.replace('  operator:', '\n    unexpected: true\n  operator:')),'hidden continuation after blank rejected');
++ if(c.typedPolicy==='ssr-custom'){
++  ok(!accepted(text.replace(/^  actual:.*\n/m,'  actual: "<section>unrelated</section>"\n')),'missing SSR witness');
++  const prefix='<section>'+c.actualStringWitness+'</section>'+'x'.repeat(10000-('<section>'+c.actualStringWitness+'</section>').length);
++  ok(accepted(text.replace(/^  actual:.*\n/m,'  actual: '+JSON.stringify(prefix)+'... 731 more characters\n')),'supported SSR prefix only');
++  ok(!accepted(text.replace(/^  actual:.*\n/m,'  actual: '+JSON.stringify(c.actualStringWitness)+'... 731 more characters\n')),'unknown SSR truncation shape');
++  ok(!accepted(text.replace(/^  actual:.*\n/m,'  actual: '+c.actualStringWitness+'\n')),'unquoted SSR not supported');
++ }else{
++  for(const key of ['expected','actual']){
++   const original=key==='expected'?c.expectedProjection:c.actualProjection;
++   const paths=[];function visit(v,path=[]){paths.push(path);if(v.kind==='map')v.entries.forEach((e,i)=>visit(e.value,path.concat(i)))}visit(original);
++   const at=(v,path)=>path.reduce((x,i)=>x.entries[i].value,v);
++   for(const path of paths){
++    const changed=structuredClone(original),v=at(changed,path);
++    if(v.kind==='map')v.entries.push({key:'unexpected_key',value:{kind:'boolean',value:true}});else if(v.kind==='number'){v.kind='string';v.value=String(v.value)}else if(v.kind==='boolean')v.value=!v.value;else if(v.kind==='null'){v.kind='string';v.value='null'}else v.value+='wrong';
++    const replacement=serialize(key,changed),pattern=new RegExp('^  '+key+':[^\\n]*\\n(?: {4,}[^\\n]*\\n)*','m');ok(!accepted(text.replace(pattern,replacement)),c.id+' complete '+key+' rejects changed typed path '+path.join('.'));
++   }
++  }
++ }
++ if(c.id==='D1-required-thickness'){
++  for(const value of ['undefined','"undefined"','false','~'])ok(!accepted(text.replace('      answers:\n','      answers:\n        thickness: '+value+'\n')),'source-proved omission cannot become printed '+value);
++  ok(!accepted(text.replace('        texture: "wavy"\n','')),'missing known field');
++  ok(!accepted(text.replace('        texture: "wavy"\n','        texture: "wavy"\n        texture: "wavy"\n')),'duplicate nested field');
++  ok(!accepted(text.replace('        texture: "wavy"','        texture: "wavy"... 3 more characters')),'truncation rejected');
++  ok(!accepted(text.replace('        texture: "wavy"','       texture: "wavy"')),'odd indentation rejected');
++  ok(!p.intended({...c,mutatedSha256:'wrong'},run(text),phase).accepted,'D1 exact mutant binding');
++  const copied={...c,id:'another-control'};ok(!p.intended(copied,run(text),phase).accepted,'omission cannot escape D1');
++ }
++ const clean=`# Subtest: ${c.test.name}\nok 1 - ${c.test.name}\n# tests 1\n# pass 1\n# fail 0\n# skipped 0\n# cancelled 0\n# todo 0\n`;ok(p.clean(c,run(clean,{status:0})),'clean exactone');ok(!p.clean(c,run(clean.replace('# tests 1','# tests 0'),{status:0})),'clean zero rejected');
+ }
+-console.log(JSON.stringify({status:'PASS_STATIC_SYNTHETIC_PARSER_ONLY',controls:18,phases:2,assertions,children:0,ownerImports:0,repositoryWrites:0,runtimeClaims:0,note:'Diagnostic-shape rejection checks only, not native fault sensitivity or real TAP evidence.'},null,2));
++console.log(JSON.stringify({status:'PASS_STATIC_SYNTHETIC_ONLY',controls:18,phases:2,assertions,repositoryWrites:0,children:0,ownerImports:0,nativeRuns:0,limits:'Predicted literal reporter projections only. No actual owner, Zod or native execution. Object/array and undefined serialization limitations remain explicit.'},null,2));
+
+--- immutable-generation157-v1/static-integrity.cjs
++++ generation157-v2/static-integrity.cjs
+@@ -1,13 +1,9 @@
+ 'use strict';
+-const fs=require('node:fs'),vm=require('node:vm'),crypto=require('node:crypto');
+-const D=__dirname,P='/tmp/test-audit-plan-generation157-R7hJl1',sha=b=>crypto.createHash('sha256').update(b).digest('hex'),read=p=>JSON.parse(fs.readFileSync(p));
+-const old=read(D+'/template-originals/operator-pins.json'),pins=read(D+'/operator-pins.json');
+-const parsed=[];for(const n of fs.readdirSync(D).filter(n=>n.endsWith('.cjs'))){new vm.Script(fs.readFileSync(D+'/'+n,'utf8'),{filename:n});parsed.push(n)}
+-const extract=s=>s.slice(s.indexOf('function parseTAP('),s.indexOf('function intended('));if(extract(fs.readFileSync(D+'/operator-proof.cjs','utf8'))!==extract(fs.readFileSync(D+'/template-originals/operator-proof.cjs','utf8')))throw Error('Base counter/clean/error decoder changed');
+-if(JSON.stringify(pins.original109Guards)!==JSON.stringify(read(P+'/readsets.json')))throw Error('Original109 repinned');
+-for(const k of ['head','branch','gitDir','commonDir','node','typescriptVersion','metadataPolicy','identityFiles'])if(JSON.stringify(pins[k])!==JSON.stringify(old[k]))throw Error('Existing identity/policy drift '+k);
+-for(const p of old.dependencies)if(!pins.dependencies.some(q=>JSON.stringify(p)===JSON.stringify(q)))throw Error('Existing dependency changed');
+-if(JSON.stringify(old.dependencyTrees)!==JSON.stringify(pins.dependencyTrees))throw Error('Existing distribution changed');
+-const controls=read(D+'/operator-controls-normalized.json');if(controls.length!==18||new Set(controls.map(x=>x.mutatedSha256)).size!==18)throw Error('18 unique controls');
+-for(const c of controls)if(sha(fs.readFileSync(c.fullMutantPath))!==c.mutatedSha256)throw Error('Full mutant drift');
+-console.log(JSON.stringify({status:'PASS_STATIC',pinsSHA:sha(fs.readFileSync(D+'/operator-pins.json')),parsedToolFiles:parsed,original109GuardsUnchanged:true,templateIdentityRuntimeDependenciesUnchanged:true,baseCounterCleanDecoderByteIdentical:true,unresolvedDiagnosticBlocked:controls.filter(c=>!c.diagnosticReady).map(c=>c.id),sourceControls:18,repositoryWrites:0,children:0,ownerImports:0,nativeRuns:0},null,2));
++const fs=require('node:fs'),vm=require('node:vm'),crypto=require('node:crypto');const D=__dirname,sha=b=>crypto.createHash('sha256').update(b).digest('hex'),read=p=>JSON.parse(fs.readFileSync(p));
++const old=read(D+'/v1-originals/operator-pins.json'),pins=read(D+'/operator-pins.json'),controls=read(D+'/operator-controls-normalized.json');
++for(const field of ['root','head','branch','gitDir','commonDir','identityFiles','node','typescriptVersion','metadataPolicy','original109Guards','readset','dependencies','dependencyTrees','repositoryTrees'])if(JSON.stringify(old[field])!==JSON.stringify(pins[field]))throw Error('Protected pins changed '+field);
++const prior=read('/tmp/test-audit-generation157-tools-xwq0stb7/operator-controls-normalized.json');for(let i=0;i<18;i++)for(const field of ['id','file','sourceSha256','mutatedSha256','from','to','test','command','oracles'])if(JSON.stringify(controls[i][field])!==JSON.stringify(prior[i][field]))throw Error('Source/keeper recipe changed '+controls[i].id+' '+field);
++const projection=fs.readFileSync(D+'/diagnostic-projection.cjs','utf8'),catalog=fs.readFileSync(D+'/catalog-decoder-source.cjs','utf8');if(projection.slice(projection.indexOf('function diagnosticValue('),projection.indexOf('function project(')).trimEnd()!==catalog.trimEnd())throw Error('Catalog scalar decoder changed');
++const files=fs.readdirSync(D).filter(n=>n.endsWith('.cjs'));for(const f of files)new vm.Script(fs.readFileSync(D+'/'+f,'utf8'),{filename:f});
++if(controls.length!==18||controls.some(c=>!c.diagnosticReady)||controls.filter(c=>c.sourceProvedUndefinedPaths?.length).map(c=>c.id).join()!=='D1-required-thickness')throw Error('Diagnostic scope');
++console.log(JSON.stringify({status:'PASS_STATIC',pinsSHA256:sha(fs.readFileSync(D+'/operator-pins.json')),parsedFiles:files,original109AndAll280ReadsetsUnchanged:true,all5022RuntimePinsAndIdentityPoliciesUnchanged:true,all18SourceRecipesAndFirstFramesUnchanged:true,catalogScalarDecoderByteExact:true,diagnosticsReady:18,repositoryWrites:0,children:0,ownerImports:0,nativeRuns:0,limits:'Static prediction and parser validation, not runtime acceptance.'},null,2));
+
+--- immutable-generation157-v1/README.md
++++ generation157-v2/README.md
+@@ -1,26 +1,30 @@
+-# Generation157 — prospective root-only operator kit
++# Generation157 — fresh diagnostic version2, main-only
+ 
+-Preparation only; semantic acceptance is pending root and independent review. Source proposal `/tmp/test-audit-plan-generation157-R7hJl1` is immutable. Its manifest hash is `5a1b8e56f7e6fc31b1f972fa98d91d8746169261702e5a3bef33f9f6ce74abcd`; handoff hash `504f0497b4ce931fe86b5ae449d547a410102a75d803f09115c939c96928003a`. Never rerun sealed proposal helpers.
++This immutable version supersedes only the unresolved diagnostic/tool preparation in `/tmp/test-audit-generation157-tools-xwq0stb7`. Old kit and sealed proposal `/tmp/test-audit-plan-generation157-R7hJl1` remain unchanged. Root owns review, acceptance, source/test writes and every native action. No automatic probes or runs occur.
+ 
+-The scope is27 test files /81 phase snapshots, AST157→157→150. Only the already-existing thickness/elasticResponse registration loop expands, so native titles are158→158→151. The unchanged opt-in PostgreSQL test must remain skipped:157→157→150 passing cases plus exactly1skip. No new skip/case/row/input/call is added. This kit never enables PostgreSQL or Docker. Root must ensure `PERSONAL_PLAN_RETURN_REPAIR_POSTGRES_TEST` is not1 before manually launching the full cohort; the full native receipt checker rejects any skip besides that exact unchanged test.
++Scope remains27 whole test files/81 snapshots; AST157→157→150, native158→158→151. All109 original and280 operative readset pins,5022 installed runtime pins,32 distribution inventories, Node/identity/config/packed-ref policies are byte-identical to version1. The canonical full native argv is copied byte-exact. Root's closed original baseline158titles/157pass/exact1 unchanged opt-in PostgreSQL skip can be requalified with the fresh read-only native checker; do not rerun it merely for a tool-code version change. Existing root receipts are `/tmp/test-audit-generation158-main-before.{tap,command.json,result.json}`. This preparer does not claim to have run that baseline.
+ 
+-Seven donors are removed; seven keepers change.143 surviving callbacks stay byte-exact, including four explicit D preservation keepers. The strict count excluding every named preservation keeper is139 unrelated. All11 held F callbacks remain exact. The only support transfer passively records `rateConfigs` in the existing callback and return object. Cut removes the unused imported routine constant. Root/independent reviewers retain responsibility for equivalent consumed inputs and assertion meaning; the kit checks exact frozen union destinations/phase reconstruction and preservation rather than granting semantic acceptance.
++Seven changed keepers/seven removed donors;143 retained callbacks remain exact (139 exclude all11 named preservation keepers). All11 F cases remain exact. Support changes remain only the sealed passive rateConfigs observation and unused-import removal. Every18 actual-owner mutation recipe, source SHA, test selection, phase assertion and first frame is unchanged. No new test inputs, rows, calls, skips, source changes or provider/DB actions were introduced.
+ 
+-All109 original source/test/dependency readset pins are immutable. Literal local import closure is a first-time mechanical guard, not semantic reading credit. The reviewed care102 kit supplies unchanged identity/Node/shared config/packed-ref/runtime-distribution policies. No unrelated prior source guards are inherited. Every18 full owner mutant remains the exact sealed proposal recipe.
++## Diagnostic representation
+ 
+-**One diagnostic is intentionally unresolved.** `D1-required-thickness` changes the required input schema into a successful larger parsed envelope. No complete observed or statically justified printed actual exists in the descriptor. This kit has `diagnosticReady:false` and ALWAYS rejects that control as preservation proof. The all-controls `run` command refuses before any child while it remains unresolved. No generic failure, imported error, guessed successful envelope or empty message can authorize cut. Root may explicitly select that one control for a controlled capture after accepting its source recipe; it will restore original bytes and perform the final clean check, then fail with no eligible receipt. There is no automatic probe/retry. Any later diagnostic representation requires a new reviewed immutable kit version; never patch this frozen kit or silently repin sources.
++All literal controls now require the complete exact typed-scalar/key/value projection of both expected and actual from Node TAP, in addition to existing full decoded error-message, code/operator/name, exact-one selection and FIRST outer keeper frame. Unknown scalar syntax, duplicate/missing/extra keys, partial/truncated object fields, wrong types, malformed indentation and earlier helper/setup frames fail closed. The bounded decoder permits only Node's observed source-defined map indentation and scalar styles; it is not a general YAML parser.
+ 
+-The other17 diagnostics use full predicted literal assertion messages, or C4's exact explicit custom SSR assertion messages. C4 does not assert complete HTML equality or fabricate printed HTML; code/operator/exact message and FIRST outer keeper assertion are required against the exact actual-owner mutant and phase/source hashes. All controls select exactly one native keeper; skip/cancel/todo/import/setup/helper/timeout or earlier-frame failures are rejected. The root reads every complete TAP diagnostic. Synthetic shape checks are not native evidence.
++D1-required-thickness is resolved prospectively from the whole pinned literal fixture plus the bounded installed Zod4.4.3/parser/schema readset. The mutant permits the existing own thickness:undefined; Zod's optional parser and both object paths preserve that own key, and the actual parser returns {ok:true,envelope:parsed.data}. No transformation/default/canonicalization occurs on this fixture path. See `diagnostic-source-evidence.json` and frozen source excerpts/whole-byte copies. Zod was read, never imported/executed.
+ 
+-## Main sequence after independent/root acceptance
++Pinned Node22 jsToYaml omits undefined-valued object properties. It also serializes arrays/objects by their entries; e.g. empty arrays and empty objects have the same printed projection. Therefore this kit explicitly proves the complete exact **printed projection**, while source pins establish the actual own undefined/container types. It does not falsely claim TAP object fields distinguish absent thickness from own undefined. Only D1's exact ID/source/mutant/keeper/phase/deepStrictEqual binding permits that source-proved omitted property. The pinned built-in AssertionError formatter, applied only to source-backed literal values, supplies additional exact `thickness: undefined` message evidence; real TAP must contain it. No observed native bytes are invented. D1's full expected typed rejection remains exact, and every remaining successful-envelope key/value must match—no arbitrary missing key, unknown/truncated encoding, extra property, or partial success object can pass.
+ 
+-Run from `/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning`, exact branch `codex/test-audit-pruning`/HEAD `21e0e41fa996ec6a725c258ab3766971f0edb94d`, with pinned Node. Set `GEN157_KIT` to this directory. Root must close all other runners first; the shared exclusive lock detects only participating operators.
++C4 retains its exact explicit custom SSR messages and now additionally requires the expected RegExp's empty reporter projection plus a typed full string or explicitly supported inspect prefix containing the precise bad progressbar/retired-label/haarplan witness. It makes no full-HTML equality or unseen-tail claim. Root reads the actual complete printed diagnostic and can reject any unanticipated encoding; no fallback relaxes the decoder.
+ 
+-1. Inspect the full delta, preparer, normalized18controls and unresolved diagnostic disposition. Read-only: `node --require "$GEN157_KIT/operator-readonly-preload.cjs" "$GEN157_KIT/operator-edit.cjs" --check`; similarly run control `--check`, static-integrity and proof-attestation. These start no child, owner or native module.
+-2. Use the exact full argv in `full-native-command.json`, capture closed0 TAP/command receipt, then validate `node "$GEN157_KIT/operator-native-proof.cjs" before <tap> <command.json>`. The checker alone cannot prove process exit.
+-3. Root-only `operator-edit.cjs transfer`; repeat full cohort and transfer native receipt validation.
+-4. Resolve D1's diagnostic in a separately reviewed version. Then all18 controls must run serial clean1→intendedred1→owned byte-exact restore→clean1. The current all-controls run is intentionally blocked.
+-5. `operator-edit.cjs cut <transfer-receipt-dir> <completion-sha256>` revalidates all18 fresh receipts, logs, commands, intended first frames and restored readsets. This version cannot legitimately satisfy the unresolved control and cannot authorize cut.
+-6. After a fully qualified later version, full cut151 native titles with unchanged one PostgreSQL skip and all18 postcut controls are required, followed by root's fresh whole CI/coverage gates.
++## Main commands and gates
+ 
+-The editor and driver retain common exclusive lock, exact CAS/owned rollback, complete cohort+all unique owner backups before the first child,45s detached own-child timeout/group cleanup, and immutable log/command/source hashes. They never enumerate/kill other agents' processes. No repository edits/native/browser/provider/database/network actions were executed during preparation. Prepared code is not acceptance or removal credit.
++Exact cwd `/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning`, branch `codex/test-audit-pruning`, HEAD `21e0e41fa996ec6a725c258ab3766971f0edb94d`, pinned Node. Set `GEN157_KIT` to this directory. First inspect the fresh delta, complete diagnostic-projection.cjs, prepare-v2.cjs, normalized18controls/evidence and static results. The final delta is generated after final PIN constants; no later reseal occurs.
++
++- Read-only preflight: `node --require "$GEN157_KIT/operator-readonly-preload.cjs" "$GEN157_KIT/operator-edit.cjs" --check`; same preload for control `--check`, static-integrity and proof-attestation. No child/owner/network/write.
++- Requalify existing closed before TAP using `node "$GEN157_KIT/operator-native-proof.cjs" before /tmp/test-audit-generation158-main-before.tap /tmp/test-audit-generation158-main-before.command.json`; root separately retains its closed0 result receipt. No native launch by this checker.
++- Root only, after all other runners close: `node "$GEN157_KIT/operator-edit.cjs" transfer`; full native using exact `full-native-command.json`, then transfer receipt checker.
++- `node "$GEN157_KIT/operator-run-controls.cjs" run`: exactly18 serial clean1→intendedred1→owned byte-exact restore→clean1.45s own detached child group timeout/cleanup, no peer process enumeration. Unknown diagnostics fail after restore/final clean; no automatic retry/probe.
++- `node "$GEN157_KIT/operator-edit.cjs" cut <exact-transfer-receipt-dir> <completion-sha256>` gates cut on all18 source/readset/log/command/intended-first-frame proofs revalidated under the common exclusive lock.
++- Full cut151 titles/150pass/exact1 unchanged opt-in PostgreSQL skip, plus all18 postcut controls, and root's fresh whole CI/coverage gates. Do not enable the PostgreSQL environment gate or Docker from this kit.
++
++All originals are backed up before the first child/write; exact CAS and owned rollback preserve concurrent bytes. Common lock coordinates participating tools only; root must sequence other native/coverage runners itself. First-time source hash pinning is not semantic review; version2 adds no new runtime/source pins, only bounded source evidence and parser/tool artifacts. Preparation/static synthetic checks are not native or actual-mutant proof.
+
+--- /dev/null
++++ generation157-v2/diagnostic-projection.cjs
+@@ -0,0 +1,84 @@
++'use strict';
++// Exact catalog scalar decoder followed by a bounded, complete Node TAP object projection parser.
++function diagnosticValue(text,key){
++ const lines=text.split('\n'),found=lines.map((v,i)=>v.startsWith('  '+key+':')?i:-1).filter(i=>i>=0);if(found.length!==1)return{ok:false}
++ const i=found[0],tail=lines[i].slice(('  '+key+':').length).trimStart()
++ function scalar(value){
++   const quote=value[0]
++   if(["'",'"','`'].includes(quote)){
++     let out='',i=1,closed=false
++     for(;i<value.length;i++){
++       const char=value[i];if(char===quote){closed=true;i++;break}
++       if(char!=='\\'){out+=char;continue}
++       const e=value[++i],simple={'n':'\n','r':'\r','t':'\t','b':'\b','f':'\f','v':'\v','0':'\0','\\':'\\',"'":"'",'"':'"','`':'`'}
++       if(Object.hasOwn(simple,e)){out+=simple[e];continue}
++       if(e==='x'||e==='u'){const n=e==='x'?2:4,hex=value.slice(i+1,i+1+n);if(hex.length!==n||!/^[a-fA-F0-9]+$/.test(hex))return{ok:false};out+=String.fromCharCode(parseInt(hex,16));i+=n;continue}
++       return{ok:false}
++     }
++     if(!closed)return{ok:false}
++     const suffix=value.slice(i)
++     if(!suffix)return{ok:true,value:out,truncated:false}
++     const truncated=suffix.match(/^\.\.\. ([1-9]\d*) more characters$/)
++     if(truncated&&out.length===10000)return{ok:true,value:out,truncated:true,remainingCharacters:Number(truncated[1])}
++     return{ok:false}
++   }
++   if(value==='true'||value==='false'||value==='null')return{ok:true,value:JSON.parse(value)}
++   if(/^-?(?:0|[1-9]\d*)(?:\.\d+)?$/.test(value))return{ok:true,value:Number(value)}
++   if(value&&!/^[>|&*!{[]/.test(value))return{ok:true,value}
++   return{ok:false}
++ }
++ if(['|-','|','|+'].includes(tail)){const body=[];for(let k=i+1;k<lines.length;k++){if(lines[k].startsWith('    '))body.push(lines[k].slice(4));else if(lines[k]==='')body.push('');else break}return{ok:true,value:body.join('\n')}}
++ if(tail)return scalar(tail)
++ const values=[];for(let k=i+1;k<lines.length&&lines[k].startsWith('    ');k++){const m=lines[k].match(/^    (\d+): (.*)$/);if(!m||Number(m[1])!==values.length)return{ok:false};const v=scalar(m[2]);if(!v.ok)return v;values.push(v.value)}
++ return values.length?{ok:true,value:values}:{ok:true,value:{},emptyObject:true}
++}
++
++function project(value,path=[],allowedUndefined=[]){
++ if(value===undefined){if(!allowedUndefined.some(p=>JSON.stringify(p)===JSON.stringify(path)))throw Error('Unapproved undefined path');return undefined}
++ if(value===null||typeof value==='boolean'||typeof value==='string'||typeof value==='number'){if(typeof value==='number'&&!Number.isFinite(value))throw Error('Nonfinite scalar');return{kind:typeof value==='object'?'null':typeof value,value}}
++ if(!value||typeof value!=='object')throw Error('Unsupported projected value');
++ const entries=[];for(const[key,v]of Object.entries(value)){const next=project(v,path.concat(key),allowedUndefined);if(next!==undefined)entries.push({key,value:next})}return{kind:'map',entries};
++}
++function decodeProjection(text,key){
++ const lines=text.split('\n'),hits=[];for(let i=0;i<lines.length;i++)if(lines[i].startsWith('  '+key+':'))hits.push(i);
++ if(hits.length!==1)return{ok:false,reason:'missing/duplicate top-level field'};
++ let nodes=0;
++ function parseAt(index,indent,depth){
++  if(++nodes>2000||depth>20)throw Error('Projection complexity bound');
++  const re=new RegExp('^ {'+indent+'}([A-Za-z_][A-Za-z_0-9]*|0|[1-9][0-9]*):(?: (.*))?$'),match=lines[index]?.match(re);if(!match)throw Error('Unknown key/indent/encoding');
++  const field=match[1],tail=match[2]??'';
++  if(tail){
++   let result;
++   if(tail==='~')result={ok:true,value:null};
++   else if(/^(?:true|false|-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?)$/.test(tail)||["'",'"','`'].includes(tail[0]))result=diagnosticValue('  value: '+tail,'value');
++   else throw Error('Unknown scalar encoding');
++   if(!result.ok||result.truncated||result.emptyObject||typeof result.value==='object'&&result.value!==null)throw Error('Partial/unknown scalar rejected');
++   if(lines[index+1]?.startsWith(' '.repeat(indent+1)))throw Error('Scalar has children');
++   return{key:field,value:project(result.value),next:index+1};
++  }
++  const entries=[],seen=new Set();let next=index+1;
++  while(next<lines.length&&lines[next].startsWith(' '.repeat(indent+1))){
++   const child=parseAt(next,indent+2,depth+1);if(seen.has(child.key))throw Error('Duplicate map key');seen.add(child.key);entries.push({key:child.key,value:child.value});next=child.next;
++  }
++  return{key:field,value:{kind:'map',entries},next};
++ }
++ try{const result=parseAt(hits[0],2,0);if(result.key!==key)throw Error('Wrong root');if(result.next<lines.length&&!/^  (?:[A-Za-z_][A-Za-z_0-9]*:|\.\.\.$)/.test(lines[result.next]))throw Error('Unknown or unconsumed diagnostic continuation');return{ok:true,value:result.value,nodes}}catch(e){return{ok:false,reason:String(e)}}
++}
++function sameProjection(a,b){
++ if(!a||!b||a.kind!==b.kind)return false;
++ if(a.kind!=='map')return typeof a.value===typeof b.value&&Object.is(a.value,b.value);
++ if(a.entries.length!==b.entries.length)return false;const wanted=new Map(b.entries.map(e=>[e.key,e.value]));return a.entries.every(e=>wanted.has(e.key)&&sameProjection(e.value,wanted.get(e.key)));
++}
++function valueProof(control,text){
++ const expected=decodeProjection(text,'expected');if(!expected.ok||!sameProjection(expected.value,control.expectedProjection))return{accepted:false,reason:'complete expected reporter projection mismatch',expected};
++ if(control.typedPolicy==='ssr-custom'){
++  const actual=diagnosticValue(text,'actual');const accepted=/^  actual: ['"`][^\n]*\n  operator: /m.test(text)&&actual.ok&&typeof actual.value==='string'&&actual.value.includes(control.actualStringWitness);
++  return{accepted,kind:'SSR custom-message plus typed printed full string/supported prefix witness',expected,actual,limits:'No complete HTML equality or unseen-tail claim; exact custom message/operator/FIRST and source hashes remain required.'};
++ }
++ const actual=decodeProjection(text,'actual');if(!actual.ok)return{accepted:false,reason:'actual reporter projection incomplete/unknown',actual,expected};
++ let binding=true;
++ if(control.id==='D1-required-thickness')binding=control.file==='src/lib/personal-plan-quiz/persistence.ts'&&control.mutatedSha256==='6d7ab0f87ebc589159841ce2985602e77a50bcebdf998e7d2a7ce2312fb2e1f7'&&control.sourceSha256==='9783d531cfaf8ed1b8d91b133b030758fd2bf3c128b5eee10cd4b0e6f5883335'&&control.expectedOperator==='deepStrictEqual'&&control.test.file==='tests/personal-plan/input.test.ts'&&control.test.name==='mask-missing-thickness: required Mask target input fails closed at the shared parser'&&control.oracles.transfer.startLine===87&&control.oracles.cut.startLine===77&&JSON.stringify(control.sourceProvedUndefinedPaths)===JSON.stringify([['envelope','answers','thickness']]);
++ else if(control.sourceProvedUndefinedPaths?.length)binding=false;
++ return{accepted:binding&&sameProjection(actual.value,control.actualProjection),kind:'complete reporter projection',actual,expected,sourceProvedUndefinedPaths:control.sourceProvedUndefinedPaths||[],limits:'Complete printed key/value projection; Node omits undefined and prints arrays/objects by entries. Source pins, not TAP alone, establish own undefined/container types. Unknown, missing, extra, duplicate or truncated encoding rejected.'};
++}
++module.exports={diagnosticValue,project,decodeProjection,sameProjection,valueProof};
+
+--- /dev/null
++++ generation157-v2/prepare-v2.cjs
+@@ -0,0 +1,56 @@
++'use strict';
++// TMP-only static preparation. Never loads Zod/product/test owners or starts native/child operations.
++const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),cp=require('node:child_process'),Module=require('node:module'),assert=require('node:assert/strict');
++const D='/tmp/test-audit-generation157-tools-v2-orjded8b',V='/tmp/test-audit-generation157-tools-xwq0stb7',R='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning',P='/tmp/test-audit-plan-generation157-R7hJl1';
++let attemptedWritesOutsideOwnTMP=0,attemptedChildren=0,attemptedOwnerImports=0,attemptedNetwork=0;
++for(const n of ['spawn','spawnSync','exec','execSync','execFile','execFileSync','fork'])cp[n]=()=>{attemptedChildren++;throw Error('Child forbidden')};
++const originalLoad=Module._load;Module._load=function(request,parent,isMain){const full=Module._resolveFilename(request,parent,isMain);if(typeof full==='string'&&full.startsWith(R+'/')&&/^(src|tests|scripts)\//.test(full.slice(R.length+1))){attemptedOwnerImports++;throw Error('Owner import forbidden')}if(typeof full==='string'&&full.includes('/node_modules/zod/')){attemptedOwnerImports++;throw Error('Zod execution forbidden; read source only')}return originalLoad.call(this,request,parent,isMain)};
++for(const n of ['node:http','node:https'])for(const m of ['request','get'])require(n)[m]=()=>{attemptedNetwork++;throw Error('Network forbidden')};globalThis.fetch=()=>{attemptedNetwork++;throw Error('Network forbidden')};
++for(const n of ['writeFileSync','appendFileSync','mkdirSync','chmodSync','unlinkSync','rmSync','rmdirSync','truncateSync','utimesSync','mkdtempSync']){const fn=fs[n];fs[n]=function(p,...args){if(typeof p!=='string'||(path.resolve(p)!==D&&!path.resolve(p).startsWith(D+'/'))){attemptedWritesOutsideOwnTMP++;throw Error('Write outside own TMP')}if(n==='writeFileSync'&&args[1]?.flag==='wx'&&fs.existsSync(p)){if(!fs.readFileSync(p).equals(Buffer.from(args[0])))throw Error('Existing own artifact differs');return}return fn.call(this,p,...args)}}
++for(const n of ['renameSync','copyFileSync','symlinkSync','linkSync'])fs[n]=()=>{throw Error('Forbidden preparation write kind')};
++const sha=b=>crypto.createHash('sha256').update(b).digest('hex'),read=p=>JSON.parse(fs.readFileSync(p)),fail=m=>{throw Error(m)},write=(n,x)=>{const p=D+'/'+n;fs.mkdirSync(path.dirname(p),{recursive:true});fs.writeFileSync(p,JSON.stringify(x,null,2)+'\n',{flag:'wx',mode:0o444})};
++const raw=fs.readFileSync(V+'/operator-pins.json');if(sha(raw)!=='04fa5cb7e922f757827213f81d5eda7421e159408c146a11da8ea5e53a669a50')fail('V1 pins drift');
++if(sha(fs.readFileSync(V+'/HANDOFF.json'))!=='19745fcb357658428450e5ce145fbf0d3fce9d68943992382b4b9a39e7566223')fail('V1 handoff drift');
++const prior=require(V+'/operator-guard.cjs'),old=JSON.parse(raw);const ctx=prior.load(sha(raw));ctx.current();
++const ts=require(R+'/node_modules/typescript'),projection=require('./diagnostic-projection.cjs');
++for(const n of ['operator-evidence.json','operator-candidates.json','operator-selected-closure.json','full-native-command.json'])fs.writeFileSync(D+'/'+n,fs.readFileSync(V+'/'+n),{flag:'wx',mode:0o444});
++function literal(n){if(ts.isStringLiteralLike(n))return n.text;if(ts.isNumericLiteral(n))return Number(n.text);if(n.kind===ts.SyntaxKind.TrueKeyword)return true;if(n.kind===ts.SyntaxKind.FalseKeyword)return false;if(ts.isArrayLiteralExpression(n))return n.elements.map(literal);if(ts.isObjectLiteralExpression(n)){const out={};for(const p of n.properties){if(!ts.isPropertyAssignment(p)||!(ts.isIdentifier(p.name)||ts.isStringLiteralLike(p.name)))fail('Nonliteral fixture property');out[p.name.text]=literal(p.initializer)}return out}fail('Unknown fixture expression')}
++const fixtureFile='tests/personal-plan/fixtures.ts',fixtureBytes=fs.readFileSync(R+'/'+fixtureFile),fixturePin=old.readset.find(p=>p.file===fixtureFile);if(!fixturePin||fixturePin.sha!==sha(fixtureBytes))fail('Original fixture drift');
++const sf=ts.createSourceFile(fixtureFile,fixtureBytes.toString(),ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);const declarations=[];for(const s of sf.statements)if(ts.isVariableStatement(s))for(const d of s.declarationList.declarations)if(d.name.getText(sf)==='COMPLETE_V3_PLAN_ENVELOPE')declarations.push(d);if(declarations.length!==1)fail('Fixture declaration identity');
++const envelope=literal(declarations[0].initializer);if(envelope.kind!=='personal_plan'||envelope.version!==3||envelope.answers.thickness!=='fine')fail('Fixture shape drift');envelope.answers.thickness=undefined;
++const successful={ok:true,envelope},failed={ok:false,error:{code:'invalid_quiz_envelope',quizVersion:3}},allowed=[['envelope','answers','thickness']];
++const predictedError=new assert.AssertionError({actual:successful,expected:failed,operator:'deepStrictEqual'}).message;
++const header='Expected values to be strictly deep-equal:';if(!predictedError.startsWith(header)||!predictedError.includes('thickness: undefined'))fail('Pinned Node formatter does not substantiate undefined witness');
++const sourceEvidence=[
++ ['node_modules/zod/index.cjs',[[29,35]],'require entry forwards to v4/classic/external'],
++ ['node_modules/zod/v4/classic/external.cjs',[[1,65]],'classic export wiring'],
++ ['node_modules/zod/v4/classic/schemas.cjs',[[186,202]],'instance safeParse delegates to parse wrapper'],
++ ['node_modules/zod/v4/classic/parse.cjs',[[26,33]],'safeParse delegates core _safeParse'],
++ ['node_modules/zod/v4/core/parse.cjs',[[59,73]],'returns result.value on success'],
++ ['node_modules/zod/v4/core/schemas.cjs',[[745,772],[830,890],[910,945],[1773,1805]],'optional undefined preserved when key exists in input, normal and JIT object paths'],
++];
++const pinnedSources=[];
++for(const[file,ranges,meaning]of sourceEvidence){const pin=old.dependencies.find(x=>x.path===R+'/'+file);if(!pin)fail('Required Zod source absent from existing runtime pins '+file);prior.checkFile(pin);const bytes=fs.readFileSync(pin.path),out=D+'/evidence/'+file;fs.mkdirSync(path.dirname(out),{recursive:true});fs.writeFileSync(out,bytes,{flag:'wx',mode:0o444});pinnedSources.push({file,sha256:sha(bytes),ranges,meaning,readDepth:'Selected bounded source ranges only; complete byte pin does not claim full Zod audit'})}
++const reporter=process.binding('natives')['internal/test_runner/reporter/tap'];if(sha(reporter)!=='ec4c8ff12b8302e0dbe70c7dcd3d3fe79cb4bee1a29dc05f86aaed7b32df15c1')fail('Pinned Node reporter source changed');fs.writeFileSync(D+'/evidence/node-tap-reporter-source.txt',reporter,{flag:'wx',mode:0o444});
++const controls=read(V+'/operator-controls-normalized.json').map(c=>{
++ c.fullMutantPath=D+c.fullMutantPath.slice(V.length);const original=fs.readFileSync(V+c.fullMutantPath.slice(D.length));if(sha(original)!==c.mutatedSha256)fail('Immutable mutant drift');fs.mkdirSync(path.dirname(c.fullMutantPath),{recursive:true});fs.writeFileSync(c.fullMutantPath,original,{flag:'wx',mode:0o444});
++ if(c.id==='D1-required-thickness'){
++  c.diagnosticReady=true;c.diagnosticKind='source-backed complete reporter projection, exact expected failure, own undefined evidenced by source and error-message witness';c.expectedValue=failed;c.actualValue={ok:true,envelope:JSON.parse(JSON.stringify(envelope))};c.expectedProjection=projection.project(failed);c.actualProjection=projection.project(successful,[],allowed);c.sourceProvedUndefinedPaths=allowed;c.errorMessageIncludes=[header,'thickness: undefined'];c.typedPolicy='complete-projection';c.predictedMessageEvidence=predictedError;c.limits='Source-backed fixture/Zod/parser shape, not observed native bytes. TAP proves complete printed projection with only source-proved thickness omission. Own undefined is not distinguished from absence by TAP object fields alone; require assertion-message witness too. No partial/extra/truncated/unknown data allowed.';
++ }else if(c.id.startsWith('C4-')){
++  c.expectedProjection=projection.project({});c.typedPolicy='ssr-custom';c.actualStringWitness=c.id==='C4-wordmark'?'>haarplan<':c.id==='C4-retired-label'?'Personal-Plan-Stufen':'role="progressbar"';
++ }else{c.expectedProjection=projection.project(c.expectedValue);c.actualProjection=projection.project(c.actualValue);c.typedPolicy='complete-projection';c.sourceProvedUndefinedPaths=[]}
++ return c;
++});write('operator-controls-normalized.json',controls);
++write('diagnostic-source-evidence.json',{node:old.node,fixture:{file:fixtureFile,sha256:sha(fixtureBytes),declarationSHA256:sha(declarations[0].getText(sf)),readDepth:'Whole literal fixture; no execution'},parser:{file:'src/lib/personal-plan/input.ts',ranges:[[138,151]],sha256:old.readset.find(x=>x.file==='src/lib/personal-plan/input.ts').sha},schema:{file:'src/lib/personal-plan-quiz/persistence.ts',ranges:[[26,111]],sha256:old.readset.find(x=>x.file==='src/lib/personal-plan-quiz/persistence.ts').sha},installedZod:pinnedSources,reporter:{source:'embedded internal/test_runner/reporter/tap',sha256:sha(reporter),ranges:[[128,174],[174,194]],contract:'jsToYaml omits undefined, preserves scalar types and emits object/array Object.entries recursively. TAP projection alone does not distinguish own undefined from absence or empty object from empty array.'},onlyOmittedRuntimeProperty:allowed,additionalErrorMessageWitness:'thickness: undefined',predictedMessage:predictedError,rootDisposition:'Root explicitly accepted complete exact printed projection with this source-proved omission, exact expected failure and bound actual-owner/FIRST keeper gates.',limits:'Source/format prediction only; no Zod/product import or native execution. Container and own-property semantics are source-backed, not claimed as fully observable in lossy TAP serialization.'});
++write('template-provenance.json',{directTemplate:V,pinsSHA256:sha(raw),handoffSHA256:sha(fs.readFileSync(V+'/HANDOFF.json')),underlyingReviewedTemplate:'/tmp/test-audit-care102-tools-fz8_q695',catalogScalarDecoder:'/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-proof.cjs',changes:'Fresh version only. Typed complete reporter projections strengthen all literal controls; C4 keeps exact custom messages plus typed SSR witness. D1 source-backed complete projection with sole thickness omission and message witness. No source/test/call/input/row/control-recipe changes.'});
++const pins={...old,artifactHashes:{...old.artifactHashes},entrypointTemplateHashes:{}};
++// Retain original V1 artifact pins for immutable provenance, but use only its unchanged generation source/readsets.
++for(const file of ['operator-guard.cjs','operator-proof.cjs','operator-readonly-preload.cjs','diagnostic-projection.cjs','catalog-decoder-source.cjs','operator-evidence.json','operator-candidates.json','operator-controls-normalized.json','operator-selected-closure.json','full-native-command.json','diagnostic-source-evidence.json','template-provenance.json','prepare-v2.cjs','proof-attestation.cjs','static-integrity.cjs','README.md'])pins.artifactHashes[D+'/'+file]=sha(fs.readFileSync(D+'/'+file));
++function pinTree(dir){for(const d of fs.readdirSync(dir,{withFileTypes:true})){const full=path.join(dir,d.name);if(d.isDirectory())pinTree(full);else if(d.isFile())pins.artifactHashes[full]=sha(fs.readFileSync(full));else fail('Unexpected own artifact kind')}}
++for(const dir of ['mutants','evidence','v1-originals'])pinTree(D+'/'+dir);
++for(const file of ['operator-edit.cjs','operator-run-controls.cjs','operator-native-proof.cjs'])pins.entrypointTemplateHashes[D+'/'+file]=sha(fs.readFileSync(D+'/'+file));
++// Current readsets, source bytes, Node/runtime/metadata are validated using old pins, never repinned.
++ctx.current();for(const p of old.dependencies)prior.checkFile(p);prior.identity(old);
++const bytes=JSON.stringify(pins,null,2)+'\n',pinSHA=sha(bytes);fs.writeFileSync(D+'/operator-pins.json',bytes,{flag:'wx',mode:0o444});
++for(const file of ['operator-edit.cjs','operator-run-controls.cjs','operator-native-proof.cjs']){const s=fs.readFileSync(D+'/'+file,'utf8');if(s.split("const PIN_SHA='PIN_SHA_PLACEHOLDER'").length!==2)fail('PIN placeholder');fs.writeFileSync(D+'/'+file,s.replace("const PIN_SHA='PIN_SHA_PLACEHOLDER'","const PIN_SHA='"+pinSHA+"'"))}
++console.log(JSON.stringify({directory:D,pinSHA,original109ReadsetsUnchanged:true,all280CurrentGenerationReadsetsUnchanged:true,all5022RuntimeDependencyPinsUnchanged:true,identityPoliciesUnchanged:true,controls:18,sourceRecipesUnchanged:true,diagnosticsReady:18,actualNativeClaims:0,attemptedWritesOutsideOwnTMP,attemptedChildren,attemptedOwnerImports,attemptedNetwork},null,2));

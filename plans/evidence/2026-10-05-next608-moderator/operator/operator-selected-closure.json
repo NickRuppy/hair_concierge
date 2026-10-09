@@ -1,0 +1,3380 @@
+{
+  "selectedTest": "tests/personal-plan-field-test-ui.test.tsx",
+  "localFiles": [
+    "src/app/result/[leadId]/result-client.tsx",
+    "src/components/billing/scanner-trial-offer.tsx",
+    "src/components/billing/trial-offer.tsx",
+    "src/components/checkout/active-subscription-dialog.tsx",
+    "src/components/checkout/checkout-access-recovery-panel.tsx",
+    "src/components/checkout/offer-payment-overlay.tsx",
+    "src/components/checkout/payment-feedback-card.tsx",
+    "src/components/checkout/payment-method-checkout.tsx",
+    "src/components/checkout/payment-option-exposure.tsx",
+    "src/components/checkout/paypal-one-time-button.tsx",
+    "src/components/checkout/paypal-script-failure.ts",
+    "src/components/checkout/paypal-subscription-button.tsx",
+    "src/components/checkout/personal-plan-one-time-checkout.tsx",
+    "src/components/checkout/plan-reference-prices.ts",
+    "src/components/checkout/stripe-offer-elements-checkout.tsx",
+    "src/components/checkout/subscription-plan-selector.tsx",
+    "src/components/checkout/use-payment-support-report.ts",
+    "src/components/checkout/use-plan-selection.ts",
+    "src/components/discovery-call-offer/discovery-call-offer.tsx",
+    "src/components/landing/footer-links.tsx",
+    "src/components/landing/site-footer.tsx",
+    "src/components/landing/wordmark.tsx",
+    "src/components/offer-media/before-after-figure.tsx",
+    "src/components/organic-plan-offer/organic-plan-offer.tsx",
+    "src/components/organic-plan-offer/wistia-video.tsx",
+    "src/components/partner-access/activation-button.tsx",
+    "src/components/partner-access/activation-card.tsx",
+    "src/components/partner-access/unavailable.tsx",
+    "src/components/personal-plan-field-test/personal-plan-field-test-ended.tsx",
+    "src/components/personal-plan-offer/personal-plan-offer.tsx",
+    "src/components/personal-plan-offer/types.ts",
+    "src/components/personal-plan-quiz/moderator-quiz-context.tsx",
+    "src/components/personal-plan-quiz/personal-plan-quiz-first-screen.tsx",
+    "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+    "src/components/personal-plan-quiz/progressive-entry-contract.ts",
+    "src/components/personal-plan-quiz/quiz-data.ts",
+    "src/components/personal-plan-quiz/texture-question.ts",
+    "src/components/providers/payment-runtime-provider.tsx",
+    "src/components/quiz/hair-length-option-card.tsx",
+    "src/components/quiz/hair-portrait-figure.tsx",
+    "src/components/quiz/legacy-quiz-visuals.ts",
+    "src/components/quiz/offer-tracking-provider.tsx",
+    "src/components/quiz/quiz-main-problem-sheet.tsx",
+    "src/components/quiz/quiz-option-card.tsx",
+    "src/components/quiz/quiz-result-lever-rows.tsx",
+    "src/components/quiz/quiz-result-transformation-card.tsx",
+    "src/components/quiz/quiz-results-view.tsx",
+    "src/components/quiz/result-offer-pricing.tsx",
+    "src/components/regular-quiz-field-test/activation-card.tsx",
+    "src/components/regular-quiz-field-test/banner.tsx",
+    "src/components/regular-quiz-field-test/unavailable.tsx",
+    "src/components/scan-regal-offer/scan-hero-demo.tsx",
+    "src/components/scan-regal-offer/scan-regal-offer.tsx",
+    "src/components/scan-regal-offer/scanner-refined-offer.tsx",
+    "src/components/scan-regal-offer/scanner-refined-styles.ts",
+    "src/components/ui/bottom-sheet.tsx",
+    "src/components/ui/button.tsx",
+    "src/components/ui/dialog.tsx",
+    "src/components/ui/icon.tsx",
+    "src/components/ui/input.tsx",
+    "src/funnels/offers/discovery-call-v1.tsx",
+    "src/funnels/offers/organic-plan-before-after-v1.tsx",
+    "src/funnels/offers/organic-plan-v1.tsx",
+    "src/funnels/offers/personal-plan-v1.tsx",
+    "src/funnels/offers/registry.generated.ts",
+    "src/funnels/offers/registry.ts",
+    "src/funnels/offers/scan-regal-v1.tsx",
+    "src/funnels/packages.json",
+    "src/funnels/quizzes/registry.json",
+    "src/funnels/quizzes/registry.ts",
+    "src/funnels/types.ts",
+    "src/lib/analytics/checkout-attempt.ts",
+    "src/lib/analytics/destinations/customerio.ts",
+    "src/lib/analytics/destinations/meta.ts",
+    "src/lib/analytics/destinations/posthog.ts",
+    "src/lib/analytics/events.ts",
+    "src/lib/analytics/meta-offer-view-client.ts",
+    "src/lib/analytics/meta-offer-view-id.ts",
+    "src/lib/analytics/observe-once-engaged.ts",
+    "src/lib/analytics/observe-once-visible.ts",
+    "src/lib/analytics/offer-engagement.ts",
+    "src/lib/analytics/offer-payment-option-view.ts",
+    "src/lib/analytics/offer-section-order.ts",
+    "src/lib/analytics/offer-tracking-claims.ts",
+    "src/lib/analytics/offer-viewed-payload.ts",
+    "src/lib/analytics/page-url.ts",
+    "src/lib/analytics/routes.ts",
+    "src/lib/analytics/runtime/bounded-fifo.ts",
+    "src/lib/analytics/runtime/environment.ts",
+    "src/lib/analytics/runtime/posthog.ts",
+    "src/lib/analytics/track-app-event.ts",
+    "src/lib/auth/free-registration.ts",
+    "src/lib/billing/offer-products.ts",
+    "src/lib/billing/payment-runtime-config.ts",
+    "src/lib/billing/pricing-catalog.ts",
+    "src/lib/billing/trial-offer.ts",
+    "src/lib/billing/types.ts",
+    "src/lib/calendly/constants.ts",
+    "src/lib/checkout/access-recovery.ts",
+    "src/lib/checkout/offer-checkout-history.ts",
+    "src/lib/checkout/payment-feedback.ts",
+    "src/lib/checkout/paypal-one-time-recovery.ts",
+    "src/lib/cookie-consent.ts",
+    "src/lib/customerio-tracking.ts",
+    "src/lib/customerio/offer-engagement-client.ts",
+    "src/lib/email-deliverability-shared.ts",
+    "src/lib/funnel/client.ts",
+    "src/lib/funnel/cookie.ts",
+    "src/lib/funnel/flags.ts",
+    "src/lib/funnel/journey-kind.ts",
+    "src/lib/funnel/offer-presentation.ts",
+    "src/lib/funnel/organic-offer-media-experiment.ts",
+    "src/lib/funnel/packages.ts",
+    "src/lib/funnel/personal-plan-pricing-experiment.ts",
+    "src/lib/funnel/personal-plan-pricing-qa-token.ts",
+    "src/lib/funnel/server.ts",
+    "src/lib/help/info-tips.ts",
+    "src/lib/leave-in/constants.ts",
+    "src/lib/meta-pixel.ts",
+    "src/lib/motion.ts",
+    "src/lib/observability/checkout-watchdog.ts",
+    "src/lib/observability/checkout.ts",
+    "src/lib/observability/offer-experiment.ts",
+    "src/lib/observability/payment-client.ts",
+    "src/lib/observability/payment.ts",
+    "src/lib/observability/sentry-scrubbing.ts",
+    "src/lib/onboarding/goal-flow.ts",
+    "src/lib/openai-ads/browser.ts",
+    "src/lib/paypal/checkout-intents.ts",
+    "src/lib/paypal/welcome-url.ts",
+    "src/lib/personal-plan-quiz/assessment-copy.ts",
+    "src/lib/personal-plan-quiz/draft-scope.ts",
+    "src/lib/personal-plan-quiz/draft.ts",
+    "src/lib/personal-plan-quiz/flow.ts",
+    "src/lib/personal-plan-quiz/hair-assessment.ts",
+    "src/lib/personal-plan-quiz/index.ts",
+    "src/lib/personal-plan-quiz/loading-timeline.ts",
+    "src/lib/personal-plan-quiz/offer-adapter.ts",
+    "src/lib/personal-plan-quiz/offer-focus.ts",
+    "src/lib/personal-plan-quiz/option-intensity.ts",
+    "src/lib/personal-plan-quiz/preparation-client.ts",
+    "src/lib/personal-plan-quiz/primary-concern.ts",
+    "src/lib/personal-plan-quiz/profile-summary.ts",
+    "src/lib/personal-plan-quiz/server-draft-client.ts",
+    "src/lib/personal-plan-quiz/types.ts",
+    "src/lib/personal-plan/products/authorities.ts",
+    "src/lib/personal-plan/products/authority/contracts.ts",
+    "src/lib/personal-plan/products/contracts.ts",
+    "src/lib/personal-plan/types.ts",
+    "src/lib/profile/chemical-treatment.ts",
+    "src/lib/quiz/diagnostic-input.ts",
+    "src/lib/quiz/draft.ts",
+    "src/lib/quiz/hair-portrait-assets.ts",
+    "src/lib/quiz/need-lane.ts",
+    "src/lib/quiz/normalization.ts",
+    "src/lib/quiz/portrait-config.ts",
+    "src/lib/quiz/primary-concern.ts",
+    "src/lib/quiz/result-cta.ts",
+    "src/lib/quiz/result-narrative.ts",
+    "src/lib/quiz/result-navigation.ts",
+    "src/lib/quiz/scan-insert-examples.ts",
+    "src/lib/quiz/types.ts",
+    "src/lib/reactivation/return-destination.ts",
+    "src/lib/stripe/intervals.ts",
+    "src/lib/stripe/offer-client-loader.ts",
+    "src/lib/stripe/prepared-checkout-credential.ts",
+    "src/lib/stripe/prepared-stripe-checkout-state.ts",
+    "src/lib/stripe/pricing-plans.ts",
+    "src/lib/supabase/admin.ts",
+    "src/lib/trustpilot-reviews.ts",
+    "src/lib/ui/modal-layer-manager.ts",
+    "src/lib/utils.ts",
+    "src/lib/vocabulary/concerns-goals.ts",
+    "src/lib/vocabulary/errors.ts",
+    "src/lib/vocabulary/frequencies.ts",
+    "src/lib/vocabulary/hair-length.ts",
+    "src/lib/vocabulary/hair-types.ts",
+    "src/lib/vocabulary/index.ts",
+    "src/lib/vocabulary/onboarding-care.ts",
+    "src/lib/vocabulary/onboarding-goals.ts",
+    "src/lib/vocabulary/profile-labels.ts",
+    "src/lib/vocabulary/source-labels.ts",
+    "tests/personal-plan-field-test-ui.test.tsx",
+    "tests/server-only-register.cjs"
+  ],
+  "edges": [
+    {
+      "from": "tests/personal-plan-field-test-ui.test.tsx",
+      "to": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "spec": "../src/components/personal-plan-quiz/personal-plan-quiz",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan-field-test-ui.test.tsx",
+      "to": "src/components/personal-plan-offer/personal-plan-offer.tsx",
+      "spec": "../src/components/personal-plan-offer/personal-plan-offer",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan-field-test-ui.test.tsx",
+      "to": "src/components/personal-plan-field-test/personal-plan-field-test-ended.tsx",
+      "spec": "../src/components/personal-plan-field-test/personal-plan-field-test-ended",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan-field-test-ui.test.tsx",
+      "to": "src/app/result/[leadId]/result-client.tsx",
+      "spec": "../src/app/result/[leadId]/result-client",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/lib/motion.ts",
+      "spec": "@/lib/motion",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/components/personal-plan-quiz/moderator-quiz-context.tsx",
+      "spec": "./moderator-quiz-context",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/lib/personal-plan-quiz/draft-scope.ts",
+      "spec": "@/lib/personal-plan-quiz/draft-scope",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/components/ui/button.tsx",
+      "spec": "@/components/ui/button",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/components/quiz/hair-length-option-card.tsx",
+      "spec": "@/components/quiz/hair-length-option-card",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/components/quiz/hair-portrait-figure.tsx",
+      "spec": "@/components/quiz/hair-portrait-figure",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/components/quiz/legacy-quiz-visuals.ts",
+      "spec": "@/components/quiz/legacy-quiz-visuals",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/components/quiz/quiz-main-problem-sheet.tsx",
+      "spec": "@/components/quiz/quiz-main-problem-sheet",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/components/ui/icon.tsx",
+      "spec": "@/components/ui/icon",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/components/ui/input.tsx",
+      "spec": "@/components/ui/input",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/lib/analytics/track-app-event.ts",
+      "spec": "@/lib/analytics/track-app-event",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/lib/email-deliverability-shared.ts",
+      "spec": "@/lib/email-deliverability-shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/lib/funnel/client.ts",
+      "spec": "@/lib/funnel/client",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/lib/personal-plan-quiz/index.ts",
+      "spec": "@/lib/personal-plan-quiz",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/lib/quiz/portrait-config.ts",
+      "spec": "@/lib/quiz/portrait-config",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/lib/utils.ts",
+      "spec": "@/lib/utils",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/lib/personal-plan-quiz/primary-concern.ts",
+      "spec": "@/lib/personal-plan-quiz/primary-concern",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/lib/quiz/primary-concern.ts",
+      "spec": "@/lib/quiz/primary-concern",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/lib/personal-plan-quiz/preparation-client.ts",
+      "spec": "@/lib/personal-plan-quiz/preparation-client",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/components/personal-plan-quiz/quiz-data.ts",
+      "spec": "./quiz-data",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/components/personal-plan-quiz/personal-plan-quiz-first-screen.tsx",
+      "spec": "./personal-plan-quiz-first-screen",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/components/personal-plan-quiz/progressive-entry-contract.ts",
+      "spec": "./progressive-entry-contract",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/components/personal-plan-quiz/texture-question.ts",
+      "spec": "./texture-question",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/lib/auth/free-registration.ts",
+      "spec": "@/lib/auth/free-registration",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "to": "src/components/personal-plan-quiz/personal-plan-quiz-first-screen.tsx",
+      "spec": "./personal-plan-quiz-first-screen",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-offer/personal-plan-offer.tsx",
+      "to": "src/lib/trustpilot-reviews.ts",
+      "spec": "@/lib/trustpilot-reviews",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-offer/personal-plan-offer.tsx",
+      "to": "src/components/checkout/plan-reference-prices.ts",
+      "spec": "@/components/checkout/plan-reference-prices",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-offer/personal-plan-offer.tsx",
+      "to": "src/components/quiz/offer-tracking-provider.tsx",
+      "spec": "@/components/quiz/offer-tracking-provider",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-offer/personal-plan-offer.tsx",
+      "to": "src/components/quiz/result-offer-pricing.tsx",
+      "spec": "@/components/quiz/result-offer-pricing",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-offer/personal-plan-offer.tsx",
+      "to": "src/components/landing/site-footer.tsx",
+      "spec": "@/components/landing/site-footer",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-offer/personal-plan-offer.tsx",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "@/lib/analytics/events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/personal-plan-offer/personal-plan-offer.tsx",
+      "to": "src/lib/personal-plan-quiz/index.ts",
+      "spec": "@/lib/personal-plan-quiz",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-offer/personal-plan-offer.tsx",
+      "to": "src/lib/personal-plan-quiz/offer-focus.ts",
+      "spec": "@/lib/personal-plan-quiz/offer-focus",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/personal-plan-offer/personal-plan-offer.tsx",
+      "to": "src/lib/stripe/pricing-plans.ts",
+      "spec": "@/lib/stripe/pricing-plans",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/personal-plan-offer/personal-plan-offer.tsx",
+      "to": "src/components/billing/trial-offer.tsx",
+      "spec": "@/components/billing/trial-offer",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/personal-plan-offer/personal-plan-offer.tsx",
+      "to": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "spec": "@/components/personal-plan-quiz/personal-plan-quiz",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-offer/personal-plan-offer.tsx",
+      "to": "src/components/offer-media/before-after-figure.tsx",
+      "spec": "@/components/offer-media/before-after-figure",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-offer/personal-plan-offer.tsx",
+      "to": "src/components/personal-plan-offer/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/app/result/[leadId]/result-client.tsx",
+      "to": "src/components/checkout/plan-reference-prices.ts",
+      "spec": "@/components/checkout/plan-reference-prices",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/result/[leadId]/result-client.tsx",
+      "to": "src/components/quiz/result-offer-pricing.tsx",
+      "spec": "@/components/quiz/result-offer-pricing",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/result/[leadId]/result-client.tsx",
+      "to": "src/components/quiz/quiz-results-view.tsx",
+      "spec": "@/components/quiz/quiz-results-view",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/result/[leadId]/result-client.tsx",
+      "to": "src/components/scan-regal-offer/scanner-refined-offer.tsx",
+      "spec": "@/components/scan-regal-offer/scanner-refined-offer",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/result/[leadId]/result-client.tsx",
+      "to": "src/components/personal-plan-offer/personal-plan-offer.tsx",
+      "spec": "@/components/personal-plan-offer/personal-plan-offer",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/result/[leadId]/result-client.tsx",
+      "to": "src/components/personal-plan-field-test/personal-plan-field-test-ended.tsx",
+      "spec": "@/components/personal-plan-field-test/personal-plan-field-test-ended",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/result/[leadId]/result-client.tsx",
+      "to": "src/components/regular-quiz-field-test/unavailable.tsx",
+      "spec": "@/components/regular-quiz-field-test/unavailable",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/result/[leadId]/result-client.tsx",
+      "to": "src/components/partner-access/unavailable.tsx",
+      "spec": "@/components/partner-access/unavailable",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/result/[leadId]/result-client.tsx",
+      "to": "src/components/personal-plan-offer/types.ts",
+      "spec": "@/components/personal-plan-offer/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/app/result/[leadId]/result-client.tsx",
+      "to": "src/funnels/offers/registry.ts",
+      "spec": "@/funnels/offers/registry",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/result/[leadId]/result-client.tsx",
+      "to": "src/funnels/types.ts",
+      "spec": "@/funnels/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/app/result/[leadId]/result-client.tsx",
+      "to": "src/lib/quiz/result-cta.ts",
+      "spec": "@/lib/quiz/result-cta",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/result/[leadId]/result-client.tsx",
+      "to": "src/lib/quiz/result-navigation.ts",
+      "spec": "@/lib/quiz/result-navigation",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/result/[leadId]/result-client.tsx",
+      "to": "src/lib/quiz/result-narrative.ts",
+      "spec": "@/lib/quiz/result-narrative",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/result/[leadId]/result-client.tsx",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "@/lib/quiz/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/app/result/[leadId]/result-client.tsx",
+      "to": "src/lib/personal-plan-quiz/offer-focus.ts",
+      "spec": "@/lib/personal-plan-quiz/offer-focus",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/app/result/[leadId]/result-client.tsx",
+      "to": "src/lib/stripe/pricing-plans.ts",
+      "spec": "@/lib/stripe/pricing-plans",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/app/result/[leadId]/result-client.tsx",
+      "to": "src/components/billing/trial-offer.tsx",
+      "spec": "@/components/billing/trial-offer",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/app/result/[leadId]/result-client.tsx",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "@/lib/analytics/events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/app/result/[leadId]/result-client.tsx",
+      "to": "src/funnels/types.ts",
+      "spec": "@/funnels/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/draft-scope.ts",
+      "to": "src/lib/quiz/draft.ts",
+      "spec": "@/lib/quiz/draft",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/draft-scope.ts",
+      "to": "src/lib/personal-plan-quiz/draft.ts",
+      "spec": "./draft",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/ui/button.tsx",
+      "to": "src/lib/utils.ts",
+      "spec": "@/lib/utils",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/hair-length-option-card.tsx",
+      "to": "src/components/quiz/hair-portrait-figure.tsx",
+      "spec": "@/components/quiz/hair-portrait-figure",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/hair-length-option-card.tsx",
+      "to": "src/lib/quiz/portrait-config.ts",
+      "spec": "@/lib/quiz/portrait-config",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/quiz/hair-length-option-card.tsx",
+      "to": "src/lib/utils.ts",
+      "spec": "@/lib/utils",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/hair-portrait-figure.tsx",
+      "to": "src/lib/quiz/hair-portrait-assets.ts",
+      "spec": "@/lib/quiz/hair-portrait-assets",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/hair-portrait-figure.tsx",
+      "to": "src/lib/quiz/portrait-config.ts",
+      "spec": "@/lib/quiz/portrait-config",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/quiz/hair-portrait-figure.tsx",
+      "to": "src/lib/utils.ts",
+      "spec": "@/lib/utils",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/legacy-quiz-visuals.ts",
+      "to": "src/components/ui/icon.tsx",
+      "spec": "@/components/ui/icon",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/quiz/legacy-quiz-visuals.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "@/lib/quiz/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/quiz/legacy-quiz-visuals.ts",
+      "to": "src/lib/quiz/portrait-config.ts",
+      "spec": "@/lib/quiz/portrait-config",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/quiz/quiz-main-problem-sheet.tsx",
+      "to": "src/components/ui/bottom-sheet.tsx",
+      "spec": "@/components/ui/bottom-sheet",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/quiz-main-problem-sheet.tsx",
+      "to": "src/components/ui/icon.tsx",
+      "spec": "@/components/ui/icon",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/quiz/quiz-main-problem-sheet.tsx",
+      "to": "src/lib/motion.ts",
+      "spec": "@/lib/motion",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/quiz-main-problem-sheet.tsx",
+      "to": "src/components/quiz/quiz-option-card.tsx",
+      "spec": "./quiz-option-card",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/ui/input.tsx",
+      "to": "src/lib/utils.ts",
+      "spec": "@/lib/utils",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/analytics/track-app-event.ts",
+      "to": "src/lib/analytics/destinations/customerio.ts",
+      "spec": "./destinations/customerio",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/analytics/track-app-event.ts",
+      "to": "src/lib/analytics/destinations/meta.ts",
+      "spec": "./destinations/meta",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/analytics/track-app-event.ts",
+      "to": "src/lib/analytics/destinations/posthog.ts",
+      "spec": "./destinations/posthog",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/analytics/track-app-event.ts",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "./events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/analytics/track-app-event.ts",
+      "to": "src/lib/analytics/routes.ts",
+      "spec": "./routes",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/analytics/track-app-event.ts",
+      "to": "src/lib/funnel/client.ts",
+      "spec": "@/lib/funnel/client",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/client.ts",
+      "to": "src/lib/funnel/journey-kind.ts",
+      "spec": "./journey-kind",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/funnel/client.ts",
+      "to": "src/lib/funnel/server.ts",
+      "spec": "./server",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/index.ts",
+      "to": "src/lib/personal-plan-quiz/draft.ts",
+      "spec": "./draft",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/index.ts",
+      "to": "src/lib/personal-plan-quiz/flow.ts",
+      "spec": "./flow",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/index.ts",
+      "to": "src/lib/personal-plan-quiz/loading-timeline.ts",
+      "spec": "./loading-timeline",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/index.ts",
+      "to": "src/lib/personal-plan-quiz/option-intensity.ts",
+      "spec": "./option-intensity",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/index.ts",
+      "to": "src/lib/personal-plan-quiz/profile-summary.ts",
+      "spec": "./profile-summary",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/index.ts",
+      "to": "src/lib/personal-plan-quiz/server-draft-client.ts",
+      "spec": "./server-draft-client",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/index.ts",
+      "to": "src/lib/personal-plan-quiz/types.ts",
+      "spec": "./types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/portrait-config.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/portrait-config.ts",
+      "to": "src/lib/quiz/normalization.ts",
+      "spec": "./normalization",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/portrait-config.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/primary-concern.ts",
+      "to": "src/lib/quiz/diagnostic-input.ts",
+      "spec": "@/lib/quiz/diagnostic-input",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/primary-concern.ts",
+      "to": "src/lib/quiz/primary-concern.ts",
+      "spec": "@/lib/quiz/primary-concern",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/primary-concern.ts",
+      "to": "src/lib/quiz/normalization.ts",
+      "spec": "./normalization",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/primary-concern.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/preparation-client.ts",
+      "to": "src/lib/personal-plan-quiz/draft-scope.ts",
+      "spec": "./draft-scope",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/preparation-client.ts",
+      "to": "src/lib/personal-plan-quiz/draft.ts",
+      "spec": "./draft",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/quiz-data.ts",
+      "to": "src/lib/trustpilot-reviews.ts",
+      "spec": "@/lib/trustpilot-reviews",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/quiz-data.ts",
+      "to": "src/lib/personal-plan-quiz/index.ts",
+      "spec": "@/lib/personal-plan-quiz",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/quiz-data.ts",
+      "to": "src/components/personal-plan-quiz/texture-question.ts",
+      "spec": "./texture-question",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz-first-screen.tsx",
+      "to": "src/components/personal-plan-quiz/texture-question.ts",
+      "spec": "./texture-question",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/personal-plan-quiz-first-screen.tsx",
+      "to": "src/lib/utils.ts",
+      "spec": "@/lib/utils",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/progressive-entry-contract.ts",
+      "to": "src/components/personal-plan-quiz/texture-question.ts",
+      "spec": "./texture-question",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/personal-plan-quiz/texture-question.ts",
+      "to": "src/components/personal-plan-quiz/quiz-data.ts",
+      "spec": "./quiz-data",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/auth/free-registration.ts",
+      "to": "src/lib/email-deliverability-shared.ts",
+      "spec": "@/lib/email-deliverability-shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/plan-reference-prices.ts",
+      "to": "src/lib/stripe/intervals.ts",
+      "spec": "@/lib/stripe/intervals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/plan-reference-prices.ts",
+      "to": "src/lib/billing/pricing-catalog.ts",
+      "spec": "@/lib/billing/pricing-catalog",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/plan-reference-prices.ts",
+      "to": "src/lib/billing/pricing-catalog.ts",
+      "spec": "@/lib/billing/pricing-catalog",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/quiz/offer-tracking-provider.tsx",
+      "to": "src/lib/analytics/track-app-event.ts",
+      "spec": "@/lib/analytics/track-app-event",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/offer-tracking-provider.tsx",
+      "to": "src/lib/analytics/offer-engagement.ts",
+      "spec": "@/lib/analytics/offer-engagement",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/offer-tracking-provider.tsx",
+      "to": "src/lib/analytics/observe-once-engaged.ts",
+      "spec": "@/lib/analytics/observe-once-engaged",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/offer-tracking-provider.tsx",
+      "to": "src/lib/analytics/offer-tracking-claims.ts",
+      "spec": "@/lib/analytics/offer-tracking-claims",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/offer-tracking-provider.tsx",
+      "to": "src/lib/analytics/offer-viewed-payload.ts",
+      "spec": "@/lib/analytics/offer-viewed-payload",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/offer-tracking-provider.tsx",
+      "to": "src/lib/analytics/meta-offer-view-client.ts",
+      "spec": "@/lib/analytics/meta-offer-view-client",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/offer-tracking-provider.tsx",
+      "to": "src/lib/customerio/offer-engagement-client.ts",
+      "spec": "@/lib/customerio/offer-engagement-client",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/offer-tracking-provider.tsx",
+      "to": "src/lib/cookie-consent.ts",
+      "spec": "@/lib/cookie-consent",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/offer-tracking-provider.tsx",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "@/lib/analytics/events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/quiz/offer-tracking-provider.tsx",
+      "to": "src/lib/funnel/client.ts",
+      "spec": "@/lib/funnel/client",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/offer-tracking-provider.tsx",
+      "to": "src/lib/analytics/offer-section-order.ts",
+      "spec": "@/lib/analytics/offer-section-order",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/offer-tracking-provider.tsx",
+      "to": "src/lib/billing/pricing-catalog.ts",
+      "spec": "@/lib/billing/pricing-catalog",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/quiz/offer-tracking-provider.tsx",
+      "to": "src/lib/funnel/journey-kind.ts",
+      "spec": "@/lib/funnel/journey-kind",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/lib/cookie-consent.ts",
+      "spec": "@/lib/cookie-consent",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/components/checkout/payment-method-checkout.tsx",
+      "spec": "@/components/checkout/payment-method-checkout",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/components/checkout/checkout-access-recovery-panel.tsx",
+      "spec": "@/components/checkout/checkout-access-recovery-panel",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/lib/checkout/access-recovery.ts",
+      "spec": "@/lib/checkout/access-recovery",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/components/checkout/offer-payment-overlay.tsx",
+      "spec": "@/components/checkout/offer-payment-overlay",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/components/providers/payment-runtime-provider.tsx",
+      "spec": "@/components/providers/payment-runtime-provider",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "spec": "@/components/checkout/personal-plan-one-time-checkout",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/components/checkout/active-subscription-dialog.tsx",
+      "spec": "@/components/checkout/active-subscription-dialog",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/components/checkout/use-plan-selection.ts",
+      "spec": "@/components/checkout/use-plan-selection",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/components/checkout/plan-reference-prices.ts",
+      "spec": "@/components/checkout/plan-reference-prices",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/components/checkout/subscription-plan-selector.tsx",
+      "spec": "@/components/checkout/subscription-plan-selector",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/components/billing/trial-offer.tsx",
+      "spec": "@/components/billing/trial-offer",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/components/quiz/offer-tracking-provider.tsx",
+      "spec": "@/components/quiz/offer-tracking-provider",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/lib/analytics/track-app-event.ts",
+      "spec": "@/lib/analytics/track-app-event",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/lib/analytics/offer-payment-option-view.ts",
+      "spec": "@/lib/analytics/offer-payment-option-view",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/lib/analytics/observe-once-visible.ts",
+      "spec": "@/lib/analytics/observe-once-visible",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/lib/analytics/checkout-attempt.ts",
+      "spec": "@/lib/analytics/checkout-attempt",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/lib/funnel/client.ts",
+      "spec": "@/lib/funnel/client",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/lib/openai-ads/browser.ts",
+      "spec": "@/lib/openai-ads/browser",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/lib/funnel/flags.ts",
+      "spec": "@/lib/funnel/flags",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "@/lib/analytics/events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/lib/stripe/offer-client-loader.ts",
+      "spec": "@/lib/stripe/offer-client-loader",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/lib/funnel/personal-plan-pricing-experiment.ts",
+      "spec": "@/lib/funnel/personal-plan-pricing-experiment",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/lib/stripe/intervals.ts",
+      "spec": "@/lib/stripe/intervals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/lib/stripe/pricing-plans.ts",
+      "spec": "@/lib/stripe/pricing-plans",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/lib/billing/offer-products.ts",
+      "spec": "@/lib/billing/offer-products",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/result-offer-pricing.tsx",
+      "to": "src/lib/observability/payment-client.ts",
+      "spec": "@/lib/observability/payment-client",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/landing/site-footer.tsx",
+      "to": "src/components/landing/footer-links.tsx",
+      "spec": "./footer-links",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/landing/site-footer.tsx",
+      "to": "src/components/landing/wordmark.tsx",
+      "spec": "./wordmark",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/landing/site-footer.tsx",
+      "to": "src/lib/utils.ts",
+      "spec": "@/lib/utils",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/analytics/events.ts",
+      "to": "src/lib/stripe/intervals.ts",
+      "spec": "@/lib/stripe/intervals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/analytics/events.ts",
+      "to": "src/lib/billing/pricing-catalog.ts",
+      "spec": "@/lib/billing/pricing-catalog",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/analytics/events.ts",
+      "to": "src/lib/email-deliverability-shared.ts",
+      "spec": "@/lib/email-deliverability-shared",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/analytics/events.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "@/lib/personal-plan/products/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/analytics/events.ts",
+      "to": "src/lib/funnel/journey-kind.ts",
+      "spec": "@/lib/funnel/journey-kind",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/offer-focus.ts",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "@/lib/analytics/events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/stripe/pricing-plans.ts",
+      "to": "src/lib/stripe/intervals.ts",
+      "spec": "./intervals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/stripe/pricing-plans.ts",
+      "to": "src/lib/billing/pricing-catalog.ts",
+      "spec": "@/lib/billing/pricing-catalog",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/stripe/pricing-plans.ts",
+      "to": "src/lib/billing/pricing-catalog.ts",
+      "spec": "@/lib/billing/pricing-catalog",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/billing/trial-offer.tsx",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "@/lib/billing/trial-offer",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/billing/trial-offer.tsx",
+      "to": "src/components/billing/scanner-trial-offer.tsx",
+      "spec": "./scanner-trial-offer",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/billing/trial-offer.tsx",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "@/lib/billing/trial-offer",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/quiz/quiz-results-view.tsx",
+      "to": "src/components/ui/button.tsx",
+      "spec": "@/components/ui/button",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/quiz-results-view.tsx",
+      "to": "src/components/quiz/quiz-result-transformation-card.tsx",
+      "spec": "@/components/quiz/quiz-result-transformation-card",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/quiz-results-view.tsx",
+      "to": "src/components/quiz/quiz-result-lever-rows.tsx",
+      "spec": "@/components/quiz/quiz-result-lever-rows",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/quiz-results-view.tsx",
+      "to": "src/lib/quiz/result-narrative.ts",
+      "spec": "@/lib/quiz/result-narrative",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/scan-regal-offer/scanner-refined-offer.tsx",
+      "to": "src/lib/trustpilot-reviews.ts",
+      "spec": "@/lib/trustpilot-reviews",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/scan-regal-offer/scanner-refined-offer.tsx",
+      "to": "src/components/landing/site-footer.tsx",
+      "spec": "@/components/landing/site-footer",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/scan-regal-offer/scanner-refined-offer.tsx",
+      "to": "src/components/organic-plan-offer/organic-plan-offer.tsx",
+      "spec": "@/components/organic-plan-offer/organic-plan-offer",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/scan-regal-offer/scanner-refined-offer.tsx",
+      "to": "src/components/quiz/offer-tracking-provider.tsx",
+      "spec": "@/components/quiz/offer-tracking-provider",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/scan-regal-offer/scanner-refined-offer.tsx",
+      "to": "src/funnels/types.ts",
+      "spec": "@/funnels/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/scan-regal-offer/scanner-refined-offer.tsx",
+      "to": "src/lib/personal-plan-quiz/assessment-copy.ts",
+      "spec": "@/lib/personal-plan-quiz/assessment-copy",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/scan-regal-offer/scanner-refined-offer.tsx",
+      "to": "src/lib/personal-plan-quiz/hair-assessment.ts",
+      "spec": "@/lib/personal-plan-quiz/hair-assessment",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/scan-regal-offer/scanner-refined-offer.tsx",
+      "to": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "spec": "@/lib/personal-plan-quiz/offer-adapter",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/scan-regal-offer/scanner-refined-offer.tsx",
+      "to": "src/components/scan-regal-offer/scanner-refined-styles.ts",
+      "spec": "./scanner-refined-styles",
+      "kind": "static"
+    },
+    {
+      "from": "src/funnels/offers/registry.ts",
+      "to": "src/funnels/offers/registry.generated.ts",
+      "spec": "./registry.generated",
+      "kind": "static"
+    },
+    {
+      "from": "src/funnels/offers/registry.ts",
+      "to": "src/funnels/types.ts",
+      "spec": "@/funnels/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/funnels/offers/registry.ts",
+      "to": "src/lib/funnel/offer-presentation.ts",
+      "spec": "@/lib/funnel/offer-presentation",
+      "kind": "static"
+    },
+    {
+      "from": "src/funnels/offers/registry.ts",
+      "to": "src/lib/funnel/offer-presentation.ts",
+      "spec": "@/lib/funnel/offer-presentation",
+      "kind": "static"
+    },
+    {
+      "from": "src/funnels/types.ts",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "@/lib/billing/trial-offer",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/funnels/types.ts",
+      "to": "src/lib/quiz/result-narrative.ts",
+      "spec": "@/lib/quiz/result-narrative",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/funnels/types.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "@/lib/quiz/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/funnels/types.ts",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "@/lib/analytics/events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/funnels/types.ts",
+      "to": "src/lib/personal-plan-quiz/types.ts",
+      "spec": "@/lib/personal-plan-quiz/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/result-narrative.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/result-narrative.ts",
+      "to": "src/lib/profile/chemical-treatment.ts",
+      "spec": "@/lib/profile/chemical-treatment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/result-narrative.ts",
+      "to": "src/lib/quiz/normalization.ts",
+      "spec": "./normalization",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/result-narrative.ts",
+      "to": "src/lib/quiz/need-lane.ts",
+      "spec": "./need-lane",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/result-narrative.ts",
+      "to": "src/lib/quiz/primary-concern.ts",
+      "spec": "./primary-concern",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/result-narrative.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/types.ts",
+      "to": "src/components/ui/icon.tsx",
+      "spec": "@/components/ui/icon",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/types.ts",
+      "to": "src/lib/help/info-tips.ts",
+      "spec": "@/lib/help/info-tips",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/types.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/types.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "@/lib/vocabulary/concerns-goals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/types.ts",
+      "to": "src/lib/quiz/diagnostic-input.ts",
+      "spec": "./diagnostic-input",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/draft.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/draft.ts",
+      "to": "src/lib/quiz/normalization.ts",
+      "spec": "./normalization",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/draft.ts",
+      "to": "src/lib/personal-plan-quiz/types.ts",
+      "spec": "./types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/hair-portrait-assets.ts",
+      "to": "src/lib/quiz/portrait-config.ts",
+      "spec": "./portrait-config",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/ui/bottom-sheet.tsx",
+      "to": "src/lib/ui/modal-layer-manager.ts",
+      "spec": "@/lib/ui/modal-layer-manager",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/ui/bottom-sheet.tsx",
+      "to": "src/lib/utils.ts",
+      "spec": "@/lib/utils",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/quiz-option-card.tsx",
+      "to": "src/components/quiz/legacy-quiz-visuals.ts",
+      "spec": "@/components/quiz/legacy-quiz-visuals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/quiz/quiz-option-card.tsx",
+      "to": "src/components/quiz/hair-length-option-card.tsx",
+      "spec": "@/components/quiz/hair-length-option-card",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/quiz-option-card.tsx",
+      "to": "src/components/ui/icon.tsx",
+      "spec": "@/components/ui/icon",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/quiz-option-card.tsx",
+      "to": "src/lib/utils.ts",
+      "spec": "@/lib/utils",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/analytics/destinations/customerio.ts",
+      "to": "src/lib/customerio-tracking.ts",
+      "spec": "@/lib/customerio-tracking",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/analytics/destinations/customerio.ts",
+      "to": "src/lib/funnel/client.ts",
+      "spec": "@/lib/funnel/client",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/analytics/destinations/customerio.ts",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "../events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/analytics/destinations/customerio.ts",
+      "to": "src/lib/funnel/journey-kind.ts",
+      "spec": "@/lib/funnel/journey-kind",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/analytics/destinations/meta.ts",
+      "to": "src/lib/meta-pixel.ts",
+      "spec": "@/lib/meta-pixel",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/analytics/destinations/meta.ts",
+      "to": "src/lib/funnel/client.ts",
+      "spec": "@/lib/funnel/client",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/analytics/destinations/meta.ts",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "../events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/analytics/destinations/meta.ts",
+      "to": "src/lib/funnel/journey-kind.ts",
+      "spec": "@/lib/funnel/journey-kind",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/analytics/destinations/posthog.ts",
+      "to": "src/lib/analytics/runtime/posthog.ts",
+      "spec": "@/lib/analytics/runtime/posthog",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/analytics/destinations/posthog.ts",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "../events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/analytics/destinations/posthog.ts",
+      "to": "src/lib/stripe/intervals.ts",
+      "spec": "@/lib/stripe/intervals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/analytics/destinations/posthog.ts",
+      "to": "src/lib/billing/pricing-catalog.ts",
+      "spec": "@/lib/billing/pricing-catalog",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/analytics/routes.ts",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "./events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/supabase/admin.ts",
+      "spec": "@/lib/supabase/admin",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/journey-kind.ts",
+      "spec": "@/lib/funnel/journey-kind",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/cookie.ts",
+      "spec": "./cookie",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/flags.ts",
+      "spec": "./flags",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/packages.ts",
+      "spec": "./packages",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/observability/offer-experiment.ts",
+      "spec": "@/lib/observability/offer-experiment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/personal-plan-pricing-experiment.ts",
+      "spec": "./personal-plan-pricing-experiment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/organic-offer-media-experiment.ts",
+      "spec": "./organic-offer-media-experiment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/personal-plan-pricing-qa-token.ts",
+      "spec": "./personal-plan-pricing-qa-token",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/flow.ts",
+      "to": "src/lib/personal-plan-quiz/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/profile-summary.ts",
+      "to": "src/lib/personal-plan-quiz/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/server-draft-client.ts",
+      "to": "src/lib/personal-plan-quiz/draft.ts",
+      "spec": "./draft",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/server-draft-client.ts",
+      "to": "src/lib/personal-plan-quiz/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/types.ts",
+      "to": "src/lib/quiz/diagnostic-input.ts",
+      "spec": "@/lib/quiz/diagnostic-input",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/hair-types.ts",
+      "spec": "./hair-types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/hair-types.ts",
+      "spec": "./hair-types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/hair-length.ts",
+      "spec": "./hair-length",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/hair-length.ts",
+      "spec": "./hair-length",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "./concerns-goals",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "./concerns-goals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "./frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "./frequencies",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/profile-labels.ts",
+      "spec": "./profile-labels",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/profile-labels.ts",
+      "spec": "./profile-labels",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "spec": "../leave-in/constants",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "spec": "../leave-in/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/source-labels.ts",
+      "spec": "./source-labels",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/source-labels.ts",
+      "spec": "./source-labels",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/errors.ts",
+      "spec": "./errors",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/onboarding-goals.ts",
+      "spec": "./onboarding-goals",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "./frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "./frequencies",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/onboarding-care.ts",
+      "spec": "./onboarding-care",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/onboarding-care.ts",
+      "spec": "./onboarding-care",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/normalization.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/normalization.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/normalization.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "@/lib/vocabulary/concerns-goals",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/normalization.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/normalization.ts",
+      "to": "src/lib/quiz/diagnostic-input.ts",
+      "spec": "./diagnostic-input",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/analytics/offer-engagement.ts",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "./events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/analytics/offer-engagement.ts",
+      "to": "src/lib/cookie-consent.ts",
+      "spec": "@/lib/cookie-consent",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/analytics/offer-tracking-claims.ts",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "./events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/analytics/offer-viewed-payload.ts",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "./events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/analytics/meta-offer-view-client.ts",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "./events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/analytics/meta-offer-view-client.ts",
+      "to": "src/lib/analytics/meta-offer-view-id.ts",
+      "spec": "./meta-offer-view-id",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/analytics/meta-offer-view-client.ts",
+      "to": "src/lib/meta-pixel.ts",
+      "spec": "@/lib/meta-pixel",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/customerio/offer-engagement-client.ts",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "@/lib/analytics/events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/analytics/offer-section-order.ts",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "./events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/analytics/offer-section-order.ts",
+      "to": "src/lib/funnel/offer-presentation.ts",
+      "spec": "@/lib/funnel/offer-presentation",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/analytics/offer-section-order.ts",
+      "to": "src/lib/funnel/personal-plan-pricing-experiment.ts",
+      "spec": "@/lib/funnel/personal-plan-pricing-experiment",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/payment-method-checkout.tsx",
+      "to": "src/lib/checkout/access-recovery.ts",
+      "spec": "@/lib/checkout/access-recovery",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/payment-method-checkout.tsx",
+      "to": "src/components/ui/button.tsx",
+      "spec": "@/components/ui/button",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/payment-method-checkout.tsx",
+      "to": "src/components/checkout/payment-feedback-card.tsx",
+      "spec": "@/components/checkout/payment-feedback-card",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/payment-method-checkout.tsx",
+      "to": "src/components/checkout/use-payment-support-report.ts",
+      "spec": "@/components/checkout/use-payment-support-report",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/payment-method-checkout.tsx",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "@/lib/analytics/events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/payment-method-checkout.tsx",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "@/lib/analytics/events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/payment-method-checkout.tsx",
+      "to": "src/lib/analytics/checkout-attempt.ts",
+      "spec": "@/lib/analytics/checkout-attempt",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/payment-method-checkout.tsx",
+      "to": "src/lib/stripe/intervals.ts",
+      "spec": "@/lib/stripe/intervals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/payment-method-checkout.tsx",
+      "to": "src/lib/checkout/payment-feedback.ts",
+      "spec": "@/lib/checkout/payment-feedback",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/payment-method-checkout.tsx",
+      "to": "src/lib/funnel/flags.ts",
+      "spec": "@/lib/funnel/flags",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/payment-method-checkout.tsx",
+      "to": "src/components/checkout/payment-option-exposure.tsx",
+      "spec": "./payment-option-exposure",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/payment-method-checkout.tsx",
+      "to": "src/components/checkout/stripe-offer-elements-checkout.tsx",
+      "spec": "./stripe-offer-elements-checkout",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/payment-method-checkout.tsx",
+      "to": "src/components/checkout/paypal-subscription-button.tsx",
+      "spec": "./paypal-subscription-button",
+      "kind": "literal dynamic"
+    },
+    {
+      "from": "src/components/checkout/checkout-access-recovery-panel.tsx",
+      "to": "src/components/ui/button.tsx",
+      "spec": "@/components/ui/button",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/checkout-access-recovery-panel.tsx",
+      "to": "src/lib/checkout/access-recovery.ts",
+      "spec": "@/lib/checkout/access-recovery",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/offer-payment-overlay.tsx",
+      "to": "src/components/ui/button.tsx",
+      "spec": "@/components/ui/button",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/offer-payment-overlay.tsx",
+      "to": "src/components/ui/bottom-sheet.tsx",
+      "spec": "@/components/ui/bottom-sheet",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/offer-payment-overlay.tsx",
+      "to": "src/lib/ui/modal-layer-manager.ts",
+      "spec": "@/lib/ui/modal-layer-manager",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/offer-payment-overlay.tsx",
+      "to": "src/lib/utils.ts",
+      "spec": "@/lib/utils",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/offer-payment-overlay.tsx",
+      "to": "src/lib/checkout/offer-checkout-history.ts",
+      "spec": "@/lib/checkout/offer-checkout-history",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/offer-payment-overlay.tsx",
+      "to": "src/components/checkout/payment-option-exposure.tsx",
+      "spec": "./payment-option-exposure",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/providers/payment-runtime-provider.tsx",
+      "to": "src/lib/billing/payment-runtime-config.ts",
+      "spec": "@/lib/billing/payment-runtime-config",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "to": "src/components/checkout/active-subscription-dialog.tsx",
+      "spec": "@/components/checkout/active-subscription-dialog",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "to": "src/components/checkout/stripe-offer-elements-checkout.tsx",
+      "spec": "@/components/checkout/stripe-offer-elements-checkout",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "to": "src/components/checkout/payment-feedback-card.tsx",
+      "spec": "@/components/checkout/payment-feedback-card",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "to": "src/components/checkout/use-payment-support-report.ts",
+      "spec": "@/components/checkout/use-payment-support-report",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "to": "src/components/checkout/payment-option-exposure.tsx",
+      "spec": "@/components/checkout/payment-option-exposure",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "to": "src/components/providers/payment-runtime-provider.tsx",
+      "spec": "@/components/providers/payment-runtime-provider",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "to": "src/components/quiz/offer-tracking-provider.tsx",
+      "spec": "@/components/quiz/offer-tracking-provider",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "to": "src/components/ui/button.tsx",
+      "spec": "@/components/ui/button",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "to": "src/lib/analytics/offer-payment-option-view.ts",
+      "spec": "@/lib/analytics/offer-payment-option-view",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "to": "src/lib/analytics/track-app-event.ts",
+      "spec": "@/lib/analytics/track-app-event",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "to": "src/lib/analytics/checkout-attempt.ts",
+      "spec": "@/lib/analytics/checkout-attempt",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "@/lib/analytics/events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "to": "src/lib/billing/offer-products.ts",
+      "spec": "@/lib/billing/offer-products",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "to": "src/lib/checkout/payment-feedback.ts",
+      "spec": "@/lib/checkout/payment-feedback",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "to": "src/lib/funnel/flags.ts",
+      "spec": "@/lib/funnel/flags",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "to": "src/lib/funnel/client.ts",
+      "spec": "@/lib/funnel/client",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "to": "src/lib/observability/checkout.ts",
+      "spec": "@/lib/observability/checkout",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "to": "src/lib/observability/payment-client.ts",
+      "spec": "@/lib/observability/payment-client",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "to": "src/lib/stripe/offer-client-loader.ts",
+      "spec": "@/lib/stripe/offer-client-loader",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "to": "src/lib/stripe/prepared-checkout-credential.ts",
+      "spec": "@/lib/stripe/prepared-checkout-credential",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "to": "src/lib/stripe/prepared-stripe-checkout-state.ts",
+      "spec": "@/lib/stripe/prepared-stripe-checkout-state",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "to": "src/components/checkout/paypal-one-time-button.tsx",
+      "spec": "./paypal-one-time-button",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/active-subscription-dialog.tsx",
+      "to": "src/components/ui/button.tsx",
+      "spec": "@/components/ui/button",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/active-subscription-dialog.tsx",
+      "to": "src/components/ui/dialog.tsx",
+      "spec": "@/components/ui/dialog",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/use-plan-selection.ts",
+      "to": "src/lib/stripe/intervals.ts",
+      "spec": "@/lib/stripe/intervals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/use-plan-selection.ts",
+      "to": "src/lib/stripe/pricing-plans.ts",
+      "spec": "@/lib/stripe/pricing-plans",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/subscription-plan-selector.tsx",
+      "to": "src/components/ui/button.tsx",
+      "spec": "@/components/ui/button",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/subscription-plan-selector.tsx",
+      "to": "src/components/checkout/plan-reference-prices.ts",
+      "spec": "@/components/checkout/plan-reference-prices",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/subscription-plan-selector.tsx",
+      "to": "src/lib/stripe/intervals.ts",
+      "spec": "@/lib/stripe/intervals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/subscription-plan-selector.tsx",
+      "to": "src/lib/stripe/pricing-plans.ts",
+      "spec": "@/lib/stripe/pricing-plans",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/analytics/offer-payment-option-view.ts",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "./events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/analytics/offer-payment-option-view.ts",
+      "to": "src/lib/analytics/observe-once-engaged.ts",
+      "spec": "./observe-once-engaged",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/analytics/checkout-attempt.ts",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "./events",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/openai-ads/browser.ts",
+      "to": "src/lib/cookie-consent.ts",
+      "spec": "@/lib/cookie-consent",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/openai-ads/browser.ts",
+      "to": "src/lib/funnel/client.ts",
+      "spec": "@/lib/funnel/client",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/observability/payment-client.ts",
+      "to": "src/lib/observability/payment.ts",
+      "spec": "@/lib/observability/payment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/observability/payment-client.ts",
+      "to": "src/lib/observability/payment.ts",
+      "spec": "@/lib/observability/payment",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "./authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./authority/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/billing/scanner-trial-offer.tsx",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "@/lib/billing/trial-offer",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/billing/scanner-trial-offer.tsx",
+      "to": "src/components/billing/trial-offer.tsx",
+      "spec": "./trial-offer",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/quiz/quiz-result-transformation-card.tsx",
+      "to": "src/lib/quiz/result-narrative.ts",
+      "spec": "@/lib/quiz/result-narrative",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/quiz/quiz-result-lever-rows.tsx",
+      "to": "src/lib/quiz/result-narrative.ts",
+      "spec": "@/lib/quiz/result-narrative",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/organic-plan-offer/organic-plan-offer.tsx",
+      "to": "src/lib/trustpilot-reviews.ts",
+      "spec": "@/lib/trustpilot-reviews",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/organic-plan-offer/organic-plan-offer.tsx",
+      "to": "src/components/landing/site-footer.tsx",
+      "spec": "@/components/landing/site-footer",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/organic-plan-offer/organic-plan-offer.tsx",
+      "to": "src/components/quiz/offer-tracking-provider.tsx",
+      "spec": "@/components/quiz/offer-tracking-provider",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/organic-plan-offer/organic-plan-offer.tsx",
+      "to": "src/components/organic-plan-offer/wistia-video.tsx",
+      "spec": "@/components/organic-plan-offer/wistia-video",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/organic-plan-offer/organic-plan-offer.tsx",
+      "to": "src/components/offer-media/before-after-figure.tsx",
+      "spec": "@/components/offer-media/before-after-figure",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/organic-plan-offer/organic-plan-offer.tsx",
+      "to": "src/components/regular-quiz-field-test/activation-card.tsx",
+      "spec": "@/components/regular-quiz-field-test/activation-card",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/organic-plan-offer/organic-plan-offer.tsx",
+      "to": "src/components/regular-quiz-field-test/banner.tsx",
+      "spec": "@/components/regular-quiz-field-test/banner",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/organic-plan-offer/organic-plan-offer.tsx",
+      "to": "src/components/partner-access/activation-card.tsx",
+      "spec": "@/components/partner-access/activation-card",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/organic-plan-offer/organic-plan-offer.tsx",
+      "to": "src/components/partner-access/activation-button.tsx",
+      "spec": "@/components/partner-access/activation-button",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/organic-plan-offer/organic-plan-offer.tsx",
+      "to": "src/funnels/types.ts",
+      "spec": "@/funnels/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/organic-plan-offer/organic-plan-offer.tsx",
+      "to": "src/lib/personal-plan-quiz/assessment-copy.ts",
+      "spec": "@/lib/personal-plan-quiz/assessment-copy",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/organic-plan-offer/organic-plan-offer.tsx",
+      "to": "src/lib/personal-plan-quiz/hair-assessment.ts",
+      "spec": "@/lib/personal-plan-quiz/hair-assessment",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/organic-plan-offer/organic-plan-offer.tsx",
+      "to": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "spec": "@/lib/personal-plan-quiz/offer-adapter",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/organic-plan-offer/organic-plan-offer.tsx",
+      "to": "src/components/personal-plan-offer/types.ts",
+      "spec": "@/components/personal-plan-offer/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/assessment-copy.ts",
+      "to": "src/lib/personal-plan-quiz/hair-assessment.ts",
+      "spec": "./hair-assessment",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/assessment-copy.ts",
+      "to": "src/lib/personal-plan-quiz/hair-assessment.ts",
+      "spec": "./hair-assessment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/assessment-copy.ts",
+      "to": "src/lib/quiz/diagnostic-input.ts",
+      "spec": "@/lib/quiz/diagnostic-input",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/hair-assessment.ts",
+      "to": "src/lib/personal-plan-quiz/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/hair-assessment.ts",
+      "to": "src/lib/quiz/diagnostic-input.ts",
+      "spec": "@/lib/quiz/diagnostic-input",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "@/lib/vocabulary/concerns-goals",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "@/lib/quiz/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "to": "src/lib/quiz/diagnostic-input.ts",
+      "spec": "@/lib/quiz/diagnostic-input",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "to": "src/lib/personal-plan-quiz/primary-concern.ts",
+      "spec": "./primary-concern",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "to": "src/lib/personal-plan-quiz/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/funnels/offers/registry.generated.ts",
+      "to": "src/funnels/offers/discovery-call-v1.tsx",
+      "spec": "./discovery-call-v1",
+      "kind": "static"
+    },
+    {
+      "from": "src/funnels/offers/registry.generated.ts",
+      "to": "src/funnels/offers/organic-plan-before-after-v1.tsx",
+      "spec": "./organic-plan-before-after-v1",
+      "kind": "static"
+    },
+    {
+      "from": "src/funnels/offers/registry.generated.ts",
+      "to": "src/funnels/offers/organic-plan-v1.tsx",
+      "spec": "./organic-plan-v1",
+      "kind": "static"
+    },
+    {
+      "from": "src/funnels/offers/registry.generated.ts",
+      "to": "src/funnels/offers/personal-plan-v1.tsx",
+      "spec": "./personal-plan-v1",
+      "kind": "static"
+    },
+    {
+      "from": "src/funnels/offers/registry.generated.ts",
+      "to": "src/funnels/offers/scan-regal-v1.tsx",
+      "spec": "./scan-regal-v1",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/profile/chemical-treatment.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/need-lane.ts",
+      "to": "src/lib/onboarding/goal-flow.ts",
+      "spec": "@/lib/onboarding/goal-flow",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/need-lane.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/need-lane.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/need-lane.ts",
+      "to": "src/lib/quiz/normalization.ts",
+      "spec": "./normalization",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/need-lane.ts",
+      "to": "src/lib/quiz/primary-concern.ts",
+      "spec": "./primary-concern",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/need-lane.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/customerio-tracking.ts",
+      "to": "src/lib/analytics/runtime/bounded-fifo.ts",
+      "spec": "@/lib/analytics/runtime/bounded-fifo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/customerio-tracking.ts",
+      "to": "src/lib/analytics/page-url.ts",
+      "spec": "@/lib/analytics/page-url",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/meta-pixel.ts",
+      "to": "src/lib/analytics/runtime/environment.ts",
+      "spec": "@/lib/analytics/runtime/environment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/meta-pixel.ts",
+      "to": "src/lib/funnel/flags.ts",
+      "spec": "@/lib/funnel/flags",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/analytics/runtime/posthog.ts",
+      "to": "src/lib/analytics/runtime/bounded-fifo.ts",
+      "spec": "./bounded-fifo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/analytics/runtime/posthog.ts",
+      "to": "src/lib/funnel/client.ts",
+      "spec": "@/lib/funnel/client",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/analytics/runtime/posthog.ts",
+      "to": "src/lib/analytics/page-url.ts",
+      "spec": "@/lib/analytics/page-url",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/types.ts",
+      "to": "src/lib/billing/pricing-catalog.ts",
+      "spec": "./pricing-catalog",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/funnel/cookie.ts",
+      "to": "src/lib/funnel/packages.ts",
+      "spec": "./packages",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/packages.ts",
+      "to": "src/funnels/packages.json",
+      "spec": "@/funnels/packages.json",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/packages.ts",
+      "to": "src/funnels/quizzes/registry.ts",
+      "spec": "@/funnels/quizzes/registry",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/packages.ts",
+      "to": "src/lib/funnel/offer-presentation.ts",
+      "spec": "@/lib/funnel/offer-presentation",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/packages.ts",
+      "to": "src/lib/funnel/offer-presentation.ts",
+      "spec": "@/lib/funnel/offer-presentation",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/onboarding-goals.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "./concerns-goals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/onboarding-goals.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "./concerns-goals",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/onboarding-goals.ts",
+      "to": "src/lib/vocabulary/hair-types.ts",
+      "spec": "./hair-types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/payment-feedback-card.tsx",
+      "to": "src/components/ui/button.tsx",
+      "spec": "@/components/ui/button",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/payment-feedback-card.tsx",
+      "to": "src/lib/checkout/payment-feedback.ts",
+      "spec": "@/lib/checkout/payment-feedback",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/payment-feedback-card.tsx",
+      "to": "src/components/checkout/use-payment-support-report.ts",
+      "spec": "./use-payment-support-report",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/use-payment-support-report.ts",
+      "to": "src/lib/checkout/payment-feedback.ts",
+      "spec": "@/lib/checkout/payment-feedback",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/payment-option-exposure.tsx",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "@/lib/analytics/events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/payment-option-exposure.tsx",
+      "to": "src/lib/analytics/offer-payment-option-view.ts",
+      "spec": "@/lib/analytics/offer-payment-option-view",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/stripe-offer-elements-checkout.tsx",
+      "to": "src/lib/checkout/access-recovery.ts",
+      "spec": "@/lib/checkout/access-recovery",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/stripe-offer-elements-checkout.tsx",
+      "to": "src/components/ui/button.tsx",
+      "spec": "@/components/ui/button",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/stripe-offer-elements-checkout.tsx",
+      "to": "src/components/checkout/payment-feedback-card.tsx",
+      "spec": "@/components/checkout/payment-feedback-card",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/stripe-offer-elements-checkout.tsx",
+      "to": "src/components/checkout/use-payment-support-report.ts",
+      "spec": "@/components/checkout/use-payment-support-report",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/stripe-offer-elements-checkout.tsx",
+      "to": "src/components/providers/payment-runtime-provider.tsx",
+      "spec": "@/components/providers/payment-runtime-provider",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/stripe-offer-elements-checkout.tsx",
+      "to": "src/components/quiz/offer-tracking-provider.tsx",
+      "spec": "@/components/quiz/offer-tracking-provider",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/stripe-offer-elements-checkout.tsx",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "@/lib/analytics/events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/stripe-offer-elements-checkout.tsx",
+      "to": "src/lib/observability/checkout.ts",
+      "spec": "@/lib/observability/checkout",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/stripe-offer-elements-checkout.tsx",
+      "to": "src/lib/observability/payment-client.ts",
+      "spec": "@/lib/observability/payment-client",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/stripe-offer-elements-checkout.tsx",
+      "to": "src/components/checkout/payment-option-exposure.tsx",
+      "spec": "./payment-option-exposure",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/stripe-offer-elements-checkout.tsx",
+      "to": "src/lib/stripe/prepared-checkout-credential.ts",
+      "spec": "@/lib/stripe/prepared-checkout-credential",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/stripe-offer-elements-checkout.tsx",
+      "to": "src/lib/checkout/payment-feedback.ts",
+      "spec": "@/lib/checkout/payment-feedback",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/stripe-offer-elements-checkout.tsx",
+      "to": "src/lib/funnel/flags.ts",
+      "spec": "@/lib/funnel/flags",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-subscription-button.tsx",
+      "to": "src/lib/cookie-consent.ts",
+      "spec": "@/lib/cookie-consent",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-subscription-button.tsx",
+      "to": "src/lib/reactivation/return-destination.ts",
+      "spec": "@/lib/reactivation/return-destination",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-subscription-button.tsx",
+      "to": "src/components/providers/payment-runtime-provider.tsx",
+      "spec": "@/components/providers/payment-runtime-provider",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-subscription-button.tsx",
+      "to": "src/components/checkout/payment-feedback-card.tsx",
+      "spec": "@/components/checkout/payment-feedback-card",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-subscription-button.tsx",
+      "to": "src/components/checkout/use-payment-support-report.ts",
+      "spec": "@/components/checkout/use-payment-support-report",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-subscription-button.tsx",
+      "to": "src/components/quiz/offer-tracking-provider.tsx",
+      "spec": "@/components/quiz/offer-tracking-provider",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-subscription-button.tsx",
+      "to": "src/lib/observability/checkout.ts",
+      "spec": "@/lib/observability/checkout",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-subscription-button.tsx",
+      "to": "src/lib/observability/checkout.ts",
+      "spec": "@/lib/observability/checkout",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/paypal-subscription-button.tsx",
+      "to": "src/lib/observability/payment-client.ts",
+      "spec": "@/lib/observability/payment-client",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-subscription-button.tsx",
+      "to": "src/lib/stripe/intervals.ts",
+      "spec": "@/lib/stripe/intervals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/paypal-subscription-button.tsx",
+      "to": "src/lib/paypal/checkout-intents.ts",
+      "spec": "@/lib/paypal/checkout-intents",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/paypal-subscription-button.tsx",
+      "to": "src/lib/funnel/client.ts",
+      "spec": "@/lib/funnel/client",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-subscription-button.tsx",
+      "to": "src/lib/openai-ads/browser.ts",
+      "spec": "@/lib/openai-ads/browser",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-subscription-button.tsx",
+      "to": "src/lib/checkout/payment-feedback.ts",
+      "spec": "@/lib/checkout/payment-feedback",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-subscription-button.tsx",
+      "to": "src/lib/funnel/flags.ts",
+      "spec": "@/lib/funnel/flags",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-subscription-button.tsx",
+      "to": "src/components/checkout/payment-method-checkout.tsx",
+      "spec": "./payment-method-checkout",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-subscription-button.tsx",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "@/lib/analytics/events",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/paypal-subscription-button.tsx",
+      "to": "src/components/checkout/paypal-script-failure.ts",
+      "spec": "./paypal-script-failure",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-subscription-button.tsx",
+      "to": "src/lib/observability/checkout-watchdog.ts",
+      "spec": "@/lib/observability/checkout-watchdog",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-subscription-button.tsx",
+      "to": "src/components/checkout/active-subscription-dialog.tsx",
+      "spec": "./active-subscription-dialog",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/observability/checkout.ts",
+      "to": "src/lib/observability/sentry-scrubbing.ts",
+      "spec": "@/lib/observability/sentry-scrubbing",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/stripe/prepared-stripe-checkout-state.ts",
+      "to": "src/lib/stripe/prepared-checkout-credential.ts",
+      "spec": "./prepared-checkout-credential",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-one-time-button.tsx",
+      "to": "src/components/providers/payment-runtime-provider.tsx",
+      "spec": "@/components/providers/payment-runtime-provider",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-one-time-button.tsx",
+      "to": "src/components/checkout/payment-feedback-card.tsx",
+      "spec": "@/components/checkout/payment-feedback-card",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-one-time-button.tsx",
+      "to": "src/components/checkout/use-payment-support-report.ts",
+      "spec": "@/components/checkout/use-payment-support-report",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-one-time-button.tsx",
+      "to": "src/components/quiz/offer-tracking-provider.tsx",
+      "spec": "@/components/quiz/offer-tracking-provider",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-one-time-button.tsx",
+      "to": "src/lib/checkout/paypal-one-time-recovery.ts",
+      "spec": "@/lib/checkout/paypal-one-time-recovery",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-one-time-button.tsx",
+      "to": "src/lib/funnel/client.ts",
+      "spec": "@/lib/funnel/client",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-one-time-button.tsx",
+      "to": "src/lib/checkout/payment-feedback.ts",
+      "spec": "@/lib/checkout/payment-feedback",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-one-time-button.tsx",
+      "to": "src/lib/funnel/flags.ts",
+      "spec": "@/lib/funnel/flags",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-one-time-button.tsx",
+      "to": "src/lib/paypal/welcome-url.ts",
+      "spec": "@/lib/paypal/welcome-url",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-one-time-button.tsx",
+      "to": "src/lib/analytics/checkout-attempt.ts",
+      "spec": "@/lib/analytics/checkout-attempt",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/checkout/paypal-one-time-button.tsx",
+      "to": "src/lib/openai-ads/browser.ts",
+      "spec": "@/lib/openai-ads/browser",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-one-time-button.tsx",
+      "to": "src/lib/observability/checkout-watchdog.ts",
+      "spec": "@/lib/observability/checkout-watchdog",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-one-time-button.tsx",
+      "to": "src/lib/observability/checkout.ts",
+      "spec": "@/lib/observability/checkout",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/checkout/paypal-one-time-button.tsx",
+      "to": "src/lib/observability/payment-client.ts",
+      "spec": "@/lib/observability/payment-client",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/ui/dialog.tsx",
+      "to": "src/lib/ui/modal-layer-manager.ts",
+      "spec": "@/lib/ui/modal-layer-manager",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/ui/dialog.tsx",
+      "to": "src/lib/utils.ts",
+      "spec": "@/lib/utils",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/observability/payment.ts",
+      "to": "src/lib/observability/checkout.ts",
+      "spec": "@/lib/observability/checkout",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/observability/payment.ts",
+      "to": "src/lib/checkout/payment-feedback.ts",
+      "spec": "@/lib/checkout/payment-feedback",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/types.ts",
+      "to": "src/lib/personal-plan-quiz/types.ts",
+      "spec": "@/lib/personal-plan-quiz/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/types.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authorities.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authorities.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/contracts.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/contracts.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/partner-access/activation-card.tsx",
+      "to": "src/components/partner-access/activation-button.tsx",
+      "spec": "@/components/partner-access/activation-button",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/partner-access/activation-button.tsx",
+      "to": "src/lib/analytics/track-app-event.ts",
+      "spec": "@/lib/analytics/track-app-event",
+      "kind": "static"
+    },
+    {
+      "from": "src/funnels/offers/discovery-call-v1.tsx",
+      "to": "src/components/discovery-call-offer/discovery-call-offer.tsx",
+      "spec": "@/components/discovery-call-offer/discovery-call-offer",
+      "kind": "static"
+    },
+    {
+      "from": "src/funnels/offers/discovery-call-v1.tsx",
+      "to": "src/funnels/types.ts",
+      "spec": "@/funnels/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/funnels/offers/organic-plan-before-after-v1.tsx",
+      "to": "src/components/organic-plan-offer/organic-plan-offer.tsx",
+      "spec": "@/components/organic-plan-offer/organic-plan-offer",
+      "kind": "static"
+    },
+    {
+      "from": "src/funnels/offers/organic-plan-before-after-v1.tsx",
+      "to": "src/funnels/types.ts",
+      "spec": "@/funnels/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/funnels/offers/organic-plan-v1.tsx",
+      "to": "src/components/organic-plan-offer/organic-plan-offer.tsx",
+      "spec": "@/components/organic-plan-offer/organic-plan-offer",
+      "kind": "static"
+    },
+    {
+      "from": "src/funnels/offers/organic-plan-v1.tsx",
+      "to": "src/funnels/types.ts",
+      "spec": "@/funnels/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/funnels/offers/personal-plan-v1.tsx",
+      "to": "src/funnels/offers/organic-plan-v1.tsx",
+      "spec": "./organic-plan-v1",
+      "kind": "static"
+    },
+    {
+      "from": "src/funnels/offers/personal-plan-v1.tsx",
+      "to": "src/funnels/types.ts",
+      "spec": "@/funnels/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/funnels/offers/scan-regal-v1.tsx",
+      "to": "src/components/scan-regal-offer/scan-regal-offer.tsx",
+      "spec": "@/components/scan-regal-offer/scan-regal-offer",
+      "kind": "static"
+    },
+    {
+      "from": "src/funnels/offers/scan-regal-v1.tsx",
+      "to": "src/funnels/types.ts",
+      "spec": "@/funnels/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/onboarding/goal-flow.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/onboarding/goal-flow.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "@/lib/vocabulary/concerns-goals",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/onboarding/goal-flow.ts",
+      "to": "src/lib/vocabulary/onboarding-goals.ts",
+      "spec": "@/lib/vocabulary/onboarding-goals",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/onboarding/goal-flow.ts",
+      "to": "src/lib/vocabulary/onboarding-goals.ts",
+      "spec": "@/lib/vocabulary/onboarding-goals",
+      "kind": "static"
+    },
+    {
+      "from": "src/funnels/quizzes/registry.ts",
+      "to": "src/funnels/quizzes/registry.json",
+      "spec": "./registry.json",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/reactivation/return-destination.ts",
+      "to": "src/lib/stripe/intervals.ts",
+      "spec": "@/lib/stripe/intervals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/reactivation/return-destination.ts",
+      "to": "src/lib/stripe/pricing-plans.ts",
+      "spec": "@/lib/stripe/pricing-plans",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/paypal/checkout-intents.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/discovery-call-offer/discovery-call-offer.tsx",
+      "to": "src/components/landing/site-footer.tsx",
+      "spec": "@/components/landing/site-footer",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/discovery-call-offer/discovery-call-offer.tsx",
+      "to": "src/components/quiz/offer-tracking-provider.tsx",
+      "spec": "@/components/quiz/offer-tracking-provider",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/discovery-call-offer/discovery-call-offer.tsx",
+      "to": "src/funnels/types.ts",
+      "spec": "@/funnels/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/discovery-call-offer/discovery-call-offer.tsx",
+      "to": "src/lib/analytics/track-app-event.ts",
+      "spec": "@/lib/analytics/track-app-event",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/discovery-call-offer/discovery-call-offer.tsx",
+      "to": "src/lib/funnel/client.ts",
+      "spec": "@/lib/funnel/client",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/discovery-call-offer/discovery-call-offer.tsx",
+      "to": "src/lib/calendly/constants.ts",
+      "spec": "@/lib/calendly/constants",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/discovery-call-offer/discovery-call-offer.tsx",
+      "to": "src/lib/trustpilot-reviews.ts",
+      "spec": "@/lib/trustpilot-reviews",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/scan-regal-offer/scan-regal-offer.tsx",
+      "to": "src/lib/trustpilot-reviews.ts",
+      "spec": "@/lib/trustpilot-reviews",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/scan-regal-offer/scan-regal-offer.tsx",
+      "to": "src/components/scan-regal-offer/scanner-refined-offer.tsx",
+      "spec": "./scanner-refined-offer",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/scan-regal-offer/scan-regal-offer.tsx",
+      "to": "src/components/landing/site-footer.tsx",
+      "spec": "@/components/landing/site-footer",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/scan-regal-offer/scan-regal-offer.tsx",
+      "to": "src/components/organic-plan-offer/organic-plan-offer.tsx",
+      "spec": "@/components/organic-plan-offer/organic-plan-offer",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/scan-regal-offer/scan-regal-offer.tsx",
+      "to": "src/components/quiz/offer-tracking-provider.tsx",
+      "spec": "@/components/quiz/offer-tracking-provider",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/scan-regal-offer/scan-regal-offer.tsx",
+      "to": "src/components/scan-regal-offer/scan-hero-demo.tsx",
+      "spec": "@/components/scan-regal-offer/scan-hero-demo",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/scan-regal-offer/scan-regal-offer.tsx",
+      "to": "src/funnels/types.ts",
+      "spec": "@/funnels/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/scan-regal-offer/scan-regal-offer.tsx",
+      "to": "src/lib/quiz/scan-insert-examples.ts",
+      "spec": "@/lib/quiz/scan-insert-examples",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/scan-regal-offer/scan-hero-demo.tsx",
+      "to": "src/lib/quiz/scan-insert-examples.ts",
+      "spec": "@/lib/quiz/scan-insert-examples",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/scan-regal-offer/scan-hero-demo.tsx",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "@/lib/quiz/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/scan-insert-examples.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    }
+  ],
+  "runtimeExternals": [
+    "@paypal/react-paypal-js",
+    "@sentry/nextjs",
+    "@stripe/react-stripe-js",
+    "@stripe/react-stripe-js/checkout",
+    "@stripe/stripe-js/pure",
+    "@supabase/supabase-js",
+    "class-variance-authority",
+    "clsx",
+    "lucide-react",
+    "next/dynamic",
+    "next/image",
+    "next/link",
+    "next/navigation",
+    "next/script",
+    "posthog-js",
+    "react",
+    "react-dom",
+    "react-dom/server",
+    "tailwind-merge",
+    "zod"
+  ],
+  "typeOnlyExternals": [
+    "@paypal/paypal-js",
+    "@stripe/stripe-js",
+    "@supabase/supabase-js",
+    "next/server",
+    "react"
+  ],
+  "externalPins": [
+    {
+      "specifier": "react-dom/server",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/react-dom/server.node.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/react-dom/package.json",
+      "kind": "runtime"
+    },
+    {
+      "specifier": "next/image",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/image.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/package.json",
+      "kind": "runtime"
+    },
+    {
+      "specifier": "next/navigation",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/navigation.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/package.json",
+      "kind": "runtime"
+    },
+    {
+      "specifier": "react-dom",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/react-dom/index.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/react-dom/package.json",
+      "kind": "runtime"
+    },
+    {
+      "specifier": "react",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/react/index.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/react/package.json",
+      "kind": "runtime"
+    },
+    {
+      "specifier": "lucide-react",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/lucide-react/dist/cjs/lucide-react.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/lucide-react/package.json",
+      "kind": "runtime"
+    },
+    {
+      "specifier": "next/link",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/link.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/package.json",
+      "kind": "runtime"
+    },
+    {
+      "specifier": "class-variance-authority",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/class-variance-authority/dist/index.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/class-variance-authority/package.json",
+      "kind": "runtime"
+    },
+    {
+      "specifier": "clsx",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/clsx/dist/clsx.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/clsx/package.json",
+      "kind": "runtime"
+    },
+    {
+      "specifier": "tailwind-merge",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tailwind-merge/dist/bundle-cjs.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tailwind-merge/package.json",
+      "kind": "runtime"
+    },
+    {
+      "specifier": "next/dynamic",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/dynamic.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/package.json",
+      "kind": "runtime"
+    },
+    {
+      "specifier": "@stripe/react-stripe-js",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@stripe/react-stripe-js/dist/react-stripe.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@stripe/react-stripe-js/package.json",
+      "kind": "runtime"
+    },
+    {
+      "specifier": "@stripe/stripe-js/pure",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@stripe/stripe-js/pure/index.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@stripe/stripe-js/package.json",
+      "kind": "runtime"
+    },
+    {
+      "specifier": "@sentry/nextjs",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/index.server.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/package.json",
+      "kind": "runtime"
+    },
+    {
+      "specifier": "zod",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/zod/index.cjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/zod/package.json",
+      "kind": "runtime"
+    },
+    {
+      "specifier": "posthog-js",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/posthog-js/dist/main.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/posthog-js/package.json",
+      "kind": "runtime"
+    },
+    {
+      "specifier": "@supabase/supabase-js",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/dist/index.cjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/package.json",
+      "kind": "runtime"
+    },
+    {
+      "specifier": "@stripe/react-stripe-js/checkout",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@stripe/react-stripe-js/dist/checkout.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@stripe/react-stripe-js/package.json",
+      "kind": "runtime"
+    },
+    {
+      "specifier": "@paypal/react-paypal-js",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@paypal/react-paypal-js/dist/cjs/react-paypal-js.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@paypal/react-paypal-js/package.json",
+      "kind": "runtime"
+    },
+    {
+      "specifier": "next/script",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/script.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/package.json",
+      "kind": "runtime"
+    },
+    {
+      "specifier": "@stripe/stripe-js",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@stripe/stripe-js/lib/index.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@stripe/stripe-js/package.json",
+      "kind": "type-only/tool"
+    },
+    {
+      "specifier": "next/server",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/server.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/package.json",
+      "kind": "type-only/tool"
+    },
+    {
+      "specifier": "@paypal/paypal-js",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@paypal/paypal-js/dist/cjs/paypal-js.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@paypal/paypal-js/package.json",
+      "kind": "type-only/tool"
+    },
+    {
+      "specifier": "typescript",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/typescript.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/package.json",
+      "kind": "type-only/tool"
+    },
+    {
+      "specifier": "tsx",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/loader.mjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/package.json",
+      "kind": "type-only/tool"
+    },
+    {
+      "specifier": "esbuild",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/esbuild/lib/main.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/esbuild/package.json",
+      "kind": "type-only/tool"
+    },
+    {
+      "specifier": "get-tsconfig",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/get-tsconfig/dist/index.cjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/get-tsconfig/package.json",
+      "kind": "type-only/tool"
+    },
+    {
+      "specifier": "resolve-pkg-maps",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/resolve-pkg-maps/dist/index.cjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/resolve-pkg-maps/package.json",
+      "kind": "type-only/tool"
+    }
+  ],
+  "nonliteralImports": [],
+  "limits": "Static selected keeper import closure includes conservatively followed local type imports and literal dynamic imports. Hashes are not human read credit. Selected runtime distribution/type/loader trees only, no whole node_modules crawl. Nonliteral imports are disclosed; unrelated26-file runtime closure and all transitive third-party runtime code are not exhaustively certified."
+}

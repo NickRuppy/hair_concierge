@@ -1,0 +1,40 @@
+import pathlib,json,hashlib,difflib
+R=pathlib.Path('/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning');D=pathlib.Path('/tmp/test-audit-partner-access84');S=json.loads((D/'sites.json').read_text());H=lambda b:hashlib.sha256(b.encode() if isinstance(b,str) else b).hexdigest()
+J='tests/partner-access-journey.test.ts';C='tests/partner-access-claim-route.test.ts';U='tests/partner-access-ui.test.tsx'
+B={f:(R/f).read_text() for f in S};T=B.copy()
+def site(f,i):return S[f][i-1]
+def change(f,i,old,new):
+ b=site(f,i)['body'];assert b.count(old)==1,(i,old);after=b.replace(old,new);assert T[f].count(b)==1;T[f]=T[f].replace(b,after);return after
+# C2 exact projection union into already-existing real auth-adapter keeper.
+projection=site(J,3)['body'].split('  assert.deepEqual(resolution, ')[1].split('\n})')[0]
+change(J,10,'  assert.equal(resolution.kind, "authorized")','  assert.deepEqual(resolution, '+projection)
+# C6: move donor's forbidden collaborator into existing fresh-account request; no extra call/input.
+change(C,1,'  const { calls, deps } = dependencies()','''  const { calls, deps } = dependencies({
+    hasCurrentPaidAppAccess: async () => {
+      throw new Error("must not be called for a just-created account")
+    },
+  })''')
+# C8: observe the existing first leg; preserve status, exact JSON and side-effect order before existing handoff parsing.
+change(C,3,'  await createPartnerAccessClaimHandler(first.deps)(request())','''  const firstResponse = await createPartnerAccessClaimHandler(first.deps)(request())
+  assert.equal(firstResponse.status, 202)
+  assert.deepEqual(await firstResponse.json(), { requiresEmail: true, email: "lea@example.test" })
+  assert.deepEqual(
+    first.calls.map(([name]) => name),
+    ["reserve", "release", "magicLink"],
+  )''')
+# C7 ready output same firstName/email/mode; omitted callbacks never serialized/invoked by SSR.
+body=site(U,1)['body'];extra=body[body.index('  assert.match(html, /lea@'):body.rindex('\n})')]
+change(U,2,'  assert.doesNotMatch(html, /Hi Lea Sommer/)','  assert.doesNotMatch(html, /Hi Lea Sommer/)\n'+extra)
+raw=[('C1',J,1,[(J,8)]),('C2',J,3,[(J,10)]),('C3',J,7,[(J,9)]),('C4',J,12,[(J,11),(J,6)]),('C5',C,8,[(C,6)]),('C6',C,9,[(C,1)]),('C7',U,1,[(U,2)]),('C8',C,2,[(C,3)])]
+K=T.copy();candidates=[]
+for id,f,n,keepers in raw:
+ d=site(f,n);assert K[f].count(d['body'])==1;K[f]=K[f].replace(d['body'],'',1)
+ candidates.append({'id':id,'donor':d,'keepers':[site(k,i) for k,i in keepers]})
+manifest={'root':str(R),'head':'21e0e41fa996ec6a725c258ab3766971f0edb94d','branch':'codex/test-audit-pruning','phases':{},'expectedCounts':{'before':84,'transfer':84,'cut':76},'nativeCounts':{'before':80,'transfer':80,'cut':72},'browserCounts':4,'candidateCount':8,'sourceEdits':0}
+for phase,files in [('before',B),('transfer',T),('cut',K)]:
+ manifest['phases'][phase]={}
+ for f,s in files.items():
+  p=D/'snapshots'/phase/f;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(s);manifest['phases'][phase][f]=H(s)
+(D/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n');(D/'candidates.json').write_text(json.dumps(candidates,indent=2,ensure_ascii=False)+'\n')
+diff=''.join(''.join(difflib.unified_diff(B[f].splitlines(True),K[f].splitlines(True),fromfile='a/'+f,tofile='b/'+f)) for f in S)
+(D/'complete.diff').write_text(diff)

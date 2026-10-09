@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: the signed navigation marks the current destination and the shell owns its bottom clearance
+ok 1 - the signed navigation marks the current destination and the shell owns its bottom clearance
+  ---
+  duration_ms: 9.3525
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 407.849834

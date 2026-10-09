@@ -10,6 +10,10 @@ import {
 import type { CustomerIoTransactionalEmailPayload } from "../src/lib/customerio/transactional"
 import type { QuizAnswers } from "../src/lib/quiz/types"
 import {
+  PERSONAL_PLAN_RESULT_ARTIFACT_CTA_LABEL,
+  PERSONAL_PLAN_RESULT_ARTIFACT_MESSAGE_ID_ENV,
+} from "../src/lib/customerio/personal-plan-result-artifact"
+import {
   SCANNER_RESULT_ARTIFACT_MESSAGE_ID_ENV,
   type ResultArtifactEmailKind,
 } from "../src/lib/customerio/scanner-result-artifact"
@@ -163,17 +167,53 @@ test("claims, sends, and marks the result artifact email sent", async () => {
     quiz_kind: "legacy",
     name: "Lea Beispiel",
     email: "lea@example.com",
-    quiz_answers: completeAnswers,
+    quiz_answers: { ...completeAnswers, concerns_other_text: "<b>do not send</b>" },
     artifact_email_status: null,
   })
 
-  const response = await handleQuizResultArtifactRequest({ leadId }, createDeps(store, sends))
+  const previousMessageId = process.env[PERSONAL_PLAN_RESULT_ARTIFACT_MESSAGE_ID_ENV]
+  process.env[PERSONAL_PLAN_RESULT_ARTIFACT_MESSAGE_ID_ENV] = "42"
+  try {
+    const response = await handleQuizResultArtifactRequest({ leadId }, createDeps(store, sends))
 
-  assert.equal(response.status, 200)
-  assert.deepEqual(response.body, { sent: true, skipped: false })
-  assert.equal(sends.length, 1)
-  assert.equal(sends[0].to, "lea@example.com")
-  assert.deepEqual(store.sent, [leadId])
+    assert.equal(response.status, 200)
+    assert.deepEqual(response.body, { sent: true, skipped: false })
+    assert.equal(sends.length, 1)
+    assert.equal(sends[0].to, "lea@example.com")
+    assert.equal(Array.isArray(sends[0].messageData.diagnostic_rows), true)
+    assert.equal(sends[0].transactionalMessageId, 42)
+    assert.equal(sends[0].messageData.lead_id, leadId)
+    assert.equal(sends[0].messageData.profile_line, "Für welliges, feines Haar")
+    assert.equal(sends[0].messageData.cta_label, PERSONAL_PLAN_RESULT_ARTIFACT_CTA_LABEL)
+    assert.equal(
+      sends[0].messageData.result_url,
+      "https://chaarlie.de/result/550e8400-e29b-41d4-a716-446655440000?entry=result_email&focus=personal_plan_complete_plan#personal_plan_complete_plan",
+    )
+    assert.deepEqual(
+      (sends[0].messageData.diagnostic_rows as Array<Record<string, unknown>>).map(
+        ({ id, title, today_label }) => ({ id, title, today_label }),
+      ),
+      [
+        { id: "surface_frizz", title: "Oberfläche & Frizz", today_label: "viel Potenzial" },
+        {
+          id: "moisture_softness",
+          title: "Feuchtigkeit & Geschmeidigkeit",
+          today_label: "viel Potenzial",
+        },
+        { id: "breakage_stability", title: "Stabilität", today_label: "gute Basis" },
+      ],
+    )
+    assert.equal("foundation_products" in sends[0].messageData, false)
+    assert.equal("routine_levers" in sends[0].messageData, false)
+    assert.equal("products" in sends[0].messageData, false)
+    assert.equal("concerns_other_text" in sends[0].messageData, false)
+    assert.doesNotMatch(JSON.stringify(sends[0].messageData), /do not send/)
+    assert.deepEqual(store.sent, [leadId])
+  } finally {
+    if (previousMessageId === undefined)
+      delete process.env[PERSONAL_PLAN_RESULT_ARTIFACT_MESSAGE_ID_ENV]
+    else process.env[PERSONAL_PLAN_RESULT_ARTIFACT_MESSAGE_ID_ENV] = previousMessageId
+  }
 })
 
 test("does not claim or mutate when Customer.io transactional config is missing", async () => {
@@ -307,26 +347,6 @@ test("skips personal-plan rows before parsing or sending a legacy result email",
   assert.equal(response.status, 200)
   assert.deepEqual(response.body, { sent: false, skipped: true })
   assert.equal(sends.length, 0)
-})
-
-test("skips when the result artifact email was already sent or is sending", async () => {
-  for (const status of ["sent", "sending"] as const) {
-    const sends: CustomerIoTransactionalEmailPayload[] = []
-    const store = createStore({
-      id: leadId,
-      quiz_kind: "legacy",
-      name: "Lea Beispiel",
-      email: "lea@example.com",
-      quiz_answers: completeAnswers,
-      artifact_email_status: status,
-    })
-
-    const response = await handleQuizResultArtifactRequest({ leadId }, createDeps(store, sends))
-
-    assert.equal(response.status, 200)
-    assert.deepEqual(response.body, { sent: false, skipped: true })
-    assert.equal(sends.length, 0)
-  }
 })
 
 test("skips a failed result artifact email until manual retry resets it", async () => {

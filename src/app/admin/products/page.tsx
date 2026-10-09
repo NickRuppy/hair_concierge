@@ -132,11 +132,13 @@ interface ProductForm {
   shampoo_bucket_pairs: ShampooBucketPair[]
   is_active: boolean
   lifecycle_status: string
+  market_segment: "" | "drugstore" | "professional"
   sort_order: number
   conditioner_specs: ConditionerSpecForm | null
   leave_in_specs: LeaveInSpecForm | null
   mask_specs: MaskSpecForm | null
   bondbuilder_specs: BondbuilderSpecForm | null
+  bondbuilder_research_managed?: boolean
   deep_cleansing_shampoo_specs: DeepCleansingShampooSpecForm | null
   dry_shampoo_specs: DryShampooSpecForm | null
   peeling_specs: PeelingSpecForm | null
@@ -206,6 +208,7 @@ const emptyForm: ProductForm = {
   shampoo_bucket_pairs: [],
   is_active: true,
   lifecycle_status: "active",
+  market_segment: "",
   sort_order: 0,
   conditioner_specs: null,
   leave_in_specs: null,
@@ -308,12 +311,12 @@ export default function AdminProductsPage() {
 
     const bondbuilderSpecs = product.bondbuilder_specs
       ? {
-          bond_repair_intensity: product.bondbuilder_specs.bond_repair_intensity,
-          application_mode: product.bondbuilder_specs.application_mode,
-          bond_repair_axis: product.bondbuilder_specs.bond_repair_axis,
-          treatment_mode: product.bondbuilder_specs.treatment_mode,
-          product_format: product.bondbuilder_specs.product_format,
-          usage_protocol: product.bondbuilder_specs.usage_protocol,
+          bond_repair_intensity: product.bondbuilder_specs.bond_repair_intensity ?? "",
+          application_mode: product.bondbuilder_specs.application_mode ?? "",
+          bond_repair_axis: product.bondbuilder_specs.bond_repair_axis ?? "",
+          treatment_mode: product.bondbuilder_specs.treatment_mode ?? "",
+          product_format: product.bondbuilder_specs.product_format ?? "",
+          usage_protocol: product.bondbuilder_specs.usage_protocol ?? "",
         }
       : isBondbuilderCategory(product.category || "")
         ? { ...emptyBondbuilderSpecs }
@@ -365,11 +368,13 @@ export default function AdminProductsPage() {
       shampoo_bucket_pairs: product.shampoo_bucket_pairs || [],
       is_active: product.is_active,
       lifecycle_status: product.lifecycle_status ?? "active",
+      market_segment: product.market_segment ?? "",
       sort_order: product.sort_order,
       conditioner_specs: conditionerSpecs,
       leave_in_specs: leaveInSpecs,
       mask_specs: maskSpecs,
       bondbuilder_specs: bondbuilderSpecs,
+      bondbuilder_research_managed: product.bondbuilder_specs?.research_profile != null,
       deep_cleansing_shampoo_specs: deepCleansingShampooSpecs,
       dry_shampoo_specs: dryShampooSpecs,
       peeling_specs: peelingSpecs,
@@ -540,6 +545,9 @@ export default function AdminProductsPage() {
         suitable_concerns: form.suitable_concerns,
         is_active: form.is_active,
         lifecycle_status: form.lifecycle_status,
+        // Omitted when unset: the segment is optional until the classification backfill, and
+        // editing a not yet segmented product must never clear it.
+        ...(form.market_segment ? { market_segment: form.market_segment } : {}),
         sort_order: form.sort_order,
         conditioner_specs:
           conditionerEnabled && form.conditioner_specs
@@ -566,7 +574,7 @@ export default function AdminProductsPage() {
               }
             : null,
         bondbuilder_specs:
-          bondbuilderEnabled && form.bondbuilder_specs
+          bondbuilderEnabled && form.bondbuilder_specs && !form.bondbuilder_research_managed
             ? {
                 bond_repair_intensity: form.bondbuilder_specs.bond_repair_intensity,
                 application_mode: form.bondbuilder_specs.application_mode,
@@ -1272,182 +1280,190 @@ export default function AdminProductsPage() {
               </div>
             )}
 
-            {isBondbuilderCategory(form.category) && form.bondbuilder_specs && (
-              <div className="rounded-lg border border-input/70 bg-muted/20 p-4 space-y-4">
-                <div>
-                  <h3 className="text-sm font-semibold text-foreground">
-                    Bondbuilder-Spezifikation
-                  </h3>
-                  <p className="text-xs text-muted-foreground">
-                    Strukturierte Felder fuer Bondbuilder-Fit und spaeteres Engine-Ranking.
-                  </p>
-                </div>
-
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                      Repair-Intensitaet
-                    </label>
-                    <select
-                      value={form.bondbuilder_specs.bond_repair_intensity}
-                      onChange={(e) =>
-                        setForm((prev) => ({
-                          ...prev,
-                          bondbuilder_specs: prev.bondbuilder_specs
-                            ? {
-                                ...prev.bondbuilder_specs,
-                                bond_repair_intensity: e.target.value,
-                              }
-                            : null,
-                        }))
-                      }
-                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                    >
-                      {PRODUCT_BOND_REPAIR_INTENSITIES.map((value) => (
-                        <option key={value} value={value}>
-                          {PRODUCT_BOND_REPAIR_INTENSITY_LABELS[value]}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                      Anwendungsmodus
-                    </label>
-                    <select
-                      value={form.bondbuilder_specs.application_mode}
-                      onChange={(e) =>
-                        setForm((prev) => ({
-                          ...prev,
-                          bondbuilder_specs: prev.bondbuilder_specs
-                            ? {
-                                ...prev.bondbuilder_specs,
-                                application_mode: e.target.value,
-                              }
-                            : null,
-                        }))
-                      }
-                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                    >
-                      {PRODUCT_BOND_APPLICATION_MODES.map((value) => (
-                        <option key={value} value={value}>
-                          {PRODUCT_BOND_APPLICATION_MODE_LABELS[value]}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                      Reparatur-Lane
-                    </label>
-                    <select
-                      value={form.bondbuilder_specs.bond_repair_axis}
-                      onChange={(e) =>
-                        setForm((prev) => ({
-                          ...prev,
-                          bondbuilder_specs: prev.bondbuilder_specs
-                            ? {
-                                ...prev.bondbuilder_specs,
-                                bond_repair_axis: e.target.value,
-                              }
-                            : null,
-                        }))
-                      }
-                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                    >
-                      {PRODUCT_BOND_REPAIR_AXES.map((value) => (
-                        <option key={value} value={value}>
-                          {PRODUCT_BOND_REPAIR_AXIS_LABELS[value]}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                      Treatment-Modus
-                    </label>
-                    <select
-                      value={form.bondbuilder_specs.treatment_mode}
-                      onChange={(e) =>
-                        setForm((prev) => ({
-                          ...prev,
-                          bondbuilder_specs: prev.bondbuilder_specs
-                            ? {
-                                ...prev.bondbuilder_specs,
-                                treatment_mode: e.target.value,
-                              }
-                            : null,
-                        }))
-                      }
-                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                    >
-                      {PRODUCT_BOND_TREATMENT_MODES.map((value) => (
-                        <option key={value} value={value}>
-                          {PRODUCT_BOND_TREATMENT_MODE_LABELS[value]}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                      Produktformat
-                    </label>
-                    <select
-                      value={form.bondbuilder_specs.product_format}
-                      onChange={(e) =>
-                        setForm((prev) => ({
-                          ...prev,
-                          bondbuilder_specs: prev.bondbuilder_specs
-                            ? {
-                                ...prev.bondbuilder_specs,
-                                product_format: e.target.value,
-                              }
-                            : null,
-                        }))
-                      }
-                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                    >
-                      {PRODUCT_BOND_PRODUCT_FORMATS.map((value) => (
-                        <option key={value} value={value}>
-                          {PRODUCT_BOND_PRODUCT_FORMAT_LABELS[value]}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                      Nutzungsprotokoll
-                    </label>
-                    <select
-                      value={form.bondbuilder_specs.usage_protocol}
-                      onChange={(e) =>
-                        setForm((prev) => ({
-                          ...prev,
-                          bondbuilder_specs: prev.bondbuilder_specs
-                            ? {
-                                ...prev.bondbuilder_specs,
-                                usage_protocol: e.target.value,
-                              }
-                            : null,
-                        }))
-                      }
-                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                    >
-                      {PRODUCT_BOND_USAGE_PROTOCOLS.map((value) => (
-                        <option key={value} value={value}>
-                          {PRODUCT_BOND_USAGE_PROTOCOL_LABELS[value]}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              </div>
+            {isBondbuilderCategory(form.category) && form.bondbuilder_research_managed && (
+              <p className="text-xs text-muted-foreground">
+                Die geprüften Bondbuilder-Forschungsdaten bleiben bei Änderungen der Produktdaten
+                unverändert. Forschungsänderungen werden separat geprüft.
+              </p>
             )}
+            {isBondbuilderCategory(form.category) &&
+              form.bondbuilder_specs &&
+              !form.bondbuilder_research_managed && (
+                <div className="rounded-lg border border-input/70 bg-muted/20 p-4 space-y-4">
+                  <div>
+                    <h3 className="text-sm font-semibold text-foreground">
+                      Bondbuilder-Spezifikation
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      Strukturierte Felder fuer Bondbuilder-Fit und spaeteres Engine-Ranking.
+                    </p>
+                  </div>
+
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                      <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                        Repair-Intensitaet
+                      </label>
+                      <select
+                        value={form.bondbuilder_specs.bond_repair_intensity}
+                        onChange={(e) =>
+                          setForm((prev) => ({
+                            ...prev,
+                            bondbuilder_specs: prev.bondbuilder_specs
+                              ? {
+                                  ...prev.bondbuilder_specs,
+                                  bond_repair_intensity: e.target.value,
+                                }
+                              : null,
+                          }))
+                        }
+                        className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                      >
+                        {PRODUCT_BOND_REPAIR_INTENSITIES.map((value) => (
+                          <option key={value} value={value}>
+                            {PRODUCT_BOND_REPAIR_INTENSITY_LABELS[value]}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                        Anwendungsmodus
+                      </label>
+                      <select
+                        value={form.bondbuilder_specs.application_mode}
+                        onChange={(e) =>
+                          setForm((prev) => ({
+                            ...prev,
+                            bondbuilder_specs: prev.bondbuilder_specs
+                              ? {
+                                  ...prev.bondbuilder_specs,
+                                  application_mode: e.target.value,
+                                }
+                              : null,
+                          }))
+                        }
+                        className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                      >
+                        {PRODUCT_BOND_APPLICATION_MODES.map((value) => (
+                          <option key={value} value={value}>
+                            {PRODUCT_BOND_APPLICATION_MODE_LABELS[value]}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                        Reparatur-Lane
+                      </label>
+                      <select
+                        value={form.bondbuilder_specs.bond_repair_axis}
+                        onChange={(e) =>
+                          setForm((prev) => ({
+                            ...prev,
+                            bondbuilder_specs: prev.bondbuilder_specs
+                              ? {
+                                  ...prev.bondbuilder_specs,
+                                  bond_repair_axis: e.target.value,
+                                }
+                              : null,
+                          }))
+                        }
+                        className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                      >
+                        {PRODUCT_BOND_REPAIR_AXES.map((value) => (
+                          <option key={value} value={value}>
+                            {PRODUCT_BOND_REPAIR_AXIS_LABELS[value]}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                        Treatment-Modus
+                      </label>
+                      <select
+                        value={form.bondbuilder_specs.treatment_mode}
+                        onChange={(e) =>
+                          setForm((prev) => ({
+                            ...prev,
+                            bondbuilder_specs: prev.bondbuilder_specs
+                              ? {
+                                  ...prev.bondbuilder_specs,
+                                  treatment_mode: e.target.value,
+                                }
+                              : null,
+                          }))
+                        }
+                        className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                      >
+                        {PRODUCT_BOND_TREATMENT_MODES.map((value) => (
+                          <option key={value} value={value}>
+                            {PRODUCT_BOND_TREATMENT_MODE_LABELS[value]}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                        Produktformat
+                      </label>
+                      <select
+                        value={form.bondbuilder_specs.product_format}
+                        onChange={(e) =>
+                          setForm((prev) => ({
+                            ...prev,
+                            bondbuilder_specs: prev.bondbuilder_specs
+                              ? {
+                                  ...prev.bondbuilder_specs,
+                                  product_format: e.target.value,
+                                }
+                              : null,
+                          }))
+                        }
+                        className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                      >
+                        {PRODUCT_BOND_PRODUCT_FORMATS.map((value) => (
+                          <option key={value} value={value}>
+                            {PRODUCT_BOND_PRODUCT_FORMAT_LABELS[value]}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                        Nutzungsprotokoll
+                      </label>
+                      <select
+                        value={form.bondbuilder_specs.usage_protocol}
+                        onChange={(e) =>
+                          setForm((prev) => ({
+                            ...prev,
+                            bondbuilder_specs: prev.bondbuilder_specs
+                              ? {
+                                  ...prev.bondbuilder_specs,
+                                  usage_protocol: e.target.value,
+                                }
+                              : null,
+                          }))
+                        }
+                        className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                      >
+                        {PRODUCT_BOND_USAGE_PROTOCOLS.map((value) => (
+                          <option key={value} value={value}>
+                            {PRODUCT_BOND_USAGE_PROTOCOL_LABELS[value]}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              )}
 
             {isDeepCleansingShampooCategory(form.category) && form.deep_cleansing_shampoo_specs && (
               <div className="rounded-lg border border-input/70 bg-muted/20 p-4 space-y-4">
@@ -1735,6 +1751,30 @@ export default function AdminProductsPage() {
                     {formatLifecycleStatus(status)}
                   </option>
                 ))}
+              </select>
+            </div>
+
+            <div>
+              <label
+                htmlFor="market_segment"
+                className="mb-1 block text-xs font-medium text-muted-foreground"
+              >
+                Segment
+              </label>
+              <select
+                id="market_segment"
+                value={form.market_segment}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    market_segment: e.target.value as ProductForm["market_segment"],
+                  })
+                }
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              >
+                <option value="">Nicht gesetzt</option>
+                <option value="drugstore">Drogerie</option>
+                <option value="professional">Profi</option>
               </select>
             </div>
           </fieldset>

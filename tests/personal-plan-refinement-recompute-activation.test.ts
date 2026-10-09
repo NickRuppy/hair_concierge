@@ -56,14 +56,6 @@ test("the recompute-activation migration wraps the existing RPCs instead of copy
   assert.doesNotMatch(source, /SELECT public\.personal_plan_complete_draft_activate_v2/)
 })
 
-test("the recompute-activation migration keeps the provenance write out of the revision CAS", async () => {
-  const source = await readFile(migrationPath, "utf8")
-  const provenanceWrite = source.slice(source.indexOf("IF p_mark_unrefined_direct_accept THEN"))
-
-  assert.match(provenanceWrite, /UPDATE public\.personal_plans/)
-  assert.doesNotMatch(provenanceWrite, /revision = revision \+ 1/)
-})
-
 /* ── Behavioral mirror of the SQL, driven through the real stager adapter ── */
 
 type ModuleProjections = Record<string, { needVersionId: string }>
@@ -248,54 +240,6 @@ const stageRequest = {
     proposalDelta: { kind: "recompute" },
   },
 }
-
-test("a module-driven recompute activates the successor immediately instead of proposing it", async () => {
-  const world = emptyWorld("routine-active")
-  const stager = createRoutineProposalStagerRpcAdapter({
-    client: createV2Client({
-      productDraftRefinedVersionId: "refined-module-2",
-      refinementDrafts: [
-        {
-          moduleProjections: { products: { needVersionId: "refined-module-1" } },
-          resultRefinedNeedVersionId: "refined-module-2",
-        },
-      ],
-      world,
-    }),
-  })
-
-  const result = await stager.stage(stageRequest)
-
-  assert.equal(result.status, "completed")
-  assert.equal(result.status === "completed" ? result.routineProposalId : "unset", null)
-  assert.equal(world.plan.activeRoutineVersionId, world.routineVersions.at(-1))
-  assert.equal(world.plan.pendingProposalId, null)
-  assert.deepEqual(
-    world.proposals.map((proposal) => proposal.status),
-    ["accepted"],
-  )
-})
-
-test("a module-1 projection activates immediately even before the closing module", async () => {
-  const world = emptyWorld("routine-active")
-  const stager = createRoutineProposalStagerRpcAdapter({
-    client: createV2Client({
-      productDraftRefinedVersionId: "refined-module-1",
-      refinementDrafts: [
-        {
-          moduleProjections: { products: { needVersionId: "refined-module-1" } },
-          resultRefinedNeedVersionId: null,
-        },
-      ],
-      world,
-    }),
-  })
-
-  const result = await stager.stage(stageRequest)
-
-  assert.equal(result.status === "completed" ? result.routineProposalId : "unset", null)
-  assert.equal(world.plan.pendingProposalId, null)
-})
 
 test("today's linear refinement keeps its pending proposal", async () => {
   const world = emptyWorld("routine-active")
@@ -506,22 +450,6 @@ test("an unconfirmable proposal the completion itself staged still fails loudly"
   assert.equal(world.plan.activeRoutineVersionId, "routine-active")
   assert.deepEqual(world.routineVersions, ["routine-active"])
   assert.equal(world.plan.revision, 4)
-})
-
-test("the direct-accept provenance is written by the same transaction that activates", async () => {
-  const world = emptyWorld(null)
-  const stager = createRoutineProposalStagerRpcAdapter({
-    client: createV2Client({
-      productDraftRefinedVersionId: "refined-1",
-      refinementDrafts: [],
-      world,
-    }),
-  })
-
-  await stager.stage({ ...stageRequest, markUnrefinedDirectAccept: true })
-
-  assert.equal(world.plan.unrefinedDirectAccept, true)
-  assert.equal(world.plan.activeRoutineVersionId, "routine-1")
 })
 
 test("a failing provenance write rolls the whole completion back", async () => {

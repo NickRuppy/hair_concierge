@@ -1,0 +1,6 @@
+{
+  "oldDirectory": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1",
+  "oldPinsSHA256": "76ba7677d1cd5e8d202cc00f1ce81757e25b5eaf5d18f7aadc2f18cc9a8ff847",
+  "policy": "/tmp/test-audit-packed-refs-relevant-policy-9crva_8q",
+  "changes": "Fresh TMP copy only. Exact same root-reviewed packed policy. Every source/dependency/original56 pin and other identity unchanged. Original preparers are historical and must not be rerun."
+}

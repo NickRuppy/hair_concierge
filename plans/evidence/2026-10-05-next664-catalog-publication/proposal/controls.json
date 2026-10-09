@@ -1,0 +1,308 @@
+[
+  {
+    "id": "C1-oil-day-types",
+    "candidate": "C1",
+    "owner": "src/lib/product-intake/expansion-apply-templates.ts",
+    "old": "    role: \"leave_in\",\n    applicationFamily: \"post_wash_damp_conditioning\",\n    compatibleDayTypes: [\n      \"wash_day\",\n      \"intensive_care_day\",\n      \"bond_repair_day\",\n      \"clarifying_wash_day\",\n    ],",
+    "new": "    role: \"leave_in\",\n    applicationFamily: \"post_wash_damp_conditioning\",\n    compatibleDayTypes: [\n      \"wash_day\",\n      \"intensive_care_day\",\n      \"bond_repair_day\",\n    ],",
+    "file": "tests/expansion-apply-templates.test.ts",
+    "title": "all 11 templates produce a schema-valid, product-scoped V1 guidance payload",
+    "assertion": "assert.deepEqual(payload.compatibleDayTypes, [",
+    "operator": "deepStrictEqual",
+    "expected": [
+      "wash_day",
+      "intensive_care_day",
+      "bond_repair_day",
+      "clarifying_wash_day"
+    ],
+    "actual": [
+      "wash_day",
+      "intensive_care_day",
+      "bond_repair_day"
+    ],
+    "ownerSHA256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+    "mutantSHA256": "a020ff53bacec7479d090036066c1f65f539c9b4ecff486d3375707ffcfdf46a",
+    "oracles": {
+      "transfer": {
+        "keeperSHA256": "74b578d05a063923a441b477179c7b697bee7e9c2fabd9743b7b3e3a3a09438a",
+        "fileSHA256": "c3fa72a4020d1986c003f22fd95a6ac6b70b13353c90a0bb3c7ec5757a0850a5",
+        "firstKeeperAssertionFrame": {
+          "file": "tests/expansion-apply-templates.test.ts",
+          "line": 108
+        },
+        "assertion": "assert.deepEqual(payload.compatibleDayTypes, [\n        \"wash_day\",\n        \"intensive_care_day\",\n        \"bond_repair_day\",\n        \"clarifying_wash_day\",\n      ])"
+      },
+      "cut": {
+        "keeperSHA256": "74b578d05a063923a441b477179c7b697bee7e9c2fabd9743b7b3e3a3a09438a",
+        "fileSHA256": "a590852fd6258fb798e7781131a6e07307049e3c0b6b093cf658a041bb6b77d4",
+        "firstKeeperAssertionFrame": {
+          "file": "tests/expansion-apply-templates.test.ts",
+          "line": 108
+        },
+        "assertion": "assert.deepEqual(payload.compatibleDayTypes, [\n        \"wash_day\",\n        \"intensive_care_day\",\n        \"bond_repair_day\",\n        \"clarifying_wash_day\",\n      ])"
+      }
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--experimental-test-isolation=none",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^all 11 templates produce a schema-valid, product-scoped V1 guidance payload$",
+      "tests/expansion-apply-templates.test.ts"
+    ],
+    "proof": "Main only: selected clean 1 pass -> single owner mutant 1 named ERR_ASSERTION with exact operator/decoded values and FIRST keeper assertion frame -> owned CAS byte restore -> same selected clean 1 pass; reject zero selection, skips, cancellations, setup/import/SQL errors, signals/timeouts. No fault executed."
+  },
+  {
+    "id": "C2-row-role",
+    "candidate": "C2",
+    "owner": "src/lib/product-intake/expansion-apply-templates.ts",
+    "old": "    role: meta.role,",
+    "new": "    role: templateId === \"TPL-SHAMPOO-STD\" ? \"finish\" : meta.role,",
+    "file": "tests/expansion-apply-templates.test.ts",
+    "title": "all 11 templates produce a schema-valid, product-scoped V1 guidance payload",
+    "assertion": "assert.equal(row.role, meta.role, templateId)",
+    "operator": "strictEqual",
+    "message": "TPL-SHAMPOO-STD",
+    "expected": "shampoo_everyday",
+    "actual": "finish",
+    "ownerSHA256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+    "mutantSHA256": "4f29546435e13cf1d761e6b878918e2d270e89de21cd54d398369621952c6a3f",
+    "oracles": {
+      "transfer": {
+        "keeperSHA256": "74b578d05a063923a441b477179c7b697bee7e9c2fabd9743b7b3e3a3a09438a",
+        "fileSHA256": "c3fa72a4020d1986c003f22fd95a6ac6b70b13353c90a0bb3c7ec5757a0850a5",
+        "firstKeeperAssertionFrame": {
+          "file": "tests/expansion-apply-templates.test.ts",
+          "line": 100
+        },
+        "assertion": "assert.equal(row.role, meta.role, templateId)"
+      },
+      "cut": {
+        "keeperSHA256": "74b578d05a063923a441b477179c7b697bee7e9c2fabd9743b7b3e3a3a09438a",
+        "fileSHA256": "a590852fd6258fb798e7781131a6e07307049e3c0b6b093cf658a041bb6b77d4",
+        "firstKeeperAssertionFrame": {
+          "file": "tests/expansion-apply-templates.test.ts",
+          "line": 100
+        },
+        "assertion": "assert.equal(row.role, meta.role, templateId)"
+      }
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--experimental-test-isolation=none",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^all 11 templates produce a schema-valid, product-scoped V1 guidance payload$",
+      "tests/expansion-apply-templates.test.ts"
+    ],
+    "proof": "Main only: selected clean 1 pass -> single owner mutant 1 named ERR_ASSERTION with exact operator/decoded values and FIRST keeper assertion frame -> owned CAS byte restore -> same selected clean 1 pass; reject zero selection, skips, cancellations, setup/import/SQL errors, signals/timeouts. No fault executed."
+  },
+  {
+    "id": "C2-row-category",
+    "candidate": "C2",
+    "owner": "src/lib/product-intake/expansion-apply-templates.ts",
+    "old": "    category: meta.category,",
+    "new": "    category: templateId === \"TPL-SHAMPOO-STD\" ? \"conditioner\" : meta.category,",
+    "file": "tests/expansion-apply-templates.test.ts",
+    "title": "all 11 templates produce a schema-valid, product-scoped V1 guidance payload",
+    "assertion": "assert.equal(row.category, meta.category, templateId)",
+    "operator": "strictEqual",
+    "message": "TPL-SHAMPOO-STD",
+    "expected": "shampoo",
+    "actual": "conditioner",
+    "ownerSHA256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+    "mutantSHA256": "54d461cde0b4949e9a029328c65ff340a9785eb25fa464835c23bba0bd155b56",
+    "oracles": {
+      "transfer": {
+        "keeperSHA256": "74b578d05a063923a441b477179c7b697bee7e9c2fabd9743b7b3e3a3a09438a",
+        "fileSHA256": "c3fa72a4020d1986c003f22fd95a6ac6b70b13353c90a0bb3c7ec5757a0850a5",
+        "firstKeeperAssertionFrame": {
+          "file": "tests/expansion-apply-templates.test.ts",
+          "line": 101
+        },
+        "assertion": "assert.equal(row.category, meta.category, templateId)"
+      },
+      "cut": {
+        "keeperSHA256": "74b578d05a063923a441b477179c7b697bee7e9c2fabd9743b7b3e3a3a09438a",
+        "fileSHA256": "a590852fd6258fb798e7781131a6e07307049e3c0b6b093cf658a041bb6b77d4",
+        "firstKeeperAssertionFrame": {
+          "file": "tests/expansion-apply-templates.test.ts",
+          "line": 101
+        },
+        "assertion": "assert.equal(row.category, meta.category, templateId)"
+      }
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--experimental-test-isolation=none",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^all 11 templates produce a schema-valid, product-scoped V1 guidance payload$",
+      "tests/expansion-apply-templates.test.ts"
+    ],
+    "proof": "Main only: selected clean 1 pass -> single owner mutant 1 named ERR_ASSERTION with exact operator/decoded values and FIRST keeper assertion frame -> owned CAS byte restore -> same selected clean 1 pass; reject zero selection, skips, cancellations, setup/import/SQL errors, signals/timeouts. No fault executed."
+  },
+  {
+    "id": "C2-mask-role-literal",
+    "candidate": "C2",
+    "owner": "src/lib/product-intake/expansion-manifest.ts",
+    "old": "\"TPL-MASK\": { category: \"mask\", role: \"intensive_conditioning_mask\" },",
+    "new": "\"TPL-MASK\": { category: \"mask\", role: \"intensive_care\" },",
+    "file": "tests/expansion-apply-templates.test.ts",
+    "title": "all 11 templates produce a schema-valid, product-scoped V1 guidance payload",
+    "assertion": "assert.equal(maskRow.role, \"intensive_conditioning_mask\")",
+    "operator": "strictEqual",
+    "expected": "intensive_conditioning_mask",
+    "actual": "intensive_care",
+    "ownerSHA256": "c82e49e141cb7912bff2c4720fd8468b0d337cf458b59f66fae5e13cb76093c9",
+    "mutantSHA256": "924152f60b3b28cc90a40e17b293e61f08239ea32bfc712c71a92d83a03e93ed",
+    "oracles": {
+      "transfer": {
+        "keeperSHA256": "74b578d05a063923a441b477179c7b697bee7e9c2fabd9743b7b3e3a3a09438a",
+        "fileSHA256": "c3fa72a4020d1986c003f22fd95a6ac6b70b13353c90a0bb3c7ec5757a0850a5",
+        "firstKeeperAssertionFrame": {
+          "file": "tests/expansion-apply-templates.test.ts",
+          "line": 104
+        },
+        "assertion": "assert.equal(maskRow.role, \"intensive_conditioning_mask\")"
+      },
+      "cut": {
+        "keeperSHA256": "74b578d05a063923a441b477179c7b697bee7e9c2fabd9743b7b3e3a3a09438a",
+        "fileSHA256": "a590852fd6258fb798e7781131a6e07307049e3c0b6b093cf658a041bb6b77d4",
+        "firstKeeperAssertionFrame": {
+          "file": "tests/expansion-apply-templates.test.ts",
+          "line": 104
+        },
+        "assertion": "assert.equal(maskRow.role, \"intensive_conditioning_mask\")"
+      }
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--experimental-test-isolation=none",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^all 11 templates produce a schema-valid, product-scoped V1 guidance payload$",
+      "tests/expansion-apply-templates.test.ts"
+    ],
+    "proof": "Main only: selected clean 1 pass -> single owner mutant 1 named ERR_ASSERTION with exact operator/decoded values and FIRST keeper assertion frame -> owned CAS byte restore -> same selected clean 1 pass; reject zero selection, skips, cancellations, setup/import/SQL errors, signals/timeouts. No fault executed."
+  },
+  {
+    "id": "C2-mask-payload-role-literal",
+    "candidate": "C2",
+    "owner": "src/lib/product-intake/expansion-apply-templates.ts",
+    "old": "    role: \"intensive_care\",\n    applicationFamily: \"post_shampoo_rinse_out_mask\",",
+    "new": "    role: \"condition\",\n    applicationFamily: \"post_shampoo_rinse_out_mask\",",
+    "file": "tests/expansion-apply-templates.test.ts",
+    "title": "all 11 templates produce a schema-valid, product-scoped V1 guidance payload",
+    "assertion": "assert.equal((maskRow.guidance_payload as { role: string }).role, \"intensive_care\")",
+    "operator": "strictEqual",
+    "expected": "intensive_care",
+    "actual": "condition",
+    "ownerSHA256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+    "mutantSHA256": "e0a735c2c4103e401c9ab104e58d38d39d2f499ec309a32bbbc1e43109ef1fa2",
+    "oracles": {
+      "transfer": {
+        "keeperSHA256": "74b578d05a063923a441b477179c7b697bee7e9c2fabd9743b7b3e3a3a09438a",
+        "fileSHA256": "c3fa72a4020d1986c003f22fd95a6ac6b70b13353c90a0bb3c7ec5757a0850a5",
+        "firstKeeperAssertionFrame": {
+          "file": "tests/expansion-apply-templates.test.ts",
+          "line": 105
+        },
+        "assertion": "assert.equal((maskRow.guidance_payload as { role: string }).role, \"intensive_care\")"
+      },
+      "cut": {
+        "keeperSHA256": "74b578d05a063923a441b477179c7b697bee7e9c2fabd9743b7b3e3a3a09438a",
+        "fileSHA256": "a590852fd6258fb798e7781131a6e07307049e3c0b6b093cf658a041bb6b77d4",
+        "firstKeeperAssertionFrame": {
+          "file": "tests/expansion-apply-templates.test.ts",
+          "line": 105
+        },
+        "assertion": "assert.equal((maskRow.guidance_payload as { role: string }).role, \"intensive_care\")"
+      }
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--experimental-test-isolation=none",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^all 11 templates produce a schema-valid, product-scoped V1 guidance payload$",
+      "tests/expansion-apply-templates.test.ts"
+    ],
+    "proof": "Main only: selected clean 1 pass -> single owner mutant 1 named ERR_ASSERTION with exact operator/decoded values and FIRST keeper assertion frame -> owned CAS byte restore -> same selected clean 1 pass; reject zero selection, skips, cancellations, setup/import/SQL errors, signals/timeouts. No fault executed."
+  },
+  {
+    "id": "C3-recommendation-serialization",
+    "candidate": "C3",
+    "owner": "src/lib/product-intake/expansion-apply.ts",
+    "old": "  const batchJson = JSON.stringify(batch)",
+    "new": "  const batchJson = JSON.stringify({ ...batch, is_chaarlie_recommended: false })",
+    "file": "tests/expansion-apply-batch.test.ts",
+    "title": "the reviewed mask manifest parks only its excluded-identifier product",
+    "assertion": "assert.doesNotMatch(result.batchJson, /is_chaarlie_recommended/)",
+    "operator": "doesNotMatch",
+    "expectedRegex": "/is_chaarlie_recommended/",
+    "actualPredicate": "decoded actual string contains the literal JSON property \"is_chaarlie_recommended\":false; not a nested exception",
+    "messagePredicate": "Node generated doesNotMatch diagnostic specifically names /is_chaarlie_recommended/; operator and FIRST keeper frame must also match",
+    "ownerSHA256": "d1b710c3b9ff424fbb09984451d3695d701ea1f90fdbdf12bd7d711295b8c618",
+    "mutantSHA256": "e0cdcd5302b1d29e66e7ffc0dcb74d9705f5417aface954f11c35c5cfe496984",
+    "oracles": {
+      "transfer": {
+        "keeperSHA256": "5061af609676f79f4c8be63fea997b7d6530cad2e6304200689ff76c6adeb129",
+        "fileSHA256": "b88065bfeeeba0bc6a2391b88f336c66829d796bf9db259b80353c708502bee0",
+        "firstKeeperAssertionFrame": {
+          "file": "tests/expansion-apply-batch.test.ts",
+          "line": 120
+        },
+        "assertion": "assert.doesNotMatch(result.batchJson, /is_chaarlie_recommended/)"
+      },
+      "cut": {
+        "keeperSHA256": "5061af609676f79f4c8be63fea997b7d6530cad2e6304200689ff76c6adeb129",
+        "fileSHA256": "bcbe4a6111c1ba2e7d30d2de1834910f19adc0ad7ce6d4d12060c90b469df6f5",
+        "firstKeeperAssertionFrame": {
+          "file": "tests/expansion-apply-batch.test.ts",
+          "line": 120
+        },
+        "assertion": "assert.doesNotMatch(result.batchJson, /is_chaarlie_recommended/)"
+      }
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--experimental-test-isolation=none",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^the reviewed mask manifest parks only its excluded-identifier product$",
+      "tests/expansion-apply-batch.test.ts"
+    ],
+    "proof": "Main only: selected clean 1 pass -> single owner mutant 1 named ERR_ASSERTION with exact operator/decoded values and FIRST keeper assertion frame -> owned CAS byte restore -> same selected clean 1 pass; reject zero selection, skips, cancellations, setup/import/SQL errors, signals/timeouts. No fault executed."
+  }
+]

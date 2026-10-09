@@ -1,0 +1,48 @@
+{
+  "templatePins": "b1619bebc5540a7ee42e2ed0ec18431cc2f9a52c43c471b3cefe9290c1d04d5f",
+  "strictProofPolicy": "Scanner119 decoded FULL diagnostic and FIRST outer assertion frame prefix unchanged",
+  "files": [
+    {
+      "file": "operator-guard.cjs",
+      "template": "/tmp/test-audit-scanner119-tools-e5gg36wq/operator-guard.cjs",
+      "templateSHA256": "c717d889712ea25bd1d65249b60e14ebb2c43c6e9172b09f9a39156f7fabef0d",
+      "preparedTemplateSHA256": "afdd88d29d49aca99a0444c721f7e0e3a116ec67b73781beed90c9f91c2eff7d"
+    },
+    {
+      "file": "operator-edit.cjs",
+      "template": "/tmp/test-audit-scanner119-tools-e5gg36wq/operator-edit.cjs",
+      "templateSHA256": "465be39962f79701f8f59d4a55bfd301789c840b94d490ef2c027f514b1407c1",
+      "preparedTemplateSHA256": "d434957a60fa7383be7d0f6a7b1793f3f50427eac60854e85ee8349f44d82576"
+    },
+    {
+      "file": "operator-run-controls.cjs",
+      "template": "/tmp/test-audit-scanner119-tools-e5gg36wq/operator-run-controls.cjs",
+      "templateSHA256": "5f75556b152053a4a6c8ab12fb280a8a5c833d4c484e16c46a29fb369f1681e0",
+      "preparedTemplateSHA256": "776e9da45c52464fb68cfa1d6f604649488c4d5ca8b7095e024df31af643134f"
+    },
+    {
+      "file": "operator-proof.cjs",
+      "template": "/tmp/test-audit-scanner119-tools-e5gg36wq/operator-proof.cjs",
+      "templateSHA256": "8bf57575777342db25b87980f3fa408c9cb24db334b60505255c1875af106cc6",
+      "preparedTemplateSHA256": "10c4e9e55aa0f9f20c16802b612519a65923e424f38222a6f83dd99cfd9c1b91"
+    },
+    {
+      "file": "operator-readonly-preload.cjs",
+      "template": "/tmp/test-audit-scanner119-tools-e5gg36wq/operator-readonly-preload.cjs",
+      "templateSHA256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+      "preparedTemplateSHA256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e"
+    },
+    {
+      "file": "proof-attestation.cjs",
+      "template": "/tmp/test-audit-scanner119-tools-e5gg36wq/proof-attestation.cjs",
+      "templateSHA256": "ca8af9a7f477930554c86e4bc91c22fee7a9f4ffbd446fa8679465caa2cf3d9f",
+      "preparedTemplateSHA256": "51ea98b2c3c258bd0cd6539c7f281c8d4475dc2211865a34ac190fe0be9b683d"
+    },
+    {
+      "file": "operator-native-proof.cjs",
+      "template": "/tmp/test-audit-scanner119-tools-e5gg36wq/operator-native-proof.cjs",
+      "templateSHA256": "12a42b13f8f20091f6db09fb40774a066c216ce7d53a27d2ed8db77a782a3efc",
+      "preparedTemplateSHA256": "423f028e221d9631369c216d2d75a3d99dd82cf153b4e70b756148a1bdbab422"
+    }
+  ]
+}

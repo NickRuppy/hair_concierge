@@ -8,9 +8,8 @@ import { createTrialOfferSnapshot } from "../src/lib/billing/trial-offer"
 import {
   beginPayPalTrialManagement,
   reconcilePayPalTrialManagement,
-  abandonPayPalTrialManagement,
 } from "../src/lib/paypal/trial-management"
-import { buildPayPalDeferredTrialPlanRequest } from "../src/lib/paypal/trial-plan-shape"
+import { paypalTrialProviderPlanFixture } from "./paypal-trial-plan.fixtures"
 
 const USER = "11111111-1111-4111-8111-111111111111",
   ENROLLMENT = "22222222-2222-4222-8222-222222222222",
@@ -67,7 +66,7 @@ function fixture(
     start_time: deadline,
     subscriber: { payer_id: "PAYER" },
     billing_info: { next_billing_time: deadline },
-    plan: buildPayPalDeferredTrialPlanRequest({
+    plan: paypalTrialProviderPlanFixture({
       interval: kind === "restore" ? "year" : "month",
       productId: "PROD",
     }),
@@ -290,7 +289,7 @@ function fixture(
     attestApp: async () => "APP",
     retrieve: async (id: string) => structuredClone(subscriptions[id]),
     getPlan: async (id: string) =>
-      buildPayPalDeferredTrialPlanRequest({
+      paypalTrialProviderPlanFixture({
         interval: id === "P-year" ? "year" : "month",
         productId: "PROD",
       }),
@@ -309,7 +308,7 @@ function fixture(
           plan_id: body.plan_id,
           start_time: body.start_time,
           status: "APPROVAL_PENDING",
-          plan: buildPayPalDeferredTrialPlanRequest({ interval: "year", productId: "PROD" }),
+          plan: paypalTrialProviderPlanFixture({ interval: "year", productId: "PROD" }),
           billing_info: { next_billing_time: body.start_time },
           links: [{ rel: "approve", href: "https://www.paypal.com/approve?token=owned" }],
         }
@@ -333,7 +332,7 @@ function fixture(
       subscriptions["I-new"].subscriber = { payer_id: "PAYER" }
     } else {
       source.plan_id = "P-year"
-      source.plan = buildPayPalDeferredTrialPlanRequest({ interval: "year", productId: "PROD" })
+      source.plan = paypalTrialProviderPlanFixture({ interval: "year", productId: "PROD" })
     }
   }
   return {
@@ -583,22 +582,6 @@ test("a racing payment prevents restoration activation and cannot be hidden behi
     /payment reconciliation/,
   )
   assert.equal(f.operation.status, "pending")
-})
-
-test("a canceled restore is abandoned only after provider cancellation and empty transaction proof", async () => {
-  const f = fixture()
-  await beginPayPalTrialManagement(f.input, f.deps)
-  assert.equal((await abandonPayPalTrialManagement(f.input, f.deps)).status, "abandoned")
-  assert.equal(f.subscriptions["I-new"].status, "CANCELLED")
-  assert.equal(f.source.status, "CANCELLED")
-})
-
-test("browser cancel does not declare an issued revision irreversibly abandoned", async () => {
-  const f = fixture("switch")
-  await beginPayPalTrialManagement(f.input, f.deps)
-  assert.equal((await abandonPayPalTrialManagement(f.input, f.deps)).status, "pending")
-  assert.equal(f.operation.status, "pending")
-  assert.equal(f.source.plan_id, "P-month")
 })
 
 test("a committed operation repairs interrupted billing projection on retry", async () => {

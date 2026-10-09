@@ -1,0 +1,242 @@
+[
+  {
+    "id": "C1",
+    "file": "src/app/beratung/produkte/loading.tsx",
+    "sourceSha256": "740f4a80b796a766d1981dba5dd2b184f5f1ba769ffeee523a93463711347551",
+    "mutatedSha256": "759feec81bb4a25bc40e914b5a33dc6bcad2dbc9418259a04f8aa42f3a71843f",
+    "from": ">Deine Produkte</h1>",
+    "to": ">Deine Pflegeprodukte</h1>",
+    "anchor": {
+      "kind": "function",
+      "scope": "DiscoveryChecklistLoading",
+      "scopeSha256": "ec1e1a730378ede146957cce08499a09be17ba0e317a36d19e0b0eea26e1d306",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/discovery-products-loading.test.tsx",
+      "name": "the loading screen reuses the real screen's layout classes and has no controls"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^the loading screen reuses the real screen's layout classes and has no controls$",
+      "tests/discovery-products-loading.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 55,
+        "text": "assert.deepEqual(textSequence(loading), textSequence(real))",
+        "keeperSha256": "f8995924c076a2da2544eeda04aafa4b06109ad100aa2b65972f3a8750a243c2",
+        "testFileSha256": "cc8b83d3e6e8d672417d9c04ae868bc89d0f8aeade78cf129fd804cff17086a2"
+      },
+      "cut": {
+        "startLine": 47,
+        "text": "assert.deepEqual(textSequence(loading), textSequence(real))",
+        "keeperSha256": "f8995924c076a2da2544eeda04aafa4b06109ad100aa2b65972f3a8750a243c2",
+        "testFileSha256": "2b8184eb0aa8ebf763f6f044a4f64fef47a5791db9b6230e2098df583965e5a0"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:",
+      "Deine Produkte",
+      "Deine Pflegeprodukte"
+    ],
+    "intendedAssertion": "assert.deepEqual(textSequence(loading), textSequence(real))",
+    "proofKind": "Accepted original assertion condition at actual owner boundary; representative source fault"
+  },
+  {
+    "id": "C2",
+    "file": "src/components/discovery/cockpit/discovery-call-cockpit.tsx",
+    "sourceSha256": "2d0adde32589464e10ba2b9a1bb9d13263ca40bbfada8b9d4ab82a1572d68071",
+    "mutatedSha256": "279265cc86456c29264984292d3a0c2dfd1f6e942221de8ce1ac87142738c16f",
+    "from": "const RECOMMENDED_HEADER = \"Empfohlenes Produkt\"",
+    "to": "const RECOMMENDED_HEADER = \"Anderes Produkt\"",
+    "anchor": {
+      "kind": "file",
+      "scopeSha256": "2d0adde32589464e10ba2b9a1bb9d13263ca40bbfada8b9d4ab82a1572d68071",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/discovery-cockpit-complexity-dom.test.tsx",
+      "name": "R28: „Neu dazu“ steps say Essenziell / Optional with the step's benefit, pronoun-free"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^R28: „Neu dazu“ steps say Essenziell / Optional with the step's benefit, pronoun-free$",
+      "tests/discovery-cockpit-complexity-dom.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 281,
+        "text": "assert.ok(header.includes(\"Empfohlenes Produkt\"), header)",
+        "keeperSha256": "0c8bbdc7cc40d913492b4401d68d14bcd356ad3553e184f84b26e285d7b00116",
+        "testFileSha256": "8d5b43ccf7a711bf8c866a19b00294f55b2897c06b7eac1f95f8f1d5032855cd"
+      },
+      "cut": {
+        "startLine": 281,
+        "text": "assert.ok(header.includes(\"Empfohlenes Produkt\"), header)",
+        "keeperSha256": "0c8bbdc7cc40d913492b4401d68d14bcd356ad3553e184f84b26e285d7b00116",
+        "testFileSha256": "63c655cac89d4336acc6fda7434466c7c772e7851ac48ae03b974611eb960b04"
+      }
+    },
+    "expectedOperator": "==",
+    "errorMessageIncludes": [
+      "Anderes ProduktZiel"
+    ],
+    "intendedAssertion": "assert.ok(header.includes(\"Empfohlenes Produkt\"), header)",
+    "proofKind": "Accepted original assertion condition at actual owner boundary; representative source fault"
+  },
+  {
+    "id": "C3",
+    "file": "src/components/discovery/cockpit/discovery-call-cockpit.tsx",
+    "sourceSha256": "2d0adde32589464e10ba2b9a1bb9d13263ca40bbfada8b9d4ab82a1572d68071",
+    "mutatedSha256": "e09e3d995f01b82e353d9252e5af1b75af71d68664133a48065c4f8af1eff200",
+    "from": "    complexityValue === \"essenziell\"",
+    "to": "    complexity === \"essenziell\"",
+    "anchor": {
+      "kind": "function",
+      "scope": "DiscoveryCallCockpit",
+      "scopeSha256": "5d044386216dca3e87392ea6881f6d0db6651e4ad36a22e8f2043bcff3ba7be0",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/discovery-cockpit-complexity-dom.test.tsx",
+      "name": "R28: a click saves {complexity} to the call sheet at once; a refusal rolls back with a line"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^R28: a click saves \\{complexity\\} to the call sheet at once; a refusal rolls back with a line$",
+      "tests/discovery-cockpit-complexity-dom.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 212,
+        "text": "assert.ok(document.getElementById(\"runsheet-complexity-folded\"), \"optional steps fold before the save settles\")",
+        "keeperSha256": "02c3ba200c4db01019196c99476b95d170aa7ec622925c99c66123b40ced78b8",
+        "testFileSha256": "8d5b43ccf7a711bf8c866a19b00294f55b2897c06b7eac1f95f8f1d5032855cd"
+      },
+      "cut": {
+        "startLine": 212,
+        "text": "assert.ok(document.getElementById(\"runsheet-complexity-folded\"), \"optional steps fold before the save settles\")",
+        "keeperSha256": "02c3ba200c4db01019196c99476b95d170aa7ec622925c99c66123b40ced78b8",
+        "testFileSha256": "63c655cac89d4336acc6fda7434466c7c772e7851ac48ae03b974611eb960b04"
+      }
+    },
+    "expectedOperator": "==",
+    "errorMessageIncludes": [
+      "optional steps fold before the save settles"
+    ],
+    "intendedAssertion": "assert.ok(document.getElementById(\"runsheet-complexity-folded\"), \"optional steps fold before the save settles\")",
+    "proofKind": "Accepted original assertion condition at actual owner boundary; representative source fault"
+  },
+  {
+    "id": "C4",
+    "file": "src/lib/discovery/refined-routine.ts",
+    "sourceSha256": "79a8321c4bb5c53a9594b0664cc708f326bca7ff058c6aeba4faa18cd821ee00",
+    "mutatedSha256": "2250d2273a5ec8c0679d0f4706d3031bf76ac8cd6cb89c34d4b003cb64889bf9",
+    "from": "      ...(usageLabel ? { ownedUsageLabel: usageLabel } : {}),",
+    "to": "      ownedUsageLabel: usageLabel ?? undefined,",
+    "anchor": {
+      "kind": "function",
+      "scope": "composeDiscoveryRefinedRoutine",
+      "scopeSha256": "200d1ba8909317ba773b67eebdb0bafd10c372848a5802332ddf38262b91e552",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/discovery-refined-usage.test.ts",
+      "name": "batch 9: the legacy fixture's third oil joins the first oil step — its hash moves on purpose"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^batch 9: the legacy fixture's third oil joins the first oil step — its hash moves on purpose$",
+      "tests/discovery-refined-usage.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 218,
+        "text": "assert.ok(!(\"ownedUsageLabel\" in entry), \"legacy entry omits ownedUsageLabel\")",
+        "keeperSha256": "0bec8f5cf2d2a501e4d9b5130a83d517923cc3c483f66545aac652823f9cd7ea",
+        "testFileSha256": "1a4965fd9db1aa6d8aca434bda2de4b65a4ef11fd2c13e29a80d82eb98a26815"
+      },
+      "cut": {
+        "startLine": 218,
+        "text": "assert.ok(!(\"ownedUsageLabel\" in entry), \"legacy entry omits ownedUsageLabel\")",
+        "keeperSha256": "0bec8f5cf2d2a501e4d9b5130a83d517923cc3c483f66545aac652823f9cd7ea",
+        "testFileSha256": "55fbffd7795be751f465158b9d3927b5e2612fac4df8236d4845440d5d69f6c4"
+      }
+    },
+    "expectedOperator": "==",
+    "errorMessageIncludes": [
+      "legacy entry omits ownedUsageLabel"
+    ],
+    "intendedAssertion": "assert.ok(!(\"ownedUsageLabel\" in entry), \"legacy entry omits ownedUsageLabel\")",
+    "proofKind": "Accepted original assertion condition at actual owner boundary; representative source fault"
+  },
+  {
+    "id": "C5",
+    "file": "src/app/admin/beratung/[enrollmentId]/page.tsx",
+    "sourceSha256": "586f0276c8add490377ab3340ce08c9045ea76b029ea7a07389a82fef0cc7eb5",
+    "mutatedSha256": "e64b91d9dc9d2aa64b14ff534cc6b9dca4280151e10d62404dd36d0ddd36bf64",
+    "from": "const UNANSWERED_PREFIX = \"Nicht angegeben:\"",
+    "to": "const UNANSWERED_PREFIX = \"Nicht erfasst:\"",
+    "anchor": {
+      "kind": "file",
+      "scopeSha256": "586f0276c8add490377ab3340ce08c9045ea76b029ea7a07389a82fef0cc7eb5",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/discovery-unanswered-categories.test.tsx",
+      "name": "a submitted intake's untouched step says so at the step — never „benutzt nichts“"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^a submitted intake's untouched step says so at the step — never „benutzt nichts“$",
+      "tests/discovery-unanswered-categories.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 286,
+        "text": "assert.ok(\n    markup.includes(\n      \"Nicht angegeben: Tiefenreinigung · Conditioner · Bondbuilder · Kopfhautpflege · Hitzeschutz · Trockenshampoo — im Call fragen.\",\n    ),\n    \"summary names exactly the six unanswered categories without steps\",\n  )",
+        "keeperSha256": "1f1d94e7caaebc72fc8f4815ee7565e7e549ec748dee530cdd6ae28eedc1f29d",
+        "testFileSha256": "0d6adadde489969f63e027e45aa890ccb85805320febd9ffa1b03133bd5c6537"
+      },
+      "cut": {
+        "startLine": 286,
+        "text": "assert.ok(\n    markup.includes(\n      \"Nicht angegeben: Tiefenreinigung · Conditioner · Bondbuilder · Kopfhautpflege · Hitzeschutz · Trockenshampoo — im Call fragen.\",\n    ),\n    \"summary names exactly the six unanswered categories without steps\",\n  )",
+        "keeperSha256": "1f1d94e7caaebc72fc8f4815ee7565e7e549ec748dee530cdd6ae28eedc1f29d",
+        "testFileSha256": "fa0775cf1524e0d8cba67ef6c81c1dce8f4b5d242d69fc5bc79dfc8a91825cdf"
+      }
+    },
+    "expectedOperator": "==",
+    "errorMessageIncludes": [
+      "summary names exactly the six unanswered categories without steps"
+    ],
+    "intendedAssertion": "assert.ok(\n    markup.includes(\n      \"Nicht angegeben: Tiefenreinigung · Conditioner · Bondbuilder · Kopfhautpflege · Hitzeschutz · Trockenshampoo — im Call fragen.\",\n    ),\n    \"summary names exactly the six unanswered categories without steps\",\n  )",
+    "proofKind": "Accepted original assertion condition at actual owner boundary; representative source fault"
+  }
+]

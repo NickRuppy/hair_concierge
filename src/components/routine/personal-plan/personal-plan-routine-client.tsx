@@ -13,6 +13,11 @@ import { Button } from "@/components/ui/button"
 import { PremiumSheet } from "@/components/premium-sheet/premium-sheet"
 import type { PremiumSheetContext } from "@/lib/premium-sheet/context"
 import { routineAnalytics } from "@/lib/personal-plan/routine/analytics"
+import {
+  countRoutineProductsOverBudget,
+  ROUTINE_BUDGET_REQUIRED_ERROR,
+} from "@/lib/personal-plan/routine/budget-gate"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
 import type {
   PersonalPlanRoutineView,
@@ -37,6 +42,7 @@ import {
 import { useAuth } from "@/providers/auth-provider"
 
 import { requestRoutineAttentionRefresh } from "./routine-attention-indicator"
+import { RoutineBudgetGate } from "./routine-budget-gate"
 import { RoutineEditor, type RoutineProductOption } from "./routine-editor"
 import { routineCategoryLabel, routinePurposeLabel } from "./routine-item-card"
 import { RoutinePage } from "./routine-page"
@@ -228,6 +234,8 @@ export function PersonalPlanRoutineClient({
   initialRefinementBanner = null,
   merklisteEnabled = false,
   keepsake = false,
+  shoppingBudget,
+  productPricesEur,
 }: {
   initialView: PersonalPlanRoutineView
   enabled: boolean
@@ -255,6 +263,15 @@ export function PersonalPlanRoutineClient({
    * Defaults to `false`: premium and flag-off render byte-identically to today.
    */
   keepsake?: boolean
+  /**
+   * Budget gate (Task 6), present only with the shopping-budget flag on: the member's saved
+   * budget, `null` when none is saved. `null` makes STARTING a routine edit ask the budget
+   * first; viewing never does. Absent = flag off (or the budget could not be read): no gate
+   * here, and the proposal route's `budget_required` stays the safety net.
+   */
+  shoppingBudget?: ShoppingBudget | null
+  /** Known package prices (EUR) of the accepted planned products, for the summary notice. */
+  productPricesEur?: Record<string, number>
 }) {
   const router = useRouter()
   const pathname = usePathname()
@@ -298,6 +315,16 @@ export function PersonalPlanRoutineClient({
   }, [authLoading, authUserId])
   const dismissPlanUpdatedToast = React.useCallback(() => setShowPlanUpdatedToast(false), [])
   const [mode, setMode] = React.useState<Mode>("overview")
+  // A budget saved from the gate on this page. It wins over the (possibly stale) server prop,
+  // which only refreshes with the next navigation.
+  const [savedBudget, setSavedBudget] = React.useState<ShoppingBudget | null>(null)
+  const effectiveBudget: ShoppingBudget | null | undefined =
+    shoppingBudget === undefined ? undefined : (savedBudget ?? shoppingBudget)
+  // The edit the member started and is waiting to continue once a budget is saved. A cancelled
+  // or failed gate drops it; nothing was submitted, so the routine is unchanged.
+  const [budgetGate, setBudgetGate] = React.useState<
+    { kind: "open_editor" } | { kind: "resubmit"; operations: RoutineEditOperation[] } | null
+  >(null)
   // A successor proposal is intentionally non-blocking during the current
   // visit, but it must be presented again on the next Routine-page visit until
   // the owner explicitly accepts or rejects it.
@@ -329,6 +356,12 @@ export function PersonalPlanRoutineClient({
     markPersonalPlanStageNavigation("/plan-start")
     router.push(`/plan-start?refine=${initialRefinementBanner.module}`)
   }, [router, initialRefinementBanner])
+  // New budget-aware suggestions come from the products module (Stage 3), not the routine
+  // editor, which only offers the products already in the routine.
+  const reviewOverBudget = React.useCallback(() => {
+    markPersonalPlanStageNavigation("/plan-start")
+    router.push("/plan-start?refine=products")
+  }, [router])
   const [proposalRetryId, setProposalRetryId] = React.useState<string | null>(null)
   const [detail, setDetail] = React.useState<RoutineProductDetailData | null>(null)
   const [detailOpen, setDetailOpen] = React.useState(false)
@@ -386,6 +419,11 @@ export function PersonalPlanRoutineClient({
   const seed = editorSeed(view)
   const canEdit = enabled && Boolean(seed)
   const refinementBanner = !bannerDismissedLocally ? initialRefinementBanner : null
+  const overBudgetCount = countRoutineProductsOverBudget({
+    payload: view.activeVersion?.payload,
+    budget: effectiveBudget,
+    pricesEur: productPricesEur,
+  })
   const entrySyncTiming = routineEntrySyncTiming({
     enabled,
     hasPendingProposal: Boolean(pending),
@@ -497,18 +535,29 @@ export function PersonalPlanRoutineClient({
     [enabled, reload],
   )
 
-  const openEditor = React.useCallback(() => {
-    if (!canEdit) return
+  const enterEditor = React.useCallback(() => {
     setError(null)
     setMode("editor")
     routineAnalytics.track("personal_plan_stage4_editor_interacted", {
       interaction: "opened",
       origin: "routine_page",
     })
-  }, [canEdit])
+  }, [])
+
+  // Every routine edit (product change, rhythm, application, role, category) starts here — from
+  // „Anpassen", the proposal sheet's „Zurück zum Editor", the graduation hand-off and the
+  // over-budget notice — so this one check is the client gate. A saved budget never opens it.
+  const openEditor = React.useCallback(() => {
+    if (!canEdit) return
+    if (effectiveBudget === null) {
+      setBudgetGate({ kind: "open_editor" })
+      return
+    }
+    enterEditor()
+  }, [canEdit, effectiveBudget, enterEditor])
 
   const submitOperations = React.useCallback(
-    async (operations: RoutineEditOperation[]) => {
+    async (operations: RoutineEditOperation[], afterBudget = false) => {
       setBusy(true)
       setError(null)
       routineAnalytics.track("personal_plan_stage4_editor_interacted", {
@@ -528,6 +577,12 @@ export function PersonalPlanRoutineClient({
         })
         if (!response.ok) {
           const code = await readError(response, "temporarily_unavailable")
+          if (code === ROUTINE_BUDGET_REQUIRED_ERROR && !afterBudget) {
+            // The server's safety net: no budget is saved. Ask once, keep the editor (and its
+            // local changes) behind the question, then resubmit these exact operations.
+            setBudgetGate({ kind: "resubmit", operations })
+            return
+          }
           throw new Error(friendlyError(code, "Änderungen konnten nicht geprüft werden."))
         }
         const next = await reload()
@@ -555,6 +610,17 @@ export function PersonalPlanRoutineClient({
       }
     },
     [reload, view.planRevision, view.sourceRevision],
+  )
+
+  const finishBudgetGate = React.useCallback(
+    async (budget: ShoppingBudget) => {
+      const gate = budgetGate
+      setSavedBudget(budget)
+      setBudgetGate(null)
+      if (gate?.kind === "open_editor") enterEditor()
+      else if (gate?.kind === "resubmit") await submitOperations(gate.operations, true)
+    },
+    [budgetGate, enterEditor, submitOperations],
   )
 
   const resolveProposal = React.useCallback(
@@ -657,22 +723,34 @@ export function PersonalPlanRoutineClient({
 
   if (mode === "editor" && seed) {
     return (
-      <RoutineEditor
-        routine={seed}
-        productOptions={frozenProductOptions(seed)}
-        supportedCadences={[...PRODUCT_FREQUENCIES]}
-        supportedRolesByCategory={Object.fromEntries(
-          Object.entries(CATEGORY_ROLE_POLICIES).map(([category, policy]) => [
-            category,
-            [...policy.allowedRoles],
-          ]),
-        )}
-        isSubmitting={busy}
-        retryMessage={error}
-        onCancel={() => setMode("overview")}
-        onSubmitOperations={submitOperations}
-      />
+      <>
+        <RoutineEditor
+          routine={seed}
+          productOptions={frozenProductOptions(seed)}
+          supportedCadences={[...PRODUCT_FREQUENCIES]}
+          supportedRolesByCategory={Object.fromEntries(
+            Object.entries(CATEGORY_ROLE_POLICIES).map(([category, policy]) => [
+              category,
+              [...policy.allowedRoles],
+            ]),
+          )}
+          isSubmitting={busy}
+          retryMessage={error}
+          hidden={budgetGate ? true : undefined}
+          onCancel={() => setMode("overview")}
+          onSubmitOperations={submitOperations}
+        />
+        {budgetGate ? (
+          <RoutineBudgetGate onSaved={finishBudgetGate} onCancel={() => setBudgetGate(null)} />
+        ) : null}
+      </>
     )
+  }
+
+  // A routine edit was started without a saved budget: the question comes first. The routine
+  // underneath is untouched, so „Abbrechen" simply returns to it.
+  if (budgetGate && seed) {
+    return <RoutineBudgetGate onSaved={finishBudgetGate} onCancel={() => setBudgetGate(null)} />
   }
 
   if (!seed && view.status === "authority_repair_required") {
@@ -748,6 +826,8 @@ export function PersonalPlanRoutineClient({
         onDismissPlanUpdatedToast={dismissPlanUpdatedToast}
         merklisteEnabled={merklisteEnabled}
         onGraduated={handleGraduated}
+        overBudgetCount={overBudgetCount}
+        onReviewOverBudget={canEdit ? reviewOverBudget : undefined}
       />
       {pending ? (
         <RoutineProposalSheet

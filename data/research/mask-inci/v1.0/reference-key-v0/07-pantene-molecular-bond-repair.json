@@ -1,0 +1,324 @@
+{
+  "schemaVersion": "mask-research-record-v0.1",
+  "lane": "reference_key",
+  "productId": "07-pantene-molecular-bond-repair",
+  "identity": {
+    "brand": "Pantene Pro-V",
+    "productName": "Miracles Molecular Bond Repair Intensive Haarmaske",
+    "packSize": "300 ml",
+    "gtinEan": "8700216173476",
+    "market": "DE (dm.de + Rossmann.de + Müller)",
+    "formulaSource": "mueller.de IPN2964989 (direct retailer fetch, verbatim — INCI and directions from the same successful page load), accessed 2026-09-04",
+    "rawInciSha256": "7be31024068a8a96a303b7637c4993c7efcc8896713e283da8bc136f2f9c400f",
+    "identityState": "verified",
+    "identityStateReason": "Exact product name and EAN both matched on a directly fetched retailer page. A similarly-named 160 ml variant with a materially different INCI was identified and kept separate, not merged (§2.4). This is the cohort's highest-quality identity record."
+  },
+  "g0": {
+    "value": "in_category",
+    "modeScoped": false,
+    "multiUse": null,
+    "rationale": "Directions state a contact time and a rinse and describe a single post-wash mask mode. No leave-in, pre-shampoo or overnight mode. Not a bondbuilder catalog product with a specialist protocol — it is a conventional drugstore rinse-out mask carrying bond positioning, which charter F3 explicitly includes.",
+    "evidenceSignals": [
+      "directions: 'Auf das nasse Haar auftragen. 2 Minuten einwirken lassen. Ausspülen.'",
+      "directions: 'In den Händen verreiben, um die Pro-V Perlen aufzulösen' — a preparation step, not a second mode",
+      "charter F3: bond-claim drugstore masks are in scope, with the bond route claim-gated",
+      "single stated mode"
+    ],
+    "placementConjunctNote": "Neither placement nor the words 'nach der Haarwäsche' are stated verbatim ('auf das nasse Haar'). Not used as a refusal ground (AP-G0-PLACEMENT, AP-05-AFTERCLEANSING)."
+  },
+  "tailMarker": {
+    "ingredient": "PARFUM",
+    "rank": 7,
+    "anomalyNote": "No §3.1 anomaly: rank 7 > 3, and three conditioning ingredients precede the marker (Stearyl Alcohol @2, Stearamidopropyl Dimethylamine @3, Cetyl Alcohol @4). The marker is early relative to a 23-entry list, so Behentrimonium Methosulfate @11, Panthenol @15, Panthenyl Ethyl Ether @16, Histidine @18 and Biotin @22 are all demoted. That demotion is well-founded here: this is a genuinely short-payload formula, not a hero-tail artefact."
+  },
+  "aboveTailSegment": [
+    "1 AQUA",
+    "2 STEARYL ALCOHOL",
+    "3 STEARAMIDOPROPYL DIMETHYLAMINE",
+    "4 CETYL ALCOHOL",
+    "5 BIS-AMINOPROPYL DIMETHICONE",
+    "6 GLUTAMIC ACID"
+  ],
+  "directProperties": {
+    "treatment_concentration_potential": { "value": "moderate", "note": "A conventional single-amidoamine plus two-fatty-alcohol base with one amino silicone; no lipid of any kind above the tail." },
+    "conditioning_deposition_potential": { "value": "moderate", "note": "Stearamidopropyl Dimethylamine @3 with Glutamic Acid @6 as its near-certain neutraliser (C3) — a textbook single-cationic base." },
+    "wet_slip_detangling_potential": { "value": "moderate", "note": "One amidoamine plus an amino silicone; wet evidence is not dry evidence." },
+    "dry_combability_potential": { "value": "moderate", "note": "Bis-Aminopropyl Dimethicone deposits preferentially on damaged, more anionic fibre regions — direction only, no numbers (Pr-2 percentages are unverified). No dry endpoint." },
+    "surface_lubrication_softness_potential": { "value": "moderate", "note": "Two fatty alcohols plus an amino silicone; friction proxy is not perceived softness." },
+    "smoothing_frizz_control_potential": { "value": "higher", "note": "The amino silicone at rank 5 is the formula's one distinct route beyond the base; still not weatherproof frizz control." },
+    "shine_potential": { "value": "moderate", "note": "Optical route present and lipid-lean, but it is the same M3-sharing-M1 film, and there is no gloss positioning to corroborate." },
+    "humectant_support_potential": { "value": "lower", "note": "Zero humectants above the tail. Panthenol @15 and Panthenyl Ethyl Ether @16 are both demoted." },
+    "weight_deposition_potential": { "value": "lower", "note": "No lipid, butter, oil or occlusive stack anywhere above the tail; two fatty alcohols and one silicone." },
+    "body_lightness_potential": { "value": "balanced", "note": "Lipid-free above the tail but two fatty alcohols in the top four; no lightness positioning to corroborate a preserving reading." },
+    "repair_lubrication_protection": { "value": "candidate", "note": "Manageability route only; manageability is not breakage protection and neither is structural repair." },
+    "repair_surface_film": { "value": "none_visible", "note": "No protein or peptide species at any rank. Glutamic Acid and Histidine are free amino acids — explicit non-qualifiers — and Glutamic Acid is the amidoamine neutraliser besides." },
+    "bond_specific_support": { "value": "claim_only", "note": "'Molecular Bond Repair' and 'Molecular Repair Technology' with no nameable bond-chemistry INCI token at any rank. Bis-Aminopropyl Dimethicone is an amino silicone and an explicit family-6 non-qualifier." },
+    "color_chemical_damage_protection": { "value": "general_conditioning", "note": "Citric Acid @10 and Disodium EDTA @12 are tail-position pH/chelation context; no colour endpoint. CI 77492 @20 is a colourant." },
+    "fragrance_scalp_exposure": { "value": "aromatic_or_allergen_exposure", "note": "Parfum @7, Hexyl Cinnamal @14, Benzyl Salicylate @19, Limonene @21." }
+  },
+  "profile": {
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, exact-market DE INCI of record (sha256 7be31024…, direct Müller fetch), above-tail ranks 1–6; category-relative to the German drugstore rinse-out mask shelf.",
+      "rationale": "Exactly one of the three §9.1 structural signals is satisfied, which §9.1 assigns to the moderate bucket by definition. This is a structurally minimal formula: one cationic species, two fatty alcohols, one silicone, no lipid. E2 ceiling: comparative structural intensity potential, not measured treatment performance.",
+      "evidenceSignals": [
+        "STEARYL ALCOHOL (rank 2) — long-chain fatty alcohol in the top three, the one satisfied signal",
+        "STEARAMIDOPROPYL DIMETHYLAMINE (rank 3) — the only cationic species above the tail",
+        "BEHENTRIMONIUM METHOSULFATE (rank 11) — a second cationic, but BELOW tail_index 7",
+        "no non-fatty-alcohol lipid at any rank above the tail (Bis-Aminopropyl Dimethicone @5 is an R2 silicone, not an R4 lipid; Glutamic Acid @6 is a free amino acid)",
+        "CETYL ALCOHOL (rank 4) — a second fatty alcohol, but S2 asks for rank 2 or 3, which Stearyl Alcohol already satisfies; breadth of fatty alcohols is not a separate signal"
+      ],
+      "derivation": "S1 (≥2 distinct cationics above the tail) = NOT satisfied; one. S2 satisfied (Stearyl Alcohol @2). S3 (≥2 distinct non-fatty-alcohol lipids above the tail) = NOT satisfied; zero. Count = 1 of 3.",
+      "thresholdReasoning": [
+        "Clears `moderate`: §9.1 assigns `moderate` to 'everything else, including exactly one satisfied signal'. Exactly one is satisfied.",
+        "`high` does not apply: it requires ≥2 of {S1,S2,S3}. Only S2 holds, and the second cationic that would have carried S1 sits four ranks below the marker.",
+        "`low` does not apply: it requires NONE of the three — specifically a single cationic species AND no fatty alcohol in the top three AND at most one lipid above the tail. The first and third conditions hold, but Stearyl Alcohol @2 defeats the second.",
+        "Confidence is `moderate` rather than `high` by the §9.1 rule itself: high confidence requires ≥2 signals pointing the same way, and only one is available — despite this being the cohort's best-sourced formula."
+      ],
+      "counterSignals": [
+        "Polysorbate 20 @13, Disodium EDTA @12 and Methicone @23 are formulation infrastructure in the tail and earn nothing (lexicon family 10).",
+        "Biotin @22 earns zero credit on every property and is kept away from any hair-loss-adjacent language (G6)."
+      ],
+      "limitations": [
+        "A three-step concentration scale is at the edge of INCI support.",
+        "This is the one cohort product where source quality is excellent and the signal count is still thin — the scale's resolution, not the evidence, is the limit."
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, above-tail ranks 1–6; an ingredient-informed matching prior, not a prediction of visible finish.",
+      "rationale": "The `high` anchor fails on its cationic leg and the `low` anchor fails on its fatty-alcohol leg, leaving `moderate` — even though the credited architecture is entirely lipid-free and would read as light on any substantive reading. E2 ceiling: weight deposition potential, never measured finish.",
+      "evidenceSignals": [
+        "STEARAMIDOPROPYL DIMETHYLAMINE (rank 3) — a single cationic species above the tail (low-anchor conjunct 1: SATISFIED)",
+        "STEARYL ALCOHOL (rank 2) and CETYL ALCOHOL (rank 4) — cetearyl-class fatty alcohols, one of them in the top three (low-anchor conjunct 2: FAILS)",
+        "no R4b heavy lipid at any rank in the entire formula (low-anchor conjunct 3: SATISFIED)",
+        "BIS-AMINOPROPYL DIMETHICONE (rank 5) — a single silicone; the occlusive-stack alternative needs two species or a dimethicone/dimethiconol pair"
+      ],
+      "derivation": "§9.2 `high` = required base (≥2 cationics above the tail AND cetearyl-class fatty alcohol in the top three): leg 1 fails. §9.2 `low` = single cationic AND no cetearyl-class fatty alcohol in the top three AND no R4b heavy lipid above the tail: conjuncts 1 and 3 hold, conjunct 2 fails on Stearyl Alcohol @2. Residual = `moderate`.",
+      "thresholdReasoning": [
+        "Clears `moderate`: the residual bucket, which §9.2 calls the expected majority and explicitly accepts.",
+        "`high` does not apply: one cationic above the tail, no heavy lipid anywhere, one silicone.",
+        "`low` does not apply on a single conjunct — the presence of a cetearyl-class fatty alcohol at rank 2. This is the cohort's clearest demonstration that the `low` anchor is effectively unreachable for a conventional mask emulsion, since a cetearyl-class alcohol at rank 2 is described by the lexicon as near-universal in the category and as carrying no signal at all by its presence. See AP-07-LOWUNREACHABLE.",
+        "§9.2 conflict fallback not engaged: no `high` value to conflict with, and no lightness positioning."
+      ],
+      "counterSignals": [
+        "The graded direct property `weight_deposition_potential` reads `lower` (a lipid-free above-tail segment) while the profile field reads `moderate`. As with #06 the divergence comes from the anchor structure, not from the evidence — but in the opposite direction."
+      ],
+      "limitations": ["A soft preference with a stated reason, never an exclusion."]
+    },
+    "careDirection": {
+      "value": "moisture",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, above-tail ranks 1–6; comparative care emphasis, never an assertion about a user's protein state (G6).",
+      "rationale": "There is no protein or peptide species at any rank in this formula. The two amino-acid tokens are explicit R5 non-qualifiers, and one of them is near-certainly the amidoamine neutraliser. The credited direction is a conventional fatty-alcohol/amidoamine/amino-silicone conditioning base. Route separation is unambiguous and the source is verbatim, so confidence is high. E2 ceiling: comparative emphasis, not a delivered outcome.",
+      "evidenceSignals": [
+        "no hydrolyzed protein, peptide, keratin, or cationised protein at ANY rank",
+        "GLUTAMIC ACID (rank 6) — free amino acid: an explicit R5 non-qualifier, and per C3 the near-certain neutraliser for Stearamidopropyl Dimethylamine @3",
+        "HISTIDINE (rank 18) — free amino acid, in the tail, doubly non-qualifying",
+        "BIS-AMINOPROPYL DIMETHICONE (rank 5) — amino silicone; contains 'amino' and is marketed as bond chemistry, but is an explicit non-qualifier for both R5 and bond_route",
+        "STEARYL ALCOHOL (2), CETYL ALCOHOL (4), STEARAMIDOPROPYL DIMETHYLAMINE (3) — the material conditioning direction",
+        "zero humectants above the tail"
+      ],
+      "derivation": "§9.3 material-R5 test fails absolutely (no candidate species exists at any rank), closing `protein` and `balanced`. Residual = `moisture`, on D6's definition of the coherent non-protein direction.",
+      "thresholdReasoning": [
+        "Clears `moisture`: a coherent conditioning architecture with no protein-film route. Note §9.3.1: a mask can and usually will be `care_direction: moisture` with a non-moisture primary focus — that is correct, not a contradiction, and this product is an instance (primary focus `smoothing`, zero above-tail humectants).",
+        "`protein` does not apply: no protein exists. The three tokens a naive read would seize on — 'Molecular Bond Repair' naming, the amino silicone, and the free amino acids — are each independently excluded by name in the standard and the lexicon's cross-family false-positive register.",
+        "`balanced` does not apply: its first conjunct is the material R5 route.",
+        "Confidence `high` is earned here and nowhere else in the cohort for this field: resolved tail marker, verbatim direct-retailer INCI, and a route separation that does not depend on the tail rule at all."
+      ],
+      "counterSignals": [
+        "The strongest repair positioning in the cohort against a formula with no repair chemistry. Recorded per §9.3's counter-signal rule; never decisive.",
+        "D4 protein-payload counter-signal does not fire — nothing to fire on."
+      ],
+      "limitations": []
+    },
+    "repairSupportLevel": {
+      "value": "low",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only; comparative temporary damage-support route, not measured repair efficacy.",
+      "rationale": "This is the cohort's designated bond-discrimination stress case and the standard refuses it cleanly. 'Molecular Bond Repair' is E0 naming; the active chemistry is an amino silicone, which R7 and lexicon family 6 name as an explicit non-qualifier precisely because it contains 'amino' and appears in bond-marketed products. No protein route exists either. E2 ceiling: comparative formula potential, never efficacy.",
+      "evidenceSignals": [
+        "BIS-AMINOPROPYL DIMETHICONE (rank 5) — amino silicone, explicit family-6 non-qualifier for bond_route and explicit §9.4 non-upgrader",
+        "no maleate, gluconamide, or bond-positioned peptide token at any rank",
+        "no protein or peptide species at any rank",
+        "GLUTAMIC ACID (6), HISTIDINE (18) — free amino acids, explicit non-qualifiers",
+        "PANTHENOL (15), PANTHENYL ETHYL ETHER (16), BIOTIN (22) — explicit non-upgraders, and in the tail besides",
+        "claims: 'Molecular Repair Technology', '5.000+ Pro-V Nutri-Pearls', 'mit Biotin' — all E0"
+      ],
+      "derivation": "§9.4: bond_route = none (no nameable token; branded naming never substitutes for a token) closes `high`. No material R5 route closes `medium`. Residual = `low`.",
+      "thresholdReasoning": [
+        "Clears `low`: ordinary conditioning and lubrication only.",
+        "`medium` does not apply: no protein/peptide/keratin film route exists at any rank.",
+        "`high` does not apply: R7 requires the reviewer to record the exact INCI token carrying the chemistry. There is none — 'Molecular Repair Technology' is a proprietary complex with no identifiable INCI species — so bond_route is `none` and the `bond_claim_review` trigger fires, which §14 predicts will be the single most frequent mask trigger.",
+        "Mask delta 3 applied verbatim: 'Bond'/'Reparatur'/'Plex' on the pack is not repair; 'Bond' front-of-pack is frequently an ordinary rich mask — and here it is an ordinary LIGHT mask.",
+        "Confidence `high`: the value is deterministic on the absence of a token, and the INCI is verbatim from a direct retailer fetch."
+      ],
+      "counterSignals": [
+        "Biotin is a marketing token with zero credit on every property, and is deliberately kept away from hair-loss-adjacent language per G6 and lexicon family 5c."
+      ],
+      "limitations": [
+        "Banned wording observed: no 'repairs', 'rebuilds bonds', 'restores structure', 'reverses damage'.",
+        "The archetype worked as designed: the cohort needed a 'bond-branded without named chemistry' discrimination stress case and this product provides an unambiguous negative."
+      ]
+    },
+    "primaryFocus": {
+      "value": "smoothing",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-first §9.5.2 hierarchy over above-tail ranks 1–6.",
+      "rationale": "Every special-purpose route fails, the moisture guard fails at zero cluster members, and the shine threshold fails its claim-corroboration leg. Step 6 is then reached with one genuine candidate: an amino silicone at rank 5 in a six-entry above-tail segment, which is a distinct silicone route beyond the ordinary mask base and is a dry-surface-control route. `general` was the close competitor. E2 ceiling: comparative smoothing potential, never weatherproof frizz control.",
+      "evidenceSignals": [
+        "BIS-AMINOPROPYL DIMETHICONE (rank 5) — the only route above the tail beyond the conditioning base; amino silicones deposit preferentially on damaged, more anionic fibre regions (direction only, no numbers — Pr-2's circulating percentages are unverified)",
+        "zero humectants above the tail",
+        "no lipid above the tail",
+        "no gloss, Glanz, Glaze or Laminierung positioning anywhere in the claims"
+      ],
+      "derivation": "Step 1 baseline exclusion applied. Step 2: one M1 base observation plus one M1/M3 silicone observation. Step 3: `repair` blocked (no R5, bond_route none, and step 3 states explicitly that `bond_specific_support = claim_only` cannot set repair); `curl_support` blocked (single cationic, no polymer — slip is not distinctive); `color_care` blocked (no candidate, no positioning); `lightness` blocked (weight `moderate`, not `low`). Step 4 `moisture` blocked (zero humectants above the tail). Step 5 `shine` blocked (criteria 2 and 3 fail). Step 6 `smoothing` clears.",
+      "thresholdReasoning": [
+        "Clears `smoothing`: step 6 requires dry surface control to be the clearest practical differentiator AND the architecture to extend materially beyond the ordinary mask base via a distinct silicone, substantive polymer, or substantial lipid route. The amino silicone at rank 5 is the only thing in this formula that is not base, so it is by construction both the clearest differentiator and the material extension.",
+        "`repair` does not apply, and this is the product's whole purpose in the cohort: the strongest bond positioning in the set produces no repair focus, because step 3 names 'generic repair naming' and 'bond_specific_support = claim_only' as things that cannot set `repair`.",
+        "`shine` does not apply: criterion 1 is arguably satisfied (an alignment-oriented amino silicone above the tail with a genuinely low lipid load — zero lipids above the tail), but criterion 2 fails because this same M1/M3 deposition is the sole optical basis, and criterion 3 fails outright for want of any gloss positioning. §9.5.4's own instruction in that case is to select `smoothing` and keep the claim as context — which is what was done.",
+        "`general` was the close competitor and lost narrowly. The argument for it: a single amino silicone in a thin formula is slender ground for a named focus, and step 6's 'clearest practical differentiator' is trivially satisfied when almost nothing else is present. The argument that won: §9.5.1 explicitly routes a `nonspecific` verdict to `smoothing` when the dry-surface route genuinely clears step 6, and an amino silicone at rank 5 of 6 above-tail entries is a real, distinct, non-baseline route. Confidence is held at `moderate` to record that this call could reasonably go the other way. See AP-07-SMOOTHINGVGENERAL."
+      ],
+      "counterSignals": [
+        "The product makes no smoothing or anti-frizz claim, so the focus has no corroboration — permitted (positioning corroborates but never creates, and its absence does not block), but it means this focus rests on a single ingredient.",
+        "Consistency check performed against #06, which reaches `smoothing` on a dimethicone/dimethiconol pair at ranks 4–5. The two products reach the same focus on very different evidential strength; only confidence distinguishes them."
+      ],
+      "limitations": [
+        "Amino silicones may support a comparative smoothing-on-damaged-hair reading; they do not raise repair_support_level, and no such upgrade was made."
+      ]
+    },
+    "secondaryFocus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Same hierarchy pass as primaryFocus.",
+      "rationale": "`shine` would reuse the same M1/M3 film just counted for the primary and fails its own criteria 2 and 3; `moisture` fails at zero cluster members; `repair` is closed at step 3.",
+      "evidenceSignals": [
+        "one silicone above the tail, carrying both the smoothing and any putative shine reading",
+        "zero humectants above the tail"
+      ],
+      "derivation": "§6 rule 2: shine that is merely the optical consequence of the smoothing/deposition film shares M3 with M1 and does not earn its own slot. §9.5.3 criterion 1 fails for moisture.",
+      "thresholdReasoning": [
+        "Zero secondaries is correct: the above-tail segment contains exactly one non-baseline route, and it has already been spent on the primary."
+      ],
+      "counterSignals": [],
+      "limitations": []
+    },
+    "hairThicknessFit": {
+      "value": ["fine", "normal", "coarse"],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Deterministic policy derivation from weight_potential (§9.6); a desired-finish/dosage prior, not an exclusion.",
+      "rationale": "weight_potential `moderate` maps to the full set.",
+      "evidenceSignals": ["derived from weight_potential = moderate"],
+      "derivation": "§9.6 table row 2.",
+      "thresholdReasoning": [
+        "Clears {fine, normal, coarse}: the moderate row.",
+        "{fine, normal} does not apply: it requires weight_potential `low`, which the cetearyl-class conjunct refused despite a lipid-free above-tail segment.",
+        "{normal, coarse} does not apply: it requires weight_potential `high`."
+      ],
+      "counterSignals": [],
+      "limitations": ["Research-level prior; no production projection is authorized."]
+    },
+    "damageFit": {
+      "value": ["healthy", "moderately_damaged"],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Deterministic policy derivation from conditioning_level and the specialist-route test (§9.7); a broad product prior, not a repair-efficacy claim.",
+      "rationale": "conditioning_level `moderate` maps directly to healthy + moderately_damaged.",
+      "evidenceSignals": [
+        "conditioning_level = moderate",
+        "repair_support_level = low",
+        "bond_route = none"
+      ],
+      "derivation": "§9.7 row 2.",
+      "thresholdReasoning": [
+        "Clears {healthy, moderately_damaged}: the moderate row.",
+        "{moderately_damaged, highly_damaged} does not apply: the specialist branch exists only under conditioning_level `high`, and no specialist qualifier is present in any case — §9.7's never-qualifying list names generic silicone, panthenol, free amino acids and repair naming, which is the entire content of this product's repair story.",
+        "{healthy} alone does not apply: it requires conditioning_level `low`.",
+        "Worth reporting: a mask positioned for the most damaged hair on the shelf lands on the same broad prior as a plain conditioner. That is the intended discrimination."
+      ],
+      "counterSignals": [],
+      "limitations": ["Watch-list item 1: fully computable from fields 1 and 4."]
+    },
+    "textureFit": {
+      "value": ["straight", "wavy", "curly"],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Deterministic policy derivation from weight_potential (§9.8); research-only.",
+      "rationale": "weight_potential `moderate` selects the balanced-architecture row.",
+      "evidenceSignals": ["weight_potential = moderate"],
+      "derivation": "§9.8 row 2.",
+      "thresholdReasoning": [
+        "Clears {straight, wavy, curly}: the balanced row.",
+        "{wavy, curly, coily} does not apply: it needs weight_potential `high` and a coherent high-slip route; both fail.",
+        "{straight, wavy} does not apply: it requires weight_potential `low`."
+      ],
+      "counterSignals": [],
+      "limitations": ["Research-only; no current consumer."]
+    }
+  },
+  "bondRoute": { "value": "none", "token": null, "rank": null },
+  "focusCareVerdict": {
+    "value": "nonspecific",
+    "claimRole": "not_applicable",
+    "note": "The repair direction is claim-only: no protein, no peptide, no named bond token, and an amino silicone that the standard and lexicon both name as an explicit non-qualifier. The moisture direction is unsupported: zero humectants above the tail. Generic conditioning distinguishes neither. §9.5.1's hard rule applied without exception — claims can never convert nonspecific formula evidence into a specialist focus, so 'Molecular Bond Repair' produced nothing. The verdict resolved to `smoothing` rather than `general` because the dry-surface route cleared step 6."
+  },
+  "overloadCounterSignal": null,
+  "blindToFinalChanges": [
+    {
+      "field": "repairSupportLevel",
+      "blindValue": "low",
+      "finalValue": "low",
+      "reason": "Recorded as an explicit non-change on the cohort's designated bond-discrimination case. Unblinding revealed 'Molecular Bond Repair' in the product name plus 'Molecular Repair Technology' in the claims. §11 step 4 permits claims to influence the `bond_claim_review` trigger and nothing else on this field; the trigger fired and the value did not move."
+    },
+    {
+      "field": "primaryFocus",
+      "blindValue": "smoothing",
+      "finalValue": "smoothing",
+      "reason": "Unblinding could only have changed this via §9.5.4 criterion 3 (no gloss positioning exists) or a dual_supported tie (none existed). The repair positioning was checked against step 3's explicit bar and rejected."
+    },
+    {
+      "field": "all other fields",
+      "blindValue": "unchanged",
+      "finalValue": "unchanged",
+      "reason": "No lightness positioning, no colour positioning, no dual tie."
+    }
+  ],
+  "projectedOutputs": {
+    "concentration": "medium",
+    "weight": "medium",
+    "balance_direction": "moisture",
+    "repair_support_level": "low",
+    "functional_benefits": ["smoothing_frizz_control"],
+    "suitable_thicknesses": ["fine", "normal", "coarse"]
+  },
+  "adjudicationPoints": [
+    {
+      "id": "AP-07-LOWUNREACHABLE",
+      "title": "§9.2's `low` weight anchor is effectively unreachable for a conventional mask emulsion",
+      "body": "The `low` anchor's second conjunct is 'no cetearyl-class fatty alcohol in the top three'. Lexicon family 2 states that a cetearyl-class alcohol at rank 2 is near-universal in this category, present in every calibration list checked, and that its presence 'therefore carries no signal at all'. The anchor thus conditions its lowest value on the absence of the category's single most universal ingredient at its most universal position. Across the twelve eligible cohort products, `low` was reached exactly once — by #02, which is not a conventional emulsion at all (water at rank 5, myristyl rather than cetearyl alcohol). This product makes the point sharply: a lipid-free above-tail segment with one cationic and one silicone is refused `low` on a fatty alcohol at rank 2. Candidate fix: replace the conjunct with a positive test on lipid load and cationic breadth, or require the fatty alcohol to be joined by a second fatty alcohol or a lipid before it blocks `low`.",
+      "source": "§9.2 low anchor; lexicon family 2"
+    },
+    {
+      "id": "AP-07-SMOOTHINGVGENERAL",
+      "title": "Step 6's `smoothing` bar is trivially met on a minimal formula, because 'clearest differentiator' is relative to what else is present",
+      "body": "Step 6 asks whether dry surface control is 'the clearest practical differentiator' and whether the architecture extends 'materially beyond the ordinary mask base'. On a six-entry above-tail segment containing exactly one non-base ingredient, both conjuncts are satisfied by construction — the single silicone is necessarily the clearest differentiator, because it is the only differentiator. The same test applied to #06 is met by a dimethicone/dimethiconol pair at ranks 4–5 in a rich formula, which is far stronger evidence for the same value. The standard currently has no way to distinguish 'smoothing because there is a real smoothing architecture' from 'smoothing because there is nothing else'. Candidate fix: add a floor — e.g. two distinct alignment-oriented species above the tail, or one within the first five ranks of the full list plus a corroborating claim — below which the fallback is `general`.",
+      "source": "§9.5.2 step 6, §9.5.1"
+    }
+  ],
+  "uncertainFields": ["primaryFocus", "weightPotential"],
+  "assumptionNotes": [
+    "Reviewer policy applied to every record in this lane: §3.1's hard cut determines above-tail membership without exception; the lexicon §0.2 boundary-band caution is applied only as a confidence modifier and never moves a value.",
+    "Review triggers fired: `bond_claim_review` (Bond/Molecular Repair positioning with no nameable bond-chemistry INCI token above the tail — §14 predicts this as the single most frequent mask trigger, and this is its textbook instance). NOT fired: `tail_marker_anomaly`, `protein_payload_review`, `specialist_damage_fit`, `weight_high_conflict`, `low_confidence_field`.",
+    "Protocol metadata for traceability only, zero classification credit: contact time 2 minutes, source mueller.de verbatim, confidence high. Placement not stated; P5 owns it.",
+    "G6 observed: Biotin is treated as a marketing token with zero credit and is kept entirely away from hair-loss-adjacent language."
+  ]
+}

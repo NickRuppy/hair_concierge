@@ -1,0 +1,91 @@
+from pathlib import Path
+import json,hashlib,re,difflib
+D=Path(__file__).parent
+T=Path('/tmp/test-audit-care102-tools-fz8_q695')
+P=Path('/tmp/test-audit-public-funnel66-c69uzpx6')
+K=Path('/tmp/test-audit-catalog99-tools-k9e7uyhg')
+sha=lambda x:hashlib.sha256(x).hexdigest()
+assert sha((T/'operator-pins.json').read_bytes())=='67f792bcbb94f1a2f6f807cddd4403c08da414aeec3748c71ad49d5bd28ccb89'
+assert sha((P/'manifest.json').read_bytes())=='152177b98efeb7dd05c261323a8eaec59f1bf6cabb690a122c1e645414552b9a'
+assert sha((P/'handoff-receipt.json').read_bytes())=='c4a22b53082fc6edf7c06d7781f788af9dce0d0767ce1c365bdcdeb60450cf85'
+(D/'template-originals').mkdir(exist_ok=True)
+files=['operator-guard.cjs','operator-edit.cjs','operator-run-controls.cjs','operator-proof.cjs','operator-readonly-preload.cjs','operator-native-proof.cjs','prepare-pins.cjs','proof-attestation.cjs','static-integrity.cjs']
+provenance=[]
+for f in files:
+ b=(T/f).read_bytes();(D/'template-originals'/f).write_bytes(b);provenance.append({'source':str(T/f),'snapshot':f'template-originals/{f}','sha256':sha(b)})
+b=(K/'operator-proof.cjs').read_bytes();(D/'template-originals/catalog-operator-proof.cjs').write_bytes(b);provenance.append({'source':str(K/'operator-proof.cjs'),'snapshot':'template-originals/catalog-operator-proof.cjs','sha256':sha(b)})
+(D/'template-provenance.json').write_text(json.dumps({'templatePinsSHA256':sha((T/'operator-pins.json').read_bytes()),'templates':provenance,'proposalManifestSHA256':sha((P/'manifest.json').read_bytes()),'proposalHandoffSHA256':sha((P/'handoff-receipt.json').read_bytes()),'limits':'Template byte provenance, not semantic/native acceptance.'},indent=2)+'\n')
+def adapt(f):
+ s=(T/f).read_text().replace(str(T),str(D)).replace('/tmp/test-audit-residual-care102-ezeu563r',str(P))
+ s=re.sub(r"const PIN_SHA='[a-f0-9]{64}'","const PIN_SHA='PIN_SHA_PLACEHOLDER'",s)
+ return s
+s=adapt('operator-guard.cjs')
+a=s.index('function nativeRegistrationNames(');b=s.index('function replaceOnce(',a)
+s=s[:a]+r'''// Expand ONLY the three existing literal row collections. Never evaluate test expressions.
+function nativeRegistrationNames(ts,file,text){
+ const sf=parse(ts,file,text),names=[],variables=new Map();
+ for(const s of sf.statements)if(ts.isVariableStatement(s))for(const d of s.declarationList.declarations)if(ts.isIdentifier(d.name))variables.set(d.name.text,d.initializer);
+ function rowsFor(loop){
+  if(!ts.isVariableDeclarationList(loop.initializer)||loop.initializer.declarations.length!==1)fail('Loop binding rejected');
+  const binding=loop.initializer.declarations[0].name;if(!ts.isArrayBindingPattern(binding)||binding.elements.length!==2||!ts.isIdentifier(binding.elements[0].name))fail('Literal tuple binding required');
+  const field=binding.elements[0].name.text,expr=loop.expression.getText(sf);
+  const approved=(file==='tests/gated-example-pages.test.tsx'&&expr==='GATED_ROUTES'&&field==='route')||(file==='tests/gated-pages-zero-mutation.test.tsx'&&['COMPOSITIONS','Object.entries(COMPOSITION_ENTRIES)'].includes(expr)&&field==='name');
+  if(!approved)fail('Unreviewed registration loop');let values=[];
+  if(expr==='Object.entries(COMPOSITION_ENTRIES)'){
+   const obj=variables.get('COMPOSITION_ENTRIES');if(!obj||!ts.isObjectLiteralExpression(obj))fail('Literal composition object required');
+   values=obj.properties.map(p=>{if(!ts.isPropertyAssignment(p)||!ts.isIdentifier(p.name))fail('Literal key required');return p.name.text});
+  }else{let arr=variables.get(expr);if(arr&&ts.isAsExpression(arr))arr=arr.expression;if(!arr||!ts.isArrayLiteralExpression(arr))fail('Literal tuple array required');
+   values=arr.elements.map(row=>{if(!ts.isArrayLiteralExpression(row)||row.elements.length!==2||!ts.isStringLiteralLike(row.elements[0]))fail('Literal first tuple field required');return row.elements[0].text});
+  }
+  const exact=expr==='GATED_ROUTES'?['routine','anwendung','chat','chat/[conversationId]']:['routine','anwendung','chat'];
+  if(JSON.stringify(values)!==JSON.stringify(exact))fail('Frozen literal rows changed: '+expr);return{field,values};
+ }
+ function walk(n){if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test'){
+  const loops=[];for(let p=n.parent;p;p=p.parent){if(ts.isFunctionLike(p)||ts.isForStatement(p)||ts.isForInStatement(p))fail('Nested/dynamic registration rejected');if(ts.isForOfStatement(p))loops.push(p)}
+  const title=n.arguments[0];if(!loops.length){if(!ts.isStringLiteralLike(title))fail('Unbound dynamic title');names.push(title.text)}else{
+   if(loops.length!==1||!ts.isTemplateExpression(title)||title.templateSpans.length!==1)fail('Only existing single literal-row template accepted');
+   const {field,values}=rowsFor(loops[0]),span=title.templateSpans[0];if(!ts.isIdentifier(span.expression)||span.expression.text!==field)fail('Title binding drift');for(const value of values)names.push(title.head.text+value+span.literal.text);
+  }
+ }if(ts.isCallExpression(n)&&n.expression.getText(sf)==='t.test')fail('Nested registration rejected');ts.forEachChild(n,walk)}walk(sf);return names
+}
+''' +s[b:]
+s=s.replace('candidates.length!==1||controls.length!==13','candidates.length!==3||controls.length!==20').replace("keepers.size!==1)fail('One unique keeper required')","keepers.size!==3)fail('Three unique keepers required')")
+s=s.replace("c.donor.body+'\\n\\n'","c.donor.removalText")
+s=s.replace("Object.keys(snapshots).length!==7||JSON.stringify(counts)!=='{\"before\":102,\"transfer\":102,\"cut\":101}'||unrelated!==100||unchangedRetained!==100||changedKeepers!==1","Object.keys(snapshots).length!==12||JSON.stringify(counts)!=='{\"before\":66,\"transfer\":66,\"cut\":63}'||unrelated!==60||unchangedRetained!==60||changedKeepers!==3")
+s=s.replace("readJSON(PROPOSAL+'/ledger.json')","readJSON(PROPOSAL+'/complete-ledger.json').rows").replace("j.classification==='F'","j.verdict==='F'").replace("length!==4)fail('Held F count')","length!==9)fail('Held F count')").replace('JSON.parse(held.title)',"held.title.startsWith('`')?held.title:JSON.parse(held.title)")
+s=s.replace("phase==='cut'?101:102","phase==='cut'?74:79")
+s=s.replace("[...ctx.snapshots[c.test.file][phase].rows.keys()].filter(n=>pattern.test(n))","nativeRegistrationNames(ctx.ts,c.test.file,ctx.snapshots[c.test.file][phase].bytes.toString()).filter(n=>pattern.test(n))")
+s=s.replace('rows.get(c.test.name)','rows.get(c.test.registrationName||c.test.name)')
+(D/'operator-guard.cjs').write_text(s)
+s=adapt('operator-proof.cjs').replace('verified!==13','verified!==20').replace('cleanRuns!==26','cleanRuns!==40').replace('Required13','Required20').replace('length!==7','length!==12').replace('records.length!==13','records.length!==20').replace('Thirteen records','Twenty records').replace('verified:13,logFiles:39','verified:20,logFiles:60')
+k=(K/'operator-proof.cjs').read_text();decoder=k[k.index('function diagnosticValue('):k.index('function valueProof(')]
+wrapper=r'''// This wrapper leaves the catalog decoder byte-exact. SSR proof concerns the visible prefix only.
+function valueProof(control,text,message){
+ const spec=control.diagnostic,actual=diagnosticValue(text,'actual'),expected=diagnosticValue(text,'expected');
+ if(!spec||!actual.ok)return{accepted:false,reason:'missing/unsupported typed actual'};
+ const exact=(a,b)=>typeof a===typeof b&&Object.is(a,b);
+ if(spec.kind==='omitted-undefined'){
+  const absent=!text.split('\n').some(line=>line.startsWith('  expected:'));
+  const bound=control.id==='C1-04'&&control.expectedOperator==='strictEqual'&&control.test.file==='tests/gated-preview-component.test.tsx'&&control.test.name==='renders the frame, the Beispiel band, the benefit line and exactly one CTA'&&control.oracles.transfer.startLine===150&&control.oracles.cut.startLine===150&&control.oracles.transfer.text==='assert.equal(scroll.props["aria-label"], undefined)'&&control.oracles.cut.text===control.oracles.transfer.text;
+  return{accepted:bound&&absent&&!actual.truncated&&exact(actual.value,'duplicate')&&message===spec.fullMessage,kind:spec.kind,expectedFieldAbsent:absent,actual};
+ }
+ if(!expected.ok)return{accepted:false,reason:'missing/unsupported typed expected'};
+ if(spec.kind==='scalar')return{accepted:!actual.truncated&&!expected.truncated&&exact(actual.value,spec.actual)&&exact(expected.value,spec.expected)&&message===spec.fullMessage,kind:spec.kind,actual,expected};
+ if(spec.kind==='regex-scalar')return{accepted:expected.emptyObject===true&&typeof actual.value==='string'&&!actual.truncated&&actual.value===spec.actual&&message===spec.fullMessage,kind:spec.kind,actual,expected};
+ if(spec.kind==='regex-prefix'){
+  const regex=new RegExp(spec.pattern,spec.flags),knownString=typeof actual.value==='string'&&(actual.truncated===undefined||typeof actual.truncated==='boolean');
+  const header=typeof message==='string'&&message.startsWith(spec.fullHeader),badPrefix=knownString&&regex.test(actual.value)&&spec.requiredTokens.every(t=>actual.value.includes(t));
+  return{accepted:expected.emptyObject===true&&header&&badPrefix,kind:spec.kind,actual,expected,fullHeader:header,prohibitedMarkupInPrintedPrefix:badPrefix,limits:'Typed printed string/prefix only. Explicit inspect truncation requires catalog length/shape checks. No assertion about an unseen HTML tail.'};
+ }
+ return{accepted:false,reason:'unknown diagnostic policy'};
+}
+'''
+s=s.replace('function intended(control,run,phase){',decoder+wrapper+'function intended(control,run,phase){')
+s=s.replace(" const codes=[...run.text.matchAll", " const diagnostic=valueProof(control,run.text,message)\n const codes=[...run.text.matchAll")
+s=s.replace('&&firstFrame.includes(stackToken),operator,message,messageMatches,firstFrame,stackToken,expected:oracle}', '&&firstFrame.includes(stackToken)&&diagnostic.accepted,operator,message,messageMatches,firstFrame,stackToken,expected:oracle,diagnostic}')
+s=s.replace('clean,errorMessage,intended,','clean,errorMessage,diagnosticValue,valueProof,intended,')
+(D/'operator-proof.cjs').write_text(s)
+for f in ['operator-edit.cjs','operator-run-controls.cjs','operator-readonly-preload.cjs','operator-native-proof.cjs']:
+ s=adapt(f).replace('parsedPhaseFiles:21','parsedPhaseFiles:36').replace('sourceControlsParsed:13','sourceControlsParsed:20').replace('tsMutantsParsed:13','tsMutantsParsed:20').replace('prepared.size===13','prepared.size===20').replace('ALL7 test originals','ALL12 test originals').replace('receipts.length===13','receipts.length===20').replace("phase==='cut'?101:102","phase==='cut'?74:79")
+ (D/f).write_text(s)
+print(D)

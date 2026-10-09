@@ -97,6 +97,9 @@ export async function prepareResearchPackages(params: {
     const validation = dryRunProductIntakeReadyForReview({
       id: row.id,
       category: row.category as ProductIntakeReviewCategoryKey,
+      user_id: row.user_id,
+      source: row.source,
+      status: row.status,
       researched_payload: payload,
     })
 

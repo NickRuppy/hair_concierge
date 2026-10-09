@@ -28,10 +28,12 @@ import { formatDiscoveryTimestamp } from "./format"
 import { RunsheetLockedInSection } from "./runsheet-locked-in"
 import { discoveryCallSheetWriteOutcome, RUNSHEET_SAVE_COPY } from "./runsheet-save"
 import {
+  FREQUENCY_ROW_NOT_COMPARABLE,
   RunsheetCard,
   RunsheetCategoryChip,
   RunsheetChip,
   RunsheetFrequencyChip,
+  RunsheetFrequencyRow,
   RunsheetPhase,
 } from "./runsheet-parts"
 import {
@@ -168,6 +170,15 @@ const RESEARCH_OPEN_HINT = "Erst Recherche abschließen"
 const APPLICATION_MISSING_PREFIX = "Anwendung fehlt für"
 const APPLICATION_MISSING_ERROR = "Anwendung fehlt für mindestens ein Produkt."
 
+/** „+19,90 € über Budget": the price difference to the saved capped budget, German format. */
+export function discoveryOverBudgetPill(overEur: number): string {
+  const amount = overEur.toLocaleString("de-DE", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })
+  return `+${amount} € über Budget`
+}
+
 /** „Erst Kategorie festlegen — 2 Produkte mit offener Kategorie." */
 export function discoveryCategoryOpenHint(count: number): string {
   return `${CATEGORY_OPEN_HINT} — ${count} ${count === 1 ? "Produkt" : "Produkte"} mit offener Kategorie.`
@@ -271,6 +282,7 @@ export function DiscoveryCallCockpit({
   researchItems = null,
   swapReasons = {},
   intakeProducts = null,
+  budgetPanel = null,
   outsideRoutine = null,
   routinePhase = null,
   followUpPhase = null,
@@ -298,6 +310,8 @@ export function DiscoveryCallCockpit({
   swapReasons?: Readonly<Record<string, string>>
   /** Runsheet slots (consult-runsheet T3): rendered in phase order around the decisions. */
   intakeProducts?: ReactNode
+  /** „Kundenbudget" (Profi-tier Task 8): rendered right after the complexity choice. */
+  budgetPanel?: ReactNode
   outsideRoutine?: ReactNode
   routinePhase?: ReactNode
   followUpPhase?: ReactNode
@@ -465,9 +479,6 @@ export function DiscoveryCallCockpit({
           <RunsheetCategoryChip category={step.category} label={step.categoryLabel} />
           <span className="text-[15px] font-bold text-foreground">{entryTitle(entry)}</span>
           <span className="text-xs text-muted-foreground">{step.roleLabel}</span>
-          {stepEntries.length > 1 && step.ownedFrequencyLabel ? (
-            <span className="text-xs text-muted-foreground">{step.ownedFrequencyLabel}</span>
-          ) : null}
           {addStep ? (
             // R28: deterministic from the Idealplan's need tier — no engine call.
             <RunsheetChip tone="neutral">{SECTION_LABEL[step.section]}</RunsheetChip>
@@ -475,17 +486,28 @@ export function DiscoveryCallCockpit({
             <span className="text-xs text-muted-foreground">· optional</span>
           ) : null}
           {entry.kind === "owned" ? <VerdictChip step={step} /> : null}
-          {entry.kind === "owned" && ownedInStep[0] && entryKey(ownedInStep[0]) === key ? (
-            // One chip per step (fix round 1), on her first product in it: the sum of all
-            // her products in the step against the step's band.
-            <RunsheetFrequencyChip
-              cadenceLabel={step.frequencyLabel}
-              frequencies={ownedInStep.map((owned) => owned.ownedFrequency)}
-              washFrequency={washFrequency}
-              allowedRange={step.idealAllowedRange}
+          <DecisionChip entry={entry} bucket={bucket} selection={selection} />
+          {entry.kind === "owned" ? (
+            <RunsheetFrequencyRow
+              ownedFrequencyLabel={step.ownedFrequencyLabel}
+              idealFrequencyLabel={step.frequencyLabel}
+              verdict={
+                ownedInStep[0] && entryKey(ownedInStep[0]) === key ? (
+                  // One chip per step (fix round 1), on her first product in it: the sum of
+                  // all her products in the step against the step's band.
+                  <RunsheetFrequencyChip
+                    cadenceLabel={step.frequencyLabel}
+                    frequencies={ownedInStep.map((owned) => owned.ownedFrequency)}
+                    washFrequency={washFrequency}
+                    allowedRange={step.idealAllowedRange}
+                    noVerdict={
+                      <RunsheetChip tone="neutral">{FREQUENCY_ROW_NOT_COMPARABLE}</RunsheetChip>
+                    }
+                  />
+                ) : null
+              }
             />
           ) : null}
-          <DecisionChip entry={entry} bucket={bucket} selection={selection} />
           {addStep && step.roleDescription ? (
             // R28: the step's one-sentence benefit, in the cockpit's voice.
             <span className="w-full text-[12px] leading-5 text-muted-foreground">
@@ -572,6 +594,7 @@ export function DiscoveryCallCockpit({
           writeTicket={complexityWriteTicket}
           locked={complexityLocked}
         />
+        {budgetPanel}
         {products.klaeren.length > 0 ? <KlaerenBanner entries={products.klaeren} /> : null}
         {intakeProducts}
         <Bucket
@@ -1151,6 +1174,12 @@ export function StepDecision({
           // The option as the PDF would print it once chosen — brand + line + name.
           title={`${empty ? NEW_PREFIX : SWAP_PREFIX}${option.label}`}
           pill={cockpitVoice(option.verdictLabel)}
+          // A capped budget saved and this package above it: „+19,90 € über Budget".
+          budgetPill={
+            option.overBudgetEur !== undefined
+              ? discoveryOverBudgetPill(option.overBudgetEur)
+              : undefined
+          }
           // R19: the price where the catalog has one — no placeholder line otherwise.
           subtitle={option.priceLabel}
           imageUrl={option.imageUrl}
@@ -1189,6 +1218,7 @@ function Choice({
   title,
   subtitle,
   pill,
+  budgetPill,
   imageUrl,
   rows,
   ownedRows,
@@ -1202,6 +1232,8 @@ function Choice({
   title: string
   subtitle?: string | null
   pill?: string
+  /** Second pill, after the verdict: how far the package is over the saved budget. */
+  budgetPill?: string
   /** The option's packshot; rendered only when present — no placeholder hole. */
   imageUrl?: string | null
   rows?: DiscoveryPropertyRow[] | null
@@ -1231,6 +1263,11 @@ function Choice({
           {pill ? (
             <span className="ml-2 rounded-full bg-muted px-2 py-0.5 text-[11px] font-bold text-muted-foreground">
               {pill}
+            </span>
+          ) : null}
+          {budgetPill ? (
+            <span className="ml-2 rounded-full bg-[var(--status-pending-bg)] px-2 py-0.5 text-[11px] font-bold text-[var(--status-pending-text)]">
+              {budgetPill}
             </span>
           ) : null}
         </span>

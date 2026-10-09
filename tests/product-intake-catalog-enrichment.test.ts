@@ -5,9 +5,7 @@ import {
   CATALOG_ENRICHMENT_SCHEMA_VERSION,
   catalogEnrichmentFingerprint,
   generateCatalogEnrichmentIndex,
-  isCatalogEnrichmentManifestPath,
   orderCatalogEnrichmentOperations,
-  previewCatalogEnrichment,
   validateCatalogEnrichmentManifest,
   type CatalogEnrichmentManifest,
   type CatalogEnrichmentOperation,
@@ -273,7 +271,7 @@ test("new-product manifests require exact curated catalog content derived from t
   }
 })
 
-test("new-product insert content fails closed on drift or resolved B1 fields and preview exposes the proposal", () => {
+test("new-product insert content fails closed on drift or resolved B1 fields", () => {
   const drifted = manifest()
   const insert = drifted.planned_operations[0] as { catalog_content: Record<string, unknown> }
   insert.catalog_content.name = "Different"
@@ -284,17 +282,6 @@ test("new-product insert content fails closed on drift or resolved B1 fields and
     resolved.planned_operations[0] as { catalog_content: Record<string, unknown> }
   ).catalog_content.image_url = "https://example.test/product.webp"
   assert.equal(validateCatalogEnrichmentManifest(resolved).ok, false)
-
-  const preview = previewCatalogEnrichment(manifest())
-  assert.equal("errors" in preview, false)
-  if (!("errors" in preview)) {
-    assert.deepEqual(
-      preview.catalog_content,
-      (manifest().planned_operations[0] as { catalog_content: Record<string, unknown> })
-        .catalog_content,
-    )
-    assert.deepEqual(preview.pending_b1_resolutions, ["brand_id", "product_line_id", "image_url"])
-  }
 })
 
 test("new-product manifests require exactly one product insert before spec operations", () => {
@@ -627,27 +614,6 @@ test("execution order runs the product row, then deletes, then upserts", () => {
   )
 })
 
-test("preview reports planned deletes in execution order", () => {
-  const result = previewCatalogEnrichment(
-    manifest({
-      ...existingEnrichment,
-      planned_operations: [
-        { type: "upsert", table: "product_leave_in_specs", rows: [] },
-        deleteOperation([eligibilityRow()]),
-      ],
-    }),
-  )
-  assert.equal(result.writes, false)
-  if (!("errors" in result)) {
-    assert.deepEqual(
-      result.operations.map((operation) => operation.type),
-      ["delete", "upsert"],
-    )
-    assert.equal(result.deletes.length, 1)
-    assert.deepEqual(result.deletes[0]?.rows, [eligibilityRow()])
-  }
-})
-
 test("duplicate candidates block a proposed new product", () => {
   const result = validateCatalogEnrichmentManifest(
     manifest({ duplicate_check: { candidates: [{ id: "existing" }] } }),
@@ -702,17 +668,6 @@ test("safe manifests reject traversal, user data, secrets, and signed URLs", () 
   ]) {
     assert.equal(validateCatalogEnrichmentManifest(manifest(override)).ok, false)
   }
-  assert.equal(
-    isCatalogEnrichmentManifestPath(
-      "data/catalog-enrichment/personal-plan-launch-v1/item.json",
-      "/repo",
-    ),
-    true,
-  )
-  assert.equal(
-    isCatalogEnrichmentManifestPath("data/catalog-enrichment/../private.json", "/repo"),
-    false,
-  )
 })
 
 test("approved review binds its exact content fingerprint", () => {
@@ -752,33 +707,6 @@ test("index generation is deterministic and refuses concurrent-key collisions", 
     () => generateCatalogEnrichmentIndex([first, first] as CatalogEnrichmentManifest[]),
     /duplicate product_key/,
   )
-})
-
-test("preview is always non-writing and never plans user-side effects", () => {
-  const result = previewCatalogEnrichment(manifest())
-  assert.equal(result.mode, "preview")
-  assert.equal(result.writes, false)
-  if (!("errors" in result)) {
-    assert.equal(result.operations.length, 3)
-    assert.equal(result.ready_for_handoff, false)
-    assert.equal(result.validation_state, "pending")
-    assert.equal(result.review_state, "pending")
-    assert.equal(result.disposition_state, "researching")
-  }
-})
-
-test("preview exposes blockers instead of presenting a blocked manifest as handoff-ready", () => {
-  const result = previewCatalogEnrichment(
-    manifest({
-      validation: { state: "blocked_schema", blockers: ["migration missing"] },
-      disposition: { state: "blocked_schema", may_enter_deliverable_b: false },
-    }),
-  )
-  assert.equal("errors" in result, false)
-  if (!("errors" in result)) {
-    assert.equal(result.ready_for_handoff, false)
-    assert.deepEqual(result.blockers, ["migration missing"])
-  }
 })
 
 test("the frozen contract requires every catalog payload section", () => {

@@ -1,0 +1,4542 @@
+{
+  "nativeTests": [
+    "tests/free-registration-screen.test.tsx",
+    "tests/free-registration-recovery-terminal.test.ts",
+    "tests/free-snapshot-provisioning-acceptance.test.ts",
+    "tests/freemium-sheet-checkout-contract.test.ts",
+    "tests/freemium-plan-provisioning.test.ts",
+    "tests/freemium-cutover-journey.test.ts",
+    "tests/personal-plan/persistence/free-snapshot-service.test.ts"
+  ],
+  "selectedTests": [
+    "tests/freemium-sheet-checkout-contract.test.ts"
+  ],
+  "localFiles": [
+    "src/app/api/stripe/create-checkout-session/route.ts",
+    "src/app/labs/personal-plan-stage-1-2/fixture.ts",
+    "src/app/registrierung/free-registration-client.tsx",
+    "src/components/ui/button.tsx",
+    "src/components/ui/icon.tsx",
+    "src/components/ui/input.tsx",
+    "src/funnels/packages.json",
+    "src/funnels/quizzes/registry.json",
+    "src/funnels/quizzes/registry.ts",
+    "src/lib/analytics/meta-capi.ts",
+    "src/lib/auth/free-registration-recovery.ts",
+    "src/lib/auth/free-registration.ts",
+    "src/lib/auth/intake-state.ts",
+    "src/lib/auth/route-classification.ts",
+    "src/lib/auth/unauthenticated-redirect.ts",
+    "src/lib/billing/offer-products.ts",
+    "src/lib/billing/payment-runtime-config.ts",
+    "src/lib/billing/personal-plan-one-time-consent-copy.ts",
+    "src/lib/billing/personal-plan-one-time-consents.ts",
+    "src/lib/billing/pricing-catalog.ts",
+    "src/lib/billing/purchases.ts",
+    "src/lib/billing/subscriptions.ts",
+    "src/lib/billing/trial-access-projection.ts",
+    "src/lib/billing/trial-admission.ts",
+    "src/lib/billing/trial-analytics-context.ts",
+    "src/lib/billing/trial-checkout-attempt.ts",
+    "src/lib/billing/trial-eligibility.ts",
+    "src/lib/billing/trial-identity-claims.ts",
+    "src/lib/billing/trial-management-operations.ts",
+    "src/lib/billing/trial-offer.ts",
+    "src/lib/billing/trial-policy.ts",
+    "src/lib/billing/trial-runtime.ts",
+    "src/lib/billing/types.ts",
+    "src/lib/bondbuilder/constants.ts",
+    "src/lib/checkout/payment-feedback.ts",
+    "src/lib/conditioner/constants.ts",
+    "src/lib/deep-cleansing-shampoo/constants.ts",
+    "src/lib/discovery/flag.ts",
+    "src/lib/discovery/participant.ts",
+    "src/lib/dry-shampoo/constants.ts",
+    "src/lib/email-deliverability-shared.ts",
+    "src/lib/entitlements/access.ts",
+    "src/lib/entitlements/entitlements.ts",
+    "src/lib/entitlements/flag.ts",
+    "src/lib/entitlements/index.ts",
+    "src/lib/freemium/checkout-metadata.ts",
+    "src/lib/freemium/checkout-return.ts",
+    "src/lib/freemium/plan-provisioning-supabase.ts",
+    "src/lib/freemium/plan-provisioning.ts",
+    "src/lib/funnel/cookie.ts",
+    "src/lib/funnel/flags.ts",
+    "src/lib/funnel/journey-kind.ts",
+    "src/lib/funnel/offer-presentation.ts",
+    "src/lib/funnel/organic-offer-media-experiment.ts",
+    "src/lib/funnel/packages.ts",
+    "src/lib/funnel/personal-plan-pricing-experiment.ts",
+    "src/lib/funnel/personal-plan-pricing-qa-token.ts",
+    "src/lib/funnel/server.ts",
+    "src/lib/help/info-tips.ts",
+    "src/lib/leave-in/constants.ts",
+    "src/lib/mask/constants.ts",
+    "src/lib/observability/checkout.ts",
+    "src/lib/observability/free-registration.ts",
+    "src/lib/observability/offer-experiment.ts",
+    "src/lib/observability/payment-server-core.ts",
+    "src/lib/observability/payment-server.ts",
+    "src/lib/observability/payment.ts",
+    "src/lib/observability/sentry-scrubbing.ts",
+    "src/lib/oil/constants.ts",
+    "src/lib/paypal/trial-collection-start.ts",
+    "src/lib/peeling/constants.ts",
+    "src/lib/personal-plan-field-test/errors.ts",
+    "src/lib/personal-plan-field-test/moderator-contract.ts",
+    "src/lib/personal-plan-field-test/moderator.ts",
+    "src/lib/personal-plan-quiz/offer-adapter.ts",
+    "src/lib/personal-plan-quiz/persistence.ts",
+    "src/lib/personal-plan-quiz/primary-concern.ts",
+    "src/lib/personal-plan-quiz/types.ts",
+    "src/lib/personal-plan/categories/bondbuilder.ts",
+    "src/lib/personal-plan/categories/conditioner.ts",
+    "src/lib/personal-plan/categories/deep-cleansing.ts",
+    "src/lib/personal-plan/categories/dry-shampoo.ts",
+    "src/lib/personal-plan/categories/heat-protectant.ts",
+    "src/lib/personal-plan/categories/leave-in.ts",
+    "src/lib/personal-plan/categories/mask.ts",
+    "src/lib/personal-plan/categories/oil.ts",
+    "src/lib/personal-plan/categories/scalp-care.ts",
+    "src/lib/personal-plan/categories/shampoo.ts",
+    "src/lib/personal-plan/compute-stage1.ts",
+    "src/lib/personal-plan/decision-presentation.ts",
+    "src/lib/personal-plan/direct-acceptance/accept.ts",
+    "src/lib/personal-plan/direct-acceptance/defaults.ts",
+    "src/lib/personal-plan/enrollment.ts",
+    "src/lib/personal-plan/freemium-enrollment.ts",
+    "src/lib/personal-plan/frontier-routing-loader.ts",
+    "src/lib/personal-plan/frontier-routing.ts",
+    "src/lib/personal-plan/input.ts",
+    "src/lib/personal-plan/journey-access-loader.ts",
+    "src/lib/personal-plan/journey-access.ts",
+    "src/lib/personal-plan/legacy-prefill.ts",
+    "src/lib/personal-plan/lifecycle/repository.ts",
+    "src/lib/personal-plan/migration-admission.ts",
+    "src/lib/personal-plan/navigation-access.ts",
+    "src/lib/personal-plan/needs.ts",
+    "src/lib/personal-plan/oil-heat-context.ts",
+    "src/lib/personal-plan/persistence/free-snapshot-service.ts",
+    "src/lib/personal-plan/persistence/free-snapshot-supabase.ts",
+    "src/lib/personal-plan/persistence/index.ts",
+    "src/lib/personal-plan/persistence/stage1-service.ts",
+    "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+    "src/lib/personal-plan/persistence/stage2-refinement-supabase.ts",
+    "src/lib/personal-plan/portfolio.ts",
+    "src/lib/personal-plan/product-preview-contract.ts",
+    "src/lib/personal-plan/product-previews.ts",
+    "src/lib/personal-plan/products/authorities.ts",
+    "src/lib/personal-plan/products/authority/catalog-batching.ts",
+    "src/lib/personal-plan/products/authority/catalog-facts.ts",
+    "src/lib/personal-plan/products/authority/categories/axis-fit.ts",
+    "src/lib/personal-plan/products/authority/categories/bondbuilder.ts",
+    "src/lib/personal-plan/products/authority/categories/conditioner.ts",
+    "src/lib/personal-plan/products/authority/categories/deep-cleansing-shampoo.ts",
+    "src/lib/personal-plan/products/authority/categories/dry-shampoo.ts",
+    "src/lib/personal-plan/products/authority/categories/heat-protectant.ts",
+    "src/lib/personal-plan/products/authority/categories/leave-in.ts",
+    "src/lib/personal-plan/products/authority/categories/mask.ts",
+    "src/lib/personal-plan/products/authority/categories/oil.ts",
+    "src/lib/personal-plan/products/authority/categories/scalp-care.ts",
+    "src/lib/personal-plan/products/authority/categories/shampoo-spec-target.ts",
+    "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+    "src/lib/personal-plan/products/authority/category-decision-schema.ts",
+    "src/lib/personal-plan/products/authority/contracts.ts",
+    "src/lib/personal-plan/products/authority/evaluate.ts",
+    "src/lib/personal-plan/products/authority/shared.ts",
+    "src/lib/personal-plan/products/authority/snapshot.ts",
+    "src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts",
+    "src/lib/personal-plan/products/candidate-ranking.ts",
+    "src/lib/personal-plan/products/comparison-dimensions.ts",
+    "src/lib/personal-plan/products/contracts.ts",
+    "src/lib/personal-plan/products/fit-comparison-schema.ts",
+    "src/lib/personal-plan/products/fit-comparison.ts",
+    "src/lib/personal-plan/products/gateway.ts",
+    "src/lib/personal-plan/products/inventory-search.ts",
+    "src/lib/personal-plan/products/legacy-inventory-entry.ts",
+    "src/lib/personal-plan/products/portfolio.ts",
+    "src/lib/personal-plan/products/product-load-resolution.ts",
+    "src/lib/personal-plan/products/production-persistence-gateway.ts",
+    "src/lib/personal-plan/products/recovery-desired-state.ts",
+    "src/lib/personal-plan/products/stage2-entry-adapter.ts",
+    "src/lib/personal-plan/products/stage3-bootstrap-review-contract.ts",
+    "src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+    "src/lib/personal-plan/products/state-machine.ts",
+    "src/lib/personal-plan/reasons.ts",
+    "src/lib/personal-plan/refinement/answer-provenance.ts",
+    "src/lib/personal-plan/refinement/assumed-defaults.ts",
+    "src/lib/personal-plan/refinement/gateway.ts",
+    "src/lib/personal-plan/refinement/heat-events.ts",
+    "src/lib/personal-plan/refinement/module-status.ts",
+    "src/lib/personal-plan/refinement/production-persistence-gateway.ts",
+    "src/lib/personal-plan/refinement/question-path.ts",
+    "src/lib/personal-plan/refinement/session.ts",
+    "src/lib/personal-plan/refinement/stage1-adapter.ts",
+    "src/lib/personal-plan/refinement/types.ts",
+    "src/lib/personal-plan/release.ts",
+    "src/lib/personal-plan/rollout-access.ts",
+    "src/lib/personal-plan/routine-candidate-compiler.ts",
+    "src/lib/personal-plan/routine-proposal-stager.ts",
+    "src/lib/personal-plan/routine/cadence-authority.ts",
+    "src/lib/personal-plan/routine/cadence.ts",
+    "src/lib/personal-plan/routine/canonicalize.ts",
+    "src/lib/personal-plan/routine/commerce.ts",
+    "src/lib/personal-plan/routine/diff.ts",
+    "src/lib/personal-plan/routine/editor.ts",
+    "src/lib/personal-plan/stage5-access.ts",
+    "src/lib/personal-plan/transition-performance.ts",
+    "src/lib/personal-plan/types.ts",
+    "src/lib/premium-sheet/pricing.ts",
+    "src/lib/product-identity/brand-resolution.ts",
+    "src/lib/product-identity/index.ts",
+    "src/lib/product-identity/normalize.ts",
+    "src/lib/product-specs/constants.ts",
+    "src/lib/product-usage/shampoo-fallback.ts",
+    "src/lib/quiz/completion.ts",
+    "src/lib/quiz/diagnostic-input.ts",
+    "src/lib/quiz/link-to-profile.ts",
+    "src/lib/quiz/normalization.ts",
+    "src/lib/quiz/primary-concern.ts",
+    "src/lib/quiz/types.ts",
+    "src/lib/reactivation/checkout-recovery.ts",
+    "src/lib/reactivation/checkout-reservations.ts",
+    "src/lib/reactivation/return-destination.ts",
+    "src/lib/reactivation/stripe-checkout-context.ts",
+    "src/lib/reactivation/stripe-checkout-recovery.ts",
+    "src/lib/recommendation-engine/contracts.ts",
+    "src/lib/recommendation-engine/types.ts",
+    "src/lib/routines/personal-plan/application/contracts.ts",
+    "src/lib/scan/profile-context.ts",
+    "src/lib/scan/scanner-context-supabase.ts",
+    "src/lib/scan/scanner-context.ts",
+    "src/lib/shampoo/constants.ts",
+    "src/lib/stripe/checkout-session-params.ts",
+    "src/lib/stripe/client.ts",
+    "src/lib/stripe/intervals.ts",
+    "src/lib/stripe/pricing-plans.ts",
+    "src/lib/stripe/trial-catalog.ts",
+    "src/lib/stripe/trial-checkout-session-params.ts",
+    "src/lib/stripe/trial-checkout.ts",
+    "src/lib/supabase/admin.ts",
+    "src/lib/supabase/middleware.ts",
+    "src/lib/supabase/server.ts",
+    "src/lib/types.ts",
+    "src/lib/utils.ts",
+    "src/lib/vocabulary/concerns-goals.ts",
+    "src/lib/vocabulary/errors.ts",
+    "src/lib/vocabulary/frequencies.ts",
+    "src/lib/vocabulary/hair-length.ts",
+    "src/lib/vocabulary/hair-types.ts",
+    "src/lib/vocabulary/index.ts",
+    "src/lib/vocabulary/onboarding-care.ts",
+    "src/lib/vocabulary/onboarding-goals.ts",
+    "src/lib/vocabulary/profile-labels.ts",
+    "src/lib/vocabulary/source-labels.ts",
+    "tests/free-registration-recovery-terminal.test.ts",
+    "tests/free-registration-screen.test.tsx",
+    "tests/free-snapshot-provisioning-acceptance.test.ts",
+    "tests/freemium-cutover-journey.test.ts",
+    "tests/freemium-plan-provisioning.test.ts",
+    "tests/freemium-sheet-checkout-contract.test.ts",
+    "tests/helpers/scanner-context-rpc.ts",
+    "tests/personal-plan/fixtures.ts",
+    "tests/personal-plan/persistence/free-snapshot-service.test.ts",
+    "tests/server-only-register.cjs"
+  ],
+  "edges": [
+    {
+      "from": "tests/free-registration-screen.test.tsx",
+      "to": "src/app/registrierung/free-registration-client.tsx",
+      "spec": "../src/app/registrierung/free-registration-client",
+      "kind": "static"
+    },
+    {
+      "from": "tests/free-registration-recovery-terminal.test.ts",
+      "to": "src/lib/auth/free-registration-recovery.ts",
+      "spec": "../src/lib/auth/free-registration-recovery",
+      "kind": "static"
+    },
+    {
+      "from": "tests/free-registration-recovery-terminal.test.ts",
+      "to": "src/lib/personal-plan/persistence/free-snapshot-service.ts",
+      "spec": "../src/lib/personal-plan/persistence/free-snapshot-service",
+      "kind": "type-only"
+    },
+    {
+      "from": "tests/free-snapshot-provisioning-acceptance.test.ts",
+      "to": "tests/helpers/scanner-context-rpc.ts",
+      "spec": "./helpers/scanner-context-rpc",
+      "kind": "static"
+    },
+    {
+      "from": "tests/free-snapshot-provisioning-acceptance.test.ts",
+      "to": "src/lib/personal-plan/persistence/free-snapshot-service.ts",
+      "spec": "../src/lib/personal-plan/persistence/free-snapshot-service",
+      "kind": "static"
+    },
+    {
+      "from": "tests/free-snapshot-provisioning-acceptance.test.ts",
+      "to": "src/lib/personal-plan/persistence/free-snapshot-supabase.ts",
+      "spec": "../src/lib/personal-plan/persistence/free-snapshot-supabase",
+      "kind": "static"
+    },
+    {
+      "from": "tests/free-snapshot-provisioning-acceptance.test.ts",
+      "to": "src/lib/scan/profile-context.ts",
+      "spec": "../src/lib/scan/profile-context",
+      "kind": "static"
+    },
+    {
+      "from": "tests/free-snapshot-provisioning-acceptance.test.ts",
+      "to": "src/lib/quiz/link-to-profile.ts",
+      "spec": "../src/lib/quiz/link-to-profile",
+      "kind": "static"
+    },
+    {
+      "from": "tests/free-snapshot-provisioning-acceptance.test.ts",
+      "to": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "spec": "../src/lib/personal-plan-quiz/offer-adapter",
+      "kind": "static"
+    },
+    {
+      "from": "tests/free-snapshot-provisioning-acceptance.test.ts",
+      "to": "tests/personal-plan/fixtures.ts",
+      "spec": "./personal-plan/fixtures",
+      "kind": "static"
+    },
+    {
+      "from": "tests/freemium-sheet-checkout-contract.test.ts",
+      "to": "src/app/api/stripe/create-checkout-session/route.ts",
+      "spec": "../src/app/api/stripe/create-checkout-session/route",
+      "kind": "static"
+    },
+    {
+      "from": "tests/freemium-sheet-checkout-contract.test.ts",
+      "to": "src/lib/auth/route-classification.ts",
+      "spec": "../src/lib/auth/route-classification",
+      "kind": "static"
+    },
+    {
+      "from": "tests/freemium-sheet-checkout-contract.test.ts",
+      "to": "src/lib/supabase/middleware.ts",
+      "spec": "../src/lib/supabase/middleware",
+      "kind": "static"
+    },
+    {
+      "from": "tests/freemium-sheet-checkout-contract.test.ts",
+      "to": "src/lib/freemium/checkout-return.ts",
+      "spec": "../src/lib/freemium/checkout-return",
+      "kind": "static"
+    },
+    {
+      "from": "tests/freemium-sheet-checkout-contract.test.ts",
+      "to": "src/lib/freemium/checkout-metadata.ts",
+      "spec": "../src/lib/freemium/checkout-metadata",
+      "kind": "static"
+    },
+    {
+      "from": "tests/freemium-sheet-checkout-contract.test.ts",
+      "to": "src/lib/premium-sheet/pricing.ts",
+      "spec": "../src/lib/premium-sheet/pricing",
+      "kind": "static"
+    },
+    {
+      "from": "tests/freemium-sheet-checkout-contract.test.ts",
+      "to": "src/lib/stripe/client.ts",
+      "spec": "../src/lib/stripe/client",
+      "kind": "static"
+    },
+    {
+      "from": "tests/freemium-sheet-checkout-contract.test.ts",
+      "to": "src/lib/stripe/checkout-session-params.ts",
+      "spec": "../src/lib/stripe/checkout-session-params",
+      "kind": "static"
+    },
+    {
+      "from": "tests/freemium-sheet-checkout-contract.test.ts",
+      "to": "src/lib/stripe/pricing-plans.ts",
+      "spec": "../src/lib/stripe/pricing-plans",
+      "kind": "static"
+    },
+    {
+      "from": "tests/freemium-plan-provisioning.test.ts",
+      "to": "src/app/labs/personal-plan-stage-1-2/fixture.ts",
+      "spec": "../src/app/labs/personal-plan-stage-1-2/fixture",
+      "kind": "static"
+    },
+    {
+      "from": "tests/freemium-plan-provisioning.test.ts",
+      "to": "src/lib/freemium/plan-provisioning.ts",
+      "spec": "../src/lib/freemium/plan-provisioning",
+      "kind": "static"
+    },
+    {
+      "from": "tests/freemium-plan-provisioning.test.ts",
+      "to": "src/lib/freemium/plan-provisioning-supabase.ts",
+      "spec": "../src/lib/freemium/plan-provisioning-supabase",
+      "kind": "static"
+    },
+    {
+      "from": "tests/freemium-plan-provisioning.test.ts",
+      "to": "src/lib/personal-plan/direct-acceptance/accept.ts",
+      "spec": "../src/lib/personal-plan/direct-acceptance/accept",
+      "kind": "static"
+    },
+    {
+      "from": "tests/freemium-plan-provisioning.test.ts",
+      "to": "src/lib/personal-plan/persistence/stage1-service.ts",
+      "spec": "../src/lib/personal-plan/persistence/stage1-service",
+      "kind": "type-only"
+    },
+    {
+      "from": "tests/freemium-cutover-journey.test.ts",
+      "to": "src/lib/auth/free-registration.ts",
+      "spec": "../src/lib/auth/free-registration",
+      "kind": "static"
+    },
+    {
+      "from": "tests/freemium-cutover-journey.test.ts",
+      "to": "src/lib/supabase/middleware.ts",
+      "spec": "../src/lib/supabase/middleware",
+      "kind": "static"
+    },
+    {
+      "from": "tests/freemium-cutover-journey.test.ts",
+      "to": "src/lib/personal-plan/navigation-access.ts",
+      "spec": "../src/lib/personal-plan/navigation-access",
+      "kind": "static"
+    },
+    {
+      "from": "tests/freemium-cutover-journey.test.ts",
+      "to": "src/lib/auth/route-classification.ts",
+      "spec": "../src/lib/auth/route-classification",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan/persistence/free-snapshot-service.test.ts",
+      "to": "src/lib/personal-plan/persistence/free-snapshot-service.ts",
+      "spec": "../../../src/lib/personal-plan/persistence/free-snapshot-service",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan/persistence/free-snapshot-service.test.ts",
+      "to": "tests/personal-plan/fixtures.ts",
+      "spec": "../fixtures",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/registrierung/free-registration-client.tsx",
+      "to": "src/components/ui/button.tsx",
+      "spec": "@/components/ui/button",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/registrierung/free-registration-client.tsx",
+      "to": "src/components/ui/input.tsx",
+      "spec": "@/components/ui/input",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/registrierung/free-registration-client.tsx",
+      "to": "src/lib/auth/free-registration.ts",
+      "spec": "@/lib/auth/free-registration",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/registrierung/free-registration-client.tsx",
+      "to": "src/lib/email-deliverability-shared.ts",
+      "spec": "@/lib/email-deliverability-shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/registrierung/free-registration-client.tsx",
+      "to": "src/lib/utils.ts",
+      "spec": "@/lib/utils",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/auth/free-registration-recovery.ts",
+      "to": "src/lib/supabase/admin.ts",
+      "spec": "@/lib/supabase/admin",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/auth/free-registration-recovery.ts",
+      "to": "src/lib/observability/free-registration.ts",
+      "spec": "@/lib/observability/free-registration",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/auth/free-registration-recovery.ts",
+      "to": "src/lib/personal-plan/persistence/free-snapshot-service.ts",
+      "spec": "@/lib/personal-plan/persistence/free-snapshot-service",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/auth/free-registration-recovery.ts",
+      "to": "src/lib/personal-plan/persistence/free-snapshot-supabase.ts",
+      "spec": "@/lib/personal-plan/persistence/free-snapshot-supabase",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/free-snapshot-service.ts",
+      "to": "src/lib/personal-plan/compute-stage1.ts",
+      "spec": "../compute-stage1",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/free-snapshot-service.ts",
+      "to": "src/lib/personal-plan/persistence/stage1-service.ts",
+      "spec": "./stage1-service",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/free-snapshot-service.ts",
+      "to": "src/lib/personal-plan/persistence/index.ts",
+      "spec": "./index",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/free-snapshot-supabase.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/free-snapshot-supabase.ts",
+      "to": "src/lib/entitlements/access.ts",
+      "spec": "@/lib/entitlements/access",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/free-snapshot-supabase.ts",
+      "to": "src/lib/supabase/admin.ts",
+      "spec": "@/lib/supabase/admin",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/free-snapshot-supabase.ts",
+      "to": "src/lib/personal-plan/persistence/free-snapshot-service.ts",
+      "spec": "./free-snapshot-service",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/free-snapshot-supabase.ts",
+      "to": "src/lib/personal-plan/persistence/stage1-service.ts",
+      "spec": "./stage1-service",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/scan/profile-context.ts",
+      "to": "src/lib/scan/scanner-context-supabase.ts",
+      "spec": "./scanner-context-supabase",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/scan/profile-context.ts",
+      "to": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "spec": "@/lib/personal-plan/products/authority/catalog-facts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/scan/profile-context.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "@/lib/personal-plan/products/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/scan/profile-context.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/link-to-profile.ts",
+      "to": "src/lib/supabase/admin.ts",
+      "spec": "@/lib/supabase/admin",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/link-to-profile.ts",
+      "to": "src/lib/quiz/completion.ts",
+      "spec": "./completion",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/link-to-profile.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/link-to-profile.ts",
+      "to": "src/lib/quiz/normalization.ts",
+      "spec": "./normalization",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/link-to-profile.ts",
+      "to": "src/lib/quiz/primary-concern.ts",
+      "spec": "./primary-concern",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/link-to-profile.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "@/lib/vocabulary/concerns-goals",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "@/lib/quiz/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "to": "src/lib/quiz/diagnostic-input.ts",
+      "spec": "@/lib/quiz/diagnostic-input",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "to": "src/lib/personal-plan-quiz/primary-concern.ts",
+      "spec": "./primary-concern",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "to": "src/lib/personal-plan-quiz/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "tests/personal-plan/fixtures.ts",
+      "to": "src/lib/personal-plan-quiz/types.ts",
+      "spec": "../../src/lib/personal-plan-quiz/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/billing/trial-analytics-context.ts",
+      "spec": "@/lib/billing/trial-analytics-context",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/supabase/server.ts",
+      "spec": "@/lib/supabase/server",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/billing/subscriptions.ts",
+      "spec": "@/lib/billing/subscriptions",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/billing/payment-runtime-config.ts",
+      "spec": "@/lib/billing/payment-runtime-config",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/observability/checkout.ts",
+      "spec": "@/lib/observability/checkout",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/observability/payment-server.ts",
+      "spec": "@/lib/observability/payment-server",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/funnel/cookie.ts",
+      "spec": "@/lib/funnel/cookie",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/funnel/cookie.ts",
+      "spec": "@/lib/funnel/cookie",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/funnel/server.ts",
+      "spec": "@/lib/funnel/server",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/funnel/flags.ts",
+      "spec": "@/lib/funnel/flags",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/billing/pricing-catalog.ts",
+      "spec": "@/lib/billing/pricing-catalog",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/entitlements/flag.ts",
+      "spec": "@/lib/entitlements/flag",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/freemium/checkout-return.ts",
+      "spec": "@/lib/freemium/checkout-return",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/freemium/checkout-metadata.ts",
+      "spec": "@/lib/freemium/checkout-metadata",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "spec": "@/lib/billing/personal-plan-one-time-consents",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/stripe/client.ts",
+      "spec": "@/lib/stripe/client",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/stripe/checkout-session-params.ts",
+      "spec": "@/lib/stripe/checkout-session-params",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/stripe/intervals.ts",
+      "spec": "@/lib/stripe/intervals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/stripe/pricing-plans.ts",
+      "spec": "@/lib/stripe/pricing-plans",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/billing/offer-products.ts",
+      "spec": "@/lib/billing/offer-products",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/reactivation/checkout-reservations.ts",
+      "spec": "@/lib/reactivation/checkout-reservations",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/reactivation/checkout-recovery.ts",
+      "spec": "@/lib/reactivation/checkout-recovery",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/reactivation/stripe-checkout-recovery.ts",
+      "spec": "@/lib/reactivation/stripe-checkout-recovery",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/reactivation/return-destination.ts",
+      "spec": "@/lib/reactivation/return-destination",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/billing/trial-runtime.ts",
+      "spec": "@/lib/billing/trial-runtime",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/billing/trial-identity-claims.ts",
+      "spec": "@/lib/billing/trial-identity-claims",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/stripe/create-checkout-session/route.ts",
+      "to": "src/lib/stripe/trial-checkout.ts",
+      "spec": "@/lib/stripe/trial-checkout",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/supabase/middleware.ts",
+      "to": "src/lib/auth/intake-state.ts",
+      "spec": "@/lib/auth/intake-state",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/supabase/middleware.ts",
+      "to": "src/lib/billing/purchases.ts",
+      "spec": "@/lib/billing/purchases",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/supabase/middleware.ts",
+      "to": "src/lib/billing/subscriptions.ts",
+      "spec": "@/lib/billing/subscriptions",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/supabase/middleware.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/supabase/middleware.ts",
+      "to": "src/lib/auth/unauthenticated-redirect.ts",
+      "spec": "@/lib/auth/unauthenticated-redirect",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/supabase/middleware.ts",
+      "to": "src/lib/reactivation/return-destination.ts",
+      "spec": "@/lib/reactivation/return-destination",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/supabase/middleware.ts",
+      "to": "src/lib/personal-plan/frontier-routing.ts",
+      "spec": "@/lib/personal-plan/frontier-routing",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/supabase/middleware.ts",
+      "to": "src/lib/personal-plan/frontier-routing-loader.ts",
+      "spec": "@/lib/personal-plan/frontier-routing-loader",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/supabase/middleware.ts",
+      "to": "src/lib/personal-plan-field-test/moderator.ts",
+      "spec": "@/lib/personal-plan-field-test/moderator",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/supabase/middleware.ts",
+      "to": "src/lib/auth/route-classification.ts",
+      "spec": "@/lib/auth/route-classification",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/supabase/middleware.ts",
+      "to": "src/lib/entitlements/flag.ts",
+      "spec": "@/lib/entitlements/flag",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/supabase/middleware.ts",
+      "to": "src/lib/discovery/flag.ts",
+      "spec": "@/lib/discovery/flag",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/supabase/middleware.ts",
+      "to": "src/lib/discovery/participant.ts",
+      "spec": "@/lib/discovery/participant",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/premium-sheet/pricing.ts",
+      "to": "src/lib/billing/pricing-catalog.ts",
+      "spec": "@/lib/billing/pricing-catalog",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/premium-sheet/pricing.ts",
+      "to": "src/lib/stripe/intervals.ts",
+      "spec": "@/lib/stripe/intervals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/premium-sheet/pricing.ts",
+      "to": "src/lib/stripe/pricing-plans.ts",
+      "spec": "@/lib/stripe/pricing-plans",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/stripe/client.ts",
+      "to": "src/lib/billing/pricing-catalog.ts",
+      "spec": "../billing/pricing-catalog",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/stripe/client.ts",
+      "to": "src/lib/stripe/intervals.ts",
+      "spec": "./intervals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/stripe/pricing-plans.ts",
+      "to": "src/lib/stripe/intervals.ts",
+      "spec": "./intervals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/stripe/pricing-plans.ts",
+      "to": "src/lib/billing/pricing-catalog.ts",
+      "spec": "@/lib/billing/pricing-catalog",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/stripe/pricing-plans.ts",
+      "to": "src/lib/billing/pricing-catalog.ts",
+      "spec": "@/lib/billing/pricing-catalog",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/app/labs/personal-plan-stage-1-2/fixture.ts",
+      "to": "src/lib/personal-plan-quiz/types.ts",
+      "spec": "@/lib/personal-plan-quiz/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/freemium/plan-provisioning.ts",
+      "to": "src/lib/personal-plan/compute-stage1.ts",
+      "spec": "@/lib/personal-plan/compute-stage1",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/freemium/plan-provisioning.ts",
+      "to": "src/lib/personal-plan/persistence/index.ts",
+      "spec": "@/lib/personal-plan/persistence",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/freemium/plan-provisioning.ts",
+      "to": "src/lib/personal-plan/persistence/stage1-service.ts",
+      "spec": "@/lib/personal-plan/persistence/stage1-service",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/freemium/plan-provisioning-supabase.ts",
+      "to": "src/lib/personal-plan/direct-acceptance/accept.ts",
+      "spec": "@/lib/personal-plan/direct-acceptance/accept",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/freemium/plan-provisioning-supabase.ts",
+      "to": "src/lib/personal-plan/freemium-enrollment.ts",
+      "spec": "@/lib/personal-plan/freemium-enrollment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/freemium/plan-provisioning-supabase.ts",
+      "to": "src/lib/personal-plan/persistence/stage2-refinement-supabase.ts",
+      "spec": "@/lib/personal-plan/persistence/stage2-refinement-supabase",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/freemium/plan-provisioning-supabase.ts",
+      "to": "src/lib/personal-plan/persistence/stage1-service.ts",
+      "spec": "@/lib/personal-plan/persistence/stage1-service",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/freemium/plan-provisioning-supabase.ts",
+      "to": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "spec": "@/lib/personal-plan/products/production-persistence-gateway",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/freemium/plan-provisioning-supabase.ts",
+      "to": "src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+      "spec": "@/lib/personal-plan/products/stage3-persistence-supabase",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/freemium/plan-provisioning-supabase.ts",
+      "to": "src/lib/personal-plan/release.ts",
+      "spec": "@/lib/personal-plan/release",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/freemium/plan-provisioning-supabase.ts",
+      "to": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "spec": "@/lib/personal-plan/routine-candidate-compiler",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/freemium/plan-provisioning-supabase.ts",
+      "to": "src/lib/personal-plan/routine-proposal-stager.ts",
+      "spec": "@/lib/personal-plan/routine-proposal-stager",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/freemium/plan-provisioning-supabase.ts",
+      "to": "src/lib/personal-plan/routine/cadence-authority.ts",
+      "spec": "@/lib/personal-plan/routine/cadence-authority",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/freemium/plan-provisioning-supabase.ts",
+      "to": "src/lib/freemium/plan-provisioning.ts",
+      "spec": "./plan-provisioning",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/direct-acceptance/accept.ts",
+      "to": "src/lib/personal-plan/compute-stage1.ts",
+      "spec": "../compute-stage1",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/direct-acceptance/accept.ts",
+      "to": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "spec": "../persistence/stage2-refinement-service",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/direct-acceptance/accept.ts",
+      "to": "src/lib/personal-plan/persistence/stage1-service.ts",
+      "spec": "../persistence/stage1-service",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/direct-acceptance/accept.ts",
+      "to": "src/lib/personal-plan/product-previews.ts",
+      "spec": "../product-previews",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/direct-acceptance/accept.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "../products/authority/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/direct-acceptance/accept.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../products/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/direct-acceptance/accept.ts",
+      "to": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "spec": "../products/production-persistence-gateway",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/direct-acceptance/accept.ts",
+      "to": "src/lib/personal-plan/refinement/production-persistence-gateway.ts",
+      "spec": "../refinement/production-persistence-gateway",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/direct-acceptance/accept.ts",
+      "to": "src/lib/personal-plan/refinement/answer-provenance.ts",
+      "spec": "../refinement/answer-provenance",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/direct-acceptance/accept.ts",
+      "to": "src/lib/personal-plan/routine/canonicalize.ts",
+      "spec": "../routine/canonicalize",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/direct-acceptance/accept.ts",
+      "to": "src/lib/personal-plan/direct-acceptance/defaults.ts",
+      "spec": "./defaults",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage1-service.ts",
+      "to": "src/lib/personal-plan/compute-stage1.ts",
+      "spec": "../compute-stage1",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage1-service.ts",
+      "to": "src/lib/personal-plan/input.ts",
+      "spec": "../input",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage1-service.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "@/lib/quiz/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage1-service.ts",
+      "to": "src/lib/personal-plan/persistence/index.ts",
+      "spec": "./index",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/auth/free-registration.ts",
+      "to": "src/lib/email-deliverability-shared.ts",
+      "spec": "@/lib/email-deliverability-shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/navigation-access.ts",
+      "to": "src/lib/personal-plan/lifecycle/repository.ts",
+      "spec": "@/lib/personal-plan/lifecycle/repository",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/navigation-access.ts",
+      "to": "src/lib/entitlements/access.ts",
+      "spec": "@/lib/entitlements/access",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/navigation-access.ts",
+      "to": "src/lib/entitlements/index.ts",
+      "spec": "@/lib/entitlements",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/navigation-access.ts",
+      "to": "src/lib/entitlements/flag.ts",
+      "spec": "@/lib/entitlements/flag",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/navigation-access.ts",
+      "to": "src/lib/supabase/admin.ts",
+      "spec": "@/lib/supabase/admin",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/navigation-access.ts",
+      "to": "src/lib/supabase/middleware.ts",
+      "spec": "@/lib/supabase/middleware",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/navigation-access.ts",
+      "to": "src/lib/supabase/server.ts",
+      "spec": "@/lib/supabase/server",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/navigation-access.ts",
+      "to": "src/lib/personal-plan/journey-access-loader.ts",
+      "spec": "./journey-access-loader",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/navigation-access.ts",
+      "to": "src/lib/personal-plan/journey-access.ts",
+      "spec": "./journey-access",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/components/ui/button.tsx",
+      "to": "src/lib/utils.ts",
+      "spec": "@/lib/utils",
+      "kind": "static"
+    },
+    {
+      "from": "src/components/ui/input.tsx",
+      "to": "src/lib/utils.ts",
+      "spec": "@/lib/utils",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/observability/free-registration.ts",
+      "to": "src/lib/personal-plan/persistence/free-snapshot-service.ts",
+      "spec": "@/lib/personal-plan/persistence/free-snapshot-service",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/categories/bondbuilder.ts",
+      "spec": "./categories/bondbuilder",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/categories/conditioner.ts",
+      "spec": "./categories/conditioner",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/categories/deep-cleansing.ts",
+      "spec": "./categories/deep-cleansing",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/categories/dry-shampoo.ts",
+      "spec": "./categories/dry-shampoo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/categories/heat-protectant.ts",
+      "spec": "./categories/heat-protectant",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/categories/leave-in.ts",
+      "spec": "./categories/leave-in",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/categories/mask.ts",
+      "spec": "./categories/mask",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/categories/oil.ts",
+      "spec": "./categories/oil",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/categories/scalp-care.ts",
+      "spec": "./categories/scalp-care",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/categories/shampoo.ts",
+      "spec": "./categories/shampoo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/input.ts",
+      "spec": "./input",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/needs.ts",
+      "spec": "./needs",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/portfolio.ts",
+      "spec": "./portfolio",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "./types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/index.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../products/contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/types.ts",
+      "to": "src/lib/billing/pricing-catalog.ts",
+      "spec": "./pricing-catalog",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/entitlements/access.ts",
+      "to": "src/lib/billing/purchases.ts",
+      "spec": "@/lib/billing/purchases",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/entitlements/access.ts",
+      "to": "src/lib/billing/subscriptions.ts",
+      "spec": "@/lib/billing/subscriptions",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/entitlements/access.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/entitlements/access.ts",
+      "to": "src/lib/entitlements/flag.ts",
+      "spec": "@/lib/entitlements/flag",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/entitlements/access.ts",
+      "to": "src/lib/personal-plan-field-test/moderator.ts",
+      "spec": "@/lib/personal-plan-field-test/moderator",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/entitlements/access.ts",
+      "to": "src/lib/supabase/admin.ts",
+      "spec": "@/lib/supabase/admin",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/scan/scanner-context-supabase.ts",
+      "to": "src/lib/scan/scanner-context.ts",
+      "spec": "./scanner-context",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "to": "src/lib/personal-plan/oil-heat-context.ts",
+      "spec": "@/lib/personal-plan/oil-heat-context",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "to": "src/lib/routines/personal-plan/application/contracts.ts",
+      "spec": "@/lib/routines/personal-plan/application/contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "../authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "spec": "./categories/shampoo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "to": "src/lib/personal-plan/products/authority/catalog-batching.ts",
+      "spec": "./catalog-batching",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "./authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./authority/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/types.ts",
+      "to": "src/lib/personal-plan-quiz/types.ts",
+      "spec": "@/lib/personal-plan-quiz/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/types.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/types.ts",
+      "to": "src/components/ui/icon.tsx",
+      "spec": "@/components/ui/icon",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/types.ts",
+      "to": "src/lib/help/info-tips.ts",
+      "spec": "@/lib/help/info-tips",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/types.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/types.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "@/lib/vocabulary/concerns-goals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/types.ts",
+      "to": "src/lib/quiz/diagnostic-input.ts",
+      "spec": "./diagnostic-input",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/normalization.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/normalization.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/normalization.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "@/lib/vocabulary/concerns-goals",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/normalization.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/normalization.ts",
+      "to": "src/lib/quiz/diagnostic-input.ts",
+      "spec": "./diagnostic-input",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/primary-concern.ts",
+      "to": "src/lib/quiz/normalization.ts",
+      "spec": "./normalization",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/primary-concern.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/hair-types.ts",
+      "spec": "./hair-types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/hair-types.ts",
+      "spec": "./hair-types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/hair-length.ts",
+      "spec": "./hair-length",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/hair-length.ts",
+      "spec": "./hair-length",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "./concerns-goals",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "./concerns-goals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "./frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "./frequencies",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/profile-labels.ts",
+      "spec": "./profile-labels",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/profile-labels.ts",
+      "spec": "./profile-labels",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "spec": "../leave-in/constants",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "spec": "../leave-in/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/source-labels.ts",
+      "spec": "./source-labels",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/source-labels.ts",
+      "spec": "./source-labels",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/errors.ts",
+      "spec": "./errors",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/onboarding-goals.ts",
+      "spec": "./onboarding-goals",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "./frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "./frequencies",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/onboarding-care.ts",
+      "spec": "./onboarding-care",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/onboarding-care.ts",
+      "spec": "./onboarding-care",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/primary-concern.ts",
+      "to": "src/lib/quiz/diagnostic-input.ts",
+      "spec": "@/lib/quiz/diagnostic-input",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/primary-concern.ts",
+      "to": "src/lib/quiz/primary-concern.ts",
+      "spec": "@/lib/quiz/primary-concern",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/types.ts",
+      "to": "src/lib/quiz/diagnostic-input.ts",
+      "spec": "@/lib/quiz/diagnostic-input",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/trial-analytics-context.ts",
+      "to": "src/lib/analytics/meta-capi.ts",
+      "spec": "../analytics/meta-capi",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/trial-analytics-context.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/billing/subscriptions.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/billing/subscriptions.ts",
+      "to": "src/lib/billing/purchases.ts",
+      "spec": "./purchases",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/subscriptions.ts",
+      "to": "src/lib/billing/trial-access-projection.ts",
+      "spec": "./trial-access-projection",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/observability/checkout.ts",
+      "to": "src/lib/observability/sentry-scrubbing.ts",
+      "spec": "@/lib/observability/sentry-scrubbing",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/observability/payment-server.ts",
+      "to": "src/lib/observability/payment-server-core.ts",
+      "spec": "@/lib/observability/payment-server-core",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/observability/payment-server.ts",
+      "to": "src/lib/observability/payment.ts",
+      "spec": "@/lib/observability/payment",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/observability/payment-server.ts",
+      "to": "src/lib/observability/payment-server-core.ts",
+      "spec": "@/lib/observability/payment-server-core",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/funnel/cookie.ts",
+      "to": "src/lib/funnel/packages.ts",
+      "spec": "./packages",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/supabase/admin.ts",
+      "spec": "@/lib/supabase/admin",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/journey-kind.ts",
+      "spec": "@/lib/funnel/journey-kind",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/cookie.ts",
+      "spec": "./cookie",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/flags.ts",
+      "spec": "./flags",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/packages.ts",
+      "spec": "./packages",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/observability/offer-experiment.ts",
+      "spec": "@/lib/observability/offer-experiment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/personal-plan-pricing-experiment.ts",
+      "spec": "./personal-plan-pricing-experiment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/organic-offer-media-experiment.ts",
+      "spec": "./organic-offer-media-experiment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/personal-plan-pricing-qa-token.ts",
+      "spec": "./personal-plan-pricing-qa-token",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "to": "src/lib/billing/personal-plan-one-time-consent-copy.ts",
+      "spec": "./personal-plan-one-time-consent-copy",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "to": "src/lib/billing/personal-plan-one-time-consent-copy.ts",
+      "spec": "./personal-plan-one-time-consent-copy",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/reactivation/checkout-reservations.ts",
+      "to": "src/lib/stripe/intervals.ts",
+      "spec": "@/lib/stripe/intervals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/reactivation/checkout-reservations.ts",
+      "to": "src/lib/reactivation/stripe-checkout-context.ts",
+      "spec": "@/lib/reactivation/stripe-checkout-context",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/reactivation/checkout-recovery.ts",
+      "to": "src/lib/reactivation/checkout-reservations.ts",
+      "spec": "./checkout-reservations",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/reactivation/stripe-checkout-recovery.ts",
+      "to": "src/lib/reactivation/checkout-reservations.ts",
+      "spec": "./checkout-reservations",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/reactivation/stripe-checkout-recovery.ts",
+      "to": "src/lib/reactivation/stripe-checkout-context.ts",
+      "spec": "./stripe-checkout-context",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/reactivation/return-destination.ts",
+      "to": "src/lib/stripe/intervals.ts",
+      "spec": "@/lib/stripe/intervals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/reactivation/return-destination.ts",
+      "to": "src/lib/stripe/pricing-plans.ts",
+      "spec": "@/lib/stripe/pricing-plans",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/trial-runtime.ts",
+      "to": "src/lib/billing/trial-identity-claims.ts",
+      "spec": "./trial-identity-claims",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/billing/trial-runtime.ts",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "./trial-offer",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/trial-identity-claims.ts",
+      "to": "src/lib/billing/trial-eligibility.ts",
+      "spec": "./trial-eligibility",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/stripe/trial-checkout.ts",
+      "to": "src/lib/billing/trial-analytics-context.ts",
+      "spec": "../billing/trial-analytics-context",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/stripe/trial-checkout.ts",
+      "to": "src/lib/billing/trial-checkout-attempt.ts",
+      "spec": "../billing/trial-checkout-attempt",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/stripe/trial-checkout.ts",
+      "to": "src/lib/billing/trial-admission.ts",
+      "spec": "../billing/trial-admission",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/stripe/trial-checkout.ts",
+      "to": "src/lib/billing/trial-eligibility.ts",
+      "spec": "../billing/trial-eligibility",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/stripe/trial-checkout.ts",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "../billing/trial-offer",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/stripe/trial-checkout.ts",
+      "to": "src/lib/billing/trial-management-operations.ts",
+      "spec": "../billing/trial-management-operations",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/stripe/trial-checkout.ts",
+      "to": "src/lib/billing/trial-runtime.ts",
+      "spec": "../billing/trial-runtime",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/stripe/trial-checkout.ts",
+      "to": "src/lib/stripe/trial-catalog.ts",
+      "spec": "./trial-catalog",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/stripe/trial-checkout.ts",
+      "to": "src/lib/stripe/trial-checkout-session-params.ts",
+      "spec": "./trial-checkout-session-params",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/auth/intake-state.ts",
+      "to": "src/lib/quiz/completion.ts",
+      "spec": "@/lib/quiz/completion",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/purchases.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/billing/purchases.ts",
+      "to": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "spec": "./personal-plan-one-time-consents",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/auth/unauthenticated-redirect.ts",
+      "to": "src/lib/auth/route-classification.ts",
+      "spec": "@/lib/auth/route-classification",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/frontier-routing-loader.ts",
+      "to": "src/lib/personal-plan/frontier-routing.ts",
+      "spec": "./frontier-routing",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/frontier-routing-loader.ts",
+      "to": "src/lib/personal-plan/release.ts",
+      "spec": "./release",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/frontier-routing-loader.ts",
+      "to": "src/lib/personal-plan/rollout-access.ts",
+      "spec": "./rollout-access",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-field-test/moderator.ts",
+      "to": "src/lib/supabase/admin.ts",
+      "spec": "@/lib/supabase/admin",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-field-test/moderator.ts",
+      "to": "src/lib/personal-plan-field-test/moderator-contract.ts",
+      "spec": "./moderator-contract",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/freemium-enrollment.ts",
+      "to": "src/lib/billing/subscriptions.ts",
+      "spec": "@/lib/billing/subscriptions",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/freemium-enrollment.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/freemium-enrollment.ts",
+      "to": "src/lib/entitlements/flag.ts",
+      "spec": "@/lib/entitlements/flag",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-supabase.ts",
+      "to": "src/lib/personal-plan/refinement/stage1-adapter.ts",
+      "spec": "@/lib/personal-plan/refinement/stage1-adapter",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-supabase.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "@/lib/personal-plan/refinement/types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-supabase.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-supabase.ts",
+      "to": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "spec": "./stage2-refinement-service",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/products/stage2-entry-adapter.ts",
+      "spec": "./stage2-entry-adapter",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/products/stage3-bootstrap-review-contract.ts",
+      "spec": "./stage3-bootstrap-review-contract",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/products/stage3-bootstrap-review-contract.ts",
+      "spec": "./stage3-bootstrap-review-contract",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/products/gateway.ts",
+      "spec": "./gateway",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/products/portfolio.ts",
+      "spec": "./portfolio",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/products/product-load-resolution.ts",
+      "spec": "./product-load-resolution",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/products/state-machine.ts",
+      "spec": "./state-machine",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/release.ts",
+      "spec": "@/lib/personal-plan/release",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/routine-proposal-stager.ts",
+      "spec": "@/lib/personal-plan/routine-proposal-stager",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/routine/cadence-authority.ts",
+      "spec": "@/lib/personal-plan/routine/cadence-authority",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "spec": "./authority/catalog-facts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./authority/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "spec": "./authority/evaluate",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/products/authority/snapshot.ts",
+      "spec": "./authority/snapshot",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/transition-performance.ts",
+      "spec": "@/lib/personal-plan/transition-performance",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "spec": "./authority/categories/shampoo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/products/recovery-desired-state.ts",
+      "spec": "./recovery-desired-state",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/products/fit-comparison.ts",
+      "spec": "./fit-comparison",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+      "to": "src/lib/personal-plan/products/stage2-entry-adapter.ts",
+      "spec": "./stage2-entry-adapter",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+      "to": "src/lib/personal-plan/oil-heat-context.ts",
+      "spec": "@/lib/personal-plan/oil-heat-context",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+      "to": "src/lib/product-identity/index.ts",
+      "spec": "@/lib/product-identity",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+      "to": "src/lib/personal-plan/legacy-prefill.ts",
+      "spec": "@/lib/personal-plan/legacy-prefill",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+      "to": "src/lib/personal-plan/products/legacy-inventory-entry.ts",
+      "spec": "./legacy-inventory-entry",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+      "to": "src/lib/personal-plan/products/gateway.ts",
+      "spec": "./gateway",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+      "to": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "spec": "./production-persistence-gateway",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+      "to": "src/lib/personal-plan/products/inventory-search.ts",
+      "spec": "./inventory-search",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+      "to": "src/lib/personal-plan/products/state-machine.ts",
+      "spec": "./state-machine",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+      "to": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "spec": "./authority/catalog-facts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+      "to": "src/lib/personal-plan/products/authority/snapshot.ts",
+      "spec": "./authority/snapshot",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+      "to": "src/lib/personal-plan/products/product-load-resolution.ts",
+      "spec": "./product-load-resolution",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+      "to": "src/lib/personal-plan/routine/canonicalize.ts",
+      "spec": "@/lib/personal-plan/routine/canonicalize",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+      "to": "src/lib/personal-plan/release.ts",
+      "spec": "@/lib/personal-plan/release",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "./products/authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./products/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "to": "src/lib/personal-plan/persistence/index.ts",
+      "spec": "./persistence",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "to": "src/lib/personal-plan/routine-proposal-stager.ts",
+      "spec": "./routine-proposal-stager",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "./types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "to": "src/lib/personal-plan/routine/canonicalize.ts",
+      "spec": "./routine/canonicalize",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "to": "src/lib/personal-plan/routine/editor.ts",
+      "spec": "./routine/editor",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "to": "src/lib/personal-plan/routine/diff.ts",
+      "spec": "./routine/diff",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "to": "src/lib/personal-plan/routine/cadence.ts",
+      "spec": "./routine/cadence",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-proposal-stager.ts",
+      "to": "src/lib/personal-plan/persistence/index.ts",
+      "spec": "./persistence",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-proposal-stager.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-proposal-stager.ts",
+      "to": "src/lib/personal-plan/routine/cadence.ts",
+      "spec": "./routine/cadence",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/cadence-authority.ts",
+      "to": "src/lib/personal-plan/routine/cadence.ts",
+      "spec": "./cadence",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "to": "src/lib/personal-plan/refinement/session.ts",
+      "spec": "@/lib/personal-plan/refinement/session",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "to": "src/lib/personal-plan/refinement/question-path.ts",
+      "spec": "@/lib/personal-plan/refinement/question-path",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "to": "src/lib/personal-plan/refinement/module-status.ts",
+      "spec": "@/lib/personal-plan/refinement/module-status",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "to": "src/lib/personal-plan/refinement/answer-provenance.ts",
+      "spec": "@/lib/personal-plan/refinement/answer-provenance",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "to": "src/lib/personal-plan/refinement/assumed-defaults.ts",
+      "spec": "@/lib/personal-plan/refinement/assumed-defaults",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "@/lib/personal-plan/refinement/types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "to": "src/lib/personal-plan/refinement/gateway.ts",
+      "spec": "@/lib/personal-plan/refinement/gateway",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "to": "src/lib/personal-plan/persistence/index.ts",
+      "spec": "./index",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/product-previews.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/product-previews.ts",
+      "to": "src/lib/personal-plan/product-preview-contract.ts",
+      "spec": "@/lib/personal-plan/product-preview-contract",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/product-previews.ts",
+      "to": "src/lib/personal-plan/decision-presentation.ts",
+      "spec": "./decision-presentation",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/product-previews.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "./products/authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/product-previews.ts",
+      "to": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "spec": "./products/authority/catalog-facts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/product-previews.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./products/authority/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/product-previews.ts",
+      "to": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "spec": "./products/authority/evaluate",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/product-previews.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./products/contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/product-previews.ts",
+      "to": "src/lib/personal-plan/routine/commerce.ts",
+      "spec": "./routine/commerce",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/contracts.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/contracts.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/compute-stage1.ts",
+      "spec": "@/lib/personal-plan/compute-stage1",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/refinement/gateway.ts",
+      "spec": "./gateway",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "spec": "@/lib/personal-plan/persistence/stage2-refinement-service",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/persistence/index.ts",
+      "spec": "@/lib/personal-plan/persistence",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/persistence/stage1-service.ts",
+      "spec": "@/lib/personal-plan/persistence/stage1-service",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/refinement/stage1-adapter.ts",
+      "spec": "./stage1-adapter",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/production-persistence-gateway.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/answer-provenance.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/direct-acceptance/defaults.ts",
+      "to": "src/lib/personal-plan/refinement/assumed-defaults.ts",
+      "spec": "../refinement/assumed-defaults",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/direct-acceptance/defaults.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "../refinement/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/input.ts",
+      "to": "src/lib/personal-plan-quiz/persistence.ts",
+      "spec": "@/lib/personal-plan-quiz/persistence",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/input.ts",
+      "to": "src/lib/personal-plan-quiz/types.ts",
+      "spec": "@/lib/personal-plan-quiz/types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/input.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "./types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/input.ts",
+      "to": "src/lib/quiz/normalization.ts",
+      "spec": "@/lib/quiz/normalization",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/input.ts",
+      "to": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "spec": "@/lib/personal-plan-quiz/offer-adapter",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/input.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "@/lib/quiz/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/lifecycle/repository.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "@/lib/personal-plan/refinement/types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/entitlements/index.ts",
+      "to": "src/lib/entitlements/entitlements.ts",
+      "spec": "./entitlements",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/supabase/admin.ts",
+      "spec": "@/lib/supabase/admin",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/personal-plan/transition-performance.ts",
+      "spec": "./transition-performance",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/personal-plan/products/stage2-entry-adapter.ts",
+      "spec": "./products/stage2-entry-adapter",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/personal-plan/products/authority/snapshot.ts",
+      "spec": "./products/authority/snapshot",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./products/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/personal-plan/release.ts",
+      "spec": "./release",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/personal-plan/stage5-access.ts",
+      "spec": "./stage5-access",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/personal-plan/rollout-access.ts",
+      "spec": "./rollout-access",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/personal-plan/journey-access.ts",
+      "spec": "./journey-access",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/personal-plan/enrollment.ts",
+      "spec": "./enrollment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/personal-plan/migration-admission.ts",
+      "spec": "./migration-admission",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/bondbuilder.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/conditioner.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/deep-cleansing.ts",
+      "to": "src/lib/personal-plan/reasons.ts",
+      "spec": "../reasons",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/deep-cleansing.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/dry-shampoo.ts",
+      "to": "src/lib/personal-plan/reasons.ts",
+      "spec": "../reasons",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/dry-shampoo.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/heat-protectant.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/leave-in.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/leave-in.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/mask.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/mask.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/oil.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/scalp-care.ts",
+      "to": "src/lib/personal-plan/reasons.ts",
+      "spec": "../reasons",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/scalp-care.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/shampoo.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/shampoo.ts",
+      "to": "src/lib/personal-plan/reasons.ts",
+      "spec": "../reasons",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/shampoo.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/needs.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/portfolio.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/portfolio.ts",
+      "to": "src/lib/personal-plan/reasons.ts",
+      "spec": "./reasons",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/scan/scanner-context.ts",
+      "to": "src/lib/personal-plan/compute-stage1.ts",
+      "spec": "@/lib/personal-plan/compute-stage1",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/scan/scanner-context.ts",
+      "to": "src/lib/personal-plan/input.ts",
+      "spec": "@/lib/personal-plan/input",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/scan/scanner-context.ts",
+      "to": "src/lib/personal-plan/persistence/index.ts",
+      "spec": "@/lib/personal-plan/persistence",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/scan/scanner-context.ts",
+      "to": "src/lib/personal-plan/persistence/stage1-service.ts",
+      "spec": "@/lib/personal-plan/persistence/stage1-service",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/scan/scanner-context.ts",
+      "to": "src/lib/personal-plan/refinement/assumed-defaults.ts",
+      "spec": "@/lib/personal-plan/refinement/assumed-defaults",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/scan/scanner-context.ts",
+      "to": "src/lib/personal-plan/refinement/answer-provenance.ts",
+      "spec": "@/lib/personal-plan/refinement/answer-provenance",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/scan/scanner-context.ts",
+      "to": "src/lib/personal-plan/refinement/stage1-adapter.ts",
+      "spec": "@/lib/personal-plan/refinement/stage1-adapter",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/scan/scanner-context.ts",
+      "to": "src/lib/personal-plan/refinement/question-path.ts",
+      "spec": "@/lib/personal-plan/refinement/question-path",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/scan/scanner-context.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "@/lib/personal-plan/refinement/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/scan/scanner-context.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/scan/scanner-context.ts",
+      "to": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "spec": "@/lib/personal-plan-quiz/offer-adapter",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/scan/scanner-context.ts",
+      "to": "src/lib/quiz/completion.ts",
+      "spec": "@/lib/quiz/completion",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/scan/scanner-context.ts",
+      "to": "src/lib/quiz/normalization.ts",
+      "spec": "@/lib/quiz/normalization",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/scan/scanner-context.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "@/lib/quiz/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/scan/scanner-context.ts",
+      "to": "src/lib/scan/profile-context.ts",
+      "spec": "./profile-context",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/oil-heat-context.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authorities.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authorities.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "to": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "spec": "../../comparison-dimensions",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "to": "src/lib/personal-plan/products/candidate-ranking.ts",
+      "spec": "../../candidate-ranking",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "to": "src/lib/personal-plan/products/authority/shared.ts",
+      "spec": "../shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/shampoo-spec-target.ts",
+      "spec": "./shampoo-spec-target",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/shampoo-spec-target.ts",
+      "spec": "./shampoo-spec-target",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/onboarding-goals.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "./concerns-goals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/onboarding-goals.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "./concerns-goals",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/onboarding-goals.ts",
+      "to": "src/lib/vocabulary/hair-types.ts",
+      "spec": "./hair-types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/billing/trial-access-projection.ts",
+      "to": "src/lib/billing/trial-policy.ts",
+      "spec": "./trial-policy",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/observability/payment-server-core.ts",
+      "to": "src/lib/observability/payment.ts",
+      "spec": "@/lib/observability/payment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/observability/payment-server-core.ts",
+      "to": "src/lib/observability/sentry-scrubbing.ts",
+      "spec": "@/lib/observability/sentry-scrubbing",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/observability/payment.ts",
+      "to": "src/lib/observability/checkout.ts",
+      "spec": "@/lib/observability/checkout",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/observability/payment.ts",
+      "to": "src/lib/checkout/payment-feedback.ts",
+      "spec": "@/lib/checkout/payment-feedback",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/funnel/packages.ts",
+      "to": "src/funnels/packages.json",
+      "spec": "@/funnels/packages.json",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/packages.ts",
+      "to": "src/funnels/quizzes/registry.ts",
+      "spec": "@/funnels/quizzes/registry",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/packages.ts",
+      "to": "src/lib/funnel/offer-presentation.ts",
+      "spec": "@/lib/funnel/offer-presentation",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/packages.ts",
+      "to": "src/lib/funnel/offer-presentation.ts",
+      "spec": "@/lib/funnel/offer-presentation",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/trial-checkout-attempt.ts",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "./trial-offer",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/trial-admission.ts",
+      "to": "src/lib/billing/trial-eligibility.ts",
+      "spec": "./trial-eligibility",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/billing/trial-admission.ts",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "./trial-offer",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/trial-management-operations.ts",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "./trial-offer",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/stripe/trial-catalog.ts",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "../billing/trial-offer",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/stripe/trial-checkout-session-params.ts",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "../billing/trial-offer",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/stripe/trial-checkout-session-params.ts",
+      "to": "src/lib/stripe/checkout-session-params.ts",
+      "spec": "./checkout-session-params",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/rollout-access.ts",
+      "to": "src/lib/personal-plan-field-test/errors.ts",
+      "spec": "@/lib/personal-plan-field-test/errors",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/rollout-access.ts",
+      "to": "src/lib/personal-plan/release.ts",
+      "spec": "./release",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/stage1-adapter.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/stage1-adapter.ts",
+      "to": "src/lib/personal-plan/refinement/heat-events.ts",
+      "spec": "./heat-events",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/stage1-adapter.ts",
+      "to": "src/lib/personal-plan/refinement/question-path.ts",
+      "spec": "./question-path",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/stage1-adapter.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/types.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/types.ts",
+      "to": "src/lib/vocabulary/onboarding-care.ts",
+      "spec": "@/lib/vocabulary/onboarding-care",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage2-entry-adapter.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage2-entry-adapter.ts",
+      "to": "src/lib/personal-plan/products/gateway.ts",
+      "spec": "./gateway",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage2-entry-adapter.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "./authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage2-entry-adapter.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage2-entry-adapter.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage3-bootstrap-review-contract.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./authority/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage3-bootstrap-review-contract.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage3-bootstrap-review-contract.ts",
+      "to": "src/lib/personal-plan/products/fit-comparison.ts",
+      "spec": "./fit-comparison",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/gateway.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/gateway.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./authority/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/gateway.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./authority/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/gateway.ts",
+      "to": "src/lib/personal-plan/products/fit-comparison.ts",
+      "spec": "./fit-comparison",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/gateway.ts",
+      "to": "src/lib/personal-plan/products/stage3-bootstrap-review-contract.ts",
+      "spec": "./stage3-bootstrap-review-contract",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/portfolio.ts",
+      "to": "src/lib/personal-plan/products/state-machine.ts",
+      "spec": "./state-machine",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/portfolio.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/portfolio.ts",
+      "to": "src/lib/personal-plan/products/product-load-resolution.ts",
+      "spec": "./product-load-resolution",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/product-load-resolution.ts",
+      "to": "src/lib/personal-plan/routine/canonicalize.ts",
+      "spec": "@/lib/personal-plan/routine/canonicalize",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/product-load-resolution.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/product-load-resolution.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/product-load-resolution.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "./authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/product-load-resolution.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/state-machine.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "./authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/state-machine.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/state-machine.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/state-machine.ts",
+      "to": "src/lib/personal-plan/products/product-load-resolution.ts",
+      "spec": "./product-load-resolution",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/bondbuilder.ts",
+      "spec": "./categories/bondbuilder",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/conditioner.ts",
+      "spec": "./categories/conditioner",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/deep-cleansing-shampoo.ts",
+      "spec": "./categories/deep-cleansing-shampoo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/dry-shampoo.ts",
+      "spec": "./categories/dry-shampoo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/heat-protectant.ts",
+      "spec": "./categories/heat-protectant",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/leave-in.ts",
+      "spec": "./categories/leave-in",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/mask.ts",
+      "spec": "./categories/mask",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/oil.ts",
+      "spec": "./categories/oil",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/scalp-care.ts",
+      "spec": "./categories/scalp-care",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "spec": "./categories/shampoo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/snapshot.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "../authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/snapshot.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/snapshot.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/snapshot.ts",
+      "to": "src/lib/personal-plan/products/product-load-resolution.ts",
+      "spec": "../product-load-resolution",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/snapshot.ts",
+      "to": "src/lib/personal-plan/products/authority/category-decision-schema.ts",
+      "spec": "./category-decision-schema",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/snapshot.ts",
+      "to": "src/lib/personal-plan/routine/canonicalize.ts",
+      "spec": "@/lib/personal-plan/routine/canonicalize",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/recovery-desired-state.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./authority/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/recovery-desired-state.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/recovery-desired-state.ts",
+      "to": "src/lib/personal-plan/products/gateway.ts",
+      "spec": "./gateway",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./authority/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/axis-fit.ts",
+      "spec": "./authority/categories/axis-fit",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison.ts",
+      "to": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "spec": "./authority/evaluate",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison.ts",
+      "to": "src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts",
+      "spec": "./authority/supportive-owned-recommendation",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison.ts",
+      "to": "src/lib/personal-plan/products/candidate-ranking.ts",
+      "spec": "./candidate-ranking",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison.ts",
+      "to": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "spec": "./comparison-dimensions",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison.ts",
+      "to": "src/lib/personal-plan/products/fit-comparison-schema.ts",
+      "spec": "./fit-comparison-schema",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison.ts",
+      "to": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "spec": "./comparison-dimensions",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/product-identity/index.ts",
+      "to": "src/lib/product-identity/brand-resolution.ts",
+      "spec": "./brand-resolution",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/product-identity/index.ts",
+      "to": "src/lib/product-identity/normalize.ts",
+      "spec": "./normalize",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/product-identity/index.ts",
+      "to": "src/lib/product-identity/normalize.ts",
+      "spec": "./normalize",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/legacy-prefill.ts",
+      "to": "src/lib/vocabulary/onboarding-care.ts",
+      "spec": "@/lib/vocabulary/onboarding-care",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/legacy-prefill.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/legacy-prefill.ts",
+      "to": "src/lib/product-usage/shampoo-fallback.ts",
+      "spec": "@/lib/product-usage/shampoo-fallback",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/legacy-prefill.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./refinement/types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/legacy-inventory-entry.ts",
+      "to": "src/lib/personal-plan/legacy-prefill.ts",
+      "spec": "@/lib/personal-plan/legacy-prefill",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/legacy-inventory-entry.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/legacy-inventory-entry.ts",
+      "to": "src/lib/personal-plan/products/state-machine.ts",
+      "spec": "./state-machine",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/editor.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "../products/authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/editor.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/editor.ts",
+      "to": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "spec": "../routine-candidate-compiler",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/diff.ts",
+      "to": "src/lib/personal-plan/routine/canonicalize.ts",
+      "spec": "./canonicalize",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/diff.ts",
+      "to": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "spec": "../routine-candidate-compiler",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/cadence.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../products/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/cadence.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/session.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/session.ts",
+      "to": "src/lib/personal-plan/refinement/question-path.ts",
+      "spec": "./question-path",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/session.ts",
+      "to": "src/lib/personal-plan/refinement/gateway.ts",
+      "spec": "./gateway",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/question-path.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/question-path.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/question-path.ts",
+      "to": "src/lib/vocabulary/onboarding-care.ts",
+      "spec": "@/lib/vocabulary/onboarding-care",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/question-path.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/question-path.ts",
+      "to": "src/lib/personal-plan/refinement/heat-events.ts",
+      "spec": "./heat-events",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/module-status.ts",
+      "to": "src/lib/personal-plan/refinement/answer-provenance.ts",
+      "spec": "./answer-provenance",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/module-status.ts",
+      "to": "src/lib/personal-plan/refinement/assumed-defaults.ts",
+      "spec": "./assumed-defaults",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/module-status.ts",
+      "to": "src/lib/personal-plan/refinement/question-path.ts",
+      "spec": "./question-path",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/module-status.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/assumed-defaults.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/assumed-defaults.ts",
+      "to": "src/lib/vocabulary/onboarding-care.ts",
+      "spec": "@/lib/vocabulary/onboarding-care",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/assumed-defaults.ts",
+      "to": "src/lib/personal-plan/refinement/heat-events.ts",
+      "spec": "./heat-events",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/assumed-defaults.ts",
+      "to": "src/lib/personal-plan/refinement/question-path.ts",
+      "spec": "./question-path",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/assumed-defaults.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/gateway.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/gateway.ts",
+      "to": "src/lib/personal-plan/refinement/session.ts",
+      "spec": "./session",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/product-preview-contract.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "./products/authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/product-preview-contract.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/decision-presentation.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/decision-presentation.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/persistence.ts",
+      "to": "src/lib/personal-plan-quiz/types.ts",
+      "spec": "./types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/enrollment.ts",
+      "to": "src/lib/billing/purchases.ts",
+      "spec": "@/lib/billing/purchases",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/enrollment.ts",
+      "to": "src/lib/billing/pricing-catalog.ts",
+      "spec": "@/lib/billing/pricing-catalog",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/enrollment.ts",
+      "to": "src/lib/billing/subscriptions.ts",
+      "spec": "@/lib/billing/subscriptions",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/enrollment.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/enrollment.ts",
+      "to": "src/lib/personal-plan-field-test/errors.ts",
+      "spec": "@/lib/personal-plan-field-test/errors",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/enrollment.ts",
+      "to": "src/lib/personal-plan/release.ts",
+      "spec": "@/lib/personal-plan/release",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/enrollment.ts",
+      "to": "src/lib/personal-plan/rollout-access.ts",
+      "spec": "@/lib/personal-plan/rollout-access",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/enrollment.ts",
+      "to": "src/lib/personal-plan/migration-admission.ts",
+      "spec": "./migration-admission",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/enrollment.ts",
+      "to": "src/lib/personal-plan/freemium-enrollment.ts",
+      "spec": "./freemium-enrollment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/reasons.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./authority/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/axis-fit.ts",
+      "spec": "./authority/categories/axis-fit",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/shampoo-spec-target.ts",
+      "spec": "./authority/categories/shampoo-spec-target",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "to": "src/lib/personal-plan/products/fit-comparison-schema.ts",
+      "spec": "./fit-comparison-schema",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/shared.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/shared.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/shampoo-spec-target.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/shampoo-spec-target.ts",
+      "to": "src/lib/shampoo/constants.ts",
+      "spec": "@/lib/shampoo/constants",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/trial-policy.ts",
+      "to": "src/lib/paypal/trial-collection-start.ts",
+      "spec": "../paypal/trial-collection-start",
+      "kind": "static"
+    },
+    {
+      "from": "src/funnels/quizzes/registry.ts",
+      "to": "src/funnels/quizzes/registry.json",
+      "spec": "./registry.json",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/heat-events.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/heat-events.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/heat-events.ts",
+      "to": "src/lib/personal-plan/refinement/types.ts",
+      "spec": "./types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/refinement/heat-events.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/bondbuilder.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/bondbuilder.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/bondbuilder.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/bondbuilder.ts",
+      "to": "src/lib/personal-plan/products/authority/shared.ts",
+      "spec": "../shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/conditioner.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/conditioner.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/conditioner.ts",
+      "to": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "spec": "../../comparison-dimensions",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/conditioner.ts",
+      "to": "src/lib/personal-plan/products/candidate-ranking.ts",
+      "spec": "../../candidate-ranking",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/conditioner.ts",
+      "to": "src/lib/personal-plan/products/authority/shared.ts",
+      "spec": "../shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/conditioner.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/axis-fit.ts",
+      "spec": "./axis-fit",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/deep-cleansing-shampoo.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/deep-cleansing-shampoo.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/deep-cleansing-shampoo.ts",
+      "to": "src/lib/personal-plan/products/authority/shared.ts",
+      "spec": "../shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/dry-shampoo.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/dry-shampoo.ts",
+      "to": "src/lib/personal-plan/products/authority/shared.ts",
+      "spec": "../shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/heat-protectant.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/heat-protectant.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/heat-protectant.ts",
+      "to": "src/lib/personal-plan/products/authority/shared.ts",
+      "spec": "../shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/leave-in.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/leave-in.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/leave-in.ts",
+      "to": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "spec": "../../comparison-dimensions",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/leave-in.ts",
+      "to": "src/lib/personal-plan/products/candidate-ranking.ts",
+      "spec": "../../candidate-ranking",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/leave-in.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/leave-in.ts",
+      "to": "src/lib/personal-plan/products/authority/shared.ts",
+      "spec": "../shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/leave-in.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/axis-fit.ts",
+      "spec": "./axis-fit",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/mask.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/mask.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/mask.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/mask.ts",
+      "to": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "spec": "../../comparison-dimensions",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/mask.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/axis-fit.ts",
+      "spec": "./axis-fit",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/mask.ts",
+      "to": "src/lib/personal-plan/products/candidate-ranking.ts",
+      "spec": "../../candidate-ranking",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/mask.ts",
+      "to": "src/lib/personal-plan/products/authority/shared.ts",
+      "spec": "../shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/oil.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/oil.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/oil.ts",
+      "to": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "spec": "../../comparison-dimensions",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/oil.ts",
+      "to": "src/lib/personal-plan/products/candidate-ranking.ts",
+      "spec": "../../candidate-ranking",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/oil.ts",
+      "to": "src/lib/personal-plan/products/authority/shared.ts",
+      "spec": "../shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/scalp-care.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/scalp-care.ts",
+      "to": "src/lib/personal-plan/products/authority/shared.ts",
+      "spec": "../shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/category-decision-schema.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/category-decision-schema.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/category-decision-schema.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "../authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/axis-fit.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/bondbuilder.ts",
+      "spec": "./categories/bondbuilder",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/mask.ts",
+      "spec": "./categories/mask",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/oil.ts",
+      "spec": "./categories/oil",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "spec": "./categories/shampoo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison-schema.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison-schema.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/product-identity/brand-resolution.ts",
+      "to": "src/lib/product-identity/normalize.ts",
+      "spec": "./normalize",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/product-usage/shampoo-fallback.ts",
+      "to": "src/lib/types.ts",
+      "spec": "@/lib/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/product-usage/shampoo-fallback.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/shampoo/constants.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/shampoo/constants.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "spec": "@/lib/leave-in/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/mask/constants.ts",
+      "spec": "@/lib/mask/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/conditioner/constants.ts",
+      "spec": "@/lib/conditioner/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/bondbuilder/constants.ts",
+      "spec": "@/lib/bondbuilder/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/deep-cleansing-shampoo/constants.ts",
+      "spec": "@/lib/deep-cleansing-shampoo/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/dry-shampoo/constants.ts",
+      "spec": "@/lib/dry-shampoo/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/oil/constants.ts",
+      "spec": "@/lib/oil/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/peeling/constants.ts",
+      "spec": "@/lib/peeling/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "spec": "@/lib/product-specs/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/shampoo/constants.ts",
+      "spec": "@/lib/shampoo/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/mask/constants.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "spec": "@/lib/product-specs/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/conditioner/constants.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "spec": "@/lib/product-specs/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/bondbuilder/constants.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "spec": "@/lib/product-specs/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/deep-cleansing-shampoo/constants.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "spec": "@/lib/product-specs/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/deep-cleansing-shampoo/constants.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/dry-shampoo/constants.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "spec": "@/lib/product-specs/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/oil/constants.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/peeling/constants.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "spec": "@/lib/product-specs/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/types.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/types.ts",
+      "to": "src/lib/shampoo/constants.ts",
+      "spec": "@/lib/shampoo/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/types.ts",
+      "to": "src/lib/oil/constants.ts",
+      "spec": "@/lib/oil/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/types.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "spec": "@/lib/leave-in/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/types.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "spec": "@/lib/product-specs/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/types.ts",
+      "to": "src/lib/recommendation-engine/contracts.ts",
+      "spec": "@/lib/recommendation-engine/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/contracts.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    }
+  ],
+  "externalPins": [
+    {
+      "specifier": "react-dom/server",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/react-dom/server.node.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/react-dom/package.json"
+    },
+    {
+      "specifier": "lucide-react",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/lucide-react/dist/cjs/lucide-react.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/lucide-react/package.json"
+    },
+    {
+      "specifier": "react",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/react/index.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/react/package.json"
+    },
+    {
+      "specifier": "@supabase/supabase-js",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/dist/index.cjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/package.json"
+    },
+    {
+      "specifier": "next/server",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/server.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/package.json"
+    },
+    {
+      "specifier": "zod",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/zod/index.cjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/zod/package.json"
+    },
+    {
+      "specifier": "next/headers",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/headers.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/package.json"
+    },
+    {
+      "specifier": "stripe",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/stripe/cjs/stripe.cjs.node.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/stripe/package.json"
+    },
+    {
+      "specifier": "@supabase/ssr",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/ssr/dist/main/index.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/ssr/package.json"
+    },
+    {
+      "specifier": "server-only",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/server-only/index.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/server-only/package.json"
+    },
+    {
+      "specifier": "class-variance-authority",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/class-variance-authority/dist/index.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/class-variance-authority/package.json"
+    },
+    {
+      "specifier": "clsx",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/clsx/dist/clsx.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/clsx/package.json"
+    },
+    {
+      "specifier": "tailwind-merge",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tailwind-merge/dist/bundle-cjs.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tailwind-merge/package.json"
+    },
+    {
+      "specifier": "@sentry/nextjs",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/index.server.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/package.json"
+    },
+    {
+      "specifier": "@sentry/node",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/node/build/cjs/index.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/node/package.json"
+    },
+    {
+      "specifier": "typescript",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/typescript.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/package.json"
+    },
+    {
+      "specifier": "tsx",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/loader.mjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/package.json"
+    }
+  ],
+  "nonliteralImports": [],
+  "pinOrigins": {
+    "tests/server-only-register.cjs": "preserved original proposal or reviewed runtime source pin",
+    "src/app/registrierung/free-registration-client.tsx": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/auth/free-registration-recovery.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/persistence/free-snapshot-service.ts": "preserved original proposal or reviewed runtime source pin",
+    "tests/helpers/scanner-context-rpc.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/persistence/free-snapshot-supabase.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/scan/profile-context.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/quiz/link-to-profile.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan-quiz/offer-adapter.ts": "preserved original proposal or reviewed runtime source pin",
+    "tests/personal-plan/fixtures.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/app/api/stripe/create-checkout-session/route.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/auth/route-classification.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/supabase/middleware.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/freemium/checkout-return.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/freemium/checkout-metadata.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/premium-sheet/pricing.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/stripe/client.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/stripe/checkout-session-params.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/stripe/pricing-plans.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/app/labs/personal-plan-stage-1-2/fixture.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/freemium/plan-provisioning.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/freemium/plan-provisioning-supabase.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/direct-acceptance/accept.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/persistence/stage1-service.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/auth/free-registration.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/navigation-access.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/components/ui/button.tsx": "preserved original proposal or reviewed runtime source pin",
+    "src/components/ui/input.tsx": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/email-deliverability-shared.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/utils.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/supabase/admin.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/observability/free-registration.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/compute-stage1.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/persistence/index.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/billing/types.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/entitlements/access.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/scan/scanner-context-supabase.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authority/catalog-facts.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/contracts.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/types.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/quiz/completion.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/quiz/types.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/quiz/normalization.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/quiz/primary-concern.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/vocabulary/index.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/vocabulary/concerns-goals.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/quiz/diagnostic-input.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan-quiz/primary-concern.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan-quiz/types.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/billing/trial-analytics-context.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/supabase/server.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/billing/subscriptions.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/billing/payment-runtime-config.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/observability/checkout.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/observability/payment-server.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/funnel/cookie.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/funnel/server.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/funnel/flags.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/billing/pricing-catalog.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/entitlements/flag.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/billing/personal-plan-one-time-consents.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/stripe/intervals.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/billing/offer-products.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/reactivation/checkout-reservations.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/reactivation/checkout-recovery.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/reactivation/stripe-checkout-recovery.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/reactivation/return-destination.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/billing/trial-runtime.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/billing/trial-identity-claims.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/stripe/trial-checkout.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/auth/intake-state.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/billing/purchases.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/auth/unauthenticated-redirect.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/frontier-routing.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/frontier-routing-loader.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan-field-test/moderator.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/discovery/flag.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/discovery/participant.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/freemium-enrollment.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/persistence/stage2-refinement-supabase.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/production-persistence-gateway.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/stage3-persistence-supabase.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/release.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/routine-candidate-compiler.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/routine-proposal-stager.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/routine/cadence-authority.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/persistence/stage2-refinement-service.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/product-previews.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authority/contracts.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/refinement/production-persistence-gateway.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/refinement/answer-provenance.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/routine/canonicalize.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/direct-acceptance/defaults.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/input.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/lifecycle/repository.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/entitlements/index.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/journey-access-loader.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/journey-access.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/categories/bondbuilder.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/categories/conditioner.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/categories/deep-cleansing.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/categories/dry-shampoo.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/categories/heat-protectant.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/categories/leave-in.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/categories/mask.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/categories/oil.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/categories/scalp-care.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/categories/shampoo.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/needs.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/portfolio.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/scan/scanner-context.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/oil-heat-context.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/routines/personal-plan/application/contracts.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authorities.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authority/categories/shampoo.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authority/catalog-batching.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/vocabulary/frequencies.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/components/ui/icon.tsx": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/help/info-tips.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/vocabulary/hair-types.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/vocabulary/hair-length.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/vocabulary/profile-labels.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/leave-in/constants.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/vocabulary/source-labels.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/vocabulary/errors.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/vocabulary/onboarding-goals.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/vocabulary/onboarding-care.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/analytics/meta-capi.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/billing/trial-access-projection.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/observability/sentry-scrubbing.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/observability/payment-server-core.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/observability/payment.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/funnel/packages.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/funnel/journey-kind.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/observability/offer-experiment.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/funnel/personal-plan-pricing-experiment.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/funnel/organic-offer-media-experiment.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/funnel/personal-plan-pricing-qa-token.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/billing/personal-plan-one-time-consent-copy.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/reactivation/stripe-checkout-context.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/billing/trial-offer.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/billing/trial-eligibility.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/billing/trial-checkout-attempt.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/billing/trial-admission.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/billing/trial-management-operations.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/stripe/trial-catalog.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/stripe/trial-checkout-session-params.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/rollout-access.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan-field-test/moderator-contract.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/refinement/stage1-adapter.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/refinement/types.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/stage2-entry-adapter.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/stage3-bootstrap-review-contract.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/gateway.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/portfolio.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/product-load-resolution.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/state-machine.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authority/evaluate.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authority/snapshot.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/transition-performance.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/recovery-desired-state.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/fit-comparison.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/product-identity/index.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/legacy-prefill.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/legacy-inventory-entry.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/inventory-search.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/routine/editor.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/routine/diff.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/routine/cadence.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/refinement/session.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/refinement/question-path.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/refinement/module-status.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/refinement/assumed-defaults.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/refinement/gateway.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/product-preview-contract.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/decision-presentation.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/routine/commerce.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan-quiz/persistence.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/entitlements/entitlements.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/stage5-access.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/enrollment.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/migration-admission.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/reasons.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/comparison-dimensions.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/candidate-ranking.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authority/shared.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authority/categories/shampoo-spec-target.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/billing/trial-policy.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/checkout/payment-feedback.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/funnels/packages.json": "preserved original proposal or reviewed runtime source pin",
+    "src/funnels/quizzes/registry.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/funnel/offer-presentation.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan-field-test/errors.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/refinement/heat-events.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authority/categories/bondbuilder.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authority/categories/conditioner.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authority/categories/deep-cleansing-shampoo.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authority/categories/dry-shampoo.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authority/categories/heat-protectant.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authority/categories/leave-in.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authority/categories/mask.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authority/categories/oil.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authority/categories/scalp-care.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authority/category-decision-schema.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authority/categories/axis-fit.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/personal-plan/products/fit-comparison-schema.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/product-identity/brand-resolution.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/product-identity/normalize.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/product-usage/shampoo-fallback.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/shampoo/constants.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/paypal/trial-collection-start.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/funnels/quizzes/registry.json": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/types.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/mask/constants.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/conditioner/constants.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/bondbuilder/constants.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/deep-cleansing-shampoo/constants.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/dry-shampoo/constants.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/oil/constants.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/peeling/constants.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/product-specs/constants.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/recommendation-engine/types.ts": "preserved original proposal or reviewed runtime source pin",
+    "src/lib/recommendation-engine/contracts.ts": "preserved original proposal or reviewed runtime source pin"
+  },
+  "limits": "Entire seven-file native static local import closure, including type imports, pinned but not semantically reread. Literal resolution only; no product imports. Prior3489 dependency pins/28 distribution trees preserved; selected external entry/package pins added only when absent. Additional Stripe/class-variance-authority/Sentry-node distributions pinned with exact membership. Not a full transitive vendor guarantee."
+}

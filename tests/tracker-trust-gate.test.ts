@@ -4,7 +4,7 @@ import test from "node:test"
 import { evaluateTrustGate } from "../src/lib/tracking/trust-gate"
 import {
   getTrustGateQualifyingLogDates,
-  hasValidTrackerDayTypeDetails,
+  isValidCustomActivityName,
   normalizeCustomActivityName,
   type TrackerLogDay,
 } from "../src/lib/tracking/types"
@@ -65,20 +65,11 @@ test("duplicate dates count once", () => {
   assert.equal(gate.loggedDayCount, 2)
 })
 
-test("custom activity validation trims names and requires them only for custom days", () => {
+test("custom activity names trim whitespace and reject blank values", () => {
   assert.equal(normalizeCustomActivityName("  Sauna  "), "Sauna")
   assert.equal(normalizeCustomActivityName("  "), null)
-  assert.equal(
-    hasValidTrackerDayTypeDetails({ dayType: "custom", customActivityName: " Sauna " }),
-    true,
-  )
-  assert.equal(hasValidTrackerDayTypeDetails({ dayType: "custom", customActivityName: " " }), false)
-  assert.equal(hasValidTrackerDayTypeDetails({ dayType: "wash", customActivityName: null }), true)
-  assert.equal(hasValidTrackerDayTypeDetails({ dayType: "wash", customActivityName: " " }), false)
-  assert.equal(
-    hasValidTrackerDayTypeDetails({ dayType: "wash", customActivityName: "Sauna" }),
-    false,
-  )
+  assert.equal(isValidCustomActivityName(" Sauna "), true)
+  assert.equal(isValidCustomActivityName(" "), false)
 })
 
 test("custom and unconfirmed days do not count toward the ten qualifying trust-gate days", () => {

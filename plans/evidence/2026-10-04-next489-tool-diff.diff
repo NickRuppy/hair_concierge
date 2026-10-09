@@ -1,0 +1,396 @@
+--- before/tests/agentic-tool-loop.spec.ts
++++ transfer/tests/agentic-tool-loop.spec.ts
+@@ -670,6 +670,36 @@
+   assert.match(firstRequest.systemPrompt, /latest_user_message.*vorherige Assistant-Nachricht/i)
+   assert.match(firstRequest.systemPrompt, /Gespraechsform vor Wissensform/i)
+   assert.match(firstRequest.systemPrompt, /nicht als eigenstaendigen Kategorieartikel/i)
++
++  const initialMessage = firstRequest.messages[0]
++  assert.ok(initialMessage && typeof initialMessage.content === "string", "Initial model message must contain the serialized brief")
++  const deliveredBrief = (JSON.parse(initialMessage.content) as {
++    consultation_brief: Awaited<ReturnType<typeof buildAgenticConsultationBrief>> | null
++  }).consultation_brief
++  assert.ok(deliveredBrief, "Initial model request must deliver a consultation brief")
++  assert.equal(deliveredBrief.charter.length > 0, true)
++  assert.equal(deliveredBrief.product_vs_education.length > 0, true)
++  assert.ok(deliveredBrief.candidate_guidance.some((item) => item.id === "topic:leave_in"), "Delivered brief must include Leave-in guidance")
++  assert.ok(deliveredBrief.profile_overlays.some((item) => item.id === "overlay:fine_hair"), "Delivered brief must include the fine-hair overlay")
++  assert.ok(deliveredBrief.candidate_guidance.every((item) => item.content.length <= 1200), "Delivered candidate guidance must stay within 1200 characters")
++
++  assert.match(firstRequest.systemPrompt, /zusaetzlich zu Shampoo/i)
++  assert.match(firstRequest.systemPrompt, /hinzufuegen/i)
++  assert.match(firstRequest.systemPrompt, /what else should I add/i)
++  assert.match(firstRequest.systemPrompt, /build_or_fix_routine mit layer="basics"/i)
++  assert.match(firstRequest.systemPrompt, /load_advisor_guidance.*konzeptuelle/i)
++  assert.match(firstRequest.systemPrompt, /answer_context.*Beratungshilfe/i)
++
++  assert.match(firstRequest.systemPrompt, /kurze Einordnung/i)
++  assert.match(firstRequest.systemPrompt, /klar struktur/i)
++  assert.match(firstRequest.systemPrompt, /genau einen.*naechsten Schritt/i)
++  assert.match(firstRequest.systemPrompt, /Fallback.*nie/i)
++  assert.match(firstRequest.systemPrompt, /Nach einem select_products-Tool/i)
++  assert.match(firstRequest.systemPrompt, /nicht.*zusaetzlich.*load_advisor_guidance/i)
++
++  assert.match(firstRequest.systemPrompt, /categories\[\].*alle explizit genannten Kategorien/i)
++  assert.match(firstRequest.systemPrompt, /advisor_guidance\.category_sections/i)
++  assert.match(firstRequest.systemPrompt, /Maske oder Oel/i)
+ })
+ 
+ test("tool-loop accepts an explicit null consultation brief for baseline runs", async () => {
+@@ -2193,6 +2223,28 @@
+   })
+ 
+   assert.equal(selectedCategory, "leave_in")
++
++  const initialMessage = modelClient.requests[0]?.messages[0]
++  assert.ok(initialMessage && typeof initialMessage.content === "string", "Initial model message must contain serialized context")
++  const deliveredOverlay = (JSON.parse(initialMessage.content) as {
++    current_turn_context: Pick<
++      ReturnType<typeof extractCurrentTurnContextOverlay>,
++      "active_concerns" | "safety_overlay_ids"
++    >
++  }).current_turn_context
++  assert.ok(
++    deliveredOverlay.active_concerns.some(
++      (signal) => signal.field === "hair_texture" && signal.value === "curly",
++    ), "Delivered context must include curly hair")
++  assert.ok(
++    deliveredOverlay.active_concerns.some(
++      (signal) => signal.field === "concerns" && signal.value === "frizz",
++    ), "Delivered context must include frizz")
++  assert.ok(
++    deliveredOverlay.active_concerns.some(
++      (signal) => signal.field === "concerns" && signal.value === "tangling",
++    ), "Delivered context must include tangling")
++  assert.deepEqual(deliveredOverlay.safety_overlay_ids, [])
+ })
+ 
+ test("answer context includes current-turn conflict capsule only for conflicting routine inventory", async () => {
+@@ -2652,6 +2704,18 @@
+   assert.equal(result.state_transition.next_state.routine_layer, "basics")
+   assert.equal(result.state_transition.next_state.pending_offer, "routine_goals_or_problems")
+   assert.equal(result.state_transition.next_state.last_assistant_action, "answered_routine_basics")
++
++  const initialMessage = modelClient.requests[0]?.messages[0]
++  assert.ok(initialMessage && typeof initialMessage.content === "string", "Initial routine message must contain the serialized brief")
++  const deliveredBrief = (JSON.parse(initialMessage.content) as {
++    consultation_brief: Awaited<ReturnType<typeof buildAgenticConsultationBrief>> | null
++  }).consultation_brief
++  assert.ok(deliveredBrief, "Initial routine request must deliver a consultation brief")
++  assert.ok(deliveredBrief.routine_staging.some((line) => /shampoo/i.test(line)), "Delivered routine staging must include Shampoo")
++  assert.ok(deliveredBrief.routine_staging.some((line) => /conditioner/i.test(line)), "Delivered routine staging must include Conditioner")
++  assert.ok(deliveredBrief.routine_staging.some((line) => /highest-impact extra lever/i.test(line)), "Delivered routine staging must include the highest-impact extra lever")
++  assert.ok(deliveredBrief.routine_staging.some((line) => /goals or problems/i.test(line)), "Delivered routine staging must include goals or problems")
++  assert.ok(deliveredBrief.candidate_guidance.some((item) => item.id === "playbook:build_or_fix_routine"), "Delivered brief must include the routine playbook")
+ })
+ 
+ test("tool loop does not normalize routine basics state when a later product tool runs", async () => {
+--- transfer/tests/agentic-tool-loop.spec.ts
++++ cut/tests/agentic-tool-loop.spec.ts
+@@ -2,10 +2,7 @@
+ import test from "node:test"
+ 
+ import { buildAgenticToolDefinitions } from "../src/lib/agent/orchestrator/tool-definitions"
+-import {
+-  AGENTIC_TOOL_LOOP_PROMPT,
+-  AGENT_ROUTE_CLASSIFIER_PROMPT,
+-} from "../src/lib/agent/orchestrator/prompt"
++import { AGENT_ROUTE_CLASSIFIER_PROMPT } from "../src/lib/agent/orchestrator/prompt"
+ import { isGuidanceId } from "../src/lib/agent/contracts"
+ import { buildAgenticConsultationBrief } from "../src/lib/agent/orchestrator/agentic-consultation-brief"
+ import { extractCurrentTurnContextOverlay } from "../src/lib/agent/orchestrator/current-turn-context"
+@@ -238,31 +235,6 @@
+   assert.match(overlay.routine_products?.evidence ?? "", /nur Shampoo und Conditioner/i)
+ })
+ 
+-test("current-turn extractor captures direct care signals without inventing reset", () => {
+-  const overlay = extractCurrentTurnContextOverlay({
+-    message:
+-      "Ich habe lockiges Haar, Frizz und verknotete Spitzen. Was waere der naechste sinnvollste Schritt?",
+-    savedProfile: null,
+-  })
+-
+-  assert.ok(
+-    overlay.active_concerns.some(
+-      (signal) => signal.field === "hair_texture" && signal.value === "curly",
+-    ),
+-  )
+-  assert.ok(
+-    overlay.active_concerns.some(
+-      (signal) => signal.field === "concerns" && signal.value === "frizz",
+-    ),
+-  )
+-  assert.ok(
+-    overlay.active_concerns.some(
+-      (signal) => signal.field === "concerns" && signal.value === "tangling",
+-    ),
+-  )
+-  assert.deepEqual(overlay.safety_overlay_ids, [])
+-})
+-
+ test("current-turn scalp context preserves dandruff and irritation together", () => {
+   const overlay = extractCurrentTurnContextOverlay({
+     message: "Meine Kopfhaut juckt und ich habe Schuppen.",
+@@ -318,44 +290,6 @@
+   assert.deepEqual(overlay.routine_products?.value, ["shampoo", "conditioner"])
+   assert.equal(overlay.routine_products?.conflicts_with_saved, false)
+   assert.deepEqual(overlay.routine_products?.saved_value, [])
+-})
+-
+-test("consultation brief distinguishes conceptual leave-in interest from product selection", async () => {
+-  const brief = await buildAgenticConsultationBrief({
+-    message: "ja ich habe gehoert leave in soll gut sein",
+-    recentMessages: [{ role: "assistant", content: "Wir passen deine Routine an." }],
+-    userContext: createUserContext({
+-      profile: {
+-        hair_texture: "straight",
+-        thickness: "fine",
+-        goals: ["shine"],
+-        current_routine_products: ["shampoo", "conditioner"],
+-      } as NonNullable<UserContextProjection["profile"]>,
+-      suggested_overlays: ["overlay:fine_hair"],
+-    }),
+-    conversationState: createRoutineState({ active_topic: "routine", routine_layer: "basics" }),
+-  })
+-
+-  assert.equal(brief.charter.length > 0, true)
+-  assert.equal(brief.product_vs_education.length > 0, true)
+-  assert.ok(brief.candidate_guidance.some((item) => item.id === "topic:leave_in"))
+-  assert.ok(brief.profile_overlays.some((item) => item.id === "overlay:fine_hair"))
+-  assert.ok(brief.candidate_guidance.every((item) => item.content.length <= 1200))
+-})
+-
+-test("consultation brief includes routine staging for broad routine requests", async () => {
+-  const brief = await buildAgenticConsultationBrief({
+-    message: "ich moechte meine routine anpassen",
+-    recentMessages: [],
+-    userContext: createUserContext(),
+-    conversationState: null,
+-  })
+-
+-  assert.ok(brief.routine_staging.some((line) => /shampoo/i.test(line)))
+-  assert.ok(brief.routine_staging.some((line) => /conditioner/i.test(line)))
+-  assert.ok(brief.routine_staging.some((line) => /highest-impact extra lever/i.test(line)))
+-  assert.ok(brief.routine_staging.some((line) => /goals or problems/i.test(line)))
+-  assert.ok(brief.candidate_guidance.some((item) => item.id === "playbook:build_or_fix_routine"))
+ })
+ 
+ test("consultation brief treats broad additional-products questions as routine basics context", async () => {
+@@ -409,30 +343,6 @@
+   assert.ok(
+     englishBrief.candidate_guidance.some((item) => item.id === "playbook:build_or_fix_routine"),
+   )
+-})
+-
+-test("agentic tool-loop prompt routes broad additional-products questions to routine basics", () => {
+-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /zusaetzlich zu Shampoo/i)
+-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /hinzufuegen/i)
+-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /what else should I add/i)
+-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /build_or_fix_routine mit layer="basics"/i)
+-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /load_advisor_guidance.*konzeptuelle/i)
+-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /answer_context.*Beratungshilfe/i)
+-})
+-
+-test("agentic tool-loop prompt requires structured helpful rendering", () => {
+-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /kurze Einordnung/i)
+-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /klar struktur/i)
+-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /genau einen.*naechsten Schritt/i)
+-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /Fallback.*nie/i)
+-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /Nach einem select_products-Tool/i)
+-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /nicht.*zusaetzlich.*load_advisor_guidance/i)
+-})
+-
+-test("agentic prompt asks for multi-category guidance on category comparisons", () => {
+-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /categories\[\].*alle explizit genannten Kategorien/i)
+-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /advisor_guidance\.category_sections/i)
+-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /Maske oder Oel/i)
+ })
+ 
+ test("route classifier prompt exposes night protection as a known topic", () => {
+--- before/tests/agent-select-products-tool.spec.ts
++++ transfer/tests/agent-select-products-tool.spec.ts
+@@ -513,6 +513,8 @@
+   assert.equal(result.decision, "recommended")
+   assert.equal(result.product_response_policy, "recommend")
+   assert.equal(result.products.length, 1)
++
++  assert.match(result.policy_reason, /Shampoo|Kopfhaut/i)
+ })
+ 
+ test("projectSelectedProducts still recommends explicit non-shampoo products when runtime marks category irrelevant", () => {
+@@ -799,6 +801,17 @@
+   assert.equal(
+     result.products[0]?.supported_claims.some((claim) => claim.field === "chemical_treatment"),
+     false,
++  )
++
++  assert.equal(result.category, "conditioner")
++  assert.equal(result.products.length, 1)
++  assert.deepEqual(
++    result.products[0].unsupported_requested_signals.map((signal) => [
++      signal.field,
++      signal.value,
++      signal.reason,
++    ]),
++    [["chemical_treatment", "colored", "no_structured_product_data"]],
+   )
+ })
+ 
+@@ -2455,6 +2468,8 @@
+   assert.equal(result.product_response_policy, "redirect_to_better_lever")
+   assert.deepEqual(result.products, [])
+   assert.equal(result.comparison_facts, null)
++
++  assert.match(result.category_guidance, /nicht der wichtigste Hebel/)
+ })
+ 
+ test("projectSelectedProducts treats dry-length shampoo questions as not shampoo-first", () => {
+--- transfer/tests/agent-select-products-tool.spec.ts
++++ cut/tests/agent-select-products-tool.spec.ts
+@@ -465,10 +465,15 @@
+   assertProjectionDoesNotExposeFallback(result)
+ })
+ 
+-test("projectSelectedProducts returns generic recommend policy for ordinary product picks", () => {
++test("projectSelectedProducts does not let profile length concerns veto direct shampoo picks", () => {
+   const result = projectSelectedProducts(
+     [createShampooMatchedProduct("p-1", 0.94, ["Passt zum normalen Kopfhaut-Fokus"])],
+-    { thickness: "normal", scalp_type: "balanced", scalp_condition: null } as HairProfile,
++    {
++      thickness: "normal",
++      scalp_type: "balanced",
++      scalp_condition: null,
++      concerns: ["dryness", "frizz"],
++    } as HairProfile,
+     "shampoo",
+     createShampooRuntimeStub(
+       createRelevantShampooDecision({
+@@ -483,33 +488,6 @@
+     { userJob: "product_pick", concerns: [] },
+   )
+ 
+-  assert.equal(result.product_response_policy, "recommend")
+-  assert.match(result.policy_reason, /Shampoo|Kopfhaut/i)
+-})
+-
+-test("projectSelectedProducts does not let profile length concerns veto direct shampoo picks", () => {
+-  const result = projectSelectedProducts(
+-    [createShampooMatchedProduct("p-1", 0.94, ["Passt zum normalen Kopfhaut-Fokus"])],
+-    {
+-      thickness: "normal",
+-      scalp_type: "balanced",
+-      scalp_condition: null,
+-      concerns: ["dryness", "frizz"],
+-    } as HairProfile,
+-    "shampoo",
+-    createShampooRuntimeStub(
+-      createRelevantShampooDecision({
+-        targetProfile: {
+-          scalpRoute: "balanced",
+-          shampooBucket: "normal",
+-          secondaryBucket: null,
+-          cleansingIntensity: "regular",
+-        },
+-      }),
+-    ),
+-    { userJob: "product_pick", concerns: [] },
+-  )
+-
+   assert.equal(result.decision, "recommended")
+   assert.equal(result.product_response_policy, "recommend")
+   assert.equal(result.products.length, 1)
+@@ -540,47 +518,6 @@
+   assert.equal(result.decision, "recommended")
+   assert.equal(result.product_response_policy, "recommend")
+   assert.equal(result.products.length, 1)
+-})
+-
+-test("projectSelectedProducts emits conditioner unsupported-signal caveats without making claims", () => {
+-  const result = projectSelectedProducts(
+-    [createMatchedProduct("p-conditioner", 0.94)],
+-    {
+-      thickness: "normal",
+-      protein_moisture_balance: "stretches_bounces",
+-      chemical_treatment: ["colored"],
+-    } as HairProfile,
+-    "conditioner",
+-    createRuntimeStub(),
+-    {
+-      userJob: "product_pick",
+-      concerns: [],
+-      activeProfileSignals: [
+-        {
+-          field: "chemical_treatment",
+-          value: "colored",
+-          source: "message",
+-          selection_effect: "qualifier",
+-          evidence: "gefaerbte Haare",
+-        },
+-      ],
+-    },
+-  )
+-
+-  assert.equal(result.category, "conditioner")
+-  assert.equal(result.products.length, 1)
+-  assert.deepEqual(
+-    result.products[0].unsupported_requested_signals.map((signal) => [
+-      signal.field,
+-      signal.value,
+-      signal.reason,
+-    ]),
+-    [["chemical_treatment", "colored", "no_structured_product_data"]],
+-  )
+-  assert.deepEqual(
+-    result.products[0].supported_claims.some((claim) => claim.field === "chemical_treatment"),
+-    false,
+-  )
+ })
+ 
+ test("projectSelectedProducts exposes conditioner claims without density or damage drivers", () => {
+@@ -2430,26 +2367,6 @@
+   assert.match(result.category_guidance, /Build-up|weniger Öl|Keine Öl-Produkte/)
+ })
+ 
+-test("projectSelectedProducts returns not_recommended when shampoo is not the right lever", () => {
+-  const result = projectSelectedProducts(
+-    [],
+-    { thickness: "normal" } as HairProfile,
+-    "shampoo",
+-    createShampooRuntimeStub(
+-      createRelevantShampooDecision({
+-        relevant: false,
+-        action: null,
+-        targetProfile: null,
+-      }),
+-    ),
+-  )
+-
+-  assert.equal(result.decision, "not_recommended")
+-  assert.equal(result.product_response_policy, "redirect_to_better_lever")
+-  assert.match(result.category_guidance, /nicht der wichtigste Hebel/)
+-  assert.deepEqual(result.products, [])
+-})
+-
+ test("projectSelectedProducts suppresses shampoo products when the category is not recommended", () => {
+   const result = projectSelectedProducts(
+     [createShampooMatchedProduct("p-1", 0.94, ["Wäre ein guter Shampoo-Treffer"])],
+@@ -3493,19 +3410,6 @@
+   )
+ })
+ 
+-test("projectSelectedProducts uses mask-specific missing-info for explicit mask requests", () => {
+-  const result = projectSelectedProducts([], { thickness: "normal" } as HairProfile, "mask")
+-
+-  assert.deepEqual(result.missing_info, [
+-    {
+-      key: "protein_moisture_balance",
+-      label: "Protein-/Feuchtigkeitsbalance",
+-      blocking: true,
+-      detail: "Es fehlt noch deine Protein-/Feuchtigkeitsbalance für die Masken-Auswahl.",
+-    },
+-  ])
+-})
+-
+ test("projectSelectedProducts redirects deep-cleansing scalp treatment requests without products", () => {
+   const result = projectSelectedProducts(
+     [createMatchedProduct("reset", 0.9)],

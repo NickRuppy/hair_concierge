@@ -1,0 +1,1351 @@
+{
+  "schema": "bucket2-declaration-research-v1",
+  "created_at": "2026-10-03T15:22:25.314595+00:00",
+  "read_only": true,
+  "source_manifest": [
+    {
+      "id": "dm-current-conditioner",
+      "url": "https://www.dm.de/p/d/1703916/balea-professional-conditioner-oil-repair-intensiv",
+      "market": "DE",
+      "checked_at": "2026-10-03T15:19:23.074Z",
+      "authority": "brand-owned dm PDP plus live dm MCP",
+      "gtin": "4070765001402"
+    },
+    {
+      "id": "dm-current-got2b",
+      "url": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+      "market": "DE",
+      "checked_at": "2026-10-03T15:19:23.074Z",
+      "authority": "German retailer PDP plus live dm MCP",
+      "gtin": "4015100894141"
+    },
+    {
+      "id": "dm-current-balea-heat",
+      "url": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray",
+      "market": "DE",
+      "checked_at": "2026-10-03T15:19:23.074Z",
+      "authority": "brand-owned dm PDP plus live dm MCP",
+      "gtin": "4070765016758"
+    },
+    {
+      "id": "got2b-brand-current",
+      "url": "https://www.got2b.de/haarstyling/produkt/settings/schutzengel-hitzeschutz-spray.html",
+      "market": "DE",
+      "checked_at_date": "2026-10-03",
+      "authority": "official brand",
+      "supports": "Current INCI exactly agrees with dm current; adds before-second-tool reapplication recommendation and dry-hair caution."
+    },
+    {
+      "id": "dm-old-conditioner-pl-index",
+      "url": "https://www.dm.pl/p/d/1703916/balea-professional-odzywka-do-w-osow-oil-repair-intensiv",
+      "market": "PL/EU",
+      "checked_at_date": "2026-10-03",
+      "source_crawl_age": "search result three weeks old; open newer page now has current GTIN/INCI",
+      "authority": "historical first-party indexed declaration, not frozen catalog source",
+      "gtin": "4066447365443",
+      "raw_inci": "Aqua, Glycerin, Cetearyl Alcohol, Isopropyl Palmitate, Behentrimonium Chloride, Panthenol, Helianthus Annuus Hybrid Oil, Ricinus Communis Seed Oil, Argania Spinosa Kernel Oil, Orbignya Oleifera Seed Oil, Sclerocarya Birrea Seed Oil, Parfum, Isopropyl Alcohol, Hydrolyzed Keratin, Sodium Benzoate, Potassium Sorbate, Citric Acid"
+    },
+    {
+      "id": "dm-old-conditioner-it-index",
+      "url": "https://www.dm-drogeriemarkt.it/balea-professional-balsamo-ristrutturante-oil-repair-con-cheratina-p4066447365443.html",
+      "market": "IT/EU",
+      "checked_at_date": "2026-10-03",
+      "source_crawl_age": "five months",
+      "authority": "historical first-party indexed declaration; live PDP no longer has product body",
+      "gtin": "4066447365443",
+      "raw_inci": "Aqua, Glycerin, Cetearyl Alcohol, Isopropyl Palmitate, Behentrimonium Chloride, Panthenol, Helianthus Annuus Hybrid Oil, Ricinus Communis Seed Oil, Argania Spinosa Kernel Oil, Orbignya Oleifera Seed Oil, Sclerocarya Birrea Seed Oil, Parfum, Isopropyl Alcohol, Hydrolyzed Keratin, Sodium Benzoate, Potassium Sorbate, Citric Acid"
+    },
+    {
+      "id": "dm-old-conditioner-hr-index",
+      "url": "https://www.dm.hr/p/d/1703916/balea-professional-oil-repair-intensiv-regenerator-za-kosu-za-ostecenu-i-suhu-kosu",
+      "market": "HR/EU",
+      "checked_at_date": "2026-10-03",
+      "source_crawl_age": "three weeks",
+      "authority": "first-party regional indexed declaration, conflicting with PL/IT",
+      "gtin": "4066447365443",
+      "raw_inci": "AQUA, GLYCERIN, CETEARYL ALCOHOL, ISOPROPYL PALMITATE, BEHENTRIMONIUM CHLORIDE, PANTHENOL, HELIANTHUS ANNUUS HYBRID OIL, RICINUS COMMUNIS SEED OIL, ARGANIA SPINOSA KERNEL OIL, PARFUM, ISOPROPYL ALCOHOL, HYDROLYZED KERATIN, SODIUM BENZOATE, POTASSIUM SORBATE, CITRIC ACID"
+    },
+    {
+      "id": "dm-old-got2b-index-v1",
+      "url": "https://www.dm.de/hitzeschutzspray-schutzengel-p4015100800128.html",
+      "market": "DE",
+      "checked_at_date": "2026-10-03",
+      "source_crawl_age": "eight months",
+      "authority": "historical first-party search-index declaration",
+      "gtin": "4015100800128",
+      "raw_inci": "Aqua (Water, Eau), VP/VA Copolymer, Laurdimonium Hydroxypropyl Hydrolyzed Wheat Protein, Sodium Benzoate, PEG-40 Hydrogenated Castor Oil, Parfum (Fragrance), Cetrimonium Chloride, Lactic Acid, Hexyl Cinnamal, Soy Amino Acids, Wheat Amino Acids, Phenoxyethanol, Linalool, Potassium Sorbate, Serine, Threonine, Arginine HCl, Benzyl Salicylate, Benzyl Alcohol, Limonene, Citronellol, Benzyl Benzoate"
+    },
+    {
+      "id": "dm-old-got2b-open-v2",
+      "url": "https://www.dm.de/hitzeschutzspray-schutzengel-p4015100800128.html",
+      "market": "DE",
+      "checked_at_date": "2026-10-03",
+      "source_crawl_age": "two months",
+      "authority": "historical first-party cached open, redirected to same DAN; different declaration from older index",
+      "gtin": "4015100800128",
+      "raw_inci": "Aqua (Water, Eau), VP/VA Copolymer, Laurdimonium Hydroxypropyl Hydrolyzed Wheat Protein, Sodium Benzoate, PEG-40 Hydrogenated Castor Oil, Cetrimonium Chloride, Parfum (Fragrance), Lactic Acid, Hexyl Cinnamal, Soy Amino Acids, Wheat Amino Acids, Phenoxyethanol, Linalool, Potassium Sorbate, Serine, Threonine, Arginine HCl, Benzyl Salicylate, Linalyl Acetate, Benzyl Alcohol, Acetyl Cedrene, Limonene, Citrus Aurantium Peel Oil, Citronellol, Terpineol, Benzyl Benzoate"
+    },
+    {
+      "id": "dm-old-balea-heat-index",
+      "url": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray",
+      "market": "DE",
+      "checked_at_date": "2026-10-03",
+      "source_crawl_age": "three weeks",
+      "authority": "historical first-party search-index declaration",
+      "gtin": "4070765073546",
+      "raw_inci": "AQUA, ISODODECANE, ALCOHOL DENAT., POLYQUATERNIUM-68, PANTHENOL, UNDECANE, CITRIC ACID, GLYCERYL CAPRATE, TRIDECANE, ETHYLHEXYLGLYCERIN, CETRIMONIUM CHLORIDE, PARFUM, HYDROLYZED RICE PROTEIN, AMMONIA, PHENOXYETHANOL, LINALYL ACETATE, LIMONENE, LINALOOL, SODIUM BENZOATE, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, CITRUS AURANTIUM PEEL OIL, GERANIOL, PINENE, TOCOPHEROL, HELIANTHUS ANNUUS SEED OIL."
+    },
+    {
+      "id": "dm-old-balea-heat-ro-index",
+      "url": "https://www.dm.ro/p/d/1460813/balea-spray-protectie-termica",
+      "market": "RO/EU",
+      "checked_at_date": "2026-10-03",
+      "source_crawl_age": "three weeks",
+      "authority": "regional first-party search-index declaration; not historical DE proof",
+      "gtin": "4070765073546",
+      "raw_inci": "AQUA, ISODODECANE, ALCOHOL DENAT., POLYQUATERNIUM-68, PANTHENOL, UNDECANE, CITRIC ACID, GLYCERYL CAPRATE, TRIDECANE, ETHYLHEXYLGLYCERIN, CETRIMONIUM CHLORIDE, PARFUM, HYDROLYZED RICE PROTEIN, AMMONIA, PHENOXYETHANOL, LIMONENE, LINALOOL, SODIUM BENZOATE, GERANIOL, CITRAL, TOCOPHEROL, HELIANTHUS ANNUUS SEED OIL."
+    }
+  ],
+  "items": [
+    {
+      "product_id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+      "current_source": {
+        "dan": "1703916",
+        "gtin": "4070765001402",
+        "productName": "Conditioner Oil Repair Intensiv, 200 ml",
+        "brand": "Balea PROFESSIONAL",
+        "found": "true",
+        "errorMessage": "",
+        "productUrl": "https://www.dm.de/applink/p/d/1703916/balea-professional-conditioner-oil-repair-intensiv?appPageType=productdetails&appProductId=1703916&wt_mc=dm-mcp",
+        "image": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1773357306/assets/pas/images/20ec1707-3778-4524-8140-bc9e8787dbd0/balea-professional-conditioner-oil-repair-intensiv",
+        "imageBackgroundColor": "#F9F3F1",
+        "productType": "NON_FOOD",
+        "weight": "220g",
+        "volume": "0.643l",
+        "description": "Eine intensive Tiefenpflege für extrem strapaziertes und trockenes Haar bietet der Balea PROFESSIONAL Conditioner Oil Repair Intensiv. Die leistungsstarke Formel mit Keratin und einem 3-Fach Öl-Komplex aus Argan-, Marula- und Babassuöl pflegt das Haar und kann es kräftigen. Dank der Spliss-Repair-Formel kann Haarschäden vorgebeugt und Haarbruch reduziert werden. Die Spülung sorgt für eine optimale Kämmbarkeit und verleiht dem Haar einen geschmeidigen Glanz, ohne es zu beschweren. Die Rezeptur kommt ohne Silikone aus.",
+        "keyBenefits": "[Intensiv-Spülung für strapaziertes Haar;Kann Haarbruch um bis zu 80 % reduzieren;Mit 3-Fach Öl-Komplex & Keratin;Hautverträglichkeit dermatologisch bestätigt]",
+        "countryOfOrigin": "Deutschland",
+        "foodIngredients": "",
+        "preparation": "",
+        "nutritionFacts": "",
+        "allergens": "",
+        "additives": "",
+        "nonFoodIngredients": "Ingredients: Aqua, Glycerin, Cetearyl Alcohol, Isopropyl Palmitate, Behentrimonium Chloride, Panthenol, Hydrolyzed Keratin, Helianthus Annuus Hybrid Oil, Ricinus Communis Seed Oil, Argania Spinosa Kernel Oil, Orbignya Oleifera Seed Oil, Sclerocarya Birrea Seed Oil, Parfum, Isopropyl Alcohol, Sodium Benzoate, Potassium Sorbate, Tetramethyl Acetyloctahydronaphthalenes, Citric Acid",
+        "applicationInstructions": "Sanft ins nasse Haar einmassieren, kurz einwirken lassen und sorgfältig mit lauwarmem Wasser ausspülen.",
+        "warnings": "",
+        "hazardWarnings": "",
+        "careLabel": "",
+        "productFeatures": "[ohne Silikone]",
+        "isSustainable": "false"
+      },
+      "current_market": "DE",
+      "current_pack": {
+        "value": 200,
+        "unit": "ml"
+      },
+      "current_inci": "Ingredients: Aqua, Glycerin, Cetearyl Alcohol, Isopropyl Palmitate, Behentrimonium Chloride, Panthenol, Hydrolyzed Keratin, Helianthus Annuus Hybrid Oil, Ricinus Communis Seed Oil, Argania Spinosa Kernel Oil, Orbignya Oleifera Seed Oil, Sclerocarya Birrea Seed Oil, Parfum, Isopropyl Alcohol, Sodium Benzoate, Potassium Sorbate, Tetramethyl Acetyloctahydronaphthalenes, Citric Acid",
+      "current_inci_normalized": [
+        "AQUA",
+        "GLYCERIN",
+        "CETEARYL ALCOHOL",
+        "ISOPROPYL PALMITATE",
+        "BEHENTRIMONIUM CHLORIDE",
+        "PANTHENOL",
+        "HYDROLYZED KERATIN",
+        "HELIANTHUS ANNUUS HYBRID OIL",
+        "RICINUS COMMUNIS SEED OIL",
+        "ARGANIA SPINOSA KERNEL OIL",
+        "ORBIGNYA OLEIFERA SEED OIL",
+        "SCLEROCARYA BIRREA SEED OIL",
+        "PARFUM",
+        "ISOPROPYL ALCOHOL",
+        "SODIUM BENZOATE",
+        "POTASSIUM SORBATE",
+        "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+        "CITRIC ACID"
+      ],
+      "current_source_checked_at": "2026-10-03T15:19:23.074Z",
+      "historical_catalog_inci": null,
+      "historical_catalog_inci_status": "No immutable old German canonical INCI recovered from catalog/provenance. Historical first-party variants below are comparisons, not substituted catalog authority.",
+      "historical_declaration_comparisons": [
+        {
+          "source_id": "dm-old-conditioner-pl-index",
+          "raw_inci": "Aqua, Glycerin, Cetearyl Alcohol, Isopropyl Palmitate, Behentrimonium Chloride, Panthenol, Helianthus Annuus Hybrid Oil, Ricinus Communis Seed Oil, Argania Spinosa Kernel Oil, Orbignya Oleifera Seed Oil, Sclerocarya Birrea Seed Oil, Parfum, Isopropyl Alcohol, Hydrolyzed Keratin, Sodium Benzoate, Potassium Sorbate, Citric Acid",
+          "diff_vs_current": {
+            "old_ingredient_count": 17,
+            "current_ingredient_count": 18,
+            "added_declarations": [
+              "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+            ],
+            "removed_declarations": [],
+            "rank_changes": [
+              {
+                "ingredient": "HELIANTHUS ANNUUS HYBRID OIL",
+                "old_rank": 7,
+                "current_rank": 8
+              },
+              {
+                "ingredient": "RICINUS COMMUNIS SEED OIL",
+                "old_rank": 8,
+                "current_rank": 9
+              },
+              {
+                "ingredient": "ARGANIA SPINOSA KERNEL OIL",
+                "old_rank": 9,
+                "current_rank": 10
+              },
+              {
+                "ingredient": "ORBIGNYA OLEIFERA SEED OIL",
+                "old_rank": 10,
+                "current_rank": 11
+              },
+              {
+                "ingredient": "SCLEROCARYA BIRREA SEED OIL",
+                "old_rank": 11,
+                "current_rank": 12
+              },
+              {
+                "ingredient": "PARFUM",
+                "old_rank": 12,
+                "current_rank": 13
+              },
+              {
+                "ingredient": "ISOPROPYL ALCOHOL",
+                "old_rank": 13,
+                "current_rank": 14
+              },
+              {
+                "ingredient": "HYDROLYZED KERATIN",
+                "old_rank": 14,
+                "current_rank": 7
+              },
+              {
+                "ingredient": "CITRIC ACID",
+                "old_rank": 17,
+                "current_rank": 18
+              }
+            ],
+            "relative_order_reversals": [
+              [
+                "HELIANTHUS ANNUUS HYBRID OIL",
+                "HYDROLYZED KERATIN"
+              ],
+              [
+                "RICINUS COMMUNIS SEED OIL",
+                "HYDROLYZED KERATIN"
+              ],
+              [
+                "ARGANIA SPINOSA KERNEL OIL",
+                "HYDROLYZED KERATIN"
+              ],
+              [
+                "ORBIGNYA OLEIFERA SEED OIL",
+                "HYDROLYZED KERATIN"
+              ],
+              [
+                "SCLEROCARYA BIRREA SEED OIL",
+                "HYDROLYZED KERATIN"
+              ],
+              [
+                "PARFUM",
+                "HYDROLYZED KERATIN"
+              ],
+              [
+                "ISOPROPYL ALCOHOL",
+                "HYDROLYZED KERATIN"
+              ]
+            ],
+            "interpretation_limit": "Declaration differences only. Neither concentration changes nor chemical continuity/reformulation established."
+          }
+        },
+        {
+          "source_id": "dm-old-conditioner-it-index",
+          "raw_inci": "Aqua, Glycerin, Cetearyl Alcohol, Isopropyl Palmitate, Behentrimonium Chloride, Panthenol, Helianthus Annuus Hybrid Oil, Ricinus Communis Seed Oil, Argania Spinosa Kernel Oil, Orbignya Oleifera Seed Oil, Sclerocarya Birrea Seed Oil, Parfum, Isopropyl Alcohol, Hydrolyzed Keratin, Sodium Benzoate, Potassium Sorbate, Citric Acid",
+          "diff_vs_current": {
+            "old_ingredient_count": 17,
+            "current_ingredient_count": 18,
+            "added_declarations": [
+              "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+            ],
+            "removed_declarations": [],
+            "rank_changes": [
+              {
+                "ingredient": "HELIANTHUS ANNUUS HYBRID OIL",
+                "old_rank": 7,
+                "current_rank": 8
+              },
+              {
+                "ingredient": "RICINUS COMMUNIS SEED OIL",
+                "old_rank": 8,
+                "current_rank": 9
+              },
+              {
+                "ingredient": "ARGANIA SPINOSA KERNEL OIL",
+                "old_rank": 9,
+                "current_rank": 10
+              },
+              {
+                "ingredient": "ORBIGNYA OLEIFERA SEED OIL",
+                "old_rank": 10,
+                "current_rank": 11
+              },
+              {
+                "ingredient": "SCLEROCARYA BIRREA SEED OIL",
+                "old_rank": 11,
+                "current_rank": 12
+              },
+              {
+                "ingredient": "PARFUM",
+                "old_rank": 12,
+                "current_rank": 13
+              },
+              {
+                "ingredient": "ISOPROPYL ALCOHOL",
+                "old_rank": 13,
+                "current_rank": 14
+              },
+              {
+                "ingredient": "HYDROLYZED KERATIN",
+                "old_rank": 14,
+                "current_rank": 7
+              },
+              {
+                "ingredient": "CITRIC ACID",
+                "old_rank": 17,
+                "current_rank": 18
+              }
+            ],
+            "relative_order_reversals": [
+              [
+                "HELIANTHUS ANNUUS HYBRID OIL",
+                "HYDROLYZED KERATIN"
+              ],
+              [
+                "RICINUS COMMUNIS SEED OIL",
+                "HYDROLYZED KERATIN"
+              ],
+              [
+                "ARGANIA SPINOSA KERNEL OIL",
+                "HYDROLYZED KERATIN"
+              ],
+              [
+                "ORBIGNYA OLEIFERA SEED OIL",
+                "HYDROLYZED KERATIN"
+              ],
+              [
+                "SCLEROCARYA BIRREA SEED OIL",
+                "HYDROLYZED KERATIN"
+              ],
+              [
+                "PARFUM",
+                "HYDROLYZED KERATIN"
+              ],
+              [
+                "ISOPROPYL ALCOHOL",
+                "HYDROLYZED KERATIN"
+              ]
+            ],
+            "interpretation_limit": "Declaration differences only. Neither concentration changes nor chemical continuity/reformulation established."
+          }
+        },
+        {
+          "source_id": "dm-old-conditioner-hr-index",
+          "raw_inci": "AQUA, GLYCERIN, CETEARYL ALCOHOL, ISOPROPYL PALMITATE, BEHENTRIMONIUM CHLORIDE, PANTHENOL, HELIANTHUS ANNUUS HYBRID OIL, RICINUS COMMUNIS SEED OIL, ARGANIA SPINOSA KERNEL OIL, PARFUM, ISOPROPYL ALCOHOL, HYDROLYZED KERATIN, SODIUM BENZOATE, POTASSIUM SORBATE, CITRIC ACID",
+          "diff_vs_current": {
+            "old_ingredient_count": 15,
+            "current_ingredient_count": 18,
+            "added_declarations": [
+              "ORBIGNYA OLEIFERA SEED OIL",
+              "SCLEROCARYA BIRREA SEED OIL",
+              "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+            ],
+            "removed_declarations": [],
+            "rank_changes": [
+              {
+                "ingredient": "HELIANTHUS ANNUUS HYBRID OIL",
+                "old_rank": 7,
+                "current_rank": 8
+              },
+              {
+                "ingredient": "RICINUS COMMUNIS SEED OIL",
+                "old_rank": 8,
+                "current_rank": 9
+              },
+              {
+                "ingredient": "ARGANIA SPINOSA KERNEL OIL",
+                "old_rank": 9,
+                "current_rank": 10
+              },
+              {
+                "ingredient": "PARFUM",
+                "old_rank": 10,
+                "current_rank": 13
+              },
+              {
+                "ingredient": "ISOPROPYL ALCOHOL",
+                "old_rank": 11,
+                "current_rank": 14
+              },
+              {
+                "ingredient": "HYDROLYZED KERATIN",
+                "old_rank": 12,
+                "current_rank": 7
+              },
+              {
+                "ingredient": "SODIUM BENZOATE",
+                "old_rank": 13,
+                "current_rank": 15
+              },
+              {
+                "ingredient": "POTASSIUM SORBATE",
+                "old_rank": 14,
+                "current_rank": 16
+              },
+              {
+                "ingredient": "CITRIC ACID",
+                "old_rank": 15,
+                "current_rank": 18
+              }
+            ],
+            "relative_order_reversals": [
+              [
+                "HELIANTHUS ANNUUS HYBRID OIL",
+                "HYDROLYZED KERATIN"
+              ],
+              [
+                "RICINUS COMMUNIS SEED OIL",
+                "HYDROLYZED KERATIN"
+              ],
+              [
+                "ARGANIA SPINOSA KERNEL OIL",
+                "HYDROLYZED KERATIN"
+              ],
+              [
+                "PARFUM",
+                "HYDROLYZED KERATIN"
+              ],
+              [
+                "ISOPROPYL ALCOHOL",
+                "HYDROLYZED KERATIN"
+              ]
+            ],
+            "interpretation_limit": "Declaration differences only. Neither concentration changes nor chemical continuity/reformulation established."
+          }
+        }
+      ],
+      "live_catalog": {
+        "observed_at": "2026-10-03 15:19:40.490866+00",
+        "product": {
+          "id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+          "name": "Balea Professional Oil Repair Intensiv Spülung",
+          "tags": [
+            "conditioner (drogerie)"
+          ],
+          "brand": "Balea",
+          "origin": "curated",
+          "brand_id": "58bcafd6-a884-4337-8c8d-8d8369f2117c",
+          "category": "Conditioner",
+          "currency": "EUR",
+          "tom_take": null,
+          "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/e7cde77e-e9d5-4976-a8ed-830c8a30c62a/06-e7cde77e-e9d5-4976-a8ed-830c8a30c62a-balea-balea-oil-repair-662414bac91b.webp",
+          "is_active": true,
+          "price_eur": 1.25,
+          "created_at": "2026-03-03T12:33:58.311159+00:00",
+          "sort_order": 31,
+          "updated_at": "2026-08-15T07:49:44.692573+00:00",
+          "description": "Balea Oil Repair ist ein Conditioner (Drogerie) von Balea, empfohlen für dickes Haar bei Proteinbedarf.",
+          "category_key": "conditioner",
+          "affiliate_link": "https://www.dm.de/balea-professional-spuelung-oil-repair-intensiv-p4066447365443.html",
+          "product_line_id": "7acc1a31-fe34-4e3a-8ee9-634a0761943c",
+          "lifecycle_status": "active",
+          "net_content_unit": null,
+          "price_checked_at": "2026-06-11T00:00:00+00:00",
+          "net_content_value": null,
+          "short_description": null,
+          "suitable_concerns": [
+            "protein",
+            "hair_damage",
+            "breakage"
+          ],
+          "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/662414bac91b50271d7268ea7c326328734f0cf5566e180aab3a192555edfbcf.webp",
+          "purchase_link_status": "available",
+          "suitable_thicknesses": [
+            "coarse"
+          ],
+          "is_chaarlie_recommended": true,
+          "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+        },
+        "identifiers": [
+          {
+            "id": "4c4fe6c8-ff53-4920-ae21-e42ce0afbff2",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-08-28T08:03:37.28665+00:00",
+            "product_id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+            "updated_at": "2026-08-28T08:03:37.28665+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "04066447365443",
+            "identifier_value": "4066447365443",
+            "normalized_identifier_value": "4066447365443"
+          }
+        ],
+        "heat_specs": null,
+        "conditioner_specs": [
+          {
+            "thickness": "coarse",
+            "created_at": "2026-07-06T13:56:43.305291+00:00",
+            "product_id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+            "updated_at": "2026-07-06T13:56:43.305291+00:00",
+            "category_key": "conditioner",
+            "protein_moisture_balance": "stretches_stays"
+          }
+        ],
+        "conditioner_rerank_specs": [
+          {
+            "weight": "rich",
+            "created_at": "2026-04-15T18:20:39.745941+00:00",
+            "product_id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+            "updated_at": "2026-04-28T12:54:04.13078+00:00",
+            "category_key": "conditioner",
+            "repair_level": "high",
+            "ingredient_flags": [],
+            "balance_direction": "protein"
+          }
+        ],
+        "protocols": [
+          {
+            "id": "d6878b1c-aaa3-4b8c-81cd-6896de1d89b4",
+            "role": "conditioner_rinse_out",
+            "cadence": null,
+            "category": "conditioner",
+            "placement": "all_hair",
+            "created_at": "2026-08-12T06:17:18.071285+00:00",
+            "product_id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+            "source_url": "https://vivavoss.com/products/conditioner-oil-repair-intensiv-200-ml",
+            "updated_at": "2026-08-13T06:58:13.851968+00:00",
+            "source_text": "Exact source evidence for Balea Professional Oil Repair Intensiv Spülung: conditioner rinse out protocol; whole-hair application; rinse-out use.",
+            "category_key": "conditioner",
+            "rinse_action": "rinse_out",
+            "source_label": "Händler-Produktseite",
+            "reapplication": "not_stated",
+            "guidance_payload": {
+              "role": "condition",
+              "scope": {
+                "kind": "product",
+                "category": "conditioner",
+                "productId": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a"
+              },
+              "steps": [
+                {
+                  "action": "apply_product",
+                  "stepKey": "apply-conditioner",
+                  "copyTemplateDe": "Sanft in das nasse Haar einmassieren."
+                },
+                {
+                  "action": "wait",
+                  "stepKey": "wait-conditioner",
+                  "copyTemplateDe": "Kurz einwirken lassen."
+                },
+                {
+                  "action": "rinse",
+                  "stepKey": "rinse-conditioner",
+                  "copyTemplateDe": "Mit lauwarmem Wasser sorgfältig ausspülen."
+                }
+              ],
+              "locale": "de",
+              "evidence": [
+                {
+                  "checkedAt": "2026-08-11",
+                  "sourceUrl": "https://vivavoss.com/products/conditioner-oil-repair-intensiv-200-ml",
+                  "sourceType": "retailer"
+                }
+              ],
+              "sequence": {
+                "after": [
+                  "wet_cleanse"
+                ],
+                "anchor": "post_cleanse_rinse_off",
+                "before": [],
+                "conflictsWith": []
+              },
+              "guidanceKey": "product-conditioner-e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+              "requirements": {
+                "requiredCatalogFacts": [],
+                "requiredProfileFacts": [],
+                "requiredProtocolFacts": []
+              },
+              "protocolFacts": {
+                "rinse": "rinse_out",
+                "amount": null,
+                "cautions": [],
+                "reapplication": "none",
+                "applicationArea": "all_hair",
+                "contactTimeSeconds": null,
+                "conditionerRelationship": "not_applicable"
+              },
+              "schemaVersion": 1,
+              "protocolVersion": 1,
+              "applicationFamily": "standard_rinse_out_conditioning",
+              "compatibleDayTypes": [
+                "wash_day"
+              ],
+              "exactGuidanceRequired": true
+            },
+            "application_stage": "post_cleanse_rinse_off",
+            "application_state": null,
+            "application_family": "standard_rinse_out_conditioning",
+            "guidance_payload_v2": {
+              "role": "condition",
+              "facts": {
+                "heat": null,
+                "rinse": "rinse_out",
+                "amount": null,
+                "contactTime": null,
+                "applicationArea": "hair_lengths_ends",
+                "applicationState": "wet_hair",
+                "conditionerPolicy": "not_applicable"
+              },
+              "scope": {
+                "kind": "product",
+                "category": "conditioner",
+                "productId": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a"
+              },
+              "evidence": [
+                {
+                  "checkedAt": "2026-08-11",
+                  "sourceUrl": "https://vivavoss.com/products/conditioner-oil-repair-intensiv-200-ml",
+                  "sourceType": "retailer"
+                }
+              ],
+              "exactSteps": [],
+              "sourceRole": "conditioner_rinse_out",
+              "workflowId": null,
+              "cautionCodes": [],
+              "contractKind": "product_pointer",
+              "schemaVersion": 2,
+              "applicationFamily": "standard_rinse_out_conditioning",
+              "runtimeBlockerCode": null,
+              "requiredCompanionProductId": null
+            },
+            "contact_time_seconds": null,
+            "instruction_modifiers": []
+          }
+        ]
+      }
+    },
+    {
+      "product_id": "efaff579-e411-41eb-972a-2734a8517356",
+      "current_source": {
+        "dan": "1267310",
+        "gtin": "4015100894141",
+        "productName": "Hitzeschutzspray Schutzengel, 200 ml",
+        "brand": "got2b",
+        "found": "true",
+        "errorMessage": "",
+        "productUrl": "https://www.dm.de/applink/p/d/1267310/got2b-hitzeschutzspray-schutzengel?appPageType=productdetails&appProductId=1267310&wt_mc=dm-mcp",
+        "image": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1785752721/assets/pas/images/ea22f1eb-f37a-4cc4-a1f3-a36e718a367d/got2b-hitzeschutzspray-schutzengel",
+        "imageBackgroundColor": "#F9F6F1",
+        "productType": "NON_FOOD",
+        "weight": "236g",
+        "volume": "0.731l",
+        "description": "Das got2b Hitzeschutzspray Schutzengel bietet einen zuverlässigen Schutz für das Haar bei Stylings mit Hitze. Es bewahrt das Haar vor Hitzeschäden bis zu 230°C und ist somit die ideale Vorbereitung für die Verwendung von Föhn, Glätteisen oder Lockenstab. Zusätzlich wird Frizz für bis zu 96 Stunden kontrolliert, während das Haar ein gepflegtes Gefühl und einen strahlenden Glanz erhält, ohne zu beschweren. Die vegane Formel des Hitzeschutzsprays ermöglicht ein schonendes Styling für jeden Tag.\\n\\n",
+        "keyBenefits": "[Hitzeschutzspray für Haarstyles;Schützt das Haar vor Hitzeschäden bis zu 230 °C;Kontrolliert Frizz für bis zu 96 Stunden;Für ein gepflegtes Haargefühl;Vegan]",
+        "countryOfOrigin": "",
+        "foodIngredients": "",
+        "preparation": "",
+        "nutritionFacts": "",
+        "allergens": "",
+        "additives": "",
+        "nonFoodIngredients": "Ingredients: Aqua (Water, Eau), VP/VA Copolymer, Laurdimonium Hydroxypropyl Hydrolyzed Wheat Protein, Sodium Benzoate, PEG-40 Hydrogenated Castor Oil, Cetrimonium Chloride, Parfum (Fragrance), Lactic Acid, Hexyl Cinnamal, Soy Amino Acids, Wheat Amino Acids, Phenoxyethanol, Linalool, Potassium Sorbate, Serine, Threonine, Arginine HCl, Linalyl Acetate, Benzyl Salicylate, Benzyl Alcohol, Acetyl Cedrene, Limonene, Citrus Aurantium Peel Oil",
+        "applicationInstructions": "Großzügig ins handtuchtrockene Haar sprühen. Das Haar wie gewohnt föhnen. Für den ultimativen heißen Style ein Glätteisen oder einen Lockenstab benutzen.",
+        "warnings": "",
+        "hazardWarnings": "",
+        "careLabel": "",
+        "productFeatures": "[Ohne Alkohol;ohne Silikone;ohne Ammoniak;vegan;Hitzeschutz]",
+        "isSustainable": "false"
+      },
+      "current_market": "DE",
+      "current_pack": {
+        "value": 200,
+        "unit": "ml"
+      },
+      "current_inci": "Ingredients: Aqua (Water, Eau), VP/VA Copolymer, Laurdimonium Hydroxypropyl Hydrolyzed Wheat Protein, Sodium Benzoate, PEG-40 Hydrogenated Castor Oil, Cetrimonium Chloride, Parfum (Fragrance), Lactic Acid, Hexyl Cinnamal, Soy Amino Acids, Wheat Amino Acids, Phenoxyethanol, Linalool, Potassium Sorbate, Serine, Threonine, Arginine HCl, Linalyl Acetate, Benzyl Salicylate, Benzyl Alcohol, Acetyl Cedrene, Limonene, Citrus Aurantium Peel Oil",
+      "current_inci_normalized": [
+        "AQUA (WATER, EAU)",
+        "VP/VA COPOLYMER",
+        "LAURDIMONIUM HYDROXYPROPYL HYDROLYZED WHEAT PROTEIN",
+        "SODIUM BENZOATE",
+        "PEG-40 HYDROGENATED CASTOR OIL",
+        "CETRIMONIUM CHLORIDE",
+        "PARFUM (FRAGRANCE)",
+        "LACTIC ACID",
+        "HEXYL CINNAMAL",
+        "SOY AMINO ACIDS",
+        "WHEAT AMINO ACIDS",
+        "PHENOXYETHANOL",
+        "LINALOOL",
+        "POTASSIUM SORBATE",
+        "SERINE",
+        "THREONINE",
+        "ARGININE HCL",
+        "LINALYL ACETATE",
+        "BENZYL SALICYLATE",
+        "BENZYL ALCOHOL",
+        "ACETYL CEDRENE",
+        "LIMONENE",
+        "CITRUS AURANTIUM PEEL OIL"
+      ],
+      "current_source_checked_at": "2026-10-03T15:19:23.074Z",
+      "historical_catalog_inci": null,
+      "historical_catalog_inci_status": "No immutable old German canonical INCI recovered from catalog/provenance. Historical first-party variants below are comparisons, not substituted catalog authority.",
+      "historical_declaration_comparisons": [
+        {
+          "source_id": "dm-old-got2b-index-v1",
+          "raw_inci": "Aqua (Water, Eau), VP/VA Copolymer, Laurdimonium Hydroxypropyl Hydrolyzed Wheat Protein, Sodium Benzoate, PEG-40 Hydrogenated Castor Oil, Parfum (Fragrance), Cetrimonium Chloride, Lactic Acid, Hexyl Cinnamal, Soy Amino Acids, Wheat Amino Acids, Phenoxyethanol, Linalool, Potassium Sorbate, Serine, Threonine, Arginine HCl, Benzyl Salicylate, Benzyl Alcohol, Limonene, Citronellol, Benzyl Benzoate",
+          "diff_vs_current": {
+            "old_ingredient_count": 22,
+            "current_ingredient_count": 23,
+            "added_declarations": [
+              "LINALYL ACETATE",
+              "ACETYL CEDRENE",
+              "CITRUS AURANTIUM PEEL OIL"
+            ],
+            "removed_declarations": [
+              "CITRONELLOL",
+              "BENZYL BENZOATE"
+            ],
+            "rank_changes": [
+              {
+                "ingredient": "PARFUM (FRAGRANCE)",
+                "old_rank": 6,
+                "current_rank": 7
+              },
+              {
+                "ingredient": "CETRIMONIUM CHLORIDE",
+                "old_rank": 7,
+                "current_rank": 6
+              },
+              {
+                "ingredient": "BENZYL SALICYLATE",
+                "old_rank": 18,
+                "current_rank": 19
+              },
+              {
+                "ingredient": "BENZYL ALCOHOL",
+                "old_rank": 19,
+                "current_rank": 20
+              },
+              {
+                "ingredient": "LIMONENE",
+                "old_rank": 20,
+                "current_rank": 22
+              }
+            ],
+            "relative_order_reversals": [
+              [
+                "PARFUM (FRAGRANCE)",
+                "CETRIMONIUM CHLORIDE"
+              ]
+            ],
+            "interpretation_limit": "Declaration differences only. Neither concentration changes nor chemical continuity/reformulation established."
+          }
+        },
+        {
+          "source_id": "dm-old-got2b-open-v2",
+          "raw_inci": "Aqua (Water, Eau), VP/VA Copolymer, Laurdimonium Hydroxypropyl Hydrolyzed Wheat Protein, Sodium Benzoate, PEG-40 Hydrogenated Castor Oil, Cetrimonium Chloride, Parfum (Fragrance), Lactic Acid, Hexyl Cinnamal, Soy Amino Acids, Wheat Amino Acids, Phenoxyethanol, Linalool, Potassium Sorbate, Serine, Threonine, Arginine HCl, Benzyl Salicylate, Linalyl Acetate, Benzyl Alcohol, Acetyl Cedrene, Limonene, Citrus Aurantium Peel Oil, Citronellol, Terpineol, Benzyl Benzoate",
+          "diff_vs_current": {
+            "old_ingredient_count": 26,
+            "current_ingredient_count": 23,
+            "added_declarations": [],
+            "removed_declarations": [
+              "CITRONELLOL",
+              "TERPINEOL",
+              "BENZYL BENZOATE"
+            ],
+            "rank_changes": [
+              {
+                "ingredient": "BENZYL SALICYLATE",
+                "old_rank": 18,
+                "current_rank": 19
+              },
+              {
+                "ingredient": "LINALYL ACETATE",
+                "old_rank": 19,
+                "current_rank": 18
+              }
+            ],
+            "relative_order_reversals": [
+              [
+                "BENZYL SALICYLATE",
+                "LINALYL ACETATE"
+              ]
+            ],
+            "interpretation_limit": "Declaration differences only. Neither concentration changes nor chemical continuity/reformulation established."
+          }
+        }
+      ],
+      "live_catalog": {
+        "observed_at": "2026-10-03 15:19:40.490866+00",
+        "product": {
+          "id": "efaff579-e411-41eb-972a-2734a8517356",
+          "name": "Hitzeschutzspray Schutzengel",
+          "tags": [],
+          "brand": "got2b",
+          "origin": "curated",
+          "brand_id": "a286e2c2-6b44-41f3-a37b-f57d4ed1e93c",
+          "category": "heat_protectant",
+          "currency": "EUR",
+          "tom_take": null,
+          "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-enrichment/personal-plan-launch-v1/heat/got2b-schutzengel-200ml/dm-packshot.webp",
+          "is_active": true,
+          "price_eur": 4.95,
+          "created_at": "2026-08-10T09:44:02.62441+00:00",
+          "sort_order": 0,
+          "updated_at": "2026-08-15T07:49:54.652656+00:00",
+          "description": null,
+          "category_key": "heat_protectant",
+          "affiliate_link": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+          "product_line_id": null,
+          "lifecycle_status": "active",
+          "net_content_unit": null,
+          "price_checked_at": "2026-08-09T09:23:08+00:00",
+          "net_content_value": null,
+          "short_description": null,
+          "suitable_concerns": [],
+          "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/310a0cd0a0dde7789ba499fcc048e6acb218bc982d09da45794ce23270740765.webp",
+          "purchase_link_status": "available",
+          "suitable_thicknesses": [],
+          "is_chaarlie_recommended": true,
+          "purchase_link_checked_at": "2026-08-09T09:23:08+00:00"
+        },
+        "identifiers": [
+          {
+            "id": "dc295986-ce59-470f-87f7-a56cd7608c8e",
+            "source": "dm",
+            "created_at": "2026-08-10T09:44:02.62441+00:00",
+            "product_id": "efaff579-e411-41eb-972a-2734a8517356",
+            "updated_at": "2026-08-10T09:44:02.62441+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "04015100800128",
+            "identifier_value": "4015100800128",
+            "normalized_identifier_value": "4015100800128"
+          },
+          {
+            "id": "9881d44f-1cdc-4804-bc74-58958bb20e95",
+            "source": "dm",
+            "created_at": "2026-08-10T09:44:02.62441+00:00",
+            "product_id": "efaff579-e411-41eb-972a-2734a8517356",
+            "updated_at": "2026-08-10T09:44:02.62441+00:00",
+            "identifier_type": "retailer_sku",
+            "canonical_gtin14": null,
+            "identifier_value": "dm:1267310",
+            "normalized_identifier_value": "dm:1267310"
+          },
+          {
+            "id": "5149c84c-b9dd-4591-ba72-5dfe188ce1e9",
+            "source": "dm",
+            "created_at": "2026-08-10T09:44:02.62441+00:00",
+            "product_id": "efaff579-e411-41eb-972a-2734a8517356",
+            "updated_at": "2026-08-10T09:44:02.62441+00:00",
+            "identifier_type": "retailer_url",
+            "canonical_gtin14": null,
+            "identifier_value": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+            "normalized_identifier_value": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel"
+          }
+        ],
+        "heat_specs": [
+          {
+            "format": "spray",
+            "created_at": "2026-08-10T09:44:02.62441+00:00",
+            "product_id": "efaff579-e411-41eb-972a-2734a8517356",
+            "updated_at": "2026-08-10T09:44:02.62441+00:00",
+            "category_key": "heat_protectant",
+            "provides_heat_protection": true
+          }
+        ],
+        "conditioner_specs": null,
+        "conditioner_rerank_specs": null,
+        "protocols": [
+          {
+            "id": "47945afa-c546-4537-945a-151f3a7d5622",
+            "role": "pre_heat_protection",
+            "cadence": null,
+            "category": "heat_protectant",
+            "placement": "all_hair",
+            "created_at": "2026-08-10T09:44:02.62441+00:00",
+            "product_id": "efaff579-e411-41eb-972a-2734a8517356",
+            "source_url": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+            "updated_at": "2026-08-13T06:58:13.851968+00:00",
+            "source_text": "Exact source evidence for got2b Hitzeschutzspray Schutzengel: pre heat protection protocol; whole-hair application; leave-in use without rinsing and amount evidence (Großzügig aufsprühen.).",
+            "category_key": "heat_protectant",
+            "rinse_action": "leave_in",
+            "source_label": "dm Produktseite",
+            "reapplication": "not_stated",
+            "guidance_payload": {
+              "role": "heat_protection",
+              "scope": {
+                "kind": "product",
+                "category": "heat_protectant",
+                "productId": "efaff579-e411-41eb-972a-2734a8517356"
+              },
+              "steps": [
+                {
+                  "action": "apply_product",
+                  "stepKey": "apply-got2b-schutzengel",
+                  "copyTemplateDe": "Großzügig ins handtuchtrockene Haar sprühen."
+                },
+                {
+                  "action": "dry",
+                  "stepKey": "dry-got2b-schutzengel",
+                  "copyTemplateDe": "Das Haar wie gewohnt föhnen; Glätteisen oder Lockenstab erst auf trockenem Haar verwenden."
+                }
+              ],
+              "locale": "de",
+              "evidence": [
+                {
+                  "checkedAt": "2026-08-11",
+                  "sourceUrl": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+                  "sourceType": "retailer"
+                }
+              ],
+              "sequence": {
+                "after": [
+                  "post_rinse_towel_dry"
+                ],
+                "anchor": "damp_leave_on",
+                "before": [
+                  "heat_tool"
+                ],
+                "conflictsWith": []
+              },
+              "guidanceKey": "product-heat-protectant-efaff579-e411-41eb-972a-2734a8517356",
+              "requirements": {
+                "requiredCatalogFacts": [
+                  "provides_heat_protection"
+                ],
+                "requiredProfileFacts": [],
+                "requiredProtocolFacts": []
+              },
+              "protocolFacts": {
+                "rinse": "leave_in",
+                "amount": {
+                  "kind": "qualitative",
+                  "copyDe": "Großzügig aufsprühen."
+                },
+                "cautions": [],
+                "reapplication": "none",
+                "applicationArea": "all_hair",
+                "contactTimeSeconds": null,
+                "conditionerRelationship": "not_applicable"
+              },
+              "schemaVersion": 1,
+              "protocolVersion": 1,
+              "applicationFamily": "pre_heat_damp",
+              "compatibleDayTypes": [
+                "styling_day"
+              ],
+              "exactGuidanceRequired": true
+            },
+            "application_stage": "damp_leave_on",
+            "application_state": "damp",
+            "application_family": "pre_heat_damp",
+            "guidance_payload_v2": {
+              "role": "heat_protection",
+              "facts": {
+                "heat": {
+                  "reapplication": "none",
+                  "supportedStates": [
+                    "damp_hair"
+                  ],
+                  "activationRequired": false,
+                  "maximumClaimedTemperatureC": null
+                },
+                "rinse": "leave_in",
+                "amount": null,
+                "contactTime": null,
+                "applicationArea": "root_to_tip_hair",
+                "applicationState": "damp_hair",
+                "conditionerPolicy": "not_applicable"
+              },
+              "scope": {
+                "kind": "product",
+                "category": "heat_protectant",
+                "productId": "efaff579-e411-41eb-972a-2734a8517356"
+              },
+              "evidence": [
+                {
+                  "checkedAt": "2026-08-11",
+                  "sourceUrl": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+                  "sourceType": "retailer"
+                }
+              ],
+              "exactSteps": [],
+              "sourceRole": "pre_heat_protection",
+              "workflowId": null,
+              "cautionCodes": [],
+              "contractKind": "product_pointer",
+              "schemaVersion": 2,
+              "applicationFamily": "pre_heat_damp",
+              "runtimeBlockerCode": null,
+              "requiredCompanionProductId": null
+            },
+            "contact_time_seconds": null,
+            "instruction_modifiers": []
+          }
+        ]
+      }
+    },
+    {
+      "product_id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+      "current_source": {
+        "dan": "1460813",
+        "gtin": "4070765016758",
+        "productName": "Hitzeschutzspray, 200 ml",
+        "brand": "Balea",
+        "found": "true",
+        "errorMessage": "",
+        "productUrl": "https://www.dm.de/applink/p/d/1460813/balea-hitzeschutzspray?appPageType=productdetails&appProductId=1460813&wt_mc=dm-mcp",
+        "image": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1773791548/assets/pas/images/bb88652e-9469-4b46-bbe1-acb4516c621a/balea-hitzeschutzspray",
+        "imageBackgroundColor": "#F9F1F2",
+        "productType": "NON_FOOD",
+        "weight": "220g",
+        "volume": "0.338l",
+        "description": "Das Hitzeschutzspray von Balea bietet dem Haar einen umfassenden Schutz bei der Verwendung von Stylinggeräten. Dank seiner leistungsstarken 2-Phasen-Rezeptur schützt es das Haar zuverlässig vor extremer Hitze bis zu 200 °C. Die vegane Formel ohne Silikone pflegt das Haar zudem intensiv, ohne es zu beschweren. Es verleiht dem Haar eine wunderbare Geschmeidigkeit und einen natürlich schönen Glanz. Ideal für das tägliche Styling mit Föhn, Glätteisen oder Lockenstab, bewahrt es das Haar vor dem Austrocknen und hält es gepflegt.",
+        "keyBenefits": "[Hitzeschutzspray für das Haarstyling;Schützend & pflegend;Effektiver Hitzeschutz bis 200 °C;Für geschmeidiges & glänzendes Haar]",
+        "countryOfOrigin": "Deutschland",
+        "foodIngredients": "",
+        "preparation": "",
+        "nutritionFacts": "",
+        "allergens": "",
+        "additives": "",
+        "nonFoodIngredients": "AQUA, ISODODECANE, ALCOHOL DENAT., POLYQUATERNIUM-68, PANTHENOL, UNDECANE, CITRIC ACID, GLYCERYL CAPRATE, TRIDECANE, ETHYLHEXYLGLYCERIN, CETRIMONIUM CHLORIDE, PARFUM, HYDROLYZED RICE PROTEIN, AMMONIA, PHENOXYETHANOL, LIMONENE, LINALOOL, SODIUM BENZOATE, GERANIOL, CITRAL, TOCOPHEROL, HELIANTHUS ANNUUS SEED OIL.",
+        "applicationInstructions": "Vor jeder Anwendung gut schütteln, damit sich die Phasen vermischen. Vor dem Föhnen aus 15 cm Entfernung gleichmäßig auf das handtuchtrockene Haar sprühen. Vor der Anwendung des Glätteisens oder des Lockenstabs nochmals auf trockene Partien auftragen.",
+        "warnings": "Nicht in die Augen sprühen. Falls das Spray auf den Boden kommen sollte, bitte entfernen - Rutschgefahr.",
+        "hazardWarnings": "",
+        "careLabel": "",
+        "productFeatures": "[ohne Silikone;Hitzeschutz]",
+        "isSustainable": "false"
+      },
+      "current_market": "DE",
+      "current_pack": {
+        "value": 200,
+        "unit": "ml"
+      },
+      "current_inci": "AQUA, ISODODECANE, ALCOHOL DENAT., POLYQUATERNIUM-68, PANTHENOL, UNDECANE, CITRIC ACID, GLYCERYL CAPRATE, TRIDECANE, ETHYLHEXYLGLYCERIN, CETRIMONIUM CHLORIDE, PARFUM, HYDROLYZED RICE PROTEIN, AMMONIA, PHENOXYETHANOL, LIMONENE, LINALOOL, SODIUM BENZOATE, GERANIOL, CITRAL, TOCOPHEROL, HELIANTHUS ANNUUS SEED OIL.",
+      "current_inci_normalized": [
+        "AQUA",
+        "ISODODECANE",
+        "ALCOHOL DENAT.",
+        "POLYQUATERNIUM-68",
+        "PANTHENOL",
+        "UNDECANE",
+        "CITRIC ACID",
+        "GLYCERYL CAPRATE",
+        "TRIDECANE",
+        "ETHYLHEXYLGLYCERIN",
+        "CETRIMONIUM CHLORIDE",
+        "PARFUM",
+        "HYDROLYZED RICE PROTEIN",
+        "AMMONIA",
+        "PHENOXYETHANOL",
+        "LIMONENE",
+        "LINALOOL",
+        "SODIUM BENZOATE",
+        "GERANIOL",
+        "CITRAL",
+        "TOCOPHEROL",
+        "HELIANTHUS ANNUUS SEED OIL"
+      ],
+      "current_source_checked_at": "2026-10-03T15:19:23.074Z",
+      "historical_catalog_inci": null,
+      "historical_catalog_inci_status": "No immutable old German canonical INCI recovered from catalog/provenance. Historical first-party variants below are comparisons, not substituted catalog authority.",
+      "historical_declaration_comparisons": [
+        {
+          "source_id": "dm-old-balea-heat-index",
+          "raw_inci": "AQUA, ISODODECANE, ALCOHOL DENAT., POLYQUATERNIUM-68, PANTHENOL, UNDECANE, CITRIC ACID, GLYCERYL CAPRATE, TRIDECANE, ETHYLHEXYLGLYCERIN, CETRIMONIUM CHLORIDE, PARFUM, HYDROLYZED RICE PROTEIN, AMMONIA, PHENOXYETHANOL, LINALYL ACETATE, LIMONENE, LINALOOL, SODIUM BENZOATE, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, CITRUS AURANTIUM PEEL OIL, GERANIOL, PINENE, TOCOPHEROL, HELIANTHUS ANNUUS SEED OIL.",
+          "diff_vs_current": {
+            "old_ingredient_count": 25,
+            "current_ingredient_count": 22,
+            "added_declarations": [
+              "CITRAL"
+            ],
+            "removed_declarations": [
+              "LINALYL ACETATE",
+              "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+              "CITRUS AURANTIUM PEEL OIL",
+              "PINENE"
+            ],
+            "rank_changes": [
+              {
+                "ingredient": "LIMONENE",
+                "old_rank": 17,
+                "current_rank": 16
+              },
+              {
+                "ingredient": "LINALOOL",
+                "old_rank": 18,
+                "current_rank": 17
+              },
+              {
+                "ingredient": "SODIUM BENZOATE",
+                "old_rank": 19,
+                "current_rank": 18
+              },
+              {
+                "ingredient": "GERANIOL",
+                "old_rank": 22,
+                "current_rank": 19
+              },
+              {
+                "ingredient": "TOCOPHEROL",
+                "old_rank": 24,
+                "current_rank": 21
+              },
+              {
+                "ingredient": "HELIANTHUS ANNUUS SEED OIL",
+                "old_rank": 25,
+                "current_rank": 22
+              }
+            ],
+            "relative_order_reversals": [],
+            "interpretation_limit": "Declaration differences only. Neither concentration changes nor chemical continuity/reformulation established."
+          }
+        },
+        {
+          "source_id": "dm-old-balea-heat-ro-index",
+          "raw_inci": "AQUA, ISODODECANE, ALCOHOL DENAT., POLYQUATERNIUM-68, PANTHENOL, UNDECANE, CITRIC ACID, GLYCERYL CAPRATE, TRIDECANE, ETHYLHEXYLGLYCERIN, CETRIMONIUM CHLORIDE, PARFUM, HYDROLYZED RICE PROTEIN, AMMONIA, PHENOXYETHANOL, LIMONENE, LINALOOL, SODIUM BENZOATE, GERANIOL, CITRAL, TOCOPHEROL, HELIANTHUS ANNUUS SEED OIL.",
+          "diff_vs_current": {
+            "old_ingredient_count": 22,
+            "current_ingredient_count": 22,
+            "added_declarations": [],
+            "removed_declarations": [],
+            "rank_changes": [],
+            "relative_order_reversals": [],
+            "interpretation_limit": "Declaration differences only. Neither concentration changes nor chemical continuity/reformulation established."
+          }
+        }
+      ],
+      "live_catalog": {
+        "observed_at": "2026-10-03 15:19:40.490866+00",
+        "product": {
+          "id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+          "name": "Hitzeschutzspray 2-Phasen",
+          "tags": [],
+          "brand": "Balea",
+          "origin": "curated",
+          "brand_id": "58bcafd6-a884-4337-8c8d-8d8369f2117c",
+          "category": "heat_protectant",
+          "currency": "EUR",
+          "tom_take": null,
+          "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-enrichment/personal-plan-launch-v1/heat/balea-two-phase-200ml/dm-packshot.webp",
+          "is_active": true,
+          "price_eur": 1.95,
+          "created_at": "2026-08-10T09:44:02.62441+00:00",
+          "sort_order": 0,
+          "updated_at": "2026-08-15T07:48:36.410502+00:00",
+          "description": null,
+          "category_key": "heat_protectant",
+          "affiliate_link": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray",
+          "product_line_id": null,
+          "lifecycle_status": "active",
+          "net_content_unit": null,
+          "price_checked_at": "2026-08-09T09:23:08+00:00",
+          "net_content_value": null,
+          "short_description": null,
+          "suitable_concerns": [],
+          "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/424bd16456b920a9aeaf43d9f4b3148fb6704f89ed0d022e9fbc9a0488b0d6df.webp",
+          "purchase_link_status": "unavailable",
+          "suitable_thicknesses": [],
+          "is_chaarlie_recommended": false,
+          "purchase_link_checked_at": "2026-08-09T09:23:08+00:00"
+        },
+        "identifiers": [
+          {
+            "id": "ea0b0722-4758-44f2-9e07-1ddc1aa7a762",
+            "source": "dm",
+            "created_at": "2026-08-10T09:44:02.62441+00:00",
+            "product_id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+            "updated_at": "2026-08-10T09:44:02.62441+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "04070765073546",
+            "identifier_value": "4070765073546",
+            "normalized_identifier_value": "4070765073546"
+          },
+          {
+            "id": "b618019d-2df1-4cd9-a72f-1f6dfa712c87",
+            "source": "dm",
+            "created_at": "2026-08-10T09:44:02.62441+00:00",
+            "product_id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+            "updated_at": "2026-08-10T09:44:02.62441+00:00",
+            "identifier_type": "retailer_sku",
+            "canonical_gtin14": null,
+            "identifier_value": "dm:1460813",
+            "normalized_identifier_value": "dm:1460813"
+          },
+          {
+            "id": "a497d967-063b-464e-87ea-9bc85501e4fc",
+            "source": "dm",
+            "created_at": "2026-08-10T09:44:02.62441+00:00",
+            "product_id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+            "updated_at": "2026-08-10T09:44:02.62441+00:00",
+            "identifier_type": "retailer_url",
+            "canonical_gtin14": null,
+            "identifier_value": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray",
+            "normalized_identifier_value": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray"
+          }
+        ],
+        "heat_specs": [
+          {
+            "format": "spray",
+            "created_at": "2026-08-10T09:44:02.62441+00:00",
+            "product_id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+            "updated_at": "2026-08-10T09:44:02.62441+00:00",
+            "category_key": "heat_protectant",
+            "provides_heat_protection": true
+          }
+        ],
+        "conditioner_specs": null,
+        "conditioner_rerank_specs": null,
+        "protocols": [
+          {
+            "id": "3a7cb27f-293a-4ac9-9c83-ef0719c800b3",
+            "role": "pre_heat_protection",
+            "cadence": null,
+            "category": "heat_protectant",
+            "placement": "all_hair",
+            "created_at": "2026-08-10T09:44:02.62441+00:00",
+            "product_id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+            "source_url": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray",
+            "updated_at": "2026-08-13T06:58:13.851968+00:00",
+            "source_text": "Exact source evidence for Balea Hitzeschutzspray 2-Phasen: pre heat protection protocol; whole-hair application; leave-in use without rinsing and amount evidence (Aus etwa 15 cm Entfernung gleichmäßig aufsprühen.).",
+            "category_key": "heat_protectant",
+            "rinse_action": "leave_in",
+            "source_label": "dm Produktseite",
+            "reapplication": "required",
+            "guidance_payload": {
+              "role": "heat_protection",
+              "scope": {
+                "kind": "product",
+                "category": "heat_protectant",
+                "productId": "a0cc0c36-b5ce-4a38-b224-64c666a83809"
+              },
+              "steps": [
+                {
+                  "action": "section",
+                  "stepKey": "shake-balea-two-phase",
+                  "copyTemplateDe": "Vor jeder Anwendung gut schütteln, damit sich die zwei Phasen vermischen."
+                },
+                {
+                  "action": "apply_product",
+                  "stepKey": "apply-balea-two-phase-damp",
+                  "copyTemplateDe": "Vor dem Föhnen aus 15 cm Entfernung gleichmäßig auf das handtuchtrockene Haar sprühen."
+                },
+                {
+                  "action": "apply_product",
+                  "stepKey": "reapply-balea-two-phase-hot-tool",
+                  "copyTemplateDe": "Vor Glätteisen oder Lockenstab nochmals auf trockene Partien auftragen."
+                }
+              ],
+              "locale": "de",
+              "evidence": [
+                {
+                  "checkedAt": "2026-08-11",
+                  "sourceUrl": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray",
+                  "sourceType": "retailer"
+                }
+              ],
+              "sequence": {
+                "after": [],
+                "anchor": "dry_pre_heat",
+                "before": [
+                  "heat_tool"
+                ],
+                "conflictsWith": []
+              },
+              "guidanceKey": "product-heat-protectant-a0cc0c36-b5ce-4a38-b224-64c666a83809",
+              "requirements": {
+                "requiredCatalogFacts": [
+                  "provides_heat_protection"
+                ],
+                "requiredProfileFacts": [],
+                "requiredProtocolFacts": [
+                  "reapply_before_direct_heat"
+                ]
+              },
+              "protocolFacts": {
+                "rinse": "leave_in",
+                "amount": {
+                  "kind": "qualitative",
+                  "copyDe": "Aus etwa 15 cm Entfernung gleichmäßig aufsprühen."
+                },
+                "cautions": [],
+                "reapplication": "each_separate_heat_event",
+                "applicationArea": "all_hair",
+                "contactTimeSeconds": null,
+                "conditionerRelationship": "not_applicable"
+              },
+              "schemaVersion": 1,
+              "protocolVersion": 1,
+              "applicationFamily": "either_state_protection",
+              "compatibleDayTypes": [
+                "styling_day"
+              ],
+              "exactGuidanceRequired": true
+            },
+            "application_stage": "dry_pre_heat",
+            "application_state": "either",
+            "application_family": "either_state_protection",
+            "guidance_payload_v2": {
+              "role": "heat_protection",
+              "facts": {
+                "heat": {
+                  "reapplication": "each_separate_heat_event",
+                  "supportedStates": [
+                    "damp_hair",
+                    "dry_hair"
+                  ],
+                  "activationRequired": false,
+                  "maximumClaimedTemperatureC": null
+                },
+                "rinse": "leave_in",
+                "amount": null,
+                "contactTime": null,
+                "applicationArea": "root_to_tip_hair",
+                "applicationState": "damp_or_dry_hair",
+                "conditionerPolicy": "not_applicable"
+              },
+              "scope": {
+                "kind": "product",
+                "category": "heat_protectant",
+                "productId": "a0cc0c36-b5ce-4a38-b224-64c666a83809"
+              },
+              "evidence": [
+                {
+                  "checkedAt": "2026-08-11",
+                  "sourceUrl": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray",
+                  "sourceType": "retailer"
+                }
+              ],
+              "exactSteps": [],
+              "sourceRole": "pre_heat_protection",
+              "workflowId": null,
+              "cautionCodes": [],
+              "contractKind": "product_pointer",
+              "schemaVersion": 2,
+              "applicationFamily": "either_state_protection",
+              "runtimeBlockerCode": null,
+              "requiredCompanionProductId": null
+            },
+            "contact_time_seconds": null,
+            "instruction_modifiers": []
+          }
+        ]
+      }
+    }
+  ],
+  "prior_evidence_authority": [
+    "docs/price-audit-rollouts/2026-10-03-exception-followup/identity-recheck.json",
+    "docs/price-audit-rollouts/2026-10-03-identity-resolution/current-dm-details.json",
+    "docs/price-audit-rollouts/2026-10-03-identity-resolution/catalog-fact-evidence.json",
+    "docs/price-audit-rollouts/2026-10-03-preferred-shop-resolution/pre-apply-readback.json"
+  ]
+}

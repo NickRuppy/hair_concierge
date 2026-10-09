@@ -1,0 +1,45 @@
+{
+  "amendment_id": "source-amendment-01",
+  "created_date": "2026-10-02",
+  "run_id": "bondbuilder-validation-2026-10-02-v0.4",
+  "slot_id": "V04",
+  "reason": "Root's original S05 observation compressed out the explicit aftercare order present on the inspected producer page. Original packet and outputs remain sealed; this is a source-preparation correction, not a changed technology/trust rule.",
+  "source_registry": [
+    {
+      "source_id": "S13",
+      "url": "https://www.lorealprofessionnel.de/alle-produkte/haarpflege/absolut-repair-molecular-serum",
+      "publisher": "L'Oréal Professionnel DE",
+      "accessed_at": "2026-10-02",
+      "scope": "same current DE serum page version as S05; application paragraphs after rinse",
+      "access_level": "relevant_full_text_inspected_by_root",
+      "commercial_context": "maker sells the product",
+      "observations": [
+        "After working the serum through for 1-2 minutes, no separate dwell is required and the serum is rinsed thoroughly.",
+        "Producer's pro tip places the optional intensive-care Metal DX mask after this treatment; matching Absolut Repair Molecular leave-in is recommended afterward for best results."
+      ],
+      "limits": [
+        "No mask dose, dwell or mask-rinse instructions supplied here; do not invent them.",
+        "Optional mask and recommended leave-in are not mandatory purchases or molecular-effect dependencies.",
+        "This adds lost order only; cadence remains unstated, diameter fit unknown, category_review and trust null unchanged."
+      ]
+    }
+  ],
+  "output_contract": {
+    "top_level_keys": [
+      "standard_version",
+      "lane_id",
+      "amendment_id",
+      "slot_id",
+      "input_receipt",
+      "no_web",
+      "classification_unchanged",
+      "aftercare_facts",
+      "retained_limits"
+    ],
+    "aftercare_facts": "Array of {action, requirement, placement, source_ids}, bounded strings; preserve optional/recommended distinctions and do not add mask protocol details.",
+    "input_receipt": "Exactly this source-amendment-01.json and own sealed records.json; absolute paths plus computed SHA256.",
+    "write_scope": "own lane-a/source-amendment-01.json or lane-b/source-amendment-01.json only. No original records or seals changed.",
+    "stop": "Stop after small supplemental extraction for root comparison/seal; no web, other files or peer results."
+  }
+}
+

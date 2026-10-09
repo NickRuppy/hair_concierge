@@ -1,0 +1,86 @@
+{
+  "checked_at": "2026-10-02T15:14:15Z",
+  "scope": "Final bounded source-quality recovery for four stale/blocked leave-in offers. Evidence is fresh direct PDP HTML only; previously indexed snippets are discovery context and are not used as price or buyability proof.",
+  "records": [
+    {
+      "id": "11a099f7-eabe-4bdb-bfd3-995f35cb6ee4",
+      "product": "Color WOW Money Mist",
+      "source_url": "https://www.cocooncenter.de/color-wow-money-mist-spray/115987.html",
+      "source_method": "fresh direct Cocooncenter DE PDP HTML GET, HTTP 200, 2026-10-02T15:14:15Z; Douglas and Flaconi were discovered but direct verification was unavailable/blocked, so this specialist PDP is selected",
+      "price_eur": 35.20,
+      "package": {
+        "value": 150,
+        "unit": "ml"
+      },
+      "observed_barcode": "5060150185731",
+      "availability": "in_stock",
+      "source_quote": "Color Wow Money Mist Spray; 150 ml; 35,20 €; Vorrätig; In den Warenkorb; JSON-LD gtin13 5060150185731, Offer 35.2 EUR, InStock.",
+      "outcome": "live_exact_offer_specialist",
+      "note": "The previously proposed hair-store.de page is parked/shell and is not relied upon. Ordinary whole-package price only; shipping excluded."
+    },
+    {
+      "id": "0756a919-5fab-4b6c-a5da-8cb810869b6f",
+      "product": "Living Proof Restore Repair Leave-In",
+      "source_url": "https://www.cosmeterie.de/living-proof/restore-repair-leave-in",
+      "source_method": "fresh direct Cosmeterie DE PDP HTML GET, HTTP 200, 2026-10-02T15:14:15Z; Flaconi PDP returned HTTP 403, so its cached result was not used as offer proof",
+      "price_eur": 30.00,
+      "package": {
+        "value": 118,
+        "unit": "ml"
+      },
+      "observed_barcode": "858544005575",
+      "availability": "in_stock",
+      "source_quote": "Living Proof Restore Repair Leave-In, 118 ml; 30,00 €; Noch 2 Stück auf Lager; cart form; EAN 858544005575; JSON-LD Offer 30.00 EUR InStock.",
+      "outcome": "live_exact_offer_specialist",
+      "note": "The prior iHerb source was HTTP 403. Ordinary whole-package price only; shipping excluded."
+    },
+    {
+      "id": "50951ef2-e16a-4a51-85c5-a709aa64c03a",
+      "product": "Maria Nila Coils & Curls Oil in Cream",
+      "source_url": "https://mapeja.de/maria-nila-c-s-coils-curls-oil-in-cream-100ml/",
+      "source_method": "fresh direct Mapeja DE PDP HTML GET, HTTP 200, 2026-10-02T15:14:15Z; Flaconi PDP returned HTTP 403, so its cached result was not used as offer proof",
+      "price_eur": 22.30,
+      "package": {
+        "value": 100,
+        "unit": "ml"
+      },
+      "observed_barcode": "7391681403741",
+      "availability": "in_stock",
+      "source_quote": "Maria Nila C&S Coils & Curls Oil-In-Cream 100ml; EAN 7391681403741; auf Lager; Versandfertig; In den Warenkorb; JSON-LD Offer 22.3 EUR InStock.",
+      "outcome": "live_exact_offer_specialist",
+      "note": "Ordinary whole-package price only; shipping excluded."
+    },
+    {
+      "id": "695414e1-3435-4304-943b-76677408980c",
+      "product": "Maria Nila Structure Repair Leave-In",
+      "source_url": "https://www.cosmeterie.de/maria-nila/structure-repair-leave-in-cream-1",
+      "source_method": "fresh direct Cosmeterie DE PDP HTML GET, HTTP 200, 2026-10-02T15:14:15Z; Flaconi PDP returned HTTP 403, so its cached result was not used as offer proof",
+      "price_eur": 32.00,
+      "package": {
+        "value": 200,
+        "unit": "ml"
+      },
+      "observed_barcode": "7391681036079",
+      "availability": "in_stock",
+      "source_quote": "Maria Nila Structure Repair Leave-In Cream, 200 ml; 32,00 €; Noch 2 Stück auf Lager; EAN 7391681036079; JSON-LD Offer 32.00 EUR InStock.",
+      "outcome": "live_exact_offer_specialist",
+      "note": "Ordinary whole-package price only; shipping excluded."
+    }
+  ],
+  "supplemental_wella_exact_gtin_check": {
+    "id": "94cf6959-a53b-421b-9f0f-05efc239171c",
+    "source_url": "https://globalhair.de/products/ultimate-repair-leave-in-treatment-140ml",
+    "source_method": "focused fresh direct GlobalHair DE PDP HTML GET, HTTP 200, 2026-10-02T15:14:15Z; this followed an exact-GTIN primary search after prior preferred-host searches returned no qualifying PDP",
+    "product": "Wella Ultimate Repair Protective Leave-In",
+    "price_eur": 32.10,
+    "package": {
+      "value": 140,
+      "unit": "ml"
+    },
+    "observed_barcode": "4064666580098",
+    "availability": "out_of_stock",
+    "source_quote": "Ultimate Repair Leave-In Treatment 140ml; Barcode 4064666580098; product JSON inventory_quantity 0, available false; schema Offer 32.10 EUR OutOfStock; page label Ausverkauft.",
+    "outcome": "live_exact_but_not_buyable",
+    "note": "No selection proposed. Exact-GTIN search also returned marketplace pages that label the same GTIN as 95 ml, so package must remain 140 ml based on this direct exact PDP and official evidence."
+  }
+}

@@ -20,6 +20,7 @@ import {
   isPersonalPlanStage2Enabled,
   isPersonalPlanStage3Enabled,
   isPersonalPlanStage4Enabled,
+  isShoppingBudgetEnabled,
 } from "@/lib/personal-plan/release"
 import { createInitialRoutineCandidateCompiler } from "@/lib/personal-plan/routine-candidate-compiler"
 import {
@@ -37,6 +38,7 @@ import {
 } from "@/lib/rate-limit"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
+import { loadKnownCareAnswers } from "@/lib/user-facts/read"
 import { saveUserFacts } from "@/lib/user-facts/save"
 
 const rate: RateLimitConfig = {
@@ -72,6 +74,7 @@ const STATUS_BY_CODE = {
   acceptance_not_ready: 409,
   refinement_in_progress: 409,
   plan_already_accepted: 409,
+  budget_required: 409,
 } as const
 
 export type AcceptIdealPlanRouteDeps = {
@@ -148,9 +151,13 @@ export const POST = createAcceptIdealPlanRouteHandler({
           stage2Enabled: isPersonalPlanStage2Enabled(),
           stage3Enabled: isPersonalPlanStage3Enabled(),
           stage4Enabled: isPersonalPlanStage4Enabled(),
+          shoppingBudgetEnabled: isShoppingBudgetEnabled(),
         },
+        loadShoppingBudget: async (id) =>
+          (await createSupabaseStage3ProductionPersistence(admin).loadShoppingContext(id)).budget,
         refinementPersistence: createSupabaseStage2RefinementPersistence(admin),
         saveFacts: (factsInput) => saveUserFacts(admin, factsInput),
+        loadKnownCareAnswers: (id) => loadKnownCareAnswers(admin, id),
         planState: {
           async loadActiveRoutineVersionId({ personalPlanId }) {
             const { data, error } = await admin
@@ -161,6 +168,16 @@ export const POST = createAcceptIdealPlanRouteHandler({
               .maybeSingle()
             if (error || !data) throw new Error("direct_accept_plan_state_unavailable")
             return data.active_routine_version_id ? String(data.active_routine_version_id) : null
+          },
+          async isUnrefinedDirectAccept({ personalPlanId }) {
+            const { data, error } = await admin
+              .from("personal_plans")
+              .select("unrefined_direct_accept")
+              .eq("id", personalPlanId)
+              .eq("user_id", userId)
+              .maybeSingle()
+            if (error || !data) throw new Error("direct_accept_plan_state_unavailable")
+            return data.unrefined_direct_accept === true
           },
         },
         stage3Gateway: createProductionStage3ProductsGateway({

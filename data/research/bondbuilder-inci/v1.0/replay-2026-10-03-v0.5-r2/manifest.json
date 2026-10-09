@@ -1,0 +1,52 @@
+{
+  "packet_version": "bondbuilder-method-replay-manifest-v0.5",
+  "prepared_date": "2026-10-03",
+  "purpose": "bounded regression replay only; not an unseen holdout, method lock, efficacy claim, catalog approval, or activation",
+  "source_lineage": {
+    "docs/research/bondbuilder-inci/v0.5/standard.md": "9fbbf63c2201732229741d2aa534a685ba999dd801f4ae5fbfe1ca4768b2b816",
+    "docs/research/bondbuilder-inci/v0.5/runbook.md": "5e54370eb907afbbbdce08115e497716fd2fe15c1b6d0bbff1f2e0e97194c0ff",
+    "docs/research/bondbuilder-inci/v0.5/researcher-prompt.md": "3019d9d4aa97167af1821f21609beaa414ea58e5f653b1dc3cc4e666191b2ec7",
+    "docs/research/bondbuilder-inci/v0.5/blind-instructions.md": "c65274655a01650b8b68c0c2839d809a39fa1942d7de8d3f9a1f2adc9b8ec54c",
+    "src/lib/bondbuilder-research/contracts.ts": "f1ab8e92c50cc64af0231855cc225dd64722b9d2b6618c50af3fbaa56e1b1eab",
+    "src/lib/bondbuilder-research/registry.ts": "25cecccfe28c6f33a0a1da2612df517ed0d91b70e6dedf8dcf3bf624aabaefee",
+    "src/lib/product-intake/bondbuilder-research-prompt-contract.ts": "a5cdf0bbc03c90a544718df932352c046998a97be77e14682fc320f8c7c5420b",
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/anonymous.json": "825a31bedaf12df4006547074645e0ef770a977c57e2a8940ed0ddf8a0f28599",
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/named-evidence.json": "e2feb6e930fb8a5231dab3c753dce9aea52b2252301e37cc006fde386c4e5cb5",
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/source-amendment-01.json": "fa9232355a32c00e37b80a99f4fdf18a0a65b0d9551cc89b1477a9c33bae9fa9",
+    "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P01.json": "00b3b5bfc9dd444ec6ba6112c3e0932b122842c5aac5e46032f80fbbfc5e32ae",
+    "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P02.json": "9a2b523764ea1318804e3edf9fd4eff32e82a671fa0a741db7693daec8638016",
+    "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P03.json": "f9351947ba0fa3ee62cb88a703d1e810a7049681429df331c06c9707e8af22e4",
+    "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P04.json": "133ab3dad75a1cba290b3a169390630bba5a763c1b7c51ed2700263dbd5de32a",
+    "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P05.json": "33cd1b45c6f88a246ed5da3226523119ee00a1d47deb341e3b06bc481d9a785c",
+    "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P06.json": "b7d3ff92b5c136a22801029493e0000a7cd35a610338840ab0d9f7d629acc7cd",
+    "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P07.json": "3aae82028365e7964feea42cd5bb7b85f69ec746e9e4323316411e74183032b8",
+    "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P08.json": "0b887a31980771042ce2a56ea19ac0bd51b71bd20fe041e1fcf43bffa191f401"
+  },
+  "frozen_copies": {
+    "method/standard.md": "9fbbf63c2201732229741d2aa534a685ba999dd801f4ae5fbfe1ca4768b2b816",
+    "method/runbook.md": "5e54370eb907afbbbdce08115e497716fd2fe15c1b6d0bbff1f2e0e97194c0ff",
+    "method/researcher-prompt.md": "3019d9d4aa97167af1821f21609beaa414ea58e5f653b1dc3cc4e666191b2ec7",
+    "method/blind-instructions.md": "c65274655a01650b8b68c0c2839d809a39fa1942d7de8d3f9a1f2adc9b8ec54c",
+    "frozen-inputs/src/lib/bondbuilder-research/contracts.ts": "f1ab8e92c50cc64af0231855cc225dd64722b9d2b6618c50af3fbaa56e1b1eab",
+    "frozen-inputs/src/lib/bondbuilder-research/registry.ts": "25cecccfe28c6f33a0a1da2612df517ed0d91b70e6dedf8dcf3bf624aabaefee",
+    "frozen-inputs/src/lib/product-intake/bondbuilder-research-prompt-contract.ts": "a5cdf0bbc03c90a544718df932352c046998a97be77e14682fc320f8c7c5420b",
+    "frozen-inputs/data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/anonymous.json": "825a31bedaf12df4006547074645e0ef770a977c57e2a8940ed0ddf8a0f28599",
+    "frozen-inputs/data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/named-evidence.json": "e2feb6e930fb8a5231dab3c753dce9aea52b2252301e37cc006fde386c4e5cb5",
+    "frozen-inputs/data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/source-amendment-01.json": "fa9232355a32c00e37b80a99f4fdf18a0a65b0d9551cc89b1477a9c33bae9fa9",
+    "frozen-inputs/data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P01.json": "00b3b5bfc9dd444ec6ba6112c3e0932b122842c5aac5e46032f80fbbfc5e32ae",
+    "frozen-inputs/data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P02.json": "9a2b523764ea1318804e3edf9fd4eff32e82a671fa0a741db7693daec8638016",
+    "frozen-inputs/data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P03.json": "f9351947ba0fa3ee62cb88a703d1e810a7049681429df331c06c9707e8af22e4",
+    "frozen-inputs/data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P04.json": "133ab3dad75a1cba290b3a169390630bba5a763c1b7c51ed2700263dbd5de32a",
+    "frozen-inputs/data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P05.json": "33cd1b45c6f88a246ed5da3226523119ee00a1d47deb341e3b06bc481d9a785c",
+    "frozen-inputs/data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P06.json": "b7d3ff92b5c136a22801029493e0000a7cd35a610338840ab0d9f7d629acc7cd",
+    "frozen-inputs/data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P07.json": "3aae82028365e7964feea42cd5bb7b85f69ec746e9e4323316411e74183032b8",
+    "frozen-inputs/data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P08.json": "0b887a31980771042ce2a56ea19ac0bd51b71bd20fe041e1fcf43bffa191f401"
+  },
+  "generated_files": {
+    "anonymous-packet.json": "6812dc31a13bb944cbcdc45ac5bbe12f62c5c35deac940b99b00f036eccc19f2",
+    "named-packet.json": "a82c738399a0a02830b7a5b3c98faca55169cac04668f4452ba3d98082ef8acd"
+  },
+  "row_count": 12,
+  "source_count": 58,
+  "lane_outputs": "Not prepared. Stage A and Stage B outputs and seals must be supplied by the two independent lanes before --complete can pass."
+}

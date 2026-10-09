@@ -1126,57 +1126,6 @@ test("fresh state (products open, 2 von 4): banner renders above the routine blo
   assert.equal(refined, 1)
 })
 
-test("post-module-1 state (habits open, 3 von 4): banner renders above the routine blocks too", () => {
-  const routine = payload([item()])
-  const view = activeViewFor(routine)
-  const html = renderToStaticMarkup(
-    <RoutinePage
-      view={view}
-      refinementBanner={{ module: "habits", completedSteps: 3, totalSteps: 4 }}
-      onDismissRefinementBanner={() => undefined}
-      onRefineFromBanner={() => undefined}
-    />,
-  )
-
-  assert.match(html, /Noch ein Schritt: deine Gewohnheiten\./)
-  assert.match(html, />3 von 4</)
-  assert.match(html, /Weiter · 3 Min\./)
-  // Field test 26.08.2026: below the blocks the second ask scrolled out of
-  // view and was never seen, so both modules share the products slot.
-  assert.ok(html.indexOf("Noch ein Schritt") < html.indexOf("Deine Basis"))
-})
-
-test("dismissed state: refinementBanner absent renders no banner", () => {
-  const routine = payload([item()])
-  const view = activeViewFor(routine)
-  const html = renderToStaticMarkup(<RoutinePage view={view} refinementBanner={null} />)
-
-  assert.doesNotMatch(html, /Mach deinen Plan genauer\./)
-  assert.doesNotMatch(html, /Noch ein Schritt: deine Gewohnheiten\./)
-  assert.doesNotMatch(html, /Hinweis schließen/)
-})
-
-test("all-done state: no refinementBanner prop at all renders no banner", () => {
-  const routine = payload([item()])
-  const view = activeViewFor(routine)
-  const html = renderToStaticMarkup(<RoutinePage view={view} />)
-
-  assert.doesNotMatch(html, /Hinweis schließen/)
-  assert.doesNotMatch(html, /von 4/)
-})
-
-test("Task 2.6: the plan-updated toast renders with the exact signed-off copy above the routine blocks", () => {
-  const routine = payload([item()])
-  const view = activeViewFor(routine)
-  const html = renderToStaticMarkup(
-    <RoutinePage view={view} showPlanUpdatedToast onDismissPlanUpdatedToast={() => undefined} />,
-  )
-
-  assert.match(html, /role="status"/)
-  assert.match(html, /Plan aktualisiert/)
-  assert.ok(html.indexOf("Plan aktualisiert") < html.indexOf("Deine Basis"))
-})
-
 test("Task 2.6: the plan-updated toast is absent without the signal", () => {
   const routine = payload([item()])
   const view = activeViewFor(routine)
@@ -1191,6 +1140,11 @@ test("Task 2.6: the plan-updated toast is absent without the signal", () => {
   // Without a dismiss handler the toast must not render even if the flag is
   // (incorrectly) set — there would be no way to ever clear it.
   const withoutHandler = renderToStaticMarkup(<RoutinePage view={view} showPlanUpdatedToast />)
+
+  assert.doesNotMatch(withoutFlag, /Mach deinen Plan genauer\./)
+  assert.doesNotMatch(withoutFlag, /Noch ein Schritt: deine Gewohnheiten\./)
+  assert.doesNotMatch(withoutFlag, /Hinweis schließen/)
+  assert.doesNotMatch(withoutFlag, /von 4/)
 
   for (const html of [withoutFlag, withFlagFalse, withoutHandler]) {
     assert.doesNotMatch(html, /Plan aktualisiert/)
@@ -1212,6 +1166,17 @@ test("Task 2.6: the plan-updated toast and the refinement banner can render on t
   )
 
   assert.match(html, /Plan aktualisiert/)
+  assert.match(html, /role="status"/)
+  assert.ok(
+    html.indexOf("Plan aktualisiert") < html.indexOf("Deine Basis"),
+    "plan-updated toast remains above the routine blocks",
+  )
+  assert.match(html, />3 von 4</)
+  assert.match(html, /Weiter · 3 Min\./)
+  assert.ok(
+    html.indexOf("Noch ein Schritt") < html.indexOf("Deine Basis"),
+    "habits refinement banner remains above the routine blocks",
+  )
   assert.match(html, /Noch ein Schritt: deine Gewohnheiten\./)
   // Toast at the very top, banner further down (mockup screen 3): the two
   // never fight for the same slot.

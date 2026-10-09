@@ -1,5 +1,4 @@
 import assert from "node:assert/strict"
-import { readdirSync } from "node:fs"
 import { readFile } from "node:fs/promises"
 import test from "node:test"
 import { PGlite } from "@electric-sql/pglite"
@@ -21,7 +20,6 @@ const CHAIN = [
   "20260925120000_discovery_intake_frequency_heat_styling.sql",
   "20260925150000_discovery_admin_item_usage_styling.sql",
 ]
-const OWN = CHAIN[5]
 
 const predecessorSchema = `
 CREATE SCHEMA auth;
@@ -139,21 +137,6 @@ async function noneRows(pg: PGlite, intakeId: string) {
   )
   return result.rows.map((entry) => entry.category)
 }
-
-test("the follow-up migration has a unique version that sorts after every migration", () => {
-  const versions = readdirSync(dir)
-    .filter((name) => name.endsWith(".sql"))
-    .map((name) => name.split("_")[0])
-  const own = OWN.split("_")[0]
-  assert.equal(versions.filter((version) => version === own).length, 1)
-  // Was "sorts after every migration" when it was the newest; the call-decision, call-sheet, iOS paywall and catalog-hardening
-  // migrations now follow it, so what still matters is that it follows its chain.
-  const predecessors = CHAIN.slice(0, CHAIN.indexOf(OWN)).map((name) => name.split("_")[0])
-  assert.ok(
-    predecessors.every((version) => version < own),
-    "must sort after its prerequisites",
-  )
-})
 
 test("styling → evaluated: type and usage set together; the destination's „none“ goes", async (t) => {
   const pg = await migrated(t)

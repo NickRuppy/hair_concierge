@@ -1,0 +1,427 @@
+[
+  {
+    "key": "shampoo",
+    "captured_at": "2026-10-03T15:30:06.910620+00:00",
+    "old_raw_inci": "Aqua, Cocamidopropyl Betaine, Sodium Cocoyl Isethionate, Sodium Chloride, Aloe Barbadensis Leaf Juice Powder, Arginine, Serine, Linum Usitatissimum Seed Extract, Parfum, Glycerin, Glyceryl Oleate, PCA, Glycine, Histidine, Coconut Acid, Glycol Distearate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Isethionate, Coco-Glucoside, Sodium PCA, Glyceryl Stearate, Aspartic Acid, Alanine, Valine, Isoleucine, Proline, Threonine, Phenylalanine, Phenoxyethanol, Ethylhexylglycerin, Benzoic Acid, Citric Acid, Sodium Lactate",
+    "current_raw_inci": "Ingredients: Aqua, Aloe Barbadensis Leaf Juice, Cocamidopropyl Betaine, Sodium Cocoyl Isethionate, Sodium Chloride, Arginine, Serine, Linum Usitatissimum Seed Extract, Parfum, Glycerin, Glyceryl Oleate, PCA, Glycine, Histidine, Coconut Acid, Glycol Distearate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Isethionate, Coco-Glucoside, Sodium PCA, Glyceryl Stearate, Aspartic Acid, Alanine, Valine, Isoleucine, Proline, Threonine, Phenylalanine, Phenoxyethanol, Ethylhexylglycerin, Benzoic Acid, Citric Acid, Sodium Lactate",
+    "old_normalized_ingredients": [
+      "Aqua",
+      "Cocamidopropyl Betaine",
+      "Sodium Cocoyl Isethionate",
+      "Sodium Chloride",
+      "Aloe Barbadensis Leaf Juice Powder",
+      "Arginine",
+      "Serine",
+      "Linum Usitatissimum Seed Extract",
+      "Parfum",
+      "Glycerin",
+      "Glyceryl Oleate",
+      "PCA",
+      "Glycine",
+      "Histidine",
+      "Coconut Acid",
+      "Glycol Distearate",
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "Sodium Isethionate",
+      "Coco-Glucoside",
+      "Sodium PCA",
+      "Glyceryl Stearate",
+      "Aspartic Acid",
+      "Alanine",
+      "Valine",
+      "Isoleucine",
+      "Proline",
+      "Threonine",
+      "Phenylalanine",
+      "Phenoxyethanol",
+      "Ethylhexylglycerin",
+      "Benzoic Acid",
+      "Citric Acid",
+      "Sodium Lactate"
+    ],
+    "current_normalized_ingredients": [
+      "Aqua",
+      "Aloe Barbadensis Leaf Juice",
+      "Cocamidopropyl Betaine",
+      "Sodium Cocoyl Isethionate",
+      "Sodium Chloride",
+      "Arginine",
+      "Serine",
+      "Linum Usitatissimum Seed Extract",
+      "Parfum",
+      "Glycerin",
+      "Glyceryl Oleate",
+      "PCA",
+      "Glycine",
+      "Histidine",
+      "Coconut Acid",
+      "Glycol Distearate",
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "Sodium Isethionate",
+      "Coco-Glucoside",
+      "Sodium PCA",
+      "Glyceryl Stearate",
+      "Aspartic Acid",
+      "Alanine",
+      "Valine",
+      "Isoleucine",
+      "Proline",
+      "Threonine",
+      "Phenylalanine",
+      "Phenoxyethanol",
+      "Ethylhexylglycerin",
+      "Benzoic Acid",
+      "Citric Acid",
+      "Sodium Lactate"
+    ],
+    "raw_current_sha256": "c685a3e6c12d447d1d0cb6cbccec858f132b8a432fd06e156793d883e4f66671",
+    "ordered_normalized_sha256": "859d5357fc56e09fe7d35719d60a5e15aebbbbd49f344dad19bbced125141d73",
+    "old_only": [
+      "Aloe Barbadensis Leaf Juice Powder"
+    ],
+    "current_only": [
+      "Aloe Barbadensis Leaf Juice"
+    ],
+    "position_changes": [
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "old_rank": 2,
+        "current_rank": 3
+      },
+      {
+        "ingredient": "Sodium Cocoyl Isethionate",
+        "old_rank": 3,
+        "current_rank": 4
+      },
+      {
+        "ingredient": "Sodium Chloride",
+        "old_rank": 4,
+        "current_rank": 5
+      }
+    ]
+  },
+  {
+    "key": "conditioner",
+    "captured_at": "2026-10-03T15:30:06.910620+00:00",
+    "old_raw_inci": "Aqua, Cetearyl Alcohol, Helianthus Annuus Hybrid Oil, Glycerin, Betaine, Arginine, Rosa Damascena Flower Water, Levulinic Acid, Parfum, Brassica Alcohol, Sodium Levulinate, Cetearyl Glucoside, Hydrolyzed Wheat Protein, Alcohol, Glyceryl Caprylate, p-Anisic Acid, Brassicyl Isoleucinate Esylate, Citric Acid, Sodium Hydroxide",
+    "current_raw_inci": "Ingredients: Aqua, Cetearyl Alcohol, Helianthus Annuus Hybrid Oil1, Glycerin, Betaine, Arginine, Hydrolyzed Wheat Protein, Rosa Damascena Flower Water 1, Parfum, Pelargonium Graveolens Flower Oil, Brassica Alcohol, Sodium Levulinate, Cetearyl Glucoside, Alcohol, Levulinic Acid, Glyceryl Caprylate, p-Anisic Acid, Brassicyl Isoleucinate Esylate, Citric Acid, Sodium Hydroxide",
+    "old_normalized_ingredients": [
+      "Aqua",
+      "Cetearyl Alcohol",
+      "Helianthus Annuus Hybrid Oil",
+      "Glycerin",
+      "Betaine",
+      "Arginine",
+      "Rosa Damascena Flower Water",
+      "Levulinic Acid",
+      "Parfum",
+      "Brassica Alcohol",
+      "Sodium Levulinate",
+      "Cetearyl Glucoside",
+      "Hydrolyzed Wheat Protein",
+      "Alcohol",
+      "Glyceryl Caprylate",
+      "p-Anisic Acid",
+      "Brassicyl Isoleucinate Esylate",
+      "Citric Acid",
+      "Sodium Hydroxide"
+    ],
+    "current_normalized_ingredients": [
+      "Aqua",
+      "Cetearyl Alcohol",
+      "Helianthus Annuus Hybrid Oil",
+      "Glycerin",
+      "Betaine",
+      "Arginine",
+      "Hydrolyzed Wheat Protein",
+      "Rosa Damascena Flower Water",
+      "Parfum",
+      "Pelargonium Graveolens Flower Oil",
+      "Brassica Alcohol",
+      "Sodium Levulinate",
+      "Cetearyl Glucoside",
+      "Alcohol",
+      "Levulinic Acid",
+      "Glyceryl Caprylate",
+      "p-Anisic Acid",
+      "Brassicyl Isoleucinate Esylate",
+      "Citric Acid",
+      "Sodium Hydroxide"
+    ],
+    "raw_current_sha256": "415557ee77af9e9305eb7e8280ec43a9fa30c614c26d4605de4ee92aade59408",
+    "ordered_normalized_sha256": "ca52f423b555b7c648a1456dbc52fe47811a0e1261df2cffdba6fe0c19471e0f",
+    "old_only": [],
+    "current_only": [
+      "Pelargonium Graveolens Flower Oil"
+    ],
+    "position_changes": [
+      {
+        "ingredient": "Rosa Damascena Flower Water",
+        "old_rank": 7,
+        "current_rank": 8
+      },
+      {
+        "ingredient": "Levulinic Acid",
+        "old_rank": 8,
+        "current_rank": 15
+      },
+      {
+        "ingredient": "Brassica Alcohol",
+        "old_rank": 10,
+        "current_rank": 11
+      },
+      {
+        "ingredient": "Sodium Levulinate",
+        "old_rank": 11,
+        "current_rank": 12
+      },
+      {
+        "ingredient": "Cetearyl Glucoside",
+        "old_rank": 12,
+        "current_rank": 13
+      },
+      {
+        "ingredient": "Hydrolyzed Wheat Protein",
+        "old_rank": 13,
+        "current_rank": 7
+      },
+      {
+        "ingredient": "Glyceryl Caprylate",
+        "old_rank": 15,
+        "current_rank": 16
+      },
+      {
+        "ingredient": "p-Anisic Acid",
+        "old_rank": 16,
+        "current_rank": 17
+      },
+      {
+        "ingredient": "Brassicyl Isoleucinate Esylate",
+        "old_rank": 17,
+        "current_rank": 18
+      },
+      {
+        "ingredient": "Citric Acid",
+        "old_rank": 18,
+        "current_rank": 19
+      },
+      {
+        "ingredient": "Sodium Hydroxide",
+        "old_rank": 19,
+        "current_rank": 20
+      }
+    ]
+  },
+  {
+    "key": "mask",
+    "captured_at": "2026-10-03T15:30:06.910620+00:00",
+    "old_raw_inci": "Aqua, Cetearyl Alcohol, Glycerin, Tripelargonin, Behenamidopropyl Dimethylamine, Dicaprylyl Ether, Lauryl Alcohol, Macadamia Ternifolia Seed Oil, Argania Spinosa Kernel Oil, Biotin, Glycolic Acid, Hydrolyzed Rice Protein, Illite, Malic Acid, Niacinamide, Pelvetia Canaliculata Extract, Salicylic Acid, Theobroma Cacao Seed Butter, Tocopherol, Tocopheryl Acetate, Anhydroxylitol, Cetyl Esters, Citric Acid, Dextrin, Ethylhexylglycerin, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Hydroxypropyl Starch Phosphate, Lactic Acid, Maltitol, Parfum, Phenoxyethanol, Sodium Benzoate, Sorbic Acid, Xylitol, Xylitylglucoside.",
+    "current_raw_inci": "Ingredients: Aqua, Cetearyl Alcohol, Glycerin, Stearamidopropyl Dimethylamine, Argania Spinosa Kernel Oil, Macadamia Ternifolia Seed Oil, Coco-Caprylate/Caprate, Maltitol, Biotin, Glycolic Acid, Hydrolyzed Rice Protein, Malic Acid, Niacinamide, Pelvetia Canaliculata Extract, Salicylic Acid, Theobroma Cacao Seed Butter, Anhydroxylitol, Behentrimonium Chloride, Calcium Aluminum, Borosilicate, Cetrimonium Chloride, Cetyl Esters, Citric Acid, Guar Hydroxypropyltrimonium Chloride, Isoamyl Laurate, Isopropyl Alcohol, Lactic Acid, Mica, Oleyl Alcohol, Parfum, Potassium Sorbate, Silica, Sodium Benzoate, Sodium Citrate, Tin Oxide, Xylitol, Xylitylglucoside, Tetramethyl, Acetyloctahydronaphthalenes, CI 77491, CI 77891.",
+    "old_normalized_ingredients": [
+      "Aqua",
+      "Cetearyl Alcohol",
+      "Glycerin",
+      "Tripelargonin",
+      "Behenamidopropyl Dimethylamine",
+      "Dicaprylyl Ether",
+      "Lauryl Alcohol",
+      "Macadamia Ternifolia Seed Oil",
+      "Argania Spinosa Kernel Oil",
+      "Biotin",
+      "Glycolic Acid",
+      "Hydrolyzed Rice Protein",
+      "Illite",
+      "Malic Acid",
+      "Niacinamide",
+      "Pelvetia Canaliculata Extract",
+      "Salicylic Acid",
+      "Theobroma Cacao Seed Butter",
+      "Tocopherol",
+      "Tocopheryl Acetate",
+      "Anhydroxylitol",
+      "Cetyl Esters",
+      "Citric Acid",
+      "Dextrin",
+      "Ethylhexylglycerin",
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "Hydroxypropyl Starch Phosphate",
+      "Lactic Acid",
+      "Maltitol",
+      "Parfum",
+      "Phenoxyethanol",
+      "Sodium Benzoate",
+      "Sorbic Acid",
+      "Xylitol",
+      "Xylitylglucoside"
+    ],
+    "current_normalized_ingredients": [
+      "Aqua",
+      "Cetearyl Alcohol",
+      "Glycerin",
+      "Stearamidopropyl Dimethylamine",
+      "Argania Spinosa Kernel Oil",
+      "Macadamia Ternifolia Seed Oil",
+      "Coco-Caprylate/Caprate",
+      "Maltitol",
+      "Biotin",
+      "Glycolic Acid",
+      "Hydrolyzed Rice Protein",
+      "Malic Acid",
+      "Niacinamide",
+      "Pelvetia Canaliculata Extract",
+      "Salicylic Acid",
+      "Theobroma Cacao Seed Butter",
+      "Anhydroxylitol",
+      "Behentrimonium Chloride",
+      "Calcium Aluminum Borosilicate",
+      "Cetrimonium Chloride",
+      "Cetyl Esters",
+      "Citric Acid",
+      "Guar Hydroxypropyltrimonium Chloride",
+      "Isoamyl Laurate",
+      "Isopropyl Alcohol",
+      "Lactic Acid",
+      "Mica",
+      "Oleyl Alcohol",
+      "Parfum",
+      "Potassium Sorbate",
+      "Silica",
+      "Sodium Benzoate",
+      "Sodium Citrate",
+      "Tin Oxide",
+      "Xylitol",
+      "Xylitylglucoside",
+      "Tetramethyl Acetyloctahydronaphthalenes",
+      "CI 77491",
+      "CI 77891"
+    ],
+    "raw_current_sha256": "22c6fb964a5ccd9e1251361c23e182ee10a355850da4a71e83f35465801c2ae3",
+    "ordered_normalized_sha256": "1934c5192cc62964abec8332180b597c6386fc3fca36d243ae7216e0bafef133",
+    "old_only": [
+      "Tripelargonin",
+      "Behenamidopropyl Dimethylamine",
+      "Dicaprylyl Ether",
+      "Lauryl Alcohol",
+      "Illite",
+      "Tocopherol",
+      "Tocopheryl Acetate",
+      "Dextrin",
+      "Ethylhexylglycerin",
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "Hydroxypropyl Starch Phosphate",
+      "Phenoxyethanol",
+      "Sorbic Acid"
+    ],
+    "current_only": [
+      "Stearamidopropyl Dimethylamine",
+      "Coco-Caprylate/Caprate",
+      "Behentrimonium Chloride",
+      "Calcium Aluminum Borosilicate",
+      "Cetrimonium Chloride",
+      "Guar Hydroxypropyltrimonium Chloride",
+      "Isoamyl Laurate",
+      "Isopropyl Alcohol",
+      "Mica",
+      "Oleyl Alcohol",
+      "Potassium Sorbate",
+      "Silica",
+      "Sodium Citrate",
+      "Tin Oxide",
+      "Tetramethyl Acetyloctahydronaphthalenes",
+      "CI 77491",
+      "CI 77891"
+    ],
+    "position_changes": [
+      {
+        "ingredient": "Macadamia Ternifolia Seed Oil",
+        "old_rank": 8,
+        "current_rank": 6
+      },
+      {
+        "ingredient": "Argania Spinosa Kernel Oil",
+        "old_rank": 9,
+        "current_rank": 5
+      },
+      {
+        "ingredient": "Biotin",
+        "old_rank": 10,
+        "current_rank": 9
+      },
+      {
+        "ingredient": "Glycolic Acid",
+        "old_rank": 11,
+        "current_rank": 10
+      },
+      {
+        "ingredient": "Hydrolyzed Rice Protein",
+        "old_rank": 12,
+        "current_rank": 11
+      },
+      {
+        "ingredient": "Malic Acid",
+        "old_rank": 14,
+        "current_rank": 12
+      },
+      {
+        "ingredient": "Niacinamide",
+        "old_rank": 15,
+        "current_rank": 13
+      },
+      {
+        "ingredient": "Pelvetia Canaliculata Extract",
+        "old_rank": 16,
+        "current_rank": 14
+      },
+      {
+        "ingredient": "Salicylic Acid",
+        "old_rank": 17,
+        "current_rank": 15
+      },
+      {
+        "ingredient": "Theobroma Cacao Seed Butter",
+        "old_rank": 18,
+        "current_rank": 16
+      },
+      {
+        "ingredient": "Anhydroxylitol",
+        "old_rank": 21,
+        "current_rank": 17
+      },
+      {
+        "ingredient": "Cetyl Esters",
+        "old_rank": 22,
+        "current_rank": 21
+      },
+      {
+        "ingredient": "Citric Acid",
+        "old_rank": 23,
+        "current_rank": 22
+      },
+      {
+        "ingredient": "Lactic Acid",
+        "old_rank": 28,
+        "current_rank": 26
+      },
+      {
+        "ingredient": "Maltitol",
+        "old_rank": 29,
+        "current_rank": 8
+      },
+      {
+        "ingredient": "Parfum",
+        "old_rank": 30,
+        "current_rank": 29
+      },
+      {
+        "ingredient": "Xylitol",
+        "old_rank": 34,
+        "current_rank": 35
+      },
+      {
+        "ingredient": "Xylitylglucoside",
+        "old_rank": 35,
+        "current_rank": 36
+      }
+    ]
+  }
+]

@@ -1,0 +1,19 @@
+"use strict";
+// Pure parser checks: synthetic TAP strings only; no product imports or children.
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const base='/tmp/test-audit-billing-trial210-tools-ybzravna/';
+const src=fs.readFileSync(base+'operator-run-controls.cjs','utf8');
+const controls=JSON.parse(fs.readFileSync(base+'operator-controls-normalized.json','utf8'));
+const parser=vm.runInNewContext("const phase='transfer';\n"+src.slice(src.indexOf('function named('),src.indexOf('function compact('))+"\n({named,clean,intended})");
+let positive=0,negative=0;
+for(const c of controls){
+ const frame=`TestContext.<anonymous> (/repo/${c.test.file}:${c.oracles.transfer.startLine}:3)`;
+ const text=`# Subtest: ${c.test.name}\nnot ok 1 - ${c.test.name}\n  ---\n  error: |-\n    ${c.errorMessageIncludes.join('\n    ')}\n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  operator: '${c.expectedOperator}'\n  stack: |-\n    ${frame}\n  ...\n`;
+ const good={text,status:1,signal:null,timedOut:false,spawnError:null,tests:1,pass:0,fail:1,skipped:0,cancelled:0,todo:0};
+ assert.equal(parser.intended(c,good).accepted,true,c.id);positive++;
+ const changes=[{status:0},{signal:'SIGKILL'},{timedOut:true},{spawnError:'import failed'},{tests:0},{tests:2},{pass:1},{fail:0},{skipped:1},{cancelled:1},{todo:1},{text:text.replace("code: 'ERR_ASSERTION'","code: 'SQL_ERROR'")},{text:text.replace(`operator: '${c.expectedOperator}'`,"operator: 'wrong'")},{text:text.replace(c.errorMessageIncludes[0],'wrong message')},{text:text.replace('# Subtest: '+c.test.name,'# Subtest: other')},{text:text.replace(frame,'SQL.execute (/repo/sql.ts:1:1)\n    '+frame)},{text:text.replace(frame,`TestContext.<anonymous> (/repo/${c.test.file}:99999:3)`)},{text:text.replace("  code: 'ERR_ASSERTION'","  code: 'ERR_ASSERTION'\n  code: 'ERR_ASSERTION'")}];
+ for(const bad of changes){assert.equal(parser.intended(c,{...good,...bad}).accepted,false,c.id+': '+JSON.stringify(bad));negative++;}
+ const clean={...good,text:`# Subtest: ${c.test.name}\n`,status:0,pass:1,fail:0};assert.equal(parser.clean(c,clean),true);positive++;
+ for(const bad of[{tests:0},{tests:2},{fail:1},{signal:'SIGTERM'},{timedOut:true},{spawnError:'setup'},{skipped:1},{text:'# Subtest: other\n'}]){assert.equal(parser.clean(c,{...clean,...bad}),false);negative++;}
+}
+console.log(JSON.stringify({kind:'pure synthetic TAP parser validation; not candidate runtime proof',controls:4,acceptedPositiveCases:positive,rejectedNegativeCases:negative,childrenStarted:0,productImports:0,repositoryWrites:0},null,2));

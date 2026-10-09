@@ -90,15 +90,6 @@ function mockPostHog(initial: Insight[]) {
   return { state, methods, bodies, fetch, tiles }
 }
 
-test("O1 target uses the declarative v2 revision", () => {
-  const result = transformInsight(
-    insight(5235347, "where properties.offer_revision = 'personal_plan_v1'") as never,
-  ) as Insight
-  assert.match(result.query.source.query as string, /personal_plan_v2/)
-  assert.doesNotMatch(result.query.source.query as string, /offer_revision = 'personal_plan_v1'/)
-  assert.match(result.description ?? "", /personal_plan_v2/)
-})
-
 test("the existing FAQ/detail tile remains byte-for-byte unchanged", () => {
   const current = insight(5235351, "where properties.offer_revision = 'personal_plan_v1'") as never
   assert.deepEqual(transformInsight(current), current)
@@ -120,6 +111,27 @@ test("offer targets use the strict declarative v2 session and checkout contract"
     assert.match(query, /offer_revision = 'personal_plan_v2'/)
     assert.match(query, /INNER JOIN eligible ON/)
     assert.doesNotMatch(query, /distinct_id/)
+    assert.match(query, /event = 'offer_viewed'/)
+    assert.match(query, /properties\.funnel_package_key = 'meta_personal_plan_v1'/)
+    assert.match(query, /properties\.offer_variant = 'personal-plan-v1'/)
+    assert.match(query, /properties\.offer_revision = 'personal_plan_v2'/)
+    assert.match(query, /notEmpty\(ifNull\(toString\(properties\.funnel_session_id\), ''\)\)/)
+    assert.match(query, /\{filters\.dateRange\.from\}/)
+    assert.match(query, /\{filters\.dateRange\.to\}/)
+    assert.match(query, /min\(timestamp\) AS offer_viewed_at/)
+    assert.match(query, /timestamp >= eligible\.offer_viewed_at/)
+    if (id === 5235347) {
+      assert.doesNotMatch(query, /offer_revision = 'personal_plan_v1'/)
+      assert.match(result.description ?? "", /personal_plan_v2/)
+    }
+    if (id === 5235348) {
+      assert.match(query, /offer_payment_option_viewed/)
+      assert.match(query, /05 Vorher und nachher/)
+      assert.match(query, /personal_plan_before_after/)
+      assert.match(query, /15 Zahlungsart gewählt/)
+      assert.match(result.description ?? "", /01–11/)
+      assert.match(result.description ?? "", /mindestens 50 % für 750 ms sichtbar/)
+    }
   }
   const o1 = (transformInsight(insight(5235347, "select 1") as never) as Insight).query.source
     .query as string
@@ -132,8 +144,14 @@ test("offer targets use the strict declarative v2 session and checkout contract"
   for (const query of [o1, o5]) {
     assert.match(query, /min\(timestamp\) AS offer_viewed_at/)
     assert.match(query, /timestamp >= eligible\.offer_viewed_at/)
+    assert.match(
+      query,
+      /\([a-z_]+\.event = 'purchase_completed' OR [a-z_]+\.properties\.offer_revision = 'personal_plan_v2'\)/,
+    )
   }
   assert.match(o5, /outcome_events\.timestamp >= click_sessions\.checkout_intent_at/)
+  assert.match(o5, /min\(click_event\.timestamp\) AS checkout_intent_at/)
+  assert.match(o5, /zahlungsoption_gesehen/)
   assert.match(
     (transformInsight(insight(5235348, "select 1") as never) as Insight).query.source
       .query as string,
@@ -202,26 +220,6 @@ test("O5 presents every checkout and payment stage, including option exposure", 
     ],
   )
   assert.equal(JSON.stringify(result.query.tableSettings).includes("zahlungsoption_gesehen"), true)
-})
-
-test("O2 inserts the before/after step and shifts checkout stages", () => {
-  const query = `personal_plan_v1
-  UNION ALL SELECT 5, '05 Preis & Mitgliedschaft', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'pricing') FROM journey_events
-  UNION ALL SELECT 6, '06 Umfrage-Beleg', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'personal_plan_survey') FROM journey_events
-  UNION ALL SELECT 7, '07 Erfahrungen', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'testimonials') FROM journey_events
-  UNION ALL SELECT 8, '08 Garantie', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'guarantee') FROM journey_events
-  UNION ALL SELECT 9, '09 FAQ', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'faq') FROM journey_events
-  UNION ALL SELECT 10, '10 Finaler CTA', uniqIf(session_id, event = 'offer_section_viewed' AND section_id = 'final_cta') FROM journey_events
-  UNION ALL SELECT 11, '11 Checkout geöffnet', uniqIf(session_id, event = 'offer_checkout_opened') FROM journey_events
-  UNION ALL SELECT 12, '12 Anbieter initialisiert', uniqIf(session_id, event = 'checkout_started') FROM journey_events
-  UNION ALL SELECT 13, '13 Zahlungsoption gesehen', uniqIf(session_id, event = 'offer_payment_option_viewed') FROM journey_events
-  UNION ALL SELECT 14, '14 Zahlungsart gewählt', uniqIf(session_id, event = 'offer_payment_method_selected') FROM journey_events`
-  const result = transformInsight(insight(5235348, query) as never) as Insight
-  const next = result.query.source.query as string
-  assert.match(next, /05 Vorher und nachher/)
-  assert.match(next, /personal_plan_before_after/)
-  assert.match(next, /15 Zahlungsart gewählt/)
-  assert.match(result.description ?? "", /01–11/)
 })
 
 test("B2 updates aliases and predecessor formulas after the inserted section", () => {

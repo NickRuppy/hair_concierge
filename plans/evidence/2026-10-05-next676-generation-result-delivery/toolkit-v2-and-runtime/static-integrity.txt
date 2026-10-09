@@ -1,0 +1,29 @@
+{
+  "status": "PASS_STATIC",
+  "pinsSHA256": "b41d3a0d1a4021f978e0458b7e7a6c21881541ff195bb662c28e0d59ea917d70",
+  "parsedFiles": [
+    "catalog-decoder-source.cjs",
+    "diagnostic-projection.cjs",
+    "operator-edit.cjs",
+    "operator-guard.cjs",
+    "operator-native-proof.cjs",
+    "operator-proof.cjs",
+    "operator-readonly-preload.cjs",
+    "operator-run-controls.cjs",
+    "prepare-v2.cjs",
+    "proof-attestation.cjs",
+    "static-integrity.cjs"
+  ],
+  "original109AndAll280ReadsetsUnchanged": true,
+  "all5022RuntimePinsAndIdentityPoliciesUnchanged": true,
+  "all18SourceRecipesAndFirstFramesUnchanged": true,
+  "catalogScalarDecoderByteExact": true,
+  "diagnosticsReady": 18,
+  "repositoryWrites": 0,
+  "children": 0,
+  "ownerImports": 0,
+  "nativeRuns": 0,
+  "limits": "Static prediction and parser validation, not runtime acceptance."
+}
+{"staticReadOnlyEnforced":true,"attemptedWrites":0,"attemptedChildren":0}
+{"attemptedOwnerImports":0,"attemptedNetworkCalls":0}

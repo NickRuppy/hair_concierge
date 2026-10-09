@@ -1,0 +1,8 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "files": {
+    "src/lib/auth/authenticated-app-route-access.ts": "9c860f0184e6f4e5282b518273161ff8f2b74dbab605fbaed2dfd7e67179bd35",
+    "tests/authenticated-app-route-access.test.ts": "13b41aef3c55af81ef4c4ca6dabed6ee1af6dce6aad50b51e4c866da55039c0a"
+  }
+}

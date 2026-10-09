@@ -287,22 +287,6 @@ export function getShampooMissingProfileFields(
   return missing
 }
 
-export function getShampooProfileCompleteness(profile: HairProfile | null): {
-  filledCount: number
-  totalCount: number
-  score: number
-} {
-  const missingFields = getShampooMissingProfileFields(profile)
-  const totalCount = !profile?.scalp_condition && !profile?.scalp_type ? 3 : 2
-  const filledCount = totalCount - missingFields.length
-
-  return {
-    filledCount,
-    totalCount,
-    score: filledCount / totalCount,
-  }
-}
-
 export function getLeaveInMissingProfileFields(params: {
   runtime: RecommendationEngineRuntime
   hairProfile: HairProfile | null

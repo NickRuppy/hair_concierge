@@ -1,0 +1,733 @@
+--- a/src/lib/personal-plan/rollout-access.ts
++++ b/src/lib/personal-plan/rollout-access.ts
+@@ -1,171 +1,8 @@
+ import "server-only"
+-
+-import {
+-  isMissingPersonalPlanFieldTestRelation,
+-  isMissingRegularQuizFieldTestRelation,
+-} from "@/lib/personal-plan-field-test/errors"
+-import { resolvePersonalPlanAppV1InternalEmails } from "./release"
+-
+-export type PersonalPlanInternalUserClient = {
+-  from: (table: "profiles") => {
+-    select: (columns: "is_admin") => {
+-      eq: (
+-        column: "id",
+-        value: string,
+-      ) => {
+-        maybeSingle: () => Promise<{ data: { is_admin?: unknown } | null; error: unknown }>
+-      }
+-    }
+-  }
+-  auth: {
+-    admin: {
+-      getUserById: (userId: string) => Promise<{
+-        data: {
+-          user: { email?: string | null; email_confirmed_at?: string | null } | null
+-        }
+-        error: unknown
+-      }>
+-    }
+-  }
+-}
+-
+-type FieldTestEnrollmentClient = {
+-  from: (table: "personal_plan_test_enrollments" | "regular_quiz_test_enrollments") => {
+-    select: (columns: string) => {
+-      eq: (
+-        column: string,
+-        value: string,
+-      ) => {
+-        eq: (
+-          column: string,
+-          value: string,
+-        ) => {
+-          maybeSingle: () => Promise<{ data: unknown; error: unknown }>
+-        }
+-      }
+-    }
+-  }
+-}
+-
+-type FieldTestEnrollmentRow = {
+-  id?: unknown
+-  user_id?: unknown
+-  status?: unknown
+-  expires_at?: unknown
+-  revoked_at?: unknown
+-  manual_access_grant_id?: unknown
+-  manual_access_grants?: unknown
+-}
+-
+-type ManualAccessGrantRow = {
+-  id?: unknown
+-  user_id?: unknown
+-  reason?: unknown
+-  expires_at?: unknown
+-  revoked_at?: unknown
+-}
+-
+-function activeFutureTimestamp(value: unknown, now: Date): boolean {
+-  return (
+-    typeof value === "string" &&
+-    !Number.isNaN(new Date(value).getTime()) &&
+-    new Date(value).getTime() > now.getTime()
+-  )
+-}
+-
+-export async function isActivePersonalPlanFieldTestOwner(
+-  userId: string,
+-  client: FieldTestEnrollmentClient,
+-  now: Date = new Date(),
+-): Promise<boolean> {
+-  const personalPlanOwner = await hasActiveFieldTestOwnerInTable(
+-    userId,
+-    client,
+-    "personal_plan_test_enrollments",
+-    now,
+-  )
+-  if (personalPlanOwner) return true
+-  return hasActiveFieldTestOwnerInTable(
+-    userId,
+-    client,
+-    "regular_quiz_test_enrollments",
+-    now,
+-  )
+-}
+-
+-async function hasActiveFieldTestOwnerInTable(
+-  userId: string,
+-  client: FieldTestEnrollmentClient,
+-  table: "personal_plan_test_enrollments" | "regular_quiz_test_enrollments",
+-  now: Date,
+-): Promise<boolean> {
+-  const { data, error } = await client
+-    .from(table)
+-    .select(
+-      "id,user_id,status,expires_at,revoked_at,manual_access_grant_id,manual_access_grants!inner(id,user_id,reason,expires_at,revoked_at)",
+-    )
+-    .eq("user_id", userId)
+-    .eq("status", "active")
+-    .maybeSingle()
+-  if (error) {
+-    if (
+-      (table === "personal_plan_test_enrollments" &&
+-        isMissingPersonalPlanFieldTestRelation(error)) ||
+-      (table === "regular_quiz_test_enrollments" &&
+-        isMissingRegularQuizFieldTestRelation(error))
+-    ) {
+-      return false
+-    }
+-    throw error
+-  }
+-  const enrollment = (data as FieldTestEnrollmentRow | null) ?? null
+-  const grant = enrollment?.manual_access_grants as ManualAccessGrantRow | null
+-  return Boolean(
+-    enrollment &&
+-    typeof enrollment.id === "string" &&
+-    enrollment.user_id === userId &&
+-    enrollment.status === "active" &&
+-    enrollment.revoked_at === null &&
+-    activeFutureTimestamp(enrollment.expires_at, now) &&
+-    typeof enrollment.manual_access_grant_id === "string" &&
+-    grant &&
+-    grant.id === enrollment.manual_access_grant_id &&
+-    grant.user_id === userId &&
+-    grant.reason === "tester" &&
+-    grant.revoked_at === null &&
+-    activeFutureTimestamp(grant.expires_at, now),
+-  )
+-}
+-
+-export async function isPersonalPlanInternalUser(
+-  userId: string,
+-  client: PersonalPlanInternalUserClient,
+-): Promise<boolean> {
+-  const { data: profile, error: profileError } = await client
+-    .from("profiles")
+-    .select("is_admin")
+-    .eq("id", userId)
+-    .maybeSingle()
+-  if (profileError) throw profileError
+-  if (profile?.is_admin === true) return true
+-
+-  if (
+-    await isActivePersonalPlanFieldTestOwner(userId, client as unknown as FieldTestEnrollmentClient)
+-  ) {
+-    return true
+-  }
+-
+-  const allowedEmails = resolvePersonalPlanAppV1InternalEmails()
+-  if (allowedEmails.size === 0) return false
+-  const { data, error } = await client.auth.admin.getUserById(userId)
+-  if (error) throw error
+-  const email = data.user?.email?.trim().toLowerCase()
+-  return Boolean(email && data.user?.email_confirmed_at && allowedEmails.has(email))
+-}
+ 
+ export async function isPersonalPlanAppV1AllowedForUser(
+   _userId: string,
+-  _client?: PersonalPlanInternalUserClient,
++  _client?: unknown,
+ ): Promise<boolean> {
+   void _userId
+   void _client
+--- a/src/lib/personal-plan/journey-access-loader.ts
++++ b/src/lib/personal-plan/journey-access-loader.ts
+@@ -8,16 +8,12 @@
+ import type { InitialNeedPlanSnapshot } from "./types"
+ import {
+   getPersonalPlanNewBuyerCohortCutoff,
+-  canAccessPersonalPlanAppV1Rollout,
+   isPersonalPlanAppV1Enabled,
+   isPersonalPlanStage2Enabled,
+   isPersonalPlanStage3Enabled,
+   isPersonalPlanStage4Enabled,
+-  resolvePersonalPlanAppV1Rollout,
+-  type PersonalPlanAppV1Rollout,
+ } from "./release"
+ import { canAccessPersonalPlanStage5 } from "./stage5-access"
+-import { isPersonalPlanInternalUser, type PersonalPlanInternalUserClient } from "./rollout-access"
+ import {
+   resolvePersonalPlanJourneyAccess,
+   type PersonalPlanJourneyAccess,
+@@ -46,7 +42,6 @@
+   cohortCutoff: () => Date | null
+   migrationEnabled?: () => boolean
+   appEnabled: () => boolean
+-  appRollout: () => PersonalPlanAppV1Rollout
+   stage2Enabled: () => boolean
+   stage3Enabled: () => boolean
+   stage4Enabled: () => boolean
+@@ -66,7 +61,6 @@
+     planId: string,
+     refinedVersionId: string,
+   ) => Promise<JourneyDraft | null>
+-  loadIsInternal: (userId: string) => Promise<boolean>
+   /**
+    * Server-only, non-identifying phase timing. It is intentionally optional so
+    * deterministic loaders and the narrow Stage 2 authorization read stay silent.
+@@ -86,16 +80,13 @@
+ 
+ export type PersonalPlanStage2Access = { allowed: boolean }
+ 
+-type JourneyAuthorizationPrefix =
+-  | { excludedByAppRollout: true }
+-  | {
+-      excludedByAppRollout: false
+-      appEnabled: boolean
+-      accessState: AccessState
+-      isNewBuyerCohort: boolean
+-      preparedSourceReady: boolean
+-      plan: JourneyPlanRow | null
+-    }
++type JourneyAuthorizationPrefix = {
++  appEnabled: boolean
++  accessState: AccessState
++  isNewBuyerCohort: boolean
++  preparedSourceReady: boolean
++  plan: JourneyPlanRow | null
++}
+ 
+ type JourneyAccessPhaseReporter = Pick<
+   PersonalPlanJourneyAccessLoaderDeps,
+@@ -202,13 +193,6 @@
+     throw new Error("journey_access_user_required")
+   }
+   const appEnabled = deps.appEnabled()
+-  const appRollout = deps.appRollout()
+-  if (appEnabled && appRollout !== "all") {
+-    const isInternal = appRollout === "internal" ? await deps.loadIsInternal(userId) : false
+-    if (!canAccessPersonalPlanAppV1Rollout({ appEnabled, rollout: appRollout, isInternal })) {
+-      return { excludedByAppRollout: true }
+-    }
+-  }
+ 
+   const entitlementStartedAt = phaseStartedAt(reporter)
+   let entitlement: Awaited<ReturnType<PersonalPlanJourneyAccessLoaderDeps["loadEntitlement"]>>
+@@ -237,7 +221,6 @@
+   })
+   if (!entitlementEligible) {
+     return {
+-      excludedByAppRollout: false,
+       appEnabled,
+       accessState: entitlement.accessState,
+       // Preserve the full journey's legacy classification for an enrollment
+@@ -281,7 +264,6 @@
+       durationMs: phaseElapsed(reporter, artifactPlanStartedAt),
+     })
+     return {
+-      excludedByAppRollout: false,
+       appEnabled,
+       accessState: "active",
+       isNewBuyerCohort: true,
+@@ -304,7 +286,6 @@
+     durationMs: phaseElapsed(reporter, artifactPlanStartedAt),
+   })
+   return {
+-    excludedByAppRollout: false,
+     appEnabled,
+     accessState: "active",
+     isNewBuyerCohort: true,
+@@ -319,7 +300,6 @@
+   userId = "user-id-required",
+ ): Promise<PersonalPlanStage2Access> {
+   const prefix = await loadJourneyAuthorizationPrefixWithDeps(deps, userId)
+-  if (prefix.excludedByAppRollout) return { allowed: false }
+   return {
+     allowed:
+       prefix.appEnabled &&
+@@ -342,7 +322,6 @@
+ ): Promise<PersonalPlanJourneyAccess> {
+   const reporter: JourneyAccessPhaseReporter = deps
+   const prefix = await loadJourneyAuthorizationPrefixWithDeps(deps, userId, reporter)
+-  if (prefix.excludedByAppRollout) return { kind: "legacy" }
+ 
+   if (prefix.accessState !== "active") {
+     return resolvePersonalPlanJourneyAccess({
+@@ -469,7 +448,6 @@
+     cohortCutoff: getPersonalPlanNewBuyerCohortCutoff,
+     migrationEnabled: isPersonalPlanLegacyMigrationEnabled,
+     appEnabled: isPersonalPlanAppV1Enabled,
+-    appRollout: resolvePersonalPlanAppV1Rollout,
+     stage2Enabled: isPersonalPlanStage2Enabled,
+     stage3Enabled: isPersonalPlanStage3Enabled,
+     stage4Enabled: isPersonalPlanStage4Enabled,
+@@ -587,9 +565,6 @@
+           : [],
+       }
+     },
+-    async loadIsInternal(userId) {
+-      return isPersonalPlanInternalUser(userId, admin as unknown as PersonalPlanInternalUserClient)
+-    },
+   }
+ }
+ 
+--- a/src/lib/personal-plan/release.ts
++++ b/src/lib/personal-plan/release.ts
+@@ -1,39 +1,16 @@
+ type PersonalPlanAppReleaseEnvironment = {
+   [key: string]: string | undefined
+-  PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS?: string
+   PERSONAL_PLAN_APP_V1_NEW_BUYER_CUTOFF?: string
+   PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED?: string
+   PERSONAL_PLAN_STAGE3_INVENTORY_AUTHORITY_V2?: string
+   PERSONAL_PLAN_STAGE3_THUMBNAILS_ENABLED?: string
+ }
+ 
+-export type PersonalPlanAppV1Rollout = "off" | "internal" | "all"
+-
+ export function resolvePersonalPlanAppV1Rollout(
+   _environment: PersonalPlanAppReleaseEnvironment = process.env,
+-): PersonalPlanAppV1Rollout {
++): "all" {
+   void _environment
+   return "all"
+-}
+-
+-export function canAccessPersonalPlanAppV1Rollout(input: {
+-  appEnabled: boolean
+-  rollout: PersonalPlanAppV1Rollout
+-  isInternal: boolean
+-}): boolean {
+-  if (!input.appEnabled || input.rollout === "off") return false
+-  return input.rollout === "all" || input.isInternal
+-}
+-
+-export function resolvePersonalPlanAppV1InternalEmails(
+-  environment: PersonalPlanAppReleaseEnvironment = process.env,
+-): ReadonlySet<string> {
+-  return new Set(
+-    (environment.PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS ?? "")
+-      .split(",")
+-      .map((email) => email.trim().toLowerCase())
+-      .filter((email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)),
+-  )
+ }
+ 
+ export function isPersonalPlanStage2Enabled(
+--- a/tests/personal-plan-journey-access-loader.test.ts
++++ b/tests/personal-plan-journey-access-loader.test.ts
+@@ -195,7 +195,6 @@
+     }),
+     cohortCutoff: () => new Date("2026-08-01T00:00:00Z"),
+     appEnabled: () => true,
+-    appRollout: () => "all",
+     stage2Enabled: () => true,
+     stage3Enabled: () => true,
+     stage4Enabled: () => true,
+@@ -232,7 +231,6 @@
+       products: [],
+       roleAssignments: [],
+     }),
+-    loadIsInternal: async () => false,
+     ...overrides,
+   }
+ }
+@@ -293,22 +291,7 @@
+   }
+ })
+ 
+-test("Stage 2 access keeps the app rollout gate and stops before later-stage authority reads", async () => {
+-  let entitlementReads = 0
+-  const excluded = await loadPersonalPlanStage2AccessWithDeps(
+-    deps({
+-      appRollout: () => "internal",
+-      loadIsInternal: async () => false,
+-      loadEntitlement: async () => {
+-        entitlementReads += 1
+-        throw new Error("must not read entitlement for excluded users")
+-      },
+-    }),
+-    "customer-1",
+-  )
+-  assert.deepEqual(excluded, { allowed: false })
+-  assert.equal(entitlementReads, 0)
+-
++test("Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing", async () => {
+   const timings: Array<{ operation: string; outcome: string; durationMs: number }> = []
+   let refinedReads = 0
+   let draftReads = 0
+@@ -413,33 +396,6 @@
+       ),
+     /artifact database unavailable/,
+   )
+-})
+-
+-test("internal app rollout excludes non-internal users before plan data is read", async () => {
+-  let entitlementReads = 0
+-  const access = await loadPersonalPlanJourneyAccessWithDeps(
+-    deps({
+-      appRollout: () => "internal",
+-      loadIsInternal: async () => false,
+-      loadEntitlement: async () => {
+-        entitlementReads += 1
+-        throw new Error("must not read entitlement for excluded users")
+-      },
+-    }),
+-    "customer-1",
+-  )
+-
+-  assert.deepEqual(access, { kind: "legacy" })
+-  assert.equal(entitlementReads, 0)
+-})
+-
+-test("internal app rollout admits the internal owner to the regular journey", async () => {
+-  const access = await loadPersonalPlanJourneyAccessWithDeps(
+-    deps({ appRollout: () => "internal", loadIsInternal: async () => true }),
+-    "nick-1",
+-  )
+-
+-  assert.equal(access.kind, "personal_plan")
+ })
+ 
+ test("journey access accepts a current Stage 3 draft with a valid product-load overlay", async () => {
+@@ -1047,7 +1003,6 @@
+       ...loader,
+       cohortCutoff: () => new Date("2026-08-01T00:00:00Z"),
+       appEnabled: () => true,
+-      appRollout: () => "all",
+       stage2Enabled: () => true,
+       stage3Enabled: () => true,
+       stage4Enabled: () => true,
+@@ -1084,7 +1039,6 @@
+       ...loader,
+       cohortCutoff: () => new Date("2026-08-01T00:00:00Z"),
+       appEnabled: () => true,
+-      appRollout: () => "all",
+       stage2Enabled: () => true,
+       stage3Enabled: () => true,
+       stage4Enabled: () => true,
+--- a/tests/personal-plan-stage3-release.test.ts
++++ b/tests/personal-plan-stage3-release.test.ts
+@@ -5,7 +5,6 @@
+ 
+ import { isPersonalPlanStage3LabEnabled } from "../src/lib/labs/personal-plan-stage3-access"
+ import {
+-  canAccessPersonalPlanAppV1Rollout,
+   getPersonalPlanNewBuyerCohortCutoff,
+   isPersonalPlanAppV1Enabled,
+   isPersonalPlanLegacyQuizCutoverEnabled,
+@@ -13,7 +12,6 @@
+   isPersonalPlanStage3Enabled,
+   isPersonalPlanStage3ThumbnailsEnabled,
+   resolvePersonalPlanAppV1Rollout,
+-  resolvePersonalPlanAppV1InternalEmails,
+ } from "../src/lib/personal-plan/release"
+ 
+ test("the released Personal Plan app ignores obsolete launch flags", () => {
+@@ -42,15 +40,6 @@
+   assert.equal(resolvePersonalPlanAppV1Rollout({}), "all")
+   assert.equal(resolvePersonalPlanAppV1Rollout({ PERSONAL_PLAN_APP_V1_ENABLED: "true" }), "all")
+ 
+-  assert.deepEqual(
+-    [
+-      ...resolvePersonalPlanAppV1InternalEmails({
+-        PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS:
+-          " Nick+Plan@Example.com,invalid, nick+plan@example.com ",
+-      }),
+-    ],
+-    ["nick+plan@example.com"],
+-  )
+   assert.equal(
+     resolvePersonalPlanAppV1Rollout({
+       PERSONAL_PLAN_APP_V1_ENABLED: "true",
+@@ -66,18 +55,6 @@
+     "all",
+   )
+ 
+-  assert.equal(
+-    canAccessPersonalPlanAppV1Rollout({ appEnabled: true, rollout: "internal", isInternal: true }),
+-    true,
+-  )
+-  assert.equal(
+-    canAccessPersonalPlanAppV1Rollout({ appEnabled: true, rollout: "internal", isInternal: false }),
+-    false,
+-  )
+-  assert.equal(
+-    canAccessPersonalPlanAppV1Rollout({ appEnabled: false, rollout: "all", isInternal: true }),
+-    false,
+-  )
+ })
+ 
+ test("released Stage 2 and Stage 3 ignore obsolete launch flags", () => {
+--- a/tests/freemium-enrollment-admission.test.ts
++++ b/tests/freemium-enrollment-admission.test.ts
+@@ -121,7 +121,6 @@
+     }),
+     cohortCutoff: () => null,
+     appEnabled: () => true,
+-    appRollout: () => "all",
+     stage2Enabled: () => true,
+     stage3Enabled: () => true,
+     stage4Enabled: () => true,
+@@ -129,7 +128,6 @@
+     loadPlan: async () => plan,
+     loadCurrentRefinedNeed: async () => null,
+     loadCurrentProductDraft: async () => null,
+-    loadIsInternal: async () => false,
+     ...overrides,
+   }
+ }
+--- a/tests/personal-plan-trial-stage1-journey.test.ts
++++ b/tests/personal-plan-trial-stage1-journey.test.ts
+@@ -279,7 +279,6 @@
+     cohortCutoff: () => cutoff,
+     migrationEnabled: () => true,
+     appEnabled: () => true,
+-    appRollout: () => "all" as const,
+     stage2Enabled: () => true,
+     stage3Enabled: () => true,
+     stage4Enabled: () => true,
+@@ -291,7 +290,6 @@
+     loadPlan: async () => null,
+     loadCurrentRefinedNeed: async () => null,
+     loadCurrentProductDraft: async () => null,
+-    loadIsInternal: async () => false,
+   }
+ 
+   const active = await loadPersonalPlanJourneyAccessWithDeps(
+--- a/tests/personal-plan-field-test-access.test.ts
++++ b/tests/personal-plan-field-test-access.test.ts
+@@ -162,7 +162,6 @@
+       }),
+       cohortCutoff: () => new Date("2026-08-11T00:00:00.000Z"),
+       appEnabled: () => true,
+-      appRollout: () => "all",
+       stage2Enabled: () => false,
+       stage3Enabled: () => false,
+       stage4Enabled: () => false,
+@@ -170,7 +169,6 @@
+       loadPlan: async () => null,
+       loadCurrentRefinedNeed: async () => null,
+       loadCurrentProductDraft: async () => null,
+-      loadIsInternal: async () => false,
+     },
+     "user-1",
+   )
+--- a/tests/personal-plan-rollout-access.test.ts
++++ b/tests/personal-plan-rollout-access.test.ts
+@@ -2,7 +2,6 @@
+ import test from "node:test"
+ 
+ import {
+-  isActivePersonalPlanFieldTestOwner,
+   isPersonalPlanAppV1AllowedForUser,
+ } from "../src/lib/personal-plan/rollout-access"
+ 
+@@ -74,174 +73,4 @@
+   assert.deepEqual(customer.calls, [])
+ })
+ 
+-test("an active tester grant admits a field-test owner without an email allowlist", async () => {
+-  const client = {
+-    from() {
+-      return {
+-        select() {
+-          return {
+-            eq() {
+-              return {
+-                eq() {
+-                  return {
+-                    async maybeSingle() {
+-                      return {
+-                        data: {
+-                          id: "enrollment-1",
+-                          user_id: "guest-1",
+-                          status: "active",
+-                          expires_at: "2026-08-17T12:00:00.000Z",
+-                          revoked_at: null,
+-                          manual_access_grant_id: "grant-1",
+-                          manual_access_grants: {
+-                            id: "grant-1",
+-                            user_id: "guest-1",
+-                            reason: "tester",
+-                            expires_at: "2026-08-17T12:00:00.000Z",
+-                            revoked_at: null,
+-                          },
+-                        },
+-                        error: null,
+-                      }
+-                    },
+-                  }
+-                },
+-              }
+-            },
+-          }
+-        },
+-      }
+-    },
+-  }
+ 
+-  assert.equal(
+-    await isActivePersonalPlanFieldTestOwner(
+-      "guest-1",
+-      client as never,
+-      new Date("2026-08-10T12:00:00.000Z"),
+-    ),
+-    true,
+-  )
+-})
+-
+-test("an active regular-quiz tester grant is also an internal field-test owner", async () => {
+-  const queriedTables: string[] = []
+-  const enrollment = {
+-    id: "regular-enrollment-1",
+-    user_id: "guest-1",
+-    status: "active",
+-    expires_at: "2026-08-17T12:00:00.000Z",
+-    revoked_at: null,
+-    manual_access_grant_id: "grant-1",
+-    manual_access_grants: {
+-      id: "grant-1",
+-      user_id: "guest-1",
+-      reason: "tester",
+-      expires_at: "2026-08-17T12:00:00.000Z",
+-      revoked_at: null,
+-    },
+-  }
+-  const client = {
+-    from(table: string) {
+-      queriedTables.push(table)
+-      return {
+-        select() {
+-          return {
+-            eq() {
+-              return {
+-                eq() {
+-                  return {
+-                    async maybeSingle() {
+-                      return {
+-                        data: table === "regular_quiz_test_enrollments" ? enrollment : null,
+-                        error: null,
+-                      }
+-                    },
+-                  }
+-                },
+-              }
+-            },
+-          }
+-        },
+-      }
+-    },
+-  }
+-
+-  assert.equal(
+-    await isActivePersonalPlanFieldTestOwner(
+-      "guest-1",
+-      client as never,
+-      new Date("2026-08-10T12:00:00.000Z"),
+-    ),
+-    true,
+-  )
+-  assert.deepEqual(queriedTables, [
+-    "personal_plan_test_enrollments",
+-    "regular_quiz_test_enrollments",
+-  ])
+-})
+-
+-test("an unapplied field-test relation is not an internal-owner signal", async () => {
+-  const client = {
+-    from(table: string) {
+-      return {
+-        select() {
+-          return {
+-            eq() {
+-              return {
+-                eq() {
+-                  return {
+-                    async maybeSingle() {
+-                      return {
+-                        data: null,
+-                        error: {
+-                          code: "42P01",
+-                          message: `relation "${table}" does not exist`,
+-                        },
+-                      }
+-                    },
+-                  }
+-                },
+-              }
+-            },
+-          }
+-        },
+-      }
+-    },
+-  }
+-
+-  assert.equal(await isActivePersonalPlanFieldTestOwner("user-1", client as never), false)
+-})
+-
+-test("field-test owner reads still fail closed on unrelated database errors", async () => {
+-  const client = {
+-    from() {
+-      return {
+-        select() {
+-          return {
+-            eq() {
+-              return {
+-                eq() {
+-                  return {
+-                    async maybeSingle() {
+-                      return {
+-                        data: null,
+-                        error: { code: "XX000", message: "database unavailable" },
+-                      }
+-                    },
+-                  }
+-                },
+-              }
+-            },
+-          }
+-        },
+-      }
+-    },
+-  }
+-
+-  await assert.rejects(
+-    isActivePersonalPlanFieldTestOwner("user-1", client as never),
+-    (error: unknown) =>
+-      typeof error === "object" && error !== null && "code" in error && error.code === "XX000",
+-  )
+-})

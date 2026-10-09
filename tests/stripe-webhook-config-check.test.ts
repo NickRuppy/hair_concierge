@@ -143,23 +143,3 @@ test("verifyStripeWebhookConfig reports error and captures an issue when listing
   assert.deepEqual(result, { status: "error", reason: "stripe api unavailable" })
   assert.deepEqual(captured, [result])
 })
-
-test("verifyStripeWebhookConfig does not capture an issue for the ok result", async () => {
-  let captureCalls = 0
-  await verifyStripeWebhookConfig({
-    webhookUrl: "https://app.example.com/api/stripe/webhook",
-    listWebhookEndpoints: async () => [
-      {
-        id: "we_1",
-        url: "https://app.example.com/api/stripe/webhook",
-        status: "enabled",
-        enabled_events: [...REQUIRED_STRIPE_WEBHOOK_EVENTS],
-      },
-    ],
-    captureIssue: () => {
-      captureCalls += 1
-    },
-  })
-
-  assert.equal(captureCalls, 0)
-})

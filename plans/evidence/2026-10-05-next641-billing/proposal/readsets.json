@@ -1,0 +1,277 @@
+[
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "sha256": "b62c33d939c9304e4e38a90890e14e96f3008473902df91ebbe8bbbce47e5295",
+    "readDepth": "Full test with helpers/tables"
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "sha256": "280c7d42b8b7bf6ae611b3e0e8df5012b717f8e0f6386ead947606aec110987f",
+    "readDepth": "Full test with helpers/tables"
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "sha256": "8a8e25f2fc0fe25d2785fb163d1278fd1b7793698c78806484a18e1f8a4791dc",
+    "readDepth": "Full test with helpers/tables"
+  },
+  {
+    "file": "tests/billing-slack-supabase-ownership.test.ts",
+    "sha256": "1feb844fd8ae48a26d55ed046bb62e5e1c29fd26c965e6c74b533976436cc3dc",
+    "readDepth": "Full test with helpers/tables"
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "sha256": "645b5a35fd71846215808798ff1be994c3c4d824e71889ed7a33eeb15e522fe3",
+    "readDepth": "Full test with helpers/tables"
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "sha256": "2acb9f8404c569cf392156a399e31ab6a0a84b500a1240f3b23fd0c79282e5ff",
+    "readDepth": "Full test with helpers/tables"
+  },
+  {
+    "file": "tests/payment-monitor-trigger.test.ts",
+    "sha256": "70040d3b5e009659f7c1f6655dc9593371e554c59c738018d78c9a6cf9a51677",
+    "readDepth": "Full test with helpers/tables"
+  },
+  {
+    "file": "tests/payment-monitor-paypal-test-classification.test.ts",
+    "sha256": "15be122a226a9772cdb9a4e9867de32d20acd2b4b1a756b03a9b41d2430292c7",
+    "readDepth": "Full test with helpers/tables"
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-resolution.test.ts",
+    "sha256": "e0f5d7b9c9950b657569de8d429e069fe0c182f6024958a3f5aa91f51711139d",
+    "readDepth": "Full test with helpers/tables"
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-route.test.ts",
+    "sha256": "6c81989f5649af5a31ea76c177ee4761b65964c19284b727883f27eb7ac9cf05",
+    "readDepth": "Full test with helpers/tables"
+  },
+  {
+    "file": "tests/billing-public-contract-declaration.test.ts",
+    "sha256": "270710a69a805ceaf10f4ba479364a6e34b9425300128a384f1467302c70416f",
+    "readDepth": "Full test with helpers/tables"
+  },
+  {
+    "file": "tests/billing-public-contract-declarations-postgres.test.ts",
+    "sha256": "89df96b1e1f56bc87dbbe341b34e49f536f47416751533eebe03dcfb5e7b8137",
+    "readDepth": "Full test with helpers/tables"
+  },
+  {
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "sha256": "083b4d832c6964496bfcbc00f137f2ff58c434c02dcca774e100f791a6ec130a",
+    "readDepth": "Full test with helpers/tables"
+  },
+  {
+    "file": "src/lib/billing/admin-user-summary.ts",
+    "sha256": "af32cab0a775c34f3bd40098c71e02288034b9f1f21d4fcaf802e5699ea0a551",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "src/lib/billing/subscriptions.ts",
+    "sha256": "a6ba77a92481e13f6f03bc7b1c8d7fee75c02facfeb8ce747493bc64ecca995c",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "src/lib/billing/trial-access-projection.ts",
+    "sha256": "6bd7a205a589005d2301cf77511709b26f63076538f953e1da77d57e567ba17f",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "src/lib/billing/trial-policy.ts",
+    "sha256": "a88f33d5abfefd705629a0ca8ef739b893dd1908aeec639627916fc815daef02",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "src/lib/paypal/trial-collection-start.ts",
+    "sha256": "d22659e8282e0f18b69971b8948ba5afc4b284774aa1d2330f434ed3358513bc",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "src/lib/billing/payment-integrity.ts",
+    "sha256": "ba15949e9aa0bf1f17a399ffb178d735c0b487f7dd22be4c331c35f8a0629cd8",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "src/app/api/billing/payment-monitor/route.ts",
+    "sha256": "3b1163b0be8c29500d706328ad2e7d3ebacd681ac536a0aded16197147c91ce8",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "src/app/api/billing/reconcile/route.ts",
+    "sha256": "961323aa73cfedd70c40597e205201c454d06f7007c568025edd78b01310a297",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "scripts/billing/trigger-payment-monitor.mjs",
+    "sha256": "1a7f3bff097500c52582b784a869ffee3433bc72be97785c035163f6ca4890ea",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "scripts/billing/classify-payment-monitor-paypal-test.ts",
+    "sha256": "570309bc4d8ff520605bca1110c400013db5a9b4fbc893d779322fbbe8241784",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "src/lib/billing/public-contract-declaration.ts",
+    "sha256": "953cc00da720d7548307949f0a360c50fc89606418169c2ef83a90abbf24f237",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "src/lib/billing/public-contract-declaration-request.ts",
+    "sha256": "38f467ed4513f7b2c5f71c38e08ad0b096fb59e539ce9a618d4d749b68f036b6",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "src/lib/billing/public-contract-declarations.ts",
+    "sha256": "caac5a06fa0bc87a71d6094442b160280c2820cbdf67a4a3922eea15fde66be0",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "src/lib/billing/public-contract-declaration-receipt-delivery.ts",
+    "sha256": "7b9cc8ae9354bdd7353f90725a64aa8209409c2184e8c3e36277a527e75fe03f",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "src/lib/billing/public-contract-declaration-resolution.ts",
+    "sha256": "5b11105c416713eb1056e8871b507e47241c37d4adf2b433c79fdc096949c323",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "scripts/billing/public-contract-declarations.ts",
+    "sha256": "b55ccb2b9d4992ace48829f8b694bee54b7e724111576b856e2e68a4b0eb5288",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "src/app/api/billing/public-contract-declaration-receipts/reconcile/route.ts",
+    "sha256": "f309a118f421c001f1f2fa0436b957ef3fc648e58a6ea04e18c11d8c5047b712",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "src/app/api/billing/contract-declarations/route.ts",
+    "sha256": "61bc54264c8be5bf6135c694ffed5fcecd0eee95074c0370e7f12bc1c1e1046d",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "src/app/api/admin/users/route.ts",
+    "sha256": "d51c76b21ba09441699acc4f9885222a7ccaed745cadcc63890556accce0a315",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "supabase/migrations/20260914103100_public_contract_declarations.sql",
+    "sha256": "23b7a222be06b80bcfa61e2af0470b8bbf466a98d124fa22171fc624cc5fa986",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "supabase/migrations/20260914110000_public_contract_declaration_receipt_delivery.sql",
+    "sha256": "1fb00a655e23d68900a73d6bbf7a16058a0cc6279ef81b9577e7f4e0ea9fbd8c",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "supabase/migrations/20260914141918_public_contract_declaration_resolution.sql",
+    "sha256": "6bef62865e8b6d414a22c5c267b313556beffb005a5e3b7bcdca56b81ece82c8",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "supabase/migrations/20260914044650_trial_admission_foundation.sql",
+    "sha256": "a791ee5abfeb6d9b7c240460f6271cae7a7953148bdfe928b72d4771e70b86f9",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "supabase/migrations/20260914090614_trial_cancellation_declarations.sql",
+    "sha256": "3d018b95ea5475b7011934dc2855427c6c16b9b27de395da2115a882d8d21c5f",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "supabase/migrations/20260914094203_trial_payment_events.sql",
+    "sha256": "7d1118c8ffb7b7dc0af7531dc9ece12b9019f7d60dcfa4ce526bb4f206cd8cb0",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "supabase/migrations/20260914135527_trial_required_notices.sql",
+    "sha256": "9dc9fac57e78c164dfc3e8d15b83324e21cab18c6595c7fdbf8edef33b899e5f",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "supabase/migrations/20260822140000_billing_subscriptions_classified_views.sql",
+    "sha256": "403092c7d01154ac3651c11fab860e07cf3320ce80c430e14984d287eb0b8ee6",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "vercel.json",
+    "sha256": "cb38b0cd0013dc1dff9a5bc2bafc4a9ccb5e6646bdcf6dcf0bfcebc4b676c55a",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "tests/server-only-register.cjs",
+    "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+    "readDepth": "Full source"
+  },
+  {
+    "file": "src/lib/billing/analytics-outbox.ts",
+    "sha256": "e81d7519e58438a54760efac9aa1b92227f028077fef049595facc84d480bef2",
+    "readDepth": "1\u2013235 (entire explicit Slack early-guard owner and surrounding entrypoints; rest inventory only)"
+  },
+  {
+    "file": "src/lib/billing/payment-integrity-runtime.ts",
+    "sha256": "ceb4c466b9e1693a20072f38e88640f9b0d46bc01bf1cf13f5d577d284d55bb6",
+    "readDepth": "1\u2013225 (actual dynamic factory/reporter/provider construction; rest1217lines not reread)"
+  },
+  {
+    "file": "src/lib/customerio/transactional.ts",
+    "sha256": "5756d3bda21c0be6cbc1ed8885846a646edd8560f22c8b7fc5ac6601c62b95e2",
+    "readDepth": "1\u2013115 (real error classes/payload/receipt types and request boundary; provider execution not reaudited)"
+  },
+  {
+    "file": "src/lib/customerio/trial-required-notices.ts",
+    "sha256": "0770ea64f09f8a883e2ab86a9b41c7e880101d4d9378fbfcfa30549a479c0d52",
+    "readDepth": "1\u2013110 (default send payload builder; remainder not audited)"
+  },
+  {
+    "file": "src/lib/supabase/middleware.ts",
+    "sha256": "b46773cf21b880cb35d2967d4a882be1c5c59c53f2416607b60d3cb8a4c862a7",
+    "readDepth": "43\u201394 and418\u2013459 plus symbol search; early bypass before auth, not wholemiddleware"
+  },
+  {
+    "file": "src/lib/auth/route-classification.ts",
+    "sha256": "6a5c8c0a283054ab108779a6a8f23764a4919b67adea2f0a94cb389abb4d57a6",
+    "readDepth": "1\u2013150 and182\u2013220 (relevant tables and classification order)"
+  },
+  {
+    "file": "src/components/billing/public-contract-declaration-form.tsx",
+    "sha256": "53f3c4529fc2491cb7d8ced7c2d08238875a3257e9e38eeb4e5e78676fd58a83",
+    "readDepth": "1\u201398 (actual parser/request/save-receipt caller; remainderUI not audited)"
+  },
+  {
+    "file": "docs/operations/payment-failure-monitoring.md",
+    "sha256": "302edcc82d9124f23dbaf2211db621c550103e8662d32260a6b422f19b6d5e40",
+    "readDepth": "40\u201382,155\u2013177,210\u2013252 (current monitor/operator/receipt contracts)"
+  },
+  {
+    "file": "docs/trial-notices-and-claims-operations.md",
+    "sha256": "965c7d487f796c49b3b92c65874cccaa583b7340dbd508459d29561b2077ab04",
+    "readDepth": "109\u2013156 (trusted matching/apply/complete/recovery authority)"
+  },
+  {
+    "file": ".github/workflows/ci.yml",
+    "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+    "readDepth": "150\u2013172 (Node test route)"
+  },
+  {
+    "file": "package.json",
+    "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+    "readDepth": "native runner/script/contract entries and targeted operator commands"
+  },
+  {
+    "file": "node_modules/@electric-sql/pglite/dist/pglite-CntadC_p.d.ts",
+    "sha256": "aa4bc50bc6ba80c59ad64dd2f58112b873b6b2f255e383dae69f3c4abb4a753b",
+    "readDepth": "780\u2013848 (query/exec native PostgreSQL protocol API; not engine internals)"
+  },
+  {
+    "file": "node_modules/next/dist/server/web/spec-extension/response.js",
+    "sha256": "68a5a07540d57a4beb3275fddd0502fd5ef9a42986b414c0bcee99a3f9033366",
+    "readDepth": "90\u2013101 (Response.json delegation)"
+  }
+]

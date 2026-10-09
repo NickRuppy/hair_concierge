@@ -1,0 +1,13 @@
+{
+  "status": "PASS_STATIC_SYNTHETIC_SHAPES_ONLY",
+  "controls": 6,
+  "phases": 2,
+  "checks": 290,
+  "repositoryWrites": 0,
+  "children": 0,
+  "ownerImports": 0,
+  "nativeRuns": 0,
+  "limits": "Not a TAP serializer/native execution test. Actual serialization and all six faults remain main proof gates."
+}
+{"staticReadOnlyEnforced":true,"attemptedWrites":0,"attemptedChildren":0}
+{"attemptedOwnerImports":0,"attemptedNetworkCalls":0}

@@ -21,7 +21,6 @@ import {
   moduleCompletionRoutineHref,
   planStartModuleEntry,
   planStartRefinementExitDestination,
-  planStartSuppressesChapterCeremony,
   stage2ModuleCompletionRoutingProps,
   stage3CompletionRoutineHref,
 } from "../src/components/personal-plan-start/plan-start-flow"
@@ -330,6 +329,7 @@ test("the fixture gateway completes one module and delegates the closing one", a
   })
   assert.equal(productsDone.module, "products")
   assert.equal(productsDone.status, "in_progress")
+  assert.equal("recompute" in productsDone, false)
   assert.equal(productsDone.stage3Handoff, true)
   assert.equal(productsDone.nextHref, "/plan-start")
   assert.match(productsDone.refinedVersionId, /^fixture-refined-/)
@@ -350,6 +350,7 @@ test("the fixture gateway completes one module and delegates the closing one", a
   })
   assert.equal(habitsDone.module, "habits")
   assert.equal(habitsDone.status, "complete")
+  assert.deepEqual(habitsDone.recompute, { outcome: "applied" })
   assert.equal(habitsDone.stage3Handoff, false)
   const loaded = await gateway.load()
   assert.equal(loaded.status, "complete")
@@ -484,7 +485,6 @@ test("the accept escape hatch opens the products module with no chapter screen a
   assert.equal(state.state, "production")
   const initialJourney = state.state === "production" ? state.initialJourney : null
   assert.ok(initialJourney)
-  assert.equal(planStartSuppressesChapterCeremony(initialJourney), true)
   // SCOPE without post-accept ORIGIN: this fixture has no Stage-4 access, which
   // is the failed-accept cohort's defining fact. The exit stays inside the flow
   // rather than aiming at a /routine the frontier redirect would bounce
@@ -526,10 +526,6 @@ test("`?refine=1` behaves like an explicit entry into the first open module", ()
   // Relic removal 28.08.2026: `first_open` no longer resurrects the retired
   // ceremony — it IS an explicit module entry, resolved against the session.
   assert.equal(parseRefineModuleParam("1"), "first_open")
-  assert.equal(
-    planStartSuppressesChapterCeremony({ stage: "stage2", refineModule: "first_open" }),
-    true,
-  )
   // The direct-accept cohort (COMPLETE draft) gets the same edit visit an
   // explicit `?refine=products` deep link gets — never the bridge chapter.
   const completeDraft = fullyAnsweredSession("complete")
@@ -996,6 +992,9 @@ test("Modul 2 (habits) completing NON-closing hands back to the host — origin-
     ),
     true,
   )
+  assert.deepEqual(habits.recorded.handedBack[0].moduleCompletion.recompute, {
+    outcome: "applied",
+  })
 })
 
 // The bug report (T2.1): Verhalten is the CLOSING module in the canonical
@@ -1174,29 +1173,6 @@ test("the bridge auto-handoff rule no longer implies a chapter presentation", ()
   assert.equal(stage2BridgeAutoContinues({ autoHandoff: true, explicitModuleEntry: false }), true)
 })
 
-test("chapter ceremony is suppressed exactly for explicit module journeys", () => {
-  assert.equal(
-    planStartSuppressesChapterCeremony({ stage: "stage2", refineModule: "products" }),
-    true,
-  )
-  assert.equal(
-    planStartSuppressesChapterCeremony({ stage: "stage2", refineModule: "habits" }),
-    true,
-  )
-  // The `?refine=1` nudge is a module entry too (relic removal 28.08.2026);
-  // only the legacy linear journeys keep the remaining chapters.
-  assert.equal(
-    planStartSuppressesChapterCeremony({ stage: "stage2", refineModule: "first_open" }),
-    true,
-  )
-  assert.equal(planStartSuppressesChapterCeremony({ stage: "stage2" }), false)
-  assert.equal(planStartSuppressesChapterCeremony({ stage: "stage1" }), false)
-  assert.equal(
-    planStartSuppressesChapterCeremony({ stage: "stage3", refinedVersionId: "refined-1" }),
-    false,
-  )
-})
-
 test("plan-start carries the banner's progress into an explicit module entry only", async () => {
   const refinement = productsDoneSession()
   let progressReads = 0
@@ -1307,21 +1283,6 @@ test("the secondary exit leaves for /routine only once the plan is accepted", ()
     }),
     "stage1",
   )
-})
-
-test("the ceremony stays suppressed for BOTH module cohorts, accepted or not", () => {
-  // Scope is independent of origin: the escape-hatch cohort must not regain the
-  // chapter screens just because their plan is not accepted yet.
-  for (const planAccepted of [true, false]) {
-    assert.equal(
-      planStartSuppressesChapterCeremony({
-        stage: "stage2",
-        refineModule: "products",
-        ...(planAccepted ? { planAccepted } : {}),
-      }),
-      true,
-    )
-  }
 })
 
 test("the „Plan aktualisiert“ toast is never claimed for an initial activation", () => {
@@ -1485,7 +1446,6 @@ test("the ?refine=1 direct-accept journey opens products and completes the edit 
     planAccepted: true,
   })
   assert.equal(planStartModuleEntry(journey), "first_open")
-  assert.equal(planStartSuppressesChapterCeremony(journey), true)
   assert.equal(planStartRefinementExitDestination(journey), "routine")
   assert.equal(moduleCompletionRoutineHref(journey, "applied"), "/routine?planUpdated=1")
 

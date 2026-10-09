@@ -49,28 +49,6 @@ test("a source-sync failure never rolls back or disguises the explicit ownership
   })
 })
 
-test("reused exact identity still synchronizes an explicit acquisition source event", async () => {
-  let syncs = 0
-  const result = await createRoutineAcquisitionService({
-    repository: {
-      async loadPlannedItem() {
-        return { personalPlanId: "plan-a", category: "oil", productId: "product-oil" }
-      },
-      async recordOwned() {
-        // The repository uses the same user_products identity; it must still
-        // enqueue a revision before this sync call.
-        return { userProductId: "existing-user-product-oil" }
-      },
-      async sync() {
-        syncs += 1
-        return { status: "processed", proposalStaged: true }
-      },
-    },
-  }).acquire({ userId: "owner-a", itemKey: "planned-oil" })
-  assert.deepEqual(result, { status: "recorded", proposalStaged: true, needsRetry: false })
-  assert.equal(syncs, 1)
-})
-
 test("acquisition route authenticates before admin service construction and rejects disabled access", async () => {
   let constructed = false
   let response = await createPersonalPlanRoutineAcquireRouteHandlers({

@@ -1,0 +1,350 @@
+{
+  "filesScanned": 3121,
+  "imports": [
+    {
+      "file": "src/app/api/analytics/meta-offer-view/route.ts",
+      "line": 4,
+      "text": "import { lookupFunnelContextForLead, resolveFunnelCookieContext } from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "src/app/api/billing/payment-support/route.ts",
+      "line": 16,
+      "text": "import { resolveFunnelCookieContext } from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "src/app/api/funnel/session/route.ts",
+      "line": 4,
+      "text": "import {\n  recordFunnelEvent,\n  resolveFunnelRequestContext,\n  resolvePendingFunnelTouch,\n} from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "src/app/api/paypal/create-subscription-intent/route.ts",
+      "line": 41,
+      "text": "import {\n  recordFunnelEvent,\n  resolveFunnelCookieContext,\n  resolveFunnelContextForLead,\n  resolvePendingFunnelTouchValue,\n} from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "src/app/api/personal-plan/field-test/activate/route.ts",
+      "line": 5,
+      "text": "import { resolveFunnelCookieContext } from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "src/app/api/personal-plan/field-test/moderator/activate/route.ts",
+      "line": 5,
+      "text": "import { resolveFunnelCookieContext } from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "src/app/api/personal-plan/field-test/moderator/start/route.ts",
+      "line": 23,
+      "text": "import { resolveFunnelCookieContext } from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "src/app/api/quiz/email-return/choose/route.ts",
+      "line": 10,
+      "text": "import { recordFunnelEvent, resolveFunnelCookieContext } from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "src/app/api/quiz/email-return/context/route.ts",
+      "line": 5,
+      "text": "import { resolveFunnelCookieContext } from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "src/app/api/quiz/field-test/activate/route.ts",
+      "line": 5,
+      "text": "import { resolveFunnelCookieContext } from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "src/app/api/quiz/lead/route.ts",
+      "line": 24,
+      "text": "import {\n  recordFunnelEvent,\n  resolveFunnelCookieContext,\n  resolvePendingFunnelTouchValue,\n} from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-draft/resume/route.ts",
+      "line": 1,
+      "text": "import { resolveFunnelCookieContext } from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-draft/route.ts",
+      "line": 6,
+      "text": "import { resolveFunnelCookieContext } from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-lead/route.ts",
+      "line": 24,
+      "text": "import {\n  recordFunnelEvent,\n  resolveFunnelCookieContext,\n  resolvePendingFunnelTouchValue,\n} from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-prepare/route.ts",
+      "line": 4,
+      "text": "import { resolveFunnelCookieContext } from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "src/app/api/stripe/create-checkout-session/route.ts",
+      "line": 16,
+      "text": "import {\n  recordFunnelEvent,\n  assertPersonalPlanOneTimeCheckoutAuthorized,\n  PersonalPlanOneTimeCheckoutAuthorizationError,\n  resolveFunnelCookieContext,\n  resolveFunnelContextForLead,\n  lookupFunnelContextForLead,\n  resolvePendingFunnelTouchValue,\n} from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "src/app/lp/[slug]/page.tsx",
+      "line": 32,
+      "text": "import { resolveFunnelCookieContext } from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "src/app/plan-bereit/page.tsx",
+      "line": 4,
+      "text": "import { resolveFunnelCookieContext } from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "src/app/plan-bereit/readiness.ts",
+      "line": 11,
+      "text": "import { lookupFunnelContextForLead, type FunnelLeadContextLookup } from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "src/app/plan-bereit/status/route.ts",
+      "line": 2,
+      "text": "import { resolveFunnelRequestContext } from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "src/app/result/[leadId]/page.tsx",
+      "line": 30,
+      "text": "import {\n  recordFunnelEvent,\n  assignPersonalPlanOneTimeQa,\n  resolveFunnelContextForLead,\n  resolveFunnelCookieContext,\n  lookupFunnelContextForLead,\n  resolveOrganicOfferMediaExperiment,\n  resolvePersonalPlanPricingExperiment,\n} from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/funnel.ts",
+      "line": 2,
+      "text": "import { recordFunnelPurchaseFromSession } from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "src/lib/funnel/api.ts",
+      "line": 1,
+      "text": "import { isBrowserRecordableFunnelMilestone, type FunnelMilestone } from \"./server\""
+    },
+    {
+      "file": "src/lib/funnel/client.ts",
+      "line": 4,
+      "text": "import type { FunnelMilestone } from \"./server\""
+    },
+    {
+      "file": "src/lib/quiz/funnel-package-context.ts",
+      "line": 1,
+      "text": "import { resolveFunnelCookieContext } from \"@/lib/funnel/server\""
+    },
+    {
+      "file": "tests/funnel-server.test.ts",
+      "line": 4,
+      "text": "import {\n  isBrowserRecordableFunnelMilestone,\n  recordFunnelEventWithRpc,\n  recordFunnelPurchaseFromSession,\n} from \"../src/lib/funnel/server\""
+    },
+    {
+      "file": "tests/organic-offer-media-experiment.test.ts",
+      "line": 11,
+      "text": "import { resolveOrganicOfferMediaExperiment } from \"../src/lib/funnel/server\""
+    },
+    {
+      "file": "tests/personal-plan-pricing-experiment.test.ts",
+      "line": 20,
+      "text": "import {\n  assertPersonalPlanOneTimeCheckoutAuthorized,\n  assignPersonalPlanOneTimeQa,\n  PersonalPlanOneTimeCheckoutAuthorizationError,\n  resolvePersonalPlanPricingExperiment,\n} from \"../src/lib/funnel/server\""
+    }
+  ],
+  "symbolReferences": [
+    {
+      "file": "src/app/api/stripe/create-checkout-session/route.ts",
+      "line": 18,
+      "symbol": "assertPersonalPlanOneTimeCheckoutAuthorized",
+      "parentKind": "ImportSpecifier"
+    },
+    {
+      "file": "src/app/api/stripe/create-checkout-session/route.ts",
+      "line": 19,
+      "symbol": "PersonalPlanOneTimeCheckoutAuthorizationError",
+      "parentKind": "ImportSpecifier"
+    },
+    {
+      "file": "src/app/api/stripe/create-checkout-session/route.ts",
+      "line": 629,
+      "symbol": "assertPersonalPlanOneTimeCheckoutAuthorized",
+      "parentKind": "CallExpression"
+    },
+    {
+      "file": "src/app/api/stripe/create-checkout-session/route.ts",
+      "line": 635,
+      "symbol": "PersonalPlanOneTimeCheckoutAuthorizationError",
+      "parentKind": "BinaryExpression"
+    },
+    {
+      "file": "src/lib/funnel/server.ts",
+      "line": 460,
+      "symbol": "PersonalPlanOneTimeCheckoutAuthorization",
+      "parentKind": "TypeAliasDeclaration"
+    },
+    {
+      "file": "src/lib/funnel/server.ts",
+      "line": 470,
+      "symbol": "PersonalPlanOneTimeCheckoutAuthorizationError",
+      "parentKind": "ClassDeclaration"
+    },
+    {
+      "file": "src/lib/funnel/server.ts",
+      "line": 485,
+      "symbol": "PersonalPlanOneTimeCheckoutSession",
+      "parentKind": "TypeAliasDeclaration"
+    },
+    {
+      "file": "src/lib/funnel/server.ts",
+      "line": 496,
+      "symbol": "assertPersonalPlanOneTimeCheckoutAuthorized",
+      "parentKind": "FunctionDeclaration"
+    },
+    {
+      "file": "src/lib/funnel/server.ts",
+      "line": 500,
+      "symbol": "PersonalPlanOneTimeCheckoutSession",
+      "parentKind": "TypeReference"
+    },
+    {
+      "file": "src/lib/funnel/server.ts",
+      "line": 503,
+      "symbol": "PersonalPlanOneTimeCheckoutAuthorization",
+      "parentKind": "TypeReference"
+    },
+    {
+      "file": "src/lib/funnel/server.ts",
+      "line": 522,
+      "symbol": "PersonalPlanOneTimeCheckoutAuthorizationError",
+      "parentKind": "NewExpression"
+    },
+    {
+      "file": "src/lib/funnel/server.ts",
+      "line": 534,
+      "symbol": "PersonalPlanOneTimeCheckoutAuthorizationError",
+      "parentKind": "NewExpression"
+    },
+    {
+      "file": "tests/personal-plan-pricing-experiment.test.ts",
+      "line": 21,
+      "symbol": "assertPersonalPlanOneTimeCheckoutAuthorized",
+      "parentKind": "ImportSpecifier"
+    },
+    {
+      "file": "tests/personal-plan-pricing-experiment.test.ts",
+      "line": 23,
+      "symbol": "PersonalPlanOneTimeCheckoutAuthorizationError",
+      "parentKind": "ImportSpecifier"
+    },
+    {
+      "file": "tests/personal-plan-pricing-experiment.test.ts",
+      "line": 464,
+      "symbol": "assertPersonalPlanOneTimeCheckoutAuthorized",
+      "parentKind": "CallExpression"
+    },
+    {
+      "file": "tests/personal-plan-pricing-experiment.test.ts",
+      "line": 485,
+      "symbol": "assertPersonalPlanOneTimeCheckoutAuthorized",
+      "parentKind": "CallExpression"
+    },
+    {
+      "file": "tests/personal-plan-pricing-experiment.test.ts",
+      "line": 497,
+      "symbol": "assertPersonalPlanOneTimeCheckoutAuthorized",
+      "parentKind": "CallExpression"
+    },
+    {
+      "file": "tests/personal-plan-pricing-experiment.test.ts",
+      "line": 503,
+      "symbol": "PersonalPlanOneTimeCheckoutAuthorizationError",
+      "parentKind": "BinaryExpression"
+    },
+    {
+      "file": "tests/personal-plan-pricing-experiment.test.ts",
+      "line": 508,
+      "symbol": "assertPersonalPlanOneTimeCheckoutAuthorized",
+      "parentKind": "CallExpression"
+    },
+    {
+      "file": "tests/personal-plan-pricing-experiment.test.ts",
+      "line": 514,
+      "symbol": "PersonalPlanOneTimeCheckoutAuthorizationError",
+      "parentKind": "BinaryExpression"
+    }
+  ],
+  "dynamicModuleLoads": [
+    {
+      "file": "data/research/shampoo-inci/approved-weight-consistency-v1/replay.cjs",
+      "line": 4,
+      "text": "require(process.cwd()+\"/src/lib/shampoo-research/release.ts\")"
+    },
+    {
+      "file": "data/research/shampoo-inci/approved-weight-consistency-v1/replay.cjs",
+      "line": 4,
+      "text": "require(process.cwd()+\"/src/lib/shampoo-research/weight-calibration.ts\")"
+    },
+    {
+      "file": "src/app/api/billing/payment-monitor/route.ts",
+      "line": 662,
+      "text": "import(\n    PAYMENT_INTEGRITY_RUNTIME_MODULE\n  )"
+    },
+    {
+      "file": "src/app/api/billing/reconcile/route.ts",
+      "line": 436,
+      "text": "import(\n    PAYMENT_INTEGRITY_RUNTIME_MODULE\n  )"
+    },
+    {
+      "file": "src/lib/agent/compare/run-agentic-tool-loop.ts",
+      "line": 92,
+      "text": "import(runtimeModulePath)"
+    },
+    {
+      "file": "src/lib/agent/compare/run-agentic-tool-loop.ts",
+      "line": 93,
+      "text": "import(modelClientModulePath)"
+    },
+    {
+      "file": "tests/admin-paypal-email-visibility.test.ts",
+      "line": 110,
+      "text": "require(specifier.startsWith(\"@/\") ? path.resolve(\"src\", specifier.slice(2)) : specifier)"
+    },
+    {
+      "file": "tests/billing-trial-analytics-delivery.test.ts",
+      "line": 194,
+      "text": "import(\"../src/lib/billing/analytics-destinations/funnel\")"
+    },
+    {
+      "file": "tests/helpers/returning-checkout-route-fixture.ts",
+      "line": 386,
+      "text": "require(name)"
+    },
+    {
+      "file": "tests/prepare-content-research-skill.test.ts",
+      "line": 19,
+      "text": "import(`../${validatorPath}`)"
+    },
+    {
+      "file": "tests/reactivation-trial-management.test.ts",
+      "line": 146,
+      "text": "require(specifier.startsWith(\"@/\") ? path.resolve(\"src\", specifier.slice(2)) : specifier)"
+    },
+    {
+      "file": "tests/result-email-return-page.test.ts",
+      "line": 128,
+      "text": "require(path.resolve(\"src/lib/billing/trial-runtime.ts\"))"
+    },
+    {
+      "file": "tests/result-email-return-page.test.ts",
+      "line": 154,
+      "text": "require(\n          id.startsWith(\"@/\")\n            ? path.resolve(\"src\", id.slice(2))\n            : id.startsWith(\".\")\n              ? path.resolve(path.dirname(filename), id)\n              : id,\n        )"
+    },
+    {
+      "file": "tests/welcome-activation-return.test.ts",
+      "line": 24,
+      "text": "require(\n    path.resolve(\"src/lib/auth/checkout-activation-outcome.ts\"),\n  )"
+    },
+    {
+      "file": "tests/welcome-activation-return.test.ts",
+      "line": 27,
+      "text": "require(\n    path.resolve(\"src/lib/auth/checkout-recovery-classification.ts\"),\n  )"
+    },
+    {
+      "file": "tests/welcome-activation-return.test.ts",
+      "line": 160,
+      "text": "require(specifier.startsWith(\"@/\") ? path.resolve(\"src\", specifier.slice(2)) : specifier)"
+    }
+  ],
+  "reexports": []
+}

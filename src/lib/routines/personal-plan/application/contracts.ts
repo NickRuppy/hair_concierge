@@ -67,6 +67,7 @@ export const APPLICATION_FAMILIES = [
   "pre_shampoo_booster_plus_treatment",
   "post_shampoo_rinse_out_treatment",
   "post_shampoo_timed_leave_in",
+  "overnight_leave_in_treatment",
   "leave_on_scalp_care",
   "rinse_off_scalp_care",
   "styling_product",
@@ -100,7 +101,82 @@ export const EXACT_APPLICATION_WORKFLOW_IDS_V2 = [
   "epres_bond_repair",
   "k18_leave_in_molecular_repair",
   "olaplex_no3plus_complete_repair",
+  "bondbuilder_verified_product",
 ] as const
+
+export const BONDBUILDER_APPLICATION_FAMILIES = [
+  "pre_shampoo_single_treatment",
+  "pre_shampoo_booster_plus_treatment",
+  "post_shampoo_rinse_out_treatment",
+  "post_shampoo_timed_leave_in",
+  "overnight_leave_in_treatment",
+] as const
+
+export const exactContactTimeSchema = z.discriminatedUnion("kind", [
+  z.object({ kind: z.literal("seconds"), seconds: z.number().int().positive() }).strict(),
+  z
+    .object({ kind: z.literal("minimum_seconds"), minimumSeconds: z.number().int().positive() })
+    .strict(),
+  z
+    .object({ kind: z.literal("maximum_seconds"), maximumSeconds: z.number().int().positive() })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("range_seconds"),
+      minimumSeconds: z.number().int().positive(),
+      maximumSeconds: z.number().int().positive(),
+    })
+    .strict()
+    .refine((v) => v.maximumSeconds >= v.minimumSeconds, "Contact-time range must be ordered"),
+  z.object({ kind: z.literal("label_directed") }).strict(),
+])
+export const exactNumericAmountSchema = z
+  .object({
+    kind: z.literal("numeric"),
+    quantity: z.number().positive(),
+    unit: z.enum(["ml", "g", "pump", "vial", "drop"]),
+  })
+  .strict()
+export const exactStartingDoseSchema = z
+  .object({
+    kind: z.literal("starting_dose"),
+    quantity: z.number().positive(),
+    unit: z.enum(["ml", "g", "pump", "vial", "drop"]),
+    addAsNeeded: z.boolean(),
+  })
+  .strict()
+export const exactDilutionSchema = z
+  .object({
+    concentrateAmount: z.number().positive(),
+    concentrateUnit: z.enum(["ml", "g", "pump", "vial", "drop"]),
+    finishedVolumeMl: z.number().positive(),
+    containerDe: z.string().min(1).max(1000),
+    methodDe: z.string().min(1).max(1000),
+  })
+  .strict()
+export const exactConditionerSequenceSchema = z
+  .object({
+    before: z.enum(["allowed", "forbidden", "not_stated"]),
+    after: z.enum(["required", "recommended", "optional", "not_stated"]),
+    minimumWaitSeconds: z.number().int().nonnegative().nullable(),
+    supplementalGuidanceRef: z.string().min(1).max(200).optional(),
+  })
+  .strict()
+export const exactApplicationStateSchema = z.enum([
+  "wet_hair",
+  "damp_hair",
+  "dry_hair",
+  "damp_or_dry_hair",
+  "pre_wash_dry_hair",
+  "clean_damp_scalp",
+  "clean_dry_scalp",
+  "clean_damp_or_dry_scalp",
+])
+export const shampooAfterTreatmentSchema = z.enum([
+  "layer_without_rinsing",
+  "rinse_then_shampoo",
+  "wash_as_usual",
+])
 
 export const applicationDayTypeKeySchema = z.enum(APPLICATION_DAY_TYPE_KEYS)
 export const personalPlanCategorySchema = z.enum(PERSONAL_PLAN_CATEGORIES)
@@ -264,6 +340,13 @@ export const applicationGuidanceProtocolSchema = z
         applicationArea: z.enum(["scalp_roots", "lengths_ends", "ends", "all_hair"]).nullable(),
         rinse: z.enum(["rinse_out", "leave_in"]).nullable(),
         contactTimeSeconds: z.number().int().nonnegative().nullable(),
+        contactTime: exactContactTimeSchema.optional(),
+        applicationState: exactApplicationStateSchema.optional(),
+        treatmentRinse: z.enum(["rinse_out", "leave_in", "follow_with_shampoo"]).optional(),
+        dilution: exactDilutionSchema.optional(),
+        overnightAllowed: z.boolean().optional(),
+        conditionerSequence: exactConditionerSequenceSchema.optional(),
+        shampooAfterTreatment: shampooAfterTreatmentSchema.optional(),
         sharedTemplateContactTime: z.enum(["include", "omit"]).optional(),
         conditionerRelationship: z
           .enum([
@@ -271,12 +354,15 @@ export const applicationGuidanceProtocolSchema = z
             "replaces_conditioner",
             "conditioner_before",
             "conditioner_after",
+            "conditioner_optional_after",
             "no_conditioner",
           ])
           .nullable(),
         reapplication: z.enum(["none", "each_separate_heat_event"]).nullable(),
         amount: z
           .discriminatedUnion("kind", [
+            exactNumericAmountSchema,
+            exactStartingDoseSchema,
             z.object({ kind: z.literal("qualitative"), copyDe: copyTemplateSchema }).strict(),
             z
               .object({
@@ -335,6 +421,31 @@ export const applicationGuidanceProtocolSchema = z
         message: "Exact workflow metadata requires exact product guidance",
         path: ["exactGuidanceRequired"],
       })
+    }
+    if (value.protocolFacts.workflowId === "bondbuilder_verified_product") {
+      const expectedAnchor = value.applicationFamily.startsWith("pre_shampoo")
+        ? "pre_wash"
+        : value.applicationFamily === "post_shampoo_rinse_out_treatment"
+          ? "post_cleanse_rinse_off"
+          : "timed_treatment"
+      if (
+        value.scope.kind !== "product" ||
+        value.scope.category !== "bondbuilder" ||
+        value.role !== "bond_repair" ||
+        !(BONDBUILDER_APPLICATION_FAMILIES as readonly string[]).includes(
+          value.applicationFamily,
+        ) ||
+        value.sequence.anchor !== expectedAnchor ||
+        value.compatibleDayTypes.length !== 1 ||
+        value.compatibleDayTypes[0] !== "bond_repair_day"
+      ) {
+        context.addIssue({
+          code: "custom",
+          path: ["scope"],
+          message:
+            "Verified Bondbuilder protocol requires its exact product, role, family and runtime sequence",
+        })
+      }
     }
     if (
       (value.applicationFamily === "standard_rinse_out_cleanse" ||

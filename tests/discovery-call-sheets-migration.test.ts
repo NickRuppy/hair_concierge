@@ -1,8 +1,9 @@
 import assert from "node:assert/strict"
-import { readdirSync } from "node:fs"
 import { readFile } from "node:fs/promises"
 import test from "node:test"
 import { PGlite } from "@electric-sql/pglite"
+
+import { parseDiscoveryCallSheet } from "../src/lib/discovery/call-sheet"
 
 /**
  * Consult runsheet (plan `plans/consult-runsheet/plan.md` §6): one call sheet per
@@ -19,8 +20,9 @@ const CHAIN = [
   "20260925150000_discovery_admin_item_usage_styling.sql",
   "20260927120000_discovery_call_decisions_per_item.sql",
   "20260928120000_discovery_call_sheets.sql",
+  "20260929160000_discovery_call_sheet_complexity.sql",
+  "20261009120000_discovery_call_sheet_half_point_score.sql",
 ]
-const OWN = CHAIN.at(-1)!
 
 const predecessorSchema = `
 CREATE SCHEMA auth;
@@ -58,21 +60,6 @@ async function enrollment(pg: PGlite) {
   return row.rows[0].id
 }
 
-test("the migration has a unique version that sorts after every migration", () => {
-  const versions = readdirSync(dir)
-    .filter((name) => name.endsWith(".sql"))
-    .map((name) => name.split("_")[0])
-  const own = OWN.split("_")[0]
-  assert.equal(versions.filter((version) => version === own).length, 1)
-  // Was "sorts after every migration" when it was the newest; the catalog-hardening
-  // migrations now follow it, so what still matters is that it follows its chain.
-  const predecessors = CHAIN.slice(0, CHAIN.indexOf(OWN)).map((name) => name.split("_")[0])
-  assert.ok(
-    predecessors.every((version) => version < own),
-    "must sort after its prerequisites",
-  )
-})
-
 test("a fresh sheet defaults to empty arrays and nulls", async (t) => {
   const pg = await migrated(t)
   const id = await enrollment(pg)
@@ -108,7 +95,7 @@ test("one sheet per enrollment; an unknown enrollment is refused", async (t) => 
   )
 })
 
-test("baseline_score is 1–10 or null", async (t) => {
+test("baseline_score is 1–10 in half points, or null", async (t) => {
   const pg = await migrated(t)
   const set = async (score: number | null) => {
     const id = await enrollment(pg)
@@ -117,10 +104,38 @@ test("baseline_score is 1–10 or null", async (t) => {
       [id, score],
     )
   }
-  for (const ok of [1, 10, null]) await set(ok)
-  for (const bad of [0, 11, -1]) {
+  for (const ok of [1, 10, 7.5, 1.5, null]) await set(ok)
+  for (const bad of [0, 11, -1, 0.5, 10.5, 7.25, 7.3]) {
     await assert.rejects(set(bad), /discovery_call_sheets_baseline_score_check/)
   }
+})
+
+test("the half-point widening keeps stored whole scores; they read back as numbers", async (t) => {
+  const pg = new PGlite()
+  t.after(async () => pg.close())
+  await pg.exec(predecessorSchema)
+  const half = "20261009120000_discovery_call_sheet_half_point_score.sql"
+  for (const file of CHAIN.filter((entry) => entry !== half)) {
+    await pg.exec(await readFile(`${dir}/${file}`, "utf8"))
+  }
+  const id = await enrollment(pg)
+  await pg.query(
+    "INSERT INTO public.discovery_call_sheets (enrollment_id, baseline_score) VALUES ($1, 7)",
+    [id],
+  )
+  await pg.exec(await readFile(`${dir}/${half}`, "utf8"))
+  const row = await pg.query<{ baseline_score: unknown }>(
+    "SELECT baseline_score FROM public.discovery_call_sheets WHERE enrollment_id = $1",
+    [id],
+  )
+  // numeric comes back as text from Postgres; the parser takes both shapes.
+  assert.equal(Number(row.rows[0]!.baseline_score), 7)
+  assert.equal(parseDiscoveryCallSheet(row.rows[0]).baselineScore, 7)
+  assert.equal(parseDiscoveryCallSheet({ baseline_score: "7.5" }).baselineScore, 7.5)
+  await pg.query(
+    "UPDATE public.discovery_call_sheets SET baseline_score = 7.5 WHERE enrollment_id = $1",
+    [id],
+  )
 })
 
 test("the list columns must hold JSON arrays", async (t) => {

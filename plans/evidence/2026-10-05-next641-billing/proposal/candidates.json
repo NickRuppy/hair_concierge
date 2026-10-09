@@ -1,0 +1,319 @@
+[
+  {
+    "id": "C1",
+    "classification": "C",
+    "donor": {
+      "file": "tests/billing-subscriptions-access-grace.test.ts",
+      "title": "hasCurrentBillingAccess: active row with period end 2 days past has no access",
+      "line": 43,
+      "start": 1240,
+      "end": 1511,
+      "body": "test(\"hasCurrentBillingAccess: active row with period end 2 days past has no access\", () => {\n  const row = billingRow({\n    entitlement_status: \"active\",\n    current_period_end: isoOffset(-2 * ONE_DAY_MS),\n  })\n  assert.equal(hasCurrentBillingAccess(row, NOW), false)\n})",
+      "sha256": "8e147c1b9a8d664d9e60ccbe11cf367241f88e2e0924ce062df6bc35994a1824",
+      "assertions": [
+        "assert.equal(hasCurrentBillingAccess(row, NOW), false)"
+      ]
+    },
+    "keeperBefore": {
+      "file": "tests/admin-user-billing-summary.test.ts",
+      "title": "active entitlement just beyond the 24h expiry grace reports expired",
+      "line": 197,
+      "start": 6240,
+      "end": 6499,
+      "body": "test(\"active entitlement just beyond the 24h expiry grace reports expired\", () => {\n  const summary = summarizeAdminUserBilling(\n    subscriptionRow({ current_period_end: \"2026-09-21T00:00:00.000Z\" }),\n    NOW,\n  )\n  assert.equal(summary.status, \"expired\")\n})",
+      "sha256": "7f220443b5f0c8e452f5deca7a74b139df0420486154c677afe12151bdbb1672",
+      "assertions": [
+        "assert.equal(summary.status, \"expired\")"
+      ]
+    },
+    "keeperAfter": {
+      "file": "tests/admin-user-billing-summary.test.ts",
+      "title": "active entitlement just beyond the 24h expiry grace reports expired",
+      "line": 197,
+      "start": 6240,
+      "end": 6499,
+      "body": "test(\"active entitlement just beyond the 24h expiry grace reports expired\", () => {\n  const summary = summarizeAdminUserBilling(\n    subscriptionRow({ current_period_end: \"2026-09-21T00:00:00.000Z\" }),\n    NOW,\n  )\n  assert.equal(summary.status, \"expired\")\n})",
+      "sha256": "7f220443b5f0c8e452f5deca7a74b139df0420486154c677afe12151bdbb1672",
+      "assertions": [
+        "assert.equal(summary.status, \"expired\")"
+      ]
+    },
+    "transfer": "None: complete original observable assertion subset already exists; inputs and owner calls unchanged.",
+    "sourceCleanup": null,
+    "union": "Donor sole assertion hasCurrentBillingAccess(row,NOW)===false. Keeper already summary.status===expired. For fixed active, cancel_at_period_end=false and no trial markers, summarizeAdminUserBilling computes hasAccess by the actual helper and maps false only to expired. No new assertion required.",
+    "inputs": "Donor Stripe row with NOW=2026-08-22T12:00Z, period=NOW-48h. Keeper PayPal row with NOW=2026-09-22T12:00Z, period=2026-09-21T00:00Z (NOW-36h). Both active/cancel=false, metadata{}, no enrollment/projection (undefined vs null both absent). Identity/provider/customer/email/timestamps outside period are not read by canonical legacy branch. Both finite ISO inputs enter the same monotonic timestamp>=now-24h predicate false; the closer36h refusal subsumes48h refusal for threshold regressions. These are NOT byte-identical inputs.",
+    "fault": "Unconditional true in actual isWithinExpiryGrace makes keeper active instead of expired. Also catches admitting active status without expiry enforcement.",
+    "history": "1550ae7c (#461) introduced grace enforcement; 960070f1 (#595) added admin summary through canonical policy. This later canonical display supplies stronger existing observation, not evidence of obsolete access logic.",
+    "nonTestCallers": [
+      "src/app/api/admin/users/route.ts:99",
+      "src/lib/billing/subscriptions.ts:146,174,198,269,303"
+    ],
+    "risk": "Conditional: source readset equivalence rather than arbitrary future implementation equivalence; main independent review and selected actual-owner fault proof required. No new inputs or calls may be added to rescue a rejected candidate.",
+    "unlockedSupportDeletion": null
+  },
+  {
+    "id": "C2",
+    "classification": "C",
+    "donor": {
+      "file": "tests/billing-subscriptions-access-grace.test.ts",
+      "title": "hasCurrentBillingAccess: active row 12 hours past is within the grace window",
+      "line": 51,
+      "start": 1513,
+      "end": 1787,
+      "body": "test(\"hasCurrentBillingAccess: active row 12 hours past is within the grace window\", () => {\n  const row = billingRow({\n    entitlement_status: \"active\",\n    current_period_end: isoOffset(-12 * 60 * 60 * 1000),\n  })\n  assert.equal(hasCurrentBillingAccess(row, NOW), true)\n})",
+      "sha256": "402e6cfa1ebbaa5444bf009060ce7cf40356a9bc036cec47d96f490bc8a394d8",
+      "assertions": [
+        "assert.equal(hasCurrentBillingAccess(row, NOW), true)"
+      ]
+    },
+    "keeperBefore": {
+      "file": "tests/admin-user-billing-summary.test.ts",
+      "title": "active entitlement within the 24h expiry grace still reports active",
+      "line": 188,
+      "start": 5905,
+      "end": 6238,
+      "body": "test(\"active entitlement within the 24h expiry grace still reports active\", () => {\n  // 12h past the period end: hasCurrentBillingAccess still grants access.\n  const summary = summarizeAdminUserBilling(\n    subscriptionRow({ current_period_end: \"2026-09-22T00:00:00.000Z\" }),\n    NOW,\n  )\n  assert.equal(summary.status, \"active\")\n})",
+      "sha256": "e4157422ed89b274f6379fded3044d177040dbabc724b5bf3d4ad4887c2908f1",
+      "assertions": [
+        "assert.equal(summary.status, \"active\")"
+      ]
+    },
+    "keeperAfter": {
+      "file": "tests/admin-user-billing-summary.test.ts",
+      "title": "active entitlement within the 24h expiry grace still reports active",
+      "line": 188,
+      "start": 5905,
+      "end": 6238,
+      "body": "test(\"active entitlement within the 24h expiry grace still reports active\", () => {\n  // 12h past the period end: hasCurrentBillingAccess still grants access.\n  const summary = summarizeAdminUserBilling(\n    subscriptionRow({ current_period_end: \"2026-09-22T00:00:00.000Z\" }),\n    NOW,\n  )\n  assert.equal(summary.status, \"active\")\n})",
+      "sha256": "e4157422ed89b274f6379fded3044d177040dbabc724b5bf3d4ad4887c2908f1",
+      "assertions": [
+        "assert.equal(summary.status, \"active\")"
+      ]
+    },
+    "transfer": "None: complete original observable assertion subset already exists; inputs and owner calls unchanged.",
+    "sourceCleanup": null,
+    "union": "Donor sole helper true; keeper existing summary.status===active with same nontrial active/cancel=false branch is equivalent observation through actual helper.",
+    "inputs": "Both period exactlyNOW-12h. Absolute months and provider/identity fields differ, but Date.parse and now difference feed same predicate; no trial marker in either.",
+    "fault": "Remove24h grace in actual isWithinExpiryGrace: keeper becomes expired.",
+    "history": "1550ae7c grace enforcement followed by 960070f1 actual admin delivery.",
+    "nonTestCallers": [
+      "src/app/api/admin/users/route.ts:99",
+      "src/lib/billing/subscriptions.ts:146,174,198,269,303"
+    ],
+    "risk": "Conditional: source readset equivalence rather than arbitrary future implementation equivalence; main independent review and selected actual-owner fault proof required. No new inputs or calls may be added to rescue a rejected candidate.",
+    "unlockedSupportDeletion": null
+  },
+  {
+    "id": "C3",
+    "classification": "C",
+    "donor": {
+      "file": "tests/billing-subscriptions-access-grace.test.ts",
+      "title": "hasCurrentBillingAccess: active row with period end in the future has access",
+      "line": 59,
+      "start": 1789,
+      "end": 2053,
+      "body": "test(\"hasCurrentBillingAccess: active row with period end in the future has access\", () => {\n  const row = billingRow({\n    entitlement_status: \"active\",\n    current_period_end: isoOffset(ONE_DAY_MS),\n  })\n  assert.equal(hasCurrentBillingAccess(row, NOW), true)\n})",
+      "sha256": "496cc458fa29bf5e94584abc921ac0a3334908e497e598e950c05abaa24dd3ec",
+      "assertions": [
+        "assert.equal(hasCurrentBillingAccess(row, NOW), true)"
+      ]
+    },
+    "keeperBefore": {
+      "file": "tests/admin-user-billing-summary.test.ts",
+      "title": "plain active subscription reports active",
+      "line": 135,
+      "start": 4241,
+      "end": 4535,
+      "body": "test(\"plain active subscription reports active\", () => {\n  const summary = summarizeAdminUserBilling(\n    subscriptionRow({ current_period_end: \"2026-10-10T00:00:00.000Z\" }),\n    NOW,\n  )\n  assert.equal(summary.status, \"active\")\n  assert.equal(summary.period_end, \"2026-10-10T00:00:00.000Z\")\n})",
+      "sha256": "8ca602f5fef8dab1eaf5d02c1bf58e309d3fb3a8f58c354a2c0f93e3b9527ff2",
+      "assertions": [
+        "assert.equal(summary.status, \"active\")",
+        "assert.equal(summary.period_end, \"2026-10-10T00:00:00.000Z\")"
+      ]
+    },
+    "keeperAfter": {
+      "file": "tests/admin-user-billing-summary.test.ts",
+      "title": "plain active subscription reports active",
+      "line": 135,
+      "start": 4241,
+      "end": 4535,
+      "body": "test(\"plain active subscription reports active\", () => {\n  const summary = summarizeAdminUserBilling(\n    subscriptionRow({ current_period_end: \"2026-10-10T00:00:00.000Z\" }),\n    NOW,\n  )\n  assert.equal(summary.status, \"active\")\n  assert.equal(summary.period_end, \"2026-10-10T00:00:00.000Z\")\n})",
+      "sha256": "8ca602f5fef8dab1eaf5d02c1bf58e309d3fb3a8f58c354a2c0f93e3b9527ff2",
+      "assertions": [
+        "assert.equal(summary.status, \"active\")",
+        "assert.equal(summary.period_end, \"2026-10-10T00:00:00.000Z\")"
+      ]
+    },
+    "transfer": "None: complete original observable assertion subset already exists; inputs and owner calls unchanged.",
+    "sourceCleanup": null,
+    "union": "Donor helper true is already observed as summary.status===active. Keeper also independently asserts exact period_end literal2026-10-10T00:00:00.000Z.",
+    "inputs": "Active/cancel=false/no trial. Donor future+24h, keeper future+420h. Both finite ISO dates enter the same >= lower-bound predicate; owner has no future upper bound or provider branch. This is monotonic future admission, not same literal input. No schema/date parsing variant is lost.",
+    "fault": "Introduce upper bound timestamp<=now in actual isWithinExpiryGrace: retained future summary becomes expired.",
+    "history": "1550ae7c and960070f1 as above. Future dated summary existed already; no input/call added.",
+    "nonTestCallers": [
+      "src/app/api/admin/users/route.ts:99",
+      "src/lib/billing/subscriptions.ts:146,174,198,269,303"
+    ],
+    "risk": "Conditional: source readset equivalence rather than arbitrary future implementation equivalence; main independent review and selected actual-owner fault proof required. No new inputs or calls may be added to rescue a rejected candidate.",
+    "unlockedSupportDeletion": null
+  },
+  {
+    "id": "C4",
+    "classification": "C",
+    "donor": {
+      "file": "tests/billing-subscriptions-access-grace.test.ts",
+      "title": "hasCurrentBillingAccess: active row with null current_period_end keeps existing (grantsaccess) behavior",
+      "line": 110,
+      "start": 3577,
+      "end": 4219,
+      "body": "test(\"hasCurrentBillingAccess: active row with null current_period_end keeps existing (grantsaccess) behavior\", () => {\n  // current_period_end null on an open-entitlement row is treated as\n  // legacy/incomplete billing_subscriptions data (e.g. rows backfilled from\n  // profiles before a first webhook populated the period). Grace-window\n  // enforcement only applies once we have a real period_end to measure\n  // against, so null rows fall back to the pre-existing status-only check.\n  const row = billingRow({\n    entitlement_status: \"active\",\n    current_period_end: null,\n  })\n  assert.equal(hasCurrentBillingAccess(row, NOW), true)\n})",
+      "sha256": "40f9aacd2569a0a79c0d3a38b0c10a401941d353107980069ffe43691285142f",
+      "assertions": [
+        "assert.equal(hasCurrentBillingAccess(row, NOW), true)"
+      ]
+    },
+    "keeperBefore": {
+      "file": "tests/admin-user-billing-summary.test.ts",
+      "title": "legacy active subscription without period end reports active",
+      "line": 144,
+      "start": 4537,
+      "end": 4699,
+      "body": "test(\"legacy active subscription without period end reports active\", () => {\n  assert.equal(summarizeAdminUserBilling(subscriptionRow(), NOW).status, \"active\")\n})",
+      "sha256": "c87a1642eb13d3528d156017ed9dcf282ba996ff23f89c1804afdf61346ee4fa",
+      "assertions": [
+        "assert.equal(summarizeAdminUserBilling(subscriptionRow(), NOW).status, \"active\")"
+      ]
+    },
+    "keeperAfter": {
+      "file": "tests/admin-user-billing-summary.test.ts",
+      "title": "legacy active subscription without period end reports active",
+      "line": 144,
+      "start": 4537,
+      "end": 4699,
+      "body": "test(\"legacy active subscription without period end reports active\", () => {\n  assert.equal(summarizeAdminUserBilling(subscriptionRow(), NOW).status, \"active\")\n})",
+      "sha256": "c87a1642eb13d3528d156017ed9dcf282ba996ff23f89c1804afdf61346ee4fa",
+      "assertions": [
+        "assert.equal(summarizeAdminUserBilling(subscriptionRow(), NOW).status, \"active\")"
+      ]
+    },
+    "transfer": "None: complete original observable assertion subset already exists; inputs and owner calls unchanged.",
+    "sourceCleanup": null,
+    "union": "Donor helper true at null period is already observed by existing legacy summary.status===active, with trial bypass and cancel false.",
+    "inputs": "Both nullcurrent_period_end and active status, metadata{}. Donor omitted trial fields; keeper explicitly null; resolveBillingTrialAccess treats both null/undefined as absent and returnsnull. Provider not read. Canonical helper same null fallback.",
+    "fault": "Change actual row.current_period_end null fallback true\u2192false; retained summary becomes expired.",
+    "history": "1550ae7c explicitly preserves legacy/incomplete null-period access;960070f1 delivers this in admin summary. Do not retire null policy.",
+    "nonTestCallers": [
+      "src/app/api/admin/users/route.ts:99",
+      "src/lib/billing/subscriptions.ts:146,174,198,269,303"
+    ],
+    "risk": "Conditional: source readset equivalence rather than arbitrary future implementation equivalence; main independent review and selected actual-owner fault proof required. No new inputs or calls may be added to rescue a rejected candidate.",
+    "unlockedSupportDeletion": null
+  },
+  {
+    "id": "D1",
+    "classification": "D",
+    "donor": {
+      "file": "tests/admin-user-billing-summary.test.ts",
+      "title": "active entitlement with lapsed period end reports expired",
+      "line": 180,
+      "start": 5654,
+      "end": 5903,
+      "body": "test(\"active entitlement with lapsed period end reports expired\", () => {\n  const summary = summarizeAdminUserBilling(\n    subscriptionRow({ current_period_end: \"2026-08-05T00:00:00.000Z\" }),\n    NOW,\n  )\n  assert.equal(summary.status, \"expired\")\n})",
+      "sha256": "51af2a64f65e9d73052a48c394956e32f5e0f9c54fbd66b1d63eb8b81c21d50b",
+      "assertions": [
+        "assert.equal(summary.status, \"expired\")"
+      ]
+    },
+    "keeperBefore": {
+      "file": "tests/admin-user-billing-summary.test.ts",
+      "title": "active entitlement just beyond the 24h expiry grace reports expired",
+      "line": 197,
+      "start": 6240,
+      "end": 6499,
+      "body": "test(\"active entitlement just beyond the 24h expiry grace reports expired\", () => {\n  const summary = summarizeAdminUserBilling(\n    subscriptionRow({ current_period_end: \"2026-09-21T00:00:00.000Z\" }),\n    NOW,\n  )\n  assert.equal(summary.status, \"expired\")\n})",
+      "sha256": "7f220443b5f0c8e452f5deca7a74b139df0420486154c677afe12151bdbb1672",
+      "assertions": [
+        "assert.equal(summary.status, \"expired\")"
+      ]
+    },
+    "keeperAfter": {
+      "file": "tests/admin-user-billing-summary.test.ts",
+      "title": "active entitlement just beyond the 24h expiry grace reports expired",
+      "line": 197,
+      "start": 6240,
+      "end": 6499,
+      "body": "test(\"active entitlement just beyond the 24h expiry grace reports expired\", () => {\n  const summary = summarizeAdminUserBilling(\n    subscriptionRow({ current_period_end: \"2026-09-21T00:00:00.000Z\" }),\n    NOW,\n  )\n  assert.equal(summary.status, \"expired\")\n})",
+      "sha256": "7f220443b5f0c8e452f5deca7a74b139df0420486154c677afe12151bdbb1672",
+      "assertions": [
+        "assert.equal(summary.status, \"expired\")"
+      ]
+    },
+    "transfer": "None: complete original observable assertion subset already exists; inputs and owner calls unchanged.",
+    "sourceCleanup": null,
+    "union": "Both callbacks call same summarizeAdminUserBilling with active nontrial cancel=false and assert only status expired. Nearer36h keeper retains exact observable subset with stronger cutoff pressure.",
+    "inputs": "Donor period2026-08-05T00:00Z, NOW2026-09-22T12:00Z (minus1164h); keeper period2026-09-21T00:00Z (minus36h), all other fixture fields identical. Date strings are same canonicalISO lexical form. Both share monotonic legacy expiry predicate; donor asserts no returned perioddate or age bucket.",
+    "fault": "Same expired-access production fault/control asC1. No need duplicate control credit.",
+    "history": "Both added by960070f1 (#595); retain nearer explicit grace-owner case. No obsolete product claim.",
+    "nonTestCallers": [
+      "src/app/api/admin/users/route.ts:99",
+      "src/lib/billing/subscriptions.ts:146,174,198,269,303"
+    ],
+    "risk": "Conditional: source readset equivalence rather than arbitrary future implementation equivalence; main independent review and selected actual-owner fault proof required. No new inputs or calls may be added to rescue a rejected candidate.",
+    "unlockedSupportDeletion": null
+  },
+  {
+    "id": "D2",
+    "classification": "D",
+    "donor": {
+      "file": "tests/payment-monitor-route.test.ts",
+      "title": "payment monitor flushes completed integrity findings before returning success",
+      "line": 364,
+      "start": 10295,
+      "end": 11583,
+      "body": "test(\"payment monitor flushes completed integrity findings before returning success\", async () => {\n  let flushes = 0\n  const response = await handlePaymentMonitor(request(), {\n    triggerSecret: secret,\n    checkRateLimit: () => ({ allowed: true }),\n    runPaymentIntegrity: async () =>\n      result({\n        counters: {\n          ...emptyPaymentIntegrityCounters(),\n          providersScanned: 2,\n          candidatesChecked: 4,\n          findings: 1,\n        },\n        findings: [\n          {\n            signal: \"payment_integrity_mismatch\",\n            provider: \"stripe\",\n            commerceKind: \"subscription\",\n            boundary: \"billing\",\n            errorFamily: \"billing_state\",\n            invariant: \"provider_success_without_billing_success\",\n            providerReferenceDigest:\n              \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n            method: \"card\",\n            truth: \"succeeded\",\n            live: true,\n            isInternalTest: false,\n          },\n        ],\n        telemetryEventIds: [\"0123456789abcdef0123456789abcdef\"],\n      }),\n    captureCheckIn: () => undefined,\n    flushTelemetry: async () => {\n      flushes += 1\n      return true\n    },\n  })\n\n  assert.equal(response.status, 200)\n  assert.equal(flushes, 1)\n})",
+      "sha256": "1092d0a81e53c3337c2ce6fc314eacb15603eff3835941b77d5b3e1675fed95d",
+      "assertions": [
+        "assert.equal(response.status, 200)",
+        "assert.equal(flushes, 1)"
+      ]
+    },
+    "keeperBefore": {
+      "file": "tests/payment-monitor-route.test.ts",
+      "title": "payment monitor uses uncapped incident counters when requiring Sentry receipts",
+      "line": 406,
+      "start": 11585,
+      "end": 12273,
+      "body": "test(\"payment monitor uses uncapped incident counters when requiring Sentry receipts\", async () => {\n  let flushes = 0\n  const response = await handlePaymentMonitor(request(), {\n    triggerSecret: secret,\n    checkRateLimit: () => ({ allowed: true }),\n    runPaymentIntegrity: async () =>\n      result({\n        counters: {\n          ...emptyPaymentIntegrityCounters(),\n          findings: 1,\n        },\n        findings: [],\n        telemetryEventIds: [\"0123456789abcdef0123456789abcdef\"],\n      }),\n    captureCheckIn: () => undefined,\n    flushTelemetry: async () => {\n      flushes += 1\n      return true\n    },\n  })\n\n  assert.equal(response.status, 200)\n  assert.equal(flushes, 1)\n})",
+      "sha256": "3386c69f68c413ab9dceb3fd16070f7df0b889d16d971c4a257d40ff8043836c",
+      "assertions": [
+        "assert.equal(response.status, 200)",
+        "assert.equal(flushes, 1)"
+      ]
+    },
+    "keeperAfter": {
+      "file": "tests/payment-monitor-route.test.ts",
+      "title": "payment monitor uses uncapped incident counters when requiring Sentry receipts",
+      "line": 406,
+      "start": 11585,
+      "end": 12273,
+      "body": "test(\"payment monitor uses uncapped incident counters when requiring Sentry receipts\", async () => {\n  let flushes = 0\n  const response = await handlePaymentMonitor(request(), {\n    triggerSecret: secret,\n    checkRateLimit: () => ({ allowed: true }),\n    runPaymentIntegrity: async () =>\n      result({\n        counters: {\n          ...emptyPaymentIntegrityCounters(),\n          findings: 1,\n        },\n        findings: [],\n        telemetryEventIds: [\"0123456789abcdef0123456789abcdef\"],\n      }),\n    captureCheckIn: () => undefined,\n    flushTelemetry: async () => {\n      flushes += 1\n      return true\n    },\n  })\n\n  assert.equal(response.status, 200)\n  assert.equal(flushes, 1)\n})",
+      "sha256": "3386c69f68c413ab9dceb3fd16070f7df0b889d16d971c4a257d40ff8043836c",
+      "assertions": [
+        "assert.equal(response.status, 200)",
+        "assert.equal(flushes, 1)"
+      ]
+    },
+    "transfer": "None: complete original observable assertion subset already exists; inputs and owner calls unchanged.",
+    "sourceCleanup": null,
+    "union": "Both assert response.status===200 and flushes===1. Existing uncapped-counter keeper already observes both. Only checkIn optional path; no paidAccess runner in either.",
+    "inputs": "Both run handlePaymentMonitor with same validsecret/request, allowedrate, completedresult, counterfindings1, receipt0123456789abcdef0123456789abcdef, optionalcheckIn undefined, flush returns true and incrementslocalcount. Donor providersScanned2/candidatesChecked4 and findings[oneStripefinding]; keeper countersotherzeros and findings[]. Actual confirmTelemetryDelivery reads ONLY findings+monitorFailures counters and receipt array, not detailedfindings or othercounters. summarizePaymentIntegrity omitsfindings; no countersbodyassert in either. Keeper adds meaningful capped-array distinction without a newcase.",
+    "fault": "Actual confirmTelemetryDelivery returntrue instead of awaitingflush gives HTTP200 butflushes0; retained exactassert fails. Switching receipt demand to findings.length is additionally caught by keeper but not donor.",
+    "history": "e47b740e (#337) hardened actual reconciliation receipts/flush; current runbook requires receiptperincident usinguncappedcounts. Do not retire Sentry or default provider runtime.",
+    "nonTestCallers": [
+      "src/app/api/billing/payment-monitor/route.ts:90",
+      "src/app/api/billing/reconcile/route.ts:172"
+    ],
+    "risk": "Conditional: source readset equivalence rather than arbitrary future implementation equivalence; main independent review and selected actual-owner fault proof required. No new inputs or calls may be added to rescue a rejected candidate.",
+    "unlockedSupportDeletion": null
+  }
+]

@@ -1,0 +1,131 @@
+{
+  "productId": "07-pantene-molecular-bond-repair",
+  "lane": "blind-v1",
+  "standardVersion": "mask-inci-v0.5",
+  "classifiedAt": "2026-10-06",
+  "attestation": {
+    "prohibitedFilesAccessed": false,
+    "inputsRead": [
+      "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1.md",
+      "docs/research/mask-inci/v1.0/02_evidence_lexicon.v0.1.md",
+      "docs/research/mask-inci/v1.0/00_category_charter.md",
+      "docs/research/mask-inci/v1.0/01_property-set-v0.md",
+      "data/research/mask-inci/v1.0/blind-packets/01-hask-argan-oil-sachet.json",
+      "data/research/mask-inci/v1.0/blind-packets/02-gliss-7sekunden-express-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets/03-bali-curls-sos-protein-treatment.json",
+      "data/research/mask-inci/v1.0/blind-packets/04-gliss-liquid-silk-4in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/05-isana-mandelmilch-3in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/06-monday-smooth-anti-frizz.json",
+      "data/research/mask-inci/v1.0/blind-packets/07-pantene-molecular-bond-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets/08-sante-intense-hydration.json",
+      "data/research/mask-inci/v1.0/blind-packets/09-balea-professional-aqua-hyaluron.json",
+      "data/research/mask-inci/v1.0/blind-packets/10-bali-curls-deep-repair-mask.json",
+      "data/research/mask-inci/v1.0/blind-packets/11-elvital-glycolic-gloss.json",
+      "data/research/mask-inci/v1.0/blind-packets/12-guhl-panthenol-reparatur-2in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/13-olaplex-no3-hair-perfector.json"
+    ]
+  },
+  "g0": {
+    "value": "in_category",
+    "modeScoped": false,
+    "coveredMode": "post_shampoo_rinse_out_mask",
+    "rationale": "Directions (mueller.de verbatim): apply to wet hair, 2 minutes, rinse. Contact time and rinse stated; wet-hair rinse-out use read as post-cleansing (no pre-shampoo direction).",
+    "evidenceSignals": [
+      "'Auf das nasse Haar auftragen'",
+      "2 min",
+      "'Ausspülen'"
+    ]
+  },
+  "tailMarker": {
+    "ingredient": "PARFUM",
+    "index": 7,
+    "status": "plausible",
+    "note": "Earliest tail-class species PARFUM @7. The base-establishing species (Stearyl Alcohol @2, Stearamidopropyl Dimethylamine @3, Cetyl Alcohol @4) outrank it; Hexyl Cinnamal @14 etc. follow Parfum. Behentrimonium Methosulfate @11 is a secondary co-quat in the tail, not the base cationic, so the marker is read as plausible (see review note)."
+  },
+  "bondRoute": "none",
+  "profile": {
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Above tail: Stearamidopropyl Dimethylamine @3 is the only cationic (Behentrimonium Methosulfate @11 is in the tail) → S1 fails. S2: Stearyl Alcohol @2. S3: no lipids. One signal → moderate.",
+      "evidenceSignals": [
+        "S2: Stearyl Alcohol @2"
+      ],
+      "counterSignals": [
+        "S1 not met",
+        "no above-tail lipids"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No R4b anywhere → high unavailable. Leanness: no R4b ✓, no occlusive silicone stack (single Bis-Aminopropyl Dimethicone @5 above tail) ✓, but two cationic species on the full list (SAPDMA @3 + Behentrimonium Methosulfate @11, E7) ✗ → moderate.",
+      "evidenceSignals": [
+        "no R4b",
+        "single above-tail silicone"
+      ],
+      "counterSignals": [
+        "2 cationics on full list (E7) withhold low"
+      ]
+    },
+    "careDirection": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No R5 route (Glutamic Acid @6 is the amidoamine neutraliser; Histidine and Biotin are non-qualifiers). Balanced (b): clause 2 fails under E9 — a single silicone species (Bis-Aminopropyl Dimethicone @5) with no R3/R6a corroboration is a route, not a system. → moisture.",
+      "evidenceSignals": [
+        "conditioning base @2–4",
+        "amino silicone film @5"
+      ],
+      "counterSignals": [
+        "film-led architecture close to reading (b), blocked by E9"
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "low",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "No R5 species and no bond token on the list. 'Molecular Bond Repair' naming, amino silicone, Glutamic Acid, Histidine, Panthenol and Biotin are explicit non-qualifiers.",
+      "evidenceSignals": [
+        "bond_route none"
+      ],
+      "counterSignals": [
+        "'Bond' positioning without a nameable token → bond_claim_review"
+      ]
+    },
+    "primaryFocus": {
+      "value": "smoothing",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No repair route (bond_specific_support = claim_only), no humectant cluster (Panthenol @15 / Panthenyl Ethyl Ether @16 in tail). Shine fails criterion 3 (no gloss positioning). Step 6 smoothing: a distinct amino silicone (Bis-Aminopropyl Dimethicone @5) above the tail extends the architecture beyond the R1 base → smoothing. focus_care_verdict: not_applicable.",
+      "evidenceSignals": [
+        "Bis-Aminopropyl Dimethicone @5"
+      ],
+      "counterSignals": [
+        "competing: general (single silicone species)"
+      ]
+    },
+    "secondaryFocus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No distinct second endpoint; shine would reuse the smoothing film.",
+      "evidenceSignals": [],
+      "counterSignals": []
+    }
+  },
+  "hinweise": {
+    "fired": [
+      {
+        "flag": "claim_formula_mismatch",
+        "value": "'Molecular Bond Repair' positioning vs bond_route none",
+        "note": "Bond pack with no nameable bond-chemistry INCI token; moves no value."
+      }
+    ]
+  },
+  "reviewTriggers": [
+    "bond_claim_review"
+  ]
+}

@@ -1,0 +1,30 @@
+TAP version 13
+# Subtest: field-test activation qualifies Stage 1 and the journey without a payment timestamp
+not ok 1 - field-test activation qualifies Stage 1 and the journey without a payment timestamp
+  ---
+  duration_ms: 4.849666
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-field-test-access.test.ts:2:4259'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected "actual" to be strictly unequal to:
+    
+    'legacy'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'legacy'
+  actual: 'legacy'
+  operator: 'notStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-field-test-access.test.ts:175:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 330.03475

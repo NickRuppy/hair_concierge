@@ -1,0 +1,1733 @@
+{
+  "selectedTest": "tests/one-time-recovery-command.test.ts",
+  "localFiles": [
+    "scripts/billing/one-time-recover.ts",
+    "src/components/ui/icon.tsx",
+    "src/funnels/packages.json",
+    "src/funnels/quizzes/registry.json",
+    "src/funnels/quizzes/registry.ts",
+    "src/lib/analytics/meta-capi.ts",
+    "src/lib/analytics/page-url.ts",
+    "src/lib/auth/checkout-activation-outcome.ts",
+    "src/lib/billing/analytics-destinations/customerio.ts",
+    "src/lib/billing/analytics-destinations/funnel.ts",
+    "src/lib/billing/analytics-destinations/meta-capi.ts",
+    "src/lib/billing/analytics-destinations/openai-capi.ts",
+    "src/lib/billing/analytics-destinations/posthog-server.ts",
+    "src/lib/billing/analytics-destinations/types.ts",
+    "src/lib/billing/analytics-outbox.ts",
+    "src/lib/billing/entitlements.ts",
+    "src/lib/billing/moderator-reset-cutoff.ts",
+    "src/lib/billing/offer-products.ts",
+    "src/lib/billing/payment-runtime-config.ts",
+    "src/lib/billing/personal-plan-one-time-activation.ts",
+    "src/lib/billing/personal-plan-one-time-consent-copy.ts",
+    "src/lib/billing/personal-plan-one-time-consents.ts",
+    "src/lib/billing/pricing-catalog.ts",
+    "src/lib/billing/purchases.ts",
+    "src/lib/billing/subscriptions.ts",
+    "src/lib/billing/tier-ids.ts",
+    "src/lib/billing/trial-access-projection.ts",
+    "src/lib/billing/trial-admission.ts",
+    "src/lib/billing/trial-analytics-context.ts",
+    "src/lib/billing/trial-checkout-attempt.ts",
+    "src/lib/billing/trial-effective-contract.ts",
+    "src/lib/billing/trial-eligibility.ts",
+    "src/lib/billing/trial-identity-claims.ts",
+    "src/lib/billing/trial-management-operations.ts",
+    "src/lib/billing/trial-offer.ts",
+    "src/lib/billing/trial-paid-recovery-operations.ts",
+    "src/lib/billing/trial-payment-events.ts",
+    "src/lib/billing/trial-policy.ts",
+    "src/lib/billing/trial-runtime.ts",
+    "src/lib/billing/types.ts",
+    "src/lib/checkout/payment-feedback.ts",
+    "src/lib/customerio/personal-plan-one-time-confirmation.ts",
+    "src/lib/customerio/server.ts",
+    "src/lib/customerio/transactional.ts",
+    "src/lib/funnel/cookie.ts",
+    "src/lib/funnel/flags.ts",
+    "src/lib/funnel/journey-kind.ts",
+    "src/lib/funnel/offer-presentation.ts",
+    "src/lib/funnel/organic-offer-media-experiment.ts",
+    "src/lib/funnel/packages.ts",
+    "src/lib/funnel/personal-plan-pricing-experiment.ts",
+    "src/lib/funnel/personal-plan-pricing-qa-token.ts",
+    "src/lib/funnel/purchase-attribution.ts",
+    "src/lib/funnel/server.ts",
+    "src/lib/help/info-tips.ts",
+    "src/lib/leave-in/constants.ts",
+    "src/lib/observability/checkout.ts",
+    "src/lib/observability/offer-experiment.ts",
+    "src/lib/observability/payment-server-core.ts",
+    "src/lib/observability/payment-server.ts",
+    "src/lib/observability/payment.ts",
+    "src/lib/observability/sentry-scrubbing.ts",
+    "src/lib/openai-ads/event-payload.ts",
+    "src/lib/openai-ads/server/capi.ts",
+    "src/lib/openai-ads/server/consent-cookie.ts",
+    "src/lib/openai-ads/server/context.ts",
+    "src/lib/paypal/checkout-activation.ts",
+    "src/lib/paypal/checkout-intents.ts",
+    "src/lib/paypal/client.ts",
+    "src/lib/paypal/order-activation.ts",
+    "src/lib/paypal/order-intents.ts",
+    "src/lib/paypal/plans.ts",
+    "src/lib/paypal/subscription-shapes.ts",
+    "src/lib/paypal/subscriptions.ts",
+    "src/lib/paypal/trial-account-admission.ts",
+    "src/lib/paypal/trial-checkout-attempt.ts",
+    "src/lib/paypal/trial-checkout.ts",
+    "src/lib/paypal/trial-collection-start.ts",
+    "src/lib/paypal/trial-paid-recovery.ts",
+    "src/lib/paypal/trial-runtime.ts",
+    "src/lib/personal-plan-field-test/errors.ts",
+    "src/lib/personal-plan/legacy-cutover-eligibility.ts",
+    "src/lib/personal-plan/release.ts",
+    "src/lib/personal-plan/rollout-access.ts",
+    "src/lib/quiz/completion.ts",
+    "src/lib/quiz/diagnostic-input.ts",
+    "src/lib/quiz/link-to-profile.ts",
+    "src/lib/quiz/normalization.ts",
+    "src/lib/quiz/primary-concern.ts",
+    "src/lib/quiz/types.ts",
+    "src/lib/reactivation/checkout-reservations.ts",
+    "src/lib/reactivation/stripe-checkout-context.ts",
+    "src/lib/stripe/checkout-activation.ts",
+    "src/lib/stripe/client.ts",
+    "src/lib/stripe/intervals.ts",
+    "src/lib/stripe/trial-account-admission.ts",
+    "src/lib/stripe/trial-authorization.ts",
+    "src/lib/supabase/admin.ts",
+    "src/lib/vocabulary/concerns-goals.ts",
+    "src/lib/vocabulary/errors.ts",
+    "src/lib/vocabulary/frequencies.ts",
+    "src/lib/vocabulary/hair-length.ts",
+    "src/lib/vocabulary/hair-types.ts",
+    "src/lib/vocabulary/index.ts",
+    "src/lib/vocabulary/onboarding-care.ts",
+    "src/lib/vocabulary/onboarding-goals.ts",
+    "src/lib/vocabulary/profile-labels.ts",
+    "src/lib/vocabulary/source-labels.ts",
+    "tests/one-time-recovery-command.test.ts",
+    "tests/server-only-register.cjs"
+  ],
+  "edges": [
+    {
+      "from": "tests/one-time-recovery-command.test.ts",
+      "to": "scripts/billing/one-time-recover.ts",
+      "spec": "../scripts/billing/one-time-recover",
+      "kind": "static including type"
+    },
+    {
+      "from": "scripts/billing/one-time-recover.ts",
+      "to": "src/lib/paypal/order-activation.ts",
+      "spec": "@/lib/paypal/order-activation",
+      "kind": "static including type"
+    },
+    {
+      "from": "scripts/billing/one-time-recover.ts",
+      "to": "src/lib/stripe/checkout-activation.ts",
+      "spec": "@/lib/stripe/checkout-activation",
+      "kind": "static including type"
+    },
+    {
+      "from": "scripts/billing/one-time-recover.ts",
+      "to": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "spec": "@/lib/billing/personal-plan-one-time-consents",
+      "kind": "static including type"
+    },
+    {
+      "from": "scripts/billing/one-time-recover.ts",
+      "to": "src/lib/billing/purchases.ts",
+      "spec": "@/lib/billing/purchases",
+      "kind": "static including type"
+    },
+    {
+      "from": "scripts/billing/one-time-recover.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "static including type"
+    },
+    {
+      "from": "scripts/billing/one-time-recover.ts",
+      "to": "src/lib/billing/personal-plan-one-time-activation.ts",
+      "spec": "@/lib/billing/personal-plan-one-time-activation",
+      "kind": "static including type"
+    },
+    {
+      "from": "scripts/billing/one-time-recover.ts",
+      "to": "src/lib/supabase/admin.ts",
+      "spec": "@/lib/supabase/admin",
+      "kind": "literal dynamic"
+    },
+    {
+      "from": "scripts/billing/one-time-recover.ts",
+      "to": "src/lib/stripe/client.ts",
+      "spec": "@/lib/stripe/client",
+      "kind": "literal dynamic"
+    },
+    {
+      "from": "scripts/billing/one-time-recover.ts",
+      "to": "src/lib/billing/tier-ids.ts",
+      "spec": "@/lib/billing/tier-ids",
+      "kind": "literal dynamic"
+    },
+    {
+      "from": "scripts/billing/one-time-recover.ts",
+      "to": "src/lib/quiz/link-to-profile.ts",
+      "spec": "@/lib/quiz/link-to-profile",
+      "kind": "literal dynamic"
+    },
+    {
+      "from": "scripts/billing/one-time-recover.ts",
+      "to": "src/lib/supabase/admin.ts",
+      "spec": "@/lib/supabase/admin",
+      "kind": "literal dynamic"
+    },
+    {
+      "from": "scripts/billing/one-time-recover.ts",
+      "to": "src/lib/paypal/order-activation.ts",
+      "spec": "@/lib/paypal/order-activation",
+      "kind": "literal dynamic"
+    },
+    {
+      "from": "src/lib/paypal/order-activation.ts",
+      "to": "src/lib/billing/offer-products.ts",
+      "spec": "@/lib/billing/offer-products",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/order-activation.ts",
+      "to": "src/lib/billing/personal-plan-one-time-activation.ts",
+      "spec": "@/lib/billing/personal-plan-one-time-activation",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/order-activation.ts",
+      "to": "src/lib/billing/purchases.ts",
+      "spec": "@/lib/billing/purchases",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/order-activation.ts",
+      "to": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "spec": "@/lib/billing/personal-plan-one-time-consents",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/order-activation.ts",
+      "to": "src/lib/customerio/personal-plan-one-time-confirmation.ts",
+      "spec": "@/lib/customerio/personal-plan-one-time-confirmation",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/order-activation.ts",
+      "to": "src/lib/paypal/checkout-activation.ts",
+      "spec": "./checkout-activation",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/order-activation.ts",
+      "to": "src/lib/paypal/order-intents.ts",
+      "spec": "./order-intents",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/order-activation.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/order-activation.ts",
+      "to": "src/lib/billing/payment-runtime-config.ts",
+      "spec": "@/lib/billing/payment-runtime-config",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/order-activation.ts",
+      "to": "src/lib/observability/payment.ts",
+      "spec": "@/lib/observability/payment",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/order-activation.ts",
+      "to": "src/lib/observability/payment-server.ts",
+      "spec": "@/lib/observability/payment-server",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/order-activation.ts",
+      "to": "src/lib/paypal/client.ts",
+      "spec": "./client",
+      "kind": "literal dynamic"
+    },
+    {
+      "from": "src/lib/stripe/checkout-activation.ts",
+      "to": "src/lib/reactivation/checkout-reservations.ts",
+      "spec": "@/lib/reactivation/checkout-reservations",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/checkout-activation.ts",
+      "to": "src/lib/billing/subscriptions.ts",
+      "spec": "@/lib/billing/subscriptions",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/checkout-activation.ts",
+      "to": "src/lib/stripe/trial-account-admission.ts",
+      "spec": "./trial-account-admission",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/checkout-activation.ts",
+      "to": "src/lib/billing/moderator-reset-cutoff.ts",
+      "spec": "@/lib/billing/moderator-reset-cutoff",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/checkout-activation.ts",
+      "to": "src/lib/billing/personal-plan-one-time-activation.ts",
+      "spec": "@/lib/billing/personal-plan-one-time-activation",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/checkout-activation.ts",
+      "to": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "spec": "@/lib/billing/personal-plan-one-time-consents",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/checkout-activation.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/checkout-activation.ts",
+      "to": "src/lib/customerio/personal-plan-one-time-confirmation.ts",
+      "spec": "@/lib/customerio/personal-plan-one-time-confirmation",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/checkout-activation.ts",
+      "to": "src/lib/billing/offer-products.ts",
+      "spec": "@/lib/billing/offer-products",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/checkout-activation.ts",
+      "to": "src/lib/stripe/intervals.ts",
+      "spec": "./intervals",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/checkout-activation.ts",
+      "to": "src/lib/stripe/client.ts",
+      "spec": "./client",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/checkout-activation.ts",
+      "to": "src/lib/personal-plan/legacy-cutover-eligibility.ts",
+      "spec": "@/lib/personal-plan/legacy-cutover-eligibility",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/checkout-activation.ts",
+      "to": "src/lib/billing/trial-runtime.ts",
+      "spec": "../billing/trial-runtime",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/checkout-activation.ts",
+      "to": "src/lib/auth/checkout-activation-outcome.ts",
+      "spec": "../auth/checkout-activation-outcome",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/checkout-activation.ts",
+      "to": "src/lib/stripe/client.ts",
+      "spec": "./client",
+      "kind": "literal dynamic"
+    },
+    {
+      "from": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "to": "src/lib/billing/personal-plan-one-time-consent-copy.ts",
+      "spec": "./personal-plan-one-time-consent-copy",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "./types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "to": "src/lib/billing/personal-plan-one-time-consent-copy.ts",
+      "spec": "./personal-plan-one-time-consent-copy",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/purchases.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "./types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/purchases.ts",
+      "to": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "spec": "./personal-plan-one-time-consents",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/types.ts",
+      "to": "src/lib/billing/pricing-catalog.ts",
+      "spec": "./pricing-catalog",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/personal-plan-one-time-activation.ts",
+      "to": "src/lib/billing/analytics-outbox.ts",
+      "spec": "./analytics-outbox",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/personal-plan-one-time-activation.ts",
+      "to": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "spec": "./personal-plan-one-time-consents",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/personal-plan-one-time-activation.ts",
+      "to": "src/lib/billing/personal-plan-one-time-consent-copy.ts",
+      "spec": "./personal-plan-one-time-consent-copy",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/personal-plan-one-time-activation.ts",
+      "to": "src/lib/billing/purchases.ts",
+      "spec": "./purchases",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/personal-plan-one-time-activation.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "./types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/personal-plan-one-time-activation.ts",
+      "to": "src/lib/customerio/personal-plan-one-time-confirmation.ts",
+      "spec": "@/lib/customerio/personal-plan-one-time-confirmation",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/personal-plan-one-time-activation.ts",
+      "to": "src/lib/funnel/flags.ts",
+      "spec": "@/lib/funnel/flags",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/client.ts",
+      "to": "src/lib/billing/pricing-catalog.ts",
+      "spec": "../billing/pricing-catalog",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/client.ts",
+      "to": "src/lib/stripe/intervals.ts",
+      "spec": "./intervals",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/quiz/link-to-profile.ts",
+      "to": "src/lib/supabase/admin.ts",
+      "spec": "@/lib/supabase/admin",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/quiz/link-to-profile.ts",
+      "to": "src/lib/quiz/completion.ts",
+      "spec": "./completion",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/quiz/link-to-profile.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "./types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/quiz/link-to-profile.ts",
+      "to": "src/lib/quiz/normalization.ts",
+      "spec": "./normalization",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/quiz/link-to-profile.ts",
+      "to": "src/lib/quiz/primary-concern.ts",
+      "spec": "./primary-concern",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/quiz/link-to-profile.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/customerio/personal-plan-one-time-confirmation.ts",
+      "to": "src/lib/customerio/transactional.ts",
+      "spec": "./transactional",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/customerio/personal-plan-one-time-confirmation.ts",
+      "to": "src/lib/customerio/transactional.ts",
+      "spec": "./transactional",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/checkout-activation.ts",
+      "to": "src/lib/reactivation/checkout-reservations.ts",
+      "spec": "@/lib/reactivation/checkout-reservations",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/checkout-activation.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/checkout-activation.ts",
+      "to": "src/lib/billing/entitlements.ts",
+      "spec": "@/lib/billing/entitlements",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/checkout-activation.ts",
+      "to": "src/lib/billing/subscriptions.ts",
+      "spec": "@/lib/billing/subscriptions",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/checkout-activation.ts",
+      "to": "src/lib/paypal/checkout-intents.ts",
+      "spec": "./checkout-intents",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/checkout-activation.ts",
+      "to": "src/lib/paypal/subscription-shapes.ts",
+      "spec": "./subscription-shapes",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/checkout-activation.ts",
+      "to": "src/lib/paypal/plans.ts",
+      "spec": "./plans",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/checkout-activation.ts",
+      "to": "src/lib/personal-plan/legacy-cutover-eligibility.ts",
+      "spec": "@/lib/personal-plan/legacy-cutover-eligibility",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/checkout-activation.ts",
+      "to": "src/lib/auth/checkout-activation-outcome.ts",
+      "spec": "@/lib/auth/checkout-activation-outcome",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/checkout-activation.ts",
+      "to": "src/lib/paypal/subscriptions.ts",
+      "spec": "./subscriptions",
+      "kind": "literal dynamic"
+    },
+    {
+      "from": "src/lib/paypal/checkout-activation.ts",
+      "to": "src/lib/paypal/trial-account-admission.ts",
+      "spec": "./trial-account-admission",
+      "kind": "literal dynamic"
+    },
+    {
+      "from": "src/lib/paypal/order-intents.ts",
+      "to": "src/lib/paypal/client.ts",
+      "spec": "./client",
+      "kind": "literal dynamic"
+    },
+    {
+      "from": "src/lib/observability/payment.ts",
+      "to": "src/lib/observability/checkout.ts",
+      "spec": "@/lib/observability/checkout",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/observability/payment.ts",
+      "to": "src/lib/checkout/payment-feedback.ts",
+      "spec": "@/lib/checkout/payment-feedback",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/observability/payment-server.ts",
+      "to": "src/lib/observability/payment-server-core.ts",
+      "spec": "@/lib/observability/payment-server-core",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/observability/payment-server.ts",
+      "to": "src/lib/observability/payment.ts",
+      "spec": "@/lib/observability/payment",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/observability/payment-server.ts",
+      "to": "src/lib/observability/payment-server-core.ts",
+      "spec": "@/lib/observability/payment-server-core",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/reactivation/checkout-reservations.ts",
+      "to": "src/lib/stripe/intervals.ts",
+      "spec": "@/lib/stripe/intervals",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/reactivation/checkout-reservations.ts",
+      "to": "src/lib/reactivation/stripe-checkout-context.ts",
+      "spec": "@/lib/reactivation/stripe-checkout-context",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/subscriptions.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "./types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/subscriptions.ts",
+      "to": "src/lib/billing/purchases.ts",
+      "spec": "./purchases",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/subscriptions.ts",
+      "to": "src/lib/billing/trial-access-projection.ts",
+      "spec": "./trial-access-projection",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/trial-account-admission.ts",
+      "to": "src/lib/billing/trial-runtime.ts",
+      "spec": "../billing/trial-runtime",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/trial-account-admission.ts",
+      "to": "src/lib/billing/trial-admission.ts",
+      "spec": "../billing/trial-admission",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/trial-account-admission.ts",
+      "to": "src/lib/billing/trial-identity-claims.ts",
+      "spec": "../billing/trial-identity-claims",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/trial-account-admission.ts",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "../billing/trial-offer",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/trial-account-admission.ts",
+      "to": "src/lib/stripe/trial-authorization.ts",
+      "spec": "./trial-authorization",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/trial-account-admission.ts",
+      "to": "src/lib/auth/checkout-activation-outcome.ts",
+      "spec": "../auth/checkout-activation-outcome",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/personal-plan/legacy-cutover-eligibility.ts",
+      "to": "src/lib/personal-plan/release.ts",
+      "spec": "./release",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/personal-plan/legacy-cutover-eligibility.ts",
+      "to": "src/lib/personal-plan/rollout-access.ts",
+      "spec": "./rollout-access",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/trial-runtime.ts",
+      "to": "src/lib/billing/trial-identity-claims.ts",
+      "spec": "./trial-identity-claims",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/trial-runtime.ts",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "./trial-offer",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-outbox.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-outbox.ts",
+      "to": "src/lib/billing/analytics-destinations/customerio.ts",
+      "spec": "./analytics-destinations/customerio",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-outbox.ts",
+      "to": "src/lib/billing/analytics-destinations/funnel.ts",
+      "spec": "./analytics-destinations/funnel",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-outbox.ts",
+      "to": "src/lib/billing/analytics-destinations/openai-capi.ts",
+      "spec": "./analytics-destinations/openai-capi",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-outbox.ts",
+      "to": "src/lib/billing/analytics-destinations/meta-capi.ts",
+      "spec": "./analytics-destinations/meta-capi",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-outbox.ts",
+      "to": "src/lib/billing/analytics-destinations/posthog-server.ts",
+      "spec": "./analytics-destinations/posthog-server",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-outbox.ts",
+      "to": "src/lib/billing/analytics-destinations/types.ts",
+      "spec": "./analytics-destinations/types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/quiz/types.ts",
+      "to": "src/components/ui/icon.tsx",
+      "spec": "@/components/ui/icon",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/quiz/types.ts",
+      "to": "src/lib/help/info-tips.ts",
+      "spec": "@/lib/help/info-tips",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/quiz/types.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/quiz/types.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "@/lib/vocabulary/concerns-goals",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/quiz/types.ts",
+      "to": "src/lib/quiz/diagnostic-input.ts",
+      "spec": "./diagnostic-input",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/quiz/normalization.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "./types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/quiz/normalization.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/quiz/normalization.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "@/lib/vocabulary/concerns-goals",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/quiz/normalization.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/quiz/normalization.ts",
+      "to": "src/lib/quiz/diagnostic-input.ts",
+      "spec": "./diagnostic-input",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/quiz/primary-concern.ts",
+      "to": "src/lib/quiz/normalization.ts",
+      "spec": "./normalization",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/quiz/primary-concern.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "./types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/hair-types.ts",
+      "spec": "./hair-types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/hair-types.ts",
+      "spec": "./hair-types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/hair-length.ts",
+      "spec": "./hair-length",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/hair-length.ts",
+      "spec": "./hair-length",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "./concerns-goals",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "./concerns-goals",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "./frequencies",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "./frequencies",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/profile-labels.ts",
+      "spec": "./profile-labels",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/profile-labels.ts",
+      "spec": "./profile-labels",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "spec": "../leave-in/constants",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "spec": "../leave-in/constants",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/source-labels.ts",
+      "spec": "./source-labels",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/source-labels.ts",
+      "spec": "./source-labels",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/errors.ts",
+      "spec": "./errors",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/onboarding-goals.ts",
+      "spec": "./onboarding-goals",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "./frequencies",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "./frequencies",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/onboarding-care.ts",
+      "spec": "./onboarding-care",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/onboarding-care.ts",
+      "spec": "./onboarding-care",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/entitlements.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "./types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/entitlements.ts",
+      "to": "src/lib/billing/subscriptions.ts",
+      "spec": "./subscriptions",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/entitlements.ts",
+      "to": "src/lib/stripe/checkout-activation.ts",
+      "spec": "@/lib/stripe/checkout-activation",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/entitlements.ts",
+      "to": "src/lib/paypal/subscriptions.ts",
+      "spec": "@/lib/paypal/subscriptions",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/checkout-intents.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/subscription-shapes.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "../billing/types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/subscription-shapes.ts",
+      "to": "src/lib/paypal/plans.ts",
+      "spec": "./plans",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/plans.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "../billing/types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/plans.ts",
+      "to": "src/lib/billing/pricing-catalog.ts",
+      "spec": "../billing/pricing-catalog",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/subscriptions.ts",
+      "to": "src/lib/paypal/subscription-shapes.ts",
+      "spec": "./subscription-shapes",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/subscriptions.ts",
+      "to": "src/lib/paypal/client.ts",
+      "spec": "./client",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-account-admission.ts",
+      "to": "src/lib/paypal/trial-paid-recovery.ts",
+      "spec": "./trial-paid-recovery",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-account-admission.ts",
+      "to": "src/lib/paypal/trial-collection-start.ts",
+      "spec": "./trial-collection-start",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-account-admission.ts",
+      "to": "src/lib/billing/trial-effective-contract.ts",
+      "spec": "../billing/trial-effective-contract",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-account-admission.ts",
+      "to": "src/lib/personal-plan/legacy-cutover-eligibility.ts",
+      "spec": "../personal-plan/legacy-cutover-eligibility",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-account-admission.ts",
+      "to": "src/lib/paypal/trial-checkout-attempt.ts",
+      "spec": "./trial-checkout-attempt",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-account-admission.ts",
+      "to": "src/lib/billing/trial-admission.ts",
+      "spec": "../billing/trial-admission",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-account-admission.ts",
+      "to": "src/lib/billing/trial-identity-claims.ts",
+      "spec": "../billing/trial-identity-claims",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-account-admission.ts",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "../billing/trial-offer",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-account-admission.ts",
+      "to": "src/lib/billing/subscriptions.ts",
+      "spec": "../billing/subscriptions",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-account-admission.ts",
+      "to": "src/lib/billing/entitlements.ts",
+      "spec": "../billing/entitlements",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-account-admission.ts",
+      "to": "src/lib/paypal/client.ts",
+      "spec": "./client",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-account-admission.ts",
+      "to": "src/lib/paypal/subscriptions.ts",
+      "spec": "./subscriptions",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-account-admission.ts",
+      "to": "src/lib/paypal/trial-checkout.ts",
+      "spec": "./trial-checkout",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-account-admission.ts",
+      "to": "src/lib/paypal/trial-checkout-attempt.ts",
+      "spec": "./trial-checkout-attempt",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-account-admission.ts",
+      "to": "src/lib/paypal/trial-runtime.ts",
+      "spec": "./trial-runtime",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-account-admission.ts",
+      "to": "src/lib/paypal/subscription-shapes.ts",
+      "spec": "./subscription-shapes",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-account-admission.ts",
+      "to": "src/lib/paypal/checkout-intents.ts",
+      "spec": "./checkout-intents",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-account-admission.ts",
+      "to": "src/lib/auth/checkout-activation-outcome.ts",
+      "spec": "@/lib/auth/checkout-activation-outcome",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-account-admission.ts",
+      "to": "src/lib/paypal/checkout-activation.ts",
+      "spec": "./checkout-activation",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-account-admission.ts",
+      "to": "src/lib/auth/checkout-activation-outcome.ts",
+      "spec": "@/lib/auth/checkout-activation-outcome",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/observability/checkout.ts",
+      "to": "src/lib/observability/sentry-scrubbing.ts",
+      "spec": "@/lib/observability/sentry-scrubbing",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/observability/payment-server-core.ts",
+      "to": "src/lib/observability/payment.ts",
+      "spec": "@/lib/observability/payment",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/observability/payment-server-core.ts",
+      "to": "src/lib/observability/sentry-scrubbing.ts",
+      "spec": "@/lib/observability/sentry-scrubbing",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/trial-access-projection.ts",
+      "to": "src/lib/billing/trial-policy.ts",
+      "spec": "./trial-policy",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/trial-admission.ts",
+      "to": "src/lib/billing/trial-eligibility.ts",
+      "spec": "./trial-eligibility",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/trial-admission.ts",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "./trial-offer",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/trial-identity-claims.ts",
+      "to": "src/lib/billing/trial-eligibility.ts",
+      "spec": "./trial-eligibility",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/stripe/trial-authorization.ts",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "../billing/trial-offer",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/personal-plan/rollout-access.ts",
+      "to": "src/lib/personal-plan-field-test/errors.ts",
+      "spec": "@/lib/personal-plan-field-test/errors",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/personal-plan/rollout-access.ts",
+      "to": "src/lib/personal-plan/release.ts",
+      "spec": "./release",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-destinations/customerio.ts",
+      "to": "src/lib/customerio/server.ts",
+      "spec": "@/lib/customerio/server",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-destinations/customerio.ts",
+      "to": "src/lib/billing/analytics-destinations/types.ts",
+      "spec": "./types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-destinations/funnel.ts",
+      "to": "src/lib/funnel/flags.ts",
+      "spec": "@/lib/funnel/flags",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-destinations/funnel.ts",
+      "to": "src/lib/funnel/server.ts",
+      "spec": "@/lib/funnel/server",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-destinations/funnel.ts",
+      "to": "src/lib/billing/analytics-destinations/types.ts",
+      "spec": "./types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-destinations/openai-capi.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-destinations/openai-capi.ts",
+      "to": "src/lib/openai-ads/server/capi.ts",
+      "spec": "@/lib/openai-ads/server/capi",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-destinations/openai-capi.ts",
+      "to": "src/lib/billing/analytics-destinations/types.ts",
+      "spec": "./types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-destinations/openai-capi.ts",
+      "to": "src/lib/openai-ads/server/context.ts",
+      "spec": "@/lib/openai-ads/server/context",
+      "kind": "literal dynamic"
+    },
+    {
+      "from": "src/lib/billing/analytics-destinations/meta-capi.ts",
+      "to": "src/lib/funnel/journey-kind.ts",
+      "spec": "@/lib/funnel/journey-kind",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-destinations/meta-capi.ts",
+      "to": "src/lib/billing/analytics-destinations/types.ts",
+      "spec": "./types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-destinations/meta-capi.ts",
+      "to": "src/lib/funnel/flags.ts",
+      "spec": "@/lib/funnel/flags",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-destinations/meta-capi.ts",
+      "to": "src/lib/analytics/page-url.ts",
+      "spec": "@/lib/analytics/page-url",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-destinations/meta-capi.ts",
+      "to": "src/lib/analytics/meta-capi.ts",
+      "spec": "@/lib/analytics/meta-capi",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-destinations/posthog-server.ts",
+      "to": "src/lib/billing/analytics-destinations/types.ts",
+      "spec": "./types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-destinations/posthog-server.ts",
+      "to": "src/lib/funnel/purchase-attribution.ts",
+      "spec": "@/lib/funnel/purchase-attribution",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/analytics-destinations/types.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/onboarding-goals.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "./concerns-goals",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/onboarding-goals.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "./concerns-goals",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/vocabulary/onboarding-goals.ts",
+      "to": "src/lib/vocabulary/hair-types.ts",
+      "spec": "./hair-types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-paid-recovery.ts",
+      "to": "src/lib/billing/trial-paid-recovery-operations.ts",
+      "spec": "../billing/trial-paid-recovery-operations",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-paid-recovery.ts",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "../billing/trial-offer",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-paid-recovery.ts",
+      "to": "src/lib/billing/trial-payment-events.ts",
+      "spec": "../billing/trial-payment-events",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-paid-recovery.ts",
+      "to": "src/lib/billing/subscriptions.ts",
+      "spec": "../billing/subscriptions",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-paid-recovery.ts",
+      "to": "src/lib/billing/entitlements.ts",
+      "spec": "../billing/entitlements",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-paid-recovery.ts",
+      "to": "src/lib/billing/tier-ids.ts",
+      "spec": "../billing/tier-ids",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-paid-recovery.ts",
+      "to": "src/lib/paypal/client.ts",
+      "spec": "./client",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-paid-recovery.ts",
+      "to": "src/lib/paypal/subscriptions.ts",
+      "spec": "./subscriptions",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-paid-recovery.ts",
+      "to": "src/lib/paypal/trial-checkout-attempt.ts",
+      "spec": "./trial-checkout-attempt",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-paid-recovery.ts",
+      "to": "src/lib/paypal/trial-runtime.ts",
+      "spec": "./trial-runtime",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-paid-recovery.ts",
+      "to": "src/lib/paypal/subscription-shapes.ts",
+      "spec": "./subscription-shapes",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/trial-effective-contract.ts",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "./trial-offer",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-checkout-attempt.ts",
+      "to": "src/lib/billing/trial-checkout-attempt.ts",
+      "spec": "../billing/trial-checkout-attempt",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-checkout-attempt.ts",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "../billing/trial-offer",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-checkout-attempt.ts",
+      "to": "src/lib/paypal/checkout-intents.ts",
+      "spec": "./checkout-intents",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-checkout-attempt.ts",
+      "to": "src/lib/paypal/trial-collection-start.ts",
+      "spec": "./trial-collection-start",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-checkout.ts",
+      "to": "src/lib/billing/trial-management-operations.ts",
+      "spec": "../billing/trial-management-operations",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-checkout.ts",
+      "to": "src/lib/billing/trial-analytics-context.ts",
+      "spec": "../billing/trial-analytics-context",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-checkout.ts",
+      "to": "src/lib/billing/trial-admission.ts",
+      "spec": "../billing/trial-admission",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-checkout.ts",
+      "to": "src/lib/billing/trial-checkout-attempt.ts",
+      "spec": "../billing/trial-checkout-attempt",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-checkout.ts",
+      "to": "src/lib/billing/trial-eligibility.ts",
+      "spec": "../billing/trial-eligibility",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-checkout.ts",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "../billing/trial-offer",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-checkout.ts",
+      "to": "src/lib/billing/trial-runtime.ts",
+      "spec": "../billing/trial-runtime",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-checkout.ts",
+      "to": "src/lib/paypal/checkout-intents.ts",
+      "spec": "./checkout-intents",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-checkout.ts",
+      "to": "src/lib/paypal/trial-checkout-attempt.ts",
+      "spec": "./trial-checkout-attempt",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-runtime.ts",
+      "to": "src/lib/billing/trial-runtime.ts",
+      "spec": "../billing/trial-runtime",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-runtime.ts",
+      "to": "src/lib/paypal/trial-checkout.ts",
+      "spec": "./trial-checkout",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-runtime.ts",
+      "to": "src/lib/paypal/client.ts",
+      "spec": "./client",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-runtime.ts",
+      "to": "src/lib/paypal/subscription-shapes.ts",
+      "spec": "./subscription-shapes",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/paypal/trial-runtime.ts",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "../billing/trial-offer",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/trial-policy.ts",
+      "to": "src/lib/paypal/trial-collection-start.ts",
+      "spec": "../paypal/trial-collection-start",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/supabase/admin.ts",
+      "spec": "@/lib/supabase/admin",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/journey-kind.ts",
+      "spec": "@/lib/funnel/journey-kind",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/cookie.ts",
+      "spec": "./cookie",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/flags.ts",
+      "spec": "./flags",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/packages.ts",
+      "spec": "./packages",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/observability/offer-experiment.ts",
+      "spec": "@/lib/observability/offer-experiment",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/personal-plan-pricing-experiment.ts",
+      "spec": "./personal-plan-pricing-experiment",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/organic-offer-media-experiment.ts",
+      "spec": "./organic-offer-media-experiment",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/personal-plan-pricing-qa-token.ts",
+      "spec": "./personal-plan-pricing-qa-token",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/openai-ads/server/capi.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/openai-ads/server/capi.ts",
+      "to": "src/lib/openai-ads/event-payload.ts",
+      "spec": "../event-payload",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/openai-ads/server/context.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/openai-ads/server/context.ts",
+      "to": "src/lib/openai-ads/event-payload.ts",
+      "spec": "../event-payload",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/openai-ads/server/context.ts",
+      "to": "src/lib/funnel/cookie.ts",
+      "spec": "@/lib/funnel/cookie",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/openai-ads/server/context.ts",
+      "to": "src/lib/openai-ads/server/consent-cookie.ts",
+      "spec": "./consent-cookie",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/funnel/purchase-attribution.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/trial-paid-recovery-operations.ts",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "./trial-offer",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/trial-paid-recovery-operations.ts",
+      "to": "src/lib/billing/trial-payment-events.ts",
+      "spec": "./trial-payment-events",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/trial-paid-recovery-operations.ts",
+      "to": "src/lib/billing/trial-management-operations.ts",
+      "spec": "./trial-management-operations",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/trial-checkout-attempt.ts",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "./trial-offer",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/trial-management-operations.ts",
+      "to": "src/lib/billing/trial-offer.ts",
+      "spec": "./trial-offer",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/trial-analytics-context.ts",
+      "to": "src/lib/analytics/meta-capi.ts",
+      "spec": "../analytics/meta-capi",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/billing/trial-analytics-context.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "./types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/funnel/cookie.ts",
+      "to": "src/lib/funnel/packages.ts",
+      "spec": "./packages",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/funnel/packages.ts",
+      "to": "src/funnels/packages.json",
+      "spec": "@/funnels/packages.json",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/funnel/packages.ts",
+      "to": "src/funnels/quizzes/registry.ts",
+      "spec": "@/funnels/quizzes/registry",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/funnel/packages.ts",
+      "to": "src/lib/funnel/offer-presentation.ts",
+      "spec": "@/lib/funnel/offer-presentation",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/funnel/packages.ts",
+      "to": "src/lib/funnel/offer-presentation.ts",
+      "spec": "@/lib/funnel/offer-presentation",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/lib/openai-ads/event-payload.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "static including type"
+    },
+    {
+      "from": "src/funnels/quizzes/registry.ts",
+      "to": "src/funnels/quizzes/registry.json",
+      "spec": "./registry.json",
+      "kind": "static including type"
+    }
+  ],
+  "externalPins": [
+    {
+      "specifier": "@supabase/supabase-js",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/dist/index.cjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/package.json"
+    },
+    {
+      "specifier": "stripe",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/stripe/cjs/stripe.cjs.node.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/stripe/package.json"
+    },
+    {
+      "specifier": "zod",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/zod/index.cjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/zod/package.json"
+    },
+    {
+      "specifier": "server-only",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/server-only/index.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/server-only/package.json"
+    },
+    {
+      "specifier": "@sentry/node",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/node/build/cjs/index.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/node/package.json"
+    },
+    {
+      "specifier": "@sentry/nextjs",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/index.server.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/package.json"
+    },
+    {
+      "specifier": "react",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/react/index.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/react/package.json"
+    },
+    {
+      "specifier": "lucide-react",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/lucide-react/dist/cjs/lucide-react.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/lucide-react/package.json"
+    },
+    {
+      "specifier": "next/server",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/server.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/package.json"
+    },
+    {
+      "specifier": "tsx",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/loader.mjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/package.json"
+    },
+    {
+      "specifier": "typescript",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/typescript.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/package.json"
+    },
+    {
+      "specifier": "esbuild",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/esbuild/lib/main.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/esbuild/package.json"
+    },
+    {
+      "specifier": "get-tsconfig",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/get-tsconfig/dist/index.cjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/get-tsconfig/package.json"
+    },
+    {
+      "specifier": "resolve-pkg-maps",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/resolve-pkg-maps/dist/index.cjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/resolve-pkg-maps/package.json"
+    }
+  ],
+  "nonliteralImports": [],
+  "scope": "Static local literal import/export closure (includes type-only/untaken imports conservatively); bounded loader trees plus SDK resolved entries/manifests. No whole-vendor or recursive source/data tree pinning. Remaining SDK internals rely on unchanged lockfile/frozen main runtime, not a complete vendor transitive hash proof."
+}

@@ -1,0 +1,130 @@
+import json,pathlib
+D=pathlib.Path('/tmp/test-audit-email-delivery94'); inv=json.loads((D/'inventory.json').read_text())
+# Individual actual-oracle judgments, in AST order. F means retain untouched in this batch.
+J={
+'customerio-funnel-attribution':[
+('R','Cold pricing/quiz events must wait for SDK/context, then deliver exact snake-case attribution in order despite first SDK track throwing. Existing facade tests do not combine both cold queues and this throw; fixture supplies raw context only, actual mapper/queue own sequence.')],
+'customerio-page-view':[
+('F','Two identical calls/assertions duplicate the canonical path oracle within this declaration. Keep its exact result identifier and permitted entry/focus projection; remove duplicate only as later zero-credit maintenance. Credential cases use other predicates.'),
+('R','Empty URLSearchParams and null must both omit trailing ?. Credential case contains a query and cannot expose the empty/null construction defect.'),
+('R','Recovery code/email/nested next/session/token must disappear on result and non-result paths while allowed entry/focus survive. Invalid safe-value case lacks these secret keys and cannot detect pass-through leakage.'),
+('R','Safe KEY with unsafe VALUE must be rejected (email entry and nested auth focus). A key-only allowlist would pass previous credential case and fail this one.'),
+('R','Absolute URL sanitization must remove fragment credentials and retain only allowed result query values; path-only builder cannot catch a wrapper retaining original URL hash.'),
+('R','Credential detection covers query and fragment/hash-router paths, with pricing and UTM negatives. Sanitization output does not establish whether Meta is suppressed before tracking.'),
+('C','C4: aggregate constant exact value already reaches actual deliverMetaOfferView conversion at the existing canonical-event keeper. Literal exact result URL subsumes includes(lead-123) false; constant is input-independent in current owner.')],
+'customerio-quiz-traits':[
+('R','Consent-true legacy snapshot verifies normalized email/name plus exact low-density, scalp, all four treatment German labels and no raw text/customer flag. Existing HTTP quiz-sync fixture uses other hair/treatment labels, so complete union cannot move without changing inputs.'),
+('R','Inherited consent date must stay old while quiz completion is fresh. Neither consent-true initial capture nor PP revision tests supplies two different dates.'),
+('R','Consent-false still identifies/tracks full coarse/curly/high/rough/snaps profile, omits consent date, and retains false event property. Existing HTTP sync does not assert this complete exact label set on the same input.')],
+'customerio-server':[
+('R','Actual identify request asserts EU URL, POST, Basic auth, strict header, one request, exact body. Higher PP sync captures URL/body only and would miss missing strict-mode/header credentials.'),
+('R','HTTP500 track returns failed result with status in error rather than throwing. Identify-failed PP test only observes identify branch; same shared post helper does not remove wrapper-specific rejection behavior.'),
+('F','Missing-key result is skipped/false, but fetch is neither stubbed nor counted; an accidental request followed by skipped result could pass or contact network. Hold unchanged, propose future zero-request observer repair without deletion.')],
+'customerio-stripe-lifecycle':[
+('R','Paid monthly checkout produces two named events with stable checkout/subscription IDs, amount14.99, uppercase EUR, timestamp and customer traits. Billing-outbox adapters have different producer inputs and cannot prove this legacy webhook fallback projector.'),
+('R','Verified trial input produces no paid lifecycle events/customer purchase timestamps and no instrument-key text. Paid snapshot does not reach trial suppression; webhook still has legacy dispatch fallback and preserved history.'),
+('R','Invoice amount749 minor becomes7.49 with attempt2, invoice-scoped ID and source/time. Checkout conversion does not consume invoice amount_due/attempt_count.'),
+('R','Quarter cancelled subscription sets is_customer false and includes Stripe event ID in dedupe key. Purchase event IDs cannot expose cross-event cancellation dedupe loss.')],
+'customerio-transactional':[
+('R','Numeric message ID7, first_name/CTA dictionary, recipient identity/path and true privacy flags. Actual send keeper has STRING message ID and lacks first_name: a numeric-to-string transport-builder change would escape it.'),
+('R','Actual App API POST observes custom base URL, bearer auth, exact serialized payload including string message ID and privacy flags; pure builder cannot catch transport dropping fields.'),
+('R','Void send API propagates exact422 and provider text. Receipt API error type alone does not exercise this public wrapper on same string-ID request.'),
+('R','Receipt API decodes delivery_id and numeric queued_at into exact camel-case result. Void sender intentionally discards receipt and cannot catch malformed decoding.'),
+('R','Receipt API422 becomes CustomerIoHttpError with exact status and provider text, distinct from ambiguous exception. Existing void API only matches message.'),
+('R','Network TypeError and successful body missing delivery_id become ambiguous errors; definitive422 never enters either path. Parameter rows remain independently meaningful and unchanged.'),
+('R','Inline content preserves from/subject/html/plain/autocreate=true/tracked=false/privacy. Reminder uses autoCreate=false and templated HTML, so input/options contract is distinct.'),
+('R','Actual wire attachment dictionary plus cumulative2MB rejection before a second fetch. No other suite observes byte bound or attachment wire delivery.')],
+'customerio-trial-reminder':[
+('R','PayPal full-price template15 observes config keys, provider Liquid subject/body, identity/privacy/autocreate flags, styling/legal links, one html/body and template-render equality. Dispatcher capture does not execute this transport builder; local Liquid helper is not Customer.io inbox proof.'),
+('R','Sender newline injection throws at actual transport builder. Dispatcher config validates separate sender input before work; direct builder is also called by default sender and must independently reject.')],
+'email-deliverability':[
+('R','Explicit historical typo map returns five exact corrections. DNS denial fixture only uses gmail.vom and cannot protect gmx.den/gmial/web.d/hotmial mappings.'),
+('R','Legitimate near-spelling domains have NO suggestion. Typo positives do not catch heuristic overcorrection; all existing rows preserved.'),
+('R','Empty/missing-local/missing-domain/missing-at suggestion inputs return null; normal domains do not exercise parser boundaries.'),
+('F','Known-good domain returns known_good and MX count0, but A/AAAA callbacks are not counted; forbidden auxiliary lookup could pass. Keep branch result; future counter repair only.'),
+('R','Valid MX under DEFAULT timeout must yield mx. Timer-cleanup keeper sets60000 explicitly; default0 would fail this outcome but escape cleanup case.'),
+('R','Both empty and dot Null MX reject with null_mx. ENOTFOUND and fallback cases cannot catch treating intentional no-mail as implicit MX.'),
+('R','ENODATA plus A record yields implicit_mx. AAAA-only case has different fulfilled family; each protocol branch must survive.'),
+('R','ENODATA plus AAAA-only record accepted. A-only success cannot catch ignored IPv6 result.'),
+('R','Successful A despite transient AAAA rejection yields implicit_mx. All-fulfilled fallback does not test Promise.allSettled partial success.'),
+('R','NXDOMAIN produces no_mx with exact suggestion and zero A/AAAA fallback calls. ENODATA branch must query fallback and cannot substitute.'),
+('F','Malformed address returns format with MX0, but A/AAAA not counted. Future repair observe all resolver methods; no deletion or fresh fixtures now.'),
+('R','Hanging MX with explicit20ms returns fail_open. Immediate resolver error cannot establish deadline completion.'),
+('R','SERVFAIL immediate MX rejection yields fail_open instead of permanent no_mx. Timeout does not catch errno misclassification.'),
+('R','Fallback A/AAAA timeout after absent MX yields allowed fail-open. MX timeout terminates before fallback path.'),
+('R','Controlled clock verifies one shared budget across MX+fallback, including deadlines observed by timers. Individual timeout cases allow restarted budget.'),
+('R','Long60000ms timer is cleared on successful lookup, with timer mock observation. Outcome-only MX case would pass leaked-resource fault.'),
+('R','Whitespace/mixed-case gmail address normalizes exact lowercase without spaces. Other positive Gmail fixture is already lowercase and cannot expose normalizer loss.')],
+'personal-plan-customerio-backfill':[
+('R','CLI safety triad permits dry-run and confirmed-live, rejects unconfirmed-live flag. Runtime backfill unit function does not enforce outer CLI invocation guard; actual main calls it before client construction.'),
+('R','Actual backfill requests profile-only RPC exact lead then dispatches existing lead and counts delivered/queued. Sync fixture bypasses operator request path; no real SQL existence/order claim from stub.'),
+('R','Dry run observes selected1, zero RPC writes, zero dispatch. Live keeper only establishes positive work and cannot catch accidental dry-run side effects.'),
+('R','Failed delivery result counts queued1/delivered0. Thrown dispatch enters separate catch; both branches retained.'),
+('R','Thrown first dispatch still attempts second lead and counts one retry/one delivery. Fixture does not create a durable row; durability comes from actual RPC owner/SQL, not this receipt. Loop continuation remains unique.')],
+'personal-plan-customerio-outbox-migration':[
+('R','Independent migration declaration contract: FK, revision/event state/defaults, no profile payload duplication, RLS/revoked public roles/service grant. Mock adapter cannot catch altered migration authority; greps remain bounded, not executable RLS proof.'),
+('R','Migration trigger must scope personal-plan INSERT/UPDATE, new consent eligibility, historical profile-only path and revision increment. Comment/string clauses are implementation-coupled maintenance risk but no equivalent actual SQL suite found in this cohort; do not delete security/history contract.'),
+('R','Scoped request RPC signature, revision increment, and absence of eligibility assignments prevent backfill promotion/demotion. Operator fake records RPC name only and cannot inspect SQL body.')],
+'personal-plan-customerio-outbox':[
+('F','Assertions prove actual dispatcher revision3/event flag/funnel/mark-delivered, but mock deliver itself decides identify-before-event; title claims an order this test cannot observe. Retain unique dispatcher projection, narrow claim/repair later; HTTP sync independently owns actual order.'),
+('R','Persisted send_completion_event=false stays false and marks non-event delivery. HTTP profile-only test receives already-derived false and cannot catch bad outbox derivation.'),
+('R','Funnel field_test overrides otherwise true event request and passes testKind; HTTP keeper has commercial input. Actual suppression predicate exercised here.'),
+('F','Durable moderator marker with missing funnel maps testKind field_test, but send_completion_event already false masks independent moderator suppression. Preserve marker assertion; future positive-eligible fixture repair no quota.'),
+('R','Delivered timestamp suppresses another completion event despite row send flag true, and marks only profile. Historical false-flag test cannot catch ignoring delivered marker.'),
+('R','503 identify failure yields failed/nonpermanent record and no delivered mark. HTTP sync error does not exercise outbox persistence classification.')],
+'personal-plan-customerio-reconcile-route':[
+('R','Exact daily cron path/schedule is deployment/operator contract independent of handler response, because handler can work while scheduler absent/wrong.'),
+('R','Wrong bearer returns401/error and zero dispatch; maxDuration60 explicit platform contract. Injected supabase means no default client-construction ordering proof.'),
+('R','Authorized route passes limit25 and returns exact processed/delivered/failed totals. Auth-negative case never reaches batch limit or successful response projection.')],
+'personal-plan-customerio-sync':[
+('R','Malformed v2 currentConcerns string produces null without throw. Legacy valid array and v3 producer do not reach invalid historical parser shape.'),
+('R','Valid v2 three historical tokens survive parser and project exact older German labels. Current v3 vocabulary differs; cannot replace without changing saved input.'),
+('R','HELD-PP: same v3 input exists in HTTP keeper; positive values and emitted privacy absence can transfer, but raw `in` forbids undefined-only own properties that JSON cleaning removes. Default plan retains this declaration pending root judgment on non-public raw shape. See conditional-pp.md; no credit.'),
+('R','All current diagnostic concern tokens map to non-token readable labels; fixed three-concern request keeper cannot catch missing label for another current token. Expected set uses normative enum but assertion independently rejects raw fallback.'),
+('R','Actual HTTP identify-before-track sequence, stable revision/event IDs and exact event properties; projector alone cannot prove request order, identity or source at server boundary.'),
+('R','sendCompletionEvent=false performs only actual identify request. Outbox fake derives false but cannot prove downstream sync honors it.'),
+('R','Failed actual identify503 suppresses track with exact fetch1; positive identify and profile-only negative reach different guard branches.')],
+ 'trial-reminders-delivery':[
+('R','Canonical keeper: actual enqueue→claim→recipient→fresh prepare→send→settle ordering, queued count and normalized ACK. Absorbs C1-C3 exact annual message union at existing send; recipient/SQL remain injected, no default Supabase or inbox proof.'),
+('R','Explicit off/missing/bad-date/key/message/sender configuration yields no enqueue/claim/send and disabled/blocked. Authorized keeper alone misses early gate regressions; all original rows unchanged.'),
+('R','Fresh prepare null produces skipped1 and no send/settle. Claim was valid; catches use of stale claimed snapshot bypassing fresh gate.'),
+('R','Changed monthly fresh snapshot must render9.99 instead of stale69.99 and send once. Same-snapshot annual keeper cannot establish fresh-over-stale data precedence.'),
+('R','Missing recipient, malformed fresh snapshot and swapped user each avoid send and require support. SQL dispatchable gate cannot prove JS fresh-claim identity equality.'),
+('F','Errors/malformed ACKs prove sends once and supportRequired count, but settle outcome is not asserted; skip settlement could pass while queue remains dispatching. Keep all inputs, flag missing durable-park observer for future repair only.'),
+('R','Post-send settle rejection propagates and count send1 stays one; catch-and-retry provider would be dangerous and absent from happy/ambiguous classification proof.')],
+ 'trial-reminders-route':[
+('R','No/wrong/basic auth cause0 dispatch; authorized aggregates, blocked503, thrown storage500 sanitized. Client email builder cannot protect server cron authorization or error privacy.'),
+('R','Exact5min scheduler/max60s plus real middleware factory on cron path avoids browser auth factory and redirect. Handler injection alone cannot catch middleware intercepting cron.')],
+ 'trial-reminders-sql':[
+('R','Actual PGlite migrations enqueue Stripe/year and PayPal/month only once and return stored frozen snapshot shape. JS fixture returns handcrafted rows and cannot prove insert/unique/mapping.'),
+('R','Trial end outside48h queues0 despite active enrollment; due predicate distinct from rollout authorization cutoff.'),
+('R','Rollout excludes older authorization and cancellation suppresses already queued row; current valid-year snapshot renderer does not execute eligibility SQL.'),
+('R','Paid/revoked/expired/provider-unresolved rows never persist reminders. All independent state inputs retained, no grouping/removal.'),
+('F','Actual SQL proves one prepare permission and no re-claim after completion; title also says cancellation but no cancellation written in this callback. Narrow title later; next callback owns cancellation. No declaration removal.'),
+('R','Cancellation AFTER claim denies fresh send and undispatched failure can park; previous repeated-prepare keeper only writes successful queued outcome.'),
+('R','Pending management change temporarily holds claimed reminder, then reconciled change releases it with current contract. Terminal cancellation and snapshot-invalid cases do not cover recovery.'),
+('R','Expired leases park support and stale completion cannot overwrite terminal outcome. Successful sequential claim/prepare does not test expired fenced attempt.'),
+('R','Actual database permission errors for private rows/RPCs protect service-only access. Source migration greps are weaker and for a different outbox.'),
+('R','Real dispatcher consumes actual RPC row fields, settles actual SQL row queued and returns exactstats. Pure injected fixture cannot expose SQL/TS protocol drift; provider ACK/recipient are still fake.')],
+ 'trial-reminders':[
+('C','C1: exact annual snapshot (all12 fields) already rendered by canonical dispatcher keeper. Transfer all12 fixed subject/text/data/html assertions onto captured existing send message; no extra render or input.'),
+('R','Monthly999+999 and annual full-price9999 verify alternate legitimate accepted prices/labels. Annual discounted6999 dispatcher input cannot catch wrong monthly or full-price handling.'),
+('R','Wrong seven-day trial end and unsupported renewal6999 must reject rather than default. Valid dispatcher snapshot cannot establish malformed snapshot parser denial.'),
+('C','C2: same annual fixture with identical contractId override adds no operative input. Transfer all4 negative HTML/template, exact ordered5href list and Berlin-date assertions to existing send capture. Original never injected hostile data, so no adversarial escaping claim.'),
+('R','PayPal provider changes first charge to next day while retaining trial end and subject date; Stripe snapshot cannot catch provider calendar offset.'),
+('C','C3: same annual input; exact first-charge date and messageData subject move into canonical captured message. Keep distinct PayPal callback and actual transport template tests.')],
+}
+rows=[]
+for f in inv['files']:
+ key=pathlib.Path(f['file']).name.removesuffix('.test.ts')
+ assert len(J[key])==len(f['sites']),key
+ for s,(mark,why) in zip(f['sites'],J[key]):
+  rows.append({'file':f['file'],**s,'mark':mark,'judgment':why})
+counts={k:sum(x['mark']==k for x in rows) for k in ['R','F','C','D']}
+(D/'ledger.json').write_text(json.dumps({'counts':counts,'sites':rows},indent=2,ensure_ascii=False)+'\n')
+md=['# Customer.io / email delivery94 — complete declaration ledger','',f"Current AST denominator94 across17 files. Marks: {counts}. All Fs remain byte-identical; no repair or cut credit. Default proposal4C, noD; PP raw-shape comparison held separately.",'','Each entry names actual assertion sensitivity and its non-equivalent neighboring proof; full original bodies and callback SHA are in ledger.json. Owners/callers/read-depth/history are in layer-plan.md.']
+for f in inv['files']:
+ md+=['',f"## {f['file']} ({len(f['sites'])})",'']
+ for r in [r for r in rows if r['file']==f['file']]:md += [f"- **{r['mark']} :{r['line']} — {r['name']}**",f"  {r['judgment']}"]
+(D/'complete-ledger.md').write_text('\n'.join(md)+'\n')
+print(counts)

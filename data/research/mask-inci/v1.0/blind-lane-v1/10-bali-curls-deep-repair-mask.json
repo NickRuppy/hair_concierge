@@ -1,0 +1,138 @@
+{
+  "productId": "10-bali-curls-deep-repair-mask",
+  "lane": "blind-v1",
+  "standardVersion": "mask-inci-v0.5",
+  "classifiedAt": "2026-10-06",
+  "attestation": {
+    "prohibitedFilesAccessed": false,
+    "inputsRead": [
+      "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1.md",
+      "docs/research/mask-inci/v1.0/02_evidence_lexicon.v0.1.md",
+      "docs/research/mask-inci/v1.0/00_category_charter.md",
+      "docs/research/mask-inci/v1.0/01_property-set-v0.md",
+      "data/research/mask-inci/v1.0/blind-packets/01-hask-argan-oil-sachet.json",
+      "data/research/mask-inci/v1.0/blind-packets/02-gliss-7sekunden-express-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets/03-bali-curls-sos-protein-treatment.json",
+      "data/research/mask-inci/v1.0/blind-packets/04-gliss-liquid-silk-4in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/05-isana-mandelmilch-3in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/06-monday-smooth-anti-frizz.json",
+      "data/research/mask-inci/v1.0/blind-packets/07-pantene-molecular-bond-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets/08-sante-intense-hydration.json",
+      "data/research/mask-inci/v1.0/blind-packets/09-balea-professional-aqua-hyaluron.json",
+      "data/research/mask-inci/v1.0/blind-packets/10-bali-curls-deep-repair-mask.json",
+      "data/research/mask-inci/v1.0/blind-packets/11-elvital-glycolic-gloss.json",
+      "data/research/mask-inci/v1.0/blind-packets/12-guhl-panthenol-reparatur-2in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/13-olaplex-no3-hair-perfector.json"
+    ]
+  },
+  "g0": {
+    "value": "in_category",
+    "modeScoped": false,
+    "coveredMode": "post_shampoo_rinse_out_mask",
+    "rationale": "Directions (brand DE site verbatim): washed, towel-dried hair, lengths and ends, 2–3 minutes, rinse thoroughly. All three G0 conjuncts clear.",
+    "evidenceSignals": [
+      "'des gewaschenen, handtuchtrockenen Haares'",
+      "2–3 min",
+      "'gründlich aus'"
+    ]
+  },
+  "tailMarker": {
+    "ingredient": "SODIUM BENZOATE",
+    "index": 12,
+    "status": "plausible",
+    "note": "Earliest tail-class species SODIUM BENZOATE @12 (Parfum @13). All architecture species (Cetearyl @2, lipids @4–7, Cetrimonium Chloride @8, Behentrimonium Methosulfate @10) outrank it. Plausible. tail_index−1 = Panthenol @11."
+  },
+  "bondRoute": "none",
+  "profile": {
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "S1: Cetrimonium Chloride @8 + Behentrimonium Methosulfate @10. S2: Cetearyl Alcohol @2. S3: Shea @4, Coconut @5, Soja Oil @6, Avocado Oil @7. No boundary dependence (tail_index−1 is Panthenol @11), plausible marker → high.",
+      "evidenceSignals": [
+        "S1: @8, @10",
+        "S2: @2",
+        "S3: @4–7"
+      ],
+      "counterSignals": []
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "R4b core: Butyrospermum Parkii Butter @4, Cocos Nucifera Oil @5 (plus soy/avocado oils). Completer: Cetearyl Alcohol @2. Plausible marker, no lightness positioning → high.",
+      "evidenceSignals": [
+        "R4b @4/@5",
+        "dense base @2"
+      ],
+      "counterSignals": []
+    },
+    "careDirection": {
+      "value": "moisture",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "No R5 species on the list. Rich emollient base plus humectants (Glycerin @3, Betaine @9, Panthenol @11) → moisture. Panthenol @11 at tail_index−1 is not load-bearing for this value.",
+      "evidenceSignals": [
+        "lipids @4–7",
+        "humectants @3/@9/@11"
+      ],
+      "counterSignals": [
+        "'Deep Repair' naming (E0)"
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "low",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "No R5 route and no bond token; 'Deep Repair' naming is E0.",
+      "evidenceSignals": [
+        "no R5",
+        "bond_route none"
+      ],
+      "counterSignals": [
+        "repair naming"
+      ]
+    },
+    "primaryFocus": {
+      "value": "general",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Repair: no route. curl_support: curl-brand positioning corroborates only; no distinct high-slip route beyond the R1 baseline (cationic guar @14 is in the tail) — not cleared. Moisture headline: criterion 1 met (Glycerin @3, Betaine @9, Panthenol @11) but criterion 2 limb (i) fires — ≥2 R4b above marker (Shea @4, Coconut @5) → lipid-led, headline disqualified. Shine fails (R4b present). Smoothing: rich lipid base is one M1 observation. → general. focus_care_verdict: nonspecific.",
+      "evidenceSignals": [
+        "rich R1+R4 base"
+      ],
+      "counterSignals": [
+        "moisture headline removed by R5 lipid-led limb (i)"
+      ]
+    },
+    "secondaryFocus": {
+      "value": [
+        "moisture"
+      ],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "E10: a moisture secondary attaches under a step-8 general primary because the cluster independently meets criterion 1 (Glycerin @3, Betaine @9, Panthenol @11) and criterion 2's baseline sentence; the lipid-led limb removes only the headline. Panthenol @11 is at tail_index−1 and load-bearing (without it only 2 humectants → no secondary) → confidence moderate.",
+      "evidenceSignals": [
+        "humectant cluster @3/@9/@11"
+      ],
+      "counterSignals": [
+        "Panthenol @11 boundary-position (tail_index 12)"
+      ]
+    }
+  },
+  "hinweise": {
+    "fired": [
+      {
+        "flag": "boundary_position_ingredient",
+        "value": "Panthenol @11 (tail_index 12)",
+        "note": "secondary_focus 'moisture' hinges on a boundary-position ingredient: without Panthenol @11 the cluster has 2 members and the secondary would be empty. Confidence capped at moderate; value unmoved."
+      },
+      {
+        "flag": "claim_formula_mismatch",
+        "value": "'Deep Repair' naming vs repair_support_level low (no R5, no bond token)",
+        "note": "Repair positioning not matched by any protein or bond route; moves no value."
+      }
+    ]
+  },
+  "reviewTriggers": []
+}
