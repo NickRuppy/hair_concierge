@@ -1,0 +1,248 @@
+{
+ "blindId": "Q02",
+ "identity": {
+  "brand": "ISANA",
+  "productName": "Shampoo Oil Repair Marulaöl",
+  "packSize": "300 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "efc1b27aaac9cb7b5cd7214f7a8cfc0f49f09dc47919dea3243a91baaf4e99d0",
+  "normalization": "ID-2: no split entries; normalized positions = packet positions (26 entries).",
+  "completeness": "ID-1: frozen canonical INCI treated as complete. ID-3: 'Marulaöl' -> Sclerocarya Birrea Seed Oil #20, 'Vitamin B3' -> Niacinamide #15, 'Panthenol' #14 all present; no conflict.",
+  "e3ProminenceCutoff": "Parfum #11; prominent = #1-#10"
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "C1: defining anionic Sodium Laureth Sulfate #2 (ether type); prominent buffers Cocamidopropyl Betaine #3 and Coco-Glucoside #7; no reinforcing strong anionic -> moderate. PEG-4 Rapeseedamide #6 is an alkanolamide-type foam booster (C3 not-a-route class, assignment stated). Refatting counter-signals (Glyceryl Oleate #8, Glycerin #5) recorded; they do not move the convention.",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "N-ALT"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "C2 not met: no early silicone and no prominent payload lipid (Sclerocarya Birrea Seed Oil #20, Hydrogenated Coconut Oil #21 are late). Anchor reading: one meaningful conditioning system (cationic Guar Hydroxypropyltrimonium Chloride #12, after Parfum) plus light routes (Glyceryl Oleate #8 weak refatter, PEG-3 Distearate #10 pearlizer, Glycerin #5 / Panthenol #14 humectants, trace oils) -> moderate. Counter-signal: the only cationic route is post-fragrance and the oils are trace, so a cleansing-led low reading is the realistic neighbor.",
+   "ruleIds": [
+    "C2",
+    "5",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "cationic_polymer": [
+     "Guar Hydroxypropyltrimonium Chloride #12 (after Parfum #11)"
+    ],
+    "payload_lipid": [
+     "Sclerocarya Birrea Seed Oil #20 (late, after preservatives)",
+     "Hydrogenated Coconut Oil #21 (late)"
+    ],
+    "weak_refatter": [
+     "Glyceryl Oleate #8",
+     "Hydrogenated Palm Glycerides Citrate #26 (trace)"
+    ],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Sodium Laureth Sulfate #2",
+     "Cocamidopropyl Betaine #3",
+     "Coco-Glucoside #7"
+    ],
+    "humectantContext": [
+     "Glycerin #5",
+     "Panthenol #14",
+     "Pantolactone #22"
+    ],
+    "excluded": [
+     "PEG-3 Distearate #10 (pearlizer/PEG thickener, 6.4)",
+     "PEG-4 Rapeseedamide #6 (foam booster/thickener)",
+     "Tocopherol #25, Octadecyl Di-t-Butyl-4-Hydroxyhydrocinnamate #23 (antioxidants)",
+     "Niacinamide #15 (vitamin, not deposition)"
+    ],
+    "unresolved": []
+   },
+   "depositionLoad": "light - single cationic guar listed after fragrance, weak refatter, trace oils after preservatives; no silicone.",
+   "persistence": "low - guar alone at post-fragrance level; liquid/trace hydrogenated oils at trace level; no persistent silicone/film system.",
+   "resetCapacity": "moderate - C1 SLES chassis with two buffers.",
+   "counterevidence": "Toward moderate: four deposition families nominally present (cationic polymer, payload lipid, weak refatter x2); Glyceryl Oleate is prominent.",
+   "whyThisBand": "Deposition is light and low-persistence; effective ordinary reset; architecture does not support a noticeable loss of movement.",
+   "whyNotNeighborBand": "W2: several families present, but each substantive one is late/trace: the only cationic polymer sits after Parfum, both payload lipids sit after the preservatives (#20, #21), and the prominent route is only a weak refatter (Glyceryl Oleate #8) plus humectants; the moderate C1 reset faces only these light routes. Not moderate because no meaningfully persistent system is present.",
+   "confidenceLimitingFactor": "Guar level unknown; a richer guar dose could make residue noticeable (moderate).",
+   "rationale": "6.6 full method (W1 not applicable: no silicone). Light load, low persistence, moderate reset -> low; W2 boundary reasoning recorded; not balanced enough for W3.",
+   "ruleIds": [
+    "6.3",
+    "6.4",
+    "6.6",
+    "W1",
+    "W2",
+    "W3",
+    "N-ALT",
+    "6.9"
+   ]
+  },
+  "focusPrimary": {
+   "value": "moisture",
+   "confidence": "moderate",
+   "neighboringAlternative": "general",
+   "careDirection": {
+    "verdict": "moisture_supported",
+    "moistureRoutes": [
+     "Glycerin #5",
+     "Panthenol #14",
+     "Pantolactone #22"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Guar Hydroxypropyltrimonium Chloride #12",
+     "Glyceryl Oleate #8",
+     "Sclerocarya Birrea Seed Oil #20"
+    ],
+    "limitation": "Humectant cluster is modest (Glycerin prominent, Panthenol post-fragrance) and conditioning support is light; no substantive/damage-care cluster, so not repair_supported or dual_supported."
+   },
+   "claimRole": "candidate",
+   "counterSignal": "Product name says 'Repair' (high grade) and manufacturer claim includes 'brüchiges Haar ... heil', but the formula has no repair cluster (no protein, no silicone, oils trace).",
+   "decisionTrace": "Claim direction: repair (name 'Oil Repair') and dryness ('macht trockenes und brüchiges Haar bis in die Spitzen heil und strahlend', manufacturer, moderate). Formula verdict moisture_supported, not repair/dual. Repair is the name-dominant claim but formula-incompatible (F1), so the dominant compatible job is moisture from the dryness claim (7.2). Compatible route: Glycerin #5 + Guar #12 + Glyceryl Oleate #8. Decision: moisture.",
+   "rationale": "F1/7.2: dryness positioning over a moisture_supported formula -> moisture; repair claim incompatible. Moderate because the moisture verdict is modest and could read as nonspecific (general).",
+   "ruleIds": [
+    "7.2",
+    "7.3",
+    "F1",
+    "CL-SRC",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "repair"
+   ],
+   "decisionTrace": "Empty default considered and kept. Repair secondary would need an independent repair route (none; F3). 'strahlend' is an outcome of the same conditioning route (F2). Citric acid is a pH adjuster (F4).",
+   "rationale": "Section 8, F2, F3, F4.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3",
+    "F4",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Default regular; directions 'In das feuchte Haar einmassieren. Gründlich ausspülen.' contain no frequency, reset or dandruff trigger (U2-U4, D1).",
+   "ruleIds": [
+    "9",
+    "U1",
+    "F-TRACE"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "'Hautverträglichkeit dermatologisch bestätigt' and 'pH-hautneutral' are protective wording (E2a, SC1), not sensitive-scalp positioning; no E2 claim unit.",
+   "ruleIds": [
+    "10",
+    "SC1",
+    "E2a"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No Piroctone Olamine or Climbazole in the complete INCI.",
+   "ruleIds": [
+    "11"
+   ]
+  }
+ },
+ "projection": {
+  "status": "proposal",
+  "thicknessFit": {
+   "fine": "ideal",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 with W low, C moderate: fine ideal, normal ideal, coarse acceptable. Ordinary target, no T6. T4: fine ideal -> W neighbor moderate gives acceptable -> flag; normal stays ideal under W neighbor; coarse acceptable -> neighbors (W moderate, C low) keep acceptable -> no flag. T2: no claim used.",
+  "weight": "light",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential low -> light.",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "confidence": "high",
+    "rationale": "S-ORDINARY way 1: no qualifying E2 claim unit; manufacturer source present -> high (13.8)."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1 moderate -> regular; I3 not raised (cleansing confidence high).",
+  "explicitResetPositioning": false,
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D1 false; D2 not met.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   "review_thickness_boundary:fine"
+  ],
+  "informationalNotes": [],
+  "catalogDependent": "review_live_value_differs to be resolved by orchestrator after freeze."
+ },
+ "selfCheck": "Fingerprint matches; formula judgments from INCI only (procedural blinding, packet co-locates claims); no count/position window assigned the band; three subjudgments and W2 reasoning recorded.",
+ "uncertainties": [
+  "Focus 7.3/F1: moisture_supported vs nonspecific is close (Glycerin #5 prominent, Panthenol #14 post-fragrance); nonspecific would give general. Repair rejected despite name because no repair cluster.",
+  "Weight W2: low rests on guar being post-fragrance and oils trace; a lane weighting the four nominal families could reach moderate (neighbor recorded, fine T4 flag raised)."
+ ]
+}

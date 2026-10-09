@@ -1,0 +1,143 @@
+{
+  "blindId": "P12",
+  "identity": {
+    "productName": "Guhl Anti Schuppen",
+    "brand": "Guhl",
+    "market": "DE",
+    "packSize": "250 ml",
+    "formulaSource": "frozen packet canonicalInci (tier not stated; treated as approved canonical capture, ID-1)",
+    "normalizedInciCount": 21,
+    "formulaFingerprintSha256": "03c9202cb074bbd8a746e55e45bafadb0ea170886b191ecf61fc17119cd1f2b4",
+    "fingerprintMethod": "lane-computed SHA-256 of ID-2-normalized INCI names joined with ', '",
+    "positioningSourceGrades": "product name high ('Anti Schuppen'); manufacturer moderate",
+    "conflicts": "Claims credit 'Zink PCA' and blue mallow as the actives; INCI contains Zinc PCA (11) and Malva Sylvestris (16) - no conflict. Piroctone Olamine (6) is present though not named in claims - no conflict."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate (2) with two prominent buffers Cocamidopropyl Betaine (3) and Coco-Glucoside (4), no reinforcing route; E3 point Parfum (19).",
+      "ruleIds": ["C1", "C3", "C4", "E3"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: one prominent cationic guar (Hydroxypropyl Guar Hydroxypropyltrimonium Chloride 9) with light routes - weak refatter Glyceryl Oleate (7), Panthenol (12), Glycerin (14). No silicone, lipid or pearlizer; C2 not met. Neighbor low.",
+      "ruleIds": ["§5", "C2", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "formulaIdentifiers": {"fingerprint": "03c9202cb074bbd8a746e55e45bafadb0ea170886b191ecf61fc17119cd1f2b4", "sourceTier": "frozen packet canonical INCI (tier not stated)", "captureDate": "not stated in packet"},
+      "evidenceByFamily": {
+        "silicone": [],
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (9)"],
+        "cationic_conditioner": [],
+        "payload_lipid": [],
+        "weak_refatter": ["Glyceryl Oleate (7)"],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["anionic: Sodium Laureth Sulfate (2)", "amphoteric: Cocamidopropyl Betaine (3)", "nonionic: Coco-Glucoside (4)"],
+        "humectantContext": ["Zinc PCA (11)", "Panthenol (12)", "Glycerin (14)"],
+        "excluded": ["Sorbitan Caprylate (8) - preservative booster", "Tetrasodium Glutamate Diacetate (13) - chelator", "Piroctone Olamine (6) - active", "Malva Sylvestris Flower Extract (16) - botanical", "Sodium Sulfate (17), Sodium Chloride (10) - salts"],
+        "unresolved": []
+      },
+      "depositionLoad": {"value": "light", "rationale": "One guar plus a weak refatter."},
+      "persistence": {"value": "low", "rationale": "No silicone, lipid or film former to retain/accumulate."},
+      "resetCapacity": {"value": "moderate", "rationale": "Two-buffer SLES chassis."},
+      "counterEvidence": "Two deposition families (cationic polymer + weak refatter).",
+      "whyThisBand": "Light, weakly retained deposit facing effective reset.",
+      "whyNotNeighborBand": "Not moderate (W2): the only families are one guar polymer and the weak refatter Glyceryl Oleate (plus humectants); neither is persistent, there is no silicone/lipid/film former, and a two-buffer SLES reset faces only light routes.",
+      "limitingFactor": "Two families with unknown levels; moderate is realistic.",
+      "rationale": "Low (depositionLoad light, persistence low, resetCapacity moderate).",
+      "ruleIds": ["§6.3", "§6.6", "W2", "§6.9", "N-ALT"],
+      "selfCheck": "Fingerprint matches; blind judgment; no count/position assigned band; three subjudgments present; W2 reason specific; no in-lane comparison."
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "careDirection": {"verdict": "not_applicable", "moistureRoutes": [], "repairRoutes": [], "sharedConditioningRoutes": [], "limitation": "Scalp role."},
+      "claimRole": "candidate",
+      "counterSignal": "Fragrance present; ordinary SLES chassis; claims attribute efficacy to Zinc PCA/mallow, not to the recognized active.",
+      "rationale": "Scalp_active: problem-led anti-dandruff product - 'Anti Schuppen' in the exact product name (high) with recognized active Piroctone Olamine (6).",
+      "decisionTrace": {"claimDirection": "anti-dandruff (name, high)", "formulaCompatible": true, "compatibleRoute": "Piroctone Olamine (6)", "decisionReason": "7.2 row: recognized dandruff active + anti-dandruff positioning."},
+      "ruleIds": ["§7.2", "F7", "E1", "F-TRACE"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Empty: no lengths-care positioning; the itch/tension sentence is a scalp claim already covered by scalp_active (not a second focus value).",
+      "decisionTrace": {"emptyDefaultConsidered": true, "selected": [], "matchingClaims": [], "independentRoutes": [], "exceptionCode": null},
+      "ruleIds": ["§8", "F-TRACE"]
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "recognized_active_problem_led",
+      "triggerEvidence": ["Piroctone Olamine (6)", "Product name 'Anti Schuppen' (high)", "Manufacturer: 'Bei Schuppen und juckender Kopfhaut' (moderate)"],
+      "rationale": "Treatment: dandruffSupport supported + qualifying E2 dandruff claim (U3); U1 precedence.",
+      "decisionTrace": "default regular; treatment fires; no other trigger.",
+      "ruleIds": ["§9", "U1", "U3", "F-TRACE"]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "not_targeted",
+      "rationale": "Targeted: besides dandruff units (whose itch/tension words are absorbed, E2a/SC1), the manufacturer sentence 'Deine juckende Kopfhaut wird beruhigt und das Spannungsgefühl reduziert.' is its own claim unit that does not name Schuppen -> explicit sensitive (itch, 'beruhigt') and dry ('Spannungsgefühl') positioning, moderate. Supportive architecture: two-buffer moderate chassis, prominent Panthenol (12), Glycerin (14), Glyceryl Oleate refatter (7), mallow; no menthol. Counter-signal: fragrance; the sentence is contextually a dandruff-symptom statement.",
+      "ruleIds": ["§10", "SC1", "E2", "E2a", "CL-SRC"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Piroctone Olamine (6). Zinc PCA is not a recognized active under §11.",
+      "ruleIds": ["§11"]
+    }
+  },
+  "projection": {
+    "thicknessFit": {"fine": "ideal", "normal": "ideal", "coarse": "acceptable"},
+    "thicknessFitDetail": {
+      "fine": {"confidence": "moderate", "rationale": "T1 W low -> ideal. T4: W neighbor moderate -> acceptable (lower; ideal->acceptable flagged for every target) -> flag fine."},
+      "normal": {"confidence": "moderate", "rationale": "T1 W low -> ideal; neighbor keeps ideal."},
+      "coarse": {"confidence": "moderate", "rationale": "T1 W low, C moderate -> acceptable; T6 no-op; neighbors keep acceptable."},
+      "ruleIds": ["T1", "T4", "T6", "13.8"]
+    },
+    "weight": "light",
+    "weightDetail": {"confidence": "moderate", "rationale": "W-LIVE low -> light.", "ruleIds": ["W-LIVE"]},
+    "scalpTargets": {"primary": "dandruff", "secondary": "sensitive"},
+    "scalpTargetsDetail": {
+      "primary": {"target": "dandruff", "bucket": "schuppen", "route": "dandruff", "confidence": "high", "rationale": "S-DANDRUFF: 'Anti Schuppen' in product name (high) + dandruffSupport supported (high). S-PRIMARY: named in product name."},
+      "secondary": {"target": "sensitive", "bucket": "irritationen", "route": "irritated", "confidence": "moderate", "rationale": "S-SENSITIVE: own claim unit 'Deine juckende Kopfhaut wird beruhigt ...' (manufacturer, moderate, does not name Schuppen, E2a); formula: scalpComfortTarget targeted + prominent comfort route Panthenol (12, before Parfum 19). Cleansing moderate -> no comfort flag. Confidence = min(moderate, moderate, high)."},
+      "thirdTarget": "dry also passes (same sentence names 'Spannungsgefühl'; targeted + prominent humectant routes Glycerin 14, Panthenol 12, Glyceryl Oleate 7) -> dropped by S-SECONDARY precedence (sensitive before dry) with review_extra_scalp_target.",
+      "ruleIds": ["S-DANDRUFF", "S-SENSITIVE", "S-DRY", "S-PRIMARY", "S-SECONDARY", "E2a", "E4", "13.8"]
+    },
+    "cleansingIntensity": "regular",
+    "cleansingIntensityDetail": {"confidence": "high", "rationale": "I1 moderate -> regular: matches schuppen (regular), differs from irritationen (gentle) -> amber there (I2). High confidence -> no I3.", "ruleIds": ["I1", "I2", "I3"]},
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserDetail": {"confidence": "high", "rationale": "D1 false; D2 not met.", "ruleIds": ["D1", "D2"]},
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "schuppen", "scalp_route": "dandruff", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal"},
+      {"thickness": "normal", "shampoo_bucket": "schuppen", "scalp_route": "dandruff", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "schuppen", "scalp_route": "dandruff", "cleansing_intensity": "regular", "weight": "light", "tier": "acceptable"},
+      {"thickness": "fine", "shampoo_bucket": "irritationen", "scalp_route": "irritated", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal"},
+      {"thickness": "normal", "shampoo_bucket": "irritationen", "scalp_route": "irritated", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "irritationen", "scalp_route": "irritated", "cleansing_intensity": "regular", "weight": "light", "tier": "acceptable"}
+    ],
+    "requiredProtocolRoles": ["shampoo_dandruff", "shampoo_everyday"],
+    "reviewFlags": [
+      {"code": "review_thickness_boundary", "detail": "fine: weightPotential neighbor moderate would make fine acceptable (T4)."},
+      {"code": "review_extra_scalp_target", "detail": "dry qualified as a third target (claim unit 'Deine juckende Kopfhaut wird beruhigt und das Spannungsgefühl reduziert.', S-DRY formula gate passed); kept dandruff + sensitive."}
+    ],
+    "informationalNotes": []
+  },
+  "uncertainties": [
+    "E2a: the sentence 'Deine juckende Kopfhaut wird beruhigt und das Spannungsgefühl reduziert.' follows two dandruff sentences and is contextually a dandruff-symptom statement, but as a separate sentence it is its own claim unit that does not name Schuppen. Applied mechanically it creates sensitive (secondary) and dry (extra) targets; if read as part of the dandruff unit, the product projects dandruff only, scalpComfortTarget not_targeted, no extra-target flag."
+  ]
+}

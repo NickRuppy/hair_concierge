@@ -1,0 +1,118 @@
+{
+  "blindId": "L06",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: genuinely mild architecture - mild amino-acid-type anionic Sodium Methyl Cocoyl Taurate #2 buffered by Decyl Glucoside #3, Cocamidopropyl Betaine #4 and Coco-Glucoside #9, with argan oil #7 refatting; no sulfate or reset route.",
+      "ruleIds": ["§4"],
+      "formulaFacts": ["Sodium Methyl Cocoyl Taurate #2", "Decyl Glucoside #3", "Cocamidopropyl Betaine #4", "Coco-Glucoside #9", "Disodium Tetrapropenyl Succinate #14"],
+      "counterSignal": "Taurate is still the primary anionic and there are four surfactant routes; 'sulfate-free does not automatically mean low'.",
+      "neighboringAlternative": "moderate",
+      "sources": ["packet INCI"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High: multiple complementary systems - Hydrolyzed Keratin #6, Argania Spinosa Kernel Oil #7 (payload lipid), starch film-former #8, Amodimethicone #10, cationic Guar Hydroxypropyltrimonium Chloride #11, Hydrogenated Castor Oil #12 and pearlizing Glycol Distearate #15 (C2 pattern without an early dimethicone).",
+      "ruleIds": ["§5", "C2"],
+      "formulaFacts": ["Hydrolyzed Keratin #6", "Argania Spinosa Kernel Oil #7", "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate #8", "Amodimethicone #10", "Guar Hydroxypropyltrimonium Chloride #11", "Hydrogenated Castor Oil #12", "Glycol Distearate #15"],
+      "counterSignal": "Silicone is mid-list (#10), not early; no humectant cluster.",
+      "neighboringAlternative": "moderate",
+      "sources": ["packet INCI"]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High: multiple converging persistent systems (early argan oil #7, amodimethicone #10, cationic guar #11, waxy hydrogenated castor oil #12, glycol distearate #15, keratin #6) in a low-reset mild chassis. Unlike W1 there is no effective sulfate/betaine reset to bound the deposition.",
+      "ruleIds": ["§6", "W1"],
+      "subjudgments": {"depositionLoad": "high", "persistence": "moderate", "resetCapacity": "weak"},
+      "whyThisBand": "Several converging deposition routes with weak reset make loss of movement likely.",
+      "whyNotNeighborBand": "Moderate would need reset or limited richness to bound residue; the chassis is mild. Amodimethicone's self-limiting deposition is the main reason moderate stays plausible.",
+      "formulaFacts": ["Argania Spinosa Kernel Oil #7", "Amodimethicone #10", "Guar Hydroxypropyltrimonium Chloride #11", "Hydrogenated Castor Oil #12"],
+      "counterSignal": "No dimethicone; amodimethicone is mid-list.",
+      "neighboringAlternative": "moderate",
+      "sources": ["packet INCI"]
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "moderate",
+      "rationale": "Repair: name 'Strength & Length + Keratin Oil' and dominant claims 'Anti-Haarbruch Shampoo für strapaziertes Haar', 'verhindert Haarbruch und reduziert Spliss'; verdict repair_supported via a coherent substantive deposition cluster (keratin #6, amodimethicone #10, argan oil #7, film-former #8, guar #11) (F1).",
+      "ruleIds": ["7.2", "7.3", "F1"],
+      "careDirection": {"verdict": "repair_supported", "moistureRoutes": [], "repairRoutes": ["Hydrolyzed Keratin #6", "Argania Spinosa Kernel Oil #7", "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate #8", "Amodimethicone #10"], "sharedRoutes": ["Guar Hydroxypropyltrimonium Chloride #11", "Glycol Distearate #15"], "limitation": "Rinse-off; claims partially quoted from conditioner copy on the retailer page."},
+      "claimRole": "candidate",
+      "formulaFacts": ["Hydrolyzed Keratin #6", "Amodimethicone #10"],
+      "counterSignal": "No humectant cluster; positioning evidence is retailer-only and mixes in conditioner text.",
+      "neighboringAlternative": "general",
+      "decisionTrace": "Blind: rich deposition with keratin/amodimethicone/oil -> repair_supported. Unblind: breakage/split-end positioning -> repair.",
+      "sources": ["product name", "retailer claims"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty: 'strahlender Glanz' is an outcome of the same deposition route (F2).",
+      "ruleIds": ["§8", "F2"],
+      "counterSignal": "Shine claim.",
+      "neighboringAlternative": "shine",
+      "sources": ["retailer claims"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: no daily/frequent, reset or treatment trigger (§9 default).",
+      "ruleIds": ["§9"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["retailer directions"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "No sensitive/itchy/dry-scalp positioning; ordinary fragranced formula.",
+      "ruleIds": ["§10"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["retailer claims"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole.",
+      "ruleIds": ["§11"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    }
+  },
+  "projection": {
+    "status": "proposal_blocked_by_review",
+    "thicknessFit": {"fine": "not_suited", "normal": "acceptable", "coarse": "ideal"},
+    "thicknessFitConfidence": {"fine": "moderate", "normal": "moderate", "coarse": "moderate"},
+    "thicknessRationale": "T1 W high: fine not_suited, normal acceptable, coarse ideal. Ordinary target, no T6. T4: W neighbor moderate would raise fine/normal (no flag); coarse stays ideal under W moderate + C high and under C moderate + W high -> no flag. T3 satisfied (coarse ideal).",
+    "weight": "heavy",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: high -> heavy.",
+    "scalpTargets": {"primary": "ordinary", "secondary": null},
+    "scalpTargetConfidence": "high",
+    "scalpTargetRationale": "S-ORDINARY: no E2 scalp claim.",
+    "cleansingIntensity": "gentle",
+    "cleansingIntensityConfidence": "moderate",
+    "cleansingIntensityRationale": "I1: low -> gentle; differs from the normal bucket's expected regular (I2, kept). I3: neighbor moderate -> regular, which equals the projected bucket's expected intensity where gentle does not -> review_intensity_boundary.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "No D1 term.",
+    "rows": [
+      {"thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "gentle", "weight": "heavy", "tier": "acceptable"},
+      {"thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "gentle", "weight": "heavy", "tier": "ideal"}
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": ["review_intensity_boundary"],
+    "informationalNotes": [],
+    "liveComparison": "Not evaluated (live rows not in sealed packet)."
+  },
+  "uncertainties": [
+    "Positioning is retailer-only and one retailer text mixes conditioner copy ('kräftigende Spülung', 'Pflegespülung repariert'); E1 rules govern projection only, while §7 does not grade claim source tiers for focus. Used the product name plus shampoo-specific retailer claims.",
+    "I3 fires on any low/moderate cleansing boundary for an ordinary product because 'gentle' never equals the normal bucket's expected 'regular' - the intensity-boundary review applies even though the flag would move the product toward a green (more recommending) row; standard does not say whether that direction should block.",
+    "W1 is anchored on an effective sulfate/betaine base; the standard gives no settled example for the same deposition stack in a mild sulfate-free chassis."
+  ]
+}

@@ -1,0 +1,239 @@
+{
+ "blindId": "Q03",
+ "identity": {
+  "brand": "Garnier Wahre Schätze",
+  "productName": "Wahre Schätze Pflegendes Shampoo Kokosmilch & Macadamia",
+  "packSize": "250 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "b154c2fcb1e61c169a97f998ccd8229df3f235e306ff110816100227e3bf5a20",
+  "normalization": "ID-2: 'Aqua/Water', 'Parfum/Fragrance', 'Cocos Nucifera Oil/Coconut Oil' are single entries; normalized positions = packet positions (19 entries).",
+  "completeness": "ID-1: frozen canonical INCI treated as complete. ID-3: 'Macadamia' -> Macadamia Integrifolia Seed Oil #8; 'Kokosmilch' maps to Cocos Nucifera Oil #9 (closest INCI; a coconut-milk extract is a botanical with no gate role -> note only); 'ohne Silikone' consistent.",
+  "e3ProminenceCutoff": "Parfum/Fragrance #7; prominent = #1-#6",
+  "sourceNote": "Packet has retailer sources only; every claim graded low (CL-SRC, E1)."
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "C1: defining anionic Sodium Laureth Sulfate #2; prominent buffer Coco-Betaine #3 (amphoteric); no reinforcing route -> moderate. Counter-signals (Glycerin #4, oils #8/#9) recorded; they do not move the convention.",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "N-ALT"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "high",
+   "rationale": "C2 not met: no early silicone and the payload lipids (Macadamia Integrifolia Seed Oil #8, Cocos Nucifera Oil #9) sit just after Parfum #7, so they are not prominent and cannot replace the silicone; Polyquaternium-10 #14 is the cationic route, Glycol Distearate #5 the pearlizing route, Glycerin #4 the humectant. W-RICH not established (lipids not prominent). One meaningful system (PQ-10) plus light routes (oils, pearlizer, glycerin) -> moderate. Counter-signal: three of four C2 elements present and oils immediately after fragrance -> high is the realistic neighbor. Retailer 'intensive Pflege' claims ignored (C7, 3.2).",
+   "ruleIds": [
+    "C2",
+    "W-RICH",
+    "C7",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "evidence": {
+    "cationic_polymer": [
+     "Polyquaternium-10 #14"
+    ],
+    "payload_lipid": [
+     "Macadamia Integrifolia Seed Oil #8",
+     "Cocos Nucifera Oil #9"
+    ],
+    "silicone": [],
+    "weak_refatter": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Sodium Laureth Sulfate #2",
+     "Coco-Betaine #3"
+    ],
+    "humectantContext": [
+     "Glycerin #4"
+    ],
+    "excluded": [
+     "Glycol Distearate #5 (pearlizer, 6.4)",
+     "Carbomer #10 (anionic acrylate thickener, 6.4)",
+     "PPG-5-Ceteth-20 #11 (solubilizer)"
+    ],
+    "unresolved": []
+   },
+   "depositionLoad": "moderate - two nonvolatile plant oils directly after fragrance plus a cationic cellulose polymer; no silicone.",
+   "persistence": "moderate - liquid oils plus PQ-10 (known to accumulate with repeated use); no waxy lipid, no silicone.",
+   "resetCapacity": "moderate - C1 SLES chassis with one amphoteric buffer.",
+   "counterevidence": "Toward low: oils are liquid and not prominent, PQ-10 is late (#14, after pH adjusters), no silicone. Toward high: none strong (no W-RICH, no silicone).",
+   "whyThisBand": "Two interacting depositing families (oils + cationic polymer) plausibly leave noticeable but bounded residue against an ordinary reset.",
+   "whyNotNeighborBand": "Not low (W2): two distinct deposition families are present and the oils are not trace (directly after Parfum), so calling it lightweight would understate residue risk. Not high: no W-RICH (lipids not prominent), no silicone, moderate reset.",
+   "confidenceLimitingFactor": "Oil and PQ-10 levels unknown; light-oil reading could make it low.",
+   "rationale": "6.6 full method; W1 not applicable (no silicone set). Moderate load, moderate persistence, moderate reset -> moderate.",
+   "ruleIds": [
+    "6.3",
+    "6.4",
+    "6.6",
+    "W1",
+    "W-RICH",
+    "W2",
+    "W3",
+    "N-ALT",
+    "6.9"
+   ]
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "moisture",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "Glycerin #4"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Macadamia Integrifolia Seed Oil #8",
+     "Cocos Nucifera Oil #9",
+     "Polyquaternium-10 #14"
+    ],
+    "limitation": "Only one humectant (Glycerin) - not a coherent humectant cluster; generic emollient/cationic conditioning distinguishes neither moisture nor repair."
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Retailer claims 'normales bis trockenes Haar', 'intensive Pflege', 'Nährendes Shampoo' point to moisture/nourishment.",
+   "decisionTrace": "Claim direction: moisture/nourishment for dry lengths, retailer-only (low, CL-SRC). A low claim can be a candidate only when the formula independently supports the focus; verdict is nonspecific -> cannot act. Formula compatible with general. Decision: general.",
+   "rationale": "CL-SRC + F1 + 7.2: low-graded moisture claim over a nonspecific formula -> general.",
+   "ruleIds": [
+    "7.2",
+    "7.3",
+    "F1",
+    "CL-SRC",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "moisture"
+   ],
+   "decisionTrace": "Empty default kept: no manufacturer/pack secondary positioning; 'seidig glänzt' is an outcome of the same conditioning route (F2).",
+   "rationale": "Section 8, F2, CL-SRC.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "CL-SRC",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Default regular; no trigger wording, and retailer-only claims cannot fire triggers (CL-SRC).",
+   "ruleIds": [
+    "9",
+    "CL-SRC",
+    "F-TRACE"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No E2 sensitive/dry scalp claim; 'reinigt sanft' is mildness wording (E2a).",
+   "ruleIds": [
+    "10",
+    "SC1",
+    "E2a"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No Piroctone Olamine or Climbazole.",
+   "ruleIds": [
+    "11"
+   ]
+  }
+ },
+ "projection": {
+  "status": "proposal",
+  "thicknessFit": {
+   "fine": "acceptable",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 with W moderate, C moderate: fine acceptable, normal ideal, coarse acceptable. Ordinary target, no T6. T4: fine (W neighbor low -> ideal, higher) no flag; normal (W neighbor low -> ideal) no flag; coarse (W neighbor low -> acceptable; C neighbor high -> ideal, higher) no flag.",
+  "weight": "moderate",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: moderate -> moderate.",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "confidence": "moderate",
+    "rationale": "S-ORDINARY way 1 (no qualifying E2 claim unit); packet has retailer copy only -> moderate (13.8)."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1 moderate -> regular; I3 not raised (confidence high).",
+  "explicitResetPositioning": false,
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D1 false (retailer-only sources, no D1 stem); D2 not met.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "acceptable"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [],
+  "informationalNotes": [],
+  "catalogDependent": "review_live_value_differs to be resolved by orchestrator after freeze."
+ },
+ "selfCheck": "Fingerprint matches; formula judgments from INCI only (procedural blinding); no count/position window assigned the band; three subjudgments and W2 reasoning recorded.",
+ "uncertainties": [
+  "Weight 6.6/W2: moderate vs low hinges on how much the two oils directly after Parfum plus late PQ-10 deposit; low is the recorded neighbor.",
+  "Focus F1/CL-SRC: a single prominent humectant (Glycerin #4) plus oils was read as nonspecific; a lane reading it as moisture_supported could use the low retailer claim as candidate (capped moderate) and select moisture."
+ ]
+}

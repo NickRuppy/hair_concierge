@@ -1,0 +1,100 @@
+{
+  "blindId": "L12",
+  "status": "projected",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: Sodium Laureth Sulfate #2 buffered by amphoteric Cocamidopropyl Hydroxysultaine #3 and Coco-Glucoside #5, no second anionic/reset route, no reset intent (C1).",
+      "ruleIds": ["C1", "§4"],
+      "formulaFacts": ["Sodium Laureth Sulfate #2", "Cocamidopropyl Hydroxysultaine #3", "Coco-Glucoside #5"],
+      "counterSignal": "SLES primary",
+      "neighboringAlternative": "none"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: cleansing-led; Hydrolyzed Wheat Protein #6, Glycerin #9 and Guar Hydroxypropyltrimonium Chloride #10 are light; no silicone, lipid, fatty alcohol or pearlizer.",
+      "ruleIds": ["§5"],
+      "formulaFacts": ["Hydrolyzed Wheat Protein #6", "Glycerin #9", "Guar Hydroxypropyltrimonium Chloride #10"],
+      "counterSignal": "one cationic polymer could be read as one meaningful system",
+      "neighboringAlternative": "moderate"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: depositionLoad light (one late guar, protein), persistence low, resetCapacity moderate.",
+      "ruleIds": ["§6"],
+      "subjudgments": { "depositionLoad": "light", "persistence": "low", "resetCapacity": "moderate" },
+      "formulaFacts": ["Guar Hydroxypropyltrimonium Chloride #10"],
+      "counterSignal": "none material",
+      "whyThisBand": "one light polymer",
+      "whyNotNeighborBand": "no persistent system",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "confidence": "high",
+      "rationale": "Volume: 'Ultimate Volume' in the name, 'Volumen Shampoo', 'Anti-Platt-Effekt', 'ohne es zu beschweren'; light, silicone-free formula with protein is compatible.",
+      "ruleIds": ["§7.2", "§7.1"],
+      "careDirection": { "verdict": "not_applicable", "limitation": "volume focus" },
+      "claimRole": "candidate",
+      "formulaFacts": ["Hydrolyzed Wheat Protein #6", "no silicone"],
+      "counterSignal": "positioning text is retailer copy; protein/biotin 'kräftigt' could hint repair",
+      "neighboringAlternative": "general",
+      "decisionTrace": "Single dominant volume claim, compatible light formula -> volume."
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "'Glanz' and 'kräftigt die Haarstruktur' are not distinct positioning with an independent route (F2).",
+      "ruleIds": ["§8", "F2"],
+      "neighboringAlternative": "none"
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "No non-default trigger.",
+      "ruleIds": ["§9"],
+      "neighboringAlternative": "none"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "No scalp-comfort positioning.",
+      "ruleIds": ["§10"],
+      "neighboringAlternative": "none"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole.",
+      "ruleIds": ["§11"],
+      "neighboringAlternative": "none"
+    }
+  },
+  "projection": {
+    "thicknessFit": { "fine": "ideal", "normal": "ideal", "coarse": "acceptable" },
+    "thicknessFitConfidence": { "fine": "high", "normal": "high", "coarse": "moderate" },
+    "thicknessRationale": "T1 W low: fine ideal, normal ideal, coarse acceptable (C low). T2: 'für feines Haar' corroboration only. T4: no lower neighbor outcome.",
+    "weight": "light",
+    "weightConfidence": "high",
+    "scalpTargets": { "primary": "ordinary", "secondary": null },
+    "scalpTargetRationale": "S-ORDINARY: no E2 scalp claim.",
+    "scalpTargetConfidence": "high",
+    "cleansingIntensity": "regular",
+    "cleansingIntensityRationale": "I1 moderate -> regular; no neighbor -> no I3.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "D1 false.",
+    "rows": [
+      { "thickness": "fine", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal" },
+      { "thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal" },
+      { "thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "acceptable" }
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": [],
+    "informationalNotes": []
+  },
+  "uncertainties": []
+}

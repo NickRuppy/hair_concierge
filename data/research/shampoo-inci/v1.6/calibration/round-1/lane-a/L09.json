@@ -1,0 +1,118 @@
+{
+  "blindId": "L09",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: C1 pattern - Sodium Laureth Sulfate #2 buffered by Coco-Glucoside #3 and Cocamidopropyl Betaine #4, refatting Hydrogenated Vegetable Oil #6 and Glyceryl Oleate #8; no second anionic or reset route/intent.",
+      "ruleIds": ["§4", "C1"],
+      "formulaFacts": ["Sodium Laureth Sulfate #2", "Coco-Glucoside #3", "Cocamidopropyl Betaine #4"],
+      "counterSignal": "Late chelator Tetrasodium Glutamate Diacetate #14.",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: one meaningful cationic system (Guar Hydroxypropyltrimonium Chloride #9) plus emollient/waxy payload lipid Hydrogenated Vegetable Oil #6 (§6 reviewed row), refatter Glyceryl Oleate #8 and humectants (Erythritol #11, Glycerin #12, Panthenol #13, hyaluronates #17/#18). No silicone or fatty alcohol, so not clearly multiple complementary systems at C2 strength.",
+      "ruleIds": ["§5", "§6 reviewed rows", "C2"],
+      "formulaFacts": ["Hydrogenated Vegetable Oil #6", "Glyceryl Oleate #8", "Guar Hydroxypropyltrimonium Chloride #9", "Glycerin #12", "Panthenol #13"],
+      "counterSignal": "Lipid + polymer + humectants could be read as multiple complementary systems (high).",
+      "neighboringAlternative": "high",
+      "sources": ["packet INCI"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: one meaningfully persistent route - waxy payload lipid Hydrogenated Vegetable Oil #6 early in the list - interacting with cationic guar #9 and glyceryl oleate #8; bounded by an effective SLES/betaine/glucoside reset and the absence of silicone. Claims ('ohne zu beschweren') cannot assign weight (3.2).",
+      "ruleIds": ["§6", "3.2"],
+      "subjudgments": {"depositionLoad": "moderate", "persistence": "moderate", "resetCapacity": "moderate"},
+      "whyThisBand": "An early waxy lipid plus a cationic polymer make noticeable but bounded residue plausible.",
+      "whyNotNeighborBand": "Not high: single persistent route kind with effective reset. Low is the realistic neighbor because rinse-off lipid deposition may be minimal.",
+      "formulaFacts": ["Hydrogenated Vegetable Oil #6", "Glyceryl Oleate #8", "Guar Hydroxypropyltrimonium Chloride #9"],
+      "counterSignal": "Silicone-free; effective cleansing base.",
+      "neighboringAlternative": "low",
+      "sources": ["packet INCI"]
+    },
+    "focusPrimary": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "rationale": "Moisture: 'Feuchtigkeits-Shampoo' in name, 'für feuchtigkeitsbedürftiges Haar', 'trockenes Haar' claims; verdict moisture_supported via a humectant cluster (Erythritol #11, Glycerin #12, Panthenol #13, Hydrolyzed Hyaluronic Acid #17, Sodium Hyaluronate #18) plus emollient/deposition support (#6, #8, #9) (F1).",
+      "ruleIds": ["7.2", "7.3", "F1"],
+      "careDirection": {"verdict": "moisture_supported", "moistureRoutes": ["Erythritol #11", "Glycerin #12", "Panthenol #13", "Hydrolyzed Hyaluronic Acid #17", "Sodium Hyaluronate #18"], "repairRoutes": [], "sharedRoutes": ["Hydrogenated Vegetable Oil #6", "Glyceryl Oleate #8", "Guar Hydroxypropyltrimonium Chloride #9"], "limitation": "Humectants mostly mid/late list; rinse-off."},
+      "claimRole": "candidate",
+      "formulaFacts": ["Glycerin #12", "Panthenol #13", "Sodium Hyaluronate #18"],
+      "counterSignal": "Hyaluronates are late; Piroctone Olamine #15 without anti-dandruff positioning.",
+      "neighboringAlternative": "general",
+      "decisionTrace": "Blind: humectant cluster + lipid/guar -> moisture_supported. Unblind: name 'Feuchtigkeits-Shampoo' -> moisture.",
+      "sources": ["product name", "manufacturer claims", "packet INCI"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty: 'glänzende Längen' is an outcome of the same route (F2); the dandruff active has no positioning.",
+      "ruleIds": ["§8", "F2"],
+      "counterSignal": "Shine wording.",
+      "neighboringAlternative": "shine",
+      "sources": ["manufacturer claims"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: no daily/frequent, reset or problem-led treatment positioning; the recognized active is not positioned, so no treatment trigger.",
+      "ruleIds": ["§9"],
+      "counterSignal": "Piroctone Olamine present.",
+      "neighboringAlternative": "none",
+      "sources": ["manufacturer claims"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted: positioning is dry hair/lengths; 'sanft zur Kopfhaut' (retailer, brand-level) is mildness, not sensitive-scalp intent.",
+      "ruleIds": ["§10"],
+      "counterSignal": "Brand-level mildness wording.",
+      "neighboringAlternative": "none",
+      "sources": ["manufacturer claims", "retailer claims"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains Piroctone Olamine #15. Describes the formula only (§11).",
+      "ruleIds": ["§11"],
+      "counterSignal": "No dandruff positioning.",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    }
+  },
+  "projection": {
+    "status": "proposal",
+    "thicknessFit": {"fine": "acceptable", "normal": "ideal", "coarse": "acceptable"},
+    "thicknessFitConfidence": {"fine": "moderate", "normal": "moderate", "coarse": "moderate"},
+    "thicknessRationale": "T1 W moderate, C moderate: fine acceptable, normal ideal, coarse acceptable. Ordinary target, no T6. T4: W neighbor low raises fine (no flag), keeps normal ideal; C neighbor high would raise coarse (no flag).",
+    "weight": "moderate",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: moderate -> moderate.",
+    "scalpTargets": {"primary": "ordinary", "secondary": null},
+    "scalpTargetConfidence": "high",
+    "scalpTargetRationale": "S-DANDRUFF: dandruffSupport supported but no E2 dandruff claim -> no dandruff target; informational active_without_dandruff_positioning. Dry-hair claims are not dry-scalp claims (E2). S-ORDINARY.",
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: moderate -> regular; I3: no neighbor.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "No D1 term.",
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable"},
+      {"thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable"}
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": [],
+    "informationalNotes": ["active_without_dandruff_positioning"],
+    "liveComparison": "Not evaluated (live rows not in sealed packet)."
+  },
+  "uncertainties": [
+    "weightPotential low vs moderate turns on how persistent an early 'Hydrogenated Vegetable Oil' is in a rinse-off SLES base; §6 reviewed row only resolves its function (waxy payload lipid), not persistence. Chose moderate (neighbor low).",
+    "S-ORDINARY says it applies 'when the product makes no E2 scalp claim at all'; a dandruff-active product without positioning reaches ordinary through S-DANDRUFF's no-target clause rather than S-ORDINARY's literal condition."
+  ]
+}

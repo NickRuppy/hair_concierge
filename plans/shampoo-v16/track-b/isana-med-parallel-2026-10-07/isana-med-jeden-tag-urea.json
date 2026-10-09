@@ -1,0 +1,518 @@
+{
+  "schemaNote": "Research artifact under shampoo-classification-v1.6-candidate (NOT locked, NOT production-active). Internal research fields (confidence, review flags) are never user-facing. No DB writes.",
+  "policyId": "shampoo-classification-v1.6-candidate",
+  "analysisModelVersion": "shampoo-inci-v1.6-candidate",
+  "slug": "isana-med-jeden-tag-urea",
+  "analysedAt": "2026-10-06",
+  "identity": {
+    "brand": "ISANA MED (Rossmann Eigenmarke; Inverkehrbringer Dirk Rossmann GmbH)",
+    "productName": "Shampoo Jeden Tag (Urea-Formel, '3% Urea')",
+    "market": "DE",
+    "packSize": "200 ml",
+    "gtinEan": [
+      "4305615629216"
+    ],
+    "status": "DELISTED: rossmann.de redirects the exact EAN page to the category with 'Der von dir aufgerufene Artikel befindet sich nicht mehr im Sortiment' (checked 2026-10-06). Not in current Rossmann search results for 'isana med shampoo'.",
+    "identityConfidence": "moderate",
+    "identityNotes": [
+      "The name 'Shampoo Jeden Tag' is now carried by a DIFFERENT formula: 'ISANA MED Shampoo Jeden Tag (Ultra Sensitiv)', EAN 4305615629223, 200 ml, urea-free, 0% Parfum (rossmann.de live; Google also indexes it under the slug .../isana-med-shampoo-jeden-tag/p/4305615629223). A customer saying 'ISANA MED Jeden Tag' may own either formula.",
+      "The urea chassis survives as 'ISANA MED Shampoo pH 5,5 hautneutral', EAN 4068134039743, 400 ml (rossmann.de live): same first 19 ingredients in the same order, plus Glycerin and Propylene Glycol at the end instead of Isopropyl Alcohol. Different GTIN/size, so per Section 2 it is NOT merged into this record; used only as corroboration of the chassis and the brand owner's positioning."
+    ]
+  },
+  "formulaSource": {
+    "rawInci": "Aqua, Sodium Laureth Sulfate, Urea, Sodium Chloride, Cocamidopropyl Betaine, Sodium Cocoyl Glutamate, Disodium Cocoamphodiacetate, Panthenol, Sodium Laureth-8 Sulfate, Glycol Distearate, Magnesium Laureth Sulfate, Magnesium Laureth-8 Sulfate, Laureth-4, Sodium Oleth Sulfate, Magnesium Oleth Sulfate, Parfum, Citric Acid, Sodium Benzoate, Potassium Sorbate, Formic Acid, Isopropyl Alcohol",
+    "normalizedInci": [
+      "aqua",
+      "sodium laureth sulfate",
+      "urea",
+      "sodium chloride",
+      "cocamidopropyl betaine",
+      "sodium cocoyl glutamate",
+      "disodium cocoamphodiacetate",
+      "panthenol",
+      "sodium laureth-8 sulfate",
+      "glycol distearate",
+      "magnesium laureth sulfate",
+      "magnesium laureth-8 sulfate",
+      "laureth-4",
+      "sodium oleth sulfate",
+      "magnesium oleth sulfate",
+      "parfum",
+      "citric acid",
+      "sodium benzoate",
+      "potassium sorbate",
+      "formic acid",
+      "isopropyl alcohol"
+    ],
+    "inciFingerprint": "318e54212ac194bb3eb1f202b20b69479ae3bf1802df5d83c45f8d773dc8ac1d",
+    "fingerprintMethod": "sha256 of lowercased trimmed INCI tokens joined by ',' (reproduces the 2026-08-26 capture fingerprint)",
+    "sourceTier": "Tier 2/3: exact-GTIN capture from rossmann.de (brand owner's own shop) on 2026-08-26; exact-GTIN page no longer live on 2026-10-06. Corroborated by codecheck (EAN search -> same product, same INCI) and INCIDecoder (uploaded 2021-10-10, same INCI).",
+    "completeness": "complete (21 ingredients, ends with preservatives/pH/solvent tail)",
+    "changedSinceCapture": false,
+    "changedSinceCaptureNote": "No formula change found for EAN 4305615629216: all available sources show the identical 21-ingredient list. However the exact product is delisted, so a newer reformulation of THIS GTIN cannot exist on shelf; the live successors are different GTINs (see identity.identityNotes).",
+    "sources": [
+      {
+        "id": "rossmann-de-isana-med-jeden-tag-4305615629216-2026-08-26",
+        "type": "official_brand_retailer_capture",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-jeden-tag/p/4305615629216/",
+        "accessed": "2026-08-26 (repo capture data/research/shampoo-inci/holdout-v1/products/isana-med-jeden-tag/formula-source.json)",
+        "gives": "INCI, EAN match exact_gtin; claim captured non-verbatim: '3% Urea, pH-hautneutral und für die tägliche Reinigung empfindlicher Kopfhaut positioniert.'"
+      },
+      {
+        "id": "rossmann-de-4305615629216-delisted-2026-10-06",
+        "type": "official_brand_retailer",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-jeden-tag/p/4305615629216",
+        "accessed": "2026-10-06",
+        "gives": "Redirect to category with 'Der von dir aufgerufene Artikel befindet sich nicht mehr im Sortiment' -> delisted."
+      },
+      {
+        "id": "codecheck-isana-med-shampoo-jeden-tag-2026-10-06",
+        "type": "third_party_database",
+        "url": "https://www.codecheck.info/p/kosmetik/haarpflege/shampoo/isana-med-shampoo-jeden-tag.html",
+        "accessed": "2026-10-06",
+        "gives": "EAN 4305615629216 search resolves to this product; identical INCI; 'Keine Angebote verfügbar'."
+      },
+      {
+        "id": "incidecoder-isana-med-shampoo-jeden-tag-2026-10-06",
+        "type": "third_party_database",
+        "url": "https://incidecoder.com/products/isana-med-shampoo-jeden-tag",
+        "accessed": "2026-10-06",
+        "gives": "Identical INCI, user upload dated 2021-10-10 (old; corroboration only). Note: incidecoder.com currently 301-redirects to inkeedecoder.com."
+      },
+      {
+        "id": "rossmann-de-isana-med-ph55-4068134039743-2026-10-06",
+        "type": "official_brand_retailer_sibling_gtin",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-ph-55-hautneutral/p/4068134039743",
+        "accessed": "2026-10-06",
+        "gives": "Sibling 400 ml, same chassis. INCI: Aqua, Sodium Laureth Sulfate, Urea, Sodium Chloride, Cocamidopropyl Betaine, Sodium Cocoyl Glutamate, Disodium Cocoamphodiacetate, Panthenol, Sodium Laureth-8 Sulfate, Glycol Distearate, Magnesium Laureth Sulfate, Magnesium Laureth-8-Sulfate, Laureth-4, Sodium Oleth Sulfate, Magnesium Oleth Sulfate, Parfum, Citric Acid, Sodium Benzoate, Potassium Sorbate, Glycerin, Formic Acid, Propylene Glycol. Claims verbatim: 'Die pH-hautneutrale Formel hilft den Säureschutzmantel der Haut zu stabilisieren ... Das ISANA MED SHAMPOO ist eine Spezialentwicklung für sensible Kopfhaut.' / 'Feuchtigkeits-Komplex' / 'schützt Kopfhaut & Haar vor Austrocknung' / 'für jeden Tag' / '3% Urea' / 'ohne Silikone' / 'für normales Haar'. Not E1 for EAN 4305615629216.",
+        "inciFingerprint": "c8b360b3f347c2c6b8690567c8ada42dbc217246003be77d97d48d4adacd61f5"
+      },
+      {
+        "id": "rossmann-de-isana-med-ultra-sensitiv-4305615629223-2026-10-06",
+        "type": "official_brand_retailer_different_product",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-jeden-tag-ultra-sensitiv/p/4305615629223",
+        "accessed": "2026-10-06",
+        "gives": "Current 'Jeden Tag (Ultra Sensitiv)', 200 ml, 1,79 EUR. INCI: Aqua, Sodium Laureth Sulfate, Glycerin, Cocamidopropyl Hydroxysultaine, Sodium Chloride, Coco-Glucoside, Glyceryl Oleate, Panthenol, Allantoin, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Hydrogenated Vegetable Glycerides Citrate, Tocopherol, Sodium Citrate, Sodium Sulfate, Citric Acid, Sodium Benzoate. Claims: 'sehr sensibler und empfindlicher Kopfhaut', '0% Parfüm, 0% Farbstoffe, 0% Silikon', 'Allantoin'.",
+        "inciFingerprint": "c9b45896d3c76faf66e48643b9fd5daef38d752c7ff9e2b8e8af347aa4ebcd3c"
+      }
+    ]
+  },
+  "blindFormulaPacket": {
+    "note": "Blind pass reconstructed from INCI only; claims applied afterwards (Section 3). The 2026-08-26 v1.3 analysis was read as reference only, not reused.",
+    "surfactantArchitecture": "Primary: Sodium Laureth Sulfate (2). Co-surfactants after Sodium Chloride (4): Cocamidopropyl Betaine (5), Sodium Cocoyl Glutamate (6, mild amino-acid anionic), Disodium Cocoamphodiacetate (7). Late ether-sulfate blend after the pearlizer: Sodium Laureth-8 Sulfate (9), Magnesium Laureth Sulfate (11), Magnesium Laureth-8 Sulfate (12), Laureth-4 (13), Sodium Oleth Sulfate (14), Magnesium Oleth Sulfate (15) - same alkyl-ether-sulfate family, higher-ethoxylated/Mg salts, typical of a single mild blend raw material.",
+    "conditioningRoutes": "No cationic polymer, no silicone, no oil/lipid payload, no protein. Glycol Distearate (10) pearlizer; humectants Urea (3), Panthenol (8).",
+    "scalpActives": "None recognized for dandruff (no Piroctone Olamine, no Climbazole). Comfort/humectant routes Urea (3) and Panthenol (8), both before Parfum (16) -> prominent (E3).",
+    "exposureFlags": {
+      "fragrance": "present (Parfum, 16)",
+      "silicones": "absent",
+      "coolingAgents": "absent",
+      "essentialOils": "none declared",
+      "chelators": "absent"
+    },
+    "unresolved": "Exact concentrations unknown; '3% Urea' is a brand claim (not verifiable from INCI)."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: an early SLES (2) buffered by betaine/amphoteric/glutamate co-surfactants (5-7), no reset intent and no chelator -> C1. The six late ether-sulfate tokens (9, 11-15) are the same SLES family at low level after the pearlizer, not an independent reinforcing reset route.",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 5
+        },
+        {
+          "ingredient": "Sodium Cocoyl Glutamate",
+          "position": 6
+        },
+        {
+          "ingredient": "Disodium Cocoamphodiacetate",
+          "position": 7
+        },
+        {
+          "ingredient": "Sodium Laureth-8 Sulfate / Magnesium Laureth Sulfate / Magnesium Laureth-8 Sulfate / Sodium Oleth Sulfate / Magnesium Oleth Sulfate",
+          "positions": [
+            9,
+            11,
+            12,
+            14,
+            15
+          ]
+        },
+        {
+          "ingredient": "Sodium Chloride",
+          "position": 4
+        }
+      ],
+      "counterSignals": [
+        "Co-surfactants sit after Sodium Chloride (4), so buffering is plausibly modest relative to SLES.",
+        "Six ether-sulfate tokens in total; a reader counting tokens would call it strong (the v1.3 analysis did; holdout-v1 lanes split strong/moderate)."
+      ],
+      "neighboringAlternative": "strong",
+      "ruleIds": [
+        "C1"
+      ],
+      "sourceIds": [
+        "rossmann-de-isana-med-jeden-tag-4305615629216-2026-08-26",
+        "codecheck-isana-med-shampoo-jeden-tag-2026-10-06",
+        "incidecoder-isana-med-shampoo-jeden-tag-2026-10-06"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: cleansing-led formula with no cationic polymer, silicone, fatty-alcohol or lipid deposition; only a pearlizer and two humectants.",
+      "formulaFacts": [
+        {
+          "ingredient": "Urea",
+          "position": 3
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 8
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 10
+        },
+        {
+          "ingredient": "Laureth-4",
+          "position": 13
+        }
+      ],
+      "counterSignals": [
+        "Glycol Distearate plus Panthenol/Urea can give a slightly softer feel than a bare cleanser (several light routes)."
+      ],
+      "neighboringAlternative": "moderate",
+      "ruleIds": [
+        "Section 5 anchors"
+      ],
+      "sourceIds": [
+        "rossmann-de-isana-med-jeden-tag-4305615629216-2026-08-26",
+        "codecheck-isana-med-shampoo-jeden-tag-2026-10-06",
+        "incidecoder-isana-med-shampoo-jeden-tag-2026-10-06"
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "subjudgments": {
+        "depositionLoad": "light",
+        "persistence": "low",
+        "resetCapacity": "moderate"
+      },
+      "rationale": "Low: no hair-substantive persistent system; the pearlizer and water-soluble humectants rinse off, and the SLES chassis removes residue.",
+      "formulaFacts": [
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 10
+        },
+        {
+          "ingredient": "Urea",
+          "position": 3
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 8
+        }
+      ],
+      "whyThisBand": "Deposition absent/light and low-persistence; one light route (pearlizer) can remain low per anchor.",
+      "whyNotNeighborBand": "Moderate needs one meaningfully persistent system (polymer, silicone, lipid) - none present.",
+      "counterSignals": [
+        "Glycol Distearate can leave a faint film on very fine hair; not persistent."
+      ],
+      "neighboringAlternative": "none",
+      "neighborNote": "No plausible adjacent band: zero persistent deposition routes.",
+      "ruleIds": [
+        "Section 6 anchors"
+      ],
+      "sourceIds": [
+        "rossmann-de-isana-med-jeden-tag-4305615629216-2026-08-26",
+        "codecheck-isana-med-shampoo-jeden-tag-2026-10-06",
+        "incidecoder-isana-med-shampoo-jeden-tag-2026-10-06"
+      ]
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "moderate",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [
+          "Urea (3)",
+          "Panthenol (8)"
+        ],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "Glycol Distearate (10)"
+        ],
+        "limitation": "Humectants act mainly on scalp feel in a rinse-off; no length-deposition support."
+      },
+      "claimRole": "candidate",
+      "rationale": "scalp_active: the exact-product claim (captured 2026-08-26) positions it for daily cleansing of sensitive scalp with 3% urea and skin-neutral pH, and the formula carries prominent comfort/humectant routes, so scalpComfortTarget is targeted (7.2 row 'explicit sensitive ... scalp positioning with targeted').",
+      "formulaFacts": [
+        {
+          "ingredient": "Urea",
+          "position": 3
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 8
+        }
+      ],
+      "counterSignal": "SLES-led chassis and declared Parfum (16) argue against a truly gentle sensitive-scalp product; the exact-GTIN claim exists only as a non-verbatim capture of a page that is now delisted.",
+      "neighboringAlternative": "general",
+      "decisionTrace": "Blind: urea/panthenol comfort cluster, no hair-care cluster -> provisional scalp_active-or-general. Unblind: name 'Jeden Tag' (mildness/everyday = not a focus) plus sensitive-scalp + 3% urea positioning -> scalp_active, kept at moderate because positioning evidence is non-verbatim; if the sensitive claim were discarded, focus falls to general (no other specialist job).",
+      "sourceIds": [
+        "rossmann-de-isana-med-jeden-tag-4305615629216-2026-08-26",
+        "codecheck-isana-med-shampoo-jeden-tag-2026-10-06",
+        "incidecoder-isana-med-shampoo-jeden-tag-2026-10-06"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty: no distinct second job with its own route. 'Feuchtigkeit/schützt Haar vor Austrocknung' (sibling pack) would rely on the same urea/panthenol route as the primary (F2), and the hair-moisture verdict is nonspecific (no conditioning/emollient support). The v1.3 'volume' secondary had no volume positioning.",
+      "counterSignals": [
+        "Sibling pack claims 'Feuchtigkeits-Komplex'."
+      ],
+      "neighboringAlternative": "moisture",
+      "ruleIds": [
+        "Section 8",
+        "F2"
+      ],
+      "sourceIds": [
+        "rossmann-de-isana-med-jeden-tag-4305615629216-2026-08-26",
+        "codecheck-isana-med-shampoo-jeden-tag-2026-10-06",
+        "incidecoder-isana-med-shampoo-jeden-tag-2026-10-06",
+        "rossmann-de-isana-med-ph55-4068134039743-2026-10-06"
+      ]
+    },
+    "usageRole": {
+      "value": "frequent",
+      "confidence": "moderate",
+      "rationale": "Frequent: explicit daily positioning in the product name ('Jeden Tag') and cleansingStrength is moderate, so the conjunctive Section 9 trigger is met.",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2
+        }
+      ],
+      "counterSignals": [
+        "If cleansing were adjudicated strong (neighbor), the role mechanically becomes regular."
+      ],
+      "neighboringAlternative": "regular",
+      "ruleIds": [
+        "Section 9"
+      ],
+      "sourceIds": [
+        "rossmann-de-isana-med-jeden-tag-4305615629216-2026-08-26",
+        "codecheck-isana-med-shampoo-jeden-tag-2026-10-06",
+        "incidecoder-isana-med-shampoo-jeden-tag-2026-10-06"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "rationale": "Targeted: positioned for sensitive scalp (capture) with an early urea humectant, panthenol, skin-neutral pH claim and moderate (C1) cleansing - a credible comfort architecture.",
+      "formulaFacts": [
+        {
+          "ingredient": "Urea",
+          "position": 3
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 8
+        }
+      ],
+      "counterSignals": [
+        "Parfum (16) present.",
+        "SLES primary surfactant; no allantoin/bisabolol.",
+        "Exact claim text not re-verifiable (page delisted)."
+      ],
+      "neighboringAlternative": "not_targeted",
+      "ruleIds": [
+        "Section 10"
+      ],
+      "sourceIds": [
+        "rossmann-de-isana-med-jeden-tag-4305615629216-2026-08-26",
+        "codecheck-isana-med-shampoo-jeden-tag-2026-10-06",
+        "incidecoder-isana-med-shampoo-jeden-tag-2026-10-06",
+        "rossmann-de-isana-med-ph55-4068134039743-2026-10-06"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: complete INCI contains neither Piroctone Olamine nor Climbazole; urea/panthenol are comfort routes, not anti-dandruff actives.",
+      "formulaFacts": [],
+      "counterSignals": [
+        "Urea can ease dry-feeling scalp; that is a comfort fit, not dandruff support."
+      ],
+      "neighboringAlternative": "none",
+      "ruleIds": [
+        "Section 11"
+      ],
+      "sourceIds": [
+        "rossmann-de-isana-med-jeden-tag-4305615629216-2026-08-26",
+        "codecheck-isana-med-shampoo-jeden-tag-2026-10-06",
+        "incidecoder-isana-med-shampoo-jeden-tag-2026-10-06"
+      ]
+    }
+  },
+  "projection": {
+    "status": "proposal (candidate standard, not appliable; exact product delisted)",
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "high",
+        "rationale": "T1: W low -> fine ideal. T4: W neighbor 'none' -> no boundary flag.",
+        "ruleIds": [
+          "T1",
+          "T4"
+        ]
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "high",
+        "rationale": "T1: W low -> normal ideal.",
+        "ruleIds": [
+          "T1",
+          "T4"
+        ]
+      },
+      {
+        "thickness": "coarse",
+        "fit": "conditional",
+        "confidence": "high",
+        "rationale": "T1: W low and C low (not high) -> conditional; usable with a separate conditioner. C neighbor 'moderate' would still be conditional.",
+        "ruleIds": [
+          "T1",
+          "T5"
+        ]
+      }
+    ],
+    "scalpTargets": {
+      "primary": {
+        "target": "sensitive",
+        "bucket": "irritationen",
+        "route": "irritated",
+        "confidence": "moderate",
+        "rationale": "S-SENSITIVE: positioning gate = E2 'empfindliche Kopfhaut' from the exact-GTIN manufacturer (Rossmann own-brand) page capture, E1 tier moderate; formula gate = scalpComfortTarget targeted AND prominent comfort routes Urea (3), Panthenol (8) before Parfum (16). Cleansing moderate -> no review_strong_cleansing_comfort_route. Confidence = min(positioning moderate, scalpComfortTarget moderate).",
+        "ruleIds": [
+          "E1",
+          "E2",
+          "E3",
+          "E4",
+          "S-SENSITIVE",
+          "13.8"
+        ]
+      },
+      "secondary": null,
+      "secondaryRationale": "No secondary. S-DRY would need a verified E2 dry-scalp claim on THIS GTIN; 'schützt Kopfhaut & Haar vor Austrocknung' is verbatim only on the sibling 4068134039743 page, so P0 -> no secondary target. S-DANDRUFF: no claim, no active. S-OILY: no claim.",
+      "focusConsistency": "focusPrimary scalp_active -> S-FOCUS satisfied, no flag."
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "moderate",
+      "rationale": "I1: cleansingStrength moderate -> regular. I2: not adjusted to the irritationen bucket's expected 'gentle' (row would rank 'supportive', a truthful trade-off). I3: neighbor 'strong' (non-clarifying) also maps to regular -> no flag.",
+      "ruleIds": [
+        "I1",
+        "I2",
+        "I3"
+      ]
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "rationale": "D1: no Tiefenreinigung/Clarifying/occasional-use wording; 'Jeden Tag' is the opposite. D2/D3 not triggered.",
+      "ruleIds": [
+        "D1",
+        "D2",
+        "D3"
+      ]
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular"
+      }
+    ],
+    "required_protocol_roles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [],
+    "reviewFlagNotes": "No 13.9 rule flag fires. review_live_value_differs NOT evaluated (live product_shampoo_specs not read; no DB access in this run). Separate non-rule blockers are in openIssues: exact product delisted; positioning claim only non-verbatim."
+  },
+  "customerFit": {
+    "customer": "Viola (wavy, FINE strands, HIGH density, medium length, colored + bleached, elastic test snaps, dry scalp without flakes/itch, dry lengths, frizz, tangling, low shine, lost wave shape; this shampoo ~1x/week of ~2 washes/week; Syoss Intense Glaze lamination mask as conditioner, Neqi leave-in mist, Neqi Opulent Oil)",
+    "keepsSeparateFrom": "Product truth above is unchanged by this fit (Section 15).",
+    "verdict": "depends",
+    "verdictShort": "Keep for now is OK (no urgent swap), but it is not an ideal match: it cleans the scalp well and stays light on fine strands, yet gives her bleached, breakage-prone lengths nothing. First confirm which bottle she has.",
+    "why": [
+      "Fits: low weight -> does not flatten fine strands or waves; useful as her weekly 'reset' wash given she layers mask + leave-in + oil (prevents build-up that can drag waves down).",
+      "Fits: urea + panthenol give a pleasant, less tight feel on a dry-feeling scalp - nice-to-have in a rinse-off, not essential since she has no flakes or itch.",
+      "Does not fit: SLES-led cleanser with practically no conditioning; on bleached, dry lengths that snap, any sulfate foam worked into the lengths adds roughness -> more tangling/frizz right after washing and somewhat faster colour fading.",
+      "Engine view: her dry scalp maps to the 'trocken' group (expects gentle cleansing); this product projects to the sensitive group with regular cleansing, so it would not be her top engine pick.",
+      "Parfum is declared - minor point for a dry scalp, only relevant if she notices tightness or itch."
+    ],
+    "watch": [
+      "Sulfate strength on bleached hair: shampoo the scalp only; let the foam run through the lengths, no rubbing of the lengths; lukewarm water.",
+      "Always follow with her conditioner/mask on the lengths (she does - good).",
+      "Weight on fine hair: no issue from this shampoo; the weight risk in her routine comes from the mask + oil, which this wash helps to remove.",
+      "Snapping lengths are a damage/handling topic (bleaching, heat, brushing wet) - this shampoo neither causes nor fixes it.",
+      "If her bottle is the newer 'Ultra Sensitiv' version (0% Parfum, glycerin + guar conditioning, no urea), it is the somewhat gentler and more caring of the two - fine to keep."
+    ],
+    "callQuestions": [
+      "Kannst du mir kurz ein Foto der Rückseite schicken - steht da '3% Urea' oder 'Ultra Sensitiv / 0% Parfüm'?",
+      "Welches Shampoo nimmst du bei der zweiten Wäsche - und schäumst du nur den Ansatz ein oder auch die Längen?",
+      "Wie fühlen sich Kopfhaut und Längen direkt nach dem Waschen an: spannt die Kopfhaut, sind die Längen stumpf oder verknotet? Verblasst deine Farbe schnell?"
+    ],
+    "swapDirectionIfNeeded": "If the call shows tight scalp, tangling straight after washing or fast fading: a mild, sulfate-reduced shampoo for dry/coloured hair that stays light (low weight) - not a rich 2-in-1 - so fine wavy strands keep their shape. Keep a stronger wash like this one for an occasional build-up reset only if she notices her hair getting limp.",
+    "language": "Cosmetic guidance only; no medical claims."
+  },
+  "openIssues": [
+    {
+      "id": "OI-1",
+      "severity": "blocking_for_catalog",
+      "issue": "Exact EAN 4305615629216 is delisted on rossmann.de (2026-10-06). Any catalog/projection use must target a current GTIN; the successor with the same chassis is 'pH 5,5 hautneutral' 400 ml (4068134039743, slightly different tail INCI) and needs its own record."
+    },
+    {
+      "id": "OI-2",
+      "severity": "identity",
+      "issue": "'ISANA MED Shampoo Jeden Tag' now names the urea-free Ultra Sensitiv formula (4305615629223). Confirm Viola's bottle before advising; the classification here applies only to the urea formula."
+    },
+    {
+      "id": "OI-3",
+      "severity": "evidence",
+      "issue": "Exact-GTIN sensitive-scalp claim exists only as a non-verbatim 2026-08-26 capture; Wayback Machine was offline (2026-10-06) so the verbatim pack text could not be recovered. If the claim were rejected, focusPrimary -> general, scalpComfortTarget -> not_targeted, and the projection -> ordinary/normal bucket (fine+normal x normal/balanced/regular)."
+    },
+    {
+      "id": "OI-4",
+      "severity": "open_question_applied",
+      "issue": "Open question 1 (moderate weight on fine hair) does not bite here (W low). Open question 3 (coarse needs C high) applied with the cautious default -> coarse conditional. Questions 2, 4, 5 not relevant."
+    },
+    {
+      "id": "OI-5",
+      "severity": "boundary",
+      "issue": "cleansingStrength moderate vs strong rests on C1; the holdout-v1 lanes split on exactly this product. Observed intensity is 'regular' either way, so rows do not change; usageRole would flip frequent -> regular."
+    },
+    {
+      "id": "OI-6",
+      "severity": "info",
+      "issue": "review_live_value_differs not evaluated - live catalog rows were not read in this run."
+    }
+  ]
+}

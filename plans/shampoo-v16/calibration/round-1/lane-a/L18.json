@@ -1,0 +1,120 @@
+{
+  "blindId": "L18",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: C1 pattern - Sodium Laureth Sulfate #2 buffered by Cocamidopropyl Betaine #4 and Cocamide MEA #9 (Sodium Xylenesulfonate #3 hydrotrope); late TEA-Dodecylbenzenesulfonate #17 is an emulsion-carrier anionic; no reset intent ('reinigt sanft').",
+      "ruleIds": ["§4", "C1"],
+      "formulaFacts": ["Sodium Laureth Sulfate #2", "Cocamidopropyl Betaine #4", "Cocamide MEA #9", "TEA-Dodecylbenzenesulfonate #17"],
+      "counterSignal": "Late second anionic.",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High: C2 pattern - early silicone Dimethiconol #7 (before Parfum #12) plus Dimethicone #13, cationic Guar Hydroxypropyltrimonium Chloride #14, pearlizer Glycol Distearate #10 and Cocamide MEA #9, with light humectant/comfort routes (Butylene Glycol #23, Aloe #24). C2: cleansing strength does not lower conditioning.",
+      "ruleIds": ["§5", "C2"],
+      "formulaFacts": ["Dimethiconol #7", "Cocamide MEA #9", "Glycol Distearate #10", "Dimethicone #13", "Guar Hydroxypropyltrimonium Chloride #14", "Butylene Glycol #23"],
+      "counterSignal": "Humectant support is weak and late; the C2 reference had prominent Panthenol/Glycerin.",
+      "neighboringAlternative": "moderate",
+      "sources": ["packet INCI"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: W1 analogue - silicones (#7, #13) plus cationic guar #14 and pearlizer #10 in an effective SLES/betaine base without a rich 2-in-1 architecture.",
+      "ruleIds": ["§6", "W1"],
+      "subjudgments": {"depositionLoad": "moderate", "persistence": "moderate", "resetCapacity": "moderate"},
+      "whyThisBand": "Persistent silicone/guar deposition bounded by effective reset (W1).",
+      "whyNotNeighborBand": "High needs multiple converging persistent systems with limited reset; the early dimethiconol plus a second silicone and pearlizer make high the realistic neighbor.",
+      "formulaFacts": ["Dimethiconol #7", "Glycol Distearate #10", "Dimethicone #13", "Guar Hydroxypropyltrimonium Chloride #14"],
+      "counterSignal": "Silicone is prominent (before Parfum).",
+      "neighboringAlternative": "high",
+      "sources": ["packet INCI"]
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "rationale": "scalp_active: problem-led anti-dandruff / itchy-dry-scalp product ('Anti-Schuppen Wirkung mit Pirocton Olamin', 'gegen Kopfhautjucken', 'Beruhigende Pflege') with recognized active Piroctone Olamine #6 (7.2).",
+      "ruleIds": ["7.2"],
+      "careDirection": {"verdict": "not_applicable", "moistureRoutes": [], "repairRoutes": [], "sharedRoutes": [], "limitation": "Not a repair/moisture decision."},
+      "claimRole": "candidate",
+      "formulaFacts": ["Piroctone Olamine #6", "Aloe Barbadensis Leaf Juice #24"],
+      "counterSignal": "Menthol #16 and fragrance.",
+      "neighboringAlternative": "general",
+      "decisionTrace": "Blind: recognized active -> scalp_active compatible. Unblind: anti-dandruff and itchy/dry scalp claims -> scalp_active.",
+      "sources": ["manufacturer claims", "retailer claims", "packet INCI"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Empty: itch/dry-scalp comfort is part of the scalp_active role (never repeat primary, §8; Appendix A); 'Feuchtigkeit' refers to the scalp, not lengths.",
+      "ruleIds": ["§8", "Appendix A"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["manufacturer claims"]
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "high",
+      "rationale": "Treatment: supported anti-dandruff formula with problem-led positioning (§9).",
+      "ruleIds": ["§9"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["manufacturer claims", "packet INCI"]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "rationale": "Targeted: explicitly positioned for dry, itchy scalp ('Beruhigende Pflege' in name, 'gegen Kopfhautjucken', 'Beruhigend bei trockener, juckender Kopfhaut', 'stärkt die Kopfhautbarriere') with a moderate buffered cleansing base, Aloe #24 and Oryza Sativa Bran Extract #30. Counter-signals: Menthol #16 and fragrance (not a veto in an explicitly anti-itch product, §10); comfort routes are late; claimed ceramides/cactus/vitamin E are absent from the INCI.",
+      "ruleIds": ["§10"],
+      "counterSignal": "Menthol, fragrance, late comfort routes, claim-formula mismatch.",
+      "neighboringAlternative": "not_targeted",
+      "sources": ["manufacturer claims", "packet INCI"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains Piroctone Olamine #6.",
+      "ruleIds": ["§11"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    }
+  },
+  "projection": {
+    "status": "proposal_blocked_by_review",
+    "thicknessFit": {"fine": "acceptable", "normal": "ideal", "coarse": "ideal"},
+    "thicknessFitConfidence": {"fine": "moderate", "normal": "moderate", "coarse": "moderate"},
+    "thicknessRationale": "T1 W moderate, C high: fine acceptable, normal ideal, coarse ideal; dandruff target (T6) lifts nothing. T4: W neighbor high would make normal acceptable -> flag normal; fine would become not_suited but T6 floors it at acceptable -> no flag; C neighbor moderate would make coarse acceptable -> flag coarse.",
+    "weight": "moderate",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: moderate -> moderate.",
+    "scalpTargets": {"primary": "dandruff", "secondary": null},
+    "scalpTargetConfidence": "moderate",
+    "scalpTargetRationale": "S-DANDRUFF: E2 'Anti-Schuppen Wirkung' / 'schuppenfreie Kopfhaut' on the exact manufacturer page (E1 moderate; product name has no Schuppen term) + supported -> pass; confidence moderate. S-SENSITIVE: E2 'juckende Kopfhaut' passes, scalpComfortTarget targeted passes, but no prominent E4 comfort route (prominent = before Parfum #12; Aloe #24 is late and unlisted) -> fails. S-DRY: E2 'trockener ... Kopfhaut' passes, targeted passes, but no prominent E4 humectant (Butylene Glycol #23 unlisted and late) -> fails. S-FAIL does not apply because dandruff qualifies. S-FOCUS: scalp_active -> no mismatch.",
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: moderate -> regular = schuppen expectation. I3: no neighbor.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "No D1 term.",
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "schuppen", "scalp_route": "dandruff", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable"},
+      {"thickness": "normal", "shampoo_bucket": "schuppen", "scalp_route": "dandruff", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "schuppen", "scalp_route": "dandruff", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal"}
+    ],
+    "requiredProtocolRoles": ["shampoo_dandruff"],
+    "reviewFlags": ["review_thickness_boundary:normal", "review_thickness_boundary:coarse"],
+    "informationalNotes": [],
+    "liveComparison": "Not evaluated (live rows not in sealed packet)."
+  },
+  "uncertainties": [
+    "Claim-formula conflict: claims cite a Ceramide complex, cactus extract and vitamin E that are not in the canonical INCI. §2 requires blocking or lowering confidence only if the conflict could change a property/projection; none of the missing ingredients is an E4-listed route, so values stand, but the INCI may be an older/other-market version.",
+    "Failed sensitive/dry gates are silent when another specialist target passes: S-FAIL only fires if 'no other specialist target qualifies', so a product positioned primarily for dry/itchy scalp loses those targets without any review flag.",
+    "T4 with T6: the fine neighbor (W high -> not_suited) is floored back to acceptable by T6, so no flag; T4 says to evaluate 'after T6 is applied', which was followed.",
+    "C2 humectant leg is weak here (late butylene glycol/aloe); applied C2 because early silicone + cationic + pearlizer are present."
+  ]
+}

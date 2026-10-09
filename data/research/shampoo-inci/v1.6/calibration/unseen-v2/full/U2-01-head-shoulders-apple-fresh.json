@@ -1,0 +1,73 @@
+{
+  "slot": "U2-01",
+  "productId": null,
+  "name": "Anti-Schuppen Shampoo Apple Fresh",
+  "brand": "head&shoulders",
+  "packSize": "500 ml (manufacturer page offers 250/500/800 ml with one INCI)",
+  "gtins": [
+    "8001090896049"
+  ],
+  "sources": [
+    {
+      "url": "https://www.headandshoulders.de/de-de/anti-schuppen-produkte/anti-schuppen-shampoo/apple-fresh/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de",
+      "gtinShown": null,
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Sodium Citrate, Parfum, Citric Acid, Cocamide MEA, Glycol Distearate, Piroctone Olamine, Dimethiconol, Sodium Chloride, Guar Hydroxypropyltrimonium Chloride, Dimethicone, Sodium Benzoate, TEA-Dodecylbenzenesulfonate, Sodium Salicylate, Tetrasodium EDTA, Sodium Hydroxide, Trideceth-10, Glycerin, Hexyl Cinnamal, Niacinamide, Panthenol, Tocopheryl Acetate, Acetic Acid, CI 19140, Benzyl Alcohol, Triethylene Glycol, Propylene Glycol, CI 42090 [page appends: 'Bitte beachten Sie die Produktverpackung für die aktuellste Liste der Inhaltstoffe.']",
+      "claimsVerbatim": "BIS ZU 100 % SCHUPPENSCHUTZ*: Entfernt Schuppen ab der ersten Haarwäsche und hilft, deren Wiederauftreten zu verhindern, sodass deine Kopfhaut sauber und schuppenfrei bleibt | 3X SCHUTZ** FORMEL: Bekämpft gezielt drei Kopfhautprobleme – Schuppen, Öl und Juckreiz im Zusammenhang mit Schuppen, für eine sauberere, gesündere Kopfhaut. | ÜBERLEGENE, KLINISCH BEWIESENE WIRKSAMKEIT: Bekämpft Schuppen effektiv und pflegt die Kopfhaut mit einer 3x-Schutzformel für klinisch erwiesene Ergebnisse. | NUMMER 1 ANTI-SCHUPPEN-SHAMPOO-MARKE***: Maßgeschneiderte Lösungen für jede Kopfhaut und jedes Haar, gestützt durch 65 Jahre Forschung. | Für jeden Haartyp und jede Kopfhaut: Dieses Anti-Schuppen-Shampoo ist dermatologisch getestet und ideal für die tägliche Anwendung. || Produktdetails: Head & Shoulders Anti-Schuppen Shampoo Apple Fresh wirkt effektiv gegen Schuppen und pflegt gleichzeitig die Kopfhaut. Die 3X Schutz** Formel mit Pirocton-Olamin bekämpft gezielt drei Kopfhautprobleme (Schuppen, Juckreiz durch Schuppen und fettige Kopfhaut)** bereits ab der ersten Anwendung. Klinisch bewiesen und dermatologisch getestet bietet das Shampoo bis zu 100 % Schutz vor Schuppen* und ist ideal für die tägliche Anwendung. *Bei regelmäßiger Anwendung. **Wirkt gegen 3 Kopfhautprobleme: Schuppen, Juckreiz aufgrund von Schuppen und fettige Kopfhaut ***#1 Anti-Schuppen Marke der Welt P&G-Berechnung basierend auf jährlichen externen Verkaufsdatenberichten in der Kategorie Anti-Schuppen-Shampoo.",
+      "directionsVerbatim": null,
+      "note": "INCI is in the page's FAQ structured data (Frage 'Inhaltsstoffe'); the accordion itself did not expand visibly. No GTIN or directions on page. Variant family page, one ingredient list."
+    },
+    {
+      "url": "https://www.dm.de/p/d/1493053/head-und-shoulders-shampoo-anti-schuppen-apple-fresh",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "german_retailer_gtin_on_page",
+      "gtinShown": "GTIN: 8001090896049 (page text and JSON-LD); dm-Artikelnummer 1493053",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Sodium Citrate, Parfum, Citric Acid, Cocamide MEA, Glycol Distearate, Piroctone Olamine, Dimethiconol, Sodium Chloride, Guar Hydroxypropyltrimonium Chloride, Dimethicone, Sodium Benzoate, TEA-Dodecylbenzenesulfonate, Sodium Salicylate, Tetrasodium EDTA, Sodium Hydroxide, Trideceth-10, Glycerin, Hexyl Cinnamal, Niacinamide, Panthenol, Tocopheryl Acetate, Acetic Acid, CI 19140, Benzyl Alcohol, Triethylene Glycol, Propylene Glycol, CI 42090",
+      "claimsVerbatim": "Anti-Schuppen Shampoo | Mit Apfel-Duft | Sorgt für wirksamen Schuppenschutz und Vorbeugung | Mit Mikrobiom-Balance-Formel | Dermatologisch getestet | Das head&shoulders Anti-Schuppen Shampoo Apple Fresh 500ml ist für jeden Haar- und Kopfhauttyp geeignet. Mit frischem Apfelduft und Mikrobiom-Balance-Formel wird gezielt die Ursache der Schuppen bekämpft und für ein ausgewogenes Kopfhautmikrobiom gesorgt. Die Kopfhaut wird bei jeder Haarwäsche mit Feuchtigkeit versorgt und dem Haar wird ein wirksamer Schuppenschutz verliehen. | Wirkung: Anti-Schuppen, Pflege, Feuchtigkeit",
+      "directionsVerbatim": null,
+      "note": "Warnhinweise: 'Kontakt mit den Augen vermeiden. Bei Kontakt, gründlich mit Wasser spülen.' No Verwendungshinweise section on page. Procter Gamble, Schwalbach."
+    }
+  ],
+  "conflicts": [],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Sodium Xylenesulfonate",
+    "Cocamidopropyl Betaine",
+    "Sodium Citrate",
+    "Parfum",
+    "Citric Acid",
+    "Cocamide MEA",
+    "Glycol Distearate",
+    "Piroctone Olamine",
+    "Dimethiconol",
+    "Sodium Chloride",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Dimethicone",
+    "Sodium Benzoate",
+    "TEA-Dodecylbenzenesulfonate",
+    "Sodium Salicylate",
+    "Tetrasodium EDTA",
+    "Sodium Hydroxide",
+    "Trideceth-10",
+    "Glycerin",
+    "Hexyl Cinnamal",
+    "Niacinamide",
+    "Panthenol",
+    "Tocopheryl Acetate",
+    "Acetic Acid",
+    "CI 19140",
+    "Benzyl Alcohol",
+    "Triethylene Glycol",
+    "Propylene Glycol",
+    "CI 42090"
+  ],
+  "canonicalReason": "Manufacturer DE list and dm exact-GTIN list are identical after normalization (manufacturer adds only a trailing pack-reference sentence).",
+  "inciFingerprintSha256": "378369639e956dfb73c558fd3d33c150b99bef3782f897743b0ab8e8f084bf6a",
+  "normalization": "Split verbatim INCI on commas outside parentheses; per item trim, lower-case, collapse internal whitespace; join items with '|'; sha256 (utf-8) hex. Original-case ingredient list is kept in canonicalInci[].",
+  "identityConfidence": "high",
+  "status": "frozen",
+  "blockReason": null,
+  "notes": "Catalog productId: none (not yet in catalog); Track B row b03-i01. No INCI was on file before; this is a fresh capture. Historical GTIN 8700216219907 deliberately not attached (per Track B notes). Rossmann/dm.at pages not fetched (two corroborating sources sufficient)."
+}
