@@ -99,7 +99,16 @@ export type Stage2StaticQuestionId =
   | "additional_heat_tools"
   | "night_protection"
 export type Stage2HeatEventQuestionId = `heat:${Stage2HeatEventSource}`
-export type Stage2QuestionId = Stage2StaticQuestionId | Stage2HeatEventQuestionId
+/**
+ * Questions of the `tools` module (Hair Tools port). Only the id shape is fixed here; the
+ * concrete ids (`tools_overview`, `tools:<pageKey>`) join the canonical path with the tool
+ * questions themselves, so today's path produces none and the module is `not_applicable`.
+ */
+export type Stage2ToolsQuestionId = "tools_overview" | `tools:${string}`
+export type Stage2QuestionId =
+  | Stage2StaticQuestionId
+  | Stage2HeatEventQuestionId
+  | Stage2ToolsQuestionId
 export type Stage2AnswerKey = keyof PersonalPlanRefinementAnswersV1
 
 export type Stage2TriggerContext = {
@@ -116,10 +125,17 @@ export type Stage2PathState = {
   prunedAnswerKeys: Stage2AnswerKey[]
 }
 
-/** Fixed two-value split of the refinement path. No abstraction for hypothetical further modules. */
-export const STAGE2_MODULES = ["products", "habits"] as const
+/**
+ * Fixed split of the refinement path, in the order the flow asks the modules. No abstraction
+ * for hypothetical further modules. `tools` is asked between `products` and `habits`.
+ */
+export const STAGE2_MODULES = ["products", "tools", "habits"] as const
 export type Stage2Module = (typeof STAGE2_MODULES)[number]
-export type Stage2ModuleStatus = "open" | "complete"
+/**
+ * `not_applicable`: the module has no question on the current path (e.g. `tools` while its
+ * rollout is off). It is neither a step the user has to do nor an assumption still in force.
+ */
+export type Stage2ModuleStatus = "open" | "complete" | "not_applicable"
 export type Stage2ModulePathState = {
   questionIds: Stage2QuestionId[]
   completedQuestionIds: Stage2QuestionId[]

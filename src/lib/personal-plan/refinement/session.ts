@@ -33,6 +33,14 @@ export type CreateStage2RefinementSessionInput = {
   revision?: number
   status?: "in_progress" | "complete" | "stale"
   completedHandoff?: Stage2RefinementHandoff
+  /**
+   * Only for rows read back from persistence. A draft completed under an older path can
+   * have a path that GREW since (a new question joined it): the stored row stays `complete`
+   * with its handoff, and its first unresolved question is asked on the next visit, whose
+   * first save reopens the draft. Fixtures and newly created sessions keep the strict
+   * "complete requires a complete canonical path" rule.
+   */
+  tolerateGrownPath?: boolean
 }
 
 export function createStage2RefinementSession(
@@ -44,7 +52,7 @@ export function createStage2RefinementSession(
     completedQuestionIds: [...(input.completedQuestionIds ?? [])],
   })
   const status = input.status ?? "in_progress"
-  if (status === "complete" && !contract.isComplete) {
+  if (status === "complete" && !contract.isComplete && !input.tolerateGrownPath) {
     throw new Stage2RefinementError(
       "incomplete_refinement",
       "A complete refinement session must have a complete canonical path",

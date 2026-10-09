@@ -10,6 +10,7 @@ import {
 } from "../src/lib/personal-plan/refinement/question-path"
 import {
   STAGE2_HEAT_EVENT_SOURCES,
+  STAGE2_MODULES,
   type Stage2QuestionId,
   type Stage2StaticQuestionId,
 } from "../src/lib/personal-plan/refinement/types"
@@ -33,7 +34,7 @@ const ALL_STATIC_QUESTION_IDS: Stage2StaticQuestionId[] = [
   "night_protection",
 ]
 
-test("every base question on a minimal path maps to a module and both modules are present", () => {
+test("every base question on a minimal path maps to a module and all three modules are present", () => {
   const path = resolveStage2Path({
     triggerContext: neutralContext,
     answers: { currentProductCategories: [] },
@@ -54,6 +55,46 @@ test("every base question on a minimal path maps to a module and both modules ar
   for (const id of path.orderedQuestionIds) {
     assert.ok(["products", "habits"].includes(getStage2QuestionModule(id)))
   }
+  // No tool question is on the path yet: the module exists but has nothing to ask.
+  assert.deepEqual(modules.tools.questionIds, [])
+  assert.equal(modules.tools.status, "not_applicable")
+})
+
+test("tools question ids map to the tools module and never throw", () => {
+  assert.equal(getStage2QuestionModule("tools_overview"), "tools")
+  assert.equal(getStage2QuestionModule("tools:wash_application:1"), "tools")
+  assert.equal(getStage2QuestionModule("tools:securing_sectioning:2"), "tools")
+  // Neighbouring ids keep their module.
+  assert.equal(getStage2QuestionModule("towel_handling"), "habits")
+  assert.equal(getStage2QuestionModule("heat:straightener"), "habits")
+})
+
+test("STAGE2_MODULES is ordered products, tools, habits", () => {
+  assert.deepEqual([...STAGE2_MODULES], ["products", "tools", "habits"])
+})
+
+test("a module with zero path questions is not_applicable; one with questions is open/complete", () => {
+  const states = getStage2ModulePathStates(["current_product_categories", "night_protection"], [])
+  assert.equal(states.tools.status, "not_applicable")
+  assert.equal(states.products.status, "open")
+  assert.equal(states.habits.status, "open")
+
+  const withTools = getStage2ModulePathStates(
+    ["current_product_categories", "tools_overview", "tools:airflow:1", "night_protection"],
+    ["tools_overview", "tools:airflow:1"],
+  )
+  assert.deepEqual(withTools.tools.questionIds, ["tools_overview", "tools:airflow:1"])
+  assert.equal(withTools.tools.status, "complete")
+
+  const partial = getStage2ModulePathStates(
+    ["tools_overview", "tools:airflow:1"],
+    ["tools_overview"],
+  )
+  assert.deepEqual(partial.tools.openQuestionIds, ["tools:airflow:1"])
+  assert.equal(partial.tools.status, "open")
+  // A module with no questions of its own is not_applicable, never "complete".
+  assert.equal(partial.products.status, "not_applicable")
+  assert.equal(partial.habits.status, "not_applicable")
 })
 
 test("oil conditional question belongs to the products module", () => {

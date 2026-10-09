@@ -6,7 +6,10 @@ import {
   type Stage2RefinementHandoff,
   type Stage2RefinementSession,
 } from "@/lib/personal-plan/refinement/session"
-import { resolveStage2RefinementContract } from "@/lib/personal-plan/refinement/question-path"
+import {
+  areAllStage2ModulesSettled,
+  resolveStage2RefinementContract,
+} from "@/lib/personal-plan/refinement/question-path"
 import { stage2ModuleStates } from "@/lib/personal-plan/refinement/module-status"
 import {
   applyUserAnswerProvenance,
@@ -173,6 +176,8 @@ export function stage2SessionFromPersistedDraft(
       draft.status === "complete" && draft.refinedVersionId
         ? { refinedVersionId: draft.refinedVersionId, nextHref: "/plan-start" }
         : undefined,
+    // A completed row whose path grew since stays loadable; its first save reopens it.
+    tolerateGrownPath: true,
   })
 }
 
@@ -419,13 +424,13 @@ export function createStage2RefinementService(input: {
       }
 
       const stage3Handoff = stage2Module === "products"
-      // Both modules answered ⇒ the canonical path is complete by construction,
+      // Every module answered (or without questions) ⇒ the canonical path is complete by construction,
       // so the closing module delegates to the existing terminal completion
       // rather than teaching the module RPC a second way to close a draft. The
       // durable Stage-3 entry marker for that case stays today's `complete`
       // draft status, so nothing extra is persisted. `completeDraft` writes
       // `care_habits` facts itself (I1) — writing here too would double-publish.
-      if (STAGE2_MODULES.every((candidate) => moduleStates[candidate].status === "complete")) {
+      if (areAllStage2ModulesSettled(moduleStates)) {
         const handoff = await completeDraft(expectedRevision)
         return { ...handoff, module: stage2Module, status: "complete", stage3Handoff }
       }

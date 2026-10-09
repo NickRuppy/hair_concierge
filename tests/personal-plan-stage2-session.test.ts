@@ -90,3 +90,50 @@ test("rejects status and handoff combinations that cannot be true", () => {
     /handoff/i,
   )
 })
+
+test("a fixture or new session still refuses a complete status on an incomplete path", () => {
+  assert.throws(
+    () =>
+      createStage2RefinementSession({
+        pathVersion: "stage2-v1",
+        triggerContext,
+        status: "complete",
+        answers: completeAnswers,
+        completedQuestionIds: completeQuestionIds.filter((id) => id !== "night_protection"),
+        completedHandoff: { refinedVersionId: "refined-1", nextHref: "/plan-start" },
+      }),
+    /complete canonical path/i,
+  )
+})
+
+test("a persisted complete draft whose path grew loads: status stays complete, the new question is open", () => {
+  const { nightProtection: _grown, ...answersWithoutNewQuestion } = completeAnswers
+  void _grown
+  const session = createStage2RefinementSession({
+    pathVersion: "stage2-v1",
+    triggerContext,
+    status: "complete",
+    answers: answersWithoutNewQuestion,
+    completedQuestionIds: completeQuestionIds.filter((id) => id !== "night_protection"),
+    completedHandoff: { refinedVersionId: "refined-1", nextHref: "/plan-start" },
+    tolerateGrownPath: true,
+  })
+  assert.equal(session.status, "complete")
+  assert.equal(session.path.firstUnresolvedQuestionId, "night_protection")
+  assert.equal(session.completedHandoff?.refinedVersionId, "refined-1")
+})
+
+test("grown-path tolerance does not excuse a missing handoff on a complete session", () => {
+  assert.throws(
+    () =>
+      createStage2RefinementSession({
+        pathVersion: "stage2-v1",
+        triggerContext,
+        status: "complete",
+        answers: completeAnswers,
+        completedQuestionIds: completeQuestionIds.filter((id) => id !== "night_protection"),
+        tolerateGrownPath: true,
+      }),
+    /handoff/i,
+  )
+})

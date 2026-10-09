@@ -3,10 +3,12 @@ import { userAnsweredQuestionIds } from "@/lib/personal-plan/refinement/answer-p
 import { resolveAssumedAnswers } from "@/lib/personal-plan/refinement/assumed-defaults"
 import { stage2ModuleStates } from "@/lib/personal-plan/refinement/module-status"
 import { createRefinedNeedSnapshot } from "@/lib/personal-plan/refinement/production-persistence-gateway"
-import { resolveStage2RefinementContract } from "@/lib/personal-plan/refinement/question-path"
+import {
+  areAllStage2ModulesSettled,
+  resolveStage2RefinementContract,
+} from "@/lib/personal-plan/refinement/question-path"
 import { deriveStage2TriggerContext } from "@/lib/personal-plan/refinement/stage1-adapter"
 import {
-  STAGE2_MODULES,
   type PersonalPlanRefinementAnswersV1,
   type Stage2AnswerProvenance,
   type Stage2QuestionId,
@@ -208,7 +210,7 @@ function moduleSnapshotArgs(
   triggerContext: Stage2TriggerContext,
 ): SnapshotArgs {
   const moduleStates = stage2ModuleStates({ triggerContext, ...draft })
-  if (STAGE2_MODULES.every((candidate) => moduleStates[candidate].status === "complete")) {
+  if (areAllStage2ModulesSettled(moduleStates)) {
     return terminalSnapshotArgs(draft, triggerContext)
   }
   const resolution = resolveAssumedAnswers({

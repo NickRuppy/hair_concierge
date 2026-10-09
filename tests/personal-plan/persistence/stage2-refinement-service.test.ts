@@ -303,6 +303,69 @@ test("Stage 2 re-edit creates an in-progress successor without rewriting complet
   assert.equal(edited.revision, 7)
 })
 
+test("a complete draft whose path grew loads as complete and reopens on the first save", async () => {
+  // `night_protection` stands in for a question that joined the path after completion.
+  const grown = draft({
+    status: "complete",
+    revision: 6,
+    refinedVersionId: "refined-1",
+    answers: {
+      currentProductCategories: [],
+      wetWashFrequency: "weekly_1x",
+      towel: { material: "no_towel" },
+      dryingRoutes: [],
+      additionalHeatTools: [],
+    },
+    completedQuestionIds: [
+      "current_product_categories",
+      "wet_wash_frequency",
+      "towel_handling",
+      "drying_routes",
+      "additional_heat_tools",
+    ],
+  })
+  let reopened = 0
+  const service = createStage2RefinementService({
+    userId: "user-1",
+    snapshotBuilder: () => ({
+      inputSnapshot: {},
+      outputSnapshot: {},
+      inputHash: "a".repeat(64),
+      schemaVersion: 1,
+      computationVersion: "test",
+    }),
+    persistence: {
+      loadOrCreate: async () => grown,
+      reopen: async ({ draft: historical }) => {
+        reopened += 1
+        assert.equal(historical.status, "complete")
+        return { ...historical, id: "draft-2", status: "in_progress", refinedVersionId: null }
+      },
+      save: async ({ draft: successor }) => ({
+        outcome: "saved",
+        revision: successor.revision + 1,
+      }),
+      complete: notCalled,
+      completeModule: notCalled,
+    },
+  })
+
+  const loaded = await service.load()
+  assert.equal(loaded.status, "complete")
+  assert.equal(loaded.path.firstUnresolvedQuestionId, "night_protection")
+  assert.equal(reopened, 0)
+
+  const edited = await service.saveAnswer({
+    questionId: "night_protection",
+    answer: ["loose_tied"],
+    expectedRevision: 6,
+  })
+  assert.equal(reopened, 1)
+  assert.equal(edited.status, "in_progress")
+  assert.equal(edited.revision, 7)
+  assert.equal(edited.path.firstUnresolvedQuestionId, null)
+})
+
 test("Stage 2 completion recomputes the refined Need snapshot from the immutable initial input", () => {
   const completedAnswers = {
     currentProductCategories: [],

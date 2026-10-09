@@ -57,5 +57,6 @@ export function stage2ModuleStates(
  */
 export function stage2AssumptionsActive(input: Stage2ModuleStatusInput): boolean {
   const states = stage2ModuleStates(input)
-  return STAGE2_MODULES.some((stage2Module) => states[stage2Module].status !== "complete")
+  // A `not_applicable` module has no question, so no assumption of its own is in force.
+  return STAGE2_MODULES.some((stage2Module) => states[stage2Module].status === "open")
 }

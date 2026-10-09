@@ -1522,3 +1522,122 @@ test("the ?refine=1 direct-accept journey opens products and completes the edit 
     "question",
   )
 })
+
+/** A session whose path carries tools questions between the products and habits blocks. */
+function withToolsOnPath(
+  base: Stage2RefinementSession,
+  completedToolIds: string[],
+): Stage2RefinementSession {
+  const toolIds = ["tools_overview", "tools:airflow:1"] as never[]
+  const ordered = [
+    ...base.path.orderedQuestionIds.filter(
+      (id) =>
+        !id.startsWith("towel") &&
+        id !== "drying_routes" &&
+        id !== "additional_heat_tools" &&
+        id !== "night_protection",
+    ),
+    ...toolIds,
+    ...base.path.orderedQuestionIds.filter(
+      (id) =>
+        id === "towel_handling" ||
+        id === "drying_routes" ||
+        id === "additional_heat_tools" ||
+        id === "night_protection",
+    ),
+  ]
+  const completed = [...base.path.completedQuestionIds, ...(completedToolIds as never[])]
+  return {
+    ...base,
+    path: {
+      ...base.path,
+      orderedQuestionIds: ordered,
+      requiredQuestionIds: ordered,
+      completedQuestionIds: completed,
+      firstUnresolvedQuestionId: ordered.find((id) => !completed.includes(id)) ?? null,
+    },
+  }
+}
+
+test("tools sit between products and habits: first_open lands on tools once products are done", () => {
+  const session = withToolsOnPath(productsDoneSession(), [])
+  assert.equal(firstOpenStage2Module(session), "tools")
+  assert.equal(resolveStage2EntryModule(session, "first_open"), "tools")
+  assert.equal(resolveStage2EntryModule(session, "tools"), "tools")
+  assert.equal(parseStage2RefineEntry("tools").refine, true)
+  assert.deepEqual(parseStage2RefineEntry("tools"), { refine: true, module: "tools" })
+
+  const scoped = scopeStage2PathToModule(session.path, "tools")
+  assert.deepEqual(scoped.orderedQuestionIds, ["tools_overview", "tools:airflow:1"])
+  assert.equal(scoped.firstUnresolvedQuestionId, "tools_overview")
+
+  const toolsDone = withToolsOnPath(productsDoneSession(), ["tools_overview", "tools:airflow:1"])
+  assert.equal(firstOpenStage2Module(toolsDone), "habits")
+})
+
+test("an explicit entry into a not_applicable module resolves like no module entry", () => {
+  const session = productsDoneSession()
+  assert.equal(resolveStage2EntryModule(session, "tools"), null)
+  assert.equal(
+    resolveStage2ModuleScope("tools", resolveStage2EntryModule(session, "tools")),
+    "none",
+  )
+  // The applicable modules are untouched.
+  assert.equal(resolveStage2EntryModule(session, "habits"), "habits")
+  assert.equal(resolveStage2EntryModule(session, "products"), "products")
+})
+
+test("a complete session whose path grew bridges only once nothing is unresolved", () => {
+  const grown = createStage2RefinementSession({
+    pathVersion: "stage2-module-test",
+    triggerContext: plainTriggerContext,
+    answers: {
+      currentProductCategories: [],
+      wetWashFrequency: "weekly_2x",
+      towel: { material: "no_towel" },
+      dryingRoutes: [],
+      additionalHeatTools: [],
+    },
+    completedQuestionIds: [
+      "current_product_categories",
+      "wet_wash_frequency",
+      "towel_handling",
+      "drying_routes",
+      "additional_heat_tools",
+    ],
+    revision: 6,
+    status: "complete",
+    completedHandoff: { refinedVersionId: "refined-module-test", nextHref: "/plan-start" },
+    tolerateGrownPath: true,
+  })
+  assert.equal(grown.path.firstUnresolvedQuestionId, "night_protection")
+
+  // Legacy linear entry: the grown question is asked, not bridged over.
+  assert.deepEqual(resolveStage2FlowEntryView({ session: grown, moduleScope: "none" }), {
+    mode: "question",
+    activeQuestionId: "night_protection",
+    status: "idle",
+    liveMessage: "",
+    bridge: false,
+  })
+  // Explicit module entry into the grown module asks it too.
+  assert.deepEqual(
+    resolveStage2FlowEntryView({
+      session: scopeStage2SessionToModule(grown, "habits"),
+      moduleScope: "explicit",
+    }),
+    {
+      mode: "question",
+      activeQuestionId: "night_protection",
+      status: "idle",
+      liveMessage: "",
+      bridge: false,
+    },
+  )
+  // A fully answered complete session still bridges.
+  assert.equal(
+    resolveStage2FlowEntryView({ session: fullyAnsweredSession("complete"), moduleScope: "none" })
+      .bridge,
+    true,
+  )
+})

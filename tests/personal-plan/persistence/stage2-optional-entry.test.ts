@@ -276,3 +276,45 @@ test("openOptionalRefinement rejects missing parent state without opening a draf
     /stage2_optional_parent_unavailable/,
   )
 })
+
+for (const [label, ctx] of [
+  ["a complete parent", () => context()],
+  [
+    "an existing in-progress draft",
+    () =>
+      context({
+        currentDraft: draft({ id: "draft-open", status: "in_progress", refinedVersionId: null }),
+        latestCompleteDraft: null,
+      }),
+  ],
+] as const) {
+  test(`openOptionalRefinement rejects a not_applicable module (tools) for ${label} without opening a draft`, async () => {
+    await assert.rejects(
+      openOptionalRefinement({
+        userId: "user-1",
+        module: "tools",
+        deps: {
+          loadContext: async () => ctx(),
+          openPreparedDraft: async () => {
+            assert.fail("must not open a draft for a module without questions")
+          },
+        },
+      }),
+      /invalid_module/,
+    )
+  })
+}
+
+test("openOptionalRefinement still rejects an unknown module as invalid_module", async () => {
+  await assert.rejects(
+    openOptionalRefinement({
+      userId: "user-1",
+      module: "nope" as never,
+      deps: {
+        loadContext: async () => context(),
+        openPreparedDraft: async () => assert.fail("must not open"),
+      },
+    }),
+    /invalid_module/,
+  )
+})

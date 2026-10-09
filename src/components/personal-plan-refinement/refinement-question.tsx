@@ -80,6 +80,7 @@ type RefinementQuestionProps = {
 /** German section labels, keyed by module. Source of truth for the split lives in the path model. */
 const STAGE2_MODULE_SECTION_LABELS = {
   products: "Was du heute benutzt",
+  tools: "Was du schon hast",
   habits: "Wie du dein Haar behandelst",
 } as const satisfies Record<Stage2Module, string>
 
@@ -714,5 +715,7 @@ export function getQuestionFamily(questionId: Stage2QuestionId) {
 
 /** Telemetry section, derived from the path model's module mapping (single source of truth). */
 export function getQuestionSection(questionId: Stage2QuestionId) {
-  return getStage2QuestionModule(questionId) === "habits" ? "hair_handling" : "current_products"
+  const questionModule = getStage2QuestionModule(questionId)
+  if (questionModule === "habits") return "hair_handling"
+  return questionModule === "tools" ? "tools" : "current_products"
 }

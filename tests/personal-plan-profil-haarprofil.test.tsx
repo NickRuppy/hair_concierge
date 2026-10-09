@@ -22,14 +22,18 @@ function statusResponse(
   products: "open" | "complete",
   habits: "open" | "complete",
   overrides: Partial<RefinementStatusResponse> = {},
+  tools: "open" | "complete" | "not_applicable" = "not_applicable",
 ): RefinementStatusResponse {
-  const completedModules = [products, habits].filter((entry) => entry === "complete").length
+  const statuses = [products, tools, habits]
+  const completedModules = statuses.filter((entry) => entry === "complete").length
+  const applicableModules = statuses.filter((entry) => entry !== "not_applicable").length
   return {
     modules: [
       { module: "products", status: products, openQuestionCount: products === "open" ? 2 : 0 },
+      { module: "tools", status: tools, openQuestionCount: tools === "open" ? 3 : 0 },
       { module: "habits", status: habits, openQuestionCount: habits === "open" ? 4 : 0 },
     ],
-    progress: { completedSteps: 2 + completedModules, totalSteps: 4 },
+    progress: { completedSteps: 2 + completedModules, totalSteps: 2 + applicableModules },
     module1HandedOff: products === "complete",
     banner: { visible: false, module: null, dismissed: false },
     ...overrides,
@@ -69,6 +73,51 @@ test("fresh auto-accept: 2 von 4 with both module rows open and deep-linked", ()
     view.rows.map((row) => row.note),
     [null, null, null, null],
   )
+})
+
+test("tools not applicable: no Tools row, steps stay 3 and 4 of 4", () => {
+  const view = buildHairProfileSection({ status: statusResponse("open", "open") })
+  assert.ok(!view.rows.some((row) => row.key === "tools"))
+  assert.equal(view.totalSteps, 4)
+  assert.deepEqual(
+    view.rows.map((row) => row.step),
+    [1, 2, 3, 4],
+  )
+})
+
+test("tools applicable: rows read Haar-Analyse, Dein Plan, Produkte, Tools, Gewohnheiten (steps 1 to 5)", () => {
+  const view = buildHairProfileSection({
+    status: statusResponse("complete", "open", {}, "open"),
+  })
+
+  assert.equal(view.totalSteps, 5)
+  assert.equal(view.completedSteps, 3)
+  assert.deepEqual(
+    view.rows.map((row) => [row.key, row.label, row.status, row.step]),
+    [
+      ["hair_analysis", "Haar-Analyse", "done", 1],
+      ["ideal_plan", "Dein Plan", "done", 2],
+      ["products", "Deine Produkte", "done", 3],
+      ["tools", "Deine Tools", "open", 4],
+      ["habits", "Deine Gewohnheiten", "open", 5],
+    ],
+  )
+  assert.equal(rowByKey(view.rows, "tools").href, "/plan-start?refine=tools")
+  assert.equal(rowByKey(view.rows, "tools").editHref, null)
+
+  const done = buildHairProfileSection({
+    status: statusResponse("complete", "complete", {}, "complete"),
+  })
+  assert.equal(rowByKey(done.rows, "tools").href, null)
+  assert.equal(rowByKey(done.rows, "tools").editHref, "/plan-start?refine=tools")
+})
+
+test("a status response without a tools entry hides the Tools row", () => {
+  const status = statusResponse("open", "open")
+  const view = buildHairProfileSection({
+    status: { ...status, modules: status.modules.filter((entry) => entry.module !== "tools") },
+  })
+  assert.ok(!view.rows.some((row) => row.key === "tools"))
 })
 
 test("products done: 3 von 4, and the finished module row is an edit visit, not a re-walk link", () => {

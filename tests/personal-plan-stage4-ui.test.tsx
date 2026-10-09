@@ -1126,6 +1126,40 @@ test("fresh state (products open, 2 von 4): banner renders above the routine blo
   assert.equal(refined, 1)
 })
 
+test("banner copy for the tools module and for habits after tools (x von 5)", () => {
+  const view = activeViewFor(payload([item()]))
+  const render = (banner: {
+    module: "tools" | "habits"
+    completedSteps: number
+    totalSteps: number
+  }) =>
+    renderToStaticMarkup(
+      <RoutinePage
+        view={view}
+        refinementBanner={banner}
+        onDismissRefinementBanner={() => undefined}
+        onRefineFromBanner={() => undefined}
+      />,
+    )
+
+  const tools = render({ module: "tools", completedSteps: 3, totalSteps: 5 })
+  assert.match(tools, /Als Nächstes: Deine Tools\./)
+  assert.match(tools, />3 von 5</)
+  assert.match(tools, /Weiter · 3 Min\./)
+  assert.ok(tools.indexOf("Als Nächstes: Deine Tools.") < tools.indexOf("Deine Basis"))
+
+  const habitsAfterTools = render({ module: "habits", completedSteps: 4, totalSteps: 5 })
+  assert.match(habitsAfterTools, /Letzter Schritt: deine Gewohnheiten\./)
+  assert.match(habitsAfterTools, />4 von 5</)
+  assert.match(habitsAfterTools, /Weiter · 3 Min\./)
+  assert.doesNotMatch(habitsAfterTools, /Noch ein Schritt/)
+
+  // Tools not applicable (x von 4): today's habits copy.
+  const habitsWithoutTools = render({ module: "habits", completedSteps: 3, totalSteps: 4 })
+  assert.match(habitsWithoutTools, /Noch ein Schritt: deine Gewohnheiten\./)
+  assert.doesNotMatch(habitsWithoutTools, /Letzter Schritt/)
+})
+
 test("Task 2.6: the plan-updated toast is absent without the signal", () => {
   const routine = payload([item()])
   const view = activeViewFor(routine)

@@ -151,8 +151,9 @@ export function getOrderedQuestionIds(
 /**
  * Total mapping from every canonical Stage 2 question id to its module. Source of truth for the
  * split: section A ("Was du heute benutzt") = products, section B ("Wie du dein Haar behandelst")
- * = habits. Derived heat-event questions (`heat:<source>`) belong to habits. Fixed two-value
- * model — no abstraction for hypothetical further modules.
+ * = habits. Derived heat-event questions (`heat:<source>`) belong to habits; the tool questions
+ * (`tools_overview`, `tools:<pageKey>`) belong to tools. Fixed model — no abstraction for
+ * hypothetical further modules.
  */
 const STAGE2_QUESTION_MODULE_BY_ID: Record<Stage2StaticQuestionId, Stage2Module> = {
   current_product_categories: "products",
@@ -169,6 +170,7 @@ const STAGE2_QUESTION_MODULE_BY_ID: Record<Stage2StaticQuestionId, Stage2Module>
 
 export function getStage2QuestionModule(questionId: Stage2QuestionId): Stage2Module {
   if (questionId.startsWith("heat:")) return "habits"
+  if (questionId === "tools_overview" || questionId.startsWith("tools:")) return "tools"
   const questionModule = STAGE2_QUESTION_MODULE_BY_ID[questionId as Stage2StaticQuestionId]
   if (!questionModule) throw new Error(`Unmapped Stage 2 refinement question id: ${questionId}`)
   return questionModule
@@ -178,7 +180,8 @@ export function getStage2QuestionModule(questionId: Stage2QuestionId): Stage2Mod
  * Given the current dynamic ordered path and completed question ids, groups them per module:
  * its question ids (in path order), which are completed vs open, and a module status (`open`
  * when it has at least one unanswered question on the current path, `complete` once all its
- * current-path questions are answered). Pure/deterministic — no I/O.
+ * current-path questions are answered, `not_applicable` when it has no question on the path at
+ * all). Pure/deterministic — no I/O.
  */
 export function getStage2ModulePathStates(
   orderedQuestionIds: readonly Stage2QuestionId[],
@@ -189,10 +192,11 @@ export function getStage2ModulePathStates(
     questionIds: [],
     completedQuestionIds: [],
     openQuestionIds: [],
-    status: "complete",
+    status: "not_applicable",
   })
   const states: Record<Stage2Module, Stage2ModulePathState> = {
     products: emptyModuleState(),
+    tools: emptyModuleState(),
     habits: emptyModuleState(),
   }
 
@@ -204,10 +208,29 @@ export function getStage2ModulePathStates(
     )
   }
   for (const stage2Module of STAGE2_MODULES) {
-    states[stage2Module].status =
-      states[stage2Module].openQuestionIds.length > 0 ? "open" : "complete"
+    const state = states[stage2Module]
+    state.status =
+      state.questionIds.length === 0
+        ? "not_applicable"
+        : state.openQuestionIds.length > 0
+          ? "open"
+          : "complete"
   }
   return states
+}
+
+/**
+ * The closing check: every module is either answered (`complete`) or has nothing to ask
+ * (`not_applicable`). Only then does a module completion close the draft.
+ */
+export function areAllStage2ModulesSettled(
+  states: Record<Stage2Module, Stage2ModulePathState>,
+): boolean {
+  return STAGE2_MODULES.every(
+    (stage2Module) =>
+      states[stage2Module].status === "complete" ||
+      states[stage2Module].status === "not_applicable",
+  )
 }
 
 export function resolveStage2Path(input: PathInput): Stage2PathState {

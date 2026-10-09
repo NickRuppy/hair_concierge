@@ -19,6 +19,8 @@ function statusResponse(
   return {
     modules: [
       { module: "products", status: products, openQuestionCount: products === "open" ? 2 : 0 },
+      // The tools module is off in these walkthroughs: the real response lists it as not_applicable.
+      { module: "tools", status: "not_applicable", openQuestionCount: 0 },
       { module: "habits", status: habits, openQuestionCount: habits === "open" ? 4 : 0 },
     ],
     progress: { completedSteps: 2 + completedModules, totalSteps: 4 },

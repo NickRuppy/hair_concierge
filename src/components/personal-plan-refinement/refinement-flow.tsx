@@ -58,7 +58,7 @@ export type Stage2RefinementTelemetryFamily =
   | "heat_behavior"
   | "detangling_behavior"
   | "night_behavior"
-export type Stage2RefinementTelemetrySection = "current_products" | "hair_handling"
+export type Stage2RefinementTelemetrySection = "current_products" | "tools" | "hair_handling"
 
 export type Stage2RefinementTelemetryEvent =
   | { name: "personal_plan_stage2_started" }

@@ -589,6 +589,36 @@ test("a rejected module id fails before any persistence call", async () => {
   assert.equal(db.needVersions.length, 0)
 })
 
+test("a not_applicable tools module neither blocks the closing module nor can be completed itself", async () => {
+  const seed = {
+    answers: { ...PRODUCTS_ANSWERS, ...HABITS_ANSWERS },
+    completedQuestionIds: [...PRODUCTS_QUESTION_IDS, ...HABITS_QUESTION_IDS],
+    answerProvenance: userProvenance([...PRODUCTS_QUESTION_IDS, ...HABITS_QUESTION_IDS]),
+    revision: 6,
+  }
+
+  // Completing `tools` (no questions on the path) is rejected before any persistence call.
+  const rejected = createModuleRefinementDb(seed)
+  await assert.rejects(
+    () => createService(rejected).completeModule({ module: "tools", expectedRevision: 6 }),
+    (error: { code?: string; message?: string }) =>
+      error.code === "incomplete_refinement" &&
+      /module is incomplete: tools/.test(error.message ?? ""),
+  )
+  assert.equal(rejected.moduleCalls.length, 0)
+  assert.equal(rejected.completeCalls.length, 0)
+
+  // `products` and `habits` complete + `tools` not_applicable closes through the full completion.
+  const closing = createModuleRefinementDb(seed)
+  const result = await createService(closing).completeModule({
+    module: "habits",
+    expectedRevision: 6,
+  })
+  assert.equal(result.status, "complete")
+  assert.equal(closing.completeCalls.length, 1)
+  assert.equal(closing.moduleCalls.length, 0)
+})
+
 /**
  * Task 5b: `care_habits` facts writing, bound to the draft that is being closed. `saveFacts`
  * is optional on `createStage2RefinementService` (every test above omits it and is

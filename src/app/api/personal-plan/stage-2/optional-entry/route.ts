@@ -5,7 +5,10 @@ import {
   loadPersonalPlanStage2AccessForUser,
   type PersonalPlanStage2Access,
 } from "@/lib/personal-plan/journey-access-loader"
-import { openOptionalRefinement } from "@/lib/personal-plan/persistence/stage2-optional-entry"
+import {
+  openOptionalRefinement,
+  Stage2OptionalEntryError,
+} from "@/lib/personal-plan/persistence/stage2-optional-entry"
 import {
   stage2SessionFromPersistedDraft,
   type Stage2PersistedDraft,
@@ -56,6 +59,11 @@ function errorResponse(
 ) {
   if (error instanceof Stage2OptionalEntryInvalidRequestError) {
     return response({ error: "invalid_request" }, 400)
+  }
+  // A module without questions on the path (e.g. `tools` while its rollout is off): a caller
+  // error, not an outage.
+  if (error instanceof Stage2OptionalEntryError && error.message === "invalid_module") {
+    return response({ error: "invalid_module" }, 400)
   }
   const message = error instanceof Error ? error.message : ""
   const code =

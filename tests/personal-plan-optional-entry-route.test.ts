@@ -152,3 +152,30 @@ test("an optional-entry access failure is reported too", async () => {
   assert.equal(response.status, 503)
   assert.deepEqual(reports, ["stage2_optional_entry_access"])
 })
+
+test("optional Stage 2 entry accepts the tools body and rejects a not_applicable module as invalid_module", async () => {
+  const calls: unknown[] = []
+  let response = await createStage2OptionalEntryRouteHandler(
+    deps({
+      openOptionalRefinement: async (input) => {
+        calls.push(input)
+        return draft
+      },
+    }),
+  )(request({ module: "tools" }))
+  assert.equal(response.status, 200)
+  assert.deepEqual(calls, [{ userId: "owner-1", module: "tools" }])
+
+  const reported: unknown[] = []
+  response = await createStage2OptionalEntryRouteHandler(
+    deps({
+      openOptionalRefinement: async () => {
+        throw new Stage2OptionalEntryError("invalid_module")
+      },
+      reportUnexpectedError: (_route, error) => reported.push(error),
+    }),
+  )(request({ module: "tools" }))
+  assert.deepEqual([response.status, await response.json()], [400, { error: "invalid_module" }])
+  // A caller error, not an outage: nothing is reported to Sentry.
+  assert.deepEqual(reported, [])
+})

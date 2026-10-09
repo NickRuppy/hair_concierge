@@ -2,6 +2,10 @@ import "server-only"
 
 import type { SupabaseClient } from "@supabase/supabase-js"
 
+import {
+  getOrderedQuestionIds,
+  getStage2ModulePathStates,
+} from "@/lib/personal-plan/refinement/question-path"
 import { deriveStage2TriggerContext } from "@/lib/personal-plan/refinement/stage1-adapter"
 import {
   STAGE2_MODULES,
@@ -72,11 +76,24 @@ export async function openOptionalRefinement(input: {
   deps?: Stage2OptionalEntryDeps
 }): Promise<Stage2PersistedDraft> {
   if (!STAGE2_MODULES.includes(input.module)) {
-    throw new Stage2OptionalEntryError("invalid_optional_module")
+    throw new Stage2OptionalEntryError("invalid_module")
   }
   const userId = normalizeRequiredId(input.userId, "userId")
   const deps = input.deps ?? defaultDeps(input.client)
   const context = await deps.loadContext(userId)
+
+  // A module without questions on the draft's path (`tools` while its rollout is off) is not
+  // an entry: opening it would only create a draft with nothing to ask.
+  const pathDraft = context.currentDraft ?? context.latestCompleteDraft
+  if (pathDraft) {
+    const moduleStates = getStage2ModulePathStates(
+      getOrderedQuestionIds(pathDraft.triggerContext, pathDraft.answers),
+      [],
+    )
+    if (moduleStates[input.module].status === "not_applicable") {
+      throw new Stage2OptionalEntryError("invalid_module")
+    }
+  }
 
   if (context.currentDraft) {
     return deps.openPreparedDraft({

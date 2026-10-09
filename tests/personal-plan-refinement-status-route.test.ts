@@ -115,7 +115,7 @@ function handlersFor(tables: Record<string, Row[]>, userId: string | null = ids.
   })
 }
 
-test("fresh plan with no refinement draft: both modules open, progress 2/4", async () => {
+test("fresh plan with no refinement draft: products and habits open, tools not applicable, progress 2/4", async () => {
   const res = await handlersFor({
     personal_plans: [planRow()],
     personal_plan_need_versions: [needVersionRow()],
@@ -128,6 +128,7 @@ test("fresh plan with no refinement draft: both modules open, progress 2/4", asy
     body.modules.map((m: { module: string; status: string }) => [m.module, m.status]),
     [
       ["products", "open"],
+      ["tools", "not_applicable"],
       ["habits", "open"],
     ],
   )
@@ -198,7 +199,7 @@ test("products module complete via lineage: 3/4 and the handoff marker is set", 
   assert.deepEqual(body.banner, { visible: true, module: "habits", dismissed: false })
 })
 
-test("both modules complete: 4/4", async () => {
+test("both applicable modules complete (tools not applicable): 4/4", async () => {
   const answers = {
     currentProductCategories: ["shampoo"],
     wetWashFrequency: "daily",
@@ -239,7 +240,7 @@ test("both modules complete: 4/4", async () => {
   assert.equal(res.status, 200)
   assert.deepEqual(
     body.modules.map((m: { status: string }) => m.status),
-    ["complete", "complete"],
+    ["complete", "not_applicable", "complete"],
   )
   assert.deepEqual(body.progress, { completedSteps: 4, totalSteps: 4 })
   assert.equal(body.module1HandedOff, true)

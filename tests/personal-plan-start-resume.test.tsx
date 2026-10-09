@@ -1249,3 +1249,65 @@ test("accepted + IN-PROGRESS draft, undirected: unchanged Stage 2 fall-through",
     initialRefinementSession: refinementSession("in_progress"),
   })
 })
+
+test("a persisted complete draft whose path grew is not unavailable: it loads and the module entry is offered", async () => {
+  // `night_protection` stands in for a question that joined the path after completion.
+  const draft: Stage2PersistedDraft = {
+    id: "draft-grown",
+    personalPlanId: "plan-1",
+    baseInitialNeedVersionId: "initial-1",
+    schemaVersion: 1,
+    preparedArtifactSourceId: "artifact-1",
+    baseInputSnapshot: {},
+    pathVersion: "stage2-v1",
+    triggerContext: {
+      relevantCategories: ["shampoo"],
+      hasReportedIrritatedScalp: false,
+      dryShampooBridgeEligibility: "ineligible",
+    },
+    answers: {
+      currentProductCategories: [],
+      wetWashFrequency: "weekly_1x",
+      towel: { material: "no_towel" },
+      dryingRoutes: [],
+      additionalHeatTools: [],
+    },
+    completedQuestionIds: [
+      "current_product_categories",
+      "wet_wash_frequency",
+      "towel_handling",
+      "drying_routes",
+      "additional_heat_tools",
+    ],
+    answerProvenance: {},
+    moduleProjections: {},
+    revision: 9,
+    status: "complete",
+    refinedVersionId: "refined-1",
+  }
+  const loadExistingRefinementSession = (userId: string) =>
+    loadExistingStage2RefinementSession({
+      userId,
+      persistence: { loadExisting: async () => draft },
+    })
+  const deps: ResumeAwareDeps = {
+    enabled: () => true,
+    stage2Enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => ({
+      kind: "personal_plan",
+      personalPlanId: "plan-1",
+      frontier: "stage2",
+      nextHref: "/plan-start",
+      allowed,
+    }),
+    loadExistingRefinementSession,
+  }
+
+  const state = await resolvePlanStartPageState(deps, { refine: true, refineModule: "habits" })
+  assert.equal(state.state, "production")
+  assert.ok(state.state === "production")
+  assert.equal(state.initialRefinementSession?.status, "complete")
+  assert.equal(state.initialRefinementSession?.path.firstUnresolvedQuestionId, "night_protection")
+  assert.equal(state.initialJourney.stage, "stage2")
+})
