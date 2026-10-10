@@ -11,6 +11,7 @@ import type {
   PersonalPlanRefinementAnswersV1,
   Stage2QuestionId,
 } from "../src/lib/personal-plan/refinement/types"
+import { DIFFUSER_AS_BLOW_DRY_RULE_ID } from "../src/lib/personal-plan/heat-diffuser-rule"
 import { resolveStage2RefinementContract } from "../src/lib/personal-plan/refinement/question-path"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
 
@@ -410,7 +411,7 @@ function allQuestionIds(
     .orderedQuestionIds
 }
 
-test("rollout on: the Diffusor projects as plain blow-drying, the Glätteisen stays direct-contact", () => {
+test("rollout on: the Diffusor keeps its airflow_shaping route and carries the tier marker", () => {
   const triggerContext = toolsTrigger()
   const completed = allQuestionIds(triggerContext, diffuserToolsAnswers)
   assert.ok(completed.includes("heat:diffuser_airflow_shaping"))
@@ -422,13 +423,40 @@ test("rollout on: the Diffusor projects as plain blow-drying, the Glätteisen st
   })
   assert.deepEqual(
     routine.heatToolUse.state === "known"
-      ? routine.heatToolUse.value.map(({ id, route }) => ({ id, route }))
+      ? routine.heatToolUse.value.map(({ id, tool, route, sourceRuleIds }) => ({
+          id,
+          tool,
+          route,
+          sourceRuleIds,
+        }))
       : null,
     [
-      { id: "heat:diffuser_airflow_shaping", route: "ordinary_airflow" },
-      { id: "heat:straightener", route: "direct_contact_heat" },
+      {
+        id: "heat:diffuser_airflow_shaping",
+        tool: "hair_dryer",
+        route: "airflow_shaping",
+        sourceRuleIds: ["post_plan_onboarding:heat_tool_use", DIFFUSER_AS_BLOW_DRY_RULE_ID],
+      },
+      {
+        id: "heat:straightener",
+        tool: "straightener",
+        route: "direct_contact_heat",
+        sourceRuleIds: ["post_plan_onboarding:heat_tool_use"],
+      },
     ],
   )
+})
+
+test("rollout off: the Diffusor event carries no marker (today's plan input)", () => {
+  const routine = buildPlanRoutineContextFromCompletedRefinement({
+    triggerContext: deriveStage2TriggerContext(initialSnapshot(), { toolsEnabled: false }),
+    answers: completedAnswers,
+    completedQuestionIds,
+  })
+  assert.ok(routine.heatToolUse.state === "known")
+  for (const event of routine.heatToolUse.value) {
+    assert.deepEqual(event.sourceRuleIds, ["post_plan_onboarding:heat_tool_use"])
+  }
 })
 
 test("rollout on: a stored Diffusor protection answer is ignored, never an error", () => {

@@ -113,7 +113,8 @@ function eventsFromAnswers(
     tool: projected.tool,
     route: projected.route,
     frequency: projected.frequency,
-    sourceRuleIds: [],
+    // As the member adapter writes it: the Diffusor marker rides in the rule ids.
+    sourceRuleIds: projected.ruleIds,
   }))
 }
 

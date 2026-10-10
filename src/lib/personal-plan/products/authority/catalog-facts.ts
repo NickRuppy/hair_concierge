@@ -15,6 +15,7 @@ import {
 } from "@/lib/personal-plan/oil-heat-context"
 import { applicationGuidanceProtocolSchema } from "@/lib/routines/personal-plan/application/contracts"
 
+import { isDiffuserBlowDryEvent } from "../../heat-diffuser-rule"
 import { CATEGORY_ROLE_POLICIES } from "../authorities"
 import type { PersonalPlanCategory, Stage3DecisionSubject, Stage3ProductDraft } from "../contracts"
 import { expectedShampooBucket, expectedShampooSpecTarget } from "./categories/shampoo"
@@ -906,7 +907,11 @@ export async function loadStage3HeatCarrierCoverage(
   heatRoutes: string[],
   heatEvents: readonly PlanHeatToolUseEvent[],
 ): Promise<Stage3AuthorityFactBundle["heatCarrierCoverage"]> {
-  const qualifyingEvents = heatEvents.filter((event) => heatRoutes.includes(event.route))
+  // The Diffusor rule: a marked Diffusor is plain blow-drying for the protectant — it never
+  // qualifies a carrier requirement, even next to a Warmluftbürste on the same route.
+  const qualifyingEvents = heatEvents.filter(
+    (event) => heatRoutes.includes(event.route) && !isDiffuserBlowDryEvent(event),
+  )
   for (const category of ["leave_in", "oil", "heat_protectant"] as const) {
     const requiredRole =
       category === "oil"

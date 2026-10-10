@@ -130,6 +130,18 @@ export function saveStage2SessionAnswer(
     throw new Stage2RefinementError("invalid_answer", "The submitted answer is invalid")
   }
 
+  // A rollout-off member still answers the Diffusor's protection question (the path reads a
+  // stored Diffusor event without it as answered under the rule, so only a new save is checked).
+  if (
+    input.questionId === "heat:diffuser_airflow_shaping" &&
+    session.triggerContext.toolsEnabled !== true &&
+    (typeof input.answer !== "object" ||
+      input.answer === null ||
+      (input.answer as { protectionConsistency?: unknown }).protectionConsistency === undefined)
+  ) {
+    throw new Stage2RefinementError("invalid_answer", "The submitted answer is invalid")
+  }
+
   const candidateAnswers = replaceQuestionAnswer(canonical.answers, input.questionId, input.answer)
   const candidate = resolveStage2RefinementContract({
     triggerContext: session.triggerContext,

@@ -684,14 +684,16 @@ test("Diffusor rule (rollout on): a stored protection answer is tolerated, never
   assert.equal(contract.path.completedQuestionIds.includes("heat:diffuser_airflow_shaping"), true)
 })
 
-test("Diffusor rule (rollout off): the Diffusor event still needs its protection answer", () => {
+test("Diffusor rule (rollout off context): a Diffusor stored without protection stays complete — the scanner does not re-ask it", () => {
+  // The question no longer exists for it, so a missing answer was given under the rule; an
+  // invalid stored value is still invalid.
   assert.equal(
     isStage2QuestionAnswerValid(
       "heat:diffuser_airflow_shaping",
       diffuserHeatAnswers(),
       neutralContext,
     ),
-    false,
+    true,
   )
   assert.equal(
     isStage2QuestionAnswerValid(
@@ -700,6 +702,14 @@ test("Diffusor rule (rollout off): the Diffusor event still needs its protection
       neutralContext,
     ),
     true,
+  )
+  assert.equal(
+    isStage2QuestionAnswerValid(
+      "heat:diffuser_airflow_shaping",
+      diffuserHeatAnswers("bogus" as never),
+      neutralContext,
+    ),
+    false,
   )
 })
 

@@ -60,6 +60,7 @@ export function buildPlanRoutineContextFromCompletedRefinement(
   const dryShampooBridgePreference = getEffectiveDryShampooBridgePreference(contract.answers)
   const mechanicalExposureSignals =
     contract.answers.towel?.technique === "rough_rubbing" ? [TOWEL_ROUGH_RUBBING_SIGNAL] : []
+  const heatRule = stage2HeatRuleOptions(input.triggerContext)
   const ownedHeatProtectionIsUnresolved =
     input.habitsModuleUserComplete === false &&
     contract.answers.currentProductCategories?.includes("heat_protectant")
@@ -77,15 +78,12 @@ export function buildPlanRoutineContextFromCompletedRefinement(
       ? { state: "unknown", reason: "heat_tool_use" }
       : {
           state: "known",
-          value: projectStage2HeatEvents(
-            contract.answers,
-            stage2HeatRuleOptions(input.triggerContext),
-          ).map((event) => ({
+          value: projectStage2HeatEvents(contract.answers, heatRule).map((event) => ({
             id: event.id,
             tool: event.tool,
             route: event.route,
             frequency: event.frequency,
-            sourceRuleIds: [...STAGE2_HEAT_SOURCE_RULE_IDS],
+            sourceRuleIds: [...STAGE2_HEAT_SOURCE_RULE_IDS, ...event.ruleIds],
           })),
         },
     mechanicalExposureSignals,

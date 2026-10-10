@@ -193,6 +193,42 @@ test("Diffusor rule: with the tools rollout on the Diffusor event is assumed wit
   })
 })
 
+test("scanner context (rollout off): a flag-on member's frequency-only Diffusor answer is kept, not re-assumed", () => {
+  const answers = {
+    dryingRoutes: ["diffuser_or_airflow_shaping"],
+    additionalHeatTools: [],
+    heatEvents: { "heat:diffuser_airflow_shaping": { frequency: "weekly_3_4x" } },
+  } as PersonalPlanRefinementAnswersV1
+  const scannerContext = triggerContext() // the scanner always resolves with the rollout off
+  const resolution = resolveAssumedAnswers({
+    triggerContext: scannerContext,
+    answers,
+    userAnsweredQuestionIds: [
+      "drying_routes",
+      "additional_heat_tools",
+      "heat:diffuser_airflow_shaping",
+    ],
+  })
+  assert.deepEqual(resolution.answers.heatEvents?.["heat:diffuser_airflow_shaping"], {
+    frequency: "weekly_3_4x",
+  })
+  assert.equal(resolution.assumedQuestionIds.includes("heat:diffuser_airflow_shaping"), false)
+  assert.equal(resolution.appliedRuleIds.includes("assume:heat_event:protected_minimum"), false)
+
+  // …and the plan input marks the Diffusor, so the Hitzeschutz tier matches the rollout-on plan.
+  const routine = buildPlanRoutineContextFromCompletedRefinement({
+    triggerContext: scannerContext,
+    answers: resolution.answers,
+    completedQuestionIds: resolution.orderedQuestionIds,
+  })
+  assert.equal(routine.heatToolUse.state, "known")
+  if (routine.heatToolUse.state === "known") {
+    const [event] = routine.heatToolUse.value
+    assert.equal(event.route, "airflow_shaping")
+    assert.ok(event.sourceRuleIds.includes("heat_protectant.diffuser_as_blow_dry"))
+  }
+})
+
 test("rule assume:night_protection:none assumes no special night protection", () => {
   const resolution = resolve(triggerContext())
   assert.deepEqual(resolution.answers.nightProtection, [])

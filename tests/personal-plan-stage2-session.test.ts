@@ -286,3 +286,38 @@ test("rollout off: the drying question still accepts the explicit empty answer",
   const saved = saveStage2SessionAnswer(session, { questionId: "drying_routes", answer: [] })
   assert.deepEqual(saved.answers.dryingRoutes, [])
 })
+
+test("rollout off: a NEW Diffusor event save must still carry its protection answer", () => {
+  const session = createStage2RefinementSession({
+    pathVersion: "stage2-v1",
+    triggerContext,
+    answers: {
+      currentProductCategories: [],
+      wetWashFrequency: "weekly_1x",
+      towel: { material: "no_towel" },
+      dryingRoutes: ["diffuser_or_airflow_shaping"],
+      additionalHeatTools: [],
+    },
+    completedQuestionIds: [
+      "current_product_categories",
+      "wet_wash_frequency",
+      "towel_handling",
+      "drying_routes",
+      "additional_heat_tools",
+    ],
+  })
+  assert.equal(session.path.firstUnresolvedQuestionId, "heat:diffuser_airflow_shaping")
+  assert.throws(
+    () =>
+      saveStage2SessionAnswer(session, {
+        questionId: "heat:diffuser_airflow_shaping",
+        answer: { frequency: "weekly_2x" },
+      }),
+    /invalid/i,
+  )
+  const saved = saveStage2SessionAnswer(session, {
+    questionId: "heat:diffuser_airflow_shaping",
+    answer: { frequency: "weekly_2x", protectionConsistency: "always" },
+  })
+  assert.equal(saved.path.completedQuestionIds.includes("heat:diffuser_airflow_shaping"), true)
+})

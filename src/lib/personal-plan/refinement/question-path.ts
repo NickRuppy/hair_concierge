@@ -42,6 +42,7 @@ import {
   createStage2HeatEventId,
   getSelectedStage2HeatEventSources,
   ignoresStoredStage2HeatProtection,
+  isDiffuserAnsweredWithoutProtection,
   requiresStage2HeatProtection,
   stage2HeatRuleOptions,
 } from "./heat-events"
@@ -516,10 +517,12 @@ function isTowelHandlingValid(answers: PersonalPlanRefinementAnswersV1): boolean
 }
 
 /**
- * Heat-event validity. Under the Diffusor rule (tools rollout on) the diffuser source is plain
- * blow-drying: it needs no protection answer and a stored one is ignored, never a reason to
- * re-open the question. Readers without a trigger context (stored facts, scanner) are tolerant
- * the same way; a rollout-off member keeps today's contract.
+ * Heat-event validity. A Diffusor is plain blow-drying under the Diffusor rule: it needs no
+ * protection answer, and a stored one is ignored — never a reason to re-open the question. The
+ * read is tolerant everywhere: a Diffusor event WITHOUT a protection answer was answered under
+ * the rule (a rollout-off member's always carries one), so it stays complete in the rollout-off
+ * scanner context too; a stored answer is valid with the rule on or without a trigger context.
+ * (New rollout-off answers still must carry it: `saveStage2SessionAnswer`.)
  */
 function isHeatEventAnswerValid(
   questionId: Stage2QuestionId,
@@ -533,6 +536,7 @@ function isHeatEventAnswerValid(
     ? stage2HeatRuleOptions(triggerContext)
     : ({ diffuserAsBlowDry: true } as const)
   if (ignoresStoredStage2HeatProtection(source, rule)) return true
+  if (isDiffuserAnsweredWithoutProtection(source, event)) return true
   return requiresStage2HeatProtection(source, rule)
     ? isOneOf<HeatProtectionConsistency>(event.protectionConsistency, HEAT_PROTECTION_CONSISTENCIES)
     : event.protectionConsistency === undefined
