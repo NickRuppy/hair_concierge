@@ -1374,7 +1374,7 @@ async function upsertOneTimeProfile(
   email: string,
   customerId: string | null,
 ) {
-  const patch = customerId
+  const patch: { id: string; email: string; stripe_customer_id?: string } = customerId
     ? { id: userId, email, stripe_customer_id: customerId }
     : { id: userId, email }
   const { error } = await deps.supabase.from("profiles").upsert(patch, { onConflict: "id" })
