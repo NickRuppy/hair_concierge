@@ -200,7 +200,7 @@
   },
   "dependencies": {
     "@apple/app-store-server-library": "^3.1.0",
-    "@customerio/cdp-analytics-browser": "^0.4.16",
+    "@customerio/cdp-analytics-browser": "^0.5.11",
     "@langfuse/client": "^5.2.0",
     "@langfuse/openai": "^5.2.0",
     "@langfuse/otel": "^5.2.0",
