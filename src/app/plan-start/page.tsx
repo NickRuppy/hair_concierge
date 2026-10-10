@@ -6,7 +6,10 @@ import type {
   PlanStartInitialJourney,
   PlanStartReadyViewModel,
 } from "@/components/personal-plan-start/plan-start-flow"
-import { adaptInitialNeedSnapshotToPlanStartViewModel } from "@/components/personal-plan-start/snapshot-adapter"
+import {
+  adaptInitialNeedSnapshotToPlanStartViewModel,
+  planStartHasOptionalPage,
+} from "@/components/personal-plan-start/snapshot-adapter"
 import {
   canAccessPersonalPlanJourneyStage,
   type PersonalPlanJourneyAccess,
@@ -33,6 +36,10 @@ import {
   isPersonalPlanStage4Enabled,
 } from "@/lib/personal-plan/release"
 import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
+import {
+  loadToolFactsSource,
+  withReadTimeStage1ToolCards,
+} from "@/lib/personal-plan/tools/read-view-facts"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -382,7 +389,15 @@ export default async function PlanStartPage({
           createStage1SupabaseDependencies(createAdminClient() as never),
         ).loadOrCreate({ userId })
         if (result.status !== "completed") return null
-        const plan = adaptInitialNeedSnapshotToPlanStartViewModel(result.outputSnapshot, {
+        // Flag on: the read-time Tool cards (presentation only) ride on the snapshot the
+        // adapter reads, exactly like the Stage-1 route's response.
+        const snapshot = toolsEnabled
+          ? await withReadTimeStage1ToolCards(result.outputSnapshot, {
+              loadFacts: () => loadToolFactsSource(createAdminClient(), userId),
+              hasOptionalPage: planStartHasOptionalPage(result.outputSnapshot),
+            })
+          : result.outputSnapshot
+        const plan = adaptInitialNeedSnapshotToPlanStartViewModel(snapshot, {
           toolsEnabled,
         })
         return plan ? { ...plan, personalPlanId: result.personalPlanId } : null

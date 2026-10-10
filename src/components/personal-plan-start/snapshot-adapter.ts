@@ -27,6 +27,7 @@ import {
   roleFrequencyLabel,
 } from "@/lib/personal-plan/decision-presentation"
 import { deriveStage2TriggerContext } from "@/lib/personal-plan/refinement/stage1-adapter"
+import type { Stage1ToolBlock, Stage1ToolCards } from "@/lib/personal-plan/tools/read-view"
 
 import {
   isNeedCardGroup,
@@ -151,6 +152,7 @@ function screenFor(
   kind: "basis" | "optional",
   cards: PlanStartCardViewModel[],
   hasOptionalPage: boolean,
+  toolBlock: Stage1ToolBlock | null = null,
 ): NeedPlanScreenViewModel {
   const countLabel = countLabelFor(kind, entryCount(cards))
 
@@ -166,6 +168,9 @@ function screenFor(
     countLabel,
     progress: kind === "basis" && hasOptionalPage ? 50 : 100,
     cards,
+    // Tool-only property, absent while the rollout is off: the off view model is
+    // shape-identical to the released one rather than merely looking the same.
+    ...(toolBlock ? { toolBlock } : {}),
   }
 }
 
@@ -193,10 +198,13 @@ function asInitialNeedPlanSnapshot(value: unknown): InitialNeedPlanSnapshot | nu
   return value as InitialNeedPlanSnapshot
 }
 
-export function adaptInitialNeedSnapshotToPlanStartViewModel(
-  value: unknown,
-  options: { toolsEnabled: boolean },
-): PlanStartReadyViewModel | null {
+type PlanStartScreens = {
+  snapshot: InitialNeedPlanSnapshot
+  visibleBasisCards: NeedCardViewModel[]
+  visibleOptionalCards: NeedCardViewModel[]
+}
+
+function planStartScreens(value: unknown): PlanStartScreens | null {
   const snapshot = asInitialNeedPlanSnapshot(value)
   if (!snapshot) return null
 
@@ -217,9 +225,34 @@ export function adaptInitialNeedSnapshotToPlanStartViewModel(
   if (basisCards.length === 0) return null
 
   const pausedOnlyOptional = optionalCards.length > 0 && optionalCards.every((card) => card.paused)
-  const visibleBasisCards = pausedOnlyOptional ? [...basisCards, ...optionalCards] : basisCards
-  const visibleOptionalCards = pausedOnlyOptional ? [] : optionalCards
+  return {
+    snapshot,
+    visibleBasisCards: pausedOnlyOptional ? [...basisCards, ...optionalCards] : basisCards,
+    visibleOptionalCards: pausedOnlyOptional ? [] : optionalCards,
+  }
+}
+
+/**
+ * Whether the Idealplan built from this snapshot has an Optional page. The server needs it to
+ * place the read-time Tool cards (`buildToolView`'s `hasOptionalPage`) exactly where this
+ * adapter will render the care-product pages.
+ */
+export function planStartHasOptionalPage(value: unknown): boolean {
+  return (planStartScreens(value)?.visibleOptionalCards.length ?? 0) > 0
+}
+
+export function adaptInitialNeedSnapshotToPlanStartViewModel(
+  value: unknown,
+  options: { toolsEnabled: boolean },
+): PlanStartReadyViewModel | null {
+  const screens = planStartScreens(value)
+  if (!screens) return null
+  const { snapshot, visibleBasisCards, visibleOptionalCards } = screens
   const hasOptionalPage = visibleOptionalCards.length > 0
+  // Read-time Tool cards ride on the snapshot the server handed us (presentation only); they
+  // render only while the server-resolved rollout is on.
+  const toolCards =
+    options.toolsEnabled === true ? asStage1ToolCards(snapshot.stage1ToolCards) : null
   return {
     sourceInputHash: snapshot.inputHash,
     // The Stage-2 defaults a direct acceptance would apply, available without
@@ -228,9 +261,38 @@ export function adaptInitialNeedSnapshotToPlanStartViewModel(
     stage2TriggerContext: deriveStage2TriggerContext(snapshot, {
       toolsEnabled: options.toolsEnabled,
     }),
-    basis: screenFor("basis", visibleBasisCards, hasOptionalPage),
-    optional: hasOptionalPage ? screenFor("optional", visibleOptionalCards, hasOptionalPage) : null,
+    basis: screenFor("basis", visibleBasisCards, hasOptionalPage, toolCards?.basis ?? null),
+    optional: hasOptionalPage
+      ? screenFor("optional", visibleOptionalCards, hasOptionalPage, toolCards?.optional ?? null)
+      : null,
   }
+}
+
+function asStage1ToolCards(value: unknown): Stage1ToolCards | null {
+  if (!isRecord(value)) return null
+  const basis = asStage1ToolBlock(value.basis)
+  const optional = asStage1ToolBlock(value.optional)
+  return basis || optional ? { basis, optional } : null
+}
+
+function asStage1ToolBlock(value: unknown): Stage1ToolBlock | null {
+  if (!isRecord(value) || typeof value.title !== "string" || typeof value.lead !== "string") {
+    return null
+  }
+  if (!Array.isArray(value.cards) || value.cards.length === 0) return null
+  const valid = value.cards.every(
+    (card) =>
+      isRecord(card) &&
+      typeof card.id === "string" &&
+      typeof card.familyLabel === "string" &&
+      typeof card.typeLabel === "string" &&
+      typeof card.purpose === "string" &&
+      typeof card.imageUrl === "string" &&
+      typeof card.imageAlt === "string" &&
+      typeof card.stateLabel === "string" &&
+      typeof card.state === "string",
+  )
+  return valid ? (value as Stage1ToolBlock) : null
 }
 
 function withRecommendation(

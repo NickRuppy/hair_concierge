@@ -81,6 +81,13 @@ export const TOOL_BLOCK_BASIS_LEAD =
   "Diese Tools gehören zu deiner Routine. Wir prüfen im Feinschliff, was du schon hast."
 export const TOOL_BLOCK_OPTIONAL_LEAD = "Diese Tools können deine Ziele zusätzlich unterstützen."
 
+/**
+ * D4/D5: a „Nutze deins" that rests only on a behaviour projection („du föhnst" ⇒ ein Föhn) is
+ * kept, but never presented as something the member said — the read-time view marks it and
+ * the Stage-1 block / Routine section add this line under the state.
+ */
+export const TOOL_DERIVED_NOTE = "Aus deinen Angaben abgeleitet"
+
 export const TOOL_STATE_LABELS: Record<ToolPresentationState, string> = {
   use_yours: "Nutze deins",
   check_in_refinement: "Bestand im Feinschliff prüfen",

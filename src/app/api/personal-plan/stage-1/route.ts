@@ -13,6 +13,12 @@ import {
 } from "@/lib/personal-plan/journey-access"
 import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journey-access-loader"
 import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
+import type { ToolFactsSource } from "@/lib/personal-plan/tools/read-view"
+import {
+  loadToolFactsSource,
+  withReadTimeStage1ToolCards,
+} from "@/lib/personal-plan/tools/read-view-facts"
+import { planStartHasOptionalPage } from "@/components/personal-plan-start/snapshot-adapter"
 
 export const runtime = "nodejs"
 
@@ -22,6 +28,11 @@ export type Stage1RouteDeps = {
   persistence: Stage1PersistenceDependencies
   /** Server-resolved Hair Tools rollout for this user; browser input never reaches it. */
   toolsEnabled: (userId: string) => Promise<boolean>
+  /**
+   * The member's facts for the read-time Tool cards, read only while the rollout is on. An
+   * unwired dep or a failed read means no cards — the Idealplan itself is unaffected.
+   */
+  loadToolFacts?: (userId: string) => Promise<ToolFactsSource>
 }
 
 export async function GET() {
@@ -36,6 +47,7 @@ export async function GET() {
       persistence: createStage1SupabaseDependencies(createAdminClient() as never),
       toolsEnabled: async (userId) =>
         isPersonalPlanToolsEnabledForUser(userId, createAdminClient()),
+      loadToolFacts: (userId) => loadToolFactsSource(createAdminClient(), userId),
     }),
   )
 }
@@ -77,7 +89,15 @@ export async function handleStage1LoadOrCreate(deps: Stage1RouteDeps) {
           status: "completed",
           personalPlanId: result.personalPlanId,
           needVersionId: result.needVersionId,
-          outputSnapshot: result.outputSnapshot,
+          // Flag on: the read-time Tool cards ride on the snapshot as the presentation-only
+          // `stage1ToolCards`; the stored snapshot is never touched. Flag off: unchanged.
+          outputSnapshot:
+            toolsEnabled && deps.loadToolFacts
+              ? await withReadTimeStage1ToolCards(result.outputSnapshot, {
+                  loadFacts: () => deps.loadToolFacts!(user.id),
+                  hasOptionalPage: planStartHasOptionalPage(result.outputSnapshot),
+                })
+              : result.outputSnapshot,
           ...(toolsEnabled ? { toolsEnabled: true } : {}),
         },
       }
