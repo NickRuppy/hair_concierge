@@ -33,6 +33,8 @@ export type Stage2PreviewScenario =
   | "complete-error"
   /** Modul-scoped entries (Task 2.4): walk ONE module and finish it. */
   | "module-products"
+  /** Hair Tools port: the tools module with the rollout on (`toolsEnabled`), products answered. */
+  | "module-tools"
   | "module-habits"
   /** Modul deep link on a COMPLETE draft — the direct-accept cohort. */
   | "module-direct-accept"
@@ -42,6 +44,7 @@ export function moduleEntryForScenario(
   scenario: Stage2PreviewScenario,
 ): Stage2ModuleEntryRequest | undefined {
   if (scenario === "module-products" || scenario === "module-direct-accept") return "products"
+  if (scenario === "module-tools") return "tools"
   if (scenario === "module-habits") return "habits"
   return undefined
 }
@@ -113,7 +116,7 @@ export function createPreviewGateway(
         ? 7
         : scenario === "complete"
           ? 12
-          : scenario === "module-habits"
+          : scenario === "module-habits" || scenario === "module-tools"
             ? 2
             : scenario === "module-direct-accept"
               ? 9
@@ -141,6 +144,14 @@ export function createPreviewGateway(
 }
 
 function triggerContextForScenario(scenario: Stage2PreviewScenario): Stage2TriggerContext {
+  if (scenario === "module-tools") {
+    return {
+      relevantCategories: ["shampoo", "mask", "heat_protectant"],
+      hasReportedIrritatedScalp: false,
+      dryShampooBridgeEligibility: "ineligible",
+      toolsEnabled: true,
+    }
+  }
   if (
     scenario === "ready" ||
     scenario === "complete" ||
@@ -187,6 +198,16 @@ function initialAnswersForScenario(
     // Modul 1 done, Modul 2 untouched — the state a `products` completion leaves.
     return { currentProductCategories: ["shampoo"], wetWashFrequency: "weekly_2x" }
   }
+  if (scenario === "module-tools") {
+    // Produkte done; the member's earlier Gewohnheiten answers imply a towel and a Satin pillow,
+    // so the overview opens with those sections pre-ticked — a starting value, nothing saved.
+    return {
+      currentProductCategories: ["shampoo"],
+      wetWashFrequency: "weekly_2x",
+      towel: { material: "mikrofaser", technique: "gentle_press" },
+      nightProtection: ["silk_satin_pillow"],
+    }
+  }
   return undefined
 }
 
@@ -214,7 +235,7 @@ function completedQuestionsForScenario(scenario: Stage2PreviewScenario): Stage2Q
       "night_protection",
     ]
   }
-  if (scenario === "module-habits") {
+  if (scenario === "module-habits" || scenario === "module-tools") {
     return ["current_product_categories", "wet_wash_frequency"]
   }
   return []

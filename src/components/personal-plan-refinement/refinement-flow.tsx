@@ -58,6 +58,7 @@ export type Stage2RefinementTelemetryFamily =
   | "heat_behavior"
   | "detangling_behavior"
   | "night_behavior"
+  | "tool_inventory"
 export type Stage2RefinementTelemetrySection = "current_products" | "tools" | "hair_handling"
 
 export type Stage2RefinementTelemetryEvent =

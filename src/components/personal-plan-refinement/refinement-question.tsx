@@ -10,8 +10,28 @@ import {
 import { Button } from "@/components/ui/button"
 import { InfoTip } from "@/components/ui/info-tip"
 import { requiresStage2HeatProtection } from "@/lib/personal-plan/refinement/heat-events"
-import { getStage2QuestionModule } from "@/lib/personal-plan/refinement/question-path"
+import {
+  getStage2DryingRouteOptions,
+  getStage2QuestionModule,
+  isStage2TowelMaterialDerived,
+} from "@/lib/personal-plan/refinement/question-path"
 import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
+import { projectToolCareFacts } from "@/lib/personal-plan/tools/facts"
+import type { ToolReportedForm } from "@/lib/personal-plan/tools/contracts"
+import {
+  toolSectionsForFamilies,
+  type ToolOverviewSectionKey,
+} from "@/lib/personal-plan/tools/labels"
+import {
+  TOOL_NOTHING_LABEL,
+  TOOL_OVERVIEW_LEAD,
+  TOOL_OVERVIEW_OPTIONS,
+  TOOL_OVERVIEW_TITLE,
+  TOOL_SECTION_LABEL,
+  toolFormPagePresentation,
+  toolOverviewPreselection,
+  toolPagePreselection,
+} from "@/lib/personal-plan/tools/stage2"
 import type {
   HeatEventAnswer,
   PersonalPlanRefinementAnswersV1,
@@ -26,9 +46,11 @@ import type {
 } from "@/lib/personal-plan/refinement/types"
 import { cn } from "@/lib/utils"
 
+import { ToolVisualMultiSelect } from "./tool-inventory"
 import {
   ADDITIONAL_HEAT_TOOL_OPTIONS,
   DRYING_ROUTE_OPTIONS,
+  TOOLS_DRYING_ROUTE_OPTIONS,
   DRY_SHAMPOO_BRIDGE_OPTIONS,
   HEAT_PROTECTION_OPTIONS,
   NIGHT_PROTECTION_OPTIONS,
@@ -99,6 +121,23 @@ export function getAnswerForQuestion(
   questionId: Stage2QuestionId,
 ): unknown {
   if (questionId.startsWith("heat:")) return answers.heatEvents?.[questionId]
+  if (questionId === "tools_overview") {
+    // Persisted as families; the overview renders presentation sections. Unanswered falls
+    // back to what the care answers already imply (`D3a`) — a STARTING value the user can
+    // untick, never an answer of its own until they submit the page.
+    return answers.toolFamiliesWithSomething
+      ? toolSectionsForFamilies(answers.toolFamiliesWithSomething)
+      : toolOverviewPreselection(projectToolCareFacts(answers))
+  }
+  if (questionId.startsWith("tools:")) {
+    const pageKey = questionId.slice("tools:".length)
+    // A saved page answer wins; otherwise this page's slice of the care-implied inventory.
+    return (
+      (answers.toolForms as Record<string, ToolReportedForm[] | undefined> | undefined)?.[
+        pageKey
+      ] ?? toolPagePreselection(projectToolCareFacts(answers), pageKey)
+    )
+  }
   switch (questionId) {
     case "current_product_categories":
       return answers.currentProductCategories
@@ -123,16 +162,36 @@ export function getAnswerForQuestion(
   }
 }
 
-export function isLocalAnswerComplete(questionId: Stage2QuestionId, answer: unknown): boolean {
+/**
+ * Rollout facts that change what counts as a complete local answer: with the tools rollout on,
+ * the drying question loses „Nichts davon" (at least one way the hair dries is required for a
+ * new answer), and a towel material derived from the textiles page leaves only the technique.
+ */
+export type LocalAnswerCompletenessOptions = {
+  toolsEnabled?: boolean
+  towelMaterialDerived?: boolean
+}
+
+export function isLocalAnswerComplete(
+  questionId: Stage2QuestionId,
+  answer: unknown,
+  options: LocalAnswerCompletenessOptions = {},
+): boolean {
   if (questionId.startsWith("heat:")) {
     const source = questionId.slice("heat:".length) as Stage2HeatEventSource
     const heatAnswer = answer as HeatEventAnswer | undefined
     if (!heatAnswer?.frequency) return false
     return requiresStage2HeatProtection(source) ? Boolean(heatAnswer.protectionConsistency) : true
   }
-  if (Array.isArray(answer)) return questionId === "oil_purposes" ? answer.length > 0 : true
+  // Tool pages: an explicit `[]` („Nichts davon") is a complete answer; `undefined` is not.
+  if (Array.isArray(answer)) {
+    if (questionId === "oil_purposes") return answer.length > 0
+    if (questionId === "drying_routes" && options.toolsEnabled) return answer.length > 0
+    return true
+  }
   if (questionId === "towel_handling") {
     const towel = answer as { material?: TowelMaterial; technique?: TowelTechnique } | undefined
+    if (options.towelMaterialDerived) return Boolean(towel?.technique)
     if (!towel?.material) return false
     return towel.material === "no_towel" ? true : Boolean(towel.technique)
   }
@@ -155,7 +214,10 @@ export function RefinementQuestion({
 }: RefinementQuestionProps) {
   const headingRef = useRef<HTMLHeadingElement>(null)
   const answer = localAnswer ?? getAnswerForQuestion(session.answers, questionId)
-  const complete = isLocalAnswerComplete(questionId, answer)
+  const complete = isLocalAnswerComplete(questionId, answer, {
+    toolsEnabled: session.triggerContext.toolsEnabled === true,
+    towelMaterialDerived: isStage2TowelMaterialDerived(session.triggerContext, session.answers),
+  })
 
   useEffect(() => {
     if (!focusOnQuestionChange) return
@@ -291,6 +353,52 @@ function renderQuestionBody({
   note?: ReactNode
 } {
   const sectionLabel = STAGE2_MODULE_SECTION_LABELS[getStage2QuestionModule(questionId)]
+
+  if (questionId === "tools_overview") {
+    return {
+      sectionLabel,
+      trigger: TOOL_SECTION_LABEL,
+      title: TOOL_OVERVIEW_TITLE,
+      lead: TOOL_OVERVIEW_LEAD,
+      body: (
+        <ToolVisualMultiSelect
+          key={questionId}
+          ariaLabel={TOOL_OVERVIEW_TITLE}
+          options={TOOL_OVERVIEW_OPTIONS}
+          selected={(answer as ToolOverviewSectionKey[] | undefined) ?? null}
+          onChange={(next, announcement) => onLocalAnswerChange(next, announcement)}
+          nothingLabel={TOOL_NOTHING_LABEL}
+          answered={session.answers.toolFamiliesWithSomething !== undefined}
+        />
+      ),
+    }
+  }
+
+  if (questionId.startsWith("tools:")) {
+    const pageKey = questionId.slice("tools:".length)
+    const page = toolFormPagePresentation(pageKey)
+    if (!page) throw new Error(`Unknown Stage 2 refinement question: ${questionId}`)
+    const savedPageAnswer = (
+      session.answers.toolForms as Record<string, ToolReportedForm[] | undefined> | undefined
+    )?.[pageKey]
+    return {
+      sectionLabel,
+      trigger: page.sectionLabel,
+      title: page.title,
+      lead: page.lead,
+      body: (
+        <ToolVisualMultiSelect
+          key={questionId}
+          ariaLabel={page.title}
+          options={page.options}
+          selected={(answer as ToolReportedForm[] | undefined) ?? null}
+          onChange={(next, announcement) => onLocalAnswerChange(next, announcement)}
+          nothingLabel={TOOL_NOTHING_LABEL}
+          answered={savedPageAnswer !== undefined}
+        />
+      ),
+    }
+  }
 
   if (questionId.startsWith("heat:")) {
     const source = questionId.slice("heat:".length) as Stage2HeatEventSource
@@ -496,26 +604,31 @@ function renderQuestionBody({
       }
     case "towel_handling": {
       const towel = (answer ?? {}) as { material?: TowelMaterial; technique?: TowelTechnique }
+      // With the tools rollout on, the textiles page already named the material: only the
+      // technique is left to ask (the path fills the material in).
+      const materialDerived = isStage2TowelMaterialDerived(session.triggerContext, session.answers)
       return {
         sectionLabel,
         title: "Wie trocknest du dein Haar direkt nach der Wäsche an?",
         body: (
           <div className="grid gap-6">
-            <div>
-              <h3 className="mb-2 text-sm font-bold text-[var(--brand-plum-darkest,#2a1845)]">
-                Welches Material nutzt du meistens?
-              </h3>
-              <RefinementOptions
-                options={TOWEL_MATERIAL_OPTIONS}
-                value={towel.material}
-                onChange={(material) =>
-                  onLocalAnswerChange(
-                    material === "no_towel" ? { material } : { ...towel, material },
-                  )
-                }
-              />
-            </div>
-            {towel.material && towel.material !== "no_towel" ? (
+            {materialDerived ? null : (
+              <div>
+                <h3 className="mb-2 text-sm font-bold text-[var(--brand-plum-darkest,#2a1845)]">
+                  Welches Material nutzt du meistens?
+                </h3>
+                <RefinementOptions
+                  options={TOWEL_MATERIAL_OPTIONS}
+                  value={towel.material}
+                  onChange={(material) =>
+                    onLocalAnswerChange(
+                      material === "no_towel" ? { material } : { ...towel, material },
+                    )
+                  }
+                />
+              </div>
+            )}
+            {materialDerived || (towel.material && towel.material !== "no_towel") ? (
               <div>
                 <h3 className="mb-2 text-sm font-bold text-[var(--brand-plum-darkest,#2a1845)]">
                   Wie gehst du damit meistens um?
@@ -531,7 +644,26 @@ function renderQuestionBody({
         ),
       }
     }
-    case "drying_routes":
+    case "drying_routes": {
+      if (session.triggerContext.toolsEnabled === true) {
+        // Render exactly what the owned airflow tools back; no „Nichts davon".
+        const allowed = new Set<string>(
+          getStage2DryingRouteOptions(session.triggerContext, session.answers),
+        )
+        return {
+          sectionLabel,
+          title: "Wie trocknet dein Haar meistens weiter?",
+          lead: "Mehrere Wege dürfen parallel vorkommen.",
+          body: (
+            <RefinementOptions
+              options={TOOLS_DRYING_ROUTE_OPTIONS.filter((option) => allowed.has(option.value))}
+              value={answer as string[] | undefined}
+              multi
+              onChange={onLocalAnswerChange}
+            />
+          ),
+        }
+      }
       return {
         sectionLabel,
         title: "Wie trocknet dein Haar meistens weiter?",
@@ -547,6 +679,7 @@ function renderQuestionBody({
           />
         ),
       }
+    }
     case "additional_heat_tools":
       return {
         sectionLabel,
@@ -699,6 +832,8 @@ function ActionDock({
 }
 
 export function getQuestionFamily(questionId: Stage2QuestionId) {
+  // The visual Tool trip reports as one bounded family; page keys stay internal.
+  if (questionId === "tools_overview" || questionId.startsWith("tools:")) return "tool_inventory"
   if (questionId === "current_product_categories") return "product_categories"
   if (questionId === "wet_wash_frequency") return "wash_rhythm"
   if (questionId === "oil_purposes") return "oil_role"

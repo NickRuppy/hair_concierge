@@ -1641,3 +1641,142 @@ test("a complete session whose path grew bridges only once nothing is unresolved
     true,
   )
 })
+
+// ---------------------------------------------------------------------------
+// Hair Tools port, Task 5: a `tools` module entry walks only the tools module.
+// ---------------------------------------------------------------------------
+
+const toolsTriggerContext: Stage2TriggerContext = { ...plainTriggerContext, toolsEnabled: true }
+
+function toolsGateway(overrides: { completed?: string[]; answers?: object } = {}) {
+  return createStage2FixtureGateway({
+    runtimeEnvironment: "test",
+    triggerContext: toolsTriggerContext,
+    initialAnswers: {
+      currentProductCategories: [],
+      wetWashFrequency: "weekly_2x",
+      ...overrides.answers,
+    },
+    initialCompletedQuestionIds: (overrides.completed ?? [
+      "current_product_categories",
+      "wet_wash_frequency",
+    ]) as never[],
+    initialRevision: 2,
+  })
+}
+
+test("a tools module entry opens on the tool overview and shows no products or habits question", async () => {
+  const gateway = toolsGateway()
+  const session = await gateway.load()
+  assert.deepEqual(session.path.orderedQuestionIds.slice(0, 3), [
+    "current_product_categories",
+    "wet_wash_frequency",
+    "tools_overview",
+  ])
+  assert.equal(resolveStage2EntryModule(session, "tools"), "tools")
+  assert.equal(resolveStage2EntryModule(session, "first_open"), "tools")
+  assert.equal(
+    resolveStage2EntryModule({ ...session }, "habits"),
+    "habits",
+    "habits stays enterable; tools is only the first open module",
+  )
+
+  const scoped = scopeStage2SessionToModule(session, "tools")
+  assert.deepEqual(scoped.path.orderedQuestionIds, ["tools_overview"])
+  assert.equal(scoped.path.firstUnresolvedQuestionId, "tools_overview")
+
+  const html = renderToStaticMarkup(
+    <RefinementFlow
+      gateway={gateway as never}
+      initialSession={session}
+      moduleEntry="tools"
+      postAcceptModuleEntry
+    />,
+  )
+  assert.match(html, /Was hast du schon\?/)
+  assert.match(html, /Was du schon hast/)
+  assert.doesNotMatch(html, /Was du heute benutzt/)
+  assert.doesNotMatch(html, /Wie du dein Haar behandelst/)
+  // The overview is the module's boundary: back leaves the module.
+  assert.equal(
+    resolveStage2FlowEntryView({ session: scoped, moduleScope: "explicit" }).activeQuestionId,
+    "tools_overview",
+  )
+})
+
+test("walking the tools module answers only tool questions and ends with a non-closing, recompute-free module completion", async () => {
+  const gateway = toolsGateway()
+  let session = await gateway.load()
+
+  // Overview: only Nachtschutz is ticked, so exactly one tool page follows.
+  session = await gateway.saveAnswer({
+    questionId: "tools_overview",
+    answer: ["nachtschutz"],
+    expectedRevision: session.revision,
+  })
+  assert.deepEqual(
+    session.path.orderedQuestionIds.filter((id) => id.startsWith("tools")),
+    ["tools_overview", "tools:night_protection:1"],
+  )
+  const scoped = scopeStage2SessionToModule(session, "tools")
+  assert.deepEqual(scoped.path.orderedQuestionIds, ["tools_overview", "tools:night_protection:1"])
+  assert.equal(scoped.path.firstUnresolvedQuestionId, "tools:night_protection:1")
+
+  const fused = await gateway.saveAnswerAndCompleteModule({
+    module: "tools",
+    questionId: "tools:night_protection:1",
+    answer: ["pillowcase"],
+    expectedRevision: session.revision,
+  })
+  assert.equal(fused.moduleCompletion.module, "tools")
+  assert.equal(fused.moduleCompletion.status, "in_progress", "habits is still open")
+  assert.equal(fused.moduleCompletion.stage3Handoff, false)
+  assert.equal(
+    "recompute" in fused.moduleCompletion,
+    false,
+    "tools completion triggers no recompute",
+  )
+
+  // The finished module hands back to the host (→ the tool checkpoint / Routine), never Stage 3.
+  const recording = recordingEffects()
+  await applyStage2ModuleCompletion(
+    {
+      session: scopeStage2SessionToModule(fused.session, "tools"),
+      hostSession: fused.session,
+      moduleCompletion: fused.moduleCompletion,
+      postAcceptModuleEntry: true,
+    },
+    recording.effects,
+  )
+  assert.equal(recording.recorded.handedBack.length, 1)
+  assert.equal(recording.recorded.bridged.length, 0)
+  assert.equal(recording.recorded.completed.length, 0)
+  assert.deepEqual(
+    recording.recorded.events.map((event) => event.name),
+    ["personal_plan_stage2_module_completed"],
+  )
+})
+
+test("a tools module that cannot be completed (a page is still open) is rejected", async () => {
+  const gateway = toolsGateway()
+  await assert.rejects(
+    () => gateway.completeModule({ module: "tools", expectedRevision: 2 }),
+    (error: unknown) =>
+      error instanceof Stage2RefinementError && error.code === "incomplete_refinement",
+  )
+})
+
+test("re-entering a finished tools module walks it again instead of bridging", async () => {
+  const gateway = toolsGateway()
+  let session = await gateway.load()
+  session = await gateway.saveAnswer({
+    questionId: "tools_overview",
+    answer: [],
+    expectedRevision: session.revision,
+  })
+  const done = scopeStage2SessionToModule(session, "tools")
+  assert.equal(done.path.firstUnresolvedQuestionId, null)
+  const view = resolveStage2FlowEntryView({ session: done, moduleScope: "explicit" })
+  assert.equal(view.mode, "question")
+  assert.equal(view.activeQuestionId, "tools_overview")
+})

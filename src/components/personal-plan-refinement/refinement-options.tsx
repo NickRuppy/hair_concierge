@@ -232,6 +232,25 @@ export const DRYING_ROUTE_OPTIONS = [
   },
 ] as const satisfies readonly RefinementOption<DryingRoute>[]
 
+/**
+ * The drying page with the tools rollout on (Rev. 5): the Diffusor and the round-brush blow dry
+ * are named for what they are, and the page offers only what the member's owned airflow tools
+ * back (`getStage2DryingRouteOptions`). There is no „Nichts davon" — the hair dries somehow.
+ */
+export const TOOLS_DRYING_ROUTE_OPTIONS = [
+  { value: "air_dry", label: "Lufttrocknen", icon: "drying-air" },
+  {
+    value: "ordinary_blow_dry",
+    label: "Gewöhnlich föhnen / auch mit Rundbürste",
+    icon: "drying-blow",
+  },
+  {
+    value: "diffuser_or_airflow_shaping",
+    label: "Mit Diffusor / Aufsatz für Locken/Wellen",
+    icon: "drying-diffuser",
+  },
+] as const satisfies readonly RefinementOption<DryingRoute>[]
+
 export const ADDITIONAL_HEAT_TOOL_OPTIONS = [
   {
     value: "dryer_brush",

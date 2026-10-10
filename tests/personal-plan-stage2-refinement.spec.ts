@@ -440,6 +440,110 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await expect(page.getByText("Was du heute benutzt")).toHaveCount(0)
   })
 
+  test("tools module entry walks only the tools module and finishes it", async ({ page }) => {
+    // Hair Tools port: Produkte are answered, the member's earlier answers imply a Mikrofaser
+    // towel and a Satin pillow, and the rollout is on. The flow opens on the tool overview.
+    await openLab(page, "module-tools")
+    await expect(page.getByRole("heading", { name: "Was hast du schon?" })).toBeVisible()
+    await expect(page.getByText("Was du schon hast")).toBeVisible()
+    await expect(page.getByText("Was du heute benutzt")).toHaveCount(0)
+    await expect(page.getByText("Wie du dein Haar behandelst")).toHaveCount(0)
+
+    // Four chronological section cards with their hints.
+    const sections = page.locator("[data-tool-option]")
+    await expect(sections).toHaveCount(4)
+    await expect(sections.nth(0)).toContainText("Waschen & Auftragen")
+    await expect(sections.nth(1)).toContainText("Abtrocknen & Entwirren")
+    await expect(sections.nth(2)).toContainText("Trocknen & Stylen")
+    await expect(sections.nth(3)).toContainText("Nachtschutz")
+    await expect(sections.nth(3)).toContainText("Kissenbezug, Bonnet")
+
+    // The pre-fill is a starting value: ticked on screen, „Nichts davon" stays unpressed.
+    await expect(sections.nth(0)).toHaveAttribute("aria-pressed", "false")
+    await expect(sections.nth(1)).toHaveAttribute("aria-pressed", "true")
+    await expect(sections.nth(2)).toHaveAttribute("aria-pressed", "false")
+    await expect(sections.nth(3)).toHaveAttribute("aria-pressed", "true")
+    const none = page.getByRole("button", { name: "Nichts davon", exact: true })
+    await expect(none).toHaveAttribute("aria-pressed", "false")
+    await expect(continueButton(page)).toBeEnabled()
+
+    // „Nichts davon" clears every section; ticking a card ends it again.
+    await none.click()
+    await expect(none).toHaveAttribute("aria-pressed", "true")
+    await expect(sections.nth(1)).toHaveAttribute("aria-pressed", "false")
+    await expect(sections.nth(3)).toHaveAttribute("aria-pressed", "false")
+    await sections.nth(1).click()
+    await sections.nth(2).click()
+    await sections.nth(3).click()
+    await expect(none).toHaveAttribute("aria-pressed", "false")
+
+    // The overview is the module's boundary: back exits to the Routine it was opened from.
+    await page.getByRole("button", { name: "Zurück" }).click()
+    await expect(page.locator("[data-stage2-secondary-exit]")).toHaveAttribute(
+      "data-stage2-secondary-exit",
+      "routine",
+    )
+    await continueButton(page).click()
+
+    // Photo pages in wash-day order; each page owns only its own forms.
+    await expect(page.getByRole("heading", { name: /Handtücher/ })).toBeVisible()
+    await expect(page.getByText("Mehrfachauswahl möglich.", { exact: true })).toBeVisible()
+    // The Mikrofaser towel was implied by the member's own answer: pre-ticked, not yet saved.
+    await expect(page.locator('[data-tool-option="microfiber_towel"]')).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    )
+    await expect(page.getByRole("button", { name: "Nichts davon", exact: true })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    )
+    await continueButton(page).click()
+
+    await expect(page.getByRole("heading", { name: /Bürsten & Kämme/ })).toBeVisible()
+    await expect(page.getByText("Mehrfachauswahl möglich. Seite 1 von 2.")).toBeVisible()
+    // Nothing is implied for the brushes: the page waits for a choice.
+    await expect(continueButton(page)).toBeDisabled()
+    await page.locator('[data-tool-option="wide_tooth_comb"]').click()
+    await expect(page.locator('[data-tool-option="wide_tooth_comb"]')).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    )
+    await continueButton(page).click()
+
+    await expect(page.getByText("Mehrfachauswahl möglich. Seite 2 von 2.")).toBeVisible()
+    await chooseNoneAndContinue(page)
+
+    await expect(page.getByRole("heading", { name: /Haartrockner/ })).toBeVisible()
+    await page.locator('[data-tool-option="hair_dryer"]').click()
+    await continueButton(page).click()
+
+    await expect(page.getByRole("heading", { name: /Hitzestyling/ })).toBeVisible()
+    await page.locator('[data-tool-option="flat_iron"]').click()
+    await continueButton(page).click()
+
+    await expect(page.getByRole("heading", { name: /Heatless/ })).toBeVisible()
+    await chooseNoneAndContinue(page)
+
+    await expect(page.getByRole("heading", { name: /Clips/ })).toBeVisible()
+    await chooseNoneAndContinue(page)
+    await chooseNoneAndContinue(page)
+
+    await expect(page.getByRole("heading", { level: 2, name: /Nachtschutz/ })).toBeVisible()
+    // The Satin pillow was implied too; confirming it saves it. This last page completes the module.
+    await expect(page.locator('[data-tool-option="pillowcase"]')).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    )
+    await continueButton(page).click()
+
+    // The tools module is done and hands back to the host (→ checkpoint / Routine) — it never
+    // asks a Produkte or Gewohnheiten question, and never arms the Stage-3 bridge.
+    await expect(page.getByText("Fertig. Antworten gespeichert.")).toBeVisible()
+    await expect(page.locator("[data-refined-version-id]")).toHaveCount(0)
+    await expect(page.getByText("Was du heute benutzt")).toHaveCount(0)
+    await expect(page.getByText("Wie du dein Haar behandelst")).toHaveCount(0)
+  })
+
   test("a module 1 entry hands the finished module into Stage 3", async ({ page }) => {
     await openLab(page, "module-products")
     await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()

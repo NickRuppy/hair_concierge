@@ -34,7 +34,12 @@ import {
   toolImageSrc,
   toolReportedFormLabel,
 } from "@/lib/personal-plan/tools/labels"
-import { TOOL_OVERVIEW_OPTIONS } from "@/lib/personal-plan/tools/stage2"
+import {
+  TOOL_OVERVIEW_OPTIONS,
+  toolFormPagePresentation,
+  toolOverviewPreselection,
+  toolPagePreselection,
+} from "@/lib/personal-plan/tools/stage2"
 import { ADDITIONAL_HEAT_TOOLS } from "@/lib/personal-plan/refinement/types"
 import { NIGHT_PROTECTIONS } from "@/lib/vocabulary/onboarding-care"
 
@@ -505,4 +510,108 @@ test("reportedToolInventoryFromFacts reads the same answer from the care keys", 
   // Unticked by the user with no page key stored yet → still explicit none.
   assert.deepEqual(inventory.wash_application, [])
   assert.deepEqual(reportedToolInventoryFromFacts(null, undefined), {})
+})
+
+/* ── per-page pre-fill (Task 5: the starting value shown on each tool page) ───── */
+
+const careWith = (overrides: Partial<ToolCareFacts>): ToolCareFacts => ({
+  ...EMPTY_TOOL_CARE_FACTS,
+  ...overrides,
+})
+
+test("a page's pre-fill is the care-implied inventory narrowed to the forms that page offers", () => {
+  const care = careWith({
+    towelMaterial: "mikrofaser",
+    additionalHeatTools: ["straightener", "dryer_brush"],
+    nightProtection: ["silk_satin_bonnet"],
+  })
+  assert.deepEqual(toolPagePreselection(care, "drying_textiles:1"), ["microfiber_towel"])
+  assert.deepEqual(toolPagePreselection(care, "night_protection:1"), ["bonnet"])
+  const heated = toolPagePreselection(care, "heated_styling:1")
+  const airflow = toolPagePreselection(care, "airflow:1")
+  assert.ok(heated?.includes("flat_iron"))
+  assert.ok(airflow?.includes("hot_air_brush"))
+  // Every returned form belongs to its own page — never to another page of the same family.
+  for (const page of TOOL_FORM_PAGES) {
+    const forms = toolPagePreselection(care, page.pageKey) ?? []
+    assert.ok(
+      forms.every((form) => (page.forms as readonly string[]).includes(form)),
+      `${page.pageKey} offers every pre-filled form`,
+    )
+  }
+})
+
+test("a page's pre-fill is undefined — never an empty answer — when the care answers imply nothing", () => {
+  assert.equal(toolPagePreselection(EMPTY_TOOL_CARE_FACTS, "drying_textiles:1"), undefined)
+  assert.equal(
+    toolPagePreselection(careWith({ nightProtection: [] }), "night_protection:1"),
+    undefined,
+  )
+  assert.equal(
+    toolPagePreselection(careWith({ towelMaterial: "mikrofaser" }), "airflow:1"),
+    undefined,
+  )
+  assert.equal(toolPagePreselection(EMPTY_TOOL_CARE_FACTS, "not_a_page"), undefined)
+})
+
+test("two pages of one family split the family pre-fill instead of repeating it", () => {
+  // A brush-family pre-fill comes from the engine projection; whatever it implies lands on
+  // exactly one of the two brush pages.
+  const care = careWith({ dryingRoutes: ["ordinary_blow_dry"] })
+  const first = toolPagePreselection(care, "airflow:1")
+  assert.ok(first?.includes("hair_dryer"))
+  for (const family of ["brushes_combs", "securing_sectioning"] as const) {
+    const pages = TOOL_FORM_PAGES.filter((page) => page.family === family)
+    assert.equal(pages.length, 2)
+    const [a, b] = pages.map((page) => toolPagePreselection(care, page.pageKey) ?? [])
+    assert.deepEqual(
+      a!.filter((form) => b!.includes(form)),
+      [],
+    )
+  }
+})
+
+test("Frottee and Diffusor answers pre-fill their answer-only cards on their own pages", () => {
+  assert.deepEqual(
+    toolPagePreselection(careWith({ towelMaterial: "frottee" }), "drying_textiles:1"),
+    ["frottee"],
+  )
+  const diffuser = toolPagePreselection(
+    careWith({ dryingRoutes: ["diffuser_or_airflow_shaping"] }),
+    "airflow:1",
+  )
+  assert.ok(diffuser?.includes("diffuser"))
+})
+
+test("direct acceptance's assumed defaults pre-fill nothing on any page or on the overview", () => {
+  const assumed = careWith({
+    provenance: "assumed",
+    towelMaterial: "mikrofaser",
+    dryingRoutes: ["air_dry"],
+    nightProtection: [],
+    additionalHeatTools: [],
+  })
+  for (const page of TOOL_FORM_PAGES)
+    assert.equal(toolPagePreselection(assumed, page.pageKey), undefined)
+  assert.equal(toolOverviewPreselection(assumed), undefined)
+})
+
+test("the overview pre-fill ticks every section holding a care-implied family, in section order", () => {
+  const care = careWith({ towelMaterial: "mikrofaser", nightProtection: ["pineapple"] })
+  assert.deepEqual(toolOverviewPreselection(care), ["abtrocknen_entwirren", "nachtschutz"])
+  assert.equal(toolOverviewPreselection(EMPTY_TOOL_CARE_FACTS), undefined)
+})
+
+test("every tool page presents its own forms with photo cards and a Mehrfachauswahl lead", () => {
+  for (const page of TOOL_FORM_PAGES) {
+    const presentation = toolFormPagePresentation(page.pageKey)
+    assert.ok(presentation, page.pageKey)
+    assert.deepEqual(
+      presentation!.options.map((option) => option.value),
+      [...page.forms],
+    )
+    assert.match(presentation!.lead, /^Mehrfachauswahl möglich\./)
+    assert.ok(presentation!.options.every((option) => option.imageUrl.endsWith(".webp")))
+  }
+  assert.equal(toolFormPagePresentation("nope"), null)
 })
