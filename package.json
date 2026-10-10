@@ -123,7 +123,7 @@
     "products:intake:review-cockpit:lint": "npm run lint --workspace @chaarlie/product-intake-review",
     "products:intake:review-cockpit:verify": "npm run typecheck --workspace @chaarlie/product-intake-review && npm run lint --workspace @chaarlie/product-intake-review && npm run build --workspace @chaarlie/product-intake-review",
     "products:intake:core:typecheck": "npm run typecheck --workspace @chaarlie/product-intake-core",
-    "products:intake:codex-worker": "tsx scripts/product-intake/codex-research-worker.ts",
+    "products:intake:codex-worker": "node --import ./tests/server-only-register.cjs --import tsx scripts/product-intake/codex-research-worker.ts",
     "products:intake:review-center": "tsx scripts/product-intake/review-center-launcher.ts",
     "test:catalog-enrichment:heat": "node --import ./tests/server-only-register.cjs --import tsx --test tests/product-intake-catalog-enrichment.test.ts tests/product-intake-catalog-enrichment-heat.test.ts",
     "test:catalog-enrichment:scalp": "node --import ./tests/server-only-register.cjs --import tsx --test tests/product-intake-catalog-enrichment.test.ts tests/product-intake-catalog-enrichment-heat.test.ts tests/product-intake-catalog-enrichment-scalp.test.ts",
