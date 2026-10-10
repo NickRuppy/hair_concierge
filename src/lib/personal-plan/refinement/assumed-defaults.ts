@@ -5,6 +5,7 @@ import { projectToolCareFacts } from "@/lib/personal-plan/tools/facts"
 import {
   isToolFormPageKey,
   TOOL_FORM_PAGES,
+  TOOL_OVERVIEW_FAMILY_ORDER,
   toolFamiliesForSections,
   toolFormPage,
   type ToolFormPageKey,
@@ -65,6 +66,8 @@ export const STAGE2_ASSUMED_WET_WASH_FREQUENCY: ProductFrequency & WetWashFreque
 /** Gentle handling, so no mechanical-exposure signal is assumed. */
 export const STAGE2_ASSUMED_TOWEL_MATERIAL: TowelMaterial = "mikrofaser"
 export const STAGE2_ASSUMED_TOWEL_TECHNIQUE: TowelTechnique = "gentle_press"
+/** The textile card that derives `STAGE2_ASSUMED_TOWEL_MATERIAL` with the rollout on. */
+export const STAGE2_ASSUMED_TOWEL_TEXTILE = "microfiber_towel" as const
 export const STAGE2_ASSUMED_SCALP_IRRITATION_DETAIL: ScalpIrritationDetail = "normal"
 export const STAGE2_ASSUMED_DRY_SHAMPOO_BRIDGE_PREFERENCE: DryShampooBridgePreference = "decline"
 export const STAGE2_ASSUMED_DRY_SHAMPOO_VISIBLE_HAIR_COLOR: DryShampooVisibleHairColor =
@@ -261,23 +264,31 @@ export const STAGE2_ASSUMPTION_RULES: readonly Stage2AssumptionRule[] = [
     questionId: "tools_overview",
     condition: "the Hair Tools rollout is on — the overview opens the tools module",
     rationale:
-      "Ticks exactly the sections the member's own care answers already imply (`defaultToolSectionsFromCare`, the same starting value the overview shows), so the assumed inventory reproduces the facts she gave and invents no ownership; with nothing implied it ticks nothing. Assumed answers never count as reported ownership (`D5`).",
-    write: ({ answers }) =>
-      withToolOverview(
+      "Ticks exactly the sections the member's own care answers already imply (`defaultToolSectionsFromCare`, the same starting value the overview shows), so the assumed inventory reproduces the facts she gave. Without a towel answer it also ticks the drying textiles, so the derived towel stays today's assumption (Mikrofaser, `assume:towel_handling:mikrofaser_gentle_press`) — an assumption may never change behaviour versus the rollout-off resolver. Assumed answers never count as reported ownership (`D5`).",
+    write: ({ answers }) => {
+      const care = projectToolCareFacts(answers)
+      const families = new Set(toolFamiliesForSections(defaultToolSectionsFromCare(care)))
+      if (care.towelMaterial === null) families.add("drying_textiles")
+      return withToolOverview(
         answers,
-        toolFamiliesForSections(defaultToolSectionsFromCare(projectToolCareFacts(answers))),
-      ),
+        TOOL_OVERVIEW_FAMILY_ORDER.filter((family) => families.has(family)),
+      )
+    },
   },
   {
     ruleId: "assume:tools_form:derived_from_care",
     questionId: "tools:*",
     condition: "the overview ticked the page's family and the page is open",
     rationale:
-      "The page offers what the care answers imply for its family (`defaultToolFormsFromCare` ∩ the page's forms), so the derived thing-fields come back as the member reported them; everything else is the page's „Nichts davon\". Never evidence of ownership (`D5`).",
+      "The page offers what the care answers imply for its family (`defaultToolFormsFromCare` ∩ the page's forms), so the derived thing-fields come back as the member reported them; everything else is the page's „Nichts davon\". Without a towel answer the textiles page assumes the Mikrofaser-Handtuch, which derives today's assumed towel material. Never evidence of ownership (`D5`).",
     write: ({ answers, questionId }) => {
       const page = toolFormPage(questionId.slice("tools:".length))
       if (!page) throw new Error(`Unknown Stage 2 tool page: ${questionId}`)
-      const implied = defaultToolFormsFromCare(projectToolCareFacts(answers))[page.family] ?? []
+      const care = projectToolCareFacts(answers)
+      const implied =
+        page.family === "drying_textiles" && care.towelMaterial === null
+          ? [STAGE2_ASSUMED_TOWEL_TEXTILE]
+          : (defaultToolFormsFromCare(care)[page.family] ?? [])
       const offered = new Set<string>(page.forms)
       return {
         ...answers,

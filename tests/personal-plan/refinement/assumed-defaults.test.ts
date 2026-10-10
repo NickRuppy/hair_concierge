@@ -536,7 +536,8 @@ test("a structurally invalid stored answer is overwritten by its assumption", ()
 
 test("rule assume:tools_overview:derived_from_care ticks what the care answers imply (may be none)", () => {
   const none = resolve(TOOLS_ON_CONTEXT)
-  assert.deepEqual(none.answers.toolFamiliesWithSomething, [])
+  // Nothing implied except today's towel assumption (Mikrofaser), so only the textiles are ticked.
+  assert.deepEqual(none.answers.toolFamiliesWithSomething, ["drying_textiles"])
   assert.equal(
     none.appliedRuleIds[none.assumedQuestionIds.indexOf("tools_overview")],
     "assume:tools_overview:derived_from_care",
@@ -545,8 +546,9 @@ test("rule assume:tools_overview:derived_from_care ticks what the care answers i
   const blowDries = resolve(TOOLS_ON_CONTEXT, { dryingRoutes: ["ordinary_blow_dry"] }, [
     "drying_routes",
   ])
-  // The whole „Trocknen & Stylen" section arrives ticked.
+  // The whole „Trocknen & Stylen" section arrives ticked, plus the textiles (no towel answer).
   assert.deepEqual(blowDries.answers.toolFamiliesWithSomething, [
+    "drying_textiles",
     "airflow",
     "heated_styling",
     "heatless_styling",
@@ -589,15 +591,17 @@ test("rule assume:tools_form:derived_from_care fills each page with the implied 
   assert.deepEqual(resolution.answers.dryingRoutes, ["ordinary_blow_dry"])
 })
 
-test("rollout on, no answers: an empty tool inventory, kein Handtuch, air drying", () => {
+test("rollout on, no answers: today's habits assumptions, reached through an assumed inventory", () => {
   const resolution = resolve(TOOLS_ON_CONTEXT)
   assert.deepEqual(resolution.answers, {
     currentProductCategories: [],
     wetWashFrequency: "weekly_2x",
-    toolFamiliesWithSomething: [],
-    toolForms: Object.fromEntries(TOOL_FORM_PAGES.map((page) => [page.pageKey, []])),
-    // An empty tool inventory is „kein Handtuch" (plan §4); the towel question leaves the path.
-    towel: { material: "no_towel" },
+    toolFamiliesWithSomething: ["drying_textiles"],
+    toolForms: {
+      ...Object.fromEntries(TOOL_FORM_PAGES.map((page) => [page.pageKey, []])),
+      "drying_textiles:1": ["microfiber_towel"],
+    },
+    towel: { material: "mikrofaser", technique: "gentle_press" },
     dryingRoutes: ["air_dry"],
     additionalHeatTools: [],
     heatEvents: {},
@@ -607,9 +611,40 @@ test("rollout on, no answers: an empty tool inventory, kein Handtuch, air drying
     "current_product_categories",
     "wet_wash_frequency",
     "tools_overview",
+    "tools:drying_textiles:1",
+    "towel_handling",
     "drying_routes",
   ])
 })
+
+for (const expectation of NO_ANSWER_EXPECTATIONS) {
+  test(`parity: with no care facts the rollout changes no habits assumption (${expectation.name})`, () => {
+    const off = resolve(expectation.context)
+    const on = resolve({ ...expectation.context, toolsEnabled: true })
+    for (const key of [
+      "towel",
+      "additionalHeatTools",
+      "nightProtection",
+      "dryingRoutes",
+      "heatEvents",
+    ] as const) {
+      assert.deepEqual(on.answers[key], off.answers[key], key)
+    }
+    const offDefaults = buildDirectAcceptanceStage2Defaults(expectation.context)
+    const onDefaults = buildDirectAcceptanceStage2Defaults({
+      ...expectation.context,
+      toolsEnabled: true,
+    })
+    for (const key of [
+      "towel",
+      "additionalHeatTools",
+      "nightProtection",
+      "dryingRoutes",
+    ] as const) {
+      assert.deepEqual(onDefaults.answers[key], offDefaults.answers[key], key)
+    }
+  })
+}
 
 /** Every family, alone: ticked with no page answered, and ticked with every form owned. */
 const FAMILY_SCENARIOS = TOOL_FAMILIES.flatMap((family) => {
