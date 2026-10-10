@@ -18,7 +18,7 @@ const CHAIN = [
   "20260925120000_discovery_intake_frequency_heat_styling.sql",
   "20260925150000_discovery_admin_item_usage_styling.sql",
   "20260927120000_discovery_call_decisions_per_item.sql",
-  "20261009140000_discovery_admin_reset_call_decisions.sql",
+  "20261009160000_discovery_admin_reset_call_decisions.sql",
 ]
 
 const predecessorSchema = `

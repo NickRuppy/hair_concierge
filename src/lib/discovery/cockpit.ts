@@ -1389,7 +1389,7 @@ export type DiscoveryCallDecisionsResetResult =
 
 /**
  * „Testlauf zurücksetzen" (cockpit call-ready A2): every decision of this intake deleted in
- * ONE locked call to `discovery_admin_reset_call_decisions` (migration 20261009140000) — the
+ * ONE locked call to `discovery_admin_reset_call_decisions` (migration 20261009160000) — the
  * same intake row lock as every decision write, so it serialises with them and with
  * finalising; a finalised call is frozen. The call sheet is not touched.
  */
