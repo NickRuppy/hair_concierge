@@ -88,9 +88,23 @@ export type ToolCareFacts = {
    * `owned_generic` or `explicit_none`.
    */
   provenance: ToolCareProvenance
+  /**
+   * Per-field refinement of a `reported` slice (read-time view, port fix round 1): the care
+   * facts listed here were supplied as assumptions, so — exactly like an `assumed` slice, but
+   * for that field only — they still shape the routes yet never project ownership or explicit
+   * absence. Absent or empty: every field follows `provenance`.
+   */
+  assumedFields?: readonly ToolCareFactField[]
 }
 
 export type ToolCareProvenance = "reported" | "assumed"
+
+/** The care facts that project Tool ownership (`careInventoryEntries`). */
+export type ToolCareFactField =
+  | "dryingRoutes"
+  | "additionalHeatTools"
+  | "towelMaterial"
+  | "nightProtection"
 
 export const EMPTY_TOOL_CARE_FACTS: ToolCareFacts = {
   dryingRoutes: null,
@@ -309,8 +323,13 @@ export function projectToolPrefillFromCareFacts(
   const add = (family: ToolFamily, form: ToolReportedForm) => {
     prefill[family] = sortToolReportedForms(family, [...(prefill[family] ?? []), form])
   }
-  if (care.towelMaterial === "frottee") add("drying_textiles", "frottee")
-  if (care.dryingRoutes?.includes("diffuser_or_airflow_shaping")) add("airflow", "diffuser")
+  const assumed = new Set(care.assumedFields ?? [])
+  if (care.towelMaterial === "frottee" && !assumed.has("towelMaterial")) {
+    add("drying_textiles", "frottee")
+  }
+  if (care.dryingRoutes?.includes("diffuser_or_airflow_shaping") && !assumed.has("dryingRoutes")) {
+    add("airflow", "diffuser")
+  }
   return prefill
 }
 
@@ -351,26 +370,32 @@ function careInventoryEntries(care: ToolCareFacts): [ToolFamily, CareInventoryEn
   // three explicit "du besitzt nichts" answers the user never gave. Everything
   // stays `unknown` until they actually resolve it in Feinschliff.
   if (care.provenance === "assumed") return []
+  // The same rule per field: an assumed fact inside a reported slice projects nothing.
+  const assumed = new Set(care.assumedFields ?? [])
+  const dryingRoutes = assumed.has("dryingRoutes") ? null : care.dryingRoutes
+  const additionalHeatTools = assumed.has("additionalHeatTools") ? null : care.additionalHeatTools
+  const towelMaterial = assumed.has("towelMaterial") ? null : care.towelMaterial
+  const nightProtection = assumed.has("nightProtection") ? null : care.nightProtection
 
   // `D2`: `[]` is unanswered, never „ich lufttrockne". `D4`: reporting the
   // behaviour reports the device, but air-drying is not a claim about owning or
   // not owning a dryer — so the air-dry-only branch projects NOTHING and the
   // route's ownership honestly stays `unknown` (fixtures 3, 4).
-  if (care.dryingRoutes && care.dryingRoutes.length > 0) {
-    const usesAirflow = care.dryingRoutes.some(
+  if (dryingRoutes && dryingRoutes.length > 0) {
+    const usesAirflow = dryingRoutes.some(
       (route) => route === "ordinary_blow_dry" || route === "diffuser_or_airflow_shaping",
     )
     // The one true behaviour projection: a device is inferred, never named.
     if (usesAirflow) entries.set("airflow", { forms: ["hair_dryer"], provenance: "derived" })
   }
 
-  if (care.additionalHeatTools) {
+  if (additionalHeatTools) {
     entries.set("heated_styling", {
-      forms: care.additionalHeatTools.flatMap(mapAdditionalHeatTool),
+      forms: additionalHeatTools.flatMap(mapAdditionalHeatTool),
       provenance: "reported",
     })
     // A hot-air brush or multi-styler is airflow, not direct-contact heat.
-    const airflowForms = care.additionalHeatTools.flatMap(mapAdditionalHeatToolAirflow)
+    const airflowForms = additionalHeatTools.flatMap(mapAdditionalHeatToolAirflow)
     if (airflowForms.length > 0) {
       // A named form outranks the behaviour stand-in: provenance records the
       // stronger `reported`.
@@ -381,28 +406,26 @@ function careInventoryEntries(care: ToolCareFacts): [ToolFamily, CareInventoryEn
     }
   }
 
-  if (care.towelMaterial) {
-    const forms = mapTowelMaterial(care.towelMaterial)
+  if (towelMaterial) {
+    const forms = mapTowelMaterial(towelMaterial)
     // `D4`: „Frottee" is a towel the user OWNS. There is no terry product type,
     // so the honest projection is no entry at all — writing `[]` would store
     // „du besitzt kein Trocknungstextil", a sentence the user never said
     // (fixtures 21, 104, 113). `no_towel` stays a real explicit none.
-    if (forms.length > 0 || care.towelMaterial === "no_towel") {
+    if (forms.length > 0 || towelMaterial === "no_towel") {
       entries.set("drying_textiles", { forms, provenance: "reported" })
     }
   }
 
-  if (care.nightProtection) {
-    const named = care.nightProtection.some(
-      (protection) => !NIGHT_PROTECTION_TECHNIQUES.has(protection),
-    )
+  if (nightProtection) {
+    const named = nightProtection.some((protection) => !NIGHT_PROTECTION_TECHNIQUES.has(protection))
     entries.set("night_protection", {
-      forms: dedupe(care.nightProtection.flatMap(mapNightProtection)),
+      forms: dedupe(nightProtection.flatMap(mapNightProtection)),
       // A technique-only answer („locker zusammengebunden", „Pineapple") is a
       // behaviour: the soft tie is projected onto it, never stated by the user
       // (fixtures 74, 102). An empty answer is a real „Nichts davon" and stays
       // `reported`.
-      provenance: named || care.nightProtection.length === 0 ? "reported" : "derived",
+      provenance: named || nightProtection.length === 0 ? "reported" : "derived",
     })
   }
 

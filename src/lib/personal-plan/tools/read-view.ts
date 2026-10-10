@@ -14,8 +14,8 @@ import type {
 import {
   projectToolCareFacts,
   reportedToolInventoryFromFacts,
+  type ToolCareFactField,
   type ToolCareFacts,
-  type ToolCareProvenance,
 } from "./facts"
 import {
   buildStage1ToolBlocks,
@@ -185,36 +185,50 @@ function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((entry) => typeof entry === "string")
 }
 
-/** The care fields the Tool engine reads (`ToolCareFacts`), by their `care_habits` key. */
-const TOOL_CARE_FACT_FIELDS = [
-  "dryingRoutes",
-  "additionalHeatTools",
-  "towel",
-  "nightProtection",
-  "heatEvents",
-] as const
+/**
+ * The care facts that project Tool ownership, by `care_habits` key → engine field. `heatEvents`
+ * shapes heat protection only and `brushesCombs` is not read by the engine (the brush pages are),
+ * so neither can make a Tool confirmed or unconfirmed.
+ */
+const TOOL_OWNERSHIP_CARE_FIELDS = [
+  ["dryingRoutes", "dryingRoutes"],
+  ["additionalHeatTools", "additionalHeatTools"],
+  ["towel", "towelMaterial"],
+  ["nightProtection", "nightProtection"],
+] as const satisfies readonly (readonly [keyof CareHabitsV1, ToolCareFactField])[]
 
 /**
- * The stored care facts as the engine's `ToolCareFacts`.
- *
- * The engine carries one provenance for the whole care slice. It is `reported` only when every
- * care fact present is the member's own (`user`); a single `assumed` (direct acceptance) or
- * `unknown_historical` (backfill — nothing provable) fact makes the slice `assumed`, which still
- * shapes the routes but never claims ownership or explicit absence (`D5`). Conservative on
- * purpose: the member's answered Tool pages carry her ownership on their own.
+ * The stored care facts as the engine's `ToolCareFacts`, with PER-FIELD provenance (port fix
+ * round 1). A care fact is the member's real answer when its provenance is `user`, or
+ * `unknown_historical` with a non-empty value (a backfilled answer — the same rule as
+ * `knownCareAnswers`). Any other fact (`assumed`, an empty historical default, no entry) still
+ * shapes the routes, but the Tools derived from THAT field stay unconfirmed („Bestand im
+ * Feinschliff prüfen"); the other fields are unaffected. Reported ownership from the Tool pages
+ * is a separate, `user`-only oracle (`reportedToolInventoryFromFacts`).
  */
 export function toolCareFactsFromFacts(
   careHabits: Partial<CareHabitsV1> | null,
   fieldProvenance: Record<string, FieldProvenanceValue> | undefined,
 ): ToolCareFacts {
   const answers = careHabits ? toolAnswersFromCareHabits(careHabits as CareHabitsV1) : undefined
-  const present = TOOL_CARE_FACT_FIELDS.filter((field) => careHabits?.[field] !== undefined)
-  const provenance: ToolCareProvenance = present.every(
-    (field) => fieldProvenance?.[field] === "user",
-  )
-    ? "reported"
-    : "assumed"
-  return projectToolCareFacts(answers, provenance)
+  const assumedFields = TOOL_OWNERSHIP_CARE_FIELDS.filter(
+    ([key]) =>
+      careHabits?.[key] !== undefined &&
+      !isConfirmedCareFact(fieldProvenance?.[key], careHabits[key]),
+  ).map(([, field]) => field)
+  const care = projectToolCareFacts(answers, "reported")
+  return assumedFields.length > 0 ? { ...care, assumedFields } : care
+}
+
+function isConfirmedCareFact(
+  provenance: FieldProvenanceValue | undefined,
+  value: unknown,
+): boolean {
+  if (provenance === "user") return true
+  if (provenance !== "unknown_historical") return false
+  if (Array.isArray(value)) return value.length > 0
+  if (isRecord(value)) return Object.keys(value).length > 0
+  return value !== undefined && value !== null
 }
 
 /** Only a real applied scalp role creates a controlled-placement Tool job (Applikator). */

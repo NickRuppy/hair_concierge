@@ -275,26 +275,94 @@ test("assumed forms are excluded from ownership; the same values as user answers
   assert.equal(towel?.presentationState, "use_yours")
 })
 
-test("one assumed or historical care fact makes the whole care slice assumed", () => {
-  const careHabits = {
-    dryingRoutes: ["ordinary_blow_dry"],
-    towel: { material: "mikrofaser", technique: "gentle_press" },
-  } as BuildToolViewInput["careHabits"]
-  assert.equal(
-    toolCareFactsFromFacts(careHabits, { dryingRoutes: "user", towel: "user" }).provenance,
-    "reported",
+/* ── per-field care provenance (fix round 1) ─────────────────────────── */
+
+const CARE_FACTS = {
+  dryingRoutes: ["ordinary_blow_dry"],
+  towel: { material: "mikrofaser", technique: "gentle_press" },
+  nightProtection: ["silk_satin_pillow"],
+} as BuildToolViewInput["careHabits"]
+
+function assetState(view: ToolView, assetKey: string) {
+  return view.routineSection?.assets.find((asset) => asset.assetKey === assetKey)?.presentationState
+}
+
+test("mixed provenance: drying user + night assumed → Föhn confirmed-derived, night unconfirmed", () => {
+  const view = viewFor({
+    careHabits: CARE_FACTS,
+    fieldProvenance: { dryingRoutes: "user", towel: "user", nightProtection: "assumed" },
+  })
+  assert.equal(assetState(view, "asset:airflow:hair_dryer"), "use_yours")
+  assert.ok(view.routineSection?.derivedAssetKeys.includes("asset:airflow:hair_dryer"))
+  assert.equal(assetState(view, "asset:drying_textiles:microfiber_towel"), "use_yours")
+  const night = view.routineSection?.assets.find((asset) => asset.family === "night_protection")
+  assert.ok(night, "the night need still exists — an assumed fact shapes routes")
+  assert.equal(night.ownership, "unknown")
+  assert.equal(night.presentationState, "check_in_refinement")
+})
+
+test("a backfilled member (all unknown_historical) is confirmed; nothing care-backed reads check-in-refinement", () => {
+  const view = viewFor({
+    careHabits: CARE_FACTS,
+    fieldProvenance: {
+      dryingRoutes: "unknown_historical",
+      towel: "unknown_historical",
+      nightProtection: "unknown_historical",
+    },
+  })
+  const careBacked = new Set(["airflow", "drying_textiles", "night_protection"])
+  const assets = view.routineSection!.assets.filter((asset) => careBacked.has(asset.family))
+  assert.equal(assets.length, 3)
+  for (const asset of assets) {
+    assert.notEqual(asset.presentationState, "check_in_refinement", asset.assetKey)
+    assert.notEqual(asset.ownership, "unknown", asset.assetKey)
+  }
+  assert.equal(assetState(view, "asset:airflow:hair_dryer"), "use_yours")
+  assert.ok(view.routineSection?.derivedAssetKeys.includes("asset:airflow:hair_dryer"))
+})
+
+test("an empty historical default is not an answer (knownCareAnswers rule)", () => {
+  const care = toolCareFactsFromFacts(
+    { nightProtection: [], dryingRoutes: ["ordinary_blow_dry"] },
+    { nightProtection: "unknown_historical", dryingRoutes: "unknown_historical" },
   )
-  assert.equal(
-    toolCareFactsFromFacts(careHabits, { dryingRoutes: "user", towel: "assumed" }).provenance,
-    "assumed",
-  )
-  assert.equal(
-    toolCareFactsFromFacts(careHabits, { dryingRoutes: "unknown_historical", towel: "user" })
-      .provenance,
-    "assumed",
-  )
-  assert.equal(toolCareFactsFromFacts(careHabits, undefined).provenance, "assumed")
-  assert.deepEqual(toolCareFactsFromFacts(null, undefined).dryingRoutes, null)
+  assert.deepEqual(care.assumedFields, ["nightProtection"])
+})
+
+test("all assumed → every care-derived Tool is unconfirmed", () => {
+  const view = viewFor({
+    careHabits: CARE_FACTS,
+    fieldProvenance: { dryingRoutes: "assumed", towel: "assumed", nightProtection: "assumed" },
+  })
+  for (const asset of view.routineSection!.assets) {
+    assert.equal(asset.ownership, "unknown", asset.assetKey)
+    assert.equal(asset.presentationState, "check_in_refinement", asset.assetKey)
+  }
+  assert.deepEqual(view.routineSection?.derivedAssetKeys, [])
+  // A fact without any provenance entry counts as unconfirmed too.
+  assert.deepEqual(toolCareFactsFromFacts(CARE_FACTS, undefined).assumedFields, [
+    "dryingRoutes",
+    "towelMaterial",
+    "nightProtection",
+  ])
+})
+
+test("reported ownership from the Tool pages stays user-only (D5 unchanged)", () => {
+  const view = viewFor({
+    careHabits: {
+      toolFamiliesWithSomething: ["brushes_combs"],
+      toolForms_brushes_combs_1: ["wide_tooth_comb"],
+      toolForms_brushes_combs_2: [],
+    },
+    fieldProvenance: {
+      toolFamiliesWithSomething: "unknown_historical",
+      toolForms_brushes_combs_1: "unknown_historical",
+      toolForms_brushes_combs_2: "unknown_historical",
+    },
+  })
+  for (const asset of view.routineSection!.assets) {
+    assert.equal(asset.ownership, "unknown", asset.assetKey)
+  }
 })
 
 /* ── D4: a behaviour projection is marked derived ────────────────────── */

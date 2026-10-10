@@ -615,3 +615,22 @@ test("every tool page presents its own forms with photo cards and a Mehrfachausw
   }
   assert.equal(toolFormPagePresentation("nope"), null)
 })
+
+test("a per-field assumed care fact projects no ownership; the other fields still do", () => {
+  const care: ToolCareFacts = {
+    ...EMPTY_TOOL_CARE_FACTS,
+    dryingRoutes: ["ordinary_blow_dry"],
+    towelMaterial: "frottee",
+    nightProtection: ["silk_satin_pillow"],
+    assumedFields: ["nightProtection", "towelMaterial"],
+  }
+  assert.deepEqual(projectToolInventoryFromCareFacts(care), { airflow: ["hair_dryer"] })
+  // The pre-fill follows the same rule: an assumed Frottee ticks nothing.
+  assert.deepEqual(projectToolPrefillFromCareFacts(care), { airflow: ["hair_dryer"] })
+  const { assumedFields: _assumed, ...allReported } = care
+  void _assumed
+  assert.deepEqual(projectToolInventoryFromCareFacts(allReported), {
+    airflow: ["hair_dryer"],
+    night_protection: ["pillowcase"],
+  })
+})
