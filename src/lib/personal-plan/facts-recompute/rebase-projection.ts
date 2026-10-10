@@ -126,7 +126,10 @@ export function buildRebaseProjection(input: RebaseProjectionInput): RebaseProje
     },
     // Exactly `writeCareHabitsFacts` (stage2-refinement-service.ts) for the clone.
     careHabits: {
-      patch: toCareHabitsPatch(clone.answers, { completedQuestionIds: clone.completedQuestionIds }),
+      patch: toCareHabitsPatch(clone.answers, {
+        completedQuestionIds: clone.completedQuestionIds,
+        answerProvenance: clone.answerProvenance,
+      }),
       provenance: {
         source: { kind: "feinschliff_draft", id: sourceDraft.id },
         schemaVersion: CARE_HABITS_SCHEMA_VERSION,

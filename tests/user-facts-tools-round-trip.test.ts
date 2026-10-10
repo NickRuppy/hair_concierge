@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
+import { buildDirectAcceptanceStage2Defaults } from "../src/lib/personal-plan/direct-acceptance/defaults"
 import { resolveAssumedAnswers } from "../src/lib/personal-plan/refinement/assumed-defaults"
 import { resolveStage2RefinementContract } from "../src/lib/personal-plan/refinement/question-path"
 import type {
@@ -346,4 +347,64 @@ test("loadKnownCareAnswers: stored user page 1 + assumed page 2 resolve to a com
     completedQuestionIds: resolution.orderedQuestionIds,
   })
   assert.equal(contract.isComplete, true)
+})
+
+/* ── fix round 3: assumed brush pages never write the legacy brush slot ─────── */
+
+test("an assumed tool inventory writes no brushesCombs (brush_type stays as today)", () => {
+  const off = buildDirectAcceptanceStage2Defaults({ ...toolsOn, toolsEnabled: undefined })
+  const on = buildDirectAcceptanceStage2Defaults(toolsOn)
+  const patchOff = toCareHabitsPatch(off.answers, off)
+  const patchOn = toCareHabitsPatch(on.answers, on)
+  assert.equal("brushesCombs" in patchOn, false)
+  assert.equal("brushesCombs" in toFieldProvenance(on), false)
+  // The legacy columns derive exactly as with the rollout off.
+  assert.deepEqual(
+    deriveCareHabitsColumns(careHabitsV1Schema.parse(patchOn)),
+    deriveCareHabitsColumns(careHabitsV1Schema.parse(patchOff)),
+  )
+})
+
+test("brushesCombs is written once a brush page is the user's; assumed if the other is not", () => {
+  const answers: PersonalPlanRefinementAnswersV1 = {
+    toolFamiliesWithSomething: ["brushes_combs"],
+    toolForms: { "brushes_combs:1": ["paddle_brush"], "brushes_combs:2": [] },
+  }
+  const completedQuestionIds: Stage2QuestionId[] = [
+    "tools_overview",
+    "tools:brushes_combs:1",
+    "tools:brushes_combs:2",
+  ]
+  const mixed: Stage2AnswerProvenance = {
+    tools_overview: "user",
+    "tools:brushes_combs:1": "user",
+    "tools:brushes_combs:2": "assumed",
+  }
+  const patch = toCareHabitsPatch(answers, { completedQuestionIds, answerProvenance: mixed })
+  assert.deepEqual(patch.brushesCombs, ["paddle"])
+  assert.equal(
+    toFieldProvenance({ completedQuestionIds, answerProvenance: mixed, answers }).brushesCombs,
+    "assumed",
+  )
+  const assumed: Stage2AnswerProvenance = {
+    tools_overview: "user",
+    "tools:brushes_combs:1": "assumed",
+    "tools:brushes_combs:2": "assumed",
+  }
+  assert.equal(
+    "brushesCombs" in
+      toCareHabitsPatch(answers, { completedQuestionIds, answerProvenance: assumed }),
+    false,
+  )
+  assert.equal(
+    "brushesCombs" in
+      toFieldProvenance({ completedQuestionIds, answerProvenance: assumed, answers }),
+    false,
+  )
+  // An unticked family is the user's explicit none when the overview is hers.
+  const unticked = toCareHabitsPatch(
+    { toolFamiliesWithSomething: [], toolForms: {} },
+    { completedQuestionIds: ["tools_overview"], answerProvenance: { tools_overview: "user" } },
+  )
+  assert.deepEqual(unticked.brushesCombs, [])
 })

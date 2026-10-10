@@ -45,7 +45,10 @@ import type { CareHabitsPatch, FieldProvenanceValue } from "./schema"
  */
 export function toCareHabitsPatch(
   answers: PersonalPlanRefinementAnswersV1,
-  completion?: { completedQuestionIds: readonly Stage2QuestionId[] },
+  completion?: {
+    completedQuestionIds: readonly Stage2QuestionId[]
+    answerProvenance?: Stage2AnswerProvenance
+  },
 ): CareHabitsPatch {
   const { toolForms, ...rest } = answers
   if (toolForms === undefined && answers.toolFamiliesWithSomething === undefined) {
@@ -60,11 +63,40 @@ export function toCareHabitsPatch(
   ][]) {
     patch[toolFormCareKey(pageKey)] = [...forms]
   }
+  // The legacy brush slot is the member's answer or nothing: assumed brush pages never write
+  // it (the Feinschliff never did, so `brush_type` stays `null` for members who never answered).
   const brushes = settledFamilyForms(settled.pages, "brushes_combs")
-  if (brushes) {
+  const pageProvenance = toolPageProvenance(answers, settled, (id) =>
+    completion?.answerProvenance?.[id] === "assumed" ? "assumed" : "user",
+  )
+  if (brushes && familyHasUserPage(pageProvenance, "brushes_combs")) {
     patch.brushesCombs = careFactsFromToolInventory({ brushes_combs: brushes }).brushesCombs
   }
   return patch as CareHabitsPatch
+}
+
+/** Each settled page's provenance: its own question's, or the overview's for an unticked family. */
+function toolPageProvenance(
+  answers: PersonalPlanRefinementAnswersV1,
+  settled: SettledToolPages,
+  provenanceOf: (id: Stage2QuestionId) => FieldProvenanceValue,
+): Partial<Record<ToolFormPageKey, FieldProvenanceValue>> {
+  const overview = settled.overviewSettled ? provenanceOf("tools_overview") : undefined
+  const ticked = new Set<ToolFamily>(answers.toolFamiliesWithSomething ?? [])
+  const pageProvenance: Partial<Record<ToolFormPageKey, FieldProvenanceValue>> = {}
+  for (const page of TOOL_FORM_PAGES) {
+    if (settled.pages[page.pageKey] === undefined) continue
+    pageProvenance[page.pageKey] =
+      overview && !ticked.has(page.family) ? overview : provenanceOf(`tools:${page.pageKey}`)
+  }
+  return pageProvenance
+}
+
+function familyHasUserPage(
+  pageProvenance: Partial<Record<ToolFormPageKey, FieldProvenanceValue>>,
+  family: ToolFamily,
+): boolean {
+  return toolFormPagesOfFamily(family).some((page) => pageProvenance[page.pageKey] === "user")
 }
 
 type SettledToolPages = {
@@ -203,16 +235,13 @@ function toolFieldProvenance(
   const fields: Record<string, FieldProvenanceValue> = {}
   if (Object.keys(settled.pages).length === 0 && !settled.overviewSettled) return fields
 
-  const overview = settled.overviewSettled ? provenanceOf("tools_overview") : undefined
-  if (overview) fields.toolFamiliesWithSomething = overview
-  const ticked = new Set<ToolFamily>(answers.toolFamiliesWithSomething ?? [])
-  const pageProvenance: Partial<Record<ToolFormPageKey, FieldProvenanceValue>> = {}
-  for (const page of TOOL_FORM_PAGES) {
-    if (settled.pages[page.pageKey] === undefined) continue
-    const value =
-      overview && !ticked.has(page.family) ? overview : provenanceOf(`tools:${page.pageKey}`)
-    pageProvenance[page.pageKey] = value
-    fields[toolFormCareKey(page.pageKey)] = value
+  if (settled.overviewSettled) fields.toolFamiliesWithSomething = provenanceOf("tools_overview")
+  const pageProvenance = toolPageProvenance(answers, settled, provenanceOf)
+  for (const [pageKey, value] of Object.entries(pageProvenance) as [
+    ToolFormPageKey,
+    FieldProvenanceValue,
+  ][]) {
+    fields[toolFormCareKey(pageKey)] = value
   }
 
   const familiesProvenance = (families: readonly ToolFamily[]) => {
@@ -247,8 +276,9 @@ function toolFieldProvenance(
     const technique = staticFields.towel
     fields.towel = textiles === "user" && (technique ?? "user") === "user" ? "user" : "assumed"
   }
+  // Written only when a brush page is the member's own (see `toCareHabitsPatch`).
   const brushes = familiesProvenance(["brushes_combs"])
-  if (brushes) fields.brushesCombs = brushes
+  if (brushes && familyHasUserPage(pageProvenance, "brushes_combs")) fields.brushesCombs = brushes
 
   return fields
 }
