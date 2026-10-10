@@ -16,8 +16,7 @@ import {
   type RefinedNeedSnapshotRow,
 } from "./repository"
 import {
-  asToolViewNeedSnapshot,
-  buildToolView,
+  buildToolViewForRoutine,
   type ToolFactsSource,
   type ToolRoutineSection,
 } from "../tools/read-view"
@@ -178,16 +177,11 @@ async function composeRoutineToolSection(
   if (!payload || !facts) return null
   try {
     const refined = await loadRefined(view.personalPlanId, payload.source.refinedVersionId)
-    const needSnapshot = asToolViewNeedSnapshot(refined?.output_snapshot)
-    if (!needSnapshot) return null
     return (
-      buildToolView({
-        careHabits: facts.careHabits,
-        fieldProvenance: facts.fieldProvenance,
-        needSnapshot,
+      buildToolViewForRoutine({
+        facts,
+        refinedOutputSnapshot: refined?.output_snapshot,
         routine: payload,
-        hasOptionalPage: false,
-        toolsEnabled: true,
       })?.routineSection ?? null
     )
   } catch {

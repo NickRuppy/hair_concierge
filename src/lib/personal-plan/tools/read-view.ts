@@ -112,6 +112,34 @@ export function buildToolView(input: BuildToolViewInput): ToolView | null {
   }
 }
 
+/**
+ * The read-time view behind a shown Routine (Routine page and Anwendung): the member's current
+ * facts, the refined need snapshot the Routine was compiled from, and the Routine itself, read
+ * and never extended. A missing input or an engine failure yields no view, so a Tool problem can
+ * never take the Routine or the Anwendung down.
+ */
+export function buildToolViewForRoutine(input: {
+  facts: ToolFactsSource | null
+  refinedOutputSnapshot: unknown
+  routine: RoutinePayloadV1
+}): ToolView | null {
+  if (!input.facts) return null
+  try {
+    const needSnapshot = asToolViewNeedSnapshot(input.refinedOutputSnapshot)
+    if (!needSnapshot) return null
+    return buildToolView({
+      careHabits: input.facts.careHabits,
+      fieldProvenance: input.facts.fieldProvenance,
+      needSnapshot,
+      routine: input.routine,
+      hasOptionalPage: false,
+      toolsEnabled: true,
+    })
+  } catch {
+    return null
+  }
+}
+
 /** The member's stored facts the view reads: `care_habits` and its per-field provenance. */
 export type ToolFactsSource = {
   careHabits: Partial<CareHabitsV1> | null

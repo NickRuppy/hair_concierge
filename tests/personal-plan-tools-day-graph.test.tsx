@@ -20,9 +20,9 @@ import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
  *
  * Engine-level parts (the graph, derived placement, instructions per capability, day gating)
  * are asserted here, plus the read-time `applicationGuidance` projected per day. The RENDERED
- * Waschtag assertions of the August file (towel before Leave-in, Hitzeschutz before the heated
- * step, Applikator before its scalp product, the rough-rubbing merge) need the Anwendung view
- * adapter's tool input and move with it to Task 9 (`tests/personal-plan-tools-application`).
+ * Waschtag assertions (towel before Leave-in, Hitzeschutz before the heated step, Applikator
+ * before its scalp product, the rough-rubbing merge) run against the real Anwendung view adapter
+ * in `tests/personal-plan-tools-application-wash-day.test.tsx`.
  */
 
 // --- fixtures -----------------------------------------------------------------
