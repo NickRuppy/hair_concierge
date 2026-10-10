@@ -9,6 +9,7 @@ import {
   toAuthenticatedAppNavigationAccess,
 } from "../src/lib/personal-plan/navigation-access"
 
+import { HAARPROFIL_LAB_SCENARIOS } from "../src/app/labs/profile-haarprofil/scenarios"
 import { HairProfileSection } from "../src/components/profile/hair-profile-section"
 import {
   buildHairProfileSection,
@@ -366,4 +367,53 @@ test("the deferred sub-note reaches the rendered markup", () => {
   )
 
   assert.match(html, /Schaltet offene Empfehlungen frei\./)
+})
+
+// ————————————— /labs/profile-haarprofil: both module sets —————————————
+
+test("the lab shows the tools-off variants with four rows and the tools-on variants with five", () => {
+  const withTools = HAARPROFIL_LAB_SCENARIOS.filter((scenario) =>
+    scenario.view.rows.some((row) => row.key === "tools"),
+  )
+  const withoutTools = HAARPROFIL_LAB_SCENARIOS.filter(
+    (scenario) => !scenario.view.rows.some((row) => row.key === "tools"),
+  )
+  assert.ok(withTools.length >= 3 && withoutTools.length >= 4)
+
+  for (const scenario of withTools) {
+    assert.equal(scenario.view.totalSteps, 5, scenario.title)
+    assert.deepEqual(
+      scenario.view.rows.map((row) => row.label),
+      ["Haar-Analyse", "Dein Plan", "Deine Produkte", "Deine Tools", "Deine Gewohnheiten"],
+      scenario.title,
+    )
+    assert.deepEqual(
+      scenario.view.rows.map((row) => row.step),
+      [1, 2, 3, 4, 5],
+      scenario.title,
+    )
+  }
+  for (const scenario of withoutTools) {
+    assert.equal(scenario.view.totalSteps, 4, scenario.title)
+    assert.equal(scenario.view.rows.length, 4, scenario.title)
+  }
+})
+
+test("the lab's tools-on scenarios walk every module state and render the Deine Tools row", () => {
+  const withTools = HAARPROFIL_LAB_SCENARIOS.filter((scenario) =>
+    scenario.view.rows.some((row) => row.key === "tools"),
+  )
+  const statuses = withTools.map((scenario) => rowByKey(scenario.view.rows, "tools").status)
+  assert.ok(statuses.includes("open") && statuses.includes("done"))
+  assert.deepEqual(
+    withTools.map((scenario) => scenario.view.completedSteps),
+    [2, 3, 4, 5],
+  )
+
+  const html = renderToStaticMarkup(<HairProfileSection view={withTools[1].view} />)
+  assert.match(html, /3 von 5/)
+  assert.match(html, /Deine Tools/)
+  assert.match(html, /href="\/plan-start\?refine=tools"/)
+  assert.equal(html.match(/Erledigt: /g)?.length, 3)
+  assert.match(html, /aria-valuemax="5"/)
 })

@@ -2,7 +2,12 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { deriveDesiredVolumeFromGoals } from "../src/lib/hair-profile/derived"
-import { PROFILE_FIELD_CONFIG } from "../src/lib/profile/section-config"
+import {
+  PROFILE_FIELD_CONFIG,
+  PROFILE_SECTION_META,
+  profileHabitsRows,
+} from "../src/lib/profile/section-config"
+import { buildProfileToolsBlock } from "../src/lib/personal-plan/tools/profile-block"
 import { deriveDiagnosticsColumns } from "../src/lib/user-facts/derive-legacy-columns"
 import { diagnosticsV1Schema } from "../src/lib/user-facts/schema"
 import type { HairProfile } from "../src/lib/types"
@@ -263,6 +268,7 @@ test("every Haar-Check field reads the stored answers in the quiz's wording", ()
     scalp_type: "Fettig",
     scalp_condition: "Nichts davon",
     concerns: ["Trockene oder strohige Längen"],
+    goals: ["Intensive Feuchtigkeit"],
   })
 })
 
@@ -342,4 +348,151 @@ test("the plan's drying routes read with the drying page's wording, never the ol
     )
     assert.ok(!shown.includes("formender Luftstrom"), shown)
   }
+})
+
+// ---------------------------------------------------------------------------
+// Hair Tools Profil (Task 11): Ziele inside Haar-Check, Gewohnheiten and Deine Tools sections
+// ---------------------------------------------------------------------------
+
+function sectionFields(sectionKey: string) {
+  return PROFILE_FIELD_CONFIG.filter((entry) => entry.sectionKey === sectionKey)
+}
+
+test("the goals row lives in the Haar-Check section and keeps its own editor as a row-level link", () => {
+  const quizKeys = sectionFields("quiz").map((entry) => entry.key)
+  assert.equal(quizKeys.at(-1), "goals", "the Ziele row closes the Haar-Check grid")
+  assert.equal(quizKeys.filter((key) => key === "goals").length, 1)
+  assert.deepEqual(field("goals").editTarget, { kind: "profile-edit-goals" })
+  assert.equal(field("goals").label, "Deine Haarziele")
+  assert.equal(field("goals").sectionKey, "quiz")
+})
+
+test("there is no Ziele card any more, in either flag state", () => {
+  assert.ok(!PROFILE_SECTION_META.some((meta) => (meta.key as string) === "goals"))
+  assert.ok(!PROFILE_FIELD_CONFIG.some((entry) => (entry.sectionKey as string) === "goals"))
+})
+
+test("Gewohnheiten is its own section with the exact copy and the four rows in order", () => {
+  const meta = PROFILE_SECTION_META.find((entry) => entry.key === "habits")
+  assert.ok(meta)
+  assert.equal(meta.title, "Gewohnheiten")
+  assert.equal(meta.description, "Wie du trocknest und stylst, aus deinem Feinschliff.")
+  const fields = sectionFields("habits")
+  assert.deepEqual(
+    fields.map((entry) => [entry.key, entry.label]),
+    [
+      ["towel_technique", "Abtrocknen"],
+      ["drying_method", "Trocknen"],
+      ["heat_styling", "Hitze-Häufigkeit"],
+      ["uses_heat_protection", "Hitzeschutz"],
+    ],
+  )
+  for (const entry of fields) {
+    assert.deepEqual(entry.editTarget, { kind: "refine", module: "habits" }, entry.key)
+  }
+})
+
+test("the Gewohnheiten rows read exactly what the Styling and Alltag rows of the same name read", () => {
+  const profile = makeProfile({
+    towel_material: "mikrofaser",
+    towel_technique: "gentle_press",
+    drying_method: "blow_dry",
+    heat_styling: "once_weekly",
+    uses_heat_protection: true,
+  })
+  for (const habit of sectionFields("habits")) {
+    const original = PROFILE_FIELD_CONFIG.find(
+      (entry) => entry.key === habit.key && entry.sectionKey !== "habits",
+    )
+    assert.ok(original, habit.key)
+    assert.deepEqual(habit.getValue(profile), original.getValue(profile), habit.key)
+  }
+})
+
+test("Deine Tools is its own section with the exact copy and one owned_tools row", () => {
+  const meta = PROFILE_SECTION_META.find((entry) => entry.key === "tools")
+  assert.ok(meta)
+  assert.equal(meta.title, "Deine Tools")
+  assert.equal(meta.description, "Was du schon hast, aus deinem Feinschliff.")
+  const fields = sectionFields("tools")
+  assert.deepEqual(
+    fields.map((entry) => entry.key),
+    ["owned_tools"],
+  )
+  assert.deepEqual(fields[0].editTarget, { kind: "refine", module: "tools" })
+})
+
+test("owned_tools lists the reported tool labels, and stays open without a confirmed answer", () => {
+  const owned = field("owned_tools")
+  const block = buildProfileToolsBlock({
+    drying_textiles: ["microfiber_towel"],
+    brushes_combs: ["wide_tooth_comb", "round_brush"],
+  })
+  assert.deepEqual(owned.getValue(null, null, block), [
+    "Mikrofaser-Handtuch",
+    "Grobzinkiger Kamm",
+    "Rundbürste",
+  ])
+  assert.equal(owned.getValue(null, null, null), null)
+  assert.equal(owned.getValue(null, null), null)
+  assert.equal(owned.getValue(null, null, buildProfileToolsBlock({ airflow: [] })), "Nichts davon")
+})
+
+test("Gewohnheiten collapses Hitze-Häufigkeit and Hitzeschutz into one „Keine Hitze“ row without a heat source", () => {
+  const heatFree = profileHabitsRows(
+    makeProfile({
+      heat_styling: "never",
+      towel_material: "mikrofaser",
+      towel_technique: "gentle_press",
+    }),
+    null,
+  )
+  assert.deepEqual(
+    heatFree.map((row) => [row.key, row.label, row.value]),
+    [
+      ["towel_technique", "Abtrocknen", "Sanft ausdrücken / scrunchen"],
+      ["drying_method", "Trocknen", null],
+      ["no_heat", "Hitze", "Keine Hitze"],
+    ],
+  )
+  assert.deepEqual(heatFree[2].editTarget, { kind: "refine", module: "habits" })
+
+  // The plan's own answers decide the same way when the legacy column is not written yet.
+  const fromPlan = profileHabitsRows(null, { dryingRoutes: ["air_dry"], additionalHeatTools: [] })
+  assert.deepEqual(
+    fromPlan.map((row) => row.key),
+    ["towel_technique", "drying_method", "no_heat"],
+  )
+})
+
+test("Gewohnheiten keeps all four rows when any heat source is used or not yet known", () => {
+  const keys = (rows: ReturnType<typeof profileHabitsRows>) => rows.map((row) => row.key)
+  const four = ["towel_technique", "drying_method", "heat_styling", "uses_heat_protection"]
+  assert.deepEqual(
+    keys(profileHabitsRows(makeProfile({ heat_styling: "once_weekly" }), null)),
+    four,
+  )
+  assert.deepEqual(
+    keys(profileHabitsRows(null, { dryingRoutes: ["ordinary_blow_dry"], additionalHeatTools: [] })),
+    four,
+  )
+  assert.deepEqual(
+    keys(
+      profileHabitsRows(null, { dryingRoutes: ["air_dry"], additionalHeatTools: ["straightener"] }),
+    ),
+    four,
+  )
+  assert.deepEqual(
+    keys(
+      profileHabitsRows(null, {
+        dryingRoutes: ["diffuser_or_airflow_shaping"],
+        additionalHeatTools: [],
+      }),
+    ),
+    four,
+  )
+  // Unknown is not „no heat": nothing answered yet keeps the open rows.
+  assert.deepEqual(keys(profileHabitsRows(null, null)), four)
+  assert.deepEqual(keys(profileHabitsRows(makeProfile(), null)), four)
+  assert.deepEqual(keys(profileHabitsRows(null, { dryingRoutes: ["air_dry"] })), four)
 })
