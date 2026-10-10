@@ -95,6 +95,13 @@ export type ToolCareFacts = {
    * absence. Absent or empty: every field follows `provenance`.
    */
   assumedFields?: readonly ToolCareFactField[]
+  /**
+   * The legacy brush answer (`care_habits.brushesCombs`, onboarding `brush_type`), read only by
+   * the read-time view (port fix round 2). Projected as DERIVED brush forms — like a Föhn from
+   * the drying route — never as reported ownership, which stays with the brush pages (D5/H2).
+   * Absent or `null`: unknown.
+   */
+  brushesCombs?: readonly BrushType[] | null
 }
 
 export type ToolCareProvenance = "reported" | "assumed"
@@ -105,6 +112,7 @@ export type ToolCareFactField =
   | "additionalHeatTools"
   | "towelMaterial"
   | "nightProtection"
+  | "brushesCombs"
 
 export const EMPTY_TOOL_CARE_FACTS: ToolCareFacts = {
   dryingRoutes: null,
@@ -376,6 +384,7 @@ function careInventoryEntries(care: ToolCareFacts): [ToolFamily, CareInventoryEn
   const additionalHeatTools = assumed.has("additionalHeatTools") ? null : care.additionalHeatTools
   const towelMaterial = assumed.has("towelMaterial") ? null : care.towelMaterial
   const nightProtection = assumed.has("nightProtection") ? null : care.nightProtection
+  const brushesCombs = assumed.has("brushesCombs") ? null : (care.brushesCombs ?? null)
 
   // `D2`: `[]` is unanswered, never „ich lufttrockne". `D4`: reporting the
   // behaviour reports the device, but air-drying is not a claim about owning or
@@ -415,6 +424,14 @@ function careInventoryEntries(care: ToolCareFacts): [ToolFamily, CareInventoryEn
     if (forms.length > 0 || towelMaterial === "no_towel") {
       entries.set("drying_textiles", { forms, provenance: "reported" })
     }
+  }
+
+  // The legacy brush answer names brushes, but it predates the brush pages and was never an
+  // ownership answer to them: its forms are DERIVED, like the Föhn above. An empty or
+  // fingers-only answer projects nothing — a derived fact never proves absence.
+  if (brushesCombs) {
+    const forms = dedupe(brushesCombs.flatMap(mapBrushType))
+    if (forms.length > 0) entries.set("brushes_combs", { forms, provenance: "derived" })
   }
 
   if (nightProtection) {
@@ -510,6 +527,24 @@ function mapAdditionalHeatToolAirflow(tool: AdditionalHeatTool): ToolProductType
     default:
       return []
   }
+}
+
+/**
+ * Inverse of the §4 brush map (`TOOL_FORM_CARE_FACTS[form].brushType`). `fingers` is an
+ * answer-only token, never a product, so it projects nothing (`D9b`).
+ */
+const BRUSH_TYPE_PRODUCT_TYPES: Record<BrushType, ToolProductType | null> = {
+  wide_tooth_comb: "wide_tooth_comb",
+  detangling: "detangling_brush",
+  paddle: "paddle_brush",
+  round: "round_brush",
+  boar_bristle: "boar_bristle",
+  fingers: null,
+}
+
+function mapBrushType(brush: BrushType): ToolProductType[] {
+  const form = BRUSH_TYPE_PRODUCT_TYPES[brush]
+  return form ? [form] : []
 }
 
 function mapTowelMaterial(material: TowelMaterial): ToolProductType[] {

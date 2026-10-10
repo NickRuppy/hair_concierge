@@ -5,7 +5,13 @@ import { computeNeedPlan } from "@/lib/personal-plan/compute-stage1"
 import { resolveStage2RefinementContract } from "@/lib/personal-plan/refinement/question-path"
 import type { RoutinePayloadV1 } from "@/lib/personal-plan/routine/contracts"
 import { buildToolPlan } from "@/lib/personal-plan/tools/assets"
-import { projectToolCareFacts, toolFormsByFamily } from "@/lib/personal-plan/tools/facts"
+import {
+  projectToolCareFacts,
+  projectToolInventoryFromCareFacts,
+  projectToolPrefillFromCareFacts,
+  reportedToolInventoryFromFacts,
+  toolFormsByFamily,
+} from "@/lib/personal-plan/tools/facts"
 import {
   buildToolView,
   scalpApplicationJobFromDecisions,
@@ -363,6 +369,63 @@ test("reported ownership from the Tool pages stays user-only (D5 unchanged)", ()
   for (const asset of view.routineSection!.assets) {
     assert.equal(asset.ownership, "unknown", asset.assetKey)
   }
+})
+
+/* ── legacy brush answer (fix round 2) ────────────────────────────────── */
+
+test("a legacy brush answer (user or backfilled) makes its brush forms confirmed-derived", () => {
+  for (const provenance of ["user", "unknown_historical"] as const) {
+    const view = viewFor({
+      careHabits: { brushesCombs: ["wide_tooth_comb", "round", "fingers"] },
+      fieldProvenance: { brushesCombs: provenance },
+    })
+    const brushes = view.routineSection!.assets.filter((asset) => asset.family === "brushes_combs")
+    assert.ok(brushes.length > 0, provenance)
+    const comb = brushes.find((asset) => asset.productTypes[0] === "wide_tooth_comb")
+    assert.ok(comb, `${provenance}: the owned comb leads the detangling need`)
+    assert.equal(comb.ownership, "owned_generic", provenance)
+    assert.equal(comb.presentationState, "use_yours", provenance)
+    assert.ok(view.routineSection!.derivedAssetKeys.includes(comb.assetKey), provenance)
+    for (const asset of brushes) {
+      assert.notEqual(asset.presentationState, "check_in_refinement", asset.assetKey)
+    }
+  }
+})
+
+test("an assumed or empty legacy brush answer leaves the brush need unconfirmed", () => {
+  for (const [brushesCombs, provenance] of [
+    [["wide_tooth_comb"], "assumed"],
+    [[], "unknown_historical"],
+    [["fingers"], "user"],
+  ] as const) {
+    const view = viewFor({
+      careHabits: { brushesCombs: [...brushesCombs] },
+      fieldProvenance: { brushesCombs: provenance },
+    })
+    for (const asset of view.routineSection!.assets.filter((a) => a.family === "brushes_combs")) {
+      assert.equal(asset.ownership, "unknown", `${provenance} ${brushesCombs.join()}`)
+      assert.equal(asset.presentationState, "check_in_refinement", asset.assetKey)
+    }
+  }
+})
+
+test("brushesCombs never enters reported ownership; the pre-fill ticks the same forms", () => {
+  const careHabits = {
+    brushesCombs: ["wide_tooth_comb", "detangling", "paddle", "round", "boar_bristle", "fingers"],
+  } as BuildToolViewInput["careHabits"]
+  assert.deepEqual(reportedToolInventoryFromFacts(careHabits, { brushesCombs: "user" }), {})
+  const care = toolCareFactsFromFacts(careHabits, { brushesCombs: "user" })
+  const expected = [
+    "wide_tooth_comb",
+    "detangling_brush",
+    "paddle_brush",
+    "round_brush",
+    "boar_bristle",
+  ]
+  assert.deepEqual(projectToolInventoryFromCareFacts(care).brushes_combs, expected)
+  assert.deepEqual(projectToolPrefillFromCareFacts(care).brushes_combs, expected)
+  const assumed = toolCareFactsFromFacts(careHabits, { brushesCombs: "assumed" })
+  assert.equal(projectToolPrefillFromCareFacts(assumed).brushes_combs, undefined)
 })
 
 /* ── D4: a behaviour projection is marked derived ────────────────────── */

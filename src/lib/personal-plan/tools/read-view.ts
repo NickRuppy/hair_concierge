@@ -187,14 +187,15 @@ function isStringArray(value: unknown): value is string[] {
 
 /**
  * The care facts that project Tool ownership, by `care_habits` key → engine field. `heatEvents`
- * shapes heat protection only and `brushesCombs` is not read by the engine (the brush pages are),
- * so neither can make a Tool confirmed or unconfirmed.
+ * shapes heat protection only, so it can make no Tool confirmed or unconfirmed. `brushesCombs`
+ * (the legacy brush answer) projects DERIVED brush forms (fix round 2).
  */
 const TOOL_OWNERSHIP_CARE_FIELDS = [
   ["dryingRoutes", "dryingRoutes"],
   ["additionalHeatTools", "additionalHeatTools"],
   ["towel", "towelMaterial"],
   ["nightProtection", "nightProtection"],
+  ["brushesCombs", "brushesCombs"],
 ] as const satisfies readonly (readonly [keyof CareHabitsV1, ToolCareFactField])[]
 
 /**
@@ -216,7 +217,11 @@ export function toolCareFactsFromFacts(
       careHabits?.[key] !== undefined &&
       !isConfirmedCareFact(fieldProvenance?.[key], careHabits[key]),
   ).map(([, field]) => field)
-  const care = projectToolCareFacts(answers, "reported")
+  const care: ToolCareFacts = {
+    ...projectToolCareFacts(answers, "reported"),
+    // Not a refinement answer, so `projectToolCareFacts` never sees it (fix round 2).
+    ...(careHabits?.brushesCombs ? { brushesCombs: [...careHabits.brushesCombs] } : {}),
+  }
   return assumedFields.length > 0 ? { ...care, assumedFields } : care
 }
 
