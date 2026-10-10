@@ -207,7 +207,7 @@
     "@langfuse/tracing": "^5.1.0",
     "@modelcontextprotocol/sdk": "1.30.0",
     "@opentelemetry/sdk-node": "^0.216.0",
-    "@paypal/react-paypal-js": "^9.2.0",
+    "@paypal/react-paypal-js": "^10.6.0",
     "@sentry/nextjs": "^10.51.0",
     "@sentry/node": "^10.51.0",
     "@stripe/react-stripe-js": "^7.0.0",
