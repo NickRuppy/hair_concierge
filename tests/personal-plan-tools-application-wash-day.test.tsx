@@ -274,3 +274,41 @@ test("the rendered Waschtag shows Lena's tools as image-led sections, never as p
     assert.equal(markup.includes(forbidden), false)
   }
 })
+
+test("a throwing Tool projection drops only the Tool blocks, never the product steps", () => {
+  const guidance = lenaToolView().applicationGuidance
+  // An occurrence without an anchor makes the projection throw.
+  const broken = {
+    ...guidance,
+    occurrences: guidance.occurrences.map((occurrence) => ({ ...occurrence, anchor: undefined })),
+  } as unknown as typeof guidance
+  assert.throws(() => projectToolsForDay({ dayType: "wash_day", ...broken }))
+
+  const outerSequence = COMPILED_DAY_ORDER.withoutScalp
+  const view = toApplicationPageView({
+    compiled: {
+      days: [
+        {
+          key: "wash_day",
+          outerSequence,
+          productBlocks: outerSequence.flatMap((entry) =>
+            entry.kind === "product" ? [entry.block] : [],
+          ),
+        },
+        { key: "rest_day", outerSequence: [], productBlocks: [] },
+      ],
+    } as never,
+    dayDefinitions: [
+      { key: "wash_day", label: "Waschtag", summary: "", sortOrder: 10 },
+      { key: "rest_day", label: "Pausentag", summary: "", sortOrder: 80 },
+    ] as never,
+    tools: broken,
+  })
+  assert.equal(view.state, "ready")
+  if (view.state !== "ready") return
+  // Exactly the day the compiler produced: same as rendering without Tools.
+  assert.deepEqual(
+    view.days.find((day) => day.dayType === "wash_day"),
+    renderWashDay({}, false).day,
+  )
+})

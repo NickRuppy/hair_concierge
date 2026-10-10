@@ -17,6 +17,7 @@ import {
 } from "@/lib/personal-plan/tools/application"
 import {
   dayAnchorIndex,
+  routeKeyFor,
   TOOL_DAY_ANCHORS,
   type ToolAsset,
   type ToolDayAnchor,
@@ -113,96 +114,105 @@ export function toApplicationPageView({
       throw new Error(`missing active day definition for ${day.key}`)
     }
 
-    const toolProjection = tools
-      ? projectToolsForDay({
+    // Tools are a read-time garnish: any failure while projecting or placing them drops the
+    // Tool blocks of this day and nothing else, so the product steps always render.
+    const buildDay = (toolProjection: ReturnType<typeof projectToolsForDay> | null) => {
+      // The product compiler emits its own generic transition line whenever a
+      // product's anchor is `post_rinse_towel_dry` ("Sanft mit einem Handtuch
+      // ausdrücken."). Since WS6 a drying-textile Tool step (towel, T-shirt,
+      // wrap) can anchor at that same graph position and say the same thing in
+      // its own copy. Drop the compiler's generic line in that case — the Tool
+      // step alone carries the instruction. The compiler's own output and
+      // semantics are untouched; a day without a drying-textile Tool step keeps
+      // the transition exactly as compiled.
+      const suppressGenericTowelTransition = Boolean(
+        toolProjection && hasDryingTextileStepAtTowelDry(toolProjection.sections),
+      )
+      const effectiveOuterSequence = day.outerSequence.filter(
+        (step) => !(suppressGenericTowelTransition && isTowelDryTransition(step)),
+      )
+
+      const productSteps: ApplicationOuterStepView[] = effectiveOuterSequence.map((step, index) => {
+        if (step.kind === "product") return productStep(step.block)
+        if (step.kind === "unresolved_product") {
+          return {
+            kind: "unresolved_product" as const,
+            stepKey: step.block.applicationInstanceKey,
+            applicationInstanceKey: step.block.applicationInstanceKey,
+            productId: step.block.productId,
+            productName: step.block.productName,
+            categoryLabelDe: categoryLabelDe(step.block.category),
+            reason: step.block.reason ?? ("no_product_chosen" as const),
+          }
+        }
+        return {
+          kind: "transition" as const,
+          stepKey: `${day.key}:transition:${index}`,
+          copyDe: step.copyDe,
+        }
+      })
+
+      const productShelf = effectiveOuterSequence.flatMap<ApplicationShelfSlotView>((step) => {
+        if (step.kind === "product")
+          return [
+            {
+              kind: "product" as const,
+              productId: step.block.productId,
+              productName: step.block.productName,
+              imageUrl: step.block.imageUrl ?? null,
+              category: step.block.category,
+              status: step.block.status,
+            },
+          ]
+        if (step.kind === "unresolved_product")
+          return [
+            {
+              kind: "open" as const,
+              category: step.block.category,
+              categoryLabelDe: categoryLabelDe(step.block.category),
+              reason: step.block.reason ?? ("no_product_chosen" as const),
+            },
+          ]
+        return []
+      })
+
+      return {
+        dayType: day.key,
+        sortOrder: definition.sortOrder,
+        labelDe: definition.label,
+        summaryDe: definition.summary,
+        cadenceDe: cadenceByDay[day.key] ?? null,
+        steps: toolProjection
+          ? withToolSteps(
+              productSteps,
+              productAnchorRanks(effectiveOuterSequence),
+              toolProjection,
+              finishStepIndex(effectiveOuterSequence),
+            )
+          : productSteps,
+        isPartial: Boolean(day.isPartial),
+        provisionalProductCount: day.productBlocks.filter((block) => block.status === "provisional")
+          .length,
+        unresolvedProductCount: effectiveOuterSequence.filter(
+          (step) => step.kind === "unresolved_product",
+        ).length,
+        // Tools stand on the same shelf as the products; no pill row is added.
+        shelf: [...productShelf, ...(toolProjection?.shelf ?? [])],
+      }
+    }
+
+    if (!tools) return buildDay(null)
+    try {
+      return buildDay(
+        projectToolsForDay({
           dayType: day.key,
           assets: tools.assets,
           occurrences: tools.occurrences,
           guidance: tools.guidance,
-        })
-      : null
-
-    // The product compiler emits its own generic transition line whenever a
-    // product's anchor is `post_rinse_towel_dry` ("Sanft mit einem Handtuch
-    // ausdrücken."). Since WS6 a drying-textile Tool step (towel, T-shirt,
-    // wrap) can anchor at that same graph position and say the same thing in
-    // its own copy. Drop the compiler's generic line in that case — the Tool
-    // step alone carries the instruction. The compiler's own output and
-    // semantics are untouched; a day without a drying-textile Tool step keeps
-    // the transition exactly as compiled.
-    const suppressGenericTowelTransition = Boolean(
-      toolProjection && hasDryingTextileStepAtTowelDry(toolProjection.sections),
-    )
-    const effectiveOuterSequence = day.outerSequence.filter(
-      (step) => !(suppressGenericTowelTransition && isTowelDryTransition(step)),
-    )
-
-    const productSteps: ApplicationOuterStepView[] = effectiveOuterSequence.map((step, index) => {
-      if (step.kind === "product") return productStep(step.block)
-      if (step.kind === "unresolved_product") {
-        return {
-          kind: "unresolved_product" as const,
-          stepKey: step.block.applicationInstanceKey,
-          applicationInstanceKey: step.block.applicationInstanceKey,
-          productId: step.block.productId,
-          productName: step.block.productName,
-          categoryLabelDe: categoryLabelDe(step.block.category),
-          reason: step.block.reason ?? ("no_product_chosen" as const),
-        }
-      }
-      return {
-        kind: "transition" as const,
-        stepKey: `${day.key}:transition:${index}`,
-        copyDe: step.copyDe,
-      }
-    })
-
-    const productShelf = effectiveOuterSequence.flatMap<ApplicationShelfSlotView>((step) => {
-      if (step.kind === "product")
-        return [
-          {
-            kind: "product" as const,
-            productId: step.block.productId,
-            productName: step.block.productName,
-            imageUrl: step.block.imageUrl ?? null,
-            category: step.block.category,
-            status: step.block.status,
-          },
-        ]
-      if (step.kind === "unresolved_product")
-        return [
-          {
-            kind: "open" as const,
-            category: step.block.category,
-            categoryLabelDe: categoryLabelDe(step.block.category),
-            reason: step.block.reason ?? ("no_product_chosen" as const),
-          },
-        ]
-      return []
-    })
-
-    return {
-      dayType: day.key,
-      sortOrder: definition.sortOrder,
-      labelDe: definition.label,
-      summaryDe: definition.summary,
-      cadenceDe: cadenceByDay[day.key] ?? null,
-      steps: toolProjection
-        ? withToolSteps(
-            productSteps,
-            productAnchorRanks(effectiveOuterSequence),
-            toolProjection,
-            finishStepIndex(effectiveOuterSequence),
-          )
-        : productSteps,
-      isPartial: Boolean(day.isPartial),
-      provisionalProductCount: day.productBlocks.filter((block) => block.status === "provisional")
-        .length,
-      unresolvedProductCount: effectiveOuterSequence.filter(
-        (step) => step.kind === "unresolved_product",
-      ).length,
-      // Tools stand on the same shelf as the products; no pill row is added.
-      shelf: [...productShelf, ...(toolProjection?.shelf ?? [])],
+        }),
+      )
+    } catch {
+      return buildDay(null)
     }
   })
 
@@ -216,6 +226,9 @@ export function toApplicationPageView({
 
   return { state: "ready", days }
 }
+
+/** The step key of the rough-rubbing correction (`guidance:<route key>`, see `buildToolPlan`). */
+const GENTLE_TOWEL_GUIDANCE_KEY = `guidance:${routeKeyFor("gentle_towel_handling")}`
 
 type DayOuterSequence = CompiledApplicationViewV1["days"][number]["outerSequence"]
 
@@ -316,7 +329,7 @@ function withToolSteps(
     })),
     ...projection.transitions
       .filter(
-        (transition) => !(towelCardPresent && transition.stepKey.includes("gentle_towel_handling")),
+        (transition) => !(towelCardPresent && transition.stepKey === GENTLE_TOWEL_GUIDANCE_KEY),
       )
       .map((transition) => ({
         rank: dayAnchorIndex(transition.anchor),
