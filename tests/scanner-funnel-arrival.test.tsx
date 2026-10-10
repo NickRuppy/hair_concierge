@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import React, { type ReactElement, type ReactNode } from "react"
+import { LayoutRouterContext } from "next/dist/shared/lib/app-router-context.shared-runtime"
 
 import { readFileSync } from "node:fs"
 
@@ -79,8 +80,13 @@ function renderWithHooks(
     },
     // `ScanPageClient` reads the app router through context; the tree never navigates
     // in these assertions, so a stub keeps `useRouter()` from throwing its invariant.
-    useContext() {
-      return { push() {} }
+    useContext(context: unknown) {
+      // Next 16.3+ `useRouter` also reads `LayoutRouterContext`; outside a layout it is null.
+      return context === LayoutRouterContext ? null : { push() {} }
+    },
+    useMemo<T>(factory: () => T): T {
+      cursor += 1
+      return factory()
     },
   }
 

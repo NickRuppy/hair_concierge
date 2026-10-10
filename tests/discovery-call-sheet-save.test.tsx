@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import React, { type ReactElement, type ReactNode } from "react"
+import { LayoutRouterContext } from "next/dist/shared/lib/app-router-context.shared-runtime"
 
 import {
   DiscoveryRunsheetBrief,
@@ -84,8 +85,14 @@ function createHarness(render: () => ReactElement | null, router: unknown) {
   let cursor = 0
 
   const dispatcher = {
-    useContext() {
-      return router
+    // Next 16.3+ `useRouter` also reads `LayoutRouterContext` (for `bfcacheId`) and memoizes
+    // through `useMemo`; outside a layout that context is null.
+    useContext(context: unknown) {
+      return context === LayoutRouterContext ? null : router
+    },
+    useMemo<T>(factory: () => T): T {
+      cursor++
+      return factory()
     },
     useRef<T>(initial: T): { current: T } {
       const index = cursor++
