@@ -1,0 +1,252 @@
+[
+  {
+    "sample_id": "bali-curls-leave-in-spray-curl-defining",
+    "product": "BALI CURLS Leave-In Spray Curl Defining, 150 ml",
+    "tail_marker": { "inci": "Sodium Benzoate", "rank": 9, "status": "plausible_non_vacuous", "note": "Tail carries Saccharomyces extract, Panthenol, ferment filtrate (outside the clause-6 closed set)." },
+    "l5_fixative": { "present": false, "members": [], "note": "Hydrolyzed Corn Starch r3 is not an L5 member (L5 enumerates vinyl/acrylate/PU fixatives). Leave-in HOLD = none." },
+    "conditioning": {
+      "state": "absent",
+      "cond_anchor_letter": "low",
+      "members": [],
+      "note": "No L1 cationic, no fatty alcohol, no oil/butter/silicone anywhere. Above the tail only humectants (Propylene Glycol r2, Betaine r6, Glycerin r7) and polyglyceryl-ester solubilisers (r4, r5) carrying Parfum r8."
+    },
+    "hold_route": { "state": "present", "mechanisms": ["natural_film"], "members": [{ "inci": "Hydrolyzed Corn Starch", "rank": 3 }], "leave_in_hold_state": "none", "note": "Hydrolysed (not unmodified) starch counts as natural_film under concept 3b; above the tail." },
+    "g0": {
+      "state": "in_category",
+      "clause": "§2.3 in_category row; §2.3.2 architecture half cannot be established without an L5 route, so excluded_styling_first cannot fire",
+      "positioning_claim_tier": "C3",
+      "note": "Curl definition is 'curl support' under §2.1. All claims (incl. 'mit Halt', 'Hitzeschutz bis zu 230°C') are dm.de copy for a third-party brand = C3; no Bali Curls DE page or pack captured. Letter reading only, low confidence."
+    },
+    "d6": { "applies": "undetermined", "note": "Concept hold_route = present (natural film), so D6's 'neither hold route' fails under concept 3b wording; under an L5-only reading of 'real hold' D6 could apply. Either way the styling promise is C3-only, so D6 cannot fire." },
+    "final_route": "provisional_boundary",
+    "styling_subtype": null,
+    "lean_if_resolved": "styling / gel (spray-gel format), alt. refresher — only if a C1/C2 styling-led promise is captured AND Nick rules how a natural-film-only, zero-conditioning product crosses the border; letter of current rules gives leave_in",
+    "confidence": "low",
+    "would_change_verdict": [
+      "C1 pack photo or C2 Bali Curls DE product page capturing the promise and directions",
+      "A C2 heat claim ('230°C') would make the promise class mixed (styling + heat_protection) → S0 provisional regardless, and opens the Heat Protectant pair rule",
+      "Ruling on whether natural_film (hydrolysed starch) counts as the architecture half of the styling border, or whether D6 reads 'real hold' as Leave-in HOLD (L5)"
+    ],
+    "review_triggers": ["claim_authority_gap", "s0_evidence_gate_no_c1c2_promise", "natural_film_border_gap"],
+    "rationale": "No L5 fixative and no conditioning route at all: above the Sodium Benzoate r9 marker sit only water, humectants, solubilisers and Hydrolyzed Corn Starch r3. The standard's styling-first test cannot fire without an L5 member, so G0 reads in_category by letter. The concept counts the hydrolysed starch as a natural-film hold route, which blocks D6, so the letter outcome is Leave-in for a 'Lockenspray mit Halt' that has no care architecture. Every promise is dm C3 copy for a third-party brand. The S0 evidence gate is therefore unmet and the product stays put for review.",
+    "standard_citations": ["§1.1", "§2.1", "§2.3", "§2.3.2", "§2.4.1 rule 1", "§3.1.1", "§5 L5 (rheology exclusion)", "§7.2", "§7.7", "concept §1 S0 step 1", "concept §3.1 3a/3b", "rulings D3", "rulings D6"]
+  },
+  {
+    "sample_id": "schwarzkopf-taft-styling-balm-locken-halt-3",
+    "product": "Schwarzkopf Taft Styling Balm LOCKEN Halt 3, 150 ml",
+    "tail_marker": { "inci": "Sodium Benzoate", "rank": 10, "status": "plausible_non_vacuous", "note": "All conditioning architecture sits above r10; tail carries Isopropyl Alcohol r14 (outside closed set)." },
+    "l5_fixative": { "present": true, "members": [{ "inci": "PVP", "rank": 4 }], "above_tail": true },
+    "conditioning": {
+      "state": "substantive",
+      "cond_anchor_letter": "high",
+      "members": [
+        { "inci": "Dicaprylyl Carbonate", "rank": 2, "route": "L3 dry-feel emollient" },
+        { "inci": "Dicaprylyl Ether", "rank": 3, "route": "L3 emollient" },
+        { "inci": "Polyquaternium-37", "rank": 5, "route": "cationic polymer (also a cationic thickener)" },
+        { "inci": "Distearoylethyl Hydroxyethylmonium Methosulfate", "rank": 6, "route": "L1 esterquat" },
+        { "inci": "Butyrospermum Parkii (Shea) Butter", "rank": 7, "route": "L3 rich lipid" },
+        { "inci": "Cetearyl Alcohol", "rank": 9, "route": "fatty alcohol; LGN pair with the esterquat" }
+      ],
+      "note": "LGN pair above the tail plus independent emollient routes = COND high by §7.2 anchor. None of Maria Nila's 'thin' markers (no LGN, no emollient, no cationic polymer, no silicone) applies. But PVP r4 outranks the esterquat r6 and fatty alcohol r9."
+    },
+    "hold_route": { "state": "present", "mechanisms": ["fixative_film"], "members": [{ "inci": "PVP", "rank": 4 }], "leave_in_hold_state": "undecidable: incidental_film (anchor letter) vs meaningful_hold_route (T15 rank framing)" },
+    "g0": {
+      "state": "provisional_boundary",
+      "clause": "§2.3 'genuinely ambiguous' + §1.1; §7.7 anchors have no value for a high-ranked fixative co-equal with a substantive LGN conditioning architecture. Note: §2.3.2 clause 4's enumerated reasons do not literally cover a rule-interpretation split",
+      "positioning_claim_tier": "C3",
+      "candidate_readings": {
+        "anchor_letter": "conditioning not thin ⇒ not meaningful_hold_route ⇒ HOLD incidental_film ⇒ in_category ⇒ Leave-in",
+        "t15_rank_reading": "fixative r4 ahead of the cationic/fatty alcohol, as in Maria Nila (PVP r4) ⇒ meaningful_hold_route ⇒ §2.3.2 clause 3 (C3 positioning suffices) ⇒ excluded_styling_first ⇒ Styling"
+      },
+      "note": "Positioning ('Haltegrad 3', 'Halt bei Feuchtigkeit und Wind', 'mit Taft Haarspray fixieren') is dm C3 only; pack name 'Halt 3' not yet confirmed as C1."
+    },
+    "d6": { "applies": "no", "note": "Has both a hold route (PVP) and real conditioning; D6 is irrelevant. The outcome rests entirely on T15/§7.7." },
+    "final_route": "provisional_boundary",
+    "styling_subtype": null,
+    "lean_if_resolved": "styling / curl_cream if Nick rules that a fixative ranked above the LGN pair is 'a fixative system', not 'a supporting fixative'; leave_in under the anchor letter",
+    "confidence": "low",
+    "would_change_verdict": [
+      "Nick ruling on the middle band: fixative-class polymer above the tail AND a substantive LGN conditioning architecture, fixative outranking the cationic",
+      "C1 pack or C2 taft.de/schwarzkopf.de capture of 'Halt 3' and the hold-led directions (needed by S0 step 1 regardless)",
+      "A different DE formula on the manufacturer page"
+    ],
+    "review_triggers": ["s0_evidence_gate_no_c1c2_promise", "hold_state_middle_band", "claim_authority_gap"],
+    "rationale": "PVP r4 is a clean L5 route above the Sodium Benzoate r10 marker. Behind it sits a full conditioning system: esterquat r6 with Cetearyl Alcohol r9 (an LGN pair), ester emollients r2/r3, shea r7 and PQ-37 r5. That is COND high by anchor, which is not 'thin' by the Maria Nila precedent. The fixative still outranks the cationic. The §7.7 3-state has no anchor for this co-equal case: the letter yields incidental_film and Leave-in, the T15 rank framing yields styling-first exclusion. The hold positioning is also C3 only, so neither reading is safe.",
+    "standard_citations": ["§1.1", "§2.2", "§2.3", "§2.3.2 clauses 3–4", "§2.3.2 T15 pair", "§2.4.1 rule 1", "§3.1.1", "§5 L1", "§5 L5", "§7.2", "§7.7", "concept §1 S0 step 1", "rulings D3"]
+  },
+  {
+    "sample_id": "balea-professional-styling-cream-traumlocken",
+    "product": "Balea PROFESSIONAL Styling Cream Traumlocken, 150 ml",
+    "tail_marker": { "inci": "Sodium Benzoate", "rank": 10, "status": "plausible_non_vacuous", "note": "Silicones r12/r13, keratin r15, shea r17 in the tail." },
+    "l5_fixative": { "present": true, "members": [{ "inci": "VP/VA Copolymer", "rank": 3 }], "above_tail": true, "note": "Acrylates/Stearyl Methacrylate Copolymer r24 is below the tail and sets nothing." },
+    "conditioning": {
+      "state": "substantive",
+      "cond_anchor_letter": "high",
+      "members": [
+        { "inci": "Cetearyl Alcohol", "rank": 2, "route": "fatty alcohol; LGN pair with Cetrimonium Chloride" },
+        { "inci": "Isopropyl Palmitate", "rank": 4, "route": "L3 emollient" },
+        { "inci": "Dicaprylyl Carbonate", "rank": 5, "route": "L3 dry-feel emollient" },
+        { "inci": "Caprylic/Capric Triglyceride", "rank": 6, "route": "L3 medium emollient" },
+        { "inci": "Polyquaternium-37", "rank": 8, "route": "cationic polymer" },
+        { "inci": "Cetrimonium Chloride", "rank": 9, "route": "L1 long-chain quat" }
+      ],
+      "note": "LGN pair above the tail plus emollient package and cationic polymer = COND high. Dimethicone/Trimethylsiloxyphenyl Dimethicone/Dimethiconol and the claimed keratin and shea are tail members. VP/VA r3 outranks every conditioning species except Cetearyl Alcohol."
+    },
+    "hold_route": { "state": "present", "mechanisms": ["fixative_film"], "members": [{ "inci": "VP/VA Copolymer", "rank": 3 }], "leave_in_hold_state": "undecidable: incidental_film (anchor letter) vs meaningful_hold_route (T15 rank framing)" },
+    "g0": {
+      "state": "provisional_boundary",
+      "clause": "§2.3 'genuinely ambiguous'; also §2.3.2 clause 2 shape: even if the architecture half were read as established, C2 claims of included uses (care 'Verbesserte Geschmeidigkeit', curl definition, 'Hitzeschutz bis zu 220 °C') contradict a styling-first exclusion, while no C1/C2 claim leads on durable hold",
+      "positioning_claim_tier": "C2 (house brand, dm ↔ Balea, §2.4.1 rule 6)",
+      "candidate_readings": {
+        "anchor_letter": "COND high ⇒ HOLD incidental_film ⇒ in_category ⇒ Leave-in",
+        "t15_rank_reading": "VP/VA r3 ahead of the cationic r9 ⇒ meaningful_hold_route ⇒ but C2 care/heat claims point the other way ⇒ clause 2 ⇒ provisional_boundary"
+      },
+      "note": "'mittlerer Halt' comes from dm's structured filter, a C3 trace per the round-2 brief, so no hold level is captured."
+    },
+    "d6": { "applies": "no", "note": "Has a hold route and real conditioning." },
+    "final_route": "provisional_boundary",
+    "styling_subtype": null,
+    "lean_if_resolved": "styling / curl_cream if Nick rules the middle band as styling; leave_in under the anchor letter. S0 promise class reads mixed (styling_result + care + heat_protection), which also routes to provisional",
+    "confidence": "low",
+    "would_change_verdict": [
+      "Nick ruling on the middle band (same as Taft)",
+      "C1 pack capture showing a hold level or hold-led directions (would establish the positioning half at C1)",
+      "Human confirmation of the house-brand C2 basis"
+    ],
+    "review_triggers": ["hold_state_middle_band", "claim_tier_basis: house_brand", "s0_promise_class_mixed"],
+    "rationale": "VP/VA r3 is an L5 fixative high in the list. Behind it sits a full LGN system: Cetearyl Alcohol r2 with Cetrimonium Chloride r9, three emollient esters r4–r6 and PQ-37 r8. That is COND high, not thin, so the anchor letter gives incidental_film and Leave-in. The fixative still outranks the cationic, the same middle band as Taft. Unlike Taft, the C2 house-brand claims lean on definition, frizz, softness and heat protection, not durable hold. So even a styling-first architecture read would meet clause-2 contradicting evidence. The promise class is mixed.",
+    "standard_citations": ["§1.1", "§2.2", "§2.3", "§2.3.2 clauses 2 and 4", "§2.3.2 T15 pair", "§2.4.1 rule 6", "§3.1.1", "§5 L1", "§5 L5", "§7.2", "§7.7", "concept §1 S0 step 2", "rulings D3"]
+  },
+  {
+    "sample_id": "balea-locken-revitalizing-spray",
+    "product": "Balea Locken Revitalizing Spray (aerosol, nitrogen), 150 ml",
+    "tail_marker": { "inci": "Sodium Benzoate", "rank": 4, "status": "plausible_non_vacuous_early", "note": "Early marker. Plausibility holds: nothing that could establish COND sits above it, and the lipids also sit after a second capped material (Potassium Sorbate r8)." },
+    "l5_fixative": { "present": false, "members": [] },
+    "conditioning": {
+      "state": "absent",
+      "cond_anchor_letter": "low",
+      "members": [],
+      "note": "Above the tail: Aqua, Glycerin r2, Nitrogen r3 (propellant). No L1, no fatty alcohol. Cocos Nucifera Oil r13, Shea r14 and Cocamidopropyl Betaine r11 are tail members; Panthenol r7 and the vitamins are L4/actives, not conditioning architecture."
+    },
+    "hold_route": { "state": "absent", "mechanisms": ["humectant_only"], "members": [], "leave_in_hold_state": "none", "note": "Sodium Chloride r16 is a tail buffer or by-product, not a salt route." },
+    "g0": {
+      "state": "in_category",
+      "clause": "§2.3 in_category row (aqueous, leave-on, curl support primary); styling-first cannot fire without L5",
+      "positioning_claim_tier": "C2 (house brand, dm ↔ Balea, §2.4.1 rule 6)"
+    },
+    "d6": { "applies": "yes", "note": "No hold route (either reading), no substantive conditioning, a spray, and a C2 promise of a styling look: 'Für definierte Locken mit Sprungkraft', 'Für bis zu 24 Stunden definierte Locken', 'Ideal zum Auffrischen'. This is the refresh-mist case D6 names." },
+    "final_route": "styling",
+    "styling_subtype": "refresher",
+    "lean_if_resolved": null,
+    "confidence": "moderate",
+    "would_change_verdict": [
+      "Re-captured INCI (pack) showing a cationic or fatty-alcohol route above the tail — the dm text has typos ('GLYERIN', 'BETANE', missing separator in 'CITRONELLOL SODIUM CHLORIDE')",
+      "C1 pack copy leading on care rather than curl definition (would make the promise care or mixed)",
+      "Human rejection of the house-brand C2 basis"
+    ],
+    "review_triggers": ["claim_tier_basis: house_brand", "early_tail_marker", "inci_text_defects"],
+    "rationale": "Humectant mist: Aqua, Glycerin r2 and nitrogen propellant, with everything else at or after the Sodium Benzoate r4 marker. The coconut oil and shea are tail-position claim ingredients. There is no L5 member, no natural film, no salt route and no conditioning route, so the standard keeps it in_category by letter as curl support. D6 applies cleanly: no real hold, no real care, and a C2 house-brand promise of defined, bouncy, refreshed curls on dry hair. Route: Styling refresher. Confidence is capped at moderate by the dm INCI typos and the rule-6 confirmation.",
+    "standard_citations": ["§1.1", "§2.1", "§2.3", "§2.4.1 rule 6", "§3.1.1 (mandatory limit 3, clause 5)", "§7.2", "§7.7", "concept §3.1 3a/3b", "rulings D6"]
+  },
+  {
+    "sample_id": "syoss-curl-control-hydrating-spray",
+    "product": "syoss Curl Control Hydrating Spray, 150 ml",
+    "tail_marker": { "inci": "Sodium Benzoate", "rank": 4, "status": "contested_plausibility", "note": "Early marker. The only conditioning candidate (cationic copolymer r6) sits directly below it, so §3.1.1 clause 5 can read the marker as implausible." },
+    "l5_fixative": { "present": false, "members": [] },
+    "conditioning": {
+      "state": "thin_or_ambiguous",
+      "cond_anchor_letter": "low (rank prong) / moderate (if marker implausible)",
+      "members": [{ "inci": "Acrylamidopropyltrimonium Chloride/Acrylamide Copolymer", "rank": 6, "route": "cationic polymer (L1 by family, not enumerated)" }],
+      "note": "Macadamia oil and coconut extract are post-Parfum trace. No fatty alcohol, no silicone."
+    },
+    "hold_route": { "state": "ambiguous", "mechanisms": ["unmodified_starch"], "members": [{ "inci": "Zea Mays (Corn) Starch", "rank": 2 }], "leave_in_hold_state": "none", "note": "Concept 3b: unmodified-starch sprays are ambiguous and go to review." },
+    "g0": {
+      "state": "provisional_boundary",
+      "clause": "G1/§2.4: no dated German-market formula source (INCI and directions from dm.at, DE availability unverified); §2.3 genuinely ambiguous on the conditioning read",
+      "positioning_claim_tier": "C4 (dm.at, third-party brand, non-German retailer)"
+    },
+    "d6": { "applies": "undetermined", "note": "Both D6 halves are undecided (starch hold ambiguous; sub-marker cationic thin or real), and the promise is C4. The lead claim 'Spendet Feuchtigkeit' is care, which with 'Definiert und bändigt Frizz' makes the promise class mixed." },
+    "final_route": "provisional_boundary",
+    "styling_subtype": null,
+    "lean_if_resolved": "styling / refresher if a C2 syoss.de capture leads on curl definition and unmodified starch plus a sub-marker cationic are ruled non-qualifying; leave_in if the cationic counts as real conditioning or 'Feuchtigkeit' leads at C2",
+    "confidence": "low",
+    "would_change_verdict": [
+      "German-market identity: dm.de or syoss.de listing with GTIN 8410436366441 and the DE INCI",
+      "C2 syoss.de capture of the promise and directions",
+      "Ruling on unmodified starch in sprays (concept 3b ambiguous) and on a cationic polymer just below an early marker"
+    ],
+    "review_triggers": ["identity_market_gap", "claim_authority_gap", "early_tail_marker", "unmodified_starch_hold_ambiguous", "s0_promise_class_mixed"],
+    "rationale": "Corn Starch r2 is unmodified, which the concept marks as an ambiguous hold route, and there is no L5 member. The only conditioning species is a cationic acrylamide copolymer at r6, just below an early Sodium Benzoate r4 marker. That reads as thin on the rank prong or as a real cationic film if the marker is held implausible. Both D6 halves are therefore open. The record also fails identity: INCI and directions come from dm.at, German availability is unverified, and the claims are C4. Care ('Spendet Feuchtigkeit') leads the promise, so the S0 class reads mixed.",
+    "standard_citations": ["§1.1", "§2.3", "§2.4 G1", "§2.4.1 rules 1 and 3", "§3.1.1 (mandatory limit 3, clause 5)", "§5 L1", "§5 L5 (rheology exclusion)", "§7.2", "concept §1 S0 steps 1–2", "concept §3.1 3b", "rulings D6"]
+  },
+  {
+    "sample_id": "alverde-locken-refresh-spray",
+    "product": "alverde NATURKOSMETIK Locken Refresh-Spray, 150 ml",
+    "tail_marker": { "inci": "Levulinic Acid", "rank": 6, "status": "contested_plausibility", "note": "The preservative system (Levulinic Acid r6, Glyceryl Undecylenate r8, Sodium Levulinate r9) sits above the product's only conditioning architecture, so §3.1.1 clause 5 can read the marker as implausible." },
+    "l5_fixative": { "present": false, "members": [] },
+    "conditioning": {
+      "state": "thin_or_ambiguous",
+      "cond_anchor_letter": "low (rank prong) / high (if marker implausible: LGN-type pair + emollients)",
+      "members": [
+        { "inci": "Helianthus Annuus Hybrid Oil", "rank": 12, "route": "L3 lipid" },
+        { "inci": "PCA Glyceryl Oleate", "rank": 14, "route": "conditioning ester" },
+        { "inci": "Isoamyl Laurate", "rank": 16, "route": "L3 dry-feel emollient" },
+        { "inci": "Brassicyl Isoleucinate Esylate", "rank": 17, "route": "L1 cationic conditioner (natural behentrimonium alternative)" },
+        { "inci": "Hydrolyzed Corn/Wheat/Soy Protein", "rank": 18, "route": "L6 protein" },
+        { "inci": "Brassica Alcohol", "rank": 21, "route": "fatty alcohol; LGN-type pair with the esylate" }
+      ],
+      "note": "Round 1 missed the cationic: Brassicyl Isoleucinate Esylate + Brassica Alcohol is a cationic + fatty-alcohol pair. All of it sits below the marker."
+    },
+    "hold_route": { "state": "absent", "mechanisms": ["humectant_only"], "members": [], "leave_in_hold_state": "none", "note": "Linum seed extract r25 is trace; hydrolysed proteins are not a natural_film under concept 3b." },
+    "g0": {
+      "state": "in_category",
+      "clause": "§2.3 in_category row (aqueous, leave-on, curl support + softness); styling-first cannot fire without L5",
+      "positioning_claim_tier": "C2 (house brand, dm ↔ alverde, §2.4.1 rule 6)"
+    },
+    "d6": { "applies": "undetermined", "note": "No hold route and a C2 refresh promise ('Spray zur Auffrischung von Locken & Wellen', the D6 example). But 'no substantive conditioning' holds only on the rank prong. If clause 5 sets the marker aside, the cationic pair is real conditioning and D6's carve-out keeps it in Leave-in. 'Verleiht geschmeidige Locken' is care-adjacent." },
+    "final_route": "provisional_boundary",
+    "styling_subtype": null,
+    "lean_if_resolved": "styling / refresher if the r6 preservative marker is ruled plausible (the cationic pair is tail-level, consistent with a light mist); leave_in if the sub-marker cationic + fatty alcohol counts as real conditioning",
+    "confidence": "low",
+    "would_change_verdict": [
+      "Ruling on whether a naturkosmetik preservative marker (levulinic system at r6) bounds a cationic conditioner below it (§3.1.1 clause 5 test)",
+      "C1 pack copy leading on care (e.g. 'pflegt') rather than refresh",
+      "Human confirmation of the house-brand C2 basis"
+    ],
+    "review_triggers": ["claim_tier_basis: house_brand", "early_tail_marker", "species_reading_conflict candidate (Brassicyl Isoleucinate Esylate r17)"],
+    "rationale": "Aloe and humectant mist with no L5 member and no hold route. G0 reads in_category by letter as curl support. D6's promise half is met at C2 by a house-brand refresh claim, the example Nick named. The care half is not settled. A natural cationic conditioner (Brassicyl Isoleucinate Esylate r17) paired with Brassica Alcohol r21, plus sunflower oil and esters, sits below the Levulinic Acid r6 marker. The rank prong reads it as tail, which makes conditioning thin and sends the product to Styling. Clause 5 can call the marker implausible, which makes the pair real conditioning and keeps it in Leave-in.",
+    "standard_citations": ["§1.1", "§2.1", "§2.3", "§2.4.1 rule 6", "§3.1.1 clauses 1–5", "§3.1.2", "§5 L1", "§7.2", "§7.7", "concept §3.1 3a/3b", "rulings D6"]
+  },
+  {
+    "sample_id": "balea-leave-in-spray-sea-salt-care-define",
+    "product": "Balea Leave-In Spray Sea Salt Care & Define, 200 ml",
+    "tail_marker": { "inci": "Phenoxyethanol", "rank": 7, "status": "plausible_non_vacuous", "note": "The dm INCI splits 'TETRAMETHYL, ACETYLOCTAHYDRONAPHTHALENES' on a comma (§2.4 packet defect). Ranks after r17 are off by one; harmless here." },
+    "l5_fixative": { "present": false, "members": [] },
+    "conditioning": {
+      "state": "thin",
+      "cond_anchor_letter": "low",
+      "members": [],
+      "note": "Isododecane r2 is a volatile carrier (L2: zero persistence). The persistent emollients (Isopropyl Myristate r10, Dicaprylyl Ether r14, C12-15 Alkyl Benzoate r17) are all below the marker and after a second capped material (Sodium Benzoate r8). Lauryl Alcohol r15 has no cationic partner. No L1."
+    },
+    "hold_route": { "state": "present", "mechanisms": ["salt"], "members": [{ "inci": "Magnesium Sulfate", "rank": 3 }, { "inci": "Maris Sal", "rank": 9, "note": "below tail" }], "leave_in_hold_state": "none" },
+    "g0": {
+      "state": "in_category",
+      "clause": "§2.3 in_category row by letter (aqueous, leave-on; C2 name 'Leave-In … Care' and 'pflegt die enthaltene Ölphase' assert care co-primary); no exclusion row can fire without L5",
+      "positioning_claim_tier": "C2 (house brand, dm ↔ Balea, §2.4.1 rule 6)",
+      "note": "Weak letter reading. The lead C2 claims are texture ('Texturgebendes Haarspray', 'Griffigkeit', 'Beach-Looks mit mattem Finish'), which is not a §2.1 function. This is exactly the gap D6 fills."
+    },
+    "d6": { "applies": "yes", "note": "Applied per the rulings ledger, which names beach sprays as D6 members and governs over concept Rev. 1. Concept 3b counts salt as a hold route, so its 'neither a hold route' wording would block D6 and leave this product in Leave-in. The ledger's examples show salt is not 'real hold' for D6. No substantive conditioning; the C2 promise is a styling look." },
+    "final_route": "styling",
+    "styling_subtype": "salt_spray",
+    "lean_if_resolved": null,
+    "confidence": "moderate",
+    "would_change_verdict": [
+      "Nick reading D6's 'real hold' as concept hold_route including salt (would push it back to Leave-in by letter)",
+      "C1 pack copy leading on care",
+      "Re-captured INCI with an emollient or cationic route above the tail"
+    ],
+    "review_triggers": ["claim_tier_basis: house_brand", "d6_hold_definition_mismatch", "inci_normalization_comma_split"],
+    "rationale": "MgSO4 r3 above the Phenoxyethanol r7 marker gives a salt texture route. The care oil phase is either volatile (Isododecane r2) or tail-position esters, so conditioning is thin. There is no L5 member, so the standard has no styling exclusion, and G0 stays in_category by letter on the C2 'Care' name, despite the texture-led C2 promise. D6 resolves it: the ledger names beach sprays as members. Route: Styling salt_spray. The concept's hold_route definition counts salt and would block D6, so the wording mismatch must be fixed in Rev. 2. House-brand C2 still routes to review.",
+    "standard_citations": ["§1.1", "§2.1", "§2.3", "§2.4 packet requirements", "§2.4.1 rule 6", "§3.1.1", "§3.1.2", "§5 L2", "§5 L3", "§7.2", "§7.7", "concept §3.1 3a/3b", "rulings ledger preamble (ledger governs)", "rulings D6"]
+  }
+]

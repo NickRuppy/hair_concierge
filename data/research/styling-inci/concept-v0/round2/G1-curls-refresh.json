@@ -1,0 +1,493 @@
+[
+  {
+    "sample_id": "john-frieda-frizz-ease-traumlocken-lockencreme",
+    "subtype_candidate": "curl_cream",
+    "boundary_probe": true,
+    "brand": "John Frieda",
+    "product_name": "Lockencreme Traumlocken (Frizz Ease Traumlocken Definierende Locken-Creme)",
+    "size": "150 ml",
+    "format": "cream",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm",
+      "rossmann"
+    ],
+    "price_eur": 9.95,
+    "price_source_url": "https://www.dm.de/p/d/3123420/john-frieda-lockencreme-traumlocken",
+    "ean": "5037156298215",
+    "inci": "WATER/AQUA/EAU, ACRYLATES COPOLYMER, SODIUM POLYSTYRENE SULFONATE, STEARYL ALCOHOL, CETYL ALCOHOL, HYDROXYETHYLCELLULOSE, LAURETH-3, SODIUM HYDROXIDE, CETEARETH-25, SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL, COCAMIDOPROPYL PG- DIMONIUM CHLORIDE PHOSPHATE, BEHENYL ALCOHOL, SILICONE QUATERNIUM-18, CAPRYLHYDROXAMIC ACID, TETRASODIUM GLUTAMATE DIACETATE, METHYLPROPANEDIOL, TRIDECETH-6, TRIDECETH-12, ROSA CANINA FRUIT OIL, DISODIUM PHOSPHATE, POLYSORBATE 60, SODIUM PHOSPHATE, TOCOPHEROL, PHENOXYETHANOL, FRAGRANCE/PARFUM, CITRONELLOL, HEXYL CINNAMAL, POGOSTEMON CABLIN OIL, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES.",
+    "inci_source_url": "https://www.dm.de/p/d/3123420/john-frieda-lockencreme-traumlocken",
+    "inci_source_tier": "retailer_product_page",
+    "claim_tier": "C3",
+    "claims_verbatim": [
+      "Definierende Creme für Locken und Wellen",
+      "Bietet langanhaltenden Halt und Geschmeidigkeit",
+      "bis zu 24 Stunden Halt und eine spürbare Geschmeidigkeit",
+      "ohne die Locken zu beschweren",
+      "Feuchtigkeitsspendend mit Frizz-Kontrolle",
+      "Angereichert mit Hagebuttenöl"
+    ],
+    "hold_claim": {
+      "raw": "Bietet langanhaltenden Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "langanhaltender Halt; bis zu 24 Stunden Halt",
+      "none_stated": false
+    },
+    "finish_claim": "geschmeidig (Geschmeidigkeit), ohne zu beschweren; kein Glanz/Matt-Wort außer Hagebuttenöl-Pflege",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Locken und Wellen",
+      "gewelltes und gelocktes Haar",
+      "widerspenstiges Haar"
+    ],
+    "free_from_claims": [
+      "vegan",
+      "ohne Sulfat",
+      "für farbbehandeltes Haar geeignet"
+    ],
+    "directions": "Erbsengroße Menge in den Handflächen verreiben, vom Ansatz bis in die Spitzen im feuchten Haar verteilen, wie gewohnt stylen. Tipp: Am 2. Tag erbsengroße Menge auf widerspenstige Locken zum Auffrischen.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "FIXATIVE-CLASS POLYMERS: yes. Acrylates Copolymer #2 of 29 (film-former/fixative class; note NaOH #8 is present, so it may partly act as a neutralised rheology thickener, function not declared) and Sodium Polystyrene Sulfonate #3 (anionic polymer; fixative/film-former class). Hydroxyethylcellulose #6 = thickener. No PVP / VP-VA / polyquaternium fixative. The 'Halt' claim therefore has formula backing, and the fixatives lead the formula after water. CONDITIONING ARCHITECTURE: fatty alcohols Stearyl #4, Cetyl #5, Behenyl #12 (emulsion base); cationic conditioners Cocamidopropyl PG-Dimonium Chloride Phosphate #11 and Silicone Quaternium-18 #13 (a quaternised silicone); oils only low: Jojoba #10, Rosehip #19. No butters. Conditioning is moderate and sits BELOW the fixatives. G0 read (T15 rule): fixative leads, conditioning thinner than fixative -> Styling, not Leave-in. Emulsion cream, no alcohol, no wax.",
+    "notes": "Claims from the dm page (C3); the Kao/John Frieda DE brand page (johnfrieda.com) could not be reached (cert error on johnfrieda.de), Rossmann page blocked by bot wall. dm puts it under Haarstyling/Haargel. Real 24-hour hold claim plus an actual acrylate fixative makes this the 'fixative curl cream' reference. Day-2 refresh with a pea-sized amount is stated on the pack text, so it also doubles as its own refresher."
+  },
+  {
+    "sample_id": "cantu-lockencreme-kokos",
+    "subtype_candidate": "curl_cream",
+    "boundary_probe": true,
+    "brand": "cantu",
+    "product_name": "Lockencreme Kokos (Shea Butter for Natural Hair Coconut Curling Cream)",
+    "size": "340 g",
+    "format": "cream",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm",
+      "rossmann"
+    ],
+    "price_eur": 6.95,
+    "price_source_url": "https://www.dm.de/p/d/1675022/cantu-lockencreme-kokos",
+    "ean": "0810006945454",
+    "inci": "AQUA (WATER), GLYCERIN, CANOLA OIL, CETEARYL ALCOHOL, PARFUM (FRAGRANCE), BUTYROSPERMUM PARKII (SHEA) BUTTER*, PETROLATUM, CETEARETH-20, GLYCOL STEARATE, COCOS NUCIFERA (COCONUT) OIL*, BIOTIN (VITAMNIN B7), FOLIC ACID (VITAMIN B9), NIACIN (VITAMIN B3),CYANOCOBALAMIN (VITAMIN B12), PANTOTHENIC ACID (VITAMIN B5), PYRIDOXINE (VITAMIN B6), RIBOFLAVIN (VITAMIN B2), SIMMONDSIA CHINENSIS (JOJOBA), SEED OIL, OLEA EUROPAEA (OLIVE) FRUIT OIL, ARGANIA SPINOSA (ARGAN) KERNEL OIL, DAUCUS CAROTA SATIVA (CARROT) SEED OIL, MACADAMIA INTEGRIFOLIA SEED OIL, MANGIFERA INDICA (MANGO) SEED OIL, PERSEA GRATISSIMA (AVOCADO) OIL, PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL, VITIS VINIFERA (GRAPE) SEED EXTRACT, ALOE BARBADENSIS (ALOE) LEAF JUICE, LONICERA CAPRIFOLIUM (HONEYSUCKLE) EXTRACT, MACROCYSTIS PYRIFERA (KELP) EXTRACT, SALVIA OFFICINALIS (SAGE) LEAF EXTRACT,URTICA DIOCICA (NETTLE) EXTRACT, HYDROLYZED SILK, CETETH-20, PHENOXYETHANOL, PEG-75, BENZYL BENZOATE, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, BEHENTRIMONIUM METHOSULFATE, DISODIUM EDTA, ETHYLHEXYLGYCERIN, POLYQUATERNIUM-7, COUMARIN, SILK AMINO ACIDS, HEXYL CINNAMAL, SODIUM BENZOATE, LEUCONOSTOC/RADISH ROOT FERMENT FILTRATE, HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL, LECITHIN, ASCORBYL PALMITATE, POTASSIUM SORBATE, TOCOPHEROL, CITRIC ACID, TETRASODIUM GLUTAMATE DIACETATE.  *CERTIFIED ORGANIC INGREDIENT.",
+    "inci_source_url": "https://www.dm.de/p/d/1675022/cantu-lockencreme-kokos",
+    "inci_source_tier": "retailer_product_page",
+    "claim_tier": "C3",
+    "claims_verbatim": [
+      "Definiert & pflegt Locken",
+      "Mit reiner Shea-Butter & natürlichen Ölen",
+      "Spendet Feuchtigkeit",
+      "Unterstützt die natürliche Locken-Sprungkraft",
+      "für ein leichtes und langanhaltendes Stylingergebnis"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "null; kein Finish-Wort (nur 'leichtes und langanhaltendes Stylingergebnis')",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Locken"
+    ],
+    "free_from_claims": [
+      "Nicht vegan (Seidenproteine; CodeCheck-Einschätzung, nicht Packungsaussage)"
+    ],
+    "directions": "Auf feuchtes Haar Strähne für Strähne auftragen, vom Ansatz bis in die Spitzen einmassieren, nicht ausspülen. Kann auf trockenem Haar zum Befeuchten der Locken genutzt werden. Mit Öl nachbehandeln, um Feuchtigkeit einzuschließen.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "FIXATIVE-CLASS POLYMERS: none. The only polymers are conditioning/rheology types: Guar Hydroxypropyltrimonium Chloride #37, Polyquaternium-7 #41 (cationic conditioning polymer, no meaningful hold) of 53. CONDITIONING ARCHITECTURE: strongly oils-and-butters led. Canola oil #3, Cetearyl Alcohol #4, Shea Butter #6, Petrolatum #7, Glycol Stearate #9, Coconut Oil #10, then a long tail of oils (jojoba, olive, argan, carrot, macadamia, mango, avocado, almond, sunflower). Fatty alcohol: Cetearyl only. Cationics: Behentrimonium Methosulfate #38, Guar-HPTC #37, PQ-7 #41, all in the lower half. No silicones. G0 read: no fixative at all, rich conditioning film -> Leave-in side of the T15 border (a 'curl cream' by name only). Heavy emulsion cream, Petrolatum in top 7.",
+    "notes": "Claim text is the dm page (C3). Manufacturer is Bionok Healthcare (Spain) with brand site cantubeauty.de; the product page there could not be located. The long vitamin B list (biotin, folic acid etc.) sits at ranks 11-17 as declared, probably trace amounts in practice. The same product is on Rossmann (EAN 0810006945454)."
+  },
+  {
+    "sample_id": "hask-lockencreme-curl-care",
+    "subtype_candidate": "curl_cream",
+    "boundary_probe": true,
+    "brand": "HASK",
+    "product_name": "Lockencreme Curl Care (Curl Defining Cream)",
+    "size": "198 ml",
+    "format": "cream",
+    "market_tier": "premium_drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 6.95,
+    "price_source_url": "https://www.dm.de/p/d/1622386/hask-lockencreme-curl-care",
+    "ean": "0071164363317",
+    "inci": "Aqua/Water/Eau, Cetearyl alcohol, Triethyl citrate, Glycol stearate, Behentrimonium chloride, Cetyl alcohol, Caprylic/capric triglyceride, Isononyl isononanoate, Cocos nucifera (coconut) oil, Argania spinosa (argan) kernel oil, Tocopheryl acetate (vitamin E), Glycine soja (soybean) oil, Panthenol, Polyquaternium-10*, Polyquaternium-68*, Tocopherol, Polyquaternium-37, PPG-1 trideceth-6, Oleyl erucate, Propylene glycol dicaprylate/dicaprate, Hydroxypropyl starch phosphate, Bis-diglyceryl polyacyladipate-2, Ceteareth-20, EDTA, Acrylates/stearyl methacrylate copolymer, Ethylhexylglycerin, Sodium acetate, Phenoxyethanol,  Citric acid, Sodium chloride, Sorbitan oleate, Sodium hydroxide, Parfum/Fragrance, Benzyl benzoate, Cinnamyl alcohol, Coumarin, Hexyl cinnamal, Alpha isomethyl ionone, Limonene (*Curl Activating Complex/Complexe d'activation des boucles)",
+    "inci_source_url": "https://www.dm.de/p/d/1622386/hask-lockencreme-curl-care",
+    "inci_source_tier": "retailer_product_page",
+    "claim_tier": "C3",
+    "claims_verbatim": [
+      "Pflegende Lockencreme",
+      "Für alle Arten von Locken geeignet",
+      "Wirkt intensiv feuchtigkeitsspendend",
+      "Mit Arganöl, Cocosöl und Vitamin E",
+      "Lässt das Haar hinreißend glänzen"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "glänzend: 'Lässt das Haar hinreißend glänzen'",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "lockiges Haar",
+      "alle Arten von Locken"
+    ],
+    "free_from_claims": [],
+    "directions": "Auf handtuchtrockenes Haar auftragen, nicht ausspülen, wie gewohnt frisieren.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "FIXATIVE-CLASS POLYMERS: weak/minor, all in the lower half. Polyquaternium-68 #15 (a real, if gentle, fixative-class cationic polymer; marked * = 'Curl Activating Complex'), Acrylates/Stearyl Methacrylate Copolymer #25 (film former), Hydroxypropyl Starch Phosphate #21 (starch film former) of 39. Polyquaternium-10 #14 (conditioning, also asterisked) and PQ-37 #17 (thickener). CONDITIONING ARCHITECTURE: dominant. Fatty alcohols: Cetearyl #2, Cetyl #6, Glycol Stearate #4; cationic: Behentrimonium Chloride #5, PQ-10 #14; emollient esters/oils: Triethyl Citrate #3, Caprylic/Capric Triglyceride #7, Isononyl Isononanoate #8, Coconut Oil #9, Argan #10, Soybean #12. No silicones. G0 read: clear conditioning film with the fixative-class polymers only after rank ~14 -> per T15 (conditioning film with supporting fixative) this is Leave-in side despite the 'Lockencreme' / 'Curl Defining Cream' name. Best border case of the lane.",
+    "notes": "dm files it under Haarkur & Haarmaske (Haarpflege), not Haarstyling, consistent with the formula read. No hold word anywhere on the dm page; the 'Curl Activating Complex' is only visible in the INCI footnote, not in the marketing text. US brand, distributed in DE by dm; address is Inspired Beauty Brands New York (no German-market manufacturer page found)."
+  },
+  {
+    "sample_id": "kevin-murphy-killer-curls",
+    "subtype_candidate": "curl_cream",
+    "boundary_probe": true,
+    "brand": "Kevin.Murphy",
+    "product_name": "Killer.Curls (Leave-in Anti-Frizz Creme)",
+    "size": "200 ml",
+    "format": "cream",
+    "market_tier": "salon_prestige",
+    "retailers_seen": [
+      "easycosmetic"
+    ],
+    "price_eur": 31.99,
+    "price_source_url": "https://www.easycosmetic.de/kevinmurphy/curl/kevinmurphy-curl-killercurls.aspx",
+    "ean": null,
+    "inci": "aqua, lanolin cera, alcohol denat., acrylates copolymer, polyurethane-14, propylene glycol dibenzoate, cetearyl alcohol, ethylhexyl palmitate, sodium polystyrene sulfonate, parfum, glycerin, amp-acrylates copolymer, citrullus lanatus fruit extract, citrus glauca fruit extract, microcitrus australasica fruit extract, microcitrus australis fruit extract, pleiogynium timoriense fruit extract, podocarpus elatus fruit extract, terminalia ferdinandiana fruit extract, ilex paraguariensis leaf extract, adansonia digitata seed oil, citrus aurantium bergamia fruit oil, aloe barbadensis leaf juice, helichrysum italicum extract, pogostemon cablin oil, copernicia cerifera cera, propanediol, caprylic/capric triglyceride, phenyl trimethicone, peg-12 dimethicone, glyceryl stearate, peg-100 stearate, peg-40 hydrogenated castor oil, ceteareth-20, peg-12 allyl ether, ethylhexyl methoxycinnamate, polysilicone-15, aminomethyl propanol, phenoxyethanol, ethylhexylglycerin, chlorphenesin, sorbic acid, benzoic acid, potassium sorbate, sodium benzoate, sodium hydroxide, limonene, linalool",
+    "inci_source_url": "https://www.easycosmetic.de/kevinmurphy/curl/kevinmurphy-curl-killercurls.aspx",
+    "inci_source_tier": "retailer_product_page",
+    "claim_tier": "C3",
+    "claims_verbatim": [
+      "Leave-in Anti-Frizz Creme",
+      "Die leichte Leave-In-Creme",
+      "verleihen den Locken eine beeindruckende Definition, Schwung, Spannkraft",
+      "wunderschönen, gesunden Glanz",
+      "schützt es vor schädlichen Umwelteinflüssen"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "glänzend: 'wunderschönen, gesunden Glanz'",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "müde Locken",
+      "lockiges Haar"
+    ],
+    "free_from_claims": [
+      "tierversuchsfrei",
+      "parabenfrei"
+    ],
+    "directions": "Not on the DE retailer page. Australian retailer (non-DE, C5): auf feuchtes oder handtuchtrockenes Haar, mittellängen bis spitzen, scrunchen, an der Luft oder mit Diffusor trocknen.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "FIXATIVE-CLASS POLYMERS: yes, strong and high-ranked. Acrylates Copolymer #4 of 48, Polyurethane-14 #5 (a strong film-forming fixative, typical of hairsprays/gels), Sodium Polystyrene Sulfonate #9, AMP-Acrylates Copolymer #12; Polysilicone-15 #37 is a UV filter, not a fixative. Alcohol Denat. #3 (rank 3). Lanolin Wax #2 and Carnauba wax #26 are structurant/occlusive. CONDITIONING ARCHITECTURE: thin. Cetearyl Alcohol #7 is the only fatty alcohol; no cationic conditioner at all; Ethylhexyl Palmitate #8, Propylene Glycol Dibenzoate #6, Phenyl Trimethicone #29, PEG-12 Dimethicone #30, Baobab Oil #21, Caprylic/Capric #28 are emollients/silicones, low. G0 read: fixative leads and conditioning is thin -> clearly Styling (anti-frizz curl-definition cream with hairspray-class fixatives), the opposite end of the border from Cantu/HASK. The marketing copy says 'pflegende Formulierung' but gives no hold claim.",
+    "notes": "INCI read from the DE retailer easycosmetic.de (lowercase as published there; the order differs slightly from the Australian Kevin.Murphy retailer version, which lists Alcohol Denat. second and Phenyl Trimethicone in the top 4, so formulas vary by market: use the DE list). Listed 'auf Lager' in one snapshot and 'ausverkauft' in another search snippet, so availability is unstable. Hersteller-Nummer 13055, no EAN on the page. Hold language appears only in non-DE copy ('Shapes and holds curls', C5), not in the DE text."
+  },
+  {
+    "sample_id": "aussie-leave-in-creme-work-that-curl",
+    "subtype_candidate": "curl_cream",
+    "boundary_probe": true,
+    "extra_beyond_quota": true,
+    "brand": "AUSSIE",
+    "product_name": "Leave-In Creme Work That Curl",
+    "size": "160 ml",
+    "format": "cream",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm",
+      "rossmann"
+    ],
+    "price_eur": 7.95,
+    "price_source_url": "https://www.dm.de/p/d/3136127/aussie-leave-in-creme-work-that-curl",
+    "ean": "8006530086073",
+    "inci": "Aqua, Stearyl Alcohol, Behentrimonium Chloride, Cetyl Alcohol, Bis-Aminopropyl Dimethicone, Isopropyl Alcohol, Parfum, Benzyl Alcohol, Sodium Benzoate, Polysorbate 20, Disodium EDTA, Citric Acid, Hexamethylindanopyran, Coumarin, Hexyl Cinnamal, Histidine, Tetramethyl Acetyloctahydronaphthalenes, Butylene Glycol, Glycerin, Linalool, Citrus Aurantium Peel Oil, Isoeugenyl Acetate, Linalyl Acetate, Vanillin, Aloe Barbadensis Leaf Juice, Cocos Nucifera Fruit Juice, Limonene, Alcohol Denat., Benzaldehyde,  Lactic Acid, Ecklonia Radiata Extract",
+    "inci_source_url": "https://www.dm.de/p/d/3136127/aussie-leave-in-creme-work-that-curl",
+    "inci_source_tier": "retailer_product_page",
+    "claim_tier": "C3",
+    "claims_verbatim": [
+      "Leave-in Lockencreme",
+      "Feuchtigkeitsspendend",
+      "Für intensive Pflege und Glanz",
+      "sorgt für eine langanhaltende Definition",
+      "Mit Kokosnussöl"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": "langanhaltende Definition (kein Halt-Wort)",
+      "none_stated": true
+    },
+    "finish_claim": "glänzend: 'verleiht ihm einen schönen Glanz'",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Locken"
+    ],
+    "free_from_claims": [
+      "vegan",
+      "ohne Sulfat"
+    ],
+    "directions": "Auf tropfnasses Haar auftragen und formen, kein Ausspülen. Auch als Leave-in-Pflege nach der Wäsche oder zur Auffrischung zwischendurch.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "FIXATIVE-CLASS POLYMERS: none. No film-forming polymer of any kind in the 31 ingredients. CONDITIONING ARCHITECTURE: classic rinse-off-style conditioner base: Stearyl Alcohol #2, Behentrimonium Chloride #3, Cetyl Alcohol #4, Bis-Aminopropyl Dimethicone #5 (amino silicone). No oils or butters ('Kokosnussöl' in the claim is only Cocos Nucifera Fruit Juice #26 in the INCI, i.e. coconut water). Isopropyl Alcohol #6 and Alcohol Denat. #28 are present (the latter late). G0 read: no fixative, strong cationic/fatty-alcohol/silicone conditioning -> Leave-in side of the border. Mirror image of Killer.Curls.",
+    "notes": "Extra record beyond the 4-product curl_cream quota; drop if not needed. dm files it under Haarkur & Haarmaske. Claim vs INCI mismatch: 'Mit Kokosnussöl' but only coconut water listed. Manufacturer (P&G, aussiehair.de) page not reachable, so C3 only."
+  },
+  {
+    "sample_id": "langhaarmaedchen-lockenspray-natur-lockenwunder",
+    "subtype_candidate": "refresher",
+    "boundary_probe": true,
+    "brand": "LANGHAARMÄDCHEN",
+    "product_name": "Lockenspray Natur Lockenwunder",
+    "size": "200 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 4.95,
+    "price_source_url": "https://www.dm.de/p/d/1592107/langhaarmaedchen-naturlockenspray",
+    "ean": "4070765004700",
+    "inci": "Aqua, Glycerin, Methyl Glucose Sesquistearate, Stearamidopropyl Dimethylamine, Arginine, Serine, Opuntia Ficus-Indica Flower Extract, Prunus Amygdalus Dulcis Seed Extract, Parfum, Dicaprylyl Carbonate, PCA, Glycine, Histidine, Glycol Distearate, Sodium PCA, Aspartic Acid, Alanine, Valine, Isoleucine, Proline, Threonine, Phenylalanine, Sodium Benzoate, Potassium Sorbate, Linalyl Acetate, Terpineol, Tetramethyl Acetyloctahydronaphthalenes, Geranyl Acetate, Lactic Acid, Sodium Lactate",
+    "inci_source_url": "https://www.dm.de/p/d/1592107/langhaarmaedchen-naturlockenspray",
+    "inci_source_tier": "retailer_product_page",
+    "claim_tier": "C2_house_brand",
+    "claims_verbatim": [
+      "Lockenspray für definierte Locken & Wellen",
+      "Belebend für müde Locken",
+      "verleiht Locken und Wellen mehr Griffigkeit",
+      "wirkt unerwünschtem Frizz entgegen",
+      "Für den Frischekick zwischendurch"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": "mehr Griffigkeit (kein Halt-Wort)",
+      "none_stated": true
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "lockiges Haar",
+      "Locken & Wellen"
+    ],
+    "free_from_claims": [
+      "vegan",
+      "ohne Silikone",
+      "Curly-Girl-Methode geeignet"
+    ],
+    "directions": "Nach dem Waschen ins nasse Haar sprühen und einkneten (auch Lufttrocknen oder Diffusor). Für den Frischekick zwischendurch kurz auf trockenes Haar sprühen und durchkneten.",
+    "application_moment": "second_day",
+    "formula_observations": "FIXATIVE-CLASS POLYMERS: none (no polymer, no starch, no PVP). CONDITIONING ARCHITECTURE: light. Cationic-when-protonated conditioner Stearamidopropyl Dimethylamine #4 of 30 (with Lactic Acid late); emulsifier Methyl Glucose Sesquistearate #3 and Glycol Distearate #14; emollient Dicaprylyl Carbonate #10; humectants Glycerin #2, PCA/Sodium PCA, then a block of amino acids (Arginine, Serine, Glycine...). No fatty alcohols, no oils/butters beyond almond extract. Water-thin milky spray. G0 read (D6 case): no fixative, light conditioning, promises 'Frischekick'/Definition -> a care-light refresh spray; per D6 refresh mists go to Styling, but the stearamidopropyl conditioner makes it borderline toward Leave-in.",
+    "notes": "Sold as a primary wet-hair product AND a day-2 refresher (both stated in the directions), so application_moment is ambiguous; second_day chosen because of the subtype. dm lists it under Locken Produkte. House brand (dm exclusive), so dm page counted as C2_house_brand."
+  },
+  {
+    "sample_id": "balea-professional-definier-spray-traumlocken",
+    "subtype_candidate": "refresher",
+    "boundary_probe": true,
+    "brand": "Balea PROFESSIONAL",
+    "product_name": "Definier Spray Traumlocken (Traum Locken Definierende Spray)",
+    "size": "150 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 2.75,
+    "price_source_url": "https://www.dm.de/p/d/1639908/balea-professional-definier-spray-traumlocken",
+    "ean": "4070765001983",
+    "inci": "AQUA , PEG-40 HYDROGENATED CASTOR OIL , GLYCERIN , TRITICUM VULGARE GERM OIL , CAMELLIA OLEIFERA SEED OIL , CAPRYLIC/CAPRIC TRIGLYCERIDE , CAPRYLYL GLYCOL , CETEARYL NONANOATE , HYDROLYZED KERATIN , TRITICUM VULGARE BRAN EXTRACT , TRITICUM VULGARE GERM EXTRACT , CITRIC ACID , LINOLEIC ACID , TOCOPHERYL ACETATE , TOCOPHEROL , PARFUM , ALPHA,ISOMETHYL IONONE , LIMONENE , SODIUM BENZOATE.",
+    "inci_source_url": "https://www.dm.de/p/d/1639908/balea-professional-definier-spray-traumlocken",
+    "inci_source_tier": "retailer_product_page",
+    "claim_tier": "C2_house_brand",
+    "claims_verbatim": [
+      "Definierendes Spray für Locken & Wellen",
+      "Für bis zu 24 Stunden definierte Locken",
+      "Mit Pro-Sprungkraft-Formel für Elastizität",
+      "optimal zum Auffrischen von Naturlocken und dauergewelltem Haar",
+      "ohne zu verkleben"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": "bis zu 24 Stunden definierte Locken (Definition, kein Halt-Wort)",
+      "none_stated": true
+    },
+    "finish_claim": "natürlich-lebendig: 'natürlich-lebendige Locken'; Wirkung 'Glanz'",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Locken & Wellen",
+      "Naturlocken",
+      "dauergewelltes Haar"
+    ],
+    "free_from_claims": [
+      "ohne Alkohol",
+      "ohne Silikone",
+      "ohne Sulfat"
+    ],
+    "directions": "Großzügig und gleichmäßig ins feuchte Haar sprühen, Locken in Form kneten, nicht auswaschen.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "FIXATIVE-CLASS POLYMERS: none. No polymer, starch or resin in the 20 ingredients, despite the 'Locken-Memory-Effekt' and '24 Stunden definierte Locken' claims (no listed ingredient would be expected to supply memory or hold; the effect reads as oil/protein smoothing). CONDITIONING ARCHITECTURE: oil-in-water micro-emulsion: PEG-40 Hydrogenated Castor Oil #2 (solubiliser), Glycerin #3, oils Wheat Germ #4, Camellia #5, Caprylic/Capric #6, Cetearyl Nonanoate #8, Hydrolyzed Keratin #9. No cationic conditioner, no fatty alcohol, no silicone. G0 read (D6): no fixative, light oil/protein care -> refresh mist / care-light spray; claims a styling look, so Styling per D6 (a claim-vs-formula gap).",
+    "notes": "The sprühen-ins-feuchte-Haar direction makes it a definition spray on damp hair; the 'Auffrischen' claim is secondary. Note the claim-vs-formula mismatch (24h definition, memory effect, no polymer). Made in Switzerland per dm. House brand, dm page = C2_house_brand."
+  },
+  {
+    "sample_id": "schwarzkopf-professional-osis-curl-retouch",
+    "subtype_candidate": "refresher",
+    "boundary_probe": true,
+    "brand": "Schwarzkopf Professional",
+    "product_name": "OSiS+ Curl Retouch (Lockenspray / Locken-Auffrischungsspray)",
+    "size": "200 ml",
+    "format": "pump_spray",
+    "market_tier": "salon_prestige",
+    "retailers_seen": [
+      "keshop",
+      "dm.at (Friseurstudio)"
+    ],
+    "price_eur": 15.5,
+    "price_source_url": "https://www.keshop.com/de/schwarzkopf-osis-locken-wellen/osis-curl-retouch.html",
+    "ean": "4067971180892",
+    "inci": "Aqua (Water, Eau), Hydroxypropyl Starch, Cetearyl Alcohol, Phenoxyethanol, Glycerin, Stearamidopropyl Dimethylamine, Behentrimonium Chloride, Dicaprylyl Carbonate, Citric Acid, Isopropyl Myristate, Distearoylethyl Hydroxyethylmonium Methosulfate, Simmondsia Chinensis (Jojoba) Seed Oil, Parfum (Fragrance), Propylene Glycol, Butyrospermum Parkii (Shea) Butter, Sodium Hydroxide, Ethylhexylglycerin, Isopropyl Alcohol, Guar Hydroxypropyltrimonium Chloride, Panthenol, Ethoxydiglycol, Hydrolyzed Wheat Protein, Ceteareth-20, Linalyl Acetate, Tetramethyl Acetyloctahydronaphthalenes, Lactic Acid, Butylene Glycol, Althaea Officinalis Root Extract, Hydrolyzed Corn Starch, Sodium Benzoate, Potassium Sorbate",
+    "inci_source_url": "https://www.keshop.com/de/schwarzkopf-osis-locken-wellen/osis-curl-retouch.html",
+    "inci_source_tier": "retailer_product_page",
+    "claim_tier": "C3",
+    "claims_verbatim": [
+      "Bietet leichten Halt und reduziert Frizz",
+      "Belebt die Locken zwischen den Haarwäschen",
+      "Lockenverstärkendes Spray",
+      "Definiert die Locken und verleiht Glanz",
+      "Hitzeschutz bis zu 230°C"
+    ],
+    "hold_claim": {
+      "raw": "leichten Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "leichter Halt",
+      "none_stated": false
+    },
+    "finish_claim": "glänzend/natürlich: 'glänzendes Finish', 'natürliches und flexibles Finish'",
+    "humidity_claim": null,
+    "heat_claim": "Hitzeschutz bis zu 230°C (keshop.com); dm.at-Text nennt keinen Hitzeschutz",
+    "hair_type_claims": [
+      "lockiges oder gewelltes Haar",
+      "Locken und Wellen"
+    ],
+    "free_from_claims": [],
+    "directions": "Schütteln. Auf handtuchtrockenes Haar sprühen, durchkämmen, Locken mit den Fingern formen, lufttrocknen. Zum Auffrischen aus ca. 20 cm auf trockenes Haar sprühen und sanft durchkämmen.",
+    "application_moment": "second_day",
+    "formula_observations": "FIXATIVE-CLASS POLYMERS: weak, modified starch only. Hydroxypropyl Starch #2 of 31 (film former, plausibly the source of the 'leichter Halt') and Hydrolyzed Corn Starch #29 (late). No PVP/VP-VA/acrylate/polyquaternium fixative. Isopropyl Alcohol #18 in the lower half. CONDITIONING ARCHITECTURE: strong, rinse-off-conditioner grade for a spray: Cetearyl Alcohol #3; cationics Stearamidopropyl Dimethylamine #6, Behentrimonium Chloride #7, Distearoylethyl Hydroxyethylmonium Methosulfate #11, Guar Hydroxypropyltrimonium Chloride #19; emollients Dicaprylyl Carbonate #8, Isopropyl Myristate #10, Jojoba #12, Shea #15; Panthenol, Hydrolyzed Wheat Protein. No silicones. G0 read: the starch is the only fixative (rank 2, right after water), but conditioning is clearly stronger and broader -> conditioning film with a supporting (light) fixative = Leave-in side under T15, even though the pack promises 'leichten Halt' and the dm.at label calls it a 'Haarfestiger'. Strong border case.",
+    "notes": "Price: keshop.com showed 7.30 EUR as a markdown from 15.50 EUR (price_eur is the list price); dm.at lists 21.50 EUR (AT, in selected dm markets with Friseurstudio; not verified for dm.de, dm.de returns no product for DAN 3152555). The Schwarzkopf Professional DE page and the Henkel hold-chart PDF could not be read, so hold level is a retailer phrase (C3). The dm.at INCI is identical but prefixed with the category label 'Haarfestiger, Spray non-Aerosol:'. Brand relaunched in 2026 as 'OSiS Curl Retouch' without the '+'."
+  },
+  {
+    "sample_id": "balea-haargel-hair-jelly",
+    "subtype_candidate": "gel",
+    "boundary_probe": false,
+    "brand": "Balea",
+    "product_name": "Haargel Hair Jelly (Styling Hair Jelly)",
+    "size": "150 ml",
+    "format": "jelly",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 1.95,
+    "price_source_url": "https://www.dm.de/p/d/3048832/balea-haargel-styling-jelly",
+    "ean": "4066447991710",
+    "inci": "AQUA, GLYCERIN, POLYGLYCERYL-6 CAPRYLATE, POLYGLYCERYL-4 CAPRATE, CARBOMER, PVP, PHENOXYETHANOL, HYDROXYACETOPHENONE, SODIUM HYDROXIDE, PARFUM, LINALOOL, HEXYL CINNAMAL, LIMONENE, CITRONELLOL, LINALYL ACETATE, GERANYL ACETATE, GERANIOL",
+    "inci_source_url": "https://www.dm.de/p/d/3048832/balea-haargel-styling-jelly",
+    "inci_source_tier": "retailer_product_page",
+    "claim_tier": "C2_house_brand",
+    "claims_verbatim": [
+      "Styling-Gelee für das Haar",
+      "Verleiht flexiblen Halt",
+      "Für ein natürliches Haargefühl",
+      "Ideal für Sleek-Looks & Locken",
+      "leichte, geleeartige Textur"
+    ],
+    "hold_claim": {
+      "raw": "flexiblen Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "flexibler Halt, soft",
+      "none_stated": false
+    },
+    "finish_claim": "natürlich: 'natürliches Haargefühl', 'lebendiges Styling'",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Sleek-Looks",
+      "Locken"
+    ],
+    "free_from_claims": [
+      "ohne Silikone"
+    ],
+    "directions": "Not on the dm page (Verwendungshinweise only repeats 'Styling Hair Jelly'). Description implies hair shaping/defining without weight.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "FIXATIVE-CLASS POLYMERS: yes, minimal. PVP #6 of 17 (classic fixative, but ranks behind the Carbomer #5 gelling agent, so likely a low dose); Carbomer neutralised by Sodium Hydroxide #9 forms the jelly. Polyglyceryl-6 Caprylate / -4 Caprate #3/#4 = mild emulsifier/solubiliser. No alcohol. CONDITIONING ARCHITECTURE: none. Only Glycerin as humectant; no cationic conditioner, no fatty alcohol, no oils. G0 read: fixative-only, zero conditioning -> pure Styling. This is the soft-hold gel the round-1 set lacked: PVP-light, alcohol-free, water-clear jelly, 'flexibler Halt' claim with no number.",
+    "notes": "Cheapest gel in the set at 1.95 EUR. Product-name nuance: dm title 'Haargel Hair Jelly', pack name 'Styling Hair Jelly'. Balea (dm house brand), so dm page counts as C2_house_brand. dm puts it under Haargel. No directions beyond the name, so usage moment is inferred (damp or dry). Related but not included: got2b Stylinggel Curlz (dm DAN 3121125, 5.95 EUR, EAN 4015100866636), a no-hold-word jelly with carrageenan + sodium polyitaconate and no PVP."
+  },
+  {
+    "sample_id": "langhaarmaedchen-lockenspray-halt-sprungkraft",
+    "subtype_candidate": "gel",
+    "boundary_probe": true,
+    "brand": "LANGHAARMÄDCHEN",
+    "product_name": "Lockenspray Halt&Sprungkraft (Lockenhaltspray)",
+    "size": "200 ml",
+    "format": "spray_gel",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 3.95,
+    "price_source_url": "https://www.dm.de/p/d/1677066/langhaarmaedchen-lockenspray-halt-und-sprungkraft",
+    "ean": "4066447384154",
+    "inci": "AQUA,PROPYLENE GLYCOL,HYDROLYZED CORN STARCH,POLYGLYCERYL-4 CAPRATE,POLYGLYCERYL-6 CAPRYLATE, BETAINE, PARFUM, SODIUM BENZOATE, SACCHAROMYCES CEREVISIAE EXTRACT, PANTHENOL, POTASSIUM SORBATE, GLYCERIN, LACTIC ACID, LEUCONOSTOC/RADISH ROOT FERMENT, FILTRATE, LINALOOL, LIMONENE.",
+    "inci_source_url": "https://www.dm.de/p/d/1677066/langhaarmaedchen-lockenspray-halt-und-sprungkraft",
+    "inci_source_tier": "retailer_product_page",
+    "claim_tier": "C2_house_brand",
+    "claims_verbatim": [
+      "Verleiht Halt und Sprungkraft für gestylte & natürliche Locken",
+      "Hitzeschutz bis 220°C",
+      "Ein natürliches Styling-Polymer verleiht langanhaltenden Halt selbst bei hoher Luftfeuchtigkeit",
+      "Geeignet für die Curly Girl Methode",
+      "Kann auch nach dem Styling aufs Haar gesprüht werden, um Halt zu verleihen"
+    ],
+    "hold_claim": {
+      "raw": "Verleiht Halt und Sprungkraft",
+      "number": null,
+      "scale_max": null,
+      "words": "langanhaltender Halt (Stärke nicht benannt)",
+      "none_stated": false
+    },
+    "finish_claim": null,
+    "humidity_claim": "langanhaltenden Halt selbst bei hoher Luftfeuchtigkeit",
+    "heat_claim": "Hitzeschutz bis 220°C",
+    "hair_type_claims": [
+      "gestylte & natürliche Locken",
+      "Locken"
+    ],
+    "free_from_claims": [
+      "vegan",
+      "geeignet für die Curly Girl Methode"
+    ],
+    "directions": "Vor dem Lockenstyling schütteln, ins handtuchtrockene oder trockene Haar sprühen, dann stylen. Kann auch nach dem Styling aufgesprüht werden, um Halt zu verleihen.",
+    "application_moment": "before_heat",
+    "formula_observations": "FIXATIVE-CLASS POLYMERS: yes, one natural. Hydrolyzed Corn Starch #3 of 16 is the 'natürliches Styling-Polymer' of the claim (same polymer family as in Isana Curltastic Scrunch Gel and OSiS Curl Retouch, but here at rank 3). No synthetic fixative, no alcohol, no gelling agent: a thin watery spray. Polyglyceryl-4 Caprate / -6 Caprylate #4/#5 = solubiliser. CONDITIONING ARCHITECTURE: none to speak of: Betaine #6, Panthenol #10, Glycerin (late, #12) and a yeast/radish ferment as light care; no cationic conditioner, no fatty alcohol, no oil. Propylene Glycol #2 (rank 2) is a humectant/solvent. G0 read: fixative-only, no conditioning -> Styling. A liquid light-hold curl styler in spray form (a curl 'spray gel' / Lockenhaltspray).",
+    "notes": "Brand name reads 'Lockenspray' and sits under Haarstyling / Styling Spray & Creme at dm, not under Haargel, so gel is the lane's assigned subtype but a 'spray_gel' or 'texture_spray'-adjacent read is arguable; needs the owner's call on whether liquid curl-hold sprays belong to gel. Halt claim has real formula backing only through a starch film (the 'langanhaltend ... bei hoher Luftfeuchtigkeit' wording is a stronger promise than a corn-starch hydrolysate typically delivers). House brand (dm), so dm page = C2_house_brand."
+  }
+]

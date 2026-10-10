@@ -1,0 +1,402 @@
+[
+ {
+  "sample_id": "balea-finishing-spray-glow-und-care",
+  "subtype_candidate": "shine_finish",
+  "boundary_probe": false,
+  "brand": "Balea",
+  "product_name": "Finishing Spray Glow & Care",
+  "size": "150 ml",
+  "format": "aerosol",
+  "market_tier": "drugstore",
+  "retailers_seen": [
+   "dm"
+  ],
+  "price_eur": 2.45,
+  "price_source_url": "https://www.dm.de/p/d/3043007/balea-finishing-spray-glow-und-care",
+  "ean": "4067796069679",
+  "inci": "Butane, Alcohol Denat., Propane, Isobutane, Isododecane, Triheptanoin Camelina Stativa Seed Oil, Aqua, Polyurethane-14, Parfum, AMP- Acrylates Copolymer, Tetramethylacetyloctahydronaphthalenes, Linalool, Citronellol, Citrus Limon Peel Oil, Limonene.",
+  "inci_source_url": "https://www.dm.de/p/d/3043007/balea-finishing-spray-glow-und-care",
+  "inci_source_tier": "retailer_product_page",
+  "claims_verbatim": [
+   "Finishing Spray",
+   "Anti-Frizz Effekt",
+   "Mit pflegendem Camelinaöl",
+   "Hinterlässt ein seidiges Haargefühl",
+   "bleibt das Haar auch bei hoher Luftfeuchtigkeit glatt und kontrolliert",
+   "sorgt für ein perfektes Finish und verwandelt das Haar in einen strahlenden Hingucker"
+  ],
+  "hold_claim": {
+   "raw": null,
+   "number": null,
+   "scale_max": null,
+   "words": null,
+   "none_stated": true
+  },
+  "finish_claim": "glänzend / seidig: 'perfektes Finish', 'strahlender Hingucker', 'beeindruckenden Glanz'",
+  "humidity_claim": "Mit einem effektiven Anti-Frizz Effekt bleibt das Haar auch bei hoher Luftfeuchtigkeit glatt und kontrolliert",
+  "heat_claim": null,
+  "hair_type_claims": [],
+  "free_from_claims": [
+   "vegan"
+  ],
+  "directions": "Nach dem Styling aus ca. 30 cm Entfernung gleichmäßig auf das trockene Haar sprühen (dry finish, whole hair).",
+  "application_moment": "dry_finish",
+  "formula_observations": "Aerosol. Propellant butane #1, propane #3, isobutane #4; alcohol denat. #2; isododecane #5 (volatile hydrocarbon carrier, dry-feel). OILS: 'Triheptanoin Camelina Stativa Seed Oil' #6 (published as one entry, no comma: synthetic triheptanoin ester plus camelina oil; the camelina-oil claim is carried by this entry) rank 6. FIXATIVES: Polyurethane-14 #8 and AMP-Acrylates Copolymer #10 (the classic film-former pair), both after Aqua #7 = low level, no hold claimed; role is film/anti-frizz seal, not hold. SILICONES: none (no 'ohne Silikone' claim printed on the dm page). SALTS/STARCHES/PARTICLES: none. Water is only #7. Only tail-end fragrance allergens and lemon peel oil.",
+  "notes": "The only drugstore finishing spray found with an explicit humidity wording ('bei hoher Luftfeuchtigkeit'). Has a real film-former (Polyurethane-14 + AMP-Acrylates) but no hold claim and no Halt number, so it behaves as a shine/anti-frizz sealer, not a hairspray. Differs from Balea PROFESSIONAL Glow&Shine Finishing Spray (separate product, DAN 3165375, not in this lane). Contains oil ester but is not sold as Öl/Serum, so stays in Styling per D2.",
+  "claim_tier": "C2_house_brand"
+ },
+ {
+  "sample_id": "schwarzkopf-taft-x-gliss-silky-shine-shine-coat",
+  "subtype_candidate": "shine_finish",
+  "boundary_probe": true,
+  "brand": "Schwarzkopf taft (taft x GLISS)",
+  "product_name": "Glanz-Spray taft x Gliss Silky Shine (schwarzkopf.de: taft x GLISS Silky Shine Shine Coat)",
+  "size": "150 ml",
+  "format": "aerosol",
+  "market_tier": "drugstore",
+  "retailers_seen": [
+   "dm",
+   "rossmann"
+  ],
+  "price_eur": 3.95,
+  "price_source_url": "https://www.dm.de/p/d/3099658/schwarzkopf-taft-glanz-spray-taft-x-gliss-silky-shine",
+  "ean": "4015100865653",
+  "inci": "Dimethyl Ether, Alcohol denat., C12-15 Alkyl Benzoate, Hydrogenated Ethylhexyl Olivate, Vinyl Caprolactam/VP/Dimethylaminoethyl Methacrylate Copolymer, AMP-Isostearoyl Wheat/Corn/Soy Amino Acids, Panthenol, Hydrogenated Olive Oil Unsaponifiables, Parfum (Fragrance), Aqua (Water, Eau), C12-15 Alcohols, Tetramethyl Acetyloctahydronaphthalenes, Linalool, Acetyl Cedrene, Citronellol, Linalyl Acetate, Alpha-Isomethyl Ionone, Juniperus Virginiana Oil",
+  "inci_source_url": "https://www.schwarzkopf.de/marken/haarstyling/taft/produktlinien/taft-x-gliss/silky-shine-shine-coat.html",
+  "inci_source_tier": "manufacturer",
+  "claims_verbatim": [
+   "Leave-In Spray für sofortigen Glanz",
+   "Mit veganem Keratin, Styling & Pflege in einem",
+   "Bis zu 72 h Anti-Frizz-Effekt",
+   "Hitzeschutz bis 230°C",
+   "Für alle Haartypen",
+   "Strahlender Glanz ohne Frizz",
+   "versiegelt brüchige Spitzen"
+  ],
+  "hold_claim": {
+   "raw": null,
+   "number": null,
+   "scale_max": null,
+   "words": null,
+   "none_stated": true
+  },
+  "finish_claim": "glänzend: 'Strahlender Glanz ohne Frizz'",
+  "humidity_claim": null,
+  "heat_claim": "Hitzeschutz bis zu 230°C (Föhnen, Glätten, Lockenbürste)",
+  "hair_type_claims": [
+   "alle Haartypen"
+  ],
+  "free_from_claims": [
+   "ohne Silikone (dm pill)",
+   "ohne Ammoniak (dm pill)",
+   "vegan (schwarzkopf.de)"
+  ],
+  "directions": "Handtuchtrocken aus 30 cm sprühen und föhnen (heat protection); alternativ auf trockenes Haar für sofortigen Glanz. Für beste Ergebnisse mit taft x GLISS holding me strongly fixieren.",
+  "application_moment": "dry_finish",
+  "formula_observations": "Aerosol. Propellant dimethyl ether #1; alcohol denat. #2. OILS/EMOLLIENTS: C12-15 Alkyl Benzoate #3 and Hydrogenated Ethylhexyl Olivate #4 (olive-derived ester) lead the non-volatile part; Hydrogenated Olive Oil Unsaponifiables #8. No true plant oil as such, all esters/hydrogenated derivatives. FIXATIVE: Vinyl Caprolactam/VP/Dimethylaminoethyl Methacrylate Copolymer #5 (cationic film-former), directly after the esters, before Panthenol, so the fixative sits at a meaningful but still modest level; no hold printed. SILICONES: none. SALTS/STARCHES/PARTICLES: none. Aqua only #10.",
+  "notes": "Boundary product: sold as dual-use 'Leave-In Spray' (damp heat-protect primer OR dry shine finish), brand explicitly says fix with Holding Me Strongly afterwards, i.e. the brand itself does not claim hold. Fixative + ester emollients + heat claim sits on the Styling/Leave-In/Heat-Protect borders (T15: fixative with thin conditioning = Styling). dm and Rossmann pages showed the item as temporarily unavailable at times (search snippets, unverified): re-check availability. The schwarzkopf.de page title is 'Shine Coat', dm title 'Glanz-Spray'.",
+  "claim_tier": "C2"
+ },
+ {
+  "sample_id": "got2b-gotgloss-glanz-spray",
+  "subtype_candidate": "shine_finish",
+  "boundary_probe": true,
+  "brand": "got2b (Schwarzkopf/Henkel)",
+  "product_name": "Glanz Spray got Gloss (gotGloss Glanz Spray)",
+  "size": "200 ml",
+  "format": "aerosol",
+  "market_tier": "drugstore",
+  "retailers_seen": [
+   "dm",
+   "rossmann"
+  ],
+  "price_eur": 4.95,
+  "price_source_url": "https://www.dm.de/p/d/1429002/got2b-glanz-spray-got-gloss",
+  "ean": "4015100812176",
+  "inci": "Butane, Isododecane, Alcohol denat., Caprylic/Capric Triglyceride, Dicaprylyl Carbonate, Isobutane, Parfum (Fragrance), Linalool, Aqua (Water, Eau), Geraniol, Tetramethyl Acetyloctahydronaphthalenes, Citronellol, Alpha-Isomethyl Ionone, Citrus Aurantium Peel Oil, Limonene",
+  "inci_source_url": "https://www.dm.de/p/d/1429002/got2b-glanz-spray-got-gloss",
+  "inci_source_tier": "retailer_product_page",
+  "claims_verbatim": [
+   "Glanz Spray",
+   "Hitzeschutz bis 230 Grad",
+   "Anti-Frizz Effekt",
+   "Glänzendes und geschmeidiges Haar bis zu 48 Stunden lang",
+   "ultimativen Spiegelglanz",
+   "ganz ohne kräuseln und verkleben"
+  ],
+  "hold_claim": {
+   "raw": null,
+   "number": null,
+   "scale_max": null,
+   "words": null,
+   "none_stated": true
+  },
+  "finish_claim": "glänzend: 'ultimativer Spiegelglanz', 'geschmeidiger Glanz'",
+  "humidity_claim": null,
+  "heat_claim": "Hitzeschutz bis zu 230 Grad (auf trockenes Haar, dann glätten)",
+  "hair_type_claims": [],
+  "free_from_claims": [
+   "vegan",
+   "ohne Silikone",
+   "ohne Ammoniak",
+   "ohne Sulfat"
+  ],
+  "directions": "Auf trockenes Haar auftragen, kurz einwirken lassen, dann glätten, um den Glanz zu verstärken; bei Bedarf als Finish nachsprühen. Optional zuerst gotGloss Glanz Primer ins handtuchtrockene Haar (Glass-Hair-Routine).",
+  "application_moment": "dry_finish",
+  "formula_observations": "Aerosol, almost anhydrous. Propellant butane #1, isobutane #6; isododecane #2 (volatile hydrocarbon); alcohol denat. #3. OILS/EMOLLIENTS: Caprylic/Capric Triglyceride #4 and Dicaprylyl Carbonate #5 (light ester/carbonate emollients, no plant oil as such) = the actual shine film, rank 4-5. FIXATIVE: none. SILICONES: none (consistent with 'ohne Silikone'). SALTS/STARCHES/PARTICLES: none. Aqua only #9 (residual).",
+  "notes": "Purest example found of a non-silicone, non-fixative 'dry oil' aerosol that is not sold as Öl/Serum: functionally an ester-oil mist, so by D2 it goes to Styling shine_finish on the name alone. Good boundary probe for the Oil/Styling name rule. Heat claim (230 °C) with a no-hold formula means it is closer to a heat/shine finisher than a styler. dm.de showed it as not orderable at times (search snippet, unverified); dm.at lists it in stock. No schwarzkopf.de product page found (only a listing without text), so C3.",
+  "claim_tier": "C3"
+ },
+ {
+  "sample_id": "feschi-smooth-and-shine-anti-frizz-spray-glanzspray",
+  "subtype_candidate": "shine_finish",
+  "boundary_probe": false,
+  "brand": "feschi",
+  "product_name": "smooth & shine Anti Frizz Spray (Glanzspray)",
+  "size": "200 ml",
+  "format": "aerosol",
+  "market_tier": "salon_prestige",
+  "retailers_seen": [
+   "flaconi"
+  ],
+  "price_eur": 22.46,
+  "price_source_url": "https://www.flaconi.de/haare/feschi/smooth-and-shine/feschi-smooth-and-shine-anti-frizz-spray-glanzspray.html",
+  "ean": null,
+  "inci": "Alcohol Denat, Butane, C11- 13 Isoparaffin, Isobutane, Propane, Phenyl Trimethicone, Tocopheryl Acetate, Parfum, Linalool, Hexyl Cinnamal, Limonene, Citronellol, Geraniol.",
+  "inci_source_url": "https://www.flaconi.de/haare/feschi/smooth-and-shine/feschi-smooth-and-shine-anti-frizz-spray-glanzspray.html",
+  "inci_source_tier": "retailer_product_page",
+  "claims_verbatim": [
+   "Das smooth & shine Anti-Frizz Spray bändigt fliegende Härchen",
+   "seidig glattes Finish, ganz ohne zu beschweren",
+   "Auch als Glanzspray geeignet",
+   "verleiht ein seidiges Haargefühl & einzigartige Glanzreflexe",
+   "beschwert nicht, selbst bei feinem Haar",
+   "Wirkung: Anti-Frizz"
+  ],
+  "hold_claim": {
+   "raw": null,
+   "number": null,
+   "scale_max": null,
+   "words": null,
+   "none_stated": true
+  },
+  "finish_claim": "glänzend: 'seidig glattes Finish', 'einzigartige Glanzreflexe'",
+  "humidity_claim": null,
+  "heat_claim": null,
+  "hair_type_claims": [
+   "Alle Haartypen",
+   "Krauses Haar",
+   "Glanzloses Haar",
+   "Locken, glattes Haar, feine Strähnen (Fließtext)"
+  ],
+  "free_from_claims": [
+   "dermatologisch getestet"
+  ],
+  "directions": "Nach dem Styling oder zur Auffrischung aus ca. 20 cm sparsam in die trockenen Haarlängen sprühen, dann kämmen. Bei krausem/dickem Haar auch vor dem Styling ins handtuchtrockene Haar.",
+  "application_moment": "dry_finish",
+  "formula_observations": "Aerosol, no water at all. Alcohol denat. #1 and propellants butane #2, isobutane #4, propane #5 dominate; C11-13 Isoparaffin #3 (volatile hydrocarbon). SILICONE: Phenyl Trimethicone #6 (sole film former, rank 6; high-shine, non-volatile silicone). FIXATIVE: none. OILS: none (Tocopheryl Acetate #7 vitamin only). SALTS/STARCHES/PARTICLES: none.",
+  "notes": "Flaconi lists it in the category 'Glanzspray'. Premium German salon-line brand; silicone-based shine/anti-frizz mist with no film-former and no hold, the contrast to the ester-oil got2b and the film-former Balea/taft. Combing instruction suggests it also doubles as detangling/anti-static finish. No EAN on the page (Flaconi variant id 90025036-0038467 is not an EAN). Not checked against a feschi manufacturer page, so C3.",
+  "claim_tier": "C3"
+ },
+ {
+  "sample_id": "moroccanoil-dry-texture-spray",
+  "subtype_candidate": "texture_spray",
+  "boundary_probe": false,
+  "brand": "Moroccanoil",
+  "product_name": "Trockenes Texturspray (Dry Texture Spray)",
+  "size": "205 ml",
+  "format": "aerosol",
+  "market_tier": "salon_prestige",
+  "retailers_seen": [
+   "moroccanoil.com/de (own shop)"
+  ],
+  "price_eur": 32.0,
+  "price_source_url": "https://de.moroccanoil.com/products/dry-texture-spray",
+  "ean": null,
+  "inci": "DIMETHYL ETHER, SD ALCOHOL 40B (ALCOHOL DENAT.), BUTANE, PROPANE, VP/VA COPOLYMER, ZEOLITE, ARGANIA SPINOSA (ARGAN) KERNEL OIL, HYDROLYZED VERBASCUM THAPSUS FLOWER, AMP-ISOSTEAROYL HYDROLYZED WHEAT PROTEIN, ISOBUTANE, GLYCERIN, ACETYL TRIETHYL CITRATE, CITRIC ACID, FRAGRANCE, WATER/AQUA, PEG/PPG-17/18 DIMETHICONE, PEG/PPG-15/15 ALLYL ETHER ACETATE, METHOXYCINNAMIDOPROPYL HYDROXYSULTAINE, OCTADECYL DI-T-BUTYL-4-HYDROXYHYDROCINNAMATE, SODIUM BENZOATE, POTASSIUM SORBATE",
+  "inci_source_url": "https://de.moroccanoil.com/products/dry-texture-spray",
+  "inci_source_tier": "manufacturer",
+  "claims_verbatim": [
+   "Arganölbasiertes Dry Texture Spray für mühelose Undone-Looks mit langem Halt",
+   "Texturspray mit trockenem Finish für müheloses Volumen und lang anhaltenden Halt",
+   "Partikelmatrix aus hochwirksamen Harzen und Zeolith",
+   "trockenem, griffigem Finish",
+   "flexiblen Halt und ein leicht griffiges, trockenes Finish",
+   "Für alle Haartypen"
+  ],
+  "hold_claim": {
+   "raw": "lang anhaltender Halt / flexibler Halt",
+   "number": null,
+   "scale_max": null,
+   "words": "langer, flexibler Halt (no number)",
+   "none_stated": false
+  },
+  "finish_claim": "matt/trocken: 'trockenes, griffiges Finish' (no 'matt' word)",
+  "humidity_claim": null,
+  "heat_claim": null,
+  "hair_type_claims": [
+   "alle Haartypen",
+   "feines Haar geeignet (FAQ)",
+   "farbbehandeltes Haar sicher (FAQ)"
+  ],
+  "free_from_claims": [],
+  "directions": "Gut schütteln, ins trockene Haar sprühen; als Finisher für texturiertes Volumen oder als Prep für Flecht- und Hochsteckfrisuren.",
+  "application_moment": "dry_restyle",
+  "formula_observations": "Aerosol. Propellant dimethyl ether #1, butane #3, propane #4, isobutane #10; alcohol denat. (SD Alcohol 40B) #2. FIXATIVE: VP/VA Copolymer #5 (resin), the first non-solvent ingredient = main structure/hold builder. PARTICLES: Zeolite #6 (mineral earth, the dry/gripping 'particle matrix'). OIL: Argan kernel oil #7 (the 'Arganöl' claim sits right behind the fixative and mineral, rank 7). SILICONE: only PEG/PPG-17/18 Dimethicone #16 (emulsifier-type, trace). Salts/starches: none. Water #15.",
+  "notes": "Premium dry texture spray with a real resin fixative AND a mineral particle AND an oil, with a stated 'langer/flexibler Halt' but no number: tests whether a texture_spray can carry hold. German manufacturer page (de.moroccanoil.com) is C2 and gives INCI, price, sizes (205 ml/60 ml). FAQ draws the line to Root Boost (roots) and Luminous Hairspray. No EAN on the page.",
+  "claim_tier": "C2"
+ },
+ {
+  "sample_id": "john-frieda-volume-lift-pushed-up-dry-texture-spray",
+  "subtype_candidate": "texture_spray",
+  "boundary_probe": false,
+  "brand": "John Frieda",
+  "product_name": "Spray Volume Lift Pushed-up Dry Texture",
+  "size": "200 ml",
+  "format": "aerosol",
+  "market_tier": "premium_drugstore",
+  "retailers_seen": [
+   "dm",
+   "rossmann"
+  ],
+  "price_eur": 12.95,
+  "price_source_url": "https://www.dm.de/p/d/3123436/john-frieda-spray-volume-lift-pushed-up-dry-texture",
+  "ean": "5037156301250",
+  "inci": "DIMETHYL ETHER, ALCOHOL DENAT., ISOPROPYL ALCOHOL, VP/VA COPOLYMER, SILICA, WATER/AQUA/EAU, HYDROLYZED VEGETABLE PROTEIN, SODIUM BENZOATE, FRAGRANCE/PARFUM, CITRONELLOL, CITRUS LIMON (LEMON) PEEL OIL, HEXYL CINNAMAL, LIMONENE.",
+  "inci_source_url": "https://www.dm.de/p/d/3123436/john-frieda-spray-volume-lift-pushed-up-dry-texture",
+  "inci_source_tier": "retailer_product_page",
+  "claims_verbatim": [
+   "Federleichte Formel für sichtbar mehr Fülle",
+   "Für plattes oder feines Haar geeignet",
+   "Ohne sichtbare Rückstände im Haar",
+   "schenkt plattem oder feinem Haar im Handumdrehen beeindruckendes Volumen und eine griffige Textur",
+   "ohne zu beschweren oder Rückstände zu hinterlassen",
+   "Die vegane Rezeptur verzichtet zudem auf Silikone"
+  ],
+  "hold_claim": {
+   "raw": null,
+   "number": null,
+   "scale_max": null,
+   "words": null,
+   "none_stated": true
+  },
+  "finish_claim": "griffig, trocken-texturiert: 'griffige Textur' (kein Glanz/Matt-Wort)",
+  "humidity_claim": null,
+  "heat_claim": null,
+  "hair_type_claims": [
+   "feines Haar",
+   "plattes Haar",
+   "dickes Haar",
+   "gestyltes Haar"
+  ],
+  "free_from_claims": [
+   "ohne Silikone",
+   "vegan"
+  ],
+  "directions": "Gut schütteln, auf trockenes Haar; Strähnen anheben und vom Ansatz her ins Haar sprühen, mit den Fingern stylen und zerzausen.",
+  "application_moment": "dry_restyle",
+  "formula_observations": "Aerosol. Propellant dimethyl ether #1; alcohol denat. #2 and isopropyl alcohol #3. FIXATIVE: VP/VA Copolymer #4 (resin) directly after the solvents, so a real fixative but no hold stated. PARTICLES: Silica #5 (the 'dry texture' agent). OILS: none (only lemon peel oil as fragrance, last). SILICONES: none (consistent with 'ohne Silikone'). Salts/starches: none. Water #6, hydrolysed vegetable protein #7.",
+  "notes": "Simplest possible dry texture spray: solvents + VP/VA + silica, no oil, no silicone. Contrast to Moroccanoil (oil + zeolite) and the Balea Volumenpuder spray from round 1. Marketed for volume at the root and lengths ('Volume Lift' line) so it overlaps with root_lift and dry-volume uses, but the product name says 'Texture Spray'. The manufacturer's own pages found were non-German (johnfrieda.com/en-*), so those were not used for claims; dm (Kao Germany address) is the best German page, C3. Rossmann.de also carries it (EUR 12.99).",
+  "claim_tier": "C3"
+ },
+ {
+  "sample_id": "jean-und-len-sea-salt-spray",
+  "subtype_candidate": "salt_spray",
+  "boundary_probe": false,
+  "brand": "Jean&Len",
+  "product_name": "Sea Salt Spray",
+  "size": "200 ml",
+  "format": "pump_spray",
+  "market_tier": "drugstore",
+  "retailers_seen": [
+   "dm",
+   "rossmann"
+  ],
+  "price_eur": 3.95,
+  "price_source_url": "https://www.dm.de/p/d/3085573/jean-und-len-sea-salt-spray",
+  "ean": "4262500781148",
+  "inci": "aqua, alcohol denat., maris sal, glycerin, heptyl glucoside, magnesium sulfate, betaine, hydrolyzed corn starch, parfum, amp-isostearoyl wheat/corn/soy/amino acids, panthenol, citrus aurantium peel oil, juniperus virginiana wood oil, fucus vesiculosus (bladderwrack) extract, potassium sorbate, sodium benzoate, citric acid, maltodextrin, tetramethyl acetyloctahydronaphthalenes, hexyl cinnamal, alpha-isomethyl ionone, citronellol, limonene, geranyl acetate, dimethyl phenethyl acetate, citral, vanillin, rose ketones, geraniol, pinene, beta-caryophyllene, linalool, benzyl benzoate, amyl cinnamal, terpineol, benzaldehyde, benzyl alcohol, alpha-terpinene, amyl salicylate, carvone, terpinolene, linalyl acetate.",
+  "inci_source_url": "https://www.dm.de/p/d/3085573/jean-und-len-sea-salt-spray",
+  "inci_source_tier": "retailer_product_page",
+  "claims_verbatim": [
+   "Für natürliche Beachwaves & Undone Looks",
+   "Verleiht Volumen, Fülle & Griffigkeit",
+   "Mit Meersalz aus dem Toten Meer & Algen-Extrakt",
+   "lässigen 'wie frisch vom Strand'-Look",
+   "bringt Textur ins Haar",
+   "vegane Formulierung"
+  ],
+  "hold_claim": {
+   "raw": null,
+   "number": null,
+   "scale_max": null,
+   "words": null,
+   "none_stated": true
+  },
+  "finish_claim": "natürlich/texturiert: 'Beachwaves & Undone Looks', 'Griffigkeit' (kein Matt-Wort)",
+  "humidity_claim": null,
+  "heat_claim": null,
+  "hair_type_claims": [],
+  "free_from_claims": [
+   "ohne Silikone",
+   "vegan"
+  ],
+  "directions": "Gut schütteln, einen Spritzer ins feuchte oder trockene Haar; für intensiveren Beach Look kneten und lufttrocknen; für mehr Volumen trocken föhnen.",
+  "application_moment": "damp_before_drying",
+  "formula_observations": "Hydroalcoholic: Aqua #1, Alcohol Denat. #2 (high). SALTS: Maris Sal #3 and Magnesium Sulfate #6 (both salts, plus Fucus extract). STARCH: Hydrolyzed Corn Starch #8, Maltodextrin #18. FIXATIVE: none (no polymer). OILS: none except essential oils at the tail (Citrus Aurantium Peel Oil #12, Juniperus Virginiana Wood Oil #13). SILICONES: none (consistent with claim). Glycerin #4 humectant, Heptyl Glucoside #5 (surfactant), Betaine #7, AMP-Isostearoyl Wheat/Corn/Soy Amino Acids #10 and Panthenol #11 (conditioning).",
+  "notes": "Real sea salt (Maris Sal) in the top 3 plus a second mineral salt, but alcohol is #2, so drier than Balea Sea Salt Texture Spray (no alcohol, propanediol-led). Hold is only 'Griffigkeit', no number. Application moment is both damp and dry; filed under damp_before_drying as the primary instruction. Pump-spray format inferred (200 ml bottle, no aerosol warnings or propellants in the INCI/page). INCI text on dm is lowercase and had 'parfum,amp-isostearoyl' without a space (space inserted). Brand is independent (JeanLen GmbH), sold at dm and Rossmann, no manufacturer page found, so C3.",
+  "claim_tier": "C3"
+ },
+ {
+  "sample_id": "alverde-beach-waves-spray-seaside-balance",
+  "subtype_candidate": "salt_spray",
+  "boundary_probe": false,
+  "brand": "alverde NATURKOSMETIK",
+  "product_name": "Beach Waves Spray Seaside Balance",
+  "size": "150 ml",
+  "format": "pump_spray",
+  "market_tier": "drugstore",
+  "retailers_seen": [
+   "dm"
+  ],
+  "price_eur": 1.45,
+  "price_source_url": "https://www.dm.de/p/d/3115913/alverde-naturkosmetik-beach-waves-spray-seaside-balance",
+  "ean": "4070765014471",
+  "inci": "Aqua, Maris Sal, Alcohol* denat., Pentylene Glycol, Caprylyl/Capryl Glucoside, Levulinic Acid, Glycerin, Sodium Levulinate, Propanediol, Sodium Hydroxide, Pinus Sylvestris Leaf Extract*, Parfum**, Lavandula Oil/Extract**, Linalool**, Linalyl Acetate**, Limonene**, Camphor**, Menthol**, Pogostemon Cablin Oil**, Pinene**, Citronellol**, Beta-Caryophyllene**, Citrus Aurantium Peel Oil**, Vanillin**, Citrus Limon Peel Oil**, Terpineol**, Geranyl Acetate** (* from certified organic agriculture, ** from natural essential oils)",
+  "inci_source_url": "https://www.dm.de/p/d/3115913/alverde-naturkosmetik-beach-waves-spray-seaside-balance",
+  "inci_source_tier": "retailer_product_page",
+  "claims_verbatim": [
+   "Haarstyling-Spray für lässige Strandwellen",
+   "Zertifizierte Naturkosmetik",
+   "Rezeptur mit Bio-Kiefer & Bio-Meersalz",
+   "Verleiht dem Haar Textur & Griffigkeit",
+   "Mit erfrischendem, maritimem Duft",
+   "natürlich definierten Look, wie frisch vom Strand"
+  ],
+  "hold_claim": {
+   "raw": null,
+   "number": null,
+   "scale_max": null,
+   "words": null,
+   "none_stated": true
+  },
+  "finish_claim": "natürlich/texturiert: 'lässige Strandwellen', 'Textur & Griffigkeit'",
+  "humidity_claim": null,
+  "heat_claim": null,
+  "hair_type_claims": [
+   "alle Haartypen"
+  ],
+  "free_from_claims": [
+   "vegan",
+   "ohne Silikone",
+   "ohne Sulfat",
+   "Naturkosmetik (certified)",
+   "Ohne Alkohol (dm Merkmal-Pill)"
+  ],
+  "directions": "Ins handtuchtrockene oder trockene Haar sprühen und sanft einarbeiten. Nicht auswaschen.",
+  "application_moment": "damp_before_drying",
+  "formula_observations": "Water-based: Aqua #1, Maris Sal #2 (organic sea salt, the only styling agent). Alcohol* denat. (organic) #3, which contradicts the dm 'Ohne Alkohol' pill. FIXATIVE: none. OILS: none apart from essential oils at the tail (lavender, patchouli, orange/lemon peel). SILICONES: none. STARCHES/PARTICLES: none. Pentylene Glycol #4, Glycerin #7 humectants, Caprylyl/Capryl Glucoside #5 (surfactant), levulinic acid/sodium levulinate (preservation), Pinus Sylvestris leaf extract (organic pine).",
+  "notes": "Claim-vs-formula mismatch: dm filters it as 'Ohne Alkohol', but the INCI lists Alcohol* denat. at #3. Lighter and more minimal than Jean&Len: salt, no polymer, no starch. The page text says 'Beach Waves Spray Aqua' in the body while the title says 'Seaside Balance' (dm copy inconsistency). dm price 1.45 EUR from the product JSON (price points oddly low for 150 ml, may be a promo; re-check). House brand on its own retailer page.",
+  "claim_tier": "C2_house_brand"
+ }
+]
