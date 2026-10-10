@@ -525,7 +525,10 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await chooseNoneAndContinue(page)
 
     await expect(page.getByRole("heading", { name: /Clips/ })).toBeVisible()
+    await expect(page.getByText("Mehrfachauswahl möglich. Seite 1 von 2.")).toBeVisible()
     await chooseNoneAndContinue(page)
+
+    await expect(page.getByText("Mehrfachauswahl möglich. Seite 2 von 2.")).toBeVisible()
     await chooseNoneAndContinue(page)
 
     await expect(page.getByRole("heading", { level: 2, name: /Nachtschutz/ })).toBeVisible()
