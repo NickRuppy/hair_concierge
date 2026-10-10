@@ -18,6 +18,7 @@ import {
   type RoutineRefinementBannerViewModel,
 } from "./routine-refinement-banner"
 import { RoutineSection } from "./routine-section"
+import { RoutineToolSection } from "./routine-tool-section"
 import { hasChosenPlannedProduct } from "./routine-status"
 
 type RoutineItem = RoutinePayloadV1["items"][number]
@@ -278,6 +279,9 @@ export function RoutinePage({
               productPresentation={view.productPresentation}
             />
           ) : null}
+          {/* Products first: `Deine Tools` follows every product section and stays a compact
+              asset list derived at read time — never a second Routine system. */}
+          <RoutineToolSection section={view.toolSection} />
           {(portfolioPresentation?.retainedOwnedProducts.length ?? 0) > 0 ||
           (portfolioPresentation?.retainedInventoryProducts?.length ?? 0) > 0 ? (
             <details className="rounded-[20px] border border-border bg-white/80 px-4 py-3">

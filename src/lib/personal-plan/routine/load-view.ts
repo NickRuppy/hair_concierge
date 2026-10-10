@@ -13,7 +13,19 @@ import {
   loadOwnerRoutinePlan,
   loadOwnerRoutineVersion,
   type PersonalPlanRoutineReadClient,
+  type RefinedNeedSnapshotRow,
 } from "./repository"
+import {
+  asToolViewNeedSnapshot,
+  buildToolView,
+  type ToolFactsSource,
+  type ToolRoutineSection,
+} from "../tools/read-view"
+
+type RefinedSnapshotLoader = (
+  planId: string,
+  refinedVersionId: string,
+) => Promise<RefinedNeedSnapshotRow | null>
 
 function exactCatalogProductIds(payloads: readonly (RoutinePayloadV1 | null)[]): string[] {
   const ids = new Set<string>()
@@ -44,18 +56,21 @@ async function hasMatchingSourceCategoryOrder(input: {
   userId: string
   planId: string
   payloads: readonly RoutinePayloadV1[]
+  loadRefined?: RefinedSnapshotLoader
 }): Promise<boolean> {
   const byRefinedVersionId = new Map(
     input.payloads.map((payload) => [payload.source.refinedVersionId, payload]),
   )
   const checks = await Promise.all(
     [...byRefinedVersionId.entries()].map(async ([refinedVersionId, payload]) => {
-      const source = await loadOwnerRefinedNeedSnapshot(
-        input.client,
-        input.userId,
-        input.planId,
-        refinedVersionId,
-      )
+      const source = input.loadRefined
+        ? await input.loadRefined(input.planId, refinedVersionId)
+        : await loadOwnerRefinedNeedSnapshot(
+            input.client,
+            input.userId,
+            input.planId,
+            refinedVersionId,
+          )
       const expected = source ? renderedOrder(source.output_snapshot) : null
       const actual = uniqueCategoryOrder(payload)
       return Boolean(
@@ -107,12 +122,85 @@ async function loadProductPresentation(input: {
   }
 }
 
+export type RoutineViewToolsInput = {
+  /** The member's facts (`loadToolFactsSource`). Passed only while the Tools rollout is on. */
+  loadFacts: (userId: string) => Promise<ToolFactsSource>
+}
+
 export async function loadPersonalPlanRoutineView(input: {
   client: PersonalPlanRoutineReadClient
   userId: string
   enabled: boolean
   includePendingProposal?: boolean
+  /**
+   * Hair Tools rollout on: compose the read-time `toolSection` next to the routine payload.
+   * Absent (off): no facts read, the view is exactly today's.
+   */
+  tools?: RoutineViewToolsInput
 }): Promise<PersonalPlanRoutineView | { status: "no_personal_plan" }> {
+  // The facts read does not depend on the plan, so it runs alongside the routine reads.
+  const facts = input.tools
+    ? input.tools.loadFacts(input.userId).catch(() => null)
+    : Promise.resolve(null)
+  // One refined-snapshot read per version per request: the category-order check and the tool
+  // section share it.
+  const refinedSnapshots = new Map<string, Promise<RefinedNeedSnapshotRow | null>>()
+  const loadRefined: RefinedSnapshotLoader = (planId, refinedVersionId) => {
+    const key = `${planId}:${refinedVersionId}`
+    let pending = refinedSnapshots.get(key)
+    if (!pending) {
+      pending = loadOwnerRefinedNeedSnapshot(input.client, input.userId, planId, refinedVersionId)
+      refinedSnapshots.set(key, pending)
+    }
+    return pending
+  }
+  const view = await loadRoutineView(input, loadRefined)
+  if (!input.tools || view.status === "no_personal_plan") return view
+  const toolSection = await composeRoutineToolSection(view, await facts, loadRefined)
+  return toolSection ? { ...view, toolSection } : view
+}
+
+/**
+ * The Routine's `Deine Tools`, derived from the member's current facts and the refined need
+ * snapshot the shown routine was compiled from. The routine payload is read, never extended.
+ * Any missing input or engine failure yields no section — the Routine itself is unaffected.
+ */
+async function composeRoutineToolSection(
+  view: PersonalPlanRoutineView,
+  facts: ToolFactsSource | null,
+  loadRefined: RefinedSnapshotLoader,
+): Promise<ToolRoutineSection | null> {
+  const payload =
+    view.status === "proposal" ? view.pendingProposal?.candidate : view.activeVersion?.payload
+  if (!payload || !facts) return null
+  try {
+    const refined = await loadRefined(view.personalPlanId, payload.source.refinedVersionId)
+    const needSnapshot = asToolViewNeedSnapshot(refined?.output_snapshot)
+    if (!needSnapshot) return null
+    return (
+      buildToolView({
+        careHabits: facts.careHabits,
+        fieldProvenance: facts.fieldProvenance,
+        needSnapshot,
+        routine: payload,
+        hasOptionalPage: false,
+        toolsEnabled: true,
+      })?.routineSection ?? null
+    )
+  } catch {
+    return null
+  }
+}
+
+async function loadRoutineView(
+  input: {
+    client: PersonalPlanRoutineReadClient
+    userId: string
+    enabled: boolean
+    includePendingProposal?: boolean
+  },
+  loadRefined: RefinedSnapshotLoader,
+): Promise<PersonalPlanRoutineView | { status: "no_personal_plan" }> {
   const plan = await loadOwnerRoutinePlan(input.client, input.userId)
   if (!plan) return { status: "no_personal_plan" }
   const shouldLoadProposal =
@@ -180,6 +268,7 @@ export async function loadPersonalPlanRoutineView(input: {
         userId: input.userId,
         planId: plan.id,
         payloads: [activeVersion.payload],
+        loadRefined,
       })
     : true
   if (activeVersion && !activeMatchesImmutableSource) {
@@ -200,6 +289,7 @@ export async function loadPersonalPlanRoutineView(input: {
             userId: input.userId,
             planId: plan.id,
             payloads: [candidatePayload],
+            loadRefined,
           })
         ) {
           return {
@@ -256,6 +346,7 @@ export async function loadPersonalPlanRoutineView(input: {
       userId: input.userId,
       planId: plan.id,
       payloads: [candidatePayload],
+      loadRefined,
     }))
   ) {
     return incompleteView()
