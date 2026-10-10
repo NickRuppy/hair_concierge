@@ -206,7 +206,7 @@
     "@langfuse/otel": "^5.2.0",
     "@langfuse/tracing": "^5.1.0",
     "@modelcontextprotocol/sdk": "1.32.1",
-    "@opentelemetry/sdk-node": "^0.216.0",
+    "@opentelemetry/sdk-node": "^0.223.0",
     "@paypal/react-paypal-js": "^10.6.0",
     "@sentry/nextjs": "^10.51.0",
     "@sentry/node": "^10.51.0",
