@@ -29,6 +29,10 @@ import {
   type PersonalPlanTransitionDirection,
   type Stage1PreviewLoadState,
 } from "@/components/personal-plan-journey"
+import {
+  TOOL_CHECKPOINT_ADD_TOOLS_HREF,
+  ToolCheckpoint,
+} from "@/components/personal-plan-refinement/tool-checkpoint"
 import { Stage3ProductsFlow } from "@/components/personal-plan-products/stage3-products-flow"
 import type { Stage3RoutineHandoff } from "@/components/personal-plan-products/stage3-products-flow"
 import {
@@ -63,6 +67,10 @@ import {
   type Stage2ModuleRecomputeOutcome,
 } from "@/lib/personal-plan/refinement/gateway"
 import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
+import {
+  buildToolCheckpointGroups,
+  toolCheckpointInventory,
+} from "@/lib/personal-plan/tools/checkpoint"
 import type { Stage2TriggerContext } from "@/lib/personal-plan/refinement/types"
 import {
   isStage1ProductExamplePreviewResponse,
@@ -304,6 +312,36 @@ export function moduleCompletionRoutineHref(
   return isPostAcceptModuleEntry(initialJourney) && recomputeOutcome === "applied"
     ? withRoutinePlanUpdatedSignal("/routine")
     : "/routine"
+}
+
+export type PlanStartModuleCompletionEffect =
+  | { kind: "open_routine"; href: string }
+  | { kind: "tools_checkpoint"; session: Stage2RefinementSession }
+
+/**
+ * Where a module that hands back to the host goes (Hair Tools port, Task 10).
+ *
+ *  - `tools` → the Tool-Checkpoint „Das hast du schon", once, before the Routine. A tools
+ *    completion recomputes nothing, so its way on is a plain `/routine` (the Routine then shows
+ *    the Gewohnheiten banner while that module is open) — never the „Plan aktualisiert" signal.
+ *    The checkpoint lives only in host state: a refresh or a later visit does not bring it back.
+ *  - everything else (`habits`; `products` never gets here — it bridges into Stage 3) → the
+ *    Routine, exactly as before (`moduleCompletionRoutineHref`).
+ *
+ * With the rollout off the tools module has no question, so it can never complete and this
+ * branch is unreachable.
+ */
+export function planStartModuleCompletionEffect(
+  initialJourney: PlanStartInitialJourney,
+  payload: Stage2ModuleCompletionPayload,
+): PlanStartModuleCompletionEffect {
+  if (payload.moduleCompletion.module === "tools") {
+    return { kind: "tools_checkpoint", session: payload.session }
+  }
+  return {
+    kind: "open_routine",
+    href: moduleCompletionRoutineHref(initialJourney, payload.moduleCompletion.recompute?.outcome),
+  }
 }
 
 /**
@@ -768,6 +806,14 @@ export function PlanStartCustomerJourney({
   replaceRoute?: (href: string) => void
 }) {
   const [stage, setStage] = useState<"stage1" | "stage2" | "stage3">(() => initialJourney.stage)
+  /**
+   * The host stage after a tools completion: the Tool-Checkpoint over the session the module
+   * completed with. Host state only, so it shows once per completion (see
+   * `planStartModuleCompletionEffect`).
+   */
+  const [toolsCheckpoint, setToolsCheckpoint] = useState<{
+    session: Stage2RefinementSession
+  } | null>(null)
   const [acceptStatus, setAcceptStatus] = useState<PlanStartAcceptStatus>("idle")
   const [plan, setPlan] = useState<PlanStartReadyViewModel | null>(initialPlan ?? null)
   const [productExamplePreviews, setProductExamplePreviews] =
@@ -1153,6 +1199,15 @@ export function PlanStartCustomerJourney({
     [initialJourney, replaceRoute],
   )
 
+  if (toolsCheckpoint) {
+    return (
+      <ToolCheckpoint
+        groups={buildToolCheckpointGroups(toolCheckpointInventory(toolsCheckpoint.session))}
+        onContinue={() => openRoutineHref("/routine")}
+        onAddTools={() => replaceRoute(TOOL_CHECKPOINT_ADD_TOOLS_HREF)}
+      />
+    )
+  }
   if (stage === "stage2") {
     // The ref deliberately retains the latest persisted seed across stage switches.
     const initialStage2Session = stage2SeedRef.current
@@ -1180,17 +1235,17 @@ export function PlanStartCustomerJourney({
         }
         onHandoff={handleHandoff}
         onModuleComplete={(payload: Stage2ModuleCompletionPayload) => {
-          // Modul 2 without a Stage-3 handoff (habits first), OR the closing
-          // module on a post-accept run (Task 2.1): the user belongs back on
-          // their Routine. The "Plan aktualisiert" toast (Task 2.6) rides
-          // along only when the server actually recomputed it (Task 2.2) —
-          // see `moduleCompletionRoutineHref`.
-          openRoutineHref(
-            moduleCompletionRoutineHref(
-              initialJourney,
-              payload.moduleCompletion.recompute?.outcome,
-            ),
-          )
+          // A module without a Stage-3 handoff, OR the closing module on a
+          // post-accept run (Task 2.1). Tools → the Tool-Checkpoint first;
+          // otherwise the user belongs back on their Routine, with the "Plan
+          // aktualisiert" toast (Task 2.6) only when the server actually
+          // recomputed it (Task 2.2) — see `planStartModuleCompletionEffect`.
+          const effect = planStartModuleCompletionEffect(initialJourney, payload)
+          if (effect.kind === "tools_checkpoint") {
+            setToolsCheckpoint({ session: effect.session })
+            return
+          }
+          openRoutineHref(effect.href)
         }}
         autoHandoff={!returningToRefinement}
         stageEntrance={stage2EnteredLocally}

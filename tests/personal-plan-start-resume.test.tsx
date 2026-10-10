@@ -1311,3 +1311,347 @@ test("a persisted complete draft whose path grew is not unavailable: it loads an
   assert.equal(state.initialRefinementSession?.path.firstUnresolvedQuestionId, "night_protection")
   assert.equal(state.initialJourney.stage, "stage2")
 })
+
+// ---------------------------------------------------------------------------
+// Hair Tools port, Task 10: the Tool-Checkpoint on module return.
+// ---------------------------------------------------------------------------
+
+const toolsCheckpointTriggerContext = {
+  relevantCategories: ["shampoo" as const],
+  hasReportedIrritatedScalp: false,
+  dryShampooBridgeEligibility: "ineligible" as const,
+  toolsEnabled: true,
+}
+
+/** Products answered, tools overview + Bürsten answered; only the Nachtschutz page is open. */
+async function toolsCheckpointSessions() {
+  const { createStage2RefinementSession, saveStage2SessionAnswer } =
+    await import("../src/lib/personal-plan/refinement/session")
+  const open = createStage2RefinementSession({
+    pathVersion: "tool-checkpoint-host-test",
+    triggerContext: toolsCheckpointTriggerContext,
+    answers: {
+      currentProductCategories: [],
+      wetWashFrequency: "weekly_2x",
+      toolFamiliesWithSomething: ["brushes_combs", "night_protection"],
+      toolForms: { "brushes_combs:1": ["wide_tooth_comb"], "brushes_combs:2": ["round_brush"] },
+    },
+    completedQuestionIds: [
+      "current_product_categories",
+      "wet_wash_frequency",
+      "tools_overview",
+      "tools:brushes_combs:1",
+      "tools:brushes_combs:2",
+    ],
+    revision: 4,
+  })
+  const saved = {
+    ...saveStage2SessionAnswer(open, { questionId: "tools:night_protection:1", answer: [] }),
+    revision: 5,
+  }
+  return { open, saved }
+}
+
+const TOOLS_MODULE_COMPLETION = {
+  module: "tools" as const,
+  refinedVersionId: "refined-tools-1",
+  nextHref: "/plan-start" as const,
+  status: "in_progress" as const,
+  stage3Handoff: false,
+}
+
+const postAcceptToolsJourney = {
+  stage: "stage2" as const,
+  refineModule: "tools" as const,
+  planAccepted: true,
+  moduleProgress: { completedSteps: 3, totalSteps: 5 },
+}
+
+test("only a tools completion opens the Tool-Checkpoint; habits and products keep their routes", async () => {
+  const { planStartModuleCompletionEffect } =
+    await import("../src/components/personal-plan-start/plan-start-flow")
+  const { saved } = await toolsCheckpointSessions()
+
+  assert.deepEqual(
+    planStartModuleCompletionEffect(postAcceptToolsJourney, {
+      moduleCompletion: TOOLS_MODULE_COMPLETION,
+      session: saved,
+    }),
+    { kind: "tools_checkpoint", session: saved },
+  )
+  // Habits: today's behavior, the toast only when the server really recomputed.
+  const habitsJourney = { ...postAcceptToolsJourney, refineModule: "habits" as const }
+  assert.deepEqual(
+    planStartModuleCompletionEffect(habitsJourney, {
+      moduleCompletion: {
+        ...TOOLS_MODULE_COMPLETION,
+        module: "habits",
+        recompute: { outcome: "applied" },
+      },
+      session: saved,
+    }),
+    { kind: "open_routine", href: "/routine?planUpdated=1" },
+  )
+  assert.deepEqual(
+    planStartModuleCompletionEffect(habitsJourney, {
+      moduleCompletion: { ...TOOLS_MODULE_COMPLETION, module: "habits" },
+      session: saved,
+    }),
+    { kind: "open_routine", href: "/routine" },
+  )
+  // Products never reaches the checkpoint (it hands off to Stage 3; a host return is the Routine).
+  assert.deepEqual(
+    planStartModuleCompletionEffect(
+      { ...postAcceptToolsJourney, refineModule: "products" as const },
+      { moduleCompletion: { ...TOOLS_MODULE_COMPLETION, module: "products" }, session: saved },
+    ),
+    { kind: "open_routine", href: "/routine" },
+  )
+})
+
+/**
+ * Mounts the host in jsdom (real clicks, real state) with a stubbed `fetch` behind the real HTTP
+ * Stage-2 gateway. Globals are installed for the call and removed after.
+ */
+async function withMountedPlanStart<T>(
+  element: React.ReactElement,
+  fetchStub: (url: string, init?: RequestInit) => Promise<Response>,
+  run: (container: HTMLElement) => T | Promise<T>,
+): Promise<T> {
+  const { JSDOM } = await import("jsdom")
+  const { createRoot } = await import("react-dom/client")
+  const { flushSync } = await import("react-dom")
+  const dom = new JSDOM(
+    '<!doctype html><html lang="de"><body><div id="root"></div></body></html>',
+    { url: "http://localhost/plan-start?refine=tools", pretendToBeVisual: true },
+  )
+  // jsdom has no media queries; the Stage-2 dock asks for the mobile breakpoint.
+  Object.defineProperty(dom.window, "matchMedia", {
+    configurable: true,
+    value: (query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      addListener: () => {},
+      removeListener: () => {},
+      dispatchEvent: () => false,
+    }),
+  })
+  const globals = globalThis as unknown as Record<string, unknown>
+  const previous: Record<string, PropertyDescriptor | undefined> = {}
+  const installed: Record<string, unknown> = {
+    window: dom.window,
+    document: dom.window.document,
+    navigator: dom.window.navigator,
+    HTMLElement: dom.window.HTMLElement,
+    sessionStorage: dom.window.sessionStorage,
+    fetch: (input: RequestInfo | URL, init?: RequestInit) => fetchStub(String(input), init),
+    IS_REACT_ACT_ENVIRONMENT: false,
+  }
+  for (const [key, value] of Object.entries(installed)) {
+    previous[key] = Object.getOwnPropertyDescriptor(globals, key)
+    Object.defineProperty(globals, key, { value, configurable: true, writable: true })
+  }
+  const container = dom.window.document.getElementById("root")!
+  const root = createRoot(container)
+  try {
+    flushSync(() => root.render(element))
+    return await run(container)
+  } finally {
+    flushSync(() => root.unmount())
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    for (const key of Object.keys(installed)) {
+      const descriptor = previous[key]
+      if (descriptor) Object.defineProperty(globals, key, descriptor)
+      else delete globals[key]
+    }
+    dom.window.close()
+  }
+}
+
+function domClick(element: Element): void {
+  const view = element.ownerDocument.defaultView!
+  element.dispatchEvent(new view.MouseEvent("click", { bubbles: true, cancelable: true }))
+}
+
+async function waitForElement(
+  find: () => Element | null | undefined,
+  label: string,
+  timeoutMs = 3000,
+): Promise<Element> {
+  const started = Date.now()
+  for (;;) {
+    const found = find()
+    if (found) return found
+    if (Date.now() - started > timeoutMs) throw new Error(`timed out waiting for ${label}`)
+    await new Promise((resolve) => setTimeout(resolve, 10))
+  }
+}
+
+function buttonByText(container: HTMLElement, text: string): HTMLButtonElement | undefined {
+  return [...container.ownerDocument.querySelectorAll("button")].find(
+    (button) => button.textContent?.trim() === text && !button.disabled,
+  ) as HTMLButtonElement | undefined
+}
+
+function jsonResponse(status: number, body: unknown): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  })
+}
+
+async function answerLastToolPage(container: HTMLElement) {
+  const nothing = await waitForElement(
+    () => container.ownerDocument.querySelector("[data-tool-nothing-option]"),
+    "the Nachtschutz page",
+  )
+  domClick(nothing)
+  domClick(await waitForElement(() => buttonByText(container, "Weiter"), "Weiter"))
+}
+
+test("tools completion shows the checkpoint once; its CTA opens /routine without the planUpdated signal", async () => {
+  const { PlanStartCustomerJourney } =
+    await import("../src/components/personal-plan-start/plan-start-flow")
+  const { open, saved } = await toolsCheckpointSessions()
+  const routes: string[] = []
+  const requests: string[] = []
+  await withMountedPlanStart(
+    <PlanStartCustomerJourney
+      initialJourney={postAcceptToolsJourney}
+      personalPlanId="plan-1"
+      initialRefinementSession={open}
+      replaceRoute={(href) => routes.push(href)}
+      reloadServerFrontier={() => routes.push("reload")}
+    />,
+    async (url, init) => {
+      requests.push(`${init?.method ?? "GET"} ${url}`)
+      if (url.endsWith("/optional-entry") || (init?.method ?? "GET") === "GET")
+        return jsonResponse(200, open)
+      if (url.endsWith("/stage-2") && init?.method === "PATCH") {
+        return jsonResponse(200, { session: saved, moduleCompletion: TOOLS_MODULE_COMPLETION })
+      }
+      return jsonResponse(500, { error: "temporarily_unavailable" })
+    },
+    async (container) => {
+      await answerLastToolPage(container)
+      const checkpoint = await waitForElement(
+        () => container.querySelector("[data-tool-checkpoint]"),
+        "the Tool-Checkpoint",
+      )
+      assert.match(checkpoint.textContent ?? "", /Das hast du schon/)
+      assert.deepEqual(
+        [...container.querySelectorAll("[data-tool-checkpoint-group]")].map((group) =>
+          group.getAttribute("data-tool-checkpoint-group"),
+        ),
+        ["brushes_combs"],
+      )
+      assert.equal(container.querySelectorAll("[data-tool-checkpoint]").length, 1)
+      // Nothing navigated yet: the checkpoint sits between the module and the Routine.
+      assert.deepEqual(routes, [])
+
+      domClick(container.querySelector("[data-tool-checkpoint-continue]")!)
+      assert.deepEqual(routes, ["/routine"])
+    },
+  )
+  assert.equal(requests.filter((request) => request.includes("/complete")).length, 0)
+})
+
+test("the checkpoint's quiet secondary re-enters the tools module as an edit visit", async () => {
+  const { PlanStartCustomerJourney } =
+    await import("../src/components/personal-plan-start/plan-start-flow")
+  const { open, saved } = await toolsCheckpointSessions()
+  const routes: string[] = []
+  await withMountedPlanStart(
+    <PlanStartCustomerJourney
+      initialJourney={postAcceptToolsJourney}
+      personalPlanId="plan-1"
+      initialRefinementSession={open}
+      replaceRoute={(href) => routes.push(href)}
+    />,
+    async (url, init) => {
+      if (url.endsWith("/optional-entry") || (init?.method ?? "GET") === "GET")
+        return jsonResponse(200, open)
+      if (init?.method === "PATCH") {
+        return jsonResponse(200, { session: saved, moduleCompletion: TOOLS_MODULE_COMPLETION })
+      }
+      return jsonResponse(500, { error: "temporarily_unavailable" })
+    },
+    async (container) => {
+      await answerLastToolPage(container)
+      const addTools = await waitForElement(
+        () => container.querySelector("[data-tool-checkpoint-add-tools]"),
+        "Tools ergänzen",
+      )
+      assert.equal(addTools.textContent, "Etwas fehlt? Tools ergänzen")
+      domClick(addTools)
+      assert.deepEqual(routes, ["/plan-start?refine=tools"])
+    },
+  )
+})
+
+test("a failed tools completion retries through POST complete {module} and still reaches the checkpoint", async () => {
+  const { PlanStartCustomerJourney } =
+    await import("../src/components/personal-plan-start/plan-start-flow")
+  const { open, saved } = await toolsCheckpointSessions()
+  const routes: string[] = []
+  const requests: Array<{ method: string; url: string; body: unknown }> = []
+  await withMountedPlanStart(
+    <PlanStartCustomerJourney
+      initialJourney={postAcceptToolsJourney}
+      personalPlanId="plan-1"
+      initialRefinementSession={open}
+      replaceRoute={(href) => routes.push(href)}
+    />,
+    async (url, init) => {
+      const method = init?.method ?? "GET"
+      requests.push({ method, url, body: init?.body ? JSON.parse(String(init.body)) : null })
+      if (url.endsWith("/optional-entry") || (init?.method ?? "GET") === "GET")
+        return jsonResponse(200, open)
+      // The answer is durable, the completion is lost.
+      if (method === "PATCH") {
+        return jsonResponse(503, { error: "temporarily_unavailable", savedSession: saved })
+      }
+      if (url.endsWith("/stage-2/complete") && method === "POST") {
+        return jsonResponse(200, TOOLS_MODULE_COMPLETION)
+      }
+      return jsonResponse(500, { error: "temporarily_unavailable" })
+    },
+    async (container) => {
+      await answerLastToolPage(container)
+      const retry = await waitForElement(
+        () => buttonByText(container, "Abschließen erneut versuchen"),
+        "the completion retry",
+      )
+      assert.equal(container.querySelector("[data-tool-checkpoint]"), null)
+      domClick(retry)
+      await waitForElement(
+        () => container.querySelector("[data-tool-checkpoint]"),
+        "the Tool-Checkpoint after the retry",
+      )
+      assert.deepEqual(routes, [])
+    },
+  )
+  const completes = requests.filter((request) => request.url.endsWith("/stage-2/complete"))
+  assert.equal(completes.length, 1)
+  assert.deepEqual(completes[0]?.body, { module: "tools", expectedRevision: saved.revision })
+})
+
+test("a refresh after a tools completion never re-opens the checkpoint: it is host state only", async () => {
+  const { PlanStartCustomerJourney } =
+    await import("../src/components/personal-plan-start/plan-start-flow")
+  const { saved } = await toolsCheckpointSessions()
+  // The reloaded page boots the same journey with the completed tools answers (an edit visit).
+  const html = renderToStaticMarkup(
+    <PlanStartCustomerJourney
+      initialJourney={postAcceptToolsJourney}
+      personalPlanId="plan-1"
+      initialRefinementSession={saved}
+      replaceRoute={() => {}}
+    />,
+  )
+  assert.doesNotMatch(html, /data-tool-checkpoint/)
+  assert.doesNotMatch(html, /Das hast du schon/)
+})
