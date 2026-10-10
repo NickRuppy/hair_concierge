@@ -4,6 +4,8 @@ import test from "node:test"
 import { computeHeatProtectantDecision } from "../../../src/lib/personal-plan/categories/heat-protectant"
 import { buildPlanProfile } from "../../../src/lib/personal-plan/input"
 import { buildPlanNeedAssessment } from "../../../src/lib/personal-plan/needs"
+import { projectStage2HeatEvents } from "../../../src/lib/personal-plan/refinement/heat-events"
+import type { PersonalPlanRefinementAnswersV1 } from "../../../src/lib/personal-plan/refinement/types"
 import type { PlanHeatToolUseEvent, PlanRoutineContext } from "../../../src/lib/personal-plan/types"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "../fixtures"
 
@@ -99,4 +101,99 @@ test("heat-protectant-direct-plus-airflow keeps one Basis event category", () =>
   if (decision.frequency?.kind === "event_based") {
     assert.deepEqual(decision.frequency.eventRoutes, ["direct_contact_heat", "airflow_shaping"])
   }
+})
+
+/** The plan's events exactly as the member adapter projects them from Feinschliff answers. */
+function eventsFromAnswers(
+  answers: PersonalPlanRefinementAnswersV1,
+  options?: { diffuserAsBlowDry?: boolean },
+): PlanHeatToolUseEvent[] {
+  return projectStage2HeatEvents(answers, options).map((projected) => ({
+    id: projected.id,
+    tool: projected.tool,
+    route: projected.route,
+    frequency: projected.frequency,
+    sourceRuleIds: [],
+  }))
+}
+
+const diffuserAnswers: PersonalPlanRefinementAnswersV1 = {
+  dryingRoutes: ["diffuser_or_airflow_shaping"],
+  heatEvents: { "heat:diffuser_airflow_shaping": { frequency: "weekly_2x" } },
+}
+
+test("heat-protectant Diffusor rule: a Diffusor-only routine is plain blow-drying at not_needed", () => {
+  const decision = decide(eventsFromAnswers(diffuserAnswers, { diffuserAsBlowDry: true }))
+  assert.equal(decision.needTier, "not_needed")
+  assert.equal(decision.frequency, null)
+  assert.deepEqual(decision.roles, [])
+})
+
+test("heat-protectant Diffusor rule: a stored Diffusor consistency never upgrades the tier", () => {
+  for (const protectionConsistency of ["always", "sometimes", "no", "unsure"] as const) {
+    const decision = decide(
+      eventsFromAnswers(
+        {
+          ...diffuserAnswers,
+          heatEvents: {
+            "heat:diffuser_airflow_shaping": { frequency: "weekly_2x", protectionConsistency },
+          },
+        },
+        { diffuserAsBlowDry: true },
+      ),
+    )
+    assert.equal(decision.needTier, "not_needed", protectionConsistency)
+  }
+})
+
+test("heat-protectant Diffusor rule: Diffusor + Glätteisen is Basis for the direct-contact route only", () => {
+  const decision = decide(
+    eventsFromAnswers(
+      {
+        dryingRoutes: ["diffuser_or_airflow_shaping"],
+        additionalHeatTools: ["straightener"],
+        heatEvents: {
+          "heat:diffuser_airflow_shaping": { frequency: "weekly_2x" },
+          "heat:straightener": { frequency: "weekly_1x", protectionConsistency: "always" },
+        },
+      },
+      { diffuserAsBlowDry: true },
+    ),
+  )
+  assert.equal(decision.needTier, "basis")
+  if (decision.frequency?.kind === "event_based") {
+    assert.deepEqual(decision.frequency.eventRoutes, ["direct_contact_heat"])
+  }
+})
+
+test("heat-protectant Diffusor rule: Warmluftbürste stays Optional next to a Diffusor", () => {
+  const decision = decide(
+    eventsFromAnswers(
+      {
+        dryingRoutes: ["diffuser_or_airflow_shaping"],
+        additionalHeatTools: ["dryer_brush"],
+        heatEvents: {
+          "heat:diffuser_airflow_shaping": { frequency: "weekly_2x" },
+          "heat:dryer_brush": { frequency: "weekly_1x", protectionConsistency: "sometimes" },
+        },
+      },
+      { diffuserAsBlowDry: true },
+    ),
+  )
+  assert.equal(decision.needTier, "optional")
+  if (decision.frequency?.kind === "event_based") {
+    assert.deepEqual(decision.frequency.eventRoutes, ["airflow_shaping"])
+  }
+})
+
+test("heat-protectant Diffusor rule off: a Diffusor event keeps today's Optional tier", () => {
+  const decision = decide(
+    eventsFromAnswers({
+      dryingRoutes: ["diffuser_or_airflow_shaping"],
+      heatEvents: {
+        "heat:diffuser_airflow_shaping": { frequency: "weekly_2x", protectionConsistency: "no" },
+      },
+    }),
+  )
+  assert.equal(decision.needTier, "optional")
 })

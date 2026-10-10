@@ -41,7 +41,9 @@ import { PRODUCT_FREQUENCIES } from "@/lib/vocabulary/frequencies"
 import {
   createStage2HeatEventId,
   getSelectedStage2HeatEventSources,
+  ignoresStoredStage2HeatProtection,
   requiresStage2HeatProtection,
+  stage2HeatRuleOptions,
 } from "./heat-events"
 import type { ToolFamily } from "@/lib/personal-plan/tools/contracts"
 import {
@@ -451,7 +453,8 @@ export function isStage2QuestionAnswerValid(
   answers: PersonalPlanRefinementAnswersV1,
   triggerContext?: Stage2TriggerContext,
 ): boolean {
-  if (questionId.startsWith("heat:")) return isHeatEventAnswerValid(questionId, answers)
+  if (questionId.startsWith("heat:"))
+    return isHeatEventAnswerValid(questionId, answers, triggerContext)
   if (questionId === "tools_overview") {
     return isToolOverviewAnswerValid(answers.toolFamiliesWithSomething)
   }
@@ -512,14 +515,25 @@ function isTowelHandlingValid(answers: PersonalPlanRefinementAnswersV1): boolean
     : isOneOf<TowelTechnique>(towel.technique, TOWEL_TECHNIQUES)
 }
 
+/**
+ * Heat-event validity. Under the Diffusor rule (tools rollout on) the diffuser source is plain
+ * blow-drying: it needs no protection answer and a stored one is ignored, never a reason to
+ * re-open the question. Readers without a trigger context (stored facts, scanner) are tolerant
+ * the same way; a rollout-off member keeps today's contract.
+ */
 function isHeatEventAnswerValid(
   questionId: Stage2QuestionId,
   answers: PersonalPlanRefinementAnswersV1,
+  triggerContext?: Stage2TriggerContext,
 ): boolean {
   const source = questionId.slice("heat:".length) as Stage2HeatEventSource
   const event = answers.heatEvents?.[questionId]
   if (!event || !isOneOf<ProductFrequency>(event.frequency, PRODUCT_FREQUENCIES)) return false
-  return requiresStage2HeatProtection(source)
+  const rule = triggerContext
+    ? stage2HeatRuleOptions(triggerContext)
+    : ({ diffuserAsBlowDry: true } as const)
+  if (ignoresStoredStage2HeatProtection(source, rule)) return true
+  return requiresStage2HeatProtection(source, rule)
     ? isOneOf<HeatProtectionConsistency>(event.protectionConsistency, HEAT_PROTECTION_CONSISTENCIES)
     : event.protectionConsistency === undefined
 }

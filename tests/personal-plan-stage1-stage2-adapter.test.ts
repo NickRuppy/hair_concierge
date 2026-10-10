@@ -11,6 +11,7 @@ import type {
   PersonalPlanRefinementAnswersV1,
   Stage2QuestionId,
 } from "../src/lib/personal-plan/refinement/types"
+import { resolveStage2RefinementContract } from "../src/lib/personal-plan/refinement/question-path"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
 
 const irritatedOilyEnvelope = {
@@ -366,4 +367,83 @@ test("an existing Dry Shampoo records an accepted bridge without asking the brid
   })
 
   assert.deepEqual(routine.dryShampooBridgePreference, { state: "known", value: "accept" })
+})
+
+/** A member who owns a Diffusor-Aufsatz and a Glätteisen, tools rollout on. */
+const diffuserToolsAnswers = {
+  currentProductCategories: [],
+  wetWashFrequency: "weekly_2x",
+  toolFamiliesWithSomething: ["drying_textiles", "airflow", "heated_styling"],
+  toolForms: {
+    "drying_textiles:1": ["microfiber_towel"],
+    "airflow:1": ["hair_dryer", "diffuser"],
+    "heated_styling:1": ["flat_iron"],
+    "heatless_styling:1": [],
+    "securing_sectioning:1": [],
+    "securing_sectioning:2": [],
+    "brushes_combs:1": [],
+    "brushes_combs:2": [],
+    "wash_application:1": [],
+    "night_protection:1": [],
+  },
+  towel: { material: "mikrofaser", technique: "gentle_press" },
+  dryingRoutes: ["diffuser_or_airflow_shaping"],
+  heatEvents: {
+    "heat:diffuser_airflow_shaping": { frequency: "weekly_2x" },
+    "heat:straightener": { frequency: "weekly_1x", protectionConsistency: "always" },
+  },
+} as PersonalPlanRefinementAnswersV1
+
+function toolsTrigger() {
+  return {
+    ...deriveStage2TriggerContext(initialSnapshot(), { toolsEnabled: true }),
+    hasReportedIrritatedScalp: false,
+    dryShampooBridgeEligibility: "ineligible" as const,
+  }
+}
+
+function allQuestionIds(
+  triggerContext: ReturnType<typeof toolsTrigger>,
+  answers: PersonalPlanRefinementAnswersV1,
+) {
+  return resolveStage2RefinementContract({ triggerContext, answers, completedQuestionIds: [] }).path
+    .orderedQuestionIds
+}
+
+test("rollout on: the Diffusor projects as plain blow-drying, the Glätteisen stays direct-contact", () => {
+  const triggerContext = toolsTrigger()
+  const completed = allQuestionIds(triggerContext, diffuserToolsAnswers)
+  assert.ok(completed.includes("heat:diffuser_airflow_shaping"))
+  assert.ok(completed.includes("heat:straightener"))
+  const routine = buildPlanRoutineContextFromCompletedRefinement({
+    triggerContext,
+    answers: diffuserToolsAnswers,
+    completedQuestionIds: completed,
+  })
+  assert.deepEqual(
+    routine.heatToolUse.state === "known"
+      ? routine.heatToolUse.value.map(({ id, route }) => ({ id, route }))
+      : null,
+    [
+      { id: "heat:diffuser_airflow_shaping", route: "ordinary_airflow" },
+      { id: "heat:straightener", route: "direct_contact_heat" },
+    ],
+  )
+})
+
+test("rollout on: a stored Diffusor protection answer is ignored, never an error", () => {
+  const triggerContext = toolsTrigger()
+  const answers = {
+    ...diffuserToolsAnswers,
+    heatEvents: {
+      ...diffuserToolsAnswers.heatEvents,
+      "heat:diffuser_airflow_shaping": { frequency: "weekly_2x", protectionConsistency: "no" },
+    },
+  } as PersonalPlanRefinementAnswersV1
+  const routine = buildPlanRoutineContextFromCompletedRefinement({
+    triggerContext,
+    answers,
+    completedQuestionIds: allQuestionIds(triggerContext, answers),
+  })
+  assert.equal(routine.heatToolUse.state, "known")
 })

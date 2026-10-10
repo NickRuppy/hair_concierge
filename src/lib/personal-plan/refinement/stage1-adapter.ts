@@ -1,6 +1,6 @@
 import type { InitialNeedPlanSnapshot, PlanRoutineContext } from "@/lib/personal-plan/types"
 
-import { projectStage2HeatEvents } from "./heat-events"
+import { projectStage2HeatEvents, stage2HeatRuleOptions } from "./heat-events"
 import {
   getEffectiveDryShampooBridgePreference,
   resolveStage2RefinementContract,
@@ -77,7 +77,10 @@ export function buildPlanRoutineContextFromCompletedRefinement(
       ? { state: "unknown", reason: "heat_tool_use" }
       : {
           state: "known",
-          value: projectStage2HeatEvents(contract.answers).map((event) => ({
+          value: projectStage2HeatEvents(
+            contract.answers,
+            stage2HeatRuleOptions(input.triggerContext),
+          ).map((event) => ({
             id: event.id,
             tool: event.tool,
             route: event.route,

@@ -119,6 +119,17 @@ export function saveStage2SessionAnswer(
     )
   }
 
+  // D2: the hair dries somehow, so with the tools rollout on a NEW drying answer names at least
+  // one route. Path validity still accepts a stored `[]` — nobody who answered it is re-asked.
+  if (
+    input.questionId === "drying_routes" &&
+    session.triggerContext.toolsEnabled === true &&
+    Array.isArray(input.answer) &&
+    input.answer.length === 0
+  ) {
+    throw new Stage2RefinementError("invalid_answer", "The submitted answer is invalid")
+  }
+
   const candidateAnswers = replaceQuestionAnswer(canonical.answers, input.questionId, input.answer)
   const candidate = resolveStage2RefinementContract({
     triggerContext: session.triggerContext,

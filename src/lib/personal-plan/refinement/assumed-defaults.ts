@@ -15,7 +15,11 @@ import {
   defaultToolSectionsFromCare,
 } from "@/lib/personal-plan/tools/stage2"
 
-import { createStage2HeatEventId, requiresStage2HeatProtection } from "./heat-events"
+import {
+  createStage2HeatEventId,
+  requiresStage2HeatProtection,
+  stage2HeatRuleOptions,
+} from "./heat-events"
 import {
   getOrderedQuestionIds,
   isStage2QuestionAnswerValid,
@@ -100,6 +104,7 @@ export type Stage2AssumptionRuleId = (typeof STAGE2_ASSUMPTION_RULE_IDS)[number]
 type Stage2AssumptionInput = {
   questionId: Stage2QuestionId
   answers: PersonalPlanRefinementAnswersV1
+  triggerContext: Stage2TriggerContext
 }
 
 export type Stage2AssumptionRule = {
@@ -230,10 +235,14 @@ export const STAGE2_ASSUMPTION_RULES: readonly Stage2AssumptionRule[] = [
     ruleId: "assume:heat_event:ordinary_airflow_minimum",
     questionId: "heat:*",
     condition:
-      "the user selected an ordinary-airflow source (gewöhnlich föhnen) but left its event open",
+      "the user selected an ordinary-airflow source (gewöhnlich föhnen — with the tools rollout on, also „Mit Diffusor“, which is plain blow-drying) but left its event open",
     rationale:
       "The source is a user answer, so the event cannot be dropped — only minimised. `less_than_monthly` is the lowest frequency the option set offers and the only band that keeps the heat damage score at 1 (`low`), the closest reachable state to no heat at all. Ordinary airflow carries no protection question, so none is written.",
-    matches: ({ questionId }) => !requiresStage2HeatProtection(heatEventSource(questionId)),
+    matches: ({ questionId, triggerContext }) =>
+      !requiresStage2HeatProtection(
+        heatEventSource(questionId),
+        stage2HeatRuleOptions(triggerContext),
+      ),
     write: ({ answers, questionId }) =>
       writeHeatEvent(answers, questionId, { frequency: STAGE2_ASSUMED_HEAT_EVENT_FREQUENCY }),
   },
@@ -244,7 +253,11 @@ export const STAGE2_ASSUMPTION_RULES: readonly Stage2AssumptionRule[] = [
       "the user selected an airflow-shaping or direct-contact-heat source but left its event open",
     rationale:
       "Same minimal frequency as the ordinary-airflow rule. Protection is `unsure` because that is the only option that truthfully encodes the app's knowledge state: the user never made any statement about heat protection, and `always` would be a positive behavioural claim on their behalf. Assuming `always` would additionally suppress the best-supported cosmetic recommendation in hair care — a heat protectant for a confirmed direct-contact-tool user — the moment this field gains a consumer (domain review, fix round 1). `no` would go the other way and invent a failure the user never reported.",
-    matches: ({ questionId }) => requiresStage2HeatProtection(heatEventSource(questionId)),
+    matches: ({ questionId, triggerContext }) =>
+      requiresStage2HeatProtection(
+        heatEventSource(questionId),
+        stage2HeatRuleOptions(triggerContext),
+      ),
     write: ({ answers, questionId }) =>
       writeHeatEvent(answers, questionId, {
         frequency: STAGE2_ASSUMED_HEAT_EVENT_FREQUENCY,
@@ -366,8 +379,13 @@ export function resolveAssumedAnswers(input: {
         ),
       }
     }
-    const rule = findAssumptionRule({ questionId: openQuestionId, answers })
-    answers = rule.write({ questionId: openQuestionId, answers })
+    const ruleInput = {
+      questionId: openQuestionId,
+      answers,
+      triggerContext: input.triggerContext,
+    }
+    const rule = findAssumptionRule(ruleInput)
+    answers = rule.write(ruleInput)
     ruleIdByQuestionId.set(openQuestionId, rule.ruleId)
   }
 

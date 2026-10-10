@@ -642,3 +642,89 @@ test("rollout on: a complete draft whose path grew loads complete with an open f
   assert.deepEqual(session.answers.additionalHeatTools, ["straightener"])
   assert.deepEqual(session.answers.nightProtection, ["silk_satin_pillow"])
 })
+
+/* ── Diffusor rule: plain blow-drying ──────────────────────────────────────── */
+
+const diffuserHeatAnswers = (
+  protectionConsistency?: "always" | "sometimes" | "no" | "unsure",
+): PersonalPlanRefinementAnswersV1 => ({
+  dryingRoutes: ["diffuser_or_airflow_shaping"],
+  heatEvents: {
+    "heat:diffuser_airflow_shaping": {
+      frequency: "weekly_2x",
+      ...(protectionConsistency ? { protectionConsistency } : {}),
+    },
+  },
+})
+
+test("Diffusor rule (rollout on): a Diffusor event is valid without a protection answer", () => {
+  assert.equal(
+    isStage2QuestionAnswerValid("heat:diffuser_airflow_shaping", diffuserHeatAnswers(), toolsOn),
+    true,
+  )
+})
+
+test("Diffusor rule (rollout on): a stored protection answer is tolerated, never re-opening the question", () => {
+  for (const value of ["always", "sometimes", "no", "unsure"] as const) {
+    assert.equal(
+      isStage2QuestionAnswerValid(
+        "heat:diffuser_airflow_shaping",
+        diffuserHeatAnswers(value),
+        toolsOn,
+      ),
+      true,
+      value,
+    )
+  }
+  const contract = resolveStage2RefinementContract({
+    triggerContext: neutralContext,
+    answers: diffuserHeatAnswers("no"),
+    completedQuestionIds: ["heat:diffuser_airflow_shaping"],
+  })
+  assert.equal(contract.path.completedQuestionIds.includes("heat:diffuser_airflow_shaping"), true)
+})
+
+test("Diffusor rule (rollout off): the Diffusor event still needs its protection answer", () => {
+  assert.equal(
+    isStage2QuestionAnswerValid(
+      "heat:diffuser_airflow_shaping",
+      diffuserHeatAnswers(),
+      neutralContext,
+    ),
+    false,
+  )
+  assert.equal(
+    isStage2QuestionAnswerValid(
+      "heat:diffuser_airflow_shaping",
+      diffuserHeatAnswers("sometimes"),
+      neutralContext,
+    ),
+    true,
+  )
+})
+
+test("Diffusor rule: readers without a trigger context tolerate either shape", () => {
+  assert.equal(
+    isStage2QuestionAnswerValid("heat:diffuser_airflow_shaping", diffuserHeatAnswers()),
+    true,
+  )
+  assert.equal(
+    isStage2QuestionAnswerValid("heat:diffuser_airflow_shaping", diffuserHeatAnswers("no")),
+    true,
+  )
+})
+
+test("Diffusor rule: other sources keep their protection requirement and ordinary airflow stays bare", () => {
+  const straightener: PersonalPlanRefinementAnswersV1 = {
+    additionalHeatTools: ["straightener"],
+    heatEvents: { "heat:straightener": { frequency: "weekly_1x" } },
+  }
+  assert.equal(isStage2QuestionAnswerValid("heat:straightener", straightener, toolsOn), false)
+  const ordinary: PersonalPlanRefinementAnswersV1 = {
+    dryingRoutes: ["ordinary_blow_dry"],
+    heatEvents: {
+      "heat:ordinary_blow_dry": { frequency: "weekly_1x", protectionConsistency: "always" },
+    },
+  }
+  assert.equal(isStage2QuestionAnswerValid("heat:ordinary_blow_dry", ordinary, toolsOn), false)
+})

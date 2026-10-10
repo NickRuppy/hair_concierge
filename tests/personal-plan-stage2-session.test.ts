@@ -227,3 +227,62 @@ test("a page writes only its own answer, sorted into canonical family order", ()
     /invalid/i,
   )
 })
+
+function sessionAtDryingRoutes() {
+  let session = saveStage2SessionAnswer(sessionAtOverview(), {
+    questionId: "tools_overview",
+    answer: ["trocknen_stylen"],
+  })
+  for (const [questionId, answer] of [
+    ["tools:airflow:1", ["hair_dryer"]],
+    ["tools:heated_styling:1", []],
+    ["tools:heatless_styling:1", []],
+    ["tools:securing_sectioning:1", []],
+    ["tools:securing_sectioning:2", []],
+  ] as const) {
+    session = saveStage2SessionAnswer(session, { questionId, answer: [...answer] })
+  }
+  assert.equal(session.path.firstUnresolvedQuestionId, "drying_routes")
+  return session
+}
+
+test("rollout on: a new empty drying answer is rejected, an offered route is saved (D2)", () => {
+  const session = sessionAtDryingRoutes()
+  assert.throws(
+    () => saveStage2SessionAnswer(session, { questionId: "drying_routes", answer: [] }),
+    /invalid/i,
+  )
+  const saved = saveStage2SessionAnswer(session, {
+    questionId: "drying_routes",
+    answer: ["air_dry", "ordinary_blow_dry"],
+  })
+  assert.deepEqual(saved.answers.dryingRoutes, ["air_dry", "ordinary_blow_dry"])
+  assert.equal(saved.path.completedQuestionIds.includes("drying_routes"), true)
+})
+
+test("rollout on: a stored empty drying answer stays complete — nobody is re-asked (D2)", () => {
+  const session = sessionAtDryingRoutes()
+  const withStoredEmpty = createStage2RefinementSession({
+    pathVersion: "stage2-v1",
+    triggerContext: toolsOn,
+    answers: { ...session.answers, dryingRoutes: [] },
+    completedQuestionIds: [...session.path.completedQuestionIds, "drying_routes"],
+  })
+  assert.equal(withStoredEmpty.path.completedQuestionIds.includes("drying_routes"), true)
+  assert.notEqual(withStoredEmpty.path.firstUnresolvedQuestionId, "drying_routes")
+})
+
+test("rollout off: the drying question still accepts the explicit empty answer", () => {
+  const session = createStage2RefinementSession({
+    pathVersion: "stage2-v1",
+    triggerContext,
+    answers: {
+      currentProductCategories: [],
+      wetWashFrequency: "weekly_1x",
+      towel: { material: "no_towel" },
+    },
+    completedQuestionIds: ["current_product_categories", "wet_wash_frequency", "towel_handling"],
+  })
+  const saved = saveStage2SessionAnswer(session, { questionId: "drying_routes", answer: [] })
+  assert.deepEqual(saved.answers.dryingRoutes, [])
+})

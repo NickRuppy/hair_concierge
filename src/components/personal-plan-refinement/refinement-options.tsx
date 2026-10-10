@@ -112,6 +112,28 @@ export const REFINEMENT_CATEGORY_OPTIONS = [
   },
 ] as const satisfies readonly RefinementOption<Stage2ProductCategory>[]
 
+/**
+ * The order the Produkte page lists the categories in: the wash-day order of a routine, from
+ * cleansing to finishing. Display only — the stored `currentProductCategories` stays in
+ * `STAGE2_PRODUCT_CATEGORIES` order (the path validates that), and so does the option list above.
+ */
+export const REFINEMENT_CATEGORY_DISPLAY_ORDER = [
+  "shampoo",
+  "deep_cleansing_shampoo",
+  "scalp_care",
+  "conditioner",
+  "mask",
+  "bondbuilder",
+  "leave_in",
+  "heat_protectant",
+  "oil",
+  "dry_shampoo",
+] as const satisfies readonly Stage2ProductCategory[]
+
+export const REFINEMENT_CATEGORY_DISPLAY_OPTIONS = REFINEMENT_CATEGORY_DISPLAY_ORDER.map(
+  (value) => REFINEMENT_CATEGORY_OPTIONS.find((option) => option.value === value)!,
+)
+
 export const WET_WASH_FREQUENCY_OPTIONS = [
   ...PRODUCT_FREQUENCIES.map((value) => ({
     value: value as ProductFrequency,
@@ -241,12 +263,14 @@ export const TOOLS_DRYING_ROUTE_OPTIONS = [
   { value: "air_dry", label: "Lufttrocknen", icon: "drying-air" },
   {
     value: "ordinary_blow_dry",
-    label: "Gewöhnlich föhnen / auch mit Rundbürste",
+    label: "Gewöhnlich föhnen",
+    description: "auch mit Rundbürste",
     icon: "drying-blow",
   },
   {
     value: "diffuser_or_airflow_shaping",
-    label: "Mit Diffusor / Aufsatz für Locken/Wellen",
+    label: "Mit Diffusor",
+    description: "Aufsatz für Locken/Wellen",
     icon: "drying-diffuser",
   },
 ] as const satisfies readonly RefinementOption<DryingRoute>[]

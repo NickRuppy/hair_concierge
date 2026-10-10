@@ -302,13 +302,13 @@ test.describe.serial("@ci Profile page smoke", () => {
     const heatFrequencyCard = page
       .locator("#profile-section-styling")
       .locator("div")
-      .filter({ hasText: /^Styling-Frequenz/ })
+      .filter({ hasText: /^Hitze-Häufigkeit/ })
       .filter({ hasText: "1x pro Woche" })
     await expect(heatFrequencyCard.last()).toBeVisible()
     await expect(
       page
         .getByRole("button")
-        .filter({ hasText: "Styling-Frequenz" })
+        .filter({ hasText: "Hitze-Häufigkeit" })
         .filter({ hasText: "1x pro Woche" }),
     ).toHaveCount(0)
 

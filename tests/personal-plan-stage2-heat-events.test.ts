@@ -5,6 +5,7 @@ import {
   createStage2HeatEventId,
   getStage2HeatEventDefinition,
   getSelectedStage2HeatEventSources,
+  ignoresStoredStage2HeatProtection,
   projectStage2HeatEvents,
   requiresStage2HeatProtection,
 } from "../src/lib/personal-plan/refinement/heat-events"
@@ -32,6 +33,9 @@ test("all sources have the approved event mapping and source-order projection", 
   })
   assert.equal(requiresStage2HeatProtection("ordinary_blow_dry"), false)
   assert.equal(requiresStage2HeatProtection("straightener"), true)
+  // Without the Diffusor rule (rollout off) the diffuser source keeps today's contract.
+  assert.equal(requiresStage2HeatProtection("diffuser_airflow_shaping"), true)
+  assert.equal(ignoresStoredStage2HeatProtection("diffuser_airflow_shaping"), false)
 
   const events = projectStage2HeatEvents({
     dryingRoutes: ["ordinary_blow_dry", "diffuser_or_airflow_shaping"],
@@ -159,5 +163,84 @@ test("projection rejects missing protection and protection on ordinary airflow",
         },
       },
     }),
+  )
+})
+
+const DIFFUSER_AS_BLOW_DRY = { diffuserAsBlowDry: true } as const
+
+test("Diffusor rule: the diffuser source is plain blow-drying — no protection question, ordinary airflow", () => {
+  assert.equal(
+    requiresStage2HeatProtection("diffuser_airflow_shaping", DIFFUSER_AS_BLOW_DRY),
+    false,
+  )
+  assert.equal(
+    ignoresStoredStage2HeatProtection("diffuser_airflow_shaping", DIFFUSER_AS_BLOW_DRY),
+    true,
+  )
+  assert.equal(ignoresStoredStage2HeatProtection("straightener", DIFFUSER_AS_BLOW_DRY), false)
+  assert.equal(requiresStage2HeatProtection("straightener", DIFFUSER_AS_BLOW_DRY), true)
+  assert.equal(requiresStage2HeatProtection("dryer_brush", DIFFUSER_AS_BLOW_DRY), true)
+  assert.deepEqual(getStage2HeatEventDefinition("diffuser_airflow_shaping", DIFFUSER_AS_BLOW_DRY), {
+    tool: "hair_dryer",
+    route: "ordinary_airflow",
+  })
+  // Every other source keeps its mapping under the rule.
+  assert.deepEqual(getStage2HeatEventDefinition("dryer_brush", DIFFUSER_AS_BLOW_DRY), {
+    tool: "dryer_brush",
+    route: "airflow_shaping",
+  })
+})
+
+test("Diffusor rule: the source projects without protection and ignores a stored value", () => {
+  const [withoutValue] = projectStage2HeatEvents(
+    {
+      dryingRoutes: ["diffuser_or_airflow_shaping"],
+      heatEvents: { "heat:diffuser_airflow_shaping": { frequency: "weekly_1x" } },
+    },
+    DIFFUSER_AS_BLOW_DRY,
+  )
+  assert.equal(withoutValue.protectionConsistency, undefined)
+  assert.equal(withoutValue.route, "ordinary_airflow")
+
+  // Four production members hold a value stored while the question was still asked.
+  const [legacy] = projectStage2HeatEvents(
+    {
+      dryingRoutes: ["diffuser_or_airflow_shaping"],
+      heatEvents: {
+        "heat:diffuser_airflow_shaping": { frequency: "weekly_1x", protectionConsistency: "no" },
+      },
+    },
+    DIFFUSER_AS_BLOW_DRY,
+  )
+  assert.equal(legacy.protectionConsistency, undefined, "the stored value is ignored, not read")
+  assert.equal(legacy.frequency, "weekly_1x")
+})
+
+test("Diffusor rule off: the diffuser source still needs its protection answer and keeps its route", () => {
+  assert.throws(() =>
+    projectStage2HeatEvents({
+      dryingRoutes: ["diffuser_or_airflow_shaping"],
+      heatEvents: { "heat:diffuser_airflow_shaping": { frequency: "weekly_1x" } },
+    }),
+  )
+  const [event] = projectStage2HeatEvents({
+    dryingRoutes: ["diffuser_or_airflow_shaping"],
+    heatEvents: {
+      "heat:diffuser_airflow_shaping": { frequency: "weekly_1x", protectionConsistency: "always" },
+    },
+  })
+  assert.equal(event.route, "airflow_shaping")
+  assert.equal(event.protectionConsistency, "always")
+})
+
+test("Diffusor rule: other sources still reject a missing protection answer", () => {
+  assert.throws(() =>
+    projectStage2HeatEvents(
+      {
+        additionalHeatTools: ["dryer_brush"],
+        heatEvents: { "heat:dryer_brush": { frequency: "weekly_1x" } },
+      },
+      DIFFUSER_AS_BLOW_DRY,
+    ),
   )
 })

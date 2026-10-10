@@ -43,14 +43,49 @@ export function getSelectedStage2HeatEventSources(
   })
 }
 
+/**
+ * The Diffusor rule (Hair Tools): a Diffusor is plain blow-drying. It opens no heat-protection
+ * question and sits at the ordinary-airflow route (tier `not_needed`), because no study measured a
+ * diffuser as harsher than a nozzle and none tested a protectant under blow-drying
+ * (`plans/2026-10-09-hair-tools-port-evidence-blowdry-heat.md`).
+ *
+ * Readers opt in: the member plan passes `diffuserAsBlowDry` with the tools rollout, the Beratung
+ * intake always. Without the option the source keeps today's contract, so a rollout-off member is
+ * unchanged. A stored `protectionConsistency` on this source is never an error under either
+ * setting — it is simply not read once the rule is on.
+ */
+export type Stage2HeatRuleOptions = { diffuserAsBlowDry?: boolean }
+
+/** The rule options a member's trigger context selects (the tools rollout). */
+export function stage2HeatRuleOptions(triggerContext?: {
+  toolsEnabled?: boolean
+}): Stage2HeatRuleOptions {
+  return { diffuserAsBlowDry: triggerContext?.toolsEnabled === true }
+}
+
 export function getStage2HeatEventDefinition(
   source: Stage2HeatEventSource,
+  options?: Stage2HeatRuleOptions,
 ): Stage2HeatEventDefinition {
+  if (source === "diffuser_airflow_shaping" && options?.diffuserAsBlowDry === true) {
+    return { tool: "hair_dryer", route: "ordinary_airflow" }
+  }
   return STAGE2_HEAT_EVENT_DEFINITIONS[source]
 }
 
-export function requiresStage2HeatProtection(source: Stage2HeatEventSource): boolean {
-  return getStage2HeatEventDefinition(source).route !== "ordinary_airflow"
+export function requiresStage2HeatProtection(
+  source: Stage2HeatEventSource,
+  options?: Stage2HeatRuleOptions,
+): boolean {
+  return getStage2HeatEventDefinition(source, options).route !== "ordinary_airflow"
+}
+
+/** Whether a stored `protectionConsistency` for this source is noise under the Diffusor rule. */
+export function ignoresStoredStage2HeatProtection(
+  source: Stage2HeatEventSource,
+  options?: Stage2HeatRuleOptions,
+): boolean {
+  return source === "diffuser_airflow_shaping" && options?.diffuserAsBlowDry === true
 }
 
 export type ProjectedStage2HeatEvent = {
@@ -64,6 +99,7 @@ export type ProjectedStage2HeatEvent = {
 
 export function projectStage2HeatEvents(
   answers: PersonalPlanRefinementAnswersV1,
+  options?: Stage2HeatRuleOptions,
 ): ProjectedStage2HeatEvent[] {
   return getSelectedStage2HeatEventSources(answers).map((source) => {
     const id = createStage2HeatEventId(source)
@@ -71,15 +107,26 @@ export function projectStage2HeatEvents(
     if (!answer || !PRODUCT_FREQUENCIES.includes(answer.frequency)) {
       throw new Error(`Incomplete heat event: ${id}`)
     }
+    const requiresProtection = requiresStage2HeatProtection(source, options)
     if (
-      requiresStage2HeatProtection(source) &&
+      requiresProtection &&
       !HEAT_PROTECTION_CONSISTENCIES.includes(answer.protectionConsistency as never)
     ) {
       throw new Error(`Incomplete heat event: ${id}`)
     }
-    if (!requiresStage2HeatProtection(source) && answer.protectionConsistency !== undefined) {
+    const ignoresStored = ignoresStoredStage2HeatProtection(source, options)
+    if (!requiresProtection && answer.protectionConsistency !== undefined && !ignoresStored) {
       throw new Error(`Ordinary airflow cannot have heat protection consistency: ${id}`)
     }
-    return { id, source, ...getStage2HeatEventDefinition(source), ...answer }
+    // Under the Diffusor rule a value stored while the question was still asked is dropped here,
+    // never read on.
+    const { protectionConsistency, ...event } = answer
+    return {
+      id,
+      source,
+      ...getStage2HeatEventDefinition(source, options),
+      ...event,
+      ...(!ignoresStored && protectionConsistency !== undefined ? { protectionConsistency } : {}),
+    }
   })
 }

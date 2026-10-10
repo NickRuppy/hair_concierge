@@ -26,7 +26,7 @@ import type {
 const PLAN_DRYING_ROUTE_LABELS: Record<DryingRoute, string> = {
   air_dry: "Lufttrocknen",
   ordinary_blow_dry: "Gewöhnlich föhnen",
-  diffuser_or_airflow_shaping: "Diffusor oder formender Luftstrom",
+  diffuser_or_airflow_shaping: "Mit Diffusor",
 }
 
 const PLAN_HEAT_TOOL_LABELS: Record<AdditionalHeatTool, string> = {
@@ -326,7 +326,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   },
   {
     key: "heat_styling",
-    label: "Styling-Frequenz",
+    label: "Hitze-Häufigkeit",
     sectionKey: "styling",
     editTarget: { kind: "refine", module: "habits" },
     getValue: (profile) => optionLabel(profile?.heat_styling, HEAT_STYLING_OPTIONS),
@@ -348,14 +348,14 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   },
   {
     key: "towel_technique",
-    label: "Trocknungstechnik",
+    label: "Abtrocknen",
     sectionKey: "routine",
     editTarget: { kind: "refine", module: "habits" },
     getValue: (profile, plan) => resolveTowelSource(profile, plan).technique,
   },
   {
     key: "drying_method",
-    label: "Trocknungsmethode",
+    label: "Trocknen",
     sectionKey: "routine",
     editTarget: { kind: "refine", module: "habits" },
     getValue: (profile, plan) => {

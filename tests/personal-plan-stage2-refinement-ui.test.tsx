@@ -6,6 +6,7 @@ import React from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 
 import {
+  REFINEMENT_CATEGORY_DISPLAY_OPTIONS,
   REFINEMENT_CATEGORY_OPTIONS,
   REFINEMENT_TELEMETRY_EVENTS,
   RefinementQuestion,
@@ -1132,12 +1133,18 @@ test("rollout on: the towel question asks only the technique once the textiles p
 })
 
 test('rollout on: the drying page offers only the routes the owned airflow tools back, without „Nichts davon"', () => {
+  // Label and subtitle are separate lines of one card.
+  const OPTION_COPY = [
+    { label: "Lufttrocknen", subtitle: null },
+    { label: "Gewöhnlich föhnen", subtitle: "auch mit Rundbürste" },
+    { label: "Mit Diffusor", subtitle: "Aufsatz für Locken/Wellen" },
+  ] as const
   const optionLabels = (html: string) =>
-    [
-      "Lufttrocknen",
-      "Gewöhnlich föhnen / auch mit Rundbürste",
-      "Mit Diffusor / Aufsatz für Locken/Wellen",
-    ].filter((label) => html.includes(label))
+    OPTION_COPY.filter(({ label, subtitle }) => {
+      if (!html.includes(`>${label}<`)) return false
+      if (subtitle) assert.ok(html.includes(`>${subtitle}<`), `${label} lost its subtitle`)
+      return true
+    }).map(({ label }) => label)
   const base = {
     toolFamiliesWithSomething: ["airflow" as const],
   }
@@ -1156,21 +1163,26 @@ test('rollout on: the drying page offers only the routes the owned airflow tools
   ])
   assert.deepEqual(
     optionLabels(renderQuestion(dryer, "drying_routes", { localAnswer: undefined })),
-    ["Lufttrocknen", "Gewöhnlich föhnen / auch mit Rundbürste"],
+    ["Lufttrocknen", "Gewöhnlich föhnen"],
   )
 
   const diffuser = toolsSession(
     { ...base, toolForms: { "airflow:1": ["hair_dryer", "diffuser"] } },
     [...PRODUCTS_DONE_IDS, "tools_overview", "tools:airflow:1"],
   )
-  assert.deepEqual(
-    optionLabels(renderQuestion(diffuser, "drying_routes", { localAnswer: undefined })),
-    [
-      "Lufttrocknen",
-      "Gewöhnlich föhnen / auch mit Rundbürste",
-      "Mit Diffusor / Aufsatz für Locken/Wellen",
-    ],
-  )
+  const diffuserHtml = renderQuestion(diffuser, "drying_routes", { localAnswer: undefined })
+  assert.deepEqual(optionLabels(diffuserHtml), [
+    "Lufttrocknen",
+    "Gewöhnlich föhnen",
+    "Mit Diffusor",
+  ])
+  for (const retired of [
+    "Diffusor oder formender Luftstrom",
+    "Gewöhnlich föhnen / auch mit Rundbürste",
+    "Mit Diffusor / Aufsatz für Locken/Wellen",
+  ]) {
+    assert.ok(!diffuserHtml.includes(retired), retired)
+  }
 
   // Rollout off: today's page, with „Nichts davon" and the old labels.
   const off = createStage2RefinementSession({
@@ -1180,6 +1192,126 @@ test('rollout on: the drying page offers only the routes the owned airflow tools
   const offHtml = renderQuestion(off, "drying_routes", { localAnswer: undefined })
   assert.match(offHtml, /data-refinement-none-option/)
   assert.match(offHtml, /Diffusor oder formender Luftstrom/)
+})
+
+test("Diffusor rule: with the rollout on the Diffusor question asks only „Wie häufig?“, no protection block", () => {
+  const diffuserAnswers = {
+    toolFamiliesWithSomething: ["airflow" as const],
+    toolForms: { "airflow:1": ["hair_dryer", "diffuser"] },
+    dryingRoutes: ["diffuser_or_airflow_shaping" as const],
+  } as PersonalPlanRefinementAnswersV1
+  const session = toolsSession(diffuserAnswers, [
+    ...PRODUCTS_DONE_IDS,
+    "tools_overview",
+    "tools:airflow:1",
+    "drying_routes",
+  ])
+  const html = renderQuestion(session, "heat:diffuser_airflow_shaping", {
+    localAnswer: { frequency: "weekly_2x" },
+  })
+  assert.match(html, /Wie häufig\?/)
+  assert.doesNotMatch(html, /Wie konsequent nutzt du dabei Hitzeschutz\?/)
+  assert.doesNotMatch(html, /und ob du dabei Hitzeschutz verwendest/)
+  assert.match(html, /Gib deinen üblichen Rhythmus an\./)
+
+  // A Warmluftbürste next to it keeps its protection block.
+  const dryerBrushHtml = renderQuestion(session, "heat:dryer_brush", {
+    localAnswer: { frequency: "weekly_2x" },
+  })
+  assert.match(dryerBrushHtml, /Wie konsequent nutzt du dabei Hitzeschutz\?/)
+
+  // Rollout off: today's Diffusor question, protection included.
+  const off = createStage2RefinementSession({
+    pathVersion: "stage2-ui-test",
+    triggerContext: baseTriggerContext,
+  })
+  const offHtml = renderQuestion(off, "heat:diffuser_airflow_shaping", {
+    localAnswer: { frequency: "weekly_2x" },
+  })
+  assert.match(offHtml, /Wie konsequent nutzt du dabei Hitzeschutz\?/)
+})
+
+test("Diffusor rule: a Diffusor answer is complete with a frequency alone only under the rollout", () => {
+  const frequencyOnly = { frequency: "weekly_2x" }
+  assert.equal(
+    isLocalAnswerComplete("heat:diffuser_airflow_shaping", frequencyOnly, { toolsEnabled: true }),
+    true,
+  )
+  assert.equal(isLocalAnswerComplete("heat:diffuser_airflow_shaping", frequencyOnly), false)
+  assert.equal(
+    isLocalAnswerComplete("heat:dryer_brush", frequencyOnly, { toolsEnabled: true }),
+    false,
+  )
+  assert.equal(
+    isLocalAnswerComplete("heat:diffuser_airflow_shaping", {}, { toolsEnabled: true }),
+    false,
+  )
+})
+
+test("the Produkte page lists categories in the display order; the stored order stays canonical", () => {
+  assert.deepEqual(
+    REFINEMENT_CATEGORY_DISPLAY_OPTIONS.map((option) => option.value),
+    [
+      "shampoo",
+      "deep_cleansing_shampoo",
+      "scalp_care",
+      "conditioner",
+      "mask",
+      "bondbuilder",
+      "leave_in",
+      "heat_protectant",
+      "oil",
+      "dry_shampoo",
+    ],
+  )
+  assert.deepEqual(
+    [...REFINEMENT_CATEGORY_DISPLAY_OPTIONS.map((option) => option.value)].sort(),
+    [...STAGE2_PRODUCT_CATEGORIES].sort(),
+  )
+  const labelOrder = (html: string, labels: string[]) =>
+    labels
+      .map((label) => ({ label, at: html.indexOf(`>${label}<`) }))
+      .filter(({ at }) => at >= 0)
+      .sort((a, b) => a.at - b.at)
+      .map(({ label }) => label)
+  const session = createStage2RefinementSession({
+    pathVersion: "stage2-ui-test",
+    triggerContext: { ...baseTriggerContext, relevantCategories: [] },
+  })
+  const html = renderQuestion(session, "current_product_categories", { localAnswer: undefined })
+  assert.deepEqual(
+    labelOrder(
+      html,
+      REFINEMENT_CATEGORY_DISPLAY_OPTIONS.map((option) => option.label),
+    ),
+    REFINEMENT_CATEGORY_DISPLAY_OPTIONS.map((option) => option.label),
+  )
+  // With a relevant group the plan's categories come first, each group in display order.
+  const grouped = createStage2RefinementSession({
+    pathVersion: "stage2-ui-test",
+    triggerContext: baseTriggerContext, // shampoo, mask, heat_protectant
+  })
+  const groupedHtml = renderQuestion(grouped, "current_product_categories", {
+    localAnswer: undefined,
+  })
+  assert.deepEqual(
+    labelOrder(
+      groupedHtml,
+      REFINEMENT_CATEGORY_DISPLAY_OPTIONS.map((option) => option.label),
+    ),
+    [
+      "Shampoo",
+      "Maske",
+      "Hitzeschutz",
+      "Tiefenreinigungsshampoo",
+      "Kopfhautpflege",
+      "Conditioner",
+      "Bondbuilder",
+      "Leave-in",
+      "Öl",
+      "Trockenshampoo",
+    ],
+  )
 })
 
 test("tool questions report one bounded telemetry family and the tools section", () => {

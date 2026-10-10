@@ -318,3 +318,28 @@ test("a row without facts shows its converted columns in the quiz's wording", ()
 test("the problems field carries the quiz's question as its title", () => {
   assert.equal(field("concerns").label, "Was beschäftigt dich gerade?")
 })
+
+test("the Gewohnheiten rows are named for what they ask", () => {
+  const label = (key: string) => PROFILE_FIELD_CONFIG.find((field) => field.key === key)?.label
+  assert.equal(label("towel_technique"), "Abtrocknen")
+  assert.equal(label("drying_method"), "Trocknen")
+  assert.equal(label("heat_styling"), "Hitze-Häufigkeit")
+  assert.equal(label("uses_heat_protection"), "Hitzeschutz")
+})
+
+test("the plan's drying routes read with the drying page's wording, never the old Diffusor label", () => {
+  const dryingMethod = PROFILE_FIELD_CONFIG.find((field) => field.key === "drying_method")
+  assert.ok(dryingMethod)
+  assert.equal(
+    dryingMethod.getValue(null, {
+      dryingRoutes: ["air_dry", "ordinary_blow_dry", "diffuser_or_airflow_shaping"],
+    }),
+    "Lufttrocknen, Gewöhnlich föhnen, Mit Diffusor",
+  )
+  for (const field of PROFILE_FIELD_CONFIG) {
+    const shown = JSON.stringify(
+      field.getValue(null, { dryingRoutes: ["diffuser_or_airflow_shaping"] }),
+    )
+    assert.ok(!shown.includes("formender Luftstrom"), shown)
+  }
+})

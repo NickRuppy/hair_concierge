@@ -9,7 +9,10 @@ import {
 } from "@/components/personal-plan-journey"
 import { Button } from "@/components/ui/button"
 import { InfoTip } from "@/components/ui/info-tip"
-import { requiresStage2HeatProtection } from "@/lib/personal-plan/refinement/heat-events"
+import {
+  requiresStage2HeatProtection,
+  stage2HeatRuleOptions,
+} from "@/lib/personal-plan/refinement/heat-events"
 import {
   getStage2DryingRouteOptions,
   getStage2QuestionModule,
@@ -55,6 +58,7 @@ import {
   HEAT_PROTECTION_OPTIONS,
   NIGHT_PROTECTION_OPTIONS,
   OIL_PURPOSE_OPTIONS,
+  REFINEMENT_CATEGORY_DISPLAY_OPTIONS,
   REFINEMENT_CATEGORY_OPTIONS,
   REFINEMENT_TELEMETRY_EVENTS,
   ROOT_COLOR_OPTIONS,
@@ -68,7 +72,11 @@ import {
   mergeGroupedCategorySelection,
 } from "./refinement-options"
 
-export { REFINEMENT_CATEGORY_OPTIONS, REFINEMENT_TELEMETRY_EVENTS }
+export {
+  REFINEMENT_CATEGORY_DISPLAY_OPTIONS,
+  REFINEMENT_CATEGORY_OPTIONS,
+  REFINEMENT_TELEMETRY_EVENTS,
+}
 
 export type RefinementQuestionStatus =
   | "idle"
@@ -180,8 +188,11 @@ export function isLocalAnswerComplete(
   if (questionId.startsWith("heat:")) {
     const source = questionId.slice("heat:".length) as Stage2HeatEventSource
     const heatAnswer = answer as HeatEventAnswer | undefined
+    const rule = stage2HeatRuleOptions({ toolsEnabled: options.toolsEnabled })
     if (!heatAnswer?.frequency) return false
-    return requiresStage2HeatProtection(source) ? Boolean(heatAnswer.protectionConsistency) : true
+    return requiresStage2HeatProtection(source, rule)
+      ? Boolean(heatAnswer.protectionConsistency)
+      : true
   }
   // Tool pages: an explicit `[]` („Nichts davon") is a complete answer; `undefined` is not.
   if (Array.isArray(answer)) {
@@ -403,10 +414,15 @@ function renderQuestionBody({
   if (questionId.startsWith("heat:")) {
     const source = questionId.slice("heat:".length) as Stage2HeatEventSource
     const heatAnswer = (answer ?? {}) as HeatEventAnswer
+    // The Diffusor rule: with the tools rollout on a Diffusor is plain blow-drying.
+    const asksProtection = requiresStage2HeatProtection(
+      source,
+      stage2HeatRuleOptions(session.triggerContext),
+    )
     return {
       sectionLabel,
       title: `Wie oft nutzt du ${HEAT_SOURCE_TITLES[source]}?`,
-      lead: requiresStage2HeatProtection(source)
+      lead: asksProtection
         ? "Gib deinen üblichen Rhythmus an und ob du dabei Hitzeschutz verwendest."
         : "Gib deinen üblichen Rhythmus an.",
       body: (
@@ -429,7 +445,7 @@ function renderQuestionBody({
               }
             />
           </div>
-          {requiresStage2HeatProtection(source) ? (
+          {asksProtection ? (
             <div>
               <h3 className="mb-2 text-sm font-bold text-[var(--brand-plum-darkest,#2a1845)]">
                 Wie konsequent nutzt du dabei Hitzeschutz?
@@ -455,10 +471,10 @@ function renderQuestionBody({
     case "current_product_categories": {
       const selected = Array.isArray(answer) ? (answer as Stage2ProductCategory[]) : undefined
       const relevant = new Set(session.triggerContext.relevantCategories)
-      const relevantOptions = REFINEMENT_CATEGORY_OPTIONS.filter((option) =>
+      const relevantOptions = REFINEMENT_CATEGORY_DISPLAY_OPTIONS.filter((option) =>
         relevant.has(option.value),
       )
-      const remainingOptions = REFINEMENT_CATEGORY_OPTIONS.filter(
+      const remainingOptions = REFINEMENT_CATEGORY_DISPLAY_OPTIONS.filter(
         (option) => !relevant.has(option.value),
       )
       const selectedValues = selected ?? []

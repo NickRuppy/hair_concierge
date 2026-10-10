@@ -175,6 +175,24 @@ test("no heat-protection assumption ever claims the user protects or skips prote
   for (const consistency of assumedConsistencies) assert.equal(consistency, "unsure")
 })
 
+test("Diffusor rule: with the tools rollout on the Diffusor event is assumed with a frequency only", () => {
+  const answers = {
+    dryingRoutes: ["diffuser_or_airflow_shaping"],
+    additionalHeatTools: ["straightener"],
+  } as PersonalPlanRefinementAnswersV1
+  const on = resolve(triggerContext({ toolsEnabled: true }), answers)
+  assert.deepEqual(on.answers.heatEvents?.["heat:diffuser_airflow_shaping"], {
+    frequency: "less_than_monthly",
+  })
+  assert.equal(on.answers.heatEvents?.["heat:straightener"]?.protectionConsistency, "unsure")
+  // Rollout off keeps today's assumption, protection included.
+  const off = resolve(triggerContext(), answers)
+  assert.deepEqual(off.answers.heatEvents?.["heat:diffuser_airflow_shaping"], {
+    frequency: "less_than_monthly",
+    protectionConsistency: "unsure",
+  })
+})
+
 test("rule assume:night_protection:none assumes no special night protection", () => {
   const resolution = resolve(triggerContext())
   assert.deepEqual(resolution.answers.nightProtection, [])
