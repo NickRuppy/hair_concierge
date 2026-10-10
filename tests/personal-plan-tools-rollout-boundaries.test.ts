@@ -259,6 +259,7 @@ test("stage-2/complete route builds its gateway with the server flag", async () 
         complete: async () => ({ refinedVersionId: "refined-1", nextHref: "/plan-start" }),
       } as never
     },
+    runHabitsRecompute: async () => null,
   })
   const response = await post(
     new Request("http://test/api/personal-plan/stage-2/complete", {

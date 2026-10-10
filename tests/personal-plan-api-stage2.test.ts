@@ -57,7 +57,7 @@ function deps(overrides: Partial<Stage2RouteDeps> = {}): Stage2RouteDeps {
 
 function moduleCompletionResult(
   overrides: Partial<{
-    module: "products" | "habits"
+    module: "products" | "tools" | "habits"
     refinedVersionId: string
     status: "in_progress" | "complete"
     stage3Handoff: boolean
@@ -80,6 +80,7 @@ function completeDeps(overrides: Partial<Stage2CompleteRouteDeps> = {}): Stage2C
     loadStage2Access: async () => stage2Access,
     toolsEnabled: async () => false,
     gatewayFor: () => gateway(),
+    runHabitsRecompute: async () => null,
     ...overrides,
   }
 }
@@ -775,6 +776,206 @@ test("Stage 2 completion is a separate strict POST with owner-derived success, c
   }
 })
 
+// ---------------------------------------------------------------------------
+// Replay-safe module completion: `POST stage-2/complete {module, expectedRevision}` runs the
+// SAME lane as the PATCH `completeModuleAfterSave` block, so a failed or lost completion can be
+// retried without saving the answer again.
+// ---------------------------------------------------------------------------
+
+function completePost(body: unknown) {
+  return new Request("http://test/api/personal-plan/stage-2/complete", {
+    method: "POST",
+    body: JSON.stringify(body),
+  })
+}
+
+test("POST complete with a module completes exactly that module and never the terminal draft", async () => {
+  const calls: string[] = []
+  const moduleCompletion = moduleCompletionResult({
+    module: "tools",
+    refinedVersionId: "refined-tools-1",
+  })
+  const recomputeCalls: string[] = []
+  const response = await createStage2CompleteRouteHandler(
+    completeDeps({
+      gatewayFor: () =>
+        gateway({
+          complete: async () => {
+            calls.push("complete")
+            return { refinedVersionId: "refined-1", nextHref: "/plan-start" }
+          },
+          completeModule: async ({ module: stage2Module, expectedRevision }) => {
+            calls.push(`completeModule:${stage2Module}:${expectedRevision}`)
+            return moduleCompletion
+          },
+        }),
+      runHabitsRecompute: async ({ refinedVersionId }) => {
+        recomputeCalls.push(refinedVersionId)
+        return { status: "applied", routineVersionId: "routine-2" } satisfies Stage3RecomputeResult
+      },
+    }),
+  )(completePost({ module: "tools", expectedRevision: 7 }))
+
+  assert.deepEqual(calls, ["completeModule:tools:7"])
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), moduleCompletion, "tools completion has no recompute")
+  assert.deepEqual(recomputeCalls, [], "only habits completion runs the recompute lane")
+  assert.equal(response.headers.get("Cache-Control"), "no-store")
+})
+
+test("POST complete without a module stays the terminal completion", async () => {
+  const calls: string[] = []
+  const response = await createStage2CompleteRouteHandler(
+    completeDeps({
+      gatewayFor: () =>
+        gateway({
+          complete: async ({ expectedRevision }) => {
+            calls.push(`complete:${expectedRevision}`)
+            return { refinedVersionId: "refined-1", nextHref: "/plan-start" }
+          },
+          completeModule: async () => {
+            calls.push("completeModule")
+            return moduleCompletionResult()
+          },
+        }),
+    }),
+  )(completePost({ expectedRevision: 3 }))
+  assert.deepEqual(calls, ["complete:3"])
+  assert.equal(response.status, 200)
+})
+
+test("POST complete for habits runs the facts rebase and the recompute lane like the PATCH route", async () => {
+  const moduleCompletion = moduleCompletionResult({ status: "in_progress" })
+  const recomputeCalls: Array<{ userId: string; refinedVersionId: string }> = []
+  const response = await createStage2CompleteRouteHandler(
+    completeDeps({
+      gatewayFor: () => gateway({ completeModule: async () => moduleCompletion }),
+      syncPlanWithFacts: async () =>
+        ({
+          status: "rebased",
+          refinedVersionId: "refined-rebased-1",
+        }) as SyncPlanWithFactsResult,
+      runHabitsRecompute: async (input) => {
+        recomputeCalls.push(input)
+        return { status: "applied", routineVersionId: "routine-2" } satisfies Stage3RecomputeResult
+      },
+    }),
+  )(completePost({ module: "habits", expectedRevision: 4 }))
+
+  assert.deepEqual(recomputeCalls, [{ userId: "owner-1", refinedVersionId: "refined-rebased-1" }])
+  assert.deepEqual(await response.json(), {
+    ...moduleCompletion,
+    recompute: { outcome: "applied" },
+  })
+})
+
+test("a failed PATCH completion is retried through POST complete without saving the answer again", async () => {
+  const savedSession = { ...session, revision: 5 }
+  const moduleCompletion = moduleCompletionResult({ module: "tools" })
+  let saves = 0
+  let attempts = 0
+  const gatewayFactory = () =>
+    gateway({
+      saveAnswer: async () => {
+        saves += 1
+        return savedSession
+      },
+      completeModule: async ({ expectedRevision }) => {
+        attempts += 1
+        assert.equal(expectedRevision, 5)
+        if (attempts === 1) throw new Stage2RefinementError("temporarily_unavailable")
+        return moduleCompletion
+      },
+    })
+
+  const patch = await createStage2RouteHandlers(deps({ gatewayFor: gatewayFactory })).PATCH(
+    new Request("http://test/api/personal-plan/stage-2", {
+      method: "PATCH",
+      body: JSON.stringify({
+        questionId: "tools:night_protection:1",
+        answer: [],
+        expectedRevision: 4,
+        completeModuleAfterSave: "tools",
+      }),
+    }),
+  )
+  assert.equal(patch.status, 503)
+  const failed = (await patch.json()) as { savedSession: { revision: number } }
+  assert.equal(failed.savedSession.revision, 5)
+
+  const retry = await createStage2CompleteRouteHandler(
+    completeDeps({ gatewayFor: gatewayFactory }),
+  )(completePost({ module: "tools", expectedRevision: failed.savedSession.revision }))
+  assert.equal(retry.status, 200)
+  assert.deepEqual(await retry.json(), moduleCompletion)
+  assert.equal(saves, 1, "the retry never saves the answer again")
+  assert.equal(attempts, 2)
+})
+
+test("a response lost after the commit replays the stored module result on the identical retry", async () => {
+  const stored = moduleCompletionResult({ module: "tools", refinedVersionId: "refined-9" })
+  let commits = 0
+  const committed = new Map<number, typeof stored>()
+  const handler = createStage2CompleteRouteHandler(
+    completeDeps({
+      gatewayFor: () =>
+        gateway({
+          // A replay-safe gateway: the second identical call answers from the stored result.
+          completeModule: async ({ expectedRevision }) => {
+            const existing = committed.get(expectedRevision)
+            if (existing) return existing
+            commits += 1
+            committed.set(expectedRevision, stored)
+            return stored
+          },
+        }),
+    }),
+  )
+  const first = await handler(completePost({ module: "tools", expectedRevision: 6 }))
+  const replay = await handler(completePost({ module: "tools", expectedRevision: 6 }))
+  assert.deepEqual(await first.json(), stored)
+  assert.deepEqual(await replay.json(), stored)
+  assert.equal(commits, 1)
+})
+
+test("POST complete rejects an unknown module, a forged field and a gateway that cannot complete modules", async () => {
+  const handler = createStage2CompleteRouteHandler(completeDeps())
+  for (const body of [
+    { module: "colour", expectedRevision: 0 },
+    { module: "tools", expectedRevision: 0, draftId: "forged" },
+    { module: "tools" },
+  ]) {
+    const response = await handler(completePost(body))
+    assert.deepEqual([response.status, await response.json()], [400, { error: "invalid_request" }])
+  }
+  // `gateway()` has no completeModule (fixture gateways do not implement it).
+  const response = await handler(completePost({ module: "tools", expectedRevision: 0 }))
+  assert.deepEqual(
+    [response.status, await response.json()],
+    [503, { error: "temporarily_unavailable" }],
+  )
+})
+
+test("POST complete with a module maps gateway errors like the terminal completion", async () => {
+  for (const [code, status] of [
+    ["incomplete_refinement", 422],
+    ["revision_conflict", 409],
+    ["temporarily_unavailable", 503],
+  ] as const) {
+    const response = await createStage2CompleteRouteHandler(
+      completeDeps({
+        gatewayFor: () =>
+          gateway({
+            completeModule: async () => {
+              throw new Stage2RefinementError(code)
+            },
+          }),
+      }),
+    )(completePost({ module: "tools", expectedRevision: 0 }))
+    assert.deepEqual([response.status, await response.json()], [status, { error: code }])
+  }
+})
+
 /**
  * Fix round 1, I1: every production `gatewayFor` that can reach `complete()` or
  * `completeModule()` must wire the facts writer — otherwise the shared service throws
@@ -807,6 +1008,19 @@ test("both stage-2 routes construct their gateway with the facts writer (admin w
     gatewayWiredWithAdmin,
     "stage-2/complete/route.ts must wire admin into createPersistedStage2RefinementGateway",
   )
+})
+
+test("both stage-2 routes wire the habits facts-sync and recompute lane into the shared module completion", async () => {
+  const { readFile } = await import("node:fs/promises")
+  for (const path of [
+    "../src/app/api/personal-plan/stage-2/route.ts",
+    "../src/app/api/personal-plan/stage-2/complete/route.ts",
+  ]) {
+    const source = await readFile(new URL(path, import.meta.url), "utf8")
+    assert.match(source, /completeStage2ModuleWithLane\(/, `${path} must use the shared lane`)
+    assert.match(source, /runHabitsRecompute: runProductionHabitsRecompute/, path)
+    assert.match(source, /syncPlanWithFacts: /, path)
+  }
 })
 
 // ---------------------------------------------------------------------------

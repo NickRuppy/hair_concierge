@@ -911,3 +911,168 @@ test("the facts write uses the injected now() for provenance.at", async () => {
   assert.equal(calls.length, 1)
   assert.equal(calls[0]!.provenance.at, "2026-09-16T08:00:00.000Z")
 })
+
+/**
+ * Replay-safe module completion (Hair Tools port, Task 5). A completing request whose response
+ * was lost (or whose client gave up) is retried through `POST stage-2/complete {module}`; the
+ * identical retry must answer from what the first call stored, never write the facts again and
+ * never turn into a `revision_conflict` — while every NON-replay call keeps the RPC lineage
+ * check exactly as it was.
+ */
+const BOTH_MODULES_SEED = {
+  answers: { ...PRODUCTS_ANSWERS, ...HABITS_ANSWERS },
+  completedQuestionIds: [...PRODUCTS_QUESTION_IDS, ...HABITS_QUESTION_IDS],
+  answerProvenance: userProvenance([...PRODUCTS_QUESTION_IDS, ...HABITS_QUESTION_IDS]),
+  revision: 6,
+}
+
+test("closing replay: a complete draft with the matching final revision returns the stored terminal handoff", async () => {
+  const db = createModuleRefinementDb(BOTH_MODULES_SEED)
+  const { saveFacts, calls } = createFakeSaveFacts({ order: db.order })
+
+  const original = await createService(db, saveFacts).completeModule({
+    module: "habits",
+    expectedRevision: 6,
+  })
+  assert.equal(original.status, "complete")
+  assert.equal(calls.length, 1)
+
+  // A fresh service, exactly as the retried request would build one.
+  const replay = await createService(db, saveFacts).completeModule({
+    module: "habits",
+    expectedRevision: 6,
+  })
+
+  assert.deepEqual(replay, original, "the replay returns the original terminal handoff")
+  assert.equal(replay.refinedVersionId, db.row.resultRefinedNeedVersionId)
+  assert.equal(calls.length, 1, "the closed draft's facts are never rewritten")
+  assert.equal(db.needVersions.length, 1, "no second refined version")
+  assert.equal(db.sourceChanges.length, 1)
+})
+
+test("closing replay: the stage3Handoff marker follows the module, not the caller", async () => {
+  const db = createModuleRefinementDb(BOTH_MODULES_SEED)
+  const original = await createService(db).completeModule({
+    module: "products",
+    expectedRevision: 6,
+  })
+  const replay = await createService(db).completeModule({ module: "products", expectedRevision: 6 })
+  assert.equal(original.stage3Handoff, true)
+  assert.deepEqual(replay, original)
+})
+
+test("closing replay: a complete draft with a DIFFERENT revision is still a revision conflict", async () => {
+  const db = createModuleRefinementDb(BOTH_MODULES_SEED)
+  const { saveFacts, calls } = createFakeSaveFacts()
+  await createService(db, saveFacts).completeModule({ module: "habits", expectedRevision: 6 })
+
+  await assert.rejects(
+    () => createService(db, saveFacts).completeModule({ module: "habits", expectedRevision: 5 }),
+    (error: unknown) =>
+      error instanceof Stage2RefinementError && error.code === "revision_conflict",
+  )
+  assert.equal(calls.length, 1)
+})
+
+test("closing replay: a complete draft whose path grew since is not replayed", async () => {
+  // Habits answers dropped from the completed set ⇒ the module is open again on a `complete`
+  // row (the path grew after the completion). A stored handoff must not claim it is done.
+  const db = createModuleRefinementDb(BOTH_MODULES_SEED)
+  await createService(db).completeModule({ module: "habits", expectedRevision: 6 })
+  db.row.completedQuestionIds = [...PRODUCTS_QUESTION_IDS]
+  db.row.answerProvenance = userProvenance(PRODUCTS_QUESTION_IDS)
+
+  await assert.rejects(
+    () => createService(db).completeModule({ module: "habits", expectedRevision: 6 }),
+    (error: unknown) =>
+      error instanceof Stage2RefinementError &&
+      (error.code === "incomplete_refinement" || error.code === "revision_conflict"),
+  )
+})
+
+test("non-closing replay never writes the care_habits facts a second time and returns the stored projection", async () => {
+  const db = createModuleRefinementDb({
+    answers: PRODUCTS_ANSWERS,
+    completedQuestionIds: PRODUCTS_QUESTION_IDS,
+    answerProvenance: userProvenance(PRODUCTS_QUESTION_IDS),
+    revision: 2,
+  })
+  const { saveFacts, calls } = createFakeSaveFacts({ order: db.order })
+
+  const first = await createService(db, saveFacts).completeModule({
+    module: "products",
+    expectedRevision: 2,
+  })
+  assert.equal(calls.length, 1)
+
+  // Retried by a fresh service (a new request), then again by the same one.
+  const retryService = createService(db, saveFacts)
+  const second = await retryService.completeModule({ module: "products", expectedRevision: 2 })
+  const third = await retryService.completeModule({ module: "products", expectedRevision: 2 })
+
+  assert.deepEqual(second, first)
+  assert.deepEqual(third, first)
+  assert.equal(calls.length, 1, "facts are written exactly once across the replays")
+  assert.equal(db.needVersions.length, 1, "a lost response must not write a second version")
+  assert.deepEqual(db.moduleOutcomes, ["completed", "already_projected", "already_projected"])
+})
+
+test("non-closing replay keeps the RPC lineage check: a moved Stage-1 source is still a conflict", async () => {
+  const db = createModuleRefinementDb({
+    answers: PRODUCTS_ANSWERS,
+    completedQuestionIds: PRODUCTS_QUESTION_IDS,
+    answerProvenance: userProvenance(PRODUCTS_QUESTION_IDS),
+    revision: 2,
+  })
+  const { saveFacts, calls } = createFakeSaveFacts()
+  await createService(db, saveFacts).completeModule({ module: "products", expectedRevision: 2 })
+  db.plan.currentInitialNeedVersionId = "initial-2"
+
+  await assert.rejects(
+    () => createService(db, saveFacts).completeModule({ module: "products", expectedRevision: 2 }),
+    (error: unknown) =>
+      error instanceof Stage2RefinementError && error.code === "revision_conflict",
+  )
+  assert.equal(calls.length, 1)
+})
+
+test("a call whose revision does NOT match the recorded projection is not a replay: facts and RPC run in full", async () => {
+  const db = createModuleRefinementDb({
+    answers: PRODUCTS_ANSWERS,
+    completedQuestionIds: PRODUCTS_QUESTION_IDS,
+    answerProvenance: userProvenance(PRODUCTS_QUESTION_IDS),
+    revision: 3,
+  })
+  // A projection recorded at an EARLIER revision (the member edited a Produkte answer since).
+  db.row.moduleProjections = {
+    products: { needVersionId: "refined-old", projectedAtRevision: 2, stage3Handoff: true },
+  }
+  const { saveFacts, calls } = createFakeSaveFacts({ order: db.order })
+
+  const result = await createService(db, saveFacts).completeModule({
+    module: "products",
+    expectedRevision: 3,
+  })
+
+  assert.notEqual(result.refinedVersionId, "refined-old")
+  assert.equal(calls.length, 1, "a genuinely new completion writes the facts")
+  assert.deepEqual(db.order, ["saveFacts", "persistence.completeModule"])
+  assert.deepEqual(db.moduleOutcomes, ["completed"])
+  assert.equal(db.row.moduleProjections.products?.projectedAtRevision, 3)
+})
+
+test("a stale revision is still rejected by the RPC lineage check on a non-replay call", async () => {
+  const db = createModuleRefinementDb({
+    answers: PRODUCTS_ANSWERS,
+    completedQuestionIds: PRODUCTS_QUESTION_IDS,
+    answerProvenance: userProvenance(PRODUCTS_QUESTION_IDS),
+    revision: 4,
+  })
+  const { saveFacts } = createFakeSaveFacts()
+  await assert.rejects(
+    () => createService(db, saveFacts).completeModule({ module: "products", expectedRevision: 3 }),
+    (error: unknown) =>
+      error instanceof Stage2RefinementError && error.code === "revision_conflict",
+  )
+  assert.deepEqual(db.moduleOutcomes, ["revision_conflict"])
+})

@@ -2,6 +2,13 @@ import { NextResponse } from "next/server"
 import { z } from "zod"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
+import { createProductionSyncPlanWithFacts } from "@/lib/personal-plan/facts-recompute"
+import {
+  completeStage2ModuleWithLane,
+  type Stage2ModuleCompletionLaneDeps,
+} from "@/lib/personal-plan/refinement/complete-module-lane"
+import { STAGE2_MODULES } from "@/lib/personal-plan/refinement/types"
+import { runProductionHabitsRecompute } from "@/lib/personal-plan/refinement-recompute/production-habits-recompute"
 import { isPersonalPlanAppV1Enabled } from "@/lib/personal-plan/release"
 import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
 import { createSupabaseStage2RefinementPersistence } from "@/lib/personal-plan/persistence/stage2-refinement-supabase"
@@ -15,11 +22,19 @@ import {
   type Stage2RefinementGateway,
 } from "@/lib/personal-plan/refinement/gateway"
 
+/**
+ * Without `module` this is the terminal completion. With `module` it is the replay-safe
+ * retry of a module completion — the same lane the PATCH `completeModuleAfterSave` block
+ * runs — so a failed or lost completion never needs the answer saved a second time.
+ */
 const completeRequestSchema = z
-  .object({ expectedRevision: z.number().int().nonnegative() })
+  .object({
+    module: z.enum(STAGE2_MODULES).optional(),
+    expectedRevision: z.number().int().nonnegative(),
+  })
   .strict()
 
-export type Stage2CompleteRouteDeps = {
+export type Stage2CompleteRouteDeps = Stage2ModuleCompletionLaneDeps & {
   enabled: () => boolean
   getUserId: () => Promise<string | null>
   /** Server-resolved Hair Tools rollout for this user; browser input never reaches it. */
@@ -82,7 +97,17 @@ export function createStage2CompleteRouteHandler(deps: Stage2CompleteRouteDeps) 
     try {
       phaseStarted = Date.now()
       const toolsEnabled = await deps.toolsEnabled(userId).catch(() => false)
-      const result = await deps.gatewayFor(userId, { toolsEnabled }).complete(parsed.data)
+      const gateway = deps.gatewayFor(userId, { toolsEnabled })
+      const { module: stage2Module, expectedRevision } = parsed.data
+      const result = stage2Module
+        ? await completeStage2ModuleWithLane({
+            gateway,
+            deps,
+            userId,
+            module: stage2Module,
+            expectedRevision,
+          })
+        : await gateway.complete({ expectedRevision })
       phases.operation = Date.now() - phaseStarted
       console.info("personal_plan_stage2_api", {
         event: "complete",
@@ -100,6 +125,8 @@ export const POST = createStage2CompleteRouteHandler({
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   loadStage2Access: loadPersonalPlanStage2AccessForUser,
   toolsEnabled: async (userId) => isPersonalPlanToolsEnabledForUser(userId, createAdminClient()),
+  syncPlanWithFacts: (input) => createProductionSyncPlanWithFacts(createAdminClient())(input),
+  runHabitsRecompute: runProductionHabitsRecompute,
   gatewayFor: (userId, { toolsEnabled }) => {
     const admin = createAdminClient()
     return createPersistedStage2RefinementGateway({

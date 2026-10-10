@@ -400,6 +400,28 @@ export function createStage2RefinementService(input: {
       if (!parsed.success) throw new Stage2RefinementError("completion_failed")
       const { module: stage2Module, expectedRevision } = parsed.data
       const draft = cached ?? (await loadDraft())
+      // Replay of a CLOSING completion whose response was lost: the draft is already `complete`
+      // and its final revision is the one the identical retry carries. The facts were written
+      // and the terminal version projected by that first call, so answer with the stored
+      // terminal handoff — a `revision_conflict` here would strand a completion that already
+      // happened. Only while the module is still settled on the draft's own path (a path that
+      // grew since must not claim a module done) and never for a different revision.
+      if (
+        draft.status === "complete" &&
+        draft.refinedVersionId &&
+        draft.revision === expectedRevision
+      ) {
+        const settled = stage2ModuleStates(draft)
+        if (settled[stage2Module].status === "complete" && areAllStage2ModulesSettled(settled)) {
+          return {
+            refinedVersionId: draft.refinedVersionId,
+            nextHref: "/plan-start",
+            module: stage2Module,
+            status: "complete",
+            stage3Handoff: stage2Module === "products",
+          }
+        }
+      }
       if (draft.status !== "in_progress") throw new Stage2RefinementError("revision_conflict")
 
       // Module status counts USER answers only; the projection input is user ∪
@@ -443,7 +465,18 @@ export function createStage2RefinementService(input: {
       // (F04/F22), bound to the draft actually being closed, not the resolver's own
       // assumptions for this call (the merge keeps whatever an earlier write recorded for a
       // question the current path no longer asks).
-      await writeCareHabitsFacts(draft, expectedRevision)
+      //
+      // Except on a replay: this module's projection is already recorded at exactly this
+      // revision, so the first call wrote the facts (it writes them BEFORE the RPC records the
+      // lineage) and only its response was lost. A second write would double-publish the same
+      // draft state. The RPC below still runs on a replay — it answers `already_projected`
+      // from the stored lineage AFTER its own moved-source (`stale_source`) check — so every
+      // call keeps the lineage guard; only the redundant facts write is skipped.
+      const recordedProjection = draft.moduleProjections[stage2Module]
+      const isProjectionReplay =
+        recordedProjection?.needVersionId !== undefined &&
+        recordedProjection.projectedAtRevision === expectedRevision
+      if (!isProjectionReplay) await writeCareHabitsFacts(draft, expectedRevision)
 
       const snapshot = input.snapshotBuilder({
         baseInitialNeedVersionId: draft.baseInitialNeedVersionId,
