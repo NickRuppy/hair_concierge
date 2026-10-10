@@ -796,6 +796,8 @@ export type DiscoveryCockpitSwapOption = {
   priceLabel: string | null
   /** The catalog packshot (`products.image_url`), for the option's thumbnail; null = none. */
   imageUrl: string | null
+  /** How it is applied, where equals need telling apart (E2); absent/null = not shown. */
+  applicationLabel?: string | null
   /**
    * `equal_alternative`: rated exactly as well as the Idealplan's pick, which a house
    * default chose among equals (Bondbuilder tie, see `equal-options.ts`).
@@ -1062,8 +1064,11 @@ function idealRecommendationOption(
 function equalAlternativeOption(
   option: DiscoveryEqualOption,
   identities: ReadonlyMap<string, DiscoveryProductIdentity>,
+  budget: ShoppingBudget | null = null,
 ): DiscoveryCockpitSwapOption {
   const brand = identities.get(option.productId)?.brand ?? null
+  // Like every other option: above a saved budget it says so (#654).
+  const over = discoveryOverBudgetEur(budget, parseDiscoveryPriceLabel(option.priceLabel))
   return {
     productId: option.productId,
     name: option.productName,
@@ -1072,7 +1077,9 @@ function equalAlternativeOption(
     verdictLabel: SCAN_VERDICT_COPY.ideal.label,
     priceLabel: option.priceLabel,
     imageUrl: identities.get(option.productId)?.imageUrl ?? option.imageUrl,
+    applicationLabel: option.applicationLabel,
     origin: "equal_alternative",
+    ...(over !== null ? { overBudgetEur: over } : {}),
     propertyRows: null,
   }
 }
@@ -1162,6 +1169,11 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
     const ownedInStep = new Set(
       stepEntries.flatMap((entry) => (entry.item?.productId ? [entry.item.productId] : [])),
     )
+    // E2: with equals on offer, the pick names its application too — the comparison is the point.
+    const idealWithApplication =
+      ideal && step.equalOptions && step.equalOptions.length > 0
+        ? { ...ideal, applicationLabel: step.idealApplicationLabel ?? null }
+        : ideal
     const swapOptions =
       alternatives.length > 0
         ? alternatives.map((alternative) =>
@@ -1172,12 +1184,12 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
               budget,
             ),
           )
-        : ideal
+        : idealWithApplication
           ? [
-              ideal,
+              idealWithApplication,
               // T1: a tie-default pick brings its equals — the call may choose any of them.
               ...(step.equalOptions ?? []).map((option) =>
-                equalAlternativeOption(option, identities),
+                equalAlternativeOption(option, identities, budget),
               ),
             ].filter((option) => !ownedInStep.has(option.productId))
           : []
@@ -1369,6 +1381,32 @@ export async function setDiscoveryCallDecision(
       intake_item_id: row.intake_item_id ?? null,
     }),
   }
+}
+
+export type DiscoveryCallDecisionsResetResult =
+  | { outcome: "reset"; deleted: number }
+  | { outcome: "not_found" | "finalized" }
+
+/**
+ * „Testlauf zurücksetzen" (cockpit call-ready A2): every decision of this intake deleted in
+ * ONE locked call to `discovery_admin_reset_call_decisions` (migration 20261009160000) — the
+ * same intake row lock as every decision write, so it serialises with them and with
+ * finalising; a finalised call is frozen. The call sheet is not touched.
+ */
+export async function resetDiscoveryCallDecisions(
+  intakeId: string,
+  client: DiscoveryCockpitAdminClient,
+): Promise<DiscoveryCallDecisionsResetResult> {
+  const { data, error } = await client.rpc("discovery_admin_reset_call_decisions", {
+    target_intake_id: intakeId,
+  })
+  if (error) throw error
+  const row = (data ?? {}) as { outcome?: string; deleted?: unknown }
+  if (row.outcome === "reset" && typeof row.deleted === "number") {
+    return { outcome: "reset", deleted: row.deleted }
+  }
+  if (row.outcome === "not_found" || row.outcome === "finalized") return { outcome: row.outcome }
+  throw new Error("discovery_call_decisions_reset_unexpected_outcome")
 }
 
 /**

@@ -2,7 +2,10 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import { NextRequest, NextResponse } from "next/server"
 
-import { createDiscoveryDecisionsHandler } from "../src/app/api/admin/beratung/[enrollmentId]/decisions/route"
+import {
+  createDiscoveryDecisionsHandler,
+  createDiscoveryDecisionsResetHandler,
+} from "../src/app/api/admin/beratung/[enrollmentId]/decisions/route"
 import { createDiscoveryFinalizeHandler } from "../src/app/api/admin/beratung/[enrollmentId]/finalize/route"
 import { composeRunsheetProducts } from "../src/components/discovery/cockpit/runsheet-products"
 import {
@@ -360,6 +363,7 @@ test("an empty tie step accepts an equally ideal product and still refuses one n
         productName: "Elvital Pre-Shampoo",
         priceLabel: "8,95 €",
         imageUrl: null,
+        applicationLabel: "Vorwäsche, ausspülen",
       },
     ],
   }
@@ -399,6 +403,65 @@ test("an empty tie step accepts an equally ideal product and still refuses one n
     written.map((entry) => entry.swapProductId),
     [equal],
   )
+})
+
+function resetRequest() {
+  return new NextRequest(`https://chaarlie.de/api/admin/beratung/${ids.enrollment}/decisions`, {
+    method: "DELETE",
+  })
+}
+
+test("„Testlauf zurücksetzen“ deletes this intake's decisions and says how many", async () => {
+  const calls: string[] = []
+  const handler = createDiscoveryDecisionsResetHandler(
+    baseDeps({
+      resetDecisions: async (intakeId: string) => {
+        calls.push(intakeId)
+        return { outcome: "reset" as const, deleted: 7 }
+      },
+    }),
+  )
+  const response = await handler(resetRequest(), params)
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), { deleted: 7 })
+  assert.deepEqual(calls, [ids.intake])
+})
+
+test("reset is frozen once finalised — before and inside the write", async () => {
+  let called = false
+  const before = createDiscoveryDecisionsResetHandler(
+    baseDeps({
+      loadIntake: async () => ({ ...submittedIntake, callFinalizedAt: "2026-10-01T10:00:00Z" }),
+      resetDecisions: async () => {
+        called = true
+        return { outcome: "reset" as const, deleted: 0 }
+      },
+    }),
+  )
+  const frozen = await before(resetRequest(), params)
+  assert.equal(frozen.status, 409)
+  assert.equal(await code(frozen), "finalized")
+  assert.equal(called, false)
+
+  const inside = createDiscoveryDecisionsResetHandler(
+    baseDeps({ resetDecisions: async () => ({ outcome: "finalized" as const }) }),
+  )
+  const raced = await inside(resetRequest(), params)
+  assert.equal(raced.status, 409)
+  assert.equal(await code(raced), "finalized")
+})
+
+test("a failing reset write answers 503, never a half state", async () => {
+  const handler = createDiscoveryDecisionsResetHandler(
+    baseDeps({
+      resetDecisions: async () => {
+        throw new Error("db down")
+      },
+    }),
+  )
+  const response = await handler(resetRequest(), params)
+  assert.equal(response.status, 503)
+  assert.equal(await code(response), "unavailable")
 })
 
 test("a decision key the Idealplan does not carry is refused", async () => {

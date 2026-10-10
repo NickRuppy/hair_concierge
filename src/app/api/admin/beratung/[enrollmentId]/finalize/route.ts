@@ -32,9 +32,11 @@ import {
  *
  * Batch 5 (P1-5): finalising is refused (409 `category_open`) while any product's usage is
  * unknown („Kategorie offen") — re-checked here from the composition it fingerprints, so
- * every product is understood before she gets a result. Accepted risk (plan Rev. 3): no
- * compare-and-set against a concurrent usage write; the correction itself refuses while
- * finalised.
+ * every product is understood before she gets a result. Accepted risk (plan Rev. 3, re-ruled
+ * by Nick 2026-10-09 for „Testlauf zurücksetzen" too): no compare-and-set against a write
+ * landing between the composition and the UPDATE (a decision, usage correction or reset from
+ * a second tab in the same second); every such write refuses once finalised, and the cockpit
+ * blocks overlapping clicks within one tab.
  *
  * Batch 6 (Nick, 2026-09-24): finalising is also refused while any captured product is not
  * yet resolved to a catalog product (409 `research_open`), and while a printed product has

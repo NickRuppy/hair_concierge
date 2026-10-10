@@ -36,7 +36,11 @@ import { prepareScannerContext } from "@/lib/scan/scanner-context"
 import { readScannerProfileSource } from "@/lib/scan/scanner-context-supabase"
 import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
 
-import { discoveryEqualOptions, type DiscoveryEqualOption } from "./equal-options"
+import {
+  discoveryApplicationLabelOf,
+  discoveryEqualOptions,
+  type DiscoveryEqualOption,
+} from "./equal-options"
 
 /**
  * The participant's Idealplan, read for the admin cockpit.
@@ -102,6 +106,8 @@ export type DiscoveryIdealStep = {
    * nothing prints until a swap names one. See `equal-options.ts`.
    */
   equalOptions?: DiscoveryEqualOption[]
+  /** The pick's own application label when it has equals to be told apart from (E2). */
+  idealApplicationLabel?: string | null
 }
 
 /** A malformed decision target must thin the step detail, not fail the whole cockpit. */
@@ -407,6 +413,12 @@ export function withDiscoveryEqualOptions(
       candidates,
       selectedProductId: preview.productId,
     })
-    return equalOptions.length > 0 ? { ...step, equalOptions } : step
+    if (equalOptions.length === 0) return step
+    const selected = candidates.find((candidate) => candidate.productId === preview.productId)
+    return {
+      ...step,
+      equalOptions,
+      idealApplicationLabel: selected ? discoveryApplicationLabelOf(selected) : null,
+    }
   })
 }

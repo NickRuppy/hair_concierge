@@ -17,10 +17,15 @@ import type { DiscoveryPropertyRow } from "@/lib/discovery/property-rows"
 import {
   runsheetEntryInHerWeek,
   runsheetLockedIn,
+  runsheetNoVerdictLabel,
   runsheetVerdictFit,
   type WashAnchor,
 } from "@/lib/discovery/runsheet"
 import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
+import {
+  RUNSHEET_DECISION_STATE_LABELS,
+  runsheetDecisionState,
+} from "@/lib/discovery/runsheet/decision-state"
 
 import { DiscoveryComparisonTable } from "./comparison-table"
 import { beginDiscoveryDecisionWrite } from "./decision-writes"
@@ -28,7 +33,6 @@ import { formatDiscoveryTimestamp } from "./format"
 import { RunsheetLockedInSection } from "./runsheet-locked-in"
 import { discoveryCallSheetWriteOutcome, RUNSHEET_SAVE_COPY } from "./runsheet-save"
 import {
-  FREQUENCY_ROW_NOT_COMPARABLE,
   RunsheetCard,
   RunsheetCategoryChip,
   RunsheetChip,
@@ -89,6 +93,7 @@ const RESEARCH_SLOT_TITLE = "Bisheriges Produkt — noch in Recherche"
 const RESEARCH_SLOT_BODY = "Das Urteil folgt, sobald die Recherche abgeschlossen ist."
 const NEW_ENTRY_TITLE = "Neu dazu"
 const OPEN_ENTRY_TITLE = "Offener Schritt"
+const SKIPPED_ENTRY_TITLE = "Ohne Produkt"
 const PROPOSAL = "Vorschlag"
 const SWAP_CHIP = "Tauschen"
 const NEW_CHIP = "Neu"
@@ -142,11 +147,16 @@ const NO_PRODUCT = "Kein Produkt angegeben"
 const UNDECIDED_HINT = "Noch nicht entschieden."
 const FROZEN_HINT =
   "Diese Beratung ist inzwischen finalisiert. Seite neu laden, dann die Finalisierung aufheben."
+const RESET_LABEL = "Testlauf zurücksetzen"
+const RESET_CONFIRM_PREFIX = "Alle"
+const RESET_CONFIRM_TAIL = "Score, Brief und Notizen bleiben."
+const RESET_FROZEN = "Der Call ist finalisiert — erst Finalisieren aufheben."
 const WRITE_ERROR = "Nicht gespeichert. Bitte noch einmal."
 const NO_OPTIONS_HINT = "Keine Alternative im Katalog. Nur behalten oder offen lassen."
 const SORT_LABEL = "Sortieren:"
 const SORT_OPTIONS: ReadonlyArray<[DiscoverySwapSort, string]> = [
-  ["fit", "Fit"],
+  // „Fit" was the engine's delivered order — named for what it is (E2).
+  ["fit", "Empfehlung"],
   ["price", "Preis"],
 ]
 
@@ -337,6 +347,11 @@ export function DiscoveryCallCockpit({
   )
   const [finalizedAt, setFinalizedAt] = useState<string | null>(initialFinalizedAt)
   const [pending, setPending] = useState<string | null>(null)
+  // „Testlauf zurücksetzen" runs on its own flag, and every decision write in flight is
+  // counted: a reset only starts once all of them have answered, and their answers never
+  // clear the reset's lock (Codex re-review, call-ready).
+  const [resetPending, setResetPending] = useState(false)
+  const [writesInFlight, setWritesInFlight] = useState(0)
   const [error, setError] = useState<string | null>(null)
   const [finalizePending, setFinalizePending] = useState(false)
   // R28 (iteration 3): the complexity chip's displayed value, lifted here so „Super
@@ -353,6 +368,8 @@ export function DiscoveryCallCockpit({
     setComplexityValue(complexity)
     complexityWriteTicket.current += 1
   }
+  // Bumped by a reset: a decision answer from before it never rolls an old choice back in.
+  const selectionEpoch = useRef(0)
   const [syncedKey, setSyncedKey] = useState(stateKey)
   if (stateKey !== syncedKey) {
     setSyncedKey(stateKey)
@@ -398,7 +415,9 @@ export function DiscoveryCallCockpit({
         : { decision: "swap", swapProductId: value }
     setSelections((current) => ({ ...current, [key]: next }))
     setPending(key)
+    setWritesInFlight((count) => count + 1)
     setError(null)
+    const epoch = selectionEpoch.current
     const endWrite = beginDiscoveryDecisionWrite()
     try {
       const response = await fetch(`/api/admin/beratung/${enrollmentId}/decisions`, {
@@ -415,17 +434,53 @@ export function DiscoveryCallCockpit({
         ? null
         : ((await response.json().catch(() => null)) as { code?: string } | null)
       const outcome = discoveryDecisionWriteOutcome(response.ok, body)
-      if (outcome.rollback) {
+      if (outcome.rollback && epoch === selectionEpoch.current) {
         setSelections((current) => ({ ...current, [key]: previous }))
       }
       if (outcome.error) setError(outcome.error)
       if (outcome.refresh) router.refresh()
     } catch {
-      setSelections((current) => ({ ...current, [key]: previous }))
+      if (epoch === selectionEpoch.current) {
+        setSelections((current) => ({ ...current, [key]: previous }))
+      }
       setError(WRITE_ERROR)
     } finally {
       endWrite()
-      setPending(null)
+      setWritesInFlight((count) => count - 1)
+      setPending((current) => (current === key ? null : current))
+    }
+  }
+
+  // A2 „Testlauf zurücksetzen": every product decision of this call goes (confirmed first);
+  // the refresh re-seeds the selections from the server.
+  const decidedCount = Object.values(selections).filter(Boolean).length
+  async function resetDecisions() {
+    const confirmed =
+      typeof window === "undefined" ||
+      window.confirm(
+        `${RESET_CONFIRM_PREFIX} ${decidedCount} ${decidedCount === 1 ? "Entscheidung" : "Entscheidungen"} zurücksetzen? ${RESET_CONFIRM_TAIL}`,
+      )
+    if (!confirmed) return
+    setResetPending(true)
+    setError(null)
+    const endWrite = beginDiscoveryDecisionWrite()
+    try {
+      const response = await fetch(`/api/admin/beratung/${enrollmentId}/decisions`, {
+        method: "DELETE",
+      })
+      if (!response.ok) {
+        const body = (await response.json().catch(() => null)) as { code?: string } | null
+        setError(body?.code === "finalized" ? RESET_FROZEN : WRITE_ERROR)
+        return
+      }
+      selectionEpoch.current += 1
+      setSelections({})
+      router.refresh()
+    } catch {
+      setError(WRITE_ERROR)
+    } finally {
+      endWrite()
+      setResetPending(false)
     }
   }
 
@@ -477,7 +532,9 @@ export function DiscoveryCallCockpit({
       <div key={key} className="border-b last:border-0">
         <div className="flex flex-wrap items-center gap-2 bg-muted/40 px-4 py-2.5">
           <RunsheetCategoryChip category={step.category} label={step.categoryLabel} />
-          <span className="text-[15px] font-bold text-foreground">{entryTitle(entry)}</span>
+          <span className="text-[15px] font-bold text-foreground">
+            {entryTitle(entry, selection)}
+          </span>
           <span className="text-xs text-muted-foreground">{step.roleLabel}</span>
           {addStep ? (
             // R28: deterministic from the Idealplan's need tier — no engine call.
@@ -501,7 +558,9 @@ export function DiscoveryCallCockpit({
                     washFrequency={washFrequency}
                     allowedRange={step.idealAllowedRange}
                     noVerdict={
-                      <RunsheetChip tone="neutral">{FREQUENCY_ROW_NOT_COMPARABLE}</RunsheetChip>
+                      <RunsheetChip tone="neutral">
+                        {runsheetNoVerdictLabel(step.frequencyLabel)}
+                      </RunsheetChip>
                     }
                   />
                 ) : null
@@ -538,7 +597,8 @@ export function DiscoveryCallCockpit({
                 takenSwapIds={siblings.flatMap((other) =>
                   other?.decision === "swap" && other.swapProductId ? [other.swapProductId] : [],
                 )}
-                disabled={frozen || pending === key}
+                // Codex (call-ready): nothing to click while a reset or finalising runs.
+                disabled={frozen || pending === key || resetPending || finalizePending}
                 onChoose={(value) => void choose(step, value)}
               />
             </div>
@@ -634,6 +694,19 @@ export function DiscoveryCallCockpit({
           ]}
         </Bucket>
         <RunsheetLockedInSection lockedIn={lockedIn} />
+        {!frozen && decidedCount > 0 ? (
+          <div className="flex justify-end">
+            <button
+              type="button"
+              id="runsheet-reset-decisions"
+              onClick={resetDecisions}
+              disabled={writesInFlight > 0 || resetPending || finalizePending}
+              className="text-[12px] font-bold text-muted-foreground underline disabled:opacity-50"
+            >
+              {RESET_LABEL}
+            </button>
+          </div>
+        ) : null}
         {products.styling.length > 0 ? (
           <p className="text-[13px] text-muted-foreground">{`${DISCOVERY_STYLING_LABEL}: ${products.styling
             .map((entry) => entry.label)
@@ -651,7 +724,7 @@ export function DiscoveryCallCockpit({
           <button
             type="button"
             onClick={() => void toggleFinalize()}
-            disabled={finalizePending || (!frozen && !submitted) || finalizeBlocked}
+            disabled={finalizePending || resetPending || (!frozen && !submitted) || finalizeBlocked}
             className="rounded-lg bg-[var(--brand-coral)] px-5 py-2.5 text-sm font-bold text-white disabled:opacity-50"
           >
             {finalizePending ? FINALIZE_BUSY : frozen ? UNFINALIZE_LABEL : FINALIZE_LABEL}
@@ -835,9 +908,11 @@ function swapCount(entries: readonly RunsheetStepEntry[]): string {
   return parts.length > 0 ? parts.join(" · ") : productCount(0)
 }
 
-function entryTitle(entry: RunsheetStepEntry): string {
+function entryTitle(entry: RunsheetStepEntry, selection: Selection): string {
   if (entry.research) return RESEARCH_SLOT_TITLE
   if (entry.kind === "owned") return entry.step.ownedLabel ?? NO_PRODUCT
+  // A1: an empty step decided without a product is no longer „offen".
+  if (selection && selection.decision !== "swap") return SKIPPED_ENTRY_TITLE
   return entry.kind === "neu" ? NEW_ENTRY_TITLE : OPEN_ENTRY_TITLE
 }
 
@@ -943,18 +1018,27 @@ function DecisionChip({
   selection: Selection
 }) {
   const empty = entry.step.intakeItemId === null
+  // A1: one status per entry — the same derivation as „Festgehalten" and the week view.
+  const state = runsheetDecisionState({
+    intakeItemId: entry.step.intakeItemId,
+    decision: selection?.decision ?? null,
+    hasProposal: entry.step.idealRecommendation !== null,
+  })
   if (selection) {
+    if (state === "bewusst_ohne") {
+      return <RunsheetChip tone="plum">{RUNSHEET_DECISION_STATE_LABELS.bewusst_ohne}</RunsheetChip>
+    }
     const label =
       selection.decision === "keep"
-        ? empty
-          ? KEEP_EMPTY_LABEL
-          : KEEP_LABEL
+        ? KEEP_LABEL
         : selection.decision === "swap"
           ? empty
             ? NEW_CHIP
             : SWAP_CHIP
           : DROP_LABEL
-    return <RunsheetChip tone="plum">{label}</RunsheetChip>
+    return (
+      <RunsheetChip tone="plum">{`${RUNSHEET_DECISION_STATE_LABELS.entschieden} · ${label}`}</RunsheetChip>
+    )
   }
   // Her product for this step is still in research: nothing to propose yet.
   if (entry.research) return <RunsheetChip tone="pending">{KLAEREN_RESEARCH}</RunsheetChip>
@@ -968,7 +1052,18 @@ function DecisionChip({
           : bucket === "weglassen"
             ? DROP_LABEL
             : SWAP_CHIP
-  return <RunsheetChip tone="neutral">{`${PROPOSAL}: ${proposal}`}</RunsheetChip>
+  // Nothing proposed for an empty step: just „Offen" (Codex, call-ready).
+  if (state === "offen" && empty) {
+    return <RunsheetChip tone="pending">{RUNSHEET_DECISION_STATE_LABELS.offen}</RunsheetChip>
+  }
+  // Her own undecided product reads „Offen" first; the engine's idea follows as a hint.
+  return (
+    <RunsheetChip tone={state === "offen" ? "pending" : "neutral"}>
+      {state === "offen" && !empty
+        ? `${RUNSHEET_DECISION_STATE_LABELS.offen} · ${PROPOSAL}: ${proposal}`
+        : `${PROPOSAL}: ${proposal}`}
+    </RunsheetChip>
+  )
 }
 
 /** Referral (R20, copy approved as-is): the message and a copy button with a fallback. */
@@ -1180,8 +1275,11 @@ export function StepDecision({
               ? discoveryOverBudgetPill(option.overBudgetEur)
               : undefined
           }
-          // R19: the price where the catalog has one — no placeholder line otherwise.
-          subtitle={option.priceLabel}
+          // R19: the price where the catalog has one — no placeholder line otherwise. E2: how
+          // it is applied, where equally ideal options need telling apart.
+          subtitle={
+            [option.applicationLabel, option.priceLabel].filter(Boolean).join(" · ") || null
+          }
           imageUrl={option.imageUrl}
           rows={option.propertyRows}
           // Her product's rows beside the option — „Bisheriges Produkt | Alternative | Ziel",

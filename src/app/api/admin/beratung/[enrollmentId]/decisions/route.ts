@@ -3,6 +3,7 @@ import { z } from "zod"
 
 import {
   discoveryCockpitSwapOptionIds,
+  resetDiscoveryCallDecisions,
   setDiscoveryCallDecision,
   type DiscoveryCallDecisionOutcome,
 } from "@/lib/discovery/cockpit"
@@ -162,3 +163,47 @@ export function createDiscoveryDecisionsHandler(
 }
 
 export const POST = createDiscoveryDecisionsHandler()
+
+export type DiscoveryDecisionsResetRouteDependencies = DiscoveryCockpitRouteDependencies & {
+  resetDecisions?: typeof resetDiscoveryCallDecisions
+}
+
+/**
+ * `DELETE /api/admin/beratung/<enrollmentId>/decisions` — „Testlauf zurücksetzen" (cockpit
+ * call-ready A2): every product decision of this call goes, the routine falls back to the
+ * Idealplan. Same gates as a single decision: flag and admin, the intake, frozen while
+ * finalised (409) — checked here and again inside the locked write, which also serialises it
+ * with finalising. Score, brief and notes live in the call sheet and stay.
+ */
+export function createDiscoveryDecisionsResetHandler(
+  overrides: DiscoveryDecisionsResetRouteDependencies = {},
+) {
+  const { resetDecisions, ...guardOverrides } = overrides
+  const reset = resetDecisions ?? resetDiscoveryCallDecisions
+
+  return async function DELETE(
+    _request: NextRequest,
+    context: { params: Promise<{ enrollmentId: string }> },
+  ) {
+    const { enrollmentId } = await context.params
+    const guard = await guardDiscoveryCockpitRequest(enrollmentId, guardOverrides)
+    if (!guard.ok) return guard.response
+    const { admin, intake } = guard
+
+    const frozen = refuseFinalizedIntake(intake)
+    if (frozen) return frozen
+
+    try {
+      const result = await reset(intake.id, admin)
+      if (result.outcome !== "reset") {
+        return discoveryCockpitError(result.outcome, result.outcome === "not_found" ? 404 : 409)
+      }
+      return discoveryCockpitJson({ deleted: result.deleted })
+    } catch (error) {
+      console.error("[discovery] cockpit decisions reset failed:", error)
+      return discoveryCockpitError("unavailable", 503)
+    }
+  }
+}
+
+export const DELETE = createDiscoveryDecisionsResetHandler()

@@ -76,7 +76,7 @@ const HEBEL_TITLE_PLACEHOLDER = "Hebel, z. B. Schaden stoppen"
 const HEBEL_NOTE_PLACEHOLDER = "Was konkret sich ändert"
 const HEBEL_POINTS_LABEL = "Punkte"
 const HEBEL_FOOTNOTE = "Erfahrungswerte — grobe Orientierung, keine Messung."
-const ASK_PREFIX = "kurz fragen:"
+const ASK_PREFIX = "Außerdem klären:"
 /** The two Maßnahmen buckets (R26); rows from pre-v4 briefs render flat above them. */
 export const RUNSHEET_HEBEL_BUCKETS = [
   { bucket: "produkt", title: "Produkte", add: "Produkt-Hebel hinzufügen" },
@@ -1005,15 +1005,6 @@ export function DiscoveryRunsheetBrief({
               </div>
             )
           })}
-          {askTopics.length > 0 ? (
-            <div className="flex flex-wrap gap-1.5">
-              {askTopics.map((topic) => (
-                <RunsheetChip key={topic} tone="pending">
-                  {`${ASK_PREFIX} ${topic}`}
-                </RunsheetChip>
-              ))}
-            </div>
-          ) : null}
           <p className="text-[12px] text-muted-foreground">{HEBEL_FOOTNOTE}</p>
         </RunsheetCard>
 
@@ -1024,6 +1015,15 @@ export function DiscoveryRunsheetBrief({
                 <p className="text-[13px] font-bold text-foreground">{list.title}</p>
                 <p className="text-[12px] text-muted-foreground">{list.hint}</p>
               </div>
+              {/* E4: the code-side asks live HERE, once — not as chips and checklist again. */}
+              {list.key === "callFragen" && askTopics.length > 0 ? (
+                <p
+                  id="runsheet-call-asks"
+                  className="text-[13px] leading-5 text-[var(--status-pending-text)]"
+                >
+                  {`${ASK_PREFIX} ${askTopics.join(" · ")}`}
+                </p>
+              ) : null}
               {state.lists[list.key].length === 0 ? (
                 <p className="text-[13px] text-muted-foreground">{list.empty}</p>
               ) : (

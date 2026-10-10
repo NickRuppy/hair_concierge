@@ -394,13 +394,12 @@ test("wash anchor: one shampoo → both ends are its own band (unchanged behavio
   }
 })
 
-test("wash anchor: two shampoos → [most frequent one, sum]; dropped/swapped/other categories ignored", () => {
+test("wash anchor: two shampoos → [most frequent one, sum]; dropped/other categories ignored", () => {
   assert.deepEqual(
     runsheetWashAnchor([
       shampooEntry("weekly_1x"),
       shampooEntry("weekly_1x", "kept"),
       shampooEntry("daily_1x", "dropped"),
-      shampooEntry("daily_1x", "swapped"),
       shampooEntry("daily_1x", "undecided", "conditioner"),
     ]),
     { single: { min: 1, max: 1 }, combined: { min: 2, max: 2 } },
@@ -409,6 +408,21 @@ test("wash anchor: two shampoos → [most frequent one, sum]; dropped/swapped/ot
     single: { min: 3, max: 4 },
     combined: { min: 4, max: 5 },
   })
+})
+
+test("wash anchor: a swapped shampoo keeps her wash days — the new one takes them over (E3)", () => {
+  // Nomi: Sebamed Anti Schuppen 2×/Woche swapped to Urea — she still washes twice a week, so a
+  // per-wash cadence („nach jeder Haarwäsche") stays comparable instead of „nicht vergleichbar".
+  const anchor = runsheetWashAnchor([shampooEntry("weekly_2x", "swapped")])
+  assert.deepEqual(anchor, { single: { min: 2, max: 2 }, combined: { min: 2, max: 2 } })
+  assert.notEqual(
+    deriveStepFrequencyDelta({
+      cadenceLabel: "nach jeder Haarwäsche",
+      frequencies: ["weekly_2x"],
+      washFrequency: anchor,
+    }),
+    null,
+  )
 })
 
 test("wash anchor: no in-week shampoo, or one without a known frequency → no anchor", () => {
