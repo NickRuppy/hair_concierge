@@ -256,7 +256,7 @@ test("the Routine page hands the server-resolved flag to the view read (fail clo
       throw new Error("flag lookup failed")
     },
   })
-  assert.deepEqual(seen, [true, false, false])
+  assert.deepEqual(seen, [true, undefined, undefined], "off leaves the read input untouched")
 })
 
 test("the keepsake Routine reads tools from current facts while the flag is on", async () => {
@@ -273,7 +273,7 @@ test("the keepsake Routine reads tools from current facts while the flag is on",
   }
   await resolveKeepsakeRoutinePage({ ...base, toolsEnabled: async () => true })
   await resolveKeepsakeRoutinePage(base)
-  assert.deepEqual(seen, [true, false])
+  assert.deepEqual(seen, [true, undefined])
 })
 
 test("the Routine reload API composes the section only while the flag is on", async () => {

@@ -98,7 +98,12 @@ export async function resolveRoutinePage(deps: RoutinePageResolverDeps) {
 
     const enabled = deps.stage4Enabled()
     const toolsEnabled = await toolsEnabledLookup
-    const view = await deps.readView({ userId, enabled, toolsEnabled })
+    // Off: the read input stays exactly as it was (no rollout key).
+    const view = await deps.readView({
+      userId,
+      enabled,
+      ...(toolsEnabled ? { toolsEnabled: true } : {}),
+    })
     if (view.status === "no_personal_plan") return { kind: "legacy" as const }
     const routinePayload =
       view.status === "proposal" ? view.pendingProposal?.candidate : view.activeVersion?.payload
@@ -273,7 +278,7 @@ export async function resolveKeepsakeRoutinePage(deps: KeepsakeRoutinePageResolv
     const view = await deps.readView({
       userId,
       enabled: false,
-      toolsEnabled: await toolsEnabledLookup,
+      ...((await toolsEnabledLookup) ? { toolsEnabled: true } : {}),
     })
     if (view.status === "no_personal_plan" || !view.activeVersion) {
       return { kind: "no_routine" as const }

@@ -142,10 +142,13 @@ export async function loadPersonalPlanRoutineView(input: {
   const facts = input.tools
     ? input.tools.loadFacts(input.userId).catch(() => null)
     : Promise.resolve(null)
-  // One refined-snapshot read per version per request: the category-order check and the tool
-  // section share it.
+  // Tools on: one refined-snapshot read per version per request — the category-order check and
+  // the tool section share it. Tools off: the reads stay exactly as they were.
   const refinedSnapshots = new Map<string, Promise<RefinedNeedSnapshotRow | null>>()
   const loadRefined: RefinedSnapshotLoader = (planId, refinedVersionId) => {
+    if (!input.tools) {
+      return loadOwnerRefinedNeedSnapshot(input.client, input.userId, planId, refinedVersionId)
+    }
     const key = `${planId}:${refinedVersionId}`
     let pending = refinedSnapshots.get(key)
     if (!pending) {
