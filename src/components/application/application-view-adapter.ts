@@ -1,3 +1,5 @@
+import * as Sentry from "@sentry/nextjs"
+
 import { PRODUCT_CATEGORY_LABELS } from "@/lib/onboarding/product-options"
 import type {
   ApplicationDayTypeKey,
@@ -67,6 +69,29 @@ type ViewAdapterInput = {
     occurrences: readonly ToolOccurrence[]
     guidance: readonly ToolGuidance[]
   }
+  /**
+   * Called when a day's Tool projection throws and the day degrades to its product-only form.
+   * Defaults to a Sentry breadcrumb; never a failure report.
+   */
+  onToolProjectionError?: (dayType: ApplicationDayTypeKey, error: unknown) => void
+}
+
+/**
+ * A broken Tool projection must never take down the Anwendung, so it degrades silently for the
+ * member — but a persistently broken projection has to be observable. A breadcrumb (not a
+ * captured exception) rides along with the next real event; the reporter itself never throws.
+ */
+function recordToolProjectionBreadcrumb(dayType: ApplicationDayTypeKey, error: unknown): void {
+  try {
+    Sentry.addBreadcrumb({
+      category: "application.tools",
+      level: "warning",
+      message: "Tool projection failed; the day renders without Tool blocks",
+      data: { dayType, errorName: error instanceof Error ? error.name : typeof error },
+    })
+  } catch {
+    // Observability is best effort.
+  }
 }
 
 function categoryLabelDe(category: PersonalPlanCategory): string {
@@ -105,6 +130,7 @@ export function toApplicationPageView({
   dayDefinitions,
   cadenceByDay = {},
   tools,
+  onToolProjectionError = recordToolProjectionBreadcrumb,
 }: ViewAdapterInput): ApplicationPageView {
   const definitionByKey = new Map(dayDefinitions.map((definition) => [definition.key, definition]))
 
@@ -211,7 +237,12 @@ export function toApplicationPageView({
           guidance: tools.guidance,
         }),
       )
-    } catch {
+    } catch (error) {
+      try {
+        onToolProjectionError(day.key, error)
+      } catch {
+        // A failing reporter must not turn the silent fallback into a failure.
+      }
       return buildDay(null)
     }
   })

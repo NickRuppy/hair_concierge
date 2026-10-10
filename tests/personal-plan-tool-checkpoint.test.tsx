@@ -111,8 +111,8 @@ test("checkpoint groups follow the wash-day order, whatever order the inventory 
   assert.deepEqual(
     groups.map((group) => group.label),
     [
-      "Wasch- & Auftragshilfen",
-      "Handtücher & Trocknungsmaterialien",
+      "Waschen & Auftragen",
+      "Handtücher",
       "Bürsten & Kämme",
       "Haartrockner & Luftstyler",
       "Hitzestyling-Tools",
@@ -154,7 +154,7 @@ test("the inventory comes from the session the tools module completed with (Lena
   assert.deepEqual(
     groups.map((group) => [group.label, group.items.map((item) => item.label)]),
     [
-      ["Handtücher & Trocknungsmaterialien", ["Mikrofaser-Handtuch"]],
+      ["Handtücher", ["Mikrofaser-Handtuch"]],
       ["Bürsten & Kämme", ["Grobzinkiger Kamm", "Rundbürste"]],
       ["Haartrockner & Luftstyler", ["Föhn", "Warmluftbürste"]],
       ["Hitzestyling-Tools", ["Glätteisen"]],

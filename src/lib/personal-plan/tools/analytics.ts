@@ -10,6 +10,7 @@ import { loadConsent } from "@/lib/cookie-consent"
  * baseline port already uses.
  */
 export type ToolAnalyticsEventName =
+  | "personal_plan_tools_checkpoint_viewed"
   | "personal_plan_tools_inventory_entered"
   | "personal_plan_tools_inventory_completed"
 
@@ -20,6 +21,7 @@ export type ToolAnalyticsPort = {
 export const noOpToolAnalytics: ToolAnalyticsPort = { track() {} }
 
 const TOOL_EVENTS = new Set<ToolAnalyticsEventName>([
+  "personal_plan_tools_checkpoint_viewed",
   "personal_plan_tools_inventory_entered",
   "personal_plan_tools_inventory_completed",
 ])

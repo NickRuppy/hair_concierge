@@ -31,7 +31,7 @@ export type ToolCardTier = "basis" | "optional"
  *
  * Stage 3 shows no ownership status at all (ownership stays in the Feinschliff
  * and in the Routine steps), so it needs its own short title and its own
- * telegram alternatives line. Stage 1's Idealplan block keeps reading
+ * telegram alternatives line. Stage 1's Plan block keeps reading
  * `typeLabel`/`noteDe` and renders byte-identically.
  */
 export type ToolCardStage3Copy = {
@@ -66,7 +66,7 @@ export type ToolCardViewModel = {
    * has only one eligible form.
    */
   noteDe: string | null
-  /** Stage-3-only copy. Never read by the Stage-1 Idealplan block. */
+  /** Stage-3-only copy. Never read by the Stage-1 Plan block. */
   stage3: ToolCardStage3Copy
 }
 
@@ -96,11 +96,11 @@ export const TOOL_STATE_LABELS: Record<ToolPresentationState, string> = {
 }
 
 /**
- * Groups the Tool plan into the two tier-local Idealplan blocks.
+ * Groups the Tool plan into the two tier-local Plan blocks.
  *
  * One physical asset renders once even when it serves several routes; its card
  * takes the strongest tier among those routes. Reported-only routes
- * (`not_needed`) never produce an Idealplan card — the user already owns them
+ * (`not_needed`) never produce an Plan card — the user already owns them
  * and nothing is being recommended.
  *
  * **One card per need (`D5`).** A `ToolChoiceGroup` is one need with several

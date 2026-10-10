@@ -312,3 +312,48 @@ test("a throwing Tool projection drops only the Tool blocks, never the product s
     renderWashDay({}, false).day,
   )
 })
+
+test("a throwing Tool projection leaves a breadcrumb hook call and still degrades silently", () => {
+  const guidance = lenaToolView().applicationGuidance
+  const broken = {
+    ...guidance,
+    occurrences: guidance.occurrences.map((occurrence) => ({ ...occurrence, anchor: undefined })),
+  } as unknown as typeof guidance
+  const outerSequence = COMPILED_DAY_ORDER.withoutScalp
+  const input = {
+    compiled: {
+      days: [
+        {
+          key: "wash_day",
+          outerSequence,
+          productBlocks: outerSequence.flatMap((entry) =>
+            entry.kind === "product" ? [entry.block] : [],
+          ),
+        },
+      ],
+    } as never,
+    dayDefinitions: [{ key: "wash_day", label: "Waschtag", summary: "", sortOrder: 10 }] as never,
+    tools: broken,
+  }
+
+  const reported: string[] = []
+  const view = toApplicationPageView({
+    ...input,
+    onToolProjectionError: (dayType) => void reported.push(dayType),
+  })
+  assert.equal(view.state, "ready")
+  assert.deepEqual(reported, ["wash_day"])
+
+  // The default reporter (a Sentry breadcrumb) is non-throwing, and a throwing reporter cannot
+  // turn the silent fallback into a failure either.
+  assert.equal(toApplicationPageView(input).state, "ready")
+  assert.equal(
+    toApplicationPageView({
+      ...input,
+      onToolProjectionError: () => {
+        throw new Error("reporter down")
+      },
+    }).state,
+    "ready",
+  )
+})

@@ -455,7 +455,22 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
     }
     case "personal_plan_stage3_handoff": {
       const data = payload as AppEventMap["personal_plan_stage3_handoff"]
-      return { outcome: data.outcome }
+      // Tool counts ride along only while the Tools rollout reports them, so the flag-off
+      // payload stays exactly `{ outcome }`.
+      return {
+        outcome: data.outcome,
+        ...(data.toolRouteCount === undefined ? {} : { tool_route_count: data.toolRouteCount }),
+        ...(data.toolGapCount === undefined ? {} : { tool_gap_count: data.toolGapCount }),
+      }
+    }
+    case "personal_plan_tools_checkpoint_viewed": {
+      const data = payload as AppEventMap["personal_plan_tools_checkpoint_viewed"]
+      return {
+        route_count: data.routeCount,
+        owned_count: data.ownedCount,
+        gap_count: data.gapCount,
+        unknown_count: data.unknownCount,
+      }
     }
     case "personal_plan_stage4_routine_viewed": {
       const data = payload as AppEventMap["personal_plan_stage4_routine_viewed"]

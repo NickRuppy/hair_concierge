@@ -44,6 +44,7 @@ export const eventRoutes = {
   personal_plan_stage3_fallback_opened: { customerio: false, meta: false, posthog: true },
   personal_plan_stage3_flow_viewed: { customerio: false, meta: false, posthog: true },
   personal_plan_stage3_handoff: { customerio: false, meta: false, posthog: true },
+  personal_plan_tools_checkpoint_viewed: { customerio: false, meta: false, posthog: true },
   personal_plan_tools_inventory_entered: { customerio: false, meta: false, posthog: true },
   personal_plan_tools_inventory_completed: { customerio: false, meta: false, posthog: true },
   personal_plan_stage3_save_outcome: { customerio: false, meta: false, posthog: true },

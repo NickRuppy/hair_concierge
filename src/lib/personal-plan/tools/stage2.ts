@@ -8,6 +8,7 @@ import {
 import {
   TOOL_ANSWER_ONLY_FORM_HINTS,
   TOOL_FAMILY_LABELS,
+  TOOL_FAMILY_PAGE_TITLES,
   TOOL_FORM_PAGES,
   TOOL_OVERVIEW_SECTIONS,
   toolImageAlt,
@@ -109,7 +110,7 @@ export function toolFormPagePresentation(pageKey: string): ToolFormPagePresentat
     family: page.family,
     familyLabel,
     sectionLabel: sectionLabelForFamily(page.family),
-    title: `Welche ${familyLabel} nutzt du?`,
+    title: TOOL_FAMILY_PAGE_TITLES[page.family],
     lead:
       pageCount > 1
         ? `Mehrfachauswahl möglich. Seite ${pageIndex + 1} von ${pageCount}.`

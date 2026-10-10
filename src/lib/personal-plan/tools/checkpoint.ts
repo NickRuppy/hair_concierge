@@ -4,7 +4,7 @@ import type { Stage2AnswerProvenance } from "../refinement/types"
 import type { ToolFamily, ToolReportedForm } from "./contracts"
 import { reportedToolInventory, type ToolInventory } from "./facts"
 import {
-  TOOL_FAMILY_LABELS,
+  TOOL_FAMILY_SHORT_LABELS,
   TOOL_OVERVIEW_FAMILY_ORDER,
   toolImageAlt,
   toolImageSrc,
@@ -48,7 +48,7 @@ export function buildToolCheckpointGroups(inventory: ToolInventory): ToolCheckpo
     return [
       {
         family,
-        label: TOOL_FAMILY_LABELS[family],
+        label: TOOL_FAMILY_SHORT_LABELS[family],
         items: forms.map((form) => ({
           form,
           label: toolReportedFormLabel(form),
@@ -58,6 +58,31 @@ export function buildToolCheckpointGroups(inventory: ToolInventory): ToolCheckpo
       },
     ]
   })
+}
+
+/**
+ * The bounded counts the `personal_plan_tools_checkpoint_viewed` event carries — never a Tool
+ * identity or an ownership claim. `gapCount` = families the member answered without owning
+ * anything shown, `unknownCount` = families she has not reported at all.
+ */
+export function toolCheckpointAnalyticsCounts(
+  inventory: ToolInventory,
+  groups: readonly ToolCheckpointGroup[],
+): { routeCount: number; ownedCount: number; gapCount: number; unknownCount: number } {
+  const shown = new Set<ToolFamily>(groups.map((group) => group.family))
+  let gapCount = 0
+  let unknownCount = 0
+  for (const family of TOOL_OVERVIEW_FAMILY_ORDER) {
+    if (shown.has(family)) continue
+    if (inventory[family] == null) unknownCount += 1
+    else gapCount += 1
+  }
+  return {
+    routeCount: groups.length,
+    ownedCount: groups.reduce((total, group) => total + group.items.length, 0),
+    gapCount,
+    unknownCount,
+  }
 }
 
 function isToolQuestionId(id: string): boolean {

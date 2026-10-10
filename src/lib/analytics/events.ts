@@ -563,6 +563,22 @@ export type AppEventMap = {
   }
   personal_plan_stage3_handoff: {
     outcome: PersonalPlanStage3HandoffOutcome
+    /** Hair Tools. Absent while the Tools rollout is off; bounded counts only. */
+    toolRouteCount?: number
+    toolGapCount?: number
+  }
+  /**
+   * The Tool-Checkpoint „Das hast du schon" after the tools module. Only bounded
+   * counts — never a Tool identity, an ownership claim or a purchase.
+   * `routeCount` = family groups shown, `ownedCount` = owned tools shown,
+   * `gapCount` = families answered „Nichts davon", `unknownCount` = families not
+   * reported at all.
+   */
+  personal_plan_tools_checkpoint_viewed: {
+    routeCount: number
+    ownedCount: number
+    gapCount: number
+    unknownCount: number
   }
   personal_plan_tools_inventory_entered: {
     sectionCount: number

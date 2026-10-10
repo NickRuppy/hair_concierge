@@ -973,7 +973,7 @@ test("a tool page renders its photo cards with plum selection and the Mehrfachau
   )
   const html = renderQuestion(session, "tools:drying_textiles:1")
 
-  assert.match(html, /Welche Handtücher &amp; Trocknungsmaterialien nutzt du\?/)
+  assert.match(html, /Welche Handtücher oder Tücher nutzt du\?/)
   assert.match(html, /Mehrfachauswahl möglich\./)
   assert.doesNotMatch(html, /Seite \d von \d/)
   // Abtrocknen & Entwirren is the section; the kicker is the module's.

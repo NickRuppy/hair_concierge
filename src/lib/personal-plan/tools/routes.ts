@@ -900,7 +900,7 @@ function nightProtectionRoutes(input: ToolRouteInput): DraftRoute[] {
     // N04: a reported Night-Protection method is real current behaviour, so it
     // is preserved as a nightly „continue yours" step even with no relevance
     // trigger. Ownership alone creates no need and no card — hence `not_needed`,
-    // which renders an occurrence but never an Idealplan card (fixtures 17, 94).
+    // which renders an occurrence but never an Plan card (fixtures 17, 94).
     const reported = reportedFormsFor(input.inventory, "night_protection") ?? []
     if (reported.length === 0) return []
     return [

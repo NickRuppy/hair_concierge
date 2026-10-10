@@ -44,6 +44,7 @@ import {
   createHttpStage3ProductsGateway,
 } from "@/lib/personal-plan/products/http-gateway"
 import { stage3BaselineAnalytics } from "@/lib/personal-plan/products/stage3-analytics"
+import { toolAnalytics } from "@/lib/personal-plan/tools/analytics"
 import {
   Stage3BootstrapContractError,
   type Stage3BootstrapContractViolation,
@@ -69,6 +70,7 @@ import {
 import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
 import {
   buildToolCheckpointGroups,
+  toolCheckpointAnalyticsCounts,
   toolCheckpointInventory,
 } from "@/lib/personal-plan/tools/checkpoint"
 import type { Stage2TriggerContext } from "@/lib/personal-plan/refinement/types"
@@ -1242,6 +1244,11 @@ export function PlanStartCustomerJourney({
           // recomputed it (Task 2.2) — see `planStartModuleCompletionEffect`.
           const effect = planStartModuleCompletionEffect(initialJourney, payload)
           if (effect.kind === "tools_checkpoint") {
+            const inventory = toolCheckpointInventory(effect.session)
+            toolAnalytics.track(
+              "personal_plan_tools_checkpoint_viewed",
+              toolCheckpointAnalyticsCounts(inventory, buildToolCheckpointGroups(inventory)),
+            )
             setToolsCheckpoint({ session: effect.session })
             return
           }

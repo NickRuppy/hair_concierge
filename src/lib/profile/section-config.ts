@@ -432,6 +432,12 @@ const BASE_FIELD_CONFIG: ProfileFieldConfig[] = [
 /**
  * Gewohnheiten (tools applicable): the four rows of the old Styling/Alltag cards that Hair Tools
  * leaves to the habits module. They read exactly what those rows read; only the section differs.
+ *
+ * Contract: these four `key`s therefore appear TWICE in `PROFILE_FIELD_CONFIG` — once in their old
+ * section (`BASE_FIELD_CONFIG`, shown when tools do not apply) and once under `habits` (shown when
+ * they do). A row is identified by `(key, sectionKey)`, never by `key` alone: consumers select
+ * with `field.sectionKey === …` (the page) or read `profileHabitsRows`, and the section-config
+ * test pins the pair as unique.
  */
 const HABITS_FIELD_KEYS = [
   "towel_technique",

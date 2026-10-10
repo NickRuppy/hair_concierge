@@ -28,7 +28,7 @@ export const TOOL_CHECKPOINT_ADD_TOOLS_HREF = "/plan-start?refine=tools"
 export const TOOL_CHECKPOINT_EMPTY = "Du hast keine Tools angegeben."
 
 /**
- * One pastel shell plus its accent dot per Tool family, in the Idealplan category-card idiom —
+ * One pastel shell plus its accent dot per Tool family, in the Plan category-card idiom —
  * the same values the mockup's family groups use.
  */
 export const TOOL_FAMILY_CARD_STYLES = {

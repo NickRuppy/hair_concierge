@@ -482,6 +482,12 @@ export default function ProfilePage() {
     null,
   )
   const [refinementStatus, setRefinementStatus] = useState<RefinementStatusResponse | null>(null)
+  /**
+   * The `userId:hasRoutineAccess` the status read last settled for (success, failure or no
+   * plan). Keyed instead of a boolean so the first render after either input changes already
+   * reads „pending" — no frame of the old layout before an effect could flip a flag.
+   */
+  const [refinementStatusSettledKey, setRefinementStatusSettledKey] = useState<string | null>(null)
   const [refinementAnswers, setRefinementAnswers] =
     useState<PersonalPlanRefinementAnswersV1 | null>(null)
   const [refinementLoading, setRefinementLoading] = useState(true)
@@ -592,6 +598,7 @@ export default function ProfilePage() {
         if (active) setRefinementStatus(null)
         return
       }
+      const settledKey = `${userId}:${hasRoutineAccess}`
       try {
         const response = await fetch("/api/personal-plan/refinement-status", {
           cache: "no-store",
@@ -601,6 +608,8 @@ export default function ProfilePage() {
         if (active) setRefinementStatus(body)
       } catch {
         if (active) setRefinementStatus(null)
+      } finally {
+        if (active) setRefinementStatusSettledKey(settledKey)
       }
     }
 
@@ -840,6 +849,15 @@ export default function ProfilePage() {
   // Hair Tools: the Profil swaps Styling/Alltag for Deine Tools/Gewohnheiten once the member's
   // refinement status lists a tools module that applies to her. A missing or failed status read
   // fails open to today's layout.
+  //
+  // Until that read has settled for a member who can have one, the swapped cards are held back so
+  // a flag-on member never sees Styling/Alltag turn into Deine Tools/Gewohnheiten. Error and a
+  // missing plan still settle, so they fail open to today's layout. Without a user or routine
+  // access there is no read to wait for.
+  const refinementStatusPending =
+    Boolean(userId) &&
+    hasRoutineAccess &&
+    refinementStatusSettledKey !== `${userId}:${hasRoutineAccess}`
   const toolsApplicable = useMemo(() => {
     const toolsModule = refinementStatus?.modules.find((entry) => entry.module === "tools")
     return toolsModule !== undefined && toolsModule.status !== "not_applicable"
@@ -1251,7 +1269,7 @@ export default function ProfilePage() {
                 </div>
               ) : null}
 
-              {profileLoading ? (
+              {profileLoading || refinementStatusPending ? (
                 <SectionGridSkeleton count={6} className="md:grid-cols-2 xl:grid-cols-3" />
               ) : quizEditing ? (
                 <HaarCheckEditor
@@ -1562,7 +1580,13 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
 
-          {toolsApplicable ? (
+          {refinementStatusPending ? (
+            <Card className="scroll-mt-24 overflow-hidden border-primary/20" aria-busy="true">
+              <CardContent className="pt-6">
+                <SectionGridSkeleton count={2} className="md:grid-cols-2" />
+              </CardContent>
+            </Card>
+          ) : toolsApplicable ? (
             <>
               <Card
                 id="profile-section-tools"

@@ -40,7 +40,7 @@ export type BuildToolViewInput = {
   needSnapshot: ToolViewNeedSnapshot
   /** The active (or proposed) Routine the member is looking at; `null` before a Routine exists. */
   routine: RoutinePayloadV1 | null
-  /** Stage 1 only: whether the Idealplan has an Optional page to put optional Tools on. */
+  /** Stage 1 only: whether the Plan has an Optional page to put optional Tools on. */
   hasOptionalPage: boolean
   /** The server-resolved rollout. Anything but `true` yields no view at all. */
   toolsEnabled: boolean | undefined
@@ -179,9 +179,9 @@ export function asToolViewNeedSnapshot(value: unknown): ToolViewNeedSnapshot | n
 }
 
 /**
- * Server side of Stage 1: the snapshot handed to the Idealplan adapter, carrying the read-time
+ * Server side of Stage 1: the snapshot handed to the Plan adapter, carrying the read-time
  * Tool cards as the presentation-only `stage1ToolCards`. The stored snapshot is never touched;
- * any failure returns it undecorated, so a Tool problem can never take down the Idealplan.
+ * any failure returns it undecorated, so a Tool problem can never take down the Plan.
  */
 export function withStage1ToolCards(
   snapshot: unknown,

@@ -23,8 +23,8 @@ export async function loadToolFactsSource(
 }
 
 /**
- * Stage 1 (route and `/plan-start` loader): the snapshot handed to the Idealplan adapter with the
- * read-time Tool cards. A failed facts read means no cards; the Idealplan is never affected.
+ * Stage 1 (route and `/plan-start` loader): the snapshot handed to the Plan adapter with the
+ * read-time Tool cards. A failed facts read means no cards; the Plan is never affected.
  * `hasOptionalPage` comes from the adapter (`planStartHasOptionalPage`), so the cards land on the
  * page the care products land on.
  */

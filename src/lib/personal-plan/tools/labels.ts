@@ -29,6 +29,39 @@ export const TOOL_FAMILY_LABELS = {
   drying_textiles: "Handtücher & Trocknungsmaterialien",
 } as const satisfies Record<ToolFamily, string>
 
+/**
+ * Short group names for the compact tool surfaces — the Tool-Checkpoint and the Profil card „Deine
+ * Tools". They are the approved mockup's short forms; `TOOL_FAMILY_LABELS` stays the full family
+ * name (alt texts, Stage-3 and Anwendung labels).
+ */
+export const TOOL_FAMILY_SHORT_LABELS = {
+  wash_application: "Waschen & Auftragen",
+  drying_textiles: "Handtücher",
+  brushes_combs: "Bürsten & Kämme",
+  airflow: "Haartrockner & Luftstyler",
+  heated_styling: "Hitzestyling-Tools",
+  heatless_styling: "Heatless-Styling",
+  securing_sectioning: "Fixieren & Clips",
+  night_protection: "Nachtschutz",
+} as const satisfies Record<ToolFamily, string>
+
+/**
+ * The question on each photo page. Written per family because the family names are nouns of
+ * different kinds: a template („Welche … nutzt du?") reads wrongly for „Nachtschutz" or
+ * „Heatless Styling & Setzen". A two-page family asks the same question on both pages (the lead
+ * line carries „Seite 1 von 2").
+ */
+export const TOOL_FAMILY_PAGE_TITLES = {
+  wash_application: "Was nutzt du beim Waschen und Auftragen?",
+  drying_textiles: "Welche Handtücher oder Tücher nutzt du?",
+  brushes_combs: "Welche Bürsten und Kämme nutzt du?",
+  airflow: "Welche Haartrockner & Luftstyler nutzt du?",
+  heated_styling: "Welche Hitzestyling-Tools nutzt du?",
+  heatless_styling: "Welche Heatless-Styling-Tools nutzt du?",
+  securing_sectioning: "Was nutzt du zum Fixieren und Abteilen?",
+  night_protection: "Was nutzt du nachts?",
+} as const satisfies Record<ToolFamily, string>
+
 export const TOOL_PRODUCT_TYPE_LABELS = {
   hair_dryer: "Föhn",
   hot_air_brush: "Warmluftbürste",
@@ -282,9 +315,9 @@ export function toolAlternativeNote(alternatives: readonly ToolProductType[]): s
 /**
  * Stage-3 „Produkt-Check" copy — D2 redesign, Nick sign-off 2026-08-25.
  *
- * That page mirrors the Idealplan's card grammar and shows no ownership status,
+ * That page mirrors the Plan's card grammar and shows no ownership status,
  * so a need leads with its short name and the eligible other forms follow as one
- * telegram „Auch ok: …" line. The Stage-1 Idealplan block is untouched and keeps
+ * telegram „Auch ok: …" line. The Stage-1 Plan block is untouched and keeps
  * `TOOL_CHOICE_GROUP_LABELS`, `TOOL_CHOICE_GROUP_NOTES` and
  * `toolAlternativeNote` exactly as they are.
  */

@@ -5,7 +5,7 @@ import { TOOL_DERIVED_NOTE } from "@/lib/personal-plan/tools/presentation"
 import type { Stage1ToolBlock, Stage1ToolCard } from "@/lib/personal-plan/tools/read-view"
 
 /**
- * The compact tier-local `Deine Tools` block that follows this Idealplan page's
+ * The compact tier-local `Deine Tools` block that follows this Plan page's
  * care-product cards.
  *
  * It deliberately does NOT reuse the exact care-product card anatomy: no price,

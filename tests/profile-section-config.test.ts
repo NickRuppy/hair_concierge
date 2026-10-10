@@ -496,3 +496,27 @@ test("Gewohnheiten keeps all four rows when any heat source is used or not yet k
   assert.deepEqual(keys(profileHabitsRows(makeProfile(), null)), four)
   assert.deepEqual(keys(profileHabitsRows(null, { dryingRoutes: ["air_dry"] })), four)
 })
+
+test("the four habits keys exist twice by design: a row is identified by (key, section), never by key alone", () => {
+  const seen = new Set<string>()
+  for (const entry of PROFILE_FIELD_CONFIG) {
+    const pair = `${entry.key}@${entry.sectionKey}`
+    assert.ok(!seen.has(pair), `${pair} is unique`)
+    seen.add(pair)
+  }
+  const habitKeys = sectionFields("habits").map((entry) => entry.key)
+  assert.equal(habitKeys.length, 4)
+  for (const key of habitKeys) {
+    const sections = PROFILE_FIELD_CONFIG.filter((entry) => entry.key === key).map(
+      (entry) => entry.sectionKey,
+    )
+    assert.equal(sections.length, 2, `${key} appears exactly twice`)
+    assert.ok(sections.includes("habits"), `${key} is a habits row`)
+    assert.ok(
+      sections.some((section) => section !== "habits"),
+      `${key} keeps its old section`,
+    )
+  }
+  // The page selects by section, so each section's rows are exactly its own.
+  assert.ok(sectionFields("habits").every((entry) => entry.sectionKey === "habits"))
+})

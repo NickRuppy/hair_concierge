@@ -343,6 +343,16 @@ function migrationChain(options: { stage1Sources?: boolean }): string[] {
   return chain
 }
 
+/**
+ * The personal-plan schema on PGlite, ending with the tools-module migration
+ * (`20261009150000`), which widens the module list to products/tools/habits.
+ *
+ * Trap: that widening lives in a function/constraint the older module-aware migrations also
+ * define. A suite that builds the DEFAULT chain itself (or runs this fixture and then re-applies
+ * an older module-aware migration) silently reverts the module list to the two-module form, and
+ * the tools module then fails its checks with confusing errors. Re-apply
+ * `PERSONAL_PLAN_STAGE2_TOOLS_MODULE_MIGRATION` last, as the tail of this function does.
+ */
 export async function migratedPersonalPlanDatabase(
   t: {
     after: (fn: () => Promise<void>) => void
