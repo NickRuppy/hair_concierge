@@ -59,6 +59,8 @@ Troubleshooting:
 - Stale behavior after editing deep lib code → restart the dev server; hot reload serves stale
   deep-lib modules.
 
+The Hair Tools module on a real (dev-login) plan account needs `PERSONAL_PLAN_TOOLS_ROLLOUT=all` (or `admin` with a `profiles.is_admin` account) in `.env.local`; default is `off`, which leaves Feinschliff, the meter and the Profil exactly as before. Restart the dev server after changing it.
+
 ## 2. `/labs` harnesses (verified)
 
 Dev-only pages (`NODE_ENV !== "development"` → 404; the `/labs` prefix is also classified as a
@@ -72,6 +74,7 @@ page fabricates its own scenario. Useful ones under `src/app/labs/`:
 - `/labs/personal-plan-stage-1-2` — Stage 1→2 journey
 - `/labs/feinschliff-journey` — fork-free journey, tools on (5 steps, Tool-Checkpoint); `?step=module-tools` jumps to the tools module
 - `/labs/personal-plan-tools` — Hair Tools surfaces from one fixture (`?section=stage1|stage2-overview|stage2-forms|checkpoint|routine|anwendung`)
+- `/labs/profile-haarprofil` — Profil „Dein Haarprofil" section, 4 steps (tools off) and 5 steps (tools on)
 - `/labs/personal-plan/stage-3` — products stage
 - `/labs/personal-plan-application`, `/labs/personal-plan-application/[dayType]` — Anwendung
 - `/labs/personal-plan-chapters`, `/labs/personal-plan-view-transition`,

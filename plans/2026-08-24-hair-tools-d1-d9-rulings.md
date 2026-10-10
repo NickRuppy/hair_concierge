@@ -509,3 +509,89 @@ was changed. One row per finding:
 
 Document versions after the pass: `decision.md` **v4**, `conditional-guidance-matrix.md`
 **v3**, `fixtures.md` **v3**, `input-mapping.md` **v3**, all `last_updated 2026-08-25`.
+
+## 2026-10-09/10 port rulings (Hair Tools port onto restructured main)
+
+Hair Tools Phase 1 was ported onto main on branch `codex/hair-tools-port` (plan
+`plans/2026-10-09-hair-tools-port.md` Rev. 5; the August build, PR #465, is superseded and was
+never merged). D1–D9 and R1–R4 above stand; the entries below amend how they are carried, or add to
+them. `decision.md` is now **v5** (module placement, storage, derivation, regrouping, read-time).
+On conflict, this section wins over the August wording it names.
+
+### Owner rulings (Nick, 2026-10-09)
+
+| # | Ruling |
+| --- | --- |
+| P1 | Option A: Hair Tools becomes a **third Feinschliff module** with its own migration (one additive SQL migration, `20261009150000_personal_plan_stage2_tools_module.sql`, teaches the three module-aware RPCs the new module; applied before the code deploy). |
+| P2 | The **Tool-Checkpoint** is shown **once, on the tools module's return to `/routine`** — not as a Stage-3 step. |
+| P3 | The module is named **„Deine Tools"**. (The plan lists this ruling without a number; P3 is the only slot left between P2 and P4.) |
+| P4 | **Ship to all after an admin walkthrough:** flag `PERSONAL_PLAN_TOOLS_ROLLOUT` goes `off` → `admin` → `all`. |
+| Temperature | The **temperature question of `D2b` is dropped** („if it's only optional, let's drop it"). The Föhn stays „nicht nötig" for Hitzeschutz on every setting; evidence in `plans/2026-10-09-hair-tools-port-evidence-blowdry-heat.md` (low confidence that a plain Föhn needs a protectant; no Föhn setting is „empfohlen"). |
+| Diffusor | **Diffusor = plain blow-drying.** With the flag on, `requiresStage2HeatProtection("diffuser_airflow_shaping")` is false: no Hitzeschutz question for it, heat-protectant tier `not_needed`, stored consistency ignored on read. **Beratung effect (visible):** the consult intake and backfill follow the same predicate unconditionally (Beratung has no flag), so a consult Diffusor event shows tier `not_needed` where it showed `optional`. Hitzeschutz for every other heat source is unchanged. |
+| Profil | Option (b) — behaviors vs things — then the **Rev. 5 structure:** Tools are asked before Gewohnheiten, things are asked once, Gewohnheiten = behaviors only. Profil cards: Haar-Check, Produkte, „Deine Tools", „Gewohnheiten"; Styling, Alltag and Ziele retire when tools apply. |
+| Wash-day order | Overview sections, pages inside a section, Profil rows/chips and the Produkte category list follow waschen → abtrocknen → entwirren → trocknen/stylen → fixieren → Nachtschutz („roughly inspired by the chronological order in which you would apply these products"). |
+| Ziele | The Ziele row moves into **Haar-Check** (it keeps its own editor, `profile-edit-goals`, as a row-level link and never changes the „x/N vollständig" count); the Ziele card is removed in both flag states. |
+
+Amended D-series wording: the overview is **regrouped chronologically** (four sections, table in
+`decision.md`) and the **three thing-questions leave Gewohnheiten** when the flag is on (they are
+derived from the inventory). This amends the question-structure parts of `D3`/`D3b`; `D3a` copy,
+`D3c` merge-per-form and `D5`–`D7` are unchanged. `D8`'s decoder machinery is not ported (the
+August family-keyed shape never reached production). `D2b`'s restructure ships without the
+temperature follow-up.
+
+### Mechanism rulings (design, 2026-10-09)
+
+- **Per-page answers.** The draft carries `toolForms` per page (`Partial<Record<ToolFormPageKey, ToolReportedForm[]>>`); the facts carry one key per page, `toolForms_<family>_<n>`, plus `toolFamiliesWithSomething`. A two-page family never lets one page promote the other's assumed answer.
+- **Derived thing-fields.** `additionalHeatTools`, `towel.material`, `nightProtection` (and `brushesCombs`, H2) are derived from the inventory by `careFactsFromToolInventory` and written with the source pages' provenance; the Gewohnheiten questions for them are skipped when derived. The plan engine, Beratung, backfill and the legacy columns read unchanged facts.
+- **Frottee / Diffusor answer-only forms.** `frottee` (drying_textiles) and `diffuser` (airflow) are captured answers that are never recommended and never lead a route — they exist so the towel material and the drying route „Mit Diffusor" can be derived.
+- **Read-time derivation.** Tool content (Stage-1 cards, Routine tool section, Anwendung tool blocks) is derived from current facts + the active V1 routine; no routine payload V2, no persisted tool artifact, no recompute on tools completion.
+- **Reported ownership (D5).** Only `user` provenance counts; assumed or derived entries never enter the inventory, so they can never read as owned.
+- **Existing members.** Inventory pre-filled from their care facts (provenance `derived`, pre-ticked, not saved until confirmed); Gewohnheiten stays complete; adding a heat tool later reopens only that tool's two questions.
+- **Rollback.** Flag flip; a pre-port code rollback first clears the new care keys through the facts door with `scripts/personal-plan/tools-rollback-clear-facts.ts` (dry run by default; `--include-derived` opt-in; idempotent).
+
+### Implementation rulings from the build (SDD ledger, condensed)
+
+- **Process:** local per-task commits on the branch are allowed (nothing is pushed); execution order 1→2→3→4→5→6→8→9→10→11→12→13 (Task 7, the Routine-V2 decoder, retired).
+- **Migration (Task 2):** the RPC is `personal_plan_rebase_on_facts_v1`; the PGlite harness appends the tools migration last so a rebase file cannot revert the widened module list; optional-entry rejects a `not_applicable` module; tools-section label „Was du schon hast" and telemetry section `tools` accepted; the „Letzter Schritt" banner keys on `totalSteps >= 5`; a grown-path complete draft keeps its existing branches on a bare `/plan-start` and the new question is asked only on explicit module entry.
+- **Flag (Task 3):** `toolsEnabled` is written into the trigger context only when true (key omitted when off) so flag-off input hashes never change; the facts-rebase lane carries the REAL flag for the refined clone while initial-version producers stay tools-off; optional page deps default to off (fail closed).
+- **Answers (Task 4):** `frottee`/`diffuser` added (above); pre-fill lives in `projectToolPrefillFromCareFacts`, not in the route engine's projection, so fixture 21's ruled `unknown` stays; assumptions must never change behavior against flag-off (textiles assumption `["microfiber_towel"]` when care has no towel info); `brushesCombs` is written only when at least one brush page has `user` provenance; ≥1 drying route is enforced for new answers at save time while stored `[]` stays valid; fixture 116 adapted to per-page answers; textile priority Mikrofaser > Baumwolltuch > Wrap > Frottee.
+- **Completion (Task 5):** a non-closing replay still calls the RPC (answers `already_projected`) so the moved-source lineage guard stays, only the duplicate facts write is skipped.
+- **Diffusor (Task 6):** the member plan is gated on `toolsEnabled`, the read side is tolerant always, Beratung unconditional; the route stays `airflow_shaping` (plan §4 is binding) and Hitzeschutz is a tier override in `heat-protectant.ts`, with leave-in/mask/needs/oil/Anwendung pinned to their previous outcomes; per-event rule markers may change refined-snapshot hashes of the four flag-on Diffusor members (accepted); drying labels are rollout-gated while Profil/iOS show „Mit Diffusor"/„Gewöhnlich föhnen" for everyone.
+- **Read views (Task 8/9):** per-field provenance — `user` and `unknown_historical` count as real, only `assumed` marks a derived tool unconfirmed; Stage-1 cards reflect care facts when they exist; `brushesCombs` is a derived-view source (ownership stays pages-only); the Stage-2 session carries a read-only `prefillCare` so legacy brush answers pre-tick; one shared `buildToolViewForRoutine` for Routine and Anwendung; a failing per-day tool projection degrades silently to the product-only day (and leaves a Sentry breadcrumb since Task 12).
+- **Checkpoint / Profil (Task 10/11):** the checkpoint is one card per family in section order, „Nur Finger" omitted, "confirmed" = completed tool questions on the path; Profil tiles follow the same grouping and short names; the card swap waits for the refinement-status read (fail open on error).
+- **Task 12:** per-family page titles and the short group-name map replace the family-label template; „Idealplan" → „Plan" in the tools copy; analytics event `personal_plan_tools_checkpoint_viewed` (bounded counts) plus optional `toolRouteCount`/`toolGapCount` on the Stage-3 handoff; grep guards pin the no-routine-V2 / nothing-persisted / no-„Idealplan" rulings.
+- **Open for ready-check (vetoable defaults):** invented copy (banner, checkpoint, card descriptions, „Keine Hitze", „N Tools"), the heat-source map and towel/night vocabulary mapping, the Frottee/Diffusor cards, per-family page titles and short names; a member whose tools are only derived (module complete, nothing user-reported) sees „Offen" in Profil, consistent with D5.
+
+### Counterpart-review findings (Codex, three rounds on the plan, all closed)
+
+Round 1 (F1–F14):
+
+| # | Finding → disposition |
+| --- | --- |
+| F1 | Completed drafts could not reopen when the path grew → grown paths are tolerated on load and reopen on save. |
+| F2 | The assumption rules did not satisfy the answer contract (sections vs families, empty defaults, wildcard) → explicit section→family conversion, valid empty defaults, explicit `tools:*` rule. |
+| F3 | A whole-family selection leaked another page's assumed answers → page-aware selection and storage. |
+| F4 | Provenance folding did not protect inventory ownership → per-page provenance, overview-derived clearing provenance, oracle that excludes assumed entries. |
+| F5 | Hot ordinary airflow needed downstream contracts → **moot** after the temperature drop. |
+| F6 | Profil read completed-draft snapshots instead of current facts → tools block from the facts via the presentation API. |
+| F7 | Completion recovery could not reach the checkpoint → `POST stage-2/complete {module}` retry path. |
+| F8 | `not_applicable` needed more consumers → response enum, assumptions predicate, row filtering, entry handling. |
+| F9 | The producer inventory missed computation owners → producers named; flag-off hashes unchanged. |
+| F10 | The "green copy" checkpoint of Task 1 was impossible → dependent files moved to their owning tasks, labs deferred. |
+| F11 | Named suites needed migration/boundary wiring → PGlite list and rebase chain extended, owners named. |
+| F12 | Unconditional brush-row removal broke the tools-off variant → **superseded** by the Profil restructure. |
+| F13 | Removing „Nichts davon" did not enforce D2 in the UI → drying-specific completeness (local + server). |
+| F14 | No reader-before-writer / rollback contract → flag + deploy order (migration → code `off` → `admin` → `all`) and the rollback script. |
+
+Round 2 (R2-1…R2-4): **R2-1** generated care keys needed answer reconstruction in `knownCareAnswers` (nested page answers rebuilt before validation, expanded on write); **R2-2** the retry endpoint was not idempotent by sharing PATCH completion (validated closing/non-closing replay before any facts write); **R2-3** rollback of persisted tool payloads was not executable on immutable routine versions → resolved by **read-time derivation** (nothing tool-shaped is persisted, so there is nothing to downgrade); **R2-4** copied labs violated the compile-clean gate (deferred to the tasks that provide their contracts).
+
+Round 3 (R3-1, R3-2, R3-P): **R3-1** `buildToolView` lacked the profile facts and the pre-routine scalp-application source (`needSnapshot` input added); **R3-2** the global "no `schemaVersion: 2`" guard rejected valid existing contracts (narrowed to routine payload schemas/producers and persisted tool fields); **R3-P** (adopted as clarification) replay preserves the persistence RPC's source-lineage check while skipping the duplicate facts write.
+
+### §2 read-time note
+
+Tool content is never versioned. The Stage-1 route, the Routine page and the Anwendung page read the
+member's current care facts (owner-scoped, request-time) and the active V1 routine, run the pure
+engine, and render. Consequences: a tools answer changes the next view immediately; a routine
+version, proposal or source fingerprint never contains a tool; "no routine payload V2" and "nothing
+persisted under `toolAssets`/`toolOccurrences`/`toolGuidance`" are enforced by
+`tests/personal-plan-tools-guards.test.ts`.

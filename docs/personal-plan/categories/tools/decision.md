@@ -2,9 +2,9 @@
 category: tools
 document_type: decision
 status: confirmed
-decision_version: 4
-last_reviewed_at: 2026-08-25
-version_note: "v4 (2026-08-25) — counterpart-review reconciliation: stale pre-ruling mirrors corrected and the D4-D7 contract seams written against the implemented WS1 contract."
+decision_version: 5
+last_reviewed_at: 2026-10-10
+version_note: "v5 (2026-10-10) — Hair Tools port: Deine Tools is the third Feinschliff module (Produkte → Deine Tools → Gewohnheiten), tool answers are stored through the care facts, the thing-questions of Gewohnheiten are derived from the inventory, the overview is regrouped in wash-day order and tool content is derived at read time. v4 (2026-08-25) — counterpart-review reconciliation: stale pre-ruling mirrors corrected and the D4-D7 contract seams written against the implemented WS1 contract."
 current_runtime_revision_reviewed: 37319140
 current_reconciliation_plan: plans/2026-08-12-personal-plan-hair-tools-current-shape.md
 evidence_file: docs/personal-plan/categories/tools/evidence.md
@@ -38,6 +38,19 @@ Hair Tools is one visual and navigation section, not one lossy recommendation re
 - how and when to use the confirmed route safely.
 
 The category does not inventory, identify, compare, or issue a fit verdict on an exact tool the user already owns. Brand, model, attachment identity, and specifications are not onboarding inputs.
+
+### v5 note — Hair Tools port (2026-10-10)
+
+The August build (PR #465) was ported onto the restructured main (plan `plans/2026-10-09-hair-tools-port.md` Rev. 5; rulings in `plans/2026-08-24-hair-tools-d1-d9-rulings.md`, section „2026-10-09/10 port rulings"). The product policy above stands; these seams changed and win over older wording in this document:
+
+- **Module placement and order.** Hair Tools is no longer a Stage-3 side lane or a Stage-1/2 appendix. It is the third Feinschliff module **„Deine Tools"** between Produkte and Gewohnheiten: modules `products → tools → habits`, steps 3/4/5 of 5 (`totalSteps = 2 + applicable`). The module is `not_applicable` while the rollout flag `PERSONAL_PLAN_TOOLS_ROLLOUT` (`off | admin | all`, default `off`) does not admit the member; with the flag off nothing about Stage 1–3, the path or the meter changes. The Tool-Checkpoint „Das hast du schon" is shown once when the module hands back to `/routine`; the old Stage-3 checkpoint is retired.
+- **Things asked once.** Gewohnheiten keeps behaviors only (Abtrocknen technique, Trocknen routes, per owned heat tool „Wie oft?" + „Hitzeschutz?"). The three thing-questions (weitere Hitze-Tools, Handtuch-Material, Nachtschutz) leave the path when the flag is on.
+- **Storage via the care facts.** Tool answers are saved through the central-profile door (`user_facts_save_v1`) as `care_habits` keys: `toolFamiliesWithSomething` plus one key per product-form page, `toolForms_<family>_<n>` (`toolForms_brushes_combs_2`, …). No new column, no routine payload: the `D8` path-version/decoder machinery of the August family-keyed shape is not ported (that shape never shipped). A page's key is written only once the page is settled; its field provenance is the page's own (`user` / `assumed`). Reported ownership (`D5`) is read only from `user` provenance (`reportedToolInventoryFromFacts`).
+- **Derived thing-fields.** `additionalHeatTools`, `towel.material`, `nightProtection` and `brushesCombs` are derived from the inventory by a fixed mapping (`careFactsFromToolInventory`) and written with the source pages' provenance, so the plan engine, Beratung, backfill and the legacy columns keep reading the same facts. `brushesCombs` is written only when at least one brush page is the member's own. Answer-only cards `frottee` and `diffuser` exist so the towel material and the drying route „Mit Diffusor" can be derived; they add no guidance route.
+- **Overview regrouping.** Four chronological sections (Waschen & Auftragen · Abtrocknen & Entwirren · Trocknen & Stylen · Nachtschutz), pages in wash-day order inside them (table under „Inputs and grouped onboarding"). Page titles are written per family (`TOOL_FAMILY_PAGE_TITLES`); the checkpoint and the Profil tiles use the short group names (`TOOL_FAMILY_SHORT_LABELS`).
+- **Drying (`D2`, `D2b`).** „Gewöhnlich föhnen / auch mit Rundbürste" and „Mit Diffusor / Aufsatz für Locken/Wellen" ship; `air_dry` is always offered, the other routes only for owned airflow tools; no „Nichts davon", at least one selection for new answers (stored `[]` stays valid). **The temperature question of `D2b` is dropped** (Nick 2026-10-09; evidence memo `plans/2026-10-09-hair-tools-port-evidence-blowdry-heat.md`). With the flag on, the Diffusor counts as plain blow-drying: no Hitzeschutz question, heat-protectant tier `not_needed`.
+- **Read-time views.** Stage-1 cards, the Routine tool section and the Anwendung tool blocks are derived at read time from the current facts plus the active V1 routine (`buildToolView`); nothing tool-shaped is persisted on a routine version, and tools completion triggers no recompute.
+- **Profil.** With tools applicable: Haar-Check (incl. the Ziele row), Produkte, „Deine Tools" (photo chips in the four chronological groups), „Gewohnheiten" (four behavior rows; „Keine Hitze" without heat tools). Styling, Alltag and the Ziele card retire in that state.
 
 ## V1 family charter
 
