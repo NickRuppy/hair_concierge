@@ -19,10 +19,33 @@ import {
   toolFormPage,
   type ToolOverviewSectionKey,
 } from "@/lib/personal-plan/tools/labels"
+import type { CareHabitsV1, FieldProvenanceValue } from "@/lib/user-facts/schema"
+import type { BrushType } from "@/lib/vocabulary/onboarding-care"
 
 export type Stage2RefinementHandoff = {
   refinedVersionId: string
   nextHref: "/plan-start"
+}
+
+/**
+ * Read-only pre-fill context (Hair Tools port, Task 8 fix round 3): the member's care facts the
+ * Tool pages pre-tick from but the Stage-2 answers do not carry — today only the legacy brush
+ * answer. Set by the server only while the Tools rollout is on and only from a confirmed fact
+ * (`user`, or non-empty `unknown_historical`). Never part of the answers, never persisted, never
+ * read by the path, the resolver or a save; it only changes UI starting values.
+ */
+export type Stage2PrefillCare = { brushesCombs?: BrushType[] }
+
+/** The confirmed legacy care facts for `Stage2PrefillCare`, or `undefined` when there are none. */
+export function stage2PrefillCareFromFacts(
+  careHabits: Partial<CareHabitsV1> | null | undefined,
+  fields: Record<string, FieldProvenanceValue> | undefined,
+): Stage2PrefillCare | undefined {
+  const brushes = careHabits?.brushesCombs
+  const provenance = fields?.brushesCombs
+  if (!brushes || brushes.length === 0) return undefined
+  if (provenance !== "user" && provenance !== "unknown_historical") return undefined
+  return { brushesCombs: [...brushes] }
 }
 
 export type Stage2RefinementSession = {
@@ -35,6 +58,8 @@ export type Stage2RefinementSession = {
   completedQuestionIds: Stage2QuestionId[]
   path: Stage2PathState
   completedHandoff?: Stage2RefinementHandoff
+  /** Read-only UI pre-fill context; see `Stage2PrefillCare`. */
+  prefillCare?: Stage2PrefillCare
 }
 
 export type CreateStage2RefinementSessionInput = {
@@ -45,6 +70,7 @@ export type CreateStage2RefinementSessionInput = {
   revision?: number
   status?: "in_progress" | "complete" | "stale"
   completedHandoff?: Stage2RefinementHandoff
+  prefillCare?: Stage2PrefillCare
   /**
    * Only for rows read back from persistence. A draft completed under an older path can
    * have a path that GREW since (a new question joined it): the stored row stays `complete`
@@ -92,6 +118,7 @@ export function createStage2RefinementSession(
     completedQuestionIds: contract.path.completedQuestionIds,
     path: contract.path,
     completedHandoff: input.completedHandoff ? structuredClone(input.completedHandoff) : undefined,
+    ...(input.prefillCare ? { prefillCare: structuredClone(input.prefillCare) } : {}),
   }
 }
 
@@ -161,6 +188,8 @@ export function saveStage2SessionAnswer(
     answers: candidate.answers,
     completedQuestionIds: candidate.path.completedQuestionIds,
     path: candidate.path,
+    // The pre-fill context outlives the local save; it is not an answer.
+    ...(session.prefillCare ? { prefillCare: structuredClone(session.prefillCare) } : {}),
   }
 }
 

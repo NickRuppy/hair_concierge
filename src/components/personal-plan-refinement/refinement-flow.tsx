@@ -297,7 +297,9 @@ export function RefinementFlow({
       setSession(nextSession)
       setActiveQuestionId(nextQuestionId)
       setLocalAnswer(
-        nextQuestionId ? getAnswerForQuestion(nextSession.answers, nextQuestionId) : undefined,
+        nextQuestionId
+          ? getAnswerForQuestion(nextSession.answers, nextQuestionId, nextSession.prefillCare)
+          : undefined,
       )
       setStatus(options?.status ?? "idle")
       setLiveMessage(options?.liveMessage ?? "")
@@ -1229,7 +1231,7 @@ function initialRefinementView(
     session,
     activeQuestionId: entry.activeQuestionId,
     localAnswer: entry.activeQuestionId
-      ? getAnswerForQuestion(session.answers, entry.activeQuestionId)
+      ? getAnswerForQuestion(session.answers, entry.activeQuestionId, session.prefillCare)
       : undefined,
     status: entry.status,
     mode: entry.mode,

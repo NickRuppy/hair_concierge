@@ -15,7 +15,8 @@ import {
   type Stage2QuestionId,
 } from "@/lib/personal-plan/refinement/types"
 import type { JsonValue } from "./index"
-import { mapDraft } from "./stage2-refinement-supabase"
+import type { Stage2PrefillCare } from "@/lib/personal-plan/refinement/session"
+import { loadStage2PrefillCare, mapDraft } from "./stage2-refinement-supabase"
 import type { Stage2PersistedDraft } from "./stage2-refinement-service"
 
 export const OPEN_OPTIONAL_STAGE2_REFINEMENT_RPC = "personal_plan_open_optional_refinement_v1"
@@ -60,6 +61,11 @@ export type Stage2OptionalEntryClient = SupabaseClient
 export type Stage2OptionalEntryDeps = {
   loadContext: (userId: string) => Promise<OptionalStage2Context>
   openPreparedDraft: (input: OpenPreparedOptionalDraftInput) => Promise<Stage2PersistedDraft>
+  /**
+   * The read-only Tool pre-fill context (`Stage2PrefillCare`), so `?refine=tools` opens with the
+   * same starting values as a resumed Feinschliff. Wired only while the Tools rollout is on.
+   */
+  loadPrefillCare?: (userId: string) => Promise<Stage2PrefillCare | undefined>
 }
 
 export class Stage2OptionalEntryError extends Error {
@@ -82,6 +88,17 @@ export async function openOptionalRefinement(input: {
   }
   const userId = normalizeRequiredId(input.userId, "userId")
   const deps = input.deps ?? defaultDeps(input.client, { toolsEnabled: input.toolsEnabled })
+  const prefillCare = deps.loadPrefillCare?.(userId).catch(() => undefined)
+  const draft = await openDraft(userId, input.module, deps)
+  const prefill = await prefillCare
+  return prefill ? { ...draft, prefillCare: prefill } : draft
+}
+
+async function openDraft(
+  userId: string,
+  module: Stage2Module,
+  deps: Stage2OptionalEntryDeps,
+): Promise<Stage2PersistedDraft> {
   const context = await deps.loadContext(userId)
 
   // A module without questions on the draft's path (`tools` while its rollout is off) is not
@@ -92,7 +109,7 @@ export async function openOptionalRefinement(input: {
       getOrderedQuestionIds(pathDraft.triggerContext, pathDraft.answers),
       [],
     )
-    if (moduleStates[input.module].status === "not_applicable") {
+    if (moduleStates[module].status === "not_applicable") {
       throw new Stage2OptionalEntryError("invalid_module")
     }
   }
@@ -100,7 +117,7 @@ export async function openOptionalRefinement(input: {
   if (context.currentDraft) {
     return deps.openPreparedDraft({
       userId,
-      module: input.module,
+      module,
       personalPlanId: context.personalPlanId,
       baseInitialNeedVersionId: context.currentInitialNeedVersionId,
       parentDraftId: null,
@@ -117,7 +134,7 @@ export async function openOptionalRefinement(input: {
 
   return deps.openPreparedDraft({
     userId,
-    module: input.module,
+    module,
     personalPlanId: context.personalPlanId,
     baseInitialNeedVersionId: context.currentInitialNeedVersionId,
     parentDraftId: parentDraft.id,
@@ -135,6 +152,9 @@ function defaultDeps(
   return {
     loadContext: (userId) => loadOptionalStage2Context(client, userId, options),
     openPreparedDraft: (request) => openPreparedDraftWithRpc(client, request, options),
+    ...(options.toolsEnabled
+      ? { loadPrefillCare: (userId: string) => loadStage2PrefillCare(client, userId) }
+      : {}),
   }
 }
 

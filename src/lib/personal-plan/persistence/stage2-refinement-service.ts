@@ -3,6 +3,7 @@ import { z } from "zod"
 import {
   createStage2RefinementSession,
   saveStage2SessionAnswer,
+  type Stage2PrefillCare,
   type Stage2RefinementHandoff,
   type Stage2RefinementSession,
 } from "@/lib/personal-plan/refinement/session"
@@ -84,6 +85,11 @@ export type Stage2PersistedDraft = {
    * absent = the row predates the column.
    */
   directAcceptanceOwned?: boolean | null
+  /**
+   * Read-only UI pre-fill context (`Stage2PrefillCare`), attached by the gateway while the Tools
+   * rollout is on. Never written back: no save, completion or RPC reads it.
+   */
+  prefillCare?: Stage2PrefillCare
 }
 
 export type Stage2RefinementPersistence = {
@@ -178,6 +184,7 @@ export function stage2SessionFromPersistedDraft(
         : undefined,
     // A completed row whose path grew since stays loadable; its first save reopens it.
     tolerateGrownPath: true,
+    ...(draft.prefillCare ? { prefillCare: draft.prefillCare } : {}),
   })
 }
 
@@ -343,7 +350,9 @@ export function createStage2RefinementService(input: {
       if (!parsed.success) throw new Stage2RefinementError("invalid_answer")
       let draft = cached ?? (await loadDraft())
       if (draft.status === "complete") {
-        draft = await input.persistence.reopen({ userId: input.userId, draft })
+        const reopened = await input.persistence.reopen({ userId: input.userId, draft })
+        // The successor row is new; the pre-fill context is the member's, so it carries over.
+        draft = draft.prefillCare ? { ...reopened, prefillCare: draft.prefillCare } : reopened
         cached = draft
       }
       if (draft.status !== "in_progress") throw new Stage2RefinementError("revision_conflict")

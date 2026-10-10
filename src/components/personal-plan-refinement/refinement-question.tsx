@@ -18,7 +18,10 @@ import {
   getStage2QuestionModule,
   isStage2TowelMaterialDerived,
 } from "@/lib/personal-plan/refinement/question-path"
-import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
+import type {
+  Stage2PrefillCare,
+  Stage2RefinementSession,
+} from "@/lib/personal-plan/refinement/session"
 import { projectToolCareFacts } from "@/lib/personal-plan/tools/facts"
 import type { ToolReportedForm } from "@/lib/personal-plan/tools/contracts"
 import {
@@ -124,9 +127,23 @@ const HEAT_SOURCE_TITLES = {
   thermal_rollers: "Thermo-Wickler",
 } as const satisfies Record<Stage2HeatEventSource, string>
 
+/**
+ * The care facts the Tool starting values read: the draft's answers plus the read-only legacy
+ * brush answer, so a member's Rundbürste from onboarding is pre-ticked (never saved by itself).
+ */
+function prefillToolCareFacts(
+  answers: PersonalPlanRefinementAnswersV1,
+  prefillCare: Stage2PrefillCare | undefined,
+) {
+  const care = projectToolCareFacts(answers)
+  return prefillCare?.brushesCombs ? { ...care, brushesCombs: prefillCare.brushesCombs } : care
+}
+
 export function getAnswerForQuestion(
   answers: PersonalPlanRefinementAnswersV1,
   questionId: Stage2QuestionId,
+  /** Read-only session context for the Tool starting values (legacy brush answer). */
+  prefillCare?: Stage2PrefillCare,
 ): unknown {
   if (questionId.startsWith("heat:")) return answers.heatEvents?.[questionId]
   if (questionId === "tools_overview") {
@@ -135,7 +152,7 @@ export function getAnswerForQuestion(
     // untick, never an answer of its own until they submit the page.
     return answers.toolFamiliesWithSomething
       ? toolSectionsForFamilies(answers.toolFamiliesWithSomething)
-      : toolOverviewPreselection(projectToolCareFacts(answers))
+      : toolOverviewPreselection(prefillToolCareFacts(answers, prefillCare))
   }
   if (questionId.startsWith("tools:")) {
     const pageKey = questionId.slice("tools:".length)
@@ -143,7 +160,7 @@ export function getAnswerForQuestion(
     return (
       (answers.toolForms as Record<string, ToolReportedForm[] | undefined> | undefined)?.[
         pageKey
-      ] ?? toolPagePreselection(projectToolCareFacts(answers), pageKey)
+      ] ?? toolPagePreselection(prefillToolCareFacts(answers, prefillCare), pageKey)
     )
   }
   switch (questionId) {
@@ -224,7 +241,8 @@ export function RefinementQuestion({
   focusOnQuestionChange = true,
 }: RefinementQuestionProps) {
   const headingRef = useRef<HTMLHeadingElement>(null)
-  const answer = localAnswer ?? getAnswerForQuestion(session.answers, questionId)
+  const answer =
+    localAnswer ?? getAnswerForQuestion(session.answers, questionId, session.prefillCare)
   const complete = isLocalAnswerComplete(questionId, answer, {
     toolsEnabled: session.triggerContext.toolsEnabled === true,
     towelMaterialDerived: isStage2TowelMaterialDerived(session.triggerContext, session.answers),
