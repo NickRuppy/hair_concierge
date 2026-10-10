@@ -1216,3 +1216,42 @@ test("Task 2.6: the plan-updated toast and the refinement banner can render on t
   // never fight for the same slot.
   assert.ok(html.indexOf("Plan aktualisiert") < html.indexOf("Noch ein Schritt"))
 })
+
+test("Deine Tools renders after the product sections iff the view carries a tool section", () => {
+  const routine = payload([item()])
+  const comb = {
+    assetKey: "asset:brushes_combs:wide_tooth_comb",
+    family: "brushes_combs",
+    productTypes: ["wide_tooth_comb"],
+    capabilities: ["detangle"],
+    ownership: "owned_generic",
+    presentationState: "use_yours",
+    routeKeys: ["tool:brushes_combs:detangling_foundation"],
+    labelKey: "Grobzinkiger Kamm",
+    purposeKey: "Zum sanften Entwirren",
+    imageKey: "wide_tooth_comb",
+  } as const
+  const withTools = renderToStaticMarkup(
+    <RoutinePage
+      view={{
+        ...activeViewFor(routine),
+        toolSection: {
+          assets: [
+            {
+              ...comb,
+              productTypes: [...comb.productTypes],
+              capabilities: [...comb.capabilities],
+              routeKeys: [...comb.routeKeys],
+            },
+          ],
+          derivedAssetKeys: [],
+        },
+      }}
+    />,
+  )
+  assert.ok(withTools.includes("data-routine-tool-section"))
+  assert.ok(withTools.indexOf("Deine Basis") < withTools.indexOf("data-routine-tool-section"))
+  const without = renderToStaticMarkup(<RoutinePage view={activeViewFor(routine)} />)
+  assert.equal(without.includes("data-routine-tool-section"), false)
+  assert.equal(without.includes("Deine Tools"), false)
+})
