@@ -17,6 +17,7 @@ import {
   type Stage2ModuleEntryRequest,
 } from "@/lib/personal-plan/refinement/module-scope"
 import { createStage2FixtureGateway } from "@/lib/personal-plan/refinement/fixture-gateway"
+import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
 import type {
   PersonalPlanRefinementAnswersV1,
   Stage2QuestionId,
@@ -56,9 +57,16 @@ export function Stage2PreviewClient({
   onModuleComplete,
   autoHandoff,
   moduleProgress,
+  seedSession,
 }: {
   scenario: Stage2PreviewScenario
   triggerContext?: Stage2TriggerContext
+  /**
+   * A draft carried over from an earlier step of a multi-step lab (`/labs/feinschliff-journey`):
+   * the module then starts from what the reviewer just answered instead of the scenario's
+   * fixture answers.
+   */
+  seedSession?: Stage2RefinementSession
   onHandoff?: (payload: Stage2HandoffPayload) => void | Promise<void>
   onModuleComplete?: (payload: Stage2ModuleCompletionPayload) => void | Promise<void>
   autoHandoff?: boolean
@@ -66,8 +74,8 @@ export function Stage2PreviewClient({
   moduleProgress?: Stage2ModuleProgress | null
 }) {
   const gateway = useMemo(
-    () => createPreviewGateway(scenario, triggerContext),
-    [scenario, triggerContext],
+    () => createPreviewGateway(scenario, triggerContext, seedSession),
+    [scenario, triggerContext, seedSession],
   )
   const moduleEntry = moduleEntryForScenario(scenario)
   const [secondaryExit, setSecondaryExit] = useState<"routine" | "stage1" | null>(null)
@@ -105,7 +113,18 @@ export function Stage2PreviewClient({
 export function createPreviewGateway(
   scenario: Stage2PreviewScenario,
   triggerContext?: Stage2TriggerContext,
+  seedSession?: Stage2RefinementSession,
 ): Stage2RefinementGateway {
+  if (seedSession) {
+    return createStage2FixtureGateway({
+      runtimeEnvironment: process.env.NODE_ENV === "test" ? "test" : "development",
+      triggerContext: seedSession.triggerContext,
+      initialAnswers: seedSession.answers,
+      initialCompletedQuestionIds: [...seedSession.completedQuestionIds],
+      initialRevision: seedSession.revision,
+      initialStatus: "in_progress",
+    })
+  }
   const fixture = createStage2FixtureGateway({
     runtimeEnvironment: process.env.NODE_ENV === "test" ? "test" : "development",
     triggerContext: triggerContext ?? triggerContextForScenario(scenario),

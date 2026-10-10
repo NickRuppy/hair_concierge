@@ -68,7 +68,10 @@ page fabricates its own scenario. Useful ones under `src/app/labs/`:
 - `/labs/personal-plan-start` — Stage 1 Plan view
 - `/labs/personal-plan-stage-2?scenario=ready` — Feinschliff (scenario values are validated
   per page; read the page's `SCENARIOS` set)
+- `/labs/personal-plan-stage-2?scenario=module-tools` — the Hair Tools module (rollout on)
 - `/labs/personal-plan-stage-1-2` — Stage 1→2 journey
+- `/labs/feinschliff-journey` — fork-free journey, tools on (5 steps, Tool-Checkpoint); `?step=module-tools` jumps to the tools module
+- `/labs/personal-plan-tools` — Hair Tools surfaces from one fixture (`?section=stage1|stage2-overview|stage2-forms|checkpoint|routine|anwendung`)
 - `/labs/personal-plan/stage-3` — products stage
 - `/labs/personal-plan-application`, `/labs/personal-plan-application/[dayType]` — Anwendung
 - `/labs/personal-plan-chapters`, `/labs/personal-plan-view-transition`,
