@@ -1,3 +1,4 @@
+import type { UserHeatRoute } from "@/lib/heat-activation/contract"
 import { CATEGORY_COPY, ROLE_COPY } from "@/components/personal-plan-products/stage3-product-copy"
 import { presentationFor } from "@/lib/personal-plan/decision-presentation"
 import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
@@ -87,6 +88,8 @@ export type BuildScanVerdictInput = {
   perRoleFacts?: Partial<Record<PlanProductRole, ScanRoleFacts>>
   coverage: PlanPortfolioCoverageFact[]
   hairThickness: PlanHairThickness
+  /** The user's heat routes (`stage3HeatRoutesFromSnapshot`); read by heat-activated products. */
+  heatRoutes?: readonly UserHeatRoute[]
   heatCarrierCoverage: {
     carrierCategory: Extract<PersonalPlanCategory, "leave_in" | "oil" | "heat_protectant"> | null
     verifiedRoutes: string[]
@@ -450,6 +453,7 @@ function scanAuthorityInput(
     productFacts: facts,
     recommendationCandidates,
     hairThickness: input.hairThickness,
+    ...(input.heatRoutes ? { heatRoutes: input.heatRoutes } : {}),
     heatCarrierCoverage: input.heatCarrierCoverage,
   }
 }

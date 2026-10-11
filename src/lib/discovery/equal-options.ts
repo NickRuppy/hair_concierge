@@ -1,3 +1,4 @@
+import { stage3HeatRoutesFromSnapshot } from "@/lib/personal-plan/oil-heat-context"
 import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
 import type { Stage3CategoryProductFacts } from "@/lib/personal-plan/products/authority/contracts"
 import { evaluateStage3Authority } from "@/lib/personal-plan/products/authority/evaluate"
@@ -72,6 +73,7 @@ export function discoveryEqualOptions(input: {
     categoryDecision: input.decision as never,
     coverage: input.snapshot.coverage,
     hairThickness: input.snapshot.profile.hair.thickness,
+    heatRoutes: stage3HeatRoutesFromSnapshot(input.snapshot),
     productFacts: null,
     recommendationCandidates: input.candidates as never,
     heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },

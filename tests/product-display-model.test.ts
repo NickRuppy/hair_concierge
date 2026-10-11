@@ -350,3 +350,28 @@ test("fallback summaries drop internal-looking description text", () => {
   assert.match(summary, /Dieses Shampoo passt/)
   assert.doesNotMatch(summary, /internal:leave-in|matched-profile|raw_code/)
 })
+
+test("activated leave-in shows Wirkt erst mit Hitze", () => {
+  const product = createWellaLikeLeaveIn()
+  product.leave_in_specs = {
+    product_id: product.id,
+    format: "spray",
+    weight: "medium",
+    conditioner_relationship: "booster_only",
+    roles: ["styling_prep"],
+    provides_heat_protection: true,
+    heat_activation_required: true,
+    care_benefits: ["anti_frizz"],
+    ingredient_flags: [],
+    application_stage: ["towel_dry", "pre_heat"],
+  }
+  const rows = buildDrawerProductProfileRows(product)
+  assert.deepEqual(
+    rows.find((row) => row.label === "Rolle"),
+    { label: "Rolle", value: "Wirkt erst mit Hitze" },
+  )
+  assert.doesNotMatch(
+    buildProductMatchSummary(product, createFineHairProfile()),
+    /Booster nach dem Conditioner/,
+  )
+})

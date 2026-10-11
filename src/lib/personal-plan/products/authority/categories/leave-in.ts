@@ -1,3 +1,4 @@
+import { heatActivationRouteServes } from "@/lib/heat-activation/contract"
 import type { PlanRepairSupportLevel } from "@/lib/personal-plan/types"
 
 import type { Stage3CriterionResult } from "../../contracts"
@@ -51,6 +52,22 @@ function evaluateFacts(input: Stage3AuthorityInput<"leave_in">, facts: Stage3Lea
   // There is no per-subject thickness fact at this boundary. Do not compare a
   // catalog label to formula weight and fabricate a profile mismatch.
   if (!target || target.category !== "leave_in") return { verdict: "mismatch" as const, criteria }
+  // Leave-In v1.2 (A1): a heat-activated product only works in the heat-styling
+  // routine. Checked before every other fact so catalogue drift cannot reopen
+  // the post-wash slot and the user sees the specific reason.
+  const activation = facts.spec.heatActivation
+  if (activation && input.role === "post_wash_leave_in")
+    return {
+      verdict: "mismatch" as const,
+      criteria: [
+        criterion(
+          "leave_in.heat_activation",
+          "Hitzeaktivierung",
+          "fail",
+          "Wirkt erst mit Hitze – nicht als Leave-in nach jeder Wäsche gedacht.",
+        ),
+      ],
+    }
   for (const [key, value] of Object.entries({
     weight: facts.spec.weight,
     care_direction: facts.spec.careDirection,
@@ -67,7 +84,28 @@ function evaluateFacts(input: Stage3AuthorityInput<"leave_in">, facts: Stage3Lea
   if (!protocol || protocol.status !== "verified_complete") missing.push("verified_protocol")
   if (input.role === "pre_heat_application" && facts.spec.providesHeatProtection === null)
     missing.push("provides_heat_protection")
+  if (activation && input.role === "pre_heat_application") {
+    if (activation.route === null) missing.push("heat_activation_route")
+    else if (input.heatRoutes === undefined) missing.push("heat_routes")
+  }
   if (missing.length) return { verdict: "unknown" as const, criteria, missing }
+  // Q3: offered only when the user's heat routine includes the activating step.
+  if (activation?.route && !heatActivationRouteServes(activation.route, input.heatRoutes ?? []))
+    return {
+      verdict: "mismatch" as const,
+      criteria: [
+        criterion(
+          "leave_in.heat_activation",
+          "Hitzeaktivierung",
+          "fail",
+          activation.route === "direct_contact_heat"
+            ? "Wirkt erst mit Glätteisen oder Lockenstab – passt nicht zu deinem Styling."
+            : activation.route === "either_heat"
+              ? "Wirkt erst mit Hitze – passt nicht zu deinem Styling ohne Hitze."
+              : "Wirkt erst beim Föhnen – passt nicht zu deinem Styling ohne Föhn.",
+        ),
+      ],
+    }
   if (input.role === "post_wash_leave_in" && !facts.spec.roles?.includes("post_wash_leave_in"))
     return {
       verdict: "mismatch" as const,

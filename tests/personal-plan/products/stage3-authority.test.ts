@@ -399,6 +399,140 @@ test("Leave-in heat claim and verified shared protocol cover pre-heat without a 
   if (noHeatClaim.status === "known") assert.equal(noHeatClaim.verdict, "mismatch")
 })
 
+function activatedLeaveInInput(
+  role: "post_wash_leave_in" | "pre_heat_application",
+  heatRoutes: Array<"airflow_shaping" | "direct_contact_heat"> | undefined,
+  route: "airflow_shaping" | "direct_contact_heat" | "either_heat" | null = "airflow_shaping",
+) {
+  const activated = input("leave_in", "known") as Stage3AuthorityInput<"leave_in">
+  activated.role = role
+  activated.categoryDecision.roles = [role]
+  if (activated.categoryDecision.target?.category !== "leave_in") throw new Error("fixture")
+  activated.categoryDecision.target.roles = [role]
+  if (activated.productFacts?.category !== "leave_in") throw new Error("fixture")
+  // DB-drift shape on purpose: the plan role list still names post-wash.
+  activated.productFacts.spec.roles = ["post_wash_leave_in", "pre_heat_application"]
+  activated.productFacts.spec.providesHeatProtection = true
+  activated.productFacts.spec.applicationStages = ["towel_dry", "pre_heat"]
+  activated.productFacts.spec.heatActivation = { route }
+  activated.productFacts.protocols = [
+    { role: "post_wash_leave_in", status: "verified_complete", fingerprint: "post-wash" },
+    { role: "pre_heat_application", status: "verified_complete", fingerprint: "pre-heat" },
+  ]
+  if (heatRoutes) activated.heatRoutes = heatRoutes
+  return activated
+}
+
+test("activated leave-in is a mismatch for post_wash_leave_in with the Hitzeaktivierung reason", () => {
+  const result = evaluateStage3Authority(
+    activatedLeaveInInput("post_wash_leave_in", ["airflow_shaping"]) as never,
+  )
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "mismatch")
+  assert.deepEqual(
+    result.criteria.map((item) => [item.criterionId, item.label, item.result, item.explanation]),
+    [
+      [
+        "leave_in.heat_activation",
+        "Hitzeaktivierung",
+        "fail",
+        "Wirkt erst mit Hitze – nicht als Leave-in nach jeder Wäsche gedacht.",
+      ],
+    ],
+  )
+})
+
+test("activated leave-in is ideal for pre_heat_application when the user blow-dries", () => {
+  const result = evaluateStage3Authority(
+    activatedLeaveInInput("pre_heat_application", ["airflow_shaping"]) as never,
+  )
+  assert.equal(result.status, "known")
+  if (result.status === "known") assert.equal(result.verdict, "ideal")
+  const either = evaluateStage3Authority(
+    activatedLeaveInInput("pre_heat_application", ["direct_contact_heat"], "either_heat") as never,
+  )
+  assert.equal(either.status === "known" && either.verdict, "ideal")
+})
+
+test("activated leave-in is a mismatch for a straightener-only user", () => {
+  const airflow = evaluateStage3Authority(
+    activatedLeaveInInput("pre_heat_application", ["direct_contact_heat"]) as never,
+  )
+  assert.equal(airflow.status, "known")
+  if (airflow.status !== "known") return
+  assert.equal(airflow.verdict, "mismatch")
+  assert.deepEqual(
+    airflow.criteria.map((item) => [item.criterionId, item.explanation]),
+    [
+      [
+        "leave_in.heat_activation",
+        "Wirkt erst beim Föhnen – passt nicht zu deinem Styling ohne Föhn.",
+      ],
+    ],
+  )
+  const direct = evaluateStage3Authority(
+    activatedLeaveInInput(
+      "pre_heat_application",
+      ["airflow_shaping"],
+      "direct_contact_heat",
+    ) as never,
+  )
+  assert.equal(direct.status, "known")
+  if (direct.status !== "known") return
+  assert.deepEqual(
+    direct.criteria.map((item) => item.explanation),
+    ["Wirkt erst mit Glätteisen oder Lockenstab – passt nicht zu deinem Styling."],
+  )
+  const noHeat = evaluateStage3Authority(activatedLeaveInInput("pre_heat_application", []) as never)
+  assert.equal(noHeat.status === "known" && noHeat.verdict, "mismatch")
+})
+
+test("missing heat routes yield unknown", () => {
+  const noRoutes = evaluateStage3Authority(
+    activatedLeaveInInput("pre_heat_application", undefined) as never,
+  )
+  assert.equal(noRoutes.status, "unknown")
+  if (noRoutes.status === "unknown") assert.deepEqual(noRoutes.missingFacts, ["heat_routes"])
+  const noRoute = evaluateStage3Authority(
+    activatedLeaveInInput("pre_heat_application", ["airflow_shaping"], null) as never,
+  )
+  assert.equal(noRoute.status, "unknown")
+  if (noRoute.status === "unknown")
+    assert.deepEqual(noRoute.missingFacts, ["heat_activation_route"])
+})
+
+test("activated product never selected as the post-wash default among candidates", () => {
+  const gap = input("leave_in", "known") as Stage3AuthorityInput<"leave_in">
+  gap.capturedProductId = null
+  gap.subjectIdentity = null
+  gap.productFacts = null
+  gap.heatRoutes = ["airflow_shaping"]
+  const plain = knownFacts("leave_in")
+  const activated = knownFacts("leave_in")
+  if (plain.category !== "leave_in" || activated.category !== "leave_in") throw new Error("fixture")
+  Object.assign(plain, {
+    productId: "plain",
+    recommendable: true,
+    catalogSortOrder: 9,
+    factFingerprint: "facts-plain",
+  })
+  Object.assign(activated, {
+    productId: "activated",
+    recommendable: true,
+    catalogSortOrder: 1,
+    factFingerprint: "facts-activated",
+  })
+  activated.spec.heatActivation = { route: "airflow_shaping" }
+  gap.recommendationCandidates = [activated, plain]
+  const result = evaluateStage3Authority(gap as never)
+  assert.equal(result.status, "known")
+  if (result.status === "known") assert.equal(result.recommendation?.productId, "plain")
+  gap.recommendationCandidates = [activated]
+  const only = evaluateStage3Authority(gap as never)
+  assert.equal(only.status === "known" && only.recommendation, null)
+})
+
 test("supportive owned-product verdicts retain explicit keep and uncovered actions", () => {
   const conditionerInput = input("conditioner", "known") as Stage3AuthorityInput<"conditioner">
   if (conditionerInput.productFacts?.category !== "conditioner") throw new Error("fixture")

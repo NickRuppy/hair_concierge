@@ -59,3 +59,17 @@ export function heatEventsFromNeedSnapshot(
 ): InitialNeedPlanSnapshot["assessments"]["heatExposure"]["events"] {
   return (snapshot as Partial<InitialNeedPlanSnapshot>).assessments?.heatExposure?.events ?? []
 }
+
+/**
+ * The user's heat routes for Stage-3 heat-activation checks (Leave-In v1.2, S3 Q3):
+ * the distinct shaping/hot-tool routes of the refined heat events. Plain blow-drying
+ * (`ordinary_airflow`) and unclassified tools never qualify: they create no pre-heat
+ * need, and the Stage-5 routine only places an activation step on a matching
+ * airflow-shaping or direct-heat event. Sorted for a stable input.
+ */
+export function stage3HeatRoutesFromSnapshot(
+  snapshot: InitialNeedPlanSnapshot,
+): Array<"airflow_shaping" | "direct_contact_heat"> {
+  const routes = new Set(heatEventsFromNeedSnapshot(snapshot).map((event) => event.route))
+  return (["airflow_shaping", "direct_contact_heat"] as const).filter((route) => routes.has(route))
+}

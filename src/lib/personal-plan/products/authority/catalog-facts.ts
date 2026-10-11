@@ -1,5 +1,10 @@
 import { createHash } from "node:crypto"
 import { readBondbuilderResearchProfile } from "@/lib/bondbuilder/research-facts"
+import {
+  HEAT_ACTIVATION_ROUTES,
+  heatActivationRouteServes,
+  type HeatActivationRoute,
+} from "@/lib/heat-activation/contract"
 
 import type { SupabaseClient } from "@supabase/supabase-js"
 
@@ -673,6 +678,10 @@ function categorySpecFromSnapshot(
         providesHeatProtection: booleanOrNull(row?.provides_heat_protection),
         careBenefits: textArray(row?.functional_benefits),
         applicationStages: textArray(row?.application_stage),
+        // Leave-In v1.2: key only when activated, so non-activated fingerprints never churn.
+        ...(row?.heat_activation_required === true
+          ? { heatActivation: { route: heatActivationRoute(row?.heat_activation_route) } }
+          : {}),
       }
     }
     case "heat_protectant": {
@@ -1034,11 +1043,33 @@ export async function loadStage3HeatCarrierCoverage(
             verifiedEventIds,
           }
         }
-        return { carrierCategory: category, verifiedRoutes: [...heatRoutes] }
+        const verifiedRoutes = stage3IntegratedHeatCarrierRoutes(facts, heatRoutes)
+        if (verifiedRoutes === null) continue
+        return { carrierCategory: category, verifiedRoutes }
       }
     }
   }
   return { carrierCategory: null, verifiedRoutes: [] }
+}
+
+/**
+ * Routes a verified Leave-in / standalone heat carrier protects. Heat protection
+ * (never activation, D-e) decides whether it is a carrier at all; a heat-activated
+ * Leave-in is applied only before its activating heat step (Stage-5 places it by
+ * route), so it protects only the routes its activation route serves — a
+ * straightener event next to a blow-dry keeps its own heat protection.
+ * `null`: not a carrier for any of the user's routes.
+ */
+export function stage3IntegratedHeatCarrierRoutes(
+  facts: Stage3CategoryProductFacts,
+  heatRoutes: readonly string[],
+): string[] | null {
+  if (facts.category !== "leave_in" && facts.category !== "heat_protectant") return null
+  if (facts.spec.providesHeatProtection !== true) return null
+  const activation = facts.category === "leave_in" ? facts.spec.heatActivation : undefined
+  if (!activation) return [...heatRoutes]
+  const served = heatRoutes.filter((route) => heatActivationRouteServes(activation.route, [route]))
+  return served.length > 0 ? served : null
 }
 
 async function one(client: AdminClient, table: string, productId: string): Promise<Row | null> {
@@ -1266,6 +1297,12 @@ function text(value: unknown): string | null {
 
 function textArray(value: unknown): string[] | null {
   return Array.isArray(value) && value.every((item) => typeof item === "string") ? [...value] : null
+}
+
+function heatActivationRoute(value: unknown): HeatActivationRoute | null {
+  return (HEAT_ACTIVATION_ROUTES as readonly unknown[]).includes(value)
+    ? (value as HeatActivationRoute)
+    : null
 }
 
 function booleanOrNull(value: unknown): boolean | null {

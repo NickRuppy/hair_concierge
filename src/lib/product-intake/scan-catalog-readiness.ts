@@ -112,6 +112,9 @@ export function scanReadinessRoles(facts: Stage3CategoryProductFacts): PlanProdu
       return primary.length > 0 ? primary : ["scalp_comfort"]
     }
     case "leave_in": {
+      // Leave-In v1.2: a heat-activated product has the pre-heat role only — it
+      // must not demand a post-wash protocol it never gets.
+      if (facts.spec.heatActivation) return ["pre_heat_application"]
       const roles = new Set<PlanProductRole>([
         "post_wash_leave_in",
         ...declaredRoles(facts.spec.roles),
@@ -316,6 +319,9 @@ export async function evaluateScanCatalogReadiness(input: {
           recommendationCandidates: [facts],
           coverage: [],
           hairThickness: profile,
+          // Synthetic readiness profile heat-styles on every route, so a heat-activated
+          // product is judged on its facts and protocol, not blocked by a missing route.
+          heatRoutes: ["airflow_shaping", "direct_contact_heat"],
           heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
           refinedVersionId: "scanner-readiness-v1",
           refinedInputHash: "scanner-readiness-v1",

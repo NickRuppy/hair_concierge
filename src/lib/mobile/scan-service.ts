@@ -1,3 +1,4 @@
+import { stage3HeatRoutesFromSnapshot } from "@/lib/personal-plan/oil-heat-context"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import { CATEGORY_COPY } from "@/components/personal-plan-products/stage3-product-copy"
@@ -378,6 +379,7 @@ async function loadVerdict(
       perRoleFacts: roles.length > 1 ? Object.fromEntries(facts) : undefined,
       coverage: context.snapshot.coverage,
       hairThickness: context.snapshot.profile.hair.thickness,
+      heatRoutes: stage3HeatRoutesFromSnapshot(context.snapshot),
       heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
       refinedVersionId: context.refinedVersionId,
       refinedInputHash: context.refinedInputHash,

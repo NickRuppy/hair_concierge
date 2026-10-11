@@ -1,3 +1,4 @@
+import { stage3HeatRoutesFromSnapshot } from "@/lib/personal-plan/oil-heat-context"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import type {
@@ -301,6 +302,7 @@ async function assessRole(
       categoryDecision: decision as never,
       coverage: input.snapshot.coverage,
       hairThickness: input.snapshot.profile.hair.thickness,
+      heatRoutes: stage3HeatRoutesFromSnapshot(input.snapshot),
       productFacts: null,
       recommendationCandidates: candidates as never,
       heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
