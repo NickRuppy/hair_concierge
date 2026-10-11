@@ -330,6 +330,8 @@ test("the schema migration adds the route column, validated CHECKs and the fit d
     constraints.rows.map((row) => [row.conname, row.convalidated]),
     [
       ["product_leave_in_specs_heat_activation_pre_heat_only", true],
+      // Pre-existing production CHECK, reproduced by the harness.
+      ["product_leave_in_specs_heat_activation_requires_styling_role", true],
       ["product_leave_in_specs_heat_activation_route_check", true],
       ["product_leave_in_specs_heat_activation_route_iff_required", true],
     ],
