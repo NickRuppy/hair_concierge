@@ -222,6 +222,8 @@ Selection order:
 4. preserve a suitable owned product before proposing an unnecessary replacement;
 5. use curated catalog priority and then stable catalog order for a remaining tie.
 
+**Amendment (S1, 2026-10-09; implemented in S2a):** new-product selection uses the shared Stage-3 comparator (`candidate-ranking.ts`): `ideal` before `supportive` → more fulfilled compact rows → fewer cautions → catalogue `sort_order` → lower price → product id. The fit rules above become Stage-3 criteria with the profile slice (`authority/selection-profile.ts`): sensitivity = quiz scalp concern `irritated`; hair colour = the refinement answer with `user` provenance only (unknown → a tinted product is `supportive`); styling direction = the shared Personal-Plan volume rule (`planVolumeDirection`). A universal product and a matching tint are both a full colour fit (open question Q1 keeps this rule; it lives in `dryShampooTintFit`). Until the schema cutover, legacy `sensitive_refresh` counts as a standard refresh; sensitivity comes only from `scalp_sensitivity_fit`. Rule id `dry_shampoo.selection.shared_rank`. The #654 budget policy applies afterwards, unchanged.
+
 Format has no global preference order. The winning suitable product brings its format. Stage 2 may show an equally suitable alternative-format tile such as:
 
 > Gleiche Eignung, aber als Schaum statt Spray.

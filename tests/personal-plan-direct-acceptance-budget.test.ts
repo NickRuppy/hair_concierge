@@ -411,6 +411,8 @@ function stage3Persistence(
         profile: {
           source: { projection: "refined_post_plan" },
           hair: { thickness: "normal" },
+          scalp: { oiliness: "balanced", concerns: [] },
+          goals: [],
           concerns: [],
         },
       }) as never,
@@ -419,6 +421,7 @@ function stage3Persistence(
     loadAuthorityFacts: async () => CATALOG,
     loadDraft: async (input) => (input.userId === USER_ID ? draft : null),
     loadShoppingContext: async () => ({ budget, currentConcerns: [], primaryConcern: null }),
+    loadVisibleHairColor: async () => null,
     loadCatalogPackagePrices: async () => [],
   }
 }

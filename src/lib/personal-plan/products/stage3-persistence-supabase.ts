@@ -32,6 +32,7 @@ import { effectiveStage3CategoryDecisions } from "./product-load-resolution"
 import { semanticHash } from "@/lib/personal-plan/routine/canonicalize"
 import { isPersonalPlanStage3ThumbnailsEnabled } from "@/lib/personal-plan/release"
 import { shoppingBudgetSchema } from "@/lib/user-facts/schema"
+import { loadVisibleHairColor } from "@/lib/user-facts/visible-hair-color"
 
 type AdminClient = SupabaseClient
 type Stage3OptionalMigrationState = {
@@ -681,6 +682,9 @@ export function createSupabaseStage3ProductionPersistence(
             ]
           : [],
       )
+    },
+    loadVisibleHairColor(userId) {
+      return loadVisibleHairColor(client as never, userId)
     },
     async loadShoppingContext(userId) {
       const { data, error } = await client

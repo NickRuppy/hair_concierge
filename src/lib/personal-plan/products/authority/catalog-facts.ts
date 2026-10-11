@@ -753,11 +753,28 @@ function categorySpecFromSnapshot(
               : null
       return {
         supportedResetRoles: supportedResetRoles ? [...supportedResetRoles] : null,
-        scalpTypeFocus: text(row?.scalp_type_focus),
+        targetScalpTypes: deepCleansingTargetScalpTypes(row?.target_scalp_types),
         colorTreatedSuitability: text(row?.color_treated_suitability),
       }
     }
   }
+}
+
+const DEEP_CLEANSING_SCALP_TYPES = ["oily", "balanced", "dry"] as const
+type DeepCleansingScalpType = (typeof DEEP_CLEANSING_SCALP_TYPES)[number]
+
+/**
+ * `target_scalp_types` (Shampoo v1.6 §13.5 projection). Mirrors the column CHECK: a set of
+ * distinct oily/balanced/dry values, never oily together with dry. Anything else — including a
+ * missing column — is null, which means "not engine-assessed" and fails closed to no soft rank.
+ */
+export function deepCleansingTargetScalpTypes(value: unknown): DeepCleansingScalpType[] | null {
+  if (!Array.isArray(value)) return null
+  if (!value.every((entry) => DEEP_CLEANSING_SCALP_TYPES.includes(entry))) return null
+  const types = value as DeepCleansingScalpType[]
+  if (new Set(types).size !== types.length) return null
+  if (types.includes("oily") && types.includes("dry")) return null
+  return DEEP_CLEANSING_SCALP_TYPES.filter((type) => types.includes(type))
 }
 
 function shampooComparisonObservations(rows: Row[]): {

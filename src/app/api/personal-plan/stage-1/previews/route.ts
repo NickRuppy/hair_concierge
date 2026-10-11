@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server"
 
+import type { Stage3VisibleHairColor } from "@/lib/personal-plan/products/authority/selection-profile"
+import { loadVisibleHairColor } from "@/lib/user-facts/visible-hair-color"
 import { STAGE1_PRODUCT_EXAMPLE_PREVIEW_CACHE_CONTROL } from "@/lib/personal-plan/product-preview-contract"
 import {
   computeStage1ProductExamplePreviews,
@@ -39,6 +41,11 @@ export type Stage1ProductExamplePreviewRouteDeps = {
    */
   loadShoppingBudget?: (userId: string) => Promise<Stage1ProductExamplePreviewBudget | null>
   marketSegmentDisplayEnabled?: () => boolean
+  /**
+   * The user-answered visible root colour, read by the same loader the Stage-3 gateway uses
+   * (direct acceptance parity). Fail-open; omitted = unknown.
+   */
+  loadVisibleHairColor?: (userId: string) => Promise<Stage3VisibleHairColor | null>
 }
 
 export async function GET() {
@@ -71,6 +78,7 @@ export async function GET() {
           }
         : {}),
       marketSegmentDisplayEnabled: isProductMarketSegmentDisplayEnabled,
+      loadVisibleHairColor: (userId) => loadVisibleHairColor(admin, userId),
     }),
   )
 }
@@ -107,6 +115,9 @@ export async function handleStage1ProductExamplePreviews(
     // products that direct acceptance — which does read the budget — would then refuse.
     const budget = (await deps.loadShoppingBudget?.(user.id)) ?? null
     const marketSegmentDisplayEnabled = deps.marketSegmentDisplayEnabled?.() === true
+    const visibleHairColor = deps.loadVisibleHairColor
+      ? await deps.loadVisibleHairColor(user.id).catch(() => null)
+      : null
     return {
       status: 200,
       body: await computeStage1ProductExamplePreviews({
@@ -116,6 +127,7 @@ export async function handleStage1ProductExamplePreviews(
         loadCandidates: deps.loadCandidates,
         ...(budget ? { budget } : {}),
         ...(marketSegmentDisplayEnabled ? { marketSegmentDisplayEnabled } : {}),
+        ...(visibleHairColor ? { visibleHairColor } : {}),
       }),
     }
   } catch {

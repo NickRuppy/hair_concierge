@@ -1,3 +1,5 @@
+import { compareRankableCandidates, type RankableCandidate } from "../../candidate-ranking"
+import { candidateDimensionCoverage } from "../../comparison-dimensions"
 import type {
   Stage3AuthorityInput,
   Stage3CategoryAuthorityAdapter,
@@ -58,11 +60,54 @@ function isRecommendableForRole(
   )
 }
 
+function idealCriteria() {
+  return [
+    criterion(
+      "scalp_care.role.exact_match",
+      "Exakte Kopfhautpflege-Rolle",
+      "pass",
+      "Die Rolle ist verifiziert.",
+    ),
+    criterion(
+      "scalp_care.format.verified",
+      "Verifiziertes Format",
+      "pass",
+      "Das Produktformat ist geprüft.",
+    ),
+    criterion(
+      "scalp_care.rinse_mode.verified",
+      "Verifizierte Ausspülart",
+      "pass",
+      "Die Ausspülart ist geprüft.",
+    ),
+    criterion(
+      "scalp_care.protocol.verified",
+      "Verifizierte Anwendung",
+      "pass",
+      "Das Rollenprotokoll ist vollständig geprüft.",
+    ),
+  ]
+}
+
 function recommendationFor(input: ScalpCareInput) {
   if (coverageSuppressesPurchase(input)) return null
-  const candidate = [...input.recommendationCandidates]
+  // Shared Stage-3 comparator (S1): every verified candidate of a role is ideal with the same
+  // rows, so catalogue order and then price decide.
+  const candidate = input.recommendationCandidates
     .filter((facts) => isRecommendableForRole(facts, input.role))
-    .sort((left, right) => left.productId.localeCompare(right.productId))[0]
+    .map((facts) => ({
+      facts,
+      rank: {
+        verdict: "ideal",
+        targetMatchCount: candidateDimensionCoverage(input as never, facts, idealCriteria())
+          .matches,
+        cautionCount: 0,
+        catalogSortOrder: facts.catalogSortOrder,
+        priceEur: facts.priceEur ?? null,
+        productId: facts.productId,
+      } satisfies RankableCandidate,
+    }))
+    .sort((left, right) => compareRankableCandidates(left.rank, right.rank))[0]?.facts
   if (!candidate) return null
 
   return {
@@ -157,32 +202,7 @@ export const evaluateScalpCareAuthority: Stage3CategoryAuthorityAdapter<"scalp_c
 
   return knownEvaluation(input as never, {
     verdict: "ideal",
-    criteria: [
-      criterion(
-        "scalp_care.role.exact_match",
-        "Exakte Kopfhautpflege-Rolle",
-        "pass",
-        "Die Rolle ist verifiziert.",
-      ),
-      criterion(
-        "scalp_care.format.verified",
-        "Verifiziertes Format",
-        "pass",
-        "Das Produktformat ist geprüft.",
-      ),
-      criterion(
-        "scalp_care.rinse_mode.verified",
-        "Verifizierte Ausspülart",
-        "pass",
-        "Die Ausspülart ist geprüft.",
-      ),
-      criterion(
-        "scalp_care.protocol.verified",
-        "Verifizierte Anwendung",
-        "pass",
-        "Das Rollenprotokoll ist vollständig geprüft.",
-      ),
-    ],
+    criteria: idealCriteria(),
     allowedActions: ["keep_owned"],
     recommendation: null,
     productFactFingerprint: facts.factFingerprint,

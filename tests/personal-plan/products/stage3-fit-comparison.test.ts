@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { UNKNOWN_SELECTION_PROFILE } from "../../../src/lib/personal-plan/products/authority/selection-profile"
 import { Buffer } from "node:buffer"
 import test from "node:test"
 
@@ -79,7 +80,9 @@ for (const category of Object.keys(CATEGORY_ROLE_POLICIES) as PersonalPlanCatego
       assert.ok(comparison.alternatives.length <= STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT)
       assert.ok(comparison.dimensions.length <= 4)
       assert.ok(comparison.evidenceRows!.length > 0)
-      assert.ok(comparison.evidenceRows!.length <= 4)
+      // S2: dry shampoo's compact table has five rows (identity, sensitivity, colour, volume,
+      // protocol); every other category keeps at most four.
+      assert.ok(comparison.evidenceRows!.length <= (category === "dry_shampoo" ? 5 : 4))
       assert.ok(
         comparison.evidenceRows!.every(
           (row) => row.target === null || row.target.profileEvidenceLabels.length <= 2,
@@ -2013,6 +2016,7 @@ function authorityInput<C extends PersonalPlanCategory>(
       executionPauseReason: null,
       deferredFacts: [],
     } as never,
+    selectionProfile: UNKNOWN_SELECTION_PROFILE,
     coverage: [],
     productFacts: options.productFacts,
     recommendationCandidates: options.candidates,
@@ -2283,7 +2287,7 @@ function factsFor<C extends PersonalPlanCategory>(
         category,
         spec: {
           supportedResetRoles: [role],
-          scalpTypeFocus: "balanced",
+          targetScalpTypes: null,
           colorTreatedSuitability: "suitable",
         },
       } as never

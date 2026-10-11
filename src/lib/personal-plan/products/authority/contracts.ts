@@ -15,6 +15,7 @@ import type {
   Stage3ProductIdentity,
   Stage3Recommendation,
 } from "../contracts"
+import type { Stage3SelectionProfile } from "./selection-profile"
 
 export const STAGE3_AUTHORITY_ACTION_KINDS = [
   "keep_owned",
@@ -186,7 +187,11 @@ export type Stage3DeepCleansingFacts = Stage3AuthorityCommonProductFacts & {
   category: "deep_cleansing_shampoo"
   spec: {
     supportedResetRoles: PlanProductRole[] | null
-    scalpTypeFocus: string | null
+    /**
+     * Soft scalp-target positioning (Shampoo v1.6 §13.5, decisions.md D-a). null = not
+     * engine-assessed (no soft rank); [] = assessed, no explicit target.
+     */
+    targetScalpTypes: Array<"oily" | "balanced" | "dry"> | null
     colorTreatedSuitability: string | null
   }
 }
@@ -217,6 +222,11 @@ export type Stage3AuthorityInput<C extends PersonalPlanCategory = PersonalPlanCa
   productFacts: Extract<Stage3CategoryProductFacts, { category: C }> | null
   recommendationCandidates: Array<Extract<Stage3CategoryProductFacts, { category: C }>>
   hairThickness?: PlanHairThickness
+  /**
+   * The profile answers dry shampoo and deep cleansing rank by; built only by
+   * `buildStage3SelectionProfile` (or `UNKNOWN_SELECTION_PROFILE` for synthetic callers).
+   */
+  selectionProfile: Stage3SelectionProfile
   heatCarrierCoverage: {
     carrierCategory: Extract<PersonalPlanCategory, "leave_in" | "oil" | "heat_protectant"> | null
     /**
@@ -235,6 +245,8 @@ export type Stage3EvaluationContext = Readonly<{
   currentRefinedVersionId: string
   refinedNeedSnapshot: InitialNeedPlanSnapshot
   hairThickness: PlanHairThickness
+  /** Stage-3 selection slice built from `refinedNeedSnapshot` + the user's visible root colour. */
+  selectionProfile: Stage3SelectionProfile
   /** Saved per-package shopping budget; absent or null = unknown (never "uncapped"). */
   budget?: ShoppingBudget | null
   /** Stated concerns from the saved diagnostics (budget priority only); absent with the gate off. */
