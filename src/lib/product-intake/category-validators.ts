@@ -290,6 +290,8 @@ const reviewedProductSchema = z
     price_checked_at: isoDateString,
     net_content_value: z.number().finite().positive().nullable().optional(),
     net_content_unit: netContentUnit.nullable().optional(),
+    /** Drogerie/Profi bucket; promotion requires it, approval does not copy it. */
+    market_segment: z.enum(["drugstore", "professional"]).optional(),
   })
   .strict()
   .refine((product) => (product.net_content_value == null) === (product.net_content_unit == null), {
@@ -424,9 +426,11 @@ const REQUIRED_REVIEWED_PRODUCT_RATIONALES = [
 function validateFieldRationales(
   finalPayload: ProductIntakeFinalReviewedPayload,
 ): ProductIntakeApprovalValidationResult | null {
-  const missing = REQUIRED_REVIEWED_PRODUCT_RATIONALES.filter(
-    (key) => !finalPayload.field_rationales[key],
-  )
+  const required =
+    finalPayload.product.market_segment === undefined
+      ? REQUIRED_REVIEWED_PRODUCT_RATIONALES
+      : [...REQUIRED_REVIEWED_PRODUCT_RATIONALES, "product.market_segment"]
+  const missing = required.filter((key) => !finalPayload.field_rationales[key])
 
   for (const key of Object.keys(finalPayload.category_specs)) {
     const rationaleKey = `category_specs.${key}`

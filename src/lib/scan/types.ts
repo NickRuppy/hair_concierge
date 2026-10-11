@@ -49,6 +49,19 @@ export type ScanAlternative = {
   verdict: Extract<ScanVerdict, "ideal" | "supportive">
   verdictLabel: string
   /**
+   * Shopping budget (Task 7). Present only when the user has a saved budget and the budget
+   * flag is on: `overBudget` only for a capped budget (true = the package costs more than
+   * the cap), `budgetLimitEur` is that cap, used for the list caption. Absent otherwise, so a
+   * budget-less response stays byte-identical. Never part of the masked free-tier shape.
+   */
+  overBudget?: boolean
+  budgetLimitEur?: 5 | 15
+  /**
+   * Drogerie/Profi badge. Present only when the segment is known, the display flag is on and
+   * the category is shampoo, conditioner or mask.
+   */
+  marketSegment?: "drugstore" | "professional"
+  /**
    * Server-internal only (T8): the candidate's already-computed fit criteria, carried
    * through so the free-tier masked serializer (`masked-alternative.ts`) can derive
    * comparison rows without re-evaluating fit. Never reaches the wire — both

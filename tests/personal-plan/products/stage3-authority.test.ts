@@ -546,6 +546,79 @@ test("a single ideal Bondbuilder candidate keeps the standalone rule, not the ti
   assert.ok(result.criteria.every((entry) => entry.criterionId !== "bondbuilder.equal_shortlist"))
 })
 
+function trustedBondbuilder(productId: string, claimTrustLevel: string | null) {
+  const candidate = bondbuilderCandidate(productId, productId)
+  candidate.spec = { ...candidate.spec, claimTrustLevel }
+  return candidate
+}
+
+test("a more trusted ideal Bondbuilder wins outright, without the tie default or shortlist", () => {
+  const result = evaluateStage3Authority(
+    bondbuilderGapInput([
+      trustedBondbuilder(BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "medium"),
+      trustedBondbuilder("olaplex-no3", "high"),
+      trustedBondbuilder("loreal", "low"),
+    ]),
+  )
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "ideal")
+  assert.equal(result.recommendation?.productId, "olaplex-no3")
+  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.validated_standalone")
+  assert.equal(result.recommendationFactFingerprint, "facts-olaplex-no3")
+  assert.ok(result.criteria.every((entry) => entry.criterionId !== "bondbuilder.equal_shortlist"))
+})
+
+test("the production Bondbuilder set resolves to K18 among the three high-trust products", () => {
+  const result = evaluateStage3Authority(
+    bondbuilderGapInput([
+      trustedBondbuilder("loreal-elvital-bond", "medium"),
+      trustedBondbuilder("ogx-sealing-serum", "low"),
+      trustedBondbuilder("redken-acidic-bonding", "medium"),
+      trustedBondbuilder("olaplex-3plus", "high"),
+      trustedBondbuilder("epres", "high"),
+      trustedBondbuilder("aveda", "low"),
+      trustedBondbuilder(BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "high"),
+      trustedBondbuilder("kerastase-premiere", "medium"),
+    ]),
+  )
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.recommendation?.productId, BONDBUILDER_TIE_DEFAULT_PRODUCT_ID)
+  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.tie_default")
+  assert.ok(result.criteria.some((entry) => entry.criterionId === "bondbuilder.equal_shortlist"))
+})
+
+test("a high-trust tie without K18 stays uncovered even when K18 is less trusted", () => {
+  const result = evaluateStage3Authority(
+    bondbuilderGapInput([
+      trustedBondbuilder("olaplex-no3", "high"),
+      trustedBondbuilder("epres", "high"),
+      trustedBondbuilder(BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "medium"),
+    ]),
+  )
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.recommendation, null)
+  assert.deepEqual(result.allowedActions, ["leave_uncovered"])
+  assert.ok(result.criteria.some((entry) => entry.criterionId === "bondbuilder.equal_shortlist"))
+})
+
+test("trust never lifts a non-ideal Bondbuilder above an ideal one", () => {
+  const unverified = trustedBondbuilder("unverified-high", "high")
+  unverified.protocols = []
+  const result = evaluateStage3Authority(
+    bondbuilderGapInput([unverified, trustedBondbuilder("verified-low", "low")]),
+  )
+
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.recommendation?.productId, "verified-low")
+})
+
 test("only owned-fit authority policies advance for this semantic correction", () => {
   assert.deepEqual(
     Object.fromEntries(

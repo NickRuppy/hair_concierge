@@ -1,0 +1,121 @@
+{
+  "blindId": "L10",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "moderate",
+      "rationale": "Strong: lean Sodium Laureth Sulfate #2 / Cocamidopropyl Betaine #3 chassis with minimal counter-signals (Glycerin #5, Hydrolyzed Keratin #6, Guar #7; no refatting lipid, silicone or nonionic buffer) and explicit deep-cleansing intent ('Tiefenreinigung' in name, 'reinigt intensiv', 'Deep-Cleanse-System'). C1's moderate ruling is conditioned on 'no reset/deep-cleansing intent', so it does not apply; the strong anchor's 'clarifying ... architecture whose net effect remains strong after counter-signals' fits the stripped-down formula.",
+      "ruleIds": ["§4", "C1"],
+      "formulaFacts": ["Sodium Laureth Sulfate #2", "Cocamidopropyl Betaine #3", "Zinc Sulfate #8", "Menthol #9"],
+      "counterSignal": "Only one anionic route, betaine-buffered - formula alone is the C1 moderate pattern; claims cannot assign cleansing by themselves (3.2).",
+      "neighboringAlternative": "moderate",
+      "sources": ["packet INCI", "product name", "manufacturer claims"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: cleansing-led; light routes only - Glycerin #5, Hydrolyzed Keratin #6, Guar Hydroxypropyltrimonium Chloride #7. No silicone, fatty or lipid route.",
+      "ruleIds": ["§5"],
+      "formulaFacts": ["Glycerin #5", "Hydrolyzed Keratin #6", "Guar Hydroxypropyltrimonium Chloride #7"],
+      "counterSignal": "Guar is relatively early in a short list.",
+      "neighboringAlternative": "moderate",
+      "sources": ["packet INCI"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: one light polymer and a protein; no persistent system; strong reset.",
+      "ruleIds": ["§6"],
+      "subjudgments": {"depositionLoad": "light", "persistence": "low", "resetCapacity": "strong"},
+      "whyThisBand": "Light deposition, strong reset.",
+      "whyNotNeighborBand": "No persistent system.",
+      "formulaFacts": ["Hydrolyzed Keratin #6", "Guar Hydroxypropyltrimonium Chloride #7"],
+      "counterSignal": "none material",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    },
+    "focusPrimary": {
+      "value": "clarifying",
+      "confidence": "moderate",
+      "rationale": "Clarifying: explicit deep-cleaning/reset product ('Shampoo Tiefenreinigung', 'Befreit das Haar von Styling-Rückständen', 'Deep-Cleanse-System') with compatible lean SLES/betaine architecture (7.2).",
+      "ruleIds": ["7.1", "7.2"],
+      "careDirection": {"verdict": "not_applicable", "moistureRoutes": [], "repairRoutes": [], "sharedRoutes": [], "limitation": "Not a repair/moisture decision."},
+      "claimRole": "candidate",
+      "formulaFacts": ["Sodium Laureth Sulfate #2", "Cocamidopropyl Betaine #3"],
+      "counterSignal": "No chelator or second anionic reset route; daily-use claim.",
+      "neighboringAlternative": "general",
+      "decisionTrace": "Blind: lean SLES/betaine, light conditioning -> clarifying-compatible. Unblind: name 'Tiefenreinigung' -> clarifying.",
+      "sources": ["product name", "manufacturer claims"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty: 'Leichtigkeit und Glanz' is an outcome of the cleansing route (F2); anti-static is not a focus value.",
+      "ruleIds": ["§8", "F2"],
+      "counterSignal": "Shine wording.",
+      "neighboringAlternative": "shine",
+      "sources": ["manufacturer claims"]
+    },
+    "usageRole": {
+      "value": "occasional_reset",
+      "confidence": "moderate",
+      "rationale": "Occasional_reset: product name contains 'Tiefenreinigung' (D1 lexicon), so §9 marks it an explicit deep-cleansing/reset product. The frequent trigger is excluded because cleansing is strong, even though the manufacturer says 'für die tägliche Anwendung geeignet'.",
+      "ruleIds": ["§9", "D1"],
+      "counterSignal": "Explicit daily-use suitability; directions do not limit frequency.",
+      "neighboringAlternative": "alternating",
+      "sources": ["product name", "manufacturer claims"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "No sensitive/itchy/dry-scalp positioning; Menthol #9 and fragrance are counter-signals.",
+      "ruleIds": ["§10"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["manufacturer claims", "packet INCI"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole.",
+      "ruleIds": ["§11"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    }
+  },
+  "projection": {
+    "status": "proposal_blocked_by_review",
+    "thicknessFit": {"fine": "ideal", "normal": "ideal", "coarse": "acceptable"},
+    "thicknessFitConfidence": {"fine": "high", "normal": "high", "coarse": "moderate"},
+    "thicknessRationale": "T1 W low, C low: fine ideal, normal ideal, coarse acceptable. T4: W no neighbor; C neighbor moderate keeps coarse acceptable -> no flags.",
+    "weight": "light",
+    "weightConfidence": "high",
+    "weightRationale": "W-LIVE: low -> light.",
+    "scalpTargets": {"primary": "ordinary", "secondary": null},
+    "scalpTargetConfidence": "moderate",
+    "scalpTargetRationale": "Manufacturer body copy says the formula 'entfernt wirksam Styling-Rückstände sowie überschüssiges Fett von Haar und Kopfhaut'. This names the scalp and excess oil (close to E2 'überschüssiger Talg') but describes what is removed in a buildup product 'für alle Haartypen', not a targeted oily-scalp state; E1 grades it low (ambiguous), and low positioning cannot support a target, so S-OILY is not emitted. S-ORDINARY literally requires 'no E2 scalp claim at all', so ordinary is proposed with review_rule_conflict (P0: fail to review). Had oily been accepted, S-OILY's formula gate (strong, W low, C low) would pass.",
+    "cleansingIntensity": "clarifying",
+    "cleansingIntensityConfidence": "moderate",
+    "cleansingIntensityRationale": "I1: strong + occasional_reset + clarifying primary -> clarifying (I2: kept; amber in everyday role). I3: neighbor moderate -> regular, equal to the normal bucket's expected regular where clarifying is not -> review_intensity_boundary.",
+    "explicitResetPositioning": true,
+    "deepCleanserListing": "flagged",
+    "deepCleanserListingConfidence": "moderate",
+    "deepCleanserRationale": "D1 true ('Tiefenreinigung' in product name, E1 high). D2: strong + clarifying primary + occasional_reset + D1 -> flagged; regular-shampoo rows kept. Confidence = min(cleansing moderate, focus moderate, usage moderate, D1 high) = moderate. If cleansing were moderate, D2 would fail and D3 would raise review_reset_positioning_mismatch instead.",
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "clarifying", "weight": "light", "tier": "ideal"},
+      {"thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "clarifying", "weight": "light", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "clarifying", "weight": "light", "tier": "acceptable"}
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": ["review_intensity_boundary", "review_rule_conflict:S-ORDINARY_vs_E1_low_oily_claim"],
+    "informationalNotes": ["deep_cleanser_listing:needs_record"],
+    "liveComparison": "Not evaluated (live rows not in sealed packet)."
+  },
+  "uncertainties": [
+    "C1 vs 3.2: C1 makes a SLES/betaine formula moderate only when there is 'no reset/deep-cleansing intent', which lets intent (a claim) move cleansing to strong, while 3.2 says claims may not assign cleansing. For a lean SLES/betaine formula named 'Tiefenreinigung' the standard does not say which wins; chose strong (moderate confidence, neighbor moderate). The choice flips D2 (flagged) vs D3 (mismatch review).",
+    "§9 occasional_reset is triggered by the D1 lexicon alone, even when the manufacturer says the product is suitable for daily use; no rule reconciles the two.",
+    "E2/E1/S-ORDINARY gap: an oil-removal statement naming the scalp inside a buildup product. S-ORDINARY needs 'no E2 claim at all', S-FAIL covers only formula-gate failure, and E1 'low' blocks the target; no rule says what to project. Resolved: ordinary + review_rule_conflict.",
+    "The standard's D2 pattern cites a Balea regular-shampoo record plus a deep-cleanser record; whether that refers to this product cannot be verified from the packet, so the note is 'needs_record'."
+  ]
+}

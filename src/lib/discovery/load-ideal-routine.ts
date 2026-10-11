@@ -11,6 +11,7 @@ import type { Stage1ProductExampleRolePreview } from "@/lib/personal-plan/produc
 import {
   computeStage1ProductExamplePreviews,
   createSupabaseStage1ProductExamplePreviewCandidateLoader,
+  type Stage1ProductExamplePreviewBudget,
   type Stage1ProductExamplePreviewCandidateLoader,
 } from "@/lib/personal-plan/product-previews"
 import type { Stage3CategoryProductFacts } from "@/lib/personal-plan/products/authority/contracts"
@@ -35,7 +36,11 @@ import { prepareScannerContext } from "@/lib/scan/scanner-context"
 import { readScannerProfileSource } from "@/lib/scan/scanner-context-supabase"
 import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
 
-import { discoveryEqualOptions, type DiscoveryEqualOption } from "./equal-options"
+import {
+  discoveryApplicationLabelOf,
+  discoveryEqualOptions,
+  type DiscoveryEqualOption,
+} from "./equal-options"
 
 /**
  * The participant's Idealplan, read for the admin cockpit.
@@ -101,6 +106,8 @@ export type DiscoveryIdealStep = {
    * nothing prints until a swap names one. See `equal-options.ts`.
    */
   equalOptions?: DiscoveryEqualOption[]
+  /** The pick's own application label when it has equals to be told apart from (E2). */
+  idealApplicationLabel?: string | null
 }
 
 /** A malformed decision target must thin the step detail, not fail the whole cockpit. */
@@ -297,6 +304,12 @@ export async function loadDiscoveryIdealRoutine(
      * computation, so every legacy intake keeps its steps and its fingerprint.
      */
     routineOverride?: PlanRoutineContext | null
+    /**
+     * The participant's saved shopping budget (flag on, one was saved): the previews are
+     * allocated under it exactly like her own Stage-1 previews. Absent or null = no budget,
+     * the price-neutral previews as before. Never uncapped-by-default.
+     */
+    budget?: Stage1ProductExamplePreviewBudget | null
   } = {},
 ): Promise<DiscoveryIdealRoutineResult> {
   let context
@@ -323,6 +336,7 @@ export async function loadDiscoveryIdealRoutine(
     ...previewInput,
     snapshot,
     loadCandidates: loaded.loader,
+    ...(options.budget ? { budget: options.budget } : {}),
   })
 
   return {
@@ -399,6 +413,12 @@ export function withDiscoveryEqualOptions(
       candidates,
       selectedProductId: preview.productId,
     })
-    return equalOptions.length > 0 ? { ...step, equalOptions } : step
+    if (equalOptions.length === 0) return step
+    const selected = candidates.find((candidate) => candidate.productId === preview.productId)
+    return {
+      ...step,
+      equalOptions,
+      idealApplicationLabel: selected ? discoveryApplicationLabelOf(selected) : null,
+    }
   })
 }

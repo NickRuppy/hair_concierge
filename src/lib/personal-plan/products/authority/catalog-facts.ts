@@ -89,6 +89,7 @@ type Stage3AuthorityPresentationFields = {
   netContentUnit?: "ml" | "g" | null
   affiliateLink?: string | null
   currency?: string | null
+  marketSegment?: "drugstore" | "professional" | null
 }
 
 export async function loadStage3AuthorityFactBundle(
@@ -184,7 +185,7 @@ async function loadLegacyRecommendationCandidates(
   const { data, error } = await client
     .from("products")
     .select(
-      "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link,currency",
+      "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link,currency,market_segment",
     )
     .eq("category_key", category)
     .eq("is_active", true)
@@ -236,7 +237,7 @@ export async function loadStage3RecommendationCandidatePool(
       client
         .from("products")
         .select(
-          "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link,currency",
+          "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link,currency,market_segment",
           { count: "exact" },
         )
         .eq("category_key", category)
@@ -343,7 +344,7 @@ async function loadOneProduct(
   const { data, error } = await client
     .from("products")
     .select(
-      "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link,currency",
+      "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link,currency,market_segment",
     )
     .eq("id", productId)
     .eq("category_key", category)
@@ -438,6 +439,10 @@ function assembleProductFacts(
         : null,
     affiliateLink: text(product.affiliate_link),
     currency: text(product.currency),
+    marketSegment:
+      product.market_segment === "drugstore" || product.market_segment === "professional"
+        ? (product.market_segment as "drugstore" | "professional")
+        : null,
   }
   const fingerprintCommon = omitPresentationFields(
     common as typeof common & Stage3AuthorityPresentationFields,
@@ -463,6 +468,7 @@ function omitPresentationFields<T extends Stage3AuthorityPresentationFields>(
     "netContentUnit",
     "affiliateLink",
     "currency",
+    "marketSegment",
   ])
   return Object.fromEntries(
     Object.entries(value).filter(
@@ -579,7 +585,7 @@ async function loadProductsByIds(
             client
               .from("products")
               .select(
-                "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link,currency",
+                "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link,currency,market_segment",
                 { count: "exact" },
               )
               .eq("category_key", category) as unknown as {

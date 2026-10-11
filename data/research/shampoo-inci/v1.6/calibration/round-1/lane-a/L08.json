@@ -1,0 +1,118 @@
+{
+  "blindId": "L08",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: C1 pattern - Sodium Laureth Sulfate #2 buffered by Cocamidopropyl Betaine #4 and Coco-Glucoside #11, refatter Glyceryl Oleate #12; no second anionic or reset route/intent.",
+      "ruleIds": ["§4", "C1"],
+      "formulaFacts": ["Sodium Laureth Sulfate #2", "Cocamidopropyl Betaine #4", "Coco-Glucoside #11", "Glyceryl Oleate #12"],
+      "counterSignal": "Betaine sits after salt.",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: one cationic polymer (Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #13) plus several light routes (Hydrolyzed Wheat Protein #7, Panthenol #9, Glyceryl Oleate #12, Hydrogenated Palm Glycerides Citrate #16, PEG-3 Distearate #17, Glycerin #19). Silicone-free; not a clearly rich 2-in-1 architecture despite the 2in1 label (claims cannot assign conditioning, 3.2).",
+      "ruleIds": ["§5", "3.2"],
+      "formulaFacts": ["Hydrolyzed Wheat Protein #7", "Panthenol #9", "Glyceryl Oleate #12", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #13", "PEG-3 Distearate #17"],
+      "counterSignal": "'Shampoo & Spülung 2in1' positioning; but no silicone or fatty alcohol.",
+      "neighboringAlternative": "low",
+      "sources": ["packet INCI"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: light, low-persistence routes only (guar #13, glyceryl oleate #12, pearlizer #17, protein #7) in an effective SLES/betaine base; no silicone or oil payload.",
+      "ruleIds": ["§6"],
+      "subjudgments": {"depositionLoad": "light", "persistence": "low", "resetCapacity": "moderate"},
+      "whyThisBand": "No persistent deposition system.",
+      "whyNotNeighborBand": "A 2-in-1 build can carry more cationic polymer than INCI order reveals; interacting light routes are the realistic path to moderate, recorded as neighbor.",
+      "formulaFacts": ["Glyceryl Oleate #12", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #13", "PEG-3 Distearate #17"],
+      "counterSignal": "2-in-1 architecture claim.",
+      "neighboringAlternative": "moderate",
+      "sources": ["packet INCI"]
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "confidence": "moderate",
+      "rationale": "Volume: 'Volumen' in product name and 'verleiht auch kraftlosem und feinem Haar Volumen'; silicone-free low-weight formula is compatible (7.2 row 1).",
+      "ruleIds": ["7.1", "7.2"],
+      "careDirection": {"verdict": "not_applicable", "moistureRoutes": [], "repairRoutes": [], "sharedRoutes": [], "limitation": "Not a repair/moisture decision."},
+      "claimRole": "candidate",
+      "formulaFacts": ["Sodium Laureth Sulfate #2", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #13"],
+      "counterSignal": "2-in-1 conditioning positioning is a counter-signal for lift.",
+      "neighboringAlternative": "general",
+      "decisionTrace": "Blind: light conditioning, low weight -> volume-compatible. Unblind: name 'Volumen' -> volume.",
+      "sources": ["product name", "retailer claims"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty: 2-in-1 care is a restatement of conditioning (§8 condition 3); no other distinct positioning.",
+      "ruleIds": ["§8"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["retailer claims"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: no daily/frequent, reset or treatment trigger.",
+      "ruleIds": ["§9"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["retailer directions"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "No sensitive/itchy/dry-scalp positioning ('dermatologisch bestätigt', 'pH-hautneutral' are tolerability statements).",
+      "ruleIds": ["§10"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["retailer claims"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole.",
+      "ruleIds": ["§11"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    }
+  },
+  "projection": {
+    "status": "proposal_blocked_by_review",
+    "thicknessFit": {"fine": "ideal", "normal": "ideal", "coarse": "acceptable"},
+    "thicknessFitConfidence": {"fine": "moderate", "normal": "moderate", "coarse": "moderate"},
+    "thicknessRationale": "T1 W low, C moderate: fine ideal, normal ideal, coarse acceptable. T2: 'feines Haar'/volume claims ignored. T4: W neighbor moderate would make fine acceptable -> review_thickness_boundary (fine); normal unchanged; coarse unchanged.",
+    "weight": "light",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: low -> light.",
+    "scalpTargets": {"primary": "ordinary", "secondary": null},
+    "scalpTargetConfidence": "high",
+    "scalpTargetRationale": "S-ORDINARY: no E2 scalp claim.",
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: moderate -> regular; I3: no neighbor.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "No D1 term.",
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal"},
+      {"thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "acceptable"}
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": ["review_thickness_boundary:fine"],
+    "informationalNotes": [],
+    "liveComparison": "Not evaluated (live rows not in sealed packet)."
+  },
+  "uncertainties": [
+    "§5 'clearly rich 2-in-1 architecture' is not defined; a product labelled 2in1 with only guar + light routes was treated as not rich.",
+    "Positioning evidence is retailer-only; §7 does not grade source tier for focus (E1 grading applies only to projection)."
+  ]
+}

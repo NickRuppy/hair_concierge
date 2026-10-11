@@ -5,6 +5,7 @@ import type { Stage3AuthorityInput, Stage3CategoryProductFacts } from "./authori
 import { maskAcceptedCareDirections } from "./authority/categories/axis-fit"
 import { expectedShampooSpecTarget } from "./authority/categories/shampoo-spec-target"
 import { compactCriterionSchema } from "./fit-comparison-schema"
+import { BUDGET_NEED_DIMENSIONS, type BudgetCandidateView } from "./budget-policy"
 
 export type Stage3FitComparisonPresentationKind = "ordered" | "set" | "binary" | "categorical"
 
@@ -25,6 +26,12 @@ export type Stage3FitComparisonProduct = {
   presentation?: {
     priceLabel: string | null
     netContentLabel: string | null
+    /** Budget fields: present only on budgeted alternatives, absent (not null) otherwise. */
+    packagePriceEur?: number | null
+    overBudget?: boolean
+    labelKind?: BudgetCandidateView["label"]
+    /** Drogerie/Profi badge: shampoo/conditioner/mask behind the display flag only, else absent. */
+    marketSegment?: "drugstore" | "professional"
   }
   category: PersonalPlanCategory
   role: PlanProductRole | null
@@ -57,12 +64,11 @@ export function renderedDimensions(
   return dimensions.slice(0, STAGE3_RENDERED_DIMENSION_CAP)
 }
 
-export function candidateDimensionCoverage(
+function singleCandidateEntry(
   input: Stage3AuthorityInput,
   candidate: Stage3CategoryProductFacts,
-  criteria: readonly Stage3CriterionResult[],
-): { matches: number; total: number } {
-  const entry: ComparisonProductEntry = {
+): ComparisonProductEntry {
+  return {
     product: {
       productId: candidate.productId,
       displayName: candidate.displayName,
@@ -72,6 +78,14 @@ export function candidateDimensionCoverage(
     },
     facts: candidate,
   }
+}
+
+export function candidateDimensionCoverage(
+  input: Stage3AuthorityInput,
+  candidate: Stage3CategoryProductFacts,
+  criteria: readonly Stage3CriterionResult[],
+): { matches: number; total: number } {
+  const entry = singleCandidateEntry(input, candidate)
   const dimensions = renderedDimensions(comparisonDimensions(input, [entry]))
   if (dimensions.length > 0 || input.category === "bondbuilder") {
     const targetDimensions = dimensions.filter(
@@ -106,6 +120,49 @@ export function candidateDimensionCoverage(
         criteria.find((criterion) => criterion.criterionId === criterionId)?.result === "pass",
     ).length,
   }
+}
+
+/**
+ * Distance to the user's target per graded need dimension (`BUDGET_NEED_DIMENSIONS`) for one
+ * candidate: 0 when the product's position overlaps the target, otherwise the smallest number of
+ * ordered stops between them. Overshooting the target counts like any other distance. A
+ * dimension whose target or product position is unknown is omitted (unknown, not "far").
+ */
+export function budgetNeedDistances(
+  input: Stage3AuthorityInput,
+  candidate: Stage3CategoryProductFacts,
+): Record<string, number> {
+  const distances: Record<string, number> = {}
+  for (const dimension of comparisonDimensions(input, [singleCandidateEntry(input, candidate)])) {
+    if (!BUDGET_NEED_DIMENSIONS.has(dimension.dimensionId)) continue
+    const target = dimension.targetPosition
+    const position = dimension.productPositions[0]?.position
+    if (!target || !position) continue
+    const distance = positionDistance(position, target, dimension.stops)
+    if (distance !== null) distances[dimension.dimensionId] = distance
+  }
+  return distances
+}
+
+function positionDistance(
+  product: Stage3FitComparisonPosition,
+  target: Stage3FitComparisonPosition,
+  stops: readonly Stage3FitComparisonStop[],
+): number | null {
+  if (product.kind === "unknown" || target.kind === "unknown") return null
+  if (positionsOverlap(product, target)) return 0
+  const stopIndex = new Map(stops.map((stop, index) => [stop.stopId, index]))
+  const indexes = (position: Exclude<Stage3FitComparisonPosition, { kind: "unknown" }>) =>
+    (position.kind === "position" ? [position.stopId] : position.stopIds).flatMap((stopId) => {
+      const index = stopIndex.get(stopId)
+      return index === undefined ? [] : [index]
+    })
+  const productIndexes = indexes(product)
+  const targetIndexes = indexes(target)
+  if (productIndexes.length === 0 || targetIndexes.length === 0) return null
+  return Math.min(
+    ...productIndexes.flatMap((left) => targetIndexes.map((right) => Math.abs(left - right))),
+  )
 }
 
 export function comparisonDimensions(

@@ -33,6 +33,7 @@ import {
   TOOL_CHECKPOINT_ADD_TOOLS_HREF,
   ToolCheckpoint,
 } from "@/components/personal-plan-refinement/tool-checkpoint"
+import { BudgetQuestion } from "@/components/budget/budget-question"
 import { Stage3ProductsFlow } from "@/components/personal-plan-products/stage3-products-flow"
 import type { Stage3RoutineHandoff } from "@/components/personal-plan-products/stage3-products-flow"
 import {
@@ -106,11 +107,23 @@ export type PlanStartReadyViewModel = {
 }
 
 export type PlanStartInitialJourney =
-  | { stage: "stage1"; refinementAvailable?: boolean; directAcceptanceAvailable?: boolean }
+  | {
+      stage: "stage1"
+      refinementAvailable?: boolean
+      directAcceptanceAvailable?: boolean
+      /** See the shared note on `shoppingBudgetRequired` on the Stage-2 variant. */
+      shoppingBudgetRequired?: boolean
+    }
   | {
       stage: "stage2"
       refinementAvailable?: boolean
       directAcceptanceAvailable?: boolean
+      /**
+       * Server-projected: the shopping-budget gate is on and no budget is saved, so the
+       * Idealplan CTA asks the budget question before it can accept (journey 5). Absent = no
+       * budget step. The accept route re-checks it (`budget_required`) either way.
+       */
+      shoppingBudgetRequired?: boolean
       /**
        * Explicit Stage-2 re-entry (`/plan-start?refine=1`, the Routine
        * refinement nudge). Suppresses the bridge auto-handoff exactly like the
@@ -754,6 +767,32 @@ export async function requestAcceptIdealPlan(
 export type PlanStartAcceptStatus = "idle" | "pending" | "error" | "unavailable"
 
 /**
+ * How many previewed roles show a different product (or none) once the proposal is re-derived
+ * under the freshly saved budget. Roles that show no product before and after do not count.
+ */
+export function countPlanStartBudgetSwaps(
+  before: Stage1ProductExamplePreviewResponse | null,
+  after: Stage1ProductExamplePreviewResponse,
+): number {
+  const productByRole = (response: Stage1ProductExamplePreviewResponse | null) =>
+    new Map(
+      (response?.previews ?? []).flatMap((preview) =>
+        preview.kind === "recommendation" ? [[preview.decisionKey, preview.productId]] : [],
+      ),
+    )
+  const previous = productByRole(before)
+  const next = productByRole(after)
+  const roles = new Set([...previous.keys(), ...next.keys()])
+  return [...roles].filter((role) => previous.get(role) !== next.get(role)).length
+}
+
+/** The note on the adjusted proposal after the budget question (journey 5). */
+export function planStartBudgetAdjustedNotice(swapCount: number): string {
+  if (swapCount === 0) return "Passt schon zu deinem Budget. Nichts getauscht."
+  return `An dein Budget angepasst: ${swapCount} ${swapCount === 1 ? "Produkt" : "Produkte"} getauscht.`
+}
+
+/**
  * What the Idealplan CTA says and whether it is blocked. The CTA speaks for
  * whatever it is actually doing: once acceptance has handed off to the
  * Feinschliff — because it is not offered, because the server sent us there, or
@@ -820,6 +859,17 @@ export function PlanStartCustomerJourney({
   const [plan, setPlan] = useState<PlanStartReadyViewModel | null>(initialPlan ?? null)
   const [productExamplePreviews, setProductExamplePreviews] =
     useState<Stage1ProductExamplePreviewResponse | null>(null)
+  /** No budget saved yet: the accept CTA opens the budget question first (journey 5). */
+  const [shoppingBudgetRequired, setShoppingBudgetRequired] = useState(
+    () =>
+      initialJourney.stage !== "stage3" &&
+      initialJourney.shoppingBudgetRequired === true &&
+      // An accepted plan keeps its existing behaviour: the accept resolves as
+      // `plan_already_accepted`, never as a budget question.
+      !isAcceptedPlanJourney(initialJourney),
+  )
+  const [budgetStepOpen, setBudgetStepOpen] = useState(false)
+  const [budgetNotice, setBudgetNotice] = useState<string | null>(null)
   /**
    * The Stage-1 preview request this render would make, or `null` when previews
    * are not requestable at all. One fact with three consumers — the effect that
@@ -1130,6 +1180,12 @@ export function PlanStartCustomerJourney({
       openRefinementRoute()
       return
     }
+    // The budget question comes first; this tap never accepts (journey 5).
+    if (shoppingBudgetRequired) {
+      setBudgetNotice(null)
+      setBudgetStepOpen(true)
+      return
+    }
     setAcceptStatus("pending")
     const effect = await runAcceptIdealPlanFlow({
       seenRoles,
@@ -1157,6 +1213,14 @@ export function PlanStartCustomerJourney({
       void enterStage2()
       return
     }
+    if (effect.kind === "ask_budget") {
+      // The server found no saved budget (the projection was stale): nothing was written.
+      setAcceptStatus("idle")
+      setShoppingBudgetRequired(true)
+      setBudgetNotice(null)
+      setBudgetStepOpen(true)
+      return
+    }
     if (effect.kind === "open_refinement_route") {
       // The refinement produces an accepted plan too, so this is a detour, not
       // a failure. The CTA relabels to the Feinschliff while the route resolves.
@@ -1173,7 +1237,33 @@ export function PlanStartCustomerJourney({
     plan?.sourceInputHash,
     resolvedPreviewLoadState,
     seenRoles,
+    shoppingBudgetRequired,
   ])
+
+  /**
+   * After a saved budget the proposal is re-derived (the previews are budget-aware now) and
+   * shown again with how many products changed. Accepting takes a fresh, explicit tap.
+   */
+  const handleBudgetSaved = useCallback(() => {
+    const before = productExamplePreviews
+    setShoppingBudgetRequired(false)
+    setBudgetStepOpen(false)
+    if (!plan?.personalPlanId || !plan.sourceInputHash) return
+    const request = { personalPlanId: plan.personalPlanId, sourceInputHash: plan.sourceInputHash }
+    setPreviewLoadState("loading")
+    void (async () => {
+      try {
+        const refreshed = await requestStage1ProductExamplePreviews(request)
+        setProductExamplePreviews(refreshed)
+        setPreviewLoadState("ready")
+        setBudgetNotice(planStartBudgetAdjustedNotice(countPlanStartBudgetSwaps(before, refreshed)))
+      } catch {
+        // Same rule as the first load: a proposal we could not re-derive is never accepted
+        // blind — the CTA routes into the refinement instead.
+        setPreviewLoadState("unavailable")
+      }
+    })()
+  }, [plan?.personalPlanId, plan?.sourceInputHash, productExamplePreviews])
 
   const { intent: ctaIntent, status: ctaStatus } = planStartCtaState({
     acceptAvailable,
@@ -1344,6 +1434,15 @@ export function PlanStartCustomerJourney({
     return <PlanStartLoading />
   }
 
+  if (budgetStepOpen) {
+    return (
+      <PlanStartBudgetScreen
+        onSaved={handleBudgetSaved}
+        onCancel={() => setBudgetStepOpen(false)}
+      />
+    )
+  }
+
   return (
     <PlanStartFlow
       state="ready"
@@ -1353,7 +1452,8 @@ export function PlanStartCustomerJourney({
       }
       nextIntent={ctaIntent}
       nextStatus={ctaStatus}
-      nextNotice={acceptStatus === "unavailable" ? PLAN_ACCEPT_UNAVAILABLE_NOTICE : null}
+      budgetFirst={acceptAvailable && shoppingBudgetRequired}
+      nextNotice={acceptStatus === "unavailable" ? PLAN_ACCEPT_UNAVAILABLE_NOTICE : budgetNotice}
       initialStep={stage1ReturnStepRef.current}
       onContinue={(sourceStep) => {
         stage1ReturnStepRef.current = sourceStep
@@ -1396,6 +1496,8 @@ export function PlanStartFlow(
     nextIntent?: NeedPlanScreenNextIntent
     nextStatus?: NeedPlanScreenNextStatus
     nextNotice?: string | null
+    /** The accept CTA opens the budget question first and reads „Weiter". */
+    budgetFirst?: boolean
   },
 ) {
   const [step, setStep] = useState<FlowStep>(() =>
@@ -1431,6 +1533,7 @@ export function PlanStartFlow(
           nextIntent={nextIntent}
           nextStatus={props.nextStatus}
           nextNotice={props.nextNotice}
+          budgetFirst={props.budgetFirst}
           onNext={
             canContinue && props.onContinue ? () => props.onContinue?.("optional") : undefined
           }
@@ -1443,6 +1546,7 @@ export function PlanStartFlow(
         hasOptionalPage={hasOptionalPage}
         showJourneyHeader={false}
         nextIntent={nextIntent}
+        budgetFirst={props.budgetFirst}
         {...(hasOptionalPage ? {} : { nextStatus: props.nextStatus, nextNotice: props.nextNotice })}
         onNext={
           hasOptionalPage
@@ -1498,6 +1602,27 @@ export function PlanStartFlow(
         </PersonalPlanStageEntrance>
       </div>
     </>
+  )
+}
+
+/**
+ * The budget question in front of a direct acceptance (journey 5). „Abbrechen" and the header's
+ * back both return to the proposal without accepting or storing anything.
+ */
+export function PlanStartBudgetScreen({
+  onSaved,
+  onCancel,
+}: {
+  onSaved: () => void
+  onCancel: () => void
+}) {
+  return (
+    <section className="min-h-dvh bg-[var(--background)]" data-plan-start-state="budget">
+      <PlanStartHeader stageLabel="Plan" onBack={onCancel} />
+      <main className="mx-auto w-full max-w-[430px] px-3 pb-10 pt-4 sm:max-w-[560px] sm:px-5">
+        <BudgetQuestion onSaved={onSaved} onCancel={onCancel} />
+      </main>
+    </section>
   )
 }
 

@@ -104,6 +104,8 @@ export type CatalogContentInput = {
   is_active: true
   lifecycle_status: "active"
   is_chaarlie_recommended: boolean
+  /** Only present when the reviewed package carries one; absent keeps existing fingerprints. */
+  market_segment?: "drugstore" | "professional"
   brand_id: null
   product_line_id: null
   image_url: null
@@ -192,6 +194,7 @@ function catalogContentFromApprovedPayload(
     is_active: catalogState.is_active as true,
     lifecycle_status: catalogState.lifecycle_status as "active",
     is_chaarlie_recommended: catalogState.is_chaarlie_recommended as boolean,
+    ...(product.market_segment ? { market_segment: product.market_segment } : {}),
     brand_id: null,
     product_line_id: null,
     image_url: null,

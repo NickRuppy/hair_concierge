@@ -14,6 +14,7 @@ import {
   type PersonalPlanKeepsakeContent,
 } from "@/lib/personal-plan/keepsake-content"
 import { loadPersonalPlanRoutineView } from "@/lib/personal-plan/routine/load-view"
+import type { RoutinePayloadV1 } from "@/lib/personal-plan/routine/contracts"
 import type { PersonalPlanRoutineReadClient } from "@/lib/personal-plan/routine/repository"
 import {
   loadOwnerPortfolioPresentation,
@@ -23,7 +24,13 @@ import { loadRefinementStatusForUser } from "@/lib/personal-plan/refinement/refi
 import {
   isPersonalPlanAppV1Enabled,
   isPersonalPlanStage4Enabled,
+  isShoppingBudgetEnabled,
 } from "@/lib/personal-plan/release"
+import {
+  loadRoutineProductPricesEur,
+  loadRoutineShoppingBudget,
+  plannedRoutineProductIds,
+} from "@/lib/personal-plan/routine/budget-gate"
 import {
   canAccessPersonalPlanJourneyStage,
   type PersonalPlanJourneyAccess,
@@ -35,6 +42,7 @@ import {
 import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
 import { loadToolFactsSource } from "@/lib/personal-plan/tools/read-view-facts"
 import { createAdminClient } from "@/lib/supabase/admin"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 
 export const dynamic = "force-dynamic"
@@ -69,6 +77,15 @@ export type RoutinePageResolverDeps = {
    * section. Fail closed: an unwired or failing dep means off. Browser input never reaches it.
    */
   toolsEnabled?: (userId: string) => Promise<boolean>
+  /**
+   * Budget gate (Task 6). Absent or `false` = the projection below is never built and the
+   * page's props are exactly what they were before the budget existed.
+   */
+  shoppingBudgetEnabled?: () => boolean
+  /** The saved budget, `null` when none; a throw means "could not find out". */
+  readShoppingBudget?: (userId: string) => Promise<ShoppingBudget | null>
+  /** Known package prices (EUR) for the accepted routine's planned products. Fail-open. */
+  readProductPricesEur?: (productIds: string[]) => Promise<Record<string, number>>
 }
 
 function resolveToolsEnabled(
@@ -81,6 +98,41 @@ function resolveToolsEnabled(
         () => false,
       )
     : Promise.resolve(false)
+}
+
+/**
+ * With the flag on: the saved budget (`null` = none saved, so the client gates a routine edit)
+ * plus the known package prices for the summary notice. A failed budget read yields no
+ * projection at all — the client then does not gate and the proposal route (503/409) stays the
+ * safety net — so a read error can never ask a member who already answered.
+ */
+async function resolveBudgetProjection(
+  deps: RoutinePageResolverDeps,
+  userId: string,
+  activePayload: RoutinePayloadV1 | null,
+): Promise<{
+  shoppingBudget: ShoppingBudget | null
+  productPricesEur: Record<string, number>
+} | null> {
+  if (!deps.shoppingBudgetEnabled?.() || !deps.readShoppingBudget) return null
+  let shoppingBudget: ShoppingBudget | null
+  try {
+    shoppingBudget = await deps.readShoppingBudget(userId)
+  } catch {
+    return null
+  }
+  let productPricesEur: Record<string, number> = {}
+  if (shoppingBudget?.kind === "capped" && deps.readProductPricesEur) {
+    const productIds = plannedRoutineProductIds(activePayload)
+    if (productIds.length > 0) {
+      try {
+        productPricesEur = await deps.readProductPricesEur(productIds)
+      } catch {
+        // Presentation only: no prices means no notice, never a broken page.
+      }
+    }
+  }
+  return { shoppingBudget, productPricesEur }
 }
 
 export async function resolveRoutinePage(deps: RoutinePageResolverDeps) {
@@ -130,12 +182,18 @@ export async function resolveRoutinePage(deps: RoutinePageResolverDeps) {
         // Routine itself.
       }
     }
+    const budgetProjection = await resolveBudgetProjection(
+      deps,
+      userId,
+      view.activeVersion?.payload ?? null,
+    )
     return {
       kind: "personal_plan" as const,
       view,
       enabled,
       portfolioPresentation,
       refinementBanner,
+      ...(budgetProjection ? { budgetProjection } : {}),
     }
   } catch {
     // The legacy Routine is not a safe substitute once a Personal Plan exists.
@@ -180,6 +238,10 @@ const defaultDeps: RoutinePageResolverDeps = {
       totalSteps: result.data.progress.totalSteps,
     }
   },
+  shoppingBudgetEnabled: () => isShoppingBudgetEnabled(),
+  readShoppingBudget: (userId) => loadRoutineShoppingBudget(createAdminClient(), userId),
+  readProductPricesEur: (productIds) =>
+    loadRoutineProductPricesEur(createAdminClient(), productIds),
 }
 
 export function RoutineUnavailableState({
@@ -398,6 +460,14 @@ export default async function RoutinePage() {
       enabled={resolved.enabled}
       portfolioPresentation={resolved.portfolioPresentation}
       initialRefinementBanner={resolved.refinementBanner}
+      // Budget gate (Task 6): present only with the flag on and a successful read, so the
+      // flag-off props are unchanged.
+      {...(resolved.budgetProjection
+        ? {
+            shoppingBudget: resolved.budgetProjection.shoppingBudget,
+            productPricesEur: resolved.budgetProjection.productPricesEur,
+          }
+        : {})}
       // Fix round 1 (F1): every freemium-provisioned buyer and every current subscriber
       // resolves HERE, not to the `legacy` branch above — the same flag gate has to reach
       // this branch too, or the „Gemerkt" section (and the scanner bookmark's

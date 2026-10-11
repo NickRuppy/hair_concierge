@@ -132,6 +132,7 @@ interface ProductForm {
   shampoo_bucket_pairs: ShampooBucketPair[]
   is_active: boolean
   lifecycle_status: string
+  market_segment: "" | "drugstore" | "professional"
   sort_order: number
   conditioner_specs: ConditionerSpecForm | null
   leave_in_specs: LeaveInSpecForm | null
@@ -207,6 +208,7 @@ const emptyForm: ProductForm = {
   shampoo_bucket_pairs: [],
   is_active: true,
   lifecycle_status: "active",
+  market_segment: "",
   sort_order: 0,
   conditioner_specs: null,
   leave_in_specs: null,
@@ -366,6 +368,7 @@ export default function AdminProductsPage() {
       shampoo_bucket_pairs: product.shampoo_bucket_pairs || [],
       is_active: product.is_active,
       lifecycle_status: product.lifecycle_status ?? "active",
+      market_segment: product.market_segment ?? "",
       sort_order: product.sort_order,
       conditioner_specs: conditionerSpecs,
       leave_in_specs: leaveInSpecs,
@@ -542,6 +545,9 @@ export default function AdminProductsPage() {
         suitable_concerns: form.suitable_concerns,
         is_active: form.is_active,
         lifecycle_status: form.lifecycle_status,
+        // Omitted when unset: the segment is optional until the classification backfill, and
+        // editing a not yet segmented product must never clear it.
+        ...(form.market_segment ? { market_segment: form.market_segment } : {}),
         sort_order: form.sort_order,
         conditioner_specs:
           conditionerEnabled && form.conditioner_specs
@@ -1745,6 +1751,30 @@ export default function AdminProductsPage() {
                     {formatLifecycleStatus(status)}
                   </option>
                 ))}
+              </select>
+            </div>
+
+            <div>
+              <label
+                htmlFor="market_segment"
+                className="mb-1 block text-xs font-medium text-muted-foreground"
+              >
+                Segment
+              </label>
+              <select
+                id="market_segment"
+                value={form.market_segment}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    market_segment: e.target.value as ProductForm["market_segment"],
+                  })
+                }
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              >
+                <option value="">Nicht gesetzt</option>
+                <option value="drugstore">Drogerie</option>
+                <option value="professional">Profi</option>
               </select>
             </div>
           </fieldset>

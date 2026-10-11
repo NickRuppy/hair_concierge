@@ -16,6 +16,7 @@ export {
   idealCadenceBand,
   PAUSED_CADENCE_PREFIX,
   runsheetEntryInHerWeek,
+  runsheetNoVerdictLabel,
   runsheetWashAnchor,
   runsheetWashChangeNote,
   runsheetWashFrequency,

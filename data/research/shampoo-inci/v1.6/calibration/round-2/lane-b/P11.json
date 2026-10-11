@@ -1,0 +1,129 @@
+{
+  "blindId": "P11",
+  "formulaIdentity": {
+    "productName": "Balea Professional Shampoo Ultimate Volume",
+    "packSize": "250 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "1bade2a784f13fa6d70a2b76d348f4f2757244783bc62eb116405ab6a43b1309",
+    "fingerprintMethod": "sha256 of packet canonicalInci joined with ', '",
+    "sourceTier": "frozen packet canonical INCI; positioning: retailer only",
+    "captureDate": "not stated in packet",
+    "completeness": "treated as complete canonical capture (ID-1)",
+    "e3MarkerPosition": "Parfum at 13; prominent = 1-12",
+    "conflictNotes": "'Biotin' (7) and 'Reis-Extrakt' (Oryza Sativa Extract, 8) present. No conflict."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: Sodium Laureth Sulfate (2) buffered by prominent Cocamidopropyl Hydroxysultaine (3) and Coco-Glucoside (5); no reinforcing anionic. Laureth-2 (12) is a thickener (C3).",
+      "ruleIds": ["C1", "C3", "C4", "E3"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Cleansing-led: Guar Hydroxypropyltrimonium Chloride (10) and Hydrolyzed Wheat Protein (6) are light routes; Glycerin (9) humectant. No silicone, lipid, pearlizer. Counter-signal toward moderate: two light routes together.",
+      "ruleIds": ["5", "C2", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidenceByFamily": {
+        "silicone": [],
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride (10)"],
+        "cationic_conditioner": [],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "protein_film": ["Hydrolyzed Wheat Protein (6)"],
+        "film_former": [],
+        "reset": ["Sodium Laureth Sulfate (2)", "Cocamidopropyl Hydroxysultaine (3)", "Coco-Glucoside (5)"],
+        "humectantContext": ["Glycerin (9)"],
+        "excluded": ["Laureth-2 (12): thickener", "Biotin (7), Oryza Sativa Extract (8): actives/extracts without deposition role", "Sodium Chloride (4), Citric Acid (11)"],
+        "unresolved": []
+      },
+      "subjudgments": {
+        "depositionLoad": {"value": "light", "rationale": "One guar and one hydrolyzed protein."},
+        "persistence": {"value": "low", "rationale": "Hydrolyzed low-MW protein and a single guar are weakly retained."},
+        "resetCapacity": {"value": "moderate", "rationale": "C1 SLES with sultaine and glucoside buffers."}
+      },
+      "counterevidence": "Two deposition families present.",
+      "whyThisBand": "Only light, weakly retained routes against moderate reset.",
+      "whyNotNeighborBand": "Not moderate (W2 specific evidence): the second family is a hydrolyzed low-MW wheat protein, the only polymer is a single guar after glycerin, and there is no silicone, lipid, film former or second polymer; an SLES/sultaine/glucoside reset faces only light routes.",
+      "confidenceLimitingFactor": "Two families; guar level unknown.",
+      "rationale": "Low (6.6 low anchor) with W2 reasoning.",
+      "ruleIds": ["6.3", "6.4", "6.5", "6.6", "W2", "6.9", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "careDirection": {"verdict": "not_applicable", "moistureRoutes": [], "repairRoutes": [], "sharedConditioningRoutes": [], "limitation": "Not a repair/moisture decision."},
+      "claimRole": "candidate",
+      "counterSignal": "Guar and protein add some deposition; 'Anti-Platt-Effekt' cannot be verified from INCI.",
+      "decisionTrace": "'Ultimate Volume' in the exact product name (high, CL-SRC); retailer copy corroborates (Volumen Shampoo, feines plattes Haar). Formula compatible: weightPotential low, conditioning low. Route: low-deposition architecture with Hydrolyzed Wheat Protein (6) as body/'Griffigkeit' route.",
+      "rationale": "volume by 7.2: name-level claim plus compatible light formula.",
+      "ruleIds": ["7.2", "7.1", "CL-SRC", "E1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "decisionTrace": "Empty default considered; 'Glanz' and 'Kräftigt die Haarstruktur' are retailer-only (low) with no independent route.",
+      "rationale": "Empty (Section 8, CL-SRC, F3).",
+      "ruleIds": ["8", "CL-SRC", "F3"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "decisionTrace": "Default regular; no trigger (reverse-washing directions are not a usage-role trigger).",
+      "rationale": "Regular (Section 9).",
+      "ruleIds": ["9", "F-TRACE"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No E2 sensitive/dry scalp claim.",
+      "ruleIds": ["10", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "ruleIds": ["11"]
+    }
+  },
+  "projection": {
+    "thicknessFit": {"fine": "ideal", "normal": "ideal", "coarse": "acceptable"},
+    "thicknessFitConfidence": {"fine": "moderate", "normal": "moderate", "coarse": "moderate"},
+    "thicknessRationale": "T1 W low, C low: fine ideal, normal ideal, coarse acceptable. Ordinary, no T6. T4: fine ideal -> W neighbor moderate gives acceptable -> flag fine; normal stays ideal; coarse stays acceptable under W or C neighbor moderate. 'Für feines Haar' ignored (T2).",
+    "weight": "light",
+    "weightConfidence": "moderate",
+    "scalpTargets": {"primary": "ordinary", "secondary": null},
+    "scalpTargetConfidence": {"primary": "moderate"},
+    "scalpTargetRationale": "S-ORDINARY way 1; retailer copy only -> moderate (13.8).",
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1 moderate -> regular; matches normal; I3 neighbor none.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "D1 false; D2 not met.",
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal"},
+      {"thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "acceptable"}
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": ["review_thickness_boundary: fine"],
+    "informationalNotes": []
+  },
+  "uncertainties": [
+    "All positioning is retailer copy; the focus rests on the product-name word 'Volume' (graded high by E1)."
+  ]
+}

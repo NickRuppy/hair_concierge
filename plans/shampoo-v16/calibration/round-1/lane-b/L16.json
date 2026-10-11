@@ -1,0 +1,105 @@
+{
+  "blindId": "L16",
+  "status": "projected_with_review",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: one anionic route, Sodium C14-16 Olefin Sulfonate #2, buffered by Cocamidopropyl Betaine #3 and nonionic Cocamide DIPA #4 with Glycerin #5; no second reinforcing anionic or chelating reset route (Disodium EDTA #17 is a stabilizer level). By analogy with C1. Buildup-removal intent cannot assign strength (3.2).",
+      "ruleIds": ["§4", "C1", "§3.2"],
+      "formulaFacts": ["Sodium C14-16 Olefin Sulfonate #2", "Cocamidopropyl Betaine #3", "Cocamide DIPA #4", "Glycerin #5"],
+      "counterSignal": "olefin sulfonate is a high-detergency anionic; 'removes heavy build-up' intent",
+      "neighboringAlternative": "strong"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: several light routes - Glycerin #5, PEG-150 Distearate #8, Butyrospermum Parkii Butter #10, Glycol Distearate #13, Panthenol #14, Guar Hydroxypropyltrimonium Chloride #15, Polyquaternium-39 #19; lipid and cationics sit after Parfum #9.",
+      "ruleIds": ["§5"],
+      "formulaFacts": ["Butyrospermum Parkii Butter #10", "Glycol Distearate #13", "Panthenol #14", "Guar Hydroxypropyltrimonium Chloride #15", "Polyquaternium-39 #19"],
+      "counterSignal": "all care routes late",
+      "neighboringAlternative": "low"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: depositionLoad light (late shea #10, two late cationics #15/#19, Polyester-37 #11), persistence low-moderate, resetCapacity moderate (olefin sulfonate). Late lipid and light polymers can remain low.",
+      "ruleIds": ["§6"],
+      "subjudgments": { "depositionLoad": "light", "persistence": "low", "resetCapacity": "moderate" },
+      "formulaFacts": ["Butyrospermum Parkii Butter #10", "Polyester-37 #11", "Guar Hydroxypropyltrimonium Chloride #15", "Polyquaternium-39 #19"],
+      "counterSignal": "shea butter is a persistent lipid; 'Cream' architecture",
+      "whyThisBand": "deposition routes are late and light",
+      "whyNotNeighborBand": "no meaningfully persistent system at a prominent position",
+      "neighboringAlternative": "moderate"
+    },
+    "focusPrimary": {
+      "value": "clarifying",
+      "confidence": "moderate",
+      "rationale": "Clarifying: 'Cleansing Cream Shampoo' whose lead claims are buildup removal ('removes buildup', 'gently removes heavy build-up from the hair and scalp', 'befreit Haar sowie Kopfhaut wirksam von Produktrückständen', second lather for heavy buildup); olefin-sulfonate chassis with light deposition is compatible. 'strukturiertes Haar'/curls is hair_texture.",
+      "ruleIds": ["§7.1", "§7.2", "T2"],
+      "careDirection": { "verdict": "not_applicable", "limitation": "clarifying focus" },
+      "claimRole": "candidate",
+      "formulaFacts": ["Sodium C14-16 Olefin Sulfonate #2"],
+      "counterSignal": "'sanft', 'milde Rezeptur', 'nourish curls' care claims; cleansing only moderate",
+      "neighboringAlternative": "general",
+      "decisionTrace": "Buildup role dominates name and claims; formula compatible -> clarifying."
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "'nourish curls', 'protect against breakage' are generic care over a nonspecific formula (F1); no independent route.",
+      "ruleIds": ["§8", "F1"],
+      "neighboringAlternative": "moisture"
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "rationale": "Regular: buildup intent exists but cleansingStrength is moderate, so alternating is excluded (§9: a moderate formula is never alternating); no D1 lexicon term, no daily positioning.",
+      "ruleIds": ["§9", "D1"],
+      "counterSignal": "buildup-removal role",
+      "neighboringAlternative": "alternating"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "No sensitive/itchy scalp positioning.",
+      "ruleIds": ["§10"],
+      "neighboringAlternative": "none"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole.",
+      "ruleIds": ["§11"],
+      "neighboringAlternative": "none"
+    }
+  },
+  "projection": {
+    "thicknessFit": { "fine": "ideal", "normal": "ideal", "coarse": "acceptable" },
+    "thicknessFitConfidence": { "fine": "moderate", "normal": "moderate", "coarse": "moderate" },
+    "thicknessRationale": "T1 W low: fine ideal, normal ideal, coarse acceptable (C moderate). T2: 'strukturiertes Haar'/curls ignored. T4: W neighbor moderate would make fine acceptable -> review_thickness_boundary (fine); C neighbor low keeps coarse acceptable.",
+    "weight": "light",
+    "weightConfidence": "moderate",
+    "scalpTargets": { "primary": "ordinary", "secondary": null },
+    "scalpTargetRationale": "S-ORDINARY: buildup removal from scalp is not an E2 scalp-condition claim.",
+    "scalpTargetConfidence": "high",
+    "cleansingIntensity": "regular",
+    "cleansingIntensityRationale": "I1 moderate -> regular. I3: neighbor strong would give clarifying (alternating + clarifying focus), not the expected regular -> no flag.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "D1 false: 'removes buildup' and 'second lather' are not D1 lexicon terms and directions do not limit use frequency.",
+    "rows": [
+      { "thickness": "fine", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal" },
+      { "thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal" },
+      { "thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "acceptable" }
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": ["review_thickness_boundary:fine"],
+    "informationalNotes": []
+  },
+  "uncertainties": [
+    "§2 identity: the manufacturer source is English-language copy with a disclaimer that the INCI may vary by time and region; packet does not state the formula source tier. No concrete conflict shown, so properties kept at moderate rather than blocked.",
+    "C1 covers alkyl ether sulfates; olefin sulfonate + betaine is not covered. Applied by analogy (moderate, neighbor strong).",
+    "§7.1 clarifying 'buildup role with compatible architecture' with only moderate cleansing: standard does not define 'compatible'; usage then falls to regular and intensity to regular, so a clarifying-focus product shows no clarifying signal anywhere in the projection."
+  ]
+}

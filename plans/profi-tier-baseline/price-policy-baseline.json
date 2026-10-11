@@ -1,0 +1,52 @@
+{
+  "kind": "read_only_price_policy_followup",
+  "captured_at": "2026-10-03T15:18:11.038702Z",
+  "project_id": "pqdkhefxsxkyeqelqegq",
+  "deployment": {
+    "alias": "chaarlie.de",
+    "id": "dpl_CAv15BqxeiUh5caNX4bqwgrBmdyq",
+    "state": "READY",
+    "commit": "192a61ee8557b4239bd448805365bb2d33b01ce4"
+  },
+  "cohort": {
+    "table": "public.products",
+    "filters": {
+      "is_active": true,
+      "lifecycle_status": "active",
+      "is_chaarlie_recommended": true
+    }
+  },
+  "all_categories": {
+    "products": 238,
+    "missing_price": 0,
+    "non_positive_price": 0,
+    "non_eur_or_unknown_currency": 0,
+    "checked_within_7_days": 218,
+    "older_than_7_days": 19,
+    "older_than_30_days": 19,
+    "without_price_check_date": 1,
+    "future_price_check_date": 0,
+    "link_marked_available": 231,
+    "link_marked_unavailable": 7,
+    "link_status_unknown": 0,
+    "missing_shop_link": 0,
+    "missing_or_invalid_package_quantity": 25
+  },
+  "initial_tier_categories": {
+    "categories": ["shampoo", "conditioner", "mask"],
+    "products": 125,
+    "checked_within_7_days": 109,
+    "older_than_7_days": 15,
+    "without_price_check_date": 1,
+    "missing_or_invalid_package_quantity": 19
+  },
+  "query": "WITH cohort AS (SELECT category_key, price_eur, currency, price_checked_at, purchase_link_status, affiliate_link, net_content_value, net_content_unit FROM public.products WHERE is_active = true AND lifecycle_status = 'active' AND is_chaarlie_recommended = true) SELECT now() AS captured_at, CASE WHEN GROUPING(category_key) = 1 THEN 'ALL' ELSE category_key END AS category, count(*) AS products, count(*) FILTER (WHERE price_eur IS NULL) AS missing_price, count(*) FILTER (WHERE price_eur IS NOT NULL AND price_eur <= 0) AS non_positive_price, count(*) FILTER (WHERE currency IS DISTINCT FROM 'EUR') AS non_eur_or_unknown_currency, count(*) FILTER (WHERE price_checked_at IS NULL) AS without_price_check_date, count(*) FILTER (WHERE price_checked_at >= now() - interval '7 days' AND price_checked_at <= now()) AS checked_within_7_days, count(*) FILTER (WHERE price_checked_at < now() - interval '7 days') AS older_than_7_days, count(*) FILTER (WHERE price_checked_at < now() - interval '30 days') AS older_than_30_days, count(*) FILTER (WHERE price_checked_at > now()) AS future_price_check_date, count(*) FILTER (WHERE purchase_link_status = 'available') AS link_marked_available, count(*) FILTER (WHERE purchase_link_status = 'unavailable') AS link_marked_unavailable, count(*) FILTER (WHERE purchase_link_status IS NULL) AS link_status_unknown, count(*) FILTER (WHERE affiliate_link IS NULL OR btrim(affiliate_link) = '') AS missing_shop_link, count(*) FILTER (WHERE net_content_value IS NULL OR net_content_value <= 0 OR net_content_unit IS NULL OR net_content_unit NOT IN ('ml', 'g')) AS missing_or_invalid_package_quantity FROM cohort GROUP BY GROUPING SETS ((), (category_key)) ORDER BY GROUPING(category_key) DESC, category_key;",
+  "limits": [
+    "One read-only aggregate query, with no customer data, live retailer fetch or price-audit run.",
+    "Seven and thirty days are descriptive reporting windows, not active or approved expiry rules.",
+    "A price-check timestamp is not proof of exact chosen-package matching; the current audit candidate has no explicit package-quantity fields.",
+    "Stored quantity checks establish only metadata presence/validity, not verified retailer size or formula identity.",
+    "Deployment lookup and database query are separate point-in-time observations.",
+    "Weekly cadence was verified in source; live server timer/monitor health was not checked."
+  ]
+}

@@ -12,6 +12,8 @@ import {
 } from "@/lib/chat-runtime/message-context"
 import type { MessageContext } from "@/lib/types"
 import { seedHairProfile } from "@/lib/user-facts/seed-profile"
+import { saveUserFacts } from "@/lib/user-facts/save"
+import { SHOPPING_PREFERENCES_SCHEMA_VERSION } from "@/lib/user-facts/schema"
 import type { EvalConversationTurnTraceRow } from "./debug-artifacts"
 import type { SSEResult, HairProfileOverrides, RoutineInventorySeed } from "./types"
 
@@ -217,6 +219,7 @@ export function buildEvalSeedPayloads(
   const profileFields = { ...overrides }
   delete profileFields.onboarding_completed
   delete profileFields.shampoo_frequency
+  delete profileFields.shopping_preferences
   const normalizedProfileFields = Object.fromEntries(
     Object.entries(profileFields).filter(([, value]) => value !== undefined),
   )
@@ -279,7 +282,24 @@ export async function upsertHairProfile(
   // Through the door (`user_facts_save_v1`): the eval user carries real fact documents, and the
   // seed keeps working under the lock that rejects direct fact-column writes.
   try {
-    await seedHairProfile(admin, userId, hairProfileRow)
+    const { revision } = await seedHairProfile(admin, userId, hairProfileRow)
+    if (overrides.shopping_preferences) {
+      const saved = await saveUserFacts(admin, {
+        userId,
+        domain: "shopping_preferences",
+        patch: { budget: overrides.shopping_preferences.budget },
+        provenance: {
+          source: { kind: "shopping_preferences_editor" },
+          schemaVersion: SHOPPING_PREFERENCES_SCHEMA_VERSION,
+          at: new Date().toISOString(),
+          fields: { budget: "user" },
+        },
+        expectedRevision: revision,
+      })
+      if (saved.status !== "ok") {
+        throw new Error(`shopping_preferences write returned ${saved.status}`)
+      }
+    }
   } catch (error) {
     throw new Error(
       formatWriteError("Failed to seed eval hair profile", {

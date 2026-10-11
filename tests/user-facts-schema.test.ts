@@ -11,6 +11,9 @@ import {
   domainProvenanceSchema,
   quizContextPatchSchema,
   quizContextV1Schema,
+  shoppingPreferencesPatchSchema,
+  shoppingPreferencesV1Schema,
+  USER_FACTS_DOMAINS,
 } from "../src/lib/user-facts/schema"
 
 const FULL_DIAGNOSTICS = {
@@ -288,5 +291,102 @@ test("diagnosticsPatchSchema never allows source to be cleared with null, but ev
     diagnosticsPatchSchema.safeParse({ texture: null }).success,
     true,
     "other fields stay clearable",
+  )
+})
+
+test("shopping_preferences is the fourth fact domain", () => {
+  assert.deepEqual(
+    [...USER_FACTS_DOMAINS],
+    ["diagnostics", "care_habits", "quiz_context", "shopping_preferences"],
+  )
+})
+
+test("shoppingPreferencesV1Schema: a capped budget needs limitEur 5 or 15 and allowExceptions", () => {
+  for (const limitEur of [5, 15]) {
+    for (const allowExceptions of [true, false]) {
+      const budget = { kind: "capped", limitEur, allowExceptions }
+      assert.equal(shoppingPreferencesV1Schema.safeParse({ budget }).success, true)
+    }
+  }
+  for (const budget of [
+    { kind: "capped", allowExceptions: true },
+    { kind: "capped", limitEur: 15 },
+    { kind: "capped", limitEur: 10, allowExceptions: true },
+    { kind: "capped", limitEur: "15", allowExceptions: true },
+    { kind: "capped", limitEur: 15, allowExceptions: "ja" },
+    { kind: "capped", limitEur: 15, allowExceptions: true, note: "x" },
+    { kind: "cheap" },
+    {},
+  ]) {
+    assert.equal(
+      shoppingPreferencesV1Schema.safeParse({ budget }).success,
+      false,
+      JSON.stringify(budget),
+    )
+  }
+})
+
+test("shoppingPreferencesV1Schema: uncapped carries no extra keys; an absent budget is valid and stays absent", () => {
+  assert.equal(
+    shoppingPreferencesV1Schema.safeParse({ budget: { kind: "uncapped" } }).success,
+    true,
+  )
+  assert.equal(
+    shoppingPreferencesV1Schema.safeParse({ budget: { kind: "uncapped", limitEur: 15 } }).success,
+    false,
+  )
+  assert.equal(
+    shoppingPreferencesV1Schema.safeParse({ budget: { kind: "uncapped", allowExceptions: false } })
+      .success,
+    false,
+  )
+  const empty = shoppingPreferencesV1Schema.parse({})
+  assert.deepEqual(empty, {})
+  assert.equal("budget" in empty, false, "absent = not collected, never defaulted to uncapped")
+  assert.equal(shoppingPreferencesV1Schema.safeParse({ budget: null }).success, false)
+  assert.equal(
+    shoppingPreferencesV1Schema.safeParse({ marketSegment: "professional" }).success,
+    false,
+  )
+})
+
+test("shoppingPreferencesPatchSchema: budget may be omitted or cleared with null; unknown keys are rejected", () => {
+  assert.equal(shoppingPreferencesPatchSchema.safeParse({}).success, true)
+  assert.equal(shoppingPreferencesPatchSchema.safeParse({ budget: null }).success, true)
+  assert.equal(
+    shoppingPreferencesPatchSchema.safeParse({
+      budget: { kind: "capped", limitEur: 5, allowExceptions: false },
+    }).success,
+    true,
+  )
+  assert.equal(
+    shoppingPreferencesPatchSchema.safeParse({ budget: { kind: "capped", limitEur: 5 } }).success,
+    false,
+  )
+  assert.equal(shoppingPreferencesPatchSchema.safeParse({ other: null }).success, false)
+})
+
+test("domainProvenanceSchema accepts the shopping provenance kinds; factsProvenanceSchema carries the domain", () => {
+  for (const kind of ["shopping_preferences_editor", "consultation_staff"]) {
+    const provenance = {
+      source: { kind, id: kind === "consultation_staff" ? "enrollment-1" : undefined },
+      schemaVersion: 1,
+      at: "2026-10-09T10:00:00.000Z",
+      fields: { budget: "user" },
+    }
+    assert.equal(domainProvenanceSchema.safeParse(provenance).success, true, kind)
+    assert.deepEqual(
+      factsProvenanceSchema.parse({ shopping_preferences: provenance }).shopping_preferences?.source
+        .kind,
+      kind,
+    )
+  }
+  assert.equal(
+    domainProvenanceSchema.safeParse({
+      source: { kind: "market_ops" },
+      schemaVersion: 1,
+      at: "2026-10-09T10:00:00.000Z",
+    }).success,
+    false,
   )
 })

@@ -38,6 +38,7 @@ type ParkedManifest = {
     readyCheckReceiptSha256?: string
   }
   archiveContent?: { files?: unknown; sha256?: unknown }
+  archiveContentRepin?: { excludedFromScope?: unknown }
 }
 
 const hashFile = (filePath: string) =>
@@ -53,6 +54,25 @@ const ARCHIVE_EXCLUSIONS = new Set([
   "data/research/shampoo-inci/v1.4-candidate/parked-research-package.json",
   "data/research/shampoo-inci/v1.4-candidate/archive-ready-check-receipt.json",
 ])
+// Paths under the archive roots that are not part of the frozen v1.4 package
+// (re-pinned 2026-10-10, see `archiveContentRepin` in the manifest): the
+// locked v1.6 package, which has its own byte pins
+// (data/research/shampoo-inci/v1.6/artifact-manifest.json, enforced by
+// tests/shampoo-research-v1-6-lock.test.ts), and the shared top-level README,
+// which is the living entry point for every version. Every other file under
+// the archive roots stays fingerprinted byte-for-byte.
+export const ARCHIVE_SCOPE_EXCLUSIONS = [
+  "data/research/shampoo-inci/v1.6/",
+  "docs/research/shampoo-inci/v1.6/",
+  "docs/research/shampoo-inci/README.md",
+] as const
+
+function isOutsideArchiveScope(filePath: string) {
+  const normalized = filePath.split(path.sep).join("/")
+  return ARCHIVE_SCOPE_EXCLUSIONS.some((exclusion) =>
+    exclusion.endsWith("/") ? normalized.startsWith(exclusion) : normalized === exclusion,
+  )
+}
 
 function listFiles(root: string, relativePath: string): string[] {
   const absolutePath = path.join(root, relativePath)
@@ -63,7 +83,7 @@ function listFiles(root: string, relativePath: string): string[] {
 
 export function fingerprintArchiveContent(root: string) {
   const files = ARCHIVE_PATHS.flatMap((archivePath) => listFiles(root, archivePath))
-    .filter((filePath) => !ARCHIVE_EXCLUSIONS.has(filePath))
+    .filter((filePath) => !ARCHIVE_EXCLUSIONS.has(filePath) && !isOutsideArchiveScope(filePath))
     .sort()
   const manifest = files
     .map((filePath) => `${filePath}\t${hashFile(path.join(root, filePath))}\n`)
@@ -199,6 +219,13 @@ export function validateParkedManifest(root: string, manifest: ParkedManifest) {
     manifest.archiveContent?.sha256 !== archiveContent.sha256
   )
     errors.push("archive content fingerprint changed")
+  const documentedExclusions = manifest.archiveContentRepin?.excludedFromScope
+  if (
+    !Array.isArray(documentedExclusions) ||
+    documentedExclusions.length !== ARCHIVE_SCOPE_EXCLUSIONS.length ||
+    documentedExclusions.some((entry, index) => entry !== ARCHIVE_SCOPE_EXCLUSIONS[index])
+  )
+    errors.push("archive scope exclusions must match the documented re-pin")
 
   if (
     manifest.existingProductCandidate?.activeProducts !== 50 ||

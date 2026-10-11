@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
 import { DiscoveryConcernRecipeSection } from "@/components/discovery/cockpit/concern-recipe"
+import { DiscoveryBudgetPanel } from "@/components/discovery/cockpit/discovery-budget-panel"
 import { DiscoveryCallCockpit } from "@/components/discovery/cockpit/discovery-call-cockpit"
 import { DiscoveryIntakeProducts } from "@/components/discovery/cockpit/discovery-intake-products"
 import {
@@ -23,6 +24,7 @@ import {
   composeRunsheetOutsideRoutine,
   composeRunsheetProducts,
 } from "@/components/discovery/cockpit/runsheet-products"
+import { DiscoveryRunsheetProfileStrip } from "@/components/discovery/cockpit/runsheet-profile-strip"
 import { DiscoveryRunsheetRoutine } from "@/components/discovery/cockpit/runsheet-routine"
 import {
   DISCOVERY_INTAKE_CATEGORY_COPY,
@@ -61,6 +63,8 @@ import {
   runsheetWashChangeNote,
   runsheetWashFrequency,
 } from "@/lib/discovery/runsheet"
+import { runsheetProfileStrip } from "@/lib/discovery/runsheet/profile-strip"
+import { isShoppingBudgetEnabled } from "@/lib/personal-plan/release"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { createAdminClient } from "@/lib/supabase/admin"
 
@@ -126,6 +130,8 @@ export type DiscoveryCockpitPageDependencies = {
   loadPreflight: (lead: DiscoveryQuizLead | null) => Promise<DiscoverySourceFactsPreflight>
   /** The runsheet's own row (`discovery_call_sheets`); null = none yet (every legacy call). */
   loadCallSheet: typeof loadDiscoveryCallSheet
+  /** `SHOPPING_BUDGET_ENABLED`: shows the „Kundenbudget" panel in Phase 3. */
+  shoppingBudgetEnabled: () => boolean
 }
 
 const DEFAULTS: DiscoveryCockpitPageDependencies = {
@@ -138,6 +144,7 @@ const DEFAULTS: DiscoveryCockpitPageDependencies = {
   loadQuizLead: loadDiscoveryQuizLead,
   loadPreflight: async (lead) => classifyDiscoverySourceFactsPreflight(lead),
   loadCallSheet: loadDiscoveryCallSheet,
+  shoppingBudgetEnabled: isShoppingBudgetEnabled,
 }
 
 export function createDiscoveryCockpitPage(
@@ -286,6 +293,13 @@ export function createDiscoveryCockpitPage(
           <Notice text={BRANDS_UNAVAILABLE} />
         )}
         {view.applicationAvailable ? null : <Notice text={APPLICATION_UNAVAILABLE} />}
+        <DiscoveryRunsheetProfileStrip
+          rows={runsheetProfileStrip({
+            quiz,
+            heat: view.heatStyling,
+            washFrequencyLabel,
+          })}
+        />
         <DiscoveryRunsheetBrief
           enrollmentId={enrollmentId}
           saveLocked={!callSheetAvailable}
@@ -332,6 +346,17 @@ export function createDiscoveryCockpitPage(
           applicationGaps={view.applicationGaps.map((gap) => gap.name)}
           complexity={callSheet?.complexity ?? null}
           complexityLocked={!callSheetAvailable}
+          budgetPanel={
+            deps.shoppingBudgetEnabled() ? (
+              <DiscoveryBudgetPanel
+                // Remounts when the saved budget or the routine changed on the server.
+                key={`budget:${JSON.stringify(model.shoppingBudget ?? null)}:${stateKey}`}
+                enrollmentId={enrollmentId}
+                budget={model.shoppingBudget ?? null}
+                finalized={intake.callFinalizedAt !== null}
+              />
+            ) : null
+          }
           intakeProducts={
             <DiscoveryIntakeProducts
               key={`products:${stateKey}`}
@@ -345,6 +370,7 @@ export function createDiscoveryCockpitPage(
           routinePhase={
             <DiscoveryRunsheetRoutine
               view={view}
+              hotTool={model.heatStyling ? model.heatStyling.additionalHeatTools.length > 0 : null}
               washFrequencyLabel={washFrequencyLabel}
               washChangeNote={washChangeNote}
               washFrequency={washAnchor}

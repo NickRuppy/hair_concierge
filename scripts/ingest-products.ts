@@ -97,6 +97,7 @@ interface ProductInput {
   suitable_concerns?: string[]
   shampoo_bucket_pairs?: ShampooBucketPairInput[]
   is_active?: boolean
+  market_segment?: "drugstore" | "professional"
   sort_order?: number
   leave_in_specs?: Partial<
     Omit<ProductLeaveInFitSpecs, "product_id" | "created_at" | "updated_at">
@@ -673,6 +674,7 @@ async function main() {
       suitable_thicknesses: product.suitable_thicknesses || [],
       suitable_concerns: product.suitable_concerns || [],
       is_active: product.is_active ?? true,
+      ...(product.market_segment ? { market_segment: product.market_segment } : {}),
       sort_order: product.sort_order ?? i,
       embedding: JSON.stringify(embedding),
     }

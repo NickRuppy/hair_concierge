@@ -144,6 +144,11 @@ export type FreemiumWebhookProvisioningOutcome =
   | { status: "retryable"; reason: string }
   /** A retry cannot help (no quiz artifact, foreign enrollment, identity mismatch). */
   | { status: "blocked"; reason: string }
+  /**
+   * Admitted and derived; the Routine waits for the buyer's budget answer (C7). Terminal for
+   * this delivery — the Premium sheet's completion call builds the Routine once it is saved.
+   */
+  | { status: "awaiting_budget" }
 
 /**
  * Freemium (Premium-sheet) post-purchase provisioning, run from the webhook lane
@@ -213,6 +218,17 @@ export async function provisionFreemiumCheckoutSession(
   }
 
   if (result.outcome === "provisioned" && result.routineAccepted) return { status: "provisioned" }
+
+  // The shopping-budget gate is on and the buyer has not saved a budget (C7): the plan is
+  // admitted and derived, and the Routine waits for the buyer's answer in the Premium sheet,
+  // whose completion call then accepts it. Redelivering cannot change that, so this is handled
+  // for now — logged once, never a retry storm and never a Sentry incident.
+  if (result.outcome === "provisioned" && result.budgetRequired) {
+    console.info("[freemium] webhook provisioning awaits the budget", {
+      checkoutSessionId: session.id,
+    })
+    return { status: "awaiting_budget" }
+  }
 
   // A plan that is admitted, pinned and derived but has no ACTIVE routine version does not
   // satisfy `resolvePersonalPlanJourneyAccess` — the buyer paid and still sees a gate. That

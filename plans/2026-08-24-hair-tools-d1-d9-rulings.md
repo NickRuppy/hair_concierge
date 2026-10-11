@@ -522,7 +522,7 @@ On conflict, this section wins over the August wording it names.
 
 | # | Ruling |
 | --- | --- |
-| P1 | Option A: Hair Tools becomes a **third Feinschliff module** with its own migration (one additive SQL migration, `20261009150000_personal_plan_stage2_tools_module.sql`, teaches the three module-aware RPCs the new module; applied before the code deploy). |
+| P1 | Option A: Hair Tools becomes a **third Feinschliff module** with its own migration (one additive SQL migration, `20261009170000_personal_plan_stage2_tools_module.sql`, teaches the three module-aware RPCs the new module; applied before the code deploy). |
 | P2 | The **Tool-Checkpoint** is shown **once, on the tools module's return to `/routine`** — not as a Stage-3 step. |
 | P3 | **Bundle all of `D2b`** into this build ("built in one now", Nick 2026-10-09): the two drying relabels and the temperature question together. **Revised the same day:** the temperature question was dropped on the evidence memo (see the Temperature row); the two drying relabels („Gewöhnlich föhnen / auch mit Rundbürste", „Mit Diffusor / Aufsatz für Locken/Wellen") remain. |
 | P4 | **Ship to all after an admin walkthrough:** flag `PERSONAL_PLAN_TOOLS_ROLLOUT` goes `off` → `admin` → `all`. |

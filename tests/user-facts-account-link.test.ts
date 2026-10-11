@@ -12,6 +12,7 @@ import {
   id,
   insertProfile,
   migratedPersonalPlanDatabase,
+  saveUserFacts,
 } from "./personal-plan-pglite-migration.fixtures"
 import { simulateUserFactsSave } from "./user-facts-save-rpc.fixtures"
 
@@ -1114,6 +1115,45 @@ test("fix round 11 (rule 1) on PGlite: the live link of a legacy lead with an ex
   )
   assert.equal(row.desired_volume, "more")
   assert.equal((row.diagnostics as DiagnosticsV1).volumeDirection, "more")
+})
+
+test("on PGlite: a quiz relink never touches the member's shopping_preferences or its provenance", async (t) => {
+  const pg = await migratedPersonalPlanDatabase(t)
+  const user = id(7, 3)
+  await insertProfile(pg, user)
+  const shoppingProvenance = {
+    source: { kind: "shopping_preferences_editor" },
+    schemaVersion: 1,
+    at: "2026-09-20T10:00:00.000Z",
+    fields: { budget: "user" },
+  }
+  const saved = await saveUserFacts(pg, {
+    userId: user,
+    domain: "shopping_preferences",
+    patch: { budget: { kind: "capped", limitEur: 5, allowExceptions: true } },
+    provenance: shoppingProvenance,
+  })
+  assert.equal(saved.status, "ok")
+
+  const outcome = await writeAccountLinkFacts(pgliteAdminClient(pg) as never, {
+    userId: user,
+    quiz: {
+      kind: "lead",
+      leadId: id(7, 4),
+      quizAnswers: CURLY_VOLUME_ANSWERS as never,
+      createdAt: "2026-09-25T00:00:00.000Z",
+    },
+  })
+  assert.equal(outcome, "replaced")
+  const row = (await readRow(pg, user))!
+  assert.deepEqual(row.shopping_preferences, {
+    budget: { kind: "capped", limitEur: 5, allowExceptions: true },
+  })
+  assert.deepEqual(
+    (row.facts_provenance as Record<string, unknown>).shopping_preferences,
+    shoppingProvenance,
+  )
+  assert.ok((row.diagnostics as DiagnosticsV1) !== null, "the relink did write diagnostics")
 })
 
 test("fix round 11: same lead id + same takenAt but a CHANGED volume direction is no resume (raw carries only volume_balance)", async () => {

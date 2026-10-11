@@ -13,6 +13,7 @@ import type {
 import type { Stage3AuthoritySemanticIntent } from "./authority/contracts"
 import type { Stage3AuthorityEvaluation } from "./authority/contracts"
 import type { Stage3FitComparison } from "./fit-comparison"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 import type { Stage3DecisionReviewBundle } from "./stage3-bootstrap-review-contract"
 
 export type Stage3ProductsGatewayErrorCode =
@@ -32,6 +33,8 @@ export type Stage3ProductsGatewayErrorCode =
   | "compensation_pending"
   | "rolled_back"
   | "idempotency_key_reused"
+  /** Flag on, no saved budget: the client opens the budget step and keeps the choices. */
+  | "budget_required"
 
 export class Stage3ProductsGatewayError extends Error {
   constructor(
@@ -108,9 +111,21 @@ export type Stage3DraftResponse = {
   catalogThumbnails?: Record<string, string>
 }
 
+/**
+ * Budget state of a decision-ready bootstrap (gate on only; absent with the gate off).
+ * `budget_required`: no budget saved yet, no review bundles were computed; `suggestion` is the
+ * server-inferred preselection from the captured products' package prices.
+ * `saved`: the saved budget the bundles were computed with.
+ */
+export type Stage3BootstrapBudgetEnvelope =
+  | { status: "budget_required"; suggestion: 5 | 15 | null }
+  | { status: "saved"; value: ShoppingBudget }
+
 export type Stage3BootstrapResponse = Omit<Stage3DraftResponse, "fitComparisons"> & {
   authorityEvaluations: Stage3AuthorityEvaluation[]
   fitComparisons: Stage3FitComparison[]
+  /** Gate on and draft decision-ready only; `budget_required` comes with empty bundles. */
+  budget?: Stage3BootstrapBudgetEnvelope
 }
 
 export type Stage3BootstrapClientPort = {

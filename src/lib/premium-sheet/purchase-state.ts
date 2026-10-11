@@ -12,6 +12,7 @@
  *                        │                          ┌─────────────────┼─────────────────┐
  *                        ▼                          ▼                 ▼                 ▼
  *                     failed ◀──────────────────  pending      provisioning        unlocked
+ *                                                                     budget ──(saved)──▶ ▲
  *
  * Four rules the type system enforces here rather than leaving to the component:
  *
@@ -53,6 +54,13 @@ export type PremiumSheetPurchasePhase =
    * a missing quiz artifact or a foreign enrollment cannot.
    */
   | { phase: "provisioning"; sessionId: string; retryable: boolean }
+  /**
+   * Paid, entitled and derived — the Routine waits for the buyer's budget answer (C7). The
+   * sheet confirms the unlock, asks the budget question, saves it and verifies the same
+   * Session again from this phase (the answer moves it on), which then builds the Routine. `cancelled` = the buyer left the question;
+   * it stays available (no dead end). Money moved, so this never falls back to `plans`.
+   */
+  | { phase: "budget"; sessionId: string; cancelled: boolean }
   /** Recoverable: the sheet shows the reason and one retry back into `plans`. */
   | { phase: "failed"; reason: PremiumSheetPurchaseFailure }
 
@@ -85,6 +93,9 @@ export type PremiumSheetPurchaseEvent =
   | { type: "verification_complete"; sessionId: string; routineReady: boolean }
   | { type: "verification_pending"; sessionId: string }
   | { type: "verification_provisioning"; sessionId: string; retryable: boolean }
+  | { type: "verification_budget_required"; sessionId: string }
+  /** The buyer left the budget question; it stays available below the cancel line. */
+  | { type: "budget_question_cancelled" }
   | { type: "verification_failed"; sessionId: string; reason: PremiumSheetPurchaseFailure }
   /** Any escape the buyer takes: back to plans, the X, backdrop, Escape. */
   | { type: "returned_to_plans" }
@@ -103,7 +114,12 @@ function attemptIsCurrent(state: PremiumSheetPurchasePhase, attemptId?: string):
 
 /** The phases that are waiting on a verification answer, and for which Session. */
 function awaitsSession(state: PremiumSheetPurchasePhase, sessionId: string): boolean {
-  if (state.phase !== "verifying" && state.phase !== "pending" && state.phase !== "provisioning") {
+  if (
+    state.phase !== "verifying" &&
+    state.phase !== "pending" &&
+    state.phase !== "provisioning" &&
+    state.phase !== "budget"
+  ) {
     return false
   }
   return state.sessionId === sessionId
@@ -129,7 +145,8 @@ export function premiumSheetPurchaseReducer(
       if (
         state.phase === "unlocked" ||
         state.phase === "pending" ||
-        state.phase === "provisioning"
+        state.phase === "provisioning" ||
+        state.phase === "budget"
       ) {
         return state
       }
@@ -157,14 +174,30 @@ export function premiumSheetPurchaseReducer(
     case "verification_provisioning":
       if (!awaitsSession(state, event.sessionId)) return state
       return { phase: "provisioning", sessionId: event.sessionId, retryable: event.retryable }
+    case "verification_budget_required":
+      if (!awaitsSession(state, event.sessionId)) return state
+      // A repeat answer while the question is already open keeps the buyer's place.
+      if (state.phase === "budget") return state
+      return { phase: "budget", sessionId: event.sessionId, cancelled: false }
+    case "budget_question_cancelled":
+      if (state.phase !== "budget") return state
+      return { ...state, cancelled: true }
     case "verification_failed":
+      // A paid purchase waiting only for the budget answer is not demoted to a failure.
+      if (state.phase === "budget") return state
       if (!awaitsSession(state, event.sessionId)) return state
       return { phase: "failed", reason: event.reason }
     case "returned_to_plans":
       // An unlocked purchase is terminal: the sheet is closing into the unlocked world and
       // must never fall back to showing plans the buyer has already paid for. A paid but
       // unprovisioned purchase is terminal for the same reason — the money moved.
-      if (state.phase === "unlocked" || state.phase === "provisioning") return state
+      if (
+        state.phase === "unlocked" ||
+        state.phase === "provisioning" ||
+        state.phase === "budget"
+      ) {
+        return state
+      }
       return { phase: "plans" }
     default:
       return state

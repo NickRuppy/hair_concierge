@@ -5,6 +5,7 @@ import type {
   PlanPortfolioCoverageFact,
   PlanProductRole,
 } from "@/lib/personal-plan/types"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 
 import type {
   PersonalPlanCategory,
@@ -71,6 +72,8 @@ export type Stage3AuthorityCommonProductFacts = {
   netContentUnit?: "ml" | "g" | null
   affiliateLink?: string | null
   currency?: string | null
+  /** Catalog market bucket (Drogerie/Profi). Presentation only; never fit authority. */
+  marketSegment?: "drugstore" | "professional" | null
 }
 
 export type Stage3ShampooFacts = Stage3AuthorityCommonProductFacts & {
@@ -232,6 +235,10 @@ export type Stage3EvaluationContext = Readonly<{
   currentRefinedVersionId: string
   refinedNeedSnapshot: InitialNeedPlanSnapshot
   hairThickness: PlanHairThickness
+  /** Saved per-package shopping budget; absent or null = unknown (never "uncapped"). */
+  budget?: ShoppingBudget | null
+  /** Stated concerns from the saved diagnostics (budget priority only); absent with the gate off. */
+  statedConcerns?: Readonly<{ currentConcerns: readonly string[]; primaryConcern: string | null }>
 }>
 
 export type Stage3KnownAuthorityEvaluation = {

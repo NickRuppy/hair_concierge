@@ -1,0 +1,58 @@
+{
+  "slot": "U2-05",
+  "productId": null,
+  "name": "Shampoo Oil Repair Marulaöl",
+  "brand": "ISANA",
+  "packSize": "300 ml",
+  "gtins": [
+    "4068134071118"
+  ],
+  "sources": [
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-oil-repair-marulaoel/p/4068134071118",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de_own_brand_retailer_exact_gtin_url",
+      "gtinShown": "4068134071118 (URL ends /p/4068134071118)",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Glycerin, PEG-4 Rapeseedamide, Coco-Glucoside, Glyceryl Oleate, Citric Acid, PEG-3 Distearate, Parfum, Guar Hydroxypropyltrimonium Chloride, Sodium Benzoate, Panthenol, Niacinamide, Potassium Sorbate, Tetramethyl Acetyloctahydronaphthalenes, Linalyl Acetate, Benzoic Acid, Sclerocarya Birrea Seed Oil, Hydrogenated Coconut Oil, Pantolactone, Octadecyl Di-t-Butyl-4-Hydroxyhydrocinnamate, Sodium Hydroxide, Tocopherol, Hydrogenated Palm Glycerides Citrate",
+      "claimsVerbatim": "Das ISANA Shampoo Oil Repair mit pflegendem Marulaöl, Vitamin B3 und Panthenol macht trockenes und brüchiges Haar bis in die Spitzen heil und strahlend. Einfach wunderbar! | Hautverträglichkeit dermatologisch bestätigt | pH-hautneutral | vegan",
+      "directionsVerbatim": "In das feuchte Haar einmassieren. Gründlich ausspülen.",
+      "note": "ISANA is a Rossmann own brand: Dirk Rossmann GmbH, Burgwedel is the responsible company, so this page is both manufacturer and exact-GTIN retailer. Price 0,65 EUR. Warnhinweis: 'Augenkontakt vermeiden.' Origin: Vlijmen, Niederlande."
+    }
+  ],
+  "conflicts": [],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Betaine",
+    "Sodium Chloride",
+    "Glycerin",
+    "PEG-4 Rapeseedamide",
+    "Coco-Glucoside",
+    "Glyceryl Oleate",
+    "Citric Acid",
+    "PEG-3 Distearate",
+    "Parfum",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Sodium Benzoate",
+    "Panthenol",
+    "Niacinamide",
+    "Potassium Sorbate",
+    "Tetramethyl Acetyloctahydronaphthalenes",
+    "Linalyl Acetate",
+    "Benzoic Acid",
+    "Sclerocarya Birrea Seed Oil",
+    "Hydrogenated Coconut Oil",
+    "Pantolactone",
+    "Octadecyl Di-t-Butyl-4-Hydroxyhydrocinnamate",
+    "Sodium Hydroxide",
+    "Tocopherol",
+    "Hydrogenated Palm Glycerides Citrate"
+  ],
+  "canonicalReason": "Own-brand manufacturer page (Rossmann DE) with exact GTIN in the URL; list identical to the 2026-09-02 stored list (taken then from the Rossmann Hungary page).",
+  "inciFingerprintSha256": "c5fe6f965db96933010e55b735f1b44ae743f74e401b79babb798561b49b059d",
+  "normalization": "Split verbatim INCI on commas outside parentheses; per item trim, lower-case, collapse internal whitespace; join items with '|'; sha256 (utf-8) hex. Original-case ingredient list is kept in canonicalInci[].",
+  "identityConfidence": "high",
+  "status": "frozen",
+  "blockReason": null,
+  "notes": "Catalog productId: none (not yet in catalog); Track B row b02-i10. Only one source re-fetched today because the brand has no separate manufacturer site; the earlier Rossmann HU capture (2026-09-02) was identical but is not counted as a fresh source. First navigation hit a transient 'Client Challenge' page that resolved on its own."
+}

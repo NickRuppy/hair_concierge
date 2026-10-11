@@ -91,6 +91,9 @@ export function classifyPendingStage3RecoveryError(
     case "rate_limited":
       return "reconcile_unknown_outcome"
     case "completion_not_ready":
+    // The flow intercepts budget_required first (budget step, choices kept); if it ever reaches
+    // here, reopening the decision keeps the choices without a retry loop.
+    case "budget_required":
       return "reopen_incomplete_decision"
     case "stale_refined_source":
       return "reload_authority"
