@@ -1,0 +1,26 @@
+{
+  "schema": "catalog-completeness-fill-slice1-artifact-manifest-v1",
+  "generator": "plans/catalog-completeness-fill/slice1/generate.ts",
+  "content_fingerprint": "4398744e32e5b643a6e509969d09d936aed0260bbb7c4e5bc1dca6cc33647ca9",
+  "inputs": {
+    "plans/catalog-completeness-fill/slice1/prestate.json": "75fd6d8e5d5d0c070469a767a07f0b8c48f2c6a59d2040017a5925debd6276eb",
+    "plans/catalog-completeness-fill/slice1/fixtures/prod-schema-2026-10-11.json": "46a2c5b6401aa4edace88a9e0da9e49ad0ab76b87fc9f6681dc8df2131ec366c",
+    "plans/catalog-completeness-fill/research/r1-leave-in-heat/findings.json": "b5cb21fea5269a24a8db023c950f5486be664f45a201f2ca5c42072f1e84b196",
+    "plans/catalog-completeness-fill/research/r4-user-submitted-14/proposal/protocol-rows.json": "7e4e860a9309904cbe23131fb02ecaddfdbbed4462742fff14f6faa0c9156c87",
+    "plans/catalog-completeness-fill/research/r4-user-submitted-14/findings.json": "96d4b254b55113b439fdbb72fa63a62b89290c719799e3ec7c1c834d10d25c60",
+    "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.1/aussie/adapter/production-projection.json": "74a2c78685757f5e3fd9307ba6abe1a97fa9cff84016b964f78db3c8175c8830",
+    "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.1/balea/adapter/production-projection.json": "b3ba6942142d84aba601d3d93ef18bd2c27a467dd0fa48071fc1cca1b1b04f7a",
+    "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.1/bali/adapter/production-projection.json": "b7027767628bfd9a2e0116abe49d48e4001225174fa9d747b339fe81e31da819",
+    "plans/catalog-completeness-fill/research/r4-user-submitted-14/mask/adapter/production-projection.json": "71315f5d46310e2f9901ebb8adae6eaa30c77434438147b178be36353cb28e17",
+    "plans/catalog-completeness-fill/slice1/amendments/ogx-cadence-uk.json": "3a2a57492f0e4f53e11bab01c5a380b907b56421651d289fd3f20b30feaa0403",
+    "plans/catalog-completeness-fill/slice1/amendments/k18-cadence-de.json": "b97ad19f1f44b8f7f2767d033239f00f69e66abc516a69e67df3b43ae3749a15",
+    "plans/catalog-completeness-fill/slice1/inputs/neqi-rosemary-scalp-care.json": "ef770bc09c0b9c3c28d01c68e31b32ace439f5a1f9a364d5013849baeb662d47"
+  },
+  "outputs": {
+    "plans/catalog-completeness-fill/slice1/target-state.json": "24887b1bb337f9a629163314305f2d3e9f424ffb5952a08bec8b79a3d65e141c",
+    "supabase/migrations/20261011140000_catalog_completeness_fill_slice1.sql": "21f899d8037586afc95b31564d826c62dc9402fd0cdb0b0ba5d477d3ffc64379",
+    "plans/catalog-completeness-fill/slice1/rollback.sql": "c401ed2422fe0622d6b739665f58f816a540e18ddda9f51292def544435fcf66",
+    "plans/catalog-completeness-fill/slice1/verify.sql": "f0be6037efc236a9242b1be836273a359cd7100ce08df07ef32062f24aecde79"
+  },
+  "combined_sha256": "d25587b3ff000e7c01b083db0d8909bfa419f3c415ad40a4002a8129b649c804"
+}
