@@ -1,23 +1,29 @@
+import { HEAT_ACTIVATION_ROUTES } from "@/lib/heat-activation/contract"
 import {
   LEAVE_IN_BASE_STANDARD,
   LEAVE_IN_OVERLAY_PATH,
   LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD,
   LEAVE_IN_PRODUCTION_ADAPTER_VERSION,
   LEAVE_IN_RESEARCH_ENVELOPE_VERSION,
+  LEAVE_IN_V1_1_OVERLAY,
 } from "@/lib/leave-in-research/production-adapter"
 
 export function leaveInResearchPromptContract() {
   return {
     engine: {
-      standard: "Leave-In Standard v1.1 (Standard v1.0 plus the T20 care_direction overlay)",
+      standard:
+        "Leave-In Standard v1.2 (Standard v1.0 plus the T20 care_direction overlay v1.1 plus the T21 heat-activation overlay v1.2)",
       standard_sources: {
         base: LEAVE_IN_BASE_STANDARD.path,
+        care_direction_overlay: LEAVE_IN_V1_1_OVERLAY.path,
         overlay: LEAVE_IN_OVERLAY_PATH,
       },
       envelope_version: LEAVE_IN_RESEARCH_ENVELOPE_VERSION,
       research_method: LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD,
       care_direction_rule:
         "T20 (overlay §9-O1–O7): only settled humectants (Glycerin, Betaine, Panthenol, Sodium PCA, Sodium Lactate, Sodium Hyaluronate, Urea, Sorbitol, simple sugars) and non-volatile medium/rich-band lipids (plant oils, butters, Squalane, Jojoba, Caprylic/Capric Triglyceride) above the tail marker can set moisture. Cationics, fatty alcohols, dry-feel esters, volatiles and multifunctional glycols never set a direction. A persistent film that outranks every such species above the tail makes the product balanced (film_leads_moisture_leg); no directional species with a readable architecture is balanced (film_led_neutral or conditioning_only_neutral). A thin read (adjacent-rank film lead, a glycol outranking the film, an unreliable marker) takes low confidence and lists care_direction in uncertainFields. Name every demoted species with its rank in evidenceSignals.",
+      heat_activation_rule:
+        "T21 (v1.2 overlay §1.3, HA-1–HA-9): capture identity.heatActivation from the product's own text, next to applicationStage. HA-1: transcribe it from the directions and the manufacturer's statements, never from the formula, the INCI, a polymer class or the name; silence is not_required. HA-2: required needs BOTH (a) an activation statement — the manufacturer says heat activates or releases the effect („hitzeaktiviert“, „durch Hitze aktiviert“, „bei Hitzeaktivierung“, „…, um zu aktivieren“ with a heat step) — AND (b) a heat-step direction that names a heat tool after application without offering a non-heat finish (an „oder an der Luft trocknen lassen“ alternative makes it not_required; a further use sentence that names no non-heat finish does not). HA-3: both prongs must be verbatim from C1 (current German pack) or C2 (German-market manufacturer page, including a house brand on its own retailer page); the cross-market C2 exception does not apply. Retailer or other C3–C5 activation wording goes only into counterSignals and leaves the value not_required (activation_authority_gap). HA-4: route from the prong-(b) tool — Föhn/föhnen/Rundbürste → airflow_shaping, Glätteisen/Lockenstab → direct_contact_heat, both as alternatives → either_heat; route is null when not_required. HA-5: one prong only, an unclear tool or conflicting C1/C2 text → set identity.identityStatus to provisional_identity_conflict instead of guessing. HA-6: activation never sets or reads provides_heat_protection, and a heat-protection claim never sets activation. HA-7: required implies applicationStage includes pre_heat. HA-8: every required value routes to human review. HA-9: activation is a directions field, not a claim-led field; HEAT stays the only claim-led field.",
       scope: "conventional leave-on conditioning Leave-In sold in Germany/EU",
       source_of_truth:
         "The complete research envelope is the durable authority. Current database rows are a derived compatibility projection only.",
@@ -47,6 +53,14 @@ export function leaveInResearchPromptContract() {
           productForm: ["spray", "milk", "lotion", "cream", "serum"],
           applicationStage:
             "non-empty unique subset of [towel_dry, dry_hair, pre_heat, post_style], transcribed from the verbatim authoritative directions, never derived from the formula. Never emit post_wash — use towel_dry.",
+          heatActivation: {
+            value: ["required", "not_required"],
+            route: [...HEAT_ACTIVATION_ROUTES, null],
+            statements:
+              "array of verbatim manufacturer sentences, each { kind: activation_statement | heat_step_direction, quote, sourceTier: C1 | C2, sourceUrl, retrievedAt: YYYY-MM-DD }; required needs at least one of each kind; empty when not_required",
+            counterSignals:
+              "array of C3–C5 activation wording, each { quote, sourceTier: C3 | C4 | C5, sourceUrl }; corroboration only, never creates the value; empty when none",
+          },
           identityStatus: [
             "verified",
             "verified_with_minor_source_difference",

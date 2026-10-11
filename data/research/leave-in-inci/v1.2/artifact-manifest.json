@@ -1,0 +1,204 @@
+{
+  "schema_version": "leave-in-stage-a-artifact-manifest.v1.2",
+  "created_at": "2026-10-09",
+  "standard_version": "1.2",
+  "composition": "Standard v1.2 = the byte-frozen Standard v1.0 (normative_base) + the byte-frozen T20 overlay (previous_overlay) + the T21 heat-activation overlay (normative_overlay). v1.0 and v1.1 artifacts stay pinned by their own manifests and are re-verified in CI.",
+  "normative_overlay": {
+    "path": "docs/research/leave-in-inci/v1.2/leave-in-classification-overlay.v1.2.md",
+    "bytes": 19286,
+    "sha256": "e8d677dbad352ee808cdd7e878e9ce6e6c98fb474f1a32ab2658ad9ebdc2c833",
+    "verification": "T21 heat-activation overlay; names the v1.1 overlay and the v1.0 base by sha256; pinned as the adapter research method policySha256"
+  },
+  "previous_overlay": {
+    "path": "docs/research/leave-in-inci/v1.1/leave-in-classification-overlay.v1.1.md",
+    "bytes": 21091,
+    "sha256": "9c1340357b4c0cf38933340f4592250d10f2cccc1429b0e4d46508d47eee032b",
+    "verification": "Standard v1.1 overlay (T20), unchanged since the 2026-09-29 lock"
+  },
+  "normative_base": {
+    "path": "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+    "bytes": 421855,
+    "sha256": "7ae5e882d9cba3e3fccdea3623d056efe802ff3bc3adbe554112e471da551ace",
+    "verification": "Standard v1.0, unchanged since the 2026-09-13 lock"
+  },
+  "runbook": {
+    "path": "docs/research/leave-in-inci/v1.0/runbook.md",
+    "bytes": 16953,
+    "sha256": "dce7d84982e52f5094a0b29500105d13f42c31d44e04b1871bcbef1bda5e56ca",
+    "verification": "unchanged; still the procedure of record"
+  },
+  "base_lock_receipt": {
+    "path": "data/research/leave-in-inci/v1.0/v1.0-logic-lock-receipt.json",
+    "bytes": 8141,
+    "sha256": "7510ccf29be21bd8fc9ee640ecc39de53bed90b6bf93bd730b11cf2c7b4dac52"
+  },
+  "previous_lock_receipt": {
+    "path": "data/research/leave-in-inci/v1.1/v1.1-logic-lock-receipt.json",
+    "bytes": 6557,
+    "sha256": "cb56d923319c32ee9e35668b884a20dbba85269a867d8e390171c13bb3771fc7"
+  },
+  "previous_artifact_manifest": {
+    "path": "data/research/leave-in-inci/v1.1/artifact-manifest.json",
+    "verification": "every artifact it lists except the README is byte-identical and re-hashed by tests/leave-in-research-v1-1-lock.test.ts"
+  },
+  "readme": {
+    "path": "docs/research/leave-in-inci/README.md",
+    "bytes": 17551,
+    "sha256": "49211c28c275c3fd8e708958300db9a0aaa74a8eb3db15482b3dd46d2bda22da",
+    "verification": "README as of the v1.2 lock; recorded for provenance, not CI-enforced (living entry point)"
+  },
+  "logic_lock_receipt": {
+    "path": "data/research/leave-in-inci/v1.2/v1.2-logic-lock-receipt.json",
+    "bytes": 9131,
+    "sha256": "27ec66921a0a9bbd122f3f5f77163d149cae2b18bd49c48df8bfb14d37bcba0a"
+  },
+  "calibration": {
+    "builder": "scripts/leave-in-research/build-v1.2-calibration.ts",
+    "expected_projections": {
+      "path": "data/research/leave-in-inci/v1.2/calibration-expected-projections.json",
+      "bytes": 700473,
+      "sha256": "8bf52af166742b88ff69f19376fc54b542cc6ef16d1fadc7caba9d1d8b0c017f"
+    },
+    "envelopes": [
+      {
+        "path": "data/research/leave-in-inci/v1.2/calibration-envelopes/slot-01.json",
+        "bytes": 17359,
+        "sha256": "b9089b1134f6db357332ac50059a1d29833674d04836cdb14c697232cd467d96"
+      },
+      {
+        "path": "data/research/leave-in-inci/v1.2/calibration-envelopes/slot-02.json",
+        "bytes": 17641,
+        "sha256": "1019fa8fd440ce6da3561b6bcd54c705777b28202ba9538c510b9fae1456c41e"
+      },
+      {
+        "path": "data/research/leave-in-inci/v1.2/calibration-envelopes/slot-03.json",
+        "bytes": 18189,
+        "sha256": "ec26089b24b395853df5fc777bcd7d1d19f880a4e8eec364de6ac2e701eea07f"
+      },
+      {
+        "path": "data/research/leave-in-inci/v1.2/calibration-envelopes/slot-04.json",
+        "bytes": 16552,
+        "sha256": "dc96eb8d53787027641a655d8aa882209c805e088517dcd8e8a1dd67a725c126"
+      },
+      {
+        "path": "data/research/leave-in-inci/v1.2/calibration-envelopes/slot-05.json",
+        "bytes": 18554,
+        "sha256": "d10edca1025bbcd149998a960112fca56cc94bb242b6ac5614b96ef69ef536e1"
+      },
+      {
+        "path": "data/research/leave-in-inci/v1.2/calibration-envelopes/slot-06.json",
+        "bytes": 18650,
+        "sha256": "c36b847f2c77181afb9a0f5dafebf2b0dc3c38be7b69adbc3fb8aed52e9f0baa"
+      },
+      {
+        "path": "data/research/leave-in-inci/v1.2/calibration-envelopes/slot-08.json",
+        "bytes": 20514,
+        "sha256": "3b1f2d6a2348afa8ad0acbff5dda0e0e2e1422ef17ca8b16b160f7bdd5a2980b"
+      },
+      {
+        "path": "data/research/leave-in-inci/v1.2/calibration-envelopes/slot-09.json",
+        "bytes": 21874,
+        "sha256": "9038658a5fc6bd5c24e406abf0c94239a581dbdaac5228c9eecdb8a67443620f"
+      },
+      {
+        "path": "data/research/leave-in-inci/v1.2/calibration-envelopes/slot-10.json",
+        "bytes": 24430,
+        "sha256": "09867736d3e44c83c4ebd1ade28385ed5c39839ca9e91bcf5f483a6e571a529a"
+      },
+      {
+        "path": "data/research/leave-in-inci/v1.2/calibration-envelopes/slot-11.json",
+        "bytes": 15646,
+        "sha256": "75881cb3747b50ef1f07699b09f8c66c0e04b8d4d1f51cd971046032436b366e"
+      },
+      {
+        "path": "data/research/leave-in-inci/v1.2/calibration-envelopes/slot-13.json",
+        "bytes": 21414,
+        "sha256": "f2105972f7aa66fcc03196a51e878aec570407d2dc99b5fadd4bac0cf5c053ca"
+      }
+    ]
+  },
+  "user_submitted_restamps": {
+    "root": "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2",
+    "summary": {
+      "aussie": {
+        "value": "not_required",
+        "route": null,
+        "requiredProtocolRoles": [
+          "post_wash_leave_in"
+        ]
+      },
+      "balea": {
+        "value": "not_required",
+        "route": null,
+        "requiredProtocolRoles": [
+          "post_wash_leave_in",
+          "pre_heat_protection"
+        ]
+      },
+      "bali": {
+        "value": "not_required",
+        "route": null,
+        "requiredProtocolRoles": [
+          "post_wash_leave_in",
+          "pre_heat_protection"
+        ]
+      },
+      "neqi-spray": {
+        "value": "required",
+        "route": "airflow_shaping",
+        "requiredProtocolRoles": [
+          "pre_heat_protection"
+        ]
+      }
+    },
+    "artifacts": [
+      {
+        "path": "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/aussie/envelope.json",
+        "bytes": 16383,
+        "sha256": "3ecce34c86b4daa3e1420d9dce7b945a6cce30545b24f4a3b286bd1d55873b53"
+      },
+      {
+        "path": "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/aussie/adapter/production-projection.json",
+        "bytes": 56827,
+        "sha256": "629eac8429c704b69f684a13b63af8182406c3980c47cd16aff0c49404c65518"
+      },
+      {
+        "path": "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/balea/envelope.json",
+        "bytes": 17155,
+        "sha256": "e40d6ae7fa5b2db6cc6aaef6d2fbaf058d3cd2947173ce838b56d6a25a60e05d"
+      },
+      {
+        "path": "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/balea/adapter/production-projection.json",
+        "bytes": 52420,
+        "sha256": "037f67920b86378355a0232c7b6b111baaa8880f431f9fc4ed265efd721fe3e8"
+      },
+      {
+        "path": "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/bali/envelope.json",
+        "bytes": 16341,
+        "sha256": "d8e1145048dc759dc1908f98fa6afaa8f26cd8215b5b838a32d35d80010b757e"
+      },
+      {
+        "path": "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/bali/adapter/production-projection.json",
+        "bytes": 64511,
+        "sha256": "f9e7ed607a7a5383d49a053b7aa60d15e1bfddb2bcd1324b7b8d81e27607cd2e"
+      },
+      {
+        "path": "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/neqi-spray/envelope.json",
+        "bytes": 21145,
+        "sha256": "56f4118eab5962cf7dd2425cd1b6883c092a0a494ae3c04232440a1141044765"
+      },
+      {
+        "path": "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/neqi-spray/adapter/production-projection.json",
+        "bytes": 72148,
+        "sha256": "242e1d85403ef83bd102142405b9e6c9343329e3be1fa61f0a245d00b9ef98e4"
+      }
+    ]
+  },
+  "production_writes": false,
+  "lab_fixture": {
+    "path": "data/research/leave-in-inci/v1.2/lab-fixture.json",
+    "bytes": 1240144,
+    "sha256": "6b0895db2fb229f0a517bff6075bc11dd6cb4a58b85f923139520590ad1e05bc",
+    "verification": "v1.1 Lab fixture overlay: slot 13 gains one heat_activation row (review trigger heat_activation_required); every other property fingerprint and every other product unchanged"
+  }
+}

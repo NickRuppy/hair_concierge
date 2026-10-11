@@ -1,5 +1,6 @@
 import { z } from "zod"
 
+import { HEAT_ACTIVATION_ROUTES } from "@/lib/heat-activation/contract"
 import { PRODUCT_BALANCE_TARGETS } from "@/lib/product-specs/constants"
 import {
   PRODUCT_BOND_APPLICATION_MODES,
@@ -99,6 +100,7 @@ type ProductIntakeSpecRowByTable = {
     roles: string[]
     provides_heat_protection: boolean
     heat_activation_required: boolean
+    heat_activation_route?: (typeof HEAT_ACTIVATION_ROUTES)[number] | null
     care_benefits: string[]
     ingredient_flags: string[]
     application_stage: string[]
@@ -576,8 +578,48 @@ const leaveInSpecsSchema = z
             ]),
           )
           .min(1),
+        // Leave-In v1.2 (AD-7). Optional so legacy payloads that predate the
+        // column still validate; a missing route reads as NULL (the DB default).
+        heat_activation_route: z.enum(HEAT_ACTIVATION_ROUTES).nullable().optional(),
       })
-      .strict(),
+      .strict()
+      .superRefine((specs, context) => {
+        // Mirrors the product_leave_in_specs CHECKs (S3 plan §2.6):
+        // heat_activation_route_iff_required and heat_activation_pre_heat_only.
+        const route = specs.heat_activation_route ?? null
+        if (specs.heat_activation_required !== (route !== null)) {
+          context.addIssue({
+            code: "custom",
+            path: ["heat_activation_route"],
+            message:
+              "heat_activation_route_iff_required: the route is set exactly when heat_activation_required is true",
+          })
+        }
+        if (!specs.heat_activation_required) return
+        if (specs.plan_roles.length !== 1 || specs.plan_roles[0] !== "pre_heat_application") {
+          context.addIssue({
+            code: "custom",
+            path: ["plan_roles"],
+            message:
+              "heat_activation_pre_heat_only: plan_roles must be exactly [pre_heat_application]",
+          })
+        }
+        if (!specs.application_stage.includes("pre_heat")) {
+          context.addIssue({
+            code: "custom",
+            path: ["application_stage"],
+            message: "heat_activation_pre_heat_only: application_stage must include pre_heat",
+          })
+        }
+        if (specs.roles.includes("replacement_conditioner")) {
+          context.addIssue({
+            code: "custom",
+            path: ["roles"],
+            message:
+              "heat_activation_pre_heat_only: roles must not include replacement_conditioner",
+          })
+        }
+      }),
     product_leave_in_fit_specs: z
       .object({
         weight: z.enum(LEAVE_IN_WEIGHTS),
@@ -1167,11 +1209,16 @@ export function requiredProtocolRoles(
         rows.map((row) => (row as { shampoo_bucket?: string | null }).shampoo_bucket),
       )
     }
-    case "leave_in":
-      return (specs.product_leave_in_specs as { provides_heat_protection?: unknown })
-        ?.provides_heat_protection === true
+    case "leave_in": {
+      const leaveIn = specs.product_leave_in_specs as
+        | { provides_heat_protection?: unknown; heat_activation_required?: unknown }
+        | undefined
+      // Leave-In v1.2 (AD-7, I8): an activated product needs the pre-heat protocol only.
+      if (leaveIn?.heat_activation_required === true) return ["pre_heat_protection"]
+      return leaveIn?.provides_heat_protection === true
         ? ["post_wash_leave_in", "pre_heat_protection"]
         : ["post_wash_leave_in"]
+    }
     case "oil": {
       return (specs.product_oil_specs as { role_support?: string[] })?.role_support ?? []
     }

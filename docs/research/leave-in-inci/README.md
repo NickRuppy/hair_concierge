@@ -1,6 +1,6 @@
 # Leave-In ingredient research
 
-Status: **logic locked (Standard v1.1 = Standard v1.0 + the T20 `care_direction` overlay, 2026-09-29) — research engine active for Product Intake preparation, not live matching logic**
+Status: **logic locked (Standard v1.2 = Standard v1.0 + the T20 `care_direction` overlay, 2026-09-29 + the T21 heat-activation overlay, 2026-10-09) — research engine active for Product Intake preparation, not live matching logic**
 
 This directory is the durable entry point for the Leave-In ingredient-classification work. It separates formula-derived product research from user fit, and both of those from catalog or production activation.
 
@@ -10,10 +10,12 @@ The folder `v1.0/` is the **artifact root version** (the frozen research package
 
 **Standard v1.1 (2026-09-29).** v1.1 is the byte-frozen v1.0 standard plus one normative overlay, [`v1.1/leave-in-classification-overlay.v1.1.md`](./v1.1/leave-in-classification-overlay.v1.1.md) (ruling T20: which species may set `care_direction`). Its artifacts live in sibling `v1.1/` roots (`docs/research/leave-in-inci/v1.1/`, `data/research/leave-in-inci/v1.1/`). That is not a new research package. It keeps every v1.0 path byte-identical: the v1.0 manifest and CI pin those files, and T20 added a re-derivation run (the `care_direction` records) and a new calibration envelope set that could not be written into the frozen root without changing it. Nothing under `v1.0/` was edited.
 
+**Standard v1.2 (2026-10-09).** v1.2 is v1.1 plus a second normative overlay, [`v1.2/leave-in-classification-overlay.v1.2.md`](./v1.2/leave-in-classification-overlay.v1.2.md) (ruling T21: the identity field `heatActivation`, HA-1…HA-9). Its artifacts live in sibling `v1.2/` roots (`docs/research/leave-in-inci/v1.2/`, `data/research/leave-in-inci/v1.2/`). Nothing under `v1.0/` or `v1.1/` was edited; the v1.1 overlay and its calibration set stay byte-frozen and are re-verified in CI.
+
 ## Start here
 
 1. Read the [runbook](./v1.0/runbook.md) — frozen-packet capture, the sealed-lane protocol, the agreement diff, the Lab review flow, and the rule-change discipline.
-2. Use the [classification standard](./v1.0/leave-in-classification-standard.md) for the seven-dimension research record and the lean matching profile, **with the [v1.1 overlay](./v1.1/leave-in-classification-overlay.v1.1.md) replacing §9's moisture-leg rule** (T20).
+2. Use the [classification standard](./v1.0/leave-in-classification-standard.md) for the seven-dimension research record and the lean matching profile, **with the [v1.1 overlay](./v1.1/leave-in-classification-overlay.v1.1.md) replacing §9's moisture-leg rule** (T20) **and the [v1.2 overlay](./v1.2/leave-in-classification-overlay.v1.2.md) adding the `heatActivation` identity field** (T21).
 3. The [reviewed source snapshot](./v1.0/leave-in-classification-standard.v1.0-rc1.md) is the exact text calibration round 4 was run against — byte-identical to the normative file minus its Version preamble and version stamps.
 4. The [rule-change ledger](./v1.0/rule-changes.md) is the entry-by-entry history; the table below is its index.
 
@@ -28,17 +30,20 @@ The folder `v1.0/` is the **artifact root version** (the frozen research package
 | Researcher prompt (operative) | `src/lib/product-intake/leave-in-research-prompt-contract.ts` (`leaveInResearchPromptContract`, consumed by `scripts/product-intake/codex-research-worker.ts`) | The current consuming guide under the frozen `leave-in-research-envelope-v1.0` standard; must stay synchronized with the standard. |
 | Researcher prompt (archived) | `v1.0/product-research-prompt.v0.1.md` | **Superseded, history only.** Predates the trim/freeze to the 13-dimension v1.0 envelope; do not follow. |
 | Current Leave-In method, v1.1 overlay | `docs/research/leave-in-inci/v1.1/leave-in-classification-overlay.v1.1.md` | T20: only settled humectants and medium/rich lipids above the tail set `moisture`; a leading persistent film makes the leg subordinate. Supersedes T19's Neqi call; documents the conditioner-`balanced` alignment. Carries the v1.1 ledger block (row 21). |
-| Rule-change ledger | `v1.0/rule-changes.md` (T1–T19, rows 20/20a, v0.1→v0.4) and the v1.1 overlay §8 (T20, row 21) | Entry-by-entry history. |
+| Current Leave-In method, v1.2 overlay | `docs/research/leave-in-inci/v1.2/leave-in-classification-overlay.v1.2.md` | T21: `heatActivation` (`required \| not_required` + route) is a directions-led identity field; `required` needs a C1/C2 activation statement and a heat-only heat-step direction (HA-1…HA-9); separate from heat protection; production invariants I1–I8. Carries the v1.2 ledger block (row 22). |
+| Rule-change ledger | `v1.0/rule-changes.md` (T1–T19, rows 20/20a, v0.1→v0.4), the v1.1 overlay §8 (T20, row 21) and the v1.2 overlay §8 (T21, row 22) | Entry-by-entry history. |
 | v1.1 lock receipt + manifest | `data/research/leave-in-inci/v1.1/v1.1-logic-lock-receipt.json`, `…/v1.1/artifact-manifest.json` | Lock of the T20 scope and hash-pinned inventory of the overlay, the frozen base and the v1.1 corpus artifacts. |
 | T20 re-derivation records | `data/research/leave-in-inci/v1.1/corpus/t20-rederived/t20-care-direction-records.json` | `care_direction` re-derived on all 15 in-category records; 4 flips (Gliss, Olaplex, Neqi, u1). |
-| v1.1 calibration set | `data/research/leave-in-inci/v1.1/calibration-envelopes/`, `…/v1.1/calibration-expected-projections.json` | The 11 gold-set envelopes under v1.1 and their golden production projections (built by `scripts/leave-in-research/build-v1.1-calibration.ts`). |
+| v1.1 calibration set | `data/research/leave-in-inci/v1.1/calibration-envelopes/`, `…/v1.1/calibration-expected-projections.json` | The 11 gold-set envelopes under v1.1 and their golden production projections (built by `scripts/leave-in-research/build-v1.1-calibration.ts`). Frozen; the adapter refuses these envelopes since v1.2. |
+| v1.2 lock receipt + manifest | `data/research/leave-in-inci/v1.2/v1.2-logic-lock-receipt.json`, `…/v1.2/artifact-manifest.json` | Lock of the T21 scope and hash-pinned inventory of the v1.2 overlay, the frozen v1.1 overlay and v1.0 base, the v1.2 calibration set, the Lab fixture and the re-stamped user-submitted envelopes. |
+| v1.2 calibration set | `data/research/leave-in-inci/v1.2/calibration-envelopes/`, `…/v1.2/calibration-expected-projections.json` | The 11 gold-set envelopes re-stamped with `identity.heatActivation` and their golden projections (built by `scripts/leave-in-research/build-v1.2-calibration.ts`). Only slot 13 (Neqi) moves: `required` / `airflow_shaping`, pre-heat slot only. |
 | Logic-lock receipt | `data/research/leave-in-inci/v1.0/v1.0-logic-lock-receipt.json` | Machine-readable lock of the v1.0 scope, dimensions, profile fields and separate gates. |
 | Artifact manifest | `data/research/leave-in-inci/v1.0/artifact-manifest.json` | Hash-pinned inventory of the normative source, snapshot, runbook and corpus. |
 | Calibration corpus | `data/research/leave-in-inci/v1.0/corpus/gold-set/`, `…/corpus/unseen-test/` | Frozen packets, reference keys v1–v4, blind lanes, round reports, unseen-product test. |
-| Lab fixture + review state | `data/research/leave-in-inci/v1.1/lab-fixture.json` (what the Lab reads since v1.1; overlay of the frozen `v1.0/lab-fixture.json`), review state `data/research/leave-in-inci/v1.0/lab-review-state.json` | 19 products / 397 reviewable properties. v1.0: 15 approved + 4 G0-confirmed exclusions; v1.1 reopens the 15 in-category `care_direction` rows (T20), every other approval still matches. |
+| Lab fixture + review state | `data/research/leave-in-inci/v1.1/lab-fixture.json` (what the Lab reads since v1.1; overlay of the frozen `v1.0/lab-fixture.json`), `data/research/leave-in-inci/v1.2/lab-fixture.json` (v1.2 overlay of the v1.1 fixture), review state `data/research/leave-in-inci/v1.0/lab-review-state.json` | 19 products / 397 reviewable properties. v1.0: 15 approved + 4 G0-confirmed exclusions; v1.1 reopens the 15 in-category `care_direction` rows (T20), every other approval still matches. The v1.2 fixture adds one `heat_activation` row to slot 13 (routed to review, HA-8) and changes nothing else; the Lab reader still points at the v1.1 fixture until it is switched. |
 | Science authority (**SR §x**) | `plans/leave-in-inci/research/leave-on-science-review.md` | The evidence base every scientific claim traces to. |
 | Handover (**HO §x**) | `plans/leave-in-inci/handover/` | Category development handover v1.0 and its candidate profile. |
-| Adapter decisions | `plans/leave-in-inci/adapter-decisions.md` | AD-1 (shared `format` enum), AD-2 (no `unknown` commits), AD-3–AD-6, AD-3a (revised 2026-09-29: `moisture_softness` requires `care_direction = moisture`) and context rulings. |
+| Adapter decisions | `plans/leave-in-inci/adapter-decisions.md` | AD-1 (shared `format` enum), AD-2 (no `unknown` commits), AD-3–AD-6, AD-3a (revised 2026-09-29: `moisture_softness` requires `care_direction = moisture`), AD-7 (2026-10-09: heat-activation projection, overrides AD-3/AD-4 when activation is required) and context rulings. |
 | Historical drafts | `v1.0/leave-in-classification-standard.v0.1.md` … `v0.4.md` | The frozen round-1/2/3 rule sets and the promoted draft. Provenance only. |
 
 ## The rulings the standard rests on
@@ -68,6 +73,7 @@ Nick's binding rulings, one line each. Full text and per-record consequences: `v
 | T19 | `balanced` gains a film-led reading | Directional neutrality is a co-equal reading of `balanced`; `unknown` is reserved for genuine evidence failure. Closes open gap §17.22. |
 | 20 / 20a | Freeze-prep housekeeping (**not a ruling**) | Six convention fixes from the unseen test (vacuity test, E-level ladder, trigger vocabulary, three §18 strings, LAYER/SHN anchors, confidence bands) plus four round-4 residue fixes. No value moves; nothing here may be cited as a ruling. |
 | T20 | `care_direction` counts directional species only (v1.1 overlay, 2026-09-29) | Only settled humectants and medium/rich lipids above the tail set `moisture`; a leading persistent film makes the leg subordinate (`balanced`); glycols, dry-feel esters, volatiles and cationics never set a direction. Supersedes T19's Neqi call. Flips Gliss, Olaplex No.6, Neqi (and unseen u1) to `balanced`. |
+| T21 | Heat activation is a directions-led identity field (v1.2 overlay, 2026-10-09; rulings A1, D-c, D-d, D-e) | `required` needs a C1/C2 activation statement and a heat-only heat-step direction; the route comes from the named tool; never from formula or name; separate from heat protection; T9 not reopened. Moves Neqi Diamond Glass (slot 13) to the pre-heat slot only. |
 
 ## Calibration status
 
@@ -106,3 +112,5 @@ The §17 open evidence gaps stay open under v1.0 and are inherited by every reco
 ## Guidance synchronization
 
 Every reusable classification or review-workflow change must update the normative standard **and** every consuming guide before the next leave-in batch (see the runbook's "Guidance synchronization" section), and bump the semantic `standard_version` when meaning changes. Historical runs are immutable; a policy change produces a new version or an overlay, never a silent rewrite. Local Lab approval accepts only the exact research artifact and version — it never implies Product Intake, catalog, Supabase, deployment, or production approval.
+
+**v1.2 synchronization (T21, 2026-10-09).** The consuming guides were updated with the overlay: the researcher prompt (`src/lib/product-intake/leave-in-research-prompt-contract.ts`, `heat_activation_rule` and `identity.heatActivation`), the production adapter and its doc (`docs/product-intake-leave-in-production-adapter.md`, AD-7), `plans/leave-in-inci/adapter-decisions.md` (AD-7) and the Leave-In plan decision (`docs/personal-plan/categories/leave-in/decision.md`). The adapter refuses v1.1-stamped envelopes: any envelope still in the intake queue must be re-stamped with a `heatActivation` capture, never defaulted to `not_required`.

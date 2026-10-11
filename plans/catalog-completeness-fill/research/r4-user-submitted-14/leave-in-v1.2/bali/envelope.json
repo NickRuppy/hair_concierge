@@ -1,0 +1,333 @@
+{
+  "version": "leave-in-research-envelope-v1.0",
+  "researchMethod": {
+    "policyId": "leave-in-classification-v1.2",
+    "modelVersion": "leave-in-inci-v1.2",
+    "policySha256": "e8d677dbad352ee808cdd7e878e9ce6e6c98fb474f1a32ab2658ad9ebdc2c833",
+    "runbookSha256": "dce7d84982e52f5094a0b29500105d13f42c31d44e04b1871bcbef1bda5e56ca"
+  },
+  "identity": {
+    "researchId": "694c4568-9235-4893-ab54-96a75b3c4f27",
+    "market": "DE/EU",
+    "exactProductName": "Bali Curls Bonding Repair Leave-In Cream N°3",
+    "brand": "Bali Curls",
+    "gtin": "4262391991732",
+    "productForm": "cream",
+    "applicationStage": [
+      "towel_dry"
+    ],
+    "heatActivation": {
+      "value": "not_required",
+      "route": null,
+      "statements": [],
+      "counterSignals": []
+    },
+    "identityStatus": "verified",
+    "categoryBoundaryStatus": "eligible",
+    "confidence": "high",
+    "sourceIds": [
+      "bali-manufacturer",
+      "bali-manufacturer-variant"
+    ]
+  },
+  "formula": {
+    "status": "verified",
+    "rawInci": "AQUA, CETEARYL ALCOHOL, GLYCERIN, COCO-CAPRYLATE, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, PARFUM, CETRIMONIUM CHLORIDE, DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE, SODIUM BENZOATE, PANTHENOL, HYDROLYZED MORINGA OLEIFERA SEED EXTRACT, POTASSIUM SORBATE, CITRIC ACID, LINALOOL, LIMONENE, AMYL SALICYLATE, LINALYL ACETATE, GERANIOL, GERANYL ACETATE, CANANGA ODORATA FLOWER EXTRACT, BENZOIC ACID, VANILLIN, BENZALDEHYDE, METHYL BENZOATE, TOCOPHEROL.",
+    "normalizedIngredients": [
+      "AQUA",
+      "CETEARYL ALCOHOL",
+      "GLYCERIN",
+      "COCO-CAPRYLATE",
+      "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+      "PARFUM",
+      "CETRIMONIUM CHLORIDE",
+      "DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE",
+      "SODIUM BENZOATE",
+      "PANTHENOL",
+      "HYDROLYZED MORINGA OLEIFERA SEED EXTRACT",
+      "POTASSIUM SORBATE",
+      "CITRIC ACID",
+      "LINALOOL",
+      "LIMONENE",
+      "AMYL SALICYLATE",
+      "LINALYL ACETATE",
+      "GERANIOL",
+      "GERANYL ACETATE",
+      "CANANGA ODORATA FLOWER EXTRACT",
+      "BENZOIC ACID",
+      "VANILLIN",
+      "BENZALDEHYDE",
+      "METHYL BENZOATE",
+      "TOCOPHEROL."
+    ],
+    "formulaFingerprintSha256": "0558c7bdd57a6453c5bb192b1e9dc4375049fdac11136badf541a61bca8ba047",
+    "rawInciSha256": "0558c7bdd57a6453c5bb192b1e9dc4375049fdac11136badf541a61bca8ba047",
+    "sourceIds": [
+      "bali-manufacturer",
+      "bali-manufacturer-variant"
+    ]
+  },
+  "profile": {
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "An LGN pair plus Guar HPTC establishes the high conditioning anchor before Sodium Benzoate r9.",
+      "evidenceSignals": [
+        "Cetearyl Alcohol r2 + Cetrimonium Chloride r7: LGN pair",
+        "Guar Hydroxypropyltrimonium Chloride r5: independent cationic-polymer route",
+        "Coco-Caprylate r4: independent high-spreading emollient",
+        "Glycerin r3: humectant",
+        "Distearoylethyl Hydroxyethylmonium Methosulfate r8: additional cationic surfactant"
+      ],
+      "derivation": "§7.2 LGN plus independent cationic-polymer lubrication",
+      "thresholdReasoning": [
+        "Moderate under-reads the explicit LGN-plus-independent-route anchor.",
+        "No higher enum; high potential is not measured performance."
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established."
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "low",
+      "rationale": "Formula WT high meets all four conflict-tag conditions against the C2 lighter-finish statement; projected weight is moderate and uncertain.",
+      "evidenceSignals": [
+        "Cetearyl Alcohol r2 + Cetrimonium Chloride r7: LGN pair",
+        "Guar Hydroxypropyltrimonium Chloride r5: independent cationic-polymer route",
+        "Coco-Caprylate r4: independent high-spreading emollient",
+        "Glycerin r3: humectant",
+        "Distearoylethyl Hydroxyethylmonium Methosulfate r8: additional cationic surfactant"
+      ],
+      "derivation": "§10.1.2 fixed weight-conflict projection",
+      "thresholdReasoning": [
+        "Low is unsupported by the LGN architecture.",
+        "High remains in the dimension; C2 light-finish claim plus absent product tests requires the fixed moderate projection."
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established.",
+        "C2 triggering sentence: Bonding Repair Leave-In N°3 ist dein leichter Pflegebooster für den Alltag.",
+        "This policy overlay is not formula evidence and does not rewrite WT high."
+      ]
+    },
+    "persistence": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "Guar HPTC r5 precedes the plausible r9 marker and establishes the highest named persistence class.",
+      "evidenceSignals": [
+        "Cetearyl Alcohol r2 + Cetrimonium Chloride r7: LGN pair",
+        "Guar Hydroxypropyltrimonium Chloride r5: independent cationic-polymer route",
+        "Coco-Caprylate r4: independent high-spreading emollient"
+      ],
+      "derivation": "§7.6 Guar HPTC enumeration → permanent_cationic",
+      "thresholdReasoning": [
+        "Neutral-only misses the polymeric quat; monomeric quats do not create this class.",
+        "No duration or wash count follows from the class."
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established."
+      ]
+    },
+    "holdSupport": {
+      "value": "none",
+      "confidence": "moderate",
+      "rationale": "No fixative-class polymer is declared, so curl branding cannot create a hold route.",
+      "evidenceSignals": [
+        "No listed L5 fixative polymer",
+        "Guar HPTC r5 is conditioning, not a hold fixative"
+      ],
+      "derivation": "§7.7 no L5 fixative",
+      "thresholdReasoning": [
+        "None is the researched negative state.",
+        "Incidental/meaningful requires L5; cationic conditioning is not that observation."
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established."
+      ]
+    },
+    "careDirection": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "rationale": "§9 as amended by the v1.1 overlay (T20) keeps `moisture` (moisture_led): GLYCERIN r3 is a settled humectant above the tail marker and no persistent film (L2 silicone, silicone quat, Polysilicone-29) exists anywhere in the formula, so nothing outranks it.",
+      "evidenceSignals": [
+        "T20 re-derivation 2026-10-09 via deriveLeaveInCareDirectionT20",
+        "evidence_level: E2",
+        "evidence_scope: formula",
+        "anchor row: moisture_led",
+        "tail marker: PARFUM r6 / SODIUM BENZOATE r9 (plausible on a 25-ingredient list)",
+        "Directional species above the tail: GLYCERIN r3 (settled humectant). PANTHENOL r10 sits below the marker (subordinate).",
+        "Non-directional (demoted) species above the tail: COCO-CAPRYLATE r4 (dry-feel ester), GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE r5 (cationic), CETEARYL ALCOHOL r2 (fatty alcohol), CETRIMONIUM CHLORIDE r7 and DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE r8 (cationics); they feed COND/WT/PERS but never set a direction.",
+        "Positioning: 'Feuchtigkeit', 'Lockendefinition', bond-repair claims are counter-signals only (§9 constraint 3)."
+      ],
+      "derivation": "§10.1: care_direction <- §9 as amended by Standard v1.1 (T20, §9-O1–O7): only settled humectants and medium/rich-band lipids above the tail set a moisture leg; a persistent film that outranks them makes the leg subordinate.",
+      "thresholdReasoning": [
+        "O5: a DH species leads and no film competes -> `moisture`; v1.0 confidence rules unchanged (not a lone-humectant thin architecture: fatty-alcohol + cationic base present) -> moderate.",
+        "T20 does not change this product's value; it is re-stated on the v1.1 pins."
+      ],
+      "limitations": [
+        "§9's ceiling caps a formula-only direction at moderate confidence.",
+        "T20 compares ranks on one list only; it states no percentage, ratio or dose (G4).",
+        "Single-lane re-derivation (2026-10-09) from the 2026-09-18 frozen formula; not run by two independent sealed lanes (overlay §5)."
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "No R2 candidate/tested and no exact-product repair endpoints; repair support is low.",
+      "evidenceSignals": [
+        "Hydrolyzed Moringa Oleifera Seed Extract r11 is plain hydrolysate, not cationised/silane",
+        "Panthenol r10 is not R2",
+        "Guar HPTC r5 is non-silicone cationic polymer, excluded from R2"
+      ],
+      "derivation": "§10.3.2 fixed rule",
+      "thresholdReasoning": [
+        "Low is a complete answer, not a missing research value.",
+        "Medium requires qualifying R2; high requires E3+ exact-product leave-on repair evidence."
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established."
+      ]
+    },
+    "focus": {
+      "value": {
+        "primary": "smoothing",
+        "secondary": []
+      },
+      "confidence": "moderate",
+      "rationale": "The LGN plus independent emollient supports the conditioning baseline; additional Guar HPTC film plus separate lubrication clears the permissive two-observation smoothing focus.",
+      "evidenceSignals": [
+        "Admissible COND baseline: Cetearyl Alcohol r2/Cetrimonium Chloride r7 LGN plus Coco-Caprylate r4",
+        "Additional film: Guar HPTC r5, not needed by that admissible baseline"
+      ],
+      "derivation": "§10.2 / §10.2.1 permissive baseline and two-observation test",
+      "thresholdReasoning": [
+        "General would miss the independent alignment-film-plus-lubrication observation.",
+        "Repair lacks R2; detangling is not C1/C2 detangler-led or low-weight; curl lacks an architectural L5 route; heat styling has no captured pre_heat direction; shine would duplicate smoothing."
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established."
+      ]
+    },
+    "specialistFunctions": {
+      "value": {
+        "providesHeatProtection": true
+      },
+      "confidence": "low",
+      "rationale": "The binary follows the frozen authority-gated claim search, separate from the HEAT trace state.",
+      "evidenceSignals": [
+        "Exact C2 manufacturer explicitly says protects against Hitze",
+        "No L9 member in complete INCI"
+      ],
+      "derivation": "§13.3 claim-led binary",
+      "thresholdReasoning": [
+        "No generic ingredient can create an absent claim.",
+        "No temperature or efficacy level follows from this binary."
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established."
+      ]
+    },
+    "smoothingRoute": {
+      "value": "cationic_alignment",
+      "confidence": "moderate",
+      "rationale": "The persistent film family is recorded as the typed smoothing input; no humidity resistance is inferred.",
+      "evidenceSignals": [
+        "Admissible COND baseline: Cetearyl Alcohol r2/Cetrimonium Chloride r7 LGN plus Coco-Caprylate r4",
+        "Additional film: Guar HPTC r5, not needed by that admissible baseline"
+      ],
+      "derivation": "§7.4 typed trace, not scored SFR",
+      "thresholdReasoning": [
+        "None/emollient alone would miss the identified film.",
+        "No independent shine or graded smoothing score is emitted."
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established."
+      ]
+    },
+    "hairThicknessFit": {
+      "value": {
+        "fine": "conditional",
+        "medium": "recommended",
+        "coarse": "recommended"
+      },
+      "confidence": "low",
+      "rationale": "Projected WT moderate selects its exact thickness row; fine-hair threshold is an explicit product prior, not a scientific constant.",
+      "evidenceSignals": [
+        "WT dimension high; projected weight moderate",
+        "COND high; R2 none_visible",
+        "Cetearyl Alcohol r2 + Cetrimonium Chloride r7: LGN pair",
+        "Guar Hydroxypropyltrimonium Chloride r5: independent cationic-polymer route"
+      ],
+      "derivation": "§10.3 thickness matrix",
+      "thresholdReasoning": [
+        "Use the named matrix row; do not interpolate from product marketing.",
+        "No stronger recommendation or exclusion is inferred beyond that fixed row."
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established.",
+        "Broad deterministic fit prior; actual user fit also depends on hair, dose and routine."
+      ]
+    },
+    "damageFit": {
+      "value": {
+        "healthy": "recommended",
+        "moderately_damaged": "recommended",
+        "highly_damaged": "conditional"
+      },
+      "confidence": "low",
+      "rationale": "COND high with no qualifying substantive repair/specialist route selects row 2, including highly damaged conditional.",
+      "evidenceSignals": [
+        "WT dimension high; projected weight moderate",
+        "COND high; R2 none_visible",
+        "Cetearyl Alcohol r2 + Cetrimonium Chloride r7: LGN pair",
+        "Guar Hydroxypropyltrimonium Chloride r5: independent cationic-polymer route"
+      ],
+      "derivation": "§10.3 damage row 2",
+      "thresholdReasoning": [
+        "Use the named matrix row; do not interpolate from product marketing.",
+        "No stronger recommendation or exclusion is inferred beyond that fixed row."
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established.",
+        "Broad deterministic fit prior; actual user fit also depends on hair, dose and routine."
+      ]
+    },
+    "textureFit": {
+      "value": {
+        "straight": "recommended",
+        "wavy": "recommended",
+        "curly": "recommended",
+        "coily": "conditional"
+      },
+      "confidence": "low",
+      "rationale": "Projected WT moderate selects row 2 regardless of slip. Curl naming does not set texture fit.",
+      "evidenceSignals": [
+        "WT dimension high; projected weight moderate",
+        "COND high; R2 none_visible",
+        "Cetearyl Alcohol r2 + Cetrimonium Chloride r7: LGN pair",
+        "Guar Hydroxypropyltrimonium Chloride r5: independent cationic-polymer route"
+      ],
+      "derivation": "§10.3 texture row 2",
+      "thresholdReasoning": [
+        "Use the named matrix row; do not interpolate from product marketing.",
+        "No stronger recommendation or exclusion is inferred beyond that fixed row."
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established.",
+        "Broad deterministic fit prior; actual user fit also depends on hair, dose and routine."
+      ]
+    },
+    "uncertainFields": [
+      "care_direction",
+      "heat_protection_evidence_state",
+      "weight_potential"
+    ],
+    "assumptionNotes": [
+      "weight_conflict_tag",
+      "heat_claim_without_l9_member",
+      "bond_claim_review",
+      "Standard v1.1 (T20, 2026-09-29): care_direction re-derived 2026-10-09 for catalog-completeness-fill r4; every other field is carried unchanged from the 2026-09-18 v1.0 record (overlay §4: only the field whose rule changed reopens). Formula and fingerprints unchanged; sources re-verified 2026-10-09.",
+      "Standard v1.2 (T21, 2026-10-09): identity.heatActivation not_required — HA-1 silence: the r4 sources carry only the ambient „Hitze“ protection wording, no activation statement and no heat-step direction. Every other field is carried unchanged from the v1.1 envelope."
+    ]
+  }
+}

@@ -1,0 +1,175 @@
+{
+  "schema_version": "leave-in-research-logic-lock.v1",
+  "locked_standard_version": "1.2",
+  "locked_at": "2026-10-09",
+  "decision": "approved_and_locked_for_reuse",
+  "ruling": "T21 — Nick, 2026-10-09: A1 (\"needs heat to work\" is a real property set from manufacturer statements and directions; activated products are offered only in the heat-styling routine, never as conditioner replacement or plain post-wash leave-in), A2 (the Neqi styling spray is never a conditioner replacement), D-c (HEAT&GLOW's between-wash use is covered by its activation direction), D-d (activation evidence is manufacturer-only: German page or pack), D-e (activation and heat protection are separate properties).",
+  "normative_sources": {
+    "overlay": {
+      "path": "docs/research/leave-in-inci/v1.2/leave-in-classification-overlay.v1.2.md",
+      "bytes": 19286,
+      "sha256": "e8d677dbad352ee808cdd7e878e9ce6e6c98fb474f1a32ab2658ad9ebdc2c833"
+    },
+    "previous_overlay": {
+      "version": "1.1",
+      "path": "docs/research/leave-in-inci/v1.1/leave-in-classification-overlay.v1.1.md",
+      "bytes": 21091,
+      "sha256": "9c1340357b4c0cf38933340f4592250d10f2cccc1429b0e4d46508d47eee032b",
+      "note": "byte-identical to the v1.1 lock"
+    },
+    "base_standard": {
+      "version": "1.0",
+      "path": "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+      "bytes": 421855,
+      "sha256": "7ae5e882d9cba3e3fccdea3623d056efe802ff3bc3adbe554112e471da551ace",
+      "note": "byte-identical to the v1.0 lock; v1.2 = base + v1.1 overlay + v1.2 overlay"
+    },
+    "base_lock_receipt": {
+      "path": "data/research/leave-in-inci/v1.0/v1.0-logic-lock-receipt.json",
+      "sha256": "7510ccf29be21bd8fc9ee640ecc39de53bed90b6bf93bd730b11cf2c7b4dac52"
+    },
+    "previous_lock_receipt": {
+      "path": "data/research/leave-in-inci/v1.1/v1.1-logic-lock-receipt.json",
+      "sha256": "cb56d923319c32ee9e35668b884a20dbba85269a867d8e390171c13bb3771fc7"
+    }
+  },
+  "research_method": {
+    "policyId": "leave-in-classification-v1.2",
+    "modelVersion": "leave-in-inci-v1.2",
+    "policySha256": "e8d677dbad352ee808cdd7e878e9ce6e6c98fb474f1a32ab2658ad9ebdc2c833",
+    "runbookSha256": "dce7d84982e52f5094a0b29500105d13f42c31d44e04b1871bcbef1bda5e56ca",
+    "research_envelope_version": "leave-in-research-envelope-v1.0",
+    "note": "policySha256 pins the v1.2 overlay, which names the v1.1 overlay and the v1.0 base by hash. The envelope version string is unchanged; the identity block gains the required heatActivation capture, and the adapter refuses v1.1-stamped envelopes with a re-stamp reason."
+  },
+  "changed_scope": {
+    "field": "identity.heatActivation",
+    "reopened_fields": [
+      "identity.heatActivation"
+    ],
+    "values": [
+      "required",
+      "not_required"
+    ],
+    "routes": [
+      "airflow_shaping",
+      "direct_contact_heat",
+      "either_heat"
+    ],
+    "evidence_rule": "HA-1…HA-9 (v1.2 overlay §1.3)",
+    "production_invariants": "I1–I8 (v1.2 overlay §1.4; adapter AD-7)",
+    "unchanged": "every §7 dimension, lean-profile field, anchor, threshold, gate, evidence bar and German string of Standard v1.0; the v1.1 care_direction rule; §13.3 (HEAT binary); §2.4.1 and T9 (HEAT stays the only claim-led field); §7.13 application_stage",
+    "executable_rule": "src/lib/heat-activation/contract.ts"
+  },
+  "reviewed_anchor_patterns": [
+    {
+      "product_id": "slot-13-neqi-diamond-glass-ultimate-styling-spray",
+      "heat_activation": "required",
+      "route": "airflow_shaping",
+      "purpose": "both prongs from the C2 manufacturer page; dm.de C3 wording is a counter-signal only; projects to the pre-heat slot only (AD-7)"
+    },
+    {
+      "product_id": "slot-05-evo-head-mistress-cuticle-sealer",
+      "heat_activation": "not_required",
+      "route": null,
+      "purpose": "a blow-dry direction without an activation statement, from a non-German page, stays not_required; pre_heat in application_stage is unaffected"
+    }
+  ],
+  "validation_basis": {
+    "calibration_records_transcribed": 11,
+    "corpus_records_transcribed": 15,
+    "records_changed": 1,
+    "changed": [
+      "slot-13 not activated -> required / airflow_shaping (review, HA-8)"
+    ],
+    "readings": [
+      {
+        "slot": 1,
+        "value": "not_required",
+        "route": null,
+        "basis": "not_required — HA-1 silence: the frozen directions (C3) name no activation statement"
+      },
+      {
+        "slot": 2,
+        "value": "not_required",
+        "route": null,
+        "basis": "not_required — HA-1 silence: the frozen directions (C2-equivalent (judgment)) name no activation statement"
+      },
+      {
+        "slot": 3,
+        "value": "not_required",
+        "route": null,
+        "basis": "not_required — HA-1 silence: the frozen directions (C3) name no activation statement"
+      },
+      {
+        "slot": 4,
+        "value": "not_required",
+        "route": null,
+        "basis": "not_required — HA-1 silence: the frozen directions (C3) name no activation statement"
+      },
+      {
+        "slot": 5,
+        "value": "not_required",
+        "route": null,
+        "basis": "not_required — checked explicitly: the frozen directions name a blow-dry step („Apply to towel-dried hair and blow-dry for improved manageability and softness. Apply after styling to control frizz and fly-aways.“) but make no activation statement (\"for improved manageability and softness\" is a benefit, not activation; HA-2(a) fails), and the source (C2-equivalent (judgment), US English manufacturer page) is not a German pack or German-market page (HA-3 fails independently); application_stage keeps pre_heat (§7.13)"
+      },
+      {
+        "slot": 6,
+        "value": "not_required",
+        "route": null,
+        "basis": "not_required — HA-1 silence: the frozen directions (C3-equivalent (judgment)) name no activation statement"
+      },
+      {
+        "slot": 8,
+        "value": "not_required",
+        "route": null,
+        "basis": "not_required — HA-1 silence: the frozen directions (C2) name no activation statement"
+      },
+      {
+        "slot": 9,
+        "value": "not_required",
+        "route": null,
+        "basis": "not_required — HA-1 silence: the frozen directions (C3) name no activation statement"
+      },
+      {
+        "slot": 10,
+        "value": "not_required",
+        "route": null,
+        "basis": "not_required — HA-1 silence: the frozen directions (C2-equivalent (judgment)) name no activation statement"
+      },
+      {
+        "slot": 11,
+        "value": "not_required",
+        "route": null,
+        "basis": "not_required — HA-1 silence: the frozen directions (C3) name no activation statement"
+      },
+      {
+        "slot": 13,
+        "value": "required",
+        "route": "airflow_shaping",
+        "basis": "required / airflow_shaping — HA-2(a) C2 activation statement „Noch mehr hitzeaktivierte Polymere als im goldenen Diamond Glass Styling Spray“ (neqi-hair.com, read 2026-10-09); HA-2(b) the frozen C2 direction „Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.“ names a blow-dry step and offers no non-heat finish; HA-4 föhnen → airflow_shaping; the dm.de C3 wording is a counter-signal only (HA-3); routes to review (HA-8)"
+      }
+    ],
+    "machine_checks": [
+      "every not_required reading is asserted free of activation wording in its frozen directions capture; slot 13's direction is asserted verbatim in its frozen C2 capture (scripts/leave-in-research/build-v1.2-calibration.ts)",
+      "every v1.2 projection except slot 13 is byte-identical to its v1.1 golden projection apart from the version pin, the input/projection hashes, the new heat_activation_route: null key and the two AD-7 rationale strings (tests/leave-in-production-adapter-calibration.test.ts)",
+      "the v1.0 base and the v1.1 overlay are byte-identical to their locks (tests/leave-in-research-v1-2-lock.test.ts)"
+    ],
+    "independent_sealed_lanes": 0,
+    "calibration_note": "Applied by one transcription lane with every reading machine-checked against the frozen captures. One positive record in the corpus; not yet run by two independent sealed lanes (v1.2 overlay §6)."
+  },
+  "known_limits_retained": [
+    "Only one corpus record is heat-activated; the rule is implemented, not yet calibrated on a wider positive set.",
+    "Every v1.0 and v1.1 known limit and §17 open evidence gap stays open."
+  ],
+  "separate_gates": {
+    "individual_product_lab_approval": "required",
+    "lab_fixture_update": "done — data/research/leave-in-inci/v1.2/lab-fixture.json (overlay of the v1.1 fixture; slot 13 gains one heat_activation row routed to review, every other approval kept)",
+    "production_adapter": "updated (research-method pin v1.2; AD-7 heat-activation projection)",
+    "catalog_apply_batch": "not prepared here (S3 data migration, separate approval)",
+    "catalog_activation": false,
+    "production_database_write": false,
+    "user_facing_copy_change": false,
+    "commit_push_or_pr": false
+  },
+  "production_writes": false
+}

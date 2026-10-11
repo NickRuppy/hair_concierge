@@ -42,7 +42,8 @@ type LeaveInBackfillSpec = {
   roles: LeaveInRole[]
   provides_heat_protection: boolean
   heat_protection_max_c: number | null
-  heat_activation_required: boolean
+  heat_activation_required: false
+  heat_activation_route: null
   care_benefits: LeaveInCareBenefit[]
   ingredient_flags: LeaveInIngredientFlag[]
   application_stage: LeaveInApplicationStage[]
@@ -64,7 +65,9 @@ function spec(
     roles,
     provides_heat_protection: providesHeatProtection,
     heat_protection_max_c: heatProtectionMaxC,
+    // Leave-In v1.2: activation is set only through research or an amendment.
     heat_activation_required: false,
+    heat_activation_route: null,
     care_benefits: careBenefits,
     ingredient_flags: ingredientFlags,
     application_stage: applicationStage,

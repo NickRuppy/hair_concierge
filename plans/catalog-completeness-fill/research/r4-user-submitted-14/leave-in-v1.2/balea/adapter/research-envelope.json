@@ -1,0 +1,335 @@
+{
+  "formula": {
+    "formulaFingerprintSha256": "d77d1c11d57a7ef48695126ff0c1b545f15cbb7f0e624a0d7955219ae956f0c5",
+    "normalizedIngredients": [
+      "AQUA",
+      "PROPYLENE GLYCOL",
+      "ALCOHOL DENAT.",
+      "DIMETHICONE",
+      "CETYL ALCOHOL",
+      "GLYCERIN",
+      "ETHYLHEXYL STEARATE",
+      "SIMMONDSIA CHINENSIS SEED OIL",
+      "PANTHENOL",
+      "HYDROLYZED WHEAT PROTEIN",
+      "HYDROLYZED KERATIN",
+      "DIMETHICONOL",
+      "CETRIMONIUM CHLORIDE",
+      "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+      "CITRIC ACID",
+      "PARFUM",
+      "SODIUM BENZOATE",
+      "PHENOXYETHANOL"
+    ],
+    "rawInci": "Aqua, Propylene Glycol, Alcohol Denat., Dimethicone, Cetyl Alcohol, Glycerin, Ethylhexyl Stearate, Simmondsia Chinensis Seed Oil, Panthenol, Hydrolyzed Wheat Protein, Hydrolyzed Keratin, Dimethiconol, Cetrimonium Chloride, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Citric Acid, Parfum, Sodium Benzoate, Phenoxyethanol",
+    "rawInciSha256": "26e83d98999891da0c7393d5d220aa26d859fe56470b903999f9aedf59f5c980",
+    "sourceIds": [
+      "balea-dm",
+      "balea-original-retailer"
+    ],
+    "status": "verified_with_minor_difference"
+  },
+  "identity": {
+    "applicationStage": [
+      "towel_dry",
+      "dry_hair"
+    ],
+    "brand": "Balea",
+    "categoryBoundaryStatus": "eligible",
+    "confidence": "moderate",
+    "exactProductName": "Balea Professional Brilliant Blond Hair Sealer Leave-in Serum",
+    "gtin": "4070765027518",
+    "heatActivation": {
+      "counterSignals": [],
+      "route": null,
+      "statements": [],
+      "value": "not_required"
+    },
+    "identityStatus": "verified_with_minor_source_difference",
+    "market": "DE/EU",
+    "productForm": "serum",
+    "researchId": "ea88a333-b11c-45c3-bbda-c51f912ee56f",
+    "sourceIds": [
+      "balea-dm",
+      "balea-original-retailer",
+      "balea-dm-it-3062765"
+    ]
+  },
+  "profile": {
+    "assumptionNotes": [
+      "tail_marker_vacuous",
+      "formula_or_identity_conflict",
+      "claim_tier_basis: house_brand",
+      "Verified matching EU listing permits damp or dry application; no source explicitly directs pre-heat application.",
+      "Late cationic guar requires architecture review on the vacuous-marker read.",
+      "Standard v1.1 (T20, 2026-09-29): care_direction re-derived 2026-10-09 for catalog-completeness-fill r4; every other field is carried unchanged from the 2026-09-18 v1.0 record (overlay §4: only the field whose rule changed reopens). Formula and fingerprints unchanged; sources re-verified 2026-10-09.",
+      "Standard v1.2 (T21, 2026-10-09): identity.heatActivation not_required — HA-1 silence: the r4 sources name heat tools only in the heat-protection claim („Hitzeschutz bis zu 230 Grad … Föhn oder Glätteisen“), which never sets activation (HA-6); no activation statement. Every other field is carried unchanged from the v1.1 envelope."
+    ],
+    "careDirection": {
+      "confidence": "low",
+      "derivation": "§10.1: care_direction <- §9 as amended by Standard v1.1 (T20, §9-O1–O7): only settled humectants and medium/rich-band lipids above the tail set a moisture leg; a persistent film that outranks them makes the leg subordinate.",
+      "evidenceSignals": [
+        "T20 re-derivation 2026-10-09 via deriveLeaveInCareDirectionT20",
+        "evidence_level: E2",
+        "evidence_scope: formula",
+        "anchor row: film_leads_moisture_leg",
+        "tail marker: vacuous (the preservative/fragrance system occupies the final ranks r15-r18; ordinal read applies)",
+        "Film species: DIMETHICONE r4, DIMETHICONOL r12. Directional species: GLYCERIN r6 (DH), SIMMONDSIA CHINENSIS SEED OIL r8 (DL), PANTHENOL r9 (DH). Film-lead margin = 2.",
+        "Demoted v1.0 leg species: PROPYLENE GLYCOL r2 (glycol; outranks the film, glycol_only_leg clause), ETHYLHEXYL STEARATE r7 (dry-feel ester), CETRIMONIUM CHLORIDE r13 (cationic).",
+        "Positioning: 'Hitzeschutz', 'Blond-Reflex-System', 'geschmeidig' are counter-signals only.",
+        "review triggers: glycol_only_leg, moisture_leg_subordinate"
+      ],
+      "limitations": [
+        "§9's ceiling caps a formula-only direction at moderate confidence.",
+        "T20 compares ranks on one list only; it states no percentage, ratio or dose (G4).",
+        "Single-lane re-derivation (2026-10-09) from the 2026-09-18 frozen formula; not run by two independent sealed lanes (overlay §5)."
+      ],
+      "rationale": "§9 as amended by the v1.1 overlay (T20) resolves care_direction to `balanced` (film_leads_moisture_leg): DIMETHICONE r4 (persistent film) outranks the first settled humectant GLYCERIN r6 by 2 ranks, and PROPYLENE GLYCOL r2 (a multifunctional glycol that v1.0 counted as a leg) outranks the film. v1.0 returned `moisture` (low); T20 supersedes that.",
+      "thresholdReasoning": [
+        "O3: the first directional species (r6) is outranked by the film (r4) -> `balanced`.",
+        "O6: marker vacuous (not plausible) and a glycol outranks the film -> confidence `low`, routed to review (glycol_only_leg + moisture_leg_subordinate)."
+      ],
+      "value": "balanced"
+    },
+    "conditioningLevel": {
+      "confidence": "low",
+      "derivation": "§7.2 LGN plus silicone/emollient; §3.1.1 vacuous marker coherence read",
+      "evidenceSignals": [
+        "Dimethicone r4 + Dimethiconol r12: persistent silicone film",
+        "Cetyl Alcohol r5 + Cetrimonium Chloride r13: coherent LGN pair",
+        "Ethylhexyl Stearate r7 + Jojoba oil r8: independent emollient route",
+        "Glycerin r6 / Propylene Glycol r2: humectants"
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established.",
+        "Sodium Benzoate r17 is vacuous. Cetrimonium r13 is a late surfactant; paired architecture is plausible but requires review."
+      ],
+      "rationale": "The coherent Cetyl Alcohol/Cetrimonium emulsion plus a separate silicone/emollient load supports high conditioning potential on ordinal/coherence reading.",
+      "thresholdReasoning": [
+        "Moderate would miss the paired emulsion architecture and independent silicone/emollient observations.",
+        "No higher enum; the late quat position lowers confidence, not a performance measure."
+      ],
+      "value": "high"
+    },
+    "damageFit": {
+      "confidence": "low",
+      "derivation": "§10.3 damage row 2",
+      "evidenceSignals": [
+        "WT dimension high; projected weight high",
+        "COND high; R2 none_visible",
+        "Dimethicone r4 + Dimethiconol r12: persistent silicone film",
+        "Cetyl Alcohol r5 + Cetrimonium Chloride r13: coherent LGN pair"
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established.",
+        "Broad deterministic fit prior; actual user fit also depends on hair, dose and routine."
+      ],
+      "rationale": "COND high with no qualifying substantive repair/specialist route selects row 2, including highly damaged conditional.",
+      "thresholdReasoning": [
+        "Use the named matrix row; do not interpolate from product marketing.",
+        "No stronger recommendation or exclusion is inferred beyond that fixed row."
+      ],
+      "value": {
+        "healthy": "recommended",
+        "highly_damaged": "conditional",
+        "moderately_damaged": "recommended"
+      }
+    },
+    "focus": {
+      "confidence": "low",
+      "derivation": "§10.2 / §10.2.1 permissive baseline and two-observation test",
+      "evidenceSignals": [
+        "Admissible COND baseline: Cetyl Alcohol r5/Cetrimonium Chloride r13 plus Ethylhexyl Stearate r7/Jojoba r8",
+        "Additional silicone film: Dimethicone r4/Dimethiconol r12"
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established."
+      ],
+      "rationale": "The conditioning emulsion/emollient baseline leaves a distinct silicone film; it and separate lubrication satisfy smoothing under §10.2.1, provisionally on the coherent LGN reading.",
+      "thresholdReasoning": [
+        "General would miss the independent alignment-film-plus-lubrication observation.",
+        "Repair lacks R2; detangling is not C1/C2 detangler-led or low-weight; curl lacks an architectural L5 route; heat styling has no captured pre_heat direction; shine would duplicate smoothing."
+      ],
+      "value": {
+        "primary": "smoothing",
+        "secondary": []
+      }
+    },
+    "hairThicknessFit": {
+      "confidence": "low",
+      "derivation": "§10.3 thickness matrix",
+      "evidenceSignals": [
+        "WT dimension high; projected weight high",
+        "COND high; R2 none_visible",
+        "Dimethicone r4 + Dimethiconol r12: persistent silicone film",
+        "Cetyl Alcohol r5 + Cetrimonium Chloride r13: coherent LGN pair"
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established.",
+        "Broad deterministic fit prior; actual user fit also depends on hair, dose and routine."
+      ],
+      "rationale": "Projected WT high selects its exact thickness row; fine-hair threshold is an explicit product prior, not a scientific constant.",
+      "thresholdReasoning": [
+        "Use the named matrix row; do not interpolate from product marketing.",
+        "No stronger recommendation or exclusion is inferred beyond that fixed row."
+      ],
+      "value": {
+        "coarse": "recommended",
+        "fine": "caution",
+        "medium": "conditional"
+      }
+    },
+    "holdSupport": {
+      "confidence": "moderate",
+      "derivation": "§7.7 no L5 fixative",
+      "evidenceSignals": [
+        "No L5 fixative polymer",
+        "Guar conditioning polymer r14 is not a hold fixative"
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established."
+      ],
+      "rationale": "The complete formula declares conditioning and emulsion architecture without a fixative hold route.",
+      "thresholdReasoning": [
+        "None is a researched absence.",
+        "Incidental or meaningful hold needs an L5 observation absent here."
+      ],
+      "value": "none"
+    },
+    "persistence": {
+      "confidence": "low",
+      "derivation": "§7.6 highest established architecture; §3.1.1 clause 6",
+      "evidenceSignals": [
+        "Dimethicone r4 + Dimethiconol r12: persistent silicone film",
+        "Cetyl Alcohol r5 + Cetrimonium Chloride r13: coherent LGN pair",
+        "Ethylhexyl Stearate r7 + Jojoba oil r8: independent emollient route",
+        "Glycerin r6 / Propylene Glycol r2: humectants",
+        "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride r14: low-order polymeric quat, architecture uncertain on vacuous marker"
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established.",
+        "Late polymeric guar may increase persistence, but its architectural role is unresolved; targeted review required.",
+        "Cetrimonium is permanently charged but monomeric and surfactant-removable: below polymeric/silicone quats; mechanism class is not a duration."
+      ],
+      "rationale": "The early persistent silicone/emollient deposit establishes neutral_non_volatile; late guar r14 is recorded without promotion based solely on the vacuous marker.",
+      "thresholdReasoning": [
+        "Water-soluble-only fails on r4/r5/r7/r8.",
+        "Permanent cationic would require confirming guar r14 as architecture; a vacuous marker cannot confer it."
+      ],
+      "value": "moderate"
+    },
+    "repairSupportLevel": {
+      "confidence": "moderate",
+      "derivation": "§10.3.2 fixed rule",
+      "evidenceSignals": [
+        "Hydrolyzed Wheat Protein r10 and Hydrolyzed Keratin r11 are plain hydrolysates",
+        "Guar r14 is non-silicone cationic polymer",
+        "Panthenol r9 is not R2"
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established."
+      ],
+      "rationale": "No R2 candidate/tested and no exact-product repair endpoints; repair support is low.",
+      "thresholdReasoning": [
+        "Low is a complete answer, not a missing research value.",
+        "Medium requires qualifying R2; high requires E3+ exact-product leave-on repair evidence."
+      ],
+      "value": "low"
+    },
+    "smoothingRoute": {
+      "confidence": "low",
+      "derivation": "§7.4 typed trace, not scored SFR",
+      "evidenceSignals": [
+        "Admissible COND baseline: Cetyl Alcohol r5/Cetrimonium Chloride r13 plus Ethylhexyl Stearate r7/Jojoba r8",
+        "Additional silicone film: Dimethicone r4/Dimethiconol r12"
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established."
+      ],
+      "rationale": "The persistent film family is recorded as the typed smoothing input; no humidity resistance is inferred.",
+      "thresholdReasoning": [
+        "None/emollient alone would miss the identified film.",
+        "No independent shine or graded smoothing score is emitted."
+      ],
+      "value": "silicone_film"
+    },
+    "specialistFunctions": {
+      "confidence": "low",
+      "derivation": "§13.3 claim-led binary",
+      "evidenceSignals": [
+        "C2 house-brand dm and current front label state Hitzeschutz",
+        "Hydrolyzed Wheat Protein r10 is L9, but its plausible film context cannot be confirmed solely above vacuous r17 marker"
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established."
+      ],
+      "rationale": "The binary follows the frozen authority-gated claim search, separate from the HEAT trace state.",
+      "thresholdReasoning": [
+        "No generic ingredient can create an absent claim.",
+        "No temperature or efficacy level follows from this binary."
+      ],
+      "value": {
+        "providesHeatProtection": true
+      }
+    },
+    "textureFit": {
+      "confidence": "low",
+      "derivation": "§10.3 texture row 3",
+      "evidenceSignals": [
+        "WT dimension high; projected weight high",
+        "COND high; R2 none_visible",
+        "Dimethicone r4 + Dimethiconol r12: persistent silicone film",
+        "Cetyl Alcohol r5 + Cetrimonium Chloride r13: coherent LGN pair"
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established.",
+        "Broad deterministic fit prior; actual user fit also depends on hair, dose and routine."
+      ],
+      "rationale": "Projected WT high selects row 3 because silicone and emollient contributors are independently observed. Curl naming does not set texture fit.",
+      "thresholdReasoning": [
+        "Use the named matrix row; do not interpolate from product marketing.",
+        "No stronger recommendation or exclusion is inferred beyond that fixed row."
+      ],
+      "value": {
+        "coily": "recommended",
+        "curly": "recommended",
+        "straight": "conditional",
+        "wavy": "recommended"
+      }
+    },
+    "uncertainFields": [
+      "care_direction",
+      "conditioning_potential",
+      "heat_protection_evidence_state",
+      "persistence_removal_class",
+      "weight_potential",
+      "weight_residue_potential"
+    ],
+    "weightPotential": {
+      "confidence": "low",
+      "derivation": "§7.5 LGN high anchor with vacuous-marker review",
+      "evidenceSignals": [
+        "Dimethicone r4 + Dimethiconol r12: persistent silicone film",
+        "Cetyl Alcohol r5 + Cetrimonium Chloride r13: coherent LGN pair",
+        "Ethylhexyl Stearate r7 + Jojoba oil r8: independent emollient route"
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established.",
+        "Vacuous marker cannot establish the late surfactant by rank alone. Coherence/ordinal reading needs review; no C2 light-finish contradiction was captured."
+      ],
+      "rationale": "Coherent fatty-alcohol/cationic emulsion plus retained silicone/emollients supports the LGN high anchor, provisionally.",
+      "thresholdReasoning": [
+        "Moderate does not apply if the Cetyl Alcohol/Cetrimonium pair is confirmed as architecture.",
+        "No numeric residue or dose conclusion."
+      ],
+      "value": "high"
+    }
+  },
+  "researchMethod": {
+    "modelVersion": "leave-in-inci-v1.2",
+    "policyId": "leave-in-classification-v1.2",
+    "policySha256": "e8d677dbad352ee808cdd7e878e9ce6e6c98fb474f1a32ab2658ad9ebdc2c833",
+    "runbookSha256": "dce7d84982e52f5094a0b29500105d13f42c31d44e04b1871bcbef1bda5e56ca"
+  },
+  "version": "leave-in-research-envelope-v1.0"
+}

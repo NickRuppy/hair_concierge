@@ -263,7 +263,7 @@ Required canonical facts are:
 - multiple supported application stages;
 - verified product protocol where available.
 
-For Personal Plan Heat coverage, the capability is deliberately binary. The current non-null false default conflates unreviewed with verified-no and therefore requires a guarded nullable migration and consumer backfill. The legacy `heat_activation_required` field and claimed maximum-temperature values are not Personal Plan fit or ranking axes. Any material activation, application-state, or reapplication instruction belongs to the exact verified product protocol.
+For Personal Plan Heat coverage, the capability is deliberately binary. The current non-null false default conflates unreviewed with verified-no and therefore requires a guarded nullable migration and consumer backfill. `heat_activation_required` is a fit axis since Leave-In v1.2: an activated product serves only `pre_heat_application`, never post-wash or conditioner replacement; activation is separate from heat protection. Claimed maximum-temperature values are not Personal Plan fit or ranking axes. Any material activation, application-state, or reapplication instruction belongs to the exact verified product protocol.
 
 Do not retain `product_leave_in_fit_specs` or strict eligibility triples as independently editable authorities. Any compatibility projection is derived from the canonical specification. Do not add refresh-specific product fields until the deferred event is specified.
 

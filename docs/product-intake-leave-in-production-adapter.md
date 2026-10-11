@@ -2,25 +2,26 @@
 
 Status: implemented local research adapter — not a production write or matching-engine change.
 
-Use this workflow for a previously unknown German/EU conventional leave-on conditioning Leave-In. The researcher performs the complete Leave-In Standard v1.0 analysis once. The adapter then projects only the smaller set of properties supported by the current Product Intake database contract.
+Use this workflow for a previously unknown German/EU conventional leave-on conditioning Leave-In. The researcher performs the complete Leave-In Standard v1.2 analysis once (v1.0 plus the T20 overlay plus the T21 heat-activation overlay). The adapter then projects only the smaller set of properties supported by the current Product Intake database contract.
 
 ## Authority stack
 
 | Layer | Authority | Responsibility |
 | --- | --- | --- |
-| Full ingredient research | `docs/research/leave-in-inci/v1.0/` (Leave-In Standard v1.0, logic-locked 2026-09-13) | Exact formula analysis and the complete lean profile |
+| Full ingredient research | `docs/research/leave-in-inci/v1.0/` (Leave-In Standard v1.0, logic-locked 2026-09-13) + `docs/research/leave-in-inci/v1.1/` (T20 overlay) + `docs/research/leave-in-inci/v1.2/` (T21 heat-activation overlay) | Exact formula analysis, the complete lean profile and the identity captures |
 | Intake serialization | `leave-in-research-envelope-v1.0` | Durable evidence, values, uncertainty, and formula provenance |
 | Current projection | `src/lib/leave-in-research/production-adapter.ts` | Pure one-way conversion into current Leave-In fields |
 | Product handoff | `docs/product-intake-research-ops.md` | Identity, image, price/link, exact protocol, review, and guarded publish |
 
 The full research envelope is the source of truth. The production projection is deliberately lossy and must never be used to reconstruct or overwrite the research profile.
 
-Research method pins (checked by the adapter's `researchMethod` fields against the envelope):
+Research method pins (checked by the adapter's `researchMethod` fields against the envelope; the values live in `LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD`):
 
-- `policySha256`: `7ae5e882d9cba3e3fccdea3623d056efe802ff3bc3adbe554112e471da551ace`
+- `policyId`: `leave-in-classification-v1.2`, `modelVersion`: `leave-in-inci-v1.2`
+- `policySha256`: the sha256 of `docs/research/leave-in-inci/v1.2/leave-in-classification-overlay.v1.2.md`, which names the v1.1 overlay and the v1.0 base by hash (pinned by `tests/leave-in-research-v1-2-lock.test.ts`)
 - `runbookSha256`: `dce7d84982e52f5094a0b29500105d13f42c31d44e04b1871bcbef1bda5e56ca`
 
-An envelope whose `researchMethod` does not match these pinned hashes fails the strict schema parse and the record stays `needs_research`.
+An envelope whose `researchMethod` does not match these pinned values fails the strict schema parse and the record stays `needs_research`. A v1.1-stamped envelope is refused with the reason "v1.2 added identity.heatActivation; re-stamp required": it carries no heat-activation capture, and a missing capture is never read as "not activated".
 
 ## Required research envelope
 
@@ -31,8 +32,8 @@ The Product Intake worker requires a `property_synthesis` artifact with:
   "leave_in_research_envelope": {
     "version": "leave-in-research-envelope-v1.0",
     "researchMethod": {
-      "policyId": "leave-in-classification-v1.0",
-      "modelVersion": "leave-in-inci-v1.0",
+      "policyId": "leave-in-classification-v1.2",
+      "modelVersion": "leave-in-inci-v1.2",
       "policySha256": "<pinned by adapter>",
       "runbookSha256": "<pinned by adapter>"
     },
@@ -44,6 +45,7 @@ The Product Intake worker requires a `property_synthesis` artifact with:
       "gtin": "<GTIN or null>",
       "productForm": "spray",
       "applicationStage": ["towel_dry"],
+      "heatActivation": { "value": "not_required", "route": null, "statements": [], "counterSignals": [] },
       "identityStatus": "verified",
       "categoryBoundaryStatus": "eligible",
       "confidence": "high",
@@ -83,6 +85,8 @@ The formula integrity fields are checked together. `rawInciSha256` hashes the ex
 
 Within Product Intake, `identity.researchId` must equal the prompt packet's `submission_id`. The worker checks this before mutating current output rows. The standalone filesystem replay accepts another stable research ID because it has no submission context.
 
+`identity.heatActivation` (Standard v1.2, HA-1…HA-9) is transcribed from the manufacturer's own text, never derived from the formula or the name. `required` needs a C1/C2 activation statement and a C1/C2 heat-step direction that offers no non-heat finish, both quoted verbatim in `statements[]` with `sourceTier`, `sourceUrl` and `retrievedAt`; `route` (`airflow_shaping | direct_contact_heat | either_heat`) comes from the named tool and is `null` exactly when the value is `not_required`. Retailer wording (C3–C5) goes only into `counterSignals[]`. The capture schema is `heatActivationCaptureSchema` in `src/lib/heat-activation/contract.ts`.
+
 `identity.applicationStage` is transcribed verbatim from the authoritative directions, never derived from the formula. The legacy `post_wash` alias is not a member of the production vocabulary; the adapter normalizes it to `towel_dry` before validating the envelope so an older-style value never fails the strict parse, but the durable envelope stored on the artifact is left untouched.
 
 ## Deterministic projection
@@ -94,7 +98,10 @@ Within Product Intake, `identity.researchId` must equal the prompt packet's `sub
 | `conditioningLevel` + `persistence` | `product_leave_in_fit_specs.conditioner_relationship` (AD-4: `replacement_capable` iff both are moderate/high) and `product_leave_in_specs.roles[0]` (AD-3: `replacement_conditioner` vs `extension_conditioner`) |
 | `holdSupport` ≠ none, or `identity.applicationStage` ∋ `pre_heat` | `roles` gains `styling_prep` (AD-3) |
 | `focus`, `careDirection`, `repairSupportLevel`, `smoothingRoute` | `care_benefits` / `product_leave_in_fit_specs.care_benefits` / `functional_benefits` (AD-3a mapping) |
-| `specialistFunctions.providesHeatProtection` | `provides_heat_protection`; also contributes `plan_roles.pre_heat_application` and the `heat_protect` eligibility bucket |
+| `specialistFunctions.providesHeatProtection` | `provides_heat_protection`; also contributes `plan_roles.pre_heat_application` and the `heat_protect` eligibility bucket (the only source of that bucket — activation never counts as protection) |
+| `identity.heatActivation.value` | `heat_activation_required` (AD-7: `true` iff `required`) |
+| `identity.heatActivation.route` | `heat_activation_route` (AD-7: `null` iff not required; table CHECK `heat_activation_route_iff_required`) |
+| `identity.heatActivation` = `required` | AD-7 overrides AD-3/AD-4 (I1–I8): `roles = [styling_prep]`, `conditioner_relationship = booster_only`, `plan_roles = [pre_heat_application]` only, eligibility `heat_style` only with every care bucket emitting its `heat_style` row, required protocol roles `[pre_heat_protection]` only. Refused (`needs_research`) without `application_stage ∋ pre_heat` (HA-7, I1) or without a heat-protection claim (I5: no Leave-In plan role → Styling program). Every `required` value carries a review warning (HA-8). |
 | `careDirection` | `care_direction` (closed enum, no `unknown` reaches the catalog — AD-2) |
 | `repairSupportLevel` | `repair_support_level` |
 | normalized complete INCI | presence-only `ingredient_flags` |
@@ -110,7 +117,7 @@ The compatibility rows are current matching policy, not ingredient observations 
 
 ## Protocol boundary
 
-The adapter returns only the required role names (`required_protocol_roles`): `["post_wash_leave_in"]`, or `["post_wash_leave_in", "pre_heat_protection"]` when the profile's `specialistFunctions.providesHeatProtection` is `true`. It does not produce cadence, amount, placement, contact time, rinse action, or source text. Those must come from authoritative product directions and remain independently reviewable under the Product Intake protocol contract.
+The adapter returns only the required role names (`required_protocol_roles`): `["post_wash_leave_in"]`, or `["post_wash_leave_in", "pre_heat_protection"]` when the profile's `specialistFunctions.providesHeatProtection` is `true`, or `["pre_heat_protection"]` alone when heat activation is required (AD-7, I8). It does not produce cadence, amount, placement, contact time, rinse action, or source text. Those must come from authoritative product directions and remain independently reviewable under the Product Intake protocol contract.
 
 ## Local replay
 
