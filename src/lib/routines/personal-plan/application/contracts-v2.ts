@@ -464,3 +464,17 @@ export const productApplicationPointerV2Schema = z
 
 export type ApplicationFamilyTemplateV2 = z.infer<typeof applicationFamilyTemplateV2Schema>
 export type ProductApplicationPointerV2 = z.infer<typeof productApplicationPointerV2Schema>
+
+/**
+ * Routine (plan) role → catalogue protocol source role. Stage 4 files a Leave-in's
+ * heat slot as the plan role `pre_heat_application`; its protocol rows carry the
+ * protocol role `pre_heat_protection` (the curated-publication gate and the
+ * Stage-3 fact loader map it the same way). Every other role binds 1:1.
+ */
+const PROTOCOL_SOURCE_ROLE_BY_ROUTINE_ROLE: Readonly<Record<string, string>> = {
+  pre_heat_application: "pre_heat_protection",
+}
+
+export function protocolSourceRoleForRoutineRole(routineRole: string): string {
+  return PROTOCOL_SOURCE_ROLE_BY_ROUTINE_ROLE[routineRole] ?? routineRole
+}

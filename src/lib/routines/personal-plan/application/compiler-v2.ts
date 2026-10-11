@@ -10,6 +10,7 @@ import type {
 } from "./contracts"
 import {
   productApplicationPointerV2Schema,
+  protocolSourceRoleForRoutineRole,
   type ApplicationFamilyTemplateV2,
   type ProductApplicationPointerV2,
 } from "./contracts-v2"
@@ -490,21 +491,17 @@ function isHeatActivatedItem(item: NormalizedRoutineItem): boolean {
 }
 
 /**
- * Stage 4 files a Leave-in's heat slot as `pre_heat_application`; its reviewed protocol row is
- * `pre_heat_protection`. Bridged for heat-activated products only, so every other item binds
- * exactly as before.
+ * A pointer serves a routine item when its source role is the protocol role of the
+ * item's routine role (`protocolSourceRoleForRoutineRole`: the Leave-in heat slot
+ * `pre_heat_application` binds `pre_heat_protection` rows; every other role 1:1).
  */
 function pointerServesRoutineRole(
   item: NormalizedRoutineItem,
   pointer: ProductApplicationPointerV2,
 ): boolean {
-  if (item.sourceRoutineRole === undefined || pointer.sourceRole === item.sourceRoutineRole) {
-    return true
-  }
   return (
-    isHeatActivatedItem(item) &&
-    item.sourceRoutineRole === "pre_heat_application" &&
-    pointer.sourceRole === "pre_heat_protection"
+    item.sourceRoutineRole === undefined ||
+    pointer.sourceRole === protocolSourceRoleForRoutineRole(item.sourceRoutineRole)
   )
 }
 
