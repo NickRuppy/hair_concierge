@@ -117,3 +117,81 @@ test("a partial persisted profile degrades to neutral answers instead of throwin
     { scalpOiliness: null, sensitiveScalp: false, volumeDirection: null, visibleHairColor: "dark" },
   )
 })
+
+/* F1 (Codex review): a partial persisted profile must never change the direction. */
+
+function partial(profile: Record<string, unknown>) {
+  return buildStage3SelectionProfile({ profile } as never, null).volumeDirection
+}
+
+test("partial profile: a volume goal without a known texture gives no direction (never a guessed 'more')", () => {
+  assert.equal(
+    partial({ hair: { thickness: "fine" }, goals: ["volume_balance"], concerns: [] }),
+    null,
+  )
+  assert.equal(
+    partial({ hair: { texture: "straight" }, goals: ["volume_balance"], concerns: [] }),
+    null,
+  )
+  assert.equal(
+    partial({ hair: { texture: "wavy", thickness: "fine" }, goals: ["volume_balance"] }),
+    null,
+  )
+})
+
+test("partial profile: decisive facts still decide", () => {
+  // An explicit low-volume concern is decisive on its own, even without goals or hair facts.
+  assert.equal(partial({ concerns: ["low_volume_or_weighed_down"] }), "more")
+  // Curly/coily or coarse is the control route whatever is missing, once no low-volume concern
+  // can override it (concerns known).
+  assert.equal(
+    partial({ hair: { texture: "curly" }, goals: ["volume_balance"], concerns: [] }),
+    "less",
+  )
+  assert.equal(
+    partial({ hair: { thickness: "coarse" }, goals: ["volume_balance"], concerns: [] }),
+    "less",
+  )
+  // Without concerns a low-volume concern cannot be ruled out → neutral.
+  assert.equal(
+    partial({ hair: { texture: "curly", thickness: "normal" }, goals: ["volume_balance"] }),
+    null,
+  )
+  // No goals known and no decisive concern → neutral.
+  assert.equal(partial({ hair: { texture: "straight", thickness: "fine" }, concerns: [] }), null)
+  // Invalid vocabulary is treated as missing.
+  assert.equal(
+    partial({
+      hair: { texture: "zigzag", thickness: "fine" },
+      goals: ["volume_balance"],
+      concerns: [],
+    }),
+    null,
+  )
+})
+
+test("complete profiles: the slice equals the conditioner's planVolumeDirection on the full matrix", () => {
+  for (const texture of ["straight", "wavy", "curly", "coily"] as const) {
+    for (const thickness of ["fine", "normal", "coarse"] as const) {
+      for (const goals of [
+        [],
+        ["volume_balance"],
+        ["volume_balance", "shape_definition"],
+      ] as const) {
+        for (const currentConcerns of [
+          [],
+          ["low_volume_or_weighed_down"],
+          ["lost_shape"],
+        ] as const) {
+          const planProfile = profile({
+            texture,
+            thickness,
+            goals: [...goals],
+            currentConcerns: [...currentConcerns],
+          })
+          assert.equal(slice(planProfile).volumeDirection, planVolumeDirection(planProfile))
+        }
+      }
+    }
+  }
+})

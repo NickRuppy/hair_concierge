@@ -105,6 +105,9 @@ const defaultDependencies = {
   isQuarantined: isProductSearchQuarantined,
   loadProductById,
   resolveRetailerEnrichment,
+  loadScanProductFacts,
+  loadRecommendationCandidates: loadStage3RecommendationCandidatesByRole,
+  loadQuarantinedProductIdsAmong,
 }
 export type MobileScanResolveDependencies = typeof defaultDependencies
 
@@ -157,6 +160,7 @@ export async function resolveMobileScan(
 
   const loaded = await loadVerdict(
     client,
+    deps,
     category,
     productRow.id,
     decision,
@@ -209,7 +213,7 @@ export async function resolveMobileScan(
   }
   const alternatives = await Promise.all(
     verdict.alternatives.map(async (alternative) => {
-      const alternativeRow = await loadProductById(client, alternative.productId)
+      const alternativeRow = await deps.loadProductById(client, alternative.productId)
       if (!alternativeRow) return null
       const rows = mobileAssessmentRows(
         category,
@@ -320,6 +324,10 @@ export async function searchMobileScanCatalog(
 
 async function loadVerdict(
   client: SupabaseClient,
+  deps: Pick<
+    MobileScanResolveDependencies,
+    "loadScanProductFacts" | "loadRecommendationCandidates" | "loadQuarantinedProductIdsAmong"
+  >,
   category: PersonalPlanCategory,
   productId: string,
   decision: PlanCategoryDecision,
@@ -347,12 +355,15 @@ async function loadVerdict(
     Promise.all(
       roles.map(
         async (role) =>
-          [role, await loadScanProductFacts(client, category, productId, selection(role))] as const,
+          [
+            role,
+            await deps.loadScanProductFacts(client, category, productId, selection(role)),
+          ] as const,
       ),
     ),
     isNotNeeded(decision)
       ? Promise.resolve(Object.fromEntries(roles.map((role) => [role, []])))
-      : loadStage3RecommendationCandidatesByRole(client, {
+      : deps.loadRecommendationCandidates(client, {
           category,
           hairThickness: context.snapshot.profile.hair.thickness,
           shampooTarget,
@@ -363,7 +374,7 @@ async function loadVerdict(
   const candidateIds = Object.values(candidates).flatMap((entries) =>
     entries.map((entry) => entry.productId),
   )
-  const quarantined = await loadQuarantinedProductIdsAmong(client, candidateIds)
+  const quarantined = await deps.loadQuarantinedProductIdsAmong(client, candidateIds)
   const facts = new Map<PlanProductRole, ScanRoleFacts>(
     factsRows.map(([role, productFacts]) => [
       role,

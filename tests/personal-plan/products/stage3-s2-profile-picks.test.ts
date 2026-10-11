@@ -7,6 +7,7 @@ import type {
   Stage3KnownAuthorityEvaluation,
 } from "../../../src/lib/personal-plan/products/authority/contracts"
 import { evaluateStage3Authority } from "../../../src/lib/personal-plan/products/authority/evaluate"
+import { buildStage3SelectionProfile } from "../../../src/lib/personal-plan/products/authority/selection-profile"
 import { allocateBudgetPortfolio } from "../../../src/lib/personal-plan/products/budget-policy"
 import { compactCriterionSchema } from "../../../src/lib/personal-plan/products/fit-comparison-schema"
 import { rankStage3ComparisonCandidates } from "../../../src/lib/personal-plan/products/fit-comparison"
@@ -381,4 +382,24 @@ test("scan subtitle counts the S2 rows: dry shampoo 5 rows, deep cleansing 3 (re
   assert.equal(scanSubtitle(oily, DEEP.gliss.productId), "3 von 3 Kriterien erfüllt")
   // R4: an ideal general deep cleanser reads „2 von 3" (honest: the scalp row is unconfirmed).
   assert.equal(scanSubtitle(oily, DEEP.isana.productId), "2 von 3 Kriterien erfüllt")
+})
+
+/* F1 (Codex review): winners from partial persisted profiles */
+
+test("partial profile winners: missing texture + volume goal keeps Batiste Original; a lone low-volume concern → got2b", () => {
+  const fromProfile = (profile: Record<string, unknown>) =>
+    s2Input({
+      category: "dry_shampoo",
+      role: "root_refresh_bridge",
+      candidates: DRY_CATALOG,
+      selectionProfile: buildStage3SelectionProfile({ profile } as never, null),
+    })
+  assert.equal(
+    pick(fromProfile({ hair: { thickness: "fine" }, goals: ["volume_balance"], concerns: [] })),
+    DRY.batisteOriginal.productId,
+  )
+  assert.equal(
+    pick(fromProfile({ concerns: ["low_volume_or_weighed_down"] })),
+    DRY.got2bVolumen.productId,
+  )
 })

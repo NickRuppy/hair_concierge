@@ -3,6 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 import {
   buildStage3SelectionProfile,
   type Stage3SelectionProfile,
+  type Stage3VisibleHairColor,
 } from "@/lib/personal-plan/products/authority/selection-profile"
 import { computeNeedPlan } from "@/lib/personal-plan/compute-stage1"
 import {
@@ -314,6 +315,8 @@ export async function loadDiscoveryIdealRoutine(
      * the price-neutral previews as before. Never uncapped-by-default.
      */
     budget?: Stage1ProductExamplePreviewBudget | null
+    /** Her user-answered visible root colour; absent = unknown (as her own previews). */
+    visibleHairColor?: Stage3VisibleHairColor | null
   } = {},
 ): Promise<DiscoveryIdealRoutineResult> {
   let context
@@ -341,6 +344,7 @@ export async function loadDiscoveryIdealRoutine(
     snapshot,
     loadCandidates: loaded.loader,
     ...(options.budget ? { budget: options.budget } : {}),
+    ...(options.visibleHairColor ? { visibleHairColor: options.visibleHairColor } : {}),
   })
 
   return {
@@ -350,8 +354,8 @@ export async function loadDiscoveryIdealRoutine(
       snapshot,
       previewInput.sourceNeedVersionId,
       await loaded.settled(),
-      // The previews above run without a visible root colour (unknown), so the options do too.
-      buildStage3SelectionProfile(snapshot, null),
+      // The same slice the previews above ran on.
+      buildStage3SelectionProfile(snapshot, options.visibleHairColor ?? null),
     ),
     routineSource,
     heatProtectionDeferred: discoveryHeatProtectionDeferred(snapshot),
