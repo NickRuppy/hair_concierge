@@ -1,0 +1,324 @@
+{
+  "formula": {
+    "formulaFingerprintSha256": "fa24885bd8763438be58732998f7aa0a81e99bbb859ea47a4eb3487281f507b6",
+    "normalizedIngredients": [
+      "AQUA",
+      "DIMETHICONE",
+      "PARAFFINUM LIQUIDUM",
+      "PHENOXYETHANOL",
+      "BETAINE",
+      "BENZYL ALCOHOL",
+      "POLYACRYLAMIDE",
+      "C13-14 ALKANE",
+      "PARFUM",
+      "ETHYLHEXYLGLYCERIN",
+      "LAURETH-7",
+      "CITRUS AURANTIUM PEEL OIL",
+      "DIMETHYL PHENETHYL ACETATE",
+      "LIMONENE",
+      "BENZYL SALICYLATE",
+      "HISTIDINE",
+      "MACADAMIA TERNIFOLIA SEED OIL",
+      "HEXYL CINNAMAL",
+      "BUTYLENE GLYCOL",
+      "LINALOOL",
+      "COUMARIN",
+      "FRAGARIA CHILOENSIS FRUIT EXTRACT"
+    ],
+    "rawInci": "Aqua, Dimethicone, Paraffinum Liquidum, Phenoxyethanol, Betaine, Benzyl Alcohol, Polyacrylamide, C13-14 Alkane, Parfum, Ethylhexylglycerin, Laureth-7, Citrus Aurantium Peel Oil, Dimethyl Phenethyl Acetate, Limonene, Benzyl Salicylate, Histidine, Macadamia Ternifolia Seed Oil, Hexyl Cinnamal, Butylene Glycol, Linalool, Coumarin, Fragaria Chiloensis Fruit Extract",
+    "rawInciSha256": "d6e4e9cea55072e5f300ac88086a7ca92f45353ac1796aede0533ce24ad70391",
+    "sourceIds": [
+      "aussie-dm"
+    ],
+    "status": "verified"
+  },
+  "identity": {
+    "applicationStage": [
+      "towel_dry",
+      "dry_hair"
+    ],
+    "brand": "AUSSIE",
+    "categoryBoundaryStatus": "eligible",
+    "confidence": "high",
+    "exactProductName": "AUSSIE SOS Leave-In Haarserum 100 Hours Hydration",
+    "gtin": "8006530085724",
+    "identityStatus": "verified",
+    "market": "DE/EU",
+    "productForm": "serum",
+    "researchId": "ba326dab-99d8-4b82-a1c5-de9aee2578a4",
+    "sourceIds": [
+      "aussie-dm"
+    ]
+  },
+  "profile": {
+    "assumptionNotes": [
+      "early_tail_marker",
+      "Polyacrylamide is unenumerated in L5; the incidental bottle-rheology film reading needs review.",
+      "Mineral-oil grade is unspecified; high weight/residue potential remains possible.",
+      "Standard v1.1 (T20, 2026-09-29): care_direction re-derived 2026-10-09 for catalog-completeness-fill r4; every other field is carried unchanged from the 2026-09-18 v1.0 record (overlay §4: only the field whose rule changed reopens). Formula and fingerprints unchanged; sources re-verified 2026-10-09."
+    ],
+    "careDirection": {
+      "confidence": "low",
+      "derivation": "§10.1: care_direction <- §9 as amended by Standard v1.1 (T20, §9-O1–O7): only settled humectants and medium/rich-band lipids above the tail set a moisture leg; a persistent film that outranks them makes the leg subordinate.",
+      "evidenceSignals": [
+        "T20 re-derivation 2026-10-09 via deriveLeaveInCareDirectionT20",
+        "evidence_level: E2",
+        "evidence_scope: formula",
+        "anchor row: film_leads_moisture_leg",
+        "tail marker: PHENOXYETHANOL r4 (early; plausibility uncertain, recorded as assumption early_tail_marker)",
+        "Film species: DIMETHICONE r2 (persistent). Candidate directional species: PARAFFINUM LIQUIDUM r3 (mineral oil, grade unspecified; read pessimistically as a medium/rich lipid; if it were not a directional lipid the row would be film_led_neutral, still `balanced`), BETAINE r5 (settled humectant; below the r4 marker on the plausible-marker read, an ordinal-read candidate otherwise).",
+        "Demoted v1.0 leg species above the tail: none (BUTYLENE GLYCOL r19 is far below; C13-14 ALKANE r8 is a volatile carrier).",
+        "Positioning: dm copy 'intensive Feuchtigkeit für bis zu 100 Stunden' is a claim counter-signal only (§9 constraint 3).",
+        "review triggers: moisture_leg_subordinate"
+      ],
+      "limitations": [
+        "§9's ceiling caps a formula-only direction at moderate confidence.",
+        "T20 compares ranks on one list only; it states no percentage, ratio or dose (G4).",
+        "Single-lane re-derivation (2026-10-09) from the 2026-09-18 frozen formula; not run by two independent sealed lanes (overlay §5)."
+      ],
+      "rationale": "§9 as amended by the v1.1 overlay (T20) resolves care_direction to `balanced` (conservative reading of film_leads_moisture_leg): DIMETHICONE r2 is a persistent L2 film that outranks every candidate directional species. v1.0 returned `moisture` (low) on Betaine r5 / Paraffinum Liquidum r3 / Macadamia oil; T20 supersedes that.",
+      "thresholdReasoning": [
+        "Reading A (marker plausible, mineral oil = directional lipid): film_leads_moisture_leg, margin 1 < 2 -> `balanced`, low, review moisture_leg_subordinate.",
+        "Reading B (marker plausible, mineral oil not directional): film_led_neutral -> `balanced`, moderate.",
+        "Reading C (marker implausible, ordinal read): film_leads_moisture_leg, low.",
+        "All three readings give `balanced`; the lowest confidence (low) is taken per the §1.1 invariant."
+      ],
+      "value": "balanced"
+    },
+    "conditioningLevel": {
+      "confidence": "low",
+      "derivation": "§7.2 moderate persistent silicone/emollient package",
+      "evidenceSignals": [
+        "Dimethicone r2: persistent silicone film",
+        "Paraffinum Liquidum r3: persistent nonvolatile emollient",
+        "No fatty-alcohol/cationic-surfactant pair",
+        "Polyacrylamide r7 + C13-14 Alkane r8 + Laureth-7 r11: plausible non-LGN emulsion rheology"
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established.",
+        "Early marker r4 lowers confidence one step; it is plausible because both core care species precede it."
+      ],
+      "rationale": "The silicone and mineral-oil package establishes ordinary leave-on conditioning without an LGN pair.",
+      "thresholdReasoning": [
+        "Low fails: two persistent care families precede Phenoxyethanol r4.",
+        "High fails: no LGN pair; extra slip observations do not upgrade COND."
+      ],
+      "value": "moderate"
+    },
+    "damageFit": {
+      "confidence": "low",
+      "derivation": "§10.3 damage row 2",
+      "evidenceSignals": [
+        "WT dimension moderate; projected weight moderate",
+        "COND moderate; R2 none_visible",
+        "Silicone lubrication r2",
+        "Emollient lubrication r3"
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established.",
+        "Broad deterministic fit prior; actual user fit also depends on hair, dose and routine."
+      ],
+      "rationale": "COND moderate with no qualifying substantive repair/specialist route selects row 2, including highly damaged conditional.",
+      "thresholdReasoning": [
+        "Use the named matrix row; do not interpolate from product marketing.",
+        "No stronger recommendation or exclusion is inferred beyond that fixed row."
+      ],
+      "value": {
+        "healthy": "recommended",
+        "highly_damaged": "conditional",
+        "moderately_damaged": "recommended"
+      }
+    },
+    "focus": {
+      "confidence": "low",
+      "derivation": "§10.2 / §10.2.1 permissive baseline and two-observation test",
+      "evidenceSignals": [
+        "Admissible COND baseline: Paraffinum Liquidum r3 emollient route",
+        "Additional film: Dimethicone r2; distinct from the mineral-oil observation"
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established."
+      ],
+      "rationale": "The mineral-oil emollient baseline leaves an independent Dimethicone film observation available under the permissive §10.2.1 rule; the two-observation smoothing test clears.",
+      "thresholdReasoning": [
+        "General would miss the independent alignment-film-plus-lubrication observation.",
+        "Repair lacks R2; detangling is not C1/C2 detangler-led or low-weight; curl lacks an architectural L5 route; heat styling has no captured pre_heat direction; shine would duplicate smoothing."
+      ],
+      "value": {
+        "primary": "smoothing",
+        "secondary": []
+      }
+    },
+    "hairThicknessFit": {
+      "confidence": "low",
+      "derivation": "§10.3 thickness matrix",
+      "evidenceSignals": [
+        "WT dimension moderate; projected weight moderate",
+        "COND moderate; R2 none_visible",
+        "Silicone lubrication r2",
+        "Emollient lubrication r3"
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established.",
+        "Broad deterministic fit prior; actual user fit also depends on hair, dose and routine."
+      ],
+      "rationale": "Projected WT moderate selects its exact thickness row; fine-hair threshold is an explicit product prior, not a scientific constant.",
+      "thresholdReasoning": [
+        "Use the named matrix row; do not interpolate from product marketing.",
+        "No stronger recommendation or exclusion is inferred beyond that fixed row."
+      ],
+      "value": {
+        "coarse": "recommended",
+        "fine": "conditional",
+        "medium": "recommended"
+      }
+    },
+    "holdSupport": {
+      "confidence": "low",
+      "derivation": "§7.7 plausible bottle-rheology reading; §5 L5 Polyacrylamide open gap",
+      "evidenceSignals": [
+        "Polyacrylamide r7 + C13-14 Alkane r8 + Laureth-7 r11: plausible non-LGN emulsion rheology"
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established.",
+        "Polyacrylamide is explicitly unenumerated in §17.19; incidental is provisional and requires review."
+      ],
+      "rationale": "Polyacrylamide is plausibly the emulsion rheology polymer and no hold performance is inferred. Conditioning at r2/r3 dominates.",
+      "thresholdReasoning": [
+        "A categorical none would hide the standard’s unenumerated Polyacrylamide family gap.",
+        "Meaningful hold fails: conditioning dominates and no C1/C2 hold-led directions were captured."
+      ],
+      "value": "incidental"
+    },
+    "persistence": {
+      "confidence": "low",
+      "derivation": "§7.6 neutral_non_volatile → moderate",
+      "evidenceSignals": [
+        "Dimethicone r2: persistent silicone film",
+        "Paraffinum Liquidum r3: persistent nonvolatile emollient"
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established.",
+        "Early marker; Polyacrylamide family is unenumerated (§17.19), no cationic structure inferred."
+      ],
+      "rationale": "Neutral silicone and mineral-oil deposits are the highest identified persistent mechanism class.",
+      "thresholdReasoning": [
+        "Water-soluble/volatile-only fails on r2/r3.",
+        "No amino silicone, silicone quat or polymeric quat is declared."
+      ],
+      "value": "moderate"
+    },
+    "repairSupportLevel": {
+      "confidence": "moderate",
+      "derivation": "§10.3.2 fixed rule",
+      "evidenceSignals": [
+        "No protein, silane, silicone-quat or cationised protein declared"
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established."
+      ],
+      "rationale": "No R2 candidate/tested and no exact-product repair endpoints; repair support is low.",
+      "thresholdReasoning": [
+        "Low is a complete answer, not a missing research value.",
+        "Medium requires qualifying R2; high requires E3+ exact-product leave-on repair evidence."
+      ],
+      "value": "low"
+    },
+    "smoothingRoute": {
+      "confidence": "low",
+      "derivation": "§7.4 typed trace, not scored SFR",
+      "evidenceSignals": [
+        "Admissible COND baseline: Paraffinum Liquidum r3 emollient route",
+        "Additional film: Dimethicone r2; distinct from the mineral-oil observation"
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established."
+      ],
+      "rationale": "The persistent film family is recorded as the typed smoothing input; no humidity resistance is inferred.",
+      "thresholdReasoning": [
+        "None/emollient alone would miss the identified film.",
+        "No independent shine or graded smoothing score is emitted."
+      ],
+      "value": "silicone_film"
+    },
+    "specialistFunctions": {
+      "confidence": "low",
+      "derivation": "§13.3 claim-led binary",
+      "evidenceSignals": [
+        "No admissible C1/C2 heat claim captured",
+        "No L9 member declared"
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established."
+      ],
+      "rationale": "The binary follows the frozen authority-gated claim search, separate from the HEAT trace state.",
+      "thresholdReasoning": [
+        "No generic ingredient can create an absent claim.",
+        "No temperature or efficacy level follows from this binary."
+      ],
+      "value": {
+        "providesHeatProtection": false
+      }
+    },
+    "textureFit": {
+      "confidence": "low",
+      "derivation": "§10.3 texture row 2",
+      "evidenceSignals": [
+        "WT dimension moderate; projected weight moderate",
+        "COND moderate; R2 none_visible",
+        "Silicone lubrication r2",
+        "Emollient lubrication r3"
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established.",
+        "Broad deterministic fit prior; actual user fit also depends on hair, dose and routine."
+      ],
+      "rationale": "Projected WT moderate selects row 2 regardless of slip. Curl naming does not set texture fit.",
+      "thresholdReasoning": [
+        "Use the named matrix row; do not interpolate from product marketing.",
+        "No stronger recommendation or exclusion is inferred beyond that fixed row."
+      ],
+      "value": {
+        "coily": "conditional",
+        "curly": "recommended",
+        "straight": "recommended",
+        "wavy": "recommended"
+      }
+    },
+    "uncertainFields": [
+      "care_direction",
+      "conditioning_potential",
+      "hold_route_state",
+      "persistence_removal_class",
+      "weight_potential",
+      "weight_residue_potential"
+    ],
+    "weightPotential": {
+      "confidence": "low",
+      "derivation": "§7.5 multi-family moderate; closed rich-band rule; §4 partial-evidence step-down",
+      "evidenceSignals": [
+        "Dimethicone r2: persistent silicone film",
+        "Paraffinum Liquidum r3: persistent nonvolatile emollient",
+        "No fatty-alcohol/cationic-surfactant pair"
+      ],
+      "limitations": [
+        "Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established.",
+        "Mineral-oil viscosity/grade is not on INCI. High remains a possible alternate; targeted WT review required.",
+        "The absence of a confirmed heavy grade is not proof of light mineral oil."
+      ],
+      "rationale": "Two persistent families support moderate residue potential. Paraffinum Liquidum does not identify the heavy mineral-oil grade required by the rich-band anchor.",
+      "thresholdReasoning": [
+        "Low fails: Dimethicone r2 and mineral oil r3 persist.",
+        "High is not established: no LGN pair and no confirmed heavy mineral-oil grade; do not invent viscosity."
+      ],
+      "value": "moderate"
+    }
+  },
+  "researchMethod": {
+    "modelVersion": "leave-in-inci-v1.1",
+    "policyId": "leave-in-classification-v1.1",
+    "policySha256": "9c1340357b4c0cf38933340f4592250d10f2cccc1429b0e4d46508d47eee032b",
+    "runbookSha256": "dce7d84982e52f5094a0b29500105d13f42c31d44e04b1871bcbef1bda5e56ca"
+  },
+  "version": "leave-in-research-envelope-v1.0"
+}

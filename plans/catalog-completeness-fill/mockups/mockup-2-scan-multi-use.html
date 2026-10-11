@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan mit Mehrfachnutzung</title>
+<meta name="description" content="Scan-Ergebnis und Speichern, wenn ein Produkt mehrere Anwendungen hat.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Tokens mirror src/app/globals.css (light mode). */
+:root {
+  --bg: #fbf9f7;
+  --fg: #3b3735;
+  --card: #ffffff;
+  --border: #e6e1dc;
+  --muted: #efeaf7;
+  --muted-fg: #68615e;
+  --plum: #6b50a0;
+  --plum-dark: #3d2a62;
+  --plum-darkest: #2a1845;
+  --plum-light: #c8b8e0;
+  --plum-ice: #f2eefa;
+  --coral: #d4616a;
+  --coral-dark: #c0555d;
+  --coral-light: #fdeef0;
+  --ok-bg: #edf7ef;
+  --ok: #356b45;
+  --pending-bg: #fff5df;
+  --pending: #805a16;
+  --danger-bg: #fff0f1;
+  --danger: #9a3f48;
+  --neutral-bg: #f3f0f6;
+  --neutral: #574b61;
+  --text-body: #3a3835;
+  --text-sub: #6a6560;
+  --display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --body: "Plus Jakarta Sans", Arial, Helvetica, sans-serif;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: #ece8e3;
+  color: var(--fg);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.5;
+}
+p, h1, h2, h3, h4 { margin: 0; }
+a { color: inherit; }
+
+/* ---------- review canvas ---------- */
+.canvas-head { max-width: 1360px; margin: 0 auto; padding: 32px 24px 0; }
+.canvas-head .crumb { font-size: 12px; color: var(--text-sub); }
+.canvas-head .crumb a { color: var(--plum); }
+.canvas-head h1 {
+  margin-top: 6px;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 1.2;
+  color: var(--plum-darkest);
+}
+.canvas-head .lede { margin-top: 6px; max-width: 760px; font-size: 14px; color: var(--text-sub); }
+.group { max-width: 1360px; margin: 0 auto; padding: 28px 24px 8px; }
+.group > h2 {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--plum-dark);
+  border-top: 1px solid rgba(42, 24, 69, 0.12);
+  padding-top: 16px;
+}
+.row { display: flex; flex-wrap: wrap; gap: 36px 32px; padding-top: 16px; align-items: flex-start; }
+.variant { width: 390px; max-width: 100%; }
+.variant .tag { font-size: 13px; font-weight: 800; color: var(--plum-darkest); }
+.variant .cap { margin: 2px 0 12px; min-height: 40px; font-size: 13px; line-height: 1.5; color: var(--text-sub); }
+@media (max-width: 480px) {
+  .canvas-head, .group { padding-left: 16px; padding-right: 16px; }
+  .variant { width: 100%; }
+  .phone { transform: scale(0.88); transform-origin: top left; margin-bottom: -100px; }
+}
+
+/* ---------- phone frame ---------- */
+.phone {
+  position: relative;
+  width: 390px;
+  height: 844px;
+  overflow: hidden;
+  border-radius: 30px;
+  background: var(--bg);
+  color: var(--text-body);
+  box-shadow: 0 0 0 1px rgba(42, 24, 69, 0.08), 0 28px 60px -34px rgba(42, 24, 69, 0.5);
+}
+
+/* ---------- journey header (personal-plan-journey/journey-header.tsx) ---------- */
+.jh { border-bottom: 1px solid rgba(107, 80, 160, 0.1); background: rgba(253, 251, 249, 0.96); padding: 10px 16px 12px; }
+.jh-grid { display: grid; grid-template-columns: 48px minmax(0, 1fr) 7rem; align-items: center; gap: 8px; min-height: 48px; }
+.back {
+  display: grid; place-items: center; width: 48px; height: 48px; border-radius: 12px;
+  border: 1px solid rgba(107, 80, 160, 0.16); background: var(--plum-ice); color: var(--plum);
+  box-shadow: 0 3px 10px rgba(42, 24, 69, 0.08);
+}
+.wordmark { text-align: center; font-family: var(--display); font-weight: 500; font-size: 20px; color: var(--plum-darkest); }
+.savestate { text-align: right; font-size: 10px; font-weight: 700; color: var(--ok); }
+
+/* ---------- refinement question (refinement-question.tsx) ---------- */
+.q { padding: 24px 20px 140px; }
+.section-label { margin-bottom: 6px; font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--plum); }
+.trigger { display: inline-flex; margin-bottom: 12px; border-radius: 999px; background: var(--plum-ice); padding: 6px 12px; font-size: 9px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--plum); }
+.q-title { font-family: var(--display); font-weight: 500; font-size: 28px; line-height: 1.25; color: var(--plum-darkest); }
+.q-lead { margin-top: 8px; font-size: 14px; line-height: 24px; color: var(--text-sub); }
+.opts { display: grid; gap: 10px; margin-top: 20px; }
+.opt {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px;
+  border: 1px solid var(--plum-light); border-radius: 16px; background: var(--card); padding: 16px;
+  box-shadow: 0 12px 34px -28px rgba(107, 80, 160, 0.6);
+}
+.opt.noicon { grid-template-columns: minmax(0, 1fr) auto; }
+.opt.on { border-color: var(--plum); box-shadow: 0 0 0 2px rgba(107, 80, 160, 0.2), 0 16px 40px -30px rgba(107, 80, 160, 0.72); }
+.opt .ico { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--plum-ice); color: var(--plum); }
+.opt .lbl { font-size: 15px; font-weight: 600; line-height: 1.375; color: var(--plum-darkest); }
+.opt .desc { margin-top: 4px; font-size: 14px; line-height: 20px; color: var(--text-sub); }
+.radio { width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--plum-light); background: #fff; }
+.radio.on { display: grid; place-items: center; border-color: var(--plum); background: var(--plum); color: #fff; }
+.dock { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 16px 22px; border-top: 1px solid rgba(231, 224, 217, 0.9); background: rgba(253, 251, 249, 0.97); }
+.cta { display: flex; align-items: center; justify-content: center; min-height: 56px; border-radius: 999px; background: var(--coral); padding: 0 24px; font-size: 16px; font-weight: 700; color: #fff; }
+
+/* ---------- routine page (routine/personal-plan/routine-page.tsx + routine-item-card.tsx) ---------- */
+.rp { height: 100%; background: linear-gradient(180deg, #fffaf7 0%, var(--bg) 38%, #fff 100%); }
+.rp-main { display: flex; flex-direction: column; gap: 20px; padding: 16px 12px 110px; }
+.rp-head { border-bottom: 1px solid rgba(107, 80, 160, 0.14); padding: 0 2px 16px; }
+.overline-ok { font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ok); }
+.rp-h1row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: 4px; }
+.rp-h1 { font-family: var(--display); font-weight: 500; font-size: 23px; line-height: 1.14; color: #291a43; }
+.link-sm { font-size: 12px; font-weight: 600; color: var(--plum); text-decoration: underline; text-underline-offset: 2px; }
+.rp-sub { margin-top: 4px; font-size: 11.5px; line-height: 1.6; color: #706a65; }
+.sec-h { padding: 0 2px; margin-bottom: 10px; font-size: 13px; font-weight: 700; color: #291a43; }
+.cards { display: grid; gap: 10px; }
+.rc { overflow: hidden; border: 1px solid; border-radius: 19px; box-shadow: 0 3px 11px rgba(43, 26, 67, 0.035); }
+.rc.shampoo { border-color: #e2d4b8; background: #f5f0e5; } .rc.shampoo .dot { background: #a77d31; }
+.rc.conditioner { border-color: #cfdee3; background: #edf3f5; } .rc.conditioner .dot { background: #4c8ea8; }
+.rc.leave_in { border-color: #cedfd5; background: #edf4f0; } .rc.leave_in .dot { background: #56866b; }
+.rc.mask { border-color: #dcd3e5; background: #f1eef5; } .rc.mask .dot { background: #7d67a8; }
+.rc.bondbuilder { border-color: #e2d1df; background: #f4edf3; } .rc.bondbuilder .dot { background: #985d8f; }
+.dot { display: inline-block; flex: none; width: 6px; height: 6px; border-radius: 50%; }
+.rc-row { display: grid; grid-template-columns: 58px minmax(0, 1fr) 16px; align-items: center; gap: 10px; min-height: 104px; padding: 10px; }
+.tile { position: relative; display: grid; place-items: center; width: 58px; height: 76px; border-radius: 14px; background: #f3efe8; box-shadow: inset 0 0 0 1px rgba(31, 26, 20, 0.04); }
+.tile svg { width: 78%; height: 94%; }
+.cat { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; line-height: 1.2; color: #6b50a0; }
+.pname { display: block; margin-top: 4px; font-size: 13.5px; font-weight: 700; line-height: 1.18; color: #291a43; }
+.purpose { display: block; margin-top: 2px; font-size: 11.5px; line-height: 1.32; color: #5f5954; }
+.meta { display: block; margin-top: 6px; border-top: 1px solid rgba(67, 55, 48, 0.09); padding-top: 6px; font-size: 11px; font-weight: 700; line-height: 1.35; color: #665e58; }
+.meta .st { color: var(--ok); }
+.chev { width: 16px; height: 16px; color: rgba(31, 26, 20, 0.38); }
+
+/* ---------- bottom nav (layout/personal-plan-navigation.tsx) ---------- */
+.nav {
+  position: absolute; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
+  min-height: 80px; padding-bottom: 8px; border-top: 1px solid var(--border); background: rgba(251, 249, 247, 0.95);
+  box-shadow: 0 -12px 30px -26px rgba(107, 80, 160, 0.55);
+}
+.nav span { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 11px; font-weight: 600; color: var(--muted-fg); }
+.nav span.on { color: #6a4fa0; }
+.nav svg { width: 20px; height: 20px; }
+
+/* ---------- scan sheet (scan/scan-result-sheet.tsx, scan-verdict-sections.tsx) ---------- */
+.cam { position: absolute; inset: 0; background:
+  radial-gradient(120px 90px at 50% 58px, rgba(240, 200, 196, 0.55), transparent 70%),
+  radial-gradient(260px 160px at 30% 20px, rgba(120, 104, 92, 0.6), transparent 70%),
+  linear-gradient(180deg, #3a332f 0%, #231f22 100%); }
+.cam::after { content: ""; position: absolute; left: 50%; top: 12px; width: 150px; height: 66px; transform: translateX(-50%);
+  border: 2px solid rgba(255, 255, 255, 0.55); border-radius: 14px; }
+.backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.2); }
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; top: 92px; display: flex; flex-direction: column; border-radius: 16px 16px 0 0; background: var(--bg); box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.3); }
+.grab { flex: none; width: 40px; height: 6px; margin: 12px auto 4px; border-radius: 999px; background: rgba(104, 97, 94, 0.3); }
+.x { position: absolute; right: 12px; top: 8px; display: grid; place-items: center; width: 40px; height: 40px; color: var(--fg); opacity: 0.7; }
+.sheet-body { position: relative; flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: 16px; padding: 4px 16px 20px; }
+.sheet-body.fade::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 18px; background: linear-gradient(180deg, rgba(251, 249, 247, 0), var(--bg)); }
+.sheet-foot { flex: none; display: flex; gap: 8px; border-top: 1px solid var(--border); background: var(--bg); padding: 12px 16px 24px; }
+.slot { display: flex; flex: 1; min-width: 0; min-height: 48px; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; border-radius: 12px; padding: 0 12px; font-size: 14px; font-weight: 600; }
+.slot.coral-solid { background: var(--coral); color: #fff; }
+.slot.coral-outline { border: 1.5px solid var(--coral); color: var(--coral-dark); }
+.slot.plum-outline { border: 1.5px solid var(--plum-light); background: var(--plum-ice); color: var(--plum-dark); }
+.slot svg { width: 16px; height: 16px; }
+.ph { display: flex; align-items: center; gap: 12px; padding-right: 36px; }
+.thumb { flex: none; display: grid; place-items: center; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: #f3efe8; }
+.thumb.s48 { width: 48px; height: 48px; } .thumb.s40 { width: 40px; height: 40px; }
+.thumb svg { width: 86%; height: 86%; }
+.ph h4 { font-size: 15px; font-weight: 700; line-height: 1.375; color: var(--fg); }
+.ph .sub { margin-top: 2px; font-size: 12px; color: var(--muted-fg); }
+.ph .sub b { font-weight: 600; color: var(--plum); }
+.banner { border-radius: 14px; padding: 14px 16px; }
+.banner .t { font-size: 17px; font-weight: 700; line-height: 1.375; }
+.banner .s { margin-top: 4px; font-size: 13px; line-height: 20px; opacity: 0.9; }
+.ok-tone { background: var(--ok-bg); color: var(--ok); }
+.pending-tone { background: var(--pending-bg); color: var(--pending); }
+.danger-tone { background: var(--danger-bg); color: var(--danger); }
+.neutral-tone { background: var(--neutral-bg); color: var(--neutral); }
+.dims { border: 1px solid var(--border); border-radius: 14px; background: var(--card); padding: 4px 16px; }
+.dim { padding: 8px 0; }
+.dim + .dim { border-top: 1px solid var(--border); }
+.dim-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.dim-l { font-size: 13px; font-weight: 600; color: var(--fg); }
+.dim-v { font-size: 12px; font-weight: 500; }
+.dim-v.in { color: var(--ok); } .dim-v.out { color: var(--danger); }
+.track { display: flex; gap: 4px; margin-top: 8px; }
+.seg { position: relative; flex: 1; height: 10px; border-radius: 999px; background: var(--muted); }
+.seg.t { background: var(--ok-bg); box-shadow: inset 0 0 0 1.5px var(--ok); }
+.seg i { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 0 2px var(--bg); }
+.seg i.in { background: var(--ok); } .seg i.out { background: var(--danger); }
+.stops { display: flex; gap: 4px; margin-top: 6px; }
+.stops span { flex: 1; text-align: center; font-size: 10px; line-height: 1.2; color: var(--muted-fg); }
+.stops span.t { font-weight: 600; color: var(--ok); }
+.whycard { border-radius: 14px; background: var(--plum-ice); padding: 14px 16px; }
+.whycard .l { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--plum); }
+.whycard .p1 { margin-top: 8px; font-size: 14px; line-height: 24px; color: var(--fg); }
+.whycard .p2 { margin-top: 8px; font-size: 13px; line-height: 24px; color: var(--muted-fg); }
+.alts-h { margin-bottom: 8px; font-size: 13px; font-weight: 700; color: var(--fg); }
+.alts { display: flex; flex-direction: column; gap: 8px; }
+.alt { display: flex; align-items: center; gap: 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--card); padding: 10px 12px; }
+.alt .nm { flex: 1; min-width: 0; }
+.alt .nm b { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 13px; font-weight: 600; color: var(--fg); }
+.alt .nm span { display: block; margin-top: 2px; font-size: 12px; color: var(--muted-fg); }
+.alt .rt { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.chip { border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.buy { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: var(--coral-dark); }
+.rescan { align-self: center; min-height: 44px; display: flex; align-items: center; font-size: 14px; font-weight: 600; color: var(--plum); }
+
+
+.sheet.auto { top: auto; max-height: 85%; }
+.sheet.auto .sheet-body { flex: none; padding-bottom: 24px; }
+.use-title { padding-right: 40px; font-size: 17px; font-weight: 600; color: var(--fg); }
+.use-sub { margin-top: 4px; font-size: 13px; line-height: 20px; color: var(--muted-fg); }
+.userows { display: flex; flex-direction: column; gap: 8px; }
+.chip.tap { display: inline-flex; align-items: center; gap: 2px; }
+.chip.tap svg { width: 12px; height: 12px; }
+.usehint { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: var(--plum); }
+.usehint svg { width: 14px; height: 14px; }
+.backrow { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: var(--plum); }
+.backrow svg { width: 14px; height: 14px; transform: rotate(180deg); }
+.foot-stack { display: flex; flex-direction: column; align-items: stretch; gap: 10px; width: 100%; }
+.foot-stack .slot { flex: none; width: 100%; }
+
+/* iOS ChaarlieButton (ios/Chaarlie/App/Theme.swift) */
+.sheet-foot { background: #fff; border-top: 1px solid #e6e0da; padding: 16px; gap: 10px; }
+.slot.coral-solid, .slot.plum-outline, .slot.saved, .sheet-cta { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 0; padding: 15px 12px; border-radius: 14px; font-size: 15px; font-weight: 700; line-height: 1.25; text-align: center; }
+.slot.coral-solid, .sheet-cta { background: #aa464e; color: #fff; border: 0; box-shadow: 0 5px 10px rgba(170,70,78,.26); }
+.slot.plum-outline { background: #fff; color: #6b50a0; border: 1px solid rgba(107,80,160,.55); box-shadow: none; }
+.slot.saved { background: #fff; color: #6b50a0; border: 1px solid rgba(107,80,160,.55); }
+.foot-stack { gap: 10px; }
+.savegrp { font-size: 12px; font-weight: 600; color: var(--muted-fg); margin: 4px 2px 0; }
+.saverow { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 10px; min-height: 56px; border: 1px solid var(--border); border-radius: 14px; background: #fff; padding: 12px 14px; }
+.saverow b { font-size: 15px; font-weight: 600; color: var(--fg); }
+.saverow small { display: block; margin-top: 2px; font-size: 12px; color: var(--muted-fg); }
+.usehint a { color: var(--plum); text-decoration: none; }
+.textlink { align-self: center; font-size: 13px; font-weight: 600; color: var(--muted-fg); text-decoration: underline; text-underline-offset: 3px; }
+.userow { display: grid; grid-template-columns: minmax(0, 1fr) auto 20px; align-items: center; gap: 10px; min-height: 56px; border: 1px solid var(--border); border-radius: 12px; background: var(--card); padding: 12px; }
+.userow.on { border-color: var(--plum); background: var(--plum-ice); }
+.userow b { font-size: 15px; font-weight: 600; color: var(--fg); }
+.sheet-cta { display: flex; align-items: center; justify-content: center; min-height: 52px; border-radius: 14px; background: var(--coral); font-size: 16px; font-weight: 700; color: #fff; }
+.toast { position: absolute; left: 16px; right: 16px; bottom: 96px; z-index: 5; border: 1px solid var(--border); border-radius: 8px; background: #fff; padding: 12px 16px; box-shadow: 0 10px 25px -5px rgba(0,0,0,.15); font-size: 14px; font-weight: 600; color: var(--fg); }
+.slot.saved { border: 1.5px solid var(--plum-light); background: var(--plum-ice); color: var(--plum-dark); }
+.caption-under { margin-top: 10px; font-size: 12px; line-height: 1.5; color: var(--text-sub); }
+
+</style>
+</head>
+<body>
+<header class="canvas-head"><p class="crumb"><a href="index.html">Mockups</a> · Katalog-Vollständigkeit</p><h1>Scan: ein Produkt, mehrere Anwendungen</h1><p class="lede">Beispiel Garnier Hair Food Macadamia. Ein Speichern-Sheet, ein Tipp.</p></header><section class="group"><h2>Ablauf</h2><div class="row"><div class="variant"><p class="tag">1 · Ergebnis</p><p class="cap">Verdict für die Anwendung, die dein Plan braucht. Andere Anwendungen direkt darunter.</p><div class="phone"><div class="cam"></div><div class="backdrop"></div><div class="sheet"><div class="grab"></div><span class="x"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></span><div class="sheet-body"><div class="ph"><span class="thumb s48"><svg viewBox="0 0 60 100" aria-hidden="true"><rect x="8" y="33" width="44" height="13" rx="3" fill="#e79aa0"/><rect x="6" y="44" width="48" height="44" rx="8" fill="#f6d3d3" stroke="#e9b8b9"/><text x="30" y="62" font-family="Arial, sans-serif" font-weight="700" font-size="7" text-anchor="middle" fill="#8a3c47">HAIR</text><text x="30" y="71" font-family="Arial, sans-serif" font-weight="700" font-size="7" text-anchor="middle" fill="#8a3c47">FOOD</text><circle cx="30" cy="80" r="3" fill="#c98a5c"/></svg></span><div style="min-width:0"><h4>Garnier Hair Food Macadamia</h4><p class="sub">Garnier · <b>Conditioner</b></p></div></div><div class="banner ok-tone"><p class="t">Passt zu deinem Haar</p><p class="s">2 von 2 Zielbereichen getroffen</p></div><p class="usehint">Auch nutzbar als&nbsp;<a>Maske ›</a>&nbsp;·&nbsp;<a>Leave-in ›</a></p><section class="dims"><div class="dim"><div class="dim-top"><p class="dim-l">Pflegegewicht</p><p class="dim-v in">&#10003; mittel</p></div><div class="track"><span class="seg t"></span><span class="seg t"><i class="in"></i></span><span class="seg"></span></div><div class="stops"><span class="t">leicht</span><span class="t">mittel</span><span class="">reichhaltig</span></div></div><div class="dim"><div class="dim-top"><p class="dim-l">Pflegerichtung</p><p class="dim-v in">&#10003; Feuchtigkeit</p></div><div class="track"><span class="seg t"><i class="in"></i></span><span class="seg t"></span><span class="seg"></span></div><div class="stops"><span class="t">Feuchtigkeit</span><span class="t">ausgeglichen</span><span class="">Protein</span></div></div></section><section class="whycard"><p class="l">Warum das zu deinem Haar passt</p><p class="p1">Pflegt deine trockenen Längen, ohne dein feines Haar zu beschweren.</p><p class="p2">Mittleres Pflegegewicht, feuchtigkeitsbetont.</p></section></div><div class="sheet-foot"><span class="slot coral-solid">Kaufen · 5,95 €<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></span><span class="slot plum-outline">Speichern</span></div></div></div></div><div class="variant"><p class="tag">2 · Leave-in angetippt</p><p class="cap">Volles Ergebnis dieser Anwendung.</p><div class="phone"><div class="cam"></div><div class="backdrop"></div><div class="sheet"><div class="grab"></div><span class="x"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></span><div class="sheet-body"><div class="ph"><span class="thumb s48"><svg viewBox="0 0 60 100" aria-hidden="true"><rect x="8" y="33" width="44" height="13" rx="3" fill="#e79aa0"/><rect x="6" y="44" width="48" height="44" rx="8" fill="#f6d3d3" stroke="#e9b8b9"/><text x="30" y="62" font-family="Arial, sans-serif" font-weight="700" font-size="7" text-anchor="middle" fill="#8a3c47">HAIR</text><text x="30" y="71" font-family="Arial, sans-serif" font-weight="700" font-size="7" text-anchor="middle" fill="#8a3c47">FOOD</text><circle cx="30" cy="80" r="3" fill="#c98a5c"/></svg></span><div style="min-width:0"><h4>Garnier Hair Food Macadamia</h4><p class="sub">Garnier · <b>Conditioner</b></p></div></div><div class="banner ok-tone"><p class="t">Passt zu deinem Haar</p><p class="s">2 von 2 Zielbereichen getroffen</p></div><p class="usehint">Auch nutzbar als&nbsp;<a>Maske ›</a>&nbsp;·&nbsp;<a>Leave-in ›</a></p><section class="dims"><div class="dim"><div class="dim-top"><p class="dim-l">Pflegegewicht</p><p class="dim-v in">&#10003; mittel</p></div><div class="track"><span class="seg t"></span><span class="seg t"><i class="in"></i></span><span class="seg"></span></div><div class="stops"><span class="t">leicht</span><span class="t">mittel</span><span class="">reichhaltig</span></div></div><div class="dim"><div class="dim-top"><p class="dim-l">Pflegerichtung</p><p class="dim-v in">&#10003; Feuchtigkeit</p></div><div class="track"><span class="seg t"><i class="in"></i></span><span class="seg t"></span><span class="seg"></span></div><div class="stops"><span class="t">Feuchtigkeit</span><span class="t">ausgeglichen</span><span class="">Protein</span></div></div></section><section class="whycard"><p class="l">Warum das zu deinem Haar passt</p><p class="p1">Pflegt deine trockenen Längen, ohne dein feines Haar zu beschweren.</p><p class="p2">Mittleres Pflegegewicht, feuchtigkeitsbetont.</p></section></div><div class="sheet-foot"><span class="slot coral-solid">Kaufen · 5,95 €<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></span><span class="slot plum-outline">Speichern</span></div></div><div class="backdrop" style="background:rgba(0,0,0,.28)"></div><div class="sheet"><div class="grab"></div><span class="x"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></span><div class="sheet-body"><div class="ph"><span class="thumb s48"><svg viewBox="0 0 60 100" aria-hidden="true"><rect x="8" y="33" width="44" height="13" rx="3" fill="#e79aa0"/><rect x="6" y="44" width="48" height="44" rx="8" fill="#f6d3d3" stroke="#e9b8b9"/><text x="30" y="62" font-family="Arial, sans-serif" font-weight="700" font-size="7" text-anchor="middle" fill="#8a3c47">HAIR</text><text x="30" y="71" font-family="Arial, sans-serif" font-weight="700" font-size="7" text-anchor="middle" fill="#8a3c47">FOOD</text><circle cx="30" cy="80" r="3" fill="#c98a5c"/></svg></span><div style="min-width:0"><h4>Garnier Hair Food Macadamia</h4><p class="sub">Garnier · <b>Leave-in</b></p></div></div><div class="banner danger-tone"><p class="t">Passt nicht als Leave-in</p><p class="s">Zu schwer für dein feines Haar</p></div><section class="dims"><div class="dim"><div class="dim-top"><p class="dim-l">Pflegegewicht</p><p class="dim-v out">&#10005; mittel</p></div><div class="track"><span class="seg t"></span><span class="seg"><i class="out"></i></span><span class="seg"></span></div><div class="stops"><span class="t">leicht</span><span class="">mittel</span><span class="">reichhaltig</span></div></div></section><section class="whycard"><p class="l">Warum nicht</p><p class="p1">Bleibt im Haar und beschwert es. Ausgewaschen als Conditioner passt es.</p></section><section><p class="alts-h">Leichtere Leave-ins</p><div class="alts"><div class="alt"><span class="thumb s40"><svg viewBox="0 0 60 100" aria-hidden="true"><rect x="24" y="4" width="11" height="8" rx="1.5" fill="#bdb8b2"/><path d="M34 7h8" stroke="#bdb8b2" stroke-width="3" stroke-linecap="round"/><rect x="22" y="11" width="16" height="8" rx="2" fill="#56866b"/><rect x="16" y="18" width="28" height="76" rx="8" fill="#d6e8dc" stroke="#b8d3c1"/><rect x="21" y="44" width="18" height="22" rx="3" fill="#fff" opacity=".7"/></svg></span><span class="nm"><b>Leichtes Leave-in-Spray</b><span>Leave-in · 3,95 €</span></span><span class="rt"><span class="chip ok-tone">Passt</span></span></div></div></section></div><div class="sheet-foot"><span class="slot coral-solid">Zurück</span><span class="slot plum-outline">Speichern</span></div></div></div></div><div class="variant"><p class="tag">3 · Speichern</p><p class="cap">Ein Sheet wie heute. Bei mehreren Anwendungen: eine Zeile pro Anwendung. Ein Tipp speichert.</p><div class="phone"><div class="cam"></div><div class="backdrop"></div><div class="sheet"><div class="grab"></div><span class="x"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></span><div class="sheet-body"><div class="ph"><span class="thumb s48"><svg viewBox="0 0 60 100" aria-hidden="true"><rect x="8" y="33" width="44" height="13" rx="3" fill="#e79aa0"/><rect x="6" y="44" width="48" height="44" rx="8" fill="#f6d3d3" stroke="#e9b8b9"/><text x="30" y="62" font-family="Arial, sans-serif" font-weight="700" font-size="7" text-anchor="middle" fill="#8a3c47">HAIR</text><text x="30" y="71" font-family="Arial, sans-serif" font-weight="700" font-size="7" text-anchor="middle" fill="#8a3c47">FOOD</text><circle cx="30" cy="80" r="3" fill="#c98a5c"/></svg></span><div style="min-width:0"><h4>Garnier Hair Food Macadamia</h4><p class="sub">Garnier · <b>Conditioner</b></p></div></div><div class="banner ok-tone"><p class="t">Passt zu deinem Haar</p><p class="s">2 von 2 Zielbereichen getroffen</p></div><p class="usehint">Auch nutzbar als&nbsp;<a>Maske ›</a>&nbsp;·&nbsp;<a>Leave-in ›</a></p><section class="dims"><div class="dim"><div class="dim-top"><p class="dim-l">Pflegegewicht</p><p class="dim-v in">&#10003; mittel</p></div><div class="track"><span class="seg t"></span><span class="seg t"><i class="in"></i></span><span class="seg"></span></div><div class="stops"><span class="t">leicht</span><span class="t">mittel</span><span class="">reichhaltig</span></div></div><div class="dim"><div class="dim-top"><p class="dim-l">Pflegerichtung</p><p class="dim-v in">&#10003; Feuchtigkeit</p></div><div class="track"><span class="seg t"><i class="in"></i></span><span class="seg t"></span><span class="seg"></span></div><div class="stops"><span class="t">Feuchtigkeit</span><span class="t">ausgeglichen</span><span class="">Protein</span></div></div></section><section class="whycard"><p class="l">Warum das zu deinem Haar passt</p><p class="p1">Pflegt deine trockenen Längen, ohne dein feines Haar zu beschweren.</p><p class="p2">Mittleres Pflegegewicht, feuchtigkeitsbetont.</p></section></div><div class="sheet-foot"><span class="slot coral-solid">Kaufen · 5,95 €<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></span><span class="slot plum-outline">Speichern</span></div></div><div class="backdrop" style="background:rgba(0,0,0,.28)"></div><div class="sheet auto"><div class="grab"></div><span class="x"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></span><div class="sheet-body"><div><p class="use-title">Wohin speichern?</p></div><p class="savegrp">Benutze ich schon als …</p><div class="userows"><div class="saverow"><span><b>Conditioner</b></span><span class="chip ok-tone">Passt</span></div><div class="saverow"><span><b>Maske</b></span><span class="chip pending-tone">Eingeschränkt</span></div><div class="saverow"><span><b>Leave-in</b></span><span class="chip danger-tone">Passt nicht</span></div></div><div class="userows" style="margin-top:6px"><div class="saverow"><span><b>Auf die Merkliste</b><small>Zum später Kaufen</small></span></div></div></div></div></div></div><div class="variant"><p class="tag">4 · Gespeichert</p><p class="cap">Als Conditioner in der Routine.</p><div class="phone"><div class="cam"></div><div class="backdrop"></div><div class="sheet"><div class="grab"></div><span class="x"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></span><div class="sheet-body"><div class="ph"><span class="thumb s48"><svg viewBox="0 0 60 100" aria-hidden="true"><rect x="8" y="33" width="44" height="13" rx="3" fill="#e79aa0"/><rect x="6" y="44" width="48" height="44" rx="8" fill="#f6d3d3" stroke="#e9b8b9"/><text x="30" y="62" font-family="Arial, sans-serif" font-weight="700" font-size="7" text-anchor="middle" fill="#8a3c47">HAIR</text><text x="30" y="71" font-family="Arial, sans-serif" font-weight="700" font-size="7" text-anchor="middle" fill="#8a3c47">FOOD</text><circle cx="30" cy="80" r="3" fill="#c98a5c"/></svg></span><div style="min-width:0"><h4>Garnier Hair Food Macadamia</h4><p class="sub">Garnier · <b>Conditioner</b></p></div></div><div class="banner ok-tone"><p class="t">Passt zu deinem Haar</p><p class="s">2 von 2 Zielbereichen getroffen</p></div><section class="dims"><div class="dim"><div class="dim-top"><p class="dim-l">Pflegegewicht</p><p class="dim-v in">&#10003; mittel</p></div><div class="track"><span class="seg t"></span><span class="seg t"><i class="in"></i></span><span class="seg"></span></div><div class="stops"><span class="t">leicht</span><span class="t">mittel</span><span class="">reichhaltig</span></div></div><div class="dim"><div class="dim-top"><p class="dim-l">Pflegerichtung</p><p class="dim-v in">&#10003; Feuchtigkeit</p></div><div class="track"><span class="seg t"><i class="in"></i></span><span class="seg t"></span><span class="seg"></span></div><div class="stops"><span class="t">Feuchtigkeit</span><span class="t">ausgeglichen</span><span class="">Protein</span></div></div></section><section class="whycard"><p class="l">Warum das zu deinem Haar passt</p><p class="p1">Pflegt deine trockenen Längen, ohne dein feines Haar zu beschweren.</p><p class="p2">Mittleres Pflegegewicht, feuchtigkeitsbetont.</p></section></div><div class="sheet-foot"><span class="slot coral-solid">Kaufen · 5,95 €<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></span><span class="slot saved">&#10003; In deiner Routine</span></div></div><div class="toast">Gespeichert – als Conditioner in deiner Routine</div></div></div></div></section>
+</body>
+</html>
