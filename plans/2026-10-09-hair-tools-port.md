@@ -75,7 +75,7 @@ Must remain unchanged: Stage 1–3 behavior with the flag off; the `user_facts_s
 
 ## 5. Decision coverage
 
-Decision coverage: **confirmed**. Journey sign-off: Nick accepted the Rev. 5 structure („Okay, I think I like that") with the wash-day ordering rule; the reworked mockup is presented for a final glance while Task 1 (pure engine copy) proceeds.
+Decision coverage: **confirmed**. Journey sign-off: Nick accepted the Rev. 5 structure („Okay, I think I like that") with the wash-day ordering rule; on the reworked mockup. Implemented and verified 2026-10-11 — receipt `plans/receipts/2026-10-11-hair-tools-port-ready-check.md`.
 
 ### 5.1 Confirmed with Nick (2026-10-09)
 
@@ -217,5 +217,7 @@ Migration before code deploy (additive); Nick's copy pass on invented strings (b
 ## 11. Findings ledger
 
 Round 1 (`01a120be…`): F1–F14 accepted and closed (F5 moot after the temperature drop; F12 superseded by the Profil restructure). Round 2 (`01a120d4…`): R2-1…R2-4 accepted and closed (R2-3 → read-time derivation). Round 3 (`01a120e1…`): R3-1, R3-2 accepted; R3-P adopted as clarification. Full tables with evidence are in the Rev. 3b–4 history of this file (git) and summarised in the ledger addendum (Task 12).
+
+Whole-branch Codex review 2026-10-11 (session `01a129b6…`, tree `c4d83e0e`): 3 majors (flag-off facts expansion, rollback leaving tool answers in drafts, „Tools ergänzen" trapped on the checkpoint) → fixed test-first (`e13b24ae`, `2821a396`, `a58e14de`), scoped re-review: all addressed. Final gates green on the merged tree `aec3f743`.
 
 Rev. 4–5 owner rulings (not findings): temperature dropped; Diffusor = blow-drying; Profil (b) → Rev. 5 structure; wash-day order; Ziele into Haar-Check. Counterpart review closed; Rev. 5 moves questions between modules, adds one derivation mapping and an ordering rule, and introduces no new storage mechanism.
