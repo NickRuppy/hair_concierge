@@ -1,6 +1,71 @@
 {
  "captured_at": "2026-10-11T13:48:49.533788+00:00",
- "source": "prod pqdkhefxsxkyeqelqegq, read-only SELECT (capture/prestate.sql), TimeZone UTC. First capture 2026-10-09T21:11:56Z after #654/#655 reached prod; recaptured 2026-10-11T13:48:49Z after #660 step 1 (20261011132316) reached prod (F01): md5 of every section's jsonb text equals the first capture (products differ only by numeric scale lost in JSON transport, e.g. net_content_value 75.0 vs 75; updated_at stamps identical), so the row bytes are unchanged",
+ "source": "prod pqdkhefxsxkyeqelqegq, read-only SELECT (capture/prestate.sql), TimeZone UTC. First capture 2026-10-09T21:11:56Z after #654/#655 reached prod; recaptured 2026-10-11T13:48:49Z after #660 step 1 (20261011132316) reached prod (F01): md5 of every section's jsonb text equals the first capture (products differ only by numeric scale lost in JSON transport, e.g. net_content_value 75.0 vs 75; updated_at stamps identical), so the row bytes are unchanged. Guidance sections added by a targeted read-only capture at 2026-10-11T14:29:45.064989+00:00 (Codex F01): application_guidance_protocols = every row of guidance_key scalp.rinse-off.v2 (one: version 2, active, contract 2); rinse_off_scalp_care_pointers = every product_application_protocols row whose application_family is rinse_off_scalp_care (Balea and Isana Kopfhautpeeling; context only, never written)",
+ "application_guidance_protocols": [
+  {
+   "id": "13c993b5-369e-5087-8454-d0f2ac7de02f",
+   "locale": "de",
+   "status": "active",
+   "payload": {
+    "role": "scalp_care",
+    "scope": {
+     "kind": "application_family",
+     "category": "scalp_care"
+    },
+    "steps": [
+     {
+      "action": "apply_product",
+      "stepKey": "apply",
+      "copyTemplateDe": "Scheitelweise auf die Kopfhaut geben und sanft verteilen."
+     },
+     {
+      "action": "wait",
+      "stepKey": "wait",
+      "copyTemplateDe": "{{contact_time_de}} einwirken lassen."
+     },
+     {
+      "action": "rinse",
+      "stepKey": "rinse",
+      "copyTemplateDe": "Gründlich ausspülen."
+     }
+    ],
+    "locale": "de",
+    "evidence": [
+     {
+      "checkedAt": "2026-08-12",
+      "sourceUrl": "https://www.aad.org/public/everyday-care/hair-scalp-care/hair/healthy-hair-tips",
+      "sourceType": "professional_authority"
+     }
+    ],
+    "sequence": {
+     "after": [],
+     "anchor": "pre_wash",
+     "before": [],
+     "conflictsWith": []
+    },
+    "guidanceKey": "scalp.rinse-off.v2",
+    "contractKind": "family_template",
+    "schemaVersion": 2,
+    "protocolVersion": 2,
+    "applicationFamily": "rinse_off_scalp_care",
+    "compatibleDayTypes": [
+     "wash_day"
+    ]
+   },
+   "role_key": "scalp_care",
+   "created_at": "2026-08-13T06:58:13.851968+00:00",
+   "product_id": null,
+   "scope_kind": "application_family",
+   "updated_at": "2026-08-13T06:58:13.851968+00:00",
+   "verified_at": "2026-08-12T00:00:00+00:00",
+   "category_key": "scalp_care",
+   "guidance_key": "scalp.rinse-off.v2",
+   "contract_version": 2,
+   "protocol_version": 2,
+   "application_family": "rinse_off_scalp_care"
+  }
+ ],
+ "application_guidance_protocols_captured_at": "2026-10-11T14:29:45.064989+00:00",
  "catalog_enrichment_applied_items_for_batch": [],
  "gtin_owners": [
   [
@@ -22674,6 +22739,96 @@
    ],
    "is_chaarlie_recommended": false,
    "purchase_link_checked_at": "2026-06-27T00:00:00+00:00"
+  }
+ ],
+ "rinse_off_scalp_care_pointers": [
+  {
+   "id": "a0bb7d30-cecd-4f5c-a134-b8412a122e63",
+   "product_id": "2544de60-e295-47ec-98a1-6b4ca58ce4be",
+   "role": "scalp_exfoliant",
+   "category": "scalp_care",
+   "brand": "Isana",
+   "product_name": "Kopfhautpeeling Tiefenreinigung",
+   "guidance_payload_v2": {
+    "role": "scalp_care",
+    "facts": {
+     "heat": null,
+     "rinse": "rinse_out",
+     "amount": null,
+     "contactTime": {
+      "kind": "seconds",
+      "seconds": 900
+     },
+     "applicationArea": "scalp_roots",
+     "applicationState": "clean_damp_scalp",
+     "conditionerPolicy": "not_applicable"
+    },
+    "scope": {
+     "kind": "product",
+     "category": "scalp_care",
+     "productId": "2544de60-e295-47ec-98a1-6b4ca58ce4be"
+    },
+    "evidence": [
+     {
+      "checkedAt": "2026-08-11",
+      "sourceUrl": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-kopfhautpeeling-tiefenreinigung/p/4068134100023",
+      "sourceType": "retailer"
+     }
+    ],
+    "exactSteps": [],
+    "sourceRole": "scalp_exfoliant",
+    "workflowId": null,
+    "cautionCodes": [],
+    "contractKind": "product_pointer",
+    "schemaVersion": 2,
+    "applicationFamily": "rinse_off_scalp_care",
+    "runtimeBlockerCode": null,
+    "requiredCompanionProductId": null
+   }
+  },
+  {
+   "id": "9e30744f-c015-45ec-8c56-aa29ebeb9cbd",
+   "product_id": "e51cfce0-fd76-4873-a868-cc3ca0301cbc",
+   "role": "scalp_exfoliant",
+   "category": "scalp_care",
+   "brand": "Balea",
+   "product_name": "Kopfhautpflege Peeling Tiefenreinigung",
+   "guidance_payload_v2": {
+    "role": "scalp_care",
+    "facts": {
+     "heat": null,
+     "rinse": "rinse_out",
+     "amount": null,
+     "contactTime": {
+      "kind": "seconds",
+      "seconds": 900
+     },
+     "applicationArea": "scalp_roots",
+     "applicationState": "clean_damp_scalp",
+     "conditionerPolicy": "not_applicable"
+    },
+    "scope": {
+     "kind": "product",
+     "category": "scalp_care",
+     "productId": "e51cfce0-fd76-4873-a868-cc3ca0301cbc"
+    },
+    "evidence": [
+     {
+      "checkedAt": "2026-08-11",
+      "sourceUrl": "https://www.dm.de/p/d/1700670/balea-professional-kopfhautpflege-peeling-tiefenreinigung",
+      "sourceType": "retailer"
+     }
+    ],
+    "exactSteps": [],
+    "sourceRole": "scalp_exfoliant",
+    "workflowId": null,
+    "cautionCodes": [],
+    "contractKind": "product_pointer",
+    "schemaVersion": 2,
+    "applicationFamily": "rinse_off_scalp_care",
+    "runtimeBlockerCode": null,
+    "requiredCompanionProductId": null
+   }
   }
  ],
  "references": {

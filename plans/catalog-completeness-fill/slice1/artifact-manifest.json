@@ -1,10 +1,10 @@
 {
   "schema": "catalog-completeness-fill-slice1-artifact-manifest-v1",
   "generator": "plans/catalog-completeness-fill/slice1/generate.ts",
-  "content_fingerprint": "4398744e32e5b643a6e509969d09d936aed0260bbb7c4e5bc1dca6cc33647ca9",
+  "content_fingerprint": "731eeac8ba0338aa636f31f664ccfee5755fb37caa545061739d0c9fa067e68f",
   "inputs": {
-    "plans/catalog-completeness-fill/slice1/prestate.json": "75fd6d8e5d5d0c070469a767a07f0b8c48f2c6a59d2040017a5925debd6276eb",
-    "plans/catalog-completeness-fill/slice1/fixtures/prod-schema-2026-10-11.json": "46a2c5b6401aa4edace88a9e0da9e49ad0ab76b87fc9f6681dc8df2131ec366c",
+    "plans/catalog-completeness-fill/slice1/prestate.json": "327dd431052472ae33976f6f950ac1b070162fcc06119ab822006e086106bd1f",
+    "plans/catalog-completeness-fill/slice1/fixtures/prod-schema-2026-10-11.json": "440040ad2044c97cccdda368596bbc421b69a5dc2e6c86212cad2ff1bde010c5",
     "plans/catalog-completeness-fill/research/r1-leave-in-heat/findings.json": "b5cb21fea5269a24a8db023c950f5486be664f45a201f2ca5c42072f1e84b196",
     "plans/catalog-completeness-fill/research/r4-user-submitted-14/proposal/protocol-rows.json": "7e4e860a9309904cbe23131fb02ecaddfdbbed4462742fff14f6faa0c9156c87",
     "plans/catalog-completeness-fill/research/r4-user-submitted-14/findings.json": "96d4b254b55113b439fdbb72fa63a62b89290c719799e3ec7c1c834d10d25c60",
@@ -17,10 +17,10 @@
     "plans/catalog-completeness-fill/slice1/inputs/neqi-rosemary-scalp-care.json": "ef770bc09c0b9c3c28d01c68e31b32ace439f5a1f9a364d5013849baeb662d47"
   },
   "outputs": {
-    "plans/catalog-completeness-fill/slice1/target-state.json": "24887b1bb337f9a629163314305f2d3e9f424ffb5952a08bec8b79a3d65e141c",
-    "supabase/migrations/20261011140000_catalog_completeness_fill_slice1.sql": "21f899d8037586afc95b31564d826c62dc9402fd0cdb0b0ba5d477d3ffc64379",
-    "plans/catalog-completeness-fill/slice1/rollback.sql": "c401ed2422fe0622d6b739665f58f816a540e18ddda9f51292def544435fcf66",
-    "plans/catalog-completeness-fill/slice1/verify.sql": "f0be6037efc236a9242b1be836273a359cd7100ce08df07ef32062f24aecde79"
+    "plans/catalog-completeness-fill/slice1/target-state.json": "fd26e0990e617dbabaef05dad73d4e2c16e2f0cebd35bf8c5b3b50dc1533e4d7",
+    "supabase/migrations/20261011140000_catalog_completeness_fill_slice1.sql": "304421abebe712cbeaa4b1d80c2c921bfd07e41674657d02fcd4496fef64df7b",
+    "plans/catalog-completeness-fill/slice1/rollback.sql": "fe80f93027d5061fd3cc56ac49f36c3e92cc75c713f942cf3cc8853b7c1d8af7",
+    "plans/catalog-completeness-fill/slice1/verify.sql": "0e2cd366bae240e671e6e285bf08e3efa581f043cf07c858f559495e0289e78f"
   },
-  "combined_sha256": "d25587b3ff000e7c01b083db0d8909bfa419f3c415ad40a4002a8129b649c804"
+  "combined_sha256": "87b3e7b021c7eb8364995d0b9023611dddc4aa646a557937c6fdb9003289d4fb"
 }

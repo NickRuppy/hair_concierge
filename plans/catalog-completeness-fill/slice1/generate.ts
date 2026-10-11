@@ -47,6 +47,11 @@ import {
 } from "@/lib/product-intake/expansion-apply-templates"
 import type { ExpansionTemplateId } from "@/lib/product-intake/expansion-manifest"
 import { applicationGuidanceProtocolSchema } from "@/lib/routines/personal-plan/application/contracts"
+import { applicationFamilyTemplateV2Schema } from "@/lib/routines/personal-plan/application/contracts-v2"
+import {
+  SHARED_APPLICATION_TEMPLATE_BY_KEY_V2,
+  SHARED_APPLICATION_TEMPLATES_AT_ARTIFACT_FREEZE_V2,
+} from "@/lib/routines/personal-plan/application/shared-templates-v2"
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(HERE, "../../..")
@@ -198,6 +203,8 @@ const schemaTables = new Map(schemaFixture.tables.map((table) => [table.name, ta
 
 const prestate = JSON.parse(readFileSync(PRESTATE_PATH, "utf8")) as Record<string, unknown> & {
   captured_at: string
+  application_guidance_protocols: Row[]
+  rinse_off_scalp_care_pointers: Row[]
   personal_plan_catalog_fact_evidence_keys: Array<[string, string, string, string]>
   catalog_enrichment_applied_items_for_batch: Row[]
   gtin_owners: Array<[string, string, string]>
@@ -299,9 +306,12 @@ function tableMeta(name: string): TableMeta {
   }
 }
 const META = Object.fromEntries(
-  [...STATE_TABLES, "personal_plan_catalog_fact_evidence", "catalog_enrichment_applied_items"].map(
-    (name) => [name, tableMeta(name)],
-  ),
+  [
+    ...STATE_TABLES,
+    "personal_plan_catalog_fact_evidence",
+    "catalog_enrichment_applied_items",
+    "application_guidance_protocols",
+  ].map((name) => [name, tableMeta(name)]),
 ) as Record<string, TableMeta>
 
 function pgType(table: string, column: string): string {
@@ -1790,6 +1800,108 @@ for (const id of [ID.baleaAquaMask, ID.baleaAquaLeaveIn]) {
 }
 
 // ---------------------------------------------------------------------------
+// 9b. Shared rinse-off scalp template v2 -> v3 (F03 runtime, Codex review F01)
+// ---------------------------------------------------------------------------
+//
+// The Anwendung page and discovery read the shared family templates from
+// application_guidance_protocols (active, de, contract_version 2), not from the
+// TS registry. Precedent 20260929231000_oil_day_type_rulings: active content is
+// immutable (reject_active_application_content_mutation), so the active
+// version 2 row is retired (never deleted) and version 3 is published under the
+// same guidance_key. The v3 payload is the TS registry entry itself (single
+// source); the captured v2 payload must equal the artifact-freeze registry entry.
+// Like that precedent, no evidence row or receipt is written for the template
+// (both ledgers are product-scoped); the change is part of the fingerprinted
+// content and of every guard, postflight and rollback check.
+
+const GUIDANCE_KEY = "scalp.rinse-off.v2"
+const GUIDANCE_TABLE = "application_guidance_protocols"
+const capturedGuidance = prestate.application_guidance_protocols
+assert(capturedGuidance.length === 1, `${GUIDANCE_KEY}: exactly one captured row (version 2)`)
+const GUIDANCE_V2 = capturedGuidance[0]!
+assert(
+  GUIDANCE_V2.guidance_key === GUIDANCE_KEY &&
+    GUIDANCE_V2.protocol_version === 2 &&
+    GUIDANCE_V2.contract_version === 2 &&
+    GUIDANCE_V2.status === "active" &&
+    GUIDANCE_V2.locale === "de" &&
+    GUIDANCE_V2.scope_kind === "application_family" &&
+    GUIDANCE_V2.product_id === null &&
+    GUIDANCE_V2.verified_at !== null,
+  `${GUIDANCE_KEY}: captured row is the active contract-2 version 2 family template`,
+)
+const frozenGuidance = SHARED_APPLICATION_TEMPLATES_AT_ARTIFACT_FREEZE_V2.find(
+  (entry) => entry.guidanceKey === GUIDANCE_KEY,
+)
+assert(
+  frozenGuidance && canonical(GUIDANCE_V2.payload) === canonical(frozenGuidance),
+  `${GUIDANCE_KEY}: captured version 2 payload equals the artifact-freeze registry entry`,
+)
+const liveGuidance = SHARED_APPLICATION_TEMPLATE_BY_KEY_V2.get(GUIDANCE_KEY)
+assert(liveGuidance?.protocolVersion === 3, `${GUIDANCE_KEY}: TS registry publishes version 3`)
+const GUIDANCE_V3_PAYLOAD = clone(applicationFamilyTemplateV2Schema.parse(liveGuidance)) as Row
+assert(
+  liveGuidance.scope.kind === "application_family" &&
+    liveGuidance.scope.category === GUIDANCE_V2.category_key &&
+    liveGuidance.role === GUIDANCE_V2.role_key &&
+    liveGuidance.applicationFamily === GUIDANCE_V2.application_family &&
+    liveGuidance.locale === "de",
+  `${GUIDANCE_KEY}: version 3 keeps the indexed columns of version 2`,
+)
+/** Version 2 after the retirement (updated_at is stamped by the immutability trigger). */
+const GUIDANCE_V2_RETIRED: Row = {
+  ...Object.fromEntries(Object.entries(GUIDANCE_V2).filter(([col]) => col !== "updated_at")),
+  status: "retired",
+}
+/** Version 3 without its apply-time stamps (verified_at = created_at = updated_at = now()). */
+const GUIDANCE_V3: Row = {
+  id: deterministicUuid(`${BATCH_ID}:${GUIDANCE_TABLE}:${GUIDANCE_KEY}:3`),
+  guidance_key: GUIDANCE_KEY,
+  protocol_version: 3,
+  locale: "de",
+  scope_kind: "application_family",
+  category_key: GUIDANCE_V2.category_key,
+  role_key: GUIDANCE_V2.role_key,
+  product_id: null,
+  application_family: GUIDANCE_V2.application_family,
+  payload: GUIDANCE_V3_PAYLOAD,
+  status: "active",
+  contract_version: 2,
+}
+const guidanceColumns = META[GUIDANCE_TABLE]!.columns.map((c) => c.name)
+assert(
+  canonical(Object.keys(GUIDANCE_V2).sort()) === canonical([...guidanceColumns].sort()),
+  `${GUIDANCE_TABLE}: captured row has exactly the production columns`,
+)
+/** Product protocols that render through this template (context, never written). */
+const GUIDANCE_AFFECTED = [
+  ...prestate.rinse_off_scalp_care_pointers.map((row) => ({
+    product_id: String(row.product_id),
+    role: String(row.role),
+    label: `${String(row.brand)} ${String(row.product_name)}`,
+  })),
+  ...state.product_application_protocols
+    .filter((row) => row.application_family === "rinse_off_scalp_care")
+    .map((row) => ({
+      product_id: String(row.product_id),
+      role: String(row.role),
+      label: `${String(productRow(String(row.product_id)).brand)} ${String(productRow(String(row.product_id)).name)}`,
+    })),
+].sort((a, b) => codepointCompare(`${a.product_id}|${a.role}`, `${b.product_id}|${b.role}`))
+const GUIDANCE_CHANGE = {
+  reason:
+    "F03 runtime (Codex F01): the shared rinse-off scalp template is read from application_guidance_protocols; version 2 is retired and the TS registry's version 3 is published",
+  guidance_key: GUIDANCE_KEY,
+  retire: {
+    id: GUIDANCE_V2.id,
+    before: GUIDANCE_V2,
+    after_without_updated_at: GUIDANCE_V2_RETIRED,
+  },
+  publish: GUIDANCE_V3,
+  affected_product_protocols: GUIDANCE_AFFECTED,
+}
+
+// ---------------------------------------------------------------------------
 // 10. Batch scope, fingerprint, expected rows
 // ---------------------------------------------------------------------------
 
@@ -1958,6 +2070,7 @@ const targetContent = {
   // The guard content is part of the reviewed content: a re-captured preimage
   // must change the fingerprint.
   link_moves: LINK_MOVES,
+  application_guidance_template: GUIDANCE_CHANGE,
   preimage: { captured_at: prestate.captured_at, stamps: preimage, changed: preimageChanged },
 }
 const FINGERPRINT = catalogAuthorityValueFingerprint(targetContent)
@@ -2069,6 +2182,10 @@ const NEQI_REFERENCE_SET_CHECKS: Check[] = [
   },
 ]
 
+const GUIDANCE_KEY_ROWS = `(SELECT coalesce(pg_catalog.jsonb_agg(pg_catalog.to_jsonb(t) ORDER BY t.protocol_version, t.id), '[]'::jsonb) FROM public.${GUIDANCE_TABLE} t WHERE t.guidance_key = ${sqlText(GUIDANCE_KEY)})`
+const guidanceRow = (id: unknown, minus: string[]) =>
+  `(SELECT pg_catalog.to_jsonb(t)${minus.map((c) => ` - '${c}'`).join("")} FROM public.${GUIDANCE_TABLE} t WHERE t.id = '${String(id)}'::uuid)`
+
 const PRESTATE_CHECKS: Check[] = [
   ...STATE_TABLES.map((table) => ({
     name: `${table}_keys_and_stamps`,
@@ -2090,6 +2207,11 @@ const PRESTATE_CHECKS: Check[] = [
   ),
   linkRowCheck("neqi_usage_preimage", "user_product_usage", linkBefore.user_product_usage, true),
   ...NEQI_REFERENCE_SET_CHECKS,
+  {
+    // Every row of the key, stamps included: exactly the captured active version 2.
+    name: "application_guidance_protocols_preimage",
+    predicate: `${GUIDANCE_KEY_ROWS} = ${sqlJson([GUIDANCE_V2])}`,
+  },
   {
     name: "new_gtins_unowned",
     predicate: `NOT EXISTS (SELECT 1 FROM public.product_identifiers t WHERE t.canonical_gtin14 IN ('00018084067994', '04070765027518', '08700216939508'))`,
@@ -2175,6 +2297,34 @@ function targetChecks(): Check[] {
     })
   }
   checks.push(...NEQI_REFERENCE_SET_CHECKS)
+  checks.push(
+    {
+      name: "application_guidance_key_versions",
+      predicate: `(SELECT coalesce(pg_catalog.jsonb_agg(pg_catalog.jsonb_build_array(t.protocol_version, t.id::text, t.status) ORDER BY t.protocol_version, t.id), '[]'::jsonb) FROM public.${GUIDANCE_TABLE} t WHERE t.guidance_key = ${sqlText(GUIDANCE_KEY)}) = ${sqlJson(
+        [
+          [2, GUIDANCE_V2.id, "retired"],
+          [3, GUIDANCE_V3.id, "active"],
+        ],
+      )}`,
+    },
+    {
+      name: "application_guidance_v2_retired",
+      predicate: `${guidanceRow(GUIDANCE_V2.id, ["updated_at"])} = ${sqlJson(GUIDANCE_V2_RETIRED)}`,
+    },
+    {
+      // reject_active_application_content_mutation stamps clock_timestamp() >= now().
+      name: "application_guidance_v2_retired_at_apply",
+      predicate: `(SELECT t.updated_at >= ${RECEIPT_TS} FROM public.${GUIDANCE_TABLE} t WHERE t.id = '${String(GUIDANCE_V2.id)}'::uuid)`,
+    },
+    {
+      name: "application_guidance_v3_target",
+      predicate: `${guidanceRow(GUIDANCE_V3.id, ["verified_at", "created_at", "updated_at"])} = ${sqlJson(GUIDANCE_V3)}`,
+    },
+    {
+      name: "application_guidance_v3_stamped_at_apply",
+      predicate: `(SELECT t.verified_at = ${RECEIPT_TS} AND t.created_at = ${RECEIPT_TS} AND t.updated_at = ${RECEIPT_TS} FROM public.${GUIDANCE_TABLE} t WHERE t.id = '${String(GUIDANCE_V3.id)}'::uuid)`,
+    },
+  )
   checks.push({
     name: "receipts_single_apply",
     predicate: `(SELECT count(DISTINCT r.created_at) FROM public.catalog_enrichment_applied_items r WHERE r.batch_id = ${sqlText(BATCH_ID)}) = 1`,
@@ -2237,6 +2387,11 @@ const ADVISORY_LOCK = `-- Shared catalog-apply serialization lock BEFORE any pro
 SELECT pg_catalog.pg_advisory_xact_lock(
   pg_catalog.hashtextextended('catalog-enrichment:product-apply', 0)
 );`
+
+const GUIDANCE_LOCK = `-- Shared family templates (Codex F01): no other writer may publish or retire a
+-- template while ${GUIDANCE_KEY} is swapped (self-conflicting mode, readers unaffected).
+LOCK TABLE public.${GUIDANCE_TABLE} IN SHARE ROW EXCLUSIVE MODE;`
+const GUIDANCE_ROW_LOCK = `  PERFORM 1 FROM public.${GUIDANCE_TABLE} t WHERE t.guidance_key = ${sqlText(GUIDANCE_KEY)} ORDER BY t.id FOR UPDATE;`
 
 // ---------------------------------------------------------------------------
 // 12. Emit the migration
@@ -2303,6 +2458,7 @@ function linkUpdate(
   move: { table: string; id: unknown; set: Record<string, unknown> },
   guards: Record<string, unknown>,
   label: string,
+  extraGuard?: string,
 ): string {
   const lit = (value: unknown) => (value === null ? "NULL" : `${sqlText(String(value))}`)
   const sets = Object.entries(move.set)
@@ -2312,7 +2468,7 @@ function linkUpdate(
     .map(([col, value]) => `${col} IS NOT DISTINCT FROM ${lit(value)}`)
     .join(" AND ")
   return `  UPDATE public.${move.table} SET ${sets}
-  WHERE id = '${String(move.id)}'::uuid AND ${where};
+  WHERE id = '${String(move.id)}'::uuid AND ${where}${extraGuard ? ` AND ${extraGuard}` : ""};
   GET DIAGNOSTICS v_rows = ROW_COUNT;
   IF v_rows <> 1 THEN RAISE EXCEPTION '${label} ${move.table} touched % rows', v_rows; END IF;`
 }
@@ -2359,6 +2515,33 @@ BEGIN
 ${body}
 END;
 $${name}$;`
+
+const guidanceInsertColumns = [
+  "id",
+  "guidance_key",
+  "protocol_version",
+  "locale",
+  "scope_kind",
+  "category_key",
+  "role_key",
+  "product_id",
+  "application_family",
+  "payload",
+  "status",
+  "contract_version",
+]
+const guidanceApplySql = `  -- Retire the exact captured active version 2 (whole-row CAS; the trigger
+  -- allows only active -> retired and stamps updated_at).
+  UPDATE public.${GUIDANCE_TABLE} t
+  SET status = 'retired'
+  WHERE t.id = '${String(GUIDANCE_V2.id)}'::uuid
+    AND pg_catalog.to_jsonb(t) = ${sqlJson(GUIDANCE_V2)};
+  GET DIAGNOSTICS v_rows = ROW_COUNT;
+  IF v_rows <> 1 THEN RAISE EXCEPTION 'slice1 retire ${GUIDANCE_KEY} v2 touched % rows', v_rows; END IF;
+
+  -- Publish version 3 (payload = SHARED_APPLICATION_TEMPLATES_V2 entry).
+  INSERT INTO public.${GUIDANCE_TABLE} (${[...guidanceInsertColumns, "verified_at"].join(", ")})
+  VALUES (${guidanceInsertColumns.map((col) => sqlValue(GUIDANCE_TABLE, col, GUIDANCE_V3[col])).join(", ")}, pg_catalog.now());`
 
 const evidenceValues = expectedEvidence
   .map(
@@ -2418,6 +2601,8 @@ ${ADVISORY_LOCK}
 
 ${PLAN_LOCKS}
 
+${GUIDANCE_LOCK}
+
 DO $mode$
 DECLARE
   v_ids constant uuid[] := ${idsArrayLiteral};
@@ -2462,6 +2647,8 @@ ${lockStatements}
   -- F04 member reference rows that move with the Neqi recategorisation.
   PERFORM 1 FROM public.product_submissions t WHERE t.id = '${String(S.id)}'::uuid FOR UPDATE;
   PERFORM 1 FROM public.user_product_usage t WHERE t.id = '${String(U.id)}'::uuid FOR UPDATE;
+  -- Codex F01: the shared rinse-off scalp template rows.
+${GUIDANCE_ROW_LOCK}
 
   -- Exact ${prestate.captured_at} preimage (null-safe: a NULL predicate fails).
 ${raiseUnless(PRESTATE_CHECKS, "catalog completeness slice1 preimage changed")}
@@ -2479,6 +2666,8 @@ ${linkBlock("link_unlink", "F04: unlink the Neqi submission <-> usage pair while
 ${groupBlocks}
 
 ${linkBlock("link_relink", "F04: move the Neqi usage + submission to 'scalp_care' (the product's new category_key) and re-link them.", linkRelinkSql)}
+
+${linkBlock("guidance_template", `Codex F01: shared rinse-off scalp template ${GUIDANCE_KEY} version 2 -> 3 (precedent 20260929231000_oil_day_type_rulings).`, guidanceApplySql)}
 
 -- Provenance for every changed fact + one ledger receipt per written product.
 DO $receipts$
@@ -2551,38 +2740,63 @@ const reverse = [...writes].reverse()
 const rollbackChildDeletes: string[] = []
 const rollbackChildRestores: string[] = []
 const rollbackProductRestores: string[] = []
+/**
+ * F02 (Codex review): every destructive rollback statement is a compare-and-swap
+ * on the generated target. A row is deleted or restored only while its content
+ * still equals the generated target and its stamp is still the apply timestamp
+ * (v_applied_at, read from this batch's receipts before they are removed).
+ */
+const targetCas = (table: StateTable, row: Row) =>
+  `${contentJson(table)} = ${sqlJson(withoutStamps(row))}
+    AND t.${META[table]!.stamp} IS NOT DISTINCT FROM v_applied_at`
+const deletedChildKeys = new Set<string>()
+const restoredProducts = new Set<string>()
 for (const w of reverse) {
   if (w.table === "products") {
     assert(w.kind === "update", "products are only updated")
+    // One restore per product: every column the batch changed back to the
+    // captured value, guarded by the product's complete generated target.
+    const id = String(w.key.id)
+    if (restoredProducts.has(id)) continue
+    restoredProducts.add(id)
+    const pre = PRE.products.find((row) => row.id === id)!
+    const final = state.products.find((row) => row.id === id)!
+    const columns = [
+      ...new Set(
+        writes
+          .filter((x) => x.table === "products" && String((x as { key: Row }).key.id) === id)
+          .flatMap((x) => Object.keys((x as { set: Row }).set)),
+      ),
+    ]
     const sets = [
-      ...Object.keys(w.set).map((col) => `${col} = ${sqlValue("products", col, w.before[col])}`),
-      `updated_at = ${sqlValue("products", "updated_at", w.before.updated_at)}`,
+      ...columns.map((col) => `${col} = ${sqlValue("products", col, pre[col])}`),
+      `updated_at = ${sqlValue("products", "updated_at", pre.updated_at)}`,
     ].join(",\n      ")
-    const guards = Object.entries(w.set)
-      .map(([col, value]) => `${col} IS NOT DISTINCT FROM ${sqlValue("products", col, value)}`)
-      .join("\n    AND ")
-    rollbackProductRestores.push(`  UPDATE public.products
+    rollbackProductRestores.push(`  UPDATE public.products t
   SET ${sets}
-  WHERE ${keyWhere("products", w.key)}
-    AND ${guards};
+  WHERE t.id = '${id}'::uuid
+    AND ${targetCas("products", final)};
   GET DIAGNOSTICS v_rows = ROW_COUNT;
-  IF v_rows <> 1 THEN RAISE EXCEPTION 'rollback: product restore touched % rows', v_rows; END IF;`)
+  IF v_rows <> 1 THEN RAISE EXCEPTION 'rollback: product ${id} is not its generated target (% rows)', v_rows; END IF;`)
     continue
   }
   // Trigger-maintained projections are reset to the captured sets below.
   if (PROJECTION_TABLES.has(w.table)) continue
-  if (w.kind === "insert") {
-    rollbackChildDeletes.push(`  DELETE FROM public.${w.table} WHERE ${keyWhere(w.table, keyOf(w.table, w.row))};
+  if (w.kind === "insert" || w.kind === "update") {
+    // Inserted rows go; updated rows are deleted and re-inserted from the capture
+    // (original id and timestamps), so the BEFORE UPDATE updated_at trigger never
+    // runs on a restored row.
+    const final = findRow(w.table, w.kind === "insert" ? keyOf(w.table, w.row) : w.key)
+    assert(final, `${w.table} final row for rollback`)
+    const key = keyString(w.table, final)
+    assert(!deletedChildKeys.has(`${w.table}|${key}`), `${w.table} ${key} written once`)
+    deletedChildKeys.add(`${w.table}|${key}`)
+    rollbackChildDeletes.push(`  DELETE FROM public.${w.table} t
+  WHERE ${keyWhere(w.table, keyOf(w.table, final))}
+    AND ${targetCas(w.table, final)};
   GET DIAGNOSTICS v_rows = ROW_COUNT;
-  IF v_rows <> 1 THEN RAISE EXCEPTION 'rollback: delete inserted ${w.table} touched % rows', v_rows; END IF;`)
-  } else if (w.kind === "update") {
-    // Delete + re-insert the captured row (original id and timestamps), so the
-    // BEFORE UPDATE updated_at trigger never runs on a restored row.
-    const finalRow = findRow(w.table, w.key)!
-    rollbackChildDeletes.push(`  DELETE FROM public.${w.table} WHERE ${keyWhere(w.table, keyOf(w.table, finalRow))};
-  GET DIAGNOSTICS v_rows = ROW_COUNT;
-  IF v_rows <> 1 THEN RAISE EXCEPTION 'rollback: delete updated ${w.table} touched % rows', v_rows; END IF;`)
-    rollbackChildRestores.push(insertPrestateRow(w.table, w.before))
+  IF v_rows <> 1 THEN RAISE EXCEPTION 'rollback: ${w.kind === "insert" ? "inserted" : "updated"} ${w.table} row is not its generated target (% rows)', v_rows; END IF;`)
+    if (w.kind === "update") rollbackChildRestores.push(insertPrestateRow(w.table, w.before))
   } else {
     rollbackChildRestores.push(insertPrestateRow(w.table, w.before))
   }
@@ -2597,6 +2811,26 @@ const eligibilityResetProducts = [
       .map((w) => String((w.kind === "insert" ? w.row : w.before).product_id)),
   ]),
 ].sort(codepointCompare)
+/**
+ * F02: the projection rows are compared with their generated target at the START
+ * of the destructive block (under the locks taken before validation; a phantom
+ * insert needs KEY SHARE on the FOR UPDATE-locked product). The later reset
+ * deletes only what the rollback's own product/child restores re-derived
+ * through the compat triggers, then re-inserts the captured sets.
+ */
+const eligibilityCas = eligibilityResetProducts
+  .flatMap((id) =>
+    (["product_thickness_eligibility", "product_concern_eligibility"] as const).map((table) => {
+      const target = state[table]
+        .filter((row) => row.product_id === id)
+        .sort(compareRows(table))
+        .map(withoutStamps)
+      return `  IF (SELECT coalesce(pg_catalog.jsonb_agg(${contentJson(table)} ORDER BY ${orderExpr(table)}), '[]'::jsonb) FROM public.${table} t WHERE t.product_id = '${id}'::uuid) IS DISTINCT FROM ${sqlJson(target)} THEN
+    RAISE EXCEPTION 'rollback: ${table} of ${id} is not its generated target';
+  END IF;`
+    }),
+  )
+  .join("\n")
 const eligibilityReset = eligibilityResetProducts
   .flatMap((id) =>
     (["product_thickness_eligibility", "product_concern_eligibility"] as const).map((table) => {
@@ -2647,6 +2881,10 @@ const FULL_RESTORE_CHECKS: Check[] = [
     true,
   ),
   {
+    name: "application_guidance_restored_byte_exact",
+    predicate: `${GUIDANCE_KEY_ROWS} = ${sqlJson([GUIDANCE_V2])}`,
+  },
+  {
     name: "no_batch_evidence_or_receipts",
     predicate: `NOT EXISTS (SELECT 1 FROM public.personal_plan_catalog_fact_evidence WHERE batch_id = ${sqlText(BATCH_ID)}) AND NOT EXISTS (SELECT 1 FROM public.catalog_enrichment_applied_items WHERE batch_id = ${sqlText(BATCH_ID)})`,
   },
@@ -2654,16 +2892,24 @@ const FULL_RESTORE_CHECKS: Check[] = [
 
 const UPDATED_AT_TRIGGER = "set_updated_at_products"
 const SUBMISSION_UPDATED_AT_TRIGGER = "set_updated_at_product_submissions"
+/** F02: the first rollback write on each member row is guarded by its whole generated target. */
+const linkTargetGuards = (table: LinkTable, withStamps: boolean): Row =>
+  Object.fromEntries(
+    Object.entries(linkExpected(table, linkAfter[table], withStamps)).filter(
+      ([col]) => !(col in LINK_FLAGS[table]),
+    ),
+  )
 const rollbackLinkUnlinkSql = [
   linkUpdate(
     { table: "user_product_usage", id: U.id, set: { product_submission_id: null } },
-    { category: LINK.target, product_submission_id: S.id },
+    linkTargetGuards("user_product_usage", !LINK_STAMPED.user_product_usage),
     "rollback unlink",
   ),
   linkUpdate(
     { table: "product_submissions", id: S.id, set: { user_product_usage_id: null } },
-    { category: LINK.target, user_product_usage_id: U.id },
+    linkTargetGuards("product_submissions", !LINK_STAMPED.product_submissions),
     "rollback unlink",
+    LINK_STAMPED.product_submissions ? "updated_at IS NOT DISTINCT FROM v_applied_at" : undefined,
   ),
 ].join("\n")
 const rollbackLinkRestoreSql = [
@@ -2696,6 +2942,15 @@ const rollback = `-- ROLLBACK for ${BATCH_ID} (fingerprint ${FINGERPRINT}).
 --   * same advisory lock and owner/plan SHARE locks as the forward migration;
 --   * refuses unless the live state equals the generated target exactly
 --     (every postflight check), so a post-apply revision is never destroyed;
+--   * F02: the target is validated only after every affected row is locked
+--     (advisory lock first, then FOR UPDATE on the products, every scoped child
+--     row, this batch's evidence and receipts, the two member rows and the
+--     ${GUIDANCE_KEY} template rows; SHARE ROW EXCLUSIVE on the template table),
+--     and every DELETE/UPDATE is itself a compare-and-swap on the generated
+--     target content and the apply stamp, so a revision committed after the
+--     validation can never be erased;
+--   * Codex F01: the published ${GUIDANCE_KEY} version 3 is retired then deleted,
+--     and version 2 is re-activated with its captured updated_at;
 --   * child rows the migration updated are deleted and re-inserted from the
 --     capture (original ids/timestamps); inserted rows are deleted; deleted rows
 --     are re-inserted; trigger-maintained thickness/concern eligibility rows of
@@ -2727,6 +2982,8 @@ $duration_bound$;
 ${ADVISORY_LOCK}
 
 ${PLAN_LOCKS}
+
+${GUIDANCE_LOCK}
 
 DO $trigger_precheck$
 BEGIN
@@ -2767,9 +3024,14 @@ DO $rollback_precheck$
 DECLARE
   v_ids constant uuid[] := ${idsArrayLiteral};
 BEGIN
+  -- F02: lock every row the rollback deletes or restores BEFORE validating it.
   PERFORM 1 FROM public.products t WHERE t.id = ANY (v_ids) ORDER BY t.id FOR UPDATE;
+${lockStatements}
+  PERFORM 1 FROM public.personal_plan_catalog_fact_evidence t WHERE t.batch_id = ${sqlText(BATCH_ID)} ORDER BY t.product_id::text COLLATE "C", t.fact_key COLLATE "C", t.source_url COLLATE "C" FOR UPDATE;
+  PERFORM 1 FROM public.catalog_enrichment_applied_items t WHERE t.batch_id = ${sqlText(BATCH_ID)} ORDER BY t.product_key COLLATE "C" FOR UPDATE;
   PERFORM 1 FROM public.product_submissions t WHERE t.id = '${String(S.id)}'::uuid FOR UPDATE;
   PERFORM 1 FROM public.user_product_usage t WHERE t.id = '${String(U.id)}'::uuid FOR UPDATE;
+${GUIDANCE_ROW_LOCK}
 
   -- The live state must be exactly this migration's generated target.
 ${raiseUnless(TARGET_CHECKS, "rollback refused: live state is not the generated target")}
@@ -2779,15 +3041,54 @@ $rollback_precheck$;
 DO $rollback$
 DECLARE
   v_rows integer;
+  v_applied_at timestamptz;
 BEGIN
-  DELETE FROM public.personal_plan_catalog_fact_evidence
-  WHERE batch_id = '${BATCH_ID}' AND batch_fingerprint = '${FINGERPRINT}';
+  -- The apply timestamp every written row carries (receipts_single_apply).
+  SELECT pg_catalog.min(r.created_at) INTO v_applied_at
+  FROM public.catalog_enrichment_applied_items r WHERE r.batch_id = '${BATCH_ID}';
+  IF v_applied_at IS NULL THEN RAISE EXCEPTION 'rollback: no apply timestamp for ${BATCH_ID}'; END IF;
+
+  -- Trigger-maintained eligibility projections still equal the generated target.
+${eligibilityCas}
+
+  DELETE FROM public.personal_plan_catalog_fact_evidence t
+  WHERE t.batch_id = '${BATCH_ID}' AND t.batch_fingerprint = '${FINGERPRINT}'
+    AND t.created_at = v_applied_at
+    AND (pg_catalog.to_jsonb(t) - 'created_at') IN (SELECT pg_catalog.jsonb_array_elements(${sqlJson(expectedEvidence)}));
   GET DIAGNOSTICS v_rows = ROW_COUNT;
-  IF v_rows <> ${expectedEvidence.length} THEN RAISE EXCEPTION 'rollback: evidence count %', v_rows; END IF;
-  DELETE FROM public.catalog_enrichment_applied_items
-  WHERE batch_id = '${BATCH_ID}' AND batch_fingerprint = '${FINGERPRINT}';
+  IF v_rows <> ${expectedEvidence.length} THEN RAISE EXCEPTION 'rollback: evidence is not the generated target (% rows)', v_rows; END IF;
+  DELETE FROM public.catalog_enrichment_applied_items t
+  WHERE t.batch_id = '${BATCH_ID}' AND t.batch_fingerprint = '${FINGERPRINT}'
+    AND t.created_at = v_applied_at
+    AND (pg_catalog.to_jsonb(t) - 'created_at') IN (SELECT pg_catalog.jsonb_array_elements(${sqlJson(expectedReceipts)}));
   GET DIAGNOSTICS v_rows = ROW_COUNT;
-  IF v_rows <> ${expectedReceipts.length} THEN RAISE EXCEPTION 'rollback: receipt count %', v_rows; END IF;
+  IF v_rows <> ${expectedReceipts.length} THEN RAISE EXCEPTION 'rollback: receipts are not the generated target (% rows)', v_rows; END IF;
+
+  -- Codex F01: ${GUIDANCE_KEY} back to version 2. Version 3 is retired (the only
+  -- transition the immutability trigger allows on active content), then deleted;
+  -- version 2 is re-activated with its captured updated_at.
+  UPDATE public.${GUIDANCE_TABLE} t
+  SET status = 'retired'
+  WHERE t.id = '${String(GUIDANCE_V3.id)}'::uuid
+    AND (pg_catalog.to_jsonb(t) - 'verified_at' - 'created_at' - 'updated_at') = ${sqlJson(GUIDANCE_V3)}
+    AND t.verified_at = v_applied_at AND t.created_at = v_applied_at AND t.updated_at = v_applied_at;
+  GET DIAGNOSTICS v_rows = ROW_COUNT;
+  IF v_rows <> 1 THEN RAISE EXCEPTION 'rollback: ${GUIDANCE_KEY} v3 is not its generated target (% rows)', v_rows; END IF;
+  DELETE FROM public.${GUIDANCE_TABLE} t
+  WHERE t.id = '${String(GUIDANCE_V3.id)}'::uuid
+    AND (pg_catalog.to_jsonb(t) - 'status' - 'verified_at' - 'created_at' - 'updated_at') = ${sqlJson(
+      Object.fromEntries(Object.entries(GUIDANCE_V3).filter(([col]) => col !== "status")),
+    )}
+    AND t.status = 'retired' AND t.created_at = v_applied_at;
+  GET DIAGNOSTICS v_rows = ROW_COUNT;
+  IF v_rows <> 1 THEN RAISE EXCEPTION 'rollback: delete ${GUIDANCE_KEY} v3 touched % rows', v_rows; END IF;
+  UPDATE public.${GUIDANCE_TABLE} t
+  SET status = 'active', updated_at = ${sqlValue(GUIDANCE_TABLE, "updated_at", GUIDANCE_V2.updated_at)}
+  WHERE t.id = '${String(GUIDANCE_V2.id)}'::uuid
+    AND (pg_catalog.to_jsonb(t) - 'updated_at') = ${sqlJson(GUIDANCE_V2_RETIRED)}
+    AND t.updated_at >= v_applied_at;
+  GET DIAGNOSTICS v_rows = ROW_COUNT;
+  IF v_rows <> 1 THEN RAISE EXCEPTION 'rollback: ${GUIDANCE_KEY} v2 is not its retired target (% rows)', v_rows; END IF;
 
   -- F04: unlink the moved Neqi submission <-> usage pair (both still 'scalp_care').
 ${rollbackLinkUnlinkSql}

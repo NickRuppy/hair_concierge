@@ -7,7 +7,8 @@ import { PGlite } from "@electric-sql/pglite"
 import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
 import { composeProductApplicationProtocolsV2 } from "@/lib/routines/personal-plan/application/compiler-v2"
 import { productApplicationPointerV2Schema } from "@/lib/routines/personal-plan/application/contracts-v2"
-import { SHARED_APPLICATION_TEMPLATES_V2 } from "@/lib/routines/personal-plan/application/shared-templates-v2"
+import { applicationFamilyTemplateV2Schema } from "@/lib/routines/personal-plan/application/contracts-v2"
+import { createApplicationGuidanceRepository } from "@/lib/routines/personal-plan/application/repository"
 import { loadScanProductFacts } from "@/lib/personal-plan/products/authority/catalog-facts"
 import type {
   Stage3AuthorityInput,
@@ -247,6 +248,9 @@ async function loadPrestate(pg: PGlite, fixture: SchemaFixture, prestate: Record
   // Replica mode is ONLY fixture loading (no FK/trigger side effects while
   // restoring captured rows); every migration statement runs with it off.
   await pg.exec("SET session_replication_role = replica")
+  // Codex F01: the captured shared rinse-off scalp template (active version 2).
+  for (const row of prestate.application_guidance_protocols as Row[])
+    await insertRecord(pg, "application_guidance_protocols", row)
   for (const table of STATE_TABLES)
     for (const row of prestate[table] as Row[]) {
       const columns = Object.keys(row).filter((col) => !generated.get(table)!.has(col))
@@ -328,6 +332,7 @@ async function snapshot(pg: PGlite): Promise<Record<string, unknown>> {
     "catalog_enrichment_applied_items",
     "product_submissions",
     "user_product_usage",
+    "application_guidance_protocols",
   ]) {
     const result = await pg.query<{ rows: unknown }>(
       `SELECT coalesce(jsonb_agg(to_jsonb(t) - 'embedding' ORDER BY to_jsonb(t)::text COLLATE "C"), '[]') AS rows FROM public.${table} t`,
@@ -608,11 +613,113 @@ test("rollback refuses a tampered target, restores the exact prestate, and the m
   await verifyZeroRows(second.pg, verify)
 })
 
+/**
+ * F02 (Codex review): a revision committed between the rollback's target
+ * validation and its destructive statements must never be erased. PGlite is
+ * single-connection, so the interleaving is simulated inside the rollback's own
+ * transaction: run everything up to and including the locked precheck, inject
+ * the revision, then run the destructive part. Every DELETE/UPDATE is a CAS on
+ * the generated target, so the rollback must refuse and the whole transaction
+ * (injected revision included) must roll back to the applied state.
+ */
+const ROLLBACK_DESTRUCTIVE = "DO $rollback$"
+const INTERVENING_WRITES: Array<{ name: string; sql: string; refusal: RegExp }> = [
+  {
+    name: "leave-in fit spec revision (Balea Hair Sealer)",
+    sql: `UPDATE public.product_leave_in_fit_specs SET weight = 'medium' WHERE product_id = '${ID.baleaSealer}'`,
+    refusal: /rollback: updated product_leave_in_fit_specs row is not its generated target/,
+  },
+  {
+    name: "inserted protocol revision (Syoss Fullness)",
+    sql: `UPDATE public.product_application_protocols SET source_text = source_text || ' (rev)' WHERE product_id = '${ID.syossFullness}'`,
+    refusal: /rollback: inserted product_application_protocols row is not its generated target/,
+  },
+  {
+    name: "product revision (Aussie, stamp-preserving: updated_at trigger is disabled in rollback)",
+    sql: `UPDATE public.products SET name = name || ' (rev)' WHERE id = '${ID.aussie}'`,
+    refusal: new RegExp(`rollback: product ${ID.aussie} is not its generated target`),
+  },
+  {
+    name: "evidence revision",
+    sql: `UPDATE public.personal_plan_catalog_fact_evidence SET source_text = source_text || ' (rev)' WHERE batch_id = '${BATCH_ID}' AND product_id = '${ID.alcina}'`,
+    refusal: /rollback: evidence is not the generated target/,
+  },
+  {
+    name: "shared template retired by another writer",
+    sql: `UPDATE public.application_guidance_protocols SET status = 'retired' WHERE guidance_key = 'scalp.rinse-off.v2' AND status = 'active'`,
+    refusal: /rollback: scalp\.rinse-off\.v2 v3 is not its generated target/,
+  },
+  {
+    name: "thickness projection row removed (Bali Curls)",
+    sql: `DELETE FROM public.product_thickness_eligibility WHERE product_id = '${ID.baliCurls}' AND thickness = 'normal'`,
+    refusal: new RegExp(
+      `rollback: product_thickness_eligibility of ${ID.baliCurls} is not its generated target`,
+    ),
+  },
+]
+
+test("F02: a revision between rollback validation and its destructive step refuses and writes nothing", async (t) => {
+  const { pg, migration, rollback } = await database(t)
+  await run(pg, migration)
+  const applied = await snapshot(pg)
+  const split = rollback.indexOf(ROLLBACK_DESTRUCTIVE)
+  assert.ok(split > 0 && rollback.indexOf("$rollback_precheck$") < split)
+  const validate = rollback.slice(0, split)
+  const destroy = rollback.slice(split)
+  assert.match(
+    validate,
+    /FOR UPDATE[\s\S]*rollback refused: live state is not the generated target/,
+  )
+
+  for (const write of INTERVENING_WRITES) {
+    await run(pg, validate)
+    const changed = await pg.exec(write.sql)
+    assert.equal(changed.at(-1)!.affectedRows! > 0, true, `${write.name}: injected`)
+    await assert.rejects(run(pg, destroy), write.refusal, write.name)
+    assert.deepEqual(await snapshot(pg), applied, `${write.name}: nothing written`)
+  }
+
+  // Without an intervening write the same split rollback restores the prestate.
+  await run(pg, validate)
+  await run(pg, destroy)
+  await run(pg, migration)
+})
+
+test("F02: a fit-spec revision before the rollback is refused by the locked precheck", async (t) => {
+  const { pg, migration, rollback } = await database(t)
+  await run(pg, migration)
+  await pg.exec(
+    `UPDATE public.product_leave_in_fit_specs SET weight = 'medium' WHERE product_id = '${ID.baleaSealer}'`,
+  )
+  const revised = await snapshot(pg)
+  await assert.rejects(
+    run(pg, rollback),
+    /rollback refused: live state is not the generated target/,
+  )
+  assert.deepEqual(await snapshot(pg), revised)
+})
+
+test("a drifted shared rinse-off scalp template refuses and writes nothing", async (t) => {
+  const { pg, migration } = await database(t)
+  // Another writer already retired version 2 (the trigger allows only that).
+  await pg.exec(
+    "UPDATE public.application_guidance_protocols SET status = 'retired' WHERE guidance_key = 'scalp.rinse-off.v2'",
+  )
+  const drifted = await snapshot(pg)
+  await assert.rejects(
+    run(pg, migration),
+    /preimage changed: application_guidance_protocols_preimage/,
+  )
+  assert.deepEqual(await snapshot(pg), drifted)
+})
+
 /** Two independent applies differ only in the apply timestamp; compare structure. */
 function withSameApplyStamps(reference: Record<string, unknown>, actual: Record<string, unknown>) {
   const strip = (value: unknown) =>
     JSON.parse(JSON.stringify(value), (key, v) =>
-      key === "created_at" || key === "updated_at" || key === "reviewed_at" ? undefined : v,
+      key === "created_at" || key === "updated_at" || key === "reviewed_at" || key === "verified_at"
+        ? undefined
+        : v,
     )
   assert.deepEqual(strip(actual), strip(reference))
   return actual
@@ -963,30 +1070,135 @@ test("Stage-3 + guidance: Neqi Rosemary Oil is a known density scalp-care produc
   assert.equal(result.status, "known")
   if (result.status === "known") assert.equal(result.verdict, "ideal")
 
-  // The stored V2 pointer composes through the shared rinse-off scalp template.
+  // The stored V2 pointer composes through the shared rinse-off scalp template
+  // the runtime reads from application_guidance_protocols (see the next test).
   const row = await one<{ v2: unknown }>(
     pg,
     "SELECT guidance_payload_v2 v2 FROM product_application_protocols WHERE product_id = $1 AND role = 'density_claim_tonic'",
     [ID.neqiRosemary],
   )
-  const pointer = productApplicationPointerV2Schema.parse(row.v2)
-  assert.equal(pointer.applicationFamily, "rinse_off_scalp_care")
-  const composed = composeProductApplicationProtocolsV2(pointer, SHARED_APPLICATION_TEMPLATES_V2)
-  assert.equal(composed.status, "resolved")
-  if (composed.status !== "resolved") return
-  assert.deepEqual(
-    composed.protocols[0]!.steps.map((step) => step.copyTemplateDe),
-    [
-      "Scheitelweise auf die Kopfhaut geben und sanft einmassieren.",
-      "Mindestens 10 Minuten einwirken lassen.",
-      "Anschließend mit Shampoo auswaschen.",
-      "Die Anwendung ist kosmetische Pflege und keine medizinische Behandlung.",
-    ],
+  assert.equal(
+    productApplicationPointerV2Schema.parse(row.v2).applicationFamily,
+    "rinse_off_scalp_care",
   )
+  assert.deepEqual(renderSteps(row.v2, await dbFamilyTemplates(pg)), NEQI_V3_STEPS)
+})
+
+/**
+ * Codex F01: the Anwendung page and discovery load the shared family templates
+ * from application_guidance_protocols through the repository (active, de,
+ * contract_version 2), never from the TS registry. This test composes through
+ * exactly that path on the PGlite database: before Slice 1 the captured
+ * production row (version 2) renders the old copy; after it, version 3.
+ */
+const NEQI_V3_STEPS = [
+  "Scheitelweise auf die Kopfhaut geben und sanft einmassieren.",
+  "Mindestens 10 Minuten einwirken lassen.",
+  "Anschließend mit Shampoo auswaschen.",
+  "Die Anwendung ist kosmetische Pflege und keine medizinische Behandlung.",
+]
+const PEELING_V2_STEPS = [
+  "Scheitelweise auf die Kopfhaut geben und sanft verteilen.",
+  "15 Minuten einwirken lassen.",
+  "Gründlich ausspülen.",
+]
+const PEELING_V3_STEPS = [
+  "Scheitelweise auf die Kopfhaut geben und sanft einmassieren.",
+  "15 Minuten einwirken lassen.",
+  "Anschließend mit Shampoo auswaschen.",
+]
+
+async function dbFamilyTemplates(pg: PGlite) {
+  const repository = createApplicationGuidanceRepository(pgliteClient(pg), { contractVersion: 2 })
+  return (await repository.loadActiveGuidanceProtocols()).map((protocol) =>
+    applicationFamilyTemplateV2Schema.parse(protocol.payload),
+  )
+}
+
+function renderSteps(
+  pointer: unknown,
+  templates: Parameters<typeof composeProductApplicationProtocolsV2>[1],
+) {
+  const composed = composeProductApplicationProtocolsV2(
+    productApplicationPointerV2Schema.parse(pointer),
+    templates,
+  )
+  assert.equal(composed.status, "resolved")
+  if (composed.status !== "resolved") return []
+  assert.equal(composed.protocols.length, 1)
+  assert.equal(composed.protocols[0]!.applicationFamily, "rinse_off_scalp_care")
+  return composed.protocols[0]!.steps.map((step) => step.copyTemplateDe)
+}
+
+test("DB-backed guidance: the stored rinse-off scalp template renders v2 before Slice 1 and v3 after it", async (t) => {
+  const { pg, migration, verify, rollback, prestate } = await database(t)
+  // Balea Kopfhautpflege Peeling Tiefenreinigung + Isana Kopfhautpeeling: the
+  // captured production pointers (context only, outside the batch scope).
+  const peelings = prestate.rinse_off_scalp_care_pointers as Array<{
+    product_id: string
+    brand: string
+    guidance_payload_v2: unknown
+  }>
+  assert.deepEqual(peelings.map((p) => p.brand).sort(), ["Balea", "Isana"])
+
+  // Before: production today. The repository serves the active version 2 only.
+  const before = await dbFamilyTemplates(pg)
+  const scalpBefore = before.filter((template) => template.guidanceKey === "scalp.rinse-off.v2")
+  assert.deepEqual(
+    scalpBefore.map((template) => template.protocolVersion),
+    [2],
+  )
+  for (const peeling of peelings)
+    assert.deepEqual(
+      renderSteps(peeling.guidance_payload_v2, before),
+      PEELING_V2_STEPS,
+      peeling.brand,
+    )
+
+  await run(pg, migration)
+  await verifyZeroRows(pg, verify)
+
+  const rows = await pg.query<{ protocol_version: number; status: string }>(
+    "SELECT protocol_version, status FROM application_guidance_protocols WHERE guidance_key = 'scalp.rinse-off.v2' ORDER BY protocol_version",
+  )
+  assert.deepEqual(rows.rows, [
+    { protocol_version: 2, status: "retired" },
+    { protocol_version: 3, status: "active" },
+  ])
+  const after = await dbFamilyTemplates(pg)
+  assert.deepEqual(
+    after
+      .filter((template) => template.guidanceKey === "scalp.rinse-off.v2")
+      .map((x) => x.protocolVersion),
+    [3],
+  )
+  for (const peeling of peelings)
+    assert.deepEqual(
+      renderSteps(peeling.guidance_payload_v2, after),
+      PEELING_V3_STEPS,
+      peeling.brand,
+    )
+  const neqi = await one<{ v2: unknown }>(
+    pg,
+    "SELECT guidance_payload_v2 v2 FROM product_application_protocols WHERE product_id = $1 AND role = 'density_claim_tonic'",
+    [ID.neqiRosemary],
+  )
+  const neqiSteps = renderSteps(neqi.v2, after)
+  assert.deepEqual(neqiSteps, NEQI_V3_STEPS)
   assert.doesNotMatch(
-    JSON.stringify(composed.protocols[0]!.steps),
+    JSON.stringify(neqiSteps),
     /wachstum|durchblutung|minoxidil|peptid|haarausfall|haarverlust/i,
   )
+
+  // Rollback restores the stored version 2 as the rendered template.
+  await run(pg, rollback)
+  const restored = await dbFamilyTemplates(pg)
+  for (const peeling of peelings)
+    assert.deepEqual(
+      renderSteps(peeling.guidance_payload_v2, restored),
+      PEELING_V2_STEPS,
+      peeling.brand,
+    )
 })
 
 test("prerequisite chain: the harness is production after 20261009130000/140000/150000 and #660", async (t) => {

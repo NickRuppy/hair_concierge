@@ -7,10 +7,11 @@ Status: **prepared and rehearsed, NOT applied.** Production apply needs Nick's a
 | Migration | `supabase/migrations/20261011140000_catalog_completeness_fill_slice1.sql` (sorts after #660's `20261011120000`) |
 | Batch id (ledger receipts + evidence) | `S5R-06-catalog-completeness-slice1` |
 | Disposition batch (Garnier) | `S5-24-catalog-completeness-slice1` |
-| Content fingerprint | `4398744e32e5b643a6e509969d09d936aed0260bbb7c4e5bc1dca6cc33647ca9` |
-| Artifact manifest combined sha256 | `d25587b3ff000e7c01b083db0d8909bfa419f3c415ad40a4002a8129b649c804` |
+| Content fingerprint | `731eeac8ba0338aa636f31f664ccfee5755fb37caa545061739d0c9fa067e68f` |
+| Artifact manifest combined sha256 | `87b3e7b021c7eb8364995d0b9023611dddc4aa646a557937c6fdb9003289d4fb` |
 | Prestate capture | `2026-10-11T13:48:49.533788Z` (read-only, prod `pqdkhefxsxkyeqelqegq`) |
 | Schema capture | `2026-10-11T13:52:02.549733Z` (`fixtures/prod-schema-2026-10-11.json`) |
+| Template capture (Codex F01) | `2026-10-11T14:29:45.064989Z`: `application_guidance_protocols` rows of `scalp.rinse-off.v2`, the table's schema + `reject_active_application_content_mutation()`, and the two rinse-off peeling pointers (read-only; ledger re-checked: 376 rows, unchanged) |
 
 Files: `generate.ts` (generator, no DB access) → `target-state.json`, `rollback.sql` (prepared, not a migration), `verify.sql` (read-only zero-row post-apply proof), the migration, `artifact-manifest.json`. Inputs: `prestate.json`, `fixtures/`, `amendments/`, `inputs/`, `../research/**`. Capture queries: `capture/`.
 
@@ -30,6 +31,8 @@ Files: `generate.ts` (generator, no DB access) → `target-state.json`, `rollbac
 | C retirement | 1 `replaced_by`, 1 disposition (Garnier) | 2 products, 1 identifier (Midnight GTIN → leave-in) | — |
 | D user-submitted | 14 protocols, 1 identifier (Balea GTIN), 1 scalp-care spec (Neqi) | 5 products, 3 leave-in specs, 3 leave-in fit specs, 1 mask spec, 1 identifier (Pantene GTIN) | 42 leave-in eligibility, 3 oil eligibility, 3 thickness eligibility |
 | E identity | — | 2 products (net content) | — |
+
+| Template (Codex F01) | 1 `application_guidance_protocols` row (`scalp.rinse-off.v2` version 3, active) | 1 (version 2 active → retired) | — |
 
 Plus 6 trigger effects (thickness projections), 51 evidence rows, 31 ledger receipts (one per written product) and 18 curated-publication re-asserts in the postflight. The F04 Neqi member rows (1 submission, 1 usage) are moved oil → scalp_care.
 
@@ -57,6 +60,22 @@ Deferred by ruling (not in this batch): Pantene 7in1 leave-in row `f8f3b51d` (S5
   - The only two live rinse-off scalp products (Balea and Isana Kopfhautpeeling) also say „einmassieren … mit Shampoo ausspülen" in their manufacturer/retailer directions (R3 §3; Stage 5 v1 candidate payload). So the new copy is source-backed for them too.
 - Neqi renders: einmassieren → „Mindestens 10 Minuten einwirken lassen." → mit Shampoo auswaschen → cosmetic-limitation line. No growth, minoxidil or peptide wording.
 - `tests/personal-plan-scalp-rinse-off-density.test.ts`: red without the code change (4/5 fail), green with it.
+
+## Codex review F01 — the template change reaches the database
+
+The Anwendung page and discovery load the shared family templates from `application_guidance_protocols` (active, `de`, `contract_version` 2) through `repository.ts`, not from the TS registry. Production had only `scalp.rinse-off.v2` version 2, so without this step the F03 copy would never render.
+
+- The migration follows `20260929231000_oil_day_type_rulings`: active content is immutable, so version 2 is **retired** (never deleted) and version 3 is **inserted** under the same `guidance_key` (`verified_at` = apply time, `contract_version` 2). Single source: the v3 payload is the `SHARED_APPLICATION_TEMPLATES_V2` entry; the generator asserts the captured v2 payload equals the artifact-freeze registry entry.
+- Guards: `SHARE ROW EXCLUSIVE` on the table, `FOR UPDATE` on the key's rows, a preimage check on every row of the key (stamps included), and a whole-row CAS on the retire. The postflight / `verify.sql` re-prove both rows.
+- Like the precedent, no evidence row or receipt is written for the template (both ledgers are product-scoped). The change is part of the fingerprinted content (`target-state.json` → `application_guidance_template`).
+- `rollback.sql`: retires and deletes version 3 (CAS on its exact target), then re-activates version 2 with its captured `updated_at` (byte-exact).
+- Renders through the template: Neqi Rosmarinöl, Balea Kopfhautpflege Peeling Tiefenreinigung and Isana Kopfhautpeeling Tiefenreinigung. The rehearsal composes all three through the DB-backed repository (v2 before, v3 after, v2 after rollback) instead of the injected TS registry.
+
+## Codex review F02 — rollback cannot erase a later revision
+
+- `rollback.sql` takes the advisory lock first, then `FOR UPDATE` on every affected row (products, every scoped child row, this batch's evidence and receipts, the two member rows, the template rows) **before** it validates the target.
+- Every destructive statement is a CAS: child rows, products (one restore per product), evidence, receipts, the member-row unlink and the template rows change only while they still equal the generated target and carry the apply stamp (`v_applied_at`, read from the receipts). The eligibility projections are compared with their target at the start of the destructive block.
+- Regression test: the rollback is split after its locked precheck; a revision is injected inside the same transaction (fit spec, inserted protocol, product, evidence, template, projection row). Each one is refused by its own CAS and nothing is written.
 
 ## F04 — Neqi Smooth Strength Rosemary Oil `010cf825` reference inventory (read-only, re-verified 2026-10-11)
 
@@ -94,6 +113,7 @@ The migration moves both member rows to `scalp_care` in the same transaction (un
 | Jean&Len Rosemary/Ginger Maske | Maskenprofil / Haardicke / Anleitung | hoch konzentriert, keine Haardicke, keine Anleitung | mittel, Feuchtigkeit, wenig Reparatur, alle Haardicken; 5–30 Min. einwirken | Masken-Standard v1.0 (U4), jeanlen.de |
 | Neqi Smooth Strength Rosemary Oil | Kategorie | Öl | Kopfhautpflege (Dichte-Tonic, Öl, wird ausgewaschen); Anleitung: einmassieren, mind. 10 Min., mit Shampoo auswaschen | neqi-hair.com How-tos, dm (U5/D-g) |
 | Balea Aqua Hyaluron 3in1 (Maske + Leave-in) | Inhalt | – | 150 ml | dm DAN 1417521 |
+| Kopfhaut-Ausspül-Anleitung v2 → v3 (betrifft Neqi Rosmarinöl, Balea Peeling, Isana Peeling) | Anleitung | „sanft verteilen" → „… einwirken lassen." → „Gründlich ausspülen." | „sanft einmassieren" → „… einwirken lassen." → „Anschließend mit Shampoo auswaschen." | Hersteller-/Händlerangaben (R3 §3, neqi-hair.com) |
 | K18, Epres | — | unverändert (blockiert, s. o.) | — | — |
 
 ## Commands and results (2026-10-11)
@@ -101,22 +121,24 @@ The migration moves both member rows to `scalp_care` in the same transaction (un
 | Command | Result |
 |---|---|
 | `npx tsx plans/catalog-completeness-fill/slice1/generate.ts --check` | validator green, fingerprint as above |
-| `node --import ./tests/server-only-register.cjs --import tsx --test tests/catalog-completeness-fill-slice1-postgres.test.ts` | 13/13 pass |
+| `node --import ./tests/server-only-register.cjs --import tsx --test tests/catalog-completeness-fill-slice1-postgres.test.ts` | 17/17 pass |
 | `… --test tests/personal-plan-scalp-rinse-off-density.test.ts tests/supabase-migration-version-uniqueness.test.ts tests/supabase-select-columns-contract.test.ts tests/personal-plan/products/stage3-authority.test.ts` | 126/126 pass |
 | `npm run test:personal-plan-stage5` | 356/356 pass |
-| Template/scalp/expansion suites (15 files touching `shared-templates-v2` / `stage5-v2-builder`) | 209/209 pass |
+| Template consumers re-run after Codex F01/F02 (11 files: oil day-type rulings, scan expansion, oil heat, discovery application/admin, between-wash coverage, catalog facts, leave-in manifest, Bondbuilder consumers, Stage-3 persistence, load-view performance) | 184/184 pass |
 | `npx tsc --noEmit -p .` | pass |
 
-The 13 rehearsal tests cover:
+The 17 rehearsal tests cover:
 - exact target state, and replay as a no-op;
 - drift refusal and NULL-tamper refusal;
 - partial-catalogue refusal and fresh-DB skip;
 - rollback: refuses a tampered target, restores the exact prestate, then re-apply;
+- F02: a revision between the rollback's validation and its destructive step is refused (six kinds), and a fit-spec revision before it is refused by the locked precheck;
+- a drifted shared rinse-off template refuses; DB-backed template rendering v2 → v3 → v2 (Codex F01);
 - armed negative controls;
 - Stage-3: Group A pre-heat and Bali post-wash only; Group D unknown → known; Neqi scalp guidance;
 - the prerequisite chain incl. #660, both #660 orders, and the F04 refusals.
 
-## Apply (only after Nick approves fingerprint `4398744e…47ca9`)
+## Apply (only after Nick approves fingerprint `731eeac8…7e68f`)
 
 1. Confirm the prod ledger still matches. Step 2 of #660 may be applied before or after this migration.
 2. Apply the migration. Run `verify.sql` and expect zero rows.

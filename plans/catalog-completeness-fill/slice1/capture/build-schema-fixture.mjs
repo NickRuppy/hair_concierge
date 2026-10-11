@@ -34,6 +34,8 @@ const CATALOG_TABLES = [
   "product_shampoo_specs",
   "product_conditioner_specs",
   "product_conditioner_rerank_specs",
+  // F01 (Codex review): the shared rinse-off scalp template is retired / republished.
+  "application_guidance_protocols",
 ]
 // Member reference rows the Neqi recategorisation moves (F04): full columns,
 // constraints and indexes, but only the triggers that fire on the columns the

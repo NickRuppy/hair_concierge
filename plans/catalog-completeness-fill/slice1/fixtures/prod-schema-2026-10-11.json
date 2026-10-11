@@ -1,6 +1,6 @@
 {
  "captured_at": "2026-10-11T13:52:02.549733+00:00",
- "source": "prod pqdkhefxsxkyeqelqegq read-only catalog query (capture/schema.sql); recaptured 2026-10-11 after #660 step 1 (20261011132316) reached prod: object-by-object md5 of every captured table/function matched the 2026-10-09 capture except product_bondbuilder_specs.bondbuilder_research_contract_v1 (relaxed by step 1), which is replaced verbatim; plus bondbuilder_write_spec_v1 and bondbuilder_research_enrich_v1 (not trigger-reachable, captured because the #660 step-2 migration rewrites them; md5-verified)",
+ "source": "prod pqdkhefxsxkyeqelqegq read-only catalog query (capture/schema.sql); recaptured 2026-10-11 after #660 step 1 (20261011132316) reached prod: object-by-object md5 of every captured table/function matched the 2026-10-09 capture except product_bondbuilder_specs.bondbuilder_research_contract_v1 (relaxed by step 1), which is replaced verbatim; plus bondbuilder_write_spec_v1 and bondbuilder_research_enrich_v1 (not trigger-reachable, captured because the #660 step-2 migration rewrites them; md5-verified); application_guidance_protocols (columns, constraints, indexes, trigger) and reject_active_application_content_mutation() added by a targeted read-only capture at 2026-10-11T14:29:45.064989+00:00 (Codex F01: the migration retires scalp.rinse-off.v2 version 2 and publishes version 3); the ledger was re-checked at the same time (376 rows, latest 20261011132316, unchanged)",
  "server_version": "17.6",
  "migrations": [
   [
@@ -1509,6 +1509,195 @@
   ]
  ],
  "tables": [
+  {
+   "name": "application_guidance_protocols",
+   "columns": [
+    {
+     "name": "id",
+     "type": "uuid",
+     "default": null,
+     "notnull": true,
+     "generated": ""
+    },
+    {
+     "name": "guidance_key",
+     "type": "text",
+     "default": null,
+     "notnull": true,
+     "generated": ""
+    },
+    {
+     "name": "protocol_version",
+     "type": "integer",
+     "default": null,
+     "notnull": true,
+     "generated": ""
+    },
+    {
+     "name": "locale",
+     "type": "text",
+     "default": "'de'::text",
+     "notnull": true,
+     "generated": ""
+    },
+    {
+     "name": "scope_kind",
+     "type": "text",
+     "default": null,
+     "notnull": true,
+     "generated": ""
+    },
+    {
+     "name": "category_key",
+     "type": "text",
+     "default": null,
+     "notnull": true,
+     "generated": ""
+    },
+    {
+     "name": "role_key",
+     "type": "text",
+     "default": null,
+     "notnull": false,
+     "generated": ""
+    },
+    {
+     "name": "product_id",
+     "type": "uuid",
+     "default": null,
+     "notnull": false,
+     "generated": ""
+    },
+    {
+     "name": "application_family",
+     "type": "text",
+     "default": null,
+     "notnull": true,
+     "generated": ""
+    },
+    {
+     "name": "payload",
+     "type": "jsonb",
+     "default": null,
+     "notnull": true,
+     "generated": ""
+    },
+    {
+     "name": "status",
+     "type": "text",
+     "default": null,
+     "notnull": true,
+     "generated": ""
+    },
+    {
+     "name": "verified_at",
+     "type": "timestamp with time zone",
+     "default": null,
+     "notnull": false,
+     "generated": ""
+    },
+    {
+     "name": "created_at",
+     "type": "timestamp with time zone",
+     "default": "now()",
+     "notnull": true,
+     "generated": ""
+    },
+    {
+     "name": "updated_at",
+     "type": "timestamp with time zone",
+     "default": "now()",
+     "notnull": true,
+     "generated": ""
+    },
+    {
+     "name": "contract_version",
+     "type": "integer",
+     "default": "1",
+     "notnull": true,
+     "generated": ""
+    }
+   ],
+   "indexes": [
+    "CREATE UNIQUE INDEX application_guidance_protocols_one_active_per_key_locale ON public.application_guidance_protocols USING btree (guidance_key, locale) WHERE (status = 'active'::text)",
+    "CREATE INDEX application_guidance_protocols_active_locale_key_idx ON public.application_guidance_protocols USING btree (locale, guidance_key) WHERE (status = 'active'::text)"
+   ],
+   "triggers": [
+    "CREATE TRIGGER application_guidance_protocols_active_immutable BEFORE DELETE OR UPDATE ON public.application_guidance_protocols FOR EACH ROW EXECUTE FUNCTION reject_active_application_content_mutation()"
+   ],
+   "constraints": [
+    {
+     "def": "CHECK (((status <> 'active'::text) OR (verified_at IS NOT NULL)))",
+     "name": "application_guidance_protocols_active_verified_check",
+     "type": "c"
+    },
+    {
+     "def": "CHECK ((length(TRIM(BOTH FROM application_family)) > 0))",
+     "name": "application_guidance_protocols_application_family_check",
+     "type": "c"
+    },
+    {
+     "def": "CHECK ((length(TRIM(BOTH FROM category_key)) > 0))",
+     "name": "application_guidance_protocols_category_key_check",
+     "type": "c"
+    },
+    {
+     "def": "CHECK ((contract_version = ANY (ARRAY[1, 2])))",
+     "name": "application_guidance_protocols_contract_version_check",
+     "type": "c"
+    },
+    {
+     "def": "CHECK ((length(TRIM(BOTH FROM guidance_key)) > 0))",
+     "name": "application_guidance_protocols_guidance_key_check",
+     "type": "c"
+    },
+    {
+     "def": "CHECK ((locale = 'de'::text))",
+     "name": "application_guidance_protocols_locale_check",
+     "type": "c"
+    },
+    {
+     "def": "CHECK ((jsonb_typeof(payload) = 'object'::text))",
+     "name": "application_guidance_protocols_payload_check",
+     "type": "c"
+    },
+    {
+     "def": "CHECK ((protocol_version > 0))",
+     "name": "application_guidance_protocols_protocol_version_check",
+     "type": "c"
+    },
+    {
+     "def": "CHECK ((scope_kind = ANY (ARRAY['application_family'::text, 'product'::text])))",
+     "name": "application_guidance_protocols_scope_kind_check",
+     "type": "c"
+    },
+    {
+     "def": "CHECK ((((scope_kind = 'product'::text) AND (product_id IS NOT NULL)) OR ((scope_kind = 'application_family'::text) AND (product_id IS NULL))))",
+     "name": "application_guidance_protocols_scope_product_check",
+     "type": "c"
+    },
+    {
+     "def": "CHECK ((status = ANY (ARRAY['draft'::text, 'active'::text, 'retired'::text])))",
+     "name": "application_guidance_protocols_status_check",
+     "type": "c"
+    },
+    {
+     "def": "FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT",
+     "name": "application_guidance_protocols_product_id_fkey",
+     "type": "f"
+    },
+    {
+     "def": "PRIMARY KEY (id)",
+     "name": "application_guidance_protocols_pkey",
+     "type": "p"
+    },
+    {
+     "def": "UNIQUE (guidance_key, protocol_version, locale)",
+     "name": "application_guidance_protocols_key_version_locale_unique",
+     "type": "u"
+    }
+   ]
+  },
   {
    "name": "catalog_enrichment_applied_items",
    "columns": [
@@ -6317,6 +6506,11 @@
    "def": "CREATE OR REPLACE FUNCTION public.protect_user_product_usage_review_fields()\n RETURNS trigger\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$\nDECLARE caller_is_admin boolean;\nBEGIN\n  IF auth.role() = 'service_role' OR coalesce(current_setting('request.jwt.claims', true), '') = '' THEN\n    RETURN NEW;\n  END IF;\n  SELECT EXISTS (\n    SELECT 1 FROM public.profiles WHERE id = auth.uid() AND is_admin = true\n  ) INTO caller_is_admin;\n  IF caller_is_admin THEN RETURN NEW; END IF;\n  IF TG_OP = 'INSERT' THEN\n    IF NEW.brand_text IS NOT NULL OR NEW.product_id IS NOT NULL\n        OR NEW.product_submission_id IS NOT NULL OR NEW.match_status IS DISTINCT FROM 'text_only'\n        OR NEW.intake_method IS NOT NULL OR NEW.source IS NOT NULL OR NEW.front_image_path IS NOT NULL THEN\n      RAISE EXCEPTION 'review-managed product usage fields require service or admin access';\n    END IF;\n    RETURN NEW;\n  END IF;\n  IF NEW.brand_text IS DISTINCT FROM OLD.brand_text OR NEW.product_id IS DISTINCT FROM OLD.product_id\n      OR NEW.product_submission_id IS DISTINCT FROM OLD.product_submission_id\n      OR NEW.match_status IS DISTINCT FROM OLD.match_status OR NEW.intake_method IS DISTINCT FROM OLD.intake_method\n      OR NEW.source IS DISTINCT FROM OLD.source OR NEW.front_image_path IS DISTINCT FROM OLD.front_image_path THEN\n    RAISE EXCEPTION 'review-managed product usage fields require service or admin access';\n  END IF;\n  RETURN NEW;\nEND;\n$function$\n",
    "args": "",
    "name": "protect_user_product_usage_review_fields"
+  },
+  {
+   "def": "CREATE OR REPLACE FUNCTION public.reject_active_application_content_mutation()\n RETURNS trigger\n LANGUAGE plpgsql\n SET search_path TO ''\nAS $function$\nBEGIN\n  IF TG_OP = 'DELETE' AND OLD.status = 'active' THEN\n    RAISE EXCEPTION 'active application content must be retired, not deleted';\n  END IF;\n\n  IF TG_OP = 'UPDATE' AND OLD.status = 'active' THEN\n    IF NEW.status <> 'retired'\n      OR (to_jsonb(NEW) - 'status' - 'updated_at') IS DISTINCT FROM (to_jsonb(OLD) - 'status' - 'updated_at') THEN\n      RAISE EXCEPTION 'active application content is immutable; only active-to-retired is allowed';\n    END IF;\n    NEW.updated_at := clock_timestamp();\n  END IF;\n\n  IF TG_OP = 'DELETE' THEN\n    RETURN OLD;\n  END IF;\n  RETURN NEW;\nEND;\n$function$\n",
+   "args": "",
+   "name": "reject_active_application_content_mutation"
   },
   {
    "def": "CREATE OR REPLACE FUNCTION public.update_updated_at_column()\n RETURNS trigger\n LANGUAGE plpgsql\n SET search_path TO 'public'\nAS $function$\nBEGIN\n    NEW.updated_at = now();\n    RETURN NEW;\nEND;\n$function$\n",

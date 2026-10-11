@@ -51,6 +51,12 @@ SELECT jsonb_build_object(
   'product_concern_eligibility', (SELECT coalesce(jsonb_agg(to_jsonb(t) ORDER BY t.product_id, t.category_key, t.concern_key), '[]') FROM public.product_concern_eligibility t WHERE t.product_id IN (SELECT id FROM ids)),
   'product_relationships', (SELECT coalesce(jsonb_agg(to_jsonb(t) ORDER BY t.id), '[]') FROM public.product_relationships t WHERE t.source_product_id IN (SELECT id FROM ids) OR t.target_product_id IN (SELECT id FROM ids)),
   'personal_plan_product_search_dispositions', (SELECT coalesce(jsonb_agg(to_jsonb(t) ORDER BY t.product_id), '[]') FROM public.personal_plan_product_search_dispositions t WHERE t.product_id IN (SELECT id FROM ids)),
+  -- F01 (Codex review): the shared rinse-off scalp template the migration retires
+  -- (version 2) and replaces (version 3). Every row of the key, any status.
+  'application_guidance_protocols', (SELECT coalesce(jsonb_agg(to_jsonb(t) ORDER BY t.protocol_version, t.id), '[]') FROM public.application_guidance_protocols t WHERE t.guidance_key = 'scalp.rinse-off.v2'),
+  -- Context only (never written): every product protocol on the rinse-off scalp family,
+  -- so the rehearsal composes their guidance through the DB-backed repository.
+  'rinse_off_scalp_care_pointers', (SELECT coalesce(jsonb_agg(jsonb_build_object('id', p.id, 'product_id', p.product_id, 'role', p.role, 'category', p.category, 'brand', pr.brand, 'product_name', pr.name, 'guidance_payload_v2', p.guidance_payload_v2) ORDER BY p.product_id, p.id), '[]') FROM public.product_application_protocols p JOIN public.products pr ON pr.id = p.product_id WHERE p.application_family = 'rinse_off_scalp_care'),
   -- Evidence: keys only (3 MB of existing provenance is never touched).
   'personal_plan_catalog_fact_evidence_keys', (SELECT coalesce(jsonb_agg(jsonb_build_array(t.product_id, t.fact_key, t.source_url, t.batch_id) ORDER BY t.product_id, t.fact_key, t.source_url), '[]') FROM public.personal_plan_catalog_fact_evidence t WHERE t.product_id IN (SELECT id FROM ids)),
   'catalog_enrichment_applied_items_for_batch', (SELECT coalesce(jsonb_agg(to_jsonb(t)), '[]') FROM public.catalog_enrichment_applied_items t WHERE t.batch_id LIKE 'S5R-06-%' OR t.batch_id LIKE 'S5-24-%'),
