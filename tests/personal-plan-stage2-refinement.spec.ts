@@ -499,7 +499,7 @@ test.describe("Stage 2 refinement Labs preview", () => {
     )
     await continueButton(page).click()
 
-    await expect(page.getByRole("heading", { name: /Bürsten & Kämme/ })).toBeVisible()
+    await expect(page.getByRole("heading", { name: /Bürsten und Kämme/ })).toBeVisible()
     await expect(page.getByText("Mehrfachauswahl möglich. Seite 1 von 2.")).toBeVisible()
     // Nothing is implied for the brushes: the page waits for a choice.
     await expect(continueButton(page)).toBeDisabled()
@@ -524,14 +524,14 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await expect(page.getByRole("heading", { name: /Heatless/ })).toBeVisible()
     await chooseNoneAndContinue(page)
 
-    await expect(page.getByRole("heading", { name: /Clips/ })).toBeVisible()
+    await expect(page.getByRole("heading", { name: /Fixieren und Abteilen/ })).toBeVisible()
     await expect(page.getByText("Mehrfachauswahl möglich. Seite 1 von 2.")).toBeVisible()
     await chooseNoneAndContinue(page)
 
     await expect(page.getByText("Mehrfachauswahl möglich. Seite 2 von 2.")).toBeVisible()
     await chooseNoneAndContinue(page)
 
-    await expect(page.getByRole("heading", { level: 2, name: /Nachtschutz/ })).toBeVisible()
+    await expect(page.getByRole("heading", { level: 2, name: /nutzt du nachts/ })).toBeVisible()
     // The Satin pillow was implied too; confirming it saves it. This last page completes the module.
     await expect(page.locator('[data-tool-option="pillowcase"]')).toHaveAttribute(
       "aria-pressed",

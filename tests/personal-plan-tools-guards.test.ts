@@ -66,6 +66,7 @@ test("the tools engine never says Idealplan", () => {
     "src/components/personal-plan-start/tool-block.tsx",
     "src/components/personal-plan-refinement/tool-checkpoint.tsx",
     "src/components/personal-plan-refinement/tool-inventory.tsx",
+    "src/app/labs/personal-plan-tools/page.tsx",
   ]
   assert.ok(files.length > 10)
   const offenders = files.filter((file) => /Idealplan/.test(read(file)))

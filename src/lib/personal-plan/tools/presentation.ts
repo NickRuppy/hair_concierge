@@ -100,7 +100,7 @@ export const TOOL_STATE_LABELS: Record<ToolPresentationState, string> = {
  *
  * One physical asset renders once even when it serves several routes; its card
  * takes the strongest tier among those routes. Reported-only routes
- * (`not_needed`) never produce an Plan card — the user already owns them
+ * (`not_needed`) never produce a Plan card — the user already owns them
  * and nothing is being recommended.
  *
  * **One card per need (`D5`).** A `ToolChoiceGroup` is one need with several

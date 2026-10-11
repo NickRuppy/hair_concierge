@@ -34,8 +34,8 @@ import { ToolsLabCheckpoint, ToolsLabRefinementQuestion, ToolsLabRoutine } from 
  */
 
 const SECTIONS = [
-  ["stage1", "Stage 1 — Idealplan Basis (Tool-Karten)"],
-  ["stage1-optional", "Stage 1 — Idealplan Optional"],
+  ["stage1", "Stage 1 — Plan Basis (Tool-Karten)"],
+  ["stage1-optional", "Stage 1 — Plan Optional"],
   ["stage2-overview", "Feinschliff — Was hast du schon?"],
   ["stage2-forms", "Feinschliff — Bürsten & Kämme"],
   ["checkpoint", "Tool-Checkpoint — Das hast du schon"],
