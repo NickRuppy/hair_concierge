@@ -437,7 +437,164 @@ test("fails closed when exact-product cadence authority cannot be read", async (
         },
       }
     },
-  })
+  } as never)
 
   await assert.rejects(() => reader.load({ productIds: ["bond-1"] }), databaseError)
+})
+
+/* ── S4: damage-branched Bondbuilder cadence (Aveda, decisions B1/D-b) ───── */
+
+const DAMAGE_BRANCHED = {
+  kind: "damage_branched",
+  branches: [
+    {
+      structural_levels: ["moderate"],
+      copy_de: "Einmal pro Woche anwenden.",
+      maintenance: { kind: "times_per_week", minimum: 1, maximum: 1 },
+      source_ids: ["C03-P07-1"],
+    },
+    {
+      structural_levels: ["high", "severe"],
+      copy_de: "An jedem Waschtag anwenden.",
+      maintenance: { kind: "every_n_washes", minimum: 1, maximum: 1 },
+      source_ids: ["C03-P07-1"],
+    },
+  ],
+  source_ids: ["C03-P07-1"],
+  binding_ruling: "decisions.md B1/D-b (Nick, 2026-10-09)",
+}
+
+const damageBranched = (
+  structuralDamageLevel: RoutineCadenceResolutionInput["structuralDamageLevel"],
+  cadence: unknown = DAMAGE_BRANCHED,
+) =>
+  resolveRoutineItemCadence(
+    base({
+      structuralDamageLevel,
+      authorityFacts: [
+        {
+          productId: "bond-1",
+          category: "bondbuilder",
+          role: "specialized_bond_treatment",
+          cadence,
+        },
+      ],
+    }),
+  )
+
+const GENERIC = {
+  copyDe: "Nach Herstellerangabe",
+  source: "safe_generic_fallback",
+  gapCode: "exact_product_cadence_unavailable",
+} as const
+
+test("damage-branched cadence: moderate → Einmal pro Woche", () => {
+  assert.deepEqual(damageBranched("moderate"), {
+    copyDe: "Einmal pro Woche anwenden.",
+    source: "exact_product_protocol",
+  })
+})
+
+test("damage-branched cadence: high and severe → An jedem Waschtag", () => {
+  for (const level of ["high", "severe"] as const) {
+    assert.deepEqual(damageBranched(level), {
+      copyDe: "An jedem Waschtag anwenden.",
+      source: "exact_product_protocol",
+    })
+  }
+})
+
+test("damage-branched cadence: none / low / missing level → Nach Herstellerangabe + gap", () => {
+  for (const level of ["none", "low", null, undefined] as const) {
+    assert.deepEqual(damageBranched(level), GENERIC, String(level))
+  }
+})
+
+test("damage-branched cadence: malformed branches → generic", () => {
+  const branches = DAMAGE_BRANCHED.branches
+  const malformed: Record<string, unknown> = {
+    "no branches": { ...DAMAGE_BRANCHED, branches: [] },
+    "branches not an array": { ...DAMAGE_BRANCHED, branches: "moderate" },
+    "overlapping levels": {
+      ...DAMAGE_BRANCHED,
+      branches: [branches[0], { ...branches[1], structural_levels: ["moderate", "high"] }],
+    },
+    "empty levels": {
+      ...DAMAGE_BRANCHED,
+      branches: [{ ...branches[0], structural_levels: [] }, branches[1]],
+    },
+    "unknown level": {
+      ...DAMAGE_BRANCHED,
+      branches: [{ ...branches[0], structural_levels: ["medium"] }, branches[1]],
+    },
+    "blank copy": { ...DAMAGE_BRANCHED, branches: [{ ...branches[0], copy_de: " " }, branches[1]] },
+  }
+  for (const [name, cadence] of Object.entries(malformed)) {
+    assert.deepEqual(damageBranched("moderate", cadence), GENERIC, name)
+  }
+})
+
+test("the damage level never changes a non-branched cadence or another category", () => {
+  const course = { kind: "label_course", copy_de: "Alle ein bis drei Haarwäschen anwenden." }
+  assert.deepEqual(damageBranched("severe", course), {
+    copyDe: "Alle ein bis drei Haarwäschen anwenden.",
+    source: "exact_product_protocol",
+  })
+  assert.deepEqual(
+    resolveRoutineItemCadence(
+      base({
+        category: "scalp_care",
+        role: "scalp_treatment" as never,
+        recommended: { kind: "role_keyed_product_protocol", roleFrequencies: [] },
+        structuralDamageLevel: "moderate",
+        authorityFacts: [
+          {
+            productId: "bond-1",
+            category: "scalp_care",
+            role: "scalp_treatment" as never,
+            cadence: DAMAGE_BRANCHED,
+          },
+        ],
+      }),
+    ),
+    GENERIC,
+  )
+})
+
+test("the cadence reader reads the refined version's damage band, scoped to plan and version", async () => {
+  const calls: unknown[] = []
+  const reader = createSupabaseRoutineCadenceAuthorityReader({
+    from(table: string) {
+      calls.push(["from", table])
+      const query = {
+        select(columns: string) {
+          calls.push(["select", columns])
+          return query
+        },
+        eq(column: string, value: string) {
+          calls.push(["eq", column, value])
+          return query
+        },
+        async maybeSingle() {
+          return { data: { structuralLevel: "severe" }, error: null }
+        },
+        async in() {
+          return { data: [], error: null }
+        },
+      }
+      return query
+    },
+  } as never)
+
+  assert.equal(
+    await reader.loadStructuralDamageLevel?.({ planId: "plan-1", refinedVersionId: "refined-1" }),
+    "severe",
+  )
+  assert.deepEqual(calls, [
+    ["from", "personal_plan_need_versions"],
+    ["select", "output_snapshot->assessments->damage->>structuralLevel"],
+    ["eq", "id", "refined-1"],
+    ["eq", "personal_plan_id", "plan-1"],
+    ["eq", "kind", "refined"],
+  ])
 })
