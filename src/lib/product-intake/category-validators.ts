@@ -5,7 +5,6 @@ import {
   PRODUCT_BOND_APPLICATION_MODES,
   PRODUCT_BOND_PRODUCT_FORMATS,
   PRODUCT_BOND_REPAIR_AXES,
-  PRODUCT_BOND_REPAIR_INTENSITIES,
   PRODUCT_BOND_TREATMENT_MODES,
   PRODUCT_BOND_USAGE_PROTOCOLS,
   DRY_SHAMPOO_FORMATS,
@@ -142,7 +141,6 @@ type ProductIntakeSpecRowByTable = {
     color_treated_suitability: string
   }
   product_bondbuilder_specs: {
-    bond_repair_intensity?: string | null
     application_mode?: string | null
     bond_repair_axis?: string | null
     treatment_mode?: string | null
@@ -657,7 +655,6 @@ const bondbuilderSpecsSchema = z
   .object({
     product_bondbuilder_specs: z
       .object({
-        bond_repair_intensity: z.enum(PRODUCT_BOND_REPAIR_INTENSITIES).nullable().optional(),
         application_mode: z.enum(PRODUCT_BOND_APPLICATION_MODES).nullable().optional(),
         bond_repair_axis: z.enum(PRODUCT_BOND_REPAIR_AXES).nullable().optional(),
         treatment_mode: z.enum(PRODUCT_BOND_TREATMENT_MODES).nullable().optional(),
@@ -685,7 +682,6 @@ const bondbuilderSpecsSchema = z
           "research_profile",
         ] as const
         const legacyKeys = [
-          "bond_repair_intensity",
           "application_mode",
           "bond_repair_axis",
           "treatment_mode",
