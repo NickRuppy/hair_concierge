@@ -36,6 +36,8 @@ export type Stage2PreviewScenario =
   | "module-habits"
   /** Modul deep link on a COMPLETE draft — the direct-accept cohort. */
   | "module-direct-accept"
+  /** Plan with a Bondbuilder need: the S4 timing question follows wash frequency. */
+  | "bondbuilder"
 
 /** The module a scenario enters with; `undefined` keeps the legacy linear flow. */
 export function moduleEntryForScenario(
@@ -141,6 +143,13 @@ export function createPreviewGateway(
 }
 
 function triggerContextForScenario(scenario: Stage2PreviewScenario): Stage2TriggerContext {
+  if (scenario === "bondbuilder") {
+    return {
+      relevantCategories: ["shampoo", "conditioner", "mask", "bondbuilder"],
+      hasReportedIrritatedScalp: false,
+      dryShampooBridgeEligibility: "ineligible",
+    }
+  }
   if (
     scenario === "ready" ||
     scenario === "complete" ||

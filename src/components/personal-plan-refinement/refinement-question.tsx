@@ -28,6 +28,7 @@ import { cn } from "@/lib/utils"
 
 import {
   ADDITIONAL_HEAT_TOOL_OPTIONS,
+  BONDBUILDER_TIMING_OPTIONS,
   DRYING_ROUTE_OPTIONS,
   DRY_SHAMPOO_BRIDGE_OPTIONS,
   HEAT_PROTECTION_OPTIONS,
@@ -103,6 +104,8 @@ export function getAnswerForQuestion(
       return answers.currentProductCategories
     case "wet_wash_frequency":
       return answers.wetWashFrequency
+    case "bondbuilder_timing":
+      return answers.bondbuilderTiming
     case "scalp_irritation_detail":
       return answers.scalpIrritationDetail
     case "dry_shampoo_bridge_preference":
@@ -429,6 +432,19 @@ function renderQuestionBody({
           <WetWashFrequencyScale
             value={answer as WetWashFrequency | undefined}
             onChange={(frequency) => onLocalAnswerChange(frequency)}
+          />
+        ),
+      }
+    case "bondbuilder_timing":
+      // Title only, no lead (mockup „Neue Frage“, X1).
+      return {
+        sectionLabel,
+        title: "Wann passt der Extra-Schritt?",
+        body: (
+          <RefinementOptions
+            options={BONDBUILDER_TIMING_OPTIONS}
+            value={answer as string | undefined}
+            onChange={onLocalAnswerChange}
           />
         ),
       }

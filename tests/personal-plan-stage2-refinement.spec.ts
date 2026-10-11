@@ -481,6 +481,25 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await expect(page.getByRole("button", { name: /Produkte erfassen/ })).toHaveCount(0)
   })
 
+  test("a Bondbuilder plan asks when the extra step fits, right after wash frequency", async ({
+    page,
+  }) => {
+    await begin(page, "bondbuilder")
+    await chooseAndContinue(page, "Shampoo")
+    await chooseAndContinue(page, "2×/Woche")
+
+    await expect(page.getByRole("heading", { name: "Wann passt der Extra-Schritt?" })).toBeVisible()
+    await expect(page.getByText("Einwirken lassen, dann waschen.")).toBeVisible()
+    await expect(page.getByText("Drin lassen, nicht ausspülen.")).toBeVisible()
+    await expect(page.getByRole("button", { name: /Ist mir egal/ })).toBeVisible()
+    await expect(continueButton(page)).toBeDisabled()
+
+    await chooseAndContinue(page, /Vor dem Waschen/)
+    await expect(
+      page.getByRole("heading", { name: "Wie trocknest du dein Haar direkt nach der Wäsche an?" }),
+    ).toBeVisible()
+  })
+
   test("unknown preview scenarios return 404", async ({ page }) => {
     await openLab(page, "not-a-scenario")
     await expect(page.getByText("404")).toBeVisible()

@@ -8,6 +8,7 @@ import type { IconName } from "@/components/ui/icon"
 import { FrequencySliderField } from "@/components/ui/frequency-slider-field"
 import type {
   AdditionalHeatTool,
+  BondbuilderTiming,
   DryingRoute,
   DryShampooBridgePreference,
   DryShampooVisibleHairColor,
@@ -124,6 +125,23 @@ export const WET_WASH_FREQUENCY_OPTIONS = [
     icon: "heat-protection-no",
   },
 ] as const satisfies readonly RefinementOption<WetWashFrequency>[]
+
+/** X1 (mockup „Neue Frage“): the two ways a Bondbuilder step exists, plus „Ist mir egal“. */
+export const BONDBUILDER_TIMING_OPTIONS = [
+  {
+    value: "before_wash",
+    label: "Vor dem Waschen",
+    description: "Einwirken lassen, dann waschen.",
+    icon: "goal-moisture",
+  },
+  {
+    value: "after_wash",
+    label: "Nach dem Waschen",
+    description: "Drin lassen, nicht ausspülen.",
+    icon: "product-leave-in",
+  },
+  { value: "no_preference", label: "Ist mir egal", icon: "heat-protection-no" },
+] as const satisfies readonly RefinementOption<BondbuilderTiming>[]
 
 export const SCALP_IRRITATION_OPTIONS = [
   {
