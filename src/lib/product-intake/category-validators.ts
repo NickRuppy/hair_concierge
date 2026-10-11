@@ -1168,6 +1168,36 @@ function validateExactProtocol(
     }
   }
 
+  // Leave-In v1.2 (S3 review R1): activation and the reviewed exact workflow come as a
+  // pair — an activated product's heat rows must be heat_activated_verified_product, and
+  // that workflow is never accepted for a product that is not activated.
+  if (categoryKey === "leave_in" && validateRoles) {
+    const activated =
+      (
+        (categorySpecs as Record<string, unknown>).product_leave_in_specs as
+          | { heat_activation_required?: unknown }
+          | undefined
+      )?.heat_activation_required === true
+    const mismatched = protocols.data.product_application_protocols.some((protocol) => {
+      const workflowId = (
+        (protocol.guidance_payload as { protocolFacts?: { workflowId?: unknown } }).protocolFacts ??
+        {}
+      ).workflowId
+      const isActivatedWorkflow = workflowId === "heat_activated_verified_product"
+      return activated
+        ? protocol.role === "pre_heat_protection" && !isActivatedWorkflow
+        : isActivatedWorkflow
+    })
+    if (mismatched)
+      return {
+        ok: false,
+        missingFields: [
+          "final.category_specs.product_application_protocols.guidance_payload.protocolFacts.workflowId",
+        ],
+        targetSpecOperations: [],
+      }
+  }
+
   let protocolsWithV2: Array<
     (typeof protocols.data.product_application_protocols)[number] & {
       guidance_payload_v2: Record<string, unknown>

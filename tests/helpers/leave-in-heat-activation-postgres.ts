@@ -164,18 +164,27 @@ export type LeaveInSeed = {
     care_benefits: string[]
   }>
   fit?: string
-  protocols?: Array<{ role: string; family?: string }>
+  /** `workflow` defaults to the reviewed activated workflow on an activated product's heat rows. */
+  protocols?: Array<{ role: string; family?: string; workflow?: boolean }>
 }
 
 export const SOURCE_URL = "https://example.test/manufacturer-directions"
 
-export function protocolPayloads(productId: string, role: string, family: string) {
+export const HEAT_ACTIVATED_WORKFLOW = "heat_activated_verified_product"
+
+export function protocolPayloads(
+  productId: string,
+  role: string,
+  family: string,
+  workflowId: string | null = null,
+) {
   const scope = { kind: "product", category: "leave_in", productId }
   return {
     v1: {
       schemaVersion: 1,
       scope,
       applicationFamily: family,
+      protocolFacts: { workflowId },
       evidence: [{ sourceUrl: SOURCE_URL, sourceType: "manufacturer", checkedAt: "2026-10-09" }],
     },
     v2: {
@@ -184,6 +193,7 @@ export function protocolPayloads(productId: string, role: string, family: string
       scope,
       sourceRole: role,
       applicationFamily: family,
+      workflowId,
       runtimeBlockerCode: null,
     },
   }
@@ -244,7 +254,16 @@ export async function insertLeaveIn(pg: PGlite, seed: LeaveInSeed): Promise<void
     [seed.id, seed.fit ?? "booster_only"],
   )
   for (const protocol of seed.protocols ?? [])
-    await insertProtocol(pg, seed.id, protocol.role, protocol.family)
+    await insertProtocol(
+      pg,
+      seed.id,
+      protocol.role,
+      protocol.family,
+      (protocol.workflow ??
+        (specs.heat_activation_required && protocol.role === "pre_heat_protection"))
+        ? HEAT_ACTIVATED_WORKFLOW
+        : null,
+    )
 }
 
 export async function insertProtocol(
@@ -252,8 +271,9 @@ export async function insertProtocol(
   productId: string,
   role: string,
   family = DEFAULT_FAMILY[role] ?? "pre_heat_damp",
+  workflowId: string | null = null,
 ): Promise<void> {
-  const payloads = protocolPayloads(productId, role, family)
+  const payloads = protocolPayloads(productId, role, family, workflowId)
   await pg.query(
     `INSERT INTO public.product_application_protocols (product_id, category, role, application_state, reapplication,
        source_url, source_text, guidance_payload, guidance_payload_v2)

@@ -7,9 +7,9 @@
     "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/neqi-spray/envelope.json": "56f4118eab5962cf7dd2425cd1b6883c092a0a494ae3c04232440a1141044765",
     "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/neqi-spray/adapter/production-projection.json": "242e1d85403ef83bd102142405b9e6c9343329e3be1fa61f0a245d00b9ef98e4",
     "plans/catalog-completeness-fill/slice3/amendments/heat-glow-activation-amendment-v1.2.json": "30b5f071c8d1be3ff0664f6e292901e91a40753adcb9622cd59b3ffd07461430",
-    "src/lib/product-intake/catalog-enrichment/heat-activated-protocols.ts": "f4ff372fdeb9624df36a0d26e9c1f5927760601db75329847b225ed93e492e69",
+    "src/lib/product-intake/catalog-enrichment/heat-activated-protocols.ts": "5f2111b37a6e409dd15588a6619d909de12378c1f0f69625f07bdfff43646fbb",
     "src/lib/heat-activation/contract.ts": "71d9acfa7c729de25c6fd6276bb1b5f6f70995257a684d967580f3c009445ef0",
-    "supabase/migrations/20261011160000_leave_in_heat_activation_schema.sql": "a31f23c5c035a74b20dca65294612bab2abc5b7e23576198ee24740a982eb477"
+    "supabase/migrations/20261011160000_leave_in_heat_activation_schema.sql": "efe68808b6ae15ad22e8da5dc9ad4858b77b32ab0269256346fb1c9bba4efbfa"
   },
   "outputs": {
     "plans/catalog-completeness-fill/slice3/prestate.json": "1fd560ca116e7a8f2c9bc57e72fe836d69aef16c9d390b760173c6bcc3a43c24",

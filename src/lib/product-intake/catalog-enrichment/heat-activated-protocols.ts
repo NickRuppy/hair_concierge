@@ -289,3 +289,23 @@ export const PANTENE_HEAT_GLOW_HEAT_ACTIVATED_ROW_INPUTS: HeatActivatedProtocolR
     ],
   },
 ]
+
+/** Every reviewed heat-activated workflow input, keyed by catalogue product. */
+const REVIEWED_HEAT_ACTIVATED_ROW_INPUTS: readonly HeatActivatedProtocolRowInput[] = [
+  NEQI_DIAMOND_GLASS_ULTIMATE_HEAT_ACTIVATED_ROW_INPUT,
+  ...PANTENE_HEAT_GLOW_HEAT_ACTIVATED_ROW_INPUTS,
+]
+
+/**
+ * The reviewed manufacturer-workflow rows for one product (empty when none was
+ * reviewed). A heat-activated Leave-in is never stamped with a shared template
+ * (S3 review R1); without a reviewed row its protocol stays blocked for review.
+ */
+export function reviewedHeatActivatedProtocolRows(
+  productId: string | null | undefined,
+): HeatActivatedProtocolRow[] {
+  if (!productId) return []
+  return REVIEWED_HEAT_ACTIVATED_ROW_INPUTS.filter((input) => input.productId === productId).map(
+    buildHeatActivatedProtocolRow,
+  )
+}

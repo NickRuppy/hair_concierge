@@ -116,7 +116,11 @@ test("Leave-In v1.2 replaces the leave-in branch: pre-heat needs heat protection
   // R8: a pre-heat role without a heat-protection claim still fails.
   assert.doesNotMatch(branch, /pre_heat_application'' = ANY\(li\.plan_roles\)\)/)
   // Activated products: pre-heat only, protected, routed, booster_only fit (I2, I4, I5, I6).
-  assert.match(branch, /li\.heat_activation_required = false OR/)
+  assert.match(branch, /CASE WHEN li\.heat_activation_required THEN/)
+  // Spec ↔ workflow agreement (S3 review R1): activated heat rows are the reviewed workflow,
+  // and no other product may carry it.
+  assert.match(branch, /IS DISTINCT FROM ''heat_activated_verified_product''/)
+  assert.match(branch, /ELSE NOT EXISTS \(SELECT 1 FROM public\.product_application_protocols ap/)
   assert.match(branch, /li\.plan_roles = ARRAY\[''pre_heat_application''\]::text\[\]/)
   assert.match(branch, /li\.heat_activation_route IS NOT NULL/)
   assert.match(branch, /f\.conditioner_relationship <> ''booster_only''/)

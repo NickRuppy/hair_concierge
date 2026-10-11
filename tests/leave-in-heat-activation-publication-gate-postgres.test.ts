@@ -4,6 +4,7 @@ import test from "node:test"
 import type { PGlite } from "@electric-sql/pglite"
 
 import {
+  HEAT_ACTIVATED_WORKFLOW,
   S3_SCHEMA_MIGRATION,
   heatActivationDatabase,
   insertLeaveIn,
@@ -156,8 +157,20 @@ test("A5 one UPDATE flips activation + plan_roles inside a deferred transaction 
         "DELETE FROM public.product_application_protocols WHERE product_id = $1 AND role = 'pre_heat_protection'",
         [ID.s1HeatGlow],
       )
-      await insertProtocol(db, ID.s1HeatGlow, "pre_heat_protection", "pre_heat_damp")
-      await insertProtocol(db, ID.s1HeatGlow, "pre_heat_protection", "pre_heat_dry")
+      await insertProtocol(
+        db,
+        ID.s1HeatGlow,
+        "pre_heat_protection",
+        "pre_heat_damp",
+        HEAT_ACTIVATED_WORKFLOW,
+      )
+      await insertProtocol(
+        db,
+        ID.s1HeatGlow,
+        "pre_heat_protection",
+        "pre_heat_dry",
+        HEAT_ACTIVATED_WORKFLOW,
+      )
     }),
     null,
   )
@@ -297,6 +310,30 @@ test("R9 setting activation before plan_roles fails at the first statement", asy
       )
     })) ?? "accepted",
     /product_leave_in_specs_heat_activation_pre_heat_only/,
+  )
+})
+
+test("R10 an activated curated product whose heat row is a shared template is rejected at COMMIT", async (t) => {
+  const pg = await heatActivationDatabase(t)
+  assert.match(
+    (await seedCase(pg, {
+      id: ID.bad,
+      ...HEAT_GLOW_ACTIVATED,
+      protocols: [{ role: "pre_heat_protection", family: "pre_heat_damp", workflow: false }],
+    })) ?? "accepted",
+    /curated publication requires complete category facts/,
+  )
+})
+
+test("R11 a non-activated curated product carrying the activated workflow is rejected at COMMIT", async (t) => {
+  const pg = await heatActivationDatabase(t)
+  assert.match(
+    (await seedCase(pg, {
+      id: ID.bad,
+      ...GLISS_SHAPE,
+      protocols: [{ role: "pre_heat_protection", workflow: true }],
+    })) ?? "accepted",
+    /curated publication requires complete category facts/,
   )
 })
 
