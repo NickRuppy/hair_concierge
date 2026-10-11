@@ -1,6 +1,6 @@
 # Styling ingredient research
 
-Status: **Phase 2 standard v0.1 ruled (2026-10-11); next Phase 3.** The charter, property set, evidence lexicon v0.1 and classification standard v0.1 exist and encode Nick's rulings SD1–SD5, D1–D8b, PH1-1…16 and PH2-1…11. They are **not calibrated and not locked**: no capture, blind-lane or calibration round has run on the v0.1 rules, and no production adapter exists. This is not matching logic and authorizes no catalog, Supabase, Product Intake or production change.
+Status: **Phase 2 standard v0.1 ruled (2026-10-11); next Phase 3.** The charter, property set, evidence lexicon v0.1 and classification standard v0.1 exist and encode Nick's rulings SD1–SD5, D1–D8b, PH1-1…16 and PH2-1…12. They are **not calibrated and not locked**: no capture, blind-lane or calibration round has run on the v0.1 rules, and no production adapter exists. This is not matching logic and authorizes no catalog, Supabase, Product Intake or production change.
 
 This directory is the durable entry point for the Styling (one category key `styling`, 12 subtypes) ingredient-classification work. As in every engine, formula-derived product research is kept separate from user fit, and both are kept separate from catalog or production activation.
 
@@ -18,10 +18,10 @@ The folder `v1.0/` is the **artifact root version**. The classification standard
 | Layer | Location | Purpose |
 | --- | --- | --- |
 | Category boundary + market | `v1.0/00_category_charter.md` | Phase 1 charter; proposals P1–P4 ruled (PH1), hold scope, route agreement and Lockenwunder closed by PH2 (§15.2) |
-| Property set | `v1.0/01_property-set-v0.md` | Ruled (PH1-1…6, PH1-15); Phase 2 items closed by PH2-4, 5, 8, 9, 11 (§9) |
-| Evidence lexicon | `v1.0/02_evidence_lexicon.v0.1.md` | v0.1 (`styling-lexicon-v0.1`); reflects PH2-4, 5, 8, 9 |
-| Classification standard | `v1.0/styling-classification-standard.md` | v0.1 (`styling-inci-v0.1`), Phase 2 ruled 2026-10-11 (PH2-1…11); not calibrated, not locked |
-| Owner rulings ledger | `plans/styling-concept/02-rulings.md` | SD1–SD5, D1–D8b, PH1-1…16 (Nick, 2026-10-09) and PH2-1…11 (2026-10-11) |
+| Property set | `v1.0/01_property-set-v0.md` | Ruled (PH1-1…6, PH1-15); Phase 2 items closed by PH2-2, 4, 5, 6, 8, 9, 11, 12 (§9, §2.1, §7) |
+| Evidence lexicon | `v1.0/02_evidence_lexicon.v0.1.md` | v0.1 (`styling-lexicon-v0.1`); reflects PH2-4, 5, 8, 9, 12; generic Acrylates Copolymer is conditional (FX-2c) |
+| Classification standard | `v1.0/styling-classification-standard.md` | v0.1 (`styling-inci-v0.1`), Phase 2 ruled 2026-10-11 (PH2-1…12); not calibrated, not locked |
+| Owner rulings ledger | `plans/styling-concept/02-rulings.md` | SD1–SD5, D1–D8b, PH1-1…16 (Nick, 2026-10-09) and PH2-1…12 (2026-10-11) |
 | Concept | `plans/styling-concept/01-styling-concept.md` | Rev. 2: definition, S0, subtypes, property candidates, hold scale, matching sketch |
 | Plan-composition evidence | `plans/styling-concept/03-d5-evidence.md` | Evidence behind D5 (one product per job) |
 | Calibration set | `data/research/styling-inci/concept-v0/calibration-set-r2.json` (built by `build-calibration-r2.js`) | 90 products: 70 Styling, 5 `provisional_boundary`, 15 routed to a neighbour |
