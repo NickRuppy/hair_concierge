@@ -24,7 +24,7 @@ Every DONE row ran the same checks. `ci:verify` (typecheck + lint + build) passe
 | 3a | @supabase/ssr | 0.10.3 → 0.12.7 | DONE | ddb9f8bb | none | getAll/setAll API unchanged. Default `cookieEncoding` is still base64url. |
 | 3b | @sentry/nextjs + @sentry/node | 10.76.2 → 11.6.0 | **BLOCKED** | — | — | See below. |
 | 3c | openai | 6.49.0 → 7.31.0 | DONE | ede97426 | none | v7's only breaking change is Node >=22. 7.31/7.32 were published 1 day ago. |
-| 3d | @stripe/stripe-js + @stripe/react-stripe-js | 9.17.0 → 10.0.0, 6.12.0 → 7.0.0 | DONE (browser check required) | 0167e92b | none | **Switches the Stripe.js release train from `dahlia` to `endive`. Server stripe-node stays on `2026-04-22.dahlia`.** Revert this one commit if the test-mode checkout misbehaves. |
+| 3d | @stripe/stripe-js + @stripe/react-stripe-js | 9.17.0 → 10.0.0, 6.12.0 → 7.0.0 | **REVERTED** (commit c2f94193) | 0167e92b | none | **Switches the Stripe.js release train from `dahlia` to `endive`. Server stripe-node stays on `2026-04-22.dahlia`.** Reverted after the Codex whole-branch review (2026-10-11): stripe-js 10's `loadStripe` no longer caches the shared in-flight promise (`dist/pure.js` ~:120-160); a second caller removes the first caller's listeners and re-injects the script, so the first promise never resolves. The app has two independent loaders (`src/lib/stripe/offer-client-loader.ts:14`, `src/components/reactivation/membership-reactivation-checkout.tsx:188`). Codex reproduced `[pending, fulfilled]` on v10 vs `[fulfilled, fulfilled]` on v9. Stripe.js 9.17 has no advisory. Retry v10 only together with a single shared loader. |
 | 3e | @paypal/react-paypal-js | 9.3.0 → 10.6.0 | DONE | 8a42aa52 | none | The v10 break (required `environment` on the v6 PayPalProvider) does not apply. We use the legacy PayPalScriptProvider/PayPalButtons. |
 | 3f | @electric-sql/pglite | 0.3.16 → 0.5.8 | **BLOCKED** | — | — | See below. |
 | 3g | @customerio/cdp-analytics-browser | 0.4.16 → 0.5.11 | DONE | 449e527b | none | Clears js-cookie (high) and uuid. Chose 0.5.11 over 0.6.0, which was 1 day old. |
@@ -114,3 +114,10 @@ For example, the tests expect `2024-02-29 10:00:00` and get `2024-02-29 11:00:00
 - **Next 16.3.8:** `npm run dev:worktree` deep links to dynamic routes (the patched route-table race), plus a quick click-through of the quiz → offer → plan flow.
 - **Customer.io (0.5.11):** identify and track events still arrive after the cookie-consent opt-in.
 - **Sentry:** unchanged (still v10.76.2); only init ordering with OTel 0.223. Trigger one test error and confirm it lands, scrubbed.
+
+
+## Post-review addendum (2026-10-11)
+
+- Codex whole-branch review verdict: ship with changes. The one finding (Stripe.js 10 loader concurrency, P1) was resolved by reverting commit 0167e92b (revert c2f94193). All other checks passed or were false positives (endive/dahlia mix alone not a defect; Supabase dropped cache-headers argument pre-existing; Langfuse has no OpenAI peer range; the 33 agent failures are the recorded baseline).
+- Codex note on held-back packages: the deferred `sharp` 0.34 → 0.35 upgrade contains security fixes; sharp is dev/script-only here (`scripts/product-intake/review-app.ts`). Follow-up: bump sharp in its own PR (#463 showed 0.35 breaking something; re-check).
+- Final tree re-verified by the orchestrating session after the revert: `npm audit --omit=dev` 0 vulnerabilities; `npm run ci:verify` + `npm run test:node` (see PR for the result line).
