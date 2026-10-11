@@ -1206,7 +1206,12 @@ export function PlanStartCustomerJourney({
       <ToolCheckpoint
         groups={buildToolCheckpointGroups(toolCheckpointInventory(toolsCheckpoint.session))}
         onContinue={() => openRoutineHref("/routine")}
-        onAddTools={() => replaceRoute(TOOL_CHECKPOINT_ADD_TOOLS_HREF)}
+        onAddTools={() => {
+          // `router.replace` keeps this host mounted, so the checkpoint state must go BEFORE
+          // navigating: otherwise the refreshed edit entry renders underneath it, unreachable.
+          setToolsCheckpoint(null)
+          replaceRoute(TOOL_CHECKPOINT_ADD_TOOLS_HREF)
+        }}
       />
     )
   }

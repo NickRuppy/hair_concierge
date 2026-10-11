@@ -1416,7 +1416,7 @@ test("only a tools completion opens the Tool-Checkpoint; habits and products kee
 async function withMountedPlanStart<T>(
   element: React.ReactElement,
   fetchStub: (url: string, init?: RequestInit) => Promise<Response>,
-  run: (container: HTMLElement) => T | Promise<T>,
+  run: (container: HTMLElement, rerender: (next: React.ReactElement) => void) => T | Promise<T>,
 ): Promise<T> {
   const { JSDOM } = await import("jsdom")
   const { createRoot } = await import("react-dom/client")
@@ -1458,7 +1458,8 @@ async function withMountedPlanStart<T>(
   const root = createRoot(container)
   try {
     flushSync(() => root.render(element))
-    return await run(container)
+    // `router.replace` keeps the same host mounted and hands it refreshed props.
+    return await run(container, (next) => flushSync(() => root.render(next)))
   } finally {
     flushSync(() => root.unmount())
     await new Promise((resolve) => setTimeout(resolve, 50))
@@ -1588,6 +1589,50 @@ test("the checkpoint's quiet secondary re-enters the tools module as an edit vis
       assert.equal(addTools.textContent, "Etwas fehlt? Tools ergänzen")
       domClick(addTools)
       assert.deepEqual(routes, ["/plan-start?refine=tools"])
+    },
+  )
+})
+
+test("Tools ergänzen clears the checkpoint: the refreshed entry shows the tool questions again", async () => {
+  const { PlanStartCustomerJourney } =
+    await import("../src/components/personal-plan-start/plan-start-flow")
+  const { open, saved } = await toolsCheckpointSessions()
+  const routes: string[] = []
+  const host = (session: typeof open) => (
+    <PlanStartCustomerJourney
+      initialJourney={{ ...postAcceptToolsJourney }}
+      personalPlanId="plan-1"
+      initialRefinementSession={session}
+      replaceRoute={(href) => routes.push(href)}
+    />
+  )
+  await withMountedPlanStart(
+    host(open),
+    async (url, init) => {
+      if (url.endsWith("/optional-entry") || (init?.method ?? "GET") === "GET")
+        return jsonResponse(200, saved)
+      if (init?.method === "PATCH") {
+        return jsonResponse(200, { session: saved, moduleCompletion: TOOLS_MODULE_COMPLETION })
+      }
+      return jsonResponse(500, { error: "temporarily_unavailable" })
+    },
+    async (container, rerender) => {
+      await answerLastToolPage(container)
+      const addTools = await waitForElement(
+        () => container.querySelector("[data-tool-checkpoint-add-tools]"),
+        "Tools ergänzen",
+      )
+      domClick(addTools)
+      assert.deepEqual(routes, ["/plan-start?refine=tools"])
+
+      // The App Router refreshes the page: the same host instance gets fresh props.
+      rerender(host(saved))
+
+      assert.ok(!container.querySelector("[data-tool-checkpoint]"), "the checkpoint is gone")
+      await waitForElement(
+        () => container.ownerDocument.querySelector("[data-tool-nothing-option]"),
+        "the tool questions",
+      )
     },
   )
 })
