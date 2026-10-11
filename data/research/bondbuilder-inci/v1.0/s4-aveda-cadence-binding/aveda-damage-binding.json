@@ -1,0 +1,21 @@
+{
+  "version": "bondbuilder-damage-cadence-binding-v1",
+  "research_key": "P07",
+  "product_id": "04a83f16-e610-4883-b44d-038d3a343787",
+  "profile_sha256": "293275baa809e81344ba17652202aec67585f850561a7726b6c9bb0ceabc6ca0",
+  "profile_source": "data/research/bondbuilder-inci/v1.0/recommendation-promotion-2026-10-06/P07.json",
+  "ruling": "decisions.md B1/D-b (Nick, 2026-10-09)",
+  "rationale": "The manufacturer's two damage bands overlap at moderate damage. D-b binds moderate to the weekly band and high/severe to the every-wash-day band; none/low stay unbound (generic line), so no cutoff is invented beyond the ruling.",
+  "branches": [
+    {
+      "condition": "Mild to moderate damage",
+      "structural_levels": ["moderate"],
+      "copy_de": "Einmal pro Woche anwenden."
+    },
+    {
+      "condition": "Moderate to severe damage",
+      "structural_levels": ["high", "severe"],
+      "copy_de": "An jedem Waschtag anwenden."
+    }
+  ]
+}
