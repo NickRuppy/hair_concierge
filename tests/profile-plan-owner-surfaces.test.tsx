@@ -597,6 +597,7 @@ function quizSurface(overrides: Record<string, unknown> = {}) {
     quizFieldRefs: { current: {} },
     quizFields: fields.filter((field) => field.sectionKey === "quiz"),
     toolsApplicable: true,
+    refinementStatusPending: false,
     startQuizEditing: (key?: string) => navigations.push(`quiz-edit:${key ?? ""}`),
     goToSectionStep: (_section: string, href: string) => navigations.push(href),
     ...overrides,
@@ -642,6 +643,14 @@ function handlersByProp(node: ReactNode, prop: string, typeName: string): Array<
     ),
   ]
 }
+
+test("the Haar-Check grid waits for the refinement status instead of swapping its density later", () => {
+  const pending = quizSurface({ refinementStatusPending: true })
+  assert.doesNotMatch(pending.html, /Deine Haarziele/)
+  assert.match(pending.html, /animate-pulse|data-slot="skeleton"/)
+  const settled = quizSurface({ refinementStatusPending: false })
+  assert.match(settled.html, /Deine Haarziele/)
+})
 
 for (const toolsApplicable of [true, false]) {
   test(`Haar-Check carries the Ziele row with its own editor link (tools applicable: ${toolsApplicable})`, () => {
