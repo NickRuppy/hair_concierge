@@ -1,15 +1,15 @@
 # Styling v1.0 category charter
 
-Status: **Phase 1 draft — not ruled, not locked.** Encodes Nick's rulings SD1–SD5 and D1–D8b (2026-10-09); four items marked **Proposal — needs Nick's ruling** are open (§15), plus one ruling conflict (§13, item 7).
-Version: 1.0 (artifact root; no classification standard exists yet)
+Status: **Phase 2 ruled 2026-10-11 (PH2-1…11); next: Phase 3 capture + blind calibration round 1.** Phase 1 ruled 2026-10-09 (PH1-1…16). Not locked. Encodes Nick's rulings SD1–SD5, D1–D8b, PH1-1…PH1-16 (2026-10-09) and PH2-1…PH2-11 (2026-10-11). The former proposals P1–P4 are ruled (§15). Items that are still open are listed in §15.2 and marked **Open** where they occur.
+Version: 1.0 (artifact root; the classification standard is being drafted)
 Market: Germany/EU
 Date: 2026-10-09
-Governing inputs: `plans/styling-concept/02-rulings.md` (owner rulings — **governs** where any other source differs), `plans/styling-concept/01-styling-concept.md` (concept Rev. 2), `plans/styling-concept/03-d5-evidence.md`, `data/research/styling-inci/concept-v0/round2/` (calibration round 2).
+Governing inputs: `plans/styling-concept/02-rulings.md` (owner rulings — **governs** where any other source differs), `plans/styling-concept/01-styling-concept.md` (concept Rev. 2), `plans/styling-concept/03-d5-evidence.md`, `data/research/styling-inci/concept-v0/round2/` (calibration round 2; for the D6 border also `round2/care-vs-trace-rule.md` and `round2/parked-border-questions.md`).
 Inherited method: Leave-In Standard v1.0 (`docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md`, cited as "LI §x"), with the v1.1 overlay where it applies.
 
 ## 1. Purpose and scope
 
-This charter fixes **what the Styling research engine classifies, from which evidence, and where it stops**. It is the front page for the later property set (Phase 2), evidence lexicon (Phase 3), classification standard and calibration (Phase 4) and logic lock (Phase 5).
+This charter fixes **what the Styling research engine classifies, from which evidence, and where it stops**. It is the front page for the property set (Phase 2), evidence lexicon (Phase 3), classification standard and calibration (Phase 4) and logic lock (Phase 5).
 
 Scope is every styling family plus the overlap types at the edges of Leave-in, Heat Protectant, Oil and Dry Shampoo (SD1), under **one category key `styling` with subtypes** (SD2).
 
@@ -46,6 +46,8 @@ Subtypes describe **how and when the product is used**. What the formula does is
 
 Cohort counts are the 70 Styling records and 5 `provisional_boundary` records in `data/research/styling-inci/concept-v0/calibration-set-r2.json` (90 records in total). Three subtypes are below five records today: `refresher` (2), `smoothing_styler` (4), `hair_powder` (4).
 
+The border rulings PH1-10 and PH1-13 are **not yet applied** to `calibration-set-r2.json`, so the counts above still show four of the five records as provisional `refresher`. Under the rulings: alverde Locken Refresh → Styling `refresher` (review flag); syoss Curl Control Hydrating → Leave-in (still blocked on DE identity); Balea Professional Definier Spray → Leave-in. Langhaarmädchen Lockenwunder reads Leave-in under the R2 rule (`round2/care-vs-trace-rule.md` §5), but no ruling names it. The file is updated when the Phase-4 packets are built; frozen records are never hand-edited. PH1-16's double-claim hold (§13 item 1) may move further records to `provisional_boundary`; see §15.2.
+
 ## 4. Excluded and adjacent categories
 
 | Excluded | Destination |
@@ -58,7 +60,10 @@ Cohort counts are the 70 Styling records and 5 `provisional_boundary` records in
 
 Excluded calibration rows stay on file as boundary stress cases and S0 negative controls; they are never forced through the Styling ontology.
 
-Two cross-category consequences are already ruled: **Oil** needs no amendment (D2 keeps everything sold as „Öl"/„Serum" in Oil, which keeps "immediate dry shine" in `docs/personal-plan/categories/oil/decision.md`; no Oil catalog re-sort). **Leave-in** gets one exception (D6) and one name rule in the middle band (D7); T15 is unchanged (D3). See §13 for what this requires of the locked Leave-in standard.
+Cross-category consequences, all ruled:
+- **Oil** needs no amendment (D2 keeps everything sold as „Öl"/„Serum" in Oil, which keeps "immediate dry shine" in `docs/personal-plan/categories/oil/decision.md`; no Oil catalog re-sort).
+- **Leave-in** gets one exception (D6) and one name rule in the middle band (D7); T15 is unchanged (D3). Per **PH1-16** the locked Leave-in standard stays unchanged until Styling locks: D6, D7 and the four added vinyl fixative families live in the Styling standard's own lists, and a Leave-in addendum follows right after the Styling lock (§13 item 1).
+- **Heat Protectant:** PH1-15 lets a Styling product fill the Personal-Plan heat-protection step when it passes the Leave-in heat rule (§5 step 5). This **amends `docs/personal-plan/categories/heat-protectant/decision.md`**, which excluded Styling from the heat role in V1. The amendment itself is written in the Personal-Plan phase.
 
 ## 5. The S0 routing gate (as ruled)
 
@@ -71,57 +76,63 @@ S0 runs as ordered steps, not "first match wins". Every step fails toward review
 
 Any input missing or unreadable, or two C1/C2 sources conflicting ⇒ `provisional_boundary`: the product **stays in its current category** and routes to human review.
 
-**Step 2 — Promise class** (C1/C2 only): `styling_result` · `care` · `heat_protection` · `refresh` · `mixed`. `mixed` ⇒ `provisional_boundary`. The class names which pair rule applies in step 3; it never routes on its own.
+**Step 2 — Promise class** (C1/C2 only): `styling_result` · `care` · `heat_protection` · `refresh` · `mixed`. `mixed` ⇒ `provisional_boundary`, **with one exception (PH1-12):** the D7 middle-band test (step 3) runs **before** this stop. If it fires — a fixative-class polymer above the tail, a substantive conditioning system, and sold as a curl/styling cream or balm — the product is Styling `curl_cream` even when it also promises care or heat protection (e.g. Balea Pro Styling Cream Traumlocken). The `mixed` stop still applies to every other product. The class names which pair rule applies in step 3; it never routes on its own.
 
 **Step 3 — One pair rule.** Exactly one applies:
 
 | Neighbour | Rule |
 |---|---|
-| **Leave-in** (promise `styling_result` or `care`, aqueous leave-on) | **Run LI G0 unchanged**, both halves and the LI §2.3.2 precedence: `excluded_styling_first` (fixative-class route with thin conditioning **and** C1/C2 directions/positioning leading on durable hold or texture) ⇒ **Styling**; `in_category` (incl. T15's `incidental_film`: a conditioning film with a supporting fixative) ⇒ **Leave-in**, whatever the styling words say; LI G0's own `provisional_boundary` ⇒ stays put, review.<br>**D7 — middle band, name decides:** a product with **both** a fixative-class polymer (LI L5) above the tail **and** a substantive conditioning system, sold as a curl/styling cream or balm („Lockencreme", „Curl Cream", „Styling Cream/Balm … Locken") ⇒ **Styling `curl_cream`**. Curl creams without a real fixative stay Leave-in under T15, even when named „Lockencreme".<br>**D6 — exception:** a product with **neither** a fixative-class hold route (LI L5 / HOLD sense) **nor** a substantive conditioning architecture, whose C1/C2 promise is a styling result ⇒ **Styling**. Salt, starch and particle mechanisms are not "real hold" here, so beach sprays and starch-only curl sprays qualify. |
+| **Leave-in** (promise `styling_result` or `care`, aqueous leave-on) | **Only where the promise overlaps Leave-in's own definition (care, detangling, smoothing/anti-frizz, curl support, blow-dry/heat support; LI §2.1; PH2-1), run LI G0 unchanged**, both halves and the LI §2.3.2 precedence: `excluded_styling_first` (fixative-class route with thin conditioning **and** C1/C2 directions/positioning leading on durable hold or texture) ⇒ **Styling**; `in_category` (incl. T15's `incidental_film`: a conditioning film with a supporting fixative) ⇒ **Leave-in**, whatever the styling words say; LI G0's own `provisional_boundary` ⇒ stays put, review.<br>**PH2-1 — border scope:** a product whose C1/C2 promise is volume, hold, texture, shaping/molding or shine goes to **Styling directly**, with no Leave-in check (e.g. Balea Föhnlotion Volume Effect and the 9 "care + no polymer" volume/hold/molding products). Accepted consequences: Garnier Fructis „Leave-In Spray" Diamond Sleek ⇒ Leave-in; Wella EIMI Flowing Form ⇒ `provisional_boundary`. **D6 applies to any format** (PH2-3), e.g. Balea Locken Crunchgel ⇒ Styling.<br>**D7 — middle band, name decides:** a product with **both** a fixative-class polymer above the tail **and** a substantive conditioning system, sold as a curl/styling cream or balm („Lockencreme", „Curl Cream", „Styling Cream/Balm … Locken") ⇒ **Styling `curl_cream`**. Curl creams without a real fixative stay Leave-in under T15, even when named „Lockencreme". D7 runs before the step-2 `mixed` stop (PH1-12).<br>**D6 — exception:** a product with **neither** a fixative-class hold route (LI L5 / HOLD sense) **nor** real care, whose C1/C2 promise is a styling result ⇒ **Styling**. Salt, starch and particle mechanisms are not "real hold" here, so beach sprays and starch-only curl sprays qualify.<br>**Fixative-class list (PH1-16, PH1-6):** LI L5 **plus** the four vinyl families LI L5 lacks (VA/Crotonates/Vinyl Neodecanoate, VP/DMAEMA, VCap/VP/DMAEMA, PVM/MA esters). They sit in the Styling standard's own list, not in LI L5, until the Leave-in addendum. PQ-11/-16/-46 with no other fixative-class polymer ⇒ hold_route review, not real hold.<br>**"Real care" for D6 — the effective-amount rule (PH1-13, R2 in `round2/care-vs-trace-rule.md` §5):** "real care" means **any** care at a working dose, not COND ≥ moderate (a detangling spray counts). Oils count as care, as in Leave-in (PH1-10). Oils, esters, plain silicones and fatty alcohols count only **above the first preservative**. Cationic conditioners, cationic polymers and amino silicones may sit below it, but **not below the first pH adjuster listed after it** (fallback: Parfum; no yardstick ⇒ review). Humectants, panthenol, proteins, extracts, starch and volatile carriers never count. Any care decision made below the preservative carries a review flag. This test is scoped to D6 only and **is never the T15 "thin" test**. The preservative-count rule (option C) is rejected. |
 | **Heat Protectant** | Primary promise decides (`docs/personal-plan/categories/heat-protectant/decision.md`): protection-first ⇒ Heat Protectant, even with a fixative; result-with-heat-first ⇒ Styling. |
 | **Dry Shampoo** | Directions and promise decide (`docs/personal-plan/categories/dry-shampoo/decision.md`): refresh / oil absorption ⇒ Dry Shampoo; texture/grip with no refresh positioning ⇒ Styling; tie ⇒ Dry Shampoo. |
 | **Oil** (shine / finish / anti-frizz) | **Name rule (D2):** sold as „Öl" or „Serum" ⇒ Oil, whatever the formula. Shine/finish products under any other name (Glanzspray, Shine Spray, Finishing Spray, Brillantine, Anti-Frizz-Spray) ⇒ Styling `shine_finish`. A water-based „Serum" that is really a leave-in conditioner follows LI G0. D2 **replaces** the Rev. 1 lipid-vs-silicone rank test. |
 
 **Step 4 — Names route in exactly two places:** D2 (Oil boundary) and D7 (curl-cream middle band). Everywhere else a name never routes and never sets a subtype: Taft „Gel Wax" contains neither gel former nor wax; got2b „Texture Clay" contains no clay; Taft Volumen Schaumfestiger „Halt 4" contains no synthetic polymer. Retailer filter facets are not evidence either (alverde Beach Waves is filtered „ohne Alkohol" with alcohol at rank 3; Color Wow is filtered „silikonfrei").
 
-**Step 5 — Styling never fills the Personal-Plan heat-protection role.** A heat claim on a Styling product is captured, never used (§11).
+**Step 5 — Heat protection on a Styling product (PH1-15).** A Styling product carries the binary property `provides_heat_protection`, decided by the Leave-in heat rule (LI HEAT §7.8, §13): `true` only with a **C1/C2 heat-protection claim and** a closed-list **L9 polymer above the tail — Styling's own marker T_S, the Mask rule, the stricter side (PH2-4)**. LI `product_tested` without an L9 member stays `false` until ruled. Only then may it fill the Personal-Plan heat-protection step (e.g. a Föhnspray covering both jobs). Otherwise the C1/C2 claim is shown („Hitzeschutz laut Hersteller“) but never fills the role. This **supersedes** the earlier "Styling never fills the heat-protection role" rule (concept Rev. 2 and the previous draft of this charter) and amends `heat-protectant/decision.md` in the Personal-Plan phase.
 
-### 5.1 Known boundary cases (calibration round 2, 2026-10-09)
+### 5.1 Known boundary cases (calibration round 2 and Phase 1 rulings, 2026-10-09)
 
 | Product | Route | Basis |
 |---|---|---|
 | Maria Nila Curlicue Cream | Styling `curl_cream` | T15 paradigm: PVP r4, no conditioning architecture ⇒ `excluded_styling_first` |
 | NEQI Diamond Glass Ultimate | Leave-in | T15 paradigm: conditioning film + one supporting fixative (D3); not a curl cream, so D7 does not apply |
-| Taft Styling Balm Locken · Balea Pro Styling Cream Traumlocken · John Frieda Lockencreme Traumlocken | Styling `curl_cream` | D7 middle band |
+| Taft Styling Balm Locken · Balea Pro Styling Cream Traumlocken · John Frieda Lockencreme Traumlocken | Styling `curl_cream` | D7 middle band; for Balea Pro Styling Cream, D7 runs before the `mixed` stop (PH1-12) |
 | Cantu Lockencreme Kokos · HASK Curl Care · Bali Curls Hydrating Curl Cream | Leave-in | no fixative ⇒ T15; D7 does not apply |
 | Balea Locken Revitalizing Spray | Styling `refresher` | D6 |
 | Balea Leave-In Spray Sea Salt Care & Define | Styling `salt_spray` | D6 (salt is not "real hold") |
-| Balea Anti-Frizz Serum · Redken One United · EVO Cuticle Sealer | Leave-in | real conditioning ⇒ D6 does not apply |
+| alverde Locken Refresh | Styling `refresher`, review flag | D6 + PH1-13: the cationic (r17) sits below the lactic acid (r13) that follows the preservative, and the oils sit below the preservative ⇒ traces only |
+| syoss Curl Control Hydrating | Leave-in, review | PH1-13: the cationic polymer (r6) sits below the preservative (r4) but above the lactic acid (r9) ⇒ real care. Still blocked on DE identity (INCI from dm.at) |
+| Balea Professional Definier Spray Traumlocken | Leave-in; „24 h" claim flagged | PH1-10: oils count as conditioning for D6 |
+| Langhaarmädchen Lockenwunder | Leave-in (`provisional_boundary` in the calibration set) | PH1-13 R2: cationic r4 above the preservative; PH2-11 housekeeping |
+| Garnier Fructis „Leave-In Spray" Diamond Sleek | Leave-in | PH2-1: smoothing promise overlaps LI §2.1, real care, no fixative (the calibration file shows Styling `smoothing_styler`; re-derived in Phase 3) |
+| Wella Professionals EIMI Flowing Form | `provisional_boundary` | PH2-1: fixative plus substantive conditioning, but a smoothing balm; D7 covers curl creams only |
+| Kevin.Murphy Killer.Curls | `provisional_boundary (evidence_gate)` | PH2-10: C3 claims only until a C1/C2 German claim is captured |
+| Balea Anti-Frizz Serum · Redken One United · EVO Cuticle Sealer | Leave-in | real care ⇒ D6 does not apply |
 | Elvital Öl Magique · John Frieda Frizz Ease Haarserum · Garnier Sleek & Stay Haarserum | Oil | D2 name rule |
 | Bumble and bumble Brilliantine · Balea Glow & Shine Finishing Spray | Styling `shine_finish` | D2 name rule |
 | Color Wow Dream Coat | Styling `smoothing_styler` | D2 (not Öl/Serum); subtype by job: damp, before blow-drying |
+| L'Oréal Elnett Stylingspray „3 Tage Glatt" | Styling `smoothing_styler`; hold level 3 + D8b flag | PH1-14: the pack front leads with the styling result („Hitze Styling-Spray, glatt 3 Tage, starker Halt"); its „Starker Halt" = level 3, flagged because it has no fixative |
 | got2b Schutzengel · Taft x Gliss Hitzeschutzspray | Heat Protectant | protection-first |
 | got2b Trockenshampoo Extra Volumen | Dry Shampoo | refresh-first |
-| Bali Curls Curl Defining Spray | `provisional_boundary` | two INCIs under one GTIN; styling promise C3-only |
-| alverde Locken Refresh · syoss Curl Control Hydrating · Langhaarmädchen Lockenwunder | `provisional_boundary` | early tail marker above the only conditioning candidate (LI §3.1.1 clause 5 plausibility) |
-| Balea Professional Definier Spray Traumlocken | `provisional_boundary` | open: does oil without a cationic count as "conditioning" for D6? |
+| Bali Curls Curl Defining Spray | `provisional_boundary` | two INCIs under one GTIN; styling promise C3-only. A data question: a C1 pack photo of the unit on sale decides, not a ruling |
 
-The last three rows are open **standard-level** questions for Phase 4, not charter questions.
+**PH1-16 hold.** D6 and D7 routes are ones the locked Leave-in standard could also claim (§13 item 1). Until the Leave-in addendum, such a product is held as `provisional_boundary` on the Styling side. **Scope ruled — PH2-2:** the hold covers every Styling route the unchanged Leave-in letter would also claim (all D6/D7 moves and owner-named routes); held records get the complete Styling profile marked `provisional`, count toward "≥ 5 per subtype" (reported separately) and are not matchable until the Leave-in addendum is approved.
 
 ## 6. Market
 
 - Germany/EU; the German market product is the research unit's market. Drugstore-first (dm, Rossmann, Müller), with salon/prestige products in scope. The current cohort is 48 drugstore, 6 premium-drugstore and 16 salon/prestige Styling records.
-- **Claim authority is the German pack (C1) or the manufacturer's German-market page (C2)**, exactly as LI §2.4.1. A non-German manufacturer page is C5 unless LI §2.4.1 rule 7 (identity verified **and** a DE retailer corroborates) admits it as `C2_cross_market_verified`.
-- **House brands (LI §2.4.1 rule 6):** a retailer's page for its **own** private label is C2 — named cases dm ↔ Balea/alverde and Rossmann ↔ Isana. The record carries `claim_tier_basis: house_brand` and routes to review for ownership confirmation. Any other retailer-exclusive brand is C3 until ownership is verified (see §13, item 5).
+- **Claim authority is the German pack (C1) or the manufacturer's German-market page (C2)**, exactly as LI §2.4.1 (reused unchanged, PH1-8). A non-German manufacturer page is C5 unless LI §2.4.1 rule 7 (identity verified **and** a DE retailer corroborates) admits it as `C2_cross_market_verified`.
+- **House brands (LI §2.4.1 rule 6):** a retailer's page for its **own** private label is C2 — named cases dm ↔ Balea/alverde and Rossmann ↔ Isana. The record carries `claim_tier_basis: house_brand` and routes to review for ownership confirmation. Any other retailer-exclusive brand is C3 until ownership is verified. Langhaarmädchen is therefore C3 (§13 item 5).
 - Retailer copy (C3/C4), retailer filter chips (dm „Halt", Douglas „Haltgrad") and secondary sources (C5) **never create a claim**. They are recorded as tier-stamped traces. In round 2, retailer copy added claims no manufacturer source makes (dm on Taft: „bis zu 24 h", „Ultra starker Halt", „Föhnschutz"; Douglas gave L'Oréal Barber Club „starker Halt" where the brand page says only „perfekten Halt").
 
 ## 7. Input authority
 
 | Input | Authority | Rule |
 |---|---|---|
-| Identity (brand, exact name, size, GTIN, format) | C1 pack > C2 manufacturer DE > exact-GTIN DE retailer > other DE/EU retailer | LI §2.4 G1. A missing GTIN is a documented gap, never a guess. |
+| Identity (brand, exact name, size, GTIN, format) | C1 pack > C2 manufacturer DE > exact-GTIN DE retailer > other DE/EU retailer | LI §2.4 G1, reused unchanged (PH1-8). A missing GTIN is a documented gap, never a guess. |
 | INCI | dated exact-market capture; any G1 source tier | Complete list required. 64 of the 70 Styling INCIs were captured from retailer product pages, 6 from the manufacturer. |
-| Directions | verbatim, source-stamped, LI §2.4 hierarchy | Mandatory (LI §2.4 G1). Missing directions ⇒ `application_moment: unresolved` and review — never an INCI guess (example: Elnett Stylingspray 3 Tage Glatt). |
+| Directions | verbatim, source-stamped, LI §2.4 hierarchy | Mandatory (LI §2.4 G1). Missing directions ⇒ `application_moment: unresolved` and review — never an INCI guess (example: Elnett Stylingspray 3 Tage Glatt was `unresolved` until its manufacturer directions were captured). |
 | Claims (`claims[]`: promise, hold, flexibility, finish, duration, humidity, heat, hair type, free-from) | **C1/C2 only create a claim** | LI §2.4 mandatory claim capture: verbatim, tier, URL/pack id, date. "Not captured" and "does not exist" are different states. Classification lanes consume frozen claims and never re-research them. |
 | Product name on the pack („Haarspray POWER Halt 5") | C1 once confirmed by pack image or manufacturer page | Feeds hold capture and the two name rules (D2, D7) only. |
 
@@ -129,13 +140,13 @@ The last three rows are open **standard-level** questions for Phase 4, not chart
 
 - The unit is the **exact market product, pack and formula version** — never a brand line or marketing name. Aerosol and pump versions are separate products; a pack-size variant shares a unit only when GTIN or formula evidence shows the same formula.
 - **A GTIN can survive a reformulation.** Formula identity and product identity are related but separate (LI §2.4). A formula change reopens the record; frozen records are never rewritten. Round 2 found reformulations on Syoss Curl Cream Gel, Syoss Max Hold Wax, John Frieda Volume Lift Ansatz-Booster (three formulas in circulation) and Bali Curls Curl Defining Spray.
-- **Two INCIs under one GTIN** (Bali Curls Curl Defining Spray: the manufacturer version adds conditioning) and other same-market formula conflicts: see Proposal P3 (§15).
+- **Two INCIs under one GTIN** (Bali Curls Curl Defining Spray: the manufacturer version adds conditioning) and other same-market formula conflicts follow LI §2.4.2 / T18 unchanged (PH1-8): convergence of ≥ 3 identical lists including one GTIN-anchored DE retailer, otherwise `unknown` + review + no catalog commit. Bali Curls stays `provisional_boundary` until a C1 pack photo identifies the formula on sale.
 - **Cross-market formula differences** are identity questions, not conflicts (LI §2.4.1 rule 7): syoss.de lists a different, shorter INCI for Curl Cream Gel than the dm.at (Austria) list used in round 1, and the „hold 5" exists only on syoss.net (C5). The German-market formula is the record; the foreign claim creates nothing.
 - **Possible duplicates** (Balea „Finishing Spray Glow & Care" vs „Glow&Shine Finishing Spray") are resolved by GTIN before calibration, never by name.
 
 ## 9. Conflict handling
 
-- **C1 vs C2 disagree** ⇒ preserve both (G5), take the more conservative reading, route to review (LI §2.4.1 rule 2). For the S0 promise this is `provisional_boundary` (step 1). For hold, see Proposal P3.
+- **C1 vs C2 disagree** ⇒ preserve both (G5), take the more conservative reading, route to review (LI §2.4.1 rule 2). For the S0 promise this is `provisional_boundary` (step 1). **For hold, a pack-vs-manufacturer-page conflict ⇒ „Halt: keine Herstellerangabe"** (PH1-8); both claims stay in the trace.
 - **Claim vs formula disagree** (a strength claim with no hold mechanism above the tail) ⇒ internal plausibility flag, review; the claim is still recorded and the level never changes (D8b).
 - **Same brand, identical INCI, different stated level** (Taft Haarspray Classic „Halt 3" vs Glanz „Halt 4"; Elnett ladder) ⇒ verify against the pack (D8b). Neither level is borrowed from the other.
 - **Retailer facet vs INCI** ⇒ the INCI governs; the facet is a C3 trace.
@@ -147,61 +158,81 @@ Healthy, cosmetic population, all genders and hair lengths. The engine never dia
 | Medically adjacent item | Charter rule |
 |---|---|
 | Aerosol inhalation (hairspray, dry texture sprays, powders) | Usage caution only (wording belongs to the decision doc); an optional pump-spray preference is a convenience, never a health claim. |
-| Pomade acne (forehead/hairline breakouts from anhydrous wax/petrolatum pomades) | Caution copy only (wording belongs to the decision doc); `hard_to_wash` is a cosmetic washing hint, not a skin claim. |
+| Pomade acne (forehead/hairline breakouts from anhydrous wax/petrolatum pomades) | Caution copy only (wording belongs to the decision doc). The reused Leave-in buildup note (PH1-4, LI §8.5) is a cosmetic washing hint, not a skin claim. |
 | Traction and hairline thinning (tight sleek styles, edge control at the hairline) | Never addressed by Styling. Any hair-loss or thinning signal follows the **existing** `hair_loss_or_thinning` route and the shared assessment boundary (`docs/personal-plan/categories/scalp-care/decision.md`, "Hair-loss boundary"). Styling may not delay that route. |
-| Sensitive or irritated scalp + high drying-alcohol load at the roots | Caution copy only („nicht auf die Kopfhaut sprühen"). Alcohol and salt are never said to "damage" hair (weak evidence; concept §6). |
+| Alcohol and a sensitive scalp | **The Leave-in alcohol note, reused (PH1-3):** „Enthält Alkohol – bei empfindlicher Kopfhaut lieber nur in die Längen geben.“ Trigger: Alcohol / Alcohol Denat. / SD Alcohol / Ethanol / Isopropyl Alcohol among the **first 3** ingredients. Fatty alcohols and benzyl alcohol never count. It is a note only, **never an exclusion**. Alcohol and salt are never said to "damage" hair (weak evidence; concept §6). |
 
 **No health claims, ever:** no „schont die Kopfhaut", „verhindert Haarausfall/Haarbruch", „hautverträglich" or comparable statements, whether or not a pack makes them.
 
 ## 11. Evidence ceiling
 
 - E0–E5 per LI §3.1. **Formula-only conclusions stop at E2.** A formula observation („PVP an Position 4") is E1; any value read from it (result mechanism, `hold_route`, weight) is E2. Ingredient presence proves a clue, not concentration, delivery or experience.
-- EU Article 19 rank semantics: ordered above 1 %, arbitrary below; the boundary is invisible.
+- EU Article 19 rank semantics: ordered above 1 %, arbitrary below; the boundary is invisible. This is why every D6 care decision made below the preservative carries a review flag (PH1-13).
 - **Hold level is claim-only, never derived (D8, D8b; LI §7.7 T7).** The Chaarlie scale (SD5: 0–4, DE labels = dm's wording) normalises **C1/C2 manufacturer claims** onto one ladder. No level is ever derived from the formula, in either direction, and none is borrowed from a similar formula (Balea Haarpuder keeps its own „starker Halt" although got2b's identical base says „leicht"). Unclaimed strength is „Halt: keine Herstellerangabe", never 0. The evidence: identical INCI under different stated levels (Taft Classic/Glanz, Elnett ladder); the best formula-only rule tested was right 3 of 6 times (`round2/hold-research-ingredients.md`); brand scales are not comparable („Jeder Anbieter erfindet eigene Skalen", Stiftung Warentest, via `round2/hold-research-community.md`).
 - Levels compare only within a hold family (film · molding · powder). The app never compares hold across families.
-- **The one formula-to-hold-adjacent output** is the D8b neutral fact „Enthält Stylingpolymere (z. B. PVP)", shown only beside „Halt: keine Herstellerangabe". It is an E1 ingredient observation and never a rating. Its trigger list is Proposal P4.
-- A C1/C2 claim is still E0 (LI §2.4.1 rule 5): claim authority decides whether a claim exists, not how true it is.
+- **The one formula-to-hold-adjacent output** is the D8b neutral fact „Enthält Stylingpolymere (z. B. PVP)", shown only beside „Halt: keine Herstellerangabe". It is an E1 ingredient observation and never a rating. **Trigger (PH1-9):** a fixative-class polymer above the tail; starch, wax, salt and particles do not trigger it.
+- A C1/C2 claim is still E0 (LI §2.4.1 rule 5): claim authority decides whether a claim exists, not how true it is. The same holds for `provides_heat_protection` (§5 step 5): it reports what the product is sold as, gated by the L9 formula check, and never grades efficacy (LI §13.3).
 
 ## 12. Explicit non-goals
 
 - **No user-facing confidence** (existing rule; research uncertainty stays internal).
 - **No hold estimate from formula** — no number, no band, no „eher leicht / eher stark" (D8b).
-- **Humidity, duration and heat claims are captured, never used** for selection, ranking or copy („bis zu 48 h", „Feuchtigkeitsschutz", „Hitzeschutz bis 230 °C"), following LI T9 and the heat-protection rule (§5 step 5).
+- **Humidity and duration claims are captured, never used** for selection, ranking or copy („bis zu 48 h", „Feuchtigkeitsschutz"), following LI T9. **Heat claims** are used only through `provides_heat_protection` (§5 step 5, PH1-15); a temperature („Hitzeschutz bis 230 °C") is never used and no heat-protection grade exists.
 - No hold measurement, no efficacy claims, no performance ranking across brands.
 - No user hold ratings — a separate, later feature idea (D8b).
 - No catalog re-sort of Oil, Leave-in, Heat Protectant or Dry Shampoo rows (D2; LI ruling 4 pattern).
-- No cross-category multi-row architecture (see Proposal P2).
+- No cross-category multi-row architecture: one product = one route (PH1-7, §15).
+- No „schwer auswaschbar" / washability field (PH1-4); the Leave-in buildup note is reused instead.
 
 ## 13. Cross-engine dependencies and known source drift
 
-1. **The locked Leave-in standard does not yet contain D6 or D7.** LI v1.0/v1.1 G0 has no D6 exception, and LI §2.3 says "never by name", which D7 deliberately overrides for the middle band. Until a Leave-in overlay encodes both (a semantic bump under LI §16), the two engines could claim the same product — e.g. Taft Styling Balm Locken (round-2 G0 lane: `provisional_boundary`, Leave-in under the LI anchor letter; D7 ⇒ Styling) or Balea Locken Revitalizing Spray (LI G0 letter: `in_category`; D6 ⇒ Styling). This charter treats S0 as authoritative for the Styling side; the Leave-in overlay is a prerequisite for the Styling logic lock.
-2. **"Real hold" for D6 is the LI L5 / HOLD sense.** It is not the concept's broader `hold_route` property (concept §3.1, 3b), which also counts natural film, wax/lipid, particulate and salt. The two must stay separate: S0 reads L5; `hold_route` is a Styling property for Phase 2. The D8b plausibility flag's "hold mechanism above the tail" must be pinned to one of them in Phase 2. (The round-2 G0 verdict for Bali Curls Curl Defining Spray predates the D6 wording clarification and reads D6 as "undetermined".)
-3. **D8 removes hold from selection** in `salt_spray`, `texture_spray`, `hair_powder`, `shine_finish`, `smoothing_styler` and `refresher`. Concept §3.2 and §5.2 still show hold bands for some of them (smoothing 0–1, shine 0, salt 1); the ledger governs. Levels captured on those subtypes (Balea Volumenpuder 1, Balea Haarpuder 3, Wella EIMI Flowing Form 1, Elnett 3 Tage Glatt 3) are stored, not used.
-4. **The D8b flag wording governs** over concept §4 rule 6: a strength claim of ≥ „stark", or any hold claim on a shine/smoothing/refresh product, with no hold mechanism above the tail ⇒ review.
-5. **Langhaarmädchen** is recorded as `C2_house_brand` on two cohort records (Lockenspray Halt & Sprungkraft, Lockenwunder). LI §2.4.1 rule 6 names only Balea/alverde and Isana. Until dm ownership is verified, these claims are C3 — which would leave `gel` at 7 of 9 records with C1/C2 claims instead of 8.
-6. **Tier labels:** the round-2 lane brief merged LI's C3 (exact-GTIN DE retailer) and C4 (other retailer) into one "C3". This charter uses the LI tiers unchanged.
-7. **S0 step 2 (`mixed` ⇒ `provisional_boundary`) vs D7. Open — needs Nick's ruling.** D7 names Balea Pro Styling Cream Traumlocken as moving to Styling. The round-2 G0 lane reads its C2 house-brand promise as `mixed` (definition + „Verbesserte Geschmeidigkeit" + „Hitzeschutz bis zu 220 °C"), which step 2 sends to `provisional_boundary` before any pair rule runs. This charter follows the ledger's named outcome. The general order is still open: does D7 apply before step 2's `mixed` stop for middle-band products? Recommendation: yes, for the D7 middle band only, because D7 already names this product.
-8. **Stale examples in the concept:** Garnier Sleek & Stay still appears as a `smoothing_styler` sample (concept §2, §3.1 #10, §3.2) although D2 routes it to Oil, as the calibration set does. The status string inside `calibration-set-r2.json` still describes round 2 as pending.
+1. **The locked Leave-in standard does not yet contain D6 or D7. Ruled — PH1-16.** LI v1.0/v1.1 G0 has no D6 exception, and LI §2.3 says "never by name", which D7 deliberately overrides for the middle band. Until a Leave-in addendum encodes both, the two engines could claim the same product — e.g. Taft Styling Balm Locken (round-2 G0 lane: `provisional_boundary`, Leave-in under the LI anchor letter; D7 ⇒ Styling) or Balea Locken Revitalizing Spray (LI G0 letter: `in_category`; D6 ⇒ Styling). **Ruling (option B):** the locked Leave-in standard stays unchanged for now. D6, D7 and the four added vinyl fixative families live in the Styling standard's own fixative list and border rules. Right after the Styling v1.0 lock, a Leave-in addendum is written (the T20-overlay pattern); every already-ruled Leave-in product that would move goes to Nick first. Until then, a product both engines could claim is held as `provisional_boundary` on the Styling side. The lock criterion is "Leave-in addendum **drafted and queued** for right after lock" (§15, P1). **Hold scope ruled — PH2-2** (§15.2).
+2. **"Real hold" for D6 is the LI L5 / HOLD sense — resolved.** It is not the concept's broader `hold_route` property (concept §3.1, 3b), which also counts natural film, wax/lipid, particulate and salt. S0 reads the fixative-class list (§5 step 3); the Styling `hold_route` property uses the same fixative-class sense, and the broader hold-mechanism set that the D8b flag reads is pinned in the property set (`01_property-set-v0.md` §6). (The round-2 G0 verdict for Bali Curls Curl Defining Spray predates the D6 wording clarification and reads D6 as "undetermined".)
+3. **D8 removes hold from selection** in `salt_spray`, `texture_spray`, `hair_powder`, `shine_finish`, `smoothing_styler` and `refresher` — **resolved:** the cleanup lane removed the stale hold bands from the concept. Levels captured on those subtypes (Balea Volumenpuder 1, Balea Haarpuder 3, Wella EIMI Flowing Form 1, Elnett 3 Tage Glatt 3) are stored, not used.
+4. **The D8b flag wording governs** — resolved: concept Rev. 2 now restates D8b, and the ledger wording (a strength claim of ≥ „stark", or any hold claim on a shine/smoothing/refresh product, with no hold mechanism above the tail ⇒ review) is encoded in the property set §6.
+5. **Langhaarmädchen — resolved.** It is not a house brand under LI §2.4.1 rule 6 (which names only Balea/alverde and Isana). Both cohort records are now recorded as C3 in `calibration-set-r2.json`, which leaves `gel` at 7 of 9 records with C1/C2 claims.
+6. **Tier labels (standing note):** the round-2 lane brief merged LI's C3 (exact-GTIN DE retailer) and C4 (other retailer) into one "C3". This charter uses the LI tiers unchanged.
+7. **S0 step 2 (`mixed` ⇒ `provisional_boundary`) vs D7 — ruled, PH1-12.** D7 runs before the `mixed` stop, for the curl-cream middle band only (§5 step 2). Balea Pro Styling Cream Traumlocken, whose C2 house-brand promise mixes definition, „Verbesserte Geschmeidigkeit" and „Hitzeschutz bis zu 220 °C", is therefore Styling `curl_cream`.
+8. **Stale examples — resolved** by the cleanup lane: Garnier Sleek & Stay is no longer a `smoothing_styler` sample in the concept (D2 routes it to Oil), and the status string in `calibration-set-r2.json` now reads round 2 complete.
+9. **Heat-role drift — open (other documents).** Concept Rev. 2 (§1 S0 step 5, §3.1 property 15) still says Styling never fills the heat-protection role, and `heat-protectant/decision.md` still excludes Styling. PH1-15 supersedes both. The concept is corrected in its next revision; the decision doc is amended in the Personal-Plan phase.
 
 ## 14. Relationship to the Personal Plan
 
 - Stage-5 roles: families A, C, D, E ⇒ `styling`; family B ⇒ `finish` (both roles exist in `contracts.ts`). Routine order Leave-in → Styling → Finish reuses the Leave-in decision.
 - **Need tier (SD4, D4)** — a matching problem or goal makes Styling `basis`; profile-based optional suggestions with a considerate note — and **plan composition (D5)** — one product per job, hairspray as default finisher for blow-dried and heat-styled looks, `curl_cream` + `gel` for curly/coily hair with normal–coarse or dry lengths, refresh as a day-2 instruction, ceiling of 3 styling products — are **matching policy**. They live in the later `docs/personal-plan/categories/styling/decision.md` and are only referenced here. The engine supplies product properties; it does not decide need, tier or count.
 - D8's ranking behaviour (a stated, fitting level ranks first; no level stays eligible, ranks after and shows „Halt: keine Herstellerangabe") is likewise matching policy, built on the engine's claim-only level.
+- **Heat-protection step (PH1-15):** a Styling product with `provides_heat_protection = true` may fill the heat-protection step. The Personal-Plan phase amends `heat-protectant/decision.md` accordingly.
+- **Deep-Cleansing reset load — deferred (PH1-4).** Whether a `rich` Styling product used weekly adds +1 to the Deep-Cleansing reset load is decided in the Personal-Plan decision. Today Styling is not an input to it.
 
-## 15. Proposals — need Nick's ruling
+## 15. Phase 1 rulings on the former proposals
 
-**P1 — v1.0 coverage target, calibration cohort and lock criteria.** *Proposal — needs Nick's ruling.*
-- **Coverage target:** ≥ 80 % of the German drugstore styling shelf (dm/Rossmann/Müller) reaches a non-provisional S0 route. (Calibration set today: 66 of 71 drugstore/premium-drugstore records; it is not a shelf sample, so this needs a shelf audit at Phase 4.)
-- **Cohort:** the 70 Styling records, the 5 `provisional_boundary` records as stress cases, and the 15 non-Styling records as S0 negative controls (all 90). Fill every subtype to **≥ 5 in-category records** (today short: `refresher` +3, `smoothing_styler` +1, `hair_powder` +1), each with a frozen packet: identity, INCI, verbatim directions, `claims[]` with tiers.
-- **Method:** capture (S0, claims, directions) separate from classification; **two sealed blind lanes** plus a reference key classify the formula-derived properties; diff; owner rulings; rerun.
-- **Lock criteria:** (a) zero unresolved value disagreements on formula-derived cells; (b) both lanes reproduce the S0 route on all 90 records, with every pair rule exercised at least once (LI G0 both halves, D6, D7, Heat, Dry Shampoo, D2); (c) two independent normalisations of the frozen claims give identical hold levels on every record; (d) an unseen set of ≥ 6 fresh products against pre-registered expectations, with ≥ 2 boundary traps; (e) the Leave-in D6/D7 overlay exists (§13, item 1).
+All four charter proposals were ruled on 2026-10-09 ("for now", PH1 bundle). The ruled text follows.
 
-**P2 — One route per product in v1.0; no mode split.** *Proposal — needs Nick's ruling.* S0 gives each product exactly one category. A multi-use product is profiled once, in its routed category; its other uses are captured only. Beard use is not a Chaarlie use. Mask's mode-scoped principle (R1, "no MODE is profiled twice") stays compatible, but Styling does not open a second mode in v1.0. Example: Balea MEN Pomade Haar & Bart 2in1 ⇒ one Styling `molding` record; its beard use is captured only. Kevin.Murphy Killer.Curls, sold as „Leave-in Anti-Frizz Creme", routes to Styling `curl_cream` and gets no second Leave-in profile. Recommendation: adopt. The multi-row architecture stays parked, as in the Mask charter.
+**P1 — v1.0 lock criteria. Ruled — PH1-11, adjusted by PH1-16.** Styling v1.0 is finished when:
+- (a) every subtype has **≥ 5 products** (today short: `refresher` +3, `smoothing_styler` +1, `hair_powder` +1), each with a frozen packet: identity, INCI, verbatim directions, `claims[]` with tiers;
+- (b) **two sealed blind lanes agree on all 90 routes and properties**, with no unresolved disagreements (method: capture separate from classification, two sealed blind lanes plus a reference key, diff, owner rulings, rerun);
+- (c) **two independent claim normalisations give identical hold levels** on every record;
+- (d) **≥ 6 unseen products, ≥ 2 of them boundary traps**, match pre-registered expectations;
+- (e) a **Leave-in addendum for D6/D7 is drafted and queued** for right after the lock (PH1-16; it no longer has to exist before the lock).
 
-**P3 — Inherit the Leave-in identity and conflict machinery unchanged.** *Proposal — needs Nick's ruling.* LI §2.4 (G1 identity gate), §2.4.1 rules 1–7 (claim authority) and §2.4.2 / T18 (same-market formula conflicts: convergence of ≥ 3 identical lists including one GTIN-anchored DE retailer, otherwise `unknown` + review + no catalog commit). Plus one Styling addition: a C1 vs C2 conflict on hold strength sets the level to `review`. Matching then treats it like „keine Herstellerangabe", not like the lower of the two numbers, because the lower number would still be a level the brand does not consistently state. Example: Bali Curls Curl Defining Spray, two INCIs under one GTIN ⇒ T18 fallback, stays `provisional_boundary` until a C1 pack photo identifies the formula on sale.
+The cohort is the 90 records of `calibration-set-r2.json`: 70 Styling, 5 `provisional_boundary` as stress cases, 15 non-Styling S0 negative controls.
 
-**P4 — Trigger list for „Enthält Stylingpolymere".** *Proposal — needs Nick's ruling.* Show the D8b neutral fact only when a **closed LI L5 fixative-class polymer** sits **above the tail marker**, and name the first such polymer as the example. Natural films (hydrolysed starch, chitosan), waxes, salts and particles do not trigger it. Example: syoss Curl Cream Gel (PVP in its fixative core; no strength on syoss.de) ⇒ „Halt: keine Herstellerangabe · Enthält Stylingpolymere (z. B. PVP)". Balea Locken Crunchgel (hydrolysed corn starch only) ⇒ „Halt: keine Herstellerangabe" alone. Recommendation: adopt for v1.0. It is the conservative reading, because the fact is only shown where the ingredient term is unambiguous.
+**P2 — One route per product. Ruled — PH1-7.** S0 gives each product exactly one category; there is no split by use. A multi-use product is profiled once, in its routed category; its other uses are only recorded. Example: Balea MEN Pomade Haar & Bart 2in1 ⇒ one Styling `molding` record; its beard use is recorded only. Kevin.Murphy Killer.Curls, sold as „Leave-in Anti-Frizz Creme", was named here as Styling `curl_cream` with no second Leave-in profile; **PH2-10 refines this:** it has C3 claims only, so it is `provisional_boundary (evidence_gate)` until a C1/C2 German claim is captured (the one-route principle is unchanged). Mask's mode-scoped principle (R1) stays compatible; the multi-row architecture stays parked.
+
+**P3 — Leave-in identity and conflict machinery. Ruled — PH1-8.** LI §2.4 (G1 identity gate), §2.4.1 rules 1–7 (claim authority) and §2.4.2 / T18 (same-market INCI conflicts) are reused unchanged. Styling addition: **a pack-vs-manufacturer-page hold conflict ⇒ „Halt: keine Herstellerangabe"** (§9). Example: Bali Curls Curl Defining Spray, two INCIs under one GTIN ⇒ T18 fallback, stays `provisional_boundary` until a C1 pack photo identifies the formula on sale.
+
+**P4 — Trigger for „Enthält Stylingpolymere". Ruled — PH1-9.** The neutral fact shows only for a **fixative-class polymer above the tail**, naming the first such polymer as the example. Starch, wax, salt and particles do not trigger it. Example: syoss Curl Cream Gel (PVP in its fixative core; no strength on syoss.de) ⇒ „Halt: keine Herstellerangabe · Enthält Stylingpolymere (z. B. PVP)". Balea Locken Crunchgel (hydrolysed corn starch only) ⇒ „Halt: keine Herstellerangabe" alone.
+
+### 15.1 Other Phase 1 rulings reflected in this charter
+
+PH1-3 (alcohol note, §10), PH1-4 (no washability field; buildup note reused; Deep-Cleansing load deferred, §12, §14), PH1-10 (oils count as care for D6, §5), PH1-12 (D7 before the `mixed` stop, §5), PH1-13 (effective-amount rule for D6, §5), PH1-14 (Elnett 3 Tage Glatt, §5.1), PH1-15 (`provides_heat_protection`, §5 step 5), PH1-16 (Leave-in addendum after lock, §4, §13). PH1-1, PH1-2, PH1-5 and PH1-6 are property-set rulings (`01_property-set-v0.md`).
+
+### 15.2 Items closed by the Phase 2 rulings (2026-10-11), and what is still open
+
+- **PH1-16 hold scope — ruled, PH2-2.** The hold covers every Styling route the unchanged Leave-in letter would also claim: all D6/D7 moves (Taft Styling Balm Locken, Balea Pro Styling Cream Traumlocken, John Frieda Lockencreme Traumlocken, Balea Locken Revitalizing, Balea Sea Salt Care & Define, alverde Locken Refresh, Balea Locken Crunchgel) and the owner-named routes. Held records get the complete Styling profile, marked `provisional`; they count toward the ≥ 5-per-subtype criterion, reported separately; they are not matchable until the Leave-in addendum is approved.
+- **Langhaarmädchen Lockenwunder — ruled, PH2-11 (housekeeping).** Leave-in by the PH1-13 R2 rule (cationic r4 above the preservative).
+- **Route agreement in the blind lanes — ruled, PH2-6.** The lanes get a separate sealed S0 packet (INCI, directions, confirmed name, C1/C2 promise and heat claims with tiers; no prior routes, no hold/finish/flexibility words); each lane classifies F/U from the blind packet using its own S0 output.
+- **Open — P1 items not carried into PH1-11.** The proposal also named a ≥ 80 % drugstore-shelf coverage target and "every pair rule exercised at least once". PH1-11 does not name them, so they are not lock criteria; PH2-11 records them as tracked-open.
 
 ## 16. Stop condition
 
@@ -209,9 +240,9 @@ This charter and all Styling engine phases produce **research artifacts only**. 
 
 ### Next phases
 
-| Phase | Artifact (planned path) | Input |
+| Phase | Artifact (planned path) | State |
 |---|---|---|
-| 2 · Property set | `v1.0/01_property-set-v0.md` | concept §3 (15 properties: formula / claim / usage kinds), §13 items 2–4 |
-| 3 · Evidence lexicon | `v1.0/02_evidence_lexicon.v0.1.md` | LI L5 list + rheology exclusion, natural film, wax/lipid, particulate, salt, silicone coat, drying alcohols |
-| 4 · Standard + calibration | `v1.0/styling-classification-standard.md`, `data/research/styling-inci/v1.0/` | P1 cohort, frozen packets, blind lanes |
-| 5 · Logic lock | lock receipt + artifact manifest | P1 lock criteria |
+| 2 · Property set | `v1.0/01_property-set-v0.md` | Ruled (PH1-1…6, PH1-15; Phase 2 items closed by PH2-1…11, 2026-10-11) |
+| 3 · Evidence lexicon | `v1.0/02_evidence_lexicon.v0.1.md` | v0.1 drafted; Phase 2 ruled 2026-10-11 (PH2-4, 5, 8, 9 reflected). Input: LI L5 list + the four vinyl families + rheology exclusion, natural film, wax/lipid, particulate, salt, silicone coat, alcohol-note members, L9 list |
+| 4 · Standard + calibration | `v1.0/styling-classification-standard.md`, `data/research/styling-inci/v1.0/` | Standard v0.1 ruled 2026-10-11 (PH2-1…11); next: Phase 3 capture + blind calibration round 1. Calibration: the P1 cohort, frozen packets, blind lanes |
+| 5 · Logic lock | lock receipt + artifact manifest | P1 lock criteria (PH1-11 as adjusted by PH1-16) |

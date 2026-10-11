@@ -1,12 +1,12 @@
 # Styling ingredient research
 
-Status: **Phase 1 — category charter drafted, not ruled, not locked (2026-10-09).** No classification standard, evidence lexicon, calibration lanes or production adapter exist yet. This is not matching logic and authorizes no catalog, Supabase, Product Intake or production change.
+Status: **Phase 2 standard v0.1 ruled (2026-10-11); next Phase 3.** The charter, property set, evidence lexicon v0.1 and classification standard v0.1 exist and encode Nick's rulings SD1–SD5, D1–D8b, PH1-1…16 and PH2-1…11. They are **not calibrated and not locked**: no capture, blind-lane or calibration round has run on the v0.1 rules, and no production adapter exists. This is not matching logic and authorizes no catalog, Supabase, Product Intake or production change.
 
 This directory is the durable entry point for the Styling (one category key `styling`, 12 subtypes) ingredient-classification work. As in every engine, formula-derived product research is kept separate from user fit, and both are kept separate from catalog or production activation.
 
 ## Versioning note
 
-The folder `v1.0/` is the **artifact root version**. When a classification standard is written, it will carry its own semantic version (`styling-inci-v0.x` until a logic lock). This follows the Mask and Leave-in convention.
+The folder `v1.0/` is the **artifact root version**. The classification standard carries its own semantic version (`styling-inci-v0.x` until a logic lock). This follows the Mask and Leave-in convention.
 
 ## Start here
 
@@ -17,8 +17,11 @@ The folder `v1.0/` is the **artifact root version**. When a classification stand
 
 | Layer | Location | Purpose |
 | --- | --- | --- |
-| Category boundary + market | `v1.0/00_category_charter.md` | Phase 1 charter; four open proposals (§15) and one ruling conflict (§13 item 7) |
-| Owner rulings ledger | `plans/styling-concept/02-rulings.md` | SD1–SD5 and D1–D8b (Nick, 2026-10-09) |
+| Category boundary + market | `v1.0/00_category_charter.md` | Phase 1 charter; proposals P1–P4 ruled (PH1), hold scope, route agreement and Lockenwunder closed by PH2 (§15.2) |
+| Property set | `v1.0/01_property-set-v0.md` | Ruled (PH1-1…6, PH1-15); Phase 2 items closed by PH2-4, 5, 8, 9, 11 (§9) |
+| Evidence lexicon | `v1.0/02_evidence_lexicon.v0.1.md` | v0.1 (`styling-lexicon-v0.1`); reflects PH2-4, 5, 8, 9 |
+| Classification standard | `v1.0/styling-classification-standard.md` | v0.1 (`styling-inci-v0.1`), Phase 2 ruled 2026-10-11 (PH2-1…11); not calibrated, not locked |
+| Owner rulings ledger | `plans/styling-concept/02-rulings.md` | SD1–SD5, D1–D8b, PH1-1…16 (Nick, 2026-10-09) and PH2-1…11 (2026-10-11) |
 | Concept | `plans/styling-concept/01-styling-concept.md` | Rev. 2: definition, S0, subtypes, property candidates, hold scale, matching sketch |
 | Plan-composition evidence | `plans/styling-concept/03-d5-evidence.md` | Evidence behind D5 (one product per job) |
 | Calibration set | `data/research/styling-inci/concept-v0/calibration-set-r2.json` (built by `build-calibration-r2.js`) | 90 products: 70 Styling, 5 `provisional_boundary`, 15 routed to a neighbour |
@@ -41,4 +44,4 @@ The folder `v1.0/` is the **artifact root version**. When a classification stand
 
 ## Next phases
 
-Phase 2 property set → Phase 3 evidence lexicon → Phase 4 standard and calibration (two sealed blind lanes) → Phase 5 logic lock. The lock also needs a Leave-in overlay that encodes D6 and D7 (charter §13 item 1). A production adapter is a separate, explicitly approved step after the lock.
+Phase 3 capture (evidence-gate gaps, short subtypes) and blind calibration round 1 on the v0.1 standard (two sealed lanes, a separate sealed S0 packet per PH2-6) → owner rulings on disagreements → Leave-in addendum drafted and queued (PH1-16) → logic lock under the PH1-11 criteria. A production adapter is a separate, explicitly approved step after the lock.
