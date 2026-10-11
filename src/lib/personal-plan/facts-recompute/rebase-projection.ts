@@ -129,12 +129,13 @@ export function buildRebaseProjection(input: RebaseProjectionInput): RebaseProje
       patch: toCareHabitsPatch(clone.answers, {
         completedQuestionIds: clone.completedQuestionIds,
         answerProvenance: clone.answerProvenance,
+        toolsEnabled: triggerContext.toolsEnabled === true,
       }),
       provenance: {
         source: { kind: "feinschliff_draft", id: sourceDraft.id },
         schemaVersion: CARE_HABITS_SCHEMA_VERSION,
         at: input.now.toISOString(),
-        fields: toFieldProvenance(clone),
+        fields: toFieldProvenance({ ...clone, toolsEnabled: triggerContext.toolsEnabled === true }),
       },
     },
   }

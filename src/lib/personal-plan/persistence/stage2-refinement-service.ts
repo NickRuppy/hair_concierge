@@ -244,12 +244,16 @@ export function createStage2RefinementService(input: {
         "stage2-refinement-service: completing a Feinschliff module or draft requires saveFacts",
       )
     }
+    // The rollout AT WRITE TIME: the trigger context is re-derived per request, so a flag turned
+    // off since the tools were answered stops their care keys from being published again.
+    const toolsEnabled = draft.triggerContext.toolsEnabled === true
     const facts = await input.saveFacts({
       userId: input.userId,
       domain: "care_habits",
       patch: toCareHabitsPatch(draft.answers, {
         completedQuestionIds: draft.completedQuestionIds,
         answerProvenance: draft.answerProvenance,
+        toolsEnabled,
       }),
       provenance: {
         source: { kind: "feinschliff_draft", id: draft.id },
@@ -259,6 +263,7 @@ export function createStage2RefinementService(input: {
           completedQuestionIds: draft.completedQuestionIds,
           answerProvenance: draft.answerProvenance,
           answers: draft.answers,
+          toolsEnabled,
         }),
       },
       draftBinding: {

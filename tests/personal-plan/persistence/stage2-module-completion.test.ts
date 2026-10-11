@@ -85,6 +85,8 @@ function createModuleRefinementDb(seed: {
   completedQuestionIds: Stage2QuestionId[]
   answerProvenance: Stage2AnswerProvenance
   revision: number
+  /** Defaults to the tools-off context; pass a `toolsEnabled: true` one for the rollout-on path. */
+  triggerContext?: Stage2TriggerContext
 }) {
   const row = {
     id: "draft-1",
@@ -120,7 +122,7 @@ function createModuleRefinementDb(seed: {
       preparedArtifactSourceId: "artifact-1",
       baseInputSnapshot: COMPLETE_V3_PLAN_ENVELOPE,
       pathVersion: "stage2-v1",
-      triggerContext: TRIGGER_CONTEXT,
+      triggerContext: seed.triggerContext ?? TRIGGER_CONTEXT,
       answers: structuredClone(row.answers),
       completedQuestionIds: [...row.completedQuestionIds],
       answerProvenance: { ...row.answerProvenance },
@@ -1075,4 +1077,96 @@ test("a stale revision is still rejected by the RPC lineage check on a non-repla
       error instanceof Stage2RefinementError && error.code === "revision_conflict",
   )
   assert.deepEqual(db.moduleOutcomes, ["revision_conflict"])
+})
+
+/**
+ * Hair Tools fix wave F1: the facts expansion follows the member's rollout AT WRITE TIME.
+ * Completed tool questions on a stored draft must not keep authorizing tool care keys once
+ * the flag is off (rollback), while the stored draft answers stay untouched.
+ */
+const TOOLS_ON_CONTEXT: Stage2TriggerContext = { ...TRIGGER_CONTEXT, toolsEnabled: true }
+const TOOL_PAGE_KEYS = [
+  "wash_application:1",
+  "drying_textiles:1",
+  "brushes_combs:1",
+  "brushes_combs:2",
+  "airflow:1",
+  "heated_styling:1",
+  "heatless_styling:1",
+  "securing_sectioning:1",
+  "securing_sectioning:2",
+  "night_protection:1",
+] as const
+const TOOLS_NONE_ANSWERS: PersonalPlanRefinementAnswersV1 = {
+  ...PRODUCTS_ANSWERS,
+  toolFamiliesWithSomething: [],
+  toolForms: Object.fromEntries(TOOL_PAGE_KEYS.map((key) => [key, []])),
+}
+const TOOLS_NONE_IDS: Stage2QuestionId[] = [...PRODUCTS_QUESTION_IDS, "tools_overview"]
+
+function isToolFactKey(key: string): boolean {
+  return (
+    key === "toolFamiliesWithSomething" || key.startsWith("toolForms_") || key === "brushesCombs"
+  )
+}
+
+test("rollout on: a non-closing Produkte completion publishes the tool care keys (unchanged)", async () => {
+  const db = createModuleRefinementDb({
+    answers: TOOLS_NONE_ANSWERS,
+    completedQuestionIds: TOOLS_NONE_IDS,
+    answerProvenance: userProvenance(TOOLS_NONE_IDS),
+    revision: 3,
+    triggerContext: TOOLS_ON_CONTEXT,
+  })
+  const { saveFacts, calls } = createFakeSaveFacts()
+  await createService(db, saveFacts).completeModule({ module: "products", expectedRevision: 3 })
+
+  const patch = calls[0]!.patch as Record<string, unknown>
+  assert.deepEqual(patch.toolFamiliesWithSomething, [])
+  assert.equal(Object.keys(patch).filter((key) => key.startsWith("toolForms_")).length, 10)
+  assert.deepEqual(patch.brushesCombs, [])
+  assert.equal(calls[0]!.provenance.fields!.toolFamiliesWithSomething, "user")
+  assert.equal(calls[0]!.provenance.fields!.brushesCombs, "user")
+})
+
+test("rollout off: the same stored tool answers publish NO tool keys, brushesCombs or provenance", async () => {
+  const db = createModuleRefinementDb({
+    answers: TOOLS_NONE_ANSWERS,
+    completedQuestionIds: TOOLS_NONE_IDS,
+    answerProvenance: userProvenance(TOOLS_NONE_IDS),
+    revision: 3,
+    // default context: the flag was turned off after the tools were answered
+  })
+  const { saveFacts, calls } = createFakeSaveFacts()
+  await createService(db, saveFacts).completeModule({ module: "products", expectedRevision: 3 })
+
+  assert.equal(calls.length, 1)
+  assert.deepEqual(calls[0]!.patch, PRODUCTS_ANSWERS)
+  assert.deepEqual(Object.keys(calls[0]!.provenance.fields!).filter(isToolFactKey), [])
+  // the stored draft answers are untouched
+  assert.deepEqual(db.row.answers.toolFamiliesWithSomething, [])
+  assert.equal(Object.keys(db.row.answers.toolForms ?? {}).length, 10)
+})
+
+test("rollout off: derived thing-fields whose own question never completed are not published", async () => {
+  const answers: PersonalPlanRefinementAnswersV1 = {
+    ...TOOLS_NONE_ANSWERS,
+    additionalHeatTools: [],
+    nightProtection: [],
+    towel: { material: "mikrofaser" } as never,
+  }
+  const db = createModuleRefinementDb({
+    answers,
+    completedQuestionIds: TOOLS_NONE_IDS,
+    answerProvenance: userProvenance(TOOLS_NONE_IDS),
+    revision: 3,
+  })
+  const { saveFacts, calls } = createFakeSaveFacts()
+  await createService(db, saveFacts).completeModule({ module: "products", expectedRevision: 3 })
+
+  assert.deepEqual(calls[0]!.patch, PRODUCTS_ANSWERS)
+  assert.deepEqual(calls[0]!.provenance.fields, {
+    currentProductCategories: "user",
+    wetWashFrequency: "user",
+  })
 })

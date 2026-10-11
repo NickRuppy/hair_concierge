@@ -42,15 +42,24 @@ import type { CareHabitsPatch, FieldProvenanceValue } from "./schema"
  * omitted. The derived thing-fields (`additionalHeatTools`, `towel.material`,
  * `nightProtection`) are already in the answers (the path writes them), so they spread as-is.
  * Without `completion` every stored page counts as settled.
+ *
+ * Rollout-aware: `completion.toolsEnabled === false` (the member's rollout AT WRITE TIME, e.g.
+ * after a rollback) expands NOTHING tool-related — no overview or page keys, no `brushesCombs`,
+ * and no thing-field that was only tool-derived (its own question never completed). The draft's
+ * stored tool answers stay as they are; they just no longer reach the facts.
  */
 export function toCareHabitsPatch(
   answers: PersonalPlanRefinementAnswersV1,
   completion?: {
     completedQuestionIds: readonly Stage2QuestionId[]
     answerProvenance?: Stage2AnswerProvenance
+    toolsEnabled?: boolean
   },
 ): CareHabitsPatch {
   const { toolForms, ...rest } = answers
+  if (completion?.toolsEnabled === false) {
+    return withoutToolAnswers(answers, completion.completedQuestionIds) as CareHabitsPatch
+  }
   if (toolForms === undefined && answers.toolFamiliesWithSomething === undefined) {
     return { ...rest } as CareHabitsPatch
   }
@@ -73,6 +82,26 @@ export function toCareHabitsPatch(
     patch.brushesCombs = careFactsFromToolInventory({ brushes_combs: brushes }).brushesCombs
   }
   return patch as CareHabitsPatch
+}
+
+/**
+ * The answers as the facts may see them while the tools rollout is off. When the draft carries
+ * tool answers, the thing-fields whose own question never completed are tool-derived (the
+ * rollout-on path writes them and keeps their questions off the path), so they are dropped too;
+ * a completed question's answer is the member's own and stays.
+ */
+function withoutToolAnswers(
+  answers: PersonalPlanRefinementAnswersV1,
+  completedQuestionIds: readonly Stage2QuestionId[],
+): Record<string, unknown> {
+  const { toolForms, toolFamiliesWithSomething, ...rest } = answers
+  const patch: Record<string, unknown> = { ...rest }
+  if (toolForms === undefined && toolFamiliesWithSomething === undefined) return patch
+  const completed = new Set(completedQuestionIds)
+  if (!completed.has("additional_heat_tools")) delete patch.additionalHeatTools
+  if (!completed.has("night_protection")) delete patch.nightProtection
+  if (!completed.has("towel_handling")) delete patch.towel
+  return patch
 }
 
 /** Each settled page's provenance: its own question's, or the overview's for an unticked family. */
@@ -183,6 +212,8 @@ export function toFieldProvenance(input: {
   completedQuestionIds: readonly Stage2QuestionId[]
   answerProvenance: Stage2AnswerProvenance
   answers?: PersonalPlanRefinementAnswersV1
+  /** `false` = the rollout is off at write time: no tool field gets a provenance entry. */
+  toolsEnabled?: boolean
 }): Record<string, FieldProvenanceValue> {
   const fields: Record<string, FieldProvenanceValue> = {}
   let heatEventSeen = false
@@ -203,7 +234,9 @@ export function toFieldProvenance(input: {
     fields[field] = value
   }
 
-  if (input.answers) Object.assign(fields, toolFieldProvenance(input, provenanceOf, fields))
+  if (input.answers && input.toolsEnabled !== false) {
+    Object.assign(fields, toolFieldProvenance(input, provenanceOf, fields))
+  }
 
   if (heatEventSeen) {
     fields.heatEvents = heatEventAssumed ? "assumed" : "user"
