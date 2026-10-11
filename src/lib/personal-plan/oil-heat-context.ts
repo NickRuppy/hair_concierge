@@ -61,15 +61,31 @@ export function heatEventsFromNeedSnapshot(
 }
 
 /**
- * The user's heat routes for Stage-3 heat-activation checks (Leave-In v1.2, S3 Q3):
- * the distinct shaping/hot-tool routes of the refined heat events. Plain blow-drying
- * (`ordinary_airflow`) and unclassified tools never qualify: they create no pre-heat
- * need, and the Stage-5 routine only places an activation step on a matching
- * airflow-shaping or direct-heat event. Sorted for a stable input.
+ * The ONE rule for which refined heat event counts as an activating heat step for a
+ * heat-activated product (Leave-In v1.2, S3 Q3). Shaping airflow (diffuser, dryer brush,
+ * hot-air styler) and hot tools count.
+ *
+ * PENDING RULING (Nick, S3 review R5): plain blow-drying (`ordinary_airflow`) does NOT count
+ * today — it creates no pre-heat need, and Stage 5 places heat steps only on shaping or
+ * hot-tool events. If Nick rules that plain blow-drying activates (e.g. HEAT&GLOW „Föhnen,
+ * um zu aktivieren."), map `ordinary_airflow` to `airflow_shaping` here.
+ */
+export function activatingHeatRouteForEvent(
+  event: Pick<PlanHeatToolUseEvent, "tool" | "route">,
+): "airflow_shaping" | "direct_contact_heat" | null {
+  if (event.route === "airflow_shaping" || event.route === "direct_contact_heat") return event.route
+  return null
+}
+
+/**
+ * The user's heat routes for Stage-3 heat-activation checks: the distinct activating routes
+ * of the refined heat events (`activatingHeatRouteForEvent`). Sorted for a stable input.
  */
 export function stage3HeatRoutesFromSnapshot(
   snapshot: InitialNeedPlanSnapshot,
 ): Array<"airflow_shaping" | "direct_contact_heat"> {
-  const routes = new Set(heatEventsFromNeedSnapshot(snapshot).map((event) => event.route))
+  const routes = new Set(
+    heatEventsFromNeedSnapshot(snapshot).map((event) => activatingHeatRouteForEvent(event)),
+  )
   return (["airflow_shaping", "direct_contact_heat"] as const).filter((route) => routes.has(route))
 }

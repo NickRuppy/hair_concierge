@@ -3,6 +3,10 @@ import test from "node:test"
 
 import { CATEGORY_ROLE_POLICIES } from "../../../src/lib/personal-plan/products/authorities"
 import { BONDBUILDER_TIE_DEFAULT_PRODUCT_ID } from "../../../src/lib/personal-plan/products/authority/categories/bondbuilder"
+import {
+  activatingHeatRouteForEvent,
+  stage3HeatRoutesFromSnapshot,
+} from "@/lib/personal-plan/oil-heat-context"
 import { evaluateStage3Authority } from "../../../src/lib/personal-plan/products/authority/evaluate"
 import { comparisonDimensions } from "../../../src/lib/personal-plan/products/comparison-dimensions"
 import type {
@@ -467,7 +471,7 @@ test("activated leave-in is a mismatch for a straightener-only user", () => {
     [
       [
         "leave_in.heat_activation",
-        "Wirkt erst beim Föhnen – passt nicht zu deinem Styling ohne Föhn.",
+        "Wirkt erst beim Föhn-Styling mit Bürste oder Diffusor – dieser Schritt fehlt in deiner Routine.",
       ],
     ],
   )
@@ -482,10 +486,53 @@ test("activated leave-in is a mismatch for a straightener-only user", () => {
   if (direct.status !== "known") return
   assert.deepEqual(
     direct.criteria.map((item) => item.explanation),
-    ["Wirkt erst mit Glätteisen oder Lockenstab – passt nicht zu deinem Styling."],
+    ["Wirkt erst mit Glätteisen oder Lockenstab – dieser Schritt fehlt in deiner Routine."],
   )
   const noHeat = evaluateStage3Authority(activatedLeaveInInput("pre_heat_application", []) as never)
   assert.equal(noHeat.status === "known" && noHeat.verdict, "mismatch")
+})
+
+test('R5 pending ruling: plain blow-drying is not an activating step, and the reason never claims „ohne Föhn"', () => {
+  // Current rule (pending Nick): ordinary_airflow events do not count as an activating heat
+  // step. A user who blow-dries plainly and straightens gets the airflow product refused with
+  // a reason that is true for her — the styling step is missing, not the hair dryer.
+  const snapshot = {
+    assessments: {
+      heatExposure: {
+        events: [
+          {
+            id: "dry",
+            tool: "hair_dryer",
+            route: "ordinary_airflow",
+            frequency: "weekly_3_4x",
+            sourceRuleIds: [],
+          },
+          {
+            id: "iron",
+            tool: "straightener",
+            route: "direct_contact_heat",
+            frequency: "weekly_1x",
+            sourceRuleIds: [],
+          },
+        ],
+      },
+    },
+  } as never
+  assert.equal(activatingHeatRouteForEvent({ tool: "hair_dryer", route: "ordinary_airflow" }), null)
+  assert.deepEqual(stage3HeatRoutesFromSnapshot(snapshot), ["direct_contact_heat"])
+  const result = evaluateStage3Authority(
+    activatedLeaveInInput("pre_heat_application", stage3HeatRoutesFromSnapshot(snapshot)) as never,
+  )
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "mismatch")
+  for (const item of result.criteria) assert.doesNotMatch(item.explanation, /ohne Föhn/)
+  assert.deepEqual(
+    result.criteria.map((item) => item.explanation),
+    [
+      "Wirkt erst beim Föhn-Styling mit Bürste oder Diffusor – dieser Schritt fehlt in deiner Routine.",
+    ],
+  )
 })
 
 test("missing heat routes yield unknown", () => {

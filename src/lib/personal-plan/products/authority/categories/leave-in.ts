@@ -98,11 +98,13 @@ function evaluateFacts(input: Stage3AuthorityInput<"leave_in">, facts: Stage3Lea
           "leave_in.heat_activation",
           "Hitzeaktivierung",
           "fail",
+          // Names the missing styling step, never „ohne Föhn": under the pending R5 ruling a
+          // user may blow-dry plainly and still lack the activating step.
           activation.route === "direct_contact_heat"
-            ? "Wirkt erst mit Glätteisen oder Lockenstab – passt nicht zu deinem Styling."
+            ? "Wirkt erst mit Glätteisen oder Lockenstab – dieser Schritt fehlt in deiner Routine."
             : activation.route === "either_heat"
-              ? "Wirkt erst mit Hitze – passt nicht zu deinem Styling ohne Hitze."
-              : "Wirkt erst beim Föhnen – passt nicht zu deinem Styling ohne Föhn.",
+              ? "Wirkt erst beim Hitzestyling – dieser Schritt fehlt in deiner Routine."
+              : "Wirkt erst beim Föhn-Styling mit Bürste oder Diffusor – dieser Schritt fehlt in deiner Routine.",
         ),
       ],
     }
