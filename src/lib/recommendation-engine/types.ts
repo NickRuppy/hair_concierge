@@ -31,7 +31,6 @@ import type {
   BALANCE_DIRECTIONS,
   BOND_APPLICATION_MODES,
   BOND_BUILDER_PRIORITIES,
-  BOND_REPAIR_INTENSITIES,
   CARE_BALANCE_FACT_KINDS,
   CARE_BALANCE_FACT_SOURCES,
   CARE_BALANCE_RECOMMENDATIONS,
@@ -76,7 +75,6 @@ export type CanonicalCleansingIntensity = (typeof CANONICAL_CLEANSING_INTENSITIE
 export type CanonicalRepairLevel = (typeof CANONICAL_REPAIR_LEVELS)[number]
 export type CanonicalWeight = (typeof CANONICAL_WEIGHTS)[number]
 export type ScalpTypeFocus = (typeof SCALP_TYPE_FOCUSES)[number]
-export type BondRepairIntensity = (typeof BOND_REPAIR_INTENSITIES)[number]
 export type BondApplicationMode = (typeof BOND_APPLICATION_MODES)[number]
 export type PeelingType = (typeof PEELING_TYPES)[number]
 export type LeaveInCareTarget = (typeof LEAVE_IN_CARE_TARGETS)[number]
@@ -533,7 +531,6 @@ export interface OilCategoryDecision extends CategoryDecisionBase<"oil", OilTarg
 }
 
 export interface BondbuilderTargetProfile {
-  bondRepairIntensity: BondRepairIntensity | null
   applicationMode: BondApplicationMode | null
   chemicalCrosslinkLane: boolean
   peptideChainLane: boolean

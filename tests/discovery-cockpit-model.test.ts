@@ -237,12 +237,14 @@ test("a tie-default pick brings its equals: the call may choose any, the route a
     productName,
     priceLabel: "8,95 €",
     imageUrl: `https://catalog.example/${productId}.jpg`,
+    applicationLabel: "Vorwäsche, ausspülen",
   })
   const view = buildDiscoveryCockpitView(
     model({
       steps: [
         step({
           preview: idealPreview(ids.ideal),
+          idealApplicationLabel: "Leave-in nach der Wäsche",
           equalOptions: [
             equal(ids.alternativeA, "Elvital Pre-Shampoo"),
             equal(ids.alternativeB, "Redken Concentrate"),
@@ -262,6 +264,11 @@ test("a tie-default pick brings its equals: the call may choose any, the route a
   )
   assert.equal(view.steps[0].swapOptions[1].verdictLabel, "Passt")
   assert.equal(view.steps[0].swapOptions[1].priceLabel, "8,95 €")
+  // E2: equals are told apart by how they are applied — the pick included.
+  assert.deepEqual(
+    view.steps[0].swapOptions.map((option) => option.applicationLabel),
+    ["Leave-in nach der Wäsche", "Vorwäsche, ausspülen", "Vorwäsche, ausspülen"],
+  )
   assert.deepEqual(discoveryCockpitSwapOptionIds(view, view.steps[0].decisionKey, null), [
     ids.ideal,
     ids.alternativeA,
@@ -269,7 +276,7 @@ test("a tie-default pick brings its equals: the call may choose any, the route a
   ])
 })
 
-test("equal options never move the routine fingerprint (nothing prints until chosen)", () => {
+test("equal options and the pick's application never move the routine fingerprint", () => {
   const plain = composeDiscoveryRefinedRoutine({
     steps: [step({ preview: idealPreview(ids.ideal) })],
     items: [],
@@ -280,12 +287,14 @@ test("equal options never move the routine fingerprint (nothing prints until cho
     steps: [
       step({
         preview: idealPreview(ids.ideal),
+        idealApplicationLabel: "Leave-in nach der Wäsche",
         equalOptions: [
           {
             productId: ids.alternativeA,
             productName: "Elvital Pre-Shampoo",
             priceLabel: null,
             imageUrl: null,
+            applicationLabel: null,
           },
         ],
       }),

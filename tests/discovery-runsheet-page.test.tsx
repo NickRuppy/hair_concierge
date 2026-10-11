@@ -33,6 +33,7 @@ import {
 import {
   DiscoveryRunsheetRoutine,
   runsheetWeek,
+  runsheetWeekPlacement,
 } from "../src/components/discovery/cockpit/runsheet-routine"
 import { ScanVerdictSections } from "../src/components/scan/scan-verdict-sections"
 import { parseDiscoveryCallSheet, type DiscoveryCallSheet } from "../src/lib/discovery/call-sheet"
@@ -329,8 +330,22 @@ function footerOf(markup: string): string {
 
 // --- the page ---------------------------------------------------------------------------
 
+test("E1: her profile sits first — hair, scalp, routine, problems with the main one marked", async () => {
+  const markup = await renderPage({ loadQuizLead: async () => dryLengthsLead })
+  const at = markup.indexOf('id="runsheet-profile"')
+  assert.ok(at > 0)
+  assert.ok(at < markup.indexOf("Vor dem Call"))
+  const strip = markup.slice(at, markup.indexOf("</section>", at))
+  assert.ok(strip.includes(">Profil<"))
+  for (const label of [">Haar<", ">Probleme<"]) assert.ok(strip.includes(label), label)
+  assert.ok(strip.includes("Hauptproblem: "))
+})
+
 test("the runsheet renders its six phases in order", async () => {
-  const markup = await renderPage()
+  const page = await renderPage()
+  // The profile strip (E1) sits above everything and shares words like „Routine": the phases
+  // are read after it.
+  const markup = page.slice(page.indexOf("</section>", page.indexOf('id="runsheet-profile"')))
   const positions = [
     "Vor dem Call",
     ">Eröffnen<",
@@ -599,13 +614,14 @@ test("a failing call-sheet read leaves the runsheet empty instead of failing the
 test("checklist: research with GTIN, bleach cadence and detangling asks from her profile", async () => {
   const markup = await renderPage()
   assert.ok(markup.includes(`Recherche abschließen — Gescanntes Produkt · ${GTIN} (Conditioner)`))
-  assert.ok(
-    markup.includes(
-      "Im Call klären: Färbe-/Blondier-Rhythmus · Entwirren (Kamm oder Bürste) · Einkaufsort",
-    ),
-  )
-  // R17: the same asks sit as „kurz fragen" chips in the Hebel card.
-  assert.ok(markup.includes("kurz fragen: Färbe-/Blondier-Rhythmus"))
+  // E4: the asks are listed ONCE, at the top of „Fragen für den Call"; the checklist points
+  // there and the Hebel card carries no chips.
+  assert.ok(markup.includes("Offene Punkte im Call klären — stehen unter Fragen für den Call"))
+  const asks =
+    "Außerdem klären: Färbe-/Blondier-Rhythmus · Entwirren (Kamm oder Bürste) · Einkaufsort"
+  assert.equal(markup.split(asks).length - 1, 1)
+  assert.ok(!markup.includes("kurz fragen:"))
+  assert.ok(markup.indexOf("Fragen für den Call") < markup.indexOf(asks))
 })
 
 test("routine: wash day and in-between days, today's wash frequency, no price row", async () => {
@@ -646,6 +662,59 @@ test("routine: each day is a table — Schritt | Produkt | Wann | Zweck, one row
       assert.ok(row.includes(line.frequencyLabel), row)
     }
   }
+})
+
+test("week view: every product names its status — Entschieden, Vorschlag or Offen (A1)", () => {
+  const week = runsheetWeek(buildDiscoveryCockpitView(model()).steps)
+  const labels = [...week.washDay, ...week.offDays].flatMap((line) =>
+    line.products.map((product) => product.label),
+  )
+  assert.ok(labels.length > 0)
+  for (const label of labels) {
+    assert.match(label, /^(Entschieden|Vorschlag|Offen): /, label)
+  }
+})
+
+test("week placement: a step sits in every column it belongs to (A3)", () => {
+  const at = (key: string, hotTool: boolean | null = true, timing: string | null = null) =>
+    runsheetWeekPlacement(key, timing, hotTool)
+  // Wash-only: shampoo, conditioner, mask, pre-wash oil, bondbuilder, scalp serum (default).
+  for (const key of [
+    "decision:shampoo:shampoo_everyday:gap",
+    "decision:conditioner:conditioner_rinse_out:gap",
+    "decision:mask:intensive_conditioning_mask:gap",
+    "decision:oil:pre_wash_fibre_treatment:gap",
+    "decision:bondbuilder:specialized_bond_treatment:gap",
+    "decision:scalp_care:scalp_comfort:gap",
+    "decision:leave_in:post_wash_leave_in:gap",
+  ]) {
+    assert.deepEqual(at(key), { washDay: true, offDays: false }, key)
+  }
+  // Finishing / leave-on oil: last on a wash day AND on days without washing.
+  assert.deepEqual(at("decision:oil:dry_finish:gap"), { washDay: true, offDays: true })
+  assert.deepEqual(at("decision:oil:leave_on_fibre_conditioning:gap"), {
+    washDay: true,
+    offDays: true,
+  })
+  // Heat steps follow her hot tools; unknown keeps both.
+  for (const key of [
+    "decision:heat_protectant:pre_heat_protection:gap",
+    "decision:leave_in:pre_heat_application:gap",
+  ]) {
+    assert.deepEqual(at(key, true), { washDay: true, offDays: true }, key)
+    assert.deepEqual(at(key, false), { washDay: true, offDays: false }, key)
+    assert.deepEqual(at(key, null), { washDay: true, offDays: true }, key)
+  }
+  // Dry shampoo bridges the days between washes.
+  assert.deepEqual(at("decision:dry_shampoo:root_refresh_bridge:gap"), {
+    washDay: false,
+    offDays: true,
+  })
+  // Unknown role: the timing label decides, as before.
+  assert.deepEqual(at("decision:x:unknown:gap", true, "Nach Shampoo"), {
+    washDay: true,
+    offDays: false,
+  })
 })
 
 test("closing: the approved referral text, the copy button, and the unchanged finalize bar", async () => {
@@ -902,7 +971,11 @@ test("recipe: her scanned conditioner still in research counts as „vorhanden�
 test("recipe as a slide: talking point, Zuerst and Nicht zuerst visible; the rest folded", async () => {
   const markup = await renderPage({ loadQuizLead: async () => dryLengthsLead })
   const recipe = concernRecipeFor("dry_lengths")!
-  const start = markup.indexOf("Hauptproblem: ")
+  // After the profile strip (E1), which marks the main problem the same way.
+  const start = markup.indexOf(
+    "Hauptproblem: ",
+    markup.indexOf("</section>", markup.indexOf('id="runsheet-profile"')),
+  )
   const card = markup.slice(start, markup.indexOf("</section>", start))
   const foldAt = card.indexOf("<details")
   assert.ok(foldAt > 0, "the recipe has fold-ups")
@@ -1167,7 +1240,7 @@ test("checklist lines: one research line per product, the asks on one line", () 
       "Recherche abschließen — Balea Spülung · 4001 (Conditioner)",
       "Baseline-Score abfragen (1–10) und oben eintragen",
       "Consult-Brief prüfen (Diagnose, Hebel, Begründungen)",
-      "Im Call klären: Einkaufsort",
+      "Offene Punkte im Call klären — stehen unter Fragen für den Call",
     ],
   )
 })
@@ -1547,7 +1620,7 @@ test("frequency row: every product of hers shows her answer next to the Idealpla
   assert.ok(!markup.includes("nicht vergleichbar"))
 })
 
-test("frequency row: a rhythm without a band shows both sides and „nicht vergleichbar“", async () => {
+test("frequency row: a rhythm without a band shows both sides and „kein fester Rhythmus“", async () => {
   const markup = await renderPage({
     loadModel: async () =>
       model({
@@ -1558,7 +1631,9 @@ test("frequency row: a rhythm without a band shows both sides and „nicht vergl
   const shampoo = entryTextOf(markup, "Shampoo")
   assert.ok(shampoo.includes("Angabe: Täglich"), shampoo)
   assert.ok(shampoo.includes("Idealplan: nach Bedarf"), shampoo)
-  assert.ok(shampoo.includes("nicht vergleichbar"), shampoo)
+  // E3: „nach Bedarf" is deliberately rhythm-free — said so, not flagged as incomparable.
+  assert.ok(shampoo.includes("kein fester Rhythmus"), shampoo)
+  assert.ok(!shampoo.includes("nicht vergleichbar"), shampoo)
   assert.ok(!markup.includes(CHIP_MARK))
 })
 
@@ -2032,7 +2107,9 @@ test("locked-in: stored decisions — the swap is bought with its price, the emp
     section.indexOf(">Summe neu<"),
   )
   assert.ok(skip.includes(">Conditioner</span>"), skip)
-  assert.ok(skip.includes("Schritt bleibt offen"))
+  // A1: a deliberately empty step is decided — never worded „offen".
+  assert.ok(skip.includes("kein Produkt nötig"))
+  assert.ok(!skip.includes("offen"))
   const keep = section.slice(section.indexOf(">Behalten<"), section.indexOf(">Weglassen<"))
   assert.ok(keep.includes("Noch nichts festgehalten."))
   assert.ok(section.includes('id="runsheet-locked-in-total" class="ml-auto tabular-nums">9,95 €<'))

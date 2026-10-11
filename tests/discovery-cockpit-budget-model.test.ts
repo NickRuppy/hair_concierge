@@ -151,6 +151,7 @@ type VerdictCall = { budget: ShoppingBudget | null; deps: unknown }
 function harness(options: {
   loadShoppingBudget?: () => Promise<Stage1ProductExamplePreviewBudget | null>
   preview?: DiscoveryIdealStep["preview"]
+  equalOptions?: DiscoveryIdealStep["equalOptions"]
   verdicts?: DiscoveryParticipantVerdict[]
 }) {
   const idealCalls: IdealCall[] = []
@@ -161,7 +162,11 @@ function harness(options: {
       idealCalls.push({ userId, options: opts })
       return {
         status: "ready" as const,
-        steps: [step(options.preview ?? null)],
+        steps: [
+          options.equalOptions
+            ? { ...step(options.preview ?? null), equalOptions: options.equalOptions }
+            : step(options.preview ?? null),
+        ],
         context: {} as never,
         previewSource: { personalPlanId: `discovery:${ids.intake}`, sourceNeedVersionId: "v1" },
       }
@@ -347,6 +352,35 @@ test("the Idealplan recommendation uses the numeric price, else its label", asyn
     // With no alternatives and no owned verdict, the recommendation is the swap option.
     assert.equal(view.steps[0].swapOptions[0]?.overBudgetEur, expected)
   }
+})
+
+test("equally ideal options (tie-default equals) are marked above a capped budget too", async () => {
+  const h = harness({
+    loadShoppingBudget: async () => PREVIEW_BUDGET,
+    preview: idealPreview(4.5, "4,50 €"),
+    equalOptions: [
+      {
+        productId: "30000000-0000-4000-8000-0000000000e1",
+        productName: "Teurer Bondbuilder",
+        priceLabel: "12,40 €",
+        imageUrl: null,
+        applicationLabel: "Vorwäsche, ausspülen",
+      },
+      {
+        productId: "30000000-0000-4000-8000-0000000000e2",
+        productName: "Günstiger Bondbuilder",
+        priceLabel: "3,95 €",
+        imageUrl: null,
+        applicationLabel: null,
+      },
+    ],
+  })
+  const view = buildDiscoveryCockpitView(await load(h))
+  const equals = view.steps[0].swapOptions.filter((option) => option.origin === "equal_alternative")
+  assert.deepEqual(
+    equals.map((option) => option.overBudgetEur),
+    [7.4, undefined],
+  )
 })
 
 test("no budget, uncapped or flag off: no option is marked", async () => {

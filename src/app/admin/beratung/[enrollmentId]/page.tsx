@@ -24,6 +24,7 @@ import {
   composeRunsheetOutsideRoutine,
   composeRunsheetProducts,
 } from "@/components/discovery/cockpit/runsheet-products"
+import { DiscoveryRunsheetProfileStrip } from "@/components/discovery/cockpit/runsheet-profile-strip"
 import { DiscoveryRunsheetRoutine } from "@/components/discovery/cockpit/runsheet-routine"
 import {
   DISCOVERY_INTAKE_CATEGORY_COPY,
@@ -62,6 +63,7 @@ import {
   runsheetWashChangeNote,
   runsheetWashFrequency,
 } from "@/lib/discovery/runsheet"
+import { runsheetProfileStrip } from "@/lib/discovery/runsheet/profile-strip"
 import { isShoppingBudgetEnabled } from "@/lib/personal-plan/release"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { createAdminClient } from "@/lib/supabase/admin"
@@ -291,6 +293,13 @@ export function createDiscoveryCockpitPage(
           <Notice text={BRANDS_UNAVAILABLE} />
         )}
         {view.applicationAvailable ? null : <Notice text={APPLICATION_UNAVAILABLE} />}
+        <DiscoveryRunsheetProfileStrip
+          rows={runsheetProfileStrip({
+            quiz,
+            heat: view.heatStyling,
+            washFrequencyLabel,
+          })}
+        />
         <DiscoveryRunsheetBrief
           enrollmentId={enrollmentId}
           saveLocked={!callSheetAvailable}
@@ -361,6 +370,7 @@ export function createDiscoveryCockpitPage(
           routinePhase={
             <DiscoveryRunsheetRoutine
               view={view}
+              hotTool={model.heatStyling ? model.heatStyling.additionalHeatTools.length > 0 : null}
               washFrequencyLabel={washFrequencyLabel}
               washChangeNote={washChangeNote}
               washFrequency={washAnchor}
