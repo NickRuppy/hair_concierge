@@ -614,6 +614,7 @@ function discoveryRoutineSourceHash(
         ...entry.step,
         depth: undefined,
         equalOptions: undefined,
+        idealApplicationLabel: undefined,
         preview: hashedPreview(entry.step.preview),
       },
     })),

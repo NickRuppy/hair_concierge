@@ -1,6 +1,5 @@
 import type {
   BondApplicationMode,
-  BondRepairIntensity,
   CanonicalBalanceTarget,
   CanonicalRepairLevel,
   CanonicalWeight,
@@ -212,11 +211,6 @@ export function derivePeelingType(profile: NormalizedProfile): PeelingType | nul
   }
 
   return "acid_serum"
-}
-
-export function deriveBondRepairIntensity(damage: DamageAssessment): BondRepairIntensity | null {
-  if (damage.bondBuilderPriority === "none") return null
-  return damage.bondBuilderPriority === "recommend" ? "intensive" : "maintenance"
 }
 
 export function deriveBondApplicationMode(profile: NormalizedProfile): BondApplicationMode | null {

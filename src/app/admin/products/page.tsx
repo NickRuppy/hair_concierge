@@ -35,8 +35,6 @@ import {
   PRODUCT_BOND_PRODUCT_FORMAT_LABELS,
   PRODUCT_BOND_REPAIR_AXES,
   PRODUCT_BOND_REPAIR_AXIS_LABELS,
-  PRODUCT_BOND_REPAIR_INTENSITIES,
-  PRODUCT_BOND_REPAIR_INTENSITY_LABELS,
   PRODUCT_BOND_TREATMENT_MODES,
   PRODUCT_BOND_TREATMENT_MODE_LABELS,
   PRODUCT_BOND_USAGE_PROTOCOLS,
@@ -91,7 +89,6 @@ interface ConditionerSpecForm {
 }
 
 interface BondbuilderSpecForm {
-  bond_repair_intensity: string
   application_mode: string
   bond_repair_axis: string
   treatment_mode: string
@@ -167,7 +164,6 @@ const emptyConditionerSpecs: ConditionerSpecForm = {
 }
 
 const emptyBondbuilderSpecs: BondbuilderSpecForm = {
-  bond_repair_intensity: "maintenance",
   application_mode: "pre_shampoo",
   bond_repair_axis: "disulfide_crosslink",
   treatment_mode: "rinse_out",
@@ -311,7 +307,6 @@ export default function AdminProductsPage() {
 
     const bondbuilderSpecs = product.bondbuilder_specs
       ? {
-          bond_repair_intensity: product.bondbuilder_specs.bond_repair_intensity ?? "",
           application_mode: product.bondbuilder_specs.application_mode ?? "",
           bond_repair_axis: product.bondbuilder_specs.bond_repair_axis ?? "",
           treatment_mode: product.bondbuilder_specs.treatment_mode ?? "",
@@ -576,7 +571,6 @@ export default function AdminProductsPage() {
         bondbuilder_specs:
           bondbuilderEnabled && form.bondbuilder_specs && !form.bondbuilder_research_managed
             ? {
-                bond_repair_intensity: form.bondbuilder_specs.bond_repair_intensity,
                 application_mode: form.bondbuilder_specs.application_mode,
                 bond_repair_axis: form.bondbuilder_specs.bond_repair_axis,
                 treatment_mode: form.bondbuilder_specs.treatment_mode,
@@ -1300,33 +1294,6 @@ export default function AdminProductsPage() {
                   </div>
 
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <div>
-                      <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                        Repair-Intensitaet
-                      </label>
-                      <select
-                        value={form.bondbuilder_specs.bond_repair_intensity}
-                        onChange={(e) =>
-                          setForm((prev) => ({
-                            ...prev,
-                            bondbuilder_specs: prev.bondbuilder_specs
-                              ? {
-                                  ...prev.bondbuilder_specs,
-                                  bond_repair_intensity: e.target.value,
-                                }
-                              : null,
-                          }))
-                        }
-                        className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                      >
-                        {PRODUCT_BOND_REPAIR_INTENSITIES.map((value) => (
-                          <option key={value} value={value}>
-                            {PRODUCT_BOND_REPAIR_INTENSITY_LABELS[value]}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
                     <div>
                       <label className="mb-1 block text-xs font-medium text-muted-foreground">
                         Anwendungsmodus
