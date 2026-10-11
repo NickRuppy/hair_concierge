@@ -89,5 +89,9 @@ export function buildPlanRoutineContextFromCompletedRefinement(
       input.triggerContext.hasReportedIrritatedScalp && contract.answers.scalpIrritationDetail
         ? { state: "known", value: contract.answers.scalpIrritationDetail }
         : { state: "unknown", reason: "scalp_irritation_detail" },
+    // Only a stated timing is carried; „Ist mir egal“ is the absence of the key (see types.ts).
+    ...(contract.answers.bondbuilderTiming && contract.answers.bondbuilderTiming !== "no_preference"
+      ? { bondbuilderTiming: { state: "known", value: contract.answers.bondbuilderTiming } }
+      : {}),
   }
 }

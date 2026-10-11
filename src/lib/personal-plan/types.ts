@@ -3,6 +3,7 @@ import type {
   PersonalPlanQuizGoal,
   PersonalPlanQuizSubmissionEnvelope,
 } from "@/lib/personal-plan-quiz/types"
+import type { BondbuilderTiming } from "@/lib/personal-plan/refinement/types"
 import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
 
 export const STAGE1_CATEGORY_ORDER = [
@@ -102,6 +103,13 @@ export type PlanRoutineContext = {
   scalpIrritationState: PlanKnowledge<
     "normal" | "mild_sensitive_or_itchy" | "burning_painful_or_inflamed"
   >
+  /**
+   * The Feinschliff Bondbuilder timing (S4), present only for a stated before/after-wash
+   * answer. Absent = „Ist mir egal“ (answered, assumed or never asked), so every snapshot
+   * without a stated timing stays byte-identical to a pre-S4 one. Read it through
+   * `bondbuilderTimingFromSnapshot`.
+   */
+  bondbuilderTiming?: { state: "known"; value: BondbuilderTiming }
 }
 
 export const INITIAL_UNKNOWN_ROUTINE_CONTEXT: PlanRoutineContext = {

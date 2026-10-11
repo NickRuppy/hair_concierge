@@ -25,6 +25,8 @@ const irritatedOilyEnvelope = {
 const completedAnswers: PersonalPlanRefinementAnswersV1 = {
   currentProductCategories: ["shampoo"],
   wetWashFrequency: "weekly_2x",
+  // „Ist mir egal“ keeps the snapshot byte-identical to a pre-S4 one (no routine key).
+  bondbuilderTiming: "no_preference",
   scalpIrritationDetail: "mild_sensitive_or_itchy",
   dryShampooBridgePreference: "accept",
   dryShampooVisibleHairColor: "dark",
@@ -47,6 +49,7 @@ const completedAnswers: PersonalPlanRefinementAnswersV1 = {
 const completedQuestionIds: Stage2QuestionId[] = [
   "current_product_categories",
   "wet_wash_frequency",
+  "bondbuilder_timing",
   "scalp_irritation_detail",
   "dry_shampoo_bridge_preference",
   "dry_shampoo_visible_hair_color",
@@ -74,6 +77,10 @@ function initialSnapshot() {
 test("a real Stage 1 snapshot drives Stage 2 triggers and a refined Stage 1 recomputation", () => {
   const initial = initialSnapshot()
   const triggerContext = deriveStage2TriggerContext(initial)
+  assert.ok(
+    triggerContext.relevantCategories.includes("bondbuilder"),
+    "fixture has a Bondbuilder need",
+  )
 
   assert.deepEqual(triggerContext, {
     relevantCategories: initial.renderedOrder,
@@ -212,6 +219,7 @@ test("current product categories stay inventory-routing facts instead of frequen
     completedQuestionIds: [
       "current_product_categories",
       "wet_wash_frequency",
+      "bondbuilder_timing",
       "scalp_irritation_detail",
       "dry_shampoo_visible_hair_color",
       "oil_purposes",
@@ -366,4 +374,46 @@ test("an existing Dry Shampoo records an accepted bridge without asking the brid
   })
 
   assert.deepEqual(routine.dryShampooBridgePreference, { state: "known", value: "accept" })
+})
+
+test("a stated Bondbuilder timing reaches the refined snapshot; „Ist mir egal“ adds no key", () => {
+  const triggerContext = deriveStage2TriggerContext(initialSnapshot())
+  const refinedRoutine = (bondbuilderTiming: "before_wash" | "after_wash" | "no_preference") => {
+    const routine = buildPlanRoutineContextFromCompletedRefinement({
+      triggerContext,
+      answers: { ...completedAnswers, bondbuilderTiming },
+      completedQuestionIds,
+    })
+    const refined = computeNeedPlan({
+      rawEnvelope: irritatedOilyEnvelope,
+      artifactId: "11111111-1111-4111-8111-111111111111",
+      projection: "refined_post_plan",
+      computationVersion: "stage1-v1",
+      createdAt: "2026-08-07T12:10:00.000Z",
+      routine,
+    })
+    assert.equal(refined.status, "ready")
+    if (refined.status !== "ready") throw new Error("unreachable")
+    return { routine, snapshot: refined.snapshot }
+  }
+
+  for (const value of ["before_wash", "after_wash"] as const) {
+    const { routine, snapshot } = refinedRoutine(value)
+    assert.deepEqual(routine.bondbuilderTiming, { state: "known", value })
+    assert.deepEqual(snapshot.profile.routine.bondbuilderTiming, { state: "known", value })
+  }
+
+  const neutral = refinedRoutine("no_preference")
+  assert.equal("bondbuilderTiming" in neutral.routine, false)
+  assert.equal("bondbuilderTiming" in neutral.snapshot.profile.routine, false)
+  // Without a Bondbuilder need (no question on the path) the snapshot is the same bytes.
+  const withoutNeed = buildPlanRoutineContextFromCompletedRefinement({
+    triggerContext: {
+      ...triggerContext,
+      relevantCategories: triggerContext.relevantCategories.filter((c) => c !== "bondbuilder"),
+    },
+    answers: { ...completedAnswers, bondbuilderTiming: undefined },
+    completedQuestionIds: completedQuestionIds.filter((id) => id !== "bondbuilder_timing"),
+  })
+  assert.equal(JSON.stringify(withoutNeed), JSON.stringify(neutral.routine))
 })

@@ -4,6 +4,8 @@ import test from "node:test"
 import { buildDirectAcceptanceStage2Defaults } from "@/lib/personal-plan/direct-acceptance/defaults"
 import {
   STAGE2_ASSUMPTION_RULES,
+  STAGE2_LATE_ADDED_QUESTION_IDS,
+  normalizeLateAddedQuestions,
   resolveAssumedAnswers,
   selectStage2Answers,
 } from "@/lib/personal-plan/refinement/assumed-defaults"
@@ -570,4 +572,127 @@ test("a structurally invalid stored answer is overwritten by its assumption", ()
   // Unordered category list is invalid too, so it is replaced rather than kept.
   assert.deepEqual(resolution.answers.currentProductCategories, [])
   assert.equal(resolution.answers.oilPurposes, undefined)
+})
+
+/* ── S4: questions added after a draft already passed their point ────────── */
+
+const PRE_S4_ANSWERS: PersonalPlanRefinementAnswersV1 = {
+  currentProductCategories: [],
+  wetWashFrequency: "weekly_1x",
+  towel: { material: "no_towel" },
+  dryingRoutes: ["air_dry"],
+  additionalHeatTools: [],
+  nightProtection: [],
+}
+const PRE_S4_IDS: Stage2QuestionId[] = [
+  "current_product_categories",
+  "wet_wash_frequency",
+  "towel_handling",
+  "drying_routes",
+  "additional_heat_tools",
+  "night_protection",
+]
+const PRE_S4_PROVENANCE = Object.fromEntries(PRE_S4_IDS.map((id) => [id, "user" as const]))
+const PROJECTION = { needVersionId: "refined-1", projectedAtRevision: 3, stage3Handoff: true }
+
+function preS4Draft(overrides: Partial<Parameters<typeof normalizeLateAddedQuestions>[0]> = {}) {
+  return {
+    status: "complete" as const,
+    triggerContext: BONDBUILDER_NEED_CONTEXT,
+    answers: PRE_S4_ANSWERS,
+    completedQuestionIds: PRE_S4_IDS,
+    answerProvenance: PRE_S4_PROVENANCE,
+    moduleProjections: {},
+    ...overrides,
+  }
+}
+
+test("only bondbuilder_timing is a late-added question", () => {
+  assert.deepEqual([...STAGE2_LATE_ADDED_QUESTION_IDS], ["bondbuilder_timing"])
+})
+
+test("a complete pre-S4 draft gets the assumed „Ist mir egal“ and stays complete", () => {
+  const before = preS4Draft()
+  assert.equal(
+    resolveStage2RefinementContract(before).isComplete,
+    false,
+    "fixture: the new question makes the stored path incomplete",
+  )
+  const normalized = normalizeLateAddedQuestions(before)
+  assert.deepEqual(normalized.answers, { ...PRE_S4_ANSWERS, bondbuilderTiming: "no_preference" })
+  assert.deepEqual(normalized.completedQuestionIds, [
+    "current_product_categories",
+    "wet_wash_frequency",
+    "bondbuilder_timing",
+    "towel_handling",
+    "drying_routes",
+    "additional_heat_tools",
+    "night_protection",
+  ])
+  assert.deepEqual(normalized.answerProvenance, {
+    ...PRE_S4_PROVENANCE,
+    bondbuilder_timing: "assumed",
+  })
+  assert.equal(resolveStage2RefinementContract(normalized).isComplete, true)
+  // input untouched, and a second pass is a no-op
+  assert.equal(before.answers.bondbuilderTiming, undefined)
+  assert.deepEqual(normalizeLateAddedQuestions(normalized), normalized)
+})
+
+test("an in-progress draft whose products module was already projected is normalized too", () => {
+  const draft = preS4Draft({
+    status: "in_progress",
+    answers: { currentProductCategories: [], wetWashFrequency: "weekly_1x" },
+    completedQuestionIds: ["current_product_categories", "wet_wash_frequency"],
+    answerProvenance: { current_product_categories: "user", wet_wash_frequency: "user" },
+    moduleProjections: { products: PROJECTION },
+  })
+  const normalized = normalizeLateAddedQuestions(draft)
+  assert.equal(normalized.answers.bondbuilderTiming, "no_preference")
+  assert.deepEqual(normalized.completedQuestionIds, [
+    "current_product_categories",
+    "wet_wash_frequency",
+    "bondbuilder_timing",
+  ])
+  assert.equal(normalized.answerProvenance.bondbuilder_timing, "assumed")
+})
+
+test("an in-progress draft owned by direct acceptance has passed every question", () => {
+  const normalized = normalizeLateAddedQuestions(
+    preS4Draft({ status: "in_progress", directAcceptanceOwned: true }),
+  )
+  assert.equal(normalized.answers.bondbuilderTiming, "no_preference")
+  assert.equal(normalized.answerProvenance.bondbuilder_timing, "assumed")
+})
+
+test("drafts that have not passed the question are left for the user to answer", () => {
+  const cases = {
+    "in progress before the products projection": preS4Draft({
+      status: "in_progress",
+      answers: { currentProductCategories: [], wetWashFrequency: "weekly_1x" },
+      completedQuestionIds: ["current_product_categories", "wet_wash_frequency"],
+    }),
+    "only the habits module projected": preS4Draft({
+      status: "in_progress",
+      answers: { currentProductCategories: [], wetWashFrequency: "weekly_1x" },
+      completedQuestionIds: ["current_product_categories", "wet_wash_frequency"],
+      moduleProjections: { habits: PROJECTION },
+    }),
+    "no Bondbuilder need": preS4Draft({ triggerContext: triggerContext() }),
+    "she already answered it": preS4Draft({
+      answers: { ...PRE_S4_ANSWERS, bondbuilderTiming: "after_wash" },
+      completedQuestionIds: [...PRE_S4_IDS, "bondbuilder_timing"],
+    }),
+    "stale draft": preS4Draft({ status: "stale" }),
+    "in progress, saved interactively": preS4Draft({
+      status: "in_progress",
+      directAcceptanceOwned: false,
+    }),
+    "another question is open as well": preS4Draft({
+      triggerContext: { ...BONDBUILDER_NEED_CONTEXT, hasReportedIrritatedScalp: true },
+    }),
+  }
+  for (const [name, draft] of Object.entries(cases)) {
+    assert.equal(normalizeLateAddedQuestions(draft), draft, name)
+  }
 })

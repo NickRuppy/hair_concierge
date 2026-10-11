@@ -4,9 +4,12 @@ import { TOWEL_MATERIALS } from "@/lib/vocabulary/onboarding-care"
 import { createStage2HeatEventId, requiresStage2HeatProtection } from "./heat-events"
 import {
   getOrderedQuestionIds,
+  getStage2QuestionModule,
   isStage2QuestionAnswerValid,
   pruneStage2Answers,
+  resolveStage2RefinementContract,
 } from "./question-path"
+import { STAGE2_MODULES } from "./types"
 import type {
   BondbuilderTiming,
   DryShampooBridgePreference,
@@ -17,7 +20,11 @@ import type {
   PersonalPlanRefinementAnswersV1,
   ScalpIrritationDetail,
   Stage2AnswerKey,
+  Stage2AnswerProvenance,
   Stage2HeatEventSource,
+  Stage2Module,
+  Stage2ModulePathState,
+  Stage2ModuleProjections,
   Stage2QuestionId,
   Stage2StaticQuestionId,
   Stage2TriggerContext,
@@ -335,6 +342,117 @@ function findAssumptionRule(input: Stage2AssumptionInput): Stage2AssumptionRule 
     throw new Error(`No Stage 2 assumption rule for canonical question: ${input.questionId}`)
   }
   return rule
+}
+
+/* ── questions added after a draft already passed their point ────────────── */
+
+/**
+ * Canonical questions added to an existing module after members had already finished it (S4:
+ * `bondbuilder_timing`, 2026-10). A draft that passed such a question is never reopened for
+ * it: the question is answered by its assumption rule instead (Nick, S4 Q2 — „Ist mir egal“,
+ * she keeps today's product and can change it via „Bearbeiten“).
+ */
+export const STAGE2_LATE_ADDED_QUESTION_IDS: readonly Stage2StaticQuestionId[] = [
+  "bondbuilder_timing",
+]
+
+function isLateAddedQuestionId(questionId: Stage2QuestionId): boolean {
+  return (STAGE2_LATE_ADDED_QUESTION_IDS as readonly Stage2QuestionId[]).includes(questionId)
+}
+
+export type Stage2LateAddedDraftState = {
+  status: "in_progress" | "complete" | "stale"
+  triggerContext: Stage2TriggerContext
+  answers: PersonalPlanRefinementAnswersV1
+  completedQuestionIds: Stage2QuestionId[]
+  answerProvenance: Stage2AnswerProvenance
+  moduleProjections?: Stage2ModuleProjections
+  /** `true`: direct acceptance wrote this draft and already answered every question for her. */
+  directAcceptanceOwned?: boolean | null
+}
+
+/**
+ * Read-time normalization for every persisted draft that rebuilds a refinement contract.
+ *
+ * A draft has passed a module when it is `complete` or owned by direct acceptance (every
+ * module), or `in_progress` with that module already projected (`module_projections`). When the only unresolved questions of the
+ * passed modules are late-added ones, each is answered by its assumption rule, marked
+ * `assumed` and appended to `completedQuestionIds` in path order — so `complete` drafts stay
+ * loadable (`createStage2RefinementSession` refuses an incomplete complete draft) and the
+ * module stays finished (`settleLateAddedAssumptions`). Every other draft is returned as is
+ * (same reference): before the point she simply meets the question in order. Idempotent; the
+ * stored row is never rewritten here.
+ */
+export function normalizeLateAddedQuestions<T extends Stage2LateAddedDraftState>(draft: T): T {
+  const passedModules: readonly Stage2Module[] =
+    draft.status === "complete" || (draft.status === "in_progress" && draft.directAcceptanceOwned)
+      ? STAGE2_MODULES
+      : draft.status === "in_progress"
+        ? STAGE2_MODULES.filter((stage2Module) => draft.moduleProjections?.[stage2Module])
+        : []
+  if (passedModules.length === 0) return draft
+
+  const { path } = resolveStage2RefinementContract(draft)
+  const unresolved = path.orderedQuestionIds.filter(
+    (questionId) =>
+      !path.completedQuestionIds.includes(questionId) &&
+      passedModules.includes(getStage2QuestionModule(questionId)),
+  )
+  if (unresolved.length === 0 || !unresolved.every(isLateAddedQuestionId)) return draft
+
+  let answers = draft.answers
+  for (const questionId of unresolved) {
+    answers = findAssumptionRule({ questionId, answers }).write({ questionId, answers })
+  }
+  const completed = new Set([...path.completedQuestionIds, ...unresolved])
+  const normalized = resolveStage2RefinementContract({
+    triggerContext: draft.triggerContext,
+    answers,
+    completedQuestionIds: path.orderedQuestionIds.filter((questionId) => completed.has(questionId)),
+  })
+  if (unresolved.some((questionId) => !normalized.path.completedQuestionIds.includes(questionId))) {
+    return draft
+  }
+  const answerProvenance = { ...draft.answerProvenance }
+  for (const questionId of unresolved) answerProvenance[questionId] = "assumed"
+  return {
+    ...draft,
+    answers,
+    completedQuestionIds: normalized.path.completedQuestionIds,
+    answerProvenance,
+  }
+}
+
+/**
+ * Module status companion of `normalizeLateAddedQuestions`: a module whose ONLY open questions
+ * are late-added ones answered by their assumption counts as finished — the member finished it
+ * before the question existed. A module that is open for any other reason keeps every open
+ * question (a direct-acceptance draft still walks all of them), and an unanswered late-added
+ * question stays open.
+ */
+export function settleLateAddedAssumptions(
+  states: Record<Stage2Module, Stage2ModulePathState>,
+  input: {
+    completedQuestionIds: readonly Stage2QuestionId[]
+    answerProvenance: Stage2AnswerProvenance
+  },
+): Record<Stage2Module, Stage2ModulePathState> {
+  const isSettled = (questionId: Stage2QuestionId) =>
+    isLateAddedQuestionId(questionId) &&
+    input.completedQuestionIds.includes(questionId) &&
+    input.answerProvenance[questionId] === "assumed"
+  const settled = { ...states }
+  for (const stage2Module of STAGE2_MODULES) {
+    const state = states[stage2Module]
+    if (state.openQuestionIds.length === 0 || !state.openQuestionIds.every(isSettled)) continue
+    settled[stage2Module] = {
+      ...state,
+      completedQuestionIds: [...state.questionIds],
+      openQuestionIds: [],
+      status: "complete",
+    }
+  }
+  return settled
 }
 
 /* ── answer selection by question id ─────────────────────────────────────── */
