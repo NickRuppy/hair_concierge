@@ -1189,19 +1189,13 @@ export function rerankBondbuilderProductsWithEngine(params: {
         })
         .filter((item): item is NonNullable<typeof item> => Boolean(item))
 
-      // Axis and intensity stay display metadata only; they never rank (Nick, 2026-10-09).
+      // Axis stays display metadata only; it never ranks (Nick, 2026-10-09).
       const recommendationMeta: BondbuilderRecommendationMetadata = {
         category: "bondbuilder",
         score: Math.round(score * 10) / 10,
-        top_reasons: [
-          ...positives,
-          target.bondRepairIntensity === "intensive"
-            ? "Unterstützt aktuell eher intensiven strukturellen Reparaturbedarf."
-            : "Passt für eher konservative Bondbuilding-Unterstützung.",
-        ].slice(0, 3),
+        top_reasons: positives.slice(0, 3),
         tradeoffs,
         usage_hint: getBondbuilderUsageHint(spec?.usage_protocol),
-        matched_intensity: target.bondRepairIntensity,
         application_mode: target.applicationMode,
         bond_repair_axis: spec?.bond_repair_axis ?? null,
         treatment_mode: spec?.treatment_mode ?? null,

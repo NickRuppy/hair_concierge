@@ -21,7 +21,6 @@ import {
   PRODUCT_BOND_APPLICATION_MODES,
   PRODUCT_BOND_PRODUCT_FORMATS,
   PRODUCT_BOND_REPAIR_AXES,
-  PRODUCT_BOND_REPAIR_INTENSITIES,
   PRODUCT_BOND_TREATMENT_MODES,
   PRODUCT_BOND_USAGE_PROTOCOLS,
   PRODUCT_SCALP_TYPE_FOCUSES,
@@ -368,7 +367,6 @@ function bondbuilderApprovalContract(): JsonRecord {
       "Research and emit only bondbuilder approval specs under researched_payload.final.category_specs.",
     required_category_specs: [...REQUIRED_CATEGORY_SPEC_KEYS.bondbuilder],
     product_bondbuilder_specs: {
-      bond_repair_intensity: [...PRODUCT_BOND_REPAIR_INTENSITIES],
       application_mode: [...PRODUCT_BOND_APPLICATION_MODES],
       bond_repair_axis: [...PRODUCT_BOND_REPAIR_AXES],
       treatment_mode: [...PRODUCT_BOND_TREATMENT_MODES],
