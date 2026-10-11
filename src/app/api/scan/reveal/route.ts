@@ -28,6 +28,7 @@ import {
 import { isShoppingBudgetEnabled } from "@/lib/personal-plan/release"
 import { loadScanEvaluationContext } from "@/lib/scan/profile-context"
 import { loadScanBudgetForRequest, loadScanShoppingBudget } from "@/lib/scan/shopping-budget"
+import { loadVisibleHairColor } from "@/lib/user-facts/visible-hair-color"
 import {
   presentScanVerdictPayload,
   withEligibleAlternatives,
@@ -90,6 +91,8 @@ export type ScanRevealRouteDeps = {
   /** Shopping budget (Task 7): same gate + loader as resolve, so reveal orders identically. */
   isShoppingBudgetEnabled: () => boolean
   loadShoppingBudget: typeof loadScanShoppingBudget
+  /** The user-answered visible root colour (fail-open; absent = unknown). Not budget-gated. */
+  loadVisibleHairColor?: typeof loadVisibleHairColor
   loadScanProductFacts: typeof loadScanProductFacts
   loadRecommendationCandidates: typeof loadStage3RecommendationCandidatesByRole
   buildScanVerdict: typeof buildScanVerdict
@@ -128,9 +131,12 @@ export function createScanRevealRouteHandler(deps: ScanRevealRouteDeps) {
       // read-before-write on the ledger itself — `consumeFreeReveal` stays a pure INSERT),
       // and doing them first means a missing profile or decision can never burn the one-
       // lifetime credit for nothing.
-      const [context, budget] = await Promise.all([
+      const [context, budget, visibleHairColor] = await Promise.all([
         deps.loadScanEvaluationContext(client, userId),
         loadScanBudgetForRequest(deps, client, userId),
+        deps.loadVisibleHairColor
+          ? deps.loadVisibleHairColor(client, userId).catch(() => null)
+          : Promise.resolve(null),
       ])
       if (!context) return scanFail("profile_missing", 409)
 
@@ -165,6 +171,7 @@ export function createScanRevealRouteHandler(deps: ScanRevealRouteDeps) {
         context,
         undefined,
         budget,
+        visibleHairColor,
       )
 
       const alternativeIds =
@@ -234,6 +241,7 @@ export const POST = createScanRevealRouteHandler({
   loadScanEvaluationContext,
   isShoppingBudgetEnabled,
   loadShoppingBudget: loadScanShoppingBudget,
+  loadVisibleHairColor,
   loadScanProductFacts,
   loadRecommendationCandidates: loadStage3RecommendationCandidatesByRole,
   buildScanVerdict,

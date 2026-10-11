@@ -6,6 +6,7 @@ import type {
   Stage3CategoryProductFacts,
 } from "@/lib/personal-plan/products/authority/contracts"
 import { evaluateStage3Authority } from "@/lib/personal-plan/products/authority/evaluate"
+import type { Stage3SelectionProfile } from "@/lib/personal-plan/products/authority/selection-profile"
 import {
   candidateDimensionCoverage,
   comparisonDimensions,
@@ -87,6 +88,8 @@ export type BuildScanVerdictInput = {
   perRoleFacts?: Partial<Record<PlanProductRole, ScanRoleFacts>>
   coverage: PlanPortfolioCoverageFact[]
   hairThickness: PlanHairThickness
+  /** The Stage-3 selection slice (`buildStage3SelectionProfile`), identical to the plan's. */
+  selectionProfile: Stage3SelectionProfile
   heatCarrierCoverage: {
     carrierCategory: Extract<PersonalPlanCategory, "leave_in" | "oil" | "heat_protectant"> | null
     verifiedRoutes: string[]
@@ -450,6 +453,7 @@ function scanAuthorityInput(
     productFacts: facts,
     recommendationCandidates,
     hairThickness: input.hairThickness,
+    selectionProfile: input.selectionProfile,
     heatCarrierCoverage: input.heatCarrierCoverage,
   }
 }

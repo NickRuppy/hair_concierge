@@ -1,5 +1,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
+import {
+  buildStage3SelectionProfile,
+  type Stage3VisibleHairColor,
+} from "@/lib/personal-plan/products/authority/selection-profile"
 import { CATEGORY_COPY } from "@/components/personal-plan-products/stage3-product-copy"
 import { ROLE_SENSITIVE_CANDIDATE_CATEGORIES } from "@/lib/personal-plan/product-previews"
 import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
@@ -92,6 +96,8 @@ export type MobileScanResolveInput = {
   retailerImageOrigin?: string
   /** Saved shopping budget, flag-gated and loaded fail-open by the route; not from the body. */
   budget?: ShoppingBudget | null
+  /** User-answered visible root colour, loaded fail-open by the route; not from the body. */
+  visibleHairColor?: Stage3VisibleHairColor | null
 }
 
 const defaultDependencies = {
@@ -156,6 +162,7 @@ export async function resolveMobileScan(
     decision,
     context,
     input.budget ?? null,
+    input.visibleHairColor ?? null,
   )
   const verdict = loaded.verdict
   const revision = context.refinedVersionId
@@ -318,6 +325,7 @@ async function loadVerdict(
   decision: PlanCategoryDecision,
   context: ScanEvaluationContext,
   budget: ShoppingBudget | null,
+  visibleHairColor: Stage3VisibleHairColor | null,
 ): Promise<{ verdict: ScanVerdictPayload; productFactsMissing: boolean }> {
   const primaryRole = decision.roles[0] ?? CATEGORY_ROLE_POLICIES[category].allowedRoles[0]
   const roles = ROLE_SENSITIVE_CANDIDATE_CATEGORIES.has(category)
@@ -378,6 +386,7 @@ async function loadVerdict(
       perRoleFacts: roles.length > 1 ? Object.fromEntries(facts) : undefined,
       coverage: context.snapshot.coverage,
       hairThickness: context.snapshot.profile.hair.thickness,
+      selectionProfile: buildStage3SelectionProfile(context.snapshot, visibleHairColor),
       heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
       refinedVersionId: context.refinedVersionId,
       refinedInputHash: context.refinedInputHash,

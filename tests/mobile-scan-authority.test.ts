@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { UNKNOWN_SELECTION_PROFILE } from "../src/lib/personal-plan/products/authority/selection-profile"
 import test from "node:test"
 import { buildScanVerdict, type BuildScanVerdictInput } from "../src/lib/scan/resolve-verdict"
 import { mobileAuthorityFailure } from "../src/lib/mobile/scan-service"
@@ -57,6 +58,7 @@ function input(): BuildScanVerdictInput {
     },
     productFacts: facts,
     recommendationCandidates: [],
+    selectionProfile: UNKNOWN_SELECTION_PROFILE,
     coverage: [],
     hairThickness: "normal",
     heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
@@ -115,6 +117,7 @@ test("compact categories expose every evaluated criterion beyond compact web sch
       "identity.active",
       "sensitivity.verified",
       "tint.verified",
+      "styling.direction",
       "format.verified",
       "protocol.verified",
     ].map((id) => ({
@@ -125,7 +128,8 @@ test("compact categories expose every evaluated criterion beyond compact web sch
     })),
     null,
   )
-  assert.equal(rows.length, 5)
+  // S2: five compact rows (identity, sensitivity, colour, volume, protocol) + format.
+  assert.equal(rows.length, 6)
   assert.ok(rows.every((row) => row.displayStatus === "green"))
   assert.ok(rows.every((row) => row.productStopIds.length === 1))
   const heat = mobileCriterionRows(
@@ -232,8 +236,9 @@ test("all compact category schemas remain visible and missing criteria are never
     ["shampoo", "shampoo_dandruff", 1],
     ["heat_protectant", "pre_heat_protection", 1],
     ["scalp_care", "scalp_comfort", 3],
-    ["dry_shampoo", "root_refresh_bridge", 3],
-    ["deep_cleansing_shampoo", "residue_reset", 2],
+    ["dry_shampoo", "root_refresh_bridge", 5],
+    ["deep_cleansing_shampoo", "residue_reset", 3],
+    ["deep_cleansing_shampoo", "mineral_reset", 2],
   ] as const
   for (const [category, role, count] of cases) {
     const rows = mobileCriterionRows(category, role, [], null)

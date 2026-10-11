@@ -75,6 +75,10 @@ import type {
 } from "./authority/contracts"
 import { evaluateStage3Authority } from "./authority/evaluate"
 import {
+  buildStage3SelectionProfile,
+  type Stage3VisibleHairColor,
+} from "./authority/selection-profile"
+import {
   authoritySnapshotMayNeedVersionRefresh,
   authoritySnapshotNeedsVersionRefresh,
   requireCurrentAuthoritySnapshot,
@@ -234,6 +238,8 @@ export type Stage3ProductionPersistence = {
    * "uncapped") and the stated concerns from the saved diagnostics.
    */
   loadShoppingContext(userId: string): Promise<Stage3ShoppingContext>
+  /** The user-answered visible root colour (fail-open: null = unknown, never throws). */
+  loadVisibleHairColor(userId: string): Promise<Stage3VisibleHairColor | null>
   /** One batch read of catalog package prices (commerce only) for the budget suggestion. */
   loadCatalogPackagePrices(productIds: string[]): Promise<Stage3CatalogPackagePrice[]>
 }
@@ -540,6 +546,7 @@ export function createProductionStage3ProductsGateway(
       categoryDecision,
       coverage: effectiveStage3Coverage(draft),
       hairThickness: context.hairThickness,
+      selectionProfile: context.selectionProfile,
       ...facts,
     } as Stage3AuthorityInput
     const authorityEvaluation = evaluateStage3Authority(authorityInput)
@@ -742,20 +749,23 @@ export function createProductionStage3ProductsGateway(
     draft: Stage3ProductDraft,
   ): Promise<Stage3EvaluationContext> {
     const authoritySnapshot = requireCurrentAuthoritySnapshot(draft)
-    const [currentRefinedVersionId, refinedNeedSnapshot, shopping] = await Promise.all([
-      options.persistence.loadCurrentRefinedVersionId({
-        userId: options.userId,
-        personalPlanId: draft.personalPlanId,
-      }),
-      options.persistence.loadRefinedNeedSnapshot({
-        userId: options.userId,
-        personalPlanId: draft.personalPlanId,
-        refinedVersionId: draft.refinedVersionId,
-      }),
-      shoppingBudgetEnabled
-        ? options.persistence.loadShoppingContext(options.userId)
-        : Promise.resolve(null),
-    ])
+    const [currentRefinedVersionId, refinedNeedSnapshot, shopping, visibleHairColor] =
+      await Promise.all([
+        options.persistence.loadCurrentRefinedVersionId({
+          userId: options.userId,
+          personalPlanId: draft.personalPlanId,
+        }),
+        options.persistence.loadRefinedNeedSnapshot({
+          userId: options.userId,
+          personalPlanId: draft.personalPlanId,
+          refinedVersionId: draft.refinedVersionId,
+        }),
+        shoppingBudgetEnabled
+          ? options.persistence.loadShoppingContext(options.userId)
+          : Promise.resolve(null),
+        // Not budget-gated: the colour is a fit input. The loader is fail-open (null = unknown).
+        options.persistence.loadVisibleHairColor(options.userId),
+      ])
     const projection = refinedNeedSnapshot?.profile?.source?.projection
     const hairThickness = refinedNeedSnapshot?.profile?.hair?.thickness
     if (
@@ -771,6 +781,7 @@ export function createProductionStage3ProductsGateway(
       currentRefinedVersionId,
       refinedNeedSnapshot,
       hairThickness,
+      selectionProfile: buildStage3SelectionProfile(refinedNeedSnapshot, visibleHairColor),
       // Flag off: the key is absent, so the context and every review stay byte-identical.
       ...(shopping
         ? {

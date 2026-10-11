@@ -29,6 +29,7 @@ import {
   type Stage3DecisionDeferralReason,
 } from "../../../src/lib/personal-plan/products/contracts"
 import type { Stage3AuthorityFactBundle } from "../../../src/lib/personal-plan/products/authority/catalog-facts"
+import type { Stage3EvaluationContext } from "../../../src/lib/personal-plan/products/authority/contracts"
 import { isValidPersistedCategoryDecision } from "../../../src/lib/personal-plan/products/authority/category-decision-schema"
 import { Stage3AuthoritySnapshotError } from "../../../src/lib/personal-plan/products/authority/snapshot"
 
@@ -164,6 +165,9 @@ function persistence(draft = readyDraft()): Stage3ProductionPersistence {
         profile: {
           source: { projection: "refined_post_plan" },
           hair: { thickness: "normal" },
+          scalp: { oiliness: "balanced", concerns: [] },
+          goals: [],
+          concerns: [],
         },
       }) as never,
     loadSourceRevision: async () => 7,
@@ -178,6 +182,7 @@ function persistence(draft = readyDraft()): Stage3ProductionPersistence {
           },
     loadDraft: async (input) => (input.userId === "owner-a" ? draft : null),
     loadShoppingContext: async () => ({ budget: null, currentConcerns: [], primaryConcern: null }),
+    loadVisibleHairColor: async () => null,
     loadCatalogPackagePrices: async () => [],
   }
 }
@@ -1304,6 +1309,9 @@ test("injected compiler reaches the atomic stager exactly once and reuses stable
           profile: {
             source: { projection: "refined_post_plan" },
             hair: { thickness: "normal" },
+            scalp: { oiliness: "balanced", concerns: [] },
+            goals: [],
+            concerns: [],
           },
           needs: [],
         } as never
@@ -1365,6 +1373,9 @@ test("injected compiler reaches the atomic stager exactly once and reuses stable
     profile: {
       source: { projection: "refined_post_plan" },
       hair: { thickness: "normal" },
+      scalp: { oiliness: "balanced", concerns: [] },
+      goals: [],
+      concerns: [],
     },
     needs: [],
   })
@@ -2342,6 +2353,9 @@ test("one immutable refined context is shared across multiple owned-product eval
           profile: {
             source: { projection: "refined_post_plan" },
             hair: { thickness: "normal" },
+            scalp: { oiliness: "balanced", concerns: [] },
+            goals: [],
+            concerns: [],
           },
         } as never
       },
@@ -2999,6 +3013,9 @@ test("production repairs and accepts inventory authority from the owner-scoped r
     profile: {
       source: { projection: "refined_post_plan" },
       hair: { thickness: "normal" },
+      scalp: { oiliness: "balanced", concerns: [] },
+      goals: [],
+      concerns: [],
       retainedAnswer: "survives",
     },
     decisions: [],
@@ -3616,6 +3633,9 @@ function refinedSnapshotForAuthority(source: Stage3ProductDraft) {
     profile: {
       source: { projection: "refined_post_plan" },
       hair: { thickness: "normal" },
+      scalp: { oiliness: "balanced", concerns: [] },
+      goals: [],
+      concerns: [],
     },
     decisions: snapshot.categoryDecisions,
     coverage: snapshot.coverage,
@@ -3777,4 +3797,56 @@ test("a Stage-3 re-entry never rebuilds on the version it was already asked for"
       error instanceof Stage3AuthoritySnapshotError && error.code === "stale_refined_source",
   )
   assert.deepEqual(loads, ["refined-a"])
+})
+
+test("S2: the evaluation context carries the selection slice (refined profile + user root colour)", async () => {
+  const draft = readyDraft()
+  const contexts: Stage3EvaluationContext[] = []
+  let colourReads = 0
+  const base = persistence(draft)
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...base,
+      loadRefinedNeedSnapshot: async () =>
+        ({
+          inputHash: draft.authoritySnapshot?.refinedInputHash ?? "refined-input-a",
+          profile: {
+            source: { projection: "refined_post_plan" },
+            hair: { thickness: "fine", texture: "straight" },
+            scalp: { oiliness: "oily", concerns: ["irritated"] },
+            goals: ["volume_balance"],
+            concerns: [],
+          },
+        }) as never,
+      loadVisibleHairColor: async (userId) => {
+        assert.equal(userId, "owner-a")
+        colourReads += 1
+        return "brown"
+      },
+      loadAuthorityFacts: async (input) => {
+        contexts.push(input.context)
+        return base.loadAuthorityFacts(input)
+      },
+    },
+  })
+  await gateway.loadOrCreate({
+    draftId: "server-derived",
+    userId: "owner-a",
+    personalPlanId: draft.personalPlanId,
+    refinedVersionId: draft.refinedVersionId,
+    requirements: [],
+  })
+  const reviews = await gateway.reviewDecisionBundles({ draftId: draft.draftId })
+  assert.ok(reviews.length >= 1)
+  assert.ok(colourReads >= 1)
+  assert.ok(contexts.length >= 1)
+  for (const context of contexts) {
+    assert.deepEqual(context.selectionProfile, {
+      scalpOiliness: "oily",
+      sensitiveScalp: true,
+      volumeDirection: "more",
+      visibleHairColor: "brown",
+    })
+  }
 })

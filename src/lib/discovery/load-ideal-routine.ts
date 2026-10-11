@@ -1,5 +1,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
+import {
+  buildStage3SelectionProfile,
+  type Stage3SelectionProfile,
+} from "@/lib/personal-plan/products/authority/selection-profile"
 import { computeNeedPlan } from "@/lib/personal-plan/compute-stage1"
 import {
   CATEGORY_LABELS,
@@ -346,6 +350,8 @@ export async function loadDiscoveryIdealRoutine(
       snapshot,
       previewInput.sourceNeedVersionId,
       await loaded.settled(),
+      // The previews above run without a visible root colour (unknown), so the options do too.
+      buildStage3SelectionProfile(snapshot, null),
     ),
     routineSource,
     heatProtectionDeferred: discoveryHeatProtectionDeferred(snapshot),
@@ -394,6 +400,7 @@ export function withDiscoveryEqualOptions(
   snapshot: InitialNeedPlanSnapshot,
   sourceNeedVersionId: string,
   candidatesByKey: ReadonlyMap<string, readonly Stage3CategoryProductFacts[]>,
+  selectionProfile: Stage3SelectionProfile,
 ): DiscoveryIdealStep[] {
   const decisions = new Map(snapshot.decisions.map((decision) => [decision.category, decision]))
   return steps.map((step) => {
@@ -412,6 +419,7 @@ export function withDiscoveryEqualOptions(
       sourceNeedVersionId,
       candidates,
       selectedProductId: preview.productId,
+      selectionProfile,
     })
     if (equalOptions.length === 0) return step
     const selected = candidates.find((candidate) => candidate.productId === preview.productId)

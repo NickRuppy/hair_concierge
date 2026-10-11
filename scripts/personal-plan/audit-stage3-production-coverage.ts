@@ -6,6 +6,7 @@ import { pathToFileURL } from "node:url"
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 
 import { CATEGORY_ROLE_POLICIES } from "../../src/lib/personal-plan/products/authorities"
+import { UNKNOWN_SELECTION_PROFILE } from "../../src/lib/personal-plan/products/authority/selection-profile"
 import { buildMaskDecision } from "../../src/lib/personal-plan/categories/mask"
 import { buildPlanNeedAssessment } from "../../src/lib/personal-plan/needs"
 import {
@@ -472,6 +473,8 @@ async function observeTarget(
     productFacts,
     recommendationCandidates: candidates,
     hairThickness,
+    // Synthetic audit targets carry no profile answers: the neutral slice keeps the matrix stable.
+    selectionProfile: UNKNOWN_SELECTION_PROFILE,
     heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
   } as Stage3AuthorityInput
   if (target.auditKind === "basis_mask_reachable_target") {

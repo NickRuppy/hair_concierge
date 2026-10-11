@@ -135,6 +135,8 @@ Field semantics:
 - `targetScalpTypes` is soft target positioning only;
 - product facts come from verified finished-product sources, not ingredient inference.
 
+**Amendment (D-a, 2026-10-09; schema + runtime in S2a, values in S2b):** `targetScalpTypes` (column `product_deep_cleansing_shampoo_specs.target_scalp_types`) comes from our own Shampoo v1.6 §13.5 scalp targets computed on the product formula (S-OILY / S-DRY with their formula gates), which supersedes "not ingredient inference" for this one field. Projection: v1.6 `ordinary` → `[]`, `oily` → `['oily']`, `dry` → `['dry']`; `sensitive`/`dandruff` are recorded in the evidence row only; `needs_research` leaves `null`. Stage 3 no longer reads the legacy single-value `scalp_type_focus` (frozen; only the legacy chat engine still reads it).
+
 Colour-treated compatibility is deliberately absent from the V1 Deep Cleansing schema, fit model, enrichment package, and launch gate. The broader colour-care topic has not yet been designed consistently across categories. Do not create an all-null placeholder column or infer compatibility locally; introduce a shared cross-category capability only when that topic is specified.
 
 Do not use the legacy `reset_intensity` field in Personal Plan selection. It cannot be calibrated reliably and must not be copied into a new target-intensity axis.
@@ -158,6 +160,8 @@ Selection precedence:
 4. when selecting a new exact product, use explicit scalp-target positioning as a soft rank;
 5. use verified protocol simplicity and practical shared catalog tie-breakers only between otherwise suitable candidates;
 6. stable catalog order resolves a remaining exact tie.
+
+**Implementation (S2a):** for `residue_reset`, a product whose `targetScalpTypes` contains the user's quiz scalp type gets one extra fulfilled row „Kopfhauttyp"; a non-match or an unassessed product emits no criterion (the row reads „nicht bestätigt", the verdict stays `ideal`). New-product selection is the shared Stage-3 comparator over ideal candidates (more fulfilled rows → fewer cautions → catalogue order → price). With every target `null` the pick is identical to before.
 
 Soft positioning never rescues the wrong role or downgrades a valid general owned product. A general verified residue product still `passt sehr gut` for an oily-scalp user; an explicit oily-scalp target merely ranks another valid new candidate higher.
 
@@ -221,7 +225,7 @@ Example optional explanation:
 | ISANA Professional Tiefenreinigung | `['residue_reset']` | `[]` |
 | Gliss Scalp Balance Tiefenreinigung | `['residue_reset']` | `['oily']` |
 
-The role/target rows are reviewed orientation for catalog backfill. The inactive professional/high-end product rows remain outside this category checkpoint.
+The role/target rows are reviewed orientation for catalog backfill. **Superseded for `targetScalpTypes` (D-a):** the values come from the Shampoo v1.6 engine artifact (`plans/catalog-completeness-fill/slice2/scalp-targets.json`, S2b), not from this table. The inactive professional/high-end product rows remain outside this category checkpoint.
 
 ## Required deterministic fixtures
 
