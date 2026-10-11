@@ -1,5 +1,6 @@
 import type {
   AdditionalHeatTool,
+  BondbuilderTiming,
   DryingRoute,
   DryShampooBridgePreference,
   DryShampooVisibleHairColor,
@@ -23,6 +24,7 @@ import type {
 } from "./types"
 import {
   ADDITIONAL_HEAT_TOOLS,
+  BONDBUILDER_TIMINGS,
   DRY_SHAMPOO_BRIDGE_PREFERENCES,
   DRY_SHAMPOO_VISIBLE_HAIR_COLORS,
   DRYING_ROUTES,
@@ -85,6 +87,7 @@ export function pruneStage2Answers(input: PathInput): Stage2PrunedAnswers {
   const categories = answers.currentProductCategories ?? []
   const usesDryShampoo = categories.includes("dry_shampoo")
 
+  if (!isBondbuilderTimingOnPath(input.triggerContext, answers)) remove("bondbuilderTiming")
   if (!input.triggerContext.hasReportedIrritatedScalp) remove("scalpIrritationDetail")
   if (!categories.includes("oil")) remove("oilPurposes")
 
@@ -127,6 +130,24 @@ export function pruneStage2Answers(input: PathInput): Stage2PrunedAnswers {
   return { answers, completedQuestionIds, prunedAnswerKeys }
 }
 
+/**
+ * The Bondbuilder timing question (X1) is asked only when the plan recommends a
+ * Bondbuilder: Stage 1 put the category in the plan (`relevantCategories` is the
+ * initial snapshot's `renderedOrder`, i.e. need tier basis|optional), the user does
+ * not already own one (then the plan keeps her product and recommends none), and
+ * she washes wet (before/after the wash is meaningless otherwise).
+ */
+export function isBondbuilderTimingOnPath(
+  triggerContext: Stage2TriggerContext,
+  answers: PersonalPlanRefinementAnswersV1,
+): boolean {
+  return (
+    triggerContext.relevantCategories.includes("bondbuilder") &&
+    !(answers.currentProductCategories ?? []).includes("bondbuilder") &&
+    answers.wetWashFrequency !== "does_not_wash"
+  )
+}
+
 export function getOrderedQuestionIds(
   triggerContext: Stage2TriggerContext,
   answers: PersonalPlanRefinementAnswersV1,
@@ -134,6 +155,7 @@ export function getOrderedQuestionIds(
   const categories = answers.currentProductCategories ?? []
   const usesDryShampoo = categories.includes("dry_shampoo")
   const ids = [...BASE_QUESTION_IDS]
+  if (isBondbuilderTimingOnPath(triggerContext, answers)) ids.push("bondbuilder_timing")
   if (triggerContext.hasReportedIrritatedScalp) ids.push("scalp_irritation_detail")
   if (usesDryShampoo) {
     ids.push("dry_shampoo_visible_hair_color")
@@ -157,6 +179,7 @@ export function getOrderedQuestionIds(
 const STAGE2_QUESTION_MODULE_BY_ID: Record<Stage2StaticQuestionId, Stage2Module> = {
   current_product_categories: "products",
   wet_wash_frequency: "products",
+  bondbuilder_timing: "products",
   scalp_irritation_detail: "products",
   dry_shampoo_bridge_preference: "products",
   dry_shampoo_visible_hair_color: "products",
@@ -295,6 +318,8 @@ export function isStage2QuestionAnswerValid(
         answers.wetWashFrequency === "does_not_wash" ||
         isOneOf(answers.wetWashFrequency, PRODUCT_FREQUENCIES)
       )
+    case "bondbuilder_timing":
+      return isOneOf<BondbuilderTiming>(answers.bondbuilderTiming, BONDBUILDER_TIMINGS)
     case "scalp_irritation_detail":
       return isOneOf<ScalpIrritationDetail>(answers.scalpIrritationDetail, SCALP_IRRITATION_DETAILS)
     case "dry_shampoo_bridge_preference":

@@ -8,6 +8,7 @@ import {
   pruneStage2Answers,
 } from "./question-path"
 import type {
+  BondbuilderTiming,
   DryShampooBridgePreference,
   DryShampooVisibleHairColor,
   HeatEventAnswer,
@@ -49,6 +50,8 @@ import type {
 
 /** Most common wash rhythm; conservative between daily and weekly cleansing. */
 export const STAGE2_ASSUMED_WET_WASH_FREQUENCY: ProductFrequency & WetWashFrequency = "weekly_2x"
+/** Leaves today's Bondbuilder selection (trust tier, then the K18 house default) untouched. */
+export const STAGE2_ASSUMED_BONDBUILDER_TIMING: BondbuilderTiming = "no_preference"
 /** Gentle handling, so no mechanical-exposure signal is assumed. */
 export const STAGE2_ASSUMED_TOWEL_MATERIAL: TowelMaterial = "mikrofaser"
 export const STAGE2_ASSUMED_TOWEL_TECHNIQUE: TowelTechnique = "gentle_press"
@@ -65,6 +68,7 @@ export const STAGE2_ASSUMED_HEAT_PROTECTION_CONSISTENCY: HeatProtectionConsisten
 export const STAGE2_ASSUMPTION_RULE_IDS = [
   "assume:current_product_categories:none",
   "assume:wet_wash_frequency:weekly_2x",
+  "assume:bondbuilder_timing:no_preference",
   "assume:scalp_irritation_detail:normal",
   "assume:dry_shampoo_bridge_preference:decline",
   "assume:dry_shampoo_visible_hair_color:light_blonde",
@@ -114,6 +118,15 @@ export const STAGE2_ASSUMPTION_RULES: readonly Stage2AssumptionRule[] = [
     rationale:
       "Most common wash rhythm and the midpoint between daily and weekly cleansing; unchanged from the direct-acceptance default so the accepted routine stays the plan the user saw.",
     write: ({ answers }) => ({ ...answers, wetWashFrequency: STAGE2_ASSUMED_WET_WASH_FREQUENCY }),
+  },
+  {
+    ruleId: "assume:bondbuilder_timing:no_preference",
+    questionId: "bondbuilder_timing",
+    condition:
+      "Stage-1 Bondbuilder need (basis or optional), the user does not report an owned Bondbuilder, and she washes wet",
+    rationale:
+      "`no_preference` is the only value that leaves today's selection untouched (trust tier, then the K18 house default); assuming a timing would silently swap the product the Idealplan showed.",
+    write: ({ answers }) => ({ ...answers, bondbuilderTiming: STAGE2_ASSUMED_BONDBUILDER_TIMING }),
   },
   {
     ruleId: "assume:scalp_irritation_detail:normal",
@@ -332,6 +345,7 @@ const STAGE2_ANSWER_KEY_BY_QUESTION_ID: Record<
 > = {
   current_product_categories: "currentProductCategories",
   wet_wash_frequency: "wetWashFrequency",
+  bondbuilder_timing: "bondbuilderTiming",
   scalp_irritation_detail: "scalpIrritationDetail",
   dry_shampoo_bridge_preference: "dryShampooBridgePreference",
   dry_shampoo_visible_hair_color: "dryShampooVisibleHairColor",

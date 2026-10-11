@@ -3,6 +3,7 @@ import { z } from "zod"
 import { personalPlanDurableAnswersBaseSchema } from "@/lib/personal-plan-quiz/persistence"
 import {
   ADDITIONAL_HEAT_TOOLS,
+  BONDBUILDER_TIMINGS,
   DRYING_ROUTES,
   DRY_SHAMPOO_BRIDGE_PREFERENCES,
   DRY_SHAMPOO_VISIBLE_HAIR_COLORS,
@@ -327,6 +328,7 @@ export const careHabitsV1Schema = z
   .object({
     currentProductCategories: dedupeArray(z.enum(STAGE2_PRODUCT_CATEGORIES)).optional(),
     wetWashFrequency: z.enum(WET_WASH_FREQUENCIES).optional(),
+    bondbuilderTiming: z.enum(BONDBUILDER_TIMINGS).optional(),
     scalpIrritationDetail: z.enum(SCALP_IRRITATION_DETAILS).optional(),
     dryShampooBridgePreference: z.enum(DRY_SHAMPOO_BRIDGE_PREFERENCES).optional(),
     dryShampooVisibleHairColor: z.enum(DRY_SHAMPOO_VISIBLE_HAIR_COLORS).optional(),

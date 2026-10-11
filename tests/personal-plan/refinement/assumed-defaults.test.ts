@@ -28,6 +28,9 @@ function triggerContext(overrides: Partial<Stage2TriggerContext> = {}): Stage2Tr
 
 const IRRITATED_SCALP_CONTEXT = triggerContext({ hasReportedIrritatedScalp: true })
 const BRIDGE_ELIGIBLE_CONTEXT = triggerContext({ dryShampooBridgeEligibility: "eligible" })
+const BONDBUILDER_NEED_CONTEXT = triggerContext({
+  relevantCategories: ["shampoo", "conditioner", "bondbuilder"],
+})
 
 function resolve(
   context: Stage2TriggerContext,
@@ -173,6 +176,31 @@ test("rule assume:night_protection:none assumes no special night protection", ()
   assert.ok(resolution.appliedRuleIds.includes("assume:night_protection:none"))
 })
 
+test("rule assume:bondbuilder_timing:no_preference fires only on the Bondbuilder path", () => {
+  const need = resolve(BONDBUILDER_NEED_CONTEXT)
+  assert.equal(need.answers.bondbuilderTiming, "no_preference")
+  assert.ok(need.appliedRuleIds.includes("assume:bondbuilder_timing:no_preference"))
+  assert.equal(need.orderedQuestionIds[2], "bondbuilder_timing")
+
+  for (const [name, context, answers] of [
+    ["no need", triggerContext(), {}],
+    ["owner", BONDBUILDER_NEED_CONTEXT, { currentProductCategories: ["bondbuilder"] }],
+    ["does not wash", BONDBUILDER_NEED_CONTEXT, { wetWashFrequency: "does_not_wash" }],
+  ] as const) {
+    const resolution = resolve(context, answers as PersonalPlanRefinementAnswersV1)
+    assert.equal(resolution.answers.bondbuilderTiming, undefined, name)
+    assert.ok(!resolution.appliedRuleIds.includes("assume:bondbuilder_timing:no_preference"), name)
+  }
+})
+
+test("a user Bondbuilder timing answer survives the resolver", () => {
+  const resolution = resolve(BONDBUILDER_NEED_CONTEXT, { bondbuilderTiming: "after_wash" }, [
+    "bondbuilder_timing",
+  ])
+  assert.equal(resolution.answers.bondbuilderTiming, "after_wash")
+  assert.ok(!resolution.assumedQuestionIds.includes("bondbuilder_timing"))
+})
+
 test("every declared rule id is unique and documented with a condition and a rationale", () => {
   const ruleIds = STAGE2_ASSUMPTION_RULES.map((rule) => rule.ruleId)
   assert.equal(new Set(ruleIds).size, ruleIds.length)
@@ -188,6 +216,7 @@ test("every declared rule id is reachable — no dead rule in the table", () => 
       resolve(triggerContext()),
       resolve(IRRITATED_SCALP_CONTEXT),
       resolve(BRIDGE_ELIGIBLE_CONTEXT),
+      resolve(BONDBUILDER_NEED_CONTEXT),
       resolve(triggerContext(), { currentProductCategories: ["dry_shampoo"] }),
       resolve(triggerContext(), { currentProductCategories: ["oil"] }),
       resolve(triggerContext(), { towel: { material: "frottee" } }),
@@ -256,6 +285,21 @@ const NO_ANSWER_EXPECTATIONS = [
       nightProtection: [],
     },
   },
+  {
+    // Pre-S4 direct-acceptance defaults plus exactly one answer.
+    name: "Bondbuilder need context",
+    context: BONDBUILDER_NEED_CONTEXT,
+    answers: {
+      currentProductCategories: [],
+      wetWashFrequency: "weekly_2x",
+      bondbuilderTiming: "no_preference",
+      towel: { material: "mikrofaser", technique: "gentle_press" },
+      dryingRoutes: ["air_dry"],
+      additionalHeatTools: [],
+      heatEvents: {},
+      nightProtection: [],
+    },
+  },
 ] as const
 
 for (const expectation of NO_ANSWER_EXPECTATIONS) {
@@ -283,6 +327,12 @@ const TOTALITY_SCENARIOS: Array<{
   { name: "no answers", context: triggerContext(), answers: {} },
   { name: "irritated scalp context, no answers", context: IRRITATED_SCALP_CONTEXT, answers: {} },
   { name: "bridge eligible, no answers", context: BRIDGE_ELIGIBLE_CONTEXT, answers: {} },
+  { name: "Bondbuilder need, no answers", context: BONDBUILDER_NEED_CONTEXT, answers: {} },
+  {
+    name: "Bondbuilder need, before wash answered",
+    context: BONDBUILDER_NEED_CONTEXT,
+    answers: { bondbuilderTiming: "before_wash" },
+  },
   {
     name: "categories with oil",
     context: triggerContext(),
