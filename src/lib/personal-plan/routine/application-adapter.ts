@@ -93,6 +93,7 @@ function factsFor(category: string, row: ProductRow) {
       roles: string[]
       provides_heat_protection: boolean
       heat_activation_required: boolean
+      heat_activation_route?: import("@/lib/heat-activation/contract").HeatActivationRoute | null
       application_stage: string[]
     }>(row.product_leave_in_specs)
     return spec

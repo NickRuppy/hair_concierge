@@ -886,12 +886,133 @@ statement.** "Am besten auf handtuchtrockenem Haar" is a preference, not either-
 - **A stated max temperature** ("Schutz bis 230 °C"). Binary only; degrees cut
   over 2026-09-14 (AD-6) — the numeric value is never stored, only the sourced
   sentence may be appended to the `tool` step copy.
-- **Heat activation required** (`heat_activation_required = true`) → the copy must
-  not imply the product works without heat; flag.
+- **Heat activation required** (`heat_activation_required = true`, Leave-In v1.2) →
+  **this template does not apply.** An activated product never gets TPL-LEAVEIN-HEAT
+  copy (its shared „Glätteisen oder Lockenstab …" sentence is not in an activating
+  manufacturer's directions) and never a post-wash template (I2). Its only pre-heat
+  rows are the manufacturer's own directions under the exact workflow
+  `heat_activated_verified_product` (next section). A product whose copy only
+  _mentions_ activation without the catalog fact stays on this template; activation is
+  never read from copy (S3 P15).
 - **"Vor dem Glätteisen antrocknen lassen"** → add a `wait` step.
 - **Spray formats** → add `amount: {"kind":"qualitative","copyDe":"Gleichmäßig sprühen."}`.
 - **A source that says one application lasts the day** → contradicts P7. The rule
   stands; record the deviation.
+
+---
+
+### Exact workflow `heat_activated_verified_product`
+
+**Key:** `⟨leave_in⟩` × `pre_heat_protection` × `⟨pre_heat_damp | pre_heat_dry⟩`, V1/V2
+`workflowId: "heat_activated_verified_product"`.
+**Applies when:** `product_leave_in_specs.heat_activation_required = true` (Leave-In
+Standard v1.2 HA-1…HA-9; rulings A1, D-c, D-d, D-e). Categories:
+`HEAT_ACTIVATED_WORKFLOW_CATEGORIES` (`leave_in` today; `styling` joins when that category
+exists — S3 plan §6).
+
+Not a family template: one generic reviewed workflow whose steps are the manufacturer's
+own directions, copied verbatim into the V2 `exactSteps`. Generator:
+`src/lib/product-intake/catalog-enrichment/heat-activated-protocols.ts`
+(`buildHeatActivatedProtocolRow`), which builds the V2 pointer from the V1 payload with
+`buildProductApplicationPointerV2`, so both agree by construction, and validates both.
+
+**Rules (enforced by `applicationGuidanceProtocolSchema` and
+`productApplicationPointerV2Schema`).**
+
+- Exact product scope, category in `HEAT_ACTIVATED_WORKFLOW_CATEGORIES`, role
+  `heat_protection`, row/`sourceRole` `pre_heat_protection`; family `pre_heat_damp` or
+  `pre_heat_dry`.
+- `protocolFacts.heatActivationRequired: true` (V1), `facts.heat.activationRequired: true`
+  (V2). This is the **catalog fact**, set by the generator; the V2 builder no longer reads
+  activation from copy (P15). The V1 fact is reserved for this workflow.
+- Steps: exactly one `apply_product`, then at least one `tool` step (the activating heat
+  step), no `rinse`; `rinse: leave_in`.
+- Evidence: at least one `manufacturer` source (D-d: German pack C1 or German-market
+  manufacturer page C2); retailer pages only as corroboration after it. The row's
+  `source_url` is the manufacturer source and must equal an evidence `sourceUrl`; the
+  Stage-5 adapter drops the pointer/payload otherwise, and also without a non-empty
+  `source_text` (same binding as `bondbuilder_verified_product`).
+- Copy: only what the manufacturer's directions and activation statement say. Every step
+  names the verbatim quote it rests on; at least one quote is in `source_text`.
+
+**Placement (runtime, `HEAT_ACTIVATED_WORKFLOW_RUNTIME`).**
+
+| Stored family   | `application_stage` | `application_state` | Runtime family         | `compatibleDayTypes`                                                                      |
+| --------------- | ------------------- | ------------------- | ---------------------- | ----------------------------------------------------------------------------------------- |
+| `pre_heat_damp` | `damp_leave_on`     | `damp`              | `damp_hair_protection` | `wash_day`, `intensive_care_day`, `bond_repair_day`, `clarifying_wash_day`, `styling_day` |
+| `pre_heat_dry`  | `dry_pre_heat`      | `dry`               | `dry_hair_protection`  | `refresh_day`                                                                             |
+
+The V1 payload's `compatibleDayTypes` must equal the row above. Damp use is never placed
+on `refresh_day` or `between_wash_care_day` (the directions name freshly washed or
+towel-dried hair). Heat occurrences are matched to the profile's heat events by the
+product's **activation route** (`product_leave_in_specs.heat_activation_route`, catalog
+fact `heatActivationRoute`), not by its application state: an airflow-activated product
+only appears with a blow-dry event, and without one it has no occurrence at all (Q3). A
+dry-state (between-wash) occurrence belongs to `refresh_day` only. No universal
+between-wash methods are synthesised for an activated product.
+
+| Column                  | Value                                                       |
+| ----------------------- | ----------------------------------------------------------- |
+| `application_stage`     | from the table above                                        |
+| `application_state`     | from the table above                                        |
+| `placement`             | where the directions apply it (`lengths_ends` / `all_hair`) |
+| `contact_time_seconds`  | `null`                                                      |
+| `rinse_action`          | `leave_in`                                                  |
+| `reapplication`         | `required` (P7)                                             |
+| `instruction_modifiers` | `[]`                                                        |
+
+```json
+{
+  "schemaVersion": 1,
+  "protocolVersion": 1,
+  "locale": "de",
+  "guidanceKey": "heat-activated-verified-product-⟨productId⟩-⟨pre_heat_damp | pre_heat_dry⟩",
+  "scope": { "kind": "product", "category": "leave_in", "productId": "⟨productId⟩" },
+  "role": "heat_protection",
+  "applicationFamily": "⟨pre_heat_damp | pre_heat_dry⟩",
+  "compatibleDayTypes": ["⟨per the placement table⟩"],
+  "exactGuidanceRequired": true,
+  "sequence": {
+    "anchor": "⟨damp_leave_on | dry_pre_heat⟩",
+    "before": ["heat_tool"],
+    "after": [],
+    "conflictsWith": []
+  },
+  "requirements": {
+    "requiredCatalogFacts": [],
+    "requiredProtocolFacts": [],
+    "requiredProfileFacts": ["heatEvents"]
+  },
+  "protocolFacts": {
+    "applicationArea": "⟨lengths_ends | all_hair⟩",
+    "rinse": "leave_in",
+    "contactTimeSeconds": null,
+    "conditionerRelationship": "not_applicable",
+    "reapplication": "each_separate_heat_event",
+    "amount": "⟨the manufacturer's dose, or null⟩",
+    "workflowId": "heat_activated_verified_product",
+    "heatActivationRequired": true,
+    "cautions": []
+  },
+  "steps": [
+    { "stepKey": "apply", "action": "apply_product", "copyTemplateDe": "⟨manufacturer direction⟩" },
+    { "stepKey": "activate", "action": "tool", "copyTemplateDe": "⟨manufacturer heat step⟩" }
+  ],
+  "evidence": [
+    {
+      "sourceUrl": "⟨manufacturer url = source_url⟩",
+      "sourceType": "manufacturer",
+      "checkedAt": "⟨YYYY-MM-DD⟩"
+    },
+    { "sourceUrl": "⟨retailer url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }
+  ]
+}
+```
+
+**Reviewed rows (S3, 2026-10-09).** Neqi Diamond Glass Ultimate Styling Spray
+(`42a2fe20`, one `pre_heat_damp` row, C2 neqi-hair.com) and Pantene HEAT&GLOW
+(`e781ca9e`, `pre_heat_damp` wash-day row + `pre_heat_dry` between-wash row, C1 German
+pack via the dm-hosted packshot). Copy and quotes live in the generator module.
 
 ---
 

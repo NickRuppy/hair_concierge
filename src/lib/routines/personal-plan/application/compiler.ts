@@ -15,6 +15,11 @@ import {
   routineItemsForDay,
 } from "./day-type-registry"
 import { heatEventDayContext } from "@/lib/personal-plan/oil-heat-context"
+import {
+  HEAT_ACTIVATION_ROUTES,
+  heatActivationRouteServes,
+  type HeatActivationRoute,
+} from "@/lib/heat-activation/contract"
 
 import { heatProtectionNote } from "./german-copy"
 import { requiresExactProductGuidance, resolveApplicationGuidance } from "./guidance-resolver"
@@ -863,6 +868,19 @@ function compileDay(
   }
 }
 
+/** `null` for every non-activated item; the route is `null` when the catalog lacks it. */
+function heatActivationOf(
+  item: NormalizedRoutineItem,
+): { route: HeatActivationRoute | null } | null {
+  const route = item.catalogFacts.heatActivationRoute
+  const knownRoute =
+    typeof route === "string" && (HEAT_ACTIVATION_ROUTES as readonly string[]).includes(route)
+      ? (route as HeatActivationRoute)
+      : null
+  if (item.catalogFacts.heatActivationRequired !== true && knownRoute === null) return null
+  return { route: knownRoute }
+}
+
 function materializeHeatOccurrences(
   items: readonly NormalizedRoutineItem[],
   profile: NormalizedApplicationInput["profile"],
@@ -878,14 +896,20 @@ function materializeHeatOccurrences(
       !["damp", "dry", "either"].includes(String(applicationState)) ||
       !["required", "optional", "not_stated"].includes(String(reapplication))
     ) {
-      return [item]
+      // Without a heat event a heat-activated product has nothing to activate it.
+      return heatActivationOf(item) && (!events || events.length === 0) ? [] : [item]
     }
+    // A heat-activated product (Leave-In v1.2) is placed by the heat ROUTE that activates it,
+    // not by its application state; with no event on that route it has no occurrence at all
+    // (S3 §5.1, Q3). Every other item keeps the state-based placement unchanged.
+    const activation = heatActivationOf(item)
     const compatibleEvents = events.filter((event) => {
+      if (activation) return heatActivationRouteServes(activation.route, [event.route])
       if (applicationState === "damp") return event.route === "airflow_shaping"
       if (applicationState === "dry") return event.route === "direct_contact_heat"
       return true
     })
-    if (compatibleEvents.length === 0) return [item]
+    if (compatibleEvents.length === 0) return activation ? [] : [item]
     // Without required reapplication one application covers one heat sequence — but blow-drying
     // (wash days) and hot tools (Styling-Tag) are different days, so each day context gets its
     // own occurrence (Nomi consult finish T6). Within a context: the direct event first.
