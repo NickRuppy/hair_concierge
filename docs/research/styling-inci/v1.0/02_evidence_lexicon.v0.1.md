@@ -225,7 +225,7 @@ Column key — **Consumed by**: S0 = routing gate (standard §4); RM = `result_m
 4. **Essential oils are not marker-eligible in v0.1.** A list whose first scent material is an essential oil keeps the next eligible marker.
 5. **Opaque quats** (Quaternium-95) stay unresolved until a supplier identity is documented; they never form an LGN pair (LI §7.6).
 6. **HP-1 is mechanism evidence on model systems**, not product evidence (LI §5 L9 rule 4). A `true` heat binary is a recommendation-policy outcome under PH1-15 (read against T_S, PH2-4), never an efficacy statement.
-7. **Rich-member list (open).** PH2-8 rules the exact LI WT rule but does not name the list of rich members; WL-1, WL-2, Paraffinum Liquidum, WL-4, WL-5 and the WL-6 rich band stay a lexicon placement (T-tier as marked), to be re-checked in the Phase 3 blind round.
+7. **Rich-member list — resolved by PH2-12.** WL-1, WL-2, Paraffinum Liquidum, WL-4, WL-5 and the WL-6 rich band are the Styling rich members (waxes, paraffin, microcrystalline wax and lanolin are a Styling-local addition to the LI L3 rich band; they move into the Leave-in addendum after lock).
 
 ## 6. Source register
 
