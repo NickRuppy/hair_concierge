@@ -1,5 +1,5 @@
 {
-  "fingerprint": "27ea6ec51faa442ad00e3119df67a314c9ffb6cb06c1500609e6787212631e15",
+  "fingerprint": "228e3936d6ce976cfa4f8ca55e6c8952978da4f4ab46b63046e026f648e24a3d",
   "batch_id": "S3-catalog-completeness-slice3-heat-activation",
   "prestate_basis": {
     "production_capture_at": "2026-10-11T14:08:01.30101+00:00",
@@ -573,8 +573,8 @@
         "source_type": "manufacturer",
         "checked_at": "2026-10-09",
         "batch_id": "S3-catalog-completeness-slice3-heat-activation",
-        "batch_fingerprint": "27ea6ec51faa442ad00e3119df67a314c9ffb6cb06c1500609e6787212631e15",
-        "content_fingerprint": "7cdedb0a00e2de6910474a432dc4c289492f9bfa157edfd9d74a8504d5675a5b"
+        "batch_fingerprint": "228e3936d6ce976cfa4f8ca55e6c8952978da4f4ab46b63046e026f648e24a3d",
+        "content_fingerprint": "a96484ba403dd5aa177c0e47ec93620db3a5f4bb1bda40a79b5c10aaa156d656"
       },
       {
         "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
@@ -586,8 +586,8 @@
         "source_type": "manufacturer",
         "checked_at": "2026-10-09",
         "batch_id": "S3-catalog-completeness-slice3-heat-activation",
-        "batch_fingerprint": "27ea6ec51faa442ad00e3119df67a314c9ffb6cb06c1500609e6787212631e15",
-        "content_fingerprint": "19f068a751aebbcc5abeb335d8e34c61b49de7771443deb27fc327a22f92ed54"
+        "batch_fingerprint": "228e3936d6ce976cfa4f8ca55e6c8952978da4f4ab46b63046e026f648e24a3d",
+        "content_fingerprint": "8b5c6e431a7fd809b14b3f8736e95804ccc727773c0c704741bf9b937333cbeb"
       },
       {
         "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
@@ -601,8 +601,8 @@
         "source_type": "manufacturer",
         "checked_at": "2026-10-09",
         "batch_id": "S3-catalog-completeness-slice3-heat-activation",
-        "batch_fingerprint": "27ea6ec51faa442ad00e3119df67a314c9ffb6cb06c1500609e6787212631e15",
-        "content_fingerprint": "c4b3b7ce417e1a697ecce72eda8802aa55609de6aaf1608d319df768d21d7516"
+        "batch_fingerprint": "228e3936d6ce976cfa4f8ca55e6c8952978da4f4ab46b63046e026f648e24a3d",
+        "content_fingerprint": "3e8cb6455297f80805f7c940748fe081b681b38beb41d2529251eb8981dadd0f"
       },
       {
         "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
@@ -616,8 +616,8 @@
         "source_type": "manufacturer",
         "checked_at": "2026-10-09",
         "batch_id": "S3-catalog-completeness-slice3-heat-activation",
-        "batch_fingerprint": "27ea6ec51faa442ad00e3119df67a314c9ffb6cb06c1500609e6787212631e15",
-        "content_fingerprint": "35a7ee6cc3d521244579023ba70b39d570dca8c7db121141e065b72a2f7720bc"
+        "batch_fingerprint": "228e3936d6ce976cfa4f8ca55e6c8952978da4f4ab46b63046e026f648e24a3d",
+        "content_fingerprint": "e26a656485dc07cb5973fe8a41974578bbf5292f82e777cc0cf99de7297f4b0a"
       },
       {
         "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
@@ -629,8 +629,8 @@
         "source_type": "manufacturer",
         "checked_at": "2026-10-09",
         "batch_id": "S3-catalog-completeness-slice3-heat-activation",
-        "batch_fingerprint": "27ea6ec51faa442ad00e3119df67a314c9ffb6cb06c1500609e6787212631e15",
-        "content_fingerprint": "c02b688e30d70caf02bb7244cc5204af1d4c8a8299ce4eabc7b5d35d0a0209ac"
+        "batch_fingerprint": "228e3936d6ce976cfa4f8ca55e6c8952978da4f4ab46b63046e026f648e24a3d",
+        "content_fingerprint": "54b00a6ccf4d03c1dd81697d4a33bf31c5b0f31d4d0b2e03a7ccd9bedad31f8f"
       },
       {
         "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
@@ -642,8 +642,8 @@
         "source_type": "manufacturer",
         "checked_at": "2026-10-09",
         "batch_id": "S3-catalog-completeness-slice3-heat-activation",
-        "batch_fingerprint": "27ea6ec51faa442ad00e3119df67a314c9ffb6cb06c1500609e6787212631e15",
-        "content_fingerprint": "1da94bafe77d37c36797cb5290c98882c2cac39495acd5bec4d435e8216efd49"
+        "batch_fingerprint": "228e3936d6ce976cfa4f8ca55e6c8952978da4f4ab46b63046e026f648e24a3d",
+        "content_fingerprint": "80bcd381636cbe68a9a83c143b72bc53039555c45d94e7d79a8be52b8f016618"
       },
       {
         "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
@@ -657,8 +657,8 @@
         "source_type": "manufacturer",
         "checked_at": "2026-10-09",
         "batch_id": "S3-catalog-completeness-slice3-heat-activation",
-        "batch_fingerprint": "27ea6ec51faa442ad00e3119df67a314c9ffb6cb06c1500609e6787212631e15",
-        "content_fingerprint": "67c4afc11ac737569b9d092a407f115ba388d82951a2dd1ef33fab4100407130"
+        "batch_fingerprint": "228e3936d6ce976cfa4f8ca55e6c8952978da4f4ab46b63046e026f648e24a3d",
+        "content_fingerprint": "4e0391f8d92e115ec9d2af67301993484d44cd25c36cb605044846accd3acb2f"
       },
       {
         "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
@@ -672,8 +672,8 @@
         "source_type": "manufacturer",
         "checked_at": "2026-10-09",
         "batch_id": "S3-catalog-completeness-slice3-heat-activation",
-        "batch_fingerprint": "27ea6ec51faa442ad00e3119df67a314c9ffb6cb06c1500609e6787212631e15",
-        "content_fingerprint": "0a46b908b621ca5aa06c2b3ce6ef4aeff6e2b94433291e6470557a49f177c139"
+        "batch_fingerprint": "228e3936d6ce976cfa4f8ca55e6c8952978da4f4ab46b63046e026f648e24a3d",
+        "content_fingerprint": "854deb59a502f8f2a322cff3f913d78a4c808caaf6a22f71ff4c5e8437909db7"
       }
     ]
   },

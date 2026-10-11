@@ -468,7 +468,16 @@ const writes = {
   protocols: protocolTargets,
   evidence: evidenceRows,
 }
-const fingerprint = sha256(canonical({ batch: SLICE3_BATCH_ID, prestate, writes }))
+// The fingerprint binds the guard scope too: widening what CAS/verify/rollback compare
+// changes the reviewed batch (S3 review R3).
+const GUARD_SCOPE = {
+  protocolColumns: ["application_family", "cadence", ...PROTOCOL_COLUMNS],
+  specs: "to_jsonb(row) - product_id - created_at - updated_at - conditioner_relationship",
+  fit: "to_jsonb(row) - product_id - created_at - updated_at",
+}
+const fingerprint = sha256(
+  canonical({ batch: SLICE3_BATCH_ID, prestate, writes, guardScope: GUARD_SCOPE }),
+)
 const evidenceWithFingerprint: Row[] = evidenceRows.map(
   (row): Row => ({
     ...row,
@@ -502,15 +511,24 @@ const eligibilityJson = (rows: Row[]) =>
       styling_context: row.styling_context,
     }))
     .sort((left, right) => (eligibilityKey(left) < eligibilityKey(right) ? -1 : 1))
+/**
+ * Every protocol column S3 writes (plus the untouched cadence and the generated
+ * family) takes part in CAS, verify, replay and rollback (S3 review R3): native
+ * column drift (state, reapplication, placement, rinse, …) fails closed.
+ */
+const PROTOCOL_KEY_COLUMNS = ["cadence", ...PROTOCOL_COLUMNS] as const
 const protocolKeyExpr = (alias: string) =>
-  `jsonb_build_object('role', ${alias}.role, 'application_family', ${alias}.application_family, 'source_url', ${alias}.source_url, 'source_text', ${alias}.source_text, 'guidance_payload', ${alias}.guidance_payload, 'guidance_payload_v2', ${alias}.guidance_payload_v2)`
-const protocolKey = (row: Row) => ({
-  role: row.role,
+  `jsonb_build_object('application_family', ${alias}.application_family, ${PROTOCOL_KEY_COLUMNS.map(
+    (column) => `'${column}', to_jsonb(${alias}.${column})`,
+  ).join(", ")})`
+const protocolKey = (row: Row): Row => ({
   application_family: familyOf(row),
-  source_url: row.source_url,
-  source_text: row.source_text,
-  guidance_payload: row.guidance_payload,
-  guidance_payload_v2: row.guidance_payload_v2,
+  ...Object.fromEntries(
+    PROTOCOL_KEY_COLUMNS.map((column) => [
+      column,
+      column === "instruction_modifiers" ? (row[column] ?? []) : (row[column] ?? null),
+    ]),
+  ),
 })
 
 function raiseUnless(condition: string, message: string): string {

@@ -371,3 +371,46 @@ test("applied protocol rows are exactly the reviewed rows Stage 5 renders (tests
     JSON.parse(JSON.stringify(expected)),
   )
 })
+
+const PRE_HEAT_ROW = "b99799b7-1d23-47e0-9338-66923a690ae1"
+
+test("native protocol-column drift fails closed in apply, verify and rollback (S3 review R3)", async (t) => {
+  const migration = await readRepoFile(MIGRATION)
+  const verify = await readRepoFile(`${SLICE}verify.sql`)
+  const rollback = await readRepoFile(`${SLICE}rollback.sql`)
+
+  // Apply: the S1 pre-heat row's placement drifted before S3.
+  const applyDrift = await seededDatabase(t)
+  await applyDrift.query(
+    "UPDATE public.product_application_protocols SET placement = 'lengths_ends' WHERE id = $1",
+    [PRE_HEAT_ROW],
+  )
+  await assert.rejects(applyDrift.exec(migration), /slice3 prestate protocols/)
+  await applyDrift.exec("ROLLBACK").catch(() => undefined)
+
+  // Verify + rollback: a written native column drifted after S3.
+  const pg = await seededDatabase(t)
+  await pg.exec(migration)
+  for (const [column, value] of [
+    ["application_state", "damp"],
+    ["reapplication", "optional"],
+    ["rinse_action", "rinse_out"],
+  ] as const) {
+    await pg.query(
+      `UPDATE public.product_application_protocols SET ${column} = $1 WHERE product_id = $2 AND role = 'pre_heat_protection' AND application_family = 'pre_heat_dry'`,
+      [value, HEAT_GLOW],
+    )
+    await assert.rejects(pg.exec(verify), /slice3 target protocols/, column)
+    await assert.rejects(pg.exec(rollback), /slice3 target protocols/, column)
+    await pg.exec("ROLLBACK").catch(() => undefined)
+    await pg.exec(
+      `UPDATE public.product_application_protocols SET ${column} = ${column === "application_state" ? "'dry'" : column === "reapplication" ? "'required'" : "'leave_in'"} WHERE product_id = '${HEAT_GLOW}' AND role = 'pre_heat_protection' AND application_family = 'pre_heat_dry'`,
+    )
+    await pg.exec(verify)
+  }
+  // A kept legacy post-wash row is guarded too.
+  await pg.query(
+    "UPDATE public.product_application_protocols SET placement = 'ends' WHERE id = '6b50c77e-c658-40f7-818b-1a64547e41ba'",
+  )
+  await assert.rejects(pg.exec(verify), /slice3 target protocols/)
+})
