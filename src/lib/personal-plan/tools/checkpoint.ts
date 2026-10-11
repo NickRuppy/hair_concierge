@@ -85,6 +85,26 @@ export function toolCheckpointAnalyticsCounts(
   }
 }
 
+/**
+ * `personal_plan_tools_inventory_completed`: how many families the member reported owning
+ * something in versus answered with „Nichts davon" (an unticked family reads as `[]`). Bounded
+ * counts only.
+ */
+export function toolInventoryCompletedCounts(inventory: ToolInventory): {
+  reportedFamilyCount: number
+  explicitNoneFamilyCount: number
+} {
+  let reportedFamilyCount = 0
+  let explicitNoneFamilyCount = 0
+  for (const family of TOOL_OVERVIEW_FAMILY_ORDER) {
+    const forms = inventory[family]
+    if (!Array.isArray(forms)) continue
+    if (forms.length > 0) reportedFamilyCount += 1
+    else explicitNoneFamilyCount += 1
+  }
+  return { reportedFamilyCount, explicitNoneFamilyCount }
+}
+
 function isToolQuestionId(id: string): boolean {
   return id === "tools_overview" || id.startsWith("tools:")
 }

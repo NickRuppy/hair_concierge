@@ -563,9 +563,6 @@ export type AppEventMap = {
   }
   personal_plan_stage3_handoff: {
     outcome: PersonalPlanStage3HandoffOutcome
-    /** Hair Tools. Absent while the Tools rollout is off; bounded counts only. */
-    toolRouteCount?: number
-    toolGapCount?: number
   }
   /**
    * The Tool-Checkpoint „Das hast du schon" after the tools module. Only bounded

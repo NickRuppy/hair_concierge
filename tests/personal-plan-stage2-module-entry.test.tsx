@@ -13,6 +13,7 @@ import {
   applyStage2ModuleCompletion,
   RefinementFlow,
   stage2BridgeAutoContinues,
+  trackToolsInventoryEntered,
   type Stage2ModuleCompletionPayload,
   type Stage2RefinementTelemetryEvent,
 } from "../src/components/personal-plan-refinement/refinement-flow"
@@ -1779,4 +1780,112 @@ test("re-entering a finished tools module walks it again instead of bridging", a
   const view = resolveStage2FlowEntryView({ session: done, moduleScope: "explicit" })
   assert.equal(view.mode, "question")
   assert.equal(view.activeQuestionId, "tools_overview")
+})
+
+/* ── Hair Tools analytics: bounded counts, never a tool identity ───────────────────────────── */
+
+function recordingToolAnalytics() {
+  const tracked: Array<[string, unknown]> = []
+  return {
+    tracked,
+    analytics: {
+      track(eventName: string, payload: unknown) {
+        tracked.push([eventName, payload])
+      },
+    } as Parameters<typeof trackToolsInventoryEntered>[0]["analytics"],
+  }
+}
+
+test("personal_plan_tools_inventory_entered fires once, on the first tools question only", () => {
+  const { tracked, analytics } = recordingToolAnalytics()
+  let alreadyTracked = false
+  // A products question is not the tools module.
+  alreadyTracked = trackToolsInventoryEntered({
+    questionId: "wet_wash_frequency",
+    alreadyTracked,
+    analytics,
+  })
+  assert.equal(alreadyTracked, false)
+  assert.deepEqual(tracked, [])
+  // The overview is the first tools question; the four sections are the only payload.
+  alreadyTracked = trackToolsInventoryEntered({
+    questionId: "tools_overview",
+    alreadyTracked,
+    analytics,
+  })
+  assert.equal(alreadyTracked, true)
+  // Later tools pages and a Back to the overview do not fire again.
+  trackToolsInventoryEntered({ questionId: "tools:airflow:1", alreadyTracked, analytics })
+  trackToolsInventoryEntered({ questionId: "tools_overview", alreadyTracked, analytics })
+  assert.deepEqual(tracked, [["personal_plan_tools_inventory_entered", { sectionCount: 4 }]])
+})
+
+test("completing the tools module emits personal_plan_tools_inventory_completed with family counts", async () => {
+  const toolsTriggerContext: Stage2TriggerContext = { ...plainTriggerContext, toolsEnabled: true }
+  const session = createStage2RefinementSession({
+    pathVersion: "tools-analytics-test",
+    triggerContext: toolsTriggerContext,
+    answers: {
+      currentProductCategories: [],
+      wetWashFrequency: "weekly_2x",
+      toolFamiliesWithSomething: ["drying_textiles", "airflow"],
+      toolForms: {
+        "drying_textiles:1": ["microfiber_towel"],
+        "airflow:1": ["hair_dryer", "hot_air_brush"],
+        "heated_styling:1": [],
+      },
+    },
+    completedQuestionIds: [
+      "current_product_categories",
+      "wet_wash_frequency",
+      "tools_overview",
+      "tools:drying_textiles:1",
+      "tools:airflow:1",
+    ],
+    revision: 5,
+  })
+  const completed: unknown[] = []
+  const recording = recordingEffects()
+  await applyStage2ModuleCompletion(
+    {
+      session,
+      hostSession: session,
+      moduleCompletion: {
+        module: "tools",
+        status: "in_progress",
+        stage3Handoff: false,
+        refinedVersionId: "refined-1",
+        nextHref: "/plan-start",
+      },
+      postAcceptModuleEntry: true,
+    },
+    {
+      ...recording.effects,
+      trackToolsInventoryCompleted: (hostSession) => completed.push(hostSession),
+    },
+  )
+  assert.equal(completed.length, 1)
+  assert.equal(completed[0], session)
+
+  // Other modules never fire it.
+  const other: unknown[] = []
+  await applyStage2ModuleCompletion(
+    {
+      session,
+      hostSession: session,
+      moduleCompletion: {
+        module: "habits",
+        status: "in_progress",
+        stage3Handoff: false,
+        refinedVersionId: "refined-1",
+        nextHref: "/plan-start",
+      },
+      postAcceptModuleEntry: true,
+    },
+    {
+      ...recording.effects,
+      trackToolsInventoryCompleted: (hostSession) => other.push(hostSession),
+    },
+  )
+  assert.deepEqual(other, [])
 })

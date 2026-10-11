@@ -76,6 +76,7 @@ import {
   hasRefinementDeferredRoles,
   parseHairProfileStatus,
 } from "@/lib/personal-plan/refinement/hair-profile-section"
+import { armRefinementStatusGate } from "@/lib/profile/refinement-status-gate"
 import type { RefinementStatusResponse } from "@/lib/personal-plan/refinement/refinement-status"
 import type { ProfileToolsBlock, ProfileToolsGroup } from "@/lib/personal-plan/tools/profile-block"
 import type {
@@ -593,12 +594,20 @@ export default function ProfilePage() {
      * unavailable → 503, network) collapses to `null`, i.e. the section stays
      * absent rather than rendering a broken card.
      */
+    let cancelPendingGate: (() => void) | null = null
+
     async function loadRefinementStatus() {
       if (!userId || !hasRoutineAccess) {
         if (active) setRefinementStatus(null)
         return
       }
       const settledKey = `${userId}:${hasRoutineAccess}`
+      // A slow read must not hold the page on skeletons: after a short while the gate opens and
+      // today's cards show (the answer still applies if it arrives later).
+      const cancelGate = armRefinementStatusGate(() => {
+        if (active) setRefinementStatusSettledKey(settledKey)
+      })
+      cancelPendingGate = cancelGate
       try {
         const response = await fetch("/api/personal-plan/refinement-status", {
           cache: "no-store",
@@ -609,6 +618,7 @@ export default function ProfilePage() {
       } catch {
         if (active) setRefinementStatus(null)
       } finally {
+        cancelGate()
         if (active) setRefinementStatusSettledKey(settledKey)
       }
     }
@@ -616,6 +626,7 @@ export default function ProfilePage() {
     loadRefinementStatus()
     return () => {
       active = false
+      cancelPendingGate?.()
     }
   }, [userId, hasRoutineAccess])
 

@@ -8,6 +8,7 @@ import { createConsentAwareToolAnalytics } from "../src/lib/personal-plan/tools/
 import {
   buildToolCheckpointGroups,
   toolCheckpointAnalyticsCounts,
+  toolInventoryCompletedCounts,
 } from "../src/lib/personal-plan/tools/checkpoint"
 
 /**
@@ -55,24 +56,6 @@ test("the checkpoint event maps its four counts to snake_case", () => {
   ])
 })
 
-test("the Stage-3 handoff carries tool counts only when they are reported", () => {
-  const calls = capture(() => {
-    postHogDestination.track("personal_plan_stage3_handoff", { outcome: "ready_for_routine" })
-    postHogDestination.track("personal_plan_stage3_handoff", {
-      outcome: "ready_with_gap",
-      toolRouteCount: 4,
-      toolGapCount: 0,
-    })
-  })
-  assert.deepEqual(calls, [
-    ["personal_plan_stage3_handoff", { outcome: "ready_for_routine" }],
-    [
-      "personal_plan_stage3_handoff",
-      { outcome: "ready_with_gap", tool_route_count: 4, tool_gap_count: 0 },
-    ],
-  ])
-})
-
 test("the tool port forwards the checkpoint event only with analytics consent", () => {
   const tracked: string[] = []
   const payload = { routeCount: 1, ownedCount: 1, gapCount: 0, unknownCount: 0 }
@@ -113,4 +96,43 @@ test("a fingers-only brush answer counts as a gap, not an owned tool", () => {
   assert.equal(counts.ownedCount, 0)
   assert.equal(counts.gapCount, 1)
   assert.equal(counts.unknownCount, 7)
+})
+
+test("the inventory-completed counts separate reported families from „Nichts davon“ ones", () => {
+  assert.deepEqual(
+    toolInventoryCompletedCounts({
+      drying_textiles: ["microfiber_towel"],
+      airflow: ["hair_dryer", "hot_air_brush"],
+      heated_styling: [],
+      night_protection: [],
+      brushes_combs: null,
+    } as never),
+    { reportedFamilyCount: 2, explicitNoneFamilyCount: 2 },
+  )
+  assert.deepEqual(toolInventoryCompletedCounts({}), {
+    reportedFamilyCount: 0,
+    explicitNoneFamilyCount: 0,
+  })
+})
+
+test("both inventory events map their counts and are PostHog-only", () => {
+  assert.deepEqual(eventRoutes.personal_plan_tools_inventory_entered, {
+    customerio: false,
+    meta: false,
+    posthog: true,
+  })
+  const calls = capture(() => {
+    postHogDestination.track("personal_plan_tools_inventory_entered", { sectionCount: 4 })
+    postHogDestination.track("personal_plan_tools_inventory_completed", {
+      reportedFamilyCount: 2,
+      explicitNoneFamilyCount: 3,
+    })
+  })
+  assert.deepEqual(calls, [
+    ["personal_plan_tools_inventory_entered", { section_count: 4 }],
+    [
+      "personal_plan_tools_inventory_completed",
+      { reported_family_count: 2, explicit_none_family_count: 3 },
+    ],
+  ])
 })
