@@ -2,7 +2,6 @@ import type {
   ProductBondApplicationMode,
   ProductBondProductFormat,
   ProductBondRepairAxis,
-  ProductBondRepairIntensity,
   ProductBondTreatmentMode,
   ProductBondUsageProtocol,
 } from "@/lib/product-specs/constants"
@@ -12,7 +11,6 @@ export const BONDBUILDER_DB_CATEGORIES = ["Bondbuilder", "Bond Builder"] as cons
 
 export interface ProductBondbuilderSpecs {
   product_id: string
-  bond_repair_intensity: ProductBondRepairIntensity | null
   application_mode: ProductBondApplicationMode | null
   bond_repair_axis: ProductBondRepairAxis | null
   treatment_mode: ProductBondTreatmentMode | null

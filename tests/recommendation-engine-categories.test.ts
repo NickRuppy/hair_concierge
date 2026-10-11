@@ -14,7 +14,6 @@ import {
   buildResetAssessment,
   buildInterventionPlan,
   emptyRecommendationRequestContext,
-  evaluateBondbuilderFit,
   evaluateConditionerFit,
   evaluateLeaveInFit,
   evaluateMaskFit,
@@ -1076,7 +1075,7 @@ test("dry shampoo blocks current-message breakage-dominant requests", () => {
   assert.ok(categories.dryShampoo.notes.includes("dry_shampoo_dry_breakage_hard_no"))
 })
 
-test("bondbuilder fit uses intensity and does not rank by treatment mode", () => {
+test("bondbuilder target profile derives lanes and application mode only", () => {
   const { normalized, damage, plan } = buildEngineState(SEVERE_DAMAGE_PROFILE, [
     {
       category: "bondbuilder",
@@ -1089,7 +1088,6 @@ test("bondbuilder fit uses intensity and does not rank by treatment mode", () =>
   assert.equal(decision.relevant, true)
   assert.equal(decision.action, "increase_frequency")
   assert.deepEqual(decision.targetProfile, {
-    bondRepairIntensity: "intensive",
     applicationMode: "post_wash_leave_in",
     chemicalCrosslinkLane: true,
     peptideChainLane: true,
@@ -1097,19 +1095,6 @@ test("bondbuilder fit uses intensity and does not rank by treatment mode", () =>
     proteinBalanceSupportingOnly: false,
     role: "recommended",
   })
-
-  const differentModeFit = evaluateBondbuilderFit(decision, {
-    bond_repair_intensity: "intensive",
-    application_mode: "pre_shampoo",
-    treatment_mode: "rinse_out",
-  })
-  assert.equal(differentModeFit.status, "ideal")
-
-  const weakerFit = evaluateBondbuilderFit(decision, {
-    bond_repair_intensity: "maintenance",
-    application_mode: "post_wash_leave_in",
-  })
-  assert.equal(weakerFit.status, "mismatch")
 })
 
 test("explicit low-need bondbuilder request stays optional instead of disappearing", () => {
@@ -1128,7 +1113,6 @@ test("explicit low-need bondbuilder request stays optional instead of disappeari
   assert.equal(categories.bondbuilder.relevant, true)
   assert.equal(categories.bondbuilder.action, null)
   assert.equal(categories.bondbuilder.targetProfile?.role, "optional")
-  assert.equal(categories.bondbuilder.targetProfile?.bondRepairIntensity, "maintenance")
   assert.ok(
     categories.bondbuilder.planReasonCodes.includes("bondbuilder_explicit_optional_low_need"),
   )
