@@ -287,6 +287,7 @@ function renderThroughV2(
   productId: string,
   inputs: readonly HeatActivatedProtocolRowInput[],
   heatEvents: HeatEvent[],
+  { withDryShampoo = true }: { withDryShampoo?: boolean } = {},
 ) {
   const heatRows = inputs.map((input) => ({
     ...buildHeatActivatedProtocolRow(input),
@@ -337,18 +338,22 @@ function renderThroughV2(
         executable: true,
         effectiveCadenceDe: "Vor dem Föhnen",
       },
-      {
-        itemId: "item-dry-shampoo",
-        applicationInstanceKey: "assign-dry-shampoo",
-        routineOrder: 2,
-        category: "dry_shampoo",
-        routineRole: "root_refresh_bridge",
-        productId: DRY_SHAMPOO,
-        productName: "Trockenshampoo",
-        kind: "owned",
-        executable: true,
-        effectiveCadenceDe: "Zwischen den Wäschen",
-      },
+      ...(withDryShampoo
+        ? [
+            {
+              itemId: "item-dry-shampoo",
+              applicationInstanceKey: "assign-dry-shampoo",
+              routineOrder: 2,
+              category: "dry_shampoo",
+              routineRole: "root_refresh_bridge",
+              productId: DRY_SHAMPOO,
+              productName: "Trockenshampoo",
+              kind: "owned",
+              executable: true,
+              effectiveCadenceDe: "Zwischen den Wäschen",
+            } as const,
+          ]
+        : []),
     ],
     products: new Map([
       [SHAMPOO, productRow(SHAMPOO, "shampoo")],
@@ -360,7 +365,11 @@ function renderThroughV2(
         }),
       ],
     ]) as never,
-    protocolRows: [shampooPointerRow(), dryShampooPointerRow(), ...heatRows],
+    protocolRows: [
+      shampooPointerRow(),
+      ...(withDryShampoo ? [dryShampooPointerRow()] : []),
+      ...heatRows,
+    ],
   })
   const result = compileApplicationViewV2({
     input: {
@@ -438,4 +447,25 @@ test("a straightener-only profile renders no heat-activated occurrence", () => {
       false,
     )
   }
+})
+
+test("HEAT&GLOW's between-wash row forms its own refresh day without any other refresh product", () => {
+  const { result, stepsOn } = renderThroughV2(
+    PANTENE,
+    PANTENE_HEAT_GLOW_HEAT_ACTIVATED_ROW_INPUTS,
+    [HAIR_DRYER],
+    { withDryShampoo: false },
+  )
+  assert.deepEqual(result.pointerIssues, [])
+  assert.deepEqual(stepsOn("refresh_day"), [
+    [
+      "Zwischen den Haarwäschen gegen Frizz: die Creme im trockenen Haar verteilen.",
+      "Danach föhnen – erst die Wärme aktiviert die Pflege.",
+    ],
+  ])
+  // Without a blow-dry event there is nothing to activate it, so no refresh day forms for it.
+  const noHeat = renderThroughV2(PANTENE, PANTENE_HEAT_GLOW_HEAT_ACTIVATED_ROW_INPUTS, [], {
+    withDryShampoo: false,
+  })
+  assert.equal(noHeat.stepsOn("refresh_day")?.length ?? 0, 0)
 })

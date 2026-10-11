@@ -463,9 +463,22 @@ function compileDay(
         item.catalogFacts.provides_heat_protection === true &&
         protocol.scope.kind === "product",
     )
+  // A verified heat-activated product's between-wash use (dry state, placed on a real
+  // activating heat event) is itself a refresh-day step (S3 review R2): it establishes the
+  // refresh day even when the routine has no other refresh, leave-in or styling item.
+  const activatedRefreshOccurrence =
+    key === "refresh_day" &&
+    resolved.some(
+      ({ item }) =>
+        item.role === "heat_protection" &&
+        item.heatEventId !== undefined &&
+        item.catalogFacts.applicationState === "dry" &&
+        heatActivationOf(item) !== null,
+    )
   if (
     !requiredRoles.some((role) => relevantItems.some((item) => item.role === role)) &&
-    !integratedOilHeatCarrier
+    !integratedOilHeatCarrier &&
+    !activatedRefreshOccurrence
   )
     return null
   if (
