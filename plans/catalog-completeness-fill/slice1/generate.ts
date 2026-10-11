@@ -1848,7 +1848,7 @@ assert(
     liveGuidance.locale === "de",
   `${GUIDANCE_KEY}: version 3 keeps the indexed columns of version 2`,
 )
-/** Version 2 after the retirement (updated_at is stamped by the immutability trigger). */
+/** Version 2 after the retirement (updated_at is then normalised to the apply timestamp). */
 const GUIDANCE_V2_RETIRED: Row = {
   ...Object.fromEntries(Object.entries(GUIDANCE_V2).filter(([col]) => col !== "updated_at")),
   status: "retired",
@@ -1896,6 +1896,8 @@ const GUIDANCE_CHANGE = {
     id: GUIDANCE_V2.id,
     before: GUIDANCE_V2,
     after_without_updated_at: GUIDANCE_V2_RETIRED,
+    // Codex F03: the retirement stamp is normalised to the apply timestamp.
+    updated_at: "apply_timestamp",
   },
   publish: GUIDANCE_V3,
   affected_product_protocols: GUIDANCE_AFFECTED,
@@ -2312,9 +2314,9 @@ function targetChecks(): Check[] {
       predicate: `${guidanceRow(GUIDANCE_V2.id, ["updated_at"])} = ${sqlJson(GUIDANCE_V2_RETIRED)}`,
     },
     {
-      // reject_active_application_content_mutation stamps clock_timestamp() >= now().
+      // The migration normalises the retirement stamp to now() (= the receipts' created_at).
       name: "application_guidance_v2_retired_at_apply",
-      predicate: `(SELECT t.updated_at >= ${RECEIPT_TS} FROM public.${GUIDANCE_TABLE} t WHERE t.id = '${String(GUIDANCE_V2.id)}'::uuid)`,
+      predicate: `(SELECT t.updated_at = ${RECEIPT_TS} FROM public.${GUIDANCE_TABLE} t WHERE t.id = '${String(GUIDANCE_V2.id)}'::uuid)`,
     },
     {
       name: "application_guidance_v3_target",
@@ -2538,6 +2540,16 @@ const guidanceApplySql = `  -- Retire the exact captured active version 2 (whole
     AND pg_catalog.to_jsonb(t) = ${sqlJson(GUIDANCE_V2)};
   GET DIAGNOSTICS v_rows = ROW_COUNT;
   IF v_rows <> 1 THEN RAISE EXCEPTION 'slice1 retire ${GUIDANCE_KEY} v2 touched % rows', v_rows; END IF;
+  -- Normalise the retirement stamp (the trigger wrote clock_timestamp()) to the
+  -- apply timestamp every receipt carries, so postflight, verify.sql and the
+  -- rollback can require exact equality (a later revision of the row is visible).
+  UPDATE public.${GUIDANCE_TABLE} t
+  SET updated_at = pg_catalog.now()
+  WHERE t.id = '${String(GUIDANCE_V2.id)}'::uuid
+    AND t.status = 'retired'
+    AND (pg_catalog.to_jsonb(t) - 'updated_at') = ${sqlJson(GUIDANCE_V2_RETIRED)};
+  GET DIAGNOSTICS v_rows = ROW_COUNT;
+  IF v_rows <> 1 THEN RAISE EXCEPTION 'slice1 stamp ${GUIDANCE_KEY} v2 retirement touched % rows', v_rows; END IF;
 
   -- Publish version 3 (payload = SHARED_APPLICATION_TEMPLATES_V2 entry).
   INSERT INTO public.${GUIDANCE_TABLE} (${[...guidanceInsertColumns, "verified_at"].join(", ")})
@@ -3086,7 +3098,7 @@ ${eligibilityCas}
   SET status = 'active', updated_at = ${sqlValue(GUIDANCE_TABLE, "updated_at", GUIDANCE_V2.updated_at)}
   WHERE t.id = '${String(GUIDANCE_V2.id)}'::uuid
     AND (pg_catalog.to_jsonb(t) - 'updated_at') = ${sqlJson(GUIDANCE_V2_RETIRED)}
-    AND t.updated_at >= v_applied_at;
+    AND t.updated_at = v_applied_at;
   GET DIAGNOSTICS v_rows = ROW_COUNT;
   IF v_rows <> 1 THEN RAISE EXCEPTION 'rollback: ${GUIDANCE_KEY} v2 is not its retired target (% rows)', v_rows; END IF;
 

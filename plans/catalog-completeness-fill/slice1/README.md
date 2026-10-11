@@ -7,8 +7,8 @@ Status: **prepared and rehearsed, NOT applied.** Production apply needs Nick's a
 | Migration | `supabase/migrations/20261011140000_catalog_completeness_fill_slice1.sql` (sorts after #660's `20261011120000`) |
 | Batch id (ledger receipts + evidence) | `S5R-06-catalog-completeness-slice1` |
 | Disposition batch (Garnier) | `S5-24-catalog-completeness-slice1` |
-| Content fingerprint | `731eeac8ba0338aa636f31f664ccfee5755fb37caa545061739d0c9fa067e68f` |
-| Artifact manifest combined sha256 | `87b3e7b021c7eb8364995d0b9023611dddc4aa646a557937c6fdb9003289d4fb` |
+| Content fingerprint | `bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823` |
+| Artifact manifest combined sha256 | `54282dbd25bbb096e9718a8d4dd2582ea0f76afe3a090383adb0fff6811e3999` |
 | Prestate capture | `2026-10-11T13:48:49.533788Z` (read-only, prod `pqdkhefxsxkyeqelqegq`) |
 | Schema capture | `2026-10-11T13:52:02.549733Z` (`fixtures/prod-schema-2026-10-11.json`) |
 | Template capture (Codex F01) | `2026-10-11T14:29:45.064989Z`: `application_guidance_protocols` rows of `scalp.rinse-off.v2`, the table's schema + `reject_active_application_content_mutation()`, and the two rinse-off peeling pointers (read-only; ledger re-checked: 376 rows, unchanged) |
@@ -66,6 +66,7 @@ Deferred by ruling (not in this batch): Pantene 7in1 leave-in row `f8f3b51d` (S5
 The Anwendung page and discovery load the shared family templates from `application_guidance_protocols` (active, `de`, `contract_version` 2) through `repository.ts`, not from the TS registry. Production had only `scalp.rinse-off.v2` version 2, so without this step the F03 copy would never render.
 
 - The migration follows `20260929231000_oil_day_type_rulings`: active content is immutable, so version 2 is **retired** (never deleted) and version 3 is **inserted** under the same `guidance_key` (`verified_at` = apply time, `contract_version` 2). Single source: the v3 payload is the `SHARED_APPLICATION_TEMPLATES_V2` entry; the generator asserts the captured v2 payload equals the artifact-freeze registry entry.
+- The trigger stamps the retirement with `clock_timestamp()`; the migration then normalises version 2's `updated_at` to the apply timestamp (= the receipts' `created_at`), so postflight, `verify.sql` and the rollback require exact equality and a later revision of the retired row is reported / refused (Codex delta F03).
 - Guards: `SHARE ROW EXCLUSIVE` on the table, `FOR UPDATE` on the key's rows, a preimage check on every row of the key (stamps included), and a whole-row CAS on the retire. The postflight / `verify.sql` re-prove both rows.
 - Like the precedent, no evidence row or receipt is written for the template (both ledgers are product-scoped). The change is part of the fingerprinted content (`target-state.json` → `application_guidance_template`).
 - `rollback.sql`: retires and deletes version 3 (CAS on its exact target), then re-activates version 2 with its captured `updated_at` (byte-exact).
@@ -121,24 +122,25 @@ The migration moves both member rows to `scalp_care` in the same transaction (un
 | Command | Result |
 |---|---|
 | `npx tsx plans/catalog-completeness-fill/slice1/generate.ts --check` | validator green, fingerprint as above |
-| `node --import ./tests/server-only-register.cjs --import tsx --test tests/catalog-completeness-fill-slice1-postgres.test.ts` | 17/17 pass |
+| `node --import ./tests/server-only-register.cjs --import tsx --test tests/catalog-completeness-fill-slice1-postgres.test.ts` | 18/18 pass |
 | `… --test tests/personal-plan-scalp-rinse-off-density.test.ts tests/supabase-migration-version-uniqueness.test.ts tests/supabase-select-columns-contract.test.ts tests/personal-plan/products/stage3-authority.test.ts` | 126/126 pass |
 | `npm run test:personal-plan-stage5` | 356/356 pass |
 | Template consumers re-run after Codex F01/F02 (11 files: oil day-type rulings, scan expansion, oil heat, discovery application/admin, between-wash coverage, catalog facts, leave-in manifest, Bondbuilder consumers, Stage-3 persistence, load-view performance) | 184/184 pass |
 | `npx tsc --noEmit -p .` | pass |
 
-The 17 rehearsal tests cover:
+The 18 rehearsal tests cover:
 - exact target state, and replay as a no-op;
 - drift refusal and NULL-tamper refusal;
 - partial-catalogue refusal and fresh-DB skip;
 - rollback: refuses a tampered target, restores the exact prestate, then re-apply;
 - F02: a revision between the rollback's validation and its destructive step is refused (six kinds), and a fit-spec revision before it is refused by the locked precheck;
+- a later revision of the retired v2 stamp: verify reports it, replay and rollback refuse and write nothing;
 - a drifted shared rinse-off template refuses; DB-backed template rendering v2 → v3 → v2 (Codex F01);
 - armed negative controls;
 - Stage-3: Group A pre-heat and Bali post-wash only; Group D unknown → known; Neqi scalp guidance;
 - the prerequisite chain incl. #660, both #660 orders, and the F04 refusals.
 
-## Apply (only after Nick approves fingerprint `731eeac8…7e68f`)
+## Apply (only after Nick approves fingerprint `bfc8bb73…2c823`)
 
 1. Confirm the prod ledger still matches. Step 2 of #660 may be applied before or after this migration.
 2. Apply the migration. Run `verify.sql` and expect zero rows.

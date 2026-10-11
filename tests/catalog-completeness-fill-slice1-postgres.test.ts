@@ -699,6 +699,30 @@ test("F02: a fit-spec revision before the rollback is refused by the locked prec
   assert.deepEqual(await snapshot(pg), revised)
 })
 
+test("a later revision of the retired v2 template stamp is reported by verify and refused by replay and rollback", async (t) => {
+  const { pg, migration, verify, rollback } = await database(t)
+  await run(pg, migration)
+  await verifyZeroRows(pg, verify)
+  // A retired row is not protected by the immutability trigger: another writer
+  // can revise it after the apply, which advances its updated_at.
+  await pg.exec(
+    "UPDATE public.application_guidance_protocols SET updated_at = updated_at + interval '1 minute' WHERE guidance_key = 'scalp.rinse-off.v2' AND protocol_version = 2",
+  )
+  const revised = await snapshot(pg)
+
+  const reported = (await pg.exec(verify)).flatMap((result) => result.rows)
+  assert.deepEqual(reported, [{ check_name: "application_guidance_v2_retired_at_apply" }])
+
+  await assert.rejects(run(pg, migration), /postflight: application_guidance_v2_retired_at_apply/)
+  assert.deepEqual(await snapshot(pg), revised)
+
+  await assert.rejects(
+    run(pg, rollback),
+    /rollback refused: live state is not the generated target/,
+  )
+  assert.deepEqual(await snapshot(pg), revised)
+})
+
 test("a drifted shared rinse-off scalp template refuses and writes nothing", async (t) => {
   const { pg, migration } = await database(t)
   // Another writer already retired version 2 (the trigger allows only that).

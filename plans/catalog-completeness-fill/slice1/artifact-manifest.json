@@ -1,7 +1,7 @@
 {
   "schema": "catalog-completeness-fill-slice1-artifact-manifest-v1",
   "generator": "plans/catalog-completeness-fill/slice1/generate.ts",
-  "content_fingerprint": "731eeac8ba0338aa636f31f664ccfee5755fb37caa545061739d0c9fa067e68f",
+  "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
   "inputs": {
     "plans/catalog-completeness-fill/slice1/prestate.json": "327dd431052472ae33976f6f950ac1b070162fcc06119ab822006e086106bd1f",
     "plans/catalog-completeness-fill/slice1/fixtures/prod-schema-2026-10-11.json": "440040ad2044c97cccdda368596bbc421b69a5dc2e6c86212cad2ff1bde010c5",
@@ -17,10 +17,10 @@
     "plans/catalog-completeness-fill/slice1/inputs/neqi-rosemary-scalp-care.json": "ef770bc09c0b9c3c28d01c68e31b32ace439f5a1f9a364d5013849baeb662d47"
   },
   "outputs": {
-    "plans/catalog-completeness-fill/slice1/target-state.json": "fd26e0990e617dbabaef05dad73d4e2c16e2f0cebd35bf8c5b3b50dc1533e4d7",
-    "supabase/migrations/20261011140000_catalog_completeness_fill_slice1.sql": "304421abebe712cbeaa4b1d80c2c921bfd07e41674657d02fcd4496fef64df7b",
-    "plans/catalog-completeness-fill/slice1/rollback.sql": "fe80f93027d5061fd3cc56ac49f36c3e92cc75c713f942cf3cc8853b7c1d8af7",
-    "plans/catalog-completeness-fill/slice1/verify.sql": "0e2cd366bae240e671e6e285bf08e3efa581f043cf07c858f559495e0289e78f"
+    "plans/catalog-completeness-fill/slice1/target-state.json": "cbdbef0b8c292a8a3680e409a3801007772fd936f1a11fa12fcb12d2008ff2f2",
+    "supabase/migrations/20261011140000_catalog_completeness_fill_slice1.sql": "695be2f8ae77740b44a4c32359d56ce7886615f4556c4c662f43ffbcf4e55f68",
+    "plans/catalog-completeness-fill/slice1/rollback.sql": "aa8c7940636433f404d29596a0422cc845d71ae2e6c2920d1eccb67f6d8ddbe0",
+    "plans/catalog-completeness-fill/slice1/verify.sql": "d706d76926ab02a7d6f7570139ec5b85d7053bac97b3f61c2a4b09c0861be453"
   },
-  "combined_sha256": "87b3e7b021c7eb8364995d0b9023611dddc4aa646a557937c6fdb9003289d4fb"
+  "combined_sha256": "54282dbd25bbb096e9718a8d4dd2582ea0f76afe3a090383adb0fff6811e3999"
 }
