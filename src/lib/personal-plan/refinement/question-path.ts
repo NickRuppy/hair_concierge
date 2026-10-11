@@ -142,7 +142,8 @@ export function isBondbuilderTimingOnPath(
   answers: PersonalPlanRefinementAnswersV1,
 ): boolean {
   return (
-    triggerContext.relevantCategories.includes("bondbuilder") &&
+    // Defensive read: a persisted trigger context without the list never asks (and never throws).
+    (triggerContext.relevantCategories ?? []).includes("bondbuilder") &&
     !(answers.currentProductCategories ?? []).includes("bondbuilder") &&
     answers.wetWashFrequency !== "does_not_wash"
   )

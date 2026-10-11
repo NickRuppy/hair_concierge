@@ -2455,3 +2455,117 @@ test("display flag off or a category outside the badge scope leaves the presenta
   assert.ok(leaveIn.products.length > 0)
   assert.ok(leaveIn.products.every((product) => !("marketSegment" in (product.presentation ?? {}))))
 })
+
+/* ------------------------------------------------ S4: Bondbuilder timing in the comparison */
+
+type S4Timing = "before_wash" | "after_wash" | "no_preference"
+
+/** The production catalogue (2026-10-09; every `products.sort_order` is 0). */
+function s4ProductionBondbuilders(options: { withoutK18?: boolean; sortOrders?: boolean } = {}) {
+  const rows: Array<[string, "high" | "medium" | "low", string, number]> = [
+    ["loreal-elvital-bond", "medium", "pre_shampoo", 8.95],
+    ["ogx-sealing-serum", "low", "bedtime_leave_in", 18.68],
+    ["redken-acidic-bonding", "medium", "pre_shampoo", 25.5],
+    ["olaplex-3plus", "high", "pre_shampoo", 34],
+    ["epres", "high", "pre_shampoo", 48],
+    ["aveda", "low", "pre_shampoo", 52],
+    [BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "high", "post_wash_leave_in", 56.25],
+    ["kerastase-premiere", "medium", "pre_shampoo", 56.29],
+  ]
+  return rows
+    .filter(([id]) => !(options.withoutK18 && id === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID))
+    .map(([id, trust, applicationMode, priceEur], index) =>
+      trustedBondbuilderFacts(id, trust, {
+        sortOrder: options.sortOrders ? index + 1 : 0,
+        priceEur,
+        applicationMode,
+        treatmentMode: applicationMode === "pre_shampoo" ? "rinse_out" : "leave_in",
+      }),
+    )
+}
+
+function s4Input(
+  timing: S4Timing,
+  candidates: ReturnType<typeof s4ProductionBondbuilders>,
+): Stage3AuthorityInput {
+  const input = authorityInput("bondbuilder", "specialized_bond_treatment", {
+    productFacts: null,
+    capturedProductId: null,
+    subjectIdentity: null,
+    candidates,
+  })
+  return {
+    ...input,
+    selectionProfile: { ...UNKNOWN_SELECTION_PROFILE, bondbuilderTiming: timing },
+  } as unknown as Stage3AuthorityInput
+}
+
+test("S4: ranked[0] equals the authority pick for all three timings", () => {
+  for (const withoutK18 of [false, true]) {
+    for (const sortOrders of [false, true]) {
+      for (const timing of ["before_wash", "after_wash", "no_preference"] as const) {
+        const input = s4Input(timing, s4ProductionBondbuilders({ withoutK18, sortOrders }))
+        const authority = evaluateStage3Authority(input)
+        assert.equal(authority.status, "known")
+        if (authority.status !== "known") return
+        assert.ok(authority.recommendation, `${timing}: the authority picks a product`)
+        assert.equal(
+          rankStage3ComparisonCandidates(input)[0]?.productId,
+          authority.recommendation.productId,
+          `${timing} withoutK18=${withoutK18} sortOrders=${sortOrders}`,
+        )
+      }
+    }
+  }
+})
+
+test("S4 E2/E3: exact comparison order — trust, then timing, then K18, then catalogue/price", () => {
+  const order = (timing: S4Timing) =>
+    rankStage3ComparisonCandidates(s4Input(timing, s4ProductionBondbuilders())).map(
+      (candidate) => candidate.productId,
+    )
+  assert.deepEqual(order("after_wash"), [
+    BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+    "olaplex-3plus",
+    "epres",
+    "loreal-elvital-bond",
+    "redken-acidic-bonding",
+    "kerastase-premiere",
+    "ogx-sealing-serum",
+    "aveda",
+  ])
+  assert.deepEqual(order("before_wash"), [
+    "olaplex-3plus",
+    "epres",
+    BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+    "loreal-elvital-bond",
+    "redken-acidic-bonding",
+    "kerastase-premiere",
+    "aveda",
+    "ogx-sealing-serum",
+  ])
+  // „Ist mir egal" is today's order, value for value.
+  assert.deepEqual(order("no_preference"), [
+    BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+    "olaplex-3plus",
+    "epres",
+    "loreal-elvital-bond",
+    "redken-acidic-bonding",
+    "kerastase-premiere",
+    "ogx-sealing-serum",
+    "aveda",
+  ])
+})
+
+test("S4: a comparison alternative that misses the timing carries the unmet rule id", () => {
+  const ranked = rankStage3ComparisonCandidates(s4Input("after_wash", s4ProductionBondbuilders()))
+  const byId = new Map(ranked.map((candidate) => [candidate.productId, candidate]))
+  assert.equal(
+    byId.get(BONDBUILDER_TIE_DEFAULT_PRODUCT_ID)?.recommendation.authorityRuleId,
+    "bondbuilder.stage3.validated_standalone",
+  )
+  assert.equal(
+    byId.get("loreal-elvital-bond")?.recommendation.authorityRuleId,
+    "bondbuilder.stage3.timing_unmet.after_wash.before_wash",
+  )
+})

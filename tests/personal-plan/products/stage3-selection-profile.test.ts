@@ -107,6 +107,7 @@ test("the unknown selection profile is neutral", () => {
     sensitiveScalp: false,
     volumeDirection: null,
     visibleHairColor: null,
+    bondbuilderTiming: "no_preference",
   })
   assert.ok(Object.isFrozen(UNKNOWN_SELECTION_PROFILE))
 })
@@ -114,8 +115,26 @@ test("the unknown selection profile is neutral", () => {
 test("a partial persisted profile degrades to neutral answers instead of throwing", () => {
   assert.deepEqual(
     buildStage3SelectionProfile({ profile: { hair: { thickness: "normal" } } } as never, "dark"),
-    { scalpOiliness: null, sensitiveScalp: false, volumeDirection: null, visibleHairColor: "dark" },
+    {
+      scalpOiliness: null,
+      sensitiveScalp: false,
+      volumeDirection: null,
+      visibleHairColor: "dark",
+      bondbuilderTiming: "no_preference",
+    },
   )
+})
+
+test("S4: the Bondbuilder timing travels in the selection profile, read via the snapshot accessor", () => {
+  for (const value of ["before_wash", "after_wash", "no_preference"] as const) {
+    const routine = { bondbuilderTiming: { state: "known", value } }
+    assert.equal(
+      buildStage3SelectionProfile({ profile: { routine } } as never, null).bondbuilderTiming,
+      value,
+    )
+  }
+  // An initial or pre-S4 refined snapshot (key omitted) means „Ist mir egal“.
+  assert.equal(slice(profile()).bondbuilderTiming, "no_preference")
 })
 
 /* F1 (Codex review): a partial persisted profile must never change the direction. */

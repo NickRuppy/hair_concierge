@@ -22,8 +22,12 @@ import {
 } from "./authority/categories/axis-fit"
 import {
   BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+  bondbuilderMatchesTiming,
+  bondbuilderTimingBucket,
+  bondbuilderTimingOf,
   bondbuilderTrustRank,
 } from "./authority/categories/bondbuilder"
+import type { BondbuilderTiming } from "@/lib/personal-plan/refinement/types"
 import { evaluateStage3Authority } from "./authority/evaluate"
 import { supportiveOwnedRecommendation } from "./authority/supportive-owned-recommendation"
 import { compareRankableCandidates, type RankableCandidate } from "./candidate-ranking"
@@ -420,7 +424,9 @@ export function rankStage3ComparisonCandidates(
     )
     .sort(
       (left, right) =>
-        (input.category === "bondbuilder" ? compareBondbuilderTrust(left, right) : 0) ||
+        (input.category === "bondbuilder"
+          ? compareBondbuilderTrust(left, right, bondbuilderTimingOf(input))
+          : 0) ||
         compareWithAuthorityPin(
           toRankableCandidate(left),
           toRankableCandidate(right),
@@ -431,21 +437,41 @@ export function rankStage3ComparisonCandidates(
 
 /**
  * Bondbuilders rank by claim trust level inside the same verdict (Nick, 2026-10-09): verdict
- * first (trust never lifts a worse fit), then trust tier, then the K18 house default among equally
- * trusted candidates. Everything else falls through to the shared comparator.
+ * first (trust never lifts a worse fit), then trust tier, then the stated timing (S4: products used
+ * the way the person asked for first — never across trust levels), then the K18 house default
+ * among equally trusted candidates. Everything else falls through to the shared comparator, whose
+ * authority pin and catalogue → price tail reproduce the authority's Q1 tie order.
  */
 export function compareBondbuilderTrust(
   left: Pick<CandidateAssessment, "verdict" | "facts" | "productId">,
   right: Pick<CandidateAssessment, "verdict" | "facts" | "productId">,
+  timing: BondbuilderTiming = "no_preference",
 ): number {
   const verdictOrder = Number(left.verdict !== "ideal") - Number(right.verdict !== "ideal")
   if (verdictOrder !== 0) return verdictOrder
   const trustOrder = candidateTrustRank(left.facts) - candidateTrustRank(right.facts)
   if (trustOrder !== 0) return trustOrder
+  const timingOrder =
+    candidateTimingRank(left.facts, timing) - candidateTimingRank(right.facts, timing)
+  if (timingOrder !== 0) return timingOrder
   return (
     Number(right.productId === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID) -
     Number(left.productId === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID)
   )
+}
+
+/**
+ * 0 when a Bondbuilder is used the way the person asked for (or she has no preference), 1
+ * otherwise; other categories never rank. Also the budget policy's `usageRank`.
+ */
+export function candidateTimingRank(
+  facts: Stage3CategoryProductFacts,
+  timing: BondbuilderTiming,
+): number {
+  return facts.category === "bondbuilder" &&
+    !bondbuilderMatchesTiming(bondbuilderTimingBucket(facts.spec), timing)
+    ? 1
+    : 0
 }
 
 /** The Bondbuilder trust rank of a candidate (lower is better); other categories never rank. */

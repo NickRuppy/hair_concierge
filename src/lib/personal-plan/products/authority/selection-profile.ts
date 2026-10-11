@@ -1,4 +1,6 @@
 import { planVolumeDirection } from "@/lib/personal-plan/categories/volume-direction"
+import type { BondbuilderTiming } from "@/lib/personal-plan/refinement/types"
+import { bondbuilderTimingFromSnapshot } from "./bondbuilder-timing"
 import type {
   InitialNeedPlanSnapshot,
   PlanProfile,
@@ -8,7 +10,7 @@ import type {
 export type Stage3VisibleHairColor = "light_blonde" | "brown" | "dark"
 
 /**
- * The profile answers the Stage-3 selection of dry shampoo and deep cleansing needs, built in
+ * The profile answers the Stage-3 selection of dry shampoo, deep cleansing and Bondbuilder needs, built in
  * one place (`buildStage3SelectionProfile`) and passed on every authority input.
  */
 export type Stage3SelectionProfile = Readonly<{
@@ -20,6 +22,11 @@ export type Stage3SelectionProfile = Readonly<{
   volumeDirection: "more" | "less" | null
   /** Refinement answer with `user` provenance only; null = unknown. */
   visibleHairColor: Stage3VisibleHairColor | null
+  /**
+   * Bondbuilder routine answer (S4, `bondbuilderTimingFromSnapshot`): ranks the equally trusted
+   * Bondbuilders by how they are used. `no_preference` leaves the trust → K18 order untouched.
+   */
+  bondbuilderTiming: BondbuilderTiming
 }>
 
 /** Neutral slice for synthetic, lab and audit callers without a real profile. */
@@ -28,6 +35,7 @@ export const UNKNOWN_SELECTION_PROFILE: Stage3SelectionProfile = Object.freeze({
   sensitiveScalp: false,
   volumeDirection: null,
   visibleHairColor: null,
+  bondbuilderTiming: "no_preference",
 })
 
 function stringList(value: unknown): readonly string[] | null {
@@ -83,5 +91,6 @@ export function buildStage3SelectionProfile(
     sensitiveScalp: Array.isArray(scalp?.concerns) && scalp.concerns.includes("irritated"),
     volumeDirection: persistedVolumeDirection(profile),
     visibleHairColor,
+    bondbuilderTiming: bondbuilderTimingFromSnapshot(snapshot),
   })
 }
