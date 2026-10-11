@@ -1,6 +1,6 @@
 # profiles privileged-columns lock
 
-Status: prepared, NOT applied. Uncommitted on `codex/profiles-privileged-columns` (base main 320940f4).
+Status: APPLIED to production 2026-10-11 (recorded as version 20261011125354) and verified; shipped as PR #659 on `codex/profiles-privileged-columns` (base main 320940f4).
 
 ## Problem
 
@@ -159,7 +159,7 @@ prior vulnerable state. To restore the full prior grant set:
   checkout identity binding (for example the `.eq("email", profile.email!)` guard at
   `src/lib/stripe/checkout-activation.ts:1241`). It is now locked against users. Existing rows a
   user may already have edited before the lock are not audited.
-- **Audit for past exploitation.** Not done here. A read-only check of production for
+- **Audit for past exploitation.** Done 2026-10-11 (result recorded at the end of this file). The read-only check of production for
   `is_admin = true` rows, or active `subscription_status` without a matching
   `billing_subscriptions` row, would show whether the hole was used.
 - **Lockable columns, widen if Nick wants.** `full_name`, `avatar_url` and `locale` have no browser
