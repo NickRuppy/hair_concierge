@@ -18,15 +18,6 @@ export const PRODUCT_SCALP_TYPE_FOCUS_LABELS = {
   dry: "Trocken",
 } as const satisfies Record<ProductScalpTypeFocus, string>
 
-export const PRODUCT_BOND_REPAIR_INTENSITIES = ["maintenance", "intensive"] as const
-
-export type ProductBondRepairIntensity = (typeof PRODUCT_BOND_REPAIR_INTENSITIES)[number]
-
-export const PRODUCT_BOND_REPAIR_INTENSITY_LABELS = {
-  maintenance: "Erhaltung",
-  intensive: "Intensiv",
-} as const satisfies Record<ProductBondRepairIntensity, string>
-
 export const PRODUCT_BOND_REPAIR_AXES = ["disulfide_crosslink", "peptide_chain"] as const
 
 export type ProductBondRepairAxis = (typeof PRODUCT_BOND_REPAIR_AXES)[number]

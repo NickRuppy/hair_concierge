@@ -122,6 +122,17 @@ function isIdealCadenceLabel(value: string): value is IdealCadenceLabel {
 export type WashAllowedRange = { min: ProductFrequency; max: ProductFrequency }
 
 /**
+ * The chip for a step whose rhythm yields no verdict (cockpit call-ready E3): a deliberate
+ * „no fixed rhythm" step (as needed, per manufacturer, per heat use) says so — „nicht
+ * vergleichbar" read like a defect there. Anything else stays „nicht vergleichbar".
+ */
+export function runsheetNoVerdictLabel(cadenceLabel: string): string {
+  return isIdealCadenceLabel(cadenceLabel) && IDEAL_CADENCE_RULES[cadenceLabel].kind === "no_band"
+    ? "kein fester Rhythmus"
+    : "nicht vergleichbar"
+}
+
+/**
  * The weekly band a step's cadence asks for; null = no chip (no band by decision, a paused
  * step, an unknown string, or a per-wash cadence without her wash frequency).
  *
@@ -248,7 +259,8 @@ function unionBand(a: WeeklyBand, b: WeeklyBand): WeeklyBand {
 
 /**
  * Her wash range from the shampoo entries in her week (`runsheetEntryInHerWeek`, the rule
- * the chips sum by): `single` = her most frequent shampoo's band, `combined` = the sum of
+ * the chips sum by, plus swapped shampoos — a swap keeps her wash days): `single` = her most
+ * frequent shampoo's band, `combined` = the sum of
  * all of them. Null without an in-week shampoo, or when one of them has no known frequency
  * (the sum would understate).
  */
@@ -260,8 +272,12 @@ export function runsheetWashAnchor(
     >
   >,
 ): WashAnchor | null {
+  // A swapped shampoo keeps her wash days — the replacement takes them over (cockpit
+  // call-ready E3); only a dropped one leaves her washes.
   const shampoos = steps.filter(
-    (step) => step.category === "shampoo" && runsheetEntryInHerWeek(step),
+    (step) =>
+      step.category === "shampoo" &&
+      (runsheetEntryInHerWeek(step) || (step.outcome === "swapped" && Boolean(step.ownedLabel))),
   )
   if (shampoos.length === 0) return null
   const known: ProductFrequency[] = []

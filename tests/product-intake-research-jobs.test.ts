@@ -752,7 +752,6 @@ test("review property rows show exact database field paths and raw approval valu
         color_treated_suitability: "suitable",
       },
       product_bondbuilder_specs: {
-        bond_repair_intensity: "intensive",
         application_mode: "post_wash_leave_in",
         bond_repair_axis: "peptide_chain",
         treatment_mode: "leave_in",
