@@ -27,7 +27,7 @@ Port, don't merge. Copy the additive engine files, then re-implement the integra
 6. **Tool content is derived at read time, never versioned** (Stage-1 cards, Routine tool section, Anwendung tool blocks from current facts + active V1 routine). No routine payload V2, no recompute on tools completion.
 7. **Tool-Checkpoint** once on the tools module's return to `/routine`; the banner then offers Gewohnheiten.
 8. **Profil**: Haar-Check (quiz answers + Ziele row), Produkte, Deine Tools, Gewohnheiten (four behavior rows). Styling, Alltag and Ziele cards retire when tools apply.
-9. **One rollout flag** `PERSONAL_PLAN_TOOLS_ROLLOUT=off|admin|all` (default `off`) gates everything new. Rollback is a flag flip; a pre-port code rollback needs only the new care keys cleared through the facts door.
+9. **One rollout flag** `PERSONAL_PLAN_TOOLS_ROLLOUT=off|admin|all` (default `off`) gates everything new. Rollback is a flag flip; a pre-port code rollback needs the new care keys cleared through the facts door AND the tool answers downgraded in the refinement drafts (both done by `tools-rollback-clear-facts.ts --apply`; fix wave F2).
 10. **Completed drafts tolerate a grown path**; module completion is replay-safe. A member who later adds a heat tool sees Gewohnheiten reopen with just that tool's two questions.
 11. Dropped: Routine V2 + decoders, Stage-3 checkpoint, fork-screen assumptions, „Feinschliff überarbeiten", internal/field-test rollout tiers, D8 decoders and their tests, temperature question, preselection-as-band-aid (replaced by derivation).
 
@@ -209,7 +209,7 @@ Migration before code deploy (additive); Nick's copy pass on invented strings (b
 
 - Branch `codex/hair-tools-port`; no push without „ship it".
 - Codex plan review rounds 1–3 done; one Codex whole-branch review before push.
-- Deploy: migration → code with flag `off` → `admin` walkthrough → `all`. Rollback: flag `off`; pre-port code rollback only after `tools-rollback-clear-facts.ts`.
+- Deploy: migration → code with flag `off` → `admin` walkthrough → `all`. Rollback: flag `off`; pre-port code rollback only after `tools-rollback-clear-facts.ts --apply` (facts + drafts).
 - Risks: heat-source map ambiguity (vetoable defaults); derived-field parity for existing members (dry-run check above); one extra facts read per Routine/Anwendung/Stage-1 view.
 - Artifacts: plan, mockups, evidence memo, ledger addendum, docs — `commit`; scratchpad notes — `discard`; old worktree retained until merge, then PR #465 closed as superseded.
 - Stop point: verified, whole-branch-reviewed local worktree.

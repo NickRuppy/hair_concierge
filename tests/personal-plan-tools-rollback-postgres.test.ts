@@ -2,15 +2,23 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import type { SupabaseClient } from "@supabase/supabase-js"
+import { z } from "zod"
 
 import {
   TOOL_CARE_KEYS,
   parseToolsRollbackArguments,
+  planToolsDraftDowngrade,
   planToolsRollbackForRow,
   runToolsRollback,
 } from "../scripts/personal-plan/tools-rollback-clear-facts"
+import { resolveStage2RefinementContract } from "../src/lib/personal-plan/refinement/question-path"
+import type { PersonalPlanRefinementAnswersV1 } from "../src/lib/personal-plan/refinement/types"
+import { careHabitsPatchSchema } from "../src/lib/user-facts/schema"
 import {
+  completeRefinementDraft,
+  createInitialNeed,
   id,
+  insertOpenRefinementDraft,
   insertProfile,
   migratedPersonalPlanDatabase,
   readHairProfile,
@@ -96,52 +104,89 @@ const PARAM_TYPES: Record<string, string> = {
 }
 
 /** The PostgREST surface the script uses: select/order/limit/gt/eq on hair_profiles + the rpc. */
-function pgliteSupabaseClient(pg: PersonalPlanTestDb): { client: SupabaseClient; rpcs: string[] } {
+function pgliteSupabaseClient(pg: PersonalPlanTestDb): {
+  client: SupabaseClient
+  rpcs: string[]
+  updates: string[]
+} {
   const rpcs: string[] = []
+  const updates: string[] = []
   const client = {
     from(table: string) {
-      return {
-        select(columns: string) {
-          const filters: string[] = []
-          const values: unknown[] = []
-          const order: string[] = []
-          let rowLimit: number | null = null
-          const builder = {
-            eq(column: string, value: unknown) {
-              values.push(value)
-              filters.push(`${column} = $${values.length}`)
-              return builder
-            },
-            gt(column: string, value: unknown) {
-              values.push(value)
-              filters.push(`${column} > $${values.length}`)
-              return builder
-            },
-            order(column: string) {
-              order.push(column)
-              return builder
-            },
-            limit(count: number) {
-              rowLimit = count
-              return builder
-            },
-            then(resolve: (value: unknown) => unknown, reject: (reason: unknown) => unknown) {
-              const sql = [
+      type Mode = "select" | "update"
+      const make = (mode: Mode, columns: string, setValues: Record<string, unknown> = {}) => {
+        const filters: string[] = []
+        const values: unknown[] = []
+        const order: string[] = []
+        let rowLimit: number | null = null
+        let returning = columns
+        const builder = {
+          eq(column: string, value: unknown) {
+            values.push(value)
+            filters.push(`${column} = $${values.length}`)
+            return builder
+          },
+          gt(column: string, value: unknown) {
+            values.push(value)
+            filters.push(`${column} > $${values.length}`)
+            return builder
+          },
+          in(column: string, list: unknown[]) {
+            values.push(list)
+            filters.push(`${column} = ANY($${values.length})`)
+            return builder
+          },
+          order(column: string, options?: { ascending?: boolean }) {
+            order.push(`${column}${options?.ascending === false ? " DESC" : ""}`)
+            return builder
+          },
+          limit(count: number) {
+            rowLimit = count
+            return builder
+          },
+          select(selected: string) {
+            returning = selected
+            return builder
+          },
+          then(resolve: (value: unknown) => unknown, reject: (reason: unknown) => unknown) {
+            const where = filters.length ? `WHERE ${filters.join(" AND ")}` : ""
+            let sql: string
+            if (mode === "select") {
+              sql = [
                 `SELECT ${columns} FROM public.${table}`,
-                filters.length ? `WHERE ${filters.join(" AND ")}` : "",
+                where,
                 order.length ? `ORDER BY ${order.join(", ")}` : "",
                 rowLimit === null ? "" : `LIMIT ${rowLimit}`,
               ]
                 .filter(Boolean)
                 .join(" ")
-              return pg
-                .query<Record<string, unknown>>(sql, values)
-                .then(({ rows }) => ({ data: rows, error: null }))
-                .catch((error: unknown) => ({ data: null, error: { message: String(error) } }))
-                .then(resolve, reject)
-            },
-          }
-          return builder
+            } else {
+              const sets = Object.entries(setValues).map(([column, value]) => {
+                values.push(
+                  Array.isArray(value) && column === "completed_question_ids"
+                    ? value
+                    : typeof value === "object"
+                      ? JSON.stringify(value)
+                      : value,
+                )
+                return `${column} = $${values.length}`
+              })
+              sql = `UPDATE public.${table} SET ${sets.join(", ")} ${where} RETURNING ${returning}`
+            }
+            return pg
+              .query<Record<string, unknown>>(sql, values)
+              .then(({ rows }) => ({ data: rows, error: null }))
+              .catch((error: unknown) => ({ data: null, error: { message: String(error) } }))
+              .then(resolve, reject)
+          },
+        }
+        return builder
+      }
+      return {
+        select: (columns: string) => make("select", columns),
+        update: (setValues: Record<string, unknown>) => {
+          updates.push(table)
+          return make("update", "id", setValues)
         },
       }
     },
@@ -163,18 +208,18 @@ function pgliteSupabaseClient(pg: PersonalPlanTestDb): { client: SupabaseClient;
       }
     },
   }
-  return { client: client as unknown as SupabaseClient, rpcs }
+  return { client: client as unknown as SupabaseClient, rpcs, updates }
 }
 
 async function run(pg: PersonalPlanTestDb, argv: string[]) {
-  const { client, rpcs } = pgliteSupabaseClient(pg)
+  const { client, rpcs, updates } = pgliteSupabaseClient(pg)
   const lines: string[] = []
   const summary = await runToolsRollback(argv, {
     supabase: client,
     log: (line) => lines.push(line),
     now: () => NOW,
   })
-  return { summary, rpcs, lines }
+  return { summary, rpcs, updates, lines }
 }
 
 async function seedMembers(pg: PersonalPlanTestDb) {
@@ -406,4 +451,391 @@ test("the CLI defaults to a dry run and rejects unknown flags", () => {
   assert.throws(() => parseToolsRollbackArguments(["--apply", "--dry-run"]))
   assert.throws(() => parseToolsRollbackArguments(["--user=nope"]))
   assert.throws(() => parseToolsRollbackArguments(["--everything"]))
+})
+
+/* ── Draft downgrade (fix wave F2) ────────────────────────────────────────── */
+
+const IN_PROGRESS_MEMBER = id(5, 5)
+const COMPLETE_MEMBER = id(6, 6)
+const PLAIN_DRAFT_MEMBER = id(7, 7)
+
+const TOOL_PAGE_KEYS = [
+  "wash_application:1",
+  "drying_textiles:1",
+  "brushes_combs:1",
+  "brushes_combs:2",
+  "airflow:1",
+  "heated_styling:1",
+  "heatless_styling:1",
+  "securing_sectioning:1",
+  "securing_sectioning:2",
+  "night_protection:1",
+] as const
+
+/** A flag-on draft: tool answers, plus the Gewohnheiten answers the old path asks for. */
+function toolDraftAnswers(): PersonalPlanRefinementAnswersV1 {
+  return {
+    currentProductCategories: [],
+    wetWashFrequency: "weekly_2x",
+    toolFamiliesWithSomething: ["airflow"],
+    toolForms: Object.fromEntries(
+      TOOL_PAGE_KEYS.map((key) => [key, key === "airflow:1" ? ["hair_dryer"] : []]),
+    ),
+    towel: { material: "mikrofaser", technique: "gentle_press" },
+    dryingRoutes: ["air_dry"],
+    additionalHeatTools: [],
+    nightProtection: [],
+  } as PersonalPlanRefinementAnswersV1
+}
+const TOOL_DRAFT_COMPLETED = [
+  "current_product_categories",
+  "wet_wash_frequency",
+  "tools_overview",
+  "tools:airflow:1",
+  "tools:wash_application:1",
+  "towel_handling",
+  "drying_routes",
+]
+const TOOL_DRAFT_PROVENANCE = {
+  current_product_categories: "user",
+  wet_wash_frequency: "user",
+  tools_overview: "user",
+  "tools:airflow:1": "user",
+  "tools:wash_application:1": "assumed",
+  towel_handling: "user",
+  drying_routes: "user",
+}
+const PRE_PORT_CONTEXT = {
+  relevantCategories: [],
+  hasReportedIrritatedScalp: false,
+  dryShampooBridgeEligibility: "ineligible" as const,
+}
+
+async function seedDraft(
+  pg: PersonalPlanTestDb,
+  input: {
+    userId: string
+    planId: string
+    needVersionId: string
+    draftId: string
+    answers: PersonalPlanRefinementAnswersV1
+    completed: string[]
+    provenance: Record<string, string>
+    complete?: string
+  },
+) {
+  await insertOpenRefinementDraft(pg, {
+    draftId: input.draftId,
+    userId: input.userId,
+    planId: input.planId,
+    baseInitialNeedVersionId: input.needVersionId,
+  })
+  await pg.query(
+    `UPDATE public.personal_plan_refinement_drafts
+        SET answers = $2::jsonb, completed_question_ids = $3, answer_provenance = $4::jsonb
+      WHERE id = $1`,
+    [
+      input.draftId,
+      JSON.stringify(input.answers),
+      input.completed,
+      JSON.stringify(input.provenance),
+    ],
+  )
+  if (input.complete) {
+    const result = await completeRefinementDraft(pg, {
+      userId: input.userId,
+      planId: input.planId,
+      draftId: input.draftId,
+      expectedRevision: 0,
+      inputHash: input.complete,
+    })
+    assert.equal(result.outcome, "completed")
+  }
+}
+
+type DraftRow = {
+  id: string
+  status: string
+  revision: number
+  answers: Record<string, unknown>
+  completed_question_ids: string[]
+  answer_provenance: Record<string, string>
+}
+async function readDraft(pg: PersonalPlanTestDb, draftId: string): Promise<DraftRow> {
+  const { rows } = await pg.query<DraftRow>(
+    `SELECT id, status, revision, answers, completed_question_ids, answer_provenance
+       FROM public.personal_plan_refinement_drafts WHERE id = $1`,
+    [draftId],
+  )
+  return rows[0]!
+}
+
+const DRAFTS = {
+  inProgress: id(8, 1),
+  completeOld: id(8, 2),
+  completeLatest: id(8, 3),
+  plain: id(8, 4),
+}
+
+async function seedDraftMembers(pg: PersonalPlanTestDb) {
+  const shared = {
+    answers: toolDraftAnswers(),
+    completed: TOOL_DRAFT_COMPLETED,
+    provenance: TOOL_DRAFT_PROVENANCE,
+  }
+  // In-progress draft with tool answers.
+  await insertProfile(pg, IN_PROGRESS_MEMBER)
+  const a = await createInitialNeed(pg, { userId: IN_PROGRESS_MEMBER, inputHash: "a".repeat(64) })
+  await seedDraft(pg, {
+    ...shared,
+    userId: IN_PROGRESS_MEMBER,
+    planId: a.personalPlanId,
+    needVersionId: a.needVersionId,
+    draftId: DRAFTS.inProgress,
+  })
+  // Two completed drafts on one base: only the latest one can be reopened.
+  await insertProfile(pg, COMPLETE_MEMBER)
+  const b = await createInitialNeed(pg, { userId: COMPLETE_MEMBER, inputHash: "b".repeat(64) })
+  await seedDraft(pg, {
+    ...shared,
+    userId: COMPLETE_MEMBER,
+    planId: b.personalPlanId,
+    needVersionId: b.needVersionId,
+    draftId: DRAFTS.completeOld,
+    complete: "c".repeat(64),
+  })
+  await seedDraft(pg, {
+    ...shared,
+    userId: COMPLETE_MEMBER,
+    planId: b.personalPlanId,
+    needVersionId: b.needVersionId,
+    draftId: DRAFTS.completeLatest,
+    complete: "d".repeat(64),
+  })
+  // A member whose draft never saw the tools.
+  await insertProfile(pg, PLAIN_DRAFT_MEMBER)
+  const c = await createInitialNeed(pg, { userId: PLAIN_DRAFT_MEMBER, inputHash: "e".repeat(64) })
+  await seedDraft(pg, {
+    userId: PLAIN_DRAFT_MEMBER,
+    planId: c.personalPlanId,
+    needVersionId: c.needVersionId,
+    draftId: DRAFTS.plain,
+    answers: { currentProductCategories: [], wetWashFrequency: "weekly_2x" },
+    completed: ["current_product_categories", "wet_wash_frequency"],
+    provenance: { current_product_categories: "user", wet_wash_frequency: "user" },
+  })
+}
+
+/** `careHabitsPatchSchema` as origin/main shipped it: without the tools keys. */
+const prePortPatchSchema = (() => {
+  const shape = (careHabitsPatchSchema as unknown as { shape: Record<string, z.ZodType> }).shape
+  const kept = Object.fromEntries(
+    Object.entries(shape).filter(
+      ([key]) => key !== "toolFamiliesWithSomething" && !key.startsWith("toolForms_"),
+    ),
+  )
+  // The post-port schema flattens `toolForms` into page keys; the draft's nested `toolForms`
+  // answer is the other key the old strict schema rejects (it never existed there).
+  return z.object(kept).strict()
+})()
+
+/** What origin/main `toCareHabitsPatch` did with the stored answers: `{ ...answers }`. */
+function prePortPatch(row: DraftRow) {
+  const contract = resolveStage2RefinementContract({
+    triggerContext: PRE_PORT_CONTEXT,
+    answers: row.answers as PersonalPlanRefinementAnswersV1,
+    completedQuestionIds: row.completed_question_ids as never,
+  })
+  return { patch: { ...contract.answers }, contract }
+}
+
+test("before the downgrade a pre-port patch from a tool draft is rejected (the review's probe)", async (t) => {
+  const pg = await migratedPersonalPlanDatabase(t)
+  await seedDraftMembers(pg)
+  const row = await readDraft(pg, DRAFTS.inProgress)
+  const result = prePortPatchSchema.safeParse(prePortPatch(row).patch)
+  assert.equal(result.success, false)
+  assert.ok(
+    result.error?.issues.some((issue) => issue.code === "unrecognized_keys"),
+    "toolFamiliesWithSomething / toolForms are unrecognized for the old schema",
+  )
+})
+
+test("a dry run reports the drafts and writes nothing", async (t) => {
+  const pg = await migratedPersonalPlanDatabase(t)
+  await seedDraftMembers(pg)
+  const before = await readDraft(pg, DRAFTS.inProgress)
+
+  const { summary, updates, lines } = await run(pg, [])
+
+  assert.equal(updates.length, 0)
+  assert.equal(summary.draftsWithToolAnswers, 2)
+  assert.equal(summary.draftsApplied, 0)
+  assert.ok(lines.some((line) => line.startsWith(`draft ${DRAFTS.inProgress}`)))
+  assert.deepEqual(await readDraft(pg, DRAFTS.inProgress), before)
+})
+
+test("--apply downgrades the in-progress and the latest complete draft, nothing else", async (t) => {
+  const pg = await migratedPersonalPlanDatabase(t)
+  await seedDraftMembers(pg)
+  const before = {
+    inProgress: await readDraft(pg, DRAFTS.inProgress),
+    old: await readDraft(pg, DRAFTS.completeOld),
+    latest: await readDraft(pg, DRAFTS.completeLatest),
+    plain: await readDraft(pg, DRAFTS.plain),
+  }
+
+  const { summary, updates } = await run(pg, ["--apply"])
+
+  assert.equal(summary.draftsApplied, 2)
+  assert.equal(updates.length, 2, "one UPDATE per draft")
+  assert.deepEqual(summary.failures, [])
+  for (const [name, draftId] of [
+    ["inProgress", DRAFTS.inProgress],
+    ["latest", DRAFTS.completeLatest],
+  ] as const) {
+    const draft = await readDraft(pg, draftId)
+    assert.equal("toolFamiliesWithSomething" in draft.answers, false, name)
+    assert.equal("toolForms" in draft.answers, false, name)
+    assert.deepEqual(draft.completed_question_ids, [
+      "current_product_categories",
+      "wet_wash_frequency",
+      "towel_handling",
+      "drying_routes",
+    ])
+    assert.deepEqual(draft.answer_provenance, {
+      current_product_categories: "user",
+      wet_wash_frequency: "user",
+      towel_handling: "user",
+      drying_routes: "user",
+    })
+    // Every other answer is untouched, the revision moved so CAS clients refetch.
+    const kept = { ...before[name].answers }
+    delete kept.toolFamiliesWithSomething
+    delete kept.toolForms
+    assert.deepEqual(draft.answers, kept)
+    assert.equal(Number(draft.revision), Number(before[name].revision) + 1)
+    assert.equal(draft.status, before[name].status)
+  }
+  // The superseded complete draft and the tool-free draft are not rows the script owns.
+  assert.deepEqual(await readDraft(pg, DRAFTS.completeOld), before.old)
+  assert.deepEqual(await readDraft(pg, DRAFTS.plain), before.plain)
+})
+
+test("after the downgrade the pre-port code path accepts the draft and it still completes", async (t) => {
+  const pg = await migratedPersonalPlanDatabase(t)
+  await seedDraftMembers(pg)
+  await run(pg, ["--apply"])
+
+  for (const draftId of [DRAFTS.inProgress, DRAFTS.completeLatest]) {
+    const row = await readDraft(pg, draftId)
+    const { patch, contract } = prePortPatch(row)
+    const parsed = prePortPatchSchema.safeParse(patch)
+    assert.equal(parsed.success, true, JSON.stringify(parsed.error?.issues))
+    // The old path asks the (derived-during-the-port) Gewohnheiten questions again until they
+    // are confirmed; with them confirmed the draft completes.
+    const completed = resolveStage2RefinementContract({
+      triggerContext: PRE_PORT_CONTEXT,
+      answers: row.answers as PersonalPlanRefinementAnswersV1,
+      completedQuestionIds: [...contract.path.orderedQuestionIds],
+    })
+    assert.equal(completed.isComplete, true, completed.validationErrors.join("; "))
+  }
+})
+
+test("a repeat run is a no-op for the drafts", async (t) => {
+  const pg = await migratedPersonalPlanDatabase(t)
+  await seedDraftMembers(pg)
+  await run(pg, ["--apply"])
+  const afterFirst = await readDraft(pg, DRAFTS.inProgress)
+
+  const second = await run(pg, ["--apply"])
+
+  assert.equal(second.summary.draftsWithToolAnswers, 0)
+  assert.equal(second.summary.draftsApplied, 0)
+  assert.equal(second.updates.length, 0)
+  assert.deepEqual(await readDraft(pg, DRAFTS.inProgress), afterFirst)
+})
+
+test("--user narrows the draft pass too", async (t) => {
+  const pg = await migratedPersonalPlanDatabase(t)
+  await seedDraftMembers(pg)
+  const completeBefore = await readDraft(pg, DRAFTS.completeLatest)
+
+  const { summary } = await run(pg, ["--apply", `--user=${IN_PROGRESS_MEMBER}`])
+
+  assert.equal(summary.draftsApplied, 1)
+  assert.deepEqual(await readDraft(pg, DRAFTS.completeLatest), completeBefore)
+})
+
+test("a draft changed between read and write is a conflict, left for the next run", async (t) => {
+  const pg = await migratedPersonalPlanDatabase(t)
+  await seedDraftMembers(pg)
+  const { client } = pgliteSupabaseClient(pg)
+  type Chain = {
+    eq: (column: string, value: unknown) => Chain
+    select: (columns: string) => Chain
+    then: (resolve: never, reject: never) => unknown
+  }
+  const racing = new Proxy(client, {
+    get(target, property, receiver) {
+      if (property !== "from") return Reflect.get(target, property, receiver)
+      return (table: string) => {
+        const builder = (
+          target as never as { from: (name: string) => { update: (v: unknown) => Chain } }
+        ).from(table)
+        if (table !== "personal_plan_refinement_drafts") return builder
+        return {
+          ...builder,
+          update: (values: unknown) => {
+            const inner = builder.update(values)
+            const wrapper: Chain = {
+              eq: (column, value) => (inner.eq(column, value), wrapper),
+              select: (columns) => (inner.select(columns), wrapper),
+              // A save lands first: the revision the script read is no longer current.
+              then: (resolve, reject) =>
+                pg
+                  .query(
+                    `UPDATE public.personal_plan_refinement_drafts SET revision = revision + 1 WHERE id = $1`,
+                    [DRAFTS.inProgress],
+                  )
+                  .then(() => inner.then(resolve, reject)),
+            }
+            return wrapper
+          },
+        }
+      }
+    },
+  }) as SupabaseClient
+  const summary = await runToolsRollback(["--apply", `--user=${IN_PROGRESS_MEMBER}`], {
+    supabase: racing,
+    log: () => {},
+    now: () => NOW,
+  })
+  assert.equal(summary.draftConflicts, 1)
+  assert.equal(summary.draftsApplied, 0)
+  assert.ok(
+    "toolForms" in (await readDraft(pg, DRAFTS.inProgress)).answers,
+    "left for the next run",
+  )
+  const next = await run(pg, ["--apply", `--user=${IN_PROGRESS_MEMBER}`])
+  assert.equal(next.summary.draftsApplied, 1)
+})
+
+test("planToolsDraftDowngrade is pure and returns null without tool state", () => {
+  assert.equal(
+    planToolsDraftDowngrade({
+      answers: { wetWashFrequency: "weekly_2x" },
+      completedQuestionIds: ["wet_wash_frequency"],
+      answerProvenance: { wet_wash_frequency: "user" },
+    }),
+    null,
+  )
+  const plan = planToolsDraftDowngrade({
+    answers: { wetWashFrequency: "weekly_2x" },
+    completedQuestionIds: ["wet_wash_frequency", "tools_overview"],
+    answerProvenance: { wet_wash_frequency: "user", tools_overview: "assumed" },
+  })
+  assert.deepEqual(plan?.completedQuestionIds, ["wet_wash_frequency"])
+  assert.deepEqual(plan?.answerProvenance, { wet_wash_frequency: "user" })
 })

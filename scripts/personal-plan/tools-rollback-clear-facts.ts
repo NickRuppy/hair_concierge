@@ -37,10 +37,22 @@ import { saveUserFacts } from "../../src/lib/user-facts/save"
  * keys' provenance fields together with the data, and re-derives the narrow legacy columns in the
  * same statement — so nothing here touches `hair_profiles` directly.
  *
- * DRY RUN BY DEFAULT: without `--apply` it only reads and prints the keys it would clear.
+ * It then downgrades the refinement DRAFTS (`personal_plan_refinement_drafts`): the facts cleanup
+ * alone is not enough, because the pre-port code builds its next facts patch as `{ ...answers }`
+ * from the draft and its strict `careHabitsPatchSchema` rejects the tool answers that remain there
+ * (`unrecognized_keys`). For every in-progress draft and for each member's latest complete draft
+ * (the one a reopen continues from) that carries tool state, ONE service-role UPDATE removes
+ * `answers.toolFamiliesWithSomething` and `answers.toolForms`, drops the `tools_overview` /
+ * `tools:<page>` ids from `completed_question_ids` and their `answer_provenance` entries, and
+ * bumps `revision` (so CAS clients refetch). The UPDATE is guarded by the revision it read
+ * (a concurrent save is reported and left for the next run). Drafts are ordinary mutable rows:
+ * their only trigger is `updated_at`; the facts lock does not cover them. Every other answer stays.
+ *
+ * DRY RUN BY DEFAULT: without `--apply` it only reads and prints the keys/drafts it would clear.
  * Idempotent: a member without any of the keys is not written (the RPC bumps `facts_revision` on
  * every write, so a blind second run would not be a no-op) — a repeat run finds nothing to do.
  * Guarded by the row's `facts_revision` (a concurrent edit is reported and left for the next run).
+ * `--limit` bounds each pass (members, then drafts) separately; `--user` scopes both.
  *
  *   node --import ./tests/server-only-register.cjs --import tsx \
  *     scripts/personal-plan/tools-rollback-clear-facts.ts [--apply] [--include-derived] \
@@ -186,6 +198,51 @@ export function planToolsRollbackForRow(input: {
   return { patch: patch as CareHabitsPatch, clearedKeys, derivedKeys }
 }
 
+export type ToolsDraftDowngradePlan = {
+  answers: Record<string, unknown>
+  completedQuestionIds: string[]
+  answerProvenance: Record<string, string>
+  /** What the write removes (for the report). */
+  removed: string[]
+}
+
+const isToolQuestionId = (questionId: string) =>
+  questionId === "tools_overview" || questionId.startsWith("tools:")
+
+/**
+ * Pure: the pre-port shape of one refinement draft, or `null` when it carries no tool state (the
+ * idempotent no-op). Only the tool answers and their completion/provenance go; the derived
+ * thing-fields (`additionalHeatTools`, `towel`, `nightProtection`) are ordinary answers the
+ * previous code reads, so they stay.
+ */
+export function planToolsDraftDowngrade(input: {
+  answers: Record<string, unknown> | null
+  completedQuestionIds: readonly string[] | null
+  answerProvenance: Record<string, string> | null
+}): ToolsDraftDowngradePlan | null {
+  const { toolFamiliesWithSomething, toolForms, ...answers } = input.answers ?? {}
+  const completedQuestionIds = (input.completedQuestionIds ?? []).filter(
+    (questionId) => !isToolQuestionId(questionId),
+  )
+  const answerProvenance = Object.fromEntries(
+    Object.entries(input.answerProvenance ?? {}).filter(
+      ([questionId]) => !isToolQuestionId(questionId),
+    ),
+  )
+  const removed = [
+    ...(toolFamiliesWithSomething !== undefined ? ["answers.toolFamiliesWithSomething"] : []),
+    ...(toolForms !== undefined ? ["answers.toolForms"] : []),
+    ...(input.completedQuestionIds ?? [])
+      .filter(isToolQuestionId)
+      .map((questionId) => `completed:${questionId}`),
+    ...Object.keys(input.answerProvenance ?? {})
+      .filter(isToolQuestionId)
+      .map((questionId) => `provenance:${questionId}`),
+  ]
+  if (removed.length === 0) return null
+  return { answers, completedQuestionIds, answerProvenance, removed }
+}
+
 /** The provenance envelope for the clear: the stored lineage, restamped. */
 export function rollbackProvenance(
   stored: DomainProvenance | undefined,
@@ -206,11 +263,14 @@ type QueryBuilder<Row> = PromiseLike<QueryResult<Row>> & {
   select: (columns: string) => QueryBuilder<Row>
   eq: (column: string, value: unknown) => QueryBuilder<Row>
   gt: (column: string, value: unknown) => QueryBuilder<Row>
-  order: (column: string) => QueryBuilder<Row>
+  in: (column: string, values: unknown[]) => QueryBuilder<Row>
+  order: (column: string, options?: { ascending?: boolean }) => QueryBuilder<Row>
   limit: (count: number) => QueryBuilder<Row>
 }
 type RollbackClient = {
-  from: <Row extends Record<string, unknown>>(table: string) => QueryBuilder<Row>
+  from: <Row extends Record<string, unknown>>(
+    table: string,
+  ) => QueryBuilder<Row> & { update: (values: Record<string, unknown>) => QueryBuilder<Row> }
 }
 
 export type ToolsRollbackSummary = {
@@ -221,6 +281,10 @@ export type ToolsRollbackSummary = {
   keysPlanned: number
   applied: number
   conflicts: number
+  draftsExamined: number
+  draftsWithToolAnswers: number
+  draftsApplied: number
+  draftConflicts: number
   failures: Array<{ userId: string; reason: string }>
 }
 
@@ -241,6 +305,10 @@ export async function runToolsRollback(
     keysPlanned: 0,
     applied: 0,
     conflicts: 0,
+    draftsExamined: 0,
+    draftsWithToolAnswers: 0,
+    draftsApplied: 0,
+    draftConflicts: 0,
     failures: [],
   }
   log(
@@ -312,10 +380,102 @@ export async function runToolsRollback(
     cursor = String(rows[rows.length - 1]?.user_id)
   }
 
+  await downgradeDrafts(client, options, summary, log)
+
   log("")
   log("SUMMARY")
   log(JSON.stringify(summary, null, 2))
   return summary
+}
+
+const DRAFT_COLUMNS =
+  "id, user_id, status, revision, answers, completed_question_ids, answer_provenance"
+
+async function downgradeDrafts(
+  client: RollbackClient,
+  options: ToolsRollbackOptions,
+  summary: ToolsRollbackSummary,
+  log: (line: string) => void,
+): Promise<void> {
+  /** The draft a reopen continues from: the member's most recently updated complete one. */
+  const latestCompleteDraftId = async (userId: string): Promise<string | null> => {
+    const { data, error } = await client
+      .from<Record<string, unknown>>("personal_plan_refinement_drafts")
+      .select("id")
+      .eq("user_id", userId)
+      .eq("status", "complete")
+      .order("updated_at", { ascending: false })
+      .order("id", { ascending: false })
+      .limit(1)
+    if (error) throw new Error(`latest complete draft query failed: ${error.message}`)
+    const row = Array.isArray(data) ? data[0] : undefined
+    return row ? String(row.id) : null
+  }
+
+  let cursor: string | null = null
+  while (summary.draftsExamined < options.limit) {
+    const pageSize = Math.min(PAGE_SIZE, options.limit - summary.draftsExamined)
+    let query = client
+      .from<Record<string, unknown>>("personal_plan_refinement_drafts")
+      .select(DRAFT_COLUMNS)
+      .in("status", ["in_progress", "complete"])
+      .order("id")
+      .limit(pageSize)
+    if (options.userId) query = query.eq("user_id", options.userId)
+    if (cursor) query = query.gt("id", cursor)
+    const { data, error } = await query
+    if (error) throw new Error(`personal_plan_refinement_drafts query failed: ${error.message}`)
+    const rows = Array.isArray(data) ? data : []
+
+    for (const row of rows) {
+      summary.draftsExamined += 1
+      const draftId = String(row.id)
+      const userId = String(row.user_id)
+      const plan = planToolsDraftDowngrade({
+        answers: (row.answers ?? null) as Record<string, unknown> | null,
+        completedQuestionIds: (row.completed_question_ids ?? null) as string[] | null,
+        answerProvenance: (row.answer_provenance ?? null) as Record<string, string> | null,
+      })
+      if (!plan) continue
+      try {
+        // A superseded complete draft can never be continued from; leave the history alone.
+        if (row.status === "complete" && (await latestCompleteDraftId(userId)) !== draftId) continue
+        summary.draftsWithToolAnswers += 1
+        const line = `draft ${draftId} (${userId}, ${String(row.status)}): remove ${plan.removed.join(", ")}`
+        if (!options.apply) {
+          log(line)
+          continue
+        }
+        const revision = Number(row.revision)
+        const { data: updated, error: updateError } = await client
+          .from<Record<string, unknown>>("personal_plan_refinement_drafts")
+          .update({
+            answers: plan.answers,
+            completed_question_ids: plan.completedQuestionIds,
+            answer_provenance: plan.answerProvenance,
+            revision: revision + 1,
+          })
+          .eq("id", draftId)
+          .eq("revision", revision)
+          .select("id")
+        if (updateError) throw new Error(updateError.message)
+        if (Array.isArray(updated) && updated.length > 0) {
+          summary.draftsApplied += 1
+          log(`${line} -> rev ${revision + 1}`)
+        } else {
+          summary.draftConflicts += 1
+          log(`${line} -> revision_conflict; left for the next run`)
+        }
+      } catch (caught) {
+        const reason = caught instanceof Error ? caught.message : String(caught)
+        summary.failures.push({ userId, reason: `draft ${draftId}: ${reason}` })
+        log(`draft ${draftId} (${userId}) -> FAILED ${reason}`)
+      }
+    }
+
+    if (rows.length < pageSize) break
+    cursor = String(rows[rows.length - 1]?.id)
+  }
 }
 
 async function main() {
