@@ -1,6 +1,6 @@
 import { parseDiscoveryPriceLabel } from "@/components/discovery/cockpit/swap-sort"
 
-import type { DiscoveryCockpitStepView } from "../cockpit"
+import type { DiscoveryCockpitStepView, DiscoveryMarketSegment } from "../cockpit"
 import type { DiscoveryCallDecision } from "../refined-routine"
 
 /**
@@ -32,13 +32,24 @@ export type RunsheetLockedInSelection = {
   swapProductId: string | null
 } | null
 
+/** The labels of `products.market_segment` — a market bucket, not a quality grade. */
+export const MARKET_SEGMENT_LABELS: Record<DiscoveryMarketSegment, string> = {
+  drugstore: "Drogerie",
+  professional: "Profi",
+}
+
 export type RunsheetLockedInBuyRow = {
   label: string
   categoryLabel: string
   priceLabel: string | null
+  marketSegment: DiscoveryMarketSegment | null
 }
 
-export type RunsheetLockedInKeepRow = { label: string; categoryLabel: string }
+export type RunsheetLockedInKeepRow = {
+  label: string
+  categoryLabel: string
+  marketSegment: DiscoveryMarketSegment | null
+}
 
 /** A product of hers she stops using (decision drop). */
 export type RunsheetLockedInDiscardRow = { label: string; categoryLabel: string }
@@ -122,6 +133,7 @@ export function runsheetLockedIn(
         lockedIn.keep.push({
           label: step.ownedLabel ?? OWNED_FALLBACK,
           categoryLabel: step.categoryLabel,
+          marketSegment: step.ownedMarketSegment ?? null,
         })
     } else if (selection?.decision === "drop") {
       if (empty) lockedIn.skip.push({ categoryLabel: step.categoryLabel })
@@ -148,5 +160,38 @@ function buyRow(step: DiscoveryCockpitStepView, productId: string): RunsheetLock
     label: option?.label ?? storedLabel ?? UNKNOWN_PRODUCT,
     categoryLabel: step.categoryLabel,
     priceLabel: option?.priceLabel ?? null,
+    // A saved target the current options no longer list keeps the catalog segment loaded for it.
+    marketSegment: option
+      ? (option.marketSegment ?? null)
+      : step.swapProductId === productId
+        ? (step.swapMarketSegment ?? null)
+        : null,
   }
+}
+
+export type RunsheetSegmentSummary = {
+  /** Products in the routine: Neu kaufen + Behalten. */
+  total: number
+  professional: number
+  drugstore: number
+  /** In the routine, but the catalog has no segment for them. */
+  unknown: number
+}
+
+/**
+ * How many of the routine's products are Profi vs Drogerie. The routine is what ends up in
+ * the plan: the products to buy plus the ones she keeps — not the ones she stops using and
+ * not the steps deliberately left without a product.
+ */
+export function runsheetSegmentSummary(
+  lockedIn: Pick<RunsheetLockedIn, "buy" | "keep">,
+): RunsheetSegmentSummary {
+  const summary: RunsheetSegmentSummary = { total: 0, professional: 0, drugstore: 0, unknown: 0 }
+  for (const row of [...lockedIn.buy, ...lockedIn.keep]) {
+    summary.total += 1
+    if (row.marketSegment === "professional") summary.professional += 1
+    else if (row.marketSegment === "drugstore") summary.drugstore += 1
+    else summary.unknown += 1
+  }
+  return summary
 }
