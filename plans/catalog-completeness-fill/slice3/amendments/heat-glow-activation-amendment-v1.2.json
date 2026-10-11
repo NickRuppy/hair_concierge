@@ -1,0 +1,60 @@
+{
+  "schema": "leave-in-heat-activation-amendment-v1.2",
+  "scope": "Field-scoped activation amendment (S3 plan §2.2, Proposal P5). Writes identity.heatActivation and its I1–I8 consequences only; every other legacy field stays as it is (never engine-researched; residual ledger F17).",
+  "productId": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+  "productName": "Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW",
+  "gtin": "8700216939768",
+  "rulings": ["A1", "D-c", "D-d", "D-e", "H3"],
+  "heatActivation": {
+    "value": "required",
+    "route": "airflow_shaping",
+    "statements": [
+      {
+        "kind": "activation_statement",
+        "quote": "Hitzeaktivierte Formel für extra Pflege",
+        "sourceTier": "C1",
+        "sourceUrl": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+        "retrievedAt": "2026-10-09"
+      },
+      {
+        "kind": "activation_statement",
+        "quote": "Unsere Pro-V Formel bringt bei Hitzeaktivierung noch mehr feuchtigkeitsspendende Nährstoffe ins Haar und versiegelt es.",
+        "sourceTier": "C1",
+        "sourceUrl": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+        "retrievedAt": "2026-10-09"
+      },
+      {
+        "kind": "heat_step_direction",
+        "quote": "Föhnen, um zu aktivieren.",
+        "sourceTier": "C1",
+        "sourceUrl": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+        "retrievedAt": "2026-10-09"
+      }
+    ],
+    "counterSignals": [
+      {
+        "quote": "Leave-In-Creme mit hitzeaktivierter Pflege",
+        "sourceTier": "C3",
+        "sourceUrl": "https://www.dm.de/p/d/3088304/pantene-pro-v-leave-in-moisture-boost-heat-und-glow"
+      }
+    ]
+  },
+  "applicationStageConfirmation": {
+    "value": ["towel_dry", "pre_heat", "dry_hair"],
+    "note": "Equals the Slice 1 value (T1.2): „auf das gereinigte Haar auftragen“ (towel_dry), „Föhnen, um zu aktivieren.“ (pre_heat), „Zwischen den Haarwäschen nutzen, um Frizz zu kontrollieren.“ (dry_hair). The further between-wash use names no non-heat finish and is governed by the pack's activation direction (HA-2b, D-c)."
+  },
+  "sources": [
+    {
+      "tier": "C1",
+      "label": "Pantene-Packung DE (Vorder- und Rückseite), Foto via dm",
+      "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+      "note": "Current German pack (DE/AT/CH, P&G Schwalbach) read from the dm-hosted packshot (research r1); Nick accepted the pack as C1 in H3. No pantene.de product page exists (search 2026-10-09)."
+    },
+    {
+      "tier": "C3",
+      "label": "dm.de Produktseite 3088304",
+      "url": "https://www.dm.de/p/d/3088304/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+      "note": "Corroboration only (HA-3)."
+    }
+  ]
+}

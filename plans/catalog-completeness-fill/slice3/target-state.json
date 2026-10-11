@@ -1,0 +1,803 @@
+{
+  "fingerprint": "27ea6ec51faa442ad00e3119df67a314c9ffb6cb06c1500609e6787212631e15",
+  "batch_id": "S3-catalog-completeness-slice3-heat-activation",
+  "prestate_basis": {
+    "production_capture_at": "2026-10-11T14:08:01.30101+00:00",
+    "slice1_fingerprint": "4398744e32e5b643a6e509969d09d936aed0260bbb7c4e5bc1dca6cc33647ca9",
+    "slice1_batch_id": "S5R-06-catalog-completeness-slice1",
+    "note": "Slice 1 post-state for the two S3 products = production capture + Slice 1 writes. Apply S3 only after Slice 1."
+  },
+  "scope_product_ids": [
+    "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+    "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+  ],
+  "writes": {
+    "specs": [
+      {
+        "productId": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+        "set": {
+          "roles": [
+            "styling_prep"
+          ],
+          "plan_roles": [
+            "pre_heat_application"
+          ],
+          "heat_activation_required": true,
+          "heat_activation_route": "airflow_shaping"
+        }
+      },
+      {
+        "productId": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+        "set": {
+          "roles": [
+            "styling_prep"
+          ],
+          "plan_roles": [
+            "pre_heat_application"
+          ],
+          "heat_activation_required": true,
+          "heat_activation_route": "airflow_shaping"
+        }
+      }
+    ],
+    "fit": [
+      {
+        "productId": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+        "set": {
+          "conditioner_relationship": "booster_only"
+        }
+      }
+    ],
+    "eligibility": [
+      {
+        "productId": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+        "rows": [
+          {
+            "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+            "thickness": "coarse",
+            "need_bucket": "heat_protect",
+            "styling_context": "heat_style"
+          },
+          {
+            "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+            "thickness": "coarse",
+            "need_bucket": "moisture_anti_frizz",
+            "styling_context": "heat_style"
+          },
+          {
+            "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+            "thickness": "normal",
+            "need_bucket": "heat_protect",
+            "styling_context": "heat_style"
+          },
+          {
+            "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+            "thickness": "normal",
+            "need_bucket": "moisture_anti_frizz",
+            "styling_context": "heat_style"
+          }
+        ]
+      },
+      {
+        "productId": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+        "rows": [
+          {
+            "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+            "thickness": "normal",
+            "need_bucket": "heat_protect",
+            "styling_context": "heat_style"
+          },
+          {
+            "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+            "thickness": "normal",
+            "need_bucket": "moisture_anti_frizz",
+            "styling_context": "heat_style"
+          },
+          {
+            "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+            "thickness": "normal",
+            "need_bucket": "shine_protect",
+            "styling_context": "heat_style"
+          }
+        ]
+      }
+    ],
+    "protocols": [
+      {
+        "mode": "insert",
+        "id": null,
+        "row": {
+          "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+          "category": "leave_in",
+          "role": "pre_heat_protection",
+          "application_stage": "damp_leave_on",
+          "application_state": "damp",
+          "placement": "lengths_ends",
+          "rinse_action": "leave_in",
+          "reapplication": "required",
+          "contact_time_seconds": null,
+          "instruction_modifiers": [],
+          "source_label": "Neqi Hersteller (neqi-hair.com)",
+          "source_url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+          "source_text": "1. Das Haar in Abschnitte unterteilen. 2. Das Spray großzügig und gleichmäßig auf das handtuchtrockene (nicht nasse) Haar sprühen. 3. Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.",
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "heat-activated-verified-product-42a2fe20-bd7e-49a3-a880-8ae89015a5c9-pre_heat_damp",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "leave_in",
+              "productId": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9"
+            },
+            "role": "heat_protection",
+            "applicationFamily": "pre_heat_damp",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "bond_repair_day",
+              "clarifying_wash_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [
+                "heat_tool"
+              ],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": [
+                "heatEvents"
+              ]
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "each_separate_heat_event",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "großzügig"
+              },
+              "workflowId": "heat_activated_verified_product",
+              "heatActivationRequired": true,
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "section",
+                "action": "section",
+                "copyTemplateDe": "Das handtuchtrockene Haar in Partien teilen – es sollte nicht mehr nass sein."
+              },
+              {
+                "stepKey": "apply",
+                "action": "apply_product",
+                "copyTemplateDe": "Das Spray großzügig und gleichmäßig auf jede Partie sprühen."
+              },
+              {
+                "stepKey": "activate",
+                "action": "tool",
+                "copyTemplateDe": "Jede Partie mit Hitze und unter Spannung föhnen. Erst die Wärme aktiviert das Spray."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-10-09"
+              },
+              {
+                "sourceUrl": "https://www.dm.de/p/d/3080142/neqi-leave-in-spray-diamond-glass-ultimate",
+                "sourceType": "retailer",
+                "checkedAt": "2026-10-09"
+              }
+            ]
+          },
+          "guidance_payload_v2": {
+            "schemaVersion": 2,
+            "contractKind": "product_pointer",
+            "scope": {
+              "kind": "product",
+              "category": "leave_in",
+              "productId": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9"
+            },
+            "sourceRole": "pre_heat_protection",
+            "role": "heat_protection",
+            "applicationFamily": "pre_heat_damp",
+            "facts": {
+              "applicationState": "damp_hair",
+              "applicationArea": "hair_lengths_ends",
+              "rinse": "leave_in",
+              "contactTime": null,
+              "amount": {
+                "kind": "qualitative",
+                "value": "generous"
+              },
+              "heat": {
+                "supportedStates": [
+                  "damp_hair"
+                ],
+                "activationRequired": true,
+                "maximumClaimedTemperatureC": null,
+                "reapplication": "each_separate_heat_event"
+              },
+              "conditionerPolicy": "not_applicable"
+            },
+            "workflowId": "heat_activated_verified_product",
+            "requiredCompanionProductId": null,
+            "runtimeBlockerCode": null,
+            "exactSteps": [
+              {
+                "stepKey": "section",
+                "action": "section",
+                "copyDe": "Das handtuchtrockene Haar in Partien teilen – es sollte nicht mehr nass sein."
+              },
+              {
+                "stepKey": "apply",
+                "action": "apply_product",
+                "copyDe": "Das Spray großzügig und gleichmäßig auf jede Partie sprühen."
+              },
+              {
+                "stepKey": "activate",
+                "action": "tool",
+                "copyDe": "Jede Partie mit Hitze und unter Spannung föhnen. Erst die Wärme aktiviert das Spray."
+              }
+            ],
+            "cautionCodes": [],
+            "evidence": [
+              {
+                "sourceUrl": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-10-09"
+              },
+              {
+                "sourceUrl": "https://www.dm.de/p/d/3080142/neqi-leave-in-spray-diamond-glass-ultimate",
+                "sourceType": "retailer",
+                "checkedAt": "2026-10-09"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "mode": "replace",
+        "id": "b99799b7-1d23-47e0-9338-66923a690ae1",
+        "row": {
+          "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+          "category": "leave_in",
+          "role": "pre_heat_protection",
+          "application_stage": "damp_leave_on",
+          "application_state": "damp",
+          "placement": "all_hair",
+          "rinse_action": "leave_in",
+          "reapplication": "required",
+          "contact_time_seconds": null,
+          "instruction_modifiers": [],
+          "source_label": "Pantene-Packung DE (Rückseite), Foto via dm",
+          "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+          "source_text": "1-2 Pumpstöße auf das gereinigte Haar auftragen. / Föhnen, um zu aktivieren. / Zwischen den Haarwäschen nutzen, um Frizz zu kontrollieren.",
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "heat-activated-verified-product-e781ca9e-886d-40a1-bfe1-48177cfbf381-pre_heat_damp",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "leave_in",
+              "productId": "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+            },
+            "role": "heat_protection",
+            "applicationFamily": "pre_heat_damp",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "bond_repair_day",
+              "clarifying_wash_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [
+                "heat_tool"
+              ],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": [
+                "heatEvents"
+              ]
+            },
+            "protocolFacts": {
+              "applicationArea": "all_hair",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "each_separate_heat_event",
+              "amount": {
+                "kind": "pumps",
+                "minimum": 1,
+                "maximum": 2
+              },
+              "workflowId": "heat_activated_verified_product",
+              "heatActivationRequired": true,
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply",
+                "action": "apply_product",
+                "copyTemplateDe": "1–2 Pumpstöße im frisch gewaschenen Haar verteilen."
+              },
+              {
+                "stepKey": "activate",
+                "action": "tool",
+                "copyTemplateDe": "Danach föhnen – erst die Wärme aktiviert die Pflege."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-10-09"
+              },
+              {
+                "sourceUrl": "https://www.dm.de/p/d/3088304/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+                "sourceType": "retailer",
+                "checkedAt": "2026-10-09"
+              }
+            ]
+          },
+          "guidance_payload_v2": {
+            "schemaVersion": 2,
+            "contractKind": "product_pointer",
+            "scope": {
+              "kind": "product",
+              "category": "leave_in",
+              "productId": "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+            },
+            "sourceRole": "pre_heat_protection",
+            "role": "heat_protection",
+            "applicationFamily": "pre_heat_damp",
+            "facts": {
+              "applicationState": "damp_hair",
+              "applicationArea": "root_to_tip_hair",
+              "rinse": "leave_in",
+              "contactTime": null,
+              "amount": {
+                "kind": "pumps",
+                "minimum": 1,
+                "maximum": 2
+              },
+              "heat": {
+                "supportedStates": [
+                  "damp_hair"
+                ],
+                "activationRequired": true,
+                "maximumClaimedTemperatureC": null,
+                "reapplication": "each_separate_heat_event"
+              },
+              "conditionerPolicy": "not_applicable"
+            },
+            "workflowId": "heat_activated_verified_product",
+            "requiredCompanionProductId": null,
+            "runtimeBlockerCode": null,
+            "exactSteps": [
+              {
+                "stepKey": "apply",
+                "action": "apply_product",
+                "copyDe": "1–2 Pumpstöße im frisch gewaschenen Haar verteilen."
+              },
+              {
+                "stepKey": "activate",
+                "action": "tool",
+                "copyDe": "Danach föhnen – erst die Wärme aktiviert die Pflege."
+              }
+            ],
+            "cautionCodes": [],
+            "evidence": [
+              {
+                "sourceUrl": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-10-09"
+              },
+              {
+                "sourceUrl": "https://www.dm.de/p/d/3088304/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+                "sourceType": "retailer",
+                "checkedAt": "2026-10-09"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "mode": "insert",
+        "id": null,
+        "row": {
+          "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+          "category": "leave_in",
+          "role": "pre_heat_protection",
+          "application_stage": "dry_pre_heat",
+          "application_state": "dry",
+          "placement": "all_hair",
+          "rinse_action": "leave_in",
+          "reapplication": "required",
+          "contact_time_seconds": null,
+          "instruction_modifiers": [],
+          "source_label": "Pantene-Packung DE (Rückseite), Foto via dm",
+          "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+          "source_text": "1-2 Pumpstöße auf das gereinigte Haar auftragen. / Föhnen, um zu aktivieren. / Zwischen den Haarwäschen nutzen, um Frizz zu kontrollieren.",
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "heat-activated-verified-product-e781ca9e-886d-40a1-bfe1-48177cfbf381-pre_heat_dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "leave_in",
+              "productId": "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+            },
+            "role": "heat_protection",
+            "applicationFamily": "pre_heat_dry",
+            "compatibleDayTypes": [
+              "refresh_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_pre_heat",
+              "before": [
+                "heat_tool"
+              ],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": [
+                "heatEvents"
+              ]
+            },
+            "protocolFacts": {
+              "applicationArea": "all_hair",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "each_separate_heat_event",
+              "amount": null,
+              "workflowId": "heat_activated_verified_product",
+              "heatActivationRequired": true,
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-between-washes",
+                "action": "apply_product",
+                "copyTemplateDe": "Zwischen den Haarwäschen gegen Frizz: die Creme im trockenen Haar verteilen."
+              },
+              {
+                "stepKey": "activate",
+                "action": "tool",
+                "copyTemplateDe": "Danach föhnen – erst die Wärme aktiviert die Pflege."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-10-09"
+              },
+              {
+                "sourceUrl": "https://www.dm.de/p/d/3088304/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+                "sourceType": "retailer",
+                "checkedAt": "2026-10-09"
+              }
+            ]
+          },
+          "guidance_payload_v2": {
+            "schemaVersion": 2,
+            "contractKind": "product_pointer",
+            "scope": {
+              "kind": "product",
+              "category": "leave_in",
+              "productId": "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+            },
+            "sourceRole": "pre_heat_protection",
+            "role": "heat_protection",
+            "applicationFamily": "pre_heat_dry",
+            "facts": {
+              "applicationState": "dry_hair",
+              "applicationArea": "root_to_tip_hair",
+              "rinse": "leave_in",
+              "contactTime": null,
+              "amount": null,
+              "heat": {
+                "supportedStates": [
+                  "dry_hair"
+                ],
+                "activationRequired": true,
+                "maximumClaimedTemperatureC": null,
+                "reapplication": "each_separate_heat_event"
+              },
+              "conditionerPolicy": "not_applicable"
+            },
+            "workflowId": "heat_activated_verified_product",
+            "requiredCompanionProductId": null,
+            "runtimeBlockerCode": null,
+            "exactSteps": [
+              {
+                "stepKey": "apply-between-washes",
+                "action": "apply_product",
+                "copyDe": "Zwischen den Haarwäschen gegen Frizz: die Creme im trockenen Haar verteilen."
+              },
+              {
+                "stepKey": "activate",
+                "action": "tool",
+                "copyDe": "Danach föhnen – erst die Wärme aktiviert die Pflege."
+              }
+            ],
+            "cautionCodes": [],
+            "evidence": [
+              {
+                "sourceUrl": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-10-09"
+              },
+              {
+                "sourceUrl": "https://www.dm.de/p/d/3088304/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+                "sourceType": "retailer",
+                "checkedAt": "2026-10-09"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "evidence": [
+      {
+        "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+        "fact_key": "leave_in.heat_activation_required",
+        "fact_value": true,
+        "source_label": "Neqi Hersteller (neqi-hair.com)",
+        "source_url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+        "source_text": "„Noch mehr hitzeaktivierte Polymere als im goldenen Diamond Glass Styling Spray“ / „Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.“",
+        "source_type": "manufacturer",
+        "checked_at": "2026-10-09",
+        "batch_id": "S3-catalog-completeness-slice3-heat-activation",
+        "batch_fingerprint": "27ea6ec51faa442ad00e3119df67a314c9ffb6cb06c1500609e6787212631e15",
+        "content_fingerprint": "7cdedb0a00e2de6910474a432dc4c289492f9bfa157edfd9d74a8504d5675a5b"
+      },
+      {
+        "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+        "fact_key": "leave_in.heat_activation_route",
+        "fact_value": "airflow_shaping",
+        "source_label": "Neqi Hersteller (neqi-hair.com)",
+        "source_url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+        "source_text": "„Noch mehr hitzeaktivierte Polymere als im goldenen Diamond Glass Styling Spray“ / „Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.“",
+        "source_type": "manufacturer",
+        "checked_at": "2026-10-09",
+        "batch_id": "S3-catalog-completeness-slice3-heat-activation",
+        "batch_fingerprint": "27ea6ec51faa442ad00e3119df67a314c9ffb6cb06c1500609e6787212631e15",
+        "content_fingerprint": "19f068a751aebbcc5abeb335d8e34c61b49de7771443deb27fc327a22f92ed54"
+      },
+      {
+        "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+        "fact_key": "leave_in.plan_roles",
+        "fact_value": [
+          "pre_heat_application"
+        ],
+        "source_label": "Neqi Hersteller (neqi-hair.com)",
+        "source_url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+        "source_text": "„Noch mehr hitzeaktivierte Polymere als im goldenen Diamond Glass Styling Spray“ / „Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.“",
+        "source_type": "manufacturer",
+        "checked_at": "2026-10-09",
+        "batch_id": "S3-catalog-completeness-slice3-heat-activation",
+        "batch_fingerprint": "27ea6ec51faa442ad00e3119df67a314c9ffb6cb06c1500609e6787212631e15",
+        "content_fingerprint": "c4b3b7ce417e1a697ecce72eda8802aa55609de6aaf1608d319df768d21d7516"
+      },
+      {
+        "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+        "fact_key": "leave_in.roles",
+        "fact_value": [
+          "styling_prep"
+        ],
+        "source_label": "Neqi Hersteller (neqi-hair.com)",
+        "source_url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+        "source_text": "„Noch mehr hitzeaktivierte Polymere als im goldenen Diamond Glass Styling Spray“ / „Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.“",
+        "source_type": "manufacturer",
+        "checked_at": "2026-10-09",
+        "batch_id": "S3-catalog-completeness-slice3-heat-activation",
+        "batch_fingerprint": "27ea6ec51faa442ad00e3119df67a314c9ffb6cb06c1500609e6787212631e15",
+        "content_fingerprint": "35a7ee6cc3d521244579023ba70b39d570dca8c7db121141e065b72a2f7720bc"
+      },
+      {
+        "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+        "fact_key": "leave_in.heat_activation_required",
+        "fact_value": true,
+        "source_label": "Pantene-Packung DE (Vorder- und Rückseite), Foto via dm",
+        "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+        "source_text": "„Hitzeaktivierte Formel für extra Pflege“ / „Unsere Pro-V Formel bringt bei Hitzeaktivierung noch mehr feuchtigkeitsspendende Nährstoffe ins Haar und versiegelt es.“ / „Föhnen, um zu aktivieren.“",
+        "source_type": "manufacturer",
+        "checked_at": "2026-10-09",
+        "batch_id": "S3-catalog-completeness-slice3-heat-activation",
+        "batch_fingerprint": "27ea6ec51faa442ad00e3119df67a314c9ffb6cb06c1500609e6787212631e15",
+        "content_fingerprint": "c02b688e30d70caf02bb7244cc5204af1d4c8a8299ce4eabc7b5d35d0a0209ac"
+      },
+      {
+        "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+        "fact_key": "leave_in.heat_activation_route",
+        "fact_value": "airflow_shaping",
+        "source_label": "Pantene-Packung DE (Vorder- und Rückseite), Foto via dm",
+        "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+        "source_text": "„Hitzeaktivierte Formel für extra Pflege“ / „Unsere Pro-V Formel bringt bei Hitzeaktivierung noch mehr feuchtigkeitsspendende Nährstoffe ins Haar und versiegelt es.“ / „Föhnen, um zu aktivieren.“",
+        "source_type": "manufacturer",
+        "checked_at": "2026-10-09",
+        "batch_id": "S3-catalog-completeness-slice3-heat-activation",
+        "batch_fingerprint": "27ea6ec51faa442ad00e3119df67a314c9ffb6cb06c1500609e6787212631e15",
+        "content_fingerprint": "1da94bafe77d37c36797cb5290c98882c2cac39495acd5bec4d435e8216efd49"
+      },
+      {
+        "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+        "fact_key": "leave_in.plan_roles",
+        "fact_value": [
+          "pre_heat_application"
+        ],
+        "source_label": "Pantene-Packung DE (Vorder- und Rückseite), Foto via dm",
+        "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+        "source_text": "„Hitzeaktivierte Formel für extra Pflege“ / „Unsere Pro-V Formel bringt bei Hitzeaktivierung noch mehr feuchtigkeitsspendende Nährstoffe ins Haar und versiegelt es.“ / „Föhnen, um zu aktivieren.“",
+        "source_type": "manufacturer",
+        "checked_at": "2026-10-09",
+        "batch_id": "S3-catalog-completeness-slice3-heat-activation",
+        "batch_fingerprint": "27ea6ec51faa442ad00e3119df67a314c9ffb6cb06c1500609e6787212631e15",
+        "content_fingerprint": "67c4afc11ac737569b9d092a407f115ba388d82951a2dd1ef33fab4100407130"
+      },
+      {
+        "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+        "fact_key": "leave_in.roles",
+        "fact_value": [
+          "styling_prep"
+        ],
+        "source_label": "Pantene-Packung DE (Vorder- und Rückseite), Foto via dm",
+        "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+        "source_text": "„Hitzeaktivierte Formel für extra Pflege“ / „Unsere Pro-V Formel bringt bei Hitzeaktivierung noch mehr feuchtigkeitsspendende Nährstoffe ins Haar und versiegelt es.“ / „Föhnen, um zu aktivieren.“",
+        "source_type": "manufacturer",
+        "checked_at": "2026-10-09",
+        "batch_id": "S3-catalog-completeness-slice3-heat-activation",
+        "batch_fingerprint": "27ea6ec51faa442ad00e3119df67a314c9ffb6cb06c1500609e6787212631e15",
+        "content_fingerprint": "0a46b908b621ca5aa06c2b3ce6ef4aeff6e2b94433291e6470557a49f177c139"
+      }
+    ]
+  },
+  "before_after": [
+    {
+      "product": "Neqi Diamond Glass Ultimate Styling Spray",
+      "field": "specs.roles",
+      "before": "{replacement_conditioner, styling_prep}",
+      "after": "{styling_prep}"
+    },
+    {
+      "product": "Neqi Diamond Glass Ultimate Styling Spray",
+      "field": "specs.plan_roles",
+      "before": "{post_wash_leave_in, pre_heat_application}",
+      "after": "{pre_heat_application}"
+    },
+    {
+      "product": "Neqi Diamond Glass Ultimate Styling Spray",
+      "field": "specs.heat_activation_required",
+      "before": "false",
+      "after": "true"
+    },
+    {
+      "product": "Neqi Diamond Glass Ultimate Styling Spray",
+      "field": "specs.heat_activation_route",
+      "before": "∅",
+      "after": "airflow_shaping"
+    },
+    {
+      "product": "Neqi Diamond Glass Ultimate Styling Spray",
+      "field": "specs.conditioner_relationship (generated)",
+      "before": "replacement_capable",
+      "after": "booster_only"
+    },
+    {
+      "product": "Neqi Diamond Glass Ultimate Styling Spray",
+      "field": "fit.conditioner_relationship",
+      "before": "replacement_capable",
+      "after": "booster_only"
+    },
+    {
+      "product": "Neqi Diamond Glass Ultimate Styling Spray",
+      "field": "eligibility",
+      "before": "coarse|heat_protect|heat_style; coarse|moisture_anti_frizz|air_dry; coarse|moisture_anti_frizz|non_heat_style; normal|heat_protect|heat_style; normal|moisture_anti_frizz|air_dry; normal|moisture_anti_frizz|non_heat_style",
+      "after": "coarse|heat_protect|heat_style; coarse|moisture_anti_frizz|heat_style; normal|heat_protect|heat_style; normal|moisture_anti_frizz|heat_style"
+    },
+    {
+      "product": "Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW",
+      "field": "specs.roles",
+      "before": "{extension_conditioner}",
+      "after": "{styling_prep}"
+    },
+    {
+      "product": "Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW",
+      "field": "specs.plan_roles",
+      "before": "{post_wash_leave_in, pre_heat_application}",
+      "after": "{pre_heat_application}"
+    },
+    {
+      "product": "Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW",
+      "field": "specs.heat_activation_required",
+      "before": "false",
+      "after": "true"
+    },
+    {
+      "product": "Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW",
+      "field": "specs.heat_activation_route",
+      "before": "∅",
+      "after": "airflow_shaping"
+    },
+    {
+      "product": "Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW",
+      "field": "specs.conditioner_relationship (generated)",
+      "before": "booster_only",
+      "after": "booster_only"
+    },
+    {
+      "product": "Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW",
+      "field": "eligibility",
+      "before": "normal|heat_protect|heat_style; normal|moisture_anti_frizz|air_dry; normal|moisture_anti_frizz|non_heat_style; normal|shine_protect|air_dry; normal|shine_protect|non_heat_style",
+      "after": "normal|heat_protect|heat_style; normal|moisture_anti_frizz|heat_style; normal|shine_protect|heat_style"
+    },
+    {
+      "product": "Neqi Diamond Glass Ultimate Styling Spray",
+      "field": "protocols",
+      "before": "none",
+      "after": "pre_heat_protection/pre_heat_damp (exact workflow heat_activated_verified_product)"
+    },
+    {
+      "product": "Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW",
+      "field": "protocols",
+      "before": "pre_heat_protection/pre_heat_damp (S1 pack row, generic) + post_wash_leave_in ×2 (legacy)",
+      "after": "pre_heat_protection/pre_heat_damp (exact, wash day) + pre_heat_protection/pre_heat_dry (exact, between washes) + post_wash_leave_in ×2 (kept, Q1)"
+    }
+  ],
+  "product_questions": {
+    "Q1": "HEAT&GLOW's post_wash_leave_in rows kept; the 7 active plans change only at each member's next plan update.",
+    "Q2": "Neqi stays user_submitted and not recommended (no promotion in S3).",
+    "Q3": "Heat-activated products are offered only to users whose heat routine includes the activating route (blow-dry/airflow shaping for both products)."
+  },
+  "reference_inventory": {
+    "42a2fe20-bd7e-49a3-a880-8ae89015a5c9": {
+      "owners": 0,
+      "drafts_by_status": {},
+      "routine_versions": 0,
+      "portfolio_versions": 0,
+      "active_routines": 0
+    },
+    "e781ca9e-886d-40a1-bfe1-48177cfbf381": {
+      "owners": 0,
+      "drafts_by_status": {
+        "completed": 10
+      },
+      "routine_versions": 11,
+      "portfolio_versions": 10,
+      "active_routines": 7,
+      "active_routines_post_wash_slot": 7,
+      "active_routines_pre_heat_slot": 0
+    },
+    "intake_queue_leave_in_v1_1_artifacts": {
+      "note": "submissions whose research artifacts carry leave-in-inci-v1.1 and are not finished",
+      "researching_job_blocked": 1,
+      "researching_job_failed": 1,
+      "ready_for_review": 0
+    }
+  }
+}
