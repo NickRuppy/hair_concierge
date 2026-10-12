@@ -89,14 +89,18 @@ import { expectedShampooBucket, expectedShampooSpecTarget } from "./authority/ca
 import { classifyStage3DesiredState, stage3DraftsSemanticallyEqual } from "./recovery-desired-state"
 import {
   buildStage3FitComparison,
-  candidateTrustRank,
+  candidateTimingRank,
   rankStage3ComparisonCandidates,
   STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
   usablePackagePriceEur,
   type Stage3RankedComparisonCandidate,
   type Stage3SelectedComparisonCandidate,
 } from "./fit-comparison"
-import { budgetNeedDistances } from "./comparison-dimensions"
+import {
+  bondbuilderTimingOf,
+  explicitBondbuilderPickRecommendation,
+} from "./authority/categories/bondbuilder"
+import { budgetRoleRanking } from "./budget-role-ranking"
 import {
   allocateBudgetPortfolio,
   CONCERN_DIMENSIONS,
@@ -672,25 +676,17 @@ export function createProductionStage3ProductsGateway(
         authorityEvaluation,
       )
       // Bondbuilders pair the most trusted affordable product with the most trusted one overall
-      // (Nick, 2026-10-09); trust also guards the uncapped price-mix swaps.
-      const trustPair = subject.category === "bondbuilder"
+      // (Nick, 2026-10-09); trust (and the S4 timing) also guards the uncapped price-mix swaps.
+      // One shared builder for gateway, previews and scan (S4 parity).
       const role: BudgetRoleInput = {
         roleKey: subject.decisionKey,
-        ranked: ranked.map((candidate) => ({
-          productId: candidate.productId,
-          priceEur: usablePackagePriceEur(candidate.facts),
-          verdict: candidate.verdict,
-          cautionCount: candidate.cautionCount,
-          needDistances: budgetNeedDistances(authorityInput, candidate.facts),
-          ...(trustPair ? { trustRank: candidateTrustRank(candidate.facts) } : {}),
-        })),
-        ...(trustPair ? { displayMode: "trust_pair" as const } : {}),
+        ...budgetRoleRanking(authorityInput, ranked),
         required: isRequiredPurchase(
           categoryDecisions.find((decision) => decision.category === subject.category),
           subject.role,
         ),
         ownedKept: choice.ownedKept,
-        preserved: choice.preserved,
+        preserved: preservedRespectingBondbuilderTiming(choice.preserved, authorityInput, ranked),
       }
       return { subject, authorityInput, authorityEvaluation, ranked, role }
     })
@@ -1698,6 +1694,24 @@ function budgetChoiceFor(
 }
 
 /**
+ * S4 P14: an accepted (not hand-picked) Bondbuilder that no longer matches a stated timing is not
+ * preserved, so a changed answer re-picks under a budget too. Explicit picks always stay.
+ */
+function preservedRespectingBondbuilderTiming(
+  preserved: BudgetRoleInput["preserved"],
+  authorityInput: Stage3AuthorityInput,
+  ranked: readonly Stage3RankedComparisonCandidate[],
+): BudgetRoleInput["preserved"] {
+  if (!preserved || preserved.explicit || authorityInput.category !== "bondbuilder") {
+    return preserved
+  }
+  const timing = bondbuilderTimingOf(authorityInput)
+  if (timing === "no_preference") return preserved
+  const candidate = ranked.find((entry) => entry.productId === preserved.productId)
+  return candidate && candidateTimingRank(candidate.facts, timing) === 0 ? preserved : null
+}
+
+/**
  * The evaluation with the budget-allocated default as its recommendation. Only evaluations that
  * offer `plan_recommendation` carry a recommendation; others are returned unchanged. A strict
  * budget without an affordable product yields no recommendation and no `plan_recommendation`.
@@ -1900,7 +1914,9 @@ function buildAuthorityDecision(
   const choiceState = choiceStateForAuthorityAction(intent.action)
   const recommendation =
     intent.action === "select_replacement"
-      ? (selectedCandidate?.recommendation ?? null)
+      ? selectedCandidate?.recommendation
+        ? explicitBondbuilderPickRecommendation(selectedCandidate.recommendation)
+        : null
       : intent.action === "plan_recommendation"
         ? (known?.recommendation ?? null)
         : null

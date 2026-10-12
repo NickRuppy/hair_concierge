@@ -1,5 +1,9 @@
 import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
-import type { Stage3CategoryProductFacts } from "@/lib/personal-plan/products/authority/contracts"
+import { bondbuilderShortlist } from "@/lib/personal-plan/products/authority/categories/bondbuilder"
+import type {
+  Stage3AuthorityInput,
+  Stage3CategoryProductFacts,
+} from "@/lib/personal-plan/products/authority/contracts"
 import { evaluateStage3Authority } from "@/lib/personal-plan/products/authority/evaluate"
 import type { Stage3SelectionProfile } from "@/lib/personal-plan/products/authority/selection-profile"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
@@ -15,7 +19,8 @@ import type {
  * Equal-fit options for one Idealplan step (Nomi consult finish, plan T1).
  *
  * When an authority resolves a tie with a house default (Bondbuilder:
- * `bondbuilder.stage3.tie_default` → K18), the default is only one of several products that
+ * `bondbuilder.stage3.tie_default` → K18, or the Q1 order `tie_ordered`), the default is only one
+ * of several products that
  * evaluate exactly as well. The call may pick any of them — so the cockpit lists the others
  * next to the default. They come from the SAME candidate list and the SAME authority input
  * the preview used: no new ranking, no new rule, and nothing printed or hashed until a
@@ -87,6 +92,17 @@ export function discoveryEqualOptions(input: {
   )
   if (!tied) return []
 
+  // Bondbuilder (S4 G1): exactly the authority's own tie set — the most trusted level, narrowed to
+  // the stated timing — never a lower-trust product that merely evaluates ideal on its own.
+  const tieSet =
+    input.category === "bondbuilder"
+      ? new Set(
+          bondbuilderShortlist(
+            authorityInput as unknown as Stage3AuthorityInput<"bondbuilder">,
+          ).pool.map((candidate) => candidate.productId),
+        )
+      : null
+
   return input.candidates
     .filter(
       (candidate) =>
@@ -95,6 +111,7 @@ export function discoveryEqualOptions(input: {
         candidate.isActive &&
         candidate.lifecycleStatus === "active",
     )
+    .filter((candidate) => tieSet === null || tieSet.has(candidate.productId))
     .filter((candidate) => {
       const evaluation = evaluateStage3Authority({
         ...authorityInput,

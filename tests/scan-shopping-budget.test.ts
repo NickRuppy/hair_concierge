@@ -684,3 +684,111 @@ test("reveal route reads the same budget as resolve and passes it to the verdict
   assert.equal(seen.loads, 1)
   assert.deepEqual(seen.budget, [CAP5])
 })
+
+/* ------------------------------------------- S4 G3: Bondbuilder scan uses the trust pair */
+
+const K18_ID = "38dace91-0fba-49ee-a93f-ac36e488fe4b"
+const CAP15_STRICT: ShoppingBudget = { kind: "capped", limitEur: 15, allowExceptions: false }
+
+function bondbuilderFacts(
+  productId: string,
+  trust: "high" | "medium" | "low",
+  applicationMode: string,
+  priceEur: number,
+) {
+  return {
+    productId,
+    displayName: productId,
+    category: "bondbuilder",
+    isActive: true,
+    lifecycleStatus: "active",
+    recommendable: true,
+    suitableThicknesses: ["fine", "normal", "coarse"],
+    knownReaction: false,
+    protocols: [
+      { role: "specialized_bond_treatment", status: "verified_complete", fingerprint: "test" },
+    ],
+    factFingerprint: `facts-${productId}`,
+    catalogSortOrder: 0,
+    priceEur,
+    currency: "EUR",
+    purchaseLinkStatus: "available",
+    spec: {
+      applicationMode,
+      treatmentMode: applicationMode === "pre_shampoo" ? "rinse_out" : "leave_in",
+      productFormat: "treatment",
+      usageProtocol: "verified_course",
+      relationship: "standalone",
+      claimTrustLevel: trust,
+    },
+  } as never
+}
+
+function bondbuilderScan(
+  overrides: Partial<BuildScanVerdictInput> = {},
+  timing: "before_wash" | "after_wash" | "no_preference" = "no_preference",
+): BuildScanVerdictInput {
+  return input({
+    category: "bondbuilder",
+    decision: {
+      category: "bondbuilder",
+      resolution: "resolved",
+      needTier: "basis",
+      roles: ["specialized_bond_treatment"],
+      target: {
+        category: "bondbuilder",
+        roles: ["specialized_bond_treatment"],
+        requiredFunction: "support_stressed_hair_resilience",
+        mechanismTarget: "mechanism_neutral",
+      },
+      frequency: null,
+      reasons: [],
+      executionState: "available",
+      executionPauseReason: null,
+      deferredFacts: [],
+    } as never,
+    productFacts: bondbuilderFacts("scanned-bond", "low", "pre_shampoo", 20),
+    recommendationCandidates: [
+      bondbuilderFacts("loreal-elvital-bond", "medium", "pre_shampoo", 8.95),
+      bondbuilderFacts("ogx-sealing-serum", "low", "bedtime_leave_in", 18.68),
+      bondbuilderFacts("redken-acidic-bonding", "medium", "pre_shampoo", 25.5),
+      bondbuilderFacts("olaplex-3plus", "high", "pre_shampoo", 34),
+      bondbuilderFacts("epres", "high", "pre_shampoo", 48),
+      bondbuilderFacts("aveda", "low", "pre_shampoo", 52),
+      bondbuilderFacts(K18_ID, "high", "post_wash_leave_in", 56.25),
+      bondbuilderFacts("kerastase-premiere", "medium", "pre_shampoo", 56.29),
+    ],
+    selectionProfile: { ...UNKNOWN_SELECTION_PROFILE, bondbuilderTiming: timing },
+    ...overrides,
+  })
+}
+
+test("S4 G3: capped Bondbuilder scan alternatives use the trust pair (web)", () => {
+  // Same pair as the plan (B-INT-TRUST): best affordable, then the cheapest most trusted.
+  assert.deepEqual(ids(inCatalog(bondbuilderScan({ budget: CAP15_STRICT }))), [
+    "loreal-elvital-bond",
+    "olaplex-3plus",
+    "epres",
+  ])
+  // After the wash: K18 is the best product overall (usage runs, S4 E4).
+  assert.deepEqual(ids(inCatalog(bondbuilderScan({ budget: CAP15_STRICT }, "after_wash"))), [
+    "loreal-elvital-bond",
+    K18_ID,
+    "olaplex-3plus",
+  ])
+})
+
+test("S4 G3: capped Bondbuilder scan alternatives use the trust pair (native, limit five)", () => {
+  assert.deepEqual(
+    ids(inCatalog(bondbuilderScan({ budget: CAP15_STRICT, alternativeSelection: "native" }))),
+    ["loreal-elvital-bond", "olaplex-3plus", "epres", K18_ID, "redken-acidic-bonding"],
+  )
+})
+
+test("S4: uncapped Bondbuilder scan keeps the ranked order (timing first inside a trust level)", () => {
+  assert.deepEqual(ids(inCatalog(bondbuilderScan({ budget: UNCAPPED }, "before_wash"))), [
+    "olaplex-3plus",
+    "epres",
+    K18_ID,
+  ])
+})

@@ -16,17 +16,13 @@ import {
   type Stage3FitComparisonPosition,
 } from "@/lib/personal-plan/products/comparison-dimensions"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
-import {
-  orderStandaloneAlternatives,
-  type BudgetCandidate,
-  type BudgetRoleAllocation,
-} from "@/lib/personal-plan/products/budget-policy"
+import { type BudgetRoleAllocation } from "@/lib/personal-plan/products/budget-policy"
+import { standaloneBudgetViews } from "@/lib/personal-plan/products/budget-role-ranking"
 import {
   buildStage3FitComparison,
   rankStage3ComparisonCandidates,
   STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
   STAGE3_NATIVE_FIT_COMPARISON_ALTERNATIVE_LIMIT,
-  usablePackagePriceEur,
   type Stage3RankedComparisonCandidate,
 } from "@/lib/personal-plan/products/fit-comparison"
 import { isProductMarketSegmentDisplayEnabled } from "@/lib/personal-plan/release"
@@ -254,8 +250,10 @@ function inCatalogPayload(input: BuildScanVerdictInput): ScanInCatalogVerdictPay
     // Standalone ordering only: the price-neutral fit ranking stays the source of fit, the
     // budget just moves affordable products first. No routine quota, no allowance.
     const ranked = rankStage3ComparisonCandidates(authorityInput, best.evaluation, selection)
-    const views = orderStandaloneAlternatives(
-      ranked.map(toBudgetCandidate),
+    // Bondbuilders use the trust pair, exactly like the plan (S4 G3); others: affordable first.
+    const views = standaloneBudgetViews(
+      authorityInput,
+      ranked,
       cappedBudget,
       selection === "native"
         ? STAGE3_NATIVE_FIT_COMPARISON_ALTERNATIVE_LIMIT
@@ -356,16 +354,6 @@ function subtitleFor(
   return hasDimensions
     ? scanTargetSubtitle(coverage.matches, coverage.total)
     : scanCriterionSubtitle(coverage.matches, coverage.total)
-}
-
-function toBudgetCandidate(candidate: Stage3RankedComparisonCandidate): BudgetCandidate {
-  return {
-    productId: candidate.productId,
-    priceEur: usablePackagePriceEur(candidate.facts),
-    verdict: candidate.verdict,
-    cautionCount: candidate.cautionCount,
-    needDistances: {},
-  }
 }
 
 const MARKET_SEGMENT_CATEGORIES: ReadonlySet<PersonalPlanCategory> = new Set([

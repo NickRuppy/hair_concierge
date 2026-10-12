@@ -37,12 +37,11 @@ import {
   type BudgetRoleAllocation,
   type BudgetRoleInput,
 } from "./products/budget-policy"
-import { budgetNeedDistances } from "./products/comparison-dimensions"
+import { budgetRoleRanking } from "./products/budget-role-ranking"
 import { stage3DecisionKey, type PersonalPlanCategory } from "./products/contracts"
 import {
   rankStage3ComparisonCandidates,
   STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
-  usablePackagePriceEur,
 } from "./products/fit-comparison"
 import { statedMainConcernDimensions } from "./products/production-persistence-gateway"
 import { presentCatalogCommerce } from "./routine/commerce"
@@ -354,14 +353,10 @@ function allocateProposal(
     return [
       {
         roleKey: assessment.decisionKey,
-        ranked: rankStage3ComparisonCandidates(authorityInput, evaluation, "web").map(
-          (candidate) => ({
-            productId: candidate.productId,
-            priceEur: usablePackagePriceEur(candidate.facts),
-            verdict: candidate.verdict,
-            cautionCount: candidate.cautionCount,
-            needDistances: budgetNeedDistances(authorityInput, candidate.facts),
-          }),
+        // The gateway's own builder: trust pair + timing for Bondbuilders (S4 G2).
+        ...budgetRoleRanking(
+          authorityInput,
+          rankStage3ComparisonCandidates(authorityInput, evaluation, "web"),
         ),
         required: assessment.task.decision.needTier !== "optional",
         ownedKept: false,
