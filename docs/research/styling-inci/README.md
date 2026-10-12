@@ -1,6 +1,6 @@
 # Styling ingredient research
 
-Status: **Phase 2 standard v0.1 ruled (2026-10-11); next Phase 3.** The charter, property set, evidence lexicon v0.1 and classification standard v0.1 exist and encode Nick's rulings SD1–SD5, D1–D8b, PH1-1…16 and PH2-1…12. They are **not calibrated and not locked**: no capture, blind-lane or calibration round has run on the v0.1 rules, and no production adapter exists. This is not matching logic and authorizes no catalog, Supabase, Product Intake or production change.
+Status: **Standard v0.2 (2026-10-12), after blind calibration round 1; next: round-2 re-captures and blind round 2.** The charter, property set, evidence lexicon v0.2 and classification standard v0.2 exist and encode Nick's rulings SD1–SD5, D1–D8b, PH1-1…16, PH2-1…12 and the round-1 rulings R1-Q1…R1-Q4 and R1-T. They are **not calibrated and not locked**: blind round 1 ran on the v0.1 rules (`data/research/styling-inci/v1.0/round-1/`), the PH1-11 lock criteria are not met, and no production adapter exists. This is not matching logic and authorizes no catalog, Supabase, Product Intake or production change.
 
 This directory is the durable entry point for the Styling (one category key `styling`, 12 subtypes) ingredient-classification work. As in every engine, formula-derived product research is kept separate from user fit, and both are kept separate from catalog or production activation.
 
@@ -18,10 +18,12 @@ The folder `v1.0/` is the **artifact root version**. The classification standard
 | Layer | Location | Purpose |
 | --- | --- | --- |
 | Category boundary + market | `v1.0/00_category_charter.md` | Phase 1 charter; proposals P1–P4 ruled (PH1), hold scope, route agreement and Lockenwunder closed by PH2 (§15.2) |
-| Property set | `v1.0/01_property-set-v0.md` | Ruled (PH1-1…6, PH1-15); Phase 2 items closed by PH2-2, 4, 5, 6, 8, 9, 11, 12 (§9, §2.1, §7) |
-| Evidence lexicon | `v1.0/02_evidence_lexicon.v0.1.md` | v0.1 (`styling-lexicon-v0.1`); reflects PH2-4, 5, 8, 9, 12; generic Acrylates Copolymer is conditional (FX-2c) |
-| Classification standard | `v1.0/styling-classification-standard.md` | v0.1 (`styling-inci-v0.1`), Phase 2 ruled 2026-10-11 (PH2-1…12); not calibrated, not locked |
-| Owner rulings ledger | `plans/styling-concept/02-rulings.md` | SD1–SD5, D1–D8b, PH1-1…16 (Nick, 2026-10-09) and PH2-1…12 (2026-10-11) |
+| Property set | `v1.0/01_property-set-v0.md` | Ruled (PH1-1…6, PH1-15); Phase 2 items closed by PH2-2, 4, 5, 6, 8, 9, 11, 12 (§9, §2.1, §7); updated in place for the round-1 rulings (version note, §9 items 16–20) |
+| Evidence lexicon | `v1.0/02_evidence_lexicon.v0.2.md` | v0.2 (`styling-lexicon-v0.2`); adds RG-1 (T_LI vacuity reading) and RG-16 (PQ-69 → FX-R, Malic Acid → PH-1, Polysilicone-9 → SI-4) to v0.1 |
+| Evidence lexicon (round-1 version) | `v1.0/02_evidence_lexicon.v0.1.md` | v0.1 (`styling-lexicon-v0.1`), unchanged; the version blind round 1 ran on |
+| Classification standard | `v1.0/styling-classification-standard.md` | v0.2 (`styling-inci-v0.2`), round-1 rulings folded in 2026-10-12 (changelog under "Version"; open items §13.2); not calibrated, not locked |
+| Owner rulings ledger | `plans/styling-concept/02-rulings.md` | SD1–SD5, D1–D8b, PH1-1…16 (Nick, 2026-10-09), PH2-1…12 (2026-10-11) and R1-Q1…R1-Q4, R1-T (2026-10-12) |
+| Blind round 1 | `data/research/styling-inci/v1.0/round-1/` (`diff.json`, `report.md`) | Two sealed lanes on the frozen v1.0 cohort (107 records); rule gaps RG-1…RG-21, packet issues P-1…P-8, owner questions Q1–Q4 |
 | Concept | `plans/styling-concept/01-styling-concept.md` | Rev. 2: definition, S0, subtypes, property candidates, hold scale, matching sketch |
 | Plan-composition evidence | `plans/styling-concept/03-d5-evidence.md` | Evidence behind D5 (one product per job) |
 | Calibration set | `data/research/styling-inci/concept-v0/calibration-set-r2.json` (built by `build-calibration-r2.js`) | 90 products: 70 Styling, 5 `provisional_boundary`, 15 routed to a neighbour |
@@ -44,4 +46,4 @@ The folder `v1.0/` is the **artifact root version**. The classification standard
 
 ## Next phases
 
-Phase 3 capture (evidence-gate gaps, short subtypes) and blind calibration round 1 on the v0.1 standard (two sealed lanes, a separate sealed S0 packet per PH2-6) → owner rulings on disagreements → Leave-in addendum drafted and queued (PH1-16) → logic lock under the PH1-11 criteria. A production adapter is a separate, explicitly approved step after the lock.
+Round-2 re-captures (P-1…P-8, evidence-gate gaps, short subtypes) → re-freeze under v0.2 → blind round 2 → owner rulings on standard §13.2 and any new disagreements → Leave-in addendum drafted and queued (PH1-16) → logic lock under the PH1-11 criteria. A production adapter is a separate, explicitly approved step after the lock.

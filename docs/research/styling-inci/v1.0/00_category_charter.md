@@ -243,6 +243,6 @@ This charter and all Styling engine phases produce **research artifacts only**. 
 | Phase | Artifact (planned path) | State |
 |---|---|---|
 | 2 · Property set | `v1.0/01_property-set-v0.md` | Ruled (PH1-1…6, PH1-15; Phase 2 items closed by PH2-1…12, 2026-10-11) |
-| 3 · Evidence lexicon | `v1.0/02_evidence_lexicon.v0.1.md` | v0.1 drafted; Phase 2 ruled 2026-10-11 (PH2-4, 5, 8, 9 reflected). Input: LI L5 list + the four vinyl families + rheology exclusion, natural film, wax/lipid, particulate, salt, silicone coat, alcohol-note members, L9 list |
+| 3 · Evidence lexicon | `v1.0/02_evidence_lexicon.v0.2.md` (v0.1 kept as the round-1 version) | v0.1 drafted; Phase 2 ruled 2026-10-11 (PH2-4, 5, 8, 9 reflected); v0.2 after blind round 1 (2026-10-12: RG-1, RG-16). Input: LI L5 list + the four vinyl families + rheology exclusion, natural film, wax/lipid, particulate, salt, silicone coat, alcohol-note members, L9 list |
 | 4 · Standard + calibration | `v1.0/styling-classification-standard.md`, `data/research/styling-inci/v1.0/` | Standard v0.1 ruled 2026-10-11 (PH2-1…12); next: Phase 3 capture + blind calibration round 1. Calibration: the P1 cohort, frozen packets, blind lanes |
 | 5 · Logic lock | lock receipt + artifact manifest | P1 lock criteria (PH1-11 as adjusted by PH1-16) |
