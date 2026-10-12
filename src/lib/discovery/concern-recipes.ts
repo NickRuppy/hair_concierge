@@ -97,7 +97,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
           evidence: "weak",
         },
         {
-          lever: "Hitze reduzieren: seltener, niedrigere Stufe, weniger Durchgänge",
+          lever: "Hitze schonender: niedrigere Stufe, weniger Durchgänge, seltener wo möglich",
           evidence: "moderate",
         },
         {
@@ -159,7 +159,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         when: {
           heat_styling: true,
         },
-        why: "Reduziert messbaren Hitzeschaden, ersetzt aber nicht weniger Hitze.",
+        why: "Reduziert messbaren Hitzeschaden, ersetzt aber keinen schonenden Umgang mit Hitze.",
         evidence: "moderate",
       },
       {
@@ -227,7 +227,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
           evidence: "weak",
         },
         {
-          lever: "Hitze reduzieren; Föhn mit Abstand und in Bewegung",
+          lever: "Hitze schonender; Föhn mit Abstand und in Bewegung",
           evidence: "moderate",
         },
         {
@@ -278,7 +278,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         when: {
           heat_styling: true,
         },
-        why: "Hitze macht die Oberfläche rauer und feuchtigkeitsempfindlicher; Schutz unterstützt, weniger Hitze bleibt wichtiger.",
+        why: "Hitze macht die Oberfläche rauer und feuchtigkeitsempfindlicher; Schutz unterstützt, schonender Umgang mit Hitze bleibt wichtiger.",
         evidence: "moderate",
       },
     ],
@@ -324,7 +324,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
           evidence: "weak",
         },
         {
-          lever: "Reibung und Hitze reduzieren (Handtuch, Bürste, Glätteisen)",
+          lever: "Reibung mindern, Hitze schonender einsetzen (Handtuch, Bürste, Glätteisen)",
           evidence: "moderate",
         },
         {
@@ -376,7 +376,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         when: {
           heat_styling: true,
         },
-        why: "Hitze raut die Oberfläche auf und lässt Farbe verblassen; Schutz unterstützt, weniger Hitze bleibt wichtiger.",
+        why: "Hitze raut die Oberfläche auf und lässt Farbe verblassen; Schutz unterstützt, schonender Umgang mit Hitze bleibt wichtiger.",
         evidence: "moderate",
       },
     ],
@@ -475,7 +475,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         when: {
           heat_styling: true,
         },
-        why: "Hitzeschaden kann das Lockenmuster dauerhaft lockern; Schutz unterstützt, weniger Hitze bleibt wichtiger.",
+        why: "Hitzeschaden kann das Lockenmuster dauerhaft lockern; Schutz unterstützt, schonender Umgang mit Hitze bleibt wichtiger.",
         evidence: "moderate",
       },
     ],
@@ -632,7 +632,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
       levers: [
         {
           lever:
-            "Schadensquelle zuerst reduzieren: weniger Hitze, niedrigere Stufe, weniger Durchgänge",
+            "Schadensquelle zuerst entschärfen: Hitze schonender – niedrigere Stufe, weniger Durchgänge, seltener wo möglich",
           evidence: "strong",
         },
         {
@@ -685,7 +685,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         when: {
           heat_styling: true,
         },
-        why: "Reduziert messbaren Hitzeschaden; steht aber hinter „weniger Hitze“.",
+        why: "Reduziert messbaren Hitzeschaden; steht aber hinter schonendem Umgang mit Hitze.",
         evidence: "moderate",
       },
       {
@@ -709,7 +709,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
       "Kommt zum strapazierten Haar vermehrter Ausfall mit Wurzel, lichter werdendes Haar oder Kopfhautbeschwerden hinzu, gilt die Grenze bei Haarausfall und dünner werdendem Haar. Brennen, Wunden oder starke Reaktion der Kopfhaut nach Färben/Blondieren → ärztlich abklären lassen.",
     conflicts: ["lost_shape", "low_volume_or_weighed_down"],
     talkingPointDe:
-      "So gehen wir es an: Geschädigte Längen kann man nicht heilen, aber wir können sie deutlich geschmeidiger machen und vor allem verhindern, dass neuer Schaden dazukommt – weniger Hitze und Belastung, konsequent Conditioner und Leave-in, und bei blondiertem Haar gezielt ein Bondbuilder. Was wirklich kaputt ist, nehmen wir beim nächsten Schnitt mit.",
+      "So gehen wir es an: Geschädigte Längen kann man nicht heilen, aber wir können sie deutlich geschmeidiger machen und vor allem verhindern, dass neuer Schaden dazukommt – schonender mit Hitze, weniger Belastung, konsequent Conditioner und Leave-in, und bei blondiertem Haar gezielt ein Bondbuilder. Was wirklich kaputt ist, nehmen wir beim nächsten Schnitt mit.",
     callQuestionsDe: [
       "Was glaubst du, woher der Schaden kommt – Blondieren, Färben, Hitze, Kämmen?",
       "Wie oft blondierst oder färbst du, und wann war die letzte Behandlung?",
@@ -809,7 +809,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         },
         {
           lever:
-            "Hitze reduzieren: seltener, niedriger, weniger Durchgänge; Glätteisen nur auf trockenes Haar",
+            "Hitze schonender: niedriger, weniger Durchgänge, seltener wo möglich; Glätteisen nur auf trockenes Haar",
           evidence: "strong",
         },
         {
@@ -844,7 +844,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         when: {
           heat_styling: true,
         },
-        why: "Reduziert Hitzeschaden und Bruch in Tests; steht hinter „weniger Hitze“.",
+        why: "Reduziert Hitzeschaden und Bruch in Tests; steht hinter schonendem Umgang mit Hitze.",
         evidence: "moderate",
       },
       {
@@ -948,7 +948,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         when: {
           heat_styling: true,
         },
-        why: "Hitze ist ein Haupttreiber für neuen Spliss; Schutz unterstützt, weniger Hitze bleibt wichtiger.",
+        why: "Hitze ist ein Haupttreiber für neuen Spliss; Schutz unterstützt, schonender Umgang mit Hitze bleibt wichtiger.",
         evidence: "moderate",
       },
       {
