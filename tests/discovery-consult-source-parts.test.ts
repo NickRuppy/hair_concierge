@@ -3,9 +3,9 @@ import test from "node:test"
 
 import {
   CONSULT_SOURCE_PART_KEYS,
-  changedConsultSourceParts,
   consultSourceParts,
 } from "../src/lib/discovery/consult-brief/hash"
+import { changedConsultSourceParts } from "../src/lib/discovery/consult-brief/source-parts"
 import type { ConsultInput } from "../src/lib/discovery/consult-brief/input"
 import { consultGoldenProfile, consultGoldenSource } from "./fixtures/consult-brief/golden-profiles"
 

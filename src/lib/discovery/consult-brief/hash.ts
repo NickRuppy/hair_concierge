@@ -1,6 +1,7 @@
 import { semanticHash } from "@/lib/personal-plan/routine/canonicalize"
 
 import type { ConsultInput } from "./input"
+import type { ConsultSourcePart } from "./source-parts"
 import { CONSULT_BRIEF_PROMPT_VERSION } from "./prompt"
 
 /**
@@ -26,18 +27,6 @@ export function consultSourceHash(
  * the brief, so a stale brief can say WHAT changed. Every ConsultInput key belongs to exactly
  * one part (a test pins it); `version` carries the assembly and prompt versions.
  */
-export const CONSULT_SOURCE_PART_LABELS = {
-  produkte: "Produkte & Entscheidungen",
-  checkliste: "Checkliste & Recherche",
-  profil: "Profil & Hauptproblem",
-  hitze: "Hitze & Styling",
-  waschen: "Waschrhythmus",
-  wissen: "Wissensbasis",
-  score: "Ausgangswert",
-  version: "Brief-Vorlage",
-} as const
-
-export type ConsultSourcePart = keyof typeof CONSULT_SOURCE_PART_LABELS
 
 export const CONSULT_SOURCE_PART_KEYS: Readonly<
   Record<Exclude<ConsultSourcePart, "version">, ReadonlyArray<keyof ConsultInput>>
@@ -65,18 +54,4 @@ export function consultSourceParts(
     ...parts,
     version: semanticHash({ v: CONSULT_INPUT_VERSION, prompt: promptVersion }),
   }
-}
-
-/**
- * The labels of the parts that differ, in display order. Empty when either side is unknown
- * (a brief stored before the parts existed) — the caller then keeps its generic hint.
- */
-export function changedConsultSourceParts(
-  stored: Readonly<Record<string, string>> | null | undefined,
-  current: Readonly<Record<string, string>> | null | undefined,
-): string[] {
-  if (!stored || !current) return []
-  return (Object.keys(CONSULT_SOURCE_PART_LABELS) as ConsultSourcePart[])
-    .filter((part) => stored[part] !== current[part])
-    .map((part) => CONSULT_SOURCE_PART_LABELS[part])
 }

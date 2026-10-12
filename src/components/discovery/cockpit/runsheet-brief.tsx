@@ -10,7 +10,7 @@ import {
   type DiscoveryCallSheetHabitCommitment,
   type DiscoveryCallSheetPatch,
 } from "@/lib/discovery/call-sheet"
-import { changedConsultSourceParts } from "@/lib/discovery/consult-brief/hash"
+import { changedConsultSourceParts } from "@/lib/discovery/consult-brief/source-parts"
 import {
   CONSULT_LEVER_SPECS,
   consultScoreRange,
