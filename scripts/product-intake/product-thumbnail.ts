@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto"
 
-import sharp from "sharp"
+import sharp, { type Metadata } from "sharp"
 
 export const PRODUCT_SEARCH_THUMBNAIL_VERSION = "search_thumbnail_v1" as const
 export const PRODUCT_SEARCH_THUMBNAIL_SIZE = 144
@@ -23,7 +23,7 @@ function sha256(value: Buffer) {
 export async function generateProductSearchThumbnail(
   canonicalBytes: Buffer,
 ): Promise<ProductSearchThumbnail> {
-  let sourceMetadata: sharp.Metadata
+  let sourceMetadata: Metadata
 
   try {
     sourceMetadata = await sharp(canonicalBytes, {
