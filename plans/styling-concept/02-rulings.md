@@ -103,3 +103,11 @@ Source: `data/research/styling-inci/v1.0/round-2/report.md` and `diff.json` (own
 | R2-H4 | **NEQI Diamond Glass All: the INCI is complete** (pack and neqi-hair.com agree, 14 items); the truncation flag is withdrawn, so R2-Q4 (Leave-in) applies without a block. |
 | R2-H5 | **Feel lines never count as the care half** (R2-Q1), incl. „Verbesserte Geschmeidigkeit" in §11.2; Balea Pro Traumlocken keeps `curl_cream` via D7 before the mixed stop (PH1-12). |
 | R2-H6 | **Claim host rule (owner):** a manufacturer's German-language storefront for the German market counts as C2 whatever its domain ending, when the brand's .de domain points to it (Kevin Murphy: kevinmurphy.com.au/de/de; kevinmurphy.de redirects). English or other-market pages stay C5 (redken.co.uk, evohair.com/us). Redken One United lines found on redken.eu/de-de are C2; the rest are C5. |
+
+## Phase 3 round-3 calibration rulings (2026-10-12)
+
+Source: `data/research/styling-inci/v1.0/round-3/report.md` and `diff.json`.
+
+| ID | Ruling |
+|---|---|
+| R3-L | **Lock criterion „lanes agree" (PH1-11) means resolved, not identical.** Styling v1.0 may lock when every remaining A/B disagreement is resolved — either a lane error proven against a clear rule, or the rule gap behind it closed — **and** a final confirmation round shows only lane errors and no new rule gaps. Literal identity of both lanes on every value is not required. |
