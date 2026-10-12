@@ -51,3 +51,7 @@ Running list; each item is evidence from a freeze packet, not a decision.
 - A34 OGX Biotin & Collagen — Rossmann says "ohne Silikone" but Amodimethicone listed; wheat-protein claim without INCI entry.
 - A04 Balea Hydra Volume — single origin (dm own brand), 13 items; pack photo for tier 1.
 - A19 ISANA MED Anti Schuppen — pack says "reinigt schnell fettendes Haar", web copy says "gegen trockene Kopfhaut".
+
+## Context note 2026-10-12
+- App mechanics ruled in the profi-shampoos session: green/amber derived from `weight` via thickness table T7 (fine: light; normal: light|moderate; coarse: heavy = green, else amber); Monday stays green (X1). Evidence from the app-PR plan (2026-10-10): under T7, coarse-hair green rows drop from ~4–5 of ~20 (research tiers) to ~0 in the calibration set — worth showing Nick once with real Track A counts when the diff is ready.
+- The cross-category fit-verdict model (worktree fit-verdict-model; Passt / Passt bedingt / Passt nicht, additive distance, thickness never a hard gate) will carry the shampoo app changes — the shampoo app PR should build on its shared evaluator.

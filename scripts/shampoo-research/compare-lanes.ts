@@ -51,7 +51,8 @@ const str = (x: unknown) => JSON.stringify(x ?? null)
 
 /** One record's compared decisions, each serialized so equality is exact. */
 export function comparisonFields(record: LaneRecord): Record<string, string> {
-  const dp = record.directProperties
+  // Standard §1.1 nests properties under `directProperties`; accept a flat record too.
+  const dp = (record.directProperties ?? record) as Record<string, unknown>
   const pj = record.projection
   // Standard §1.2 shape (`thicknesses` list) or the calibration-era `thicknessFit` map.
   const fit: Record<string, unknown> = Array.isArray(pj.thicknesses)

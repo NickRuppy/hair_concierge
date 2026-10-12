@@ -1,0 +1,517 @@
+{
+  "blindId": "T413",
+  "inciFingerprintSha256": "351b58a4617384a685f3955f5483548a89bc08c94119b6ca2d8db1ca7cc98165",
+  "identity": {
+    "brand": "head&shoulders",
+    "productName": "head & shoulders Anti-Schuppen Shampoo Classic Clean",
+    "market": "DE",
+    "packSize": "500 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": [
+      "Normalized positions = packet positions.",
+      "E3 cut: Parfum at 6; prominent = 2-5."
+    ]
+  },
+  "sourcesUsed": {
+    "formula": "formula/T413.json (fingerprint 351b58a4617384a685f3955f5483548a89bc08c94119b6ca2d8db1ca7cc98165, source tier 2, completeness complete)",
+    "positioning": [
+      "reveal/T413.json#positioningSources[0] (manufacturer_de, packet grade moderate)",
+      "reveal/T413.json#positioningSources[1] (retailer, packet grade low)"
+    ]
+  },
+  "claimGrading": {
+    "productName": "high",
+    "manufacturer_de": "moderate",
+    "German retailer": "low"
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "general (provisional)",
+      "final": "scalp_active",
+      "evidence": "name",
+      "reason": "7.2"
+    },
+    {
+      "property": "usageRole",
+      "blind": "regular (provisional)",
+      "final": "treatment",
+      "evidence": "dandruff claim + active",
+      "reason": "U3"
+    },
+    {
+      "property": "cleansingStrength/conditioningLevel/weightPotential/dandruffSupport",
+      "blind": "see formula-pass",
+      "final": "unchanged",
+      "evidence": "formula-only properties; no material formula conflict exposed by the reveal"
+    }
+  ],
+  "cleansingStrength": {
+    "value": "moderate",
+    "confidence": "high",
+    "rationale": "C1: defining anionic Sodium Laureth Sulfate (2) (ether/sulfonate type) with prominent buffer(s) Cocamidopropyl Betaine (4) and no prominent reinforcing strong anionic -> moderate. TEA-Dodecylbenzenesulfonate (16) after Parfum (6). Unchanged after unblinding: claims never set cleansing strength (Section 4, 3.2).",
+    "formulaFacts": [
+      {
+        "ingredient": "Sodium Laureth Sulfate",
+        "position": 2,
+        "role": "defining anionic"
+      },
+      {
+        "ingredient": "Sodium Xylenesulfonate",
+        "position": 3,
+        "role": "hydrotrope"
+      },
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 4,
+        "role": "buffer"
+      }
+    ],
+    "counterSignal": [
+      "none material"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "formula/T413.json (fingerprint 351b58a4617384a685f3955f5483548a89bc08c94119b6ca2d8db1ca7cc98165, source tier 2, completeness complete)"
+    ]
+  },
+  "conditioningLevel": {
+    "value": "moderate",
+    "confidence": "moderate",
+    "rationale": "C2 not met: the silicones Dimethiconol (11) and Dimethicone (14) are after Parfum (6), so not early; guar (13), Glycol Distearate (9) and humectants Glycerin (23), Panthenol (25) present. Silicone/guar system plus light routes -> moderate. Unchanged after unblinding: claims never raise or lower conditioning (3.2, C7).",
+    "formulaFacts": [
+      {
+        "ingredient": "Glycol Distearate",
+        "position": 9,
+        "role": "pearlizer"
+      },
+      {
+        "ingredient": "Dimethiconol",
+        "position": 11,
+        "role": "silicone (not early)"
+      },
+      {
+        "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+        "position": 13,
+        "role": "cationic polymer"
+      },
+      {
+        "ingredient": "Dimethicone",
+        "position": 14,
+        "role": "silicone"
+      },
+      {
+        "ingredient": "Glycerin",
+        "position": 23,
+        "role": "humectant"
+      },
+      {
+        "ingredient": "Panthenol",
+        "position": 25,
+        "role": "humectant/comfort"
+      }
+    ],
+    "counterSignal": [
+      "all other C2 elements present; silicone just past the E3 cut"
+    ],
+    "neighboringAlternative": "high",
+    "sources": [
+      "formula/T413.json (fingerprint 351b58a4617384a685f3955f5483548a89bc08c94119b6ca2d8db1ca7cc98165, source tier 2, completeness complete)"
+    ]
+  },
+  "weightPotential": {
+    "value": "moderate",
+    "confidence": "moderate",
+    "rationale": "moderate: silicone/guar deposition system with an ordinary C1 reset gives noticeable but bounded residue. Unchanged after unblinding (claims cannot decide the band, 6.5).",
+    "neighboringAlternative": "high",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "moderate",
+        "rationale": "Dimethiconol (11) + Dimethicone (14) with cationic guar (13): silicone/guar coacervate deposition, after Parfum."
+      },
+      "persistence": {
+        "value": "moderate",
+        "rationale": "Silicone deposited via guar can persist and build."
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C1 ether-sulfate chassis with amphoteric buffer: effective ordinary reset, not strong (no prominent second anionic), not weak."
+      }
+    },
+    "extractedEvidenceByFamily": {
+      "silicone": [
+        [
+          "Dimethiconol",
+          11
+        ],
+        [
+          "Dimethicone",
+          14
+        ]
+      ],
+      "cationic_polymer": [
+        [
+          "Guar Hydroxypropyltrimonium Chloride",
+          13
+        ]
+      ],
+      "payload_lipid": [],
+      "weak_refatter": [
+        [
+          "Tocopheryl Acetate",
+          26
+        ]
+      ],
+      "protein_film": [],
+      "film_former": [],
+      "anionic_surfactant": [
+        [
+          "Sodium Laureth Sulfate",
+          2
+        ],
+        [
+          "TEA-Dodecylbenzenesulfonate",
+          16
+        ]
+      ],
+      "amphoteric_surfactant": [
+        [
+          "Cocamidopropyl Betaine",
+          4
+        ]
+      ],
+      "humectant_context": [
+        [
+          "Glycerin",
+          23
+        ],
+        [
+          "Panthenol",
+          25
+        ]
+      ]
+    },
+    "excludedIngredients": [
+      [
+        "Glycol Distearate",
+        9,
+        "pearlizer"
+      ],
+      [
+        "Cocamide MEA",
+        8,
+        "thickener"
+      ],
+      [
+        "Niacinamide",
+        24,
+        "vitamin"
+      ],
+      [
+        "Trideceth-10",
+        22,
+        "solubilizer"
+      ]
+    ],
+    "whyThisBand": "moderate: silicone/guar deposition system with an ordinary C1 reset gives noticeable but bounded residue.",
+    "whyNotNeighborBand": "Not low: two silicones + guar (W2). Not high: no W-RICH, no second cationic/film former; reset moderate. W1 not applicable (no amodimethicone).",
+    "counterEvidence": [
+      "silicones after Parfum"
+    ],
+    "confidenceLimitingFactor": "Silicone/guar levels unknown.",
+    "formulaFacts": [
+      {
+        "ingredient": "Dimethiconol",
+        "position": 11,
+        "family": "silicone"
+      },
+      {
+        "ingredient": "Dimethicone",
+        "position": 14,
+        "family": "silicone"
+      },
+      {
+        "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+        "position": 13,
+        "family": "cationic_polymer"
+      },
+      {
+        "ingredient": "Tocopheryl Acetate",
+        "position": 26,
+        "family": "weak_refatter"
+      },
+      {
+        "ingredient": "Sodium Laureth Sulfate",
+        "position": 2,
+        "family": "anionic_surfactant"
+      },
+      {
+        "ingredient": "TEA-Dodecylbenzenesulfonate",
+        "position": 16,
+        "family": "anionic_surfactant"
+      },
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 4,
+        "family": "amphoteric_surfactant"
+      },
+      {
+        "ingredient": "Glycerin",
+        "position": 23,
+        "family": "humectant_context"
+      },
+      {
+        "ingredient": "Panthenol",
+        "position": 25,
+        "family": "humectant_context"
+      }
+    ],
+    "counterSignal": [
+      "silicones after Parfum"
+    ],
+    "canonicalFormula": {
+      "fingerprint": "351b58a4617384a685f3955f5483548a89bc08c94119b6ca2d8db1ca7cc98165",
+      "sourceTier": 2,
+      "completeness": "complete",
+      "identityConfidence": "high",
+      "captureDate": "not stated in packet",
+      "normalization": "Normalized positions = packet positions."
+    },
+    "unresolvedFacts": [],
+    "sources": [
+      "formula/T413.json (fingerprint 351b58a4617384a685f3955f5483548a89bc08c94119b6ca2d8db1ca7cc98165, source tier 2, completeness complete)"
+    ]
+  },
+  "focusPrimary": {
+    "value": "scalp_active",
+    "confidence": "high",
+    "rationale": "'Anti-Schuppen' in the exact name (high) + Piroctone Olamine (10).",
+    "formulaFacts": [
+      {
+        "ingredient": "Piroctone Olamine",
+        "position": 10
+      }
+    ],
+    "counterSignal": [
+      "oil and itch wording bundled with dandruff"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources",
+      "formula packet"
+    ]
+  },
+  "focusSecondary": {
+    "value": [],
+    "confidence": "high",
+    "rationale": "No lengths-care positioning.",
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources"
+    ]
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "not_applicable"
+    },
+    "claimRole": "candidate",
+    "counterSignal": [
+      "oil and itch wording bundled with dandruff"
+    ],
+    "neighboringAlternative": "none",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "anti-dandruff (name)",
+        "formulaCompatible": true,
+        "compatibleRoute": "Piroctone Olamine (10)",
+        "decisionReason": "7.2 problem-led"
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [],
+        "independentRoutes": [],
+        "whyDistinctFromPrimary": "none",
+        "exceptionCode": null
+      },
+      "usageRole": {
+        "default": "regular",
+        "triggerCode": "recognized_active_problem_led",
+        "triggerEvidence": [
+          "name 'Anti-Schuppen'",
+          "Piroctone Olamine (10)"
+        ],
+        "losingTriggers": [
+          "frequent: explicit_frequent_non_strong"
+        ],
+        "rationale": "U3; frequent fires ('ideal für die tägliche Anwendung', manufacturer moderate, cleansing moderate) and loses (U1)."
+      }
+    }
+  },
+  "usageRole": {
+    "value": "treatment",
+    "confidence": "high",
+    "rationale": "U3; frequent fires ('ideal für die tägliche Anwendung', manufacturer moderate, cleansing moderate) and loses (U1).",
+    "triggerCode": "recognized_active_problem_led",
+    "triggerEvidence": [
+      "name 'Anti-Schuppen'",
+      "Piroctone Olamine (10)"
+    ],
+    "losingTriggers": [
+      "frequent: explicit_frequent_non_strong"
+    ],
+    "formulaFacts": [],
+    "counterSignal": [
+      "frequent: explicit_frequent_non_strong"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources"
+    ]
+  },
+  "scalpComfortTarget": {
+    "value": "not_targeted",
+    "confidence": "high",
+    "rationale": "Itch wording is inside dandruff units ('Juckreiz im Zusammenhang mit Schuppen'); no separate SC1 unit; CSA fails.",
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources",
+      "formula packet"
+    ]
+  },
+  "dandruffSupport": {
+    "value": "supported",
+    "confidence": "high",
+    "rationale": "Complete INCI contains Piroctone Olamine (10) (Section 11) -> supported (formula only; dandruff target still needs an E2 dandruff claim, S-DANDRUFF/R17.3).",
+    "neighboringAlternative": "none",
+    "formulaFacts": [
+      {
+        "ingredient": "Piroctone Olamine",
+        "position": 10,
+        "role": "recognised anti-dandruff active"
+      }
+    ],
+    "counterSignal": [
+      "none"
+    ],
+    "sources": [
+      "formula/T413.json (fingerprint 351b58a4617384a685f3955f5483548a89bc08c94119b6ca2d8db1ca7cc98165, source tier 2, completeness complete)"
+    ]
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate -> acceptable. T2: thickness/texture claims do not change fit."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate -> ideal. T2: thickness/texture claims do not change fit. T4: weightPotential neighbor high -> acceptable (lower tier) -> review_thickness_boundary."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate, C moderate -> acceptable. T2: thickness/texture claims do not change fit."
+      }
+    ],
+    "weight": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential moderate -> 1:1 projection; confidence = weightPotential confidence."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "dandruff",
+        "confidence": "high",
+        "rationale": "S-DANDRUFF: name 'Anti-Schuppen' (high) + supported. Primary dandruff, no secondary (R17.2)."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate -> regular. I3: neighbor none (high confidence, no boundary check)"
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "rationale": "D1: no D1 stem (tiefenrein / deep clean / clarifying shampoo / detox-reinigung) in name or manufacturer/pack claims, no occasional-use directions."
+    },
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_dandruff"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:normal (weightPotential neighbor high -> acceptable)"
+    ],
+    "informationalNotes": [
+      "suits_dandruff_with_oily_scalp ('3X SCHUTZ ... Schuppen, Öl und Juckreiz', '... fettige Kopfhaut', manufacturer moderate; S-OILY clause passes: cleansing moderate, W moderate, C moderate)",
+      "dandruff_bundled_comfort_wording ('Juckreiz im Zusammenhang mit Schuppen', manufacturer moderate; S-SENSITIVE formula gate failed: CSA fails, no prominent E4 comfort route)"
+    ],
+    "researchCombinationTargets": [
+      "oily"
+    ]
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsAndPriorLabelsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": "Silicone/guar levels unknown.",
+    "comparisonWithEarlierValuesOnlyOutsideLane": true,
+    "formulaPropertiesChangedAfterUnblinding": false
+  },
+  "uncertainties": [
+    {
+      "reading": "conditioning moderate (silicone not early per E3)",
+      "alternative": "high"
+    },
+    {
+      "reading": "weight neighbor high",
+      "alternative": "low"
+    }
+  ]
+}
