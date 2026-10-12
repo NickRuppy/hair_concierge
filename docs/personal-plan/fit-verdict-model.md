@@ -31,14 +31,14 @@ Exact = 0 steps ⇒ Passt. 1 step ⇒ Passt bedingt. 2+ steps ⇒ Passt nicht.
 
 | Axis | Scale | Categories |
 |---|---|---|
-| Thickness | fine – normal – coarse | shampoo, conditioner, mask, oil, leave-in (leave-in currently unchecked; docs say it must be) |
+| Thickness | fine – normal – coarse | shampoo only in the no-scalp-issue cell (`normal` / `balanced`; R19, 2026-10-12), conditioner, mask, oil, leave-in (leave-in currently unchecked; docs say it must be) |
 | Weight | light – moderate – rich | conditioner, mask, oil (leave-on), leave-in |
 | Care direction | protein – balanced – moisture | conditioner, mask, leave-in (a `balanced` user target vs a moisture product is 1 step ⇒ Passt bedingt if it is the only miss) |
 | Repair support vs need | at/above = 0; 1 below = 1; 2 below = 2 | conditioner, mask, leave-in |
 | Cleansing intensity | gentle – regular – strong | shampoo |
 | Tint / scalp sensitivity | match = 0; other = 1 | dry shampoo (per its decision doc; today has no middle level) |
 
-Categories with no degree axis today (deep cleanser, scalp care, heat protectant) keep gates only; their verdict set is Passt / Passt nicht / Nicht geprüft. Shampoo stops dropping thickness-conditional products before evaluation: the research envelope's `conditional` thickness fit is emitted as a 1-step row, not discarded, so a thickness miss is reported as a thickness reason, never as "deckt die Shampoo-Aufgabe nicht ab".
+Categories with no degree axis today (deep cleanser, scalp care, heat protectant) keep gates only; their verdict set is Passt / Passt nicht / Nicht geprüft. Shampoo stops dropping thickness-conditional products before evaluation: the research envelope's `conditional` thickness fit is emitted as a 1-step row, not discarded, so in the no-scalp-issue cell a thickness miss is reported as a thickness reason, never as "deckt die Shampoo-Aufgabe nicht ab". In scalp cells, thickness is informational and passing (R19, 2026-10-12).
 
 ## 4. Combination rule (ruled 2026-10-12: additive)
 
@@ -72,7 +72,7 @@ Recommended by **trust in the technology** (reviewed/approved tiers per the 2026
 These are implementation consequences of §1–§6, not new rulings.
 
 1. **Distance-preserving facts.** The loader must keep near rows, not only exact ones:
-   - shampoo: `catalog-facts.ts` (~1154–1168) selects exact thickness + bucket + route and turns everything else into `targetFit: "known_mismatch"`, which `categories/shampoo.ts` (~112–120) reports as a wrong-job miss. Bucket and route stay exact (gates); thickness must carry its distance.
+   - shampoo: `catalog-facts.ts` (~1154–1168) selects exact thickness + bucket + route and turns everything else into `targetFit: "known_mismatch"`, which `categories/shampoo.ts` (~112–120) reports as a wrong-job miss. Bucket and route stay exact (gates); thickness carries distance only in the no-scalp-issue cell (R19, §7b).
    - conditioner: `catalog-facts.ts` (~1195–1207) selects exact thickness + care direction; same fix, both are degree axes.
    - oil: `catalog-facts.ts` (~1253–1260) projects thickness to an exact boolean and `categories/oil.ts` (~46–56) drops `false`; replace with the product's thickness set so distance is computable.
    - mask / leave-in already copy spec values; leave-in gains the thickness axis (§3).
@@ -84,6 +84,8 @@ These are implementation consequences of §1–§6, not new rulings.
 7. **Retired wording elsewhere:** `discovery/cockpit-copy.ts` (~31–34) and the quiz scanner demo `quiz/scan-insert-examples.ts` (~251–271 aggregation, ~299–307 hard-coded mask row) adopt the four labels and the additive rule.
 
 ### 7b. Rulings on the review questions (Nick, chat 2026-10-12)
+
+- **R19 Scalp concern decides shampoo fit (2026-10-12).** `shampoo_everyday` with bucket `normal`, route `balanced`, and no irritation/dry-scalp constraint is the no-scalp-issue cell: thickness distance stays unchanged. Oily (`dehydriert-fettig` / `oily`), dry (`trocken` / `dry`), irritated (`irritationen` / `irritated`), and dandruff (`shampoo_dandruff`, `schuppen` / `dandruff`) cells exclude thickness from the step sum and required fit facts; retain a passing informational `shampoo.thickness` row for plan/scanner display and coverage ranking. Cleansing distance and all gates remain unchanged. For coarse hair only, equally fitting scalp-cell candidates rank by gentler cleansing after verdict, target matches, and cautions, before catalog order/price (including native alternatives before price). Fine/normal ranking is unchanged. New usage guidance copy is out of scope pending Nick's approval.
 
 - **Q1 Scanner actions — same buttons for every verdict.** The scanner keeps its buy/save footer; "Trotzdem kaufen" is retired ("Trotzdem" confuses users). Every verdict shows the same two actions: "Kaufen" (with price when known) and "Speichern" (Benutze ich schon / Merkliste). Only the verdict label and reason lines differ. "Wechseln" / "Trotzdem behalten" stay plan-only (owned products). Supersedes §5 for the scanner.
 - **Q2 Heat protectant — same as others.** A heat protectant owned without verified heat protection offers `acknowledge_override` + `leave_uncovered` (+ `plan_recommendation` when a candidate exists), like every category.

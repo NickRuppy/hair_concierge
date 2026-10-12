@@ -18,7 +18,11 @@ import type {
 import { bondbuilderTrustRank } from "./authority/categories/bondbuilder"
 import { evaluateStage3Authority } from "./authority/evaluate"
 import { supportiveOwnedRecommendation } from "./authority/supportive-owned-recommendation"
-import { compareRankableCandidates, type RankableCandidate } from "./candidate-ranking"
+import {
+  compareRankableCandidates,
+  shampooGentlenessRank,
+  type RankableCandidate,
+} from "./candidate-ranking"
 import {
   candidateDimensionCoverage,
   comparisonDimensions,
@@ -133,6 +137,7 @@ type CandidateAssessment = Stage3SelectedComparisonCandidate & {
   targetMatchCount: number
   targetCount: number
   cautionCount: number
+  shampooGentleness?: number
   priceEur: number | null
 }
 
@@ -463,6 +468,7 @@ function toRankableCandidate(candidate: CandidateAssessment): RankableCandidate 
     verdict: candidate.verdict,
     targetMatchCount: candidate.targetMatchCount,
     cautionCount: candidate.cautionCount,
+    shampooGentleness: candidate.shampooGentleness,
     catalogSortOrder: candidate.catalogSortOrder,
     priceEur: candidate.priceEur,
     productId: candidate.productId,
@@ -471,9 +477,9 @@ function toRankableCandidate(candidate: CandidateAssessment): RankableCandidate 
 
 /**
  * Invariant: the authority's pinned recommendation only breaks ties among candidates already
- * equal on verdict, coverage, and cautions — it never overrides those fields. Implemented by
+ * equal on verdict, coverage, cautions, and shampoo gentleness — it never overrides those fields. Implemented by
  * running the shared comparator twice: once with catalogSortOrder/priceEur/productId neutralized
- * (isolating verdict/coverage/cautions), then — only on a genuine tie — the pin, then the full
+ * (isolating verdict/coverage/cautions/gentleness), then — only on a genuine tie — the pin, then the full
  * comparator (which restores catalogSortOrder/priceEur/productId) for the remaining tiebreaks.
  */
 function compareWithAuthorityPin(
@@ -515,13 +521,15 @@ function boundedSelectedComparisonCandidateAssessments(
   return [...bounded.slice(0, STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT - 1), kept]
 }
 
-/** Native carousel policy is presentation-only: verdict, then comparable EUR price, then ID. */
+/** Native carousel: verdict, R19 coarse scalp gentleness, comparable EUR price, then ID. */
 function compareNativePresentationCandidates(
   left: CandidateAssessment,
   right: CandidateAssessment,
 ): number {
   const verdict = left.verdict === right.verdict ? 0 : left.verdict === "ideal" ? -1 : 1
   if (verdict !== 0) return verdict
+  const gentleness = (left.shampooGentleness ?? 0) - (right.shampooGentleness ?? 0)
+  if (gentleness !== 0) return gentleness
   const price = (candidate: CandidateAssessment) =>
     candidate.facts.currency === "EUR" &&
     Number.isFinite(candidate.priceEur) &&
@@ -557,6 +565,7 @@ function assessCandidate(
     targetMatchCount: coverage.matches,
     targetCount: coverage.total,
     cautionCount: detached.criteria.filter((criterion) => criterion.result === "caution").length,
+    shampooGentleness: shampooGentlenessRank(input, candidate),
     priceEur: candidate.priceEur ?? null,
   }
 }
