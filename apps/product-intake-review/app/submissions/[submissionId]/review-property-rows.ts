@@ -58,7 +58,6 @@ const SPEC_TABLE_COLUMNS: Record<(typeof SPEC_TABLE_ORDER)[number], string[]> = 
     "color_treated_suitability",
   ],
   product_bondbuilder_specs: [
-    "bond_repair_intensity",
     "application_mode",
     "bond_repair_axis",
     "treatment_mode",

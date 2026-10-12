@@ -40,7 +40,6 @@ import {
   PRODUCT_BOND_APPLICATION_MODES,
   PRODUCT_BOND_PRODUCT_FORMATS,
   PRODUCT_BOND_REPAIR_AXES,
-  PRODUCT_BOND_REPAIR_INTENSITIES,
   PRODUCT_BOND_TREATMENT_MODES,
   PRODUCT_BOND_USAGE_PROTOCOLS,
   PRODUCT_PEELING_TYPES,
@@ -104,7 +103,6 @@ const conditionerSpecsSchema = z.object({
 
 const bondbuilderSpecsSchema = z
   .object({
-    bond_repair_intensity: z.enum(PRODUCT_BOND_REPAIR_INTENSITIES).nullable().optional(),
     application_mode: z.enum(PRODUCT_BOND_APPLICATION_MODES).nullable().optional(),
     bond_repair_axis: z.enum(PRODUCT_BOND_REPAIR_AXES).nullable().optional(),
     treatment_mode: z.enum(PRODUCT_BOND_TREATMENT_MODES).nullable().optional(),
@@ -132,7 +130,6 @@ const bondbuilderSpecsSchema = z
       "research_profile",
     ] as const
     const legacyKeys = [
-      "bond_repair_intensity",
       "application_mode",
       "bond_repair_axis",
       "treatment_mode",
@@ -234,6 +231,20 @@ export const chatFeedbackSchema = z.object({
   score: z.union([z.literal(-1), z.literal(1)]),
 })
 
+/**
+ * A recommended product must keep a market segment (DB CHECK
+ * products_recommended_requires_market_segment). Checked before any write so an admin update
+ * that would clear it never commits its spec changes first. `requested` undefined = unchanged.
+ */
+export function recommendedProductLosesMarketSegment(input: {
+  recommended: boolean | null
+  current: string | null
+  requested: string | null | undefined
+}): boolean {
+  const next = input.requested === undefined ? input.current : input.requested
+  return input.recommended === true && next == null
+}
+
 export const productSchema = z
   .object({
     name: z.string().min(1, "Name ist erforderlich."),
@@ -257,8 +268,8 @@ export const productSchema = z
     suitable_concerns: z.array(z.string()).default([]),
     is_active: z.boolean().default(true),
     lifecycle_status: z.enum(["active", "discontinued"]).default("active"),
-    // Optional until the approved classification backfill makes it required (then enforced by
-    // a DB CHECK); validated against the enum whenever it is sent.
+    // Validated against the enum whenever it is sent. A recommended product needs one (DB CHECK
+    // products_recommended_requires_market_segment, since the 2026-10-09 backfill).
     market_segment: z.enum(["drugstore", "professional"]).nullable().optional(),
     sort_order: z.number().int().default(0),
     conditioner_specs: conditionerSpecsSchema.nullable().optional(),

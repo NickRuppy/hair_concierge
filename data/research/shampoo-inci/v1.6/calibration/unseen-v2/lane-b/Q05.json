@@ -1,0 +1,301 @@
+{
+ "blindId": "Q05",
+ "policy": "shampoo-classification-v1.6-candidate",
+ "identity": {
+  "brand": "Syoss",
+  "productName": "Men Intense Power Deep Caring Shampoo",
+  "packSize": "440 ml",
+  "market": "DE",
+  "formulaSource": "frozen packet canonicalInci (treated as approved canonical full-INCI capture, ID-1)",
+  "normalization": "ID-2: 'Aqua (Water, Eau)' is one entry; normalized positions = packet positions (22 entries)",
+  "formulaFingerprint": "sha256(newline-joined normalized INCI) = d15b94b1a7f3168a04653e4dddc8df487e02e8156a776cea13933bfd062bad67",
+  "prominenceCutoff": "E3: Parfum (Fragrance) at #8 -> prominent = #1-#7",
+  "claimInciConflicts": "none: 'Koffein' -> Caffeine #6; keratin implied -> Hydrolyzed Keratin #5; 'ohne Silikone' consistent",
+  "sourceGrading": "CL-SRC/E1: two German retailer sources = low; English manufacturer page = low (E1 foreign-language; same claims in German only in retailer copy, so graded low); product name 'Men Intense Power Deep Caring Shampoo' = high"
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "C1: defining anionic Sodium Laureth Sulfate #2 (ether type); prominent buffer Cocamidopropyl Betaine #4; Coco-Glucoside #9 is after Parfum (C4: recorded, not a buffer); no reinforcing anionic -> moderate. Laureth-4 #14 is a low-ethoxylate thickener/emulsifier (C3 not a route).",
+   "ruleIds": [
+    "C3",
+    "C4",
+    "C1",
+    "E3",
+    "N-ALT"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "Section 5 anchors: several light routes - prominent Hydrolyzed Keratin #5 (protein film), weak refatters Glyceryl Oleate #10 and PEG-7 Glyceryl Cocoate #12, pearlizing Glycol Distearate #13, waxy Hydrogenated Castor Oil #15, late cationic Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #18. C2 not met: no early silicone, no prominent payload_lipid, and no R11 humectant (Propylene Glycol #22 is excluded). Counter-signal toward low: the only cationic is near the end and every lipid route is post-fragrance. 'Deep Caring' name word cannot raise the level (3.2, C7).",
+   "ruleIds": [
+    "C2",
+    "R11",
+    "E3",
+    "C7",
+    "3.2",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidenceByFamily": {
+    "protein_film": [
+     "Hydrolyzed Keratin #5"
+    ],
+    "weak_refatter": [
+     "Glyceryl Oleate #10",
+     "PEG-7 Glyceryl Cocoate #12"
+    ],
+    "payload_lipid": [
+     "Hydrogenated Castor Oil #15 (waxy, late)"
+    ],
+    "cationic_polymer": [
+     "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #18"
+    ],
+    "silicone": [],
+    "film_former": [],
+    "anionic_surfactant": [
+     "Sodium Laureth Sulfate #2"
+    ],
+    "amphoteric_surfactant": [
+     "Cocamidopropyl Betaine #4"
+    ],
+    "nonionic_surfactant": [
+     "Coco-Glucoside #9 (post-fragrance)"
+    ],
+    "humectant_context": []
+   },
+   "excluded": [
+    "Glycol Distearate #13 (pearlizing wax, 6.4)",
+    "PEG-120 Methyl Glucose Dioleate #16 (PEG thickener, 6.4)",
+    "Laureth-4 #14 (thickener/emulsifier)",
+    "Caffeine #6 (active, not a deposition route)",
+    "Propylene Glycol #22 (solvent)",
+    "Hexyl Cinnamal #17, Tetramethyl Acetyloctahydronaphthalenes #19, Citronellol #21 (fragrance)"
+   ],
+   "unresolved": [],
+   "depositionLoad": {
+    "value": "light",
+    "rationale": "Only prominent deposition route is a water-soluble hydrolyzed protein; all other families are post-fragrance and late (refatters #10/#12, HCO #15, guar #18)."
+   },
+   "persistence": {
+    "value": "low",
+    "rationale": "Hydrolyzed keratin is a low-persistence rinse-off film; no silicone, film former or prominent lipid; late guar weakly retained."
+   },
+   "resetCapacity": {
+    "value": "moderate",
+    "rationale": "C1 ether-sulfate chassis with a prominent betaine buffer."
+   },
+   "whyThisBand": "Light, low-persistence deposition against an effective ordinary reset.",
+   "whyNotNeighborBand": "W2 (several families): the only prominent family is a hydrolyzed protein (water-soluble, low substantivity in rinse-off); the cationic (HP guar #18) and the waxy lipid (HCO #15) are after Parfum and after the PEG thickener, i.e. late/trace; the rest are weak_refatters. No silicone, no prominent cationic or lipid, so combined residue stays below noticeable against the C1 reset.",
+   "confidenceLimitingFactor": "Keratin level (part of a claimed 4% complex) unknown; several weak families together could tip to moderate.",
+   "rationale": "6.6 subjudgments light/low/moderate -> low. W1 n/a. 'Deep Caring' hidden during judgment and cannot raise the band (6.5).",
+   "ruleIds": [
+    "6.3",
+    "6.4",
+    "6.5",
+    "6.6",
+    "W2",
+    "W3",
+    "W1",
+    "6.8",
+    "N-ALT"
+   ]
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "repair",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [],
+    "repairRoutes": [
+     "Hydrolyzed Keratin #5"
+    ],
+    "sharedConditioningRoutes": [
+     "Glyceryl Oleate #10",
+     "PEG-7 Glyceryl Cocoate #12",
+     "Hydrogenated Castor Oil #15",
+     "HP Guar HPTC #18"
+    ],
+    "limitation": "One protein token is not a repair cluster (7.3); no humectant cluster."
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "'stärkt das Haar von innen' (retailer/English manufacturer, low) and prominent Hydrolyzed Keratin #5 point to repair; name word 'Deep Caring' is generic care.",
+   "decisionTrace": {
+    "claimDirection": "hair growth/root stimulation (F5, ignored); remaining: generic care, strengthening (low)",
+    "formulaCompatible": "no specialist verdict (nonspecific)",
+    "compatibleRoute": "none specialist",
+    "decisionReason": "F5 removes the dominant caffeine/hair-growth claims; remaining low-graded strengthening claim can only be a candidate with an independent repair_supported verdict, which the formula lacks -> general."
+   },
+   "rationale": "F5 + 7.3/F1 + CL-SRC -> general.",
+   "ruleIds": [
+    "F5",
+    "7.2",
+    "7.3",
+    "F1",
+    "CL-SRC",
+    "E1",
+    "F-TRACE",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingDistinctClaims": "none graded moderate/high; 'erfrischt' is not a focus",
+    "independentRoutes": "none",
+    "exceptionCode": null
+   },
+   "rationale": "Section 8: no distinct positioning with an independent route.",
+   "ruleIds": [
+    "8",
+    "F5",
+    "CL-SRC"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Section 9 default; no frequency, reset, D1 or dandruff trigger; 'Deep Caring' does not match the D1 stem 'deep clean'.",
+   "ruleIds": [
+    "9",
+    "D1",
+    "CL-SRC",
+    "F-TRACE"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No E2 sensitive/dry scalp unit (SC1); 'stimuliert die Haarwurzeln' is hair-growth positioning (out of scope, E2).",
+   "ruleIds": [
+    "10",
+    "SC1",
+    "E2",
+    "S-HAIRLOSS"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Section 11: no Piroctone Olamine / Climbazole.",
+   "ruleIds": [
+    "11"
+   ]
+  }
+ },
+ "projection": {
+  "status": "proposal (blocked by review flags)",
+  "thicknesses": [
+   {
+    "thickness": "fine",
+    "fit": "ideal",
+    "confidence": "moderate"
+   },
+   {
+    "thickness": "normal",
+    "fit": "ideal",
+    "confidence": "moderate"
+   },
+   {
+    "thickness": "coarse",
+    "fit": "acceptable",
+    "confidence": "moderate"
+   }
+  ],
+  "thicknessFit": {
+   "fine": "ideal",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessRationale": "T1: W low -> fine/normal ideal; coarse acceptable (C moderate). T2: 'für normales Haar' not a fit input. Confidence lowest T1 input (13.8).",
+  "weight": "light",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: low -> light.",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "confidence": "moderate",
+    "rationale": "S-ORDINARY ways 1 (no qualifying E2 claim unit; manufacturer source present -> high) and 2 (only scalp-adjacent positioning is hair growth/root stimulation, S-HAIRLOSS -> moderate); lowest = moderate (13.8 mixed ways)."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "observedCleansingIntensity": "regular",
+  "cleansingIntensity": "regular",
+  "observedCleansingIntensityConfidence": "high",
+  "intensityRationale": "I1 moderate -> regular; matches normal bucket; I3 none.",
+  "positioning": {
+   "explicitResetPositioning": false,
+   "rationale": "D1: 'Deep Caring' is not a D1 stem."
+  },
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserRationale": "D2 not met.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   {
+    "code": "review_thickness_boundary",
+    "detail": "fine: ideal -> acceptable if weightPotential were moderate (T4)"
+   }
+  ],
+  "informationalNotes": [
+   {
+    "code": "hair_loss_claim_not_evaluated",
+    "detail": "'aktiviert Haarwachstumsfaktoren', 'stimuliert die Haarwurzeln', 4% Koffein-Energy-Komplex - out of scope (S-HAIRLOSS, F5)"
+   }
+  ],
+  "catalogDependent": "review_live_value_differs resolved by orchestrator after freeze (13.9, 14)"
+ },
+ "uncertainties": [
+  "W2 (weightPotential): five weak/late deposition families incl. prominent Hydrolyzed Keratin #5; read as low, moderate is the realistic neighbor.",
+  "E1: English manufacturer page graded low; claims there have German equivalents only in retailer copy (also low)."
+ ]
+}

@@ -218,6 +218,10 @@ test-screenshots*/
 !/data/research/leave-in-inci/**
 /data/research/leave-in-inci/**/lab-review-state.json
 /data/research/leave-in-inci/**/rework-queue.json
+!/data/research/shampoo-inci/
+/data/research/shampoo-inci/*
+!/data/research/shampoo-inci/v1.6/
+!/data/research/shampoo-inci/v1.6/**
 /data/research/mask-inci/**/lab-review-state.json
 !/data/research/bondbuilder-inci/
 !/data/research/bondbuilder-inci/**

@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { validateBondbuilderResearchProfile } from "@/lib/bondbuilder-research/production-adapter"
-import { productSchema } from "@/lib/validators"
+import { productSchema, recommendedProductLosesMarketSegment } from "@/lib/validators"
 import { ERR_UNAUTHORIZED, ERR_FORBIDDEN, ERR_INVALID_DATA, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
 import { isBondbuilderCategory } from "@/lib/bondbuilder/constants"
@@ -162,7 +162,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
   const { data: existing, error: existingError } = await supabase
     .from("products")
-    .select("category, category_key")
+    .select("category, category_key, is_chaarlie_recommended, market_segment")
     .eq("id", id)
     .single()
 
@@ -192,6 +192,18 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     market_segment: requestedMarketSegment,
     ...productPayloadWithoutSegment
   } = parsed.data
+  if (
+    recommendedProductLosesMarketSegment({
+      recommended: existing.is_chaarlie_recommended,
+      current: existing.market_segment,
+      requested: requestedMarketSegment,
+    })
+  ) {
+    return NextResponse.json(
+      { error: "Empfohlene Produkte brauchen ein Marktsegment (Drogerie oder Profi)." },
+      { status: 400 },
+    )
+  }
   const productPayload =
     requestedMarketSegment === undefined
       ? productPayloadWithoutSegment

@@ -1,0 +1,144 @@
+{
+  "blindId": "P06",
+  "identity": {
+    "productName": "Wahre Schätze Sanfte Hafermilch",
+    "brand": "Wahre Schätze (Garnier)",
+    "market": "DE",
+    "packSize": "300 ml",
+    "formulaSource": "frozen packet canonicalInci (tier not stated; treated as approved canonical capture, ID-1)",
+    "normalizedInciCount": 27,
+    "formulaFingerprintSha256": "1e402352b15d085029055c82d226d2001ead763d87d876f4d3a9611833bd8eab",
+    "fingerprintMethod": "lane-computed SHA-256 of ID-2-normalized INCI names joined with ', '",
+    "positioningSourceGrades": "manufacturer moderate; retailers low; product name high (no scalp word: 'Sanfte' is mildness)",
+    "conflicts": "Claims 'Reiscreme' -> Oryza Sativa Starch (9); 'Hafermilch' -> Avena Sativa Kernel Extract (8); mapped (ID-3), no conflict.",
+    "e3Point": "Parfum is last (27), so every ingredient 1-26 is prominent under E3."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "strong",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate (2) with exactly one prominent buffer Coco-Betaine (3), no reinforcing route. PPG-5-Ceteth-20 (10) and PEG-55 Propylene Glycol Oleate (11) are not routes (C3). Counter-signals toward low (Soybean Oil 6, Dicaprylyl Ether 13, cationic polymers) recorded but cannot move the C1 value; the realistic unknown is the single buffer's level -> neighbor strong.",
+      "ruleIds": ["C1", "C3", "C4", "E3", "N-ALT", "§4"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High via C2 with a payload lipid in place of the early silicone: prominent Glycine Soja Oil (6) (+ Dicaprylyl Ether 13), cationic polymers Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (19) and Polyquaternium-7 (22) (prominent only because Parfum is last), pearlizing Glycol Distearate (4), humectant Glycerin (5). Counter-signal: no silicone, polymers sit after salt/pH adjusters (likely low level), liquid oil -> neighbor moderate.",
+      "ruleIds": ["C2", "§5", "E3", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "formulaIdentifiers": {"fingerprint": "1e402352b15d085029055c82d226d2001ead763d87d876f4d3a9611833bd8eab", "sourceTier": "frozen packet canonical INCI (tier not stated)", "captureDate": "not stated in packet"},
+      "evidenceByFamily": {
+        "silicone": [],
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (19)", "Polyquaternium-7 (22)"],
+        "cationic_conditioner": [],
+        "payload_lipid": ["Glycine Soja Oil / Soybean Oil (6)", "Dicaprylyl Ether (13)"],
+        "weak_refatter": [],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["anionic: Sodium Laureth Sulfate (2)", "amphoteric: Coco-Betaine (3)"],
+        "humectantContext": ["Glycerin (5)", "Aloe Barbadensis Leaf Juice (7)", "Propylene Glycol (18)"],
+        "excluded": ["Glycol Distearate (4) - pearlizer (6.4)", "PPG-5-Ceteth-20 (10), PEG-55 Propylene Glycol Oleate (11) - PEG/PPG thickener/solubilizer", "PEG-60 Hydrogenated Castor Oil (12) - solubilizer (6.4)", "Carbomer (15), Xanthan Gum (21) - rheology modifiers", "Oryza Sativa Starch (9) - starch absorbent/texturizer", "Dilauryl Thiodipropionate (14), Tocopherol (23) - antioxidants", "Avena Sativa Kernel Extract (8) - botanical comfort extract"],
+        "unresolved": []
+      },
+      "depositionLoad": {"value": "moderate", "rationale": "Prominent liquid soybean oil and an emollient ether with two cationic polymers: rich architecture by W-RICH, but polymers are at low-level positions and there is no silicone."},
+      "persistence": {"value": "moderate", "rationale": "Guar + PQ-7 can accumulate; soybean oil is a liquid (less substantive than waxy) lipid."},
+      "resetCapacity": {"value": "moderate", "rationale": "SLES with one betaine buffer: effective ordinary reset, not limited."},
+      "counterEvidence": "W-RICH is formally met (prominent payload lipid converging with cationic deposition), pulling toward high.",
+      "whyThisBand": "Lipid plus two cationic polymers plausibly leave noticeable but bounded residue; sulfate reset and the absence of silicone/waxy lipid bound it.",
+      "whyNotNeighborBand": "Not high: the high anchor needs multiple persistent systems or a rich architecture with limited reset; here reset is a normal SLES chassis, the lipid is a liquid oil, the polymers are listed after salt/NaOH and there is no silicone. Not low: W-RICH and two cationic polymers make 'lightweight' an understatement (W2).",
+      "limitingFactor": "W-RICH present with moderate reset: realistic unknowns (oil level) could move it to high.",
+      "rationale": "Moderate (depositionLoad moderate, persistence moderate, resetCapacity moderate); neighbor high.",
+      "ruleIds": ["§6.3", "§6.4", "§6.6", "W-RICH", "W2", "W3", "§6.9", "N-ALT"],
+      "selfCheck": "Fingerprint matches; blind formula judgment; no count/position assigned band; three subjudgments present; whyNotNeighborBand specific; no in-lane comparison."
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "moderate",
+      "neighboringAlternative": "moisture",
+      "careDirection": {"verdict": "not_applicable", "moistureRoutes": [], "repairRoutes": [], "sharedConditioningRoutes": [], "limitation": "Primary is the scalp role; moisture verdict recorded under focusSecondary."},
+      "claimRole": "candidate",
+      "counterSignal": "Lengths-care moisture/geschmeidig copy competes; SLES chassis; fragrance (last) and salicylic acid preservative.",
+      "rationale": "Scalp_active: F7 - product carries qualifying sensitive scalp units ('wirkt beruhigend auf die juckende Kopfhaut', 'für ... sensible Kopfhaut', 'Erleichterung bei juckender Kopfhaut'; manufacturer, moderate) and a moisture lengths claim; neither role is named in the exact product name ('Sanfte Hafermilch'), so scalp_active is primary because scalpComfortTarget is targeted (F7.2).",
+      "decisionTrace": {"claimDirection": "sensitive/itchy scalp (manufacturer, moderate)", "formulaCompatible": true, "compatibleRoute": "Avena Sativa Kernel Extract (8, prominent E4 comfort route) in a betaine-buffered chassis with fragrance listed last", "decisionReason": "F7 step 2: neither role in name -> problem-led scalp role primary, formula-compatible via targeted."},
+      "ruleIds": ["F7", "§7.2", "SC1", "E2", "CL-SRC", "F-TRACE"]
+    },
+    "focusSecondary": {
+      "value": ["moisture"],
+      "confidence": "moderate",
+      "neighboringAlternative": "empty",
+      "careDirection": {"verdict": "moisture_supported", "moistureRoutes": ["Glycerin (5)", "Aloe Barbadensis Leaf Juice (7)"], "repairRoutes": [], "sharedConditioningRoutes": ["Glycine Soja Oil (6)", "Dicaprylyl Ether (13)", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (19)", "Polyquaternium-7 (22)"], "limitation": "Rinse-off; humectant cluster is glycerin-led."},
+      "claimRole": "candidate",
+      "counterSignal": "Moisture copy is partly an outcome of conditioning; liquid oil and polymers are shared conditioning routes.",
+      "rationale": "Moisture as secondary: distinct manufacturer positioning ('spendet Feuchtigkeit und sorgt für geschmeidiges Haar', moderate), independent route (glycerin/aloe humectant cluster plus soybean oil and cationic polymers) that shares no ingredient with the primary's oat-extract comfort route (F3); moisture_supported (F1).",
+      "decisionTrace": {"emptyDefaultConsidered": true, "selected": ["moisture"], "matchingClaims": ["spendet Feuchtigkeit und sorgt für geschmeidiges Haar (manufacturer)"], "independentRoutes": ["Glycerin (5), Aloe (7), Soybean Oil (6), Guar (19), PQ-7 (22)"], "whyDistinct": "Lengths hydration vs scalp comfort; different ingredients (F3).", "exceptionCode": null},
+      "ruleIds": ["§8", "F1", "F3", "F7", "F-TRACE"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "rationale": "Regular: no U2 frequency wording, no reset intent, no D1, no dandruff.",
+      "decisionTrace": "default regular; no trigger fired.",
+      "ruleIds": ["§9", "U1", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "not_targeted",
+      "rationale": "Targeted: explicit E2 sensitive/itch units graded moderate (manufacturer) (SC1); supportive architecture: prominent Avena Sativa Kernel Extract (8, listed comfort route), Glycerin (5), Aloe (7), refatting Soybean Oil (6), betaine buffer, fragrance listed last; 'hochverträglich/ECARF' is mildness only. Counter-signals: SLES chassis at moderate strength, Salicylic Acid (26) preservative.",
+      "ruleIds": ["§10", "SC1", "E2", "E4", "CL-SRC"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No Piroctone Olamine or Climbazole; Salicylic Acid alone does not count.",
+      "ruleIds": ["§11"]
+    }
+  },
+  "projection": {
+    "thicknessFit": {"fine": "acceptable", "normal": "ideal", "coarse": "ideal"},
+    "thicknessFitDetail": {
+      "fine": {"confidence": "moderate", "rationale": "T1 W moderate -> acceptable. T4: W neighbor high -> not_suited, T6 lifts to acceptable (sensitive target) -> unchanged, no flag."},
+      "normal": {"confidence": "moderate", "rationale": "T1 W moderate -> ideal. T4: W neighbor high -> acceptable (lower) -> flag normal."},
+      "coarse": {"confidence": "moderate", "rationale": "T1 C high -> ideal. T4: C neighbor moderate (with W moderate) -> acceptable (lower) -> flag coarse; W neighbor high keeps ideal."},
+      "ruleIds": ["T1", "T4", "T6", "13.8"]
+    },
+    "weight": "moderate",
+    "weightDetail": {"confidence": "moderate", "rationale": "W-LIVE moderate -> moderate.", "ruleIds": ["W-LIVE"]},
+    "scalpTargets": {"primary": "sensitive", "secondary": null},
+    "scalpTargetsDetail": {
+      "primary": {"target": "sensitive", "bucket": "irritationen", "route": "irritated", "confidence": "moderate", "rationale": "S-SENSITIVE: positioning = manufacturer sensitive/itch units (moderate); formula = scalpComfortTarget targeted + prominent E4 comfort route Avena Sativa Kernel Extract (8). cleansingStrength moderate (not strong) -> no comfort-route flag. Confidence = min(positioning moderate, scalpComfortTarget moderate, cleansingStrength moderate)."},
+      "secondary": null,
+      "secondaryConsidered": "No dry, oily or dandruff claim unit.",
+      "ruleIds": ["S-SENSITIVE", "E1", "E2", "E4", "S-PRIMARY", "13.8"]
+    },
+    "cleansingIntensity": "regular",
+    "cleansingIntensityDetail": {"confidence": "moderate", "rationale": "I1 moderate -> regular; irritationen expects gentle -> amber (I2). I3: current already differs from expected -> no flag.", "ruleIds": ["I1", "I2", "I3"]},
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserDetail": {"confidence": "moderate", "rationale": "D1 false; D2 not met.", "ruleIds": ["D1", "D2"]},
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "irritationen", "scalp_route": "irritated", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable"},
+      {"thickness": "normal", "shampoo_bucket": "irritationen", "scalp_route": "irritated", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "irritationen", "scalp_route": "irritated", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal"}
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": [
+      {"code": "review_thickness_boundary", "detail": "normal: weightPotential neighbor high would make normal acceptable (T4)."},
+      {"code": "review_thickness_boundary", "detail": "coarse: conditioningLevel neighbor moderate would make coarse acceptable (T4)."}
+    ],
+    "informationalNotes": []
+  },
+  "uncertainties": [
+    "C2 met via payload lipid with cationic polymers that are 'prominent' only because Parfum is listed last; C2 does not require polymer prominence, so lane applied it, at moderate confidence."
+  ]
+}

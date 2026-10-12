@@ -1,0 +1,106 @@
+{
+  "blindId": "L14",
+  "status": "projected_with_review",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: Sodium Laureth Sulfate #2 buffered by Coco-Betaine #3, no second anionic or reset route, no reset intent (C1); refatting Glycerin #5 and Glycine Soja Oil #6.",
+      "ruleIds": ["C1", "§4"],
+      "formulaFacts": ["Sodium Laureth Sulfate #2", "Coco-Betaine #3", "Glycine Soja Oil #6"],
+      "counterSignal": "SLES primary in a sensitive-scalp product",
+      "neighboringAlternative": "none"
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High: multiple complementary systems - pearlizing Glycol Distearate #4, humectant Glycerin #5, payload lipid Glycine Soja Oil #6 (§6 row), emollient Dicaprylyl Ether #13, and two cationic polymers (Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #19, Polyquaternium-7 #22). Analogous to C2 with an oil in place of the silicone.",
+      "ruleIds": ["§5", "C2"],
+      "formulaFacts": ["Glycol Distearate #4", "Glycerin #5", "Glycine Soja Oil #6", "Dicaprylyl Ether #13", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #19", "Polyquaternium-7 #22"],
+      "counterSignal": "no silicone; both cationics are late (after Sodium Chloride #16)",
+      "neighboringAlternative": "moderate"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: depositionLoad moderate (early soybean oil #6, emollient ether #13, late cationics), persistence low-moderate (oils, no silicone), resetCapacity moderate (SLES/betaine). Bounded residue plausible from interacting lipid/cationic routes; not a rich 2-in-1. PEG-60 Hydrogenated Castor Oil #12 excluded as solubilizer (§6 row).",
+      "ruleIds": ["§6"],
+      "subjudgments": { "depositionLoad": "moderate", "persistence": "moderate", "resetCapacity": "moderate" },
+      "formulaFacts": ["Glycine Soja Oil #6", "Dicaprylyl Ether #13", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #19", "Polyquaternium-7 #22"],
+      "counterSignal": "silicone-free, effective SLES base",
+      "whyThisBand": "interacting lighter lipid and cationic routes",
+      "whyNotNeighborBand": "high needs converging persistent systems with limited reset; low unlikely with an early oil",
+      "neighboringAlternative": "low"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "moderate",
+      "rationale": "scalp_active: 'Beruhigendes Shampoo', 'wirkt beruhigend auf die juckende Kopfhaut', 'ideal für sensible Kopfhaut', ECARF; scalpComfortTarget targeted with a prominent comfort route (Avena Sativa Kernel Extract #8). 7.2 row: explicit sensitive/itchy scalp positioning + targeted.",
+      "ruleIds": ["§7.2", "§10"],
+      "careDirection": { "verdict": "not_applicable", "limitation": "scalp focus" },
+      "claimRole": "candidate",
+      "formulaFacts": ["Aloe Barbadensis Leaf Juice #7", "Avena Sativa Kernel Extract #8", "Glycerin #5"],
+      "counterSignal": "SLES chassis; Parfum #27; moisture/softness claims compete",
+      "neighboringAlternative": "moisture",
+      "decisionTrace": "Soothing itchy/sensitive scalp is the product's named job; formula has oat comfort route and buffered cleansing -> scalp_active."
+    },
+    "focusSecondary": {
+      "value": ["moisture"],
+      "confidence": "moderate",
+      "rationale": "moisture: distinct positioning 'spendet Feuchtigkeit und sorgt für geschmeidiges Haar', 'nährt'; independent lengths route with moisture_supported verdict (Glycerin #5 humectant + Glycine Soja Oil #6, Glycol Distearate #4, cationics #19/#22), separate from the oat/aloe scalp-comfort route.",
+      "ruleIds": ["§8", "§7.3", "F1"],
+      "careDirection": { "verdict": "moisture_supported", "moistureRoutes": ["Glycerin #5", "Aloe Barbadensis Leaf Juice #7"], "sharedConditioningRoutes": ["Glycine Soja Oil #6", "Glycol Distearate #4", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #19"], "limitation": "humectant cluster is thin (glycerin + aloe)" },
+      "counterSignal": "generic 'Feuchtigkeit' language; glycerin shared with scalp comfort",
+      "neighboringAlternative": "none"
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "No daily/frequent, reset or treatment trigger.",
+      "ruleIds": ["§9"],
+      "neighboringAlternative": "none"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "rationale": "Targeted: explicit sensitive/itchy scalp positioning and credible support - buffered cleansing, Glycerin #5, soybean oil refatting #6, Aloe #7, Avena Sativa Kernel Extract #8 comfort route, ECARF-certified. Counter-signals: SLES chassis, Parfum #27, Salicylic Acid #26.",
+      "ruleIds": ["§10"],
+      "counterSignal": "SLES and fragrance",
+      "neighboringAlternative": "not_targeted"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole; Salicylic Acid alone does not upgrade (§11).",
+      "ruleIds": ["§11"],
+      "neighboringAlternative": "none"
+    }
+  },
+  "projection": {
+    "thicknessFit": { "fine": "acceptable", "normal": "ideal", "coarse": "ideal" },
+    "thicknessFitConfidence": { "fine": "moderate", "normal": "moderate", "coarse": "moderate" },
+    "thicknessRationale": "T1 W moderate: fine acceptable, normal ideal, coarse ideal (C high). T6: scalp-concern target, nothing not_suited. T4: C neighbor moderate would make coarse acceptable -> review_thickness_boundary (coarse); W neighbor low raises fits -> no flag.",
+    "weight": "moderate",
+    "weightConfidence": "moderate",
+    "scalpTargets": { "primary": "sensitive", "secondary": null },
+    "scalpTargetRationale": "S-SENSITIVE: E2 'sensible Kopfhaut', 'juckende Kopfhaut', 'beruhigend' (manufacturer, E1 moderate); scalpComfortTarget targeted; prominent comfort route Avena Sativa Kernel Extract #8 (before Parfum #27) -> pass; cleansing not strong -> no review. No dry-scalp, oily or dandruff claim. S-FOCUS satisfied.",
+    "scalpTargetConfidence": "moderate",
+    "cleansingIntensity": "regular",
+    "cleansingIntensityRationale": "I1 moderate -> regular; differs from irritationen's expected gentle, kept per I2 (amber). Cleansing neighbor none -> no I3.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "D1 false.",
+    "rows": [
+      { "thickness": "fine", "shampoo_bucket": "irritationen", "scalp_route": "irritated", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable" },
+      { "thickness": "normal", "shampoo_bucket": "irritationen", "scalp_route": "irritated", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal" },
+      { "thickness": "coarse", "shampoo_bucket": "irritationen", "scalp_route": "irritated", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal" }
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": ["review_thickness_boundary:coarse"],
+    "informationalNotes": []
+  },
+  "uncertainties": [
+    "C2 is anchored on a silicone; the standard does not say whether an early nonvolatile oil can substitute for the silicone in the 'multiple complementary systems' pattern. Resolved high (neighbor moderate), which makes coarse ideal and raises a T4 flag.",
+    "I3 depends on recording a cleansing neighbor; with C1-settled moderate (neighbor none) the sensitive bucket's expected 'gentle' mismatch is never flagged even for a sensitive-scalp product."
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "blindId": "L13",
+  "status": "projected",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: Sodium Laureth Sulfate #2 buffered by Cocamidopropyl Betaine #4 and nonionic Cocamide MEA #8; Sodium Xylenesulfonate #3 is a hydrotrope and TEA-Dodecylbenzenesulfonate #16 a trace emulsifier; no reset intent (C1).",
+      "ruleIds": ["C1", "§4"],
+      "formulaFacts": ["Sodium Laureth Sulfate #2", "Cocamidopropyl Betaine #4", "Cocamide MEA #8", "TEA-Dodecylbenzenesulfonate #16"],
+      "counterSignal": "'Classic Clean' and oily-scalp claim",
+      "neighboringAlternative": "none"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: one silicone/cationic deposition system (Dimethiconol #11, Guar Hydroxypropyltrimonium Chloride #13, Dimethicone #14) plus pearlizing Glycol Distearate #9; humectants Glycerin #23 and Panthenol #25 are trace. Silicones sit after Parfum #6, so the C2 'early silicone' pattern is not met.",
+      "ruleIds": ["§5", "C2"],
+      "formulaFacts": ["Glycol Distearate #9", "Dimethiconol #11", "Guar Hydroxypropyltrimonium Chloride #13", "Dimethicone #14"],
+      "counterSignal": "silicone + cationic + pearlizer + humectants resembles C2 (high)",
+      "neighboringAlternative": "high"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: depositionLoad moderate (silicone gum + dimethicone + guar), persistence moderate, resetCapacity moderate (SLES/betaine). W1-type: silicone + cationic guar in an effective sulfate/betaine base, not a rich 2-in-1.",
+      "ruleIds": ["§6", "W1"],
+      "subjudgments": { "depositionLoad": "moderate", "persistence": "moderate", "resetCapacity": "moderate" },
+      "formulaFacts": ["Dimethiconol #11", "Guar Hydroxypropyltrimonium Chloride #13", "Dimethicone #14"],
+      "counterSignal": "silicones after Parfum; effective cleansing base",
+      "whyThisBand": "one meaningfully persistent silicone/cationic system",
+      "whyNotNeighborBand": "low would need absent/light deposition",
+      "neighboringAlternative": "low"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "rationale": "scalp_active: problem-led 'Anti-Schuppen' product with recognized active Piroctone Olamine #10 (7.2 row).",
+      "ruleIds": ["§7.2"],
+      "careDirection": { "verdict": "not_applicable", "limitation": "scalp focus" },
+      "claimRole": "corroborating",
+      "formulaFacts": ["Piroctone Olamine #10"],
+      "counterSignal": "fragrance early (#6)",
+      "neighboringAlternative": "general",
+      "decisionTrace": "Recognized active + anti-dandruff name -> scalp_active."
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty: the oily-scalp/itch claims are part of the anti-dandruff '3x Schutz' scalp role, and the only route for oil control is the ordinary cleansing chassis (restating cleansing, §8 condition 3).",
+      "ruleIds": ["§8"],
+      "neighboringAlternative": "clarifying"
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "moderate",
+      "rationale": "Treatment: supported anti-dandruff formula with problem-led positioning. The frequent trigger is also met ('ideal für die tägliche Anwendung', cleansing moderate); the problem-led trigger was preferred (§9 has no precedence rule).",
+      "ruleIds": ["§9"],
+      "counterSignal": "explicit daily-use positioning",
+      "neighboringAlternative": "frequent"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "rationale": "Not targeted: itch is claimed only as 'Juckreiz im Zusammenhang mit Schuppen' (a dandruff symptom), not sensitive-scalp positioning; formula has early Parfum #6 and only trace comfort routes (Niacinamide #24, Panthenol #25).",
+      "ruleIds": ["§10"],
+      "counterSignal": "'pflegt die Kopfhaut', 'Juckreiz'",
+      "neighboringAlternative": "targeted"
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains Piroctone Olamine #10.",
+      "ruleIds": ["§11"],
+      "neighboringAlternative": "none"
+    }
+  },
+  "projection": {
+    "thicknessFit": { "fine": "acceptable", "normal": "ideal", "coarse": "acceptable" },
+    "thicknessFitConfidence": { "fine": "moderate", "normal": "moderate", "coarse": "moderate" },
+    "thicknessRationale": "T1 W moderate: fine acceptable, normal ideal, coarse acceptable (C moderate). T6: scalp-concern targets, nothing not_suited. T4: W neighbor low and C neighbor high raise fits -> no flag.",
+    "weight": "moderate",
+    "weightConfidence": "moderate",
+    "scalpTargets": { "primary": "dandruff", "secondary": "oily" },
+    "scalpTargetRationale": "S-DANDRUFF: 'Anti-Schuppen' in name (E1 high) + supported -> pass. S-OILY: distinct E2 claim 'fettige Kopfhaut' (manufacturer, E1 moderate); cleansing moderate, W moderate (not high), C moderate (not high) -> pass. S-SENSITIVE: 'Juckreiz' is an E2 claim but scalpComfortTarget not_targeted and no prominent comfort route (Panthenol/Niacinamide after Parfum #6) -> fails; S-FAIL does not apply because dandruff qualifies. Primary dandruff by name/precedence (S-PRIMARY). S-FOCUS satisfied.",
+    "scalpTargetConfidence": { "dandruff": "high", "oily": "moderate" },
+    "cleansingIntensity": "regular",
+    "cleansingIntensityRationale": "I1 moderate -> regular; equals schuppen and dehydriert-fettig expectations. No neighbor -> no I3.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "D1 false.",
+    "rows": [
+      { "thickness": "fine", "shampoo_bucket": "schuppen", "scalp_route": "dandruff", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable" },
+      { "thickness": "normal", "shampoo_bucket": "schuppen", "scalp_route": "dandruff", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal" },
+      { "thickness": "coarse", "shampoo_bucket": "schuppen", "scalp_route": "dandruff", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable" },
+      { "thickness": "fine", "shampoo_bucket": "dehydriert-fettig", "scalp_route": "oily", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable" },
+      { "thickness": "normal", "shampoo_bucket": "dehydriert-fettig", "scalp_route": "oily", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal" },
+      { "thickness": "coarse", "shampoo_bucket": "dehydriert-fettig", "scalp_route": "oily", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable" }
+    ],
+    "requiredProtocolRoles": ["shampoo_dandruff", "shampoo_everyday"],
+    "reviewFlags": [],
+    "informationalNotes": []
+  },
+  "uncertainties": [
+    "S-SECONDARY: an anti-dandruff product listing oil as one of its '3x Schutz' scalp problems mechanically passes S-OILY and gains a full oily row set. Standard has no rule on whether a secondary scalp claim embedded in the primary problem statement is 'distinct'; also the oily gate has no positioning-strength threshold beyond E1. This is a toward_recommending ambiguity.",
+    "Inconsistency: focusSecondary rejects oil-control (no independent route beyond cleansing, §8), yet S-OILY projects an oily target; S-FOCUS checks only dandruff/sensitive/dry targets against focus, so no review is raised.",
+    "C2 cites an 'early Dimethicone'; the standard does not define 'early' relative to fragrance/E3. Silicones after Parfum treated as not early.",
+    "§9 trigger precedence (treatment vs frequent) undefined."
+  ]
+}

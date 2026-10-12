@@ -1,0 +1,136 @@
+{
+  "blindId": "P07",
+  "identity": {
+    "productName": "Garnier Fructis Locken Methode Feuchtigkeitsauffüllendes Shampoo",
+    "brand": "Garnier Fructis",
+    "market": "DE",
+    "packSize": "200 ml",
+    "formulaSource": "frozen packet canonicalInci (tier not stated; treated as approved canonical capture, ID-1)",
+    "normalizedInciCount": 28,
+    "formulaFingerprintSha256": "e015b98786a4c655ac657e46be038ed0f6166cc74ab78d151d767b45dbf71ea5",
+    "fingerprintMethod": "lane-computed SHA-256 of ID-2-normalized INCI names joined with ', '",
+    "positioningSourceGrades": "product name high ('Feuchtigkeitsauffüllendes'); manufacturer moderate; retailers low",
+    "conflicts": "Claims 'Hyaluron' -> Sodium Hyaluronate (14), 'Shea-Fettsäuren' -> Butyrospermum Parkii Butter (10): mapped. 'Ohne Sulfate' is consistent (olefin sulfonate is not a sulfate) - no conflict."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 sulfonate-type chassis, Sodium C14-16 Olefin Sulfonate (2) defining anionic, buffered by two prominent buffers Cocamidopropyl Betaine (5) and the mild anionic Sodium Lauroyl Sarcosinate (7); no reinforcing route. Cocamide MEA (3) is a foam booster (C3). E3 point Parfum (8). 'Sulfate-free' claim does not move cleansing (3.2).",
+      "ruleIds": ["C1", "C3", "C4", "E3", "§4"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "rationale": "Moderate: several routes but no early silicone and no prominent payload lipid (Shea Butter 10 is after Parfum 8), so C2 is not met: prominent Glycerin (4) and Glycol Distearate (6), plus post-fragrance Shea Butter (10), Sodium Hyaluronate (14), Guar Hydroxypropyltrimonium Chloride (19), Polyquaternium-7 (21). Counter-signal: two cationic polymers + butter + pearlizer make high realistic -> neighbor high.",
+      "ruleIds": ["C2", "§5", "E3", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "formulaIdentifiers": {"fingerprint": "e015b98786a4c655ac657e46be038ed0f6166cc74ab78d151d767b45dbf71ea5", "sourceTier": "frozen packet canonical INCI (tier not stated)", "captureDate": "not stated in packet"},
+      "evidenceByFamily": {
+        "silicone": [],
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (19)", "Polyquaternium-7 (21)"],
+        "cationic_conditioner": [],
+        "payload_lipid": ["Butyrospermum Parkii Butter (10)"],
+        "weak_refatter": [],
+        "protein_film": ["Arginine (16) - free amino acid, trace"],
+        "film_former": [],
+        "reset": ["anionic: Sodium C14-16 Olefin Sulfonate (2)", "amphoteric: Cocamidopropyl Betaine (5), Coco-Betaine (17, non-prominent)", "mild anionic: Sodium Lauroyl Sarcosinate (7)"],
+        "humectantContext": ["Glycerin (4)", "Hexylene Glycol (9)", "Sodium Hyaluronate (14)", "Propylene Glycol (18)"],
+        "excluded": ["Glycol Distearate (6) - pearlizer (6.4)", "Cocamide MEA (3) - foam booster", "Carbomer (11) - rheology modifier", "PEG-55 Propylene Glycol Oleate (12) - PEG thickener"],
+        "unresolved": []
+      },
+      "depositionLoad": {"value": "moderate", "rationale": "Waxy shea butter plus two cationic polymers (guar + PQ-7) converge, though all post-fragrance."},
+      "persistence": {"value": "moderate", "rationale": "Butter is a substantive (waxy) lipid; PQ-7/guar can build up with repeated use."},
+      "resetCapacity": {"value": "moderate", "rationale": "Olefin sulfonate with two buffers: effective, not clarifying."},
+      "counterEvidence": "Every deposition family sits after Parfum; no silicone; no W-RICH (lipid not prominent).",
+      "whyThisBand": "Three converging deposition families (lipid + two cationic polymers) make bounded noticeable residue plausible.",
+      "whyNotNeighborBand": "Not low (W2): two distinct families plus a second cationic polymer converge, and the lipid is a waxy butter - calling it lightweight would understate residue risk. Not high: no W-RICH (butter after Parfum), no silicone, polymers late, effective reset.",
+      "limitingFactor": "All deposition is post-fragrance; actual levels may be low enough for low.",
+      "rationale": "Moderate (depositionLoad moderate, persistence moderate, resetCapacity moderate); neighbor low because all routes are post-fragrance.",
+      "ruleIds": ["§6.3", "§6.4", "§6.6", "W2", "W-RICH", "§6.9", "N-ALT"],
+      "selfCheck": "Fingerprint matches; blind judgment; no count/position assigned band; subjudgments present; W2 reasoning specific; no in-lane comparison."
+    },
+    "focusPrimary": {
+      "value": "moisture",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "careDirection": {"verdict": "moisture_supported", "moistureRoutes": ["Glycerin (4)", "Sodium Hyaluronate (14)"], "repairRoutes": [], "sharedConditioningRoutes": ["Butyrospermum Parkii Butter (10)", "Guar Hydroxypropyltrimonium Chloride (19)", "Polyquaternium-7 (21)"], "limitation": "Rinse-off; '5% Feuchtigkeitskomplex' and '72 Stunden' are not provable from INCI."},
+      "claimRole": "candidate",
+      "counterSignal": "Curl/definition positioning is texture (not a focus); emollient routes are post-fragrance.",
+      "rationale": "Moisture: named in the exact product name ('Feuchtigkeitsauffüllendes', high) and manufacturer copy; formula moisture_supported (humectant cluster glycerin + hyaluronate with emollient/deposition support from shea and two cationic polymers) (F1).",
+      "decisionTrace": {"claimDirection": "moisture (name, high)", "formulaCompatible": true, "compatibleRoute": "Glycerin (4) + Sodium Hyaluronate (14) with Shea Butter (10)", "decisionReason": "Dominant name claim, moisture_supported verdict."},
+      "ruleIds": ["F1", "§7.2", "§7.3", "CL-SRC", "T2", "F-TRACE"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Empty: curl definition/'gebändigt' is texture/outcome wording, not a focus value; no distinct shine/repair positioning with independent route.",
+      "decisionTrace": {"emptyDefaultConsidered": true, "selected": [], "matchingClaims": [], "independentRoutes": [], "exceptionCode": null},
+      "ruleIds": ["§8", "F2", "F-TRACE"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "rationale": "Regular: no frequency, reset, D1 or dandruff trigger.",
+      "decisionTrace": "default regular; no trigger fired.",
+      "ruleIds": ["§9", "U1"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No E2 scalp claim; directions to apply on the scalp are not positioning.",
+      "ruleIds": ["§10", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No Piroctone Olamine or Climbazole; Salicylic Acid (23) alone does not count.",
+      "ruleIds": ["§11"]
+    }
+  },
+  "projection": {
+    "thicknessFit": {"fine": "acceptable", "normal": "ideal", "coarse": "acceptable"},
+    "thicknessFitDetail": {
+      "fine": {"confidence": "moderate", "rationale": "T1 W moderate -> acceptable; W neighbor low -> ideal (higher) -> no flag."},
+      "normal": {"confidence": "moderate", "rationale": "T1 W moderate -> ideal; neighbor low keeps ideal."},
+      "coarse": {"confidence": "moderate", "rationale": "T1 W moderate, C moderate -> acceptable; C neighbor high -> ideal (higher), W neighbor low -> acceptable -> no flag."},
+      "ruleIds": ["T1", "T2", "T4", "13.8"]
+    },
+    "weight": "moderate",
+    "weightDetail": {"confidence": "moderate", "rationale": "W-LIVE moderate -> moderate.", "ruleIds": ["W-LIVE"]},
+    "scalpTargets": {"primary": "ordinary", "secondary": null},
+    "scalpTargetsDetail": {
+      "primary": {"target": "ordinary", "bucket": "normal", "route": "balanced", "confidence": "high", "rationale": "S-ORDINARY way 1 (no qualifying E2 claim unit); packet includes a manufacturer source -> high."},
+      "secondary": null,
+      "ruleIds": ["S-ORDINARY", "13.8"]
+    },
+    "cleansingIntensity": "regular",
+    "cleansingIntensityDetail": {"confidence": "high", "rationale": "I1 moderate -> regular; high confidence -> no I3.", "ruleIds": ["I1", "I3"]},
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserDetail": {"confidence": "high", "rationale": "D1 false; D2 not met.", "ruleIds": ["D1", "D2"]},
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable"},
+      {"thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable"}
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": [],
+    "informationalNotes": []
+  },
+  "uncertainties": [
+    "Arginine recorded as a trace amino-acid film route; immaterial to the band."
+  ]
+}

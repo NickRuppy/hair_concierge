@@ -65,10 +65,10 @@ function breakableLabel(label: string): string {
     .replace("Pflegerichtung", "Pflege­richtung")
 }
 
-const GRID = "grid grid-cols-[68px_16px_minmax(0,1fr)_minmax(0,1fr)] items-center"
+const GRID = "grid grid-cols-[88px_16px_minmax(0,1fr)_minmax(0,1fr)] items-center"
 /** Alternative next to her product: name | her value | the alternative's value | target. */
 const GRID_WITH_OWNED =
-  "grid grid-cols-[68px_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] items-center"
+  "grid grid-cols-[88px_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] items-center"
 
 const OWNED_HEADER = "Bisheriges Produkt"
 const OWNED_ARIA = "bisheriges Produkt"
@@ -137,6 +137,7 @@ export function DiscoveryComparisonTable({
   const productHeader = productHeaderOverride ?? (compact ? ALTERNATIVE_HEADER : "Produkt")
   return (
     <div
+      lang="de"
       data-comparison={compact ? "compact" : "full"}
       className="overflow-hidden rounded-[14px] border border-border bg-card"
     >
@@ -145,7 +146,7 @@ export function DiscoveryComparisonTable({
         className={cn(
           GRID,
           gap,
-          "bg-[#f6f3f0] px-2.5 py-[9px] text-[12px] font-bold uppercase tracking-[0.08em] text-foreground",
+          "bg-[#f6f3f0] px-2.5 py-[9px] text-[11px] font-bold uppercase leading-tight tracking-[0.04em] text-foreground [&>span]:min-w-0",
         )}
       >
         <span />
@@ -165,14 +166,18 @@ export function DiscoveryComparisonTable({
             >
               <span
                 aria-hidden="true"
-                className="hyphens-manual break-words text-[13px] font-semibold leading-tight text-foreground"
+                className="hyphens-auto break-normal text-[13px] font-semibold leading-tight text-foreground"
               >
                 {breakableLabel(row.label)}
               </span>
               <StatusDisc status={row.status} />
               <span
                 aria-hidden="true"
-                className={cn(valueSize, "font-bold leading-snug break-words", status.word)}
+                className={cn(
+                  valueSize,
+                  "font-bold leading-snug hyphens-auto break-normal",
+                  status.word,
+                )}
               >
                 {row.productValue ?? EMPTY_VALUE}
               </span>
@@ -180,7 +185,7 @@ export function DiscoveryComparisonTable({
                 aria-hidden="true"
                 className={cn(
                   valueSize,
-                  "font-semibold leading-snug break-words text-[var(--brand-plum)]",
+                  "font-semibold leading-snug hyphens-auto break-normal text-[var(--brand-plum)]",
                 )}
               >
                 {row.targetValue ?? EMPTY_VALUE}
@@ -212,17 +217,18 @@ function ComparisonWithOwned({
   const gap = "gap-x-1.5"
   return (
     <div
+      lang="de"
       data-comparison="compact-owned"
       className="overflow-hidden rounded-[14px] border border-border bg-card"
     >
       <div className="overflow-x-auto">
-        <div className="min-w-[340px]">
+        <div className="min-w-[360px]">
           <div
             aria-hidden="true"
             className={cn(
               GRID_WITH_OWNED,
               gap,
-              "bg-[#f6f3f0] px-2.5 py-[9px] text-[12px] font-bold uppercase tracking-[0.08em] text-foreground",
+              "bg-[#f6f3f0] px-2.5 py-[9px] text-[10px] font-bold uppercase leading-tight tracking-[0.02em] text-foreground [&>span]:min-w-0",
             )}
           >
             <span />
@@ -248,7 +254,7 @@ function ComparisonWithOwned({
                 >
                   <span
                     aria-hidden="true"
-                    className="hyphens-manual break-words text-[13px] font-semibold leading-tight text-foreground"
+                    className="hyphens-auto break-normal text-[13px] font-semibold leading-tight text-foreground"
                   >
                     {breakableLabel(row.label)}
                   </span>
@@ -258,7 +264,7 @@ function ComparisonWithOwned({
                         <StatusDisc status={hers.status} owned />
                         <span
                           className={cn(
-                            "text-[12px] font-semibold leading-snug break-words",
+                            "text-[12px] font-semibold leading-snug hyphens-auto break-normal",
                             hersStatus.word,
                           )}
                         >
@@ -274,14 +280,17 @@ function ComparisonWithOwned({
                   >
                     <StatusDisc status={row.status} />
                     <span
-                      className={cn("text-[12px] font-bold leading-snug break-words", status.word)}
+                      className={cn(
+                        "text-[12px] font-bold leading-snug hyphens-auto break-normal",
+                        status.word,
+                      )}
                     >
                       {row.productValue ?? EMPTY_VALUE}
                     </span>
                   </span>
                   <span
                     aria-hidden="true"
-                    className="text-[12px] font-semibold leading-snug break-words text-[var(--brand-plum)]"
+                    className="text-[12px] font-semibold leading-snug hyphens-auto break-normal text-[var(--brand-plum)]"
                   >
                     {row.targetValue ?? EMPTY_VALUE}
                   </span>

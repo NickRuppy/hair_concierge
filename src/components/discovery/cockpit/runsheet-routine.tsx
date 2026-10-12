@@ -9,6 +9,10 @@ import {
 } from "@/lib/discovery/runsheet"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
+import {
+  RUNSHEET_DECISION_STATE_LABELS,
+  runsheetDecisionState,
+} from "@/lib/discovery/runsheet/decision-state"
 
 import { RunsheetCard, RunsheetFrequencyChip, RunsheetPhase } from "./runsheet-parts"
 
@@ -33,13 +37,59 @@ const WEEK_COLUMNS = ["Schritt", "Produkt", "Wann", "Zweck"] as const
 const EMPTY_CELL = "–"
 const ROUTINE_FROM_ANSWERS = "Aus den Angaben der Checkliste berechnet (Häufigkeit, Hitze)."
 const HEAT_PROTECTION_ASK = "Hitzeschutz: im Call fragen"
-const PROPOSAL = "Vorschlag"
-const STEP_OPEN = "bleibt offen"
+const STEP_OPEN = "Offen"
 const IN_RESEARCH = "noch in Recherche"
 const CLOSING_QUESTION =
   "Abschlussfrage: „Alles klar so? Passt das in deine Woche?“ — dann festhalten."
 
-/** The step timings (`routineRoleTimingLabel`) that happen on a wash day. */
+/**
+ * Where a step lives in her week (cockpit call-ready A3, Nick 2026-10-09 after the
+ * steps-per-day research): a step appears in EVERY column it belongs to. Wash-only steps sit
+ * on the wash day; a finishing or leave-on oil goes on last on a wash day AND on days
+ * without washing; heat steps follow her hot tools — wash day always, days without washing
+ * only when she uses a hot tool (unknown → both). Scalp serums stay on the wash day by
+ * default (daily use only per label); dry shampoo bridges the days between washes.
+ * Conventions, not hard rules. Unknown roles fall back to the timing label.
+ */
+const WASH_ONLY_ROLES = new Set([
+  "shampoo_everyday",
+  "shampoo_dandruff",
+  "conditioner_rinse_out",
+  "intensive_conditioning_mask",
+  "post_wash_leave_in",
+  "pre_wash_fibre_treatment",
+  "residue_reset",
+  "mineral_reset",
+  "specialized_bond_treatment",
+  "scalp_comfort",
+  "scalp_flake_oil_adjunct",
+  "density_claim_tonic",
+  "scalp_exfoliant",
+])
+const WASH_AND_OFF_ROLES = new Set(["dry_finish", "leave_on_fibre_conditioning"])
+const HEAT_ROLES = new Set(["pre_heat_protection", "pre_heat_application"])
+const OFF_ONLY_ROLES = new Set(["root_refresh_bridge"])
+
+/** The role a decision key names (`decision:<category>:<role>:gap`). */
+function roleOf(decisionKey: string): string | null {
+  return decisionKey.split(":")[2] ?? null
+}
+
+export function runsheetWeekPlacement(
+  decisionKey: string,
+  timingLabel: string | null,
+  hotTool: boolean | null,
+): { washDay: boolean; offDays: boolean } {
+  const role = roleOf(decisionKey)
+  if (role && WASH_ONLY_ROLES.has(role)) return { washDay: true, offDays: false }
+  if (role && WASH_AND_OFF_ROLES.has(role)) return { washDay: true, offDays: true }
+  if (role && HEAT_ROLES.has(role)) return { washDay: true, offDays: hotTool !== false }
+  if (role && OFF_ONLY_ROLES.has(role)) return { washDay: false, offDays: true }
+  const wash = timingLabel !== null && WASH_DAY_TIMINGS.has(timingLabel)
+  return { washDay: wash, offDays: !wash }
+}
+
+/** The step timings (`routineRoleTimingLabel`) that happen on a wash day — the fallback. */
 const WASH_DAY_TIMINGS = new Set([
   "Haarwäsche",
   "Nach Shampoo",
@@ -77,28 +127,57 @@ export type WeekLine = {
  * sums over too, so the two phases can never disagree (fix round 2).
  */
 function productOf(step: DiscoveryCockpitStepView): WeekLine["products"][number] | null {
+  // A1: the label carries the entry's one status (Entschieden · Vorschlag · Offen).
+  const state = runsheetDecisionState({
+    intakeItemId: step.intakeItemId,
+    decision: decisionOf(step.outcome),
+    hasProposal: step.recommendationLabel !== null,
+  })
+  const tagged = (label: string) =>
+    `${RUNSHEET_DECISION_STATE_LABELS[state === "bewusst_ohne" ? "entschieden" : state]}: ${label}`
   if (runsheetEntryInHerWeek(step) && step.ownedLabel) {
-    return { label: step.ownedLabel, proposal: false, owned: true, frequency: step.ownedFrequency }
+    return {
+      label: tagged(step.ownedLabel),
+      proposal: false,
+      owned: true,
+      frequency: step.ownedFrequency,
+    }
   }
   switch (step.outcome) {
     case "swapped":
       return step.swapProductLabel
-        ? { label: step.swapProductLabel, proposal: false, owned: false, frequency: null }
+        ? { label: tagged(step.swapProductLabel), proposal: false, owned: false, frequency: null }
         : null
     case "ideal":
       return step.recommendationLabel
-        ? {
-            label: `${PROPOSAL}: ${step.recommendationLabel}`,
-            proposal: true,
-            owned: false,
-            frequency: null,
-          }
+        ? { label: tagged(step.recommendationLabel), proposal: true, owned: false, frequency: null }
         : null
     case "kept":
     case "undecided":
     case "dropped":
       return null
   }
+}
+
+function decisionOf(outcome: DiscoveryCockpitStepView["outcome"]): "keep" | "swap" | "drop" | null {
+  return outcome === "kept"
+    ? "keep"
+    : outcome === "swapped"
+      ? "swap"
+      : outcome === "dropped"
+        ? "drop"
+        : null
+}
+
+/** An empty step decided without a product (A1: „Bewusst ohne Produkt") — not in her week. */
+function deliberatelyEmpty(step: DiscoveryCockpitStepView): boolean {
+  return (
+    runsheetDecisionState({
+      intakeItemId: step.intakeItemId,
+      decision: decisionOf(step.outcome),
+      hasProposal: step.recommendationLabel !== null,
+    }) === "bewusst_ohne"
+  )
 }
 
 /**
@@ -111,12 +190,25 @@ export function runsheetWeekLineText(line: WeekLine, researchLabel: string | und
   return researchLabel ? `${researchLabel} — ${IN_RESEARCH}` : STEP_OPEN
 }
 
-export function runsheetWeek(steps: readonly DiscoveryCockpitStepView[]): {
+export function runsheetWeek(
+  steps: readonly DiscoveryCockpitStepView[],
+  options: {
+    /** She uses a hot tool (iron, straightener, airflow styler); null = not asked. */
+    hotTool?: boolean | null
+  } = {},
+): {
   washDay: WeekLine[]
   offDays: WeekLine[]
 } {
   const lines = new Map<string, WeekLine>()
+  // A step whose every entry was deliberately left without a product is not part of her week.
+  const skipped = new Set(
+    [...new Set(steps.map((step) => step.decisionKey))].filter((key) =>
+      steps.filter((step) => step.decisionKey === key).every(deliberatelyEmpty),
+    ),
+  )
   for (const step of steps) {
+    if (skipped.has(step.decisionKey)) continue
     const line = lines.get(step.decisionKey) ?? {
       decisionKey: step.decisionKey,
       category: step.category,
@@ -133,9 +225,13 @@ export function runsheetWeek(steps: readonly DiscoveryCockpitStepView[]): {
     lines.set(step.decisionKey, line)
   }
   const all = [...lines.values()]
+  const hotTool = options.hotTool ?? null
+  const placed = all.map(
+    (line) => [line, runsheetWeekPlacement(line.decisionKey, line.timingLabel, hotTool)] as const,
+  )
   return {
-    washDay: all.filter((line) => line.timingLabel && WASH_DAY_TIMINGS.has(line.timingLabel)),
-    offDays: all.filter((line) => !line.timingLabel || !WASH_DAY_TIMINGS.has(line.timingLabel)),
+    washDay: placed.filter(([, at]) => at.washDay).map(([line]) => line),
+    offDays: placed.filter(([, at]) => at.offDays).map(([line]) => line),
   }
 }
 
@@ -145,8 +241,11 @@ export function DiscoveryRunsheetRoutine({
   washChangeNote = null,
   washFrequency = null,
   researchLabels = {},
+  hotTool = null,
 }: {
   view: Pick<DiscoveryCockpitView, "steps" | "heatProtectionAsk" | "routineSource">
+  /** She uses a hot tool (her checklist's heat answers); null = not asked. */
+  hotTool?: boolean | null
   /** Her shampoo frequency from the checklist („3–4× pro Woche"); null when not asked. */
   washFrequencyLabel: string | null
   /** Why the wash frequency changes (`runsheetWashChangeNote`, F2); null = no change. */
@@ -159,7 +258,7 @@ export function DiscoveryRunsheetRoutine({
    */
   researchLabels?: Readonly<Record<string, string>>
 }) {
-  const week = runsheetWeek(view.steps)
+  const week = runsheetWeek(view.steps, { hotTool })
   return (
     <RunsheetPhase number={4} title={TITLE} id="runsheet-phase-4">
       <RunsheetCard title={ROUTINE_LABEL}>

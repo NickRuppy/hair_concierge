@@ -2,6 +2,7 @@ import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities
 import type { Stage3CategoryProductFacts } from "@/lib/personal-plan/products/authority/contracts"
 import { evaluateStage3Authority } from "@/lib/personal-plan/products/authority/evaluate"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
+import { bondbuilderApplication } from "@/lib/personal-plan/products/fit-comparison"
 import { presentCatalogCommerce } from "@/lib/personal-plan/routine/commerce"
 import type {
   InitialNeedPlanSnapshot,
@@ -29,6 +30,24 @@ export type DiscoveryEqualOption = {
   /** The catalog's price label („8,95 €"), display only; null without a price. */
   priceLabel: string | null
   imageUrl: string | null
+  /**
+   * How the product is applied („Vorwäsche, ausspülen", „Leave-in nach der Wäsche", „Abends,
+   * über Nacht im Haar") — what tells equally ideal options apart in the call (E2). Null when
+   * the catalog facts carry no application mode.
+   */
+  applicationLabel: string | null
+}
+
+/** The application label of a candidate whose facts carry one (Bondbuilder specs). */
+export function discoveryApplicationLabelOf(candidate: Stage3CategoryProductFacts): string | null {
+  const spec = (
+    candidate as { spec?: { applicationMode?: string | null; treatmentMode?: string | null } }
+  ).spec
+  if (!spec || (spec.applicationMode == null && spec.treatmentMode == null)) return null
+  return bondbuilderApplication({
+    applicationMode: spec.applicationMode ?? null,
+    treatmentMode: spec.treatmentMode ?? null,
+  })
 }
 
 export function discoveryEqualOptions(input: {
@@ -98,6 +117,7 @@ export function discoveryEqualOptions(input: {
           updatedAt: commerce.priceCheckedAt ?? null,
         }).priceLabel,
         imageUrl: candidate.presentationImageUrl?.trim() || null,
+        applicationLabel: discoveryApplicationLabelOf(candidate),
       }
     })
     .sort(

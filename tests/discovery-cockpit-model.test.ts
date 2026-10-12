@@ -7,10 +7,12 @@ import {
   discoveryCockpitSwapOptionIds,
   discoveryOwnedProductIdentities,
   finalizeDiscoveryCall,
+  loadDiscoveryProductIdentities,
   loadDiscoveryCockpitModel,
   unfinalizeDiscoveryCall,
   setDiscoveryCallDecision,
   type DiscoveryCockpitModel,
+  type DiscoveryProductIdentity,
 } from "../src/lib/discovery/cockpit"
 import type { DiscoveryIdealStep } from "../src/lib/discovery/load-ideal-routine"
 import type { DiscoveryParticipantVerdict } from "../src/lib/discovery/load-participant-verdicts"
@@ -237,12 +239,14 @@ test("a tie-default pick brings its equals: the call may choose any, the route a
     productName,
     priceLabel: "8,95 €",
     imageUrl: `https://catalog.example/${productId}.jpg`,
+    applicationLabel: "Vorwäsche, ausspülen",
   })
   const view = buildDiscoveryCockpitView(
     model({
       steps: [
         step({
           preview: idealPreview(ids.ideal),
+          idealApplicationLabel: "Leave-in nach der Wäsche",
           equalOptions: [
             equal(ids.alternativeA, "Elvital Pre-Shampoo"),
             equal(ids.alternativeB, "Redken Concentrate"),
@@ -262,6 +266,11 @@ test("a tie-default pick brings its equals: the call may choose any, the route a
   )
   assert.equal(view.steps[0].swapOptions[1].verdictLabel, "Passt")
   assert.equal(view.steps[0].swapOptions[1].priceLabel, "8,95 €")
+  // E2: equals are told apart by how they are applied — the pick included.
+  assert.deepEqual(
+    view.steps[0].swapOptions.map((option) => option.applicationLabel),
+    ["Leave-in nach der Wäsche", "Vorwäsche, ausspülen", "Vorwäsche, ausspülen"],
+  )
   assert.deepEqual(discoveryCockpitSwapOptionIds(view, view.steps[0].decisionKey, null), [
     ids.ideal,
     ids.alternativeA,
@@ -269,7 +278,7 @@ test("a tie-default pick brings its equals: the call may choose any, the route a
   ])
 })
 
-test("equal options never move the routine fingerprint (nothing prints until chosen)", () => {
+test("equal options and the pick's application never move the routine fingerprint", () => {
   const plain = composeDiscoveryRefinedRoutine({
     steps: [step({ preview: idealPreview(ids.ideal) })],
     items: [],
@@ -280,12 +289,14 @@ test("equal options never move the routine fingerprint (nothing prints until cho
     steps: [
       step({
         preview: idealPreview(ids.ideal),
+        idealApplicationLabel: "Leave-in nach der Wäsche",
         equalOptions: [
           {
             productId: ids.alternativeA,
             productName: "Elvital Pre-Shampoo",
             priceLabel: null,
             imageUrl: null,
+            applicationLabel: null,
           },
         ],
       }),
@@ -1050,4 +1061,127 @@ test("swap option cards carry the same brand + line + name the PDF would print",
     open.steps[0].swapOptions.map((option) => option.label),
     ["Schwarzkopf Lab Shampoo Ideal"],
   )
+})
+
+// --- Profi / Drogerie segment ---------------------------------------------------------
+
+test("the identity read selects market_segment and surfaces it (unknown → null)", async () => {
+  const selects: string[] = []
+  const client = {
+    from: (table: string) => {
+      assert.equal(table, "products")
+      return {
+        select: (columns: string) => {
+          selects.push(columns)
+          return {
+            in: async () => ({
+              data: [
+                {
+                  id: "p1",
+                  name: "A",
+                  brand: null,
+                  product_line: null,
+                  market_segment: "professional",
+                },
+                {
+                  id: "p2",
+                  name: "B",
+                  brand: null,
+                  product_line: null,
+                  market_segment: "drugstore",
+                },
+                { id: "p3", name: "C", brand: null, product_line: null, market_segment: null },
+                { id: "p4", name: "D", brand: null, product_line: null },
+              ],
+              error: null,
+            }),
+          }
+        },
+      }
+    },
+  }
+  const identities = await loadDiscoveryProductIdentities(client as never, ["p1", "p2", "p3", "p4"])
+  assert.match(selects[0]!, /\bmarket_segment\b/)
+  assert.deepEqual(
+    ["p1", "p2", "p3", "p4"].map((id) => identities.get(id)?.marketSegment),
+    ["professional", "drugstore", null, null],
+  )
+})
+
+test("the step view carries the segment: owned product, swap options and the ideal pick", () => {
+  const withSegment = (
+    segment: "drugstore" | "professional" | null,
+    base: DiscoveryProductIdentity,
+  ): DiscoveryProductIdentity => ({ ...base, marketSegment: segment })
+  const identities = new Map([
+    [ids.owned, withSegment("drugstore", identity("Hyaluron Pure", "L'Oréal Paris"))],
+    [ids.alternativeA, withSegment("professional", identity("Alt A", "Guhl"))],
+    [ids.alternativeB, identity("Alt B", "Guhl")],
+  ])
+  const view = buildDiscoveryCockpitView({
+    ...model({
+      steps: [step({ preview: idealPreview(ids.ideal) })],
+      items: [item()],
+      verdicts: [
+        {
+          itemId: ids.item,
+          productId: ids.owned,
+          status: "verdict",
+          product: productHeader,
+          payload: payload([ids.alternativeA, ids.alternativeB]),
+        },
+      ],
+    }),
+    productIdentities: new Map([
+      ...identities,
+      [ids.ideal, withSegment("professional", identity("Lab Maske", "Schwarzkopf"))],
+    ]),
+  })
+  const only = view.steps[0]!
+  assert.equal(only.ownedMarketSegment, "drugstore")
+  assert.deepEqual(
+    only.swapOptions.map((option) => [option.productId, option.marketSegment]),
+    [
+      [ids.alternativeA, "professional"],
+      [ids.alternativeB, null],
+    ],
+  )
+  assert.equal(only.idealRecommendation?.marketSegment, "professional")
+})
+
+test("the saved swap target's segment is surfaced even when the options no longer list it", () => {
+  const view = buildDiscoveryCockpitView({
+    ...model({
+      steps: [step()],
+      items: [item()],
+      decisions: [swapShampoo],
+      verdicts: [
+        {
+          itemId: ids.item,
+          productId: ids.owned,
+          status: "verdict",
+          product: productHeader,
+          payload: payload([ids.alternativeB]),
+        },
+      ],
+    }),
+    productIdentities: new Map([
+      [ids.alternativeA, { ...identity("Alt A", "Guhl"), marketSegment: "professional" as const }],
+    ]),
+  })
+  const only = view.steps[0]!
+  assert.equal(only.swapProductId, ids.alternativeA)
+  assert.deepEqual(
+    only.swapOptions.map((option) => option.productId),
+    [ids.alternativeB],
+  )
+  assert.equal(only.swapMarketSegment, "professional")
+})
+
+test("without identities every segment is null", () => {
+  const view = buildDiscoveryCockpitView(
+    model({ steps: [step({ preview: idealPreview(ids.ideal) })], items: [item()] }),
+  )
+  assert.equal(view.steps[0]!.ownedMarketSegment, null)
+  assert.equal(view.steps[0]!.idealRecommendation?.marketSegment, null)
 })

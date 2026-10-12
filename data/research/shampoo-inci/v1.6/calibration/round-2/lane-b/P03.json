@@ -1,0 +1,129 @@
+{
+  "blindId": "P03",
+  "formulaIdentity": {
+    "productName": "Salthouse Totes Meer Therapie Anti-Fett Shampoo",
+    "packSize": "250 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "27f0a8ba56b50f87dcb31b2c16f5e94dccde892f29f4d8c3da32e9d771c4f98e",
+    "fingerprintMethod": "sha256 of packet canonicalInci joined with ', '",
+    "sourceTier": "frozen packet canonical INCI; positioning: manufacturer + 2 retailers",
+    "captureDate": "not stated in packet",
+    "completeness": "treated as complete canonical capture (ID-1)",
+    "e3MarkerPosition": "No Parfum declared (orange peel oil, Limonene, mint oil are not the marker, E3); first fallback preservative Sodium Benzoate at 5; prominent = 1-4"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: Sodium Laureth Sulfate (2, ether type) buffered by prominent Cocamidopropyl Betaine (3); no reinforcing anionic; no other cleansing route. Settled core pattern; no counter-signal pointing to a neighbor. 'klärend'/'Anti-Fett' claims cannot move it (Section 4, 3.2).",
+      "ruleIds": ["C1", "C3", "C4", "E3", "4", "3.2"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Cleansing-led: single cationic Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (6) plus humectants Panthenol (11), Glycerin (16), Butylene Glycol (8). No silicone, lipid or pearlizer. Counter-signal toward moderate: guar fairly early (6) can give noticeable wet slip.",
+      "ruleIds": ["5", "C2", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "evidenceByFamily": {
+        "silicone": [],
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (6)"],
+        "cationic_conditioner": [],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["Sodium Laureth Sulfate (2, anionic ether)", "Cocamidopropyl Betaine (3, amphoteric)"],
+        "humectantContext": ["Butylene Glycol (8)", "Panthenol (11)", "Glycerin (16)"],
+        "excluded": ["Maris Sal (7): salt", "Citrus Aurantium Dulcis Peel Oil (12), Mentha Arvensis Leaf Oil (15): essential oils (6.4)", "Menthol (14), Limonene (13): fragrance/cooling", "Botanical extracts (17-21): no deposition role"],
+        "unresolved": []
+      },
+      "subjudgments": {
+        "depositionLoad": {"value": "light", "rationale": "One cationic guar is the only depositing route."},
+        "persistence": {"value": "low", "rationale": "Guar alone, no silicone/lipid/film to anchor residue."},
+        "resetCapacity": {"value": "moderate", "rationale": "C1 SLES/betaine chassis; salt and no refatting."}
+      },
+      "counterevidence": "Guar at position 6 is relatively prominent.",
+      "whyThisBand": "Single light polymer facing moderate reset; no system supports noticeable residue.",
+      "whyNotNeighborBand": "Not moderate: only one deposition family (single guar, W2 not triggered), no reinforcing route; reset capacity makes noticeable residue unlikely (no polymer floor).",
+      "confidenceLimitingFactor": "Guar charge density unknown; immaterial to the band given no second family.",
+      "rationale": "Low: single cationic guar (6), moderate SLES reset, nothing converging (6.6 low anchor).",
+      "ruleIds": ["6.3", "6.4", "6.5", "6.6", "W2", "6.9"]
+    },
+    "focusPrimary": {
+      "value": "clarifying",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "careDirection": {"verdict": "not_applicable", "moistureRoutes": [], "repairRoutes": [], "sharedConditioningRoutes": [], "limitation": "Not a repair/moisture decision."},
+      "claimRole": "candidate",
+      "counterSignal": "No sebum-specific active; cleansing is only moderate (C1); Panthenol/Glycerin humectants present.",
+      "decisionTrace": "Product name 'Anti-Fett' is an E2 oily claim (high); manufacturer 'bei schnell fettender Kopfhaut', 'reguliert die Talgabsonderung' (moderate). F6 compatibility: cleansing moderate, conditioning low (not high), weight low (not high) -> compatible. Route: SLES/betaine cleansing chassis (2, 3) with light deposition. Neurodermitis/Psoriasis basis-care wording is medical and out of scope.",
+      "rationale": "clarifying by F6/7.2: name-level oily-scalp positioning with a compatible formula.",
+      "ruleIds": ["F6", "7.2", "E1", "E2", "CL-SRC"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "decisionTrace": "Empty default considered. 'Panthenol sorgt für ausgeglichenen Feuchtigkeitshaushalt' is a supporting remark, not distinct moisture positioning, and the formula verdict for moisture would be nonspecific (panthenol/glycerin without emollient support).",
+      "rationale": "Empty (Section 8, F3).",
+      "ruleIds": ["8", "F3"]
+    },
+    "usageRole": {
+      "value": "frequent",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "explicit_frequent_non_strong",
+      "triggerEvidence": ["Manufacturer directions: 'Für die tägliche Haarwäsche geeignet.' (moderate)"],
+      "decisionTrace": "Default regular considered. U4 reset intent present ('klärend', oily lexicon) but alternating needs cleansingStrength strong -> not fired. U2 frequency wording graded moderate and cleansing moderate (not strong) -> frequent. D1 false.",
+      "rationale": "Frequent: explicit daily-use wording with non-strong cleansing (U2); alternating blocked by moderate cleansing (U4).",
+      "ruleIds": ["9", "U1", "U2", "U4", "CL-SRC", "F-TRACE"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No E2 sensitive or dry claim unit. 'Problemhaut', 'sehr gute Hautverträglichkeit', 'pH-hautneutral', 'schützt vor Reizeffekten' are mildness/protective (SC1); Neurodermitis/Psoriasis wording is medical, outside E2. Menthol (14) and mint oil (15) are counter-signals.",
+      "ruleIds": ["10", "SC1", "E2", "E2a"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "ruleIds": ["11"]
+    }
+  },
+  "projection": {
+    "thicknessFit": {"fine": "ideal", "normal": "ideal", "coarse": "acceptable"},
+    "thicknessFitConfidence": {"fine": "high", "normal": "high", "coarse": "moderate"},
+    "thicknessRationale": "T1 W low, C low: fine ideal, normal ideal, coarse acceptable. Oily target (scalp-concern) but no not_suited fit, so T6 changes nothing. T4: W high confidence; C neighbor moderate keeps coarse acceptable -> no flag.",
+    "weight": "light",
+    "weightConfidence": "high",
+    "scalpTargets": {"primary": "oily", "secondary": null},
+    "scalpTargetConfidence": {"primary": "moderate"},
+    "scalpTargetRationale": "S-OILY: positioning 'Anti-Fett' in product name (high); formula cleansing moderate, weight low (not high), conditioning low (not high) -> pass. Confidence = lowest of positioning high, cleansing high, weight high, conditioning moderate -> moderate. No other E2 unit.",
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: moderate -> regular; equals the dehydriert-fettig expectation. I3: neighbor none -> no flag.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "D1 false: 'klärend' is not a D1 term (D1 'Not D1'); D2 not met.",
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "dehydriert-fettig", "scalp_route": "oily", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal"},
+      {"thickness": "normal", "shampoo_bucket": "dehydriert-fettig", "scalp_route": "oily", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "dehydriert-fettig", "scalp_route": "oily", "cleansing_intensity": "regular", "weight": "light", "tier": "acceptable"}
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": [],
+    "informationalNotes": []
+  },
+  "uncertainties": [
+    "Medical basis-care wording (Neurodermitis, Psoriasis) is ignored as out of scope; no rule code exists for it beyond Section 1 scope."
+  ]
+}

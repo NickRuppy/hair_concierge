@@ -213,7 +213,7 @@ The shared product identity/lifecycle record plus a canonical Bondbuilder spec m
 | lifecycle and relationships | `active`, `discontinued`, `replaced_by`, `add_on_for` | missing lifecycle/relationship audit = `unknown` |
 | safety/exclusions | verified product/user conflict facts | known conflict = `mismatch`; unverified strong gate = `unknown` |
 | `suitableThicknesses` | verified non-empty suitability array | `null`/missing = `unknown`; `[]` invalid for active recommendation; exclusion = `mismatch` |
-| `bondRepairIntensity` | descriptive `maintenance | intensive` | missing = data gap; not a V1 person-side ranking axis |
+| `bondRepairIntensity` | retired 2026-10-09 | property removed (product column and person-side target); ranking uses `claim_trust_level` |
 | `applicationMode` | `pre_shampoo | post_wash_leave_in` | missing = critical protocol/format gap |
 | `treatmentMode` | `rinse_out | leave_in` | missing = critical protocol gap |
 | `productFormat` | verified format | missing prevents format-preference selection but not need computation |

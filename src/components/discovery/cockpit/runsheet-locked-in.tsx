@@ -2,7 +2,13 @@
 
 import type { ReactNode } from "react"
 
-import type { RunsheetLockedIn } from "@/lib/discovery/runsheet"
+import type { DiscoveryMarketSegment } from "@/lib/discovery/cockpit"
+import {
+  MARKET_SEGMENT_LABELS,
+  runsheetSegmentSummary,
+  type RunsheetLockedIn,
+  type RunsheetSegmentSummary,
+} from "@/lib/discovery/runsheet"
 
 import { RunsheetEyebrow } from "./runsheet-parts"
 
@@ -22,7 +28,7 @@ const GROUP_KEEP = "Behalten"
 const GROUP_DISCARD = "Weglassen"
 const GROUP_SKIP = "Bewusst ohne Produkt"
 const EMPTY = "Noch nichts festgehalten."
-const SKIP_EMPTY_STEP = "Schritt bleibt offen"
+const SKIP_EMPTY_STEP = "kein Produkt nötig"
 const TOTAL = "Summe neu"
 const TOTAL_FROM = "ab"
 const TOTAL_UNKNOWN = "Preis noch offen"
@@ -44,7 +50,19 @@ export function runsheetTotalLabel(
   return `${TOTAL_FROM} ${lockedIn.totalLabel}`
 }
 
+/** „3 von 5 Profi · 2 von 5 Drogerie"; „· 1 ohne Angabe" when a segment is unknown; null for none. */
+export function runsheetSegmentLabel(summary: RunsheetSegmentSummary): string | null {
+  if (summary.total === 0) return null
+  const parts = [
+    `${summary.professional} von ${summary.total} ${MARKET_SEGMENT_LABELS.professional}`,
+    `${summary.drugstore} von ${summary.total} ${MARKET_SEGMENT_LABELS.drugstore}`,
+  ]
+  if (summary.unknown > 0) parts.push(`${summary.unknown} ohne Angabe`)
+  return parts.join(" · ")
+}
+
 export function RunsheetLockedInSection({ lockedIn }: { lockedIn: RunsheetLockedIn }) {
+  const segmentLabel = runsheetSegmentLabel(runsheetSegmentSummary(lockedIn))
   return (
     <section
       aria-labelledby="runsheet-locked-in-title"
@@ -65,6 +83,7 @@ export function RunsheetLockedInSection({ lockedIn }: { lockedIn: RunsheetLocked
               key={`${row.categoryLabel}-${row.label}-${index}`}
               name={row.label}
               detail={row.categoryLabel}
+              segment={row.marketSegment}
               price={row.priceLabel}
             />
           ))
@@ -81,6 +100,7 @@ export function RunsheetLockedInSection({ lockedIn }: { lockedIn: RunsheetLocked
               key={`${row.categoryLabel}-${row.label}-${index}`}
               name={row.label}
               detail={row.categoryLabel}
+              segment={row.marketSegment}
             />
           ))
         )}
@@ -124,6 +144,15 @@ export function RunsheetLockedInSection({ lockedIn }: { lockedIn: RunsheetLocked
       </div>
 
       <p
+        id="runsheet-locked-in-segments"
+        aria-live="polite"
+        aria-atomic="true"
+        className={segmentLabel ? "text-[13px] text-muted-foreground" : "sr-only"}
+      >
+        {segmentLabel}
+      </p>
+
+      <p
         aria-live="polite"
         className={`text-[13px] leading-5 ${
           lockedIn.openCount > 0
@@ -146,15 +175,20 @@ function Empty() {
 function Row({
   name,
   detail,
+  segment,
   price,
 }: {
   name: ReactNode
   detail: ReactNode
+  segment?: DiscoveryMarketSegment | null
   price?: string | null
 }) {
   return (
     <div className="flex flex-wrap items-baseline gap-x-2 text-sm">
       <span className="font-semibold text-foreground">{name}</span>
+      {segment ? (
+        <span className="text-xs text-muted-foreground">{MARKET_SEGMENT_LABELS[segment]}</span>
+      ) : null}
       <span className="text-xs text-muted-foreground">{detail}</span>
       {price ? (
         <span className="ml-auto font-semibold tabular-nums text-foreground">{price}</span>
