@@ -397,6 +397,13 @@ export async function migratedPersonalPlanDatabase(
     await pg.exec(DROP_ENROLLMENTS_COMPILE_STUB)
   }
   if (options.lock !== false) await applyCurrentUserFacts(pg)
+  // NR2/NR3: newest helper/CHECK, after all historical prerequisites. In-memory only.
+  await pg.exec(
+    await readFile(
+      new URL("supabase/migrations/20261012190000_widen_engine_concern_goal_vocabulary.sql", ROOT),
+      "utf8",
+    ),
+  )
   return pg
 }
 

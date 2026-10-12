@@ -5,12 +5,10 @@ import {
   buildProfileDataFromPersonalPlanCanonicalProfile,
   buildProfileDataFromQuizAnswers,
   buildProfilePrimaryConcern,
+  projectQuizAnswersToHistoricalColumnVocabulary,
 } from "@/lib/quiz/legacy-profile-projection"
-import {
-  CONCERN_TO_PROFILE_CONCERN_MAP,
-  normalizeStoredQuizAnswers,
-  projectQuizAnswersToLegacyVocabulary,
-} from "@/lib/quiz/normalization"
+import type { DiagnosticConcern } from "@/lib/quiz/diagnostic-input"
+import { normalizeStoredQuizAnswers } from "@/lib/quiz/normalization"
 
 import { deriveDiagnosticsColumns } from "../derive-legacy-columns"
 import type { DiagnosticsAnswerGroup, HandEditField } from "../hand-edit"
@@ -201,7 +199,7 @@ export function oldWriterColumnsForLead(quizAnswers: unknown): OldWriterColumns 
   const answers = normalizeStoredQuizAnswers(quizAnswers)
   const data = buildProfileDataFromQuizAnswers(answers)
   if (answers.concerns !== undefined) data.primary_concern = buildProfilePrimaryConcern(answers)
-  const goals = projectQuizAnswersToLegacyVocabulary(answers).goals
+  const goals = projectQuizAnswersToHistoricalColumnVocabulary(answers).goals
   if (goals.length > 0) data.goals = goals
   return pickCompared(data)
 }
@@ -338,8 +336,10 @@ function compareColumn(
 }
 
 /** Concern codes a legacy profile editor could never show (no legacy equivalent). */
-function isQuizOnlyConcern(concern: string): boolean {
-  return CONCERN_TO_PROFILE_CONCERN_MAP[concern] === undefined
+function isQuizOnlyConcern(concern: DiagnosticConcern): boolean {
+  return (
+    projectQuizAnswersToHistoricalColumnVocabulary({ concerns: [concern] }).concerns.length === 0
+  )
 }
 
 export type DetectHandEditsInput = {

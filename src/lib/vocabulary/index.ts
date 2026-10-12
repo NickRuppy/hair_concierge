@@ -22,10 +22,11 @@ export {
   PROFILE_CONCERN_LABELS,
   PROFILE_CONCERN_OPTIONS,
   GOALS,
+  ENGINE_GOALS,
   GOAL_LABELS,
   GOAL_OPTIONS,
 } from "./concerns-goals"
-export type { ProfileConcern, Goal } from "./concerns-goals"
+export type { ProfileConcern, Goal, EngineGoal } from "./concerns-goals"
 
 export { HEAT_STYLING_LEVELS, HEAT_STYLING_LABELS, HEAT_STYLING_OPTIONS } from "./frequencies"
 export type { HeatStyling } from "./frequencies"
