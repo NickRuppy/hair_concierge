@@ -29,7 +29,7 @@
  * if any batch brand or product name remains in it.
  *
  * Usage:
- *   npx tsx scripts/shampoo-research/build-lane-kit.ts build <full-packets-dir> <out-dir> --seed <n> [--prefix K]
+ *   npx tsx scripts/shampoo-research/build-lane-kit.ts build <full-packets-dir> <out-dir> --seed <n> [--prefix K] [--standard <path>]
  *   npx tsx scripts/shampoo-research/build-lane-kit.ts release <out-dir> <lane-a|lane-b>
  *
  * The historical builders in data/research/shampoo-inci/v1.6/calibration/ produced single
@@ -49,6 +49,13 @@ import path from "node:path"
 import { pathToFileURL } from "node:url"
 
 const STANDARD_PATH = "docs/research/shampoo-inci/v1.6/classification-standard.md"
+
+/** The locked v1.6 standard unless `--standard` names another text (e.g. a version candidate). */
+export function resolveStandardPath(flagValue: string | undefined) {
+  if (flagValue === undefined) return STANDARD_PATH
+  if (!flagValue.trim()) throw new Error("--standard needs a path to a standard text")
+  return flagValue
+}
 const LANES = ["lane-a", "lane-b"] as const
 
 /** CL-SRC base grade per source kind. A word in the exact product name is always `high`, and a
@@ -517,7 +524,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
       .map((file) => JSON.parse(readFileSync(path.join(args[0]!, file), "utf8")) as FreezePacket)
     const { mapping } = buildLaneKit({
       packets,
-      standardText: readFileSync(STANDARD_PATH, "utf8"),
+      standardText: readFileSync(resolveStandardPath(flag("--standard")), "utf8"),
       outDir: args[1],
       seed: Number(flag("--seed")),
       prefix: flag("--prefix"),
@@ -529,7 +536,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
     console.log(`${releaseReveal(args[0], args[1]).length} reveal packets released to ${args[1]}`)
   } else {
     console.error(
-      "usage: build-lane-kit.ts build <full-packets-dir> <out-dir> --seed <n> [--prefix K]\n" +
+      "usage: build-lane-kit.ts build <full-packets-dir> <out-dir> --seed <n> [--prefix K] [--standard <path>]\n" +
         "       build-lane-kit.ts release <out-dir> <lane-a|lane-b>",
     )
     process.exit(2)

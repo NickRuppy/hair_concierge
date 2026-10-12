@@ -19,6 +19,7 @@ import {
   inciFingerprint,
   releaseReveal,
   resolveInside,
+  resolveStandardPath,
   scrubStandard,
   type FreezePacket,
 } from "../scripts/shampoo-research/build-lane-kit"
@@ -225,6 +226,26 @@ test("the standard scrub fails closed when a batch name survives replacement", (
     () => scrubStandard(`${SCRUB_STANDARD}\nMustermarkes Serie`, scrubBatch()),
     /scrubbed standard still names batch products: .*Mustermarke/,
   )
+})
+
+test("the locked standard's holdout example product does not leak into a Vichy batch's lane copy", () => {
+  const locked = readFileSync("docs/research/shampoo-inci/v1.6/classification-standard.md", "utf8")
+  const batch = [packet({ brand: "Vichy", name: "Dercos Anti-Schuppen Shampoo" })]
+  const scrubbed = scrubStandard(locked, batch)
+  assert.doesNotMatch(scrubbed, /\bVichy\b|\bVICHY\b/)
+  assert.match(scrubbed, /Secondary `gentle` alongside primary `scalp_active`/)
+})
+
+test("the kit builds against the locked standard by default and against an explicit candidate path", () => {
+  assert.equal(
+    resolveStandardPath(undefined),
+    "docs/research/shampoo-inci/v1.6/classification-standard.md",
+  )
+  assert.equal(
+    resolveStandardPath("plans/shampoo-v161/candidate/classification-standard.md"),
+    "plans/shampoo-v161/candidate/classification-standard.md",
+  )
+  assert.throws(() => resolveStandardPath(""), /standard/)
 })
 
 const REQUIRED_PROPERTIES = ["cleansingStrength", "conditioningLevel", "weightPotential"] as const
