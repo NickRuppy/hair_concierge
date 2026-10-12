@@ -102,6 +102,8 @@ export function discoveryEqualOptions(input: {
           ).pool.map((candidate) => candidate.productId),
         )
       : null
+  // S4-03: a pick outside the tie (e.g. a capped budget's affordable Elvital) has no equals.
+  if (tieSet && !tieSet.has(input.selectedProductId)) return []
 
   return input.candidates
     .filter(

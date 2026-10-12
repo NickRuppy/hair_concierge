@@ -424,6 +424,54 @@ export function normalizeLateAddedQuestions<T extends Stage2LateAddedDraftState>
 }
 
 /**
+ * Carries a parent's late-added assumptions into its optional-edit successor (S4-01).
+ *
+ * `personal_plan_open_optional_refinement_v1` clones the STORED complete parent into a new
+ * `in_progress` draft with empty projections. The parent's late-added answers exist only in its
+ * read-time view (`normalizeLateAddedQuestions`), and the successor has no lineage that would
+ * let a later read re-derive them — so its products module would reopen. Given the normalized
+ * parent and the fresh successor, this returns the successor with every late-added question the
+ * parent holds as `assumed` answered by the same assumption rule (provenance `assumed`, path
+ * order), ready to be saved once. Returns null when there is nothing to carry or the successor
+ * is not a clone of this parent (it misses one of the parent's other completions).
+ */
+export function carryLateAddedAssumptions<T extends Stage2LateAddedDraftState>(
+  parent: Stage2LateAddedDraftState,
+  successor: T,
+): T | null {
+  const carried = parent.completedQuestionIds.filter(
+    (questionId) =>
+      isLateAddedQuestionId(questionId) &&
+      parent.answerProvenance[questionId] === "assumed" &&
+      !successor.completedQuestionIds.includes(questionId),
+  )
+  if (carried.length === 0) return null
+  const isClone = parent.completedQuestionIds
+    .filter((questionId) => !carried.includes(questionId))
+    .every((questionId) => successor.completedQuestionIds.includes(questionId))
+  if (!isClone) return null
+
+  let answers = successor.answers
+  for (const questionId of carried) {
+    answers = findAssumptionRule({ questionId, answers }).write({ questionId, answers })
+  }
+  const { path } = resolveStage2RefinementContract({
+    triggerContext: successor.triggerContext,
+    answers,
+    completedQuestionIds: [...successor.completedQuestionIds, ...carried],
+  })
+  if (carried.some((questionId) => !path.completedQuestionIds.includes(questionId))) return null
+  const answerProvenance = { ...successor.answerProvenance }
+  for (const questionId of carried) answerProvenance[questionId] = "assumed"
+  return {
+    ...successor,
+    answers,
+    completedQuestionIds: path.completedQuestionIds,
+    answerProvenance,
+  }
+}
+
+/**
  * Module status companion of `normalizeLateAddedQuestions`: a module whose ONLY open questions
  * are late-added ones answered by their assumption counts as finished — the member finished it
  * before the question existed. A module that is open for any other reason keeps every open

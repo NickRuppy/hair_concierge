@@ -82,12 +82,13 @@ async function seedPrestate(pg: Database) {
     )
   await pg.exec("SET session_replication_role = origin")
   await apply(pg, PROMOTION)
-  // The promotion generated a random protocol id; prod's is f8d9cf57.
+  // The promotion generated a random protocol id and stamp; prod's are f8d9cf57 / prestate.
+  const prestate = JSON.parse(await read("plans/catalog-completeness-fill/slice4/prestate.json"))
   await pg.exec("SET session_replication_role = replica")
-  await pg.query("UPDATE product_application_protocols SET id=$1 WHERE product_id=$2", [
-    PROTOCOL,
-    AVEDA,
-  ])
+  await pg.query(
+    "UPDATE product_application_protocols SET id=$1, updated_at=$3 WHERE product_id=$2",
+    [PROTOCOL, AVEDA, prestate.protocol.updated_at],
+  )
   await pg.exec("SET session_replication_role = origin")
 }
 
@@ -107,6 +108,17 @@ async function exec(pg: Database, sql: string) {
     throw error
   }
 }
+/** Full rows (every column, timestamps included) the batch may touch. */
+const fullRows = async (pg: Database) => ({
+  protocol: (
+    await pg.query("SELECT to_jsonb(p) AS row FROM product_application_protocols p WHERE id=$1", [
+      PROTOCOL,
+    ])
+  ).rows[0],
+  product: (await pg.query("SELECT to_jsonb(p) AS row FROM products p WHERE id=$1", [AVEDA]))
+    .rows[0],
+})
+
 const state = async (pg: Database) => ({
   cadence: (
     await pg.query<{ cadence: unknown }>(
@@ -141,6 +153,7 @@ test("apply writes the damage-branched cadence, replays as a no-op, rolls back a
   await seedPrestate(pg)
   const { cadence, fingerprint } = buildSlice4Artifacts()
   assert.equal((await state(pg)).cadence, null)
+  const before = await fullRows(pg)
 
   await apply(pg, S4)
   const applied = await state(pg)
@@ -170,6 +183,8 @@ test("apply writes the damage-branched cadence, replays as a no-op, rolls back a
 
   await exec(pg, await read("plans/catalog-completeness-fill/slice4/rollback.sql"))
   assert.deepEqual(await state(pg), { cadence: null, evidence: [], receipts: [] })
+  // S4-04: the full restored rows equal the preimage, updated_at included.
+  assert.deepEqual(await fullRows(pg), before)
 
   await apply(pg, S4)
   assert.deepEqual((await state(pg)).cadence, cadence)

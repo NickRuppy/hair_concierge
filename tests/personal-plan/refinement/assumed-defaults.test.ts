@@ -5,11 +5,13 @@ import { buildDirectAcceptanceStage2Defaults } from "@/lib/personal-plan/direct-
 import {
   STAGE2_ASSUMPTION_RULES,
   STAGE2_LATE_ADDED_QUESTION_IDS,
+  carryLateAddedAssumptions,
   normalizeLateAddedQuestions,
   resolveAssumedAnswers,
   selectStage2Answers,
 } from "@/lib/personal-plan/refinement/assumed-defaults"
 import { buildPlanRoutineContextFromCompletedRefinement } from "@/lib/personal-plan/refinement/stage1-adapter"
+import { stage2ModuleStates } from "@/lib/personal-plan/refinement/module-status"
 import { resolveStage2RefinementContract } from "@/lib/personal-plan/refinement/question-path"
 import type {
   PersonalPlanRefinementAnswersV1,
@@ -695,4 +697,53 @@ test("drafts that have not passed the question are left for the user to answer",
   for (const [name, draft] of Object.entries(cases)) {
     assert.equal(normalizeLateAddedQuestions(draft), draft, name)
   }
+})
+
+/* ── S4-01: an optional-habits edit clones the stored (un-normalized) parent ── */
+
+test("S4-01: old complete → optional habits edit → products stays complete, timing assumed", () => {
+  // The read-time view of the complete pre-S4 parent (what mapDraft hands the optional entry).
+  const parent = normalizeLateAddedQuestions(preS4Draft())
+  // `personal_plan_open_optional_refinement_v1` clones the STORED parent row: no timing, no
+  // projections, status in_progress.
+  const successor = preS4Draft({ status: "in_progress", moduleProjections: {} })
+  assert.equal(normalizeLateAddedQuestions(successor), successor, "fixture: no lineage on read")
+  assert.equal(
+    stage2ModuleStates(successor).products.status === "complete",
+    false,
+    "fixture: without the carry the products module reopens",
+  )
+
+  const carried = carryLateAddedAssumptions(parent, successor)
+  assert.ok(carried)
+  assert.equal(carried.answers.bondbuilderTiming, "no_preference")
+  assert.equal(carried.answerProvenance.bondbuilder_timing, "assumed")
+  assert.deepEqual(carried.completedQuestionIds, parent.completedQuestionIds)
+  assert.equal(stage2ModuleStates(carried).products.status, "complete")
+  assert.equal(stage2ModuleStates(carried).habits.status, stage2ModuleStates(parent).habits.status)
+})
+
+test("S4-01: nothing is carried without clone lineage or when the successor already has it", () => {
+  const parent = normalizeLateAddedQuestions(preS4Draft())
+  // Not a clone of this parent: misses a parent completion.
+  assert.equal(
+    carryLateAddedAssumptions(
+      parent,
+      preS4Draft({
+        status: "in_progress",
+        completedQuestionIds: ["current_product_categories", "wet_wash_frequency"],
+      }),
+    ),
+    null,
+  )
+  // The parent's timing was a user answer, not an assumption: the clone already carries it.
+  const answeredParent = preS4Draft({
+    answers: { ...PRE_S4_ANSWERS, bondbuilderTiming: "after_wash" },
+    completedQuestionIds: [...PRE_S4_IDS, "bondbuilder_timing"],
+    answerProvenance: { ...PRE_S4_PROVENANCE, bondbuilder_timing: "user" },
+  })
+  assert.equal(
+    carryLateAddedAssumptions(answeredParent, { ...answeredParent, status: "in_progress" }),
+    null,
+  )
 })

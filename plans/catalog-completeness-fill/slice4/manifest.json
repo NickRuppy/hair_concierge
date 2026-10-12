@@ -3,7 +3,7 @@
   "status": "prepared, rehearsed, NOT applied — prod apply needs Nick's approval of this exact batch",
   "batch_id": "S4-catalog-completeness-aveda-damage-cadence",
   "migration": "supabase/migrations/20261011170000_bondbuilder_aveda_damage_cadence.sql",
-  "content_fingerprint": "4a3498972ba6fa8f769625134a1f05ecfeaeb45ea9f131653c5355e197f3669c",
+  "content_fingerprint": "92dcb1acf4b736765167ad1f1bdd98cc30307d106d0c07991532f60272fda4f0",
   "inputs": {
     "profile": {
       "path": "data/research/bondbuilder-inci/v1.0/recommendation-promotion-2026-10-06/P07.json",
@@ -29,7 +29,8 @@
     "source_text": "DE pre-shampoo: gel-cream, root-to-tip application, conditional frequency and manufacturer diameter positioning",
     "guidance_payload_sha256": "b6fb9c29421794804d4e11259d85f6ec4a1e21b6590c94db9bfe1d5f79e08288",
     "guidance_payload_v2_sha256": "38062df5950dc70166199df6b593f0eec5c5a73e11181108c1abac27cd6f9e73",
-    "profile_canonical_sha256": "d2473aa129092e261c5a876db90a2eb3e4dc0ce5f3b2fd918192a8287f938de4"
+    "profile_canonical_sha256": "d2473aa129092e261c5a876db90a2eb3e4dc0ce5f3b2fd918192a8287f938de4",
+    "protocol_updated_at": "2026-10-07T09:52:51.582864+00:00"
   },
   "write": {
     "protocol_id": "f8d9cf57-9266-465a-8f09-d603e5065701",
@@ -137,8 +138,8 @@
     "reviewed_by": "nick"
   },
   "artifacts_sha256": {
-    "supabase/migrations/20261011170000_bondbuilder_aveda_damage_cadence.sql": "fcc8a9df71ac8f70cbd438801c938eb583763ae2551fcc3afe37adf39f9c424a",
-    "plans/catalog-completeness-fill/slice4/rollback.sql": "1e63ac5002196ec1ce7218601fd81b8dd15cf6047276b773f3393e343f4dd7d3",
-    "plans/catalog-completeness-fill/slice4/verify.sql": "ad41c6cb0506e43c03f848fa46204f2b87b80ce75aa87f0a1da11ee0dd737a85"
+    "supabase/migrations/20261011170000_bondbuilder_aveda_damage_cadence.sql": "3d86fe4f051a99e692bc1603130ced4add4234c84c6b815615793ddce419d91d",
+    "plans/catalog-completeness-fill/slice4/rollback.sql": "9048fb15f838fc39bb4a0fe12335928a0836700284a94b4de31313d7c9d2d899",
+    "plans/catalog-completeness-fill/slice4/verify.sql": "9752a408779d506a31814adb9b54409dcc9776499ecd646a0304a63a54b9c969"
   }
 }

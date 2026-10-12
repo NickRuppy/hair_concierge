@@ -792,3 +792,26 @@ test("S4: uncapped Bondbuilder scan keeps the ranked order (timing first inside 
     K18_ID,
   ])
 })
+
+test("S4-02: native Bondbuilder alternatives keep the trust order without a cap (absent and uncapped)", () => {
+  const expected = {
+    no_preference: [
+      K18_ID,
+      "olaplex-3plus",
+      "epres",
+      "loreal-elvital-bond",
+      "redken-acidic-bonding",
+    ],
+    after_wash: [K18_ID, "olaplex-3plus", "epres", "loreal-elvital-bond", "redken-acidic-bonding"],
+    before_wash: ["olaplex-3plus", "epres", K18_ID, "loreal-elvital-bond", "redken-acidic-bonding"],
+  } as const
+  for (const timing of ["no_preference", "after_wash", "before_wash"] as const) {
+    for (const budget of [undefined, null, UNCAPPED]) {
+      assert.deepEqual(
+        ids(inCatalog(bondbuilderScan({ alternativeSelection: "native", budget }, timing))),
+        [...expected[timing]],
+        `${timing} budget=${JSON.stringify(budget)}`,
+      )
+    }
+  }
+})

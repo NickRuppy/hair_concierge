@@ -536,9 +536,14 @@ function boundedSelectedComparisonCandidateAssessments(
 ): CandidateAssessment[] {
   const candidates = rankStage3ComparisonCandidates(input, subjectEvaluation, selection)
   if (selection === "native") {
-    return candidates
-      .sort(compareNativePresentationCandidates)
-      .slice(0, STAGE3_NATIVE_FIT_COMPARISON_ALTERNATIVE_LIMIT)
+    // Bondbuilders keep the authority order (Nick's ruling S2: verdict → trust → timing → K18 /
+    // tie order); a price-first presentation would put medium-trust products ahead (S4-02).
+    // Other categories keep the native verdict → price presentation.
+    return (
+      input.category === "bondbuilder"
+        ? candidates
+        : candidates.sort(compareNativePresentationCandidates)
+    ).slice(0, STAGE3_NATIVE_FIT_COMPARISON_ALTERNATIVE_LIMIT)
   }
   const bounded = candidates.slice(0, STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT)
   const kept = keepCandidateId

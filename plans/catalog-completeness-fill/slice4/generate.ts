@@ -130,6 +130,8 @@ export function buildSlice4Artifacts() {
     guidance_payload_sha256: prestate.protocol_payload_canonical_sha256.guidance_payload,
     guidance_payload_v2_sha256: prestate.protocol_payload_canonical_sha256.guidance_payload_v2,
     profile_canonical_sha256: prestate.research_profile.canonical_sha256,
+    // S4-04: the captured stamp is part of the preimage, so the rollback can restore it exactly.
+    protocol_updated_at: prestate.protocol.updated_at as string,
   }
   const fingerprint = sha256({ batch: SLICE4_BATCH_ID, guarded, cadence, evidence: evidenceBody })
 
@@ -201,6 +203,7 @@ BEGIN
     OR v_row.category IS DISTINCT FROM ${sqlText(guarded.category)}
     OR v_row.role IS DISTINCT FROM ${sqlText(guarded.role)}
     OR v_row.cadence IS NOT NULL
+    OR v_row.updated_at IS DISTINCT FROM ${sqlText(guarded.protocol_updated_at)}::timestamptz
     OR v_row.source_label IS DISTINCT FROM ${sqlText(guarded.source_label)}
     OR v_row.source_url IS DISTINCT FROM ${sqlText(guarded.source_url)}
     OR v_row.source_text IS DISTINCT FROM ${sqlText(guarded.source_text)}
@@ -259,6 +262,8 @@ COMMIT;
   const rollback = `-- Slice 4 rollback (prepared, NOT a migration). Reverses exactly the generated batch
 -- ${SLICE4_BATCH_ID} (fingerprint ${fingerprint}); refuses if anything else moved.
 BEGIN;
+-- Immediate checks: the updated_at trigger can only be suspended with no pending trigger events.
+SET CONSTRAINTS ALL IMMEDIATE;
 DO $slice4_rollback$
 DECLARE
 ${declare}
@@ -270,12 +275,21 @@ BEGIN
   IF NOT ${receiptMatches}
     OR NOT ${evidenceMatches}
     OR (SELECT cadence FROM public.product_application_protocols WHERE id = v_protocol)
-      IS DISTINCT FROM v_cadence THEN
+      IS DISTINCT FROM v_cadence
+    -- A later revision of the row (its stamp moved past the apply) is never undone.
+    OR (SELECT updated_at FROM public.product_application_protocols WHERE id = v_protocol)
+      IS DISTINCT FROM (SELECT r.created_at FROM public.catalog_enrichment_applied_items r
+                        WHERE r.batch_id = v_batch AND r.product_key = v_product_key) THEN
     RAISE EXCEPTION 'S4 Aveda cadence rollback: postimage not in place';
   END IF;
-  UPDATE public.product_application_protocols SET cadence = NULL
-  WHERE id = v_protocol AND cadence = v_cadence;
+  -- Restore the captured stamp too: only this table's updated_at trigger is suspended, inside
+  -- this transaction (Slice 1 precedent).
+  ALTER TABLE public.product_application_protocols DISABLE TRIGGER set_updated_at_product_application_protocols;
+  UPDATE public.product_application_protocols
+     SET cadence = NULL, updated_at = ${sqlText(guarded.protocol_updated_at)}::timestamptz
+   WHERE id = v_protocol AND cadence = v_cadence;
   GET DIAGNOSTICS v_rows = ROW_COUNT;
+  ALTER TABLE public.product_application_protocols ENABLE TRIGGER set_updated_at_product_application_protocols;
   IF v_rows <> 1 THEN RAISE EXCEPTION 'S4 Aveda cadence rollback write count %', v_rows; END IF;
   DELETE FROM public.personal_plan_catalog_fact_evidence WHERE product_id = v_product AND batch_id = v_batch;
   DELETE FROM public.catalog_enrichment_applied_items WHERE batch_id = v_batch;

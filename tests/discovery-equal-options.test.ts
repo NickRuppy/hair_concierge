@@ -193,3 +193,20 @@ test("S4: before the wash the pick is OLAPLEX and Epres is the one equal option"
 test("S4: after the wash there is no tie and no option", () => {
   assert.deepEqual(discoveryEqualOptions(production("after_wash")), [])
 })
+
+test("S4-03: a capped cockpit pick outside the tie set (Elvital) gets no equal options", () => {
+  for (const timing of ["no_preference", "before_wash", "after_wash"] as const) {
+    assert.deepEqual(
+      discoveryEqualOptions({ ...production(timing), selectedProductId: "elvital" }),
+      [],
+      timing,
+    )
+  }
+  // A budget pick that IS in the tie set (OLAPLEX under „Ist mir egal") still lists the others.
+  assert.deepEqual(
+    discoveryEqualOptions({ ...production("no_preference"), selectedProductId: "olaplex" }).map(
+      (option) => option.productId,
+    ),
+    ["epres", K18],
+  )
+})
