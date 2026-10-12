@@ -107,7 +107,7 @@ const MIGRATIONS = [
  * revert the widened list.
  */
 export const PERSONAL_PLAN_STAGE2_TOOLS_MODULE_MIGRATION =
-  "supabase/migrations/20261009170000_personal_plan_stage2_tools_module.sql"
+  "supabase/migrations/20261012125714_20261009170000_personal_plan_stage2_tools_module.sql"
 
 /**
  * The default chain has no paid-migration admission, but `personal_plan_open_optional_refinement_v1`

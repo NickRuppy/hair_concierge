@@ -77,3 +77,11 @@ Residual risks:
 - **Commit:** this receipt, the plan and ledger updates, the docs updates and the Rev. 6 mockup.
 - **Discard at `worktree:finish`:** `.superpowers/sdd/2026-10-09-hair-tools-port/**`.
 - **After merge:** close PR #465 (`personal-plan-hair-tools-current-shape`) as superseded.
+
+## Production migration (2026-10-12)
+
+- Applied to production as version `20261012125714` (`personal_plan_stage2_tools_module`) on Nick's "apply the migration and merge it".
+- **Method:** a digest-guarded patch, the same pattern as `20261012054724_bondbuilder_retire_bond_repair_intensity`. Each live body was checked against its pre-apply md5, and only the one module-list occurrence was replaced.
+- **Pre-check:** production bodies equalled the repo's previous definitions. The completion function matched once comments are ignored, because production stores it without comments.
+- **Post-check:** all three production bodies equal this file's bodies once comments are ignored (normalized md5 `30c078b7…`, `d9986b7e…`, `10ac687e…`). SECURITY DEFINER, `search_path=""` and the grants (service_role only) are unchanged.
+- **Rename:** the file is now `20261012125714_20261009170000_personal_plan_stage2_tools_module.sql`, the same convention as `20261011125354_20261009160000_…`.

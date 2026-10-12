@@ -70,7 +70,7 @@ Must remain unchanged: Stage 1–3 behavior with the flag off; the `user_facts_s
 | Banner copy | tools open: „Letzter Schritt: Deine Tools." is wrong now — tools: „Als Nächstes: Deine Tools." / 3 min; habits open after tools: „Letzter Schritt: deine Gewohnheiten." / 3 min; habits open with tools not applicable: today's copy |
 | Profil (tools applicable) | card order Haar-Check (quiz rows + „Deine Haarziele" row, own editor), Produkte, „Deine Tools" (photo chips in the four chronological groups; „Was du schon hast, aus deinem Feinschliff."; badge „N Tools"; „Deine Tools bearbeiten"), „Gewohnheiten" (rows Abtrocknen, Trocknen, Hitze-Häufigkeit, Hitzeschutz, Nachts; the two heat rows collapse to one row „Keine Hitze" without heat tools, and „Nachts" is absent for hair too short to tie; „Wie du trocknest und stylst, aus deinem Feinschliff."; „Gewohnheiten bearbeiten"). Tools not applicable → today's cards (Ziele folded into Haar-Check in both cases) |
 | Haarprofil rows | Haar-Analyse, Dein Plan, Deine Produkte, Deine Tools, Deine Gewohnheiten |
-| Migration | `supabase/migrations/20261009170000_personal_plan_stage2_tools_module.sql`, additive, applied before the code deploy |
+| Migration | `supabase/migrations/20261012125714_20261009170000_personal_plan_stage2_tools_module.sql`, additive, applied before the code deploy |
 | Brush mapping (→ `brushesCombs`) | `wide_tooth_comb→wide_tooth_comb`, `detangling_brush→detangling`, `paddle_brush→paddle`, `round_brush→round`, `boar_bristle→boar_bristle`, `fingers→fingers`; others dropped from the legacy slot only |
 
 ## 5. Decision coverage

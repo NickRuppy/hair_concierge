@@ -15,7 +15,7 @@ const MIGRATION = new URL(
 )
 
 const TOOLS_MODULE_MIGRATION = new URL(
-  "../supabase/migrations/20261009170000_personal_plan_stage2_tools_module.sql",
+  "../supabase/migrations/20261012125714_20261009170000_personal_plan_stage2_tools_module.sql",
   import.meta.url,
 )
 
