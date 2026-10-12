@@ -87,6 +87,7 @@ export type BuildScanVerdictInput = {
   perRoleFacts?: Partial<Record<PlanProductRole, ScanRoleFacts>>
   coverage: PlanPortfolioCoverageFact[]
   hairThickness: PlanHairThickness
+  dryShampooTarget?: Stage3AuthorityInput["dryShampooTarget"]
   heatCarrierCoverage: {
     carrierCategory: Extract<PersonalPlanCategory, "leave_in" | "oil" | "heat_protectant"> | null
     verifiedRoutes: string[]
@@ -450,6 +451,7 @@ function scanAuthorityInput(
     productFacts: facts,
     recommendationCandidates,
     hairThickness: input.hairThickness,
+    dryShampooTarget: input.dryShampooTarget,
     heatCarrierCoverage: input.heatCarrierCoverage,
   }
 }

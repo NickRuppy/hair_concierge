@@ -1,3 +1,5 @@
+import { BOND_TECHNOLOGY_FAMILIES } from "@/lib/bondbuilder-research/contracts"
+import { evaluateGateCriteria } from "../fit-criteria"
 import type { PlanProductRole } from "@/lib/personal-plan/types"
 
 import type { Stage3CriterionResult } from "../../contracts"
@@ -16,26 +18,8 @@ import {
   unsupportedEvaluation,
 } from "../shared"
 
-/**
- * K18 Leave-In Molecular Repair Hair Mask — Nick's explicit product decision
- * (2026-08-17): when several Bondbuilder candidates evaluate equally ideal
- * (since 2026-10-09: equally ideal at the same, highest claim trust level),
- * this is the default pick. Production carries a permanent three-way ideal tie
- * (Olaplex No.3, Epres, K18 — all high trust), and without a default the
- * category stayed uncovered for every Stage-1 preview and every direct
- * acceptance.
- *
- * It is a default among equals, NOT a superiority claim: the tie keeps its
- * `bondbuilder.equal_shortlist` caution and the recommendation carries its own
- * rule id (`bondbuilder.stage3.tie_default`) so nothing reads as "verified
- * best".
- *
- * Note for analytics: the same situation persists two different honest rule
- * ids — picking this product interactively in Stage 3 persists
- * `validated_standalone` (that path evaluates the chosen product on its own),
- * while a direct acceptance persists `tie_default`. Anything keyed on
- * `tie_default` therefore sees only the direct-accept half of the cohort.
- */
+// Retained as a product identifier for existing consumers; no selection preference.
+// Spec §6, ruled 2026-10-12: equal trust ranks by price, not a house default.
 export const BONDBUILDER_TIE_DEFAULT_PRODUCT_ID = "38dace91-0fba-49ee-a93f-ac36e488fe4b"
 
 const BONDBUILDER_TRUST_RANKS: Readonly<Record<string, number>> = { high: 0, medium: 1, low: 2 }
@@ -49,32 +33,31 @@ export function bondbuilderTrustRank(level: string | null | undefined): number {
   return (level ? BONDBUILDER_TRUST_RANKS[level] : undefined) ?? 3
 }
 
-export function recommendationForBondbuilder(product: Stage3BondbuilderFacts, supportive = false) {
+export function recommendationForBondbuilder(product: Stage3BondbuilderFacts) {
   return {
     recommendationId: `recommendation:bondbuilder:${product.productId}`,
     productId: product.productId,
     category: "bondbuilder" as const,
     role: "specialized_bond_treatment" as const,
     displayName: product.displayName,
-    reason: supportive
-      ? "Ist ein verifiziertes Ergänzungsprodukt und erfüllt die Bondbuilder-Rolle nicht allein."
-      : "Erfüllt die eigenständige Bondbuilder-Rolle mit verifiziertem Protokoll.",
-    authorityRuleId: supportive
-      ? "bondbuilder.stage3.validated_add_on"
-      : "bondbuilder.stage3.validated_standalone",
+    reason: "Erfüllt die eigenständige Bondbuilder-Rolle mit verifiziertem Protokoll.",
+    authorityRuleId: "bondbuilder.stage3.validated_standalone",
   }
 }
 
-/**
- * The same recommendation, relabelled for the tie case. The reason line stays
- * deliberately modest — it names a house default, not a better product.
- */
-function tieDefaultRecommendationForBondbuilder(product: Stage3BondbuilderFacts) {
-  return {
-    ...recommendationForBondbuilder(product),
-    reason: "Unsere Standardwahl, wenn mehrere Produkte gleich gut passen.",
-    authorityRuleId: "bondbuilder.stage3.tie_default",
-  }
+/** Spec §6, ruled 2026-10-12; the 2026-10-09 trust-tie rule. */
+export function compareBondbuilderCandidates(
+  left: Stage3BondbuilderFacts,
+  right: Stage3BondbuilderFacts,
+): number {
+  return (
+    bondbuilderTrustRank(left.spec.claimTrustLevel) -
+      bondbuilderTrustRank(right.spec.claimTrustLevel) ||
+    (left.priceEur ?? Number.MAX_SAFE_INTEGER) - (right.priceEur ?? Number.MAX_SAFE_INTEGER) ||
+    (left.catalogSortOrder ?? Number.MAX_SAFE_INTEGER) -
+      (right.catalogSortOrder ?? Number.MAX_SAFE_INTEGER) ||
+    left.productId.localeCompare(right.productId)
+  )
 }
 
 /**
@@ -117,7 +100,11 @@ function evaluateProduct(
       "Bondbuilder sind für feines, normales und dickes Haar geeignet.",
     ),
   )
-  if (!product.isActive || product.lifecycleStatus !== "active")
+  if (
+    !product.isActive ||
+    !product.recommendable ||
+    (product.lifecycleStatus !== null && product.lifecycleStatus !== "active")
+  )
     criteria.push(
       criterion("bondbuilder.lifecycle", "Produktstatus", "fail", "Das Produkt ist nicht aktiv."),
     )
@@ -135,7 +122,7 @@ function evaluateProduct(
       criterion(
         "bondbuilder.relationship",
         "Rollenbeziehung",
-        product.spec.relationship === "standalone" ? "pass" : "caution",
+        product.spec.relationship === "standalone" ? "pass" : "fail",
         product.spec.relationship === "standalone"
           ? "Kann die spezialisierte Rolle eigenständig erfüllen."
           : "Ist nur ein ergänzendes Produkt und kann die Rolle nicht allein erfüllen.",
@@ -152,14 +139,41 @@ function evaluateProduct(
         : "Anwendungsmodus, Behandlung oder Kursprotokoll ist nicht vollständig verifiziert.",
     ),
   )
-  const verdict = criteria.some((entry) => entry.result === "fail")
-    ? ("mismatch" as const)
-    : criteria.some((entry) => entry.result === "unknown")
-      ? ("unknown" as const)
-      : product.spec.relationship === "add_on"
-        ? ("supportive" as const)
-        : ("ideal" as const)
-  return { criteria, verdict }
+  // Reviewed owner tiers, including low trust, are approved; owner_default is not.
+  // Older catalog facts omit research metadata; their active/recommendable flags and
+  // verified application remain the admission contract. Explicit null technology/owner
+  // evidence stays unknown. Claim trust is a ranking input: missing ranks last, not ineligible.
+  // Spec §2.5 / §6, ruled 2026-10-12; recommendation policy 2026-10-05.
+  const family = product.spec.technologyFamily
+  const basis = product.spec.trustBasis
+  const trust = product.spec.claimTrustLevel
+  const technologyOutcome =
+    (family != null && !BOND_TECHNOLOGY_FAMILIES.includes(family as never)) ||
+    (basis != null && basis !== "owner_anchor" && basis !== "owner_calibration") ||
+    (trust != null && !["high", "medium", "low"].includes(trust)) ||
+    (product.spec.researchProfile &&
+      product.spec.researchProfile.assessment.boundary_status !== "in_scope")
+      ? "fail"
+      : family === null || basis === null
+        ? "unknown"
+        : "pass"
+  criteria.push(
+    criterion(
+      "bondbuilder.technology",
+      "Verifizierte Technologie",
+      technologyOutcome,
+      technologyOutcome === "pass"
+        ? "Die Technologie ist geprüft und freigegeben."
+        : "Die Technologie ist nicht freigegeben oder noch nicht geprüft.",
+    ),
+  )
+  const commonMissing = commonUnknownFacts(
+    { ...input, productFacts: product },
+    { requiresSuitableThickness: false },
+  )
+  const missing = [...commonMissing]
+  if (criteria.some((row) => row.result === "unknown")) missing.push("bondbuilder_fit_or_protocol")
+  return evaluateGateCriteria(input, product, criteria, missing)
 }
 
 export function evaluateBondbuilderAuthority(
@@ -186,22 +200,14 @@ export function evaluateBondbuilderAuthority(
           candidate.recommendable && candidate.isActive && candidate.lifecycleStatus === "active",
       )
       .filter((candidate) => evaluateProduct(input, candidate).verdict === "ideal")
-    // Only the most trusted ideal candidates compete (Nick, 2026-10-09).
-    const bestTrust = Math.min(
-      ...ideal.map((candidate) => bondbuilderTrustRank(candidate.spec.claimTrustLevel)),
-    )
-    const mostTrusted = ideal.filter(
-      (candidate) => bondbuilderTrustRank(candidate.spec.claimTrustLevel) === bestTrust,
-    )
-    const multiple = mostTrusted.length > 1
-    // A tie among the most trusted resolves to the house default only when that exact product is
-    // on the shortlist; any other tie keeps the need uncovered.
-    const tieDefault = multiple
-      ? (mostTrusted.find(
-          (candidate) => candidate.productId === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
-        ) ?? null)
-      : null
-    const selected = mostTrusted.length === 1 ? mostTrusted[0] : tieDefault
+    const selected = [...ideal].sort(compareBondbuilderCandidates)[0] ?? null
+    const multiple =
+      selected !== null &&
+      ideal.filter(
+        (candidate) =>
+          bondbuilderTrustRank(candidate.spec.claimTrustLevel) ===
+          bondbuilderTrustRank(selected.spec.claimTrustLevel),
+      ).length > 1
     return knownEvaluation(sharedInput, {
       verdict: ideal.length === 0 ? "unknown" : "ideal",
       criteria: multiple
@@ -215,21 +221,25 @@ export function evaluateBondbuilderAuthority(
           ]
         : [],
       allowedActions: selected ? ["plan_recommendation", "leave_uncovered"] : ["leave_uncovered"],
-      recommendation: !selected
-        ? null
-        : tieDefault
-          ? tieDefaultRecommendationForBondbuilder(tieDefault)
-          : recommendationForBondbuilder(selected),
+      recommendation: selected ? recommendationForBondbuilder(selected) : null,
       productFactFingerprint: null,
       recommendationFactFingerprint: selected?.factFingerprint ?? null,
     })
   }
-  const missing = commonUnknownFacts(sharedInput, { requiresSuitableThickness: false })
-  if (missing.length > 0) return unknownEvaluation(sharedInput, missing)
   const assessment = evaluateProduct(input, input.productFacts)
   if (assessment.verdict === "unknown") {
-    return unknownEvaluation(sharedInput, ["bondbuilder_fit_or_protocol"], assessment.criteria)
+    return unknownEvaluation(sharedInput, assessment.missing, assessment.criteria)
   }
+  const replacement =
+    assessment.verdict === "mismatch"
+      ? evaluateBondbuilderAuthority({
+          ...input,
+          productFacts: null,
+          capturedProductId: null,
+          subjectIdentity: null,
+        })
+      : null
+  const recommendation = replacement?.status === "known" ? replacement.recommendation : null
   return knownEvaluation(sharedInput, {
     verdict: assessment.verdict,
     criteria: assessment.criteria,
@@ -237,10 +247,13 @@ export function evaluateBondbuilderAuthority(
       assessment.verdict === "ideal"
         ? ["keep_owned"]
         : assessment.verdict === "mismatch"
-          ? ["acknowledge_override"]
+          ? recommendation
+            ? ["acknowledge_override", "plan_recommendation", "leave_uncovered"]
+            : ["acknowledge_override", "leave_uncovered"]
           : ["keep_owned", "leave_uncovered"],
-    recommendation: null,
+    recommendation,
     productFactFingerprint: input.productFacts.factFingerprint,
-    recommendationFactFingerprint: null,
+    recommendationFactFingerprint:
+      replacement?.status === "known" ? replacement.recommendationFactFingerprint : null,
   })
 }

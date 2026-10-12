@@ -378,6 +378,17 @@ async function loadVerdict(
       perRoleFacts: roles.length > 1 ? Object.fromEntries(facts) : undefined,
       coverage: context.snapshot.coverage,
       hairThickness: context.snapshot.profile.hair.thickness,
+      dryShampooTarget:
+        category === "dry_shampoo"
+          ? {
+              scalpSensitivity: context.snapshot.profile.scalp
+                ? context.snapshot.profile.scalp.concerns.includes("irritated")
+                  ? "sensitive"
+                  : "normal"
+                : null,
+              hairColorFit: null,
+            }
+          : undefined,
       heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
       refinedVersionId: context.refinedVersionId,
       refinedInputHash: context.refinedInputHash,

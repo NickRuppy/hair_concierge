@@ -11,7 +11,7 @@ import { CATEGORY_ROLE_POLICIES } from "../../src/lib/personal-plan/products/aut
 import { evaluateStage3Authority } from "../../src/lib/personal-plan/products/authority/evaluate"
 import type { Stage3AuthorityInput } from "../../src/lib/personal-plan/products/authority/contracts"
 
-type Category = "shampoo" | "conditioner" | "oil" | "mask" | "leave_in"
+type Category = Stage3AuthorityInput["category"]
 type Verdict = "ideal" | "supportive" | "mismatch"
 
 const expectedVerdict = (steps: number): Verdict =>
@@ -788,4 +788,339 @@ test("irritated-only scalp still rejects an anti-dandruff shampoo", () => {
   input.categoryDecision.target.everydayConstraint = "irritation_compatible"
   const result = evaluateStage3Authority(input)
   assert.equal(result.status === "known" ? result.verdict : null, "mismatch")
+})
+
+// fit-verdict spec §§2–6, §7a.6, §7b Q2, ruled 2026-10-12.
+// Primary authority-boundary guards for the remaining gates and mobile wire keys.
+function gateCategory(category: Category, spec: Record<string, unknown> = {}) {
+  const configurations = {
+    deep_cleansing_shampoo: {
+      role: "residue_reset",
+      target: {},
+      spec: {
+        supportedResetRoles: ["residue_reset"],
+        scalpTypeFocus: "balanced",
+        colorTreatedSuitability: "suitable",
+      },
+    },
+    scalp_care: {
+      role: "scalp_comfort",
+      target: { roleTargets: [{ role: "scalp_comfort", coverage: "primary" }] },
+      spec: { primaryRole: "scalp_comfort", presentationFormat: "serum", rinseMode: "leave_on" },
+    },
+    heat_protectant: {
+      role: "pre_heat_protection",
+      target: {
+        qualifyingRoutes: ["direct_contact_heat"],
+        carrierPolicy: "integrated_or_separate_verified_binary_capability",
+      },
+      spec: { providesHeatProtection: true, format: "spray" },
+    },
+    dry_shampoo: {
+      role: "root_refresh_bridge",
+      target: { cadenceAdjustment: "keep" },
+      spec: {
+        primaryEffect: "standard_refresh",
+        hairColorFit: "universal",
+        scalpSensitivityFit: "sensitive_ok",
+        format: "aerosol_spray",
+      },
+    },
+    bondbuilder: {
+      role: "specialized_bond_treatment",
+      target: {
+        requiredFunction: "support_stressed_hair_resilience",
+        mechanismTarget: "mechanism_neutral",
+      },
+      spec: {
+        applicationMode: "pre_shampoo",
+        treatmentMode: "rinse_out",
+        usageProtocol: "verified_course",
+        productFormat: "cream",
+        relationship: "standalone",
+        technologyFamily: "sulfur_targeting_dimaleate",
+        claimTrustLevel: "high",
+        trustBasis: "owner_anchor",
+      },
+    },
+  } as const
+  const config = configurations[category as keyof typeof configurations]
+  return base(
+    category,
+    config.role,
+    { category, roles: [config.role], ...config.target },
+    { ...config.spec, ...spec },
+  )
+}
+const remainingCategories = [
+  "deep_cleansing_shampoo",
+  "scalp_care",
+  "heat_protectant",
+  "dry_shampoo",
+  "bondbuilder",
+] as const
+function fitVerdict(input: Stage3AuthorityInput) {
+  const result = evaluateStage3Authority(input)
+  return result.status === "known" ? result.verdict : result.status
+}
+for (const category of remainingCategories) {
+  test(`${category}: a wrong role is a hard gate`, () => {
+    const input = gateCategory(category)
+    input.role = "conditioner_rinse_out"
+    assert.equal(fitVerdict(input), "mismatch")
+  })
+  test(`${category}: all gates pass without a thickness fact`, () => {
+    const input = gateCategory(category)
+    input.productFacts!.suitableThicknesses = null
+    assert.equal(fitVerdict(input), "ideal")
+  })
+  for (const [gate, change] of [
+    ["safety", { knownReaction: true }],
+    ["inactive", { isActive: false }],
+    ["retired", { lifecycleStatus: "discontinued" }],
+    ["recommendability", { recommendable: false }],
+    ["wrong category", { category: "shampoo" }],
+  ] as const) {
+    test(`${category}: ${gate} fails even with missing protocol`, () => {
+      const input = gateCategory(category)
+      Object.assign(input.productFacts!, change, { protocols: [] })
+      assert.equal(fitVerdict(input), "mismatch")
+    })
+  }
+  for (const [gate, change, wireKey] of [
+    ["safety", { knownReaction: null }, "known_reaction"],
+    ["lifecycle", { lifecycleStatus: null }, "lifecycle_status"],
+    [
+      "protocol",
+      { protocols: [] },
+      category === "bondbuilder"
+        ? "bondbuilder_fit_or_protocol"
+        : category === "deep_cleansing_shampoo"
+          ? "deep_cleansing.protocol"
+          : "application_protocol",
+    ],
+  ] as const) {
+    test(`${category}: missing ${gate} stays unknown with its wire key`, () => {
+      const input = gateCategory(category)
+      Object.assign(input.productFacts!, change)
+      const result = evaluateStage3Authority(input)
+      assert.equal(result.status, "unknown")
+      if (result.status !== "unknown") return
+      assert.deepEqual(result.missingFacts, [wireKey])
+      for (const criterion of result.criteria ?? [])
+        assert.deepEqual(Object.keys(criterion).sort(), [
+          "criterionId",
+          "explanation",
+          "label",
+          "result",
+        ])
+    })
+  }
+}
+for (const [category, field, failed, key] of [
+  ["deep_cleansing_shampoo", "supportedResetRoles", ["mineral_reset"], "deep_cleansing.reset_role"],
+  ["scalp_care", "primaryRole", "density_claim_tonic", "primary_role"],
+  ["heat_protectant", "providesHeatProtection", false, "provides_heat_protection"],
+  ["bondbuilder", "relationship", "add_on", "bondbuilder_fit_or_protocol"],
+  ["bondbuilder", "technologyFamily", "unapproved_technology", "bondbuilder_fit_or_protocol"],
+  ["bondbuilder", "trustBasis", "owner_default", "bondbuilder_fit_or_protocol"],
+] as const) {
+  for (const state of ["pass", "fail", "unknown"] as const) {
+    test(`${category}: ${field} ${state}`, () => {
+      const input = gateCategory(
+        category,
+        state === "pass" ? {} : { [field]: state === "fail" ? failed : null },
+      )
+      const result = evaluateStage3Authority(input)
+      assert.equal(
+        result.status === "known" ? result.verdict : result.status,
+        state === "pass" ? "ideal" : state === "fail" ? "mismatch" : "unknown",
+      )
+      if (result.status === "unknown") assert.deepEqual(result.missingFacts, [key])
+    })
+  }
+}
+for (const [category, field, key] of [
+  ["scalp_care", "presentationFormat", "presentation_format"],
+  ["scalp_care", "rinseMode", "rinse_mode"],
+  ["dry_shampoo", "primaryEffect", "styling_effect"],
+  ["dry_shampoo", "format", "format"],
+  ["dry_shampoo", "hairColorFit", "hair_color_fit"],
+  ["dry_shampoo", "scalpSensitivityFit", "scalp_sensitivity_fit"],
+  ["bondbuilder", "applicationMode", "bondbuilder_fit_or_protocol"],
+  ["bondbuilder", "treatmentMode", "bondbuilder_fit_or_protocol"],
+  ["bondbuilder", "usageProtocol", "bondbuilder_fit_or_protocol"],
+] as const) {
+  test(`${category}: required ${field} remains unknown`, () => {
+    const result = evaluateStage3Authority(gateCategory(category, { [field]: null }))
+    assert.equal(result.status, "unknown")
+    if (result.status === "unknown") assert.deepEqual(result.missingFacts, [key])
+  })
+}
+for (const row of [
+  {
+    tint: "universal",
+    sensitivity: "sensitive_ok",
+    scalp: "sensitive",
+    color: "dark",
+    verdict: "ideal",
+  },
+  { tint: "dark", sensitivity: "normal_only", scalp: "normal", color: "dark", verdict: "ideal" },
+  {
+    tint: "brown",
+    sensitivity: "sensitive_ok",
+    scalp: "sensitive",
+    color: "dark",
+    verdict: "supportive",
+  },
+  {
+    tint: "dark",
+    sensitivity: "normal_only",
+    scalp: "sensitive",
+    color: "dark",
+    verdict: "supportive",
+  },
+  {
+    tint: "brown",
+    sensitivity: "normal_only",
+    scalp: "sensitive",
+    color: "dark",
+    verdict: "mismatch",
+  },
+  { tint: "dark", sensitivity: "sensitive_ok", scalp: "normal", color: null, verdict: "ideal" },
+  { tint: "universal", sensitivity: "normal_only", scalp: null, color: null, verdict: "ideal" },
+  { tint: "dark", sensitivity: "normal_only", scalp: null, color: null, verdict: "ideal" },
+  {
+    tint: "dark",
+    sensitivity: "normal_only",
+    scalp: "sensitive",
+    color: null,
+    verdict: "supportive",
+  },
+] as const) {
+  test(`dry_shampoo: tint ${row.tint}, ${row.sensitivity} for ${row.scalp}/${row.color} gives ${row.verdict}`, () => {
+    const input = gateCategory("dry_shampoo", {
+      hairColorFit: row.tint,
+      scalpSensitivityFit: row.sensitivity,
+    }) as any
+    input.dryShampooTarget = { scalpSensitivity: row.scalp, hairColorFit: row.color }
+    const result = evaluateStage3Authority(input)
+    assert.equal(result.status === "known" ? result.verdict : result.status, row.verdict)
+    if (result.status === "known") {
+      const cautions = result.criteria.filter((c) => c.result === "caution")
+      if (row.verdict === "supportive") assert.equal(cautions.length, 1)
+      if (row.color === null) {
+        assert.ok(cautions.every((c) => c.criterionId !== "dry_shampoo.tint.verified"))
+        if (row.scalp === "sensitive")
+          assert.match(cautions[0]!.explanation, /Sensitivitätspositionierung.*Kopfhaut/)
+      }
+      if (row.scalp === null && row.color === null) assert.deepEqual(cautions, [])
+    }
+  })
+}
+test("dry_shampoo: ideal wins, supportive is a reasoned fallback, catalog order stays stable", () => {
+  const input = gateCategory("dry_shampoo") as any
+  input.dryShampooTarget = { scalpSensitivity: "sensitive", hairColorFit: "dark" }
+  input.capturedProductId = null
+  input.subjectIdentity = null
+  input.productFacts = null
+  const near = {
+    ...gateCategory("dry_shampoo", { scalpSensitivityFit: "normal_only" }).productFacts!,
+    productId: "near",
+  }
+  const exact = { ...gateCategory("dry_shampoo").productFacts!, productId: "exact" }
+  input.recommendationCandidates = [near, exact]
+  let result = evaluateStage3Authority(input)
+  assert.equal(result.status === "known" ? result.recommendation?.productId : null, "exact")
+  input.recommendationCandidates = [near]
+  result = evaluateStage3Authority(input)
+  assert.equal(result.status === "known" ? result.verdict : null, "supportive")
+  assert.ok(result.status === "known" && result.recommendation?.reason)
+})
+test("bondbuilder: trust then price; add-ons never supportive or standalone candidates; no preferred-step filter", () => {
+  const input = gateCategory("bondbuilder") as any
+  input.capturedProductId = null
+  input.subjectIdentity = null
+  input.productFacts = null
+  input.recommendationCandidates = [
+    {
+      ...gateCategory("bondbuilder", { claimTrustLevel: "medium", trustBasis: "owner_calibration" })
+        .productFacts!,
+      productId: "cheap-medium",
+      priceEur: 1,
+    },
+    {
+      ...gateCategory("bondbuilder").productFacts!,
+      productId: "expensive-high",
+      priceEur: 50,
+      catalogSortOrder: 1,
+    },
+    {
+      ...gateCategory("bondbuilder").productFacts!,
+      productId: "cheap-high",
+      priceEur: 20,
+      catalogSortOrder: 99,
+    },
+    {
+      ...gateCategory("bondbuilder", { relationship: "add_on" }).productFacts!,
+      productId: "companion",
+      priceEur: 0,
+    },
+  ]
+  const result = evaluateStage3Authority(input)
+  assert.equal(result.status === "known" ? result.recommendation?.productId : null, "cheap-high")
+  for (const relationship of ["standalone", "add_on", null]) {
+    const owned = evaluateStage3Authority(gateCategory("bondbuilder", { relationship }))
+    assert.notEqual(owned.status === "known" ? owned.verdict : owned.status, "supportive")
+  }
+})
+for (const [category, create] of [
+  ["shampoo", shampoo],
+  ["conditioner", conditioner],
+  ["oil", oil],
+  ["mask", mask],
+  ["leave_in", leaveIn],
+  ...remainingCategories.map(
+    (category) =>
+      [category, (spec: Record<string, unknown>) => gateCategory(category, spec)] as const,
+  ),
+] as const) {
+  for (const withCandidate of [false, true]) {
+    test(`${category}: identical mismatch actions ${withCandidate ? "with" : "without"} recommendation`, () => {
+      const input = create({})
+      input.productFacts!.knownReaction = true
+      if (withCandidate)
+        input.recommendationCandidates = [
+          {
+            ...create({}).productFacts!,
+            productId: "replacement",
+            presentationImageUrl: "https://example.com/p.webp",
+          },
+        ] as never
+      const result = evaluateStage3Authority(input)
+      assert.equal(result.status === "known" ? result.verdict : null, "mismatch")
+      assert.deepEqual(
+        [...result.allowedActions].sort(),
+        [
+          "acknowledge_override",
+          "leave_uncovered",
+          ...(withCandidate ? ["plan_recommendation"] : []),
+        ].sort(),
+      )
+      if (result.status === "known")
+        assert.equal(result.recommendation?.productId ?? null, withCandidate ? "replacement" : null)
+    })
+  }
+}
+
+// Missing user targets are unscored; missing product facts still require verification.
+test("dry_shampoo: absent personal targets skip tint and scalp scoring", () => {
+  const unresolved = gateCategory("dry_shampoo", { hairColorFit: "dark" })
+  const result = evaluateStage3Authority(unresolved)
+  assert.equal(result.status, "known")
+  if (result.status === "known") {
+    assert.equal(result.verdict, "ideal")
+    assert.ok(result.criteria.every((row) => row.result === "pass"))
+  }
+  assert.equal(fitVerdict(gateCategory("dry_shampoo", { hairColorFit: "universal" })), "ideal")
 })

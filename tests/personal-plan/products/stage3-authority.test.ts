@@ -149,7 +149,13 @@ function knownFacts(category: PersonalPlanCategory): Stage3CategoryProductFacts 
         },
       }
     case "heat_protectant":
-      return { ...base, category, spec: { format: "spray", providesHeatProtection: true } }
+      // fit-verdict spec §2, ruled 2026-10-12: lifecycle includes recommendability.
+      return {
+        ...base,
+        category,
+        recommendable: true,
+        spec: { format: "spray", providesHeatProtection: true },
+      }
     case "oil":
       return {
         ...base,
@@ -181,12 +187,16 @@ function knownFacts(category: PersonalPlanCategory): Stage3CategoryProductFacts 
       return {
         ...base,
         category,
+        // fit-verdict spec §2, ruled 2026-10-12: lifecycle includes recommendability.
+        recommendable: true,
         spec: { primaryRole: "scalp_comfort", presentationFormat: "serum", rinseMode: "leave_on" },
       }
     case "dry_shampoo":
       return {
         ...base,
         category,
+        // fit-verdict spec §2, ruled 2026-10-12: lifecycle includes recommendability.
+        recommendable: true,
         spec: {
           primaryEffect: "classic_refresh",
           hairColorFit: "universal",
@@ -198,18 +208,26 @@ function knownFacts(category: PersonalPlanCategory): Stage3CategoryProductFacts 
       return {
         ...base,
         category,
+        // fit-verdict spec §2, ruled 2026-10-12: lifecycle includes recommendability.
+        recommendable: true,
         spec: {
           applicationMode: "pre_shampoo",
           treatmentMode: "standalone",
           productFormat: "treatment",
           usageProtocol: "verified_course",
           relationship: "standalone",
+          // fit-verdict spec §6, ruled 2026-10-12: use reviewed technology facts.
+          technologyFamily: "sulfur_targeting_dimaleate",
+          claimTrustLevel: "high",
+          trustBasis: "owner_anchor",
         },
       }
     case "deep_cleansing_shampoo":
       return {
         ...base,
         category,
+        // fit-verdict spec §2, ruled 2026-10-12: lifecycle includes recommendability.
+        recommendable: true,
         spec: {
           supportedResetRoles: ["residue_reset"],
           scalpTypeFocus: "balanced",
@@ -410,6 +428,12 @@ test("supportive owned-product verdicts retain explicit keep and uncovered actio
     const result = evaluateStage3Authority(authorityInput as never)
     assert.equal(result.status, "known")
     if (result.status !== "known") continue
+    // fit-verdict spec §6, ruled 2026-10-12: an add-on cannot cover the role alone.
+    if (authorityInput.category === "bondbuilder") {
+      assert.equal(result.verdict, "mismatch")
+      assert.deepEqual(result.allowedActions, ["acknowledge_override", "leave_uncovered"])
+      continue
+    }
     assert.equal(result.verdict, "supportive")
     assert.ok(result.allowedActions.includes("keep_owned"))
     assert.ok(result.allowedActions.includes("leave_uncovered"))
@@ -483,6 +507,14 @@ function bondbuilderCandidate(productId: string, displayName: string) {
     productId,
     displayName,
     recommendable: true,
+    priceEur:
+      productId === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID
+        ? 56.25
+        : productId.startsWith("olaplex")
+          ? 34
+          : productId === "epres"
+            ? 48
+            : null,
     factFingerprint: `facts-${productId}`,
   })
 }
@@ -496,7 +528,8 @@ function bondbuilderGapInput(candidates: ReturnType<typeof bondbuilderCandidate>
   return gap
 }
 
-test("a Bondbuilder tie defaults to K18 without claiming it is the better product", () => {
+// fit-verdict spec §6, ruled 2026-10-12: trust then price supersedes house default/uncovered ties.
+test("a Bondbuilder trust tie picks the cheapest reviewed standalone", () => {
   const k18 = bondbuilderCandidate(
     BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
     "K18 Leave-In Molecular Repair Hair Mask",
@@ -512,13 +545,13 @@ test("a Bondbuilder tie defaults to K18 without claiming it is the better produc
   assert.equal(result.status, "known")
   if (result.status !== "known") return
   assert.equal(result.verdict, "ideal")
-  assert.equal(result.recommendation?.productId, BONDBUILDER_TIE_DEFAULT_PRODUCT_ID)
-  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.tie_default")
+  assert.equal(result.recommendation?.productId, "olaplex-no3")
+  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.validated_standalone")
   assert.equal(
     result.recommendation?.reason,
-    "Unsere Standardwahl, wenn mehrere Produkte gleich gut passen.",
+    "Erfüllt die eigenständige Bondbuilder-Rolle mit verifiziertem Protokoll.",
   )
-  assert.equal(result.recommendationFactFingerprint, k18.factFingerprint)
+  assert.equal(result.recommendationFactFingerprint, "facts-olaplex-no3")
   assert.deepEqual(result.allowedActions, ["plan_recommendation", "leave_uncovered"])
   // The "several equally suitable products" fact stays visible: the default is
   // a choice among equals, not a superiority claim.
@@ -529,7 +562,8 @@ test("a Bondbuilder tie defaults to K18 without claiming it is the better produc
   )
 })
 
-test("a Bondbuilder tie without the default product still leaves the need uncovered", () => {
+// fit-verdict spec §6, ruled 2026-10-12: trust then price supersedes house default/uncovered ties.
+test("a Bondbuilder trust tie without K18 still picks the cheapest reviewed standalone", () => {
   const result = evaluateStage3Authority(
     bondbuilderGapInput([
       bondbuilderCandidate("olaplex-no3", "OLAPLEX No.3PLUS Complete Repair Treatment"),
@@ -540,9 +574,9 @@ test("a Bondbuilder tie without the default product still leaves the need uncove
   assert.equal(result.status, "known")
   if (result.status !== "known") return
   assert.equal(result.verdict, "ideal")
-  assert.equal(result.recommendation, null)
-  assert.equal(result.recommendationFactFingerprint, null)
-  assert.deepEqual(result.allowedActions, ["leave_uncovered"])
+  assert.equal(result.recommendation?.productId, "olaplex-no3")
+  assert.equal(result.recommendationFactFingerprint, "facts-olaplex-no3")
+  assert.deepEqual(result.allowedActions, ["plan_recommendation", "leave_uncovered"])
   assert.ok(result.criteria.some((entry) => entry.criterionId === "bondbuilder.equal_shortlist"))
 })
 
@@ -584,7 +618,8 @@ test("a more trusted ideal Bondbuilder wins outright, without the tie default or
   assert.ok(result.criteria.every((entry) => entry.criterionId !== "bondbuilder.equal_shortlist"))
 })
 
-test("the production Bondbuilder set resolves to K18 among the three high-trust products", () => {
+// fit-verdict spec §6, ruled 2026-10-12: trust then price supersedes house default/uncovered ties.
+test("the production Bondbuilder set resolves to Olaplex among the three high-trust products", () => {
   const result = evaluateStage3Authority(
     bondbuilderGapInput([
       trustedBondbuilder("loreal-elvital-bond", "medium"),
@@ -600,12 +635,13 @@ test("the production Bondbuilder set resolves to K18 among the three high-trust 
 
   assert.equal(result.status, "known")
   if (result.status !== "known") return
-  assert.equal(result.recommendation?.productId, BONDBUILDER_TIE_DEFAULT_PRODUCT_ID)
-  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.tie_default")
+  assert.equal(result.recommendation?.productId, "olaplex-3plus")
+  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.validated_standalone")
   assert.ok(result.criteria.some((entry) => entry.criterionId === "bondbuilder.equal_shortlist"))
 })
 
-test("a high-trust tie without K18 stays uncovered even when K18 is less trusted", () => {
+// fit-verdict spec §6, ruled 2026-10-12: trust then price supersedes house default/uncovered ties.
+test("a high-trust tie picks Olaplex even when cheaper K18 is less trusted", () => {
   const result = evaluateStage3Authority(
     bondbuilderGapInput([
       trustedBondbuilder("olaplex-no3", "high"),
@@ -616,8 +652,8 @@ test("a high-trust tie without K18 stays uncovered even when K18 is less trusted
 
   assert.equal(result.status, "known")
   if (result.status !== "known") return
-  assert.equal(result.recommendation, null)
-  assert.deepEqual(result.allowedActions, ["leave_uncovered"])
+  assert.equal(result.recommendation?.productId, "olaplex-no3")
+  assert.deepEqual(result.allowedActions, ["plan_recommendation", "leave_uncovered"])
   assert.ok(result.criteria.some((entry) => entry.criterionId === "bondbuilder.equal_shortlist"))
 })
 

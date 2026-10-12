@@ -1,3 +1,5 @@
+import { evaluateGateCriteria } from "../fit-criteria"
+import type { FitAxis } from "../fit-evaluator"
 import type {
   Stage3AuthorityInput,
   Stage3CategoryAuthorityAdapter,
@@ -7,7 +9,6 @@ import {
   commonUnknownFacts,
   criterion,
   hasValidTarget,
-  isInactiveOrRetired,
   isPendingIdentity,
   knownEvaluation,
   pendingEvaluation,
@@ -28,35 +29,111 @@ function productMissingFacts(input: DryShampooInput, facts: Stage3DryShampooFact
   return [...new Set(missing)].sort()
 }
 
-function isRecommendable(facts: Stage3DryShampooFacts, role: DryShampooInput["role"]): boolean {
-  const protocol = facts.protocols.find((candidateProtocol) => candidateProtocol.role === role)
+function evaluateFacts(input: DryShampooInput, facts: Stage3DryShampooFacts) {
+  const missing = productMissingFacts({ ...input, productFacts: facts }, facts)
+  const target = input.dryShampooTarget
+  const sensitivity = facts.spec.scalpSensitivityFit
+  const tint = facts.spec.hairColorFit
+  const sensitivityMatch =
+    sensitivity === "sensitive_ok"
+      ? true
+      : sensitivity === "normal_only" && target?.scalpSensitivity
+        ? target.scalpSensitivity === "normal"
+        : null
+  const tintMatch =
+    tint === "universal"
+      ? true
+      : tint && ["blonde_light", "brown", "dark"].includes(tint) && target?.hairColorFit
+        ? tint === target.hairColorFit
+        : null
+  // Missing user targets leave an axis unscored. Product facts are still required above.
+  const axes: FitAxis[] = []
+  if (target?.scalpSensitivity != null)
+    axes.push({
+      id: "dry_shampoo.sensitivity.verified",
+      label: "Kopfhautverträglichkeit",
+      scale: ["match", "other"],
+      targetValue: "match",
+      productValues: sensitivityMatch === null ? null : [sensitivityMatch ? "match" : "other"],
+      reason: () => "Die Sensitivitätspositionierung passt nur eingeschränkt zu deiner Kopfhaut.",
+    })
+  if (target?.hairColorFit != null)
+    axes.push({
+      id: "dry_shampoo.tint.verified",
+      label: "Farbpassung",
+      scale: ["match", "other"],
+      targetValue: "match",
+      productValues: tintMatch === null ? null : [tintMatch ? "match" : "other"],
+      reason: () => "Die Tönung passt nur eingeschränkt zu deiner Haarfarbe.",
+    })
+  const criteria = [
+    criterion(
+      "dry_shampoo.identity.active",
+      "Aktive Produktidentität",
+      "pass",
+      "Das Produkt ist aktiv und verträglich.",
+    ),
+    criterion(
+      "dry_shampoo.sensitivity.verified",
+      "Kopfhautverträglichkeit",
+      "pass",
+      "Die Sensitivitätspositionierung ist geprüft.",
+    ),
+    criterion("dry_shampoo.tint.verified", "Farbpassung", "pass", "Die Farbpassung ist geprüft."),
+    criterion(
+      "dry_shampoo.format.verified",
+      "Verifiziertes Format",
+      facts.spec.format === null ? "unknown" : "pass",
+      "Das Format ist geprüft.",
+    ),
+    criterion(
+      "dry_shampoo.protocol.verified",
+      "Verifizierte Anwendung",
+      protocolForRole({ ...input, productFacts: facts })?.status === "verified_complete"
+        ? "pass"
+        : "unknown",
+      "Das Anwendungsprotokoll ist vollständig geprüft.",
+    ),
+  ]
+  if (missing.length > 0)
+    criteria.unshift(
+      criterion(
+        "dry_shampoo.fit.verified_facts",
+        "Verifizierte Trockenshampoo-Fakten",
+        "unknown",
+        "Auffrischung, Farbpassung, Kopfhautsensitivität, Format und Anwendung müssen geprüft sein.",
+      ),
+    )
+  return evaluateGateCriteria(input, facts, criteria, missing, axes)
+}
+
+function bestCandidate(input: DryShampooInput) {
+  // Spec §§3–5, ruled 2026-10-12: verdict first; stable first-entered order inside it.
+  const assessed = input.recommendationCandidates.map((candidate) => ({
+    candidate,
+    result: evaluateFacts(input, candidate),
+  }))
   return (
-    facts.isActive &&
-    facts.lifecycleStatus === "active" &&
-    facts.recommendable &&
-    facts.knownReaction === false &&
-    facts.spec.primaryEffect !== null &&
-    facts.spec.hairColorFit !== null &&
-    facts.spec.scalpSensitivityFit !== null &&
-    facts.spec.format !== null &&
-    protocol?.status === "verified_complete"
+    assessed.find((entry) => entry.result.verdict === "ideal") ??
+    assessed.find((entry) => entry.result.verdict === "supportive") ??
+    null
   )
 }
 
 function recommendationFor(input: DryShampooInput) {
-  // Candidate order is the shared stable first-entered fallback for this category.
-  const candidate = input.recommendationCandidates.find((facts) =>
-    isRecommendable(facts, input.role),
-  )
-  if (!candidate) return null
-
+  const best = bestCandidate(input)
+  if (!best) return null
+  const { candidate, result } = best
   return {
     recommendationId: `stage3:${input.subjectKey}:${candidate.productId}`,
     productId: candidate.productId,
     category: "dry_shampoo" as const,
     role: input.role,
     displayName: candidate.displayName,
-    reason: "Verifizierte Auffrischungs-, Farb-, Kopfhaut- und Formatangaben liegen vor.",
+    reason:
+      result.verdict === "supportive"
+        ? result.criteria.find((row) => row.result === "caution")!.explanation
+        : "Verifizierte Auffrischungs-, Farb-, Kopfhaut- und Formatangaben liegen vor.",
     authorityRuleId: "dry_shampoo.selection.stable_first_entered_verified",
   }
 }
@@ -74,7 +151,7 @@ export const evaluateDryShampooAuthority: Stage3CategoryAuthorityAdapter<"dry_sh
     const recommendation = recommendationFor(input)
     if (input.capturedProductId) return unknownEvaluation(input as never, ["catalog_product_facts"])
     return knownEvaluation(input as never, {
-      verdict: "unknown",
+      verdict: bestCandidate(input)?.result.verdict ?? "unknown",
       criteria: [
         criterion(
           "dry_shampoo.selection.uncovered_role",
@@ -98,73 +175,26 @@ export const evaluateDryShampooAuthority: Stage3CategoryAuthorityAdapter<"dry_sh
     })
   }
 
-  if (isInactiveOrRetired(input as never) || facts.knownReaction === true) {
-    const recommendation = recommendationFor(input)
-    return knownEvaluation(input as never, {
-      verdict: "mismatch",
-      criteria: [
-        criterion(
-          "dry_shampoo.identity.active",
-          "Aktive, verträgliche Produktidentität",
-          "fail",
-          "Das Produkt ist nicht als aktive, verträgliche Trockenshampoo-Option verfügbar.",
-        ),
-      ],
-      allowedActions: ["acknowledge_override", "leave_uncovered"],
-      recommendation,
-      productFactFingerprint: facts.factFingerprint,
-      recommendationFactFingerprint: recommendation
-        ? (input.recommendationCandidates.find(
-            (candidate) => candidate.productId === recommendation.productId,
-          )?.factFingerprint ?? null)
-        : null,
-    })
-  }
-
-  const missingFacts = productMissingFacts(input, facts)
-  if (missingFacts.length > 0) {
-    return unknownEvaluation(input as never, missingFacts, [
-      criterion(
-        "dry_shampoo.fit.verified_facts",
-        "Verifizierte Trockenshampoo-Fakten",
-        "unknown",
-        "Auffrischung, Farbpassung, Kopfhautsensitivität, Format und Anwendung müssen geprüft sein.",
-      ),
-    ])
-  }
-
-  return knownEvaluation(input as never, {
-    verdict: "ideal",
-    criteria: [
-      criterion(
-        "dry_shampoo.identity.active",
-        "Aktive Produktidentität",
-        "pass",
-        "Das Produkt ist aktiv und verträglich.",
-      ),
-      criterion(
-        "dry_shampoo.sensitivity.verified",
-        "Kopfhautverträglichkeit",
-        "pass",
-        "Die Sensitivitätspositionierung ist geprüft.",
-      ),
-      criterion("dry_shampoo.tint.verified", "Farbpassung", "pass", "Die Farbpassung ist geprüft."),
-      criterion(
-        "dry_shampoo.format.verified",
-        "Verifiziertes Format",
-        "pass",
-        "Das Format ist geprüft.",
-      ),
-      criterion(
-        "dry_shampoo.protocol.verified",
-        "Verifizierte Anwendung",
-        "pass",
-        "Das Anwendungsprotokoll ist vollständig geprüft.",
-      ),
-    ],
-    allowedActions: ["keep_owned"],
-    recommendation: null,
+  const result = evaluateFacts(input, facts)
+  if (result.verdict === "unknown") return unknownEvaluation(input, result.missing, result.criteria)
+  const recommendation = result.verdict === "mismatch" ? recommendationFor(input) : null
+  return knownEvaluation(input, {
+    verdict: result.verdict,
+    criteria: result.criteria,
+    allowedActions:
+      result.verdict === "mismatch"
+        ? recommendation
+          ? ["acknowledge_override", "plan_recommendation", "leave_uncovered"]
+          : ["acknowledge_override", "leave_uncovered"]
+        : result.verdict === "supportive"
+          ? ["keep_owned", "acknowledge_override", "leave_uncovered"]
+          : ["keep_owned"],
+    recommendation,
     productFactFingerprint: facts.factFingerprint,
-    recommendationFactFingerprint: null,
+    recommendationFactFingerprint: recommendation
+      ? (input.recommendationCandidates.find(
+          (candidate) => candidate.productId === recommendation.productId,
+        )?.factFingerprint ?? null)
+      : null,
   })
 }

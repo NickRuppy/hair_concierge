@@ -20,10 +20,7 @@ import {
   orderedAxisFitResult,
   repairSupportAxisFitResult,
 } from "./authority/categories/axis-fit"
-import {
-  BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
-  bondbuilderTrustRank,
-} from "./authority/categories/bondbuilder"
+import { bondbuilderTrustRank } from "./authority/categories/bondbuilder"
 import { evaluateStage3Authority } from "./authority/evaluate"
 import { supportiveOwnedRecommendation } from "./authority/supportive-owned-recommendation"
 import { compareRankableCandidates, type RankableCandidate } from "./candidate-ranking"
@@ -431,7 +428,7 @@ export function rankStage3ComparisonCandidates(
 
 /**
  * Bondbuilders rank by claim trust level inside the same verdict (Nick, 2026-10-09): verdict
- * first (trust never lifts a worse fit), then trust tier, then the K18 house default among equally
+ * first (trust never lifts a worse fit), then trust tier, then price among equally
  * trusted candidates. Everything else falls through to the shared comparator.
  */
 export function compareBondbuilderTrust(
@@ -442,9 +439,10 @@ export function compareBondbuilderTrust(
   if (verdictOrder !== 0) return verdictOrder
   const trustOrder = candidateTrustRank(left.facts) - candidateTrustRank(right.facts)
   if (trustOrder !== 0) return trustOrder
+  // Spec §6, ruled 2026-10-12: equal trust resolves by price before catalog order.
   return (
-    Number(right.productId === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID) -
-    Number(left.productId === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID)
+    (left.facts.priceEur ?? Number.MAX_SAFE_INTEGER) -
+    (right.facts.priceEur ?? Number.MAX_SAFE_INTEGER)
   )
 }
 

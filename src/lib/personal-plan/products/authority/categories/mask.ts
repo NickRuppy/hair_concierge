@@ -203,17 +203,28 @@ export function evaluateMaskAuthority(
   if (assessment.verdict === "unknown") {
     return unknownEvaluation(sharedInput, assessment.missing, assessment.criteria)
   }
-  const recommendation =
-    input.productFacts.recommendable &&
-    !isInactiveOrRetired(sharedInput) &&
-    (assessment.verdict === "ideal" || assessment.verdict === "supportive") &&
-    protocolForRole(sharedInput)?.status === "verified_complete"
-      ? recommendationForMask(
-          input.productFacts,
-          assessment.verdict === "supportive",
-          assessment.criteria.find((item) => item.result === "caution")?.explanation,
-        )
+  const replacement =
+    assessment.verdict === "mismatch"
+      ? evaluateMaskAuthority({
+          ...input,
+          productFacts: null,
+          capturedProductId: null,
+          subjectIdentity: null,
+        })
       : null
+  const recommendation =
+    replacement?.status === "known"
+      ? replacement.recommendation
+      : input.productFacts.recommendable &&
+          !isInactiveOrRetired(sharedInput) &&
+          (assessment.verdict === "ideal" || assessment.verdict === "supportive") &&
+          protocolForRole(sharedInput)?.status === "verified_complete"
+        ? recommendationForMask(
+            input.productFacts,
+            assessment.verdict === "supportive",
+            assessment.criteria.find((item) => item.result === "caution")?.explanation,
+          )
+        : null
   return knownEvaluation(sharedInput, {
     verdict: assessment.verdict,
     criteria: assessment.criteria,
@@ -221,10 +232,17 @@ export function evaluateMaskAuthority(
       assessment.verdict === "ideal"
         ? ["keep_owned"]
         : assessment.verdict === "mismatch"
-          ? ["acknowledge_override"]
+          ? recommendation
+            ? ["acknowledge_override", "plan_recommendation", "leave_uncovered"]
+            : ["acknowledge_override", "leave_uncovered"]
           : ["keep_owned", "leave_uncovered"],
     recommendation,
     productFactFingerprint: input.productFacts.factFingerprint,
-    recommendationFactFingerprint: recommendation ? input.productFacts.factFingerprint : null,
+    recommendationFactFingerprint:
+      replacement?.status === "known"
+        ? replacement.recommendationFactFingerprint
+        : recommendation
+          ? input.productFacts.factFingerprint
+          : null,
   })
 }

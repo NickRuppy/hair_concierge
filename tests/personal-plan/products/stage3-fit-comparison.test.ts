@@ -725,6 +725,15 @@ for (const scenario of [
       ],
     })
 
+    // fit-verdict spec §6, ruled 2026-10-12: companion alternatives are excluded.
+    if (scenario.category === "bondbuilder") {
+      const comparison = buildStage3FitComparison(input)
+      assert.equal(
+        comparison.alternatives.some((candidate) => candidate.productId === "supportive-candidate"),
+        false,
+      )
+      return
+    }
     const comparison = buildStage3FitComparison(input)
     const selected =
       comparison.alternatives.find((candidate) => candidate.productId === "supportive-candidate") ??
@@ -1310,6 +1319,7 @@ test("Bondbuilder bedtime leave-in is distinct from post-wash use and never over
   )
 })
 
+// fit-verdict spec §6, ruled 2026-10-12: keep owned companions visible; exclude companion candidates.
 test("Bondbuilder shows the standalone row only when a displayed product is an add-on", () => {
   const standaloneOnly = buildStage3FitComparison(
     authorityInput("bondbuilder", "specialized_bond_treatment", {
@@ -1325,7 +1335,9 @@ test("Bondbuilder shows the standalone row only when a displayed product is an a
 
   const withAddOn = buildStage3FitComparison(
     authorityInput("bondbuilder", "specialized_bond_treatment", {
-      productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned"),
+      productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned", {
+        relationship: "add_on",
+      }),
       candidates: [
         factsFor("bondbuilder", "specialized_bond_treatment", "add-on-candidate", {
           relationship: "add_on",
@@ -1342,15 +1354,17 @@ test("Bondbuilder shows the standalone row only when a displayed product is an a
   assert.equal(relationship.label, "Wirkt eigenständig")
   assert.equal(relationship.target?.valueLabel, "eigenständig")
   assert.deepEqual(relationship.productValues, [
-    { productId: "owned", valueLabel: "eigenständig", relation: "in_target" },
-    { productId: "add-on-candidate", valueLabel: "nur ergänzend", relation: "supportive" },
+    { productId: "owned", valueLabel: "nur ergänzend", relation: "outside_target" },
   ])
 })
 
+// fit-verdict spec §6, ruled 2026-10-12: keep owned companions visible; exclude companion candidates.
 test("Bondbuilder standalone row states a dedicated rationale, not the generic profile claim", () => {
   const withAddOn = buildStage3FitComparison(
     authorityInput("bondbuilder", "specialized_bond_treatment", {
-      productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned"),
+      productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned", {
+        relationship: "add_on",
+      }),
       candidates: [
         factsFor("bondbuilder", "specialized_bond_treatment", "add-on-candidate", {
           relationship: "add_on",
@@ -1403,7 +1417,8 @@ test("Bondbuilder Anwendung does not invent a leave-in instruction for a rinse-o
 // three standalone candidates tie on verdict, coverage, and cautions, so only the pin can decide
 // between them. K18 carries the worst catalogSortOrder of the three, so this only passes when the
 // pin is applied strictly after verdict/coverage/cautions and strictly before catalog order.
-test("Bondbuilder tie-default pin decides the order only after verdict, coverage, and cautions tie", () => {
+// fit-verdict spec §6, ruled 2026-10-12: house default retired; equal prices retain catalog order.
+test("Bondbuilder equally trusted and priced options retain stable catalog order", () => {
   const input = authorityInput("bondbuilder", "specialized_bond_treatment", {
     productFacts: null,
     capturedProductId: null,
@@ -1421,7 +1436,7 @@ test("Bondbuilder tie-default pin decides the order only after verdict, coverage
 
   assert.deepEqual(
     comparison.alternatives.map((candidate) => candidate.productId),
-    [BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "olaplex-no3", "epres"],
+    ["olaplex-no3", "epres", BONDBUILDER_TIE_DEFAULT_PRODUCT_ID],
   )
 })
 
@@ -1434,7 +1449,8 @@ function trustedBondbuilderFacts(
   return { ...facts, spec: { ...facts.spec, claimTrustLevel } }
 }
 
-test("Bondbuilder comparison ranks by trust tier, then the K18 default, before catalog order", () => {
+// fit-verdict spec §6, ruled 2026-10-12: trust then price.
+test("Bondbuilder comparison ranks by trust tier then price before catalog order", () => {
   const input = authorityInput("bondbuilder", "specialized_bond_treatment", {
     productFacts: null,
     capturedProductId: null,
@@ -1459,9 +1475,9 @@ test("Bondbuilder comparison ranks by trust tier, then the K18 default, before c
       (candidate) => candidate.productId,
     ),
     [
-      BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
       "olaplex-3plus",
       "epres",
+      BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
       "loreal-elvital-bond",
       "redken-acidic-bonding",
       "kerastase-premiere",
@@ -1471,7 +1487,8 @@ test("Bondbuilder comparison ranks by trust tier, then the K18 default, before c
   )
 })
 
-test("Bondbuilder comparison never ranks a more trusted add-on above a standalone ideal product", () => {
+// fit-verdict spec §6, ruled 2026-10-12: a companion cannot be a standalone alternative.
+test("Bondbuilder comparison excludes a more trusted add-on from standalone alternatives", () => {
   const input = authorityInput("bondbuilder", "specialized_bond_treatment", {
     productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned"),
     candidates: [
@@ -1483,10 +1500,7 @@ test("Bondbuilder comparison never ranks a more trusted add-on above a standalon
   const ranked = rankStage3ComparisonCandidates(input as unknown as Stage3AuthorityInput)
   assert.deepEqual(
     ranked.map((candidate) => [candidate.productId, candidate.verdict]),
-    [
-      ["standalone-low", "ideal"],
-      ["add-on-high", "supportive"],
-    ],
+    [["standalone-low", "ideal"]],
   )
 })
 
@@ -2275,6 +2289,10 @@ function factsFor<C extends PersonalPlanCategory>(
           usageProtocol:
             overrides.usageProtocol === undefined ? "verified_course" : overrides.usageProtocol,
           relationship: overrides.relationship ?? "standalone",
+          // fit-verdict spec §6, ruled 2026-10-12: reviewed technology fixture.
+          technologyFamily: "sulfur_targeting_dimaleate",
+          trustBasis: "owner_anchor",
+          claimTrustLevel: "high",
         },
       } as never
     case "deep_cleansing_shampoo":

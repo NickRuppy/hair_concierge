@@ -223,17 +223,30 @@ export const evaluateLeaveInAuthority: Stage3CategoryAuthorityAdapter<"leave_in"
   const result = evaluateFacts(input, input.productFacts)
   if (result.verdict === "unknown")
     return unknownEvaluation(input as never, result.missing ?? [], result.criteria)
+  const replacement =
+    result.verdict === "mismatch"
+      ? evaluateLeaveInAuthority({
+          ...input,
+          productFacts: null,
+          capturedProductId: null,
+          subjectIdentity: null,
+        })
+      : null
+  const recommendation = replacement?.status === "known" ? replacement.recommendation : null
   return knownEvaluation(input as never, {
     verdict: result.verdict,
     criteria: result.criteria,
     allowedActions:
       result.verdict === "mismatch"
-        ? ["acknowledge_override", "leave_uncovered"]
+        ? recommendation
+          ? ["acknowledge_override", "plan_recommendation", "leave_uncovered"]
+          : ["acknowledge_override", "leave_uncovered"]
         : result.verdict === "supportive"
           ? ["keep_owned", "leave_uncovered"]
           : ["keep_owned"],
-    recommendation: null,
+    recommendation,
     productFactFingerprint: input.productFacts.factFingerprint,
-    recommendationFactFingerprint: null,
+    recommendationFactFingerprint:
+      replacement?.status === "known" ? replacement.recommendationFactFingerprint : null,
   })
 }

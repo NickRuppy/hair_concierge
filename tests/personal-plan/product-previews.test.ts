@@ -725,6 +725,10 @@ test("Bondbuilder previews ignore legacy diameter fit but still require verified
       productFormat: "treatment",
       usageProtocol: "course",
       relationship: "standalone",
+      // fit-verdict spec §6, ruled 2026-10-12: reviewed technology fixture.
+      technologyFamily: "sulfur_targeting_dimaleate",
+      trustBasis: "owner_anchor",
+      claimTrustLevel: "high",
     },
   }
   const snapshot = {
@@ -778,16 +782,8 @@ test("Bondbuilder previews ignore legacy diameter fit but still require verified
   assert.equal(asFallback(incomplete.previews[0]!).fallback, "post_refinement")
 })
 
-test("a tied Bondbuilder shortlist previews the authority's tie default, not an illustration", async () => {
-  // History: product-previews.ts once special-cased bondbuilder ties with a
-  // hardcoded product id (STAGE1_BONDBUILDER_EXAMPLE_PRODUCT_ID, K18) as an
-  // illustration-only fallback whenever multiple ideal candidates tied and
-  // the bondbuilder authority itself declined to pick one
-  // (recommendationCandidates.length > 1 => recommendation: null). That
-  // presentation hardcode stays removed. The tie is now resolved where it
-  // belongs — inside the authority, as the `bondbuilder.stage3.tie_default`
-  // rule (BONDBUILDER_TIE_DEFAULT_PRODUCT_ID) — so the preview shows a real,
-  // buyable recommendation with that product's own facts and fingerprint.
+// fit-verdict spec §6, ruled 2026-10-12: trust ties pick cheaper first, including without K18.
+test("a tied Bondbuilder shortlist previews the cheapest reviewed option, not an illustration", async () => {
   const result = computeNeedPlan({
     rawEnvelope: COMPLETE_V3_PLAN_ENVELOPE,
     artifactId: "11111111-1111-4111-8111-111111111111",
@@ -826,6 +822,7 @@ test("a tied Bondbuilder shortlist previews the authority's tie default, not an 
     isActive: true,
     lifecycleStatus: "active",
     recommendable: true,
+    priceEur: productId === "olaplex" ? 34 : productId === "epres" ? 48 : 56.25,
     suitableThicknesses: [result.snapshot.profile.hair.thickness],
     knownReaction: false,
     protocols: [{ role, status: "verified_complete", fingerprint: `protocol-${productId}` }],
@@ -841,6 +838,10 @@ test("a tied Bondbuilder shortlist previews the authority's tie default, not an 
       usageProtocol:
         productId === "38dace91-0fba-49ee-a93f-ac36e488fe4b" ? "k18_leave_in" : "course",
       relationship: "standalone",
+      // fit-verdict spec §6, ruled 2026-10-12: reviewed technology fixture.
+      technologyFamily: "sulfur_targeting_dimaleate",
+      trustBasis: "owner_anchor",
+      claimTrustLevel: "high",
     },
   })
   const tiedCandidates = [
@@ -872,14 +873,13 @@ test("a tied Bondbuilder shortlist previews the authority's tie default, not an 
 
   assert.equal(response.previews.length, 1)
   const tied = asRecommendation(response.previews[0]!)
-  assert.equal(tied.productId, "38dace91-0fba-49ee-a93f-ac36e488fe4b")
-  assert.equal(tied.productName, "K18 Leave-In Molecular Repair Hair Mask")
-  assert.equal(tied.imageUrl, "https://example.com/k18.webp")
-  assert.equal(tied.factFingerprint, "facts-38dace91-0fba-49ee-a93f-ac36e488fe4b")
+  assert.equal(tied.productId, "olaplex")
+  assert.equal(tied.productName, "OLAPLEX No.3PLUS Complete Repair Treatment")
+  assert.equal(tied.imageUrl, "https://example.com/olaplex.webp")
+  assert.equal(tied.factFingerprint, "facts-olaplex")
   assert.equal(tied.verdict, "ideal")
 
-  // A tie WITHOUT the default product on the shortlist keeps the honest
-  // fallback: the authority still refuses to pick among equals.
+  // Equal trust still resolves to the cheaper option when K18 is absent.
   const tieWithoutDefault = await computeStage1ProductExamplePreviews({
     ...previewInput,
     loadCandidates: async () =>
@@ -887,22 +887,18 @@ test("a tied Bondbuilder shortlist previews the authority's tie default, not an 
   })
 
   assert.equal(tieWithoutDefault.previews.length, 1)
-  assert.equal(asFallback(tieWithoutDefault.previews[0]!).fallback, "post_refinement")
+  assert.equal(asRecommendation(tieWithoutDefault.previews[0]!).productId, "olaplex")
 
   // If only one ideal candidate remains, the tie resolves and the engine
   // recommends it directly (no tie default involved).
+  // fit-verdict spec §§2,6, ruled 2026-10-12: protocol gaps, not diameter, exclude candidates.
   const untied = await computeStage1ProductExamplePreviews({
     ...previewInput,
     loadCandidates: async () =>
       tiedCandidates.map((item) =>
         item.productId === "38dace91-0fba-49ee-a93f-ac36e488fe4b"
           ? item
-          : {
-              ...item,
-              suitableThicknesses: [
-                result.snapshot.profile.hair.thickness === "coarse" ? "fine" : "coarse",
-              ],
-            },
+          : { ...item, protocols: [] },
       ),
   })
 

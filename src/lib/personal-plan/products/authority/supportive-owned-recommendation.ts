@@ -1,5 +1,4 @@
 import type { Stage3Recommendation } from "../contracts"
-import { recommendationForBondbuilder } from "./categories/bondbuilder"
 import { recommendationForMask } from "./categories/mask"
 import { recommendationForSupportiveOil } from "./categories/oil"
 import { recommendationForShampoo } from "./categories/shampoo"
@@ -34,7 +33,7 @@ export function supportiveOwnedRecommendation(
     case "oil":
       return recommendationForSupportiveOil(candidate, input as Stage3AuthorityInput<"oil">)
     case "bondbuilder":
-      return recommendationForBondbuilder(candidate, true)
+      return null // Spec §6, ruled 2026-10-12: Bondbuilder never has supportive candidates.
     default:
       return null
   }

@@ -785,12 +785,13 @@ test("a user-excluded category with an owned product keeps it when leave_uncover
   })
 })
 
-test("a user-excluded category with a mismatching owned product falls back to acknowledging it", () => {
+// fit-verdict spec §5 / §7a.6, ruled 2026-10-12: mismatch respects explicit exclusion.
+test("a user-excluded category with a mismatching owned product stays uncovered", () => {
   const evaluation = knownEvaluation({
     category: "mask",
     role: "intensive_conditioning_mask",
     capturedProductId: "captured-9",
-    allowedActions: ["acknowledge_override"],
+    allowedActions: ["acknowledge_override", "leave_uncovered"],
     verdict: "mismatch",
   })
   const plan = buildStage3RecomputeIntents({
@@ -818,7 +819,7 @@ test("a user-excluded category with a mismatching owned product falls back to ac
     {
       type: "resolve_decision",
       subjectKey: evaluation.subjectKey,
-      action: "acknowledge_override",
+      action: "leave_uncovered",
     },
   ])
 })

@@ -1,3 +1,5 @@
+import type { Stage3CriterionResult } from "../contracts"
+import { CATEGORY_ROLE_POLICIES } from "../authorities"
 import type { Stage3AuthorityInput, Stage3CategoryProductFacts } from "./contracts"
 import type { FitAxis, FitAxisReasonInput, FitGate } from "./fit-evaluator"
 import { evaluateFit } from "./fit-evaluator"
@@ -130,4 +132,71 @@ export function evaluateCriteria(
         ? criteria.filter((item) => item.result !== "pass")
         : criteria,
   }
+}
+
+/** Gates-only adapters retain their existing criterion rows and missing-fact wire keys.
+ * Spec §§2–4, ruled 2026-10-12: a known failed gate wins over incomplete facts.
+ */
+export function evaluateGateCriteria(
+  input: Pick<Stage3AuthorityInput, "category" | "role" | "capturedProductId">,
+  facts: Stage3CategoryProductFacts,
+  criteria: Stage3CriterionResult[],
+  missing: string[],
+  axes: FitAxis[] = [],
+) {
+  const prefix = input.category === "deep_cleansing_shampoo" ? "deep_cleansing" : input.category
+  const common = commonFitGates(input, facts)
+    .filter((gate) => gate.id !== "verified_protocol")
+    .map((gate) => ({ ...gate, id: gate.id.replace(input.category, prefix) }))
+  const gates: FitGate[] = [
+    ...common,
+    {
+      id: `${prefix}.category`,
+      label: "Produktrolle",
+      outcome: facts.category === input.category ? "pass" : "fail",
+      reason: "Das Produkt deckt diese Produktrolle nicht ab.",
+    },
+    {
+      id: `${prefix}.role`,
+      label: "Produktrolle",
+      outcome: CATEGORY_ROLE_POLICIES[input.category].allowedRoles.some(
+        (role) => role === input.role,
+      )
+        ? "pass"
+        : "fail",
+      reason: "Das Produkt deckt diese Produktrolle nicht ab.",
+    },
+    ...criteria
+      .filter((row) => !axes.some((axis) => axis.id === row.criterionId))
+      .map((row) => ({
+        id: row.criterionId,
+        label: row.label,
+        outcome: row.result === "caution" ? ("pass" as const) : row.result,
+        reason: row.explanation,
+      })),
+    ...missing.map((id) => ({ id, label: id, outcome: "unknown" as const })),
+  ]
+  const evaluation = evaluateFit({ gates, axes })
+  const rows = [...criteria]
+  for (const gate of gates) {
+    if (
+      gate.outcome === "fail" &&
+      !rows.some((row) => row.criterionId === gate.id && row.result === "fail")
+    )
+      rows.push(criterion(gate.id, gate.label, "fail", gate.reason ?? gate.label))
+  }
+  for (const outcome of evaluation.axisOutcomes) {
+    const row = rows.find((row) => row.criterionId === outcome.id)
+    if (!row) continue
+    row.result =
+      outcome.steps === null
+        ? "unknown"
+        : outcome.steps === 0
+          ? "pass"
+          : outcome.steps === 1
+            ? "caution"
+            : "fail"
+    if (outcome.reason) row.explanation = outcome.reason
+  }
+  return { verdict: evaluation.verdict, criteria: rows, missing }
 }
