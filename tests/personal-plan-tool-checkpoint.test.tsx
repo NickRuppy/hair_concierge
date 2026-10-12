@@ -158,7 +158,7 @@ test("the inventory comes from the session the tools module completed with (Lena
       ["Bürsten & Kämme", ["Grobzinkiger Kamm", "Rundbürste"]],
       ["Haartrockner & Luftstyler", ["Föhn", "Warmluftbürste"]],
       ["Hitzestyling-Tools", ["Glätteisen"]],
-      ["Nachtschutz", ["Glatter Kissenbezug"]],
+      ["Nachtschutz", ["Glatter Kissenbezug (z. B. Seide, Satin)"]],
     ],
   )
 })

@@ -266,7 +266,12 @@ test("the rendered Waschtag shows Lena's tools as image-led sections, never as p
   const markup = renderToStaticMarkup(
     <ApplicationDay day={day as ApplicationDayView} overviewHref="/anwendung" />,
   )
-  for (const label of ["Mikrofaser-Handtuch", "Föhn", "Glätteisen", "Glatter Kissenbezug"]) {
+  for (const label of [
+    "Mikrofaser-Handtuch",
+    "Föhn",
+    "Glätteisen",
+    "Glatter Kissenbezug (z. B. Seide, Satin)",
+  ]) {
     assert.ok(markup.includes(label), `${label} is on the Waschtag`)
   }
   assert.ok(markup.includes("data-application-tool-use"))

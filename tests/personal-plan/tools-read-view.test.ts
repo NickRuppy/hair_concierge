@@ -56,7 +56,7 @@ const toolsOn = {
 
 /**
  * Lena (§6): Föhn, Warmluftbürste, Glätteisen, Rundbürste, Grobzinkiger Kamm,
- * Mikrofaser-Handtuch, Glatter Kissenbezug — answered by her, stored through the facts door.
+ * Mikrofaser-Handtuch, Glatter Kissenbezug (z. B. Seide, Satin) — answered by her, stored through the facts door.
  */
 function lenaDraft() {
   const contract = resolveStage2RefinementContract({

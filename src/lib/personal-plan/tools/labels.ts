@@ -100,14 +100,58 @@ export const TOOL_PRODUCT_TYPE_LABELS = {
   applicator_bottle: "Applikatorflasche",
   applicator_comb: "Applikatorkamm",
   water_spray_bottle: "Sprühflasche",
-  pillowcase: "Glatter Kissenbezug",
+  // Night forms (polish 2026-10-12): the names people know. Seide/Satin are named as examples
+  // of a smooth surface only — never as a material-quality claim (`N03`).
+  pillowcase: "Glatter Kissenbezug (z. B. Seide, Satin)",
   bonnet: "Bonnet",
-  length_tip_sleeve: "Längen-/Spitzenschutz",
-  soft_night_tie: "Weiches Nacht-Haargummi",
+  length_tip_sleeve: "Spitzen-Schoner",
+  soft_night_tie: "Scrunchie / weiches Haargummi",
   microfiber_towel: "Mikrofaser-Handtuch",
   smooth_cotton_cloth: "Glattes Baumwolltuch / T-Shirt",
   drying_wrap: "Haarturban / Wrap",
 } as const satisfies Record<ToolProductType, string>
+
+/**
+ * Line-break-ready forms of the tool names, for the two-column photo cards only.
+ *
+ * The cards hyphenate automatically, which splits German compounds mid-stem
+ * („Applikatorfla-sche") and, in WebKit, even re-hyphenates the half after a real hyphen
+ * („Kopfhaut-Bürs-te"). A form listed here renders with `hyphens: manual` instead, so it breaks
+ * only at a real hyphen, a space, or the soft hyphen (U+00AD) placed at the compound boundary.
+ * `z. B.` keeps a no-break space, `T-Shirt` a no-break hyphen (U+2011).
+ *
+ * Display only: answers, alt texts, announcements and every other surface keep the plain label,
+ * and each entry must read exactly as its label once the break hints are removed (tested).
+ * Labels with a „-/" pair („Styling-/Definitionsbürste", „Stiel-/Abteilkamm") stay automatic:
+ * Chromium cannot break between the hyphen and the slash, so a manual form would overflow.
+ */
+export const TOOL_CARD_LABELS: Partial<Record<ToolReportedForm, string>> = {
+  hot_air_brush: "Warmluft\u00ADbürste",
+  air_multi_styler: "Air Multi-Styler",
+  heated_multi_styler: "Beheizter Multi-Styler",
+  heatless_curling_band: "Heatless Locken\u00ADband",
+  setting_roller: "Locken\u00ADwickler",
+  foam_roller: "Schaumstoff\u00ADwickler",
+  flexi_rod: "Flexi-Rod",
+  setting_former: "Setting-Former",
+  detangling_brush: "Detangling-Bürste",
+  paddle_brush: "Paddle-Bürste",
+  vent_brush: "Vent-Bürste",
+  boar_bristle: "Wildschwein\u00ADborsten-Bürste",
+  hair_pick: "Afro-Pick",
+  root_volume_clip: "Ansatz\u00ADvolumen-Clips",
+  scalp_brush: "Kopfhaut-Bürste",
+  applicator_bottle: "Applikator\u00ADflasche",
+  applicator_comb: "Applikator\u00ADkamm",
+  water_spray_bottle: "Sprüh\u00ADflasche",
+  pillowcase: "Glatter Kissen\u00ADbezug (z.\u00A0B. Seide, Satin)",
+  length_tip_sleeve: "Spitzen-Schoner",
+  soft_night_tie: "Scrunchie / weiches Haar\u00ADgummi",
+  microfiber_towel: "Mikrofaser-Handtuch",
+  smooth_cotton_cloth: "Glattes Baum\u00ADwoll\u00ADtuch / T\u2011Shirt",
+  frottee: "Frottee-Handtuch",
+  diffuser: "Diffusor-Aufsatz",
+}
 
 /**
  * Answer-only tokens (`D9b`). „Nur Finger" is a real answer about how the user
