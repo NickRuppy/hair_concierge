@@ -17,6 +17,7 @@ import {
   userAnsweredQuestionIds,
 } from "@/lib/personal-plan/refinement/answer-provenance"
 import { resolveAssumedAnswers } from "@/lib/personal-plan/refinement/assumed-defaults"
+import { carryOverStage2NightAnswer } from "@/lib/personal-plan/refinement/night-wear-carry-over"
 import {
   STAGE2_MODULES,
   type PersonalPlanRefinementAnswersV1,
@@ -168,9 +169,19 @@ export type Stage2RefinementSnapshotBuilder = (input: {
   computationVersion: string
 }
 
+/**
+ * A persisted draft as every reader interprets it: the earlier night answer of a Gewohnheiten
+ * finished before the night question existed carries over (`carryOverStage2NightAnswer`). The
+ * service works on this form, so the next save persists the carried-over answer.
+ */
+export function interpretStage2PersistedDraft(draft: Stage2PersistedDraft): Stage2PersistedDraft {
+  return carryOverStage2NightAnswer(draft.triggerContext, draft)
+}
+
 export function stage2SessionFromPersistedDraft(
-  draft: Stage2PersistedDraft,
+  persisted: Stage2PersistedDraft,
 ): Stage2RefinementSession {
+  const draft = interpretStage2PersistedDraft(persisted)
   return createStage2RefinementSession({
     pathVersion: draft.pathVersion,
     triggerContext: draft.triggerContext,
@@ -294,8 +305,8 @@ export function createStage2RefinementService(input: {
         "A fresh refinement draft is unavailable",
       )
     }
-    cached = draft
-    return draft
+    cached = interpretStage2PersistedDraft(draft)
+    return cached
   }
 
   /** Today's terminal completion, shared by `complete()` and the closing module. */
@@ -355,7 +366,9 @@ export function createStage2RefinementService(input: {
       if (!parsed.success) throw new Stage2RefinementError("invalid_answer")
       let draft = cached ?? (await loadDraft())
       if (draft.status === "complete") {
-        const reopened = await input.persistence.reopen({ userId: input.userId, draft })
+        const reopened = interpretStage2PersistedDraft(
+          await input.persistence.reopen({ userId: input.userId, draft }),
+        )
         // The successor row is new; the pre-fill context is the member's, so it carries over.
         draft = draft.prefillCare ? { ...reopened, prefillCare: draft.prefillCare } : reopened
         cached = draft

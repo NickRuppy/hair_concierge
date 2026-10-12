@@ -17,7 +17,10 @@ import {
   TOWEL_TECHNIQUE_LABELS,
 } from "@/lib/vocabulary"
 import { getSelectedStage2HeatEventSources } from "@/lib/personal-plan/refinement/heat-events"
-import { nightWearFromNightProtection } from "@/lib/personal-plan/tools/facts"
+import {
+  nightWearFromEarlierNightAnswer,
+  nightWearFromNightProtection,
+} from "@/lib/personal-plan/tools/facts"
 import type {
   AdditionalHeatTool,
   DryingRoute,
@@ -517,9 +520,10 @@ function usesNoHeatSource(
 }
 
 /**
- * The „Nachts" row (Rev. 6): the night question's answer, or — before it was asked — the
- * technique the member's earlier night answer names. Without either it is still open (an
- * earlier list without a technique cannot say „Offen").
+ * The „Nachts" row (Rev. 6): the night question's answer, or — for a Feinschliff finished before
+ * it existed — the earlier night answer carried over (`carryOverStage2NightAnswer`): its
+ * technique, else „Offen". Without a Feinschliff answer, a technique in the profile's own night
+ * column; otherwise still open.
  */
 const NIGHT_WEAR_FIELD: ProfileFieldConfig = {
   key: "night_wear",
@@ -529,7 +533,7 @@ const NIGHT_WEAR_FIELD: ProfileFieldConfig = {
   getValue: (profile, plan) => {
     const wear =
       plan?.nightWear ??
-      nightWearFromNightProtection(plan?.nightProtection) ??
+      nightWearFromEarlierNightAnswer(plan?.nightProtection) ??
       nightWearFromNightProtection(profile?.night_protection)
     return wear ? PLAN_NIGHT_WEAR_LABELS[wear] : null
   },

@@ -906,6 +906,19 @@ export function nightWearFromNightProtection(
 }
 
 /**
+ * The `nightWear` an EARLIER night answer (the pre-Rev.-6 multi-select, which offered both
+ * techniques) stands for: its technique, else „Offen" — she was asked and chose neither. Unlike
+ * `nightWearFromNightProtection` this reads an answered list as complete; `undefined` only when
+ * there is no list at all.
+ */
+export function nightWearFromEarlierNightAnswer(
+  nightProtection: readonly NightProtection[] | null | undefined,
+): NightWear | undefined {
+  if (!Array.isArray(nightProtection)) return undefined
+  return nightWearFromNightProtection(nightProtection) ?? "open"
+}
+
+/**
  * The drying routes Gewohnheiten offers for a settled `airflow` family: `air_dry` always, the
  * rest per owned form (`TOOL_FORM_CARE_FACTS[form].dryingRoutes`). `null` while `airflow` is
  * unknown — every route stays offered then.

@@ -514,14 +514,16 @@ test("Profil: „Keine Hitze“ collapse is unchanged and „Nachts“ stays las
   )
 })
 
-test("Profil: „Nachts“ reads an earlier technique, is open without one, and is absent for short hair", () => {
+test("Profil: „Nachts“ carries over an earlier night answer, is open without one, and is absent for short hair", () => {
   const row = (plan: PersonalPlanRefinementAnswersV1) =>
     profileHabitsRows(null, plan).find((candidate) => candidate.key === "night_wear")
   assert.equal(
     row({ nightProtection: ["silk_satin_pillow", "loose_tied"] })?.value,
     "Locker zusammengebunden",
   )
-  assert.equal(row({ nightProtection: ["silk_satin_pillow"] })?.value, null)
+  // Rev. 6 review fix F3: an earlier answer without a technique chose neither — „Offen".
+  assert.equal(row({ nightProtection: ["silk_satin_pillow"] })?.value, "Offen")
+  assert.equal(row({})?.value, null)
   const shortHair = plannerProfile({ hair_length: "short", night_protection: null })
   assert.equal(
     profileHabitsRows(shortHair, { nightWear: "open" }).some((r) => r.key === "night_wear"),
