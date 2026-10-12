@@ -13,6 +13,10 @@ import {
   toolFormsByFamily,
 } from "@/lib/personal-plan/tools/facts"
 import {
+  TOOL_BLOCK_BASIS_LEAD,
+  TOOL_BLOCK_BASIS_LEAD_KNOWN,
+} from "@/lib/personal-plan/tools/presentation"
+import {
   buildToolView,
   scalpApplicationJobFromDecisions,
   scalpApplicationJobFromRoutine,
@@ -544,4 +548,28 @@ test("an empty facts document still yields the profile-driven Tool needs, all un
   for (const asset of view.routineSection!.assets) {
     assert.equal(asset.ownership, "unknown", asset.assetKey)
   }
+})
+
+/* ── Stage-1 basis lead follows the cards ─────────────────────────────── */
+
+test("before the Tools module the basis lead promises the Feinschliff check", () => {
+  const view = viewFor({ careHabits: null, fieldProvenance: undefined })
+  assert.ok(view.stage1Cards.basis)
+  assert.ok(view.stage1Cards.basis!.cards.some((card) => card.state === "check_in_refinement"))
+  assert.equal(view.stage1Cards.basis!.lead, TOOL_BLOCK_BASIS_LEAD)
+  assert.equal(
+    view.stage1Cards.basis!.lead,
+    "Diese Tools gehören zu deiner Routine. Wir prüfen im Feinschliff, was du schon hast.",
+  )
+})
+
+test("once the Tools are answered the basis lead points at the marks instead", () => {
+  const view = viewFor()
+  assert.ok(view.stage1Cards.basis)
+  assert.ok(view.stage1Cards.basis!.cards.every((card) => card.state !== "check_in_refinement"))
+  assert.equal(view.stage1Cards.basis!.lead, TOOL_BLOCK_BASIS_LEAD_KNOWN)
+  assert.equal(
+    view.stage1Cards.basis!.lead,
+    "Diese Tools gehören zu deiner Routine. Was du schon hast, ist markiert.",
+  )
 })
