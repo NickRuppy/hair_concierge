@@ -1031,3 +1031,17 @@ test("Stil: with hot tools, a heat Hebel says „schonender“, never „weniger
     [],
   )
 })
+
+test("Stil: what heat does is not „weniger Hitze“ advice (prod 2026-10-12)", () => {
+  const brief = cleanBrief()
+  // The note Nomi's generation was discarded for: the protectant reduces heat strain.
+  brief.hebel[0]!.note =
+    "Der Hitzeschutz ist dafür als neuer Produktzug hinterlegt; es kann die Belastung durch Hitze reduzieren."
+  assert.deepEqual(lintConsultBrief(brief, nomiInput()), [])
+  // The advice itself is still caught.
+  brief.hebel[0]!.note = "Sie sollte die Hitze reduzieren."
+  assert.deepEqual(
+    lintConsultBrief(brief, nomiInput()).map((finding) => finding.rule),
+    ["heat_less_framing"],
+  )
+})

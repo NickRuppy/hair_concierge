@@ -212,8 +212,12 @@ export async function generateConsultBrief(
     instruction: correctionInstruction(first.findings),
   })
   if ("error" in second) return second
-  if (second.findings.length > 0) {
-    return { error: { code: "lint_failed", findings: second.findings } }
+  // Only the guardrails (G1–G6) discard a brief. A „Stil" rule steers the retry, but a brief
+  // that still trips one is kept — Nick edits wording; a discarded brief helps nobody (prod
+  // 2026-10-12: a protectant's „Belastung durch Hitze reduzieren" threw Nomi's brief away).
+  const fatal = second.findings.filter((finding) => finding.guardrail !== "Stil")
+  if (fatal.length > 0) {
+    return { error: { code: "lint_failed", findings: fatal } }
   }
   return { brief: second.brief, sourceHash: consultSourceHash(input) }
 }

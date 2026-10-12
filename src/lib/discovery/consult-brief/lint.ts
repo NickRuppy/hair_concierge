@@ -726,9 +726,12 @@ export const DIAGNOSE_PLAN_TALK = words(
   "vorgesehen|geplant|soll künftig|sollen künftig|wird künftig|werden künftig|steht an|stehen an",
 )
 
-/** „Less heat" wording, illegal when hot tools are part of her styling (item 5). */
+/**
+ * „Less heat" advice, illegal when hot tools are part of her styling (item 5). What heat DOES is
+ * not advice: „die Belastung durch Hitze reduzieren" (a protectant's effect) stays legal.
+ */
 export const LESS_HEAT = words(
-  "weniger hitze|hitze reduzieren|hitze gezielt reduzieren|hitze runterfahren|seltener glätten|seltener stylen",
+  "weniger hitze|(?<!durch\\s)hitze reduzieren|hitze gezielt reduzieren|hitze runterfahren|seltener glätten|seltener stylen",
 )
 
 /** „nicht" / „kein…" right before a match (within the same short phrase). */
