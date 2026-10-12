@@ -189,6 +189,17 @@ test("the eval's checks catch broken answers", () => {
       }),
     ).includes("duplicate_ask"),
   )
+  // A neighbouring topic is legitimate: a mask on bleached hair is not the bleach cadence.
+  assert.ok(nomi.input.checklist.some((item) => item.kind === "ask_bleach_cadence"))
+  assert.equal(
+    checks(
+      mutated((brief) => {
+        const fragen = brief.callFragen as string[]
+        fragen[0] = "Wie oft nutzt du eine Maske bei blondierten Längen?"
+      }),
+    ).includes("duplicate_ask"),
+    false,
+  )
 
   // A market brand is the lint's job; an invented brand is the eval's heuristic.
   assert.ok(

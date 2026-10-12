@@ -308,8 +308,10 @@ function languageFindings(brief: DiscoveryCallSheetBriefSections): ConsultEvalFi
 
 /** The checklist's code-side asks, by topic — a callFrage must not ask them again (item 8). */
 const ASK_TOPICS = {
+  // The act of bleaching/colouring, not anything on bleached hair („Maske bei blondierten
+  // Längen" is a legitimate question, Codex review).
   ask_bleach_cadence:
-    /\b(wie oft|wann|zuletzt|in welchem abstand)\b[^?]*\b(blondier|färb|farb)\p{L}*|\b(blondier|färb)\p{L}*\s+du\b/iu,
+    /\b(blondierst|färbst|tönst|blondieren lässt|färben lässt|blondiert hast|gefärbt hast)\b|\b(blondier|färbe?)-?(rhythmus|termin|abstand|abstände)\b|\bzuletzt\b[^?]*\b(blondiert|gefärbt)\b/iu,
   ask_detangling:
     /\b(wie|womit|wann)\s+(entwirrst|kämmst|bürstest)\b|\b(entwirrst|kämmst|bürstest)\s+du\b/iu,
   ask_where_she_shops: /\b(wo|in welche[mr]?)\b[^?]*\b(kaufst|einkaufst|shoppst)\b/iu,

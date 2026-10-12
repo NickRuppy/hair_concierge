@@ -1004,6 +1004,10 @@ test("Stil: plan talk in the diagnose is a finding; plan talk in a Hebel is not"
     findings.map((finding) => [finding.rule, finding.guardrail, finding.location, finding.excerpt]),
     [["diagnose_plan_talk", "Stil", "diagnose", "vorgesehen"]],
   )
+  // A past cause is her state today, not a plan (Codex review).
+  const pastCause = cleanBrief()
+  pastCause.diagnose = `${pastCause.diagnose} Nach der Umstellung auf tägliches Glätten sind ihre Spitzen rau.`
+  assert.deepEqual(lintConsultBrief(pastCause, nomiInput()), [])
   const inHebel = cleanBrief()
   inHebel.hebel[0]!.note = `${inHebel.hebel[0]!.note} Die Umstellung ist vorgesehen.`
   assert.deepEqual(lintConsultBrief(inHebel, nomiInput()), [])
@@ -1016,6 +1020,11 @@ test("Stil: with hot tools, a heat Hebel says „schonender“, never „weniger
     lintConsultBrief(brief, nomiInput()).map((finding) => [finding.rule, finding.location]),
     [["heat_less_framing", "hebel[0].title"]],
   )
+  // A negated mention recommends the opposite (Codex review).
+  const negated = cleanBrief()
+  negated.hebel[0]!.note =
+    "Sie muss nicht seltener glätten; eine niedrigere Stufe und weniger Durchgänge schonen die Längen."
+  assert.deepEqual(lintConsultBrief(negated, nomiInput()), [])
   // Without hot tools (blow-drying only) „weniger Hitze" may be the honest advice.
   assert.deepEqual(
     lintConsultBrief(brief, nomiInput({ flags: ["bleached", "colored", "breakage_signal"] })),

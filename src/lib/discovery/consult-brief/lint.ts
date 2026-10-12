@@ -718,15 +718,21 @@ function briefTexts(brief: DiscoveryCallSheetBriefSections): BriefText[] {
   ]
 }
 
-/** Plan talk in the diagnose (consult-brief-d item 4). */
+/**
+ * Plan talk in the diagnose (consult-brief-d item 4): forward-looking markers only — „Umstellung"
+ * alone can be a past cause („Nach der Umstellung auf tägliches Glätten …", Codex review).
+ */
 export const DIAGNOSE_PLAN_TALK = words(
-  "umstellung|umstellen|vorgesehen|geplant|soll künftig|sollen künftig|wird künftig|werden künftig",
+  "vorgesehen|geplant|soll künftig|sollen künftig|wird künftig|werden künftig|steht an|stehen an",
 )
 
 /** „Less heat" wording, illegal when hot tools are part of her styling (item 5). */
 export const LESS_HEAT = words(
   "weniger hitze|hitze reduzieren|hitze gezielt reduzieren|hitze runterfahren|seltener glätten|seltener stylen",
 )
+
+/** „nicht" / „kein…" right before a match (within the same short phrase). */
+const NEGATION_BEFORE = /(?<![\p{L}])(?:nicht|kein\p{L}*)(?:\s+\p{L}+)?\s+$/iu
 
 /** Whitespace-normalized, for the verbatim boundary check. */
 function squash(text: string): string {
@@ -908,8 +914,13 @@ export function lintConsultBrief(
         [`hebel[${index}].title`, entry.title],
         [`hebel[${index}].note`, entry.note],
       ] as const) {
-        const match = LESS_HEAT.exec(normalizeConsultText(text))
-        if (match) {
+        const normalized = normalizeConsultText(text)
+        const match = LESS_HEAT.exec(normalized)
+        // A negated mention recommends the opposite („muss nicht seltener glätten").
+        const negated =
+          match !== null &&
+          NEGATION_BEFORE.test(normalized.slice(Math.max(0, match.index - 20), match.index))
+        if (match && !negated) {
           findings.push({
             rule: "heat_less_framing",
             guardrail: "Stil",
