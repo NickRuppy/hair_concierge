@@ -48,7 +48,7 @@ import {
 import path from "node:path"
 import { pathToFileURL } from "node:url"
 
-const STANDARD_PATH = "docs/research/shampoo-inci/v1.6.1/classification-standard.md"
+const STANDARD_PATH = "docs/research/shampoo-inci/v1.6.2/classification-standard.md"
 
 /** Stage-A normalization text: the runbook rule only. Freeze-worker notes can name retailers or
  * brands (v1.6.2 seal fix; the same leak was fixed on the Track A rollout branch). */
@@ -63,7 +63,7 @@ export function blindPackSize(raw: string | null | undefined) {
   return `${match[1]!.replace(",", ".")} ${match[2]!.toLowerCase()}`
 }
 
-/** The locked v1.6.1 standard unless `--standard` names another text (e.g. a version candidate). */
+/** The locked v1.6.2 standard unless `--standard` names another text (e.g. a version candidate). */
 /** Reads `--name value` from CLI args. A flag given without a value (last argument, or followed
  * by another flag) is an operator error, never "absent": it must not fall back to a default. */
 export function cliFlag(args: string[], name: string) {

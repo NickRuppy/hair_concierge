@@ -1,17 +1,27 @@
 # Shampoo ingredient research
 
-Status: **v1.6.1 is the active, locked research method (2026-10-12). v1.6 (locked 2026-10-10) is its frozen base. v1.4 is the parked, frozen predecessor. None is active in production.**
+Status: **v1.6.2 is the active, locked research method (2026-10-12). v1.6.1 (locked 2026-10-12) is its frozen base, and v1.6 (locked 2026-10-10) the base of v1.6.1. v1.4 is the parked, frozen predecessor. None is active in production.**
 
 This directory is the durable entry point for the Shampoo ingredient-classification work. It separates formula-derived product research from user fit and from catalog or production activation. This README is the living entry point; it is not part of either version's frozen files.
 
 ## Start here
 
-1. Read the [v1.6.1 overview](./v1.6.1/README.md).
-2. Use the [v1.6.1 classification standard](./v1.6.1/classification-standard.md) for the eight direct product properties and the production projection block.
-3. Follow the [v1.6.1 research runbook](./v1.6.1/runbook.md) for a new German shampoo.
+1. Read the [v1.6.2 overview](./v1.6.2/README.md).
+2. Use the [v1.6.2 classification standard](./v1.6.2/classification-standard.md) for the eight direct product properties and the production projection block.
+3. Follow the [v1.6.2 research runbook](./v1.6.2/runbook.md) for a new German shampoo.
 4. Use the [category template](../category-classification-engine-template.md) when adapting the approach to another product category.
 
-## Active method: v1.6.1
+## Active method: v1.6.2
+
+| Layer | Canonical location | Purpose |
+| --- | --- | --- |
+| Locked standard | `docs/research/shampoo-inci/v1.6.2/classification-standard.md` | `shampoo-classification-v1.6.2` / `shampoo-inci-v1.6.2`: the v1.6.1 standard plus ruling R18 — the mild-base route for the irritated-scalp formula check, the closed-list batch decided with no additions, `Laureth-9` = Polidocanol, and the evidence boundary for user copy. |
+| Rule changes | `docs/research/shampoo-inci/v1.6.2/rule-changes.md` | Rows 138–143, every change from v1.6.1, with its source. |
+| Runbook | `docs/research/shampoo-inci/v1.6.2/runbook.md` | Formula freeze, sealed two-lane validation, adjudication, stop boundary. |
+| Lock receipt and manifest | `data/research/shampoo-inci/v1.6.2/` | Hash pins for the locked files, the rulings ledger snapshot, the evidence inputs and the test-round corpus; checked by `tests/shampoo-research-v1-6-2-lock.test.ts`. |
+| Test-round evidence | `data/research/shampoo-inci/v1.6.2/test-round/` | Two sealed lanes, 9 Track A products, 150/153 = 98.0%; pre-registration, comparison and adjudication. |
+
+## Frozen base: v1.6.1
 
 | Layer | Canonical location | Purpose |
 | --- | --- | --- |
@@ -30,7 +40,7 @@ This directory is the durable entry point for the Shampoo ingredient-classificat
 | Lock receipt and manifest | `data/research/shampoo-inci/v1.6/` | Hash pins for the locked files, the rulings ledger snapshot and the calibration corpus; checked by `tests/shampoo-research-v1-6-lock.test.ts`. |
 | Calibration evidence | `data/research/shampoo-inci/v1.6/calibration/` | Round 1 (97.4%), round 2 (97.1%) and unseen check v2 (95.8%). |
 
-The shipped Production Light adapter (`src/lib/shampoo/production-light-adapter.ts`) is still pinned to v1.4; re-pinning it to v1.6.1 is a separate, reviewed change. Locking v1.6 or v1.6.1 authorizes no catalog, database or recommendation change.
+The shipped Production Light adapter (`src/lib/shampoo/production-light-adapter.ts`) is still pinned to v1.4; re-pinning it to v1.6.2 is a separate, reviewed change. Locking v1.6, v1.6.1 or v1.6.2 authorizes no catalog, database or recommendation change.
 
 ## Parked predecessor: v1.4
 

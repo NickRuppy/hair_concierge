@@ -15,6 +15,8 @@
     1. A21 ISANA MED Totes Meer (VS08): `weightPotential` low → moderate in both lanes (v1.6 lanes: low, neighbor moderate; v1.6.2 lanes: moderate, neighbor high), so fine fit ideal → acceptable. Same evidence set (guar@5 + Lauryl Lactate@4 under an SLES/CAPB reset); lane B additionally reads Lauryl Lactate as `payload_lipid` (conditioning high). A genuine low/moderate weight boundary. Not recommended live.
     2. A43 Sante Sensitive Care (VS07): `conditioningLevel` low → moderate in both lanes (protein cluster + PCA Ethyl Cocoyl Arginate read as a cationic conditioner); weight, fits and every projected value unchanged. Lane A focus `repair` (research-only).
 
-## Adjudication (pending Nick)
+## Adjudication (Nick, 2026-10-12: "yes to both")
 
-Proposed cause codes: A21 = boundary variance, not a v1.6.2 question → resolved in the Track A re-check (all 73 products re-run on locked v1.6.2), cautious `moderate` per the R14 precedent if it stays split; A43 = research-only variance, no live effect, no action.
+- A21 ISANA MED Totes Meer: cause `boundary_variance_not_v1.6.2` → resolved in the Track A re-check (all 73 products re-run on locked v1.6.2); if the lanes stay split there, the cautious `moderate` applies (R14 precedent). No rule change.
+- A43 Sante Sensitive Care: cause `research_only_variance` (conditioning; no projected value changes) → no action.
+- Pass: yes. Lock v1.6.2 (Nick: "yes to both").

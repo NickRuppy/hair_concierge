@@ -1,0 +1,29 @@
+{
+  "blindId": "VS01",
+  "packSize": "250 ml",
+  "canonicalInci": [
+    "Aqua",
+    "Coco-Glucoside",
+    "Glycerin",
+    "Sodium Coco-Sulfate",
+    "Sodium Cocoamphoacetate",
+    "Citric Acid",
+    "Panthenol",
+    "Niacinamide",
+    "Tocopherol",
+    "Ascorbyl Palmitate",
+    "Glyceryl Oleate",
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+    "Hydrogenated Palm Glycerides Citrate",
+    "Lecithin",
+    "Sodium Benzoate",
+    "Potassium Sorbate",
+    "Sodium Chloride",
+    "Sodium Hydroxide"
+  ],
+  "inciFingerprintSha256": "ad4168be859a6e0b1b7a76ae82e1e72040e87afa86dcf97031a6745545d783f4",
+  "normalization": "Runbook step 2: canonical list items lower-cased, trimmed, whitespace collapsed, joined with '|', SHA-256; split synonym entries (e.g. 'Aqua (Water, Eau)') merged before numbering.",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high"
+}

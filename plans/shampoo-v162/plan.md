@@ -1,6 +1,6 @@
 # Shampoo classification v1.6.2 — plan
 
-Status: approved by Nick 2026-10-12 ("yes approve both, then do the v1.6.2 + re-check"). Worktree `.worktrees/shampoo-v162`, branch `codex/shampoo-v162`, base `81201a9e` (= origin/main at creation, includes v1.6.1 #667).
+Status: LOCKED 2026-10-12 (Nick: "yes to both" after the test round). Approved by Nick 2026-10-12 ("yes approve both, then do the v1.6.2 + re-check"). Worktree `.worktrees/shampoo-v162`, branch `codex/shampoo-v162`, base `81201a9e` (= origin/main at creation, includes v1.6.1 #667).
 
 Origin: the Track A review of 2026-10-12 (rollout worktree `.worktrees/shampoo-v16-rollout`, review page decisions, rulings ledger `plans/shampoo-v16/rulings.md` R18). v1.6.1 deferred the R16.4 closed-list batch to v1.6.2.
 

@@ -1,0 +1,28 @@
+{
+  "blindId": "VS07",
+  "productName": "SANTE Sensitive Care Shampoo Probiotika + 3-fach Protein Komplex, 250 ml",
+  "brand": "Sante (LOGOCOS Naturkosmetik)",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_de (LOGOCOS own web shop)",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Für sensibles Haar und empfindliche Kopfhaut | Wohltuend für die Kopfhaut | Fördert den Erhalt einer intakten Hautbarriere | Hält den natürlichen pH-Wert der Kopfhaut in Balance | Verträglichkeit dermatologisch getestet | Das SANTE Sensitiv Care Shampoo enthält eine hochwirksame Pflegeformel¹ für sensible Kopfhaut mit Probiotika und 3-fach Protein Komplex. Es pflegt die Haare besonders sanft, ohne zu beschweren. Reduziert Spannungs- & Trockenheitsgefühle und unterstützt den natürlichen pH-Wert der Kopfhaut. Der 3-fach Protein Komplex stärkt, pflegt & schützt das Haar von der Wurzel bis in die Spitzen. Der hydratisierende Pflege-Komplex füllt & baut das Haar auf, für eine natürlich kraftvolle Haarstruktur. Die Verträglichkeit ist dermatologisch getestet. ... ¹Instrumenteller Test – Shampoo + Conditioner | Label: Vegan, Vegetarisch | Leitwirkstoffe: 3-fach Protein Komplex, Probiotika | Verträglichkeit: alkoholfrei, parabenfrei, silikonfrei",
+      "directionsVerbatim": "Haselnussgroße Menge ins feuchte Haar einmassieren, danach gründlich ausspülen. Für die optimale Pflegeroutine anschließend den SANTE Conditioner verwenden."
+    },
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Sensitives Shampoo | Mit Probiotika und 3-fach Protein Komplex | Hält den natürlichen pH-Wert der Kopfhaut in Balance | Zertifizierte Naturkosmetik | Für sensibles Haar und empfindliche Kopfhaut | Das Sensitive Care Shampoo von SANTE NATURKOSMETIK beinhaltet die perfekte Pflegetextur für sensibles Haar und empfindliche Kopfhaut. Dank Probiotika und dem dreifach Protein Komplex wird der natürliche pH-Wert der Kopfhaut in Balance gehalten und der Erhalt einer intakten Hautbarriere gefördert. Für ein wohltuendes Gefühl auf der Kopfhaut. | Produkteigenschaften: vegan, vegetarisch",
+      "directionsVerbatim": "Haselnussgroße Menge ins feuchte Haar einmassieren, danach gründlich ausspülen. Für die optimale Pflegeroutine anschließend den Sante Conditioner verwenden."
+    },
+    {
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Die hochwirksame Pflegeformel mit Probiotika und 3-Fach Protein Komplex, versorgt das Haar mit intensiver Feuchtigkeit bis in die Spitzen und schützt langanhaltend vor dem Austrocknen. | für sensibles Haar und empfindliche Kopfhaut | fördert den Erhalt einer intakten Hautbarriere | wohltuend für die Kopfhaut | hält den natürlichen pH-Wert der Kopfhaut in Balance | Verträglichkeit dermatologisch getestet | vegan",
+      "directionsVerbatim": "(section 'Anwendung und Gebrauch' empty/not captured)"
+    }
+  ]
+}
