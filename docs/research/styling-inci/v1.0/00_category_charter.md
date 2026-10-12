@@ -1,6 +1,6 @@
 # Styling v1.0 category charter
 
-Status: **Phase 2 ruled 2026-10-11 (PH2-1…12); blind calibration rounds 1 and 2 run 2026-10-12, their rulings folded into standard v0.3 / lexicon v0.3; next: targeted `smoothing_styler` capture and blind round 3.** Phase 1 ruled 2026-10-09 (PH1-1…16). Not locked. Encodes Nick's rulings SD1–SD5, D1–D8b, PH1-1…PH1-16 (2026-10-09) and PH2-1…PH2-12 (2026-10-11); the round-1 and round-2 rulings (R1-*, R2-*, 2026-10-12) live in the standard and are reflected here only where a boundary case below changes. The former proposals P1–P4 are ruled (§15). Items that are still open are listed in §15.2 and marked **Open** where they occur.
+Status: **Phase 2 ruled 2026-10-11 (PH2-1…12); blind calibration rounds 1 and 2 run 2026-10-12, their rulings folded into standard v0.3 / lexicon v0.3; next: targeted `smoothing_styler` capture and blind round 3.** Phase 1 ruled 2026-10-09 (PH1-1…16). Not locked. Encodes Nick's rulings SD1–SD5, D1–D8b, PH1-1…PH1-16 (2026-10-09) and PH2-1…PH2-12 (2026-10-11); the round-1 and round-2 rulings (R1-*, R2-*, incl. the post-recheck R2-H1…R2-H6, 2026-10-12) live in the standard and are reflected here only where a boundary case below changes. The former proposals P1–P4 are ruled (§15). Items that are still open are listed in §15.2 and marked **Open** where they occur.
 Version: 1.0 (artifact root; the classification standard is being drafted)
 Market: Germany/EU
 Date: 2026-10-09
@@ -97,7 +97,9 @@ Any input missing or unreadable, or two C1/C2 sources conflicting ⇒ `provision
 |---|---|---|
 | Maria Nila Curlicue Cream | Styling `curl_cream` | T15 paradigm: PVP r4, no conditioning architecture ⇒ `excluded_styling_first` |
 | NEQI Diamond Glass Ultimate | Leave-in | T15 paradigm: conditioning film + one supporting fixative (D3); not a curl cream, so D7 does not apply |
-| NEQI Diamond Glass All | Leave-in, blocked until its possibly truncated dm INCI is re-checked | R2-Q4 (2026-10-12): D3 extended to the fixative-free sibling (same conditioning silicone film, no hold polymer, damp hair before blow-drying) |
+| NEQI Diamond Glass All | Leave-in | R2-Q4 (2026-10-12): D3 extended to the fixative-free sibling (same conditioning silicone film, no hold polymer, damp hair before blow-drying); R2-H4: its INCI is complete (pack and neqi-hair.com agree), so no block |
+| GUHL Locken Pflege & Styling 3in1 (Lockencreme, Kur & Spülung) | stays in its current category (care product, not Styling) | R2-H2 (2026-10-12): a care cream that can also be left in as a curl cream stays care; only a fixative-class polymer or the D7 middle band makes it Styling |
+| Balea Haarwachs Styling Stick („Styling WAX STICK") | Styling `molding` | R2-H3 (2026-10-12): the name step precedes the skip-a-job-less-line rule |
 | Redken Refreshing Curl Mist | Styling `refresher`, held | R2-Q1 (2026-10-12): curl revival is refresh and „gepflegte Locken" is a result adjective, so not `mixed`; D6 + PH1-13 (humectants only; the cationic sits below the citric-acid yardstick) |
 | Taft Styling Balm Locken · Balea Pro Styling Cream Traumlocken · John Frieda Lockencreme Traumlocken | Styling `curl_cream` | D7 middle band; for Balea Pro Styling Cream, D7 runs before the `mixed` stop (PH1-12) |
 | Cantu Lockencreme Kokos · HASK Curl Care · Bali Curls Hydrating Curl Cream | Leave-in | no fixative ⇒ T15; D7 does not apply |
@@ -194,7 +196,7 @@ Healthy, cosmetic population, all genders and hair lengths. The engine never dia
 4. **The D8b flag wording governs** — resolved: concept Rev. 2 now restates D8b, and the ledger wording (a strength claim of ≥ „stark", or any hold claim on a shine/smoothing/refresh product, with no hold mechanism above the tail ⇒ review) is encoded in the property set §6.
 5. **Langhaarmädchen — resolved.** It is not a house brand under LI §2.4.1 rule 6 (which names only Balea/alverde and Isana). Both cohort records are now recorded as C3 in `calibration-set-r2.json`, which leaves `gel` at 7 of 9 records with C1/C2 claims.
 6. **Tier labels (standing note):** the round-2 lane brief merged LI's C3 (exact-GTIN DE retailer) and C4 (other retailer) into one "C3". This charter uses the LI tiers unchanged.
-7. **S0 step 2 (`mixed` ⇒ `provisional_boundary`) vs D7 — ruled, PH1-12.** D7 runs before the `mixed` stop, for the curl-cream middle band only (§5 step 2). Balea Pro Styling Cream Traumlocken, whose C2 house-brand promise mixes definition, „Verbesserte Geschmeidigkeit" and „Hitzeschutz bis zu 220 °C", is therefore Styling `curl_cream`.
+7. **S0 step 2 (`mixed` ⇒ `provisional_boundary`) vs D7 — ruled, PH1-12.** D7 runs before the `mixed` stop, for the curl-cream middle band only (§5 step 2). Balea Pro Styling Cream Traumlocken, whose C2 house-brand promise mixes definition, „Verbesserte Geschmeidigkeit" and „Hitzeschutz bis zu 220 °C", is therefore Styling `curl_cream`. (R2-H5, 2026-10-12: „Verbesserte Geschmeidigkeit" is a feel line and never the care half; the outcome is unchanged.)
 8. **Stale examples — resolved** by the cleanup lane: Garnier Sleek & Stay is no longer a `smoothing_styler` sample in the concept (D2 routes it to Oil), and the status string in `calibration-set-r2.json` now reads round 2 complete.
 9. **Heat-role drift — open (other documents).** Concept Rev. 2 (§1 S0 step 5, §3.1 property 15) still says Styling never fills the heat-protection role, and `heat-protectant/decision.md` still excludes Styling. PH1-15 supersedes both. The concept is corrected in its next revision; the decision doc is amended in the Personal-Plan phase.
 
