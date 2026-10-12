@@ -50,6 +50,11 @@ import { pathToFileURL } from "node:url"
 
 const STANDARD_PATH = "docs/research/shampoo-inci/v1.6.1/classification-standard.md"
 
+/** Stage-A normalization text: the runbook rule only. Freeze-worker notes can name retailers or
+ * brands (v1.6.2 seal fix; the same leak was fixed on the Track A rollout branch). */
+export const STAGE_A_NORMALIZATION =
+  "Runbook step 2: canonical list items lower-cased, trimmed, whitespace collapsed, joined with '|', SHA-256; split synonym entries (e.g. 'Aqua (Water, Eau)') merged before numbering."
+
 /** Stage A must not carry identity: freeze notes in `packSize` (brands, GTINs, retailers) are
  * reduced to the first bare size, e.g. "300 ml", or "unknown". */
 export function blindPackSize(raw: string | null | undefined) {
@@ -400,7 +405,7 @@ export function buildLaneKit(options: {
       packSize: blindPackSize(p.packSize),
       canonicalInci: p.canonicalInci,
       inciFingerprintSha256: p.inciFingerprintSha256,
-      normalization: p.normalization,
+      normalization: STAGE_A_NORMALIZATION,
       formulaCompleteness: p.formulaCompleteness,
       formulaSourceTier: p.formulaSourceTier,
       identityConfidence: p.identityConfidence,

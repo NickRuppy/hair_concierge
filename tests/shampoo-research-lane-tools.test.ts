@@ -23,6 +23,7 @@ import {
   resolveInside,
   resolveStandardPath,
   scrubStandard,
+  STAGE_A_NORMALIZATION,
   type FreezePacket,
 } from "../scripts/shampoo-research/build-lane-kit"
 import { compareLaneDirs, comparisonFields } from "../scripts/shampoo-research/compare-lanes"
@@ -148,6 +149,32 @@ test("the lane kit splits each product into a blind formula packet and a held-ba
     }
     const kitMapping = JSON.parse(readFileSync(path.join(out, "blind-mapping.json"), "utf8"))
     assert.equal(kitMapping[0].slot, "T01")
+  })
+})
+
+test("stage-A normalization carries only the runbook rule, never freeze-worker notes (v1.6.2 seal fix)", () => {
+  withTempDir((out) => {
+    const { mapping } = buildLaneKit({
+      packets: [
+        {
+          ...packet(),
+          normalization:
+            "Split on ','; dm renders a non-breaking hyphen as '|' inside names; Mustermarke list pinned",
+        },
+      ],
+      standardText: STANDARD,
+      outDir: out,
+      seed: 7,
+    })
+    const id = mapping[0]!.blindId
+    for (const lane of ["lane-a", "lane-b"]) {
+      const formula = JSON.parse(
+        readFileSync(path.join(out, lane, "formula", `${id}.json`), "utf8"),
+      )
+      assert.equal(formula.normalization, STAGE_A_NORMALIZATION)
+      for (const hidden of ["dm ", "Mustermarke"])
+        assert.ok(!formula.normalization.includes(hidden))
+    }
   })
 })
 
