@@ -169,6 +169,9 @@ function triggerContextForScenario(scenario: Stage2PreviewScenario): Stage2Trigg
       hasReportedIrritatedScalp: false,
       dryShampooBridgeEligibility: "ineligible",
       toolsEnabled: true,
+      // Rev. 6: hair that can be tied, so the Gewohnheiten night question („Wie trägst du dein
+      // Haar nachts?") is on the path when the journey lab continues into the habits module.
+      hairLength: "long",
     }
   }
   if (
