@@ -292,6 +292,8 @@ test("rollout on: the tools block sits between Produkte and Gewohnheiten; thing-
     "drying_routes",
     "heat:ordinary_blow_dry",
     "heat:straightener",
+    // Rev. 6: the night question closes Gewohnheiten (the length is unknown here, so it asks).
+    "night_wear",
   ])
   assert.equal(before.firstUnresolvedQuestionId, "tools_overview")
 
@@ -329,13 +331,24 @@ test("rollout on: the tools block sits between Produkte and Gewohnheiten; thing-
     "drying_routes",
     "heat:ordinary_blow_dry",
     "heat:straightener",
+    "night_wear",
   ])
   assert.equal(after.firstUnresolvedQuestionId, "tools:drying_textiles:1")
-  // Gewohnheiten stays complete until a page actually changes one of its facts.
+  // Gewohnheiten keeps every earlier answer; only the new night question is open (Rev. 6).
   const modules = getStage2ModulePathStates(after.orderedQuestionIds, after.completedQuestionIds)
   assert.equal(modules.products.status, "complete")
   assert.equal(modules.tools.status, "open")
-  assert.equal(modules.habits.status, "complete")
+  assert.deepEqual(modules.habits.openQuestionIds, ["night_wear"])
+  // Hair that cannot be tied has no night question: Gewohnheiten stays complete.
+  const short = resolveStage2Path({
+    triggerContext: { ...toolsOn, hairLength: "short" },
+    answers: answeredBeforeTools,
+    completedQuestionIds: [...answeredBeforeToolsIds],
+  })
+  assert.equal(
+    getStage2ModulePathStates(short.orderedQuestionIds, short.completedQuestionIds).habits.status,
+    "complete",
+  )
 })
 
 /** Lena (§6): textiles, brushes, airflow, heated, heatless, securing and night ticked. */
@@ -394,6 +407,7 @@ test("rollout on: settled pages derive the thing-fields and open one heat questi
     "drying_routes",
     "heat:dryer_brush",
     "heat:straightener",
+    "night_wear",
   ])
   assert.equal(contract.path.firstUnresolvedQuestionId, "towel_handling")
   assert.equal(isStage2TowelMaterialDerived(toolsOn, lenaAnswers()), true)
@@ -518,6 +532,7 @@ test("rollout on: adding a heat tool later reopens only that tool's heat questio
         protectionConsistency: "sometimes" as const,
       },
     },
+    nightWear: "open" as const,
   }
   const completeIds = [
     ...lenaToolIds,
@@ -525,6 +540,7 @@ test("rollout on: adding a heat tool later reopens only that tool's heat questio
     "drying_routes",
     "heat:dryer_brush",
     "heat:straightener",
+    "night_wear",
   ] as const
   const done = resolveStage2Path({
     triggerContext: toolsOn,
@@ -634,10 +650,12 @@ test("rollout on: a complete draft whose path grew loads complete with an open f
     session.path.orderedQuestionIds,
     session.path.completedQuestionIds,
   )
+  // Rev. 6: the night question joined Gewohnheiten, so it is the one open habits question.
   assert.deepEqual(
     [modules.products.status, modules.tools.status, modules.habits.status],
-    ["complete", "open", "complete"],
+    ["complete", "open", "open"],
   )
+  assert.deepEqual(modules.habits.openQuestionIds, ["night_wear"])
   // Its stored thing-facts are not touched before the tools are settled.
   assert.deepEqual(session.answers.additionalHeatTools, ["straightener"])
   assert.deepEqual(session.answers.nightProtection, ["silk_satin_pillow"])

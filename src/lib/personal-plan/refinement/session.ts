@@ -1,5 +1,6 @@
 import type {
   HeatEventAnswer,
+  NightWear,
   PersonalPlanRefinementAnswersV1,
   Stage2PathState,
   Stage2QuestionId,
@@ -12,6 +13,7 @@ import {
   type ToolFamily,
   type ToolReportedForm,
 } from "@/lib/personal-plan/tools/contracts"
+import { nightWearFromNightProtection } from "@/lib/personal-plan/tools/facts"
 import {
   TOOL_FORM_PAGES,
   TOOL_OVERVIEW_FAMILY_ORDER,
@@ -29,23 +31,36 @@ export type Stage2RefinementHandoff = {
 
 /**
  * Read-only pre-fill context (Hair Tools port, Task 8 fix round 3): the member's care facts the
- * Tool pages pre-tick from but the Stage-2 answers do not carry — today only the legacy brush
- * answer. Set by the server only while the Tools rollout is on and only from a confirmed fact
+ * Tool pages pre-tick from but the Stage-2 answers do not carry — the legacy brush answer and
+ * (Rev. 6) the stored night technique. Set by the server only while the Tools rollout is on and only from a confirmed fact
  * (`user`, or non-empty `unknown_historical`). Never part of the answers, never persisted, never
  * read by the path, the resolver or a save; it only changes UI starting values.
  */
-export type Stage2PrefillCare = { brushesCombs?: BrushType[] }
+export type Stage2PrefillCare = {
+  brushesCombs?: BrushType[]
+  /**
+   * Rev. 6: the night technique of a confirmed stored `nightProtection` (`pineapple` /
+   * `loose_tied`), the starting value of „Wie trägst du dein Haar nachts?". The question still
+   * shows (pre-filled); one tap on „Weiter" keeps it.
+   */
+  nightWear?: Exclude<NightWear, "open">
+}
 
 /** The confirmed legacy care facts for `Stage2PrefillCare`, or `undefined` when there are none. */
 export function stage2PrefillCareFromFacts(
   careHabits: Partial<CareHabitsV1> | null | undefined,
   fields: Record<string, FieldProvenanceValue> | undefined,
 ): Stage2PrefillCare | undefined {
+  const confirmed = (field: string) =>
+    fields?.[field] === "user" || fields?.[field] === "unknown_historical"
+  const prefill: Stage2PrefillCare = {}
   const brushes = careHabits?.brushesCombs
-  const provenance = fields?.brushesCombs
-  if (!brushes || brushes.length === 0) return undefined
-  if (provenance !== "user" && provenance !== "unknown_historical") return undefined
-  return { brushesCombs: [...brushes] }
+  if (brushes && brushes.length > 0 && confirmed("brushesCombs")) {
+    prefill.brushesCombs = [...brushes]
+  }
+  const nightWear = nightWearFromNightProtection(careHabits?.nightProtection)
+  if (nightWear && confirmed("nightProtection")) prefill.nightWear = nightWear
+  return Object.keys(prefill).length > 0 ? prefill : undefined
 }
 
 export type Stage2RefinementSession = {
@@ -289,6 +304,9 @@ function replaceQuestionAnswer(
       next.nightProtection = structuredClone(
         answer,
       ) as PersonalPlanRefinementAnswersV1["nightProtection"]
+      break
+    case "night_wear":
+      next.nightWear = answer as PersonalPlanRefinementAnswersV1["nightWear"]
       break
   }
   return next

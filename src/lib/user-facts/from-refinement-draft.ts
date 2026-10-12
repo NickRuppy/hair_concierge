@@ -100,6 +100,7 @@ function withoutToolAnswers(
   const completed = new Set(completedQuestionIds)
   if (!completed.has("additional_heat_tools")) delete patch.additionalHeatTools
   if (!completed.has("night_protection")) delete patch.nightProtection
+  if (!completed.has("night_wear")) delete patch.nightWear
   if (!completed.has("towel_handling")) delete patch.towel
   return patch
 }
@@ -187,6 +188,7 @@ export const CARE_HABITS_FIELD_BY_STATIC_QUESTION_ID: Record<Stage2StaticQuestio
   drying_routes: "dryingRoutes",
   additional_heat_tools: "additionalHeatTools",
   night_protection: "nightProtection",
+  night_wear: "nightWear",
 }
 
 /**
@@ -253,7 +255,8 @@ export function toFieldProvenance(input: {
  * page carries its own question's provenance (an unticked family's pages carry the overview's),
  * and a derived field carries its source pages' — `user` only when every source is `user`.
  * `additionalHeatTools` / `nightProtection` take it only when their own (rollout-off) question
- * did not complete; the towel combines the textiles page with the technique answer.
+ * did not complete (`nightProtection` also with the `night_wear` answer, Rev. 6); the towel
+ * combines the textiles page with the technique answer.
  */
 function toolFieldProvenance(
   input: {
@@ -296,7 +299,10 @@ function toolFieldProvenance(
   }
   const night = familiesProvenance(["night_protection"])
   if (night && answers.nightProtection !== undefined && !completed.has("night_protection")) {
-    fields.nightProtection = night
+    // Rev. 6: the list is the night page's things plus the night question's technique, so it is
+    // the member's own only when both are.
+    fields.nightProtection =
+      completed.has("night_wear") && provenanceOf("night_wear") !== "user" ? "assumed" : night
   }
   const textiles = familiesProvenance(["drying_textiles"])
   const textileForms = settledFamilyForms(settled.pages, "drying_textiles")

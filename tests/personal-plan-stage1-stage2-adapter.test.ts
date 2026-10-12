@@ -393,6 +393,8 @@ const diffuserToolsAnswers = {
     "heat:diffuser_airflow_shaping": { frequency: "weekly_2x" },
     "heat:straightener": { frequency: "weekly_1x", protectionConsistency: "always" },
   },
+  // Rev. 6: Gewohnheiten closes with the night question (the snapshot's hair can be tied).
+  nightWear: "open",
 } as PersonalPlanRefinementAnswersV1
 
 function toolsTrigger() {

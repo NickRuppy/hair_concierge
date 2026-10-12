@@ -1,7 +1,7 @@
 import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
 import { TOWEL_MATERIALS } from "@/lib/vocabulary/onboarding-care"
 import { sortToolReportedForms, type ToolFamily } from "@/lib/personal-plan/tools/contracts"
-import { projectToolCareFacts } from "@/lib/personal-plan/tools/facts"
+import { nightWearFromNightProtection, projectToolCareFacts } from "@/lib/personal-plan/tools/facts"
 import {
   isToolFormPageKey,
   TOOL_FORM_PAGES,
@@ -96,6 +96,8 @@ export const STAGE2_ASSUMPTION_RULE_IDS = [
   "assume:heat_event:ordinary_airflow_minimum",
   "assume:heat_event:protected_minimum",
   "assume:night_protection:none",
+  "assume:night_wear:derived_from_care",
+  "assume:night_wear:open",
   "assume:tools_overview:derived_from_care",
   "assume:tools_form:derived_from_care",
 ] as const
@@ -273,6 +275,28 @@ export const STAGE2_ASSUMPTION_RULES: readonly Stage2AssumptionRule[] = [
     write: ({ answers }) => ({ ...answers, nightProtection: [] }),
   },
   {
+    ruleId: "assume:night_wear:derived_from_care",
+    questionId: "night_wear",
+    condition:
+      "the Hair Tools rollout is on, the hair can be tied, and the member's own earlier night answer already names a technique (`pineapple` / `loose_tied`)",
+    rationale:
+      'Her earlier night answer („Pineapple", „locker zusammengebunden") IS the answer to how she wears her hair at night; assuming „Offen" would silently drop it from the plan, which the rollout-off resolver keeps. Pineapple wins over loose_tied when both were stored (the old multi-select).',
+    matches: ({ answers }) => nightWearFromNightProtection(answers.nightProtection) !== undefined,
+    write: ({ answers }) => ({
+      ...answers,
+      nightWear: nightWearFromNightProtection(answers.nightProtection),
+    }),
+  },
+  {
+    ruleId: "assume:night_wear:open",
+    questionId: "night_wear",
+    condition:
+      "the Hair Tools rollout is on, the hair can be tied, and no technique is known — the night question closes Gewohnheiten",
+    rationale:
+      '„Offen" adds no technique, so the derived night protection stays exactly the night things — the same as the rollout-off default `assume:night_protection:none` (no technique, no habit, no product).',
+    write: ({ answers }) => ({ ...answers, nightWear: "open" }),
+  },
+  {
     ruleId: "assume:tools_overview:derived_from_care",
     questionId: "tools_overview",
     condition: "the Hair Tools rollout is on — the overview opens the tools module",
@@ -425,6 +449,7 @@ const STAGE2_ANSWER_KEY_BY_QUESTION_ID: Record<
   drying_routes: "dryingRoutes",
   additional_heat_tools: "additionalHeatTools",
   night_protection: "nightProtection",
+  night_wear: "nightWear",
 }
 
 /**

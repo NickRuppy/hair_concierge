@@ -779,6 +779,7 @@ test('the tool overview asks „Was hast du schon?" with the four chronological 
     "tools_overview",
     "towel_handling",
     "drying_routes",
+    "night_wear",
   ])
   const html = renderQuestion(session, "tools_overview")
 

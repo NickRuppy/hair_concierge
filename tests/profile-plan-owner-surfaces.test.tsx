@@ -414,7 +414,7 @@ function toolsSurface(overrides: Record<string, unknown> = {}) {
     refinementTools: LENA_TOOLS,
     toolsStatus: "5 Tools",
     habitsStatus: "4/4 vollständig",
-    habitsRows: profileHabitsRows(hairProfile as never, null),
+    habitsRows: profileHabitsRows(hairProfile as never, { nightWear: "pineapple" }),
     startQuizEditing: () => {},
     goToSectionStep: (_section: string, href: string) => navigations.push(href),
     ...overrides,
@@ -511,9 +511,10 @@ test("the Deine Tools and Gewohnheiten buttons open their Feinschliff modules", 
   assert.deepEqual(navigations.splice(0), ["/plan-start?refine=habits"])
 })
 
-test("Gewohnheiten shows the four rows in order and every row opens the habits module", () => {
+test("Gewohnheiten shows the five rows in order and every row opens the habits module", () => {
   const { html, root, navigations } = toolsSurface()
-  const labels = ["Abtrocknen", "Trocknen", "Hitze-Häufigkeit", "Hitzeschutz"]
+  // Rev. 6: „Nachts" closes the card.
+  const labels = ["Abtrocknen", "Trocknen", "Hitze-Häufigkeit", "Hitzeschutz", "Nachts"]
   const positions = labels.map((label) => html.indexOf(`>${label}</p>`))
   assert.ok(
     positions.every((index) => index >= 0),
@@ -541,11 +542,13 @@ test("Gewohnheiten without a heat tool collapses to Abtrocknen, Trocknen and one
     towel_technique: "gentle_press",
     drying_method: "air_dry",
   }
-  const rows = profileHabitsRows(heatFree as never, null)
-  const { html } = toolsSurface({ habitsRows: rows, habitsStatus: "3/3 vollständig" })
+  const rows = profileHabitsRows(heatFree as never, { nightWear: "open" })
+  const { html } = toolsSurface({ habitsRows: rows, habitsStatus: "4/4 vollständig" })
   assert.match(html, /Keine Hitze/)
   assert.doesNotMatch(html, /Hitze-Häufigkeit|Hitzeschutz/)
-  assert.equal(html.match(/<p class="[^"]*uppercase[^"]*">[^<]+<\/p>/g)?.length, 3)
+  // Abtrocknen, Trocknen, Hitze and (Rev. 6) Nachts.
+  assert.equal(html.match(/<p class="[^"]*uppercase[^"]*">[^<]+<\/p>/g)?.length, 4)
+  assert.match(html, />Nachts<\/p>/)
 })
 
 test("without a plan, the Gewohnheiten rows are static and offer no edit button", () => {

@@ -7,6 +7,7 @@ import {
   DRY_SHAMPOO_BRIDGE_PREFERENCES,
   DRY_SHAMPOO_VISIBLE_HAIR_COLORS,
   HEAT_PROTECTION_CONSISTENCIES,
+  NIGHT_WEARS,
   OIL_PURPOSES,
   SCALP_IRRITATION_DETAILS,
   STAGE2_HEAT_EVENT_SOURCES,
@@ -363,6 +364,9 @@ export const careHabitsV1Schema = z
     additionalHeatTools: dedupeArray(z.enum(ADDITIONAL_HEAT_TOOLS)).optional(),
     heatEvents: z.partialRecord(z.enum(HEAT_EVENT_QUESTION_IDS), heatEventAnswerSchema).optional(),
     nightProtection: dedupeArray(z.enum(NIGHT_PROTECTIONS)).optional(),
+    // Rev. 6 (Hair Tools): how the hair is worn at night. Its technique is also merged into the
+    // derived `nightProtection` above; „Offen" (`open`) adds none.
+    nightWear: z.enum(NIGHT_WEARS).optional(),
     // Legacy `hair_profiles.brush_type` vocabulary; no Stage-2 version ever carried it (see
     // explore/B-habits.md §10).
     brushesCombs: dedupeArray(z.enum(BRUSH_TYPES)).optional(),

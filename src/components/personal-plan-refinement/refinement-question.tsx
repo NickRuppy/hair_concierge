@@ -22,7 +22,7 @@ import type {
   Stage2PrefillCare,
   Stage2RefinementSession,
 } from "@/lib/personal-plan/refinement/session"
-import { projectToolCareFacts } from "@/lib/personal-plan/tools/facts"
+import { nightWearFromNightProtection, projectToolCareFacts } from "@/lib/personal-plan/tools/facts"
 import type { ToolReportedForm } from "@/lib/personal-plan/tools/contracts"
 import {
   toolSectionsForFamilies,
@@ -60,6 +60,7 @@ import {
   DRY_SHAMPOO_BRIDGE_OPTIONS,
   HEAT_PROTECTION_OPTIONS,
   NIGHT_PROTECTION_OPTIONS,
+  NIGHT_WEAR_OPTIONS,
   OIL_PURPOSE_OPTIONS,
   REFINEMENT_CATEGORY_DISPLAY_OPTIONS,
   REFINEMENT_CATEGORY_OPTIONS,
@@ -184,6 +185,15 @@ export function getAnswerForQuestion(
       return answers.additionalHeatTools
     case "night_protection":
       return answers.nightProtection
+    case "night_wear":
+      // A saved answer wins; otherwise the member's earlier technique is the STARTING value
+      // (Rev. 6): from the draft's own night answer, else from her confirmed stored facts. „Offen"
+      // is never pre-selected — an earlier list without a technique cannot tell it from unanswered.
+      return (
+        answers.nightWear ??
+        nightWearFromNightProtection(answers.nightProtection) ??
+        prefillCare?.nightWear
+      )
   }
 }
 
@@ -749,6 +759,18 @@ function renderQuestionBody({
           />
         ),
       }
+    case "night_wear":
+      return {
+        sectionLabel,
+        title: "Wie trägst du dein Haar nachts?",
+        body: (
+          <RefinementOptions
+            options={NIGHT_WEAR_OPTIONS}
+            value={answer as string | undefined}
+            onChange={onLocalAnswerChange}
+          />
+        ),
+      }
   }
   throw new Error(`Unknown Stage 2 refinement question: ${questionId}`)
 }
@@ -878,7 +900,7 @@ export function getQuestionFamily(questionId: Stage2QuestionId) {
     questionId.startsWith("heat:")
   )
     return "heat_behavior"
-  if (questionId === "night_protection") return "night_behavior"
+  if (questionId === "night_protection" || questionId === "night_wear") return "night_behavior"
   return "conditional_context"
 }
 

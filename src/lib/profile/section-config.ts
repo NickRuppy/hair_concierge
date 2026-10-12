@@ -17,9 +17,11 @@ import {
   TOWEL_TECHNIQUE_LABELS,
 } from "@/lib/vocabulary"
 import { getSelectedStage2HeatEventSources } from "@/lib/personal-plan/refinement/heat-events"
+import { nightWearFromNightProtection } from "@/lib/personal-plan/tools/facts"
 import type {
   AdditionalHeatTool,
   DryingRoute,
+  NightWear,
   PersonalPlanRefinementAnswersV1,
   Stage2Module,
 } from "@/lib/personal-plan/refinement/types"
@@ -29,6 +31,13 @@ const PLAN_DRYING_ROUTE_LABELS: Record<DryingRoute, string> = {
   air_dry: "Lufttrocknen",
   ordinary_blow_dry: "Gewöhnlich föhnen",
   diffuser_or_airflow_shaping: "Mit Diffusor",
+}
+
+/** Rev. 6 — the Gewohnheiten „Nachts" row (same labels as the question). */
+export const PLAN_NIGHT_WEAR_LABELS: Record<NightWear, string> = {
+  open: "Offen",
+  loose_tied: "Locker zusammengebunden",
+  pineapple: "Pineapple",
 }
 
 const PLAN_HEAT_TOOL_LABELS: Record<AdditionalHeatTool, string> = {
@@ -494,6 +503,31 @@ function usesNoHeatSource(
   return false
 }
 
+/**
+ * The „Nachts" row (Rev. 6): the night question's answer, or — before it was asked — the
+ * technique the member's earlier night answer names. Without either it is still open (an
+ * earlier list without a technique cannot say „Offen").
+ */
+const NIGHT_WEAR_FIELD: ProfileFieldConfig = {
+  key: "night_wear",
+  label: "Nachts",
+  sectionKey: "habits",
+  editTarget: { kind: "refine", module: "habits" },
+  getValue: (profile, plan) => {
+    const wear =
+      plan?.nightWear ??
+      nightWearFromNightProtection(plan?.nightProtection) ??
+      nightWearFromNightProtection(profile?.night_protection)
+    return wear ? PLAN_NIGHT_WEAR_LABELS[wear] : null
+  },
+}
+
+/** Hair that cannot be tied is never asked how it is worn at night, so it gets no row. */
+function hairCanBeTied(profile: HairProfile | null): boolean {
+  const length = profileDiagnostics(profile)?.hairLength
+  return length !== "very_short" && length !== "short"
+}
+
 export type ProfileHabitsRow = {
   key: string
   label: string
@@ -502,27 +536,31 @@ export type ProfileHabitsRow = {
 }
 
 /**
- * The Gewohnheiten rows in display order. Without a heat source, Hitze-Häufigkeit and Hitzeschutz
- * have nothing to say and collapse into the single row „Keine Hitze".
+ * The Gewohnheiten rows in display order (Abtrocknen → Trocknen → Hitze → Nachts). Without a heat
+ * source, Hitze-Häufigkeit and Hitzeschutz have nothing to say and collapse into the single row
+ * „Keine Hitze". „Nachts" closes the card, except for hair that cannot be tied.
  */
 export function profileHabitsRows(
   profile: HairProfile | null,
   plan?: PersonalPlanRefinementAnswersV1 | null,
 ): ProfileHabitsRow[] {
-  const rows: ProfileHabitsRow[] = HABITS_FIELD_CONFIG.map((field) => ({
+  const toRow = (field: ProfileFieldConfig): ProfileHabitsRow => ({
     key: field.key,
     label: field.label,
     editTarget: field.editTarget,
     value: field.getValue(profile, plan),
-  }))
-  if (!usesNoHeatSource(profile, plan)) return rows
-  return [
-    ...rows.filter((row) => row.key !== "heat_styling" && row.key !== "uses_heat_protection"),
-    {
-      key: "no_heat",
-      label: "Hitze",
-      editTarget: { kind: "refine", module: "habits" },
-      value: "Keine Hitze",
-    },
-  ]
+  })
+  const rows: ProfileHabitsRow[] = HABITS_FIELD_CONFIG.map(toRow)
+  const heatRows = usesNoHeatSource(profile, plan)
+    ? [
+        ...rows.filter((row) => row.key !== "heat_styling" && row.key !== "uses_heat_protection"),
+        {
+          key: "no_heat",
+          label: "Hitze",
+          editTarget: { kind: "refine", module: "habits" } as const,
+          value: "Keine Hitze",
+        },
+      ]
+    : rows
+  return hairCanBeTied(profile) ? [...heatRows, toRow(NIGHT_WEAR_FIELD)] : heatRows
 }

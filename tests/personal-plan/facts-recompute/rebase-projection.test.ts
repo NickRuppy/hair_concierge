@@ -711,7 +711,13 @@ function toolsOnModuleStates(clone: {
 }
 
 test("rollout on: a complete source keeps its tools module complete, answers and ids in the clone", async () => {
-  const ids: Stage2QuestionId[] = [...PRODUCTS_IDS, ...TOOLS_IDS, "towel_handling", "drying_routes"]
+  const ids: Stage2QuestionId[] = [
+    ...PRODUCTS_IDS,
+    ...TOOLS_IDS,
+    "towel_handling",
+    "drying_routes",
+    "night_wear",
+  ]
   const draft = source({
     status: "complete",
     answers: {
@@ -720,7 +726,9 @@ test("rollout on: a complete source keeps its tools module complete, answers and
       towel: { material: "mikrofaser", technique: "gentle_press" },
       dryingRoutes: ["air_dry"],
       additionalHeatTools: [],
-      nightProtection: ["silk_satin_bonnet"],
+      // Rev. 6: the bonnet (night page) + the Pineapple (night question), merged.
+      nightProtection: ["silk_satin_bonnet", "pineapple"],
+      nightWear: "pineapple",
     },
     completedQuestionIds: ids,
     answerProvenance: provenance(ids),
@@ -747,6 +755,9 @@ test("rollout on: a complete source keeps its tools module complete, answers and
   assert.deepEqual(projection.careHabits!.provenance, real.facts[0]!.provenance)
   assert.deepEqual(projection.careHabits!.patch.toolForms_night_protection_1, ["bonnet"])
   assert.deepEqual(projection.careHabits!.patch.brushesCombs, ["wide_tooth_comb"])
+  assert.equal(projection.careHabits!.patch.nightWear, "pineapple")
+  assert.deepEqual(projection.careHabits!.patch.nightProtection, ["silk_satin_bonnet", "pineapple"])
+  assert.equal(projection.careHabits!.provenance.fields?.nightWear, "user")
 })
 
 test("rollout on: an in-progress source with tools done keeps the tools module complete", () => {

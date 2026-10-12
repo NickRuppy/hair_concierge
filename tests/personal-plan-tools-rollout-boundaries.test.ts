@@ -76,7 +76,10 @@ test("on carries the server decision on the context and inserts the tools block 
   const off = deriveStage2TriggerContext(snapshot, { toolsEnabled: false })
   assert.equal(on.toolsEnabled, true)
   assert.equal("toolsEnabled" in off, false)
-  const { toolsEnabled: _flag, ...rest } = on
+  // Rev. 6: the quiz length rides along (night question gate), also only while on.
+  assert.equal(on.hairLength, snapshot.profile.hair.length)
+  assert.equal("hairLength" in off, false)
+  const { toolsEnabled: _flag, hairLength: _length, ...rest } = on
   assert.deepEqual(rest, off)
   const answers = { currentProductCategories: ["shampoo"] as never }
   const offIds = getOrderedQuestionIds(off, answers)
@@ -85,7 +88,12 @@ test("on carries the server decision on the context and inserts the tools block 
   // Same Produkte block, then the tools, then Gewohnheiten without the thing-questions.
   const habitsStart = offIds.indexOf("towel_handling")
   assert.deepEqual(onIds.slice(0, habitsStart), offIds.slice(0, habitsStart))
-  assert.deepEqual(onIds.slice(habitsStart), ["tools_overview", "towel_handling", "drying_routes"])
+  assert.deepEqual(onIds.slice(habitsStart), [
+    "tools_overview",
+    "towel_handling",
+    "drying_routes",
+    "night_wear",
+  ])
   assert.equal(getStage2ModulePathStates(onIds, [])["tools"].status, "open")
 })
 

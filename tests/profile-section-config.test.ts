@@ -453,6 +453,8 @@ test("Gewohnheiten collapses Hitze-Häufigkeit and Hitzeschutz into one „Keine
       ["towel_technique", "Abtrocknen", "Sanft ausdrücken / scrunchen"],
       ["drying_method", "Trocknen", null],
       ["no_heat", "Hitze", "Keine Hitze"],
+      // Rev. 6: „Nachts" closes the card (still open here).
+      ["night_wear", "Nachts", null],
     ],
   )
   assert.deepEqual(heatFree[2].editTarget, { kind: "refine", module: "habits" })
@@ -461,13 +463,20 @@ test("Gewohnheiten collapses Hitze-Häufigkeit and Hitzeschutz into one „Keine
   const fromPlan = profileHabitsRows(null, { dryingRoutes: ["air_dry"], additionalHeatTools: [] })
   assert.deepEqual(
     fromPlan.map((row) => row.key),
-    ["towel_technique", "drying_method", "no_heat"],
+    ["towel_technique", "drying_method", "no_heat", "night_wear"],
   )
 })
 
 test("Gewohnheiten keeps all four rows when any heat source is used or not yet known", () => {
   const keys = (rows: ReturnType<typeof profileHabitsRows>) => rows.map((row) => row.key)
-  const four = ["towel_technique", "drying_method", "heat_styling", "uses_heat_protection"]
+  // Plus the Rev. 6 „Nachts" row at the end.
+  const four = [
+    "towel_technique",
+    "drying_method",
+    "heat_styling",
+    "uses_heat_protection",
+    "night_wear",
+  ]
   assert.deepEqual(
     keys(profileHabitsRows(makeProfile({ heat_styling: "once_weekly" }), null)),
     four,

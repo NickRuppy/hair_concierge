@@ -7,6 +7,7 @@ import { ADDITIONAL_HEAT_TOOL_IMAGES, type ToolImage } from "@/components/quiz/t
 import type { IconName } from "@/components/ui/icon"
 import { FrequencySliderField } from "@/components/ui/frequency-slider-field"
 import type {
+  NightWear,
   AdditionalHeatTool,
   DryingRoute,
   DryShampooBridgePreference,
@@ -312,6 +313,13 @@ export const ADDITIONAL_HEAT_TOOL_OPTIONS = [
     image: ADDITIONAL_HEAT_TOOL_IMAGES.thermal_rollers,
   },
 ] as const satisfies readonly RefinementOption<AdditionalHeatTool>[]
+
+/** Rev. 6 „Wie trägst du dein Haar nachts?" — single choice, no icons (mockup 5c). */
+export const NIGHT_WEAR_OPTIONS = [
+  { value: "open", label: "Offen" },
+  { value: "loose_tied", label: "Locker zusammengebunden" },
+  { value: "pineapple", label: "Pineapple", description: "locker oben auf dem Kopf" },
+] as const satisfies readonly RefinementOption<NightWear>[]
 
 export const HEAT_PROTECTION_OPTIONS = [
   { value: "always", label: "Immer", icon: "heat-protection-yes" },

@@ -257,6 +257,8 @@ test("every declared rule id is reachable — no dead rule in the table", () => 
       resolve(triggerContext(), { additionalHeatTools: ["straightener"] }),
       // Hair Tools rollout on: the overview and the page wildcard.
       resolve(TOOLS_ON_CONTEXT, { dryingRoutes: ["ordinary_blow_dry"] }, ["drying_routes"]),
+      // Rev. 6: the night question, from an earlier technique.
+      resolve(TOOLS_ON_CONTEXT, { nightProtection: ["pineapple"] }, ["night_protection"]),
     ].flatMap((resolution) => resolution.appliedRuleIds),
   )
   assert.deepEqual(
@@ -660,6 +662,8 @@ test("rollout on, no answers: today's habits assumptions, reached through an ass
     additionalHeatTools: [],
     heatEvents: {},
     nightProtection: [],
+    // Rev. 6: „Offen" adds no technique — the night protection stays today's none.
+    nightWear: "open",
   })
   assert.deepEqual(resolution.orderedQuestionIds, [
     "current_product_categories",
@@ -668,6 +672,7 @@ test("rollout on, no answers: today's habits assumptions, reached through an ass
     "tools:drying_textiles:1",
     "towel_handling",
     "drying_routes",
+    "night_wear",
   ])
 })
 
@@ -810,9 +815,10 @@ test("rollout on: resolution over a complete draft whose path grew fills only th
   const resolution = resolve(TOOLS_ON_CONTEXT, answers, completedQuestionIds)
   assert.deepEqual(
     resolution.assumedQuestionIds.filter((id) => !id.startsWith("tools")),
-    [],
-    "only the tool questions are assumed",
+    ["night_wear"],
+    "only the new questions are assumed: the tools and (Rev. 6) the night question",
   )
+  assert.equal(resolution.answers.nightWear, "open")
   // Her real facts survive the assumed inventory unchanged.
   assert.deepEqual(resolution.answers.towel, { material: "frottee", technique: "rough_rubbing" })
   assert.deepEqual(resolution.answers.additionalHeatTools, ["straightener"])

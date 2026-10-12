@@ -1,6 +1,7 @@
 import { PRODUCT_FREQUENCIES, type ProductFrequency } from "@/lib/vocabulary/frequencies"
 import type { ToolFamily, ToolReportedForm } from "@/lib/personal-plan/tools/contracts"
 import type { ToolFormPageKey } from "@/lib/personal-plan/tools/labels"
+import type { HairLength } from "@/lib/vocabulary/hair-length"
 import type {
   NightProtection,
   TowelMaterial,
@@ -50,6 +51,13 @@ export const ADDITIONAL_HEAT_TOOLS = [
   "thermal_rollers",
 ] as const
 export type AdditionalHeatTool = (typeof ADDITIONAL_HEAT_TOOLS)[number]
+/**
+ * How the hair is worn at night (Rev. 6, Gewohnheiten „Wie trägst du dein Haar nachts?"). A
+ * behaviour, not a thing: the night THINGS come from the Deine-Tools night page. `loose_tied` /
+ * `pineapple` are merged into the derived `nightProtection` list; `open` adds nothing.
+ */
+export const NIGHT_WEARS = ["open", "loose_tied", "pineapple"] as const
+export type NightWear = (typeof NIGHT_WEARS)[number]
 export const HEAT_PROTECTION_CONSISTENCIES = ["always", "sometimes", "no", "unsure"] as const
 export type HeatProtectionConsistency = (typeof HEAT_PROTECTION_CONSISTENCIES)[number]
 export const STAGE2_HEAT_EVENT_SOURCES = [
@@ -88,6 +96,11 @@ export type PersonalPlanRefinementAnswersV1 = {
   heatEvents?: Record<string, HeatEventAnswer>
   nightProtection?: NightProtection[]
   /**
+   * The night behaviour answer (`night_wear`). Only on the path while the Hair Tools rollout is
+   * on and the quiz hair length can be tied (not `very_short` / `short`; unknown length asks).
+   */
+  nightWear?: NightWear
+  /**
    * The Tools overview answer (`tools_overview`): the families the user owns something in, in
    * wash-day order (`TOOL_OVERVIEW_FAMILY_ORDER`). Every family NOT listed is an explicit none.
    * Only on the path while the Hair Tools rollout is on.
@@ -111,6 +124,7 @@ export type Stage2StaticQuestionId =
   | "drying_routes"
   | "additional_heat_tools"
   | "night_protection"
+  | "night_wear"
 export type Stage2HeatEventQuestionId = `heat:${Stage2HeatEventSource}`
 /** Questions of the `tools` module: the overview, then one question per product-form page. */
 export type Stage2ToolsQuestionId = "tools_overview" | `tools:${ToolFormPageKey}`
@@ -131,6 +145,12 @@ export type Stage2TriggerContext = {
    * `=== true`.
    */
   toolsEnabled?: boolean
+  /**
+   * The quiz hair length, set by `deriveStage2TriggerContext` only while the rollout is on (so
+   * tools-off contexts stay byte-identical). Gates `night_wear`: `very_short` / `short` cannot be
+   * tied; absent (unknown) asks.
+   */
+  hairLength?: HairLength
 }
 
 export type Stage2PathState = {

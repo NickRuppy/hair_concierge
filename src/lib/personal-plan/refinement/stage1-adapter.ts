@@ -38,7 +38,13 @@ export function deriveStage2TriggerContext(
         : "ineligible",
     // Absent means off, so tools-off contexts (and the refined input hash derived from them) stay
     // byte-identical to the pre-rollout shape.
-    ...(options.toolsEnabled ? { toolsEnabled: true } : {}),
+    // `hairLength` gates the Rev. 6 night question; also set only while the rollout is on.
+    ...(options.toolsEnabled
+      ? {
+          toolsEnabled: true,
+          ...(snapshot.profile?.hair?.length ? { hairLength: snapshot.profile.hair.length } : {}),
+        }
+      : {}),
   }
 }
 

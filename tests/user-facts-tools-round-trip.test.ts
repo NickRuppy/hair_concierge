@@ -62,6 +62,8 @@ function lenaDraft() {
         "heat:dryer_brush": { frequency: "weekly_1x", protectionConsistency: "always" },
         "heat:straightener": { frequency: "weekly_1x", protectionConsistency: "sometimes" },
       },
+      // Rev. 6: she sleeps with her hair open.
+      nightWear: "open",
     },
     completedQuestionIds: [
       "current_product_categories",
@@ -81,6 +83,7 @@ function lenaDraft() {
       "heat:ordinary_blow_dry",
       "heat:dryer_brush",
       "heat:straightener",
+      "night_wear",
     ],
   })
   assert.equal(contract.isComplete, true)

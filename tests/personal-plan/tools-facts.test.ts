@@ -332,11 +332,13 @@ test("towel material is always derived from a settled textiles page", () => {
 })
 
 test("night forms map onto the existing night-protection vocabulary", () => {
+  // Rev. 6: the soft tie is a thing and names no technique — `loose_tied` / `pineapple` come
+  // from the Gewohnheiten night question (`nightWear`), merged by the path.
   assert.deepEqual(
     careFactsFromToolInventory({
       night_protection: ["pillowcase", "bonnet", "length_tip_sleeve", "soft_night_tie"],
     }).nightProtection,
-    ["silk_satin_pillow", "silk_satin_bonnet", "loose_tied", "length_tip_accessory"],
+    ["silk_satin_pillow", "silk_satin_bonnet", "length_tip_accessory"],
   )
   assert.deepEqual(careFactsFromToolInventory({ night_protection: [] }).nightProtection, [])
   assert.equal(careFactsFromToolInventory({}).nightProtection, undefined)
@@ -419,8 +421,10 @@ test("round trip: towel material and night protection survive, with the document
   for (const protection of NIGHT_PROTECTIONS) {
     const care = { ...EMPTY_TOOL_CARE_FACTS, nightProtection: [protection] }
     const derived = careFactsFromToolInventory(confirmPrefill(care)).nightProtection
-    // `pineapple` is a technique the soft tie stands in for; it comes back as `loose_tied`.
-    assert.deepEqual(derived, [protection === "pineapple" ? "loose_tied" : protection])
+    // Rev. 6: a technique (`loose_tied` / `pineapple`) pre-ticks the soft tie, which derives no
+    // technique of its own — the technique round-trips through the night question instead.
+    const technique = protection === "loose_tied" || protection === "pineapple"
+    assert.deepEqual(derived, technique ? [] : [protection])
   }
 })
 

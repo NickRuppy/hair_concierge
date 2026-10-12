@@ -18,6 +18,7 @@ import type {
   Stage2HeatEventTool,
   Stage2AnswerProvenance,
   Stage2QuestionId,
+  NightWear,
 } from "../refinement/types"
 import {
   createStage2HeatEventId,
@@ -770,7 +771,9 @@ export const TOOL_FORM_CARE_FACTS = {
   pillowcase: { nightProtection: "silk_satin_pillow" },
   bonnet: { nightProtection: "silk_satin_bonnet" },
   length_tip_sleeve: { nightProtection: "length_tip_accessory" },
-  soft_night_tie: { nightProtection: "loose_tied" },
+  // Rev. 6: a soft tie is a THING. How the hair is worn (`loose_tied` / `pineapple`) comes from
+  // the Gewohnheiten question „Wie trägst du dein Haar nachts?" (`nightWear`), never from the tie.
+  soft_night_tie: {},
   // drying_textiles — the inverse of the existing pre-fill projection (`mapTowelMaterial`)
   microfiber_towel: { towelMaterial: "mikrofaser" },
   frottee: { towelMaterial: "frottee" },
@@ -859,6 +862,47 @@ export function careFactsFromToolInventory(inventory: ToolInventory): ToolDerive
     )
   }
   return facts
+}
+
+/** The night technique a `nightWear` answer adds to `nightProtection` („Offen" adds none). */
+const NIGHT_WEAR_TECHNIQUE: Record<NightWear, NightProtection | null> = {
+  open: null,
+  loose_tied: "loose_tied",
+  pineapple: "pineapple",
+}
+
+/**
+ * Rev. 6 — things vs behaviour: the derived `nightProtection` list is the night THINGS the tools
+ * night page derives plus the TECHNIQUE of the night question. Until `nightWear` is answered the
+ * technique the member already had (`previous`, her earlier night answer) stays in place, like
+ * every other earlier answer before its new question is settled.
+ */
+export function nightProtectionWithWear(
+  things: readonly NightProtection[],
+  nightWear: NightWear | undefined,
+  previous: readonly NightProtection[] | undefined,
+): NightProtection[] {
+  const techniques =
+    nightWear !== undefined
+      ? [NIGHT_WEAR_TECHNIQUE[nightWear]].filter(
+          (technique): technique is NightProtection => technique !== null,
+        )
+      : (previous ?? []).filter((protection) => NIGHT_PROTECTION_TECHNIQUES.has(protection))
+  return inOrder([...things, ...techniques], NIGHT_PROTECTIONS)
+}
+
+/**
+ * The `nightWear` a stored `nightProtection` list implies, or `undefined` when it names no
+ * technique (then „Offen" and „unanswered" cannot be told apart). When both techniques are
+ * stored (the old multi-select), Pineapple wins: it is the more specific way to wear the hair.
+ */
+export function nightWearFromNightProtection(
+  nightProtection: readonly NightProtection[] | null | undefined,
+): Exclude<NightWear, "open"> | undefined {
+  if (!nightProtection) return undefined
+  if (nightProtection.includes("pineapple")) return "pineapple"
+  if (nightProtection.includes("loose_tied")) return "loose_tied"
+  return undefined
 }
 
 /**

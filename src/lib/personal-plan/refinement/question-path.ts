@@ -5,6 +5,7 @@ import type {
   DryShampooVisibleHairColor,
   HeatProtectionConsistency,
   NightProtection,
+  NightWear,
   OilPurpose,
   PersonalPlanRefinementAnswersV1,
   ProductFrequency,
@@ -27,6 +28,7 @@ import {
   DRY_SHAMPOO_VISIBLE_HAIR_COLORS,
   DRYING_ROUTES,
   HEAT_PROTECTION_CONSISTENCIES,
+  NIGHT_WEARS,
   OIL_PURPOSES,
   SCALP_IRRITATION_DETAILS,
   STAGE2_MODULES,
@@ -52,6 +54,7 @@ import {
   dryingRouteOptionsFromToolInventory,
   isToolOverviewAnswerValid,
   isToolPageAnswerValid,
+  nightProtectionWithWear,
   resolvedToolInventory,
   type ToolDerivedCareFacts,
 } from "@/lib/personal-plan/tools/facts"
@@ -116,6 +119,8 @@ export function pruneStage2Answers(input: PathInput): Stage2PrunedAnswers {
   }
 
   if (input.triggerContext.toolsEnabled === true) {
+    // Rev. 6: hair that cannot be tied is not asked how it is worn at night.
+    if (!isStage2NightWearApplicable(input.triggerContext)) remove("nightWear")
     if (normalizeToolForms(answers)) prunedAnswerKeys.push("toolForms")
     applyDerivedToolCareFacts(answers)
   }
@@ -178,12 +183,24 @@ export function getOrderedQuestionIds(
     }
     ids.push("drying_routes")
     ids.push(...getSelectedStage2HeatEventSources(answers).map(createStage2HeatEventId))
+    // Rev. 6: Gewohnheiten closes with how the hair is worn at night (Abtrocknen → Trocknen →
+    // Hitze → Nachts).
+    if (isStage2NightWearApplicable(triggerContext)) ids.push("night_wear")
     return ids
   }
   ids.push(...END_QUESTION_IDS.slice(0, 3))
   ids.push(...getSelectedStage2HeatEventSources(answers).map(createStage2HeatEventId))
   ids.push(...END_QUESTION_IDS.slice(3))
   return ids
+}
+
+/**
+ * Whether `night_wear` is on the path: rollout on and a hair length that can be tied. A short
+ * (`very_short` / `short`) quiz length skips it; an unknown length asks.
+ */
+export function isStage2NightWearApplicable(triggerContext: Stage2TriggerContext): boolean {
+  if (triggerContext.toolsEnabled !== true) return false
+  return triggerContext.hairLength !== "very_short" && triggerContext.hairLength !== "short"
 }
 
 /**
@@ -277,7 +294,14 @@ function normalizeToolForms(answers: PersonalPlanRefinementAnswersV1): boolean {
 function applyDerivedToolCareFacts(answers: PersonalPlanRefinementAnswersV1): void {
   const derived = careFactsFromToolInventory(resolvedToolInventory(answers))
   if (derived.additionalHeatTools) answers.additionalHeatTools = derived.additionalHeatTools
-  if (derived.nightProtection) answers.nightProtection = derived.nightProtection
+  if (derived.nightProtection) {
+    // Things from the night page + the technique of `night_wear` (Rev. 6).
+    answers.nightProtection = nightProtectionWithWear(
+      derived.nightProtection,
+      isOneOf<NightWear>(answers.nightWear, NIGHT_WEARS) ? answers.nightWear : undefined,
+      answers.nightProtection,
+    )
+  }
   if (derived.towelMaterial) {
     const technique = answers.towel?.technique
     answers.towel = {
@@ -305,6 +329,7 @@ const STAGE2_QUESTION_MODULE_BY_ID: Record<Stage2StaticQuestionId, Stage2Module>
   drying_routes: "habits",
   additional_heat_tools: "habits",
   night_protection: "habits",
+  night_wear: "habits",
 }
 
 export function getStage2QuestionModule(questionId: Stage2QuestionId): Stage2Module {
@@ -504,6 +529,8 @@ export function isStage2QuestionAnswerValid(
       )
     case "night_protection":
       return isOrderedKnownArray<NightProtection>(answers.nightProtection, NIGHT_PROTECTIONS)
+    case "night_wear":
+      return isOneOf<NightWear>(answers.nightWear, NIGHT_WEARS)
   }
   return false
 }
