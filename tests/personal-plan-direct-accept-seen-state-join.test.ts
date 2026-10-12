@@ -147,7 +147,9 @@ async function assertSeenStateJoin(envelope: PersonalPlanQuizSubmissionEnvelope)
 
 /** The refined need version the synthetic Stage-2 defaults produce. */
 function refinedSnapshot(envelope: PersonalPlanQuizSubmissionEnvelope) {
-  const triggerContext = deriveStage2TriggerContext(initialSnapshot(envelope))
+  const triggerContext = deriveStage2TriggerContext(initialSnapshot(envelope), {
+    toolsEnabled: false,
+  })
   const defaults = buildDirectAcceptanceStage2Defaults(triggerContext)
   const refined = computeNeedPlan({
     rawEnvelope: envelope,

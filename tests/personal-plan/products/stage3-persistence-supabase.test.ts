@@ -4785,6 +4785,108 @@ test("Oil retains shared suitable thicknesses while its product spec stays singu
   assert.ok(oilSpecMaybeSingleCalls >= 1)
 })
 
+test("Diffusor rule: a marked Diffusor never qualifies a carrier requirement next to a Warmluftbürste", async () => {
+  const productId = "66666666-6666-4666-8666-666666666666"
+  const run = async (diffuserRuleIds: string[]) =>
+    loadStage3HeatCarrierCoverage(
+      completeCatalogFactClient(
+        {
+          products: [
+            {
+              id: productId,
+              name: "Heat-capable styling oil",
+              category_key: "oil",
+              is_active: true,
+              lifecycle_status: "active",
+              is_chaarlie_recommended: true,
+              suitable_thicknesses: ["normal"],
+              sort_order: 1,
+            },
+          ],
+          product_oil_specs: [
+            {
+              product_id: productId,
+              weight: "light",
+              role_support: ["leave_on_fibre_conditioning"],
+              provides_heat_protection: true,
+            },
+          ],
+          product_oil_eligibility: [
+            {
+              product_id: productId,
+              thickness: "normal",
+              oil_subtype: "styling-oel",
+              oil_purpose: "styling_finish",
+            },
+          ],
+          product_application_protocols: [
+            {
+              product_id: productId,
+              role: "leave_on_fibre_conditioning",
+              // Styling-Tag only: it cannot carry the wash-family Diffusor blow-dry.
+              guidance_payload: oilLeaveOnGuidancePayload(productId, ["styling_day"]),
+            },
+          ],
+          application_guidance_protocols: [],
+        },
+        [],
+      ) as never,
+      {
+        ...shampooAuthorityDraft(),
+        products: [
+          {
+            capturedProductId: "captured-oil-carrier",
+            identity: {
+              kind: "catalog_product",
+              productId,
+              displayName: "Heat-capable styling oil",
+              category: "oil",
+            },
+          },
+        ],
+        roleAssignments: [
+          {
+            capturedProductId: "captured-oil-carrier",
+            category: "oil",
+            roles: ["leave_on_fibre_conditioning"],
+          },
+        ],
+      } as never,
+      ["airflow_shaping"],
+      [
+        {
+          id: "heat:diffuser_airflow_shaping",
+          tool: "hair_dryer",
+          route: "airflow_shaping",
+          frequency: "weekly_2x",
+          sourceRuleIds: diffuserRuleIds,
+        },
+        {
+          id: "heat:dryer_brush",
+          tool: "dryer_brush",
+          route: "airflow_shaping",
+          frequency: "weekly_1x",
+          sourceRuleIds: [],
+        },
+      ],
+    )
+
+  // Rule on: only the Warmluftbürste qualifies, and the Styling-Tag oil covers it.
+  assert.deepEqual(await run(["heat_protectant.diffuser_as_blow_dry"]), {
+    carrierCategory: "oil",
+    verifiedRoutes: ["airflow_shaping"],
+    qualifyingEventIds: ["heat:dryer_brush"],
+    verifiedEventIds: ["heat:dryer_brush"],
+  })
+  // Rule off (today): the unmarked Diffusor qualifies and its wash-family blow-dry stays uncovered.
+  assert.deepEqual(await run([]), {
+    carrierCategory: "oil",
+    verifiedRoutes: [],
+    qualifyingEventIds: ["heat:diffuser_airflow_shaping", "heat:dryer_brush"],
+    verifiedEventIds: ["heat:dryer_brush"],
+  })
+})
+
 test("shopping context reads the owner's budget and stated concerns in one narrow query", async () => {
   const reads: Array<{ table: string; columns: string; filters: Array<[string, unknown]> }> = []
   const clientFor = (row: unknown, error: unknown = null) => ({

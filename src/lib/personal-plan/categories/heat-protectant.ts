@@ -1,3 +1,4 @@
+import { isDiffuserBlowDryEvent } from "../heat-diffuser-rule"
 import type {
   PlanCategoryDecision,
   PlanHeatToolRoute,
@@ -78,7 +79,14 @@ export function computeHeatProtectantDecision(
     }
   }
 
-  const selected = new Set(exposure.events.map((event) => event.route))
+  // The Diffusor rule: a marked Diffusor event is plain blow-drying for this tier — it
+  // contributes `not_needed` (ordinary airflow) and never qualifies the airflow upgrade, while
+  // every other reader still sees its `airflow_shaping` route.
+  const selected = new Set(
+    exposure.events.map((event) =>
+      isDiffuserBlowDryEvent(event) ? ("ordinary_airflow" as const) : event.route,
+    ),
+  )
   const routes = QUALIFYING_ROUTE_ORDER.filter((route) => selected.has(route))
 
   if (selected.has("direct_contact_heat")) {

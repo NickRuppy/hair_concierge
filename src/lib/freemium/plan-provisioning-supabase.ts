@@ -211,6 +211,9 @@ async function acceptInitialRoutineForUser(
   admin: ProvisioningAdminClient,
   userId: string,
 ): Promise<AcceptInitialRoutineResult> {
+  // Tools-off: freemium provisioning builds a product-only plan; the Hair Tools path is
+  // member-only and never applies here.
+  const toolsOff = { toolsEnabled: false }
   try {
     await acceptIdealPlan(
       {
@@ -224,7 +227,7 @@ async function acceptInitialRoutineForUser(
         loadShoppingBudget: async (id) =>
           (await createSupabaseStage3ProductionPersistence(admin as never).loadShoppingContext(id))
             .budget,
-        refinementPersistence: createSupabaseStage2RefinementPersistence(admin as never),
+        refinementPersistence: createSupabaseStage2RefinementPersistence(admin as never, toolsOff),
         saveFacts: (factsInput) => saveUserFacts(admin as never, factsInput),
         loadKnownCareAnswers: (id) => loadKnownCareAnswers(admin as never, id),
         planState: {

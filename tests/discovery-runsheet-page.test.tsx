@@ -14,8 +14,10 @@ import {
 } from "../src/components/discovery/cockpit/discovery-call-cockpit"
 import {
   parseRunsheetBaseline,
-  parseRunsheetPoints,
-  runsheetScoreSteps,
+  formatRunsheetRange,
+  hebelTags,
+  runsheetScoreRange,
+  runsheetStaleText,
 } from "../src/components/discovery/cockpit/runsheet-brief"
 import {
   formatRunsheetDueOn,
@@ -445,10 +447,15 @@ test("a legacy enrollment without a call sheet renders every new section empty",
   assert.ok(!markup.includes("Call-Sheet nicht geladen"))
 })
 
-test("a call sheet fills the score tile, the staircase and the follow-ups", async () => {
+test("a call sheet fills the score tile, the range and the follow-ups", async () => {
   const markup = await renderPage({ loadCallSheet: async () => callSheet })
   assert.ok(markup.includes("Mit Plan"))
-  assert.ok(markup.includes("Maßnahmen · von 4 auf 8"))
+  // Legacy points 1,5 / 1,5 / 1 read as ●●● / ●●● / ●● (point system v2): one range.
+  assert.ok(markup.includes("Maßnahmen · von 4 auf 5 bis 6 in 4–8 Wochen"))
+  assert.ok(
+    markup.includes("Orientierung auf Basis üblicher Wirkungen, keine Messung oder Garantie."),
+  )
+  assert.ok(markup.includes('id="runsheet-score-range"'))
   assert.ok(!markup.includes("Hebel · von"))
   assert.ok(
     markup.includes("Aufgeraute Längen entstehen meist durch Hitze, Reibung und Vorschädigung."),
@@ -1142,34 +1149,23 @@ test("footer: nothing genuinely unused — no footer at all", async () => {
 
 // --- pure helpers -------------------------------------------------------------------------
 
-test("score helpers: staircase scales onto the gap, German decimals, strict parsing", () => {
-  // Sum within the gap to 9: raw points hold, nothing is inflated.
-  assert.deepEqual(runsheetScoreSteps(4, [1.5, 1.5, 1]), [4, 5.5, 7, 8])
-  // Overshoot: the gap is spread in tenths by largest remainder (R32) — the relative
-  // order holds, the target is exactly the cap, and no weighted step flattens to +0
-  // while a tenth is left for it.
-  assert.deepEqual(runsheetScoreSteps(8, [3, null]), [8, 9, 9])
-  assert.deepEqual(runsheetScoreSteps(4, [2, 2, 2]), [4, 5.7, 7.4, 9])
-  assert.deepEqual(runsheetScoreSteps(7, [2, 1, 1]), [7, 8, 8.5, 9])
-  // Five in-range weights into a gap of 1: plain rounding would flatten the 0.5er —
-  // the tenth-apportionment keeps every weighted Hebel visibly moving (Codex F2).
-  assert.deepEqual(runsheetScoreSteps(8, [2, 2, 0.5, 2, 2]), [8, 8.3, 8.5, 8.6, 8.8, 9])
-  // The code does the arithmetic and caps the display at 9; a baseline at or above
-  // stays truthful and the ladder stays flat.
-  assert.deepEqual(runsheetScoreSteps(9, [1, 1]), [9, 9, 9])
-  assert.deepEqual(runsheetScoreSteps(10, [1]), [10, 10])
-  // No weights at all: nothing to spread.
-  assert.deepEqual(runsheetScoreSteps(5, [null, null]), [5, 5, 5])
-  // Negative edits never count (Codex F1): the ladder neither pierces the cap between
-  // steps nor sinks a flat baseline — and the save refuses the value outright.
-  assert.deepEqual(runsheetScoreSteps(8, [3, -1]), [8, 9, 9])
-  assert.deepEqual(runsheetScoreSteps(10, [-1]), [10, 10])
-  assert.equal(parseRunsheetPoints("-1"), null)
+test("score helpers: one range over the levels, German decimals, strict parsing", () => {
+  // The range is lever-scale's (tests/discovery-consult-lever-scale.test.ts); here only the
+  // runsheet's use of it and its German rendering.
+  assert.deepEqual(
+    runsheetScoreRange(7.5, [
+      { kind: "hitze_tools", level: 3 },
+      { kind: "entwirren", level: 2 },
+      { kind: "kopfhaut", level: null },
+    ]),
+    { low: 8, high: 9 },
+  )
+  assert.equal(runsheetScoreRange(6, [{ kind: null, level: null }]), null)
+  assert.equal(formatRunsheetRange({ low: 8, high: 9 }), "8 bis 9")
+  assert.equal(formatRunsheetRange({ low: 7.5, high: 8.5 }), "7,5 bis 8,5")
+  assert.equal(formatRunsheetRange({ low: 9, high: 9 }), "9")
   assert.equal(formatRunsheetScore(5.5), "5,5")
   assert.equal(formatRunsheetScore(8), "8")
-  assert.equal(parseRunsheetPoints("1,5"), 1.5)
-  assert.equal(parseRunsheetPoints(""), null)
-  assert.equal(parseRunsheetPoints("viel"), null)
   assert.equal(parseRunsheetBaseline("4"), 4)
   assert.equal(parseRunsheetBaseline("11"), null)
   assert.equal(parseRunsheetBaseline("4,5"), 4.5)
@@ -2187,4 +2183,26 @@ test("locked-in: no copy button (R29), plum section in the cockpit's own voice",
   assert.equal(occurrences(section, "--brand-coral"), 0)
   assert.ok(section.includes("text-[var(--brand-plum)]"))
   assert.ok(!SECOND_PERSON_WORD.test(readableLines(section).join("\n")))
+})
+
+test("a Hebel's small print: timing, thin evidence, out of range, asked in the call", () => {
+  assert.deepEqual(hebelTags({ kind: "hitze_tools", gap: "gross", level: 3 }), ["4–8 Wochen"])
+  assert.deepEqual(hebelTags({ kind: "bondbuilder", gap: "gross", level: 1 }), ["wenig belegt"])
+  assert.deepEqual(hebelTags({ kind: "entwirren", gap: "offen", level: 2 }), [
+    "1–2 Wochen",
+    "im Call klären",
+  ])
+  assert.deepEqual(hebelTags({ kind: "chemie_abstaende", gap: "gross", level: 3 }), [
+    "ab dem nächsten Termin",
+    "nicht in der Spanne",
+  ])
+  assert.deepEqual(hebelTags({ kind: null, gap: null, level: 2 }), [])
+})
+
+test("the stale line names what changed, else stays generic", () => {
+  assert.equal(
+    runsheetStaleText(["Produkte & Entscheidungen", "Brief-Vorlage"]),
+    "Seit dem Brief geändert: Produkte & Entscheidungen, Brief-Vorlage — neu generieren?",
+  )
+  assert.equal(runsheetStaleText([]), "Eingaben haben sich geändert — Brief neu generieren?")
 })

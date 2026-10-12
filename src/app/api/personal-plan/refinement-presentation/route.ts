@@ -1,3 +1,4 @@
+import type { SupabaseClient } from "@supabase/supabase-js"
 import { NextResponse } from "next/server"
 
 import { effectiveRoutineCadenceCopyDe } from "@/lib/personal-plan/routine/cadence"
@@ -6,8 +7,12 @@ import { routineCategoryLabel, routinePurposeLabel } from "@/lib/personal-plan/r
 import { loadPersonalPlanRoutineView } from "@/lib/personal-plan/routine/load-view"
 import type { PersonalPlanRoutineReadClient } from "@/lib/personal-plan/routine/repository"
 import type { PersonalPlanRefinementAnswersV1 } from "@/lib/personal-plan/refinement/types"
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
+import { reportedToolInventoryFromFacts } from "@/lib/personal-plan/tools/facts"
+import { buildProfileToolsBlock } from "@/lib/personal-plan/tools/profile-block"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
+import { loadUserFacts } from "@/lib/user-facts/read"
 
 type Query = {
   select: (columns: string) => Query
@@ -30,6 +35,8 @@ export type RoutineProductSummary = {
 export type RefinementPresentationRouteDeps = {
   getUserId: () => Promise<string | null>
   client: () => RefinementPresentationReadClient
+  /** Server-resolved Hair Tools rollout for this user; browser input never reaches it. */
+  toolsEnabled: (userId: string) => Promise<boolean>
 }
 
 const response = (body: unknown, status = 200) =>
@@ -142,7 +149,24 @@ export function createRefinementPresentationRouteHandlers(deps: RefinementPresen
               .filter((summary): summary is RoutineProductSummary => summary !== null)
           : null
 
-        return response({ answers, completedQuestionIds, routineProducts })
+        const body: Record<string, unknown> = { answers, completedQuestionIds, routineProducts }
+        // The `tools` key exists only for a member whose rollout is on; a flag off, a failing
+        // flag read or unreadable facts leave the response exactly as it was.
+        if (await deps.toolsEnabled(userId).catch(() => false)) {
+          try {
+            const facts = await loadUserFacts(client as unknown as SupabaseClient, userId)
+            body.tools = buildProfileToolsBlock(
+              reportedToolInventoryFromFacts(
+                facts?.careHabits ?? null,
+                facts?.provenance.care_habits?.fields,
+              ),
+            )
+          } catch {
+            // Only the tools block is dropped.
+          }
+        }
+
+        return response(body)
       } catch {
         return response({ error: "temporarily_unavailable" }, 503)
       }
@@ -153,6 +177,7 @@ export function createRefinementPresentationRouteHandlers(deps: RefinementPresen
 const handlers = createRefinementPresentationRouteHandlers({
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   client: () => createAdminClient() as unknown as RefinementPresentationReadClient,
+  toolsEnabled: async (userId) => isPersonalPlanToolsEnabledForUser(userId, createAdminClient()),
 })
 
 export const GET = () => handlers.GET()

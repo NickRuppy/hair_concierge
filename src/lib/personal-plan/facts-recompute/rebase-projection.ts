@@ -2,11 +2,14 @@ import type { JsonValue } from "@/lib/personal-plan/persistence"
 import { userAnsweredQuestionIds } from "@/lib/personal-plan/refinement/answer-provenance"
 import { resolveAssumedAnswers } from "@/lib/personal-plan/refinement/assumed-defaults"
 import { stage2ModuleStates } from "@/lib/personal-plan/refinement/module-status"
+import { carryOverStage2NightAnswer } from "@/lib/personal-plan/refinement/night-wear-carry-over"
 import { createRefinedNeedSnapshot } from "@/lib/personal-plan/refinement/production-persistence-gateway"
-import { resolveStage2RefinementContract } from "@/lib/personal-plan/refinement/question-path"
+import {
+  areAllStage2ModulesSettled,
+  resolveStage2RefinementContract,
+} from "@/lib/personal-plan/refinement/question-path"
 import { deriveStage2TriggerContext } from "@/lib/personal-plan/refinement/stage1-adapter"
 import {
-  STAGE2_MODULES,
   type PersonalPlanRefinementAnswersV1,
   type Stage2AnswerProvenance,
   type Stage2QuestionId,
@@ -44,6 +47,8 @@ export type RebaseProjectionInput = {
   sourceId: string
   hasRefinedHead: boolean
   now: Date
+  /** Server-resolved Hair Tools rollout: decides the question path the clone must satisfy. */
+  toolsEnabled: boolean
 }
 
 export type RebaseClone = {
@@ -81,8 +86,12 @@ export class RebaseProjectionIncompleteError extends Error {
 }
 
 export function buildRebaseProjection(input: RebaseProjectionInput): RebaseProjection {
-  const { sourceDraft, newInitial } = input
-  const triggerContext = deriveStage2TriggerContext(newInitial.outputSnapshot)
+  const { newInitial } = input
+  const triggerContext = deriveStage2TriggerContext(newInitial.outputSnapshot, {
+    toolsEnabled: input.toolsEnabled,
+  })
+  // Read the source exactly as the user's own lane reads it (`interpretStage2PersistedDraft`).
+  const sourceDraft = carryOverStage2NightAnswer(triggerContext, input.sourceDraft)
   const clone =
     sourceDraft.status === "complete"
       ? resolvedClone(sourceDraft, triggerContext)
@@ -120,12 +129,16 @@ export function buildRebaseProjection(input: RebaseProjectionInput): RebaseProje
     },
     // Exactly `writeCareHabitsFacts` (stage2-refinement-service.ts) for the clone.
     careHabits: {
-      patch: toCareHabitsPatch(clone.answers),
+      patch: toCareHabitsPatch(clone.answers, {
+        completedQuestionIds: clone.completedQuestionIds,
+        answerProvenance: clone.answerProvenance,
+        toolsEnabled: triggerContext.toolsEnabled === true,
+      }),
       provenance: {
         source: { kind: "feinschliff_draft", id: sourceDraft.id },
         schemaVersion: CARE_HABITS_SCHEMA_VERSION,
         at: input.now.toISOString(),
-        fields: toFieldProvenance(clone),
+        fields: toFieldProvenance({ ...clone, toolsEnabled: triggerContext.toolsEnabled === true }),
       },
     },
   }
@@ -208,7 +221,7 @@ function moduleSnapshotArgs(
   triggerContext: Stage2TriggerContext,
 ): SnapshotArgs {
   const moduleStates = stage2ModuleStates({ triggerContext, ...draft })
-  if (STAGE2_MODULES.every((candidate) => moduleStates[candidate].status === "complete")) {
+  if (areAllStage2ModulesSettled(moduleStates)) {
     return terminalSnapshotArgs(draft, triggerContext)
   }
   const resolution = resolveAssumedAnswers({

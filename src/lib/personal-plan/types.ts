@@ -4,6 +4,7 @@ import type {
   PersonalPlanQuizSubmissionEnvelope,
 } from "@/lib/personal-plan-quiz/types"
 import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
+import type { Stage1ToolCards } from "./tools/read-view"
 
 export const STAGE1_CATEGORY_ORDER = [
   "shampoo",
@@ -544,4 +545,12 @@ export type InitialNeedPlanSnapshot = {
   productPreviews: InitialProductPreview[]
   renderedOrder: Stage1Category[]
   deferredFacts: PlanMissingFactId[]
+  /**
+   * Hair Tools Stage-1 cards — PRESENTATION ONLY. Attached at read time by the server
+   * (`buildToolView`, plan `2026-10-09-hair-tools-port` §4) to the snapshot it hands the
+   * Idealplan adapter, and only while the Tools rollout is on for this owner. Never written by
+   * `computeNeedPlan`, never persisted, never part of `inputHash`: the initial version stays
+   * tools-off. Tools is deliberately NOT a member of `decisions`/`renderedOrder`.
+   */
+  stage1ToolCards?: Stage1ToolCards
 }

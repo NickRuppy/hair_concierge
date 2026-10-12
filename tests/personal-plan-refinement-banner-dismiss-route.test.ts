@@ -126,6 +126,20 @@ test("records a dismissal for the given module and returns it", async () => {
   })
 })
 
+test("records a dismissal for the tools module", async () => {
+  const { client, rows } = createInMemoryClient()
+  const handlers = createRefinementBannerDismissRouteHandlers({
+    getUserId: async () => USER,
+    client: () => client as never,
+    now: () => NOW,
+  })
+
+  const res = await handlers.POST(postRequest({ module: "tools" }))
+  assert.equal(res.status, 200)
+  assert.deepEqual(await res.json(), { status: "dismissed", module: "tools" })
+  assert.equal(rows()[0]?.subject, "tools")
+})
+
 test("dismissing the same module twice is idempotent", async () => {
   const { client, rows } = createInMemoryClient()
   const handlers = createRefinementBannerDismissRouteHandlers({

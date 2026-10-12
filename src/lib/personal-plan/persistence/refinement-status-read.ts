@@ -122,6 +122,7 @@ async function loadCurrentDraft(
 export async function loadRefinementStatusSource(
   client: RefinementStatusReadClient,
   userId: string,
+  options: { toolsEnabled: boolean },
 ): Promise<RefinementStatusSource> {
   const plan = await loadPlan(client, userId)
   if (!plan) return { status: "no_personal_plan" }
@@ -133,6 +134,7 @@ export async function loadRefinementStatusSource(
 
   const triggerContext = deriveStage2TriggerContext(
     await loadInitialNeedSnapshot(client, userId, plan.current_initial_need_version_id),
+    { toolsEnabled: options.toolsEnabled },
   )
   const draft = await loadCurrentDraft(client, plan.id, plan.current_initial_need_version_id)
 

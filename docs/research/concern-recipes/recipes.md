@@ -1,6 +1,6 @@
 # Concern-Rezepte (intern, Beratungs-Cockpit)
 
-Stand: 2026-09-25. Nur intern (Admin-Cockpit), nie nutzerseitig. Quelle der Wahrheit ist `recipes.json`; diese Datei wird daraus erzeugt und muss mit ihr übereinstimmen. Methode, Quellen, Scope-Grenze und Code-Mapping: `README.md`.
+Stand: 2026-09-25 · Evidenz neu bewertet 2026-10-12. Nur intern (Admin-Cockpit), nie nutzerseitig. Quelle der Wahrheit ist `recipes.json`; diese Datei wird daraus erzeugt und muss mit ihr übereinstimmen. Methode, Quellen, Scope-Grenze und Code-Mapping: `README.md`.
 
 Evidenz-Labels: `strong` / `moderate` / `weak` / `unknown` (Definition in `README.md`). `weak` ist nie eine harte Regel, sondern eine Option für den Call.
 
@@ -8,46 +8,46 @@ Evidenz-Labels: `strong` / `moderate` / `weak` / `unknown` (Definition in `READM
 
 | Code | Label | Kern | Evidenz | Grenze |
 | --- | --- | --- | --- | --- |
-| `dry_lengths` | Trockene oder strohige Längen | conditioner, leave_in, shampoo | strong | ja |
+| `dry_lengths` | Trockene oder strohige Längen | conditioner, leave_in, shampoo | moderate | ja |
 | `frizz_flyaways` | Frizz oder viele abstehende Haare | conditioner, leave_in | moderate | ja |
 | `low_shine` | Wenig Glanz | conditioner | moderate | – |
-| `lost_shape` | Form verliert sich schnell (je nach Haarstruktur: Form und Halt / Wellen / Locken-Definition / Coil-Definition) | conditioner | moderate | – |
-| `low_volume_or_weighed_down` | Platt oder beschwert (je nach Haarstruktur: flacher Ansatz / ungleichmäßiges Volumen) | shampoo, conditioner | moderate | ja |
-| `hair_damage` | Mein Haar wirkt insgesamt strapaziert oder geschädigt | conditioner, leave_in | strong | ja |
+| `lost_shape` | Form verliert sich schnell (je nach Haarstruktur: Form und Halt / Wellen / Locken-Definition / Coil-Definition) | conditioner | weak | – |
+| `low_volume_or_weighed_down` | Platt oder beschwert (je nach Haarstruktur: flacher Ansatz / ungleichmäßiges Volumen) | shampoo, conditioner | weak | ja |
+| `hair_damage` | Mein Haar wirkt insgesamt strapaziert oder geschädigt | conditioner, leave_in | moderate | ja |
 | `hair_loss_or_thinning` | Haarausfall oder dünner werdendes Haar | kein Produktrezept | strong | ja |
-| `breakage` | Mein Haar bricht in den Längen ab | conditioner, leave_in | strong | ja |
-| `split_ends` | Meine Spitzen sind sichtbar gespalten oder ausgefranst | conditioner, leave_in | strong | – |
-| `tangling` | Schnelles Verknoten | conditioner, leave_in | strong | ja |
+| `breakage` | Mein Haar bricht in den Längen ab | conditioner, leave_in | moderate | ja |
+| `split_ends` | Meine Spitzen sind sichtbar gespalten oder ausgefranst | conditioner, leave_in | moderate | – |
+| `tangling` | Schnelles Verknoten | conditioner, leave_in | moderate | ja |
 
 ## `dry_lengths` – Trockene oder strohige Längen
 
 **Was sie meistens meint:** Die Längen fühlen sich rau, strohig oder spröde an und lassen sich schwer kämmen – gemeint sind die Längen, nicht die Kopfhaut.
 
-**Evidenz gesamt:** `strong` · **Research-Basis (goal-concern-levers):** Concerns `dryness`; Goals `moisture`
+**Evidenz gesamt:** `moderate` · **Research-Basis (goal-concern-levers):** Concerns `dryness`; Goals `moisture`
 
 ### Primär – Produktkategorien
 
 - **conditioner** (`strong`): Nach jeder Wäsche in Längen und Spitzen: glättet die Oberfläche, verbessert Gleitfähigkeit und Kämmbarkeit, weniger raues Gefühl.
 - **leave_in** (`moderate`): Gibt zwischen den Wäschen Gleitfähigkeit und Schutz vor Reibung. Menge und Gewicht an die Haardicke anpassen: feines Haar = leichte Formel, sparsam, nur Längen.
-- **shampoo** (`strong`): Mildes Shampoo gezielt auf die Kopfhaut; die Längen werden nur vom ausgespülten Schaum mitgereinigt. Waschrhythmus richtet sich nach der Kopfhaut, nicht nach den Längen.
+- **shampoo** (`weak`): Mildes Shampoo gezielt auf die Kopfhaut; die Längen werden nur vom ausgespülten Schaum mitgereinigt. Waschrhythmus richtet sich nach der Kopfhaut, nicht nach den Längen.
 
 ### Primär – Hebel ohne Produkt
 
-- Handtuch: ausdrücken statt rubbeln (`strong`)
-- Hitze reduzieren: seltener, niedrigere Stufe, weniger Durchgänge (`strong`)
-- Längen beim Waschen nicht schrubben, nur Kopfhaut massieren (`strong`)
+- Handtuch: ausdrücken statt rubbeln (`weak`)
+- Hitze schonender: niedrigere Stufe, weniger Durchgänge, seltener wo möglich (`moderate`)
+- Längen beim Waschen nicht schrubben, nur Kopfhaut massieren (`weak`)
 - Belag-Check: wirken die Längen eher belegt/schwer als rau? Dann einmalig Tiefenreinigung statt mehr Pflege (`moderate`) → nur bei bestätigtem Signal: `deep_cleansing_shampoo`
 
 ### Bedingt (Profil-Modifikatoren)
 
 | Kategorie | Wenn | Warum | Evidenz |
 | --- | --- | --- | --- |
-| mask | thickness=coarse | Grobes Haar verträgt reichhaltigere Pflege; Maske ersetzt an dem Waschtag den Conditioner. | `moderate` |
-| mask | hair_texture=curly/coily | Locken und Coils brauchen erfahrungsgemäß mehr Gleitfähigkeit; Maske ersetzt an dem Waschtag den Conditioner. | `moderate` |
-| mask | damaged=true UND thickness=normal/coarse | Chemisch/thermisch strapazierte Längen sind rauer und poröser; reichhaltigere Pflege glättet spürbar. Bei feinem Haar stattdessen beim leichten Leave-in bleiben. | `moderate` |
+| mask | thickness=coarse | Grobes Haar verträgt reichhaltigere Pflege; Maske ersetzt an dem Waschtag den Conditioner. | `weak` |
+| mask | hair_texture=curly/coily | Locken und Coils brauchen erfahrungsgemäß mehr Gleitfähigkeit; Maske ersetzt an dem Waschtag den Conditioner. | `weak` |
+| mask | damaged=true UND thickness=normal/coarse | Chemisch/thermisch strapazierte Längen sind rauer und poröser; reichhaltigere Pflege glättet spürbar. Bei feinem Haar stattdessen beim leichten Leave-in bleiben. | `weak` |
 | oil | hair_texture=curly/coily | Wenige Tropfen in die Spitzen als Gleit- und Abschlussfilm, nicht als „Feuchtigkeit“. | `weak` |
 | oil | thickness=coarse | Wenige Tropfen in die Spitzen als Gleit- und Abschlussfilm. | `weak` |
-| heat_protectant | heat_styling=true | Reduziert messbaren Hitzeschaden, ersetzt aber nicht weniger Hitze. | `moderate` |
+| heat_protectant | heat_styling=true | Reduziert messbaren Hitzeschaden, ersetzt aber keinen schonenden Umgang mit Hitze. | `moderate` |
 | bondbuilder | chemical_treatment=lightened/permed/chemically_straightened | Strohigkeit nach Blondierung/Dauerwelle/Glättung ist oft Strukturschaden; ein Bondbuilder kann unterstützen, ersetzt aber Conditioner und Leave-in nicht. | `weak` |
 
 ### Nicht zuerst / vermeiden
@@ -84,26 +84,26 @@ Nur Längen. Trockene, spannende, juckende, schuppende oder gerötete Kopfhaut i
 
 ### Primär – Produktkategorien
 
-- **conditioner** (`strong`): Senkt Reibung und statische Aufladung, glättet die Oberfläche – der am besten belegte erste Schritt gegen Frizz.
-- **leave_in** (`strong`): Reduziert Frizz, Flyaways und statische Aufladung zwischen den Wäschen. Gewicht an die Haardicke anpassen: feines Haar = leichte Sprühformel, grobes/lockiges Haar = cremiger.
+- **conditioner** (`moderate`): Senkt Reibung und statische Aufladung, glättet die Oberfläche – der am besten belegte erste Schritt gegen Frizz.
+- **leave_in** (`moderate`): Reduziert Frizz, Flyaways und statische Aufladung zwischen den Wäschen. Gewicht an die Haardicke anpassen: feines Haar = leichte Sprühformel, grobes/lockiges Haar = cremiger.
 
 ### Primär – Hebel ohne Produkt
 
 - Handtuch: ausdrücken statt rubbeln (Mikrofaser/T-Shirt) (`strong`)
-- Wellen, Locken, Coils nicht trocken bürsten; im nassen Haar mit Pflege entwirren (`strong`)
-- Produkte im nassen/feuchten Haar einarbeiten und beim Trocknen wenig anfassen (`moderate`)
-- Hitze reduzieren; Föhn mit Abstand und in Bewegung (`strong`)
+- Wellen, Locken, Coils nicht trocken bürsten; im nassen Haar mit Pflege entwirren (`moderate`)
+- Produkte im nassen/feuchten Haar einarbeiten und beim Trocknen wenig anfassen (`weak`)
+- Hitze schonender; Föhn mit Abstand und in Bewegung (`moderate`)
 - Belag-Check: wirkt das Haar schwer/belegt und trotzdem frizzy? Dann einmalig Tiefenreinigung (`moderate`) → nur bei bestätigtem Signal: `deep_cleansing_shampoo`
 
 ### Bedingt (Profil-Modifikatoren)
 
 | Kategorie | Wenn | Warum | Evidenz |
 | --- | --- | --- | --- |
-| mask | hair_texture=curly/coily | Mehr Gleitfähigkeit für Locken/Coils; Maske ersetzt an dem Waschtag den Conditioner. | `moderate` |
-| mask | damaged=true UND thickness=normal/coarse | Geschädigte Längen reagieren stärker auf Feuchtigkeit und sind rauer; reichhaltigere Pflege glättet. | `moderate` |
+| mask | hair_texture=curly/coily | Mehr Gleitfähigkeit für Locken/Coils; Maske ersetzt an dem Waschtag den Conditioner. | `weak` |
+| mask | damaged=true UND thickness=normal/coarse | Geschädigte Längen reagieren stärker auf Feuchtigkeit und sind rauer; reichhaltigere Pflege glättet. | `weak` |
 | oil | thickness=coarse | Wenige Tropfen als glättender Abschluss auf den Längen. | `weak` |
 | oil | hair_texture=curly/coily UND thickness=normal/coarse | Wenige Tropfen als Abschluss, nachdem Leave-in eingearbeitet ist; nicht statt Leave-in. | `weak` |
-| heat_protectant | heat_styling=true | Hitze macht die Oberfläche rauer und feuchtigkeitsempfindlicher; Schutz unterstützt, weniger Hitze bleibt wichtiger. | `moderate` |
+| heat_protectant | heat_styling=true | Hitze macht die Oberfläche rauer und feuchtigkeitsempfindlicher; Schutz unterstützt, schonender Umgang mit Hitze bleibt wichtiger. | `moderate` |
 
 ### Nicht zuerst / vermeiden
 
@@ -115,7 +115,7 @@ Nur Längen. Trockene, spannende, juckende, schuppende oder gerötete Kopfhaut i
 
 ### Sicherheitsgrenze
 
-Sind die „abstehenden Haare“ kurze abgebrochene Stücke, gilt das Rezept breakage. Viele neue kurze Haare am Haaransatz nach einer Phase mit starkem Ausfall sind meist nachwachsendes Haar – kosmetisch unkritisch, aber wenn der Ausfall selbst Thema ist, gilt die Grenze von hair_loss_or_thinning.
+Sind die „abstehenden Haare“ kurze abgebrochene Stücke, gilt das Rezept breakage. Viele neue kurze Haare am Haaransatz nach einer Phase mit starkem Ausfall sind meist nachwachsendes Haar – kosmetisch unkritisch, aber wenn der Ausfall selbst Thema ist, gilt die Grenze bei Haarausfall und dünner werdendem Haar.
 
 ### Konflikte mit anderen Anliegen
 
@@ -143,10 +143,10 @@ Sind die „abstehenden Haare“ kurze abgebrochene Stücke, gilt das Rezept bre
 
 ### Primär – Hebel ohne Produkt
 
-- Schonend waschen: Shampoo auf die Kopfhaut, Längen nicht schrubben (`strong`)
-- Reibung und Hitze reduzieren (Handtuch, Bürste, Glätteisen) (`strong`)
+- Schonend waschen: Shampoo auf die Kopfhaut, Längen nicht schrubben (`weak`)
+- Reibung mindern, Hitze schonender einsetzen (Handtuch, Bürste, Glätteisen) (`moderate`)
 - Beim Föhnen von oben nach unten trocknen, zum Schluss kühl – richtet die Haare aus (`weak`)
-- Gefärbtes Haar: unnötige Wäschen, Sonne und Hitze reduzieren – Glanzverlust ist oft verblassende Farbe (`strong`)
+- Gefärbtes Haar: unnötige Wäschen, Sonne und Hitze reduzieren – Glanzverlust ist oft verblassende Farbe (`moderate`)
 - Belag-Check: stumpf, schwer, wachsig? Dann einmalig Tiefenreinigung – nicht als Standard bei gefärbtem oder trockenem Haar (`moderate`) → nur bei bestätigtem Signal: `deep_cleansing_shampoo`
 
 ### Bedingt (Profil-Modifikatoren)
@@ -155,8 +155,8 @@ Sind die „abstehenden Haare“ kurze abgebrochene Stücke, gilt das Rezept bre
 | --- | --- | --- | --- |
 | leave_in | thickness=fine | Leichter Glättungsfilm ohne das Gewicht von Öl. | `weak` |
 | oil | thickness=normal/coarse | Ein, zwei Tropfen als Glanzfinish auf trockene Längen; Effekt ist ein Film, keine Reparatur. | `weak` |
-| mask | damaged=true UND thickness=normal/coarse | Raue, strapazierte Längen streuen Licht; reichhaltigere Pflege glättet sichtbar. | `moderate` |
-| heat_protectant | heat_styling=true | Hitze raut die Oberfläche auf und lässt Farbe verblassen; Schutz unterstützt, weniger Hitze bleibt wichtiger. | `moderate` |
+| mask | damaged=true UND thickness=normal/coarse | Raue, strapazierte Längen streuen Licht; reichhaltigere Pflege glättet sichtbar. | `weak` |
+| heat_protectant | heat_styling=true | Hitze raut die Oberfläche auf und lässt Farbe verblassen; Schutz unterstützt, schonender Umgang mit Hitze bleibt wichtiger. | `moderate` |
 
 ### Nicht zuerst / vermeiden
 
@@ -192,11 +192,11 @@ Keine medizinische Grenze; rein kosmetisch.
 
 **Was sie meistens meint:** Bei Wellen, Locken und Coils: Die Definition fällt schnell zusammen oder hängt aus. Bei glattem Haar: Die Frisur hält nicht und die Längen wirken schnell platt und kraftlos.
 
-**Evidenz gesamt:** `moderate` · **Research-Basis (goal-concern-levers):** Goals `curl_definition`, `volume`
+**Evidenz gesamt:** `weak` · **Research-Basis (goal-concern-levers):** Goals `curl_definition`, `volume`
 
 ### Primär – Produktkategorien
 
-- **conditioner** (`moderate`): Gleitfähigkeit ist die Grundlage für Definition bei Wellen/Locken; bei glattem Haar leicht und nur in Längen und Spitzen, damit nichts runterzieht.
+- **conditioner** (`weak`): Gleitfähigkeit ist die Grundlage für Definition bei Wellen/Locken; bei glattem Haar leicht und nur in Längen und Spitzen, damit nichts runterzieht.
 
 ### Primär – Hebel ohne Produkt
 
@@ -211,9 +211,9 @@ Keine medizinische Grenze; rein kosmetisch.
 
 | Kategorie | Wenn | Warum | Evidenz |
 | --- | --- | --- | --- |
-| leave_in | hair_texture=wavy/curly/coily | Im nassen Haar eingearbeitet hilft es, Strähnen zu Gruppen zu formen, und reduziert Frizz. Bei feinen Wellen leichte Formel, sonst hängen sie aus. Nächste Kategorie zu Curl-Cremes. | `moderate` |
+| leave_in | hair_texture=wavy/curly/coily | Im nassen Haar eingearbeitet hilft es, Strähnen zu Gruppen zu formen, und reduziert Frizz. Bei feinen Wellen leichte Formel, sonst hängen sie aus. Nächste Kategorie zu Curl-Cremes. | `weak` |
 | dry_shampoo | hair_texture=straight/wavy UND scalp_type=oily | Wenn die Form am zweiten Tag wegen fettigem Ansatz zusammenfällt: sparsam am Ansatz zwischen den Wäschen, ersetzt aber das Waschen nicht. | `weak` |
-| heat_protectant | heat_styling=true | Hitzeschaden kann das Lockenmuster dauerhaft lockern; Schutz unterstützt, weniger Hitze bleibt wichtiger. | `moderate` |
+| heat_protectant | heat_styling=true | Hitzeschaden kann das Lockenmuster dauerhaft lockern; Schutz unterstützt, schonender Umgang mit Hitze bleibt wichtiger. | `moderate` |
 
 ### Nicht zuerst / vermeiden
 
@@ -251,7 +251,7 @@ Keine medizinische Grenze; rein kosmetisch.
 
 **Was sie meistens meint:** Glatt/wellig: Der Ansatz liegt flach oder die Längen wirken schnell schwer und platt. Lockig/Coils: Volumen verteilt sich ungleichmäßig, z. B. oben flach und unten breit.
 
-**Evidenz gesamt:** `moderate` · **Research-Basis (goal-concern-levers):** Goals `volume`
+**Evidenz gesamt:** `weak` · **Research-Basis (goal-concern-levers):** Goals `volume`
 
 ### Primär – Produktkategorien
 
@@ -260,7 +260,7 @@ Keine medizinische Grenze; rein kosmetisch.
 
 ### Primär – Hebel ohne Produkt
 
-- Gewicht rausnehmen: weniger Produkt, nichts am Ansatz, schwere Schritte weglassen (`moderate`)
+- Gewicht rausnehmen: weniger Produkt, nichts am Ansatz, schwere Schritte weglassen (`weak`)
 - Ansatz vollständig trocknen und dabei gegen die Fallrichtung anheben (`weak`)
 - Schnitt/Stufen: lange, schwere Längen hängen flacher (`weak`)
 - Belag-Check: schwer, belegt, schnell platt trotz Waschen? Dann einmalig Tiefenreinigung (`moderate`) → nur bei bestätigtem Signal: `deep_cleansing_shampoo`
@@ -284,7 +284,7 @@ Keine medizinische Grenze; rein kosmetisch.
 
 ### Sicherheitsgrenze
 
-Wenn „platt“ eigentlich heißt, dass das Haar weniger dicht wird, der Scheitel breiter wirkt oder mehr Kopfhaut durchscheint, gilt die Grenze von hair_loss_or_thinning – nicht dieses Rezept.
+Wenn „platt“ eigentlich heißt, dass das Haar weniger dicht wird, der Scheitel breiter wirkt oder mehr Kopfhaut durchscheint, gilt die Grenze bei Haarausfall und dünner werdendem Haar – nicht dieses Rezept.
 
 ### Konflikte mit anderen Anliegen
 
@@ -309,18 +309,18 @@ Wenn „platt“ eigentlich heißt, dass das Haar weniger dicht wird, der Scheit
 
 **Was sie meistens meint:** Sammelbegriff: Längen fühlen sich rau, stumpf, porös oder „anders“ an, oft nach Blondieren, Färben oder viel Hitze – manchmal mit Bruch, Spliss oder Knoten.
 
-**Evidenz gesamt:** `strong` · **Research-Basis (goal-concern-levers):** Concerns `hair_damage`; Goals `healthier_hair`, `strengthen`
+**Evidenz gesamt:** `moderate` · **Research-Basis (goal-concern-levers):** Concerns `hair_damage`; Goals `healthier_hair`, `strengthen`
 
 ### Primär – Produktkategorien
 
 - **conditioner** (`strong`): Senkt Reibung und Kämmkraft, macht strapazierte Längen geschmeidiger und reduziert Bruch beim Kämmen.
-- **leave_in** (`strong`): Gleitfähigkeit und Schutz zwischen den Wäschen; feines Haar: leichte Formel, sparsam.
+- **leave_in** (`moderate`): Gleitfähigkeit und Schutz zwischen den Wäschen; feines Haar: leichte Formel, sparsam.
 
 ### Primär – Hebel ohne Produkt
 
-- Schadensquelle zuerst reduzieren: weniger Hitze, niedrigere Stufe, weniger Durchgänge (`strong`)
+- Schadensquelle zuerst entschärfen: Hitze schonender – niedrigere Stufe, weniger Durchgänge, seltener wo möglich (`strong`)
 - Chemische Behandlungen strecken, nicht überlappend blondieren/färben/glätten (`strong`)
-- Sanft entwirren: abschnittsweise, von den Spitzen nach oben, breiter Kamm oder Finger (`strong`)
+- Sanft entwirren: abschnittsweise, von den Spitzen nach oben, breiter Kamm oder Finger (`moderate`)
 - Strukturell kaputte Spitzen schneiden lassen (`moderate`)
 - Einordnung: Haar ist nicht lebendig und heilt nicht – Pflege verbessert Gefühl und Optik und bremst neuen Schaden (`strong`)
 
@@ -328,10 +328,10 @@ Wenn „platt“ eigentlich heißt, dass das Haar weniger dicht wird, der Scheit
 
 | Kategorie | Wenn | Warum | Evidenz |
 | --- | --- | --- | --- |
-| bondbuilder | chemical_treatment=lightened/permed/chemically_straightened | Für chemisch geschädigtes Haar gibt es Hinweise auf mehr Festigkeit und weniger Bruch (vor allem Labor-/In-vitro-Daten); als Unterstützung, nicht als Reparatur. | `moderate` |
-| mask | thickness=normal/coarse | Reichhaltigere Pflege glättet raue Längen; Maske ersetzt an dem Waschtag den Conditioner. Bei feinem Haar beim leichten Leave-in bleiben. | `moderate` |
-| mask | hair_texture=curly/coily | Locken/Coils brauchen mehr Gleitfähigkeit; Maske ersetzt an dem Waschtag den Conditioner. | `moderate` |
-| heat_protectant | heat_styling=true | Reduziert messbaren Hitzeschaden; steht aber hinter „weniger Hitze“. | `moderate` |
+| bondbuilder | chemical_treatment=lightened/permed/chemically_straightened | Für chemisch geschädigtes Haar gibt es Hinweise auf mehr Festigkeit und weniger Bruch (vor allem Labor-/In-vitro-Daten); als Unterstützung, nicht als Reparatur. | `weak` |
+| mask | thickness=normal/coarse | Reichhaltigere Pflege glättet raue Längen; Maske ersetzt an dem Waschtag den Conditioner. Bei feinem Haar beim leichten Leave-in bleiben. | `weak` |
+| mask | hair_texture=curly/coily | Locken/Coils brauchen mehr Gleitfähigkeit; Maske ersetzt an dem Waschtag den Conditioner. | `weak` |
+| heat_protectant | heat_styling=true | Reduziert messbaren Hitzeschaden; steht aber hinter schonendem Umgang mit Hitze. | `moderate` |
 | oil | thickness=coarse | Wenige Tropfen in die Spitzen als Gleitfilm; keine Strukturreparatur. | `weak` |
 
 ### Nicht zuerst / vermeiden
@@ -345,7 +345,7 @@ Wenn „platt“ eigentlich heißt, dass das Haar weniger dicht wird, der Scheit
 
 ### Sicherheitsgrenze
 
-Kommt zum strapazierten Haar vermehrter Ausfall mit Wurzel, lichter werdendes Haar oder Kopfhautbeschwerden hinzu, gilt die Grenze von hair_loss_or_thinning. Brennen, Wunden oder starke Reaktion der Kopfhaut nach Färben/Blondieren → ärztlich abklären lassen.
+Kommt zum strapazierten Haar vermehrter Ausfall mit Wurzel, lichter werdendes Haar oder Kopfhautbeschwerden hinzu, gilt die Grenze bei Haarausfall und dünner werdendem Haar. Brennen, Wunden oder starke Reaktion der Kopfhaut nach Färben/Blondieren → ärztlich abklären lassen.
 
 ### Konflikte mit anderen Anliegen
 
@@ -359,7 +359,7 @@ Kommt zum strapazierten Haar vermehrter Ausfall mit Wurzel, lichter werdendes Ha
 
 ### Talking Point
 
-> So gehen wir es an: Geschädigte Längen kann man nicht heilen, aber wir können sie deutlich geschmeidiger machen und vor allem verhindern, dass neuer Schaden dazukommt – weniger Hitze und Belastung, konsequent Conditioner und Leave-in, und bei blondiertem Haar gezielt ein Bondbuilder. Was wirklich kaputt ist, nehmen wir beim nächsten Schnitt mit.
+> So gehen wir es an: Geschädigte Längen kann man nicht heilen, aber wir können sie deutlich geschmeidiger machen und vor allem verhindern, dass neuer Schaden dazukommt – schonender mit Hitze, weniger Belastung, konsequent Conditioner und Leave-in, und bei blondiertem Haar gezielt ein Bondbuilder. Was wirklich kaputt ist, nehmen wir beim nächsten Schnitt mit.
 
 ### Domain Review offen
 
@@ -421,31 +421,31 @@ Nur Grenze, kein Produktrezept. Ausfall und Ausdünnung haben viele Ursachen und
 
 **Was sie meistens meint:** Einzelne Haare reißen oberhalb der Spitzen ab – kurze abgebrochene Stücke, ungleich lange Haare, oft beim Kämmen, nach Hitze oder Blondierung.
 
-**Evidenz gesamt:** `strong` · **Research-Basis (goal-concern-levers):** Concerns `breakage`; Goals `anti_breakage`
+**Evidenz gesamt:** `moderate` · **Research-Basis (goal-concern-levers):** Concerns `breakage`; Goals `anti_breakage`
 
 ### Primär – Produktkategorien
 
 - **conditioner** (`strong`): Conditioner senkt in Kämmstudien den Bruch messbar, besonders bei blondiertem Haar.
-- **leave_in** (`strong`): Gleitfähigkeit beim Entwirren und Stylen; weniger Kraft beim Kämmen = weniger Bruch.
+- **leave_in** (`moderate`): Gleitfähigkeit beim Entwirren und Stylen; weniger Kraft beim Kämmen = weniger Bruch.
 
 ### Primär – Hebel ohne Produkt
 
 - Bruch von Ausfall trennen: kurze Stücke ohne Wurzel = Bruch; ganze Haare mit Wurzel → hair_loss_or_thinning (`strong`)
-- Entwirren: abschnittsweise, von den Spitzen nach oben, breiter Kamm oder Finger; Locken/Coils nur nass mit Pflege (`strong`)
-- Hitze reduzieren: seltener, niedriger, weniger Durchgänge; Glätteisen nur auf trockenes Haar (`strong`)
+- Entwirren: abschnittsweise, von den Spitzen nach oben, breiter Kamm oder Finger; Locken/Coils nur nass mit Pflege (`moderate`)
+- Hitze schonender: niedriger, weniger Durchgänge, seltener wo möglich; Glätteisen nur auf trockenes Haar (`strong`)
 - Chemische Behandlungen strecken, nicht überlappend blondieren (`strong`)
-- Lockere Frisuren, keine straffen Gummis; Handtuch ausdrücken statt rubbeln (`strong`)
-- Reibung nachts reduzieren (lockerer Zopf, glatter Bezug) (`moderate`)
+- Lockere Frisuren, keine straffen Gummis; Handtuch ausdrücken statt rubbeln (`weak`)
+- Reibung nachts reduzieren (lockerer Zopf, glatter Bezug) (`weak`)
 - Die am stärksten geschädigten Spitzen schneiden (`moderate`)
 
 ### Bedingt (Profil-Modifikatoren)
 
 | Kategorie | Wenn | Warum | Evidenz |
 | --- | --- | --- | --- |
-| bondbuilder | chemical_treatment=lightened/permed/chemically_straightened | Hinweise auf weniger Bruch und mehr Festigkeit bei chemisch geschädigtem Haar (überwiegend Labor-/In-vitro-Daten); Unterstützung, keine Umkehr. | `moderate` |
-| heat_protectant | heat_styling=true | Reduziert Hitzeschaden und Bruch in Tests; steht hinter „weniger Hitze“. | `moderate` |
-| mask | damaged=true UND thickness=normal/coarse | Mehr Gleitfähigkeit für raue, strapazierte Längen; Maske ersetzt an dem Waschtag den Conditioner. | `moderate` |
-| mask | hair_texture=curly/coily | Locken/Coils brechen vor allem beim Entwirren; mehr Gleitfähigkeit hilft. | `moderate` |
+| bondbuilder | chemical_treatment=lightened/permed/chemically_straightened | Hinweise auf weniger Bruch und mehr Festigkeit bei chemisch geschädigtem Haar (überwiegend Labor-/In-vitro-Daten); Unterstützung, keine Umkehr. | `weak` |
+| heat_protectant | heat_styling=true | Reduziert Hitzeschaden und Bruch in Tests; steht hinter schonendem Umgang mit Hitze. | `moderate` |
+| mask | damaged=true UND thickness=normal/coarse | Mehr Gleitfähigkeit für raue, strapazierte Längen; Maske ersetzt an dem Waschtag den Conditioner. | `weak` |
+| mask | hair_texture=curly/coily | Locken/Coils brechen vor allem beim Entwirren; mehr Gleitfähigkeit hilft. | `weak` |
 | oil | hair_texture=curly/coily | Etwas Öl auf schwierige Stellen als zusätzliche Gleitfähigkeit beim Entwirren. | `weak` |
 
 ### Nicht zuerst / vermeiden
@@ -478,26 +478,26 @@ Ganze Haare mit Wurzel, lichter werdendes Haar, kahle Stellen oder plötzlich vi
 
 **Was sie meistens meint:** Die Enden einzelner Haare teilen sich oder fransen aus; die Spitzen wirken dünn, rau oder verheddern sich.
 
-**Evidenz gesamt:** `strong` · **Research-Basis (goal-concern-levers):** Concerns `split_ends`; Goals `less_split_ends`
+**Evidenz gesamt:** `moderate` · **Research-Basis (goal-concern-levers):** Concerns `split_ends`; Goals `less_split_ends`
 
 ### Primär – Produktkategorien
 
-- **conditioner** (`strong`): Senkt Reibung und beugt neuem Spliss vor; bestehender Spliss wird nur optisch geglättet.
+- **conditioner** (`moderate`): Senkt Reibung und beugt neuem Spliss vor; bestehender Spliss wird nur optisch geglättet.
 - **leave_in** (`moderate`): Hält die Spitzen geschmeidig, damit sie weniger hängen bleiben und weiter aufspleißen; glättet die Optik bis zur nächsten Wäsche.
 
 ### Primär – Hebel ohne Produkt
 
 - Bestehenden Spliss schneiden lassen – die einzige echte Lösung (`strong`)
-- Wer Länge behalten will: regelmäßig nur wenige Millimeter schneiden (`moderate`)
-- Hitze, chemische Belastung und Reibung reduzieren (`strong`)
-- Sanft entwirren, von den Spitzen nach oben (`strong`)
+- Wer Länge behalten will: regelmäßig nur wenige Millimeter schneiden (`weak`)
+- Hitze, chemische Belastung und Reibung reduzieren (`moderate`)
+- Sanft entwirren, von den Spitzen nach oben (`moderate`)
 
 ### Bedingt (Profil-Modifikatoren)
 
 | Kategorie | Wenn | Warum | Evidenz |
 | --- | --- | --- | --- |
 | oil | thickness=normal/coarse | Ein, zwei Tropfen in die Spitzen glätten die Optik vorübergehend; keine Reparatur. | `weak` |
-| heat_protectant | heat_styling=true | Hitze ist ein Haupttreiber für neuen Spliss; Schutz unterstützt, weniger Hitze bleibt wichtiger. | `moderate` |
+| heat_protectant | heat_styling=true | Hitze ist ein Haupttreiber für neuen Spliss; Schutz unterstützt, schonender Umgang mit Hitze bleibt wichtiger. | `moderate` |
 | bondbuilder | chemical_treatment=lightened/permed/chemically_straightened | Kann chemisch geschwächtes Haar widerstandsfähiger machen und so neuem Spliss vorbeugen; verklebt keinen bestehenden Spliss. | `weak` |
 
 ### Nicht zuerst / vermeiden
@@ -529,27 +529,27 @@ Keine medizinische Grenze; rein kosmetisch.
 
 **Was sie meistens meint:** Die Haare verknoten oder verfilzen schnell, Kämmen ziept und dauert lange.
 
-**Evidenz gesamt:** `strong` · **Research-Basis (goal-concern-levers):** Concerns `tangling`
+**Evidenz gesamt:** `moderate` · **Research-Basis (goal-concern-levers):** Concerns `tangling`
 
 ### Primär – Produktkategorien
 
 - **conditioner** (`strong`): Gleitfähigkeit ist der wichtigste Hebel gegen Knoten; senkt die Kämmkraft.
-- **leave_in** (`strong`): Wirkt als Entwirrhilfe zwischen den Wäschen; feines Haar: leichte Sprühformel.
+- **leave_in** (`moderate`): Wirkt als Entwirrhilfe zwischen den Wäschen; feines Haar: leichte Sprühformel.
 
 ### Primär – Hebel ohne Produkt
 
-- In Abschnitten entwirren, von den Spitzen nach oben, breiter Kamm oder Finger (`strong`)
-- Locken/Coils nur nass mit Pflege entwirren; glattes Haar kann angetrocknet mit breitem Kamm entwirrt werden (`strong`)
-- Handtuch ausdrücken statt rubbeln; nachts lockerer Zopf oder glatter Bezug (`moderate`)
-- Spitzen, die immer wieder hängen bleiben, schneiden lassen (`moderate`)
+- In Abschnitten entwirren, von den Spitzen nach oben, breiter Kamm oder Finger (`moderate`)
+- Locken/Coils nur nass mit Pflege entwirren; glattes Haar kann angetrocknet mit breitem Kamm entwirrt werden (`moderate`)
+- Handtuch ausdrücken statt rubbeln; nachts lockerer Zopf oder glatter Bezug (`weak`)
+- Spitzen, die immer wieder hängen bleiben, schneiden lassen (`weak`)
 - Belag-Check: fühlt sich das Haar belegt/klebrig an? Dann einmalig Tiefenreinigung (`moderate`) → nur bei bestätigtem Signal: `deep_cleansing_shampoo`
 
 ### Bedingt (Profil-Modifikatoren)
 
 | Kategorie | Wenn | Warum | Evidenz |
 | --- | --- | --- | --- |
-| mask | hair_texture=curly/coily | Mehr Gleitfähigkeit für Locken/Coils; Maske ersetzt an dem Waschtag den Conditioner. | `moderate` |
-| mask | damaged=true UND thickness=normal/coarse | Raue, strapazierte Längen haken stärker ineinander; reichhaltigere Pflege glättet. | `moderate` |
+| mask | hair_texture=curly/coily | Mehr Gleitfähigkeit für Locken/Coils; Maske ersetzt an dem Waschtag den Conditioner. | `weak` |
+| mask | damaged=true UND thickness=normal/coarse | Raue, strapazierte Längen haken stärker ineinander; reichhaltigere Pflege glättet. | `weak` |
 | oil | hair_texture=curly/coily | Etwas Öl auf besonders schwierige Stellen als zusätzliche Gleitfähigkeit. | `weak` |
 | oil | thickness=coarse | Etwas Öl in die Spitzen als zusätzliche Gleitfähigkeit. | `weak` |
 

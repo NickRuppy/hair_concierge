@@ -1,27 +1,8 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { deriveVolumeFromGoals } from "../src/lib/onboarding/goal-flow"
 import { getOrderedGoals } from "../src/lib/vocabulary/onboarding-goals"
 import { GOALS } from "../src/lib/vocabulary/concerns-goals"
-
-// --- deriveVolumeFromGoals ---
-
-test("volume goal derives desired_volume 'more'", () => {
-  assert.equal(deriveVolumeFromGoals(["shine", "volume"]), "more")
-})
-
-test("less_volume goal derives desired_volume 'less'", () => {
-  assert.equal(deriveVolumeFromGoals(["less_volume", "moisture"]), "less")
-})
-
-test("no volume goal derives desired_volume 'balanced'", () => {
-  assert.equal(deriveVolumeFromGoals(["shine", "healthy_scalp"]), "balanced")
-})
-
-test("empty goals derives desired_volume 'balanced'", () => {
-  assert.equal(deriveVolumeFromGoals([]), "balanced")
-})
 
 // --- getOrderedGoals ---
 

@@ -11,6 +11,7 @@ import {
 } from "@/lib/personal-plan/journey-access"
 import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journey-access-loader"
 import { routineProposalRequestSchema } from "@/lib/personal-plan/routine/contracts"
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
 import { createSupabaseRoutineProposalService } from "@/lib/personal-plan/routine/proposal-service"
 import {
   loadRoutineShoppingBudget,
@@ -80,7 +81,13 @@ const handlers = createPersonalPlanRoutineProposalRouteHandlers({
   enabled: () => isPersonalPlanAppV1Enabled() && isPersonalPlanStage4Enabled(),
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
-  service: () => createSupabaseRoutineProposalService({ client: createAdminClient() as never }),
+  service: () => {
+    const admin = createAdminClient()
+    return createSupabaseRoutineProposalService({
+      client: admin as never,
+      toolsEnabled: async (userId) => isPersonalPlanToolsEnabledForUser(userId, admin),
+    })
+  },
   budgetGate: {
     enabled: () => isShoppingBudgetEnabled(),
     load: (userId) => loadRoutineShoppingBudget(createAdminClient(), userId),

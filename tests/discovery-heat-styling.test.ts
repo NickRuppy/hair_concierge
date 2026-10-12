@@ -37,20 +37,31 @@ test("air drying implies no heat event", () => {
   assert.deepEqual(discoveryHeatEventSources(air as DiscoveryHeatStylingV1), [])
 })
 
-test("plain föhnen needs a frequency but no protection answer; diffuser and tools need both", () => {
+test("plain föhnen and the Diffusor need a frequency but no protection answer; heat tools need both", () => {
   const blow = {
     dryingRoutes: ["ordinary_blow_dry", "diffuser_or_airflow_shaping"],
     additionalHeatTools: ["dryer_brush"],
     heatEvents: {
       "heat:ordinary_blow_dry": { frequency: "weekly_3_4x" },
-      "heat:diffuser_airflow_shaping": {
-        frequency: "weekly_1x",
-        protectionConsistency: "sometimes",
-      },
+      "heat:diffuser_airflow_shaping": { frequency: "weekly_1x" },
       "heat:dryer_brush": { frequency: "biweekly_1x", protectionConsistency: "no" },
     },
   }
   assert.equal(parseDiscoveryHeatStyling(blow).ok, true)
+  // A Diffusor saved while its protection question existed stays valid: the value is tolerated.
+  assert.equal(
+    parseDiscoveryHeatStyling({
+      ...blow,
+      heatEvents: {
+        ...blow.heatEvents,
+        "heat:diffuser_airflow_shaping": {
+          frequency: "weekly_1x",
+          protectionConsistency: "sometimes",
+        },
+      },
+    }).ok,
+    true,
+  )
   assert.deepEqual(discoveryHeatEventSources(blow as DiscoveryHeatStylingV1), [
     "ordinary_blow_dry",
     "diffuser_airflow_shaping",
@@ -165,5 +176,21 @@ test("the cockpit block names drying, tools with frequency and protection", () =
   assert.deepEqual(
     describeDiscoveryHeatStyling({ dryingRoutes: [], additionalHeatTools: [], heatEvents: {} }),
     { drying: "Keiner dieser Wege", tools: [] },
+  )
+})
+
+test("the cockpit block shows no protection for a Diffusor saved while the question still existed", () => {
+  assert.deepEqual(
+    describeDiscoveryHeatStyling({
+      dryingRoutes: ["diffuser_or_airflow_shaping"],
+      additionalHeatTools: [],
+      heatEvents: {
+        "heat:diffuser_airflow_shaping": {
+          frequency: "weekly_2x",
+          protectionConsistency: "always",
+        },
+      },
+    }).tools,
+    [{ label: "Diffusor", frequency: "2× pro Woche", protection: null }],
   )
 })
