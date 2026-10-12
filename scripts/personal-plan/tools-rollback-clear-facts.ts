@@ -102,9 +102,13 @@ export function parseToolsRollbackArguments(argv: string[]): ToolsRollbackOption
   return { apply, includeDerived, limit, userId }
 }
 
-/** Every care key the tools module introduced: the overview answer and one key per page. */
+/**
+ * Every care key the tools module introduced: the overview answer, one key per page, and the
+ * Rev. 6 night question's `nightWear` (a strict key the pre-port schema does not know).
+ */
 export const TOOL_CARE_KEYS: readonly string[] = [
   "toolFamiliesWithSomething",
+  "nightWear",
   ...TOOL_FORM_PAGES.map((page) => toolFormCareKey(page.pageKey)),
 ]
 
@@ -207,7 +211,7 @@ export type ToolsDraftDowngradePlan = {
 }
 
 const isToolQuestionId = (questionId: string) =>
-  questionId === "tools_overview" || questionId.startsWith("tools:")
+  questionId === "tools_overview" || questionId.startsWith("tools:") || questionId === "night_wear"
 
 /**
  * Pure: the pre-port shape of one refinement draft, or `null` when it carries no tool state (the
@@ -220,23 +224,24 @@ export function planToolsDraftDowngrade(input: {
   completedQuestionIds: readonly string[] | null
   answerProvenance: Record<string, string> | null
 }): ToolsDraftDowngradePlan | null {
-  const { toolFamiliesWithSomething, toolForms, ...answers } = input.answers ?? {}
+  const { toolFamiliesWithSomething, toolForms, nightWear, ...answers } = input.answers ?? {}
   const completedQuestionIds = (input.completedQuestionIds ?? []).filter(
     (questionId) => !isToolQuestionId(questionId),
   )
   const answerProvenance = Object.fromEntries(
     Object.entries(input.answerProvenance ?? {}).filter(
-      ([questionId]) => !isToolQuestionId(questionId),
+      ([questionId]) => !isToolQuestionId(questionId) && questionId !== "nightWear",
     ),
   )
   const removed = [
     ...(toolFamiliesWithSomething !== undefined ? ["answers.toolFamiliesWithSomething"] : []),
     ...(toolForms !== undefined ? ["answers.toolForms"] : []),
+    ...(nightWear !== undefined ? ["answers.nightWear"] : []),
     ...(input.completedQuestionIds ?? [])
       .filter(isToolQuestionId)
       .map((questionId) => `completed:${questionId}`),
     ...Object.keys(input.answerProvenance ?? {})
-      .filter(isToolQuestionId)
+      .filter((questionId) => isToolQuestionId(questionId) || questionId === "nightWear")
       .map((questionId) => `provenance:${questionId}`),
   ]
   if (removed.length === 0) return null

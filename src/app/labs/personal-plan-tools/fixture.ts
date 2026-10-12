@@ -9,7 +9,8 @@ import { careHabitsV1Schema } from "@/lib/user-facts/schema"
 
 /**
  * Lena (plan `plans/2026-10-09-hair-tools-port.md` §6): products answered, every tool page and
- * every Gewohnheiten question answered by her. One draft feeds every surface of the lab — the
+ * every Gewohnheiten question except the Rev. 6 night question (`night_wear`) answered by her; it
+ * stays on her path unanswered, because the trigger context carries no `hairLength`. One draft feeds every surface of the lab — the
  * Feinschliff pages, the Tool-Checkpoint, and (through the same `care_habits` projection the
  * completion writes) the read-time tool view on Stage 1, Routine and Anwendung. No DB.
  */

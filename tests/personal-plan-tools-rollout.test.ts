@@ -14,14 +14,16 @@ function resolve(value: string | undefined) {
 }
 
 test("Rev. 6: on (all) is the default; only `off` switches it off and `admin` stages it", () => {
-  for (const value of [undefined, "", "1", "true", "ALL", "ADMIN", "Admin", "on", "internal"]) {
+  for (const value of [undefined, "", "1", "true", "ALL", "on", "internal", "false"]) {
     assert.equal(resolve(value), "all", `${String(value)} resolves to all`)
   }
   assert.equal(resolve("all"), "all")
   assert.equal(resolve("off"), "off")
   assert.equal(resolve(" off "), "off", "surrounding whitespace is trimmed")
   assert.equal(resolve("admin"), "admin")
-  assert.equal(resolve(" admin "), "admin", "surrounding whitespace is trimmed, case is not")
+  assert.equal(resolve(" admin "), "admin", "surrounding whitespace is trimmed")
+  for (const value of ["OFF", "Off", " Off "]) assert.equal(resolve(value), "off", value)
+  for (const value of ["ADMIN", "Admin", " Admin "]) assert.equal(resolve(value), "admin", value)
 })
 
 test("admin serves only admins and never a browser claim", () => {

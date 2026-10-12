@@ -4,6 +4,7 @@ import Image from "next/image"
 import { useState } from "react"
 
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
+import { TOOL_NOTHING_DESCRIPTION } from "@/lib/personal-plan/tools/stage2"
 import { cn } from "@/lib/utils"
 
 /**
@@ -26,7 +27,7 @@ export function ToolVisualMultiSelect({
   selected,
   onChange,
   nothingLabel = "Nichts davon",
-  nothingDescription = "Ich habe hier nichts davon.",
+  nothingDescription = TOOL_NOTHING_DESCRIPTION,
   ariaLabel,
   answered = true,
 }: {

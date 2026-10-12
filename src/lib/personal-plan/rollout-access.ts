@@ -17,9 +17,10 @@ export async function isPersonalPlanAppV1AllowedForUser(
 
 /**
  * Server-owned gate for the Hair Tools domain, resolved once per request and
- * passed down as a boolean. Fails closed: an invalid environment value, an
- * unreadable identity or a missing client all resolve to false. Browser answers
- * never reach this decision.
+ * passed down as a boolean. Default on: an unset or unknown environment value
+ * means on for everyone, and only `off` (any case) disables. Under `admin` an
+ * unreadable identity or a missing client fails closed to false. Browser
+ * answers never reach this decision.
  */
 export async function isPersonalPlanToolsEnabledForUser(
   userId: string,

@@ -839,3 +839,24 @@ test("planToolsDraftDowngrade is pure and returns null without tool state", () =
   assert.deepEqual(plan?.completedQuestionIds, ["wet_wash_frequency"])
   assert.deepEqual(plan?.answerProvenance, { wet_wash_frequency: "user" })
 })
+
+test("planToolsDraftDowngrade also strips the Rev. 6 night answer, completion and provenance", () => {
+  assert.equal(TOOL_CARE_KEYS.includes("nightWear"), true)
+  const plan = planToolsDraftDowngrade({
+    answers: { wetWashFrequency: "weekly_2x", nightWear: "pineapple" },
+    completedQuestionIds: ["wet_wash_frequency", "night_wear"],
+    answerProvenance: { wet_wash_frequency: "user", night_wear: "user", nightWear: "user" },
+  })
+  assert.deepEqual(plan?.answers, { wetWashFrequency: "weekly_2x" })
+  assert.deepEqual(plan?.completedQuestionIds, ["wet_wash_frequency"])
+  assert.deepEqual(plan?.answerProvenance, { wet_wash_frequency: "user" })
+  assert.deepEqual(
+    [...(plan?.removed ?? [])].sort(),
+    [
+      "answers.nightWear",
+      "completed:night_wear",
+      "provenance:night_wear",
+      "provenance:nightWear",
+    ].sort(),
+  )
+})
