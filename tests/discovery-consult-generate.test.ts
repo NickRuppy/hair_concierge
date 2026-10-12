@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
+import type { DiscoveryCallSheetBriefSections } from "../src/lib/discovery/call-sheet"
 import { toConsultBriefSections } from "../src/lib/discovery/consult-brief/api-schema"
 import {
   CONSULT_BRIEF_DEFAULT_MODEL,
@@ -10,6 +11,7 @@ import {
 } from "../src/lib/discovery/consult-brief/generate"
 import { consultSourceHash } from "../src/lib/discovery/consult-brief/hash"
 import type { ConsultInput } from "../src/lib/discovery/consult-brief/input"
+import { CONSULT_LEVER_KINDS } from "../src/lib/discovery/consult-brief/lever-scale"
 import { CONSULT_BOUNDARY_LINE } from "../src/lib/discovery/consult-brief/lint"
 import {
   CONSULT_BRIEF_PROMPT_VERSION,
@@ -68,6 +70,7 @@ function input(overrides: Partial<ConsultInput> = {}): ConsultInput {
     ],
     checklist: [{ kind: "ask_detangling" }],
     heat: null,
+    heatProtection: null,
     washFrequency: {
       current: null,
       currentLabel: null,
@@ -91,19 +94,22 @@ function validSections(): GeneratedConsultBriefSections {
       {
         title: "Schonend entwirren",
         note: "Breiter Kamm, von den Spitzen her.",
-        points: 1,
+        kind: "entwirren",
+        gap: "gross",
         bucket: "umgang",
       },
       {
         title: "Milder waschen",
         note: "Das Sanftwerk Mild Shampoo statt des jetzigen.",
-        points: 0.5,
+        kind: "waschrhythmus",
+        gap: "klein",
         bucket: "produkt",
       },
       {
         title: "Längen schützen",
         note: "Nass nur mit Conditioner kämmen.",
-        points: null,
+        kind: "entwirren",
+        gap: "offen",
         bucket: "umgang",
       },
     ],
@@ -116,6 +122,21 @@ function validSections(): GeneratedConsultBriefSections {
       "Wann war die letzte Blondierung?",
     ],
     erwartungen: ["Kämmbarkeit: stabil in 2–4 Wochen.", CONSULT_BOUNDARY_LINE],
+  }
+}
+
+/**
+ * `validSections()` as stored: zielLuecken `[]` (code-owned since v4), and each Hebel's level
+ * derived in code from kind + gap on bleached, breaking hair (point system v2):
+ * entwirren/gross 2+1 = ●●●, waschrhythmus/klein 2−1 = ●, entwirren/offen 2+1−1 = ●●.
+ */
+function storedValidSections(): DiscoveryCallSheetBriefSections {
+  const levels = [3, 1, 2] as const
+  const sections = validSections()
+  return {
+    ...sections,
+    hebel: sections.hebel.map((entry, index) => ({ ...entry, points: null, level: levels[index] })),
+    zielLuecken: [],
   }
 }
 
@@ -176,7 +197,7 @@ test("a valid answer: brief + source hash, one completion with the configured mo
   const result = await generateConsultBrief(input(), { complete, model: "test-model" })
   assert.ok("brief" in result, JSON.stringify(result))
   // Code owns zielLuecken since v4: always `[]` in the generated brief.
-  assert.deepEqual(result.brief, { ...validSections(), zielLuecken: [] })
+  assert.deepEqual(result.brief, storedValidSections())
   assert.deepEqual(result.brief.zielLuecken, [])
   assert.equal(result.sourceHash, consultSourceHash(input()))
   assert.equal(calls.length, 1)
@@ -197,7 +218,7 @@ test("a valid answer: brief + source hash, one completion with the configured mo
   }
   // zielLuecken is code-owned since v4: it never appears in the prompt's schema.
   assert.equal(system.includes('"zielLuecken"'), false)
-  assert.equal(CONSULT_BRIEF_PROMPT_VERSION, "consult-brief-v5")
+  assert.equal(CONSULT_BRIEF_PROMPT_VERSION, "consult-brief-v6")
   assert.match(system, /dritte[rn]? Person/)
   assert.ok(user.includes(SHAMPOO_KEY))
   assert.ok(user.includes("Glanzwerk Volumen Shampoo"))
@@ -205,7 +226,15 @@ test("a valid answer: brief + source hash, one completion with the configured mo
   // Evidence grades never reach the prompt (G5).
   assert.doesNotMatch(user, /"evidence"/)
   assert.ok(user.includes(`"${SHAMPOO_KEY}"`))
-  assert.ok(system.includes("Die Ziel-Rechnung und ihre Deckelung macht der Code"))
+  assert.ok(system.includes("Wirkungsstufe und Score-Spanne berechnet der Code"))
+  // Point system v2: every lever kind is listed for the model; the diagnosis and heat rules.
+  assert.ok(
+    system.includes("  - hitze_tools: Glätteisen, Lockenstab & Co.: schonender oder seltener"),
+  )
+  assert.ok(system.includes("  - kopfhaut: Kopfhaut (eigener Block)"))
+  assert.ok(system.includes('Die "diagnose" beschreibt ihren heutigen Zustand, nie den Plan'))
+  assert.ok(system.includes('heißt der Hebel „schonender"'))
+  assert.ok(system.includes("dazu keine eigene callFrage"))
   assert.ok(
     system.includes(
       '"mechanik": 2–3 Sätze, generisch und ohne Personenbezug: das Hauptproblem benannt, der Mechanismus dahinter, die typischen Ursachen',
@@ -224,7 +253,7 @@ test("a valid answer: brief + source hash, one completion with the configured mo
   assert.ok(system.includes('"mechanik": ganz ohne Personenbezug'))
   assert.ok(
     user.includes(
-      '5. "hebel" und "callFragen" haben je 3 bis 5 Einträge, jeder Hebel den passenden "bucket", und jede Frage ändert den Plan.',
+      '5. "hebel" und "callFragen" haben je 3 bis 5 Einträge, jeder Hebel den passenden "bucket", "kind" und "gap", und jede Frage ändert den Plan und doppelt keine ask_-Frage der checklist.',
     ),
   )
   assert.equal(format.type, "json_schema")
@@ -243,9 +272,9 @@ test("a valid answer: brief + source hash, one completion with the configured mo
   const hebelItem = schema.properties.hebel!.items as {
     required: string[]
     additionalProperties: boolean
-    properties: { points: { type: string[] } }
+    properties: { kind: { enum: string[] }; gap: { enum: string[] } }
   }
-  assert.deepEqual(hebelItem.required, ["title", "note", "points", "bucket"])
+  assert.deepEqual(hebelItem.required, ["title", "note", "kind", "gap", "bucket"])
   assert.deepEqual(schema.required.toSorted(), [
     "callFragen",
     "diagnose",
@@ -256,7 +285,8 @@ test("a valid answer: brief + source hash, one completion with the configured mo
   ])
   assert.equal("zielLuecken" in schema.properties, false)
   assert.equal(hebelItem.additionalProperties, false)
-  assert.deepEqual(hebelItem.properties.points.type, ["number", "null"])
+  assert.deepEqual(hebelItem.properties.kind.enum, [...CONSULT_LEVER_KINDS])
+  assert.deepEqual(hebelItem.properties.gap.enum, ["gross", "klein", "offen"])
   const swap = schema.properties.swapReasons as {
     type: string
     maxItems: number
@@ -312,7 +342,7 @@ test("a lint failure, then a clean retry → the retried brief; the retry carrie
   const { complete, calls } = completing(dirtyRaw, JSON.stringify(apiAnswer()))
   const result = await generateConsultBrief(input(), { complete, model: "m" })
   assert.ok("brief" in result, JSON.stringify(result))
-  assert.deepEqual(result.brief, { ...validSections(), zielLuecken: [] })
+  assert.deepEqual(result.brief, storedValidSections())
   assert.equal(calls.length, 2)
   assert.equal(calls[0]!.correction, undefined)
   const correction = calls[1]!.correction
@@ -383,7 +413,8 @@ test("no swap keys end to end: an empty swapReasons array becomes an empty recor
   sections.hebel[1] = {
     title: "Milder waschen",
     note: "Seltener und sanfter waschen.",
-    points: 0.5,
+    kind: "waschrhythmus",
+    gap: "klein",
     bucket: "umgang",
   }
   const { complete, calls } = completing(JSON.stringify(apiAnswer(sections)))
@@ -453,4 +484,24 @@ test("the model: env override, else the strongest configured default", () => {
   assert.equal(consultBriefModel({ CONSULT_BRIEF_MODEL: " gpt-x " }), "gpt-x")
   assert.equal(consultBriefModel({}), CONSULT_BRIEF_DEFAULT_MODEL)
   assert.equal(consultBriefModel({ CONSULT_BRIEF_MODEL: "  " }), CONSULT_BRIEF_DEFAULT_MODEL)
+})
+
+test("her heat-protection answer overrides the model's gap before the level is derived", async () => {
+  const sections = validSections()
+  sections.hebel[0] = {
+    title: "Hitzeschutz jedes Mal",
+    note: "Vor jedem Glätten.",
+    kind: "hitzeschutz",
+    gap: "gross",
+    bucket: "produkt",
+  }
+  const { complete } = completing(JSON.stringify(apiAnswer(sections)))
+  const result = await generateConsultBrief(input({ heatProtection: "sometimes" }), {
+    complete,
+    model: "m",
+  })
+  assert.ok("brief" in result, JSON.stringify(result))
+  // „manchmal" = klein: 2 + 1 (bleached, breaking) − 1 = ●●, not the model's ●●●.
+  assert.equal(result.brief.hebel[0]!.gap, "klein")
+  assert.equal(result.brief.hebel[0]!.level, 2)
 })

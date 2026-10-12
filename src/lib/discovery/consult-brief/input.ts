@@ -9,6 +9,8 @@ import type {
 } from "../cockpit"
 import { concernRecipeFor } from "../concern-recipes"
 import { DISCOVERY_FREQUENCY_LABELS, mostFrequentDiscoveryFrequency } from "../frequency"
+import type { HeatProtectionConsistency } from "@/lib/personal-plan/refinement/types"
+
 import { describeDiscoveryHeatStyling, type DiscoveryHeatStylingSummary } from "../heat-styling"
 import { resolveDiscoveryMainConcern } from "../quiz-answers"
 import {
@@ -124,6 +126,11 @@ export type ConsultInput = {
   products: ConsultProduct[]
   checklist: ConsultChecklistItem[]
   heat: DiscoveryHeatStylingSummary | null
+  /**
+   * Her least consistent heat-protection answer over the heat sources that need it; null when
+   * none does. Code sets the heat-protection Hebel's gap from it (point system v2).
+   */
+  heatProtection: HeatProtectionConsistency | null
   washFrequency: {
     current: string | null
     currentLabel: string | null
@@ -225,6 +232,7 @@ export function assembleConsultInput(
       item.kind === "research_open" ? { kind: item.kind, label: item.label } : { kind: item.kind },
     ),
     heat: model.heatStyling ? describeDiscoveryHeatStyling(model.heatStyling) : null,
+    heatProtection: weakestHeatProtection(model.heatStyling ?? null),
     washFrequency: {
       current: currentWash,
       currentLabel: washLabel(currentWash),
@@ -347,6 +355,24 @@ function ownedAliases(step: DiscoveryCockpitStepView, name: string): string[] {
     }
   }
   return [...aliases]
+}
+
+const PROTECTION_ORDER: readonly HeatProtectionConsistency[] = [
+  "no",
+  "unsure",
+  "sometimes",
+  "always",
+]
+
+function weakestHeatProtection(
+  heat: DiscoveryCockpitModel["heatStyling"] | null,
+): HeatProtectionConsistency | null {
+  if (!heat) return null
+  const answers = Object.values(heat.heatEvents).flatMap((event) =>
+    event?.protectionConsistency ? [event.protectionConsistency] : [],
+  )
+  if (answers.length === 0) return null
+  return PROTECTION_ORDER.find((value) => answers.includes(value)) ?? null
 }
 
 function washLabel(value: string | null): string | null {

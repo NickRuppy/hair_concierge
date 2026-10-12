@@ -11,11 +11,13 @@ import {
 } from "./api-schema"
 import { consultSourceHash } from "./hash"
 import type { ConsultInput } from "./input"
+import { consultFactGap, consultLeverLevel, consultLeverSituation } from "./lever-scale"
 import { CONSULT_BOUNDARY_LINE, lintConsultBrief, type ConsultLintFinding } from "./lint"
 import {
   buildConsultBriefPrompt,
   consultBriefSectionsSchema,
   CONSULT_BRIEF_PROMPT_VERSION,
+  type GeneratedConsultBriefSections,
 } from "./prompt"
 
 /**
@@ -121,6 +123,37 @@ export function withBoundaryLine(erwartungen: string[]): string[] {
   return [...erwartungen.filter((line) => line.trim() !== boundaryLine), CONSULT_BOUNDARY_LINE]
 }
 
+/**
+ * The model's answer → the stored sections: zielLuecken is code-owned since v4 (R27), the
+ * boundary line is appended in code, and each Hebel's level is code's (point system v2:
+ * the model picks kind and gap, her own answers override the gap where code knows them,
+ * `consultLeverLevel` derives the level). Shared with the eval.
+ */
+export function storedConsultBriefSections(
+  generated: GeneratedConsultBriefSections,
+  input: ConsultInput,
+): DiscoveryCallSheetBriefSections {
+  const situation = consultLeverSituation(input.flags)
+  return {
+    ...generated,
+    hebel: generated.hebel.map((entry) => {
+      // Her own answer beats the model's reading of it (heat protection „manchmal" = klein).
+      const gap = consultFactGap(entry.kind, input) ?? entry.gap
+      return {
+        title: entry.title,
+        note: entry.note,
+        points: null,
+        bucket: entry.bucket,
+        kind: entry.kind,
+        gap,
+        level: consultLeverLevel(entry.kind, gap, situation),
+      }
+    }),
+    zielLuecken: [],
+    erwartungen: withBoundaryLine(generated.erwartungen),
+  }
+}
+
 function correctionInstruction(findings: ConsultLintFinding[]): string {
   const lines = findings.map((finding) => {
     const excerpt = finding.excerpt ? ` „${finding.excerpt}"` : ""
@@ -165,13 +198,7 @@ export async function generateConsultBrief(
 
     const parsed = consultBriefSectionsSchema.safeParse(toConsultBriefSections(json))
     if (!parsed.success) return { error: { code: "invalid_schema" } }
-    // zielLuecken is code-owned since v4 (R27): gaps travel as callFragen, the stored
-    // field stays only so pre-v4 briefs round-trip.
-    const brief: DiscoveryCallSheetBriefSections = {
-      ...parsed.data,
-      zielLuecken: [],
-      erwartungen: withBoundaryLine(parsed.data.erwartungen),
-    }
+    const brief = storedConsultBriefSections(parsed.data, input)
     return { raw, brief, findings: lintConsultBrief(brief, input) }
   }
 
