@@ -882,3 +882,77 @@ test("ATTACK V1: a REUSED lead never receives a free-registration correction cap
     else process.env.FUNNEL_COOKIE_SIGNING_SECRET = previousSecret
   }
 })
+
+// PUB-3, security audit 2026-10-09, minimal fix ruled by Nick 2026-10-12.
+for (const [label, known, sessionEmail, expected] of [
+  ["known anonymous", true, null, false],
+  ["new anonymous", false, null, true],
+  ["authenticated same email", true, " PLAN@EXAMPLE.COM ", true],
+  ["authenticated different email", true, "other@example.com", false],
+  ["lookup error", "error", null, false],
+] as const) {
+  test(`PUB-3 personal-plan ${label}: save RPC receives server-resolved consent authority`, async () => {
+    const originalFlag = process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED
+    process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED = "true"
+    let saveArgs: Record<string, unknown> | undefined
+    let lookups = 0
+    const handler = createPersonalPlanLeadPostHandler({
+      checkRateLimit: async () => ({ allowed: true }),
+      checkEmailDeliverability: async () => ({
+        ok: true,
+        normalized: "plan@example.com",
+        outcome: "mx",
+      }),
+      recordEmailDeliverabilityOutcome: () => {},
+      cookies: (async () => ({ get: () => undefined })) as never,
+      resolveFunnelCookieContext: async () => null,
+      resolveModeratorJourney: async () => ({ kind: "ordinary" }),
+      createSessionClient: (async () => ({
+        auth: {
+          getUser: async () => ({
+            data: { user: sessionEmail ? { email: sessionEmail } : null },
+            error: null,
+          }),
+        },
+      })) as never,
+      createAdminClient: (() => ({
+        rpc: async (name: string, args: Record<string, unknown>) => {
+          if (name === "is_known_quiz_lead_email") {
+            lookups++
+            assert.equal(args.p_email, "plan@example.com")
+            return {
+              data: known === "error" ? null : known,
+              error: known === "error" ? { message: "offline" } : null,
+            }
+          }
+          assert.equal(name, "save_personal_plan_lead_with_artifact")
+          saveArgs = args
+          return {
+            data: [{ lead_id: "10000000-0000-4000-8000-000000000099", reused: false }],
+            error: null,
+          }
+        },
+      })) as never,
+      scheduleAfter: (() => {}) as never,
+      enqueueMetaLead: () => false,
+      isFreemiumScannerFirstEnabled: () => false,
+      issueResultReturn: async () => ({ issued: false }),
+    })
+    try {
+      const response = await handler(
+        new Request("https://chaarlie.de/api/quiz/personal-plan-lead", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(request),
+        }),
+      )
+      assert.equal(response.status, 200)
+      assert.equal(saveArgs?.p_identity_traits_allowed, expected)
+      assert.equal(saveArgs?.p_authenticated_same_email, label === "authenticated same email")
+      assert.equal(lookups, label === "authenticated same email" ? 0 : 1)
+    } finally {
+      if (originalFlag === undefined) delete process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED
+      else process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED = originalFlag
+    }
+  })
+}

@@ -125,7 +125,6 @@ test("classifies every current public page and route handler", () => {
     "/api/quiz/result-artifact",
     "/api/stripe/create-checkout-session",
     "/api/stripe/portal-session",
-    "/api/stripe/session",
     "/api/stripe/webhook",
   ]
 

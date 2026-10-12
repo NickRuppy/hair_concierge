@@ -37,7 +37,9 @@ import {
  * wins"), shared by `linkQuizToProfile` and the `/plan-bereit` link path.
  *
  * A quiz overwrites the profile only when it is the user's OWN (the callers establish that —
- * email/user_id ownership or an active field-test enrollment — before calling this) and was
+ * an explicit matching lead ID, existing user_id ownership or an active field-test
+ * enrollment — before calling this; email-only adoption is restricted to new accounts
+ * by PUB-1, security audit 2026-10-09) and was
  * TAKEN after the stored quiz and after any hand edit (`quizSupersedesFacts`). A winning quiz
  * REPLACES the diagnostics document and quiz_context (an artifact's own answers; a legacy lead
  * clears a previous artifact's, F4): fields the new quiz does not carry are cleared
