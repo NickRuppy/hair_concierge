@@ -1,0 +1,2433 @@
+{
+  "sealed_at": "2026-10-12T11:49:44Z",
+  "standard_version": "v0.2",
+  "lexicon_version": "styling-lexicon-v0.2",
+  "author": "pre-registration lane r2",
+  "scope_note": "Expected outputs for the 8 unseen products of blind calibration round 2 (sample_ids in data/research/styling-inci/v1.0/capture/round2-new-r4.json), derived only from those 8 capture records under styling-classification-standard.md v0.2, 02_evidence_lexicon.v0.2.md, 01_property-set-v0.md, 00_category_charter.md, the rulings ledger (SD1-SD5, D1-D8b, PH1-1..16, PH2-1..12, R1-Q1..Q4, R1-T, R1-H1..H3) and the Leave-in / Mask sections the Styling standard cites. Written before any blind lane was scored. Firmness: 'firm' = the rule determines the value unambiguously from the record; 'soft' = judgment involved (alternatives listed; any listed alternative is an acceptable lane answer, the 'value' is the expected one); 'UNDETERMINED' = the standard does not decide the value (a finding; 'acceptable' lists the answers a lane may give, 'leaning' is this lane's reading). Keys named informational_* and records whose route is not styling carry Styling values that are NOT scoring targets (standard 4.7).",
+  "conventions": {
+    "ranks": "1-based; split at ',' (and '·', '•') outside brackets; a comma inside an ingredient name is not a separator (lexicon 0.4 item 2: '1,2-Hexanediol' is one token — got2b has 18 items, a naive split gives 19; tail only, no value moves). 'Aqua (Water, Eau)' is one token. Item counts: 22, 12, 18, 9, 18, 18, 29, 15.",
+    "T_S": "full Mask rule (PH2-9, lexicon 0.2): earliest of fragrance, declared allergen/aroma chemical, PR-1 preservative (enumerated list), PR-2 booster only with a PR-1 declared, CH-1 chelator; third-limb unresolved readings per standard 3.3",
+    "T_LI": "LI 3.1.1 capped list plus other Annex V preservatives; fragrance/allergens never eligible; statuses plausible/implausible/vacuous/none_visible; T_LI triggers fire only on paths whose border rule reads T_LI (RG-18)",
+    "aqueous": "Aqua/Water above T_S (lexicon 0.3)",
+    "claim_tiers": "dm pages for Balea are C2_house_brand (LI 2.4.1 rule 6); German-language manufacturer pages are C2; got2b INCI on dm is C3 but matches the C2 got2b.de list"
+  },
+  "summary": [
+    {
+      "slot": 1,
+      "sample_id": "balea-overnight-wellenspray",
+      "route": "styling (not held)",
+      "subtype": "UNDETERMINED (lean gel; not salt_spray)",
+      "hold": "null (firm)",
+      "trap": "salt-free wave spray vs salt_spray",
+      "firmness": "route firm; subtype UNDETERMINED"
+    },
+    {
+      "slot": 2,
+      "sample_id": "balea-haarwachs-styling-stick",
+      "route": "styling (3.5)",
+      "subtype": "UNDETERMINED (shine_finish vs molding; not gel)",
+      "hold": "null (firm)",
+      "trap": "hairline vs surface target_zone (surface, soft)",
+      "firmness": "route firm; subtype UNDETERMINED"
+    },
+    {
+      "slot": 3,
+      "sample_id": "got2b-kleber-4-brows-and-edges-2in1-stylinggel",
+      "route": "styling (3.4(ii))",
+      "subtype": "gel (target_zone hairline)",
+      "hold": "3 (firm; 'Kleber' is not strength)",
+      "trap": "edge gel + brows; Haaransatz vs roots; Kleber",
+      "firmness": "route/subtype/hold firm"
+    },
+    {
+      "slot": 4,
+      "sample_id": "wella-eimi-volume-dry-me",
+      "route": "dry_shampoo (3.2, refresh tie)",
+      "subtype": null,
+      "hold": "not emitted",
+      "trap": "Trockenshampoo with volume/texture claims",
+      "firmness": "route firm"
+    },
+    {
+      "slot": 5,
+      "sample_id": "syoss-glaze-glanz-und-schutz-primer",
+      "route": "provisional_boundary (mixed_promise)",
+      "subtype": null,
+      "hold": "not emitted",
+      "trap": "heat protection + shine primer, '3in1 Style, Care'",
+      "firmness": "route firm"
+    },
+    {
+      "slot": 6,
+      "sample_id": "redken-wax-spray",
+      "route": "styling (3.5)",
+      "subtype": "texture_spray (soft; alt molding, hairspray)",
+      "hold": "UNDETERMINED (2 vs null: 'mittlerer Kontrolle')",
+      "trap": "wax in spray form, no wax above tail",
+      "firmness": "route firm; subtype soft"
+    },
+    {
+      "slot": 7,
+      "sample_id": "moroccanoil-glaettende-creme-smoothing-lotion",
+      "route": "UNDETERMINED: leave_in (lean) vs provisional_boundary (mixed_promise); never styling (firm)",
+      "subtype": null,
+      "hold": "not emitted",
+      "trap": "smoothing cream usable as Leave-in-Kur",
+      "firmness": "non-Styling firm; exact route UNDETERMINED (R1-Q3 scope)"
+    },
+    {
+      "slot": 8,
+      "sample_id": "wella-eimi-glam-mist-shine-spray",
+      "route": "styling (3.5)",
+      "subtype": "shine_finish",
+      "hold": "1 (soft; alt null; not used)",
+      "trap": "hold claim on shine spray => D8b; alcohol r5",
+      "firmness": "route/subtype firm"
+    }
+  ],
+  "cross_record_findings": {
+    "traps": [
+      "slot 1: salt-free wave spray — salt_spray is not expected (job anchor is beach/texture); a lane choosing salt_spray failed the trap.",
+      "slot 2: hairline vs surface — directions say 'abstehende Härchen' => surface (first recorded surface case); claims ('Babyhaare') never set U fields.",
+      "slot 3: edges + brows gel — §5 rule 2 => gel/hairline; 'Haaransatz' is second-named so RG-9 roots does not fire; 'Kleber' => fest, not hold 4 (RG-14).",
+      "slot 4: Trockenshampoo with volume/texture — tie precedence => refresh => dry_shampoo.",
+      "slot 5: heat + shine primer — '3in1 Style, pflege' lead => mixed_promise, not heat_protectant, not smoothing_styler.",
+      "slot 6: wax in spray form — no wax above T_S (SFS-1); texture_spray; allergen-above-Parfum marker.",
+      "slot 7: smoothing cream / Leave-in-Kur — leave_in by LI G0 + D6 (PH2-1 Garnier pattern); brand name 'Moroccanoil' never triggers D2.",
+      "slot 8: hold claim on a shine spray => D8b claim_formula_conflict; Alcohol Denat. r5 => no alcohol note."
+    ],
+    "undetermined_values": [
+      "slot 1 styling_subtype — standard 5 anchor table has no overnight/heatless setting-spray job (lean gel; hairspray/mousse acceptable; salt_spray not).",
+      "slot 2 styling_subtype — standard 5 step 3 / 6.10 RG-11: a job-less lead line ('Haarwachs-Stift für trendige Styles', product-noun fallback => molding) vs specific shine/flyaway lines and dry-finish directions (shine_finish, R1-Q2).",
+      "slot 3 application_moment — standard 6.11 / property set 2.13: shaping directions with no moisture state have no default (dry_restyle or unresolved).",
+      "slot 6 chaarlie_hold_level — standard 7.2/7.4 (RG-13 covers names only): is 'mittlerer Kontrolle' a hold strength? (2 or null).",
+      "slot 6 R2 tail marker — standard 3.3 / lexicon 0.2 third limb: Benzyl Alcohol is both PR-1 and a declared allergen; decides weight light vs unknown.",
+      "slot 7 promise_class/route — standard 4.2 R1-Q3: does an unqualified 'Definition' for curly hair count as curl definition? (leave_in vs provisional_boundary mixed_promise; never styling)."
+    ],
+    "rule_gaps": [
+      "T_S class (c) uses the enumerated PR-1 list while T_LI admits any Annex V preservative (slot 1 Sodium Bisulfite).",
+      "Rank-based 'aqueous' turns a propellant dry-shampoo aerosol with Water r6 into an aqueous formula, so unmodified starch reads NF-U instead of PT-2 (slot 4, informational).",
+      "Unlisted species met: Sodium Bisulfite, Polymethylsilsesquioxane, Polyglyceryl-3 Betainate Acetate, Fructose, Octyldodecanol, Hydrogenated Rapeseed/Palm/Vegetable Oil.",
+      "Brow (facial) application of a 2in1 gel has no explicit scope line; recorded only (PH1-7).",
+      "Capture: typed hold 'words' with no verbatim claim line (slot 8); promise-line positions not marked (slots 5, 7)."
+    ],
+    "coverage_findings": [
+      "5 of 8 slots route to Styling (1, 2, 3, 6, 8), none held; 3 boundary traps route out (4 dry_shampoo, 5 mixed_promise, 7 leave_in/mixed).",
+      "RG-20 gaps exercised: target_zone surface (slot 2) and hairline (slot 3) now have real cases; a salt-free salt_spray is still NOT tested (slot 1 is not a beach spray); FX-2c and FX-U still have no deciding case (slot 3's acrylate is an unconditional FX-2 name); C1/C2 'fest' tested again (slot 3).",
+      "No slot reaches D6, D7-firing or the PH1-16 hold; PH1-15 true is not reachable on any slot (slot 5's heat claim has no HP-1 and the route is mixed)."
+    ]
+  },
+  "records": [
+    {
+      "unseen_slot": 1,
+      "sample_id": "balea-overnight-wellenspray",
+      "product": "Balea Overnight Wellenspray, 150 ml, aerosol (dm house brand, EAN 4070765016598)",
+      "intended_trap": "Salt-free wave spray vs salt_spray. The name says 'Wellenspray' and the capture candidate is salt_spray, but the promise is a heatless overnight curl/wave set with flexible hold (VP/VA r5), no salt, no beach/texture promise. Secondary: Sodium Bisulfite r7 (an Annex V substance not in PR-1) as a possible marker; Aqua r9 sits between the two marker readings, so 'aqueous' depends on it.",
+      "trap_assessment": "Route is robust (styling, not held, on every path). Subtype is the trap: the salt_spray job anchor is 'beachy, piecey texture' and the 'salt-free beach spray is still salt_spray' note covers beach sprays only, so salt_spray is not expected. No anchor in the 12-subtype table describes an overnight setting spray => subtype UNDETERMINED (lean gel).",
+      "identity_status": {
+        "value": "verified",
+        "firmness": "firm",
+        "rule": "standard 2.1 (LI 2.4 G1), 2.3",
+        "rationale": "dm house-brand page with EAN 4070765016598 and a single INCI; no conflicting capture. Pack photo not read is a capture gap, not an identity defect (RG-7)."
+      },
+      "tail_markers": {
+        "T_S": {
+          "value": {
+            "inci": "Potassium Sorbate",
+            "rank": 13,
+            "status": "plausible"
+          },
+          "firmness": "soft",
+          "alternatives": [
+            {
+              "inci": "Sodium Bisulfite",
+              "rank": 7,
+              "status": "plausible",
+              "when": "if an Annex V sulfite is read as a PR-1 preservative (lexicon T_S class (c) names only the enumerated PR-1 list; Sodium Bisulfite is not on it)"
+            }
+          ],
+          "rule": "lexicon 0.2 (T_S classes; PR-1 enumeration), standard 3.2",
+          "rationale": "Earliest enumerated marker-class member: Potassium Sorbate r13 (PR-1). Citric Acid r12 is PH-1 (never a marker); Lavandula extract r11 is not a fragrance declaration. No value moves between the two readings except 'aqueous' (Aqua r9)."
+        },
+        "T_LI": {
+          "value": {
+            "inci": "Potassium Sorbate",
+            "rank": 13,
+            "status": "plausible"
+          },
+          "firmness": "soft",
+          "alternatives": [
+            {
+              "inci": "Sodium Bisulfite",
+              "rank": 7,
+              "status": "plausible",
+              "when": "T_LI explicitly admits 'any other EU Annex V preservative'; inorganic sulphites/bisulphites are an Annex V entry, but here the species is more likely an antioxidant"
+            }
+          ],
+          "rule": "lexicon 0.2 (T_LI column), LI 3.1.1",
+          "rationale": "Either reading: VP/VA r5 and Laurtrimonium r6 sit above it; tail carries extracts/humectants => not vacuous. Only read if the path is 3.4(iii)."
+        }
+      },
+      "aqueous": {
+        "value": true,
+        "firmness": "soft",
+        "alternatives": [
+          false
+        ],
+        "rule": "lexicon 0.3",
+        "rationale": "Aqua r9 is above T_S under the Potassium Sorbate reading (aqueous); under the Sodium Bisulfite reading water is tail-only (non-aqueous => 3.5). Route identical either way."
+      },
+      "s0": {
+        "evidence_gate": {
+          "value": "pass",
+          "firmness": "firm",
+          "rule": "standard 4.1",
+          "rationale": "C2 house-brand promise lines, C2 house-brand directions, complete INCI, identity verified."
+        },
+        "lead_promise": {
+          "value": "Styling-Spray für Locken über Nacht (first C2 line; the name job word 'Wellen-' gives the same wave/curl job)",
+          "firmness": "soft",
+          "alternatives": [
+            "name step 1: 'Wellenspray' => wave/curl job"
+          ],
+          "rule": "standard 4.2 lead-promise order (RG-5/R1-T)",
+          "rationale": "No C1 pack-front line captured. Both candidate leads state the same job (curl/wave creation)."
+        },
+        "promise_class": {
+          "value": "styling_result",
+          "firmness": "firm",
+          "rule": "standard 4.2",
+          "rationale": "Visible styling result (curls/waves set overnight, 'fixiert die Frisur'). No care, heat or refresh lead; 'Schonendes Styling ohne Hitze' is a method line, not a heat-protection promise."
+        },
+        "li_function": {
+          "value": "yes",
+          "firmness": "soft",
+          "alternatives": [
+            "no"
+          ],
+          "rule": "standard 4.2 li_function; LI 2.1 'curl support'",
+          "rationale": "Curl/wave wording in the lead ('für Locken', 'verleiht Wellen und Locken ... Sprungkraft') reads as curl support; alternative 'no' if the set-with-curlers job is read as shaping/hold only. Route unchanged."
+        },
+        "route": {
+          "value": "styling",
+          "firmness": "firm",
+          "rule": "standard 4.3",
+          "rationale": "Every path lands on styling: li_function yes => 3.4(iii) LI G0 excluded_styling_first; li_function no => 3.4(ii); non-aqueous reading => 3.5."
+        },
+        "boundary_reason": {
+          "value": null,
+          "firmness": "firm",
+          "rule": "standard 4.0",
+          "rationale": "Not provisional."
+        },
+        "lean_route": {
+          "value": null,
+          "firmness": "firm",
+          "rule": "standard 4.5",
+          "rationale": "Not held."
+        },
+        "reason_code": {
+          "value": "li_g0_excluded_styling_first",
+          "firmness": "soft",
+          "alternatives": [
+            "promise_outside_li_functions (3.4(ii))",
+            "non_aqueous_styling_result (3.5)"
+          ],
+          "rule": "standard 4.3",
+          "rationale": "Follows li_function and the aqueous reading."
+        },
+        "rule_path": {
+          "value": "4.1 pass -> 4.2 styling_result, li_function yes -> 3.1 n/a (not a shine lead) -> 3.2/3.3 n/a -> 3.4 aqueous -> (i) no (not a curl cream) -> (ii) skipped (li_function yes) -> (iii) LI G0: VP/VA r5 (LI L5) above T_LI; conditioning = Laurtrimonium Chloride r6 alone (no fatty alcohol, no silicone, no oil) = COND low = thin; positioning C2 'Flexibler Halt', 'fixiert die Frisur zuverlässig über Nacht' => excluded_styling_first => styling",
+          "firmness": "soft",
+          "alternatives": [
+            "3.4(ii) styling directly",
+            "3.5 styling"
+          ],
+          "rule": "standard 4.3; LI 2.3, 2.3.2 clause 1, 7.2, 7.7",
+          "rationale": "See reason_code."
+        },
+        "held_pending_leave_in_addendum": {
+          "value": false,
+          "firmness": "firm",
+          "rule": "standard 4.5",
+          "rationale": "Locked LI letter (L5 only): VP/VA is L5 with thin conditioning => LI excludes it (excluded_styling_first); 3.4(ii)/3.5 routes are never held."
+        }
+      },
+      "styling_subtype": {
+        "value": "UNDETERMINED",
+        "firmness": "UNDETERMINED",
+        "leaning": "gel",
+        "acceptable": [
+          "gel",
+          "hairspray",
+          "mousse"
+        ],
+        "rule": "standard 5 step 3 anchor table",
+        "rationale": "Job (C2 lead): create/define curls and waves with flexible hold; moment: damp or dry, set with curlers or braids overnight. No anchor covers a heatless overnight setting spray. gel: 'hold + definition, damp or dry, shaped by hand'; spray-gel tie-break precedent (Langhaarmädchen liquid curl-hold spray => gel). hairspray: alcohol/VP-VA aerosol that 'fixiert die Frisur', but its moment is not dry_finish. mousse: 'wave/curl lift, damp before drying', but form is a spray, not foam. NOT salt_spray: its job anchor is beachy, piecey texture; the salt-free note covers beach sprays; nothing here promises beach waves or texture. A lane that emits salt_spray has fallen into the trap.",
+        "not_expected": "salt_spray"
+      },
+      "properties": {
+        "result_mechanisms": {
+          "value": [
+            {
+              "value": "fixative_film",
+              "members": [
+                {
+                  "inci": "VP/VA Copolymer",
+                  "rank": 5
+                }
+              ]
+            }
+          ],
+          "firmness": "firm",
+          "rule": "standard 6.1; lexicon FX-1",
+          "rationale": "Above T_S (either reading): Alcohol Denat. (AL-1), Butane/Propane (VC-1), Propylene Glycol (HU-1), VP/VA r5 (FX-1), Laurtrimonium Chloride (CA-1, never a mechanism), Panthenol/Glycerin (HU-1, not credited because a mechanism exists). Sodium Bisulfite is unlisted (no mechanism)."
+        },
+        "hold_route": {
+          "value": "present",
+          "firmness": "firm",
+          "rule": "standard 6.2",
+          "rationale": "FX-1 VP/VA r5 above T_S."
+        },
+        "weight": {
+          "value": "light",
+          "firmness": "firm",
+          "rule": "standard 6.3; LI 7.5",
+          "rationale": "No persistent family above T_S: Laurtrimonium Chloride is monomeric (CA-1) with no FA-1 partner => no LGN pair, no family."
+        },
+        "alcohol_note": {
+          "value": "fires",
+          "firmness": "firm",
+          "rule": "standard 6.5; PH1-3",
+          "rationale": "Alcohol Denat. r1."
+        },
+        "buildup_note": {
+          "value": "not_fired",
+          "firmness": "firm",
+          "rule": "standard 6.4; LI 8.5",
+          "rationale": "No permanent_cationic above T_S (Laurtrimonium is monomeric); weight not rich."
+        },
+        "ingredient_flags": {
+          "value": {
+            "silicones": false,
+            "oils": false,
+            "fragrance": true,
+            "salt": false,
+            "propellant": true,
+            "fixative_family": [
+              "pvp_vp"
+            ]
+          },
+          "firmness": "firm",
+          "rule": "standard 6.6",
+          "rationale": "Citrus Aurantium Peel Oil is an essential oil (no oils flag). Sodium Bisulfite is neither SA-1 nor Sodium Chloride (no salt flag) — the 'Wellenspray' name and the free-from 'ölfrei' line never set flags."
+        },
+        "provides_heat_protection": {
+          "value": {
+            "value": false,
+            "trace": "not_claimed"
+          },
+          "firmness": "firm",
+          "rule": "standard 6.7",
+          "rationale": "No heat-protection claim ('ohne Hitze' is a method statement)."
+        },
+        "application_moment": {
+          "value": {
+            "primary": "damp_before_drying",
+            "also": [
+              "dry_restyle"
+            ]
+          },
+          "firmness": "soft",
+          "rule": "standard 6.11 (RG-8 equal alternatives)",
+          "rationale": "'In das feuchte oder trockene Haar sprühen' => first-named moment primary (firm). also[]: dry hair then set with curlers/braids read as dry_restyle (shaped); alternative also = [] if tool-setting is not read as shaping.",
+          "alternatives": [
+            {
+              "primary": "damp_before_drying",
+              "also": []
+            }
+          ]
+        },
+        "target_zone": {
+          "value": "all",
+          "firmness": "firm",
+          "rule": "standard 6.12 (RG-9)",
+          "rationale": "No zone for the application; 'Für Wellen die Haare vom Ansatz an flechten' is a braiding step, not an application site, so the Ansatz is not the first-named application site."
+        },
+        "heat_activated": {
+          "value": "no",
+          "firmness": "firm",
+          "rule": "standard 6.13 (R1-Q4)",
+          "rationale": "No heat role; the product is sold as heatless."
+        }
+      },
+      "chaarlie_hold_level": {
+        "value": null,
+        "firmness": "firm",
+        "rule": "standard 7.2 step 5-6, 7.4 'never strength'",
+        "rationale": "Only hold claim is C2 house-brand 'Flexibler Halt': a flexibility word, not a strength word; 'zuverlässig' is unquantified. No dm 'Halt' attribute captured => null ('Halt: keine Herstellerangabe').",
+        "hold_basis": "C2 house-brand 'Flexibler Halt' (no strength word)"
+      },
+      "flexibility": {
+        "value": "beweglich",
+        "firmness": "firm",
+        "rule": "standard 6.9",
+        "rationale": "'Flexibler Halt' => flexibel. 'verhindert ein Verkleben' is not a flexibility word (PH1-5)."
+      },
+      "finish": {
+        "value": "unbekannt",
+        "firmness": "firm",
+        "rule": "standard 6.8",
+        "rationale": "No finish word ('Sprungkraft' is a movement word)."
+      },
+      "primary_job": {
+        "value": "definition",
+        "firmness": "soft",
+        "alternatives": [
+          "hold_fix"
+        ],
+        "rule": "standard 6.10 (RG-11)",
+        "rationale": "First job-bearing phrase: 'für Locken' / 'Wellen' => curl/wave definition (gate: fixative_film passes). Alternative hold_fix if curl-setting is read as shaping/forming wording.",
+        "gate": "pass"
+      },
+      "secondary_jobs": {
+        "value": [],
+        "firmness": "soft",
+        "alternatives": [
+          [
+            "hold_fix"
+          ]
+        ],
+        "rule": "standard 6.10 (RG-12)",
+        "rationale": "RG-12 adds hold_fix only for a hold claim with a strength word; 'Flexibler Halt' has none. Alternative [hold_fix] from 'fixiert die Frisur'."
+      },
+      "dropped_jobs": {
+        "value": [],
+        "firmness": "firm",
+        "rule": "standard 6.10",
+        "rationale": "Nothing fails the gate."
+      },
+      "d8b_flags": {
+        "value": [],
+        "firmness": "firm",
+        "rule": "standard 7.5",
+        "rationale": "No strength claim >= stark; not a shine/smoothing/refresher subtype; hold mechanism present anyway."
+      },
+      "neutral_fact": {
+        "value": "Enthält Stylingpolymere (z. B. VP/VA Copolymer)",
+        "firmness": "soft",
+        "alternatives": [
+          null
+        ],
+        "rule": "standard 7.6",
+        "rationale": "Shown iff subtype is hold-relevant (gel/hairspray/mousse all are), level null and hold_route present. Not shown only if a lane chooses salt_spray (the trap)."
+      },
+      "hinweise": {
+        "value": [
+          {
+            "flag": "alcohol_note",
+            "basis": "Alcohol Denat. r1"
+          }
+        ],
+        "firmness": "firm",
+        "rule": "standard 6.4, 6.5",
+        "rationale": "Buildup not fired."
+      },
+      "derived": {
+        "thickness_fit": "fine · normal · coarse (light)",
+        "hold_display": "Halt: keine Herstellerangabe + neutral fact (if hold-relevant subtype)",
+        "cautions": [],
+        "firmness": "soft (follows subtype)"
+      },
+      "captured_claims": [
+        "hair_type C2 'alle Haartypen'",
+        "free_from C2 'ohne Farbstoffe, ölfrei / fettfrei, vegan'",
+        "other C2 'den ganzen Tag hält' (duration-like, never a level)"
+      ],
+      "review_triggers": {
+        "value": [
+          {
+            "id": "house_brand_ownership",
+            "firmness": "firm"
+          }
+        ],
+        "firmness": "firm",
+        "rule": "standard 8; LI 2.4.1 rule 6",
+        "rationale": "C2 rests on the dm house-brand rule. No marker trigger (T_S plausible; T_LI plausible and non-vacuous)."
+      },
+      "undetermined": [
+        "styling_subtype: no subtype anchor for a heatless overnight curl/wave setting spray (standard 5 anchor table; D1). Lean gel; hairspray/mousse defensible; salt_spray is not."
+      ],
+      "rule_gaps": [
+        "Lexicon T_S class (c) is the enumerated PR-1 list while T_LI admits 'any other Annex V preservative': an Annex V antioxidant/preservative such as Sodium Bisulfite can be a T_LI member but not a T_S member. Here it flips 'aqueous' (Aqua r9) but not the route.",
+        "The directions end with a valve hint mentioning a 'Schaumkopf' (foam head) on a spray: possible copied text; it is not an application instruction, so it is not treated as 'copied directions' (6.11)."
+      ],
+      "sections_used": [
+        "standard 2.1-2.3",
+        "3.2",
+        "4.1-4.5",
+        "5",
+        "6.1-6.13",
+        "7.2-7.6",
+        "8",
+        "lexicon 0.2, 0.3, FX-1, CA-1, HU-1, AL-1, VC-1, PR-1",
+        "LI 2.1, 2.3, 2.3.2, 3.1.1, 7.2, 7.7",
+        "property set 2.13, 2.14"
+      ]
+    },
+    {
+      "unseen_slot": 2,
+      "sample_id": "balea-haarwachs-styling-stick",
+      "product": "Balea Haarwachs Styling Stick, 25 g, stick (dm house brand, EAN 4067796173666)",
+      "intended_trap": "Hairline vs surface target_zone on a wax stick (round-1 slot 2 gap, RG-20): bullets say 'Bändigt abstehende Babyhaare', directions say 'abstehende Härchen fixieren'. Also: §5 rule 2 'gel-type shaping product' on a non-gel; anhydrous wax (3.5); molding vs shine_finish job.",
+      "trap_assessment": "target_zone is U and reads the directions only: 'abstehende Härchen' (flyaways) => surface, not hairline (the 'Babyhaare' bullet is a claim and never sets a U field). §5 rule 2 cannot fire (not gel-type, and directions do not lead with edges). Subtype molding vs shine_finish is not decided by the standard.",
+      "identity_status": {
+        "value": "verified",
+        "firmness": "firm",
+        "rule": "standard 2.1, 2.3",
+        "rationale": "dm house-brand page with EAN; single INCI; no conflict."
+      },
+      "tail_markers": {
+        "T_S": {
+          "value": {
+            "inci": "Parfum",
+            "rank": 9,
+            "status": "plausible"
+          },
+          "firmness": "firm",
+          "rule": "lexicon 0.2",
+          "rationale": "No preservative declared; Parfum r9 is the earliest marker class; Linalool r12 follows it."
+        },
+        "T_LI": {
+          "value": {
+            "inci": null,
+            "rank": null,
+            "status": "none_visible"
+          },
+          "firmness": "firm",
+          "rule": "LI 3.1.1 limit 2",
+          "rationale": "No capped preservative. Not read on this path (3.5), so no T_LI trigger (RG-18)."
+        }
+      },
+      "aqueous": {
+        "value": false,
+        "firmness": "firm",
+        "rule": "lexicon 0.3",
+        "rationale": "No water declared."
+      },
+      "s0": {
+        "evidence_gate": {
+          "value": "pass",
+          "firmness": "firm",
+          "rule": "standard 4.1",
+          "rationale": "C2 house-brand promise and directions, complete INCI."
+        },
+        "lead_promise": {
+          "value": "Haarwachs-Stift für trendige Styles (first C2 line; the name has no job word)",
+          "firmness": "soft",
+          "alternatives": [
+            "'Für ein glattes & glänzendes Finish' if a lane treats line 1 as a product descriptor"
+          ],
+          "rule": "standard 4.2 lead order",
+          "rationale": "Either lead is styling_result."
+        },
+        "promise_class": {
+          "value": "styling_result",
+          "firmness": "firm",
+          "rule": "standard 4.2",
+          "rationale": "Styling look / shine-sleek finish; no care, heat or refresh lead."
+        },
+        "li_function": {
+          "value": "no",
+          "firmness": "firm",
+          "rule": "standard 4.2 (PH2-1, R1-Q2)",
+          "rationale": "Lead is styling/shaping; the flyaway line is anti-frizz on dry, finished hair by the main directions ('über das trockene Haar') => shine-finish job, li_function no either way."
+        },
+        "route": {
+          "value": "styling",
+          "firmness": "firm",
+          "rule": "standard 4.3 3.5",
+          "rationale": "Non-aqueous, class styling_result, not sold as Öl/Serum."
+        },
+        "boundary_reason": {
+          "value": null,
+          "firmness": "firm",
+          "rule": "standard 4.0",
+          "rationale": ""
+        },
+        "lean_route": {
+          "value": null,
+          "firmness": "firm",
+          "rule": "standard 4.5",
+          "rationale": ""
+        },
+        "reason_code": {
+          "value": "non_aqueous_styling_result",
+          "firmness": "firm",
+          "rule": "standard 4.3 3.5",
+          "rationale": ""
+        },
+        "rule_path": {
+          "value": "4.1 pass -> 4.2 styling_result, li_function no -> 3.1 skip or continue (not Öl/Serum) -> 3.2/3.3 n/a -> 3.4 n/a (non-aqueous) -> 3.5 => styling",
+          "firmness": "firm",
+          "rule": "standard 4.3",
+          "rationale": ""
+        },
+        "held_pending_leave_in_addendum": {
+          "value": false,
+          "firmness": "firm",
+          "rule": "standard 4.5",
+          "rationale": "3.5 routes are not held (LI could only say excluded_anhydrous)."
+        }
+      },
+      "styling_subtype": {
+        "value": "UNDETERMINED",
+        "firmness": "UNDETERMINED",
+        "leaning": "shine_finish",
+        "acceptable": [
+          "shine_finish",
+          "molding"
+        ],
+        "rule": "standard 5 steps 2-3; R1-Q2",
+        "rationale": "Rule 2 (hairline gel) does not fire: a wax stick is not gel-type and the directions do not lead with edges. Step 3: the lead line 'Haarwachs-Stift für trendige Styles' carries no job but the product noun (RG-11 fallback => hold_fix => molding job), and the wax form would break a tie toward molding. The specific claims ('glattes & glänzendes Finish', 'Bändigt abstehende Babyhaare', 'Sleek-Look') and the only directions (stroke over dry hair to fix flyaways, no shaping => dry_finish) are the shine_finish anchor 'shine, flyaway control on dry hair' (R1-Q2). The standard does not say which of the two job readings wins.",
+        "not_expected": "gel (hairline edge rule)"
+      },
+      "properties": {
+        "result_mechanisms": {
+          "value": [
+            {
+              "value": "wax_lipid",
+              "members": [
+                {
+                  "inci": "Prunus Amygdalus Dulcis Oil",
+                  "rank": 1,
+                  "structuring": false
+                },
+                {
+                  "inci": "Mangifera Indica Seed Butter",
+                  "rank": 2,
+                  "structuring": false
+                },
+                {
+                  "inci": "Cocos Nucifera Oil",
+                  "rank": 4,
+                  "structuring": false
+                },
+                {
+                  "inci": "Butyrospermum Parkii Butter",
+                  "rank": 5,
+                  "structuring": false
+                },
+                {
+                  "inci": "Copernicia Cerifera Cera",
+                  "rank": 6,
+                  "structuring": true
+                },
+                {
+                  "inci": "Hydrogenated Rapeseed Oil",
+                  "rank": 7,
+                  "structuring": "unlisted"
+                },
+                {
+                  "inci": "Hydrogenated Palm Oil",
+                  "rank": 8,
+                  "structuring": "unlisted"
+                }
+              ]
+            }
+          ],
+          "firmness": "firm",
+          "rule": "standard 6.1; lexicon WL-1, WL-4, WL-6",
+          "rationale": "Value wax_lipid is firm; the r7/r8 hydrogenated oils are not enumerated (WL-1 lists only hydrogenated castor/coconut oil) — membership soft, moves no value (Carnauba r6 already gives structuring). Stearyl Alcohol r3 is FA-1 (WT only, not a mechanism)."
+        },
+        "hold_route": {
+          "value": "absent",
+          "firmness": "firm",
+          "rule": "standard 6.2",
+          "rationale": "No FX member."
+        },
+        "weight": {
+          "value": "rich",
+          "firmness": "firm",
+          "rule": "standard 6.3 (PH2-12)",
+          "rationale": "Families above T_S: (a) WL-6 oils (Almond r1, Coconut r4 rich band), (b) WL-4 butters (Mango r2, Shea r5) and WL-1 wax (Carnauba r6), (c) FA-1 Stearyl Alcohol r3 => >= 2 families with rich members."
+        },
+        "alcohol_note": {
+          "value": "does_not_fire",
+          "firmness": "firm",
+          "rule": "standard 6.5",
+          "rationale": "No AL-1 member; Stearyl Alcohol is FA-1."
+        },
+        "buildup_note": {
+          "value": "fired",
+          "firmness": "firm",
+          "rule": "standard 6.4 limb 2",
+          "rationale": "weight rich."
+        },
+        "ingredient_flags": {
+          "value": {
+            "silicones": false,
+            "oils": true,
+            "fragrance": true,
+            "salt": false,
+            "propellant": false,
+            "fixative_family": []
+          },
+          "firmness": "firm",
+          "rule": "standard 6.6",
+          "rationale": ""
+        },
+        "provides_heat_protection": {
+          "value": {
+            "value": false,
+            "trace": "not_claimed"
+          },
+          "firmness": "firm",
+          "rule": "standard 6.7",
+          "rationale": "No heat claim."
+        },
+        "application_moment": {
+          "value": {
+            "primary": "dry_finish",
+            "also": []
+          },
+          "firmness": "soft",
+          "alternatives": [
+            {
+              "primary": "dry_restyle",
+              "also": []
+            }
+          ],
+          "rule": "standard 6.11",
+          "rationale": "'sparsam über das trockene Haar streichen, um abstehende Härchen zu fixieren': dry hair, applied over the style, no separate shaping step => dry_finish; dry_restyle if the stroking itself is read as shaping."
+        },
+        "target_zone": {
+          "value": "surface",
+          "firmness": "soft",
+          "alternatives": [
+            "hairline"
+          ],
+          "rule": "standard 6.12; property set 2.14",
+          "rationale": "Directions name 'abstehende Härchen' (stray/flyaway hairs) with no edge, baby-hair or brow word => surface ('the outer layer or flyaways of a finished style only'). hairline only if 'Härchen' is equated with the C2 bullet 'Babyhaare' — but bullets are claims and never set a U field. First recorded surface case (property set 2.14: none in cohort)."
+        },
+        "heat_activated": {
+          "value": "no",
+          "firmness": "firm",
+          "rule": "standard 6.13",
+          "rationale": "Directions give heat no role."
+        }
+      },
+      "chaarlie_hold_level": {
+        "value": null,
+        "firmness": "firm",
+        "rule": "standard 7.2 step 6",
+        "rationale": "No hold claim at any tier; 'fixieren' is in the directions, 'das den ganzen Tag hält' is a duration of the finish.",
+        "hold_basis": "no claim"
+      },
+      "flexibility": {
+        "value": "unbekannt",
+        "firmness": "firm",
+        "rule": "standard 6.9 (PH1-5)",
+        "rationale": "'ohne dass die Haare verkleben' is not a flexibility word."
+      },
+      "finish": {
+        "value": "glänzend",
+        "firmness": "firm",
+        "rule": "standard 6.8",
+        "rationale": "C2 'glattes & glänzendes Finish'. F sanity: not a particulate powder => no conflict."
+      },
+      "primary_job": {
+        "value": "hold_fix",
+        "firmness": "soft",
+        "alternatives": [
+          "shine",
+          "sleek"
+        ],
+        "rule": "standard 6.10 (RG-11)",
+        "rationale": "Lead line has no job-bearing phrase besides the product noun 'Haarwachs' (fallback => hold_fix; gate passes via structuring Carnauba r6). If a lane takes the finish line as lead => shine (gate wax_lipid passes) or 'Sleek-Look' => sleek.",
+        "gate": "pass"
+      },
+      "secondary_jobs": {
+        "value": [
+          "shine",
+          "frizz_control"
+        ],
+        "firmness": "soft",
+        "alternatives": [
+          [
+            "frizz_control"
+          ],
+          [
+            "shine"
+          ]
+        ],
+        "rule": "standard 6.10 (RG-12)",
+        "rationale": "Claim order: shine word ('glänzendes Finish') then flyaway word ('Bändigt abstehende Babyhaare'); both pass the gate (wax_lipid). Changes if the primary is shine."
+      },
+      "dropped_jobs": {
+        "value": [],
+        "firmness": "firm",
+        "rule": "standard 6.10",
+        "rationale": ""
+      },
+      "d8b_flags": {
+        "value": [],
+        "firmness": "firm",
+        "rule": "standard 7.5",
+        "rationale": "No hold claim of any kind; structuring wax present anyway."
+      },
+      "neutral_fact": {
+        "value": null,
+        "firmness": "firm",
+        "rule": "standard 7.6",
+        "rationale": "hold_route absent => never shown, whichever subtype."
+      },
+      "subtype_extras": {
+        "value": {
+          "if_molding": {
+            "form_label": "wax",
+            "base": "anhydrous"
+          },
+          "if_shine_finish": {
+            "base": "wax_lipid",
+            "fixative_present": false
+          }
+        },
+        "firmness": "soft",
+        "alternatives": [],
+        "rule": "standard 6.15",
+        "rationale": "Follows the undetermined subtype."
+      },
+      "hinweise": {
+        "value": [
+          {
+            "flag": "buildup",
+            "basis": "weight rich (limb 2)"
+          }
+        ],
+        "firmness": "firm",
+        "rule": "standard 6.4",
+        "rationale": ""
+      },
+      "derived": {
+        "thickness_fit": "coarse; normal lower; fine last (rich)",
+        "cautions": [
+          "medically adjacent pomade caution 'Nicht direkt am Haaransatz oder auf der Stirn auftragen.' fires if subtype molding (rich/anhydrous) or if target_zone hairline (wax_lipid + hairline); not under shine_finish + surface"
+        ],
+        "firmness": "soft (follows subtype/target_zone)"
+      },
+      "captured_claims": [
+        "free_from C2 'vegan'",
+        "other C2 'ideal für den angesagten Sleek-Look oder um abstehende Babyhaare zu bändigen'"
+      ],
+      "review_triggers": {
+        "value": [
+          {
+            "id": "house_brand_ownership",
+            "firmness": "firm"
+          }
+        ],
+        "firmness": "firm",
+        "rule": "standard 8",
+        "rationale": "No marker trigger (T_S plausible; T_LI not read on 3.5)."
+      },
+      "undetermined": [
+        "styling_subtype: molding (lead-line product-noun fallback + wax form) vs shine_finish (specific claims + dry-hair flyaway directions, R1-Q2) — standard 5 step 3 / 6.10 RG-11 do not rank a generic lead line against specific job lines."
+      ],
+      "rule_gaps": [
+        "Hydrogenated Rapeseed Oil / Hydrogenated Palm Oil are not enumerated in WL-1 (only hydrogenated castor/coconut) or clearly in WL-6; no value moves here.",
+        "RG-20 gap partly exercised: §5 rule 2 'gel-type shaping product' is still undefined, but this product fails it on directions anyway."
+      ],
+      "sections_used": [
+        "standard 2.1-2.3",
+        "3.2",
+        "4.1-4.5",
+        "5",
+        "6.1-6.15",
+        "7.2, 7.5, 7.6",
+        "8",
+        "lexicon 0.2, 0.3, WL-1, WL-4, WL-6, FA-1",
+        "property set 2.14, 4",
+        "ledger R1-Q2, PH2-12"
+      ]
+    },
+    {
+      "unseen_slot": 3,
+      "sample_id": "got2b-kleber-4-brows-and-edges-2in1-stylinggel",
+      "product": "got2b Kleber 4 Brows & Edges 2in1 Stylinggel, 16 ml, gel tube with brush (EAN 4015100863208)",
+      "intended_trap": "Hairline edge gel (§5 rule 2, D1) with brows as a second use (PH1-7, one route); 'Haaransatz' vs the RG-9 'Ansatz => roots' rule; 'Kleber' after RG-14 (rigidity word, not strength); FX-2 unconditional acrylate beside an RH-1 crosspolymer.",
+      "trap_assessment": "gel via §5 rule 2 (directions lead with brows, then hairline/edges => target_zone hairline, not roots: the brows are the first-named site). Hold 3 from 'starken' (not 4 from 'Kleber'); flexibility fest from the name word 'Kleber' (P-2).",
+      "identity_status": {
+        "value": "verified",
+        "firmness": "firm",
+        "rule": "standard 2.1, 2.3",
+        "rationale": "EAN on dm; INCI on dm (C3) matches got2b.de's German-name list (C2) set-for-set; the got2b.de 'PEG[1]40' is a page typo, not a formula difference."
+      },
+      "tail_markers": {
+        "T_S": {
+          "value": {
+            "inci": "Phenoxyethanol",
+            "rank": 5,
+            "status": "plausible"
+          },
+          "firmness": "firm",
+          "rule": "lexicon 0.2",
+          "rationale": "First PR-1; boosters (Caprylyl Glycol r8, Ethylhexylglycerin) follow it."
+        },
+        "T_LI": {
+          "value": {
+            "inci": "Phenoxyethanol",
+            "rank": 5,
+            "status": "plausible"
+          },
+          "firmness": "firm",
+          "rule": "LI 3.1.1",
+          "rationale": "Tail holds AMP, PEG-40 HCO, Glycerin, Panthenol => not vacuous. Only cross-check paths read it."
+        }
+      },
+      "aqueous": {
+        "value": true,
+        "firmness": "firm",
+        "rule": "lexicon 0.3",
+        "rationale": "Aqua r1."
+      },
+      "s0": {
+        "evidence_gate": {
+          "value": "pass",
+          "firmness": "firm",
+          "rule": "standard 4.1",
+          "rationale": "C2 got2b.de promise and directions; INCI C3 corroborated by C2."
+        },
+        "lead_promise": {
+          "value": "Perfekte Augenbrauen und Haarkonturen! ... sorgt für starken und langanhaltenden Halt (first C2 line; the name has no single job word)",
+          "firmness": "firm",
+          "rule": "standard 4.2",
+          "rationale": "'2in1' names two zones (brows + edges), not two classes => not mixed."
+        },
+        "promise_class": {
+          "value": "styling_result",
+          "firmness": "firm",
+          "rule": "standard 4.2",
+          "rationale": "Shape/hold of brows and hair contours."
+        },
+        "li_function": {
+          "value": "no",
+          "firmness": "firm",
+          "rule": "standard 4.2 (PH2-1)",
+          "rationale": "Hold/shaping only."
+        },
+        "route": {
+          "value": "styling",
+          "firmness": "firm",
+          "rule": "standard 4.3 3.4(ii)",
+          "rationale": ""
+        },
+        "boundary_reason": {
+          "value": null,
+          "firmness": "firm",
+          "rule": "standard 4.0",
+          "rationale": ""
+        },
+        "lean_route": {
+          "value": null,
+          "firmness": "firm",
+          "rule": "standard 4.5",
+          "rationale": ""
+        },
+        "reason_code": {
+          "value": "promise_outside_li_functions",
+          "firmness": "firm",
+          "rule": "standard 4.3 3.4(ii)",
+          "rationale": ""
+        },
+        "rule_path": {
+          "value": "4.1 pass -> 4.2 styling_result, li_function no -> 3.1-3.3 n/a -> 3.4 aqueous -> (ii) styling directly (PH2-1). Cross-check: LI G0 PVP r2 above T_LI, no conditioning => excluded_styling_first, same route",
+          "firmness": "firm",
+          "rule": "standard 4.3",
+          "rationale": ""
+        },
+        "held_pending_leave_in_addendum": {
+          "value": false,
+          "firmness": "firm",
+          "rule": "standard 4.5",
+          "rationale": "3.4(ii) route; LI letter would exclude it anyway (PVP is L5)."
+        }
+      },
+      "styling_subtype": {
+        "value": "gel",
+        "firmness": "firm",
+        "rule": "standard 5 rule 2 (D1)",
+        "rationale": "Directions lead with brows and the hair at the hairline/edges ('Augenbrauen und die Haare am Haaransatz', 'Augenbrauen und Kanten') => hairline; the product is a gel ('Stylinggel', PVP + acrylate film in a crosspolymer gel). Brow use is recorded only (PH1-7, A8)."
+      },
+      "properties": {
+        "result_mechanisms": {
+          "value": [
+            {
+              "value": "fixative_film",
+              "members": [
+                {
+                  "inci": "PVP",
+                  "rank": 2
+                },
+                {
+                  "inci": "Acrylates/Hydroxyesters Acrylates Copolymer",
+                  "rank": 3
+                }
+              ]
+            }
+          ],
+          "firmness": "firm",
+          "rule": "standard 6.1; lexicon FX-1, FX-2 (unconditional name), RH-1",
+          "rationale": "Acrylates/Steareth-20 Methacrylate Crosspolymer r4 is RH-1 (never a mechanism). The r3 acrylate is an unconditional FX-2 name, so FX-2c corroboration is not needed."
+        },
+        "hold_route": {
+          "value": "present",
+          "firmness": "firm",
+          "rule": "standard 6.2",
+          "rationale": ""
+        },
+        "weight": {
+          "value": "light",
+          "firmness": "firm",
+          "rule": "standard 6.3",
+          "rationale": "No persistent family above T_S."
+        },
+        "alcohol_note": {
+          "value": "does_not_fire",
+          "firmness": "firm",
+          "rule": "standard 6.5",
+          "rationale": "First 3: Aqua, PVP, acrylate; Benzyl Alcohol never counts."
+        },
+        "buildup_note": {
+          "value": "not_fired",
+          "firmness": "firm",
+          "rule": "standard 6.4",
+          "rationale": ""
+        },
+        "ingredient_flags": {
+          "value": {
+            "silicones": false,
+            "oils": false,
+            "fragrance": true,
+            "salt": false,
+            "propellant": false,
+            "fixative_family": [
+              "pvp_vp",
+              "acrylate"
+            ]
+          },
+          "firmness": "firm",
+          "rule": "standard 6.6",
+          "rationale": "PEG-40 Hydrogenated Castor Oil is ethoxylated (no oils flag); Citrus Aurantium Peel Oil is an essential oil."
+        },
+        "provides_heat_protection": {
+          "value": {
+            "value": false,
+            "trace": "not_claimed"
+          },
+          "firmness": "firm",
+          "rule": "standard 6.7",
+          "rationale": ""
+        },
+        "application_moment": {
+          "value": "UNDETERMINED",
+          "firmness": "UNDETERMINED",
+          "leaning": "dry_restyle",
+          "acceptable": [
+            "dry_restyle",
+            "unresolved"
+          ],
+          "rule": "standard 6.11; property set 2.13",
+          "rationale": "Directions give a shaping step with the brush but no moisture state, no drying, no heat. dry_restyle requires 'applied to dry hair'; RG-2 covers spray-only directions without a moisture state, not shaping directions. The standard has no default for 'no moisture state + shaping'."
+        },
+        "target_zone": {
+          "value": "hairline",
+          "firmness": "firm",
+          "rule": "standard 6.12 (RG-9), property set 2.14",
+          "rationale": "First-named site is the brows (hairline class); 'Haaransatz' here is the hair contour ('Kanten'), and RG-9's roots reading needs the Ansatz to be the only or first-named site — it is second."
+        },
+        "heat_activated": {
+          "value": "no",
+          "firmness": "firm",
+          "rule": "standard 6.13",
+          "rationale": ""
+        }
+      },
+      "chaarlie_hold_level": {
+        "value": 3,
+        "firmness": "firm",
+        "rule": "standard 7.2 step 5, 7.4 (RG-14)",
+        "rationale": "C2 'sorgt für starken und langanhaltenden Halt' => stark => 3. No brand number captured (Henkel x/5 table not reached). 'Kleber' is a rigidity word only (RG-14), never 4. 'langanhaltend' unquantified.",
+        "hold_basis": "C2 got2b.de 'starken ... Halt'",
+        "tier": "C2",
+        "confidence": "high"
+      },
+      "flexibility": {
+        "value": "fest",
+        "firmness": "firm",
+        "rule": "standard 6.9 (P-2, RG-14), 2.2 A3",
+        "rationale": "Confirmed name word 'Kleber' => flexibility claim from_product_name: true => fest. 'nicht klebend' is not a negated rigidity word (it is the 'ohne zu verkleben' family, PH1-5). Note: 'Kleber' is also got2b's range name; the rule reads the word literally."
+      },
+      "finish": {
+        "value": "unbekannt",
+        "firmness": "firm",
+        "rule": "standard 6.8",
+        "rationale": "'transparent' is not a finish word."
+      },
+      "primary_job": {
+        "value": "hold_fix",
+        "firmness": "soft",
+        "alternatives": [
+          "sleek"
+        ],
+        "rule": "standard 6.10 (RG-11)",
+        "rationale": "Lead line names brows/contours; 'bleiben ... in Form' (shaping) and the strength phrase both map to hold_fix. Alternative sleek (laid edges) if a lane reads 'perfekte Haarkonturen' as a sleek look.",
+        "gate": "pass"
+      },
+      "secondary_jobs": {
+        "value": [],
+        "firmness": "soft",
+        "alternatives": [
+          [
+            "hold_fix"
+          ]
+        ],
+        "rule": "standard 6.10 (RG-12)",
+        "rationale": "The strength-word hold claim maps to hold_fix, already primary; no anti-frizz, shine or definition words."
+      },
+      "dropped_jobs": {
+        "value": [],
+        "firmness": "firm",
+        "rule": "standard 6.10",
+        "rationale": ""
+      },
+      "d8b_flags": {
+        "value": [],
+        "firmness": "firm",
+        "rule": "standard 7.5",
+        "rationale": "Strength 'stark' with hold_route present."
+      },
+      "neutral_fact": {
+        "value": null,
+        "firmness": "firm",
+        "rule": "standard 7.6",
+        "rationale": "Level stated."
+      },
+      "subtype_extras": {
+        "value": {
+          "film_type": "synthetic",
+          "cast_expected": "unbekannt"
+        },
+        "firmness": "firm",
+        "rule": "standard 6.15",
+        "rationale": "No Crunch/Cast word."
+      },
+      "hinweise": {
+        "value": [],
+        "firmness": "firm",
+        "rule": "standard 6.4, 6.5",
+        "rationale": ""
+      },
+      "derived": {
+        "thickness_fit": "fine · normal · coarse (light)",
+        "hold_display": "laut Hersteller: Starker Halt",
+        "cautions": [],
+        "firmness": "firm"
+      },
+      "captured_claims": [
+        "hair_type C2 'für alle Haartypen geeignet'",
+        "other C2 'sanft zur Haut', 'dermatologisch getestet' (health-adjacent, never repeated)",
+        "free_from C3 'Frei von tierischen Inhaltsstoffen'",
+        "duration-like C2 'langer Tag ... lassen dich nicht im Stich' (never a level)"
+      ],
+      "review_triggers": {
+        "value": [],
+        "firmness": "firm",
+        "rule": "standard 8",
+        "rationale": "No marker, claim, house-brand or formula trigger."
+      },
+      "undetermined": [
+        "application_moment: shaping directions with no moisture state (standard 6.11 / property set 2.13 have no default; RG-2 covers spray-only directions only)."
+      ],
+      "rule_gaps": [
+        "INCI tokenisation: '1,2-Hexanediol' must stay one token (lexicon 0.4 item 2); a naive comma split gives 19 items instead of 18 and shifts tail ranks (no value moves).",
+        "Brow application (skin-adjacent, facial) has no explicit scope line in the charter; recorded only under PH1-7."
+      ],
+      "sections_used": [
+        "standard 2.1-2.3",
+        "3.2",
+        "4.1-4.5",
+        "5 rule 2",
+        "6.1-6.15",
+        "7.2, 7.4, 7.5, 7.6",
+        "lexicon 0.2, 0.4, FX-1, FX-2, RH-1",
+        "property set 2.10, 2.13, 2.14",
+        "ledger RG-9, RG-14, P-2, PH1-7"
+      ]
+    },
+    {
+      "unseen_slot": 4,
+      "sample_id": "wella-eimi-volume-dry-me",
+      "product": "Wella Professionals EIMI Volume Dry Me (Trockenshampoo), 180 ml, aerosol (no GTIN on page)",
+      "intended_trap": "A 'Trockenshampoo' with volume and matte-texture claims vs the Dry Shampoo tie rule (standard 4.2 tie precedence, 4.3 step 3.2). Capture candidate: texture_spray.",
+      "trap_assessment": "Caught: the C2 promise co-leads volume/matte texture with freshness and oil absorption ('erfrischt Ihr Haar und absorbiert Öl') => refresh class (tie) => 3.2 dry_shampoo. Even if the name job word 'Volume' is taken as the lead, 3.2's second limb (promise positioned on oil absorption) gives dry_shampoo.",
+      "identity_status": {
+        "value": "verified",
+        "firmness": "soft",
+        "alternatives": [
+          "insufficient_information"
+        ],
+        "rule": "standard 2.1, 2.3 (LI 2.4 G1: GTIN or a documented gap)",
+        "rationale": "INCI from the German manufacturer page; GTIN not on page (documented gap); no conflicting capture."
+      },
+      "tail_markers": {
+        "T_S": {
+          "value": {
+            "inci": "Fragrance",
+            "rank": 9,
+            "status": "plausible"
+          },
+          "firmness": "firm",
+          "rule": "lexicon 0.2",
+          "rationale": "Only marker-class member."
+        },
+        "T_LI": {
+          "value": {
+            "inci": null,
+            "rank": null,
+            "status": "none_visible"
+          },
+          "firmness": "firm",
+          "rule": "LI 3.1.1 limit 2",
+          "rationale": "No preservative; not read on path 3.2."
+        }
+      },
+      "aqueous": {
+        "value": true,
+        "firmness": "firm",
+        "rule": "lexicon 0.3",
+        "rationale": "Water r6 is above T_S Fragrance r9 => aqueous by the rank rule (a counter-intuitive reading for an aerosol powder spray; informational consequence below)."
+      },
+      "s0": {
+        "evidence_gate": {
+          "value": "pass",
+          "firmness": "firm",
+          "rule": "standard 4.1",
+          "rationale": "C2 manufacturer DE page (promise, directions, INCI)."
+        },
+        "lead_promise": {
+          "value": "first C2 line: '... einem Trockenshampoo, das Volumen und eine handhabbare, matte Textur schafft. Die Formel ... erfrischt Ihr Haar und absorbiert Öl.'",
+          "firmness": "soft",
+          "alternatives": [
+            "name step 1 'Volume' if '(Trockenshampoo)' is not part of the confirmed name (then two job words do not arise)"
+          ],
+          "rule": "standard 4.2",
+          "rationale": "With '(Trockenshampoo)' the name has two job words (R1-H1) => first C2 line."
+        },
+        "promise_class": {
+          "value": "refresh",
+          "firmness": "soft",
+          "alternatives": [
+            "styling_result (if the name job word 'Volume' is the lead)"
+          ],
+          "rule": "standard 4.2 tie precedence",
+          "rationale": "Refresh (freshness/oil absorption) + volume/texture co-lead => refresh, promise_tie: refresh_plus_volume_texture."
+        },
+        "li_function": {
+          "value": "no",
+          "firmness": "firm",
+          "rule": "standard 4.2",
+          "rationale": "Volume/texture/refresh; no LI function."
+        },
+        "route": {
+          "value": "dry_shampoo",
+          "firmness": "firm",
+          "rule": "standard 4.3 3.2; charter 5 Dry Shampoo row",
+          "rationale": "Class refresh => 3.2; and independently the promise is positioned on oil absorption ('absorbiert Öl', 'Trockenshampoo') => 3.2. The formula (starch, silica) never decides this boundary."
+        },
+        "boundary_reason": {
+          "value": null,
+          "firmness": "firm",
+          "rule": "standard 4.0",
+          "rationale": ""
+        },
+        "lean_route": {
+          "value": null,
+          "firmness": "firm",
+          "rule": "standard 4.5",
+          "rationale": ""
+        },
+        "reason_code": {
+          "value": "dry_shampoo_refresh_tie",
+          "firmness": "firm",
+          "rule": "standard 4.2, 4.3 3.2",
+          "rationale": ""
+        },
+        "rule_path": {
+          "value": "4.1 pass -> 4.2 refresh (tie precedence, promise_tie: refresh_plus_volume_texture) -> 3.1 n/a -> 3.2 => dry_shampoo",
+          "firmness": "firm",
+          "rule": "standard 4.3",
+          "rationale": ""
+        },
+        "held_pending_leave_in_addendum": {
+          "value": false,
+          "firmness": "firm",
+          "rule": "standard 4.5",
+          "rationale": "Not a Styling route."
+        }
+      },
+      "styling_subtype": {
+        "value": null,
+        "firmness": "firm",
+        "rule": "standard 4.7",
+        "rationale": "dry_shampoo: no subtype."
+      },
+      "properties": "not_scored (standard 4.7: identity, formula, route + rationale, both markers; Styling properties optional and informational_and_non_authoritative)",
+      "informational_styling_values": {
+        "informational_and_non_authoritative": true,
+        "non_scoring": true,
+        "counterfactual_subtype_if_styling": "texture_spray (dry_restyle, spray form)",
+        "result_mechanisms": "natural_film [Tapioca Starch r5, NF-U, natural_film_unsettled — because the formula reads aqueous by rank] + particulate [Silica r7, PT-1]; Polymethylsilsesquioxane r8 unlisted",
+        "hold_route": "absent",
+        "weight": "light",
+        "alcohol_note": "fires (Alcohol Denat. r1)",
+        "ingredient_flags": {
+          "silicones": "true (Polymethylsilsesquioxane is a silicone resin; not enumerated in SI-1..SI-4 — soft)",
+          "oils": false,
+          "fragrance": true,
+          "salt": false,
+          "propellant": true,
+          "fixative_family": []
+        },
+        "provides_heat_protection": "false (not_claimed)",
+        "chaarlie_hold_level": "null (C2 'Haltegrad: 1': Wella EIMI has no stated maximum => words decide; no strength word)",
+        "finish": "matt (C2 'matte Textur')",
+        "application_moment": "dry_restyle (dry hair, leave on, brush through)",
+        "target_zone": "all",
+        "heat_activated": "no"
+      },
+      "chaarlie_hold_level": {
+        "value": "not_emitted",
+        "firmness": "firm",
+        "rule": "standard 4.7",
+        "rationale": "Route dry_shampoo."
+      },
+      "d8b_flags": {
+        "value": [],
+        "firmness": "firm",
+        "rule": "standard 4.7",
+        "rationale": "Not emitted."
+      },
+      "neutral_fact": {
+        "value": null,
+        "firmness": "firm",
+        "rule": "standard 4.7",
+        "rationale": "Not emitted."
+      },
+      "review_triggers": {
+        "value": [],
+        "firmness": "firm",
+        "rule": "standard 8, 4.7",
+        "rationale": "No Styling trigger on a dry_shampoo route; GTIN gap is documented, not a trigger."
+      },
+      "undetermined": [],
+      "rule_gaps": [
+        "Lexicon 0.3 'aqueous' is rank-based (Water above T_S). On a propellant-led dry-shampoo aerosol whose only marker is Fragrance r9, Water r6 makes the formula 'aqueous', so Tapioca Starch reads NF-U natural film instead of PT-2 particulate. Informational here; it would matter for a Styling-routed powder spray.",
+        "Polymethylsilsesquioxane (silicone resin powder) is in no lexicon family (SI-x or PT-1)."
+      ],
+      "sections_used": [
+        "standard 2.3",
+        "3.2",
+        "4.1-4.3, 4.7",
+        "lexicon 0.2, 0.3, NF-U, PT-1, PT-2",
+        "charter 5 Dry Shampoo row",
+        "standard 7.3 (Wella EIMI words-only)"
+      ]
+    },
+    {
+      "unseen_slot": 5,
+      "sample_id": "syoss-glaze-glanz-und-schutz-primer",
+      "product": "Syoss Glaze Glanz & Schutz Primer, pump spray (size/GTIN not on page)",
+      "intended_trap": "Heat protection + shine primer: tests 3.3 (heat lead?), 3.1 (shine lead, not Öl/Serum), the R1-H1 two-job-word name rule, the co-equal '3in1 Style, Care, Shine' lead, PH1-15 (heat claim without an L9 member). Capture candidate: smoothing_styler.",
+      "trap_assessment": "Caught at step 2: the first C2 line joins styling and care in a '3 in 1' ('Style, pflege und repariere') => mixed; D7 cannot fire (not a curl/styling cream, no fixative) => provisional_boundary (mixed_promise). The name 'Glanz & Schutz' has two job words and does not decide (R1-H1); read as a lead it would be co-equal too. Not heat_protectant (heat is a bullet), not smoothing_styler.",
+      "identity_status": {
+        "value": "verified",
+        "firmness": "soft",
+        "alternatives": [
+          "insufficient_information"
+        ],
+        "rule": "standard 2.1, 2.3",
+        "rationale": "INCI from syoss.de; GTIN and size not on page (documented gap); format assumed pump (no propellant)."
+      },
+      "tail_markers": {
+        "T_S": {
+          "value": {
+            "inci": "Sodium Benzoate",
+            "rank": 6,
+            "status": "plausible"
+          },
+          "firmness": "firm",
+          "rule": "lexicon 0.2",
+          "rationale": "First PR-1; Parfum r10 follows."
+        },
+        "T_LI": {
+          "value": {
+            "inci": "Sodium Benzoate",
+            "rank": 6,
+            "status": "plausible"
+          },
+          "firmness": "firm",
+          "rule": "LI 3.1.1",
+          "rationale": "Tail carries Triethyl Citrate, Panthenol, CCT, extracts => not vacuous. Read by the D7 test (PH1-12) on the mixed path; no T_LI trigger fires."
+        }
+      },
+      "aqueous": {
+        "value": true,
+        "firmness": "firm",
+        "rule": "lexicon 0.3",
+        "rationale": "Aqua r1."
+      },
+      "s0": {
+        "evidence_gate": {
+          "value": "pass",
+          "firmness": "firm",
+          "rule": "standard 4.1",
+          "rationale": "C2 syoss.de promise, directions, INCI."
+        },
+        "lead_promise": {
+          "value": "'3 in 1 Formel: Style, pflege und repariere dein Haar für Looks mit einem Laminierungs-Effekt ...' (first C2 line; the name 'Glaze Glanz & Schutz Primer' has two job words, R1-H1)",
+          "firmness": "firm",
+          "rule": "standard 4.2 lead order",
+          "rationale": ""
+        },
+        "promise_class": {
+          "value": "mixed",
+          "firmness": "firm",
+          "rule": "standard 4.2 (co-equal lead via '3in1' naming both classes)",
+          "rationale": "Styling + care in the lead itself; second line '3in1 Style, Care, Shine' confirms. Not care + curl definition (R1-Q3 not involved); no refresh tie."
+        },
+        "li_function": {
+          "value": "yes",
+          "firmness": "firm",
+          "rule": "standard 4.2",
+          "rationale": "Care, anti-frizz on damp hair, blow-dry/heat support are LI 2.1 functions (R1-Q2: anti-frizz for damp hair keeps the Leave-in check). Not route-deciding on the mixed path."
+        },
+        "route": {
+          "value": "provisional_boundary",
+          "firmness": "firm",
+          "rule": "standard 4.2 mixed stop, PH1-12",
+          "rationale": "D7 runs first (PH1-12): no fixative-class polymer above T_LI and not sold as a curl/styling cream or balm => D7 does not fire => mixed stop."
+        },
+        "boundary_reason": {
+          "value": "mixed_promise",
+          "firmness": "firm",
+          "rule": "standard 4.0",
+          "rationale": ""
+        },
+        "lean_route": {
+          "value": null,
+          "firmness": "firm",
+          "rule": "standard 4.5",
+          "rationale": "Not a pending_leave_in_addendum hold."
+        },
+        "reason_code": {
+          "value": "mixed_promise_d7_not_fired",
+          "firmness": "firm",
+          "rule": "standard 4.2",
+          "rationale": ""
+        },
+        "rule_path": {
+          "value": "4.1 pass -> 4.2 lead = first C2 line ('3in1 Style, pflege und repariere') => mixed -> D7 test first: limb 1 fails (no FX; Triethyl Citrate is PL-1), limb 3 fails ('Primer') -> provisional_boundary (mixed_promise); stays in its current category, review",
+          "firmness": "firm",
+          "rule": "standard 4.2, 4.3 3.4(i)",
+          "rationale": ""
+        },
+        "held_pending_leave_in_addendum": {
+          "value": false,
+          "firmness": "firm",
+          "rule": "standard 4.5",
+          "rationale": ""
+        },
+        "both_readings": {
+          "firmness": "soft",
+          "styling_reading": "If 'Style/Glanz' alone led: shine lead -> 3.1 in scope, not Öl/Serum -> continue -> 3.4 aqueous, li_function yes (damp-hair anti-frizz, blow-dry primer) -> (iii) LI G0: no L5 fixative; conditioning above T_LI only the unlisted Polyglyceryl-3 Betainate Acetate r2 => G0 in_category or provisional_boundary; D6 limb 1 (no real hold) holds, limb 2 (no real care) turns on whether Polyglyceryl-3 Betainate Acetate is a cationic conditioner (unlisted) => unresolved. Never a confident styling route.",
+          "care_reading": "If 'pflege und repariere' led: class care -> 3.4(iii) LI G0 (blow-dry primer with heat claim) -> leave_in or LI provisional_boundary."
+        }
+      },
+      "styling_subtype": {
+        "value": null,
+        "firmness": "firm",
+        "rule": "standard 4.7",
+        "rationale": "mixed_promise: no subtype (capture candidate smoothing_styler is not expected)."
+      },
+      "properties": "not_scored (standard 4.7: as leave_in plus both readings; Styling properties informational_and_non_authoritative)",
+      "informational_styling_values": {
+        "informational_and_non_authoritative": true,
+        "non_scoring": true,
+        "result_mechanisms": "humectant_only [Propylene Glycol r3; Fructose r5 (sugar, not enumerated in HU-1)]; Polyglyceryl-3 Betainate Acetate r2 unlisted; PEG-60 HCO EM-1",
+        "hold_route": "absent (Triethyl Citrate r7 is PL-1, not a fixative)",
+        "weight": "light; candidate_below_tail: Caprylic/Capric Triglyceride r11 (WL-7) would make it medium",
+        "alcohol_note": "does_not_fire",
+        "buildup_note": "not_fired",
+        "ingredient_flags": {
+          "silicones": false,
+          "oils": false,
+          "fragrance": true,
+          "salt": false,
+          "propellant": false,
+          "fixative_family": []
+        },
+        "provides_heat_protection": "false (claim_only: C2 'Bis zu 230°C Hitzeschutz', no HP-1 member) => shown 'Hitzeschutz laut Hersteller', heat_claim_without_l9",
+        "chaarlie_hold_level": "null (no hold claim)",
+        "finish": "glänzend (C2 'glänzendes Finish', 'glänzende Grundlage')",
+        "flexibility": "unbekannt",
+        "application_moment": "before_heat ('ins feuchte Haar sprühen und anschließend föhnen' — blow-dry is the required next step)",
+        "target_zone": "all",
+        "heat_activated": "no",
+        "d8b": "none (no hold claim)"
+      },
+      "chaarlie_hold_level": {
+        "value": "not_emitted",
+        "firmness": "firm",
+        "rule": "standard 4.7",
+        "rationale": ""
+      },
+      "d8b_flags": {
+        "value": [],
+        "firmness": "firm",
+        "rule": "standard 4.7",
+        "rationale": "Not emitted."
+      },
+      "neutral_fact": {
+        "value": null,
+        "firmness": "firm",
+        "rule": "standard 4.7",
+        "rationale": "Not emitted."
+      },
+      "review_triggers": {
+        "value": [
+          {
+            "id": "s0_mixed_promise",
+            "firmness": "firm"
+          },
+          {
+            "id": "heat_claim_without_l9",
+            "firmness": "soft",
+            "note": "informational block only"
+          },
+          {
+            "id": "candidate_below_tail",
+            "firmness": "soft",
+            "note": "informational block only"
+          }
+        ],
+        "firmness": "firm",
+        "rule": "standard 8",
+        "rationale": "The route-level trigger is s0_mixed_promise; the other two belong to the non-authoritative Styling block."
+      },
+      "undetermined": [],
+      "rule_gaps": [
+        "Polyglyceryl-3 Betainate Acetate (a quaternary betaine ester sold as a conditioner) is in no lexicon family; it would decide the D6 care limb on the counterfactual styling reading.",
+        "Fructose is not enumerated in HU-1 (Sucrose/Glucose are).",
+        "The capture does not mark promise-line position (pack front / headline / bullet); the lead rests on the listed order of C2 lines (standard 4.2 packet note)."
+      ],
+      "sections_used": [
+        "standard 2.3",
+        "3.2",
+        "4.1-4.3, 4.7",
+        "6.7 (informational)",
+        "lexicon PL-1, HU-1, EM-1, HP-1",
+        "ledger R1-H1, PH1-12, PH1-15, R1-Q2"
+      ]
+    },
+    {
+      "unseen_slot": 6,
+      "sample_id": "redken-wax-spray",
+      "product": "Redken Wax Spray (Spray Wax), aerosol (redken.eu/de-de; no GTIN/size on page)",
+      "intended_trap": "A wax in spray form: name and description say wax ('Sprühwachs', 'Microwax-Technologie') but the formula has no wax above the tail (VA/Crotonates r4 film only; Soybean Oil r12 and Octyldodecanol r10 sit in the fragrance/allergen block). Also: hold word 'mittlerer Kontrolle' (not 'Halt'); allergen-above-Parfum marker (Mask E2 shape); FX-4 alone.",
+      "trap_assessment": "SFS-1 caught if the lane reads no wax_lipid and does not set molding by name. Subtype texture_spray from the 'Texturierendes' lead (soft vs molding). Hold level not decided by the standard ('Kontrolle').",
+      "identity_status": {
+        "value": "verified",
+        "firmness": "soft",
+        "alternatives": [
+          "insufficient_information"
+        ],
+        "rule": "standard 2.1, 2.3",
+        "rationale": "INCI from the German-language Redken Germany page; GTIN not on page (documented gap)."
+      },
+      "claim_tier_note": {
+        "value": "C2",
+        "firmness": "soft",
+        "alternatives": [
+          "C5 if redken.eu/de-de were read as a non-German EU page (LI 2.4.1 rule 3)"
+        ],
+        "rule": "LI 2.4.1 C2 row and rule 3",
+        "rationale": "A German-language page addressed to the German market ('Redken Germany') is C2 for a foreign brand."
+      },
+      "tail_markers": {
+        "T_S": {
+          "value": {
+            "inci": "Benzyl Salicylate",
+            "rank": 7,
+            "status": "unresolved",
+            "alt": {
+              "inci": "Benzyl Alcohol",
+              "rank": 9,
+              "firmness": "soft",
+              "note": "next ordinally consistent member if Benzyl Alcohol is read as PR-1 (lexicon AL-X/PR-1); if it is read as a declared allergen above Parfum too, the next consistent member is Parfum r18"
+            }
+          },
+          "firmness": "firm",
+          "rule": "lexicon 0.2 third limb (i); standard 3.3",
+          "rationale": "Benzyl Salicylate is a declared allergen ranked above the list's own Parfum (r18) => unresolved (the Mask E2 / Elnett Haarspray shape)."
+        },
+        "T_LI": {
+          "value": {
+            "inci": "Benzyl Alcohol",
+            "rank": 9,
+            "status": "plausible"
+          },
+          "firmness": "soft",
+          "alternatives": [
+            {
+              "inci": null,
+              "rank": null,
+              "status": "none_visible",
+              "when": "if Benzyl Alcohol is not 'as preservative'"
+            }
+          ],
+          "rule": "LI 3.1.1",
+          "rationale": "Not read on path 3.5 => no T_LI trigger (RG-18)."
+        }
+      },
+      "aqueous": {
+        "value": false,
+        "firmness": "firm",
+        "rule": "lexicon 0.3",
+        "rationale": "No water declared."
+      },
+      "s0": {
+        "evidence_gate": {
+          "value": "pass",
+          "firmness": "firm",
+          "rule": "standard 4.1",
+          "rationale": "C2 promise and directions, complete INCI."
+        },
+        "lead_promise": {
+          "value": "'REDKEN WAX SPRAY Texturierendes Sprühwachs.' (first C2 line; the name has no job word)",
+          "firmness": "firm",
+          "rule": "standard 4.2",
+          "rationale": ""
+        },
+        "promise_class": {
+          "value": "styling_result",
+          "firmness": "firm",
+          "rule": "standard 4.2",
+          "rationale": "Texture."
+        },
+        "li_function": {
+          "value": "no",
+          "firmness": "firm",
+          "rule": "standard 4.2",
+          "rationale": "Texture/volume/hold."
+        },
+        "route": {
+          "value": "styling",
+          "firmness": "firm",
+          "rule": "standard 4.3 3.5",
+          "rationale": "Non-aqueous styling_result; not Öl/Serum; 3.1 not in scope (texture lead)."
+        },
+        "boundary_reason": {
+          "value": null,
+          "firmness": "firm",
+          "rule": "standard 4.0",
+          "rationale": ""
+        },
+        "lean_route": {
+          "value": null,
+          "firmness": "firm",
+          "rule": "standard 4.5",
+          "rationale": ""
+        },
+        "reason_code": {
+          "value": "non_aqueous_styling_result",
+          "firmness": "firm",
+          "rule": "standard 4.3 3.5",
+          "rationale": ""
+        },
+        "rule_path": {
+          "value": "4.1 pass -> 4.2 styling_result (texture), li_function no -> 3.1 skip -> 3.2 texture with no refresh => continue -> 3.3 n/a -> 3.4 n/a (non-aqueous) -> 3.5 => styling",
+          "firmness": "firm",
+          "rule": "standard 4.3",
+          "rationale": ""
+        },
+        "held_pending_leave_in_addendum": {
+          "value": false,
+          "firmness": "firm",
+          "rule": "standard 4.5",
+          "rationale": "3.5 route; the FX-4-alone double-claim case applies only where LI could claim the product — here LI could only say excluded_anhydrous."
+        }
+      },
+      "styling_subtype": {
+        "value": "texture_spray",
+        "firmness": "soft",
+        "alternatives": [
+          "molding (name/form 'wax', 'Mit den Händen ... formen')",
+          "hairspray ('fixierender Haarspray')"
+        ],
+        "rule": "standard 5 step 3",
+        "rationale": "Job from the lead: texture ('Texturierendes'; plus 'Volumen und Körper', 'seidig-mattes Finish', 'Struktur') = texture_spray anchor 'dry grip, airy volume, matte texture'; spray form. A name never decides (SFS-1): the formula has no wax above T_S. Moment: first-named damp (RG-8), also dry_restyle — the anchor moment is dry_restyle, so job carries it."
+      },
+      "properties": {
+        "result_mechanisms": {
+          "value": [
+            {
+              "value": "fixative_film",
+              "members": [
+                {
+                  "inci": "VA/Crotonates/Vinyl Neodecanoate Copolymer",
+                  "rank": 4
+                }
+              ]
+            }
+          ],
+          "firmness": "firm",
+          "rule": "standard 6.1, 3.3; lexicon FX-4",
+          "rationale": "Under both marker readings (r7, r9) only FX-4 sits above; Linalool r8 unpositioned (moves nothing). No wax_lipid: Octyldodecanol r10 (unlisted emollient) and Soybean Oil r12 are below T_S."
+        },
+        "hold_route": {
+          "value": "present",
+          "firmness": "firm",
+          "rule": "standard 6.2",
+          "rationale": "FX-4 VA/Crotonates r4 (Styling list, PH1-16)."
+        },
+        "weight": {
+          "value": "light",
+          "firmness": "soft",
+          "alternatives": [
+            "unknown (if R2 marker = Parfum r18: Soybean Oil r12 and Octyldodecanol r10 become positioned, readings disagree => unknown, standard 3.3 step 3)"
+          ],
+          "rule": "standard 6.3, 3.3",
+          "rationale": "R1 (r7) and R2 = Benzyl Alcohol r9 both give no persistent family => light."
+        },
+        "alcohol_note": {
+          "value": "fires",
+          "firmness": "firm",
+          "rule": "standard 6.5",
+          "rationale": "Alcohol Denat. r1."
+        },
+        "buildup_note": {
+          "value": "not_fired",
+          "firmness": "firm",
+          "rule": "standard 6.4",
+          "rationale": ""
+        },
+        "ingredient_flags": {
+          "value": {
+            "silicones": false,
+            "oils": true,
+            "fragrance": true,
+            "salt": false,
+            "propellant": true,
+            "fixative_family": [
+              "vinyl_acetate"
+            ]
+          },
+          "firmness": "firm",
+          "rule": "standard 6.6",
+          "rationale": "oils: Glycine Soja Oil anywhere on the list; propellant: Dimethyl Ether; fixative_family from FX-4 VA/Crotonates above T_S."
+        },
+        "provides_heat_protection": {
+          "value": {
+            "value": false,
+            "trace": "not_claimed"
+          },
+          "firmness": "firm",
+          "rule": "standard 6.7",
+          "rationale": ""
+        },
+        "application_moment": {
+          "value": {
+            "primary": "damp_before_drying",
+            "also": [
+              "dry_restyle"
+            ]
+          },
+          "firmness": "firm",
+          "rule": "standard 6.11 (RG-8)",
+          "rationale": "'Auf das feuchte oder trockene Haar sprühen. Mit den Händen die gewünschte Frisur formen.' First-named damp (drying unspecified => damp_before_drying); dry + hand shaping => dry_restyle in also[]."
+        },
+        "target_zone": {
+          "value": "all",
+          "firmness": "firm",
+          "rule": "standard 6.12",
+          "rationale": ""
+        },
+        "heat_activated": {
+          "value": "no",
+          "firmness": "firm",
+          "rule": "standard 6.13",
+          "rationale": ""
+        }
+      },
+      "chaarlie_hold_level": {
+        "value": "UNDETERMINED",
+        "firmness": "UNDETERMINED",
+        "leaning": 2,
+        "acceptable": [
+          2,
+          null
+        ],
+        "rule": "standard 7.2 step 5, 7.4; RG-13 analogue",
+        "rationale": "C2 'fixierender Haarspray mit mittlerer Kontrolle': 'mittel' => 2 if 'Kontrolle' is read as hold; null if 'Kontrolle' is another result noun (the RG-13 'qualifies another result noun' test is written for names only). The standard does not say whether 'Kontrolle' = Halt. Not used in selection if the subtype is texture_spray (7.1).",
+        "hold_basis": "C2 'mittlerer Kontrolle'"
+      },
+      "flexibility": {
+        "value": "unbekannt",
+        "firmness": "firm",
+        "rule": "standard 6.9",
+        "rationale": "No flexibility or rigidity word."
+      },
+      "finish": {
+        "value": "matt",
+        "firmness": "firm",
+        "rule": "standard 6.8",
+        "rationale": "C2 'seidig-mattes Finish': matt word; 'seidig' is not a finish word. F sanity: formula is fixative-led, not oil/silicone-led => no finish_formula_conflict."
+      },
+      "primary_job": {
+        "value": "texture",
+        "firmness": "firm",
+        "rule": "standard 6.10 (RG-11)",
+        "rationale": "'Texturierendes' is the first job-bearing word; gate: a film (fixative_film) passes.",
+        "gate": "pass"
+      },
+      "secondary_jobs": {
+        "value": [
+          "hold_fix"
+        ],
+        "firmness": "soft",
+        "alternatives": [
+          [],
+          [
+            "hold_fix",
+            "volume"
+          ],
+          [
+            "volume"
+          ]
+        ],
+        "rule": "standard 6.10 (RG-12)",
+        "rationale": "hold_fix only if 'mittlerer Kontrolle' is a strength-word hold claim; RG-12 names no volume trigger, so 'Volumen und Körper' is not added on the letter."
+      },
+      "dropped_jobs": {
+        "value": [],
+        "firmness": "firm",
+        "rule": "standard 6.10",
+        "rationale": ""
+      },
+      "d8b_flags": {
+        "value": [],
+        "firmness": "firm",
+        "rule": "standard 7.5",
+        "rationale": "No claim >= stark; not shine/smoothing/refresher; hold mechanism present."
+      },
+      "neutral_fact": {
+        "value": null,
+        "firmness": "soft",
+        "alternatives": [
+          "'Enthält Stylingpolymere (z. B. VA/Crotonates/Vinyl Neodecanoate Copolymer)' if a lane chooses molding or hairspray AND reads the level as null"
+        ],
+        "rule": "standard 7.6",
+        "rationale": "texture_spray is not hold-relevant => never shown."
+      },
+      "subtype_extras": {
+        "value": {
+          "particle_type": "none",
+          "fixative_present": true
+        },
+        "firmness": "soft",
+        "alternatives": [
+          "molding view: form_label wax, base anhydrous (if subtype molding)"
+        ],
+        "rule": "standard 6.15",
+        "rationale": "texture_spray view (follows subtype)."
+      },
+      "hinweise": {
+        "value": [
+          {
+            "flag": "alcohol_note",
+            "basis": "Alcohol Denat. r1"
+          }
+        ],
+        "firmness": "firm",
+        "rule": "standard 6.4, 6.5",
+        "rationale": ""
+      },
+      "derived": {
+        "thickness_fit": "fine · normal · coarse (light)",
+        "hold_display": "follows the undetermined hold level",
+        "cautions": [],
+        "firmness": "soft"
+      },
+      "captured_claims": [
+        "other C2 'Microwax-Technologie ... Finish eines Wachses' (no wax in the formula above T_S — claim only)"
+      ],
+      "review_triggers": {
+        "value": [
+          {
+            "id": "tail_marker_unresolved",
+            "firmness": "firm"
+          },
+          {
+            "id": "candidate_below_tail",
+            "firmness": "soft",
+            "note": "Soybean Oil r12 (WL-6) below T_S would move weight light -> medium"
+          }
+        ],
+        "firmness": "firm",
+        "rule": "standard 3.3, 3.4, 8",
+        "rationale": ""
+      },
+      "undetermined": [
+        "chaarlie_hold_level: whether 'mittlerer Kontrolle' is a strength-word hold claim (standard 7.2 step 5, 7.4; RG-13 covers name words only).",
+        "R2 tail marker: Benzyl Alcohol is both a PR-1 preservative and an EU-declared allergen; standard 3.3 / lexicon third limb do not say which role decides ordinal consistency. Decides weight light vs unknown."
+      ],
+      "rule_gaps": [
+        "Octyldodecanol (Guerbet alcohol emollient) is in no lexicon family (not FA-1, not WL-7)."
+      ],
+      "sections_used": [
+        "standard 2.1, 2.3",
+        "3.2-3.4",
+        "4.1-4.5",
+        "5",
+        "6.1-6.15",
+        "7.1-7.6",
+        "8",
+        "9 SFS-1",
+        "lexicon 0.2 third limb, FX-4, WL-6, AL-1, AL-X, PR-1, FR-2",
+        "LI 2.4.1 rule 3"
+      ]
+    },
+    {
+      "unseen_slot": 7,
+      "sample_id": "moroccanoil-glaettende-creme-smoothing-lotion",
+      "product": "Moroccanoil Glättende Creme (Smoothing Lotion), 300/75 ml, pump bottle (de.moroccanoil.com; no GTIN)",
+      "intended_trap": "A smoothing cream also usable as a Leave-in-Kur (capture candidate smoothing_styler). Embedded: brand name 'Moroccanoil' contains 'oil' (D2 reads the product name only); PQ-11 r9 (FX-R) below T_S; LGN pair split by the Fragrance r6 marker; 'pflegende ... Stylingcreme' + 'Definition' (R1-Q3 question).",
+      "trap_assessment": "Never styling: smoothing is an LI function, there is no fixative-class polymer, and the conditioning is substantive (LGN pair Cetearyl r4 + Behentrimonium r7 above T_LI, Dimethicone r3, PQ-70, PQ-11, Argan r11) => LI G0 in_category, D6 does not fire => leave_in — the exact PH2-1 Garnier Diamond Sleek pattern. Whether R1-Q3 turns it into mixed_promise is not decided.",
+      "identity_status": {
+        "value": "verified",
+        "firmness": "soft",
+        "alternatives": [
+          "insufficient_information"
+        ],
+        "rule": "standard 2.1, 2.3",
+        "rationale": "INCI from the German manufacturer shop; GTIN gap documented."
+      },
+      "tail_markers": {
+        "T_S": {
+          "value": {
+            "inci": "Fragrance",
+            "rank": 6,
+            "status": "plausible"
+          },
+          "firmness": "firm",
+          "rule": "lexicon 0.2",
+          "rationale": "Earliest marker class; third limb not engaged (Fragrance itself)."
+        },
+        "T_LI": {
+          "value": {
+            "inci": "Caprylyl Glycol",
+            "rank": 14,
+            "status": "plausible"
+          },
+          "firmness": "firm",
+          "rule": "LI 3.1.1 (Caprylyl Glycol in a preservative pair with Chlorphenesin/Phenoxyethanol)",
+          "rationale": "All COND/WT-establishing species (Dimethicone r3, Cetearyl r4, Behentrimonium r7, PQ-70 r8, PQ-11 r9, Argan r11, HVO r12) sit above it; tail carries Dipropylene Glycol, Glyceryl Stearate, Oleth-10 => not vacuous."
+        }
+      },
+      "aqueous": {
+        "value": true,
+        "firmness": "firm",
+        "rule": "lexicon 0.3",
+        "rationale": "Water r1."
+      },
+      "s0": {
+        "evidence_gate": {
+          "value": "pass",
+          "firmness": "firm",
+          "rule": "standard 4.1",
+          "rationale": "C2 shop page promise, directions, INCI."
+        },
+        "lead_promise": {
+          "value": "name job word 'Glättende' (smoothing) — the name names exactly one job",
+          "firmness": "firm",
+          "rule": "standard 4.2 step 1",
+          "rationale": "First C2 line: 'pflegende und dennoch leichte Stylingcreme bändigt krauses ... Haar ... Geschmeidigkeit und Definition ... pflegen ... spürbar glatt'."
+        },
+        "promise_class": {
+          "value": "UNDETERMINED",
+          "firmness": "UNDETERMINED",
+          "leaning": "styling_result",
+          "acceptable": [
+            "styling_result (smoothing/sleekness lead)",
+            "care (if the 'pflegende Stylingcreme' line leads)",
+            "mixed (if R1-Q3 reads the unqualified 'Definition' on a product 'ideal für lockiges ... Haar' as curl definition)"
+          ],
+          "rule": "standard 4.2 (R1-Q3, R1-H2)",
+          "rationale": "R1-Q3 fires only on care + curl definition; here 'Definition' is not tied to 'Locken' in the promise, and the curly-hair line is a hair_type claim. styling_result and care both lead to leave_in; only the R1-Q3 reading changes the route."
+        },
+        "li_function": {
+          "value": "yes",
+          "firmness": "firm",
+          "rule": "standard 4.2; LI 2.1",
+          "rationale": "Smoothing/anti-frizz and care on damp hair; directions also name the Leave-in-Kur use."
+        },
+        "route": {
+          "value": "UNDETERMINED",
+          "firmness": "UNDETERMINED",
+          "leaning": "leave_in",
+          "acceptable": [
+            "leave_in",
+            "provisional_boundary (mixed_promise)"
+          ],
+          "rule": "standard 4.3 3.4(iii) + D6; 4.2 R1-Q3",
+          "rationale": "Path (styling_result or care): 3.1 in scope (smoothing lead) but not sold as Öl/Serum (the brand name is not the product name) -> 3.4 aqueous -> (i) D7 no (no fixative; not a curl cream) -> (ii) skipped (li_function yes) -> (iii) LI G0 in_category (aqueous, stays on, smoothing/conditioning primary; no L5 route: PQ-11 is L1 in LI) -> D6: limb 1 holds (no FX above T_LI; PQ-11 is FX-R), limb 2 fails (real care above T_LI) => leave_in. If R1-Q3 applies: mixed -> D7 first (fails) -> provisional_boundary (mixed_promise). Styling is excluded on every reading (firm).",
+          "styling_excluded": "firm"
+        },
+        "boundary_reason": {
+          "value": "UNDETERMINED",
+          "firmness": "UNDETERMINED",
+          "leaning": null,
+          "acceptable": [
+            null,
+            "mixed_promise"
+          ],
+          "rule": "standard 4.0",
+          "rationale": "Follows route."
+        },
+        "lean_route": {
+          "value": null,
+          "firmness": "firm",
+          "rule": "standard 4.5",
+          "rationale": "No Styling lean on either reading."
+        },
+        "reason_code": {
+          "value": "UNDETERMINED",
+          "firmness": "UNDETERMINED",
+          "leaning": "li_g0_in_category_d6_not_fired",
+          "acceptable": [
+            "li_g0_in_category_d6_not_fired",
+            "mixed_promise_d7_not_fired"
+          ],
+          "rule": "standard 4.3",
+          "rationale": "Follows route."
+        },
+        "rule_path": {
+          "value": "see route",
+          "firmness": "soft",
+          "rule": "standard 4.3",
+          "rationale": "Two acceptable paths, both non-Styling."
+        },
+        "held_pending_leave_in_addendum": {
+          "value": false,
+          "firmness": "firm",
+          "rule": "standard 4.5",
+          "rationale": "Not a Styling route."
+        }
+      },
+      "styling_subtype": {
+        "value": null,
+        "firmness": "firm",
+        "rule": "standard 4.7",
+        "rationale": "Non-Styling route: no subtype. smoothing_styler (capture candidate) is not expected."
+      },
+      "properties": "not_scored (standard 4.7: leave_in / mixed_promise emit identity, formula, route + rationale, both markers; Styling properties informational_and_non_authoritative)",
+      "informational_styling_values": {
+        "informational_and_non_authoritative": true,
+        "non_scoring": true,
+        "result_mechanisms": "silicone_coat [Dimethicone r3] (Cyclomethicone volatile; Cetearyl Alcohol FA-1 not a mechanism)",
+        "hold_route": "absent (PQ-11 r9 is FX-R and below T_S Fragrance r6)",
+        "weight": "medium (multi-family: (d) Dimethicone r3, (c) Cetearyl Alcohol r4; no rich member, no LGN pair above T_S); candidate_below_tail: Behentrimonium Chloride r7 would form the LGN pair => rich",
+        "buildup_note": "not fired above T_S (PQ-70/PQ-11 below r6); candidate_below_tail",
+        "alcohol_note": "does_not_fire (Isopropyl Alcohol r16)",
+        "ingredient_flags": {
+          "silicones": true,
+          "oils": true,
+          "fragrance": true,
+          "salt": false,
+          "propellant": false,
+          "fixative_family": []
+        },
+        "provides_heat_protection": "false (not_claimed)",
+        "chaarlie_hold_level": "null",
+        "finish": "unbekannt ('glatt', 'geschmeidig' are not finish words)",
+        "application_moment": "damp_before_drying ('ins feuchte Haar geben. Wie gewünscht föhnen' — blow-dry optional)",
+        "target_zone": "all",
+        "heat_activated": "no",
+        "species_reading_note": "Behentrimonium Chloride r7 is architecture for LI G0 (T_LI r14) and below-tail for Styling weight (T_S r6): two markers by design (PH1-1); a lane may raise species_reading_conflict (soft)."
+      },
+      "chaarlie_hold_level": {
+        "value": "not_emitted",
+        "firmness": "firm",
+        "rule": "standard 4.7",
+        "rationale": ""
+      },
+      "d8b_flags": {
+        "value": [],
+        "firmness": "firm",
+        "rule": "standard 4.7",
+        "rationale": "Not emitted."
+      },
+      "neutral_fact": {
+        "value": null,
+        "firmness": "firm",
+        "rule": "standard 4.7",
+        "rationale": "Not emitted."
+      },
+      "review_triggers": {
+        "value": [],
+        "firmness": "soft",
+        "alternatives": [
+          [
+            {
+              "id": "s0_mixed_promise"
+            }
+          ]
+        ],
+        "rule": "standard 8",
+        "rationale": "leave_in: no Styling trigger required; s0_mixed_promise on the R1-Q3 reading. Informational: candidate_below_tail."
+      },
+      "undetermined": [
+        "promise_class / route: does R1-Q3 ('care + curl definition => mixed') cover an unqualified 'Definition' on a product whose hair-type line is 'ideal für lockiges ... Haar'? (standard 4.2; ledger R1-Q3, R1-H2). leave_in vs provisional_boundary (mixed_promise); styling is excluded either way."
+      ],
+      "rule_gaps": [
+        "Dual-use directions ('Kann als Leave-in-Kur verwendet werden') have no S0 step (RG-20 'no step for rinse-out or dual-use'); here both uses are leave-on, so nothing turns on it.",
+        "Hydrogenated Vegetable Oil (r12) is not enumerated in WL-1/WL-6."
+      ],
+      "sections_used": [
+        "standard 2.3",
+        "3.2",
+        "4.1-4.3, 4.7",
+        "lexicon 0.2, FX-R, CA-1, CA-3, FA-1, SI-1, SI-3",
+        "LI 2.1, 2.3, 7.2, 7.7",
+        "ledger D2, D6, PH1-13, PH2-1, R1-Q3, R1-H2"
+      ]
+    },
+    {
+      "unseen_slot": 8,
+      "sample_id": "wella-eimi-glam-mist-shine-spray",
+      "product": "Wella Professionals EIMI Glam Mist Shinespray, 200 ml, aerosol (no GTIN on page)",
+      "intended_trap": "Control-plus-traps: shine_finish with a hold claim ('Haltegrad 1') and no hold mechanism (D8b rule 1); Alcohol Denat. at r5 (alcohol note must NOT fire); 'Glanzpomade' wording on a spray; anti-frizz on dry finished hair (R1-Q2); Wella EIMI Haltegrad is words-only; INCI with missing spaces.",
+      "trap_assessment": "shine_finish committed (not held), D8b claim_formula_conflict fires, alcohol_note does not fire, hold level not used in selection.",
+      "identity_status": {
+        "value": "verified",
+        "firmness": "soft",
+        "alternatives": [
+          "insufficient_information"
+        ],
+        "rule": "standard 2.1, 2.3; lexicon 0.4",
+        "rationale": "Manufacturer DE page INCI; GTIN gap documented; missing spaces repaired as unambiguous aliases ('HexylCinnamal' => Hexyl Cinnamal; 'Disiloxane,Cyclopentasiloxane' split at the comma) and logged, not a transcription_defect."
+      },
+      "tail_markers": {
+        "T_S": {
+          "value": {
+            "inci": "Parfum",
+            "rank": 8,
+            "status": "plausible"
+          },
+          "firmness": "firm",
+          "rule": "lexicon 0.2",
+          "rationale": "No preservative; Parfum precedes every allergen."
+        },
+        "T_LI": {
+          "value": {
+            "inci": null,
+            "rank": null,
+            "status": "none_visible"
+          },
+          "firmness": "firm",
+          "rule": "LI 3.1.1",
+          "rationale": "Not read on path 3.5."
+        }
+      },
+      "aqueous": {
+        "value": false,
+        "firmness": "firm",
+        "rule": "lexicon 0.3",
+        "rationale": "Aqua r14 is tail-only."
+      },
+      "s0": {
+        "evidence_gate": {
+          "value": "pass",
+          "firmness": "firm",
+          "rule": "standard 4.1",
+          "rationale": "C2 promise and directions, complete INCI."
+        },
+        "lead_promise": {
+          "value": "name job word 'Shinespray' (finish) — exactly one job word",
+          "firmness": "firm",
+          "rule": "standard 4.2 step 1",
+          "rationale": "Matches the first C2 line 'Vollende deinen glamourösen Style mit diesem Glanzspray'."
+        },
+        "promise_class": {
+          "value": "styling_result",
+          "firmness": "firm",
+          "rule": "standard 4.2",
+          "rationale": "Shine/finish; 'Schutz ... vor Feuchtigkeit und UV' is not heat protection and not a co-equal lead."
+        },
+        "li_function": {
+          "value": "no",
+          "firmness": "firm",
+          "rule": "standard 4.2 (R1-Q2)",
+          "rationale": "Shine; the anti-frizz line is on dry, finished hair by the main directions ('um deinen Look ... zu vollenden')."
+        },
+        "route": {
+          "value": "styling",
+          "firmness": "firm",
+          "rule": "standard 4.3 3.5",
+          "rationale": "3.1 in scope (shine lead) but not sold as Öl/Serum ('Glanzpomade' in a bullet is neither); non-aqueous => 3.5."
+        },
+        "boundary_reason": {
+          "value": null,
+          "firmness": "firm",
+          "rule": "standard 4.0",
+          "rationale": ""
+        },
+        "lean_route": {
+          "value": null,
+          "firmness": "firm",
+          "rule": "standard 4.5",
+          "rationale": ""
+        },
+        "reason_code": {
+          "value": "non_aqueous_styling_result",
+          "firmness": "firm",
+          "rule": "standard 4.3 3.5",
+          "rationale": ""
+        },
+        "rule_path": {
+          "value": "4.1 pass -> 4.2 styling_result (shine), li_function no -> 3.1 in scope, not Öl/Serum => continue -> 3.2/3.3 n/a -> 3.4 n/a (non-aqueous) -> 3.5 => styling",
+          "firmness": "firm",
+          "rule": "standard 4.3",
+          "rationale": ""
+        },
+        "held_pending_leave_in_addendum": {
+          "value": false,
+          "firmness": "firm",
+          "rule": "standard 4.5",
+          "rationale": "3.5 route."
+        }
+      },
+      "styling_subtype": {
+        "value": "shine_finish",
+        "firmness": "firm",
+        "rule": "standard 5 (D2)",
+        "rationale": "Shine job, dry_finish moment; the lead is shine, not hold, so the hairspray tie-break ('a hold lead => hairspray') does not apply."
+      },
+      "properties": {
+        "result_mechanisms": {
+          "value": [
+            {
+              "value": "silicone_coat",
+              "members": [
+                {
+                  "inci": "Dimethicone",
+                  "rank": 6
+                }
+              ]
+            }
+          ],
+          "firmness": "firm",
+          "rule": "standard 6.1; lexicon SI-1, SI-3",
+          "rationale": "Disiloxane/Cyclopentasiloxane are SI-3 volatiles; Butane/Isobutane/Propane VC-1; Alcohol Denat. AL-1."
+        },
+        "hold_route": {
+          "value": "absent",
+          "firmness": "firm",
+          "rule": "standard 6.2",
+          "rationale": ""
+        },
+        "weight": {
+          "value": "medium",
+          "firmness": "firm",
+          "rule": "standard 6.3",
+          "rationale": "Exactly one persistent family above T_S: (d) Dimethicone r6."
+        },
+        "alcohol_note": {
+          "value": "does_not_fire",
+          "firmness": "firm",
+          "rule": "standard 6.5",
+          "rationale": "First 3: Butane, Disiloxane, Cyclopentasiloxane; Alcohol Denat. is r5."
+        },
+        "buildup_note": {
+          "value": "not_fired",
+          "firmness": "firm",
+          "rule": "standard 6.4",
+          "rationale": "No permanent cationic; weight medium."
+        },
+        "ingredient_flags": {
+          "value": {
+            "silicones": true,
+            "oils": false,
+            "fragrance": true,
+            "salt": false,
+            "propellant": true,
+            "fixative_family": []
+          },
+          "firmness": "firm",
+          "rule": "standard 6.6",
+          "rationale": ""
+        },
+        "provides_heat_protection": {
+          "value": {
+            "value": false,
+            "trace": "not_claimed"
+          },
+          "firmness": "firm",
+          "rule": "standard 6.7",
+          "rationale": "Humidity/UV protection is not a heat claim."
+        },
+        "application_moment": {
+          "value": {
+            "primary": "dry_finish",
+            "also": []
+          },
+          "firmness": "firm",
+          "rule": "standard 6.11 (RG-2)",
+          "rationale": "Spray-only directions ('gleichmäßig auf dein Haar ... vollenden'), no moisture state, drying or shaping step; confidence moderate."
+        },
+        "target_zone": {
+          "value": "all",
+          "firmness": "firm",
+          "rule": "standard 6.12",
+          "rationale": "'auf dein Haar' — no flyaway/outer-layer-only wording, so not surface."
+        },
+        "heat_activated": {
+          "value": "no",
+          "firmness": "firm",
+          "rule": "standard 6.13",
+          "rationale": ""
+        }
+      },
+      "chaarlie_hold_level": {
+        "value": 1,
+        "firmness": "soft",
+        "alternatives": [
+          null
+        ],
+        "rule": "standard 7.2, 7.3 (Wella EIMI: no stated maximum => words decide), 7.4",
+        "rationale": "C2 'Haltegrad 1' is recorded, not normalised (words-only brand). The capture's typed hold entry carries words 'leichten Halt' => leicht => 1. If a lane accepts only verbatim promise text (no 'leichten Halt' line in claims_verbatim) => null. Stored, not used (shine_finish, 7.1).",
+        "hold_basis": "C2 typed hold claim words 'leichten Halt' (number 'Haltegrad 1' recorded only)"
+      },
+      "flexibility": {
+        "value": "unbekannt",
+        "firmness": "firm",
+        "rule": "standard 6.9",
+        "rationale": ""
+      },
+      "finish": {
+        "value": "glänzend",
+        "firmness": "firm",
+        "rule": "standard 6.8",
+        "rationale": "'Glanzspray', 'glänzendes Finish', 'Glanz'."
+      },
+      "primary_job": {
+        "value": "shine",
+        "firmness": "firm",
+        "rule": "standard 6.10",
+        "rationale": "Gate: silicone_coat passes.",
+        "gate": "pass"
+      },
+      "secondary_jobs": {
+        "value": [
+          "frizz_control"
+        ],
+        "firmness": "soft",
+        "alternatives": [
+          [
+            "frizz_control"
+          ]
+        ],
+        "rule": "standard 6.10 (RG-12)",
+        "rationale": "Claim order: hold claim (line 1) => hold_fix, dropped by the gate (no hold mechanism); 'Anti-Frizz-Effekt' => frizz_control (silicone_coat passes)."
+      },
+      "dropped_jobs": {
+        "value": [
+          "hold_fix"
+        ],
+        "firmness": "soft",
+        "alternatives": [
+          []
+        ],
+        "rule": "standard 6.10 gate",
+        "rationale": "hold_fix is added only if the hold claim carries a strength word ('leichten'); with 'Haltegrad 1' alone it is not added and not dropped."
+      },
+      "d8b_flags": {
+        "value": [
+          "claim_formula_conflict"
+        ],
+        "firmness": "firm",
+        "rule": "standard 7.5 rule 1",
+        "rationale": "Any hold claim ('Haltegrad 1', C2) on a shine_finish with no member of the hold-mechanism set above T_S (silicone_coat is not one)."
+      },
+      "neutral_fact": {
+        "value": null,
+        "firmness": "firm",
+        "rule": "standard 7.6",
+        "rationale": "shine_finish is not hold-relevant; hold_route absent."
+      },
+      "subtype_extras": {
+        "value": {
+          "base": "silicone_coat",
+          "fixative_present": false
+        },
+        "firmness": "firm",
+        "rule": "standard 6.15",
+        "rationale": ""
+      },
+      "hinweise": {
+        "value": [],
+        "firmness": "firm",
+        "rule": "standard 6.4, 6.5",
+        "rationale": ""
+      },
+      "derived": {
+        "thickness_fit": "normal · coarse; fine ranked lower (medium)",
+        "hold_display": "stored only (not used for shine_finish)",
+        "cautions": [],
+        "firmness": "firm"
+      },
+      "captured_claims": [
+        "humidity C2 'Schutz vor Luftfeuchtigkeit'",
+        "other C2 'Schutz ... vor UV-Strahlen'",
+        "other C2 'Professionelle Glanzpomade ...' (wording on a spray; display/trace only)"
+      ],
+      "review_triggers": {
+        "value": [
+          {
+            "id": "claim_formula_conflict",
+            "firmness": "firm"
+          }
+        ],
+        "firmness": "firm",
+        "rule": "standard 7.5, 8",
+        "rationale": ""
+      },
+      "undetermined": [],
+      "rule_gaps": [
+        "Capture: the typed hold entry carries words 'leichten Halt' that no verbatim claim line shows (P-6 asks that capture notes never become claim text); the level is soft for that reason only."
+      ],
+      "sections_used": [
+        "standard 2.1-2.3",
+        "3.2",
+        "4.1-4.5",
+        "5",
+        "6.1-6.15",
+        "7.1-7.6",
+        "8",
+        "lexicon 0.4, SI-1, SI-3, VC-1, AL-1",
+        "ledger D2, R1-Q2, D8b"
+      ]
+    }
+  ]
+}
