@@ -56,12 +56,14 @@ For each quiz concern (`DIAGNOSTIC_CONCERNS`), this gives the founder a short, e
 
 ## Evidence Labels
 
-These are reused unchanged from `goal-concern-levers/research-brief.md`:
+Re-graded 2026-10-12 (consult-brief-d) with one rubric. No behaviour lever in this file has human-trial support; most rest on instrumental tress data plus practitioner consensus. Cockpit labels in brackets:
 
-- `strong`: consistent clinical or scientific support, or a clear safety consensus.
-- `moderate`: plausible and commonly accepted, with some direct evidence.
-- `weak`: indirect evidence, professional practice, or mixed findings. Treat it as an option to discuss in the call, never as a hard rule.
-- `unknown`: insufficient support. It must not be turned into a rule. No recipe currently uses it.
+- `strong` („gut belegt"): human trials or systematic reviews, OR consistent instrumental data on the actual outcome plus broad consensus; also a clear safety consensus (e.g. refer hair loss).
+- `moderate` („laborbasiert"): instrumental or mechanistic data that plausibly transfers, no human outcome data.
+- `weak` („Erfahrungswert"): practitioner consensus or a single small study only. Treat it as an option to discuss in the call, never as a hard rule.
+- `unknown` („unklar"): insufficient support. It must not be turned into a rule. No recipe currently uses it.
+
+The 2026-10-12 pass moved 51 grades (e.g. leave-in strong → moderate, towel/scrubbing strong → weak, mask and bondbuilder moderate → weak), citing sources per change; the original labels came from `goal-concern-levers/research-brief.md`.
 
 The overall `evidence` on each recipe rates its **core** recommendation, meaning the primary categories and levers. Conditional items carry their own labels.
 
@@ -173,7 +175,7 @@ This is guidance for the cockpit display, not a hard rule.
 - [Novel Compounds for Hair Repair: Chemical Characterization and In Vitro Analysis of Thiol Cross-Linking Agents](https://pubmed.ncbi.nlm.nih.gov/40430453/) (Pharmaceuticals, 2025).
   - In-vitro tensile-strength data for bond-building chemistries on bleached hair.
   - Confirms that the evidence base is mostly in vitro, with no clinical outcome data.
-  - Supports keeping `bondbuilder` `moderate` for chemically damaged hair in `hair_damage`/`breakage`, and `weak` for `dry_lengths`/`split_ends`.
+  - Originally kept `bondbuilder` `moderate` for chemically damaged hair in `hair_damage`/`breakage`; re-graded `weak` everywhere on 2026-10-12 (no independent clinical or strength data; mostly manufacturer in-vitro work).
 - [Commission Regulation (EU) No 655/2013](https://eur-lex.europa.eu/eli/reg/2013/655/oj/eng): common criteria for cosmetic claims (truthfulness, evidential support, honesty). This is the reason the talking points avoid repair, regrowth and cure claims.
 - MSD Manual (German consumer edition), [Haarausfall](https://www.msdmanuals.com/de/heim/kurzinformationen-hauterkrankungen/erkrankungen-der-haarfollikel/haarausfall).
   - Lists hair-loss causes in German: genetic, autoimmune, medication, fungal, hormonal, nutrient deficiency, physical stress, traction/chemical injury.
@@ -191,4 +193,4 @@ These questions are also stored per recipe in `domainReview`.
 4. **`hair_loss_or_thinning`:**
    - May the founder ask the root-vs-piece question, or only acknowledge and refer?
    - The talking point needs a legal/compliance read (HWG / EU claims) before it is used verbatim.
-5. **Bondbuilder:** `moderate` rests on chemistry-specific, mostly in-vitro data. Should the talking points for `hair_damage` and `breakage` name it at all, or keep it as "may support" only when the user has lightened hair? The current wording is conditional.
+5. **Bondbuilder:** `weak` since 2026-10-12 (was `moderate`); the data are chemistry-specific and mostly in vitro. Should the talking points for `hair_damage` and `breakage` name it at all, or keep it as "may support" only when the user has lightened hair? The current wording is conditional.

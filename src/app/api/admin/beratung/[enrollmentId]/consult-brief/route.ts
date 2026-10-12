@@ -76,8 +76,10 @@ export type StoredConsultBrief = DiscoveryCallSheetBrief & {
 /** The stored brief as a revision: its own `previous` is dropped (never nested). */
 function asRevision(brief: DiscoveryCallSheetBrief | null): DiscoveryCallSheetBriefRevision | null {
   if (!brief) return null
-  const { sections, generated_at, generated_by, source_hash } = brief
-  return { sections, generated_at, generated_by, source_hash }
+  const { sections, generated_at, generated_by, source_hash, source_parts } = brief
+  return source_parts === undefined
+    ? { sections, generated_at, generated_by, source_hash }
+    : { sections, generated_at, generated_by, source_hash, source_parts }
 }
 
 const MESSAGES = {
@@ -195,7 +197,7 @@ export function createDiscoveryConsultBriefHandler(
       return discoveryCockpitError("unavailable", 503)
     }
     if (source.status !== "ready") return discoveryCockpitError(source.status, 503)
-    const { input, sourceHash, callSheet: before } = source
+    const { input, sourceHash, sourceParts, callSheet: before } = source
 
     // Fail fast before spending a minute on the LLM.
     const seen = before?.consultBrief ?? null
@@ -231,6 +233,7 @@ export function createDiscoveryConsultBriefHandler(
       generated_at: now().toISOString(),
       generated_by: "agent",
       source_hash: sourceHash,
+      ...(sourceParts ? { source_parts: sourceParts } : {}),
       // Exactly one revision: the stored brief, without its own `previous`.
       previous: asRevision(stored),
     }

@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server"
 import { z } from "zod"
 
 import { saveDiscoveryCallSheet } from "@/lib/discovery/call-sheet"
+import { CONSULT_LEVER_GAPS, CONSULT_LEVER_KINDS } from "@/lib/discovery/consult-brief/lever-scale"
 
 import {
   discoveryCockpitError,
@@ -57,6 +58,13 @@ const hebel = z
     points: z.number().finite().nullable(),
     // `null` = a row from a pre-v4 brief (rendered as one flat list, R26).
     bucket: z.enum(["produkt", "umgang"]).nullable(),
+    // Point system v2 (consult-brief-d); absent on older briefs.
+    kind: z.enum(CONSULT_LEVER_KINDS).nullable().optional(),
+    gap: z.enum(CONSULT_LEVER_GAPS).nullable().optional(),
+    level: z
+      .union([z.literal(1), z.literal(2), z.literal(3)])
+      .nullable()
+      .optional(),
   })
   .strict()
 
@@ -76,6 +84,7 @@ const briefRevision = z
     generated_at: isoTimestamp.nullable(),
     generated_by: z.enum(["manual", "agent"]),
     source_hash: z.string().max(200).nullable(),
+    source_parts: z.record(z.string().max(40), z.string().max(200)).nullable().optional(),
   })
   .strict()
 
