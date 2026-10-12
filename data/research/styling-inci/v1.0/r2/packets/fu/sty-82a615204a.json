@@ -1,0 +1,104 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-82a615204a",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 20,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA / WATER"
+      },
+      {
+        "rank": 2,
+        "inci": "PROPYLENE GLYCOL"
+      },
+      {
+        "rank": 3,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 4,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 5,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 6,
+        "inci": "OLETH-20"
+      },
+      {
+        "rank": 7,
+        "inci": "POLYQUATERNIUM-6"
+      },
+      {
+        "rank": 8,
+        "inci": "PARFUM / FRAGRANCE"
+      },
+      {
+        "rank": 9,
+        "inci": "ETHYLHEXYLGLYCERIN"
+      },
+      {
+        "rank": 10,
+        "inci": "TRISODIUM ETHYLENEDIAMINE DISUCCINATE"
+      },
+      {
+        "rank": 11,
+        "inci": "SIMMONDSIA CHINENSIS SEED OIL / JOJOBA SEED OIL"
+      },
+      {
+        "rank": 12,
+        "inci": "SQUALANE"
+      },
+      {
+        "rank": 13,
+        "inci": "HEXYL CINNAMAL"
+      },
+      {
+        "rank": 14,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 15,
+        "inci": "ALPHA-ISOMETHYL IONONE"
+      },
+      {
+        "rank": 16,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 17,
+        "inci": "GERANIOL"
+      },
+      {
+        "rank": 18,
+        "inci": "BENZYL ALCOHOL"
+      },
+      {
+        "rank": 19,
+        "inci": "TETRASODIUM EDTA"
+      },
+      {
+        "rank": 20,
+        "inci": "TOCOPHEROL"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "In die trockenen Längen und Spitzen sprühen und sanft einkneten. Anschließend entweder lufttrocknen lassen oder föhnen. Für optimale Ergebnisse wird die Anwendung der Acidic Bonding Curls Lockenpflege-Serie sowie der Curls Stylers von [CLAIM] empfohlen. Bei Kontakt mit den Augen diese sofort gründlich ausspülen. Außer Reichweite von Kindern aufbewahren.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "redken.eu",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

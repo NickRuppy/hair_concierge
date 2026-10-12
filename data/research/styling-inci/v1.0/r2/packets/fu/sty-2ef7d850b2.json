@@ -1,0 +1,144 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-2ef7d850b2",
+  "format": "spray_gel",
+  "inci": {
+    "inci_item_count": 30,
+    "tier": "C1",
+    "source_class": "pack",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA"
+      },
+      {
+        "rank": 2,
+        "inci": "PROPYLENE GLYCOL"
+      },
+      {
+        "rank": 3,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 4,
+        "inci": "SACCHAROMYCES CEREVISIAE EXTRACT"
+      },
+      {
+        "rank": 5,
+        "inci": "HYDROGENATED ETHYLHEXYL OLIVATE"
+      },
+      {
+        "rank": 6,
+        "inci": "CETYL ALCOHOL"
+      },
+      {
+        "rank": 7,
+        "inci": "HYDROLYZED CORN PROTEIN"
+      },
+      {
+        "rank": 8,
+        "inci": "SODIUM STEAROYL GLUTAMATE"
+      },
+      {
+        "rank": 9,
+        "inci": "HYDROLYZED WHEAT PROTEIN"
+      },
+      {
+        "rank": 10,
+        "inci": "HYDROLYZED SOY PROTEIN"
+      },
+      {
+        "rank": 11,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 12,
+        "inci": "SODIUM BENZOATE"
+      },
+      {
+        "rank": 13,
+        "inci": "SCLEROTIUM GUM"
+      },
+      {
+        "rank": 14,
+        "inci": "POTASSIUM SORBATE"
+      },
+      {
+        "rank": 15,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 16,
+        "inci": "HYDROGENATED OLIVE OIL UNSAPONIFIABLES"
+      },
+      {
+        "rank": 17,
+        "inci": "LACTOBACILLUS FERMENT"
+      },
+      {
+        "rank": 18,
+        "inci": "LEUCONOSTOC/RADISH ROOT FERMENT FILTRATE"
+      },
+      {
+        "rank": 19,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 20,
+        "inci": "SODIUM CHLORIDE"
+      },
+      {
+        "rank": 21,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 22,
+        "inci": "AMYL SALICYLATE"
+      },
+      {
+        "rank": 23,
+        "inci": "LINALYL ACETATE"
+      },
+      {
+        "rank": 24,
+        "inci": "GLUCOSE"
+      },
+      {
+        "rank": 25,
+        "inci": "GERANIOL"
+      },
+      {
+        "rank": 26,
+        "inci": "GERANYL ACETATE"
+      },
+      {
+        "rank": 27,
+        "inci": "CANANGA ODORATA FLOWER EXTRACT"
+      },
+      {
+        "rank": 28,
+        "inci": "BENZOIC ACID"
+      },
+      {
+        "rank": 29,
+        "inci": "VANILLIN"
+      },
+      {
+        "rank": 30,
+        "inci": "METHYL BENZOATE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Sprühe das Spray auf handtuchtrockenes oder trockenes Haar und style es wie gewohnt.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

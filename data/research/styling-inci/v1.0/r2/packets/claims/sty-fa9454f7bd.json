@@ -1,0 +1,52 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-fa9454f7bd",
+  "brand": "COLOR WOW",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "schenkt Ihrem Haar eine seidige, glatte Textur mit umwerfendem Glanz",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "douglas.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "finish",
+      "text": "umwerfendem Glanz",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "douglas.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "duration",
+      "text": "bis zu drei Haarwäschen",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "douglas.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "humidity",
+      "text": "leistungsstarker Feuchtigkeitsschutz, der bis zu drei Haarwäschen anhält",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "douglas.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "heat_protection",
+      "text": "Hitzeschutz für Stylinggeräte; wärmeaktiviertes Polymer",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "douglas.de",
+      "date": "2026-10-11",
+      "mixed_source": true
+    }
+  ]
+}

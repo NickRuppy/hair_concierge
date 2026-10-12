@@ -1,0 +1,136 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-63426f02d0",
+  "format": "aerosol",
+  "inci": {
+    "inci_item_count": 28,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA"
+      },
+      {
+        "rank": 2,
+        "inci": "DIMETHYL ETHER"
+      },
+      {
+        "rank": 3,
+        "inci": "VP/VA COPOLYMER"
+      },
+      {
+        "rank": 4,
+        "inci": "POLYQUATERNIUM-46"
+      },
+      {
+        "rank": 5,
+        "inci": "PANTHENOL"
+      },
+      {
+        "rank": 6,
+        "inci": "PEG-40 HYDROGENATED CASTOR OIL"
+      },
+      {
+        "rank": 7,
+        "inci": "TRIDECETH-9"
+      },
+      {
+        "rank": 8,
+        "inci": "CETRIMONIUM CHLORIDE"
+      },
+      {
+        "rank": 9,
+        "inci": "PROPYLENE GLYCOL"
+      },
+      {
+        "rank": 10,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 11,
+        "inci": "PHENYLPROPANOL"
+      },
+      {
+        "rank": 12,
+        "inci": "PROPANEDIOL"
+      },
+      {
+        "rank": 13,
+        "inci": "CAPRYLYL GLYCOL"
+      },
+      {
+        "rank": 14,
+        "inci": "TOCOPHEROL"
+      },
+      {
+        "rank": 15,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 16,
+        "inci": "METHYLPARABEN"
+      },
+      {
+        "rank": 17,
+        "inci": "ETHYLPARABEN"
+      },
+      {
+        "rank": 18,
+        "inci": "PROPYLPARABEN"
+      },
+      {
+        "rank": 19,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 20,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 21,
+        "inci": "HEXYL CINNAMAL"
+      },
+      {
+        "rank": 22,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 23,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 24,
+        "inci": "GERANYL ACETATE"
+      },
+      {
+        "rank": 25,
+        "inci": "CITRUS AURANTIUM PEEL OIL"
+      },
+      {
+        "rank": 26,
+        "inci": "PINENE"
+      },
+      {
+        "rank": 27,
+        "inci": "CARVONE"
+      },
+      {
+        "rank": 28,
+        "inci": "DIMETHYL PHENETHYL ACETATE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Das Spray ansatznah auf das handtuchtrockene Haar sprühen und anschließend wie gewohnt trocken föhnen.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "alcina.com",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-5ace0c470d",
+  "brand": "got2b",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Schützt das Haar vor Hitzeschäden bis zu 230 °C",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Für ein gepflegtes Haargefühl",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "ideale Vorbereitung für Föhn, Glätteisen oder Lockenstab",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "got2b Schutzengel Hitzeschutz-Spray schützt dein Haar bis zu 230 °C vor Hitzeschäden und hinterlässt ein gepflegtes Haargefühl und einen himmlischen Glanz, ohne das Haar zu beschweren.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "got2b.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "finish",
+      "text": "gepflegtes Gefühl, strahlender Glanz, ohne zu beschweren",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "humidity",
+      "text": "Kontrolliert Frizz für bis zu 96 Stunden",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "heat_protection",
+      "text": "bewahrt das Haar vor Hitzeschäden bis zu 230°C (Föhn, Glätteisen, Lockenstab)",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-64d07e6664",
+  "product": {
+    "confirmed_name": "Haarwachs Styling Stick",
+    "confirmed_name_redacted": false,
+    "brand": "Balea",
+    "format": "stick"
+  },
+  "inci": {
+    "inci_item_count": 12,
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "PRUNUS AMYGDALUS DULCIS OIL"
+      },
+      {
+        "rank": 2,
+        "inci": "MANGIFERA INDICA SEED BUTTER"
+      },
+      {
+        "rank": 3,
+        "inci": "STEARYL ALCOHOL"
+      },
+      {
+        "rank": 4,
+        "inci": "COCOS NUCIFERA OIL"
+      },
+      {
+        "rank": 5,
+        "inci": "BUTYROSPERMUM PARKII BUTTER"
+      },
+      {
+        "rank": 6,
+        "inci": "COPERNICIA CERIFERA CERA"
+      },
+      {
+        "rank": 7,
+        "inci": "HYDROGENATED RAPESEED OIL"
+      },
+      {
+        "rank": 8,
+        "inci": "HYDROGENATED PALM OIL"
+      },
+      {
+        "rank": 9,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 10,
+        "inci": "PERSEA GRATISSIMA OIL"
+      },
+      {
+        "rank": 11,
+        "inci": "TOCOPHEROL"
+      },
+      {
+        "rank": 12,
+        "inci": "LINALOOL"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "ANWENDUNG Mit dem Stick sparsam über das trockene Haar streichen, um abstehende Härchen zu [CLAIM].",
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "redacted_with": "[CLAIM]"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Haarwachs-Stift für trendige Styles",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Praktische Anwendung",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Für ein glattes & [CLAIM]",
+      "redacted": true,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Bändigt abstehende Babyhaare",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Für ein schnelles und unkompliziertes Haarstyling sorgt der Wax Styling Stick von Balea. Mit seiner Hilfe lassen sich trendige Looks im Handumdrehen umsetzen, ohne dass die Haare verkleben. Der Stift ermöglicht eine einfache und präzise Anwendung, ideal für den angesagten Sleek-Look oder um abstehende Babyhaare zu bändigen. Er verleiht dem Haar ein glattes und [CLAIM] das den [CLAIM] hält. Dank des praktischen Formats ist der Styling-Stick auch ein idealer Begleiter für unterwegs.",
+      "redacted": true,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-12"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

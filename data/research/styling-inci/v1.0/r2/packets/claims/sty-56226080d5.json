@@ -1,0 +1,89 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-56226080d5",
+  "brand": "got2b",
+  "format": "gel_tube_with_brush",
+  "product_type_word": "gel",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Perfekte Augenbrauen und Haarkonturen! got2b 2in1 Stylinggel Kleber 4 Brows & Edges ist der absolute Allrounder für deine Augenbrauen und Haarkonturen. Das schnell trocknende, nicht klebende, transparente Stylinggel sorgt für starken und langanhaltenden Halt für unterwegs. Das Gel ist sanft zur Haut und für alle Haartypen geeignet.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "got2b.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "got2b Kleber 4 Brows & Edges 2in1 Stylinggel kannst du für Augenbrauen und Haarkonturen verwenden. Mit dem transparenten Gel bleiben deine Brauen und Konturen in Form. Vor dir liegt ein langer Tag? Keine Sorge, deine Brauen und Haarkonturen lassen dich nicht im Stich.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "got2b.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Kleber ist für alle Haartypen – egal ob glattes, welliges, lockiges oder coily Haar, es funktioniert einfach! Keber-Produkte performen bei jedem Style und sind gleichzeitig sanft zu deiner Haut & Kopfhaut – dermatologisch getestet.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "got2b.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Brauen- und Haar Gel",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Transparente Formel",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Zweiseitige Bürste",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Dermatologisch getestet",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "hold",
+      "text": "starken und langanhaltenden Halt für unterwegs",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "got2b.de",
+      "date": "2026-10-12",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "starken und langanhaltenden Halt"
+    },
+    {
+      "type": "flexibility",
+      "text": "Kleber",
+      "tier": "C2",
+      "source_class": "product_name",
+      "source_host": null,
+      "date": null,
+      "from_product_name": true
+    }
+  ]
+}

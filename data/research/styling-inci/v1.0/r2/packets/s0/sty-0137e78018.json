@@ -1,0 +1,82 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-0137e78018",
+  "product": {
+    "confirmed_name": "smooth & [CLAIM] Anti Frizz Spray ([CLAIM])",
+    "confirmed_name_redacted": true,
+    "brand": "feschi",
+    "format": "aerosol"
+  },
+  "inci": {
+    "inci_item_count": 13,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Alcohol Denat"
+      },
+      {
+        "rank": 2,
+        "inci": "Butane"
+      },
+      {
+        "rank": 3,
+        "inci": "C11- 13 Isoparaffin"
+      },
+      {
+        "rank": 4,
+        "inci": "Isobutane"
+      },
+      {
+        "rank": 5,
+        "inci": "Propane"
+      },
+      {
+        "rank": 6,
+        "inci": "Phenyl Trimethicone"
+      },
+      {
+        "rank": 7,
+        "inci": "Tocopheryl Acetate"
+      },
+      {
+        "rank": 8,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 9,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 10,
+        "inci": "Hexyl Cinnamal"
+      },
+      {
+        "rank": 11,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 12,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 13,
+        "inci": "Geraniol"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Nach dem Styling oder zur Auffrischung zwischendurch die Dose gut schütteln und aus ca. 20 cm Entfernung sparsam in die trockenen Haarlängen sprühen. Anschließend kämmen. Tipp: Bei besonders krausem oder dickem Haar das Spray bereits vor dem Styling ins handtuchtrockene Haar sprühen, um es in die gewünschte Form zu bringen!",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "flaconi.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [],
+  "heat_protection_claims_c1_c2": []
+}

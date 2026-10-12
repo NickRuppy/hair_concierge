@@ -1,0 +1,74 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-ec3184f3aa",
+  "brand": "BALI GENTS",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Für natürliche Beach Waves, mehr Struktur und den perfekten Undone Look. Das Bali Gents Sea Salt Spray verleiht dem Haar spürbare Griffigkeit und Definition, ohne es zu verkleben oder unnötig auszutrocknen.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "bali-care.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Die spezielle Formulierung mit Meersalz sorgt für ein authentisches Beach-Hair-Finish und unterstützt natürliche Wellen, Locken und Textur. Gleichzeitig helfen Panthenol, Glycerin und hydrolysiertes Reisprotein dabei, das Haar geschmeidig zu halten und ihm ein gepflegtes Gefühl zu verleihen.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "bali-care.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Texturierendes Meersalzspray",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Mit einem exklusiven Premium-Duft",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Verleiht dem Haar Griffigkeit und Volumen",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Für natürliche Beachwaves und Undone-Looks",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "hold",
+      "text": "Halt: mittlerer Halt",
+      "tier": "C3",
+      "source_class": "retailer_attribute",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "mittlerer Halt",
+      "attribute": "Halt",
+      "retailer_attribute": true
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-2d5ab4896e",
+  "product": {
+    "confirmed_name": "Schaumfestiger Locken & Wellen, [CLAIM]",
+    "confirmed_name_redacted": true,
+    "brand": "wellaflex",
+    "format": "foam"
+  },
+  "inci": {
+    "inci_item_count": 26,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua/Water/Eau"
+      },
+      {
+        "rank": 2,
+        "inci": "Propane"
+      },
+      {
+        "rank": 3,
+        "inci": "Butane"
+      },
+      {
+        "rank": 4,
+        "inci": "PVP"
+      },
+      {
+        "rank": 5,
+        "inci": "VP/VA Copolymer"
+      },
+      {
+        "rank": 6,
+        "inci": "Isobutane"
+      },
+      {
+        "rank": 7,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 8,
+        "inci": "PEG-40 Hydrogenated Castor Oil"
+      },
+      {
+        "rank": 9,
+        "inci": "Laureth-4"
+      },
+      {
+        "rank": 10,
+        "inci": "Polyquaternium-16"
+      },
+      {
+        "rank": 11,
+        "inci": "Chitosan"
+      },
+      {
+        "rank": 12,
+        "inci": "Dimethicone"
+      },
+      {
+        "rank": 13,
+        "inci": "Isododecane"
+      },
+      {
+        "rank": 14,
+        "inci": "Parfum/Fragrance"
+      },
+      {
+        "rank": 15,
+        "inci": "Disodium EDTA"
+      },
+      {
+        "rank": 16,
+        "inci": "Methylparaben"
+      },
+      {
+        "rank": 17,
+        "inci": "Formic Acid"
+      },
+      {
+        "rank": 18,
+        "inci": "Cetrimonium Chloride"
+      },
+      {
+        "rank": 19,
+        "inci": "Dimethiconol"
+      },
+      {
+        "rank": 20,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 21,
+        "inci": "Hexyl Cinnamal"
+      },
+      {
+        "rank": 22,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 23,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 24,
+        "inci": "Benzyl Salicylate"
+      },
+      {
+        "rank": 25,
+        "inci": "Macadamia Ternifolia Seed Oil"
+      },
+      {
+        "rank": 26,
+        "inci": "Citric Acid"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Vor Gebrauch gut schütteln und bei der Anwendung Flasche kopfüber [CLAIM]. Verwende eine apfelgroße Menge für mittellanges Haar und verteilen sie gleichmäßig im nassen Haar. Föhne Deine Haare, oder lass sie [CLAIM] trocknen.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "redacted_with": "[CLAIM]"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Genieße schwungvolle, definierte Locken für [CLAIM]",
+      "redacted": true,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-09"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

@@ -1,0 +1,62 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-78863e03c9",
+  "product": {
+    "confirmed_name": "OSiS Dust It",
+    "confirmed_name_redacted": false,
+    "brand": "Schwarzkopf Professional",
+    "format": "powder_shaker"
+  },
+  "inci": {
+    "inci_item_count": 4,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 2,
+        "inci": "Silica Silylate"
+      },
+      {
+        "rank": 3,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 4,
+        "inci": "Citric Acid"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Das Volumenpuder vor der Anwendung vorsichtig schütteln und mit den Fingern in das trockene Haar einarbeiten. Auf den Haaransatz und die Längen auftragen, um mehr Volumen zu erhalten und um Zöpfen und Hochsteckfrisuren zusätzlichen [CLAIM] zu verleihen, sowie Haarnadeln an ihrem Platz zu [CLAIM].",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "schwarzkopf-professional.com",
+    "date": "2026-10-12",
+    "redacted_with": "[CLAIM]"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "OSiS Dust It ist ein [CLAIM] Volumenpuder für unglaubliches Volumen, [CLAIM] und intensive [CLAIM].",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "PERFEKT FÜR TEXTUR VOLUMEN ANSATZVOLUMEN",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

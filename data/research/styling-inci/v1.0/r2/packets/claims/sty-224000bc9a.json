@@ -1,0 +1,59 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-224000bc9a",
+  "brand": "BALI CURLS",
+  "format": "cream",
+  "product_type_word": "creme",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Exotische Lockencreme",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Mit Sheabutter, Kokosöl und Ylang-Ylang-Extrakt",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Feuchtigkeitsspendend",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Anti-Frizz-Effekt",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Ihre leichte Textur definiert die Locken, ohne sie zu beschweren",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Die vegane und leichte Hydrating Curl Cream mit ihrer wirksamen Anti-Frizz-Formel aus reiner Sheabutter, Kokosöl und Ylang-Ylang-Extrakt spendet deinen Locken nicht nur Feuchtigkeit, sondern definiert, stärkt und regeneriert sie.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "bali-care.com",
+      "date": "2026-10-12"
+    }
+  ]
+}

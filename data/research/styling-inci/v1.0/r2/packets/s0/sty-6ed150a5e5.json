@@ -1,0 +1,81 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-2",
+  "sample_id": "sty-6ed150a5e5",
+  "product": {
+    "confirmed_name": "OSiS Sparkler",
+    "confirmed_name_redacted": false,
+    "brand": "Schwarzkopf Professional",
+    "format": "aerosol"
+  },
+  "inci": {
+    "inci_item_count": 9,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Butane"
+      },
+      {
+        "rank": 2,
+        "inci": "Isododecane"
+      },
+      {
+        "rank": 3,
+        "inci": "Alcohol denat."
+      },
+      {
+        "rank": 4,
+        "inci": "Caprylic/Capric Triglyceride"
+      },
+      {
+        "rank": 5,
+        "inci": "Dicaprylyl Carbonate"
+      },
+      {
+        "rank": 6,
+        "inci": "Isobutane"
+      },
+      {
+        "rank": 7,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 8,
+        "inci": "Linalyl Acetate"
+      },
+      {
+        "rank": 9,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Mit einem Abstand von 30cm auf das trockene Haar sprühen. In mehreren kurzen Sprühstößen anwenden. Die Haare nach Bedarf stylen.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "schwarzkopf-professional.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "OSiS Sparkler ist ein [CLAIM]-Spray für sofort glamouröses [CLAIM] Haar. Es verleiht dem Haar ein sofortiges, leichtes [CLAIM], ohne zu beschweren. Der leichte Pflegeeffekt verbessert die Kämmbarkeit.",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Bring den Glamour zum Vorschein! Dieses silikonfreie [CLAIM] sorgt für einen leichten Pflegeeffekt und ein herrlich [CLAIM] nach dem Föhnen. Es reduziert Frizz und entwirrt, während es gleichzeitig vor Feuchtigkeit und Hitze bis zu 230°C schützt.",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_pdf",
+      "date": "2026-10-12"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}
