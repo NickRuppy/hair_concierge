@@ -93,22 +93,20 @@ test("the night page names its forms the way people know them (polish 2026-10-12
   assert.deepEqual(
     toolFormPagePresentation("night_protection:1")?.options.map((option) => option.label),
     [
-      "Glatter Kissenbezug (z. B. Seide, Satin)",
+      "Glatter Kissenbezug (z.\u00A0B. Seide, Satin)",
       "Bonnet",
       "Spitzen-Schoner",
       "Scrunchie / weiches Haargummi",
     ],
   )
   // `N03`: the materials are examples of a smooth surface, never the claim itself.
-  assert.match(TOOL_PRODUCT_TYPE_LABELS.pillowcase, /z\. B\. Seide, Satin/)
+  // „z. B." never splits across lines: the label carries a no-break space.
+  assert.match(TOOL_PRODUCT_TYPE_LABELS.pillowcase, /z\.\u00A0B\. Seide, Satin/)
 })
 
-/** A card form with its break hints removed: soft hyphen, no-break space, no-break hyphen. */
+/** A card form with its break hints removed: soft hyphen and no-break hyphen. */
 function plain(cardLabel: string): string {
-  return cardLabel
-    .replace(/\u00AD/g, "")
-    .replace(/\u00A0/g, " ")
-    .replace(/\u2011/g, "-")
+  return cardLabel.replace(/\u00AD/g, "").replace(/\u2011/g, "-")
 }
 
 test("every line-break-ready card label reads exactly as its plain label", () => {

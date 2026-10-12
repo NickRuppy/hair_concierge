@@ -476,7 +476,7 @@ test("Deine Tools shows the member's photo chips grouped in wash-day order with 
     "Föhn",
     "Warmluftbürste",
     "Glätteisen",
-    "Glatter Kissenbezug (z. B. Seide, Satin)",
+    "Glatter Kissenbezug (z.\u00A0B. Seide, Satin)",
   ]) {
     assert.ok(html.includes(label), label)
   }

@@ -254,7 +254,7 @@ test("Lena's read-time guidance projects onto the Waschtag in graph order", () =
       ["Mikrofaser-Handtuch", "post_rinse_towel_dry"],
       ["Föhn", "dry_pre_heat"],
       ["Glätteisen", "heat_tool"],
-      ["Glatter Kissenbezug (z. B. Seide, Satin)", "nightly"],
+      ["Glatter Kissenbezug (z.\u00A0B. Seide, Satin)", "nightly"],
     ],
   )
   // Every Tool she reached for is on the day's shelf exactly once.
@@ -265,6 +265,6 @@ test("Lena's styling day keeps the dryer and the iron, never the towel or the co
   const projection = projectToolsForDay({ dayType: "styling_day", ...lenaGuidance() })
   assert.deepEqual(
     projection.sections.map((section) => section.typeLabelDe),
-    ["Föhn", "Glätteisen", "Glatter Kissenbezug (z. B. Seide, Satin)"],
+    ["Föhn", "Glätteisen", "Glatter Kissenbezug (z.\u00A0B. Seide, Satin)"],
   )
 })

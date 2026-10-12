@@ -270,7 +270,7 @@ test("the rendered Waschtag shows Lena's tools as image-led sections, never as p
     "Mikrofaser-Handtuch",
     "Föhn",
     "Glätteisen",
-    "Glatter Kissenbezug (z. B. Seide, Satin)",
+    "Glatter Kissenbezug (z.\u00A0B. Seide, Satin)",
   ]) {
     assert.ok(markup.includes(label), `${label} is on the Waschtag`)
   }

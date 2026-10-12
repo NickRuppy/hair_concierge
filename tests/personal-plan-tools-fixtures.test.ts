@@ -1671,7 +1671,7 @@ const NIGHT_ROWS: FixtureRow[] = [
       ])
       assert.equal(
         context.card("night_protection")?.noteDe,
-        "Alternative: Glatter Kissenbezug (z. B. Seide, Satin), wenn diese Form besser zu dir passt",
+        "Alternative: Glatter Kissenbezug (z.\u00A0B. Seide, Satin), wenn diese Form besser zu dir passt",
       )
       // … rendered as the „Alternative:" line only, never as a second card.
       assert.equal(

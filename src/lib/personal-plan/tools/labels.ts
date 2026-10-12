@@ -101,8 +101,9 @@ export const TOOL_PRODUCT_TYPE_LABELS = {
   applicator_comb: "Applikatorkamm",
   water_spray_bottle: "Sprühflasche",
   // Night forms (polish 2026-10-12): the names people know. Seide/Satin are named as examples
-  // of a smooth surface only — never as a material-quality claim (`N03`).
-  pillowcase: "Glatter Kissenbezug (z. B. Seide, Satin)",
+  // of a smooth surface only — never as a material-quality claim (`N03`). „z. B." keeps a
+  // no-break space so it never splits across lines.
+  pillowcase: "Glatter Kissenbezug (z.\u00A0B. Seide, Satin)",
   bonnet: "Bonnet",
   length_tip_sleeve: "Spitzen-Schoner",
   soft_night_tie: "Scrunchie / weiches Haargummi",
@@ -118,7 +119,8 @@ export const TOOL_PRODUCT_TYPE_LABELS = {
  * („Applikatorfla-sche") and, in WebKit, even re-hyphenates the half after a real hyphen
  * („Kopfhaut-Bürs-te"). A form listed here renders with `hyphens: manual` instead, so it breaks
  * only at a real hyphen, a space, or the soft hyphen (U+00AD) placed at the compound boundary.
- * `z. B.` keeps a no-break space, `T-Shirt` a no-break hyphen (U+2011).
+ * `T-Shirt` keeps a no-break hyphen (U+2011); `z. B.` carries its no-break space in the label
+ * itself, so it never splits on any surface.
  *
  * Display only: answers, alt texts, announcements and every other surface keep the plain label,
  * and each entry must read exactly as its label once the break hints are removed (tested).

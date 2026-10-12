@@ -667,7 +667,7 @@ test("flag on: the Anwendung derives tool blocks from the member's current facts
       "Mikrofaser-Handtuch",
       "Föhn",
       "Glätteisen",
-      "Glatter Kissenbezug (z. B. Seide, Satin)",
+      "Glatter Kissenbezug (z.\u00A0B. Seide, Satin)",
     ],
   )
   assert.equal(wash.shelf.filter((slot) => slot.kind === "tool").length, 5)
