@@ -1684,7 +1684,7 @@ test("does not substitute category-only images for live authority previews", () 
     ],
   )
 
-  const plan = adaptInitialNeedSnapshotToPlanStartViewModel(snapshot)
+  const plan = adaptInitialNeedSnapshotToPlanStartViewModel(snapshot, { toolsEnabled: false })
   assert.ok(plan)
   assert.equal(plan.basis.title, "Deine Basis")
   const shampoo = findCard(plan.basis.cards, (item) => item.categoryLabel === "Shampoo")
@@ -1729,7 +1729,7 @@ test("adapts Basis-only snapshots without an empty Optional page", () => {
     scalpOiliness: "balanced",
     scalpConcerns: [],
   })
-  const plan = adaptInitialNeedSnapshotToPlanStartViewModel(snapshot)
+  const plan = adaptInitialNeedSnapshotToPlanStartViewModel(snapshot, { toolsEnabled: false })
 
   assert.ok(plan)
   assert.equal(plan.optional, null)
@@ -1757,7 +1757,7 @@ test("a missing Optional page normalizes an Optional return to Basis", () => {
     scalpOiliness: "balanced",
     scalpConcerns: [],
   })
-  const plan = adaptInitialNeedSnapshotToPlanStartViewModel(snapshot)
+  const plan = adaptInitialNeedSnapshotToPlanStartViewModel(snapshot, { toolsEnabled: false })
 
   assert.ok(plan)
   assert.equal(plan.optional, null)
@@ -1794,7 +1794,7 @@ test("untreated rough-surface Lea gets no Bondbuilder card or chemical-stress pr
     hairSurface: "rough",
     elasticResponse: "stretches_bounces",
   })
-  const plan = adaptInitialNeedSnapshotToPlanStartViewModel(snapshot)
+  const plan = adaptInitialNeedSnapshotToPlanStartViewModel(snapshot, { toolsEnabled: false })
 
   assert.ok(plan)
   const html = renderToStaticMarkup(<PlanStartFlow state="ready" plan={plan} />)
@@ -1812,6 +1812,7 @@ test("Bondbuilder presentation names chemical stress only for chemical-treatment
       hairSurface: "smooth",
       elasticResponse: "stretches_bounces",
     }),
+    { toolsEnabled: false },
   )
   const treated = adaptInitialNeedSnapshotToPlanStartViewModel(
     computedSnapshot({
@@ -1822,6 +1823,7 @@ test("Bondbuilder presentation names chemical stress only for chemical-treatment
       hairSurface: "smooth",
       elasticResponse: "stretches_bounces",
     }),
+    { toolsEnabled: false },
   )
 
   assert.ok(untreated)
@@ -1839,12 +1841,15 @@ test("Bondbuilder presentation names chemical stress only for chemical-treatment
 })
 
 test("invalid or unsupported snapshots fail closed to retryable error", () => {
-  assert.equal(adaptInitialNeedSnapshotToPlanStartViewModel({}), null)
+  assert.equal(adaptInitialNeedSnapshotToPlanStartViewModel({}, { toolsEnabled: false }), null)
   assert.equal(
-    adaptInitialNeedSnapshotToPlanStartViewModel({
-      ...computedSnapshot(),
-      schemaVersion: 999,
-    }),
+    adaptInitialNeedSnapshotToPlanStartViewModel(
+      {
+        ...computedSnapshot(),
+        schemaVersion: 999,
+      },
+      { toolsEnabled: false },
+    ),
     null,
   )
   assert.equal(

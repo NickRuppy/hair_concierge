@@ -368,6 +368,60 @@ test("stale_source is checked BEFORE the replay short-circuit: a moved Stage-1 s
   )
 })
 
+test("the tools module projects like any module but never arms the Stage-3 handoff", async (t) => {
+  const pg = await migratedPersonalPlanDatabase(t)
+  const draftId = id(2, 2)
+  const initial = await seedInitialNeedAndDraft(pg, draftId, "tools-1")
+
+  const result = await completeStage2Module(pg, {
+    userId: USER_ID,
+    planId: initial.personalPlanId,
+    draftId,
+    module: "tools",
+    expectedRevision: 0,
+    inputHash: "c".repeat(64),
+  })
+  assert.equal(result.outcome, "completed")
+  assert.equal(result.stage3Handoff, false, "only 'products' hands off into Stage 3")
+  assert.ok(result.refinedNeedVersionId)
+
+  const row = await pg.query<{ status: string; module_projections: unknown }>(
+    "SELECT status, module_projections FROM public.personal_plan_refinement_drafts WHERE id = $1",
+    [draftId],
+  )
+  assert.equal(row.rows[0]!.status, "in_progress")
+  const projections = mapModuleProjections(row.rows[0]!.module_projections)
+  assert.deepEqual(Object.keys(projections), ["tools"])
+  assert.equal(projections.tools?.needVersionId, result.refinedNeedVersionId)
+  assert.equal(projections.tools?.stage3Handoff, false)
+  assert.equal(projections.products, undefined)
+
+  // Replay of a lost response: the same module at the same revision returns the first version.
+  const replay = await completeStage2Module(pg, {
+    userId: USER_ID,
+    planId: initial.personalPlanId,
+    draftId,
+    module: "tools",
+    expectedRevision: 0,
+    inputHash: "d".repeat(64),
+  })
+  assert.equal(replay.outcome, "already_projected")
+  assert.equal(replay.refinedNeedVersionId, result.refinedNeedVersionId)
+  assert.equal(replay.stage3Handoff, false)
+
+  // `products` is unchanged by the widened list: it still hands off.
+  const products = await completeStage2Module(pg, {
+    userId: USER_ID,
+    planId: initial.personalPlanId,
+    draftId,
+    module: "products",
+    expectedRevision: 0,
+    inputHash: "e".repeat(64),
+  })
+  assert.equal(products.outcome, "completed")
+  assert.equal(products.stage3Handoff, true)
+})
+
 test("a NULL module id is rejected as invalid_source / invalid_module", async (t) => {
   const pg = await migratedPersonalPlanDatabase(t)
   const draftId = id(2, 2)

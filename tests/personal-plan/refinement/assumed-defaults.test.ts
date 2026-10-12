@@ -9,6 +9,13 @@ import {
 } from "@/lib/personal-plan/refinement/assumed-defaults"
 import { buildPlanRoutineContextFromCompletedRefinement } from "@/lib/personal-plan/refinement/stage1-adapter"
 import { resolveStage2RefinementContract } from "@/lib/personal-plan/refinement/question-path"
+import { createStage2RefinementSession } from "@/lib/personal-plan/refinement/session"
+import { TOOL_FAMILIES, TOOL_REPORTED_FORMS_BY_FAMILY } from "@/lib/personal-plan/tools/contracts"
+import {
+  TOOL_FORM_PAGES,
+  TOOL_OVERVIEW_FAMILY_ORDER,
+  TOOL_OVERVIEW_SECTIONS,
+} from "@/lib/personal-plan/tools/labels"
 import type {
   PersonalPlanRefinementAnswersV1,
   Stage2QuestionId,
@@ -28,6 +35,7 @@ function triggerContext(overrides: Partial<Stage2TriggerContext> = {}): Stage2Tr
 
 const IRRITATED_SCALP_CONTEXT = triggerContext({ hasReportedIrritatedScalp: true })
 const BRIDGE_ELIGIBLE_CONTEXT = triggerContext({ dryShampooBridgeEligibility: "eligible" })
+const TOOLS_ON_CONTEXT = triggerContext({ toolsEnabled: true })
 
 function resolve(
   context: Stage2TriggerContext,
@@ -167,6 +175,60 @@ test("no heat-protection assumption ever claims the user protects or skips prote
   for (const consistency of assumedConsistencies) assert.equal(consistency, "unsure")
 })
 
+test("Diffusor rule: with the tools rollout on the Diffusor event is assumed with a frequency only", () => {
+  const answers = {
+    dryingRoutes: ["diffuser_or_airflow_shaping"],
+    additionalHeatTools: ["straightener"],
+  } as PersonalPlanRefinementAnswersV1
+  const on = resolve(triggerContext({ toolsEnabled: true }), answers)
+  assert.deepEqual(on.answers.heatEvents?.["heat:diffuser_airflow_shaping"], {
+    frequency: "less_than_monthly",
+  })
+  assert.equal(on.answers.heatEvents?.["heat:straightener"]?.protectionConsistency, "unsure")
+  // Rollout off keeps today's assumption, protection included.
+  const off = resolve(triggerContext(), answers)
+  assert.deepEqual(off.answers.heatEvents?.["heat:diffuser_airflow_shaping"], {
+    frequency: "less_than_monthly",
+    protectionConsistency: "unsure",
+  })
+})
+
+test("scanner context (rollout off): a flag-on member's frequency-only Diffusor answer is kept, not re-assumed", () => {
+  const answers = {
+    dryingRoutes: ["diffuser_or_airflow_shaping"],
+    additionalHeatTools: [],
+    heatEvents: { "heat:diffuser_airflow_shaping": { frequency: "weekly_3_4x" } },
+  } as PersonalPlanRefinementAnswersV1
+  const scannerContext = triggerContext() // the scanner always resolves with the rollout off
+  const resolution = resolveAssumedAnswers({
+    triggerContext: scannerContext,
+    answers,
+    userAnsweredQuestionIds: [
+      "drying_routes",
+      "additional_heat_tools",
+      "heat:diffuser_airflow_shaping",
+    ],
+  })
+  assert.deepEqual(resolution.answers.heatEvents?.["heat:diffuser_airflow_shaping"], {
+    frequency: "weekly_3_4x",
+  })
+  assert.equal(resolution.assumedQuestionIds.includes("heat:diffuser_airflow_shaping"), false)
+  assert.equal(resolution.appliedRuleIds.includes("assume:heat_event:protected_minimum"), false)
+
+  // …and the plan input marks the Diffusor, so the Hitzeschutz tier matches the rollout-on plan.
+  const routine = buildPlanRoutineContextFromCompletedRefinement({
+    triggerContext: scannerContext,
+    answers: resolution.answers,
+    completedQuestionIds: resolution.orderedQuestionIds,
+  })
+  assert.equal(routine.heatToolUse.state, "known")
+  if (routine.heatToolUse.state === "known") {
+    const [event] = routine.heatToolUse.value
+    assert.equal(event.route, "airflow_shaping")
+    assert.ok(event.sourceRuleIds.includes("heat_protectant.diffuser_as_blow_dry"))
+  }
+})
+
 test("rule assume:night_protection:none assumes no special night protection", () => {
   const resolution = resolve(triggerContext())
   assert.deepEqual(resolution.answers.nightProtection, [])
@@ -193,6 +255,10 @@ test("every declared rule id is reachable — no dead rule in the table", () => 
       resolve(triggerContext(), { towel: { material: "frottee" } }),
       resolve(triggerContext(), { dryingRoutes: ["ordinary_blow_dry"] }),
       resolve(triggerContext(), { additionalHeatTools: ["straightener"] }),
+      // Hair Tools rollout on: the overview and the page wildcard.
+      resolve(TOOLS_ON_CONTEXT, { dryingRoutes: ["ordinary_blow_dry"] }, ["drying_routes"]),
+      // Rev. 6: the night question, from an earlier technique.
+      resolve(TOOLS_ON_CONTEXT, { nightProtection: ["pineapple"] }, ["night_protection"]),
     ].flatMap((resolution) => resolution.appliedRuleIds),
   )
   assert.deepEqual(
@@ -520,4 +586,304 @@ test("a structurally invalid stored answer is overwritten by its assumption", ()
   // Unordered category list is invalid too, so it is replaced rather than kept.
   assert.deepEqual(resolution.answers.currentProductCategories, [])
   assert.equal(resolution.answers.oilPurposes, undefined)
+})
+
+/* ── Hair Tools rollout on: tools rules, convergence, per-page selection ─────── */
+
+test("rule assume:tools_overview:derived_from_care ticks what the care answers imply (may be none)", () => {
+  const none = resolve(TOOLS_ON_CONTEXT)
+  // Nothing implied except today's towel assumption (Mikrofaser), so only the textiles are ticked.
+  assert.deepEqual(none.answers.toolFamiliesWithSomething, ["drying_textiles"])
+  assert.equal(
+    none.appliedRuleIds[none.assumedQuestionIds.indexOf("tools_overview")],
+    "assume:tools_overview:derived_from_care",
+  )
+
+  const blowDries = resolve(TOOLS_ON_CONTEXT, { dryingRoutes: ["ordinary_blow_dry"] }, [
+    "drying_routes",
+  ])
+  // The whole „Trocknen & Stylen" section arrives ticked, plus the textiles (no towel answer).
+  assert.deepEqual(blowDries.answers.toolFamiliesWithSomething, [
+    "drying_textiles",
+    "airflow",
+    "heated_styling",
+    "heatless_styling",
+    "securing_sectioning",
+  ])
+})
+
+test("rule assume:tools_form:derived_from_care fills each page with the implied forms it offers", () => {
+  const resolution = resolve(
+    TOOLS_ON_CONTEXT,
+    {
+      dryingRoutes: ["ordinary_blow_dry"],
+      additionalHeatTools: ["dryer_brush", "straightener"],
+      nightProtection: ["silk_satin_bonnet"],
+      towel: { material: "mikrofaser", technique: "gentle_press" },
+    },
+    ["drying_routes", "additional_heat_tools", "night_protection", "towel_handling"],
+  )
+  assert.deepEqual(resolution.answers.toolForms, {
+    "wash_application:1": [],
+    "drying_textiles:1": ["microfiber_towel"],
+    "brushes_combs:1": [],
+    "brushes_combs:2": [],
+    "airflow:1": ["hair_dryer", "hot_air_brush"],
+    "heated_styling:1": ["flat_iron"],
+    "heatless_styling:1": [],
+    "securing_sectioning:1": [],
+    "securing_sectioning:2": [],
+    "night_protection:1": ["bonnet"],
+  })
+  const pageRules = resolution.assumedQuestionIds
+    .map((id, index) => [id, resolution.appliedRuleIds[index]] as const)
+    .filter(([id]) => id.startsWith("tools:"))
+  assert.ok(pageRules.length > 0)
+  for (const [, ruleId] of pageRules) assert.equal(ruleId, "assume:tools_form:derived_from_care")
+  // The member's own facts round-trip through the assumed inventory.
+  assert.deepEqual(resolution.answers.additionalHeatTools, ["dryer_brush", "straightener"])
+  assert.deepEqual(resolution.answers.nightProtection, ["silk_satin_bonnet"])
+  assert.deepEqual(resolution.answers.towel, { material: "mikrofaser", technique: "gentle_press" })
+  assert.deepEqual(resolution.answers.dryingRoutes, ["ordinary_blow_dry"])
+})
+
+test("rollout on, no answers: today's habits assumptions, reached through an assumed inventory", () => {
+  const resolution = resolve(TOOLS_ON_CONTEXT)
+  assert.deepEqual(resolution.answers, {
+    currentProductCategories: [],
+    wetWashFrequency: "weekly_2x",
+    toolFamiliesWithSomething: ["drying_textiles"],
+    toolForms: {
+      ...Object.fromEntries(TOOL_FORM_PAGES.map((page) => [page.pageKey, []])),
+      "drying_textiles:1": ["microfiber_towel"],
+    },
+    towel: { material: "mikrofaser", technique: "gentle_press" },
+    dryingRoutes: ["air_dry"],
+    additionalHeatTools: [],
+    heatEvents: {},
+    nightProtection: [],
+    // Rev. 6: „Offen" adds no technique — the night protection stays today's none.
+    nightWear: "open",
+  })
+  assert.deepEqual(resolution.orderedQuestionIds, [
+    "current_product_categories",
+    "wet_wash_frequency",
+    "tools_overview",
+    "tools:drying_textiles:1",
+    "towel_handling",
+    "drying_routes",
+    "night_wear",
+  ])
+})
+
+for (const expectation of NO_ANSWER_EXPECTATIONS) {
+  test(`parity: with no care facts the rollout changes no habits assumption (${expectation.name})`, () => {
+    const off = resolve(expectation.context)
+    const on = resolve({ ...expectation.context, toolsEnabled: true })
+    for (const key of [
+      "towel",
+      "additionalHeatTools",
+      "nightProtection",
+      "dryingRoutes",
+      "heatEvents",
+    ] as const) {
+      assert.deepEqual(on.answers[key], off.answers[key], key)
+    }
+    const offDefaults = buildDirectAcceptanceStage2Defaults(expectation.context)
+    const onDefaults = buildDirectAcceptanceStage2Defaults({
+      ...expectation.context,
+      toolsEnabled: true,
+    })
+    for (const key of [
+      "towel",
+      "additionalHeatTools",
+      "nightProtection",
+      "dryingRoutes",
+    ] as const) {
+      assert.deepEqual(onDefaults.answers[key], offDefaults.answers[key], key)
+    }
+  })
+}
+
+/** Every family, alone: ticked with no page answered, and ticked with every form owned. */
+const FAMILY_SCENARIOS = TOOL_FAMILIES.flatMap((family) => {
+  const pages = TOOL_FORM_PAGES.filter((page) => page.family === family)
+  const order = TOOL_REPORTED_FORMS_BY_FAMILY[family]
+  const everything = Object.fromEntries(
+    pages.map((page) => [
+      page.pageKey,
+      order.filter((form) => (page.forms as readonly string[]).includes(form)),
+    ]),
+  )
+  return [
+    {
+      name: `${family} ticked, pages open`,
+      answers: { toolFamiliesWithSomething: [family] },
+      ids: ["tools_overview"],
+    },
+    {
+      name: `${family} ticked, every form owned`,
+      answers: { toolFamiliesWithSomething: [family], toolForms: everything },
+      ids: ["tools_overview", ...pages.map((page) => `tools:${page.pageKey}`)],
+    },
+  ] as Array<{ name: string; answers: PersonalPlanRefinementAnswersV1; ids: Stage2QuestionId[] }>
+})
+FAMILY_SCENARIOS.push({
+  name: "every section ticked, every form owned",
+  answers: {
+    toolFamiliesWithSomething: [...TOOL_OVERVIEW_FAMILY_ORDER],
+    toolForms: Object.fromEntries(
+      TOOL_FORM_PAGES.map((page) => [
+        page.pageKey,
+        TOOL_REPORTED_FORMS_BY_FAMILY[page.family].filter((form) =>
+          (page.forms as readonly string[]).includes(form),
+        ),
+      ]),
+    ),
+  },
+  ids: [
+    "tools_overview",
+    ...TOOL_FORM_PAGES.map((page) => `tools:${page.pageKey}` as Stage2QuestionId),
+  ],
+})
+
+for (const scenario of FAMILY_SCENARIOS) {
+  test(`rollout on: direct acceptance converges and never throws (${scenario.name})`, () => {
+    const defaults = buildDirectAcceptanceStage2Defaults(TOOLS_ON_CONTEXT, {
+      answers: scenario.answers,
+      questionIds: scenario.ids,
+    })
+    const contract = resolveStage2RefinementContract({
+      triggerContext: TOOLS_ON_CONTEXT,
+      answers: defaults.answers,
+      completedQuestionIds: defaults.completedQuestionIds,
+    })
+    assert.equal(contract.isComplete, true)
+    assert.deepEqual(contract.validationErrors, [])
+    for (const id of scenario.ids) assert.equal(defaults.answerProvenance[id], "user", id)
+    // A fixed point: resolving the result again assumes nothing new.
+    const again = resolve(TOOLS_ON_CONTEXT, defaults.answers)
+    assert.deepEqual(again.assumedQuestionIds, [])
+    // And it loads as a complete session.
+    const session = createStage2RefinementSession({
+      pathVersion: "test",
+      triggerContext: TOOLS_ON_CONTEXT,
+      answers: defaults.answers,
+      completedQuestionIds: defaults.completedQuestionIds,
+      status: "complete",
+      completedHandoff: { refinedVersionId: "refined", nextHref: "/plan-start" },
+    })
+    assert.equal(session.path.firstUnresolvedQuestionId, null)
+  })
+}
+
+test("rollout on: resolution over a complete draft whose path grew fills only the new questions", () => {
+  const answers: PersonalPlanRefinementAnswersV1 = {
+    currentProductCategories: [],
+    wetWashFrequency: "weekly_2x",
+    towel: { material: "frottee", technique: "rough_rubbing" },
+    dryingRoutes: ["ordinary_blow_dry"],
+    additionalHeatTools: ["straightener"],
+    heatEvents: {
+      "heat:ordinary_blow_dry": { frequency: "weekly_2x" },
+      "heat:straightener": { frequency: "weekly_1x", protectionConsistency: "always" },
+    },
+    nightProtection: ["silk_satin_pillow"],
+  }
+  const completedQuestionIds: Stage2QuestionId[] = [
+    "current_product_categories",
+    "wet_wash_frequency",
+    "towel_handling",
+    "drying_routes",
+    "additional_heat_tools",
+    "heat:ordinary_blow_dry",
+    "heat:straightener",
+    "night_protection",
+  ]
+  const grown = createStage2RefinementSession({
+    pathVersion: "test",
+    triggerContext: TOOLS_ON_CONTEXT,
+    answers,
+    completedQuestionIds,
+    status: "complete",
+    completedHandoff: { refinedVersionId: "refined", nextHref: "/plan-start" },
+    tolerateGrownPath: true,
+  })
+  assert.equal(grown.status, "complete")
+  assert.equal(grown.path.firstUnresolvedQuestionId, "tools_overview")
+
+  const resolution = resolve(TOOLS_ON_CONTEXT, answers, completedQuestionIds)
+  assert.deepEqual(
+    resolution.assumedQuestionIds.filter((id) => !id.startsWith("tools")),
+    ["night_wear"],
+    "only the new questions are assumed: the tools and (Rev. 6) the night question",
+  )
+  assert.equal(resolution.answers.nightWear, "open")
+  // Her real facts survive the assumed inventory unchanged.
+  assert.deepEqual(resolution.answers.towel, { material: "frottee", technique: "rough_rubbing" })
+  assert.deepEqual(resolution.answers.additionalHeatTools, ["straightener"])
+  assert.deepEqual(resolution.answers.nightProtection, ["silk_satin_pillow"])
+  assert.deepEqual(resolution.answers.heatEvents, answers.heatEvents)
+})
+
+test("selectStage2Answers copies only the page a tool question owns", () => {
+  const answers: PersonalPlanRefinementAnswersV1 = {
+    toolFamiliesWithSomething: ["brushes_combs", "airflow"],
+    toolForms: {
+      "brushes_combs:1": ["wide_tooth_comb"],
+      "brushes_combs:2": ["round_brush"],
+      "airflow:1": ["hair_dryer"],
+    },
+    additionalHeatTools: [],
+  }
+  assert.deepEqual(selectStage2Answers(answers, ["tools:brushes_combs:1"]), {
+    toolForms: { "brushes_combs:1": ["wide_tooth_comb"] },
+  })
+  assert.deepEqual(selectStage2Answers(answers, ["tools_overview", "tools:airflow:1"]), {
+    toolFamiliesWithSomething: ["brushes_combs", "airflow"],
+    toolForms: { "airflow:1": ["hair_dryer"] },
+  })
+  assert.deepEqual(selectStage2Answers(answers, ["tools:night_protection:1"]), {})
+  // The overview owns the explicit none it wrote for an unticked family's pages.
+  assert.deepEqual(
+    selectStage2Answers(
+      {
+        toolFamiliesWithSomething: ["airflow"],
+        toolForms: { "airflow:1": ["hair_dryer"], "night_protection:1": [] },
+      },
+      ["tools_overview"],
+    ),
+    { toolFamiliesWithSomething: ["airflow"], toolForms: { "night_protection:1": [] } },
+  )
+})
+
+test("the tools rules cover the overview and every page explicitly", () => {
+  const overviewRules = STAGE2_ASSUMPTION_RULES.filter(
+    (rule) => rule.questionId === "tools_overview",
+  )
+  const pageRules = STAGE2_ASSUMPTION_RULES.filter((rule) => rule.questionId === "tools:*")
+  assert.equal(overviewRules.length, 1)
+  assert.equal(pageRules.length, 1)
+  assert.equal(TOOL_OVERVIEW_SECTIONS.length, 4)
+})
+
+test("rollout on: a Frottee + Diffusor member's assumed inventory keeps both answers", () => {
+  const answers: PersonalPlanRefinementAnswersV1 = {
+    towel: { material: "frottee", technique: "rough_rubbing" },
+    dryingRoutes: ["diffuser_or_airflow_shaping"],
+    heatEvents: {
+      "heat:diffuser_airflow_shaping": { frequency: "weekly_1x", protectionConsistency: "unsure" },
+    },
+  }
+  const resolution = resolve(TOOLS_ON_CONTEXT, answers, [
+    "towel_handling",
+    "drying_routes",
+    "heat:diffuser_airflow_shaping",
+  ])
+  assert.deepEqual(resolution.answers.toolForms?.["drying_textiles:1"], ["frottee"])
+  assert.deepEqual(resolution.answers.toolForms?.["airflow:1"], ["hair_dryer", "diffuser"])
+  assert.deepEqual(resolution.answers.towel, { material: "frottee", technique: "rough_rubbing" })
+  assert.deepEqual(resolution.answers.dryingRoutes, ["diffuser_or_airflow_shaping"])
+  assert.deepEqual(resolution.answers.heatEvents, answers.heatEvents)
+  assert.equal(resolution.assumedQuestionIds.includes("drying_routes"), false)
 })

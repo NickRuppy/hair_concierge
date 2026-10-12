@@ -106,7 +106,7 @@ export function buildDiscoveryRoutineContext(
             tool: event.tool,
             route: event.route,
             frequency: event.frequency,
-            sourceRuleIds: [...DISCOVERY_HEAT_SOURCE_RULE_IDS],
+            sourceRuleIds: [...DISCOVERY_HEAT_SOURCE_RULE_IDS, ...event.ruleIds],
           })),
         }
       : INITIAL_UNKNOWN_ROUTINE_CONTEXT.heatToolUse,

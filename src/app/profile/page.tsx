@@ -31,6 +31,8 @@ import {
 } from "@/components/profile/retained-personal-plan-products"
 import { VerfeinerungTeaser } from "@/components/profile/verfeinerung-teaser"
 import { PremiumSheet } from "@/components/premium-sheet/premium-sheet"
+import { TOOL_FAMILY_CARD_STYLES } from "@/components/personal-plan-refinement/tool-checkpoint"
+import { ToolThumb } from "@/components/personal-plan-tools/tool-thumb"
 import type { PremiumSheetContext } from "@/lib/premium-sheet/context"
 import type { MembershipManagementState } from "@/lib/billing/types"
 import { formatBillingDate } from "@/lib/billing/display"
@@ -46,6 +48,9 @@ import {
 import {
   PROFILE_FIELD_CONFIG,
   PROFILE_SECTION_META,
+  profileHabitsRows,
+  profileToolsStatusLabel,
+  PROFILE_TOOLS_NONE_LABEL,
   type ProfileEditTarget,
   type ProfileFieldConfig,
   type ProfileFieldValue,
@@ -73,7 +78,9 @@ import {
   hasRefinementDeferredRoles,
   parseHairProfileStatus,
 } from "@/lib/personal-plan/refinement/hair-profile-section"
+import { armRefinementStatusGate } from "@/lib/profile/refinement-status-gate"
 import type { RefinementStatusResponse } from "@/lib/personal-plan/refinement/refinement-status"
+import type { ProfileToolsBlock, ProfileToolsGroup } from "@/lib/personal-plan/tools/profile-block"
 import type {
   PersonalPlanRefinementAnswersV1,
   Stage2Module,
@@ -98,6 +105,8 @@ type RefinementPresentationApiResponse = {
   answers: PersonalPlanRefinementAnswersV1 | null
   completedQuestionIds: string[]
   routineProducts: RoutineProductFromPlan[] | null
+  /** Present only while the member's Hair Tools rollout is on; `null` = nothing confirmed yet. */
+  tools?: ProfileToolsBlock | null
 }
 
 /**
@@ -260,12 +269,15 @@ function ProfileFieldCard({
   onClick,
   className,
   tone = "default",
+  compact = false,
 }: {
   field: JourneyField
   children?: ReactNode
   onClick?: () => void
   className?: string
   tone?: "default" | "attention"
+  /** Two-column phone layout of the tools Profil: tighter padding and label. */
+  compact?: boolean
 }) {
   const interactive = Boolean(onClick)
 
@@ -286,6 +298,7 @@ function ProfileFieldCard({
       }
       className={cn(
         "rounded-[22px] border border-primary/10 bg-[hsl(var(--background))]/70 p-5 transition-colors",
+        compact ? "min-w-0 rounded-2xl p-3 md:rounded-[22px] md:p-5" : "",
         interactive
           ? "cursor-pointer hover:border-primary/30 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           : "",
@@ -293,7 +306,14 @@ function ProfileFieldCard({
         className,
       )}
     >
-      <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+      <p
+        className={cn(
+          "text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground",
+          compact
+            ? "mb-2 text-[10px] tracking-[0.06em] md:mb-3 md:text-[11px] md:tracking-[0.14em]"
+            : "mb-3",
+        )}
+      >
         {field.label}
       </p>
       {children ?? <ProfileFieldValue value={field.value} />}
@@ -334,6 +354,83 @@ function ProfileFieldValue({
           {item}
         </Badge>
       ))}
+    </div>
+  )
+}
+
+/**
+ * „Deine Haarziele": the closing row of the Haar-Check grid. Not one big button — the chips are
+ * plain values and the goals editor is the row's own „Ziele bearbeiten" link.
+ */
+function ProfileGoalsRow({
+  field,
+  onEdit,
+  compact = false,
+}: {
+  field: JourneyField
+  onEdit: () => void
+  compact?: boolean
+}) {
+  return (
+    <div
+      className={cn(
+        "rounded-[22px] border border-primary/10 bg-[hsl(var(--background))]/70 p-5",
+        compact
+          ? "col-span-full rounded-2xl p-3 md:rounded-[22px] md:p-5"
+          : "md:col-span-2 xl:col-span-3",
+      )}
+    >
+      <div className="mb-3 flex items-baseline justify-between gap-2">
+        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+          {field.label}
+        </p>
+        <button
+          type="button"
+          onClick={onEdit}
+          className="min-h-8 shrink-0 text-xs font-semibold text-primary underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        >
+          Ziele bearbeiten
+        </button>
+      </div>
+      <ProfileFieldValue value={field.value} emptyLabel="Noch keine Ziele gewählt" />
+    </div>
+  )
+}
+
+/** Photo chips of one tool family: Bildkarte thumbnail plus the form's name. */
+function ProfileToolGroupCard({ group }: { group: ProfileToolsGroup }) {
+  const style = TOOL_FAMILY_CARD_STYLES[group.family]
+  return (
+    <div
+      className="min-w-0 rounded-2xl border border-primary/10 bg-[hsl(var(--background))]/70 p-3 md:rounded-[22px] md:p-5"
+      data-profile-tool-group={group.family}
+    >
+      <p
+        className={cn(
+          "mb-2 flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.08em] md:mb-3",
+          style.label,
+        )}
+      >
+        <span aria-hidden="true" className={cn("h-1.5 w-1.5 shrink-0 rounded-full", style.dot)} />
+        <span className="min-w-0">{group.label}</span>
+      </p>
+      <ul className="flex flex-wrap gap-2" aria-label={group.label}>
+        {group.items.map((item) => (
+          <li
+            key={item.form}
+            className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-primary/20 bg-background py-1 pl-1 pr-3 text-xs font-semibold text-[var(--text-heading)] md:text-[13px]"
+            data-profile-tool-item={item.form}
+          >
+            <ToolThumb
+              src={item.imageSrc}
+              alt={item.imageAlt}
+              size={28}
+              className="h-7 w-7 rounded-full"
+            />
+            <span className="min-w-0">{item.label}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
@@ -388,10 +485,17 @@ export default function ProfilePage() {
     null,
   )
   const [refinementStatus, setRefinementStatus] = useState<RefinementStatusResponse | null>(null)
+  /**
+   * The `userId:hasRoutineAccess` the status read last settled for (success, failure or no
+   * plan). Keyed instead of a boolean so the first render after either input changes already
+   * reads „pending" — no frame of the old layout before an effect could flip a flag.
+   */
+  const [refinementStatusSettledKey, setRefinementStatusSettledKey] = useState<string | null>(null)
   const [refinementAnswers, setRefinementAnswers] =
     useState<PersonalPlanRefinementAnswersV1 | null>(null)
   const [refinementLoading, setRefinementLoading] = useState(true)
   const [routineProducts, setRoutineProducts] = useState<RoutineProductFromPlan[] | null>(null)
+  const [refinementTools, setRefinementTools] = useState<ProfileToolsBlock | null>(null)
   const [quizEditing, setQuizEditing] = useState(false)
   const [quizSaving, setQuizSaving] = useState(false)
   const [quizDraft, setQuizDraft] = useState<HaarCheckDraft>(() => draftFromProfile(null))
@@ -492,11 +596,20 @@ export default function ProfilePage() {
      * unavailable → 503, network) collapses to `null`, i.e. the section stays
      * absent rather than rendering a broken card.
      */
+    let cancelPendingGate: (() => void) | null = null
+
     async function loadRefinementStatus() {
       if (!userId || !hasRoutineAccess) {
         if (active) setRefinementStatus(null)
         return
       }
+      const settledKey = `${userId}:${hasRoutineAccess}`
+      // A slow read must not hold the page on skeletons: after a short while the gate opens and
+      // today's cards show (the answer still applies if it arrives later).
+      const cancelGate = armRefinementStatusGate(() => {
+        if (active) setRefinementStatusSettledKey(settledKey)
+      })
+      cancelPendingGate = cancelGate
       try {
         const response = await fetch("/api/personal-plan/refinement-status", {
           cache: "no-store",
@@ -506,12 +619,16 @@ export default function ProfilePage() {
         if (active) setRefinementStatus(body)
       } catch {
         if (active) setRefinementStatus(null)
+      } finally {
+        cancelGate()
+        if (active) setRefinementStatusSettledKey(settledKey)
       }
     }
 
     loadRefinementStatus()
     return () => {
       active = false
+      cancelPendingGate?.()
     }
   }, [userId, hasRoutineAccess])
 
@@ -523,6 +640,7 @@ export default function ProfilePage() {
         if (active) {
           setRefinementAnswers(null)
           setRoutineProducts(null)
+          setRefinementTools(null)
           setRefinementLoading(false)
         }
         return
@@ -537,11 +655,13 @@ export default function ProfilePage() {
         if (active) {
           setRefinementAnswers(body.answers ?? null)
           setRoutineProducts(body.routineProducts ?? null)
+          setRefinementTools(body.tools ?? null)
         }
       } catch {
         if (active) {
           setRefinementAnswers(null)
           setRoutineProducts(null)
+          setRefinementTools(null)
         }
       } finally {
         if (active) {
@@ -734,16 +854,37 @@ export default function ProfilePage() {
     () =>
       PROFILE_FIELD_CONFIG.map((field) => ({
         ...field,
-        value: field.getValue(hairProfile, refinementAnswers),
+        value: field.getValue(hairProfile, refinementAnswers, refinementTools),
       })),
-    [hairProfile, refinementAnswers],
+    [hairProfile, refinementAnswers, refinementTools],
   )
 
+  // Hair Tools: the Profil swaps Styling/Alltag for Deine Tools/Gewohnheiten once the member's
+  // refinement status lists a tools module that applies to her. A missing or failed status read
+  // fails open to today's layout.
+  //
+  // Until that read has settled for a member who can have one, the swapped cards are held back so
+  // a flag-on member never sees Styling/Alltag turn into Deine Tools/Gewohnheiten. Error and a
+  // missing plan still settle, so they fail open to today's layout. Without a user or routine
+  // access there is no read to wait for.
+  const refinementStatusPending =
+    Boolean(userId) &&
+    hasRoutineAccess &&
+    refinementStatusSettledKey !== `${userId}:${hasRoutineAccess}`
+  const toolsApplicable = useMemo(() => {
+    const toolsModule = refinementStatus?.modules.find((entry) => entry.module === "tools")
+    return toolsModule !== undefined && toolsModule.status !== "not_applicable"
+  }, [refinementStatus])
+
   const quizFields = structuredFields.filter((field) => field.sectionKey === "quiz")
+  // The Ziele row closes the Haar-Check grid but never changes its „x/N vollständig" count.
+  const quizAnswerFields = quizFields.filter((field) => field.key !== "goals")
   const stylingFields = structuredFields.filter((field) => field.sectionKey === "styling")
   const routineFields = structuredFields.filter((field) => field.sectionKey === "routine")
-  const goalsFields = structuredFields.filter((field) => field.sectionKey === "goals")
-  const goalsField = goalsFields[0] ?? null
+  const habitsRows = useMemo(
+    () => profileHabitsRows(hairProfile, refinementAnswers),
+    [hairProfile, refinementAnswers],
+  )
   const retainedPersonalPlanProducts = useMemo(
     () =>
       portfolioPresentation?.schemaVersion === 3 ? portfolioPresentation.retainedOwnedProducts : [],
@@ -758,10 +899,10 @@ export default function ProfilePage() {
     [productUsage, retainedPersonalPlanProducts],
   )
 
-  const quizFilled = quizFields.filter((field) => hasProfileFieldValue(field.value))
+  const quizFilled = quizAnswerFields.filter((field) => hasProfileFieldValue(field.value))
   const stylingFilled = stylingFields.filter((field) => hasProfileFieldValue(field.value))
   const routineFilled = routineFields.filter((field) => hasProfileFieldValue(field.value))
-  const goalsFilled = goalsFields.filter((field) => hasProfileFieldValue(field.value))
+  const habitsFilled = habitsRows.filter((row) => hasProfileFieldValue(row.value))
   const selectedProductCategories = productRows.map((row) => row.categoryLabel)
   const incompleteProductRows = productRows.filter((row) => row.needsUserDetails)
   const planProductRows = hasPersonalPlan ? selectPlanProductRows(routineProducts) : null
@@ -769,7 +910,7 @@ export default function ProfilePage() {
 
   const quizStatus = profileLoading
     ? "Wird geladen"
-    : getCompletionLabel(quizFilled.length, quizFields.length)
+    : getCompletionLabel(quizFilled.length, quizAnswerFields.length)
   const productsAwaitingRefinement = hasPersonalPlan && refinementLoading
   const productsStatus =
     productsLoading || productsAwaitingRefinement
@@ -785,9 +926,11 @@ export default function ProfilePage() {
     profileLoading || refinementLoading
       ? "Wird geladen"
       : getCompletionLabel(routineFilled.length, routineFields.length)
-  const goalsStatus = profileLoading
-    ? "Wird geladen"
-    : getCompletionLabel(goalsFilled.length, goalsFields.length)
+  const habitsStatus =
+    profileLoading || refinementLoading
+      ? "Wird geladen"
+      : getCompletionLabel(habitsFilled.length, habitsRows.length)
+  const toolsStatus = refinementLoading ? "Wird geladen" : profileToolsStatusLabel(refinementTools)
   // T15 fix round 1 (F5): free tier never reaches `/api/memory` (subscription-gated, not
   // freemium-admitted), so `memoryEnabled` never reflects a real setting for them — the
   // status must say so honestly instead of defaulting to "Aktiv".
@@ -899,7 +1042,7 @@ export default function ProfilePage() {
         }
         return
       case "profile-edit-goals":
-        goToSectionStep("goals", "/profile/edit/goals")
+        goToSectionStep("quiz", "/profile/edit/goals")
         return
       default: {
         const exhaustive: never = target
@@ -1135,7 +1278,7 @@ export default function ProfilePage() {
                 </div>
               ) : null}
 
-              {profileLoading ? (
+              {profileLoading || refinementStatusPending ? (
                 <SectionGridSkeleton count={6} className="md:grid-cols-2 xl:grid-cols-3" />
               ) : quizEditing ? (
                 <HaarCheckEditor
@@ -1169,16 +1312,39 @@ export default function ProfilePage() {
                     />
                   ) : null}
 
-                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  <div
+                    className={
+                      toolsApplicable
+                        ? "grid grid-cols-2 gap-2.5 md:grid-cols-3 md:gap-4 xl:grid-cols-4"
+                        : "grid gap-4 md:grid-cols-2 xl:grid-cols-3"
+                    }
+                  >
                     {quizFields.map((field) => {
+                      if (field.key === "goals") {
+                        return (
+                          <ProfileGoalsRow
+                            key={field.key}
+                            field={field}
+                            compact={toolsApplicable}
+                            onEdit={() => openTarget("quiz", field.editTarget, field.key)}
+                          />
+                        )
+                      }
                       const isMissing = field.value == null
                       return (
                         <ProfileFieldCard
                           key={field.key}
                           field={field}
+                          compact={toolsApplicable}
                           onClick={() => openTarget("quiz", field.editTarget, field.key)}
                           tone={isMissing ? "attention" : "default"}
-                          className={isMissing ? "md:col-span-2 xl:col-span-3" : undefined}
+                          className={
+                            isMissing
+                              ? toolsApplicable
+                                ? "col-span-full"
+                                : "md:col-span-2 xl:col-span-3"
+                              : undefined
+                          }
                         >
                           {isMissing ? (
                             <ProfileFieldValue
@@ -1423,195 +1589,277 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
 
-          <Card
-            id="profile-section-styling"
-            className="scroll-mt-24 overflow-hidden border-primary/20 transition-colors"
-          >
-            <CardHeader className="pb-4">
-              <SectionHeader
-                title={SECTION_META_BY_KEY.styling.title}
-                description={
-                  hasPersonalPlan
-                    ? SECTION_META_BY_KEY.styling.description
-                    : (SECTION_META_BY_KEY.styling.descriptionWithoutPlan ?? "")
-                }
-                status={stylingStatus}
-                isOpen
-                controls={
-                  hasPersonalPlan ? (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-auto"
-                      onClick={() => goToSectionStep("styling", refineHref("habits"))}
-                    >
-                      Styling bearbeiten
-                    </Button>
-                  ) : undefined
-                }
-              />
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {profileLoading || refinementLoading ? (
-                <SectionGridSkeleton count={3} className="md:grid-cols-2 xl:grid-cols-3" />
-              ) : (
-                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                  {stylingFields.map((field) => {
-                    const isMissing = field.value == null
-                    return (
-                      <ProfileFieldCard
-                        key={field.key}
-                        field={field}
-                        onClick={
-                          hasPersonalPlan
-                            ? () => openTarget("styling", field.editTarget)
-                            : undefined
-                        }
-                        tone={isMissing && hasPersonalPlan ? "attention" : "default"}
-                        className={
-                          isMissing && hasPersonalPlan ? "md:col-span-2 xl:col-span-3" : undefined
-                        }
-                      >
-                        {isMissing ? (
-                          <ProfileFieldValue
-                            value={null}
-                            emptyLabel={
-                              hasPersonalPlan ? "Noch offen — tippen zum Ergänzen" : "Noch offen"
-                            }
-                          />
-                        ) : undefined}
-                      </ProfileFieldCard>
-                    )
-                  })}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card
-            id="profile-section-routine"
-            className="scroll-mt-24 overflow-hidden border-primary/20 transition-colors"
-          >
-            <CardHeader className="pb-4">
-              <SectionHeader
-                title={SECTION_META_BY_KEY.routine.title}
-                description={
-                  hasPersonalPlan
-                    ? SECTION_META_BY_KEY.routine.description
-                    : (SECTION_META_BY_KEY.routine.descriptionWithoutPlan ?? "")
-                }
-                status={routineStatus}
-                isOpen
-                controls={
-                  hasPersonalPlan ? (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-auto"
-                      onClick={() => goToSectionStep("routine", refineHref("habits"))}
-                    >
-                      Alltag bearbeiten
-                    </Button>
-                  ) : undefined
-                }
-              />
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {profileLoading || refinementLoading ? (
-                <SectionGridSkeleton count={5} className="md:grid-cols-2 xl:grid-cols-3" />
-              ) : (
-                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                  {routineFields.map((field) => {
-                    const isMissing = field.value == null
-                    return (
-                      <ProfileFieldCard
-                        key={field.key}
-                        field={field}
-                        onClick={
-                          hasPersonalPlan
-                            ? () => openTarget("routine", field.editTarget)
-                            : undefined
-                        }
-                        tone={isMissing && hasPersonalPlan ? "attention" : "default"}
-                        className={
-                          isMissing && hasPersonalPlan ? "md:col-span-2 xl:col-span-3" : undefined
-                        }
-                      >
-                        {isMissing ? (
-                          <ProfileFieldValue
-                            value={null}
-                            emptyLabel={
-                              hasPersonalPlan ? "Noch offen — tippen zum Ergänzen" : "Noch offen"
-                            }
-                          />
-                        ) : undefined}
-                      </ProfileFieldCard>
-                    )
-                  })}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card
-            id="profile-section-goals"
-            className="scroll-mt-24 overflow-hidden border-primary/20 transition-colors"
-          >
-            <CardHeader className="pb-4">
-              <SectionHeader
-                title={SECTION_META_BY_KEY.goals.title}
-                description={SECTION_META_BY_KEY.goals.description}
-                status={goalsStatus}
-                isOpen
-                controls={
-                  <>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-auto"
-                      onClick={() => goToSectionStep("goals", "/profile/edit/goals")}
-                    >
-                      Ziele bearbeiten
-                    </Button>
-                  </>
-                }
-              />
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {profileLoading ? (
-                <div className="rounded-xl border border-border/70 bg-card/70 p-4">
-                  <Skeleton className="h-4 w-32" />
-                  <Skeleton className="mt-2 h-3 w-56" />
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <Skeleton key={index} className="h-8 w-28 rounded-full" />
-                    ))}
-                  </div>
-                </div>
-              ) : goalsField ? (
-                <button
-                  type="button"
-                  onClick={() => openTarget("goals", goalsField.editTarget)}
-                  className="flex w-full flex-wrap gap-2 rounded-[22px] border border-primary/10 bg-[hsl(var(--background))]/70 p-5 text-left transition-colors hover:border-primary/30 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  aria-label={`${goalsField.label} bearbeiten`}
-                >
-                  {Array.isArray(goalsField.value) && goalsField.value.length > 0 ? (
-                    goalsField.value.map((goal) => (
-                      <Badge
-                        key={goal}
-                        variant="outline"
-                        className="rounded-full border-primary/20 bg-background px-4 py-1.5 text-sm font-semibold text-[var(--text-heading)]"
-                      >
-                        {goal}
-                      </Badge>
-                    ))
+          {refinementStatusPending ? (
+            <Card className="scroll-mt-24 overflow-hidden border-primary/20" aria-busy="true">
+              <CardContent className="pt-6">
+                <SectionGridSkeleton count={2} className="md:grid-cols-2" />
+              </CardContent>
+            </Card>
+          ) : toolsApplicable ? (
+            <>
+              <Card
+                id="profile-section-tools"
+                className="scroll-mt-24 overflow-hidden border-primary/20 transition-colors"
+              >
+                <CardHeader className="pb-4">
+                  <SectionHeader
+                    title={SECTION_META_BY_KEY.tools.title}
+                    description={SECTION_META_BY_KEY.tools.description}
+                    status={toolsStatus}
+                    isOpen
+                    controls={
+                      hasPersonalPlan ? (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-auto"
+                          onClick={() => goToSectionStep("tools", refineHref("tools"))}
+                        >
+                          Deine Tools bearbeiten
+                        </Button>
+                      ) : undefined
+                    }
+                  />
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {refinementLoading ? (
+                    <SectionGridSkeleton count={3} className="grid-cols-2 md:grid-cols-3" />
+                  ) : refinementTools !== null && refinementTools.groups.length > 0 ? (
+                    <div className="grid grid-cols-2 gap-2.5 md:grid-cols-3 md:gap-4 xl:grid-cols-5">
+                      {refinementTools.groups.map((group) => (
+                        <ProfileToolGroupCard key={group.family} group={group} />
+                      ))}
+                    </div>
                   ) : (
-                    <span className="text-sm text-muted-foreground">Noch keine Ziele gewählt</span>
+                    <ProfileFieldCard
+                      field={{
+                        key: "owned_tools",
+                        label: SECTION_META_BY_KEY.tools.title,
+                        value: refinementTools === null ? null : PROFILE_TOOLS_NONE_LABEL,
+                        editTarget: { kind: "refine", module: "tools" },
+                      }}
+                      compact
+                      onClick={
+                        hasPersonalPlan
+                          ? () => openTarget("tools", { kind: "refine", module: "tools" })
+                          : undefined
+                      }
+                      tone={refinementTools === null && hasPersonalPlan ? "attention" : "default"}
+                    >
+                      <ProfileFieldValue
+                        value={refinementTools === null ? null : PROFILE_TOOLS_NONE_LABEL}
+                        emptyLabel={
+                          hasPersonalPlan ? "Noch offen — tippen zum Ergänzen" : "Noch offen"
+                        }
+                      />
+                    </ProfileFieldCard>
                   )}
-                </button>
-              ) : null}
-            </CardContent>
-          </Card>
+                </CardContent>
+              </Card>
+
+              <Card
+                id="profile-section-habits"
+                className="scroll-mt-24 overflow-hidden border-primary/20 transition-colors"
+              >
+                <CardHeader className="pb-4">
+                  <SectionHeader
+                    title={SECTION_META_BY_KEY.habits.title}
+                    description={SECTION_META_BY_KEY.habits.description}
+                    status={habitsStatus}
+                    isOpen
+                    controls={
+                      hasPersonalPlan ? (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-auto"
+                          onClick={() => goToSectionStep("habits", refineHref("habits"))}
+                        >
+                          Gewohnheiten bearbeiten
+                        </Button>
+                      ) : undefined
+                    }
+                  />
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {profileLoading || refinementLoading ? (
+                    <SectionGridSkeleton count={3} className="grid-cols-2 md:grid-cols-3" />
+                  ) : (
+                    <div className="grid grid-cols-2 gap-2.5 md:grid-cols-3 md:gap-4 xl:grid-cols-4">
+                      {habitsRows.map((row) => {
+                        const isMissing = row.value == null
+                        return (
+                          <ProfileFieldCard
+                            key={row.key}
+                            field={row}
+                            compact
+                            onClick={
+                              hasPersonalPlan
+                                ? () => openTarget("habits", row.editTarget)
+                                : undefined
+                            }
+                            tone={isMissing && hasPersonalPlan ? "attention" : "default"}
+                            className={isMissing && hasPersonalPlan ? "col-span-full" : undefined}
+                          >
+                            {isMissing ? (
+                              <ProfileFieldValue
+                                value={null}
+                                emptyLabel={
+                                  hasPersonalPlan
+                                    ? "Noch offen — tippen zum Ergänzen"
+                                    : "Noch offen"
+                                }
+                              />
+                            ) : undefined}
+                          </ProfileFieldCard>
+                        )
+                      })}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </>
+          ) : (
+            <>
+              <Card
+                id="profile-section-styling"
+                className="scroll-mt-24 overflow-hidden border-primary/20 transition-colors"
+              >
+                <CardHeader className="pb-4">
+                  <SectionHeader
+                    title={SECTION_META_BY_KEY.styling.title}
+                    description={
+                      hasPersonalPlan
+                        ? SECTION_META_BY_KEY.styling.description
+                        : (SECTION_META_BY_KEY.styling.descriptionWithoutPlan ?? "")
+                    }
+                    status={stylingStatus}
+                    isOpen
+                    controls={
+                      hasPersonalPlan ? (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-auto"
+                          onClick={() => goToSectionStep("styling", refineHref("habits"))}
+                        >
+                          Styling bearbeiten
+                        </Button>
+                      ) : undefined
+                    }
+                  />
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {profileLoading || refinementLoading ? (
+                    <SectionGridSkeleton count={3} className="md:grid-cols-2 xl:grid-cols-3" />
+                  ) : (
+                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                      {stylingFields.map((field) => {
+                        const isMissing = field.value == null
+                        return (
+                          <ProfileFieldCard
+                            key={field.key}
+                            field={field}
+                            onClick={
+                              hasPersonalPlan
+                                ? () => openTarget("styling", field.editTarget)
+                                : undefined
+                            }
+                            tone={isMissing && hasPersonalPlan ? "attention" : "default"}
+                            className={
+                              isMissing && hasPersonalPlan
+                                ? "md:col-span-2 xl:col-span-3"
+                                : undefined
+                            }
+                          >
+                            {isMissing ? (
+                              <ProfileFieldValue
+                                value={null}
+                                emptyLabel={
+                                  hasPersonalPlan
+                                    ? "Noch offen — tippen zum Ergänzen"
+                                    : "Noch offen"
+                                }
+                              />
+                            ) : undefined}
+                          </ProfileFieldCard>
+                        )
+                      })}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              <Card
+                id="profile-section-routine"
+                className="scroll-mt-24 overflow-hidden border-primary/20 transition-colors"
+              >
+                <CardHeader className="pb-4">
+                  <SectionHeader
+                    title={SECTION_META_BY_KEY.routine.title}
+                    description={
+                      hasPersonalPlan
+                        ? SECTION_META_BY_KEY.routine.description
+                        : (SECTION_META_BY_KEY.routine.descriptionWithoutPlan ?? "")
+                    }
+                    status={routineStatus}
+                    isOpen
+                    controls={
+                      hasPersonalPlan ? (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-auto"
+                          onClick={() => goToSectionStep("routine", refineHref("habits"))}
+                        >
+                          Alltag bearbeiten
+                        </Button>
+                      ) : undefined
+                    }
+                  />
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {profileLoading || refinementLoading ? (
+                    <SectionGridSkeleton count={5} className="md:grid-cols-2 xl:grid-cols-3" />
+                  ) : (
+                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                      {routineFields.map((field) => {
+                        const isMissing = field.value == null
+                        return (
+                          <ProfileFieldCard
+                            key={field.key}
+                            field={field}
+                            onClick={
+                              hasPersonalPlan
+                                ? () => openTarget("routine", field.editTarget)
+                                : undefined
+                            }
+                            tone={isMissing && hasPersonalPlan ? "attention" : "default"}
+                            className={
+                              isMissing && hasPersonalPlan
+                                ? "md:col-span-2 xl:col-span-3"
+                                : undefined
+                            }
+                          >
+                            {isMissing ? (
+                              <ProfileFieldValue
+                                value={null}
+                                emptyLabel={
+                                  hasPersonalPlan
+                                    ? "Noch offen — tippen zum Ergänzen"
+                                    : "Noch offen"
+                                }
+                              />
+                            ) : undefined}
+                          </ProfileFieldCard>
+                        )
+                      })}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </>
+          )}
 
           <div className="mt-12 border-t border-border/60 pt-8">
             <h2 className="font-[family-name:var(--font-display)] text-3xl font-medium leading-none text-[var(--text-heading)]">

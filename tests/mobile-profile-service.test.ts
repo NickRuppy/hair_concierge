@@ -180,7 +180,7 @@ test("refined owner preserves explicit detailed answers, refreshes assumptions a
     createdAt: "2026-01-01T00:00:00Z",
   })
   if (computed.status !== "ready") throw new Error("fixture")
-  const triggerContext = deriveStage2TriggerContext(computed.snapshot)
+  const triggerContext = deriveStage2TriggerContext(computed.snapshot, { toolsEnabled: false })
   const resolved = resolveAssumedAnswers({
     triggerContext,
     answers: {
@@ -320,7 +320,7 @@ test("complete habits preserve reported heat when only a product question is ass
     createdAt: "2026-01-01T00:00:00Z",
   })
   if (computed.status !== "ready") throw new Error("fixture")
-  const triggerContext = deriveStage2TriggerContext(computed.snapshot)
+  const triggerContext = deriveStage2TriggerContext(computed.snapshot, { toolsEnabled: false })
   const resolution = resolveAssumedAnswers({
     triggerContext,
     answers: {

@@ -6,6 +6,10 @@ import { Stage2PreviewClient } from "@/app/labs/personal-plan-stage-2/preview-cl
 import { PlanStartCustomerJourney } from "@/components/personal-plan-start/plan-start-flow"
 import type { PlanStartReadyViewModel } from "@/components/personal-plan-start/plan-start-flow"
 import { Stage3ProductsFlow } from "@/components/personal-plan-products/stage3-products-flow"
+import {
+  TOOL_CHECKPOINT_ADD_TOOLS_HREF,
+  ToolCheckpoint,
+} from "@/components/personal-plan-refinement/tool-checkpoint"
 import { PersonalPlanNavigationView } from "@/components/layout/personal-plan-navigation"
 import { HairProfileSection } from "@/components/profile/hair-profile-section"
 import { RoutinePage } from "@/components/routine/personal-plan"
@@ -15,10 +19,18 @@ import { createFixtureStage3Gateway } from "@/lib/personal-plan/products/fixture
 import type { Stage3EntryContext } from "@/lib/personal-plan/products/contracts"
 import { developmentStage3Analytics } from "@/lib/personal-plan/products/stage3-development-analytics"
 import { buildHairProfileSection } from "@/lib/personal-plan/refinement/hair-profile-section"
+import type { Stage2RefinementSession } from "@/lib/personal-plan/refinement/session"
+import type { Stage2Module } from "@/lib/personal-plan/refinement/types"
+import {
+  buildToolCheckpointGroups,
+  toolCheckpointInventory,
+} from "@/lib/personal-plan/tools/checkpoint"
+import type { ToolRoutineSection } from "@/lib/personal-plan/tools/read-view"
 
 import {
   DEMO_PERSONAL_PLAN_ID,
   DEMO_REFINED_VERSION_ID,
+  JOURNEY_TOTAL_STEPS,
   PORTFOLIO_PRESENTATION_RESOLVED,
   PORTFOLIO_PRESENTATION_WITH_DEFERRAL,
   ROUTINE_VIEW_RESOLVED,
@@ -29,9 +41,11 @@ import {
 /**
  * The fork-free Feinschliff journey, end to end, on fixtures.
  *
- * Idealplan → (fixture accept) → Routine → Modul 1 (Produkte) → Stage-3
- * Produkt-Check → Routine (Toast + Modul-2-Banner) → Modul 2 (Gewohnheiten) →
- * Routine (Toast, kein Banner) → Haarprofil 4/4.
+ * Tools rollout ON (Hair Tools port, Task 10): Idealplan → (fixture accept) →
+ * Routine → Modul „Deine Produkte" → Stage-3 Produkt-Check → Routine (Toast +
+ * Tools-Banner) → Modul „Deine Tools" → Tool-Checkpoint „Das hast du schon" →
+ * Routine (kein Toast, Gewohnheiten-Banner) → Modul „Deine Gewohnheiten" →
+ * Routine (Toast, kein Banner) → Haarprofil 5/5.
  *
  * Every screen is the REAL production component; this file only owns the state
  * machine and the fixture wiring. Dev-only (`page.tsx` gates it).
@@ -42,11 +56,39 @@ type Step =
   | { name: "routine"; phase: RoutinePhase }
   | { name: "module-products" }
   | { name: "stage3" }
+  | { name: "module-tools" }
+  | { name: "checkpoint"; session: Stage2RefinementSession }
   | { name: "module-habits" }
   | { name: "hair-profile"; from: RoutinePhase }
 
-/** Which of the three Routine states the mockup defines is on screen. */
-type RoutinePhase = "after-accept" | "after-products" | "after-habits"
+export type FeinschliffJourneyEntryStep = "idealplan" | "module-tools"
+
+/** Which of the four Routine states the journey passes through is on screen. */
+type RoutinePhase = "after-accept" | "after-products" | "after-tools" | "after-habits"
+
+/** The module the Routine banner offers in each phase, and the meter it shows („x von 5"). */
+const BANNER_BY_PHASE: Record<
+  RoutinePhase,
+  { module: Stage2Module; completedSteps: number } | null
+> = {
+  "after-accept": { module: "products", completedSteps: 2 },
+  "after-products": { module: "tools", completedSteps: 3 },
+  "after-tools": { module: "habits", completedSteps: 4 },
+  "after-habits": null,
+}
+
+const MODULE_STEP: Record<Stage2Module, Step> = {
+  products: { name: "module-products" },
+  tools: { name: "module-tools" },
+  habits: { name: "module-habits" },
+}
+
+const NO_BANNER_DISMISSED: Record<RoutinePhase, boolean> = {
+  "after-accept": false,
+  "after-products": false,
+  "after-tools": false,
+  "after-habits": false,
+}
 
 const ACCEPT_ENDPOINT = "/api/personal-plan/accept-ideal-plan"
 
@@ -67,16 +109,25 @@ const INITIALLY_UNVISITED: readonly PersonalPlanNavSurface[] = ["chat", "applica
 export function FeinschliffJourneyClient({
   plan,
   stage3EntryContext,
+  routineToolSection,
+  initialStep = "idealplan",
 }: {
   plan: PlanStartReadyViewModel
   stage3EntryContext: Stage3EntryContext | null
+  /** The read-time `Deine Tools` the Routine shows once the tools module is done (fixture). */
+  routineToolSection: ToolRoutineSection | null
+  /** `?step=module-tools` jumps straight to the tools module (review shortcut, jsdom test). */
+  initialStep?: FeinschliffJourneyEntryStep
 }) {
-  const [step, setStep] = useState<Step>({ name: "idealplan" })
-  const [bannerDismissed, setBannerDismissed] = useState<Record<RoutinePhase, boolean>>({
-    "after-accept": false,
-    "after-products": false,
-    "after-habits": false,
-  })
+  const [step, setStep] = useState<Step>(() =>
+    initialStep === "module-tools" ? { name: "module-tools" } : { name: "idealplan" },
+  )
+  const [bannerDismissed, setBannerDismissed] =
+    useState<Record<RoutinePhase, boolean>>(NO_BANNER_DISMISSED)
+  // The draft the tools module completed with seeds the Gewohnheiten module, so its questions
+  // follow the tools the reviewer just named (rollout on: no thing-questions, Diffusor only with
+  // a Diffusor).
+  const [toolsDoneSession, setToolsDoneSession] = useState<Stage2RefinementSession | null>(null)
   const [toastVisible, setToastVisible] = useState(false)
   const [visitedSurfaces, setVisitedSurfaces] = useState<readonly PersonalPlanNavSurface[]>([])
   const [navNote, setNavNote] = useState<string | null>(null)
@@ -132,11 +183,8 @@ export function FeinschliffJourneyClient({
   }, [])
 
   const restart = useCallback(() => {
-    setBannerDismissed({
-      "after-accept": false,
-      "after-products": false,
-      "after-habits": false,
-    })
+    setBannerDismissed(NO_BANNER_DISMISSED)
+    setToolsDoneSession(null)
     setToastVisible(false)
     setVisitedSurfaces([])
     setNavNote(null)
@@ -164,6 +212,10 @@ export function FeinschliffJourneyClient({
     }
     if (href.startsWith("/plan-start?refine=habits")) {
       setStep({ name: "module-habits" })
+      return
+    }
+    if (href.startsWith("/plan-start?refine=tools")) {
+      setStep({ name: "module-tools" })
       return
     }
     if (href.startsWith("/plan-start?refine=")) {
@@ -227,7 +279,7 @@ export function FeinschliffJourneyClient({
         <Stage2PreviewClient
           scenario="module-products"
           autoHandoff
-          moduleProgress={{ completedSteps: 2, totalSteps: 4 }}
+          moduleProgress={{ completedSteps: 2, totalSteps: JOURNEY_TOTAL_STEPS }}
           onHandoff={() => setStep({ name: "stage3" })}
           onModuleComplete={() => setStep({ name: "stage3" })}
         />
@@ -264,13 +316,46 @@ export function FeinschliffJourneyClient({
     )
   }
 
+  if (step.name === "module-tools") {
+    const openCheckpoint = (session: Stage2RefinementSession) => {
+      setToolsDoneSession(session)
+      setStep({ name: "checkpoint", session })
+    }
+    return (
+      <DemoShell onRestart={restart}>
+        <Stage2PreviewClient
+          scenario="module-tools"
+          autoHandoff
+          moduleProgress={{ completedSteps: 3, totalSteps: JOURNEY_TOTAL_STEPS }}
+          onHandoff={(payload) => openCheckpoint(payload.session)}
+          onModuleComplete={(payload) => openCheckpoint(payload.session)}
+        />
+      </DemoShell>
+    )
+  }
+
+  if (step.name === "checkpoint") {
+    // The production host renders exactly this (`planStartModuleCompletionEffect`): the CTA is a
+    // plain `/routine` (tools recompute nothing → no toast), the secondary re-enters the tools.
+    return (
+      <DemoShell onRestart={restart}>
+        <ToolCheckpoint
+          groups={buildToolCheckpointGroups(toolCheckpointInventory(step.session))}
+          onContinue={() => openRoutine("after-tools", false)}
+          onAddTools={() => followDemoLink(TOOL_CHECKPOINT_ADD_TOOLS_HREF, "after-tools")}
+        />
+      </DemoShell>
+    )
+  }
+
   if (step.name === "module-habits") {
     return (
       <DemoShell onRestart={restart}>
         <Stage2PreviewClient
           scenario="module-habits"
+          seedSession={toolsDoneSession ?? undefined}
           autoHandoff
-          moduleProgress={{ completedSteps: 3, totalSteps: 4 }}
+          moduleProgress={{ completedSteps: 4, totalSteps: JOURNEY_TOTAL_STEPS }}
           onHandoff={() => openRoutine("after-habits", true)}
           onModuleComplete={() => openRoutine("after-habits", true)}
         />
@@ -305,8 +390,9 @@ export function FeinschliffJourneyClient({
 
   const { phase } = step
   const resolved = phase !== "after-accept"
-  const bannerModule =
-    phase === "after-accept" ? "products" : phase === "after-products" ? "habits" : null
+  const banner = BANNER_BY_PHASE[phase]
+  const toolsDone = phase === "after-tools" || phase === "after-habits"
+  const routineView = resolved ? ROUTINE_VIEW_RESOLVED : ROUTINE_VIEW_WITH_DEFERRED_MASK
 
   return (
     <DemoShell onRestart={restart} liftChrome>
@@ -316,27 +402,23 @@ export function FeinschliffJourneyClient({
         note={navNote}
       />
       <RoutinePage
-        view={resolved ? ROUTINE_VIEW_RESOLVED : ROUTINE_VIEW_WITH_DEFERRED_MASK}
+        view={
+          toolsDone && routineToolSection
+            ? { ...routineView, toolSection: routineToolSection }
+            : routineView
+        }
         portfolioPresentation={
           resolved ? PORTFOLIO_PRESENTATION_RESOLVED : PORTFOLIO_PRESENTATION_WITH_DEFERRAL
         }
         refinementBanner={
-          bannerModule && !bannerDismissed[phase]
-            ? {
-                module: bannerModule,
-                completedSteps: bannerModule === "products" ? 2 : 3,
-                totalSteps: 4,
-              }
-            : null
+          banner && !bannerDismissed[phase] ? { ...banner, totalSteps: JOURNEY_TOTAL_STEPS } : null
         }
         onDismissRefinementBanner={() =>
           setBannerDismissed((current) => ({ ...current, [phase]: true }))
         }
-        onRefineFromBanner={() =>
-          setStep(
-            bannerModule === "products" ? { name: "module-products" } : { name: "module-habits" },
-          )
-        }
+        onRefineFromBanner={() => {
+          if (banner) setStep(MODULE_STEP[banner.module])
+        }}
         showPlanUpdatedToast={toastVisible}
         onDismissPlanUpdatedToast={() => setToastVisible(false)}
       />
@@ -355,7 +437,7 @@ export function FeinschliffJourneyClient({
   )
 }
 
-const STATUS_ALL_DONE = refinementStatus("complete", "complete")
+const STATUS_ALL_DONE = refinementStatus("complete", "complete", "complete")
 
 /**
  * The REAL authenticated shell nav (`PersonalPlanNavigationView`) — the "now

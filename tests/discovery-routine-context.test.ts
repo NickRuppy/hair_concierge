@@ -104,8 +104,25 @@ test("heat_protectant.inclusion.direct_heat: a straightener makes heat protectio
   assert.deepEqual(ruleIds(entry), ["heat_protectant.inclusion.direct_heat"])
 })
 
-test("heat_protectant.inclusion.airflow_shaping: a diffuser makes it Optional", () => {
+test("heat_protectant.inclusion.ordinary_airflow: a Diffusor is plain blow-drying — not needed, a saved value never upgrades it", () => {
   const entry = decision(plan(buildDiscoveryRoutineContext([], DIFFUSER)), "heat_protectant")
+  assert.equal(entry.needTier, "not_needed")
+  assert.deepEqual(ruleIds(entry), ["heat_protectant.inclusion.ordinary_airflow"])
+  const plainDiffuser = heat({
+    dryingRoutes: ["diffuser_or_airflow_shaping"],
+    heatEvents: { "heat:diffuser_airflow_shaping": { frequency: "weekly_3_4x" } },
+  })
+  const bare = decision(plan(buildDiscoveryRoutineContext([], plainDiffuser)), "heat_protectant")
+  assert.equal(bare.needTier, "not_needed")
+})
+
+test("heat_protectant.inclusion.airflow_shaping: a Warmluftbürste still makes it Optional", () => {
+  const dryerBrush = heat({
+    dryingRoutes: ["air_dry"],
+    additionalHeatTools: ["dryer_brush"],
+    heatEvents: { "heat:dryer_brush": { frequency: "weekly_2x", protectionConsistency: "no" } },
+  })
+  const entry = decision(plan(buildDiscoveryRoutineContext([], dryerBrush)), "heat_protectant")
   assert.equal(entry.needTier, "optional")
   assert.deepEqual(ruleIds(entry), ["heat_protectant.inclusion.airflow_shaping"])
 })

@@ -790,7 +790,6 @@ test("returning to edit: the flow is prefilled from her saved heat answers", () 
     "drying",
     "tools",
     "frequency:diffuser_airflow_shaping",
-    "protection:diffuser_airflow_shaping",
     "summary",
   ])
 })

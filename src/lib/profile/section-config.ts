@@ -16,17 +16,31 @@ import {
   TOWEL_MATERIAL_LABELS,
   TOWEL_TECHNIQUE_LABELS,
 } from "@/lib/vocabulary"
+import { getSelectedStage2HeatEventSources } from "@/lib/personal-plan/refinement/heat-events"
+import {
+  nightWearFromEarlierNightAnswer,
+  nightWearFromNightProtection,
+} from "@/lib/personal-plan/tools/facts"
 import type {
   AdditionalHeatTool,
   DryingRoute,
+  NightWear,
   PersonalPlanRefinementAnswersV1,
   Stage2Module,
 } from "@/lib/personal-plan/refinement/types"
+import type { ProfileToolsBlock } from "@/lib/personal-plan/tools/profile-block"
 
 const PLAN_DRYING_ROUTE_LABELS: Record<DryingRoute, string> = {
   air_dry: "Lufttrocknen",
   ordinary_blow_dry: "Gewöhnlich föhnen",
-  diffuser_or_airflow_shaping: "Diffusor oder formender Luftstrom",
+  diffuser_or_airflow_shaping: "Mit Diffusor",
+}
+
+/** Rev. 6 — the Gewohnheiten „Nachts" row (same labels as the question). */
+export const PLAN_NIGHT_WEAR_LABELS: Record<NightWear, string> = {
+  open: "Offen",
+  loose_tied: "Locker zusammengebunden",
+  pineapple: "Pineapple",
 }
 
 const PLAN_HEAT_TOOL_LABELS: Record<AdditionalHeatTool, string> = {
@@ -42,7 +56,8 @@ export type ProfileJourneySectionKey =
   | "products"
   | "styling"
   | "routine"
-  | "goals"
+  | "habits"
+  | "tools"
   | "memory"
 export type ProfileFieldValue = string | string[] | null
 
@@ -60,6 +75,7 @@ export type ProfileFieldConfig = {
   getValue: (
     profile: HairProfile | null,
     plan?: PersonalPlanRefinementAnswersV1 | null,
+    tools?: ProfileToolsBlock | null,
   ) => ProfileFieldValue
 }
 
@@ -211,9 +227,14 @@ export const PROFILE_SECTION_META: ProfileSectionMeta[] = [
     descriptionWithoutPlan: "Handtuch, Trocknen, Bürste/Kamm und Nachtschutz.",
   },
   {
-    key: "goals",
-    title: "Ziele",
-    description: "Deine ausgewählten Haarziele aus dem Haar-Check.",
+    key: "habits",
+    title: "Gewohnheiten",
+    description: "Wie du trocknest und stylst, aus deinem Feinschliff.",
+  },
+  {
+    key: "tools",
+    title: "Deine Tools",
+    description: "Was du schon hast, aus deinem Feinschliff.",
   },
   {
     key: "memory",
@@ -222,7 +243,7 @@ export const PROFILE_SECTION_META: ProfileSectionMeta[] = [
   },
 ]
 
-export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
+const BASE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "hair_texture",
     label: "Haarstruktur",
@@ -303,6 +324,15 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     getValue: (profile) => problemLabels(profile),
   },
   {
+    // The Ziele card is gone; the goals are the closing row of the Haar-Check grid and keep their
+    // own editor as a row-level link.
+    key: "goals",
+    label: "Deine Haarziele",
+    sectionKey: "quiz",
+    editTarget: { kind: "profile-edit-goals" },
+    getValue: (profile) => goalLabels(profile),
+  },
+  {
     key: "styling_tools",
     label: "Hitzetools",
     sectionKey: "styling",
@@ -326,7 +356,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   },
   {
     key: "heat_styling",
-    label: "Styling-Frequenz",
+    label: "Hitze-Häufigkeit",
     sectionKey: "styling",
     editTarget: { kind: "refine", module: "habits" },
     getValue: (profile) => optionLabel(profile?.heat_styling, HEAT_STYLING_OPTIONS),
@@ -348,14 +378,14 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   },
   {
     key: "towel_technique",
-    label: "Trocknungstechnik",
+    label: "Abtrocknen",
     sectionKey: "routine",
     editTarget: { kind: "refine", module: "habits" },
     getValue: (profile, plan) => resolveTowelSource(profile, plan).technique,
   },
   {
     key: "drying_method",
-    label: "Trocknungsmethode",
+    label: "Trocknen",
     sectionKey: "routine",
     editTarget: { kind: "refine", module: "habits" },
     getValue: (profile, plan) => {
@@ -409,11 +439,145 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
       return null
     },
   },
+]
+
+/**
+ * Gewohnheiten (tools applicable): the four rows of the old Styling/Alltag cards that Hair Tools
+ * leaves to the habits module. They read exactly what those rows read; only the section differs.
+ *
+ * Contract: these four `key`s therefore appear TWICE in `PROFILE_FIELD_CONFIG` — once in their old
+ * section (`BASE_FIELD_CONFIG`, shown when tools do not apply) and once under `habits` (shown when
+ * they do). A row is identified by `(key, sectionKey)`, never by `key` alone: consumers select
+ * with `field.sectionKey === …` (the page) or read `profileHabitsRows`, and the section-config
+ * test pins the pair as unique.
+ */
+const HABITS_FIELD_KEYS = [
+  "towel_technique",
+  "drying_method",
+  "heat_styling",
+  "uses_heat_protection",
+] as const
+
+const HABITS_FIELD_CONFIG: ProfileFieldConfig[] = HABITS_FIELD_KEYS.map((key) => {
+  const base = BASE_FIELD_CONFIG.find((field) => field.key === key)
+  if (!base) throw new Error(`profile habits field ${key} has no base config`)
+  return { ...base, sectionKey: "habits" }
+})
+
+/**
+ * Deine Tools: one row. Its value is the list of owned-tool labels from the presentation API's
+ * `tools` block (`null` until the member has confirmed something); the page renders the photo
+ * chips from the same block.
+ */
+const TOOLS_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
-    key: "goals",
-    label: "Deine Haarziele",
-    sectionKey: "goals",
-    editTarget: { kind: "profile-edit-goals" },
-    getValue: (profile) => goalLabels(profile),
+    key: "owned_tools",
+    label: "Deine Tools",
+    sectionKey: "tools",
+    editTarget: { kind: "refine", module: "tools" },
+    getValue: (_profile, _plan, tools) => {
+      if (!tools) return null
+      const labels = tools.groups.flatMap((group) => group.items.map((item) => item.label))
+      return labels.length > 0 ? labels : PROFILE_TOOLS_NONE_LABEL
+    },
   },
 ]
+
+/** Deine Tools after an all-„Nichts davon" answer (Rev. 6, aligned with the other cards). */
+export const PROFILE_TOOLS_NONE_LABEL = "Keine Tools angegeben"
+
+/**
+ * The Deine Tools status badge: „Offen" before anything is confirmed, „Keine Tools" after an
+ * all-„Nichts davon" answer (never „0 Tools"), otherwise the count.
+ */
+export function profileToolsStatusLabel(tools: ProfileToolsBlock | null): string {
+  if (tools === null) return "Offen"
+  if (tools.count === 0) return "Keine Tools"
+  return `${tools.count} ${tools.count === 1 ? "Tool" : "Tools"}`
+}
+
+export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
+  ...BASE_FIELD_CONFIG,
+  ...HABITS_FIELD_CONFIG,
+  ...TOOLS_FIELD_CONFIG,
+]
+
+/**
+ * True only when the member's own answers say no heat source is used: the derived heat column
+ * reads „never", or the plan answered both the drying routes and the extra heat tools and
+ * selected no heat event. Not yet answered is not „no heat".
+ */
+function usesNoHeatSource(
+  profile: HairProfile | null,
+  plan?: PersonalPlanRefinementAnswersV1 | null,
+): boolean {
+  if (profile?.heat_styling === "never") return true
+  if (profile?.heat_styling || profile?.styling_tools?.length) return false
+  if (plan?.dryingRoutes !== undefined && plan.additionalHeatTools !== undefined) {
+    return getSelectedStage2HeatEventSources(plan).length === 0
+  }
+  return false
+}
+
+/**
+ * The „Nachts" row (Rev. 6): the night question's answer, or — for a Feinschliff finished before
+ * it existed — the earlier night answer carried over (`carryOverStage2NightAnswer`): its
+ * technique, else „Offen". Without a Feinschliff answer, a technique in the profile's own night
+ * column; otherwise still open.
+ */
+const NIGHT_WEAR_FIELD: ProfileFieldConfig = {
+  key: "night_wear",
+  label: "Nachts",
+  sectionKey: "habits",
+  editTarget: { kind: "refine", module: "habits" },
+  getValue: (profile, plan) => {
+    const wear =
+      plan?.nightWear ??
+      nightWearFromEarlierNightAnswer(plan?.nightProtection) ??
+      nightWearFromNightProtection(profile?.night_protection)
+    return wear ? PLAN_NIGHT_WEAR_LABELS[wear] : null
+  },
+}
+
+/** Hair that cannot be tied is never asked how it is worn at night, so it gets no row. */
+function hairCanBeTied(profile: HairProfile | null): boolean {
+  const length = profileDiagnostics(profile)?.hairLength
+  return length !== "very_short" && length !== "short"
+}
+
+export type ProfileHabitsRow = {
+  key: string
+  label: string
+  editTarget: ProfileEditTarget
+  value: ProfileFieldValue
+}
+
+/**
+ * The Gewohnheiten rows in display order (Abtrocknen → Trocknen → Hitze → Nachts). Without a heat
+ * source, Hitze-Häufigkeit and Hitzeschutz have nothing to say and collapse into the single row
+ * „Keine Hitze". „Nachts" closes the card, except for hair that cannot be tied.
+ */
+export function profileHabitsRows(
+  profile: HairProfile | null,
+  plan?: PersonalPlanRefinementAnswersV1 | null,
+): ProfileHabitsRow[] {
+  const toRow = (field: ProfileFieldConfig): ProfileHabitsRow => ({
+    key: field.key,
+    label: field.label,
+    editTarget: field.editTarget,
+    value: field.getValue(profile, plan),
+  })
+  const rows: ProfileHabitsRow[] = HABITS_FIELD_CONFIG.map(toRow)
+  const heatRows = usesNoHeatSource(profile, plan)
+    ? [
+        ...rows.filter((row) => row.key !== "heat_styling" && row.key !== "uses_heat_protection"),
+        {
+          key: "no_heat",
+          label: "Hitze",
+          editTarget: { kind: "refine", module: "habits" } as const,
+          value: "Keine Hitze",
+        },
+      ]
+    : rows
+  return hairCanBeTied(profile) ? [...heatRows, toRow(NIGHT_WEAR_FIELD)] : heatRows
+}
