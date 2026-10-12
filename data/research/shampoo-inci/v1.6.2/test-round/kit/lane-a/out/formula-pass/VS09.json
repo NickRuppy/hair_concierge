@@ -1,0 +1,157 @@
+{
+  "blindId": "VS09",
+  "inciFingerprintSha256": "4871d6edeb1c4a74bb8123dc09d22d76a8888bf42f570a16fd8b5f91ac931e73",
+  "phase": "formula-pass (blind; stage A packet only; no claims seen)",
+  "standard": "shampoo-classification-v1.6.2 (candidate)",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "Canonical list one entry per ingredient; no split synonyms; no markers. Normalized one-based positions (ID-2) = packet positions.",
+    "e3ProminenceCutoff": "Parfum @18 is the E3 marker. Prominent = positions 1-17."
+  },
+  "normalizedInci": ["1 Aqua", "2 Hydrogenated Starch Hydrolysate", "3 Sodium Laureth Sulfate", "4 Cocamidopropyl Hydroxysultaine", "5 Glycerin", "6 Sodium Chloride", "7 Coco-Glucoside", "8 Allantoin", "9 Bisabolol", "10 Zinc PCA", "11 Panthenol", "12 Hydrolyzed Keratin", "13 Camellia Sinensis Leaf Extract", "14 Guar Hydroxypropyltrimonium Chloride", "15 Citric Acid", "16 Glycol Distearate", "17 Cocamidopropyl Betaine", "18 Parfum", "19 Sodium Benzoate"],
+  "formulaFacts": {
+    "surfactants": [
+      {"inci": "Sodium Laureth Sulfate", "position": 3, "c3Class": "strong anionic, ether/sulfonate type", "role": "defining anionic (C4)"},
+      {"inci": "Cocamidopropyl Hydroxysultaine", "position": 4, "c3Class": "amphoteric (hydroxysultaine)", "role": "buffer (prominent)"},
+      {"inci": "Coco-Glucoside", "position": 7, "c3Class": "nonionic cleansing", "role": "buffer (prominent)"},
+      {"inci": "Cocamidopropyl Betaine", "position": 17, "c3Class": "amphoteric", "role": "buffer (prominent, just before Parfum)"}
+    ],
+    "reinforcingRoutes": [],
+    "conditioningRoutes": {
+      "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride@14 (prominent)"],
+      "silicone": [],
+      "payload_lipid": [],
+      "pearlizingFattyRoute": ["Glycol Distearate@16 (prominent)"],
+      "weak_refatter": [],
+      "protein_film": ["Hydrolyzed Keratin@12"],
+      "film_former": [],
+      "humectants": ["Glycerin@5 (C2 list)", "Panthenol@11 (C2 list)", "Hydrogenated Starch Hydrolysate@2 (polyol; not on the closed C2/E4 lists)"]
+    },
+    "actives": ["Allantoin@8", "Bisabolol@9", "Zinc PCA@10 (not a listed route)", "Panthenol@11", "Camellia Sinensis Leaf Extract@13"],
+    "recognizedDandruffActives": [],
+    "exposure": {"fragrance": "Parfum@18 (E3 marker)", "fragranceAllergens": "none declared", "coolingAgents": "none", "essentialOils": "none"},
+    "phBuffers": ["Citric Acid@15"],
+    "e4ProminentRoutes": {
+      "comfort": ["Allantoin@8", "Bisabolol@9", "Panthenol@11"],
+      "humectantRefatting": ["Glycerin@5", "Panthenol@11"]
+    },
+    "mildBase": "Not met: prominent strong anionic Sodium Laureth Sulfate@3 excludes MB.",
+    "csa": "Met via listed prominent routes (comfort: Allantoin@8, Bisabolol@9, Panthenol@11; humectant: Glycerin@5, Panthenol@11). MB not used (excluded). Parfum@18 declared; no cooling or essential-oil counter-signal.",
+    "wLine": {
+      "wLine": {"position": 18, "inci": "Parfum", "classes": ["fragrance"]},
+      "cap": {"e3Point": 18, "inci": "Parfum"},
+      "alphabeticalRun": "none",
+      "skippedCandidates": ["w_line_skipped:Panthenol@11 - clause (ii) failed: pearlizing wax Glycol Distearate@16 and cleansing surfactant Cocamidopropyl Betaine@17 are listed after it and before the cap"],
+      "plausibility": "First candidate Panthenol@11 (class c) is implausible under (ii) and skipped. No further candidate at 12-17. E3 marker Parfum@18 (class a): (i) SLES@3 etc. listed before; (ii) nothing between it and the cap. Plausible; W-line = cap, no fallback code.",
+      "codes": [],
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": [],
+      "note": "No payload_lipid; the W-line gates nothing here."
+    }
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate@3 with three prominent buffers (Cocamidopropyl Hydroxysultaine@4, Coco-Glucoside@7, Cocamidopropyl Betaine@17) and no reinforcing strong anionic.",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: one meaningful system (prominent cationic guar@14) plus light routes: pearlizing Glycol Distearate@16, Hydrolyzed Keratin@12, humectants Glycerin@5, Panthenol@11 (and Hydrogenated Starch Hydrolysate@2). C2 not met: three elements present (cationic polymer, pearlizing route, humectant) but no early silicone and no prominent payload_lipid. Neighbor low: guar and pearlizer sit late in the prominent zone (14, 16); high would need the missing silicone/lipid leg.",
+      "ruleIds": ["C2", "Section 5 anchors", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride@14"],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": ["Hydrolyzed Keratin@12"],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate@3", "Cocamidopropyl Hydroxysultaine@4", "Coco-Glucoside@7", "Cocamidopropyl Betaine@17"],
+        "humectantContext": ["Hydrogenated Starch Hydrolysate@2", "Glycerin@5", "Panthenol@11", "Zinc PCA@10"],
+        "excluded": ["Glycol Distearate@16 (pearlizing wax, 6.4)", "Sodium Chloride@6 (salt)", "Citric Acid@15 (pH)", "Allantoin@8, Bisabolol@9 (comfort actives)", "Camellia Sinensis Leaf Extract@13 (botanical extract)"],
+        "unresolved": []
+      },
+      "wLine": "Parfum@18 (fragrance; = cap) after skipping Panthenol@11; no payload_lipid to split.",
+      "depositionLoad": "light - one guar late in the prominent zone and one hydrolysed keratin; no silicone, lipid or film former.",
+      "persistence": "low - hydrolysed protein and a single guar are light, rinse-off routes.",
+      "resetCapacity": "moderate - C1 SLES chassis with three buffers.",
+      "counterevidence": "Two deposition families (cationic_polymer + protein_film, W2); a pearlizer is present (excluded for weight).",
+      "whyThisBand": "Low anchor: light, low-persistence deposition against a moderate reset.",
+      "whyNotNeighborBand": "Not moderate (W2): the families are one guar@14 and one small hydrolysed keratin@12, both in the last third of the prominent zone after a large humectant/comfort block; no silicone, payload lipid, film former or second cationic route; the buffered SLES reset faces only these light routes.",
+      "confidenceLimitingFactor": "Guar dose/charge density unknown (one band).",
+      "rationale": "Low (moderate confidence): guar + keratin, both light and late, against moderate C1 reset; W2 reasoning given.",
+      "ruleIds": ["6.3", "6.4", "6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": ["Hydrogenated Starch Hydrolysate@2", "Glycerin@5", "Panthenol@11"],
+        "repairRoutes": ["Hydrolyzed Keratin@12 (single protein token)"],
+        "sharedConditioningRoutes": ["Guar Hydroxypropyltrimonium Chloride@14", "Glycol Distearate@16"],
+        "limitation": "Blind; coherent humectant cluster plus guar support moisture; one keratin token is not enough for repair."
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "Prominent comfort routes (Allantoin@8, Bisabolol@9) and Zinc PCA suggest a scalp role that a claim could select.",
+      "decisionTrace": "Claim direction: null (blind). Formula-compatible routes: scalp_active (CSA met), moisture (humectant cluster + guar). Decision: provisional general pending claims.",
+      "rationale": "Provisional (claim-dependent): general.",
+      "ruleIds": ["3.1", "7.2", "7.3", "F1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["moisture"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional (claim-dependent): empty.",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional (claim-dependent): default regular; cleansing not strong, so frequent fires with U2 wording; alternating/treatment impossible.",
+      "ruleIds": ["Section 9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional (claim-dependent): no positioning visible. CSA formula half met via listed prominent routes (comfort Allantoin@8, Bisabolol@9, Panthenol@11; humectant Glycerin@5, Panthenol@11). MB not met (SLES@3). No cooling/essential-oil counter-signal. Becomes targeted with an SC1 sensitive/dry-scalp unit graded moderate/high.",
+      "ruleIds": ["Section 10", "CSA", "MB", "E4", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no Piroctone Olamine, Climbazole or selenium sulfide; Zinc PCA is not a recognized active.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "Hydrogenated Starch Hydrolysate@2 is a polyol humectant (sorbitol-containing) but not on the closed C2/E4 lists (only 'Sorbitol' is); recorded as humectant context only. No effect: Glycerin@5 satisfies the humectant element anyway.",
+    "W-line: Panthenol@11 skipped under (ii) because Glycol Distearate@16 and Cocamidopropyl Betaine@17 follow it before the cap."
+  ]
+}

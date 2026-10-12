@@ -1,0 +1,21 @@
+{
+  "blindId": "VS09",
+  "productName": "Balea PROFESSIONAL Shampoo Kopfhaut Sensitive",
+  "brand": "Balea PROFESSIONAL (dm-Eigenmarke)",
+  "positioningSources": [
+    {
+      "sourceType": "retailer_dm_de_own_brand",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Beruhigendes Shampoo für empfindliche Kopfhaut | Mit Panthenol und Weißer-Tee-Extrakt | Kann Juckreiz und Spannungsgefühle mildern | Ohne Silikone | Das Shampoo Kopfhaut Sensitive von Balea PROFESSIONAL wurde speziell für die Bedürfnisse von sensibler und trockener Kopfhaut entwickelt. Die sanfte, pH-hautneutrale Formel reinigt schonend und wirkt mit Panthenol sowie Weißer-Tee-Extrakt beruhigend. Das Shampoo kann helfen, Juckreiz und Spannungsgefühle zu mildern. Das Haar wird sanft gepflegt und erhält einen seidigen Glanz. | Produkteigenschaften: Ohne Alkohol, ohne Silikone | Haartyp: glanzloses Haar",
+      "directionsVerbatim": "Sanft auf die Kopfhaut und ins Haar einmassieren. Kurz einwirken lassen und sorgfältig mit lauwarmen Wasser ausspülen."
+    },
+    {
+      "sourceType": "open_beauty_facts_support",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "(none captured)",
+      "directionsVerbatim": "(none captured)"
+    }
+  ]
+}

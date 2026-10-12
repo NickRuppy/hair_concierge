@@ -1,0 +1,21 @@
+{
+  "blindId": "VS08",
+  "productName": "ISANA MED Shampoo Totes Meer, 200 ml",
+  "brand": "ISANA",
+  "positioningSources": [
+    {
+      "sourceType": "pack_back_image_on_rossmann_pdp",
+      "sourceKind": "pack_back",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "WIRKUNG: Das ISANA MED SHAMPOO ist eine Spezialentwicklung, die empfindliche und juckende Kopfhaut beruhigt. | Totes Meer Salz ist ein einzigartiger Mineralien-Komplex und besonders reich an naturreinen Spurenelementen. | Original Totes Meer Salz Mineralien | juckreizlindernder Wirkstoff-Komplex | Schutz vor Austrocknung für Kopfhaut & Haar | HAUTVERTRÄGLICHKEIT: dermatologisch bestätigt",
+      "directionsVerbatim": "(none seen on the pack back; none on DE PDP)"
+    },
+    {
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Das ISANA Med Shampoo ist eine Spezialentwicklung, die empfindliche und juckende Kopfhaut beruhigt. Totes Meer Salz ist ein einzigartiger Mineralien-Komplex und besonders reich an naturreinen Spurenelementen. | Original Totes Meer Salz Mineralien | juckreizlindernder Wirkstoff-Komplex | Schutz vor Austrocknung für Kopfhaut & Haar | Hautverträglichkeit: dermatologisch bestätigt. | naturreine Mineralien | Kopfhaut beruhigend | ohne Silikone | pH hautneutral | empfindliche Kopfhaut",
+      "directionsVerbatim": "(none on Rossmann PDP)"
+    }
+  ]
+}

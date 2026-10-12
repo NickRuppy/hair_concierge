@@ -23,6 +23,7 @@ import {
   resolveInside,
   resolveStandardPath,
   scrubStandard,
+  STAGE_A_NORMALIZATION,
   type FreezePacket,
 } from "../scripts/shampoo-research/build-lane-kit"
 import { compareLaneDirs, comparisonFields } from "../scripts/shampoo-research/compare-lanes"
@@ -151,6 +152,32 @@ test("the lane kit splits each product into a blind formula packet and a held-ba
   })
 })
 
+test("stage-A normalization carries only the runbook rule, never freeze-worker notes (v1.6.2 seal fix)", () => {
+  withTempDir((out) => {
+    const { mapping } = buildLaneKit({
+      packets: [
+        {
+          ...packet(),
+          normalization:
+            "Split on ','; dm renders a non-breaking hyphen as '|' inside names; Mustermarke list pinned",
+        },
+      ],
+      standardText: STANDARD,
+      outDir: out,
+      seed: 7,
+    })
+    const id = mapping[0]!.blindId
+    for (const lane of ["lane-a", "lane-b"]) {
+      const formula = JSON.parse(
+        readFileSync(path.join(out, lane, "formula", `${id}.json`), "utf8"),
+      )
+      assert.equal(formula.normalization, STAGE_A_NORMALIZATION)
+      for (const hidden of ["dm ", "Mustermarke"])
+        assert.ok(!formula.normalization.includes(hidden))
+    }
+  })
+})
+
 test("the lane kit fails closed on missing evidence inputs, a wrong fingerprint or a leaking standard", () => {
   withTempDir((out) => {
     const build = (p: FreezePacket, standardText = STANDARD) =>
@@ -242,6 +269,7 @@ test("a lower-case brand slug is scrubbed whole, case-insensitively (v1.6.1 seal
   for (const standard of [
     "docs/research/shampoo-inci/v1.6/classification-standard.md",
     "docs/research/shampoo-inci/v1.6.1/classification-standard.md",
+    "docs/research/shampoo-inci/v1.6.2/classification-standard.md",
   ]) {
     const locked = readFileSync(standard, "utf8")
     const batch = [packet({ brand: "Vichy", name: "Dercos Anti-Schuppen Shampoo" })]
@@ -268,7 +296,7 @@ test("a slug built from a multi-word product name is replaced whole, ordinary wo
 test("the kit builds against the locked standard by default and against an explicit candidate path", () => {
   assert.equal(
     resolveStandardPath(undefined),
-    "docs/research/shampoo-inci/v1.6.1/classification-standard.md",
+    "docs/research/shampoo-inci/v1.6.2/classification-standard.md",
   )
   assert.equal(
     resolveStandardPath("plans/shampoo-v161/candidate/classification-standard.md"),

@@ -226,6 +226,8 @@ test-screenshots*/
 !/data/research/shampoo-inci/v1.6.1/**
 !/data/research/shampoo-inci/v1.6-track-a/
 !/data/research/shampoo-inci/v1.6-track-a/**
+!/data/research/shampoo-inci/v1.6.2/
+!/data/research/shampoo-inci/v1.6.2/**
 /data/research/mask-inci/**/lab-review-state.json
 !/data/research/bondbuilder-inci/
 !/data/research/bondbuilder-inci/**

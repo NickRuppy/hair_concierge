@@ -1,0 +1,156 @@
+{
+  "blindId": "VS03",
+  "inciFingerprintSha256": "5f982bf87555a931d4def50368197813a82e944030a1c2e9d63dff77fa1d141e",
+  "phase": "formula-pass (blind; stage A packet only; no claims seen)",
+  "standard": "shampoo-classification-v1.6.2 (candidate)",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "Canonical list one entry per ingredient; 'Maris Sal (Dead Sea Salt)' is one entry (synonym in parentheses). Normalized one-based positions (ID-2) = packet positions.",
+    "e3ProminenceCutoff": "No Parfum/Fragrance declared; E3 preservative fallback = Sodium Benzoate @8. Prominent = positions 1-7."
+  },
+  "normalizedInci": ["1 Aqua", "2 Sodium Laureth Sulfate", "3 Laureth-9", "4 Sodium Chloride", "5 Cocamidopropyl Betaine", "6 Urea", "7 Hydroxypropyl Guar Hydroxypropyltrimonium Chloride", "8 Sodium Benzoate", "9 Glycerin", "10 Maris Sal (Dead Sea Salt)", "11 Citric Acid", "12 Menthol", "13 Potassium Sorbate", "14 Panthenol", "15 Lactic Acid", "16 Mentha Arvensis Leaf Oil"],
+  "formulaFacts": {
+    "surfactants": [
+      {"inci": "Sodium Laureth Sulfate", "position": 2, "c3Class": "strong anionic, ether/sulfonate type", "role": "defining anionic (C4)"},
+      {"inci": "Laureth-9", "position": 3, "c3Class": "no C3 cleansing class (fatty-alcohol ethoxylate; C3 nonionic cleansing covers alkyl glucosides only, and the chemistry-name rule names no ethoxylate class)", "role": "not a cleansing route, not a buffer; E4 comfort route as Polidocanol (v1.6.2)"},
+      {"inci": "Cocamidopropyl Betaine", "position": 5, "c3Class": "amphoteric", "role": "buffer (prominent)"}
+    ],
+    "reinforcingRoutes": [],
+    "conditioningRoutes": {
+      "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@7 (prominent)"],
+      "silicone": [],
+      "payload_lipid": [],
+      "pearlizingFattyRoute": [],
+      "weak_refatter": [],
+      "protein_film": [],
+      "film_former": [],
+      "humectants": ["Urea@6 (C2 list, prominent)", "Glycerin@9 (C2 list, not prominent)", "Panthenol@14 (C2 list, not prominent)"]
+    },
+    "actives": ["Laureth-9@3 (= Polidocanol, E4 comfort route)", "Urea@6", "Menthol@12 (cooling)", "Panthenol@14"],
+    "recognizedDandruffActives": [],
+    "exposure": {"fragrance": "none declared", "fragranceAllergens": "none declared", "coolingAgents": "Menthol@12 (not prominent, after E3 point)", "essentialOils": "Mentha Arvensis Leaf Oil@16 (not prominent)"},
+    "phBuffers": ["Citric Acid@11", "Lactic Acid@15"],
+    "e4ProminentRoutes": {
+      "comfort": ["Laureth-9@3 (Polidocanol)", "Urea@6"],
+      "humectantRefatting": ["Urea@6"]
+    },
+    "mildBase": "Not met: prominent strong anionic Sodium Laureth Sulfate@2 excludes MB.",
+    "csa": "Met via listed prominent routes (comfort: Laureth-9@3 = Polidocanol, Urea@6; humectant: Urea@6). MB not used (excluded). Cooling agent Menthol@12 and Mentha Arvensis Leaf Oil@16 are not prominent, so they are not CSA counter-signals under the E3 reading; recorded as exposure facts.",
+    "wLine": {
+      "wLine": {"position": 8, "inci": "Sodium Benzoate", "classes": ["preservative_or_capped_active"]},
+      "cap": {"e3Point": 8, "inci": "Sodium Benzoate (E3 preservative fallback)"},
+      "alphabeticalRun": "none",
+      "skippedCandidates": [],
+      "plausibility": "No candidate at positions 1-7 (no fragrance, no listed allergen, no class-b/c ingredient). E3 marker Sodium Benzoate@8 is itself a class-b candidate: (i) SLES@2 listed before; (ii) nothing lies between it and the cap. Plausible; W-line = cap, no fallback code.",
+      "codes": [],
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": [],
+      "note": "No payload_lipid; the W-line gates nothing here."
+    }
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate@2 with one prominent buffer Cocamidopropyl Betaine@5 and no reinforcing strong anionic. Laureth-9@3 is in no C3 cleansing class and does not change the count; read as a buffer it would not change the value either.",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: one meaningful conditioning system (prominent cationic guar Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@7) with humectants Urea@6, Glycerin@9, Panthenol@14. C2 not met (no silicone, payload lipid or pearlizing route). Neighbor low: guar is the only substantive route and sits at the E3 boundary in a salt-heavy, cleansing-led base.",
+      "ruleIds": ["C2", "Section 5 anchors", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@7"],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate@2", "Cocamidopropyl Betaine@5"],
+        "humectantContext": ["Urea@6", "Glycerin@9", "Panthenol@14"],
+        "excluded": ["Laureth-9@3 (nonionic ethoxylate/comfort active, no deposition role)", "Sodium Chloride@4, Maris Sal@10 (salts)", "Menthol@12 (cooling agent)", "Mentha Arvensis Leaf Oil@16 (essential oil, 6.4)", "Citric Acid@11, Lactic Acid@15 (pH)"],
+        "unresolved": []
+      },
+      "wLine": "Sodium Benzoate@8 (= cap); no payload_lipid to split.",
+      "depositionLoad": "light - a single cationic guar; no other deposition family.",
+      "persistence": "low - one light polymer route, no silicone/lipid.",
+      "resetCapacity": "moderate - C1 buffered ether-sulfate chassis.",
+      "counterevidence": "Guar is prominent (position 7); guar can build up over repeated use.",
+      "whyThisBand": "Low anchor: a single deposition family without a reinforcing route facing a moderate reset (no polymer floor, W2).",
+      "whyNotNeighborBand": "Not moderate: the only depositing route is one cationic guar; no second family, no silicone, lipid, protein or film former converges, and the SLES/betaine reset is moderate.",
+      "confidenceLimitingFactor": "Guar dose/charge density unknown (one band).",
+      "rationale": "Low (moderate confidence): single guar route against moderate reset.",
+      "ruleIds": ["6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": ["Urea@6", "Glycerin@9", "Panthenol@14"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@7"],
+        "limitation": "Blind; relevant only if a lengths moisture/repair claim appears. Humectants beyond Urea are after the E3 point."
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "Comfort routes (Polidocanol/Laureth-9@3, Urea@6) plus a cooling agent suggest an itch/scalp role, but focus needs a claim (3.2).",
+      "decisionTrace": "Claim direction: null (blind). Formula-compatible routes: scalp_active (comfort routes, CSA met), moisture (urea + guar). Decision: provisional general pending claims.",
+      "rationale": "Provisional (claim-dependent): general; scalp_active is the most plausible formula-compatible alternative.",
+      "ruleIds": ["3.1", "7.2", "7.3"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["moisture"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional (claim-dependent): empty.",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional (claim-dependent): default regular. Cleansing not strong, so frequent open under U2; alternating and treatment impossible from the formula.",
+      "ruleIds": ["Section 9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional (claim-dependent): no positioning visible. CSA formula half met via listed prominent comfort routes Laureth-9@3 (INCI of the listed Polidocanol, v1.6.2) and Urea@6 (also humectant route). MB not met (SLES@2). Menthol@12/Mentha Arvensis Leaf Oil@16 are non-prominent exposure facts. Becomes targeted with an SC1 sensitive/dry-scalp unit graded moderate/high.",
+      "ruleIds": ["Section 10", "CSA", "MB", "E4", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no Piroctone Olamine, Climbazole, Selenium Sulfide or Selenium Disulfide; menthol/salt do not upgrade it.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "Laureth-9@3 C3 class: assigned to no cleansing class (fatty-alcohol ethoxylate; C3 nonionic cleansing = alkyl glucosides). Alternative: nonionic buffer. No effect on cleansingStrength (C1 already buffered by Cocamidopropyl Betaine@5) or on MB (SLES@2 excludes it).",
+    "Menthol@12 is after the E3 point; under the E3 reading it is not a prominent cooling counter-signal for CSA. If the reveal shows strong cooling positioning, confidence of targeted (if reached) still follows the CSA counter-signal rule only for prominent agents."
+  ]
+}
