@@ -6,7 +6,7 @@ import type {
   Stage2QuestionId,
   Stage2TriggerContext,
 } from "./types"
-import { resolveStage2RefinementContract } from "./question-path"
+import { getStage2QuestionModule, resolveStage2RefinementContract } from "./question-path"
 import { Stage2RefinementError } from "./gateway"
 import {
   sortToolReportedForms,
@@ -153,7 +153,8 @@ export function saveStage2SessionAnswer(
   const isCompletedActiveQuestion = canonical.path.completedQuestionIds.includes(input.questionId)
   if (
     !activeQuestionIds.has(input.questionId) ||
-    (!isCompletedActiveQuestion && canonical.path.firstUnresolvedQuestionId !== input.questionId)
+    (!isCompletedActiveQuestion &&
+      firstUnresolvedQuestionOfModule(canonical.path, input.questionId) !== input.questionId)
   ) {
     throw new Stage2RefinementError(
       "question_not_current",
@@ -206,6 +207,25 @@ export function saveStage2SessionAnswer(
     // The pre-fill context outlives the local save; it is not an answer.
     ...(session.prefillCare ? { prefillCare: structuredClone(session.prefillCare) } : {}),
   }
+}
+
+/**
+ * The current question within the submitted question's own module. A module entry walks only its
+ * module (`module-scope.ts`), so its next question is current even while an earlier module —
+ * Deine Tools for a member who finished Gewohnheiten before it existed — is still open (review
+ * fix F2). The contract keeps completed answers behind an unresolved question, and order inside
+ * a module is unchanged. The whole path's first unresolved question is always one of these.
+ */
+function firstUnresolvedQuestionOfModule(
+  path: Stage2PathState,
+  questionId: Stage2QuestionId,
+): Stage2QuestionId | undefined {
+  const questionModule = getStage2QuestionModule(questionId)
+  return path.orderedQuestionIds.find(
+    (candidate) =>
+      getStage2QuestionModule(candidate) === questionModule &&
+      !path.completedQuestionIds.includes(candidate),
+  )
 }
 
 export function cloneStage2RefinementSession(

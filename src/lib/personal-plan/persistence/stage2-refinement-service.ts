@@ -178,6 +178,15 @@ export function interpretStage2PersistedDraft(draft: Stage2PersistedDraft): Stag
   return carryOverStage2NightAnswer(draft.triggerContext, draft)
 }
 
+function assertWithinPayloadLimit(next: Stage2RefinementSession): void {
+  if (
+    JSON.stringify({ answers: next.answers, completedQuestionIds: next.completedQuestionIds })
+      .length > MAX_REFINEMENT_PAYLOAD_BYTES
+  ) {
+    throw new Stage2RefinementError("invalid_answer", "The refinement payload is too large")
+  }
+}
+
 export function stage2SessionFromPersistedDraft(
   persisted: Stage2PersistedDraft,
 ): Stage2RefinementSession {
@@ -365,6 +374,15 @@ export function createStage2RefinementService(input: {
       const parsed = stage2AnswerSaveInputSchema.safeParse(raw)
       if (!parsed.success) throw new Stage2RefinementError("invalid_answer")
       let draft = cached ?? (await loadDraft())
+      const answer = {
+        questionId: parsed.data.questionId as Stage2QuestionId,
+        answer: parsed.data.answer,
+      }
+      // Validate before reopening: a rejected answer must never turn a completed draft into a
+      // fresh in-progress successor (review fix F2). Throws exactly what the save would throw.
+      assertWithinPayloadLimit(
+        saveStage2SessionAnswer(stage2SessionFromPersistedDraft(draft), answer),
+      )
       if (draft.status === "complete") {
         const reopened = interpretStage2PersistedDraft(
           await input.persistence.reopen({ userId: input.userId, draft }),
@@ -374,16 +392,7 @@ export function createStage2RefinementService(input: {
         cached = draft
       }
       if (draft.status !== "in_progress") throw new Stage2RefinementError("revision_conflict")
-      const next = saveStage2SessionAnswer(stage2SessionFromPersistedDraft(draft), {
-        questionId: parsed.data.questionId as Stage2QuestionId,
-        answer: parsed.data.answer,
-      })
-      if (
-        JSON.stringify({ answers: next.answers, completedQuestionIds: next.completedQuestionIds })
-          .length > MAX_REFINEMENT_PAYLOAD_BYTES
-      ) {
-        throw new Stage2RefinementError("invalid_answer", "The refinement payload is too large")
-      }
+      const next = saveStage2SessionAnswer(stage2SessionFromPersistedDraft(draft), answer)
       const nextAnswerProvenance = applyUserAnswerProvenance({
         previous: draft.answerProvenance,
         answeredQuestionId: parsed.data.questionId as Stage2QuestionId,
