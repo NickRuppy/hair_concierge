@@ -1,89 +1,89 @@
 {
-  "slot": "A15b",
-  "productId": "17b6d50e-ca5b-4f66-bdd7-39bd19afe748",
-  "name": "Hask Repair + Argan Oil Shampoo",
-  "brand": "Hask",
-  "packSize": "473 ml (16 US fl. oz.); dm-Artikelnummer 3123206; successor pack of the catalog's former 355 ml Hask Argan Oil Shampoo (GTIN 071164343166)",
-  "gtins": [
-    "071164341469"
-  ],
-  "sources": [
-    {
-      "url": "https://haskbeauty.com/products/repair-arganoil-shampoo",
-      "retrievedAt": "2026-10-12",
-      "sourceType": "manufacturer_foreign (US brand site; current 'Repair + Argan Oil Shampoo' 16 fl oz line = 473 ml pack)",
-      "sourceKind": "manufacturer",
-      "gtinShown": "none shown on page; pack identity matched via list identity with dm GTIN 071164341469 and pack photo '473 ml (16 US FL. OZ.)'",
-      "inciVerbatim": "Aqua/Water/Eau, Sodium C14-16 olefin sulfonate, Cocamide MIPA, Sodium chloride, Cocamidopropyl betaine, Glycerin, Argania spinosa (argan) kernel oil, Panthenol, Polyquaternium-10, Polyquaternium-7, Glycol distearate, Dicaprylyl ether, Decyl glucoside, Glyceryl oleate, Citric acid, Sodium hydroxide, Sodium salicylate, Sodium benzoate, Trisodium ethylenediamine disuccinate, Isopropanolamine, Parfum/Fragrance, Benzoic acid, Benzyl benzoate, Citrus aurantium peel oil, Limonene",
-      "claimsVerbatim": "Infused with argan oil, this shampoo gently cleanses hair while helping to repair breakage and smooth split ends. | Sulfate-free argan oil shampoo that repairs damage, adds shine, and tames frizz for silky-smooth, manageable hair. | STRENGTHENS | RESTORES | REPAIRS | BEST FOR: Dry or damaged hair | Revives and restores overworked hair | Controls frizz and flyaways | Gently cleanses and hydrates dry hair | Helps repair damage and breakage to reveal soft and touchable strands | Free of sulfates, parabens, phthalates, silicone, gluten, drying alcohol and artificial colors. Vegan, cruelty free and color-safe.",
-      "directionsVerbatim": "Apply to wet hair, massage into a lather and rinse thoroughly. Ideal for daily use."
-    },
-    {
-      "url": "https://www.dm.de/p/d/3123206/hask-shampoo-repair-argan-oil",
-      "retrievedAt": "2026-10-12",
-      "sourceType": "retailer_dm_de",
-      "sourceKind": "retailer",
-      "gtinShown": "GTIN: 071164341469 (dm-Artikelnummer 3123206; 'Shampoo repair + argan oil, 473 ml'); page status 'Nicht lieferbar', price 5,95 EUR (previous 8,95 EUR), 'Keine Anzeige für die Verfügbarkeit im dm-Markt möglich'",
-      "inciVerbatim": "Ingredients: Aqua/Water/Eau, Sodium C14-16 olefin sulfonate, Cocamide MIPA, Sodium chloride, Cocamidopropyl betaine, Glycerin, Argania spinosa (argan) kernel oil, Panthenol, Polyquaternium-10, Polyquaternium-7, Glycol distearate, Dicaprylyl ether, Decyl glucoside, Glyceryl oleate, Citric acid, Sodium hydroxide, Sodium salicylate, Sodium benzoate, Trisodium ethylenediamine disuccinate, Isopropanolamine, Parfum/Fragrance, Benzoic acid, Benzyl benzoate, Citrus aurantium peel oil, Limonene",
-      "claimsVerbatim": "Pflegendes Shampoo | Mit Arganöl | Für trockenes und geschädigtes Haar | Gegen Haarbruch | Vegan | Das Shampoo repair + argan oil von HASK wurde speziell für die Bedürfnisse von trockenem und strapaziertem Haar entwickelt. Die Formel, angereichert mit Arganöl, kann dabei unterstützen, das Haar zu reparieren. Es versorgt das Haar intensiv mit Feuchtigkeit und kann Haarbruch sowie Spliss entgegenwirken. Das Haar fühlt sich nach der Anwendung gekräftigt an. Das Shampoo verleiht ein geschmeidiges und gepflegtes Haargefühl vom Ansatz bis in die Spitzen. | Wirkung: Pflege | Produkteigenschaften: ohne Silikone, ohne Sulfat",
-      "directionsVerbatim": "Auf das nasse Haar auftragen, einmassieren, aufschäumen und gründlich ausspülen. Ideal für die tägliche Haarwäsche."
-    },
-    {
-      "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1600,w_1600/v1776726635/assets/pas/images/ad9085c9-2295-4fdc-8b97-7fac6b0eeec2/hask-shampoo-repair-argan-oil (back-of-pack image, 3rd gallery image on dm 3123206); front image .../v1775689071/assets/pas/images/b53341ba-4498-427a-b5b8-4ffb7d362d93/hask-shampoo-repair-argan-oil",
-      "retrievedAt": "2026-10-12",
-      "sourceType": "pack_photo (dm gallery image of the 473 ml bottle; back label wraps around the curved bottle so the left/right edges of each INCI line are cut off)",
-      "sourceKind": "pack_photo",
-      "gtinShown": "barcode partly visible, digits legible only as '0 7 1 1 6 4 …' (rest cut off by bottle curvature); front shows '473 ml e (16 US FL. OZ.)', 'repair + argan oil', 'shampoo', 'TARGETS DAMAGE & STRENGTHENS | NO SULFATES | NO SILICONES | VEGAN'",
-      "inciVerbatim": "Ingredients/Ingrédients : Aqua/Water/Eau, Sodium C14-16 olefin sulfonate, Cocamide MIPA, [..]chloride, Cocamidopropyl betaine, Glycerin, Argania spinosa (argan) kernel oil, Panthenol, [..]quaternium-10, Polyquaternium-7, Glycol distearate, Dicaprylyl ether, Decyl glucoside, Glyceryl [..], Citric acid, Sodium hydroxide, Sodium salicylate, Sodium benzoate, Trisodium [..]diamine disuccinate, Isopropanolamine, Parfum/Fragrance, Benzoic acid, Benzyl benzoate, [Citr]us aurantium peel oil, Limonene  (PARTIAL read: '[..]' marks text cut off at the label edge; every legible fragment matches the dm/manufacturer list in order and content; no extra or missing ingredient visible)",
-      "claimsVerbatim": "TARGETS DAMAGE & STRENGTHENS | NO SULFATES | NO SILICONES | VEGAN | Sulfates | No silicones | Vegan formula | Color safe | Bottle made from at least 25% recycled plastics | Damaged hair is left feeling hydrated, and looking healthy. | Repair shampoo: Infused with argan oil, this shampoo targets damage, repairs signs of breakage and smooths split ends. | lather in love. rinse in confidence | KINDNESS IS OUR SECRET INGREDIENT. (label text partly cut off at edges). Also gallery image 3 'HASK clean: no sulfates, no silicones, color safe, vegan, cruelty free'; gallery image 4 'new look SAME RESULTS. 12oz Argan Oil repairing 355 ml -> 16oz repair + argan oil 473 ml, LARGER SIZE'.",
-      "directionsVerbatim": "DE label: 'Wirkt gegen Schäden & Stärkt ... Auf nasses Haar auftragen, einmassieren, bis sich Schaum bildet, und gut [ausspülen]. Ideal für die tägliche Anwendung. VORSICHT: KONTAKT MIT DEN AUGEN VERMEIDEN. BEI KONTAKT DES PRODUKTS MIT DEN AUGEN SOFORT MIT VIEL WASSER AUSSPÜLEN.' (label partially cut off at edges)"
-    }
-  ],
-  "conflicts": [
-    "Predecessor SKU list (NOT this product): the old 355 ml Hask Argan Oil Shampoo (GTIN 071164343166; dm 1475016, retrievedAt 2026-10-09, packet A15) shows a different formula: it additionally lists Hydrolyzed keratin, Phenoxyethanol, Methylchloroisothiazolinone, Methylisothiazolinone, Polyquaternium-55, Caprylyl glycol, Potassium sorbate, Magnesium chloride, Magnesium nitrate, Sodium acetate, and lacks Sodium salicylate, Trisodium ethylenediamine disuccinate, Citrus aurantium peel oil. It is a different pack/formula generation ('new look' relaunch per dm gallery image 4) and is excluded from this packet's canonical list.",
-    "No conflicting list exists for GTIN 071164341469: manufacturer page, dm.de listing and the legible parts of the pack photo agree item for item (25 items)."
-  ],
-  "canonicalInci": [
-    "Aqua/Water/Eau",
-    "Sodium C14-16 olefin sulfonate",
-    "Cocamide MIPA",
-    "Sodium chloride",
-    "Cocamidopropyl betaine",
-    "Glycerin",
-    "Argania spinosa (argan) kernel oil",
-    "Panthenol",
-    "Polyquaternium-10",
-    "Polyquaternium-7",
-    "Glycol distearate",
-    "Dicaprylyl ether",
-    "Decyl glucoside",
-    "Glyceryl oleate",
-    "Citric acid",
-    "Sodium hydroxide",
-    "Sodium salicylate",
-    "Sodium benzoate",
-    "Trisodium ethylenediamine disuccinate",
-    "Isopropanolamine",
-    "Parfum/Fragrance",
-    "Benzoic acid",
-    "Benzyl benzoate",
-    "Citrus aurantium peel oil",
-    "Limonene"
-  ],
-  "canonicalReason": "Trust order manufacturer page for exact product > pack photo > GTIN-matched retailer. The haskbeauty.com page (current 'Repair + Argan Oil Shampoo') is the manufacturer source; it is the same 473 ml / 16 fl oz line as shown on the pack photo, although it shows no GTIN itself. Its list is identical item for item and in order to the GTIN-matched dm.de list (GTIN 071164341469) and to every legible fragment of the back-label pack photo, so the three sources corroborate each other and the list is taken verbatim from the manufacturer page (25 items, case/punctuation kept; synonym entries such as 'Aqua/Water/Eau' and 'Parfum/Fragrance' are single items as published).",
-  "inciFingerprintSha256": "424834f10d54e500a9cbe027b1abcf4e97415145af2bac0e7e17abac49e29973",
-  "normalization": "Runbook step 2: canonical list items lower-cased, trimmed, whitespace collapsed, joined with '|', SHA-256; split synonym entries (e.g. 'Aqua (Water, Eau)') merged before numbering.",
-  "identityConfidence": "high",
-  "formulaCompleteness": "complete",
-  "formulaSourceTier": 2,
-  "status": "frozen",
-  "blockReason": null,
-  "notes": [
-    "Availability: dm.de 3123206 shows 'Nicht lieferbar' and 'Keine Anzeige für die Verfügbarkeit im dm-Markt möglich' on 2026-10-12; price 5,95 EUR (reduced from 8,95 EUR, dm-Dauerpreis 'nicht erhöht seit 27.03.2026'); rating 4.9 (37 Bewertungen). The product is absent from dm's product search API for the GTIN and for 'hask shampoo' (only Shampoo curls + coconut oil, 473 ml, GTIN 071164341438, is listed as lieferbar) - consistent with delisting/clearance or temporary stock-out.",
-    "dm company address on page: Inspired Beauty Brands, 330 SEVENTH AVE, 16th FL, NEW YORK, NY 10001, customerservice@haskbeauty.com; Aufbewahrungshinweis 'Vor direkter Sonneneinstrahlung schützen.' Pack photo back label also names an EU/IE importer (Exponent International HG2 8RE UK / St. Mary's Place, Dublin 7, IRE per partial text).",
-    "SKU relationship: dm gallery image 4 ('new look SAME RESULTS', 12oz Argan Oil repairing 355 ml -> 16oz repair + argan oil 473 ml, 'LARGER SIZE') shows the 473 ml pack is the manufacturer-declared successor of the 355 ml Argan Oil Shampoo, but the INCI differs (see conflicts); the catalog row must be re-pointed to GTIN 071164341469 and the 355 ml formula must not be used for it.",
-    "Amazon.de (searched 2026-10-12): only the old 355 ml listing (ASIN B00FY5QUT6) surfaced; no 473 ml listing, no INCI/GTIN text usable -> not used as a source. Open Beauty Facts: GTIN 0071164341469 'product not found' (API v0/v2) and no search hit. Rossmann: no listing found (previous check 2026-10-09).",
-    "Formula-source tier 2 = manufacturer page (US, no DE/EU page found) corroborated by GTIN-exact dm.de list and pack photo; no DE manufacturer page exists in the sources checked.",
-    "Claim vs INCI: 'ohne Sulfat' (dm) / 'no sulfates' (pack): list contains Sodium C14-16 olefin sulfonate (a sulfonate, not a sulfate) - marketing-defined claim, no direct contradiction; no silicones in the list (consistent with 'ohne Silikone')."
-  ]
+ "slot": "A15b",
+ "productId": "17b6d50e-ca5b-4f66-bdd7-39bd19afe748",
+ "name": "Hask Repair + Argan Oil Shampoo",
+ "brand": "Hask",
+ "packSize": "473 ml (16 US fl. oz.); dm-Artikelnummer 3123206; successor pack of the catalog's former 355 ml Hask Argan Oil Shampoo (GTIN 071164343166)",
+ "gtins": [
+  "071164341469"
+ ],
+ "sources": [
+  {
+   "url": "https://haskbeauty.com/products/repair-arganoil-shampoo",
+   "retrievedAt": "2026-10-12",
+   "sourceType": "manufacturer_foreign (US brand site; current 'Repair + Argan Oil Shampoo' 16 fl oz line = 473 ml pack)",
+   "sourceKind": "manufacturer_foreign",
+   "gtinShown": "none shown on page; pack identity matched via list identity with dm GTIN 071164341469 and pack photo '473 ml (16 US FL. OZ.)'",
+   "inciVerbatim": "Aqua/Water/Eau, Sodium C14-16 olefin sulfonate, Cocamide MIPA, Sodium chloride, Cocamidopropyl betaine, Glycerin, Argania spinosa (argan) kernel oil, Panthenol, Polyquaternium-10, Polyquaternium-7, Glycol distearate, Dicaprylyl ether, Decyl glucoside, Glyceryl oleate, Citric acid, Sodium hydroxide, Sodium salicylate, Sodium benzoate, Trisodium ethylenediamine disuccinate, Isopropanolamine, Parfum/Fragrance, Benzoic acid, Benzyl benzoate, Citrus aurantium peel oil, Limonene",
+   "claimsVerbatim": "Infused with argan oil, this shampoo gently cleanses hair while helping to repair breakage and smooth split ends. | Sulfate-free argan oil shampoo that repairs damage, adds shine, and tames frizz for silky-smooth, manageable hair. | STRENGTHENS | RESTORES | REPAIRS | BEST FOR: Dry or damaged hair | Revives and restores overworked hair | Controls frizz and flyaways | Gently cleanses and hydrates dry hair | Helps repair damage and breakage to reveal soft and touchable strands | Free of sulfates, parabens, phthalates, silicone, gluten, drying alcohol and artificial colors. Vegan, cruelty free and color-safe.",
+   "directionsVerbatim": "Apply to wet hair, massage into a lather and rinse thoroughly. Ideal for daily use."
+  },
+  {
+   "url": "https://www.dm.de/p/d/3123206/hask-shampoo-repair-argan-oil",
+   "retrievedAt": "2026-10-12",
+   "sourceType": "retailer_dm_de",
+   "sourceKind": "retailer",
+   "gtinShown": "GTIN: 071164341469 (dm-Artikelnummer 3123206; 'Shampoo repair + argan oil, 473 ml'); page status 'Nicht lieferbar', price 5,95 EUR (previous 8,95 EUR), 'Keine Anzeige für die Verfügbarkeit im dm-Markt möglich'",
+   "inciVerbatim": "Ingredients: Aqua/Water/Eau, Sodium C14-16 olefin sulfonate, Cocamide MIPA, Sodium chloride, Cocamidopropyl betaine, Glycerin, Argania spinosa (argan) kernel oil, Panthenol, Polyquaternium-10, Polyquaternium-7, Glycol distearate, Dicaprylyl ether, Decyl glucoside, Glyceryl oleate, Citric acid, Sodium hydroxide, Sodium salicylate, Sodium benzoate, Trisodium ethylenediamine disuccinate, Isopropanolamine, Parfum/Fragrance, Benzoic acid, Benzyl benzoate, Citrus aurantium peel oil, Limonene",
+   "claimsVerbatim": "Pflegendes Shampoo | Mit Arganöl | Für trockenes und geschädigtes Haar | Gegen Haarbruch | Vegan | Das Shampoo repair + argan oil von HASK wurde speziell für die Bedürfnisse von trockenem und strapaziertem Haar entwickelt. Die Formel, angereichert mit Arganöl, kann dabei unterstützen, das Haar zu reparieren. Es versorgt das Haar intensiv mit Feuchtigkeit und kann Haarbruch sowie Spliss entgegenwirken. Das Haar fühlt sich nach der Anwendung gekräftigt an. Das Shampoo verleiht ein geschmeidiges und gepflegtes Haargefühl vom Ansatz bis in die Spitzen. | Wirkung: Pflege | Produkteigenschaften: ohne Silikone, ohne Sulfat",
+   "directionsVerbatim": "Auf das nasse Haar auftragen, einmassieren, aufschäumen und gründlich ausspülen. Ideal für die tägliche Haarwäsche."
+  },
+  {
+   "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1600,w_1600/v1776726635/assets/pas/images/ad9085c9-2295-4fdc-8b97-7fac6b0eeec2/hask-shampoo-repair-argan-oil (back-of-pack image, 3rd gallery image on dm 3123206); front image .../v1775689071/assets/pas/images/b53341ba-4498-427a-b5b8-4ffb7d362d93/hask-shampoo-repair-argan-oil",
+   "retrievedAt": "2026-10-12",
+   "sourceType": "pack_photo (dm gallery image of the 473 ml bottle; back label wraps around the curved bottle so the left/right edges of each INCI line are cut off)",
+   "sourceKind": "pack_back",
+   "gtinShown": "barcode partly visible, digits legible only as '0 7 1 1 6 4 …' (rest cut off by bottle curvature); front shows '473 ml e (16 US FL. OZ.)', 'repair + argan oil', 'shampoo', 'TARGETS DAMAGE & STRENGTHENS | NO SULFATES | NO SILICONES | VEGAN'",
+   "inciVerbatim": "Ingredients/Ingrédients : Aqua/Water/Eau, Sodium C14-16 olefin sulfonate, Cocamide MIPA, [..]chloride, Cocamidopropyl betaine, Glycerin, Argania spinosa (argan) kernel oil, Panthenol, [..]quaternium-10, Polyquaternium-7, Glycol distearate, Dicaprylyl ether, Decyl glucoside, Glyceryl [..], Citric acid, Sodium hydroxide, Sodium salicylate, Sodium benzoate, Trisodium [..]diamine disuccinate, Isopropanolamine, Parfum/Fragrance, Benzoic acid, Benzyl benzoate, [Citr]us aurantium peel oil, Limonene  (PARTIAL read: '[..]' marks text cut off at the label edge; every legible fragment matches the dm/manufacturer list in order and content; no extra or missing ingredient visible)",
+   "claimsVerbatim": "TARGETS DAMAGE & STRENGTHENS | NO SULFATES | NO SILICONES | VEGAN | Sulfates | No silicones | Vegan formula | Color safe | Bottle made from at least 25% recycled plastics | Damaged hair is left feeling hydrated, and looking healthy. | Repair shampoo: Infused with argan oil, this shampoo targets damage, repairs signs of breakage and smooths split ends. | lather in love. rinse in confidence | KINDNESS IS OUR SECRET INGREDIENT. (label text partly cut off at edges). Also gallery image 3 'HASK clean: no sulfates, no silicones, color safe, vegan, cruelty free'; gallery image 4 'new look SAME RESULTS. 12oz Argan Oil repairing 355 ml -> 16oz repair + argan oil 473 ml, LARGER SIZE'.",
+   "directionsVerbatim": "DE label: 'Wirkt gegen Schäden & Stärkt ... Auf nasses Haar auftragen, einmassieren, bis sich Schaum bildet, und gut [ausspülen]. Ideal für die tägliche Anwendung. VORSICHT: KONTAKT MIT DEN AUGEN VERMEIDEN. BEI KONTAKT DES PRODUKTS MIT DEN AUGEN SOFORT MIT VIEL WASSER AUSSPÜLEN.' (label partially cut off at edges)"
+  }
+ ],
+ "conflicts": [
+  "Predecessor SKU list (NOT this product): the old 355 ml Hask Argan Oil Shampoo (GTIN 071164343166; dm 1475016, retrievedAt 2026-10-09, packet A15) shows a different formula: it additionally lists Hydrolyzed keratin, Phenoxyethanol, Methylchloroisothiazolinone, Methylisothiazolinone, Polyquaternium-55, Caprylyl glycol, Potassium sorbate, Magnesium chloride, Magnesium nitrate, Sodium acetate, and lacks Sodium salicylate, Trisodium ethylenediamine disuccinate, Citrus aurantium peel oil. It is a different pack/formula generation ('new look' relaunch per dm gallery image 4) and is excluded from this packet's canonical list.",
+  "No conflicting list exists for GTIN 071164341469: manufacturer page, dm.de listing and the legible parts of the pack photo agree item for item (25 items)."
+ ],
+ "canonicalInci": [
+  "Aqua/Water/Eau",
+  "Sodium C14-16 olefin sulfonate",
+  "Cocamide MIPA",
+  "Sodium chloride",
+  "Cocamidopropyl betaine",
+  "Glycerin",
+  "Argania spinosa (argan) kernel oil",
+  "Panthenol",
+  "Polyquaternium-10",
+  "Polyquaternium-7",
+  "Glycol distearate",
+  "Dicaprylyl ether",
+  "Decyl glucoside",
+  "Glyceryl oleate",
+  "Citric acid",
+  "Sodium hydroxide",
+  "Sodium salicylate",
+  "Sodium benzoate",
+  "Trisodium ethylenediamine disuccinate",
+  "Isopropanolamine",
+  "Parfum/Fragrance",
+  "Benzoic acid",
+  "Benzyl benzoate",
+  "Citrus aurantium peel oil",
+  "Limonene"
+ ],
+ "canonicalReason": "Trust order manufacturer page for exact product > pack photo > GTIN-matched retailer. The haskbeauty.com page (current 'Repair + Argan Oil Shampoo') is the manufacturer source; it is the same 473 ml / 16 fl oz line as shown on the pack photo, although it shows no GTIN itself. Its list is identical item for item and in order to the GTIN-matched dm.de list (GTIN 071164341469) and to every legible fragment of the back-label pack photo, so the three sources corroborate each other and the list is taken verbatim from the manufacturer page (25 items, case/punctuation kept; synonym entries such as 'Aqua/Water/Eau' and 'Parfum/Fragrance' are single items as published).",
+ "inciFingerprintSha256": "424834f10d54e500a9cbe027b1abcf4e97415145af2bac0e7e17abac49e29973",
+ "normalization": "Runbook step 2: canonical list items lower-cased, trimmed, whitespace collapsed, joined with '|', SHA-256; split synonym entries (e.g. 'Aqua (Water, Eau)') merged before numbering.",
+ "identityConfidence": "high",
+ "formulaCompleteness": "complete",
+ "formulaSourceTier": 2,
+ "status": "frozen",
+ "blockReason": null,
+ "notes": [
+  "Availability: dm.de 3123206 shows 'Nicht lieferbar' and 'Keine Anzeige für die Verfügbarkeit im dm-Markt möglich' on 2026-10-12; price 5,95 EUR (reduced from 8,95 EUR, dm-Dauerpreis 'nicht erhöht seit 27.03.2026'); rating 4.9 (37 Bewertungen). The product is absent from dm's product search API for the GTIN and for 'hask shampoo' (only Shampoo curls + coconut oil, 473 ml, GTIN 071164341438, is listed as lieferbar) - consistent with delisting/clearance or temporary stock-out.",
+  "dm company address on page: Inspired Beauty Brands, 330 SEVENTH AVE, 16th FL, NEW YORK, NY 10001, customerservice@haskbeauty.com; Aufbewahrungshinweis 'Vor direkter Sonneneinstrahlung schützen.' Pack photo back label also names an EU/IE importer (Exponent International HG2 8RE UK / St. Mary's Place, Dublin 7, IRE per partial text).",
+  "SKU relationship: dm gallery image 4 ('new look SAME RESULTS', 12oz Argan Oil repairing 355 ml -> 16oz repair + argan oil 473 ml, 'LARGER SIZE') shows the 473 ml pack is the manufacturer-declared successor of the 355 ml Argan Oil Shampoo, but the INCI differs (see conflicts); the catalog row must be re-pointed to GTIN 071164341469 and the 355 ml formula must not be used for it.",
+  "Amazon.de (searched 2026-10-12): only the old 355 ml listing (ASIN B00FY5QUT6) surfaced; no 473 ml listing, no INCI/GTIN text usable -> not used as a source. Open Beauty Facts: GTIN 0071164341469 'product not found' (API v0/v2) and no search hit. Rossmann: no listing found (previous check 2026-10-09).",
+  "Formula-source tier 2 = manufacturer page (US, no DE/EU page found) corroborated by GTIN-exact dm.de list and pack photo; no DE manufacturer page exists in the sources checked.",
+  "Claim vs INCI: 'ohne Sulfat' (dm) / 'no sulfates' (pack): list contains Sodium C14-16 olefin sulfonate (a sulfonate, not a sulfate) - marketing-defined claim, no direct contradiction; no silicones in the list (consistent with 'ohne Silikone')."
+ ]
 }
