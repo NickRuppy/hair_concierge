@@ -5,7 +5,10 @@ import { renderToStaticMarkup } from "react-dom/server"
 import { ProductFitComparison } from "../../src/components/personal-plan-products/product-fit-comparison"
 import { ScanVerdictSections } from "../../src/components/scan/scan-verdict-sections"
 import { criterionIdForDimension } from "../../src/lib/personal-plan/products/comparison-dimensions"
-import { buildStage3FitComparison } from "../../src/lib/personal-plan/products/fit-comparison"
+import {
+  buildStage3FitComparison,
+  rankStage3ComparisonCandidates,
+} from "../../src/lib/personal-plan/products/fit-comparison"
 
 import { buildOilDecision } from "../../src/lib/personal-plan/categories/oil"
 import { buildPlanProfile } from "../../src/lib/personal-plan/input"
@@ -111,6 +114,238 @@ function shampooWithCleansingTarget(
   }
   return input as Stage3AuthorityInput
 }
+
+// R19, ruled 2026-10-12: scalp cells ignore thickness for fit; normal retains distance.
+const shampooCells = [
+  {
+    name: "no scalp issue",
+    bucket: "normal",
+    route: "balanced",
+    constraint: "standard",
+    role: "shampoo_everyday",
+    intensity: "regular",
+  },
+  {
+    name: "oily",
+    bucket: "dehydriert-fettig",
+    route: "oily",
+    constraint: "standard",
+    role: "shampoo_everyday",
+    intensity: "regular",
+  },
+  {
+    name: "dry",
+    bucket: "trocken",
+    route: "dry",
+    constraint: "gentle_dry_scalp",
+    role: "shampoo_everyday",
+    intensity: "gentle",
+  },
+  {
+    name: "irritated",
+    bucket: "irritationen",
+    route: "balanced",
+    constraint: "irritation_compatible",
+    role: "shampoo_everyday",
+    intensity: "gentle",
+  },
+  {
+    name: "dandruff",
+    bucket: "schuppen",
+    route: "balanced",
+    constraint: "standard",
+    role: "shampoo_dandruff",
+    intensity: "regular",
+  },
+] as const
+
+function shampooCell(cell: (typeof shampooCells)[number], thickness: "fine" | "normal" | "coarse") {
+  const input = shampoo({
+    shampooBucket: cell.bucket,
+    scalpRoute:
+      cell.name === "irritated" ? "irritated" : cell.name === "dandruff" ? "dandruff" : cell.route,
+    cleansingIntensity: cell.intensity,
+  }) as Stage3AuthorityInput<"shampoo">
+  input.hairThickness = thickness
+  input.role = cell.role
+  input.categoryDecision.target = {
+    category: "shampoo",
+    roles: [cell.role],
+    scalpRoute: cell.route,
+    everydayConstraint: cell.constraint,
+    requiresTargetedDandruffCapability: cell.role === "shampoo_dandruff",
+  }
+  input.productFacts!.protocols[0].role = cell.role
+  return input
+}
+
+for (const cell of shampooCells) {
+  for (const thickness of ["fine", "normal", "coarse"] as const) {
+    test(`R19 shampoo ${cell.name}: ${thickness} thickness distances`, () => {
+      for (const productThickness of ["fine", "normal", "coarse"] as const) {
+        for (const [intensityIndex, cleansingIntensity] of [
+          "gentle",
+          "regular",
+          "clarifying",
+        ].entries()) {
+          const input = shampooCell(cell, thickness)
+          input.productFacts!.suitableThicknesses = [productThickness]
+          input.productFacts!.spec.thicknesses = [productThickness]
+          input.productFacts!.spec.cleansingIntensity = cleansingIntensity
+          const distance =
+            cell.name === "no scalp issue"
+              ? Math.abs(
+                  ["fine", "normal", "coarse"].indexOf(thickness) -
+                    ["fine", "normal", "coarse"].indexOf(productThickness),
+                )
+              : 0
+          const result = evaluateStage3Authority(input as never)
+          assert.equal(
+            result.status === "known" ? result.verdict : result.status,
+            expectedVerdict(
+              distance + Math.abs(intensityIndex - (cell.intensity === "gentle" ? 0 : 1)),
+            ),
+          )
+          if (result.status !== "known") return
+          assert.equal(
+            result.criteria.find((row) => row.criterionId === "shampoo.thickness")?.result,
+            distance === 0 ? "pass" : distance === 1 ? "caution" : "fail",
+          )
+        }
+      }
+    })
+  }
+}
+
+for (const cell of shampooCells.filter((cell) => cell.name !== "no scalp issue")) {
+  test(`R19 shampoo ${cell.name}: absent thickness facts are informational`, () => {
+    const input = shampooCell(cell, "coarse")
+    input.productFacts!.suitableThicknesses = null
+    input.productFacts!.spec.thickness = null
+    input.productFacts!.spec.thicknesses = null
+    const result = evaluateStage3Authority(input as never)
+    assert.equal(result.status, "known")
+    if (result.status !== "known") return
+    assert.equal(result.verdict, "ideal")
+    assert.equal(
+      result.criteria.find((row) => row.criterionId === "shampoo.thickness")?.result,
+      "pass",
+    )
+  })
+}
+
+for (const cell of shampooCells.filter((cell) => cell.intensity === "regular")) {
+  for (const thickness of ["fine", "normal", "coarse"] as const) {
+    test(`R19 shampoo ${cell.name}: ${thickness} equally fitting candidate ranking`, () => {
+      const input = shampooCell(cell, thickness)
+      const candidates = (["gentle", "clarifying"] as const).map((intensity, index) => ({
+        ...input.productFacts!,
+        productId: intensity,
+        catalogSortOrder: index === 0 ? 99 : 1,
+        priceEur: index === 0 ? 99 : 1,
+        currency: "EUR",
+        suitableThicknesses: [thickness],
+        spec: {
+          ...input.productFacts!.spec,
+          thicknesses: [thickness],
+          cleansingIntensity: intensity,
+        },
+      }))
+      input.productFacts = null
+      input.capturedProductId = null
+      input.subjectIdentity = null
+      input.recommendationCandidates = candidates
+      const expectedId =
+        cell.name !== "no scalp issue" && thickness === "coarse" ? "gentle" : "clarifying"
+      const result = evaluateStage3Authority(input as never)
+      assert.equal(result.status === "known" ? result.recommendation?.productId : null, expectedId)
+      assert.equal(rankStage3ComparisonCandidates(input as never, result)[0]?.productId, expectedId)
+      const native = buildStage3FitComparison(input, result, undefined, {
+        alternativeSelection: "native",
+      })
+      assert.equal(native.alternatives[0]?.productId, expectedId)
+      // Gentleness must never lift a supportive candidate over an ideal one.
+      input.recommendationCandidates.push({
+        ...candidates[1],
+        productId: "ideal",
+        catalogSortOrder: 999,
+        spec: { ...candidates[1].spec, cleansingIntensity: "regular" },
+      })
+      const idealPick = evaluateStage3Authority(input as never)
+      assert.equal(
+        idealPick.status === "known" ? idealPick.recommendation?.productId : null,
+        "ideal",
+      )
+      assert.equal(rankStage3ComparisonCandidates(input as never, idealPick)[0]?.productId, "ideal")
+      assert.equal(
+        buildStage3FitComparison(input, idealPick, undefined, {
+          alternativeSelection: "native",
+        }).alternatives[0]?.productId,
+        "ideal",
+      )
+    })
+  }
+}
+
+test("R19 shampoo scalp thickness row stays green in plan and scanner", () => {
+  const input = shampooCell(shampooCells[1], "coarse")
+  input.productFacts!.suitableThicknesses = ["fine"]
+  input.productFacts!.spec.thicknesses = ["fine"]
+  const evaluation = evaluateStage3Authority(input as never)
+  const comparison = buildStage3FitComparison(input, evaluation)
+  assert.equal(
+    comparison.evidenceRows!.find((row) => row.rowId === "shampoo.suitable_thicknesses")
+      ?.productValues[0]?.relation,
+    "in_target",
+  )
+  const scan = buildScanVerdict({
+    category: input.category,
+    decision: input.categoryDecision,
+    productFacts: input.productFacts,
+    recommendationCandidates: [],
+    coverage: [],
+    hairThickness: input.hairThickness!,
+    heatCarrierCoverage: input.heatCarrierCoverage,
+    refinedVersionId: input.refinedVersionId,
+    refinedInputHash: input.refinedInputHash,
+  })
+  assert.equal(scan.kind, "in_catalog")
+  if (scan.kind !== "in_catalog") return
+  assert.equal(scan.verdict, "ideal")
+  assert.equal(
+    scan.dimensions.find((row) => row.dimensionId === "shampoo.suitable_thicknesses")?.state,
+    "in_target",
+  )
+})
+
+test("R19 shampoo scalp ranking ignores informational thickness overlap", () => {
+  const input = shampooCell(shampooCells[1], "coarse")
+  const gentle = {
+    ...input.productFacts!,
+    productId: "gentle",
+    catalogSortOrder: 99,
+    suitableThicknesses: ["fine"],
+    spec: { ...input.productFacts!.spec, thicknesses: ["fine"], cleansingIntensity: "gentle" },
+  }
+  const stronger = {
+    ...input.productFacts!,
+    productId: "stronger",
+    catalogSortOrder: 1,
+    suitableThicknesses: ["coarse"],
+    spec: {
+      ...input.productFacts!.spec,
+      thicknesses: ["coarse"],
+      cleansingIntensity: "clarifying",
+    },
+  }
+  input.productFacts = null
+  input.capturedProductId = null
+  input.subjectIdentity = null
+  input.recommendationCandidates = [stronger, gentle]
+  const result = evaluateStage3Authority(input as never)
+  assert.equal(result.status === "known" ? result.recommendation?.productId : null, "gentle")
+  assert.equal(rankStage3ComparisonCandidates(input as never, result)[0]?.productId, "gentle")
+})
 
 function conditioner(spec: Record<string, unknown>) {
   return base(

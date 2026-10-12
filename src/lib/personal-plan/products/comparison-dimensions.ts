@@ -3,7 +3,10 @@ import type { PlanProductRole } from "@/lib/personal-plan/types"
 import type { PersonalPlanCategory, Stage3CriterionResult } from "./contracts"
 import type { Stage3AuthorityInput, Stage3CategoryProductFacts } from "./authority/contracts"
 import { maskAcceptedCareDirections } from "./authority/categories/axis-fit"
-import { expectedShampooSpecTarget } from "./authority/categories/shampoo-spec-target"
+import {
+  expectedShampooSpecTarget,
+  isScalpShampooTarget,
+} from "./authority/categories/shampoo-spec-target"
 import { compactCriterionSchema } from "./fit-comparison-schema"
 import { BUDGET_NEED_DIMENSIONS, type BudgetCandidateView } from "./budget-policy"
 
@@ -106,6 +109,14 @@ export function candidateDimensionCoverage(
       matches:
         applicationMatches +
         targetDimensions.filter((dimension) => {
+          // R19: the informational thickness row must not penalize scalp-cell ranking.
+          if (
+            dimension.dimensionId === "shampoo.suitable_thicknesses" &&
+            isScalpShampooTarget({ role: input.role, target: input.categoryDecision.target })
+          )
+            return criteria.some(
+              (row) => row.criterionId === "shampoo.thickness" && row.result === "pass",
+            )
           const position = dimension.productPositions[0]?.position ?? { kind: "unknown" as const }
           return positionsOverlap(position, dimension.targetPosition!)
         }).length,

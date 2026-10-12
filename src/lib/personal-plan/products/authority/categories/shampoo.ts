@@ -13,7 +13,11 @@ import type {
   Stage3ShampooFacts,
 } from "../contracts"
 import { candidateDimensionCoverage } from "../../comparison-dimensions"
-import { compareRankableCandidates, type RankableCandidate } from "../../candidate-ranking"
+import {
+  compareRankableCandidates,
+  shampooGentlenessRank,
+  type RankableCandidate,
+} from "../../candidate-ranking"
 import {
   criterion,
   hasValidTarget,
@@ -23,7 +27,7 @@ import {
   unknownEvaluation,
   unsupportedEvaluation,
 } from "../shared"
-import { expectedShampooSpecTarget } from "./shampoo-spec-target"
+import { expectedShampooSpecTarget, isScalpShampooTarget } from "./shampoo-spec-target"
 
 export { expectedShampooBucket, expectedShampooSpecTarget } from "./shampoo-spec-target"
 
@@ -52,6 +56,7 @@ function evaluateFacts(input: Stage3AuthorityInput<"shampoo">, facts: Stage3Sham
   const target = input.categoryDecision.target
   const expected =
     target?.category === "shampoo" ? expectedShampooSpecTarget({ role: input.role, target }) : null
+  const scalpCell = isScalpShampooTarget({ role: input.role, target })
   const gates = commonFitGates(input, facts)
   gates.push(
     {
@@ -114,15 +119,34 @@ function evaluateFacts(input: Stage3AuthorityInput<"shampoo">, facts: Stage3Sham
       ),
     },
   ]
-  const result = evaluateCriteria(input, facts, gates, axes, {
-    "shampoo.role": [
-      ...(facts.spec.shampooBucket === null ? ["shampoo_bucket"] : []),
-      ...(!expected ? ["shampoo_bucket_target", "shampoo_spec_target"] : []),
-    ],
-    "shampoo.scalp_route": facts.spec.scalpRoute === null ? ["scalp_route"] : [],
-    "shampoo.cleansing_intensity":
-      expected || facts.spec.cleansingIntensity === null ? ["cleansing_intensity"] : [],
-  })
+  // R19, ruled 2026-10-12: thickness stays visible but contributes no distance in scalp cells.
+  const scoredAxes = scalpCell ? axes.filter((axis) => axis.id !== "shampoo.thickness") : axes
+  const result = evaluateCriteria(
+    input,
+    facts,
+    gates,
+    scoredAxes,
+    {
+      "shampoo.role": [
+        ...(facts.spec.shampooBucket === null ? ["shampoo_bucket"] : []),
+        ...(!expected ? ["shampoo_bucket_target", "shampoo_spec_target"] : []),
+      ],
+      "shampoo.scalp_route": facts.spec.scalpRoute === null ? ["scalp_route"] : [],
+      "shampoo.cleansing_intensity":
+        expected || facts.spec.cleansingIntensity === null ? ["cleansing_intensity"] : [],
+    },
+    { requiresSuitableThickness: !scalpCell },
+  )
+  if (scalpCell) {
+    const intensityIndex = result.criteria.findIndex(
+      (row) => row.criterionId === "shampoo.cleansing_intensity",
+    )
+    result.criteria.splice(
+      intensityIndex,
+      0,
+      criterion("shampoo.thickness", "Haardicke", "pass", "Entspricht deinem Bedarf."),
+    )
+  }
   const roleCriterion = result.criteria.find((row) => row.criterionId === "shampoo.role")!
   if (roleCriterion.result === "pass")
     roleCriterion.explanation = "Das Produkt deckt die bestätigte Shampoo-Aufgabe ab."
@@ -162,6 +186,7 @@ function bestCandidate(input: Stage3AuthorityInput<"shampoo">) {
           candidate.result.criteria,
         ).matches,
         cautionCount: candidate.result.criteria.filter((c) => c.result === "caution").length,
+        shampooGentleness: shampooGentlenessRank(input, candidate.item),
         catalogSortOrder: candidate.item.catalogSortOrder,
         priceEur: candidate.item.priceEur ?? null,
         productId: candidate.item.productId,

@@ -84,8 +84,12 @@ export function evaluateCriteria(
   gates: FitGate[],
   axes: FitAxis[],
   missingFactKeys: Record<string, string[]> = {},
+  options: { requiresSuitableThickness?: boolean } = {},
 ) {
-  const missing = commonUnknownFacts({ ...input, productFacts: facts } as Stage3AuthorityInput)
+  const missing = commonUnknownFacts(
+    { ...input, productFacts: facts } as Stage3AuthorityInput,
+    options,
+  )
   const evaluation = evaluateFit({
     gates: [...gates, ...missing.map((id): FitGate => ({ id, label: id, outcome: "unknown" }))],
     axes,
