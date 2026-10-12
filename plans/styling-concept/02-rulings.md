@@ -70,3 +70,11 @@ Source: `docs/research/styling-inci/v1.0/styling-classification-standard.md` §1
 | PH2-10 | **Kevin.Murphy Killer.Curls** has C3 claims only → `provisional_boundary (evidence_gate)` until a C1/C2 German claim is captured. |
 | PH2-11 (housekeeping, Claude) | Langhaarmädchen Lockenwunder → Leave-in by the PH1-13 R2 rule (cationic r4 above the preservative). „ausbürstbar" stays a v0 convention (not a flexibility word). The charter's dropped P1 extras (≥ 80 % shelf coverage, every pair rule exercised) are tracked as open, not lock criteria. `calibration-set-r2.json` stays frozen: ruled outcomes are re-derived in the Phase 3 blind round, not patched. |
 | PH2-12 | **Waxes, paraffin, microcrystalline wax and lanolin count as rich members for Styling `weight`** (Styling-local addition to the LI WT rich list, like the four vinyl fixative families; it moves into the Leave-in addendum after lock per PH1-16). Wax/paste/pomade products read `rich` and get the buildup note (e.g. Taft Matt Wax, got2b Mattpaste). This resolves standard §13 item 15 / lexicon §5 item 7 / property set §9 item 12(b). |
+
+## Phase 3 round-1 calibration rulings (2026-10-12)
+
+Source: `data/research/styling-inci/v1.0/round-1/report.md` and `diff.json` (owner questions Q1–Q4).
+
+| ID | Ruling |
+|---|---|
+| R1-Q1 | **Henkel „Haltegrad" on pastes, waxes and balms is read on the same x/5 scale as Henkel sprays and mousses** (every Henkel format except Taft gels, which keep the words-only rule). „5+" = 5. Before the fold-in, the Taft Paste pack is re-read (it shows „5+" next to 4 dots). |
