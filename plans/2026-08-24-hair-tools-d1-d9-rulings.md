@@ -596,7 +596,7 @@ Round 1 (F1–F14):
 | F11 | Named suites needed migration/boundary wiring → PGlite list and rebase chain extended, owners named. |
 | F12 | Unconditional brush-row removal broke the tools-off variant → **superseded** by the Profil restructure. |
 | F13 | Removing „Nichts davon" did not enforce D2 in the UI → drying-specific completeness (local + server). |
-| F14 | No reader-before-writer / rollback contract → flag + deploy order (migration → code `off` → `admin` → `all`) and the rollback script. |
+| F14 | No reader-before-writer / rollback contract → flag + deploy order and the rollback script. Rev. 6 (2026-10-11): the flag defaults on, so the order is migration → deploy (module live for all) → Nick's production walkthrough; `off` (any case) is the emergency switch and `admin` stays an optional stage. |
 
 Round 2 (R2-1…R2-4): **R2-1** generated care keys needed answer reconstruction in `knownCareAnswers` (nested page answers rebuilt before validation, expanded on write); **R2-2** the retry endpoint was not idempotent by sharing PATCH completion (validated closing/non-closing replay before any facts write); **R2-3** rollback of persisted tool payloads was not executable on immutable routine versions → resolved by **read-time derivation** (nothing tool-shaped is persisted, so there is nothing to downgrade); **R2-4** copied labs violated the compile-clean gate (deferred to the tasks that provide their contracts).
 

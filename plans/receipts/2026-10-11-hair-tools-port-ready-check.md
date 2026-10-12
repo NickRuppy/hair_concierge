@@ -64,5 +64,6 @@ Logs: `.superpowers/sdd/2026-10-09-hair-tools-port/reports/readycheck-aec3f743/`
 
 - Skipped: live signed-in flag-on journey (above); `npm run test:chat` not required (no chat/rag/routines-engine paths changed).
 - Deploy order (plan §10): apply the migration first (additive) → deploy with `PERSONAL_PLAN_TOOLS_ROLLOUT` unset → set `admin`, Nick walks the journey in production → `all`.
+  - Note: Rev. 6 changed the flag default to on (deploy = live for all); the receipt for the final tree supersedes this line.
 - Rollback: flag `off` first; a pre-port code rollback only after `scripts/personal-plan/tools-rollback-clear-facts.ts --apply` (facts + draft downgrade).
 - Residual: Beratung consult sheets now show the Diffusor tier as „nicht nötig" (unconditional; matches the ruling); with the flag off a completed towel answer that originated from the tools page is indistinguishable from a member answer; one extra `hair_profiles` read per Stage-2 load/save and per Routine/Anwendung view with the flag on (measured: not slower); 4 production members with a stored Diffusor Hitzeschutz value are read-tolerant; 3 August test drafts keep working.
