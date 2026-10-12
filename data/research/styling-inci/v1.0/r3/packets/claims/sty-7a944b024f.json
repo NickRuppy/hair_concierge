@@ -1,0 +1,58 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-7a944b024f",
+  "brand": "Balea",
+  "confirmed_name": "Overnight Wellenspray",
+  "confirmed_name_tier": "C2_house_brand",
+  "format": "aerosol",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Styling-Spray für Locken über Nacht",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Schonendes Styling ohne Hitze",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Flexibler Halt",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Für ein Styling, das im Schlaf gelingt, ist das Balea Overnight Wellenspray die ideale Wahl. Es verleiht Wellen und Locken eine tolle Sprungkraft und fixiert die Frisur zuverlässig über Nacht. Die leichte Formulierung beschwert das Haar nicht und verhindert ein Verkleben. In Kombination mit Lockentools lässt sich so ganz ohne Hitze ein beeindruckendes Ergebnis erzielen. Das Balea Overnight Wellenspray unterstützt ein unkompliziertes Styling für einen Look, der am Morgen begeistert und den ganzen Tag hält.",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "hold",
+      "text": "Flexibler Halt",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "Flexibler Halt"
+    }
+  ]
+}

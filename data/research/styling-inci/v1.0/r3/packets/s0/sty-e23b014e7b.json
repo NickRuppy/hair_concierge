@@ -1,0 +1,141 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-e23b014e7b",
+  "product": {
+    "confirmed_name": "Styling Fiber",
+    "confirmed_name_redacted": false,
+    "brand": "American Crew",
+    "format": "paste"
+  },
+  "identity": {
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 27,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua (Water (Eau))"
+      },
+      {
+        "rank": 2,
+        "inci": "Lanolin Cera (Lanolin Wax (Cire De Lanoline))"
+      },
+      {
+        "rank": 3,
+        "inci": "Cetearyl Alcohol"
+      },
+      {
+        "rank": 4,
+        "inci": "PVP"
+      },
+      {
+        "rank": 5,
+        "inci": "Tridecyl Stearate"
+      },
+      {
+        "rank": 6,
+        "inci": "Tribehenin"
+      },
+      {
+        "rank": 7,
+        "inci": "Propylene Glycol"
+      },
+      {
+        "rank": 8,
+        "inci": "Alcohol Denat."
+      },
+      {
+        "rank": 9,
+        "inci": "Tridecyl Trimellitate"
+      },
+      {
+        "rank": 10,
+        "inci": "PEG-8 Beeswax"
+      },
+      {
+        "rank": 11,
+        "inci": "Ceteareth-25"
+      },
+      {
+        "rank": 12,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 13,
+        "inci": "PEG-40 Castor Oil"
+      },
+      {
+        "rank": 14,
+        "inci": "Dipentaerythrityl Hexacaprylate/Hexacaprate"
+      },
+      {
+        "rank": 15,
+        "inci": "Benzyl Alcohol"
+      },
+      {
+        "rank": 16,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 17,
+        "inci": "Acrylates/C10-30 Alkyl Acrylate Crosspolymer"
+      },
+      {
+        "rank": 18,
+        "inci": "Triethanolamine"
+      },
+      {
+        "rank": 19,
+        "inci": "Methylparaben"
+      },
+      {
+        "rank": 20,
+        "inci": "Ethylparaben"
+      },
+      {
+        "rank": 21,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 22,
+        "inci": "Tetrasodium EDTA"
+      },
+      {
+        "rank": 23,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 24,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 25,
+        "inci": "Caramel"
+      },
+      {
+        "rank": 26,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 27,
+        "inci": "Yellow 5 (CI 19140)/ Acid Yellow 23"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Eine kleine Menge in den Händen gut verreiben und in handtuchtrockenes Haar einarbeiten.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "flaconi.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [],
+  "heat_protection_claims_c1_c2": []
+}

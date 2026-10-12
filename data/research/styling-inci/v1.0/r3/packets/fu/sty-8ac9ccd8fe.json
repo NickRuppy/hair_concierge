@@ -1,0 +1,200 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-8ac9ccd8fe",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 44,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "WATER/AQUA"
+      },
+      {
+        "rank": 2,
+        "inci": "DIPROPYLENE GLYCOL"
+      },
+      {
+        "rank": 3,
+        "inci": "POLYSILICONE-29"
+      },
+      {
+        "rank": 4,
+        "inci": "SILICONE QUATERNIUM-18"
+      },
+      {
+        "rank": 5,
+        "inci": "ARGANIA SPINOSA (ARGAN) KERNEL OIL"
+      },
+      {
+        "rank": 6,
+        "inci": "ARTOCARPUS HETEROPHYLLUS FRUIT EXTRACT"
+      },
+      {
+        "rank": 7,
+        "inci": "AMARANTHUS CAUDATUS SEED EXTRACT"
+      },
+      {
+        "rank": 8,
+        "inci": "FRAGRANCE (PERFUM)"
+      },
+      {
+        "rank": 9,
+        "inci": "POLYSORBATE 20"
+      },
+      {
+        "rank": 10,
+        "inci": "TRIDECETH-12"
+      },
+      {
+        "rank": 11,
+        "inci": "METHYLPROPANEDIOL"
+      },
+      {
+        "rank": 12,
+        "inci": "TRIDECETH-6"
+      },
+      {
+        "rank": 13,
+        "inci": "CAPRYLYL GLYCOL"
+      },
+      {
+        "rank": 14,
+        "inci": "GLYCOLIC ACID"
+      },
+      {
+        "rank": 15,
+        "inci": "POLYQUATERNIUM-80"
+      },
+      {
+        "rank": 16,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 17,
+        "inci": "C12-13 PARETH-9"
+      },
+      {
+        "rank": 18,
+        "inci": "HYDROLYZED QUINOA"
+      },
+      {
+        "rank": 19,
+        "inci": "SODIUM PCA"
+      },
+      {
+        "rank": 20,
+        "inci": "SODIUM LACTATE"
+      },
+      {
+        "rank": 21,
+        "inci": "DIDECYLDIMONIUM CHLORIDE"
+      },
+      {
+        "rank": 22,
+        "inci": "ARGININE"
+      },
+      {
+        "rank": 23,
+        "inci": "ASPARTIC ACID"
+      },
+      {
+        "rank": 24,
+        "inci": "POTASSIUM HYDROXIDE"
+      },
+      {
+        "rank": 25,
+        "inci": "PCA"
+      },
+      {
+        "rank": 26,
+        "inci": "LACTOBACILLUS FERMENT"
+      },
+      {
+        "rank": 27,
+        "inci": "GLYCINE"
+      },
+      {
+        "rank": 28,
+        "inci": "ALANINE"
+      },
+      {
+        "rank": 29,
+        "inci": "ALGIN"
+      },
+      {
+        "rank": 30,
+        "inci": "CAPRYLIC/CAPRIC TRIGLYCERIDE"
+      },
+      {
+        "rank": 31,
+        "inci": "CHITOSAN"
+      },
+      {
+        "rank": 32,
+        "inci": "SERINE"
+      },
+      {
+        "rank": 33,
+        "inci": "VALINE"
+      },
+      {
+        "rank": 34,
+        "inci": "ISOLEUCINE"
+      },
+      {
+        "rank": 35,
+        "inci": "PROLINE"
+      },
+      {
+        "rank": 36,
+        "inci": "THREONINE"
+      },
+      {
+        "rank": 37,
+        "inci": "HISTIDINE"
+      },
+      {
+        "rank": 38,
+        "inci": "PHENYLALANINE"
+      },
+      {
+        "rank": 39,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 40,
+        "inci": "SODIUM BENZOATE"
+      },
+      {
+        "rank": 41,
+        "inci": "POTASSIUM SORBATE"
+      },
+      {
+        "rank": 42,
+        "inci": "BENZYL ALCOHOL"
+      },
+      {
+        "rank": 43,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 44,
+        "inci": "ALPHA-ISOMETHYL IONONE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "In das saubere, feuchte Haar sprühen. Für eine gleichmäßige Verteilung kämmen und zur Aktivierung abschnittsweise föhnen. Anschließend ein Glätteisen verwenden, um die Anti-Frizz-Wirkung zu verstärken. [CLAIM] sollte das letzte Produkt vor dem Föhnen sein, um eine optimale Wärmeaktivierung zu erzielen.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "de.moroccanoil.com",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

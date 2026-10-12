@@ -1,0 +1,50 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-f0542ffb56",
+  "brand": "Schwarzkopf Professional",
+  "confirmed_name": "OSiS Flatliner",
+  "confirmed_name_tier": "C2",
+  "format": "pump_spray",
+  "product_type_word": "pump_spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "OSiS Flatliner bietet Hitzeschutz bis zu 230 °C und wurde speziell für die tägliche Anwendung mit heißen Stylingtools entwickelt. Es reduziert Frizz für geschmeidiges, gesund aussehendes Haar.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf-professional.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "PERFEKT FÜR SMOOTH GLANZ HITZESCHUTZ",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf-professional.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "hold",
+      "text": "leichten Halt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf-professional.com",
+      "date": "2026-10-12",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "leichten Halt"
+    },
+    {
+      "type": "heat_protection",
+      "text": "Hitzeschutz bis zu 230 °C",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf-professional.com",
+      "date": "2026-10-12"
+    }
+  ]
+}

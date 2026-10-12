@@ -1,0 +1,109 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-45767bd5e3",
+  "product": {
+    "confirmed_name": "Haargel [CLAIM] Halt [CLAIM]",
+    "confirmed_name_redacted": true,
+    "brand": "Schwarzkopf taft",
+    "format": "gel"
+  },
+  "identity": {
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 17,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 2,
+        "inci": "Alcohol denat."
+      },
+      {
+        "rank": 3,
+        "inci": "PVP"
+      },
+      {
+        "rank": 4,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 5,
+        "inci": "Carbomer"
+      },
+      {
+        "rank": 6,
+        "inci": "PEG-32"
+      },
+      {
+        "rank": 7,
+        "inci": "PEG-40 Hydrogenated Castor Oil"
+      },
+      {
+        "rank": 8,
+        "inci": "Aminomethyl Propanol"
+      },
+      {
+        "rank": 9,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 10,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 11,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 12,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 13,
+        "inci": "Benzyl Alcohol"
+      },
+      {
+        "rank": 14,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 15,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      },
+      {
+        "rank": 16,
+        "inci": "Terpineol"
+      },
+      {
+        "rank": 17,
+        "inci": "Dimethyl Phenethyl Acetate"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "In das trockene oder feuchte Haar einarbeiten. Haar nach Wunsch stylen. Für beste Ergebnisse mit TAFT Haarspray fixieren.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "bietet den [CLAIM] langanhaltenden Halt von Taft, ohne zu verkleben",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-09"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

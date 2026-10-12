@@ -1,0 +1,233 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-af0f9c4937",
+  "product": {
+    "confirmed_name": "Killer.Curls (Leave-in Anti-Frizz Creme)",
+    "confirmed_name_redacted": false,
+    "brand": "Kevin.Murphy",
+    "format": "cream"
+  },
+  "identity": {
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 48,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Water (Aqua) (Eau)"
+      },
+      {
+        "rank": 2,
+        "inci": "Lanolin Wax (Lanolin Cera) (Cire de lanoline)"
+      },
+      {
+        "rank": 3,
+        "inci": "Alcohol Denat."
+      },
+      {
+        "rank": 4,
+        "inci": "Acrylates Copolymer"
+      },
+      {
+        "rank": 5,
+        "inci": "Polyurethane-14"
+      },
+      {
+        "rank": 6,
+        "inci": "Propylene Glycol Dibenzoate"
+      },
+      {
+        "rank": 7,
+        "inci": "Cetearyl Alcohol"
+      },
+      {
+        "rank": 8,
+        "inci": "Ethylhexyl Palmitate"
+      },
+      {
+        "rank": 9,
+        "inci": "Sodium Polystyrene Sulfonate"
+      },
+      {
+        "rank": 10,
+        "inci": "Fragrance (Parfum)"
+      },
+      {
+        "rank": 11,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 12,
+        "inci": "AMP-Acrylates Copolymer"
+      },
+      {
+        "rank": 13,
+        "inci": "Citrullus Lanatus (Watermelon) Fruit Extract"
+      },
+      {
+        "rank": 14,
+        "inci": "Citrus Glauca Fruit Extract"
+      },
+      {
+        "rank": 15,
+        "inci": "Microcitrus Australasica Fruit Extract"
+      },
+      {
+        "rank": 16,
+        "inci": "Microcitrus Australis Fruit Extract"
+      },
+      {
+        "rank": 17,
+        "inci": "Pleiogynium Timorense Fruit Extract"
+      },
+      {
+        "rank": 18,
+        "inci": "Podocarpus Elatus Fruit Extract"
+      },
+      {
+        "rank": 19,
+        "inci": "Terminalia Ferdinandiana Fruit Extract"
+      },
+      {
+        "rank": 20,
+        "inci": "Ilex Paraguariensis Leaf Extract"
+      },
+      {
+        "rank": 21,
+        "inci": "Adansonia Digitata Seed Oil"
+      },
+      {
+        "rank": 22,
+        "inci": "Citrus Aurantium Bergamia (Bergamot) Fruit Oil"
+      },
+      {
+        "rank": 23,
+        "inci": "Aloe Barbadensis Leaf Juice"
+      },
+      {
+        "rank": 24,
+        "inci": "Helichrysum Italicum Extract"
+      },
+      {
+        "rank": 25,
+        "inci": "Pogostemon Cablin Oil"
+      },
+      {
+        "rank": 26,
+        "inci": "Copernicia Cerifera (Carnauba) Wax (Cera Carnauba) (Cire de carnauba)"
+      },
+      {
+        "rank": 27,
+        "inci": "Propanediol"
+      },
+      {
+        "rank": 28,
+        "inci": "Caprylic/Capric Triglyceride"
+      },
+      {
+        "rank": 29,
+        "inci": "Phenyl Trimethicone"
+      },
+      {
+        "rank": 30,
+        "inci": "PEG-12 Dimethicone"
+      },
+      {
+        "rank": 31,
+        "inci": "Glyceryl Stearate"
+      },
+      {
+        "rank": 32,
+        "inci": "PEG-100 Stearate"
+      },
+      {
+        "rank": 33,
+        "inci": "PEG-40 Hydrogenated Castor Oil"
+      },
+      {
+        "rank": 34,
+        "inci": "Ceteareth-20"
+      },
+      {
+        "rank": 35,
+        "inci": "PEG-12 Allyl Ether"
+      },
+      {
+        "rank": 36,
+        "inci": "Ethylhexyl Methoxycinnamate"
+      },
+      {
+        "rank": 37,
+        "inci": "Polysilicone-15"
+      },
+      {
+        "rank": 38,
+        "inci": "Aminomethyl Propanol"
+      },
+      {
+        "rank": 39,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 40,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 41,
+        "inci": "Chlorphenesin"
+      },
+      {
+        "rank": 42,
+        "inci": "Sorbic Acid"
+      },
+      {
+        "rank": 43,
+        "inci": "Benzoic Acid"
+      },
+      {
+        "rank": 44,
+        "inci": "Potassium Sorbate"
+      },
+      {
+        "rank": 45,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 46,
+        "inci": "Sodium Hydroxide"
+      },
+      {
+        "rank": 47,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 48,
+        "inci": "Linalool"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Ins handtuchtrockene oder feuchte Haar geben und einkneten, um die Locken in Form zu bringen.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "flaconi.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "ideale Balance zwischen [CLAIM] Halt und [CLAIM] für das Haar",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-11"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

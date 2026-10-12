@@ -1,0 +1,69 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-3cae94d642",
+  "brand": "John Frieda",
+  "confirmed_name": "Haarserum Frizz Ease Der Bändiger (Extra Strong Serum)",
+  "confirmed_name_tier": "C3",
+  "format": "serum",
+  "product_type_word": "serum",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Haarserum für Frizz-Kontrolle",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Die nicht fettende Formel mit Antioxidans Vitamin E und Reisöl",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Der ultimative Tropfen gegen Frizz.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "finish",
+      "text": "sorgt für ein glänzendes Finish bei jeder Anwendung",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "humidity",
+      "text": "Schützt bis zu 72 Stunden vor Luftfeuchtigkeit",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "heat_protection",
+      "text": "Bietet Hitzeschutz bis zu 230 °C",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "Für sofortige Geschmeidigkeit und Glanz",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    }
+  ]
+}

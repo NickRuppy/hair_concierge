@@ -1,0 +1,138 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-42345831af",
+  "product": {
+    "confirmed_name": "Stylingspray Hitzeschutz 3 Tage Glatt",
+    "confirmed_name_redacted": false,
+    "brand": "L'ORÉAL PARiS Elnett",
+    "format": "pump_spray"
+  },
+  "identity": {
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 22,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA / WATER"
+      },
+      {
+        "rank": 2,
+        "inci": "DIMETHICONE"
+      },
+      {
+        "rank": 3,
+        "inci": "STEARYL ALCOHOL"
+      },
+      {
+        "rank": 4,
+        "inci": "HYDROLYZED CONCHIOLIN PROTEIN"
+      },
+      {
+        "rank": 5,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 6,
+        "inci": "PPG-5-CETETH-20"
+      },
+      {
+        "rank": 7,
+        "inci": "BEHENTRIMONIUM CHLORIDE"
+      },
+      {
+        "rank": 8,
+        "inci": "TRIDECETH-6"
+      },
+      {
+        "rank": 9,
+        "inci": "SALICYLIC ACID"
+      },
+      {
+        "rank": 10,
+        "inci": "XYLOSE"
+      },
+      {
+        "rank": 11,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 12,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 13,
+        "inci": "AMODIMETHICONE"
+      },
+      {
+        "rank": 14,
+        "inci": "ISOPROPYL ALCOHOL"
+      },
+      {
+        "rank": 15,
+        "inci": "ALPHA- ISOMETHYL IONONE"
+      },
+      {
+        "rank": 16,
+        "inci": "CETRIMONIUM CHLORIDE"
+      },
+      {
+        "rank": 17,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 18,
+        "inci": "BUTYLENE GLYCOL"
+      },
+      {
+        "rank": 19,
+        "inci": "LAURETH-23"
+      },
+      {
+        "rank": 20,
+        "inci": "LAURETH-4"
+      },
+      {
+        "rank": 21,
+        "inci": "HEXYL CINNAMAL"
+      },
+      {
+        "rank": 22,
+        "inci": "PARFUM / FRAGRANCE"
+      }
+    ]
+  },
+  "directions_status": "missing",
+  "directions": null,
+  "promise_claims_c1_c2": [
+    {
+      "text": "Die 230° Hitzeschutz-Technologie ist speziell für das Stylen mit heißem Fön und Glätteisen entwickelt",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-09"
+    },
+    {
+      "text": "Elnett de Luxe | POWER-SHINE-TECHNOLOGIE | 230°C HITZE STYLING-SPRAY | [GLATT 3 TAGE] | Hitze-Schutz-Technologie | Schutz vor Frizz & Feuchtigkeit | [CLAIM] Halt",
+      "redacted": true,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12"
+    }
+  ],
+  "heat_protection_claims_c1_c2": [
+    {
+      "text": "230°C HITZE STYLING-SPRAY / Hitze-Schutz-Technologie; schützt das Haar bis zu 230 Grad",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-09",
+      "mixed_source": true
+    }
+  ]
+}

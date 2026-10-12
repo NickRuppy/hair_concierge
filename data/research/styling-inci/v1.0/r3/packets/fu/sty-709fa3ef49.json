@@ -1,0 +1,124 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-709fa3ef49",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 25,
+    "tier": "C1",
+    "source_class": "pack",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "aqua"
+      },
+      {
+        "rank": 2,
+        "inci": "alcohol denat."
+      },
+      {
+        "rank": 3,
+        "inci": "maris sal"
+      },
+      {
+        "rank": 4,
+        "inci": "glycerin"
+      },
+      {
+        "rank": 5,
+        "inci": "heptyl glucoside"
+      },
+      {
+        "rank": 6,
+        "inci": "magnesium sulfate"
+      },
+      {
+        "rank": 7,
+        "inci": "betaine"
+      },
+      {
+        "rank": 8,
+        "inci": "hydrolyzed corn starch"
+      },
+      {
+        "rank": 9,
+        "inci": "parfum"
+      },
+      {
+        "rank": 10,
+        "inci": "amp-isostearoyl wheat/corn/soy/amino acids"
+      },
+      {
+        "rank": 11,
+        "inci": "panthenol"
+      },
+      {
+        "rank": 12,
+        "inci": "citrus aurantium peel oil"
+      },
+      {
+        "rank": 13,
+        "inci": "juniperus virginiana wood oil"
+      },
+      {
+        "rank": 14,
+        "inci": "fucus vesiculosus extract"
+      },
+      {
+        "rank": 15,
+        "inci": "potassium sorbate"
+      },
+      {
+        "rank": 16,
+        "inci": "sodium benzoate"
+      },
+      {
+        "rank": 17,
+        "inci": "citric acid"
+      },
+      {
+        "rank": 18,
+        "inci": "maltodextrin"
+      },
+      {
+        "rank": 19,
+        "inci": "tetramethyl acetyloctahydronaphthalenes"
+      },
+      {
+        "rank": 20,
+        "inci": "hexyl cinnamal"
+      },
+      {
+        "rank": 21,
+        "inci": "alpha-isomethyl ionone"
+      },
+      {
+        "rank": 22,
+        "inci": "citronellol"
+      },
+      {
+        "rank": 23,
+        "inci": "limonene"
+      },
+      {
+        "rank": 24,
+        "inci": "geranyl acetate"
+      },
+      {
+        "rank": 25,
+        "inci": "dimethyl phenethyl acetate"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Vor Gebrauch guuut schütteln, dann einen Spritzer ins feuchte oder trockene Haar geben. Für einen intensiveren Beach Look Haare kneten und an der Luft trocknen lassen. Du willst mehr Volumen? Dann einfach Deine Haare trocken föhnen.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

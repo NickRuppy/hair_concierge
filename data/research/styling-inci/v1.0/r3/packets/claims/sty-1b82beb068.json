@@ -1,0 +1,56 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-1b82beb068",
+  "brand": "American Crew",
+  "confirmed_name": "Styling Pomade",
+  "confirmed_name_tier": "C2",
+  "format": "pomade",
+  "product_type_word": "pomade",
+  "scale_info": {
+    "number": 7,
+    "scale_as_written": "Mittlerer Halt – viel Glanz. Haltfaktor 7 – Glanzfaktor 9.",
+    "scale_max": null,
+    "scale_max_stated": false,
+    "tier": "C3"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Unsere Pomade bietet mittleren Halt und hohen Glanz.",
+      "tier": "C5",
+      "source_class": "non_DE_page",
+      "source_host": "americancrew.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "hold",
+      "text": "Mittlerer Halt – viel Glanz. Haltfaktor 7 – Glanzfaktor 9.",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "flaconi.de",
+      "date": "2026-10-09",
+      "number": 7,
+      "scale_as_written": "Mittlerer Halt – viel Glanz. Haltfaktor 7 – Glanzfaktor 9.",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "mittlerer Halt"
+    },
+    {
+      "type": "flexibility",
+      "text": "Ultimativer Halt in einem flexiblen Produkt",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "flaconi.de",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "finish",
+      "text": "hochglänzendes Finish; Glanzfaktor 9",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "flaconi.de",
+      "date": "2026-10-09"
+    }
+  ]
+}

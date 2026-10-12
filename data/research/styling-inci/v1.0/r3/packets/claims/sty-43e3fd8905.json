@@ -1,0 +1,139 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-43e3fd8905",
+  "brand": "got2b",
+  "confirmed_name": "SPRÜH KLEBER Freeze Haarlack",
+  "confirmed_name_tier": "C1",
+  "format": "aerosol",
+  "product_type_word": "aerosol",
+  "scale_info": {
+    "number": 6,
+    "scale_as_written": "1 2 3 4 5 6",
+    "scale_max": 6,
+    "scale_max_stated": false,
+    "tier": "C1"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "für bis zu 72h ultrastarke Styles",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "sanft zur Kopfhaut",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "für alle Haartypen",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "promise",
+      "text": "krasser Halt",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "hold",
+      "text": "krasser Halt",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "number": 6,
+      "scale_as_written": "1 2 3 4 5 6",
+      "scale_max": 6,
+      "scale_max_stated": false,
+      "words": "krasser Halt",
+      "display": {
+        "marks": 6,
+        "labels_as_printed": "1 2 3 4 5 6",
+        "highlighted": [
+          6
+        ],
+        "filled": [
+          6
+        ],
+        "caption_as_printed": "krasser Halt"
+      }
+    },
+    {
+      "type": "hold",
+      "text": "sehr starker Halt",
+      "tier": "C3",
+      "source_class": "retailer_attribute",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "sehr starker Halt",
+      "retailer_attribute": true
+    },
+    {
+      "type": "flexibility",
+      "text": "KLEBER",
+      "tier": "C1",
+      "source_class": "product_name",
+      "source_host": null,
+      "date": null,
+      "from_product_name": true
+    },
+    {
+      "type": "flexibility",
+      "text": "Freeze",
+      "tier": "C1",
+      "source_class": "product_name",
+      "source_host": null,
+      "date": null,
+      "from_product_name": true
+    },
+    {
+      "type": "other",
+      "text": "sorgt für ultra starke Looks mit krassem Halt",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "other",
+      "text": "Fixiert Ihren Look bis zur nächsten Haarwäsche",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "other",
+      "text": "bis zu 72h ultra starke Styles, ohne zu verkleben oder auszutrocknen",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "other",
+      "text": "für bis zu 72 h ultrastarke Styles",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    }
+  ]
+}

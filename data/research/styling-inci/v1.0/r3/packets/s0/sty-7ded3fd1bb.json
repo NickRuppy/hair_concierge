@@ -1,0 +1,89 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-7ded3fd1bb",
+  "product": {
+    "confirmed_name": "Surf Spray",
+    "confirmed_name_redacted": false,
+    "brand": "Bumble and bumble",
+    "format": "pump_spray"
+  },
+  "identity": {
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 14,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Water/Aqua/Eau"
+      },
+      {
+        "rank": 2,
+        "inci": "Magnesium Sulfate"
+      },
+      {
+        "rank": 3,
+        "inci": "Macrocystis Pyrifera (Kelp) Extract"
+      },
+      {
+        "rank": 4,
+        "inci": "Ascophyllum Nodosum Extract"
+      },
+      {
+        "rank": 5,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 6,
+        "inci": "Isoceteth-20"
+      },
+      {
+        "rank": 7,
+        "inci": "PPG-5-Ceteth-20"
+      },
+      {
+        "rank": 8,
+        "inci": "Citric Acid"
+      },
+      {
+        "rank": 9,
+        "inci": "Fragrance (Parfum)"
+      },
+      {
+        "rank": 10,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 11,
+        "inci": "Alpha-Isomethyl Ionone"
+      },
+      {
+        "rank": 12,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 13,
+        "inci": "Potassium Sorbate"
+      },
+      {
+        "rank": 14,
+        "inci": "Phenoxyethanol"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Gleichmäßig auf das feuchte oder trockene Haar sprühen. Stylen und trocknen lassen; stellen Sie sich in den Wind oder verwenden Sie einen Fön mit Aufsatz.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "lookfantastic.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [],
+  "heat_protection_claims_c1_c2": []
+}

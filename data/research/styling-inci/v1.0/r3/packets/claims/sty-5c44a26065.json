@@ -1,0 +1,101 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-5c44a26065",
+  "brand": "Syoss",
+  "confirmed_name": "Glaze Glanz & Schutz Primer",
+  "confirmed_name_tier": "C2",
+  "format": "pump_spray",
+  "product_type_word": "pump_spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "3 in 1 Formel: Style, pflege und repariere dein Haar für Looks mit einem Laminierungs-Effekt. Mit Vitamin-Komplex und Gloss Boost für ein glänzendes Finish.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "3in1 Style, Care, Shine",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Mit Laminierungs-Effekt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Bis zu 230°C Hitzeschutz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Mit Vitamin-Komplex und Gloss Boost für ein glänzendes Finish",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Reduziert Frizz bis zu 24h und schützt das Haar vor Luftfeuchtigkeit",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Bereitet das Haar auf das Styling vor und sorgt für eine geschmeidige, glänzende Grundlage",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Bändigt abstehende Haare, ohne zu beschweren",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "duration",
+      "text": "Reduziert Frizz bis zu 24h",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "humidity",
+      "text": "schützt das Haar vor Luftfeuchtigkeit",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "heat_protection",
+      "text": "Bis zu 230°C Hitzeschutz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12"
+    }
+  ]
+}

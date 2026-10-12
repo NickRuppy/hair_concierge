@@ -1,0 +1,37 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-befcc57c98",
+  "brand": "Redken",
+  "confirmed_name": "Refreshing Curl Mist",
+  "confirmed_name_tier": "C2",
+  "format": "pump_spray",
+  "product_type_word": "pump_spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "REDKEN REFRESHING CURL MIST LOCKEN REVITALISIERT UND REAKTIVIERT LOCKEN (NEU)",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "redken.eu",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Das silikonfreie Refreshing Curl Mist von Redken sorgt für eine sofortige Revitalisierung von Locken bis zum 7. Tag, ohne Haarwäsche. Das mit Squalan und Jojoba-Öl angereicherte Lockenspray stellt die Lockenstruktur, die Sprungkraft und die natürliche Bewegung von Locken wieder her. Für langanhaltend gestylte und gepflegte Locken.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "redken.eu",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "duration",
+      "text": "bis zum 7. Tag, ohne Haarwäsche",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "redken.eu",
+      "date": "2026-10-12"
+    }
+  ]
+}

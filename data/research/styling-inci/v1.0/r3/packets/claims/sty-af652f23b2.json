@@ -1,0 +1,66 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-af652f23b2",
+  "brand": "Balea",
+  "confirmed_name": "Haarpuder Volumen (Pomegranate)",
+  "confirmed_name_tier": "C2_house_brand",
+  "format": "powder",
+  "product_type_word": "puder",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Puder für mehr Volumen & Textur",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "hold",
+      "text": "Halt: starker Halt",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "starker Halt; langanhaltenden Halt"
+    },
+    {
+      "type": "finish",
+      "text": "ein mattes Finish",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "Für Ansatzvolumen & ein mattes Finish",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "eignet sich zudem hervorragend, um Frisuren zu fixieren",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "langanhaltenden Halt zu geben",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    }
+  ]
+}

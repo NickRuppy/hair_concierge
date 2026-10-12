@@ -1,0 +1,80 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-f178bc5ee7",
+  "format": "powder_shaker",
+  "inci": {
+    "inci_item_count": 14,
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 2,
+        "inci": "Silica Silylate"
+      },
+      {
+        "rank": 3,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 4,
+        "inci": "Carrageenan"
+      },
+      {
+        "rank": 5,
+        "inci": "Undecane"
+      },
+      {
+        "rank": 6,
+        "inci": "Potassium Sorbate"
+      },
+      {
+        "rank": 7,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 8,
+        "inci": "Citric Acid"
+      },
+      {
+        "rank": 9,
+        "inci": "Tridecane"
+      },
+      {
+        "rank": 10,
+        "inci": "Tocopherol"
+      },
+      {
+        "rank": 11,
+        "inci": "Linalyl Acetate"
+      },
+      {
+        "rank": 12,
+        "inci": "Acetyl Cedrene"
+      },
+      {
+        "rank": 13,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      },
+      {
+        "rank": 14,
+        "inci": "Pinene"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Eine kleine Menge Puder in den Handflächen verteilen und in das trockene Haar einarbeiten. Für [CLAIM] Volumen das Puder direkt am Haaransatz einmassieren und nach Wunsch stylen.",
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

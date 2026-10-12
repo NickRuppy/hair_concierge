@@ -1,0 +1,64 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-0c4fe6e5f1",
+  "brand": "Wella Professionals",
+  "confirmed_name": "EIMI Nutricurls Fresh Up",
+  "confirmed_name_tier": "C1",
+  "format": "pump_spray",
+  "product_type_word": "pump_spray",
+  "scale_info": {
+    "number": 1,
+    "scale_as_written": "Haltegrad 1",
+    "scale_max": null,
+    "scale_max_stated": false,
+    "tier": "C2"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Anti-Frizz-Effekt bis zum 72 Stunden",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Kann jederzeit im Laufe des Tages erneut angewendet werden, um die Locken zu reaktivieren.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Frische deine Locken auf und erhalte Definition, Glanz und Anti-Frizz-Effekt.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "hold",
+      "text": "Haltegrad 1",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "number": 1,
+      "scale_as_written": "Haltegrad 1",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null
+    },
+    {
+      "type": "finish",
+      "text": "Definition und Glanz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12"
+    }
+  ]
+}

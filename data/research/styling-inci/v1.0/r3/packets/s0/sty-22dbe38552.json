@@ -1,0 +1,129 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-22dbe38552",
+  "product": {
+    "confirmed_name": "Styling Spray Locken Pflege & Styling 2in1 (Pflegendes Styling Spray)",
+    "confirmed_name_redacted": false,
+    "brand": "GUHL",
+    "format": "pump_spray"
+  },
+  "identity": {
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 22,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 2,
+        "inci": "Hydrolyzed Corn Starch"
+      },
+      {
+        "rank": 3,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 4,
+        "inci": "Coco-Betaine"
+      },
+      {
+        "rank": 5,
+        "inci": "Sucrose"
+      },
+      {
+        "rank": 6,
+        "inci": "Cetrimonium Chloride"
+      },
+      {
+        "rank": 7,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 8,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 9,
+        "inci": "Citric Acid"
+      },
+      {
+        "rank": 10,
+        "inci": "Linum Usitatissimum Seed Oil"
+      },
+      {
+        "rank": 11,
+        "inci": "Olea Europaea Fruit Oil"
+      },
+      {
+        "rank": 12,
+        "inci": "Prunus Amygdalus Dulcis Oil"
+      },
+      {
+        "rank": 13,
+        "inci": "Borago Officinalis Seed Oil"
+      },
+      {
+        "rank": 14,
+        "inci": "Aloe Barbadensis Leaf Extract"
+      },
+      {
+        "rank": 15,
+        "inci": "Tocopherol"
+      },
+      {
+        "rank": 16,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 17,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 18,
+        "inci": "Potassium Sorbate"
+      },
+      {
+        "rank": 19,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 20,
+        "inci": "Alpha-Isomethyl Ionone"
+      },
+      {
+        "rank": 21,
+        "inci": "Linalyl Acetate"
+      },
+      {
+        "rank": 22,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "2in1 ANWENDUNG für Pflege & Styling: Im nassen oder trockenen Haar anwenden. In die Längen sprühen & einarbeiten. Wie gewohnt stylen. Mit Hitzeschutz bis 220°C. Ideal auch zur Reaktivierung der Locken.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Du möchtest deine Locken definieren und ihnen zwischendurch neue Sprungkraft geben? Das Guhl Locken Pflege & Styling 2in1 pflegendes Stylingspray mit Aloe Vera und Duo-Pflege-Style-Komplex verbindet unbeschwerte Pflege mit einfachem Locken-Styling.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

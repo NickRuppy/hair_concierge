@@ -1,0 +1,178 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-4bbe7d8a34",
+  "product": {
+    "confirmed_name": "Textur- & Volumenpuder fürs Haar (Texture & Volume Hair Powder)",
+    "confirmed_name_redacted": false,
+    "brand": "Moroccanoil",
+    "format": "powder_pump_bottle"
+  },
+  "identity": {
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 15,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA/WATER/EAU"
+      },
+      {
+        "rank": 2,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 3,
+        "inci": "SILICA SILYLATE"
+      },
+      {
+        "rank": 4,
+        "inci": "ARGANIA SPINOSA (ARGAN) KERNEL OIL"
+      },
+      {
+        "rank": 5,
+        "inci": "PARFUM/FRAGRANCE"
+      },
+      {
+        "rank": 6,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 7,
+        "inci": "SODIUM BENZOATE"
+      },
+      {
+        "rank": 8,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 9,
+        "inci": "ALPHA-ISOMETHYL IONONE"
+      },
+      {
+        "rank": 10,
+        "inci": "HEXAMETHYLINDANOPYRAN"
+      },
+      {
+        "rank": 11,
+        "inci": "LINALYL ACETATE"
+      },
+      {
+        "rank": 12,
+        "inci": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+      },
+      {
+        "rank": 13,
+        "inci": "VANILLIN"
+      },
+      {
+        "rank": 14,
+        "inci": "LAVANDULA (LAVENDER) OIL/EXTRACT"
+      },
+      {
+        "rank": 15,
+        "inci": "ISOEUGENYL ACETATE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Haare in Abschnitte unterteilen. Die Flasche 4–6 cm von den trockenen Wurzeln entfernt halten. Sanft auf die Pumpe, um das Produkt zu verteilen. Mit einem Pumpenstoß beginnen und je nach Bedarf weitere hinzugeben, um das Volumen zu erhöhen. Mit den Fingern stylen, bis das gewünschte Ergebnis erreicht ist. Das Haar zerzausen, um das Volumen über den Tag hinweg zu reaktivieren.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "de.moroccanoil.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Das Moroccanoil Textur- & Volumenpuder sorgt für sofortiges Volumen, hebt die Strähnen an und verbessert jeden Style am Ansatz. Dieser leistungsstarke Puder verleiht Grip und Textur für müheloses Styling, maximales, konzentriertes Volumen und lang anhaltenden, [CLAIM] Halt.",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Um die Vorteile des Volumens während des Tages zu reaktivieren, kannst du das Haar einfach zerzausen. Dadurch bleibt das Haar auch nach der ersten Anwendung des Produkts den ganzen Tag über voluminös und sieht toll aus. Es beschwert das Haar nicht und hinterlässt kein klebriges Gefühl, was es zu einem idealen Produkt für feines, dünnes oder plattes Haar macht.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "• Leichte Formel für fühlbare Ergebnisse",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "• [CLAIM] aussehendes, [CLAIM] Finish",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "• Aufbauende Ergebnisse",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "• Haare zur Reaktivierung zerzausen",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "• Desodorier, hinterlässt den typischen Moroccanoil-Duft",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Die Ergebnisse basieren auf Verbraucher- und Instrumententests nach einmaliger Anwendung:",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "• 48 Stunden lang anhaltender Lift1",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "• 98 % stimmen zu, dass das Haar sofort mehr Fülle und Volumen an der Haarwurzel erhält²",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "• 98 % stimmen zu, dass sich das Haar nicht klebrig, spröde oder [CLAIM] anfühlt²",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "• 93 % stimmen zu, dass dieses Produkt kraftloses und plattes Haar wiederbelebt²",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

@@ -1,0 +1,116 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-3",
+  "sample_id": "sty-74275d6955",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 23,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 2,
+        "inci": "Hydrolyzed Corn Starch"
+      },
+      {
+        "rank": 3,
+        "inci": "Propylene Glycol"
+      },
+      {
+        "rank": 4,
+        "inci": "VP/VA Copolymer"
+      },
+      {
+        "rank": 5,
+        "inci": "PVP"
+      },
+      {
+        "rank": 6,
+        "inci": "Sorbitol"
+      },
+      {
+        "rank": 7,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 8,
+        "inci": "Methylparaben"
+      },
+      {
+        "rank": 9,
+        "inci": "Ceteareth-20"
+      },
+      {
+        "rank": 10,
+        "inci": "PEG-40Hydrogenated Castor Oil"
+      },
+      {
+        "rank": 11,
+        "inci": "Carbomer"
+      },
+      {
+        "rank": 12,
+        "inci": "Benzyl Alcohol"
+      },
+      {
+        "rank": 13,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 14,
+        "inci": "Aminomethyl Propanol"
+      },
+      {
+        "rank": 15,
+        "inci": "Disodium EDTA"
+      },
+      {
+        "rank": 16,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 17,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 18,
+        "inci": "Benzyl Salicylate"
+      },
+      {
+        "rank": 19,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 20,
+        "inci": "Laurtimonium Chloride"
+      },
+      {
+        "rank": 21,
+        "inci": "Hydroxycitronellal"
+      },
+      {
+        "rank": 22,
+        "inci": "CI15510"
+      },
+      {
+        "rank": 23,
+        "inci": "CI 17200"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Auf das feuchte Haar auftragen, um eine großartige Textur und Volumen zu kreieren. Oder auf trockenes Haar auftragen, um einen gleichmäßigeren Style zu erhalten.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "wella.com",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}
