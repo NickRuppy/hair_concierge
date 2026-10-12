@@ -53,7 +53,8 @@ const completeInput = (): ConditionerResearchEnvelope => {
       repairSupportLevel: evidence("medium"),
       primaryFocus: evidence("repair"),
       secondaryFocus: evidence(["smoothing", "shine"]),
-      hairThicknessFit: evidence(["medium", "coarse"]),
+      // §10.4 weight echo — audit NR-2, ruled 2026-10-11.
+      hairThicknessFit: evidence(["fine", "medium", "coarse"]),
       damageFit: evidence(["moderately_damaged", "highly_damaged"]),
       textureFit: evidence(["wavy", "curly", "coily"]),
       uncertainFields: [],
@@ -71,8 +72,9 @@ test("projects the complete v1.6 profile into exact current Conditioner fields",
   assert.equal(outcome.status, "projection_ready")
   if (outcome.status !== "projection_ready") return
 
-  assert.deepEqual(outcome.productionProjection.suitable_thicknesses, ["normal", "coarse"])
+  assert.deepEqual(outcome.productionProjection.suitable_thicknesses, ["fine", "normal", "coarse"])
   assert.deepEqual(outcome.productionProjection.category_specs.product_conditioner_specs, [
+    { thickness: "fine", protein_moisture_balance: "stretches_bounces" },
     { thickness: "normal", protein_moisture_balance: "stretches_bounces" },
     { thickness: "coarse", protein_moisture_balance: "stretches_bounces" },
   ])
@@ -121,6 +123,66 @@ test("maps each research care direction to the current compatibility vocabulary"
         .balance_direction,
       direction,
     )
+  }
+})
+
+test("derives thickness rows from weight even when the research annotation disagrees (audit NR-2, ruled 2026-10-11)", () => {
+  const cases = [
+    ["low", ["fine", "normal"]],
+    ["moderate", ["fine", "normal", "coarse"]],
+    ["high", ["normal", "coarse"]],
+  ] as const
+  for (const [weight, expected] of cases) {
+    const input = completeInput()
+    input.profile.weightPotential = evidence(weight)
+    const outcome = projectConditionerForProduction(input)
+    assert.equal(outcome.status, "projection_ready")
+    if (outcome.status !== "projection_ready") continue
+    assert.deepEqual(outcome.productionProjection.suitable_thicknesses, expected)
+    assert.deepEqual(
+      outcome.productionProjection.category_specs.product_conditioner_specs.map(
+        (row) => row.thickness,
+      ),
+      expected,
+    )
+    assert.equal(
+      outcome.warnings.some((warning) => /contradicted/.test(warning)),
+      weight !== "moderate",
+    )
+    assert.match(
+      outcome.productionProjection.field_rationales["product.suitable_thicknesses"],
+      new RegExp(`weight_potential ${weight}`),
+    )
+  }
+})
+
+test("high repair admits named bond chemistry but refuses a lone gluconate (audit NR-2, ruled 2026-10-11)", () => {
+  const cases = [
+    ["Bis-Aminopropyl Diglycol Dimaleate", "projection_ready"],
+    ["Hydroxypropylgluconamide, Hydroxypropylammonium Gluconate", "projection_ready"],
+    ["Hydroxypropylammonium Gluconate", "needs_research"],
+  ] as const
+  for (const [chemistry, expected] of cases) {
+    const input = completeInput()
+    input.formula.rawInci += `, ${chemistry}`
+    input.formula.normalizedIngredients = input.formula.rawInci
+      .split(",")
+      .map((value) => value.trim())
+    input.formula.rawInciSha256 = createHash("sha256").update(input.formula.rawInci).digest("hex")
+    input.formula.formulaFingerprintSha256 = conditionerFormulaFingerprintSha256(
+      input.formula.rawInci,
+    )
+    input.profile.repairSupportLevel = evidence("high")
+    const outcome = projectConditionerForProduction(input)
+    assert.equal(outcome.status, expected, chemistry)
+    if (outcome.status === "projection_ready") {
+      assert.equal(
+        outcome.productionProjection.category_specs.product_conditioner_rerank_specs.repair_level,
+        "high",
+      )
+    } else if (outcome.status === "needs_research") {
+      assert.match(outcome.reasons.join(" "), /named bond chemistry/)
+    }
   }
 })
 
