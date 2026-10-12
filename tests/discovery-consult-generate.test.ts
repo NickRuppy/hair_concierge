@@ -505,3 +505,46 @@ test("her heat-protection answer overrides the model's gap before the level is d
   assert.equal(result.brief.hebel[0]!.gap, "klein")
   assert.equal(result.brief.hebel[0]!.level, 2)
 })
+
+test("a Stil finding never discards a brief: left after the retry, the brief is kept", async () => {
+  // Prod 2026-10-12: a guardrail finding, then a retry with only a style finding — the brief
+  // must survive (style rules steer the retry; guardrails G1–G6 decide what is discarded).
+  const guardrail = validSections()
+  guardrail.diagnose += " Die Kur repariert die Längen."
+  const style = validSections()
+  style.diagnose += " Eine Spülung ist als neuer Schritt vorgesehen."
+  const { complete, calls } = completing(
+    JSON.stringify(apiAnswer(guardrail)),
+    JSON.stringify(apiAnswer(style)),
+  )
+  const result = await generateConsultBrief(input(), { complete, model: "m" })
+  assert.ok("brief" in result, JSON.stringify(result))
+  assert.equal(calls.length, 2)
+  assert.match(result.brief.diagnose, /vorgesehen/)
+  assert.equal(result.sourceHash, consultSourceHash(input()))
+})
+
+test("a retry with a guardrail AND a style finding is discarded with the guardrail finding only", async () => {
+  const mixed = validSections()
+  mixed.diagnose += " Die Kur repariert die Längen. Eine Spülung ist als neuer Schritt vorgesehen."
+  const raw = JSON.stringify(apiAnswer(mixed))
+  const { complete, calls } = completing(raw, raw)
+  const result = await generateConsultBrief(input(), { complete, model: "m" })
+  assert.ok("error" in result)
+  assert.equal(result.error.code, "lint_failed")
+  assert.equal(calls.length, 2)
+  assert.ok(result.error.findings && result.error.findings.length > 0)
+  assert.ok(result.error.findings.every((finding) => finding.guardrail !== "Stil"))
+})
+
+test("a style-only first draft is still retried once, and kept if the retry is no better", async () => {
+  const style = validSections()
+  style.diagnose += " Eine Spülung ist als neuer Schritt vorgesehen."
+  const raw = JSON.stringify(apiAnswer(style))
+  const { complete, calls } = completing(raw, raw)
+  const result = await generateConsultBrief(input(), { complete, model: "m" })
+  assert.ok("brief" in result, JSON.stringify(result))
+  assert.equal(calls.length, 2)
+  assert.ok(calls[1]!.correction?.instruction.includes("diagnose_plan_talk"))
+  assert.equal(result.sourceHash, consultSourceHash(input()))
+})
