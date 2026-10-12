@@ -59,7 +59,7 @@ Troubleshooting:
 - Stale behavior after editing deep lib code → restart the dev server; hot reload serves stale
   deep-lib modules.
 
-The Hair Tools module is **on by default** since Rev. 6 (2026-10-11): with `PERSONAL_PLAN_TOOLS_ROLLOUT` unset (or any value other than `off` / `admin`) every dev-login plan account gets it. To see the pre-tools Feinschliff, the meter and the Profil exactly as before, set `PERSONAL_PLAN_TOOLS_ROLLOUT=off` in `.env.local`; `admin` limits it to `profiles.is_admin` accounts. Restart the dev server after changing it.
+The Hair Tools module is **on by default** since Rev. 6 (2026-10-11): with `PERSONAL_PLAN_TOOLS_ROLLOUT` unset (or any value other than `off` / `admin`) every dev-login plan account gets it. **Only the exact value `off` disables it** (trimmed, case-sensitive — `OFF`, `false`, `0` or a typo leave it ON). To see the pre-tools Feinschliff, the meter and the Profil exactly as before, set `PERSONAL_PLAN_TOOLS_ROLLOUT=off` in `.env.local`; `admin` limits it to `profiles.is_admin` accounts. Restart the dev server after changing it.
 
 ## 2. `/labs` harnesses (verified)
 
