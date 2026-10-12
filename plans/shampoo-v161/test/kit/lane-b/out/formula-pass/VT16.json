@@ -1,0 +1,155 @@
+{
+  "blindId": "VT16",
+  "inciFingerprintSha256": "62c6f9e1036abf77934bec6b3629a4f56d6f273a10d4a86d539a8ea34d46c167",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, claims hidden)",
+  "standard": "shampoo-classification-v1.6.1 candidate text (unlocked)",
+  "identity": {
+    "packSize": "200 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "ID-2: AQUA / WATER and PRUNUS ARMENIACA KERNEL OIL / APRICOT KERNEL OIL each one entry; normalized one-based positions of the 38-entry list",
+    "e3ProminenceCutoff": "PARFUM / FRAGRANCE @38 -> positions 1-37 prominent"
+  },
+  "formulaFacts": {
+    "surfactantSystem": [
+      "Sodium Cocoyl Isethionate @2 - mild anionic, earliest prominent cleansing surfactant",
+      "Disodium Laureth Sulfosuccinate @3 - mild anionic, buffer",
+      "Sodium Lauryl Sulfoacetate @4 - mild anionic, buffer",
+      "Sodium Lauroyl Sarcosinate @5 - mild anionic, buffer",
+      "Cocamidopropyl Betaine @8 - amphoteric, buffer",
+      "Coco-Betaine @16 - amphoteric, buffer (in alphabetical zone)",
+      "Decyl Glucoside @17 - nonionic glucoside, buffer (in alphabetical zone)",
+      "Not cleansing/not buffer: Glycol Distearate @7, C12-13 Pareth-23 @11, C12-13 Pareth-3 @12, PEG-55 Propylene Glycol Oleate @22, Polysorbate 21 @27, PPG-5-Ceteth-20 @28, Trideceth-6 @37, Sodium Isethionate @36 (salt), Hydrogenated Coconut Acid @19 (free fatty acid)",
+      "No strong anionic"
+    ],
+    "conditioningAndWeightRoutes": {
+      "silicone": ["Amodimethicone @9", "Divinyldimethicone/Dimethicone Copolymer @18"],
+      "cationic_polymer": ["Polyquaternium-10 @25", "Polyquaternium-7 @26"],
+      "cationic_conditioner": ["Cetrimonium Chloride @14"],
+      "payload_lipid": ["Prunus Armeniaca Kernel Oil @30 (non-material, after W-line)"],
+      "weak_refatter": ["Hydrogenated Coconut Acid @19 (free fatty acid, light refatting)"],
+      "protein_film": [],
+      "film_former": [],
+      "pearlizing_fatty_route_for_C2": ["Glycol Distearate @7"],
+      "humectantContext": ["Glycerin @6", "Panthenol @21", "Propylene Glycol @29 (solvent)"],
+      "excluded": ["Glycol Distearate @7 (pearlizing wax)", "Carbomer @13 (anionic acrylate thickener, 6.4)", "PEG-55 Propylene Glycol Oleate @22, PPG-5-Ceteth-20 @28 (PEG/PPG thickener/solubilizer)", "C12-13 Pareth-23 @11, C12-13 Pareth-3 @12, Polysorbate 21 @27, Trideceth-6 @37 (emulsifiers)", "Isopropyl Alcohol @20 (solvent)"]
+    },
+    "actives": ["Piroctone Olamine @24 - recognized anti-dandruff active", "Salicylic Acid @31 (does not upgrade dandruffSupport)", "Panthenol @21"],
+    "scalpExposureFlags": ["Parfum @38 last; no cooling agent, no essential oil", "E4 comfort route prominent: Panthenol @21", "E4 humectant/refatting routes prominent: Glycerin @6, Panthenol @21, Apricot Kernel Oil @30"]
+  },
+  "wLine": {
+    "wLine": "Benzoic Acid @10",
+    "candidateClasses": ["preservative_or_capped_active", "alphabetical_tail"],
+    "cap": "e3Point @38 (PARFUM / FRAGRANCE)",
+    "alphabeticalRun": "positions 9-37 (Amodimethicone ... Trideceth-6; 29 entries, each sorting after the one before; C12-13 Pareth-23/-3 and Polyquaternium-10/-7 differ only in digits); run does not contain the earliest-listed cleansing surfactant (Sodium Cocoyl Isethionate @2), so it is a tail; its second entry Benzoic Acid @10 is the class-d candidate",
+    "skipped": [],
+    "plausibilityOfWLine": "Benzoic Acid @10: (i) cleansing surfactants listed before (@2-@5, @8); (ii) entries of the same run are ignored; after the run (@37) and before the cap (@38) there is nothing - plausible",
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": ["Prunus Armeniaca Kernel Oil @30"]
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low by C6: no strong anionic; earliest prominent cleansing surfactant is the mild anionic Sodium Cocoyl Isethionate @2 with prominent amphoteric/glucoside co-surfactants (Cocamidopropyl Betaine @8, Coco-Betaine @16, Decyl Glucoside @17). Counter-signal: four mild anionics (@2-@5) precede the first amphoteric, which comes after the pearlizer; realistic unknowns could make the net cleansing moderate.",
+      "ruleIds": ["C3", "C4", "C6", "N-ALT"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High by C2: prominent silicone (Amodimethicone @9) plus cationic polymers (Polyquaternium-10 @25, Polyquaternium-7 @26; prominent because Parfum is last) plus pearlizing route (Glycol Distearate @7) plus closed-list humectants (Glycerin @6, Panthenol @21); also Cetrimonium Chloride @14 and a second silicone @18. Counter-signal: everything from @9 on is in an alphabetical (unordered, sub-1 %-type) zone, so doses are unknown and care could be bounded.",
+      "ruleIds": ["C2", "E3", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "silicone": ["Amodimethicone @9", "Divinyldimethicone/Dimethicone Copolymer @18"],
+        "cationic_polymer": ["Polyquaternium-10 @25", "Polyquaternium-7 @26"],
+        "cationic_conditioner": ["Cetrimonium Chloride @14"],
+        "payload_lipid": ["non-material: Prunus Armeniaca Kernel Oil @30 (after W-line @10)"],
+        "weak_refatter": ["Hydrogenated Coconut Acid @19"],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["mild anionic @2, @3, @4, @5", "amphoteric @8, @16", "nonionic @17"],
+        "humectantContext": ["Glycerin @6", "Panthenol @21"],
+        "excluded": ["Glycol Distearate @7", "Carbomer @13", "PEG-55 Propylene Glycol Oleate @22", "PPG-5-Ceteth-20 @28", "pareths/polysorbate/trideceth @11, @12, @27, @37"],
+        "unresolved": []
+      },
+      "depositionLoad": "moderate - two silicones (amodimethicone, divinyldimethicone copolymer), two cationic polymers and a quat converge, but all sit in the alphabetical low-dose zone",
+      "persistence": "high - amodimethicone, divinyldimethicone/dimethicone crosspolymer, Polyquaternium-7 and -10 are substantive and plausibly persistent through dilution deposition",
+      "resetCapacity": "weak - C6 low mild-anionic chassis",
+      "counterevidence": "No material payload lipid (W-RICH does not hold; apricot oil @30 is after the W-line); all deposition routes are in the alphabetical tail zone; ordinary rinse-off.",
+      "whyThisBand": "High via the convergence route: silicone + cationic polymer + cationic conditioner are three distinct plausibly persistent families (read without position test, W-LINE item 4), and weak reset does not offset them.",
+      "whyNotNeighborBand": "Not moderate: three converging persistent non-lipid families against weak reset satisfy the high anchor's convergence route; the late (alphabetical-zone) position is the realistic unknown that sets confidence at moderate. The post-line apricot oil is not what keeps or makes the band.",
+      "confidenceLimitingFactor": "All deposition in an alphabetical zone of unknown dose; realistic unknowns could move it to moderate.",
+      "rationale": "High: W-line Benzoic Acid @10 (alphabetical-tail candidate) leaves the only lipid (apricot oil @30) non-material, so no W-RICH; but silicone + cationic polymer + cationic conditioner converge on a weak-reset C6 chassis (convergence route). W1 not applicable (no sulfate chassis).",
+      "ruleIds": ["6.6", "W-LINE", "W-RICH", "W1", "W2", "W3", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "not_applicable (provisional; a recognized anti-dandruff active suggests a scalp role, to be checked against claims)",
+        "moistureRoutes": ["Glycerin @6", "Panthenol @21"],
+        "repairRoutes": ["Amodimethicone @9"],
+        "sharedConditioningRoutes": ["Polyquaternium-10 @25", "Polyquaternium-7 @26", "Cetrimonium Chloride @14"],
+        "limitation": "Claims hidden"
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "Piroctone Olamine @24 is present but a dandruff path needs a dandruff claim (R17.3); heavy conditioning architecture.",
+      "decisionTrace": "Claim direction null (blind); formula compatible with scalp_active if anti-dandruff positioning is revealed (recognized active); provisional general.",
+      "rationale": "Provisional formula-only: general.",
+      "ruleIds": ["7.2", "11", "3.1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["repair"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no positioning visible.",
+      "rationale": "Provisional [].",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "treatment",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": ["treatment possible if a qualifying dandruff claim is revealed (dandruffSupport supported)", "alternating impossible (not strong)"],
+      "rationale": "Provisional default regular; treatment requires a moderate-or-high dandruff claim (U3).",
+      "ruleIds": ["9", "U1", "U3"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: positioning hidden. CSA formula half met (prominent Panthenol @21 comfort route; Glycerin @6 humectant); no prominent cooling agent or essential oil.",
+      "ruleIds": ["10", "CSA", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Supported: the complete INCI contains Piroctone Olamine @24. Formula-only; whether a dandruff target is projected depends on a dandruff claim (S-DANDRUFF, R17.3).",
+      "ruleIds": ["11", "S-DANDRUFF"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "weightPotential high vs moderate: no material lipid; band rests on silicone+cationic convergence in the alphabetical zone; alternative moderate with high neighbor.",
+    "Hydrogenated Coconut Acid @19 read as weak_refatter (free fatty acid); alternative payload_lipid - non-material either way (after W-line).",
+    "Alphabetical run interpretation: 'C12-13 Pareth-23' before 'C12-13 Pareth-3' and 'Polyquaternium-10' before 'Polyquaternium-7' treated as in order (differ only in digits)."
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "blindId": "VT12",
+  "packSize": "250 ml",
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Hydroxysultaine",
+    "Sodium Chloride",
+    "Coco-Glucoside",
+    "Hydrolyzed Wheat Protein",
+    "Biotin",
+    "Oryza Sativa Extract",
+    "Glycerin",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Citric Acid",
+    "Laureth-2",
+    "Parfum",
+    "Tetramethyl Acetyloctahydronaphthalenes",
+    "Linalool",
+    "Hexyl Cinnamal",
+    "Linalyl Acetate",
+    "Sodium Benzoate"
+  ],
+  "inciFingerprintSha256": "926b4f48400d27a381a3854afd2573d0e1c4e1d435d55a78e60691c1f68f60ba",
+  "normalization": "Split the canonical INCI string on commas (or bullets/pipes where the source uses them), trimmed; lower-case each item, trim, collapse internal whitespace to single spaces, join with '|' (no other change: parentheses, slashes, hyphens, spelling kept), sha256 over the UTF-8 string. Batch/F.I.L. codes, the 'INGREDIENTS:' prefix and the trailing period are removed before splitting.",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high"
+}

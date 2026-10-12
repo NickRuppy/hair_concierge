@@ -289,3 +289,39 @@ test("Stage 1 loads and persists an exact legacy lead without a prepared artifac
   assert.equal((persisted as { stage1SourceLeadId: string }).stage1SourceLeadId, "lead-legacy")
   assert.equal((persisted as { preparedArtifactSourceId: null }).preparedArtifactSourceId, null)
 })
+
+function assertProductOnlySnapshot(snapshot: unknown) {
+  const value = snapshot as {
+    toolPlan?: unknown
+    renderedOrder?: string[]
+    decisions?: Array<{ category: string }>
+  }
+  assert.equal("toolPlan" in value, false, "no tool plan on a Stage-1 snapshot")
+  assert.equal(
+    value.renderedOrder?.some((category) => category.startsWith("tool")),
+    false,
+  )
+  assert.equal(
+    value.decisions?.some((decision) => decision.category.startsWith("tool")),
+    false,
+  )
+}
+
+test("Stage 1 persists a product-only snapshot: the Hair Tools rollout never reaches the initial plan", async () => {
+  const snapshots: unknown[] = []
+  await createStage1PersistenceService(
+    dependencies({
+      createOrReuseInitialNeed: async (request) => {
+        snapshots.push(request.outputSnapshot)
+        return {
+          outcome: "completed",
+          personalPlanId: "plan-1",
+          needVersionId: "need-1",
+          outputSnapshot: request.outputSnapshot,
+        }
+      },
+    }),
+  ).loadOrCreate({ userId: "user-1" })
+  assert.equal(snapshots.length, 1)
+  assertProductOnlySnapshot(snapshots[0])
+})

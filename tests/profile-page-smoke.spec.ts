@@ -175,7 +175,6 @@ test.describe.serial("@ci Profile page smoke", () => {
       page.locator("#profile-section-products").boundingBox(),
       page.locator("#profile-section-styling").boundingBox(),
       page.locator("#profile-section-routine").boundingBox(),
-      page.locator("#profile-section-goals").boundingBox(),
       page.locator("#profile-section-memory").boundingBox(),
     ])
 
@@ -187,7 +186,11 @@ test.describe.serial("@ci Profile page smoke", () => {
     expect(sectionPositions[1]!.y).toBeLessThan(sectionPositions[2]!.y)
     expect(sectionPositions[2]!.y).toBeLessThan(sectionPositions[3]!.y)
     expect(sectionPositions[3]!.y).toBeLessThan(sectionPositions[4]!.y)
-    expect(sectionPositions[4]!.y).toBeLessThan(sectionPositions[5]!.y)
+    // The Ziele card is gone: the goals are the closing row of the Haar-Check card.
+    await expect(page.locator("#profile-section-goals")).toHaveCount(0)
+    await expect(
+      page.locator("#profile-section-quiz").getByRole("button", { name: "Ziele bearbeiten" }),
+    ).toBeVisible()
 
     await expect(page.getByText("So baut sich dein Profil auf")).toHaveCount(0)
     await expect(page.getByText("Basis-Produkte")).toHaveCount(0)
@@ -302,13 +305,13 @@ test.describe.serial("@ci Profile page smoke", () => {
     const heatFrequencyCard = page
       .locator("#profile-section-styling")
       .locator("div")
-      .filter({ hasText: /^Styling-Frequenz/ })
+      .filter({ hasText: /^Hitze-Häufigkeit/ })
       .filter({ hasText: "1x pro Woche" })
     await expect(heatFrequencyCard.last()).toBeVisible()
     await expect(
       page
         .getByRole("button")
-        .filter({ hasText: "Styling-Frequenz" })
+        .filter({ hasText: "Hitze-Häufigkeit" })
         .filter({ hasText: "1x pro Woche" }),
     ).toHaveCount(0)
 

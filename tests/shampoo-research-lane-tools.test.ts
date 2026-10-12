@@ -15,12 +15,13 @@ import path from "node:path"
 import test from "node:test"
 
 import {
+  blindPackSize,
   buildLaneKit,
+  cliFlag,
   inciFingerprint,
   releaseReveal,
   resolveInside,
-  STAGE_A_NORMALIZATION,
-  sanitizePackSize,
+  resolveStandardPath,
   scrubStandard,
   type FreezePacket,
 } from "../scripts/shampoo-research/build-lane-kit"
@@ -227,6 +228,90 @@ test("the standard scrub fails closed when a batch name survives replacement", (
     () => scrubStandard(`${SCRUB_STANDARD}\nMustermarkes Serie`, scrubBatch()),
     /scrubbed standard still names batch products: .*Mustermarke/,
   )
+})
+
+test("the locked standard's holdout example product does not leak into a Vichy batch's lane copy", () => {
+  const locked = readFileSync("docs/research/shampoo-inci/v1.6/classification-standard.md", "utf8")
+  const batch = [packet({ brand: "Vichy", name: "Dercos Anti-Schuppen Shampoo" })]
+  const scrubbed = scrubStandard(locked, batch)
+  assert.doesNotMatch(scrubbed, /\bVichy\b|\bVICHY\b/)
+  assert.match(scrubbed, /Secondary `gentle` alongside primary `scalp_active`/)
+})
+
+test("a lower-case brand slug is scrubbed whole, case-insensitively (v1.6.1 seal incident 3)", () => {
+  for (const standard of [
+    "docs/research/shampoo-inci/v1.6/classification-standard.md",
+    "docs/research/shampoo-inci/v1.6.1/classification-standard.md",
+  ]) {
+    const locked = readFileSync(standard, "utf8")
+    const batch = [packet({ brand: "Vichy", name: "Dercos Anti-Schuppen Shampoo" })]
+    const scrubbed = scrubStandard(locked, batch)
+    assert.doesNotMatch(scrubbed, /vichy/i, `${standard}: no brand in any case`)
+    assert.doesNotMatch(
+      scrubbed,
+      /dercos-anti-schuppen-sensitiv/,
+      `${standard}: slug replaced whole`,
+    )
+  }
+})
+
+test("a slug built from a multi-word product name is replaced whole, ordinary words stay", () => {
+  const scrubbed = scrubStandard(
+    `${SCRUB_STANDARD}\nHoldout \`being-big-hair-shampoo-v2\` read as mild; well-being matters.`,
+    scrubBatch(),
+  )
+  assert.ok(scrubbed.includes("Holdout `[catalog product]` read as mild"))
+  assert.ok(scrubbed.includes("well-being matters"))
+  assert.ok(scrubbed.includes("is being treated needs care; being conservative"))
+})
+
+test("the kit builds against the locked standard by default and against an explicit candidate path", () => {
+  assert.equal(
+    resolveStandardPath(undefined),
+    "docs/research/shampoo-inci/v1.6.1/classification-standard.md",
+  )
+  assert.equal(
+    resolveStandardPath("plans/shampoo-v161/candidate/classification-standard.md"),
+    "plans/shampoo-v161/candidate/classification-standard.md",
+  )
+  assert.throws(() => resolveStandardPath(""), /standard/)
+})
+
+test("a CLI flag without a value fails instead of silently selecting the default", () => {
+  assert.equal(cliFlag(["in", "out", "--seed", "7"], "--standard"), undefined)
+  assert.equal(cliFlag(["in", "out", "--standard", "x.md", "--seed", "7"], "--standard"), "x.md")
+  assert.throws(
+    () => cliFlag(["in", "out", "--seed", "7", "--standard"], "--standard"),
+    /--standard needs a value/,
+  )
+  assert.throws(
+    () => cliFlag(["in", "out", "--standard", "--seed", "7"], "--standard"),
+    /--standard needs a value/,
+  )
+})
+
+test("stage-A packets carry only the bare pack size, never identity notes from the freeze", () => {
+  assert.equal(blindPackSize("250 ml"), "250 ml")
+  assert.equal(
+    blindPackSize("300ml (the same formula is published for a 250 ml pack, GTIN 3600542512534)"),
+    "300 ml",
+  )
+  assert.equal(
+    blindPackSize(
+      "UNRESOLVED: prior record says 250 ml bound to GTIN 3600542461658, but Garnier DE and dm show 300 ml",
+    ),
+    "250 ml",
+  )
+  assert.equal(blindPackSize("1,5 L"), "1.5 l")
+  assert.equal(blindPackSize("unbekannt"), "unknown")
+  withTempDir((out) => {
+    const leaky = packet({ packSize: "250 ml — Mustermarke DE page shows GTIN 4000000000001" })
+    buildLaneKit({ packets: [leaky], standardText: STANDARD, outDir: path.join(out, "k"), seed: 1 })
+    const ids = readdirSync(path.join(out, "k", "lane-a", "formula"))
+    const stageA = readFileSync(path.join(out, "k", "lane-a", "formula", ids[0]!), "utf8")
+    assert.doesNotMatch(stageA, /Mustermarke|4000000000001/)
+    assert.match(stageA, /"packSize": ?"250 ml"/)
+  })
 })
 
 const REQUIRED_PROPERTIES = ["cleansingStrength", "conditioningLevel", "weightPotential"] as const
@@ -621,25 +706,4 @@ test("historical v1.6 runs recomputed with researchCombinationTargets where the 
   assert.deepEqual([r1.agree, r1.total], [296, 304], "round 1 records predate the field")
   assert.deepEqual([r2.agree, r2.total], [202, 208], "round 2 records predate the field")
   assert.deepEqual([u2.agree, u2.total], [98, 102], "unseen-v2: +6 agreeing combination decisions")
-})
-
-test("stage-A pack size carries only the size, never research notes", () => {
-  assert.equal(sanitizePackSize("250 ml"), "250 ml")
-  assert.equal(
-    sanitizePackSize(
-      "400 ml (dm GTIN-bound, catalog price row); garnier.de lists 250/300/400/1000 ml",
-    ),
-    "400 ml",
-  )
-  assert.equal(
-    sanitizePackSize("UNRESOLVED: prior record says 250 ml bound to GTIN 3600542461658"),
-    "unknown",
-  )
-  assert.equal(sanitizePackSize("1,5 l"), "1,5 l")
-  assert.equal(sanitizePackSize("no size here"), "unknown")
-})
-
-test("stage-A normalization is the fixed runbook rule, never the freeze worker's free text", () => {
-  assert.match(STAGE_A_NORMALIZATION, /lower-case/)
-  assert.doesNotMatch(STAGE_A_NORMALIZATION, /\bdm\b|Rossmann|GTIN/)
 })

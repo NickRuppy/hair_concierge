@@ -5,6 +5,7 @@ import {
   applyBondbuilderResearchAdapter,
   applyBondbuilderResearchAdapterForWorker,
 } from "../src/lib/product-intake/bondbuilder-research-adapter"
+import { validateProductIntakeCategorySpecs } from "../src/lib/product-intake/category-validators"
 import { bondbuilderResearchPromptContract } from "../src/lib/product-intake/bondbuilder-research-prompt-contract"
 import { BOND_CURRENT_METHOD_PINS } from "../src/lib/bondbuilder-research/registry"
 import { makeBondbuilderEnvelope, sealProfile } from "./fixtures/bondbuilder-research/profile"
@@ -206,7 +207,6 @@ test("enabled Bondbuilder worker rejects legacy-only output instead of bypassing
   const final: Record<string, unknown> = {
     category_specs: {
       product_bondbuilder_specs: {
-        bond_repair_intensity: "maintenance",
         application_mode: "pre_shampoo",
         bond_repair_axis: "disulfide_crosslink",
         treatment_mode: "rinse_out",
@@ -248,4 +248,27 @@ test("enabled Bondbuilder worker enforces submission and current method before m
     )
     assert.deepEqual({ final, artifacts }, before)
   }
+})
+
+test("strict Bondbuilder intake validator rejects the retired bond_repair_intensity key", () => {
+  const legacySpecs = {
+    application_mode: "pre_shampoo",
+    bond_repair_axis: "disulfide_crosslink",
+    treatment_mode: "rinse_out",
+    product_format: "spray_treatment",
+    usage_protocol: "epres_spray",
+  }
+
+  assert.equal(
+    validateProductIntakeCategorySpecs("bondbuilder", {
+      product_bondbuilder_specs: legacySpecs,
+    }).ok,
+    true,
+  )
+  assert.equal(
+    validateProductIntakeCategorySpecs("bondbuilder", {
+      product_bondbuilder_specs: { ...legacySpecs, bond_repair_intensity: "intensive" },
+    }).ok,
+    false,
+  )
 })

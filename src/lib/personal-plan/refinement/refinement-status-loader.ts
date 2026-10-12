@@ -23,9 +23,10 @@ export type RefinementStatusLoadResult =
 export async function loadRefinementStatusForUser(
   client: RefinementStatusLoadClient,
   userId: string,
+  options: { toolsEnabled: boolean },
 ): Promise<RefinementStatusLoadResult> {
   try {
-    const source = await loadRefinementStatusSource(client, userId)
+    const source = await loadRefinementStatusSource(client, userId, options)
     if (source.status === "no_personal_plan") return { status: "no_personal_plan" }
 
     const bannerDismissals = await loadModuleBannerDismissals(client, userId)

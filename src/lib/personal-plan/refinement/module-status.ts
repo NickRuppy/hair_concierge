@@ -1,5 +1,6 @@
 import { userAnsweredQuestionIds } from "./answer-provenance"
 import { resolveAssumedAnswers } from "./assumed-defaults"
+import { carryOverStage2NightAnswer } from "./night-wear-carry-over"
 import { getStage2ModulePathStates } from "./question-path"
 import {
   STAGE2_MODULES,
@@ -36,8 +37,10 @@ export type Stage2ModuleStatusInput = {
 }
 
 export function stage2ModuleStates(
-  input: Stage2ModuleStatusInput,
+  raw: Stage2ModuleStatusInput,
 ): Record<Stage2Module, Stage2ModulePathState> {
+  // A Gewohnheiten finished before the night question existed keeps its old night answer.
+  const input = carryOverStage2NightAnswer(raw.triggerContext, raw)
   const userQuestionIds = userAnsweredQuestionIds(
     input.completedQuestionIds,
     input.answerProvenance,
@@ -57,5 +60,6 @@ export function stage2ModuleStates(
  */
 export function stage2AssumptionsActive(input: Stage2ModuleStatusInput): boolean {
   const states = stage2ModuleStates(input)
-  return STAGE2_MODULES.some((stage2Module) => states[stage2Module].status !== "complete")
+  // A `not_applicable` module has no question, so no assumption of its own is in force.
+  return STAGE2_MODULES.some((stage2Module) => states[stage2Module].status === "open")
 }

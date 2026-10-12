@@ -10,6 +10,7 @@ import {
 import { getStage2QuestionModule } from "@/lib/personal-plan/refinement/question-path"
 import type {
   Stage2AnswerProvenance,
+  Stage2Module,
   Stage2QuestionId,
   Stage2TriggerContext,
 } from "@/lib/personal-plan/refinement/types"
@@ -32,7 +33,7 @@ function defaults() {
 
 function provenanceFor(
   completedQuestionIds: readonly Stage2QuestionId[],
-  userModules: readonly ("products" | "habits")[],
+  userModules: readonly Stage2Module[],
 ): Stage2AnswerProvenance {
   const provenance: Stage2AnswerProvenance = {}
   for (const id of completedQuestionIds) {
@@ -99,4 +100,31 @@ test("legacy answers without a provenance entry count as user answers", () => {
     }),
     false,
   )
+})
+
+test("a not_applicable tools module neither opens a step nor keeps assumptions active", () => {
+  const { answers, completedQuestionIds } = defaults()
+  const input = {
+    triggerContext: TRIGGER_CONTEXT,
+    answers,
+    completedQuestionIds,
+    answerProvenance: provenanceFor(completedQuestionIds, ["products", "habits"]),
+  }
+
+  const states = stage2ModuleStates(input)
+  assert.equal(states.tools.status, "not_applicable")
+  assert.deepEqual(states.tools.questionIds, [])
+  assert.equal(stage2AssumptionsActive(input), false)
+})
+
+test("an auto-accepted draft still reports assumptions active with tools not applicable", () => {
+  const { answers, completedQuestionIds } = defaults()
+  const input = {
+    triggerContext: TRIGGER_CONTEXT,
+    answers,
+    completedQuestionIds,
+    answerProvenance: buildAssumedAnswerProvenance(completedQuestionIds),
+  }
+  assert.equal(stage2ModuleStates(input).tools.status, "not_applicable")
+  assert.equal(stage2AssumptionsActive(input), true)
 })

@@ -23,7 +23,9 @@ const computed = computeNeedPlan({
   createdAt: "2026-08-08T12:00:00.000Z",
 })
 if (computed.status !== "ready") throw new Error("production browser fixture failed to compute")
-const adapted = adaptInitialNeedSnapshotToPlanStartViewModel(computed.snapshot)
+const adapted = adaptInitialNeedSnapshotToPlanStartViewModel(computed.snapshot, {
+  toolsEnabled: false,
+})
 if (!adapted) throw new Error("production browser fixture failed to adapt")
 
 export const planStartLabSnapshot = computed.snapshot

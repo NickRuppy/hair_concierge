@@ -14,12 +14,21 @@ import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journe
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
+import type { RoutineViewToolsInput } from "@/lib/personal-plan/routine/load-view"
+import { loadToolFactsSource } from "@/lib/personal-plan/tools/read-view-facts"
 
 export type PersonalPlanRoutineRouteDeps = {
   enabled: () => boolean
   getUserId: () => Promise<string | null>
   loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
   client: () => PersonalPlanRoutineReadClient
+  /**
+   * Server-resolved Hair Tools rollout and the facts read behind the read-time `Deine Tools`
+   * section, so a client reload keeps the section the page rendered. Unwired or failing: off.
+   */
+  toolsEnabled?: (userId: string) => Promise<boolean>
+  tools?: RoutineViewToolsInput
 }
 const response = (body: unknown, status = 200) =>
   NextResponse.json(body, { status, headers: { "Cache-Control": "no-store" } })
@@ -35,11 +44,15 @@ export function createPersonalPlanRoutineRouteHandlers(deps: PersonalPlanRoutine
         if (!canAccessPersonalPlanJourneyStage(journey, "stage4")) {
           return response({ error: "stage_not_ready" }, 409)
         }
+        const toolsEnabled = deps.toolsEnabled
+          ? await deps.toolsEnabled(userId).catch(() => false)
+          : false
         return response(
           await loadPersonalPlanRoutineView({
             client: deps.client(),
             userId,
             enabled: deps.enabled(),
+            ...(toolsEnabled === true && deps.tools ? { tools: deps.tools } : {}),
           }),
         )
       } catch {
@@ -54,6 +67,8 @@ const handlers = createPersonalPlanRoutineRouteHandlers({
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
   client: () => createAdminClient() as unknown as PersonalPlanRoutineReadClient,
+  toolsEnabled: (userId) => isPersonalPlanToolsEnabledForUser(userId, createAdminClient()),
+  tools: { loadFacts: (userId) => loadToolFactsSource(createAdminClient(), userId) },
 })
 export const GET = async () => {
   const startedAt = performance.now()

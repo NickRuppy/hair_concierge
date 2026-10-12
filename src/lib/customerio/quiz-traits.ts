@@ -76,6 +76,7 @@ function labelsFor(values: string[] | undefined, labels: Record<string, string>)
 
 export function buildCustomerIoQuizLeadSync({
   createdAt,
+  allowIdentityTraits = true,
   consentTimestamp,
   email,
   leadId,
@@ -86,6 +87,7 @@ export function buildCustomerIoQuizLeadSync({
   funnelPackageKey,
 }: {
   createdAt: string
+  allowIdentityTraits?: boolean
   consentTimestamp?: string | null
   email: string
   leadId: string
@@ -99,13 +101,17 @@ export function buildCustomerIoQuizLeadSync({
   const answers = canonicalizeQuizAnswers(quizAnswers)
   const legacyVocabulary = projectQuizAnswersToLegacyVocabulary(answers)
   const identifyTraits: CustomerIoServerProperties = {
-    email: normalizedEmail,
-    first_name: firstName(name),
+    ...(allowIdentityTraits ? { email: normalizedEmail } : {}),
     lead_id: leadId,
     funnel_session_id: funnelSessionId,
     funnel_package_key: funnelPackageKey,
-    marketing_consent: marketingConsent,
-    consent_timestamp: marketingConsent ? (consentTimestamp ?? createdAt) : undefined,
+    ...(allowIdentityTraits
+      ? {
+          first_name: firstName(name),
+          marketing_consent: marketingConsent,
+          consent_timestamp: marketingConsent ? (consentTimestamp ?? createdAt) : undefined,
+        }
+      : {}),
     quiz_completed_at: createdAt,
     hair_texture: answers.structure,
     hair_texture_label: labelFor(answers.structure, HAIR_TEXTURE_LABELS),

@@ -11,5 +11,3 @@ export const PERSONAL_PLAN_LOADING_STAGES = [
     endProgress: 100,
   },
 ] as const
-
-export type PersonalPlanLoadingStageId = (typeof PERSONAL_PLAN_LOADING_STAGES)[number]["id"]

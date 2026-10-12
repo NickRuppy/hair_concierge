@@ -39,6 +39,8 @@ import {
   loadCachedAuthenticatedAppUserId,
   loadCachedPersonalPlanJourneyAccessForUser,
 } from "@/lib/personal-plan/navigation-access"
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
+import { loadToolFactsSource } from "@/lib/personal-plan/tools/read-view-facts"
 import { createAdminClient } from "@/lib/supabase/admin"
 import type { ShoppingBudget } from "@/lib/user-facts/schema"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
@@ -48,9 +50,11 @@ export const dynamic = "force-dynamic"
 export type RoutinePageResolverDeps = {
   getUserId: () => Promise<string | null>
   loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
+  /** `toolsEnabled`: compose the read-time `Deine Tools` section (facts read) — on only. */
   readView: (input: {
     userId: string
     enabled: boolean
+    toolsEnabled?: boolean
   }) => ReturnType<typeof loadPersonalPlanRoutineView>
   stage4Enabled: () => boolean
   readPortfolioPresentation?: (
@@ -64,7 +68,15 @@ export type RoutinePageResolverDeps = {
    * Optional and failure-tolerant like `readPortfolioPresentation` above — a
    * missing dep or a failed read just means no banner, never a broken page.
    */
-  readRefinementBanner?: (userId: string) => Promise<RoutineRefinementBannerViewModel | null>
+  readRefinementBanner?: (
+    userId: string,
+    options: { toolsEnabled: boolean },
+  ) => Promise<RoutineRefinementBannerViewModel | null>
+  /**
+   * Server-resolved Hair Tools rollout for the banner's module states and the read-time tool
+   * section. Fail closed: an unwired or failing dep means off. Browser input never reaches it.
+   */
+  toolsEnabled?: (userId: string) => Promise<boolean>
   /**
    * Budget gate (Task 6). Absent or `false` = the projection below is never built and the
    * page's props are exactly what they were before the budget existed.
@@ -74,6 +86,18 @@ export type RoutinePageResolverDeps = {
   readShoppingBudget?: (userId: string) => Promise<ShoppingBudget | null>
   /** Known package prices (EUR) for the accepted routine's planned products. Fail-open. */
   readProductPricesEur?: (productIds: string[]) => Promise<Record<string, number>>
+}
+
+function resolveToolsEnabled(
+  deps: Pick<RoutinePageResolverDeps, "toolsEnabled">,
+  userId: string,
+): Promise<boolean> {
+  return deps.toolsEnabled
+    ? deps.toolsEnabled(userId).then(
+        (enabled) => enabled === true,
+        () => false,
+      )
+    : Promise.resolve(false)
 }
 
 /**
@@ -115,6 +139,8 @@ export async function resolveRoutinePage(deps: RoutinePageResolverDeps) {
   const userId = await deps.getUserId()
   if (!userId) return { kind: "legacy" as const }
 
+  // Started alongside the journey read: in `admin` mode it is one `profiles` read.
+  const toolsEnabledLookup = resolveToolsEnabled(deps, userId)
   try {
     const journey = await deps.loadJourneyAccess(userId)
     if (journey.kind === "legacy") return { kind: "legacy" as const }
@@ -123,7 +149,13 @@ export async function resolveRoutinePage(deps: RoutinePageResolverDeps) {
     }
 
     const enabled = deps.stage4Enabled()
-    const view = await deps.readView({ userId, enabled })
+    const toolsEnabled = await toolsEnabledLookup
+    // Off: the read input stays exactly as it was (no rollout key).
+    const view = await deps.readView({
+      userId,
+      enabled,
+      ...(toolsEnabled ? { toolsEnabled: true } : {}),
+    })
     if (view.status === "no_personal_plan") return { kind: "legacy" as const }
     const routinePayload =
       view.status === "proposal" ? view.pendingProposal?.candidate : view.activeVersion?.payload
@@ -143,7 +175,7 @@ export async function resolveRoutinePage(deps: RoutinePageResolverDeps) {
     let refinementBanner: RoutineRefinementBannerViewModel | null = null
     if (deps.readRefinementBanner) {
       try {
-        refinementBanner = await deps.readRefinementBanner(userId)
+        refinementBanner = await deps.readRefinementBanner(userId, { toolsEnabled })
       } catch {
         // Cosmetic and deliberately failure-tolerant, like the presentation
         // load above: a failed banner read must never hide or break the
@@ -173,11 +205,14 @@ export async function resolveRoutinePage(deps: RoutinePageResolverDeps) {
 const defaultDeps: RoutinePageResolverDeps = {
   getUserId: loadCachedAuthenticatedAppUserId,
   loadJourneyAccess: loadCachedPersonalPlanJourneyAccessForUser,
-  readView: ({ userId, enabled }) =>
+  readView: ({ userId, enabled, toolsEnabled }) =>
     loadPersonalPlanRoutineView({
       client: createAdminClient() as unknown as PersonalPlanRoutineReadClient,
       userId,
       enabled,
+      ...(toolsEnabled
+        ? { tools: { loadFacts: (id: string) => loadToolFactsSource(createAdminClient(), id) } }
+        : {}),
     }),
   stage4Enabled: () => isPersonalPlanAppV1Enabled() && isPersonalPlanStage4Enabled(),
   readPortfolioPresentation: (userId, planId, portfolioVersionId) =>
@@ -187,10 +222,12 @@ const defaultDeps: RoutinePageResolverDeps = {
       planId,
       portfolioVersionId,
     ),
-  readRefinementBanner: async (userId) => {
+  toolsEnabled: async (userId) => isPersonalPlanToolsEnabledForUser(userId, createAdminClient()),
+  readRefinementBanner: async (userId, { toolsEnabled }) => {
     const result = await loadRefinementStatusForUser(
       createAdminClient() as unknown as Parameters<typeof loadRefinementStatusForUser>[0],
       userId,
+      { toolsEnabled },
     )
     if (result.status !== "ok" || !result.data.banner.visible || !result.data.banner.module) {
       return null
@@ -275,18 +312,22 @@ export type KeepsakeRoutinePageResolverDeps = {
   readView: (input: {
     userId: string
     enabled: boolean
+    toolsEnabled?: boolean
   }) => ReturnType<typeof loadPersonalPlanRoutineView>
   readPortfolioPresentation?: (
     userId: string,
     planId: string,
     portfolioVersionId: string,
   ) => Promise<PortfolioPresentation | null>
+  /** The keepsake Routine derives its tools from current facts too, while the rollout is on. */
+  toolsEnabled?: (userId: string) => Promise<boolean>
 }
 
 export async function resolveKeepsakeRoutinePage(deps: KeepsakeRoutinePageResolverDeps) {
   const userId = await deps.getUserId()
   if (!userId) return { kind: "unavailable" as const }
 
+  const toolsEnabledLookup = resolveToolsEnabled(deps, userId)
   try {
     const keepsake = await deps.loadKeepsakeContent(userId)
     // PR5 review fix (Z2): "no accepted Routine version" is not the same failure as "the
@@ -296,7 +337,11 @@ export async function resolveKeepsakeRoutinePage(deps: KeepsakeRoutinePageResolv
     // `KeepsakeNoRoutineState`), never the „Beispiel" composition, which would show them a
     // stranger's routine as if it were theirs.
     if (!keepsake) return { kind: "no_routine" as const }
-    const view = await deps.readView({ userId, enabled: false })
+    const view = await deps.readView({
+      userId,
+      enabled: false,
+      ...((await toolsEnabledLookup) ? { toolsEnabled: true } : {}),
+    })
     if (view.status === "no_personal_plan" || !view.activeVersion) {
       return { kind: "no_routine" as const }
     }
@@ -324,6 +369,7 @@ const keepsakeDeps: KeepsakeRoutinePageResolverDeps = {
   loadKeepsakeContent: loadPersonalPlanKeepsakeContentForUser,
   readView: defaultDeps.readView,
   readPortfolioPresentation: defaultDeps.readPortfolioPresentation,
+  toolsEnabled: defaultDeps.toolsEnabled,
 }
 
 async function resolveDefaultRoutinePage() {

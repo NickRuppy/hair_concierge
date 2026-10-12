@@ -1,0 +1,351 @@
+{
+ "blindId": "VT04",
+ "identity": {
+  "brand": "Maria Nila",
+  "productName": "Pure Volume Shampoo",
+  "packSize": "350 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "1be03cbd54a1c200191dd75353289d693de9ce603fc87def5de78ebc4f4bd5ce",
+  "normalization": "Packet list already ID-2 normalized (Aqua/Water/Eau one entry); normalized one-based positions; 35 entries.",
+  "completeness": "complete",
+  "e3ProminenceCutoff": "Parfum/Fragrance @33; entries 1-32 prominent",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high"
+ },
+ "formulaPassRecord": {
+  "path": "out/formula-pass/VT04.json",
+  "sha256": "c5ce3708ffedee48619a18e0441a4b42aa48fcb228bbd2a6c052d38a47f79d7d",
+  "note": "Hash-pinned blind record; not edited after release."
+ },
+ "claimEvidence": [
+  "product name (high): \"Pure Volume\" -> volume",
+  "manufacturer_de (moderate): \"Ein volumengebendes Shampoo, das feines Haar fülliger macht ... während es die Haarstruktur stärkt\", \"Volumengebend und stärkend\", \"Für feines Haar\" -> volume (thickness wording ignored for fit, T2)",
+  "manufacturer_de (moderate): \"Mit Provitamin B5, Weizenprotein und Moringaöl\" -> Panthenol @7 and Hydrolyzed Wheat Protein @11 map; Moringa oil has no INCI match (ID-3 note)",
+  "manufacturer_de (moderate) directions: \"Täglich anwendbar.\" -> U2 frequency wording",
+  "No E2 scalp claim unit."
+ ],
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "low",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "low by C6: no strong anionic; the earliest prominent cleansing surfactant is Sodium Lauroyl Methyl Isethionate @2 (mild anionic) with prominent amphoteric co-surfactant Cocamidopropyl Betaine @3; further mild anionics Disodium Laureth Sulfosuccinate @4, Sodium Lauryl Sulfoacetate @5. Counter-signal: three mild anionics.",
+   "ruleIds": [
+    "C3",
+    "C4",
+    "C6"
+   ],
+   "blindValue": "low",
+   "changedAfterUnblind": false
+  },
+  "conditioningLevel": {
+   "value": "high",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "high by the Section 5 high anchor (multiple complementary systems): early amino-silicone copolymer @12, two cationic polymers (Ethyltrimonium Chloride Methacrylate/Hydrolyzed Wheat Protein Copolymer @9, Guar Hydroxypropyltrimonium Chloride @18), cationic conditioner Quaternium-95 @16, prominent payload lipid Sunflower Seed Oil @8, proteins @11/@13 and a deliberate humectant route (Glycerin @6, Panthenol @7). C2 as worded is uncertain because there is no pearlizing wax; the oil is a fatty route only if read so. Counter-signal: no pearlizer; neighbor moderate.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "R11",
+    "N-ALT"
+   ],
+   "blindValue": "high",
+   "changedAfterUnblind": false
+  },
+  "weightPotential": {
+   "value": "high",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "high: material payload lipid Sunflower Seed Oil @8 converges with an amino-silicone copolymer @12, two cationic polymers @9/@18, a quat @16 and two protein films @11/@13 against a weak reset (C6 low chassis); W-RICH with limited reset and the convergence route both meet the high anchor. Moderate confidence (INCI-only ceiling; individual levels unknown), neighbor moderate.",
+   "evidence": {
+    "silicone": [
+     "Amodimethicone/Morpholinomethyl Silsesquioxane Copolymer @12"
+    ],
+    "cationic_polymer": [
+     "Ethyltrimonium Chloride Methacrylate/Hydrolyzed Wheat Protein Copolymer @9 (cationic protein copolymer; ...trimonium methacrylate stays cationic_polymer, 6.4)",
+     "Guar Hydroxypropyltrimonium Chloride @18"
+    ],
+    "cationic_conditioner": [
+     "Quaternium-95 @16"
+    ],
+    "payload_lipid": [
+     "Helianthus Annuus (Sunflower) Seed Oil @8 (material)"
+    ],
+    "weak_refatter": [],
+    "protein_film": [
+     "Hydrolyzed Wheat Protein @11",
+     "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol @13"
+    ],
+    "film_former": [],
+    "reset": [
+     "Sodium Lauroyl Methyl Isethionate @2",
+     "Cocamidopropyl Betaine @3",
+     "Disodium Laureth Sulfosuccinate @4",
+     "Sodium Lauryl Sulfoacetate @5"
+    ],
+    "humectantContext": [
+     "Glycerin @6",
+     "Panthenol @7",
+     "Propanediol @19"
+    ],
+    "excluded": [
+     "Trideceth-5 @14 (low-ethoxylate thickener)",
+     "PEG-150 Pentaerythrityl Tetrastearate @15 (PEG thickener)",
+     "PPG-2 Hydroxyethyl Cocamide @17 (alkanolamide thickener)"
+    ],
+    "unresolved": []
+   },
+   "wLine": {
+    "position": 21,
+    "inci": "Potassium Sorbate",
+    "classes": [
+     "preservative_or_capped_active"
+    ],
+    "cap": "e3Point @33 (Parfum/Fragrance)",
+    "alphabeticalRuns": [],
+    "skipped": [
+     "w_line_skipped:Panthenol@7 (clause ii: alkanolamide-type thickener PPG-2 Hydroxyethyl Cocamide @17 listed after it before the cap)"
+    ],
+    "codes": [],
+    "payloadLipidMaterial": [
+     "Helianthus Annuus (Sunflower) Seed Oil @8"
+    ],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "high",
+   "depositionLoadRationale": "Five deposition families (silicone, two cationic polymers, quat, oil, two proteins), the oil and the protein copolymer within the first nine entries.",
+   "persistence": "high",
+   "persistenceRationale": "Amino-silicone copolymer and cationic polymers are persistent; oil adds lipid residue.",
+   "resetCapacity": "weak",
+   "resetCapacityRationale": "C6 low chassis.",
+   "counterevidence": "No dimethicone; amino-silicone and guar sit in the second half of the prominent zone; proteins are low-persistence.",
+   "whyThisBand": "W-RICH (material oil @8 + silicone/cationics) with weak reset, plus several converging persistent families.",
+   "whyNotNeighborBand": "moderate would need a reset that offsets the converging systems or a light load; neither holds for a mild chassis carrying five deposition families.",
+   "confidenceLimitingFactor": "INCI-only levels of silicone and polymers.",
+   "ruleIds": [
+    "6.3",
+    "6.4",
+    "6.6",
+    "W-RICH",
+    "W-LINE",
+    "N-ALT"
+   ],
+   "blindValue": "high",
+   "changedAfterUnblind": false
+  },
+  "focusPrimary": {
+   "value": "volume",
+   "confidence": "moderate",
+   "neighboringAlternative": "general",
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": "Volume focus; not a repair/moisture decision."
+   },
+   "claimRole": "candidate",
+   "counterSignal": "weightPotential high and conditioningLevel high argue against lift (rich mild-chassis formula); recorded as a trade-off.",
+   "decisionTrace": "Claim direction: volume (name, high; manufacturer DE, moderate). Formula compatible: a body route exists (Panthenol @7, wheat proteins @9/@11/@13), but the heavy deposition architecture is a strong counter-signal; no rule makes volume formally incompatible. Decision: volume at moderate confidence, counter-signal recorded.",
+   "rationale": "volume: dominant exact-product claim (name) with a body route; heavy formula recorded as counter-signal. Neighbor general (if the heavy architecture were read as incompatible).",
+   "ruleIds": [
+    "7.1",
+    "7.2",
+    "3.2",
+    "N-ALT"
+   ],
+   "blindValue": "general",
+   "blindConfidence": "low",
+   "changedAfterUnblind": true
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "repair"
+   ],
+   "decisionTrace": "Empty default considered; \"stärkend\"/\"stärkt die Haarstruktur\" is strengthening, not damage/breakage positioning, so repair is not separately positioned. Selected [].",
+   "rationale": "[]: no distinct secondary job meets Section 8.",
+   "ruleIds": [
+    "8",
+    "F1"
+   ],
+   "blindValue": [],
+   "blindConfidence": "low",
+   "changedAfterUnblind": true
+  },
+  "usageRole": {
+   "value": "frequent",
+   "confidence": "moderate",
+   "neighboringAlternative": "regular",
+   "triggerCode": "explicit_frequent_non_strong",
+   "triggerEvidence": [
+    "\"Täglich anwendbar.\" (manufacturer DE directions, moderate)",
+    "cleansingStrength low (not strong)"
+   ],
+   "losingTriggers": [],
+   "rationale": "frequent: explicit daily-use wording (U2) on a non-strong formula.",
+   "ruleIds": [
+    "9",
+    "U2",
+    "CL-SRC"
+   ],
+   "blindValue": "regular",
+   "blindConfidence": "low",
+   "changedAfterUnblind": true
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "not_targeted: no E2 sensitive or dry claim unit (SC1 fails).",
+   "ruleIds": [
+    "10",
+    "SC1"
+   ],
+   "blindValue": "not_targeted",
+   "blindConfidence": "low",
+   "changedAfterUnblind": true
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "not_supported: complete INCI contains none of Piroctone Olamine, Climbazole, Selenium Sulfide/Disulfide.",
+   "ruleIds": [
+    "11"
+   ],
+   "blindValue": "not_supported",
+   "changedAfterUnblind": false
+  }
+ },
+ "formulaFacts": {
+  "surfactants": {
+   "strongAnionic": [],
+   "mildAnionic": [
+    "Sodium Lauroyl Methyl Isethionate @2",
+    "Disodium Laureth Sulfosuccinate @4",
+    "Sodium Lauryl Sulfoacetate @5"
+   ],
+   "amphoteric": [
+    "Cocamidopropyl Betaine @3"
+   ],
+   "nonionicCleansing": [],
+   "notCleansing": [
+    "Trideceth-5 @14",
+    "PEG-150 Pentaerythrityl Tetrastearate @15",
+    "PPG-2 Hydroxyethyl Cocamide @17"
+   ],
+   "c6Reading": "earliest prominent mild anionic @2 with prominent amphoteric @3 -> low"
+  },
+  "conditioningRoutes": [
+   "Helianthus Annuus Seed Oil @8",
+   "cationic wheat-protein copolymer @9",
+   "Hydrolyzed Wheat Protein @11",
+   "Amodimethicone/Morpholinomethyl Silsesquioxane Copolymer @12",
+   "protein silanetriol @13",
+   "Quaternium-95 @16",
+   "Guar Hydroxypropyltrimonium Chloride @18"
+  ],
+  "humectants": [
+   "Glycerin @6",
+   "Panthenol @7"
+  ],
+  "actives": [
+   "Phyllostachys Nigra Leaf Extract @10"
+  ],
+  "scalpExposure": [
+   "Benzyl Alcohol @27",
+   "Linalool @28",
+   "Hexyl Cinnamal @29",
+   "Benzyl Salicylate @30",
+   "Citronellol @31",
+   "Parfum/Fragrance @33"
+  ],
+  "recognizedDandruffActives": [],
+  "preservatives": [
+   "Potassium Sorbate @21",
+   "Benzyl Alcohol @27",
+   "Phenoxyethanol @32"
+  ]
+ },
+ "unresolvedMaterialIngredients": [],
+ "reconciliation": {
+  "blindToFinalChanges": [
+   "focusPrimary: general (low) -> volume (moderate). Evidence: name + manufacturer volume claims.",
+   "focusSecondary: [] (low) -> [] (moderate).",
+   "usageRole: regular (low) -> frequent (moderate). Evidence: \"Täglich anwendbar.\"",
+   "scalpComfortTarget: not_targeted (low) -> not_targeted (high)."
+  ],
+  "unchangedFormulaProperties": "cleansingStrength, conditioningLevel, weightPotential (high), dandruffSupport unchanged; \"für feines Haar\" does not move weight or fit (6.5, T2).",
+  "claimConflicts": [
+   "ID-3: claimed Moringa oil has no INCI entry (no Moringa Oleifera Seed Oil). Non-material: a payload lipid could not lower the high weight band or move conditioning, and CSA is already met. Note only."
+  ]
+ },
+ "projection": {
+  "status": "proposed",
+  "thicknessFit": {
+   "fine": "not_suited",
+   "normal": "acceptable",
+   "coarse": "ideal"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "fine: T1 cell W=high, C=high -> not_suited; normal: T1 cell W=high, C=high -> acceptable; coarse: T1 cell W=high, C=high -> ideal. T2: thickness/texture claims ignored. T4 recomputed from N-ALT neighbors after T6. Balanced scalp (ordinary): no T6.",
+  "weight": "heavy",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential high -> heavy, confidence = weightPotential confidence (moderate).",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "confidence": "high",
+    "rationale": "S-ORDINARY way 1: no qualifying E2 claim unit; manufacturer source present -> high."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "researchCombinationConfidence": {},
+  "cleansingIntensity": "gentle",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1: cleansingStrength low, D1 false -> gentle; written unchanged to every row (I2). I3 checked against the none neighbor.",
+  "explicitResetPositioning": false,
+  "explicitResetEvidence": "none",
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D2 not met (requires cleansingStrength strong, focusPrimary clarifying, usageRole occasional_reset and D1 true); not_flagged.",
+  "rows": [
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "gentle",
+    "weight": "heavy",
+    "tier": "acceptable"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "gentle",
+    "weight": "heavy",
+    "tier": "ideal"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [],
+  "informationalNotes": [],
+  "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; lanes do not see catalog rows."
+ },
+ "selfCheck": "6.11: fingerprint matches the frozen packet; claims were hidden during the formula judgment (formula pass hash-pinned); no ingredient, family count or position window assigned the weight band; W-line derived per W-LINE with every skipped candidate recorded; three subjudgments present; whyNotNeighborBand specific; confidence names its limit; no comparison with earlier values made in-lane. Projection derived mechanically from final properties (T1/T6/T4/I1/I3/W-LIVE/13.7).",
+ "uncertainties": [
+  "C2 pearlizing/fatty element: no pearlizing wax; conditioningLevel high rests on the high anchor's multiple complementary systems (alternative moderate).",
+  "Cationic wheat-protein copolymer @9 assigned cationic_polymer (alternative protein_film); either way a deposition family.",
+  "Volume focus with a high-weight formula: kept volume (positioned focus, trade-off recorded); alternative general.",
+  "Moringa oil claim vs INCI mismatch may signal a formula/claim version difference; non-material here."
+ ]
+}

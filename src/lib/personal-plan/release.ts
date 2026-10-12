@@ -4,6 +4,7 @@ type PersonalPlanAppReleaseEnvironment = {
   PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED?: string
   PERSONAL_PLAN_STAGE3_INVENTORY_AUTHORITY_V2?: string
   PERSONAL_PLAN_STAGE3_THUMBNAILS_ENABLED?: string
+  PERSONAL_PLAN_TOOLS_ROLLOUT?: string
   SHOPPING_BUDGET_ENABLED?: string
   PRODUCT_MARKET_SEGMENT_DISPLAY_ENABLED?: string
 }
@@ -92,4 +93,33 @@ export function getPersonalPlanNewBuyerCohortCutoff(
   const canonical = parsed.toISOString()
   const comparableCanonical = value.includes(".") ? canonical : canonical.replace(".000Z", "Z")
   return comparableCanonical === value ? parsed : null
+}
+
+/**
+ * Server-owned rollout boundary for the Hair Tools domain. Browser answers and
+ * query parameters never grant access: the only inputs are this environment
+ * value and the `profiles.is_admin` identity.
+ *
+ * Rev. 6 (2026-10-11): the rollout DEFAULTS TO ON. Unset or empty resolves to
+ * "all"; the trimmed, case-insensitive value "off" is the emergency switch and
+ * "admin" the admin-only stage; any other string (e.g. "false", "on") resolves
+ * to "all" as well.
+ */
+export const PERSONAL_PLAN_TOOLS_ROLLOUT_VALUES = ["off", "admin", "all"] as const
+export type PersonalPlanToolsRollout = (typeof PERSONAL_PLAN_TOOLS_ROLLOUT_VALUES)[number]
+
+export function resolvePersonalPlanToolsRollout(
+  environment: PersonalPlanAppReleaseEnvironment = process.env,
+): PersonalPlanToolsRollout {
+  const value = environment.PERSONAL_PLAN_TOOLS_ROLLOUT?.trim().toLowerCase()
+  if (value === "off" || value === "admin") return value
+  return "all"
+}
+
+export function canAccessPersonalPlanTools(input: {
+  rollout: PersonalPlanToolsRollout
+  isAdmin: boolean
+}): boolean {
+  if (input.rollout === "off") return false
+  return input.rollout === "all" || input.isAdmin
 }

@@ -1,0 +1,13 @@
+agreement 379/391 = 96.9% over 23 products
+DIFF VT02 scalpComfortTarget "not_targeted" "targeted" 
+DIFF VT02 researchCombinationTargets ["sensitive"] ["dry","sensitive"] research_only
+DIFF VT04 focusPrimary "general" "volume" 
+DIFF VT05 focusPrimary "general" "moisture" 
+DIFF VT09 conditioningLevel "high" "moderate" 
+DIFF VT09 weightPotential "high" "moderate" 
+DIFF VT09 focusPrimary "moisture" "general" 
+DIFF VT09 fit.fine "not_suited" "acceptable" tier
+DIFF VT09 fit.normal "acceptable" "ideal" tier
+DIFF VT09 fit.coarse "ideal" "acceptable" tier
+DIFF VT09 weight "heavy" "moderate" weight
+DIFF VT17 focusSecondary [] ["clarifying"] 

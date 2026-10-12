@@ -10,7 +10,16 @@ import {
   type DiscoveryCallSheetHabitCommitment,
   type DiscoveryCallSheetPatch,
 } from "@/lib/discovery/call-sheet"
-import { CONSULT_SCORE_TARGET_CAP } from "@/lib/discovery/consult-brief/lint"
+import { changedConsultSourceParts } from "@/lib/discovery/consult-brief/source-parts"
+import {
+  CONSULT_LEVER_SPECS,
+  consultScoreRange,
+  levelFromLegacyPoints,
+  type ConsultLeverGap,
+  type ConsultLeverKind,
+  type ConsultLeverLevel,
+  type ConsultScoreRange,
+} from "@/lib/discovery/consult-brief/lever-scale"
 
 import {
   RunsheetCard,
@@ -24,9 +33,9 @@ import { RunsheetSaveBar, useRunsheetSave } from "./runsheet-save"
 
 /**
  * The runsheet's top half (consult-runsheet T3): the score tile and „Vor dem Call" checklist,
- * Phase 1 („Eröffnen") and Phase 2 („Problem": Diagnose, Hebel with the score staircase,
- * Gewohnheiten). One client island because the „Mit Plan" target in the head is the baseline
- * plus the Hebel points below.
+ * Phase 1 („Eröffnen") and Phase 2 („Problem": Diagnose, Hebel with their level ●–●●●,
+ * Gewohnheiten). One client island because the „Mit Plan" range in the head is computed from
+ * the baseline and the Hebel levels below (point system v2, consult-brief-d).
  *
  * Saving (T5): one explicit „Speichern" at the end of Phase 2 sends `baseline_score`,
  * `consult_brief` (the edited Diagnose + Hebel, every other section and the generation meta
@@ -74,9 +83,16 @@ const HEBEL_EMPTY = "Noch keine Hebel erfasst."
 const HEBEL_REMOVE = "Entfernen"
 const HEBEL_TITLE_PLACEHOLDER = "Hebel, z. B. Schaden stoppen"
 const HEBEL_NOTE_PLACEHOLDER = "Was konkret sich ändert"
-const HEBEL_POINTS_LABEL = "Punkte"
-const HEBEL_FOOTNOTE = "Erfahrungswerte — grobe Orientierung, keine Messung."
-const ASK_PREFIX = "kurz fragen:"
+const HEBEL_LEVEL_LABEL = "Wirkung"
+/** Nick 2026-10-12: dots per measure, one range for the plan — never a per-lever number. */
+export const RUNSHEET_LEVEL_DOTS: Record<ConsultLeverLevel, string> = { 1: "●", 2: "●●", 3: "●●●" }
+const HEBEL_LEVEL_NONE = "–"
+const HEBEL_THIN_EVIDENCE = "wenig belegt"
+const HEBEL_ASK_IN_CALL = "im Call klären"
+const HEBEL_OUT_OF_RANGE = "nicht in der Spanne"
+const RANGE_WINDOW = "in 4–8 Wochen"
+const HEBEL_FOOTNOTE = "Orientierung auf Basis üblicher Wirkungen, keine Messung oder Garantie."
+const ASK_PREFIX = "Außerdem klären:"
 /** The two Maßnahmen buckets (R26); rows from pre-v4 briefs render flat above them. */
 export const RUNSHEET_HEBEL_BUCKETS = [
   { bucket: "produkt", title: "Produkte", add: "Produkt-Hebel hinzufügen" },
@@ -117,7 +133,6 @@ export type RunsheetBriefListKey = (typeof RUNSHEET_BRIEF_LISTS)[number]["key"]
 const SAVE_SCOPE = "Score, Brief und Gewohnheiten"
 const INVALID_BASELINE =
   "Nicht gespeichert — Score von 1 bis 10 eintragen, halbe Punkte gehen, z. B. 7,5."
-const INVALID_POINTS = "Nicht gespeichert — Hebel-Punkte als Zahl ab 0 eintragen, z. B. 1,5."
 
 export const RUNSHEET_GENERATE_COPY = {
   create: "Brief erstellen",
@@ -129,6 +144,8 @@ export const RUNSHEET_GENERATE_COPY = {
   doneKeptEdits:
     "Brief erstellt — der Brief wurde währenddessen bearbeitet und bleibt wie getippt (nicht gespeichert).",
   stale: "Eingaben haben sich geändert — Brief neu generieren?",
+  staleParts: "Seit dem Brief geändert:",
+  staleRegenerate: "— neu generieren?",
   replaceDirty: "Nicht gespeicherte Änderungen am Brief werden ersetzt.",
   replaceManual: "Der von Hand bearbeitete Brief wird ersetzt.",
   keptAsRevision: "Die gespeicherte Fassung bleibt als Revision erhalten.",
@@ -150,6 +167,15 @@ export type RunsheetBriefMeta = {
   generatedBy: "manual" | "agent" | null
   /** The server's stamp on the stored brief's last write (null: none, or stored before it). */
   savedAt: string | null
+  /** The stored brief's per-part fingerprints; null/absent on briefs stored before them. */
+  sourceParts?: Record<string, string> | null
+}
+
+/** The stale line: what changed when both sides carry parts, else the generic hint. */
+export function runsheetStaleText(changedParts: readonly string[]): string {
+  return changedParts.length === 0
+    ? RUNSHEET_GENERATE_COPY.stale
+    : `${RUNSHEET_GENERATE_COPY.staleParts} ${changedParts.join(", ")} ${RUNSHEET_GENERATE_COPY.staleRegenerate}`
 }
 
 type RunsheetBriefBase = RunsheetBriefMeta & { sections: DiscoveryCallSheetBriefSections }
@@ -200,7 +226,11 @@ type HebelRow = {
   uid: string
   title: string
   note: string
-  points: string
+  /** ●–●●●; legacy points read as the nearest level. Nick may change it by hand. */
+  level: ConsultLeverLevel | null
+  /** Carried through unchanged: the generator's choice, null on hand-added and older rows. */
+  kind: ConsultLeverKind | null
+  gap: ConsultLeverGap | null
   /** `null` = row from a pre-v4 brief; rendered as one flat list, never guessed (R26). */
   bucket: "produkt" | "umgang" | null
 }
@@ -225,7 +255,7 @@ type BriefSeed = {
 
 /** `tag` prefixes the Hebel row uids of this seed (`s<generation>`, `g<n>` for a generation). */
 function seedRunsheetBrief(props: BriefSeed, tag: string): RunsheetBriefState {
-  // Display order = array order = staircase order: bucket-less legacy rows first (flat
+  // Display order = array order = numbering order: bucket-less legacy rows first (flat
   // list), then Produkte, then Umgang. Within a group the model's impact ranking holds.
   const bucketRank = { produkt: 1, umgang: 2 }
   const hebel = props.initialSections.hebel
@@ -233,7 +263,9 @@ function seedRunsheetBrief(props: BriefSeed, tag: string): RunsheetBriefState {
       uid: `${tag}-${index}`,
       title: entry.title,
       note: entry.note,
-      points: entry.points === null ? "" : formatRunsheetScore(entry.points),
+      level: entry.level ?? levelFromLegacyPoints(entry.points),
+      kind: entry.kind ?? null,
+      gap: entry.gap ?? null,
       bucket: entry.bucket,
     }))
     .sort(
@@ -281,7 +313,7 @@ function runsheetBriefContentKey(state: RunsheetBriefState): string {
   return JSON.stringify([
     state.mechanik,
     state.diagnose,
-    state.hebel.map((row) => [row.title, row.note, row.points.trim(), row.bucket]),
+    state.hebel.map((row) => [row.title, row.note, row.level, row.bucket]),
     RUNSHEET_BRIEF_LISTS.map(({ key }) => listLines(state.lists[key])),
   ])
 }
@@ -306,8 +338,8 @@ export function applyGeneratedRunsheetBrief(
 
 /**
  * The save payload, in the table's column shapes — or why it cannot be sent. An empty score
- * clears it; a non-empty one that is no whole 1–10 is refused rather than silently cleared
- * (same for Hebel points).
+ * clears it; a non-empty one that is no 1–10 in half points is refused rather than silently
+ * cleared. Hebel are written in the v2 shape (level, kind, gap; `points` null).
  */
 export function runsheetBriefPatch(
   state: RunsheetBriefState,
@@ -315,16 +347,20 @@ export function runsheetBriefPatch(
     sections: DiscoveryCallSheetBriefSections
     generatedAt: string | null
     sourceHash: string | null
+    sourceParts?: Record<string, string> | null
   },
 ): { patch: DiscoveryCallSheetPatch } | { invalid: string } {
   const baseline = parseRunsheetBaseline(state.baselineText)
   if (baseline === null && state.baselineText.trim() !== "") return { invalid: INVALID_BASELINE }
-  const hebel = []
-  for (const row of state.hebel) {
-    const points = parseRunsheetPoints(row.points)
-    if (points === null && row.points.trim() !== "") return { invalid: INVALID_POINTS }
-    hebel.push({ title: row.title, note: row.note, points, bucket: row.bucket })
-  }
+  const hebel = state.hebel.map((row) => ({
+    title: row.title,
+    note: row.note,
+    points: null,
+    bucket: row.bucket,
+    kind: row.kind,
+    gap: row.gap,
+    level: row.level,
+  }))
   // `zielLuecken` rides along via the spread: no longer edited here (R27), but a pre-v4
   // brief's stored lines are not dropped by a manual save.
   return {
@@ -342,6 +378,8 @@ export function runsheetBriefPatch(
         generated_at: brief.generatedAt,
         generated_by: "manual",
         source_hash: brief.sourceHash,
+        // A manual save keeps what the brief was generated from, like `source_hash`.
+        ...(brief.sourceParts ? { source_parts: brief.sourceParts } : {}),
       },
       habit_commitments: state.commitments,
     },
@@ -370,15 +408,6 @@ function habitDomId(id: string): string {
   return `runsheet-habit-${id.replace(/[^A-Za-z0-9_-]/g, "--")}`
 }
 
-/** „1,5" or „1.5" → 1.5; anything else → null. Negative points would let the ladder
- * pierce its cap or sink a flat baseline, so they are refused like non-numbers. */
-export function parseRunsheetPoints(value: string): number | null {
-  const normalized = value.trim().replace(",", ".")
-  if (normalized === "") return null
-  const parsed = Number(normalized)
-  return Number.isFinite(parsed) && parsed >= 0 ? parsed : null
-}
-
 /** A score 1–10 in half points — „7,5" or „7.5" → 7.5 — else null. */
 export function parseRunsheetBaseline(value: string): number | null {
   const normalized = value.trim().replace(",", ".")
@@ -387,57 +416,19 @@ export function parseRunsheetBaseline(value: string): number | null {
   return Number.isInteger(parsed * 2) && parsed >= 1 && parsed <= 10 ? parsed : null
 }
 
-/**
- * The staircase: baseline, then the running total after each Hebel. The code does this
- * arithmetic, never the model, and caps at 9 (G3: a 10 is never held out). When the raw
- * points overshoot the gap to the cap, they act as weights: every step is scaled down
- * proportionally (never up — no invented impact), so the relative order holds and no
- * step flattens to +0 at the cap (R32). Steps are shown at one decimal; the last value
- * is the „Mit Plan" target, exactly min(cap, baseline + sum).
- */
-export function runsheetScoreSteps(
+/** The plan's realistic range over the rows' levels (`consultScoreRange`); null without one. */
+export function runsheetScoreRange(
   baseline: number,
-  points: ReadonlyArray<number | null>,
-): number[] {
-  // A baseline already above the cap stays what it is — the cap limits the promise, not
-  // the truth; the ladder then just never climbs further. Negative edits never count:
-  // the save refuses them, and the ladder must neither pierce the cap nor sink.
-  const cap = Math.max(CONSULT_SCORE_TARGET_CAP, baseline)
-  const gap = cap - baseline
-  const weights = points.map((value) => Math.max(0, value ?? 0))
-  const sum = weights.reduce((total, value) => total + value, 0)
-  if (sum <= gap) {
-    const steps = [baseline]
-    let exact = baseline
-    for (const value of weights) {
-      exact += value
-      steps.push(Math.round(exact * 10) / 10)
-    }
-    return steps
-  }
-  // Overshoot: the gap is spread in tenths by largest remainder, so the relative order
-  // holds, a weighted Hebel keeps visible progress wherever a tenth is left for it, and
-  // the last step is exactly the cap. (Plain rounding of scaled sums could still flatten
-  // a positive step.)
-  const tenthsTotal = Math.round(gap * 10)
-  const quotas = weights.map((value) => (value / sum) * tenthsTotal)
-  const shares = quotas.map(Math.floor)
-  let rest = tenthsTotal - shares.reduce((total, value) => total + value, 0)
-  const byRemainder = quotas
-    .map((quota, index) => ({ index, fraction: quota - Math.floor(quota) }))
-    .sort((a, b) => b.fraction - a.fraction || a.index - b.index)
-  for (const { index } of byRemainder) {
-    if (rest <= 0) break
-    shares[index] += 1
-    rest -= 1
-  }
-  const steps = [baseline]
-  let tenths = Math.round(baseline * 10)
-  for (const value of shares) {
-    tenths += value
-    steps.push(tenths / 10)
-  }
-  return steps
+  rows: ReadonlyArray<Pick<HebelRow, "kind" | "level">>,
+): ConsultScoreRange | null {
+  return consultScoreRange(baseline, rows)
+}
+
+/** „8 bis 9", or one value when the range has no width. */
+export function formatRunsheetRange(range: ConsultScoreRange): string {
+  return range.low === range.high
+    ? formatRunsheetScore(range.high)
+    : `${formatRunsheetScore(range.low)} bis ${formatRunsheetScore(range.high)}`
 }
 
 export function DiscoveryRunsheetBrief({
@@ -446,6 +437,7 @@ export function DiscoveryRunsheetBrief({
   initialSections,
   initialBriefMeta = { generatedAt: null, sourceHash: null, generatedBy: null, savedAt: null },
   currentSourceHash = null,
+  currentSourceParts = null,
   generateBlockedHint = null,
   initialCommitments,
   recipeHabits,
@@ -466,6 +458,8 @@ export function DiscoveryRunsheetBrief({
    * the page read degraded (quiz lead or call sheet unread) — then no stale hint.
    */
   currentSourceHash?: string | null
+  /** The same read's per-part fingerprints — what the stale hint names. */
+  currentSourceParts?: Record<string, string> | null
   /** Why generating is not possible here (R14: a draft intake); null = it is. */
   generateBlockedHint?: string | null
   initialCommitments: DiscoveryCallSheetHabitCommitment[]
@@ -580,6 +574,7 @@ export function DiscoveryRunsheetBrief({
       sections: base.sections,
       generatedAt: base.generatedAt,
       sourceHash: base.sourceHash,
+      sourceParts: base.sourceParts ?? null,
     })
     if ("invalid" in built) {
       fail(built.invalid)
@@ -594,6 +589,7 @@ export function DiscoveryRunsheetBrief({
         sections: brief.sections,
         generatedAt: brief.generated_at,
         sourceHash: brief.source_hash,
+        sourceParts: brief.source_parts ?? null,
         generatedBy: brief.generated_by,
         // The server's new stamp: the next generation must expect THIS write.
         savedAt: stored?.consultBrief?.saved_at ?? null,
@@ -668,6 +664,7 @@ export function DiscoveryRunsheetBrief({
       sections: brief.sections,
       generatedAt: brief.generated_at,
       sourceHash: brief.source_hash,
+      sourceParts: brief.source_parts ?? null,
       generatedBy: brief.generated_by,
       savedAt: brief.saved_at ?? null,
     })
@@ -681,25 +678,26 @@ export function DiscoveryRunsheetBrief({
   }
 
   const baseline = parseRunsheetBaseline(baselineText)
-  const steps =
-    baseline !== null && hebel.length > 0
-      ? runsheetScoreSteps(
-          baseline,
-          hebel.map((row) => parseRunsheetPoints(row.points)),
-        )
-      : null
-  const target = steps ? steps.at(-1)! : null
+  const range = baseline !== null ? runsheetScoreRange(baseline, hebel) : null
 
   function updateHebel(uid: string, patch: Partial<HebelRow>) {
     setHebel((rows) => rows.map((row) => (row.uid === uid ? { ...row, ...patch } : row)))
   }
 
-  // Keeps array order = display order = staircase order: a Produkt row lands before the
+  // Keeps array order = display order = numbering order: a Produkt row lands before the
   // Umgang group, an Umgang row at the end.
   function addHebel(bucket: "produkt" | "umgang") {
     const rowUid = `n${nextUid.current++}`
     setHebel((rows) => {
-      const row = { uid: rowUid, title: "", note: "", points: "", bucket }
+      const row: HebelRow = {
+        uid: rowUid,
+        title: "",
+        note: "",
+        level: null,
+        kind: null,
+        gap: null,
+        bucket,
+      }
       if (bucket === "umgang") return [...rows, row]
       const at = rows.findIndex((entry) => entry.bucket === "umgang")
       return at === -1 ? [...rows, row] : [...rows.slice(0, at), row, ...rows.slice(at)]
@@ -741,18 +739,32 @@ export function DiscoveryRunsheetBrief({
           />
         </div>
         <div className="flex shrink-0 flex-col items-end gap-1">
-          <label className="flex items-center gap-1 text-[11px] text-muted-foreground">
-            +
-            <input
-              id={`runsheet-hebel-${row.uid}-points`}
-              aria-label={`${HEBEL_TITLE} ${index + 1}: ${HEBEL_POINTS_LABEL}`}
-              inputMode="decimal"
-              value={row.points}
-              placeholder="0"
-              onChange={(event) => updateHebel(row.uid, { points: event.target.value })}
-              className="w-12 rounded border bg-background px-1.5 py-1 text-right text-sm font-bold text-[var(--brand-plum)]"
-            />
-          </label>
+          <select
+            id={`runsheet-hebel-${row.uid}-level`}
+            aria-label={`${HEBEL_TITLE} ${index + 1}: ${HEBEL_LEVEL_LABEL}`}
+            value={row.level ?? ""}
+            onChange={(event) =>
+              updateHebel(row.uid, {
+                level:
+                  event.target.value === ""
+                    ? null
+                    : (Number(event.target.value) as ConsultLeverLevel),
+              })
+            }
+            className="rounded border bg-background px-1.5 py-1 text-sm font-bold text-[var(--brand-plum)]"
+          >
+            <option value="">{HEBEL_LEVEL_NONE}</option>
+            {([1, 2, 3] as const).map((level) => (
+              <option key={level} value={level}>
+                {RUNSHEET_LEVEL_DOTS[level]}
+              </option>
+            ))}
+          </select>
+          {hebelTags(row).map((tag) => (
+            <span key={tag} className="text-right text-[11px] leading-4 text-muted-foreground">
+              {tag}
+            </span>
+          ))}
           <button
             type="button"
             onClick={() => setHebel((rows) => rows.filter((entry) => entry.uid !== row.uid))}
@@ -847,7 +859,7 @@ export function DiscoveryRunsheetBrief({
               <span className="text-sm text-muted-foreground">{SCORE_SCALE}</span>
             </span>
           </div>
-          {baseline !== null && target !== null ? (
+          {baseline !== null && range !== null ? (
             <>
               <span aria-hidden="true" className="text-xl text-muted-foreground">
                 →
@@ -856,8 +868,11 @@ export function DiscoveryRunsheetBrief({
                 <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
                   {SCORE_TARGET}
                 </p>
-                <p className="text-2xl font-bold text-[var(--brand-plum)]">
-                  {formatRunsheetScore(target)}
+                <p
+                  id="runsheet-score-range"
+                  className="text-2xl font-bold text-[var(--brand-plum)]"
+                >
+                  {formatRunsheetRange(range)}
                   <span className="text-sm font-normal text-muted-foreground">{SCORE_SCALE}</span>
                 </p>
               </div>
@@ -910,7 +925,11 @@ export function DiscoveryRunsheetBrief({
           ui={generateUi}
           disabled={saveLocked || status === "saving" || generateBlockedHint !== null}
           blockedHint={generateBlockedHint}
-          stale={stale}
+          stale={
+            stale
+              ? runsheetStaleText(changedConsultSourceParts(base.sourceParts, currentSourceParts))
+              : null
+          }
           onGenerate={handleGenerate}
           onConfirm={handleGenerateConfirm}
           onCancel={handleGenerateCancel}
@@ -969,12 +988,11 @@ export function DiscoveryRunsheetBrief({
 
         <RunsheetCard
           title={
-            baseline !== null && target !== null
-              ? `${MASSNAHMEN_TITLE} · von ${formatRunsheetScore(baseline)} auf ${formatRunsheetScore(target)}`
+            baseline !== null && range !== null
+              ? `${MASSNAHMEN_TITLE} · von ${formatRunsheetScore(baseline)} auf ${formatRunsheetRange(range)} ${RANGE_WINDOW}`
               : MASSNAHMEN_TITLE
           }
         >
-          {steps ? <Staircase steps={steps} /> : null}
           {hebel.length === 0 ? (
             <p className="text-[13px] text-muted-foreground">{HEBEL_EMPTY}</p>
           ) : null}
@@ -1005,15 +1023,6 @@ export function DiscoveryRunsheetBrief({
               </div>
             )
           })}
-          {askTopics.length > 0 ? (
-            <div className="flex flex-wrap gap-1.5">
-              {askTopics.map((topic) => (
-                <RunsheetChip key={topic} tone="pending">
-                  {`${ASK_PREFIX} ${topic}`}
-                </RunsheetChip>
-              ))}
-            </div>
-          ) : null}
           <p className="text-[12px] text-muted-foreground">{HEBEL_FOOTNOTE}</p>
         </RunsheetCard>
 
@@ -1024,6 +1033,15 @@ export function DiscoveryRunsheetBrief({
                 <p className="text-[13px] font-bold text-foreground">{list.title}</p>
                 <p className="text-[12px] text-muted-foreground">{list.hint}</p>
               </div>
+              {/* E4: the code-side asks live HERE, once — not as chips and checklist again. */}
+              {list.key === "callFragen" && askTopics.length > 0 ? (
+                <p
+                  id="runsheet-call-asks"
+                  className="text-[13px] leading-5 text-[var(--status-pending-text)]"
+                >
+                  {`${ASK_PREFIX} ${askTopics.join(" · ")}`}
+                </p>
+              ) : null}
               {state.lists[list.key].length === 0 ? (
                 <p className="text-[13px] text-muted-foreground">{list.empty}</p>
               ) : (
@@ -1112,7 +1130,8 @@ export function RunsheetGenerateBar({
   disabled: boolean
   /** Why generating is not possible (R14: draft intake) — shown instead of any other line. */
   blockedHint?: string | null
-  stale: boolean
+  /** The stale line, or null when the brief is current. */
+  stale: string | null
   onGenerate: () => void
   onConfirm: () => void
   onCancel: () => void
@@ -1131,7 +1150,7 @@ export function RunsheetGenerateBar({
       : ui.phase === "error"
         ? { text: ui.text, tone: "text-[var(--status-danger-text)]" }
         : stale
-          ? { text: RUNSHEET_GENERATE_COPY.stale, tone: "text-[var(--status-pending-text)]" }
+          ? { text: stale, tone: "text-[var(--status-pending-text)]" }
           : ui.phase === "done"
             ? { text: ui.text, tone: "text-muted-foreground" }
             : null
@@ -1188,27 +1207,15 @@ export function RunsheetGenerateBar({
 }
 
 /** Baseline → +points per Hebel → target, as bars (a rough indication, R3). */
-function Staircase({ steps }: { steps: number[] }) {
-  return (
-    <div aria-hidden="true" className="flex items-end gap-2">
-      {steps.map((value, index) => {
-        const edge = index === 0 ? "base" : index === steps.length - 1 ? "goal" : "step"
-        return (
-          <div key={index} className="flex w-12 flex-col items-center gap-1">
-            <span className="text-xs font-bold text-foreground">{formatRunsheetScore(value)}</span>
-            <div
-              className={`w-full rounded-t ${
-                edge === "base"
-                  ? "bg-muted-foreground/30"
-                  : edge === "goal"
-                    ? "bg-[var(--brand-plum)]"
-                    : "bg-[var(--brand-plum-light)]"
-              }`}
-              style={{ height: `${Math.max(8, Math.round((value / 10) * 88))}px` }}
-            />
-          </div>
-        )
-      })}
-    </div>
-  )
+
+/** The small print beside a row's level: when she notices it, and the honest caveats. */
+export function hebelTags(row: Pick<HebelRow, "kind" | "gap" | "level">): string[] {
+  if (row.kind === null) return []
+  const spec = CONSULT_LEVER_SPECS[row.kind]
+  const tags: string[] = []
+  if (spec.timing) tags.push(spec.timing)
+  if (spec.thinEvidence) tags.push(HEBEL_THIN_EVIDENCE)
+  if (row.level !== null && !spec.inRange) tags.push(HEBEL_OUT_OF_RANGE)
+  if (row.gap === "offen") tags.push(HEBEL_ASK_IN_CALL)
+  return tags
 }

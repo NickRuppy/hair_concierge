@@ -98,6 +98,31 @@ const MIGRATIONS = [
   "supabase/migrations/20261006180100_personal_plan_direct_acceptance_draft_owner.sql",
 ] as const
 
+/**
+ * Hair Tools port: `tools` joins the module ids of the three module-aware functions
+ * (`personal_plan_complete_stage2_module`, `personal_plan_open_optional_refinement_v1`,
+ * `personal_plan_rebase_on_facts_v1`). One file that re-defines all three, so it must be applied
+ * AFTER the latest definition of each — i.e. last in every chain, never inside `MIGRATIONS`,
+ * where the rebase function does not exist yet and a later `CREATE OR REPLACE` would silently
+ * revert the widened list.
+ */
+export const PERSONAL_PLAN_STAGE2_TOOLS_MODULE_MIGRATION =
+  "supabase/migrations/20261012125714_20261009170000_personal_plan_stage2_tools_module.sql"
+
+/**
+ * The default chain has no paid-migration admission, but `personal_plan_open_optional_refinement_v1`
+ * declares `v_enrollment public.personal_plan_migration_enrollments%ROWTYPE`, which plpgsql
+ * resolves when the function is CREATEd. A shape-only stub table lets the real file apply and is
+ * dropped right after: suites that build the admission themselves (`personal-plan-unified-
+ * migrations`) `CREATE TABLE` it, and no default-chain suite calls the optional-entry function.
+ */
+const ENROLLMENTS_COMPILE_STUB = `
+CREATE TABLE public.personal_plan_migration_enrollments (id uuid PRIMARY KEY);
+`
+const DROP_ENROLLMENTS_COMPILE_STUB = `
+DROP TABLE public.personal_plan_migration_enrollments;
+`
+
 const STUB_PREREQUISITES = `
 CREATE ROLE anon;
 CREATE ROLE authenticated;
@@ -335,9 +360,20 @@ function migrationChain(options: { stage1Sources?: boolean }): string[] {
   }
   chain.push(PERSONAL_PLAN_REBASE_ON_FACTS_MIGRATION)
   chain.push(PERSONAL_PLAN_CREATE_INITIAL_KEEPS_REBASED_HEAD_MIGRATION)
+  chain.push(PERSONAL_PLAN_STAGE2_TOOLS_MODULE_MIGRATION)
   return chain
 }
 
+/**
+ * The personal-plan schema on PGlite, ending with the tools-module migration
+ * (`20261009170000`), which widens the module list to products/tools/habits.
+ *
+ * Trap: that widening lives in a function/constraint the older module-aware migrations also
+ * define. A suite that builds the DEFAULT chain itself (or runs this fixture and then re-applies
+ * an older module-aware migration) silently reverts the module list to the two-module form, and
+ * the tools module then fails its checks with confusing errors. Re-apply
+ * `PERSONAL_PLAN_STAGE2_TOOLS_MODULE_MIGRATION` last, as the tail of this function does.
+ */
 export async function migratedPersonalPlanDatabase(
   t: {
     after: (fn: () => Promise<void>) => void
@@ -352,6 +388,13 @@ export async function migratedPersonalPlanDatabase(
   if (options.stage1Sources) await pg.exec(STAGE1_SOURCE_STUB_PREREQUISITES)
   for (const migration of migrationChain(options)) {
     await pg.exec(await readFile(new URL(migration, ROOT), "utf8"))
+  }
+  if (!options.stage1Sources) {
+    await pg.exec(ENROLLMENTS_COMPILE_STUB)
+    await pg.exec(
+      await readFile(new URL(PERSONAL_PLAN_STAGE2_TOOLS_MODULE_MIGRATION, ROOT), "utf8"),
+    )
+    await pg.exec(DROP_ENROLLMENTS_COMPILE_STUB)
   }
   if (options.lock !== false) await applyCurrentUserFacts(pg)
   return pg

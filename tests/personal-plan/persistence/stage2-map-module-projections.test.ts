@@ -40,3 +40,8 @@ test("mapModuleProjections still skips malformed entries and non-objects", () =>
     {},
   )
 })
+
+test("mapModuleProjections reads a tools entry and still ignores unknown module keys", () => {
+  const tools = { ...base, stage3Handoff: false }
+  assert.deepEqual(mapModuleProjections({ tools, colour: base }), { tools })
+})

@@ -24,6 +24,7 @@ import {
   composeRunsheetOutsideRoutine,
   composeRunsheetProducts,
 } from "@/components/discovery/cockpit/runsheet-products"
+import { DiscoveryRunsheetProfileStrip } from "@/components/discovery/cockpit/runsheet-profile-strip"
 import { DiscoveryRunsheetRoutine } from "@/components/discovery/cockpit/runsheet-routine"
 import {
   DISCOVERY_INTAKE_CATEGORY_COPY,
@@ -62,6 +63,7 @@ import {
   runsheetWashChangeNote,
   runsheetWashFrequency,
 } from "@/lib/discovery/runsheet"
+import { runsheetProfileStrip } from "@/lib/discovery/runsheet/profile-strip"
 import { isShoppingBudgetEnabled } from "@/lib/personal-plan/release"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { createAdminClient } from "@/lib/supabase/admin"
@@ -259,9 +261,9 @@ export function createDiscoveryCockpitPage(
     // The brief's stale check compares against the generate route's own fingerprint (the
     // shared helper, same parts). A degraded read (lead or call sheet unread) hashes
     // differently from the full one, so it shows no stale hint rather than a false one.
-    const currentSourceHash =
+    const currentSource =
       leadAvailable && callSheetAvailable
-        ? consultBriefSource({ model, view, quiz, callSheet }).sourceHash
+        ? consultBriefSource({ model, view, quiz, callSheet })
         : null
     // Her wash frequency as she stated it (the Phase-4 „heute" line), and her honest wash
     // range over the shampoos in her week — the anchor of the per-wash frequency chips
@@ -291,6 +293,13 @@ export function createDiscoveryCockpitPage(
           <Notice text={BRANDS_UNAVAILABLE} />
         )}
         {view.applicationAvailable ? null : <Notice text={APPLICATION_UNAVAILABLE} />}
+        <DiscoveryRunsheetProfileStrip
+          rows={runsheetProfileStrip({
+            quiz,
+            heat: view.heatStyling,
+            washFrequencyLabel,
+          })}
+        />
         <DiscoveryRunsheetBrief
           enrollmentId={enrollmentId}
           saveLocked={!callSheetAvailable}
@@ -301,8 +310,10 @@ export function createDiscoveryCockpitPage(
             sourceHash: callSheet?.consultBrief?.source_hash ?? null,
             generatedBy: callSheet?.consultBrief?.generated_by ?? null,
             savedAt: callSheet?.consultBrief?.saved_at ?? null,
+            sourceParts: callSheet?.consultBrief?.source_parts ?? null,
           }}
-          currentSourceHash={currentSourceHash}
+          currentSourceHash={currentSource?.sourceHash ?? null}
+          currentSourceParts={currentSource?.sourceParts ?? null}
           // R14: the brief is generated from what she submitted, never from a draft.
           generateBlockedHint={intake.state === "submitted" ? null : RUNSHEET_GENERATE_COPY.draft}
           initialCommitments={callSheet?.habitCommitments ?? []}
@@ -361,6 +372,7 @@ export function createDiscoveryCockpitPage(
           routinePhase={
             <DiscoveryRunsheetRoutine
               view={view}
+              hotTool={model.heatStyling ? model.heatStyling.additionalHeatTools.length > 0 : null}
               washFrequencyLabel={washFrequencyLabel}
               washChangeNote={washChangeNote}
               washFrequency={washAnchor}

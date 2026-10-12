@@ -14,8 +14,10 @@ import {
 } from "../src/components/discovery/cockpit/discovery-call-cockpit"
 import {
   parseRunsheetBaseline,
-  parseRunsheetPoints,
-  runsheetScoreSteps,
+  formatRunsheetRange,
+  hebelTags,
+  runsheetScoreRange,
+  runsheetStaleText,
 } from "../src/components/discovery/cockpit/runsheet-brief"
 import {
   formatRunsheetDueOn,
@@ -33,6 +35,7 @@ import {
 import {
   DiscoveryRunsheetRoutine,
   runsheetWeek,
+  runsheetWeekPlacement,
 } from "../src/components/discovery/cockpit/runsheet-routine"
 import { ScanVerdictSections } from "../src/components/scan/scan-verdict-sections"
 import { parseDiscoveryCallSheet, type DiscoveryCallSheet } from "../src/lib/discovery/call-sheet"
@@ -329,8 +332,22 @@ function footerOf(markup: string): string {
 
 // --- the page ---------------------------------------------------------------------------
 
+test("E1: her profile sits first — hair, scalp, routine, problems with the main one marked", async () => {
+  const markup = await renderPage({ loadQuizLead: async () => dryLengthsLead })
+  const at = markup.indexOf('id="runsheet-profile"')
+  assert.ok(at > 0)
+  assert.ok(at < markup.indexOf("Vor dem Call"))
+  const strip = markup.slice(at, markup.indexOf("</section>", at))
+  assert.ok(strip.includes(">Profil<"))
+  for (const label of [">Haar<", ">Probleme<"]) assert.ok(strip.includes(label), label)
+  assert.ok(strip.includes("Hauptproblem: "))
+})
+
 test("the runsheet renders its six phases in order", async () => {
-  const markup = await renderPage()
+  const page = await renderPage()
+  // The profile strip (E1) sits above everything and shares words like „Routine": the phases
+  // are read after it.
+  const markup = page.slice(page.indexOf("</section>", page.indexOf('id="runsheet-profile"')))
   const positions = [
     "Vor dem Call",
     ">Eröffnen<",
@@ -430,10 +447,15 @@ test("a legacy enrollment without a call sheet renders every new section empty",
   assert.ok(!markup.includes("Call-Sheet nicht geladen"))
 })
 
-test("a call sheet fills the score tile, the staircase and the follow-ups", async () => {
+test("a call sheet fills the score tile, the range and the follow-ups", async () => {
   const markup = await renderPage({ loadCallSheet: async () => callSheet })
   assert.ok(markup.includes("Mit Plan"))
-  assert.ok(markup.includes("Maßnahmen · von 4 auf 8"))
+  // Legacy points 1,5 / 1,5 / 1 read as ●●● / ●●● / ●● (point system v2): one range.
+  assert.ok(markup.includes("Maßnahmen · von 4 auf 5 bis 6 in 4–8 Wochen"))
+  assert.ok(
+    markup.includes("Orientierung auf Basis üblicher Wirkungen, keine Messung oder Garantie."),
+  )
+  assert.ok(markup.includes('id="runsheet-score-range"'))
   assert.ok(!markup.includes("Hebel · von"))
   assert.ok(
     markup.includes("Aufgeraute Längen entstehen meist durch Hitze, Reibung und Vorschädigung."),
@@ -599,13 +621,14 @@ test("a failing call-sheet read leaves the runsheet empty instead of failing the
 test("checklist: research with GTIN, bleach cadence and detangling asks from her profile", async () => {
   const markup = await renderPage()
   assert.ok(markup.includes(`Recherche abschließen — Gescanntes Produkt · ${GTIN} (Conditioner)`))
-  assert.ok(
-    markup.includes(
-      "Im Call klären: Färbe-/Blondier-Rhythmus · Entwirren (Kamm oder Bürste) · Einkaufsort",
-    ),
-  )
-  // R17: the same asks sit as „kurz fragen" chips in the Hebel card.
-  assert.ok(markup.includes("kurz fragen: Färbe-/Blondier-Rhythmus"))
+  // E4: the asks are listed ONCE, at the top of „Fragen für den Call"; the checklist points
+  // there and the Hebel card carries no chips.
+  assert.ok(markup.includes("Offene Punkte im Call klären — stehen unter Fragen für den Call"))
+  const asks =
+    "Außerdem klären: Färbe-/Blondier-Rhythmus · Entwirren (Kamm oder Bürste) · Einkaufsort"
+  assert.equal(markup.split(asks).length - 1, 1)
+  assert.ok(!markup.includes("kurz fragen:"))
+  assert.ok(markup.indexOf("Fragen für den Call") < markup.indexOf(asks))
 })
 
 test("routine: wash day and in-between days, today's wash frequency, no price row", async () => {
@@ -646,6 +669,59 @@ test("routine: each day is a table — Schritt | Produkt | Wann | Zweck, one row
       assert.ok(row.includes(line.frequencyLabel), row)
     }
   }
+})
+
+test("week view: every product names its status — Entschieden, Vorschlag or Offen (A1)", () => {
+  const week = runsheetWeek(buildDiscoveryCockpitView(model()).steps)
+  const labels = [...week.washDay, ...week.offDays].flatMap((line) =>
+    line.products.map((product) => product.label),
+  )
+  assert.ok(labels.length > 0)
+  for (const label of labels) {
+    assert.match(label, /^(Entschieden|Vorschlag|Offen): /, label)
+  }
+})
+
+test("week placement: a step sits in every column it belongs to (A3)", () => {
+  const at = (key: string, hotTool: boolean | null = true, timing: string | null = null) =>
+    runsheetWeekPlacement(key, timing, hotTool)
+  // Wash-only: shampoo, conditioner, mask, pre-wash oil, bondbuilder, scalp serum (default).
+  for (const key of [
+    "decision:shampoo:shampoo_everyday:gap",
+    "decision:conditioner:conditioner_rinse_out:gap",
+    "decision:mask:intensive_conditioning_mask:gap",
+    "decision:oil:pre_wash_fibre_treatment:gap",
+    "decision:bondbuilder:specialized_bond_treatment:gap",
+    "decision:scalp_care:scalp_comfort:gap",
+    "decision:leave_in:post_wash_leave_in:gap",
+  ]) {
+    assert.deepEqual(at(key), { washDay: true, offDays: false }, key)
+  }
+  // Finishing / leave-on oil: last on a wash day AND on days without washing.
+  assert.deepEqual(at("decision:oil:dry_finish:gap"), { washDay: true, offDays: true })
+  assert.deepEqual(at("decision:oil:leave_on_fibre_conditioning:gap"), {
+    washDay: true,
+    offDays: true,
+  })
+  // Heat steps follow her hot tools; unknown keeps both.
+  for (const key of [
+    "decision:heat_protectant:pre_heat_protection:gap",
+    "decision:leave_in:pre_heat_application:gap",
+  ]) {
+    assert.deepEqual(at(key, true), { washDay: true, offDays: true }, key)
+    assert.deepEqual(at(key, false), { washDay: true, offDays: false }, key)
+    assert.deepEqual(at(key, null), { washDay: true, offDays: true }, key)
+  }
+  // Dry shampoo bridges the days between washes.
+  assert.deepEqual(at("decision:dry_shampoo:root_refresh_bridge:gap"), {
+    washDay: false,
+    offDays: true,
+  })
+  // Unknown role: the timing label decides, as before.
+  assert.deepEqual(at("decision:x:unknown:gap", true, "Nach Shampoo"), {
+    washDay: true,
+    offDays: false,
+  })
 })
 
 test("closing: the approved referral text, the copy button, and the unchanged finalize bar", async () => {
@@ -902,7 +978,11 @@ test("recipe: her scanned conditioner still in research counts as „vorhanden�
 test("recipe as a slide: talking point, Zuerst and Nicht zuerst visible; the rest folded", async () => {
   const markup = await renderPage({ loadQuizLead: async () => dryLengthsLead })
   const recipe = concernRecipeFor("dry_lengths")!
-  const start = markup.indexOf("Hauptproblem: ")
+  // After the profile strip (E1), which marks the main problem the same way.
+  const start = markup.indexOf(
+    "Hauptproblem: ",
+    markup.indexOf("</section>", markup.indexOf('id="runsheet-profile"')),
+  )
   const card = markup.slice(start, markup.indexOf("</section>", start))
   const foldAt = card.indexOf("<details")
   assert.ok(foldAt > 0, "the recipe has fold-ups")
@@ -1069,34 +1149,23 @@ test("footer: nothing genuinely unused — no footer at all", async () => {
 
 // --- pure helpers -------------------------------------------------------------------------
 
-test("score helpers: staircase scales onto the gap, German decimals, strict parsing", () => {
-  // Sum within the gap to 9: raw points hold, nothing is inflated.
-  assert.deepEqual(runsheetScoreSteps(4, [1.5, 1.5, 1]), [4, 5.5, 7, 8])
-  // Overshoot: the gap is spread in tenths by largest remainder (R32) — the relative
-  // order holds, the target is exactly the cap, and no weighted step flattens to +0
-  // while a tenth is left for it.
-  assert.deepEqual(runsheetScoreSteps(8, [3, null]), [8, 9, 9])
-  assert.deepEqual(runsheetScoreSteps(4, [2, 2, 2]), [4, 5.7, 7.4, 9])
-  assert.deepEqual(runsheetScoreSteps(7, [2, 1, 1]), [7, 8, 8.5, 9])
-  // Five in-range weights into a gap of 1: plain rounding would flatten the 0.5er —
-  // the tenth-apportionment keeps every weighted Hebel visibly moving (Codex F2).
-  assert.deepEqual(runsheetScoreSteps(8, [2, 2, 0.5, 2, 2]), [8, 8.3, 8.5, 8.6, 8.8, 9])
-  // The code does the arithmetic and caps the display at 9; a baseline at or above
-  // stays truthful and the ladder stays flat.
-  assert.deepEqual(runsheetScoreSteps(9, [1, 1]), [9, 9, 9])
-  assert.deepEqual(runsheetScoreSteps(10, [1]), [10, 10])
-  // No weights at all: nothing to spread.
-  assert.deepEqual(runsheetScoreSteps(5, [null, null]), [5, 5, 5])
-  // Negative edits never count (Codex F1): the ladder neither pierces the cap between
-  // steps nor sinks a flat baseline — and the save refuses the value outright.
-  assert.deepEqual(runsheetScoreSteps(8, [3, -1]), [8, 9, 9])
-  assert.deepEqual(runsheetScoreSteps(10, [-1]), [10, 10])
-  assert.equal(parseRunsheetPoints("-1"), null)
+test("score helpers: one range over the levels, German decimals, strict parsing", () => {
+  // The range is lever-scale's (tests/discovery-consult-lever-scale.test.ts); here only the
+  // runsheet's use of it and its German rendering.
+  assert.deepEqual(
+    runsheetScoreRange(7.5, [
+      { kind: "hitze_tools", level: 3 },
+      { kind: "entwirren", level: 2 },
+      { kind: "kopfhaut", level: null },
+    ]),
+    { low: 8, high: 9 },
+  )
+  assert.equal(runsheetScoreRange(6, [{ kind: null, level: null }]), null)
+  assert.equal(formatRunsheetRange({ low: 8, high: 9 }), "8 bis 9")
+  assert.equal(formatRunsheetRange({ low: 7.5, high: 8.5 }), "7,5 bis 8,5")
+  assert.equal(formatRunsheetRange({ low: 9, high: 9 }), "9")
   assert.equal(formatRunsheetScore(5.5), "5,5")
   assert.equal(formatRunsheetScore(8), "8")
-  assert.equal(parseRunsheetPoints("1,5"), 1.5)
-  assert.equal(parseRunsheetPoints(""), null)
-  assert.equal(parseRunsheetPoints("viel"), null)
   assert.equal(parseRunsheetBaseline("4"), 4)
   assert.equal(parseRunsheetBaseline("11"), null)
   assert.equal(parseRunsheetBaseline("4,5"), 4.5)
@@ -1167,7 +1236,7 @@ test("checklist lines: one research line per product, the asks on one line", () 
       "Recherche abschließen — Balea Spülung · 4001 (Conditioner)",
       "Baseline-Score abfragen (1–10) und oben eintragen",
       "Consult-Brief prüfen (Diagnose, Hebel, Begründungen)",
-      "Im Call klären: Einkaufsort",
+      "Offene Punkte im Call klären — stehen unter Fragen für den Call",
     ],
   )
 })
@@ -1547,7 +1616,7 @@ test("frequency row: every product of hers shows her answer next to the Idealpla
   assert.ok(!markup.includes("nicht vergleichbar"))
 })
 
-test("frequency row: a rhythm without a band shows both sides and „nicht vergleichbar“", async () => {
+test("frequency row: a rhythm without a band shows both sides and „kein fester Rhythmus“", async () => {
   const markup = await renderPage({
     loadModel: async () =>
       model({
@@ -1558,7 +1627,9 @@ test("frequency row: a rhythm without a band shows both sides and „nicht vergl
   const shampoo = entryTextOf(markup, "Shampoo")
   assert.ok(shampoo.includes("Angabe: Täglich"), shampoo)
   assert.ok(shampoo.includes("Idealplan: nach Bedarf"), shampoo)
-  assert.ok(shampoo.includes("nicht vergleichbar"), shampoo)
+  // E3: „nach Bedarf" is deliberately rhythm-free — said so, not flagged as incomparable.
+  assert.ok(shampoo.includes("kein fester Rhythmus"), shampoo)
+  assert.ok(!shampoo.includes("nicht vergleichbar"), shampoo)
   assert.ok(!markup.includes(CHIP_MARK))
 })
 
@@ -2032,7 +2103,9 @@ test("locked-in: stored decisions — the swap is bought with its price, the emp
     section.indexOf(">Summe neu<"),
   )
   assert.ok(skip.includes(">Conditioner</span>"), skip)
-  assert.ok(skip.includes("Schritt bleibt offen"))
+  // A1: a deliberately empty step is decided — never worded „offen".
+  assert.ok(skip.includes("kein Produkt nötig"))
+  assert.ok(!skip.includes("offen"))
   const keep = section.slice(section.indexOf(">Behalten<"), section.indexOf(">Weglassen<"))
   assert.ok(keep.includes("Noch nichts festgehalten."))
   assert.ok(section.includes('id="runsheet-locked-in-total" class="ml-auto tabular-nums">9,95 €<'))
@@ -2113,4 +2186,26 @@ test("locked-in: no copy button (R29), plum section in the cockpit's own voice",
   assert.equal(occurrences(section, "--brand-coral"), 0)
   assert.ok(section.includes("text-[var(--brand-plum)]"))
   assert.ok(!SECOND_PERSON_WORD.test(readableLines(section).join("\n")))
+})
+
+test("a Hebel's small print: timing, thin evidence, out of range, asked in the call", () => {
+  assert.deepEqual(hebelTags({ kind: "hitze_tools", gap: "gross", level: 3 }), ["4–8 Wochen"])
+  assert.deepEqual(hebelTags({ kind: "bondbuilder", gap: "gross", level: 1 }), ["wenig belegt"])
+  assert.deepEqual(hebelTags({ kind: "entwirren", gap: "offen", level: 2 }), [
+    "1–2 Wochen",
+    "im Call klären",
+  ])
+  assert.deepEqual(hebelTags({ kind: "chemie_abstaende", gap: "gross", level: 3 }), [
+    "ab dem nächsten Termin",
+    "nicht in der Spanne",
+  ])
+  assert.deepEqual(hebelTags({ kind: null, gap: null, level: 2 }), [])
+})
+
+test("the stale line names what changed, else stays generic", () => {
+  assert.equal(
+    runsheetStaleText(["Produkte & Entscheidungen", "Brief-Vorlage"]),
+    "Seit dem Brief geändert: Produkte & Entscheidungen, Brief-Vorlage — neu generieren?",
+  )
+  assert.equal(runsheetStaleText([]), "Eingaben haben sich geändert — Brief neu generieren?")
 })

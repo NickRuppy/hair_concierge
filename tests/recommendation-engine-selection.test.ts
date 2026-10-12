@@ -2056,7 +2056,6 @@ test("engine bondbuilder reranking exposes protocol metadata without ranking by 
     planReasonCodes: [],
     currentInventory: null,
     targetProfile: {
-      bondRepairIntensity: "intensive",
       applicationMode: "pre_shampoo",
       chemicalCrosslinkLane: false,
       peptideChainLane: true,
@@ -2075,7 +2074,6 @@ test("engine bondbuilder reranking exposes protocol metadata without ranking by 
   const specs: ProductBondbuilderSpecs[] = [
     {
       product_id: "supportive",
-      bond_repair_intensity: "intensive",
       application_mode: "post_wash_leave_in",
       bond_repair_axis: "peptide_chain",
       treatment_mode: "leave_in",
@@ -2084,7 +2082,6 @@ test("engine bondbuilder reranking exposes protocol metadata without ranking by 
     },
     {
       product_id: "ideal",
-      bond_repair_intensity: "intensive",
       application_mode: "pre_shampoo",
       bond_repair_axis: "disulfide_crosslink",
       treatment_mode: "rinse_out",
@@ -2124,7 +2121,6 @@ function bondbuilderBudgetFixture(
     planReasonCodes: [],
     currentInventory: null,
     targetProfile: {
-      bondRepairIntensity: "intensive",
       applicationMode: "pre_shampoo",
       ...lanes,
       mixedOrSevereCombo: false,
@@ -2142,7 +2138,6 @@ function bondbuilderBudgetFixture(
   )
   const specs: ProductBondbuilderSpecs[] = products.map((product) => ({
     product_id: product.id,
-    bond_repair_intensity: "intensive",
     application_mode: "pre_shampoo",
     bond_repair_axis: product.axis,
     treatment_mode: "rinse_out",
@@ -2195,7 +2190,6 @@ const REAL_BONDBUILDERS: Array<{
   id: string
   price: number
   trust: "high" | "medium" | "low"
-  intensity: "maintenance" | "intensive"
   axis: "disulfide_crosslink" | "peptide_chain"
   score: number
 }> = [
@@ -2203,7 +2197,6 @@ const REAL_BONDBUILDERS: Array<{
     id: "loreal-elvital-bond",
     price: 8.95,
     trust: "medium",
-    intensity: "intensive",
     axis: "disulfide_crosslink",
     score: 0.95,
   },
@@ -2211,7 +2204,6 @@ const REAL_BONDBUILDERS: Array<{
     id: "ogx-sealing-serum",
     price: 18.68,
     trust: "low",
-    intensity: "intensive",
     axis: "peptide_chain",
     score: 0.94,
   },
@@ -2219,7 +2211,6 @@ const REAL_BONDBUILDERS: Array<{
     id: "redken-acidic-bonding",
     price: 25.5,
     trust: "medium",
-    intensity: "maintenance",
     axis: "disulfide_crosslink",
     score: 0.8,
   },
@@ -2227,7 +2218,6 @@ const REAL_BONDBUILDERS: Array<{
     id: "olaplex-3plus",
     price: 34,
     trust: "high",
-    intensity: "maintenance",
     axis: "disulfide_crosslink",
     score: 0.86,
   },
@@ -2235,7 +2225,6 @@ const REAL_BONDBUILDERS: Array<{
     id: "epres",
     price: 48,
     trust: "high",
-    intensity: "maintenance",
     axis: "disulfide_crosslink",
     score: 0.84,
   },
@@ -2243,7 +2232,6 @@ const REAL_BONDBUILDERS: Array<{
     id: "aveda-miraculous-oil",
     price: 52,
     trust: "low",
-    intensity: "intensive",
     axis: "peptide_chain",
     score: 0.93,
   },
@@ -2251,7 +2239,6 @@ const REAL_BONDBUILDERS: Array<{
     id: BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
     price: 56.25,
     trust: "high",
-    intensity: "maintenance",
     axis: "peptide_chain",
     score: 0.7,
   },
@@ -2259,7 +2246,6 @@ const REAL_BONDBUILDERS: Array<{
     id: "kerastase-premiere",
     price: 56.29,
     trust: "medium",
-    intensity: "intensive",
     axis: "disulfide_crosslink",
     score: 0.9,
   },
@@ -2279,7 +2265,6 @@ function realBondbuilderRerank(options: {
     planReasonCodes: [],
     currentInventory: null,
     targetProfile: {
-      bondRepairIntensity: "intensive",
       applicationMode: "pre_shampoo",
       chemicalCrosslinkLane: true,
       peptideChainLane: false,
@@ -2298,7 +2283,6 @@ function realBondbuilderRerank(options: {
   )
   const specs: ProductBondbuilderSpecs[] = products.map((product) => ({
     product_id: product.id,
-    bond_repair_intensity: product.intensity,
     application_mode: "pre_shampoo",
     bond_repair_axis: product.axis,
     treatment_mode: "rinse_out",
@@ -2320,9 +2304,9 @@ function realBondbuilderRerank(options: {
   }).map((product) => product.id)
 }
 
-test("engine bondbuilder ranking orders by trust, K18 among equals, not by intensity or relevance", () => {
+test("engine bondbuilder ranking orders by trust, K18 among equals, not by relevance", () => {
   // Without a budget: high trust first (K18 house default among the three high products), even
-  // though K18 has the lowest relevance and a mismatching intensity.
+  // though K18 has the lowest relevance.
   assert.deepEqual(realBondbuilderRerank({}), [BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "olaplex-3plus"])
   assert.deepEqual(realBondbuilderRerank({ mixedOrSevereCombo: true }), [
     BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
@@ -2376,7 +2360,6 @@ test("engine bondbuilder ranking keeps a product without structured specs behind
     planReasonCodes: [],
     currentInventory: null,
     targetProfile: {
-      bondRepairIntensity: "intensive",
       applicationMode: "pre_shampoo",
       chemicalCrosslinkLane: true,
       peptideChainLane: false,
@@ -2394,7 +2377,6 @@ test("engine bondbuilder ranking keeps a product without structured specs behind
     specs: [
       {
         product_id: "low-trust",
-        bond_repair_intensity: "maintenance",
         application_mode: "pre_shampoo",
         bond_repair_axis: "peptide_chain",
         treatment_mode: "rinse_out",
@@ -2420,7 +2402,6 @@ test("engine bondbuilder reranking excludes retired and add-on products from pri
     planReasonCodes: [],
     currentInventory: null,
     targetProfile: {
-      bondRepairIntensity: "intensive",
       applicationMode: "pre_shampoo",
       chemicalCrosslinkLane: true,
       peptideChainLane: false,
@@ -2442,7 +2423,6 @@ test("engine bondbuilder reranking excludes retired and add-on products from pri
 
   const specs: ProductBondbuilderSpecs[] = candidates.map((candidate) => ({
     product_id: candidate.id,
-    bond_repair_intensity: "intensive",
     application_mode: "pre_shampoo",
     bond_repair_axis: "disulfide_crosslink",
     treatment_mode: "rinse_out",
@@ -2483,7 +2463,6 @@ test("engine bondbuilder reranking keeps explicitly included owned products asse
     planReasonCodes: [],
     currentInventory: null,
     targetProfile: {
-      bondRepairIntensity: "intensive",
       applicationMode: "pre_shampoo",
       chemicalCrosslinkLane: true,
       peptideChainLane: false,
@@ -2507,7 +2486,6 @@ test("engine bondbuilder reranking keeps explicitly included owned products asse
 
   const specs: ProductBondbuilderSpecs[] = candidates.map((candidate) => ({
     product_id: candidate.id,
-    bond_repair_intensity: "intensive",
     application_mode: "pre_shampoo",
     bond_repair_axis: "disulfide_crosslink",
     treatment_mode: "rinse_out",
@@ -2537,7 +2515,6 @@ test("engine bondbuilder reranking attaches optional add-ons for severe combo ca
     planReasonCodes: ["bondbuilder_mixed_severe_combo"],
     currentInventory: null,
     targetProfile: {
-      bondRepairIntensity: "intensive",
       applicationMode: "pre_shampoo",
       chemicalCrosslinkLane: true,
       peptideChainLane: true,
@@ -2557,7 +2534,6 @@ test("engine bondbuilder reranking attaches optional add-ons for severe combo ca
   const specs: ProductBondbuilderSpecs[] = [
     {
       product_id: "olaplex-3plus",
-      bond_repair_intensity: "intensive",
       application_mode: "pre_shampoo",
       bond_repair_axis: "disulfide_crosslink",
       treatment_mode: "rinse_out",
@@ -2566,7 +2542,6 @@ test("engine bondbuilder reranking attaches optional add-ons for severe combo ca
     },
     {
       product_id: "epres",
-      bond_repair_intensity: "intensive",
       application_mode: "pre_shampoo",
       bond_repair_axis: "disulfide_crosslink",
       treatment_mode: "rinse_out",
@@ -2575,7 +2550,6 @@ test("engine bondbuilder reranking attaches optional add-ons for severe combo ca
     },
     {
       product_id: "k18",
-      bond_repair_intensity: "intensive",
       application_mode: "post_wash_leave_in",
       bond_repair_axis: "peptide_chain",
       treatment_mode: "leave_in",
@@ -2584,7 +2558,6 @@ test("engine bondbuilder reranking attaches optional add-ons for severe combo ca
     },
     {
       product_id: "olaplex-0",
-      bond_repair_intensity: "intensive",
       application_mode: "pre_shampoo",
       bond_repair_axis: "disulfide_crosslink",
       treatment_mode: "rinse_out",
@@ -2645,7 +2618,6 @@ test("engine bondbuilder reranking scopes named K18 and OLAPLEX comparisons", ()
     planReasonCodes: ["bondbuilder_mixed_severe_combo"],
     currentInventory: null,
     targetProfile: {
-      bondRepairIntensity: "intensive",
       applicationMode: "pre_shampoo",
       chemicalCrosslinkLane: true,
       peptideChainLane: true,
@@ -2677,7 +2649,6 @@ test("engine bondbuilder reranking scopes named K18 and OLAPLEX comparisons", ()
   const specs: ProductBondbuilderSpecs[] = [
     {
       product_id: "olaplex-3plus",
-      bond_repair_intensity: "intensive",
       application_mode: "pre_shampoo",
       bond_repair_axis: "disulfide_crosslink",
       treatment_mode: "rinse_out",
@@ -2686,7 +2657,6 @@ test("engine bondbuilder reranking scopes named K18 and OLAPLEX comparisons", ()
     },
     {
       product_id: "epres",
-      bond_repair_intensity: "intensive",
       application_mode: "pre_shampoo",
       bond_repair_axis: "disulfide_crosslink",
       treatment_mode: "rinse_out",
@@ -2695,7 +2665,6 @@ test("engine bondbuilder reranking scopes named K18 and OLAPLEX comparisons", ()
     },
     {
       product_id: "k18",
-      bond_repair_intensity: "intensive",
       application_mode: "post_wash_leave_in",
       bond_repair_axis: "peptide_chain",
       treatment_mode: "leave_in",

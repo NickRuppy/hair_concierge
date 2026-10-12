@@ -655,7 +655,7 @@ const computedInitial = computeNeedPlan({
 })
 if (computedInitial.status !== "ready") throw new Error("fixture")
 const initialSnapshot = computedInitial.snapshot
-const triggerContext = deriveStage2TriggerContext(initialSnapshot)
+const triggerContext = deriveStage2TriggerContext(initialSnapshot, { toolsEnabled: false })
 const resolved = resolveAssumedAnswers({
   triggerContext,
   answers: {

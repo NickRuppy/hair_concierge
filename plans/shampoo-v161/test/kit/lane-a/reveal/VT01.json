@@ -1,0 +1,28 @@
+{
+  "blindId": "VT01",
+  "productName": "No.4 Bond Maintenance Shampoo",
+  "brand": "OLAPLEX",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "N°4 Shampoo repariert und schützt das Haar vor alltäglichen Belastungen - einschließlich geschädigtem Haar, Spliss und Frizz - indem es gebrochene Bindungen wieder repariert. Das Haar lässt sich leichter pflegen, glänzt und wird mit jeder Anwendung gesünder. N°4 ist color safe und reduziert nachweislich Brüche und stärkt alle Haartypen.",
+      "directionsVerbatim": "Gib eine münzgroße Menge in die Hand und trage es auf nasses Haar auf.Gründlich aufschäumen und gut ausspülen.Anschließend den N°.5 Bond Maintenance® Conditioner verwenden."
+    },
+    {
+      "sourceType": "retailer_lookfantastic_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Olaplex No.4 Bond Maintenance Shampoo 250ml (retailer title); product text: 'Anwendung: Die gewünschte Menge des Produkts in die Hände geben und emulgieren. Auf das nasse Haar auftragen, vor allem auf die Kopfhaut und bis in die Spitzen einarbeiten. Ausspülen.'",
+      "directionsVerbatim": "Anwendung: Die gewünschte Menge des Produkts in die Hände geben und emulgieren. Auf das nasse Haar auftragen, vor allem auf die Kopfhaut und bis in die Spitzen einarbeiten. Ausspülen. Routine: Anschließend mit Olaplex Nº.5 Bond Maintenance Conditioner."
+    },
+    {
+      "sourceType": "retailer_shop_apotheke_marketplace",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Olaplex No.4 Bond Maintenance Shampoo: Schonender Reiniger für alle Haartypen (marketplace listing text; also says 'frei von Sulfaten' although the list contains Disodium Laureth Sulfosuccinate)",
+      "directionsVerbatim": "Eine kleine Menge des Shampoos in das nasse Haar einmassieren, aufschäumen und gründlich ausspülen. Falls erforderlich, den Vorgang wiederholen."
+    }
+  ]
+}

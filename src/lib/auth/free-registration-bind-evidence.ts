@@ -22,9 +22,10 @@ import type { FreeRegistrationBindEvidence } from "./free-registration"
 export async function loadFreeRegistrationBindEvidence(input: {
   userId: string
   leadId: string
-  admin?: BindEvidenceAdmin
+  admin?: ReturnType<typeof createAdminClient> | BindEvidenceAdmin
 }): Promise<FreeRegistrationBindEvidence> {
-  const admin = input.admin ?? (createAdminClient() as unknown as BindEvidenceAdmin)
+  // Keep Supabase's generic builders behind this small read-only boundary.
+  const admin = (input.admin ?? createAdminClient()) as unknown as BindEvidenceAdmin
 
   const lead = await admin
     .from("leads")
@@ -69,11 +70,12 @@ export async function loadFreeRegistrationBindEvidence(input: {
 }
 
 type BindEvidenceQuery = {
-  select: (columns: string) => BindEvidenceQuery
   eq: (column: string, value: string) => BindEvidenceQuery
-  maybeSingle: () => Promise<{ data: unknown; error: unknown }>
+  maybeSingle: () => PromiseLike<{ data: unknown; error: unknown }>
 }
 
 type BindEvidenceAdmin = {
-  from: (table: "leads" | "hair_profiles" | "personal_plans") => BindEvidenceQuery
+  from: (table: "leads" | "hair_profiles" | "personal_plans") => {
+    select: (columns: string) => BindEvidenceQuery
+  }
 }

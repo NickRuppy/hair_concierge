@@ -1,3 +1,5 @@
+import * as Sentry from "@sentry/nextjs"
+
 import { PRODUCT_CATEGORY_LABELS } from "@/lib/onboarding/product-options"
 import type {
   ApplicationDayTypeKey,
@@ -9,6 +11,23 @@ import type {
   CompiledProductBlock,
 } from "@/lib/routines/personal-plan/application/compiler"
 import type { ApplicationDayTypeDefinition } from "@/lib/routines/personal-plan/application/repository"
+
+import {
+  projectToolsForDay,
+  type ToolPlacement,
+  type ToolUseSectionView,
+} from "@/lib/personal-plan/tools/application"
+import {
+  dayAnchorIndex,
+  routeKeyFor,
+  TOOL_DAY_ANCHORS,
+  type ToolAsset,
+  type ToolDayAnchor,
+  type ToolGuidance,
+  type ToolOccurrence,
+  type ToolOccurrenceAnchor,
+} from "@/lib/personal-plan/tools/contracts"
+import { TOOL_FAMILY_LABELS } from "@/lib/personal-plan/tools/labels"
 
 import type {
   ApplicationDayView,
@@ -41,6 +60,38 @@ type ViewAdapterInput = {
   compiled: CompiledApplicationViewV1
   dayDefinitions: readonly ApplicationDayTypeDefinition[]
   cadenceByDay?: Partial<Record<ApplicationDayTypeKey, string>>
+  /**
+   * The Routine's durable Tool authority. Absent while the Tools rollout is off,
+   * which leaves every day exactly as it renders in production today.
+   */
+  tools?: {
+    assets: readonly ToolAsset[]
+    occurrences: readonly ToolOccurrence[]
+    guidance: readonly ToolGuidance[]
+  }
+  /**
+   * Called when a day's Tool projection throws and the day degrades to its product-only form.
+   * Defaults to a Sentry breadcrumb; never a failure report.
+   */
+  onToolProjectionError?: (dayType: ApplicationDayTypeKey, error: unknown) => void
+}
+
+/**
+ * A broken Tool projection must never take down the Anwendung, so it degrades silently for the
+ * member — but a persistently broken projection has to be observable. A breadcrumb (not a
+ * captured exception) rides along with the next real event; the reporter itself never throws.
+ */
+function recordToolProjectionBreadcrumb(dayType: ApplicationDayTypeKey, error: unknown): void {
+  try {
+    Sentry.addBreadcrumb({
+      category: "application.tools",
+      level: "warning",
+      message: "Tool projection failed; the day renders without Tool blocks",
+      data: { dayType, errorName: error instanceof Error ? error.name : typeof error },
+    })
+  } catch {
+    // Observability is best effort.
+  }
 }
 
 function categoryLabelDe(category: PersonalPlanCategory): string {
@@ -78,6 +129,8 @@ export function toApplicationPageView({
   compiled,
   dayDefinitions,
   cadenceByDay = {},
+  tools,
+  onToolProjectionError = recordToolProjectionBreadcrumb,
 }: ViewAdapterInput): ApplicationPageView {
   const definitionByKey = new Map(dayDefinitions.map((definition) => [definition.key, definition]))
 
@@ -87,13 +140,25 @@ export function toApplicationPageView({
       throw new Error(`missing active day definition for ${day.key}`)
     }
 
-    return {
-      dayType: day.key,
-      sortOrder: definition.sortOrder,
-      labelDe: definition.label,
-      summaryDe: definition.summary,
-      cadenceDe: cadenceByDay[day.key] ?? null,
-      steps: day.outerSequence.map((step, index) => {
+    // Tools are a read-time garnish: any failure while projecting or placing them drops the
+    // Tool blocks of this day and nothing else, so the product steps always render.
+    const buildDay = (toolProjection: ReturnType<typeof projectToolsForDay> | null) => {
+      // The product compiler emits its own generic transition line whenever a
+      // product's anchor is `post_rinse_towel_dry` ("Sanft mit einem Handtuch
+      // ausdrücken."). Since WS6 a drying-textile Tool step (towel, T-shirt,
+      // wrap) can anchor at that same graph position and say the same thing in
+      // its own copy. Drop the compiler's generic line in that case — the Tool
+      // step alone carries the instruction. The compiler's own output and
+      // semantics are untouched; a day without a drying-textile Tool step keeps
+      // the transition exactly as compiled.
+      const suppressGenericTowelTransition = Boolean(
+        toolProjection && hasDryingTextileStepAtTowelDry(toolProjection.sections),
+      )
+      const effectiveOuterSequence = day.outerSequence.filter(
+        (step) => !(suppressGenericTowelTransition && isTowelDryTransition(step)),
+      )
+
+      const productSteps: ApplicationOuterStepView[] = effectiveOuterSequence.map((step, index) => {
         if (step.kind === "product") return productStep(step.block)
         if (step.kind === "unresolved_product") {
           return {
@@ -111,13 +176,9 @@ export function toApplicationPageView({
           stepKey: `${day.key}:transition:${index}`,
           copyDe: step.copyDe,
         }
-      }),
-      isPartial: Boolean(day.isPartial),
-      provisionalProductCount: day.productBlocks.filter((block) => block.status === "provisional")
-        .length,
-      unresolvedProductCount: day.outerSequence.filter((step) => step.kind === "unresolved_product")
-        .length,
-      shelf: day.outerSequence.flatMap<ApplicationShelfSlotView>((step) => {
+      })
+
+      const productShelf = effectiveOuterSequence.flatMap<ApplicationShelfSlotView>((step) => {
         if (step.kind === "product")
           return [
             {
@@ -139,7 +200,50 @@ export function toApplicationPageView({
             },
           ]
         return []
-      }),
+      })
+
+      return {
+        dayType: day.key,
+        sortOrder: definition.sortOrder,
+        labelDe: definition.label,
+        summaryDe: definition.summary,
+        cadenceDe: cadenceByDay[day.key] ?? null,
+        steps: toolProjection
+          ? withToolSteps(
+              productSteps,
+              productAnchorRanks(effectiveOuterSequence),
+              toolProjection,
+              finishStepIndex(effectiveOuterSequence),
+            )
+          : productSteps,
+        isPartial: Boolean(day.isPartial),
+        provisionalProductCount: day.productBlocks.filter((block) => block.status === "provisional")
+          .length,
+        unresolvedProductCount: effectiveOuterSequence.filter(
+          (step) => step.kind === "unresolved_product",
+        ).length,
+        // Tools stand on the same shelf as the products; no pill row is added.
+        shelf: [...productShelf, ...(toolProjection?.shelf ?? [])],
+      }
+    }
+
+    if (!tools) return buildDay(null)
+    try {
+      return buildDay(
+        projectToolsForDay({
+          dayType: day.key,
+          assets: tools.assets,
+          occurrences: tools.occurrences,
+          guidance: tools.guidance,
+        }),
+      )
+    } catch (error) {
+      try {
+        onToolProjectionError(day.key, error)
+      } catch {
+        // A failing reporter must not turn the silent fallback into a failure.
+      }
+      return buildDay(null)
     }
   })
 
@@ -152,4 +256,149 @@ export function toApplicationPageView({
   }
 
   return { state: "ready", days }
+}
+
+/** The step key of the rough-rubbing correction (`guidance:<route key>`, see `buildToolPlan`). */
+const GENTLE_TOWEL_GUIDANCE_KEY = `guidance:${routeKeyFor("gentle_towel_handling")}`
+
+type DayOuterSequence = CompiledApplicationViewV1["days"][number]["outerSequence"]
+
+/**
+ * Index of the first finishing product (a `dry_finish` Oil or equivalent), or -1.
+ * Drying and styling Tools must be used BEFORE the finish is applied — appending
+ * them after it would tell the user to finish, then style.
+ */
+function finishStepIndex(outerSequence: DayOuterSequence): number {
+  return outerSequence.findIndex(
+    (step) => step.kind === "product" && step.block.roles.includes("finish"),
+  )
+}
+
+/**
+ * The graph position each product step occupies, in the day's own order.
+ *
+ * Product blocks carry their protocol's `APPLICATION_SEQUENCE_ANCHORS` anchor,
+ * which is the same graph the Tool occurrences anchor onto (`D7`). A step
+ * without a usable anchor — an unresolved product, a compiler transition —
+ * inherits the position of the step before it, so it stays glued where the
+ * compiler put it instead of jumping to a bucket of its own.
+ */
+function productAnchorRanks(outerSequence: DayOuterSequence): number[] {
+  let carried = -1
+  return outerSequence.map((step) => {
+    const anchor =
+      step.kind === "product" ? (step.block.anchor as ToolDayAnchor | undefined) : undefined
+    const index = anchor ? TOOL_DAY_ANCHORS.indexOf(anchor) : -1
+    if (index >= 0) carried = index
+    return carried
+  })
+}
+
+/**
+ * True for the compiler's own generic transition into the towel-dry graph
+ * position (`toAnchor === "post_rinse_towel_dry"`) — the line this dedupe may
+ * suppress. Every other transition (into `wet_cleanse`, `damp_leave_on`, etc.)
+ * is untouched.
+ */
+function isTowelDryTransition(step: DayOuterSequence[number]): boolean {
+  return step.kind === "state_transition" && step.toAnchor === "post_rinse_towel_dry"
+}
+
+/**
+ * Whether the Tool projection already renders a drying-textile Tool step
+ * (towel, T-shirt, wrap) at the towel-dry graph position. When it does, the
+ * compiler's generic transition line would repeat the same instruction the
+ * Tool step already gives, so the view drops the generic line and keeps the
+ * Tool step as the single source of the instruction.
+ */
+function hasDryingTextileStepAtTowelDry(sections: readonly ToolUseSectionView[]): boolean {
+  return sections.some(
+    (section) =>
+      section.anchor.position === "post_rinse_towel_dry" &&
+      section.familyLabelDe === TOOL_FAMILY_LABELS.drying_textiles,
+  )
+}
+
+/**
+ * Splices the Tool sections and behaviour-only guidance into the day's ordered
+ * sequence by GRAPH POSITION (`D7`), not by a five-slot bucket of its own.
+ *
+ * A Tool step renders after every product step at or before its position and
+ * before the first product step past it. At an equal position the product goes
+ * first — you apply the heat protection, then you reach for the tool.
+ *
+ * Two ordering guarantees survive unchanged: nothing but the nightly step
+ * renders after the finishing product, and the nightly step is always last.
+ */
+function withToolSteps(
+  productSteps: readonly ApplicationOuterStepView[],
+  productRanks: readonly number[],
+  projection: ReturnType<typeof projectToolsForDay>,
+  finishIndex: number,
+): ApplicationOuterStepView[] {
+  type Pending = {
+    rank: number
+    placement: ToolPlacement
+    relativeToStep: ToolOccurrenceAnchor["relativeToStep"]
+    /** Nick's ready-check ruling 2026-08-25: the Applikator renders BEFORE its
+     * scalp product — you pick up the tool, then apply the product with it. All
+     * other ties stay product-first (heat protection before the heated tool). */
+    toolFirst: boolean
+    step: ApplicationOuterStepView
+  }
+  // Ready-check ruling 2026-08-25: when the towel card renders at
+  // post_rinse_towel_dry, the separate rough-rubbing correction line is dropped —
+  // its message lives in the card. Users without a towel card keep the firm line.
+  const towelCardPresent = hasDryingTextileStepAtTowelDry(projection.sections)
+  const pending: Pending[] = [
+    ...projection.sections.map((section) => ({
+      rank: dayAnchorIndex(section.anchor),
+      placement: section.placement,
+      relativeToStep: section.anchor.relativeToStep,
+      toolFirst: section.assetKey.startsWith("asset:wash_application:"),
+      step: section as ApplicationOuterStepView,
+    })),
+    ...projection.transitions
+      .filter(
+        (transition) => !(towelCardPresent && transition.stepKey === GENTLE_TOWEL_GUIDANCE_KEY),
+      )
+      .map((transition) => ({
+        rank: dayAnchorIndex(transition.anchor),
+        placement: transition.placement,
+        relativeToStep: transition.anchor.relativeToStep,
+        toolFirst: false,
+        step: {
+          kind: "transition" as const,
+          stepKey: transition.stepKey,
+          copyDe: transition.copyDe,
+        },
+      })),
+  ].sort((left, right) => left.rank - right.rank)
+
+  const nightly = pending.filter((entry) => entry.placement === "nightly")
+  const inDay = pending.filter((entry) => entry.placement !== "nightly")
+  // Everything except the nightly step belongs before the finishing product.
+  const cap = finishIndex >= 0 ? finishIndex : productSteps.length
+
+  const merged: ApplicationOuterStepView[] = []
+  let cursor = 0
+  for (const entry of inDay) {
+    let target = productRanks.filter((rank) =>
+      entry.toolFirst ? rank < entry.rank : rank <= entry.rank,
+    ).length
+    // An optional refinement INSIDE the position: sit immediately after (or
+    // before) the named product step when the day actually contains it. The
+    // graph position still decides everything else, so this can never move a
+    // step into another phase.
+    if (entry.relativeToStep) {
+      const at = productSteps.findIndex((step) => step.stepKey === entry.relativeToStep?.stepKey)
+      if (at >= 0) target = entry.relativeToStep.side === "after" ? at + 1 : at
+    }
+    target = Math.min(target, cap)
+    target = Math.max(target, cursor)
+    while (cursor < target) merged.push(productSteps[cursor++])
+    merged.push(entry.step)
+  }
+  while (cursor < productSteps.length) merged.push(productSteps[cursor++])
+  return [...merged, ...nightly.map((entry) => entry.step)]
 }

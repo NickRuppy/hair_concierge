@@ -1,0 +1,153 @@
+{
+  "blindId": "VT20",
+  "inciFingerprintSha256": "10bad7dd846d5f9d98b6fd278514e1ea952c56ca98277bb09bf38d263a7f1512",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, claims hidden)",
+  "standard": "shampoo-classification-v1.6.1 candidate text (unlocked)",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "moderate",
+    "normalization": "ID-2: no split synonym entries; normalized one-based positions of the 27-entry list",
+    "e3ProminenceCutoff": "Parfum @21 -> positions 1-20 prominent"
+  },
+  "formulaFacts": {
+    "surfactantSystem": [
+      "Sodium Laureth Sulfate @2 - strong anionic, ether type, defining anionic",
+      "Disodium Laureth Sulfosuccinate @5 - mild anionic, buffer",
+      "Sodium Lauroyl Glutamate @7 - mild anionic, buffer",
+      "No reinforcing strong anionic; no amphoteric",
+      "Not cleansing: Laureth-2 @3 (low-ethoxylate thickener), PEG-120 Methyl Glucose Dioleate @10 (PEG thickener), Sodium Chloride @6"
+    ],
+    "conditioningAndWeightRoutes": {
+      "silicone": [],
+      "cationic_polymer": ["Polyquaternium-7 @13"],
+      "cationic_conditioner": [],
+      "payload_lipid": [],
+      "weak_refatter": [],
+      "protein_film": ["Hydrolyzed Wheat Protein @17"],
+      "film_former": [],
+      "pearlizing_fatty_route_for_C2": [],
+      "humectantContext": ["Panthenol @4", "Propylene Glycol @8 (solvent)", "Zinc PCA @15 (zinc salt active, not on the C2 humectant list)"],
+      "excluded": ["Laureth-2 @3", "PEG-120 Methyl Glucose Dioleate @10 (PEG thickener, 6.4)", "Citric Acid @11, Sodium Citrate @12 (pH, F4)", "Camellia Sinensis Leaf Extract @14 (extract)", "Citrus Aurantium Peel Oil @26 (fragrance oil)"]
+    },
+    "actives": ["Caffeine @9", "Niacinamide @16", "Zinc PCA @15", "Panthenol @4", "no recognized anti-dandruff active"],
+    "scalpExposureFlags": ["Parfum @21; no cooling agent", "E4 comfort routes prominent: Panthenol @4, Niacinamide @16", "E4 humectant/refatting route prominent: Panthenol @4"]
+  },
+  "wLine": {
+    "wLine": "Caffeine @9",
+    "candidateClasses": ["sub1_active"],
+    "cap": "e3Point @21 (Parfum)",
+    "alphabeticalRun": "none",
+    "skipped": [
+      "w_line_skipped:Panthenol@4 - clause (ii) failed: cleansing surfactants Disodium Laureth Sulfosuccinate @5 and Sodium Lauroyl Glutamate @7 listed after it and before the cap"
+    ],
+    "plausibilityOfWLine": "Caffeine @9: (i) cleansing surfactants before; (ii) after @9 and before @21 no cleansing surfactant, alkanolamide-type thickener or pearlizing wax (PEG-120 Methyl Glucose Dioleate is not a structurant for (ii))",
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "strong",
+      "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate @2 with prominent mild-anionic buffers (Disodium Laureth Sulfosuccinate @5, Sodium Lauroyl Glutamate @7) and no reinforcing route. Counter-signal: no amphoteric, and the buffers sit after Panthenol @4 and salt @6, so the SLES chassis is lightly buffered; realistic unknowns could make it strong.",
+      "ruleIds": ["C1", "C3", "C4", "N-ALT"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low: cleansing-led architecture; the only conditioning system is Polyquaternium-7 @13 (after pH adjusters), with Panthenol @4 as humectant and a late protein @17. No silicone, lipid or pearlizing route; C2 not met. Neighbor moderate because PQ-7 could be a meaningful single system.",
+      "ruleIds": ["5", "C2", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "silicone": [],
+        "cationic_polymer": ["Polyquaternium-7 @13"],
+        "cationic_conditioner": [],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "protein_film": ["Hydrolyzed Wheat Protein @17"],
+        "film_former": [],
+        "reset": ["strong anionic ether type: Sodium Laureth Sulfate @2", "mild anionic: Disodium Laureth Sulfosuccinate @5, Sodium Lauroyl Glutamate @7"],
+        "humectantContext": ["Panthenol @4"],
+        "excluded": ["Laureth-2 @3", "PEG-120 Methyl Glucose Dioleate @10"],
+        "unresolved": []
+      },
+      "depositionLoad": "light - one cationic polymer after the pH adjusters and a protein just before the preservatives",
+      "persistence": "low - Polyquaternium-7 at a low position and a water-soluble hydrolyzed protein are weakly retained",
+      "resetCapacity": "moderate - lightly buffered SLES chassis (close to strong)",
+      "counterevidence": "Polyquaternium-7 is a substantive cationic polymer that can build up with repeated use.",
+      "whyThisBand": "Low: deposition is light and low-persistence and the SLES chassis offsets it.",
+      "whyNotNeighborBand": "W2 (two families present): both are late - Polyquaternium-7 @13 sits after Citric Acid @11/Sodium Citrate @12 and the protein @17 directly before the preservatives - and they face a lightly buffered SLES reset; no lipid, silicone or second cationic converges, so combined residue is plausibly below noticeable.",
+      "confidenceLimitingFactor": "Polyquaternium-7 dose unknown; could plausibly be one band heavier.",
+      "rationale": "Low: one late cationic polymer plus a late protein against a moderate-to-strong SLES reset; no payload lipid (W-line Caffeine @9). W1 not applicable.",
+      "ruleIds": ["6.6", "W2", "W-LINE", "W1", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "volume",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "nonspecific (provisional)",
+        "moistureRoutes": ["Panthenol @4"],
+        "repairRoutes": ["Hydrolyzed Wheat Protein @17"],
+        "sharedConditioningRoutes": ["Polyquaternium-7 @13"],
+        "limitation": "Single humectant and a single late protein; no cluster"
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "Caffeine @9 may carry a hair-loss claim, which F5 excludes from focus; Zinc PCA @15 hints at a sebum/oily role, to be checked against claims.",
+      "decisionTrace": "Claim direction null (blind); formula light and F6-compatible with clarifying (moderate cleansing, low conditioning, low weight) or volume; provisional general.",
+      "rationale": "Provisional formula-only: general.",
+      "ruleIds": ["7.2", "F5", "F6", "3.1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["clarifying"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no positioning visible.",
+      "rationale": "Provisional [].",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": ["alternating impossible (moderate formula)", "treatment impossible", "frequent needs U2 wording"],
+      "rationale": "Provisional default regular.",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: positioning hidden. CSA formula half met (prominent comfort routes Panthenol @4 and Niacinamide @16).",
+      "ruleIds": ["10", "CSA", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active; Zinc PCA is not one of the four listed actives.",
+      "ruleIds": ["11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "conditioningLevel low vs moderate (Polyquaternium-7 single system).",
+    "weightPotential low vs moderate (W2 boundary); alternative moderate.",
+    "Packet identityConfidence moderate; no formula effect."
+  ]
+}
