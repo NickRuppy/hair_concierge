@@ -56,7 +56,7 @@ import { ScanProductThumb } from "./scan-product-thumb"
 export type ScanSearchReason = "timeout" | "manual" | "camera"
 
 const TIMEOUT_TITLE = "Barcode nicht lesbar?"
-const TIMEOUT_SUBLINE = "So findest du's trotzdem."
+const TIMEOUT_SUBLINE = "Du kannst nach dem Produkt suchen."
 const DEFAULT_TITLE = "Produkt finden"
 
 const FIELD_PLACEHOLDER = "Produktname oder Marke"

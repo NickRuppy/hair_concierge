@@ -1,3 +1,4 @@
+// fit-verdict spec §1/§7b, ruled 2026-10-12: web copy.
 import assert from "node:assert/strict"
 import test from "node:test"
 import React, { type ReactElement, type ReactNode } from "react"
@@ -1444,7 +1445,7 @@ test("ScanSearchSheet: default header is 'Produkt finden'; the timeout reason ke
   const timeout = await mountSearchSheet(notFound, { reason: "timeout" })
   const timeoutHeader = searchSheetHeaderText(timeout.tree)
   assert.ok(timeoutHeader.includes("Barcode nicht lesbar?"))
-  assert.ok(timeoutHeader.includes("So findest du's trotzdem."))
+  assert.ok(timeoutHeader.includes("Du kannst nach dem Produkt suchen."))
 })
 
 test("ScanSearchSheet: a dm-row tap calls onSelectRetailerResult with its GTIN", async () => {

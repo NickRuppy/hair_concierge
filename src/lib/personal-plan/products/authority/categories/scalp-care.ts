@@ -1,3 +1,4 @@
+import { evaluateGateCriteria } from "../fit-criteria"
 import type {
   Stage3AuthorityInput,
   Stage3CategoryAuthorityAdapter,
@@ -7,7 +8,6 @@ import {
   commonUnknownFacts,
   criterion,
   hasValidTarget,
-  isInactiveOrRetired,
   isPendingIdentity,
   knownEvaluation,
   pendingEvaluation,
@@ -40,28 +40,58 @@ function productMissingFacts(input: ScalpCareInput, facts: Stage3ScalpCareFacts)
   return [...new Set(missing)].sort()
 }
 
-function isRecommendableForRole(
-  facts: Stage3ScalpCareFacts,
-  role: ScalpCareInput["role"],
-): boolean {
-  const protocol = facts.protocols.find((candidateProtocol) => candidateProtocol.role === role)
-  return (
-    facts.isActive &&
-    facts.lifecycleStatus === "active" &&
-    facts.recommendable &&
-    facts.knownReaction === false &&
-    facts.spec.primaryRole === role &&
-    facts.spec.presentationFormat !== null &&
-    facts.spec.presentationFormat !== "unknown" &&
-    facts.spec.rinseMode !== null &&
-    protocol?.status === "verified_complete"
-  )
+function evaluateFacts(input: ScalpCareInput, facts: Stage3ScalpCareFacts) {
+  const missing = productMissingFacts({ ...input, productFacts: facts }, facts)
+  const criteria =
+    missing.length > 0
+      ? [
+          criterion(
+            "scalp_care.protocol.readiness",
+            "Verifizierte Anwendung",
+            "unknown",
+            "Rolle, Format, Ausspülart und sicherheitskritische Anwendungshinweise müssen vollständig verifiziert sein.",
+          ),
+        ]
+      : []
+  if (facts.spec.primaryRole !== null)
+    criteria.push(
+      criterion(
+        "scalp_care.role.exact_match",
+        "Exakte Kopfhautpflege-Rolle",
+        facts.spec.primaryRole === input.role ? "pass" : "fail",
+        facts.spec.primaryRole === input.role
+          ? "Die Rolle ist verifiziert."
+          : "Die verifizierte Produktrolle deckt diese Planrolle nicht ab.",
+      ),
+    )
+  if (missing.length === 0 && facts.spec.primaryRole === input.role)
+    criteria.push(
+      criterion(
+        "scalp_care.format.verified",
+        "Verifiziertes Format",
+        "pass",
+        "Das Produktformat ist geprüft.",
+      ),
+      criterion(
+        "scalp_care.rinse_mode.verified",
+        "Verifizierte Ausspülart",
+        "pass",
+        "Die Ausspülart ist geprüft.",
+      ),
+      criterion(
+        "scalp_care.protocol.verified",
+        "Verifizierte Anwendung",
+        "pass",
+        "Das Rollenprotokoll ist vollständig geprüft.",
+      ),
+    )
+  return evaluateGateCriteria(input, facts, criteria, missing)
 }
 
 function recommendationFor(input: ScalpCareInput) {
   if (coverageSuppressesPurchase(input)) return null
   const candidate = [...input.recommendationCandidates]
-    .filter((facts) => isRecommendableForRole(facts, input.role))
+    .filter((facts) => facts.recommendable && evaluateFacts(input, facts).verdict === "ideal")
     .sort((left, right) => left.productId.localeCompare(right.productId))[0]
   if (!candidate) return null
 
@@ -114,78 +144,24 @@ export const evaluateScalpCareAuthority: Stage3CategoryAuthorityAdapter<"scalp_c
     })
   }
 
-  const missingFacts = productMissingFacts(input, facts)
-  if (missingFacts.length > 0) {
-    return unknownEvaluation(input as never, missingFacts, [
-      criterion(
-        "scalp_care.protocol.readiness",
-        "Verifizierte Anwendung",
-        "unknown",
-        "Rolle, Format, Ausspülart und sicherheitskritische Anwendungshinweise müssen vollständig verifiziert sein.",
-      ),
-    ])
-  }
-
-  if (
-    isInactiveOrRetired(input as never) ||
-    facts.knownReaction === true ||
-    facts.spec.primaryRole !== input.role
-  ) {
-    const recommendation = recommendationFor(input)
-    return knownEvaluation(input as never, {
-      verdict: "mismatch",
-      criteria: [
-        criterion(
-          "scalp_care.role.exact_match",
-          "Exakte Kopfhautpflege-Rolle",
-          facts.spec.primaryRole === input.role ? "pass" : "fail",
-          facts.spec.primaryRole === input.role
-            ? "Die Rolle ist verifiziert."
-            : "Die verifizierte Produktrolle deckt diese Planrolle nicht ab.",
-        ),
-      ],
-      allowedActions: ["acknowledge_override", "leave_uncovered"],
-      recommendation,
-      productFactFingerprint: facts.factFingerprint,
-      recommendationFactFingerprint: recommendation
-        ? (input.recommendationCandidates.find(
-            (candidate) => candidate.productId === recommendation.productId,
-          )?.factFingerprint ?? null)
-        : null,
-    })
-  }
-
-  return knownEvaluation(input as never, {
-    verdict: "ideal",
-    criteria: [
-      criterion(
-        "scalp_care.role.exact_match",
-        "Exakte Kopfhautpflege-Rolle",
-        "pass",
-        "Die Rolle ist verifiziert.",
-      ),
-      criterion(
-        "scalp_care.format.verified",
-        "Verifiziertes Format",
-        "pass",
-        "Das Produktformat ist geprüft.",
-      ),
-      criterion(
-        "scalp_care.rinse_mode.verified",
-        "Verifizierte Ausspülart",
-        "pass",
-        "Die Ausspülart ist geprüft.",
-      ),
-      criterion(
-        "scalp_care.protocol.verified",
-        "Verifizierte Anwendung",
-        "pass",
-        "Das Rollenprotokoll ist vollständig geprüft.",
-      ),
-    ],
-    allowedActions: ["keep_owned"],
-    recommendation: null,
+  const result = evaluateFacts(input, facts)
+  if (result.verdict === "unknown") return unknownEvaluation(input, result.missing, result.criteria)
+  const recommendation = result.verdict === "mismatch" ? recommendationFor(input) : null
+  return knownEvaluation(input, {
+    verdict: result.verdict,
+    criteria: result.criteria,
+    allowedActions:
+      result.verdict === "mismatch"
+        ? recommendation
+          ? ["acknowledge_override", "plan_recommendation", "leave_uncovered"]
+          : ["acknowledge_override", "leave_uncovered"]
+        : ["keep_owned"],
+    recommendation,
     productFactFingerprint: facts.factFingerprint,
-    recommendationFactFingerprint: null,
+    recommendationFactFingerprint: recommendation
+      ? (input.recommendationCandidates.find(
+          (candidate) => candidate.productId === recommendation.productId,
+        )?.factFingerprint ?? null)
+      : null,
   })
 }

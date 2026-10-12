@@ -11,7 +11,7 @@
     "npm": ">=10"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -H localhost",
     "dev:worktree": "node scripts/worktree-dev.mjs",
     "build": "next build",
     "start": "next start",
@@ -199,7 +199,8 @@
     "langfuse:setup-review-queues": "tsx scripts/langfuse/setup-review-queues.ts",
     "prepare": "node -e \"if (!process.env.npm_config_omit?.split(/[,\\s]+/).includes('dev')) process.exit(1)\" || husky",
     "postinstall": "node -e \"if (!process.env.npm_config_omit?.split(/[,\\s]+/).includes('dev')) process.exit(1)\" || patch-package --error-on-fail",
-    "test:playwright:scanner-refinement": "WAIT_ON_TIMEOUT=180000 CI=true CI_SCANNER_REFINEMENT_LAB_ENABLED=true SCANNER_FUNNEL_REFINEMENT_ENABLED=true SCAN_FUNNEL_ENABLED=true FUNNEL_ATTRIBUTION_ENABLED=true FUNNEL_COOKIE_SIGNING_SECRET=local-scanner-refinement-ci PLAYWRIGHT_BASE_URL=http://127.0.0.1:3228 start-server-and-test 'next dev --webpack --hostname 127.0.0.1 --port 3228' http://127.0.0.1:3228 'playwright test tests/scanner-refinement-entry.spec.ts tests/scanner-refinement-offer.spec.ts --project=chromium --project=webkit-mobile-action'"
+    "test:playwright:scanner-refinement": "WAIT_ON_TIMEOUT=180000 CI=true CI_SCANNER_REFINEMENT_LAB_ENABLED=true SCANNER_FUNNEL_REFINEMENT_ENABLED=true SCAN_FUNNEL_ENABLED=true FUNNEL_ATTRIBUTION_ENABLED=true FUNNEL_COOKIE_SIGNING_SECRET=local-scanner-refinement-ci PLAYWRIGHT_BASE_URL=http://127.0.0.1:3228 start-server-and-test 'next dev --webpack --hostname 127.0.0.1 --port 3228' http://127.0.0.1:3228 'playwright test tests/scanner-refinement-entry.spec.ts tests/scanner-refinement-offer.spec.ts --project=chromium --project=webkit-mobile-action'",
+    "test:dev-hardening": "node --import ./tests/server-only-register.cjs --import tsx --test tests/local-dev-login.test.ts tests/dev-server-binding.test.ts tests/agent-compare-test-users.spec.ts tests/agent-compare-api.spec.ts"
   },
   "dependencies": {
     "@apple/app-store-server-library": "^3.1.0",
@@ -257,7 +258,7 @@
     "patch-package": "^8.0.1",
     "playwright": "^1.59.1",
     "prettier": "^3.8.3",
-    "sharp": "^0.34.5",
+    "sharp": "^0.35.5",
     "start-server-and-test": "^2.1.5",
     "supabase": "^2.98.0",
     "tailwindcss": "^4.2.4",
@@ -270,7 +271,8 @@
     "follow-redirects": "1.16.0",
     "form-data": "4.0.6",
     "postcss": "8.5.29",
-    "protobufjs": "7.6.6"
+    "protobufjs": "7.6.6",
+    "brace-expansion@^1.1.0": "1.1.21"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

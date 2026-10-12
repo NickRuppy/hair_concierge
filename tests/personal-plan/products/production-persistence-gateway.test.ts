@@ -1110,7 +1110,8 @@ function conditionerFacts(): Stage3AuthorityFactBundle {
       category: "conditioner",
       isActive: true,
       lifecycleStatus: "active",
-      recommendable: false,
+      // fit-verdict spec §2, ruled 2026-10-12: the active owned fixture must be recommendable.
+      recommendable: true,
       suitableThicknesses: ["normal"],
       knownReaction: false,
       protocols: [
@@ -1123,7 +1124,8 @@ function conditionerFacts(): Stage3AuthorityFactBundle {
       factFingerprint: "facts-a",
       spec: {
         thickness: "normal",
-        proteinMoistureBalance: "balanced",
+        // fit-verdict spec §3, ruled 2026-10-12: ideal requires matching care direction.
+        proteinMoistureBalance: "moisture",
         weight: "light",
         repairSupportLevel: "medium",
         balanceDirection: "moisture",

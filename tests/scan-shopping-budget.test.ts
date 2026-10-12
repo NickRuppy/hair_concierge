@@ -1,3 +1,4 @@
+// fit-verdict spec §1/§7b, ruled 2026-10-12: reasonLines extend the web transport.
 import assert from "node:assert/strict"
 import test from "node:test"
 import React from "react"
@@ -319,6 +320,7 @@ test("web serialization carries the optional budget/segment fields and nothing e
       "priceLabel",
       "productId",
       "purchaseUrl",
+      "reasonLines",
       "verdict",
       "verdictLabel",
     ])
@@ -344,6 +346,7 @@ test("web serialization without a budget keeps the pre-budget key set", () => {
     "priceLabel",
     "productId",
     "purchaseUrl",
+    "reasonLines",
     "verdict",
     "verdictLabel",
   ])
@@ -357,7 +360,12 @@ test("masked alternatives stay closed: exact keys, no price/tier/budget leakage,
     const masked = maskScanVerdictPayload(budgeted)
     assert.equal(masked.alternatives.length, 3)
     for (const alternative of masked.alternatives) {
-      assert.deepEqual(Object.keys(alternative).sort(), ["comparison", "verdict", "verdictLabel"])
+      assert.deepEqual(Object.keys(alternative).sort(), [
+        "comparison",
+        "reasonLines",
+        "verdict",
+        "verdictLabel",
+      ])
     }
     const wire = JSON.stringify(masked)
     for (const forbidden of [

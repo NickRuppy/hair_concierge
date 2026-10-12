@@ -18,6 +18,7 @@ import {
   rankStage3ComparisonCandidates,
   stage3CriterionEvidenceRelation,
   STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
+  type Stage3FitComparison,
 } from "../../../src/lib/personal-plan/products/fit-comparison"
 import {
   candidateDimensionCoverage,
@@ -663,7 +664,7 @@ test("Shampoo cleansing evidence marks a displayed two-step intensity gap outsid
   ])
 })
 
-test("Shampoo cleansing marker follows the displayed observation instead of the authority spec", () => {
+test("Shampoo cleansing marker follows authority while preserving its display observation (fit-verdict spec §7a.3, ruled 2026-10-12)", () => {
   const input = authorityInput("shampoo", "shampoo_everyday", {
     productFacts: factsFor("shampoo", "shampoo_everyday", "owned", {
       cleansingIntensity: "regular",
@@ -680,7 +681,7 @@ test("Shampoo cleansing marker follows the displayed observation instead of the 
   )
 
   assert.deepEqual(cleansing?.productValues, [
-    { productId: "owned", valueLabel: "sanft", relation: "supportive" },
+    { productId: "owned", valueLabel: "sanft", relation: "in_target" },
   ])
 })
 
@@ -696,7 +697,8 @@ for (const scenario of [
     name: "Mask",
     category: "mask" as const,
     role: "intensive_conditioning_mask" as const,
-    overrides: { weight: "rich" },
+    // fit-verdict spec §§3–5, ruled 2026-10-12: one step remains supportive.
+    overrides: { weight: "medium" },
     authorityRuleId: "mask.stage3.validated_supportive_candidate",
   },
   {
@@ -724,6 +726,15 @@ for (const scenario of [
       ],
     })
 
+    // fit-verdict spec §6, ruled 2026-10-12: companion alternatives are excluded.
+    if (scenario.category === "bondbuilder") {
+      const comparison = buildStage3FitComparison(input)
+      assert.equal(
+        comparison.alternatives.some((candidate) => candidate.productId === "supportive-candidate"),
+        false,
+      )
+      return
+    }
     const comparison = buildStage3FitComparison(input)
     const selected =
       comparison.alternatives.find((candidate) => candidate.productId === "supportive-candidate") ??
@@ -795,7 +806,8 @@ test("uncovered Shampoo now ranks in a supportive candidate for the everyday rol
   )
 })
 
-test("uncovered Shampoo dandruff role remains strict for the same supportive candidate", () => {
+test("uncovered Shampoo dandruff role admits a one-step supportive candidate", () => {
+  // fit-verdict spec §5, ruled 2026-10-12: every role permits supportive fallback.
   const input = authorityInput("shampoo", "shampoo_dandruff", {
     productFacts: null,
     capturedProductId: null,
@@ -809,21 +821,20 @@ test("uncovered Shampoo dandruff role remains strict for the same supportive can
 
   const comparison = buildStage3FitComparison(input)
 
-  assert.equal(
-    comparison.alternatives.find((candidate) => candidate.productId === "supportive-candidate") ??
-      null,
-    null,
+  assert.deepEqual(
+    comparison.alternatives.map((candidate) => [candidate.productId, candidate.verdict]),
+    [["supportive-candidate", "supportive"]],
   )
-  assert.deepEqual(comparison.alternatives, [])
 })
 
 test("uncovered Mask now ranks in the best-available supportive candidate for a required tier", () => {
+  // fit-verdict spec §5, ruled 2026-10-12: basis picks an eligible one-step fallback with its reason.
   const input = authorityInput("mask", "intensive_conditioning_mask", {
     productFacts: null,
     capturedProductId: null,
     subjectIdentity: null,
     candidates: [
-      factsFor("mask", "intensive_conditioning_mask", "supportive-candidate", { weight: "rich" }),
+      factsFor("mask", "intensive_conditioning_mask", "supportive-candidate", { weight: "medium" }),
     ],
   })
 
@@ -887,38 +898,27 @@ test("complete comparison excludes a two-step Oil weight gap from supportive alt
   assert.deepEqual(comparison.alternatives, [])
 })
 
-for (const scenario of [
-  {
-    name: "Mask",
-    category: "mask" as const,
-    role: "intensive_conditioning_mask" as const,
-    overrides: { weight: "medium" },
-  },
-]) {
-  test(`complete comparison rejects a ${scenario.name} candidate that excludes the confirmed thickness`, () => {
-    const input = authorityInput(scenario.category, scenario.role, {
-      productFacts: factsFor(scenario.category, scenario.role, "owned", {
-        recommendable: false,
+test("complete comparison admits adjacent Mask thickness and rejects an additive second miss", () => {
+  // fit-verdict spec §§2–4, ruled 2026-10-12: thickness is a degree axis, never a gate.
+  const input = authorityInput("mask", "intensive_conditioning_mask", {
+    productFacts: factsFor("mask", "intensive_conditioning_mask", "owned", {
+      recommendable: false,
+    }),
+    candidates: [
+      factsFor("mask", "intensive_conditioning_mask", "near-thickness-candidate", {
+        suitableThicknesses: ["coarse"],
       }),
-      candidates: [
-        factsFor(scenario.category, scenario.role, "wrong-thickness-candidate", {
-          ...scenario.overrides,
-          suitableThicknesses: ["coarse"],
-        }),
-      ],
-    })
-
-    const comparison = buildStage3FitComparison(input)
-
-    assert.equal(
-      comparison.alternatives.find(
-        (candidate) => candidate.productId === "wrong-thickness-candidate",
-      ) ?? null,
-      null,
-    )
-    assert.deepEqual(comparison.alternatives, [])
+    ],
   })
-}
+  const near = buildStage3FitComparison(input).alternatives
+  assert.deepEqual(
+    near.map((candidate) => [candidate.productId, candidate.verdict]),
+    [["near-thickness-candidate", "supportive"]],
+  )
+  assert.equal(near[0]?.recommendation.reason, "Eher für kräftigeres Haar gedacht")
+  input.recommendationCandidates[0].spec.weight = "medium"
+  assert.deepEqual(buildStage3FitComparison(input).alternatives, [])
+})
 
 test("Shampoo comparison keeps complete route targets independent of catalogue pagination", () => {
   const input = authorityInput("shampoo", "shampoo_everyday", {
@@ -996,7 +996,7 @@ test("Conditioner shows concrete dimensions only, with thickness as the fourth r
   assert.deepEqual(thickness?.productValues[0], {
     productId: "owned",
     valueLabel: "fein",
-    relation: "outside_target",
+    relation: "in_target",
   })
   assert.deepEqual(thickness?.productValues[1], {
     productId: "candidate",
@@ -1006,7 +1006,7 @@ test("Conditioner shows concrete dimensions only, with thickness as the fourth r
   assert.deepEqual(
     comparison.evidenceRows?.find((row) => row.rowId === "conditioner.care_direction")
       ?.productValues[0],
-    { productId: "owned", valueLabel: "ausgeglichen", relation: "supportive" },
+    { productId: "owned", valueLabel: "ausgeglichen", relation: "in_target" },
   )
 })
 
@@ -1016,6 +1016,7 @@ test("Conditioner shows concrete dimensions only, with thickness as the fourth r
 // so it must win both the authority's own uncovered-role recommendation and the alternatives
 // order.
 test("uncovered Conditioner ranks the candidate covering the confirmed thickness above an equal peer", () => {
+  // fit-verdict spec §3–§4, ruled 2026-10-12: a thickness miss adds to the weight miss.
   const input = {
     ...authorityInput("conditioner", "conditioner_rinse_out", {
       productFacts: null,
@@ -1025,11 +1026,17 @@ test("uncovered Conditioner ranks the candidate covering the confirmed thickness
         factsFor("conditioner", "conditioner_rinse_out", "misses-thickness", {
           sortOrder: 1,
           weight: "medium",
+          careDirection: "moisture",
+          thickness: "normal",
+          thicknesses: ["fine", "normal"],
           suitableThicknesses: ["fine", "normal"],
         }),
         factsFor("conditioner", "conditioner_rinse_out", "covers-thickness", {
           sortOrder: 9,
           weight: "medium",
+          careDirection: "moisture",
+          thickness: "coarse",
+          thicknesses: ["coarse"],
           suitableThicknesses: ["fine", "normal", "coarse"],
         }),
       ],
@@ -1041,10 +1048,7 @@ test("uncovered Conditioner ranks the candidate covering the confirmed thickness
 
   assert.deepEqual(
     comparison.alternatives.map((candidate) => [candidate.productId, candidate.verdict]),
-    [
-      ["covers-thickness", "supportive"],
-      ["misses-thickness", "supportive"],
-    ],
+    [["covers-thickness", "supportive"]],
   )
   assert.equal(
     (
@@ -1055,30 +1059,40 @@ test("uncovered Conditioner ranks the candidate covering the confirmed thickness
   )
 })
 
-test("Shampoo compares confirmed route observations against the derived route target", () => {
-  const comparison = buildStage3FitComparison(
-    authorityInput("shampoo", "shampoo_everyday", {
-      productFacts: factsFor("shampoo", "shampoo_everyday", "owned", {
-        targetFit: "known_mismatch",
-        shampooObservations: {
-          cleansingIntensity: "gentle",
-          supportedScalpRoutes: ["dry"],
-        },
-      }),
-      candidates: [factsFor("shampoo", "shampoo_everyday", "candidate")],
+test("Shampoo mismatch retains the passing route, while absent criteria remain unknown", () => {
+  const input = authorityInput("shampoo", "shampoo_everyday", {
+    productFacts: factsFor("shampoo", "shampoo_everyday", "owned", {
+      targetFit: "known_mismatch",
+      shampooObservations: {
+        cleansingIntensity: "gentle",
+        supportedScalpRoutes: ["dry"],
+      },
     }),
-  )
-
-  assert.equal(
-    comparison.evidenceRows?.some((row) => row.rowId === "shampoo.target_fit"),
-    false,
-  )
-  assert.deepEqual(
-    comparison.evidenceRows
-      ?.find((row) => row.rowId === "shampoo.scalp_route")
-      ?.productValues.find((value) => value.productId === "owned"),
-    { productId: "owned", valueLabel: "trocken", relation: "outside_target" },
-  )
+    candidates: [factsFor("shampoo", "shampoo_everyday", "candidate")],
+  })
+  const evaluation = evaluateStage3Authority(input as unknown as Stage3AuthorityInput)
+  assert.equal(evaluation.status, "known")
+  if (evaluation.status !== "known") return
+  assert.equal(evaluation.verdict, "mismatch")
+  for (const [criteria, relation] of [
+    [evaluation.criteria, "in_target"],
+    [evaluation.criteria.filter((row) => row.criterionId !== "shampoo.scalp_route"), "unknown"],
+  ] as const) {
+    const comparison: Stage3FitComparison = buildStage3FitComparison(input, {
+      ...evaluation,
+      criteria,
+    })
+    assert.equal(
+      comparison.evidenceRows?.some((row) => row.rowId === "shampoo.target_fit"),
+      false,
+    )
+    assert.deepEqual(
+      comparison.evidenceRows
+        ?.find((row) => row.rowId === "shampoo.scalp_route")
+        ?.productValues.find((value) => value.productId === "owned"),
+      { productId: "owned", valueLabel: "trocken", relation },
+    )
+  }
 })
 
 for (const scenario of [
@@ -1111,7 +1125,8 @@ for (const scenario of [
     overrides: { weight: "medium" },
   },
 ]) {
-  test(`${scenario.name} remains supportive instead of being flattened to outside`, () => {
+  test(`${scenario.name} retains its evaluated relation`, () => {
+    // fit-verdict spec §§3–4, ruled 2026-10-12: the mask's two-step weight gap is outside.
     const comparison = buildStage3FitComparison(
       authorityInput(scenario.category, scenario.role, {
         productFacts: factsFor(scenario.category, scenario.role, "owned", scenario.overrides),
@@ -1121,7 +1136,7 @@ for (const scenario of [
     const value = comparison.evidenceRows
       ?.find((row) => row.rowId === scenario.rowId)
       ?.productValues.find((candidate) => candidate.productId === "owned")
-    assert.equal(value?.relation, "supportive")
+    assert.equal(value?.relation, scenario.category === "mask" ? "outside_target" : "supportive")
   })
 }
 
@@ -1315,6 +1330,7 @@ test("Bondbuilder bedtime leave-in is distinct from post-wash use and never over
   )
 })
 
+// fit-verdict spec §6, ruled 2026-10-12: keep owned companions visible; exclude companion candidates.
 test("Bondbuilder shows the standalone row only when a displayed product is an add-on", () => {
   const standaloneOnly = buildStage3FitComparison(
     authorityInput("bondbuilder", "specialized_bond_treatment", {
@@ -1330,7 +1346,9 @@ test("Bondbuilder shows the standalone row only when a displayed product is an a
 
   const withAddOn = buildStage3FitComparison(
     authorityInput("bondbuilder", "specialized_bond_treatment", {
-      productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned"),
+      productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned", {
+        relationship: "add_on",
+      }),
       candidates: [
         factsFor("bondbuilder", "specialized_bond_treatment", "add-on-candidate", {
           relationship: "add_on",
@@ -1347,15 +1365,17 @@ test("Bondbuilder shows the standalone row only when a displayed product is an a
   assert.equal(relationship.label, "Wirkt eigenständig")
   assert.equal(relationship.target?.valueLabel, "eigenständig")
   assert.deepEqual(relationship.productValues, [
-    { productId: "owned", valueLabel: "eigenständig", relation: "in_target" },
-    { productId: "add-on-candidate", valueLabel: "nur ergänzend", relation: "supportive" },
+    { productId: "owned", valueLabel: "nur ergänzend", relation: "outside_target" },
   ])
 })
 
+// fit-verdict spec §6, ruled 2026-10-12: keep owned companions visible; exclude companion candidates.
 test("Bondbuilder standalone row states a dedicated rationale, not the generic profile claim", () => {
   const withAddOn = buildStage3FitComparison(
     authorityInput("bondbuilder", "specialized_bond_treatment", {
-      productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned"),
+      productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned", {
+        relationship: "add_on",
+      }),
       candidates: [
         factsFor("bondbuilder", "specialized_bond_treatment", "add-on-candidate", {
           relationship: "add_on",
@@ -1408,7 +1428,8 @@ test("Bondbuilder Anwendung does not invent a leave-in instruction for a rinse-o
 // three standalone candidates tie on verdict, coverage, and cautions, so only the pin can decide
 // between them. K18 carries the worst catalogSortOrder of the three, so this only passes when the
 // pin is applied strictly after verdict/coverage/cautions and strictly before catalog order.
-test("Bondbuilder tie-default pin decides the order only after verdict, coverage, and cautions tie", () => {
+// fit-verdict spec §6, ruled 2026-10-12: house default retired; equal prices retain catalog order.
+test("Bondbuilder equally trusted and priced options retain stable catalog order", () => {
   const input = authorityInput("bondbuilder", "specialized_bond_treatment", {
     productFacts: null,
     capturedProductId: null,
@@ -1426,7 +1447,7 @@ test("Bondbuilder tie-default pin decides the order only after verdict, coverage
 
   assert.deepEqual(
     comparison.alternatives.map((candidate) => candidate.productId),
-    [BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "olaplex-no3", "epres"],
+    ["olaplex-no3", "epres", BONDBUILDER_TIE_DEFAULT_PRODUCT_ID],
   )
 })
 
@@ -1439,7 +1460,8 @@ function trustedBondbuilderFacts(
   return { ...facts, spec: { ...facts.spec, claimTrustLevel } }
 }
 
-test("Bondbuilder comparison ranks by trust tier, then the K18 default, before catalog order", () => {
+// fit-verdict spec §6, ruled 2026-10-12: trust then price.
+test("Bondbuilder comparison ranks by trust tier then price before catalog order", () => {
   const input = authorityInput("bondbuilder", "specialized_bond_treatment", {
     productFacts: null,
     capturedProductId: null,
@@ -1464,9 +1486,9 @@ test("Bondbuilder comparison ranks by trust tier, then the K18 default, before c
       (candidate) => candidate.productId,
     ),
     [
-      BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
       "olaplex-3plus",
       "epres",
+      BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
       "loreal-elvital-bond",
       "redken-acidic-bonding",
       "kerastase-premiere",
@@ -1476,7 +1498,8 @@ test("Bondbuilder comparison ranks by trust tier, then the K18 default, before c
   )
 })
 
-test("Bondbuilder comparison never ranks a more trusted add-on above a standalone ideal product", () => {
+// fit-verdict spec §6, ruled 2026-10-12: a companion cannot be a standalone alternative.
+test("Bondbuilder comparison excludes a more trusted add-on from standalone alternatives", () => {
   const input = authorityInput("bondbuilder", "specialized_bond_treatment", {
     productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned"),
     candidates: [
@@ -1488,10 +1511,7 @@ test("Bondbuilder comparison never ranks a more trusted add-on above a standalon
   const ranked = rankStage3ComparisonCandidates(input as unknown as Stage3AuthorityInput)
   assert.deepEqual(
     ranked.map((candidate) => [candidate.productId, candidate.verdict]),
-    [
-      ["standalone-low", "ideal"],
-      ["add-on-high", "supportive"],
-    ],
+    [["standalone-low", "ideal"]],
   )
 })
 
@@ -1588,7 +1608,12 @@ test("Leave-in pre-heat always uses heat capability as its canonical third targe
   assert.equal(ordinary.mode, "comparison")
   assert.deepEqual(
     ordinary.dimensions.map((dimension) => dimension.dimensionId),
-    ["leave_in.weight", "leave_in.care_direction", "leave_in.heat_protection"],
+    [
+      "leave_in.weight",
+      "leave_in.care_direction",
+      "leave_in.heat_protection",
+      "leave_in.suitable_thicknesses",
+    ],
   )
 
   const heatFailure = buildStage3FitComparison(
@@ -1602,7 +1627,12 @@ test("Leave-in pre-heat always uses heat capability as its canonical third targe
   assert.equal(heatFailure.mode, "comparison")
   assert.deepEqual(
     heatFailure.dimensions.map((dimension) => dimension.dimensionId),
-    ["leave_in.weight", "leave_in.care_direction", "leave_in.heat_protection"],
+    [
+      "leave_in.weight",
+      "leave_in.care_direction",
+      "leave_in.heat_protection",
+      "leave_in.suitable_thicknesses",
+    ],
   )
 })
 
@@ -1765,6 +1795,7 @@ test("comparison ranks target coverage before recommendation and verdict tie-bre
 })
 
 test("comparison excludes a known Leave-in candidate with zero displayed target matches", () => {
+  // fit-verdict spec §4, ruled 2026-10-12: two misses are ineligible; keep the second candidate at one miss.
   const input = authorityInput("leave_in", "post_wash_leave_in", {
     productFacts: factsFor("leave_in", "post_wash_leave_in", "owned", {
       recommendable: false,
@@ -1777,7 +1808,7 @@ test("comparison excludes a known Leave-in candidate with zero displayed target 
       }),
       factsFor("leave_in", "post_wash_leave_in", "one-of-three", {
         weight: "medium",
-        careDirection: "balanced",
+        careDirection: "moisture",
         repairSupportLevel: "medium",
       }),
     ],
@@ -1812,7 +1843,8 @@ test("uncovered leave-in role ranks displayed coverage over the pinned authority
         sortOrder: 1,
         weight: "light", // matches target -> 1 dimension match
         careDirection: "balanced", // caution vs. target "moisture" -> no match, keeps verdict supportive
-        repairSupportLevel: "high", // caution vs. target "medium" -> no match
+        // spec §3 / §7a.2, ruled 2026-10-12: above target is pass; displayed coverage stays exact-position based.
+        repairSupportLevel: "high",
       }),
       factsFor("leave_in", "post_wash_leave_in", "high-coverage-second", {
         sortOrder: 9,
@@ -1867,11 +1899,10 @@ test("covered leave-in role ranks the same fixture by displayed coverage", () =>
   )
 })
 
-// Verdict dominance: mask's axis rules can mark a candidate "ideal" (every axis within one
-// step) while its exact-position dimension coverage stays low, and mark another candidate
-// "supportive" (one axis two steps off) while its coverage is higher. The comparator must still
-// rank verdict before coverage.
-test("an ideal verdict outranks a higher-coverage supportive candidate", () => {
+// Verdict dominance: extra repair is ideal even without exact displayed overlap;
+// an adjacent weight is supportive. Verdict still ranks before catalog order.
+test("an ideal verdict outranks an earlier-listed supportive candidate with equal coverage", () => {
+  // fit-verdict spec §§3–5, ruled 2026-10-12: one step is supportive; at/above repair is ideal.
   const input = authorityInput("mask", "intensive_conditioning_mask", {
     productFacts: factsFor("mask", "intensive_conditioning_mask", "owned", {
       recommendable: false,
@@ -1879,13 +1910,13 @@ test("an ideal verdict outranks a higher-coverage supportive candidate", () => {
     candidates: [
       factsFor("mask", "intensive_conditioning_mask", "fewer-matches-ideal", {
         sortOrder: 5,
-        weight: "medium", // one step from target "light" -> mask treats this as "pass"
-        careDirection: "moisture", // exact match -> the only displayed-dimension match
+        weight: "light", // exact weight
+        careDirection: "moisture", // exact match
         repairSupportLevel: "high", // stronger than target "medium" -> "pass", but no match
       }),
       factsFor("mask", "intensive_conditioning_mask", "more-matches-supportive", {
         sortOrder: 1,
-        weight: "rich", // two steps from target "light" -> caution, keeps a match miss too
+        weight: "medium", // one step from target "light" -> caution
         careDirection: "moisture", // exact match
         repairSupportLevel: "medium", // exact match
       }),
@@ -1940,7 +1971,7 @@ test("candidateDimensionCoverage counts only rendered rich dimensions and falls 
   })
   assert.deepEqual(
     candidateDimensionCoverage(richInput as unknown as Stage3AuthorityInput, richCandidate, []),
-    { matches: 3, total: 3 },
+    { matches: 4, total: 4 },
   )
 
   const compactInput = authorityInput("heat_protectant", "pre_heat_protection", {
@@ -2112,6 +2143,8 @@ function factsFor<C extends PersonalPlanCategory>(
     recommendable?: boolean
     sortOrder?: number | null
     suitableThicknesses?: string[] | null
+    thickness?: string
+    thicknesses?: string[] | null
     priceEur?: number | null
     priceCheckedAt?: string | null
     netContentValue?: number | null
@@ -2161,7 +2194,9 @@ function factsFor<C extends PersonalPlanCategory>(
         ...common,
         category,
         spec: {
-          thickness: "normal",
+          // fit-verdict spec §7a.1, ruled 2026-10-12: preserve contextual thickness values.
+          thickness: overrides.thickness ?? "normal",
+          thicknesses: overrides.thicknesses ?? [overrides.thickness ?? "normal"],
           proteinMoistureBalance: overrideOrDefault(
             overrides,
             "careDirection",
@@ -2275,6 +2310,10 @@ function factsFor<C extends PersonalPlanCategory>(
           usageProtocol:
             overrides.usageProtocol === undefined ? "verified_course" : overrides.usageProtocol,
           relationship: overrides.relationship ?? "standalone",
+          // fit-verdict spec §6, ruled 2026-10-12: reviewed technology fixture.
+          technologyFamily: "sulfur_targeting_dimaleate",
+          trustBasis: "owner_anchor",
+          claimTrustLevel: "high",
         },
       } as never
     case "deep_cleansing_shampoo":
@@ -2451,3 +2490,31 @@ test("display flag off or a category outside the badge scope leaves the presenta
   assert.ok(leaveIn.products.length > 0)
   assert.ok(leaveIn.products.every((product) => !("marketSegment" in (product.presentation ?? {}))))
 })
+
+// Authority outcomes own the row state even when the display positions suggest otherwise.
+// fit-verdict spec §1/§7a.3/§7b, ruled 2026-10-12.
+for (const result of ["pass", "caution", "fail", "unknown"] as const) {
+  test(`conditioner display rows consume criterion ${result} without re-deriving fit`, () => {
+    const input = authorityInput("conditioner", "conditioner_rinse_out", {
+      productFacts: factsFor("conditioner", "conditioner_rinse_out", "owned"),
+      candidates: [],
+    })
+    const evaluation = evaluateStage3Authority(input as Stage3AuthorityInput)
+    assert.equal(evaluation.status, "known")
+    if (evaluation.status !== "known") return
+    const criteria = evaluation.criteria.map((criterion) =>
+      criterion.criterionId === "conditioner.weight" ? { ...criterion, result } : criterion,
+    )
+    const comparison = buildStage3FitComparison(input, { ...evaluation, criteria })
+    const row = comparison.evidenceRows?.find((item) => item.rowId === "conditioner.weight")
+    assert.equal(
+      row?.productValues[0].relation,
+      {
+        pass: "in_target",
+        caution: "supportive",
+        fail: "outside_target",
+        unknown: "unknown",
+      }[result],
+    )
+  })
+}

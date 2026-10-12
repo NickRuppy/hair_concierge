@@ -13,7 +13,7 @@ import {
 export const dynamic = "force-dynamic"
 
 export async function GET(request: NextRequest) {
-  if (!isLocalDevLoginEnabled() || !isLocalDevLoginHost(request.nextUrl.hostname)) {
+  if (!isLocalDevLoginEnabled() || !isLocalDevLoginHost(request.headers.get("host"), request)) {
     return NextResponse.json({ error: "not_found" }, { status: 404 })
   }
 

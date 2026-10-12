@@ -7,11 +7,50 @@ import {
   projectCompareUserSnapshot,
 } from "../src/lib/agent/compare/test-users"
 
-test("filterEligibleCompareUsers keeps only completed users with hair profiles", () => {
+test("filterEligibleCompareUsers keeps only completed test accounts with hair profiles", () => {
   const result = filterEligibleCompareUsers([
-    { id: "u1", full_name: "Lea", onboarding_completed: true, has_hair_profile: true },
-    { id: "u2", full_name: "Draft", onboarding_completed: false, has_hair_profile: true },
-    { id: "u3", full_name: "Empty", onboarding_completed: true, has_hair_profile: false },
+    {
+      id: "u1",
+      email: "lea@hairconscierge.test",
+      full_name: "Lea",
+      onboarding_completed: true,
+      has_hair_profile: true,
+    },
+    {
+      id: "u2",
+      email: "draft@hairconscierge.test",
+      full_name: "Draft",
+      onboarding_completed: false,
+      has_hair_profile: true,
+    },
+    {
+      id: "u3",
+      email: "empty@hairconscierge.test",
+      full_name: "Empty",
+      onboarding_completed: true,
+      has_hair_profile: false,
+    },
+    {
+      id: "real",
+      email: "customer@example.com",
+      full_name: "Customer",
+      onboarding_completed: true,
+      has_hair_profile: true,
+    },
+    {
+      id: "spoof",
+      email: "dev@hairconscierge.test.evil.test",
+      full_name: "Spoof",
+      onboarding_completed: true,
+      has_hair_profile: true,
+    },
+    {
+      id: "missing",
+      email: null,
+      full_name: null,
+      onboarding_completed: true,
+      has_hair_profile: true,
+    },
   ])
 
   assert.deepEqual(
