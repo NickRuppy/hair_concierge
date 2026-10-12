@@ -85,3 +85,11 @@ Source: `data/research/styling-inci/v1.0/round-1/report.md` and `diff.json` (own
 | R1-H1 | **A product name with two or more job words does not pick the lead promise**; the first C1 pack-front line does (RG-5 step 2). Keeps PH1-14: Elnett „Stylingspray Hitzeschutz 3 Tage Glatt" ⇒ „Hitze Styling-Spray, glatt 3 Tage, starker Halt" ⇒ styling result. *(Standard v0.2 §13.2 item 1; approved 2026-10-12.)* |
 | R1-H2 | **R1-Q3 overrides the v0.1 „Pflegecreme" adjective clause**: a care word in the name or an adjective is the care half of a care + definition tie ⇒ `mixed` (review). Owner-named routes (Maria Nila Curlicue) stand. *(§13.2 item 2.)* |
 | R1-H3 | **Polysilicone-9 (CosIng: hair fixing) = "maybe hold ⇒ review"**: SI-4 for the silicone flag, FX-U for `hold_route` (ambiguous + review) and D6's hold limb (unresolved ⇒ review, like an uncorroborated FX-2c). John Frieda Frizz Ease 3 Tage Glatt ⇒ review in round 2. *(§13.2 item 3.)* |
+
+## Phase 3 round-2 calibration rulings (2026-10-12)
+
+Source: `data/research/styling-inci/v1.0/round-2/report.md` and `diff.json` (owner questions Q1–Q4, rule-gap register RG2-1…RG2-27, packet issues P2-1…P2-6).
+
+| ID | Ruling |
+|---|---|
+| R2-Q1 | **The care half of an R1-Q3 „care + curl definition" tie must be a care job the product promises** (spendet Feuchtigkeit, pflegt, repariert, entwirrt; „Pflege"/„Care"/„Detangling" in the name). An adjective on the result („gepflegte Locken") or an ingredient/feel call-out does not count (SFS-15). **Reviving or reactivating curls is refresh, not definition**; the definition half needs „definiert"/„Definition". Narrows R1-H2. The ingredients are then checked by the existing border rules (D6 with the PH1-13 effective-amount test, T15, D7), as Nick asked: e.g. Redken Refreshing Curl Mist (humectants only; Polyquaternium-6 r7 below the citric-acid yardstick; jojoba/squalane after the preservative; no fixative) ⇒ D6 ⇒ Styling `refresher`, held until the Leave-in addendum; Wella Nutricurls Fresh Up ⇒ Leave-in by D6 (after its tier re-stamp, P2-6). |
