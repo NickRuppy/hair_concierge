@@ -521,6 +521,20 @@ test("a Stil finding never discards a brief: left after the retry, the brief is 
   assert.ok("brief" in result, JSON.stringify(result))
   assert.equal(calls.length, 2)
   assert.match(result.brief.diagnose, /vorgesehen/)
+  assert.equal(result.sourceHash, consultSourceHash(input()))
+})
+
+test("a retry with a guardrail AND a style finding is discarded with the guardrail finding only", async () => {
+  const mixed = validSections()
+  mixed.diagnose += " Die Kur repariert die Längen. Eine Spülung ist als neuer Schritt vorgesehen."
+  const raw = JSON.stringify(apiAnswer(mixed))
+  const { complete, calls } = completing(raw, raw)
+  const result = await generateConsultBrief(input(), { complete, model: "m" })
+  assert.ok("error" in result)
+  assert.equal(result.error.code, "lint_failed")
+  assert.equal(calls.length, 2)
+  assert.ok(result.error.findings && result.error.findings.length > 0)
+  assert.ok(result.error.findings.every((finding) => finding.guardrail !== "Stil"))
 })
 
 test("a style-only first draft is still retried once, and kept if the retry is no better", async () => {
@@ -532,4 +546,5 @@ test("a style-only first draft is still retried once, and kept if the retry is n
   assert.ok("brief" in result, JSON.stringify(result))
   assert.equal(calls.length, 2)
   assert.ok(calls[1]!.correction?.instruction.includes("diagnose_plan_talk"))
+  assert.equal(result.sourceHash, consultSourceHash(input()))
 })

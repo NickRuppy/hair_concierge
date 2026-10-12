@@ -917,7 +917,8 @@ export function lintConsultBrief(
         [`hebel[${index}].title`, entry.title],
         [`hebel[${index}].note`, entry.note],
       ] as const) {
-        const normalized = normalizeConsultText(text)
+        // Collapsed whitespace: „durch  Hitze" must not slip past the exception (Codex review).
+        const normalized = normalizeConsultText(text).replace(/\s+/g, " ")
         const match = LESS_HEAT.exec(normalized)
         // A negated mention recommends the opposite („muss nicht seltener glätten").
         const negated =

@@ -1038,6 +1038,8 @@ test("Stil: what heat does is not „weniger Hitze“ advice (prod 2026-10-12)",
   brief.hebel[0]!.note =
     "Der Hitzeschutz ist dafür als neuer Produktzug hinterlegt; es kann die Belastung durch Hitze reduzieren."
   assert.deepEqual(lintConsultBrief(brief, nomiInput()), [])
+  brief.hebel[0]!.note = "Es kann die Belastung durch  Hitze\nreduzieren."
+  assert.deepEqual(lintConsultBrief(brief, nomiInput()), [])
   // The advice itself is still caught.
   brief.hebel[0]!.note = "Sie sollte die Hitze reduzieren."
   assert.deepEqual(
