@@ -350,9 +350,9 @@ export function projectToolPrefillFromCareFacts(
  * `nightProtection`, `towel.material`, and every „Nichts davon"-class answer to
  * one of them — is a `reported` fact: „Ich schlafe auf einem Satin-Bonnet" is a
  * report wherever it was asked. Only a **behaviour projection** that infers an
- * unnamed device is `derived`: today `dryingRoutes → hair_dryer` („du föhnst"
- * proves a dryer exists but names none) and the `loose_tied` / `pineapple`
- * night TECHNIQUES, which are ways of tying hair rather than a reported tie.
+ * unnamed device is `derived`: today only `dryingRoutes → hair_dryer` („du föhnst"
+ * proves a dryer exists but names none). The `loose_tied` / `pineapple` night
+ * TECHNIQUES project nothing since Rev. 6 (they have their own night question).
  *
  * Both facts are read off the same projection pass, so the two can never drift.
  */
@@ -435,16 +435,16 @@ function careInventoryEntries(care: ToolCareFacts): [ToolFamily, CareInventoryEn
     if (forms.length > 0) entries.set("brushes_combs", { forms, provenance: "derived" })
   }
 
+  // Rev. 6 (fix round 1): a night TECHNIQUE („locker zusammengebunden", „Pineapple") is a
+  // behaviour with its own Gewohnheiten question (`night_wear`). It projects no thing — in
+  // particular no soft tie, which is pre-ticked only when the member names it herself — so a
+  // technique-only answer leaves the night family unknown (fixtures 74, 102). An empty answer is
+  // a real „Nichts davon" and stays an explicit none.
   if (nightProtection) {
-    const named = nightProtection.some((protection) => !NIGHT_PROTECTION_TECHNIQUES.has(protection))
-    entries.set("night_protection", {
-      forms: dedupe(nightProtection.flatMap(mapNightProtection)),
-      // A technique-only answer („locker zusammengebunden", „Pineapple") is a
-      // behaviour: the soft tie is projected onto it, never stated by the user
-      // (fixtures 74, 102). An empty answer is a real „Nichts davon" and stays
-      // `reported`.
-      provenance: named || nightProtection.length === 0 ? "reported" : "derived",
-    })
+    const forms = dedupe(nightProtection.flatMap(mapNightProtection))
+    if (forms.length > 0 || nightProtection.length === 0) {
+      entries.set("night_protection", { forms, provenance: "reported" })
+    }
   }
 
   return [...entries]
@@ -574,8 +574,8 @@ function mapNightProtection(protection: NightProtection): ToolProductType[] {
       return ["length_tip_sleeve"]
     case "loose_tied":
     case "pineapple":
-      // Application routes, not product types. A soft tie may support them.
-      return ["soft_night_tie"]
+      // Techniques, not things (Rev. 6): they come from the night question, never a soft tie.
+      return []
   }
 }
 

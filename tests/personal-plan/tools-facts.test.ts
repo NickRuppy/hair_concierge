@@ -360,6 +360,27 @@ test("brush forms map onto the legacy brush vocabulary; the rest drop out of tha
 
 /* ── C. round trip with the pre-fill projection ──────────────────────────── */
 
+test("Rev. 6: a stored night technique never pre-ticks the soft tie", () => {
+  for (const nightProtection of [["pineapple"], ["loose_tied"]] as const) {
+    const care = { ...EMPTY_TOOL_CARE_FACTS, nightProtection: [...nightProtection] }
+    assert.deepEqual(projectToolPrefillFromCareFacts(care), {})
+    assert.deepEqual(projectToolInventoryFromCareFacts(care), {})
+  }
+  // Things still pre-tick; the technique beside them adds nothing.
+  assert.deepEqual(
+    projectToolPrefillFromCareFacts({
+      ...EMPTY_TOOL_CARE_FACTS,
+      nightProtection: ["silk_satin_bonnet", "pineapple"],
+    }),
+    { night_protection: ["bonnet"] },
+  )
+  // A real „Nichts davon" stays an explicit none.
+  assert.deepEqual(
+    projectToolInventoryFromCareFacts({ ...EMPTY_TOOL_CARE_FACTS, nightProtection: [] }),
+    { night_protection: [] },
+  )
+})
+
 test("the pre-fill adds Frottee and Diffusor; the engine projection stays as it was", () => {
   const care = {
     ...EMPTY_TOOL_CARE_FACTS,
@@ -421,8 +442,8 @@ test("round trip: towel material and night protection survive, with the document
   for (const protection of NIGHT_PROTECTIONS) {
     const care = { ...EMPTY_TOOL_CARE_FACTS, nightProtection: [protection] }
     const derived = careFactsFromToolInventory(confirmPrefill(care)).nightProtection
-    // Rev. 6: a technique (`loose_tied` / `pineapple`) pre-ticks the soft tie, which derives no
-    // technique of its own — the technique round-trips through the night question instead.
+    // Rev. 6 fix round 1: a technique (`loose_tied` / `pineapple`) pre-ticks nothing on the night
+    // page — it round-trips through the night question — so the confirmed page holds no thing.
     const technique = protection === "loose_tied" || protection === "pineapple"
     assert.deepEqual(derived, technique ? [] : [protection])
   }
@@ -601,8 +622,15 @@ test("direct acceptance's assumed defaults pre-fill nothing on any page or on th
 })
 
 test("the overview pre-fill ticks every section holding a care-implied family, in section order", () => {
-  const care = careWith({ towelMaterial: "mikrofaser", nightProtection: ["pineapple"] })
+  const care = careWith({ towelMaterial: "mikrofaser", nightProtection: ["silk_satin_bonnet"] })
   assert.deepEqual(toolOverviewPreselection(care), ["abtrocknen_entwirren", "nachtschutz"])
+  // Rev. 6: a night technique alone names no night thing, so Nachtschutz is not pre-ticked.
+  assert.deepEqual(
+    toolOverviewPreselection(
+      careWith({ towelMaterial: "mikrofaser", nightProtection: ["pineapple"] }),
+    ),
+    ["abtrocknen_entwirren"],
+  )
   assert.equal(toolOverviewPreselection(EMPTY_TOOL_CARE_FACTS), undefined)
 })
 

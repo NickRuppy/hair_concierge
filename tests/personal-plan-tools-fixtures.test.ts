@@ -1240,12 +1240,13 @@ const SECURING_ROWS: FixtureRow[] = [
     check: (context) => {
       assert.equal(context.route("night_protection")?.tier, "optional")
       exact(context, "night_protection", ["tools.night.optional_other"])
-      assert.equal(context.lead("night_protection"), "soft_night_tie")
+      // Rev. 6 (2026-10-11): `loose_tied` is a technique — it has its own Gewohnheiten
+      // question and no longer projects a soft tie. The lead is the profile's (`N02`) and
+      // ownership stays unknown.
+      assert.equal(context.lead("night_protection"), "pillowcase")
       const ownership = context.route("night_protection")?.reportedOwnership
-      assert.equal(ownership?.state, "owned_generic")
-      // D4: `loose_tied` is a technique. It is never a REPORTED tie.
-      assert.equal(ownership?.provenance, "derived")
-      // C02/D12: the soft tie is owned by Night Protection — no duplicate card.
+      assert.equal(ownership?.state, "unknown")
+      // C02/D12: a night technique never opens a Clips/Ties card of its own.
       absent(context, "securing_support")
     },
   },
@@ -1575,10 +1576,10 @@ const NIGHT_ROWS: FixtureRow[] = [
     input: { answers: { hairLength: "long" }, care: { nightProtection: ["loose_tied"] } },
     check: (context) => {
       exact(context, "night_protection", ["tools.night.optional_other"])
-      assert.equal(context.lead("night_protection"), "soft_night_tie")
+      // Rev. 6: no soft tie is projected from the technique (see fixture 74).
+      assert.equal(context.lead("night_protection"), "pillowcase")
       const ownership = context.route("night_protection")?.reportedOwnership
-      assert.equal(ownership?.state, "owned_generic")
-      assert.equal(ownership?.provenance, "derived")
+      assert.equal(ownership?.state, "unknown")
       assert.equal(
         context.plan.assets.filter(
           (asset) => asset.family === "night_protection" || asset.family === "securing_sectioning",
