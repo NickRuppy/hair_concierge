@@ -1,0 +1,232 @@
+{
+ "blindId": "W214",
+ "inciFingerprintSha256": "9b5e9427f281529f077e16f49cad7fe8f7383361a917fd3de236c76e46e7b6ca",
+ "phase": "formula-pass (blind, stage A only; no reveal opened)",
+ "standard": "shampoo-classification-v1.6.2",
+ "lane": "lane-b",
+ "identity": {
+  "packSize": "500 ml",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 3,
+  "identityConfidence": "high",
+  "normalization": "No synonym or split entries; normalized positions = packet positions (ID-2).",
+  "e3ProminenceCutoff": "Parfum @6; prominent = positions 1-5 (E3)."
+ },
+ "formulaFacts": {
+  "surfactants": {
+   "definingAnionic": "Sodium Laureth Sulfate @2 (strong anionic, ether type)",
+   "reinforcingRoutes": [],
+   "buffers": [
+    "Cocamidopropyl Betaine @3 (amphoteric)"
+   ],
+   "notCleansing": [
+    "Sodium Xylenesulfonate @4 (hydrotrope)"
+   ],
+   "c3aOrC3b": "none"
+  },
+  "conditioningRoutes": {
+   "cationic_polymer": [],
+   "silicone": [],
+   "payload_lipid": [],
+   "weak_refatter": [],
+   "protein_film": [],
+   "film_former": [],
+   "pearlizing": []
+  },
+  "humectants": [
+   "Panthenol @13"
+  ],
+  "actives": [
+   "Panthenol @13",
+   "Histidine @16"
+  ],
+  "recognizedDandruffActives": [],
+  "exposure": {
+   "fragrance": "Parfum @6, Hexyl Cinnamal @15",
+   "coolingAgents": [],
+   "essentialOils": []
+  },
+  "csa": {
+   "listedComfortRoutesProminent": [],
+   "listedHumectantRefattingRoutesProminent": [],
+   "mildBase": "no: prominent Sodium Laureth Sulfate @2",
+   "csaHolds": false
+  },
+  "preservativesAndOther": [
+   "Sodium Chloride @5",
+   "Citric Acid @7",
+   "Sodium Benzoate @8",
+   "Sodium Citrate @9",
+   "Sodium Salicylate @10",
+   "Hydroxypropyl Methylcellulose @11 (nonionic cellulose thickener)",
+   "Sodium Hydroxide @12",
+   "Tetrasodium EDTA @14",
+   "Glyoxal @17 (HPMC processing aid)"
+  ]
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Moderate: C1 - defining anionic Sodium Laureth Sulfate @2 with prominent buffer Cocamidopropyl Betaine @3 and no reinforcing route; Sodium Xylenesulfonate @4 is a hydrotrope, not a route.",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "E3"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "low",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Low: cleansing-led architecture with no conditioning system at all - no cationic, silicone, lipid, refatter or pearlizer; only a late Panthenol @13. C2 not met.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "E3"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Low: no deposition family is present; Hydroxypropyl Methylcellulose is a nonionic thickener.",
+   "ruleIds": [
+    "6.6",
+    "W-LINE",
+    "W2",
+    "W3",
+    "N-ALT"
+   ],
+   "evidence": {
+    "cationic_polymer": [],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Sodium Laureth Sulfate @2",
+     "Cocamidopropyl Betaine @3"
+    ],
+    "humectantContext": [
+     "Panthenol @13"
+    ],
+    "excluded": [
+     "Hydroxypropyl Methylcellulose @11 (nonionic cellulose thickener, no cationic charge; excluded like the 6.4 thickeners)",
+     "Sodium Xylenesulfonate @4 (hydrotrope)"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": {
+     "position": 6,
+     "inci": "Parfum",
+     "classes": [
+      "fragrance"
+     ]
+    },
+    "cap": {
+     "e3Point": 6
+    },
+    "alphabeticalRun": null,
+    "skipped": [],
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "light",
+   "persistence": "low",
+   "resetCapacity": "moderate",
+   "counterevidence": "none",
+   "whyThisBand": "There is no depositing system; a plain SLES/betaine base.",
+   "whyNotNeighborBand": "Not moderate: no deposition family exists at all (W2 not engaged).",
+   "confidenceLimitingFactor": "none material"
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "low",
+   "neighboringAlternative": "clarifying",
+   "rationale": "Provisional, formula-only (claims hidden, 3.1): no exact-product claim is visible, so no focus candidate exists and 7.2 (\"unsupported/absent claims\") gives general. Formula care-direction verdict: not_applicable. Neighbor clarifying: a plain SLES/betaine base without conditioning is most compatible with a reset/oily-scalp role if so positioned (F6 needs moderate/strong cleansing, which holds). Final focus is decided only after the reveal (3.2, 7.2, F1-F7).",
+   "ruleIds": [
+    "3.1",
+    "7.2",
+    "7.3",
+    "F1",
+    "N-ALT"
+   ],
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": "No conditioning routes at all; no care direction."
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "No claim visible in the blind pass; formula verdict only. No conditioning routes at all; no care direction.",
+   "decisionTrace": "Blind: claim direction null; formula verdict not_applicable; decision reason: no candidate claim, provisional general."
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "low",
+   "neighboringAlternative": [
+    "clarifying"
+   ],
+   "rationale": "Provisional, formula-only: secondary needs distinct exact-product positioning (Section 8), which is hidden in the blind pass; empty default.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3",
+    "N-ALT"
+   ],
+   "decisionTrace": "Empty default considered; no claims visible; no secondary selected."
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "low",
+   "neighboringAlternative": "frequent",
+   "rationale": "Provisional, formula-only: usage triggers need moderate/high-graded claims or directions (Section 9, CL-SRC), hidden in the blind pass; default regular. Neighbor: cleansingStrength is not strong, so explicit frequency wording (U2) could fire frequent.",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U4",
+    "CL-SRC",
+    "N-ALT"
+   ],
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": []
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not targeted (formula half fails, so no claim can make it targeted): no listed comfort or humectant/refatting route is prominent (Panthenol @13 after Parfum @6) and MB fails (prominent SLES @2). An explicitly positioned product would still be not_targeted and fail its S-SENSITIVE/S-DRY gate (S-FAIL).",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "MB",
+    "E4",
+    "S-FAIL"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not supported: the complete INCI contains no Piroctone Olamine, Climbazole or Selenium (Di)Sulfide (Section 11).",
+   "ruleIds": [
+    "11",
+    "DS1"
+   ]
+  }
+ },
+ "unresolvedMaterialIngredients": [],
+ "notes": [
+  "Hydroxypropyl Methylcellulose classified as excluded (nonionic thickener), not film_former; Glyoxal is its processing aid."
+ ]
+}

@@ -1,0 +1,142 @@
+{
+  "blindId": "W201",
+  "inciFingerprintSha256": "8c3575d78dbb8cccd4edf7ec1b0e2859980ec328ddca8923caeae347df5fcc90",
+  "phase": "formula-pass (blind, stage A only; no claims seen)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "packSize": "473 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 3,
+    "identityConfidence": "high",
+    "normalization": "ID-2: packet list already merged (Aqua/Water/Eau = one entry); marker '*' stripped from Polyimide-1 and Polyquaternium-10 (provenance only); normalized one-based positions used throughout.",
+    "e3ProminenceCutoff": "Parfum/Fragrance @26; positions 1-25 prominent"
+  },
+  "normalizedInci": ["1 Aqua/Water/Eau", "2 Sodium C14-16 Olefin Sulfonate", "3 Cocamide MIPA", "4 Cocamidopropyl Betaine", "5 Glycerin", "6 Sodium Chloride", "7 Cocos Nucifera (Coconut) Oil", "8 Argania Spinosa (Argan) Kernel Oil", "9 Tocopheryl Acetate", "10 Panthenol", "11 Coco-Glucoside", "12 Polyimide-1", "13 Polyquaternium-10", "14 Hydrogenated Palm Glycerides Citrate", "15 Polyquaternium-7", "16 Glyceryl Oleate", "17 Tocopherol", "18 Guar Hydroxypropyltrimonium Chloride", "19 Sodium Hydroxide", "20 Citric Acid", "21 Glycol Distearate", "22 Sodium Benzoate", "23 Sodium Salicylate", "24 Trisodium Ethylenediamine Disuccinate", "25 Isopropanolamine", "26 Parfum/Fragrance", "27 Hexyl Cinnamal", "28 Tetramethyl Acetyloctahydronaphthalenes"],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: the defining anionic is Sodium C14-16 Olefin Sulfonate @2 (C3 strong ether/sulfonate type), with two prominent buffers (Cocamidopropyl Betaine @4 amphoteric, Coco-Glucoside @11 nonionic glucoside) and no reinforcing strong anionic. Cocamide MIPA @3 is an alkanolamide foam booster (C3: not a route, not a buffer). Counter-signals (oils @7-8, weak refatters @14/@16, cationic polymers) point milder, never stronger; the convention is unambiguous, so high confidence.",
+      "ruleIds": ["C3", "C4", "C1", "E3"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "High by C2: all four elements are prominent (E3, before Parfum @26): a prominent payload lipid in place of the silicone (Cocos Nucifera Oil @7, Argania Spinosa Kernel Oil @8), cationic polymers (Polyquaternium-10 @13, Polyquaternium-7 @15, Guar Hydroxypropyltrimonium Chloride @18), a pearlizing/fatty route (Glycol Distearate @21) and a deliberate humectant route (Glycerin @5, Panthenol @10). Further light routes (film former Polyimide-1 @12, weak refatters @14/@16) add redundancy; no element is borderline.",
+      "ruleIds": ["C2", "E3", "6.3"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "cationic_polymer": ["Polyquaternium-10 @13", "Polyquaternium-7 @15", "Guar Hydroxypropyltrimonium Chloride @18"],
+        "payload_lipid": ["Cocos Nucifera (Coconut) Oil @7 (material, < W-line 22)", "Argania Spinosa (Argan) Kernel Oil @8 (material, < W-line 22)"],
+        "weak_refatter": ["Hydrogenated Palm Glycerides Citrate @14", "Glyceryl Oleate @16"],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": ["Polyimide-1 @12"],
+        "cationic_conditioner": [],
+        "reset": ["Sodium C14-16 Olefin Sulfonate @2 (strong anionic ether/sulfonate)", "Cocamidopropyl Betaine @4 (amphoteric)", "Coco-Glucoside @11 (nonionic)"],
+        "humectantContext": ["Glycerin @5", "Panthenol @10"],
+        "excluded": ["Cocamide MIPA @3 (alkanolamide thickener/foam booster, not deposition)", "Glycol Distearate @21 (pearlizing wax, 6.4; counts for C2 only)", "Tocopheryl Acetate @9, Tocopherol @17 (antioxidant actives, not payload)", "Parfum @26 and fragrance materials @27-28"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 22,
+        "inci": "Sodium Benzoate",
+        "candidateClasses": ["preservative_or_capped_active"],
+        "cap": "e3Point @26 (Parfum/Fragrance)",
+        "alphabeticalRun": "none",
+        "skipped": ["w_line_skipped:Tocopheryl Acetate@9 (ii: Coco-Glucoside @11 cleansing surfactant and Glycol Distearate @21 pearlizing wax listed after it before the cap)", "w_line_skipped:Panthenol@10 (ii: Coco-Glucoside @11, Glycol Distearate @21 after it)", "w_line_skipped:Tocopherol@17 (ii: Glycol Distearate @21 after it)"],
+        "codes": [],
+        "payloadLipidMaterial": ["Cocos Nucifera Oil @7", "Argania Spinosa Kernel Oil @8"],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "moderate: three cationic polymers, a film former and two material oils converge, but every deposition ingredient sits after Sodium Chloride @6, polymers at @12-18 in the usual low-dose zone.",
+      "persistence": "moderate: guar/polyquaternium and film-former deposition is plausibly retained; liquid oils (not waxy) at low dose; no silicone.",
+      "resetCapacity": "moderate: C1 olefin-sulfonate chassis buffered by betaine and glucoside, an effective ordinary reset.",
+      "counterevidence": "W-RICH is formally established (material payload lipids @7-8 converging with cationic polymers) and the high-anchor convergence route has three families (cationic_polymer, film_former, material payload_lipid); this is the argument for high.",
+      "whyThisBand": "Moderate: several interacting deposition routes (cationic polymers, film former, material oils) plausibly leave noticeable but bounded residue.",
+      "whyNotNeighborBand": "Not high: W-RICH lacks limited reset (resetCapacity moderate, 6.7 W-RICH limited reset), and the convergence route rests on low-dose ingredients all listed after Sodium Chloride @6 against an effective olefin-sulfonate reset; not low: three cationic polymers plus material oils and a film former (W2) make calling it lightweight an understatement.",
+      "confidenceLimitingFactor": "Concentrations of the polymers and oils are unknown; a richer actual dose would move it to high (W-RICH and convergence both present).",
+      "rationale": "Moderate (provisional final from formula): converging cationic polymers @13/@15/@18, film former @12 and material oils @7-8 (W-line @22) face a moderate C1 reset; W-RICH holds but reset is not limited, so high is the neighbor, not the band.",
+      "ruleIds": ["6.3", "6.4", "6.6", "W-LINE", "W-RICH", "W2", "W3", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": ["Glycerin @5", "Panthenol @10", "Cocos Nucifera Oil @7", "Argania Spinosa Kernel Oil @8"],
+        "repairRoutes": ["Polyimide-1 @12 (film)"],
+        "sharedConditioningRoutes": ["Polyquaternium-10 @13", "Polyquaternium-7 @15", "Guar Hydroxypropyltrimonium Chloride @18", "Glyceryl Oleate @16", "Hydrogenated Palm Glycerides Citrate @14"],
+        "limitation": "Blind: no claim seen; no protein or damage-care cluster, so repair is weaker than moisture; verdict could read dual_supported only if deposition is counted as damage care."
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "Strong-anionic olefin sulfonate chassis (moderate after buffering).",
+      "decisionTrace": "Claim direction null (blind); formula compatible with moisture (humectant cluster plus oils and polymers); provisional general until a claim identifies the job.",
+      "rationale": "Provisional (claim-dependent): formula supports a moisture direction; focus cannot be set without exact-product claims (3.2, 7.2).",
+      "ruleIds": ["3.1", "7.2", "7.3", "F1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["shine"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible, so no distinct secondary positioning can exist yet.",
+      "rationale": "Provisional (claim-dependent): secondary requires distinct positioning (Section 8).",
+      "ruleIds": ["8", "F3"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional: default regular; cleansingStrength moderate so alternating/occasional_reset need D1 or are excluded; frequent would need frequency wording; treatment impossible (no active).",
+      "ruleIds": ["9", "U1", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: no SC1 positioning visible blind. CSA formula half is met via listed prominent routes: Panthenol @10 (comfort and humectant), Glycerin @5, Cocos Nucifera Oil @7 and Argania Spinosa Kernel Oil @8 (humectant/refatting plant oils), Glyceryl Oleate @16. MB does not apply: strong anionic Sodium C14-16 Olefin Sulfonate @2 is prominent. Counter-signals: Parfum @26 (fragrance), no cooling agent.",
+      "csaRoute": "listed route (Panthenol @10, Glycerin @5, plant oils @7-8, Glyceryl Oleate @16); MB excluded by Sodium C14-16 Olefin Sulfonate @2",
+      "ruleIds": ["10", "CSA", "MB", "SC1", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Complete INCI contains no Piroctone Olamine, Climbazole or Selenium Sulfide/Disulfide.",
+      "ruleIds": ["11", "DS1"]
+    }
+  },
+  "formulaFacts": {
+    "surfactantClasses": {
+      "strongAnionicEtherSulfonate": ["Sodium C14-16 Olefin Sulfonate @2 (defining anionic)"],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": [],
+      "amphoteric": ["Cocamidopropyl Betaine @4 (buffer)"],
+      "nonionicCleansing": ["Coco-Glucoside @11 (buffer)"],
+      "notRouteNotBuffer": ["Cocamide MIPA @3 (alkanolamide)", "Glycol Distearate @21 (pearlizer)"]
+    },
+    "conditioningRoutes": ["Cocos Nucifera Oil @7", "Argania Spinosa Kernel Oil @8", "Polyimide-1 @12", "Polyquaternium-10 @13", "Polyquaternium-7 @15", "Guar Hydroxypropyltrimonium Chloride @18", "Hydrogenated Palm Glycerides Citrate @14", "Glyceryl Oleate @16", "Glycol Distearate @21 (pearlizing route)"],
+    "weightRoutes": "see weightPotential.evidence",
+    "humectants": ["Glycerin @5", "Panthenol @10"],
+    "actives": ["Tocopheryl Acetate @9", "Panthenol @10", "Tocopherol @17"],
+    "recognizedDandruffActives": [],
+    "exposureFlags": ["Parfum @26", "Hexyl Cinnamal @27 (allergen)", "no cooling agent", "no essential oil"],
+    "chelatorsPhAdjusters": ["Sodium Hydroxide @19", "Citric Acid @20", "Trisodium Ethylenediamine Disuccinate @24", "Isopropanolamine @25"],
+    "preservatives": ["Sodium Benzoate @22", "Sodium Salicylate @23"]
+  },
+  "unresolvedMaterialIngredients": []
+}

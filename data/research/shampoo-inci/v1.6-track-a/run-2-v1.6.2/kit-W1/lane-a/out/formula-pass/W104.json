@@ -1,0 +1,147 @@
+{
+  "blindId": "W104",
+  "inciFingerprintSha256": "6aadaef99413633a8a0903229d33fda87aac541b8f86ad7a1d4123f0e19c921a",
+  "phase": "formula-pass (blind; stage-A packet only; no claims seen)",
+  "standard": "shampoo-classification-v1.6.2",
+  "formulaIdentity": {
+    "packSize": "400 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "moderate",
+    "normalization": "Slash synonyms ('Aqua/Water', 'Mel/Honey', 'Mel Extract/Honey Extract', 'Parfum/Fragrance') are single entries; no split entries; normalized positions = packet positions (ID-2).",
+    "e3Point": "Parfum/Fragrance @30, listed last (prominent = positions 1-29)"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "Sodium Lauryl Sulfate @2 (strong anionic, alkyl sulfate type)",
+      "reinforcingRoutes": [],
+      "buffers": ["Cocamidopropyl Betaine @3 (amphoteric)", "Coco-Betaine @14 (amphoteric)", "Coco-Glucoside @15 (nonionic glucoside)", "Lauroyl/Myristoyl Methyl Glucamide @19 (nonionic sugar amide; assigned nonionic co-surfactant by chemistry; does not change the value)"],
+      "notCleansing": ["Carbomer @7 (acrylate thickener)"]
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @17 (prominent only because fragrance is listed last)"],
+      "weak_refatter": ["Glyceryl Oleate @9", "Lecithin @12", "Hydrogenated Palm Glycerides Citrate @16", "Ascorbyl Palmitate @21"],
+      "pearlizingFattyRoute": ["Glycol Distearate @10"],
+      "payload_lipid": [],
+      "silicone": [],
+      "humectants": ["Mel/Honey @5 (not a C2 list member)", "Mel Extract/Honey Extract @6", "Glycerin @8"]
+    },
+    "actives": [],
+    "exposure": {
+      "fragrance": "Parfum/Fragrance @30 (last); allergens Coumarin @26, Limonene @27, Benzyl Alcohol @28, Benzyl Salicylate @29",
+      "essentialOils": [],
+      "coolingAgents": [],
+      "otherNotes": "Parfum-last listing makes almost every entry 'prominent' under E3; recorded as a counter-signal on the C5 buffer count"
+    },
+    "wLine": {
+      "cap": "e3Point Parfum/Fragrance @30",
+      "wLine": "Tocopherol @20",
+      "wLineClasses": ["sub1_active"],
+      "skippedCandidates": [],
+      "alphabeticalRun": "none (longest ascending run 7-11, 5 entries)",
+      "codes": [],
+      "plausibility": "Tocopherol @20: (i) SLS @2 before; (ii) no cleansing surfactant, alkanolamide or pearlizing wax at 21-29",
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": []
+    },
+    "csaListedProminentRoutes": ["Glycerin @8 (humectant)", "Glyceryl Oleate @9 (humectant/refatting)"],
+    "mildBase": "not met: prominent strong anionic Sodium Lauryl Sulfate @2"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "strong",
+      "rationale": "Moderate: C5 alkyl-sulfate chassis (Sodium Lauryl Sulfate @2) with at least two prominent buffers (Cocamidopropyl Betaine @3, Coco-Betaine @14, Coco-Glucoside @15) and no reinforcing strong anionic (C3, C4, C5). Counter-signal: two of the buffers are prominent only because the fragrance is listed last, and SLS is the harsher class; strong is the realistic neighbor.",
+      "ruleIds": ["C3", "C4", "C5", "E3", "N-ALT"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: one cationic polymer (Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @17) plus light routes (Glycerin @8, Glyceryl Oleate @9, Glycol Distearate @10, Lecithin @12, Hydrogenated Palm Glycerides Citrate @16). C2 not met (no prominent silicone or payload lipid). Guar sits late, after NaOH @13 and the co-surfactants, so low is the realistic neighbor.",
+      "ruleIds": ["Section 5", "C2", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @17"],
+        "payload_lipid": [],
+        "weak_refatter": ["Glyceryl Oleate @9", "Lecithin @12", "Hydrogenated Palm Glycerides Citrate @16", "Ascorbyl Palmitate @21"],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Lauryl Sulfate @2", "Cocamidopropyl Betaine @3", "Coco-Betaine @14", "Coco-Glucoside @15", "Lauroyl/Myristoyl Methyl Glucamide @19"],
+        "humectantContext": ["Mel/Honey @5", "Mel Extract/Honey Extract @6", "Glycerin @8"],
+        "excluded": ["Carbomer @7 (anionic acrylate thickener, 6.4)", "Glycol Distearate @10 (pearlizing wax, 6.4)", "Triethyl Citrate @11 (solvent/deodorant ester, no deposition)", "Tocopherol @20 (antioxidant)", "Caramel @25 (colourant)"],
+        "unresolved": []
+      },
+      "depositionLoad": "light - one late guar and weak refatters only",
+      "persistence": "low - no silicone, no payload lipid; refatters weakly retained",
+      "resetCapacity": "moderate - SLS buffered by betaines/glucoside",
+      "counterevidence": "Two families present (cationic polymer + weak refatters); SLS chassis buffered.",
+      "whyThisBand": "Only light deposition (single late guar, weak refatters) against an effective sulfate reset; noticeable residue unlikely.",
+      "whyNotNeighborBand": "Not moderate (W2): besides weak refatters and humectants, the only depositing system is a single guar listed after NaOH @13 and the co-surfactants @14-15, with no silicone, payload lipid or protein to reinforce it, facing a buffered SLS reset.",
+      "confidenceLimitingFactor": "Guar share unknown (Parfum-last list obscures the sub-1 % zone)",
+      "rationale": "Low: single late cationic plus weak refatters against SLS reset (6.6, W2). Neighbor moderate.",
+      "ruleIds": ["6.3", "6.4", "6.6", "W2", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": ["Mel/Honey @5", "Mel Extract/Honey Extract @6", "Glycerin @8"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @17", "Glyceryl Oleate @9", "Lecithin @12", "Hydrogenated Palm Glycerides Citrate @16"],
+        "limitation": "Formula-only; humectant cluster with light conditioning support"
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Conditioning support is light and late",
+      "decisionTrace": "PROVISIONAL (formula-only): no claim direction; formula verdict moisture_supported. Placeholder general until claims.",
+      "rationale": "Provisional general (claim-dependent, 7.2); moisture is the formula-compatible candidate.",
+      "ruleIds": ["3.1", "7.2", "7.3"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["repair"],
+      "decisionTrace": "PROVISIONAL: empty default (Section 8).",
+      "rationale": "Provisional empty (claim-dependent).",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "PROVISIONAL: default regular; frequent possible only with explicit frequency wording (U2).",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "rationale": "PROVISIONAL: CSA formula half met via listed prominent routes Glycerin @8 and Glyceryl Oleate @9 (E4 humectant/refatting); MB not met (prominent SLS @2). No comfort-list route (S-SENSITIVE would need a comfort route or MB; neither present). targeted needs SC1 positioning.",
+      "ruleIds": ["10", "CSA", "MB", "SC1", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active (Section 11).",
+      "ruleIds": ["11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "Lauroyl/Myristoyl Methyl Glucamide @19 assigned as nonionic co-surfactant by chemistry; C5 already has two buffers without it.",
+    "Identity confidence moderate in the packet; no conflict visible in stage A."
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "blindId": "W118",
+  "inciFingerprintSha256": "303653d5f86a174377761e891fefde597d7e15dc484437056bd83783230aa48f",
+  "phase": "formula-pass (blind; stage-A packet only; no claims seen)",
+  "standard": "shampoo-classification-v1.6.2",
+  "formulaIdentity": {
+    "packSize": "200 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "One entry per ingredient; normalized positions = packet positions (ID-2).",
+    "e3Point": "Parfum @7 (prominent = positions 1-6)"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "none (no strong anionic) -> C6",
+      "earliestProminentCleansing": "Decyl Glucoside @2 (nonionic glucoside)",
+      "reinforcingRoutes": [],
+      "buffers": ["Disodium Laureth Sulfosuccinate @3 (mild anionic)", "Sodium Lauryl Sulfoacetate @4 (mild anionic)"],
+      "notCleansing": ["PEG-55 Propylene Glycol Oleate @5 (PEG ester thickener)"]
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": ["Hydroxypropyl Oxidized Starch PG-Trimonium Chloride @11 (not prominent; after fragrance and preservatives)"],
+      "silicone": [],
+      "payload_lipid": [],
+      "weak_refatter": [],
+      "pearlizingFattyRoute": [],
+      "humectants": ["Sodium Lactate @14 (E4 humectant, late; not a C2 deliberate route)"]
+    },
+    "actives": [],
+    "exposure": {
+      "fragrance": "Parfum @7 (not prominent); no declared allergens",
+      "essentialOils": [],
+      "coolingAgents": []
+    },
+    "wLine": {
+      "cap": "e3Point Parfum @7",
+      "wLine": "Parfum @7",
+      "wLineClasses": ["fragrance"],
+      "skippedCandidates": [],
+      "alphabeticalRun": "none (ascending run 10-14 has 5 entries)",
+      "codes": [],
+      "plausibility": "No candidate before the cap; Parfum @7 plausible ((i) Decyl Glucoside @2 before; (ii) Propylene Glycol @6 is not a structurant)",
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": []
+    },
+    "csaListedProminentRoutes": [],
+    "mildBase": "met: mild_base:Decyl Glucoside @2, Disodium Laureth Sulfosuccinate @3, Sodium Lauryl Sulfoacetate @4 (cleansingStrength low; no prominent strong anionic)"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Low: no strong anionic; the earliest prominent cleansing surfactant is the nonionic Decyl Glucoside @2, followed by the mild anionics Disodium Laureth Sulfosuccinate @3 and Sodium Lauryl Sulfoacetate @4 (C3, C4, C6).",
+      "ruleIds": ["C3", "C4", "C6"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low: the only conditioning route is a cationic starch (Hydroxypropyl Oxidized Starch PG-Trimonium Chloride @11) listed after the fragrance and preservatives (trace); no silicone, lipid, refatter or deliberate humectant. Cleansing-led (Section 5). The cationic makes moderate the neighbor.",
+      "ruleIds": ["Section 5", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Hydroxypropyl Oxidized Starch PG-Trimonium Chloride @11"],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Decyl Glucoside @2", "Disodium Laureth Sulfosuccinate @3", "Sodium Lauryl Sulfoacetate @4"],
+        "humectantContext": ["Propylene Glycol @6 (solvent)", "Sodium Lactate @14"],
+        "excluded": ["PEG-55 Propylene Glycol Oleate @5 (PEG thickener, 6.4)"],
+        "unresolved": []
+      },
+      "depositionLoad": "light - one trace cationic starch",
+      "persistence": "low - nothing persistent besides a trace polymer",
+      "resetCapacity": "weak - glucoside/sulfosuccinate/sulfoacetate chassis",
+      "counterevidence": "Weak reset could let the polymer accumulate.",
+      "whyThisBand": "A single trace cationic polymer with no reinforcing family.",
+      "whyNotNeighborBand": "Not moderate: one deposition family only, listed after the fragrance and two preservatives, with no silicone, lipid, protein or refatter to converge with it (6.6; single family, W2 not triggered).",
+      "confidenceLimitingFactor": "Weak reset",
+      "rationale": "Low: single trace cationic starch (6.4, 6.6). Neighbor moderate.",
+      "ruleIds": ["6.3", "6.4", "6.6", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Hydroxypropyl Oxidized Starch PG-Trimonium Chloride @11"],
+        "limitation": "No care cluster"
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Mild base could support a sensitive-scalp role if positioned",
+      "decisionTrace": "PROVISIONAL (formula-only): no claim direction. Placeholder general until claims.",
+      "rationale": "Provisional general (claim-dependent, 7.2).",
+      "ruleIds": ["3.1", "7.2"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["volume"],
+      "decisionTrace": "PROVISIONAL: empty default (Section 8).",
+      "rationale": "Provisional empty (claim-dependent).",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "PROVISIONAL: default regular; frequent possible with explicit frequency wording (cleansing low, U2).",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "rationale": "PROVISIONAL: CSA formula half met via MB only (mild_base: Decyl Glucoside, Disodium Laureth Sulfosuccinate, Sodium Lauryl Sulfoacetate); no listed E4 route is prominent (Sodium Lactate @14 is late). MB passes S-SENSITIVE's route clause but never S-DRY. targeted needs SC1 positioning.",
+      "ruleIds": ["10", "CSA", "MB", "SC1", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active (Section 11).",
+      "ruleIds": ["11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": []
+}

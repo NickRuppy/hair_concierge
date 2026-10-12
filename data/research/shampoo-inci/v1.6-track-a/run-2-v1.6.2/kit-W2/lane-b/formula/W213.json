@@ -1,0 +1,32 @@
+{
+  "blindId": "W213",
+  "packSize": "385 ml",
+  "canonicalInci": [
+    "Aqua/Water/Eau",
+    "Sodium Methyl Cocoyl Taurate",
+    "Decyl Glucoside",
+    "Cocamidopropyl Betaine",
+    "Sodium Chloride",
+    "Argania Spinosa Kernel Oil",
+    "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+    "Coco-Glucoside",
+    "Amodimethicone",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Hydrogenated Castor Oil",
+    "Coconut Acid",
+    "Disodium Tetrapropenyl Succinate",
+    "Glycol Distearate",
+    "PEG-150 Distearate",
+    "Hexylene Glycol",
+    "Citric Acid",
+    "Sodium Hydroxide",
+    "Sodium Benzoate",
+    "Benzoic Acid",
+    "Parfum/Fragrance"
+  ],
+  "inciFingerprintSha256": "96713abf4bfbfaf9b4a2843332d8ac3a1436ddf36324a11c21c4b55acd358fc7",
+  "normalization": "Runbook step 2: canonical list items lower-cased, trimmed, whitespace collapsed, joined with '|', SHA-256; split synonym entries (e.g. 'Aqua (Water, Eau)') merged before numbering.",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 3,
+  "identityConfidence": "high"
+}

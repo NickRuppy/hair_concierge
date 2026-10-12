@@ -1,0 +1,375 @@
+{
+ "blindId": "W209",
+ "standard": "shampoo-classification-v1.6.2",
+ "lane": "lane-b",
+ "identity": {
+  "brand": "Sante (LOGOCOS Naturkosmetik)",
+  "productName": "SANTE Sensitive Care Shampoo Probiotika + 3-fach Protein Komplex",
+  "packSize": "250 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "e7bbbca05138a36c9232d3bcfa024431c19776c252a065267ee03808404354e1",
+  "normalization": "Aqua (Water), Maris Sal (Sea Salt), Parfum (Fragrance) are single entries (ID-2); markers * (Aloe) and ** (Parfum, Linalool, Benzyl Salicylate, Vanillin) stripped and kept as provenance; normalized positions = packet positions.",
+  "completeness": "complete (packet; formula source tier 2, identity confidence high)",
+  "e3ProminenceCutoff": "Parfum (Fragrance) @22; prominent = positions 1-21 (E3)."
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Moderate: C5 - defining anionic Sodium Coco-Sulfate @2 (alkyl sulfate type) with four prominent buffers (Lauryl Glucoside @3, Coco-Glucoside @4, Disodium Cocoyl Glutamate @8, Sodium Cocoyl Glutamate @11) and no reinforcing route; C5 needs at least two.",
+   "ruleIds": [
+    "C5",
+    "C3",
+    "C4",
+    "E3"
+   ],
+   "counterSignal": "none.",
+   "formulaFacts": {
+    "definingAnionic": "Sodium Coco-Sulfate @2 (strong anionic, alkyl sulfate type)",
+    "reinforcingRoutes": [],
+    "buffers": [
+     "Lauryl Glucoside @3 (nonionic glucoside)",
+     "Coco-Glucoside @4 (nonionic glucoside)",
+     "Disodium Cocoyl Glutamate @8 (mild anionic)",
+     "Sodium Cocoyl Glutamate @11 (mild anionic)"
+    ],
+    "notCleansing": [
+     "Maris Sal @5",
+     "Sodium Chloride @18"
+    ],
+    "c3aOrC3b": "none (Sodium Coco-Sulfate is never C3a)"
+   }
+  },
+  "conditioningLevel": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "Low: cleansing-led architecture - no cationic polymer, silicone, payload lipid or pearlizer; only three hydrolyzed proteins (@13-15) and a late cationic arginine ester (@19). C2 not met. Neighbor moderate: the protein trio plus the cationic ester could be read as several light routes.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "E3",
+    "N-ALT"
+   ],
+   "counterSignal": "Proteins only; no cationic polymer.",
+   "formulaFacts": {
+    "protein_film": [
+     "Hydrolyzed Corn Protein @13",
+     "Hydrolyzed Wheat Protein @14",
+     "Hydrolyzed Soy Protein @15"
+    ],
+    "cationic_conditioner": [
+     "PCA Ethyl Cocoyl Arginate @19 (cationic arginine ester, conditioning/antimicrobial)"
+    ],
+    "cationic_polymer": [],
+    "silicone": [],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "pearlizing": []
+   }
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "cationic_polymer": [],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "silicone": [],
+    "protein_film": [
+     "Hydrolyzed Corn Protein @13",
+     "Hydrolyzed Wheat Protein @14",
+     "Hydrolyzed Soy Protein @15"
+    ],
+    "film_former": [],
+    "cationic_conditioner": [
+     "PCA Ethyl Cocoyl Arginate @19"
+    ],
+    "reset": [
+     "Sodium Coco-Sulfate @2",
+     "Lauryl Glucoside @3",
+     "Coco-Glucoside @4",
+     "Disodium Cocoyl Glutamate @8",
+     "Sodium Cocoyl Glutamate @11"
+    ],
+    "humectantContext": [],
+    "excluded": [
+     "Aloe Barbadensis Leaf Juice @6, Lactococcus Ferment Lysate @9, Arginine @10, Leuconostoc/Radish Root Ferment Filtrate @16 (juice/ferments/amino acid, not deposition)",
+     "Phytic Acid @12 (chelator)"
+    ],
+    "unresolved": []
+   },
+   "depositionLoad": "light",
+   "persistence": "low",
+   "resetCapacity": "moderate",
+   "counterevidence": "Two families (protein_film, cationic_conditioner, W2).",
+   "whyThisBand": "Only light protein films and a trace cationic ester; no persistent system.",
+   "whyNotNeighborBand": "Not moderate: the hydrolyzed proteins are light water-soluble film routes and the only cationic is an arginine ester at @19, just before the preservatives (late/trace), facing a C5 sulfate chassis with four buffers (W2 reason: a moderate reset faces only light routes).",
+   "confidenceLimitingFactor": "Protein film level unknown; INCI-only.",
+   "rationale": "Low: deposition is limited to water-soluble hydrolyzed proteins and a trace cationic arginine ester against a C5 sulfate/glucoside/glutamate reset.",
+   "ruleIds": [
+    "6.6",
+    "W-LINE",
+    "W2",
+    "W3",
+    "N-ALT"
+   ],
+   "wLineRecord": {
+    "wLine": {
+     "position": 20,
+     "inci": "Potassium Sorbate",
+     "classes": [
+      "preservative_or_capped_active"
+     ]
+    },
+    "cap": {
+     "e3Point": 22
+    },
+    "alphabeticalRun": null,
+    "skipped": [],
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "counterSignal": "Two families (protein_film, cationic_conditioner, W2).",
+   "formulaIdentifiers": {
+    "fingerprint": "e7bbbca05138a36c9232d3bcfa024431c19776c252a065267ee03808404354e1",
+    "sourceTier": 2,
+    "captureDate": "not in stage-A packet (packet field absent)"
+   }
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "scalp_active",
+   "rationale": "General: the scalp role is formula-incompatible (scalpComfortTarget not_targeted, CSA fails) and the protein claim has no repair_supported verdict (F7, F1).",
+   "ruleIds": [
+    "7.2",
+    "F1",
+    "F7",
+    "SC1",
+    "N-ALT"
+   ],
+   "counterSignal": "The explicit sensitive-scalp positioning would point to scalp_active, but scalpComfortTarget is not_targeted (CSA fails).",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [],
+    "repairRoutes": [
+     "Hydrolyzed Corn/Wheat/Soy Protein @13-15"
+    ],
+    "sharedConditioningRoutes": [],
+    "limitation": "Protein trio without deposition support; not repair_supported."
+   },
+   "claimRole": "not_applicable",
+   "decisionTrace": "Claim directions: sensitive scalp (\"Für sensibles Haar und empfindliche Kopfhaut\", manufacturer DE, moderate) and lengths care (\"3-fach Protein Komplex stärkt, pflegt & schützt\"). F7: name word \"Sensitive\" does not name the scalp; step 2 -> scalp_active only if targeted (fails, CSA) -> lengths-care repair only if repair_supported (verdict nonspecific) -> general."
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "repair"
+   ],
+   "rationale": "Empty.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3",
+    "N-ALT"
+   ],
+   "counterSignal": "n/a",
+   "decisionTrace": "Empty default considered; no secondary with an independent compatible route."
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Regular (default): no frequency, reset or dandruff trigger.",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "CL-SRC",
+    "F-TRACE",
+    "N-ALT"
+   ],
+   "counterSignal": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": []
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not targeted: the product is explicitly positioned (SC1: \"Für ... empfindliche Kopfhaut\", manufacturer moderate) but CSA fails - no prominent listed comfort or humectant/refatting route and no MB (prominent Sodium Coco-Sulfate @2). Prominent unlisted candidates do not count (closed lists, R18).",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "MB",
+    "SC1",
+    "E4"
+   ],
+   "counterSignal": "Positioning is explicit; unlisted_route_candidate:Aloe Barbadensis Leaf Juice, Lactococcus Ferment Lysate, Arginine."
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not supported: the complete INCI contains no Piroctone Olamine, Climbazole or Selenium (Di)Sulfide (Section 11).",
+   "ruleIds": [
+    "11",
+    "DS1"
+   ],
+   "counterSignal": "none (mechanical lookup, Section 11)"
+  }
+ },
+ "projection": {
+  "status": "proposal",
+  "thicknessFit": {
+   "fine": "ideal",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 with W=low (moderate, neighbor moderate), C=low (moderate, neighbor moderate); ordinary target, no T6; T4 checked against N-ALT neighbors after T6. ",
+  "weight": "light",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential low -> weight light, confidence = weightPotential confidence.",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "confidence": "moderate",
+    "rationale": "S-ORDINARY way 4: claimed sensitive (and dry) targets failed their formula gates and nothing else passed (S-FAIL); confidence moderate."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1: cleansingStrength moderate, D1 false -> regular. I3 checked with neighbor none against each projected bucket expectation (normal expects regular).",
+  "explicitResetPositioning": false,
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "No D1 term in the product name, a manufacturer/pack claim or usage directions (13.6). D2 not met -> not_flagged.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   "review_thickness_boundary:fine (neighbor weightPotential=moderate gives acceptable)",
+   "review_specialist_gate_failed: sensitive (E2 claim \"Für sensibles Haar und empfindliche Kopfhaut\", manufacturer moderate; S-SENSITIVE formula gate fails - scalpComfortTarget not_targeted because CSA fails; no prominent E4 comfort route, no MB) and dry (\"Reduziert Spannungs- & Trockenheitsgefühle ... der Kopfhaut\", manufacturer moderate; S-DRY fails - not targeted, no prominent E4 humectant route); unlisted_route_candidate:Aloe Barbadensis Leaf Juice; unlisted_route_candidate:Lactococcus Ferment Lysate; unlisted_route_candidate:Arginine"
+  ],
+  "informationalNotes": [],
+  "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze (13.9, D2 lane visibility); not computed in the lane."
+ },
+ "formulaFacts": {
+  "surfactants": {
+   "definingAnionic": "Sodium Coco-Sulfate @2 (strong anionic, alkyl sulfate type)",
+   "reinforcingRoutes": [],
+   "buffers": [
+    "Lauryl Glucoside @3 (nonionic glucoside)",
+    "Coco-Glucoside @4 (nonionic glucoside)",
+    "Disodium Cocoyl Glutamate @8 (mild anionic)",
+    "Sodium Cocoyl Glutamate @11 (mild anionic)"
+   ],
+   "notCleansing": [
+    "Maris Sal @5",
+    "Sodium Chloride @18"
+   ],
+   "c3aOrC3b": "none (Sodium Coco-Sulfate is never C3a)"
+  },
+  "conditioningRoutes": {
+   "protein_film": [
+    "Hydrolyzed Corn Protein @13",
+    "Hydrolyzed Wheat Protein @14",
+    "Hydrolyzed Soy Protein @15"
+   ],
+   "cationic_conditioner": [
+    "PCA Ethyl Cocoyl Arginate @19 (cationic arginine ester, conditioning/antimicrobial)"
+   ],
+   "cationic_polymer": [],
+   "silicone": [],
+   "payload_lipid": [],
+   "weak_refatter": [],
+   "pearlizing": []
+  },
+  "humectants": [],
+  "actives": [
+   "Arginine @10",
+   "Lactococcus Ferment Lysate @9",
+   "Leuconostoc/Radish Root Ferment Filtrate @16"
+  ],
+  "recognizedDandruffActives": [],
+  "exposure": {
+   "fragrance": "Parfum @22, Linalool @23, Benzyl Salicylate @24, Vanillin @25",
+   "coolingAgents": [],
+   "essentialOils": []
+  },
+  "csa": {
+   "listedComfortRoutesProminent": [],
+   "listedHumectantRefattingRoutesProminent": [],
+   "mildBase": "no: prominent Sodium Coco-Sulfate @2 (alkyl sulfate) excludes MB",
+   "csaHolds": false,
+   "unlistedRouteCandidates": [
+    "unlisted_route_candidate:Aloe Barbadensis Leaf Juice (@6, rejected by R18)",
+    "unlisted_route_candidate:Lactococcus Ferment Lysate (@9, rejected by R18)",
+    "unlisted_route_candidate:Arginine (@10, rejected by R18)"
+   ]
+  },
+  "preservativesAndOther": [
+   "Citric Acid @7",
+   "Phytic Acid @12 (chelator)",
+   "Lactic Acid @17",
+   "Potassium Sorbate @20",
+   "Sodium Benzoate @21"
+  ]
+ },
+ "unresolvedMaterialIngredients": [],
+ "reconciliation": {
+  "formulaPassFile": "out/formula-pass/W209.json (hash-pinned, unchanged)",
+  "blindToFinalChanges": [
+   "focusPrimary general (provisional, neighbor repair) -> general (moderate, neighbor scalp_active).",
+   "usageRole regular (low) -> regular (high).",
+   "scalpComfortTarget not_targeted (high) unchanged: positioning revealed but CSA fails.",
+   "No formula-derived property changed."
+  ]
+ },
+ "selfCheck": "6.11: fingerprint e7bbbca05138a36c9232d3bcfa024431c19776c252a065267ee03808404354e1 matches the stage-A packet and the formula pass; claims and identity were hidden during the formula judgment (formula pass frozen before the reveal); no ingredient, family count or position window assigned the weight band (the W-line only gated payload_lipid legs); W-line derived from the frozen list as W-LINE states, skipped candidates recorded; depositionLoad/persistence/resetCapacity present with rationales; counterevidence and whyNotNeighborBand specific (W2 addressed where two or more families); confidence names its limiting factor; no comparison with any earlier or live value was made in the lane. Projection flags recomputed mechanically from this record (T4/I3 via N-ALT).",
+ "uncertainties": [
+  "Dry-scalp unit: \"Reduziert Spannungs- & Trockenheitsgefühle und unterstützt den natürlichen pH-Wert der Kopfhaut\" read as naming the scalp (Spannungsgefühl der Kopfhaut); if not, only the sensitive gate failure is flagged - the outcome (ordinary + review flag) is the same.",
+  "\"Wohltuend für die Kopfhaut\" and \"Fördert den Erhalt einer intakten Hautbarriere\" are not lexicon terms; noted."
+ ]
+}

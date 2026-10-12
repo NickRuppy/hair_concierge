@@ -1,0 +1,32 @@
+{
+  "blindId": "W205",
+  "packSize": "200 ml",
+  "canonicalInci": [
+    "Aqua",
+    "Urea",
+    "Disodium Laureth Sulfosuccinate",
+    "Sodium Lauryl Sulfoacetate",
+    "Laureth-9",
+    "Lauryl Glucoside",
+    "Sodium Laureth Sulfate",
+    "Parfum",
+    "PEG-120 Methyl Glucose Dioleate",
+    "Phenoxyethanol",
+    "Citric Acid",
+    "Laureth-2",
+    "PEG/PPG-120/10 Trimethylolpropane Trioleate",
+    "Sodium Benzoate",
+    "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+    "Sodium Citrate",
+    "Tetramethyl Acetyloctahydronaphthalenes",
+    "Sodium Chloride",
+    "Lactic Acid",
+    "Tocopherol",
+    "Helianthus annuus seed oil"
+  ],
+  "inciFingerprintSha256": "cb12321175c1cf9a3f9455fab2e6c51d09b6cb0f3700439be148e708e310ec21",
+  "normalization": "Runbook step 2: canonical list items lower-cased, trimmed, whitespace collapsed, joined with '|', SHA-256; split synonym entries (e.g. 'Aqua (Water, Eau)') merged before numbering.",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high"
+}

@@ -1,0 +1,357 @@
+{
+  "blindId": "W106",
+  "phase": "final record (post-unblind reconciliation, runbook step 4)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "brand": "Neqi",
+    "productName": "Neqi Moisture Mystery Shampoo",
+    "packSize": "330 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "50859ff7bd326a300c95751b54ebed6cadcc08b8cbafb623625c5a5dbf48f719",
+    "normalization": "'Aqua [Water]', 'Parfum [Fragrance]' and parenthesis synonyms are single entries; normalized positions = packet positions (ID-2).",
+    "completeness": "complete",
+    "formulaSourceTier": 3,
+    "identityConfidence": "moderate",
+    "e3ProminenceCutoff": "Parfum [Fragrance] @6 (prominent = positions 1-5)"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "none (no prominent strong anionic) -> C6",
+      "earliestProminentCleansing": "Disodium Laureth Sulfosuccinate @2 (mild anionic, sulfosuccinate)",
+      "reinforcingRoutes": [],
+      "buffers": [
+        "Cocamidopropyl Betaine @3 (amphoteric)",
+        "Cocamidopropyl Hydroxysultaine @4 (amphoteric)"
+      ],
+      "notCleansing": [
+        "PEG-18 Glyceryl Oleate/Cocoate @5 (PEG glyceryl ester refatter/solubilizer)",
+        "Cocamide MEA @17 (alkanolamide)",
+        "Laureth-10 @18 (ethoxylate, no C3 cleansing class)"
+      ]
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": [],
+      "silicone": [],
+      "weak_refatter": [
+        "PEG-18 Glyceryl Oleate/Cocoate @5"
+      ],
+      "protein_film": [
+        "Avena Sativa (Oat) Peptide @8"
+      ],
+      "payload_lipid": [
+        "C13-15 Alkane @19 (light hydrocarbon emollient; membership uncertain, recorded cautiously as payload_lipid; non-material either way)"
+      ],
+      "pearlizingFattyRoute": [
+        "Glycol Distearate @14 (not prominent)"
+      ],
+      "humectants": [
+        "Glycerin @21 (late)"
+      ]
+    },
+    "actives": [],
+    "exposure": {
+      "fragrance": "Parfum [Fragrance] @6; allergens Hexyl Cinnamal @30, Limonene @31, Linalool @32; Linalyl Acetate @24",
+      "essentialOils": [
+        "Juniperus Virginiana Oil @12 (not prominent)",
+        "Citrus Aurantium Peel Oil @13 (not prominent)"
+      ],
+      "coolingAgents": [],
+      "otherNotes": "UV filters Ethylhexyl Methoxycinnamate @22, Diethylamino Hydroxybenzoyl Hexyl Benzoate @23; MCI/MIT @26-27"
+    },
+    "wLine": {
+      "cap": "e3Point Parfum [Fragrance] @6",
+      "wLine": "Parfum [Fragrance] @6",
+      "wLineClasses": [
+        "fragrance"
+      ],
+      "skippedCandidates": [],
+      "alphabeticalRun": "none",
+      "codes": [],
+      "plausibility": "No candidate before the cap; Parfum @6 plausible ((i) sulfosuccinate @2 before; (ii) nothing between)",
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": [
+        "C13-15 Alkane @19"
+      ]
+    },
+    "csaListedProminentRoutes": [],
+    "unlistedRouteCandidates": [
+      "PEG-18 Glyceryl Oleate/Cocoate @5 (prominent; rejected by R18, not on E4 lists)"
+    ],
+    "mildBase": "met: mild_base:Disodium Laureth Sulfosuccinate @2, Cocamidopropyl Betaine @3, Cocamidopropyl Hydroxysultaine @4 (cleansingStrength low; no prominent strong anionic)"
+  },
+  "unresolvedMaterialIngredients": [],
+  "claimEvidence": [
+    "Product name 'Moisture Mystery' (high, English name word): moisture direction.",
+    "manufacturer_de (German-language storefront showing CHF prices, so possibly the Swiss market): 'Intensive Feuchtigkeitspflege mit Algenextrakten', 'Di- und Tri-Peptide aus ... Hafer beugen Haarbruch vor', 'Sanfte Reinigung von Haaren und Kopfhaut, ohne zu strapazieren' (protective, E2a). Graded low as a possibly foreign-market manufacturer page (E1), except where German retailers carry the same claim.",
+    "'perfekt für alle Haartypen geeignet - egal ob normales, trockenes, feines, fettiges oder dünnes Haar' - a suitability/hair-type list, not a claim that the product acts on oily roots (E2a tolerance wording; listing attribute, P0) -> no oily claim unit.",
+    "pack_back source present but not transcribed.",
+    "ID-3: 'Algenextrakt' has no algae-extract INCI entry (Algin @7 is an alginate thickener) - botanical marketing ingredient with no property role, note only. 'Hemisqualan' -> C13-15 Alkane @19 plausibly; 'Goji' Lycium @10, 'Malve' @11, 'Monoi' Gardenia @9, oat peptides @8 present."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Low: no prominent strong anionic; the earliest prominent cleansing surfactant is the mild anionic Disodium Laureth Sulfosuccinate @2 with prominent amphoteric co-surfactants Cocamidopropyl Betaine @3 and Cocamidopropyl Hydroxysultaine @4 (C3, C4, C6).",
+      "ruleIds": [
+        "C3",
+        "C4",
+        "C6"
+      ],
+      "counterSignal": "None material (C6 clear).",
+      "formulaPassValue": "low",
+      "formulaPassConfidence": "high"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low: no cationic polymer, no silicone and no material lipid; only light routes (refatter PEG-18 Glyceryl Oleate/Cocoate @5, Oat Peptide @8, Glycol Distearate @14, C13-15 Alkane @19, late Glycerin @21). Little substantive slip (Section 5 low anchor). The cluster of light routes makes moderate the realistic neighbor.",
+      "ruleIds": [
+        "Section 5",
+        "C2",
+        "N-ALT"
+      ],
+      "counterSignal": "Several light routes (refatter, oat peptide, pearlizer, alkane) could read as moderate.",
+      "formulaPassValue": "low",
+      "formulaPassConfidence": "moderate"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "evidence": {
+        "cationic_polymer": [],
+        "payload_lipid": [
+          "C13-15 Alkane @19 (non-material, W-line @6)"
+        ],
+        "weak_refatter": [
+          "PEG-18 Glyceryl Oleate/Cocoate @5"
+        ],
+        "silicone": [],
+        "protein_film": [
+          "Avena Sativa (Oat) Peptide @8"
+        ],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": [
+          "Disodium Laureth Sulfosuccinate @2",
+          "Cocamidopropyl Betaine @3",
+          "Cocamidopropyl Hydroxysultaine @4"
+        ],
+        "humectantContext": [
+          "Propylene Glycol @20 (solvent)",
+          "Glycerin @21"
+        ],
+        "excluded": [
+          "Algin @7 (thickener)",
+          "Juniperus Virginiana Oil @12 (fragrance oil, 6.4)",
+          "Citrus Aurantium Peel Oil @13 (fragrance oil, 6.4)",
+          "Glycol Distearate @14 (pearlizing wax, 6.4)",
+          "Cocamide MEA @17 (alkanolamide)",
+          "Laureth-10 @18 (ethoxylate)",
+          "UV filters @22-23"
+        ],
+        "unresolved": []
+      },
+      "depositionLoad": "light - weak refatter and a small peptide only",
+      "persistence": "low - no cationic, silicone or material lipid",
+      "resetCapacity": "weak - mild sulfosuccinate/betaine chassis",
+      "counterevidence": "Weak reset; three families present on paper (weak refatter, peptide, non-material alkane).",
+      "whyThisBand": "Nothing in the formula can build noticeable residue: no cationic or silicone deposition system at all.",
+      "whyNotNeighborBand": "Not moderate (W2): the families are a weak refatter, a hydrolyzed oat peptide and a non-material post-fragrance alkane; without any cationic or silicone carrier the combined residue stays below noticeable even with weak reset.",
+      "confidenceLimitingFactor": "None material; recognition complete",
+      "rationale": "Low: no cationic/silicone deposition, only weak light routes (6.6, W2, W-LINE).",
+      "ruleIds": [
+        "6.3",
+        "6.4",
+        "6.6",
+        "W2",
+        "W-LINE"
+      ],
+      "counterSignal": "Weak reset; non-material alkane post-line.",
+      "formulaPassValue": "low",
+      "formulaPassConfidence": "high",
+      "wLineRecord": {
+        "cap": "e3Point Parfum [Fragrance] @6",
+        "wLine": "Parfum [Fragrance] @6",
+        "wLineClasses": [
+          "fragrance"
+        ],
+        "skippedCandidates": [],
+        "alphabeticalRun": "none",
+        "codes": [],
+        "plausibility": "No candidate before the cap; Parfum @6 plausible ((i) sulfosuccinate @2 before; (ii) nothing between)",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": [
+          "C13-15 Alkane @19"
+        ]
+      }
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "neighboringAlternative": "moisture",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": [
+          "Glycerin @21 (late)"
+        ],
+        "repairRoutes": [
+          "Avena Sativa (Oat) Peptide @8"
+        ],
+        "sharedConditioningRoutes": [
+          "PEG-18 Glyceryl Oleate/Cocoate @5"
+        ],
+        "limitation": "No conditioning system; humectant late"
+      },
+      "claimRole": "candidate",
+      "counterSignal": "Name says 'Moisture'; formula carries no coherent humectant + conditioning cluster.",
+      "decisionTrace": "Primary: claim direction moisture (name, high); formula verdict nonspecific (recorded blind) -> generic moisture language over a nonspecific formula stays general (F1); repair wording (oat peptides) rests on one protein token; decision general.",
+      "rationale": "General: moisture claim not supported by a moisture_supported verdict (F1, 3.2).",
+      "ruleIds": [
+        "7.2",
+        "7.3",
+        "F1"
+      ],
+      "formulaPassValue": "general"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "repair"
+      ],
+      "decisionTrace": "Empty default; no distinct supported positioning.",
+      "rationale": "Empty.",
+      "ruleIds": [
+        "8",
+        "F2",
+        "F3"
+      ],
+      "formulaPassValue": []
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Regular: default; no moderate/high frequency wording (U2), reset intent (U4), D1 or dandruff claim (U3) in the revealed sources.",
+      "ruleIds": [
+        "9",
+        "U1",
+        "U2",
+        "CL-SRC"
+      ],
+      "formulaPassValue": "regular"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no E2 sensitive or dry scalp claim unit ('Sanfte Reinigung ... Kopfhaut, ohne zu strapazieren' is protective); MB would satisfy CSA but positioning is absent.",
+      "ruleIds": [
+        "10",
+        "SC1",
+        "CSA",
+        "MB",
+        "E2",
+        "E2a",
+        "E4"
+      ],
+      "formulaPassValue": "not_targeted"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active (Section 11).",
+      "ruleIds": [
+        "11"
+      ],
+      "counterSignal": "None.",
+      "formulaPassValue": "not_supported",
+      "formulaPassConfidence": "high"
+    }
+  },
+  "reconciliation": [
+    "focusPrimary general confirmed; low -> moderate (moisture claim, nonspecific formula).",
+    "usageRole regular, scalpComfortTarget not_targeted confirmed; low -> high.",
+    "Formula properties unchanged."
+  ],
+  "projection": {
+    "status": "proposed",
+    "thicknessFit": {
+      "fine": "ideal",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFitConfidence": {
+      "fine": "high",
+      "normal": "high",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": "T1 with W=low (high, neighbor none) and C=low (moderate, neighbor moderate): fine ideal, normal ideal, coarse acceptable; ordinary target, T6 not applicable; T4 checked against N-ALT neighbors after T6 (T2: thickness/texture claims not used).",
+    "weight": "light",
+    "weightConfidence": "high",
+    "weightRationale": "W-LIVE: weightPotential low -> light, written to every row; confidence = weightPotential confidence.",
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1: no qualifying E2 claim unit (the 'fettiges Haar' mention is a suitability list); manufacturer and pack sources present (13.8)."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "gentle",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength low, D1 False -> gentle. I3: neighbor none; normal expects regular; no I3 flag (neighbor none, or current intensity already differs / neighbor matches equally).",
+    "explicitResetPositioning": false,
+    "explicitResetEvidence": "No D1 stem (tiefenrein, deep clean, clarifying shampoo, detox-reinigung) in the name, manufacturer/pack claims or directions; no occasional-use directions.",
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRecord": null,
+    "deepCleanserListingConfidence": "high",
+    "deepCleanserRationale": "D1 false -> not_flagged (D2).",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "light",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [],
+    "catalogDependent": "review_live_value_differs and the deep-cleanser record id are resolved by the orchestrator after freeze; the lane sees no catalog values."
+  },
+  "selfCheck": "6.11/selfCheck: fingerprint copied from and equal to the frozen stage-A packet; claims hidden during the formula pass (formula-pass file unchanged, hash-pinned); no ingredient, family count or position window assigned the weight band (W-line used only to gate payload_lipid legs); W-line derived per W-LINE with skipped candidates recorded; depositionLoad/persistence/resetCapacity present; whyNotNeighborBand specific; N-ALT neighbors consistent with confidence; projection computed mechanically from final properties; no comparison with earlier or live values inside the lane.",
+  "uncertainties": [
+    "C13-15 Alkane family membership (hydrocarbon emollient not named in 6.3): recorded as payload_lipid cautiously; it is after the W-line, so the band is unchanged either way.",
+    "Identity confidence moderate in the packet.",
+    "'fettiges ... Haar' inside 'für alle Haartypen geeignet' read as suitability/listing, not an oily claim unit; reading it as a claim would open S-OILY, which would fail anyway (cleansing low)."
+  ]
+}

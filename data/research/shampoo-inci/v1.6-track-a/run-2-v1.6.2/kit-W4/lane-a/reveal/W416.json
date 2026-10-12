@@ -1,0 +1,21 @@
+{
+  "blindId": "W416",
+  "productName": "Guhl Kraft & Fülle Shampoo (kräftigendes Shampoo)",
+  "brand": "Guhl",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer DE product page (Guhl Ikebana / Kao); schema.org gtin13 in markup",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Kraft & Fülle | kräftigendes Shampoo | Rosmarin & Biotin-Aktiv-Komplex | ohne Silikone | Für dünner-werdendes, zu Haarausfall neigendes Haar | Schenke deinem Haar neue Energie mit unserem Kraft & Fülle Shampoo und unterstütze das natürliche Haarwachstum*. | Die Formulierung mit vitalisierendem Rosmarinextrakt und Biotin-Aktiv-Komplex  hilft, die Durchblutung der Kopfhaut anzuregen und stimuliert die Haarwurzel. Unser Shampoo kräftigt dünner werdendes und zu Haarausfall neigendes Haar – ohne es zu beschweren. Es reinigt sanft und gründlich und stärkt fühlbar vom Ansatz an. Verleihe deinem Haar in Kombination mit dem Tonikum wieder mehr Kraft und Fülle! | *Bei regelmäßiger Verwendung des Kraft & Fülle Kopfhaut Tonikum | Inhaltsstoffe zu 93% natürlichen Ursprungs* und zu 98% biologisch abbaubar** | ohne Silikone | keine Parabene | keine Mikroplastik | *gem. ISO 16128, inkl. 80% Wasser **gem. OECD Richtlinien & inkl. Wasser | Guhl Kraft & Fülle kräftigendes Shampoo (250 ml) für dünner werdendes, zu Haarausfall neigendes Haar, mit Rosmarinextrakt und Biotin-Aktiv-Komplex; ohne Silikone, vegan, hergestellt in Deutschland.",
+      "directionsVerbatim": "Beim Guhl Kraft & Fülle kräftigenden Shampoo wird eine kleine Menge zwei Minuten lang ins nasse Haar einmassiert und anschließend ausgespült. Die Einwirkzeit von zwei Minuten gehört zur Anwendung, weil die Formulierung mit Rosmarinextrakt und Biotin-Aktiv-Komplex an der Kopfhaut wirkt und nicht nur in den Längen. Eine kleine Menge genügt: Alle Guhl Shampoos sind dank ihres reichhaltigen Schaums besonders ergiebig. (FAQ 'Anwendung und Ergiebigkeit')"
+    },
+    {
+      "sourceType": "dm.de PDP (browser tab, Inhaltsstoffe accordion expanded)",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Sanfte Reinigung für gestärktes Haar | Regt die Durchblutung der Kopfhaut an | Mit Rosmarin & Biotin | Das Shampoo Kraft & Fülle von GUHL ist die ideale Wahl für feines, dünner werdendes Haar. Die sanfte Formel reinigt effektiv und regt die Durchblutung der Kopfhaut an, was zu einer spürbaren Stärkung des Haares führt. Angereichert mit Rosmarinextrakt und Biotin unterstützt es das Haarwachstum und sorgt für mehr Fülle. Die silikonfreie Rezeptur lässt das Haar leicht und luftig wirken. | Haartyp: feines Haar, dünner werdendes Haar, normales Haar, kurzes Haar",
+      "directionsVerbatim": "Anwendung: Eine kleine Menge 2 Minuten lang ins nasse Haar einmassieren. Ausspülen."
+    }
+  ]
+}

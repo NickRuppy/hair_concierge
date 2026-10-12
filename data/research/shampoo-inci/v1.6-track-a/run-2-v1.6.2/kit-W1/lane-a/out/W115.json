@@ -1,0 +1,392 @@
+{
+  "blindId": "W115",
+  "phase": "final record (post-unblind reconciliation, runbook step 4)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "brand": "Balea (dm)",
+    "productName": "Balea med Duschgel & Shampoo 2in1 Urea 5%",
+    "packSize": "300 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "4d7a4c5bc241cc8ccd2f4b30cd7da69a5f905824816b8f87574bb3f0beb515ad",
+    "normalization": "One entry per ingredient; normalized positions = packet positions (ID-2).",
+    "completeness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "moderate",
+    "e3ProminenceCutoff": "Parfum @12 (prominent = positions 1-11)"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "Sodium Laureth Sulfate @2 (strong anionic, ether/sulfonate type)",
+      "reinforcingRoutes": [],
+      "buffers": [
+        "Cocamidopropyl Betaine @4 (amphoteric)"
+      ],
+      "nonProminentSurfactants": [
+        "Coco-Glucoside @14 (after the E3 point; recorded only)"
+      ],
+      "notCleansing": [
+        "Laureth-4 @16 (thickener)"
+      ]
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": [
+        "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @17 (not prominent)"
+      ],
+      "weak_refatter": [
+        "Ascorbyl Palmitate @11",
+        "Glyceryl Oleate @13",
+        "Hydrogenated Palm Glycerides Citrate @18",
+        "Lecithin @19"
+      ],
+      "pearlizingFattyRoute": [
+        "Glycol Distearate @15 (not prominent)"
+      ],
+      "silicone": [],
+      "payload_lipid": [],
+      "humectants": [
+        "Urea @3",
+        "Glycerin @5",
+        "Sodium Lactate @7",
+        "Panthenol @8"
+      ]
+    },
+    "actives": [
+      "Allantoin @9 (comfort route)",
+      "Piroctone Olamine @22 (recognized anti-dandruff active; preservative-zone position)"
+    ],
+    "exposure": {
+      "fragrance": "Parfum @12 (not prominent); Benzyl Alcohol @21",
+      "essentialOils": [],
+      "coolingAgents": []
+    },
+    "wLine": {
+      "cap": "e3Point Parfum @12",
+      "wLine": "Panthenol @8",
+      "wLineClasses": [
+        "sub1_active"
+      ],
+      "skippedCandidates": [],
+      "alphabeticalRun": "none",
+      "codes": [],
+      "plausibility": "Panthenol @8: (i) SLES @2 before; (ii) entries 9-11 (Allantoin, Tocopherol, Ascorbyl Palmitate) contain no cleansing surfactant, alkanolamide or pearlizing wax",
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": []
+    },
+    "csaListedProminentRoutes": [
+      "Urea @3 (comfort + humectant)",
+      "Glycerin @5 (humectant)",
+      "Sodium Lactate @7 (humectant)",
+      "Panthenol @8 (comfort + humectant)",
+      "Allantoin @9 (comfort)"
+    ],
+    "mildBase": "not met: prominent strong anionic Sodium Laureth Sulfate @2"
+  },
+  "unresolvedMaterialIngredients": [],
+  "claimEvidence": [
+    "Source graded moderate (dm own-brand page, sourceKind manufacturer_de): 'Duschgel & Shampoo für empfindliche Haut'; 'Seine seifenfreie Rezeptur ist speziell für trockene sowie empfindliche Haut und Kopfhaut entwickelt worden' - one E2 unit naming dry and sensitive scalp states (counts for both, E2a); 'Das Duschgel & Shampoo schützt zudem vor Juckreiz, der durch Trockenheit entstehen kann' - sensitive (itch) unit acting on the scalp/skin state.",
+    "'Schützt vor dem Austrocknen', 'kann dem Austrocknen von Haut und Haar entgegenwirken' - protective; 'ph-hautneutral'.",
+    "No dandruff claim; no frequency or reset wording; directions 'Dusche + Shampoo'.",
+    "ID-3: '5% Urea' -> Urea @3, 'Allantoin' @9, 'Provitamin B5' -> Panthenol @8. No conflict.",
+    "Product is a shower gel + shampoo 2-in-1 (body and hair)."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate @2 with prominent buffer Cocamidopropyl Betaine @4, no reinforcing strong anionic (C3, C4, C1). Coco-Glucoside @14 is post-fragrance and recorded only.",
+      "ruleIds": [
+        "C3",
+        "C4",
+        "C1"
+      ],
+      "counterSignal": "Humectant-rich formula; single betaine buffer still satisfies C1 moderate.",
+      "formulaPassValue": "moderate",
+      "formulaPassConfidence": "high"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: several light routes - a prominent humectant cluster (Urea @3, Glycerin @5, Sodium Lactate @7, Panthenol @8) with a post-fragrance guar @17, Glycol Distearate @15 and weak refatters (Glyceryl Oleate @13, Hydrogenated Palm Glycerides Citrate @18, Lecithin @19). C2 not met (no prominent silicone or payload lipid). The only slip agent is post-fragrance, so low is the realistic neighbor.",
+      "ruleIds": [
+        "Section 5",
+        "C2",
+        "N-ALT"
+      ],
+      "counterSignal": "Only slip agent (guar @17) is post-fragrance.",
+      "formulaPassValue": "moderate",
+      "formulaPassConfidence": "moderate"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "evidence": {
+        "cationic_polymer": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @17"
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [
+          "Ascorbyl Palmitate @11",
+          "Glyceryl Oleate @13",
+          "Hydrogenated Palm Glycerides Citrate @18",
+          "Lecithin @19"
+        ],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": [
+          "Sodium Laureth Sulfate @2",
+          "Cocamidopropyl Betaine @4",
+          "Coco-Glucoside @14 (non-prominent)"
+        ],
+        "humectantContext": [
+          "Urea @3",
+          "Glycerin @5",
+          "Sodium Lactate @7",
+          "Panthenol @8",
+          "Allantoin @9"
+        ],
+        "excluded": [
+          "Glycol Distearate @15 (pearlizing wax, 6.4)",
+          "Laureth-4 @16 (thickener)",
+          "Tocopherol @10 (antioxidant)"
+        ],
+        "unresolved": []
+      },
+      "depositionLoad": "light - trace post-fragrance guar and weak refatters",
+      "persistence": "low - no silicone, lipid or protein",
+      "resetCapacity": "moderate - buffered SLES chassis",
+      "counterevidence": "Two families present on paper (cationic + weak refatter).",
+      "whyThisBand": "Only a trace guar and weak refatters; humectants are context, not deposition.",
+      "whyNotNeighborBand": "Not moderate (W2): the guar is listed after the fragrance and after the sub-1 % actives (Panthenol @8, Allantoin @9, Tocopherol @10), the other family is only weak refatters plus humectants, and a buffered SLES reset faces these light routes.",
+      "confidenceLimitingFactor": "None material",
+      "rationale": "Low: trace guar + weak refatters (6.6, W2).",
+      "ruleIds": [
+        "6.3",
+        "6.4",
+        "6.6",
+        "W2"
+      ],
+      "counterSignal": "None material.",
+      "formulaPassValue": "low",
+      "formulaPassConfidence": "high",
+      "wLineRecord": {
+        "cap": "e3Point Parfum @12",
+        "wLine": "Panthenol @8",
+        "wLineClasses": [
+          "sub1_active"
+        ],
+        "skippedCandidates": [],
+        "alphabeticalRun": "none",
+        "codes": [],
+        "plausibility": "Panthenol @8: (i) SLES @2 before; (ii) entries 9-11 (Allantoin, Tocopherol, Ascorbyl Palmitate) contain no cleansing surfactant, alkanolamide or pearlizing wax",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      }
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "moderate",
+      "neighboringAlternative": "moisture",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": [
+          "Urea @3",
+          "Glycerin @5",
+          "Sodium Lactate @7",
+          "Panthenol @8"
+        ],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "Glyceryl Oleate @13",
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @17",
+          "Lecithin @19"
+        ],
+        "limitation": "Verdict recorded blind; focus decided by F7"
+      },
+      "claimRole": "candidate",
+      "counterSignal": "Generic dryness/moisture wording for skin and hair competes.",
+      "decisionTrace": "Primary: claim direction sensitive/dry scalp (moderate) with scalpComfortTarget targeted -> scalp_active compatible; name ('2 in 1 Urea 5%') names no role -> F7 step 2 scalp_active; route Urea @3, Panthenol @8, Allantoin @9 comfort routes.",
+      "rationale": "scalp_active: explicit sensitive/dry scalp positioning with targeted (7.2, F7).",
+      "ruleIds": [
+        "7.2",
+        "F7",
+        "SC1"
+      ],
+      "formulaPassValue": "general"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "moisture"
+      ],
+      "decisionTrace": "Empty default; hair-moisture wording reuses the Urea/Glycerin/Panthenol route already cited (F3).",
+      "rationale": "Empty (F3).",
+      "ruleIds": [
+        "8",
+        "F2",
+        "F3"
+      ],
+      "formulaPassValue": []
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Regular: default; no moderate/high frequency wording (U2), reset intent (U4), D1 or dandruff claim (U3) in the revealed sources.",
+      "ruleIds": [
+        "9",
+        "U1",
+        "U2",
+        "CL-SRC"
+      ],
+      "formulaPassValue": "regular"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "not_targeted",
+      "rationale": "Targeted: SC1 - 'speziell für trockene sowie empfindliche Haut und Kopfhaut entwickelt' and 'schützt zudem vor Juckreiz' (moderate); CSA - listed prominent routes Urea @3, Panthenol @8, Allantoin @9 (comfort) and Glycerin @5, Sodium Lactate @7 (humectant). MB not met (SLES). Confidence capped by the moderate positioning grade.",
+      "ruleIds": [
+        "10",
+        "SC1",
+        "CSA",
+        "MB",
+        "E2",
+        "E2a",
+        "E4"
+      ],
+      "formulaPassValue": "not_targeted"
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Supported: Piroctone Olamine @22 in the complete INCI; position is not checked (Section 11). Its preservative-zone position may mean it serves as a preservative - the claim decides the dandruff path (R17.3).",
+      "ruleIds": [
+        "11",
+        "R17.3"
+      ],
+      "counterSignal": "Active present (preservative zone) without dandruff positioning (R17.3).",
+      "formulaPassValue": "supported",
+      "formulaPassConfidence": "high"
+    }
+  },
+  "reconciliation": [
+    "focusPrimary general -> scalp_active.",
+    "scalpComfortTarget not_targeted (provisional) -> targeted (SC1 revealed; CSA met blind).",
+    "usageRole regular confirmed (low -> high); dandruff active recorded as active_without_dandruff_positioning.",
+    "Formula properties unchanged."
+  ],
+  "projection": {
+    "status": "proposed",
+    "thicknessFit": {
+      "fine": "ideal",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFitConfidence": {
+      "fine": "high",
+      "normal": "high",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": "T1 with W=low (high, neighbor none) and C=moderate (moderate, neighbor low): fine ideal, normal ideal, coarse acceptable; T6 applies (scalp-concern target) but lifts nothing; T4 checked against N-ALT neighbors after T6 (T2: thickness/texture claims not used).",
+    "weight": "light",
+    "weightConfidence": "high",
+    "weightRationale": "W-LIVE: weightPotential low -> light, written to every row; confidence = weightPotential confidence.",
+    "scalpTargets": {
+      "primary": {
+        "target": "sensitive",
+        "confidence": "moderate",
+        "rationale": "S-SENSITIVE passes (E2 sensitive units, moderate; targeted; prominent comfort routes Urea @3, Panthenol @8, Allantoin @9); S-DRY also passes. S-PRIMARY: no target in the product name -> order sensitive, dry -> sensitive primary. Confidence moderate."
+      },
+      "secondary": {
+        "target": "dry",
+        "confidence": "moderate",
+        "rationale": "S-DRY: E2 dry-scalp unit 'für trockene ... Kopfhaut' (moderate) + targeted + prominent humectant routes Glycerin @5, Urea @3, Sodium Lactate @7, Panthenol @8; S-SECONDARY: dry is not contradictory with sensitive; the active without a dandruff claim restricts nothing (R17.3)."
+      }
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength moderate, D1 False -> regular. I3: neighbor none; irritationen expects gentle, trocken expects gentle; no I3 flag (neighbor none, or current intensity already differs / neighbor matches equally).",
+    "explicitResetPositioning": false,
+    "explicitResetEvidence": "No D1 stem (tiefenrein, deep clean, clarifying shampoo, detox-reinigung) in the name, manufacturer/pack claims or directions; no occasional-use directions.",
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRecord": null,
+    "deepCleanserListingConfidence": "high",
+    "deepCleanserRationale": "D1 false -> not_flagged (D2).",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "trocken",
+        "scalp_route": "dry",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "trocken",
+        "scalp_route": "dry",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "trocken",
+        "scalp_route": "dry",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [
+      "active_without_dandruff_positioning"
+    ],
+    "catalogDependent": "review_live_value_differs and the deep-cleanser record id are resolved by the orchestrator after freeze; the lane sees no catalog values."
+  },
+  "selfCheck": "6.11/selfCheck: fingerprint copied from and equal to the frozen stage-A packet; claims hidden during the formula pass (formula-pass file unchanged, hash-pinned); no ingredient, family count or position window assigned the weight band (W-line used only to gate payload_lipid legs); W-line derived per W-LINE with skipped candidates recorded; depositionLoad/persistence/resetCapacity present; whyNotNeighborBand specific; N-ALT neighbors consistent with confidence; projection computed mechanically from final properties; no comparison with earlier or live values inside the lane.",
+  "uncertainties": [
+    "Identity confidence moderate in the packet.",
+    "Piroctone Olamine @22 sits among preservatives; recognized regardless (Section 11), dandruff path depends on claims.",
+    "Scope: a shower-gel-and-shampoo 2-in-1 for body and hair; classified as a regular shampoo because it is sold and directed for hair washing. Orchestrator may rule it out of the shampoo cohort.",
+    "The sensitive and dry claims come from one unit naming skin and scalp together; read as scalp positioning because it names 'Kopfhaut' explicitly."
+  ]
+}

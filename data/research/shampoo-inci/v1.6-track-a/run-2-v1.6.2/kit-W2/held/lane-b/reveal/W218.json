@@ -1,0 +1,21 @@
+{
+  "blindId": "W218",
+  "productName": "LANGHAARMÄDCHEN Shampoo Beautiful Curls",
+  "brand": "Langhaarmädchen",
+  "positioningSources": [
+    {
+      "sourceType": "dm.de PDP (browser tab, Inhaltsstoffe accordion expanded); dm-exclusive brand, Anschrift des Unternehmens = dm-drogerie markt GmbH + Co. KG",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Shampoo für Locken und Wellen | Mit Aloe Vera und Leinsamen-Extrakt | Ideal für die Curly Girl Methode geeignet | Verleiht Sprungkraft | Ohne Silikone und Sulfattenside | Das LANGHAARMÄDCHEN Shampoo Beautiful Curls reinigt schonend und pflegt natürlich gewelltes sowie gelocktes Haar. Die Formulierung mit Aloe Vera und Leinsamen-Extrakt verleiht den Locken eine beeindruckende Sprungkraft. Zusätzlich sorgt die Rezeptur für einen gesunden Glanz und natürliches Volumen direkt am Ansatz. Das Shampoo ist ideal für die Anwendung der Curly Girl Methode geeignet und verhilft zu einer definierten und gepflegten Lockenpracht. Dank des enthaltenen Aminosäuren-Komplexes ist es für alle Stufen der Haarporosität geeignet. | Wirkung: für Locken | Produkteigenschaften: vegan, ohne Silikone | Haartyp: lockiges Haar",
+      "directionsVerbatim": "Sanft ins Haar einmassieren, kurz einwirken lassen und gründlich ausspülen."
+    },
+    {
+      "sourceType": "dm MCP product detail",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "",
+      "directionsVerbatim": "Sanft ins Haar einmassieren, kurz einwirken lassen und gründlich ausspülen."
+    }
+  ]
+}

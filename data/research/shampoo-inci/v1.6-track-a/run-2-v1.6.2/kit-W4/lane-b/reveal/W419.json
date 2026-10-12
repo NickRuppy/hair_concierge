@@ -1,0 +1,28 @@
+{
+  "blindId": "W419",
+  "productName": "Hask Repair + Argan Oil Shampoo",
+  "brand": "Hask",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_foreign (US brand site; current 'Repair + Argan Oil Shampoo' 16 fl oz line = 473 ml pack)",
+      "sourceKind": "manufacturer_foreign",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Infused with argan oil, this shampoo gently cleanses hair while helping to repair breakage and smooth split ends. | Sulfate-free argan oil shampoo that repairs damage, adds shine, and tames frizz for silky-smooth, manageable hair. | STRENGTHENS | RESTORES | REPAIRS | BEST FOR: Dry or damaged hair | Revives and restores overworked hair | Controls frizz and flyaways | Gently cleanses and hydrates dry hair | Helps repair damage and breakage to reveal soft and touchable strands | Free of sulfates, parabens, phthalates, silicone, gluten, drying alcohol and artificial colors. Vegan, cruelty free and color-safe.",
+      "directionsVerbatim": "Apply to wet hair, massage into a lather and rinse thoroughly. Ideal for daily use."
+    },
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Pflegendes Shampoo | Mit Arganöl | Für trockenes und geschädigtes Haar | Gegen Haarbruch | Vegan | Das Shampoo repair + argan oil von HASK wurde speziell für die Bedürfnisse von trockenem und strapaziertem Haar entwickelt. Die Formel, angereichert mit Arganöl, kann dabei unterstützen, das Haar zu reparieren. Es versorgt das Haar intensiv mit Feuchtigkeit und kann Haarbruch sowie Spliss entgegenwirken. Das Haar fühlt sich nach der Anwendung gekräftigt an. Das Shampoo verleiht ein geschmeidiges und gepflegtes Haargefühl vom Ansatz bis in die Spitzen. | Wirkung: Pflege | Produkteigenschaften: ohne Silikone, ohne Sulfat",
+      "directionsVerbatim": "Auf das nasse Haar auftragen, einmassieren, aufschäumen und gründlich ausspülen. Ideal für die tägliche Haarwäsche."
+    },
+    {
+      "sourceType": "pack_photo (dm gallery image of the 473 ml bottle; back label wraps around the curved bottle so the left/right edges of each INCI line are cut off)",
+      "sourceKind": "pack_back",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "TARGETS DAMAGE & STRENGTHENS | NO SULFATES | NO SILICONES | VEGAN | Sulfates | No silicones | Vegan formula | Color safe | Bottle made from at least 25% recycled plastics | Damaged hair is left feeling hydrated, and looking healthy. | Repair shampoo: Infused with argan oil, this shampoo targets damage, repairs signs of breakage and smooths split ends. | lather in love. rinse in confidence | KINDNESS IS OUR SECRET INGREDIENT. (label text partly cut off at edges). Also gallery image 3 'HASK clean: no sulfates, no silicones, color safe, vegan, cruelty free'; gallery image 4 'new look SAME RESULTS. 12oz Argan Oil repairing 355 ml -> 16oz repair + argan oil 473 ml, LARGER SIZE'.",
+      "directionsVerbatim": "DE label: 'Wirkt gegen Schäden & Stärkt ... Auf nasses Haar auftragen, einmassieren, bis sich Schaum bildet, und gut [ausspülen]. Ideal für die tägliche Anwendung. VORSICHT: KONTAKT MIT DEN AUGEN VERMEIDEN. BEI KONTAKT DES PRODUKTS MIT DEN AUGEN SOFORT MIT VIEL WASSER AUSSPÜLEN.' (label partially cut off at edges)"
+    }
+  ]
+}

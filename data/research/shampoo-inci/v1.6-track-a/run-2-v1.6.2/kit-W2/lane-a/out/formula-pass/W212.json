@@ -1,0 +1,143 @@
+{
+  "blindId": "W212",
+  "inciFingerprintSha256": "de1c1328234632643df7eaba5f5f27d554680f3efa2ed25ce77e6dcaa59ddc40",
+  "phase": "formula-pass (blind, stage A only; no claims seen)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "packSize": "440 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "ID-2: packet split 'Aqua (Water' and 'Eau)' into raw entries 1-2; merged into one entry 'Aqua (Water, Eau)' before numbering, so normalized position = raw position - 1 from Sodium Laureth Sulfate onward. All positions cited are normalized.",
+    "e3ProminenceCutoff": "Parfum (Fragrance) @9 (normalized); positions 1-8 prominent"
+  },
+  "normalizedInci": ["1 Aqua (Water, Eau)", "2 Sodium Laureth Sulfate", "3 Cocamidopropyl Betaine", "4 Sodium Chloride", "5 PEG-7 Glyceryl Cocoate", "6 Hydrolyzed Keratin", "7 Dimethicone", "8 Sodium Benzoate", "9 Parfum (Fragrance)", "10 Citric Acid", "11 Amodimethicone", "12 Guar Hydroxypropyltrimonium Chloride", "13 Hydrogenated Castor Oil", "14 Glycol Distearate", "15 Laureth-4", "16 PEG-40 Hydrogenated Castor Oil", "17 PEG-120 Methyl Glucose Dioleate", "18 Tetramethyl Acetyloctahydronaphthalenes", "19 Laureth-23", "20 Prunus Armeniaca (Apricot) Kernel Oil", "21 Trideceth-10", "22 Sodium Hydroxide", "23 Linalool", "24 Linalyl Acetate", "25 Propylene Glycol", "26 Acetyl Cedrene", "27 Phenoxyethanol", "28 Sodium Salicylate"],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate @2, prominent buffer Cocamidopropyl Betaine @3, no reinforcing strong anionic.",
+      "ruleIds": ["C3", "C4", "C1"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "rationale": "Moderate: C2 is not met only because the humectant element is missing (no Glycerin, Panthenol, Sodium Hyaluronate, Sodium PCA, Urea, Sorbitol or Betaine anywhere); the other three elements are present: early silicone Dimethicone @7 (prominent), cationic polymer Guar Hydroxypropyltrimonium Chloride @12 and pearlizing route Glycol Distearate @14. Without C2 the anchors decide: one meaningful silicone/cationic system (Dimethicone @7, Amodimethicone @11, guar @12) plus light routes (Hydrolyzed Keratin @6, PEG-7 Glyceryl Cocoate @5, Hydrogenated Castor Oil @13) is moderate. Per C2 the missing humectant is the counter-signal and high is the neighbor.",
+      "ruleIds": ["5", "C2", "E3", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @12"],
+        "payload_lipid": ["Hydrogenated Castor Oil @13 (waxy; non-material, after W-line 8)", "Prunus Armeniaca (Apricot) Kernel Oil @20 (non-material)"],
+        "weak_refatter": ["PEG-7 Glyceryl Cocoate @5"],
+        "silicone": ["Dimethicone @7", "Amodimethicone @11"],
+        "protein_film": ["Hydrolyzed Keratin @6"],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @3"],
+        "humectantContext": ["none (no closed-list humectant)"],
+        "excluded": ["Glycol Distearate @14 (pearlizing wax, 6.4)", "Laureth-4 @15, Laureth-23 @19, Trideceth-10 @21 (ethoxylates)", "PEG-40 Hydrogenated Castor Oil @16 (solubilizer, 6.4)", "PEG-120 Methyl Glucose Dioleate @17 (PEG thickener)", "Propylene Glycol @25"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 8,
+        "inci": "Sodium Benzoate",
+        "candidateClasses": ["preservative_or_capped_active"],
+        "cap": "e3Point @9 (Parfum (Fragrance))",
+        "alphabeticalRun": "none",
+        "skipped": [],
+        "codes": [],
+        "plausibility": "(i) Sodium Laureth Sulfate @2 before it; (ii) nothing between @8 and the cap @9.",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": ["Hydrogenated Castor Oil @13", "Prunus Armeniaca (Apricot) Kernel Oil @20"]
+      },
+      "w1Check": "W1 does not apply: (a) and (b) hold (C1 SLES/betaine chassis; Dimethicone @7 + Guar @12 + late Amodimethicone @11), but (c) fails because a protein film (Hydrolyzed Keratin @6, prominent) reinforces the set; the full method decides. The lipids are non-material (W-line @8) and do not end W1.",
+      "depositionLoad": "moderate: prominent dimethicone plus amodimethicone and cationic guar (coacervate system) with a prominent keratin film and a weak refatter.",
+      "persistence": "moderate-to-high: dimethicone and amodimethicone are persistent and amodimethicone binds to damaged sites; guar aids deposition.",
+      "resetCapacity": "moderate: C1 SLES/betaine chassis.",
+      "counterevidence": "Convergence route of the high anchor is formally present (silicone, cationic_polymer, protein_film are three families, all counted wherever listed); waxy Hydrogenated Castor Oil @13 and Apricot Kernel Oil @20 would add a lipid leg if they were material.",
+      "whyThisBand": "Moderate: a persistent silicone/amodimethicone/guar system with a keratin film plausibly leaves noticeable but bounded residue.",
+      "whyNotNeighborBand": "Not high: the deposition is the W1-type silicone/guar/amodimethicone set plus a light protein, with no rich architecture: the lipids that could make it rich (Hydrogenated Castor Oil @13, Apricot Kernel Oil @20) are at or after the W-line @8 and are non-material, and the moderate C1 reset is not limited. Because a post-line payload lipid is part of what keeps it from high, confidence is capped at moderate with high as neighbor (W-LINE item 6). Not low: silicone plus cationic polymer plus protein (W2) is clearly more than a light route.",
+      "confidenceLimitingFactor": "Silicone and amodimethicone dose unknown; the formula sits near the moderate/high boundary (W-LINE item 6 cap).",
+      "rationale": "Moderate: W1 excluded by the keratin film, full method gives moderate (persistent silicone/guar system, non-material lipids, moderate reset); high is the neighbor.",
+      "ruleIds": ["6.3", "6.4", "6.6", "W1", "W-LINE", "W-RICH", "W2", "W3", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "repair",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "repair_supported",
+        "moistureRoutes": [],
+        "repairRoutes": ["Hydrolyzed Keratin @6", "Amodimethicone @11", "Dimethicone @7"],
+        "sharedConditioningRoutes": ["Guar Hydroxypropyltrimonium Chloride @12", "PEG-7 Glyceryl Cocoate @5"],
+        "limitation": "No closed-list humectant, so moisture is not supported; repair rests on keratin plus a damage-targeting amino-silicone deposition cluster."
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "No humectant route; ordinary SLES chassis.",
+      "decisionTrace": "Claim direction null (blind); formula repair_supported (keratin + amodimethicone + silicone/guar); provisional general until a claim identifies the job.",
+      "rationale": "Provisional (claim-dependent): repair is the formula-supported candidate (7.3, F1).",
+      "ruleIds": ["3.1", "7.2", "7.3", "F1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["shine"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible; a shine claim would share the silicone route (F2).",
+      "rationale": "Provisional (claim-dependent).",
+      "ruleIds": ["8", "F2"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional: default regular; frequent possible with frequency wording.",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: no SC1 positioning visible blind. CSA formula half met via a listed prominent humectant/refatting route: PEG-7 Glyceryl Cocoate @5. MB excluded: Sodium Laureth Sulfate @2 is a prominent strong anionic. No comfort-list route (S-SENSITIVE would fail its comfort-route clause).",
+      "csaRoute": "listed route (PEG-7 Glyceryl Cocoate @5); MB excluded by Sodium Laureth Sulfate @2",
+      "ruleIds": ["10", "CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active in the complete INCI.",
+      "ruleIds": ["11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactantClasses": {
+      "strongAnionicEtherSulfonate": ["Sodium Laureth Sulfate @2 (defining)"],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": [],
+      "amphoteric": ["Cocamidopropyl Betaine @3 (buffer)"],
+      "nonionicCleansing": [],
+      "notRouteNotBuffer": ["Glycol Distearate @14", "Laureth-4 @15", "PEG-40 Hydrogenated Castor Oil @16", "PEG-120 Methyl Glucose Dioleate @17", "Laureth-23 @19", "Trideceth-10 @21"]
+    },
+    "conditioningRoutes": ["PEG-7 Glyceryl Cocoate @5", "Hydrolyzed Keratin @6", "Dimethicone @7", "Amodimethicone @11", "Guar Hydroxypropyltrimonium Chloride @12", "Hydrogenated Castor Oil @13", "Glycol Distearate @14 (pearlizing)", "Prunus Armeniaca Kernel Oil @20"],
+    "humectants": [],
+    "actives": ["Hydrolyzed Keratin @6"],
+    "recognizedDandruffActives": [],
+    "exposureFlags": ["Parfum @9", "allergens Linalool @23", "no cooling agent", "no essential oil"],
+    "chelatorsPhAdjusters": ["Citric Acid @10", "Sodium Hydroxide @22"],
+    "preservatives": ["Sodium Benzoate @8", "Phenoxyethanol @27", "Sodium Salicylate @28"]
+  },
+  "unresolvedMaterialIngredients": []
+}

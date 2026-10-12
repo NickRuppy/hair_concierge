@@ -1,0 +1,310 @@
+{
+ "blindId": "W116",
+ "lane": "lane-b",
+ "policyId": "shampoo-classification-v1.6.2",
+ "formulaPassRecord": "out/formula-pass/W116.json (hash-pinned; not edited)",
+ "identity": {
+  "brand": "Herbal Essences (Procter & Gamble)",
+  "productName": "Herbal Essences Shampoo Fiji (Rossmann: Fiji Schwerelose Feuchtigkeit)",
+  "packSize": "350 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "057ef537b8cb1c0e3bfe089504cba2f2348f6018980b584cd9e903664c0292dc",
+  "normalization": "25 entries as frozen; no split synonyms; normalized one-based positions cited (ID-2).",
+  "completeness": "complete",
+  "formulaSourceTier": 3,
+  "identityConfidence": "high",
+  "e3ProminenceCutoff": "Parfum@8 (prominent = positions 1-7)"
+ },
+ "formulaFacts": {
+  "surfactants": {
+   "definingAnionic": "none (no strong anionic) - C6 applies",
+   "earliestProminentCleansingSurfactant": "Sodium Cocoyl Isethionate@2 (mild anionic, isethionate)",
+   "coSurfactants": [
+    "Lauramidopropyl Betaine@3 (amphoteric)",
+    "Cocamidopropyl Betaine@4 (amphoteric)",
+    "Sodium Lauroyl Sarcosinate@5 (mild anionic)"
+   ],
+   "nonCleansing": []
+  },
+  "conditioningRoutes": [
+   "Polyquaternium-10@11 (cationic_polymer, post-E3)",
+   "Glycerin@24 (trace)"
+  ],
+  "humectants": [
+   "Glycerin@24 (post-E3)"
+  ],
+  "actives": [],
+  "e4ComfortRoutesProminent": [],
+  "e4HumectantRoutesProminent": [],
+  "mildBase": "mild_base:Sodium Cocoyl Isethionate@2, Lauramidopropyl Betaine@3, Cocamidopropyl Betaine@4, Sodium Lauroyl Sarcosinate@5",
+  "exposureFlags": [
+   "Parfum@8",
+   "Hexamethylindanopyran@14",
+   "Linalool@15",
+   "Linalyl Acetate@16",
+   "Citrus Aurantium Peel Oil@17 (essential oil, post-E3)",
+   "Coumarin@20",
+   "Limonene@21",
+   "Vanillin@22",
+   "Terpineol@23"
+  ],
+  "otherIngredients": [
+   "Sodium Salicylate@10, Sodium Benzoate@9 (preservatives)",
+   "Tetrasodium EDTA@13",
+   "Histidine@18",
+   "Cocos Nucifera Fruit Juice@25 (coconut water, not a lipid)"
+  ]
+ },
+ "claimUnits": [
+  "name (high): 'Fiji' - no focus word (the 'Schwerelose Feuchtigkeit' name variant is retailer-only)",
+  "manufacturer_de brand portal (moderate): 'Shampoo für schwerelose Feuchtigkeit. Shampoo frei von sulfatierenden Tensiden. Vegan.'",
+  "retailers (low): 'Feuchtigkeitsshampoo', 'reinigt das Haar sanft und spendet Feuchtigkeit', 'ohne es zu beschweren'"
+ ],
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "low",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Low: C6 - no strong anionic; earliest prominent cleansing surfactant is the mild anionic Sodium Cocoyl Isethionate@2 with prominent amphoteric co-surfactants Lauramidopropyl Betaine@3 and Cocamidopropyl Betaine@4 (plus Sodium Lauroyl Sarcosinate@5).",
+   "ruleIds": [
+    "C6",
+    "C3",
+    "C4"
+   ],
+   "counterSignal": "see rationale (counter-signals recorded there; convention value unchanged by claims, 3.2)",
+   "sourceIds": [
+    "formula/W116.json (stage A, fingerprint 057ef537b8cb...)"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "Low: cleansing-led architecture whose only conditioning route is Polyquaternium-10@11, listed after Parfum and the preservatives, with trace Glycerin@24; no silicone, lipid, refatter or protein. Counter-signal: PQ-10 is an effective conditioner even at low levels and could count as one meaningful system (moderate).",
+   "ruleIds": [
+    "5",
+    "C2"
+   ],
+   "counterSignal": "see rationale",
+   "sourceIds": [
+    "formula/W116.json (stage A, fingerprint 057ef537b8cb...)"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "cationic_polymer": [
+     "Polyquaternium-10@11 (post-E3)"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Sodium Cocoyl Isethionate@2",
+     "Lauramidopropyl Betaine@3",
+     "Cocamidopropyl Betaine@4",
+     "Sodium Lauroyl Sarcosinate@5"
+    ],
+    "humectantContext": [
+     "Glycerin@24"
+    ],
+    "excluded": [
+     "Citrus Aurantium Peel Oil@17 (fragrance oil, 6.4)",
+     "Histidine@18 (amino acid/chelating aid)",
+     "Cocos Nucifera Fruit Juice@25 (aqueous juice)",
+     "fragrance materials"
+    ],
+    "unresolved": []
+   },
+   "wLine": {
+    "position": 8,
+    "inci": "Parfum",
+    "classes": [
+     "fragrance"
+    ],
+    "e3Point": 8,
+    "alphabeticalRun": "none",
+    "skipped": [],
+    "codes": [],
+    "plausibility": "(i) Sodium Cocoyl Isethionate@2 before it; (ii) nothing between 8 and cap 8",
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "light - a single post-E3 PQ-10",
+   "persistence": "low-to-moderate - PQ-10 can accumulate under mild surfactants, but the amount is post-fragrance",
+   "resetCapacity": "weak - C6 low isethionate/betaine chassis",
+   "counterevidence": "Weak reset does not actively offset the PQ-10; PQ-10 build-up under sulfate-free systems is plausible.",
+   "whyThisBand": "Deposition is a single light/late polymer with no converging family.",
+   "whyNotNeighborBand": "Not moderate: only one deposition family (PQ-10 listed after Parfum and preservatives) with no silicone, lipid, protein or refatter to converge; a single late polymer is not a meaningfully persistent system in this sparse architecture.",
+   "confidenceLimitingFactor": "Weak reset plus PQ-10 accumulation risk could make residue noticeable with repeated use.",
+   "rationale": "Low: single late cationic, sparse architecture (6.6).",
+   "ruleIds": [
+    "6.3",
+    "6.6",
+    "W2",
+    "N-ALT"
+   ],
+   "counterSignal": "see counterevidence / whyNotNeighborBand",
+   "sourceIds": [
+    "formula/W116.json (stage A, fingerprint 057ef537b8cb...)"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No recognized anti-dandruff active (Section 11); Sodium Salicylate@10 is a preservative.",
+   "ruleIds": [
+    "11"
+   ],
+   "counterSignal": "none (mechanical presence test, Section 11)",
+   "sourceIds": [
+    "formula/W116.json (stage A, fingerprint 057ef537b8cb...)"
+   ]
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "moisture",
+   "claimRole": "not_applicable",
+   "counterSignal": "Moisture is the consistent positioning.",
+   "decisionTrace": "Claim direction: moisture (manufacturer, moderate). Formula verdict nonspecific: PQ-10@11 post-E3 and trace Glycerin@24 only - no humectant cluster. F1: moisture language over a nonspecific formula stays general.",
+   "rationale": "General: moisture positioning over a nonspecific formula (F1).",
+   "ruleIds": [
+    "7.2",
+    "7.3",
+    "F1"
+   ],
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Polyquaternium-10@11"
+    ],
+    "limitation": "no lengths-care cluster"
+   }
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "decisionTrace": "Empty default considered.",
+   "rationale": "Empty.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Regular: no trigger.",
+   "ruleIds": [
+    "9",
+    "U1"
+   ],
+   "decisionTrace": "Default regular considered; trigger none; no losing trigger."
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not targeted: no scalp claim unit (CSA would be met via MB only).",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "SC1",
+    "E2a"
+   ]
+  }
+ },
+ "reconciliation": [
+  "focusPrimary general (low) -> general (moderate): moisture claim rejected by F1.",
+  "usageRole/scalpComfortTarget confirmed (high).",
+  "'Kokosnussextrakt' -> Cocos Nucifera Fruit Juice@25 (no conflict).",
+  "No formula property changed."
+ ],
+ "projection": {
+  "status": "proposal_blocked_pending_review",
+  "thicknessFit": {
+   "fine": "ideal",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 with weightPotential low (moderate, neighbor moderate) and conditioningLevel low (moderate, neighbor moderate): fine ideal, normal ideal, coarse acceptable. Target ordinary: T6 not applied. T4: review_thickness_boundary:fine (weightPotential neighbor moderate -> acceptable). T2: thickness/volume claims ignored for fit.",
+  "weight": "light",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential low -> weight light, 1:1; confidence = weightPotential confidence (moderate). Claims ('ohne zu beschweren', 'leicht') never lower it (6.5).",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "confidence": "high",
+    "rationale": "S-ORDINARY way 1; manufacturer source present."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "cleansingIntensity": "gentle",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1: cleansingStrength low (high), D1 false -> gentle. I3: neighbor none raises no flag (normal expects regular).",
+  "explicitResetPositioning": false,
+  "explicitResetRationale": "No D1 stem (tiefenrein, deep clean, clarifying shampoo, detox-reinigung) in the name or a manufacturer/pack claim, and no occasional-use directions.",
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D2 not met (cleansingStrength low, focusPrimary general, usageRole regular, D1 false) -> not_flagged.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "gentle",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "gentle",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "gentle",
+    "weight": "light",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   "review_thickness_boundary:fine (weightPotential neighbor moderate -> acceptable)"
+  ],
+  "informationalNotes": [],
+  "catalogDependent": "review_live_value_differs not evaluated in-lane (live rows unseen; orchestrator after freeze)."
+ },
+ "selfCheck": "6.11: fingerprint matches the stage-A packet; claims and labels were hidden during the formula pass (phase 1 frozen before reveal); no ingredient, family count or position window assigned the weight band; W-line derived per W-LINE with skipped candidates recorded; depositionLoad/persistence/resetCapacity present; whyNotNeighborBand specific; confidence names its limiting factor; no comparison with earlier values in-lane. Formula properties (cleansing, conditioning, weight, dandruff) unchanged after unblind (3.2: claims cannot move them). N-ALT checked: every high confidence has neighbor none, every moderate/low names one neighbor. Projection derived mechanically from final properties (T1/T6/T4/W-LIVE/I1/I3/D2/13.7/13.8).",
+ "uncertainties": [
+  "weightPotential low with PQ-10 under a weak reset; alternative moderate (neighbor -> T4 fine flag)."
+ ]
+}

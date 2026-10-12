@@ -1,0 +1,142 @@
+{
+  "blindId": "W112",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, Section 3.1)",
+  "policyId": "shampoo-classification-v1.6.2",
+  "inciFingerprintSha256": "80709619cc5b860ba314a06f5d5cb7ec58d65b853e39abdb0e5ab3414ad68db7",
+  "formulaPacket": {
+    "packSize": "385 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 3,
+    "identityConfidence": "high",
+    "normalization": "Aqua/Water/Eau and Parfum/Fragrance single entries (ID-2); 28 entries; normalized one-based positions cited."
+  },
+  "e3Point": "Parfum/Fragrance@28 (declared last; prominent = positions 1-27)",
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "none (no strong anionic in the formula) - C6 applies",
+      "earliestProminentCleansingSurfactant": "Sodium Methyl Cocoyl Taurate@2 (mild anionic, taurate)",
+      "coSurfactants": ["Decyl Glucoside@3 (nonionic glucoside)", "Cocamidopropyl Betaine@4 (amphoteric)", "Coco-Glucoside@11 (nonionic glucoside)"],
+      "otherAnionics": ["Coconut Acid@17 (fatty acid, neutralized to soap with Sodium Hydroxide@23; no C3 class)", "Disodium Tetrapropenyl Succinate@18 (alkenyl succinate salt; no named C3 class, read as co-surfactant/hydrotrope; immaterial to C6)"],
+      "nonCleansing": ["PEG-150 Distearate@20 (PEG thickener)"]
+    },
+    "conditioningRoutes": ["Hydrolyzed Collagen@7 (protein_film)", "Starch Hydroxypropyltrimonium Chloride@9 (cationic_polymer, prominent)", "Amodimethicone@10 (silicone, prominent = early)", "Glyceryl Oleate@12, Hydrogenated Palm Glycerides Citrate@16, Lecithin@19, Tocopherol@26, Ascorbyl Palmitate@27 (weak_refatter)", "Urea@15 (humectant)"],
+    "humectants": ["Urea@15", "Sodium Lactate@13 (pH buffer, F4; on E4 humectant list but not a C2 humectant)", "Hexylene Glycol@21 (solvent)"],
+    "actives": ["Biotin@6"],
+    "e4ComfortRoutesProminent": ["Urea@15"],
+    "e4HumectantRoutesProminent": ["Glyceryl Oleate@12", "Sodium Lactate@13", "Urea@15"],
+    "mildBase": "mild_base:Sodium Methyl Cocoyl Taurate@2, Decyl Glucoside@3, Cocamidopropyl Betaine@4, Coco-Glucoside@11 (cleansingStrength low, no strong anionic)",
+    "exposureFlags": ["Parfum/Fragrance@28 (last)", "no allergens declared", "no cooling agent"],
+    "preservatives": ["Sodium Benzoate@24", "Benzoic Acid@25"]
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Low: C6 - no strong anionic; earliest prominent cleansing surfactant is the mild anionic Sodium Methyl Cocoyl Taurate@2 with prominent glucoside/amphoteric co-surfactants (Decyl Glucoside@3, Cocamidopropyl Betaine@4).",
+      "ruleIds": ["C6", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "rationale": "Moderate: C2 is not met - early silicone Amodimethicone@10, cationic Starch Hydroxypropyltrimonium Chloride@9 and a humectant route (Urea@15) are present, but there is no pearlizing/fatty route (PEG-150 Distearate@20 is a thickener). Judged by anchors: an amino-silicone plus a light cationic starch with a collagen hydrolysate and weak refatters give noticeable but bounded care. Counter-signal: silicone + cationic + humectant + protein come close to multiple complementary systems; high is the neighbor.",
+      "ruleIds": ["C2", "5"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "cationic_polymer": ["Starch Hydroxypropyltrimonium Chloride@9"],
+        "payload_lipid": [],
+        "weak_refatter": ["Glyceryl Oleate@12", "Hydrogenated Palm Glycerides Citrate@16", "Coconut Acid@17 (fatty acid/soap, lipid-like)", "Lecithin@19", "Tocopherol@26", "Ascorbyl Palmitate@27"],
+        "silicone": ["Amodimethicone@10"],
+        "protein_film": ["Hydrolyzed Collagen@7"],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Methyl Cocoyl Taurate@2", "Decyl Glucoside@3", "Cocamidopropyl Betaine@4", "Coco-Glucoside@11"],
+        "humectantContext": ["Biotin@6 (active)", "Sodium Lactate@13", "Urea@15"],
+        "excluded": ["PEG-150 Distearate@20 (PEG thickener, 6.4)", "Hexylene Glycol@21 (solvent)", "Disodium Tetrapropenyl Succinate@18 (co-surfactant/hydrotrope)"],
+        "unresolved": ["Sodium Hydrolyzed Potato Starch Dodecenylsuccinate@8 (modified anionic starch; emulsifier/rheology or light film role not certain; carries no cationic charge, so not judged able to move the band)"]
+      },
+      "wLine": {
+        "position": 24,
+        "inci": "Sodium Benzoate",
+        "classes": ["preservative_or_capped_active"],
+        "e3Point": 28,
+        "alphabeticalRun": "none (longest ordered run 17-20, 4 entries)",
+        "skipped": ["w_line_skipped:Biotin@6 - clause (ii) failed: cleansing surfactant Coco-Glucoside@11 listed after it before the cap"],
+        "codes": [],
+        "plausibility": "Sodium Benzoate@24: (i) Sodium Methyl Cocoyl Taurate@2 before it; (ii) no cleansing surfactant, alkanolamide or pearlizing wax at 25-27",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "moderate - amino-silicone plus cationic starch plus collagen hydrolysate and several weak refatters",
+      "persistence": "moderate - amodimethicone deposits substantively (self-limiting); cationic starch and hydrolysate are light",
+      "resetCapacity": "weak - C6 low mild taurate/glucoside chassis",
+      "counterevidence": "Weak reset faces two genuine deposition families (silicone, cationic) plus protein, which argues toward high.",
+      "whyThisBand": "A plausibly persistent amino-silicone with a cationic polymer under a mild chassis leaves noticeable but bounded residue.",
+      "whyNotNeighborBand": "Not high: there is no payload lipid, no rich architecture (W-RICH not met), only one silicone (amodimethicone, self-limiting deposition) and a light cationic starch; the protein is a hydrolysate. Convergence is plausible but not strong enough for a coating conclusion. Not low: the silicone + cationic system under weak reset is too substantive to call lightweight.",
+      "confidenceLimitingFactor": "Weak reset with silicone + cationic convergence; doses unknown; the modified starch@8 role unresolved (judged immaterial).",
+      "rationale": "Moderate: amodimethicone + cationic starch under a weak reset, without lipid richness (6.6, W2).",
+      "ruleIds": ["6.3", "6.4", "6.6", "W-RICH (not met)", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "repair",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "dual_supported",
+        "moistureRoutes": ["Urea@15", "Sodium Lactate@13", "Glyceryl Oleate@12"],
+        "repairRoutes": ["Hydrolyzed Collagen@7", "Amodimethicone@10", "Starch Hydroxypropyltrimonium Chloride@9"],
+        "sharedConditioningRoutes": ["Starch Hydroxypropyltrimonium Chloride@9", "Lecithin@19", "Hydrogenated Palm Glycerides Citrate@16"],
+        "limitation": "each cluster is modest; one protein token plus amino-silicone for repair, urea-led humectants for moisture"
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "Mild chassis with comfort routes could also carry a scalp role if positioned; Biotin@6 is a hair-loss-adjacent ingredient that is never a focus route (F5).",
+      "decisionTrace": "Formula-only: claim direction null; formula dual_supported (repair: collagen + amodimethicone; moisture: urea + lactate); provisional general until positioning breaks the tie.",
+      "rationale": "Provisional general pending claims.",
+      "ruleIds": ["7.2", "7.3", "F1", "F5"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["moisture"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty.",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional regular; low cleansing allows frequent with explicit frequency wording.",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: positioning unknown. CSA met via prominent E4 comfort route Urea@15, humectant/refatting routes (Glyceryl Oleate@12, Sodium Lactate@13, Urea@15) and MB.",
+      "ruleIds": ["CSA", "MB", "E4", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active (Section 11).",
+      "ruleIds": ["11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "unresolvedNonMaterialIngredients": ["Sodium Hydrolyzed Potato Starch Dodecenylsuccinate@8 (role uncertain; anionic, judged unable to move weight or cleansing)"]
+}

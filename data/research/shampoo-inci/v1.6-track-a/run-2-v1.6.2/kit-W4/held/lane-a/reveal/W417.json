@@ -1,0 +1,28 @@
+{
+  "blindId": "W417",
+  "productName": "Dejan Garz The Foundation Shampoo (catalog: Dejan Garz Shampoo)",
+  "brand": "Dejan Garz",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Das Foundation Shampoo | Effektive Reinigung | Mein Shampoo ist ein Leichtgewicht, das mit Panthenol und Glycerin Feuchtigkeit spendet, ohne deine Kopfhaut auszutrocknen. Perfekt für alle Haartypen! Damit dein Haar genau das bekommt, was es braucht - natürliche Reinigung. | Deep Hydration | All Hair Types | Lightweight Formula | Regulates Oil Production on the Scalp | Anti Frizz | Geeignet für alle Haartypen, von dünn bis dick, für eine effektive Reinigung.",
+      "directionsVerbatim": "Eine kleine Menge Shampoo in die Hand geben, aufschäumen, auf dem ganzen Kopf verteilen, sanft in die Kopfhaut einmassieren und gründlich ausspülen. | Verwende das Shampoo bei jeder Haarwäsche, um dein Haar und deine Kopfhaut frisch und sauber zu halten."
+    },
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Sanfte & gründliche Reinigung für ein frisches Haargefühl | Rückfettender Wirkstoffkomplex schützt die Kopfhaut während der Anwendung | Befreit effektiv von Stylingrückständen & Verschmutzungen | Zero-Gravity-Conditioning-Effekt minimiert Frizz am Haaransatz | Wirkung: Pflege, leichte Kämmbarkeit, Anti-Frizz | Produkteigenschaften: vegan | Haartyp: alle Haartypen",
+      "directionsVerbatim": "Anwendung: Trage eine kleine Menge auf die Kopfhaut auf und schäume sie in kreisenden Bewegungen auf. Die Reinigung der Haarlängen während des Abspülens der Kopfhaut mit Wasser reicht aus! Anschließend ist der Conditioner Pflicht."
+    },
+    {
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Die ausbalanciert reinigende Formulierung befreit das Haar von Stylingrückständen und Verschmutzungen, ohne es zu strapazieren. | Es besitzt einen Zero-Gravity-Conditioning- Effekt, der gegen Frizz am Haaransatz wirkt. | Ein rückfettender Wirkstoff Komplex schont die Kopfhaut während der Reinigung. | sanfte & gründliche Reinigung für ein frisches Haargefühl | minimiert Frizz am Haaransatz",
+      "directionsVerbatim": "(section 'Anwendung und Gebrauch' present but empty)"
+    }
+  ]
+}

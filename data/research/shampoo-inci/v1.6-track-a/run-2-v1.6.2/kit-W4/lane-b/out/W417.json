@@ -1,0 +1,388 @@
+{
+  "blindId": "W417",
+  "lane": "lane-b",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "brand": "Dejan Garz",
+    "productName": "Dejan Garz The Foundation Shampoo",
+    "packSize": "300 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "571fec0717ab082a937b7fcadf0e886dc73b356c7d45f4c33fb1fbcde5b83742",
+    "normalization": "Packet list already one entry per ingredient; positions are normalized one-based positions (ID-2).",
+    "completeness": "complete (packet; source tier 2, identity confidence high)",
+    "e3ProminenceCutoff": "Parfum @21; prominent = positions 1-20"
+  },
+  "formulaPassReference": "out/formula-pass/W417.json (hash-pinned; not edited)",
+  "claimEvidence": [
+    "manufacturer_de (moderate): German: 'Effektive Reinigung'; 'Mein Shampoo ist ein Leichtgewicht, das mit Panthenol und Glycerin Feuchtigkeit spendet, ohne deine Kopfhaut auszutrocknen'; 'Geeignet für alle Haartypen'. English badges on the same page: 'Deep Hydration', 'Lightweight Formula', 'Regulates Oil Production on the Scalp', 'Anti Frizz'. Directions: 'Verwende das Shampoo bei jeder Haarwäsche'.",
+    "retailers (low): Stylingrückstände, rückfettender Wirkstoffkomplex, Anti-Frizz."
+  ],
+  "reconciliation": [
+    "focusPrimary provisional general -> moisture (German manufacturer claim 'Feuchtigkeit spendet', moderate; formula moisture_supported).",
+    "'Regulates Oil Production on the Scalp' is English web copy (low, E1) and not in the closed English oily list; does not qualify (noted). -> ordinary way 1.",
+    "'bei jeder Haarwäsche' is not U2 frequency wording -> regular.",
+    "cleansingStrength, conditioningLevel, weightPotential and dandruffSupport unchanged from the hash-pinned blind pass (formula-only; claims cannot move them, 3.2)."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate @2 defining anionic buffered by prominent Cocamidopropyl Betaine @3 and Coco-Glucoside @5, no reinforcing strong anionic; Salicylic Acid @7 is not a surfactant.",
+      "ruleIds": [
+        "C3",
+        "C4",
+        "C1"
+      ],
+      "counterSignal": "none material.",
+      "formulaFacts": {
+        "strongAnionicEtherSulfonate": [
+          "Sodium Laureth Sulfate @2 (defining anionic)"
+        ],
+        "strongAnionicAlkylSulfate": [],
+        "mildAnionic": [],
+        "amphoteric": [
+          "Cocamidopropyl Betaine @3 (prominent buffer)"
+        ],
+        "nonionicCleansing": [
+          "Coco-Glucoside @5 (prominent buffer)"
+        ],
+        "notCleansingNotBuffer": [
+          "Sodium Chloride @18",
+          "Salicylic Acid @7",
+          "Citric Acid @17"
+        ],
+        "reinforcingRoutes": [],
+        "c1c5c6Reading": "C1: ether-sulfate defining anionic, two prominent buffers, no reinforcing route"
+      },
+      "blindToFinal": "unchanged: formula-only property; claims may not set or move it (3.2)"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "rationale": "Moderate: a cationic pair (Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10, Quaternium-80 @12) plus light refatters (Glyceryl Oleate @8, Hydrogenated Palm Glycerides Citrate @11, Lecithin @15) and a humectant cluster (Glycerin @4, Panthenol @6, Sodium Hyaluronate @9). C2 not met (no silicone or prominent payload lipid, no pearlizer); no W-RICH. Counter-signal: two distinct cationic families plus refatters could be read as multiple complementary systems (high).",
+      "ruleIds": [
+        "Section 5 anchors",
+        "C2",
+        "W-RICH"
+      ],
+      "counterSignal": "Two cationic families plus refatters could read as multiple complementary systems (high).",
+      "formulaFacts": {
+        "cationic_polymer": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10 (prominent)"
+        ],
+        "cationic_conditioner": [
+          "Quaternium-80 @12 (prominent; 6.4 cationic hair-conditioning signal)"
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [
+          "Glyceryl Oleate @8",
+          "Hydrogenated Palm Glycerides Citrate @11",
+          "Lecithin @15",
+          "Ascorbyl Palmitate @16",
+          "Tocopherol @14 (antioxidant)"
+        ],
+        "silicone": [],
+        "pearlizing_fatty_route": [],
+        "humectants": [
+          "Glycerin @4",
+          "Panthenol @6",
+          "Sodium Hyaluronate @9"
+        ],
+        "notHumectantRoute": [
+          "Propylene Glycol @13"
+        ]
+      },
+      "blindToFinal": "unchanged: formula-only property; claims may not set or move it (3.2)"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "evidence": {
+        "cationic_polymer": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10"
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [
+          "Glyceryl Oleate @8",
+          "Hydrogenated Palm Glycerides Citrate @11",
+          "Lecithin @15",
+          "Ascorbyl Palmitate @16",
+          "Tocopherol @14"
+        ],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [
+          "Quaternium-80 @12"
+        ],
+        "reset": [
+          "Sodium Laureth Sulfate @2",
+          "Cocamidopropyl Betaine @3",
+          "Coco-Glucoside @5"
+        ],
+        "humectantContext": [
+          "Glycerin @4",
+          "Panthenol @6",
+          "Sodium Hyaluronate @9",
+          "Propylene Glycol @13"
+        ],
+        "excluded": [
+          "Salicylic Acid @7, Citric Acid @17 (acids)",
+          "Parfum @21, Hexyl Cinnamal @22, Linalool @23",
+          "Sodium Chloride @18, Sodium Benzoate @19, Potassium Sorbate @20"
+        ],
+        "unresolved": []
+      },
+      "wLineRecord": "wLine Panthenol @6 (sub1_active); cap e3Point @21; no alphabetical run; no skipped candidates; no codes; no payload_lipid present.",
+      "depositionLoad": "moderate: two cationic routes of different families (guar, Quaternium-80) plus a cluster of four weak refatters.",
+      "persistence": "moderate-to-low: Quaternium-80 and guar can be retained; the refatters are light.",
+      "resetCapacity": "moderate: C1 SLES/betaine/glucoside chassis.",
+      "counterevidence": "Toward low: no silicone, lipid or film former; every route is light and mid-list. Toward high: three deposition families (cationic_polymer, cationic_conditioner, weak_refatter).",
+      "whyThisBand": "Interacting light/moderate routes from three families plausibly leave noticeable but bounded residue.",
+      "whyNotNeighborBand": "Not low (W2): three distinct families are present, including two cationic routes (guar and Quaternium-80), so 'only weak_refatter plus humectants' or 'one light polymer' does not hold. Not high: no W-RICH (no payload lipid), no silicone, and the routes are light enough that the moderate C1 reset offsets a coating result.",
+      "confidenceLimitingFactor": "Doses of guar and Quaternium-80 unknown; low is the more realistic neighbor because all routes are light.",
+      "rationale": "Moderate: guar + Quaternium-80 + refatter cluster against moderate C1 reset.",
+      "ruleIds": [
+        "6.3",
+        "6.4",
+        "6.6",
+        "W2",
+        "W-LINE",
+        "N-ALT"
+      ],
+      "counterSignal": "Toward low: no silicone, lipid or film former; every route is light and mid-list. Toward high: three deposition families (cationic_polymer, cationic_conditioner, weak_refatter).",
+      "formulaFacts": {
+        "wLine": "Panthenol @6",
+        "wLineClasses": [
+          "sub1_active"
+        ],
+        "cap": "e3Point @21 (Parfum)",
+        "alphabeticalRun": "none",
+        "candidatesTested": [
+          "Panthenol @6: (i) SLES @2, betaine @3, Coco-Glucoside @5 before it ok; (ii) no cleansing surfactant, alkanolamide or pearlizing wax between @7 and the cap -> plausible"
+        ],
+        "skipped": [],
+        "codes": [],
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "identifiers": {
+        "formulaFingerprintSha256": "571fec0717ab082a937b7fcadf0e886dc73b356c7d45f4c33fb1fbcde5b83742",
+        "sourceTier": 2,
+        "captureDate": "not stated in the frozen packet"
+      },
+      "blindToFinal": "unchanged: weight is formula-only; claims cannot decide the band (6.5 step 5)"
+    },
+    "focusPrimary": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "neighboringAlternative": "general",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": [
+          "Glycerin @4",
+          "Panthenol @6",
+          "Sodium Hyaluronate @9",
+          "Glyceryl Oleate @8"
+        ],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10",
+          "Quaternium-80 @12",
+          "Hydrogenated Palm Glycerides Citrate @11",
+          "Lecithin @15"
+        ],
+        "limitation": "Rinse-off humectant cluster; claim also stresses cleansing."
+      },
+      "claimRole": "candidate",
+      "counterSignal": "'Effektive Reinigung' and 'Lightweight' compete; English badges are low-graded.",
+      "decisionTrace": "Claim direction moisture ('Feuchtigkeit spendet', German manufacturer, moderate). Formula moisture_supported. Route: Glycerin @4 + Panthenol @6 + Sodium Hyaluronate @9 with refatters. Decision moisture.",
+      "rationale": "Moisture: hydration claim with a moisture_supported formula (F1).",
+      "formulaFacts": null,
+      "ruleIds": [
+        "7.2",
+        "7.3",
+        "F1",
+        "CL-SRC",
+        "E1"
+      ],
+      "blindToFinal": "provisional general -> moisture (moisture claim with moisture_supported formula)"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "decisionTrace": "Empty default considered; anti-frizz/shine is English web copy or retailer (low).",
+      "rationale": "Empty: no distinct secondary positioning with an independent compatible route (Section 8, F2, F3).",
+      "counterSignal": "none",
+      "formulaFacts": [],
+      "ruleIds": [
+        "Section 8",
+        "F2",
+        "F3"
+      ],
+      "blindToFinal": "provisional [] -> []"
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Regular: no non-default trigger fires (no U2 frequency wording graded moderate/high, no D1, no dandruff claim plus active, no strong formula).",
+      "counterSignal": "none beyond losing triggers",
+      "formulaFacts": "cleansingStrength moderate (high); dandruffSupport not_supported",
+      "ruleIds": [
+        "Section 9",
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "CL-SRC"
+      ],
+      "decisionTrace": "Default regular; 'bei jeder Haarwäsche' is not U2 wording.",
+      "blindToFinal": "provisional regular -> regular"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no E2 sensitive or dry scalp claim unit graded moderate/high exists (SC1), so the product is not explicitly positioned; CSA met via prominent Panthenol @6 and humectant/refatting routes; MB not met. 'ohne deine Kopfhaut auszutrocknen' is protective (E2a).",
+      "counterSignal": "none; mildness/protective wording is not targeting (E2a)",
+      "formulaFacts": {
+        "CSA": "met via prominent E4 comfort route Panthenol @6 and humectant/refatting routes (Glycerin @4, Glyceryl Oleate @8, Sodium Hyaluronate @9)",
+        "MB": "not met: Sodium Laureth Sulfate @2 prominent strong anionic",
+        "S-SENSITIVE formula half": "comfort route Panthenol @6 -> would pass if targeted",
+        "S-DRY formula half": "humectant routes -> would pass if targeted",
+        "S-OILY formula clause": "cleansing moderate, weight moderate, conditioning moderate -> clause passes"
+      },
+      "csaRoute": "CSA met via prominent Panthenol @6 and humectant/refatting routes; MB not met.",
+      "ruleIds": [
+        "Section 10",
+        "SC1",
+        "E2a",
+        "CSA",
+        "MB"
+      ],
+      "blindToFinal": "unchanged; claims show no SC1 positioning"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no Piroctone Olamine, Climbazole or Selenium Sulfide/Disulfide; Salicylic Acid @7 alone does not count.",
+      "ruleIds": [
+        "Section 11"
+      ],
+      "counterSignal": "none (mechanical table, Section 11)",
+      "formulaFacts": [],
+      "blindToFinal": "unchanged (formula-only)"
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "moisture_supported",
+      "moistureRoutes": [
+        "Glycerin @4",
+        "Panthenol @6",
+        "Sodium Hyaluronate @9",
+        "Glyceryl Oleate @8"
+      ],
+      "repairRoutes": [],
+      "sharedConditioningRoutes": [
+        "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10",
+        "Quaternium-80 @12",
+        "Hydrogenated Palm Glycerides Citrate @11",
+        "Lecithin @15"
+      ],
+      "limitation": "Rinse-off humectant cluster; claim also stresses cleansing."
+    },
+    "claimRole": "candidate",
+    "decisionTrace": {
+      "primary": "Claim direction moisture ('Feuchtigkeit spendet', German manufacturer, moderate). Formula moisture_supported. Route: Glycerin @4 + Panthenol @6 + Sodium Hyaluronate @9 with refatters. Decision moisture.",
+      "secondary": "Empty default considered; anti-frizz/shine is English web copy or retailer (low).",
+      "usageRole": "Default regular; 'bei jeder Haarwäsche' is not U2 wording."
+    }
+  },
+  "weightRecord": "see directProperties.weightPotential (6.8 fields: evidence by family, wLineRecord/formulaFacts, subjudgments, counterevidence, whyThisBand, whyNotNeighborBand, confidence and limiting factor, neighbor)",
+  "projection": {
+    "status": "proposal_ready",
+    "thicknessFitT1": {
+      "fine": "acceptable",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFit": {
+      "fine": "acceptable",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFitConfidence": {
+      "fine": "moderate",
+      "normal": "moderate",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": " T1 with W=moderate (moderate, neighbor low) and C=moderate (moderate, neighbor high): fine acceptable, normal ideal, coarse acceptable; target ordinary -> T6 not applicable (ordinary). T4 computed from N-ALT neighbors after T6; T2: thickness/texture claims never change fit.",
+    "weight": "moderate",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: weightPotential moderate projects 1:1 to moderate; confidence = weightPotential confidence.",
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1: no qualifying E2 scalp claim unit after E2a; packet has a manufacturer/pack source -> high (13.8). 'Regulates Oil Production on the Scalp' is not a qualifying term (English list closed) and is low-graded web copy."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength moderate, D1 false -> regular. I3: neighbor none (high confidence, no I3 review).",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserListingConfidence": "moderate",
+    "deepCleanserRationale": "D2 not met: D1 false (no D1 lexicon term in name, manufacturer/pack claims or directions); not_flagged.",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [],
+    "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; lanes never see catalog ids."
+  },
+  "unresolvedMaterialIngredients": [],
+  "selfCheck": "6.11: fingerprint 571fec0717ab... matches the frozen packet; claims were hidden during the formula pass (formula-pass file hash-pinned before release); no ingredient, family count or position window assigned the weight band; W-line derived per W-LINE with every skipped candidate recorded; three subjudgments present; whyNotNeighborBand specific (W2 where it applies); confidence names its limiting factor; no comparison with earlier values inside the lane. N-ALT: every high confidence has neighbor none, every moderate/low names one neighbor. Projection derived mechanically from final properties; P0 applied where readings were uncertain.",
+  "uncertainties": [
+    "'Regulates Oil Production on the Scalp': if read as oily positioning it is still low-graded (English web page), so S-OILY would fail at positioning -> S-FAIL review. I read it as not qualifying (not in the closed English list), so ordinary way 1 without a flag.",
+    "Weight moderate vs low (neighbor low)."
+  ]
+}

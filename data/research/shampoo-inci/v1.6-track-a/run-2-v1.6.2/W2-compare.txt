@@ -1,0 +1,5 @@
+agreement 302/306 = 98.7% over 18 products
+DIFF W203 weightPotential "low" "moderate" 
+DIFF W203 fit.fine "ideal" "acceptable" tier
+DIFF W203 weight "light" "moderate" weight
+DIFF W210 focusSecondary [] ["clarifying"] 

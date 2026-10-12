@@ -1,0 +1,15 @@
+agreement 309/323 = 95.7% over 19 products
+DIFF W402 conditioningLevel "moderate" "low" 
+DIFF W402 focusPrimary "general" "shine" 
+DIFF W403 conditioningLevel "moderate" "low" 
+DIFF W406 conditioningLevel "moderate" "low" 
+DIFF W410 conditioningLevel "high" "moderate" 
+DIFF W410 fit.coarse "ideal" "acceptable" tier
+DIFF W411 weightPotential "high" "moderate" 
+DIFF W411 focusSecondary [] ["moisture"] 
+DIFF W411 fit.fine "not_suited" "acceptable" tier
+DIFF W411 fit.normal "acceptable" "ideal" tier
+DIFF W411 weight "heavy" "moderate" weight
+DIFF W414 focusPrimary "general" "scalp_active" 
+DIFF W416 focusPrimary "general" "volume" 
+DIFF W418 focusPrimary "general" "moisture" 

@@ -1,0 +1,21 @@
+{
+  "blindId": "W407",
+  "productName": "Syoss Intense Fullness Kräftigendes Shampoo (Rossmann: Shampoo Intense Fullness), 440 ml",
+  "brand": "Syoss (Henkel)",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Kräftigendes Shampoo | Intense Fullness | Tiefenpflegende Formel mit 3% Niacinamide-Volumen-Komplex, stärkt das Harr von innen. Für rundum schönes und gesund aussehendes Haar.",
+      "directionsVerbatim": "Anwendung für professionelle Ergebnisse: Sanft im nassen Haar verteilen und gründlich ausspülen"
+    },
+    {
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "SYOSS Shampoo Intense Fullness – Kräftigendes Shampoo für feines, kraftloses Haar mit Niacinamide-Volumen-Komplex Das SYOSS Intense Fullness Shampoo eignet sich für feines und kraftloses Haar und verleiht ihm Fülle mit jeder Anwendung. Es kombiniert pflegende Inhaltsstoffe mit einem 3% Niacinamide-Volumen-Komplex. Das Shampoo stärkt die Haare von innen und sorgt so für mehr Volumen. Die Formel enthält 88% Inhaltsstoffe natürlichen Ursprungs inklusive Wasser und der Flaschenkörper des Shampoos besteht aus 100% recyceltem Plastik (Kappe ausgenommen). SYOSS entwickelt mit mehr als 45 Jahren Haar-Expertise Produkte für professionelle Performance. | für dünnes, kraftloses Haar – Das Volumen Haarshampoo eignet sich für feines und kraftloses Haar, stärkt es und verleiht somit Fülle und Volumen | Fülle-Wirkung – Die pflegende Formel stärkt dünnes Haar von innen und verleiht voller aussehendes Haar mit jeder Anwendung, für schönes und gesund aussehendes Haar | Niacinamide-Volumen-Komplex – In dem Shampoo vereinen sich pflegende Inhaltsstoffe mit einem 3% Niacinamide-Volumen-Komplex, für schönes und gesund aussehendes Haar | Inhaltsstoffe natürlichen Ursprungs – Das Shampoo für feines Haar enthält 88% Inhaltsstoffe natürlichen Ursprungs, inklusive Wasser | 100% recyceltes Plastik",
+      "directionsVerbatim": "Sanft im nassen Haar verteilen und ausspülen. Nutze anschließend eine Spülung."
+    }
+  ]
+}

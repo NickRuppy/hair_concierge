@@ -1,0 +1,21 @@
+{
+  "blindId": "W213",
+  "productName": "OGX Renewing + Argan Oil of Morocco Shampoo",
+  "brand": "OGX",
+  "positioningSources": [
+    {
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Das regenerierende OGX Renewing Argan Oil of Morocco Shampoo mit wertvollem & marokkanischem Arganöl kräftigt und nährt das Haar. Darüber hinaus versorgt das Haarpflege Shampoo das Haar mit intensiver Feuchtigkeit. Zudem schützt das Shampoo mit UV Schutz für trockenes und strapaziertes Haar wirksam vor Schädigungen durch Hitze-Styling (Haarfön, Glätteisen, etc.) und UV-Strahlen. Das Arganöl Shampoo ohne sulfathaltige Tenside sorgt für kräftiges, geschmeidiges & glänzendes Haar. | regenerierende Formel – ... kräftigt und nährt das Haar ... intensive Feuchtigkeit | schützt wirksam vor UV-Strahlen – ... schützt wirksam vor Schädigungen durch Hitze-Styling (Haarfön, Glätteisen, etc.) und UV-Strahlen | Haarpflege Shampoo mit ausgewogenem pH-Wert – Das Arganöl Shampoo ohne sulfathaltige Tenside sorgt für kräftiges, geschmeidiges & glänzendes Haar",
+      "directionsVerbatim": "Shampoo großzügig im nassen Haar verteilen und bis in die Haarspitzen aufschäumen, danach gründlich ausspülen."
+    },
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Haarshampoo | Mit marrokanischem Arganöl | Nährt und belebt das Haar | Feuchtigkeitsspendend | Mit LipiPro Shield Technologie | Das OGX Argan Oil of Morocco Shampoo repariert trockenes & geschädigtes Haar. Dank der effektiven Pflegeformel können Haarschäden sichtbar bereits nach der ersten Anwendung reduziert werden. Die Formel mit patentierter LipiPro Shield Technologie schützt die Lipid- und Proteinbarriere und hinterlässt strahlendes Haar. Das Shampoo verleiht dem Haar zudem ein gepflegtes und verführerisches Ergebnis. | Textur: Lotion | Wirkung: Feuchtigkeit | Produkteigenschaften: Ohne Alkohol",
+      "directionsVerbatim": "Shampoo großzügig im nassen Haar verteilen und bis in die Haarspitzen aufschäumen, danach gründlich ausspülen. Anschließend Conditioner verwenden."
+    }
+  ]
+}

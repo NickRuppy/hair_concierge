@@ -1,0 +1,380 @@
+{
+  "blindId": "W112",
+  "phase": "final record (post-unblind reconciliation, runbook step 4)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "brand": "OGX",
+    "productName": "OGX Biotin & Collagen Shampoo (Thick & Full)",
+    "packSize": "385 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "80709619cc5b860ba314a06f5d5cb7ec58d65b853e39abdb0e5ab3414ad68db7",
+    "normalization": "'Aqua/Water/Eau' and 'Parfum/Fragrance' single entries; normalized positions = packet positions (ID-2).",
+    "completeness": "complete",
+    "formulaSourceTier": 3,
+    "identityConfidence": "high",
+    "e3ProminenceCutoff": "Parfum/Fragrance @28, listed last (prominent = positions 1-27)"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "none (no strong anionic) -> C6",
+      "earliestProminentCleansing": "Sodium Methyl Cocoyl Taurate @2 (mild anionic, taurate)",
+      "reinforcingRoutes": [],
+      "buffers": [
+        "Decyl Glucoside @3 (nonionic glucoside)",
+        "Cocamidopropyl Betaine @4 (amphoteric)",
+        "Coco-Glucoside @11 (nonionic glucoside)"
+      ],
+      "notCleansing": [
+        "PEG-150 Distearate @20 (PEG thickener)",
+        "Coconut Acid @17 (free fatty acid; no C3 class)",
+        "Disodium Tetrapropenyl Succinate @18 (alkenyl succinate, no C3 class; function unresolved)"
+      ]
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": [
+        "Starch Hydroxypropyltrimonium Chloride @9 (prominent)"
+      ],
+      "silicone": [
+        "Amodimethicone @10 (prominent)"
+      ],
+      "protein_film": [
+        "Hydrolyzed Collagen @7"
+      ],
+      "weak_refatter": [
+        "Glyceryl Oleate @12",
+        "Hydrogenated Palm Glycerides Citrate @16",
+        "Lecithin @19",
+        "Ascorbyl Palmitate @27"
+      ],
+      "payload_lipid": [],
+      "pearlizingFattyRoute": [],
+      "humectants": [
+        "Sodium Lactate @13 (E4 humectant; not a C2 deliberate route)",
+        "Urea @15 (C2 list)"
+      ]
+    },
+    "actives": [
+      "Biotin @6"
+    ],
+    "exposure": {
+      "fragrance": "Parfum/Fragrance @28 (last); no declared allergens",
+      "essentialOils": [],
+      "coolingAgents": [],
+      "otherNotes": "Hexylene Glycol @21 solvent"
+    },
+    "wLine": {
+      "cap": "e3Point Parfum/Fragrance @28",
+      "wLine": "Sodium Benzoate @24",
+      "wLineClasses": [
+        "preservative_or_capped_active"
+      ],
+      "skippedCandidates": [
+        "w_line_skipped:Biotin@6 - clause (ii) failed: Coco-Glucoside @11 (cleansing surfactant) listed after it before the cap"
+      ],
+      "alphabeticalRun": "none (longest ascending run 17-20, 4 entries)",
+      "codes": [],
+      "plausibility": "Sodium Benzoate @24: (i) taurate @2 before; (ii) entries 25-27 contain no cleansing surfactant, alkanolamide or pearlizing wax",
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": []
+    },
+    "csaListedProminentRoutes": [
+      "Glyceryl Oleate @12 (humectant/refatting)",
+      "Sodium Lactate @13 (humectant)",
+      "Urea @15 (comfort + humectant)"
+    ],
+    "mildBase": "met: mild_base:Sodium Methyl Cocoyl Taurate @2, Decyl Glucoside @3, Cocamidopropyl Betaine @4, Coco-Glucoside @11 (cleansingStrength low; no prominent strong anionic)"
+  },
+  "unresolvedMaterialIngredients": [
+    "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate @8 - weight role unresolved (anionic modified starch); judged not band-moving, recorded",
+    "Disodium Tetrapropenyl Succinate @18 - function unresolved (no C3 class); not counted as a cleansing surfactant for W-LINE (R2 clarification: an ingredient in no C3 class is not a cleansing surfactant)"
+  ],
+  "claimEvidence": [
+    "All German claims are retailer copy (low); the US manufacturer page is manufacturer_foreign (low, E1).",
+    "Retailer (low): 'Hinterlässt Volumen und ein seidiges Gefühl', 'bis zu 72 Stunden ... mehr Volumen', 'für feines & dünnes Haar', 'für die tägliche Haarwäsche ... geeignet' (low, cannot fire U2), 'Nährt das Haar'.",
+    "Product name 'OGX Biotin & Collagen Shampoo' names ingredients only (no focus word); 'Thick & Full' appears in retailer titles only.",
+    "No scalp claim unit; 'dünnes Haar' is a cosmetic fullness claim, not a hair-loss claim.",
+    "ID-3: 'Biotin' @6, 'Collagen' @7 present; 'Weizenprotein'/'hydrolysiertes Weizenprotein' (retailer) has no INCI match -> conflict, not material (a protein_film family is already present via Hydrolyzed Collagen @7, so adding a hydrolyzed protein cannot change a property or gate); 'LipiPro Shield' unmapped technology - note only."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Low: no strong anionic; the earliest prominent cleansing surfactant is the mild anionic Sodium Methyl Cocoyl Taurate @2 with prominent glucoside (Decyl Glucoside @3) and amphoteric (Cocamidopropyl Betaine @4) co-surfactants (C3, C4, C6).",
+      "ruleIds": [
+        "C3",
+        "C4",
+        "C6"
+      ],
+      "counterSignal": "None material (C6 clear).",
+      "formulaPassValue": "low",
+      "formulaPassConfidence": "high"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "rationale": "Moderate: two meaningful systems are present - prominent amodimethicone @10 and cationic starch @9 - with collagen @7, Urea @15 and weak refatters. C2 is not met: no pearlizing/fatty route (PEG-150 Distearate is a thickener). Both depositing agents sit after Biotin @6 (a typical trace active), so their share is likely small and the high anchor's 'substantial softness/slip' is not established; high is the realistic neighbor because silicone + cationic are complementary systems.",
+      "ruleIds": [
+        "Section 5",
+        "C2",
+        "N-ALT"
+      ],
+      "counterSignal": "Silicone + cationic could be read as multiple complementary systems (high).",
+      "formulaPassValue": "moderate",
+      "formulaPassConfidence": "moderate"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "cationic_polymer": [
+          "Starch Hydroxypropyltrimonium Chloride @9"
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [
+          "Glyceryl Oleate @12",
+          "Hydrogenated Palm Glycerides Citrate @16",
+          "Coconut Acid @17 (free fatty acid; recorded here as a weak refatter, not payload)",
+          "Lecithin @19",
+          "Ascorbyl Palmitate @27"
+        ],
+        "silicone": [
+          "Amodimethicone @10"
+        ],
+        "protein_film": [
+          "Hydrolyzed Collagen @7"
+        ],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": [
+          "Sodium Methyl Cocoyl Taurate @2",
+          "Decyl Glucoside @3",
+          "Cocamidopropyl Betaine @4",
+          "Coco-Glucoside @11"
+        ],
+        "humectantContext": [
+          "Sodium Lactate @13",
+          "Urea @15",
+          "Hexylene Glycol @21 (solvent)"
+        ],
+        "excluded": [
+          "PEG-150 Distearate @20 (PEG thickener, 6.4)",
+          "Biotin @6 (vitamin)",
+          "Tocopherol @26 (antioxidant)"
+        ],
+        "unresolved": [
+          "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate @8 (anionic hydrophobically modified starch; emulsifier/stabilizer or film role not resolvable from INCI; carries no cationic charge, so not judged band-moving)",
+          "Disodium Tetrapropenyl Succinate @18 (alkenyl succinate salt; function unresolved; no deposition role expected)"
+        ]
+      },
+      "depositionLoad": "moderate - amodimethicone plus cationic starch plus collagen",
+      "persistence": "moderate - amodimethicone is substantive, but both depositors sit after the trace active Biotin @6",
+      "resetCapacity": "weak - mild taurate/glucoside/betaine chassis",
+      "counterevidence": "Two persistent families (amino-silicone, cationic polymer) converge and the mild chassis gives weak reset - argues toward high.",
+      "whyThisBand": "Silicone + cationic plausibly leave noticeable residue, more so with a mild chassis, but the amounts look small.",
+      "whyNotNeighborBand": "Not high: the two converging systems both sit after Biotin @6 (trace zone), there is no material payload lipid (so no W-RICH) and no film former; the deposition load is plausibly bounded. Not low: two persistent families with weak reset make 'lightweight' an understatement (W2). W1 not applicable (mild C6 chassis).",
+      "confidenceLimitingFactor": "Depositor shares unknown; weak reset; two unresolved minor ingredients",
+      "rationale": "Moderate: amodimethicone + cationic starch with weak reset, but small amounts and no rich lipid architecture (6.6, W2, W1 n/a). Neighbor high.",
+      "ruleIds": [
+        "6.3",
+        "6.6",
+        "W1",
+        "W2",
+        "W3",
+        "N-ALT"
+      ],
+      "counterSignal": "Two persistent families with weak reset argue high.",
+      "formulaPassValue": "moderate",
+      "formulaPassConfidence": "moderate",
+      "wLineRecord": {
+        "cap": "e3Point Parfum/Fragrance @28",
+        "wLine": "Sodium Benzoate @24",
+        "wLineClasses": [
+          "preservative_or_capped_active"
+        ],
+        "skippedCandidates": [
+          "w_line_skipped:Biotin@6 - clause (ii) failed: Coco-Glucoside @11 (cleansing surfactant) listed after it before the cap"
+        ],
+        "alphabeticalRun": "none (longest ascending run 17-20, 4 entries)",
+        "codes": [],
+        "plausibility": "Sodium Benzoate @24: (i) taurate @2 before; (ii) entries 25-27 contain no cleansing surfactant, alkanolamide or pearlizing wax",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      }
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "neighboringAlternative": "volume",
+      "careDirection": {
+        "verdict": "dual_supported",
+        "moistureRoutes": [
+          "Urea @15",
+          "Sodium Lactate @13",
+          "Glyceryl Oleate @12"
+        ],
+        "repairRoutes": [
+          "Hydrolyzed Collagen @7",
+          "Amodimethicone @10",
+          "Starch Hydroxypropyltrimonium Chloride @9"
+        ],
+        "sharedConditioningRoutes": [
+          "Starch Hydroxypropyltrimonium Chloride @9",
+          "Lecithin @19"
+        ],
+        "limitation": "Verdict recorded blind"
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Retailer volume/nourishing claims exist but are graded low.",
+      "decisionTrace": "Primary: claim direction volume/nourishment only from low-graded sources; a low claim may act as candidate only when the formula verdict independently supports that focus - volume is not supported (weightPotential moderate, neighbor high, amodimethicone) and a low claim can never be a tie_breaker for the dual verdict (CL-SRC); decision general.",
+      "rationale": "General: no in-scope claim of sufficient grade (CL-SRC).",
+      "ruleIds": [
+        "7.2",
+        "CL-SRC"
+      ],
+      "formulaPassValue": "general"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "volume"
+      ],
+      "decisionTrace": "Empty default.",
+      "rationale": "Empty.",
+      "ruleIds": [
+        "8",
+        "F2",
+        "F3"
+      ],
+      "formulaPassValue": []
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Regular: default; no moderate/high frequency wording (U2), reset intent (U4), D1 or dandruff claim (U3) in the revealed sources.",
+      "ruleIds": [
+        "9",
+        "U1",
+        "U2",
+        "CL-SRC"
+      ],
+      "formulaPassValue": "regular"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no E2 scalp claim unit; formula half (listed routes and MB) would be met but positioning is absent.",
+      "ruleIds": [
+        "10",
+        "SC1",
+        "CSA",
+        "MB",
+        "E2",
+        "E2a",
+        "E4"
+      ],
+      "formulaPassValue": "not_targeted"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active (Section 11).",
+      "ruleIds": [
+        "11"
+      ],
+      "counterSignal": "None.",
+      "formulaPassValue": "not_supported",
+      "formulaPassConfidence": "high"
+    }
+  },
+  "reconciliation": [
+    "focusPrimary general confirmed; low -> moderate (claims low-graded).",
+    "usageRole regular, scalpComfortTarget not_targeted confirmed (low -> high).",
+    "Formula properties unchanged; wheat-protein conflict recorded as a non-material note (ID-3)."
+  ],
+  "projection": {
+    "status": "proposed_blocked_by_review_flags",
+    "thicknessFit": {
+      "fine": "acceptable",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFitConfidence": {
+      "fine": "moderate",
+      "normal": "moderate",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": "T1 with W=moderate (moderate, neighbor high) and C=moderate (moderate, neighbor high): fine acceptable, normal ideal, coarse acceptable; ordinary target, T6 not applicable; T4 checked against N-ALT neighbors after T6 (T2: thickness/texture claims not used).",
+    "weight": "moderate",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: weightPotential moderate -> moderate, written to every row; confidence = weightPotential confidence.",
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "moderate",
+        "rationale": "S-ORDINARY way 1: no qualifying E2 claim unit; German sources are retailer copy only (the foreign manufacturer page is graded like retailer copy) -> moderate (13.8)."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "gentle",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength low, D1 False -> gentle. I3: neighbor none; normal expects regular; no I3 flag (neighbor none, or current intensity already differs / neighbor matches equally).",
+    "explicitResetPositioning": false,
+    "explicitResetEvidence": "No D1 stem (tiefenrein, deep clean, clarifying shampoo, detox-reinigung) in the name, manufacturer/pack claims or directions; no occasional-use directions.",
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRecord": null,
+    "deepCleanserListingConfidence": "high",
+    "deepCleanserRationale": "D1 false -> not_flagged (D2).",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "moderate",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "moderate",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "moderate",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine",
+      "review_thickness_boundary:normal"
+    ],
+    "informationalNotes": [],
+    "catalogDependent": "review_live_value_differs and the deep-cleanser record id are resolved by the orchestrator after freeze; the lane sees no catalog values."
+  },
+  "selfCheck": "6.11/selfCheck: fingerprint copied from and equal to the frozen stage-A packet; claims hidden during the formula pass (formula-pass file unchanged, hash-pinned); no ingredient, family count or position window assigned the weight band (W-line used only to gate payload_lipid legs); W-line derived per W-LINE with skipped candidates recorded; depositionLoad/persistence/resetCapacity present; whyNotNeighborBand specific; N-ALT neighbors consistent with confidence; projection computed mechanically from final properties; no comparison with earlier or live values inside the lane.",
+  "uncertainties": [
+    "Conditioning moderate vs high: silicone + cationic could be read as 'multiple complementary systems'; moderate chosen because C2 fails (no pearlizing/fatty route) and both depositors follow a trace active.",
+    "Coconut Acid @17 recorded as weak refatter (free fatty acid, not in 6.3 payload list).",
+    "Ordinary confidence moderate: the US manufacturer page is treated as not counting as a manufacturer source for 13.8 (it is graded low like retailer copy, E1)."
+  ]
+}

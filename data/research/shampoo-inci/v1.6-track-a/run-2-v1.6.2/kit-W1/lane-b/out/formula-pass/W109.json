@@ -1,0 +1,141 @@
+{
+  "blindId": "W109",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, Section 3.1)",
+  "policyId": "shampoo-classification-v1.6.2",
+  "inciFingerprintSha256": "20cb4c26791b1441afb3fa4d89877d1d0247cdd726fe68a236ee26b5caf09067",
+  "formulaPacket": {
+    "packSize": "350 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 3,
+    "identityConfidence": "high",
+    "normalization": "22 entries as frozen; no split synonyms; normalized one-based positions cited (ID-2)."
+  },
+  "e3Point": "Parfum@4 (prominent = positions 1-3)",
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "Sodium Laureth Sulfate@2 (strong anionic, ether/sulfonate type)",
+      "reinforcingRoutes": [],
+      "buffers": [],
+      "nonProminentSurfactants": ["Cocamidopropyl Betaine@5 (amphoteric, directly after Parfum@4; recorded, not a buffer under C4)"],
+      "nonCleansing": ["Sodium Xylenesulfonate@6 (hydrotrope)"]
+    },
+    "conditioningRoutes": ["none substantive", "Hydroxypropyl Methylcellulose@13 (nonionic cellulose thickener, not conditioning)"],
+    "humectants": [],
+    "actives": [],
+    "e4ComfortRoutesProminent": [],
+    "e4HumectantRoutesProminent": [],
+    "mildBase": "not met: Sodium Laureth Sulfate@2 prominent strong anionic; cleansingStrength strong",
+    "exposureFlags": ["Parfum@4 (very early, high fragrance load)", "Limonene@10", "Citrus Aurantium Peel Oil@11 (essential oil)", "Hexamethylindanopyran@14", "Linalool@15", "Dimethyl Phenethyl Acetate@16", "Hexyl Cinnamal@19", "Geranyl Acetate@20"],
+    "otherIngredients": ["Citric Acid@7, Sodium Citrate@9 (pH)", "Sodium Benzoate@8, Sodium Salicylate@12 (preservatives)", "Tetrasodium EDTA@18 (chelator)", "Histidine@21", "Glyoxal@22 (HPMC dispersion aid)"]
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Strong: C1 - defining anionic Sodium Laureth Sulfate@2 with no prominent buffer (Parfum@4 is the E3 point; Cocamidopropyl Betaine@5 is after it and does not count, C4). Counter-signal: the betaine sits directly after an unusually early Parfum, so a real buffering effect is plausible; confidence moderate, neighbor moderate.",
+      "ruleIds": ["C1", "C3", "C4", "E3"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Low: cleansing-led architecture with no cationic polymer, silicone, lipid, refatter, protein or humectant; Hydroxypropyl Methylcellulose@13 is a thickener.",
+      "ruleIds": ["5"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "evidence": {
+        "cationic_polymer": [],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate@2", "Cocamidopropyl Betaine@5 (non-prominent)"],
+        "humectantContext": [],
+        "excluded": ["Hydroxypropyl Methylcellulose@13 (nonionic cellulose thickener, no cationic charge, no film role in rinse-off)", "Glyoxal@22 (processing aid)", "Citrus Aurantium Peel Oil@11 (fragrance oil, 6.4)", "Sodium Xylenesulfonate@6 (hydrotrope)", "fragrance materials"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 4,
+        "inci": "Parfum",
+        "classes": ["fragrance"],
+        "e3Point": 4,
+        "alphabeticalRun": "none",
+        "skipped": [],
+        "codes": [],
+        "plausibility": "(i) Sodium Laureth Sulfate@2 before it; (ii) nothing between 4 and cap 4",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light - no deposition family",
+      "persistence": "low",
+      "resetCapacity": "strong - unbuffered (by C4) ether-sulfate chassis",
+      "counterevidence": "none",
+      "whyThisBand": "No depositing system; strong reset.",
+      "whyNotNeighborBand": "Not moderate: no cationic, silicone, lipid, refatter, protein or film former is present.",
+      "confidenceLimitingFactor": "none material",
+      "rationale": "Low: deposition absent (6.6).",
+      "ruleIds": ["6.3", "6.6"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "clarifying",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [],
+        "limitation": "no care route at all; repair/moisture not formula-supported"
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "Strong, low-conditioning, low-weight formula is F6-compatible with clarifying or volume if positioned.",
+      "decisionTrace": "Formula-only: claim direction null; formula compatible with clarifying (F6: strong, C low, W low) or volume; provisional general.",
+      "rationale": "Provisional general pending claims.",
+      "ruleIds": ["7.2", "F6"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["volume"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty.",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "alternating",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional regular. Strong formula: alternating with a moderate/high reset-intent claim (U4); occasional_reset if D1.",
+      "ruleIds": ["9", "U4"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional not_targeted: CSA not met - no prominent E4 comfort or humectant route and no MB. Counter-signals: strong cleansing, very early Parfum, citrus peel oil.",
+      "ruleIds": ["CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active (Section 11); Sodium Salicylate@12 is a preservative, not an active.",
+      "ruleIds": ["11"]
+    }
+  },
+  "unresolvedMaterialIngredients": []
+}

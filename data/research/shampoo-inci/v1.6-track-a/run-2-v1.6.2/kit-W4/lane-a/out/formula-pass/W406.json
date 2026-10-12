@@ -1,0 +1,232 @@
+{
+ "blindId": "W406",
+ "inciFingerprintSha256": "ea15e539c6477bb039c7ba86cf7ceb1d8bcc429a2f5fe581850cd59e14e15b7c",
+ "lane": "lane-a",
+ "phase": "1-blind-formula-pass",
+ "policyId": "shampoo-classification-v1.6.2",
+ "formulaBlock": {
+  "packSize": "250 ml",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high",
+  "normalization": "Packet list already normalized (synonym variants are single entries); positions cited are normalized one-based positions (ID-2), identical to the packet order.",
+  "normalizedInci": [
+   "1. Aqua",
+   "2. Sodium Laureth Sulfate",
+   "3. Cocamidopropyl Betaine",
+   "4. Sodium Chloride",
+   "5. Piroctone Olamine",
+   "6. Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+   "7. Citric Acid",
+   "8. Sodium Benzoate",
+   "9. Maris Sal (Dead Sea Salt)",
+   "10. Potassium Sorbate",
+   "11. Glycerin",
+   "12. Melaleuca Alternifolia (Tea Tree) Leaf Oil",
+   "13. Limonene",
+   "14. Aloe Barbadensis Leaf Juice Powder",
+   "15. Lactic Acid",
+   "16. Citrus Limon Peel Oil",
+   "17. Citrus Sinensis Peel Oil Expressed",
+   "18. Litsea Cubeba Fruit Oil",
+   "19. Silt"
+  ],
+  "e3Point": "No Parfum declared (Limonene and essential oils are not the marker); preservative fallback Sodium Benzoate@8; prominent = positions 1-7"
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`moderate` by C1: defining anionic Sodium Laureth Sulfate@2, prominent buffer Cocamidopropyl Betaine@3, no reinforcing strong anionic. Maris Sal@9 and Silt@19 are salt/mineral, not routes (C3).",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "E3"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "`moderate`: one meaningful conditioning system — prominent cationic Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@6 — with a late humectant (Glycerin@11). C2 not met (no early silicone, no payload lipid, no pearlizing route). Neighbor `low`: the guar is the only slip route in a short cleansing-led formula.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "cationic_polymer": [
+     "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@6"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "anionic: Sodium Laureth Sulfate@2",
+     "amphoteric: Cocamidopropyl Betaine@3"
+    ],
+    "humectantContext": [
+     "Glycerin@11",
+     "Aloe Barbadensis Leaf Juice Powder@14 (plant juice)"
+    ],
+    "excluded": [
+     "Melaleuca Alternifolia (Tea Tree) Leaf Oil@12, Citrus Limon Peel Oil@16, Citrus Sinensis Peel Oil Expressed@17, Litsea Cubeba Fruit Oil@18 (essential oils, 6.4)",
+     "Maris Sal@9, Sodium Chloride@4 (salts)",
+     "Silt@19 (mineral mud; not a deposition family)",
+     "Lactic Acid@15, Citric Acid@7 (acids)"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": "5 Piroctone Olamine",
+    "candidateClasses": [
+     "preservative_or_capped_active"
+    ],
+    "cap": "e3Point 8 (Sodium Benzoate, preservative fallback)",
+    "alphabeticalRun": "none",
+    "skipped": [],
+    "testedCandidate": "Piroctone Olamine@5: (i) Sodium Laureth Sulfate@2 before it; (ii) entries 6-7 (HP guar, Citric Acid) contain no cleansing surfactant, alkanolamide or pearlizing wax -> plausible",
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "light — a single cationic guar.",
+   "persistence": "low — no silicone, lipid, protein or film former.",
+   "resetCapacity": "moderate — C1 ether-sulfate chassis with a betaine buffer.",
+   "counterevidence": "The guar is prominent (@6, before Citric Acid) and can deposit as a coacervate.",
+   "whyThisBand": "One light conditioning polymer facing an effective ordinary reset (6.6 low anchor).",
+   "whyNotNeighborBand": "Not `moderate`: single deposition family, nothing converges (W2 not triggered); essential oils are fragrance materials, not payload; the buffered sulfate reset offsets one guar.",
+   "confidenceLimitingFactor": "guar dose/charge density unknown.",
+   "rationale": "`low`: single light cationic route under a moderate reset (6.6).",
+   "ruleIds": [
+    "6.6",
+    "6.4",
+    "W-LINE",
+    "W2",
+    "N-ALT"
+   ]
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "low",
+   "neighboringAlternative": "scalp_active",
+   "provisional": true,
+   "careDirection": {
+    "verdict": "not_applicable (provisional)",
+    "moistureRoutes": [
+     "Glycerin@11"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@6"
+    ],
+    "limitation": "recognized dandruff active present; scalp_active depends on a dandruff claim at reveal"
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Claims are hidden in the blind pass; focus is claim-led (7.2) and cannot be set from the formula alone.",
+   "decisionTrace": "Blind pass: claim direction null (hidden). Placeholder `general` (7.1 honest fallback) until reveal; formula routes recorded for reconciliation (3.2).",
+   "rationale": "Provisional (formula-only): `general` because no claim is visible; the formula care-direction verdict is recorded before claims (7.3) and the neighbor names the most plausible formula-compatible focus.",
+   "ruleIds": [
+    "3.1",
+    "7.2",
+    "7.3",
+    "F1",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "low",
+   "neighboringAlternative": [
+    "clarifying"
+   ],
+   "provisional": true,
+   "decisionTrace": "Blind pass: empty default considered; no distinct positioning visible (claims hidden), so no secondary can be selected (Section 8).",
+   "rationale": "Provisional (formula-only): `[]` — Section 8 requires distinct exact-product positioning, which is hidden in the blind pass.",
+   "ruleIds": [
+    "3.1",
+    "8",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "low",
+   "neighboringAlternative": "treatment",
+   "provisional": true,
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Provisional (formula-only): default `regular` (Section 9); every non-default trigger needs a moderate/high-graded claim or direction, all hidden in the blind pass. cleansingStrength `moderate` fixes which triggers remain possible: `treatment` fires only with a moderate/high-graded E2 dandruff claim (U3) — Piroctone Olamine present; `alternating` impossible (not strong).",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "CL-SRC"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "csaRoute": "none",
+   "mildBase": "excluded — Sodium Laureth Sulfate@2 is a prominent strong anionic",
+   "rationale": "`not_targeted`, decided by the formula: CSA FAILS — no E4 comfort route and no E4 humectant/refatting route is prominent (Glycerin@11 is after the Sodium Benzoate@8 E3 point; no panthenol, allantoin or payload lipid). MB: excluded — Sodium Laureth Sulfate@2 is a prominent strong anionic. Without a listed prominent route and without MB, even an explicitly positioned product is `not_targeted` (Section 10), so positioning cannot change the value; a sensitive/dry claim at reveal would trigger S-FAIL with the missing route named.",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "MB",
+    "E3",
+    "E4"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`supported`: complete INCI contains Piroctone Olamine@5 (Section 11 table). Formula-only property; a dandruff target additionally needs a dandruff claim (S-DANDRUFF, R17.3).",
+   "ruleIds": [
+    "11",
+    "ID-1"
+   ]
+  }
+ },
+ "formulaFacts": {
+  "surfactants": [
+   "Sodium Laureth Sulfate@2 strong anionic ether type (defining)",
+   "Cocamidopropyl Betaine@3 amphoteric (buffer)"
+  ],
+  "conditioningRoutes": [
+   "cationic: Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@6",
+   "humectant: Glycerin@11"
+  ],
+  "comfortRoutes": "E4 comfort list: none; E4 humectant/refatting: Glycerin@11 (not prominent)",
+  "actives": [
+   "Piroctone Olamine@5 (recognized anti-dandruff active)",
+   "Maris Sal@9",
+   "Silt@19"
+  ],
+  "exposureFlags": [
+   "no Parfum; essential oils Tea Tree Leaf Oil@12, Citrus Limon Peel Oil@16, Citrus Sinensis Peel Oil@17, Litsea Cubeba Fruit Oil@18 (non-prominent)",
+   "Limonene@13"
+  ],
+  "preservatives": [
+   "Sodium Benzoate@8",
+   "Potassium Sorbate@10"
+  ]
+ },
+ "unresolvedMaterialIngredients": [],
+ "notes": []
+}
