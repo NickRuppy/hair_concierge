@@ -96,10 +96,14 @@ export function getPersonalPlanNewBuyerCohortCutoff(
 }
 
 /**
- * Server-owned, fail-closed rollout boundary for the Hair Tools domain. Browser
- * answers and query parameters never grant access: the only inputs are this
- * environment value and the `profiles.is_admin` identity. Case-sensitive: only
- * a trimmed exact value is accepted, everything else resolves to "off".
+ * Server-owned rollout boundary for the Hair Tools domain. Browser answers and
+ * query parameters never grant access: the only inputs are this environment
+ * value and the `profiles.is_admin` identity.
+ *
+ * Rev. 6 (2026-10-11): the rollout DEFAULTS TO ON. Unset or empty resolves to
+ * "all"; the trimmed exact value "off" is the emergency switch and "admin" the
+ * admin-only stage; any other string (case-sensitive, so also "OFF", "false")
+ * resolves to "all" as well.
  */
 export const PERSONAL_PLAN_TOOLS_ROLLOUT_VALUES = ["off", "admin", "all"] as const
 export type PersonalPlanToolsRollout = (typeof PERSONAL_PLAN_TOOLS_ROLLOUT_VALUES)[number]
@@ -108,9 +112,8 @@ export function resolvePersonalPlanToolsRollout(
   environment: PersonalPlanAppReleaseEnvironment = process.env,
 ): PersonalPlanToolsRollout {
   const value = environment.PERSONAL_PLAN_TOOLS_ROLLOUT?.trim()
-  return PERSONAL_PLAN_TOOLS_ROLLOUT_VALUES.includes(value as PersonalPlanToolsRollout)
-    ? (value as PersonalPlanToolsRollout)
-    : "off"
+  if (value === "off" || value === "admin") return value
+  return "all"
 }
 
 export function canAccessPersonalPlanTools(input: {

@@ -13,11 +13,13 @@ function resolve(value: string | undefined) {
   )
 }
 
-test("off is the default and every invalid value fails closed", () => {
+test("Rev. 6: on (all) is the default; only `off` switches it off and `admin` stages it", () => {
   for (const value of [undefined, "", "1", "true", "ALL", "ADMIN", "Admin", "on", "internal"]) {
-    assert.equal(resolve(value), "off", `${String(value)} must fail closed`)
+    assert.equal(resolve(value), "all", `${String(value)} resolves to all`)
   }
   assert.equal(resolve("all"), "all")
+  assert.equal(resolve("off"), "off")
+  assert.equal(resolve(" off "), "off", "surrounding whitespace is trimmed")
   assert.equal(resolve("admin"), "admin")
   assert.equal(resolve(" admin "), "admin", "surrounding whitespace is trimmed, case is not")
 })
@@ -58,8 +60,8 @@ async function withRollout<T>(value: string | undefined, run: () => Promise<T>):
   }
 }
 
-test("unset, off and ALL never enable tools and never read the identity", async () => {
-  for (const value of [undefined, "off", "ALL", "true"]) {
+test("off never enables tools and never reads the identity", async () => {
+  for (const value of ["off", " off "]) {
     const { client, reads } = adminClient(true)
     assert.equal(
       await withRollout(value, () => isPersonalPlanToolsEnabledForUser("u", client)),
@@ -69,9 +71,16 @@ test("unset, off and ALL never enable tools and never read the identity", async 
   }
 })
 
-test("all enables tools for everyone", async () => {
-  const { client } = adminClient(false)
-  assert.equal(await withRollout("all", () => isPersonalPlanToolsEnabledForUser("u", client)), true)
+test("all — and an unset or unknown value — enables tools for everyone without an identity read", async () => {
+  for (const value of ["all", undefined, "", "ALL", "true"]) {
+    const { client, reads } = adminClient(false)
+    assert.equal(
+      await withRollout(value, () => isPersonalPlanToolsEnabledForUser("u", client)),
+      true,
+      String(value),
+    )
+    assert.equal(reads(), 0)
+  }
 })
 
 test("admin enables tools only for profiles.is_admin", async () => {
