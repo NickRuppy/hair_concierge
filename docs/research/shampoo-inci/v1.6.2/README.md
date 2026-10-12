@@ -16,7 +16,7 @@ Status: **LOCKED v1.6.2 (2026-10-12, Nick's decision after the test round: "yes 
 | File | Purpose |
 | --- | --- |
 | [`classification-standard.md`](./classification-standard.md) | The normative locked standard: the full v1.6.1 text plus the v1.6.2 changes (marked "(v1.6.2)"). Self-contained. |
-| [`rule-changes.md`](./rule-changes.md) | Rows 138–143, every change from v1.6.1, with its source and whether it could change a live value. Rows 1–137 stay in the v1.6 and v1.6.1 ledgers. |
+| [`rule-changes.md`](./rule-changes.md) | Rows 138–144, every change from v1.6.1, with its source and whether it could change a live value. Rows 1–137 stay in the v1.6 and v1.6.1 ledgers. |
 | [`runbook.md`](./runbook.md) | How to research a new German shampoo under v1.6.2: the v1.6.1 procedure with version and path references updated. |
 
 ## Authority
@@ -33,6 +33,7 @@ Status: **LOCKED v1.6.2 (2026-10-12, Nick's decision after the test round: "yes 
 - **Closed-list batch decided.** No ingredient is added to any list; six candidates are rejected for lack of rinse-off evidence.
 - **Laureth-9 = Polidocanol.** The listed comfort ingredient is now also recognised under its INCI name.
 - **Evidence boundary.** The lists and MB are plausibility filters, not proof of soothing; research never supports "soothes" in user copy.
+- **Review fix (row 144).** MB reads surfactant prominence under C4, so a fragrance-free, preservative-marker-free sulfate formula cannot pass as a mild base. Applied before publication after the Codex branch review; no Track A product is affected.
 
 ## Test-round evidence
 

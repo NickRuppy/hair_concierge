@@ -21,8 +21,8 @@ const LINEAGE_STANDARD_PATH = "docs/research/shampoo-inci/v1.6/classification-st
 // to the manifest or the normative standard must also change these constants: a visible,
 // reviewable test edit. The v1.6.1 base (and its v1.6 lineage) are anchored by their own lock
 // tests and again here, so v1.6.2 can never be produced by editing a frozen base.
-const MANIFEST_SHA256 = "454ebfa8a608ee7443bd98a3c8a189064bcd19ed9f94643d4056f5f6d205c803"
-const NORMATIVE_STANDARD_SHA256 = "ec8ffbaaaacc4e02abddac4c648e266bd96aa66ecac62070785ebe7812d804ef"
+const MANIFEST_SHA256 = "0fd87f2b93a9426d45da11f9bc496bda80f2eb77c4b710b35dfdf79263b15391"
+const NORMATIVE_STANDARD_SHA256 = "c490b3c5a002ba98aa66122f6f44c78782b2eef9dfc75ce33d9fe48aeada71a6"
 const BASE_STANDARD_SHA256 = "8bd97d31b433109e0bc79738163a41b3e644de9ab3e7312948ecaddea23d0a29"
 const LINEAGE_STANDARD_SHA256 = "3b70a145e23e381f5c83ded0092d86d9642ddb7f570dfc9d7414a843659baf98"
 
@@ -236,7 +236,9 @@ test("the v1.6.2 lock receipt is consistent with the manifest, the standard and 
       ["A43", "research_only_variance"],
     ],
   )
-  assert.deepEqual(receipt.post_test_rulings.rule_changes, [])
+  assert.deepEqual(receipt.post_test_rulings.rule_changes, [
+    "144 (review fix before publication, stricter only, no tested value affected)",
+  ])
   assert.equal(receipt.post_test_rulings.recalibrated, false)
   assert.ok(receipt.post_test_rulings.applied.some((entry) => entry.startsWith("A21 ")))
 

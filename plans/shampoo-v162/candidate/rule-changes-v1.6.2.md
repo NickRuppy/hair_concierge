@@ -18,6 +18,7 @@ Expected movers come from a mechanical screen of the 73 Track A packets (sensiti
 | 141 | 13.3 E4, 5 C2, 10 CSA | R16.4 closed-list batch resolved with no additions; six candidates rejected by name with the evidence path; a later addition needs a new version. | R18.3 | No |
 | 142 | 13.3 E4 | `Polidocanol` (INCI `Laureth-9`, the same substance) on the comfort list. Lanes previously flagged `Laureth-9` as an unlisted candidate. | R18.3 | Possibly: a product whose only prominent comfort route is `Laureth-9` now passes; Track A: none (A40 and A51 already pass via `Urea`) |
 | 143 | 10 evidence boundary, sources table | The lists and MB are plausibility filters without independent rinse-off soothing evidence; claims alone never pass; research never supports "soothes" in user copy. Sources table rows for the v1.6.2 ledger and evidence. | R18.1, R18.4 | No |
+| 144 | 10 MB | Review fix before publication (Codex branch review, 2026-10-12): MB's strong-anionic exclusion reads surfactant prominence under C4, including its no-marker fallback (every listed surfactant counts when the formula declares neither a fragrance nor an E3 preservative marker). Without it, a fragrance-free, preservative-marker-free SLES/CAPB formula would have nothing prominent under E3 and could pass MB. Stricter, never looser (P0). No Track A product lacks both markers, so no tested or Track A value changes; the clause was not exercised by the test-round lanes. | Review fix (main session, inside R18.2) | No (Track A: none) |
 
 Not in this version:
 
