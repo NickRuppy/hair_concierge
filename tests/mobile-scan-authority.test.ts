@@ -67,6 +67,23 @@ function input(): BuildScanVerdictInput {
 }
 
 test("machine authority distinguishes missing product facts and unavailable personal targets", () => {
+  // These field names cross the scanner/native wire boundary.
+  for (const [field, missingKey] of [
+    ["thickness", "thickness"],
+    ["weight", "weight"],
+    ["proteinMoistureBalance", "protein_moisture_balance"],
+    ["repairSupportLevel", "repair_support_level"],
+  ] as const) {
+    const fixture = input()
+    ;(fixture.productFacts as Stage3ConditionerFacts).spec[field] = null
+    const verdict = buildScanVerdict(fixture)
+    assert.equal(verdict.kind, "in_catalog")
+    if (verdict.kind === "in_catalog")
+      assert.deepEqual(mobileAuthorityFailure(verdict), {
+        kind: "submission_required",
+        missingFacts: [missingKey],
+      })
+  }
   const value = input()
   ;(value.productFacts as Stage3ConditionerFacts).spec.weight = null
   const incomplete = buildScanVerdict(value)

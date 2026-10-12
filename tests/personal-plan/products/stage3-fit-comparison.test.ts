@@ -795,7 +795,8 @@ test("uncovered Shampoo now ranks in a supportive candidate for the everyday rol
   )
 })
 
-test("uncovered Shampoo dandruff role remains strict for the same supportive candidate", () => {
+test("uncovered Shampoo dandruff role admits a one-step supportive candidate", () => {
+  // fit-verdict spec §5, ruled 2026-10-12: every role permits supportive fallback.
   const input = authorityInput("shampoo", "shampoo_dandruff", {
     productFacts: null,
     capturedProductId: null,
@@ -809,12 +810,10 @@ test("uncovered Shampoo dandruff role remains strict for the same supportive can
 
   const comparison = buildStage3FitComparison(input)
 
-  assert.equal(
-    comparison.alternatives.find((candidate) => candidate.productId === "supportive-candidate") ??
-      null,
-    null,
+  assert.deepEqual(
+    comparison.alternatives.map((candidate) => [candidate.productId, candidate.verdict]),
+    [["supportive-candidate", "supportive"]],
   )
-  assert.deepEqual(comparison.alternatives, [])
 })
 
 test("uncovered Mask now ranks in the best-available supportive candidate for a required tier", () => {
@@ -1016,6 +1015,7 @@ test("Conditioner shows concrete dimensions only, with thickness as the fourth r
 // so it must win both the authority's own uncovered-role recommendation and the alternatives
 // order.
 test("uncovered Conditioner ranks the candidate covering the confirmed thickness above an equal peer", () => {
+  // fit-verdict spec §3–§4, ruled 2026-10-12: a thickness miss adds to the weight miss.
   const input = {
     ...authorityInput("conditioner", "conditioner_rinse_out", {
       productFacts: null,
@@ -1025,11 +1025,17 @@ test("uncovered Conditioner ranks the candidate covering the confirmed thickness
         factsFor("conditioner", "conditioner_rinse_out", "misses-thickness", {
           sortOrder: 1,
           weight: "medium",
+          careDirection: "moisture",
+          thickness: "normal",
+          thicknesses: ["fine", "normal"],
           suitableThicknesses: ["fine", "normal"],
         }),
         factsFor("conditioner", "conditioner_rinse_out", "covers-thickness", {
           sortOrder: 9,
           weight: "medium",
+          careDirection: "moisture",
+          thickness: "coarse",
+          thicknesses: ["coarse"],
           suitableThicknesses: ["fine", "normal", "coarse"],
         }),
       ],
@@ -1041,10 +1047,7 @@ test("uncovered Conditioner ranks the candidate covering the confirmed thickness
 
   assert.deepEqual(
     comparison.alternatives.map((candidate) => [candidate.productId, candidate.verdict]),
-    [
-      ["covers-thickness", "supportive"],
-      ["misses-thickness", "supportive"],
-    ],
+    [["covers-thickness", "supportive"]],
   )
   assert.equal(
     (
@@ -2113,6 +2116,8 @@ function factsFor<C extends PersonalPlanCategory>(
     recommendable?: boolean
     sortOrder?: number | null
     suitableThicknesses?: string[] | null
+    thickness?: string
+    thicknesses?: string[] | null
     priceEur?: number | null
     priceCheckedAt?: string | null
     netContentValue?: number | null
@@ -2162,7 +2167,9 @@ function factsFor<C extends PersonalPlanCategory>(
         ...common,
         category,
         spec: {
-          thickness: "normal",
+          // fit-verdict spec §7a.1, ruled 2026-10-12: preserve contextual thickness values.
+          thickness: overrides.thickness ?? "normal",
+          thicknesses: overrides.thicknesses ?? [overrides.thickness ?? "normal"],
           proteinMoistureBalance: overrideOrDefault(
             overrides,
             "careDirection",

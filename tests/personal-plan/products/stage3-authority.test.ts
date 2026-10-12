@@ -104,8 +104,11 @@ function knownFacts(category: PersonalPlanCategory): Stage3CategoryProductFacts 
       return {
         ...base,
         category,
+        // fit-verdict spec §2, ruled 2026-10-12: lifecycle includes recommendability.
+        recommendable: true,
         spec: {
           thickness: "normal",
+          thicknesses: ["normal"],
           shampooBucket: "normal",
           scalpRoute: "balanced",
           cleansingIntensity: "regular",
@@ -116,9 +119,12 @@ function knownFacts(category: PersonalPlanCategory): Stage3CategoryProductFacts 
       return {
         ...base,
         category,
+        // fit-verdict spec §2, ruled 2026-10-12: lifecycle includes recommendability.
+        recommendable: true,
         spec: {
           thickness: "normal",
-          proteinMoistureBalance: "balanced",
+          thicknesses: ["normal"],
+          proteinMoistureBalance: "moisture",
           weight: "light",
           repairSupportLevel: "medium",
           balanceDirection: "moisture",
@@ -146,8 +152,11 @@ function knownFacts(category: PersonalPlanCategory): Stage3CategoryProductFacts 
       return {
         ...base,
         category,
+        // fit-verdict spec §2, ruled 2026-10-12: lifecycle includes recommendability.
+        recommendable: true,
         spec: {
           roleSupport: { dry_finish: true },
+          thicknesses: ["normal"],
           weight: "light",
           targetThicknessEligible: true,
           providesHeatProtection: false,
@@ -829,7 +838,8 @@ test("Shampoo uncovered-role recommendation ranks two ideal candidates by catalo
   assert.equal(result.recommendation?.productId, "shampoo-ideal-better-order")
 })
 
-test("Shampoo dandruff role stays ideal-only: no supportive fallback even when only supportive candidates exist", () => {
+test("Shampoo dandruff role recommends a one-step supportive fallback", () => {
+  // fit-verdict spec §5, ruled 2026-10-12: supportive fallback applies to every role.
   const shampooInput = input("shampoo", "known") as Stage3AuthorityInput<"shampoo">
   shampooInput.role = "shampoo_dandruff"
   shampooInput.capturedProductId = null
@@ -851,23 +861,25 @@ test("Shampoo dandruff role stays ideal-only: no supportive fallback even when o
 
   assert.equal(result.status, "known")
   if (result.status !== "known") return
-  assert.equal(result.verdict, "unknown")
-  assert.deepEqual(result.allowedActions, ["leave_uncovered"])
-  assert.equal(result.recommendation, null)
+  assert.equal(result.verdict, "supportive")
+  assert.deepEqual(result.allowedActions, ["plan_recommendation", "leave_uncovered"])
+  assert.equal(result.recommendation?.productId, "shampoo-dandruff-supportive")
 })
 
 test("Conditioner with complete nonmatching semantic facts is a known mismatch, not unknown", () => {
+  // fit-verdict spec §3, ruled 2026-10-12: nonmatching direction is an axis, not a wrong-job gate.
   const conditionerInput = input("conditioner", "known") as Stage3AuthorityInput<"conditioner">
   if (conditionerInput.productFacts?.category !== "conditioner") {
     throw new Error("expected Conditioner fixture")
   }
   conditionerInput.productFacts.spec = {
-    thickness: null,
-    proteinMoistureBalance: null,
+    thickness: "normal",
+    thicknesses: ["normal"],
+    proteinMoistureBalance: "protein",
     weight: "light",
     repairSupportLevel: "medium",
     balanceDirection: "moisture",
-    targetFit: "known_mismatch",
+    targetFit: "matched",
   }
 
   const result = evaluateStage3Authority(conditionerInput as never)
@@ -875,7 +887,11 @@ test("Conditioner with complete nonmatching semantic facts is a known mismatch, 
   assert.equal(result.status, "known")
   if (result.status !== "known") return
   assert.equal(result.verdict, "mismatch")
-  assert.ok(result.criteria.some((criterion) => criterion.criterionId === "conditioner.role"))
+  assert.ok(
+    result.criteria.some(
+      (criterion) => criterion.criterionId === "conditioner.balance" && criterion.result === "fail",
+    ),
+  )
 })
 
 test("Conditioner with ambiguous or incomplete semantic facts remains unknown", () => {
@@ -918,7 +934,7 @@ test("Oil v2 distinguishes known unsupported roles from missing role support", (
   assert.ok(missing.missingFacts.includes("oil.role_support"))
 })
 
-test("Oil v2 requires explicit leave-on support, canonical weight, and target-thickness eligibility", () => {
+test("Oil v2 requires explicit leave-on support, canonical weight, and distance-preserving thickness facts", () => {
   const oilInput = input("oil", "known") as Stage3AuthorityInput<"oil">
   oilInput.role = "leave_on_fibre_conditioning"
   oilInput.subjectKey = "decision:oil:leave_on_fibre_conditioning:owned-1"
@@ -949,7 +965,8 @@ test("Oil v2 requires explicit leave-on support, canonical weight, and target-th
     pre_wash_fibre_treatment: false,
   }
   oilInput.productFacts.spec.weight = "light"
-  oilInput.productFacts.spec.targetThicknessEligible = true
+  // fit-verdict spec §3, ruled 2026-10-12: thickness is a degree axis.
+  oilInput.productFacts.spec.thicknesses = ["normal"]
 
   const ideal = evaluateStage3Authority(oilInput as never)
   assert.equal(ideal.status, "known")
@@ -966,11 +983,16 @@ test("Oil v2 requires explicit leave-on support, canonical weight, and target-th
 
   const wrongThickness = structuredClone(oilInput) as Stage3AuthorityInput<"oil">
   if (wrongThickness.productFacts?.category !== "oil") throw new Error("expected Oil fixture")
-  wrongThickness.productFacts.spec.targetThicknessEligible = false
+  // fit-verdict spec §3, ruled 2026-10-12: a one-step thickness miss is supportive.
+  wrongThickness.productFacts.spec.thicknesses = ["coarse"]
   const mismatch = evaluateStage3Authority(wrongThickness as never)
   assert.equal(mismatch.status, "known")
   if (mismatch.status !== "known") return
-  assert.equal(mismatch.verdict, "mismatch")
+  assert.equal(mismatch.verdict, "supportive")
+  assert.equal(
+    mismatch.criteria.find((criterion) => criterion.criterionId === "oil.thickness")?.result,
+    "caution",
+  )
 })
 
 test("Mask v4 treats compatible formulation preferences as ideal but keeps hard needs strict", () => {
@@ -2129,8 +2151,11 @@ test("complete Shampoo authority treats a non-target cleansing intensity as supp
   assert.equal(result.verdict, "supportive")
   assert.equal(result.criteria[0]?.criterionId, "shampoo.role")
   assert.equal(result.criteria[0]?.result, "pass")
-  assert.equal(result.criteria[1]?.criterionId, "shampoo.cleansing_intensity")
-  assert.equal(result.criteria[1]?.result, "caution")
+  // fit-verdict spec §7a.3, ruled 2026-10-12: criteria now include every evaluated axis.
+  assert.equal(
+    result.criteria.find((item) => item.criterionId === "shampoo.cleansing_intensity")?.result,
+    "caution",
+  )
   assert.deepEqual(result.allowedActions, ["keep_owned", "leave_uncovered"])
 })
 test("Scalp Care keeps comfort complementary while root reset suppresses only exfoliant", () => {
@@ -2424,6 +2449,7 @@ test("Conditioner uncovered-role recommendation still prefers an ideal candidate
 })
 
 test("Conditioner uncovered-role recommendation falls back to catalog order once verdict and coverage tie", () => {
+  // fit-verdict spec §4, ruled 2026-10-12: one weight miss stays supportive; two misses are excluded.
   const conditionerInput = input("conditioner", "known") as Stage3AuthorityInput<"conditioner">
   conditionerInput.capturedProductId = null
   conditionerInput.subjectIdentity = null
@@ -2435,7 +2461,7 @@ test("Conditioner uncovered-role recommendation falls back to catalog order once
     displayName: "Später im Katalog",
     catalogSortOrder: 5,
     weight: "medium",
-    balance: "balanced",
+    balance: "moisture",
     repairSupportLevel: "high",
   })
   const earlierInCatalog = conditionerCoverageCandidate({
@@ -2443,7 +2469,7 @@ test("Conditioner uncovered-role recommendation falls back to catalog order once
     displayName: "Früher im Katalog",
     catalogSortOrder: 2,
     weight: "medium",
-    balance: "balanced",
+    balance: "moisture",
     repairSupportLevel: "high",
   })
   conditionerInput.recommendationCandidates = [laterInCatalog, earlierInCatalog]

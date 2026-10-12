@@ -382,3 +382,43 @@ test("evaluation leaves caller-owned arrays and facts unchanged", () => {
   assert.deepEqual(evaluateFit(input), first)
   assert.deepEqual(input, before)
 })
+
+test("axis reason provider receives distance and original value sets, replacing the fallback", () => {
+  const seen: unknown[] = []
+  const result = evaluateFit({
+    gates: [],
+    axes: [
+      {
+        ...thickness,
+        productValues: ["normal", "coarse"],
+        reason: (outcome) => {
+          seen.push(outcome)
+          return "Eher für kräftigeres Haar gedacht"
+        },
+      },
+    ],
+  })
+  assert.deepEqual(seen, [{ steps: 1, productValues: ["normal", "coarse"], target: ["fine"] }])
+  assert.deepEqual(result.reasons, ["Eher für kräftigeres Haar gedacht"])
+  assert.equal(result.axisOutcomes[0].reason, result.reasons[0])
+})
+
+test("reason providers get accepted targets and run only for known misses", () => {
+  let calls = 0
+  const reason = (outcome: { steps: number; target: readonly string[] }) => {
+    calls++
+    assert.deepEqual(outcome.target, ["normal", "coarse"])
+    return "Eher für feines Haar gedacht"
+  }
+  const result = evaluateFit({
+    gates: [],
+    axes: [
+      { ...thickness, targetValue: undefined, acceptedTargets: ["normal", "coarse"], reason },
+      { ...thickness, id: "exact", reason },
+      { ...thickness, id: "missing", productValues: null, reason },
+    ],
+  })
+  assert.equal(calls, 1)
+  assert.equal(result.verdict, "unknown")
+  assert.equal(result.axisOutcomes[0].reason, "Eher für feines Haar gedacht")
+})

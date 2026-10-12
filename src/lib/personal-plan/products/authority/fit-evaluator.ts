@@ -7,11 +7,18 @@ export type FitGate = {
   reason?: string
 }
 
+export type FitAxisReasonInput = {
+  steps: number
+  productValues: readonly string[]
+  target: readonly string[]
+}
+
 export type FitAxis = {
   id: string
   label: string
   scale: readonly string[]
   productValues: readonly string[] | null
+  reason?: (outcome: FitAxisReasonInput) => string
   direction?: "symmetric" | "at_or_above_is_zero"
 } & (
   | { targetValue: string | null; acceptedTargets?: never }
@@ -71,7 +78,12 @@ export function evaluateFit(input: FitEvaluationInput): FitEvaluation {
   const axisOutcomes = input.axes.map((axis): FitAxisOutcome => {
     const steps = axisSteps(axis)
     if (steps === null || steps === 0) return { id: axis.id, steps }
-    const reason = `${axis.label}: ${steps} ${steps === 1 ? "Schritt" : "Schritte"} vom Ziel entfernt.`
+    const reason =
+      axis.reason?.({
+        steps,
+        productValues: axis.productValues!,
+        target: axis.acceptedTargets ?? [axis.targetValue!],
+      }) ?? `${axis.label}: ${steps} ${steps === 1 ? "Schritt" : "Schritte"} vom Ziel entfernt.`
     reasons.push(reason)
     return { id: axis.id, steps, reason }
   })

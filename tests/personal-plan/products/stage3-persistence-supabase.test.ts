@@ -3919,6 +3919,7 @@ test("authority facts select a contextual Shampoo row without PGRST116", async (
   if (bundle.productFacts?.category !== "shampoo") return
   assert.deepEqual(bundle.productFacts.spec, {
     thickness: "normal",
+    thicknesses: ["normal"],
     shampooBucket: "normal",
     scalpRoute: "balanced",
     cleansingIntensity: "regular",
@@ -3957,6 +3958,7 @@ test("authority facts translate an irritation need into the stored irritated rou
   if (bundle.productFacts?.category !== "shampoo") return
   assert.deepEqual(bundle.productFacts.spec, {
     thickness: "normal",
+    thicknesses: ["normal"],
     shampooBucket: "irritationen",
     scalpRoute: "irritated",
     cleansingIntensity: "gentle",
@@ -4103,6 +4105,38 @@ test("complete nonmatching Shampoo rows load as a known semantic mismatch", asyn
   })
 })
 
+test("Shampoo retains a near thickness row when bucket and scalp route match", async () => {
+  // fit-verdict spec §7a.1, ruled 2026-10-12: thickness is a degree axis, not a wrong-job gate.
+  const bundle = await loadStage3AuthorityFactBundle(
+    shampooAuthorityFactClient([
+      {
+        thickness: "fine",
+        shampoo_bucket: "normal",
+        scalp_route: "balanced",
+        cleansing_intensity: "regular",
+      },
+    ]) as never,
+    {
+      draft: shampooAuthorityDraft(),
+      subject: {
+        decisionKey: "decision:shampoo:shampoo_everyday:owned-shampoo-1",
+        category: "shampoo",
+        role: "shampoo_everyday",
+        capturedProductId: "owned-shampoo-1",
+        subjectKind: "captured_product",
+      },
+      heatRoutes: [],
+      context: normalRefinedContext,
+    } as never,
+  )
+
+  assert.equal(bundle.productFacts?.category, "shampoo")
+  if (bundle.productFacts?.category !== "shampoo") return
+  assert.equal(bundle.productFacts.spec.targetFit, "matched")
+  assert.equal(bundle.productFacts.spec.thickness, "fine")
+  assert.deepEqual(bundle.productFacts.spec.thicknesses, ["fine"])
+})
+
 test("Shampoo comparison observations are row-order invariant and do not change authority fingerprints", async () => {
   const rows = [
     {
@@ -4178,6 +4212,7 @@ test("semantically identical contextual Shampoo rows canonicalize to one fact", 
   if (bundle.productFacts?.category !== "shampoo") return
   assert.deepEqual(bundle.productFacts.spec, {
     thickness: "normal",
+    thicknesses: ["normal"],
     shampooBucket: "normal",
     scalpRoute: "balanced",
     cleansingIntensity: "regular",
@@ -4273,7 +4308,8 @@ test("authority facts select the single Conditioner spec matching the signed tar
   assert.equal(bundle.productFacts.spec.proteinMoistureBalance, "moisture")
 })
 
-test("Conditioner selection also filters by the actual refined thickness", async () => {
+test("Conditioner selection retains the nearest coherent thickness row for distance evaluation", async () => {
+  // fit-verdict spec §7a.1, ruled 2026-10-12: thickness is a degree axis, not an exact loader gate.
   const bundle = await loadStage3AuthorityFactBundle(
     authorityFactClient([
       { thickness: "fine", protein_moisture_balance: "snaps" },
@@ -4324,7 +4360,8 @@ test("incomplete Conditioner specs remain unknown", async () => {
   assert.equal(bundle.productFacts.spec.targetFit, "unknown")
 })
 
-test("complete nonmatching Conditioner rows load as a known semantic mismatch", async () => {
+test("complete near Conditioner rows remain matched for distance evaluation", async () => {
+  // fit-verdict spec §7a.1, ruled 2026-10-12: care direction is a degree axis, not a loader mismatch.
   const bundle = await loadStage3AuthorityFactBundle(
     authorityFactClient([
       { thickness: "normal", protein_moisture_balance: "stretches_stays" },
@@ -4345,7 +4382,9 @@ test("complete nonmatching Conditioner rows load as a known semantic mismatch", 
 
   assert.equal(bundle.productFacts?.category, "conditioner")
   if (bundle.productFacts?.category !== "conditioner") return
-  assert.equal(bundle.productFacts.spec.targetFit, "known_mismatch")
+  assert.equal(bundle.productFacts.spec.targetFit, "matched")
+  assert.equal(bundle.productFacts.spec.thickness, "normal")
+  assert.deepEqual(bundle.productFacts.spec.thicknesses, ["normal"])
   assert.equal(bundle.productFacts.spec.balanceDirection, "moisture")
 })
 
@@ -4594,7 +4633,8 @@ test("Leave-in authority facts load plan-facing v3 columns instead of legacy rol
   assert.deepEqual(bundle.productFacts.spec.careBenefits, ["detangle"])
 })
 
-test("Oil combines every eligibility row while its product spec stays singular", async () => {
+test("Oil retains shared suitable thicknesses while its product spec stays singular", async () => {
+  // fit-verdict spec §7a.1, ruled 2026-10-12: shared suitable_thicknesses is the oil thickness authority.
   const base = conditionerAuthorityDraft()
   const draft: Stage3ProductDraft = {
     ...base,
@@ -4739,6 +4779,7 @@ test("Oil combines every eligibility row while its product spec stays singular",
     dry_finish: true,
   })
   assert.equal(bundle.productFacts.spec.weight, "light")
+  assert.deepEqual(bundle.productFacts.spec.thicknesses, ["normal"])
   assert.equal(bundle.productFacts.spec.targetThicknessEligible, true)
   assert.equal(oilEligibilityMaybeSingleCalls, 0)
   assert.ok(oilSpecMaybeSingleCalls >= 1)
