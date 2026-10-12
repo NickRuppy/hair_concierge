@@ -363,6 +363,16 @@ function leaveInDimensions(
       "Die Pflegerichtung kommt aus Zielprofil und exakten Produktfakten.",
     ),
     third,
+    dimension(
+      "leave_in.suitable_thicknesses",
+      "Geeignete Haardicke",
+      "set",
+      THICKNESS_STOPS,
+      input.hairThickness ?? null,
+      entries,
+      (facts) => facts.suitableThicknesses,
+      "Die Haardicken-Eignung nutzt nur gespeicherte Katalogwerte.",
+    ),
   ]
 }
 
@@ -402,6 +412,16 @@ function maskDimensions(
       entries,
       (facts) => (facts.category === "mask" ? facts.spec.repairSupportLevel : null),
       "Die Repair-Unterstützung bleibt eine explizite Katalogachse.",
+    ),
+    dimension(
+      "mask.suitable_thicknesses",
+      "Geeignete Haardicke",
+      "set",
+      THICKNESS_STOPS,
+      input.hairThickness ?? null,
+      entries,
+      (facts) => facts.suitableThicknesses,
+      "Die Haardicken-Eignung nutzt nur gespeicherte Katalogwerte.",
     ),
   ]
 }
@@ -460,7 +480,7 @@ function oilDimensions(
       "Pflegegewicht",
       "ordered",
       WEIGHT_STOPS,
-      roleTarget?.weight ?? null,
+      roleTarget?.acceptedTargets ?? (roleTarget?.weight ? [roleTarget.weight] : null),
       entries,
       (facts) => (facts.category === "oil" ? facts.spec.weight : null),
       "Das Öl-Gewicht wird nur für Leave-on-Rollen als Zielachse genutzt.",

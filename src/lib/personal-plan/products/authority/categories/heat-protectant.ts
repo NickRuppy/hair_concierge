@@ -79,7 +79,7 @@ function compareRecommendationCandidates(
 
 function recommendationCandidate(input: HeatInput): Stage3HeatProtectantFacts | null {
   const sharedFit = input.recommendationCandidates.filter(
-    (candidate) => evaluateFacts(input, candidate).verdict === "ideal",
+    (candidate) => candidate.recommendable && evaluateFacts(input, candidate).verdict === "ideal",
   )
 
   const candidates = [...sharedFit].sort(compareRecommendationCandidates)

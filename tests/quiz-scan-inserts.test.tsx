@@ -135,7 +135,7 @@ test("the home insert turns the user's own bathroom into the first shelf", () =>
 
   assert.ok(
     readRenderedContent(html).paragraphs.includes(
-      "Pflegegewicht: reichhaltig statt leicht · Repair-Pflege: mittel statt hoch",
+      "Pflegegewicht: reichhaltig statt leicht · Pflegerichtung: Feuchtigkeit statt ausgeglichen · Repair-Pflege: mittel statt hoch",
     ),
   )
   assert.match(html, /Und zu Hause/)
@@ -147,7 +147,10 @@ test("the home insert turns the user's own bathroom into the first shelf", () =>
   assert.match(html, imageUrl("bad-ablage.webp"))
   assert.match(html, /Alterra Feuchtigkeits-Haarmaske/)
   assert.match(html, /Haarmaske · ca\. 2,79 €/)
-  assert.match(html, /Pflegegewicht: reichhaltig statt leicht · Repair-Pflege: mittel statt hoch/)
+  assert.match(
+    html,
+    /Pflegegewicht: reichhaltig statt leicht · Pflegerichtung: Feuchtigkeit statt ausgeglichen · Repair-Pflege: mittel statt hoch/,
+  )
 })
 
 test("every insert marks its card as an example and keeps the preceding question's counter", () => {

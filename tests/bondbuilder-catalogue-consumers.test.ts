@@ -216,8 +216,8 @@ test("scan facts retain each frozen profile but recommendation candidates exclud
   )
 })
 
-// fit-verdict spec §2.2 / §4, ruled 2026-10-12: nonrecommendable lifecycle fails before missing facts.
-test("a real Bondbuilder category decision marks a nonrecommendable research-only scanned product mismatch", async () => {
+// Lifecycle describes active availability; missing application facts still prevent a fit verdict.
+test("an active nonrecommendable research-only Bondbuilder stays unverified without its protocol", async () => {
   const { reviewed, tables } = catalogueTables()
   const { client } = strictCatalogClient(tables)
   const facts = await loadScanProductFacts(client, "bondbuilder", reviewed[0]!.id, {
@@ -240,9 +240,15 @@ test("a real Bondbuilder category decision marks a nonrecommendable research-onl
 
   assert.equal(verdict.kind, "in_catalog")
   if (verdict.kind !== "in_catalog") return
-  assert.equal(verdict.verdict, "mismatch")
+  assert.equal(verdict.verdict, "unknown")
   assert.notEqual(verdict.verdict, "ideal")
   assert.notEqual(verdict.verdict, "supportive")
   assert.ok(verdict.mobileAuthority)
-  assert.ok(verdict.criteria.some((row) => row.result === "fail"))
+  assert.ok(verdict.mobileAuthority.missingFacts.includes("bondbuilder_fit_or_protocol"))
+  assert.equal(
+    verdict.criteria.find((row) => row.criterionId === "bondbuilder.lifecycle")?.result,
+    "pass",
+  )
+  assert.ok(verdict.criteria.some((row) => row.result === "unknown"))
+  assert.ok(verdict.criteria.every((row) => row.result !== "fail"))
 })

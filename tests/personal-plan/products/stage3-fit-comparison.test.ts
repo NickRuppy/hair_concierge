@@ -1608,7 +1608,12 @@ test("Leave-in pre-heat always uses heat capability as its canonical third targe
   assert.equal(ordinary.mode, "comparison")
   assert.deepEqual(
     ordinary.dimensions.map((dimension) => dimension.dimensionId),
-    ["leave_in.weight", "leave_in.care_direction", "leave_in.heat_protection"],
+    [
+      "leave_in.weight",
+      "leave_in.care_direction",
+      "leave_in.heat_protection",
+      "leave_in.suitable_thicknesses",
+    ],
   )
 
   const heatFailure = buildStage3FitComparison(
@@ -1622,7 +1627,12 @@ test("Leave-in pre-heat always uses heat capability as its canonical third targe
   assert.equal(heatFailure.mode, "comparison")
   assert.deepEqual(
     heatFailure.dimensions.map((dimension) => dimension.dimensionId),
-    ["leave_in.weight", "leave_in.care_direction", "leave_in.heat_protection"],
+    [
+      "leave_in.weight",
+      "leave_in.care_direction",
+      "leave_in.heat_protection",
+      "leave_in.suitable_thicknesses",
+    ],
   )
 })
 
@@ -1961,7 +1971,7 @@ test("candidateDimensionCoverage counts only rendered rich dimensions and falls 
   })
   assert.deepEqual(
     candidateDimensionCoverage(richInput as unknown as Stage3AuthorityInput, richCandidate, []),
-    { matches: 3, total: 3 },
+    { matches: 4, total: 4 },
   )
 
   const compactInput = authorityInput("heat_protectant", "pre_heat_protection", {

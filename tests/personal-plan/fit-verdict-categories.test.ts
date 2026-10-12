@@ -4,6 +4,7 @@ import React from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 import { ProductFitComparison } from "../../src/components/personal-plan-products/product-fit-comparison"
 import { ScanVerdictSections } from "../../src/components/scan/scan-verdict-sections"
+import { criterionIdForDimension } from "../../src/lib/personal-plan/products/comparison-dimensions"
 import { buildStage3FitComparison } from "../../src/lib/personal-plan/products/fit-comparison"
 
 import { buildOilDecision } from "../../src/lib/personal-plan/categories/oil"
@@ -677,12 +678,6 @@ for (const [category, create] of [
       },
     ],
     [
-      "recommendability",
-      (input: any) => {
-        input.productFacts.recommendable = false
-      },
-    ],
-    [
       "function",
       (input: any) => {
         if (category === "mask")
@@ -883,7 +878,6 @@ for (const category of remainingCategories) {
     ["safety", { knownReaction: true }],
     ["inactive", { isActive: false }],
     ["retired", { lifecycleStatus: "discontinued" }],
-    ["recommendability", { recommendable: false }],
     ["wrong category", { category: "shampoo" }],
   ] as const) {
     test(`${category}: ${gate} fails even with missing protocol`, () => {
@@ -1273,3 +1267,151 @@ for (const category of remainingCategories) {
     )
   })
 }
+
+// Lifecycle describes usability; recommendation admission is an independent catalog policy.
+const categoryFactories = [
+  ["shampoo", shampoo],
+  ["conditioner", conditioner],
+  ["oil", oil],
+  ["mask", mask],
+  ["leave_in", leaveIn],
+  ...remainingCategories.map(
+    (category) =>
+      [category, (spec: Record<string, unknown>) => gateCategory(category, spec)] as const,
+  ),
+] as const
+for (const [category, create] of categoryFactories) {
+  test(`${category}: active non-recommended products fit owned and scanned, but cannot be picked`, () => {
+    const input = create({})
+    input.productFacts!.recommendable = false
+    assert.equal(fitVerdict(input), "ideal", "owned product")
+    const scan = buildScanVerdict({
+      category: input.category,
+      decision: input.categoryDecision,
+      productFacts: input.productFacts,
+      recommendationCandidates: [],
+      coverage: [],
+      hairThickness: input.hairThickness!,
+      heatCarrierCoverage: input.heatCarrierCoverage,
+      refinedVersionId: input.refinedVersionId,
+      refinedInputHash: input.refinedInputHash,
+    })
+    assert.equal(scan.kind, "in_catalog")
+    if (scan.kind === "in_catalog") assert.equal(scan.verdict, "ideal", "scanned product")
+    const nonRecommended = input.productFacts!
+    input.productFacts = null
+    input.capturedProductId = null
+    input.subjectIdentity = null
+    input.recommendationCandidates = [nonRecommended] as never
+    const pick = evaluateStage3Authority(input)
+    assert.equal(pick.status === "known" ? pick.recommendation : null, null)
+    const comparison = buildStage3FitComparison(input, pick)
+    assert.equal(
+      comparison.products.filter((product) => product.source === "alternative").length,
+      0,
+    )
+  })
+}
+for (const [heat, state] of [
+  [true, "pass"],
+  [false, "fail"],
+  [null, "unknown"],
+] as const) {
+  test(`oil: informational heat protection ${heat} renders without changing fit`, () => {
+    const input = oil({ providesHeatProtection: heat })
+    input.coverage = [{ job: "heat_protection" }] as never
+    const evaluation = evaluateStage3Authority(input)
+    assert.equal(fitVerdict(input), "ideal")
+    assert.equal(
+      evaluation.status === "known"
+        ? evaluation.criteria.find((row) => row.criterionId === "oil.heat_protection")?.result
+        : null,
+      state,
+    )
+    const comparison = buildStage3FitComparison(input, evaluation)
+    assert.equal(
+      comparison.evidenceRows!.find((row) => row.rowId === "oil.heat_protection")!.productValues[0]
+        .relation,
+      heat === true ? "in_target" : heat === false ? "outside_target" : "unknown",
+    )
+    const scan = buildScanVerdict({
+      category: input.category,
+      decision: input.categoryDecision,
+      productFacts: input.productFacts,
+      recommendationCandidates: [],
+      coverage: input.coverage,
+      hairThickness: input.hairThickness!,
+      heatCarrierCoverage: input.heatCarrierCoverage,
+      refinedVersionId: input.refinedVersionId,
+      refinedInputHash: input.refinedInputHash,
+    })
+    assert.equal(scan.kind, "in_catalog")
+    if (scan.kind === "in_catalog") {
+      assert.equal(scan.verdict, "ideal")
+      assert.equal(
+        scan.dimensions.find((row) => row.dimensionId === "oil.heat_protection")?.state,
+        heat === true ? "in_target" : heat === false ? "outside_target" : "unknown",
+      )
+    }
+    const miss = oil({ providesHeatProtection: heat, weight: "medium" })
+    miss.coverage = input.coverage
+    assert.equal(fitVerdict(miss), "supportive", "heat capability does not add steps")
+  })
+}
+test("every emitted comparison row has authority evidence, including conditional rows", () => {
+  for (const [category, create] of categoryFactories) {
+    const inputs = [create({})]
+    if (category === "oil") inputs[0].coverage = [{ job: "heat_protection" }] as never
+    if (category === "leave_in") {
+      const preHeat = leaveIn({
+        roles: ["pre_heat_application"],
+        applicationStages: ["pre_heat"],
+        providesHeatProtection: true,
+      })
+      preHeat.role = "pre_heat_application"
+      preHeat.productFacts!.protocols[0].role = preHeat.role
+      inputs.push(preHeat)
+    }
+    if (category === "bondbuilder")
+      inputs.push(gateCategory("bondbuilder", { relationship: "add_on" }))
+    for (const input of inputs) {
+      const evaluation = evaluateStage3Authority(input)
+      assert.equal(evaluation.status, "known")
+      if (evaluation.status !== "known") continue
+      const comparison = buildStage3FitComparison(input, evaluation)
+      for (const row of comparison.dimensions)
+        assert.ok(
+          evaluation.criteria.some(
+            (criterion) => criterion.criterionId === criterionIdForDimension(row.dimensionId),
+          ),
+          row.dimensionId,
+        )
+    }
+  }
+})
+
+for (const [category, create] of [
+  ["mask", mask],
+  ["leave_in", leaveIn],
+] as const) {
+  test(`${category}: comparison includes the scored thickness row`, () => {
+    const input = create({})
+    const comparison = buildStage3FitComparison(input, evaluateStage3Authority(input))
+    assert.equal(comparison.dimensions.length, 4)
+    const row = comparison.evidenceRows!.find(
+      (row) => row.rowId === `${category}.suitable_thicknesses`,
+    )!
+    assert.ok(row)
+    assert.equal(row.productValues[0].relation, "in_target")
+  })
+}
+test("oil: the comparison target shows every accepted leave-on weight", () => {
+  const input = oil({ weight: "medium" }) as any
+  input.categoryDecision.target.roleTargets[0].acceptedTargets = ["rich", "medium"]
+  const comparison = buildStage3FitComparison(input, evaluateStage3Authority(input))
+  assert.equal(fitVerdict(input), "ideal")
+  assert.deepEqual(
+    comparison.dimensions.find((row) => row.dimensionId === "oil.weight")!.targetPosition,
+    { kind: "supported_stops", stopIds: ["rich", "medium"] },
+  )
+})

@@ -251,7 +251,7 @@ function buildDeviation(rows: ScanExampleRow[]): string {
 
 function buildVerdict(rows: ScanExampleRow[]): { verdict: ScanExampleStatus; headline: string } {
   const firstBad = rows.find((row) => row.status === "bad")
-  if (firstBad) {
+  if (firstBad || rows.filter((row) => row.status === "warn").length >= 2) {
     return {
       verdict: "bad",
       headline: SCAN_VERDICT_COPY.mismatch.title,
@@ -291,20 +291,25 @@ function buildHomeExample(answers: QuizAnswers): ScanExampleCard {
       status: scaleStatus(CARE_WEIGHT_SCALE, MASK_CARE_WEIGHT, careWeightTarget),
     },
     {
-      // The quiz asks no direction question, so every profile still aims at
-      // `ausgeglichen`. A moisture mask sits inside a balanced plan, so — like
-      // the scalp row — the product value covers the target instead of
-      // equalling it, and this row never deviates.
+      // The quiz has no direction question: the balanced target is one step
+      // from this moisture mask, and contributes to the additive verdict.
       label: "Pflegerichtung",
       productValue: MASK_CARE_DIRECTION,
       targetValue: CARE_DIRECTION_TARGET,
-      status: "ok",
+      status: scaleStatus(
+        ["Protein", "ausgeglichen", "Feuchtigkeit"],
+        MASK_CARE_DIRECTION,
+        CARE_DIRECTION_TARGET,
+      ),
     },
     {
       label: "Repair-Pflege",
       productValue: MASK_REPAIR,
       targetValue: repairTarget,
-      status: scaleStatus(REPAIR_SCALE, MASK_REPAIR, repairTarget),
+      status:
+        REPAIR_SCALE.indexOf(MASK_REPAIR) >= REPAIR_SCALE.indexOf(repairTarget)
+          ? "ok"
+          : scaleStatus(REPAIR_SCALE, MASK_REPAIR, repairTarget),
     },
   ]
   return { product: MASK, rows, ...buildVerdict(rows), deviation: buildDeviation(rows) }

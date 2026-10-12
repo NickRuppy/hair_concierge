@@ -292,11 +292,21 @@ function inCatalogPayload(input: BuildScanVerdictInput): ScanInCatalogVerdictPay
           : [],
     }),
   )
+  const criteria =
+    best.evaluation.status === "known" || best.evaluation.status === "unknown"
+      ? (best.evaluation.criteria ?? [])
+      : []
+  const evidencedDimensions = dimensions.filter((dimension) =>
+    criteria.some(
+      (criterion) => criterion.criterionId === criterionIdForDimension(dimension.dimensionId),
+    ),
+  )
   const displayCoverage =
     dimensions.length > 0
       ? {
-          matches: dimensions.filter((dimension) => dimension.state === "in_target").length,
-          total: dimensions.filter((dimension) => dimension.state !== "no_target").length,
+          matches: evidencedDimensions.filter((dimension) => dimension.state === "in_target")
+            .length,
+          total: evidencedDimensions.filter((dimension) => dimension.state !== "no_target").length,
         }
       : best.coverage
   const verdict = scanVerdictForEvaluation(best.evaluation)

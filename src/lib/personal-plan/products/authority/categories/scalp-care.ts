@@ -91,7 +91,7 @@ function evaluateFacts(input: ScalpCareInput, facts: Stage3ScalpCareFacts) {
 function recommendationFor(input: ScalpCareInput) {
   if (coverageSuppressesPurchase(input)) return null
   const candidate = [...input.recommendationCandidates]
-    .filter((facts) => evaluateFacts(input, facts).verdict === "ideal")
+    .filter((facts) => facts.recommendable && evaluateFacts(input, facts).verdict === "ideal")
     .sort((left, right) => left.productId.localeCompare(right.productId))[0]
   if (!candidate) return null
 

@@ -109,10 +109,12 @@ function evaluateFacts(input: DryShampooInput, facts: Stage3DryShampooFacts) {
 
 function bestCandidate(input: DryShampooInput) {
   // Spec §§3–5, ruled 2026-10-12: verdict first; stable first-entered order inside it.
-  const assessed = input.recommendationCandidates.map((candidate) => ({
-    candidate,
-    result: evaluateFacts(input, candidate),
-  }))
+  const assessed = input.recommendationCandidates
+    .filter((candidate) => candidate.recommendable)
+    .map((candidate) => ({
+      candidate,
+      result: evaluateFacts(input, candidate),
+    }))
   return (
     assessed.find((entry) => entry.result.verdict === "ideal") ??
     assessed.find((entry) => entry.result.verdict === "supportive") ??

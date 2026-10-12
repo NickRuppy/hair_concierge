@@ -63,11 +63,7 @@ export function commonFitGates(
       id: `${prefix}.lifecycle`,
       label: "Verfügbarkeit",
       outcome:
-        !facts.isActive ||
-        // Owned oils can be usable without being eligible for new recommendations.
-        (!facts.recommendable &&
-          !(input.category === "oil" && input.capturedProductId === facts.productId)) ||
-        (facts.lifecycleStatus !== null && facts.lifecycleStatus !== "active")
+        !facts.isActive || (facts.lifecycleStatus !== null && facts.lifecycleStatus !== "active")
           ? "fail"
           : facts.lifecycleStatus === null
             ? "unknown"

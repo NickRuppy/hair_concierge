@@ -42,6 +42,7 @@ const SOURCES = [
   "src/lib/personal-plan/decision-presentation.ts",
   "src/lib/personal-plan/routine/labels.ts",
   "src/lib/personal-plan/products/authority/categories/conditioner.ts",
+  "src/lib/personal-plan/products/authority/categories/dry-shampoo.ts",
   "src/lib/personal-plan/products/authority/fit-criteria.ts",
   "src/components/scan/scan-verdict-sections.tsx",
   "src/lib/scan/verdict-labels.ts",
@@ -49,6 +50,14 @@ const SOURCES = [
 ].map((file) => readFileSync(path.join(process.cwd(), file), "utf8"))
 
 test("known shared strings map to their neutral variant", () => {
+  assert.equal(
+    cockpitVoice("Die Sensitivitätspositionierung passt nur eingeschränkt zu deiner Kopfhaut."),
+    "Die Sensitivitätspositionierung passt nur eingeschränkt zur Kopfhaut.",
+  )
+  assert.equal(
+    cockpitVoice("Die Tönung passt nur eingeschränkt zu deiner Haarfarbe."),
+    "Die Tönung passt nur eingeschränkt zur Haarfarbe.",
+  )
   assert.equal(cockpitVoice("Für dein Haar eher schwer"), "Für das Haar eher schwer")
   assert.equal(cockpitVoice("Entspricht deinem Bedarf."), "Entspricht dem Bedarf.")
   assert.equal(

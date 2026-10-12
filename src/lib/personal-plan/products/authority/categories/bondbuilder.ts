@@ -102,7 +102,6 @@ function evaluateProduct(
   )
   if (
     !product.isActive ||
-    !product.recommendable ||
     (product.lifecycleStatus !== null && product.lifecycleStatus !== "active")
   )
     criteria.push(

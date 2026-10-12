@@ -13,6 +13,7 @@ import type { Stage3AuthorityEvaluation, Stage3AuthorityInput, Stage3OilFacts } 
 import { candidateDimensionCoverage } from "../../comparison-dimensions"
 import { compareRankableCandidates, type RankableCandidate } from "../../candidate-ranking"
 import {
+  criterion,
   hasValidTarget,
   isPendingIdentity,
   knownEvaluation,
@@ -83,6 +84,24 @@ function evaluateFacts(input: OilInput, facts: Stage3OilFacts) {
   const roleCriterion = result.criteria.find((row) => row.criterionId === "oil.role")!
   if (roleCriterion.result === "pass")
     roleCriterion.explanation = "Das Produkt unterstützt die zugeordnete Öl-Rolle."
+  // Capability evidence is informational: append only after fit aggregation.
+  const heat = facts.spec.providesHeatProtection
+  if (
+    input.role === "leave_on_fibre_conditioning" &&
+    input.coverage.some((fact) => fact.job === "heat_protection")
+  )
+    result.criteria.push(
+      criterion(
+        "oil.heat_protection",
+        "Hitzeschutz",
+        heat == null ? "unknown" : heat ? "pass" : "fail",
+        heat == null
+          ? "Hitzeschutz ist noch nicht geprüft."
+          : heat
+            ? "Hitzeschutz ist verifiziert."
+            : "Das Produkt bietet keinen Hitzeschutz.",
+      ),
+    )
   return result
 }
 

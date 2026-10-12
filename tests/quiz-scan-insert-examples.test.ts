@@ -250,13 +250,13 @@ test("insert 18 weighs the mask against thickness, direction and repair need", (
       label: "Pflegerichtung",
       productValue: "Feuchtigkeit",
       targetValue: "ausgeglichen",
-      status: "ok",
+      status: "warn",
     },
     { label: "Repair-Pflege", productValue: "mittel", targetValue: "mittel", status: "ok" },
   ])
-  assert.equal(card.verdict, "ok")
-  assert.equal(card.headline, "Passt")
-  assert.equal(card.deviation, "Alles im Ziel.")
+  assert.equal(card.verdict, "warn")
+  assert.equal(card.headline, "Passt bedingt")
+  assert.equal(card.deviation, "Pflegerichtung: Feuchtigkeit statt ausgeglichen")
 })
 
 // The mask is `reichhaltig`: coarse hair is its target, medium is one step off,
@@ -264,8 +264,8 @@ test("insert 18 weighs the mask against thickness, direction and repair need", (
 test("insert 18 walks the rich mask down the care-weight ladder", () => {
   const expected: [string, string, "ok" | "warn" | "bad", string][] = [
     ["fine", "leicht", "bad", "Passt nicht"],
-    ["normal", "mittel", "warn", "Passt bedingt"],
-    ["coarse", "reichhaltig", "ok", "Passt"],
+    ["normal", "mittel", "warn", "Passt nicht"],
+    ["coarse", "reichhaltig", "ok", "Passt bedingt"],
   ]
   for (const [thickness, target, status, headline] of expected) {
     const card = getScanInsertExample(18, answers({ thickness }))
@@ -275,11 +275,12 @@ test("insert 18 walks the rich mask down the care-weight ladder", () => {
       targetValue: target,
       status,
     })
-    assert.equal(card.verdict, status, thickness)
+    assert.equal(card.verdict, thickness === "coarse" ? "warn" : "bad", thickness)
     assert.equal(card.headline, headline, thickness)
     assert.equal(
       card.deviation,
-      status === "ok" ? "Alles im Ziel." : `Pflegegewicht: reichhaltig statt ${target}`,
+      (status === "ok" ? "" : `Pflegegewicht: reichhaltig statt ${target} · `) +
+        "Pflegerichtung: Feuchtigkeit statt ausgeglichen",
       thickness,
     )
   }
@@ -297,8 +298,12 @@ test("insert 18 raises the repair target for bleached hair", () => {
     targetValue: "hoch",
     status: "warn",
   })
-  assert.equal(card.verdict, "warn")
-  assert.equal(card.deviation, "Repair-Pflege: mittel statt hoch")
+  assert.equal(card.verdict, "bad")
+  assert.equal(card.headline, "Passt nicht")
+  assert.equal(
+    card.deviation,
+    "Pflegerichtung: Feuchtigkeit statt ausgeglichen · Repair-Pflege: mittel statt hoch",
+  )
 })
 
 test("insert 18 raises the repair target for damage concerns", () => {
