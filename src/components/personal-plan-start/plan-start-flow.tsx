@@ -532,9 +532,13 @@ export function PlanStartProductionGate({
   useEffect(() => {
     if (canBootstrapLaterStage || !shouldRequestPlanStartOnMount(initialPlan)) return
     let cancelled = false
-    void requestPlanStart().then(
+    void (async () => {
+      await Promise.resolve()
+      if (cancelled) return
+      return requestPlanStart()
+    })().then(
       (nextState) => {
-        if (!cancelled) setState(nextState)
+        if (!cancelled && nextState) setState(nextState)
       },
       () => {
         if (!cancelled) setState({ state: "retryable_error" })
@@ -881,6 +885,10 @@ export function PlanStartCustomerJourney({
     // read as "the user saw nothing", so failure is retried once and then
     // recorded — the CTA routes into the refinement rather than accepting blind.
     void (async () => {
+      // Hydration can replay effects. Let cleanup cancel the discarded setup before
+      // it starts a request; the surviving setup still owns the one silent retry.
+      await Promise.resolve()
+      if (cancelled) return
       for (let attempt = 0; attempt < 2; attempt += 1) {
         try {
           const response = await requestStage1ProductExamplePreviews({
@@ -1027,9 +1035,13 @@ export function PlanStartCustomerJourney({
   useEffect(() => {
     if (initialJourney.stage !== "stage3") return
     let cancelled = false
-    void loadStage3Bootstrap(initialJourney.refinedVersionId).then(
+    void (async () => {
+      await Promise.resolve()
+      if (cancelled) return
+      return loadStage3Bootstrap(initialJourney.refinedVersionId)
+    })().then(
       (loaded) => {
-        if (cancelled) return
+        if (cancelled || !loaded) return
         installNewStage3Bootstrap(loaded)
         setStage3LoadState("idle")
       },
