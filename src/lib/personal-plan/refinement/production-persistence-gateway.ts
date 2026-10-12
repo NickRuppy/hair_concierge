@@ -52,7 +52,11 @@ export function createPersistedStage2RefinementGateway(input: {
       ? async () => {
           const facts = await loadUserFacts(input.admin!, input.userId)
           return facts
-            ? { careHabits: facts.careHabits, fields: facts.provenance.care_habits?.fields }
+            ? {
+                careHabits: facts.careHabits,
+                fields: facts.provenance.care_habits?.fields,
+                revision: facts.revision,
+              }
             : null
         }
       : undefined,

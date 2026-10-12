@@ -1,5 +1,6 @@
 import type {
   NightProtection,
+  NightWear,
   PersonalPlanRefinementAnswersV1,
   Stage2AnswerProvenance,
   Stage2QuestionId,
@@ -127,13 +128,40 @@ export function confirmedNightProtectionFromFacts(
  * Only while the night page is settled and the rollout-off `night_protection` question did not
  * complete; otherwise `undefined` (the list is the draft's own answer then).
  */
-function nightProtectionFact(input: {
+function nightProtectionFact(
+  input: NightMergeInput & { confirmedNightProtection: readonly NightProtection[] | undefined },
+): { value: NightProtection[]; provenance: FieldProvenanceValue } | undefined {
+  const parts = nightMergeParts(input)
+  if (!parts) return undefined
+  const { list, things, wear, nightWear } = parts
+  if (wear === undefined || wear === things) return { value: list, provenance: things }
+  const confirmed = input.confirmedNightProtection
+  if (!confirmed) return { value: list, provenance: "assumed" }
+  return {
+    value:
+      wear === "user"
+        ? nightProtectionWithWear(nightProtectionThings(confirmed), nightWear, undefined)
+        : nightProtectionWithWear(nightProtectionThings(list), undefined, confirmed),
+    provenance: "user",
+  }
+}
+
+type NightMergeInput = {
   answers: PersonalPlanRefinementAnswersV1
   completedQuestionIds: readonly Stage2QuestionId[] | undefined
   pageProvenance: Partial<Record<ToolFormPageKey, FieldProvenanceValue>>
   provenanceOf: (id: Stage2QuestionId) => FieldProvenanceValue
-  confirmedNightProtection: readonly NightProtection[] | undefined
-}): { value: NightProtection[]; provenance: FieldProvenanceValue } | undefined {
+}
+
+/** The merged list and the provenance of its two parts, or `undefined` outside the merge. */
+function nightMergeParts(input: NightMergeInput):
+  | {
+      list: NightProtection[]
+      things: FieldProvenanceValue
+      wear: FieldProvenanceValue | undefined
+      nightWear: NightWear | undefined
+    }
+  | undefined {
   const { answers } = input
   const completed = new Set(input.completedQuestionIds ?? [])
   const things = familyProvenance(input.pageProvenance, "night_protection")
@@ -145,22 +173,36 @@ function nightProtectionFact(input: {
       ? answers.nightWear
       : undefined
   const wear = nightWear !== undefined ? input.provenanceOf("night_wear") : undefined
-  if (wear === undefined || wear === things) {
-    return { value: answers.nightProtection, provenance: things }
+  return { list: answers.nightProtection, things, wear, nightWear }
+}
+
+/**
+ * Whether this draft's facts write needs the member's stored facts: exactly when the night
+ * merge's two parts differ in provenance (`nightProtectionFact`), so the stored list decides the
+ * assumed part. Every other write reads nothing extra (review round 2).
+ */
+export function nightMergeNeedsStoredFacts(
+  answers: PersonalPlanRefinementAnswersV1,
+  completion: {
+    completedQuestionIds: readonly Stage2QuestionId[]
+    answerProvenance?: Stage2AnswerProvenance
+    toolsEnabled?: boolean
+  },
+): boolean {
+  if (completion.toolsEnabled === false) return false
+  if (answers.toolForms === undefined && answers.toolFamiliesWithSomething === undefined) {
+    return false
   }
-  const confirmed = input.confirmedNightProtection
-  if (!confirmed) return { value: answers.nightProtection, provenance: "assumed" }
-  return {
-    value:
-      wear === "user"
-        ? nightProtectionWithWear(nightProtectionThings(confirmed), nightWear, undefined)
-        : nightProtectionWithWear(
-            nightProtectionThings(answers.nightProtection),
-            undefined,
-            confirmed,
-          ),
-    provenance: "user",
-  }
+  const provenanceOf = (id: Stage2QuestionId): FieldProvenanceValue =>
+    completion.answerProvenance?.[id] === "assumed" ? "assumed" : "user"
+  const settled = settledToolPages(answers, completion.completedQuestionIds)
+  const parts = nightMergeParts({
+    answers,
+    completedQuestionIds: completion.completedQuestionIds,
+    pageProvenance: toolPageProvenance(answers, settled, provenanceOf),
+    provenanceOf,
+  })
+  return parts !== undefined && parts.wear !== undefined && parts.wear !== parts.things
 }
 
 /** A family's provenance once every one of its pages is settled: `user` only when all are. */
