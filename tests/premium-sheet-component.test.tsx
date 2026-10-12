@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import React, { type ReactElement, type ReactNode } from "react"
+import { LayoutRouterContext } from "next/dist/shared/lib/app-router-context.shared-runtime"
 
 import { BottomSheetContent } from "@/components/ui/bottom-sheet"
 import { PremiumSheet } from "@/components/premium-sheet/premium-sheet"
@@ -159,7 +160,9 @@ function createStateHarness(renderComponent: () => ReactElement | null) {
      * no-op (the effect-level suite `premium-sheet-effects.test.tsx` owns it), and the
      * pathname falls back to the sanitizer's default, which is all these assertions need.
      */
-    useContext(): unknown {
+    useContext(context: unknown): unknown {
+      // Next 16.3+ `useRouter` also reads `LayoutRouterContext`; outside a layout it is null.
+      if (context === LayoutRouterContext) return null
       return { refresh() {}, replace() {}, push() {}, toasts: [], toast() {}, dismiss() {} }
     },
     /** `usePathname` reads its context through `use`, not `useContext`. */

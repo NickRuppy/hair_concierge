@@ -27,7 +27,6 @@ test("product schema accepts bondbuilder support specs", () => {
     buildBaseProduct({
       category: "Bondbuilder",
       bondbuilder_specs: {
-        bond_repair_intensity: "intensive",
         application_mode: "post_wash_leave_in",
         bond_repair_axis: "peptide_chain",
         treatment_mode: "leave_in",
@@ -38,6 +37,24 @@ test("product schema accepts bondbuilder support specs", () => {
   )
 
   assert.equal(parsed.success, true)
+})
+
+test("product schema rejects the retired bond_repair_intensity key", () => {
+  const parsed = productSchema.safeParse(
+    buildBaseProduct({
+      category: "Bondbuilder",
+      bondbuilder_specs: {
+        bond_repair_intensity: "intensive",
+        application_mode: "post_wash_leave_in",
+        bond_repair_axis: "peptide_chain",
+        treatment_mode: "leave_in",
+        product_format: "leave_in_mask",
+        usage_protocol: "k18_leave_in",
+      },
+    }),
+  )
+
+  assert.equal(parsed.success, false)
 })
 
 test("product schema accepts a verified full Bondbuilder profile with nullable unmapped legacy fields", () => {
@@ -52,7 +69,6 @@ test("product schema accepts a verified full Bondbuilder profile with nullable u
         research_profile: profile,
         application_mode: "pre_shampoo",
         treatment_mode: "rinse_out",
-        bond_repair_intensity: null,
         bond_repair_axis: null,
         product_format: null,
         usage_protocol: null,

@@ -117,7 +117,15 @@ const generatedSections = {
   mechanik: "Trockene Längen entstehen meist durch Hitze, Reibung und Vorschädigung.",
   diagnose: "Feines, blondiertes Haar mit aufgerauten Längen.",
   hebel: [
-    { title: "Hitzeschutz", note: "Vor jedem Glätten.", points: 1, bucket: "produkt" as const },
+    {
+      title: "Hitzeschutz",
+      note: "Vor jedem Glätten.",
+      points: null,
+      bucket: "produkt" as const,
+      kind: "hitzeschutz" as const,
+      gap: "klein" as const,
+      level: 2 as const,
+    },
   ],
   swapReasons: {},
   zielLuecken: [],
@@ -164,6 +172,7 @@ function deps(options: {
   stored?: Record<string, unknown> | null
   overrides?: Record<string, unknown>
   result?: ConsultBriefResult
+  sourceParts?: Record<string, string>
 }) {
   const recorded = recordingClient(options.stored ?? null)
   const calls = { generate: 0, traced: 0, sourceReads: 0 }
@@ -181,6 +190,7 @@ function deps(options: {
           status: "ready",
           input: fakeInput,
           sourceHash: SOURCE_HASH,
+          ...(options.sourceParts ? { sourceParts: options.sourceParts } : {}),
           callSheet: await o!.loadCallSheet!(target.enrollmentId, admin),
         }
       }) as typeof loadConsultBriefSource,
@@ -830,5 +840,50 @@ test("loadConsultBriefSource: a plan that cannot be read is a status; a failed r
       },
     }),
     /sheet unreadable/,
+  )
+})
+
+test("source_parts: stored by a generation, kept by a manual save, carried into `previous`", async () => {
+  const parts = { produkte: "p1", score: "s1", version: "v1" }
+  const { deps: d, recorded } = deps({
+    stored: { ...EXISTING_ROW, consult_brief: storedBrief },
+    sourceParts: parts,
+  })
+  const generated = await createDiscoveryConsultBriefHandler(d)(
+    postRequest({ expected_state: storedState }),
+    params(),
+  )
+  assert.equal(generated.status, 200)
+  assert.deepEqual(storedConsultBrief(recorded).source_parts, parts)
+
+  // The runsheet's manual save sends the parts it was seeded with; the strict PATCH accepts them.
+  const edited = {
+    sections: { ...generatedSections, diagnose: "Von Nick überarbeitet." },
+    generated_at: NOW.toISOString(),
+    generated_by: "manual",
+    source_hash: SOURCE_HASH,
+    source_parts: parts,
+  }
+  const saved = await manualSave(d, edited)
+  assert.equal(saved.status, 200)
+  const { callSheet } = (await json(saved)) as { callSheet: DiscoveryCallSheet }
+  assert.deepEqual(callSheet.consultBrief!.source_parts, parts)
+  const savedAt = callSheet.consultBrief!.saved_at!
+
+  // A regeneration moves the edited brief, parts included, into `previous`.
+  const again = await createDiscoveryConsultBriefHandler(d)(
+    postRequest({
+      expected_state: {
+        source_hash: SOURCE_HASH,
+        generated_at: NOW.toISOString(),
+        saved_at: savedAt,
+      },
+    }),
+    params(),
+  )
+  assert.equal(again.status, 200)
+  assert.deepEqual(
+    (storedConsultBrief(recorded).previous as Record<string, unknown>).source_parts,
+    parts,
   )
 })

@@ -2443,13 +2443,6 @@ function buildProfileBasis(
         : bondbuilderDecision?.relevant
           ? "Bondbuilder-Check: Empfohlener Strukturpflege-Schritt"
           : "Bondbuilder-Check: Gerade nicht notwendig",
-      bondbuilderDecision?.targetProfile?.bondRepairIntensity
-        ? `Bondbuilder-Intensität: ${
-            bondbuilderDecision.targetProfile.bondRepairIntensity === "intensive"
-              ? "Intensiv"
-              : "Erhaltung"
-          }`
-        : null,
       bondbuilderDecision?.targetProfile?.chemicalCrosslinkLane
         ? "Bondbuilder-Lane: Disulfid-/Crosslink"
         : null,

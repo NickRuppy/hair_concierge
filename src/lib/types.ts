@@ -50,7 +50,6 @@ import type {
   ProductBondApplicationMode,
   ProductBondProductFormat,
   ProductBondRepairAxis,
-  ProductBondRepairIntensity,
   ProductBondTreatmentMode,
   ProductBondUsageProtocol,
   DryShampooFormat,
@@ -560,7 +559,6 @@ export interface MaskRecommendationMetadata extends BaseRecommendationMetadata {
 
 export interface BondbuilderRecommendationMetadata extends BaseRecommendationMetadata {
   category: "bondbuilder"
-  matched_intensity: ProductBondRepairIntensity | null
   application_mode: ProductBondApplicationMode | null
   bond_repair_axis?: ProductBondRepairAxis | null
   treatment_mode?: ProductBondTreatmentMode | null

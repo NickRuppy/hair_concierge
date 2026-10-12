@@ -863,6 +863,10 @@ export function useScannerLoop({
     }
 
     async function start() {
+      // Hydration can replay effects. Do not consume a permission result or open
+      // a camera for a setup that React has already cleaned up.
+      await Promise.resolve()
+      if (cancelled) return
       const stream = await acquire(true)
       if (!stream) return
       if (cancelled) {

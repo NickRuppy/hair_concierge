@@ -1,6 +1,7 @@
 import { semanticHash } from "@/lib/personal-plan/routine/canonicalize"
 
 import type { ConsultInput } from "./input"
+import type { ConsultSourcePart } from "./source-parts"
 import { CONSULT_BRIEF_PROMPT_VERSION } from "./prompt"
 
 /**
@@ -19,4 +20,38 @@ export function consultSourceHash(
   promptVersion: string = CONSULT_BRIEF_PROMPT_VERSION,
 ): string {
   return semanticHash({ v: CONSULT_INPUT_VERSION, prompt: promptVersion, input })
+}
+
+/**
+ * The input split into the parts a consultant recognises (consult-brief-d item 3): stored with
+ * the brief, so a stale brief can say WHAT changed. Every ConsultInput key belongs to exactly
+ * one part (a test pins it); `version` carries the assembly and prompt versions.
+ */
+
+export const CONSULT_SOURCE_PART_KEYS: Readonly<
+  Record<Exclude<ConsultSourcePart, "version">, ReadonlyArray<keyof ConsultInput>>
+> = {
+  produkte: ["products"],
+  checkliste: ["checklist"],
+  profil: ["profile", "mainConcern", "flags", "boundaryTriggers"],
+  hitze: ["heat", "heatProtection"],
+  waschen: ["washFrequency"],
+  wissen: ["knowledge"],
+  score: ["baselineScore"],
+}
+
+export function consultSourceParts(
+  input: ConsultInput,
+  promptVersion: string = CONSULT_BRIEF_PROMPT_VERSION,
+): Record<ConsultSourcePart, string> {
+  const parts = Object.fromEntries(
+    Object.entries(CONSULT_SOURCE_PART_KEYS).map(([part, keys]) => [
+      part,
+      semanticHash(Object.fromEntries(keys.map((key) => [key, input[key]]))),
+    ]),
+  ) as Record<Exclude<ConsultSourcePart, "version">, string>
+  return {
+    ...parts,
+    version: semanticHash({ v: CONSULT_INPUT_VERSION, prompt: promptVersion }),
+  }
 }
