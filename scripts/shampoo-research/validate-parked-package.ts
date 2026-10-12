@@ -58,12 +58,17 @@ const ARCHIVE_EXCLUSIONS = new Set([
 // (re-pinned 2026-10-10, see `archiveContentRepin` in the manifest): the
 // locked v1.6 package, which has its own byte pins
 // (data/research/shampoo-inci/v1.6/artifact-manifest.json, enforced by
-// tests/shampoo-research-v1-6-lock.test.ts), and the shared top-level README,
+// tests/shampoo-research-v1-6-lock.test.ts), the locked v1.6.1 package
+// (scope extended 2026-10-12; its own byte pins in
+// data/research/shampoo-inci/v1.6.1/artifact-manifest.json, enforced by
+// tests/shampoo-research-v1-6-1-lock.test.ts), and the shared top-level README,
 // which is the living entry point for every version. Every other file under
 // the archive roots stays fingerprinted byte-for-byte.
 export const ARCHIVE_SCOPE_EXCLUSIONS = [
   "data/research/shampoo-inci/v1.6/",
   "docs/research/shampoo-inci/v1.6/",
+  "data/research/shampoo-inci/v1.6.1/",
+  "docs/research/shampoo-inci/v1.6.1/",
   "docs/research/shampoo-inci/README.md",
 ] as const
 

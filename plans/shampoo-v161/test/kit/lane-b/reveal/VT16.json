@@ -1,0 +1,21 @@
+{
+  "blindId": "VT16",
+  "productName": "Dercos Ultra-Sensitiv Shampoo trockene Kopfhaut",
+  "brand": "Vichy",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Wirkt sofort ab der 1. Anwendung. Besänftigt die Kopfhaut 48h lang. Gegen Juckreiz. Kräftigt sensibilisierte Haarfasern. Für empfindliche, trockene Kopfhaut. | Nutzen: Gründliche Reinigung trotz hautberuhigender Formel; Mildert effektiv Juckreiz, Hautbrennen und Rötungen; Spendet dem Haar intensive Feuchtigkeit und hilft Kopfhaut und Haar, diese langfristig zu speichern. Textur: Cremige, sanft aufschäumende Textur; Auch für coloriertes Haar geeignet; Ohne Parabene – ideal für sehr empfindliche Kopfhaut bei Männern und Frauen",
+      "directionsVerbatim": "Gib eine haselnussgroße Menge des DERCOS TECHNIQUE Shampoos für trockene Kopfhaut in dein feuchtes Haar. Massiere das Shampoo für trockenes Haar sanft auf deine Kopfhaut ein. Spüle das Haarshampoo nach circa 1 Minute Einwirkzeit gründlich mit lauwarmem Wasser aus."
+    },
+    {
+      "sourceType": "retailer_shop_apotheke_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Vichy Ultra-Sensitiv Shampoo Beruhigt die Kopfhaut ab der 1. AnwendungWirkt bis zu 48h Cremige Textur Für coloriertes Haar geeignet",
+      "directionsVerbatim": "Auf das feuchte Haar auftragen, sanft einmassieren, 1 Minute einwirken lassen, dann ausspülen. Bei Kontakt mit den Augen sofort ausspülen."
+    }
+  ]
+}

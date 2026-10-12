@@ -1,0 +1,42 @@
+{
+  "blindId": "VT08",
+  "productName": "Purify Shampeeling P4",
+  "brand": "System Professional",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_en_gb",
+      "sourceKind": "manufacturer_foreign",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Gentle, yet powerful dandruff removal designed to transform the scalp. (English text from the manufacturer page)",
+      "directionsVerbatim": ""
+    },
+    {
+      "sourceType": "retailer_lookfantastic_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Reinige und kläre dein Haar mit dem System Professional Purify Shampeeling, einem Shampoo-Ersatz, der die Haare reinigt und gleichzeitig Schuppen professionell bekämpft Die Formel wurde für diejenigen entwickelt, die unter anhaltenden Schuppen und fettiger, gereizter Kopfhaut leiden. Sie bietet Schuppen bekämpfende Wirkung und dauerhaften Schutz. Der Dermapure Complex eliminiert Schuppen verursachende Mikroorganismen und fördert ein gesundes Kopfhautmilieu. Bei regelmäßiger Anwendung wird das Haar sauber, angenehm und schuppenfrei.",
+      "directionsVerbatim": "Über einen Zeitraum von 4 Wochen 3 Mal wöchentlich anstelle des Shampoos verwenden. Anschließend Purify Shampoo verwenden."
+    },
+    {
+      "sourceType": "retailer_parfumdreams_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Für eine gezielte Pflege der Kopfhaut wurde das System Professional Lipid Code Purify Shampeeling P4 entwickelt. Diese spezielle Formulierung ist darauf ausgelegt, die Kopfhaut von hartnäckigen Schuppen zu befreien und die Grundlage für gesund aussehendes Haar zu schaffen. Die Anwendung kombiniert die reinigenden Eigenschaften eines Shampoos mit dem Effekt eines sanften Peelings.",
+      "directionsVerbatim": "(generic retailer text for anti-dandruff shampoos, not P4-specific:) Tragen Sie das Anti-Schuppen-Shampoo auf das feuchte Haar und die Kopfhaut auf. Massieren Sie es gründlich in die gesamte Kopfhaut ein. [...] etwa eine Minute einwirken. Für beste Ergebnisse wenden Sie das Shampoo alle 2 Tage an."
+    },
+    {
+      "sourceType": "retailer_hagel_shop_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "P4 - Für Frauen mit intensivem, hartnäckigem Schuppenbefall, der nur sehr schwer zu beseitigen ist, hinzu kommt sehr ölige und gereizte Kopfhaut. Das System Professional P4 Purify Anti-Schuppen Shampoo & Peeling sorgt für die sanfte und dennoch kraftvolle Beseitigung von Schuppen, um die Kopfhaut zu transformieren. Es pflegt die Kopfhaut und bekämpft Schuppenbildung. Das Shampeeling ist ein tiefenwirksamer und nachhaltiger Schutz gegen Schuppen bis zu 24 Stunden lang. | Der Derma-Complex besteht aus hochwirksamen Inhaltsstoffen: 1. Zink-Pyrithion: Nachhaltige Schuppenregulierung 2. Allantoin: Reizlindernd, beruhigt die Kopfhaut 3. Hamamelisextrakt: Entzündungshemmend, adstringierender Effekt",
+      "directionsVerbatim": "1. Mit der Düse eine münzgroße Menge auf das feuchte Haar auftragen 2. In die Kopfhaut einmassieren und 2 Minuten einwirken lassen, um den Emulsionsprozess zu aktivieren 3. Ausspülen"
+    },
+    {
+      "sourceType": "pack_front_photo",
+      "sourceKind": "pack_front",
+      "sourceGrade": "high",
+      "claimsVerbatim": "SYSTEM PROFESSIONAL / PURIFY SHAMPEELING / Intensive Dandruff Removal / Eliminación Intensiva de la caspa / Eliminação Intensiva da Caspa / P4 / Cont. Net./Contenido: 150 ml e",
+      "directionsVerbatim": ""
+    }
+  ]
+}

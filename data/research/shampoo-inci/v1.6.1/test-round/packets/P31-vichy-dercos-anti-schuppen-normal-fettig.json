@@ -1,0 +1,111 @@
+{
+  "slot": "P31",
+  "productId": null,
+  "name": "Dercos Anti-Schuppen Shampoo für normale bis fettige Kopfhaut",
+  "brand": "Vichy",
+  "packSize": "200 ml",
+  "gtins": [
+    "3337871330286",
+    "3337871331290",
+    "3337875902830",
+    "3337875787192",
+    "3401378301015"
+  ],
+  "sources": [
+    {
+      "url": "https://www.vichy.de/alle-produkte/haarpflege/shampoos/schuppen/dercos-anti-schuppen-shampoo-fuer-normale-bis-fettige-kopfhaut",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "3337871330286 (JSON-LD gtin13)",
+      "inciVerbatim": "AQUA / WATER • SODIUM LAURETH SULFATE • GLYCOL DISTEARATE • COCO-BETAINE • GLYCERIN • DIMETHICONE • CARBOMER • CI 19140 / YELLOW 5 • CITRIC ACID • MENTHOL • 2-OLEAMIDO-1,3-OCTADECANEDIOL • PARFUM / FRAGRANCE • PPG-5-CETETH-20 • SALICYLIC ACID • SELENIUM SULFIDE • SODIUM BENZOATE • SODIUM CHLORIDE • SODIUM HYDROXIDE • TOCOPHERYL ACETATE",
+      "claimsVerbatim": "Effektives Anti-Schuppen Shampoo für fettige Schuppen mit sichtbaren Ergebnissen ab der ersten Anwendung Lindert Juckreiz auf der Kopfhaut dank einem ausgeglichen Mikrobiom Anti-Rückfall-Effekt: Beugt Schuppen bis zu sechs Wochen lang vor",
+      "directionsVerbatim": "Um Schuppen auf der Kopfhaut effektiv zu mildern, das DERCOS Anti-Schuppen Shampoo für normales bis fettiges Haar auf das nasse Haar auftragen. Dabei gründlich aufschäumen und in die Kopfhaut einmassieren. Nach zwei Minuten Einwirkzeit nochmal einmassieren und anschließend gründlich ausspülen. In akuten Phasen dreimal wöchentlich über 4 Wochen anwenden. Danach einmal wöchentlich, um Rückfällen vorzubeugen."
+    },
+    {
+      "url": "https://www.shop-apotheke.com/beauty/11162591/vichy-dercos-anti-schuppen-shampoo-fuer-normale-bis-fettige-kopfhaut.htm",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_shop_apotheke_de",
+      "sourceKind": "retailer",
+      "gtinShown": "3337871330286 (PZN 11162591 / EAN)",
+      "inciVerbatim": "AQUA / WATER - SODIUM LAURETH SULFATE - GLYCOL DISTEARATE - COCO-BETAINE - GLYCERIN - DIMETHICONE - CARBOMER - CI 19140 / YELLOW 5 - CITRIC ACID - MENTHOL - 2-OLEAMIDO-1,3-OCTADECANEDIOL - PPG-5-CETETH-20 - SALICYLIC ACID - SELENIUM SULFIDE - SODIUM BENZOATE - SODIUM CHLORIDE - SODIUM HYDROXIDE - TOCOPHERYL ACETATE - PARFUM / FRAGRANCE",
+      "claimsVerbatim": "Besondere Eigenschaften des Vichy DERCOS Anti-Schuppen Shampoos: 100 % schuppenfrei ab der 1. Anwendung. 3 Monate klinisch belegte Langzeitwirkung gegen Wiederauftreten (Anti-Rückfall-Effekt). Reduziert Juckreiz um bis zu 91 %*. Reguliert das Kopfhaut-Mikrobiom und schützt die Hautbarriere. Bekämpft den Schuppenpilz gezielt an der Wurzel.",
+      "directionsVerbatim": "Tragen Sie das Shampoo auf das nasse Haar und die Kopfhaut auf. Lassen Sie es für 2 Minuten einwirken, massieren Sie es sanft ein und spülen Sie es im Anschluss gründlich aus. Anwendung: 3-mal pro Woche über einen Zeitraum von 4 Wochen anwenden. Erhaltungsphase: Regelmäßig anwenden, um den 3-monatigen Langzeitschutz aufrechtzuerhalten."
+    },
+    {
+      "url": "https://www.shop-apotheke.com/beauty/11162616/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_shop_apotheke_de_390ml_variant",
+      "sourceKind": "retailer",
+      "gtinShown": "3337871331290 (PZN 11162616 / EAN, 390 ml)",
+      "inciVerbatim": "AQUA / WATER - SODIUM LAURETH SULFATE - GLYCOL DISTEARATE - COCO-BETAINE - GLYCERIN - DIMETHICONE - CARBOMER - CI 19140 / YELLOW 5 - CITRIC ACID - MENTHOL - 2-OLEAMIDO-1,3-OCTADECANEDIOL - PPG-5-CETETH-20 - SALICYLIC ACID - SELENIUM SULFIDE - SODIUM BENZOATE - SODIUM CHLORIDE - SODIUM HYDROXIDE - TOCOPHERYL ACETATE - PARFUM / FRAGRANCE.",
+      "claimsVerbatim": "",
+      "directionsVerbatim": ""
+    },
+    {
+      "url": "https://www.shop-apotheke.com/beauty/19668568/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_shop_apotheke_de_390ml_refill_variant",
+      "sourceKind": "retailer",
+      "gtinShown": "3337875902830 (PZN 19668568 / EAN, 390 ml)",
+      "inciVerbatim": "AQUA / WATER - SODIUM LAURETH SULFATE - GLYCOL DISTEARATE - COCO-BETAINE - GLYCERIN - DIMETHICONE - CARBOMER - CI 19140 / YELLOW 5 - CITRIC ACID - MENTHOL - 2-OLEAMIDO-1,3-OCTADECANEDIOL - PPG-5-CETETH-20 - SALICYLIC ACID - SELENIUM SULFIDE - SODIUM BENZOATE - SODIUM CHLORIDE - SODIUM HYDROXIDE - TOCOPHERYL ACETATE - PARFUM / FRAGRANCE.",
+      "claimsVerbatim": "",
+      "directionsVerbatim": ""
+    },
+    {
+      "url": "https://www.shop-apotheke.com/beauty/17258398/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_shop_apotheke_de_500ml_refill_variant",
+      "sourceKind": "retailer",
+      "gtinShown": "3337875787192 (PZN 17258398 / EAN, 500 ml refill)",
+      "inciVerbatim": "AQUA / WATER - SODIUM LAURETH SULFATE - GLYCOL DISTEARATE - COCO-BETAINE - GLYCERIN - DIMETHICONE - CARBOMER - CI 19140 / YELLOW 5 - CITRIC ACID - MENTHOL - 2-OLEAMIDO-1,3-OCTADECANEDIOL - PPG-5-CETETH-20 - SALICYLIC ACID - SELENIUM SULFIDE - SODIUM BENZOATE - SODIUM CHLORIDE - SODIUM HYDROXIDE - TOCOPHERYL ACETATE - PARFUM / FRAGRANCE",
+      "claimsVerbatim": "",
+      "directionsVerbatim": ""
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "inci_order_only",
+      "source": "shop-apotheke.com (200 ml, 390 ml, 390 ml refill, 500 ml refill pages; dm.de per phase-1 batch-G, not re-fetchable: bot wall)",
+      "url": "https://www.shop-apotheke.com/beauty/11162591/vichy-dercos-anti-schuppen-shampoo-fuer-normale-bis-fettige-kopfhaut.htm",
+      "list": "AQUA / WATER - SODIUM LAURETH SULFATE - GLYCOL DISTEARATE - COCO-BETAINE - GLYCERIN - DIMETHICONE - CARBOMER - CI 19140 / YELLOW 5 - CITRIC ACID - MENTHOL - 2-OLEAMIDO-1,3-OCTADECANEDIOL - PPG-5-CETETH-20 - SALICYLIC ACID - SELENIUM SULFIDE - SODIUM BENZOATE - SODIUM CHLORIDE - SODIUM HYDROXIDE - TOCOPHERYL ACETATE - PARFUM / FRAGRANCE",
+      "note": "Same 19 ingredients; PARFUM / FRAGRANCE is last (after TOCOPHERYL ACETATE) instead of after 2-OLEAMIDO-1,3-OCTADECANEDIOL (before PPG-5-CETETH-20). Only the position within the sub-1% tail differs."
+    },
+    {
+      "type": "claims_disagreement",
+      "source": "vichy.de vs shop-apotheke.com",
+      "url": "https://www.shop-apotheke.com/beauty/11162591/vichy-dercos-anti-schuppen-shampoo-fuer-normale-bis-fettige-kopfhaut.htm",
+      "quote": "vichy.de: \"Beugt Schuppen bis zu sechs Wochen lang vor\" vs shop-apotheke: \"3 Monate klinisch belegte Langzeitwirkung gegen Wiederauftreten\" (retailer text appears older; not an INCI conflict)"
+    }
+  ],
+  "canonicalInci": [
+    "AQUA / WATER",
+    "SODIUM LAURETH SULFATE",
+    "GLYCOL DISTEARATE",
+    "COCO-BETAINE",
+    "GLYCERIN",
+    "DIMETHICONE",
+    "CARBOMER",
+    "CI 19140 / YELLOW 5",
+    "CITRIC ACID",
+    "MENTHOL",
+    "2-OLEAMIDO-1,3-OCTADECANEDIOL",
+    "PARFUM / FRAGRANCE",
+    "PPG-5-CETETH-20",
+    "SALICYLIC ACID",
+    "SELENIUM SULFIDE",
+    "SODIUM BENZOATE",
+    "SODIUM CHLORIDE",
+    "SODIUM HYDROXIDE",
+    "TOCOPHERYL ACETATE"
+  ],
+  "canonicalReason": "Exact manufacturer DE page (vichy.de, JSON-LD gtin13 = 3337871330286) wins; shop-apotheke.com (GTIN-anchored for 200 ml, 390 ml, 390 ml refill, 500 ml refill) shows the same 19 ingredients, differing only in the position of PARFUM / FRAGRANCE. Manufacturer order kept. Synonym pairs (AQUA / WATER, CI 19140 / YELLOW 5, PARFUM / FRAGRANCE) are single printed entries.",
+  "inciFingerprintSha256": "6635962985f9b1a54602ba96907582a72056e007f26454febd9037f66aca91bb",
+  "normalization": "lower-case, trim, collapse whitespace, join with |; split synonym entries merged into one item",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": "PZN 11162591 (200 ml; shop-apotheke.com). 390 ml PZN 11162616 = 3337871331290; 390 ml refill PZN 19668568 = 3337875902830; 500 ml refill PZN 17258398 = 3337875787192; each shop-apotheke page shows the identical INCI (single retailer, not independent per GTIN). 3401378301015: French-registered code (country FR, upcitemdb last scanned 2016-07-14, \"Itchy Scalp, Normal To Oily Hair 200ml\"), no formula source found, likely a very old pack; formula for it NOT verified. shop-apotheke.com lists \"Thermalwasser\" under Wirkstoffe (Avoxa/ABDATA), not an INCI entry. dm.de listing (dm-med partner, 13,35 EUR) and Rossmann not fetchable (bot wall); phase-1 batch-G recorded the dm variant (PARFUM last). Pack front reads \"Anti-Schuppen DS Intensiv-Shampoo\"; current brand name \"Anti-Schuppen Shampoo normale bis fettige Kopfhaut\". Medically adjacent (selenium sulfide + salicylic acid). Not classified."
+}

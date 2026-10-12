@@ -118,7 +118,7 @@ export const storedQuizAnswersSchema = applyQuizAnswerRules(
 )
 
 export const leadSchema = z.object({
-  name: z.string().min(1, "Name ist erforderlich"),
+  name: z.string().min(1, "Name ist erforderlich").max(80, "Name darf höchstens 80 Zeichen haben"),
   email: z.string().email("Bitte gib eine gueltige E-Mail-Adresse ein"),
   marketingConsent: z.boolean(),
   quizAnswers: quizAnswersSchema,

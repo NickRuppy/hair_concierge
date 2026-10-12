@@ -1,0 +1,14 @@
+{
+  "blindId": "VT04",
+  "productName": "Pure Volume Shampoo",
+  "brand": "Maria Nila",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_de_marianila_shop",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Ein volumengebendes Shampoo, das feines Haar fülliger macht und ihm Substanz verleiht, während es die Haarstruktur stärkt. Provitamin B5 schenkt dem Haar Volumen und Schwung mit langanhaltendem Ergebnis.\nFür feines Haar\nVolumengebend und stärkend\nMit Provitamin B5, Weizenprotein und Moringaöl\n100 % vegan und tierfreundlich\n\nDas Pure Volume Shampoo verleiht feinem Haar lebendiges Volumen. Vitamin B5 kräftigt das Haar und sorgt für mehr Fülle und Halt. Der Colour Guard Complex schützt die Haare zudem vor UV-Strahlen und sorgt für länger anhaltende, strahlende Farbkraft.",
+      "directionsVerbatim": "Ins feuchte Haar einmassieren, ausspülen und anschließend wie gewohnt pflegen. Täglich anwendbar."
+    }
+  ]
+}

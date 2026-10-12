@@ -1,0 +1,387 @@
+{
+ "blindId": "VT09",
+ "identity": {
+  "brand": "Moroccanoil",
+  "productName": "Moroccanoil Clarifying Shampoo",
+  "packSize": "250 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "da02a486122f7d259660e2f2026fe9613b7af885f06414ab20f5c5ad28840765",
+  "normalization": "Packet list already ID-2 normalized (WATER/AQUA one entry); names matched case-insensitively; normalized one-based positions; 44 entries.",
+  "completeness": "complete",
+  "e3ProminenceCutoff": "FRAGRANCE/PERFUME @13; entries 1-12 prominent",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high"
+ },
+ "formulaPassRecord": {
+  "path": "out/formula-pass/VT09.json",
+  "sha256": "a199af9ab135cbe226bc36d07728242a81b28a09d6dc5406d86b2c5fe7ba81f2",
+  "note": "Hash-pinned blind record; not edited after release."
+ },
+ "claimEvidence": [
+  "product name (high): \"Clarifying Shampoo\" -> D1 stem \"clarifying shampoo\"",
+  "manufacturer_de (moderate): \"Ein tiefenreinigendes Shampoo, das alltägliche Ablagerungen ohne Feuchtigkeitsentzug beseitigt\" -> D1 stem \"tiefenrein\"; buildup wording (U4)",
+  "manufacturer_de (moderate): \"reich an Argan- und Avocadoöl, Keratin ... und nährt das Haar\" -> nourishment wording (moisture candidate, secondary to the reset job)",
+  "manufacturer_de directions (moderate): \"sollte zweimal im Monat verwendet werden; oder bis zu ein- oder zweimal wöchentlich ...\" -> occasional-reset directions (D1); no daily use",
+  "manufacturer_de (moderate): \"sowohl Haar als auch Kopfhaut zu einem gesunden Gleichgewicht\" -> no E2 term",
+  "manufacturer_foreign (low): \"Removes 88% of oil*\" -> low, not used"
+ ],
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "low",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "low by C6: no strong anionic; the earliest prominent cleansing surfactant is Cocamidopropyl Hydroxysultaine @2 (amphoteric), followed by mild anionics Disodium Laureth Sulfosuccinate @3, Sodium Lauryl Sulfoacetate @4, Sodium Lauroyl Sarcosinate @5. Cocamidopropylamine Oxide @18 and Sodium Laurate @29 are after the E3 point and recorded only. Counter-signal: three mild anionics.",
+   "ruleIds": [
+    "C3",
+    "C3b",
+    "C4",
+    "C6"
+   ],
+   "blindValue": "low",
+   "changedAfterUnblind": false
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "moderate: one meaningful system, prominent payload oils (Argania Spinosa Kernel Oil @7, Persea Gratissima Oil @8), plus light late routes (humectants Glycerin @15, Panthenol @17, Sodium PCA @21; weak refatter PEG-6 Caprylic/Capric Glycerides @25; cationic conditioners Cinnamidopropyltrimonium Chloride @26, Cocamidopropyl Dimethylamine @30; amino acids and Hydrolyzed Keratin @32-36). C2 not met: no cationic polymer and no pearlizing/fatty route. Counter-signal: no cationic polymer or silicone, so slip may be limited; neighbor low.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "N-ALT"
+   ],
+   "blindValue": "moderate",
+   "changedAfterUnblind": false
+  },
+  "weightPotential": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "high",
+   "rationale": "moderate: two material plant oils (Argan @7, Avocado @8, both before the W-line @13) in a mild chassis (weak reset) plausibly leave noticeable lipid residue, but there is no silicone and no cationic polymer; the only cationic partners are two late quats (Cinnamidopropyltrimonium Chloride @26, Cocamidopropyl Dimethylamine @30) at trace position, weighed as weak evidence, so W-RICH's partner is not judged plausibly persistent and no second persistent family converges. Moderate confidence, neighbor high (heavier side realistic if the late quats are read as a persistent partner).",
+   "evidence": {
+    "silicone": [],
+    "cationic_polymer": [],
+    "cationic_conditioner": [
+     "Cinnamidopropyltrimonium Chloride @26",
+     "Cocamidopropyl Dimethylamine @30 (amidopropyl dimethylamine, cationic_conditioner per 6.3)"
+    ],
+    "payload_lipid": [
+     "Argania Spinosa (Argan) Kernel Oil @7 (material)",
+     "Persea Gratissima (Avocado) Oil @8 (material)"
+    ],
+    "weak_refatter": [
+     "PEG-6 Caprylic/Capric Glycerides @25"
+    ],
+    "protein_film": [
+     "Silk Amino Acids @32",
+     "Keratin Amino Acids @33",
+     "Hydrolyzed Keratin @36"
+    ],
+    "film_former": [],
+    "reset": [
+     "Cocamidopropyl Hydroxysultaine @2",
+     "Disodium Laureth Sulfosuccinate @3",
+     "Sodium Lauryl Sulfoacetate @4",
+     "Sodium Lauroyl Sarcosinate @5",
+     "Cocamidopropylamine Oxide @18 (not prominent)",
+     "Sodium Laurate @29 (soap, not prominent)"
+    ],
+    "humectantContext": [
+     "Glycerin @15",
+     "Panthenol @17",
+     "Sodium PCA @21",
+     "Butylene Glycol @31"
+    ],
+    "excluded": [
+     "PEG-40 Hydrogenated Castor Oil @19 (solubilizer, 6.4)",
+     "PEG-150 Pentaerythrityl Tetrastearate @24 (PEG thickener)",
+     "Simmondsia Chinensis (Jojoba) Seed Extract @12 (extract, not a nonvolatile oil)",
+     "botanical extracts @9-11"
+    ],
+    "unresolved": [
+     "Sodium Polystyrene Sulfonate @14 (anionic sulfonated polymer, no cationic charge; post-fragrance; not plausibly band-moving)"
+    ]
+   },
+   "wLine": {
+    "position": 13,
+    "inci": "FRAGRANCE/PERFUME",
+    "classes": [
+     "fragrance"
+    ],
+    "cap": "e3Point @13 (FRAGRANCE/PERFUME)",
+    "alphabeticalRuns": [],
+    "skipped": [],
+    "codes": [],
+    "payloadLipidMaterial": [
+     "Argania Spinosa Kernel Oil @7",
+     "Persea Gratissima Oil @8"
+    ],
+    "payloadLipidNonMaterial": [],
+    "note": "No class a-c candidate precedes the E3 marker; the marker itself is the earliest plausible candidate (W-LINE 3), so no fallback code."
+   },
+   "depositionLoad": "moderate",
+   "depositionLoadRationale": "Two prominent oils; other routes late and light.",
+   "persistence": "moderate",
+   "persistenceRationale": "Oils can persist under a mild chassis; no silicone/cationic polymer system.",
+   "resetCapacity": "weak",
+   "resetCapacityRationale": "C6 low chassis.",
+   "counterevidence": "W-RICH would be met if the late quats @26/@30 count as a plausibly persistent cationic partner; with weak reset that would reach the high anchor's rich route.",
+   "whyThisBand": "Material oils under weak reset make residue plausible but bounded.",
+   "whyNotNeighborBand": "high needs a plausibly persistent silicone/cationic partner for W-RICH or two converging persistent families; the only cationic entries are trace-position quats (@26, @30, after the chelators and citric acid) and the proteins are late amino acids. low is excluded: two material oils in a weak-reset chassis.",
+   "confidenceLimitingFactor": "Whether the late quats count as a plausibly persistent W-RICH partner (judgment; alternative high).",
+   "ruleIds": [
+    "6.3",
+    "6.6",
+    "W-RICH",
+    "W-LINE",
+    "W2",
+    "W3",
+    "N-ALT"
+   ],
+   "blindValue": "moderate",
+   "changedAfterUnblind": false
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "moisture",
+   "careDirection": {
+    "verdict": "moisture_supported",
+    "moistureRoutes": [
+     "Argania Spinosa Kernel Oil @7",
+     "Persea Gratissima Oil @8",
+     "Glycerin @15",
+     "Panthenol @17",
+     "Sodium PCA @21"
+    ],
+    "repairRoutes": [
+     "Hydrolyzed Keratin @36 (late)"
+    ],
+    "sharedConditioningRoutes": [
+     "Cinnamidopropyltrimonium Chloride @26",
+     "Cocamidopropyl Dimethylamine @30"
+    ],
+    "limitation": "Nourishment is a supporting statement in a reset-positioned product."
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Dominant positioning is clarifying/deep-cleansing, which fails F6 (cleansingStrength low); nourishment claim plus moisture_supported formula argue for moisture.",
+   "decisionTrace": "Claim direction: clarifying (name, high; manufacturer DE, moderate). Formula compatible: no - F6 requires cleansingStrength moderate or strong; it is low (C6). Fall back (F6, 7.2): the next claim (\"nährt das Haar\") is a subordinate benefit statement, not the product job; competing directions are resolved conservatively to general.",
+   "rationale": "general: the dominant clarifying job fails F6 (cleansingStrength low); the nourishment line is not a dominant job. Neighbor moisture.",
+   "ruleIds": [
+    "F6",
+    "7.2",
+    "7.1",
+    "N-ALT"
+   ],
+   "blindValue": "general",
+   "blindConfidence": "low",
+   "changedAfterUnblind": true
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "moisture"
+   ],
+   "decisionTrace": "Empty default considered; moisture could be a secondary only beside a valid primary specialist job; with general primary, the nourishment line is kept as a trade-off note. Selected [].",
+   "rationale": "[]",
+   "ruleIds": [
+    "8",
+    "N-ALT"
+   ],
+   "blindValue": [],
+   "blindConfidence": "low",
+   "changedAfterUnblind": true
+  },
+  "usageRole": {
+   "value": "occasional_reset",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "explicit_deep_cleansing",
+   "triggerEvidence": [
+    "product name \"Clarifying Shampoo\" (high)",
+    "\"Ein tiefenreinigendes Shampoo\" (manufacturer DE, moderate)",
+    "\"zweimal im Monat ... bis zu ein- oder zweimal wöchentlich\" (manufacturer DE directions, moderate)"
+   ],
+   "losingTriggers": [],
+   "rationale": "occasional_reset: D1 true (U1 first precedence). alternating cannot fire (cleansing not strong).",
+   "ruleIds": [
+    "9",
+    "U1",
+    "D1"
+   ],
+   "blindValue": "regular",
+   "blindConfidence": "low",
+   "changedAfterUnblind": true
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "not_targeted: no E2 sensitive or dry claim unit.",
+   "ruleIds": [
+    "10",
+    "SC1"
+   ],
+   "blindValue": "not_targeted",
+   "blindConfidence": "low",
+   "changedAfterUnblind": true
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "not_supported: complete INCI contains no recognized anti-dandruff active.",
+   "ruleIds": [
+    "11"
+   ],
+   "blindValue": "not_supported",
+   "changedAfterUnblind": false
+  }
+ },
+ "formulaFacts": {
+  "surfactants": {
+   "strongAnionic": [],
+   "mildAnionic": [
+    "Disodium Laureth Sulfosuccinate @3",
+    "Sodium Lauryl Sulfoacetate @4",
+    "Sodium Lauroyl Sarcosinate @5",
+    "Sodium Laurate @29 (soap, not prominent)"
+   ],
+   "amphoteric": [
+    "Cocamidopropyl Hydroxysultaine @2",
+    "Cocamidopropylamine Oxide @18 (C3b buffer only; not prominent)"
+   ],
+   "nonionicCleansing": [],
+   "notCleansing": [
+    "PEG-40 Hydrogenated Castor Oil @19",
+    "PEG-150 Pentaerythrityl Tetrastearate @24",
+    "PEG-6 Caprylic/Capric Glycerides @25"
+   ],
+   "c6Reading": "earliest prominent cleansing surfactant amphoteric @2 -> low"
+  },
+  "conditioningRoutes": [
+   "Argania Spinosa Kernel Oil @7",
+   "Persea Gratissima Oil @8",
+   "PEG-6 Caprylic/Capric Glycerides @25",
+   "Cinnamidopropyltrimonium Chloride @26",
+   "Cocamidopropyl Dimethylamine @30",
+   "Silk Amino Acids @32",
+   "Keratin Amino Acids @33",
+   "Hydrolyzed Keratin @36"
+  ],
+  "humectants": [
+   "Glycerin @15",
+   "Panthenol @17",
+   "Sodium PCA @21"
+  ],
+  "actives": [
+   "Chamomilla Recutita Flower Extract @9",
+   "Lavandula Angustifolia Flower Extract @10",
+   "Rosmarinus Officinalis Leaf Extract @11",
+   "Simmondsia Chinensis Seed Extract @12"
+  ],
+  "scalpExposure": [
+   "FRAGRANCE/PERFUME @13",
+   "Alpha-Isomethyl Ionone @43",
+   "Linalool @44"
+  ],
+  "recognizedDandruffActives": [],
+  "preservatives": [
+   "Phenoxyethanol @37",
+   "Sodium Benzoate @38",
+   "Chlorphenesin @39",
+   "Potassium Sorbate @40"
+  ]
+ },
+ "unresolvedMaterialIngredients": [
+  "Sodium Polystyrene Sulfonate @14: role not named in 6.3/6.4; anionic, post-fragrance; recorded as unresolved, judged not band-moving."
+ ],
+ "reconciliation": {
+  "blindToFinalChanges": [
+   "focusPrimary: general (low) -> general (moderate). Evidence: clarifying positioning fails F6.",
+   "focusSecondary: [] (low) -> [] (moderate).",
+   "usageRole: regular (low) -> occasional_reset (high). Evidence: D1 true.",
+   "scalpComfortTarget: not_targeted (low) -> not_targeted (high)."
+  ],
+  "unchangedFormulaProperties": "cleansingStrength stays low: reset intent never moves it (Section 4, 3.2). Other formula properties unchanged."
+ },
+ "projection": {
+  "status": "proposed_blocked_by_review_flags",
+  "thicknessFit": {
+   "fine": "acceptable",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "fine: T1 cell W=moderate, C=moderate -> acceptable; normal: T1 cell W=moderate, C=moderate -> ideal; coarse: T1 cell W=moderate, C=moderate -> acceptable. T2: thickness/texture claims ignored. T4 recomputed from N-ALT neighbors after T6. Balanced scalp (ordinary): no T6.",
+  "weight": "moderate",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential moderate -> moderate, confidence = weightPotential confidence (moderate).",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "confidence": "high",
+    "rationale": "S-ORDINARY way 1: no qualifying E2 claim unit; manufacturer source -> high."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "researchCombinationConfidence": {},
+  "cleansingIntensity": "gentle",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1: cleansingStrength low, D1 true -> gentle; written unchanged to every row (I2). I3 checked against the none neighbor.",
+  "explicitResetPositioning": true,
+  "explicitResetEvidence": "Product name \"Clarifying Shampoo\" (high); \"tiefenreinigendes Shampoo\" (manufacturer DE, moderate); directions limit use to twice a month / up to twice weekly (moderate).",
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D3 ordinary-strength: D1 true but cleansingStrength low -> no deep-cleanser entry, no review flag; regular-shampoo entry only at intensity gentle (R16.3).",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "gentle",
+    "weight": "moderate",
+    "tier": "acceptable"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "gentle",
+    "weight": "moderate",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "gentle",
+    "weight": "moderate",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   "review_thickness_boundary:fine",
+   "review_thickness_boundary:normal"
+  ],
+  "informationalNotes": [
+   "deep_cleansing_name_ordinary_formula (D1 wording \"Clarifying Shampoo\", \"tiefenreinigend\"; cleansingStrength low; directions twice a month to twice weekly, no daily use)"
+  ],
+  "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; lanes do not see catalog rows."
+ },
+ "selfCheck": "6.11: fingerprint matches the frozen packet; claims were hidden during the formula judgment (formula pass hash-pinned); no ingredient, family count or position window assigned the weight band; W-line derived per W-LINE with every skipped candidate recorded; three subjudgments present; whyNotNeighborBand specific; confidence names its limit; no comparison with earlier values made in-lane. Projection derived mechanically from final properties (T1/T6/T4/I1/I3/W-LIVE/13.7).",
+ "uncertainties": [
+  "weightPotential moderate vs high: hinges on whether trace-position quats (@26, @30) are a plausibly persistent W-RICH partner; chose moderate, neighbor high.",
+  "conditioningLevel moderate vs low: oils are the only prominent system; chose moderate.",
+  "focusPrimary general vs moisture (nourishment wording + moisture_supported formula); chose general because the product job is reset, which fails F6."
+ ]
+}

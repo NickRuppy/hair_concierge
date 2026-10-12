@@ -1,0 +1,32 @@
+{
+  "blindId": "VT21",
+  "packSize": "300 ml (the same formula is published for a 250 ml pack, GTIN 3600542512534)",
+  "canonicalInci": [
+    "AQUA / WATER",
+    "AMMONIUM LAURYL SULFATE",
+    "SODIUM CHLORIDE",
+    "COCAMIDOPROPYL BETAINE",
+    "NIGELLA SATIVA SEED OIL",
+    "TRIETHYL CITRATE",
+    "SODIUM HYDROXIDE",
+    "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+    "CHARCOAL POWDER",
+    "CITRIC ACID",
+    "POLYGLYCERIN-10",
+    "POLYGLYCERYL-10 MYRISTATE",
+    "POLYGLYCERYL-10 STEARATE",
+    "SODIUM BENZOATE",
+    "SODIUM DEHYDROACETATE",
+    "BENZOIC ACID",
+    "CARAMEL",
+    "LINALOOL",
+    "LIMONENE",
+    "BENZYL ALCOHOL",
+    "PARFUM / FRAGRANCE"
+  ],
+  "inciFingerprintSha256": "4d21bc975505079b916aa495f148440be891511f6de5cfb207eb9bfeb79bd9a0",
+  "normalization": "Split verbatim INCI on commas; per item trim, lower-case, collapse internal whitespace; join items with '|'; sha256 (utf-8) hex. Original-case ingredient list is kept in canonicalInci[].",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "moderate"
+}

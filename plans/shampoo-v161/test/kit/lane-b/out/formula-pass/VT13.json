@@ -1,0 +1,160 @@
+{
+  "blindId": "VT13",
+  "inciFingerprintSha256": "99422deac4534805dc08e5e6b4a3a06e9bacc0c0072971b058368c9844da05c0",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, claims hidden)",
+  "standard": "shampoo-classification-v1.6.1 candidate text (unlocked)",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "ID-2: packet entries already merged (Water (Aqua) (Eau) = one entry); all positions are normalized one-based positions of the 48-entry list",
+    "e3ProminenceCutoff": "Fragrance (Parfum) @45 -> positions 1-44 prominent"
+  },
+  "formulaFacts": {
+    "surfactantSystem": [
+      "Sodium Cocoyl Isethionate @2 - mild anionic (isethionate), earliest prominent cleansing surfactant",
+      "Disodium Laureth Sulfosuccinate @3 - mild anionic (sulfosuccinate), buffer",
+      "Cocamidopropyl Hydroxysultaine @5 - amphoteric, buffer",
+      "Sodium Lauryl Sulfoacetate @6 - mild anionic (sulfoacetate), buffer",
+      "Sodium Methyl Cocoyl Taurate @33 - mild anionic (taurate), prominent (before Fragrance) but late",
+      "Not cleansing/not buffer (C3): Cocamide MIPA @4 (alkanolamide), Glycol Distearate @7 (pearlizer), Trideceth-6 @34, Trideceth-12 @35, Polysorbate 20 @36",
+      "No strong anionic of either type anywhere in the list"
+    ],
+    "conditioningAndWeightRoutes": {
+      "silicone": ["Amodimethicone @30", "Silicone Quaternium-18 @31 (quaternized silicone)"],
+      "cationic_polymer": ["Polyquaternium-10 @37"],
+      "cationic_conditioner": ["Cetrimonium Chloride @29", "Quaternium-95 @32 (quaternary conditioning agent, recognition note in uncertainties)"],
+      "payload_lipid": ["Butyrospermum Parkii (Shea) Butter @19", "Oenothera Biennis (Evening Primrose) Oil @20", "Rosa Canina Fruit Oil @24", "Jojoba Esters @25"],
+      "weak_refatter": ["Ascorbyl Palmitate @14"],
+      "protein_film": ["Hydrolyzed Milk Protein @26"],
+      "film_former": [],
+      "pearlizing_fatty_route_for_C2": ["Glycol Distearate @7"],
+      "humectantContext": ["Glycerin @8", "Panthenol @11", "Butylene Glycol @27 (solvent, not a C2 humectant)", "Propanediol @28 (solvent)"],
+      "excluded": ["Glycol Distearate @7 (pearlizing wax, excluded from weight, 6.4)", "Cocamide MIPA @4 (alkanolamide thickener)", "Trideceth-6 @34, Trideceth-12 @35, Polysorbate 20 @36 (emulsifiers/solubilizers, likely silicone-emulsion carriers)", "Retinyl Palmitate @9, Tocopherol @12, Tocopheryl Acetate @15 (vitamin actives/antioxidants, not deposition routes)", "Bergamot fruit extract @17 and botanical extracts @18, @21-23 (extracts)", "Fragrance @45 and allergens @46-48"]
+    },
+    "actives": ["Panthenol @11", "Biotin @13", "Retinyl Palmitate @9", "Ascorbic Acid @10", "Pyridoxine HCl @16", "no recognized anti-dandruff active (no Piroctone Olamine, Climbazole, Selenium Sulfide/Disulfide)"],
+    "scalpExposureFlags": ["Fragrance @45 (not prominent)", "Bergamot fruit extract @17 (extract, not an essential oil)", "no cooling agent", "E4 comfort route prominent: Panthenol @11", "E4 humectant/refatting routes prominent: Glycerin @8, Panthenol @11, Shea Butter @19, Evening Primrose Oil @20, Rosa Canina Fruit Oil @24"]
+  },
+  "wLine": {
+    "wLine": "Phenoxyethanol @40",
+    "candidateClasses": ["preservative_or_capped_active"],
+    "cap": "e3Point @45 (Fragrance (Parfum))",
+    "alphabeticalRun": "none (no run of >=7 consecutive ascending entries)",
+    "skipped": [
+      "w_line_skipped:Panthenol@11 - clause (ii) failed: cleansing surfactant Sodium Methyl Cocoyl Taurate @33 listed after it and before the cap",
+      "w_line_skipped:Tocopherol@12 - clause (ii) failed: Sodium Methyl Cocoyl Taurate @33 after it",
+      "w_line_skipped:Biotin@13 - clause (ii) failed: Sodium Methyl Cocoyl Taurate @33 after it",
+      "w_line_skipped:Tocopheryl Acetate@15 - clause (ii) failed: Sodium Methyl Cocoyl Taurate @33 after it"
+    ],
+    "plausibilityOfWLine": "Phenoxyethanol @40: (i) cleansing surfactants listed before (@2); (ii) between @40 and the cap @45 only Chlorphenesin, Potassium Sorbate, Sodium Benzoate, Citric Acid - no cleansing surfactant, alkanolamide or pearlizing wax",
+    "codes": [],
+    "payloadLipidMaterial": ["Shea Butter @19", "Evening Primrose Oil @20", "Rosa Canina Fruit Oil @24", "Jojoba Esters @25"],
+    "payloadLipidNonMaterial": []
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low by C6: no prominent strong anionic; the earliest prominent cleansing surfactant is the mild anionic Sodium Cocoyl Isethionate @2 with a prominent amphoteric co-surfactant (Cocamidopropyl Hydroxysultaine @5). Counter-signal lowering confidence: the chassis is anionic-dominated (three mild anionics @2, @3, @6, plus taurate @33) and the only amphoteric comes fourth, after the alkanolamide @4, so realistic concentration unknowns could make the net cleansing moderate. Convention value kept (C1-C6 preamble).",
+      "ruleIds": ["C3", "C4", "C6", "N-ALT"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High by C2: prominent silicones (Amodimethicone @30, Silicone Quaternium-18 @31; prominent because before Fragrance @45) plus a cationic polymer (Polyquaternium-10 @37) plus a pearlizing route (Glycol Distearate @7) plus a closed-list humectant route (Glycerin @8, Panthenol @11); further routes: Cetrimonium Chloride @29, Quaternium-95 @32, material payload lipids @19/@20/@24/@25, Hydrolyzed Milk Protein @26. Counter-signal: every conditioning route sits after trace vitamins (Biotin @13), so each is plausibly at a low level; realistic unknowns could make the rinse-off care bounded (moderate).",
+      "ruleIds": ["C2", "E3", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "silicone": ["Amodimethicone @30", "Silicone Quaternium-18 @31"],
+        "cationic_polymer": ["Polyquaternium-10 @37"],
+        "cationic_conditioner": ["Cetrimonium Chloride @29", "Quaternium-95 @32"],
+        "payload_lipid": ["material: Shea Butter @19, Evening Primrose Oil @20, Rosa Canina Fruit Oil @24, Jojoba Esters @25 (all before W-line @40)"],
+        "weak_refatter": ["Ascorbyl Palmitate @14"],
+        "protein_film": ["Hydrolyzed Milk Protein @26"],
+        "film_former": [],
+        "reset": ["mild anionic: Sodium Cocoyl Isethionate @2, Disodium Laureth Sulfosuccinate @3, Sodium Lauryl Sulfoacetate @6, Sodium Methyl Cocoyl Taurate @33", "amphoteric: Cocamidopropyl Hydroxysultaine @5"],
+        "humectantContext": ["Glycerin @8", "Panthenol @11"],
+        "excluded": ["Glycol Distearate @7 (pearlizing wax)", "Cocamide MIPA @4 (alkanolamide)", "Trideceth-6 @34, Trideceth-12 @35, Polysorbate 20 @36 (emulsifiers)", "vitamin actives @9, @12, @15"],
+        "unresolved": ["Quaternium-95 @32 - read as a quaternary conditioning agent; not band-moving because cationic deposition is already present"]
+      },
+      "depositionLoad": "moderate - six deposition families converge (two silicones incl. amodimethicone, polyquaternium-10, two quats, four material lipids, protein), but each is listed after trace-level vitamins, so the absolute dose of each route is plausibly small",
+      "persistence": "high - amodimethicone and a quaternized silicone with cationic polymer/quats are substantive, plausibly persistent routes; waxy shea butter and jojoba esters add persistence",
+      "resetCapacity": "weak - C6 low mild-anionic/amphoteric chassis, no strong anionic",
+      "counterevidence": "All deposition routes sit after Biotin @13 and other trace vitamins (likely sub-1 % zone); silicones appear with their emulsion carriers (Trideceth-6/-12, Cetrimonium Chloride), suggesting small silicone dose; ordinary rinse-off context.",
+      "whyThisBand": "High: W-RICH holds (material payload lipids @19/@20/@24/@25 converge with silicone and cationic deposition) and reset is limited (resetCapacity weak), which is the rich route of the high anchor; the convergence route also holds (silicone + cationic polymer + cationic conditioner + material lipid + protein).",
+      "whyNotNeighborBand": "Not moderate: the anchor's rich route (W-RICH with weak reset) and the convergence route both hold; a moderate call would rest only on the unknown absolute dose of late routes, which is the realistic unknown that sets confidence at moderate rather than a reason for the lighter band (P0).",
+      "confidenceLimitingFactor": "Position of all deposition routes after trace-level actives; absolute doses unknown, so realistic unknowns could move the band one step to moderate.",
+      "rationale": "High: W-RICH (material lipids before W-line Phenoxyethanol @40 plus silicones/cationics) with weak reset from a C6 low mild chassis, plus multi-family convergence. Confidence moderate because every route is late. W1 not applicable (no C1/C5 sulfate chassis).",
+      "ruleIds": ["6.3", "6.4", "6.6", "W-RICH", "W-LINE", "W1", "W2", "W3", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "dual_supported (provisional)",
+        "moistureRoutes": ["Glycerin @8", "Panthenol @11", "Shea Butter @19", "Evening Primrose Oil @20", "Rosa Canina Fruit Oil @24", "Jojoba Esters @25"],
+        "repairRoutes": ["Amodimethicone @30", "Silicone Quaternium-18 @31", "Hydrolyzed Milk Protein @26", "Polyquaternium-10 @37", "Cetrimonium Chloride @29"],
+        "sharedConditioningRoutes": ["Glycol Distearate @7", "Quaternium-95 @32"],
+        "limitation": "All routes late; rinse-off context; one protein token only"
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "No claims visible in the blind pass; formula supports both moisture and repair directions without distinguishing one.",
+      "decisionTrace": "Claim direction: null (blind). Formula compatible with moisture or repair (dual_supported). Provisional general until the reveal supplies an exact-product claim.",
+      "rationale": "Provisional formula-only: general, because focus needs an exact-product claim (7.2); formula is dual_supported, so a moisture or repair claim would be compatible.",
+      "ruleIds": ["7.2", "7.3", "F1", "3.1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["shine"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible; independent routes exist but need distinct positioning (Section 8).",
+      "rationale": "Provisional formula-only: [] (no positioning visible).",
+      "ruleIds": ["8", "F2", "F3"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": ["alternating impossible (cleansingStrength not strong)", "treatment impossible (dandruffSupport not_supported)", "frequent possible only with U2 wording (formula not strong)"],
+      "rationale": "Provisional default regular; claim-dependent triggers cannot be checked blind.",
+      "ruleIds": ["9", "U1", "U2", "U4"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: positioning (SC1) is hidden. Formula half (CSA) is met: prominent E4 comfort route Panthenol @11 and humectant/refatting routes Glycerin @8, Shea Butter @19, oils @20/@24; no prominent cooling agent or essential oil; fragrance not prominent.",
+      "ruleIds": ["10", "CSA", "SC1", "E3", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: the complete INCI contains none of Piroctone Olamine, Climbazole, Selenium Sulfide or Selenium Disulfide.",
+      "ruleIds": ["11", "DS1", "ID-1"]
+    }
+  },
+  "unresolvedMaterialIngredients": [
+    "Quaternium-95 @32: read as a quaternary conditioning agent (cationic_conditioner); not band-moving (cationic deposition already present via Cetrimonium Chloride and Polyquaternium-10)"
+  ],
+  "uncertainties": [
+    "cleansingStrength confidence moderate rather than high: anionic-dominated mild chassis; alternative reading high confidence on the pure C6 convention.",
+    "weightPotential high vs moderate: W-RICH and convergence hold on the rules, but all routes are late; alternative moderate with high as neighbor.",
+    "Retinyl Palmitate @9 and Jojoba Esters @25: Retinyl Palmitate read as a vitamin active (excluded), Jojoba Esters as an emollient ester (payload_lipid)."
+  ]
+}

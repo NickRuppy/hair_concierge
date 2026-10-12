@@ -1,0 +1,375 @@
+{
+  "blindId": "VT19",
+  "lane": "lane-b",
+  "phase": "final (post-unblind reconciliation)",
+  "standard": "shampoo-classification-v1.6.1 candidate text (unlocked)",
+  "identity": {
+    "brand": "Moroccanoil",
+    "productName": "Moisture Repair Shampoo",
+    "packSize": "250 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "3c44cb1ae0d128189054da9ef1d6e1743192d16935c0fb7bf95b5892b593d9d4",
+    "normalization": "ID-2: WATER/AQUA one entry; normalized one-based positions of the 57-entry list",
+    "completeness": "complete (source tier 2, identity confidence high)",
+    "e3ProminenceCutoff": "FRAGRANCE @16 -> positions 1-15 prominent",
+    "identityNotes": []
+  },
+  "formulaFacts": {
+    "surfactantSystem": [
+      "Disodium Laureth Sulfosuccinate @2 - mild anionic, earliest prominent cleansing surfactant",
+      "Sodium Lauroyl Sarcosinate @3 - mild anionic, buffer",
+      "Cocamidopropyl Hydroxysultaine @4 - amphoteric, buffer",
+      "Sodium Lauryl Sulfoacetate @5 - mild anionic, buffer",
+      "Not cleansing: Cocamide MEA @6 (alkanolamide), Glycol Distearate @7, C12-13 Pareth-23 @21, C12-13 Pareth-3 @22, Trideceth-12 @23, PEG-150 Pentaerythrityl Tetrastearate @28",
+      "No strong anionic"
+    ],
+    "conditioningAndWeightRoutes": {
+      "silicone": [
+        "Dimethicone @8",
+        "Divinyldimethicone/Dimethicone Copolymer @24",
+        "Amodimethicone @29",
+        "Dimethiconol @30",
+        "Cyclopentasiloxane @33 (volatile carrier; not counted as persistent deposition)"
+      ],
+      "cationic_polymer": [
+        "Polyquaternium-7 @25",
+        "Polyquaternium-10 @26",
+        "Polyquaternium-59 @42"
+      ],
+      "cationic_conditioner": [
+        "Quaternium-80 @27",
+        "Cocamidopropyl Dimethylamine @43 (amidoamine)",
+        "Cetrimonium Chloride @48"
+      ],
+      "payload_lipid": [
+        "Argania Spinosa Kernel Oil @9",
+        "Persea Gratissima (Avocado) Oil @10"
+      ],
+      "weak_refatter": [
+        "PEG-6 Caprylic/Capric Glycerides @31"
+      ],
+      "protein_film": [
+        "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol @15",
+        "Silk Amino Acids @17",
+        "Hydrolyzed Keratin @18",
+        "Keratin Amino Acids @19"
+      ],
+      "film_former": [],
+      "pearlizing_fatty_route_for_C2": [
+        "Glycol Distearate @7"
+      ],
+      "humectantContext": [
+        "Panthenol @32",
+        "Glycerin @34",
+        "Sodium PCA @36",
+        "Butylene Glycol @38, Propylene Glycol @41 (solvents)"
+      ],
+      "excluded": [
+        "Glycol Distearate @7 (pearlizing wax)",
+        "Cocamide MEA @6 (alkanolamide)",
+        "PEG-150 Pentaerythrityl Tetrastearate @28 (PEG thickener)",
+        "Acrylates/Palmeth-25 Acrylate Copolymer @39 (anionic associative acrylate thickener, 6.4)",
+        "Simmondsia Chinensis (Jojoba) Seed Extract @14 (extract, not the oil)",
+        "chamomile/lavender/rosemary extracts @11-@13",
+        "pareths/trideceth @21-@23",
+        "Cyclopentasiloxane @33 (volatile)"
+      ]
+    },
+    "actives": [
+      "no recognized anti-dandruff active"
+    ],
+    "scalpExposureFlags": [
+      "Fragrance @16; lavender/rosemary extracts (extracts, not essential oils); no cooling agent",
+      "E4 comfort list: Panthenol @32 not prominent - no prominent comfort route",
+      "E4 humectant/refatting routes prominent: Argan Oil @9, Avocado Oil @10"
+    ]
+  },
+  "claimEvidence": [
+    "product name (high): 'Moisture Repair Shampoo' (DE name per manufacturer: 'Feuchtigkeitsspendendes Reparatur-Shampoo')",
+    "manufacturer_de (moderate): 'Reparieren Sie das durch Farbe, chemische Behandlungen oder Hitze-Styling geschädigte Haar ... genährtes, geschmeidiges und starkes Ergebnis. Reich an Antioxidantien, Keratin, Fettsäuren, Proteine ...'",
+    "manufacturer_foreign EN (low): repair/moisturizing, 'Sulfate-free'",
+    "retailer (low): color safe, sulfate-free"
+  ],
+  "reconciliation": [
+    "focusPrimary general low -> repair moderate (damage claim breaks dual tie).",
+    "focusSecondary [] low -> ['moisture'] moderate (distinct name positioning + independent oil/humectant route).",
+    "usageRole regular low -> regular high; scalpComfortTarget not_targeted low -> high.",
+    "'Keratin' maps to Hydrolyzed Keratin @18/Keratin Amino Acids @19; 'Arganöl' to @9; 'sulfatfrei' consistent with INCI. Formula properties unchanged."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low by C6: no strong anionic; the earliest prominent cleansing surfactant is the mild anionic Disodium Laureth Sulfosuccinate @2 with the prominent amphoteric Cocamidopropyl Hydroxysultaine @4. Counter-signal: three mild anionics (@2, @3, @5) plus an alkanolamide booster dominate, so realistic unknowns could make net cleansing moderate.",
+      "ruleIds": [
+        "C3",
+        "C4",
+        "C6",
+        "N-ALT"
+      ],
+      "counterSignal": "Three mild anionics plus an alkanolamide booster dominate the chassis.",
+      "sourceIds": [
+        "formula-pass/VT19.json (hash-pinned blind record)",
+        "stage-A formula packet VT19"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "High: rich architecture under the Section 5 reading (E3) - prominent payload oils (Argan @9, Avocado @10) converge with a prominent silicone (Dimethicone @8); C2 also met (Dimethicone @8 early, cationic polymers @25/@26, Glycol Distearate @7, Glycerin @34/Panthenol @32/Sodium PCA @36). Further silicones, three cationic polymers, three cationic conditioners and four protein routes after Fragrance add support.",
+      "ruleIds": [
+        "C2",
+        "W-RICH",
+        "E3",
+        "5"
+      ],
+      "counterSignal": "Oils are liquid; many routes after Fragrance.",
+      "sourceIds": [
+        "formula-pass/VT19.json (hash-pinned blind record)",
+        "stage-A formula packet VT19"
+      ]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "evidence": {
+        "silicone": [
+          "Dimethicone @8",
+          "Divinyldimethicone/Dimethicone Copolymer @24",
+          "Amodimethicone @29",
+          "Dimethiconol @30"
+        ],
+        "cationic_polymer": [
+          "Polyquaternium-7 @25",
+          "Polyquaternium-10 @26",
+          "Polyquaternium-59 @42"
+        ],
+        "cationic_conditioner": [
+          "Quaternium-80 @27",
+          "Cocamidopropyl Dimethylamine @43",
+          "Cetrimonium Chloride @48"
+        ],
+        "payload_lipid": [
+          "material: Argania Spinosa Kernel Oil @9, Persea Gratissima Oil @10 (before W-line @16)"
+        ],
+        "weak_refatter": [
+          "PEG-6 Caprylic/Capric Glycerides @31"
+        ],
+        "protein_film": [
+          "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol @15",
+          "Silk Amino Acids @17",
+          "Hydrolyzed Keratin @18",
+          "Keratin Amino Acids @19"
+        ],
+        "film_former": [],
+        "reset": [
+          "mild anionic @2, @3, @5",
+          "amphoteric @4"
+        ],
+        "humectantContext": [
+          "Panthenol @32",
+          "Glycerin @34",
+          "Sodium PCA @36"
+        ],
+        "excluded": [
+          "Glycol Distearate @7",
+          "Cocamide MEA @6",
+          "PEG-150 Pentaerythrityl Tetrastearate @28",
+          "Acrylates/Palmeth-25 Acrylate Copolymer @39",
+          "Cyclopentasiloxane @33 (volatile)"
+        ],
+        "unresolved": []
+      },
+      "depositionLoad": "high - prominent dimethicone and two prominent oils, plus three further silicones incl. amodimethicone, three cationic polymers, three cationic conditioners and proteins",
+      "persistence": "high - dimethicone, amodimethicone, dimethiconol and polyquaternium/quat systems are substantive and accumulate",
+      "resetCapacity": "weak - C6 low mild-anionic/sultaine chassis",
+      "counterevidence": "Oils are liquid; many routes are after Fragrance and likely low-dose; ordinary rinse-off.",
+      "whyThisBand": "High: W-RICH (material Argan @9/Avocado @10 with prominent Dimethicone @8) with limited reset (weak) is the rich route; the convergence route (silicone + cationic polymer + cationic conditioner + material lipid + protein) also holds.",
+      "whyNotNeighborBand": "Not moderate: both high routes hold with prominent members, and a weak mild chassis cannot offset four silicones and three cationic polymers; no realistic unknown removes the prominent dimethicone + oils core.",
+      "confidenceLimitingFactor": "None material: converging prominent routes and weak reset.",
+      "rationale": "High: W-line = Fragrance @16 keeps both oils material; W-RICH + weak reset and multi-family convergence. W1 not applicable (no sulfate chassis).",
+      "ruleIds": [
+        "6.6",
+        "W-RICH",
+        "W-LINE",
+        "W1",
+        "N-ALT"
+      ],
+      "counterSignal": "Liquid oils; many routes after Fragrance and likely low-dose.",
+      "sourceIds": [
+        "formula-pass/VT19.json (hash-pinned blind record)",
+        "stage-A formula packet VT19"
+      ],
+      "wLineRecord": {
+        "wLine": "FRAGRANCE @16",
+        "candidateClasses": [
+          "fragrance"
+        ],
+        "cap": "e3Point @16 (Fragrance)",
+        "alphabeticalRun": "none before the cap",
+        "skipped": [],
+        "plausibilityOfWLine": "No class a-d candidate before the cap; the E3 marker is the earliest candidate: (i) cleansing surfactants before; (ii) nothing between. W-line = cap, no fallback code",
+        "codes": [],
+        "payloadLipidMaterial": [
+          "Argan Oil @9",
+          "Avocado Oil @10"
+        ],
+        "payloadLipidNonMaterial": []
+      }
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "moderate",
+      "neighboringAlternative": "moisture",
+      "rationale": "Repair: the manufacturer DE text leads with damage repair ('Reparieren Sie das durch Farbe, chemische Behandlungen oder Hitze-Styling geschädigte Haar', keratin, proteins, 'gestärkt') and the exact name carries 'Repair'; the formula is dual_supported with a coherent protein/deposition cluster, so the dominant damage claim breaks the tie (F1).",
+      "ruleIds": [
+        "7.2",
+        "7.3",
+        "F1",
+        "CL-SRC"
+      ],
+      "careDirection": {
+        "verdict": "dual_supported",
+        "moistureRoutes": [
+          "Argan Oil @9",
+          "Avocado Oil @10",
+          "Panthenol @32",
+          "Glycerin @34",
+          "Sodium PCA @36"
+        ],
+        "repairRoutes": [
+          "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol @15",
+          "Silk Amino Acids @17",
+          "Hydrolyzed Keratin @18",
+          "Keratin Amino Acids @19",
+          "Amodimethicone @29"
+        ],
+        "sharedConditioningRoutes": [
+          "Dimethicone @8",
+          "Glycol Distearate @7",
+          "Polyquaternium-7 @25",
+          "Polyquaternium-10 @26",
+          "Quaternium-80 @27"
+        ],
+        "limitation": "Proteins and humectants after Fragrance; rinse-off."
+      },
+      "claimRole": "tie_breaker",
+      "counterSignal": "'Moisture' is equally in the exact name; 'genährt, geschmeidig' wording and early oils support moisture.",
+      "decisionTrace": "Claim direction: repair (dominant DE manufacturer damage claim, moderate; name 'Moisture Repair', high, names both). Formula: dual_supported. Route: Hydrolyzed Keratin @18 + keratin/silk amino acids + protein silanetriol @15 + Amodimethicone @29. Decision: damage-led positioning breaks the tie -> repair."
+    },
+    "focusSecondary": {
+      "value": [
+        "moisture"
+      ],
+      "confidence": "moderate",
+      "neighboringAlternative": [],
+      "rationale": "Moisture as secondary: distinct positioning ('Moisture' in the exact name; DE name 'Feuchtigkeitsspendendes Reparatur-Shampoo'; 'genährtes, geschmeidiges' result) with an independent route not cited for repair (Argan @9, Avocado @10, Glycerin @34, Panthenol @32, Sodium PCA @36).",
+      "ruleIds": [
+        "8",
+        "F3"
+      ],
+      "decisionTrace": "Empty default considered. Selected moisture: matching distinct claim = 'Moisture' (name) / 'Feuchtigkeitsspendend'; independent route = oils @9/@10 + humectants @32/@34/@36 (repair route cites proteins and amodimethicone); distinct from primary (hydration vs damage). One value, no exception code."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Regular: no frequency wording, no D1, no dandruff claim, cleansing low ('Bei Bedarf wiederholen' is not a trigger).",
+      "ruleIds": [
+        "9",
+        "U1"
+      ],
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": []
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no scalp positioning.",
+      "ruleIds": [
+        "10",
+        "SC1"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: none of Piroctone Olamine, Climbazole, Selenium Sulfide or Selenium Disulfide in the complete INCI (formula-only; unchanged by the reveal).",
+      "ruleIds": [
+        "11",
+        "DS1"
+      ]
+    }
+  },
+  "projection": {
+    "status": "projected_proposal",
+    "thicknessFit": {
+      "fine": "not_suited",
+      "normal": "acceptable",
+      "coarse": "ideal"
+    },
+    "thicknessFitConfidence": {
+      "fine": "high",
+      "normal": "high",
+      "coarse": "high"
+    },
+    "thicknessRationale": "T1 W high, C high (both high confidence): fine not_suited, normal acceptable, coarse ideal. No T4 flag (neighbors none).",
+    "weight": "heavy",
+    "weightConfidence": "high",
+    "weightRationale": "W-LIVE: weightPotential high projects 1:1 to heavy; confidence = weightPotential confidence.",
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1: no qualifying E2 claim unit; manufacturer DE source present -> high."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "gentle",
+    "cleansingIntensityConfidence": "moderate",
+    "cleansingIntensityRationale": "I1: cleansingStrength low; D1 false -> gentle. I3 recomputed with neighbor moderate.",
+    "explicitResetPositioning": false,
+    "explicitResetPositioningEvidence": "No D1 stem (tiefenrein, deep clean, clarifying shampoo, detox-reinigung) in the product name or any manufacturer/pack claim; no directions limiting use to occasional resets.",
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserListingConfidence": "moderate",
+    "deepCleanserRationale": "D1 false -> not_flagged (D2).",
+    "rows": [
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "heavy",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "heavy",
+        "tier": "ideal"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [],
+    "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze (lane cannot see catalog)"
+  },
+  "selfCheck": "6.11/selfCheck: formula fingerprint matches the frozen stage-A packet; claims and identity were hidden during the formula pass and the hash-pinned formula-pass record was not edited after release; no ingredient, family count or position window assigned a band (the W-line only gated payload_lipid legs); W-line derived from the frozen list per W-LINE with every skipped candidate recorded; depositionLoad, persistence and resetCapacity present with rationales; counterevidence and whyNotNeighborBand specific (W2 where it applies); confidence names its limiting factor; N-ALT neighbors consistent with confidences; projection fields derived mechanically (T1, T6, T4, W-LIVE, I1, I3, D1-D3, 13.7, 13.8); no catalog, web or other-lane input.",
+  "uncertainties": [
+    "C2 'cationic polymer' and humectant elements are listed only after Fragrance; C2 text defines 'early' only for the silicone. conditioningLevel high does not depend on it (rich architecture holds with prominent members).",
+    "Acrylates/Palmeth-25 Acrylate Copolymer @39 read as an anionic associative acrylate thickener (excluded); not band-moving either way.",
+    "Simmondsia Chinensis Seed Extract @14 read as an extract, not jojoba oil.",
+    "Primary repair vs moisture: name names both; alternative primary moisture with secondary repair."
+  ]
+}

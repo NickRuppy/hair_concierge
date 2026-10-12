@@ -1,0 +1,30 @@
+{
+  "blindId": "VT17",
+  "packSize": "200 ml",
+  "canonicalInci": [
+    "AQUA / WATER",
+    "SODIUM LAURETH SULFATE",
+    "GLYCOL DISTEARATE",
+    "COCO-BETAINE",
+    "GLYCERIN",
+    "DIMETHICONE",
+    "CARBOMER",
+    "CI 19140 / YELLOW 5",
+    "CITRIC ACID",
+    "MENTHOL",
+    "2-OLEAMIDO-1,3-OCTADECANEDIOL",
+    "PARFUM / FRAGRANCE",
+    "PPG-5-CETETH-20",
+    "SALICYLIC ACID",
+    "SELENIUM SULFIDE",
+    "SODIUM BENZOATE",
+    "SODIUM CHLORIDE",
+    "SODIUM HYDROXIDE",
+    "TOCOPHERYL ACETATE"
+  ],
+  "inciFingerprintSha256": "6635962985f9b1a54602ba96907582a72056e007f26454febd9037f66aca91bb",
+  "normalization": "lower-case, trim, collapse whitespace, join with |; split synonym entries merged into one item",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high"
+}

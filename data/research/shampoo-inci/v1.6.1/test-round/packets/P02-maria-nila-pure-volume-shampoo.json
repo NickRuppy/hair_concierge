@@ -1,0 +1,89 @@
+{
+ "slot": "P02",
+ "productId": null,
+ "name": "Pure Volume Shampoo",
+ "brand": "Maria Nila",
+ "packSize": "350 ml",
+ "gtins": [
+  "7391681036109",
+  "7391681036154",
+  "7391681036130"
+ ],
+ "sources": [
+  {
+   "url": "https://marianila.de/products/pure-volume-shampoo-350-ml",
+   "retrievedAt": "2026-10-09",
+   "sourceType": "manufacturer_de_marianila_shop",
+   "sourceKind": "manufacturer_de",
+   "gtinShown": "7391681036109",
+   "inciVerbatim": "Aqua/Water/Eau, Sodium Lauroyl Methyl Isethionate, Cocamidopropyl Betaine, Disodium Laureth Sulfosuccinate, Sodium Lauryl Sulfoacetate, Glycerin, Panthenol, Helianthus Annuus (Sunflower) Seed Oil, Ethyltrimonium Chloride Methacrylate/Hydrolyzed Wheat Protein Copolymer, Phyllostachys Nigra Leaf Extract, Hydrolyzed Wheat Protein, Amodimethicone/Morpholinomethyl Silsesquioxane Copolymer, Hydrolyzed Vegetable Protein PG-Propyl Silanetriol, Trideceth-5, PEG-150 Pentaerythrityl Tetrastearate, Quaternium-95, PPG-2 Hydroxyethyl Cocamide, Guar Hydroxypropyltrimonium Chloride, Propanediol, Pentaerythrityl Tetra-Di-T-Butyl Hydroxyhydrocinnamate, Potassium Sorbate, Disodium EDTA, Sodium Chloride, Lactic Acid, Ethylhexylglycerin, Citric Acid, Benzyl Alcohol, Linalool, Hexyl Cinnamal, Benzyl Salicylate, Citronellol, Phenoxyethanol, Parfum/Fragrance, CI 16035/Red 40, CI 42090/Blue 1",
+   "claimsVerbatim": "Ein volumengebendes Shampoo, das feines Haar fülliger macht und ihm Substanz verleiht, während es die Haarstruktur stärkt. Provitamin B5 schenkt dem Haar Volumen und Schwung mit langanhaltendem Ergebnis.\nFür feines Haar\nVolumengebend und stärkend\nMit Provitamin B5, Weizenprotein und Moringaöl\n100 % vegan und tierfreundlich\n\nDas Pure Volume Shampoo verleiht feinem Haar lebendiges Volumen. Vitamin B5 kräftigt das Haar und sorgt für mehr Fülle und Halt. Der Colour Guard Complex schützt die Haare zudem vor UV-Strahlen und sorgt für länger anhaltende, strahlende Farbkraft.",
+   "directionsVerbatim": "Ins feuchte Haar einmassieren, ausspülen und anschließend wie gewohnt pflegen. Täglich anwendbar."
+  },
+  {
+   "url": "https://luxuriouslook.co.uk/maria-nila-pure-volume-shampoo-350ml",
+   "retrievedAt": "2026-10-09",
+   "sourceType": "retailer_luxuriouslook_uk",
+   "sourceKind": "retailer",
+   "gtinShown": "7391681036109",
+   "inciVerbatim": "Aqua/Water/Eau, Sodium Lauroyl Methyl Isethionate, Cocamidopropyl Betaine, Disodium Laureth Sulfosuccinate, Sodium Lauryl Sulfoacetate, Glycerin, Panthenol, Helianthus Annuus (Sunflower) Seed Oil, Ethyltrimonium Chloride Methacrylate/Hydrolyzed Wheat Protein Copolymer, Phyllostachys Nigra Leaf Extract, Hydrolyzed Wheat Protein, Amodimethicone/Morpholinomethyl Silsesquioxane Copolymer, Hydrolyzed Vegetable Protein PG-Propyl Silanetriol, Trideceth-5, PEG-150 Pentaerythrityl Tetrastearate, Quaternium-95, PPG-2 Hydroxyethyl Cocamide, Guar Hydroxypropyltrimonium Chloride, Propanediol, Pentaerythrityl Tetra-Di-T-Butyl Hydroxyhydrocinnamate, Potassium Sorbate, Disodium EDTA, Sodium Chloride, Lactic Acid, Ethylhexylglycerin, Citric Acid, Benzyl Alcohol, Linalool, Hexyl Cinnamal, Benzyl Salicylate, Citronellol, Phenoxyethanol, Parfum/Fragrance, CI 16035/Red 40, CI 42090/Blue 1",
+   "claimsVerbatim": null,
+   "directionsVerbatim": null
+  }
+ ],
+ "conflicts": [
+  {
+   "type": "claim_vs_inci",
+   "source": "marianila.de claims",
+   "url": "https://marianila.de/products/pure-volume-shampoo-350-ml",
+   "quote": "Mit Provitamin B5, Weizenprotein und Moringaöl",
+   "note": "Claim names Moringa oil, but no Moringa ingredient (e.g. Moringa Oleifera Seed Oil) appears in the brand INCI or in the luxuriouslook.co.uk copy. Provitamin B5 = Panthenol and wheat protein = Hydrolyzed Wheat Protein are present. Either the claim is marketing for a trace/unlisted component or the list is not the full current formula."
+  }
+ ],
+ "canonicalInci": [
+  "Aqua/Water/Eau",
+  "Sodium Lauroyl Methyl Isethionate",
+  "Cocamidopropyl Betaine",
+  "Disodium Laureth Sulfosuccinate",
+  "Sodium Lauryl Sulfoacetate",
+  "Glycerin",
+  "Panthenol",
+  "Helianthus Annuus (Sunflower) Seed Oil",
+  "Ethyltrimonium Chloride Methacrylate/Hydrolyzed Wheat Protein Copolymer",
+  "Phyllostachys Nigra Leaf Extract",
+  "Hydrolyzed Wheat Protein",
+  "Amodimethicone/Morpholinomethyl Silsesquioxane Copolymer",
+  "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol",
+  "Trideceth-5",
+  "PEG-150 Pentaerythrityl Tetrastearate",
+  "Quaternium-95",
+  "PPG-2 Hydroxyethyl Cocamide",
+  "Guar Hydroxypropyltrimonium Chloride",
+  "Propanediol",
+  "Pentaerythrityl Tetra-Di-T-Butyl Hydroxyhydrocinnamate",
+  "Potassium Sorbate",
+  "Disodium EDTA",
+  "Sodium Chloride",
+  "Lactic Acid",
+  "Ethylhexylglycerin",
+  "Citric Acid",
+  "Benzyl Alcohol",
+  "Linalool",
+  "Hexyl Cinnamal",
+  "Benzyl Salicylate",
+  "Citronellol",
+  "Phenoxyethanol",
+  "Parfum/Fragrance",
+  "CI 16035/Red 40",
+  "CI 42090/Blue 1"
+ ],
+ "canonicalReason": "Brand DE page (marianila.de) re-fetched 2026-10-09, matches phase-1 list exactly; luxuriouslook.co.uk UK copy is identical. Canonical = manufacturer EU page. Open item: claim names Moringaöl but no Moringa INCI entry exists (see conflicts); canonical INCI is unaffected but completeness cannot be asserted.",
+ "inciFingerprintSha256": "1be03cbd54a1c200191dd75353289d693de9ce603fc87def5de78ebc4f4bd5ce",
+ "normalization": "lower-case, trim, collapse whitespace, join with |; split synonym entries merged into one item",
+ "identityConfidence": "high",
+ "formulaCompleteness": "complete",
+ "formulaSourceTier": 2,
+ "status": "frozen_with_conflict",
+ "blockReason": null,
+ "notes": "GTIN aliases: 7391681036109 = 350 ml (brand, JSON-LD, upcitemdb, bluemercury US carries same code); ...154 = 100 ml; ...130 = 1000 ml. Only the 350 ml EU pack list was frozen. Not listed at dm/Rossmann/Mueller. \"Colour Guard Complex\" branded, not INCI. | 2026-10-10 amendment (orchestrator): formulaCompleteness → complete. The only conflict is a claim naming moringa oil absent from the INCI; per standard ID-3 the lane decides whether that is material — it is not an INCI-list conflict. Fingerprint unchanged."
+}

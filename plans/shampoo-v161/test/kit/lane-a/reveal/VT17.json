@@ -1,0 +1,21 @@
+{
+  "blindId": "VT17",
+  "productName": "Dercos Anti-Schuppen Shampoo für normale bis fettige Kopfhaut",
+  "brand": "Vichy",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Effektives Anti-Schuppen Shampoo für fettige Schuppen mit sichtbaren Ergebnissen ab der ersten Anwendung Lindert Juckreiz auf der Kopfhaut dank einem ausgeglichen Mikrobiom Anti-Rückfall-Effekt: Beugt Schuppen bis zu sechs Wochen lang vor",
+      "directionsVerbatim": "Um Schuppen auf der Kopfhaut effektiv zu mildern, das DERCOS Anti-Schuppen Shampoo für normales bis fettiges Haar auf das nasse Haar auftragen. Dabei gründlich aufschäumen und in die Kopfhaut einmassieren. Nach zwei Minuten Einwirkzeit nochmal einmassieren und anschließend gründlich ausspülen. In akuten Phasen dreimal wöchentlich über 4 Wochen anwenden. Danach einmal wöchentlich, um Rückfällen vorzubeugen."
+    },
+    {
+      "sourceType": "retailer_shop_apotheke_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Besondere Eigenschaften des Vichy DERCOS Anti-Schuppen Shampoos: 100 % schuppenfrei ab der 1. Anwendung. 3 Monate klinisch belegte Langzeitwirkung gegen Wiederauftreten (Anti-Rückfall-Effekt). Reduziert Juckreiz um bis zu 91 %*. Reguliert das Kopfhaut-Mikrobiom und schützt die Hautbarriere. Bekämpft den Schuppenpilz gezielt an der Wurzel.",
+      "directionsVerbatim": "Tragen Sie das Shampoo auf das nasse Haar und die Kopfhaut auf. Lassen Sie es für 2 Minuten einwirken, massieren Sie es sanft ein und spülen Sie es im Anschluss gründlich aus. Anwendung: 3-mal pro Woche über einen Zeitraum von 4 Wochen anwenden. Erhaltungsphase: Regelmäßig anwenden, um den 3-monatigen Langzeitschutz aufrechtzuerhalten."
+    }
+  ]
+}
