@@ -117,6 +117,20 @@ const uniqueArray = <T extends z.ZodType>(value: T, min = 1, max?: number) => {
   })
 }
 
+const orderedFit = <T extends string>(values: readonly [T, ...T[]]) =>
+  uniqueArray(z.enum(values), 0).superRefine((items, context) => {
+    if (
+      items.some(
+        (item, index) => index > 0 && values.indexOf(item) <= values.indexOf(items[index - 1]),
+      )
+    ) {
+      context.addIssue({
+        code: "custom",
+        message: "Fit values must follow the canonical vocabulary order",
+      })
+    }
+  })
+
 const focusValueSchema = z
   .object({
     primary: z.enum(focusValues),
@@ -202,9 +216,9 @@ export const maskResearchEnvelopeSchema = z
         repairSupportLevel: evidenceSchema(z.enum(MASK_REPAIR_SUPPORT_LEVELS)),
         focus: evidenceSchema(focusValueSchema),
         bondRoute: evidenceSchema(z.enum(bondRouteValues)),
-        hairThicknessFit: evidenceSchema(uniqueArray(z.enum(researchThicknesses), 0)),
-        damageFit: evidenceSchema(uniqueArray(z.enum(damageValues), 0)),
-        textureFit: evidenceSchema(uniqueArray(z.enum(textureValues), 0)),
+        hairThicknessFit: evidenceSchema(orderedFit(researchThicknesses)),
+        damageFit: evidenceSchema(orderedFit(damageValues)),
+        textureFit: evidenceSchema(orderedFit(textureValues)),
         uncertainFields: uniqueArray(z.enum(profileFieldNames), 0),
         assumptionNotes: z.array(z.string().trim().min(1)),
       })
@@ -425,29 +439,49 @@ function evidenceRationale(evidence: MaskProfileEvidence<unknown>): string {
   ].join(" ")
 }
 
-/** Presence-flag rules, identical to the leave-in v1.0 adapter's. */
+/** Mask Standard §10: presence lookups from lexicon families 3/4/5a/7/9,
+ * excluding family-10 infrastructure. E15 excludes solvent glycols from care
+ * scoring, not this complete-INCI presence lookup (lexicon §7).
+ * Flags carry no rank, concentration or performance claim.
+ */
 const ingredientRules: Record<MaskIngredientFlag, Array<string | RegExp>> = {
   silicones: [
-    /\b[a-z]+(?:dimethicone|methicone|siloxane|silsesquioxane|silicone)\b/i,
+    /\b[a-z]*(?:dimethicone|methicone|siloxane|silsesquioxane|silicone)\b/i,
     "dimethicone",
     "amodimethicone",
     "dimethiconol",
+    "bis-peg-18 methyl ether dimethyl silane",
   ],
   polymers: [
     /^polyquaternium-/i,
     /^hydroxypropyl guar hydroxypropyltrimonium chloride$/i,
     /^guar hydroxypropyltrimonium chloride$/i,
-    /acrylates.*(?:polymer|copolymer)/i,
+    /^cassia hydroxypropyltrimonium chloride$/i,
+    /^starch hydroxypropyltrimonium chloride$/i,
     /^pvp$/i,
     /^vp\/va copolymer$/i,
-    /^polyester-/i,
   ],
-  oils: [/\b(?:seed|kernel|fruit|flower|bran|germ) oil\b/i, /\bbutter\b/i, /\boil$/i],
+  oils: [
+    /\b(?:seed|kernel|fruit|flower|bran|germ) oil\b/i,
+    /\bbutter\b/i,
+    /\boil$/i,
+    "lanolin",
+    "lanolin alcohol",
+    "hydrogenated lanolin",
+    "cera lanae",
+    "peg-75 lanolin",
+    "petrolatum",
+    "paraffinum liquidum",
+    "mineral oil",
+    "cera alba",
+    "caprylic/capric triglyceride",
+  ],
   proteins: [
-    /\bhydrolyzed (?:keratin|collagen|wheat protein|rice protein|soy protein|oat protein)\b/i,
+    /\bhydroly[sz]ed (?:keratin|collagen|silk|casein|wheat protein|rice protein|soy protein|oat protein)\b/i,
     /\b(?:keratin|collagen|peptide|protein)\b/i,
     /^hydrolyzed silk$/i,
     /^sericin$/i,
+    /^sh-(?:oligopeptide|polypeptide)-\d+$/i,
   ],
   humectants: [
     "glycerin",
@@ -457,11 +491,27 @@ const ingredientRules: Record<MaskIngredientFlag, Array<string | RegExp>> = {
     "urea",
     "sodium hyaluronate",
     "hyaluronic acid",
+    "hydrolyzed hyaluronic acid",
+    "hydrolysed hyaluronic acid",
+    "sodium acetylated hyaluronate",
+    "sodium pca",
     "propylene glycol",
     "butylene glycol",
     "pentylene glycol",
+    "dipropylene glycol",
+    "caprylyl glycol",
+    "1,2-hexanediol",
     "aloe barbadensis leaf juice",
+    "aloe barbadensis leaf juice powder",
+    "aloe barbadensis leaf extract",
     "sorbitol",
+    "trehalose",
+    "inositol",
+    "saccharide isomerate",
+    "glycereth-26",
+    "mel",
+    "fructose",
+    "glucose",
   ],
 }
 
@@ -471,9 +521,19 @@ function matchesIngredientRule(ingredient: string, rule: string | RegExp): boole
 }
 
 export function deriveMaskIngredientFlags(normalizedIngredients: string[]): MaskIngredientFlag[] {
+  const ingredients = normalizedIngredients.map((ingredient) =>
+    ingredient
+      .replace(/[*†]/g, "")
+      .replace(/\([^)]*\)/g, " ")
+      .replace(/\s+/g, " ")
+      .trim(),
+  )
   return MASK_INGREDIENT_FLAGS.filter((flag) =>
-    normalizedIngredients.some((ingredient) =>
-      ingredientRules[flag].some((rule) => matchesIngredientRule(ingredient.trim(), rule)),
+    ingredients.some(
+      (ingredient) =>
+        // Lexicon §10: this solubiliser is not a lipid payload, despite its name.
+        !/^peg-40 hydrogenated castor oil$/i.test(ingredient) &&
+        ingredientRules[flag].some((rule) => matchesIngredientRule(ingredient.trim(), rule)),
     ),
   )
 }
@@ -698,6 +758,53 @@ export function projectMaskForProduction(input: unknown): MaskProductionAdapterO
   const weightPotential = profile.weightPotential.value as "low" | "moderate" | "high"
   const careDirection = profile.careDirection.value as ProductBalanceTarget
   const repairSupportLevel = profile.repairSupportLevel.value
+  // Audit NR-2, ruled 2026-10-11: reviewed driving fields do not authorize
+  // contradictory echoes or a repair value forbidden by §9.4.
+  const ruleFailures: string[] = []
+  if (repairSupportLevel === "high" && profile.bondRoute.value === "none") {
+    ruleFailures.push("profile.repairSupportLevel: §9.4 high requires bond_route != none")
+  }
+  if (profile.bondRoute.value !== "none" && repairSupportLevel !== "high") {
+    ruleFailures.push("profile.repairSupportLevel: §9.4 a recorded bond route requires high")
+  }
+  const expectedDamage =
+    conditioningLevel === "low"
+      ? ["healthy"]
+      : conditioningLevel === "high" &&
+          (repairSupportLevel !== "low" || profile.bondRoute.value !== "none")
+        ? ["moderately_damaged", "highly_damaged"]
+        : ["healthy", "moderately_damaged"]
+  if (JSON.stringify(profile.damageFit.value) !== JSON.stringify(expectedDamage)) {
+    ruleFailures.push(
+      `profile.damageFit: §9.7 requires exactly ${expectedDamage.join(", ")}; additional §7/§8 specialist facts must return to research`,
+    )
+  }
+  // §9.8's high row has a reviewed high-slip condition. Read a positive
+  // recorded route signal, never infer it from weight, branding or INCI count.
+  // Without that fact the standard explicitly assigns the moderate row.
+  const hasRecordedHighSlip = [
+    profile.conditioningLevel,
+    profile.weightPotential,
+    profile.textureFit,
+  ].some((field) =>
+    field.evidenceSignals.some(
+      (signal) =>
+        /\bcoherent high-slip R[13](?:\/R3)? route\b/i.test(signal) &&
+        !/\b(?:no|not|without|absent|zero)\b/i.test(signal),
+    ),
+  )
+  const expectedTexture =
+    weightPotential === "low"
+      ? ["straight", "wavy"]
+      : weightPotential === "high" && hasRecordedHighSlip
+        ? ["wavy", "curly", "coily"]
+        : ["straight", "wavy", "curly"]
+  if (JSON.stringify(profile.textureFit.value) !== JSON.stringify(expectedTexture)) {
+    ruleFailures.push(
+      `profile.textureFit: §9.8 requires exactly ${expectedTexture.join(", ")}; the high row needs a recorded coherent high-slip R1/R3 route`,
+    )
+  }
+  if (ruleFailures.length > 0) return needsResearch(ruleFailures, envelope)
   const focus = profile.focus.value
   const focusValuesUsed: MaskFocus[] = [focus.primary, ...focus.secondary]
 
@@ -731,12 +838,10 @@ export function projectMaskForProduction(input: unknown): MaskProductionAdapterO
   const functionalBenefits = MASK_FUNCTIONAL_BENEFITS.filter((benefit) =>
     functionalBenefitSet.has(benefit),
   )
-  const ingredientFlags = deriveMaskIngredientFlags(envelope.formula.normalizedIngredients)
+  const ingredientFlags = deriveMaskIngredientFlags(tokensFromRaw)
 
   // Property set field 7: the derived thickness subset projects to suitable_thicknesses.
-  const thicknessSet = new Set<string>(profile.hairThicknessFit.value)
-  const suitableThicknesses = HAIR_THICKNESSES.filter((thickness) => thicknessSet.has(thickness))
-  if (suitableThicknesses.length === 0) {
+  if (profile.hairThicknessFit.value.length === 0) {
     return needsResearch(
       [
         "profile.hairThicknessFit: the derived thickness fit is empty, so no suitable thickness may be written",
@@ -744,6 +849,14 @@ export function projectMaskForProduction(input: unknown): MaskProductionAdapterO
       envelope,
     )
   }
+  const thicknessByWeight = {
+    low: ["fine", "normal"],
+    moderate: ["fine", "normal", "coarse"],
+    high: ["normal", "coarse"],
+  } as const satisfies Record<typeof weightPotential, readonly HairThickness[]>
+  const suitableThicknesses = [...thicknessByWeight[weightPotential]]
+  const thicknessContradiction =
+    JSON.stringify(profile.hairThicknessFit.value) !== JSON.stringify(suitableThicknesses)
 
   const specs: MaskSpecsRow = {
     weight,
@@ -771,7 +884,7 @@ export function projectMaskForProduction(input: unknown): MaskProductionAdapterO
 
   // 9. Field rationales — plain strings keyed by the exact intake paths.
   const thicknessRationale = [
-    evidenceRationale(profile.hairThicknessFit),
+    evidenceRationale(thicknessContradiction ? profile.weightPotential : profile.hairThicknessFit),
     `Echo field derived from weight_potential (§9.6); emitted: ${suitableThicknesses.join(", ")}.`,
   ].join(" ")
   const conditioningRationale = evidenceRationale(profile.conditioningLevel)
@@ -835,6 +948,11 @@ export function projectMaskForProduction(input: unknown): MaskProductionAdapterO
     ),
     ...legacyWarnings(envelope, suitableThicknesses, specs),
   ]
+  if (thicknessContradiction) {
+    warnings.push(
+      "hair_thickness_fit contradicted the §9.6 weight echo; production thicknesses were derived from weight_potential. Review the research annotation.",
+    )
+  }
   if (envelope.identity.multiUse) {
     warnings.push(
       `Multi-use product: this projection covers the rinse-out mask mode only; uncovered modes (${envelope.identity.uncoveredModes.join(", ")}) belong to their own engines.`,
