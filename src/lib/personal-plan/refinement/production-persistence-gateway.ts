@@ -10,6 +10,7 @@ import {
 import { hashPersonalPlanNeedVersionInput, type JsonValue } from "@/lib/personal-plan/persistence"
 import { PERSONAL_PLAN_STAGE1_COMPUTATION_VERSION } from "@/lib/personal-plan/persistence/stage1-service"
 import { buildPlanRoutineContextFromCompletedRefinement } from "./stage1-adapter"
+import { loadUserFacts } from "@/lib/user-facts/read"
 import { saveUserFacts } from "@/lib/user-facts/save"
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
 import type {
@@ -47,6 +48,14 @@ export function createPersistedStage2RefinementGateway(input: {
     saveFacts:
       input.saveFacts ??
       (input.admin ? (factsInput) => saveUserFacts(input.admin!, factsInput) : undefined),
+    loadStoredCareHabits: input.admin
+      ? async () => {
+          const facts = await loadUserFacts(input.admin!, input.userId)
+          return facts
+            ? { careHabits: facts.careHabits, fields: facts.provenance.care_habits?.fields }
+            : null
+        }
+      : undefined,
     now: input.now,
   })
 }

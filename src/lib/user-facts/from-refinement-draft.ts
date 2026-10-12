@@ -1,14 +1,18 @@
 import type {
+  NightProtection,
   PersonalPlanRefinementAnswersV1,
   Stage2AnswerProvenance,
   Stage2QuestionId,
   Stage2StaticQuestionId,
 } from "@/lib/personal-plan/refinement/types"
+import { NIGHT_WEARS } from "@/lib/personal-plan/refinement/types"
 
 import {
   careFactsFromToolInventory,
   isToolOverviewAnswerValid,
   isToolPageAnswerValid,
+  nightProtectionThings,
+  nightProtectionWithWear,
 } from "@/lib/personal-plan/tools/facts"
 import {
   TOOL_FORM_PAGES,
@@ -18,7 +22,7 @@ import {
 } from "@/lib/personal-plan/tools/labels"
 import type { ToolFamily, ToolReportedForm } from "@/lib/personal-plan/tools/contracts"
 
-import type { CareHabitsPatch, FieldProvenanceValue } from "./schema"
+import type { CareHabitsPatch, CareHabitsV1, FieldProvenanceValue } from "./schema"
 
 /**
  * Pure translators from a Feinschliff refinement draft's own answer state into the
@@ -54,6 +58,8 @@ export function toCareHabitsPatch(
     completedQuestionIds: readonly Stage2QuestionId[]
     answerProvenance?: Stage2AnswerProvenance
     toolsEnabled?: boolean
+    /** The member's confirmed stored night list (`confirmedNightProtectionFromFacts`). */
+    confirmedNightProtection?: readonly NightProtection[]
   },
 ): CareHabitsPatch {
   const { toolForms, ...rest } = answers
@@ -75,13 +81,96 @@ export function toCareHabitsPatch(
   // The legacy brush slot is the member's answer or nothing: assumed brush pages never write
   // it (the Feinschliff never did, so `brush_type` stays `null` for members who never answered).
   const brushes = settledFamilyForms(settled.pages, "brushes_combs")
-  const pageProvenance = toolPageProvenance(answers, settled, (id) =>
-    completion?.answerProvenance?.[id] === "assumed" ? "assumed" : "user",
-  )
+  const provenanceOf = (id: Stage2QuestionId): FieldProvenanceValue =>
+    completion?.answerProvenance?.[id] === "assumed" ? "assumed" : "user"
+  const pageProvenance = toolPageProvenance(answers, settled, provenanceOf)
   if (brushes && familyHasUserPage(pageProvenance, "brushes_combs")) {
     patch.brushesCombs = careFactsFromToolInventory({ brushes_combs: brushes }).brushesCombs
   }
+  const night = nightProtectionFact({
+    answers,
+    completedQuestionIds: completion?.completedQuestionIds,
+    pageProvenance,
+    provenanceOf,
+    confirmedNightProtection: completion?.confirmedNightProtection,
+  })
+  if (night) patch.nightProtection = night.value
   return patch as CareHabitsPatch
+}
+
+/**
+ * The member's stored `nightProtection` when it is a confirmed answer — `user`,
+ * `unknown_historical`, or a value without provenance. These are exactly the values an `assumed`
+ * write can never replace (`user_facts_save_v1`), so the night merge must not lean on an
+ * assumption against them. `undefined` when nothing confirmed is stored.
+ */
+export function confirmedNightProtectionFromFacts(
+  careHabits: Partial<CareHabitsV1> | null | undefined,
+  fields: Record<string, FieldProvenanceValue> | undefined,
+): NightProtection[] | undefined {
+  const stored = careHabits?.nightProtection
+  if (!Array.isArray(stored) || fields?.nightProtection === "assumed") return undefined
+  return [...stored]
+}
+
+/**
+ * Rev. 6: the stored `nightProtection` is the night page's THINGS plus the TECHNIQUE of the
+ * night question (`nightProtectionWithWear`), so its provenance combines both parts. When both
+ * parts share a provenance the draft's merged list is written with it. When one part is the
+ * member's and the other assumed (review fix F1: a direct accept assumed the night page, then she
+ * changed „Nachts"), an assumed write would leave a confirmed stored list untouched and drop her
+ * change. With a confirmed stored list the assumed part is taken from it instead — her
+ * technique onto the confirmed things, or her things with the confirmed technique — and the
+ * list is hers (`user`). Without one, nothing confirmed can be overwritten, and the merged list
+ * is written as `assumed`.
+ *
+ * Only while the night page is settled and the rollout-off `night_protection` question did not
+ * complete; otherwise `undefined` (the list is the draft's own answer then).
+ */
+function nightProtectionFact(input: {
+  answers: PersonalPlanRefinementAnswersV1
+  completedQuestionIds: readonly Stage2QuestionId[] | undefined
+  pageProvenance: Partial<Record<ToolFormPageKey, FieldProvenanceValue>>
+  provenanceOf: (id: Stage2QuestionId) => FieldProvenanceValue
+  confirmedNightProtection: readonly NightProtection[] | undefined
+}): { value: NightProtection[]; provenance: FieldProvenanceValue } | undefined {
+  const { answers } = input
+  const completed = new Set(input.completedQuestionIds ?? [])
+  const things = familyProvenance(input.pageProvenance, "night_protection")
+  if (!things || answers.nightProtection === undefined || completed.has("night_protection")) {
+    return undefined
+  }
+  const nightWear =
+    completed.has("night_wear") && NIGHT_WEARS.includes(answers.nightWear as never)
+      ? answers.nightWear
+      : undefined
+  const wear = nightWear !== undefined ? input.provenanceOf("night_wear") : undefined
+  if (wear === undefined || wear === things) {
+    return { value: answers.nightProtection, provenance: things }
+  }
+  const confirmed = input.confirmedNightProtection
+  if (!confirmed) return { value: answers.nightProtection, provenance: "assumed" }
+  return {
+    value:
+      wear === "user"
+        ? nightProtectionWithWear(nightProtectionThings(confirmed), nightWear, undefined)
+        : nightProtectionWithWear(
+            nightProtectionThings(answers.nightProtection),
+            undefined,
+            confirmed,
+          ),
+    provenance: "user",
+  }
+}
+
+/** A family's provenance once every one of its pages is settled: `user` only when all are. */
+function familyProvenance(
+  pageProvenance: Partial<Record<ToolFormPageKey, FieldProvenanceValue>>,
+  family: ToolFamily,
+): FieldProvenanceValue | undefined {
+  const values = toolFormPagesOfFamily(family).map((page) => pageProvenance[page.pageKey])
+  if (values.some((value) => value === undefined)) return undefined
+  return values.every((value) => value === "user") ? "user" : "assumed"
 }
 
 /**
@@ -216,6 +305,8 @@ export function toFieldProvenance(input: {
   answers?: PersonalPlanRefinementAnswersV1
   /** `false` = the rollout is off at write time: no tool field gets a provenance entry. */
   toolsEnabled?: boolean
+  /** The member's confirmed stored night list (`confirmedNightProtectionFromFacts`). */
+  confirmedNightProtection?: readonly NightProtection[]
 }): Record<string, FieldProvenanceValue> {
   const fields: Record<string, FieldProvenanceValue> = {}
   let heatEventSeen = false
@@ -262,6 +353,7 @@ function toolFieldProvenance(
   input: {
     completedQuestionIds: readonly Stage2QuestionId[]
     answers?: PersonalPlanRefinementAnswersV1
+    confirmedNightProtection?: readonly NightProtection[]
   },
   provenanceOf: (id: Stage2QuestionId) => FieldProvenanceValue,
   staticFields: Record<string, FieldProvenanceValue>,
@@ -281,9 +373,7 @@ function toolFieldProvenance(
   }
 
   const familiesProvenance = (families: readonly ToolFamily[]) => {
-    const values = families.flatMap((family) =>
-      toolFormPagesOfFamily(family).map((page) => pageProvenance[page.pageKey]),
-    )
+    const values = families.map((family) => familyProvenance(pageProvenance, family))
     if (values.some((value) => value === undefined)) return undefined
     return values.every((value) => value === "user") ? "user" : "assumed"
   }
@@ -297,13 +387,15 @@ function toolFieldProvenance(
   ) {
     fields.additionalHeatTools = heat
   }
-  const night = familiesProvenance(["night_protection"])
-  if (night && answers.nightProtection !== undefined && !completed.has("night_protection")) {
-    // Rev. 6: the list is the night page's things plus the night question's technique, so it is
-    // the member's own only when both are.
-    fields.nightProtection =
-      completed.has("night_wear") && provenanceOf("night_wear") !== "user" ? "assumed" : night
-  }
+  // Rev. 6: the night page's things plus the night question's technique (`nightProtectionFact`).
+  const night = nightProtectionFact({
+    answers,
+    completedQuestionIds: input.completedQuestionIds,
+    pageProvenance,
+    provenanceOf,
+    confirmedNightProtection: input.confirmedNightProtection,
+  })
+  if (night) fields.nightProtection = night.provenance
   const textiles = familiesProvenance(["drying_textiles"])
   const textileForms = settledFamilyForms(settled.pages, "drying_textiles")
   if (

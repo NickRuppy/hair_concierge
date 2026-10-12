@@ -891,6 +891,13 @@ export function nightProtectionWithWear(
   return inOrder([...things, ...techniques], NIGHT_PROTECTIONS)
 }
 
+/** The night THINGS of a `nightProtection` list — every entry that is not a technique. */
+export function nightProtectionThings(
+  nightProtection: readonly NightProtection[],
+): NightProtection[] {
+  return nightProtection.filter((protection) => !NIGHT_PROTECTION_TECHNIQUES.has(protection))
+}
+
 /**
  * The `nightWear` a stored `nightProtection` list implies, or `undefined` when it names no
  * technique (then „Offen" and „unanswered" cannot be told apart). When both techniques are

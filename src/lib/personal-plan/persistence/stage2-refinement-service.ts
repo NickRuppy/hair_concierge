@@ -31,8 +31,16 @@ import {
   Stage2RefinementError,
   type Stage2ModuleCompletionResult,
 } from "@/lib/personal-plan/refinement/gateway"
-import { toCareHabitsPatch, toFieldProvenance } from "@/lib/user-facts/from-refinement-draft"
-import { CARE_HABITS_SCHEMA_VERSION } from "@/lib/user-facts/schema"
+import {
+  confirmedNightProtectionFromFacts,
+  toCareHabitsPatch,
+  toFieldProvenance,
+} from "@/lib/user-facts/from-refinement-draft"
+import {
+  CARE_HABITS_SCHEMA_VERSION,
+  type CareHabitsV1,
+  type FieldProvenanceValue,
+} from "@/lib/user-facts/schema"
 import type { SaveUserFactsInput, SaveUserFactsResult } from "@/lib/user-facts/save"
 import type { JsonValue } from "./index"
 
@@ -44,6 +52,15 @@ import type { JsonValue } from "./index"
 export type SaveCareHabitsFacts = (
   input: Extract<SaveUserFactsInput, { domain: "care_habits" }>,
 ) => Promise<SaveUserFactsResult>
+
+/**
+ * Reads the member's currently stored `care_habits` and their field provenance, injected like
+ * `SaveCareHabitsFacts`. The facts write consults it for the Rev. 6 night merge only.
+ */
+export type LoadStoredCareHabits = () => Promise<{
+  careHabits: Partial<CareHabitsV1> | null
+  fields?: Record<string, FieldProvenanceValue>
+} | null>
 
 const MAX_REFINEMENT_PAYLOAD_BYTES = 64 * 1024
 
@@ -239,6 +256,13 @@ export function createStage2RefinementService(input: {
    * silently skipped.
    */
   saveFacts?: SaveCareHabitsFacts
+  /**
+   * Review fix F1 (Rev. 6): the stored facts the night merge reads, so a member's „Nachts" change
+   * reaches the stored `nightProtection` even while the night page is still assumed (see
+   * `nightProtectionFact`). Optional: without it (or when the read fails) a list whose parts
+   * differ in provenance is written as `assumed`, which never overwrites a confirmed list.
+   */
+  loadStoredCareHabits?: LoadStoredCareHabits
   /** Injected clock for `provenance.at` (M2). Defaults to the real time. */
   now?: () => Date
 }) {
@@ -267,6 +291,7 @@ export function createStage2RefinementService(input: {
     // The rollout AT WRITE TIME: the trigger context is re-derived per request, so a flag turned
     // off since the tools were answered stops their care keys from being published again.
     const toolsEnabled = draft.triggerContext.toolsEnabled === true
+    const confirmedNightProtection = toolsEnabled ? await loadConfirmedNightProtection() : undefined
     const facts = await input.saveFacts({
       userId: input.userId,
       domain: "care_habits",
@@ -274,6 +299,7 @@ export function createStage2RefinementService(input: {
         completedQuestionIds: draft.completedQuestionIds,
         answerProvenance: draft.answerProvenance,
         toolsEnabled,
+        confirmedNightProtection,
       }),
       provenance: {
         source: { kind: "feinschliff_draft", id: draft.id },
@@ -284,6 +310,7 @@ export function createStage2RefinementService(input: {
           answerProvenance: draft.answerProvenance,
           answers: draft.answers,
           toolsEnabled,
+          confirmedNightProtection,
         }),
       },
       draftBinding: {
@@ -302,6 +329,17 @@ export function createStage2RefinementService(input: {
         source: "facts",
         status: facts.status,
       })
+    }
+  }
+
+  /** A failed read only loses the merge's upgrade: the conservative `assumed` write remains. */
+  async function loadConfirmedNightProtection() {
+    if (!input.loadStoredCareHabits) return undefined
+    try {
+      const stored = await input.loadStoredCareHabits()
+      return confirmedNightProtectionFromFacts(stored?.careHabits, stored?.fields)
+    } catch {
+      return undefined
     }
   }
 
