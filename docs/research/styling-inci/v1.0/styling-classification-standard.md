@@ -341,7 +341,7 @@ The charter's "exactly one pair rule applies" is implemented as an ordered selec
 
 ### 4.4 Step 4 — Names route in exactly two places `[D2, D7]`
 
-D2 (Oil, only for products whose lead promise is shine, finish, anti-frizz or a smoothing finish — §4.3 step 3.1) and D7 (curl-cream middle band). Nowhere else does a name route or set a subtype: Taft „Gel Wax" has no wax or gel former; got2b „Texture Clay" has no clay; Taft Volumen Schaumfestiger „Halt 4" has no synthetic polymer. Retailer facets are never evidence (alverde Beach Waves „ohne Alkohol" with Alcohol denat. r3; Color Wow „silikonfrei" with Polysilicone-29 r3).
+D2 (Oil, only for products whose lead promise is shine, finish, anti-frizz or a smoothing finish — §4.3 step 3.1) and D7 (curl-cream middle band). Nowhere else does a name route **on its own**, and a name never stands in for formula evidence (an F value). The one other use of a name is as **promise evidence**: the job word of the confirmed name picks the lead promise (§4.2 step 1, RG2-21, R2-H3; e.g. Balea „Styling WAX STICK" ⇒ `molding`). Formula-type nouns in a name are never read as ingredients: Taft „Gel Wax" has no wax or gel former; got2b „Texture Clay" has no clay; Taft Volumen Schaumfestiger „Halt 4" has no synthetic polymer. Retailer facets are never evidence (alverde Beach Waves „ohne Alkohol" with Alcohol denat. r3; Color Wow „silikonfrei" with Polysilicone-29 r3).
 
 ### 4.5 Step 5 — The PH1-16 double-claim hold `[PH1-16, PH2-2]`
 
