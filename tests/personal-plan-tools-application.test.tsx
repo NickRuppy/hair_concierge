@@ -290,3 +290,23 @@ test("drying and styling Tools are used before the finishing product, nightly st
   assert.ok(dryerAt < finishAt, "drying happens before the finishing product")
   assert.ok(finishAt < nightlyAt, "the nightly step stays last")
 })
+
+test("the night step reads right for every night form, pillowcase included (N06)", () => {
+  const night = project("rest_day").sections.find((section) => section.placement === "nightly")
+  assert.deepEqual(night?.actionsDe, [
+    "Schlaf wie gewohnt — was du trägst, sitzt bequem und locker am Ansatz.",
+    "Wenn etwas zieht oder wehtut: lös es, setz es um oder lass es weg.",
+  ])
+})
+
+test("Tool step instructions use the short du-imperative, never the archaic -e form", () => {
+  const projection = project("wash_day")
+  const actions = projection.sections.flatMap((section) => section.actionsDe)
+  for (const archaic of ["Drücke ", "Halte ", "Löse ", "Setze ", "Führe ", "Lege ", "Teile "]) {
+    assert.equal(
+      actions.some((action) => action.startsWith(archaic)),
+      false,
+      `archaic imperative „${archaic.trim()}" in ${JSON.stringify(actions)}`,
+    )
+  }
+})
