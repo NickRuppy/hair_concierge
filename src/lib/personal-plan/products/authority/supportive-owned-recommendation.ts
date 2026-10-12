@@ -26,7 +26,11 @@ export function supportiveOwnedRecommendation(
     case "shampoo":
       return recommendationForShampoo(candidate, input as Stage3AuthorityInput<"shampoo">, true)
     case "mask":
-      return recommendationForMask(candidate, true)
+      return recommendationForMask(
+        candidate,
+        true,
+        evaluation.criteria.find((item) => item.result === "caution")?.explanation,
+      )
     case "oil":
       return recommendationForSupportiveOil(candidate, input as Stage3AuthorityInput<"oil">)
     case "bondbuilder":

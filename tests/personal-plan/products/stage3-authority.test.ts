@@ -135,6 +135,8 @@ function knownFacts(category: PersonalPlanCategory): Stage3CategoryProductFacts 
       return {
         ...base,
         category,
+        // fit-verdict spec §2, ruled 2026-10-12: the ideal fixture must be recommendable.
+        recommendable: true,
         spec: {
           format: "cream",
           weight: "light",
@@ -166,6 +168,8 @@ function knownFacts(category: PersonalPlanCategory): Stage3CategoryProductFacts 
       return {
         ...base,
         category,
+        // fit-verdict spec §2, ruled 2026-10-12: the ideal fixture must be recommendable.
+        recommendable: true,
         spec: {
           weight: "light",
           careDirection: "moisture",
@@ -387,7 +391,8 @@ test("supportive owned-product verdicts retain explicit keep and uncovered actio
   leaveInInput.productFacts.spec.weight = "medium"
   const maskInput = input("mask", "known") as Stage3AuthorityInput<"mask">
   if (maskInput.productFacts?.category !== "mask") throw new Error("fixture")
-  maskInput.productFacts.spec.weight = "rich"
+  // fit-verdict spec §§3–4, ruled 2026-10-12: exactly one weight step is supportive.
+  maskInput.productFacts.spec.weight = "medium"
   const bondbuilderInput = input("bondbuilder", "known") as Stage3AuthorityInput<"bondbuilder">
   if (bondbuilderInput.productFacts?.category !== "bondbuilder") throw new Error("fixture")
   bondbuilderInput.productFacts.spec.relationship = "add_on"
@@ -995,7 +1000,8 @@ test("Oil v2 requires explicit leave-on support, canonical weight, and distance-
   )
 })
 
-test("Mask v4 treats compatible formulation preferences as ideal but keeps hard needs strict", () => {
+test("Mask uses additive formulation distances and keeps required functions strict", () => {
+  // fit-verdict spec §§2–4, ruled 2026-10-12: one-step misses add; two steps fail.
   const idealInput = input("mask", "known") as Stage3AuthorityInput<"mask">
   idealInput.categoryDecision.target = {
     category: "mask",
@@ -1030,7 +1036,7 @@ test("Mask v4 treats compatible formulation preferences as ideal but keeps hard 
   const compatible = evaluateStage3Authority(compatibleInput as never)
   assert.equal(compatible.status, "known")
   if (compatible.status !== "known") return
-  assert.equal(compatible.verdict, "ideal")
+  assert.equal(compatible.verdict, "mismatch")
   assert.deepEqual(
     compatible.criteria
       .filter((criterion) =>
@@ -1039,7 +1045,7 @@ test("Mask v4 treats compatible formulation preferences as ideal but keeps hard 
         ),
       )
       .map((criterion) => criterion.result),
-    ["pass", "pass", "pass"],
+    ["caution", "caution"],
   )
 
   const strongerThanRequestedInput = structuredClone(idealInput) as Stage3AuthorityInput<"mask">
@@ -1058,7 +1064,7 @@ test("Mask v4 treats compatible formulation preferences as ideal but keeps hard 
     strongerThanRequested.criteria.find(
       (criterion) => criterion.criterionId === "mask.repair_support",
     )?.explanation,
-    "Unterstützt stärker als erforderlich.",
+    "Entspricht deinem Bedarf.",
   )
 
   const tooHeavyInput = structuredClone(idealInput) as Stage3AuthorityInput<"mask">
@@ -1067,10 +1073,10 @@ test("Mask v4 treats compatible formulation preferences as ideal but keeps hard 
   const tooHeavy = evaluateStage3Authority(tooHeavyInput as never)
   assert.equal(tooHeavy.status, "known")
   if (tooHeavy.status !== "known") return
-  assert.equal(tooHeavy.verdict, "supportive")
+  assert.equal(tooHeavy.verdict, "mismatch")
   assert.equal(
     tooHeavy.criteria.find((criterion) => criterion.criterionId === "mask.weight")?.result,
-    "caution",
+    "fail",
   )
 
   const mismatchInput = structuredClone(idealInput) as Stage3AuthorityInput<"mask">
@@ -1113,7 +1119,7 @@ test("Mask v4 fails closed when required canonical functional benefits are missi
 // derived from the implementation. Ruling R12 Option A: the accepted set is {target}, widened by
 // exactly one step toward Protein (Feuchtigkeit → ausgeglichen → Protein) when the confirmed mask
 // target carries high repair support; a Protein target never widens.
-// Everything outside the accepted set is a caution (never a fail) for the intensive mask role.
+// fit-verdict spec §7a.3 / §§3–4, ruled 2026-10-12: nearest accepted-set distance decides caution vs fail.
 type MaskDirection = "moisture" | "balanced" | "protein"
 type MaskRepair = "low" | "medium" | "high"
 const MASK_CARE_DIRECTION_FIXTURES: Array<{
@@ -1121,7 +1127,7 @@ const MASK_CARE_DIRECTION_FIXTURES: Array<{
   product: MaskDirection
   target: MaskDirection
   repair: MaskRepair
-  result: "pass" | "caution"
+  result: "pass" | "caution" | "fail"
   accepted: MaskDirection[]
 }> = [
   // Target Feuchtigkeit
@@ -1180,7 +1186,7 @@ const MASK_CARE_DIRECTION_FIXTURES: Array<{
     product: "protein",
     target: "moisture",
     repair: "low",
-    result: "caution",
+    result: "fail",
     accepted: ["moisture"],
   },
   {
@@ -1188,7 +1194,7 @@ const MASK_CARE_DIRECTION_FIXTURES: Array<{
     product: "protein",
     target: "moisture",
     repair: "medium",
-    result: "caution",
+    result: "fail",
     accepted: ["moisture"],
   },
   // Adversarial vs. a non-contiguous widening: high repair never jumps two steps to Protein.
@@ -1279,7 +1285,7 @@ const MASK_CARE_DIRECTION_FIXTURES: Array<{
     product: "moisture",
     target: "protein",
     repair: "low",
-    result: "caution",
+    result: "fail",
     accepted: ["protein"],
   },
   {
@@ -1287,7 +1293,7 @@ const MASK_CARE_DIRECTION_FIXTURES: Array<{
     product: "moisture",
     target: "protein",
     repair: "medium",
-    result: "caution",
+    result: "fail",
     accepted: ["protein"],
   },
   {
@@ -1295,7 +1301,7 @@ const MASK_CARE_DIRECTION_FIXTURES: Array<{
     product: "moisture",
     target: "protein",
     repair: "high",
-    result: "caution",
+    result: "fail",
     accepted: ["protein"],
   },
   {
@@ -1372,7 +1378,14 @@ for (const fixture of MASK_CARE_DIRECTION_FIXTURES) {
       result.criteria.find((criterion) => criterion.criterionId === "mask.care_direction")?.result,
       fixture.result,
     )
-    assert.equal(result.verdict, fixture.result === "pass" ? "ideal" : "supportive")
+    assert.equal(
+      result.verdict,
+      fixture.result === "pass"
+        ? "ideal"
+        : fixture.result === "caution"
+          ? "supportive"
+          : "mismatch",
+    )
 
     const [careDirection] = comparisonDimensions(maskInput as never, [
       {
@@ -1396,6 +1409,7 @@ for (const fixture of MASK_CARE_DIRECTION_FIXTURES) {
 }
 
 test("Mask selects the best image-backed supportive candidate regardless of need tier", () => {
+  // fit-verdict spec §5, ruled 2026-10-12: basis and optional admit one-step fallback.
   const maskInput = input("mask", "known") as Stage3AuthorityInput<"mask">
   maskInput.capturedProductId = null
   maskInput.subjectIdentity = null
@@ -1415,7 +1429,7 @@ test("Mask selects the best image-backed supportive candidate regardless of need
     presentationImageUrl: "https://example.com/one.webp",
     factFingerprint: "facts-one-caution",
   })
-  oneCaution.spec.weight = "rich"
+  oneCaution.spec.weight = "medium"
   oneCaution.spec.repairSupportLevel = "high"
   Object.assign(twoCautions, {
     productId: "a-two-cautions",
@@ -1500,6 +1514,7 @@ test("Mask v4 preserves catalog merchandising order among equally fitting candid
 })
 
 test("Leave-in v3 evaluates towel-dry post-wash facts and repair support deterministically", () => {
+  // fit-verdict spec §§3–4, ruled 2026-10-12: repair uses at-or-above zero and additive distance.
   const idealInput = input("leave_in", "known") as Stage3AuthorityInput<"leave_in">
   idealInput.categoryDecision.target = {
     category: "leave_in",
@@ -2315,6 +2330,7 @@ test("Leave-in uncovered-role recommendation still prefers an ideal candidate ov
 })
 
 test("Leave-in uncovered-role recommendation falls back to catalog order once verdict and coverage tie", () => {
+  // fit-verdict spec §4, ruled 2026-10-12: keep one miss so the ranking tie remains eligible.
   const leaveInInput = input("leave_in", "known") as Stage3AuthorityInput<"leave_in">
   leaveInInput.capturedProductId = null
   leaveInInput.subjectIdentity = null
@@ -2328,7 +2344,7 @@ test("Leave-in uncovered-role recommendation falls back to catalog order once ve
     displayName: "Später im Katalog",
     catalogSortOrder: 5,
     weight: "medium",
-    careDirection: "balanced",
+    careDirection: "moisture",
     repairSupportLevel: "high",
   })
   const earlierInCatalog = leaveInCoverageCandidate({
@@ -2336,7 +2352,7 @@ test("Leave-in uncovered-role recommendation falls back to catalog order once ve
     displayName: "Früher im Katalog",
     catalogSortOrder: 2,
     weight: "medium",
-    careDirection: "balanced",
+    careDirection: "moisture",
     repairSupportLevel: "high",
   })
   leaveInInput.recommendationCandidates = [laterInCatalog, earlierInCatalog]
@@ -2665,6 +2681,7 @@ test("Oil uncovered-role recommendation preserves no-recommendation behavior whe
 })
 
 test("Mask uncovered-role recommendation ranks in a supportive candidate for a required tier", () => {
+  // fit-verdict spec §5, ruled 2026-10-12: basis admits a one-step fallback with its reason.
   const maskInput = input("mask", "known") as Stage3AuthorityInput<"mask">
   maskInput.capturedProductId = null
   maskInput.subjectIdentity = null
@@ -2681,7 +2698,7 @@ test("Mask uncovered-role recommendation ranks in a supportive candidate for a r
     presentationImageUrl: "https://example.com/required.webp",
     factFingerprint: "facts-required-supportive",
   })
-  supportiveCandidate.spec.weight = "rich"
+  supportiveCandidate.spec.weight = "medium"
   supportiveCandidate.spec.repairSupportLevel = "high"
   maskInput.recommendationCandidates = [supportiveCandidate]
 
@@ -2696,6 +2713,7 @@ test("Mask uncovered-role recommendation ranks in a supportive candidate for a r
 })
 
 test("Mask uncovered-role recommendation still prefers an ideal candidate over a supportive one at a required tier", () => {
+  // fit-verdict spec §§4–5, ruled 2026-10-12: retain verdict-first ranking with a one-step fallback.
   const maskInput = input("mask", "known") as Stage3AuthorityInput<"mask">
   maskInput.capturedProductId = null
   maskInput.subjectIdentity = null
@@ -2722,7 +2740,7 @@ test("Mask uncovered-role recommendation still prefers an ideal candidate over a
     catalogSortOrder: 1,
     factFingerprint: "facts-required-supportive-2",
   })
-  supportive.spec.weight = "rich"
+  supportive.spec.weight = "medium"
   maskInput.recommendationCandidates = [supportive, ideal]
 
   const result = evaluateStage3Authority(maskInput as never)

@@ -11,7 +11,7 @@ import { CATEGORY_ROLE_POLICIES } from "../../src/lib/personal-plan/products/aut
 import { evaluateStage3Authority } from "../../src/lib/personal-plan/products/authority/evaluate"
 import type { Stage3AuthorityInput } from "../../src/lib/personal-plan/products/authority/contracts"
 
-type Category = "shampoo" | "conditioner" | "oil"
+type Category = "shampoo" | "conditioner" | "oil" | "mask" | "leave_in"
 type Verdict = "ideal" | "supportive" | "mismatch"
 
 const expectedVerdict = (steps: number): Verdict =>
@@ -150,6 +150,111 @@ function oil(spec: Record<string, unknown>, role = "leave_on_fibre_conditioning"
     },
   )
 }
+
+function mask(spec: Record<string, unknown>) {
+  return base(
+    "mask",
+    "intensive_conditioning_mask",
+    {
+      category: "mask",
+      roles: ["intensive_conditioning_mask"],
+      needStrength: "standard",
+      weight: "rich",
+      careDirection: "protein",
+      repairSupportLevel: "high",
+      functionalNeeds: [],
+    },
+    {
+      weight: "rich",
+      careDirection: "protein",
+      repairSupportLevel: "high",
+      functionalBenefits: [],
+      ...spec,
+    },
+  )
+}
+
+function leaveIn(spec: Record<string, unknown>) {
+  return base(
+    "leave_in",
+    "post_wash_leave_in",
+    {
+      category: "leave_in",
+      roles: ["post_wash_leave_in"],
+      weight: "rich",
+      careDirection: "moisture",
+      repairSupportLevel: "high",
+      functions: [],
+      conditionerReplacementEligible: false,
+    },
+    {
+      weight: "rich",
+      careDirection: "moisture",
+      repairSupportLevel: "high",
+      roles: ["post_wash_leave_in"],
+      applicationStages: ["towel_dry"],
+      careBenefits: [],
+      providesHeatProtection: false,
+      ...spec,
+    },
+  )
+}
+
+// fit-verdict spec §§2–4 / §7a.3, ruled 2026-10-12: category adapters must
+// preserve distance, additive misses and the R12 accepted set.
+for (const [category, create, direction] of [
+  ["mask", mask, ["protein", "balanced", "moisture"]],
+  ["leave_in", leaveIn, ["moisture", "balanced", "protein"]],
+] as const) {
+  for (const [axis, values, reason] of [
+    ["thickness", ["coarse", "normal", "fine"], "Eher für feines Haar gedacht"],
+    ["weight", ["rich", "medium", "light"], "Für dein Haar eher leicht"],
+    [
+      "care_direction",
+      direction,
+      category === "mask"
+        ? "Mehr Feuchtigkeit als dein Haar gerade braucht"
+        : "Mehr Protein als dein Haar gerade braucht",
+    ],
+    ["repair_support", ["high", "medium", "low"], "Weniger Reparatur, als dein Haar braucht"],
+  ] as const) {
+    for (const [steps, value] of values.entries()) {
+      test(`fit verdict category axis: ${category} ${axis} ${steps}`, () => {
+        const key =
+          axis === "care_direction"
+            ? "careDirection"
+            : axis === "repair_support"
+              ? "repairSupportLevel"
+              : axis
+        const input = create(axis === "thickness" ? {} : { [key]: value })
+        if (axis === "thickness") input.productFacts!.suitableThicknesses = [value]
+        const result = evaluateStage3Authority(input)
+        assert.equal(result.status === "known" ? result.verdict : null, expectedVerdict(steps))
+        if (result.status !== "known") return
+        const row = result.criteria.find((entry) => entry.criterionId === `${category}.${axis}`)
+        assert.equal(row?.result, steps === 0 ? "pass" : steps === 1 ? "caution" : "fail")
+        assert.equal(row?.explanation, steps === 0 ? "Entspricht deinem Bedarf." : reason)
+      })
+    }
+  }
+}
+
+test("dandruff plus irritation has no cleansing gate or target shift", () => {
+  // fit-verdict spec §7b Q5, ruled 2026-10-12.
+  const input = shampoo({
+    shampooBucket: "schuppen",
+    scalpRoute: "dandruff",
+    cleansingIntensity: "regular",
+  }) as any
+  input.role = "shampoo_dandruff"
+  input.categoryDecision.target.roles = [input.role]
+  input.categoryDecision.target.everydayConstraint = "irritation_compatible"
+  input.productFacts.protocols[0].role = input.role
+  const result = evaluateStage3Authority(input)
+  assert.equal(result.status === "known" ? result.verdict : null, "ideal")
+  input.categoryDecision.target.everydayConstraint = "standard"
+  assert.deepEqual(evaluateStage3Authority(input), result)
+})
 
 function assertFit(
   input: Stage3AuthorityInput,
@@ -499,3 +604,188 @@ for (const row of [
     if (result.status === "unknown") assert.deepEqual(result.missingFacts, [...row.keys].sort())
   })
 }
+
+// fit-verdict spec §§2–5 / §7a.3, ruled 2026-10-12. These checks protect
+// gates, missing-fact transport and supportive selection through real authority.
+for (const [category, create] of [
+  ["mask", mask],
+  ["leave_in", leaveIn],
+] as const) {
+  test(`${category}: additive misses, repair above target and known mismatch precedence`, () => {
+    const input = create({ weight: "medium", repairSupportLevel: "medium" }) as any
+    assert.equal(
+      evaluateStage3Authority(input).status === "known"
+        ? (evaluateStage3Authority(input) as any).verdict
+        : null,
+      "mismatch",
+    )
+    input.productFacts.protocols = []
+    const incomplete = evaluateStage3Authority(input)
+    assert.equal(incomplete.status === "known" ? incomplete.verdict : null, "mismatch")
+    input.productFacts.spec.weight = "rich"
+    assert.equal(evaluateStage3Authority(input).status, "unknown")
+    input.productFacts.protocols = [
+      { role: input.role, status: "verified_complete", fingerprint: "p" },
+    ]
+    input.categoryDecision.target.repairSupportLevel = "low"
+    input.productFacts.spec.repairSupportLevel = "high"
+    const above = evaluateStage3Authority(input)
+    assert.equal(above.status === "known" ? above.verdict : null, "ideal")
+  })
+  for (const [field, key] of [
+    ["weight", category === "mask" ? "mask.weight" : "weight"],
+    ["careDirection", category === "mask" ? "mask.care_direction" : "care_direction"],
+    ["repairSupportLevel", category === "mask" ? "mask.repair_support" : "repair_support_level"],
+  ] as const) {
+    test(`${category}: missing ${field} keeps its wire key and criterion shape`, () => {
+      const input = create({ [field]: null })
+      const result = evaluateStage3Authority(input)
+      assert.equal(result.status, "unknown")
+      if (result.status !== "unknown") return
+      assert.deepEqual(result.missingFacts, [key])
+      for (const row of result.criteria ?? [])
+        assert.deepEqual(Object.keys(row).sort(), ["criterionId", "explanation", "label", "result"])
+    })
+  }
+  test(`${category}: missing common facts retain wire keys`, () => {
+    const input = create({})
+    input.productFacts!.suitableThicknesses = null
+    let result = evaluateStage3Authority(input)
+    assert.equal(result.status, "unknown")
+    if (result.status === "unknown") assert.deepEqual(result.missingFacts, ["suitable_thicknesses"])
+    input.productFacts!.suitableThicknesses = ["coarse"]
+    input.productFacts!.knownReaction = null
+    result = evaluateStage3Authority(input)
+    if (result.status === "unknown") assert.deepEqual(result.missingFacts, ["known_reaction"])
+  })
+  for (const [gate, mutate] of [
+    [
+      "safety",
+      (input: any) => {
+        input.productFacts.knownReaction = true
+      },
+    ],
+    [
+      "inactive",
+      (input: any) => {
+        input.productFacts.isActive = false
+      },
+    ],
+    [
+      "recommendability",
+      (input: any) => {
+        input.productFacts.recommendable = false
+      },
+    ],
+    [
+      "function",
+      (input: any) => {
+        if (category === "mask")
+          input.categoryDecision.target.functionalNeeds = [
+            { need: "shine", ownership: "required", priority: 1 },
+          ]
+        else
+          input.categoryDecision.target.functions = [
+            { function: "detangle", ownership: "required", priority: 1 },
+          ]
+      },
+    ],
+  ] as const) {
+    test(`${category}: ${gate} remains a hard gate with missing axis data`, () => {
+      const input = create({ weight: null })
+      mutate(input)
+      const result = evaluateStage3Authority(input)
+      assert.equal(result.status === "known" ? result.verdict : null, "mismatch")
+      if (result.status === "known")
+        assert.ok(result.criteria.some((item) => item.result === "fail"))
+    })
+  }
+  for (const needTier of ["basis", "optional"] as const) {
+    test(`${category}: ${needTier} supportive fallback carries its reason and catalog tie-break`, () => {
+      const input = create({})
+      input.capturedProductId = null
+      input.subjectIdentity = null
+      input.productFacts = null
+      input.categoryDecision.needTier = needTier
+      const near = create({ weight: "medium" }).productFacts!
+      input.recommendationCandidates = [
+        {
+          ...near,
+          productId: "later",
+          catalogSortOrder: 9,
+          presentationImageUrl: "https://example.com/later.webp",
+        },
+        {
+          ...near,
+          productId: "earlier",
+          catalogSortOrder: 1,
+          presentationImageUrl: "https://example.com/earlier.webp",
+        },
+      ] as never
+      const result = evaluateStage3Authority(input)
+      assert.equal(result.status === "known" ? result.verdict : null, "supportive")
+      if (result.status !== "known") return
+      assert.equal(result.recommendation?.productId, "earlier")
+      assert.equal(result.recommendation?.reason, "Für dein Haar eher leicht")
+      const exact = create({}).productFacts!
+      input.recommendationCandidates.push({
+        ...exact,
+        productId: "ideal",
+        catalogSortOrder: 99,
+        presentationImageUrl: "https://example.com/ideal.webp",
+      } as never)
+      const preferred = evaluateStage3Authority(input)
+      if (preferred.status === "known") assert.equal(preferred.recommendation?.productId, "ideal")
+    })
+  }
+}
+
+for (const [gate, mutate] of [
+  [
+    "role",
+    (input: any) => {
+      input.productFacts.spec.roles = ["post_wash_leave_in"]
+    },
+  ],
+  [
+    "stage",
+    (input: any) => {
+      input.productFacts.spec.applicationStages = ["towel_dry"]
+    },
+  ],
+  [
+    "heat",
+    (input: any) => {
+      input.productFacts.spec.providesHeatProtection = false
+    },
+  ],
+  [
+    "required function",
+    (input: any) => {
+      input.categoryDecision.target.functions = [
+        { function: "detangle", ownership: "required", priority: 1 },
+      ]
+    },
+  ],
+] as const) {
+  test(`pre-heat leave-in: ${gate} remains a hard gate`, () => {
+    const input = leaveIn({
+      roles: ["pre_heat_application"],
+      applicationStages: ["pre_heat"],
+      providesHeatProtection: true,
+    }) as any
+    input.role = "pre_heat_application"
+    input.productFacts.protocols[0].role = input.role
+    mutate(input)
+    const result = evaluateStage3Authority(input)
+    assert.equal(result.status === "known" ? result.verdict : null, "mismatch")
+  })
+}
+
+test("irritated-only scalp still rejects an anti-dandruff shampoo", () => {
+  // fit-verdict spec §2.4 / §7b Q5, ruled 2026-10-12: only the combined intensity gate retires.
+  const input = shampoo({ shampooBucket: "schuppen", scalpRoute: "dandruff" }) as any
+  input.categoryDecision.target.everydayConstraint = "irritation_compatible"
+  const result = evaluateStage3Authority(input)
+  assert.equal(result.status === "known" ? result.verdict : null, "mismatch")
+})

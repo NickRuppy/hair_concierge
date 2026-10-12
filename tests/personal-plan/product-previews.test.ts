@@ -501,7 +501,8 @@ test("evaluates an uncovered Scalp Care recommendation before exposing its image
   assert.equal(recommendation.verdict, "ideal")
 })
 
-test("returns an exact-fit Mask preview and falls back on an unsuitable thickness", async () => {
+test("Mask preview admits adjacent thickness and falls back only on a two-step gap", async () => {
+  // fit-verdict spec §§2–5, ruled 2026-10-12: thickness is a degree axis, never a gate.
   const result = computeNeedPlan({
     rawEnvelope: COMPLETE_V3_PLAN_ENVELOPE,
     artifactId: "11111111-1111-4111-8111-111111111111",
@@ -563,6 +564,13 @@ test("returns an exact-fit Mask preview and falls back on an unsuitable thicknes
     snapshot,
     loadCandidates: async () => [candidate],
   })
+  const adjacent = await computeStage1ProductExamplePreviews({
+    personalPlanId: "plan-1",
+    sourceNeedVersionId: "need-1",
+    snapshot,
+    loadCandidates: async () => [{ ...candidate, suitableThicknesses: ["normal"] }],
+  })
+  assert.equal(asRecommendation(adjacent.previews[0]!).verdict, "supportive")
   const unsuitable = await computeStage1ProductExamplePreviews({
     personalPlanId: "plan-1",
     sourceNeedVersionId: "need-1",
@@ -588,6 +596,7 @@ test("returns an exact-fit Mask preview and falls back on an unsuitable thicknes
 })
 
 test("uses a source-bound supportive Mask for both optional and required (basis) Mask decisions", async () => {
+  // fit-verdict spec §§3–5, ruled 2026-10-12: use one weight step for supportive in both tiers.
   // Mask's uncovered-role candidate search (mask.ts) used to admit a
   // supportive candidate into `eligible` only when needTier === "optional".
   // Task 3d lifted that restriction: supportive candidates are eligible for
@@ -638,7 +647,7 @@ test("uses a source-bound supportive Mask for both optional and required (basis)
     presentationImageUrl: "https://example.com/mask-supportive.webp",
     factFingerprint: "facts-mask-supportive",
     spec: {
-      weight: "rich",
+      weight: "medium",
       careDirection: "moisture",
       repairSupportLevel: "medium",
       functionalBenefits: [],

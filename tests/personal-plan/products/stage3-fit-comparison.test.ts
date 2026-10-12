@@ -696,7 +696,8 @@ for (const scenario of [
     name: "Mask",
     category: "mask" as const,
     role: "intensive_conditioning_mask" as const,
-    overrides: { weight: "rich" },
+    // fit-verdict spec §§3–5, ruled 2026-10-12: one step remains supportive.
+    overrides: { weight: "medium" },
     authorityRuleId: "mask.stage3.validated_supportive_candidate",
   },
   {
@@ -817,12 +818,13 @@ test("uncovered Shampoo dandruff role admits a one-step supportive candidate", (
 })
 
 test("uncovered Mask now ranks in the best-available supportive candidate for a required tier", () => {
+  // fit-verdict spec §5, ruled 2026-10-12: basis picks an eligible one-step fallback with its reason.
   const input = authorityInput("mask", "intensive_conditioning_mask", {
     productFacts: null,
     capturedProductId: null,
     subjectIdentity: null,
     candidates: [
-      factsFor("mask", "intensive_conditioning_mask", "supportive-candidate", { weight: "rich" }),
+      factsFor("mask", "intensive_conditioning_mask", "supportive-candidate", { weight: "medium" }),
     ],
   })
 
@@ -886,38 +888,27 @@ test("complete comparison excludes a two-step Oil weight gap from supportive alt
   assert.deepEqual(comparison.alternatives, [])
 })
 
-for (const scenario of [
-  {
-    name: "Mask",
-    category: "mask" as const,
-    role: "intensive_conditioning_mask" as const,
-    overrides: { weight: "medium" },
-  },
-]) {
-  test(`complete comparison rejects a ${scenario.name} candidate that excludes the confirmed thickness`, () => {
-    const input = authorityInput(scenario.category, scenario.role, {
-      productFacts: factsFor(scenario.category, scenario.role, "owned", {
-        recommendable: false,
+test("complete comparison admits adjacent Mask thickness and rejects an additive second miss", () => {
+  // fit-verdict spec §§2–4, ruled 2026-10-12: thickness is a degree axis, never a gate.
+  const input = authorityInput("mask", "intensive_conditioning_mask", {
+    productFacts: factsFor("mask", "intensive_conditioning_mask", "owned", {
+      recommendable: false,
+    }),
+    candidates: [
+      factsFor("mask", "intensive_conditioning_mask", "near-thickness-candidate", {
+        suitableThicknesses: ["coarse"],
       }),
-      candidates: [
-        factsFor(scenario.category, scenario.role, "wrong-thickness-candidate", {
-          ...scenario.overrides,
-          suitableThicknesses: ["coarse"],
-        }),
-      ],
-    })
-
-    const comparison = buildStage3FitComparison(input)
-
-    assert.equal(
-      comparison.alternatives.find(
-        (candidate) => candidate.productId === "wrong-thickness-candidate",
-      ) ?? null,
-      null,
-    )
-    assert.deepEqual(comparison.alternatives, [])
+    ],
   })
-}
+  const near = buildStage3FitComparison(input).alternatives
+  assert.deepEqual(
+    near.map((candidate) => [candidate.productId, candidate.verdict]),
+    [["near-thickness-candidate", "supportive"]],
+  )
+  assert.equal(near[0]?.recommendation.reason, "Eher für kräftigeres Haar gedacht")
+  input.recommendationCandidates[0].spec.weight = "medium"
+  assert.deepEqual(buildStage3FitComparison(input).alternatives, [])
+})
 
 test("Shampoo comparison keeps complete route targets independent of catalogue pagination", () => {
   const input = authorityInput("shampoo", "shampoo_everyday", {
@@ -1114,7 +1105,8 @@ for (const scenario of [
     overrides: { weight: "medium" },
   },
 ]) {
-  test(`${scenario.name} remains supportive instead of being flattened to outside`, () => {
+  test(`${scenario.name} retains its evaluated relation`, () => {
+    // fit-verdict spec §§3–4, ruled 2026-10-12: the mask's two-step weight gap is outside.
     const comparison = buildStage3FitComparison(
       authorityInput(scenario.category, scenario.role, {
         productFacts: factsFor(scenario.category, scenario.role, "owned", scenario.overrides),
@@ -1124,7 +1116,7 @@ for (const scenario of [
     const value = comparison.evidenceRows
       ?.find((row) => row.rowId === scenario.rowId)
       ?.productValues.find((candidate) => candidate.productId === "owned")
-    assert.equal(value?.relation, "supportive")
+    assert.equal(value?.relation, scenario.category === "mask" ? "outside_target" : "supportive")
   })
 }
 
@@ -1768,6 +1760,7 @@ test("comparison ranks target coverage before recommendation and verdict tie-bre
 })
 
 test("comparison excludes a known Leave-in candidate with zero displayed target matches", () => {
+  // fit-verdict spec §4, ruled 2026-10-12: two misses are ineligible; keep the second candidate at one miss.
   const input = authorityInput("leave_in", "post_wash_leave_in", {
     productFacts: factsFor("leave_in", "post_wash_leave_in", "owned", {
       recommendable: false,
@@ -1780,7 +1773,7 @@ test("comparison excludes a known Leave-in candidate with zero displayed target 
       }),
       factsFor("leave_in", "post_wash_leave_in", "one-of-three", {
         weight: "medium",
-        careDirection: "balanced",
+        careDirection: "moisture",
         repairSupportLevel: "medium",
       }),
     ],
@@ -1871,11 +1864,10 @@ test("covered leave-in role ranks the same fixture by displayed coverage", () =>
   )
 })
 
-// Verdict dominance: mask's axis rules can mark a candidate "ideal" (every axis within one
-// step) while its exact-position dimension coverage stays low, and mark another candidate
-// "supportive" (one axis two steps off) while its coverage is higher. The comparator must still
-// rank verdict before coverage.
-test("an ideal verdict outranks a higher-coverage supportive candidate", () => {
+// Verdict dominance: extra repair is ideal even without exact displayed overlap;
+// an adjacent weight is supportive. Verdict still ranks before catalog order.
+test("an ideal verdict outranks an earlier-listed supportive candidate with equal coverage", () => {
+  // fit-verdict spec §§3–5, ruled 2026-10-12: one step is supportive; at/above repair is ideal.
   const input = authorityInput("mask", "intensive_conditioning_mask", {
     productFacts: factsFor("mask", "intensive_conditioning_mask", "owned", {
       recommendable: false,
@@ -1883,13 +1875,13 @@ test("an ideal verdict outranks a higher-coverage supportive candidate", () => {
     candidates: [
       factsFor("mask", "intensive_conditioning_mask", "fewer-matches-ideal", {
         sortOrder: 5,
-        weight: "medium", // one step from target "light" -> mask treats this as "pass"
-        careDirection: "moisture", // exact match -> the only displayed-dimension match
+        weight: "light", // exact weight
+        careDirection: "moisture", // exact match
         repairSupportLevel: "high", // stronger than target "medium" -> "pass", but no match
       }),
       factsFor("mask", "intensive_conditioning_mask", "more-matches-supportive", {
         sortOrder: 1,
-        weight: "rich", // two steps from target "light" -> caution, keeps a match miss too
+        weight: "medium", // one step from target "light" -> caution
         careDirection: "moisture", // exact match
         repairSupportLevel: "medium", // exact match
       }),

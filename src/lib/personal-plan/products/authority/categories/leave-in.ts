@@ -1,6 +1,14 @@
-import type { PlanRepairSupportLevel } from "@/lib/personal-plan/types"
-
-import type { Stage3CriterionResult } from "../../contracts"
+import type { FitAxis } from "../fit-evaluator"
+import {
+  commonFitGates,
+  evaluateCriteria,
+  THICKNESSES,
+  thicknessReason,
+  WEIGHTS,
+  weightReason,
+  CARE_DIRECTIONS,
+  careDirectionReason,
+} from "../fit-criteria"
 import { candidateDimensionCoverage } from "../../comparison-dimensions"
 import { compareRankableCandidates, type RankableCandidate } from "../../candidate-ranking"
 import type {
@@ -9,191 +17,143 @@ import type {
   Stage3LeaveInFacts,
 } from "../contracts"
 import {
-  commonUnknownFacts,
   criterion,
   hasValidTarget,
-  isInactiveOrRetired,
   isPendingIdentity,
   knownEvaluation,
   pendingEvaluation,
   unknownEvaluation,
   unsupportedEvaluation,
 } from "../shared"
-import {
-  careDirectionAxisFitResult,
-  orderedAxisFitResult,
-  repairSupportAxisFitResult,
-} from "./axis-fit"
-
-const WEIGHTS = ["light", "medium", "rich"] as const
-const REPAIR_LEVELS: PlanRepairSupportLevel[] = ["low", "medium", "high"]
-
 function supportsPostWashApplication(stages: readonly string[]) {
   return stages.some((stage) => stage === "towel_dry" || stage === "damp" || stage === "wet")
 }
 
 function evaluateFacts(input: Stage3AuthorityInput<"leave_in">, facts: Stage3LeaveInFacts) {
   const target = input.categoryDecision.target
-  const criteria: Stage3CriterionResult[] = []
-  const missing = commonUnknownFacts({ ...input, productFacts: facts })
-  if (isInactiveOrRetired({ ...input, productFacts: facts }) || facts.knownReaction)
-    return {
-      verdict: "mismatch" as const,
-      criteria: [
-        criterion(
-          "leave_in.safety",
-          "Sicherheit",
-          "fail",
-          "Das Produkt ist nicht sicher aktiv einsetzbar.",
-        ),
-      ],
-    }
-  // There is no per-subject thickness fact at this boundary. Do not compare a
-  // catalog label to formula weight and fabricate a profile mismatch.
-  if (!target || target.category !== "leave_in") return { verdict: "mismatch" as const, criteria }
-  for (const [key, value] of Object.entries({
-    weight: facts.spec.weight,
-    care_direction: facts.spec.careDirection,
-    repair_support_level: facts.spec.repairSupportLevel,
-    plan_roles: facts.spec.roles,
-    application_stage: facts.spec.applicationStages,
-  }))
-    if (value === null) missing.push(key)
+  if (!target || target.category !== "leave_in") return evaluateCriteria(input, facts, [], [])
+  const gates = commonFitGates(input, facts)
   const requiredFunctions = target.functions
-    .filter((functionTarget) => functionTarget.ownership === "required")
-    .map((functionTarget) => functionTarget.function)
-  if (requiredFunctions.length && facts.spec.careBenefits === null) missing.push("care_benefits")
-  const protocol = facts.protocols.find((candidate) => candidate.role === input.role)
-  if (!protocol || protocol.status !== "verified_complete") missing.push("verified_protocol")
-  if (input.role === "pre_heat_application" && facts.spec.providesHeatProtection === null)
-    missing.push("provides_heat_protection")
-  if (missing.length) return { verdict: "unknown" as const, criteria, missing }
-  if (input.role === "post_wash_leave_in" && !facts.spec.roles?.includes("post_wash_leave_in"))
-    return {
-      verdict: "mismatch" as const,
-      criteria: [
-        criterion(
-          "leave_in.role",
-          "Pflege nach der Wäsche",
-          "fail",
-          "Das Produkt deckt die Pflege-Rolle nicht ab.",
-        ),
-      ],
-    }
-  if (
-    input.role === "post_wash_leave_in" &&
-    requiredFunctions.some((required) => !facts.spec.careBenefits?.includes(required))
+    .filter((item) => item.ownership === "required")
+    .map((item) => item.function)
+  gates.push(
+    {
+      id: "leave_in.role",
+      label: "Leave-in-Rolle",
+      outcome:
+        facts.spec.roles === null
+          ? "unknown"
+          : facts.category !== "leave_in" || !facts.spec.roles.includes(input.role as never)
+            ? "fail"
+            : "pass",
+      reason: "Das Produkt deckt die erforderliche Leave-in-Rolle nicht ab.",
+    },
+    {
+      id: "leave_in.application",
+      label: "Anwendungszeitpunkt",
+      outcome:
+        facts.spec.applicationStages === null
+          ? "unknown"
+          : (
+                input.role === "pre_heat_application"
+                  ? facts.spec.applicationStages.includes("pre_heat")
+                  : supportsPostWashApplication(facts.spec.applicationStages)
+              )
+            ? "pass"
+            : "fail",
+      reason:
+        input.role === "pre_heat_application"
+          ? "Die Anwendung vor Hitze ist nicht bestätigt."
+          : "Die Anwendung auf feuchtem Haar ist nicht bestätigt.",
+    },
   )
-    return {
-      verdict: "mismatch" as const,
-      criteria: [
-        criterion(
-          "leave_in.functions",
-          "Pflegefunktionen",
-          "fail",
-          "Das Produkt deckt eine erforderliche Leave-in-Funktion nicht ab.",
-        ),
-      ],
-    }
-  if (input.role === "pre_heat_application" && !facts.spec.providesHeatProtection)
-    return {
-      verdict: "mismatch" as const,
-      criteria: [
-        criterion("leave_in.heat", "Hitzeschutz", "fail", "Der Hitzeschutz ist nicht verifiziert."),
-      ],
-    }
-  if (
-    input.role === "post_wash_leave_in" &&
-    !supportsPostWashApplication(facts.spec.applicationStages ?? [])
-  )
-    return {
-      verdict: "mismatch" as const,
-      criteria: [
-        criterion(
-          "leave_in.application",
-          "Anwendungszeitpunkt",
-          "fail",
-          "Die Anwendung auf feuchtem Haar ist nicht bestätigt.",
-        ),
-      ],
-    }
-  if (input.role === "pre_heat_application" && !facts.spec.applicationStages?.includes("pre_heat"))
-    return {
-      verdict: "mismatch" as const,
-      criteria: [
-        criterion(
-          "leave_in.application",
-          "Anwendungszeitpunkt",
-          "fail",
-          "Die Anwendung vor Hitze ist nicht bestätigt.",
-        ),
-      ],
-    }
-  const weightResult = orderedAxisFitResult(
-    facts.spec.weight as (typeof WEIGHTS)[number],
-    target.weight,
-    WEIGHTS,
-  )
-  if (weightResult === "fail")
-    return {
-      verdict: "mismatch" as const,
-      criteria: [
-        criterion(
-          "leave_in.weight",
-          "Gewicht",
-          "fail",
-          "Die Formel ist deutlich zu leicht oder zu reichhaltig.",
-        ),
-      ],
-    }
-  const repairResult = repairSupportAxisFitResult(
-    facts.spec.repairSupportLevel as PlanRepairSupportLevel,
-    target.repairSupportLevel,
-    REPAIR_LEVELS,
-  )
-  if (repairResult === "fail")
-    return {
-      verdict: "mismatch" as const,
-      criteria: [
-        criterion(
-          "leave_in.repair_support",
-          "Repair-Unterstützung",
-          "fail",
-          "Die Repair-Unterstützung liegt deutlich unter dem Ziel.",
-        ),
-      ],
-    }
-  const careDirectionResult = careDirectionAxisFitResult(
-    facts.spec.careDirection!,
-    target.careDirection,
-  )
-  if (careDirectionResult === "fail")
-    return {
-      verdict: "mismatch" as const,
-      criteria: [
-        criterion(
-          "leave_in.care_direction",
-          "Pflegeausrichtung",
-          "fail",
-          "Die Pflegeausrichtung ist entgegengesetzt.",
-        ),
-      ],
-    }
-  const supportive =
-    weightResult === "caution" || repairResult === "caution" || careDirectionResult === "caution"
-  return {
-    verdict: supportive ? ("supportive" as const) : ("ideal" as const),
-    criteria: [
+  if (input.role === "pre_heat_application")
+    gates.push({
+      id: "leave_in.heat",
+      label: "Hitzeschutz",
+      outcome:
+        facts.spec.providesHeatProtection === null
+          ? "unknown"
+          : facts.spec.providesHeatProtection
+            ? "pass"
+            : "fail",
+      reason: "Der Hitzeschutz ist nicht verifiziert.",
+    })
+  if (requiredFunctions.length)
+    gates.push({
+      id: "leave_in.functions",
+      label: "Pflegefunktionen",
+      outcome:
+        facts.spec.careBenefits === null
+          ? "unknown"
+          : requiredFunctions.some((required) => !facts.spec.careBenefits!.includes(required))
+            ? "fail"
+            : "pass",
+      reason: "Das Produkt deckt eine erforderliche Leave-in-Funktion nicht ab.",
+    })
+  const axes: FitAxis[] = [
+    {
+      id: "leave_in.thickness",
+      label: "Haarstärke",
+      scale: THICKNESSES,
+      productValues: facts.suitableThicknesses,
+      targetValue: input.hairThickness ?? null,
+      reason: thicknessReason,
+    },
+    {
+      id: "leave_in.weight",
+      label: "Gewicht",
+      scale: WEIGHTS,
+      productValues: facts.spec.weight ? [facts.spec.weight] : null,
+      targetValue: target.weight,
+      reason: weightReason,
+    },
+    {
+      id: "leave_in.care_direction",
+      label: "Pflegeausrichtung",
+      scale: CARE_DIRECTIONS,
+      productValues: facts.spec.careDirection ? [facts.spec.careDirection] : null,
+      targetValue: target.careDirection,
+      reason: careDirectionReason,
+    },
+    {
+      id: "leave_in.repair_support",
+      label: "Repair-Unterstützung",
+      scale: ["low", "medium", "high"],
+      productValues: facts.spec.repairSupportLevel ? [facts.spec.repairSupportLevel] : null,
+      targetValue: target.repairSupportLevel,
+      direction: "at_or_above_is_zero",
+      reason: () => "Weniger Reparatur, als dein Haar braucht",
+    },
+  ]
+  const result = evaluateCriteria(input, facts, gates, axes, {
+    "leave_in.thickness": ["suitable_thicknesses"],
+    "leave_in.weight": ["weight"],
+    "leave_in.care_direction": ["care_direction"],
+    "leave_in.repair_support": ["repair_support_level"],
+    "leave_in.role": ["plan_roles"],
+    "leave_in.application": ["application_stage"],
+    "leave_in.heat": ["provides_heat_protection"],
+    "leave_in.functions": ["care_benefits"],
+  })
+  if (result.verdict !== "mismatch")
+    result.criteria.unshift(
       criterion(
         "leave_in.fit",
         "Leave-in-Passung",
-        supportive ? "caution" : "pass",
-        supportive
-          ? "Passt mit einer dokumentierten Einschränkung."
-          : "Rolle, Gewicht und Pflegeausrichtung passen.",
+        result.verdict === "supportive"
+          ? "caution"
+          : result.verdict === "unknown"
+            ? "unknown"
+            : "pass",
+        result.verdict === "supportive"
+          ? result.criteria.find((item) => item.result === "caution")!.explanation
+          : result.verdict === "unknown"
+            ? "Noch nicht geprüft."
+            : "Rolle, Gewicht und Pflegeausrichtung passen.",
       ),
-    ],
-  }
+    )
+  return result
 }
 
 export const evaluateLeaveInAuthority: Stage3CategoryAuthorityAdapter<"leave_in"> = (
@@ -250,7 +210,10 @@ export const evaluateLeaveInAuthority: Stage3CategoryAuthorityAdapter<"leave_in"
         category: "leave_in",
         role: input.role,
         displayName: selected.item.displayName,
-        reason: "Passt zur erforderlichen Leave-in-Rolle.",
+        reason:
+          selected.result.verdict === "supportive"
+            ? selected.result.criteria.find((item) => item.result === "caution")!.explanation
+            : "Passt zur erforderlichen Leave-in-Rolle.",
         authorityRuleId: "leave_in.selection.role_fit",
       },
       productFactFingerprint: null,

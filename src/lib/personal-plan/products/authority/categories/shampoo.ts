@@ -84,24 +84,7 @@ function evaluateFacts(input: Stage3AuthorityInput<"shampoo">, facts: Stage3Sham
       outcome: facts.spec.targetFit === "unknown" ? "unknown" : "pass",
     },
   )
-  // fit-verdict spec §2, ruled 2026-10-12: dandruff with irritation requires gentle cleansing.
-  if (
-    input.role === "shampoo_dandruff" &&
-    target?.category === "shampoo" &&
-    target.everydayConstraint.includes("irritation")
-  ) {
-    gates.push({
-      id: "shampoo.medical_exclusion",
-      label: "Verträglichkeit",
-      outcome:
-        facts.spec.cleansingIntensity === null
-          ? "unknown"
-          : facts.spec.cleansingIntensity === "gentle"
-            ? "pass"
-            : "fail",
-      reason: "Reinigt kräftiger als nötig",
-    })
-  }
+  // fit-verdict spec §7b Q5, ruled 2026-10-12: no dandruff + irritation intensity gate or target shift.
   const axes: FitAxis[] = [
     {
       id: "shampoo.thickness",
@@ -139,7 +122,6 @@ function evaluateFacts(input: Stage3AuthorityInput<"shampoo">, facts: Stage3Sham
     "shampoo.scalp_route": facts.spec.scalpRoute === null ? ["scalp_route"] : [],
     "shampoo.cleansing_intensity":
       expected || facts.spec.cleansingIntensity === null ? ["cleansing_intensity"] : [],
-    "shampoo.medical_exclusion": ["cleansing_intensity"],
   })
   if (result.verdict === "ideal" || result.verdict === "supportive")
     result.criteria.unshift(
