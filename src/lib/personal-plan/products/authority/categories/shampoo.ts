@@ -123,11 +123,17 @@ function evaluateFacts(input: Stage3AuthorityInput<"shampoo">, facts: Stage3Sham
     "shampoo.cleansing_intensity":
       expected || facts.spec.cleansingIntensity === null ? ["cleansing_intensity"] : [],
   })
-  if (result.verdict === "ideal" || result.verdict === "supportive")
+  const roleCriterion = result.criteria.find((row) => row.criterionId === "shampoo.role")!
+  if (roleCriterion.result === "pass")
+    roleCriterion.explanation = "Das Produkt deckt die bestätigte Shampoo-Aufgabe ab."
+  if (
+    input.role === "shampoo_dandruff" &&
+    (result.verdict === "ideal" || result.verdict === "supportive")
+  )
     result.criteria.unshift(
       criterion(
-        input.role === "shampoo_dandruff" ? "shampoo.fit" : "shampoo.role",
-        input.role === "shampoo_dandruff" ? "Shampoo-Passung" : "Reinigungsaufgabe",
+        "shampoo.fit",
+        "Shampoo-Passung",
         "pass",
         "Das Produkt deckt die bestätigte Shampoo-Aufgabe ab.",
       ),

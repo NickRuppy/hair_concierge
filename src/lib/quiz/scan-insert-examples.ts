@@ -1,3 +1,4 @@
+import { SCAN_VERDICT_COPY } from "@/lib/scan/verdict-labels"
 import type { QuizAnswers, QuizStep } from "./types"
 
 /**
@@ -253,22 +254,15 @@ function buildVerdict(rows: ScanExampleRow[]): { verdict: ScanExampleStatus; hea
   if (firstBad) {
     return {
       verdict: "bad",
-      headline:
-        firstBad.label === SCALP_ROW_LABEL
-          ? "Passt nicht zu deiner Kopfhaut"
-          : "Passt nicht zu deinem Haar",
+      headline: SCAN_VERDICT_COPY.mismatch.title,
     }
   }
   if (rows.some((row) => row.status === "warn")) {
-    return { verdict: "warn", headline: "Passt mit Einschränkung" }
+    return { verdict: "warn", headline: SCAN_VERDICT_COPY.supportive.title }
   }
-  // A card carrying a scalp row judges a scalp product; the negative verdict
-  // above already says "Kopfhaut", so the positive one must match it.
   return {
     verdict: "ok",
-    headline: rows.some((row) => row.label === SCALP_ROW_LABEL)
-      ? "Passt zu deiner Kopfhaut"
-      : "Passt zu deinem Haar",
+    headline: SCAN_VERDICT_COPY.ideal.title,
   }
 }
 

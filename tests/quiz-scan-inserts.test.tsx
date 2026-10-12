@@ -105,7 +105,8 @@ test("the solution insert quotes the scalp answer the user just gave", () => {
     /Du hast „Schuppen“ angegeben\. Jedes Shampoo, das nicht dazu passt, erkennt der Scanner in Sekunden – bevor es im Korb landet\./,
   )
   assert.match(html, imageUrl("regal-scan-flasche.webp"))
-  assert.match(html, /Passt nicht zu deiner Kopfhaut/)
+  // fit-verdict spec §1, ruled 2026-10-12.
+  assert.match(html, />Passt nicht</)
 })
 
 test("the solution insert's positive card judges the scalp and names the match", () => {
@@ -121,7 +122,8 @@ test("the solution insert's positive card judges the scalp and names the match",
   assert.ok(
     rendered.imageSources.includes("/images/funnels/scan/example-balea-kopfhaut-sensitive.webp"),
   )
-  assert.match(html, /Passt zu deiner Kopfhaut/)
+  // fit-verdict spec §1, ruled 2026-10-12.
+  assert.match(html, />Passt</)
   assert.doesNotMatch(html, /Passt zu deinem Haar/)
   assert.match(html, /Kopfhaut trocken – genau dein Profil\./)
   assert.doesNotMatch(html, /Kopfhaut sensibel, trocken – genau dein Profil\./)

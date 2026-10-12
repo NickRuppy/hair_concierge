@@ -749,7 +749,7 @@ test("states non-executable conditions plainly and keeps editing global", () => 
   )
 
   assert.match(html, /Empfohlen, aber nicht eingeplant/)
-  assert.match(html, /Noch in Prüfung/)
+  assert.match(html, /Nicht geprüft/)
   assert.match(html, /Nicht empfohlen · von dir eingeplant/)
   assert.match(html, /Offen/)
   assert.match(html, /Für diesen Basis-Baustein fehlt noch ein Produkt/)

@@ -1081,7 +1081,7 @@ test("Mask uses additive formulation distances and keeps required functions stri
         ),
       )
       .map((criterion) => criterion.result),
-    ["caution", "caution"],
+    ["caution", "pass", "caution"],
   )
 
   const strongerThanRequestedInput = structuredClone(idealInput) as Stage3AuthorityInput<"mask">
@@ -2200,8 +2200,7 @@ test("complete Shampoo authority treats a non-target cleansing intensity as supp
   assert.equal(result.status, "known")
   if (result.status !== "known") return
   assert.equal(result.verdict, "supportive")
-  assert.equal(result.criteria[0]?.criterionId, "shampoo.role")
-  assert.equal(result.criteria[0]?.result, "pass")
+  assert.equal(result.criteria.find((row) => row.criterionId === "shampoo.role")?.result, "pass")
   // fit-verdict spec §7a.3, ruled 2026-10-12: criteria now include every evaluated axis.
   assert.equal(
     result.criteria.find((item) => item.criterionId === "shampoo.cleansing_intensity")?.result,

@@ -14,7 +14,6 @@ import { candidateDimensionCoverage } from "../../comparison-dimensions"
 import { maskAcceptedCareDirections } from "./axis-fit"
 import { compareRankableCandidates, type RankableCandidate } from "../../candidate-ranking"
 import {
-  criterion,
   hasValidTarget,
   isInactiveOrRetired,
   isPendingIdentity,
@@ -118,19 +117,6 @@ function evaluateProduct(input: Stage3AuthorityInput<"mask">, product: Stage3Mas
       ? ["mask.thickness"]
       : ["suitable_thicknesses"],
   })
-  // Keep the existing mask protocol/required-benefit criterion rows and wire IDs.
-  for (const gate of gates.filter(
-    (gate) =>
-      ["mask.protocol", "mask.functional_benefits"].includes(gate.id) && gate.outcome !== "fail",
-  ))
-    result.criteria.push(
-      criterion(
-        gate.id,
-        gate.label,
-        gate.outcome === "unknown" ? "unknown" : "pass",
-        gate.outcome === "unknown" ? "Noch nicht geprüft." : "Entspricht deinem Bedarf.",
-      ),
-    )
   return result
 }
 

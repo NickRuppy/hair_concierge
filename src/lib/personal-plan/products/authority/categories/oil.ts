@@ -13,7 +13,6 @@ import type { Stage3AuthorityEvaluation, Stage3AuthorityInput, Stage3OilFacts } 
 import { candidateDimensionCoverage } from "../../comparison-dimensions"
 import { compareRankableCandidates, type RankableCandidate } from "../../candidate-ranking"
 import {
-  criterion,
   hasValidTarget,
   isPendingIdentity,
   knownEvaluation,
@@ -81,17 +80,9 @@ function evaluateFacts(input: OilInput, facts: Stage3OilFacts) {
     "oil.thickness": ["oil.thickness_eligibility"],
     verified_protocol: ["application_protocol"],
   })
-  if (result.verdict !== "mismatch")
-    result.criteria.unshift(
-      criterion(
-        "oil.role",
-        "Öl-Rolle",
-        roleSupport === true ? "pass" : "unknown",
-        roleSupport === true
-          ? "Das Produkt unterstützt die zugeordnete Öl-Rolle."
-          : "Noch nicht geprüft.",
-      ),
-    )
+  const roleCriterion = result.criteria.find((row) => row.criterionId === "oil.role")!
+  if (roleCriterion.result === "pass")
+    roleCriterion.explanation = "Das Produkt unterstützt die zugeordnete Öl-Rolle."
   return result
 }
 

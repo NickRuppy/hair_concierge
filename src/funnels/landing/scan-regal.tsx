@@ -19,11 +19,7 @@ const heroExample = getScanInsertExample(16, {})
 const steps = [
   ["1", "Haarprofil", "10 Fragen zu Struktur, Kopfhaut und Zielen."],
   ["2", "Scannen", "Barcode in den Rahmen halten – im Regal oder zu Hause."],
-  [
-    "3",
-    "Ergebnis",
-    "Passt, passt mit Einschränkung oder passt nicht – plus Alternativen, die passen.",
-  ],
+  ["3", "Ergebnis", "Passt, passt bedingt oder passt nicht – plus Alternativen, die passen."],
 ] as const
 
 const appStack = [

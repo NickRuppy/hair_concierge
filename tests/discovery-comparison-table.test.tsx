@@ -300,8 +300,8 @@ test("the cockpit shows her product as a comparison table instead of bars and te
       initialFinalizedAt={null}
     />,
   )
-  // Verdict title and badge stay (the title in the cockpit's voice, T4).
-  assert.match(markup, /Passt zum Haarprofil/)
+  // Verdict title and badge: fit-verdict spec §1, ruled 2026-10-12.
+  assert.match(markup, />Passt</)
   // No slider bars, no batch-4 text rows.
   assert.doesNotMatch(
     markup,

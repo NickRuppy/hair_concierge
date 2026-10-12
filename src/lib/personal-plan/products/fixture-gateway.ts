@@ -1001,7 +1001,7 @@ function fixtureCompactEvidenceRows(
             result === "pass"
               ? "erfüllt"
               : result === "caution"
-                ? "passt mit Einschränkung"
+                ? "passt bedingt"
                 : result === "fail"
                   ? "nicht erfüllt"
                   : "nicht bestätigt",

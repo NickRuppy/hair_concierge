@@ -1,3 +1,4 @@
+// fit-verdict spec §1/§7b, ruled 2026-10-12: web verdict labels.
 import assert from "node:assert/strict"
 import test from "node:test"
 
@@ -45,7 +46,7 @@ test("insert 16 stays partial: cleansing and thickness, no scalp row", () => {
     status: "bad",
   })
   assert.equal(card.verdict, "bad")
-  assert.equal(card.headline, "Passt nicht zu deinem Haar")
+  assert.equal(card.headline, "Passt nicht")
   assert.equal(card.deviation, "Haardicke: dick statt fein")
 })
 
@@ -63,11 +64,7 @@ test("insert 16 weighs the fixed thick product against every thickness", () => {
     assert.equal(card.deviation, deviation, thickness)
     assert.equal(
       card.headline,
-      status === "bad"
-        ? "Passt nicht zu deinem Haar"
-        : status === "warn"
-          ? "Passt mit Einschränkung"
-          : "Passt zu deinem Haar",
+      status === "bad" ? "Passt nicht" : status === "warn" ? "Passt bedingt" : "Passt",
       thickness,
     )
   }
@@ -79,7 +76,7 @@ test("insert 16 falls back to the default thickness before the question is answe
   assert.equal(card.rows[1].targetValue, "fein")
   assert.equal(card.rows[1].status, "bad")
   assert.equal(card.verdict, "bad")
-  assert.equal(card.headline, "Passt nicht zu deinem Haar")
+  assert.equal(card.headline, "Passt nicht")
   assert.equal(card.deviation, "Haardicke: dick statt fein")
 })
 
@@ -152,7 +149,7 @@ test("insert 17 asks for a clarifying wash when the scalp runs oily", () => {
     status: "warn",
   })
   assert.equal(card.verdict, "bad")
-  assert.equal(card.headline, "Passt nicht zu deiner Kopfhaut")
+  assert.equal(card.headline, "Passt nicht")
   assert.equal(
     card.deviation,
     "Reinigung: regulär statt klärend · Kopfhaut: sensibel, trocken statt fettig",
@@ -169,7 +166,7 @@ test("insert 17 passes on the scalp and says so, naming the matched criterion", 
   )
 
   assert.equal(card.verdict, "ok")
-  assert.equal(card.headline, "Passt zu deiner Kopfhaut")
+  assert.equal(card.headline, "Passt")
   assert.equal(card.deviation, "Kopfhaut trocken – genau dein Profil.")
   assert.equal(
     card.rows.every((row) => row.status === "ok"),
@@ -215,7 +212,7 @@ test("insert 17 keeps the restriction verdict when only the wash deviates", () =
 
   assert.equal(card.rows.find((row) => row.label === "Kopfhaut")?.status, "ok")
   assert.equal(card.verdict, "warn")
-  assert.equal(card.headline, "Passt mit Einschränkung")
+  assert.equal(card.headline, "Passt bedingt")
   assert.equal(card.deviation, "Reinigung: regulär statt klärend")
 })
 
@@ -225,7 +222,7 @@ test("insert 17 falls back to a balanced scalp before the question is answered",
   assert.equal(card.rows.find((row) => row.label === "Kopfhaut")?.targetValue, "ausgeglichen")
   assert.equal(card.rows.find((row) => row.label === "Haardicke")?.targetValue, "fein")
   assert.equal(card.verdict, "bad")
-  assert.equal(card.headline, "Passt nicht zu deiner Kopfhaut")
+  assert.equal(card.headline, "Passt nicht")
 })
 
 test("insert 18 weighs the mask against thickness, direction and repair need", () => {
@@ -258,7 +255,7 @@ test("insert 18 weighs the mask against thickness, direction and repair need", (
     { label: "Repair-Pflege", productValue: "mittel", targetValue: "mittel", status: "ok" },
   ])
   assert.equal(card.verdict, "ok")
-  assert.equal(card.headline, "Passt zu deinem Haar")
+  assert.equal(card.headline, "Passt")
   assert.equal(card.deviation, "Alles im Ziel.")
 })
 
@@ -266,9 +263,9 @@ test("insert 18 weighs the mask against thickness, direction and repair need", (
 // and fine hair is two steps away — a real miss, not a restriction.
 test("insert 18 walks the rich mask down the care-weight ladder", () => {
   const expected: [string, string, "ok" | "warn" | "bad", string][] = [
-    ["fine", "leicht", "bad", "Passt nicht zu deinem Haar"],
-    ["normal", "mittel", "warn", "Passt mit Einschränkung"],
-    ["coarse", "reichhaltig", "ok", "Passt zu deinem Haar"],
+    ["fine", "leicht", "bad", "Passt nicht"],
+    ["normal", "mittel", "warn", "Passt bedingt"],
+    ["coarse", "reichhaltig", "ok", "Passt"],
   ]
   for (const [thickness, target, status, headline] of expected) {
     const card = getScanInsertExample(18, answers({ thickness }))

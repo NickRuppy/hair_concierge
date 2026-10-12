@@ -174,7 +174,7 @@ const payload: ScanPresentedVerdictPayload = {
   kind: "in_catalog",
   verdict: "mismatch",
   verdictLabel: "Passt nicht",
-  verdictTitle: "Passt nicht zu deinem Haar",
+  verdictTitle: "Passt nicht",
   status: "pending",
   subtitle: "1 von 3 Zielbereichen getroffen",
   evaluatedRole: "shampoo_everyday",
@@ -922,7 +922,7 @@ test("join rule (c): research in a category whose step is BOUND to her product j
   )
   const entry = entryOf(markup, "Shampoo")
   // The shared verdict title, in the cockpit's neutral voice (verdict-layer T4).
-  assert.ok(entry.includes("Passt nicht zum Haarprofil"))
+  assert.ok(entry.includes("Passt nicht"))
   assert.ok(!entry.includes("noch in Recherche"))
 })
 
@@ -1847,8 +1847,7 @@ function nomiSecondPerson(): DiscoveryCockpitModel {
           criterionId: "shampoo.scalp_route",
           label: "Kopfhaut",
           result: "fail",
-          explanation:
-            "Keine Produktvariante deckt deine Haardicke und Pflegerichtung gemeinsam ab.",
+          explanation: "Für dein Haar eher schwer",
         },
       ],
     },
@@ -1941,7 +1940,7 @@ test("voice: no du/dein in the cockpit's own display outside the quoted exceptio
   assert.deepEqual(thirdPerson, [])
 
   // The fixture really carried second-person sentences: their neutral variants are on screen.
-  assert.ok(markup.includes("Passt nicht zum Haarprofil"))
+  assert.ok(markup.includes("Passt nicht"))
   assert.ok(
     markup.includes(
       `Die Kopfhaut ist eher trocken. Deshalb eine milde Reinigung ohne zusätzlichen Fettentzug.${DANDRUFF_TAIL}`,
@@ -1949,9 +1948,7 @@ test("voice: no du/dein in the cockpit's own display outside the quoted exceptio
   )
   assert.ok(markup.includes("Reinigt passend zu Kopfhaut und Haaranalyse."))
   assert.ok(markup.includes("Regelmäßige Reinigung für die Kopfhaut."))
-  assert.ok(
-    markup.includes("Keine Produktvariante deckt Haardicke und Pflegerichtung gemeinsam ab."),
-  )
+  assert.ok(markup.includes("Für das Haar eher schwer"))
   // …and the exceptions really rendered, so the test exercised them.
   assert.ok(markup.includes("So sagst du es"))
   assert.ok(markup.includes("Passt das in deine Woche?"))

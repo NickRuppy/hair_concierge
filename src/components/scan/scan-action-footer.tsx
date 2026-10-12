@@ -26,7 +26,7 @@ const TONE_CLASS: Record<ScanFooterTone, string> = {
     "border-[1.5px] border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] text-[var(--brand-plum-dark)] hover:border-[var(--brand-plum)] focus-visible:ring-[var(--brand-plum)]",
 }
 
-// `whitespace-nowrap` + `min-w-0`: on a 390px screen "Trotzdem kaufen" next to
+// `whitespace-nowrap` + `min-w-0`: on a 390px screen "Kaufen · <Preis>" next to
 // "✓ In deiner Routine" otherwise wraps and gets clipped by the fixed slot height.
 const SLOT_CLASS =
   "flex min-h-[48px] min-w-0 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-[12px] px-3 text-[14px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"

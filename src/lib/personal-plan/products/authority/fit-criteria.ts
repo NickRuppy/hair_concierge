@@ -105,9 +105,18 @@ export function evaluateCriteria(
   for (const axis of evaluation.axisOutcomes)
     if (axis.steps === null) missing.push(...(wireKeys[axis.id] ?? [axis.id]))
   const criteria = [
-    ...gates
-      .filter((gate) => gate.outcome === "fail")
-      .map((gate) => criterion(gate.id, gate.label, "fail", gate.reason ?? gate.label)),
+    ...gates.map((gate) =>
+      criterion(
+        gate.id,
+        gate.label,
+        gate.outcome,
+        gate.outcome === "fail"
+          ? (gate.reason ?? gate.label)
+          : gate.outcome === "pass"
+            ? "Entspricht deinem Bedarf."
+            : "Noch nicht geprüft.",
+      ),
+    ),
     ...evaluation.axisOutcomes.map((outcome, index) =>
       criterion(
         outcome.id,
@@ -127,14 +136,11 @@ export function evaluateCriteria(
   return {
     verdict: evaluation.verdict,
     missing,
-    criteria:
-      evaluation.verdict === "mismatch"
-        ? criteria.filter((item) => item.result !== "pass")
-        : criteria,
+    criteria,
   }
 }
 
-/** Gates-only adapters retain their existing criterion rows and missing-fact wire keys.
+/** Gates-only adapters retain their criterion IDs, results and missing-fact wire keys.
  * Spec §§2–4, ruled 2026-10-12: a known failed gate wins over incomplete facts.
  */
 export function evaluateGateCriteria(
@@ -177,26 +183,45 @@ export function evaluateGateCriteria(
     ...missing.map((id) => ({ id, label: id, outcome: "unknown" as const })),
   ]
   const evaluation = evaluateFit({ gates, axes })
-  const rows = [...criteria]
+  // The evaluator treats caution gates as passing, but transport preserves their
+  // original caution result. Emit each gate once, then each axis in input order.
+  const rows: Stage3CriterionResult[] = []
   for (const gate of gates) {
-    if (
-      gate.outcome === "fail" &&
-      !rows.some((row) => row.criterionId === gate.id && row.result === "fail")
+    if (rows.some((row) => row.criterionId === gate.id)) continue
+    const existing = criteria.find((row) => row.criterionId === gate.id)
+    rows.push(
+      existing
+        ? { ...existing }
+        : criterion(
+            gate.id,
+            gate.label,
+            gate.outcome,
+            gate.outcome === "fail"
+              ? (gate.reason ?? gate.label)
+              : gate.outcome === "pass"
+                ? "Entspricht deinem Bedarf."
+                : "Noch nicht geprüft.",
+          ),
     )
-      rows.push(criterion(gate.id, gate.label, "fail", gate.reason ?? gate.label))
   }
-  for (const outcome of evaluation.axisOutcomes) {
-    const row = rows.find((row) => row.criterionId === outcome.id)
-    if (!row) continue
-    row.result =
-      outcome.steps === null
-        ? "unknown"
-        : outcome.steps === 0
-          ? "pass"
-          : outcome.steps === 1
-            ? "caution"
-            : "fail"
-    if (outcome.reason) row.explanation = outcome.reason
+  for (const [index, outcome] of evaluation.axisOutcomes.entries()) {
+    const existing = criteria.find((row) => row.criterionId === outcome.id)
+    rows.push(
+      criterion(
+        outcome.id,
+        axes[index].label,
+        outcome.steps === null
+          ? "unknown"
+          : outcome.steps === 0
+            ? "pass"
+            : outcome.steps === 1
+              ? "caution"
+              : "fail",
+        outcome.reason ??
+          existing?.explanation ??
+          (outcome.steps === 0 ? "Entspricht deinem Bedarf." : "Noch nicht geprüft."),
+      ),
+    )
   }
   return { verdict: evaluation.verdict, criteria: rows, missing }
 }

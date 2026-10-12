@@ -18,6 +18,7 @@ import {
   rankStage3ComparisonCandidates,
   stage3CriterionEvidenceRelation,
   STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
+  type Stage3FitComparison,
 } from "../../../src/lib/personal-plan/products/fit-comparison"
 import {
   candidateDimensionCoverage,
@@ -663,7 +664,7 @@ test("Shampoo cleansing evidence marks a displayed two-step intensity gap outsid
   ])
 })
 
-test("Shampoo cleansing marker follows the displayed observation instead of the authority spec", () => {
+test("Shampoo cleansing marker follows authority while preserving its display observation (fit-verdict spec §7a.3, ruled 2026-10-12)", () => {
   const input = authorityInput("shampoo", "shampoo_everyday", {
     productFacts: factsFor("shampoo", "shampoo_everyday", "owned", {
       cleansingIntensity: "regular",
@@ -680,7 +681,7 @@ test("Shampoo cleansing marker follows the displayed observation instead of the 
   )
 
   assert.deepEqual(cleansing?.productValues, [
-    { productId: "owned", valueLabel: "sanft", relation: "supportive" },
+    { productId: "owned", valueLabel: "sanft", relation: "in_target" },
   ])
 })
 
@@ -995,7 +996,7 @@ test("Conditioner shows concrete dimensions only, with thickness as the fourth r
   assert.deepEqual(thickness?.productValues[0], {
     productId: "owned",
     valueLabel: "fein",
-    relation: "outside_target",
+    relation: "in_target",
   })
   assert.deepEqual(thickness?.productValues[1], {
     productId: "candidate",
@@ -1005,7 +1006,7 @@ test("Conditioner shows concrete dimensions only, with thickness as the fourth r
   assert.deepEqual(
     comparison.evidenceRows?.find((row) => row.rowId === "conditioner.care_direction")
       ?.productValues[0],
-    { productId: "owned", valueLabel: "ausgeglichen", relation: "supportive" },
+    { productId: "owned", valueLabel: "ausgeglichen", relation: "in_target" },
   )
 })
 
@@ -1058,30 +1059,40 @@ test("uncovered Conditioner ranks the candidate covering the confirmed thickness
   )
 })
 
-test("Shampoo compares confirmed route observations against the derived route target", () => {
-  const comparison = buildStage3FitComparison(
-    authorityInput("shampoo", "shampoo_everyday", {
-      productFacts: factsFor("shampoo", "shampoo_everyday", "owned", {
-        targetFit: "known_mismatch",
-        shampooObservations: {
-          cleansingIntensity: "gentle",
-          supportedScalpRoutes: ["dry"],
-        },
-      }),
-      candidates: [factsFor("shampoo", "shampoo_everyday", "candidate")],
+test("Shampoo mismatch retains the passing route, while absent criteria remain unknown", () => {
+  const input = authorityInput("shampoo", "shampoo_everyday", {
+    productFacts: factsFor("shampoo", "shampoo_everyday", "owned", {
+      targetFit: "known_mismatch",
+      shampooObservations: {
+        cleansingIntensity: "gentle",
+        supportedScalpRoutes: ["dry"],
+      },
     }),
-  )
-
-  assert.equal(
-    comparison.evidenceRows?.some((row) => row.rowId === "shampoo.target_fit"),
-    false,
-  )
-  assert.deepEqual(
-    comparison.evidenceRows
-      ?.find((row) => row.rowId === "shampoo.scalp_route")
-      ?.productValues.find((value) => value.productId === "owned"),
-    { productId: "owned", valueLabel: "trocken", relation: "outside_target" },
-  )
+    candidates: [factsFor("shampoo", "shampoo_everyday", "candidate")],
+  })
+  const evaluation = evaluateStage3Authority(input as unknown as Stage3AuthorityInput)
+  assert.equal(evaluation.status, "known")
+  if (evaluation.status !== "known") return
+  assert.equal(evaluation.verdict, "mismatch")
+  for (const [criteria, relation] of [
+    [evaluation.criteria, "in_target"],
+    [evaluation.criteria.filter((row) => row.criterionId !== "shampoo.scalp_route"), "unknown"],
+  ] as const) {
+    const comparison: Stage3FitComparison = buildStage3FitComparison(input, {
+      ...evaluation,
+      criteria,
+    })
+    assert.equal(
+      comparison.evidenceRows?.some((row) => row.rowId === "shampoo.target_fit"),
+      false,
+    )
+    assert.deepEqual(
+      comparison.evidenceRows
+        ?.find((row) => row.rowId === "shampoo.scalp_route")
+        ?.productValues.find((value) => value.productId === "owned"),
+      { productId: "owned", valueLabel: "trocken", relation },
+    )
+  }
 })
 
 for (const scenario of [
@@ -2469,3 +2480,31 @@ test("display flag off or a category outside the badge scope leaves the presenta
   assert.ok(leaveIn.products.length > 0)
   assert.ok(leaveIn.products.every((product) => !("marketSegment" in (product.presentation ?? {}))))
 })
+
+// Authority outcomes own the row state even when the display positions suggest otherwise.
+// fit-verdict spec §1/§7a.3/§7b, ruled 2026-10-12.
+for (const result of ["pass", "caution", "fail", "unknown"] as const) {
+  test(`conditioner display rows consume criterion ${result} without re-deriving fit`, () => {
+    const input = authorityInput("conditioner", "conditioner_rinse_out", {
+      productFacts: factsFor("conditioner", "conditioner_rinse_out", "owned"),
+      candidates: [],
+    })
+    const evaluation = evaluateStage3Authority(input as Stage3AuthorityInput)
+    assert.equal(evaluation.status, "known")
+    if (evaluation.status !== "known") return
+    const criteria = evaluation.criteria.map((criterion) =>
+      criterion.criterionId === "conditioner.weight" ? { ...criterion, result } : criterion,
+    )
+    const comparison = buildStage3FitComparison(input, { ...evaluation, criteria })
+    const row = comparison.evidenceRows?.find((item) => item.rowId === "conditioner.weight")
+    assert.equal(
+      row?.productValues[0].relation,
+      {
+        pass: "in_target",
+        caution: "supportive",
+        fail: "outside_target",
+        unknown: "unknown",
+      }[result],
+    )
+  })
+}

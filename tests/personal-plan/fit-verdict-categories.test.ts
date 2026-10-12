@@ -1,5 +1,10 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import React from "react"
+import { renderToStaticMarkup } from "react-dom/server"
+import { ProductFitComparison } from "../../src/components/personal-plan-products/product-fit-comparison"
+import { ScanVerdictSections } from "../../src/components/scan/scan-verdict-sections"
+import { buildStage3FitComparison } from "../../src/lib/personal-plan/products/fit-comparison"
 
 import { buildOilDecision } from "../../src/lib/personal-plan/categories/oil"
 import { buildPlanProfile } from "../../src/lib/personal-plan/input"
@@ -1124,3 +1129,147 @@ test("dry_shampoo: absent personal targets skip tint and scalp scoring", () => {
   }
   assert.equal(fitVerdict(gateCategory("dry_shampoo", { hairColorFit: "universal" })), "ideal")
 })
+
+// A two-step weight mismatch must not erase independent passing gates or axes.
+for (const [category, create, passingAxes] of [
+  ["shampoo", shampoo, ["shampoo.thickness"]],
+  [
+    "conditioner",
+    conditioner,
+    ["conditioner.thickness", "conditioner.balance", "conditioner.repair"],
+  ],
+  [
+    "leave_in",
+    leaveIn,
+    ["leave_in.thickness", "leave_in.care_direction", "leave_in.repair_support"],
+  ],
+  ["mask", mask, ["mask.thickness", "mask.care_direction", "mask.repair_support"]],
+  ["oil", oil, ["oil.thickness", "oil.role"]],
+] as const) {
+  test(`${category}: mismatch retains passing criteria exactly once in stable order`, () => {
+    const matching = create({})
+    const mismatch = create(
+      category === "shampoo"
+        ? { cleansingIntensity: "gentle", thicknesses: ["fine"] }
+        : { weight: "light" },
+    )
+    // Shampoo uses a failed scalp gate here so the thickness axis can still pass.
+    if (category === "shampoo")
+      mismatch.productFacts = {
+        ...matching.productFacts!,
+        spec: { ...matching.productFacts!.spec, scalpRoute: "dry" },
+      } as typeof mismatch.productFacts
+    const result = evaluateStage3Authority(mismatch)
+    assert.equal(result.status, "known")
+    if (result.status !== "known") return
+    assert.equal(result.verdict, "mismatch")
+    for (const id of [`${category}.safety`, `${category}.lifecycle`, ...passingAxes]) {
+      assert.equal(result.criteria.filter((row) => row.criterionId === id).length, 1, id)
+      assert.equal(result.criteria.find((row) => row.criterionId === id)?.result, "pass", id)
+    }
+    assert.equal(
+      new Set(result.criteria.map((row) => row.criterionId)).size,
+      result.criteria.length,
+    )
+    const ideal = evaluateStage3Authority(matching)
+    assert.equal(ideal.status, "known")
+    if (ideal.status === "known") {
+      const ids = new Set(result.criteria.map((row) => row.criterionId))
+      assert.deepEqual(
+        ideal.criteria.filter((row) => ids.has(row.criterionId)).map((row) => row.criterionId),
+        result.criteria.map((row) => row.criterionId),
+      )
+    }
+  })
+}
+
+test("mismatch passing axes render green in the real plan comparison and scanner", () => {
+  const input = conditioner({ weight: "light" })
+  const evaluation = evaluateStage3Authority(input)
+  const comparison = buildStage3FitComparison(input, evaluation)
+  const thickness = comparison.evidenceRows!.find(
+    (row) => row.rowId === "conditioner.suitable_thicknesses",
+  )!
+  assert.equal(
+    thickness.productValues.find((value) => value.productId === "owned")?.relation,
+    "in_target",
+  )
+  const plan = renderToStaticMarkup(
+    React.createElement(ProductFitComparison, {
+      comparison,
+      evaluation,
+      displayedAlternativeIndex: 0,
+      onDisplayedAlternativeChange: () => {},
+      onAction: () => {},
+      onBack: () => {},
+    }),
+  )
+  const thicknessRow = plan
+    .match(/<tr[\s\S]*?<\/tr>/g)
+    ?.find((row) => row.includes("Geeignete Haardicke"))
+  assert.ok(thicknessRow)
+  assert.match(thicknessRow, /status-ok-text/)
+  assert.match(thicknessRow, /Im Ziel/)
+  const scan = buildScanVerdict({
+    category: input.category,
+    decision: input.categoryDecision,
+    productFacts: input.productFacts,
+    recommendationCandidates: [],
+    coverage: [],
+    hairThickness: input.hairThickness!,
+    heatCarrierCoverage: input.heatCarrierCoverage,
+    refinedVersionId: input.refinedVersionId,
+    refinedInputHash: input.refinedInputHash,
+  })
+  assert.equal(scan.kind, "in_catalog")
+  if (scan.kind !== "in_catalog") return
+  assert.equal(scan.verdict, "mismatch")
+  assert.equal(
+    scan.dimensions.find((row) => row.dimensionId === "conditioner.suitable_thicknesses")?.state,
+    "in_target",
+  )
+  const markup = renderToStaticMarkup(
+    React.createElement(ScanVerdictSections, {
+      result: {
+        ...scan,
+        product: {
+          productId: "owned",
+          name: "Produkt",
+          brand: null,
+          category: "conditioner",
+          categoryLabel: "Conditioner",
+          imageUrl: null,
+          priceLabel: null,
+          purchaseUrl: null,
+        },
+      },
+    }),
+  )
+  assert.match(markup, /Geeignete Haardicke<\/p><p[^>]*status-ok-text[^>]*>✓ dick/)
+})
+
+for (const category of remainingCategories) {
+  test(`${category}: gate-only transport retains independent passes on a safety mismatch`, () => {
+    const input = gateCategory(category)
+    input.productFacts!.knownReaction = true
+    const result = evaluateStage3Authority(input)
+    assert.equal(result.status, "known")
+    if (result.status !== "known") return
+    assert.equal(result.verdict, "mismatch")
+    const prefix = category === "deep_cleansing_shampoo" ? "deep_cleansing" : category
+    assert.equal(
+      result.criteria.find((row) => row.criterionId === `${prefix}.safety`)?.result,
+      "fail",
+    )
+    for (const suffix of ["lifecycle", "category", "role"]) {
+      assert.equal(
+        result.criteria.find((row) => row.criterionId === `${prefix}.${suffix}`)?.result,
+        "pass",
+      )
+    }
+    assert.equal(
+      new Set(result.criteria.map((row) => row.criterionId)).size,
+      result.criteria.length,
+    )
+  })
+}

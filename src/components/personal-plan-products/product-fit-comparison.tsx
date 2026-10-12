@@ -1,5 +1,7 @@
 "use client"
 
+import { fitReasonLines, SCAN_VERDICT_COPY } from "@/lib/scan/verdict-labels"
+
 import { Check, ChevronLeft, ChevronRight, CircleHelp, ImageIcon, Minus, X } from "lucide-react"
 import { type ReactElement, type ReactNode, useState } from "react"
 
@@ -532,12 +534,17 @@ function ComparisonReview({
         <ProductCard
           product={alternativeProduct}
           label={
-            budgetCardLabel(alternativeProduct?.presentation?.labelKind) ??
-            (selectedAlternative?.verdict === "supportive"
-              ? "Alternative · passt mit Einschränkung"
-              : "Passende Alternative")
+            selectedAlternative?.verdict === "supportive"
+              ? "Alternative · passt bedingt"
+              : (budgetCardLabel(alternativeProduct?.presentation?.labelKind) ??
+                "Passende Alternative")
           }
           alternativeVerdict={selectedAlternative?.verdict ?? null}
+          reasonLines={
+            selectedAlternative
+              ? fitReasonLines(selectedAlternative.verdict, selectedAlternative.criteria)
+              : []
+          }
         />
       </div>
       {alternatives.length > 1 ? (
@@ -606,16 +613,16 @@ function FitOnlyReview({
   const presentation =
     verdict === "ideal"
       ? {
-          title: `Dein ${categoryLabel || "Produkt"} passt`,
+          title: "Passt",
           description: "Dein Produkt liegt in den relevanten bestätigten Punkten im Ziel.",
         }
       : verdict === "supportive"
         ? {
-            title: `Dein ${categoryLabel || "Produkt"} passt mit Einschränkung`,
+            title: "Passt bedingt",
             description: "Dein Produkt passt grundsätzlich zu deinem Bedarf.",
           }
         : {
-            title: `Dein ${categoryLabel || "Produkt"} passt nicht`,
+            title: "Passt nicht",
             description:
               "Dein Produkt liegt in mindestens einem bestätigten Prüfpunkt außerhalb deines Ziels.",
           }
@@ -624,7 +631,11 @@ function FitOnlyReview({
       <ReviewHeader
         contextLabel={contextLabel}
         title={headingOverride ?? presentation.title}
-        description={presentation.description}
+        description={
+          fitReasonLines(verdict, evaluation.status === "known" ? evaluation.criteria : []).join(
+            " · ",
+          ) || presentation.description
+        }
         scopeContextLine={scopeContextLine}
       />
       <ProductCard product={product} label="Dein Produkt" />
@@ -649,7 +660,6 @@ function FitOnlyReview({
 
 function PendingReview({
   contextLabel,
-  categoryLabel,
   currentProduct,
   comparison,
   alternatives,
@@ -680,7 +690,7 @@ function PendingReview({
     <>
       <ReviewHeader
         contextLabel={contextLabel}
-        title={headingOverride ?? `Dein ${categoryLabel || "Produkt"} wird noch geprüft`}
+        title={headingOverride ?? "Nicht geprüft"}
         description="Wir haben noch nicht genug bestätigte Produktdaten für ein verlässliches Urteil."
         scopeContextLine={scopeContextLine}
       />
@@ -689,8 +699,13 @@ function PendingReview({
         {selectedAlternative ? (
           <ProductCard
             product={alternativeProduct}
-            label="Verifizierte Alternative"
+            label={
+              selectedAlternative.verdict === "supportive"
+                ? "Alternative · passt bedingt"
+                : "Verifizierte Alternative"
+            }
             alternativeVerdict={selectedAlternative.verdict}
+            reasonLines={fitReasonLines(selectedAlternative.verdict, selectedAlternative.criteria)}
           />
         ) : null}
       </div>
@@ -742,7 +757,7 @@ function UnassessableReview({
     <>
       <ReviewHeader
         contextLabel={contextLabel}
-        title={headingOverride ?? "Noch nicht eindeutig beurteilbar"}
+        title={headingOverride ?? "Nicht geprüft"}
         description="Für diesen Vergleich fehlen noch verifizierte Produktdaten."
         scopeContextLine={scopeContextLine}
       />
@@ -751,8 +766,13 @@ function UnassessableReview({
         {selectedAlternative ? (
           <ProductCard
             product={alternativeProduct}
-            label="Verifizierte Alternative"
+            label={
+              selectedAlternative.verdict === "supportive"
+                ? "Alternative · passt bedingt"
+                : "Verifizierte Alternative"
+            }
             alternativeVerdict={selectedAlternative.verdict}
+            reasonLines={fitReasonLines(selectedAlternative.verdict, selectedAlternative.criteria)}
           />
         ) : null}
       </div>
@@ -827,18 +847,23 @@ function UncoveredRecommendationReview({
       ? recommendationCardLabel(
           budgetCardLabel(firstProduct?.presentation?.labelKind) ?? BUDGET_NEUTRAL_FIRST_LABEL,
           first,
+          first.productId === defaultRecommendationCandidate(comparison, alternatives)?.productId,
         )
       : BUDGET_NEUTRAL_FIRST_LABEL
     : first?.verdict === "ideal"
       ? "Beste Passung"
-      : "Beste verfügbare Option"
+      : "Passt bedingt"
   const secondaryBaseLabel = secondaryIndex === null ? null : `Alternative ${secondaryIndex}`
   const secondaryBudgetLabel = budgetAllocated
     ? budgetCardLabel(secondaryProduct?.presentation?.labelKind)
     : null
   const secondaryLabel =
     secondary && secondaryBaseLabel
-      ? recommendationCardLabel(secondaryBudgetLabel ?? secondaryBaseLabel, secondary)
+      ? recommendationCardLabel(
+          secondaryBudgetLabel ?? secondaryBaseLabel,
+          secondary,
+          budgetAllocated && secondary.productId === comparison.defaultProductId,
+        )
       : null
   // Evidence columns must tell the two products apart: two cards can carry the same budget
   // label („Alternative“/„Im Budget“), so the first column then falls back to the neutral name.
@@ -878,6 +903,7 @@ function UncoveredRecommendationReview({
               product={firstProduct}
               label={firstLabel}
               alternativeVerdict={first.verdict}
+              reasonLines={fitReasonLines(first.verdict, first.criteria)}
               selected={selectedProductId === first.productId}
               disabled={disabled}
               onSelect={() => onSelect(first.productId)}
@@ -887,6 +913,7 @@ function UncoveredRecommendationReview({
                 product={secondaryProduct}
                 label={secondaryLabel ?? "Alternative"}
                 alternativeVerdict={secondary.verdict}
+                reasonLines={fitReasonLines(secondary.verdict, secondary.criteria)}
                 selected={selectedProductId === secondary.productId}
                 disabled={disabled}
                 onSelect={() => onSelect(secondary.productId)}
@@ -945,8 +972,16 @@ function UncoveredRecommendationReview({
   )
 }
 
-function recommendationCardLabel(baseLabel: string, candidate: Stage3SelectedComparisonCandidate) {
-  return candidate.verdict === "supportive" ? `${baseLabel} · passt teilweise` : baseLabel
+function recommendationCardLabel(
+  baseLabel: string,
+  candidate: Stage3SelectedComparisonCandidate,
+  isRecommendation = false,
+) {
+  return candidate.verdict === "supportive"
+    ? isRecommendation
+      ? "Passt bedingt"
+      : "Alternative · passt bedingt"
+    : baseLabel
 }
 
 function OverallVerdict({
@@ -960,13 +995,12 @@ function OverallVerdict({
   rows: Stage3FitEvidenceRow[]
   currentProductId?: string
 }) {
-  if (evaluation.status !== "known" || evaluation.verdict === "unknown") return null
-  const label =
-    evaluation.verdict === "ideal"
-      ? "Passt"
-      : evaluation.verdict === "supportive"
-        ? "Passt mit Einschränkung"
-        : "Passt nicht"
+  const verdict = evaluation.status === "known" ? evaluation.verdict : "unknown"
+  const label = SCAN_VERDICT_COPY[verdict].label
+  const reasonLines = fitReasonLines(
+    verdict,
+    evaluation.status === "known" ? evaluation.criteria : [],
+  )
   const inTargetLabels = rows
     .filter((row) => relationFor(row, currentProductId) === "in_target")
     .map((row) => row.label)
@@ -985,21 +1019,24 @@ function OverallVerdict({
         <strong className="text-sm text-foreground">{label}</strong>
         {count ? (
           <span className="text-xs text-muted-foreground">
-            {count.inTarget} im Ziel · {count.supportive} mit Einschränkung · {count.outsideTarget}{" "}
-            außerhalb{count.unknown ? ` · ${count.unknown} nicht bestätigt` : ""}
+            {count.inTarget} im Ziel · {count.supportive} bedingt · {count.outsideTarget} außerhalb
+            {count.unknown ? ` · ${count.unknown} nicht bestätigt` : ""}
             {count.noTarget ? ` · ${count.noTarget} ohne Einordnung` : ""}
           </span>
         ) : null}
       </div>
+      {reasonLines.length > 0 ? (
+        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+          {reasonLines.join(" · ")}
+        </p>
+      ) : null}
       {inTargetLabels.length > 0 ||
       supportiveLabels.length > 0 ||
       outsideTargetLabels.length > 0 ||
       unknownLabels.length > 0 ? (
         <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
           {inTargetLabels.length > 0 ? `Im Ziel: ${inTargetLabels.join(", ")}.` : null}{" "}
-          {supportiveLabels.length > 0
-            ? `Passt mit Einschränkung: ${supportiveLabels.join(", ")}.`
-            : null}{" "}
+          {supportiveLabels.length > 0 ? `Passt bedingt: ${supportiveLabels.join(", ")}.` : null}{" "}
           {outsideTargetLabels.length > 0 ? `Außerhalb: ${outsideTargetLabels.join(", ")}.` : null}
           {unknownLabels.length > 0 ? ` Nicht bestätigt: ${unknownLabels.join(", ")}.` : null}
         </p>
@@ -1012,6 +1049,7 @@ function ProductCard({
   product,
   label,
   alternativeVerdict = null,
+  reasonLines = [],
   selected = false,
   disabled = false,
   onSelect,
@@ -1019,6 +1057,7 @@ function ProductCard({
   product: ReviewProduct | null
   label: string
   alternativeVerdict?: Stage3SelectedComparisonCandidate["verdict"] | null
+  reasonLines?: string[]
   selected?: boolean
   disabled?: boolean
   onSelect?: () => void
@@ -1044,6 +1083,7 @@ function ProductCard({
             label={label}
             idealAlternative={idealAlternative}
             supportiveAlternative={supportiveAlternative}
+            reasonLines={reasonLines}
           />
           <button
             type="button"
@@ -1062,6 +1102,7 @@ function ProductCard({
           label={label}
           idealAlternative={idealAlternative}
           supportiveAlternative={supportiveAlternative}
+          reasonLines={reasonLines}
         />
       )}
     </article>
@@ -1073,11 +1114,13 @@ function ProductCardContent({
   label,
   idealAlternative,
   supportiveAlternative,
+  reasonLines,
 }: {
   product: ReviewProduct | null
   label: string
   idealAlternative: boolean
   supportiveAlternative: boolean
+  reasonLines: string[]
 }) {
   return (
     <>
@@ -1090,6 +1133,11 @@ function ProductCardContent({
       >
         {label}
       </p>
+      {reasonLines.length > 0 ? (
+        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+          {reasonLines.join(" · ")}
+        </p>
+      ) : null}
       <div className="mt-2 flex min-w-0 flex-col items-center gap-2 text-center sm:flex-row sm:text-left">
         <ProductImage
           imageUrl={product?.presentationImageUrl}
@@ -1495,7 +1543,7 @@ function relationPresentation(relation: Stage3FitEvidenceRelation) {
       }
     case "supportive":
       return {
-        ariaLabel: "Passt mit Einschränkung",
+        ariaLabel: "Passt bedingt",
         Icon: Minus,
         className: "border-[var(--status-pending-text)] text-[var(--status-pending-text)]",
       }
@@ -1540,7 +1588,7 @@ function SelectedEvidencePanel({
     relation === "in_target"
       ? "Im Ziel"
       : relation === "supportive"
-        ? "Passt mit Einschränkung"
+        ? "Passt bedingt"
         : relation === "outside_target"
           ? "Außerhalb des Ziels"
           : relation === "unknown"
@@ -1914,13 +1962,13 @@ function quietActionsFor({
 }) {
   const actions: Array<{ kind: ProductFitComparisonAction; label: string }> = []
   if (allowedActions.has("keep_owned") && primaryAction?.kind !== "keep_owned")
-    actions.push({ kind: "keep_owned", label: "Mein Produkt trotzdem behalten" })
+    actions.push({ kind: "keep_owned", label: "Mein Produkt behalten" })
   if (
     allowedActions.has("acknowledge_override") &&
     !allowedActions.has("keep_owned") &&
     primaryAction?.kind !== "acknowledge_override"
   )
-    actions.push({ kind: "acknowledge_override", label: "Mein Produkt trotzdem behalten" })
+    actions.push({ kind: "acknowledge_override", label: "Mein Produkt behalten" })
   if (replacementAllowed && selectedAlternative && primaryAction?.kind !== "select_replacement")
     actions.push({ kind: "select_replacement", label: "Diese Alternative wählen" })
   if (allowedActions.has("keep_pending") && primaryAction?.kind !== "keep_pending")
