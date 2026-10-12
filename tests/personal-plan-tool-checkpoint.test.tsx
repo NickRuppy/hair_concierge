@@ -239,6 +239,7 @@ test("an empty inventory keeps the screen honest: an empty note, the same CTA an
     <ToolCheckpoint groups={groups} onContinue={() => {}} onAddTools={() => {}} />,
   )
   assert.match(html, new RegExp(TOOL_CHECKPOINT_EMPTY.replace(/\./g, "\\.")))
+  assert.equal(TOOL_CHECKPOINT_EMPTY, "Keine Tools angegeben. Du kannst sie jederzeit ergänzen.")
   assert.match(html, /data-tool-checkpoint-empty/)
   assert.match(html, />Weiter zu deiner Routine<\/button>/)
   assert.match(html, /Tools ergänzen/)

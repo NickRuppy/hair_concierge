@@ -6,6 +6,8 @@ import {
   PROFILE_FIELD_CONFIG,
   PROFILE_SECTION_META,
   profileHabitsRows,
+  profileToolsStatusLabel,
+  PROFILE_TOOLS_NONE_LABEL,
 } from "../src/lib/profile/section-config"
 import { buildProfileToolsBlock } from "../src/lib/personal-plan/tools/profile-block"
 import { deriveDiagnosticsColumns } from "../src/lib/user-facts/derive-legacy-columns"
@@ -435,7 +437,27 @@ test("owned_tools lists the reported tool labels, and stays open without a confi
   ])
   assert.equal(owned.getValue(null, null, null), null)
   assert.equal(owned.getValue(null, null), null)
-  assert.equal(owned.getValue(null, null, buildProfileToolsBlock({ airflow: [] })), "Nichts davon")
+  // Rev. 6: an all-„Nichts davon" answer reads like the other cards.
+  assert.equal(
+    owned.getValue(null, null, buildProfileToolsBlock({ airflow: [] })),
+    "Keine Tools angegeben",
+  )
+})
+
+test("the Deine Tools badge: Offen, Keine Tools (never „0 Tools“), or the count", () => {
+  assert.equal(profileToolsStatusLabel(null), "Offen")
+  assert.equal(profileToolsStatusLabel(buildProfileToolsBlock({ airflow: [] })), "Keine Tools")
+  assert.equal(
+    profileToolsStatusLabel(buildProfileToolsBlock({ drying_textiles: ["microfiber_towel"] })),
+    "1 Tool",
+  )
+  assert.equal(
+    profileToolsStatusLabel(
+      buildProfileToolsBlock({ brushes_combs: ["wide_tooth_comb", "round_brush"] }),
+    ),
+    "2 Tools",
+  )
+  assert.equal(PROFILE_TOOLS_NONE_LABEL, "Keine Tools angegeben")
 })
 
 test("Gewohnheiten collapses Hitze-Häufigkeit and Hitzeschutz into one „Keine Hitze“ row without a heat source", () => {

@@ -769,8 +769,22 @@ function pressedOptions(html: string): string[] {
   )
 }
 
+/**
+ * Rev. 6: „Nichts davon" is the Feinschliff none card — a multi QuizOptionCard (square
+ * checkbox) with its one-line description, marked with both none-option attributes.
+ */
+function assertNothingCard(html: string) {
+  assert.match(html, /data-refinement-none-option="true" data-tool-nothing-option="true"/)
+  const card = html.slice(html.indexOf("data-tool-nothing-option"))
+  assert.match(card, /^[^]*?>Nichts davon</)
+  assert.match(card, /^[^]*?>Ich habe hier nichts davon\.</)
+  assert.match(card, /^[^]*?rounded-\[6px\]/)
+}
+
 function nothingPressed(html: string): boolean {
-  return /<button[^>]*aria-pressed="true"[^>]*data-tool-nothing-option/.test(html)
+  // Rev. 6: „Nichts davon" is a QuizOptionCard inside the marked wrapper; its button is the first.
+  const card = html.slice(html.indexOf("data-tool-nothing-option"))
+  return /^[^]*?<button[^>]*aria-pressed="(true|false)"/.exec(card)?.[1] === "true"
 }
 
 test('the tool overview asks „Was hast du schon?" with the four chronological section cards', () => {
@@ -816,7 +830,7 @@ test('the tool overview asks „Was hast du schon?" with the four chronological 
   assert.equal(countOccurrences(html, "data-tool-option="), 4)
   assert.match(html, /data-tool-option="waschen_auftragen"/)
   assert.match(html, /data-tool-option="nachtschutz"/)
-  assert.match(html, /<button[^>]*data-tool-nothing-option[^>]*>Nichts davon<\/button>/)
+  assertNothingCard(html)
   // Nothing implied, nothing answered: nothing is ticked, „Nichts davon" is not pre-lit, Weiter waits.
   assert.deepEqual(pressedOptions(html), [])
   assert.equal(nothingPressed(html), false)
@@ -943,7 +957,7 @@ test('tapping cards toggles them in wash-day order and „Nichts davon" clears t
   }
   await withMountedDom(<Harness />, (container) => {
     const card = (value: string) => container.querySelector(`[data-tool-option="${value}"]`)!
-    const none = () => container.querySelector("[data-tool-nothing-option]")!
+    const none = () => container.querySelector("[data-tool-nothing-option] button")!
     flushSync(() => click(card("nachtschutz")))
     flushSync(() => click(card("waschen_auftragen")))
     // Order follows the wash-day sections, not the tapping order.
@@ -975,7 +989,12 @@ test("a tool page renders its photo cards with plum selection and the Mehrfachau
   const html = renderQuestion(session, "tools:drying_textiles:1")
 
   assert.match(html, /Welche Handtücher oder Tücher nutzt du\?/)
-  assert.match(html, /Mehrfachauswahl möglich\./)
+  assert.match(html, /Wähle alles aus, was du nutzt\. Mehrfachauswahl möglich\./)
+  // Rev. 6: multi-select cards carry the square QuizOptionCard checkbox, and the photo area
+  // matches the QuizOptionCard grid card.
+  assert.match(html, /personal-plan-option-check[^"]*h-5 w-5[^"]*rounded-\[6px\]/)
+  assert.doesNotMatch(html, /personal-plan-option-check[^"]*rounded-full/)
+  assert.match(html, /h-\[140px\][^"]*sm:h-36/)
   assert.doesNotMatch(html, /Seite \d von \d/)
   // Abtrocknen & Entwirren is the section; the kicker is the module's.
   assert.match(html, /Abtrocknen &amp; Entwirren/)
@@ -992,7 +1011,7 @@ test("a tool page renders its photo cards with plum selection and the Mehrfachau
   const cardsRegion = html.slice(html.indexOf("data-tool-visual-select"), html.indexOf(">Weiter<"))
   assert.doesNotMatch(cardsRegion.slice(0, cardsRegion.lastIndexOf("<button")), /coral/i)
   assert.match(html, /bg-\[var\(--brand-coral\)\]/)
-  assert.match(html, /<button[^>]*data-tool-nothing-option[^>]*>Nichts davon<\/button>/)
+  assertNothingCard(html)
   // Unanswered, nothing implied: the page waits for a choice or an explicit „Nichts davon".
   assert.match(html, /<button[^>]*disabled=""[^>]*>Weiter<\/button>/)
 })
@@ -1004,8 +1023,8 @@ test("two-page families number their pages and keep their own forms", () => {
   ])
   const first = renderQuestion(session, "tools:brushes_combs:1")
   const second = renderQuestion(session, "tools:brushes_combs:2")
-  assert.match(first, /Mehrfachauswahl möglich\. Seite 1 von 2\./)
-  assert.match(second, /Mehrfachauswahl möglich\. Seite 2 von 2\./)
+  assert.match(first, /Wähle alles aus, was du nutzt\. Mehrfachauswahl möglich\. Seite 1 von 2\./)
+  assert.match(second, /Wähle alles aus, was du nutzt\. Mehrfachauswahl möglich\. Seite 2 von 2\./)
   const optionsOf = (html: string) =>
     [...html.matchAll(/data-tool-option="([^"]+)"/g)].map((match) => match[1]!)
   assert.ok(optionsOf(first).includes("fingers"))

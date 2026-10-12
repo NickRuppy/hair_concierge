@@ -140,7 +140,7 @@ async function walkToolsModule(container: HTMLElement): Promise<string[]> {
       await pause(30)
       continue
     }
-    const nothing = document.querySelector("[data-tool-nothing-option]")
+    const nothing = document.querySelector("[data-tool-nothing-option] button")
     if (nothing && nothing.getAttribute("aria-pressed") !== "true") click(nothing)
     await pause()
   }

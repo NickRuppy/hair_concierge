@@ -487,7 +487,9 @@ test.describe("Stage 2 refinement Labs preview", () => {
 
     // Photo pages in wash-day order; each page owns only its own forms.
     await expect(page.getByRole("heading", { name: /Handtücher/ })).toBeVisible()
-    await expect(page.getByText("Mehrfachauswahl möglich.", { exact: true })).toBeVisible()
+    await expect(
+      page.getByText("Wähle alles aus, was du nutzt. Mehrfachauswahl möglich.", { exact: true }),
+    ).toBeVisible()
     // The Mikrofaser towel was implied by the member's own answer: pre-ticked, not yet saved.
     await expect(page.locator('[data-tool-option="microfiber_towel"]')).toHaveAttribute(
       "aria-pressed",
@@ -500,7 +502,9 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await continueButton(page).click()
 
     await expect(page.getByRole("heading", { name: /Bürsten und Kämme/ })).toBeVisible()
-    await expect(page.getByText("Mehrfachauswahl möglich. Seite 1 von 2.")).toBeVisible()
+    await expect(
+      page.getByText("Wähle alles aus, was du nutzt. Mehrfachauswahl möglich. Seite 1 von 2."),
+    ).toBeVisible()
     // Nothing is implied for the brushes: the page waits for a choice.
     await expect(continueButton(page)).toBeDisabled()
     await page.locator('[data-tool-option="wide_tooth_comb"]').click()
@@ -510,7 +514,9 @@ test.describe("Stage 2 refinement Labs preview", () => {
     )
     await continueButton(page).click()
 
-    await expect(page.getByText("Mehrfachauswahl möglich. Seite 2 von 2.")).toBeVisible()
+    await expect(
+      page.getByText("Wähle alles aus, was du nutzt. Mehrfachauswahl möglich. Seite 2 von 2."),
+    ).toBeVisible()
     await chooseNoneAndContinue(page)
 
     await expect(page.getByRole("heading", { name: /Haartrockner/ })).toBeVisible()
@@ -525,10 +531,14 @@ test.describe("Stage 2 refinement Labs preview", () => {
     await chooseNoneAndContinue(page)
 
     await expect(page.getByRole("heading", { name: /Fixieren und Abteilen/ })).toBeVisible()
-    await expect(page.getByText("Mehrfachauswahl möglich. Seite 1 von 2.")).toBeVisible()
+    await expect(
+      page.getByText("Wähle alles aus, was du nutzt. Mehrfachauswahl möglich. Seite 1 von 2."),
+    ).toBeVisible()
     await chooseNoneAndContinue(page)
 
-    await expect(page.getByText("Mehrfachauswahl möglich. Seite 2 von 2.")).toBeVisible()
+    await expect(
+      page.getByText("Wähle alles aus, was du nutzt. Mehrfachauswahl möglich. Seite 2 von 2."),
+    ).toBeVisible()
     await chooseNoneAndContinue(page)
 
     await expect(page.getByRole("heading", { level: 2, name: /nutzt du nachts/ })).toBeVisible()

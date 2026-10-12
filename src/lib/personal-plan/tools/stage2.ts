@@ -69,8 +69,12 @@ export const TOOL_OVERVIEW_TITLE = "Was hast du schon?"
  */
 export const TOOL_OVERVIEW_LEAD =
   "Wähle die Bereiche, aus denen du schon Produkte hast. Nicht gewählt = hast du nicht."
+/** Rev. 6: the lead of every photo page (the overview keeps `TOOL_OVERVIEW_LEAD`). */
+export const TOOL_PAGE_LEAD = "Wähle alles aus, was du nutzt. Mehrfachauswahl möglich."
 export const TOOL_SECTION_LABEL = "Deine Tools"
 export const TOOL_NOTHING_LABEL = "Nichts davon"
+/** Rev. 6: the one-line description of the „Nichts davon" card (Feinschliff none-card idiom). */
+export const TOOL_NOTHING_DESCRIPTION = "Ich habe hier nichts davon."
 
 export type ToolFormOption = {
   value: ToolReportedForm
@@ -111,10 +115,10 @@ export function toolFormPagePresentation(pageKey: string): ToolFormPagePresentat
     familyLabel,
     sectionLabel: sectionLabelForFamily(page.family),
     title: TOOL_FAMILY_PAGE_TITLES[page.family],
+    // Rev. 6: the quiz/Feinschliff multi-select lead, plus the page position for two-page
+    // families. (The overview keeps its own lead, `TOOL_OVERVIEW_LEAD`.)
     lead:
-      pageCount > 1
-        ? `Mehrfachauswahl möglich. Seite ${pageIndex + 1} von ${pageCount}.`
-        : "Mehrfachauswahl möglich.",
+      pageCount > 1 ? `${TOOL_PAGE_LEAD} Seite ${pageIndex + 1} von ${pageCount}.` : TOOL_PAGE_LEAD,
     pageIndex,
     pageCount,
     options: (page.forms as readonly ToolReportedForm[]).map((form) => ({

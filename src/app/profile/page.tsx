@@ -49,6 +49,8 @@ import {
   PROFILE_FIELD_CONFIG,
   PROFILE_SECTION_META,
   profileHabitsRows,
+  profileToolsStatusLabel,
+  PROFILE_TOOLS_NONE_LABEL,
   type ProfileEditTarget,
   type ProfileFieldConfig,
   type ProfileFieldValue,
@@ -928,11 +930,7 @@ export default function ProfilePage() {
     profileLoading || refinementLoading
       ? "Wird geladen"
       : getCompletionLabel(habitsFilled.length, habitsRows.length)
-  const toolsStatus = refinementLoading
-    ? "Wird geladen"
-    : refinementTools === null
-      ? "Offen"
-      : `${refinementTools.count} ${refinementTools.count === 1 ? "Tool" : "Tools"}`
+  const toolsStatus = refinementLoading ? "Wird geladen" : profileToolsStatusLabel(refinementTools)
   // T15 fix round 1 (F5): free tier never reaches `/api/memory` (subscription-gated, not
   // freemium-admitted), so `memoryEnabled` never reflects a real setting for them — the
   // status must say so honestly instead of defaulting to "Aktiv".
@@ -1637,14 +1635,22 @@ export default function ProfilePage() {
                       field={{
                         key: "owned_tools",
                         label: SECTION_META_BY_KEY.tools.title,
-                        value: refinementTools === null ? null : "Nichts davon",
+                        value: refinementTools === null ? null : PROFILE_TOOLS_NONE_LABEL,
                         editTarget: { kind: "refine", module: "tools" },
                       }}
                       compact
+                      onClick={
+                        hasPersonalPlan
+                          ? () => openTarget("tools", { kind: "refine", module: "tools" })
+                          : undefined
+                      }
+                      tone={refinementTools === null && hasPersonalPlan ? "attention" : "default"}
                     >
                       <ProfileFieldValue
-                        value={refinementTools === null ? null : "Nichts davon"}
-                        emptyLabel="Noch nicht angegeben"
+                        value={refinementTools === null ? null : PROFILE_TOOLS_NONE_LABEL}
+                        emptyLabel={
+                          hasPersonalPlan ? "Noch offen — tippen zum Ergänzen" : "Noch offen"
+                        }
                       />
                     </ProfileFieldCard>
                   )}

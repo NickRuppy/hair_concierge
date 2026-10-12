@@ -1506,7 +1506,7 @@ function jsonResponse(status: number, body: unknown): Response {
 
 async function answerLastToolPage(container: HTMLElement) {
   const nothing = await waitForElement(
-    () => container.ownerDocument.querySelector("[data-tool-nothing-option]"),
+    () => container.ownerDocument.querySelector("[data-tool-nothing-option] button"),
     "the Nachtschutz page",
   )
   domClick(nothing)
@@ -1630,7 +1630,7 @@ test("Tools ergänzen clears the checkpoint: the refreshed entry shows the tool 
 
       assert.ok(!container.querySelector("[data-tool-checkpoint]"), "the checkpoint is gone")
       await waitForElement(
-        () => container.ownerDocument.querySelector("[data-tool-nothing-option]"),
+        () => container.ownerDocument.querySelector("[data-tool-nothing-option] button"),
         "the tool questions",
       )
     },

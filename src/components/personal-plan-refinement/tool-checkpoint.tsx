@@ -25,7 +25,7 @@ export const TOOL_CHECKPOINT_ADD_TOOLS_LINK = "Tools ergänzen"
 /** Explicit module entry: an edit visit with the answers pre-filled. */
 export const TOOL_CHECKPOINT_ADD_TOOLS_HREF = "/plan-start?refine=tools"
 /** Every family answered „Nichts davon" — the screen still says something true. */
-export const TOOL_CHECKPOINT_EMPTY = "Du hast keine Tools angegeben."
+export const TOOL_CHECKPOINT_EMPTY = "Keine Tools angegeben. Du kannst sie jederzeit ergänzen."
 
 /**
  * One pastel shell plus its accent dot per Tool family, in the Plan category-card idiom —

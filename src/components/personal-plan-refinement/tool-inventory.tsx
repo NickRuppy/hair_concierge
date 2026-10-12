@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { useState } from "react"
 
+import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
 import { cn } from "@/lib/utils"
 
 /**
@@ -25,6 +26,7 @@ export function ToolVisualMultiSelect({
   selected,
   onChange,
   nothingLabel = "Nichts davon",
+  nothingDescription = "Ich habe hier nichts davon.",
   ariaLabel,
   answered = true,
 }: {
@@ -33,6 +35,8 @@ export function ToolVisualMultiSelect({
   selected: readonly string[] | null
   onChange: (next: string[], announcement?: string) => void
   nothingLabel?: string
+  /** One line under „Nichts davon", like the Feinschliff none card. */
+  nothingDescription?: string
   ariaLabel: string
   /**
    * Whether `selected` is the user's own submitted answer.
@@ -76,26 +80,24 @@ export function ToolVisualMultiSelect({
           />
         ))}
       </div>
-      <button
-        type="button"
-        aria-pressed={nothingSelected}
-        data-tool-nothing-option
-        onClick={() => {
-          setTouched(true)
-          onChange([], nothingLabel)
-        }}
-        className={cn(
-          // Same white-body, plum-border-and-ring selected state as the cards
-          // above and as `quiz-card-active`, so nothing on the page signals
-          // selection with a different treatment.
-          "mt-3 w-full rounded-2xl border bg-white px-4 py-3 text-left text-[15px] font-semibold text-[var(--brand-plum-darkest)] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum-dark)] focus-visible:ring-offset-2",
-          nothingSelected
-            ? "border-[var(--brand-plum)] ring-2 ring-[rgba(var(--brand-plum-rgb),0.2)]"
-            : "border-[var(--brand-plum-light)]",
-        )}
-      >
-        {nothingLabel}
-      </button>
+      {/*
+        Rev. 6: „Nichts davon" is the same card as the Feinschliff none option
+        (`RefinementOptions`): a multi-select QuizOptionCard with the square checkbox and a
+        one-line description, in the same muted wrapper.
+      */}
+      <div className="mt-3 opacity-[0.92]" data-refinement-none-option data-tool-nothing-option>
+        <QuizOptionCard
+          label={nothingLabel}
+          description={nothingDescription}
+          active={nothingSelected}
+          multi
+          animateIn={false}
+          onClick={() => {
+            setTouched(true)
+            onChange([], nothingLabel)
+          }}
+        />
+      </div>
     </div>
   )
 }
@@ -129,7 +131,8 @@ function ToolOptionCard({
           : "border-[var(--brand-plum-light)]",
       )}
     >
-      <span className="relative flex h-32 w-full shrink-0 items-center justify-center overflow-hidden bg-[var(--brand-plum-ice)] [@media(max-height:700px)]:h-24">
+      {/* Rev. 6: the photo area matches the `QuizOptionCard` grid card. */}
+      <span className="relative flex h-[140px] w-full shrink-0 items-center justify-center overflow-hidden bg-[var(--brand-plum-ice)] sm:h-36 [@media(max-height:700px)]:h-28">
         {imageFailed ? (
           <span aria-hidden="true" className="h-8 w-8 rounded-full bg-[var(--brand-plum-light)]" />
         ) : option.imageUrl.endsWith(".webp") ? (
@@ -183,20 +186,21 @@ function ToolOptionCard({
             </span>
           ) : null}
         </span>
+        {/* Rev. 6: multi-select → the square checkbox of `QuizOptionCard` (`rounded-[6px]`, 20px). */}
         <span
+          aria-hidden="true"
           className={cn(
-            "personal-plan-option-check mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border",
+            "personal-plan-option-check mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-[6px] border",
             selected
-              ? "border-[var(--brand-plum)] bg-[var(--brand-plum)] text-white"
+              ? "border-[var(--brand-plum)] bg-[var(--brand-plum)] text-primary-foreground"
               : "border-[var(--brand-plum-light)] bg-white text-transparent",
           )}
         >
-          <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" aria-hidden="true">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
             <path
-              d="m5 10.5 3.2 3.2L15 7"
-              fill="none"
+              d="M2.5 6L5 8.5L9.5 4"
               stroke="currentColor"
-              strokeWidth="2.2"
+              strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
             />

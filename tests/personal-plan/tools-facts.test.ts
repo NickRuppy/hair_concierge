@@ -614,7 +614,7 @@ test("every tool page presents its own forms with photo cards and a Mehrfachausw
       presentation!.options.map((option) => option.value),
       [...page.forms],
     )
-    assert.match(presentation!.lead, /^Mehrfachauswahl möglich\./)
+    assert.match(presentation!.lead, /^Wähle alles aus, was du nutzt\. Mehrfachauswahl möglich\./)
     assert.ok(presentation!.options.every((option) => option.imageUrl.endsWith(".webp")))
   }
   assert.equal(toolFormPagePresentation("nope"), null)

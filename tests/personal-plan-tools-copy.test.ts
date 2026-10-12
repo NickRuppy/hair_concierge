@@ -40,9 +40,12 @@ test("a two-page family keeps its question and says which page it is on", () => 
   )
   assert.equal(
     toolFormPagePresentation("brushes_combs:2")?.lead,
-    "Mehrfachauswahl möglich. Seite 2 von 2.",
+    "Wähle alles aus, was du nutzt. Mehrfachauswahl möglich. Seite 2 von 2.",
   )
-  assert.equal(toolFormPagePresentation("night_protection:1")?.lead, "Mehrfachauswahl möglich.")
+  assert.equal(
+    toolFormPagePresentation("night_protection:1")?.lead,
+    "Wähle alles aus, was du nutzt. Mehrfachauswahl möglich.",
+  )
 })
 
 test("the families the template got wrong no longer use it", () => {

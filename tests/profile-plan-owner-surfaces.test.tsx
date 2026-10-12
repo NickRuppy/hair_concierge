@@ -21,6 +21,7 @@ import { buildProfileToolsBlock } from "../src/lib/personal-plan/tools/profile-b
 import {
   PROFILE_FIELD_CONFIG,
   PROFILE_SECTION_META,
+  PROFILE_TOOLS_NONE_LABEL,
   profileHabitsRows,
 } from "../src/lib/profile/section-config"
 import { cn } from "../src/lib/utils"
@@ -408,6 +409,7 @@ function toolsSurface(overrides: Record<string, unknown> = {}) {
     TOOL_FAMILY_CARD_STYLES,
     cn,
     SECTION_META_BY_KEY: Object.fromEntries(PROFILE_SECTION_META.map((meta) => [meta.key, meta])),
+    PROFILE_TOOLS_NONE_LABEL,
     hasPersonalPlan: true,
     profileLoading: false,
     refinementLoading: false,
@@ -484,17 +486,26 @@ test("Deine Tools shows the member's photo chips grouped in wash-day order with 
   assert.match(html, /Bürsten &amp; Kämme/)
 })
 
-test("Deine Tools says „Noch nicht angegeben“ before the member confirmed anything, „Nichts davon“ after an empty answer", () => {
-  const unanswered = toolsSurface({ refinementTools: null, toolsStatus: "Offen" }).html
-  assert.match(unanswered, /Noch nicht angegeben/)
-  assert.doesNotMatch(unanswered, /data-profile-tool-group/)
+test("Deine Tools says „Noch offen — tippen zum Ergänzen“ before the member confirmed anything, „Keine Tools angegeben“ after an empty answer", () => {
+  const unansweredSurface = toolsSurface({ refinementTools: null, toolsStatus: "Offen" })
+  const unanswered = unansweredSurface.html
+  assert.match(unanswered, /Noch offen — tippen zum Ergänzen/)
+  assert.doesNotMatch(unanswered, /data-profile-tool-group|Noch nicht angegeben/)
+  // The open card is tappable, like every other open Profil card, and opens the tools module:
+  // two handlers lead there now — „Deine Tools bearbeiten" and the card itself.
+  clickHandlers(unansweredSurface.root).forEach((click) => click())
+  assert.equal(
+    unansweredSurface.navigations.filter((href) => href === "/plan-start?refine=tools").length,
+    2,
+  )
 
   const none = toolsSurface({
     refinementTools: buildProfileToolsBlock({ airflow: [] }),
-    toolsStatus: "0 Tools",
+    toolsStatus: "Keine Tools",
   }).html
-  assert.match(none, /Nichts davon/)
-  assert.doesNotMatch(none, /Noch nicht angegeben|data-profile-tool-group/)
+  assert.match(none, /Keine Tools angegeben/)
+  assert.match(none, />Keine Tools</)
+  assert.doesNotMatch(none, /0 Tools|Nichts davon|Noch nicht angegeben|data-profile-tool-group/)
 })
 
 test("Deine Tools waits for the refinement read before it shows anything", () => {

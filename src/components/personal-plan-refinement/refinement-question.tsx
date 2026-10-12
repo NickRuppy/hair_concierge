@@ -29,6 +29,7 @@ import {
   type ToolOverviewSectionKey,
 } from "@/lib/personal-plan/tools/labels"
 import {
+  TOOL_NOTHING_DESCRIPTION,
   TOOL_NOTHING_LABEL,
   TOOL_OVERVIEW_LEAD,
   TOOL_OVERVIEW_OPTIONS,
@@ -407,6 +408,7 @@ function renderQuestionBody({
           selected={(answer as ToolOverviewSectionKey[] | undefined) ?? null}
           onChange={(next, announcement) => onLocalAnswerChange(next, announcement)}
           nothingLabel={TOOL_NOTHING_LABEL}
+          nothingDescription={TOOL_NOTHING_DESCRIPTION}
           answered={session.answers.toolFamiliesWithSomething !== undefined}
         />
       ),
@@ -433,6 +435,7 @@ function renderQuestionBody({
           selected={(answer as ToolReportedForm[] | undefined) ?? null}
           onChange={(next, announcement) => onLocalAnswerChange(next, announcement)}
           nothingLabel={TOOL_NOTHING_LABEL}
+          nothingDescription={TOOL_NOTHING_DESCRIPTION}
           answered={savedPageAnswer !== undefined}
         />
       ),

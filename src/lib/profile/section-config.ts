@@ -475,10 +475,23 @@ const TOOLS_FIELD_CONFIG: ProfileFieldConfig[] = [
     getValue: (_profile, _plan, tools) => {
       if (!tools) return null
       const labels = tools.groups.flatMap((group) => group.items.map((item) => item.label))
-      return labels.length > 0 ? labels : "Nichts davon"
+      return labels.length > 0 ? labels : PROFILE_TOOLS_NONE_LABEL
     },
   },
 ]
+
+/** Deine Tools after an all-„Nichts davon" answer (Rev. 6, aligned with the other cards). */
+export const PROFILE_TOOLS_NONE_LABEL = "Keine Tools angegeben"
+
+/**
+ * The Deine Tools status badge: „Offen" before anything is confirmed, „Keine Tools" after an
+ * all-„Nichts davon" answer (never „0 Tools"), otherwise the count.
+ */
+export function profileToolsStatusLabel(tools: ProfileToolsBlock | null): string {
+  if (tools === null) return "Offen"
+  if (tools.count === 0) return "Keine Tools"
+  return `${tools.count} ${tools.count === 1 ? "Tool" : "Tools"}`
+}
 
 export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   ...BASE_FIELD_CONFIG,
