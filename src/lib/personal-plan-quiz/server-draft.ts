@@ -20,7 +20,6 @@ export const PERSONAL_PLAN_QUIZ_DRAFT_COOKIE = "chaarlie_personal_plan_quiz_draf
 export const PERSONAL_PLAN_QUIZ_DRAFT_VERSION = 4 as const
 export const PERSONAL_PLAN_QUIZ_DRAFT_MAX_BODY_BYTES = 16_384
 export const PERSONAL_PLAN_QUIZ_DRAFT_SLIDING_TTL_SECONDS = 24 * 60 * 60
-export const PERSONAL_PLAN_QUIZ_DRAFT_ABSOLUTE_TTL_SECONDS = 7 * 24 * 60 * 60
 
 const screenSet = new Set<string>(PERSONAL_PLAN_QUIZ_SCREEN_IDS)
 const uuidSchema = z.string().uuid()
