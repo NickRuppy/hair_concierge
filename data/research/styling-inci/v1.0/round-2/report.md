@@ -57,7 +57,7 @@ Products can carry more than one cause. The 11 route splits are 4 packet, 5 lane
 | Every subtype ≥ 5 products | **not met** | 11/12 with held; smoothing_styler 1 (0 committed). Committed < 5: curl_cream 1, smoothing_styler 0, refresher 1 |
 | Two blind lanes agree on all routes and properties, no unresolved disagreements | **not met** | 11 route splits, 157 core values on 44 products. All classified; 4 owner questions open |
 | Identical hold normalisations | **not met** (2 of 43) | Balea Hair Jelly null vs 1 (packet, P2-5); OSiS Sparkler 0 vs null (route split, P2-1). No normalisation-rule split remains |
-| ≥ 6 unseen incl. ≥ 2 traps, matching expectations | **met** | 8 unseen, 8 traps caught by both; firm A 148/148, B 147/148 |
+| ≥ 6 unseen incl. ≥ 2 traps, matching expectations | **met** | computed from record-level matches (fixed after Codex review 2026-10-12): 7 of 8 slots match every firm value in both lanes (A 8/8, B 7/8); 7 trap slots matched on route + reason by both lanes; analyst view: 8 traps caught by both, firm A 148/148, B 147/148 |
 | Leave-in addendum drafted and queued | **not met** | no addendum drafted |
 
 **Closest path to lock:**

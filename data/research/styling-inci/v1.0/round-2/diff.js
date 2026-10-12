@@ -750,6 +750,10 @@ const coverageTable = SUBTYPES.map((st) => ({
 // ---------------------------------------------------------------------------
 // 7. Lock criteria (PH1-11 as adjusted by PH1-16)
 // ---------------------------------------------------------------------------
+// Unseen acceptance is computed from record-level matches (Codex review 2026-10-12): >= 6 unseen slots
+// matching all firm values in BOTH lanes, and >= 2 analyst-identified trap slots whose route + reason both lanes match.
+const trapSlotsBothRouteMatch = unseenScore.filter((s) => CLASSIFY.unseen_traps[s.slot] && s.A_route_and_reason_match && s.B_route_and_reason_match).map((s) => s.slot);
+const unseenComputedMet = S.records.length >= 6 && Math.min(unseenSlotMatch.A.all_firm, unseenSlotMatch.B.all_firm) >= 6 && trapSlotsBothRouteMatch.length >= 2;
 const coreDis = disagreements.filter((d) => !d.supplementary);
 const routeDis = coreDis.filter((d) => d.field === 'route');
 const lockCriteria = [
@@ -759,8 +763,8 @@ const lockCriteria = [
     numbers: `${routeDis.length} route and ${coreDis.length} core-field disagreements on ${new Set(coreDis.map((d) => d.slug)).size} records (all classified: ${unclassified.length === 0})` },
   { criterion: 'Two independent claim normalisations give identical hold levels', met: holdCheck.criterion_met,
     numbers: `${holdCheck.identical}/${holdCheck.products_where_either_emits_a_level} identical` },
-  { criterion: '>= 6 unseen products incl. >= 2 traps, matching pre-registered expectations', met: CLASSIFY.unseen_criterion_met,
-    numbers: CLASSIFY.unseen_criterion_numbers },
+  { criterion: '>= 6 unseen products incl. >= 2 traps, matching pre-registered expectations', met: unseenComputedMet,
+    numbers: `computed: ${Math.min(unseenSlotMatch.A.all_firm, unseenSlotMatch.B.all_firm)} slots match all firm values in both lanes (A ${unseenSlotMatch.A.all_firm}/${S.records.length}, B ${unseenSlotMatch.B.all_firm}/${S.records.length}); ${trapSlotsBothRouteMatch.length} trap slots with route+reason matched by both lanes (${trapSlotsBothRouteMatch.join(', ')}). Analyst note: ${CLASSIFY.unseen_criterion_numbers}` },
   { criterion: 'Leave-in addendum drafted and queued for right after lock (PH1-16)', met: false, numbers: 'not drafted (no addendum file in the repo; queued only as an intention in PH1-16)' },
 ];
 

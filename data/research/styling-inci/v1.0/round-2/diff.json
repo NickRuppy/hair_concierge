@@ -7814,7 +7814,7 @@
     {
       "criterion": ">= 6 unseen products incl. >= 2 traps, matching pre-registered expectations",
       "met": true,
-      "numbers": "8 unseen, 8/8 traps caught by both lanes; firm A 148/148, B 147/148 (one pair-rule code); 7 UNDETERMINED values not scorable (rule gaps)"
+      "numbers": "computed: 7 slots match all firm values in both lanes (A 8/8, B 7/8); 7 trap slots with route+reason matched by both lanes (1, 2, 3, 4, 5, 6, 7). Analyst note: 8 unseen, 8/8 traps caught by both lanes; firm A 148/148, B 147/148 (one pair-rule code); 7 UNDETERMINED values not scorable (rule gaps)"
     },
     {
       "criterion": "Leave-in addendum drafted and queued for right after lock (PH1-16)",

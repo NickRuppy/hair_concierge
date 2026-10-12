@@ -30,7 +30,7 @@ In the dm range every product that leads with a smooth/sleek result is already i
 - Bali Curls Sleek Stick (dm 3120064) is already in cohort (same INCI as "Sleek Stick Brows & Edges").
 
 ## Not reachable (not bypassed)
-Rossmann (bot challenge; Isana OMG Glattspray "anti-frizz, Hitzeschutz bis 220 °C" exists but unreadable), sephora.de (403; Living Proof No Frizz Smooth Styling Cream, Bumble and bumble Straight Blow Dry), ghd.de and aveda.de (403). Living Proof on lookfantastic.de has English-only text and the 59 ml size was sold out, so no German directions: not captured. Kevin Murphy's German pages are on kevinmurphy.com.au (C5 by our rule): Smooth.Again is a leave-in; not captured.
+Rossmann (bot challenge; Isana OMG Glattspray "anti-frizz, Hitzeschutz bis 220 °C" exists but unreadable), sephora.de (403; Living Proof No Frizz Smooth Styling Cream, Bumble and bumble Straight Blow Dry), ghd.de and aveda.de (403). Living Proof on lookfantastic.de has English-only text and the 59 ml size was sold out, so no German directions: not captured. Kevin Murphy's German pages are on kevinmurphy.com.au (noted as C5 at capture time; SUPERSEDED by R2-H6 — this German storefront counts as C2): Smooth.Again is a leave-in; not captured.
 
 ## Doubts
 - KMS INCI is copied as printed incl. page hyphenation artifacts ("Tri-heptanoin", "Gly-cerin"); needs a normalisation decision. A sold-out lookfantastic.de listing shows an older KMS Straightening Creme formulation with a different INCI (starts Water, Dimethicone, Propylene Glycol; includes Polysilicone-9, Alcohol Denat.): market may still carry both. Current page = "upcycled pomegranate" version.
