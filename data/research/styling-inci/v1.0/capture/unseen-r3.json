@@ -1,0 +1,453 @@
+[
+ {
+  "sample_id": "redken-styling-beach-spray",
+  "unseen_slot": 1,
+  "subtype_candidate": "texture_spray",
+  "boundary_probe": true,
+  "brand": "Redken",
+  "product_name": "Styling Volume Beach Spray (Spray für strukturierte Beach Waves)",
+  "size": "150 ml",
+  "format": "pump_spray",
+  "market_tier": "salon_prestige",
+  "retailers_seen": [
+   "easycosmetic.de (listed, notify-when-available = out of stock at capture)",
+   "lookfantastic.at (listed, sold out at capture)"
+  ],
+  "retailers_checked_not_found": [
+   "douglas.de (search 0 results)",
+   "parfumdreams.de (product URL redirects to category)",
+   "dm.de",
+   "flaconi.de (search returned no results text)"
+  ],
+  "price_eur": 26.99,
+  "price_source_url": "https://www.easycosmetic.de/redken/styling-volume/redken-styling-volume-beach-spray.aspx",
+  "ean": null,
+  "inci": "Aqua / Water, Acrylates Copolymer, Polyurethane-34, Phenoxyethanol, Triethanolamine, Acrylates/Beheneth-25 Methacrylate Copolymer, Parfum / Fragrance, PEG-12 Dimethicone, Polysorbate 80, Aminomethyl Propanol, Calcium Carbonate, Ethylhexylglycerin, Limonene, Sodium Lauryl Sulfate, Methylpropanediol, Linalool, Benzyl Salicylate, Caprylyl Glycol, Geraniol, Benzyl Alcohol, Citral, Phenylpropanol, Propylene Glycol, Tocopherol",
+  "inci_source_url": "https://www.easycosmetic.de/redken/styling-volume/redken-styling-volume-beach-spray.aspx",
+  "inci_source_tier": "retailer_product_page",
+  "inci_corroboration": "Identical INCI on lookfantastic.at (https://www.lookfantastic.at/p/redken-beach-spray-for-hair-definition-and-texture-150ml/15431769/). Retailers advise checking the pack.",
+  "claims_verbatim": [
+   "Spray für strukturierte Beach Waves",
+   "kommt ohne Meersalz aus, welches das Haar austrocknet",
+   "Pumpspray schenkt dem Haar Volumen und Griffigkeit",
+   "Das matte Finish ... hinterlässt einen coolen Strandlook",
+   "Für jeden Haartyp geeignet",
+   "MITTLERER HALT"
+  ],
+  "hold_claim": {
+   "raw": "MITTLERER HALT",
+   "number": null,
+   "scale_max": null,
+   "words": "mittlerer Halt",
+   "none_stated": false
+  },
+  "finish_claim": "matt: 'Das matte Finish ... hinterlässt einen coolen Strandlook'",
+  "humidity_claim": null,
+  "heat_claim": "Für die perfekte Welle mit einem Lockenstab stylen (styling instruction, not a protection claim)",
+  "hair_type_claims": [
+   "Für jeden Haartyp geeignet"
+  ],
+  "free_from_claims": [
+   "ohne Meersalz (German retailer text: 'kommt ohne Meersalz aus'); product photo on lookfantastic.at (English): 'sea salt-free'"
+  ],
+  "directions": "Auf das feuchte Haar auftragen, dann trockenföhnen oder an der Luft trocknen lassen; für definiertere Welle mit Lockenstab stylen (easycosmetic.de). Pack image (lookfantastic.at, English): spray into wet hair, air-dry; re-spray on dry hair during the day.",
+  "application_moment": "damp_before_drying",
+  "formula_observations": "Aqueous, alcohol-free pump spray (no Alcohol Denat., no propellant). FIXATIVES: Acrylates Copolymer #2 and Polyurethane-34 #3 (both right after Aqua; high-level film-formers); Acrylates/Beheneth-25 Methacrylate Copolymer #6 (associative thickener/rheology, counted as polymer but not a primary fixative); Aminomethyl Propanol #10 = neutraliser for the acrylates. CONDITIONING: none (no cationic, no fatty alcohol; Polysorbate 80 #9 and Methylpropanediol #15 are non-conditioning). First preservative: Phenoxyethanol #4. Perfume (Parfum) #7. SALTS: none of sodium chloride/magnesium sulfate/sea salt; mineral particle Calcium Carbonate #11 (texturising powder, not a salt-spray salt); Sodium Lauryl Sulfate #14 (surfactant). SILICONES: PEG-12 Dimethicone #8 (water-soluble silicone). OILS/WAXES/STARCHES: none. Tocopherol last (#24).",
+  "claim_tier": "C3",
+  "claim_tier_detail": "German claims from easycosmetic.de (C3 retailer for third-party brand); English product photo on lookfantastic.at corroborates 'sea salt-free'/medium hold. No redken.de page found. German pack not seen.",
+  "capture_date": "2026-10-11",
+  "notes": "Only salt-free beach-wave spray found sold in Germany; no drugstore (dm/Rossmann/Müller) product with beach-wave promise and no salt was found: dm's beach sprays (Balea Sea Salt Texture Spray, Balea Leave-In Sea Salt Care & Define, Jean&Len Sea Salt Spray, Bali Gents Sea Salt Spray, alverde Beach Waves Maris Sal) all carry salt. Availability weak: both German/Austrian retailers showed out-of-stock at capture; price on lookfantastic.at EUR 29.33 (sold out). UK Redken page reportedly mixes 'sea-salt free' and 'salt-infused' wording - INCI shows no sodium chloride/magnesium sulfate. Hold stated by retailer only.",
+  "inci_item_count": 24
+ },
+ {
+  "sample_id": "balea-styling-finishing-stick",
+  "unseen_slot": 2,
+  "subtype_candidate": "smoothing_styler",
+  "boundary_probe": true,
+  "brand": "Balea",
+  "product_name": "Fixierungsbürste Styling Finishing Stick (pack: Styling Finishing Stick, 'Au Revoir Baby Haar')",
+  "size": "10 ml",
+  "format": "liquid",
+  "market_tier": "drugstore",
+  "retailers_seen": [
+   "dm"
+  ],
+  "price_eur": 2.95,
+  "price_source_url": "https://www.dm.de/p/d/1569189/",
+  "ean": "4066447991796",
+  "dm_dan": 1569189,
+  "inci": "AQUA, ALCOHOL DENAT., PROPYLENE GLYCOL, VPVA COPOLYMER, GLYCERIN, HEPTYL GLUCOSIDE, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, PARFUM, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, CITRIC ACID, PANTHENOL, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, HEXYL CINNAMAL, CITRONELLOL, TERPINEOL, HEPTANOL, GERANIOL, GERANYL ACETATE, ROSE KETONES.",
+  "inci_source_url": "https://products.dm.de/product/products/detail/DE/dan/1569189",
+  "inci_source_tier": "retailer_product_page",
+  "claims_verbatim": [
+   "Haar-Finishing-Stick",
+   "Bändigt abstehende Babyhaare und Frizz",
+   "Sorgt für ein perfektes Finish mit leichter Fixierung",
+   "Ohne zu verkleben oder zu beschweren",
+   "Ideal für die Anwendung unterwegs",
+   "Pack: fixiert Babyhaare & Frizz; nicht fettend; perfektes Finish; auch für Augenbrauen"
+  ],
+  "hold_claim": {
+   "raw": "leichte Fixierung",
+   "number": null,
+   "scale_max": null,
+   "words": "leichte Fixierung",
+   "none_stated": false
+  },
+  "finish_claim": "perfektes Finish / makelloses Finish; nicht fettend (no gloss or matt claim)",
+  "humidity_claim": null,
+  "heat_claim": null,
+  "hair_type_claims": [],
+  "free_from_claims": [
+   "vegan",
+   "nicht fettend (pack)",
+   "ohne zu verkleben, zu beschweren oder zu fetten (dm text)"
+  ],
+  "directions": "dm Verwendungshinweise: 'keine vorhanden'. Mascara-wand applicator: used on dry hair surface for baby hairs/flyaways (from product description; pack photo shows wand applicator).",
+  "application_moment": "dry_finish",
+  "formula_observations": "Water/alcohol liquid with mascara-style wand. FIXATIVE: VPVA Copolymer #4 (only fixative; after Aqua #1, Alcohol Denat. #2, Propylene Glycol #3, so moderate-low level). CONDITIONING: two cationic guars, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #7 and Guar Hydroxypropyltrimonium Chloride #9 (conditioning polymers), Panthenol #11, Glycerin #5; no cationic surfactant, no fatty alcohol. Alcohol Denat. #2. Perfume #8. First preservative: no classic preservative listed (Heptyl Glucoside #6 and Heptanol #16 are the only candidates for antimicrobial role; Citric Acid #10 pH). SALTS: none. SILICONES: none. OILS/WAXES: none.",
+  "claim_tier": "C1",
+  "claim_tier_detail": "Pack/box photo on dm (front text read from image) = C1; dm description = C2_house_brand (Balea is dm's own brand).",
+  "pack_text_observed": "Tube: 'STYLING FINISHING STICK - fixiert Babyhaare und Frizz'. Box: 'FINISHING STICK, Au Revoir BABY HAAR, fixiert Babyhaare & Frizz, nicht fettend, perfektes Finish; auch für Augenbrauen'.",
+  "capture_date": "2026-10-11",
+  "notes": "Hair-surface-only product (applied with wand to flyaways), not named Öl/Serum; dm categorises it under Haargel. Pack also says usable on eyebrows. dm Dauerpreis since 2020. No retailer other than dm checked.",
+  "inci_item_count": 19
+ },
+ {
+  "sample_id": "got2b-spruehkleber-freeze-haarlack",
+  "unseen_slot": 3,
+  "subtype_candidate": "hairspray",
+  "boundary_probe": false,
+  "brand": "got2b",
+  "product_name": "Haarlack Sprühkleber (pack: SPRÜH KLEBER Freeze Haarlack)",
+  "size": "300 ml",
+  "format": "aerosol",
+  "market_tier": "drugstore",
+  "retailers_seen": [
+   "dm",
+   "rossmann (listing only: https://www.rossmann.de/de/pflege-und-duft-got2b-sprueh-kleber-freeze-haarlack/p/4015100894042, 100 ml EAN)",
+   "rewe"
+  ],
+  "price_eur": 4.95,
+  "price_source_url": "https://www.dm.de/p/d/1136451/",
+  "ean": "4015100800524",
+  "dm_dan": 1136451,
+  "other_sizes": "dm 100 ml Reisegröße DAN 3121123, EAN 4015100894042, EUR 2.45, identical INCI, 'momentan nicht lieferbar' per search snippet",
+  "inci": "Dimethyl Ether, Alcohol denat., Aqua (Water, Eau), Octylacrylamide/Acrylates/Butylaminoethyl Methacrylate Copolymer, Aminomethyl Propanol, Parfum (Fragrance), Benzoic Acid",
+  "inci_source_url": "https://products.dm.de/product/products/detail/DE/dan/1136451",
+  "inci_source_tier": "retailer_product_page",
+  "claims_verbatim": [
+   "Einfaches Styling - Krasser Halt",
+   "sorgt für ultra starke Looks mit krassem Halt",
+   "Fixiert Ihren Look bis zur nächsten Haarwäsche",
+   "bis zu 72h ultra starke Styles, ohne zu verkleben oder auszutrocknen",
+   "Halt: sehr starker Halt (dm Produktmerkmal)",
+   "Pack: für bis zu 72 h ultrastarke Styles"
+  ],
+  "hold_claim": {
+   "raw": "krasser Halt / ultra starker Halt",
+   "number": null,
+   "scale_max": null,
+   "words": "sehr starker Halt (dm attribute); 'krasser Halt' (pack and dm bullet)",
+   "none_stated": false,
+   "note": "Pack shows a dot scale next to 'krasser Halt'; the number of filled dots was not legible at 900 px."
+  },
+  "finish_claim": null,
+  "humidity_claim": null,
+  "heat_claim": null,
+  "hair_type_claims": [
+   "Für alle Haartypen geeignet (pack, 100 ml dm page)"
+  ],
+  "free_from_claims": [
+   "vegan (frei von Inhaltsstoffen tierischen Ursprungs)",
+   "ohne Silikone",
+   "ohne Ammoniak",
+   "ohne Sulfat",
+   "recycelbare Aluminium-Dose"
+  ],
+  "directions": "Gleichmäßig aus 30 cm Entfernung auf das Haar sprühen; gezielt auf einzelne Strähnen möglich. Fixiert bis zur nächsten Haarwäsche.",
+  "application_moment": "dry_finish",
+  "formula_observations": "Aerosol, dimethyl ether propellant #1. Alcohol Denat. #2, Aqua #3. FIXATIVE: single polymer, Octylacrylamide/Acrylates/Butylaminoethyl Methacrylate Copolymer #4 (rigid, alcohol-soluble film-former, typical of firm-hold hairsprays); Aminomethyl Propanol #5 = neutraliser. CONDITIONING: none. Perfume #6. First preservative: Benzoic Acid #7 (last). SALTS: none. SILICONES: none. OILS/WAXES: none. Very short 7-item INCI.",
+  "claim_tier": "C1",
+  "claim_tier_detail": "Pack front photo on dm read (name 'SPRÜH KLEBER Freeze Haarlack', 'für bis zu 72h ultrastarke Styles', vegan, krasser Halt). Manufacturer text via dm = C3. Manufacturer page got2b.de not fetched.",
+  "pack_text_observed": "'got2b SPRÜH KLEBER Freeze Haarlack; für bis zu 72h ultrastarke Styles; sanft zur Kopfhaut; für alle Haartypen; vegane Formel; krasser Halt' with dot scale.",
+  "capture_date": "2026-10-11",
+  "notes": "Alternative from the same range if gel form is preferred: got2b Haargel Kleber wasserfest, 150 ml, dm DAN 1136462 (dm text: wasser- & schweißfest; alcohol-free) - INCI not captured. dm 300 ml page Lieferbar at capture.",
+  "inci_item_count": 8
+ },
+ {
+  "sample_id": "guhl-locken-pflege-und-styling-3in1",
+  "unseen_slot": 4,
+  "subtype_candidate": "curl_cream",
+  "boundary_probe": true,
+  "brand": "GUHL",
+  "product_name": "Haarkur, Conditioner & Lockencreme Pflege & Styling 3in1 (pack: LOCKEN Pflege & Styling 3in1)",
+  "size": "200 ml",
+  "format": "cream",
+  "market_tier": "drugstore",
+  "retailers_seen": [
+   "dm (marked Neues Produkt)"
+  ],
+  "price_eur": 4.95,
+  "price_source_url": "https://www.dm.de/p/d/3153470/",
+  "ean": "4072600715703",
+  "dm_dan": 3153470,
+  "inci": "Aqua, Cetearyl Alcohol, Behentrimonium Chloride, Cocos Nucifera Oil, Dipropylene Glycol, Triheptanoin, Panthenol, Glycerin, Hydrolyzed Corn Starch, Sodium Hydroxide, Glycine, Linum Usitatissimum Seed Oil, Olea Europaea Fruit Oil, Prunus Amygdalus Dulcis Oil, Borago Officinalis Seed Oil, Citric Acid, Tocopherol, Aloe Barbadensis Leaf Extract, Benzoic Acid, Sodium Benzoate, Potassium Sorbate, Parfum, Linalyl Acetate, Tetramethyl Acetyloctahydronaphthalenes.",
+  "inci_source_url": "https://products.dm.de/product/products/detail/DE/dan/3153470",
+  "inci_source_tier": "retailer_product_page",
+  "claims_verbatim": [
+   "Lockencreme, Kur & Spülung in einem",
+   "Für definierte Locken & Wellen voller Sprungkraft",
+   "Spendet Feuchtigkeit & stärkt das Haar",
+   "Mit integriertem Hitzeschutz bis 220°C",
+   "Pack: natürlich langanhaltende Definition; Ohne Silikone"
+  ],
+  "hold_claim": {
+   "raw": null,
+   "number": null,
+   "scale_max": null,
+   "words": null,
+   "none_stated": true
+  },
+  "finish_claim": "gesunder Glanz (dm text)",
+  "humidity_claim": null,
+  "heat_claim": "Mit integriertem Hitzeschutz bis 220°C",
+  "hair_type_claims": [
+   "lockiges Haar",
+   "welliges Haar",
+   "Dauerwellen"
+  ],
+  "free_from_claims": [
+   "ohne Silikone",
+   "dermatologisch bestätigt"
+  ],
+  "directions": "3 uses. Spülung: in nasse Längen, kurz einwirken, ausspülen. Kur: 3-5 min einwirken, ausspülen. Lockencreme: ins handtuchtrockene oder trockene Haar einarbeiten, wie gewohnt stylen (leave-in); Hitzeschutz bis 220 °C.",
+  "application_moment": "damp_before_drying",
+  "formula_observations": "Classic conditioner base, no synthetic fixative polymer. CONDITIONING: Cetearyl Alcohol #2, Behentrimonium Chloride #3 (cationic surfactant), Panthenol #7, Glycerin #8. OILS/ESTERS: Cocos Nucifera Oil #4, Triheptanoin #6, Linum Usitatissimum Seed Oil #12, Olea Europaea Fruit Oil #13, Prunus Amygdalus Dulcis Oil #14, Borago Officinalis Seed Oil #15. STYLING AGENT: Hydrolyzed Corn Starch #9 (only styling-type ingredient; weak film/definition). FIXATIVE POLYMERS: none. First preservative: Benzoic Acid #19 (then Sodium Benzoate #20, Potassium Sorbate #21). Perfume #22 (Parfum). SALTS: none (Sodium Hydroxide #10 and Glycine #11 are pH/buffer). SILICONES: none ('ohne Silikone').",
+  "claim_tier": "C1",
+  "claim_tier_detail": "Pack front photo on dm read (LOCKEN PFLEGE & STYLING, 3in1 LOCKENCREME, KUR & SPÜLUNG). dm description = C3 (third-party brand). guhl.com page not found via search.",
+  "pack_text_observed": "'GUHL LOCKEN PFLEGE & STYLING; Mit wenig Aufwand zu definierten Locken & Wellen; 3in1 LOCKENCREME, KUR & SPÜLUNG; Tiefenwirksame Pflege & natürlich langanhaltende Definition; Aloe Vera + [Duo]-Pflege-Style-Komplex mit Leinsamenöl; Dermatologisch bestätigt; Ohne Silikone'.",
+  "capture_date": "2026-10-11",
+  "notes": "Leads with 'Styling' on pack and uses a Lockencreme leave-in mode, but the formula is a rinse-out-capable conditioner (cationic + fatty alcohol + oils), 3in1 rinse/mask/cream. Not strictly a leave-in-only product. Sister product GUHL Styling Spray Locken Pflege & Styling 2in1 (dm DAN 3154460) has no cationic/fatty alcohol and Hydrolyzed Corn Starch #2; not captured as a record.",
+  "inci_item_count": 24
+ },
+ {
+  "sample_id": "balea-professional-haarserum-glow-und-shine",
+  "unseen_slot": 5,
+  "subtype_candidate": "shine_finish",
+  "boundary_probe": true,
+  "brand": "Balea PROFESSIONAL",
+  "product_name": "Haarserum Glow & Shine (pack: GLOW & SHINE Ultra Gloss Serum)",
+  "size": "125 ml",
+  "format": "serum",
+  "market_tier": "drugstore",
+  "retailers_seen": [
+   "dm"
+  ],
+  "price_eur": 2.75,
+  "price_source_url": "https://www.dm.de/p/d/3106704/",
+  "ean": "4070765006506",
+  "dm_dan": 3106704,
+  "inci": "Aqua, Glycerin, Cetearyl Alcohol, Undecane, Behentrimonium Chloride, Ricinus Communis Seed Oil, Panthenol, Glycolic Acid,Tocopherol, Parfum, Tridecane, Polyglyceryl-3 Caprate, Quaternium-87, Propylene Glycol, Silicone Quaternium-22, Isopropyl Alcohol, Dimethicone Propyl PG-Betaine, Dipropylene Glycol, Hydrolyzed Keratin, Cocamidopropyl Betaine, Palmitamidopropyltrimonium Chloride, Sodium Benzoate, Potassium Sorbate, Tetramethyl Acetyloctahydronaphthalenes, Hexyl Cinnamal, Linalool, Limonene, Pinene, Geranyl Acetate, Citronellol, Benzyl Benzoate, Terpineol, Sodium Hydroxide, Citric Acid, Synthetic Fluorphlogopite, Sodium Chloride,  Tin Oxide, Mica, CI 77891",
+  "inci_source_url": "https://products.dm.de/product/products/detail/DE/dan/3106704",
+  "inci_source_tier": "retailer_product_page",
+  "claims_verbatim": [
+   "Haarserum für stumpfes und glanzloses Haar",
+   "Mit Anti-Frizz-Effekt",
+   "Verleiht ein strahlendes Finish",
+   "Formel mit Glykolsäure und Keratin",
+   "Ideal zur intensiven Pflege der Haarspitzen"
+  ],
+  "hold_claim": {
+   "raw": null,
+   "number": null,
+   "scale_max": null,
+   "words": null,
+   "none_stated": true
+  },
+  "finish_claim": "glänzend: 'strahlendes Finish', 'Glossing-Technologie'",
+  "humidity_claim": null,
+  "heat_claim": null,
+  "hair_type_claims": [
+   "glanzloses Haar",
+   "trockenes Haar"
+  ],
+  "free_from_claims": [
+   "ohne Sulfat"
+  ],
+  "directions": "Gleichmäßig in die Spitzen im feuchten oder trockenen Haar einarbeiten. Nicht ausspülen.",
+  "application_moment": "dry_finish",
+  "formula_observations": "Leave-in emulsion serum. CONDITIONING: Cetearyl Alcohol #3, Behentrimonium Chloride #5, Panthenol #7, Quaternium-87 #13, Palmitamidopropyltrimonium Chloride, Hydrolyzed Keratin; Glycerin #2. OILS/ALKANES: Undecane #4, Tridecane #11 (plant-derived volatile alkanes), Ricinus Communis Seed Oil #6. SILICONES: Silicone Quaternium-22, Dimethicone Propyl PG-Betaine (both modified water-soluble silicones, mid-list). FIXATIVE POLYMERS: none. First preservative: Sodium Benzoate #22. Perfume (Parfum) #10. SALTS: Sodium Chloride near end (viscosity/by-product), plus Mica/Tin Oxide/CI 77891 shimmer pigments at end. Alcohol: Isopropyl Alcohol mid-list.",
+  "claim_tier": "C1",
+  "claim_tier_detail": "Pack front photo on dm read; dm description = C2_house_brand (Balea = dm own brand).",
+  "pack_text_observed": "'Balea PROFESSIONAL GLOW & SHINE ULTRA GLOSS SERUM; Für ein strahlendes Finish - ideal auch zur intensiven Spitzenpflege; stumpfes und glanzloses Haar; ANTI-FRIZZ-EFFEKT; Glossing-Technologie mit Glykolsäure und Keratin'.",
+  "capture_date": "2026-10-11",
+  "notes": "Named 'Serum'; promise is shine/anti-frizz finish applied to ends, but with a full cationic/fatty-alcohol care base. dm lists it under Haarkur & Haarmaske. Alternative checked but not recorded: syoss Haarserum Intense Glaze, dm DAN 3119232 (pack: 'LEAVE-IN INTENSE GLAZE Hochkonzentriertes Serum, 10% Silizium-Glanz-Komplex, stark geschädigtes glanzloses Haar, mit Laminierungs-Effekt'; INCI Aqua, Dimethicone #2, Cetearyl Alcohol #3, Behentrimonium Chloride #4; dm text 24 h Frizz-Kontrolle); it reads more as damaged-hair treatment than finishing.",
+  "inci_item_count": 39
+ },
+ {
+  "sample_id": "batiste-trockenshampoo-all-in-one",
+  "unseen_slot": 6,
+  "subtype_candidate": "refresher",
+  "boundary_probe": true,
+  "brand": "Batiste",
+  "product_name": "Trockenshampoo All in One (fruchtig frischer Duft)",
+  "size": "200 ml",
+  "format": "aerosol",
+  "market_tier": "drugstore",
+  "retailers_seen": [
+   "dm"
+  ],
+  "price_eur": 3.95,
+  "price_source_url": "https://www.dm.de/p/d/3095710/",
+  "ean": "5010724006467",
+  "dm_dan": 3095710,
+  "inci": "Butane, Isobutane, Propane, Oryza Sativa Starch, Alcohol Denat., Tapioca Starch, Silica, Parfum, Cocoyl Hydrolyzed Keratin, Hydrolyzed Collagen, Distearyldimonium Chloride, Cetrimonium Chloride, Alpha Isomethyl-Ionone, Citronellol, Hexyl Cinnamal,  Linalool, Amyl Salicylate, Dimethyl Phenethyl Acetate, Tetramethyl Acetyloctahydronaphthalenes.",
+  "inci_source_url": "https://products.dm.de/product/products/detail/DE/dan/3095710",
+  "inci_source_tier": "retailer_product_page",
+  "claims_verbatim": [
+   "Schenkt Volumen und Textur",
+   "Sorgt für lang anhaltende Frische",
+   "Leichte Formel für sauberes Haargefühl",
+   "Pack: Zusätzlicher Volumenboost; Textur & Griffigkeit",
+   "Pack: Entfernt sanft Fett; trocknet das Haar nicht aus"
+  ],
+  "hold_claim": {
+   "raw": null,
+   "number": null,
+   "scale_max": null,
+   "words": null,
+   "none_stated": true
+  },
+  "finish_claim": "Textur & Griffigkeit (matt/griffig, no gloss claim)",
+  "humidity_claim": null,
+  "heat_claim": null,
+  "hair_type_claims": [],
+  "free_from_claims": [
+   "ohne Silikone",
+   "ohne Ammoniak",
+   "ohne Sulfat"
+  ],
+  "directions": "Dose schütteln; Haar in Partien teilen, aus 30 cm in Richtung Ansatz sprühen; mit Fingerspitzen verteilen, Kopfhaut leicht massieren; leicht durchbürsten.",
+  "application_moment": "second_day",
+  "formula_observations": "Aerosol: Butane #1, Isobutane #2, Propane #3 (propellants). POWDERS: Oryza Sativa Starch #4, Tapioca Starch #6, Silica #7 (oil absorbers and texture). Alcohol Denat. #5. FIXATIVE POLYMERS: none. CONDITIONING: Distearyldimonium Chloride #11, Cetrimonium Chloride #12 (low-level cationics), Cocoyl Hydrolyzed Keratin #9, Hydrolyzed Collagen #10. Perfume #8 (Parfum). No classic preservative listed. SALTS: none. SILICONES: none. OILS/WAXES: none.",
+  "claim_tier": "C1",
+  "claim_tier_detail": "Pack front photo on dm read (small print legible when zoomed); dm text = C3 (third-party brand).",
+  "pack_text_observed": "'Batiste TROCKENSHAMPOO ALL IN ONE, fruchtig frischer Duft; Sauber aussehendes Haar; Lang anhaltende Frische; Zusätzlicher Volumenboost; Textur & Griffigkeit; Revitalisiert das Haar; Entfernt sanft Fett; Trocknet das Haar nicht aus'.",
+  "capture_date": "2026-10-11",
+  "notes": "Volume/texture promise stated on pack as strongly as freshness (six bullets: freshness, volume, texture, grip). dm Wirkung attribute: 'Pflege, Styling'. dm.de online status 'Nicht lieferbar' at capture (store availability not shown). Sibling checked: Batiste Trockenshampoo Cherry (dm DAN 1476443) 'Volumen und Griffigkeit' but fewer claims.",
+  "inci_item_count": 19
+ },
+ {
+  "sample_id": "syoss-hitzeschutzspray-keratin-heat",
+  "unseen_slot": 7,
+  "subtype_candidate": "blowdry_lotion",
+  "boundary_probe": true,
+  "brand": "syoss",
+  "product_name": "Hitzeschutzspray Keratin (pack: KERATIN Heat Hitzeschutz-Spray)",
+  "size": "200 ml",
+  "format": "pump_spray",
+  "market_tier": "drugstore",
+  "retailers_seen": [
+   "dm",
+   "rossmann (listing: https://www.rossmann.de/de/pflege-und-duft-syoss-hitzeschutz-spray-keratin-heat/p/4015100860146)"
+  ],
+  "price_eur": 4.95,
+  "price_source_url": "https://www.dm.de/p/d/3047023/",
+  "ean": "4015100860146",
+  "dm_dan": 3047023,
+  "inci": "Aqua (Water, Eau), Alcohol denat., Hydrolyzed Keratin, Panthenol, Niacinamide, Propylene Glycol, Polyurethane-48, Sodium Benzoate, PEG-60 Hydrogenated Castor Oil, Parfum (Fragrance), Bis-Isobutyl PEG/PPG-20/35/Amodimethicone Copolymer, Cetyl Ethylhexanoate, Lactic Acid, Polysorbate 80, Butylene Glycol, Gluconolactone, Methylpropanediol, Tetramethyl Acetyloctahydronaphthalenes, Trimethylcyclopentenyl Methylisopentenol, Caprylyl Glycol, Dimethyl Phenethyl Acetate, Terpineol",
+  "inci_source_url": "https://products.dm.de/product/products/detail/DE/dan/3047023",
+  "inci_source_tier": "retailer_product_page",
+  "claims_verbatim": [
+   "Hitzeschutz für Haare",
+   "Schützt beim Stylen",
+   "Ideal vorm Föhnen oder Glätten",
+   "Mit einer Kombination aus Panthenol und Niacinamide",
+   "perfekte Balance zwischen Halt und Geschmeidigkeit",
+   "Pack: 2x Frizz-Kontrolle"
+  ],
+  "hold_claim": {
+   "raw": "perfekte Balance zwischen Halt und Geschmeidigkeit",
+   "number": null,
+   "scale_max": null,
+   "words": "Balance zwischen Halt und Geschmeidigkeit",
+   "none_stated": false
+  },
+  "finish_claim": "seidiges, glattes Finish (dm text)",
+  "humidity_claim": null,
+  "heat_claim": "Die hitzeaktivierte Formel bietet effektiven Schutz vor Hitzeeinwirkungen (dm); 230 °C per Rossmann/Henkel retailer text, not seen on pack",
+  "hair_type_claims": [],
+  "free_from_claims": [
+   "ohne Ammoniak",
+   "ohne Sulfat"
+  ],
+  "directions": "Feuchtes Haar: gleichmäßig aufs ganze Haar sprühen, vor Glätteisen/Lockenstab föhnen. Trockenes Haar: Strähnen abteilen, direkt vor dem Glätten/Locken einsprühen, kurz antrocknen lassen. Syoss nennt Keratin Haarspray als Ergänzung.",
+  "application_moment": "before_heat",
+  "formula_observations": "Hydro-alcoholic spray: Aqua #1, Alcohol denat. #2. FIXATIVE: Polyurethane-48 #7 (film-former; after Hydrolyzed Keratin #3, Panthenol #4, Niacinamide #5, Propylene Glycol #6 = low-to-moderate level). CONDITIONING: Hydrolyzed Keratin #3, Panthenol #4, Niacinamide #5; Bis-Isobutyl PEG/PPG-20/35/Amodimethicone Copolymer #11 (silicone, conditioning); no cationic surfactant or fatty alcohol. First preservative: Sodium Benzoate #8. Perfume #10 (Parfum). Emollients/oils: PEG-60 Hydrogenated Castor Oil #9 (solubiliser), Cetyl Ethylhexanoate #12 (ester). SALTS: none (only Sodium Benzoate). SILICONES: Amodimethicone copolymer #11 only.",
+  "claim_tier": "C1",
+  "claim_tier_detail": "Pack front photo on dm read (KERATIN Heat HITZESCHUTZ-SPRAY, 2x FRIZZ-KONTROLLE*). dm description = C3. 230 °C figure only from retailer text.",
+  "pack_text_observed": "'SYOSS KERATIN Heat HITZESCHUTZ-SPRAY; 2x FRIZZ-KONTROLLE*; Professional Performance'.",
+  "capture_date": "2026-10-11",
+  "notes": "Pack leads with heat protection and does not print a Halt claim on the front; the 'Halt' wording appears in the dm description. Syoss is a styling-led brand (Henkel); dm files it under Haarstyling > Hitzeschutzspray with Wirkung 'Pflege, Styling, Glättung'. dm.de Lieferbar at capture.",
+  "inci_item_count": 23
+ },
+ {
+  "sample_id": "taft-styling-paste-forming-halt-5plus",
+  "unseen_slot": 8,
+  "subtype_candidate": "molding",
+  "boundary_probe": false,
+  "brand": "Schwarzkopf taft",
+  "product_name": "Styling Paste Forming Verformbare Styles (pack: FORMING STYLING PASTE 5+)",
+  "size": "75 ml",
+  "format": "paste",
+  "market_tier": "drugstore",
+  "retailers_seen": [
+   "dm",
+   "rossmann (listing: https://www.rossmann.de/de/pflege-und-duft-taft-paste-forming/p/4015100810820)",
+   "kaufland marketplace"
+  ],
+  "price_eur": 2.95,
+  "price_source_url": "https://www.dm.de/p/d/1616411/",
+  "ean": "4015100810820",
+  "dm_dan": 1616411,
+  "inci": "Aqua (Water, Eau), Rhus Verniciflua Peel Cera (Rhus Verniciflua Peel Wax), Stearic Acid, Palmitic Acid, VP/VA Copolymer, Cera Carnauba (Copernicia Cerifera (Carnauba) Wax, Cire de Carnauba), Steareth-21, Steareth-2, Propylene Glycol, PPG-5- Ceteth-20, Cetyl Ethylhexanoate, Parfum (Fragrance), Phenoxyethanol, Caramel, Aminomethyl Propanol, Panthenol, Benzyl Alcohol, Geraniol, Tetramethyl Acetyloctahydronaphthalenes, Tropolone, Limonene, Rose Ketones",
+  "inci_source_url": "https://products.dm.de/product/products/detail/DE/dan/1616411",
+  "inci_source_tier": "retailer_product_page",
+  "claims_verbatim": [
+   "Styling Paste",
+   "Haltegrad: 5",
+   "Bis zu 24h starker Halt und Kontrolle",
+   "Mit mattem Finish",
+   "Ideal für verformbare und texturierte Haarstyles",
+   "Pack: 5+ ; Sanft zu Haar & Kopfhaut"
+  ],
+  "hold_claim": {
+   "raw": "Haltegrad: 5 (dm); '5+' printed on pack; Rossmann: Haltegrad 5+",
+   "number": 5,
+   "scale_max": null,
+   "scale_max_stated": false,
+   "words": "sehr starker Halt (dm Produktmerkmal); starker Halt bis zu 24h",
+   "none_stated": false,
+   "note": "Pack front shows a 4-dot scale plus a circled '5+'."
+  },
+  "finish_claim": "matt: 'Mit mattem Finish' (Rossmann: Glanzstufe 1)",
+  "humidity_claim": "perfekt für jede Wetterlage geeignet (dm)",
+  "heat_claim": null,
+  "hair_type_claims": [
+   "auch für kurzes Haar (via Taft Men range PR)"
+  ],
+  "free_from_claims": [
+   "vegan/PETA (Rossmann text, per search summary)"
+  ],
+  "directions": "Kleine Menge zwischen den Handflächen verreiben, ins trockene oder feuchte Haar einarbeiten, nach Belieben stylen; einzelne Strähnen mit Fingerspitzen definieren; neu stylbar; für beste Ergebnisse mit TAFT Haarspray fixieren.",
+  "application_moment": "dry_restyle",
+  "formula_observations": "Wax/fatty-acid emulsion paste. WAXES: Rhus Verniciflua Peel Cera #2 (sumac wax), Cera Carnauba #6; Stearic Acid #3, Palmitic Acid #4 (emulsion/soap structure with Aminomethyl Propanol). FIXATIVE: VP/VA Copolymer #5 (single synthetic fixative). CONDITIONING: Panthenol (low, after Caramel). Emulsifiers: Steareth-21 #7, Steareth-2 #8, PPG-5-Ceteth-20 #10; Cetyl Ethylhexanoate #11 (ester). Perfume #12 (Parfum). First preservative: Phenoxyethanol #13. SALTS: none. SILICONES: none. OILS: none (ester only). Alcohol: none.",
+  "claim_tier": "C1",
+  "claim_tier_detail": "Pack front photo on dm read (FORMING STYLING PASTE, 5+, Verformbare Styles). dm text = C3 (third-party brand). Men's positioning NOT on pack front.",
+  "pack_text_observed": "'Schwarzkopf taft; FORMING STYLING PASTE; 4-dot scale and circled 5+; Sanft zu Haar & Kopfhaut; Verformbare Styles'.",
+  "capture_date": "2026-10-11",
+  "notes": "WEAK men's evidence: neither the dm text nor the pack front says Männer. A web-search summary of Henkel press release 'Matt, natürlich, flexibel: Kreiere mit Taft Men die Trendlooks 2021' (https://www.henkel.com/resource/blob/1385440/6ad70d59396922f6331e9dd9d29ebac1/data/2021-10-19-presseinformation-matt-natuerlich-flexibel-kreiere-mit-taft-men-die-trendlooks-2021.pdf) places the Forming Styling Paste in the Taft Men range ('maskuline Looks'); the PDF text could not be extracted, so this is secondhand. dm.de files it under Haare > Haarstyling, not its Haarprodukte für Männer category. Men-labelled alternatives seen at dm without a hold number: SEINZ. Styling Powerwax (dm DAN 1714635, 'starker Halt'), SEINZ. Styling Mattpaste (1556009), Balea MEN Styling Creme Matt-Paste (3162945, 'mittlerer Halt'), got2b Phenomenal Texture Clay (1539873, in dm men's category, text 'Mittlerer Halt' but Halt attribute 'starker Halt'). Men's gels with number in dm men's category: taft Haargel POWER Halt 5 (1296950), ULTRA Halt 4 (1296953); both already-seen or gels.",
+  "inci_item_count": 24
+ }
+]

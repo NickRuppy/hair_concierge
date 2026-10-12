@@ -1,0 +1,65 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-b4b75fdfc5",
+  "brand": "got2b (Schwarzkopf/Henkel)",
+  "format": "aerosol",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Bis zu 48h spiegelglänzendes Haar",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "got2b.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "hold",
+      "text": "null",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "got2b.de",
+      "date": "2026-10-11",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "kein Halt: 'ohne zu kräuseln und zu verkleben', 'Kein Verkleben', 'Keine Rückstände'",
+      "absence_statement": true
+    },
+    {
+      "type": "finish",
+      "text": "spiegelglänzendes Haar / Spiegelglanz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "got2b.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "duration",
+      "text": "Bis zu 48h",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "got2b.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "humidity",
+      "text": "Bis zu 48h Frizz-Effekt (Anti-Frizz, keine Luftfeuchtigkeits-Aussage)",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "got2b.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "heat_protection",
+      "text": "Bis zu 230 C Hitzeschutz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "got2b.de",
+      "date": "2026-10-11"
+    }
+  ]
+}

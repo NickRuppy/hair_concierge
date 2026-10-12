@@ -1,0 +1,1395 @@
+[
+ {
+  "slug": "alverde-locken-refresh-spray",
+  "directions": {
+   "verbatim": "Anwendung: Vor Gebrauch bitte gut schütteln. Strähne für Strähne auf trockenes oder feuchtes Haar sprühen, um Locken, Coils und Wellen aufzufrischen und wiederzubeleben. Für zusätzliche Feuchtigkeit nach Bedarf erneut auf trockenes Haar auftragen.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3100916"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "langhaarmaedchen-lockenspray-halt-sprungkraft",
+  "directions": {
+   "verbatim": "Vor dem Lockenstyling gut schütteln und ins handtuchtrockene oder trockene Haar sprühen, anschließend stylen. Kann auch nach dem Styling aufs Haar gesprüht werden, um Halt zu verleihen.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1677066"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "neqi-diamond-glass-ultimate-styling-spray",
+  "directions": {
+   "verbatim": "1. Das Haar in Abschnitte unterteilen.\n2. Das Spray großzügig und gleichmäßig auf das handtuchtrockene (nicht nasse) Haar sprühen.\n3. Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.",
+   "tier": "C2",
+   "source_host": "neqi-hair.com",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "neqi-hair.com is the DACH shop (prices shown in CHF); dm/Rossmann/Müller logos listed as retailers. Directions are in the ANWENDUNG tab. | cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "syoss-curl-cream-gel-3in1",
+  "directions": {
+   "verbatim": "Für die „Curly Girl Methode\" eine kleine Menge in den Handflächen verteilen und das Gel gleichmäßig von unten nach oben in das nasse Haar einkneten. Für ein natürlicheres Ergebnis und weniger Frizz, die Locken nach dem Trocknen in ein Seidentuch wickeln und sanft kneten, damit sich der Film lösen kann. Für mehr Definition kann zusätzlich der SYOSS Curl Schaumfestiger verwendet werden.",
+   "tier": "C2",
+   "source_host": "syoss.de",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "inci_current": {
+   "list": "Aqua (Water, Eau), PVP, Acrylates/Hydroxyesters Acrylates Copolymer, Glycerin, Acrylates/Steareth-20 Methacrylate Crosspolymer, Phenoxyethanol, Aminomethyl Propanol, Panthenol, Niacinamide, Benzyl Alcohol, Parfum (Fragrance), Caprylyl Glycol, Ricinus Communis (Castor) Seed Oil, Cocos Nucifera (Coconut) Oil, Caprylyl/Capryl Glucoside, 1,2-Hexanediol, Ethylhexylglycerin, Sodium Benzoate, Terpineol",
+   "tier": "C2",
+   "source_host": "syoss.de",
+   "date": "2026-10-12"
+  },
+  "notes": "syoss.de INCI is the short list without the fragrance-allergen tail present in the stale round-1 list (Tetrahydrolinalool ... BHT); page title 'Syoss Curl Cream Gel'. | cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "loreal-paris-elnett-haarspray-extra-starker-halt",
+  "directions": {
+   "verbatim": "Schutzlasche von der Kappe entfernen. Elnett-Haarspray aus ca. 30cm Entfernung aufsprühen. Sollte der Sprühkopf verkleben, bitte unter warmem Wasser abspülen.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1713489"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "schwarzkopf-taft-foehn-spray-volumen-halt-3",
+  "directions": {
+   "verbatim": "Gleichmäßig in das handtuchtrockene Haar sprühen, Haare trocken föhnen und stylen.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1168693"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "schwarzkopf-taft-schaumfestiger-volumen-halt-4-feines-haar",
+  "directions": {
+   "verbatim": "Gut schütteln und Ventil nach unten richten. Schaum entnehmen und im feuchten Haar verteilen. Nicht ausspülen! Föhnhitze verstärkt den Volumen-Effekt.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1581168"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "alcina-foehn-lotion",
+  "directions": {
+   "verbatim": "Ins feuchte Haar sprühen. Haare wie gewohnt föhnen.",
+   "tier": "C2",
+   "source_host": "alcina.com",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "alcina.com page flags the item 'Dieser Artikel ist ein Nachfolge-Produkt.' | cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "john-frieda-frizz-ease-traumlocken-lockencreme",
+  "directions": {
+   "verbatim": "Anwendung: Sparsam verwenden. Eine erbsengroße Menge der Creme in den Handflächen verreiben und gleichmäßig vom Ansatz bis in die Spitzen im feuchten Haar verteilen. Je nach Haarlänge und -struktur eine größere oder kleinere Menge des Produkts verwenden. Wie gewohnt Stylen. Styling Tipp: Zum Auffrischen am 2.Tag eine erbsengroße Menge auf besonders widerspenstige Locken geben.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3123420"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "wella-eimi-nutricurls-curl-shaper",
+  "directions": {
+   "verbatim": "Gleichmäßig auf die feuchten Locken auftragen. An der Luft trocknen lassen oder den Diffusor verwenden.",
+   "tier": "C2",
+   "source_host": "wella.com",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "wella-eimi-smooth-perfect-me",
+  "directions": {
+   "verbatim": "Verteile eine kleine Menge des Produkts auf feuchtem oder trockenem Haar in den mittleren Längen und Spitzen für ein luxuriöses Gefühl. Nach Belieben stylen.",
+   "tier": "C2",
+   "source_host": "wella.com",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "alcina-ansatz-volumen-spray-aerosol",
+  "directions": {
+   "verbatim": "Das Spray ansatznah auf das handtuchtrockene Haar sprühen und anschließend wie gewohnt trocken föhnen.",
+   "tier": "C2",
+   "source_host": "alcina.com",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "alcina.com page flags the item 'Dieser Artikel ist ein Nachfolge-Produkt.' | cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "balea-foehnlotion-volume-effect",
+  "directions": {
+   "verbatim": "Auf feuchtem Haar: vor dem Föhnen gleichmäßig im gesamten Haar verteilen und wie gewohnt stylen. Glätteisen und Lockenstab nicht in feuchtem Haar verwenden, da dies zu starker Haarschädigung führen kann. Auf trockenem Haar, vor der Anwendung des Glätteisens oder Lockenstabs gleichmäßig auf das Haar sprühen.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1711401"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "schwarzkopf-taft-haarspray-glanz-halt-4",
+  "directions": {
+   "verbatim": "Aus 30 cm Abstand sprühen.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1616914"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "wella-eimi-nutricurls-fresh-up",
+  "directions": {
+   "verbatim": "Auf feuchtes oder trockenes Haar aufsprühen. Kann jederzeit im Laufe des Tages erneut angewendet werden, um die Locken zu reaktivieren.",
+   "tier": "C2",
+   "source_host": "wella.com",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "wella.com/professional/de-DE product page 'EIMI Fresh Up' (Haltegrad 1); retrieved INCI on that page reads wax-like (Ceresin, Petrolatum, Carnauba...) not spray-like; not verified further. | cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "color-wow-dream-coat-supernatural-spray",
+  "directions": {
+   "verbatim": "Teilen Sie das handtuchtrockene Haar in Abschnitte und sprühen Sie das Spray großzügig und gleichmäßig auf das feuchte Haar. Föhnen Sie jeden Abschnitt unter Spannung. Zusätzliche Styling-Produkte erst auf trockenem Haar verwenden.",
+   "tier": "C3",
+   "source_host": "douglas.de",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "STILL MISSING: no C1/C2 promise line found (cohort holds only C3 promise lines)."
+ },
+ {
+  "slug": "maria-nila-curlicue-cream",
+  "directions": {
+   "verbatim": "Für ein optimales Ergebnis die Curlicue Cream im feuchten Haar anwenden. Das Haar in einzelne Partien abteilen und die Haar-Creme einarbeiten.",
+   "tier": "C2",
+   "source_host": "marianila.de",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "wella-eimi-sugar-lift",
+  "directions": {
+   "verbatim": "Auf das feuchte Haar auftragen, um eine großartige Textur und Volumen zu kreieren. Oder auf trockenes Haar auftragen, um einen gleichmäßigeren Style zu erhalten.",
+   "tier": "C2",
+   "source_host": "wella.com",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "bali-curls-leave-in-spray-curl-defining",
+  "directions": {
+   "verbatim": "Sprühe das Spray auf handtuchtrockenes oder trockenes Haar und style es wie gewohnt.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3122368"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "aussie-leave-in-creme-work-that-curl",
+  "directions": {
+   "verbatim": "Auf tropfnasses Haar auftragen und formen – kein Ausspülen nötig! Tada",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3136127"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [
+   {
+    "raw": "Dive into 5 days of curl definition (plus 48-hour frizz protection) and strong hair*. Because curls just wanna have fun!",
+    "tier": "C1",
+    "source_host": "products.dm-static.com",
+    "date": "2026-10-12"
+   }
+  ],
+  "notes": "Pack text is English (dm-hosted pack photo 1): 'WORK THAT CURL LEAVE-IN CREAM. With Coconut & Australian Macadamia Nut Oils. Dive into 5 days of curl definition (plus 48-hour frizz protection) and strong hair*. Because curls just wanna have fun!'. No German aussie manufacturer page found (aussie.de is an unrelated dog-breed site)."
+ },
+ {
+  "slug": "balea-locken-revitalizing-spray",
+  "directions": {
+   "verbatim": "ANWENDUNG: Gleichmäßig auf das trockene Haar sprühen, um die Locken wiederzubeleben. Anschließend sanft einkneten und bei Bedarf mit einem Diffusor föhnen oder lufttrocknen lassen.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3146889"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "wella-professionals-eimi-flowing-form",
+  "directions": {
+   "verbatim": "2-5 Pumpstöße auftragen und gründlich in die mittleren Längen und Spitzen einarbeiten. Mit einer Bürste trockenföhnen. Für besonders glatte Ergebnisse mit einem Glätteisen nacharbeiten.",
+   "tier": "C2",
+   "source_host": "wella.com",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "bali-curls-sleek-stick-brows-and-edges",
+  "directions": {
+   "verbatim": "Sanft über die Augenbrauen oder trockenes Haar streichen und nach Wunsch in Form bringen.",
+   "tier": "C2",
+   "source_host": "bali-care.com",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "cantu-lockenspray-comeback-curl-next-day",
+  "directions": {
+   "verbatim": "Auf trockenes oder feuchtes Haar Strähne für Strähne sprühen, um Locken, Coils und Wellen aufzufrischen und wiederzubeleben. Für zusätzliche Feuchtigkeit nach Bedarf erneut auf trockenes Haar auftragen. Vor dem Schlafengehen Haare leicht anfeuchten und zu lockerem Pferdeschwanz am Oberkopf zusammennehmen, um Frizz am nächsten Tag zu minimieren.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1675023"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [
+   {
+    "raw": "refreshes curls & adds shine",
+    "tier": "C1",
+    "source_host": "products.dm-static.com",
+    "date": "2026-10-12"
+   }
+  ],
+  "notes": "Pack text on the dm-hosted photo is English: 'COMEBACK CURL NEXT DAY CURL REVITALIZER / FOR NATURAL CURLS, COILS & WAVES / refreshes curls & adds shine'. No German C1/C2 line found."
+ },
+ {
+  "slug": "balea-leave-in-spray-sea-salt-care-define",
+  "directions": {
+   "verbatim": "Auf das handtuchtrockene Haar sprühen und sanft einkneten. Danach für einen natürlichen Look entweder lufttrocknen lassen oder für mehr Volumen trocken föhnen.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3134022"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "kevin-murphy-killer-curls",
+  "directions": {
+   "verbatim": "Ins handtuchtrockene oder feuchte Haar geben und einkneten, um die Locken in Form zu bringen.",
+   "tier": "C3",
+   "source_host": "flaconi.de",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "kevinmurphy.com.au/de (C5 manufacturer) has no German how-to text (Anwendung flyout empty); flaconi page titled 'Killer.Curls Curl Haarkur' shares the same INCI. | cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "john-frieda-frizz-ease-3-tage-glatt-styling-spray",
+  "directions": {
+   "verbatim": "1. Gleichmäßig auf das feuchte Haar sprühen. Bei feinem Haar sparsam verwenden.\n2. Durchkämmen, um eine gleichmäßige Verteilung zu gewährleisten.\n3. Glatt föhnen und anschließend mit einem Glätteisen fixieren für langanhaltende Geschmeidigkeit.",
+   "tier": "C2",
+   "source_host": "johnfrieda.com",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "schwarzkopf-taft-power-haargel-halt-5",
+  "directions": {
+   "verbatim": "In das trockene oder feuchte Haar einarbeiten. Haar nach Wunsch stylen. Für beste Ergebnisse mit TAFT Haarspray fixieren.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1296950"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "got2b-hitzeschutzspray-schutzengel",
+  "directions": {
+   "verbatim": "Großzügig ins handtuchtrockene Haar sprühen. Das Haar wie gewohnt föhnen. Für den ultimativen heißen Style ein Glätteisen oder einen Lockenstab benutzen.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1267310"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [
+   {
+    "raw": "got2b Schutzengel Hitzeschutz-Spray schützt dein Haar bis zu 230 °C vor Hitzeschäden und hinterlässt ein gepflegtes Haargefühl und einen himmlischen Glanz, ohne das Haar zu beschweren.",
+    "tier": "C2",
+    "source_host": "got2b.de",
+    "date": "2026-10-12"
+   }
+  ],
+  "notes": ""
+ },
+ {
+  "slug": "john-frieda-haarserum-frizz-ease-der-baendiger",
+  "directions": {
+   "verbatim": "Für die Anwendung auf nassem Haar: Sparsam verwenden, 1 Pumpstoß des Serums in die Handfläche geben und verreiben. Gleichmäßig im feuchten Haar verteilen, den Ansatz aussparen. Je nach Haarlänge und -dicke mehr oder weniger verwenden. Nicht ausspülen. Für die Anwendung auf trockenem Haar: Eine kleine Menge auf gezielte Haarpartien auftragen.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3123438"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [
+   {
+    "raw": "Der ultimative Tropfen gegen Frizz.",
+    "tier": "C2",
+    "source_host": "johnfrieda.com",
+    "date": "2026-10-12"
+   }
+  ],
+  "notes": "johnfrieda.com/de-de page is 'Der Bändiger Extra Strong Serum' (50 ml); INCI is identical to the dm 3123438 INCI, so same formula. JF.de directions differ slightly from dm: 'Auf nassem Haar: Einen Pumpstoß in die Handflächen geben, verreiben und in das feuchte Haar einarbeiten, dabei den Haaransatz aussparen. Das Haar an der Luft trocknen lassen oder wie gewohnt stylen.' / 'Auf trockenem Haar: Einige Tropfen verwenden, um Frizz oder abstehende Härchen zu bändigen.'"
+ },
+ {
+  "slug": "taft-x-gliss-hitzeschutzspray-lovely-long",
+  "directions": {
+   "verbatim": "Gut schütteln. Aus einem Abstand von 15-20 cm auf das handtuchtrockene Haar sprühen und wie gewöhnt föhnen. Kann auch auf trockenem Haar verwendet werden, aber Produkt vor Nutzung heißer Stylinggeräte trocknen lassen oder kurz anföhnen.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1681631"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [
+   {
+    "raw": "Schutz & Pflege – Das Hitzespray kombiniert dank der GLISS Care & Repair Technologie Styling und Pflege in einer Anwendung und ist für langes Haar geeignet",
+    "tier": "C2",
+    "source_host": "schwarzkopf.de",
+    "date": "2026-10-12"
+   }
+  ],
+  "notes": ""
+ },
+ {
+  "slug": "moroccanoil-dry-texture-spray",
+  "directions": {
+   "verbatim": "Gut schütteln. Ins trockene Haar sprühen.",
+   "tier": "C2",
+   "source_host": "de.moroccanoil.com",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "bali-curls-hydrating-curl-cream",
+  "directions": {
+   "verbatim": "Beginne mit einer haselnussgroßen Menge der Lockencreme und verteile sie in deinen Händen. Arbeite dann die Creme in dein feuchtes oder handtuchtrockenes Haar. Passe bei Bedarf die verwendete Menge an die Länge deines Haares an. Style deine Locken nun wie gewohnt, um sie zu formen und die Sprungkraft zu erhöhen. Um deine Locken zu definieren kannst du deine Finger oder auch eine Stylingbürste wie die Behairful Brush nutzen. Verwende zum Abschluss deiner Styling-Routine ein Gel, wie das Defining Gel von Bali Curls.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3070337"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [
+   {
+    "raw": "Die vegane und leichte Hydrating Curl Cream mit ihrer wirksamen Anti-Frizz-Formel aus reiner Sheabutter, Kokosöl und Ylang-Ylang-Extrakt spendet deinen Locken nicht nur Feuchtigkeit, sondern definiert, stärkt und regeneriert sie.",
+    "tier": "C2",
+    "source_host": "bali-care.com",
+    "date": "2026-10-12"
+   }
+  ],
+  "notes": ""
+ },
+ {
+  "slug": "balea-haarpuder-volumen-pomegranate",
+  "directions": {
+   "verbatim": "Eine kleine Menge Puder in den Handflächen verteilen und in das trockene Haar einarbeiten. Für maximales Volumen das Puder direkt am Haaransatz einmassieren und nach Wunsch stylen.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1567808"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "john-frieda-volume-lift-ansatz-booster",
+  "directions": {
+   "verbatim": "1. Für mehr Volumen am Ansatz großzügig auf den Haaransatz des handtuchtrockenen Haares sprühen. Der gesamte Ansatz und die darunterliegenden Haarschichten sollten vollständig bedeckt sein.\n2. Anschließend trocken föhnen und wie gewohnt stylen.",
+   "tier": "C2",
+   "source_host": "johnfrieda.com",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "inci_current": {
+   "list": "Aqua, Alcohol Denat., Polyquaternium-16, Polysorbate 20, Polyquaternium-68, Parfum, Panthenol, Ethylhexylglycerin, Cetrimonium Chloride, Hydrolyzed Rice Protein, Glycerin, Alcohol, Lecithin, Tocopherol, Caffeine, Hyaluronic Acid, Tocopheryl Acetate, Biotin, Phenoxyethanol, Sodium Benzoate, Alpha-Isomethyl Ionone, Benzyl Salicylate, Geraniol, Hexyl Cinnamal, Limonene, Linalool.",
+   "tier": "C2",
+   "source_host": "johnfrieda.com",
+   "date": "2026-10-12"
+  },
+  "notes": "THREE formulas exist. SKU chosen = johnfrieda.com/de-de 'Volume Lift Original Ansatz-Booster' (25/150 ml; C2): INCI, claims, directions and heat-protection claim all captured from that one page. Divergent SKUs: (a) dm 1462632, 125 ml, GTIN 50002993, old formula Alcohol Denat., Aqua, PVP, VP/VA Copolymer, ... (retired SKU, still served by dm JSON); (b) dm 3122357, 150 ml, GTIN 5037156299137, 'Leave-In Spray Volume Lift Ansatz-Booster' mit Peptiden: ALCOHOL DENAT., WATER/AQUA/EAU, PVP, VP/VA COPOLYMER, POLYSORBATE 20, SEA SALT/MARIS SAL/SEL MARIN, HYDROLYZED VEGETABLE PROTEIN, VP/DMAPA ACRYLATES COPOLYMER, BENZALKONIUM CHLORIDE, SODIUM BENZOATE, FRAGRANCE/PARFUM, CITRONELLOL, CITRUS LIMON (LEMON) PEEL OIL, HEXYL CINNAMAL, LIMONENE. (C3, dm 2026-10-12). The two current 150 ml listings disagree (JF.de is aqua-first with Polyquaternium-16/-68, caffeine, biotin and no PVP/VP-VA; dm's is alcohol-first with PVP/VP-VA); JF.de page itself warns 'Unsere Formulierungen können Änderungen unterliegen. Bitte beachte stets die Inhaltsstoffliste auf der Produktverpackung.' Which is physically on the shelf right now cannot be settled without a pack photo; a decision for Nick. dm directions for 3122357 are word-identical. | cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "syoss-professional-performance-max-hold-power-wax",
+  "directions": {
+   "verbatim": "Eine kleine Menge entnehmen und in den Handflächen verreiben\nAuf trockenem Haar anwenden, um den gewünschten Look zu erzielen\nBei Bedarf etwas mehr Wax nehmen",
+   "tier": "C2",
+   "source_host": "syoss.de",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "inci_current": {
+   "list": "Aqua (Water, Eau) · Cera Alba (Beeswax, Cire d'Abeille) · Petrolatum · PVP · C12-15 Alkyl Benzoate · Stearic Acid · Palmitic Acid · Cetyl Alcohol · Parfum (Fragrance)· Steareth-21 · Steareth-2 · Paraffinum Liquidum (Mineral Oil, Huile Minérale)· PPG-5-Ceteth-20 · Phenoxyethanol · Panthenol · Niacinamide · Oleth-20 · VP/DMAPA Acrylates Copolymer· Cetearyl Alcohol · Caprylyl Glycol · Acrylates/C10-30 Alkyl Acrylate Crosspolymer · Aminomethyl Propanol · Benzyl Alcohol · Dicetyl Phosphate · Ceteth-10 Phosphate · C12-15 Alcohols · Ethylhexylglycerin · Benzalkonium Chloride · Tropolone. *Ethylalcohol",
+   "tier": "C2",
+   "source_host": "syoss.de",
+   "date": "2026-10-12"
+  },
+  "notes": "syoss.de lists 'Syoss Max Hold Wax'; INCI shown incl. the page's trailing footnote '*Ethylalcohol'. Compared with the stale round-1 INCI (Rossmann), Methylparaben, Ethylparaben, Propylene Glycol, Linalool, Hexyl Cinnamal, Limonene, Citral are gone and Benzyl Alcohol, Caprylyl Glycol, Ceteth-10 Phosphate etc. appear. | cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "schwarzkopf-taft-haarspray-classic-halt-3",
+  "directions": {
+   "verbatim": "Aus 30 cm Abstand sprühen.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1580759"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "hask-lockencreme-curl-care",
+  "directions": {
+   "verbatim": "Tragen Sie es auf das handtuchtrockene Haar auf. Nicht ausspülen. Frisieren Sie das Haar wie gewohnt.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1622386"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [
+   {
+    "raw": "MOISTURIZES & CONTROLS FRIZZ",
+    "tier": "C1",
+    "source_host": "products.dm-static.com",
+    "date": "2026-10-12"
+   }
+  ],
+  "notes": "Pack text on the current dm-hosted photo is English/French: 'curls + coconut oil, argan oil & vitamin e / defining cream / MOISTURIZES & CONTROLS FRIZZ / NO SULFATES | NO SILICONES | VEGAN / crème définition des boucles'. dm description text (C3: 'Pflegende Lockencreme', 'Wirkt intensiv feuchtigkeitsspendend') may refer to an older pack."
+ },
+ {
+  "slug": "balea-finishing-spray-glow-und-care",
+  "directions": {
+   "verbatim": "Nach dem Styling das Finishing Spray aus ca. 30 cm Entfernung gleichmäßig auf das trockene Haar sprühen.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3043007"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "garnier-fructis-locken-methode-feuchtigkeitsboost-pflege-spray",
+  "directions": {
+   "verbatim": "Das Haar mit dem N°0 Pre-Shampoo und dem N°1 Shampoo waschen, die N°2 feuchtigkeitsauffüllende Maske anwenden und anschließend das N°3 Shape Refresh Feuchtigkeitsboost Spray auf das feuchte oder trockene Haar auftragen; Locken kneten und um die Finger zwirbeln, um sie zu definieren; an der Luft oder im Diffusor trocknen lassen; täglich oder zwischen den Haarwäschen anwenden.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1319532"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [
+   {
+    "raw": "Die Formel mit dem Feuchtigkeits-Komplex mit Hyaluron und Shea-Fettsäuren spenden den Locken bis zu 48h Feuchtigkeit und definierte Locken.",
+    "tier": "C2",
+    "source_host": "garnier.de",
+    "date": "2026-10-12"
+   }
+  ],
+  "notes": ""
+ },
+ {
+  "slug": "american-crew-fiber",
+  "directions": {
+   "verbatim": "Eine kleine Menge in den Händen gut verreiben und in handtuchtrockenes Haar einarbeiten.",
+   "tier": "C3",
+   "source_host": "flaconi.de",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [
+   {
+    "raw": "American Crew Texture Fiber ist ein Stylingprodukt mit starkem Halt und wenig Glanz, das das Haar dicker erscheinen lässt, texturiert und für mehr Fülle sorgt.",
+    "tier": "C5",
+    "source_host": "americancrew.com",
+    "date": "2026-10-12"
+   }
+  ],
+  "notes": "Promise line is C5: americancrew.com/de is a German-language page of the US shop (prices in USD, directions block in English). Flaconi DE (C3) says 'Sehr starker Halt – kein Glanz. Haltfaktor 9 – Glanzfaktor 1.'. No German-market manufacturer page found."
+ },
+ {
+  "slug": "balea-styling-creme-power-flex",
+  "directions": {
+   "verbatim": "Auf den Handflächen verteilen, ins feuchte oder trockene Haar einarbeiten und wie gewohnt stylen.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1612047"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "loreal-men-expert-barber-club-styling-pomade",
+  "directions": {
+   "verbatim": "Eine kleine Menge zwischen den Händen verreiben und auf den trockenen oder feuchten Bart und/oder das Haar auftragen. Nutze einen Kamm für ein perfektes Styling.",
+   "tier": "C2",
+   "source_host": "loreal-paris.de",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "balea-ansatzvolumen-booster",
+  "directions": {
+   "verbatim": "Produkt vor der Anwendung gut schütteln. Zur Dosierung senkrecht halten. 1. Eine tennisballgroße Menge des Schaums im Ansatz verteilen. 2. Trocken föhnen, über Nacht einwirken lassen oder lufttrocknen lassen. 3. Sofortige Frische für Haar und Kopfhaut und frisch gestyltes Haar.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/2972854"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "cantu-shea-butter-extra-hold-edge-stay-gel",
+  "directions": null,
+  "directions_status": "missing",
+  "promise_lines": [],
+  "notes": "No German-language directions found: not on dm; only English retailer text (eu.lookfantastic.com 'How to Use: Apply to edges and smooth with fingertips or tightly bristled brush.'). Pack photo is the US pack (English). Not captured as German verbatim. | cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "schwarzkopf-taft-styling-balm-locken-halt-3",
+  "directions": {
+   "verbatim": "In trockenes oder handtuchtrockenes Haar einarbeiten und Locken nach Wunsch modellieren. Für beste Ergebnisse, mit TAFT Haarspray fixieren.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1226644"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "wellaflex-schaumfestiger-locken-und-wellen-starker-halt",
+  "directions": {
+   "verbatim": "Vor Gebrauch gut schütteln und bei der Anwendung Flasche kopfüber halten. Verwende eine apfelgroße Menge für mittellanges Haar und verteilen sie gleichmäßig im nassen Haar. Föhne Deine Haare, oder lass sie natürlich trocknen.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1384129"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "balea-haargel-hair-jelly",
+  "directions": {
+   "verbatim": "Auf den Handflächen verteilen, ins feuchte oder trockene Haar einarbeiten und wie gewohnt stylen.",
+   "tier": "C1",
+   "source_host": "products.dm-static.com",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "dm.de 'Verwendungshinweise' field only repeats the product name ('Styling Hair Jelly'); the directions are printed on the pack side panel (ANWENDUNG block), read from the dm-hosted pack photo (third image of dm 3048832). Pack front reads 'für flexiblen Halt und ein natürliches Haargefühl. Ideal für den Sleek-Look und Naturlockenstylings'. | cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "balea-locken-crunchgel",
+  "directions": {
+   "verbatim": "Eine kleine Menge in den Händen verteilen und sanft in das handtuchtrockene Haar einmassieren. Nicht ausspülen. Haare an der Luft trocknen lassen oder einen Diffuser verwenden, um Frizz zu vermeiden. Am nächsten Tag können die Locken durch Verteilung einer kleinen Menge in den angefeuchteten Haaren aufgefrischt werden.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/2476122"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "balea-haarserum-anti-frizz-glatt-und-glossy",
+  "directions": {
+   "verbatim": "Gleichmäßig in den handtuchtrockenen Haarlängen verteilen. Nicht ausspülen.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3123269"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "got2b-trockenshampoo-extra-volumen",
+  "directions": {
+   "verbatim": "Bürste dein Haar gut durch und lege ein Handtuch um deine Schultern. Dose vor jedem Sprühen kräftig schütteln. Das Haar in Partien einteilen und aus einer Entfernung von 20 cm auf das trockene Haar sprühen und kurz trocknen lassen. Mit den Fingern oder einem Handtuch einarbeiten und eventuelle Rückstände einfach ausbürsten.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1685672"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [
+   {
+    "raw": "got2b Trockenwäsche Extra Volumen – Trockenshampoo für sofortigen Volumen-Boost & 48 h frischen Duft",
+    "tier": "C2",
+    "source_host": "got2b.de",
+    "date": "2026-10-12"
+   }
+  ],
+  "notes": "got2b.de names the product 'Trockenwäsche Extra Volumen' (dm: 'Trockenshampoo Extra Volumen'); directions identical to dm text."
+ },
+ {
+  "slug": "schwarzkopf-taft-gel-wax-glanz-halt-2",
+  "directions": {
+   "verbatim": "In das trockene oder feuchte Haar einarbeiten. Haar nach Wunsch stylen. Für beste Ergebnisse mit TAFT Glanz Haarspray fixieren.",
+   "tier": "C2",
+   "source_host": "schwarzkopf.de",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "guhl-foehn-spray-langzeit-volumen",
+  "directions": {
+   "verbatim": "ANWENDUNG: Vor dem Föhnen aufsprühen. Nicht ausspülen.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1447160"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "schwarzkopf-taft-x-gliss-silky-shine-shine-coat",
+  "directions": {
+   "verbatim": "Für optimalen Hitzeschutz vor dem Stylen aus 30 cm Abstand ins handtuchtrockene Haar sprühen und wie gewohnt föhnen. Für beste Ergebnisse mit taft x GLISS holding me strongly Haarspray fixieren.",
+   "tier": "C2",
+   "source_host": "schwarzkopf.de",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "Same page also has a step-wise block (Schritt 1-3: 'Aus einem Abstand von 30 cm auf das handtuchtrockene Haar sprühen und wie gewohnt föhnen.' / 'Alternativ auf trockenes Haar sprühen für sofortigen Glanz.' / 'Für beste Ergebnisse mit taft x GLISS Haarspray holding me strongly fixieren.'). | cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "kevin-murphy-powder-puff-volume",
+  "directions": {
+   "verbatim": "POWDER.PUFF Schütteln, stylen und staunen! Für sofortiges Volumen und Struktur einfach etwas Puder auf den Haaransatz ins feuchte oder trockene Haar geben.",
+   "tier": "C3",
+   "source_host": "flaconi.de",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "kevinmurphy.com.au/de has no German how-to text for this SKU (Anwendung flyout empty). | cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "got2b-styling-puder-volumen-powderfull",
+  "directions": {
+   "verbatim": "Eine kleine Menge Puder in deine Handflächen streuen und gut verreiben, bis es unsichtbar wird. Dann im trockenen Haar, vom Ansatz bis in die Spitzen verteilen. Für sofortiges Volumen.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1300882"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "bumble-and-bumble-brilliantine",
+  "directions": {
+   "verbatim": "Eine kleine Menge verwenden und bei Bedarf aufbauen; im feuchten oder trockenen Haar verwenden. Die Finger für einen verwuschelten Look verwenden, einen Kamm für glatte Looks.",
+   "tier": "C3",
+   "source_host": "douglas.de",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "STILL MISSING: no C1/C2 promise line found (cohort holds only C3 promise lines)."
+ },
+ {
+  "slug": "bali-gents-haarpuder-volumizing-styling-powder",
+  "directions": {
+   "verbatim": "Eine kleine Menge des Puders in den Handflächen verreiben oder direkt auf den Haaransatz streuen. In das trockene Haar einmassieren und nach Belieben stylen.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3117041"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [
+   {
+    "raw": "Leichtigkeit trifft auf maximales Volumen! Das Volumizing Styling Powder ist die perfekte Lösung für sofortige Fülle und einen natürlich strukturierten Look.",
+    "tier": "C2",
+    "source_host": "bali-care.com",
+    "date": "2026-10-12"
+   }
+  ],
+  "notes": ""
+ },
+ {
+  "slug": "langhaarmaedchen-lockenspray-natur-lockenwunder",
+  "directions": {
+   "verbatim": "Nach dem Waschen ins nasse Haar sprühen und sanft einkneten. Für den Frischekick zwischendurch kurz auf das trockenen Haar aufsprühen und durchkneten - fertig.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1592107"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "schwarzkopf-taft-texturspray-aloe-boost",
+  "directions": {
+   "verbatim": "Gut schütteln. Mit kurzen Sprühstößen aus 30cm Abstand auf das trockene Haar sprühen.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3047463"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "got2b-lockenspray-refresher-curlz",
+  "directions": {
+   "verbatim": "Auf trockenem Haar auftragen. Sprühe von der Haarmitte bis zu den Spritzen für den ultimativen glossy Look. HACK: bei feinerem Haar den Sprühnebel auf die Hände sprühen und von der Haarmitte bis zu den Spitzen verteilen.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3121124"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "balea-glattspray-anti-frizz",
+  "directions": {
+   "verbatim": "Aus 20 bis 25 cm Abstand großzügig auf das handtuchtrockene Haar aufsprühen und mit einem Kamm gleichmäßig einarbeiten, dabei den Ansatz aussparen. Für noch mehr Glätte mit einer Paddebürste trocken föhnen. Für den glättesten Effekt einzelne Haarpartien mit dem Glätteisen glätten.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/2978038"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "redken-one-united-all-in-one-multi-benefit-treatment",
+  "directions": {
+   "verbatim": "1. Variante: Nach der Haarwäsche ins handtuchtrockene Haar einarbeiten. Nicht ausspülen. Danach die Haare wie gewohnt stylen\n2. Variante: Nach dem Shampoonieren mit einem Conditioner mischen und ins Haar einarbeiten. Anschliessend gründlich wieder ausspülen.\n3. Variante: Nach der Haarwäsche mit einer Leave-In Pflege vermischen und ins Haar einarbeiten. Nicht ausspülen\n4. Variante: Mit einem Stylingprodukt vermischen und ins Haar einarbeiten, um ein perfektes Finish zu erzielen.\nBei Kontakt mit den Augen diese sofort gründlich ausspülen.",
+   "tier": "C2",
+   "source_host": "redken.eu",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [
+   {
+    "raw": "Leave-in-Pflege für allen Haartypen. Bietet 25 Vorteile in einem Produkt.",
+    "tier": "C2",
+    "source_host": "redken.eu",
+    "date": "2026-10-12"
+   }
+  ],
+  "notes": "redken.eu/de-de (Redken Germany) page 'REDKEN ONE UNITED 25 BENEFITS SPRAY'; the earlier record used redken.co.uk (English). German lead line on that page: 'Leave-in-Pflege für allen Haartypen. Bietet 25 Vorteile in einem Produkt.'"
+ },
+ {
+  "slug": "schwarzkopf-taft-haarpuder-volumen",
+  "directions": {
+   "verbatim": "Eine kleine Menge Puder in die Handflächen geben und gut verreiben. Anschließend auf das trockene Haar auftragen, vom Ansatz bis in die Spitzen verteilen und nach Wunsch stylen. Tipp: Für einen extra Volumen-Boost das Puder direkt auf das trockene Haar streuen. Das Puder anschließend mit den Fingerspitzen einmassieren und nach Wunsch stylen.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1320701"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "living-proof-full-dry-volume-texture-spray",
+  "directions": {
+   "verbatim": "- Vor jedem Sprühstoß die Dose gut schütteln.\n- Halten Sie die Dose fünf bis zehn Zentimeter vom trockenen Haar entfernt. Eine Haarpartie anheben und von der Wurzel bis zu den Spitzen auftragen.\n- Das Haar mit den Fingern zerzausen. Wiederholen Sie den Vorgang, bis die gewünschte Frisur erreicht ist, und schütteln Sie die Dose zwischen den einzelnen Sprühstößen.\n- Sprühen Sie die fertige Frisur für zusätzliche Textur und Halt ein.\nTipps und Tricks: Drehen Sie den Kopf zur Seite oder auf den Kopf und sprühen Sie das Produkt in kleinen Stößen in die Längen, um mehr Textur zu erhalten.",
+   "tier": "C3",
+   "source_host": "flaconi.de",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "STILL MISSING: no C1/C2 promise line found (cohort holds only C3 promise lines)."
+ },
+ {
+  "slug": "syoss-schaumfestiger-volume",
+  "directions": {
+   "verbatim": "Vor Gebrauch gut schütteln und Ventil nach unten halten. Eine Handvoll Schaum entnehmen und im feuchten Haar verteilen. Anschließend das Haar wie gewohnt stylen. Nicht auswaschen.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3047024"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "loreal-elvital-haaroel-oel-magique-alle-haartypen",
+  "directions": {
+   "verbatim": "Das Öl Magique Haaröl kann täglich als veredelnde Pflege auf trockenem und nassem Haar verwendet werden. Während dem Duschen, vor dem Föhnen oder als glanzvolles Styling-Finish.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1621820"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [
+   {
+    "raw": "Sichtbar mehr Glanz",
+    "tier": "C1",
+    "source_host": "products.dm-static.com",
+    "date": "2026-10-12"
+   }
+  ],
+  "notes": "Pack front (dm-hosted photo): 'ÖL MAGIQUE VEREDELNDES HAARÖL [KOSTBARE BLÜTENÖLE] Sichtbar mehr Glanz ALLE HAARTYPEN'. loreal-paris.de now lists 'Elvital ÖL Magique Veredelndes Haaröl 100 ml' with a different formula claim (14 % Pflege-Komplex aus Marula- und Kamelien-Öl) than the dm entry (6 Blütenöle); not treated as the same SKU, so the loreal-paris.de lead sentence ('verleiht jedem Haartyp und -bedürfnis einen strahlenden Glanz sowie mehr Geschmeidigkeit') is NOT used as this record's C2 line."
+ },
+ {
+  "slug": "got2b-styling-paste-istyler-texture-clay",
+  "directions": {
+   "verbatim": "Verreibe die Clay-Paste zwischen deinen Handflächen und arbeite sie ins trockene Haar ein.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1336597"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "gard-haarspray-extrastark-pumpspray",
+  "directions": {
+   "verbatim": "Finishing: Aus ca. 25 cm Entfernung gleichmäßig auf das Haar sprühen. Mehr Volumen: Aus ca. 15 cm Entfernung kopfüber ins Haar oder direkt in den Haaransatz sprühen. Styling: Einzelne Haarsträhnen gezielt besprühen und mit den Fingern in Form bringen.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1607390"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "evo-head-mistress-cuticle-sealer",
+  "directions": null,
+  "directions_status": "missing",
+  "promise_lines": [],
+  "notes": "No German-language directions found. evohair.com (US/AU pages, English) says: 'Apply to towel-dried hair... blow-dry' style text; no German retailer or German pack text located (evohair.de 403, Douglas/Flaconi/Notino searches returned no German page). | cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "john-frieda-volume-lift-pushed-up-dry-texture-spray",
+  "directions": {
+   "verbatim": "Anwendung: Den farbigen Teil des Sprühkopfes zum Öffnen und Schließen drehen. Vor und während der Anwendung gut schütteln. Auf trockenem Haar anwenden. Strähnen anheben und vom Ansatz her ins Haar sprühen. Mit den Fingern stylen und zerzausen.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3123436"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "schwarzkopf-taft-matt-wax-halt-5",
+  "directions": {
+   "verbatim": "In das trockene oder feuchte Haar einarbeiten. Haar nach Wunsch stylen. Für beste Ergebnisse mit TAFT Haarspray fixieren.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1616410"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "got2b-gotgloss-glanz-spray",
+  "directions": {
+   "verbatim": "Anwendung: Das GOT2B gotGloss Glanz Spray auf trockenes Haar auftragen und kurz einwirken lassen. Haare im Anschluss Glätten um den Glanz zu verstärken. Bei Bedarf das Spray noch einmal als Finisch aufsprühen. Styling Hack: Für die ultimative \"Glass Hair\" Routine,  zuerst den gotGloss Glanz Primer im handtuchtrockenen Haar verteilen und die Haare föhnen. Im Anschluss das gotGloss Glanz Spray auf das trockene Haar sprühen und die Haare glätten. Das Ergebnis: Spiegelglänzendes, glattes \"Glass Hair\" Haar!",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1429002"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "balea-men-pomade-haar-bart-2in1",
+  "directions": {
+   "verbatim": "Eine kleine Menge Balea MEN Pomade 2in1 zwischen den Handflächen verreiben und gleichmäßig ins trockene oder feuchte Haar einarbeiten oder einzelne Strähnen modellieren.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1491041"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "nivea-men-styling-cream-active-craft-stylers",
+  "directions": {
+   "verbatim": "1 Vorbereiten\nEine Fingerspitze voll NIVEA MEN Styling Cream aufnehmen und zwischen den Handflächen verreiben.\n2 Anwenden\nDie Cream mit den Händen im handtuchfeuchten oder trockenen Haar einarbeiten und dann mit den Fingern den gewünschten Look stylen.\n3 Nachstylen\nMit einem Tupfer NIVEA MEN Styling Cream kann man schnell und unkompliziert noch einmal nachstylen – ohne dass die Hände oder Haare verkleben oder der Look unnatürlich wirkt.",
+   "tier": "C2",
+   "source_host": "nivea.de",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "dm.de page has no Verwendungshinweise for this SKU. | cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "american-crew-pomade",
+  "directions": {
+   "verbatim": "Eine kleine Menge gleichmäßig im feuchten oder trockenen Haar verteilen und wie gewünscht stylen.",
+   "tier": "C5",
+   "source_host": "americancrew.com",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "Tier C5, not C2 as the cohort labelled it: americancrew.com/de is the US shop in German language (prices in USD; the sibling Fiber page's how-to block is English). Directions come from its 'usage' tab. Flaconi DE (C3) page for the same SKU has no Anwendung block (description only: 'Schon eine kleine Menge in das handtuchtrockene Haar eingearbeitet...'). No DE-market manufacturer page found. | cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "balea-sea-salt-texture-spray",
+  "directions": {
+   "verbatim": "ANWENDUNG: Auf das handtuchtrockene Haar sprühen und sanft einkneten. Danach für einen natürlichen Look entweder lufttrocknen lassen oder für mehr Volumen trocken föhnen. Kann auch aufs trockene Haar gesprüht werden, um z.B. Locken mit dem Lockenstab ein natürliches Finish zu verleihen.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3048815"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "alverde-beach-waves-spray-seaside-balance",
+  "directions": {
+   "verbatim": "Anwendung: Das Spray ins handtuchtrockene oder trockene Haar sprühen und sanft einarbeiten. Nicht auswaschen.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3115913"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "syoss-haarspray-max-hold",
+  "directions": {
+   "verbatim": "Auf trockenem Haar verwenden. Als Finish: Aus 30 cm Abstand aufsprühen. Zum Stylen einzelner Haarpartien: Haarsträhne vom Ansatz an besprühen und in Form bringen. Sollte die Düse verklebt sein, bitte mit warmem Wasser reinigen.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3046958"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "schwarzkopf-professional-osis-curl-retouch",
+  "directions": {
+   "verbatim": "Vor Gebrauch schütteln.\nDas Curl Spray auf handtuchtrockenes Haar sprühen, durchkämmen und Locken und Wellen mit den Fingern formen, für natürlich definierte Locken. Lufttrocknen lassen.\nZum Auffrischen das Lockenspray aus ca. 20 cm Entfernung auf das trockene Haar sprühen. Anschließend das Haar sanft durchkämmen, um geschmeidige Locken zu erhalten.",
+   "tier": "C2",
+   "source_host": "schwarzkopf-professional.com",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [
+   {
+    "raw": "Frische Deine Locken im Handumdrehen auf: OSiS Curl Retouch belebt Deine Locken neu, für mehr Sprungkraft, Definition und natürlichen Glanz.",
+    "tier": "C2",
+    "source_host": "schwarzkopf-professional.com",
+    "date": "2026-10-12"
+   }
+  ],
+  "notes": "C2 from schwarzkopf-professional.com/de/de (Verwendung block); keshop.com (C3) has the same lines."
+ },
+ {
+  "slug": "garnier-fructis-sleek-and-stay-heat-activated-serum",
+  "directions": {
+   "verbatim": "Zu Beginn der Haarpflegroutine das Haar gründlich mit dem Fructis Keratin Sleek Shampoo waschen und dieses im Anschluss ausspülen. Anschließen mit der Haarmaske oder dem Conditioner fortfahren und das Haar leicht antrocknen lassen. Nun einen Pumpstoß des Fructis Sleek & Stay Heat-Activated Serums in die Hand geben und gleichmäßig im feuchten Haar verteilen. Dabei nicht ausspülen. Jetzt das Haar sorgfältig föhnen und bei Bedarf mithilfe eines Glätteisens glätten.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3042323"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [
+   {
+    "raw": "Die Formel des Haarserum enthält Alpha-Silane und sorgt für intensive Glättung und Glanz, mit bis zu fünf Haarwäschen Halt.",
+    "tier": "C2",
+    "source_host": "garnier.de",
+    "date": "2026-10-12"
+   }
+  ],
+  "notes": ""
+ },
+ {
+  "slug": "loreal-paris-elnett-stylingspray-hitzeschutz-3-tage-glatt",
+  "directions": {
+   "verbatim": "Haarspray mit 3 cm Abstand gleichmäßig auf das Haar sprühen. Für besonders viel Volumen, Deckhaar anheben und ein wenig Haarspray von unten auf die Haare sprühen.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1353305"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "balea-professional-definier-spray-traumlocken",
+  "directions": {
+   "verbatim": "Großzügig und gleichmäßig ins feuchte Haar sprühen. Anschließend die Locken in Form kneten. Nicht auswaschen.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1639908"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "balea-pure-styling-volumenpuder-spray",
+  "directions": {
+   "verbatim": "Dose vor jedem Gebraucht kräftig schütteln, um ein Verstopfen der Düse zu vermeiden. Auf trockenen Haaransatz sprühen und wie gewohnt stylen. Für mehr Textur und Griffigkeit sparsam in die Haarlängen sprühen.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3070168"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "cantu-lockencreme-kokos",
+  "directions": {
+   "verbatim": "Auf feuchtes Haar Strähne für Strähne auftragen. Vom Ansatz bis zu den Spitzen in das Haar einmassieren. Nicht ausspülen. Kann auf trockenem Haar verwendet werden, um Locken zu befeuchten. Mit Öl nachbehandeln, um Feuchtigkeit einzuschließen",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1675022"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [
+   {
+    "raw": "defines, softens & moisturises",
+    "tier": "C1",
+    "source_host": "products.dm-static.com",
+    "date": "2026-10-12"
+   }
+  ],
+  "notes": "Pack text on the dm-hosted photo is English: 'COCONUT CURLING CREAM / FOR NATURAL CURLS & COILS defines, softens & moisturises'. No German C1/C2 line found."
+ },
+ {
+  "slug": "bumble-and-bumble-surf-spray",
+  "directions": {
+   "verbatim": "Gleichmäßig auf das feuchte oder trockene Haar sprühen. Stylen und trocknen lassen; stellen Sie sich in den Wind oder verwenden Sie einen Fön mit Aufsatz.",
+   "tier": "C3",
+   "source_host": "lookfantastic.de",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "STILL MISSING: no C1/C2 promise line found (cohort holds only C3 promise lines)."
+ },
+ {
+  "slug": "guhl-styling-spray-locken-pflege-und-styling-2in1",
+  "directions": {
+   "verbatim": "2in1 ANWENDUNG für Pflege & Styling: Im nassen oder trockenen Haar anwenden. In die Längen sprühen & einarbeiten. Wie gewohnt stylen. Mit Hitzeschutz bis 220°C. Ideal auch zur Reaktivierung der Locken.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3154460"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [
+   {
+    "raw": "Du möchtest deine Locken definieren und ihnen zwischendurch neue Sprungkraft geben? Das Guhl Locken Pflege & Styling 2in1 pflegendes Stylingspray mit Aloe Vera und Duo-Pflege-Style-Komplex verbindet unbeschwerte Pflege mit einfachem Locken-Styling.",
+    "tier": "C2",
+    "source_host": "guhl.com",
+    "date": "2026-10-12"
+   }
+  ],
+  "notes": "guhl.com page directions (C2): 'Das Guhl Lockenspray kann im nassen oder trockenen Haar angewendet werden: einfach in die Längen sprühen, einarbeiten und stylen. Ideal auch zur Reaktivierung der Locken, mit Hitzeschutz bis 220 °C.'"
+ },
+ {
+  "slug": "got2b-styling-mattpaste-strand-matte",
+  "directions": {
+   "verbatim": "Auf trockenem oder feuchtem Haar. In den Handflächen verteilen und nach Belieben einzelne Partien zerzausen, zwirbeln oder plätten.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1136459"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "inci_current": {
+   "list": "Aqua (Water, Eau), Cera Alba (Beeswax, Cire d'Abeille), Cera Carnauba (Copernicia Cerifera (Carnauba) Wax, Cire de Carnauba), Isopropyl Myristate, Glyceryl Stearate, Petrolatum, Parfum (Fragrance), Stearic Acid, Palmitic Acid, PEG-8 Beeswax, Phenoxyethanol, Aminomethyl Propanol, Ethylhexylglycerin, Hydroxyethylcellulose, Benzyl Alcohol, Mica, Geraniol, CI 77499 (Iron Oxides), CI 77891 (Titanium Dioxide), CI 15985 (Yellow 6)",
+   "tier": "C2",
+   "source_host": "got2b.de",
+   "date": "2026-10-12"
+  },
+  "notes": "got2b.de (C2) lists 'Geraniol' where dm 1136459 (C3) still lists 'Geranyl Acetate, Rose Ketones' (stale). The dm page also says 'leichten Halt' while got2b.de says 'mittlerem Halt'. | cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "jean-und-len-sea-salt-spray",
+  "directions": {
+   "verbatim": "Vor Gebrauch guuut schütteln, dann einen Spritzer ins feuchte oder trockene Haar geben. Für einen intensiveren Beach Look Haare kneten und an der Luft trocknen lassen. Du willst mehr Volumen? Dann einfach Deine Haare trocken föhnen.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3085573"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "balea-styling-spray-ultra-volumen",
+  "directions": {
+   "verbatim": "Vor dem Föhnen auf den gewaschenen, noch feuchten Haaransatz sprühen und bis in die Längen verteilen. Kreieren Sie mehr Volumen, indem Sie mit einer Rundbürste gegen den gewohnten Scheitel trocken föhnen. Kann auch zwischendurch im trockenen Haar verwendet werden, um das Haar mit Volumen zu beleben.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1436045"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "feschi-smooth-and-shine-anti-frizz-spray-glanzspray",
+  "directions": {
+   "verbatim": "Nach dem Styling oder zur Auffrischung zwischendurch die Dose gut schütteln und aus ca. 20 cm Entfernung sparsam in die trockenen Haarlängen sprühen. Anschließend kämmen. Tipp: Bei besonders krausem oder dickem Haar das Spray bereits vor dem Styling ins handtuchtrockene Haar sprühen, um es in die gewünschte Form zu bringen!",
+   "tier": "C3",
+   "source_host": "flaconi.de",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "STILL MISSING: no C1/C2 promise line found (cohort holds only C3 promise lines)."
+ },
+ {
+  "slug": "bali-curls-strong-hold-flaxseed-gel",
+  "directions": {
+   "verbatim": "Das Gel in die nassen oder feuchten Locken einarbeiten. Zum Definieren die Scrunch-Technik anwenden, indem das Gel von unten nach oben in die Locken eingeknetet wird. An der Luft trocknen lassen oder mit einem Diffusor stylen.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3106307"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "balea-styling-locken-lotion",
+  "directions": {
+   "verbatim": "Eine kleine Menge auf den Händen verteilen und sanft ins handtuchtrockene Haar einarbeiten. Nicht ausspülen.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1436046"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "bali-gents-matt-paste",
+  "directions": {
+   "verbatim": "Eine kleine Menge zwischen den Handflächen verreiben und auf trockenes oder leicht feuchtes Haar auftragen. Anschließend mit den Fingern oder einem Kamm in Form bringen.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3093667"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "alcina-styling-mousse-aerosol",
+  "directions": {
+   "verbatim": "Vor Gebrauch gut schütteln. Schaumkopf nach unten richten. Je nach Haarlänge eine tennisballgroße Menge Schaum im feuchten Haar verteilen. Nicht ausspülen.",
+   "tier": "C2",
+   "source_host": "alcina.com",
+   "date": "2026-10-12"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "alcina.com page flags the item 'Dieser Artikel ist ein Nachfolge-Produkt.' | cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "garnier-fructis-leave-in-spray-diamond-sleek-glaettungsspray",
+  "directions": {
+   "verbatim": "Nach der Haarwäsche- und pflege mit der Keratin Sleek Routine das handtuchtrockene Haar mit dem Diamond Sleek Shine-Coat Glättungsspray großzügig besprühen. Anschließend das Haar strähnenweise mit einer Bürste föhnen, um das Haar auf Spannung zu halten und die Formel zu aktivieren. Für ein ultimativ strahlendes Finish den Sleek Look mit einem Glätteisen versiegeln.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3115734"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "isana-professional-styling-creme-locken-traum",
+  "directions": null,
+  "directions_status": "missing",
+  "promise_lines": [],
+  "notes": "Rossmann (house brand Isana, the only retailer carrying it) is behind a bot wall ('Client Challenge') in the built-in browser and for curl; codecheck.info carries INCI only; no other German source with directions found. Web-search snippets indicate a Rossmann description but not the Anwendung text, so nothing was captured. | STILL MISSING: no C1/C2 promise line found (cohort holds only C3 promise lines)."
+ },
+ {
+  "slug": "balea-professional-glow-und-shine-finishing-spray",
+  "directions": {
+   "verbatim": "Vor Gebrauch Dose gut schütteln. Nach dem Styling das Finishing Spray aus ca. 30 cm Entfernung gleichmäßig auf das trockene Haar sprühen.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/3165375"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "balea-professional-styling-cream-traumlocken",
+  "directions": {
+   "verbatim": "Eine kleine Menge auf den Händen verteilen und sanft ins handtuchtrockene oder trockene Haar einarbeiten. Nicht ausspülen.",
+   "tier": "C2_house_brand",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1536368"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ },
+ {
+  "slug": "schwarzkopf-taft-haarspray-power-halt-5",
+  "directions": {
+   "verbatim": "Aus 30 cm Abstand sprühen.",
+   "tier": "C3",
+   "source_host": "products.dm.de",
+   "date": "2026-10-12",
+   "source_url": "https://products.dm.de/product/products/detail/DE/dan/1580758"
+  },
+  "directions_status": "verbatim",
+  "promise_lines": [],
+  "notes": "cohort already holds a C1/C2 promise line; not re-captured."
+ }
+]

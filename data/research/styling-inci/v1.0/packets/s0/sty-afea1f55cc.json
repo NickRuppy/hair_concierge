@@ -1,0 +1,89 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-afea1f55cc",
+  "product": {
+    "confirmed_name": "Spray Volume Lift Pushed-up Dry Texture",
+    "brand": "John Frieda",
+    "format": "aerosol"
+  },
+  "inci": {
+    "inci_item_count": 13,
+    "tier": "C1",
+    "source_class": "pack",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "DIMETHYL ETHER"
+      },
+      {
+        "rank": 2,
+        "inci": "ALCOHOL DENAT."
+      },
+      {
+        "rank": 3,
+        "inci": "ISOPROPYL ALCOHOL"
+      },
+      {
+        "rank": 4,
+        "inci": "VP/VA COPOLYMER"
+      },
+      {
+        "rank": 5,
+        "inci": "SILICA"
+      },
+      {
+        "rank": 6,
+        "inci": "WATER/AQUA/EAU"
+      },
+      {
+        "rank": 7,
+        "inci": "HYDROLYZED VEGETABLE PROTEIN"
+      },
+      {
+        "rank": 8,
+        "inci": "SODIUM BENZOATE"
+      },
+      {
+        "rank": 9,
+        "inci": "FRAGRANCE/PARFUM"
+      },
+      {
+        "rank": 10,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 11,
+        "inci": "CITRUS LIMON (LEMON) PEEL OIL"
+      },
+      {
+        "rank": 12,
+        "inci": "HEXYL CINNAMAL"
+      },
+      {
+        "rank": 13,
+        "inci": "LIMONENE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Anwendung: Den farbigen Teil des Sprühkopfes zum Öffnen und Schließen drehen. Vor und während der Anwendung gut schütteln. Auf trockenem Haar anwenden. Strähnen anheben und vom Ansatz her ins Haar sprühen. Mit den Fingern stylen und zerzausen.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Verleiht dem Haar sofort Textur, Fülle und Volumen.",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

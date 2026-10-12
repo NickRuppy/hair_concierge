@@ -1,0 +1,64 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-b8a3be5840",
+  "brand": "Balea MEN",
+  "format": "pomade",
+  "product_type_word": "pomade",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "2in1 Pomade für Bart- & Haupthaar",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Mit pflegendem Macadamiaöl & Sheabutter",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Dermatologisch bestätigte Hautverträglichkeit",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "hold",
+      "text": "Halt: mittlerer Halt; Für langanhaltenden Halt & Definition",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "mittlerer Halt"
+    },
+    {
+      "type": "finish",
+      "text": "null: no finish claim stated; formula suggests soft sheen (no shine or matt wording)",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "Formt & festigt individuelle Styles",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    }
+  ]
+}

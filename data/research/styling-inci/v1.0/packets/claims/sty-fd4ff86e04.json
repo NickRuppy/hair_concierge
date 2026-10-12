@@ -1,0 +1,72 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-fd4ff86e04",
+  "brand": "Balea PROFESSIONAL",
+  "format": "cream",
+  "product_type_word": "cream",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Für definierte lebendige Locken",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Schützt effektiv vor Frizz",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Verbesserte Geschmeidigkeit",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Anti-Statik-Formel verhindert Frizz",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "hold",
+      "text": "Halt: mittlerer Halt",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "mittlerer Halt"
+    },
+    {
+      "type": "finish",
+      "text": "glänzend (raw: 'perfekt definierte und glänzende Locken')",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "heat_protection",
+      "text": "Hitzeschutz bis zu 220 °C",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    }
+  ]
+}

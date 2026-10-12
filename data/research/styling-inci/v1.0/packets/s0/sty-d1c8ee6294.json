@@ -1,0 +1,256 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-d1c8ee6294",
+  "product": {
+    "confirmed_name": "Lockencreme Kokos (Shea Butter for Natural Hair Coconut Curling Cream)",
+    "brand": "cantu",
+    "format": "cream"
+  },
+  "inci": {
+    "inci_item_count": 54,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA (WATER)"
+      },
+      {
+        "rank": 2,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 3,
+        "inci": "CANOLA OIL"
+      },
+      {
+        "rank": 4,
+        "inci": "CETEARYL ALCOHOL"
+      },
+      {
+        "rank": 5,
+        "inci": "PARFUM (FRAGRANCE)"
+      },
+      {
+        "rank": 6,
+        "inci": "BUTYROSPERMUM PARKII (SHEA) BUTTER"
+      },
+      {
+        "rank": 7,
+        "inci": "PETROLATUM"
+      },
+      {
+        "rank": 8,
+        "inci": "CETEARETH-20"
+      },
+      {
+        "rank": 9,
+        "inci": "GLYCOL STEARATE"
+      },
+      {
+        "rank": 10,
+        "inci": "COCOS NUCIFERA (COCONUT) OIL"
+      },
+      {
+        "rank": 11,
+        "inci": "BIOTIN (VITAMNIN B7)"
+      },
+      {
+        "rank": 12,
+        "inci": "FOLIC ACID (VITAMIN B9)"
+      },
+      {
+        "rank": 13,
+        "inci": "NIACIN (VITAMIN B3)"
+      },
+      {
+        "rank": 14,
+        "inci": "CYANOCOBALAMIN (VITAMIN B12)"
+      },
+      {
+        "rank": 15,
+        "inci": "PANTOTHENIC ACID (VITAMIN B5)"
+      },
+      {
+        "rank": 16,
+        "inci": "PYRIDOXINE (VITAMIN B6)"
+      },
+      {
+        "rank": 17,
+        "inci": "RIBOFLAVIN (VITAMIN B2)"
+      },
+      {
+        "rank": 18,
+        "inci": "SIMMONDSIA CHINENSIS (JOJOBA)"
+      },
+      {
+        "rank": 19,
+        "inci": "SEED OIL"
+      },
+      {
+        "rank": 20,
+        "inci": "OLEA EUROPAEA (OLIVE) FRUIT OIL"
+      },
+      {
+        "rank": 21,
+        "inci": "ARGANIA SPINOSA (ARGAN) KERNEL OIL"
+      },
+      {
+        "rank": 22,
+        "inci": "DAUCUS CAROTA SATIVA (CARROT) SEED OIL"
+      },
+      {
+        "rank": 23,
+        "inci": "MACADAMIA INTEGRIFOLIA SEED OIL"
+      },
+      {
+        "rank": 24,
+        "inci": "MANGIFERA INDICA (MANGO) SEED OIL"
+      },
+      {
+        "rank": 25,
+        "inci": "PERSEA GRATISSIMA (AVOCADO) OIL"
+      },
+      {
+        "rank": 26,
+        "inci": "PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL"
+      },
+      {
+        "rank": 27,
+        "inci": "VITIS VINIFERA (GRAPE) SEED EXTRACT"
+      },
+      {
+        "rank": 28,
+        "inci": "ALOE BARBADENSIS (ALOE) LEAF JUICE"
+      },
+      {
+        "rank": 29,
+        "inci": "LONICERA CAPRIFOLIUM (HONEYSUCKLE) EXTRACT"
+      },
+      {
+        "rank": 30,
+        "inci": "MACROCYSTIS PYRIFERA (KELP) EXTRACT"
+      },
+      {
+        "rank": 31,
+        "inci": "SALVIA OFFICINALIS (SAGE) LEAF EXTRACT"
+      },
+      {
+        "rank": 32,
+        "inci": "URTICA DIOCICA (NETTLE) EXTRACT"
+      },
+      {
+        "rank": 33,
+        "inci": "HYDROLYZED SILK"
+      },
+      {
+        "rank": 34,
+        "inci": "CETETH-20"
+      },
+      {
+        "rank": 35,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 36,
+        "inci": "PEG-75"
+      },
+      {
+        "rank": 37,
+        "inci": "BENZYL BENZOATE"
+      },
+      {
+        "rank": 38,
+        "inci": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE"
+      },
+      {
+        "rank": 39,
+        "inci": "BEHENTRIMONIUM METHOSULFATE"
+      },
+      {
+        "rank": 40,
+        "inci": "DISODIUM EDTA"
+      },
+      {
+        "rank": 41,
+        "inci": "ETHYLHEXYLGYCERIN"
+      },
+      {
+        "rank": 42,
+        "inci": "POLYQUATERNIUM-7"
+      },
+      {
+        "rank": 43,
+        "inci": "COUMARIN"
+      },
+      {
+        "rank": 44,
+        "inci": "SILK AMINO ACIDS"
+      },
+      {
+        "rank": 45,
+        "inci": "HEXYL CINNAMAL"
+      },
+      {
+        "rank": 46,
+        "inci": "SODIUM BENZOATE"
+      },
+      {
+        "rank": 47,
+        "inci": "LEUCONOSTOC/RADISH ROOT FERMENT FILTRATE"
+      },
+      {
+        "rank": 48,
+        "inci": "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL"
+      },
+      {
+        "rank": 49,
+        "inci": "LECITHIN"
+      },
+      {
+        "rank": 50,
+        "inci": "ASCORBYL PALMITATE"
+      },
+      {
+        "rank": 51,
+        "inci": "POTASSIUM SORBATE"
+      },
+      {
+        "rank": 52,
+        "inci": "TOCOPHEROL"
+      },
+      {
+        "rank": 53,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 54,
+        "inci": "TETRASODIUM GLUTAMATE DIACETATE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Auf feuchtes Haar Strähne für Strähne auftragen. Vom Ansatz bis zu den Spitzen in das Haar einmassieren. Nicht ausspülen. Kann auf trockenem Haar verwendet werden, um Locken zu befeuchten. Mit Öl nachbehandeln, um Feuchtigkeit einzuschließen",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "defines, softens & moisturises",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12",
+      "flags": [
+        "non_german_wording"
+      ]
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

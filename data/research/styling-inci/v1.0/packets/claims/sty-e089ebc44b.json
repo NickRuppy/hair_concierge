@@ -1,0 +1,63 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-e089ebc44b",
+  "brand": "Balea",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Sorgt für sichtbare Fülle vom Ansatz an",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Mit pflegendem Panthenol",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "lässt sich dennoch leicht wieder auskämmen",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "hold",
+      "text": "Bietet flexiblen und langanhaltenden Halt",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "sehr starker Halt (dm-Merkmal)"
+    },
+    {
+      "type": "hold",
+      "text": "Ultra",
+      "tier": "C2_house_brand",
+      "source_class": "product_name",
+      "source_host": null,
+      "date": null,
+      "from_product_name": true,
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null,
+      "tier_basis": "name tier = record best_tier (name confirmation not captured separately)"
+    }
+  ]
+}

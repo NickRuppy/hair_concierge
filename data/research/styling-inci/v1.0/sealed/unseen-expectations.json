@@ -1,0 +1,481 @@
+{
+  "sealed_at": "2026-10-12T05:10:16Z",
+  "standard_version": "v0.1",
+  "author": "pre-registration lane",
+  "scope_note": "Expected outputs for the 8 records of data/research/styling-inci/v1.0/capture/unseen-r3.json, derived only from those records (INCI, claims with tiers, directions, pack text) under styling-classification-standard.md v0.1, lexicon v0.1, property set v0, charter and the rulings ledger (SD1-SD5, D1-D8b, PH1-1..16, PH2-1..12). Firmness: 'firm' = the rule determines the value unambiguously from the record; 'soft' = judgment involved (alternatives listed). 'UNDETERMINED' = the standard does not decide the value; treated as a finding. Keys named informational_* are NOT scoring targets: for evidence_gate records the standard emits no Styling values (standard 4.7), and for leave_in/oil/heat_protectant/dry_shampoo/mixed_promise records Styling properties are optional and informational_and_non_authoritative.",
+  "conventions": {
+    "ranks": "1-based, comma split at bracket depth 0 (lexicon 0.4). Recounted 2026-10-12: slots 3, 7, 8 have 7, 22, 22 items, not the inci_item_count values 8, 23, 24 in the capture file (capture defect, moves nothing).",
+    "T_S": "full Mask rule (PH2-9, lexicon 0.2): earliest of fragrance, declared allergen/aroma chemical, PR-1 preservative, PR-2 booster only when a PR-1 is declared, CH-1 chelator",
+    "T_LI": "LI 3.1.1 capped list plus other Annex V preservatives; fragrance/allergens never eligible (LI T17); statuses plausible/implausible/vacuous/none_visible",
+    "aqueous": "Aqua above T_S (lexicon 0.3)"
+  },
+  "summary": [
+    {"slot": 1, "sample_id": "redken-styling-beach-spray", "route": "provisional_boundary", "boundary_reason": "evidence_gate", "subtype": null, "hold": "not emitted", "firmness": "firm"},
+    {"slot": 2, "sample_id": "balea-styling-finishing-stick", "route": "provisional_boundary", "boundary_reason": "evidence_gate", "subtype": null, "hold": "not emitted", "firmness": "firm"},
+    {"slot": 3, "sample_id": "got2b-spruehkleber-freeze-haarlack", "route": "styling", "boundary_reason": null, "subtype": "hairspray", "hold": "4 (soft: pack dot scale illegible)", "firmness": "route/subtype firm"},
+    {"slot": 4, "sample_id": "guhl-locken-pflege-und-styling-3in1", "route": "provisional_boundary", "boundary_reason": "mixed_promise", "subtype": null, "hold": "not emitted", "firmness": "soft (alternative letter: leave_in; never styling)"},
+    {"slot": 5, "sample_id": "balea-professional-haarserum-glow-und-shine", "route": "leave_in", "boundary_reason": null, "subtype": null, "hold": "not emitted", "firmness": "soft (alternative: oil by D2 name rule if the water-based-serum exception is not applied)"},
+    {"slot": 6, "sample_id": "batiste-trockenshampoo-all-in-one", "route": "dry_shampoo", "boundary_reason": null, "subtype": null, "hold": "not emitted", "firmness": "firm"},
+    {"slot": 7, "sample_id": "syoss-hitzeschutzspray-keratin-heat", "route": "heat_protectant", "boundary_reason": null, "subtype": null, "hold": "not emitted", "firmness": "firm"},
+    {"slot": 8, "sample_id": "taft-styling-paste-forming-halt-5plus", "route": "styling", "boundary_reason": null, "subtype": "molding", "hold": "4 (soft: 5+ beside a 4-dot display)", "firmness": "route/subtype firm"}
+  ],
+  "records": [
+    {
+      "unseen_slot": 1,
+      "sample_id": "redken-styling-beach-spray",
+      "product": "Redken Styling Volume Beach Spray, 150 ml, pump spray",
+      "intended_trap": "Salt-free beach spray (subtype_candidate texture_spray; standard 5 says a salt-free beach spray is still salt_spray, property set 9 item 7 untested value). Secondary: generic Acrylates Copolymer in a pump spray (FX-2c), Polyurethane-34 (FX-U).",
+      "trap_caught": "Not exercised. Every claim is C3/C4 retailer copy or an English pack image (not the German pack), so S0 stops at the evidence gate before subtype or FX-2c are reached. The slot cannot test the salt-free salt_spray value until a C1 German pack or a redken.de C2 page is captured.",
+      "identity_status": {"value": "verified", "firmness": "soft", "basis": "GTIN null = documented identity gap (LI 2.4 G1 allows it); INCI from easycosmetic.de, identical on lookfantastic.at; no conflict. Alternative: insufficient_information. Either way the route below is unchanged (input 1 already fails)."},
+      "tail_markers": {
+        "T_S": {"inci": "Phenoxyethanol", "rank": 4, "status": "plausible", "firmness": "firm"},
+        "T_LI": {"inci": "Phenoxyethanol", "rank": 4, "status": "plausible", "firmness": "firm", "note": "no conditioning architecture to bound (clause 5 plausible); tail holds functional species (Acrylates/Beheneth-25 Methacrylate Copolymer, PEG-12 Dimethicone, Polysorbate 80, SLS) so not vacuous"}
+      },
+      "s0": {
+        "route": "provisional_boundary",
+        "boundary_reason": "evidence_gate",
+        "lean_route": null,
+        "promise_class": "not assigned (no C1/C2 promise)",
+        "li_function": "not assigned",
+        "pair_rule": null,
+        "deciding_rule": "standard 4.1 step 1 input 1 (no C1/C2 primary promise); LI 2.4.1 rules 1 and 3 (retailer copy and a non-German pack image create no claim). Not owner-named (4.6), so no 4.1 override.",
+        "missing_input": "C1/C2 primary promise",
+        "capture_work_order": "photograph the German pack or capture a redken.de German product page; re-read hold and salt wording at that tier",
+        "stays_in_current_category": "Styling candidate (unclassified)",
+        "firmness": "firm"
+      },
+      "styling_subtype": {"value": null, "firmness": "firm", "basis": "4.7: evidence_gate emits no Styling values"},
+      "properties": "not_emitted (standard 4.7: identity block, formula record, missing input, capture work order only)",
+      "chaarlie_hold_level": {"value": "not_emitted", "firmness": "firm", "note": "'MITTLERER HALT' is C3 retailer text (plus English pack image, not C1); even after the gate it could not assign (7.2 step 1)"},
+      "d8b_flags": [],
+      "neutral_fact_shown": false,
+      "review_triggers": [
+        {"id": "s0_evidence_gate", "firmness": "firm"},
+        {"id": "claim_authority_gap", "firmness": "firm"}
+      ],
+      "undetermined": [],
+      "informational_counterfactual_if_C1C2_promise_captured": {
+        "non_scoring": true,
+        "promise_class": "styling_result (beach-wave texture, volume, grip, matte)",
+        "li_function": "no (texture/volume; 'strukturierte Beach Waves' read as texture, not curl support) - soft",
+        "pair_rule": "3.4(ii) aqueous, styling directly (PH2-1); if li_function were yes, 3.4(iii) LI G0 excluded_styling_first, same route; not held",
+        "subtype": "salt_spray (beach texture job, damp moment; 5: a salt-free beach spray is still salt_spray)",
+        "result_mechanisms": "fixative_film [Acrylates Copolymer r2] - FX-2c corroborated by (ii): format pump_spray and no RH-1 member anywhere; Polyurethane-34 r3 = FX-U (not credited); no salt mechanism (Calcium Carbonate r11 is below T_S and not a PT-1/SA-1 member)",
+        "hold_route": "present",
+        "weight": "light",
+        "alcohol_note": "does_not_fire",
+        "buildup_note": "not fired",
+        "ingredient_flags": {"silicones": true, "oils": false, "fragrance": true, "salt": false, "propellant": false, "fixative_family": ["acrylate"]},
+        "provides_heat_protection": "false (not_claimed; 'mit Lockenstab stylen' is a styling instruction)",
+        "application_moment": "damp_before_drying (air-dry or blow-dry allowed), also dry_restyle (re-spray on dry hair, English pack text)",
+        "target_zone": "all",
+        "heat_activated": "no",
+        "salt_spray_extra": "salt-free"
+      },
+      "rule_gaps": [
+        "Lexicon FX-2c corroboration (ii) asks for 'no RH-1 member anywhere'. Acrylates/Beheneth-25 Methacrylate Copolymer is an associative thickener in practice but falls into the FX-U catch-all ('any vinyl/acrylate copolymer not named'), not RH-1, so it does not block corroboration. A thickener-shaped copolymer neither blocks FX-2c nor is read as rheology.",
+        "Polyurethane-34 (and other non-PU-14 polyurethanes) is FX-U by default; a beach spray resting on it alone would read hold_route ambiguous."
+      ],
+      "sections_used": ["standard 2.1 (LI 2.4, 2.4.1 rules 1/3)", "standard 2.3", "standard 3.2", "standard 4.0", "standard 4.1", "standard 4.6", "standard 4.7", "standard 5 (counterfactual)", "lexicon 0.2", "lexicon FX-2c, FX-3, FX-U, RH-1, PT-1", "LI 3.1.1 clauses 5-6", "property set 9 item 7"]
+    },
+    {
+      "unseen_slot": 2,
+      "sample_id": "balea-styling-finishing-stick",
+      "product": "Balea Styling Finishing Stick (Fixierungsbürste), 10 ml, liquid with mascara wand",
+      "intended_trap": "target_zone surface/hairline product (baby hairs, flyaways, brows), subtype_candidate smoothing_styler; frizz-taming promise on a fixative formula (Leave-in border scope under PH2-1); weight claim 'ohne zu beschweren' vs a cationic-guar formula.",
+      "trap_caught": "Not exercised. dm states Verwendungshinweise 'keine vorhanden' and the capture's directions are a paraphrase of the product description plus an observation of the wand. LI 2.4 rule 1: a paraphrase is not a capture. S0 input 2 fails, so no Styling values are emitted. The surface/hairline value stays untested. Packet-builder risk: if the paraphrase enters the sealed S0 packet as 'verbatim directions', lanes will run S0 and diverge (see counterfactual).",
+      "identity_status": {"value": "verified", "firmness": "firm", "basis": "dm house brand, EAN 4066447991796, INCI products.dm.de"},
+      "tail_markers": {
+        "T_S": {"inci": "Parfum", "rank": 8, "status": "plausible", "firmness": "firm", "note": "no PR-1 declared; Heptyl Glucoside r6 is EM-1, Heptanol r16 is unlisted, Citric Acid is PH-1; with no PR-1, PR-2 boosters cannot be the marker"},
+        "T_LI": {"inci": null, "rank": null, "status": "none_visible", "firmness": "firm", "note": "no capped preservative or Annex V preservative declared; LI limit 2 (ordinal read) would apply to any border rule"}
+      },
+      "s0": {
+        "route": "provisional_boundary",
+        "boundary_reason": "evidence_gate",
+        "lean_route": null,
+        "promise_class": "not assigned (gate fails first)",
+        "li_function": "not assigned",
+        "pair_rule": null,
+        "deciding_rule": "standard 4.1 step 1 input 2 (captured verbatim directions); LI 2.4 mandatory directions capture rule 3 (absent directions = documented gap). C1 pack + house-brand C2 promise present; INCI complete; identity verified.",
+        "missing_input": "verbatim directions (dm: 'keine vorhanden')",
+        "capture_work_order": "read the directions panel on the tube/box (C1) or a Balea/dm page that prints them",
+        "stays_in_current_category": "Styling candidate (dm files it under Haargel)",
+        "firmness": "firm"
+      },
+      "styling_subtype": {"value": null, "firmness": "firm"},
+      "properties": "not_emitted (standard 4.7)",
+      "chaarlie_hold_level": {"value": "not_emitted", "firmness": "firm"},
+      "d8b_flags": [],
+      "neutral_fact_shown": false,
+      "review_triggers": [
+        {"id": "s0_evidence_gate", "firmness": "firm"},
+        {"id": "house_brand_ownership", "firmness": "soft", "note": "C2 claims rest on LI rule 6 (dm text for Balea); whether a gated record lists it is not stated"},
+        {"id": "directions_unresolved", "firmness": "soft", "note": "property-level trigger; the gate already carries the record"}
+      ],
+      "undetermined": [],
+      "informational_counterfactual_if_directions_captured": {
+        "non_scoring": true,
+        "promise_class": "styling_result (C1 'fixiert Babyhaare & Frizz', 'perfektes Finish')",
+        "li_function": "UNDETERMINED - 'fixiert ... Frizz' / 'Bändigt ... Frizz' names frizz control (an LI 2.1 smoothing/anti-frizz function => yes) but the verb is fixing (hold => no). The tag definition does not say which word governs.",
+        "if_li_function_no": "3.1 runs (frizz/flyaway lead) but name is not Öl/Serum; 3.4(ii) => styling directly",
+        "if_li_function_yes": "3.4(iii) LI G0 with T_LI none_visible: VP/VA r4 vs cationic guars r7 (above T_S) and r9 (below Parfum). If the guars read as LI COND moderate (cationic-polymer film route) the T15 reading is 'not thin' => in_category (incidental_film) => D6 fails (real hold: VP/VA) => leave_in. If they read thin => excluded_styling_first (C1 positioning 'fixiert') => styling, not held. UNDETERMINED: the T15/COND reading with no readable T_LI and two cationic guars straddling Parfum.",
+        "subtype": "UNDETERMINED - rule 2 (hairline => gel) needs directions leading with baby hair/brows; without them, job 'flyaway control on dry hair' + dry_finish points to shine_finish; capture guess smoothing_styler does not fit (no heat/damp moment)",
+        "result_mechanisms": "fixative_film [VP/VA Copolymer r4] - 'VPVA COPOLYMER' read as an unambiguous alias of VP/VA Copolymer (lexicon 0.4 item 4, logged as transcription repair). A lane that refuses the alias reads it FX-U => hold_route ambiguous.",
+        "hold_route": "present",
+        "weight": "medium (one family: (e) Hydroxypropyl Guar Hydroxypropyltrimonium Chloride r7 above T_S; Guar HPTC r9 below)",
+        "weight_claim_conflict": "yes - C2 house brand 'Ohne zu verkleben oder zu beschweren' vs medium",
+        "alcohol_note": "fires (Alcohol Denat. r2)",
+        "buildup_note": "fires (limb 1: Hydroxypropyl Guar HPTC r7 = LI 7.6 permanent_cationic above T_S; PH2-5)",
+        "ingredient_flags": {"silicones": false, "oils": false, "fragrance": true, "salt": false, "propellant": false, "fixative_family": ["pvp_vp"]},
+        "provides_heat_protection": "false (not_claimed)",
+        "chaarlie_hold_level": "1 (C2 house brand 'leichte Fixierung', strength word 'leicht'; moderate, house-brand review) - soft: 'Fixierung' not 'Halt'",
+        "flexibility": "unbekannt ('ohne zu verkleben' is not a flex word, PH1-5)",
+        "finish": "unbekannt ('perfektes Finish', 'nicht fettend' are not finish words)",
+        "primary_job": "frizz_control (gate: fixative_film counts as 'a film'), secondary hold_fix"
+      },
+      "rule_gaps": [
+        "li_function tag has no tie rule for a lead promise that fixes frizz (hold verb + anti-frizz object).",
+        "T15 'thin' test via LI COND has no stated reading when T_LI is none_visible and the only conditioning is cationic guar ranked around Parfum.",
+        "Subtype rule 2 says 'gel-type shaping product' without defining gel-type for a liquid wand product."
+      ],
+      "sections_used": ["standard 2.1 (LI 2.4 directions capture rules 1/3)", "standard 3.2", "standard 4.1", "standard 4.7", "standard 4.2/4.3 (counterfactual)", "standard 5 rule 2 (counterfactual)", "standard 6.3, 6.4, 6.5", "lexicon 0.2, 0.4 item 4, FX-1, CA-3", "LI 3.1.1 limit 2", "LI 7.2 COND, 7.7 HOLD"]
+    },
+    {
+      "unseen_slot": 3,
+      "sample_id": "got2b-spruehkleber-freeze-haarlack",
+      "product": "got2b Haarlack Sprühkleber Freeze, 300 ml, aerosol",
+      "intended_trap": "Control (boundary_probe false) plus the ruled-but-uncalibrated C1 'fest' flexibility value (Kleber, Freeze). Secondary: dm 'Halt' attribute on a third-party brand must stay a C3 trace.",
+      "trap_caught": "Yes. C1 confirmed name 'SPRÜH KLEBER Freeze Haarlack' sets flexibility fest; the dm 'sehr starker Halt' attribute is a C3 trace (A4) and assigns nothing; level comes from C1 words.",
+      "identity_status": {"value": "verified", "firmness": "firm", "basis": "dm, EAN 4015100800524, INCI products.dm.de; 100 ml variant has identical INCI"},
+      "tail_markers": {
+        "T_S": {"inci": "Parfum", "rank": 6, "status": "plausible", "firmness": "firm"},
+        "T_LI": {"inci": "Benzoic Acid", "rank": 7, "status": "vacuous", "firmness": "firm", "note": "only species at/below r7 is Benzoic Acid (closed set (a)), LI 3.1.1 clause 6; T_LI feeds no rule on this path"}
+      },
+      "s0": {
+        "route": "styling",
+        "boundary_reason": null,
+        "lean_route": null,
+        "promise_class": "styling_result (C1: 'für bis zu 72h ultrastarke Styles', 'krasser Halt', name 'Sprüh Kleber Freeze Haarlack')",
+        "li_function": "no (hold only)",
+        "pair_rule": "3.4(ii)",
+        "deciding_rule": "4.1 pass (C1 pack promise; C3 dm directions valid for S0, not claim-gated; complete INCI); 4.2 styling_result; 3.1 skipped (lead is not shine/frizz); 3.2/3.3 not applicable; aqueous (Aqua r3 above T_S r6, lexicon 0.3) so 3.4; (ii) li_function no => styling directly (PH2-1). 4.5: not held (li_function no, never LI-claimable).",
+        "firmness": "firm"
+      },
+      "styling_subtype": {"value": "hairspray", "firmness": "firm", "basis": "5 rule 3: job fixes the finished style + dry_finish moment + aerosol; name 'Haarlack' does not decide"},
+      "properties": {
+        "result_mechanisms": {"value": [{"value": "fixative_film", "members": [{"inci": "Octylacrylamide/Acrylates/Butylaminoethyl Methacrylate Copolymer", "rank": 4}]}], "firmness": "firm", "basis": "FX-2 unconditional member above T_S"},
+        "hold_route": {"value": "present", "firmness": "firm"},
+        "weight": {"value": "light", "firmness": "firm", "basis": "no persistent family above T_S; propellant, alcohol, AMP are not families"},
+        "alcohol_note": {"value": "fires", "trigger": "Alcohol denat. r2", "firmness": "firm"},
+        "buildup_note": {"value": "not_fired", "firmness": "firm"},
+        "ingredient_flags": {"value": {"silicones": false, "oils": false, "fragrance": true, "salt": false, "propellant": true, "fixative_family": ["acrylate"]}, "firmness": "firm"},
+        "provides_heat_protection": {"value": false, "trace": "not_claimed", "firmness": "firm"},
+        "finish": {"value": "unbekannt", "firmness": "firm", "basis": "no finish word at any tier"},
+        "flexibility": {"value": "fest", "firmness": "firm", "basis": "C1 name 'Kleber' and 'Freeze' (6.9 rigidity words); 'ohne zu verkleben' (C3) is not a flex word"},
+        "primary_job": {"value": "hold_fix", "firmness": "firm", "gate": "pass (hold_route present)"},
+        "secondary_jobs": {"value": [], "firmness": "firm"},
+        "dropped_jobs": [],
+        "application_moment": {"primary": "dry_finish", "also": [], "firmness": "firm", "confidence": "moderate (C3 retailer directions)", "basis": "'Gleichmäßig aus 30 cm Entfernung auf das Haar sprühen ... Fixiert bis zur nächsten Haarwäsche' = over the finished style, no shaping"},
+        "target_zone": {"value": "all", "firmness": "firm", "basis": "'auf das Haar'; 'gezielt auf einzelne Strähnen möglich' is optional and names no zone"},
+        "heat_activated": {"value": "no", "firmness": "firm"},
+        "captured_claims": ["duration C1 'für bis zu 72h ultrastarke Styles'", "duration C3 'Fixiert bis zur nächsten Haarwäsche'", "health-adjacent C1 'sanft zur Kopfhaut' (recorded, never repeated)", "hair_type C1 'für alle Haartypen'", "free_from C1 'vegane Formel'; C3 ohne Silikone/Ammoniak/Sulfat", "hold trace C3 dm attribute 'sehr starker Halt' (third-party, A4)"],
+        "subtype_extras": {"format": "aerosol", "flexibility_view": "fest", "finish_view": "unbekannt"}
+      },
+      "chaarlie_hold_level": {
+        "value": 4,
+        "firmness": "soft",
+        "normalisation": "7.2 step 1 (C1 only; dm attribute is a C3 trace) -> step 2 cannot run (pack dot scale present but its filled-dot count is illegible) -> step 5 strength words: C1 'ultrastarke' (ultra stark) => 4 and C1 name 'Kleber' => 4; 'krasser Halt' is not in the 7.4 lexicon (unranked, ignored)",
+        "tier": "C1",
+        "confidence": "moderate",
+        "risk": "the illegible Henkel dot scale is a brand number that would beat the words (7.2 step 3); 5 of 5 => 4, 4 of 5 => 3. Capture should re-read the dots."
+      },
+      "d8b_flags": {"value": [], "firmness": "firm", "basis": "rule 1: hold_route present; rule 2: no same-brand identical-INCI sibling in the record"},
+      "neutral_fact_shown": {"value": false, "firmness": "firm", "basis": "level stated (7.6 needs level null)"},
+      "hinweise": [{"flag": "alcohol_note", "basis": "Alcohol denat. r2", "firmness": "firm"}],
+      "derived": {"thickness_fit": "fine · normal · coarse (light)", "hold_display": "laut Hersteller: Sehr starker Halt", "cautions": ["aerosol inhalation usage caution (charter 10; wording owned by decision doc)"]},
+      "review_triggers": [
+        {"id": "tail_marker_vacuous", "firmness": "soft", "note": "T_LI status is vacuous by the letter; the standard does not say whether the trigger fires when no border rule reads T_LI on the record's path"}
+      ],
+      "undetermined": [
+        {"field": "chaarlie_hold_level (exact)", "why": "a brand number exists on the C1 pack but is unreadable; the standard has no rule for a captured-but-illegible number (number beats word cannot run). Expected 4 from words, flagged soft."}
+      ],
+      "rule_gaps": [
+        "'Kleber' is in the 7.4 strength lexicon (level 4) AND the 6.9 rigidity list (fest), while 6.9/7.4 say flexibility words are never strength words and vice versa. Here 'ultrastarke' gives 4 and 'Freeze' gives fest independently, so no value moves, but the double listing contradicts the stated separation.",
+        "'krass/krasser Halt' (got2b house ladder word) is not in the word lexicon; 'ultra krass' resolved via 'ultra' in the cohort."
+      ],
+      "sections_used": ["standard 2.2 A3, A4", "standard 3.2", "lexicon 0.2, 0.3, FX-2, AL-1, VC-1", "standard 4.1, 4.2, 4.3 (3.1-3.4(ii)), 4.5", "standard 5", "standard 6.1-6.13", "standard 7.1-7.6", "property set 2.10, 4", "charter 10", "LI 3.1.1 clause 6"]
+    },
+    {
+      "unseen_slot": 4,
+      "sample_id": "guhl-locken-pflege-und-styling-3in1",
+      "product": "GUHL Locken Pflege & Styling 3in1 (Haarkur, Conditioner & Lockencreme), 200 ml, cream",
+      "intended_trap": "'Lockencreme' name with no fixative (D7 must not fire; Cantu/HASK pattern), a rinse-out-capable 3in1 conditioner base, a C3-only heat claim, and a 'Pflege & Styling' co-lead.",
+      "trap_caught": "Yes. Never routes to Styling: the co-equal 'Pflege & Styling' lead makes the class mixed; PH1-12 runs D7 first and D7 fails (no fixative-class polymer anywhere; Hydrolyzed Corn Starch is NF-1, not FX) => mixed_promise. Under any non-mixed reading the letter gives leave_in (real care blocks D6). The heat claim is C3 and never counts.",
+      "identity_status": {"value": "verified", "firmness": "firm", "basis": "dm, EAN 4072600715703, INCI products.dm.de"},
+      "tail_markers": {
+        "T_S": {"inci": "Benzoic Acid", "rank": 19, "status": "plausible", "firmness": "firm"},
+        "T_LI": {"inci": "Benzoic Acid", "rank": 19, "status": "vacuous", "firmness": "firm", "note": "tail r19-r24 = Benzoic Acid, Sodium Benzoate, Potassium Sorbate (a), Parfum, Linalyl Acetate, TAHN (b): closed set only (LI 3.1.1 clause 6). No route depends on it: D7 limb 1 fails on the whole list."}
+      },
+      "s0": {
+        "route": "provisional_boundary",
+        "boundary_reason": "mixed_promise",
+        "lean_route": null,
+        "promise_class": "mixed (C1 pack: 'LOCKEN PFLEGE & STYLING', '3in1 LOCKENCREME, KUR & SPÜLUNG', 'Tiefenwirksame Pflege & natürlich langanhaltende Definition' = care and definition as co-equal jobs)",
+        "li_function": "yes (care, curl definition)",
+        "pair_rule": "D7 pre-check under PH1-12 (fails), then 4.2 mixed stop",
+        "deciding_rule": "4.1 pass (C1 promise; directions captured in dm text; complete INCI) -> 4.2 mixed -> PH1-12: D7 limb 1 fails (no FX-1..FX-4 member) -> provisional_boundary (mixed_promise). Stays in its current category.",
+        "d7": {"fixative_above_T_LI": false, "substantive_conditioning": true, "sold_as_curl_cream": true, "fires": false},
+        "firmness": "soft",
+        "alternative_readings": [
+          "class styling_result (definition lead, 'Pflege' read as attribute) or care -> 3.4 aqueous -> (i) D7 fails -> (iii) LI G0: HOLD none, aqueous leave-on use offered, conditioning primary => in_category (LI dual_use_directions note: rinse uses offered beside leave-on) -> D6 limb 2 fails (LGN pair Cetearyl Alcohol r2 + Behentrimonium Chloride r3, Coconut r4 above T_LI = real care) => leave_in",
+          "if the packet builder judges the '3 uses' directions a paraphrase -> provisional_boundary (evidence_gate)"
+        ],
+        "expected_invariant": "route is never styling (firm)"
+      },
+      "styling_subtype": {"value": null, "firmness": "firm"},
+      "properties": "informational only (4.7 mixed_promise: as leave_in plus both readings)",
+      "informational_properties": {
+        "non_scoring": true,
+        "result_mechanisms": "natural_film [Hydrolyzed Corn Starch r9] + wax_lipid [Cocos Nucifera Oil r4, Triheptanoin r6, Linum Usitatissimum Seed Oil r12, Olea Europaea Fruit Oil r13, Prunus Amygdalus Dulcis Oil r14, Borago Officinalis Seed Oil r15]",
+        "hold_route": "absent",
+        "weight": "rich (LGN pair r2+r3; families a, c; Coconut/Olive rich band)",
+        "buildup_note": "fires (limb 2)",
+        "alcohol_note": "does_not_fire",
+        "ingredient_flags": {"silicones": false, "oils": true, "fragrance": true, "salt": false, "propellant": false, "fixative_family": ["natural_film"]},
+        "provides_heat_protection": "false (heat claim C3 dm text only => not_claimed + claim_authority_gap)",
+        "conditioning_co_load": "rich"
+      },
+      "chaarlie_hold_level": {"value": "not_emitted", "firmness": "firm", "note": "no hold claim at any tier (none_stated)"},
+      "d8b_flags": [],
+      "neutral_fact_shown": false,
+      "review_triggers": [
+        {"id": "s0_mixed_promise", "firmness": "soft"},
+        {"id": "tail_marker_vacuous", "firmness": "soft"},
+        {"id": "claim_authority_gap", "firmness": "soft", "note": "heat claim exists only at C3"},
+        {"id": "dual_use_directions (LI 2.4 rule 2.2; not in Styling 8 list)", "firmness": "soft"}
+      ],
+      "undetermined": [],
+      "rule_gaps": [
+        "The Styling standard reuses LI 2.4 directions capture but its S0 has no explicit step for rinse-out or dual-use (rinse + leave-on) directions; charter 4 excludes rinse-out products without saying where the check runs. Here it does not matter (the route is non-Styling either way)."
+      ],
+      "sections_used": ["standard 2.1", "standard 3.2", "standard 4.1, 4.2 (mixed, PH1-12), 4.3 3.4(i)/(iii)/D6", "standard 4.7", "standard 9 SFS-16", "lexicon NF-1, FA-1, CA-1, WL-6", "LI 2.3, 2.4 rule 2.2, 3.1.1 clause 6, 7.2", "charter 4, 5"]
+    },
+    {
+      "unseen_slot": 5,
+      "sample_id": "balea-professional-haarserum-glow-und-shine",
+      "product": "Balea PROFESSIONAL Haarserum Glow & Shine (Ultra Gloss Serum), 125 ml",
+      "intended_trap": "D2 name rule: a shine-led product sold as 'Serum' (subtype_candidate shine_finish) that is a water-based cationic/fatty-alcohol emulsion, so the D2 'water-based serum that is really a leave-in conditioner' exception applies.",
+      "trap_caught": "Yes, it never reaches Styling, but the destination depends on an undefined test: with the exception applied, 3.4 / LI G0 => leave_in; without it, D2 => oil.",
+      "identity_status": {"value": "verified", "firmness": "firm", "basis": "dm house brand, EAN 4070765006506, INCI products.dm.de"},
+      "tail_markers": {
+        "T_S": {"inci": "Parfum", "rank": 10, "status": "plausible", "firmness": "firm", "note": "Glycolic Acid r8 is PH-1, Tocopherol r9 is NC-1"},
+        "T_LI": {"inci": "Sodium Benzoate", "rank": 22, "status": "plausible", "firmness": "firm", "note": "COND/WT species (Cetearyl Alcohol r3, Behentrimonium Chloride r5, Ricinus r6) all above; tail holds Sodium Chloride and pigments, so not vacuous"}
+      },
+      "s0": {
+        "route": "leave_in",
+        "boundary_reason": null,
+        "lean_route": null,
+        "promise_class": "styling_result (C1 lead 'Für ein strahlendes Finish', 'Ultra Gloss Serum'; 'ideal auch zur intensiven Spitzenpflege' is a secondary 'auch' clause)",
+        "li_function": "yes (C1 pack front 'ANTI-FRIZZ-EFFEKT' and 'Spitzenpflege') - soft",
+        "pair_rule": "3.1 (in scope, sold as 'Serum') -> water-based-serum exception -> 3.4(iii)",
+        "deciding_rule": "3.1: shine lead => D2 in scope; confirmed name 'Serum' (C1 + house-brand C2) => oil, EXCEPT a water-based 'Serum' that is really a leave-in conditioner => 3.4 (LI G0 decides). Aqua r1; LGN pair Cetearyl Alcohol r3 + Behentrimonium Chloride r5, castor oil r6, quats, 'Nicht ausspülen' => judged a leave-in conditioner. 3.4(i) not a curl cream; (ii) li_function yes => full check; (iii) LI G0: no fixative (HOLD none), aqueous, leave-on, care/anti-frizz co-primary => in_category -> D6 limb 2 fails (real care above T_LI) => leave_in.",
+        "firmness": "soft",
+        "alternative_readings": [
+          "oil - D2 name rule applied without the exception (the standard gives no test for 'really a leave-in conditioner')",
+          "styling shine_finish - only if a lane reads li_function no and lets 3.4(ii) fire after the 3.1 exception (contradicts 3.1's 'LI G0 decides'); considered incorrect"
+        ],
+        "expected_invariant": "route is not styling (soft-firm)"
+      },
+      "styling_subtype": {"value": null, "firmness": "soft"},
+      "properties": "informational only (4.7 leave_in)",
+      "informational_properties": {
+        "non_scoring": true,
+        "result_mechanisms": "wax_lipid [Ricinus Communis Seed Oil r6] (Undecane r4 is VC-2; Cetearyl Alcohol and Behentrimonium Chloride are not RM members)",
+        "hold_route": "absent",
+        "weight": "rich (LGN pair Cetearyl Alcohol r3 + Behentrimonium Chloride r5; families a, c; castor rich band)",
+        "buildup_note": "fires (limb 2); limb 1 candidates Quaternium-87 r13 and Silicone Quaternium-22 r15 sit below T_S",
+        "alcohol_note": "does_not_fire (Isopropyl Alcohol r16)",
+        "ingredient_flags": {"silicones": true, "oils": true, "fragrance": true, "salt": true, "propellant": false, "fixative_family": []},
+        "provides_heat_protection": "false (not_claimed)"
+      },
+      "chaarlie_hold_level": {"value": "not_emitted", "firmness": "firm"},
+      "d8b_flags": [],
+      "neutral_fact_shown": false,
+      "review_triggers": [
+        {"id": "house_brand_ownership", "firmness": "soft", "note": "house-brand C2 dm text"}
+      ],
+      "undetermined": [
+        {"field": "route (leave_in vs oil)", "why": "D2 / standard 4.3 step 3.1 exception 'a water-based Serum that is really a leave-in conditioner' has no operational test (no formula criterion, no trigger id). Pre-registered expectation leave_in on the conditioner architecture; oil is the literal alternative."}
+      ],
+      "rule_gaps": [
+        "Undefined 'really a leave-in conditioner' test in 3.1; no review trigger records that judgment.",
+        "Order conflict: 3.1's exception says 'go to 3.4 (LI G0 decides)', but 3.4(ii) sends a shine-only (li_function no) promise to Styling with no LI check (PH2-1). For a shine-led water-based serum the two rules point different ways unless li_function is yes."
+      ],
+      "sections_used": ["standard 2.2 A4", "standard 3.2", "standard 4.2, 4.3 3.1, 3.4(ii)/(iii), D6", "standard 4.4", "standard 4.7", "ledger D2, PH2-1", "charter 4, 5 Oil row", "LI 2.3 (serum trap), 7.2", "lexicon WL-6, VC-2, FA-1, CA-1"]
+    },
+    {
+      "unseen_slot": 6,
+      "sample_id": "batiste-trockenshampoo-all-in-one",
+      "product": "Batiste Trockenshampoo All in One, 200 ml, aerosol",
+      "intended_trap": "Refresh vs refresher: a dry shampoo whose pack states volume/texture as strongly as freshness (subtype_candidate refresher).",
+      "trap_caught": "Yes. Refresh in the Dry Shampoo sense (freshness, 'Entfernt sanft Fett') co-leading with volume/texture => tie precedence assigns class refresh => 3.2 dry_shampoo. Curl revival is the only refresher sense, so the refresher subtype is never reached.",
+      "identity_status": {"value": "verified", "firmness": "firm", "basis": "dm, EAN 5010724006467, INCI products.dm.de"},
+      "tail_markers": {
+        "T_S": {"inci": "Parfum", "rank": 8, "status": "plausible", "firmness": "firm"},
+        "T_LI": {"inci": null, "rank": null, "status": "none_visible", "firmness": "firm", "note": "no preservative declared; unused on this path"}
+      },
+      "s0": {
+        "route": "dry_shampoo",
+        "boundary_reason": null,
+        "lean_route": null,
+        "promise_class": "refresh (tie precedence; promise_tie: refresh_plus_volume_texture)",
+        "li_function": "no",
+        "pair_rule": "3.2",
+        "deciding_rule": "4.1 pass (C1 pack promise; C3 directions; complete INCI) -> 4.2 tie precedence: C1 'Sauber aussehendes Haar; Lang anhaltende Frische; Entfernt sanft Fett' + 'Zusätzlicher Volumenboost; Textur & Griffigkeit' => refresh -> 3.2 => dry_shampoo. Directions ('in Richtung Ansatz sprühen ... Kopfhaut leicht massieren') confirm oil-absorption positioning. The formula (starch, silica) does not decide.",
+        "firmness": "firm",
+        "alternative_readings": ["a lane may read refresh as the sole lead (name 'Trockenshampoo', 'zusätzlich' volume) and skip the tie note; same route"]
+      },
+      "styling_subtype": {"value": null, "firmness": "firm"},
+      "properties": "informational only (4.7 dry_shampoo)",
+      "informational_properties": {
+        "non_scoring": true,
+        "aqueous": false,
+        "result_mechanisms": "particulate [Oryza Sativa Starch r4 (PT-2), Tapioca Starch r6 (PT-2), Silica r7 (PT-1)]",
+        "hold_route": "absent",
+        "weight": "light (cationics r11/r12 below T_S)",
+        "alcohol_note": "does_not_fire (Alcohol Denat. r5; first 3 are propellants)",
+        "ingredient_flags": {"silicones": false, "oils": false, "fragrance": true, "salt": false, "propellant": true, "fixative_family": []}
+      },
+      "chaarlie_hold_level": {"value": "not_emitted", "firmness": "firm"},
+      "d8b_flags": [],
+      "neutral_fact_shown": false,
+      "review_triggers": [],
+      "undetermined": [],
+      "rule_gaps": [],
+      "sections_used": ["standard 3.2", "standard 4.1, 4.2 (tie precedence), 4.3 3.2", "standard 4.7", "standard 11.10 (negative-control pattern)", "charter 5 Dry Shampoo row", "lexicon PT-1, PT-2, AL-1"]
+    },
+    {
+      "unseen_slot": 7,
+      "sample_id": "syoss-hitzeschutzspray-keratin-heat",
+      "product": "syoss Hitzeschutzspray Keratin Heat, 200 ml, pump spray",
+      "intended_trap": "Protection-first spray with a film former and retailer 'Halt' wording (subtype_candidate blowdry_lotion); Schutzengel pattern.",
+      "trap_caught": "Yes. C1 confirmed name 'HITZESCHUTZ-SPRAY' => class heat_protection => 3.3 heat_protectant, regardless of Polyurethane-48 or the C3 'Halt und Geschmeidigkeit' text. '2x Frizz-Kontrolle' is a secondary bullet, not a co-equal job.",
+      "identity_status": {"value": "verified", "firmness": "firm", "basis": "dm, EAN 4015100860146, INCI products.dm.de"},
+      "tail_markers": {
+        "T_S": {"inci": "Sodium Benzoate", "rank": 8, "status": "plausible", "firmness": "firm"},
+        "T_LI": {"inci": "Sodium Benzoate", "rank": 8, "status": "plausible", "firmness": "soft", "note": "unused on this path"}
+      },
+      "s0": {
+        "route": "heat_protectant",
+        "boundary_reason": null,
+        "lean_route": null,
+        "promise_class": "heat_protection",
+        "li_function": "yes (heat-styling support, anti-frizz) - irrelevant on this path",
+        "pair_rule": "3.3",
+        "deciding_rule": "4.1 pass (C1 pack; C3 directions; complete INCI) -> 4.2 heat_protection -> 3.1 skipped (not a shine/frizz lead) -> 3.2 no -> 3.3 => heat_protectant (protection-first even with a film former).",
+        "firmness": "firm"
+      },
+      "styling_subtype": {"value": null, "firmness": "firm"},
+      "properties": "informational only (4.7 heat_protectant)",
+      "informational_properties": {
+        "non_scoring": true,
+        "result_mechanisms": "humectant_only [Panthenol r4, Propylene Glycol r6] (Hydrolyzed Keratin r3 and Niacinamide r5 are NC-1)",
+        "hold_route": "ambiguous (Polyurethane-48 r7 = FX-U, the only candidate; unsettled_film_former)",
+        "weight": "light",
+        "alcohol_note": "fires (Alcohol denat. r2)",
+        "heat_L9_check": "no HP-1 member (Hydrolyzed Keratin is not HP-1; only plain Hydrolyzed Wheat Protein is)",
+        "ingredient_flags": {"silicones": true, "oils": false, "fragrance": true, "salt": false, "propellant": false, "fixative_family": []}
+      },
+      "chaarlie_hold_level": {"value": "not_emitted", "firmness": "firm", "note": "'Balance zwischen Halt und Geschmeidigkeit' is C3 dm text and unquantified"},
+      "d8b_flags": [],
+      "neutral_fact_shown": false,
+      "review_triggers": [],
+      "undetermined": [],
+      "rule_gaps": [],
+      "sections_used": ["standard 3.2", "standard 4.1, 4.2, 4.3 3.3", "standard 4.7", "standard 9 SFS-16", "charter 2, 4, 5 Heat Protectant row", "lexicon FX-3, FX-U, HP-1, NC-1"]
+    },
+    {
+      "unseen_slot": 8,
+      "sample_id": "taft-styling-paste-forming-halt-5plus",
+      "product": "Schwarzkopf taft Styling Paste Forming 5+, 75 ml, paste",
+      "intended_trap": "Control (boundary_probe false), molding. Embedded traps: matte finish and 'starker Halt bis zu 24h' only at C3; weak men's positioning (C5 secondhand); a C1 '5+' printed beside a 4-dot display; the second weight family sits at T_S - 1.",
+      "trap_caught": "Yes. C3 'Mit mattem Finish' does not set finish (stays unbekannt); C3 words and the dm 'Haltegrad: 5' do not assign; the C1 '5+' assigns via the Henkel x/5 row; men's positioning is captured only.",
+      "identity_status": {"value": "verified", "firmness": "firm", "basis": "dm, EAN 4015100810820, INCI products.dm.de"},
+      "tail_markers": {
+        "T_S": {"inci": "Parfum", "rank": 12, "status": "plausible", "firmness": "firm"},
+        "T_LI": {"inci": "Phenoxyethanol", "rank": 13, "status": "plausible", "firmness": "firm", "note": "Panthenol r16 in the tail => not vacuous; unused on this path"}
+      },
+      "s0": {
+        "route": "styling",
+        "boundary_reason": null,
+        "lean_route": null,
+        "promise_class": "styling_result (C1: 'FORMING STYLING PASTE', 'Verformbare Styles', 5+)",
+        "li_function": "no (shaping/molding, hold)",
+        "pair_rule": "3.4(ii)",
+        "deciding_rule": "4.1 pass (C1 pack; C3 directions; complete INCI) -> styling_result -> 3.1-3.3 n/a -> aqueous (Aqua r1) -> 3.4(ii) => styling directly (PH2-1). Not held.",
+        "firmness": "firm"
+      },
+      "styling_subtype": {"value": "molding", "firmness": "firm", "basis": "paste, restylable shape, dry_restyle (5 table, D1)"},
+      "properties": {
+        "result_mechanisms": {"value": [{"value": "fixative_film", "members": [{"inci": "VP/VA Copolymer", "rank": 5}]}, {"value": "wax_lipid", "members": [{"inci": "Rhus Verniciflua Peel Cera", "rank": 2, "structuring": true}, {"inci": "Stearic Acid", "rank": 3, "structuring": true}, {"inci": "Palmitic Acid", "rank": 4, "structuring": true}, {"inci": "Cera Carnauba", "rank": 6, "structuring": true}, {"inci": "Cetyl Ethylhexanoate", "rank": 11, "structuring": false}]}], "firmness": "firm", "basis": "FX-1, WL-1, WL-8, WL-7 above T_S r12; Steareth-21/-2 and PPG-5-Ceteth-20 are EM-1; Propylene Glycol HU-1 not credited (other mechanisms present)"},
+        "hold_route": {"value": "present", "firmness": "firm"},
+        "weight": {"value": "rich", "confidence": "moderate", "firmness": "firm", "basis": "families (b) waxes WL-1 r2/r6 (rich members, PH2-12) and (a) ester Cetyl Ethylhexanoate r11 => >=2 families with a rich member. The ester sits at T_S - 1 and is load-bearing for 'rich' (without it: one family => medium) => counts normally, confidence capped at moderate (3.5). WL-8 fatty acids are not a WT family."},
+        "alcohol_note": {"value": "does_not_fire", "firmness": "firm", "basis": "first 3: Aqua, Rhus Verniciflua Peel Cera, Stearic Acid; Benzyl Alcohol never counts"},
+        "buildup_note": {"value": "fired", "basis": "limb 2 (weight rich)", "firmness": "firm"},
+        "ingredient_flags": {"value": {"silicones": false, "oils": false, "fragrance": true, "salt": false, "propellant": false, "fixative_family": ["pvp_vp"]}, "firmness": "firm"},
+        "provides_heat_protection": {"value": false, "trace": "not_claimed", "firmness": "firm"},
+        "finish": {"value": "unbekannt", "firmness": "firm", "basis": "'Mit mattem Finish' is C3 dm text and Rossmann 'Glanzstufe 1' is a C3/C4 trace; no C1/C2 finish word"},
+        "flexibility": {"value": "beweglich", "firmness": "soft", "basis": "C1 'Verformbare Styles' read as the 6.9 word 'formbar'; alternative unbekannt (verformbar is not literally listed). C3 'neu stylbar' is not claim evidence."},
+        "primary_job": {"value": "hold_fix", "firmness": "soft", "gate": "pass (hold_route present; structuring wax)", "basis": "C1 lead is forming/shaping with a hold number; the job list has no shaping key (cohort precedent: Balea MEN Pomade 'Formt & festigt' => hold_fix)"},
+        "secondary_jobs": {"value": [], "firmness": "soft", "basis": "'texturierte Haarstyles' is C3 only"},
+        "dropped_jobs": [],
+        "application_moment": {"primary": "dry_restyle", "also": ["damp_before_drying"], "firmness": "firm", "confidence": "moderate (C3 retailer directions)", "basis": "'ins trockene oder feuchte Haar einarbeiten, nach Belieben stylen; einzelne Strähnen mit Fingerspitzen definieren'"},
+        "target_zone": {"value": "all", "firmness": "firm"},
+        "heat_activated": {"value": "no", "firmness": "firm"},
+        "captured_claims": ["hold C1 '5+' (4-dot display)", "hold trace C3 dm 'Haltegrad: 5', 'sehr starker Halt' attribute; Rossmann 'Haltegrad 5+'", "duration C3 'Bis zu 24h starker Halt'", "finish trace C3 'Mit mattem Finish', Rossmann 'Glanzstufe 1'", "humidity C3 'perfekt für jede Wetterlage'", "health-adjacent C1 'Sanft zu Haar & Kopfhaut' (never repeated)", "positioning C5 secondhand: Taft Men range (Henkel PR, not extracted)", "free_from C3/C4 vegan/PETA"],
+        "subtype_extras": {"form_label": "paste", "base": "water_based"}
+      },
+      "chaarlie_hold_level": {
+        "value": 4,
+        "firmness": "soft",
+        "normalisation": "7.2 step 1 (C1 pack '5+'; dm/Rossmann numbers are traces) -> step 2: Henkel Haltegrad x/5 row (Taft; cohort precedent Taft Gel Wax Haltegrad 2 => 1, Syoss Max Hold Wax 5 => 4) '5 / 5+' => 4",
+        "tier": "C1",
+        "confidence": "high (moderate if the display is questioned)",
+        "alternative": "null - if a lane reads the 4-dot display as an unknown scale (7.3: no published maximum => words only) the C1 pack has no strength word ('Verformbare Styles') => null ('Halt: keine Herstellerangabe') and the neutral fact would then show 'Enthält Stylingpolymere (z. B. VP/VA Copolymer)'"
+      },
+      "d8b_flags": {"value": [], "firmness": "firm", "basis": "hold-mechanism set present (fixative_film, structuring waxes)"},
+      "neutral_fact_shown": {"value": false, "firmness": "soft", "basis": "level stated; flips to true only under the null alternative"},
+      "hinweise": [{"flag": "buildup", "basis": "weight rich (limb 2)", "firmness": "firm"}],
+      "derived": {"thickness_fit": "coarse; normal lower; fine last (rich)", "length_fit": "very short · short", "hold_display": "laut Hersteller: Sehr starker Halt", "cautions": ["medically adjacent pomade caution: molding + weight rich (property set 4) 'Nicht direkt am Haaransatz oder auf der Stirn auftragen.'"]},
+      "review_triggers": [],
+      "undetermined": [],
+      "rule_gaps": [
+        "Henkel x/5 row lists formats 'sprays, mousses, Föhnspray'; molding is covered only by cohort precedent, and a '5+' printed beside a 4-dot display is not addressed.",
+        "Flexibility lexicon has 'formbar' but not 'verformbar'; closed-list vs stem reading is unstated."
+      ],
+      "sections_used": ["standard 2.2 A3/A4", "standard 3.2, 3.5", "standard 4.1, 4.2, 4.3 3.4(ii)", "standard 5", "standard 6.1-6.13, 6.15", "standard 7.1-7.6", "lexicon 0.2, FX-1, WL-1, WL-7, WL-8, EM-1, AL-X", "ledger PH2-8, PH2-12", "property set 2.5, 4, 5.3", "build-calibration-r2.js TABLES (Henkel precedent)"]
+    }
+  ],
+  "cross_record_findings": {
+    "undetermined_values": [
+      "slot 5 route: leave_in (expected) vs oil - the D2 'water-based Serum that is really a leave-in conditioner' exception has no test",
+      "slot 3 chaarlie_hold_level: 4 from words; an illegible C1 dot scale could override (number beats word)",
+      "slot 2 (counterfactual only, non-scoring): li_function, the T15/COND thin test with T_LI none_visible, and subtype gel vs shine_finish"
+    ],
+    "rule_gaps": [
+      "Kleber listed both as strength (7.4, level 4) and rigidity (6.9, fest), contradicting 'flexibility words are never strength words'",
+      "No rule for a captured-but-illegible brand number",
+      "3.1 water-based-serum exception: no operational criterion, no trigger id, and an order conflict with 3.4(ii) for shine-only promises",
+      "li_function has no tie rule for a lead that fixes frizz",
+      "FX-2c corroboration: associative-thickener acrylate copolymers fall into FX-U, so they do not block corroboration",
+      "Unclear whether tail_marker_vacuous fires when T_LI is read but no border rule uses it (slots 3, 4)",
+      "No explicit S0 step for rinse-out / dual-use directions in the Styling standard (charter 4 exclusion)",
+      "Henkel x/5 table format scope (molding) and 'verformbar' not in the flex lexicon"
+    ],
+    "coverage_findings": [
+      "Only 2 of 8 slots route to Styling (3, 8), both controls. Boundary traps exercised and caught: 4, 5, 6, 7 (all routed out of Styling, as intended).",
+      "Two of the three ruled-but-uncalibrated values named in standard 14 stay untested: salt-free salt_spray (slot 1 blocked at the evidence gate, C3 claims only) and target_zone surface/hairline (slot 2 blocked, no verbatim directions). The C1 fest value is tested (slot 3).",
+      "Capture-file inci_item_count is wrong on slots 3, 7, 8 (7/22/22 actual vs 8/23/24)."
+    ]
+  }
+}

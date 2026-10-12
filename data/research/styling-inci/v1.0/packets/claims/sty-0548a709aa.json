@@ -1,0 +1,64 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-0548a709aa",
+  "brand": "LANGHAARMÄDCHEN",
+  "format": "spray_gel",
+  "product_type_word": "lockenspray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Verleiht Halt und Sprungkraft für gestylte & natürliche Locken",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "hold",
+      "text": "Halt & Sprungkraft",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": "2026-10-11",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "langanhaltenden Halt selbst bei hoher Luftfeuchtigkeit (natürliches Styling-Polymer)"
+    },
+    {
+      "type": "flexibility",
+      "text": "Sprungkraft",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "duration",
+      "text": "langanhaltend (keine Zahl)",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "humidity",
+      "text": "langanhaltenden Halt selbst bei hoher Luftfeuchtigkeit",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "heat_protection",
+      "text": "Hitzeschutz bis 220 C",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": "2026-10-11"
+    }
+  ]
+}

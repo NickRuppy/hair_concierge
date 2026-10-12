@@ -1,0 +1,65 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-35bedb40ca",
+  "brand": "Balea",
+  "format": "aerosol",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Revitalisierendes Lockenspray",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Wirkt einem Frizz-Effekt entgegen",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Für bis zu 24 Stunden definierte Locken",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Ideal zum Auffrischen von Naturlocken & dauergewelltem Haar",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "hold",
+      "text": "null",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "Für bis zu 24 Stunden definierte Locken (Dauer-, kein Halt-Claim)",
+      "absence_statement": true
+    },
+    {
+      "type": "other",
+      "text": "Für definierte Locken mit Sprungkraft",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    }
+  ]
+}

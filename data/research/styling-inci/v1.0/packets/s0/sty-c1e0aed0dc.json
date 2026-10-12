@@ -1,0 +1,73 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-c1e0aed0dc",
+  "product": {
+    "confirmed_name": "Haarspray Max Hold",
+    "brand": "syoss",
+    "format": "aerosol"
+  },
+  "inci": {
+    "inci_item_count": 9,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Dimethyl Ether"
+      },
+      {
+        "rank": 2,
+        "inci": "Alcohol denat."
+      },
+      {
+        "rank": 3,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 4,
+        "inci": "Octylacrylamide/Acrylates/Butylaminoethyl Methacrylate Copolymer"
+      },
+      {
+        "rank": 5,
+        "inci": "Aminomethyl Propanol"
+      },
+      {
+        "rank": 6,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 7,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 8,
+        "inci": "Niacinamide"
+      },
+      {
+        "rank": 9,
+        "inci": "Benzoic Acid"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Auf trockenem Haar verwenden. Als Finish: Aus 30 cm Abstand aufsprühen. Zum Stylen einzelner Haarpartien: Haarsträhne vom Ansatz an besprühen und in Form bringen. Sollte die Düse verklebt sein, bitte mit warmem Wasser reinigen.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "[CLAIM] intensiver, [CLAIM] und Kontrolle für [CLAIM] Frisuren",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-09"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

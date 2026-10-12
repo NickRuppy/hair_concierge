@@ -1,0 +1,41 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-938c97b6f6",
+  "brand": "Schwarzkopf taft",
+  "format": "aerosol",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Textur und Pflege für mühelose Undone Looks und natürlich aussehende Wellen",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "hold",
+      "text": "null",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-11",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "kein Halt-Wort und keine Zahl auf der Packung; nur 'Fülle und Volumen', 'gestärktes Haar'",
+      "absence_statement": true
+    },
+    {
+      "type": "humidity",
+      "text": "Hilft die Frisur vor Luftfeuchtigkeit zu schützen",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-11"
+    }
+  ]
+}

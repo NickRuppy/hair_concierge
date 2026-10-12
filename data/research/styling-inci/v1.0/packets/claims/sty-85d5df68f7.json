@@ -1,0 +1,80 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-85d5df68f7",
+  "brand": "GUHL",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Natürliches Volumen und 48h Halt zauberst du ganz leicht",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "hold",
+      "text": "48h Halt",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "48h Halt (duration only, no strength grade)"
+    },
+    {
+      "type": "flexibility",
+      "text": "bleibt dabei flexibel",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "natürliches Haargefühl",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "ohne zu beschweren",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "finish",
+      "text": "lebendiges Volumen",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "duration",
+      "text": "Verleiht 48h Halt und lebendiges Volumen",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "heat_protection",
+      "text": "hinterlässt einen Hitzeschutz bis 230°",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-d02784ab66",
+  "brand": "Balea PROFESSIONAL",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Definierendes Spray für Locken & Wellen",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Für bis zu 24 Stunden definierte Locken",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "optimal zum Auffrischen von Naturlocken und dauergewelltem Haar",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "hold",
+      "text": "null",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "bis zu 24 Stunden definierte Locken (Definition, kein Halt-Wort)",
+      "absence_statement": true
+    },
+    {
+      "type": "finish",
+      "text": "natürlich-lebendig: 'natürlich-lebendige Locken'; Wirkung 'Glanz'",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "Mit Pro-Sprungkraft-Formel für Elastizität",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-e756c072ce",
+  "brand": "ALCINA",
+  "format": "foam",
+  "product_type_word": "mousse",
+  "scale_info": {
+    "number": 5,
+    "scale_as_written": "Hold-Faktor 5 (Skala 1-10; Bild-Alt-Text: Haltstärke 5 von 10)",
+    "scale_max": 10,
+    "scale_max_stated": true,
+    "tier": "C2"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Starker, flexibler Halt, ohne zu verkleben",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "alcina.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "hold",
+      "text": "Hold-Faktor 5",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "alcina.com",
+      "date": "2026-10-09",
+      "number": 5,
+      "scale_as_written": "Hold-Faktor 5 (Skala 1-10; Bild-Alt-Text: Haltstärke 5 von 10)",
+      "scale_max": 10,
+      "scale_max_stated": true,
+      "words": "starker, flexibler Halt"
+    },
+    {
+      "type": "flexibility",
+      "text": "flexibler Halt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "alcina.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "finish",
+      "text": "intensiven Glanz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "alcina.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "duration",
+      "text": "langanhaltendem Volumen",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "alcina.com",
+      "date": "2026-10-09"
+    }
+  ]
+}

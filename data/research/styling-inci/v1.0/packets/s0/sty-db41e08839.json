@@ -1,0 +1,117 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-1",
+  "sample_id": "sty-db41e08839",
+  "product": {
+    "confirmed_name": "Styling Mattpaste Strand Matte",
+    "brand": "got2b (Schwarzkopf)",
+    "format": "paste"
+  },
+  "inci": {
+    "inci_item_count": 20,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 2,
+        "inci": "Cera Alba (Beeswax, Cire d'Abeille)"
+      },
+      {
+        "rank": 3,
+        "inci": "Cera Carnauba (Copernicia Cerifera (Carnauba) Wax, Cire de Carnauba)"
+      },
+      {
+        "rank": 4,
+        "inci": "Isopropyl Myristate"
+      },
+      {
+        "rank": 5,
+        "inci": "Glyceryl Stearate"
+      },
+      {
+        "rank": 6,
+        "inci": "Petrolatum"
+      },
+      {
+        "rank": 7,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 8,
+        "inci": "Stearic Acid"
+      },
+      {
+        "rank": 9,
+        "inci": "Palmitic Acid"
+      },
+      {
+        "rank": 10,
+        "inci": "PEG-8 Beeswax"
+      },
+      {
+        "rank": 11,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 12,
+        "inci": "Aminomethyl Propanol"
+      },
+      {
+        "rank": 13,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 14,
+        "inci": "Hydroxyethylcellulose"
+      },
+      {
+        "rank": 15,
+        "inci": "Benzyl Alcohol"
+      },
+      {
+        "rank": 16,
+        "inci": "Mica"
+      },
+      {
+        "rank": 17,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 18,
+        "inci": "CI 77499 (Iron Oxides)"
+      },
+      {
+        "rank": 19,
+        "inci": "CI 77891 (Titanium Dioxide)"
+      },
+      {
+        "rank": 20,
+        "inci": "CI 15985 (Yellow 6)"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Auf trockenem oder feuchtem Haar. In den Handflächen verteilen und nach Belieben einzelne Partien zerzausen, zwirbeln oder plätten.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "kreiert [CLAIM] Surfer-Styles mit mittlerem [CLAIM]",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-09"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

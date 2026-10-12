@@ -1,0 +1,856 @@
+[
+  {
+    "sample_id": "bumble-and-bumble-brilliantine",
+    "old_tier": "C3",
+    "best_tier": "C3",
+    "sources": [
+      {
+        "tier": "C3",
+        "url": "https://www.douglas.de/de/p/3000067264",
+        "retrieved": "2026-10-11",
+        "what": "Douglas.de product page (German text, INCI, directions); 50 ml mini"
+      },
+      {
+        "tier": "C5",
+        "url": "https://www.bumbleandbumble.com/product/19057/178/style/cremes/brilliantine-styling-cream-for-separation-shine",
+        "retrieved": "2026-10-11",
+        "what": "US manufacturer page; INCI identical to Douglas DE (formula-identity check passed, so C5 exception satisfied, but German wording is only on the retailer page)"
+      }
+    ],
+    "primary_promise_raw": "Definition & Glanz für lebendige Styles",
+    "hold": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "kein Haltversprechen des Herstellers; Douglas-Filterchip 'Haltgrad leicht' = reine C3-Spur",
+      "tier": "C3"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "fantastischen Glanz",
+      "number": null,
+      "tier": "C3"
+    },
+    "directions_summary": "Kleine Menge, bei Bedarf aufbauen; ins feuchte oder trockene Haar; Finger für verwuschelten Look, Kamm für glatte Looks.",
+    "directions_tier": "C3",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": "Styles, die lange begeistern (keine Zahl)",
+    "conflicts_with_round1": null,
+    "inci_changed": false,
+    "inci_current": "Water\\Aqua\\Eau, Glycerin, Caprylic/Capric Triglyceride, Ricinus Communis (Castor) Seed Oil, Oleyl Alcohol, Polybutene, Cetyl Acetate, Cetyl Alcohol, Rosmarinus Officinalis (Rosemary) Leaf Extract, Salvia Officinalis (Sage) Leaf Extract, Ethylhexylglycerin, PEG-40 Castor Oil, Carbomer, Acetylated Lanolin Alcohol, Arachidyl Alcohol, Myristyl Alcohol, Aminomethyl Propanol, Tetrasodium EDTA, Benzophenone-4, Fragrance (Parfum), Linalool, Citronellol, Hydroxycitronellal, Benzyl Benzoate, Hexyl Cinnamal, Geraniol, Sodium Hydroxide, Phenoxyethanol",
+    "inci_source": "Douglas.de (C3) live 2026-10-11; identical to bumbleandbumble.com US page",
+    "notes": "No German-market manufacturer site exists (bumbleandbumble.com is US only; /de paths 404/403). No pack image found. Best attainable: C3 with a corroborating, formula-identical US manufacturer page (brand self-description: 'oil-based styling cream', finisher, no hold claim). Douglas shows only the 50 ml mini (26,75 EUR)."
+  },
+  {
+    "sample_id": "color-wow-dream-coat-supernatural-spray",
+    "old_tier": "C3",
+    "best_tier": "C3",
+    "sources": [
+      {
+        "tier": "C3",
+        "url": "https://www.douglas.de/de/p/3001054710",
+        "retrieved": "2026-10-11",
+        "what": "Douglas.de product page (German claims, directions, INCI)"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-color-wow-dream-coat-supernatural-spray/p/5060150185274",
+        "retrieved": "2026-10-11",
+        "what": "Rossmann listing exists (EAN 5060150185274), page not readable (bot wall); seen only in search index"
+      }
+    ],
+    "primary_promise_raw": "schenkt Ihrem Haar eine seidige, glatte Textur mit umwerfendem Glanz",
+    "hold": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "kein Haltversprechen; Douglas-Chip 'Haltgrad mittel' = C3-Spur und widerspricht fehlendem Fixativ",
+      "tier": "C3"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "umwerfendem Glanz",
+      "number": null,
+      "tier": "C3"
+    },
+    "directions_summary": "Handtuchtrockenes Haar abteilen, großzügig aufs feuchte Haar sprühen, jede Partie unter Spannung föhnen; weitere Styling-Produkte erst auf trockenem Haar.",
+    "directions_tier": "C3",
+    "heat_claim_raw": "Hitzeschutz für Stylinggeräte (Douglas bullet); wärmeaktiviertes Polymer",
+    "humidity_claim_raw": "leistungsstarker Feuchtigkeitsschutz, der bis zu drei Haarwäschen anhält",
+    "duration_claim_raw": "bis zu drei Haarwäschen",
+    "conflicts_with_round1": null,
+    "inci_changed": false,
+    "inci_current": "Aqua/Water/Eau, Dipropylene Glycol, Polysilicone-29, DMDM Hydantoin, Propylene Glycol, Glycerin, Silicone Quaternium-18, Butylene Glycol, Iodopropynyl butylcarbamate, Trideceth-7, Trideceth-12, Phenoxyethanol, Chamomilla Recutita (Matricaria) Flower Extract , Calendula Officinalis Flower Extract, Potassium Sorbate, Potassium Benzoate, Citric Acid",
+    "inci_source": "Douglas.de (C3) live 2026-10-11",
+    "notes": "C5 exception NOT usable: colorwowhair.com (US) INCI is a different formula (Water, Dipropylene Glycol, Polysilicone-29, Silicone Quaternium-18, Glycerin, Trideceth-6, ... Chlorphenesin, Disodium EDTA; no DMDM Hydantoin, no Iodopropynyl butylcarbamate), so US claims cannot be carried to the EU/DE product. No German manufacturer site found (colorwowhair.com/de 404). Douglas tags it 'silikonfrei' although Polysilicone-29 and Silicone Quaternium-18 are silicone-derived (claim vs formula mismatch). No pack image found."
+  },
+  {
+    "sample_id": "bumble-and-bumble-surf-spray",
+    "old_tier": "C3",
+    "best_tier": "C3",
+    "sources": [
+      {
+        "tier": "C3",
+        "url": "https://www.lookfantastic.de/p/bumble-and-bumble-surf-salt-spray-125ml/10302655/",
+        "retrieved": "2026-10-11",
+        "what": "Lookfantastic.de: German description, directions, INCI (2nd DE retailer)"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.douglas.de/de/p/3000067216",
+        "retrieved": "2026-10-11",
+        "what": "Douglas.de listing from round 1 (INCI identical)"
+      },
+      {
+        "tier": "C5",
+        "url": "https://www.bumbleandbumble.com/product/19061/221/style/texture-sprays/surf-spray-for-beachy-waves",
+        "retrieved": "2026-10-11",
+        "what": "US manufacturer page; INCI identical to both DE retailers (formula-identity + DE retailer corroboration = C5 exception satisfied)"
+      }
+    ],
+    "primary_promise_raw": "Salzwasser verleiht Ihrem Haar Volumen, Halt und ein cooles, mattes Finish",
+    "hold": {
+      "raw": "Halt",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "Salzwasser verleiht ... Halt (ohne Stärkeangabe); US: matte, beachy waves, wind-styled texture",
+      "tier": "C3"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "mattes Finish",
+      "number": null,
+      "tier": "C3"
+    },
+    "directions_summary": "Gleichmäßig auf feuchtes oder trockenes Haar sprühen; stylen und trocknen lassen (in den Wind stellen) oder mit Diffusor föhnen.",
+    "directions_tier": "C3",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": null,
+    "conflicts_with_round1": null,
+    "inci_changed": false,
+    "inci_current": "Water\\Aqua\\Eau, Magnesium Sulfate, Macrocystis Pyrifera (Kelp) Extract, Ascophyllum Nodosum Extract, Glycerin, Isoceteth-20, PPG-5-Ceteth-20, Citric Acid, Fragrance (Parfum), Citronellol, Alpha-Isomethyl Ionone, Limonene, Potassium Sorbate, Phenoxyethanol",
+    "inci_source": "Lookfantastic.de (C3) live 2026-10-11 = Douglas.de = bumbleandbumble.com",
+    "notes": "No German-market manufacturer page exists. The 'Salzwasser' is Magnesium Sulfate (Epsom salt), not sea salt. US manufacturer text calls it 'matte finish sea salt spray' for fine to medium hair and does not use the word Halt; the German 'Halt' comes from the retailer translation."
+  },
+  {
+    "sample_id": "schwarzkopf-taft-texturspray-aloe-boost",
+    "old_tier": "C5",
+    "best_tier": "C1",
+    "sources": [
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_440,w_500/v1788477303/assets/pas/images/314ee62a-3e55-443b-8256-ae3f1b5ea58b/schwarzkopf-taft-texturspray-aloe-boost",
+        "retrieved": "2026-10-11",
+        "what": "German pack back image (dm listing 3047463): claims, Anwendung, INCI"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.dm.de/p/d/3047463/",
+        "retrieved": "2026-10-11",
+        "what": "dm.de listing / JSON endpoint (Henkel AG Düsseldorf address, EAN 4015100860825)"
+      }
+    ],
+    "primary_promise_raw": "Textur und Pflege für mühelose Undone Looks und natürlich aussehende Wellen",
+    "hold": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "kein Halt-Wort und keine Zahl auf der Packung; nur 'Fülle und Volumen', 'gestärktes Haar'",
+      "tier": "C1"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": null,
+      "number": null,
+      "tier": "C1"
+    },
+    "directions_summary": "Gut schütteln; mit kurzen Sprühstößeen aus 30 cm Abstand auf das trockene Haar sprühen.",
+    "directions_tier": "C1",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": "Hilft die Frisur vor Luftfeuchtigkeit zu schützen",
+    "duration_claim_raw": null,
+    "conflicts_with_round1": "Round 1 / calibration set recorded C5 although the DE pack is now read directly; no claim conflict. Pack shows 'Für extra Fülle und Volumen' and 'Niacinamid für gestärktes Haar'; no hold number (not a Haltegrad product).",
+    "inci_changed": false,
+    "inci_current": "Dimethyl Ether, Alcohol denat., VP/VA Copolymer, Distarch Phosphate, Aqua (Water, Eau), Polyquaternium-11, Cellulose, Tapioca Starch, Glycerin, Aloe Barbadensis Leaf Juice, Panthenol, Niacinamide, Parfum (Fragrance), Linalool, Benzyl Alcohol, Geraniol, Tetramethyl Acetyloctahydronaphthalenes, Sodium Benzoate",
+    "inci_source": "German pack back image (C1), identical to dm.de text list",
+    "notes": "Pack: 'Für alle Haartypen', 'Mit feuchtigkeitsspendendem Aloe Vera Komplex für gepflegtes und gesund aussehendes Haar', 'Niacinamid für gestärktes Haar', 'Textur und Pflege für mühelose Undone Looks und natürlich aussehende Wellen', 'Für extra Fülle und Volumen', 'Hilft die Frisur vor Luftfeuchtigkeit zu schützen', VEGANE FORMEL, 0% SILIKON. Right edge of the INCI line is clipped by the photo; the full list was matched against the dm text. schwarzkopf.de/taft.de page not consulted (C1 suffices)."
+  },
+  {
+    "sample_id": "living-proof-full-dry-volume-texture-spray",
+    "old_tier": "C3",
+    "best_tier": "C3",
+    "sources": [
+      {
+        "tier": "C3",
+        "url": "https://www.flaconi.de/haare/living-proof/full/living-proof-full-dry-volume-and-texture-spray-texturizing-spray.html",
+        "retrieved": "2026-10-11",
+        "what": "Flaconi.de: German description, Anwendung, INCI (live 2026-10-11)"
+      },
+      {
+        "tier": "C5",
+        "url": "https://www.livingproof.com/products/full-dry-volume-texture-spray",
+        "retrieved": "2026-10-11",
+        "what": "US manufacturer page; NOT identical formula (propellant HFC-152a instead of Dimethyl Ether) so not usable as C5"
+      }
+    ],
+    "primary_promise_raw": "sofortiges und lang anhaltendes Volumen, Textur und weichen Halt",
+    "hold": {
+      "raw": "weichen Halt / aufbaubaren, grifffreien Halt",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "weicher, aufbaubarer, grifffreier Halt",
+      "tier": "C3"
+    },
+    "flexibility_words": [
+      "weich",
+      "aufbaubar",
+      "grifffrei"
+    ],
+    "finish": {
+      "raw": null,
+      "number": null,
+      "tier": "C3"
+    },
+    "directions_summary": "Dose schütteln; 5-10 cm vom trockenen Haar, Partie anheben, von Wurzel bis Spitzen; mit Fingern zerzausen; fertige Frisur für Textur und Halt einsprühen.",
+    "directions_tier": "C3",
+    "heat_claim_raw": "Hitzeschutz bis zu 410 F / 210 C",
+    "humidity_claim_raw": null,
+    "duration_claim_raw": "lang anhaltendes Volumen und Textur (keine Zahl)",
+    "conflicts_with_round1": null,
+    "inci_changed": false,
+    "inci_current": "Dimethyl Ether, Alcohol Denat., VP/VA Copolymer, VA/Crotonates/Vinyl Neodecanoate Copolymer, Calcium Sodium Borosilicate, Water/Aqua/Eau, Cyclodextrin, Zeolite, Fragrance (Parfum), Ethylcellulose, Propylene Glycol Dibenzoate, Aminomethyl Propanol, Ammonium Glycyrrhizate, Linalool, Citronellol, Citral, Limonene.",
+    "inci_source": "Flaconi.de (C3) live 2026-10-11",
+    "notes": "No German-market manufacturer page (livingproof.com/de-de 404). US formula differs (HFC-152a propellant), so US claims are not carried over. No pack image found. Only 'weich/aufbaubar' hold language, no number."
+  },
+  {
+    "sample_id": "kevin-murphy-powder-puff-volume",
+    "old_tier": "C5",
+    "best_tier": "C2",
+    "tier_note": "C2 is the manufacturer's German-LANGUAGE EU storefront (kevinmurphy.com.au/de/de, EUR prices, Sites-km_b2c_eu-Site/de_DE, country selector Deutschland), but it sits on the .com.au domain. If the owner reads the C2 rule strictly (German-market page on a German domain), treat as C3-equivalent.",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://kevinmurphy.com.au/de/de/products/by-benefit/volume/POWDER-PUFF.html",
+        "retrieved": "2026-10-11",
+        "what": "Manufacturer German storefront (de-de): claims, benefits, INCI"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.flaconi.de/haare/kevin-murphy/powder-puff/kevin-murphy-powder-puff-volume-haarpuder.html",
+        "retrieved": "2026-10-11",
+        "what": "Flaconi.de: INCI (older list), SCHÜTTELN-Anwendung (live 2026-10-11)"
+      }
+    ],
+    "primary_promise_raw": "Fixierprodukt mit langanhaltendem Halt. Sorgt mühelos für Fülle",
+    "hold": {
+      "raw": "Sanfter Halt",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "Vorteil 'Sanfter Halt'; Text: 'verwandelt sich in ein Fixierprodukt mit langanhaltendem Halt'",
+      "tier": "C2"
+    },
+    "flexibility_words": [
+      "sanft"
+    ],
+    "finish": {
+      "raw": null,
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Manufacturer-DE storefront: 'Anwendung' fold-out empty server-side. Flaconi: schütteln, wirken lassen, stylen; etwas Puder auf den Haaransatz ins feuchte oder trockene Haar (product-detail line says ins trockene Haar).",
+    "directions_tier": "C3",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": "langanhaltendem Halt (keine Zahl)",
+    "conflicts_with_round1": "INCI conflict (see inci_alt). Round 1 list = Flaconi list.",
+    "inci_changed": true,
+    "inci_current": "Water (Aqua) (Eau), Silica Silylate, VP/VA Copolymer, Butylene Glycol, Zinc Myristate, Undaria Pinnatifida Extract, Phenoxyethanol, Sodium Benzoate, Citric Acid",
+    "inci_source": "kevinmurphy.com.au/de/de manufacturer storefront (C2), with page disclaimer that the list may vary by region/over time",
+    "inci_alt": "Water (Aqua) (Eau), Silica Silylate, VP/VA Copolymer, Butylene Glycol, Nylon-12, Alaria Esculenta Extract, Phenoxyethanol, Sodium Benzoate, Citric Acid. (Flaconi.de live 2026-10-11 = round-1 capture = UK/AU retailers)",
+    "notes": "UNRESOLVED which list is on German shelves: manufacturer EU storefront shows Zinc Myristate + Undaria Pinnatifida Extract where DE retailer Flaconi (and most other markets) show Nylon-12 + Alaria Esculenta Extract. Probably a rolling reformulation. The hold-relevant fixative (VP/VA Copolymer) and Silica Silylate are the same in both. No pack image available (not sold at dm). Price 36,00 EUR / 14 g; KM storefront shows 'derzeit nicht auf Lager'."
+  },
+  {
+    "sample_id": "american-crew-fiber",
+    "old_tier": "C3",
+    "best_tier": "C3",
+    "sources": [
+      {
+        "tier": "C3",
+        "url": "https://www.flaconi.de/haare/american-crew/styling/american-crew-styling-fiber-stylingcreme.html",
+        "retrieved": "2026-10-11",
+        "what": "Flaconi.de: German claims, Haltfaktor 9 / Glanzfaktor 1, Anwendung, INCI (live 2026-10-11)"
+      },
+      {
+        "tier": "C5",
+        "url": "https://www.americancrew.com/de/products/fiber",
+        "retrieved": "2026-10-11",
+        "what": "German-language page of the US Shopify store (USD prices, US UPCs 738678002698/738678174074); no INCI published, so formula identity with the DE product cannot be verified: C5 exception not met"
+      }
+    ],
+    "primary_promise_raw": "starker aber variabler Halt und natürliches, mattes Finish",
+    "hold": {
+      "raw": "Haltfaktor 9",
+      "number": 9,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "Sehr starker Halt - kein Glanz. Haltfaktor 9 - Glanzfaktor 1. (US page: High hold / Low shine)",
+      "tier": "C3"
+    },
+    "flexibility_words": [
+      "variabler Halt",
+      "flexibel (US page: strong, pliable)"
+    ],
+    "finish": {
+      "raw": "Glanzfaktor 1 / mattes Finish",
+      "number": 1,
+      "tier": "C3"
+    },
+    "directions_summary": "Flaconi: kleine Menge in den Händen verreiben, ins HANDTUCHTROCKENE Haar einarbeiten. US page: through damp or dry hair, small fingertip amount.",
+    "directions_tier": "C3",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": "langem Halt (US page, no number)",
+    "conflicts_with_round1": "Directions: DE retailer says towel-dried hair only; US manufacturer says damp or dry. Scale max of Haltfaktor 9 is not stated anywhere.",
+    "inci_changed": false,
+    "inci_current": "Aqua (Water (Eau)),Lanolin Cera (Lanolin Wax (Cire De Lanoline)),Cetearyl Alcohol,PVP,Tridecyl Stearate,Tribehenin,Propylene Glycol,Alcohol Denat.,Tridecyl Trimellitate,PEG-8 Beeswax,Ceteareth-25,Phenoxyethanol,PEG-40 Castor Oil,Dipentaerythrityl Hexacaprylate/Hexacaprate,Benzyl Alcohol,Limonene,Acrylates/C10-30 Alkyl Acrylate Crosspolymer,Triethanolamine,Methylparaben,Ethylparaben,Parfum (Fragrance),Tetrasodium EDTA,Citronellol,Geraniol,Caramel,Linalool,Yellow 5 (CI 19140)/ Acid Yellow 23",
+    "inci_source": "Flaconi.de (C3) live 2026-10-11",
+    "notes": "No German-market manufacturer site; americancrew.com/de is the US store translated. No pack image found. The 9/1 numbers appear only in the retailer text (probably quoting the pack's hold/shine scale)."
+  },
+  {
+    "sample_id": "cantu-shea-butter-extra-hold-edge-stay-gel",
+    "old_tier": "C3",
+    "best_tier": "C1",
+    "tier_note": "C1 here = pack photos in the Amazon.de listing B01LTIAUAQ (third-party seller gallery, EU model 07569-C06EUS, EU rep Bionik Healthcare Spain). The pack text is ENGLISH only, not German; provenance of the seller photo is not independently verified. Treat as C1-with-caveat.",
+    "sources": [
+      {
+        "tier": "C1",
+        "url": "https://m.media-amazon.com/images/I/51zw1496VHL._AC_UF1000,1000_QL80_.jpg",
+        "retrieved": "2026-10-11",
+        "what": "Amazon.de gallery: pack back (How to use, INGREDIENTS, 07569-C06EUS, pdc brands)"
+      },
+      {
+        "tier": "C1",
+        "url": "https://m.media-amazon.com/images/I/41XSbE+2maL._AC_.jpg",
+        "retrieved": "2026-10-11",
+        "what": "Amazon.de gallery: pack front 'FIRM HOLD EDGE STAY GEL', 'UP TO 48 HOUR FIRM HOLD', 'NEW & IMPROVED'"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.amazon.de/dp/B01LTIAUAQ",
+        "retrieved": "2026-10-11",
+        "what": "Amazon.de listing text (German, still titled 'Gel für extra Halt', no INCI in text, not discontinued)"
+      }
+    ],
+    "primary_promise_raw": "langanhaltender, schuppenfreier Halt (Amazon.de); pack: long-lasting, flake-free hold",
+    "hold": {
+      "raw": "up to 48 hour firm hold",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "FIRM HOLD (pack front, NEW & IMPROVED); infographic: UP TO 16HR FIRM HOLD; Amazon.de text: extra Halt",
+      "tier": "C1"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "flake-free; smooth styles & ponytails",
+      "number": null,
+      "tier": "C1"
+    },
+    "directions_summary": "Auf die Kanten auftragen und mit Fingerspitzen oder straffem Pinsel glätten (pack: Apply to edges and smooth with fingertips or tightly bristled brush).",
+    "directions_tier": "C1",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": "up to 48 hour firm hold (pack front); up to 16HR firm hold (listing infographic) - the two numbers conflict",
+    "conflicts_with_round1": "PRODUCT RENAMED/REFORMULATED: current pack is 'Firm Hold Edge Stay Gel' (NEW & IMPROVED, up to 48 hour firm hold), not 'Extra Hold'. The Amazon.de title still says Extra Hold. Round-1 INCI (EU Lookfantastic) is the older formula. New list adds a B-vitamin block.",
+    "inci_changed": true,
+    "inci_current": "Water (Aqua/Eau), Ceteareth-25, PEG-7 Glyceryl Cocoate, PEG-40 Hydrogenated Castor Oil, Glycerin, Butyrospermum Parkii (Shea) Butter*, Theobroma Cacao (Cocoa) Seed Butter, Panthenol, Simmondsia Chinensis (Jojoba) Seed Oil, Caramel, Biotin (Vitamin B7), Cyanocobalamin (Vitamin B12), Folic Acid (Vitamin B9), Niacin (Vitamin B3), Pantothenic Acid (Vitamin B5), Pyridoxine HCL (Vitamin B6), Riboflavin (Vitamin B2), Thiamine HCL (Vitamin B1), Ethylhexylglycerin, Glycereth-2 Cocoate, Silk Amino Acids, Leuconostoc/Radish Root Ferment Filtrate, Potassium Sorbate, Sodium Benzoate, Phenoxyethanol, Fragrance (Parfum), Benzyl Benzoate, Benzoic Acid, Coumarin, Hexyl Cinnamal.  (*certified organic ingredient)",
+    "inci_source": "Pack back photo in Amazon.de gallery (C1 with caveat); low resolution, read at 3x upscale",
+    "inci_alt": "Round-1 list (EU Lookfantastic): Aqua, Ceteareth-25, PEG-7 Glyceryl Cocoate, PEG-40 Hydrogenated Castor Oil, Glycerin, Caramel, Butyrospermum Parkii (Shea) Butter, Phenoxyethanol, Parfum, Benzoic Acid, Simmondsia Chinensis (Jojoba) Seed Oil, Panthenol, Glycereth-2 Cocoate, Ethylhexylglycerin, Silk Amino Acids, Theobroma Cacao (Cocoa) Seed Butter, Benzyl Alcohol, Sodium Benzoate, Potassium Sorbate, Benzyl Benzoate, Coumarin, Hexyl Cinnamal",
+    "notes": "Only German retailer found is Amazon.de (third party, NOMMAD per round 1). No dm/Rossmann/Müller listing. Not a German-market manufacturer pack (pdc brands, Stamford CT; EU rep Spain). cantubeauty.com was not reachable for this SKU. Product has no real fixative polymer; hold claim is a brand claim only."
+  },
+  {
+    "sample_id": "john-frieda-frizz-ease-traumlocken-lockencreme",
+    "old_tier": "C3",
+    "best_tier": "C1",
+    "sources": [
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_440,w_500/v1770251250/assets/pas/images/3f1190ea-3ba6-4fe0-8c05-1343455c9b01/john-frieda-lockencreme-traumlocken",
+        "retrieved": "2026-10-11",
+        "what": "German pack back image (dm listing 3123420), Kao Germany GmbH Darmstadt"
+      },
+      {
+        "tier": "C2",
+        "url": "https://www.johnfrieda.com/de-de/produkte/traumlocken/locken/traumlocken-definierende-lockencreme/",
+        "retrieved": "2026-10-11",
+        "what": "Manufacturer German page (de-de): claims, Anwendung, INCI"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.dm.de/p/d/3123420/",
+        "retrieved": "2026-10-11",
+        "what": "dm.de listing / JSON"
+      }
+    ],
+    "primary_promise_raw": "perfekte Balance aus 24-Stunden Halt und Geschmeidigkeit",
+    "hold": {
+      "raw": "24-Stunden Halt",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "langanhaltender Halt, bis zu 24 Stunden (Pack/dm); Hersteller-Web: 'langanhaltende, spürbare Definition', 'Definition - den ganzen Tag'",
+      "tier": "C1"
+    },
+    "flexibility_words": [
+      "definierte, flexible Locken",
+      "Geschmeidigkeit"
+    ],
+    "finish": {
+      "raw": null,
+      "number": null,
+      "tier": "C1"
+    },
+    "directions_summary": "Sparsam; erbsengroße Menge in Handflächen verreiben, vom Ansatz bis in die Spitzen im FEUCHTEN Haar verteilen, wie gewohnt stylen; Tipp: am 2. Tag erbsengroße Menge auf widerspenstige Locken zum Auffrischen.",
+    "directions_tier": "C1",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": "Verhindert Frizz für definierte, flexible Locken",
+    "duration_claim_raw": "24-Stunden Halt (pack); manufacturer web page drops the 24 h number",
+    "conflicts_with_round1": "None for hold/directions. Pack says 45 % recycled material; manufacturer web says 48 % (packaging only). The 24 h number is on the pack and dm text but not on johnfrieda.com/de-de.",
+    "inci_changed": false,
+    "inci_current": "WATER/AQUA/EAU, ACRYLATES COPOLYMER, SODIUM POLYSTYRENE SULFONATE, STEARYL ALCOHOL, CETYL ALCOHOL, HYDROXYETHYLCELLULOSE, LAURETH-3, SODIUM HYDROXIDE, CETEARETH-25, SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL, COCAMIDOPROPYL PG- DIMONIUM CHLORIDE PHOSPHATE, BEHENYL ALCOHOL, SILICONE QUATERNIUM-18, CAPRYLHYDROXAMIC ACID, TETRASODIUM GLUTAMATE DIACETATE, METHYLPROPANEDIOL, TRIDECETH-6, TRIDECETH-12, ROSA CANINA FRUIT OIL, DISODIUM PHOSPHATE, POLYSORBATE 60, SODIUM PHOSPHATE, TOCOPHEROL, PHENOXYETHANOL, FRAGRANCE/PARFUM, CITRONELLOL, HEXYL CINNAMAL, POGOSTEMON CABLIN OIL, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES.",
+    "inci_source": "German pack back image (C1), identical to johnfrieda.com/de-de (C2) and dm.de",
+    "notes": "johnfrieda.de has a certificate error; the working manufacturer URL is johnfrieda.com/de-de. Pack: 'Verhindert Frizz für definierte, flexible Locken', 'Für alle Arten von Frizz geeignet', vegane Formel, mit AuraBoost-Duft."
+  },
+  {
+    "sample_id": "kevin-murphy-killer-curls",
+    "old_tier": "C3",
+    "best_tier": "C2",
+    "tier_note": "Same caveat as Powder.Puff: C2 = manufacturer German-language EU storefront kevinmurphy.com.au/de/de (EUR, de_DE, 'Made in EU - Available Globally').",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://kevinmurphy.com.au/de/de/products/by-benefit/curl/KILLER-CURLS.html",
+        "retrieved": "2026-10-11",
+        "what": "Manufacturer German storefront: claims, benefits, INCI (Anwendung fold-out not loaded server-side)"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.easycosmetic.de/kevinmurphy/curl/kevinmurphy-curl-killercurls.aspx",
+        "retrieved": "2026-10-11",
+        "what": "easycosmetic.de: 200 ml, 31,99 EUR, INCI lower-case, 'auf Lager' 2026-10-11"
+      }
+    ],
+    "primary_promise_raw": "ideale Balance zwischen starkem Halt und Flexibilität für das Haar",
+    "hold": {
+      "raw": "starkem Halt",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "Vorteil 'Flexibler Halt'; Text: ideale Balance zwischen starkem Halt und Flexibilität",
+      "tier": "C2"
+    },
+    "flexibility_words": [
+      "Flexibilität",
+      "Flexibler Halt"
+    ],
+    "finish": {
+      "raw": "natürlich und weich ('Natürliches Haargefühl')",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Not published in German on any DE page reached. Only the Australian retailer text (C5): auf feuchtes oder handtuchtrockenes Haar, Mittellängen bis Spitzen, scrunchen, an der Luft oder mit Diffusor trocknen.",
+    "directions_tier": "C5",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": null,
+    "conflicts_with_round1": "Round 1 said hold language appears only in non-DE copy; the German manufacturer storefront does carry it ('starkem Halt und Flexibilität', 'Flexibler Halt'), so the hold claim is now C2. Still no German directions.",
+    "inci_changed": false,
+    "inci_current": "Water (Aqua) (Eau), Lanolin Wax (Lanolin Cera) (Cire de lanoline), Alcohol Denat., Acrylates Copolymer, Polyurethane-14, Propylene Glycol Dibenzoate, Cetearyl Alcohol, Ethylhexyl Palmitate, Sodium Polystyrene Sulfonate, Fragrance (Parfum), Glycerin, AMP-Acrylates Copolymer, Citrullus Lanatus (Watermelon) Fruit Extract, Citrus Glauca Fruit Extract, Microcitrus Australasica Fruit Extract, Microcitrus Australis Fruit Extract, Pleiogynium Timorense Fruit Extract, Podocarpus Elatus Fruit Extract, Terminalia Ferdinandiana Fruit Extract, Ilex Paraguariensis Leaf Extract, Adansonia Digitata Seed Oil, Citrus Aurantium Bergamia (Bergamot) Fruit Oil, Aloe Barbadensis Leaf Juice, Helichrysum Italicum Extract, Pogostemon Cablin Oil, Copernicia Cerifera (Carnauba) Wax (Cera Carnauba) (Cire de carnauba), Propanediol, Caprylic/Capric Triglyceride, Phenyl Trimethicone, PEG-12 Dimethicone, Glyceryl Stearate, PEG-100 Stearate, PEG-40 Hydrogenated Castor Oil, Ceteareth-20, PEG-12 Allyl Ether, Ethylhexyl Methoxycinnamate, Polysilicone-15, Aminomethyl Propanol, Phenoxyethanol, Ethylhexylglycerin, Chlorphenesin, Sorbic Acid, Benzoic Acid, Potassium Sorbate, Sodium Benzoate, Sodium Hydroxide, Limonene, Linalool",
+    "inci_source": "kevinmurphy.com.au/de/de (C2); identical to easycosmetic.de (C3) and round-1 capture",
+    "notes": "Contains Alcohol Denat. at position 3 with no free-from claim. KM storefront shows 45,00 EUR and 'derzeit nicht auf Lager'; size not visible there. No pack image available."
+  },
+  {
+    "sample_id": "langhaarmaedchen-lockenspray-halt-sprungkraft",
+    "old_tier": "C3",
+    "best_tier": "C2_house_brand",
+    "sources": [
+      {
+        "tier": "C2_house_brand",
+        "url": "https://www.dm.de/p/d/1677066/langhaarmaedchen-lockenspray-halt-und-sprungkraft",
+        "retrieved": "2026-10-11",
+        "what": "dm.de listing + JSON endpoint; responsible company dm-drogerie markt GmbH + Co. KG, made in Germany"
+      },
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_440,w_500/v1747481072/assets/pas/images/36c31442-5d1b-437b-b6bc-4d8afec21770/langhaarmaedchen-lockenspray-halt-und-sprungkraft",
+        "retrieved": "2026-10-11",
+        "what": "dm lifestyle photo with front label only (LOCKENHALT SPRAY, Halt & Sprungkraft, für gestylte & natürliche Locken, Hitzeschutz bis 220 C, 'dm liebt'); no back label image exists"
+      }
+    ],
+    "primary_promise_raw": "Verleiht Halt und Sprungkraft für gestylte & natürliche Locken",
+    "hold": {
+      "raw": "Halt & Sprungkraft",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "langanhaltenden Halt selbst bei hoher Luftfeuchtigkeit (natürliches Styling-Polymer)",
+      "tier": "C2_house_brand"
+    },
+    "flexibility_words": [
+      "Sprungkraft"
+    ],
+    "finish": {
+      "raw": null,
+      "number": null,
+      "tier": "C2_house_brand"
+    },
+    "directions_summary": "Vor dem Lockenstyling gut schütteln, ins handtuchtrockene oder trockene Haar sprühen, dann stylen; kann auch nach dem Styling aufgesprüht werden, um Halt zu verleihen.",
+    "directions_tier": "C2_house_brand",
+    "heat_claim_raw": "Hitzeschutz bis 220 C",
+    "humidity_claim_raw": "langanhaltenden Halt selbst bei hoher Luftfeuchtigkeit",
+    "duration_claim_raw": "langanhaltend (keine Zahl)",
+    "conflicts_with_round1": "None. Calibration-set-r2 stores this record as C3 although the round-1 G1 note already says house brand (C2_house_brand): the tier label in the calibration set is stale.",
+    "inci_changed": false,
+    "inci_current": "AQUA,PROPYLENE GLYCOL,HYDROLYZED CORN STARCH,POLYGLYCERYL-4 CAPRATE,POLYGLYCERYL-6 CAPRYLATE, BETAINE, PARFUM, SODIUM BENZOATE, SACCHAROMYCES CEREVISIAE EXTRACT, PANTHENOL, POTASSIUM SORBATE, GLYCERIN, LACTIC ACID, LEUCONOSTOC/RADISH ROOT FERMENT, FILTRATE, LINALOOL, LIMONENE.",
+    "inci_source": "dm.de JSON (C2_house_brand) 2026-10-11 = round-1 list",
+    "notes": "The brand site langhaarmaedchen.de is the salon (Haarverdichtung) shop, not the dm product line; no product pages there. This is the same backbone (corn starch + polyglyceryl caprate/caprylate + saccharomyces/radish ferment) as the OLD Bali Curls Leave-In Spray INCI on dm.de. No back-label photo on dm."
+  },
+  {
+    "sample_id": "got2b-gotgloss-glanz-spray",
+    "old_tier": "C3",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.got2b.de/haarstyling/produkt/settings/got-gloss-glanz-spray.html",
+        "retrieved": "2026-10-11",
+        "what": "Manufacturer German page (Schwarzkopf/Henkel got2b.de): claims, Anwendung, INCI"
+      },
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_440,w_500/v1785367240/assets/pas/images/b4699ed7-877a-464a-9baf-8e935af701e8/got2b-glanz-spray-got-gloss",
+        "retrieved": "2026-10-11",
+        "what": "German pack back image on dm listing 1429002 (image index 1): claims, Anwendung, INCI, EAN 4015100812176"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.dm.de/p/d/1429002/",
+        "retrieved": "2026-10-11",
+        "what": "dm.de listing / JSON"
+      }
+    ],
+    "primary_promise_raw": "Bis zu 48h spiegelglänzendes Haar",
+    "hold": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "kein Halt: 'ohne zu kräuseln und zu verkleben', 'Kein Verkleben', 'Keine Rückstände'",
+      "tier": "C2"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "spiegelglänzendes Haar / Spiegelglanz",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Pack: Spray aus 30 cm Entfernung gleichmäßig auf trockene Haarlängen sprühen; Glanz verstärken durch anschliessendes Glätten. Web: auf trockenes Haar auftragen, kurz einwirken lassen, glätten, bei Bedarf als Finish nachsprühen; Glass-Hair-Routine mit Primer.",
+    "directions_tier": "C1",
+    "heat_claim_raw": "Bis zu 230 C Hitzeschutz",
+    "humidity_claim_raw": "Bis zu 48h Frizz-Effekt (Anti-Frizz, keine Luftfeuchtigkeits-Aussage)",
+    "duration_claim_raw": "Bis zu 48h",
+    "conflicts_with_round1": "INCI differs between the manufacturer page and the pack/dm list: the got2b.de list ends '... Citronellol, Alpha-Isomethyl Ionone, Limonene, Benzyl Alcohol' and has no Tetramethyl Acetyloctahydronaphthalenes and no Citrus Aurantium Peel Oil; the pack photographed on dm still has those two. Fragrance/preservative components only; the functional base (butane, isododecane, alcohol denat., esters) is the same.",
+    "inci_changed": true,
+    "inci_current": "Butane, Isododecane, Alcohol denat., Caprylic/Capric Triglyceride, Dicaprylyl Carbonate, Isobutane, Parfum (Fragrance), Linalool, Aqua (Water, Eau), Geraniol, Citronellol, Alpha-Isomethyl Ionone, Limonene, Benzyl Alcohol",
+    "inci_source": "got2b.de (C2), live 2026-10-11",
+    "inci_alt": "Butane, Isododecane, Alcohol denat., Caprylic/Capric Triglyceride, Dicaprylyl Carbonate, Isobutane, Parfum (Fragrance), Linalool, Aqua (Water, Eau), Geraniol, Tetramethyl Acetyloctahydronaphthalenes, Citronellol, Alpha-Isomethyl Ionone, Citrus Aurantium Peel Oil, Limonene (German pack photo on dm = dm.de text = round-1 capture)",
+    "notes": "Round 1 said 'no schwarzkopf.de page found'; got2b.de has it. Pack: SILIKONFREIE FORMEL, vegan; ingredient list on pack ends after Limonene."
+  },
+  {
+    "sample_id": "feschi-smooth-and-shine-anti-frizz-spray-glanzspray",
+    "old_tier": "C3",
+    "best_tier": "C3",
+    "sources": [
+      {
+        "tier": "C3",
+        "url": "https://www.flaconi.de/haare/feschi/smooth-and-shine/feschi-smooth-and-shine-anti-frizz-spray-glanzspray.html",
+        "retrieved": "2026-10-11",
+        "what": "Flaconi.de: German description, Anwendung, INCI (live 2026-10-11); product images are front/infographic only"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.parfumdreams.ie/feschi/Hair/smooth-shine/Anti-frizz-spray/index_142552.aspx",
+        "retrieved": "2026-10-11",
+        "what": "parfumdreams: second retailer, seen only via search snippet"
+      }
+    ],
+    "primary_promise_raw": "bändigt fliegende Härchen und verleiht ein seidig glattes Finish",
+    "hold": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "kein Halt; 'beschwert nicht, selbst bei feinem Haar'",
+      "tier": "C3"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "seidiges Haargefühl & einzigartige Glanzreflexe",
+      "number": null,
+      "tier": "C3"
+    },
+    "directions_summary": "Nach dem Styling oder zur Auffrischung Dose schütteln, aus ca. 20 cm sparsam in die trockenen Haarlängen sprühen, dann kämmen; bei krausem/dickem Haar auch vor dem Styling ins handtuchtrockene Haar.",
+    "directions_tier": "C3",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": null,
+    "conflicts_with_round1": null,
+    "inci_changed": false,
+    "inci_current": "Alcohol Denat, Butane, C11- 13 Isoparaffin, Isobutane, Propane, Phenyl Trimethicone, Tocopheryl Acetate, Parfum, Linalool, Hexyl Cinnamal, Limonene, Citronellol, Geraniol.",
+    "inci_source": "Flaconi.de (C3) live 2026-10-11",
+    "notes": "No manufacturer site reachable (feschi.de/.com/.at do not resolve). EAN 9120112141901 appears only in the Flaconi image file name (not verified on a pack). Flaconi page text mentions Anti-Frizz and 'Glanzspray'; silikonfrei claim, if any, conflicts with Phenyl Trimethicone."
+  },
+  {
+    "sample_id": "john-frieda-volume-lift-pushed-up-dry-texture-spray",
+    "old_tier": "C3",
+    "best_tier": "C1",
+    "sources": [
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_440,w_500/v1770855957/assets/pas/images/47daf669-65ba-4edb-a0d7-bcd3abfe649c/john-frieda-spray-volume-lift-pushed-up-dry-texture",
+        "retrieved": "2026-10-11",
+        "what": "German pack back image on dm listing 3123436 (image index 1; Kao Germany GmbH Darmstadt, EAN 5037156301250)"
+      },
+      {
+        "tier": "C2",
+        "url": "https://www.johnfrieda.com/de-de/produkte/volumen/volume-lift/dry-texture-spray/",
+        "retrieved": "2026-10-11",
+        "what": "Manufacturer German page (de-de): claims, Anwendung, INCI"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.dm.de/p/d/3123436/",
+        "retrieved": "2026-10-11",
+        "what": "dm.de listing / JSON"
+      }
+    ],
+    "primary_promise_raw": "Verleiht dem Haar sofort Textur, Fülle und Volumen.",
+    "hold": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "kein Halt-Wort; 'griffige Textur' (dm), 'langanhaltendes Volumen und Textur', 'kein steifes oder klebriges Haar'",
+      "tier": "C2"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": null,
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Gut schütteln; auf trockenem Haar anwenden; Strähnen anheben und Ansatz sowie Längen leicht besprühen; mit den Fingern stylen und zerzausen.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": "langanhaltendes Volumen und Textur (keine Zahl)",
+    "conflicts_with_round1": "Round 1 said no German manufacturer page; johnfrieda.com/de-de has one. Numeric claim: '400% mehr Fülle ... im Vergleich zu unbehandeltem Haar' (pack + web). Pack also: ideal vor dem Ausgehen oder als Styling-Auffrischung am zweiten Tag.",
+    "inci_changed": false,
+    "inci_current": "DIMETHYL ETHER, ALCOHOL DENAT., ISOPROPYL ALCOHOL, VP/VA COPOLYMER, SILICA, WATER/AQUA/EAU, HYDROLYZED VEGETABLE PROTEIN, SODIUM BENZOATE, FRAGRANCE/PARFUM, CITRONELLOL, CITRUS LIMON (LEMON) PEEL OIL, HEXYL CINNAMAL, LIMONENE.",
+    "inci_source": "German pack back image (C1; right edge clipped), identical to johnfrieda.com/de-de (C2) and dm.de",
+    "notes": "Pack text: 'Sprühe beeindruckende 400% mehr Fülle ins Haar und erhalte mühelos zerzauste Looks in Sekunden. Keine sichtbaren Rückstände, kein steifes oder klebriges Haar'. Silikonfrei, vegan, von Dermatologie-Experten getestet. Hergestellt in UK."
+  },
+  {
+    "sample_id": "jean-und-len-sea-salt-spray",
+    "old_tier": "C3",
+    "best_tier": "C1",
+    "sources": [
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_440,w_500/v1752706240/assets/pas/images/c8d3c9dd-3009-4fd2-a321-072584ff229c/jean-und-len-sea-salt-spray",
+        "retrieved": "2026-10-11",
+        "what": "German pack back image on dm listing 3085573 (image index 1; Jean&Len GmbH Krauchenwies, EAN 4262500781148)"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.dm.de/p/d/3085573/",
+        "retrieved": "2026-10-11",
+        "what": "dm.de listing / JSON (JeanLen GmbH is independent, not a dm house brand)"
+      }
+    ],
+    "primary_promise_raw": "verleiht unser Meer in der Flasche Fülle sowie Griffigkeit",
+    "hold": {
+      "raw": "Griffigkeit",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "Fülle sowie Griffigkeit; Haare ohne grossen Aufwand wellig fallen (kein Halt-Wort)",
+      "tier": "C1"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": null,
+      "number": null,
+      "tier": "C1"
+    },
+    "directions_summary": "Gut schütteln, ein paar Spritzer ins feuchte oder trockene Haar; für intensiveren Beach Look kneten und lufttrocknen; für mehr Volumen trocken föhnen.",
+    "directions_tier": "C1",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": null,
+    "conflicts_with_round1": "Pack says 'ein paar Spritzer'; dm text says 'einen Spritzer'. Pack INCI is shorter than the dm list (see notes).",
+    "inci_changed": false,
+    "inci_current": "aqua, alcohol denat., maris sal, glycerin, heptyl glucoside, magnesium sulfate, betaine, hydrolyzed corn starch, parfum, amp-isostearoyl wheat/corn/soy/amino acids, panthenol, citrus aurantium peel oil, juniperus virginiana wood oil, fucus vesiculosus extract, potassium sorbate, sodium benzoate, citric acid, maltodextrin, tetramethyl acetyloctahydronaphthalenes, hexyl cinnamal, alpha-isomethyl ionone, citronellol, limonene, geranyl acetate, dimethyl phenethyl acetate.  (pack list; dm text continues with further fragrance allergens: citral, vanillin, rose ketones, geraniol, pinene, beta-caryophyllene, linalool, benzyl benzoate, amyl cinnamal, terpineol, benzaldehyde, benzyl alcohol, alpha-terpinene, amyl salicylate, carvone, terpinolene, linalyl acetate)",
+    "inci_source": "German pack back image (C1): list ends '... dimethyl phenethyl acetate.**Mehr auf www.jeanlen.de/Inhaltsstoffe'",
+    "notes": "inci_changed=false: all pack ingredients appear in the same order in the dm list; the pack simply truncates the fragrance-component tail and points to jeanlen.de/Inhaltsstoffe (not reached). Pack: Meersalz und Algen-Extrakt, ohne tierische Inhaltsstoffe, Silikone, Parabene, Mikroplastik, Mineralöl & PEG; Hautverträglichkeit dermatologisch bestätigt."
+  },
+  {
+    "sample_id": "langhaarmaedchen-lockenspray-natur-lockenwunder",
+    "old_tier": "C3",
+    "best_tier": "C1",
+    "sources": [
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_440,w_500/v1784672661/assets/pas/images/52d32594-86c0-4914-b643-5426d7f9849b/langhaarmaedchen-lockenspray-natur-lockenwunder",
+        "retrieved": "2026-10-11",
+        "what": "German pack back image on dm listing 1592107 (image index 1): Langhaarmädchen-Rezeptur, Anwendung, INCI; 'dm drogerie markt Karlsruhe', EAN 4070765004700"
+      },
+      {
+        "tier": "C2_house_brand",
+        "url": "https://www.dm.de/p/d/1592107/langhaarmaedchen-naturlockenspray",
+        "retrieved": "2026-10-11",
+        "what": "dm.de listing / JSON"
+      }
+    ],
+    "primary_promise_raw": "für mehr Griff deiner Locken und Wellen",
+    "hold": {
+      "raw": "mehr Griff",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "mehr Griff (kein Halt-Wort); Tipp: kopfüber verteilen für Volumen und lockere, gebündelte Struktur",
+      "tier": "C1"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": null,
+      "number": null,
+      "tier": "C1"
+    },
+    "directions_summary": "Nach dem Waschen ins nasse Haar sprühen und sanft einkneten; für den Frischekick zwischendurch kurz auf das trockene Haar aufsprühen und durchkneten.",
+    "directions_tier": "C1",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": "belebt deine Locken auch am zweiten oder dritten Tag",
+    "conflicts_with_round1": "None. Calibration-set-r2 tier label C3 is stale (house brand).",
+    "inci_changed": false,
+    "inci_current": "Aqua, Glycerin, Methyl Glucose Sesquistearate, Stearamidopropyl Dimethylamine, Arginine, Serine, Opuntia Ficus-Indica Flower Extract, Prunus Amygdalus Dulcis Seed Extract, Parfum, Dicaprylyl Carbonate, PCA, Glycine, Histidine, Glycol Distearate, Sodium PCA, Aspartic Acid, Alanine, Valine, Isoleucine, Proline, Threonine, Phenylalanine, Sodium Benzoate, Potassium Sorbate, Linalyl Acetate, Terpineol, Tetramethyl Acetyloctahydronaphthalenes, Geranyl Acetate, Lactic Acid, Sodium Lactate",
+    "inci_source": "German pack back image (C1), identical to dm.de text and round-1 capture",
+    "notes": "Pack bullets: für mehr Griff deiner Locken und Wellen; belebt deine Locken auch am zweiten oder dritten Tag; zum Lufttrocknen oder Föhnen mit Diffusoraufsatz; mit Aminosäuren-Komplex. Hergestellt in Deutschland; Vertrieb dm AT also on pack."
+  },
+  {
+    "sample_id": "bali-curls-leave-in-spray-curl-defining",
+    "old_tier": "C3",
+    "best_tier": "C1",
+    "sources": [
+      {
+        "tier": "C1",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_440,w_500/v1778665593/assets/pas/images/076ee4a9-b09b-4cae-a5c8-98d6bf118ca1/bali-curls-leave-in-spray-curl-defining",
+        "retrieved": "2026-10-11",
+        "what": "dm.de hosted pack photos of listing 3122368: front (image 0) and back (image 1, DE/EN/FR Anwendung + INGREDIENTS, Bali Treatment GmbH Klagenfurt, GTIN 4262391990490)"
+      },
+      {
+        "tier": "C2",
+        "url": "https://www.bali-care.com/de-de/products/leave-in-diffusing-heat-protection-spray",
+        "retrieved": "2026-10-11",
+        "what": "Manufacturer German store (de-de, EUR): Beschreibung, benefits, INCI, Anwendung; page title CURL DEFINING SPRAY; barcode 4262391990490"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.dm.de/p/d/3122368/",
+        "retrieved": "2026-10-11",
+        "what": "dm.de listing text: carries the OLD INCI (stale vs the dm-hosted pack photo)"
+      }
+    ],
+    "primary_promise_raw": "Definiert und formt deine Locken - mit natürlichem Stylingpolymer für langanhaltenden Halt",
+    "hold": {
+      "raw": "langanhaltenden Halt",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "Hersteller-Web: 'natürlichem Stylingpolymer für langanhaltenden Halt'; dm: 'Für definierte Locken und Wellen mit Halt'; Pack-Front nennt KEINEN Halt ('Nourishes, defines, and protects')",
+      "tier": "C2"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": null,
+      "number": null,
+      "tier": "C1"
+    },
+    "directions_summary": "Pack: Lockendefinitionsspray auf HANDTUCHTROCKENES Haar sprühen, stylen und diffusen; für zusätzliche Definition und Feuchtigkeit mit Curl Cream oder Curl Gel kombinieren. Web: handtuchtrockenes oder trockenes Haar.",
+    "directions_tier": "C1",
+    "heat_claim_raw": "Heat protection up to 230 C (pack front, dm text); bali-care.com: Schützt bis zu 220 C",
+    "humidity_claim_raw": null,
+    "duration_claim_raw": "Für ein definiertes und gepflegtes Lockenbild, das den ganzen Tag hält (dm text)",
+    "conflicts_with_round1": "FORMULA ON SALE IS THE NEW ONE. Round-1 INCI (corn starch / polyglyceryl caprylate-caprate / betaine / saccharomyces / radish ferment) is the stale text on the dm.de listing. The dm-hosted back-label photo (image uploaded ~2026-05) and the manufacturer page both show the new formula. Heat protection is 230 C on pack/dm but 220 C on bali-care.com.",
+    "inci_changed": true,
+    "inci_current": "AQUA, PROPYLENE GLYCOL, GLYCERIN, SACCHAROMYCES CEREVISIAE EXTRACT, HYDROGENATED ETHYLHEXYL OLIVATE, CETYL ALCOHOL, HYDROLYZED CORN PROTEIN, SODIUM STEAROYL GLUTAMATE, HYDROLYZED WHEAT PROTEIN, HYDROLYZED SOY PROTEIN, PARFUM, SODIUM BENZOATE, SCLEROTIUM GUM, POTASSIUM SORBATE, CITRIC ACID, HYDROGENATED OLIVE OIL UNSAPONIFIABLES, LACTOBACILLUS FERMENT, LEUCONOSTOC/RADISH ROOT FERMENT FILTRATE, LINALOOL, SODIUM CHLORIDE, LIMONENE, AMYL SALICYLATE, LINALYL ACETATE, GLUCOSE, GERANIOL, GERANYL ACETATE, CANANGA ODORATA FLOWER EXTRACT, BENZOIC ACID, VANILLIN, METHYL BENZOATE.",
+    "inci_source": "dm-hosted German-market pack back photo (C1) = bali-care.com/de-de (C2), both read 2026-10-11",
+    "inci_alt": "OLD list (dm.de text field + round-1 capture, still on dm.de listing): Aqua, Propylene Glycol, Hydrolyzed Corn Starch, Polyglyceryl-6 Caprylate, Polyglyceryl-4 Caprate, Betaine, Glycerin, Parfum, Sodium Benzoate, Saccharomyces Cerevisiae Extract, Panthenol, Lactic Acid, Potassium Sorbate, Benzyl Alcohol, Linalool, Limonene, Leuconostoc/Radish Root Ferment Filtrate, Geraniol, Cananga Odorata Flower Extract.",
+    "notes": "ANSWER B: two INCIs under GTIN 4262391990490 = an old formula (dm.de text field, backbone identical to Langhaarmädchen Lockenspray Halt&Sprungkraft) and a new formula (pack photo + manufacturer site). The pack photo hosted by dm and the manufacturer agree, so the new formula is what is currently on sale; the dm text field was not updated. New formula has no starch film former and no polyglyceryl esters: it is a light conditioning spray (Hydrogenated Ethylhexyl Olivate, Cetyl Alcohol, hydrolyzed corn/wheat/soy proteins, Sodium Stearoyl Glutamate, Sclerotium Gum). The 'Stylingpolymer' claim on bali-care.com has no obvious polymer in the INCI (Sclerotium Gum is the nearest film/thickener). Pack mentions plant-based keratin alternative asterisk; VEGAN | CURL CARE METHODE. Both lists are reproduced; if the pack in a customer's hand predates May 2026 it may still carry the old list."
+  },
+  {
+    "sample_id": "syoss-curl-control-hydrating-spray",
+    "old_tier": "C3",
+    "best_tier": "C5",
+    "tier_note": "Only Austrian (dm.at, Henkel CEE Vienna) and the multi-country AT/ES/GR/CY pack were found. No German retailer or syoss.de listing exists, so even C5 is not eligible under the cross-market rule (needs DE retailer corroboration). Treat as NOT SOLD IN GERMANY.",
+    "sources": [
+      {
+        "tier": "C5",
+        "url": "https://www.dm.at/p/d/1920069/",
+        "retrieved": "2026-10-11",
+        "what": "dm.at (Austria) listing; JSON via products.dm.de/product/products/detail/AT/dan/1920069; company Henkel Central Eastern Europe GmbH Vienna; price 4,95 EUR incl. 20 % MwSt"
+      },
+      {
+        "tier": "C5",
+        "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_440,w_500/v1747590543/assets/pas/images/3e4314e4-b1d1-4bd6-8716-b1560ead21c8/syoss-curl-control-hydrating-spray",
+        "retrieved": "2026-10-11",
+        "what": "pack back: AT/ES/GR/CY texts and service lines, no DE text; EAN 8410436366441 (Spanish prefix 841)"
+      }
+    ],
+    "primary_promise_raw": "Formel mit VITAMIN COMPLEX; Lockendefinition und Geschmeidigkeit mit Frizz-Kontrolle",
+    "hold": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "kein Halt; Pack/dm: Feuchtigkeit, Definition, Frizz-Kontrolle; für stärkeren Halt mit Curl Control Cream-Gel kombinieren",
+      "tier": "C5"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": null,
+      "number": null,
+      "tier": "C5"
+    },
+    "directions_summary": "Auf das feuchte oder trockene Haar sprühen und einarbeiten; lufttrocknen oder Diffusor; für stärkeren Halt mit Curl Control Cream-Gel kombinieren; zwischen den Haarwäschen auf trockenem Haar beleben.",
+    "directions_tier": "C5",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": null,
+    "conflicts_with_round1": "Round 1 noted German availability unverified: now checked and NOT found in Germany. dm.at text list omits Niacinamide and orders differently from the pack.",
+    "inci_changed": true,
+    "inci_current": "Aqua (Water, Eau), Zea Mays (Corn) Starch, Glycerin, Panthenol, Niacinamide, Cocos Nucifera (Coconut) Fruit Extract, Macadamia Ternifolia Seed Oil, Sodium Benzoate, PEG-40 Hydrogenated Castor Oil, Parfum (Fragrance), Acrylamidopropyltrimonium Chloride/Acrylamide Copolymer, Lactic Acid, Lysine, Phenoxyethanol, Potassium Sorbate, Sodium Metabisulfite",
+    "inci_source": "AT/ES/GR/CY pack back photo hosted by dm (C5): has Niacinamide and no fragrance-allergen tail",
+    "inci_alt": "dm.at text field (round-1 capture): Aqua (Water, Eau), Zea Mays (Corn) Starch, Glycerin, Sodium Benzoate, PEG-40 Hydrogenated Castor Oil, Acrylamidopropyltrimonium Chloride/Acrylamide Copolymer, Parfum (Fragrance), Panthenol, Lactic Acid, Cocos Nucifera (Coconut) Fruit Extract, Macadamia Ternifolia Seed Oil, Lysine, Linalool, Phenoxyethanol, Limonene, Benzyl Alcohol, Citronellol, Geraniol, Potassium Sorbate, Sodium Metabisulfite, Methyl Benzoate",
+    "notes": "ANSWER C: not sold in Germany on the evidence. Checked: syoss.de (Curls range = Intense Curls Shampoo/Tiefenspülung/Haarmaske, Curl Schaumfestiger, Curl Cream Gel; products sitemap has no Hydrating Spray), Müller.de search 'syoss curl control' (3 hits: Schaumfestiger, Shampoo Intense Curls, Creme Gel Curl), Amazon.de search (no spray), dm.de (DAN 1920069 returns not found for market DE, found for AT), Rossmann not readable (bot wall) but the Rossmann Haarstyling category via search shows other Syoss curl products only. syoss.net (international) lists hairsprays only. Pack carries DE-style service line only for Austria (A), plus ES/GR/CY."
+  }
+]
