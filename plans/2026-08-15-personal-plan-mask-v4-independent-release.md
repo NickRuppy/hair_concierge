@@ -1,5 +1,7 @@
 # Personal Plan Mask v4 independent release
 
+**Superseded 2026-10-12:** The Basis ideal-only rule and conflicting fit thresholds below are historical; the [canonical fit-verdict model](../docs/personal-plan/fit-verdict-model.md) (§2–§5) uses additive degree distances, treats thickness as an axis rather than a hard gate, and permits a supportive fallback with its reason in both Basis and optional tiers.
+
 Status: **implementation complete; exact-tree release checks and final counterpart review pass**
 
 Release base: current `main@f214e3a050098dd4b1b54cf0d7949e901fa90941` plus the migration-free K18 Stage 1 commit `180fa9ae4bbec111d943c6cb296d8161d2581190`, canonical K18 content fingerprint `b76d19cc3c73054319dbb99f0a12d6a3984742e9f96f685be116a954c2169a45`.
