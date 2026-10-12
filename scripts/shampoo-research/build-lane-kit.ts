@@ -50,6 +50,14 @@ import { pathToFileURL } from "node:url"
 
 const STANDARD_PATH = "docs/research/shampoo-inci/v1.6/classification-standard.md"
 
+/** Stage A must not carry identity: freeze notes in `packSize` (brands, GTINs, retailers) are
+ * reduced to the first bare size, e.g. "300 ml", or "unknown". */
+export function blindPackSize(raw: string | null | undefined) {
+  const match = (raw ?? "").match(/(\d+(?:[.,]\d+)?)\s*(ml|l|g|oz)(?![\p{L}])/iu)
+  if (!match) return "unknown"
+  return `${match[1]!.replace(",", ".")} ${match[2]!.toLowerCase()}`
+}
+
 /** The locked v1.6 standard unless `--standard` names another text (e.g. a version candidate). */
 export function resolveStandardPath(flagValue: string | undefined) {
   if (flagValue === undefined) return STANDARD_PATH
@@ -344,7 +352,7 @@ export function buildLaneKit(options: {
     const blindId = `${prefix}${String(index + 1).padStart(2, "0")}`
     const formula = {
       blindId,
-      packSize: p.packSize,
+      packSize: blindPackSize(p.packSize),
       canonicalInci: p.canonicalInci,
       inciFingerprintSha256: p.inciFingerprintSha256,
       normalization: p.normalization,

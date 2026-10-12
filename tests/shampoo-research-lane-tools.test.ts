@@ -15,6 +15,7 @@ import path from "node:path"
 import test from "node:test"
 
 import {
+  blindPackSize,
   buildLaneKit,
   inciFingerprint,
   releaseReveal,
@@ -246,6 +247,30 @@ test("the kit builds against the locked standard by default and against an expli
     "plans/shampoo-v161/candidate/classification-standard.md",
   )
   assert.throws(() => resolveStandardPath(""), /standard/)
+})
+
+test("stage-A packets carry only the bare pack size, never identity notes from the freeze", () => {
+  assert.equal(blindPackSize("250 ml"), "250 ml")
+  assert.equal(
+    blindPackSize("300ml (the same formula is published for a 250 ml pack, GTIN 3600542512534)"),
+    "300 ml",
+  )
+  assert.equal(
+    blindPackSize(
+      "UNRESOLVED: prior record says 250 ml bound to GTIN 3600542461658, but Garnier DE and dm show 300 ml",
+    ),
+    "250 ml",
+  )
+  assert.equal(blindPackSize("1,5 L"), "1.5 l")
+  assert.equal(blindPackSize("unbekannt"), "unknown")
+  withTempDir((out) => {
+    const leaky = packet({ packSize: "250 ml — Mustermarke DE page shows GTIN 4000000000001" })
+    buildLaneKit({ packets: [leaky], standardText: STANDARD, outDir: path.join(out, "k"), seed: 1 })
+    const ids = readdirSync(path.join(out, "k", "lane-a", "formula"))
+    const stageA = readFileSync(path.join(out, "k", "lane-a", "formula", ids[0]!), "utf8")
+    assert.doesNotMatch(stageA, /Mustermarke|4000000000001/)
+    assert.match(stageA, /"packSize": ?"250 ml"/)
+  })
 })
 
 const REQUIRED_PROPERTIES = ["cleansingStrength", "conditioningLevel", "weightPotential"] as const
