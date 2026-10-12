@@ -19,6 +19,7 @@ const STALE_PROCESSING_MINUTES = 15
 
 export type CustomerIoProfileSyncOutboxRow = {
   lead_id: string
+  identity_traits_allowed?: boolean
   profile_revision: number
   completion_event_eligible: boolean
   send_completion_event: boolean
@@ -120,6 +121,7 @@ export async function dispatchCustomerIoProfileSyncForLead(
       identifyTimestamp: claimed.processing_started_at ?? lead.created_at,
       leadId: lead.id,
       marketingConsent: lead.marketing_consent ?? false,
+      allowIdentityTraits: claimed.identity_traits_allowed === true,
       quizAnswers,
       funnelSessionId: funnel?.id,
       funnelPackageKey: funnel?.package_key,

@@ -51,6 +51,7 @@ export function repairSupportAxisFitResult<T extends string>(
   const productIndex = values.indexOf(product)
   const targetIndex = values.indexOf(target)
   if (productIndex < 0 || targetIndex < 0) return "fail"
-  if (productIndex > targetIndex) return "caution"
+  // spec §3 / §7a.2, ruled 2026-10-12: repair at/above target is zero steps.
+  if (productIndex > targetIndex) return "pass"
   return targetIndex - productIndex === 1 ? "caution" : "fail"
 }

@@ -105,7 +105,8 @@ test("the solution insert quotes the scalp answer the user just gave", () => {
     /Du hast „Schuppen“ angegeben\. Jedes Shampoo, das nicht dazu passt, erkennt der Scanner in Sekunden – bevor es im Korb landet\./,
   )
   assert.match(html, imageUrl("regal-scan-flasche.webp"))
-  assert.match(html, /Passt nicht zu deiner Kopfhaut/)
+  // fit-verdict spec §1, ruled 2026-10-12.
+  assert.match(html, />Passt nicht</)
 })
 
 test("the solution insert's positive card judges the scalp and names the match", () => {
@@ -121,7 +122,8 @@ test("the solution insert's positive card judges the scalp and names the match",
   assert.ok(
     rendered.imageSources.includes("/images/funnels/scan/example-balea-kopfhaut-sensitive.webp"),
   )
-  assert.match(html, /Passt zu deiner Kopfhaut/)
+  // fit-verdict spec §1, ruled 2026-10-12.
+  assert.match(html, />Passt</)
   assert.doesNotMatch(html, /Passt zu deinem Haar/)
   assert.match(html, /Kopfhaut trocken – genau dein Profil\./)
   assert.doesNotMatch(html, /Kopfhaut sensibel, trocken – genau dein Profil\./)
@@ -133,7 +135,7 @@ test("the home insert turns the user's own bathroom into the first shelf", () =>
 
   assert.ok(
     readRenderedContent(html).paragraphs.includes(
-      "Pflegegewicht: reichhaltig statt leicht · Repair-Pflege: mittel statt hoch",
+      "Pflegegewicht: reichhaltig statt leicht · Pflegerichtung: Feuchtigkeit statt ausgeglichen · Repair-Pflege: mittel statt hoch",
     ),
   )
   assert.match(html, /Und zu Hause/)
@@ -145,7 +147,10 @@ test("the home insert turns the user's own bathroom into the first shelf", () =>
   assert.match(html, imageUrl("bad-ablage.webp"))
   assert.match(html, /Alterra Feuchtigkeits-Haarmaske/)
   assert.match(html, /Haarmaske · ca\. 2,79 €/)
-  assert.match(html, /Pflegegewicht: reichhaltig statt leicht · Repair-Pflege: mittel statt hoch/)
+  assert.match(
+    html,
+    /Pflegegewicht: reichhaltig statt leicht · Pflegerichtung: Feuchtigkeit statt ausgeglichen · Repair-Pflege: mittel statt hoch/,
+  )
 })
 
 test("every insert marks its card as an example and keeps the preceding question's counter", () => {
