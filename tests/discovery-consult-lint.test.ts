@@ -85,6 +85,7 @@ function nomiInput(overrides: Partial<ConsultInput> = {}): ConsultInput {
     ],
     checklist: [],
     heat: null,
+    heatProtection: null,
     washFrequency: {
       current: null,
       currentLabel: null,
@@ -993,4 +994,31 @@ test("v4: legacy zielLuecken lines on a stored brief are no longer linted", () =
   const brief = cleanBrief()
   brief.zielLuecken = ["Die Bond Kur repariert die gebrochenen Längen."]
   assert.deepEqual(lintConsultBrief(brief, nomiInput()), [])
+})
+
+test("Stil: plan talk in the diagnose is a finding; plan talk in a Hebel is not", () => {
+  const brief = cleanBrief()
+  brief.diagnose = `${brief.diagnose} Eine Spülung ist als neuer Schritt vorgesehen.`
+  const findings = lintConsultBrief(brief, nomiInput())
+  assert.deepEqual(
+    findings.map((finding) => [finding.rule, finding.guardrail, finding.location, finding.excerpt]),
+    [["diagnose_plan_talk", "Stil", "diagnose", "vorgesehen"]],
+  )
+  const inHebel = cleanBrief()
+  inHebel.hebel[0]!.note = `${inHebel.hebel[0]!.note} Die Umstellung ist vorgesehen.`
+  assert.deepEqual(lintConsultBrief(inHebel, nomiInput()), [])
+})
+
+test("Stil: with hot tools, a heat Hebel says „schonender“, never „weniger Hitze“", () => {
+  const brief = cleanBrief()
+  brief.hebel[0]!.title = "Weniger Hitze"
+  assert.deepEqual(
+    lintConsultBrief(brief, nomiInput()).map((finding) => [finding.rule, finding.location]),
+    [["heat_less_framing", "hebel[0].title"]],
+  )
+  // Without hot tools (blow-drying only) „weniger Hitze" may be the honest advice.
+  assert.deepEqual(
+    lintConsultBrief(brief, nomiInput({ flags: ["bleached", "colored", "breakage_signal"] })),
+    [],
+  )
 })

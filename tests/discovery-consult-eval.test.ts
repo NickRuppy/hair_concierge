@@ -8,7 +8,10 @@ import {
   type ConsultEvalCheck,
 } from "../scripts/eval-consult-brief/checks"
 import { toConsultBriefSections } from "../src/lib/discovery/consult-brief/api-schema"
-import { generateConsultBrief, withBoundaryLine } from "../src/lib/discovery/consult-brief/generate"
+import {
+  generateConsultBrief,
+  storedConsultBriefSections,
+} from "../src/lib/discovery/consult-brief/generate"
 import { CONSULT_BOUNDARY_LINE, lintConsultBrief } from "../src/lib/discovery/consult-brief/lint"
 import { consultSourceHash } from "../src/lib/discovery/consult-brief/hash"
 import {
@@ -86,12 +89,10 @@ test("the recorded real answer passes the generator's parse, schema and lint pat
 
   // The stored shape: array → record converted, boundary line appended in code.
   const parsed = consultBriefSectionsSchema.parse(toConsultBriefSections(JSON.parse(recorded.raw)))
-  const brief = {
-    ...parsed,
-    zielLuecken: [],
-    erwartungen: withBoundaryLine(parsed.erwartungen),
-  }
+  const brief = storedConsultBriefSections(parsed, nomi.input)
   assert.deepEqual(lintConsultBrief(brief, nomi.input), [])
+  // Point system v2: every recorded Hebel carries a kind and gap; code set the levels.
+  assert.ok(brief.hebel.every((hebel) => hebel.kind && hebel.gap))
   assert.equal(brief.erwartungen.at(-1), CONSULT_BOUNDARY_LINE)
   assert.ok("brief" in result && result.brief.erwartungen.at(-1) === CONSULT_BOUNDARY_LINE)
 })
@@ -127,12 +128,20 @@ test("the eval's checks catch broken answers", () => {
   assert.deepEqual(noBoundary.findings, [])
   assert.equal(noBoundary.brief?.erwartungen.at(-1), CONSULT_BOUNDARY_LINE)
 
-  // Fewer than 3 levers is now a schema violation (R23); an out-of-range points value on a
-  // valid lever count is the eval's hebel_shape check.
+  // Fewer than 3 levers is a schema violation (R23), and so is a Hebel without a valid lever
+  // kind (point system v2).
   assert.deepEqual(
     checks(
       mutated((brief) => {
-        brief.hebel = [{ title: "Zu wenig", note: "Nur ein Hebel.", points: 1, bucket: "umgang" }]
+        brief.hebel = [
+          {
+            title: "Zu wenig",
+            note: "Nur ein Hebel.",
+            kind: "entwirren",
+            gap: "gross",
+            bucket: "umgang",
+          },
+        ]
       }),
     ),
     ["schema"],
@@ -148,11 +157,37 @@ test("the eval's checks catch broken answers", () => {
   assert.deepEqual(
     checks(
       mutated((brief) => {
-        const hebel = brief.hebel as Array<{ points: number | null }>
-        hebel[0] = { ...hebel[0], points: 0.1 }
+        const hebel = brief.hebel as Array<Record<string, unknown>>
+        hebel[0] = { ...hebel[0], kind: "wundermittel" }
       }),
     ),
-    ["hebel_shape"],
+    ["schema"],
+  )
+
+  // consult-brief-d: the diagnose describes her today and hot tools get „schonender" (lint, so
+  // the generator retries), and the checklist's own asks are not asked again (eval).
+  assert.ok(
+    checks(
+      mutated((brief) => (brief.diagnose = `${brief.diagnose} Eine Umstellung ist vorgesehen.`)),
+    ).includes("lint"),
+  )
+  assert.ok(nomi.input.flags.includes("hot_tool"))
+  assert.ok(
+    checks(
+      mutated((brief) => {
+        const hebel = brief.hebel as Array<Record<string, unknown>>
+        hebel[0] = { ...hebel[0], note: "Weniger Hitze im Alltag." }
+      }),
+    ).includes("lint"),
+  )
+  assert.ok(nomi.input.checklist.some((item) => item.kind === "ask_detangling"))
+  assert.ok(
+    checks(
+      mutated((brief) => {
+        const fragen = brief.callFragen as string[]
+        fragen[0] = "Wie entwirrst du deine Haare nach dem Waschen?"
+      }),
+    ).includes("duplicate_ask"),
   )
 
   // A market brand is the lint's job; an invented brand is the eval's heuristic.
@@ -171,17 +206,25 @@ test("the eval's checks catch broken answers", () => {
       brief.mechanik = "Dry ends usually come from heat, friction and too little moisture."
       brief.diagnose = "She has fine hair and it is not the product that is the problem."
       brief.hebel = [
-        { title: "Less heat", note: "Use the iron less often.", points: 1, bucket: "umgang" },
+        {
+          title: "Less heat",
+          note: "Use the iron less often.",
+          kind: "hitze_tools",
+          gap: "gross",
+          bucket: "umgang",
+        },
         {
           title: "Detangle gently",
           note: "Start at the ends and work upwards.",
-          points: 1,
+          kind: "entwirren",
+          gap: "gross",
           bucket: "umgang",
         },
         {
           title: "Conditioner",
           note: "Use it after every wash for slip.",
-          points: 1,
+          kind: "gewicht_tausch",
+          gap: "gross",
           bucket: "produkt",
         },
       ]

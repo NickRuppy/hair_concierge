@@ -4,6 +4,7 @@ import test from "node:test"
 import {
   CONSULT_LEVER_KINDS,
   CONSULT_LEVER_SPECS,
+  consultFactGap,
   consultLeverLevel,
   consultLeverSituation,
   consultScoreRange,
@@ -146,4 +147,13 @@ test("legacy points map onto levels", () => {
   assert.equal(levelFromLegacyPoints(0.5), 1)
   assert.equal(levelFromLegacyPoints(0), null)
   assert.equal(levelFromLegacyPoints(null), null)
+})
+
+test("her heat-protection answer sets that Hebel's gap; other kinds keep the model's", () => {
+  assert.equal(consultFactGap("hitzeschutz", { heatProtection: "sometimes" }), "klein")
+  assert.equal(consultFactGap("hitzeschutz", { heatProtection: "no" }), "gross")
+  assert.equal(consultFactGap("hitzeschutz", { heatProtection: "unsure" }), "offen")
+  assert.equal(consultFactGap("hitzeschutz", { heatProtection: "always" }), "klein")
+  assert.equal(consultFactGap("hitzeschutz", { heatProtection: null }), null)
+  assert.equal(consultFactGap("hitze_tools", { heatProtection: "no" }), null)
 })

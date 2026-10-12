@@ -261,9 +261,9 @@ export function createDiscoveryCockpitPage(
     // The brief's stale check compares against the generate route's own fingerprint (the
     // shared helper, same parts). A degraded read (lead or call sheet unread) hashes
     // differently from the full one, so it shows no stale hint rather than a false one.
-    const currentSourceHash =
+    const currentSource =
       leadAvailable && callSheetAvailable
-        ? consultBriefSource({ model, view, quiz, callSheet }).sourceHash
+        ? consultBriefSource({ model, view, quiz, callSheet })
         : null
     // Her wash frequency as she stated it (the Phase-4 „heute" line), and her honest wash
     // range over the shampoos in her week — the anchor of the per-wash frequency chips
@@ -310,8 +310,10 @@ export function createDiscoveryCockpitPage(
             sourceHash: callSheet?.consultBrief?.source_hash ?? null,
             generatedBy: callSheet?.consultBrief?.generated_by ?? null,
             savedAt: callSheet?.consultBrief?.saved_at ?? null,
+            sourceParts: callSheet?.consultBrief?.source_parts ?? null,
           }}
-          currentSourceHash={currentSourceHash}
+          currentSourceHash={currentSource?.sourceHash ?? null}
+          currentSourceParts={currentSource?.sourceParts ?? null}
           // R14: the brief is generated from what she submitted, never from a draft.
           generateBlockedHint={intake.state === "submitted" ? null : RUNSHEET_GENERATE_COPY.draft}
           initialCommitments={callSheet?.habitCommitments ?? []}

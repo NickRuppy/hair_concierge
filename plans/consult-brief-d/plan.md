@@ -26,9 +26,9 @@ kept deterministic and in code so the 4-week re-scores (package B) can recalibra
      - kinds: hitze_tools, hitzeschutz, foehnen, entwirren, chemie_abstaende, spitzen, waschrhythmus,
        produktlast, nachtschutz (no dots), spuelung_neu, gewicht_tausch, leave_in, bondbuilder, maske,
        oel, kopfhaut (own block, no dots), sonstiges (no dots unless Nick sets one);
-     - level = base, +1 for breakage levers when bleached/breaking, −1 when the gap is small,
-       −1 for leave-in/oil on fine hair, clamped 1–3; gap „offen" keeps the level and marks it
-       „im Call klären";
+     - level = base, +1 for breakage levers (heat tools, protectant, detangling, chemical spacing) when
+       bleached/breaking, −1 when the gap is small or unknown („offen", marked „im Call klären"),
+       −1 for leave-in/oil on fine hair, clamped 1–3;
      - range: weights 0,5/1/1,5 per level, overall largest + ½ × rest, capped by
        min(2, 0,6 × (10 − baseline), 9 − baseline); lower bound = upper / 2, both in half points; levers with
        no 4-week effect (chemie_abstaende, spitzen) and the kopfhaut block stay out of the range.
@@ -42,12 +42,15 @@ kept deterministic and in code so the 4-week re-scores (package B) can recalibra
 3. **Stale banner says what changed**: generation stores per-part hashes (Produkte, Profil, Hitze,
    Waschrhythmus, Wissen, Score, Brief-Version); the banner names the changed parts. Older briefs keep
    the generic text.
-4. **Diagnosis describes her, not plan decisions**: prompt rule + lint (no „Umstellung", „vorgesehen",
-   „geplant" in `diagnose`).
+4. **Diagnosis describes her, not plan decisions**: prompt rule + eval check (no „Umstellung",
+   „vorgesehen", „geplant" in `diagnose`). Not a lint rule: a lint failure discards the generation, too
+   harsh for a style rule.
 5. **Heat framing**: hot tools in her styling → the heat Hebel says „schonender", never „weniger"/„reduzieren";
-   prompt rule + lint.
-6. **Honest evidence labels** in the concern recipes: re-grade entries against the lever research
-   (e.g. leave-in is not „stark belegt"); research agent proposes, main session applies.
+   prompt rule + eval check.
+6. **Honest evidence labels** in the concern recipes: 51 entries re-graded with one rubric (strong = human
+   trials or consistent instrumental data + consensus; moderate = instrumental/mechanistic only; weak =
+   consensus or a single small study), research agent 2026-10-12; labels „gut belegt / laborbasiert /
+   Erfahrungswert / unklar". Display-only (grades never reach the brief input, G5).
 7. **German copy for `hair_loss_or_thinning`** in the recipe texts (3 places).
 8. **No duplicate questions**: callFragen never repeat the checklist's code-side asks (prompt rule +
    eval check).

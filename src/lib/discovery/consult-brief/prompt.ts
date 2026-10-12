@@ -3,6 +3,13 @@ import { z } from "zod"
 import type { DiscoveryCallSheetBriefSections, DiscoveryCallSheetHebel } from "../call-sheet"
 import type { ConsultInput } from "./input"
 import { CONSULT_GUARDRAILS_MARKDOWN } from "./knowledge-sources"
+import {
+  CONSULT_LEVER_GAPS,
+  CONSULT_LEVER_KINDS,
+  CONSULT_LEVER_SPECS,
+  type ConsultLeverGap,
+  type ConsultLeverKind,
+} from "./lever-scale"
 
 /**
  * The consult brief's prompt (consult-agent T2, hardened per plans/consult-brief-hardening):
@@ -14,7 +21,7 @@ import { CONSULT_GUARDRAILS_MARKDOWN } from "./knowledge-sources"
  * model.
  */
 
-export const CONSULT_BRIEF_PROMPT_VERSION = "consult-brief-v5"
+export const CONSULT_BRIEF_PROMPT_VERSION = "consult-brief-v6"
 
 /**
  * The exact sentence that must accompany lengths-care when boundary triggers are present
@@ -26,7 +33,8 @@ export const CONSULT_LENGTHS_ONLY_SENTENCE =
 
 /**
  * The generated sections (v4, R26/R27): the stored shape minus `zielLuecken` (code fills
- * `[]` — gaps are asked as callFragen now) and with `bucket` required on every Hebel.
+ * `[]` — gaps are asked as callFragen now) and with `bucket` required on every Hebel. Since v6
+ * (point system v2) a Hebel names its lever `kind` and her `gap`; code derives the level.
  * Strict, so a drifting answer is refused. hebel 3–5 (R23) and callFragen 3–5 (R24) are
  * contract, not style; old stored briefs are never re-validated through this schema.
  */
@@ -34,7 +42,13 @@ export type GeneratedConsultBriefSections = Omit<
   DiscoveryCallSheetBriefSections,
   "zielLuecken" | "hebel"
 > & {
-  hebel: Array<Omit<DiscoveryCallSheetHebel, "bucket"> & { bucket: "produkt" | "umgang" }>
+  hebel: Array<
+    Pick<DiscoveryCallSheetHebel, "title" | "note"> & {
+      kind: ConsultLeverKind
+      gap: ConsultLeverGap
+      bucket: "produkt" | "umgang"
+    }
+  >
 }
 
 export const consultBriefSectionsSchema = z
@@ -47,7 +61,8 @@ export const consultBriefSectionsSchema = z
           .object({
             title: z.string(),
             note: z.string(),
-            points: z.number().finite().nullable(),
+            kind: z.enum(CONSULT_LEVER_KINDS),
+            gap: z.enum(CONSULT_LEVER_GAPS),
             bucket: z.enum(["produkt", "umgang"]),
           })
           .strict(),
@@ -63,7 +78,7 @@ export const consultBriefSectionsSchema = z
 const SCHEMA_SKETCH = `{
   "mechanik": string,
   "diagnose": string,
-  "hebel": [{ "title": string, "note": string, "points": number | null, "bucket": "produkt" | "umgang" }],  // 3 bis 5 Einträge
+  "hebel": [{ "title": string, "note": string, "kind": "<Hebel-Art>", "gap": "gross" | "klein" | "offen", "bucket": "produkt" | "umgang" }],  // 3 bis 5 Einträge
   "swapReasons": [{ "key": "<decisionKey>", "reason": string }],
   "callFragen": [string],  // 3 bis 5 Einträge
   "erwartungen": [string]
@@ -79,10 +94,13 @@ const SYSTEM = `Du schreibst den internen Beratungs-Brief für Nick, der gleich 
 
 ## Aufgabe
 - "mechanik": 2–3 Sätze, generisch und ohne Personenbezug: das Hauptproblem benannt, der Mechanismus dahinter, die typischen Ursachen — in einfachen Worten, damit klar wird, dass das Problem verstanden ist. Register: verständnisvoll und nahbar, nicht lehrbuchhaft — darf anerkennen, dass das Problem lästig ist, und Zuversicht geben, dass ein klarer, gut verstandener Mechanismus dahintersteckt. Kein Kitsch, keine Ausrufezeichen, kein Wirkversprechen (G1: „Pflege kann bremsen" ja, Heilung nie). Stützt sich auf das Rezept und die Wissensbasis im <input>, kein Allgemeinwissen darüber hinaus.
-- "diagnose": ihre konkrete Situation als Ursachenkette aus Profil, Hauptproblem, Hitze-Daten, Waschrhythmus und Produkten, 2 bis 4 Sätze — knapp, ohne die "mechanik" zu wiederholen. Styling- und Hitze-Gewohnheiten gehören hinein, sobald sie plausibel aufs Hauptproblem einzahlen. Jede Ursachen-Aussage stützt sich auf ein Feld im <input>. Fehlt eine Angabe, erfinde keine — mach eine callFrage daraus.
-- "hebel": 3 bis 5 Hebel, gereiht nach erwartetem Impact für IHR Hauptproblem, jeder mit "bucket": "produkt" für Produkt-Züge (Tausch, Neuzugang, Weglassen) oder "umgang" für Verhalten (Waschrhythmus, Hitze, Handling). Verhaltens-Hebel und Produkt-Züge zählen gleichberechtigt: Ein zentraler Tausch oder Neuzugang darf ein eigener Hebel sein. Ein Hebel = ein Thema, keine Sammel-Hebel. Umgang-Hebel nur für eigenständige große Züge mit eigenem Score-Gewicht: Die Zeilen aus "mainConcern.levers" stehen im Cockpit schon als abhakbare Gewohnheiten — kein Hebel formuliert eine davon bloß um. Berührt ein Hebel dasselbe Thema, VERTIEFT seine "note" sie (konkretes Wie: Stufe, Häufigkeit, Reihenfolge), statt sie zu wiederholen. Jede Kategorie aus "mainConcern.primaryCategories" („Zuerst") kommt im Brief vor: als eigener Produkt-Hebel, ausdrücklich benannt in der "note" eines Hebels oder als callFrage — keine fehlt stillschweigend (bei "boundaryTriggers" gilt trotzdem: kein Pflegehebel gegen Ausfall). "title" kurz, "note" ein bis zwei Sätze, was konkret zu tun ist. "points": grobe Orientierung je Hebel (0,5 bis 2) oder null, wenn offen. Die Ziel-Rechnung und ihre Deckelung macht der Code — rechne nichts zusammen. Punkte stehen nur im Feld "points", nie im Text.
+- "diagnose": ihre konkrete Situation als Ursachenkette aus Profil, Hauptproblem, Hitze-Daten, Waschrhythmus und Produkten, 2 bis 4 Sätze — knapp, ohne die "mechanik" zu wiederholen. Styling- und Hitze-Gewohnheiten gehören hinein, sobald sie plausibel aufs Hauptproblem einzahlen. Jede Ursachen-Aussage stützt sich auf ein Feld im <input>. Fehlt eine Angabe, erfinde keine — mach eine callFrage daraus. Die "diagnose" beschreibt ihren heutigen Zustand, nie den Plan: keine Umstellungen, Tausche oder Vorhaben („Umstellung auf …", „vorgesehen", „geplant", „soll künftig") — die gehören in die Hebel.
+- "hebel": 3 bis 5 Hebel, gereiht nach erwartetem Impact für IHR Hauptproblem, jeder mit "bucket": "produkt" für Produkt-Züge (Tausch, Neuzugang, Weglassen) oder "umgang" für Verhalten (Waschrhythmus, Hitze, Handling). Verhaltens-Hebel und Produkt-Züge zählen gleichberechtigt: Ein zentraler Tausch oder Neuzugang darf ein eigener Hebel sein. Ein Hebel = ein Thema, keine Sammel-Hebel. Umgang-Hebel nur für eigenständige große Züge mit eigenem Score-Gewicht: Die Zeilen aus "mainConcern.levers" stehen im Cockpit schon als abhakbare Gewohnheiten — kein Hebel formuliert eine davon bloß um. Berührt ein Hebel dasselbe Thema, VERTIEFT seine "note" sie (konkretes Wie: Stufe, Häufigkeit, Reihenfolge), statt sie zu wiederholen. Jede Kategorie aus "mainConcern.primaryCategories" („Zuerst") kommt im Brief vor: als eigener Produkt-Hebel, ausdrücklich benannt in der "note" eines Hebels oder als callFrage — keine fehlt stillschweigend (bei "boundaryTriggers" gilt trotzdem: kein Pflegehebel gegen Ausfall). "title" kurz, "note" ein bis zwei Sätze, was konkret zu tun ist. "kind": die Hebel-Art aus der Liste unten, die den Hebel am genauesten trifft. "gap": wie weit ihre heutige Gewohnheit vom Ziel weg ist — "gross" (macht es nie, falsch oder stark abweichend), "klein" („manchmal", nur wenig daneben), "offen" (der <input> sagt es nicht; dann gehört die Frage in die callFragen). Was sie schon richtig macht, ist kein Hebel. Wirkungsstufe und Score-Spanne berechnet der Code aus "kind" und "gap" — keine Punkte, Stufen oder Score-Zahlen im Text. Ein Kopfhaut-Hebel ("kind": "kopfhaut") bleibt kosmetisch und steht ohne Stufe für sich. Hitze: Gehört ein Hitze-Tool (Glätteisen, Lockenstab, Welleneisen, Warmluftbürste) zu ihrem Styling, heißt der Hebel „schonender" (Stufe, Durchgänge, Hitzeschutz), nie „weniger Hitze" oder „Hitze reduzieren" — außer sie sagt selbst, dass sie darauf verzichten kann.
+
+Hebel-Arten ("kind"):
+${CONSULT_LEVER_KINDS.map((kind) => `  - ${kind}: ${CONSULT_LEVER_SPECS[kind].label}`).join("\n")}
 - "swapReasons": pro erlaubtem Key ein Eintrag { "key", "reason" } mit einer Begründung in Beratungssprache, "key" ausschließlich aus <erlaubte_swapReasons_keys>. Jede "reason" begründet nur den vorgeschlagenen Zug hinter ihrem Key — Tausch, Neuzugang oder noch offener Vorschlag, je nachdem, was im <input> steht; behaupte keine Entscheidung, die dort nicht steht. Keine Prioritäts-Aussagen über die Kategorie („zuerst", „nachrangig", „erster Schritt"): die gehören in Hebel oder callFragen. Ist die Liste leer, ist ein leeres Array die richtige Antwort.
-- "callFragen": genau die 3 bis 5 Fragen, deren Antwort den Plan wirklich ändert — zuerst die zu Einträgen mit "questionFirst": true. Liegen ihr Ziel und die realistische Erwartung auseinander, formuliere genau das als Frage („Du willst X — wie wichtig ist dir das im Vergleich zu Y?"), nie als Feststellung. Mehrere Detailfragen zum selben Thema werden zu einer zusammengesetzten Frage verdichtet. Die Fragenlisten im Material sind Auswahl-Material, nichts zum Kopieren.
+- "callFragen": genau die 3 bis 5 Fragen, deren Antwort den Plan wirklich ändert — zuerst die zu Einträgen mit "questionFirst": true. Liegen ihr Ziel und die realistische Erwartung auseinander, formuliere genau das als Frage („Du willst X — wie wichtig ist dir das im Vergleich zu Y?"), nie als Feststellung. Mehrere Detailfragen zum selben Thema werden zu einer zusammengesetzten Frage verdichtet. Die Fragenlisten im Material sind Auswahl-Material, nichts zum Kopieren. Die "checklist"-Einträge mit "kind" ask_bleach_cadence (Färbe-/Blondier-Rhythmus), ask_detangling (Entwirren) und ask_where_she_shops (Einkaufsort) fragt das Cockpit selbst ab — dazu keine eigene callFrage, auch nicht, wenn Wissensbasis oder Rezept eine solche Frage vorschlagen (etwa „Wie entwirrst du?").
 - "erwartungen": ehrliche Zeitfenster nach den Guardrails (G3). Die medizinische Grenz-Zeile schreibst du NICHT selbst — sie wird automatisch als letzter Eintrag angehängt.
 
 ## Stil
@@ -126,9 +144,10 @@ export function buildConsultBriefPrompt(input: ConsultInput): { system: string; 
     "2. Keine Wirk- oder Heilversprechen aus G1 — auch nicht sinngemäß, auch nicht verneint.",
     "3. Keine Score-Zahlen, Prozentwerte oder Evidenz-Vokabeln im Text; Häufigkeiten und Zeitfenster (Wochen, Monate) sind erlaubt.",
     "4. Medizinisches nur faktisch — nie empfehlen, dosieren oder Präparat-Marken nennen (G1b), die Entscheidung ärztlich verorten; bei boundaryTriggers kein Pflegehebel gegen Ausfall.",
-    '5. "hebel" und "callFragen" haben je 3 bis 5 Einträge, jeder Hebel den passenden "bucket", und jede Frage ändert den Plan.',
+    '5. "hebel" und "callFragen" haben je 3 bis 5 Einträge, jeder Hebel den passenden "bucket", "kind" und "gap", und jede Frage ändert den Plan und doppelt keine ask_-Frage der checklist.',
     '6. Jede Kategorie aus "mainConcern.primaryCategories" steht als Produkt-Hebel, in der "note" eines Hebels oder als callFrage im Brief.',
     '7. Kein Umgang-Hebel wiederholt eine Zeile aus "mainConcern.levers" — er vertieft sie (Stufe, Häufigkeit, Reihenfolge) oder entfällt.',
+    '8. Die "diagnose" beschreibt ihren heutigen Zustand, keinen Plan; ein Hitze-Hebel bei Hitze-Tools heißt „schonender", nicht „weniger".',
     "Antworte nur mit dem JSON-Objekt.",
   ].join("\n")
   return { system: SYSTEM, user }

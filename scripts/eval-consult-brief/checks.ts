@@ -1,6 +1,6 @@
 import type { DiscoveryCallSheetBriefSections } from "../../src/lib/discovery/call-sheet"
 import { toConsultBriefSections } from "../../src/lib/discovery/consult-brief/api-schema"
-import { withBoundaryLine } from "../../src/lib/discovery/consult-brief/generate"
+import { storedConsultBriefSections } from "../../src/lib/discovery/consult-brief/generate"
 import type { ConsultInput } from "../../src/lib/discovery/consult-brief/input"
 import {
   CONSULT_BOUNDARY_LINE,
@@ -27,6 +27,7 @@ export type ConsultEvalCheck =
   | "product_outside_input"
   | "hair_loss_product"
   | "language"
+  | "duplicate_ask"
 
 export type ConsultEvalFinding = { check: ConsultEvalCheck; detail: string }
 
@@ -62,12 +63,8 @@ export function evaluateConsultBriefAnswer(raw: string, input: ConsultInput): Co
     }
     return { brief: null, findings, jsonShape }
   }
-  // Same augment as `generateConsultBrief`: zielLuecken is code-owned since v4 (R27).
-  const brief = {
-    ...parsed.data,
-    zielLuecken: [],
-    erwartungen: withBoundaryLine(parsed.data.erwartungen),
-  }
+  // Exactly what `generateConsultBrief` would store (levels, zielLuecken, boundary line).
+  const brief = storedConsultBriefSections(parsed.data, input)
 
   for (const finding of lintConsultBrief(brief, input)) {
     findings.push({
@@ -83,6 +80,7 @@ export function evaluateConsultBriefAnswer(raw: string, input: ConsultInput): Co
   findings.push(...productOutsideInputFindings(brief, input))
   findings.push(...hairLossProductFindings(brief, input))
   findings.push(...languageFindings(brief))
+  findings.push(...duplicateAskFindings(brief, input))
 
   return { brief, findings, jsonShape }
 }
@@ -125,7 +123,7 @@ function boundaryLineFindings(brief: DiscoveryCallSheetBriefSections): ConsultEv
   ]
 }
 
-/** 1–5 levers, each titled and explained; points null or within the prompt's 0,5–2. */
+/** 1–5 levers, each titled and explained, each with a lever kind and gap (point system v2). */
 function hebelFindings(brief: DiscoveryCallSheetBriefSections): ConsultEvalFinding[] {
   const findings: ConsultEvalFinding[] = []
   if (brief.hebel.length < 1 || brief.hebel.length > 5) {
@@ -136,11 +134,8 @@ function hebelFindings(brief: DiscoveryCallSheetBriefSections): ConsultEvalFindi
       findings.push({ check: "hebel_shape", detail: `hebel[${index}]: leerer Titel` })
     if (!hebel.note.trim())
       findings.push({ check: "hebel_shape", detail: `hebel[${index}]: leere Notiz` })
-    if (hebel.points !== null && !(hebel.points >= 0.5 && hebel.points <= 2)) {
-      findings.push({
-        check: "hebel_shape",
-        detail: `hebel[${index}].points = ${hebel.points} (erwartet null oder 0,5–2)`,
-      })
+    if (!hebel.kind || !hebel.gap) {
+      findings.push({ check: "hebel_shape", detail: `hebel[${index}]: ohne kind/gap` })
     }
   })
   return findings
@@ -195,6 +190,10 @@ const GENERIC_PRECEDERS = new Set([
   "ohne",
   "nur",
   "auch",
+  // A clause opener („Ob Conditioner genutzt wird …") — capitalized at a sentence start.
+  "ob",
+  "wie",
+  "wann",
 ])
 
 /**
@@ -307,6 +306,30 @@ function languageFindings(brief: DiscoveryCallSheetBriefSections): ConsultEvalFi
   ]
 }
 
+/** The checklist's code-side asks, by topic — a callFrage must not ask them again (item 8). */
+const ASK_TOPICS = {
+  ask_bleach_cadence:
+    /\b(wie oft|wann|zuletzt|in welchem abstand)\b[^?]*\b(blondier|färb|farb)\p{L}*|\b(blondier|färb)\p{L}*\s+du\b/iu,
+  ask_detangling:
+    /\b(wie|womit|wann)\s+(entwirrst|kämmst|bürstest)\b|\b(entwirrst|kämmst|bürstest)\s+du\b/iu,
+  ask_where_she_shops: /\b(wo|in welche[mr]?)\b[^?]*\b(kaufst|einkaufst|shoppst)\b/iu,
+} as const
+
+function duplicateAskFindings(
+  brief: DiscoveryCallSheetBriefSections,
+  input: ConsultInput,
+): ConsultEvalFinding[] {
+  const asked = new Set(input.checklist.map((item) => item.kind))
+  return brief.callFragen.flatMap((frage, index) =>
+    (Object.keys(ASK_TOPICS) as Array<keyof typeof ASK_TOPICS>)
+      .filter((kind) => asked.has(kind) && ASK_TOPICS[kind].test(frage))
+      .map((kind) => ({
+        check: "duplicate_ask" as const,
+        detail: `callFragen[${index}] doppelt ${kind}: „${frage}"`,
+      })),
+  )
+}
+
 /** The brief as readable Markdown for Nick's review. */
 export function consultBriefMarkdown(
   brief: DiscoveryCallSheetBriefSections,
@@ -327,7 +350,7 @@ export function consultBriefMarkdown(
     "",
     ...brief.hebel.map(
       (hebel, index) =>
-        `${index + 1}. [${hebel.bucket ?? "?"}] **${hebel.title}**${hebel.points === null ? "" : ` _(${hebel.points} P.)_`} — ${hebel.note}`,
+        `${index + 1}. [${hebel.bucket ?? "?"}] **${hebel.title}** _(${hebel.kind ?? "?"}, ${hebel.gap ?? "?"}, ${hebel.level ? "●".repeat(hebel.level) : "ohne Stufe"})_ — ${hebel.note}`,
     ),
     "",
     "## Tausch-Begründungen",

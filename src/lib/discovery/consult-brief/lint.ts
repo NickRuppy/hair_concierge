@@ -26,8 +26,21 @@ export type ConsultLintRule =
   | "unknown_swap_key"
   | "swap_reason_priority"
   | "boundary_line_missing"
+  | "diagnose_plan_talk"
+  | "heat_less_framing"
 
-export type ConsultGuardrail = "G1" | "G1a" | "G1b" | "G1c" | "G2" | "G3" | "G4" | "G5" | "G6"
+/** G1–G6 from guardrails.md; „Stil" = a brief-shape rule of consult-brief-d (no guardrail). */
+export type ConsultGuardrail =
+  | "G1"
+  | "G1a"
+  | "G1b"
+  | "G1c"
+  | "G2"
+  | "G3"
+  | "G4"
+  | "G5"
+  | "G6"
+  | "Stil"
 
 export type ConsultLintFinding = {
   rule: ConsultLintRule
@@ -705,6 +718,16 @@ function briefTexts(brief: DiscoveryCallSheetBriefSections): BriefText[] {
   ]
 }
 
+/** Plan talk in the diagnose (consult-brief-d item 4). */
+export const DIAGNOSE_PLAN_TALK = words(
+  "umstellung|umstellen|vorgesehen|geplant|soll künftig|sollen künftig|wird künftig|werden künftig",
+)
+
+/** „Less heat" wording, illegal when hot tools are part of her styling (item 5). */
+export const LESS_HEAT = words(
+  "weniger hitze|hitze reduzieren|hitze gezielt reduzieren|hitze runterfahren|seltener glätten|seltener stylen",
+)
+
 /** Whitespace-normalized, for the verbatim boundary check. */
 function squash(text: string): string {
   return normalizeConsultText(text).replace(/\s+/g, " ").trim()
@@ -864,6 +887,39 @@ export function lintConsultBrief(
         }
       }
     }
+  }
+
+  // consult-brief-d item 4: the diagnose describes her today — plan talk belongs in the Hebel.
+  const planTalk = DIAGNOSE_PLAN_TALK.exec(normalizeConsultText(brief.diagnose))
+  if (planTalk) {
+    findings.push({
+      rule: "diagnose_plan_talk",
+      guardrail: "Stil",
+      location: "diagnose",
+      excerpt: planTalk[0],
+      detail: "Die Diagnose beschreibt ihren heutigen Zustand; Vorhaben gehören in die Hebel.",
+    })
+  }
+
+  // Item 5: hot tools are part of her styling — the heat Hebel says „schonender".
+  if (input.flags.includes("hot_tool")) {
+    brief.hebel.forEach((entry, index) => {
+      for (const [location, text] of [
+        [`hebel[${index}].title`, entry.title],
+        [`hebel[${index}].note`, entry.note],
+      ] as const) {
+        const match = LESS_HEAT.exec(normalizeConsultText(text))
+        if (match) {
+          findings.push({
+            rule: "heat_less_framing",
+            guardrail: "Stil",
+            location,
+            excerpt: match[0],
+            detail: 'Hitze-Tools gehören zu ihrem Styling: „schonender", nicht „weniger".',
+          })
+        }
+      }
+    })
   }
 
   // G2 — the boundary line, verbatim, in `erwartungen` of every brief (ruling: deterministic

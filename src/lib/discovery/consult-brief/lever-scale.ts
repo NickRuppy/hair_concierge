@@ -139,6 +139,21 @@ export function consultLeverLevel(
   return clampLevel(level)
 }
 
+/**
+ * The gap code knows from her answers, ahead of the model's guess: for heat protection her
+ * least consistent answer („manchmal" → klein, „nein" → gross, „unsicher" → offen; „immer"
+ * leaves only a small gap — the Hebel then mostly repeats what she does). Null: the model's.
+ */
+export function consultFactGap(
+  kind: ConsultLeverKind,
+  facts: { heatProtection: "always" | "sometimes" | "no" | "unsure" | null },
+): ConsultLeverGap | null {
+  if (kind !== "hitzeschutz" || facts.heatProtection === null) return null
+  if (facts.heatProtection === "no") return "gross"
+  if (facts.heatProtection === "unsure") return "offen"
+  return "klein"
+}
+
 /** Briefs stored before v6 carry the model's 0,5–2 points; they render as the nearest level. */
 export function levelFromLegacyPoints(points: number | null): ConsultLeverLevel | null {
   if (points === null || !(points > 0)) return null

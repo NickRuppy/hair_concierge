@@ -205,7 +205,7 @@ test("brief save: PATCHes score, the edited brief (Mechanik, bucketed Hebel, sto
 
     byId(tree, "runsheet-baseline-score").props.onChange({ target: { value: "5" } })
     tree = render()
-    byId(tree, "runsheet-hebel-s0-0-points").props.onChange({ target: { value: "1,5" } })
+    byId(tree, "runsheet-hebel-s0-0-level").props.onChange({ target: { value: "2" } })
     tree = render()
     byId(tree, "runsheet-habit-recipe--dryness--hitzeschutz-immer").props.onChange({
       target: { checked: true },
@@ -226,15 +226,27 @@ test("brief save: PATCHes score, the edited brief (Mechanik, bucketed Hebel, sto
         sections: {
           ...sections,
           // Display order (Produkte, then Umgang), with each row's bucket; zielLuecken
-          // comes through the spread untouched.
+          // comes through the spread untouched. Written in the v2 shape: legacy points read
+          // as a level (1 → ●●), the edited row keeps the level Nick picked.
           hebel: [
             {
               title: "Mildes Shampoo",
               note: "Sanftwerk statt Glanzwerk",
-              points: 1,
+              points: null,
               bucket: "produkt",
+              kind: null,
+              gap: null,
+              level: 2,
             },
-            { title: "Schaden stoppen", note: "Hitzeschutz", points: 1.5, bucket: "umgang" },
+            {
+              title: "Schaden stoppen",
+              note: "Hitzeschutz",
+              points: null,
+              bucket: "umgang",
+              kind: null,
+              gap: null,
+              level: 2,
+            },
           ],
         },
         generated_at: "2026-09-27T10:00:00.000Z",
@@ -347,12 +359,22 @@ test("hebel rows keep their DOM ids when a row above is removed", () => {
   )
 })
 
-test("brief patch: empty score clears it, German decimals parse, bad points are refused", () => {
+test("brief patch: empty score clears it, Hebel are written in the v2 shape", () => {
   const state: RunsheetBriefState = {
     baselineText: " ",
     mechanik: "M",
     diagnose: "x",
-    hebel: [{ uid: "a", title: "T", note: "N", points: "0,5", bucket: "umgang" }],
+    hebel: [
+      {
+        uid: "a",
+        title: "T",
+        note: "N",
+        level: 1,
+        kind: "entwirren",
+        gap: "offen",
+        bucket: "umgang",
+      },
+    ],
     lists: { callFragen: [], erwartungen: [] },
     commitments: [],
   }
@@ -361,17 +383,22 @@ test("brief patch: empty score clears it, German decimals parse, bad points are 
   assert.ok("patch" in built)
   assert.equal(built.patch.baseline_score, null)
   assert.deepEqual(built.patch.consult_brief!.sections.hebel, [
-    { title: "T", note: "N", points: 0.5, bucket: "umgang" },
+    {
+      title: "T",
+      note: "N",
+      points: null,
+      bucket: "umgang",
+      kind: "entwirren",
+      gap: "offen",
+      level: 1,
+    },
   ])
   assert.equal(built.patch.consult_brief!.sections.mechanik, "M")
   // zielLuecken is not edited any more: the stored lines ride along via the spread.
   assert.deepEqual(built.patch.consult_brief!.sections.zielLuecken, ["Kein Hitzeschutz"])
   assert.equal(built.patch.consult_brief!.generated_by, "manual")
 
-  const bad = runsheetBriefPatch(
-    { ...state, hebel: [{ ...state.hebel[0]!, points: "viel" }] },
-    meta,
-  )
+  const bad = runsheetBriefPatch({ ...state, baselineText: "viel" }, meta)
   assert.ok("invalid" in bad)
 })
 
@@ -487,7 +514,15 @@ test("generate: POSTs expected_state of the loaded brief and takes the new brief
       assert.equal(brief.source_hash, "fresh-hash")
       assert.equal(brief.generated_by, "manual")
       assert.deepEqual((brief.sections as DiscoveryCallSheetBriefSections).hebel, [
-        { title: "Generierter Hebel", note: "Neu", points: 1, bucket: "produkt" },
+        {
+          title: "Generierter Hebel",
+          note: "Neu",
+          points: null,
+          bucket: "produkt",
+          kind: null,
+          gap: null,
+          level: 2,
+        },
       ])
       assert.equal(
         (brief.sections as DiscoveryCallSheetBriefSections).mechanik,
@@ -526,7 +561,7 @@ test("generate: the refresh after it re-syncs to the same brief — no flicker, 
     assert.equal(byId(tree, "runsheet-diagnose").props.value, "Generierte Diagnose.")
     assert.equal(byId(tree, "runsheet-hebel-g0-0-title").props.value, "Generierter Hebel")
     assert.equal(saveBar(tree).props.dirty, false)
-    assert.equal(generateBar(tree).props.stale, false)
+    assert.equal(generateBar(tree).props.stale, null)
   } finally {
     fetchStub.restore()
   }
@@ -552,7 +587,7 @@ test("generate: a legacy enrollment without a brief says „Brief erstellen“ a
   try {
     let tree = render()
     assert.equal(generateBar(tree).props.label, RUNSHEET_GENERATE_COPY.create)
-    assert.equal(generateBar(tree).props.stale, false)
+    assert.equal(generateBar(tree).props.stale, null)
     generateBar(tree).props.onGenerate()
     await settle()
     assert.deepEqual(fetchStub.calls[0]!.body, { expected_state: null })
@@ -866,16 +901,34 @@ test("stale hint: shown when the stored hash differs from the page's, hidden whe
       () => DiscoveryRunsheetBrief(briefProps({ currentSourceHash, ...overrides })),
       router,
     )()
-  assert.equal(generateBar(tree("abc123")).props.stale, false)
-  assert.equal(generateBar(tree("changed")).props.stale, true)
-  assert.equal(generateBar(tree(null)).props.stale, false, "degraded read: no hint")
+  assert.equal(generateBar(tree("abc123")).props.stale, null)
+  assert.equal(
+    generateBar(tree("changed")).props.stale,
+    "Eingaben haben sich geändert — Brief neu generieren?",
+    "a brief stored without parts: the generic hint",
+  )
+  assert.equal(generateBar(tree(null)).props.stale, null, "degraded read: no hint")
+  // Both sides carry parts: the hint names what changed (consult-brief-d item 3).
+  const storedParts = { produkte: "p1", score: "s1", version: "v1" }
+  assert.equal(
+    generateBar(
+      tree("changed", {
+        initialBriefMeta: {
+          ...briefProps().initialBriefMeta,
+          sourceParts: storedParts,
+        },
+        currentSourceParts: { ...storedParts, produkte: "p2", version: "v2" },
+      }),
+    ).props.stale,
+    "Seit dem Brief geändert: Produkte & Entscheidungen, Brief-Vorlage — neu generieren?",
+  )
   assert.equal(
     generateBar(
       tree("changed", {
         initialBriefMeta: { generatedAt: null, sourceHash: null, generatedBy: null, savedAt: null },
       }),
     ).props.stale,
-    false,
+    null,
     "no brief: nothing to be stale",
   )
 
@@ -895,11 +948,11 @@ test("stale hint: shown when the stored hash differs from the page's, hidden whe
   }))
   try {
     let current = render()
-    assert.equal(generateBar(current).props.stale, true)
+    assert.ok(generateBar(current).props.stale)
     generateBar(current).props.onGenerate()
     await settle()
     current = render()
-    assert.equal(generateBar(current).props.stale, false)
+    assert.equal(generateBar(current).props.stale, null)
   } finally {
     fetchStub.restore()
   }
@@ -959,7 +1012,9 @@ test("generate helpers: expected state, R15 warning, error lines, apply", () => 
     baselineText: "4",
     mechanik: "neue Mechanik",
     diagnose: "neu",
-    hebel: [{ uid: "g0-0", title: "T", note: "", points: "1", bucket: "produkt" }],
+    hebel: [
+      { uid: "g0-0", title: "T", note: "", level: 2, kind: null, gap: null, bucket: "produkt" },
+    ],
     lists: { callFragen: [{ uid: "g0-f-0", text: "Frage?" }], erwartungen: [] },
     commitments: [],
   }

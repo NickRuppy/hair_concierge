@@ -117,7 +117,15 @@ const generatedSections = {
   mechanik: "Trockene Längen entstehen meist durch Hitze, Reibung und Vorschädigung.",
   diagnose: "Feines, blondiertes Haar mit aufgerauten Längen.",
   hebel: [
-    { title: "Hitzeschutz", note: "Vor jedem Glätten.", points: 1, bucket: "produkt" as const },
+    {
+      title: "Hitzeschutz",
+      note: "Vor jedem Glätten.",
+      points: null,
+      bucket: "produkt" as const,
+      kind: "hitzeschutz" as const,
+      gap: "klein" as const,
+      level: 2 as const,
+    },
   ],
   swapReasons: {},
   zielLuecken: [],
