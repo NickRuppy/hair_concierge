@@ -1,0 +1,47 @@
+{
+  "blindId": "T104",
+  "inciFingerprintSha256": "6aadaef99413633a8a0903229d33fda87aac541b8f86ad7a1d4123f0e19c921a",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {"normalization": "Aqua/Water, Mel/Honey, Mel Extract/Honey Extract, Parfum/Fragrance each one entry; normalized one-based positions.", "completeness": "complete (ID-1)", "sourceTier": 2, "identityConfidence": "moderate", "e3ProminenceCutoff": "Parfum/Fragrance is listed last (30) -> positions 1-29 mechanically prominent, including preservatives and fragrance allergens (an atypical ordering; recorded as uncertainty)"},
+  "directProperties": {
+    "cleansingStrength": {"value": "moderate", "confidence": "moderate", "neighboringAlternative": "strong",
+      "rationale": "C5: defining anionic Sodium Lauryl Sulfate (2, alkyl sulfate) with at least two prominent buffers - Cocamidopropyl Betaine (3), Coco-Betaine (14), Coco-Glucoside (15) - and no reinforcing strong anionic -> moderate.",
+      "counterSignals": "Two of the three buffers (14, 15) are prominent only because Parfum is listed last; on a conventional fragrance position SLS + one betaine would read strong under C5. Lauroyl/Myristoyl Methyl Glucamide (19) is a sugar-based nonionic (assigned nonionic by chemistry)."},
+    "conditioningLevel": {"value": "moderate", "confidence": "moderate", "neighboringAlternative": "low",
+      "rationale": "One cationic system, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (17), plus light routes: weak refatters Glyceryl Oleate (9), Lecithin (12), Hydrogenated Palm Glycerides Citrate (16), pearlizer Glycol Distearate (10), humectants Honey (5), Glycerin (8). C2 not met (no silicone, no prominent payload lipid; weak refatters cannot substitute).",
+      "counterSignals": "Guar sits late (17); all lipid-like routes are weak refatters; alkyl sulfate chassis."},
+    "weightPotential": {"value": "low", "confidence": "moderate", "neighboringAlternative": "moderate",
+      "rationale": "Only weak refatters and one late cationic guar face a sulfate reset; no silicone, payload lipid or film former.",
+      "subjudgments": {
+        "depositionLoad": {"value": "light", "rationale": "Guar (17) plus weak refatters (9, 12, 16, 21) and Tocopherol (20)."},
+        "persistence": {"value": "low", "rationale": "No persistent silicone/lipid system; refatters are light."},
+        "resetCapacity": {"value": "moderate", "rationale": "SLS with betaine/glucoside buffers (C5 moderate), close to strong."}},
+      "evidenceByFamily": {"cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (17)"], "weak_refatter": ["Glyceryl Oleate (9)", "Lecithin (12)", "Hydrogenated Palm Glycerides Citrate (16)", "Tocopherol (20)", "Ascorbyl Palmitate (21)"], "anionic_surfactant": ["Sodium Lauryl Sulfate (2)"], "amphoteric_surfactant": ["Cocamidopropyl Betaine (3)", "Coco-Betaine (14)"], "nonionic_surfactant": ["Coco-Glucoside (15)", "Lauroyl/Myristoyl Methyl Glucamide (19)"], "humectant_context": ["Mel/Honey (5)", "Mel Extract/Honey Extract (6)", "Glycerin (8)"]},
+      "excluded": ["Carbomer (7): anionic acrylate thickener (6.4)", "Glycol Distearate (10): pearlizer (6.4)", "Triethyl Citrate (11): solvent/plasticizer, not deposition", "Caramel (25): colorant"],
+      "unresolved": [],
+      "whyThisBand": "Deposition is light and low-persistence against an effective sulfate reset.",
+      "whyNotNeighborBand": "W2: two families present, but the only cationic route is a single guar at 17 and the other family is weak_refatter only (plus humectants); no silicone, payload lipid or film former; reset is effective. Combined residue plausibly below noticeable.",
+      "confidenceLimitingFactor": "Guar level unknown; honey/glycerin may add tacky feel; one step toward moderate is realistic."},
+    "focusPrimary": {"value": "provisional:pending_claims", "confidence": "low", "neighboringAlternative": "general",
+      "rationale": "Formula-only candidate: moisture (humectant cluster Honey/Glycerin with guar and refatter support). No claims seen.",
+      "careDirectionVerdictProvisional": "moisture_supported (moderate support; could be nonspecific)"},
+    "focusSecondary": {"value": [], "confidence": "low", "neighboringAlternative": ["repair"], "rationale": "Empty default pending claims."},
+    "usageRole": {"value": "regular", "confidence": "low", "neighboringAlternative": "frequent", "rationale": "Default; moderate cleansing excludes alternating."},
+    "scalpComfortTarget": {"value": "provisional:not_targeted", "confidence": "low", "neighboringAlternative": "targeted", "rationale": "Positioning unknown. CSA formula half met via E4 humectant/refatting routes Glycerin (8) and Glyceryl Oleate (9) (prominent); no E4 comfort route."},
+    "dandruffSupport": {"value": "not_supported", "confidence": "high", "neighboringAlternative": "none", "rationale": "Neither Piroctone Olamine nor Climbazole in the complete INCI."}
+  },
+  "formulaFacts": [
+    {"ingredient": "Sodium Lauryl Sulfate", "position": 2, "role": "defining anionic (alkyl sulfate, C5)"},
+    {"ingredient": "Cocamidopropyl Betaine", "position": 3, "role": "buffer (amphoteric)"},
+    {"ingredient": "Mel/Honey", "position": 5, "role": "humectant context (not on the C2/E4 closed lists)"},
+    {"ingredient": "Carbomer", "position": 7, "role": "acrylate thickener, excluded"},
+    {"ingredient": "Glycerin", "position": 8, "role": "humectant (C2/E4)"},
+    {"ingredient": "Glyceryl Oleate", "position": 9, "role": "weak_refatter; E4 refatting route"},
+    {"ingredient": "Glycol Distearate", "position": 10, "role": "pearlizing route"},
+    {"ingredient": "Coco-Betaine", "position": 14, "role": "buffer (amphoteric)"},
+    {"ingredient": "Coco-Glucoside", "position": 15, "role": "buffer (nonionic glucoside)"},
+    {"ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride", "position": 17, "role": "cationic_polymer"},
+    {"ingredient": "Parfum/Fragrance", "position": 30, "role": "E3 fragrance marker (last)"}
+  ],
+  "unresolvedMaterialIngredients": []
+}

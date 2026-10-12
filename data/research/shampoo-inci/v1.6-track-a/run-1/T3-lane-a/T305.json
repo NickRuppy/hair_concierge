@@ -1,0 +1,697 @@
+{
+  "blindId": "T305",
+  "inciFingerprintSha256": "4d21bc975505079b916aa495f148440be891511f6de5cfb207eb9bfeb79bd9a0",
+  "identity": {
+    "productName": "Garnier Wahre Schätze Ausgleichendes Shampoo Anziehende Aktivkohle & Schwarzkümmelöl (dm: 'Wahre Schätze Shampoo Aktivkohle, fettige Kopfhaut, 300 ml'; catalog name: Wahre Schätze Aktivkohle)",
+    "brand": "Wahre Schätze (Garnier)",
+    "market": "DE",
+    "formulaBlock": {
+      "normalization": "'AQUA / WATER' one entry; 'PARFUM / FRAGRANCE' one entry; positions = packet positions. E3: Parfum at 21; prominent = 1-20.",
+      "formulaCompleteness": "complete",
+      "formulaSourceTier": 2,
+      "identityConfidence": "moderate",
+      "rawInciCount": 21
+    }
+  },
+  "claimSources": [
+    {
+      "id": "S1",
+      "sourceKind": "retailer",
+      "grade": "low"
+    },
+    {
+      "id": "S2",
+      "sourceKind": "manufacturer_de",
+      "grade": "moderate"
+    },
+    {
+      "id": "S3",
+      "sourceKind": "retailer",
+      "grade": "low"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "high",
+      "rationale": "C5: Ammonium Lauryl Sulfate (2) is an alkyl-sulfate defining anionic with only one prominent buffer (Cocamidopropyl Betaine 4); polyglyceryl esters and charcoal are not buffers -> strong.",
+      "neighboringAlternative": "none",
+      "counterSignal": "Nigella oil and guar add refatting/conditioning; they never move the C5 convention.",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T305"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Ammonium Lauryl Sulfate",
+          "position": 2,
+          "role": "defining anionic, alkyl sulfate type (C5)"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "role": "buffer (only one)"
+        },
+        {
+          "ingredient": "Nigella Sativa Seed Oil",
+          "position": 5,
+          "role": "payload_lipid (nonvolatile plant oil); E4 humectant/refatting route"
+        },
+        {
+          "ingredient": "Triethyl Citrate",
+          "position": 6,
+          "role": "solvent/ester, no deposition role"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 8,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Charcoal Powder",
+          "position": 9,
+          "role": "not a cleansing route (C3)"
+        },
+        {
+          "ingredient": "Polyglycerin-10",
+          "position": 11,
+          "role": "polyol; not on the closed humectant list"
+        },
+        {
+          "ingredient": "Polyglyceryl-10 Myristate",
+          "position": 12,
+          "role": "polyglyceryl ester, not a route"
+        },
+        {
+          "ingredient": "Polyglyceryl-10 Stearate",
+          "position": 13,
+          "role": "polyglyceryl ester, not a route"
+        },
+        {
+          "ingredient": "Parfum / Fragrance",
+          "position": 21,
+          "role": "E3 marker"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "W-RICH by formula: prominent payload lipid (Nigella Sativa Seed Oil 5) converging with a cationic guar (8); Section 5 counts W-RICH as a rich architecture. C2 itself is not met (no pearlizing/fatty route; Polyglycerin-10 is not a listed humectant).",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "Single liquid oil + single guar in a strong ALS chassis; without C2 the care may be only one meaningful system (moderate). Value rests on the mechanical W-RICH reading.",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T305"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Ammonium Lauryl Sulfate",
+          "position": 2,
+          "role": "defining anionic, alkyl sulfate type (C5)"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "role": "buffer (only one)"
+        },
+        {
+          "ingredient": "Nigella Sativa Seed Oil",
+          "position": 5,
+          "role": "payload_lipid (nonvolatile plant oil); E4 humectant/refatting route"
+        },
+        {
+          "ingredient": "Triethyl Citrate",
+          "position": 6,
+          "role": "solvent/ester, no deposition role"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 8,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Charcoal Powder",
+          "position": 9,
+          "role": "not a cleansing route (C3)"
+        },
+        {
+          "ingredient": "Polyglycerin-10",
+          "position": 11,
+          "role": "polyol; not on the closed humectant list"
+        },
+        {
+          "ingredient": "Polyglyceryl-10 Myristate",
+          "position": 12,
+          "role": "polyglyceryl ester, not a route"
+        },
+        {
+          "ingredient": "Polyglyceryl-10 Stearate",
+          "position": 13,
+          "role": "polyglyceryl ester, not a route"
+        },
+        {
+          "ingredient": "Parfum / Fragrance",
+          "position": 21,
+          "role": "E3 marker"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-RICH (Nigella oil 5 + guar 8) with a strong reset is not limited reset, so high is unavailable; per W-RICH the band is moderate with W-RICH as counter-signal.",
+      "neighboringAlternative": "high",
+      "counterSignal": "Strong ALS reset and a liquid (non-waxy) oil argue that residue could be light.",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "one plant oil + one guar, both fairly early"
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "liquid oil and light guar, washed by a strong chassis"
+        },
+        "resetCapacity": {
+          "value": "strong",
+          "rationale": "C5 alkyl sulfate with a single buffer"
+        }
+      },
+      "whyThisBand": "W-RICH present; with moderate/strong reset the standard sets moderate unless the high route holds.",
+      "whyNotNeighborBand": "high needs limited (weak) reset or multiple persistent systems not offset; reset here is strong. low is closed off by W-RICH (two converging families), see uncertainty.",
+      "evidenceByFamily": {
+        "payload_lipid": [
+          [
+            "Nigella Sativa Seed Oil",
+            5
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Guar Hydroxypropyltrimonium Chloride",
+            8
+          ]
+        ],
+        "excluded": [
+          [
+            "Charcoal Powder",
+            9,
+            "absorbent, not deposition"
+          ],
+          [
+            "Polyglyceryl-10 Myristate",
+            12,
+            "emulsifier"
+          ],
+          [
+            "Polyglyceryl-10 Stearate",
+            13,
+            "emulsifier"
+          ],
+          [
+            "Triethyl Citrate",
+            6,
+            "solvent/ester"
+          ]
+        ],
+        "context_humectant": [
+          [
+            "Polyglycerin-10",
+            11
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Ammonium Lauryl Sulfate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            4
+          ]
+        ],
+        "unresolved": []
+      },
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T305"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Ammonium Lauryl Sulfate",
+          "position": 2,
+          "role": "defining anionic, alkyl sulfate type (C5)"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "role": "buffer (only one)"
+        },
+        {
+          "ingredient": "Nigella Sativa Seed Oil",
+          "position": 5,
+          "role": "payload_lipid (nonvolatile plant oil); E4 humectant/refatting route"
+        },
+        {
+          "ingredient": "Triethyl Citrate",
+          "position": 6,
+          "role": "solvent/ester, no deposition role"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 8,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Charcoal Powder",
+          "position": 9,
+          "role": "not a cleansing route (C3)"
+        },
+        {
+          "ingredient": "Polyglycerin-10",
+          "position": 11,
+          "role": "polyol; not on the closed humectant list"
+        },
+        {
+          "ingredient": "Polyglyceryl-10 Myristate",
+          "position": 12,
+          "role": "polyglyceryl ester, not a route"
+        },
+        {
+          "ingredient": "Polyglyceryl-10 Stearate",
+          "position": 13,
+          "role": "polyglyceryl ester, not a route"
+        },
+        {
+          "ingredient": "Parfum / Fragrance",
+          "position": 21,
+          "role": "E3 marker"
+        }
+      ],
+      "formulaIdentifiers": {
+        "inciFingerprintSha256": "4d21bc975505079b916aa495f148440be891511f6de5cfb207eb9bfeb79bd9a0",
+        "sourceTier": 2,
+        "captureDate": "per frozen packet (not shown to lane)"
+      },
+      "confidenceLimitingFactor": "INCI-only: concentrations, charge density and deposition unknown"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "rationale": "Deep-cleansing + oily-scalp positioning (S2 'Tiefenreinigungsshampoo, das schnell fettende Kopfhaut reinigt') points to clarifying, but F6 compatibility fails: conditioningLevel is high (W-RICH: Nigella Sativa Seed Oil 5 + guar 8). Next job, moisture for dry lengths ('spendet trockenen Haarlaengen bis zu 72 Stunden Feuchtigkeit'), fails because the care-direction verdict is nonspecific. -> general.",
+      "counterSignal": "If conditioningLevel were moderate (its N-ALT neighbor), clarifying would be compatible and dominant.",
+      "neighboringAlternative": "clarifying",
+      "formulaFacts": [
+        {
+          "ingredient": "Ammonium Lauryl Sulfate",
+          "position": 2
+        },
+        {
+          "ingredient": "Nigella Sativa Seed Oil",
+          "position": 5
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 8
+        }
+      ],
+      "claimRole": "not_applicable",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": [
+          "Polyglycerin-10 11 (not on closed humectant list)"
+        ],
+        "repairRoutes": [],
+        "sharedRoutes": [
+          "Nigella Sativa Seed Oil 5",
+          "Guar HPTC 8"
+        ],
+        "limitation": "One oil + one guar distinguish no direction."
+      },
+      "decisionTrace": {
+        "claimDirection": "clarifying (deep cleansing + oily scalp, S2 moderate); moisture for lengths",
+        "formulaCompatible": "clarifying: no (F6 failed condition: conditioningLevel high); moisture: no (nonspecific)",
+        "compatibleRoute": "none",
+        "decisionReason": "No compatible specialist focus -> general."
+      },
+      "sourceIds": [
+        "S1 German retailer exact GTIN (low); S2 manufacturer_de Garnier (moderate); S3 retailer other GTIN (low)"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "No compatible specialist role.",
+      "counterSignal": "None.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "claims": [
+          "clarifying (incompatible)",
+          "moisture (nonspecific)"
+        ],
+        "routes": [],
+        "exception": null
+      },
+      "sourceIds": [
+        "S1 German retailer exact GTIN (low); S2 manufacturer_de Garnier (moderate); S3 retailer other GTIN (low)"
+      ]
+    },
+    "usageRole": {
+      "value": "occasional_reset",
+      "confidence": "high",
+      "rationale": "explicit_deep_cleansing: D1 true (S2 manufacturer 'Tiefenreinigungsshampoo', moderate).",
+      "counterSignal": "Directions do not limit frequency.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "decisionTrace": {
+        "default": "regular",
+        "trigger": "explicit_deep_cleansing",
+        "triggerEvidence": [
+          "S2: 'Das Garnier Wahre Schaetze Ausgleichende Shampoo ist ein Tiefenreinigungsshampoo'"
+        ],
+        "losingTriggers": [
+          "strong_plus_reset_intent (strong + 'Rueckstaende und Unreinheiten', oily scalp)"
+        ],
+        "rationale": "U1: occasional_reset precedes alternating."
+      },
+      "sourceIds": [
+        "S1 German retailer exact GTIN (low); S2 manufacturer_de Garnier (moderate); S3 retailer other GTIN (low)"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "No sensitive/dry-scalp positioning; oily scalp is not a comfort target.",
+      "counterSignal": "CSA would pass only via Nigella oil (5); strong cleansing.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Nigella Sativa Seed Oil",
+          "position": 5
+        }
+      ],
+      "sourceIds": [
+        "S1 German retailer exact GTIN (low); S2 manufacturer_de Garnier (moderate); S3 retailer other GTIN (low)"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T305"
+      ]
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "nonspecific",
+      "moistureRoutes": [
+        "Polyglycerin-10 11 (not on closed humectant list)"
+      ],
+      "repairRoutes": [],
+      "sharedRoutes": [
+        "Nigella Sativa Seed Oil 5",
+        "Guar HPTC 8"
+      ],
+      "limitation": "One oil + one guar distinguish no direction."
+    },
+    "claimRole": "not_applicable",
+    "counterSignal": "If conditioningLevel were moderate (its N-ALT neighbor), clarifying would be compatible and dominant.",
+    "neighboringAlternative": "clarifying",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "clarifying (deep cleansing + oily scalp, S2 moderate); moisture for lengths",
+        "formulaCompatible": "clarifying: no (F6 failed condition: conditioningLevel high); moisture: no (nonspecific)",
+        "compatibleRoute": "none",
+        "decisionReason": "No compatible specialist focus -> general."
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "claims": [
+          "clarifying (incompatible)",
+          "moisture (nonspecific)"
+        ],
+        "routes": [],
+        "exception": null
+      },
+      "usageRole": {
+        "default": "regular",
+        "trigger": "explicit_deep_cleansing",
+        "triggerEvidence": [
+          "S2: 'Das Garnier Wahre Schaetze Ausgleichende Shampoo ist ein Tiefenreinigungsshampoo'"
+        ],
+        "losingTriggers": [
+          "strong_plus_reset_intent (strong + 'Rueckstaende und Unreinheiten', oily scalp)"
+        ],
+        "rationale": "U1: occasional_reset precedes alternating."
+      }
+    }
+  },
+  "weightRecord": {
+    "value": "moderate",
+    "confidence": "moderate",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "moderate",
+        "rationale": "one plant oil + one guar, both fairly early"
+      },
+      "persistence": {
+        "value": "low",
+        "rationale": "liquid oil and light guar, washed by a strong chassis"
+      },
+      "resetCapacity": {
+        "value": "strong",
+        "rationale": "C5 alkyl sulfate with a single buffer"
+      }
+    },
+    "evidenceByFamily": {
+      "payload_lipid": [
+        [
+          "Nigella Sativa Seed Oil",
+          5
+        ]
+      ],
+      "cationic_polymer": [
+        [
+          "Guar Hydroxypropyltrimonium Chloride",
+          8
+        ]
+      ],
+      "excluded": [
+        [
+          "Charcoal Powder",
+          9,
+          "absorbent, not deposition"
+        ],
+        [
+          "Polyglyceryl-10 Myristate",
+          12,
+          "emulsifier"
+        ],
+        [
+          "Polyglyceryl-10 Stearate",
+          13,
+          "emulsifier"
+        ],
+        [
+          "Triethyl Citrate",
+          6,
+          "solvent/ester"
+        ]
+      ],
+      "context_humectant": [
+        [
+          "Polyglycerin-10",
+          11
+        ]
+      ],
+      "anionic_surfactant": [
+        [
+          "Ammonium Lauryl Sulfate",
+          2
+        ]
+      ],
+      "amphoteric_surfactant": [
+        [
+          "Cocamidopropyl Betaine",
+          4
+        ]
+      ],
+      "unresolved": []
+    },
+    "whyThisBand": "W-RICH present; with moderate/strong reset the standard sets moderate unless the high route holds.",
+    "whyNotNeighborBand": "high needs limited (weak) reset or multiple persistent systems not offset; reset here is strong. low is closed off by W-RICH (two converging families), see uncertainty.",
+    "counterSignal": "Strong ALS reset and a liquid (non-waxy) oil argue that residue could be light.",
+    "neighboringAlternative": "high",
+    "formulaIdentifiers": {
+      "inciFingerprintSha256": "4d21bc975505079b916aa495f148440be891511f6de5cfb207eb9bfeb79bd9a0",
+      "sourceTier": 2,
+      "captureDate": "per frozen packet (not shown to lane)"
+    },
+    "confidenceLimitingFactor": "INCI-only: concentrations, charge density and deposition unknown"
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1 (fine, W moderate) = acceptable; ordinary target, T6 n/a; T4: neighbor would lower the tier -> review_thickness_boundary"
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1 (normal, W moderate) = ideal; ordinary target, T6 n/a; T4: neighbor would lower the tier -> review_thickness_boundary"
+      },
+      {
+        "thickness": "coarse",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1 (coarse, W moderate, C high) = ideal; ordinary target, T6 n/a; T4: neighbor would lower the tier -> review_thickness_boundary"
+      }
+    ],
+    "weight": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential moderate -> moderate."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "bucket": "normal",
+        "route": "balanced",
+        "confidence": "moderate",
+        "rationale": "S-ORDINARY way 4: S-OILY positioning passes (S2 'schnell fettende Kopfhaut', moderate) but its formula clause fails (conditioningLevel high); nothing else passes -> review_specialist_gate_failed."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "clarifying",
+      "confidence": "moderate",
+      "rationale": "I1: cleansingStrength strong, D1 True -> clarifying."
+    },
+    "positioning": {
+      "explicitResetPositioning": true,
+      "confidence": "moderate",
+      "evidence": "S2 manufacturer: 'Tiefenreinigungsshampoo' (stem tiefenrein), 'tiefenreinigende Shampoo'."
+    },
+    "explicitResetPositioning": true,
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "moderate",
+      "rationale": "D2 not met: focus/usage fail on a strong D1 formula (D3)"
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "clarifying",
+        "weight": "moderate",
+        "tier": "acceptable",
+        "display": "amber"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "clarifying",
+        "weight": "moderate",
+        "tier": "ideal",
+        "display": "amber"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "clarifying",
+        "weight": "moderate",
+        "tier": "ideal",
+        "display": "amber"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_specialist_gate_failed",
+        "detail": "target oily; formula clause failed: conditioningLevel not high (is high, moderate confidence, neighbor moderate)"
+      },
+      {
+        "code": "review_thickness_boundary",
+        "detail": "fine, normal, coarse"
+      },
+      {
+        "code": "review_reset_positioning_mismatch",
+        "detail": "D1 true, cleansing strong, D2 not met (focusPrimary general, usageRole occasional_reset)"
+      }
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "catalogDependent": "review_live_value_differs not computed in lane (live rows unseen)."
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "general (provisional, low)",
+      "final": "general",
+      "evidence": "Deep-cleansing + oily-scalp positioning (S2 'Tiefenreinigungsshampoo, das schnell fettende Kopfhaut reinigt') points to clarifying, but F6 compatibility fails: conditioningLevel is high (W-RICH: Nigella Sativa Seed Oil 5 + guar 8). Next job, moisture for dry lengths ('spendet trockenen Haarlaengen bis zu 72 Stunden Feuchtigkeit'), fails because the care-direction verdict is nonspecific. -> general."
+    },
+    {
+      "property": "focusSecondary",
+      "blind": "[] (provisional)",
+      "final": [],
+      "evidence": "No compatible specialist role."
+    },
+    {
+      "property": "usageRole",
+      "blind": "regular (provisional)",
+      "final": "occasional_reset",
+      "evidence": "explicit_deep_cleansing: D1 true (S2 manufacturer 'Tiefenreinigungsshampoo', moderate)."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blind": "unknown (positioning hidden)",
+      "final": "not_targeted",
+      "evidence": "No sensitive/dry-scalp positioning; oily scalp is not a comfort target."
+    },
+    {
+      "property": "cleansingStrength/conditioningLevel/weightPotential/dandruffSupport",
+      "blind": "frozen",
+      "final": "unchanged",
+      "evidence": "Claims cannot assign these (3.2); no revealed formula conflict."
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "noComparisonWithEarlierValues": true
+  },
+  "uncertainties": [
+    {
+      "reading": "conditioningLevel high via W-RICH alone (blind)",
+      "chosen": "high -> F6 and S-OILY fail, general focus, D3 review",
+      "alternative": "moderate -> clarifying focus, D2 flagged, oily target"
+    },
+    {
+      "reading": "W-RICH 'prominent' read with E3 convention",
+      "chosen": "Nigella oil 5 prominent",
+      "alternative": "qualitative reading"
+    }
+  ]
+}

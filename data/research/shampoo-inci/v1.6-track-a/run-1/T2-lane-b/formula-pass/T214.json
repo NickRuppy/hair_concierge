@@ -1,0 +1,65 @@
+{
+  "blindId": "T214",
+  "inciFingerprintSha256": "9b5e9427f281529f077e16f49cad7fe8f7383361a917fd3de236c76e46e7b6ca",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "completeness": "complete",
+    "sourceTier": 3,
+    "identityConfidence": "high",
+    "normalization": "No split entries; positions = packet order (normalized, one-based). Packet notes identical formula on a 300 ml pack (provenance only).",
+    "prominenceCutoff": "E3: Parfum at 6; positions 1-5 prominent."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate (C1): Sodium Laureth Sulfate (2) defining anionic, buffered by Cocamidopropyl Betaine (3); no reinforcing strong anionic; Sodium Xylenesulfonate (4) is a hydrotrope.",
+      "counterSignal": "No refatting or conditioning counter-signal at all; an essentially pure cleansing base. Convention unchanged.",
+      "neighboringAlternative": "none",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: cleansing-led; no cationic polymer, silicone, lipid, refatter or pearlizer; only a late Panthenol (13). Hydroxypropyl Methylcellulose (11) is a nonionic thickener.",
+      "counterSignal": "Panthenol and Histidine (16) are trace care additives.",
+      "neighboringAlternative": "none",
+      "ruleIds": ["Section 5 anchors"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: no deposition family at all; buffered SLES chassis.",
+      "neighboringAlternative": "none",
+      "subjudgments": {
+        "depositionLoad": {"value": "light", "rationale": "No silicone, polymer, lipid, refatter, protein or film former."},
+        "persistence": {"value": "low", "rationale": "Nothing persistent."},
+        "resetCapacity": {"value": "moderate", "rationale": "C1 SLES + betaine."}
+      },
+      "extractedEvidence": {
+        "silicone": [], "cationic_polymer": [], "payload_lipid": [], "weak_refatter": [], "protein_film": [], "film_former": [],
+        "reset": [{"ingredient": "Sodium Laureth Sulfate", "position": 2}, {"ingredient": "Cocamidopropyl Betaine", "position": 3}],
+        "excluded": [{"ingredient": "Hydroxypropyl Methylcellulose", "position": 11, "reason": "nonionic cellulose thickener, no cationic charge"}, {"ingredient": "Sodium Xylenesulfonate", "position": 4, "reason": "hydrotrope"}, {"ingredient": "Histidine", "position": 16, "reason": "amino acid additive, trace"}],
+        "context_humectants": [{"ingredient": "Panthenol", "position": 13}]
+      },
+      "whyThisBand": "Absent deposition: low anchor.",
+      "whyNotNeighborBand": "No depositing system exists to make residue plausible.",
+      "limitingFactor": "None."
+    },
+    "focusPrimary": {"value": "general", "confidence": "low", "provisional": true, "rationale": "Pending claims. Care-direction verdict: nonspecific (no care architecture). A clean, low-weight base could be compatible with volume or clarifying-type positioning if claimed."},
+    "focusSecondary": {"value": [], "confidence": "low", "provisional": true, "rationale": "Empty default pending claims."},
+    "usageRole": {"value": "regular", "confidence": "low", "provisional": true, "rationale": "Default."},
+    "scalpComfortTarget": {"value": "not_targeted", "confidence": "low", "provisional": true, "rationale": "CSA formula half NOT met: no prominent E4 route (Panthenol 13 post-fragrance)."},
+    "dandruffSupport": {"value": "not_supported", "confidence": "high", "rationale": "Neither Piroctone Olamine nor Climbazole; Sodium Salicylate (10) is a preservative."}
+  },
+  "formulaFacts": [
+    {"ingredient": "Sodium Laureth Sulfate", "position": 2, "role": "defining anionic (ether type)"},
+    {"ingredient": "Cocamidopropyl Betaine", "position": 3, "role": "amphoteric buffer"},
+    {"ingredient": "Sodium Xylenesulfonate", "position": 4, "role": "hydrotrope"},
+    {"ingredient": "Parfum", "position": 6, "role": "E3 fragrance marker"},
+    {"ingredient": "Hydroxypropyl Methylcellulose", "position": 11, "role": "nonionic thickener, excluded"},
+    {"ingredient": "Panthenol", "position": 13, "role": "humectant, non-prominent"},
+    {"ingredient": "Histidine", "position": 16, "role": "amino acid, trace"}
+  ],
+  "unresolvedMaterialIngredients": []
+}

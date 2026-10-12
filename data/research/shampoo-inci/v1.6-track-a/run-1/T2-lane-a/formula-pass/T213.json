@@ -1,0 +1,294 @@
+{
+  "blindId": "T213",
+  "inciFingerprintSha256": "96713abf4bfbfaf9b4a2843332d8ac3a1436ddf36324a11c21c4b55acd358fc7",
+  "fingerprintRecomputedMatches": true,
+  "formulaSource": {
+    "tier": 3,
+    "completeness": "complete",
+    "identityConfidence": "high"
+  },
+  "normalization": "'Aqua/Water/Eau' one entry. Normalized positions = packet positions.",
+  "prominenceCutoff": "Parfum/Fragrance at 21 -> positions 1-20 prominent (E3).",
+  "surfactantArchitecture": "Sodium Methyl Cocoyl Taurate (2, mild anionic, earliest); Decyl Glucoside (3), Cocamidopropyl Betaine (4), Coco-Glucoside (8) prominent co-surfactants; Disodium Tetrapropenyl Succinate (13) minor anionic (succinate salt, not a strong anionic); Coconut Acid (12) fatty acid. No strong anionic.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "C6: no prominent strong anionic; earliest prominent cleansing surfactant is a mild anionic taurate (2) with prominent glucoside (3, 8) and amphoteric (4) co-surfactants -> low.",
+      "counterSignal": "Taurate/glucoside systems clean effectively; no strong anionic though.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Methyl Cocoyl Taurate",
+          "position": 2
+        },
+        {
+          "ingredient": "Decyl Glucoside",
+          "position": 3
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 8
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "Rich architecture: prominent payload lipid Argania Spinosa Kernel Oil (6) converging with prominent Amodimethicone (9) and cationic Guar Hydroxypropyltrimonium Chloride (10) is W-RICH, which counts as a rich architecture for conditioning (Section 5, W-RICH); plus waxy Hydrogenated Castor Oil (11) and Glycol Distearate (14). C2 itself is not met (no deliberate humectant route; Hexylene Glycol does not count).",
+      "counterSignal": "Missing humectant element; oil and silicone levels bounded by position after Sodium Chloride. Moderate is the realistic neighbor.",
+      "neighboringAlternative": "moderate",
+      "formulaFacts": [
+        {
+          "ingredient": "Argania Spinosa Kernel Oil",
+          "position": 6
+        },
+        {
+          "ingredient": "Amodimethicone",
+          "position": 9
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 10
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 11
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 14
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High: W-RICH (prominent argan oil converging with amodimethicone and cationic guar, plus waxy HCO) in a mild C6 chassis with limited reset (resetCapacity weak) reaches the high anchor's rich route.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "high",
+          "rationale": "Argan oil (6), Amodimethicone (9), guar (10), Hydrogenated Castor Oil (11), Coconut Acid (12): oil + amino-silicone + cationic + waxy lipid converge, all prominent."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Amodimethicone is substantive; waxy HCO more persistent than liquid oil; guar aids deposition."
+        },
+        "resetCapacity": {
+          "value": "weak",
+          "rationale": "C6 low chassis (taurate/glucoside/betaine), no strong anionic: limited reset."
+        }
+      },
+      "evidenceByFamily": {
+        "payload_lipid": [
+          [
+            "Argania Spinosa Kernel Oil",
+            6
+          ],
+          [
+            "Hydrogenated Castor Oil",
+            11
+          ]
+        ],
+        "silicone": [
+          [
+            "Amodimethicone",
+            9
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Guar Hydroxypropyltrimonium Chloride",
+            10
+          ]
+        ],
+        "weak_refatter": [
+          [
+            "Coconut Acid",
+            12
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Methyl Cocoyl Taurate",
+            2
+          ],
+          [
+            "Disodium Tetrapropenyl Succinate",
+            13
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Decyl Glucoside",
+            3
+          ],
+          [
+            "Coco-Glucoside",
+            8
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            4
+          ]
+        ]
+      },
+      "excluded": [
+        [
+          "Glycol Distearate",
+          14,
+          "pearlizer"
+        ],
+        [
+          "PEG-150 Distearate",
+          15,
+          "PEG thickener"
+        ],
+        [
+          "Hexylene Glycol",
+          16,
+          "solvent"
+        ]
+      ],
+      "unresolved": [
+        [
+          "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+          7,
+          "anionic modified starch (emulsion stabilizer / light film); not cationic; not judged band-moving"
+        ]
+      ],
+      "counterSignal": "Oil and amino-silicone sit after Sodium Chloride, so levels are bounded; taurate/glucoside chassis still cleans reasonably; moderate is realistic.",
+      "whyThisBand": "W-RICH plus limited reset (weak) meets the high anchor's rich route; four converging deposition families.",
+      "whyNotNeighborBand": "Not moderate: unlike a sulfate chassis, the mild C6 system gives limited reset, so W-RICH is not offset (6.7 limited reset). W1 does not apply (mild chassis).",
+      "confidenceLimitingFactor": "Lipid/silicone levels and the true reset of a taurate system are unknown; moderate realistic.",
+      "ruleNotes": [
+        "W-RICH with limited reset (weak)",
+        "W1 not applicable (C6 chassis)"
+      ]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Rich, mild, oil-and-silicone care formula; repair-compatible; claims decide.",
+      "careDirection": {
+        "verdict": "repair_supported",
+        "basis": "Argan oil (6), Amodimethicone (9), guar (10), HCO (11): substantive deposition/nourishment cluster; no deliberate humectant, so moisture_supported is not reached on formula (nourishment wording would need dual/moisture verdict)."
+      },
+      "formulaCompatibleRoutes": [
+        "repair: Amodimethicone 9, Argania Spinosa Kernel Oil 6, Hydrogenated Castor Oil 11",
+        "shine-compatible: Argan oil/amodimethicone (same route)"
+      ],
+      "counterSignal": "Heavy weight potential.",
+      "neighboringAlternative": "moisture"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Empty default; a secondary needs distinct positioning (Section 8), not visible yet.",
+      "counterSignal": "Positioning unknown.",
+      "neighboringAlternative": [
+        "shine"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Default regular (Section 9); triggers need graded claims. frequent possible with explicit frequency wording (cleansing low).",
+      "counterSignal": "No claims.",
+      "neighboringAlternative": "frequent"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). SC1 positioning not visible. CSA formula half: passes: prominent refatting route Argania Spinosa Kernel Oil (6, payload_lipid, E4); no prominent comfort route.",
+      "counterSignal": "Fragrance.",
+      "neighboringAlternative": "targeted",
+      "csaPasses": true
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11).",
+      "counterSignal": "None; formula complete (ID-1).",
+      "neighboringAlternative": "none"
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Methyl Cocoyl Taurate",
+      "position": 2,
+      "role": "mild anionic, earliest"
+    },
+    {
+      "ingredient": "Decyl Glucoside",
+      "position": 3,
+      "role": "nonionic"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "amphoteric"
+    },
+    {
+      "ingredient": "Argania Spinosa Kernel Oil",
+      "position": 6,
+      "role": "payload_lipid (prominent)"
+    },
+    {
+      "ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+      "position": 7,
+      "role": "anionic modified starch"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 8,
+      "role": "nonionic"
+    },
+    {
+      "ingredient": "Amodimethicone",
+      "position": 9,
+      "role": "amino-silicone (prominent)"
+    },
+    {
+      "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+      "position": 10,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Hydrogenated Castor Oil",
+      "position": 11,
+      "role": "payload_lipid waxy"
+    },
+    {
+      "ingredient": "Coconut Acid",
+      "position": 12,
+      "role": "fatty acid refatter"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 14,
+      "role": "pearlizer"
+    },
+    {
+      "ingredient": "Parfum/Fragrance",
+      "position": 21,
+      "role": "E3 cutoff"
+    }
+  ],
+  "unresolvedMaterialIngredients": [],
+  "blindUncertainties": [
+    "conditioningLevel high via W-RICH although C2 fails on the humectant element; alternative moderate (read C2 humectant counter-signal as capping). Chose high because Section 5 names W-RICH as an independent high route.",
+    "weightPotential high vs moderate hinges on resetCapacity weak for a taurate/glucoside chassis."
+  ]
+}

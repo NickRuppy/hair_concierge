@@ -1,0 +1,608 @@
+{
+ "blindId": "T101",
+ "inciFingerprintSha256": "eef000f8a7dc826481f7acb578e7b176abe38a6664108469cd96bfbd4ca9a841",
+ "identity": {
+  "productName": "Guhl Hyaluron+ Pflege Feuchtigkeits-Shampoo",
+  "brand": "Guhl",
+  "market": "DE",
+  "packSize": "250 ml",
+  "formulaBlock": {
+   "normalization": "Packet list used as normalized; no split synonym entries; one-based normalized positions.",
+   "completeness": "complete (ID-1)",
+   "sourceTier": 2,
+   "identityConfidence": "high",
+   "e3ProminenceCutoff": "Parfum at 20 -> positions 1-19 prominent"
+  },
+  "positioningSourceGrades": {
+   "productName": "high",
+   "manufacturer_de": "moderate",
+   "dm_de/dm_at/rossmann retailer": "low"
+  }
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "rationale": "C1: defining anionic Sodium Laureth Sulfate (2, ether type) with two prominent buffers, Coco-Glucoside (3) and Cocamidopropyl Betaine (4), and no reinforcing strong anionic -> moderate.",
+   "formulaFacts": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "defining anionic (ether type)"
+    },
+    {
+     "ingredient": "Coco-Glucoside",
+     "position": 3,
+     "role": "buffer (nonionic glucoside)"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 4,
+     "role": "buffer (amphoteric)"
+    }
+   ],
+   "counterSignal": "Refatting/conditioning routes (Hydrogenated Vegetable Oil 6, Glyceryl Oleate 8) argue toward milder feel but do not move the C1 convention.",
+   "neighboringAlternative": "none",
+   "blindToFinal": "unchanged from frozen blind formula pass (claims cannot set or move this property, 3.2)",
+   "sources": [
+    "formula packet T101"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "high",
+   "confidence": "moderate",
+   "rationale": "W-RICH holds: prominent payload_lipid Hydrogenated Vegetable Oil (6) converges with cationic Guar Hydroxypropyltrimonium Chloride (9); Section 6 says W-RICH alone counts as a rich architecture for conditioning. Supported by weak refatter Glyceryl Oleate (8) and humectants Glycerin (12), Panthenol (13), Sodium Hyaluronate (18).",
+   "formulaFacts": [
+    {
+     "ingredient": "Hydrogenated Vegetable Oil",
+     "position": 6,
+     "role": "payload_lipid (waxy), prominent"
+    },
+    {
+     "ingredient": "Glyceryl Oleate",
+     "position": 8,
+     "role": "weak_refatter; E4 humectant/refatting route"
+    },
+    {
+     "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+     "position": 9,
+     "role": "cationic_polymer"
+    },
+    {
+     "ingredient": "Glycerin",
+     "position": 12,
+     "role": "humectant (C2/E4)"
+    },
+    {
+     "ingredient": "Panthenol",
+     "position": 13,
+     "role": "humectant; E4 comfort route"
+    },
+    {
+     "ingredient": "Sodium Hyaluronate",
+     "position": 18,
+     "role": "humectant"
+    }
+   ],
+   "counterSignal": "C2 is not fully met: no pearlizing/fatty route separate from the lipid that substitutes for the silicone; no silicone; lipid sits after Sodium Chloride, so its amount may be small.",
+   "neighboringAlternative": "moderate",
+   "blindToFinal": "unchanged from frozen blind formula pass (claims cannot set or move this property, 3.2)",
+   "sources": [
+    "formula packet T101"
+   ]
+  },
+  "weightPotential": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "rationale": "Waxy payload lipid (6) plus cationic guar (9) plus weak refatter (8) plausibly leave bounded residue; W-RICH is present but resetCapacity is moderate (C1 chassis), so the limited-reset route to high is not met.",
+   "formulaFacts": [
+    {
+     "ingredient": "Hydrogenated Vegetable Oil",
+     "position": 6,
+     "role": "payload_lipid (waxy), prominent"
+    },
+    {
+     "ingredient": "Glyceryl Oleate",
+     "position": 8,
+     "role": "weak_refatter; E4 humectant/refatting route"
+    },
+    {
+     "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+     "position": 9,
+     "role": "cationic_polymer"
+    },
+    {
+     "ingredient": "Glycerin",
+     "position": 12,
+     "role": "humectant (C2/E4)"
+    },
+    {
+     "ingredient": "Panthenol",
+     "position": 13,
+     "role": "humectant; E4 comfort route"
+    },
+    {
+     "ingredient": "Sodium Hyaluronate",
+     "position": 18,
+     "role": "humectant"
+    }
+   ],
+   "counterSignal": "",
+   "neighboringAlternative": "high",
+   "blindToFinal": "unchanged from frozen blind formula pass (claims cannot set or move this property, 3.2)",
+   "sources": [
+    "formula packet T101"
+   ],
+   "weightRecord": {
+    "formulaIdentifiers": {
+     "blindId": "T101",
+     "inciFingerprintSha256": "eef000f8a7dc826481f7acb578e7b176abe38a6664108469cd96bfbd4ca9a841",
+     "sourceTier": 2,
+     "completeness": "complete (ID-1)",
+     "captureDate": "not in packet"
+    },
+    "evidenceByFamily": {
+     "payload_lipid": [
+      "Hydrogenated Vegetable Oil (6)"
+     ],
+     "weak_refatter": [
+      "Glyceryl Oleate (8)"
+     ],
+     "cationic_polymer": [
+      "Guar Hydroxypropyltrimonium Chloride (9)"
+     ],
+     "anionic_surfactant": [
+      "Sodium Laureth Sulfate (2)"
+     ],
+     "nonionic_surfactant": [
+      "Coco-Glucoside (3)"
+     ],
+     "amphoteric_surfactant": [
+      "Cocamidopropyl Betaine (4)"
+     ],
+     "humectant_context": [
+      "Erythritol (11)",
+      "Glycerin (12)",
+      "Panthenol (13)",
+      "Hydrolyzed Hyaluronic Acid (17)",
+      "Sodium Hyaluronate (18)"
+     ]
+    },
+    "excluded": [
+     "Sorbitan Caprylate (10): preservative booster/emulsifier, not a deposition route",
+     "Tetrasodium Glutamate Diacetate (14): chelator"
+    ],
+    "unresolved": [],
+    "subjudgments": {
+     "depositionLoad": {
+      "value": "moderate",
+      "rationale": "Hydrogenated Vegetable Oil (6) prominent waxy lipid + Guar HPTC (9) + Glyceryl Oleate (8); no silicone, no second cationic."
+     },
+     "persistence": {
+      "value": "moderate",
+      "rationale": "Hydrogenated (waxy) lipid is more substantive than a liquid oil; guar deposits with the lipid; no silicone/film former."
+     },
+     "resetCapacity": {
+      "value": "moderate",
+      "rationale": "SLES with glucoside and betaine buffers (C1 moderate): effective ordinary cleansing."
+     }
+    },
+    "counterevidence": "Not high: W-RICH without limited reset (resetCapacity moderate); only one cationic polymer, no silicone, film former or second persistent system. Not low: two deposition families (waxy lipid + guar) converge and are prominent (W2).",
+    "proposedWeightPotential": "moderate",
+    "whyThisBand": "One plausibly persistent lipid+cationic system converges (W-RICH) so lightweight would understate residue; ordinary sulfate reset bounds it.",
+    "whyNotNeighborBand": "Not high: W-RICH without limited reset (resetCapacity moderate); only one cationic polymer, no silicone, film former or second persistent system. Not low: two deposition families (waxy lipid + guar) converge and are prominent (W2).",
+    "confidence": "moderate",
+    "confidenceLimitingFactor": "Amount of Hydrogenated Vegetable Oil after salt is unknown; W-RICH vs moderate reset is a realistic one-step uncertainty toward high.",
+    "neighboringAlternative": "high",
+    "claimsEffect": "Claims read after freeze; none changes the band (6.5 step 5)."
+   }
+  },
+  "dandruffSupport": {
+   "value": "supported",
+   "confidence": "high",
+   "rationale": "Complete INCI contains Piroctone Olamine (15).",
+   "neighboringAlternative": "none",
+   "formulaFacts": [
+    {
+     "ingredient": "Piroctone Olamine",
+     "position": 15,
+     "role": "recognized anti-dandruff active"
+    }
+   ],
+   "counterSignal": "None; mechanical rule (Section 11).",
+   "blindToFinal": "unchanged",
+   "sources": [
+    "formula packet T101"
+   ]
+  },
+  "focusPrimary": {
+   "value": "moisture",
+   "confidence": "moderate",
+   "neighboringAlternative": "general",
+   "rationale": "moisture: the exact name claims hydration and the formula carries a coherent humectant cluster with lipid+guar conditioning support (moisture_supported, F1).",
+   "formulaFacts": [
+    {
+     "ingredient": "Glycerin",
+     "position": 12
+    },
+    {
+     "ingredient": "Panthenol",
+     "position": 13
+    },
+    {
+     "ingredient": "Sodium Hyaluronate",
+     "position": 18
+    },
+    {
+     "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+     "position": 9
+    },
+    {
+     "ingredient": "Hydrogenated Vegetable Oil",
+     "position": 6
+    }
+   ],
+   "counterSignal": "Humectants are mid/late in the list; a recognized dandruff active (Piroctone Olamine 15) exists but has no dandruff positioning (R17.3) and is not a focus route.",
+   "careDirection": {
+    "verdict": "moisture_supported",
+    "routes": {
+     "moisture": [
+      "Glycerin (12)",
+      "Panthenol (13)",
+      "Hydrolyzed Hyaluronic Acid (17)",
+      "Sodium Hyaluronate (18)",
+      "Erythritol (11)"
+     ],
+     "shared": [
+      "Hydrogenated Vegetable Oil (6)",
+      "Glyceryl Oleate (8)",
+      "Guar Hydroxypropyltrimonium Chloride (9)"
+     ],
+     "repair": []
+    },
+    "limitation": "Humectants sit after salt and the lipid; rinse-off context limits hydration evidence to feel/manageability."
+   },
+   "claimRole": "candidate",
+   "decisionTrace": {
+    "claimDirection": "moisture (product name 'Feuchtigkeits-Shampoo', high; manufacturer 'Für feuchtigkeitsbedürftiges Haar', moderate)",
+    "formulaCompatible": true,
+    "compatibleRoute": "humectant cluster (Glycerin 12, Panthenol 13, Sodium Hyaluronate 18) + lipid/guar deposition (6, 9)",
+    "decisionReason": "Name-level moisture claim over a moisture_supported formula (F1) -> moisture."
+   },
+   "blindToFinal": "provisional pending_claims (candidates scalp_active/moisture) -> moisture: no dandruff claim exists, so scalp_active fell away (R17.3).",
+   "sources": [
+    "formula packet",
+    "reveal packet"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "shine"
+   ],
+   "rationale": "Empty: the shine wording is an outcome of the primary moisture route (F2/F3).",
+   "counterSignal": "Shine is worded explicitly; a lane reading it as distinct would pick ['shine'].",
+   "formulaFacts": [],
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selectedValues": [],
+    "matchingDistinctClaims": [
+     "'gesund glänzende Längen' (manufacturer, moderate)"
+    ],
+    "independentRoutes": [],
+    "whyDistinctFromPrimary": "Shine is an outcome of the same humectant/lipid/guar route (F2); no independent shine route.",
+    "exceptionCode": null
+   },
+   "blindToFinal": "provisional [] -> final []",
+   "sources": [
+    "reveal packet"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No non-default trigger: no frequency wording (U2) at moderate/high grade, no reset intent, no dandruff claim (treatment needs U3), no D1.",
+   "formulaFacts": [],
+   "counterSignal": "No other trigger evaluated as firing.",
+   "decisionTrace": {
+    "default": "regular",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": []
+   },
+   "blindToFinal": "provisional regular -> final regular",
+   "sources": [
+    "reveal packet"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No E2 sensitive/dry scalp claim unit at moderate/high grade (Rossmann 'sanft zur Kopfhaut' is retailer-only and protective wording, E2a). CSA formula half is met (Panthenol 13 etc.) but positioning half (SC1) is absent.",
+   "counterSignal": "None that could make it targeted.",
+   "formulaFacts": [],
+   "blindToFinal": "provisional not_targeted -> final not_targeted",
+   "sources": [
+    "formula packet",
+    "reveal packet"
+   ]
+  }
+ },
+ "focusRecord": {
+  "focusPrimary": "moisture",
+  "focusSecondary": [],
+  "careDirection": {
+   "verdict": "moisture_supported",
+   "routes": {
+    "moisture": [
+     "Glycerin (12)",
+     "Panthenol (13)",
+     "Hydrolyzed Hyaluronic Acid (17)",
+     "Sodium Hyaluronate (18)",
+     "Erythritol (11)"
+    ],
+    "shared": [
+     "Hydrogenated Vegetable Oil (6)",
+     "Glyceryl Oleate (8)",
+     "Guar Hydroxypropyltrimonium Chloride (9)"
+    ],
+    "repair": []
+   },
+   "limitation": "Humectants sit after salt and the lipid; rinse-off context limits hydration evidence to feel/manageability."
+  },
+  "claimRole": "candidate",
+  "counterSignal": "Humectants are mid/late in the list; a recognized dandruff active (Piroctone Olamine 15) exists but has no dandruff positioning (R17.3) and is not a focus route.",
+  "neighboringAlternative": "general",
+  "decisionTrace": {
+   "primary": {
+    "claimDirection": "moisture (product name 'Feuchtigkeits-Shampoo', high; manufacturer 'Für feuchtigkeitsbedürftiges Haar', moderate)",
+    "formulaCompatible": true,
+    "compatibleRoute": "humectant cluster (Glycerin 12, Panthenol 13, Sodium Hyaluronate 18) + lipid/guar deposition (6, 9)",
+    "decisionReason": "Name-level moisture claim over a moisture_supported formula (F1) -> moisture."
+   },
+   "secondary": {
+    "emptyDefaultConsidered": true,
+    "selectedValues": [],
+    "matchingDistinctClaims": [
+     "'gesund glänzende Längen' (manufacturer, moderate)"
+    ],
+    "independentRoutes": [],
+    "whyDistinctFromPrimary": "Shine is an outcome of the same humectant/lipid/guar route (F2); no independent shine route.",
+    "exceptionCode": null
+   },
+   "usageRole": {
+    "default": "regular",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": []
+   },
+   "narrative": "moisture: the exact name claims hydration and the formula carries a coherent humectant cluster with lipid+guar conditioning support (moisture_supported, F1)."
+  }
+ },
+ "weightRecord": {
+  "formulaIdentifiers": {
+   "blindId": "T101",
+   "inciFingerprintSha256": "eef000f8a7dc826481f7acb578e7b176abe38a6664108469cd96bfbd4ca9a841",
+   "sourceTier": 2,
+   "completeness": "complete (ID-1)",
+   "captureDate": "not in packet"
+  },
+  "evidenceByFamily": {
+   "payload_lipid": [
+    "Hydrogenated Vegetable Oil (6)"
+   ],
+   "weak_refatter": [
+    "Glyceryl Oleate (8)"
+   ],
+   "cationic_polymer": [
+    "Guar Hydroxypropyltrimonium Chloride (9)"
+   ],
+   "anionic_surfactant": [
+    "Sodium Laureth Sulfate (2)"
+   ],
+   "nonionic_surfactant": [
+    "Coco-Glucoside (3)"
+   ],
+   "amphoteric_surfactant": [
+    "Cocamidopropyl Betaine (4)"
+   ],
+   "humectant_context": [
+    "Erythritol (11)",
+    "Glycerin (12)",
+    "Panthenol (13)",
+    "Hydrolyzed Hyaluronic Acid (17)",
+    "Sodium Hyaluronate (18)"
+   ]
+  },
+  "excluded": [
+   "Sorbitan Caprylate (10): preservative booster/emulsifier, not a deposition route",
+   "Tetrasodium Glutamate Diacetate (14): chelator"
+  ],
+  "unresolved": [],
+  "subjudgments": {
+   "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Hydrogenated Vegetable Oil (6) prominent waxy lipid + Guar HPTC (9) + Glyceryl Oleate (8); no silicone, no second cationic."
+   },
+   "persistence": {
+    "value": "moderate",
+    "rationale": "Hydrogenated (waxy) lipid is more substantive than a liquid oil; guar deposits with the lipid; no silicone/film former."
+   },
+   "resetCapacity": {
+    "value": "moderate",
+    "rationale": "SLES with glucoside and betaine buffers (C1 moderate): effective ordinary cleansing."
+   }
+  },
+  "counterevidence": "Not high: W-RICH without limited reset (resetCapacity moderate); only one cationic polymer, no silicone, film former or second persistent system. Not low: two deposition families (waxy lipid + guar) converge and are prominent (W2).",
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "One plausibly persistent lipid+cationic system converges (W-RICH) so lightweight would understate residue; ordinary sulfate reset bounds it.",
+  "whyNotNeighborBand": "Not high: W-RICH without limited reset (resetCapacity moderate); only one cationic polymer, no silicone, film former or second persistent system. Not low: two deposition families (waxy lipid + guar) converge and are prominent (W2).",
+  "confidence": "moderate",
+  "confidenceLimitingFactor": "Amount of Hydrogenated Vegetable Oil after salt is unknown; W-RICH vs moderate reset is a realistic one-step uncertainty toward high.",
+  "neighboringAlternative": "high",
+  "claimsEffect": "Claims read after freeze; none changes the band (6.5 step 5)."
+ },
+ "projection": {
+  "thicknesses": [
+   {
+    "thickness": "fine",
+    "fit": "acceptable",
+    "t1Fit": "acceptable",
+    "confidence": "moderate",
+    "rationale": "T1: W=moderate, C=high -> acceptable"
+   },
+   {
+    "thickness": "normal",
+    "fit": "ideal",
+    "t1Fit": "ideal",
+    "confidence": "moderate",
+    "rationale": "T1: W=moderate, C=high -> ideal"
+   },
+   {
+    "thickness": "coarse",
+    "fit": "ideal",
+    "t1Fit": "ideal",
+    "confidence": "moderate",
+    "rationale": "T1: W=moderate, C=high -> ideal"
+   }
+  ],
+  "weight": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "rationale": "W-LIVE: weightPotential moderate -> moderate"
+  },
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "confidence": "moderate",
+    "rationale": "S-ORDINARY ways 1 and 3: no qualifying E2 claim unit (way 1, manufacturer source -> high) and recognized active without a dandruff claim (way 3 -> moderate); lowest -> moderate (13.8)."
+   },
+   "secondary": null
+  },
+  "observedCleansingIntensity": {
+   "value": "regular",
+   "confidence": "high",
+   "rationale": "I1: cleansingStrength moderate, D1 false -> regular"
+  },
+  "positioning": {
+   "explicitResetPositioning": false,
+   "d1Evidence": "No D1 stem (tiefenrein/deep clean/clarifying shampoo/detox-reinigung) in name, manufacturer/pack claims or directions.",
+   "d1Grade": "high"
+  },
+  "deepCleanserListing": {
+   "value": "not_flagged",
+   "deepCleanserRecord": "needs_record",
+   "confidence": "high",
+   "rationale": "D2 not met: D1 false."
+  },
+  "reviewFlags": [
+   {
+    "code": "review_thickness_boundary",
+    "detail": "fine: weightPotential neighbor -> not_suited (selected acceptable)"
+   },
+   {
+    "code": "review_thickness_boundary",
+    "detail": "normal: weightPotential neighbor -> acceptable (selected ideal)"
+   },
+   {
+    "code": "review_thickness_boundary",
+    "detail": "coarse: conditioningLevel neighbor -> acceptable (selected ideal)"
+   }
+  ],
+  "informationalNotes": [
+   {
+    "code": "active_without_dandruff_positioning",
+    "detail": "Piroctone Olamine (15) without any dandruff claim; regular shampoo (R17.3)."
+   }
+  ],
+  "researchCombinationTargets": [],
+  "researchCombinationConfidence": {},
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "acceptable",
+    "intensityMatchesBucket": true
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "ideal",
+    "intensityMatchesBucket": true
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "ideal",
+    "intensityMatchesBucket": true
+   }
+  ],
+  "required_protocol_roles": [
+   "shampoo_everyday"
+  ],
+  "projectionStatus": "proposal_blocked_by_review_flags"
+ },
+ "blindToFinalChanges": [
+  {
+   "property": "focusPrimary",
+   "from": "provisional",
+   "to": "moisture",
+   "evidence": "name 'Feuchtigkeits-Shampoo' (high)",
+   "reason": "candidate claim + moisture_supported verdict"
+  },
+  {
+   "property": "scalpComfortTarget",
+   "from": "provisional not_targeted",
+   "to": "not_targeted",
+   "evidence": "no SC1 unit",
+   "reason": "positioning half absent"
+  },
+  {
+   "property": "usageRole",
+   "from": "provisional regular",
+   "to": "regular",
+   "evidence": "no trigger",
+   "reason": "default"
+  }
+ ],
+ "selfCheck": {
+  "fingerprintMatchesFrozenPacket": true,
+  "claimsAndPriorLabelsHiddenDuringFormulaJudgment": true,
+  "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+  "allThreeWeightSubjudgmentsPresent": true,
+  "counterevidenceAndWhyNotNeighborSpecific": true,
+  "w2AppliedWhereTwoOrMoreFamilies": true,
+  "confidenceNamesLimitingUncertainty": true,
+  "noComparisonWithEarlierValuesInsideLane": true,
+  "allFinalPropertiesModerateOrBetter": true,
+  "webUsed": false
+ },
+ "uncertainties": [
+  {
+   "reading": "conditioningLevel high via W-RICH (Hydrogenated Vegetable Oil 6 counted as prominent payload_lipid)",
+   "alternative": "moderate if the lipid is read as a minor refatter; C2 is not fully met"
+  },
+  {
+   "reading": "weightPotential moderate (W-RICH but moderate reset)",
+   "alternative": "high"
+  },
+  {
+   "reading": "focus moisture at moderate",
+   "alternative": "general if the humectant cluster is judged too late to be coherent"
+  }
+ ]
+}

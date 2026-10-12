@@ -1,0 +1,164 @@
+{
+  "blindId": "T115",
+  "inciFingerprintSha256": "4d7a4c5bc241cc8ccd2f4b30cd7da69a5f905824816b8f87574bb3f0beb515ad",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "Packet canonicalInci used as normalized list (ID-2); positions are one-based on that list.",
+    "inciCount": 25,
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "moderate",
+    "e3ProminencePoint": "Parfum at 12: positions 1-11 prominent"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: SLES (2) defining, one prominent buffer (Cocamidopropyl Betaine 4), no reinforcing anionic -> moderate.",
+      "neighboringAlternative": "none"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Cleansing-led for slip: the prominent routes are humectants (Urea 3, Glycerin 5, Panthenol 8), which add little slip; the only cationic (HP Guar 17), the refatters (13, 18, 19) and the pearlizer (15) are after Parfum. No silicone or lipid.",
+      "counterSignal": "Strong humectant cluster plus late guar/refatters/pearlizer could add up to bounded care.",
+      "neighboringAlternative": "moderate"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Every deposition family is after Parfum (guar 17, refatters 13/18/19) and C1 reset is effective -> low.",
+      "neighboringAlternative": "none",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Late guar and weak refatters only."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "No silicone, lipid or protein."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 buffered SLES chassis."
+        }
+      },
+      "whyThisBand": "Trace-level light deposition.",
+      "whyNotNeighborBand": "W2: two families (cationic polymer, weak refatters) but each is late/trace (after Parfum), plus humectants only.",
+      "limitingFactor": "None material."
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Piroctone Olamine (22) present in a complete INCI -> supported (prominence irrelevant for Section 11).",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Formula care-direction verdict recorded for reconciliation.",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "note": "Strong humectant cluster (Urea 3, Glycerin 5, Sodium Lactate 7, Panthenol 8) with only late guar/refatter support; weak conditioning support."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2)."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Default regular; triggers (U2-U5, D1, U3) need graded claims."
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). SC1 positioning unknown. CSA formula half passes: comfort routes Urea (3), Panthenol (8), Allantoin (9); humectants Urea, Glycerin (5), Sodium Lactate (7), Panthenol."
+    }
+  },
+  "scalpGateFormulaHalves": "S-SENSITIVE yes; S-DRY yes; S-OILY clause passes.",
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic, ether type"
+    },
+    {
+      "ingredient": "Urea",
+      "position": 3,
+      "role": "humectant + E4 comfort route"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 5,
+      "role": "humectant"
+    },
+    {
+      "ingredient": "Sodium Lactate",
+      "position": 7,
+      "role": "pH buffer; E4 humectant list"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 8,
+      "role": "humectant + E4 comfort route"
+    },
+    {
+      "ingredient": "Allantoin",
+      "position": 9,
+      "role": "E4 comfort route"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 12,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 13,
+      "role": "weak_refatter, late"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 14,
+      "role": "glucoside after E3 point"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 15,
+      "role": "pearlizer, late"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 17,
+      "role": "cationic_polymer, late (17)"
+    },
+    {
+      "ingredient": "Hydrogenated Palm Glycerides Citrate",
+      "position": 18,
+      "role": "weak_refatter, late"
+    },
+    {
+      "ingredient": "Lecithin",
+      "position": 19,
+      "role": "weak_refatter, late"
+    },
+    {
+      "ingredient": "Piroctone Olamine",
+      "position": 22,
+      "role": "recognized anti-dandruff active (late)"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

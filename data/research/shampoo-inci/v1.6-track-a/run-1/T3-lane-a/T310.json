@@ -1,0 +1,731 @@
+{
+  "blindId": "T310",
+  "inciFingerprintSha256": "105e7ebd0649e688f2427321a0648b9945d539dd1a158dcf0640d02303771f67",
+  "identity": {
+    "productName": "Schauma Anti-Schuppen Classic Shampoo",
+    "brand": "Schauma",
+    "market": "DE",
+    "formulaBlock": {
+      "normalization": "'Aqua (Water, Eau)' one entry; 'Parfum (Fragrance)' one entry. E3: Parfum at 18; prominent = 1-17.",
+      "formulaCompleteness": "complete",
+      "formulaSourceTier": 2,
+      "identityConfidence": "high",
+      "rawInciCount": 20
+    }
+  },
+  "claimSources": [
+    {
+      "id": "S1",
+      "sourceKind": "manufacturer_de",
+      "grade": "moderate"
+    },
+    {
+      "id": "S2",
+      "sourceKind": "retailer",
+      "grade": "low"
+    },
+    {
+      "id": "S3",
+      "sourceKind": "retailer",
+      "grade": "low"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: SLES (2) defining, buffered by Cocamidopropyl Betaine (4) and Coco-Glucoside (10) -> moderate.",
+      "neighboringAlternative": "none",
+      "counterSignal": "None material.",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T310"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic, ether type"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Piroctone Olamine",
+          "position": 5,
+          "role": "recognized anti-dandruff active"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 6,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 7,
+          "role": "E4 comfort route; humectant"
+        },
+        {
+          "ingredient": "Aloe Barbadensis Leaf Extract",
+          "position": 8,
+          "role": "extract, not a humectant route"
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 9,
+          "role": "payload_lipid (waxy, 6.3)"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 10,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 11,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 12,
+          "role": "pearlizing route; excluded for weight"
+        },
+        {
+          "ingredient": "Laureth-4",
+          "position": 14,
+          "role": "low-ethoxylate thickener, not a route"
+        },
+        {
+          "ingredient": "PEG-7 Glyceryl Cocoate",
+          "position": 15,
+          "role": "weak_refatter"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "C2 met with a payload lipid in place of the silicone: prominent Hydrogenated Castor Oil (9) + cationic guar (6) + pearlizing Glycol Distearate (12) + humectant Panthenol (7); also W-RICH.",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "No silicone; Hydrogenated Castor Oil next to Glycol Distearate/Laureth-4/Coco-Glucoside/Glyceryl Oleate likely belongs to a pearlizing/opacifier blend at low level, so care may be bounded (moderate).",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T310"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic, ether type"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Piroctone Olamine",
+          "position": 5,
+          "role": "recognized anti-dandruff active"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 6,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 7,
+          "role": "E4 comfort route; humectant"
+        },
+        {
+          "ingredient": "Aloe Barbadensis Leaf Extract",
+          "position": 8,
+          "role": "extract, not a humectant route"
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 9,
+          "role": "payload_lipid (waxy, 6.3)"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 10,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 11,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 12,
+          "role": "pearlizing route; excluded for weight"
+        },
+        {
+          "ingredient": "Laureth-4",
+          "position": 14,
+          "role": "low-ethoxylate thickener, not a route"
+        },
+        {
+          "ingredient": "PEG-7 Glyceryl Cocoate",
+          "position": 15,
+          "role": "weak_refatter"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-RICH (waxy Hydrogenated Castor Oil 9 + guar 6) with a moderate C1 reset -> not limited reset; plausible bounded residue -> moderate.",
+      "neighboringAlternative": "high",
+      "counterSignal": "W-RICH and a waxy lipid with a prominent guar plus two weak refatters.",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "prominent guar + waxy lipid + weak refatters"
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "hydrogenated (waxy) lipid is more substantive"
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES + betaine + glucoside"
+        }
+      },
+      "whyThisBand": "Converging guar + lipid routes; effective reset bounds the residue.",
+      "whyNotNeighborBand": "high needs weak reset with W-RICH or multiple persistent systems not offset; reset is moderate and there is no silicone. low would understate guar + waxy lipid convergence (W2).",
+      "evidenceByFamily": {
+        "cationic_polymer": [
+          [
+            "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+            6
+          ]
+        ],
+        "payload_lipid": [
+          [
+            "Hydrogenated Castor Oil",
+            9
+          ]
+        ],
+        "weak_refatter": [
+          [
+            "Glyceryl Oleate",
+            11
+          ],
+          [
+            "PEG-7 Glyceryl Cocoate",
+            15
+          ]
+        ],
+        "context_humectant": [
+          [
+            "Panthenol",
+            7
+          ]
+        ],
+        "excluded": [
+          [
+            "Glycol Distearate",
+            12,
+            "pearlizer"
+          ],
+          [
+            "Laureth-4",
+            14,
+            "thickener"
+          ],
+          [
+            "Propylene Glycol",
+            13,
+            "solvent"
+          ],
+          [
+            "Aloe Barbadensis Leaf Extract",
+            8,
+            "extract"
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            4
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Coco-Glucoside",
+            10
+          ]
+        ],
+        "unresolved": []
+      },
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T310"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic, ether type"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Piroctone Olamine",
+          "position": 5,
+          "role": "recognized anti-dandruff active"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 6,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 7,
+          "role": "E4 comfort route; humectant"
+        },
+        {
+          "ingredient": "Aloe Barbadensis Leaf Extract",
+          "position": 8,
+          "role": "extract, not a humectant route"
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 9,
+          "role": "payload_lipid (waxy, 6.3)"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 10,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 11,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 12,
+          "role": "pearlizing route; excluded for weight"
+        },
+        {
+          "ingredient": "Laureth-4",
+          "position": 14,
+          "role": "low-ethoxylate thickener, not a route"
+        },
+        {
+          "ingredient": "PEG-7 Glyceryl Cocoate",
+          "position": 15,
+          "role": "weak_refatter"
+        }
+      ],
+      "formulaIdentifiers": {
+        "inciFingerprintSha256": "105e7ebd0649e688f2427321a0648b9945d539dd1a158dcf0640d02303771f67",
+        "sourceTier": 2,
+        "captureDate": "per frozen packet (not shown to lane)"
+      },
+      "confidenceLimitingFactor": "INCI-only: concentrations, charge density and deposition unknown"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "rationale": "Anti-dandruff name (high) + Piroctone Olamine (5) (7.2).",
+      "counterSignal": "Pro-Vitamin B5 lengths-care wording is generic.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Piroctone Olamine",
+          "position": 5
+        }
+      ],
+      "claimRole": "candidate",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedRoutes": [],
+        "limitation": "Active-led."
+      },
+      "decisionTrace": {
+        "claimDirection": "dandruff",
+        "formulaCompatible": "yes",
+        "compatibleRoute": "Piroctone Olamine 5",
+        "decisionReason": "Dandruff claim + active."
+      },
+      "sourceIds": [
+        "name (high); S1 manufacturer_de (moderate); S2 dm (low); S3 Mueller (low)"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "'Mit Pro-Vitamin B5 zur tiefen Pflege des Haares' is generic care, not a distinct positioned focus (repair/moisture claims only in Mueller retailer copy, low).",
+      "counterSignal": "None.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "claims": [],
+        "routes": [],
+        "exception": null
+      },
+      "sourceIds": [
+        "name (high); S1 manufacturer_de (moderate); S2 dm (low); S3 Mueller (low)"
+      ]
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "high",
+      "rationale": "recognized_active_problem_led (U3).",
+      "counterSignal": "None.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "decisionTrace": {
+        "default": "regular",
+        "trigger": "recognized_active_problem_led",
+        "triggerEvidence": [
+          "name 'Anti-Schuppen Classic'",
+          "Piroctone Olamine 5"
+        ],
+        "losingTriggers": [
+          "frequent not fired ('Fuer die taegliche Haarwaesche geeignet' is dm retailer, low)"
+        ],
+        "rationale": "Treatment."
+      },
+      "sourceIds": [
+        "name (high); S1 manufacturer_de (moderate); S2 dm (low); S3 Mueller (low)"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Soothing wording ('Eine beruhigte, erfrischte Kopfhaut und bis zu 100% schuppenfreies Haar') is in a dandruff unit (E2a/E2b), not SC1.",
+      "counterSignal": "CSA would pass (Panthenol 7).",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Panthenol",
+          "position": 7
+        }
+      ],
+      "sourceIds": [
+        "name (high); S1 manufacturer_de (moderate); S2 dm (low); S3 Mueller (low)"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Piroctone Olamine (5) present.",
+      "neighboringAlternative": "none",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T310"
+      ]
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "not_applicable",
+      "moistureRoutes": [],
+      "repairRoutes": [],
+      "sharedRoutes": [],
+      "limitation": "Active-led."
+    },
+    "claimRole": "candidate",
+    "counterSignal": "Pro-Vitamin B5 lengths-care wording is generic.",
+    "neighboringAlternative": "none",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "dandruff",
+        "formulaCompatible": "yes",
+        "compatibleRoute": "Piroctone Olamine 5",
+        "decisionReason": "Dandruff claim + active."
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "claims": [],
+        "routes": [],
+        "exception": null
+      },
+      "usageRole": {
+        "default": "regular",
+        "trigger": "recognized_active_problem_led",
+        "triggerEvidence": [
+          "name 'Anti-Schuppen Classic'",
+          "Piroctone Olamine 5"
+        ],
+        "losingTriggers": [
+          "frequent not fired ('Fuer die taegliche Haarwaesche geeignet' is dm retailer, low)"
+        ],
+        "rationale": "Treatment."
+      }
+    }
+  },
+  "weightRecord": {
+    "value": "moderate",
+    "confidence": "moderate",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "moderate",
+        "rationale": "prominent guar + waxy lipid + weak refatters"
+      },
+      "persistence": {
+        "value": "moderate",
+        "rationale": "hydrogenated (waxy) lipid is more substantive"
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C1 SLES + betaine + glucoside"
+      }
+    },
+    "evidenceByFamily": {
+      "cationic_polymer": [
+        [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          6
+        ]
+      ],
+      "payload_lipid": [
+        [
+          "Hydrogenated Castor Oil",
+          9
+        ]
+      ],
+      "weak_refatter": [
+        [
+          "Glyceryl Oleate",
+          11
+        ],
+        [
+          "PEG-7 Glyceryl Cocoate",
+          15
+        ]
+      ],
+      "context_humectant": [
+        [
+          "Panthenol",
+          7
+        ]
+      ],
+      "excluded": [
+        [
+          "Glycol Distearate",
+          12,
+          "pearlizer"
+        ],
+        [
+          "Laureth-4",
+          14,
+          "thickener"
+        ],
+        [
+          "Propylene Glycol",
+          13,
+          "solvent"
+        ],
+        [
+          "Aloe Barbadensis Leaf Extract",
+          8,
+          "extract"
+        ]
+      ],
+      "anionic_surfactant": [
+        [
+          "Sodium Laureth Sulfate",
+          2
+        ]
+      ],
+      "amphoteric_surfactant": [
+        [
+          "Cocamidopropyl Betaine",
+          4
+        ]
+      ],
+      "nonionic_surfactant": [
+        [
+          "Coco-Glucoside",
+          10
+        ]
+      ],
+      "unresolved": []
+    },
+    "whyThisBand": "Converging guar + lipid routes; effective reset bounds the residue.",
+    "whyNotNeighborBand": "high needs weak reset with W-RICH or multiple persistent systems not offset; reset is moderate and there is no silicone. low would understate guar + waxy lipid convergence (W2).",
+    "counterSignal": "W-RICH and a waxy lipid with a prominent guar plus two weak refatters.",
+    "neighboringAlternative": "high",
+    "formulaIdentifiers": {
+      "inciFingerprintSha256": "105e7ebd0649e688f2427321a0648b9945d539dd1a158dcf0640d02303771f67",
+      "sourceTier": 2,
+      "captureDate": "per frozen packet (not shown to lane)"
+    },
+    "confidenceLimitingFactor": "INCI-only: concentrations, charge density and deposition unknown"
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1 (fine, W moderate) = acceptable; T6 not needed"
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1 (normal, W moderate) = ideal; T6 not needed; T4: neighbor would lower the tier -> review_thickness_boundary"
+      },
+      {
+        "thickness": "coarse",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1 (coarse, W moderate, C high) = ideal; T6 not needed; T4: neighbor would lower the tier -> review_thickness_boundary"
+      }
+    ],
+    "weight": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential moderate -> moderate."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "dandruff",
+        "bucket": "schuppen",
+        "route": "dandruff",
+        "confidence": "high",
+        "rationale": "S-DANDRUFF: name 'Anti-Schuppen' (high) + Piroctone Olamine (5)."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate, D1 False -> regular."
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "evidence": "No D1 wording."
+    },
+    "explicitResetPositioning": false,
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "high",
+      "rationale": "D2 not met: D1 false"
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable",
+        "display": "amber"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal",
+        "display": "green"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal",
+        "display": "green"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_dandruff"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_thickness_boundary",
+        "detail": "normal, coarse"
+      }
+    ],
+    "informationalNotes": [
+      {
+        "code": "suits_dandruff_with_irritated_scalp",
+        "detail": "Bundled comfort wording S1 'Eine beruhigte, erfrischte Kopfhaut und bis zu 100% schuppenfreies Haar' (moderate); S-SENSITIVE gate read as CSA + prominent comfort route: Panthenol 7 -> pass. Combination confidence moderate."
+      }
+    ],
+    "researchCombinationTargets": [
+      "sensitive"
+    ],
+    "catalogDependent": "review_live_value_differs not computed in lane (live rows unseen)."
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "scalp_active (provisional, low)",
+      "final": "scalp_active",
+      "evidence": "Anti-dandruff name (high) + Piroctone Olamine (5) (7.2)."
+    },
+    {
+      "property": "focusSecondary",
+      "blind": "[] (provisional)",
+      "final": [],
+      "evidence": "'Mit Pro-Vitamin B5 zur tiefen Pflege des Haares' is generic care, not a distinct positioned focus (repair/moisture claims only in Mueller retailer copy, low)."
+    },
+    {
+      "property": "usageRole",
+      "blind": "regular (provisional)",
+      "final": "treatment",
+      "evidence": "recognized_active_problem_led (U3)."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blind": "unknown (positioning hidden)",
+      "final": "not_targeted",
+      "evidence": "Soothing wording ('Eine beruhigte, erfrischte Kopfhaut und bis zu 100% schuppenfreies Haar') is in a dandruff unit (E2a/E2b), not SC1."
+    },
+    {
+      "property": "cleansingStrength/conditioningLevel/weightPotential/dandruffSupport",
+      "blind": "frozen",
+      "final": "unchanged",
+      "evidence": "Claims cannot assign these (3.2); no revealed formula conflict."
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "noComparisonWithEarlierValues": true
+  },
+  "uncertainties": [
+    {
+      "reading": "'beruhigte Kopfhaut' as comfort wording",
+      "chosen": "comfort wording -> ['sensitive']",
+      "alternative": "outcome wording, [] with note"
+    }
+  ]
+}

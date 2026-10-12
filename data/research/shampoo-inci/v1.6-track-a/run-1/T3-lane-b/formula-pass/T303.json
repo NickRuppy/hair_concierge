@@ -1,0 +1,158 @@
+{
+  "blindId": "T303",
+  "inciFingerprintSha256": "5f982bf87555a931d4def50368197813a82e944030a1c2e9d63dff77fa1d141e",
+  "phase": "blind_formula_pass",
+  "normalizationNote": "No split synonym entries; packet positions are normalized positions.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic Sodium Laureth Sulfate (2); prominent buffer Cocamidopropyl Betaine (5); no reinforcing route. No Parfum; first listed preservative Sodium Benzoate (8) is the E3 point. Laureth-9 (3) is a fatty-alcohol ethoxylate (solubilizer/polidocanol), assigned to the not-a-route/not-a-buffer class; counting it as a nonionic buffer would not change the value.",
+      "neighboringAlternative": "none",
+      "counterSignal": "Single buffer listed after Sodium Chloride (4) argues toward strong, but C1 fixes moderate with one prominent buffer."
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "One meaningful conditioning system: prominent Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (7) with humectants Urea (6), Glycerin (9), Panthenol (14). No silicone, payload lipid or pearlizer, so C2 is not met.",
+      "neighboringAlternative": "low",
+      "counterSignal": "Otherwise cleansing-led; guar is the only substantive route."
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Single deposition family (one cationic guar at 7) facing an effective C1 reset; humectants are context only; no lipid, silicone, protein or film.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "One cationic polymer only."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "Single guar coacervate, no persistent silicone/lipid."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES + betaine."
+        }
+      },
+      "whyThisBand": "Single light polymer with ordinary reset (no polymer floor).",
+      "whyNotNeighborBand": "moderate would need a second converging family or a persistent system; only one guar is present (W2 not triggered).",
+      "counterSignal": "Hydroxypropyl guar at 7 is fairly early; charge density/amount unknown.",
+      "excluded": [
+        "Menthol (12), Mentha Arvensis Leaf Oil (16): cooling/essential, 6.4",
+        "Maris Sal (10): salt",
+        "Laureth-9 (3): solubilizer/polidocanol, not deposition"
+      ]
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "low",
+      "rationale": "Provisional (claims hidden). Formula pattern is scalp-comfort led: prominent Urea (6) and Laureth-9 (3, polidocanol), plus menthol and dead sea salt; no recognized dandruff active. Needs explicit sensitive/itch/dry-scalp positioning (SC1) and targeted.",
+      "neighboringAlternative": "general",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "limitation": "Scalp candidate; no lengths repair/moisture case."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "rationale": "Provisional empty default.",
+      "neighboringAlternative": [
+        "moisture"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "rationale": "Provisional default.",
+      "neighboringAlternative": "frequent"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "low",
+      "rationale": "Provisional pending SC1. CSA formula half passes: Urea (6) is a prominent E4 comfort and humectant route; Laureth-9 (3) is the INCI of polidocanol (E4 comfort list) under ID-2 synonym normalization. Cooling agents Menthol (12) and Mentha Arvensis oil (16) are non-prominent (after Sodium Benzoate 8).",
+      "neighboringAlternative": "not_targeted",
+      "csaFormulaHalf": "pass",
+      "prominentComfortRoute": true,
+      "prominentHumectantRefattingRoute": true
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none"
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic"
+    },
+    {
+      "ingredient": "Laureth-9",
+      "position": 3,
+      "role": "ethoxylate solubilizer = polidocanol (comfort route reading)"
+    },
+    {
+      "ingredient": "Sodium Chloride",
+      "position": 4,
+      "role": "thickener"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 5,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Urea",
+      "position": 6,
+      "role": "humectant; E4 comfort and humectant route"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 7,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Sodium Benzoate",
+      "position": 8,
+      "role": "E3 point"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 9,
+      "role": "humectant"
+    },
+    {
+      "ingredient": "Maris Sal (Dead Sea Salt)",
+      "position": 10,
+      "role": "salt"
+    },
+    {
+      "ingredient": "Menthol",
+      "position": 12,
+      "role": "cooling agent, non-prominent"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 14,
+      "role": "humectant/comfort, non-prominent"
+    },
+    {
+      "ingredient": "Mentha Arvensis Leaf Oil",
+      "position": 16,
+      "role": "essential oil, non-prominent"
+    }
+  ],
+  "unresolvedMaterialIngredients": [
+    {
+      "ingredient": "Laureth-9",
+      "position": 3,
+      "issue": "E4 lists 'Polidocanol', whose INCI is Laureth-9; this lane reads it as the listed comfort route via ID-2 synonymy. Alternative reading: unlisted_route_candidate:Laureth-9. Urea (6) independently satisfies CSA and the comfort-route clause, so no gate depends on it."
+    }
+  ]
+}

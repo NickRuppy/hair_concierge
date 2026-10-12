@@ -1,0 +1,557 @@
+{
+  "blindId": "T313",
+  "inciFingerprintSha256": "22bedf0cd1a87fec074e6fba8724488bdfc5b3c97a6aa424e3512c022d440014",
+  "policy": "shampoo-classification-v1.6",
+  "identity": {
+    "productName": "Garnier Wahre Schätze Beruhigendes Shampoo Sanfte Hafermilch",
+    "brand": "Wahre Schätze (Garnier)",
+    "market": "DE",
+    "packSize": "unresolved (250/300 ml; formula identical)",
+    "identityConfidence": "moderate"
+  },
+  "normalizationNote": "Slash synonym entries are single items (ID-2); positions as listed. Pack-size/GTIN binding unresolved in packet but formula stated identical across sizes (immaterial).",
+  "claimUnitsReviewed": [
+    {
+      "unit": "Beruhigendes Shampoo Sanfte Hafermilch (name)",
+      "source": "name",
+      "grade": "high",
+      "reading": "'Beruhigend', 'Sanft' are non-scalp name words (F7)"
+    },
+    {
+      "unit": "Das Shampoo wirkt beruhigend auf die juckende Kopfhaut.",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "reading": "E2 sensitive (product acts on itchy scalp) -> SC1"
+    },
+    {
+      "unit": "... eignet sich das Shampoo ideal für empfindliches Haar und sensible Kopfhaut / besonders für sensible Kopfhaut ... geeignet",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "reading": "suitability/tolerance wording; not relied on"
+    },
+    {
+      "unit": "Für ein natürliches Haargefühl und Erleichterung bei juckender Kopfhaut sorgen die Inhaltsstoffe Reiscreme und Hafermilch.",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "reading": "product's ingredients act ('Erleichterung bei juckender Kopfhaut') -> sensitive"
+    },
+    {
+      "unit": "spendet Feuchtigkeit und sorgt für geschmeidiges Haar",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "reading": "moisture (lengths)"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic Sodium Laureth Sulfate (2); prominent buffer Coco-Betaine (3); no reinforcing route. PPG-5-Ceteth-20 (10), PEG-55 Propylene Glycol Oleate (11) are thickeners/solubilizers. E3 point Parfum (27).",
+      "neighboringAlternative": "none",
+      "counterSignal": "Single buffer; soy oil and glycol distearate refat.",
+      "sourceIds": [
+        "formula:22bedf0cd1a8"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic"
+        },
+        {
+          "ingredient": "Coco-Betaine",
+          "position": 3,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 4,
+          "role": "pearlizing route"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 5,
+          "role": "humectant"
+        },
+        {
+          "ingredient": "Glycine Soja Oil / Soybean Oil",
+          "position": 6,
+          "role": "payload_lipid"
+        },
+        {
+          "ingredient": "Aloe Barbadensis Leaf Juice",
+          "position": 7,
+          "role": "plant juice"
+        },
+        {
+          "ingredient": "Avena Sativa Kernel Extract / Oat Kernel Extract",
+          "position": 8,
+          "role": "E4 comfort route"
+        },
+        {
+          "ingredient": "Dicaprylyl Ether",
+          "position": 13,
+          "role": "payload_lipid (emollient ether)"
+        },
+        {
+          "ingredient": "Carbomer",
+          "position": 15,
+          "role": "acrylate thickener"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 19,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Polyquaternium-7",
+          "position": 22,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Salicylic Acid",
+          "position": 26,
+          "role": "preservative/keratolytic, not a dandruff active"
+        },
+        {
+          "ingredient": "Parfum / Fragrance",
+          "position": 27,
+          "role": "E3 point"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "C2 met with payload lipid in place of silicone: Glycine Soja Oil (6) + cationic Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (19) and Polyquaternium-7 (22) + pearlizing Glycol Distearate (4) + humectant Glycerin (5); Dicaprylyl Ether (13) adds emollience. W-RICH holds.",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "Both cationic polymers are late (19, 22, after NaOH/propylene glycol).",
+      "sourceIds": [
+        "formula:22bedf0cd1a8"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic"
+        },
+        {
+          "ingredient": "Coco-Betaine",
+          "position": 3,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 4,
+          "role": "pearlizing route"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 5,
+          "role": "humectant"
+        },
+        {
+          "ingredient": "Glycine Soja Oil / Soybean Oil",
+          "position": 6,
+          "role": "payload_lipid"
+        },
+        {
+          "ingredient": "Aloe Barbadensis Leaf Juice",
+          "position": 7,
+          "role": "plant juice"
+        },
+        {
+          "ingredient": "Avena Sativa Kernel Extract / Oat Kernel Extract",
+          "position": 8,
+          "role": "E4 comfort route"
+        },
+        {
+          "ingredient": "Dicaprylyl Ether",
+          "position": 13,
+          "role": "payload_lipid (emollient ether)"
+        },
+        {
+          "ingredient": "Carbomer",
+          "position": 15,
+          "role": "acrylate thickener"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 19,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Polyquaternium-7",
+          "position": 22,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Salicylic Acid",
+          "position": 26,
+          "role": "preservative/keratolytic, not a dandruff active"
+        },
+        {
+          "ingredient": "Parfum / Fragrance",
+          "position": 27,
+          "role": "E3 point"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Prominent soybean oil (6) and dicaprylyl ether (13) converge with two late cationic polymers (19, 22); W-RICH holds, but resetCapacity is moderate (C1), so the rich route to high is not met.",
+      "neighboringAlternative": "high",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "Early fixed oil + emollient ether; cationics late."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Liquid oil and ether moderately retained; late cationics small."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES + coco-betaine."
+        }
+      },
+      "whyThisBand": "Noticeable but bounded residue; ordinary reset.",
+      "whyNotNeighborBand": "Not low: early payload lipid plus two cationic polymers (W2). Not high: reset not limited; cationics late; no silicone or wax.",
+      "counterSignal": "Second cationic polymer and W-RICH converge toward high.",
+      "excluded": [
+        "Glycol Distearate (4): pearlizer",
+        "Oryza Sativa Starch (9): starch powder, sensory/opacity",
+        "PPG-5-Ceteth-20, PEG-55 Propylene Glycol Oleate, PEG-60 Hydrogenated Castor Oil: thickeners/solubilizers (6.4)",
+        "Carbomer (15): acrylate thickener (6.4)",
+        "Dilauryl Thiodipropionate (14): antioxidant",
+        "Xanthan Gum (21): thickener"
+      ],
+      "sourceIds": [
+        "formula:22bedf0cd1a8"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic"
+        },
+        {
+          "ingredient": "Coco-Betaine",
+          "position": 3,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 4,
+          "role": "pearlizing route"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 5,
+          "role": "humectant"
+        },
+        {
+          "ingredient": "Glycine Soja Oil / Soybean Oil",
+          "position": 6,
+          "role": "payload_lipid"
+        },
+        {
+          "ingredient": "Aloe Barbadensis Leaf Juice",
+          "position": 7,
+          "role": "plant juice"
+        },
+        {
+          "ingredient": "Avena Sativa Kernel Extract / Oat Kernel Extract",
+          "position": 8,
+          "role": "E4 comfort route"
+        },
+        {
+          "ingredient": "Dicaprylyl Ether",
+          "position": 13,
+          "role": "payload_lipid (emollient ether)"
+        },
+        {
+          "ingredient": "Carbomer",
+          "position": 15,
+          "role": "acrylate thickener"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 19,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Polyquaternium-7",
+          "position": 22,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Salicylic Acid",
+          "position": 26,
+          "role": "preservative/keratolytic, not a dandruff active"
+        },
+        {
+          "ingredient": "Parfum / Fragrance",
+          "position": 27,
+          "role": "E3 point"
+        }
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole; Salicylic Acid (26) does not count.",
+      "neighboringAlternative": "none",
+      "sourceIds": [
+        "formula:22bedf0cd1a8"
+      ],
+      "counterSignal": "Mechanical INCI check (Section 11); botanicals, salicylic acid or claims never change it.",
+      "formulaFacts": []
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "moderate",
+      "rationale": "F7: a qualifying sensitive-scalp claim (manufacturer, moderate) competes with a lengths moisture claim; the product name names neither role ('Beruhigend', 'Sanft' do not name the scalp), so scalp_active is primary because it is formula-compatible (targeted: Avena Sativa Kernel Extract 8, Glycerin 5).",
+      "neighboringAlternative": "moisture",
+      "counterSignal": "Moisture/softness positioning is equally prominent.",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": [
+          "Glycerin 5"
+        ],
+        "sharedConditioningRoutes": [
+          "Glycine Soja Oil 6",
+          "Dicaprylyl Ether 13",
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride 19",
+          "Polyquaternium-7 22"
+        ],
+        "repairRoutes": [],
+        "limitation": "Recorded for the secondary moisture decision; primary is not a repair/moisture decision."
+      },
+      "claimRole": "candidate",
+      "decisionTrace": {
+        "primary": {
+          "claimDirection": "sensitive/itchy scalp vs moisture lengths",
+          "formulaCompatible": true,
+          "compatibleRoute": "Avena Sativa Kernel Extract 8 (comfort)",
+          "decisionReason": "F7 step 2: neither in name -> scalp_active"
+        }
+      },
+      "sourceIds": [
+        "reveal:manufacturer_de",
+        "formula"
+      ],
+      "formulaFacts": []
+    },
+    "focusSecondary": {
+      "value": [
+        "moisture"
+      ],
+      "confidence": "moderate",
+      "rationale": "Section 8: distinct moisture/softness positioning (manufacturer) + independent route Glycerin (5) with soybean oil (6), dicaprylyl ether (13) and cationics, none cited by the scalp_active route (oat extract) (F3); moisture_supported verdict (F1).",
+      "neighboringAlternative": [],
+      "counterSignal": "Thin humectant cluster (glycerin only).",
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [
+          "moisture"
+        ],
+        "matchingClaims": [
+          "spendet Feuchtigkeit und sorgt für geschmeidiges Haar"
+        ],
+        "independentRoutes": [
+          "Glycerin 5",
+          "Glycine Soja Oil 6"
+        ],
+        "whyDistinct": "lengths hydration vs scalp comfort"
+      },
+      "sourceIds": [
+        "reveal:manufacturer_de",
+        "formula"
+      ],
+      "formulaFacts": []
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "No trigger.",
+      "neighboringAlternative": "none",
+      "counterSignal": "-",
+      "decisionTrace": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "No trigger."
+      },
+      "sourceIds": [
+        "reveal:manufacturer_de"
+      ],
+      "formulaFacts": []
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "rationale": "SC1: 'wirkt beruhigend auf die juckende Kopfhaut' (manufacturer, moderate). CSA: prominent Avena Sativa Kernel Extract (8) (comfort), Glycerin (5), soybean oil (6).",
+      "neighboringAlternative": "not_targeted",
+      "counterSignal": "Positioning moderate only; fragrance declared late.",
+      "sourceIds": [
+        "reveal:manufacturer_de",
+        "formula"
+      ],
+      "formulaFacts": []
+    }
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "moisture (low)",
+      "final": "scalp_active (moderate)",
+      "evidence": "'wirkt beruhigend auf die juckende Kopfhaut'",
+      "reason": "F7 step 2: scalp role primary, formula-compatible"
+    },
+    {
+      "property": "focusSecondary",
+      "blind": "[] (low)",
+      "final": "[moisture] (moderate)",
+      "evidence": "'spendet Feuchtigkeit ... geschmeidiges Haar'",
+      "reason": "Section 8 passes with independent route"
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blind": "not_targeted (low)",
+      "final": "targeted (moderate)",
+      "evidence": "SC1 unit",
+      "reason": "positioning + CSA"
+    },
+    {
+      "property": "usageRole",
+      "blind": "regular (low)",
+      "final": "regular (high)",
+      "evidence": "-",
+      "reason": "-"
+    }
+  ],
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "acceptable",
+        "t1Fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate -> acceptable. Confidence = lowest T1 input (moderate). T4: neighbor weightPotential=high would give acceptable"
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "t1Fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate -> ideal. Confidence = lowest T1 input (moderate). T4: neighbor weightPotential=high would give acceptable"
+      },
+      {
+        "thickness": "coarse",
+        "fit": "ideal",
+        "t1Fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate, C high -> ideal. Confidence = lowest T1 input (moderate). T4: neighbor weightPotential=high would give ideal; neighbor conditioningLevel=moderate would give acceptable"
+      }
+    ],
+    "weight": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential moderate -> 1:1."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "sensitive",
+        "confidence": "moderate",
+        "rationale": "S-SENSITIVE: E2 sensitive claim (manufacturer, moderate) + targeted (moderate) + prominent comfort route Avena Sativa Kernel Extract (8). Confidence min(E1 moderate, targeted moderate)."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate -> regular."
+    },
+    "explicitResetPositioning": {
+      "value": false,
+      "confidence": "high",
+      "rationale": "D1: no tiefenrein/deep clean/clarifying shampoo/detox-reinigung stem and no occasional-use direction in name or manufacturer/pack claims (n/a)."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged"
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable",
+        "liveVerdictExpectation": "supportive"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal",
+        "liveVerdictExpectation": "supportive"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal",
+        "liveVerdictExpectation": "supportive"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_thickness_boundary",
+        "detail": "normal: ideal -> acceptable if weightPotential=high (T4)"
+      },
+      {
+        "code": "review_thickness_boundary",
+        "detail": "coarse: ideal -> acceptable if conditioningLevel=moderate (T4)"
+      }
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": {
+      "value": []
+    },
+    "catalogDependentFieldsNotComputed": [
+      "review_live_value_differs (requires live rows; orchestrator after freeze)"
+    ]
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeWeightSubjudgmentsPresent": true,
+    "counterEvidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "noComparisonWithEarlierValuesInsideLane": true,
+    "weightUnchangedAfterUnblind": true
+  },
+  "uncertainties": [
+    {
+      "reading": "'Beruhigendes' in the product name does not name the scalp, so F7 step 2 makes scalp_active primary.",
+      "alternative": "moisture primary with scalp_active secondary (target projection unchanged)."
+    },
+    {
+      "reading": "Secondary moisture accepted with a glycerin-only humectant cluster.",
+      "alternative": "[]"
+    }
+  ],
+  "status": "classified"
+}

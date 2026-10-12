@@ -1,0 +1,146 @@
+{
+  "blindId": "T105",
+  "inciFingerprintSha256": "ad4168be859a6e0b1b7a76ae82e1e72040e87afa86dcf97031a6745545d783f4",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "Packet canonicalInci used as normalized list (ID-2); positions are one-based on that list.",
+    "inciCount": 18,
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "e3ProminencePoint": "No Parfum declared; first listed E3 preservative is Sodium Benzoate (15): positions 1-14 prominent"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "C5: Sodium Coco-Sulfate (4) is the defining (alkyl sulfate) anionic; two prominent buffers (Coco-Glucoside 2, Sodium Cocoamphoacetate 5), no reinforcing anionic -> moderate.",
+      "counterSignal": "The glucoside is listed before the sulfate and glycerin is early: the architecture is glucoside-led, arguing toward low.",
+      "neighboringAlternative": "low"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "One meaningful system (HP Guar HPTC 12, prominent) plus light routes (Glyceryl Oleate 11, HPGC 13, Lecithin 14, Glycerin 3, Panthenol 7) -> moderate. No silicone or payload lipid; C2 not met.",
+      "counterSignal": "Guar is the only cationic and sits late in a short list.",
+      "neighboringAlternative": "low"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Single light cationic polymer plus weak refatters and humectants; no silicone/lipid/protein -> low.",
+      "counterSignal": "Two families (cationic polymer + weak refatters).",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Guar 12 + weak refatters 10/11/13/14."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "No persistent silicone or lipid."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C5 moderate (coco-sulfate buffered by glucoside and amphoacetate)."
+        }
+      },
+      "whyThisBand": "Light deposition, low persistence.",
+      "whyNotNeighborBand": "W2: the only families are one light cationic polymer and weak refatters plus humectants; no silicone, payload lipid, protein or film former.",
+      "limitingFactor": "Guar level unknown; reset is milder than a typical sulfate chassis."
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Formula care-direction verdict recorded for reconciliation.",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "note": "Glycerin (3) + Panthenol (7) humectant route with light guar/refatter support; weak."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2)."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Default regular; triggers (U2-U5, D1, U3) need graded claims."
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). SC1 positioning unknown. CSA formula half passes: prominent comfort routes Panthenol (7), Niacinamide (8); humectant/refatting Glycerin (3), Panthenol, Glyceryl Oleate (11). Fragrance-free (supportive signal only)."
+    }
+  },
+  "scalpGateFormulaHalves": "S-SENSITIVE comfort route yes; S-DRY humectant route yes; S-OILY clause passes.",
+  "formulaFacts": [
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 2,
+      "role": "buffer, nonionic glucoside (earliest surfactant)"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 3,
+      "role": "humectant (C2/E4)"
+    },
+    {
+      "ingredient": "Sodium Coco-Sulfate",
+      "position": 4,
+      "role": "defining anionic, alkyl sulfate type (C5)"
+    },
+    {
+      "ingredient": "Sodium Cocoamphoacetate",
+      "position": 5,
+      "role": "buffer, amphoteric"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 7,
+      "role": "humectant + E4 comfort route"
+    },
+    {
+      "ingredient": "Niacinamide",
+      "position": 8,
+      "role": "E4 comfort route"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 11,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 12,
+      "role": "cationic_polymer, prominent"
+    },
+    {
+      "ingredient": "Hydrogenated Palm Glycerides Citrate",
+      "position": 13,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Lecithin",
+      "position": 14,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Sodium Benzoate",
+      "position": 15,
+      "role": "E3 fallback marker"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

@@ -94,6 +94,16 @@ export type FreezePacket = {
 }
 
 /** Runbook step 2 fingerprint: lower-case, trim, collapse whitespace, join with `|`, SHA-256. */
+/** Stage-A normalization text: the runbook rule only; freeze-worker notes can name retailers or brands. */
+export const STAGE_A_NORMALIZATION =
+  "Runbook step 2: canonical list items lower-cased, trimmed, whitespace collapsed, joined with '|', SHA-256; split synonym entries (e.g. 'Aqua (Water, Eau)') merged before numbering."
+
+/** Stage-A pack size: only a leading "<n> ml|l|g" token survives; any research note yields "unknown". */
+export function sanitizePackSize(raw: string) {
+  const match = /^\s*(\d+(?:[.,]\d+)?\s*(?:ml|l|g))\b/i.exec(raw ?? "")
+  return match ? match[1] : "unknown"
+}
+
 export function inciFingerprint(inci: string[]) {
   const normalized = inci.map((entry) => entry.trim().toLowerCase().replace(/\s+/g, " ")).join("|")
   return createHash("sha256").update(normalized, "utf8").digest("hex")
@@ -337,10 +347,10 @@ export function buildLaneKit(options: {
     const blindId = `${prefix}${String(index + 1).padStart(2, "0")}`
     const formula = {
       blindId,
-      packSize: p.packSize,
+      packSize: sanitizePackSize(p.packSize),
       canonicalInci: p.canonicalInci,
       inciFingerprintSha256: p.inciFingerprintSha256,
-      normalization: p.normalization,
+      normalization: STAGE_A_NORMALIZATION,
       formulaCompleteness: p.formulaCompleteness,
       formulaSourceTier: p.formulaSourceTier,
       identityConfidence: p.identityConfidence,

@@ -19,6 +19,8 @@ import {
   inciFingerprint,
   releaseReveal,
   resolveInside,
+  STAGE_A_NORMALIZATION,
+  sanitizePackSize,
   scrubStandard,
   type FreezePacket,
 } from "../scripts/shampoo-research/build-lane-kit"
@@ -619,4 +621,25 @@ test("historical v1.6 runs recomputed with researchCombinationTargets where the 
   assert.deepEqual([r1.agree, r1.total], [296, 304], "round 1 records predate the field")
   assert.deepEqual([r2.agree, r2.total], [202, 208], "round 2 records predate the field")
   assert.deepEqual([u2.agree, u2.total], [98, 102], "unseen-v2: +6 agreeing combination decisions")
+})
+
+test("stage-A pack size carries only the size, never research notes", () => {
+  assert.equal(sanitizePackSize("250 ml"), "250 ml")
+  assert.equal(
+    sanitizePackSize(
+      "400 ml (dm GTIN-bound, catalog price row); garnier.de lists 250/300/400/1000 ml",
+    ),
+    "400 ml",
+  )
+  assert.equal(
+    sanitizePackSize("UNRESOLVED: prior record says 250 ml bound to GTIN 3600542461658"),
+    "unknown",
+  )
+  assert.equal(sanitizePackSize("1,5 l"), "1,5 l")
+  assert.equal(sanitizePackSize("no size here"), "unknown")
+})
+
+test("stage-A normalization is the fixed runbook rule, never the freeze worker's free text", () => {
+  assert.match(STAGE_A_NORMALIZATION, /lower-case/)
+  assert.doesNotMatch(STAGE_A_NORMALIZATION, /\bdm\b|Rossmann|GTIN/)
 })

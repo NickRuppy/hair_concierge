@@ -1,0 +1,70 @@
+{
+  "blindId": "T209",
+  "inciFingerprintSha256": "e7bbbca05138a36c9232d3bcfa024431c19776c252a065267ee03808404354e1",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "completeness": "complete",
+    "sourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "Aqua (Water) one entry; asterisk markers (* on Aloe juice, ** on fragrance items) stripped and kept as provenance; positions = packet order (normalized, one-based).",
+    "prominenceCutoff": "E3: Parfum (Fragrance) at 22; positions 1-21 prominent."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate (C5): Sodium Coco-Sulfate (2) is the defining alkyl-sulfate anionic, with at least two prominent buffers (Lauryl Glucoside 3, Coco-Glucoside 4, Disodium Cocoyl Glutamate 8, Sodium Cocoyl Glutamate 11) and no reinforcing strong anionic.",
+      "counterSignal": "Alkyl sulfate is the harsher class, plus Maris Sal (5); no refatting.",
+      "neighboringAlternative": "none",
+      "ruleIds": ["C5", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: cleansing-led; the only care routes are three hydrolyzed proteins (13-15), Arginine (10) and a late cationic amino-acid conditioner PCA Ethyl Cocoyl Arginate (19). No cationic polymer, silicone, lipid or pearlizing route.",
+      "counterSignal": "PCA Ethyl Cocoyl Arginate is an antistatic cationic and three proteins add some film; together they could give noticeable slip (neighbor moderate).",
+      "neighboringAlternative": "moderate",
+      "ruleIds": ["C2", "Section 5 anchors"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: only hydrolyzed proteins and a late cationic arginate conditioner, facing a buffered coco-sulfate chassis; no polymer, silicone or lipid.",
+      "neighboringAlternative": "none",
+      "subjudgments": {
+        "depositionLoad": {"value": "light", "rationale": "Hydrolyzed corn/wheat/soy protein (13-15), PCA Ethyl Cocoyl Arginate (19)."},
+        "persistence": {"value": "low", "rationale": "Hydrolyzed proteins and a small cationic surfactant are weakly retained."},
+        "resetCapacity": {"value": "moderate", "rationale": "C5 coco-sulfate with glucoside and glutamate buffers."}
+      },
+      "extractedEvidence": {
+        "protein_film": [{"ingredient": "Hydrolyzed Corn Protein", "position": 13}, {"ingredient": "Hydrolyzed Wheat Protein", "position": 14}, {"ingredient": "Hydrolyzed Soy Protein", "position": 15}],
+        "cationic_conditioner": [{"ingredient": "PCA Ethyl Cocoyl Arginate", "position": 19}],
+        "silicone": [], "cationic_polymer": [], "payload_lipid": [], "weak_refatter": [], "film_former": [],
+        "reset": [{"ingredient": "Sodium Coco-Sulfate", "position": 2}, {"ingredient": "Lauryl Glucoside", "position": 3}, {"ingredient": "Coco-Glucoside", "position": 4}, {"ingredient": "Disodium Cocoyl Glutamate", "position": 8}, {"ingredient": "Sodium Cocoyl Glutamate", "position": 11}],
+        "excluded": [{"ingredient": "Maris Sal", "position": 5, "reason": "salt"}, {"ingredient": "Phytic Acid", "position": 12, "reason": "chelator"}],
+        "context_humectants": [{"ingredient": "Aloe Barbadensis Leaf Juice", "position": 6, "note": "not a deliberate humectant route (C2 R11)"}, {"ingredient": "Arginine", "position": 10}]
+      },
+      "whyThisBand": "Light, weakly retained routes and moderate reset: low anchor.",
+      "whyNotNeighborBand": "W2: two families present, but they are hydrolyzed proteins (light film) and one late cationic surfactant listed after salt near the preservatives; no persistent polymer, silicone or lipid exists, so noticeable residue is implausible.",
+      "limitingFactor": "None material."
+    },
+    "focusPrimary": {"value": "general", "confidence": "low", "provisional": true, "rationale": "Pending claims. Care-direction verdict provisional: nonspecific (three hydrolyzed proteins without a deposition system are a weak repair cue; a protein token alone is not repair_supported)."},
+    "focusSecondary": {"value": [], "confidence": "low", "provisional": true, "rationale": "Empty default pending claims."},
+    "usageRole": {"value": "regular", "confidence": "low", "provisional": true, "rationale": "Default."},
+    "scalpComfortTarget": {"value": "not_targeted", "confidence": "low", "provisional": true, "rationale": "CSA formula half NOT met: no prominent E4 comfort or humectant route (Aloe juice and Arginine are not listed)."},
+    "dandruffSupport": {"value": "not_supported", "confidence": "high", "rationale": "Neither Piroctone Olamine nor Climbazole in the complete INCI."}
+  },
+  "formulaFacts": [
+    {"ingredient": "Sodium Coco-Sulfate", "position": 2, "role": "defining anionic (alkyl sulfate)"},
+    {"ingredient": "Lauryl Glucoside", "position": 3, "role": "nonionic buffer"},
+    {"ingredient": "Coco-Glucoside", "position": 4, "role": "nonionic buffer"},
+    {"ingredient": "Maris Sal (Sea Salt)", "position": 5, "role": "salt"},
+    {"ingredient": "Aloe Barbadensis Leaf Juice", "position": 6, "role": "plant juice, not a humectant route"},
+    {"ingredient": "Disodium Cocoyl Glutamate", "position": 8, "role": "mild anionic buffer"},
+    {"ingredient": "Sodium Cocoyl Glutamate", "position": 11, "role": "mild anionic buffer"},
+    {"ingredient": "Hydrolyzed Corn/Wheat/Soy Protein", "position": 13, "role": "protein_film (13, 14, 15)"},
+    {"ingredient": "PCA Ethyl Cocoyl Arginate", "position": 19, "role": "cationic_conditioner"},
+    {"ingredient": "Parfum (Fragrance)", "position": 22, "role": "E3 fragrance marker"}
+  ],
+  "unresolvedMaterialIngredients": []
+}

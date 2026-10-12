@@ -1,0 +1,445 @@
+{
+  "blindId": "T113",
+  "productName": "OGX Strength & Length + Keratin Oil Shampoo",
+  "inciFingerprintSha256": "0a9ba55eea029f16c1dd373bac11ec24870aff152e5c446b649cdcbe27a058f7",
+  "normalization": "Packet canonicalInci is the normalized list (ID-2); all positions are normalized one-based positions on it. Parfum/Fragrance at 24 (last): positions 1-23 prominent",
+  "status": "classified",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "C6: no strong anionic; earliest prominent surfactant is a mild anionic taurate (2) with prominent glucoside (3, 9) and amphoteric (4) co-surfactants -> low.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Methyl Cocoyl Taurate",
+          "position": 2,
+          "role": "mild anionic"
+        },
+        {
+          "ingredient": "Decyl Glucoside",
+          "position": 3,
+          "role": "glucoside"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "role": "amphoteric"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "W-RICH rich architecture: prominent payload lipids (Argan Oil 7, Hydrogenated Castor Oil 12) converge with an amino-silicone (10) and cationic guar (11), plus keratin (6) and a pearlizer (15) -> high anchor. C2 itself is not met: no closed-list humectant (Hexylene Glycol does not count, R11).",
+      "counterSignal": "Missing C2 humectant element; argan and amodimethicone amounts unknown.",
+      "neighboringAlternative": "moderate",
+      "formulaFacts": [
+        {
+          "ingredient": "Argania Spinosa Kernel Oil",
+          "position": 7,
+          "role": "payload_lipid"
+        },
+        {
+          "ingredient": "Amodimethicone",
+          "position": 10,
+          "role": "silicone"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 11,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 12,
+          "role": "payload_lipid"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 15,
+          "role": "pearlizer"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "W-RICH with limited reset: prominent argan oil and waxy hydrogenated castor oil converge with amodimethicone, guar, keratin and a film-type starch, under a mild C6 chassis (resetCapacity weak) -> high.",
+      "counterSignal": "Rinse-off context and unknown concentrations; amodimethicone deposits selectively.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "high",
+          "rationale": "Five deposition families: payload lipids 7/12, amino-silicone 10, cationic guar 11, keratin 6, possible film starch 8."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Amodimethicone and hydrogenated castor oil are substantive; argan oil liquid."
+        },
+        "resetCapacity": {
+          "value": "weak",
+          "rationale": "C6 mild taurate/glucoside/betaine chassis."
+        }
+      },
+      "whyThisBand": "Rich architecture (W-RICH) plus limited reset; multiple converging systems.",
+      "whyNotNeighborBand": "Not moderate: W-RICH holds (prominent argan oil and waxy castor oil with silicone and cationic) and reset is weak, so the high anchor's rich route is satisfied and reset does not offset it.",
+      "limitingFactor": "Concentrations of argan oil/amodimethicone in a rinse-off; potato-starch role.",
+      "canonicalFormula": {
+        "inciFingerprintSha256": "0a9ba55eea029f16c1dd373bac11ec24870aff152e5c446b649cdcbe27a058f7",
+        "formulaSourceTier": 3,
+        "formulaCompleteness": "complete",
+        "captureDate": "not in packet",
+        "identityConfidence": "moderate"
+      },
+      "evidenceByFamily": {
+        "payload_lipid": [
+          {
+            "ingredient": "Argania Spinosa Kernel Oil",
+            "position": 7,
+            "role": "prominent"
+          },
+          {
+            "ingredient": "Hydrogenated Castor Oil",
+            "position": 12,
+            "role": "waxy"
+          }
+        ],
+        "silicone": [
+          {
+            "ingredient": "Amodimethicone",
+            "position": 10,
+            "role": "prominent"
+          }
+        ],
+        "cationic_polymer": [
+          {
+            "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+            "position": 11,
+            "role": ""
+          }
+        ],
+        "protein_film": [
+          {
+            "ingredient": "Hydrolyzed Keratin",
+            "position": 6,
+            "role": ""
+          }
+        ],
+        "possible_film_former": [
+          {
+            "ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+            "position": 8,
+            "role": "recognition gap"
+          }
+        ],
+        "excluded": [
+          {
+            "ingredient": "Glycol Distearate",
+            "position": 15,
+            "role": "pearlizer"
+          },
+          {
+            "ingredient": "PEG-150 Distearate",
+            "position": 16,
+            "role": "PEG thickener"
+          }
+        ],
+        "reset": [
+          {
+            "ingredient": "Sodium Methyl Cocoyl Taurate",
+            "position": 2,
+            "role": "mild anionic"
+          },
+          {
+            "ingredient": "Decyl Glucoside",
+            "position": 3,
+            "role": "nonionic"
+          },
+          {
+            "ingredient": "Cocamidopropyl Betaine",
+            "position": 4,
+            "role": "amphoteric"
+          }
+        ]
+      },
+      "formulaCounterevidence": "Rinse-off context and unknown concentrations; amodimethicone deposits selectively.",
+      "unresolved": [
+        {
+          "ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+          "position": 8,
+          "note": "Modified anionic starch; possible film route. Not band-moving here because W-RICH with weak reset already sets high."
+        }
+      ],
+      "proposedWeightPotential": "high",
+      "confidenceLimitingFactor": "Concentrations of argan oil/amodimethicone in a rinse-off; potato-starch role.",
+      "postUnblindNote": "Claims 'Arganöl' and 'Keratin' map to Argania Spinosa Kernel Oil 7 and Hydrolyzed Keratin 6."
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "moderate",
+      "neighboringAlternative": "general",
+      "rationale": "Repair: retailer copy (low) positions anti-breakage/split-end care for 'strapaziertes Haar'; the formula verdict is independently repair_supported (keratin + amodimethicone + argan oil + guar), so the low claim may act as candidate with confidence capped at moderate (CL-SRC).",
+      "careDirection": {
+        "verdict": "repair_supported",
+        "moistureRoutes": [],
+        "repairRoutes": [
+          "Hydrolyzed Keratin 6",
+          "Amodimethicone 10",
+          "Argania Spinosa Kernel Oil 7"
+        ],
+        "sharedConditioningRoutes": [
+          "Guar 11",
+          "Hydrogenated Castor Oil 12"
+        ],
+        "limitation": "Claims low-graded."
+      },
+      "claimRole": "candidate",
+      "formulaFacts": [
+        {
+          "ingredient": "Hydrolyzed Keratin",
+          "position": 6,
+          "role": "protein"
+        },
+        {
+          "ingredient": "Amodimethicone",
+          "position": 10,
+          "role": "damage-selective deposition"
+        },
+        {
+          "ingredient": "Argania Spinosa Kernel Oil",
+          "position": 7,
+          "role": "lipid"
+        }
+      ],
+      "counterSignal": "Positioning is low-graded only; heavy weight.",
+      "decisionTrace": {
+        "claimDirection": "repair",
+        "formulaCompatible": true,
+        "compatibleRoute": "Hydrolyzed Keratin 6 + Amodimethicone 10 + Argan Oil 7 + Guar 11",
+        "decisionReason": "Low claim plus independently supporting repair_supported verdict."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Empty: shine/elasticity claims are outcomes of the same repair/deposition route (F2) and low-graded.",
+      "counterSignal": "None.",
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [],
+        "independentRoutes": [],
+        "whyDistinctFromPrimary": "",
+        "exceptionCode": null
+      }
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Default regular: no trigger.",
+      "counterSignal": "None.",
+      "decisionTrace": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "Default regular: no trigger."
+      }
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No scalp claim.",
+      "counterSignal": "None.",
+      "formulaFacts": []
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none",
+      "counterSignal": "None in formula; claims never upgrade this property.",
+      "formulaFacts": []
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Methyl Cocoyl Taurate",
+      "position": 2,
+      "role": "mild anionic (taurate), earliest surfactant"
+    },
+    {
+      "ingredient": "Decyl Glucoside",
+      "position": 3,
+      "role": "nonionic glucoside co-surfactant"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "amphoteric co-surfactant"
+    },
+    {
+      "ingredient": "Hydrolyzed Keratin",
+      "position": 6,
+      "role": "protein_film"
+    },
+    {
+      "ingredient": "Argania Spinosa Kernel Oil",
+      "position": 7,
+      "role": "payload_lipid, prominent"
+    },
+    {
+      "ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+      "position": 8,
+      "role": "modified starch (recognition gap)"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 9,
+      "role": "glucoside co-surfactant"
+    },
+    {
+      "ingredient": "Amodimethicone",
+      "position": 10,
+      "role": "amino-silicone, prominent"
+    },
+    {
+      "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+      "position": 11,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Hydrogenated Castor Oil",
+      "position": 12,
+      "role": "payload_lipid, waxy"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 15,
+      "role": "pearlizing route (C2); excluded from weight"
+    },
+    {
+      "ingredient": "PEG-150 Distearate",
+      "position": 16,
+      "role": "PEG thickener, excluded"
+    },
+    {
+      "ingredient": "Hexylene Glycol",
+      "position": 17,
+      "role": "solvent, not a humectant route"
+    }
+  ],
+  "blindToFinalChanges": [
+    {
+      "property": "provisional properties",
+      "blind": "general/[]/regular/not_targeted (low, provisional)",
+      "final": "see records",
+      "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+      "reason": "post-unblind reconciliation (3.2)"
+    }
+  ],
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "not_suited",
+        "confidence": "moderate",
+        "rationale": "T1: W high -> not_suited; T2: thickness/texture claims do not change the fit."
+      },
+      {
+        "thickness": "normal",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W high -> acceptable; T2: thickness/texture claims do not change the fit."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W high, C high -> ideal; T2: thickness/texture claims do not change the fit."
+      }
+    ],
+    "weight": {
+      "value": "heavy",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential high -> heavy (1:1)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "moderate",
+        "rationale": "S-ORDINARY way 1: no qualifying E2 claim; retailer copy only -> moderate."
+      },
+      "secondary": null,
+      "secondaryRationale": "No qualifying claim unit."
+    },
+    "observedCleansingIntensity": {
+      "value": "gentle",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength low -> gentle. I2: written unchanged to every row."
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "rationale": "No D1 wording."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "deepCleanserRecord": null,
+      "confidence": "high",
+      "rationale": "D2 not met (no D1) -> not_flagged."
+    },
+    "rows": [
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "heavy",
+        "tier": "acceptable",
+        "intensityMatchesBucket": false
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "heavy",
+        "tier": "ideal",
+        "intensityMatchesBucket": false
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "researchCombinationRationale": "Not a dandruff-primary product: E2b layer 2 does not apply.",
+    "liveComparison": "review_live_value_differs is resolved by the orchestrator after freeze (lanes see no live rows)."
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientOrCountOrPositionAssignedWeightBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "comparisonWithEarlierValuesMadeInLane": false,
+    "nAltConsistent": true
+  },
+  "uncertainties": [
+    {
+      "reading": "weightPotential high (W-RICH + weak reset)",
+      "alternative": "moderate (rinse-off context, unknown argan/amodimethicone levels)"
+    },
+    {
+      "reading": "conditioningLevel high via W-RICH although C2 lacks a closed-list humectant",
+      "alternative": "moderate"
+    }
+  ]
+}

@@ -1,0 +1,176 @@
+{
+  "blindId": "T112",
+  "inciFingerprintSha256": "80709619cc5b860ba314a06f5d5cb7ec58d65b853e39abdb0e5ab3414ad68db7",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "Packet canonicalInci used as normalized list (ID-2); positions are one-based on that list.",
+    "inciCount": 28,
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 3,
+    "identityConfidence": "high",
+    "e3ProminencePoint": "Parfum/Fragrance at 28 (last): positions 1-27 prominent"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "C6: no strong anionic; the earliest prominent surfactant is a mild anionic taurate (2) with prominent glucoside (3, 11) and amphoteric (4) co-surfactants -> low.",
+      "neighboringAlternative": "none"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Amino-silicone (Amodimethicone 10) with a cationic starch (9), collagen (7) and weak refatters is one meaningful silicone/cationic system plus light routes -> moderate. C2 not met: no pearlizing/fatty route.",
+      "counterSignal": "Silicone + cationic + protein + humectant (Urea 15) is close to the C2 set; could read as multiple complementary systems.",
+      "neighboringAlternative": "high"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "A prominent amino-silicone with a cationic starch, collagen and a film-type starch under a mild C6 chassis (weak reset) plausibly leaves noticeable but bounded residue -> moderate.",
+      "counterSignal": "Weak reset plus several families (silicone, cationic polymer, protein, possible film former).",
+      "neighboringAlternative": "high",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "Amodimethicone 10, Starch HPTC 9, collagen 7, potato-starch derivative 8, refatters 12/16/19."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Amodimethicone is substantive; cationic starch is light; no payload lipid."
+        },
+        "resetCapacity": {
+          "value": "weak",
+          "rationale": "C6 mild taurate/glucoside/betaine system."
+        }
+      },
+      "whyThisBand": "One meaningfully persistent amino-silicone system with light converging routes, weak reset.",
+      "whyNotNeighborBand": "Not high: no W-RICH (no prominent payload lipid), the cationic is a light starch, and amodimethicone at 10 in a rinse-off is bounded. Not low: a prominent amino-silicone plus a cationic polymer under weak reset is a real deposition system (W2).",
+      "limitingFactor": "Amodimethicone level; role of the potato-starch dodecenylsuccinate."
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Formula care-direction verdict recorded for reconciliation.",
+      "careDirection": {
+        "verdict": "repair_supported",
+        "note": "Amodimethicone (damage-selective deposition) + collagen + cationic starch = coherent substantive cluster; Urea/Lactate humectant route is thin."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2)."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Default regular; triggers (U2-U5, D1, U3) need graded claims."
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). SC1 positioning unknown. CSA formula half passes: prominent comfort route Urea (15); humectant/refatting Glyceryl Oleate (12), Sodium Lactate (13), Urea (15)."
+    }
+  },
+  "scalpGateFormulaHalves": "S-SENSITIVE yes; S-DRY yes; S-OILY clause fails on cleansingStrength low.",
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Methyl Cocoyl Taurate",
+      "position": 2,
+      "role": "mild anionic (taurate), earliest surfactant"
+    },
+    {
+      "ingredient": "Decyl Glucoside",
+      "position": 3,
+      "role": "nonionic glucoside co-surfactant"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "amphoteric co-surfactant"
+    },
+    {
+      "ingredient": "Biotin",
+      "position": 6,
+      "role": "vitamin, no route"
+    },
+    {
+      "ingredient": "Hydrolyzed Collagen",
+      "position": 7,
+      "role": "protein_film"
+    },
+    {
+      "ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+      "position": 8,
+      "role": "modified starch; film/emulsion stabilizer (recognition gap, see unresolved)"
+    },
+    {
+      "ingredient": "Starch Hydroxypropyltrimonium Chloride",
+      "position": 9,
+      "role": "cationic_polymer (6.4)"
+    },
+    {
+      "ingredient": "Amodimethicone",
+      "position": 10,
+      "role": "amino-silicone, prominent"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 11,
+      "role": "glucoside co-surfactant"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 12,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Sodium Lactate",
+      "position": 13,
+      "role": "pH buffer (F4); E4 humectant list"
+    },
+    {
+      "ingredient": "Urea",
+      "position": 15,
+      "role": "humectant (C2/E4) + E4 comfort route"
+    },
+    {
+      "ingredient": "Hydrogenated Palm Glycerides Citrate",
+      "position": 16,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Lecithin",
+      "position": 19,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "PEG-150 Distearate",
+      "position": 20,
+      "role": "PEG thickener, excluded"
+    },
+    {
+      "ingredient": "Hexylene Glycol",
+      "position": 21,
+      "role": "solvent, not a humectant route"
+    }
+  ],
+  "unresolvedMaterialIngredients": [
+    {
+      "ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+      "position": 8,
+      "note": "Modified anionic starch (film-forming/emulsion-stabilizing). Recorded as a possible film route; not judged material because it most plausibly stabilizes the amodimethicone emulsion. If it is a persistent film former the band could move toward high."
+    }
+  ]
+}

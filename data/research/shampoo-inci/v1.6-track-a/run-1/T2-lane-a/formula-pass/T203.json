@@ -1,0 +1,293 @@
+{
+  "blindId": "T203",
+  "inciFingerprintSha256": "9ed40828cb9c2c6d4b23d508b6f6cfad1455175d2dd943cdd969e6c7f7f1271d",
+  "fingerprintRecomputedMatches": true,
+  "formulaSource": {
+    "tier": 4,
+    "completeness": "complete",
+    "identityConfidence": "high"
+  },
+  "normalization": "'AQUA (WATER)' is one entry. Normalized positions = packet positions.",
+  "prominenceCutoff": "PARFUM at 9 -> positions 1-8 prominent (E3).",
+  "surfactantArchitecture": "Sodium C14-16 Olefin Sulfonate (2, defining, sulfonate type); Cocamidopropyl Betaine (3) buffer; Cocamide DIPA (4) thickener; no reinforcing anionic.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic is ether/sulfonate type with at least one prominent buffer and no prominent reinforcing strong anionic -> moderate. Olefin sulfonate (2) buffered by CAPB (3).",
+      "counterSignal": "Only one buffer and little refatting; strong is a conceivable reading but C1 fixes moderate.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium C14-16 Olefin Sulfonate",
+          "position": 2
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Several light routes, all after Parfum: Butyrospermum Parkii Butter (10), Polyester-37 (11), Glycol Distearate (13), Panthenol (14), Guar Hydroxypropyltrimonium Chloride (15), Polyquaternium-39 (19); Glycerin (5) prominent. C2 not met (no prominent silicone or payload lipid). Several light routes -> moderate.",
+      "counterSignal": "Every conditioning route is post-fragrance; low is a realistic neighbor.",
+      "neighboringAlternative": "low",
+      "formulaFacts": [
+        {
+          "ingredient": "Glycerin",
+          "position": 5
+        },
+        {
+          "ingredient": "Butyrospermum Parkii Butter",
+          "position": 10
+        },
+        {
+          "ingredient": "Polyester-37",
+          "position": 11
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 15
+        },
+        {
+          "ingredient": "Polyquaternium-39",
+          "position": 19
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: four deposition families are present but every one sits after Parfum (late/trace), facing an olefin sulfonate reset with only one buffer.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Shea butter (10), Polyester-37 (11), guar (15), Polyquaternium-39 (19): all post-fragrance, small levels."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "Late cationic polymers and a late butter; no silicone; Polyester-37 is a light film."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 moderate sulfonate chassis with a single betaine buffer, close to the strong side."
+        }
+      },
+      "evidenceByFamily": {
+        "payload_lipid": [
+          [
+            "Butyrospermum Parkii Butter",
+            10
+          ]
+        ],
+        "film_former": [
+          [
+            "Polyester-37",
+            11
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Guar Hydroxypropyltrimonium Chloride",
+            15
+          ],
+          [
+            "Polyquaternium-39",
+            19
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium C14-16 Olefin Sulfonate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            3
+          ]
+        ],
+        "humectant_context": [
+          [
+            "Glycerin",
+            5
+          ],
+          [
+            "Panthenol",
+            14
+          ]
+        ]
+      },
+      "excluded": [
+        [
+          "Acrylates Copolymer",
+          6,
+          "anionic acrylate rheology polymer (6.4)"
+        ],
+        [
+          "PEG-150 Distearate",
+          8,
+          "PEG thickener (6.4)"
+        ],
+        [
+          "Glycol Distearate",
+          13,
+          "pearlizer (6.4)"
+        ],
+        [
+          "Steareth-4",
+          18,
+          "emulsifier"
+        ],
+        [
+          "Polysorbate 20",
+          22,
+          "solubilizer"
+        ],
+        [
+          "Cocamide DIPA",
+          4,
+          "thickener"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "Four distinct deposition families, including two cationic polymers and a film former, could add up to noticeable residue.",
+      "whyThisBand": "All depositing material is after the fragrance marker; the chassis is an effective sulfonate reset.",
+      "whyNotNeighborBand": "Not moderate (W2): each family (butter 10, Polyester-37 11, guar 15, Polyquaternium-39 19) is late/trace, after Parfum (9); the prominent part of the formula is surfactants, glycerin and non-depositing thickeners, and a sulfonate reset faces only light routes.",
+      "confidenceLimitingFactor": "Combined effect of four late families is not measurable from INCI; could move to moderate.",
+      "ruleNotes": [
+        "W2",
+        "6.4 acrylate thickener excluded"
+      ]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Light formula with a film-forming polymer; compatible with a volume role if claimed.",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "basis": "Glycerin plus late panthenol, butter and polymers; no coherent repair or moisture cluster."
+      },
+      "formulaCompatibleRoutes": [
+        "volume-compatible: Polyester-37 11 (film), Acrylates Copolymer 6 (body), low weight"
+      ],
+      "counterSignal": "Nonspecific care routes.",
+      "neighboringAlternative": "volume"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Empty default; a secondary needs distinct positioning (Section 8), not visible yet.",
+      "counterSignal": "Positioning unknown.",
+      "neighboringAlternative": [
+        "shine"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Default regular (Section 9); triggers need graded claims. No trigger visible.",
+      "counterSignal": "No claims.",
+      "neighboringAlternative": "frequent"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). SC1 positioning not visible. CSA formula half: passes: prominent humectant Glycerin (5); no prominent comfort route (Panthenol 14 is after Parfum).",
+      "counterSignal": "Sulfonate chassis; fragrance.",
+      "neighboringAlternative": "targeted",
+      "csaPasses": true
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11).",
+      "counterSignal": "None; formula complete (ID-1).",
+      "neighboringAlternative": "none"
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium C14-16 Olefin Sulfonate",
+      "position": 2,
+      "role": "defining anionic"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 3,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Cocamide DIPA",
+      "position": 4,
+      "role": "thickener"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 5,
+      "role": "humectant"
+    },
+    {
+      "ingredient": "Acrylates Copolymer",
+      "position": 6,
+      "role": "excluded rheology polymer"
+    },
+    {
+      "ingredient": "Phenoxyethanol",
+      "position": 7,
+      "role": "preservative"
+    },
+    {
+      "ingredient": "PEG-150 Distearate",
+      "position": 8,
+      "role": "thickener"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 9,
+      "role": "E3 cutoff"
+    },
+    {
+      "ingredient": "Butyrospermum Parkii Butter",
+      "position": 10,
+      "role": "payload_lipid (late)"
+    },
+    {
+      "ingredient": "Polyester-37",
+      "position": 11,
+      "role": "film_former"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 13,
+      "role": "pearlizer"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 14,
+      "role": "humectant/comfort (not prominent)"
+    },
+    {
+      "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+      "position": 15,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Polyquaternium-39",
+      "position": 19,
+      "role": "cationic_polymer"
+    }
+  ],
+  "unresolvedMaterialIngredients": [],
+  "blindUncertainties": [
+    "conditioningLevel moderate vs low: all routes post-fragrance; chose moderate (several light routes), neighbor low."
+  ]
+}
