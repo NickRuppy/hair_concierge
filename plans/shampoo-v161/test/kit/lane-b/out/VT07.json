@@ -1,0 +1,378 @@
+{
+ "blindId": "VT07",
+ "identity": {
+  "brand": "GLYNT",
+  "productName": "DERMA Shampoo",
+  "packSize": "250 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "20012397ea815f52b539698536d537afcc6f42029e6c345f14aca92b2b0e1681",
+  "normalization": "Packet list already ID-2 normalized; normalized one-based positions; 36 entries.",
+  "completeness": "complete",
+  "e3ProminenceCutoff": "Parfum @32; entries 1-31 prominent",
+  "formulaSourceTier": 2,
+  "identityConfidence": "moderate"
+ },
+ "formulaPassRecord": {
+  "path": "out/formula-pass/VT07.json",
+  "sha256": "9a0a7e90549669f6bcfcd1428fb96806954682c1773449c9a21b5ea89ef6dd69",
+  "note": "Hash-pinned blind record; not edited after release."
+ },
+ "claimEvidence": [
+  "manufacturer_de (moderate): \"Anti-Schuppen-Shampoo für jeden Haartyp: wirkt effektiv gegen Schuppen und Hautirritationen ... reinigt mild und reduziert eine zu starke Talgproduktion\" -> dandruff unit; irritation wording bundled; \"zu starke Talgproduktion\" is not an E2 lexicon term",
+  "manufacturer_de (moderate): \"wirkt es effektiv und wirksam gegen Schuppen und Irritationen wie zum Beispiel trockene oder gespannte Kopfhaut, Juckreiz oder ein fettender Haaransatz\" -> dandruff unit; comfort/tension wording bundled; dryness absorbed; \"fettender Haaransatz\" = E2 oily wording inside a dandruff unit (feeds the oily combination, R17.2)",
+  "manufacturer_de (moderate): \"Verwende das Shampoo lediglich solange wie die Irritation besteht\" -> limited-use wording, not a D1 reset direction",
+  "manufacturer_de: \"Dermatologically Tested\" -> protective wording",
+  "retailer (low): \"Intervallweise einsetzen\" -> not used"
+ ],
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "moderate by C5: defining anionic Sodium Coco-Sulfate @2 (alkyl sulfate type) with at least two prominent buffers (Cocamidopropyl Betaine @3, Disodium Lauryl Sulfosuccinate @4, Sodium Methyl Oleoyl Taurate @5, Heptyl Glucoside @14, Disodium Cocoamphodiacetate @17) and no reinforcing strong anionic. Sulfated Castor Oil @16 is not a cleansing route (C3b); Cocamide MIPA @6 is a foam booster. Counter-signal: alkyl sulfate is the harsher class.",
+   "ruleIds": [
+    "C3",
+    "C3b",
+    "C4",
+    "C5"
+   ],
+   "blindValue": "moderate",
+   "changedAfterUnblind": false
+  },
+  "conditioningLevel": {
+   "value": "high",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "high by C2 with the payload-lipid substitute: prominent payload lipids (Lauryl/Myristyl Polyricinoleate @12 read as an emollient ester, Hydrogenated Castor Oil @23) take the place of the early silicone; cationic polymer Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10; pearlizing route Glycol Distearate @7; humectants Glycerin @29, Sorbitol @31 (listed C2 humectants). Additional cationic conditioner Behenoyl PG-Trimonium Chloride @11. Counter-signal: no silicone; humectants and hydrogenated castor oil sit late in the prominent zone; neighbor moderate.",
+   "ruleIds": [
+    "C2",
+    "E3",
+    "R11",
+    "N-ALT"
+   ],
+   "blindValue": "high",
+   "changedAfterUnblind": false
+  },
+  "weightPotential": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "high",
+   "rationale": "moderate: cationic guar @10, cationic conditioner @11 and a material emollient ester @12 converge, giving plausible bounded residue, but the C5 sulfate chassis (resetCapacity moderate) offsets them and there is no silicone. W-RICH is formally established (material lipid @12 + cationic deposition) but reset is not limited, so the rich route fails; the remaining waxy lipids (Hydrogenated Castor Oil @23, Stearic Acid @24, Palmitic Acid @25) lie after the W-line @19 and do not count toward convergence. Confidence moderate, neighbor high (W-RICH counter-signal; W-LINE item 6).",
+   "evidence": {
+    "silicone": [],
+    "cationic_polymer": [
+     "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10"
+    ],
+    "cationic_conditioner": [
+     "Behenoyl PG-Trimonium Chloride @11"
+    ],
+    "payload_lipid": [
+     "Lauryl/Myristyl Polyricinoleate @12 (material; read as emollient ester, role uncertain)",
+     "Hydrogenated Castor Oil @23 (non-material)",
+     "Stearic Acid @24 (non-material; fatty acid read conservatively as payload lipid)",
+     "Palmitic Acid @25 (non-material; same)"
+    ],
+    "weak_refatter": [],
+    "protein_film": [],
+    "film_former": [],
+    "reset": [
+     "Sodium Coco-Sulfate @2 (strong alkyl sulfate)",
+     "Cocamidopropyl Betaine @3",
+     "Disodium Lauryl Sulfosuccinate @4",
+     "Sodium Methyl Oleoyl Taurate @5",
+     "Heptyl Glucoside @14",
+     "Disodium Cocoamphodiacetate @17"
+    ],
+    "humectantContext": [
+     "Xylitylglucoside @13",
+     "Hexylene Glycol @18",
+     "Propylene Glycol @27",
+     "Glycerin @29",
+     "Sorbitol @31"
+    ],
+    "excluded": [
+     "Cocamide MIPA @6 (alkanolamide thickener)",
+     "Glycol Distearate @7 (pearlizing wax, 6.4)",
+     "Mentha Piperita Oil @9 (essential oil, 6.4)",
+     "Sulfated Castor Oil @16 (no weight family, 6.4 v1.6.1)",
+     "Cetyl Hydroxyethylcellulose @26 (nonionic cellulose thickener, no cationic charge)",
+     "Zinc Oxide @28 (pigment/particle, no deposition family)"
+    ],
+    "unresolved": [
+     "Lauryl/Myristyl Polyricinoleate @12: emollient-ester reading (payload_lipid) vs refatter reading (weak_refatter); conservative payload_lipid reading used"
+    ]
+   },
+   "wLine": {
+    "position": 19,
+    "inci": "Piroctone Olamine",
+    "classes": [
+     "preservative_or_capped_active"
+    ],
+    "cap": "e3Point @32 (Parfum)",
+    "alphabeticalRuns": [],
+    "skipped": [],
+    "codes": [],
+    "payloadLipidMaterial": [
+     "Lauryl/Myristyl Polyricinoleate @12"
+    ],
+    "payloadLipidNonMaterial": [
+     "Hydrogenated Castor Oil @23",
+     "Stearic Acid @24",
+     "Palmitic Acid @25"
+    ],
+    "note": "Capryloyl Glycine @21 is in no candidate list and is not a cleansing surfactant (W-LINE items 1-2); Salicylic Acid @20 is not a candidate."
+   },
+   "depositionLoad": "moderate",
+   "depositionLoadRationale": "Cationic guar, a behenoyl quat and an emollient ester early in the list; waxy lipids later.",
+   "persistence": "moderate",
+   "persistenceRationale": "Cationic polymer and quat are substantive; no silicone.",
+   "resetCapacity": "moderate",
+   "resetCapacityRationale": "C5 moderate sulfate chassis with several buffers.",
+   "counterevidence": "W-RICH formally met; waxy Hydrogenated Castor Oil and fatty acids present; behenoyl quat is a substantive conditioner.",
+   "whyThisBand": "Plausible bounded residue from a cationic/lipid system on an effective ordinary chassis.",
+   "whyNotNeighborBand": "high needs W-RICH with limited reset (reset is moderate here) or converging persistent systems that reset does not offset; without silicone, and with the waxy lipids Hydrogenated Castor Oil @23, Stearic Acid @24 and Palmitic Acid @25 after the W-line @19, the converging load is not heavy. low is excluded: two cationic families plus a material lipid are a plausible system.",
+   "confidenceLimitingFactor": "Role of Lauryl/Myristyl Polyricinoleate; W-LINE item 6 (post-line lipids named in whyNotNeighborBand).",
+   "ruleIds": [
+    "6.3",
+    "6.4",
+    "6.6",
+    "W-RICH",
+    "W-LINE",
+    "W2",
+    "N-ALT"
+   ],
+   "blindValue": "moderate",
+   "changedAfterUnblind": false
+  },
+  "focusPrimary": {
+   "value": "scalp_active",
+   "confidence": "moderate",
+   "neighboringAlternative": "general",
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": "Scalp role."
+   },
+   "claimRole": "candidate",
+   "counterSignal": "Rich conditioning architecture (C2 met) and prominent mint oil; claim grade moderate only.",
+   "decisionTrace": "Claim direction: anti-dandruff (manufacturer DE, moderate). Formula compatible: Piroctone Olamine @19 (claimed actives Salicylsäure @20 and Zink -> Zinc Oxide @28 also present). Decision: scalp_active.",
+   "rationale": "scalp_active: anti-dandruff positioning with a recognized active. Moderate: claim graded moderate.",
+   "ruleIds": [
+    "7.2",
+    "CL-SRC",
+    "N-ALT"
+   ],
+   "blindValue": "general",
+   "blindConfidence": "low",
+   "changedAfterUnblind": true
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "decisionTrace": "Empty default considered; sebum/oily wording sits inside dandruff units (E2a) and no separate clarifying positioning exists. Selected [].",
+   "rationale": "[]: no distinct secondary positioning.",
+   "ruleIds": [
+    "8",
+    "E2a"
+   ],
+   "blindValue": [],
+   "blindConfidence": "low",
+   "changedAfterUnblind": true
+  },
+  "usageRole": {
+   "value": "treatment",
+   "confidence": "moderate",
+   "neighboringAlternative": "regular",
+   "triggerCode": "recognized_active_problem_led",
+   "triggerEvidence": [
+    "dandruffSupport supported (Piroctone Olamine @19)",
+    "\"Anti-Schuppen-Shampoo ... wirkt effektiv gegen Schuppen\" (manufacturer DE, moderate)",
+    "\"Verwende das Shampoo lediglich solange wie die Irritation besteht\" (corroborates treatment use)"
+   ],
+   "losingTriggers": [],
+   "rationale": "treatment (U3). Moderate: claim graded moderate.",
+   "ruleIds": [
+    "9",
+    "U3"
+   ],
+   "blindValue": "regular",
+   "blindConfidence": "low",
+   "changedAfterUnblind": true
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "moderate",
+   "neighboringAlternative": "targeted",
+   "rationale": "not_targeted: all irritation, itch, tension and dryness wording sits inside dandruff units (E2a, E2b bundled), so no SC1 positioning; CSA formula half is met but positioning is absent. Prominent Mentha Piperita Oil @9 would cap targeted anyway. Moderate: bundling-based.",
+   "ruleIds": [
+    "10",
+    "SC1",
+    "E2a",
+    "E2b"
+   ],
+   "blindValue": "not_targeted",
+   "blindConfidence": "low",
+   "changedAfterUnblind": true
+  },
+  "dandruffSupport": {
+   "value": "supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "supported: complete INCI contains Piroctone Olamine @19 (Section 11); Salicylic Acid @20 alone would not count.",
+   "ruleIds": [
+    "11"
+   ],
+   "blindValue": "supported",
+   "changedAfterUnblind": false
+  }
+ },
+ "formulaFacts": {
+  "surfactants": {
+   "strongAnionic": [
+    "Sodium Coco-Sulfate @2 (alkyl sulfate, defining)"
+   ],
+   "mildAnionic": [
+    "Disodium Lauryl Sulfosuccinate @4",
+    "Sodium Methyl Oleoyl Taurate @5"
+   ],
+   "amphoteric": [
+    "Cocamidopropyl Betaine @3",
+    "Disodium Cocoamphodiacetate @17"
+   ],
+   "nonionicCleansing": [
+    "Heptyl Glucoside @14 (alkyl glucoside by chemistry)"
+   ],
+   "notCleansing": [
+    "Cocamide MIPA @6 (alkanolamide)",
+    "Sulfated Castor Oil @16 (C3b)",
+    "Capryloyl Glycine @21"
+   ],
+   "c5Reading": "alkyl-sulfate defining @2, >= 2 prominent buffers, no reinforcing route -> moderate"
+  },
+  "conditioningRoutes": [
+   "Glycol Distearate @7",
+   "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10",
+   "Behenoyl PG-Trimonium Chloride @11",
+   "Lauryl/Myristyl Polyricinoleate @12",
+   "Hydrogenated Castor Oil @23"
+  ],
+  "humectants": [
+   "Glycerin @29",
+   "Sorbitol @31",
+   "Xylitylglucoside @13 (not on the C2 list)"
+  ],
+  "actives": [
+   "Salix Alba Bark Extract @8",
+   "Piroctone Olamine @19",
+   "Salicylic Acid @20",
+   "Capryloyl Glycine @21",
+   "Zinc Oxide @28"
+  ],
+  "scalpExposure": [
+   "Mentha Piperita Oil @9 (prominent cooling essential oil)",
+   "Parfum @32",
+   "Citrus Aurantium Peel Oil @33",
+   "Limonene @34",
+   "Linalyl Acetate @35"
+  ],
+  "recognizedDandruffActives": [
+   "Piroctone Olamine @19"
+  ],
+  "preservatives": []
+ },
+ "unresolvedMaterialIngredients": [
+  "Lauryl/Myristyl Polyricinoleate @12: payload_lipid (emollient ester) vs weak_refatter; decides whether a material lipid leg (W-RICH/convergence) exists and the C2 lipid substitute (Hydrogenated Castor Oil @23 also serves C2).",
+  "Stearic Acid @24 / Palmitic Acid @25: fatty acids not named in 6.3; read conservatively as payload_lipid; non-material either way."
+ ],
+ "reconciliation": {
+  "blindToFinalChanges": [
+   "focusPrimary: general (low) -> scalp_active (moderate).",
+   "focusSecondary: [] (low) -> [] (high).",
+   "usageRole: regular (low) -> treatment (moderate).",
+   "scalpComfortTarget: not_targeted (low) -> not_targeted (moderate)."
+  ],
+  "unchangedFormulaProperties": "All four formula properties unchanged. Claimed \"Zink\" maps to Zinc Oxide @28, \"Salicylsäure\" to Salicylic Acid @20: no ID-3 conflict."
+ },
+ "projection": {
+  "status": "proposed_blocked_by_review_flags",
+  "thicknessFit": {
+   "fine": "acceptable",
+   "normal": "ideal",
+   "coarse": "ideal"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "fine: T1 cell W=moderate, C=high -> acceptable; normal: T1 cell W=moderate, C=high -> ideal; coarse: T1 cell W=moderate, C=high -> ideal. T2: thickness/texture claims ignored. T4 recomputed from N-ALT neighbors after T6. T6 applies (scalp-concern targets).",
+  "weight": "moderate",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential moderate -> moderate, confidence = weightPotential confidence (moderate).",
+  "scalpTargets": {
+   "primary": {
+    "target": "dandruff",
+    "confidence": "moderate",
+    "rationale": "S-DANDRUFF: dandruff claim (manufacturer DE, moderate) + dandruffSupport supported -> dandruff primary (R17.1), no secondary (R17.2)."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "researchCombinationConfidence": {},
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1: cleansingStrength moderate, D1 false -> regular; written unchanged to every row (I2). I3 checked against the none neighbor.",
+  "explicitResetPositioning": false,
+  "explicitResetEvidence": "none",
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D2 not met (requires cleansingStrength strong, focusPrimary clarifying, usageRole occasional_reset and D1 true); not_flagged.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "schuppen",
+    "scalp_route": "dandruff",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "acceptable"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "schuppen",
+    "scalp_route": "dandruff",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "schuppen",
+    "scalp_route": "dandruff",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "ideal"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_dandruff"
+  ],
+  "reviewFlags": [
+   "review_thickness_boundary:normal",
+   "review_thickness_boundary:coarse"
+  ],
+  "informationalNotes": [
+   "dandruff_bundled_comfort_wording (\"gegen Schuppen und Hautirritationen\", \"Irritationen wie ... gespannte Kopfhaut, Juckreiz\", moderate): S-SENSITIVE formula gate failed - no prominent E4 comfort route",
+   "dandruff_oily_scalp_wording (\"ein fettender Haaransatz\", moderate): S-OILY clause failed - conditioningLevel high"
+  ],
+  "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; lanes do not see catalog rows."
+ },
+ "selfCheck": "6.11: fingerprint matches the frozen packet; claims were hidden during the formula judgment (formula pass hash-pinned); no ingredient, family count or position window assigned the weight band; W-line derived per W-LINE with every skipped candidate recorded; three subjudgments present; whyNotNeighborBand specific; confidence names its limit; no comparison with earlier values made in-lane. Projection derived mechanically from final properties (T1/T6/T4/I1/I3/W-LIVE/13.7).",
+ "uncertainties": [
+  "weightPotential moderate vs high: W-RICH formally met but reset moderate (C5) -> moderate with high as neighbor.",
+  "No E3-list preservative is declared; E3 is set by Parfum @32, so the preservative fallback is not needed.",
+  "\"reduziert eine zu starke Talgproduktion\" not read as E2 oily (lexicon term is \"überschüssiger Talg\"); the oily combination outcome is unchanged because \"fettender Haaransatz\" already qualifies and the S-OILY clause fails on conditioning."
+ ]
+}

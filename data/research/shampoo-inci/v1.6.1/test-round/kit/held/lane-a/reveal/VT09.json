@@ -1,0 +1,35 @@
+{
+  "blindId": "VT09",
+  "productName": "Moroccanoil Clarifying Shampoo",
+  "brand": "Moroccanoil",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_moroccanoil_de (DE shop, German text, EUR)",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Ein tiefenreinigendes Shampoo, das alltägliche Ablagerungen ohne Feuchtigkeitsentzug beseitigt und sowohl Haar als auch Kopfhaut zu einem gesundes Gleichgewicht verhilft. [Für durch Ablagerungen belastetes Haar] Moroccanoil® Belebendes Shampoo ist tiefenreinigend und beseitigt alltägliche Ablagerungen, so dass das Haar wieder zu einem schwerelosen, gesunden Gleichgewicht findet. Dieses für Reinheit sorgende, belebende Shampoo ist reich an Argan- und Avocadoöl, Keratin, Lavendel-, Kamille- sowie Jojobaextrakten und nährt das Haar, während es sanft von Unreinheiten befreit wird. Ohne die Haarfarbe zu schädigen. Kann vor einer Tönung, Dauerwelle oder chemischen Behandlung verwendet werden, um ein möglichst gleichmäßiges Ergebnis zu erzielen.",
+      "directionsVerbatim": "Das Haar vollständig anfeuchten und so mit dem hochkonzentrierten Moroccanoil® Belebendes Shampoo einen reichhaltigen, luxuriösen Schaum zu erzeugen. Um Ablagerungen vollständig zu entfernen, unter Zugabe von zusätzlichem Wasser das Shampoo sanft in Haar und Kopfhaut einmassieren. Gut ausspülen, bis keine Produktreste mehr im Wasser enthalten sind. Bei Bedarf wiederholen. Anschließend eine Moroccanoil-Spülung oder -Maske verwenden. Dieses für Reinheit sorgende, belebende Shampoo sollte zweimal im Monat verwendet werden; oder bis zu ein- oder zweimal wöchentlich bei vielfacher Verwendung von Haarprodukten, regelmäßigem Schwimmen oder hartem Wasser."
+    },
+    {
+      "sourceType": "retailer_flaconi_de (text from phase-1 research file batch-I.json; re-fetch now blocked by Cloudflare 'Just a moment')",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Ein tiefenreinigendes Shampoo, das alltägliche Ablagerungen entfernt, ohne Feuchtigkeit zu entziehen, und Haar und Kopfhaut wieder in ein gesundes Gleichgewicht bringt.",
+      "directionsVerbatim": "Das Haar vollständig anfeuchten, um einen reichhaltigen, luxuriösen Schaum aus dem hochkonzentrierten Moroccanoil® Clarifying Shampoo zu erzeugen. Um Ablagerungen vollständig zu entfernen, fügen Sie weiterhin Wasser hinzu und massieren Sie das Shampoo sanft in Haar und Kopfhaut ein. Gründlich ausspülen, bis das Wasser klar ist. Bei Bedarf wiederholen. Anschließend eine Moroccanoil-Spülung oder -Maske verwenden. Dieses klärende Shampoo kann zweimal im Monat verwendet werden; oder bis zu ein- oder zweimal wöchentlich für diejenigen, die viele Haarprodukte verwenden, regelmäßig schwimmen gehen oder hartes Wasser haben."
+    },
+    {
+      "sourceType": "manufacturer_moroccanoil_uk",
+      "sourceKind": "manufacturer_foreign",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Color-safe, phosphate-free and paraben-free. Can be used prior to a color, perm or chemical treatment for the most even results.",
+      "directionsVerbatim": "Wet hair completely to activate a rich, luxurious lather from the highly concentrated Moroccanoil® Clarifying Shampoo. To completely remove buildup, continue to add water while gently massaging the shampoo throughout hair and scalp. Rinse thoroughly until water runs clear. Repeat if needed. Follow with a Moroccanoil conditioner or mask. This clarifying shampoo may be used twice a month; or up to once or twice weekly for those who use a lot of hair products, swim regularly or have hard water."
+    },
+    {
+      "sourceType": "manufacturer_moroccanoil_us",
+      "sourceKind": "manufacturer_foreign",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Color-safe. Sulfate-free, phosphate-free and paraben-free. Removes 88% of oil*, 88% of copper pollutants*, 72% of aluminum pollutants*, 52% of metals such as calcium and hard water mineral deposits* (*independent lab study)",
+      "directionsVerbatim": ""
+    }
+  ]
+}

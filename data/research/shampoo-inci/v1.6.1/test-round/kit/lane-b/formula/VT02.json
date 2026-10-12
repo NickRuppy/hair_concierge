@@ -1,0 +1,33 @@
+{
+  "blindId": "VT02",
+  "packSize": "300 ml",
+  "canonicalInci": [
+    "Water/Aqua/Eau",
+    "Cocamidopropyl Betaine",
+    "Coco-Glucoside",
+    "Sodium Lauroyl Sarcosinate",
+    "Disodium 2-Sulfolaurate",
+    "PEG-200 Hydrogenated Glyceryl Palmate",
+    "Propanediol",
+    "Citric Acid",
+    "Piroctone Olamine",
+    "PEG-7 Glyceryl Cocoate",
+    "Polyquaternium-47",
+    "Tetrasodium Glutamate Diacetate",
+    "Panthenol",
+    "Zinc PCA",
+    "Glycerin",
+    "Fraxinus Excelsior Bark Extract",
+    "Saccharomyces Ferment Lysate Filtrate",
+    "Sodium Benzoate",
+    "Fragrance/Parfum",
+    "Citrus Aurantium Peel Oil",
+    "Limonene",
+    "Tetramethyl Acetyloctahydronaphthalenes"
+  ],
+  "inciFingerprintSha256": "541487036feac0c7f14d0bc67de7353e17db9635cbc646fcbc9f4ad5ac9be21c",
+  "normalization": "lower-case, trim, collapse whitespace, join with |; split synonym entries merged into one item",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high"
+}

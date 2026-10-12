@@ -48,7 +48,7 @@ import {
 import path from "node:path"
 import { pathToFileURL } from "node:url"
 
-const STANDARD_PATH = "docs/research/shampoo-inci/v1.6/classification-standard.md"
+const STANDARD_PATH = "docs/research/shampoo-inci/v1.6.1/classification-standard.md"
 
 /** Stage A must not carry identity: freeze notes in `packSize` (brands, GTINs, retailers) are
  * reduced to the first bare size, e.g. "300 ml", or "unknown". */
@@ -58,7 +58,7 @@ export function blindPackSize(raw: string | null | undefined) {
   return `${match[1]!.replace(",", ".")} ${match[2]!.toLowerCase()}`
 }
 
-/** The locked v1.6 standard unless `--standard` names another text (e.g. a version candidate). */
+/** The locked v1.6.1 standard unless `--standard` names another text (e.g. a version candidate). */
 export function resolveStandardPath(flagValue: string | undefined) {
   if (flagValue === undefined) return STANDARD_PATH
   if (!flagValue.trim()) throw new Error("--standard needs a path to a standard text")

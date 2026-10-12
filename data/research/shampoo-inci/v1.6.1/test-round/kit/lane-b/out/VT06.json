@@ -1,0 +1,346 @@
+{
+ "blindId": "VT06",
+ "identity": {
+  "brand": "System Professional",
+  "productName": "Purify Shampoo P1",
+  "packSize": "250 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "4f789abad4b461aa10f54ca9a4d1c86e6b379a4e7d1fb4cfba3d23cd4e049896",
+  "normalization": "Packet list already ID-2 normalized (Aqua/Water/Eau one entry); normalized one-based positions; 42 entries.",
+  "completeness": "complete",
+  "e3ProminenceCutoff": "Parfum/Fragrance @11; entries 1-10 prominent",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high"
+ },
+ "formulaPassRecord": {
+  "path": "out/formula-pass/VT06.json",
+  "sha256": "252cfd5ffb38ab046302b7bcdf9cbd2138dc9519c15e79d5302fdefd65b806b5",
+  "note": "Hash-pinned blind record; not edited after release."
+ },
+ "claimEvidence": [
+  "pack_front (high, any language, E1 v1.6.1): \"Dandruff Cleansing & Protection / ... / Reinigung und Schutz gegen Schuppen\" -> E2 dandruff",
+  "manufacturer_foreign (low): \"gentle cleansing to alleviate dandruff and excess oil\" -> low; \"excess oil\" not on the English list",
+  "retailer (low): \"Anti-Schuppen Shampoo ... fettender, gereizter Kopfhaut\", \"überschüssigem Fett\", \"reduzieren Talg\" -> oily and comfort wording graded low",
+  "retailer (low) directions: \"alle 2 Tage\" (generic) -> not used"
+ ],
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "strong",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "strong by C1: defining anionic Sodium Laureth Sulfate @2 (ether type) with a prominent reinforcing strong anionic Sodium Laureth-8 Sulfate @4 (C3b: laureth-8 sulfates are strong anionic, ether type); buffer Cocamidopropyl Betaine @5. C3b limit applies: read as a buffer the laureth-8 sulfate would make the chassis moderate, so confidence at most moderate and neighbor moderate. Further ether sulfates (Magnesium Laureth Sulfate @12, Magnesium Laureth-8 Sulfate @13, Sodium Oleth Sulfate @14, Magnesium Oleth Sulfate @17) are after the E3 point and recorded only.",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C3b",
+    "C4",
+    "N-ALT"
+   ],
+   "blindValue": "strong",
+   "changedAfterUnblind": false
+  },
+  "conditioningLevel": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "low: cleansing-led architecture; the only substantive conditioner is Polyquaternium-10 @18, after the E3 point; pearlizer PEG-3 Distearate @3 and minor humectant-type entries (Glucose @28, Inositol @37, Calcium Pantothenate @38) add little slip. No silicone, no payload lipid. Counter-signal: a cationic polymer is present; neighbor moderate.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "N-ALT"
+   ],
+   "blindValue": "low",
+   "changedAfterUnblind": false
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "low: a single late cationic polymer (Polyquaternium-10 @18, after the fragrance) is the only deposition family and faces a strong reset (reinforced ether-sulfate chassis); no silicone, no lipid, no protein, no film former. W2 does not apply (one family).",
+   "evidence": {
+    "silicone": [],
+    "cationic_polymer": [
+     "Polyquaternium-10 @18"
+    ],
+    "cationic_conditioner": [],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "protein_film": [],
+    "film_former": [],
+    "reset": [
+     "Sodium Laureth Sulfate @2",
+     "Sodium Laureth-8 Sulfate @4",
+     "Cocamidopropyl Betaine @5",
+     "Magnesium Laureth Sulfate @12",
+     "Magnesium Laureth-8 Sulfate @13",
+     "Sodium Oleth Sulfate @14",
+     "Magnesium Oleth Sulfate @17"
+    ],
+    "humectantContext": [
+     "Propylene Glycol @6",
+     "Glucose @28",
+     "Inositol @37",
+     "Calcium Pantothenate @38"
+    ],
+    "excluded": [
+     "PEG-3 Distearate @3 (pearlizing/thickening PEG ester, 6.4)",
+     "Hamamelis Virginiana Water @23 and botanical extracts @30-35 (no deposition role)"
+    ],
+    "unresolved": []
+   },
+   "wLine": {
+    "position": 8,
+    "inci": "Piroctone Olamine",
+    "classes": [
+     "preservative_or_capped_active"
+    ],
+    "cap": "e3Point @11 (Parfum/Fragrance)",
+    "alphabeticalRuns": [],
+    "skipped": [],
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "light",
+   "depositionLoadRationale": "One cationic polymer after the fragrance.",
+   "persistence": "low",
+   "persistenceRationale": "No persistent silicone or lipid system.",
+   "resetCapacity": "strong",
+   "resetCapacityRationale": "SLES reinforced by laureth-8 sulfate (C1 strong), with further late ether sulfates.",
+   "counterevidence": "Polyquaternium-10 is a substantive polymer.",
+   "whyThisBand": "Deposition absent apart from one late polymer; strong reset.",
+   "whyNotNeighborBand": "moderate needs at least one plausibly persistent system; a single post-fragrance polymer facing a strong reset is not one (no polymer floor).",
+   "confidenceLimitingFactor": "None material; complete formula, converging subjudgments.",
+   "ruleIds": [
+    "6.6",
+    "W2",
+    "W-LINE"
+   ],
+   "blindValue": "low",
+   "changedAfterUnblind": false
+  },
+  "focusPrimary": {
+   "value": "scalp_active",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": "Scalp role."
+   },
+   "claimRole": "candidate",
+   "counterSignal": "Strong reinforced ether-sulfate chassis; caffeine present without a visible hair-loss claim.",
+   "decisionTrace": "Claim direction: anti-dandruff (pack front, high). Formula compatible: Piroctone Olamine @8. Oily wording only low-graded, so no clarifying candidate. Decision: scalp_active.",
+   "rationale": "scalp_active: pack-front dandruff claim with a recognized active (7.2).",
+   "ruleIds": [
+    "7.2",
+    "E1",
+    "CL-SRC"
+   ],
+   "blindValue": "general",
+   "blindConfidence": "low",
+   "changedAfterUnblind": true
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "decisionTrace": "Empty default considered; oily/clarifying wording is low-graded only and cannot act as candidate for a secondary without moderate positioning. Selected [].",
+   "rationale": "[]: no qualifying secondary positioning.",
+   "ruleIds": [
+    "8",
+    "CL-SRC"
+   ],
+   "blindValue": [],
+   "blindConfidence": "low",
+   "changedAfterUnblind": true
+  },
+  "usageRole": {
+   "value": "treatment",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "recognized_active_problem_led",
+   "triggerEvidence": [
+    "dandruffSupport supported (Piroctone Olamine @8)",
+    "pack front \"Reinigung und Schutz gegen Schuppen\" (high)"
+   ],
+   "losingTriggers": [],
+   "rationale": "treatment (U3). Reset intent (oily wording) is low-graded only, so alternating does not fire.",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U3",
+    "U4"
+   ],
+   "blindValue": "regular",
+   "blindConfidence": "low",
+   "changedAfterUnblind": true
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "not_targeted: CSA fails (no prominent listed comfort or humectant route); comfort wording only low-graded retailer text.",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "SC1"
+   ],
+   "blindValue": "not_targeted",
+   "blindConfidence": "high",
+   "changedAfterUnblind": false
+  },
+  "dandruffSupport": {
+   "value": "supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "supported: complete INCI contains Piroctone Olamine @8 (Section 11).",
+   "ruleIds": [
+    "11"
+   ],
+   "blindValue": "supported",
+   "changedAfterUnblind": false
+  }
+ },
+ "formulaFacts": {
+  "surfactants": {
+   "strongAnionic": [
+    "Sodium Laureth Sulfate @2 (defining, ether type)",
+    "Sodium Laureth-8 Sulfate @4 (reinforcing, C3b)",
+    "Magnesium Laureth Sulfate @12 (not prominent)",
+    "Magnesium Laureth-8 Sulfate @13 (not prominent)",
+    "Sodium Oleth Sulfate @14 (not prominent)",
+    "Magnesium Oleth Sulfate @17 (not prominent)"
+   ],
+   "mildAnionic": [],
+   "amphoteric": [
+    "Cocamidopropyl Betaine @5 (buffer)"
+   ],
+   "nonionicCleansing": [],
+   "notCleansing": [
+    "PEG-3 Distearate @3"
+   ],
+   "c1Reading": "ether-type defining @2 + reinforcing @4 -> strong (C3b confidence cap)"
+  },
+  "conditioningRoutes": [
+   "PEG-3 Distearate @3 (pearlizing)",
+   "Polyquaternium-10 @18"
+  ],
+  "humectants": [
+   "Glucose @28",
+   "Inositol @37",
+   "Calcium Pantothenate @38 (none on the C2/E4 lists)"
+  ],
+  "actives": [
+   "Piroctone Olamine @8",
+   "Allantoin @16",
+   "Caffeine @19",
+   "Niacinamide @26",
+   "botanical extracts @30-35",
+   "Tocopherol @40"
+  ],
+  "scalpExposure": [
+   "Parfum/Fragrance @11",
+   "Benzyl Salicylate @24",
+   "Hexyl Cinnamal @25",
+   "Alcohol @27",
+   "Rosmarinus Officinalis Leaf Extract @31",
+   "Salvia Officinalis Leaf Extract @32"
+  ],
+  "recognizedDandruffActives": [
+   "Piroctone Olamine @8"
+  ],
+  "preservatives": [
+   "Phenoxyethanol @9",
+   "Sodium Benzoate @15",
+   "Benzoic Acid @20",
+   "Potassium Sorbate @36"
+  ]
+ },
+ "unresolvedMaterialIngredients": [],
+ "reconciliation": {
+  "blindToFinalChanges": [
+   "focusPrimary: general (low) -> scalp_active (high). Evidence: pack-front dandruff claim.",
+   "focusSecondary: [] (low) -> [] (high).",
+   "usageRole: regular (low) -> treatment (high).",
+   "scalpComfortTarget: not_targeted (high) unchanged."
+  ],
+  "unchangedFormulaProperties": "All four formula properties unchanged."
+ },
+ "projection": {
+  "status": "proposed",
+  "thicknessFit": {
+   "fine": "ideal",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "high",
+   "normal": "high",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "fine: T1 cell W=low, C=low -> ideal; normal: T1 cell W=low, C=low -> ideal; coarse: T1 cell W=low, C=low -> acceptable. T2: thickness/texture claims ignored. T4 recomputed from N-ALT neighbors after T6. T6 applies (scalp-concern targets).",
+  "weight": "light",
+  "weightConfidence": "high",
+  "weightRationale": "W-LIVE: weightPotential low -> light, confidence = weightPotential confidence (high).",
+  "scalpTargets": {
+   "primary": {
+    "target": "dandruff",
+    "confidence": "high",
+    "rationale": "S-DANDRUFF: pack-front dandruff claim (high) + dandruffSupport supported (high) -> dandruff primary (R17.1), no secondary (R17.2)."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "researchCombinationConfidence": {},
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "moderate",
+  "cleansingIntensityRationale": "I1: cleansingStrength strong, D1 false -> regular; written unchanged to every row (I2). I3 checked against the moderate neighbor.",
+  "explicitResetPositioning": false,
+  "explicitResetEvidence": "none",
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D2 not met (requires cleansingStrength strong, focusPrimary clarifying, usageRole occasional_reset and D1 true); not_flagged.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "schuppen",
+    "scalp_route": "dandruff",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "schuppen",
+    "scalp_route": "dandruff",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "schuppen",
+    "scalp_route": "dandruff",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_dandruff"
+  ],
+  "reviewFlags": [],
+  "informationalNotes": [
+   "dandruff_bundled_comfort_wording (\"gereizter Kopfhaut\", retailer, graded low; also S-SENSITIVE gate fails: CSA not met, no prominent E4 comfort route)",
+   "dandruff_oily_scalp_wording (\"fettender ... Kopfhaut\", \"überschüssigem Fett\", retailer, graded low; S-OILY clause itself would pass)"
+  ],
+  "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; lanes do not see catalog rows."
+ },
+ "selfCheck": "6.11: fingerprint matches the frozen packet; claims were hidden during the formula judgment (formula pass hash-pinned); no ingredient, family count or position window assigned the weight band; W-line derived per W-LINE with every skipped candidate recorded; three subjudgments present; whyNotNeighborBand specific; confidence names its limit; no comparison with earlier values made in-lane. Projection derived mechanically from final properties (T1/T6/T4/I1/I3/W-LIVE/13.7).",
+ "uncertainties": [
+  "conditioningLevel low vs moderate: single post-fragrance cationic polymer; chose low."
+ ]
+}

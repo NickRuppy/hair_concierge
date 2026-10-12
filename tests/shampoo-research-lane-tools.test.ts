@@ -240,7 +240,7 @@ test("the locked standard's holdout example product does not leak into a Vichy b
 test("the kit builds against the locked standard by default and against an explicit candidate path", () => {
   assert.equal(
     resolveStandardPath(undefined),
-    "docs/research/shampoo-inci/v1.6/classification-standard.md",
+    "docs/research/shampoo-inci/v1.6.1/classification-standard.md",
   )
   assert.equal(
     resolveStandardPath("plans/shampoo-v161/candidate/classification-standard.md"),

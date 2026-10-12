@@ -1,0 +1,145 @@
+{
+  "blindId": "VT02",
+  "inciFingerprintSha256": "541487036feac0c7f14d0bc67de7353e17db9635cbc646fcbc9f4ad5ac9be21c",
+  "phase": "formula_pass_blind",
+  "standard": "classification-standard.md (candidate shampoo-classification-v1.6.1, scrubbed lane copy)",
+  "identity": {
+    "packSize": "300 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "Packet list already ID-2 normalized (Water/Aqua/Eau one entry); normalized one-based positions; 22 entries.",
+    "e3ProminenceCutoff": "Fragrance/Parfum @19; entries 1-18 prominent"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "provisional": false,
+      "rationale": "low by C6: no strong anionic; the earliest prominent cleansing surfactant is Cocamidopropyl Betaine @2 (amphoteric), followed by Coco-Glucoside @3 (nonionic), Sodium Lauroyl Sarcosinate @4 and Disodium 2-Sulfolaurate @5 (mild anionics; C3b: sulfolaurate is mild anionic). The C3b sulfolaurate confidence limit does not apply because the sulfolaurate is not the earliest prominent cleansing surfactant. Counter-signal recorded: two mild anionics.",
+      "ruleIds": ["C3", "C3b", "C4", "C6"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "provisional": false,
+      "rationale": "moderate: one meaningful conditioning system, cationic polymer Polyquaternium-47 @11 (prominent), plus light routes (weak refatter PEG-7 Glyceryl Cocoate @10, humectants Panthenol @13, Glycerin @15). C2 not met: no silicone or payload lipid and no pearlizing/fatty route. Counter-signal: the polymer sits after Piroctone Olamine @9 (capped active), so it is likely low-level; low is the realistic neighbor.",
+      "ruleIds": ["5", "C2", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "provisional": false,
+      "rationale": "low: only a single light cationic polymer (Polyquaternium-47 @11) and a weak refatter (PEG-7 Glyceryl Cocoate @10) deposit; no silicone, no payload lipid, no protein or film former. W2: both families sit after Piroctone Olamine @9 (a capped active usually dosed well below 1 %), so their combined residue is plausibly below noticeable; moderate confidence because the reset is weak (C6 low chassis), neighbor moderate.",
+      "evidence": {
+        "silicone": [],
+        "cationic_polymer": ["Polyquaternium-47 @11"],
+        "cationic_conditioner": [],
+        "payload_lipid": [],
+        "weak_refatter": ["PEG-7 Glyceryl Cocoate @10"],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["Cocamidopropyl Betaine @2", "Coco-Glucoside @3", "Sodium Lauroyl Sarcosinate @4", "Disodium 2-Sulfolaurate @5"],
+        "humectantContext": ["Propanediol @7", "Panthenol @13", "Zinc PCA @14", "Glycerin @15"],
+        "excluded": ["PEG-200 Hydrogenated Glyceryl Palmate @6 (PEG ester thickener, 6.4)", "Citrus Aurantium Peel Oil @20 (essential oil, 6.4)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 9,
+        "inci": "Piroctone Olamine",
+        "classes": ["preservative_or_capped_active"],
+        "cap": "e3Point @19 (Fragrance/Parfum)",
+        "alphabeticalRuns": [],
+        "skipped": [],
+        "codes": [],
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light",
+      "depositionLoadRationale": "One cationic polymer and one weak refatter, both after a capped active.",
+      "persistence": "low",
+      "persistenceRationale": "No silicone or lipid; a single polymer plus refatter is weakly retained.",
+      "resetCapacity": "weak",
+      "resetCapacityRationale": "C6 low chassis (betaine/glucoside-led with mild anionics).",
+      "counterevidence": "Weak reset means the polymer is not actively offset; Polyquaternium-47 is a substantive polymer.",
+      "whyThisBand": "Deposition is light and low-persistence; no converging persistent systems.",
+      "whyNotNeighborBand": "W2: the two families are a single light cationic polymer and a weak refatter, both listed after Piroctone Olamine @9, so noticeable residue is unlikely even with a mild chassis; moderate stays the realistic neighbor because reset is weak.",
+      "confidenceLimitingFactor": "Polymer level unknown under INCI-only evidence; weak reset.",
+      "ruleIds": ["6.3", "6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": true,
+      "rationale": "Provisional, claim-dependent: claims hidden. The formula carries a recognized anti-dandruff active (Piroctone Olamine @9) and a mild chassis, so scalp_active is the likely claim candidate if dandruff or scalp positioning appears; lengths-care routes are nonspecific.",
+      "careDirection": {
+        "verdict": "nonspecific (provisional)",
+        "moistureRoutes": ["Panthenol @13", "Glycerin @15"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Polyquaternium-47 @11", "PEG-7 Glyceryl Cocoate @10"],
+        "limitation": "No claims; light conditioning only."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "No claims visible in the blind pass.",
+      "ruleIds": ["3.1", "7.2", "7.3"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["moisture"],
+      "provisional": true,
+      "rationale": "Provisional empty default; no claims visible.",
+      "ruleIds": ["8", "N-ALT"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "treatment",
+      "provisional": true,
+      "triggerCode": "none",
+      "rationale": "Provisional default regular; dandruffSupport is supported, so a qualifying dandruff claim would fire treatment (U3); frequency wording could fire frequent (cleansing not strong).",
+      "ruleIds": ["9", "U1", "U3"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: positioning hidden. CSA met: prominent comfort route Panthenol @13; prominent humectant/refatting routes Glycerin @15 and PEG-7 Glyceryl Cocoate @10; mild C6 chassis is supportive. Counter-signal: Fragrance @19, Citrus Aurantium Peel Oil @20 (not prominent).",
+      "ruleIds": ["10", "CSA", "SC1", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "provisional": false,
+      "rationale": "supported: complete INCI contains Piroctone Olamine @9 (Section 11). Formula fact only; the dandruff path needs a dandruff claim (R17.3).",
+      "ruleIds": ["11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionic": [],
+      "mildAnionic": ["Sodium Lauroyl Sarcosinate @4", "Disodium 2-Sulfolaurate @5 (C3b sulfolaurate)"],
+      "amphoteric": ["Cocamidopropyl Betaine @2"],
+      "nonionicCleansing": ["Coco-Glucoside @3"],
+      "notCleansing": ["PEG-200 Hydrogenated Glyceryl Palmate @6"],
+      "c6Reading": "earliest prominent cleansing surfactant amphoteric @2 -> low"
+    },
+    "conditioningRoutes": ["Polyquaternium-47 @11", "PEG-7 Glyceryl Cocoate @10"],
+    "humectants": ["Panthenol @13", "Glycerin @15", "Zinc PCA @14 (not on the C2/E4 lists)"],
+    "actives": ["Piroctone Olamine @9", "Zinc PCA @14", "Fraxinus Excelsior Bark Extract @16", "Saccharomyces Ferment Lysate Filtrate @17"],
+    "scalpExposure": ["Fragrance/Parfum @19", "Citrus Aurantium Peel Oil @20", "Limonene @21"],
+    "recognizedDandruffActives": ["Piroctone Olamine @9"],
+    "preservatives": ["Sodium Benzoate @18"]
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "conditioningLevel moderate vs low: one prominent cationic polymer after a capped active; chose moderate (one meaningful system).",
+    "weightPotential low vs moderate: chose low with moderate confidence on W2 grounds (single light polymer + weak refatter, both after a capped active)."
+  ]
+}

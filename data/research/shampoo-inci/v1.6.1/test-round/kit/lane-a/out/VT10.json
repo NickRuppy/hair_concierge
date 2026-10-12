@@ -1,0 +1,365 @@
+{
+ "blindId": "VT10",
+ "identity": {
+  "brand": "Color Wow",
+  "productName": "Curl Wow HOOKED 100% Clean Shampoo",
+  "packSize": "295 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "f70e5b306799545949560113893c7598ef335f04956a536381f421db2145d2a5",
+  "normalization": "ID-2: 'Aqua/Water' one entry; no split entries; 34 normalized entries; normalized positions. PEG-40 Hydrogenated Castor Oil is listed twice (@26 and @30); this is a repeated full entry, not a split synonym, so both positions are kept and the repeat is recorded as a source artifact (immaterial: both after the E3 point, excluded from weight).",
+  "completeness": "complete",
+  "e3ProminenceCutoff": "Fragrance/Parfum @11; prominent = positions 1-10",
+  "formulaSourceTier": 4,
+  "identityConfidence": "high",
+  "identityNotes": [
+   "All positioning sources are low (retailer copy and manufacturer_foreign UK/US pages). Formula source tier 4."
+  ],
+  "formulaPassRecord": {
+   "path": "lane-a/out/formula-pass/VT10.json",
+   "sha256": "abac06ac769f9b60713405766a45088fb8b9f74337d4de917ff1293ee5ad22a1"
+  }
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "low by C6: no strong anionic; the earliest prominent cleansing surfactant is the C3b mild anionic Sodium Methyl 2-Sulfolaurate @2, with prominent amphoteric co-surfactants Cocamidopropyl Hydroxysultaine @3 and Sodium Lauroamphoacetate @6; further mild anionics Sodium Cocoyl Isethionate @4, Sodium Lauryl Sulfoacetate @5, Sodium Methyl Cocoyl Taurate @7, Disodium 2-Sulfolaurate @10. C3b: a sulfolaurate is the earliest prominent cleansing surfactant, so confidence is at most moderate and the neighbor is the next stronger value, moderate.",
+   "ruleIds": [
+    "C3",
+    "C3b",
+    "C4",
+    "C6",
+    "N-ALT"
+   ],
+   "counterSignal": "C3b sulfolaurate earliest; broad mild-anionic system",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  },
+  "conditioningLevel": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "low: cleansing-led architecture; the only conditioning polymer is Polyquaternium-22 @15 after the E3 point; Hydrolyzed Wheat Protein @24 late; humectants Glycerin @8, Sodium PCA @13; no silicone, lipid or pearlizer. Counter-signal: polymer + protein + humectants are several light routes that could read as moderate; neighbor moderate.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "N-ALT"
+   ],
+   "counterSignal": "several light late routes",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "silicone": [],
+    "cationic_polymer": [
+     "Polyquaternium-22 @15"
+    ],
+    "cationic_conditioner": [],
+    "payload_lipid": {
+     "material": [],
+     "nonMaterial": []
+    },
+    "weak_refatter": [],
+    "protein_film": [
+     "Hydrolyzed Wheat Protein @24"
+    ],
+    "film_former": [],
+    "reset": [
+     "mild anionic Sodium Methyl 2-Sulfolaurate @2, Sodium Cocoyl Isethionate @4, Sodium Lauryl Sulfoacetate @5, Sodium Methyl Cocoyl Taurate @7, Disodium 2-Sulfolaurate @10, Sodium Cocoyl Glycinate @12",
+     "amphoteric Cocamidopropyl Hydroxysultaine @3, Sodium Lauroamphoacetate @6"
+    ],
+    "humectantContext": [
+     "Glycerin @8",
+     "Sodium PCA @13",
+     "Butylene Glycol @25",
+     "Aloe Barbadensis Leaf Extract @16"
+    ],
+    "excluded": [
+     "PEG-150 Distearate @14 (PEG thickener, 6.4)",
+     "PPG-2 Hydroxyethyl Cocamide @18 (alkanolamide thickener)",
+     "PEG-40 Hydrogenated Castor Oil @26, @30 (solubilizer, 6.4)",
+     "PPG-26-Buteth-26 @29 (solubilizer)"
+    ],
+    "unresolved": [
+     "Hydrolyzed Wheat Starch @23 (carbohydrate film/humectant; late and trace, cannot plausibly move the band)"
+    ]
+   },
+   "wLineRecord": {
+    "wLine": {
+     "position": 11,
+     "inci": "Fragrance/Parfum",
+     "classes": [
+      "fragrance"
+     ]
+    },
+    "cap": {
+     "e3Point": 11,
+     "inci": "Fragrance/Parfum"
+    },
+    "alphabeticalRun": null,
+    "skipped": [
+     "w_line_skipped:Phenoxyethanol@9 (ii) cleansing surfactant Disodium 2-Sulfolaurate@10 listed after it before the cap"
+    ],
+    "codes": [],
+    "note": "The E3 marker @11 is the earliest plausible candidate, so the W-line equals the cap; no fallback code. No payload_lipid in the formula."
+   },
+   "depositionLoad": "light",
+   "persistence": "low",
+   "resetCapacity": "weak",
+   "counterevidence": "Two deposition families (cationic polymer, protein) are present, and the mild C6 chassis offers little reset.",
+   "whyThisBand": "The only depositing routes are one light cationic polymer (@15) and a hydrolyzed protein (@24), both after the fragrance and the first preservatives; no silicone, no lipid, no film former.",
+   "whyNotNeighborBand": "W2: both families are late/trace (after the E3 point and after preservatives @17, @19, @21) and of low persistence (light polymer, hydrolyzed protein), so their combined residue is plausibly below noticeable even with weak reset; moderate stays the realistic neighbor.",
+   "confidenceLimitingFactor": "weak reset; amounts unknown",
+   "rationale": "low: late light polymer plus late protein, W2 reason named (6.6, W2).",
+   "ruleIds": [
+    "6.6",
+    "W2",
+    "W-LINE",
+    "N-ALT"
+   ],
+   "counterSignal": "Two deposition families (cationic polymer, protein) are present, and the mild C6 chassis offers little reset.",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "moisture",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "repairRoutes": [
+     "Hydrolyzed Wheat Protein @24"
+    ],
+    "moistureRoutes": [
+     "Glycerin @8",
+     "Sodium PCA @13"
+    ],
+    "sharedConditioningRoutes": [
+     "Polyquaternium-22 @15"
+    ],
+    "limitation": "light, cleansing-led formula"
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "low-graded moisture/anti-breakage claims; hair-loss (Procapil, shedding) claims out of scope",
+   "decisionTrace": {
+    "claimDirection": "hair loss/shedding (out of scope, F5); breakage, moisture, buildup removal (all low)",
+    "formulaCompatible": false,
+    "compatibleRoute": null,
+    "decisionReason": "low claims can be a candidate only if the formula verdict independently supports the focus; verdict nonspecific; hair-loss claims ignored (F5); general"
+   },
+   "rationale": "general: only low-graded in-scope claims over a nonspecific formula (CL-SRC, F5).",
+   "ruleIds": [
+    "7.2",
+    "F5",
+    "CL-SRC",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingClaims": [
+     "low-graded only"
+    ],
+    "independentRoutes": [],
+    "whyDistinct": "no moderate/high positioning",
+    "exceptionCode": null
+   },
+   "rationale": "[] (CL-SRC).",
+   "ruleIds": [
+    "8",
+    "CL-SRC"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "counterSignal": "buildup-removal wording (U4) is low-graded; cleansing low",
+   "decisionTrace": {
+    "default": "regular",
+    "nonDefaultTrigger": null,
+    "triggerEvidence": [],
+    "rationale": "only low-graded claims; none can fire a trigger"
+   },
+   "rationale": "regular (CL-SRC).",
+   "ruleIds": [
+    "9",
+    "CL-SRC"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "counterSignal": "none",
+   "rationale": "not_targeted: no E2 sensitive/dry unit in any source.",
+   "ruleIds": [
+    "10",
+    "SC1"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "not_supported: complete formula without a recognized dandruff active.",
+   "ruleIds": [
+    "11"
+   ],
+   "counterSignal": "none",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  }
+ },
+ "formulaFacts": {
+  "surfactantClasses": {
+   "strongAnionicEther": [],
+   "strongAnionicAlkylSulfate": [],
+   "mildAnionic": [
+    "Sodium Methyl 2-Sulfolaurate @2 (C3b)",
+    "Sodium Cocoyl Isethionate @4",
+    "Sodium Lauryl Sulfoacetate @5",
+    "Sodium Methyl Cocoyl Taurate @7",
+    "Disodium 2-Sulfolaurate @10 (C3b)",
+    "Sodium Cocoyl Glycinate @12 (not prominent)"
+   ],
+   "amphoteric": [
+    "Cocamidopropyl Hydroxysultaine @3",
+    "Sodium Lauroamphoacetate @6"
+   ],
+   "nonionicCleansing": [],
+   "notCleansing": [
+    "PEG-150 Distearate @14",
+    "PPG-2 Hydroxyethyl Cocamide @18 (alkanolamide-type)",
+    "PEG-40 Hydrogenated Castor Oil @26, @30",
+    "PPG-26-Buteth-26 @29"
+   ],
+   "c4": "no defining anionic; C6 earliest prominent = Sodium Methyl 2-Sulfolaurate @2 (C3b) with amphoterics @3, @6"
+  },
+  "conditioningRoutes": [
+   "Polyquaternium-22 @15",
+   "Hydrolyzed Wheat Protein @24",
+   "Glycerin @8",
+   "Sodium PCA @13"
+  ],
+  "actives": [
+   "Apigenin @31",
+   "Oleanolic Acid @32",
+   "Biotinoyl Tripeptide-1 @33",
+   "Tocopheryl Acetate @27"
+  ],
+  "scalpExposure": [
+   "Fragrance/Parfum @11 (no allergens declared)"
+  ],
+  "recognizedDandruffActives": []
+ },
+ "unresolvedMaterialIngredients": [],
+ "claimUnitsAndGrades": [
+  "retailer lookfantastic (low): \"entfernt Ablagerungen\", \"Procapil® ... schützt vor übermäßigem Haarausfall und Haarbruch\", \"spendet dem Haar Feuchtigkeit\", \"glänzendes Finish\"",
+  "manufacturer_colorwow_uk / _us (manufacturer_foreign, low): \"Residue-free, sulfate-free\", \"prevent shedding + reduce breakage\", curl types"
+ ],
+ "reconciliation": [
+  {
+   "property": "focusPrimary",
+   "blind": "general (provisional)",
+   "final": "general",
+   "evidence": "only low claims; hair-loss claims",
+   "reason": "CL-SRC, F5"
+  },
+  {
+   "property": "usageRole",
+   "blind": "regular (provisional, low)",
+   "final": "regular (high)",
+   "evidence": "no moderate/high claims",
+   "reason": "CL-SRC"
+  }
+ ],
+ "projection": {
+  "status": "proposal_blocked_by_review_flags",
+  "statusReasons": [],
+  "thicknessFit": {
+   "fine": "ideal",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 with W=low (neighbor moderate), C=low (neighbor moderate): fine ideal, normal ideal, coarse acceptable; ordinary target, no T6; T4 checked against the N-ALT neighbors after T6; thickness claims never change fit (T2).",
+  "weight": "light",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential low -> light, confidence moderate.",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "confidence": "moderate",
+    "rationale": "S-ORDINARY way 1 (no qualifying E2 claim; packet has no German manufacturer or pack source, only retailer and foreign manufacturer pages graded low: moderate) and way 2 (only scalp-adjacent positioning is hair loss: moderate); lowest = moderate."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "researchCombinationConfidence": null,
+  "cleansingIntensity": "gentle",
+  "cleansingIntensityConfidence": "moderate",
+  "cleansingIntensityRationale": "I1: cleansingStrength low with D1 false -> gentle; bucket expects regular (amber row, I2); I3 neighbor moderate.",
+  "explicitResetPositioning": false,
+  "explicitResetEvidence": "no D1 term",
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserRecord": null,
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D2 not met (D1 false)",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "gentle",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "gentle",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "gentle",
+    "weight": "light",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   "review_thickness_boundary:fine"
+  ],
+  "informationalNotes": [
+   "hair_loss_claim_not_evaluated: \"schützt vor übermäßigem Haarausfall\" (retailer), \"prevent shedding\", \"hair loss\" (manufacturer_foreign)"
+  ],
+  "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; lanes never see catalog ids."
+ },
+ "selfCheck": "6.11: fingerprint matches the frozen packet; claims and labels were hidden during the formula pass (frozen before reveal, sha256 above); no ingredient, family count or position window assigned the weight band, the W-line only gated payload_lipid legs; the W-line was derived from the frozen list and every skipped candidate is recorded; depositionLoad/persistence/resetCapacity present; counterevidence and whyNotNeighborBand are specific; confidence names its limiting factor; no comparison with earlier values was made in this lane. Projection derived mechanically from final properties (T1/T6/T4, W-LIVE, I1/I3, D1-D3, 13.7, 13.8); N-ALT neighbors consistent with confidences.",
+ "uncertainties": [
+  "13.8 way-1 confidence: I read manufacturer_foreign pages as not counting as a manufacturer source (graded like retailer copy, E1); alternative high for way 1 — final stays moderate because way 2 applies.",
+  "Repeated PEG-40 Hydrogenated Castor Oil entry (@26, @30) kept as listed; merging it would shift later positions by one but changes no property.",
+  "conditioningLevel low vs moderate (several light late routes); recorded low with neighbor moderate."
+ ]
+}

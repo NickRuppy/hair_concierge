@@ -1,0 +1,244 @@
+{
+  "schema_version": "shampoo-research-logic-lock.v1",
+  "locked_standard_version": "1.6.1",
+  "policy_id": "shampoo-classification-v1.6.1",
+  "model_version": "shampoo-inci-v1.6.1",
+  "locked_at": "2026-10-12",
+  "decision": "approved_and_locked_for_reuse",
+  "decision_ruling": "Lock",
+  "decision_quote": "Sounds good. lets goo",
+  "decision_basis": "Nick's decision after the sealed two-lane test round (run log, 'Result and adjudication'); ledger entry 'Lock — Test-round adjudication and lock (2026-10-12)'",
+  "normative_standard": {
+    "path": "docs/research/shampoo-inci/v1.6.1/classification-standard.md",
+    "bytes": 161617,
+    "sha256": "8bd97d31b433109e0bc79738163a41b3e644de9ab3e7312948ecaddea23d0a29"
+  },
+  "base_method": {
+    "policy_id": "shampoo-classification-v1.6",
+    "path": "docs/research/shampoo-inci/v1.6/classification-standard.md",
+    "sha256": "3b70a145e23e381f5c83ded0092d86d9642ddb7f570dfc9d7414a843659baf98",
+    "status": "locked_frozen_base",
+    "integrity_command": "node --import ./tests/server-only-register.cjs --import tsx --test tests/shampoo-research-v1-6-lock.test.ts (part of npm run test:node)"
+  },
+  "base_lineage": {
+    "policy_id": "shampoo-classification-v1.4",
+    "path": "docs/research/shampoo-inci/v1.4/classification-standard.md",
+    "sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "status": "parked_frozen_predecessor",
+    "integrity_command": "npm run research:shampoo:validate-parked-v14"
+  },
+  "candidate_working_record": {
+    "path": "plans/shampoo-v161/candidate/classification-standard.md",
+    "sha256_at_lock": "6d8262611de8fc2ce8f58f1b96036c8b13b465bb2cf446fff0847c76792c096d",
+    "sha256_tested": "6d8262611de8fc2ce8f58f1b96036c8b13b465bb2cf446fff0847c76792c096d",
+    "note": "Not normative and not pinned. The test round's lane kits were built from this candidate (scrubbed lane copies in test-round/kit/lane-*/classification-standard.md); the candidate was not changed between the kit build and the lock. The locked text equals this candidate except for the Version preamble (title, policy ID, status, base, lock receipt, test-round and calibration evidence rows; the candidate preamble paragraph and the first and third 'What locked means' bullets), file references re-pointed to the locked package (rulings-ledger.md, rule-changes.md, evidence/, test-round/), the rule-changes row range 116-136 -> 116-137 in the preamble and Appendix B, and the version wording 'decided for this candidate' -> 'decided in v1.6.1' in the W-LINE alkanolamide rationale and Appendix B. No rule text changed."
+  },
+  "approved_scope": {
+    "category": "shampoo",
+    "category_description": "current German-market regular shampoos for healthy users with cosmetic hair/scalp needs; explicit deep cleansers stay in the regular-shampoo cohort (deep-cleanser entry classified under its own category rules)",
+    "market": "DE",
+    "out_of_scope": [
+      "medical treatment",
+      "diagnosed disease",
+      "hair-loss efficacy"
+    ],
+    "direct_properties": [
+      "cleansingStrength",
+      "conditioningLevel",
+      "weightPotential",
+      "focusPrimary",
+      "focusSecondary",
+      "usageRole",
+      "scalpComfortTarget",
+      "dandruffSupport"
+    ],
+    "focus_values": [
+      "volume",
+      "shine",
+      "repair",
+      "moisture",
+      "clarifying",
+      "scalp_active",
+      "general"
+    ],
+    "projection_fields": [
+      "thicknesses[].fit",
+      "weight",
+      "scalpTargets.primary.target",
+      "scalpTargets.secondary.target",
+      "observedCleansingIntensity",
+      "positioning.explicitResetPositioning",
+      "deepCleanserListing",
+      "reviewFlags",
+      "informationalNotes",
+      "researchCombinationTargets"
+    ],
+    "research_only_fields": [
+      "researchCombinationTargets"
+    ],
+    "live_vocabulary": {
+      "thickness": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "shampoo_bucket": [
+        "normal",
+        "dehydriert-fettig",
+        "trocken",
+        "irritationen",
+        "schuppen"
+      ],
+      "scalp_route": [
+        "balanced",
+        "oily",
+        "dry",
+        "irritated",
+        "dandruff"
+      ],
+      "cleansing_intensity": [
+        "gentle",
+        "regular",
+        "clarifying"
+      ],
+      "weight": [
+        "light",
+        "moderate",
+        "heavy"
+      ]
+    }
+  },
+  "rulings": {
+    "ledger_snapshot": {
+      "path": "data/research/shampoo-inci/v1.6.1/rulings-ledger.md",
+      "bytes": 7930,
+      "sha256": "14b6046a164c3be3df315a417a23c924180be8f7a6787b8fc82237bd4f469b32"
+    },
+    "living_ledger_path": "plans/shampoo-v161/plan.md",
+    "base_rulings": "v1.6 rulings R1-R17 stay in force unchanged (data/research/shampoo-inci/v1.6/rulings-ledger.md)",
+    "applied": [
+      "S1",
+      "S2",
+      "S3",
+      "S4",
+      "Alkanolamide breadth (a)",
+      "Defaults accepted",
+      "W-LINE scope (a)",
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D6",
+      "R1",
+      "R2",
+      "R3",
+      "R4"
+    ],
+    "normative_in_standard": {
+      "S1": "Selenium Sulfide / Selenium Disulfide are recognized anti-dandruff actives (Section 11, DS1); the EU label warning is an informational fact only (rule-changes rows 117-118)",
+      "S2": "W-LINE weight materiality line (6.7) with its consequential lines in 6.1, 6.6, 6.7, 6.8, 6.11 and 13.3 E3 (rows 119-124)",
+      "S3": "'fettiges Haar', 'fettige Haare', 'für fettiges Haar' and 'fettendes Haar' qualify for oily in 13.3 E2 (row 125)",
+      "S4": "C3 rows and C3b: sulfolaurates mild anionic, Sulfated Castor Oil not a cleansing route, Cocamidopropylamine Oxide amphoteric buffer only, laureth-8 sulfates strong anionic with a high-EO counter-signal (rows 126-129)",
+      "Alkanolamide breadth (a)": "every alkanolamide-type thickener makes an earlier W-line candidate implausible (row 120)",
+      "W-LINE scope (a)": "the W-line decides materiality for payload_lipid only; silicones and cationic deposition keep the v1.6 reading (row 130)",
+      "D1": "pack text graded at pack grade in any language; closed English equivalents for dandruff and oily (3.2 CL-SRC, 13.3 E1/E2, row 131)",
+      "D2": "classic 26 Annex III allergens as W-line candidates, closed list (row 133)",
+      "D3": "the E3 marker is itself a candidate; fallback codes scoped (row 134)",
+      "D4": "split synonym entries merged per ID-2 before W-line positions are counted (row 132)",
+      "D5": "Capryloyl Glycine is not a W-line candidate (row 135)",
+      "D6": "Sulfated Castor Oil has no weight family (6.4, row 136)",
+      "R1-R4": "orchestrator clarifications before any lane ran: non-lipid families keep the v1.6 judgment exactly; an ingredient in no C3 class is not a cleansing surfactant for W-LINE (ii); payload_lipid membership per 6.3/6.4; 'oily dandruff' is a dandruff claim (row 137)"
+    },
+    "process_or_scope_rulings": [
+      "P plan: v1.6.1 as its own version in its own worktree",
+      "Scope: the R16.4 closed-list batch becomes v1.6.2 after the Track A/B collection",
+      "Defaults accepted (no selenium-sulfide review code; alphabetical runs from 7 entries; heavier reading without a visible marker)",
+      "Lock: test-round adjudication and lock",
+      "Note: v1.7 outcome-calibrated weight idea (not part of v1.6.1)"
+    ]
+  },
+  "test_round_evidence": {
+    "corpus_root": "data/research/shampoo-inci/v1.6.1/test-round/",
+    "copied_from": "plans/shampoo-v161/test/",
+    "evidence_root": "data/research/shampoo-inci/v1.6.1/evidence/",
+    "evidence_copied_from": "plans/shampoo-v161/inputs/",
+    "lanes_per_run": 2,
+    "lane_design": "two independent sealed Opus lanes; two-stage kit (scripts/shampoo-research/build-lane-kit.ts with --standard pointing at the candidate): blind formula packets first, reveal packets released only after every formula-pass record was hash-pinned in held/<lane>/release-log.json; scrubbed standard copy without worked examples; no web",
+    "runs": [
+      {
+        "id": "v1.6.1-test-round",
+        "products": 23,
+        "composition": "the weight products of the weight-method comparison plus the S1/S3/S4-affected products; packets reused from the v1.6 calibration and the profi freeze with unchanged fingerprints; blind ids VT01-VT23, seed 20261012",
+        "agreement": "379/391",
+        "raw_agreement": 0.969,
+        "report": "data/research/shampoo-inci/v1.6.1/test-round/run-log.md",
+        "compare_output": "data/research/shampoo-inci/v1.6.1/test-round/compare-output.txt",
+        "pre_registration": "data/research/shampoo-inci/v1.6.1/test-round/pre-registration.md",
+        "standard_tested": {
+          "path": "plans/shampoo-v161/candidate/classification-standard.md",
+          "sha256": "6d8262611de8fc2ce8f58f1b96036c8b13b465bb2cf446fff0847c76792c096d"
+        },
+        "outcome": "every pre-registered movement happened (P01 weight high; P31/P05 dandruff path via DS1; P29 oily target via S3 and cleansing moderate via S4; P34 cleansing moderate; S4 rows for P39/P06/P35/P36 as registered); departures adjudicated without a rule change (P40 product correction, U4 baseline artifact, A13 to the Track A flagged review); remaining differences research-only (P0)"
+      }
+    ],
+    "pass_criteria": "pre-registration section 4: only the pre-registered movements, no unexplained movement, agreement at or above the v1.6 bars (>= 90% raw over judged direct and projection decisions); Nick adjudicates",
+    "adjudications": [
+      {
+        "product": "P40 Moroccanoil Clarifying Shampoo (VT09)",
+        "field": "weightPotential",
+        "value": "moderate",
+        "adopted": "lane B",
+        "projection_effect": "lane B projection: fine acceptable, normal ideal, coarse acceptable, live weight moderate",
+        "cause": "product_correction",
+        "basis": "lane A counted two trace cationics (@26/@30) as a full W-RICH partner, contrary to row 137 (R1); both v1.6 lanes recorded moderate; the product is ruled a deep cleanser in the profi wave anyway"
+      },
+      {
+        "product": "U4 Garnier Wahre Schätze Aktivkohle",
+        "field": "weightPotential",
+        "value": "moderate",
+        "cause": "baseline_artifact",
+        "basis": "registered low from a round-1 record that predates the full weight method; both lanes moderate (guar + Nigella oil @5, material under either reading); not a v1.6.1 effect; no rule action"
+      },
+      {
+        "product": "A13 Hair Biology Revitalize & Soothe",
+        "field": "weightPotential",
+        "value": "moderate (both lanes)",
+        "cause": "not_a_v1.6.1_question",
+        "basis": "high reachable, not reached; conflicts with the Aug-26 approved high (v1.4 rerun-v3 also moderate); goes to Nick's flagged review in the Track A re-check"
+      }
+    ]
+  },
+  "post_test_rulings": {
+    "applied": [
+      "P40 product correction: weightPotential moderate (lane B)"
+    ],
+    "rule_changes": [],
+    "recalibrated": false,
+    "basis": "the test round passed; Nick adjudicated the disagreements cause-coded without tuning and without changing a rule"
+  },
+  "known_limits_retained": [
+    "One sealed two-lane test round on 23 products; there is no separate unseen re-run for v1.6.1. Several cohort products (packets from the v1.6 calibration and the profi freeze) were known to the rule authors.",
+    "Seal incident 1: VT11's stage-A packSize carried a freeze note naming the brand, a retailer and two GTINs (U4 carried a GTIN note); both lanes report not using it. Fixed afterwards in the kit (blindPackSize, stage-A pack size reduced to the bare size); the running kit was not rebuilt.",
+    "Seal incident 2: a lane-b worker globbed names and hashes of same-lane formula-pass files (no contents); no cross-lane access reported.",
+    "No cohort product records w_line_fallback_e3 or w_line_none_visible (rule-changes row 134); both fallback codes are untested by lanes.",
+    "The C3b surfactant classes rest on thin evidence (one manufacturer irritation table, data on a related amine oxide, patent data); they are repeatability conventions with confidence caps, not potency findings.",
+    "Lane agreement measures repeatability, not finished-product or consumer accuracy; INCI order is a prominence proxy, never a concentration.",
+    "Closed ingredient lists may be too narrow; additions wait for the v1.6.2 batch after the Track A/B collection (R16.4).",
+    "A13 Hair Biology stays a flagged review item in the Track A re-check.",
+    "All v1.6 known limits not resolved here carry over (data/research/shampoo-inci/v1.6/v1.6-logic-lock-receipt.json)."
+  ],
+  "separate_gates": {
+    "production_light_adapter_repin": false,
+    "live_weight_column_and_authority_rule": false,
+    "closed_list_batch_v1_6_2": false,
+    "n1_no_gap_preflight": false,
+    "individual_product_review_completed": false,
+    "catalog_activation": false,
+    "production_database_write": false,
+    "user_facing_copy_change": false,
+    "commit_push_or_pr": false
+  },
+  "separate_gates_note": "Every gate is false: none is authorized or done by this lock. The Production Light adapter stays pinned to v1.4 (re-pin to v1.6.1 is a separate reviewed PR); the live weight column and shampoo authority rule (v1.6 R2) are not built and the two v1.6 live-display questions (T7, X1) stay open; the N1 no-gap preflight is required before any catalog apply; every review flag blocks its product until Nick rules.",
+  "production_writes": false
+}

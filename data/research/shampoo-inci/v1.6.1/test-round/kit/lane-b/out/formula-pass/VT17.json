@@ -1,0 +1,149 @@
+{
+  "blindId": "VT17",
+  "inciFingerprintSha256": "6635962985f9b1a54602ba96907582a72056e007f26454febd9037f66aca91bb",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, claims hidden)",
+  "standard": "shampoo-classification-v1.6.1 candidate text (unlocked)",
+  "identity": {
+    "packSize": "200 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "ID-2: AQUA / WATER, CI 19140 / YELLOW 5 and PARFUM / FRAGRANCE each one entry; normalized one-based positions of the 19-entry list",
+    "e3ProminenceCutoff": "PARFUM / FRAGRANCE @12 -> positions 1-11 prominent"
+  },
+  "formulaFacts": {
+    "surfactantSystem": [
+      "Sodium Laureth Sulfate @2 - strong anionic, ether type, defining anionic",
+      "Coco-Betaine @4 - amphoteric, buffer",
+      "No reinforcing strong anionic",
+      "Not cleansing: Glycol Distearate @3, Carbomer @7, PPG-5-Ceteth-20 @13, Sodium Chloride @17"
+    ],
+    "conditioningAndWeightRoutes": {
+      "silicone": ["Dimethicone @6"],
+      "cationic_polymer": [],
+      "cationic_conditioner": [],
+      "payload_lipid": [],
+      "weak_refatter": ["2-Oleamido-1,3-Octadecanediol @11 (ceramide-type lipid additive)"],
+      "protein_film": [],
+      "film_former": [],
+      "pearlizing_fatty_route_for_C2": ["Glycol Distearate @3"],
+      "humectantContext": ["Glycerin @5"],
+      "excluded": ["Glycol Distearate @3 (pearlizing wax)", "Carbomer @7 (anionic acrylate thickener)", "PPG-5-Ceteth-20 @13 (solubilizer)", "Tocopheryl Acetate @19 (antioxidant)", "Menthol @10 (cooling agent)"]
+    },
+    "actives": ["Selenium Sulfide @15 - recognized anti-dandruff active (DS1)", "Salicylic Acid @14 (does not upgrade)", "Menthol @10"],
+    "scalpExposureFlags": ["Menthol @10 - prominent cooling agent (CSA counter-signal)", "Parfum @12", "E4 comfort list: no route", "E4 humectant/refatting route prominent: Glycerin @5"]
+  },
+  "wLine": {
+    "wLine": "PARFUM / FRAGRANCE @12",
+    "candidateClasses": ["fragrance", "alphabetical_tail"],
+    "cap": "e3Point @12 (Parfum)",
+    "alphabeticalRun": "positions 11-19 (2-Oleamido-1,3-Octadecanediol, Parfum, PPG-5-Ceteth-20, Salicylic Acid, Selenium Sulfide, Sodium Benzoate, Sodium Chloride, Sodium Hydroxide, Tocopheryl Acetate; digit-led name sorts before letters); does not contain the earliest cleansing surfactant (SLES @2), so it is a tail; second entry = Parfum @12",
+    "skipped": [],
+    "plausibilityOfWLine": "Parfum @12 is the earliest candidate: (i) SLES @2 before; (ii) nothing between it and the cap (it is the cap). W-line = cap; no fallback code",
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate @2 with the prominent buffer Coco-Betaine @4 and no reinforcing strong anionic. Settled C1 core; no C3b member involved.",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: C2 not met (no cationic polymer). One meaningful system: prominent Dimethicone @6 suspended by Glycol Distearate @3/Carbomer @7, plus Glycerin @5 and a trace ceramide @11. Counter-signal: without a cationic deposition aid in an SLES chassis, silicone deposition may be limited, so low is the realistic neighbor.",
+      "ruleIds": ["C2", "5", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "evidence": {
+        "silicone": ["Dimethicone @6"],
+        "cationic_polymer": [],
+        "cationic_conditioner": [],
+        "payload_lipid": [],
+        "weak_refatter": ["2-Oleamido-1,3-Octadecanediol @11"],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["strong anionic ether type: Sodium Laureth Sulfate @2", "amphoteric: Coco-Betaine @4"],
+        "humectantContext": ["Glycerin @5"],
+        "excluded": ["Glycol Distearate @3", "Carbomer @7", "PPG-5-Ceteth-20 @13"],
+        "unresolved": []
+      },
+      "depositionLoad": "moderate - prominent dimethicone at @6 (suspended silicone system), no cationic co-deposition",
+      "persistence": "moderate - dimethicone is a persistent, non-water-soluble film where it deposits",
+      "resetCapacity": "moderate - C1 SLES/betaine chassis",
+      "counterevidence": "No cationic polymer to drive coacervate deposition; the only other family is a trace weak refatter; effective ordinary chassis.",
+      "whyThisBand": "Moderate: a prominent persistent silicone system is plausible enough that calling the product lightweight would understate residue risk.",
+      "whyNotNeighborBand": "Not low: the silicone is prominent (@6, before Parfum) and persistent; W2 - with two families present, a low call would need the routes to be late/trace, which the dimethicone is not. Not high: one deposition kind plus a trace refatter, no W-RICH, moderate reset.",
+      "confidenceLimitingFactor": "Deposition efficiency of dimethicone without a cationic polymer is unknown; could be one band lighter.",
+      "rationale": "Moderate: prominent Dimethicone @6 with moderate reset; no material payload lipid (W-line = Parfum @12, none listed); W1 not applicable (no guar, no amodimethicone).",
+      "ruleIds": ["6.6", "W1", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "not_applicable (provisional)",
+        "moistureRoutes": ["Glycerin @5"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Dimethicone @6"],
+        "limitation": "Claims hidden"
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "Selenium Sulfide @15 suggests an anti-dandruff role but the path needs a dandruff claim (R17.3).",
+      "decisionTrace": "Claim direction null (blind); formula compatible with scalp_active if anti-dandruff positioning is revealed; provisional general.",
+      "rationale": "Provisional formula-only: general.",
+      "ruleIds": ["7.2", "11", "3.1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["shine"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no positioning visible.",
+      "rationale": "Provisional [].",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "treatment",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": ["treatment possible if a qualifying dandruff claim is revealed", "alternating impossible (moderate formula)"],
+      "rationale": "Provisional default regular.",
+      "ruleIds": ["9", "U3"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: positioning hidden. CSA formula half met only via the humectant route Glycerin @5 (no E4 comfort route); prominent Menthol @10 is a counter-signal that would cap targeted at moderate.",
+      "ruleIds": ["10", "CSA", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Supported: Selenium Sulfide @15 is a recognized active (DS1, exact INCI name). Formula-only.",
+      "ruleIds": ["11", "DS1"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "2-Oleamido-1,3-Octadecanediol @11 read as weak_refatter (ceramide-type lipid additive at trace level); if read as payload_lipid it would be material (before W-line @12), W-RICH would hold with Dimethicone @6, but reset is moderate so the band would still be moderate (with high as neighbor).",
+    "conditioningLevel moderate vs low (no cationic polymer)."
+  ]
+}
