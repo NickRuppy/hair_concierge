@@ -1,0 +1,391 @@
+{
+ "blindId": "VT09",
+ "identity": {
+  "brand": "Moroccanoil",
+  "productName": "Moroccanoil Clarifying Shampoo",
+  "packSize": "250 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "da02a486122f7d259660e2f2026fe9613b7af885f06414ab20f5c5ad28840765",
+  "normalization": "ID-2: 'WATER/AQUA' one entry; no split entries; 44 normalized entries; normalized positions (names matched case-insensitively)",
+  "completeness": "complete",
+  "e3ProminenceCutoff": "FRAGRANCE/PERFUME @13; prominent = positions 1-12",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high",
+  "identityNotes": [
+   "US manufacturer page (low) claims oil and mineral removal percentages; foreign, low, informational only."
+  ],
+  "formulaPassRecord": {
+   "path": "lane-a/out/formula-pass/VT09.json",
+   "sha256": "42a15937467baae1fa3d1975c2c068004a0af1380225dcdef97db9886646c48b"
+  }
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "low",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "low by C6: no strong anionic; the earliest prominent cleansing surfactant is the amphoteric Cocamidopropyl Hydroxysultaine @2, followed by mild anionics Disodium Laureth Sulfosuccinate @3, Sodium Lauryl Sulfoacetate @4, Sodium Lauroyl Sarcosinate @5. Cocamidopropylamine Oxide @18 is after the E3 point (and buffer-only, C3b). Counter-signal: three mild anionic routes.",
+   "ruleIds": [
+    "C3",
+    "C3b",
+    "C4",
+    "C6"
+   ],
+   "counterSignal": "three mild anionic routes; deep-cleansing positioning cannot move cleansing (Section 4)",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  },
+  "conditioningLevel": {
+   "value": "high",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "high by the Section 5 high anchor's rich-architecture route: W-RICH for conditioning is met by prominent (E3) payload lipids Argania Spinosa Kernel Oil @7 and Persea Gratissima Oil @8 converging with a cationic deposition system (Cinnamidopropyltrimonium Chloride @26, Cocamidopropyl Dimethylamine @30); plus Glycerin @15, Panthenol @17, Sodium PCA @21, keratin/silk amino acids @32-33, Hydrolyzed Keratin @36. C2 is not met (no cationic polymer, no pearlizing/fatty route). Counter-signal: the cationic partners are trace-level and late; without a cationic polymer or silicone, slip may be only moderate; neighbor moderate.",
+   "ruleIds": [
+    "5",
+    "W-RICH",
+    "C2",
+    "E3",
+    "N-ALT"
+   ],
+   "counterSignal": "cationic partners trace-level; no cationic polymer or silicone",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  },
+  "weightPotential": {
+   "value": "high",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "silicone": [],
+    "cationic_polymer": [],
+    "cationic_conditioner": [
+     "Cinnamidopropyltrimonium Chloride @26",
+     "Cocamidopropyl Dimethylamine @30 (amidopropyl dimethylamine, cationic_conditioner per W-LINE item 2)"
+    ],
+    "payload_lipid": {
+     "material": [
+      "Argania Spinosa (Argan) Kernel Oil @7",
+      "Persea Gratissima (Avocado) Oil @8"
+     ],
+     "nonMaterial": []
+    },
+    "weak_refatter": [
+     "PEG-6 Caprylic/Capric Glycerides @25"
+    ],
+    "protein_film": [
+     "Silk Amino Acids @32",
+     "Keratin Amino Acids @33",
+     "Hydrolyzed Keratin @36"
+    ],
+    "film_former": [],
+    "reset": [
+     "amphoteric Cocamidopropyl Hydroxysultaine @2, Cocamidopropylamine Oxide @18 (buffer only)",
+     "mild anionic Disodium Laureth Sulfosuccinate @3, Sodium Lauryl Sulfoacetate @4, Sodium Lauroyl Sarcosinate @5, Sodium Laurate @29 (soap)"
+    ],
+    "humectantContext": [
+     "Glycerin @15",
+     "Panthenol @17",
+     "Sodium PCA @21",
+     "Butylene Glycol @31"
+    ],
+    "excluded": [
+     "Sodium Polystyrene Sulfonate @14 (anionic opacifying polymer, no cationic charge; excluded by analogy with the 6.4 anionic thickeners)",
+     "PEG-40 Hydrogenated Castor Oil @19 (solubilizer, 6.4)",
+     "PEG-150 Pentaerythrityl Tetrastearate @24 (PEG thickener)",
+     "Simmondsia Chinensis (Jojoba) Seed Extract @12 (extract, not the oil)",
+     "botanical extracts @9-11"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": {
+     "position": 13,
+     "inci": "FRAGRANCE/PERFUME",
+     "classes": [
+      "fragrance"
+     ]
+    },
+    "cap": {
+     "e3Point": 13,
+     "inci": "FRAGRANCE/PERFUME"
+    },
+    "alphabeticalRun": null,
+    "skipped": [],
+    "codes": [],
+    "note": "No a-c candidate before @13; the E3 marker is itself the earliest plausible candidate ((i) surfactants before; (ii) nothing between it and the cap), so the W-line equals the cap and no fallback code is recorded. Both oils (@7, @8) are material. No alphabetical run of seven (Chamomilla @9 to Simmondsia @12 is four)."
+   },
+   "depositionLoad": "moderate",
+   "persistence": "moderate",
+   "resetCapacity": "weak",
+   "counterevidence": "The cationic partners (@26, @30) are trace-level after salts, chelators and solubilizers; there is no silicone and no cationic polymer; proteins/amino acids are late and low-persistence.",
+   "whyThisBand": "W-RICH holds for weight: material oils @7-8 (before the W-line @13) converging with present, plausibly persistent cationic conditioners (@26, @30; the W-line is not applied to the partner); reset is limited (C6 low, resetCapacity weak), so the high anchor's rich route holds.",
+   "whyNotNeighborBand": "moderate would require reset to offset two prominent plant oils with a cationic partner; a mild sultaine chassis does not. The realistic case for moderate is that the cationic partners are trace and the oils plausibly small, which is why confidence is moderate.",
+   "confidenceLimitingFactor": "trace-level cationic partners; unknown oil amounts",
+   "rationale": "high: W-RICH plus limited reset (6.7 W-RICH, W-LINE, 6.6 high anchor); moderate confidence, neighbor moderate.",
+   "ruleIds": [
+    "6.3",
+    "6.6",
+    "W-RICH",
+    "W-LINE",
+    "W2",
+    "P0",
+    "N-ALT"
+   ],
+   "counterSignal": "The cationic partners (@26, @30) are trace-level after salts, chelators and solubilizers; there is no silicone and no cationic polymer; proteins/amino acids are late and low-persistence.",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  },
+  "focusPrimary": {
+   "value": "moisture",
+   "confidence": "moderate",
+   "neighboringAlternative": "general",
+   "careDirection": {
+    "verdict": "dual_supported",
+    "repairRoutes": [
+     "Hydrolyzed Keratin @36",
+     "Keratin Amino Acids @33",
+     "Silk Amino Acids @32",
+     "Cinnamidopropyltrimonium Chloride @26"
+    ],
+    "moistureRoutes": [
+     "Argan Oil @7",
+     "Avocado Oil @8",
+     "Glycerin @15",
+     "Panthenol @17",
+     "Sodium PCA @21"
+    ],
+    "sharedConditioningRoutes": [
+     "Cocamidopropyl Dimethylamine @30",
+     "PEG-6 Caprylic/Capric Glycerides @25"
+    ],
+    "limitation": "moisture-leaning dual verdict"
+   },
+   "claimRole": "tie_breaker",
+   "counterSignal": "the dominant claim is clarifying/deep cleansing, which fails F6 (cleansingStrength low, conditioningLevel high, weightPotential high)",
+   "decisionTrace": {
+    "claimDirection": "clarifying (name \"Clarifying Shampoo\", high; \"tiefenreinigend\", moderate); next: nourishment (\"nährt das Haar\", \"reich an Argan- und Avocadoöl\", moderate)",
+    "formulaCompatible": false,
+    "compatibleRoute": "Argan Oil @7 + Avocado Oil @8 + Glycerin @15 (moisture)",
+    "decisionReason": "F6 fails on all three clauses, so clarifying is not compatible; next dominant compatible job is nourishment of the lengths, which tie-breaks the dual_supported verdict to moisture (F1)"
+   },
+   "rationale": "moisture: clarifying incompatible (F6: cleansing low, C high, W high); the moderate nourishment claim tie-breaks dual_supported (F1).",
+   "ruleIds": [
+    "7.2",
+    "F6",
+    "F1",
+    "7.3",
+    "CL-SRC",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingClaims": [
+     "clarifying/deep cleansing (name)"
+    ],
+    "independentRoutes": [],
+    "whyDistinct": "clarifying fails F6 compatibility and cannot be a secondary either",
+    "exceptionCode": null
+   },
+   "rationale": "[]: clarifying is formula-incompatible (F6).",
+   "ruleIds": [
+    "8",
+    "F6"
+   ]
+  },
+  "usageRole": {
+   "value": "occasional_reset",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "explicit_deep_cleansing",
+   "triggerEvidence": [
+    "product name \"Clarifying Shampoo\" (high)",
+    "\"tiefenreinigendes Shampoo\" (manufacturer DE, moderate)",
+    "directions \"zweimal im Monat ...; oder bis zu ein- oder zweimal wöchentlich\" (manufacturer DE, moderate)"
+   ],
+   "losingTriggers": [
+    "frequent cannot fire (no U2 wording)"
+   ],
+   "counterSignal": "cleansingStrength low: an ordinary-strength formula behind a clarifying name (D3)",
+   "decisionTrace": {
+    "default": "regular",
+    "nonDefaultTrigger": "explicit_deep_cleansing",
+    "triggerEvidence": [
+     "\"Clarifying Shampoo\" in name",
+     "occasional-reset directions"
+    ],
+    "rationale": "D1 true; U1 occasional_reset first"
+   },
+   "rationale": "occasional_reset: D1 true (U1).",
+   "ruleIds": [
+    "9",
+    "U1",
+    "D1",
+    "U5"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "counterSignal": "none",
+   "rationale": "not_targeted: no E2 sensitive/dry unit; \"Haar als auch Kopfhaut zu einem gesundes Gleichgewicht\" names no scalp state.",
+   "ruleIds": [
+    "10",
+    "SC1"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "not_supported: complete formula without a recognized dandruff active.",
+   "ruleIds": [
+    "11"
+   ],
+   "counterSignal": "none",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  }
+ },
+ "formulaFacts": {
+  "surfactantClasses": {
+   "strongAnionicEther": [],
+   "strongAnionicAlkylSulfate": [],
+   "mildAnionic": [
+    "Disodium Laureth Sulfosuccinate @3",
+    "Sodium Lauryl Sulfoacetate @4",
+    "Sodium Lauroyl Sarcosinate @5",
+    "Sodium Laurate @29 (soap, not prominent)"
+   ],
+   "amphoteric": [
+    "Cocamidopropyl Hydroxysultaine @2",
+    "Cocamidopropylamine Oxide @18 (C3b buffer only; not prominent)"
+   ],
+   "nonionicCleansing": [],
+   "notCleansing": [
+    "Sodium Chloride @6",
+    "Sodium Polystyrene Sulfonate @14",
+    "Sodium Sulfate @16",
+    "PEG-40 Hydrogenated Castor Oil @19",
+    "PEG-150 Pentaerythrityl Tetrastearate @24"
+   ],
+   "c4": "no defining anionic; C6 earliest prominent = Cocamidopropyl Hydroxysultaine @2"
+  },
+  "conditioningRoutes": [
+   "oils @7, @8",
+   "Cinnamidopropyltrimonium Chloride @26",
+   "Cocamidopropyl Dimethylamine @30",
+   "PEG-6 Caprylic/Capric Glycerides @25",
+   "Glycerin @15",
+   "Panthenol @17",
+   "Sodium PCA @21",
+   "amino acids/keratin @32, @33, @36"
+  ],
+  "actives": [
+   "Panthenol @17",
+   "Sodium PCA @21",
+   "Hydrolyzed Keratin @36"
+  ],
+  "scalpExposure": [
+   "FRAGRANCE/PERFUME @13",
+   "Alpha-Isomethyl Ionone @43",
+   "Linalool @44",
+   "botanical extracts @9-11 (chamomile, lavender, rosemary)"
+  ],
+  "recognizedDandruffActives": []
+ },
+ "unresolvedMaterialIngredients": [],
+ "claimUnitsAndGrades": [
+  "product name \"Moroccanoil Clarifying Shampoo\" (high): D1 \"clarifying shampoo\"",
+  "manufacturer_de (moderate): \"Ein tiefenreinigendes Shampoo, das alltägliche Ablagerungen ohne Feuchtigkeitsentzug beseitigt\" (D1 stem tiefenrein; U4 Ablagerungen); \"nährt das Haar\"; directions \"zweimal im Monat ... ein- oder zweimal wöchentlich\"",
+  "retailer flaconi (low), manufacturer UK/US (manufacturer_foreign, low): same; color-safe"
+ ],
+ "reconciliation": [
+  {
+   "property": "focusPrimary",
+   "blind": "general (provisional)",
+   "final": "moisture",
+   "evidence": "clarifying name (F6 fails); \"nährt das Haar\"",
+   "reason": "F6, F1 tie-break"
+  },
+  {
+   "property": "usageRole",
+   "blind": "regular (provisional)",
+   "final": "occasional_reset",
+   "evidence": "\"Clarifying Shampoo\" name + twice-monthly directions",
+   "reason": "D1 true"
+  }
+ ],
+ "projection": {
+  "status": "proposal",
+  "statusReasons": [],
+  "thicknessFit": {
+   "fine": "not_suited",
+   "normal": "acceptable",
+   "coarse": "ideal"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 with W=high (neighbor moderate), C=high (neighbor moderate): fine not_suited, normal acceptable, coarse ideal; ordinary target, no T6; T4 checked against the N-ALT neighbors after T6; thickness claims never change fit (T2).",
+  "weight": "heavy",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential high -> heavy, confidence moderate.",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "confidence": "high",
+    "rationale": "S-ORDINARY way 1: no qualifying E2 claim (no oily-scalp wording); manufacturer source present."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "researchCombinationConfidence": null,
+  "cleansingIntensity": "gentle",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1: cleansingStrength low with D1 true -> gentle; bucket expects regular (amber row, I2); I3 neighbor none.",
+  "explicitResetPositioning": true,
+  "explicitResetEvidence": "\"Clarifying Shampoo\" in the product name (high); \"tiefenreinigend\" and occasional-reset directions (manufacturer DE, moderate)",
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserRecord": null,
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D1 true but cleansingStrength low: D3 ordinary-strength, no deep-cleanser entry (R16.3)",
+  "rows": [
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "gentle",
+    "weight": "heavy",
+    "tier": "acceptable"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "gentle",
+    "weight": "heavy",
+    "tier": "ideal"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [],
+  "informationalNotes": [
+   "deep_cleansing_name_ordinary_formula: D1 wording \"Clarifying Shampoo\" (name), \"tiefenreinigendes Shampoo\"; cleansingStrength low; directions twice monthly to twice weekly, no daily-use directions; no deep-cleanser entry (D3, R16.3)"
+  ],
+  "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; lanes never see catalog ids."
+ },
+ "selfCheck": "6.11: fingerprint matches the frozen packet; claims and labels were hidden during the formula pass (frozen before reveal, sha256 above); no ingredient, family count or position window assigned the weight band, the W-line only gated payload_lipid legs; the W-line was derived from the frozen list and every skipped candidate is recorded; depositionLoad/persistence/resetCapacity present; counterevidence and whyNotNeighborBand are specific; confidence names its limiting factor; no comparison with earlier values was made in this lane. Projection derived mechanically from final properties (T1/T6/T4, W-LIVE, I1/I3, D1-D3, 13.7, 13.8); N-ALT neighbors consistent with confidences.",
+ "uncertainties": [
+  "Focus moisture vs general: alternative general if the nourishment sentence is read as subordinate copy rather than the next dominant job.",
+  "The method yields heavy weight, high conditioning and gentle intensity for a product named \"Clarifying Shampoo\" (W-RICH from two prominent oils + trace cationics, mild sultaine chassis). This is a rule outcome, not a lane choice; flagged for the orchestrator as a plausibility check on W-RICH partner reading.",
+  "W-RICH partner: the cationic conditioners are trace (@26, @30). Under the v1.6.1 partner reading (present and plausibly persistent, wherever listed) W-RICH holds; if a lane judges them not plausibly persistent, weight falls to moderate and conditioning to moderate.",
+  "Sodium Polystyrene Sulfonate @14 excluded as an anionic opacifier (not named in 6.4); it carries no cationic charge and does not move the band."
+ ]
+}
