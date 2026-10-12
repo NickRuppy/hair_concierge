@@ -106,7 +106,12 @@ export function ScanVerdictSections({
         <Banner
           status={result.status}
           title={voice(result.verdictTitle)}
-          subtitle={voice(result.subtitle)}
+          subtitle={voice(
+            (result.verdict === "supportive" || result.verdict === "mismatch") &&
+              result.reasonLines?.length
+              ? result.reasonLines.join(" · ")
+              : result.subtitle,
+          )}
         />
       ) : (
         <Banner
@@ -323,6 +328,9 @@ export function ScanAlternativesList({
   onBuy?: (productId: string) => void
 }) {
   const caption = budgetCaption(alternatives)
+  const supportiveRecommendationId = alternatives.some((item) => item.verdict === "ideal")
+    ? null
+    : alternatives[0]?.productId
   return (
     <section>
       <p
@@ -356,6 +364,11 @@ export function ScanAlternativesList({
                 <span className="block truncate text-[13px] font-semibold text-foreground">
                   {alternative.displayName}
                 </span>
+                {alternative.verdict === "supportive" && alternative.reasonLines?.length ? (
+                  <span className="mt-0.5 block text-[12px] text-muted-foreground">
+                    {alternative.reasonLines.join(" · ")}
+                  </span>
+                ) : null}
                 {meta ? (
                   <span className="mt-0.5 block text-[12px] text-muted-foreground">{meta}</span>
                 ) : null}
@@ -399,7 +412,10 @@ export function ScanAlternativesList({
                     STATUS_CLASS[alternative.verdict === "ideal" ? "ok" : "pending"],
                   )}
                 >
-                  {alternative.verdictLabel}
+                  {alternative.verdict === "supportive" &&
+                  alternative.productId !== supportiveRecommendationId
+                    ? "Alternative · passt bedingt"
+                    : alternative.verdictLabel}
                 </span>
                 {onBuy && alternative.purchaseUrl ? (
                   <a

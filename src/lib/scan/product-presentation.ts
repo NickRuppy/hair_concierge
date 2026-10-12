@@ -89,6 +89,7 @@ export function presentScanVerdictPayload(
         netContentLabel: alternative.netContentLabel,
         verdict: alternative.verdict,
         verdictLabel: alternative.verdictLabel,
+        reasonLines: alternative.reasonLines ?? [],
         // Task 7 optional metadata: spelled out and only when set, so budget-less / flag-off
         // responses keep their exact key set.
         ...(alternative.overBudget !== undefined ? { overBudget: alternative.overBudget } : {}),

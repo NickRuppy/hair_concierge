@@ -241,45 +241,7 @@ Current product frequency belongs to the user's inventory state. Recommended pro
 
 ## Product fit verdict
 
-Use a layered verdict rather than one undifferentiated binary match.
-
-### Layer 1 — strict suitability
-
-- Shared `suitable_thicknesses = null` means not verified and therefore `unknown`; a non-empty verified array must contain the user's `thickness`.
-- A verified exclusion is a hard mismatch even when the formula weight looks close.
-- Empty arrays are invalid for active recommendable products. Legacy empty arrays remain `unknown` until researched and migrated; they are never an implicit match or a verified exclusion.
-- Strong exclusions, unresolved identity, pending review, and safety constraints are applied before formula fit.
-
-### Layer 2 — core formula fit
-
-| Axis | `exact` | `supportive` | `mismatch` |
-|---|---|---|---|
-| `weight` | same `light / medium / rich` level | one level lighter or richer | two levels apart |
-| `balance` | same `moisture / balanced / protein` direction | either target or product is `balanced` | direct `moisture` versus `protein` opposition |
-
-Thickness remains a separate strict product-suitability gate. Weight answers the different question of how light or rich the formula should be for this complete profile.
-
-### Layer 3 — need coverage
-
-`repairLevel` is directional and secondary to strict suitability plus weight/balance:
-
-- exact product and target level = `exact`;
-- product one level below target = `supportive`;
-- product two levels below target = `mismatch` because it materially under-serves the repair need;
-- product above target = `supportive`, never `exact`: the product may remain usable when thickness, weight, and balance fit, but it is more repair-focused than necessary.
-
-Functional benefits describe how completely an otherwise suitable product serves the person's goals. Verified matching benefits improve the product-level explanation and ranking. A missing benefit cannot rescue a core mismatch; missing functional metadata is shown as unverified and never becomes a hard mismatch by itself.
-
-### Aggregate verdict and precedence
-
-| Engine result | User-facing verdict | Rule |
-|---|---|---|
-| `ideal` | `passt sehr gut` | Strict thickness/safety gates pass; core axes are exact; repair is exact; material functional needs are verified or explicitly covered elsewhere in the plan. |
-| `supportive` | `passt mit Einschränkung` | Strict gates pass and no hard mismatch exists, but at least one axis is a documented near-match, repair is above/below the exact target without being severely underpowered, or functional goal coverage is partial/unverified. |
-| `mismatch` | `wechseln empfohlen` | Verified thickness exclusion, extreme weight mismatch, direct balance opposition, repair two levels below need, strong exclusion, or safety conflict. |
-| `unknown` | `noch in Prüfung` | Product identity is pending or a required strict/core field is unavailable. |
-
-Precedence is: unresolved identity/pending review; safety and strong exclusions; strict thickness; hard core/repair mismatch; missing required data; supportive deviations; ideal. Each product retains the axis-level facts so the UI can explain the verdict rather than showing only the label.
+Fit verdicts and labels follow the [canonical fit-verdict model](../../fit-verdict-model.md) (§1–§5, ruled 2026-10-12): `ideal` = **Passt**, `supportive` = **Passt bedingt**, `mismatch` = **Passt nicht**, and `unknown` = **Nicht geprüft**. Thickness is a degree axis, never a hard gate; sum all axis distances (0 / 1 / ≥2 steps), let hard-gate failures take precedence, and allow a supportive recommendation with its evaluator reason when no ideal candidate exists in either Basis or optional tiers.
 
 ### Owned products versus a new recommendation
 
@@ -350,9 +312,9 @@ Reason salience and the final user-facing explanation format are deliberately de
 10. `conditioner-double-shampoo`: one Conditioner step after the final rinse.
 11. `conditioner-label-protocol`: exact verified product directions override category fallback.
 12. `conditioner-sensitive-scalp-reaction`: no product escalation; safety guidance.
-13. `conditioner-strict-thickness-exclusion`: otherwise close product is `mismatch`.
+13. `conditioner-thickness-distance`: otherwise close product is `supportive` at one step and `mismatch` at two steps (canonical model §3–§4).
 14. `conditioner-thickness-metadata-missing`: otherwise exact product is `unknown`.
-15. `conditioner-higher-repair-than-needed`: strict/core fit passes; verdict is `supportive`, not `ideal` or `mismatch`.
+15. `conditioner-higher-repair-than-needed`: zero repair steps; ideal if all other axes and gates pass (canonical model §3).
 16. `conditioner-high-repair-need-low-product`: repair is two levels below need; verdict is `mismatch`.
 17. `conditioner-balanced-bridge`: strict gate passes and balance bridge produces `supportive`.
 
@@ -368,7 +330,7 @@ Conditioner has no launch-cohort or enrichment shortage. A read-only live-catalo
 Launch readiness is therefore an integrity-preservation gate:
 
 1. preserve every existing verified non-empty `suitable_thicknesses` array and matching Conditioner/rerank row during the nullable-semantics migration;
-2. use `null` only for unreviewed product suitability, producing `unknown` / `noch in Prüfung` rather than a match or mismatch;
+2. use `null` only for unreviewed product suitability, producing `unknown` / `Nicht geprüft` rather than a match or mismatch;
 3. reject `[]` as invalid for an active recommended Conditioner rather than treating it as a wildcard or verified exclusion;
 4. verify after migration that fine, normal, and coarse each retain valid exact candidates and that row counts/data fingerprints match the preflight snapshot;
 5. keep the confirmed safe generic Conditioner application fallback launch-capable; exact-product protocol rows are required only when a product materially differs from that fallback;

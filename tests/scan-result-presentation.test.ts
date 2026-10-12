@@ -1,3 +1,4 @@
+// fit-verdict spec §1/§7b, ruled 2026-10-12: web labels and actions.
 import assert from "node:assert/strict"
 import test from "node:test"
 
@@ -12,7 +13,7 @@ import {
   scanSaveButtonLabel,
   type ScanFooterInput,
 } from "../src/lib/scan/result-presentation"
-import type { ScanDimension, ScanProductHeader } from "../src/lib/scan/types"
+import type { ScanWebDimension, ScanProductHeader } from "../src/lib/scan/types"
 
 const buyableProduct: ScanProductHeader = {
   productId: "p1",
@@ -49,13 +50,13 @@ test("footer drops the price from the buy label when no price is known", () => {
   assert.equal(actions[0].label, "Kaufen")
 })
 
-test("footer on supportive, mismatch and unknown verdicts keeps the buy affordance honest", () => {
-  for (const verdict of ["supportive", "mismatch", "unknown"] as const) {
+test("footer parity across every verdict (fit-verdict spec §1/§7b, ruled 2026-10-12)", () => {
+  for (const verdict of ["ideal", "supportive", "mismatch", "unknown"] as const) {
     const actions = scanFooterActions(footer({ verdict }))
     assert.deepEqual(
       actions.map((action) => [action.kind, action.label, action.tone]),
       [
-        ["buy", "Trotzdem kaufen", "coral-outline"],
+        ["buy", "Kaufen · 24,90 €", "coral-solid"],
         ["save", "Speichern", "plum-outline"],
       ],
       verdict,
@@ -63,7 +64,7 @@ test("footer on supportive, mismatch and unknown verdicts keeps the buy affordan
   }
 })
 
-test("footer on not_needed leads with a solid save button, buy stays available", () => {
+test("footer on not_needed uses the same actions (fit-verdict spec §7b, ruled 2026-10-12)", () => {
   assert.deepEqual(
     scanFooterActions(footer({ kind: "not_needed", verdict: null })).map((action) => [
       action.kind,
@@ -71,8 +72,8 @@ test("footer on not_needed leads with a solid save button, buy stays available",
       action.tone,
     ]),
     [
-      ["save", "Speichern", "plum-solid"],
-      ["buy", "Trotzdem kaufen", "coral-outline"],
+      ["buy", "Kaufen · 24,90 €", "coral-solid"],
+      ["save", "Speichern", "plum-outline"],
     ],
   )
 })
@@ -84,7 +85,7 @@ test("footer without a purchase url renders save alone instead of a dead buy slo
   assert.deepEqual(actions, [{ kind: "save", label: "Speichern", tone: "plum-outline" }])
 })
 
-test("footer without a purchase url still leads with the solid save button on not_needed", () => {
+test("footer without a purchase url keeps the same save tone on not_needed", () => {
   const actions = scanFooterActions(
     footer({
       kind: "not_needed",
@@ -92,7 +93,7 @@ test("footer without a purchase url still leads with the solid save button on no
       product: { ...buyableProduct, purchaseUrl: null },
     }),
   )
-  assert.deepEqual(actions, [{ kind: "save", label: "Speichern", tone: "plum-solid" }])
+  assert.deepEqual(actions, [{ kind: "save", label: "Speichern", tone: "plum-outline" }])
 })
 
 test("saved state morphs the save button label", () => {
@@ -109,7 +110,7 @@ test("saved state morphs the save button label", () => {
 
 /* -------------------------------------------------------------- dimensions */
 
-const thickness: ScanDimension = {
+const thickness: ScanWebDimension = {
   dimensionId: "thickness",
   label: "Geeignete Haardicke",
   stops: [
@@ -194,12 +195,12 @@ test("reasons label follows the verdict and the need mode", () => {
   )
   assert.equal(
     scanReasonsLabel({ kind: "in_catalog", verdict: "supportive" }),
-    "Warum das nur eingeschränkt passt",
+    "Warum das bedingt passt",
   )
   assert.equal(scanReasonsLabel({ kind: "in_catalog", verdict: "mismatch" }), "Warum nicht")
   assert.equal(
     scanReasonsLabel({ kind: "in_catalog", verdict: "unknown" }),
-    "Warum wir uns nicht sicher sind",
+    "Warum das noch nicht geprüft ist",
   )
   assert.equal(
     scanReasonsLabel({ kind: "not_needed", mode: "not_needed", category: "mask" }),
@@ -260,4 +261,15 @@ test("alternative meta line joins the known facts only", () => {
   assert.equal(scanAlternativeMetaLine({ brand: null, priceLabel: "18,00 €" }), "18,00 €")
   assert.equal(scanAlternativeMetaLine({ brand: "Kérastase", priceLabel: null }), "Kérastase")
   assert.equal(scanAlternativeMetaLine({ brand: null, priceLabel: null }), null)
+})
+
+test("caution dimension has an amber warning marker (fit-verdict spec §7a.3, ruled 2026-10-12)", () => {
+  assert.deepEqual(
+    scanDimensionSummary({ ...thickness, state: "supportive", productStopIds: ["fine"] }),
+    {
+      marker: "!",
+      text: "Fein",
+      state: "supportive",
+    },
+  )
 })

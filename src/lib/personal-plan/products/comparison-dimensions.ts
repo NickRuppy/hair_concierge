@@ -363,6 +363,16 @@ function leaveInDimensions(
       "Die Pflegerichtung kommt aus Zielprofil und exakten Produktfakten.",
     ),
     third,
+    dimension(
+      "leave_in.suitable_thicknesses",
+      "Geeignete Haardicke",
+      "set",
+      THICKNESS_STOPS,
+      input.hairThickness ?? null,
+      entries,
+      (facts) => facts.suitableThicknesses,
+      "Die Haardicken-Eignung nutzt nur gespeicherte Katalogwerte.",
+    ),
   ]
 }
 
@@ -402,6 +412,16 @@ function maskDimensions(
       entries,
       (facts) => (facts.category === "mask" ? facts.spec.repairSupportLevel : null),
       "Die Repair-Unterstützung bleibt eine explizite Katalogachse.",
+    ),
+    dimension(
+      "mask.suitable_thicknesses",
+      "Geeignete Haardicke",
+      "set",
+      THICKNESS_STOPS,
+      input.hairThickness ?? null,
+      entries,
+      (facts) => facts.suitableThicknesses,
+      "Die Haardicken-Eignung nutzt nur gespeicherte Katalogwerte.",
     ),
   ]
 }
@@ -460,7 +480,7 @@ function oilDimensions(
       "Pflegegewicht",
       "ordered",
       WEIGHT_STOPS,
-      roleTarget?.weight ?? null,
+      roleTarget?.acceptedTargets ?? (roleTarget?.weight ? [roleTarget.weight] : null),
       entries,
       (facts) => (facts.category === "oil" ? facts.spec.weight : null),
       "Das Öl-Gewicht wird nur für Leave-on-Rollen als Zielachse genutzt.",
@@ -632,4 +652,20 @@ export function positionLabel(
   const ids = position.kind === "position" ? [position.stopId] : position.stopIds
   const labels = ids.map((id) => stops.find((stop) => stop.stopId === id)?.label ?? id)
   return labels.join(", ")
+}
+
+/** Display row IDs are stable; authority criterion IDs own their fit state. */
+export function criterionIdForDimension(dimensionId: string): string {
+  const aliases: Record<string, string> = {
+    "shampoo.suitable_thicknesses": "shampoo.thickness",
+    "conditioner.suitable_thicknesses": "conditioner.thickness",
+    "conditioner.care_direction": "conditioner.balance",
+    "conditioner.repair_support": "conditioner.repair",
+    "leave_in.suitable_thicknesses": "leave_in.thickness",
+    "leave_in.heat_protection": "leave_in.heat",
+    "mask.suitable_thicknesses": "mask.thickness",
+    "oil.suitable_thicknesses": "oil.thickness",
+    "oil.role_support": "oil.role",
+  }
+  return aliases[dimensionId] ?? dimensionId
 }

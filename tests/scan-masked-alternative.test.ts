@@ -78,3 +78,12 @@ test("maskScanVerdictPayload: an empty alternatives list stays empty", () => {
   const masked = maskScanVerdictPayload({ ...inCatalogVerdict, alternatives: [] })
   assert.deepEqual(masked.alternatives, [])
 })
+
+test("masked alternatives carry evaluator reasons without identity (fit-verdict spec §1/§7b, ruled 2026-10-12)", () => {
+  const masked = maskAlternative(
+    alternative({ verdict: "supportive", reasonLines: ["Für dein Haar eher schwer"] }),
+  )
+  assert.deepEqual(masked.reasonLines, ["Für dein Haar eher schwer"])
+  assert.equal("productId" in masked, false)
+  assert.equal("displayName" in masked, false)
+})

@@ -27,7 +27,7 @@ const STATUS: Record<
   },
   partial: {
     glyph: "!",
-    label: "mit Einschränkung",
+    label: "passt bedingt",
     surface: "bg-[var(--status-pending-bg)]",
     word: "text-[var(--status-pending-text)]",
     disc: "bg-[var(--status-pending-text)]",
@@ -41,7 +41,7 @@ const STATUS: Record<
   },
   unknown: {
     glyph: "–",
-    label: "nicht einschätzbar",
+    label: "nicht geprüft",
     surface: "bg-[#f6f3f0]",
     word: "text-muted-foreground",
     disc: "bg-muted-foreground",

@@ -74,6 +74,13 @@ function leaveOnWeight(profile: PlanProfile): PlanCareWeight {
   return loadSensitive ? "medium" : "rich"
 }
 
+function idealLeaveOnWeights(profile: PlanProfile): PlanCareWeight[] {
+  if (has(profile.concerns, "low_volume_or_weighed_down"))
+    return [profile.hair.thickness === "coarse" ? "medium" : "light"]
+  if (profile.hair.thickness === "fine") return ["light"]
+  return profile.hair.thickness === "normal" ? ["light", "medium"] : ["medium", "rich"]
+}
+
 function benefit(
   benefit: OilFunctionalBenefit,
   priorityValue: PlanFunctionPriority,
@@ -128,6 +135,7 @@ function dryFinish(
     role: "dry_finish",
     tier: tier === "not_needed" ? "optional" : tier,
     weight: leaveOnWeight(profile),
+    acceptedTargets: idealLeaveOnWeights(profile),
     functionalBenefits:
       tier === "not_needed"
         ? []
@@ -239,6 +247,7 @@ function dampLeaveOn(
     role: "leave_on_fibre_conditioning",
     tier: tier === "not_needed" ? "optional" : tier,
     weight: leaveOnWeight(profile),
+    acceptedTargets: idealLeaveOnWeights(profile),
     functionalBenefits:
       tier === "not_needed"
         ? []
@@ -261,6 +270,7 @@ function includedTarget(target: OilRoleTarget & { ruleId: string }): OilRoleTarg
     role: target.role,
     tier: target.tier,
     weight: target.weight,
+    ...(target.acceptedTargets ? { acceptedTargets: target.acceptedTargets } : {}),
     functionalBenefits: target.functionalBenefits,
   }
 }
