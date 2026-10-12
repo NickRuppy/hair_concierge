@@ -1,0 +1,91 @@
+{
+  "slot": "A43",
+  "productId": "678119a0-9070-4faf-b9ed-7c0ac008767e",
+  "name": "SANTE Sensitive Care Shampoo Probiotika + 3-fach Protein Komplex, 250 ml",
+  "brand": "Sante (LOGOCOS Naturkosmetik)",
+  "packSize": "250 ml",
+  "gtins": [
+    "4055297221467"
+  ],
+  "sources": [
+    {
+      "url": "https://www.sante.de/sensitive-care-shampoo-probiotika-3-fach-protein-komplex/4060901-M",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de (LOGOCOS own web shop)",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4055297221467 (schema.org gtin13; sku 4060901; size option 250 ml; 500 ml option unavailable; 950 ml exists)",
+      "inciVerbatim": "Aqua (Water), Sodium Coco-Sulfate, Lauryl Glucoside, Coco-Glucoside, Maris Sal (Sea Salt), Aloe Barbadensis Leaf Juice*, Citric Acid, Disodium Cocoyl Glutamate, Lactococcus Ferment Lysate, Arginine, Sodium Cocoyl Glutamate, Phytic Acid, Hydrolyzed Corn Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Leuconostoc/Radish Root Ferment Filtrate, Lactic Acid, Sodium Chloride, PCA Ethyl Cocoyl Arginate, Potassium Sorbate, Sodium Benzoate, Parfum (Fragrance)**, Linalool**, Benzyl Salicylate**, Vanillin** *aus kontrolliert biologischem Anbau/issu de I'agriculture biologique/da coltivazione biologica controllata/certified organically grown/procedente de un cultivo ecológico controlado **aus natürlichen ätherischen Ölen/issus d´huiles essentielles naturelles/ da oli essenziali naturali/ from natural essential oils/ a partir de aceites esenciales naturales",
+      "claimsVerbatim": "Für sensibles Haar und empfindliche Kopfhaut | Wohltuend für die Kopfhaut | Fördert den Erhalt einer intakten Hautbarriere | Hält den natürlichen pH-Wert der Kopfhaut in Balance | Verträglichkeit dermatologisch getestet | Das SANTE Sensitiv Care Shampoo enthält eine hochwirksame Pflegeformel¹ für sensible Kopfhaut mit Probiotika und 3-fach Protein Komplex. Es pflegt die Haare besonders sanft, ohne zu beschweren. Reduziert Spannungs- & Trockenheitsgefühle und unterstützt den natürlichen pH-Wert der Kopfhaut. Der 3-fach Protein Komplex stärkt, pflegt & schützt das Haar von der Wurzel bis in die Spitzen. Der hydratisierende Pflege-Komplex füllt & baut das Haar auf, für eine natürlich kraftvolle Haarstruktur. Die Verträglichkeit ist dermatologisch getestet. ... ¹Instrumenteller Test – Shampoo + Conditioner | Label: Vegan, Vegetarisch | Leitwirkstoffe: 3-fach Protein Komplex, Probiotika | Verträglichkeit: alkoholfrei, parabenfrei, silikonfrei",
+      "directionsVerbatim": "Haselnussgroße Menge ins feuchte Haar einmassieren, danach gründlich ausspülen. Für die optimale Pflegeroutine anschließend den SANTE Conditioner verwenden."
+    },
+    {
+      "url": "https://www.dm.de/p/d/1335957/sante-naturally-shampoo-sensitive-care",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "4055297221467 (dm-Artikelnummer 1335957; 'Shampoo Sensitive Care'; online 'Nicht lieferbar - Keine Anzeige für die Verfügbarkeit im dm-Markt möglich' at retrieval; page does not state pack size in title)",
+      "inciVerbatim": "Ingredients: Aqua (Water), Sodium Coco-Sulfate, Lauryl Glucoside, Coco-Glucoside, Maris Sal (Sea Salt), Aloe Barbadensis Leaf Juice*, Citric Acid, Disodium Cocoyl Glutamate, Lactococcus Ferment Lysate, Arginine, Sodium Cocoyl Glutamate, Phytic Acid, Hydrolyzed Corn Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Leuconostoc/Radish Root Ferment Filtrate, Lactic Acid, Sodium Chloride, PCA Ethyl Cocoyl Arginate, Potassium Sorbate, Sodium Benzoate, Parfum (Fragrance)**, Linalool**, Benzyl Salicylate**, Vanillin** *aus kontrolliert biologischem Anbau/issu de I'agriculture biologique/da coltivazione biologica controllata/certified organically grown/procedente de un cultivo ecológico controlado **aus natürlichen ätherischen Ölen/issus d´huiles essentielles naturelles/ da oli essenziali naturali/ from natural essential oils/ a partir de aceites esenciales naturales",
+      "claimsVerbatim": "Sensitives Shampoo | Mit Probiotika und 3-fach Protein Komplex | Hält den natürlichen pH-Wert der Kopfhaut in Balance | Zertifizierte Naturkosmetik | Für sensibles Haar und empfindliche Kopfhaut | Das Sensitive Care Shampoo von SANTE NATURKOSMETIK beinhaltet die perfekte Pflegetextur für sensibles Haar und empfindliche Kopfhaut. Dank Probiotika und dem dreifach Protein Komplex wird der natürliche pH-Wert der Kopfhaut in Balance gehalten und der Erhalt einer intakten Hautbarriere gefördert. Für ein wohltuendes Gefühl auf der Kopfhaut. | Produkteigenschaften: vegan, vegetarisch",
+      "directionsVerbatim": "Haselnussgroße Menge ins feuchte Haar einmassieren, danach gründlich ausspülen. Für die optimale Pflegeroutine anschließend den Sante Conditioner verwenden."
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-sante-sensitive-care-shampoo/p/4055297221467",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "gtinShown": "4055297221467 (URL + schema.org sku; Rossmann Artikelnummer 154642; 250 ml; 'Nur Online')",
+      "inciVerbatim": "Aqua (Water), Sodium Coco-Sulfate, Lauryl Glucoside, Coco-Glucoside, Sea Salt, Aloe Barbadensis Leaf Juice*, Citric Acid, Disodium Cocoyl Glutamate, Lactococcus Ferment Lysate, Arginine, Sodium Cocoyl Glutamate, Phytic Acid, Hydrolyzed Corn Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Leuconostoc/Radish Root Ferment Filtrate, Lactic Acid, Sodium Chloride, Sodium Benzoate, PCA Ethyl Cocoyl Arginate, Potassium Sorbate, Parfum (Fragrance)**, Linalool**, Benzyl Salicylate\n\n*aus kontrolliert biologischem Anbau\n**aus natürlichen ätherischen Ölen",
+      "claimsVerbatim": "Die hochwirksame Pflegeformel mit Probiotika und 3-Fach Protein Komplex, versorgt das Haar mit intensiver Feuchtigkeit bis in die Spitzen und schützt langanhaltend vor dem Austrocknen. | für sensibles Haar und empfindliche Kopfhaut | fördert den Erhalt einer intakten Hautbarriere | wohltuend für die Kopfhaut | hält den natürlichen pH-Wert der Kopfhaut in Balance | Verträglichkeit dermatologisch getestet | vegan",
+      "directionsVerbatim": "(section 'Anwendung und Gebrauch' empty/not captured)"
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "rossmann_list_truncated_and_reordered",
+      "quote": "rossmann.de ends '... Parfum (Fragrance)**, Linalool**, Benzyl Salicylate' (no '**', no Vanillin**) and orders the preservatives 'Sodium Chloride, Sodium Benzoate, PCA Ethyl Cocoyl Arginate, Potassium Sorbate'; also 'Sea Salt' instead of 'Maris Sal (Sea Salt)'. Manufacturer and dm: '... Sodium Chloride, PCA Ethyl Cocoyl Arginate, Potassium Sorbate, Sodium Benzoate, Parfum (Fragrance)**, Linalool**, Benzyl Salicylate**, Vanillin**'.",
+      "resolution": "Kept separate, not merged. Rossmann is treated as a truncated/older feed (24 vs 25 effective items; Vanillin missing; preservative order differs); manufacturer + dm agree verbatim, so their list is canonical. Fragrance-allergen Vanillin is the material difference."
+    }
+  ],
+  "canonicalInci": [
+    "Aqua (Water)",
+    "Sodium Coco-Sulfate",
+    "Lauryl Glucoside",
+    "Coco-Glucoside",
+    "Maris Sal (Sea Salt)",
+    "Aloe Barbadensis Leaf Juice*",
+    "Citric Acid",
+    "Disodium Cocoyl Glutamate",
+    "Lactococcus Ferment Lysate",
+    "Arginine",
+    "Sodium Cocoyl Glutamate",
+    "Phytic Acid",
+    "Hydrolyzed Corn Protein",
+    "Hydrolyzed Wheat Protein",
+    "Hydrolyzed Soy Protein",
+    "Leuconostoc/Radish Root Ferment Filtrate",
+    "Lactic Acid",
+    "Sodium Chloride",
+    "PCA Ethyl Cocoyl Arginate",
+    "Potassium Sorbate",
+    "Sodium Benzoate",
+    "Parfum (Fragrance)**",
+    "Linalool**",
+    "Benzyl Salicylate**",
+    "Vanillin**"
+  ],
+  "canonicalReason": "Manufacturer DE page (LOGOCOS/SANTE shop, exact 250 ml, GTIN in schema.org) and dm.de (same GTIN) agree verbatim on the complete 25-item list; identical to the v1.3 capture. Rossmann deviates (truncated/reordered), preserved under conflicts.",
+  "inciFingerprintSha256": "e7bbbca05138a36c9232d3bcfa024431c19776c252a065267ee03808404354e1",
+  "normalization": "Split the canonical INCI on ',' (or '|' / '•' separators where the source uses them; dm renders a non-breaking hyphen as '|' inside names, e.g. 'COCO|GLUCOSIDE' = 'Coco-Glucoside'); per ingredient: trim, collapse internal whitespace, merge split synonym entries (e.g. 'Aqua (Water, Eau)' stays one item), strip trailing full stop; canonicalInci keeps the published capitalisation/asterisks; for the hash each item is lower-cased; items joined with '|' and sha256 over the UTF-8 string.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "The v1.3 formula-source had no GTIN; GTIN 4055297221467 now anchored by manufacturer + dm + Rossmann. Other sizes: 500 ml 4055297221221, 950 ml 4055297221047 (Vorteilsgröße) - not this product.",
+    "AVAILABILITY: dm.de shows 'Nicht lieferbar' with no store availability (online). Manufacturer and Rossmann list it as available. Not a delisting by evidence; watch.",
+    "Claim-INCI check: Probiotika = Lactococcus Ferment Lysate / Leuconostoc/Radish Root Ferment Filtrate; '3-fach Protein Komplex' = Hydrolyzed Corn / Wheat / Soy Protein; all present. 'Silikonfrei/alkoholfrei' consistent. Contains hydrolyzed wheat and soy protein (relevant for allergen-style notes). No conflict.",
+    "Scalp claims are footnoted as instrumental test of shampoo + conditioner combination, not shampoo alone.",
+    "No pack photo inspected."
+  ]
+}
