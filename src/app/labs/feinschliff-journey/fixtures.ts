@@ -239,21 +239,36 @@ export const PORTFOLIO_PRESENTATION_RESOLVED: PortfolioPresentation = {
   deferredRoleReasons: {},
 }
 
-/** Feeds the real `buildHairProfileSection` at the end of the journey. */
+type ModuleState = "open" | "complete" | "not_applicable"
+
+/**
+ * Feeds the real `buildHairProfileSection` at the end of the journey. The journey runs with the
+ * tools rollout ON, so `tools` is a real module and the meter reads „x von 5"
+ * (`totalSteps = 2 + applicable modules`); pass `not_applicable` for the tools-off shape.
+ */
 export function refinementStatus(
-  products: "open" | "complete",
-  habits: "open" | "complete",
+  products: Exclude<ModuleState, "not_applicable">,
+  tools: ModuleState,
+  habits: Exclude<ModuleState, "not_applicable">,
 ): RefinementStatusResponse {
-  const completedModules = [products, habits].filter((entry) => entry === "complete").length
+  const states = { products, tools, habits } as const
+  const modules = (["products", "tools", "habits"] as const).map((module) => ({
+    module,
+    status: states[module],
+    openQuestionCount:
+      states[module] === "open" ? (module === "products" ? 2 : module === "tools" ? 8 : 4) : 0,
+  }))
+  const applicable = modules.filter((entry) => entry.status !== "not_applicable")
+  const completedModules = applicable.filter((entry) => entry.status === "complete").length
   const openBanner: Stage2Module | null =
-    products === "open" ? "products" : habits === "open" ? "habits" : null
+    modules.find((entry) => entry.status === "open")?.module ?? null
   return {
-    modules: [
-      { module: "products", status: products, openQuestionCount: products === "open" ? 2 : 0 },
-      { module: "habits", status: habits, openQuestionCount: habits === "open" ? 4 : 0 },
-    ],
-    progress: { completedSteps: 2 + completedModules, totalSteps: 4 },
+    modules,
+    progress: { completedSteps: 2 + completedModules, totalSteps: 2 + applicable.length },
     module1HandedOff: products === "complete",
     banner: { visible: openBanner !== null, module: openBanner, dismissed: false },
   }
 }
+
+/** The journey's coarse meter: idealplan + routine, then one step per module. */
+export const JOURNEY_TOTAL_STEPS = 5

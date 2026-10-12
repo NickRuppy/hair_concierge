@@ -4,6 +4,7 @@ import {
   planProductRoleSchema,
   productFrequencySchema,
 } from "../products/contracts"
+import type { ToolRoutineSection } from "../tools/read-view"
 
 const id = z.string().uuid()
 const boundedText = z.string().min(1).max(256)
@@ -254,4 +255,10 @@ export type PersonalPlanRoutineView = {
     href: string
   } | null
   productPresentation?: RoutineProductPresentation
+  /**
+   * Hair Tools `Deine Tools` section, DERIVED AT READ TIME from the member's current facts and
+   * the routine-linked refined need snapshot (`tools/read-view.ts`). Never part of a routine
+   * payload. Present only while the Tools rollout is on and the plan holds a Tool.
+   */
+  toolSection?: ToolRoutineSection
 }

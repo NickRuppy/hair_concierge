@@ -255,6 +255,81 @@ test("the browser Stage 2 gateway leaves an absent recompute field undefined, ne
   assert.equal("recompute" in (result?.moduleCompletion ?? {}), false)
 })
 
+/**
+ * Replay-safe module completion: a failed completing PATCH is retried through
+ * `POST stage-2/complete {module}` — the browser gateway used to have no `completeModule`,
+ * so the retry silently did nothing.
+ */
+test("the browser Stage 2 gateway retries a module completion through the complete route", async () => {
+  const requests: Array<{ url: string; init?: RequestInit }> = []
+  const gateway = createHttpStage2RefinementGateway({
+    fetch: async (url, init) => {
+      requests.push({ url: String(url), init })
+      return new Response(
+        JSON.stringify({
+          module: "tools",
+          status: "in_progress",
+          stage3Handoff: false,
+          nextHref: "/plan-start",
+          refinedVersionId: "refined-9",
+        }),
+        { status: 200 },
+      )
+    },
+  })
+
+  const result = await gateway.completeModule?.({ module: "tools", expectedRevision: 8 })
+
+  assert.equal(result?.refinedVersionId, "refined-9")
+  assert.equal(result?.module, "tools")
+  assert.equal(requests.length, 1)
+  assert.equal(requests[0]?.url, "/api/personal-plan/stage-2/complete")
+  assert.equal(requests[0]?.init?.method, "POST")
+  assert.deepEqual(JSON.parse(String(requests[0]?.init?.body)), {
+    module: "tools",
+    expectedRevision: 8,
+  })
+})
+
+test("the browser Stage 2 gateway passes the recompute outcome of a habits retry through untouched", async () => {
+  const gateway = createHttpStage2RefinementGateway({
+    fetch: async () =>
+      new Response(
+        JSON.stringify({
+          module: "habits",
+          status: "complete",
+          stage3Handoff: false,
+          nextHref: "/plan-start",
+          refinedVersionId: "refined-5",
+          recompute: { outcome: "unchanged" },
+        }),
+        { status: 200 },
+      ),
+  })
+  const result = await gateway.completeModule?.({ module: "habits", expectedRevision: 4 })
+  assert.deepEqual(result?.recompute, { outcome: "unchanged" })
+})
+
+test("the browser Stage 2 gateway maps a failed module completion retry to a typed error", async () => {
+  const gateway = createHttpStage2RefinementGateway({
+    fetch: async () =>
+      new Response(JSON.stringify({ error: "revision_conflict" }), { status: 409 }),
+  })
+  await assert.rejects(
+    gateway.completeModule!({ module: "tools", expectedRevision: 8 }),
+    (error: unknown) => (error as { code?: unknown }).code === "revision_conflict",
+  )
+  const offline = createHttpStage2RefinementGateway({
+    fetch: async () => {
+      throw new TypeError("offline")
+    },
+  })
+  await assert.rejects(
+    offline.completeModule!({ module: "tools", expectedRevision: 8 }),
+    (error: unknown) => (error as { code?: unknown }).code === "temporarily_unavailable",
+  )
+})
+
 test("the browser intake client posts a stable UUID idempotency key with valid manual input", async () => {
   let request: RequestInit | undefined
   const client = createHttpStage3IntakeClient({

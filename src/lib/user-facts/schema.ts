@@ -7,6 +7,7 @@ import {
   DRY_SHAMPOO_BRIDGE_PREFERENCES,
   DRY_SHAMPOO_VISIBLE_HAIR_COLORS,
   HEAT_PROTECTION_CONSISTENCIES,
+  NIGHT_WEARS,
   OIL_PURPOSES,
   SCALP_IRRITATION_DETAILS,
   STAGE2_HEAT_EVENT_SOURCES,
@@ -14,6 +15,13 @@ import {
   WET_WASH_FREQUENCIES,
 } from "@/lib/personal-plan/refinement/types"
 import { PRODUCT_FREQUENCIES } from "@/lib/vocabulary/frequencies"
+import { TOOL_FAMILIES } from "@/lib/personal-plan/tools/contracts"
+import {
+  TOOL_FORM_PAGES,
+  toolFormCareKey,
+  type ToolFormCareKey,
+  type ToolFormPage,
+} from "@/lib/personal-plan/tools/labels"
 import {
   BRUSH_TYPES,
   NIGHT_PROTECTIONS,
@@ -323,6 +331,26 @@ const towelSchema = z
   })
   .strict()
 
+/**
+ * Hair Tools (plan `plans/2026-10-09-hair-tools-port.md` §4): one key per product-form page,
+ * `toolForms_<family>_<n>`, holding that page's reported forms. Generated from
+ * `TOOL_FORM_PAGES`, so a new page gets its key with it. Values are canonicalized (sorted) by
+ * the readers before they validate against the Stage-2 path.
+ */
+function toolFormPageSchema<Page extends ToolFormPage>(page: Page) {
+  return dedupeArray(
+    z.enum(page.forms as unknown as [Page["forms"][number], ...Page["forms"][number][]]),
+  ).optional()
+}
+
+type ToolFormPageShape = {
+  [Key in ToolFormCareKey]: ReturnType<typeof toolFormPageSchema<ToolFormPage>>
+}
+
+const toolFormPageShape = Object.fromEntries(
+  TOOL_FORM_PAGES.map((page) => [toolFormCareKey(page.pageKey), toolFormPageSchema(page)]),
+) as ToolFormPageShape
+
 export const careHabitsV1Schema = z
   .object({
     currentProductCategories: dedupeArray(z.enum(STAGE2_PRODUCT_CATEGORIES)).optional(),
@@ -336,9 +364,16 @@ export const careHabitsV1Schema = z
     additionalHeatTools: dedupeArray(z.enum(ADDITIONAL_HEAT_TOOLS)).optional(),
     heatEvents: z.partialRecord(z.enum(HEAT_EVENT_QUESTION_IDS), heatEventAnswerSchema).optional(),
     nightProtection: dedupeArray(z.enum(NIGHT_PROTECTIONS)).optional(),
+    // Rev. 6 (Hair Tools): how the hair is worn at night. Its technique is also merged into the
+    // derived `nightProtection` above; „Offen" (`open`) adds none.
+    nightWear: z.enum(NIGHT_WEARS).optional(),
     // Legacy `hair_profiles.brush_type` vocabulary; no Stage-2 version ever carried it (see
     // explore/B-habits.md §10).
     brushesCombs: dedupeArray(z.enum(BRUSH_TYPES)).optional(),
+    // Hair Tools: the overview answer (families the member owns something in) and one key per
+    // page. `brushesCombs` above is DERIVED from the two brush pages when they are settled.
+    toolFamiliesWithSomething: dedupeArray(z.enum(TOOL_FAMILIES)).optional(),
+    ...toolFormPageShape,
   })
   .strict()
 

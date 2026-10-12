@@ -47,9 +47,10 @@ export type Module1Stage3Resume = { refinedVersionId: string }
 export async function loadModule1Stage3Resume(
   client: Module1Stage3ResumeClient,
   userId: string,
+  options: { toolsEnabled: boolean },
 ): Promise<Module1Stage3Resume | null> {
   try {
-    const source = await loadRefinementStatusSource(client, userId)
+    const source = await loadRefinementStatusSource(client, userId, options)
     if (source.status !== "ok") return null
 
     const projection = source.moduleProjections.products

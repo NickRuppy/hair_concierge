@@ -706,7 +706,10 @@ export function prepareScannerContext(read: ScannerSourceRead): PreparedScannerC
     const ids = retainedIds
     if (ids.some((id) => !isStage2QuestionAnswerValid(id, retainedAnswers!)))
       throw new Error("scan_profile_context_unavailable")
-    const triggerContext = deriveStage2TriggerContext(base.snapshot)
+    const triggerContext = deriveStage2TriggerContext(base.snapshot, {
+      // Tools-off: scanner context reads product answers only; the Hair Tools path never applies.
+      toolsEnabled: false,
+    })
     const resolved = resolveAssumedAnswers({
       triggerContext,
       answers: retainedAnswers,

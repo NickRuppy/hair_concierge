@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import React, { type ReactElement, type ReactNode } from "react"
+import { LayoutRouterContext } from "next/dist/shared/lib/app-router-context.shared-runtime"
 
 import { BudgetQuestion } from "@/components/budget/budget-question"
 import { BottomSheetContent } from "@/components/ui/bottom-sheet"
@@ -120,7 +121,9 @@ function createEffectHarness(renderComponent: () => ReactElement | null, context
      * `useRouter` and `useToast` both read a context. One merged fake serves both — the
      * contexts themselves are module-private, so identity switching is not available here.
      */
-    useContext<T>(): T {
+    useContext<T>(context: unknown): T {
+      // Next 16.3+ `useRouter` also reads `LayoutRouterContext`; outside a layout it is null.
+      if (context === LayoutRouterContext) return null as T
       return contextValue as T
     },
     /** `usePathname` reads its context through `use`, not `useContext`. */

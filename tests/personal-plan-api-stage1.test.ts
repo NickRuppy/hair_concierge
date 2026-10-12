@@ -18,6 +18,7 @@ function dependencies(overrides: Partial<Stage1RouteDeps> = {}): Stage1RouteDeps
   return {
     getAuthenticatedUser: async () => ({ id: "user-1" }),
     loadJourneyAccess: async () => stage1Access,
+    toolsEnabled: async () => false,
     persistence: {
       isEnabled: () => true,
       cohortCutoff: () => new Date("2026-08-08T00:00:00.000Z"),

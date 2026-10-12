@@ -73,6 +73,9 @@ const noindexRoutes = [
 ]
 
 export const nextConfig: NextConfig = {
+  // Next 16.3+ rewrites AGENTS.md/CLAUDE.md on `next dev` when it detects an AI agent;
+  // our agent instructions are hand-owned, so opt out.
+  agentRules: false,
   // Dev pages opened via 127.0.0.1 otherwise fail to hydrate: Next blocks
   // /_next dev resources for non-localhost origins.
   allowedDevOrigins: ["127.0.0.1"],

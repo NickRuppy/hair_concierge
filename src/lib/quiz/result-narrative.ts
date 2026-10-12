@@ -1041,5 +1041,3 @@ export function buildQuizResultNarrative(rawAnswers: QuizAnswers): QuizResultNar
     primaryGoal,
   }
 }
-
-export const buildResultNarrative = buildQuizResultNarrative

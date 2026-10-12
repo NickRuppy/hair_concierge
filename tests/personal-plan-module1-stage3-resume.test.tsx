@@ -116,7 +116,7 @@ function makeClient(tables: Record<string, Row[]>) {
 }
 
 const resumeFor = (tables: Record<string, Row[]>) =>
-  loadModule1Stage3Resume(makeClient(tables) as never, ids.user)
+  loadModule1Stage3Resume(makeClient(tables) as never, ids.user, { toolsEnabled: false })
 
 test("reloading on the bridge — handoff done, Stage-3 draft not created yet — resumes Stage 3", async () => {
   // The Stage-3 journey bootstrap creates the draft itself (today's tap-"weiter"
@@ -574,7 +574,9 @@ test("rebased in-progress clone (products done, habits open, no Stage-3 draft) s
   })
   const state = await resolvePlanStartPageState(
     // The REAL resume loader over the in-memory tables a rebase produces.
-    depsWithResume((userId) => loadModule1Stage3Resume(client as never, userId)),
+    depsWithResume((userId) =>
+      loadModule1Stage3Resume(client as never, userId, { toolsEnabled: false }),
+    ),
   )
   assert.deepEqual(state.state === "production" ? state.initialJourney : null, {
     stage: "stage2",
@@ -592,7 +594,9 @@ test("the same rebased clone resumes Stage 3 once a live Stage-3 draft exists on
     personal_plan_product_drafts: [stage3DraftRow({ status: "active" })],
   })
   const state = await resolvePlanStartPageState(
-    depsWithResume((userId) => loadModule1Stage3Resume(client as never, userId)),
+    depsWithResume((userId) =>
+      loadModule1Stage3Resume(client as never, userId, { toolsEnabled: false }),
+    ),
   )
   assert.deepEqual(state.state === "production" ? state.initialJourney : null, {
     stage: "stage3",
