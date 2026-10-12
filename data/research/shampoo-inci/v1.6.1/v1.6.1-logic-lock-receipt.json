@@ -221,6 +221,7 @@
     "One sealed two-lane test round on 23 products; there is no separate unseen re-run for v1.6.1. Several cohort products (packets from the v1.6 calibration and the profi freeze) were known to the rule authors.",
     "Seal incident 1: VT11's stage-A packSize carried a freeze note naming the brand, a retailer and two GTINs (U4 carried a GTIN note); both lanes report not using it. Fixed afterwards in the kit (blindPackSize, stage-A pack size reduced to the bare size); the running kit was not rebuilt.",
     "Seal incident 2: a lane-b worker globbed names and hashes of same-lane formula-pass files (no contents); no cross-lane access reported.",
+    "Seal incident 3 (found by the Codex branch review): the lane standard kept the lower-case holdout slug `vichy-dercos-anti-schuppen-sensitiv` in a v1.6 focus-migration example; research-only focus secondary, no graded value affected. Fixed afterwards in the kit (case-insensitive slug scrub); the running kit was not rebuilt.",
     "No cohort product records w_line_fallback_e3 or w_line_none_visible (rule-changes row 134); both fallback codes are untested by lanes.",
     "The C3b surfactant classes rest on thin evidence (one manufacturer irritation table, data on a related amine oxide, patent data); they are repeatability conventions with confidence caps, not potency findings.",
     "Lane agreement measures repeatability, not finished-product or consumer accuracy; INCI order is a prominence proxy, never a concentration.",

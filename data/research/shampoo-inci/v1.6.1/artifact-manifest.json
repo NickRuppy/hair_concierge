@@ -29,8 +29,8 @@
   },
   "readme": {
     "path": "docs/research/shampoo-inci/v1.6.1/README.md",
-    "bytes": 7998,
-    "sha256": "963cf7fb7b9a9e904b973b45350adb76a03a851d8cfe88db72474bbb4d3e8b80",
+    "bytes": 8054,
+    "sha256": "df22255a4b405a908233b6d422018e6dd159c5f68d3ad56298172071003e88ce",
     "verification": "v1.6.1 package README (status, authority, changes, test-round evidence, open after lock); the top-level docs/research/shampoo-inci/README.md is the living entry point and is not pinned"
   },
   "rulings_ledger": {
@@ -41,8 +41,8 @@
   },
   "logic_lock_receipt": {
     "path": "data/research/shampoo-inci/v1.6.1/v1.6.1-logic-lock-receipt.json",
-    "bytes": 13504,
-    "sha256": "705766e6b96b80648225c2ee4bb1c0fefe737a0a4131f378070f2ed5a0466de1"
+    "bytes": 13836,
+    "sha256": "7924a95b1332d7a6a016e4430b5db8e17fc54b58b5c26d741bfa61d9f4ce470b"
   },
   "evidence": {
     "root": "data/research/shampoo-inci/v1.6.1/evidence/",
@@ -78,8 +78,8 @@
     "key_reports": [
       {
         "path": "data/research/shampoo-inci/v1.6.1/test-round/run-log.md",
-        "bytes": 2844,
-        "sha256": "ce1add923a4d014795771c38e74f90ef9d7ec26f8185b8b66320fb0d32e36ac6"
+        "bytes": 3647,
+        "sha256": "eee88c88ab3aab429cb4f8e2d5f050132f328749f7d352e9c858989b779c2172"
       },
       {
         "path": "data/research/shampoo-inci/v1.6.1/test-round/compare-output.txt",
@@ -1631,8 +1631,8 @@
       },
       {
         "path": "data/research/shampoo-inci/v1.6.1/test-round/run-log.md",
-        "bytes": 2844,
-        "sha256": "ce1add923a4d014795771c38e74f90ef9d7ec26f8185b8b66320fb0d32e36ac6"
+        "bytes": 3647,
+        "sha256": "eee88c88ab3aab429cb4f8e2d5f050132f328749f7d352e9c858989b779c2172"
       }
     ]
   },

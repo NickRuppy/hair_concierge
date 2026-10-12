@@ -17,6 +17,7 @@ import test from "node:test"
 import {
   blindPackSize,
   buildLaneKit,
+  cliFlag,
   inciFingerprint,
   releaseReveal,
   resolveInside,
@@ -237,6 +238,33 @@ test("the locked standard's holdout example product does not leak into a Vichy b
   assert.match(scrubbed, /Secondary `gentle` alongside primary `scalp_active`/)
 })
 
+test("a lower-case brand slug is scrubbed whole, case-insensitively (v1.6.1 seal incident 3)", () => {
+  for (const standard of [
+    "docs/research/shampoo-inci/v1.6/classification-standard.md",
+    "docs/research/shampoo-inci/v1.6.1/classification-standard.md",
+  ]) {
+    const locked = readFileSync(standard, "utf8")
+    const batch = [packet({ brand: "Vichy", name: "Dercos Anti-Schuppen Shampoo" })]
+    const scrubbed = scrubStandard(locked, batch)
+    assert.doesNotMatch(scrubbed, /vichy/i, `${standard}: no brand in any case`)
+    assert.doesNotMatch(
+      scrubbed,
+      /dercos-anti-schuppen-sensitiv/,
+      `${standard}: slug replaced whole`,
+    )
+  }
+})
+
+test("a slug built from a multi-word product name is replaced whole, ordinary words stay", () => {
+  const scrubbed = scrubStandard(
+    `${SCRUB_STANDARD}\nHoldout \`being-big-hair-shampoo-v2\` read as mild; well-being matters.`,
+    scrubBatch(),
+  )
+  assert.ok(scrubbed.includes("Holdout `[catalog product]` read as mild"))
+  assert.ok(scrubbed.includes("well-being matters"))
+  assert.ok(scrubbed.includes("is being treated needs care; being conservative"))
+})
+
 test("the kit builds against the locked standard by default and against an explicit candidate path", () => {
   assert.equal(
     resolveStandardPath(undefined),
@@ -247,6 +275,19 @@ test("the kit builds against the locked standard by default and against an expli
     "plans/shampoo-v161/candidate/classification-standard.md",
   )
   assert.throws(() => resolveStandardPath(""), /standard/)
+})
+
+test("a CLI flag without a value fails instead of silently selecting the default", () => {
+  assert.equal(cliFlag(["in", "out", "--seed", "7"], "--standard"), undefined)
+  assert.equal(cliFlag(["in", "out", "--standard", "x.md", "--seed", "7"], "--standard"), "x.md")
+  assert.throws(
+    () => cliFlag(["in", "out", "--seed", "7", "--standard"], "--standard"),
+    /--standard needs a value/,
+  )
+  assert.throws(
+    () => cliFlag(["in", "out", "--standard", "--seed", "7"], "--standard"),
+    /--standard needs a value/,
+  )
 })
 
 test("stage-A packets carry only the bare pack size, never identity notes from the freeze", () => {

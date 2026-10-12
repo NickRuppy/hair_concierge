@@ -20,7 +20,7 @@ const BASE_STANDARD_PATH = "docs/research/shampoo-inci/v1.6/classification-stand
 // to the manifest or the normative standard must also change these constants: a visible,
 // reviewable test edit. The v1.6 base is anchored by its own lock test and again here, so
 // v1.6.1 can never be produced by editing the frozen base.
-const MANIFEST_SHA256 = "1fc29bc8d9e6626958613db8273a85c269462eb5a979143c1107000618eeeff7"
+const MANIFEST_SHA256 = "8e8b91f5691e98759888078bcd4260a1464e894cd620a1d39d5dca636f5e78ee"
 const NORMATIVE_STANDARD_SHA256 = "8bd97d31b433109e0bc79738163a41b3e644de9ab3e7312948ecaddea23d0a29"
 const BASE_STANDARD_SHA256 = "3b70a145e23e381f5c83ded0092d86d9642ddb7f570dfc9d7414a843659baf98"
 

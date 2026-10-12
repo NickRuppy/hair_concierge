@@ -70,7 +70,7 @@ Every pre-registered movement happened: P01 weight `high`; P31 and P05 on the da
 
 The other disagreements are research-only properties (focus, secondary focus, comfort, combination); the cautious value applies (P0), with no live effect.
 
-Known limits are in the receipt: two seal incidents (an identity note in one stage-A pack size, since fixed in the kit; a same-lane hash glob), and that lane agreement measures repeatability, not product accuracy.
+Known limits are in the receipt: three seal incidents (an identity note in one stage-A pack size and a lower-case brand slug in the lane standard, both since fixed in the kit; a same-lane hash glob), and that lane agreement measures repeatability, not product accuracy.
 
 ## Open after lock
 
