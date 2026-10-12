@@ -276,3 +276,12 @@ E-1 … E-7 are listed in `diff.json` (`lane_errors`). None changes a route.
 | hair_powder | 4 | 0 | 4 | no | no | balea-pure-styling-volumenpuder-spray |
 | molding | 10 | 0 | 10 | yes | yes | — |
 | refresher | 1 | 3 | 4 | no | no | — |
+
+## Post-review note (2026-10-12, Codex batch review)
+
+Two blindness defects in the round-1 packets were found after scoring. The round-1 artifacts are kept unchanged as the record; round 2 uses corrected packets (`r2/`).
+
+1. **S0 packets carried hold cues in confirmed names and directions.** Eight confirmed names contain „Halt N" (e.g. „POWER Halt 5"), and some directions carry hold wording („Fixiert bis zur nächsten Haarwäsche"). The freeze redacted promise lines only (`build/freeze-cohort.js` S0 builder). The lanes could have converged on these cues; whether they did is not established.
+2. **One claims packet carried a prior retailer label** („round-1 dm filter: leichter Halt" inside a C2-stamped hold object, `packets/claims/sty-8c7c8bdd5d.json`).
+
+Read the round-1 agreement figures with this in mind, especially hold levels (31/33 identical). The round-2 freeze redacts names, name variants and directions in S0, and its leak check scans them.
