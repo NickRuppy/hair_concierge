@@ -1812,7 +1812,8 @@ test("uncovered leave-in role ranks displayed coverage over the pinned authority
         sortOrder: 1,
         weight: "light", // matches target -> 1 dimension match
         careDirection: "balanced", // caution vs. target "moisture" -> no match, keeps verdict supportive
-        repairSupportLevel: "high", // caution vs. target "medium" -> no match
+        // spec §3 / §7a.2, ruled 2026-10-12: above target is pass; displayed coverage stays exact-position based.
+        repairSupportLevel: "high",
       }),
       factsFor("leave_in", "post_wash_leave_in", "high-coverage-second", {
         sortOrder: 9,
