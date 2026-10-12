@@ -19,3 +19,5 @@ Two cited evidence checks (`evidence/comfort-route-audit-2026-10-12.md`, `eviden
 ## Lock — test-round adjudication and lock (2026-10-12)
 
 Test round: two sealed Opus lanes, 9 Track A products, 150/153 = 98.0%. The registered move (Sebamed Every-Day → `sensitive` via MB) happened in both lanes; every control held. Nick ("yes to both"): A21 ISANA MED Totes Meer weight boundary (low → moderate in both lanes, not a v1.6.2 rule) is resolved in the Track A re-check, cautious `moderate` per R14 if it stays split; A43 Sante conditioning variance is research-only, no action. Lock v1.6.2.
+
+Review fix before publication (Codex branch review, 2026-10-12; row 144): MB's strong-anionic exclusion reads surfactant prominence under C4 including its no-marker fallback, closing a loophole for formulas with neither a fragrance nor an E3 preservative marker. Stricter only (P0); no Track A product lacks both markers. Applied in place before the package was first published, following the v1.6 row-115 precedent.

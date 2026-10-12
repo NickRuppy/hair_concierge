@@ -16,7 +16,7 @@ This directory is the durable entry point for the Shampoo ingredient-classificat
 | Layer | Canonical location | Purpose |
 | --- | --- | --- |
 | Locked standard | `docs/research/shampoo-inci/v1.6.2/classification-standard.md` | `shampoo-classification-v1.6.2` / `shampoo-inci-v1.6.2`: the v1.6.1 standard plus ruling R18 — the mild-base route for the irritated-scalp formula check, the closed-list batch decided with no additions, `Laureth-9` = Polidocanol, and the evidence boundary for user copy. |
-| Rule changes | `docs/research/shampoo-inci/v1.6.2/rule-changes.md` | Rows 138–143, every change from v1.6.1, with its source. |
+| Rule changes | `docs/research/shampoo-inci/v1.6.2/rule-changes.md` | Rows 138–144, every change from v1.6.1, with its source (row 144: review fix before publication). |
 | Runbook | `docs/research/shampoo-inci/v1.6.2/runbook.md` | Formula freeze, sealed two-lane validation, adjudication, stop boundary. |
 | Lock receipt and manifest | `data/research/shampoo-inci/v1.6.2/` | Hash pins for the locked files, the rulings ledger snapshot, the evidence inputs and the test-round corpus; checked by `tests/shampoo-research-v1-6-2-lock.test.ts`. |
 | Test-round evidence | `data/research/shampoo-inci/v1.6.2/test-round/` | Two sealed lanes, 9 Track A products, 150/153 = 98.0%; pre-registration, comparison and adjudication. |

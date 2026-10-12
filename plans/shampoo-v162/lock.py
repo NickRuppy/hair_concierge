@@ -12,7 +12,7 @@ shutil.copyfile("plans/shampoo-v162/candidate/classification-standard.md",f"{DOC
 # rule changes
 rc=open("plans/shampoo-v162/candidate/rule-changes-v1.6.2.md").read()
 rc=rc.replace("# Rule changes: v1.6.2 vs v1.6.1 (candidate)","# Rule changes: v1.6.2 vs v1.6.1")
-rc=rc.replace("Target: `plans/shampoo-v162/candidate/classification-standard.md`.","Target: `classification-standard.md` in this directory (locked v1.6.2, 2026-10-12, Nick's decision after the test round). This ledger is the v1.6.2 candidate changelog at lock with file references re-pointed to the locked package; rows 138–143 are unchanged.")
+rc=rc.replace("Target: `plans/shampoo-v162/candidate/classification-standard.md`.","Target: `classification-standard.md` in this directory (locked v1.6.2, 2026-10-12, Nick's decision after the test round). This ledger is the v1.6.2 candidate changelog at lock with file references re-pointed to the locked package; rows 138–144 are unchanged (row 144 is the review fix applied before publication).")
 rc=rc.replace("(`plans/shampoo-v16/rulings.md` R18, snapshot in `data/research/shampoo-inci/v1.6.2/rulings-ledger.md`)","(snapshot in `data/research/shampoo-inci/v1.6.2/rulings-ledger.md`)")
 open(f"{DOCS}/rule-changes.md","w").write(rc)
 # runbook
@@ -55,6 +55,8 @@ Two cited evidence checks (`evidence/comfort-route-audit-2026-10-12.md`, `eviden
 ## Lock — test-round adjudication and lock (2026-10-12)
 
 Test round: two sealed Opus lanes, 9 Track A products, 150/153 = 98.0%. The registered move (Sebamed Every-Day → `sensitive` via MB) happened in both lanes; every control held. Nick ("yes to both"): A21 ISANA MED Totes Meer weight boundary (low → moderate in both lanes, not a v1.6.2 rule) is resolved in the Track A re-check, cautious `moderate` per R14 if it stays split; A43 Sante conditioning variance is research-only, no action. Lock v1.6.2.
+
+Review fix before publication (Codex branch review, 2026-10-12; row 144): MB's strong-anionic exclusion reads surfactant prominence under C4 including its no-marker fallback, closing a loophole for formulas with neither a fragrance nor an E3 preservative marker. Stricter only (P0); no Track A product lacks both markers. Applied in place before the package was first published, following the v1.6 row-115 precedent.
 """)
 # README (docs)
 open(f"{DOCS}/README.md","w").write("""# Shampoo classification v1.6.2
@@ -75,7 +77,7 @@ Status: **LOCKED v1.6.2 (2026-10-12, Nick's decision after the test round: "yes 
 | File | Purpose |
 | --- | --- |
 | [`classification-standard.md`](./classification-standard.md) | The normative locked standard: the full v1.6.1 text plus the v1.6.2 changes (marked "(v1.6.2)"). Self-contained. |
-| [`rule-changes.md`](./rule-changes.md) | Rows 138–143, every change from v1.6.1, with its source and whether it could change a live value. Rows 1–137 stay in the v1.6 and v1.6.1 ledgers. |
+| [`rule-changes.md`](./rule-changes.md) | Rows 138–144, every change from v1.6.1, with its source and whether it could change a live value. Rows 1–137 stay in the v1.6 and v1.6.1 ledgers. |
 | [`runbook.md`](./runbook.md) | How to research a new German shampoo under v1.6.2: the v1.6.1 procedure with version and path references updated. |
 
 ## Authority
@@ -92,6 +94,7 @@ Status: **LOCKED v1.6.2 (2026-10-12, Nick's decision after the test round: "yes 
 - **Closed-list batch decided.** No ingredient is added to any list; six candidates are rejected for lack of rinse-off evidence.
 - **Laureth-9 = Polidocanol.** The listed comfort ingredient is now also recognised under its INCI name.
 - **Evidence boundary.** The lists and MB are plausibility filters, not proof of soothing; research never supports "soothes" in user copy.
+- **Review fix (row 144).** MB reads surfactant prominence under C4, so a fragrance-free, preservative-marker-free sulfate formula cannot pass as a mild base. Applied before publication after the Codex branch review; no Track A product is affected.
 
 ## Test-round evidence
 
@@ -110,15 +113,15 @@ receipt={"schema_version":"shampoo-research-logic-lock-receipt.v1.6.2","locked_s
  "normative_standard":pin(std),
  "base_method":{"policy_id":"shampoo-classification-v1.6.1","path":"docs/research/shampoo-inci/v1.6.1/classification-standard.md","sha256":sha("docs/research/shampoo-inci/v1.6.1/classification-standard.md")},
  "base_lineage":{"policy_id":"shampoo-classification-v1.6","path":"docs/research/shampoo-inci/v1.6/classification-standard.md","sha256":sha("docs/research/shampoo-inci/v1.6/classification-standard.md")},
- "candidate_working_record":{"path":"plans/shampoo-v162/candidate/classification-standard.md","sha256_at_lock":sha("plans/shampoo-v162/candidate/classification-standard.md"),"sha256_tested":subprocess.check_output(["git","show","41eac740:plans/shampoo-v162/candidate/classification-standard.md"]).decode() and hashlib.sha256(subprocess.check_output(["git","show","41eac740:plans/shampoo-v162/candidate/classification-standard.md"])).hexdigest(),"note":"Not normative and not pinned. The test round's lane kits were built from the candidate as committed in 41eac740 (sha256_tested). The locked text differs from it only in the Version block (Status LOCKED, Lock receipt and Test-round evidence rows); no rule text changed after the test."},
+ "candidate_working_record":{"path":"plans/shampoo-v162/candidate/classification-standard.md","sha256_at_lock":sha("plans/shampoo-v162/candidate/classification-standard.md"),"sha256_tested":subprocess.check_output(["git","show","41eac740:plans/shampoo-v162/candidate/classification-standard.md"]).decode() and hashlib.sha256(subprocess.check_output(["git","show","41eac740:plans/shampoo-v162/candidate/classification-standard.md"])).hexdigest(),"note":"Not normative and not pinned. The test round's lane kits were built from the candidate as committed in 41eac740 (sha256_tested). The locked text differs from it in the Version block (Status LOCKED, Lock receipt and Test-round evidence rows, rows 138–144 references) and in one review fix before publication (row 144: MB reads surfactant prominence under C4 including the no-marker fallback; stricter only, no Track A product affected)."},
  "approved_scope":r161["approved_scope"],
  "rulings":{"ledger_snapshot":pin(f"{DATA}/rulings-ledger.md"),"living_ledger_path":"plans/shampoo-v16/rulings.md (codex/shampoo-v16-rollout)","base_rulings":"v1.6 rulings R1-R17 and v1.6.1 rulings S1-S4, D1-D6, R1-R4 stay in force unchanged","applied":["R18.1","R18.2","R18.3","R18.4","R18.5"]},
  "test_round_evidence":{"corpus_root":f"{TR}/","copied_from":"plans/shampoo-v162/test/","evidence_root":f"{DATA}/evidence/","evidence_copied_from":"plans/shampoo-v162/inputs/","lanes_per_run":2,
    "lane_design":"two independent sealed Opus lanes; two-stage kit (scripts/shampoo-research/build-lane-kit.ts with --standard pointing at the candidate): blind formula packets first (stage-A normalization carries only the runbook rule), reveal packets released only after both lanes' formula-pass records were committed (c3adc93d); scrubbed standard copy without worked examples; no web",
    "runs":[{"id":"v1.6.2-test-round","products":9,"composition":"9 Track A freeze packets not touched by v1.6.1 (mechanical screen): the R18 mover G03, sulfate-base controls A43/A24/A21, listed-route passes A05/A03/A40, dandruff-path combination controls G01/A06; blind ids VS01-VS09, seed 20261013","agreement":"150/153","raw_agreement":0.98,"report":f"{TR}/run-log.md","compare_output":f"{TR}/compare-output.txt","pre_registration":f"{TR}/pre-registration.md"}],
    "adjudications":[{"product":"A21 ISANA MED Totes Meer","field":"weightPotential","value":"resolved in the Track A re-check; cautious moderate if still split (R14)","cause":"boundary_variance_not_v1.6.2"},{"product":"A43 Sante Sensitive Care","field":"conditioningLevel","value":"no action (research-only, no projected change)","cause":"research_only_variance"}]},
- "post_test_rulings":{"applied":["A21 to the Track A re-check","A43 no action"],"rule_changes":[],"recalibrated":False,"basis":"the test round passed; Nick adjudicated the two departures cause-coded without tuning and without changing a rule"},
- "known_limits_retained":["One sealed two-lane test round on 9 products; there is no separate unseen re-run for v1.6.2. The cohort products were known to the rule authors (Track A).","MB rests on consensus-level evidence (mild surfactant system), not controlled shampoo trials; the E4 lists likewise have no independent rinse-off soothing evidence (evidence/).","The first kit build carried a retailer name in the stage-A normalization text; it was rebuilt with the fix before any lane ran (run log)."],
+ "post_test_rulings":{"applied":["A21 to the Track A re-check","A43 no action","Row 144 review fix (Codex): MB under C4 no-marker fallback"],"rule_changes":["144 (review fix before publication, stricter only, no tested value affected)"],"recalibrated":False,"basis":"the test round passed; Nick adjudicated the two departures cause-coded without tuning and without changing a rule"},
+ "known_limits_retained":["One sealed two-lane test round on 9 products; there is no separate unseen re-run for v1.6.2. The cohort products were known to the rule authors (Track A).","MB rests on consensus-level evidence (mild surfactant system), not controlled shampoo trials; the E4 lists likewise have no independent rinse-off soothing evidence (evidence/).","The first kit build carried a retailer name in the stage-A normalization text; it was rebuilt with the fix before any lane ran (run log).","Row 144 (review fix: MB under C4's no-marker fallback) was applied after the test round and was not exercised by the lanes; no Track A product lacks both a fragrance and an E3 preservative marker, so no tested or Track A value can change.","The archived check-preregistration.py reads plans/shampoo-v162/test; replay against the pinned copies with replay-check.py in the same folder (same output)."],
  "separate_gates":{"production_light_adapter_repin":False,"live_weight_column_and_authority_rule":False,"track_a_recheck_applied":False,"n1_no_gap_preflight":False,"individual_product_review_completed":False,"catalog_activation":False,"production_database_write":False,"user_facing_copy_change":False},
  "separate_gates_note":"Every gate is false: none is authorized or done by this lock. The Production Light adapter stays pinned to v1.4; the Track A re-check, the N1 preflight and every catalog apply need their own approval.",
  "production_writes":False}

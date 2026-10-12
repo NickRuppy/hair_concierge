@@ -5,8 +5,8 @@
   "model_version": "shampoo-inci-v1.6.2",
   "normative_source": {
     "path": "docs/research/shampoo-inci/v1.6.2/classification-standard.md",
-    "bytes": 165814,
-    "sha256": "ec8ffbaaaacc4e02abddac4c648e266bd96aa66ecac62070785ebe7812d804ef",
+    "bytes": 165970,
+    "sha256": "c490b3c5a002ba98aa66122f6f44c78782b2eef9dfc75ce33d9fe48aeada71a6",
     "verification": "tests/shampoo-research-v1-6-2-lock.test.ts"
   },
   "base_standard": {
@@ -23,26 +23,26 @@
   },
   "rule_change_ledger": {
     "path": "docs/research/shampoo-inci/v1.6.2/rule-changes.md",
-    "bytes": 3508,
-    "sha256": "f7056a1bf32dd11bc4f1420d5c7663d426241f73fcde2ecfca5c238636d0610d",
+    "bytes": 4211,
+    "sha256": "6ad1bbedfa5fda1425d5e4a9d9535b0511504f08acff4ef5fb23b253ee966e65",
     "verification": "tests/shampoo-research-v1-6-2-lock.test.ts"
   },
   "readme": {
     "path": "docs/research/shampoo-inci/v1.6.2/README.md",
-    "bytes": 3898,
-    "sha256": "790c10c077082e2b617141579fa343273edb88b7617fc63326f1e70be224539f",
+    "bytes": 4147,
+    "sha256": "bc6c7049aa7e2f3428023bfeca8c3c13fe299de3ba6709e99db307f58bc9b4da",
     "verification": "tests/shampoo-research-v1-6-2-lock.test.ts"
   },
   "rulings_ledger": {
     "path": "data/research/shampoo-inci/v1.6.2/rulings-ledger.md",
-    "bytes": 2532,
-    "sha256": "4cd5e8d4c09cb517f3e6bb966b2fa14a50d6acefc60d810670d6e42cbba6e3d3",
+    "bytes": 2950,
+    "sha256": "f3882b6be997360004f0e2437e64e254d090e5f6c798b6311e53a17a38e4cb1e",
     "verification": "tests/shampoo-research-v1-6-2-lock.test.ts"
   },
   "logic_lock_receipt": {
     "path": "data/research/shampoo-inci/v1.6.2/v1.6.2-logic-lock-receipt.json",
-    "bytes": 7344,
-    "sha256": "1013bccc0b94764500f236fe02fa19b858f5c164897e0c24b71293d314ccc487"
+    "bytes": 8066,
+    "sha256": "b64e01ca9e386e8e09c8323a651bcc2ef56f60bf7af8d459fa93110ad2ab8727"
   },
   "evidence": {
     "root": "data/research/shampoo-inci/v1.6.2/evidence/",
@@ -69,7 +69,7 @@
   "test_round": {
     "root": "data/research/shampoo-inci/v1.6.2/test-round/",
     "copied_from": "plans/shampoo-v162/test/",
-    "files": 119,
+    "files": 120,
     "key_reports": [
       {
         "path": "data/research/shampoo-inci/v1.6.2/test-round/pre-registration.md",
@@ -688,6 +688,11 @@
         "path": "data/research/shampoo-inci/v1.6.2/test-round/record-skeleton.json",
         "bytes": 4372,
         "sha256": "e72b8dd71428a78cc836be0b66deaa3d0223c91ac9b7271ec28f6845687a4a5e"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/replay-check.py",
+        "bytes": 621,
+        "sha256": "7f5495348bfb9acac58a49ba64710c913488f4dd0c66c05fce64f87a1f1b9533"
       },
       {
         "path": "data/research/shampoo-inci/v1.6.2/test-round/run-log.md",

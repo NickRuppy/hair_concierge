@@ -10,8 +10,8 @@
   "decision_basis": "Nick's decision after the sealed two-lane test round (run log, 'Adjudication'); ledger entry 'Lock — test-round adjudication and lock (2026-10-12)'",
   "normative_standard": {
     "path": "docs/research/shampoo-inci/v1.6.2/classification-standard.md",
-    "bytes": 165814,
-    "sha256": "ec8ffbaaaacc4e02abddac4c648e266bd96aa66ecac62070785ebe7812d804ef"
+    "bytes": 165970,
+    "sha256": "c490b3c5a002ba98aa66122f6f44c78782b2eef9dfc75ce33d9fe48aeada71a6"
   },
   "base_method": {
     "policy_id": "shampoo-classification-v1.6.1",
@@ -25,9 +25,9 @@
   },
   "candidate_working_record": {
     "path": "plans/shampoo-v162/candidate/classification-standard.md",
-    "sha256_at_lock": "ec8ffbaaaacc4e02abddac4c648e266bd96aa66ecac62070785ebe7812d804ef",
+    "sha256_at_lock": "c490b3c5a002ba98aa66122f6f44c78782b2eef9dfc75ce33d9fe48aeada71a6",
     "sha256_tested": "f5ad0029e7ea8affd5d0edd9e97507a35795a8e3dbb76c4ddbee2e66d020a1f3",
-    "note": "Not normative and not pinned. The test round's lane kits were built from the candidate as committed in 41eac740 (sha256_tested). The locked text differs from it only in the Version block (Status LOCKED, Lock receipt and Test-round evidence rows); no rule text changed after the test."
+    "note": "Not normative and not pinned. The test round's lane kits were built from the candidate as committed in 41eac740 (sha256_tested). The locked text differs from it in the Version block (Status LOCKED, Lock receipt and Test-round evidence rows, rows 138–144 references) and in one review fix before publication (row 144: MB reads surfactant prominence under C4 including the no-marker fallback; stricter only, no Track A product affected)."
   },
   "approved_scope": {
     "category": "shampoo",
@@ -107,8 +107,8 @@
   "rulings": {
     "ledger_snapshot": {
       "path": "data/research/shampoo-inci/v1.6.2/rulings-ledger.md",
-      "bytes": 2532,
-      "sha256": "4cd5e8d4c09cb517f3e6bb966b2fa14a50d6acefc60d810670d6e42cbba6e3d3"
+      "bytes": 2950,
+      "sha256": "f3882b6be997360004f0e2437e64e254d090e5f6c798b6311e53a17a38e4cb1e"
     },
     "living_ledger_path": "plans/shampoo-v16/rulings.md (codex/shampoo-v16-rollout)",
     "base_rulings": "v1.6 rulings R1-R17 and v1.6.1 rulings S1-S4, D1-D6, R1-R4 stay in force unchanged",
@@ -157,16 +157,21 @@
   "post_test_rulings": {
     "applied": [
       "A21 to the Track A re-check",
-      "A43 no action"
+      "A43 no action",
+      "Row 144 review fix (Codex): MB under C4 no-marker fallback"
     ],
-    "rule_changes": [],
+    "rule_changes": [
+      "144 (review fix before publication, stricter only, no tested value affected)"
+    ],
     "recalibrated": false,
     "basis": "the test round passed; Nick adjudicated the two departures cause-coded without tuning and without changing a rule"
   },
   "known_limits_retained": [
     "One sealed two-lane test round on 9 products; there is no separate unseen re-run for v1.6.2. The cohort products were known to the rule authors (Track A).",
     "MB rests on consensus-level evidence (mild surfactant system), not controlled shampoo trials; the E4 lists likewise have no independent rinse-off soothing evidence (evidence/).",
-    "The first kit build carried a retailer name in the stage-A normalization text; it was rebuilt with the fix before any lane ran (run log)."
+    "The first kit build carried a retailer name in the stage-A normalization text; it was rebuilt with the fix before any lane ran (run log).",
+    "Row 144 (review fix: MB under C4's no-marker fallback) was applied after the test round and was not exercised by the lanes; no Track A product lacks both a fragrance and an E3 preservative marker, so no tested or Track A value can change.",
+    "The archived check-preregistration.py reads plans/shampoo-v162/test; replay against the pinned copies with replay-check.py in the same folder (same output)."
   ],
   "separate_gates": {
     "production_light_adapter_repin": false,
