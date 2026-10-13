@@ -1,3 +1,4 @@
+import type { BondbuilderTiming } from "@/lib/personal-plan/refinement/types"
 import { BOND_TECHNOLOGY_FAMILIES } from "@/lib/bondbuilder-research/contracts"
 import { evaluateGateCriteria } from "../fit-criteria"
 import type { PlanProductRole } from "@/lib/personal-plan/types"
@@ -17,10 +18,6 @@ import {
   unknownEvaluation,
   unsupportedEvaluation,
 } from "../shared"
-
-// Retained as a product identifier for existing consumers; no selection preference.
-// Spec §6, ruled 2026-10-12: equal trust ranks by price, not a house default.
-export const BONDBUILDER_TIE_DEFAULT_PRODUCT_ID = "38dace91-0fba-49ee-a93f-ac36e488fe4b"
 
 const BONDBUILDER_TRUST_RANKS: Readonly<Record<string, number>> = { high: 0, medium: 1, low: 2 }
 
@@ -45,19 +42,104 @@ export function recommendationForBondbuilder(product: Stage3BondbuilderFacts) {
   }
 }
 
-/** Spec §6, ruled 2026-10-12; the 2026-10-09 trust-tie rule. */
-export function compareBondbuilderCandidates(
-  left: Stage3BondbuilderFacts,
-  right: Stage3BondbuilderFacts,
+/** Equally trusted and equally timed options rank cheapest first (Nick, 2026-10-13). */
+function tieOrderedRecommendationForBondbuilder(product: Stage3BondbuilderFacts) {
+  return {
+    ...recommendationForBondbuilder(product),
+    reason: "Gleich gut passende Produkte; wir nennen zuerst das günstigste.",
+    authorityRuleId: "bondbuilder.stage3.tie_ordered",
+  }
+}
+
+/**
+ * The stated timing cannot be met at the best trust level: the pick is the most trusted product,
+ * used differently. The rule id carries requested and actual timing for the routine card line.
+ */
+function timingUnmetRecommendationForBondbuilder(
+  product: Stage3BondbuilderFacts,
+  timing: Exclude<BondbuilderTiming, "no_preference">,
+) {
+  return {
+    ...recommendationForBondbuilder(product),
+    reason: "Kein gleich vertrauenswürdiges Produkt passt zu deinem Zeitpunkt.",
+    authorityRuleId: bondbuilderTimingUnmetRuleId(timing, bondbuilderTimingBucket(product.spec)),
+  }
+}
+
+/** When a Bondbuilder is used, from the catalogue's `application_mode` (S4 plan §2.2). */
+export type BondbuilderTimingBucket = "before_wash" | "after_wash" | "overnight"
+
+export function bondbuilderTimingBucket(spec: {
+  applicationMode: string | null
+}): BondbuilderTimingBucket | null {
+  switch (spec.applicationMode) {
+    case "pre_shampoo":
+      return "before_wash"
+    case "post_wash_leave_in":
+      return "after_wash"
+    case "bedtime_leave_in":
+      return "overnight"
+    default:
+      return null
+  }
+}
+
+/** „Ist mir egal" matches every product; a stated timing only its exact bucket (overnight: none). */
+export function bondbuilderMatchesTiming(
+  bucket: BondbuilderTimingBucket | null,
+  timing: BondbuilderTiming,
+): boolean {
+  return timing === "no_preference" || bucket === timing
+}
+
+export const BONDBUILDER_TIMING_UNMET_RULE_PREFIX = "bondbuilder.stage3.timing_unmet."
+
+export function bondbuilderTimingUnmetRuleId(
+  timing: Exclude<BondbuilderTiming, "no_preference">,
+  actual: BondbuilderTimingBucket | null,
+): string {
+  return `${BONDBUILDER_TIMING_UNMET_RULE_PREFIX}${timing}.${actual ?? "unknown"}`
+}
+
+/** The timing the selection respects; absent (synthetic callers) means „Ist mir egal". */
+export function bondbuilderTimingOf(input: Pick<Stage3AuthorityInput, "selectionProfile">) {
+  return input.selectionProfile?.bondbuilderTiming ?? "no_preference"
+}
+
+/**
+ * Tie order among equally trusted, equally timed Bondbuilders: lower price (unknown last),
+ * then catalogue order, then product id. Nick retired the K18 preference on 2026-10-13.
+ */
+export function compareBondbuilderTieOrder(
+  left: Pick<Stage3BondbuilderFacts, "catalogSortOrder" | "priceEur" | "productId">,
+  right: Pick<Stage3BondbuilderFacts, "catalogSortOrder" | "priceEur" | "productId">,
 ): number {
+  const order = (value: number | null | undefined) => value ?? Number.MAX_SAFE_INTEGER
   return (
-    bondbuilderTrustRank(left.spec.claimTrustLevel) -
-      bondbuilderTrustRank(right.spec.claimTrustLevel) ||
-    (left.priceEur ?? Number.MAX_SAFE_INTEGER) - (right.priceEur ?? Number.MAX_SAFE_INTEGER) ||
-    (left.catalogSortOrder ?? Number.MAX_SAFE_INTEGER) -
-      (right.catalogSortOrder ?? Number.MAX_SAFE_INTEGER) ||
+    order(left.priceEur) - order(right.priceEur) ||
+    order(left.catalogSortOrder) - order(right.catalogSortOrder) ||
     left.productId.localeCompare(right.productId)
   )
+}
+
+/**
+ * An explicit user pick fulfils the preference by definition (she chose it): a `timing_unmet`
+ * recommendation is persisted as `validated_standalone`, so the routine card never claims the
+ * answer could not be met.
+ */
+export function explicitBondbuilderPickRecommendation<
+  T extends { authorityRuleId: string; reason: string; category: string },
+>(recommendation: T): T {
+  if (
+    recommendation.category !== "bondbuilder" ||
+    !recommendation.authorityRuleId.startsWith(BONDBUILDER_TIMING_UNMET_RULE_PREFIX)
+  )
+    return recommendation
+  return {
+    ...recommendation,
+    reason: "Erfüllt die eigenständige Bondbuilder-Rolle mit verifiziertem Protokoll.",
+    authorityRuleId: "bondbuilder.stage3.validated_standalone",
+  }
 }
 
 /**
@@ -175,6 +257,44 @@ function evaluateProduct(
   return evaluateGateCriteria(input, product, criteria, missing)
 }
 
+/**
+ * The recommendation shortlist (S2 + X1, plan §2.3): ideal candidates → the most trusted level
+ * (Nick, 2026-10-09) → those matching the stated timing, unless none does (then the whole most
+ * trusted level, flagged `timingUnmet`). Timing never lifts a less trusted product. A tie picks the
+ * cheapest product. Exported so equal options list exactly this tie.
+ */
+export function bondbuilderShortlist(input: Stage3AuthorityInput<"bondbuilder">): {
+  ideal: Stage3BondbuilderFacts[]
+  pool: Stage3BondbuilderFacts[]
+  selected: Stage3BondbuilderFacts | null
+  timingUnmet: boolean
+} {
+  const timing = bondbuilderTimingOf(input as Stage3AuthorityInput)
+  const ideal = input.recommendationCandidates
+    .filter(
+      (candidate) =>
+        candidate.recommendable && candidate.isActive && candidate.lifecycleStatus === "active",
+    )
+    .filter((candidate) => evaluateProduct(input, candidate).verdict === "ideal")
+  const bestTrust = Math.min(
+    ...ideal.map((candidate) => bondbuilderTrustRank(candidate.spec.claimTrustLevel)),
+  )
+  const mostTrusted = ideal.filter(
+    (candidate) => bondbuilderTrustRank(candidate.spec.claimTrustLevel) === bestTrust,
+  )
+  const matching = mostTrusted.filter((candidate) =>
+    bondbuilderMatchesTiming(bondbuilderTimingBucket(candidate.spec), timing),
+  )
+  const pool = matching.length > 0 ? matching : mostTrusted
+  const selected = [...pool].sort(compareBondbuilderTieOrder)[0] ?? null
+  return {
+    ideal,
+    pool,
+    selected,
+    timingUnmet: timing !== "no_preference" && mostTrusted.length > 0 && matching.length === 0,
+  }
+}
+
 export function evaluateBondbuilderAuthority(
   input: Stage3AuthorityInput<"bondbuilder">,
 ): Stage3AuthorityEvaluation {
@@ -193,20 +313,9 @@ export function evaluateBondbuilderAuthority(
   if (!input.productFacts && input.capturedProductId)
     return unknownEvaluation(sharedInput, ["catalog_product_facts"])
   if (!input.productFacts) {
-    const ideal = input.recommendationCandidates
-      .filter(
-        (candidate) =>
-          candidate.recommendable && candidate.isActive && candidate.lifecycleStatus === "active",
-      )
-      .filter((candidate) => evaluateProduct(input, candidate).verdict === "ideal")
-    const selected = [...ideal].sort(compareBondbuilderCandidates)[0] ?? null
-    const multiple =
-      selected !== null &&
-      ideal.filter(
-        (candidate) =>
-          bondbuilderTrustRank(candidate.spec.claimTrustLevel) ===
-          bondbuilderTrustRank(selected.spec.claimTrustLevel),
-      ).length > 1
+    const { ideal, pool, selected, timingUnmet } = bondbuilderShortlist(input)
+    const timing = bondbuilderTimingOf(input)
+    const multiple = pool.length > 1
     return knownEvaluation(sharedInput, {
       verdict: ideal.length === 0 ? "unknown" : "ideal",
       criteria: multiple
@@ -220,7 +329,13 @@ export function evaluateBondbuilderAuthority(
           ]
         : [],
       allowedActions: selected ? ["plan_recommendation", "leave_uncovered"] : ["leave_uncovered"],
-      recommendation: selected ? recommendationForBondbuilder(selected) : null,
+      recommendation: !selected
+        ? null
+        : timingUnmet && timing !== "no_preference"
+          ? timingUnmetRecommendationForBondbuilder(selected, timing)
+          : !multiple
+            ? recommendationForBondbuilder(selected)
+            : tieOrderedRecommendationForBondbuilder(selected),
       productFactFingerprint: null,
       recommendationFactFingerprint: selected?.factFingerprint ?? null,
     })

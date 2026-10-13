@@ -3,6 +3,7 @@ import test from "node:test"
 
 import {
   createStage2RefinementService,
+  interpretStage2PersistedDraft,
   stage2SessionFromPersistedDraft,
   type Stage2PersistedDraft,
 } from "@/lib/personal-plan/persistence/stage2-refinement-service"
@@ -266,4 +267,24 @@ test("Profil „Nachts“ shows the carried-over value of a pre-port answer", ()
     profileHabitsRows(null, plan).find((candidate) => candidate.key === "night_wear")?.value
   assert.equal(row(prePortAnswers(["silk_satin_pillow"])), "Offen")
   assert.equal(row(prePortAnswers(["pineapple"])), "Pineapple")
+})
+
+test("S4 + Tools: a grown tools path keeps finished products assumed and carries the old night answer", () => {
+  const source = draft({
+    triggerContext: { ...ON_MEDIUM, relevantCategories: ["shampoo", "bondbuilder"] },
+    answers: prePortAnswers(["pineapple"]),
+  })
+  const interpreted = interpretStage2PersistedDraft(source)
+  const session = stage2SessionFromPersistedDraft(source)
+  assert.equal(session.status, "complete")
+  assert.equal(session.answers.bondbuilderTiming, "no_preference")
+  assert.equal(session.answers.nightWear, "pineapple")
+  assert.equal(session.path.firstUnresolvedQuestionId, "tools_overview")
+  assert.equal(interpreted.answerProvenance.bondbuilder_timing, "assumed")
+  assert.equal(interpreted.answerProvenance.night_wear, "user")
+  const states = stage2ModuleStates(moduleStatusInput(interpreted))
+  assert.equal(states.products.status, "complete")
+  assert.equal(states.habits.status, "complete")
+  assert.equal(states.tools.status, "open")
+  assert.equal(source.answers.bondbuilderTiming, undefined)
 })

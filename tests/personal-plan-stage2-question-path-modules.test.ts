@@ -24,6 +24,7 @@ const neutralContext = {
 const ALL_STATIC_QUESTION_IDS: Stage2StaticQuestionId[] = [
   "current_product_categories",
   "wet_wash_frequency",
+  "bondbuilder_timing",
   "scalp_irritation_detail",
   "dry_shampoo_bridge_preference",
   "dry_shampoo_visible_hair_color",
@@ -120,6 +121,21 @@ test("dry-shampoo conditional questions belong to the products module", () => {
   assert.ok(path.orderedQuestionIds.includes("dry_shampoo_visible_hair_color"))
   assert.ok(modules.products.questionIds.includes("dry_shampoo_bridge_preference"))
   assert.ok(modules.products.questionIds.includes("dry_shampoo_visible_hair_color"))
+})
+
+test("bondbuilder timing question belongs to the products module", () => {
+  const path = resolveStage2Path({
+    triggerContext: { ...neutralContext, relevantCategories: ["bondbuilder"] },
+    answers: { currentProductCategories: [] },
+    completedQuestionIds: [],
+  })
+  const modules = getStage2ModulePathStates(path.orderedQuestionIds, path.completedQuestionIds)
+  assert.equal(getStage2QuestionModule("bondbuilder_timing"), "products")
+  assert.deepEqual(modules.products.questionIds, [
+    "current_product_categories",
+    "wet_wash_frequency",
+    "bondbuilder_timing",
+  ])
 })
 
 test("scalp conditional question belongs to the products module", () => {
@@ -228,6 +244,12 @@ test("totality: every canonical question id the path can produce has a module, a
   )
   record(getOrderedQuestionIds(neutralContext, { currentProductCategories: ["dry_shampoo"] }))
   record(getOrderedQuestionIds(neutralContext, { currentProductCategories: ["oil"] }))
+  record(
+    getOrderedQuestionIds(
+      { ...neutralContext, relevantCategories: ["bondbuilder"] },
+      { currentProductCategories: [] },
+    ),
+  )
   record(
     getOrderedQuestionIds(neutralContext, {
       currentProductCategories: [],

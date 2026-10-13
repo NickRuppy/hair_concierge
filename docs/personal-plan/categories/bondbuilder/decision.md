@@ -188,6 +188,8 @@ Bondbuilder is the deliberate category exception whose exact total cadence is pr
 | `bondbuilder.cadence.protocol_gap` | critical course facts are missing | Return a visible protocol-data gap and compile zero precise occurrences. |
 | `bondbuilder.cadence.successor` | selected primary or bound course changes | Create a proposed successor plan and require confirmation. |
 
+Damage-branched cadence (rulings B1/D-b, 2026-10-09): a protocol cadence of kind `damage_branched` (Aveda Botanical Repair) resolves by the refined snapshot's `assessments.damage.structuralLevel` — `moderate` → „Einmal pro Woche anwenden.", `high`/`severe` → „An jedem Waschtag anwenden."; `none`/`low` or a missing level fall back to the safe generic line with the `exact_product_cadence_unavailable` gap. The compiler reads the level from the snapshot, the successor sync from the routine's refined version.
+
 Current reported product frequency remains an inventory fact and never becomes the recommended course. Tier expresses how important the category is; it does not rewrite the selected product's verified directions.
 
 There is no universal V1 reassessment date. When the verified protocol has an initial and maintenance phase, its phase boundary may create a product-directed reassessment prompt. The shared check-in UI and successor-plan mechanics are deferred; any cadence change remains proposed until confirmed.
@@ -259,7 +261,24 @@ The current launch set contains three equally eligible primary concepts when all
 - K18 Leave-In Molecular Repair Hair Mask — post-wash leave-in treatment;
 - OLAPLEX Nº.3PLUS Complete Repair Treatment — pre-shampoo cream.
 
-Selection follows the [canonical fit-verdict model](../../fit-verdict-model.md) (§6 and §7b Q6): rank by reviewed technology trust, then cheapest first among equally trusted candidates, with no preferred-step filter. The K18 house default is retired (2026-10-12); companion/add-on products remain excluded from standalone recommendations.
+Selection rules (current implementation; Nick's rulings 2026-10-09 S2/X1 and 2026-10-13 S4, superseding the original V1 "no winner" rule):
+
+The [canonical fit-verdict model](../../fit-verdict-model.md) supplies the fit evaluator and technology admission gates. The S4 owner rulings retain the following timing and tie policy for this branch.
+
+1. filter safety, lifecycle, verified technology, strict suitability, role, availability, and critical protocol gaps; only `ideal` standalone products compete;
+2. **claim trust** (`product_bondbuilder_specs.claim_trust_level`: high > medium > low > none) — only the most trusted ideal level forms the shortlist; nothing lifts a less trusted product above it;
+3. **timing** — the Feinschliff answer `bondbuilderTiming` (`before_wash` | `after_wash` | `no_preference`, carried in `Stage3SelectionProfile.bondbuilderTiming`) narrows the most trusted level to the products used that way (`application_mode`: `pre_shampoo` → before, `post_wash_leave_in` → after, `bedtime_leave_in` → overnight, which matches neither answer). If none matches, the whole most-trusted level stays and the pick carries `bondbuilder.stage3.timing_unmet.<requested>.<actual>`;
+4. **budget** (capped only, `trust_pair` mode) — cheaper first only inside one (verdict, trust, usage) run; the default is the best affordable product next to the best product overall;
+5. **Cheapest first** within an equal trust/timing tie (unknown prices last), then catalogue order, then product id (`compareBondbuilderTieOrder`, `bondbuilder.stage3.tie_ordered`; e.g. „Vor dem Waschen" → OLAPLEX No.3PLUS before Epres). The other tied products stay visible as equal options and the `bondbuilder.equal_shortlist` caution stays;
+6. if no ideal product survives, return `Empfehlung wird geprüft`; never promote supportive, mismatch, or unknown as the confident standalone recommendation.
+
+Nick retired the K18 house default on 2026-10-13, superseding Q1's catalogue-first tail. Lena, with damaged hair and no timing preference: OLAPLEX No.3PLUS (€34) is picked; Epres (€48) and K18 (€56.25) are equal options.
+
+Rule ids on the recommendation: `validated_standalone` (single pick, or any explicit user pick — an explicit `select_replacement` never persists `timing_unmet`), `tie_ordered`, `timing_unmet.<requested>.<actual>`. The same order drives the comparison list (`compareBondbuilderTrust`: verdict → trust → timing → price → catalogue order → id; ranked[0] equals the authority pick), the Stage-1 previews, the gateway budget allocation and the scan alternatives through one builder (`budget-role-ranking.ts`); cockpit equal options are exactly the authority's tie set (`bondbuilderShortlist`).
+
+Timing question retained per Nick 2026-10-13 (`bondbuilder_timing`, products module, X1): asked after the wash-frequency question only when Stage 1 put Bondbuilder in the plan, the user does not report an owned Bondbuilder, and she washes wet. Unanswered or „Ist mir egal" = `no_preference`, which uses trust → cheapest first without inventing a timing preference; completed drafts from before the question are normalized to the assumed `no_preference`.
+
+Routine card: no extra line when the answer is met; a planned product carrying `timing_unmet.*` shows one neutral line, e.g. „Nach dem Waschen gerade nicht möglich. Kommt vor dem Waschen ins Haar." (`routine/bondbuilder-timing-note.ts`). Owned products never show it.
 
 Stage 2 may describe a product as pre-shampoo spray, pre-shampoo cream, or post-wash leave-in treatment. Exact “when and how” instructions remain Stage 3.
 

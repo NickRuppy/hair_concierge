@@ -30,6 +30,7 @@ const triggerContext: Stage2TriggerContext = {
 const answers: PersonalPlanRefinementAnswersV1 = {
   currentProductCategories: ["shampoo", "conditioner", "oil"],
   wetWashFrequency: "weekly_2x",
+  bondbuilderTiming: "no_preference",
   scalpIrritationDetail: "mild_sensitive_or_itchy",
   dryShampooBridgePreference: "accept",
   dryShampooVisibleHairColor: "dark",
@@ -47,6 +48,7 @@ const answers: PersonalPlanRefinementAnswersV1 = {
 const completedQuestionIds: Stage2QuestionId[] = [
   "current_product_categories",
   "wet_wash_frequency",
+  "bondbuilder_timing",
   "scalp_irritation_detail",
   "dry_shampoo_bridge_preference",
   "dry_shampoo_visible_hair_color",

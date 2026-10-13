@@ -35,6 +35,12 @@ export const DRY_SHAMPOO_BRIDGE_PREFERENCES = ["accept", "decline"] as const
 export type DryShampooBridgePreference = (typeof DRY_SHAMPOO_BRIDGE_PREFERENCES)[number]
 export const DRY_SHAMPOO_VISIBLE_HAIR_COLORS = ["light_blonde", "brown", "dark"] as const
 export type DryShampooVisibleHairColor = (typeof DRY_SHAMPOO_VISIBLE_HAIR_COLORS)[number]
+/**
+ * When the user wants the Bondbuilder step: before the wash (rinse-out), after the
+ * wash (leave-in), or either. States the user's answer, not a product property.
+ */
+export const BONDBUILDER_TIMINGS = ["before_wash", "after_wash", "no_preference"] as const
+export type BondbuilderTiming = (typeof BONDBUILDER_TIMINGS)[number]
 export const OIL_PURPOSES = ["prewash_lengths", "damp_leave_on", "dry_finish", "scalp"] as const
 export type OilPurpose = (typeof OIL_PURPOSES)[number]
 export const DRYING_ROUTES = [
@@ -86,6 +92,7 @@ export type HeatEventAnswer = {
 export type PersonalPlanRefinementAnswersV1 = {
   currentProductCategories?: Stage2ProductCategory[]
   wetWashFrequency?: WetWashFrequency
+  bondbuilderTiming?: BondbuilderTiming
   scalpIrritationDetail?: ScalpIrritationDetail
   dryShampooBridgePreference?: DryShampooBridgePreference
   dryShampooVisibleHairColor?: DryShampooVisibleHairColor
@@ -116,6 +123,7 @@ export type PersonalPlanRefinementAnswersV1 = {
 export type Stage2StaticQuestionId =
   | "current_product_categories"
   | "wet_wash_frequency"
+  | "bondbuilder_timing"
   | "scalp_irritation_detail"
   | "dry_shampoo_bridge_preference"
   | "dry_shampoo_visible_hair_color"

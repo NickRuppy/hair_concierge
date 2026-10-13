@@ -437,7 +437,8 @@ function completedRefinementDraft(): Stage2PersistedDraft {
     preparedArtifactSourceId: "artifact-a",
     baseInputSnapshot: null,
     pathVersion: "v1",
-    triggerContext: {} as never,
+    // A real trigger context: every draft read is normalized for late-added questions (S4).
+    triggerContext: labTriggerContext(),
     answers: { washFrequency: "weekly_2x" } as never,
     completedQuestionIds: ["wash_frequency"] as never,
     answerProvenance: {} as never,

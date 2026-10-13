@@ -16,7 +16,10 @@ import {
   applyUserAnswerProvenance,
   userAnsweredQuestionIds,
 } from "@/lib/personal-plan/refinement/answer-provenance"
-import { resolveAssumedAnswers } from "@/lib/personal-plan/refinement/assumed-defaults"
+import {
+  normalizeLateAddedQuestions,
+  resolveAssumedAnswers,
+} from "@/lib/personal-plan/refinement/assumed-defaults"
 import { carryOverStage2NightAnswer } from "@/lib/personal-plan/refinement/night-wear-carry-over"
 import {
   STAGE2_MODULES,
@@ -197,7 +200,7 @@ export type Stage2RefinementSnapshotBuilder = (input: {
  * service works on this form, so the next save persists the carried-over answer.
  */
 export function interpretStage2PersistedDraft(draft: Stage2PersistedDraft): Stage2PersistedDraft {
-  return carryOverStage2NightAnswer(draft.triggerContext, draft)
+  return normalizeLateAddedQuestions(carryOverStage2NightAnswer(draft.triggerContext, draft))
 }
 
 function assertWithinPayloadLimit(next: Stage2RefinementSession): void {
@@ -234,8 +237,10 @@ export async function loadExistingStage2RefinementSession(input: {
   userId: string
   persistence: Stage2RefinementResumeReader
 }): Promise<Stage2RefinementSession | null> {
-  const draft = await input.persistence.loadExisting(input.userId)
-  if (!draft) return null
+  const loaded = await input.persistence.loadExisting(input.userId)
+  if (!loaded) return null
+  // Idempotent with the Supabase mapper; keeps any persistence implementation honest (S4).
+  const draft = interpretStage2PersistedDraft(loaded)
   if (draft.status === "stale") {
     throw new Stage2RefinementError(
       "temporarily_unavailable",
@@ -376,7 +381,8 @@ export function createStage2RefinementService(input: {
   }
 
   async function loadDraft(): Promise<Stage2PersistedDraft> {
-    const draft = await input.persistence.loadOrCreate(input.userId)
+    // Idempotent with the Supabase mapper; keeps any persistence implementation honest (S4).
+    const draft = interpretStage2PersistedDraft(await input.persistence.loadOrCreate(input.userId))
     // A stale row is historical only. The persistence boundary must create a fresh draft.
     if (draft.status === "stale") {
       throw new Stage2RefinementError(

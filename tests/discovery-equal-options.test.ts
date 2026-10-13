@@ -138,3 +138,81 @@ test("only recommendable, active, verified products are offered", () => {
     ["ok"],
   )
 })
+
+/* ------------------------------------------ S4 G1: options = the authority's tie set only */
+
+function production(timing: "before_wash" | "after_wash" | "no_preference") {
+  const row = (
+    id: string,
+    name: string,
+    trust: "high" | "medium" | "low",
+    applicationMode: string,
+    priceEur: number,
+  ) =>
+    candidate(id, name, {
+      catalogSortOrder: 0,
+      priceEur,
+      currency: "EUR",
+      spec: {
+        applicationMode,
+        treatmentMode: applicationMode === "pre_shampoo" ? "rinse_out" : "leave_in",
+        productFormat: "treatment",
+        usageProtocol: "course",
+        relationship: "standalone",
+        claimTrustLevel: trust,
+      },
+    })
+  return {
+    ...base,
+    selectionProfile: { ...UNKNOWN_SELECTION_PROFILE, bondbuilderTiming: timing },
+    candidates: [
+      row("olaplex", "OLAPLEX No.3PLUS", "high", "pre_shampoo", 34),
+      row("epres", "Epres Bond Repair", "high", "pre_shampoo", 48),
+      row(K18, "K18 Leave-In", "high", "post_wash_leave_in", 56.25),
+      row("elvital", "Elvital Bond Repair", "medium", "pre_shampoo", 8.95),
+      row("redken", "Redken Acidic Bonding", "medium", "pre_shampoo", 25.5),
+      row("kerastase", "Kérastase Première", "medium", "pre_shampoo", 56.29),
+      row("ogx", "OGX Sealing Serum", "low", "bedtime_leave_in", 18.68),
+      row("aveda", "Aveda Botanical Repair", "low", "pre_shampoo", 52),
+    ],
+  }
+}
+
+test("S4 G1: the cheapest pick offers Epres and K18, never the lower trust levels", () => {
+  assert.deepEqual(
+    discoveryEqualOptions({ ...production("no_preference"), selectedProductId: "olaplex" }).map(
+      (option) => option.productId,
+    ),
+    ["epres", K18],
+  )
+})
+
+test("S4: before the wash the pick is OLAPLEX and Epres is the one equal option", () => {
+  assert.deepEqual(
+    discoveryEqualOptions({ ...production("before_wash"), selectedProductId: "olaplex" }).map(
+      (option) => option.productId,
+    ),
+    ["epres"],
+  )
+})
+
+test("S4: after the wash there is no tie and no option", () => {
+  assert.deepEqual(discoveryEqualOptions(production("after_wash")), [])
+})
+
+test("S4-03: a capped cockpit pick outside the tie set (Elvital) gets no equal options", () => {
+  for (const timing of ["no_preference", "before_wash", "after_wash"] as const) {
+    assert.deepEqual(
+      discoveryEqualOptions({ ...production(timing), selectedProductId: "elvital" }),
+      [],
+      timing,
+    )
+  }
+  // A budget pick that IS in the tie set (OLAPLEX under „Ist mir egal") still lists the others.
+  assert.deepEqual(
+    discoveryEqualOptions({ ...production("no_preference"), selectedProductId: "olaplex" }).map(
+      (option) => option.productId,
+    ),
+    ["epres", K18],
+  )
+})

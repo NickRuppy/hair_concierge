@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
+import { interpretStage2PersistedDraft } from "./stage2-refinement-service"
 import { deriveStage2TriggerContext } from "@/lib/personal-plan/refinement/stage1-adapter"
 import { STAGE2_MODULES, type Stage2ModuleProjections } from "@/lib/personal-plan/refinement/types"
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
@@ -306,7 +307,10 @@ export function mapDraft(
     initial.prepared_artifact_source_id ?? initial.stage1_source_lead_id ?? null
   if (!stage1SourceId) throw new Error("stage2_initial_source_missing")
 
-  return {
+  // Every persisted-draft read goes through here (loadOrCreate, loadExisting, reopen,
+  // optional entry, direct acceptance): a draft that passed a late-added question is
+  // read with its assumption (S4, `normalizeLateAddedQuestions`).
+  return interpretStage2PersistedDraft({
     id: String(row.id),
     personalPlanId: String(row.personal_plan_id),
     baseInitialNeedVersionId: String(row.base_initial_need_version_id),
@@ -330,5 +334,5 @@ export function mapDraft(
         : null,
     directAcceptanceOwned:
       typeof row.direct_acceptance_owned === "boolean" ? row.direct_acceptance_owned : null,
-  }
+  })
 }

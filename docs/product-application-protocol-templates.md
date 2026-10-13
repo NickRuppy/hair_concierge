@@ -1298,3 +1298,7 @@ pre-wash and heat-claim "musts" were already enforced by the compiler).
   dryer brush / hot-air styler and always carries heat protection. A plain blow-dry belongs
   to the wash-family days and does not by itself require a heat protectant. Heat protection
   stays a separate, sourced capability (R-E) and never decides an Oil's day set.
+
+### Bondbuilder damage-branched cadence (S4, Nick 2026-10-09 B1/D-b)
+
+`product_application_protocols.cadence` may carry `kind: "damage_branched"` for a Bondbuilder whose manufacturer states the schedule per damage level (first product: Aveda Botanical Repair, protocol `f8d9cf57`). Shape: `branches[]` of `{ structural_levels, copy_de, maintenance, source_ids }` plus `source_ids` and `binding_ruling`; a level appears in at most one branch, and unbound levels (`none`, `low`) fall back to the generic line with a visible gap. It is produced only by `projectBondbuilderDamageBranchedCadence` from the frozen research profile plus a reviewed binding file (`data/research/bondbuilder-inci/v1.0/s4-aveda-cadence-binding/`); `projectBondbuilderCadence` still drops branches without a binding. The routine resolves the branch from the refined snapshot's structural damage level.

@@ -19,6 +19,12 @@ export type BudgetCandidate = {
    * carry one, a swap or exception never trades a more trusted product for a less trusted one.
    */
   trustRank?: number
+  /**
+   * Optional usage rank (S4 Bondbuilder timing): 0 = used the way the person asked for, 1 = not.
+   * Omitted for „Ist mir egal". The cap's cheaper-first sort never mixes the two, and an uncapped
+   * price-mix swap never trades a matching product for a non-matching one.
+   */
+  usageRank?: number
 }
 
 export type BudgetRoleInput = {
@@ -169,6 +175,7 @@ function fitComparable(y: BudgetCandidate, d: BudgetCandidate): boolean {
   return (
     verdictRank(y) <= verdictRank(d) &&
     (y.trustRank === undefined || d.trustRank === undefined || y.trustRank <= d.trustRank) &&
+    (y.usageRank === undefined || d.usageRank === undefined || y.usageRank <= d.usageRank) &&
     y.cautionCount <= d.cautionCount &&
     sharedNeedDimensions(y, d).every((id) => needDistance(y, id)! <= needDistance(d, id)!)
   )
@@ -249,8 +256,9 @@ export function orderStandaloneAlternatives(
 /**
  * Under a cap, equally trusted products of the same verdict are ordered cheaper first (Nick,
  * 2026-10-09: Olaplex and K18 share the top trust level, so a budget shows Olaplex); unpriced ones
- * close their run. Only consecutive runs move, so verdict and trust order stay intact. Without a
- * cap the ranked order (K18 house default) is kept.
+ * close their run. Only consecutive runs move, so verdict, trust and usage (S4 timing) order stay
+ * intact — a run is one (verdict, trust, usage) group. Without a
+ * cap the ranked order (trust, timing, then cheapest first) is kept.
  */
 function trustTiesByPrice(ranked: BudgetCandidate[]): BudgetCandidate[] {
   const result: BudgetCandidate[] = []
@@ -274,6 +282,7 @@ function trustTiesByPrice(ranked: BudgetCandidate[]): BudgetCandidate[] {
       head &&
       (candidate.trustRank === undefined ||
         candidate.trustRank !== head.trustRank ||
+        candidate.usageRank !== head.usageRank ||
         candidate.verdict !== head.verdict)
     ) {
       flush()

@@ -2,6 +2,7 @@ import "server-only"
 
 import type { SupabaseClient } from "@supabase/supabase-js"
 
+import { carryLateAddedAssumptions } from "@/lib/personal-plan/refinement/assumed-defaults"
 import {
   getOrderedQuestionIds,
   getStage2ModulePathStates,
@@ -58,9 +59,22 @@ export type OpenPreparedOptionalDraftInput = {
 
 export type Stage2OptionalEntryClient = SupabaseClient
 
+export type CarriedOptionalDraftSave = {
+  userId: string
+  draft: Stage2PersistedDraft
+  expectedRevision: number
+  answers: PersonalPlanRefinementAnswersV1
+  completedQuestionIds: Stage2QuestionId[]
+  answerProvenance: Stage2AnswerProvenance
+}
+
 export type Stage2OptionalEntryDeps = {
   loadContext: (userId: string) => Promise<OptionalStage2Context>
   openPreparedDraft: (input: OpenPreparedOptionalDraftInput) => Promise<Stage2PersistedDraft>
+  /** Persists late-added assumptions carried from the parent (S4-01); one CAS save. */
+  saveDraft?: (
+    input: CarriedOptionalDraftSave,
+  ) => Promise<{ outcome: "saved"; revision: number } | { outcome: "revision_conflict" }>
   /**
    * The read-only Tool pre-fill context (`Stage2PrefillCare`), so `?refine=tools` opens with the
    * same starting values as a resumed Feinschliff. Wired only while the Tools rollout is on.
@@ -115,7 +129,7 @@ async function openDraft(
   }
 
   if (context.currentDraft) {
-    return deps.openPreparedDraft({
+    const opened = await deps.openPreparedDraft({
       userId,
       module,
       personalPlanId: context.personalPlanId,
@@ -125,6 +139,10 @@ async function openDraft(
       context,
       seed: skippedSeed(),
     })
+    // An existing successor opened before S4-01 may still miss the carried assumption.
+    return context.latestCompleteDraft
+      ? withCarriedAssumptions(deps, userId, opened, context.latestCompleteDraft)
+      : opened
   }
 
   const parentDraft = context.latestCompleteDraft
@@ -132,7 +150,7 @@ async function openDraft(
     throw new Stage2OptionalEntryError("stage2_optional_parent_unavailable")
   }
 
-  return deps.openPreparedDraft({
+  const opened = await deps.openPreparedDraft({
     userId,
     module,
     personalPlanId: context.personalPlanId,
@@ -142,6 +160,36 @@ async function openDraft(
     context,
     seed: skippedSeed(),
   })
+  return withCarriedAssumptions(deps, userId, opened, parentDraft)
+}
+
+/**
+ * S4-01: the RPC clones the STORED complete parent; carry its read-time late-added assumptions
+ * (one CAS save) so an optional edit of another module never reopens the finished products
+ * module. No-op unless the draft is an in-progress clone missing them.
+ */
+async function withCarriedAssumptions(
+  deps: Stage2OptionalEntryDeps,
+  userId: string,
+  opened: Stage2PersistedDraft,
+  parentDraft: Stage2PersistedDraft,
+): Promise<Stage2PersistedDraft> {
+  const carried =
+    opened.status === "in_progress" && opened.id !== parentDraft.id
+      ? carryLateAddedAssumptions(parentDraft, opened)
+      : null
+  if (!carried) return opened
+  if (!deps.saveDraft) throw new Stage2OptionalEntryError("stage2_optional_save_unavailable")
+  const saved = await deps.saveDraft({
+    userId,
+    draft: opened,
+    expectedRevision: opened.revision,
+    answers: carried.answers,
+    completedQuestionIds: carried.completedQuestionIds,
+    answerProvenance: carried.answerProvenance,
+  })
+  if (saved.outcome !== "saved") throw new Stage2OptionalEntryError("revision_conflict")
+  return { ...carried, revision: saved.revision }
 }
 
 function defaultDeps(
@@ -155,6 +203,7 @@ function defaultDeps(
     ...(options.toolsEnabled
       ? { loadPrefillCare: (userId: string) => loadStage2PrefillCare(client, userId) }
       : {}),
+    saveDraft: (request) => saveCarriedDraftWithRpc(client, request),
   }
 }
 
@@ -277,4 +326,26 @@ async function openPreparedDraftWithRpc(
       input_snapshot: input.context.initial.input_snapshot as JsonValue,
     },
   )
+}
+
+async function saveCarriedDraftWithRpc(
+  client: Stage2OptionalEntryClient,
+  input: CarriedOptionalDraftSave,
+): Promise<{ outcome: "saved"; revision: number } | { outcome: "revision_conflict" }> {
+  const { data, error } = await client.rpc("personal_plan_save_refinement_draft", {
+    p_user_id: input.userId,
+    p_draft_id: input.draft.id,
+    p_expected_revision: input.expectedRevision,
+    p_answers: input.answers,
+    p_completed_question_ids: input.completedQuestionIds,
+    p_answer_provenance: input.answerProvenance,
+  })
+  if (error || !data || typeof data !== "object") {
+    throw new Stage2OptionalEntryError("stage2_optional_save_failed")
+  }
+  const result = data as { outcome?: unknown; revision?: unknown }
+  if (result.outcome === "revision_conflict") return { outcome: "revision_conflict" }
+  if (result.outcome !== "saved")
+    throw new Stage2OptionalEntryError("stage2_optional_save_rejected")
+  return { outcome: "saved", revision: Number(result.revision) }
 }

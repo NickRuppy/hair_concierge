@@ -140,6 +140,33 @@ test("an assumed write never replaces a user answer either", async (t) => {
   })
 })
 
+test("an assumed Bondbuilder timing never replaces her stored answer", async (t) => {
+  const pg = await migratedPersonalPlanDatabase(t)
+  await insertProfile(pg, USER)
+  await saveUserFacts(pg, {
+    userId: USER,
+    domain: "care_habits",
+    patch: { bondbuilderTiming: "after_wash" },
+    provenance: { ...FEINSCHLIFF_PROVENANCE, fields: { bondbuilderTiming: "user" } },
+  })
+
+  await saveUserFacts(pg, {
+    userId: USER,
+    domain: "care_habits",
+    patch: { bondbuilderTiming: "no_preference" },
+    provenance: { ...FEINSCHLIFF_PROVENANCE, fields: { bondbuilderTiming: "assumed" } },
+  })
+
+  const row = await readHairProfile(pg, USER)
+  assert.ok(row)
+  assert.equal((row.care_habits as Record<string, unknown>).bondbuilderTiming, "after_wash")
+  assert.equal(
+    (row.facts_provenance as Record<string, { fields: Record<string, string> }>).care_habits.fields
+      .bondbuilderTiming,
+    "user",
+  )
+})
+
 test("a stored answer without a provenance entry counts as real", async (t) => {
   const pg = await migratedPersonalPlanDatabase(t)
   await insertProfile(pg, USER)

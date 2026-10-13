@@ -321,3 +321,36 @@ test("rollout off: a NEW Diffusor event save must still carry its protection ans
   })
   assert.equal(saved.path.completedQuestionIds.includes("heat:diffuser_airflow_shaping"), true)
 })
+test("saves and edits a completed bondbuilder_timing answer", () => {
+  const bondbuilderContext = {
+    ...triggerContext,
+    relevantCategories: ["shampoo" as const, "bondbuilder" as const],
+  }
+  let session = createStage2RefinementSession({
+    pathVersion: "stage2-v1",
+    triggerContext: bondbuilderContext,
+    answers: { currentProductCategories: [], wetWashFrequency: "weekly_1x" },
+    completedQuestionIds: ["current_product_categories", "wet_wash_frequency"],
+  })
+  assert.equal(session.path.firstUnresolvedQuestionId, "bondbuilder_timing")
+  assert.throws(
+    () =>
+      saveStage2SessionAnswer(session, { questionId: "bondbuilder_timing", answer: "overnight" }),
+    /invalid/i,
+  )
+
+  session = saveStage2SessionAnswer(session, {
+    questionId: "bondbuilder_timing",
+    answer: "before_wash",
+  })
+  assert.equal(session.answers.bondbuilderTiming, "before_wash")
+  assert.ok(session.completedQuestionIds.includes("bondbuilder_timing"))
+  assert.equal(session.path.firstUnresolvedQuestionId, "towel_handling")
+
+  const edited = saveStage2SessionAnswer(session, {
+    questionId: "bondbuilder_timing",
+    answer: "no_preference",
+  })
+  assert.equal(edited.answers.bondbuilderTiming, "no_preference")
+  assert.equal(edited.revision, session.revision + 1)
+})

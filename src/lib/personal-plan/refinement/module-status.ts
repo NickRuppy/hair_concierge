@@ -1,5 +1,5 @@
 import { userAnsweredQuestionIds } from "./answer-provenance"
-import { resolveAssumedAnswers } from "./assumed-defaults"
+import { resolveAssumedAnswers, settleLateAddedAssumptions } from "./assumed-defaults"
 import { carryOverStage2NightAnswer } from "./night-wear-carry-over"
 import { getStage2ModulePathStates } from "./question-path"
 import {
@@ -50,7 +50,10 @@ export function stage2ModuleStates(
     answers: input.answers,
     userAnsweredQuestionIds: userQuestionIds,
   })
-  return getStage2ModulePathStates(resolution.orderedQuestionIds, userQuestionIds)
+  return settleLateAddedAssumptions(
+    getStage2ModulePathStates(resolution.orderedQuestionIds, userQuestionIds),
+    input,
+  )
 }
 
 /**

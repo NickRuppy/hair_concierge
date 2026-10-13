@@ -756,3 +756,137 @@ test("Diffusor rule: other sources keep their protection requirement and ordinar
   }
   assert.equal(isStage2QuestionAnswerValid("heat:ordinary_blow_dry", ordinary, toolsOn), false)
 })
+/* ── S4: Bondbuilder timing question ─────────────────────────────────────── */
+
+const bondbuilderContext = {
+  ...neutralContext,
+  relevantCategories: ["shampoo" as const, "bondbuilder" as const],
+}
+
+test("bondbuilder_timing follows wet_wash_frequency when the Stage-1 need is basis or optional", () => {
+  const path = resolveStage2Path({
+    triggerContext: { ...bondbuilderContext, hasReportedIrritatedScalp: true },
+    answers: { currentProductCategories: ["oil"], wetWashFrequency: "weekly_2x" },
+    completedQuestionIds: [],
+  })
+  assert.deepEqual(path.orderedQuestionIds.slice(0, 5), [
+    "current_product_categories",
+    "wet_wash_frequency",
+    "bondbuilder_timing",
+    "scalp_irritation_detail",
+    "oil_purposes",
+  ])
+  // Unanswered wash frequency keeps the question on the path (it is not does_not_wash yet).
+  const early = resolveStage2Path({
+    triggerContext: bondbuilderContext,
+    answers: {},
+    completedQuestionIds: [],
+  })
+  assert.equal(early.orderedQuestionIds[2], "bondbuilder_timing")
+})
+
+test("bondbuilder_timing is absent without a need, for owners, and for does_not_wash", () => {
+  const withoutNeed = resolveStage2Path({
+    triggerContext: neutralContext,
+    answers: { currentProductCategories: [], wetWashFrequency: "weekly_2x" },
+    completedQuestionIds: [],
+  })
+  assert.equal(withoutNeed.orderedQuestionIds.includes("bondbuilder_timing"), false)
+
+  const owner = resolveStage2Path({
+    triggerContext: bondbuilderContext,
+    answers: { currentProductCategories: ["bondbuilder"], wetWashFrequency: "weekly_2x" },
+    completedQuestionIds: [],
+  })
+  assert.equal(owner.orderedQuestionIds.includes("bondbuilder_timing"), false)
+
+  const noWash = resolveStage2Path({
+    triggerContext: bondbuilderContext,
+    answers: { currentProductCategories: [], wetWashFrequency: "does_not_wash" },
+    completedQuestionIds: [],
+  })
+  assert.equal(noWash.orderedQuestionIds.includes("bondbuilder_timing"), false)
+})
+
+test("bondbuilder_timing is pruned when the owner answer or does_not_wash arrives later", () => {
+  const answered = {
+    currentProductCategories: [],
+    wetWashFrequency: "weekly_2x" as const,
+    bondbuilderTiming: "before_wash" as const,
+  }
+  const kept = pruneStage2Answers({
+    triggerContext: bondbuilderContext,
+    answers: answered,
+    completedQuestionIds: [
+      "current_product_categories",
+      "wet_wash_frequency",
+      "bondbuilder_timing",
+    ],
+  })
+  assert.equal(kept.answers.bondbuilderTiming, "before_wash")
+  assert.deepEqual(kept.prunedAnswerKeys, [])
+
+  const owner = pruneStage2Answers({
+    triggerContext: bondbuilderContext,
+    answers: { ...answered, currentProductCategories: ["bondbuilder"] },
+    completedQuestionIds: [
+      "current_product_categories",
+      "wet_wash_frequency",
+      "bondbuilder_timing",
+    ],
+  })
+  assert.equal(owner.answers.bondbuilderTiming, undefined)
+  assert.deepEqual(owner.prunedAnswerKeys, ["bondbuilderTiming"])
+  assert.deepEqual(owner.completedQuestionIds, ["current_product_categories", "wet_wash_frequency"])
+
+  const noWash = pruneStage2Answers({
+    triggerContext: bondbuilderContext,
+    answers: { ...answered, wetWashFrequency: "does_not_wash" },
+    completedQuestionIds: [
+      "current_product_categories",
+      "wet_wash_frequency",
+      "bondbuilder_timing",
+    ],
+  })
+  assert.equal(noWash.answers.bondbuilderTiming, undefined)
+  assert.deepEqual(noWash.prunedAnswerKeys, ["bondbuilderTiming"])
+
+  const needGone = pruneStage2Answers({
+    triggerContext: neutralContext,
+    answers: answered,
+    completedQuestionIds: ["bondbuilder_timing"],
+  })
+  assert.equal(needGone.answers.bondbuilderTiming, undefined)
+  assert.deepEqual(needGone.completedQuestionIds, [])
+})
+
+test("bondbuilder_timing accepts only the three answer values", () => {
+  for (const bondbuilderTiming of ["before_wash", "after_wash", "no_preference"] as const) {
+    const path = resolveStage2Path({
+      triggerContext: bondbuilderContext,
+      answers: { currentProductCategories: [], wetWashFrequency: "weekly_2x", bondbuilderTiming },
+      completedQuestionIds: [
+        "current_product_categories",
+        "wet_wash_frequency",
+        "bondbuilder_timing",
+      ],
+    })
+    assert.ok(path.completedQuestionIds.includes("bondbuilder_timing"), bondbuilderTiming)
+  }
+  for (const invalid of ["overnight", "", null, 1]) {
+    const path = resolveStage2Path({
+      triggerContext: bondbuilderContext,
+      answers: {
+        currentProductCategories: [],
+        wetWashFrequency: "weekly_2x",
+        bondbuilderTiming: invalid as never,
+      },
+      completedQuestionIds: [
+        "current_product_categories",
+        "wet_wash_frequency",
+        "bondbuilder_timing",
+      ],
+    })
+    assert.equal(path.firstUnresolvedQuestionId, "bondbuilder_timing", String(invalid))
+  }
+})

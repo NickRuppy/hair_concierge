@@ -107,7 +107,7 @@ export type DiscoveryIdealStep = {
   depth?: DiscoveryStepDepth
   /**
    * Products the authority rates exactly as well as the preview's pick, when it resolved a
-   * tie with a house default (Bondbuilder → K18) — swap options for the call. Never hashed:
+   * tie by price (Bondbuilder → cheapest first) — swap options for the call. Never hashed:
    * nothing prints until a swap names one. See `equal-options.ts`.
    */
   equalOptions?: DiscoveryEqualOption[]

@@ -18,6 +18,7 @@ import {
 } from "../src/components/personal-plan-refinement/refinement-question"
 import {
   ADDITIONAL_HEAT_TOOL_OPTIONS,
+  BONDBUILDER_TIMING_OPTIONS,
   DRYING_ROUTE_OPTIONS,
   NIGHT_PROTECTION_OPTIONS,
   OIL_PURPOSE_OPTIONS,
@@ -42,6 +43,7 @@ import {
 } from "../src/lib/personal-plan/refinement/session"
 import {
   ADDITIONAL_HEAT_TOOLS,
+  BONDBUILDER_TIMINGS,
   DRYING_ROUTES,
   OIL_PURPOSES,
   STAGE2_PRODUCT_CATEGORIES,
@@ -1429,4 +1431,48 @@ test("the module-tools Labs scenario walks the tools module with the rollout on"
   assert.equal(session.path.orderedQuestionIds.includes("tools_overview"), true)
   assert.equal(session.path.firstUnresolvedQuestionId, "tools_overview")
   assert.equal(moduleEntryForScenario("module-tools"), "tools")
+})
+test("renders the Bondbuilder timing question after wash frequency with the approved copy", async () => {
+  assert.deepEqual(
+    BONDBUILDER_TIMING_OPTIONS.map((option) => option.value),
+    [...BONDBUILDER_TIMINGS],
+  )
+  const session = createStage2RefinementSession({
+    pathVersion: "stage2-ui-test",
+    triggerContext: { ...baseTriggerContext, relevantCategories: ["shampoo", "bondbuilder"] },
+    answers: { currentProductCategories: ["shampoo"], wetWashFrequency: "weekly_2x" },
+    completedQuestionIds: ["current_product_categories", "wet_wash_frequency"],
+  })
+  assert.equal(session.path.firstUnresolvedQuestionId, "bondbuilder_timing")
+
+  const render = (localAnswer: unknown) =>
+    renderToStaticMarkup(
+      <RefinementQuestion
+        session={session}
+        questionId="bondbuilder_timing"
+        localAnswer={localAnswer}
+        onLocalAnswerChange={() => {}}
+        status="idle"
+        canGoBack
+        onBack={() => {}}
+        onSubmit={() => {}}
+        onSecondaryExit={() => {}}
+      />,
+    )
+  const html = render(undefined)
+  assert.match(html, /Was du heute benutzt/)
+  assert.match(html, /Wann passt der Extra-Schritt\?/)
+  assert.match(html, /Vor dem Waschen/)
+  assert.match(html, /Einwirken lassen, dann waschen\./)
+  assert.match(html, /Nach dem Waschen/)
+  assert.match(html, /Drin lassen, nicht ausspülen\./)
+  assert.match(html, /Ist mir egal/)
+  assert.doesNotMatch(html, /über Nacht|abends/i, "no overnight option")
+  assert.equal(countOccurrences(html, "aria-pressed="), 3)
+  assert.match(html, /<button[^>]*disabled=""[^>]*>Weiter<\/button>/)
+
+  const chosen = render("no_preference")
+  assert.doesNotMatch(chosen, /<button[^>]*disabled=""[^>]*>Weiter<\/button>/)
+  assert.equal(countOccurrences(chosen, 'aria-pressed="true"'), 1)
+  assert.match(chosen, /aria-pressed="true"[^>]*>(?:(?!aria-pressed)[\s\S])*Ist mir egal/)
 })

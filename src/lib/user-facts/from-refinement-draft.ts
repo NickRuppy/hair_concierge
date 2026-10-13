@@ -311,6 +311,7 @@ function settledFamilyForms(
 export const CARE_HABITS_FIELD_BY_STATIC_QUESTION_ID: Record<Stage2StaticQuestionId, string> = {
   current_product_categories: "currentProductCategories",
   wet_wash_frequency: "wetWashFrequency",
+  bondbuilder_timing: "bondbuilderTiming",
   scalp_irritation_detail: "scalpIrritationDetail",
   dry_shampoo_bridge_preference: "dryShampooBridgePreference",
   dry_shampoo_visible_hair_color: "dryShampooVisibleHairColor",

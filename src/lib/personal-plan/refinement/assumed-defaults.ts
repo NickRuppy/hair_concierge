@@ -22,10 +22,14 @@ import {
 } from "./heat-events"
 import {
   getOrderedQuestionIds,
+  getStage2QuestionModule,
   isStage2QuestionAnswerValid,
   pruneStage2Answers,
+  resolveStage2RefinementContract,
 } from "./question-path"
+import { STAGE2_MODULES } from "./types"
 import type {
+  BondbuilderTiming,
   DryShampooBridgePreference,
   DryShampooVisibleHairColor,
   HeatEventAnswer,
@@ -34,7 +38,11 @@ import type {
   PersonalPlanRefinementAnswersV1,
   ScalpIrritationDetail,
   Stage2AnswerKey,
+  Stage2AnswerProvenance,
   Stage2HeatEventSource,
+  Stage2Module,
+  Stage2ModulePathState,
+  Stage2ModuleProjections,
   Stage2QuestionId,
   Stage2StaticQuestionId,
   Stage2TriggerContext,
@@ -67,6 +75,8 @@ import type {
 
 /** Most common wash rhythm; conservative between daily and weekly cleansing. */
 export const STAGE2_ASSUMED_WET_WASH_FREQUENCY: ProductFrequency & WetWashFrequency = "weekly_2x"
+/** Leaves today's Bondbuilder selection (trust tier, then cheapest first) untouched. */
+export const STAGE2_ASSUMED_BONDBUILDER_TIMING: BondbuilderTiming = "no_preference"
 /** Gentle handling, so no mechanical-exposure signal is assumed. */
 export const STAGE2_ASSUMED_TOWEL_MATERIAL: TowelMaterial = "mikrofaser"
 export const STAGE2_ASSUMED_TOWEL_TECHNIQUE: TowelTechnique = "gentle_press"
@@ -85,6 +95,7 @@ export const STAGE2_ASSUMED_HEAT_PROTECTION_CONSISTENCY: HeatProtectionConsisten
 export const STAGE2_ASSUMPTION_RULE_IDS = [
   "assume:current_product_categories:none",
   "assume:wet_wash_frequency:weekly_2x",
+  "assume:bondbuilder_timing:no_preference",
   "assume:scalp_irritation_detail:normal",
   "assume:dry_shampoo_bridge_preference:decline",
   "assume:dry_shampoo_visible_hair_color:light_blonde",
@@ -143,6 +154,15 @@ export const STAGE2_ASSUMPTION_RULES: readonly Stage2AssumptionRule[] = [
     rationale:
       "Most common wash rhythm and the midpoint between daily and weekly cleansing; unchanged from the direct-acceptance default so the accepted routine stays the plan the user saw.",
     write: ({ answers }) => ({ ...answers, wetWashFrequency: STAGE2_ASSUMED_WET_WASH_FREQUENCY }),
+  },
+  {
+    ruleId: "assume:bondbuilder_timing:no_preference",
+    questionId: "bondbuilder_timing",
+    condition:
+      "Stage-1 Bondbuilder need (basis or optional), the user does not report an owned Bondbuilder, and she washes wet",
+    rationale:
+      "`no_preference` is the only value that leaves today's selection untouched (trust tier, then cheapest first); assuming a timing would silently swap the product the Idealplan showed.",
+    write: ({ answers }) => ({ ...answers, bondbuilderTiming: STAGE2_ASSUMED_BONDBUILDER_TIMING }),
   },
   {
     ruleId: "assume:scalp_irritation_detail:normal",
@@ -433,6 +453,185 @@ function findAssumptionRule(input: Stage2AssumptionInput): Stage2AssumptionRule 
   return rule
 }
 
+/* ── questions added after a draft already passed their point ────────────── */
+
+/**
+ * Canonical questions added to an existing module after members had already finished it (S4:
+ * `bondbuilder_timing`, 2026-10). A draft that passed such a question is never reopened for
+ * it: the question is answered by its assumption rule instead (Nick, S4 Q2 — „Ist mir egal“,
+ * she keeps today's product and can change it via „Bearbeiten“).
+ */
+export const STAGE2_LATE_ADDED_QUESTION_IDS: readonly Stage2StaticQuestionId[] = [
+  "bondbuilder_timing",
+]
+
+function isLateAddedQuestionId(questionId: Stage2QuestionId): boolean {
+  return (STAGE2_LATE_ADDED_QUESTION_IDS as readonly Stage2QuestionId[]).includes(questionId)
+}
+
+export type Stage2LateAddedDraftState = {
+  status: "in_progress" | "complete" | "stale"
+  triggerContext: Stage2TriggerContext
+  answers: PersonalPlanRefinementAnswersV1
+  completedQuestionIds: Stage2QuestionId[]
+  answerProvenance: Stage2AnswerProvenance
+  moduleProjections?: Stage2ModuleProjections
+  /** `true`: direct acceptance wrote this draft and already answered every question for her. */
+  directAcceptanceOwned?: boolean | null
+}
+
+/**
+ * Read-time normalization for every persisted draft that rebuilds a refinement contract.
+ *
+ * A draft has passed a module when it is `complete` or owned by direct acceptance (every
+ * module), or `in_progress` with that module already projected (`module_projections`). When a passed module's only unresolved questions are late-added ones, each is answered by its assumption rule, marked
+ * `assumed` and appended to `completedQuestionIds` in path order — so `complete` drafts stay
+ * loadable (`createStage2RefinementSession` refuses an incomplete complete draft) and the
+ * module stays finished (`settleLateAddedAssumptions`). Every other draft is returned as is
+ * (same reference): before the point she simply meets the question in order. Idempotent; the
+ * stored row is never rewritten here.
+ */
+export function normalizeLateAddedQuestions<T extends Stage2LateAddedDraftState>(draft: T): T {
+  const passedModules: readonly Stage2Module[] =
+    draft.status === "complete" || (draft.status === "in_progress" && draft.directAcceptanceOwned)
+      ? STAGE2_MODULES
+      : draft.status === "in_progress"
+        ? STAGE2_MODULES.filter((stage2Module) => draft.moduleProjections?.[stage2Module])
+        : []
+  if (passedModules.length === 0) return draft
+
+  const { path } = resolveStage2RefinementContract(draft)
+  // Path growth in another module (e.g. the newer Tools module) must not reopen products.
+  // Fill only a passed module whose own remaining questions are all late-added ones.
+  const unresolved = passedModules.flatMap((stage2Module) => {
+    const open = path.orderedQuestionIds.filter(
+      (questionId) =>
+        !path.completedQuestionIds.includes(questionId) &&
+        getStage2QuestionModule(questionId) === stage2Module,
+    )
+    return open.every(isLateAddedQuestionId) ? open : []
+  })
+  if (unresolved.length === 0) return draft
+
+  let answers = draft.answers
+  for (const questionId of unresolved) {
+    answers = findAssumptionRule({
+      questionId,
+      answers,
+      triggerContext: draft.triggerContext,
+    }).write({
+      questionId,
+      answers,
+      triggerContext: draft.triggerContext,
+    })
+  }
+  const completed = new Set([...path.completedQuestionIds, ...unresolved])
+  const normalized = resolveStage2RefinementContract({
+    triggerContext: draft.triggerContext,
+    answers,
+    completedQuestionIds: path.orderedQuestionIds.filter((questionId) => completed.has(questionId)),
+  })
+  if (unresolved.some((questionId) => !normalized.path.completedQuestionIds.includes(questionId))) {
+    return draft
+  }
+  const answerProvenance = { ...draft.answerProvenance }
+  for (const questionId of unresolved) answerProvenance[questionId] = "assumed"
+  return {
+    ...draft,
+    answers,
+    completedQuestionIds: normalized.path.completedQuestionIds,
+    answerProvenance,
+  }
+}
+
+/**
+ * Carries a parent's late-added assumptions into its optional-edit successor (S4-01).
+ *
+ * `personal_plan_open_optional_refinement_v1` clones the STORED complete parent into a new
+ * `in_progress` draft with empty projections. The parent's late-added answers exist only in its
+ * read-time view (`normalizeLateAddedQuestions`), and the successor has no lineage that would
+ * let a later read re-derive them — so its products module would reopen. Given the normalized
+ * parent and the fresh successor, this returns the successor with every late-added question the
+ * parent holds as `assumed` answered by the same assumption rule (provenance `assumed`, path
+ * order), ready to be saved once. Returns null when there is nothing to carry or the successor
+ * is not a clone of this parent (it misses one of the parent's other completions).
+ */
+export function carryLateAddedAssumptions<T extends Stage2LateAddedDraftState>(
+  parent: Stage2LateAddedDraftState,
+  successor: T,
+): T | null {
+  const carried = parent.completedQuestionIds.filter(
+    (questionId) =>
+      isLateAddedQuestionId(questionId) &&
+      parent.answerProvenance[questionId] === "assumed" &&
+      !successor.completedQuestionIds.includes(questionId),
+  )
+  if (carried.length === 0) return null
+  const isClone = parent.completedQuestionIds
+    .filter((questionId) => !carried.includes(questionId))
+    .every((questionId) => successor.completedQuestionIds.includes(questionId))
+  if (!isClone) return null
+
+  let answers = successor.answers
+  for (const questionId of carried) {
+    answers = findAssumptionRule({
+      questionId,
+      answers,
+      triggerContext: successor.triggerContext,
+    }).write({
+      questionId,
+      answers,
+      triggerContext: successor.triggerContext,
+    })
+  }
+  const { path } = resolveStage2RefinementContract({
+    triggerContext: successor.triggerContext,
+    answers,
+    completedQuestionIds: [...successor.completedQuestionIds, ...carried],
+  })
+  if (carried.some((questionId) => !path.completedQuestionIds.includes(questionId))) return null
+  const answerProvenance = { ...successor.answerProvenance }
+  for (const questionId of carried) answerProvenance[questionId] = "assumed"
+  return {
+    ...successor,
+    answers,
+    completedQuestionIds: path.completedQuestionIds,
+    answerProvenance,
+  }
+}
+
+/**
+ * Module status companion of `normalizeLateAddedQuestions`: a module whose ONLY open questions
+ * are late-added ones answered by their assumption counts as finished — the member finished it
+ * before the question existed. A module that is open for any other reason keeps every open
+ * question (a direct-acceptance draft still walks all of them), and an unanswered late-added
+ * question stays open.
+ */
+export function settleLateAddedAssumptions(
+  states: Record<Stage2Module, Stage2ModulePathState>,
+  input: {
+    completedQuestionIds: readonly Stage2QuestionId[]
+    answerProvenance: Stage2AnswerProvenance
+  },
+): Record<Stage2Module, Stage2ModulePathState> {
+  const isSettled = (questionId: Stage2QuestionId) =>
+    isLateAddedQuestionId(questionId) &&
+    input.completedQuestionIds.includes(questionId) &&
+    input.answerProvenance[questionId] === "assumed"
+  const settled = { ...states }
+  for (const stage2Module of STAGE2_MODULES) {
+    const state = states[stage2Module]
+    if (state.openQuestionIds.length === 0 || !state.openQuestionIds.every(isSettled)) continue
+    settled[stage2Module] = {
+      ...state,
+      completedQuestionIds: [...state.questionIds],
+      openQuestionIds: [],
+      status: "complete",
+    }
+  }
+  return settled
+}
+
 /* ── answer selection by question id ─────────────────────────────────────── */
 
 const STAGE2_ANSWER_KEY_BY_QUESTION_ID: Record<
@@ -441,6 +640,7 @@ const STAGE2_ANSWER_KEY_BY_QUESTION_ID: Record<
 > = {
   current_product_categories: "currentProductCategories",
   wet_wash_frequency: "wetWashFrequency",
+  bondbuilder_timing: "bondbuilderTiming",
   scalp_irritation_detail: "scalpIrritationDetail",
   dry_shampoo_bridge_preference: "dryShampooBridgePreference",
   dry_shampoo_visible_hair_color: "dryShampooVisibleHairColor",

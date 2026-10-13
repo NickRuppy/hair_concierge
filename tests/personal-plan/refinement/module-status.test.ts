@@ -128,3 +128,52 @@ test("an auto-accepted draft still reports assumptions active with tools not app
   assert.equal(stage2ModuleStates(input).tools.status, "not_applicable")
   assert.equal(stage2AssumptionsActive(input), true)
 })
+const BONDBUILDER_CONTEXT: Stage2TriggerContext = {
+  ...TRIGGER_CONTEXT,
+  relevantCategories: ["shampoo", "conditioner", "bondbuilder"],
+}
+
+test("an assumed late-added question never reopens a module she finished", () => {
+  const { answers, completedQuestionIds } = buildDirectAcceptanceStage2Defaults(BONDBUILDER_CONTEXT)
+  assert.ok(completedQuestionIds.includes("bondbuilder_timing"))
+  const answerProvenance = provenanceFor(completedQuestionIds, ["products", "habits"])
+  answerProvenance.bondbuilder_timing = "assumed"
+  const input = {
+    triggerContext: BONDBUILDER_CONTEXT,
+    answers,
+    completedQuestionIds,
+    answerProvenance,
+  }
+
+  const states = stage2ModuleStates(input)
+  assert.equal(states.products.status, "complete")
+  assert.deepEqual(states.products.openQuestionIds, [])
+  assert.equal(stage2AssumptionsActive(input), false)
+})
+
+test("an assumed late-added question still counts as open while the module is open anyway", () => {
+  const { answers, completedQuestionIds } = buildDirectAcceptanceStage2Defaults(BONDBUILDER_CONTEXT)
+  const states = stage2ModuleStates({
+    triggerContext: BONDBUILDER_CONTEXT,
+    answers,
+    completedQuestionIds,
+    answerProvenance: buildAssumedAnswerProvenance(completedQuestionIds),
+  })
+  assert.equal(states.products.status, "open")
+  assert.deepEqual(states.products.openQuestionIds, [
+    "current_product_categories",
+    "wet_wash_frequency",
+    "bondbuilder_timing",
+  ])
+})
+
+test("an unanswered late-added question keeps the module open", () => {
+  const states = stage2ModuleStates({
+    triggerContext: BONDBUILDER_CONTEXT,
+    answers: { currentProductCategories: [], wetWashFrequency: "weekly_1x" },
+    completedQuestionIds: ["current_product_categories", "wet_wash_frequency"],
+    answerProvenance: { current_product_categories: "user", wet_wash_frequency: "user" },
+  })
+  assert.equal(states.products.status, "open")
+  assert.deepEqual(states.products.openQuestionIds, ["bondbuilder_timing"])
+})
