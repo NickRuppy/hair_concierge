@@ -661,6 +661,7 @@ function categorySpecFromSnapshot(
       const shampooRows = rows("product_shampoo_specs")
       return {
         ...selectShampooSpec(shampooRows, selectionContext),
+        weight: shampooWeight(shampooRows),
         comparisonObservations: shampooComparisonObservations(shampooRows),
       }
     }
@@ -1125,6 +1126,14 @@ function shampooTargetFor(
           (decision) => decision.category === "shampoo",
         )?.target
   return target?.category === "shampoo" ? target : null
+}
+
+/** Weight is product truth, shared by all contextual rows. Ambiguity stays unverified. */
+function shampooWeight(rows: Row[]): "light" | "moderate" | "heavy" | null {
+  const weights = new Set(rows.map((row) => text(row.weight)))
+  if (weights.size !== 1) return null
+  const weight = [...weights][0]
+  return weight === "light" || weight === "moderate" || weight === "heavy" ? weight : null
 }
 
 function selectShampooSpec(rows: Row[], context: CategorySelectionContext) {

@@ -6,6 +6,7 @@ import {
   loadStage3RecommendationCandidatePool,
   loadStage3RecommendationCandidates,
   loadStage3RecommendationCandidatesByRole,
+  loadScanProductFacts,
   type Stage3RecommendationCandidatePool,
 } from "@/lib/personal-plan/products/authority/catalog-facts"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
@@ -60,6 +61,7 @@ const BOND_B = product("dddddddd-0000-4000-8000-000000000004", "Bondbuilder B", 
 const shampooSpecRows = (productId: string): Row[] => [
   {
     product_id: productId,
+    weight: productId === SHAMPOO_A.id ? "moderate" : null,
     thickness: "normal",
     shampoo_bucket: "normal",
     scalp_route: "balanced",
@@ -67,6 +69,7 @@ const shampooSpecRows = (productId: string): Row[] => [
   },
   {
     product_id: productId,
+    weight: productId === SHAMPOO_A.id ? "moderate" : null,
     thickness: "normal",
     shampoo_bucket: "schuppen",
     scalp_route: "dandruff",
@@ -328,6 +331,8 @@ test("candidate pool: Shampoo roles still select different spec rows from one po
     role: "shampoo_dandruff",
   })
   assert.equal(everyday!.productId, dandruff!.productId)
+  assert.equal(everyday!.category === "shampoo" ? everyday.spec.weight : undefined, "moderate")
+  assert.equal(dandruff!.category === "shampoo" ? dandruff.spec.weight : undefined, "moderate")
   assert.equal((everyday!.spec as { scalpRoute: string }).scalpRoute, "balanced")
   assert.equal((dandruff!.spec as { scalpRoute: string }).scalpRoute, "dandruff")
   assert.notEqual(everyday!.factFingerprint, dandruff!.factFingerprint)
@@ -421,4 +426,59 @@ test("market segment: every catalog product select requests market_segment", asy
   }) // legacy select
   assert.ok(selects.length >= 2)
   for (const columns of selects) assert.match(columns, /(^|,)market_segment(,|$)/)
+})
+
+for (const supportsIn of [true, false]) {
+  test(`T7 shampoo catalog weight: pool and per-product loaders retain researched value and NULL (${supportsIn})`, async () => {
+    const { client } = catalogClient(SHAMPOO_TABLES, { supportsIn })
+    const pool = await loadStage3RecommendationCandidatePool(client, "shampoo")
+    const selection = {
+      ...LANES[0]!.selection,
+      category: "shampoo" as const,
+      role: "shampoo_everyday" as const,
+    }
+    const scanned = await loadScanProductFacts(client, "shampoo", SHAMPOO_A.id, selection)
+    assert.equal(scanned?.category === "shampoo" ? scanned.spec.weight : undefined, "moderate")
+    const batches = [
+      deriveStage3RecommendationCandidates(pool, selection),
+      await loadStage3RecommendationCandidates(client, selection),
+    ]
+    for (const facts of batches) {
+      assert.equal(facts.find((fact) => fact.productId === SHAMPOO_A.id)?.category, "shampoo")
+      assert.equal(
+        (facts.find((fact) => fact.productId === SHAMPOO_A.id)!.spec as { weight: unknown }).weight,
+        "moderate",
+      )
+      assert.equal(
+        (facts.find((fact) => fact.productId === SHAMPOO_B.id)!.spec as { weight: unknown }).weight,
+        null,
+      )
+    }
+  })
+}
+
+test("T7 shampoo product truth: conflicting contextual weights stay unverified and changed weight refreshes fingerprints", async () => {
+  const selection = { ...LANES[0]!.selection, role: "shampoo_everyday" as const }
+  const load = async (weights: unknown[]) => {
+    const tables = {
+      ...SHAMPOO_TABLES,
+      product_shampoo_specs: SHAMPOO_TABLES.product_shampoo_specs!.map((row, index) => ({
+        ...row,
+        weight: weights[index % weights.length],
+      })),
+    }
+    const { client } = catalogClient(tables, { supportsIn: true })
+    const facts = await loadScanProductFacts(client, "shampoo", SHAMPOO_A.id, selection)
+    assert.equal(facts?.category, "shampoo")
+    if (facts?.category !== "shampoo") throw new Error("Missing shampoo facts")
+    return facts
+  }
+  assert.equal((await load(["light", "heavy"])).spec.weight, null)
+  assert.equal((await load(["light", null])).spec.weight, null)
+  assert.equal((await load(["rich"])).spec.weight, null)
+  const light = await load(["light"])
+  const heavy = await load(["heavy"])
+  assert.equal(light.spec.weight, "light")
+  assert.equal(heavy.spec.weight, "heavy")
+  assert.notEqual(light.factFingerprint, heavy.factFingerprint)
 })

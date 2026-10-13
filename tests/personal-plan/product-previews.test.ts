@@ -279,6 +279,7 @@ test("selects the thirteenth injected complete-mode irritation Shampoo candidate
     presentationImageUrl: `https://example.com/shampoo-candidate-${index + 1}.webp`,
     factFingerprint: `facts-${index + 1}`,
     spec: {
+      weight: null,
       thickness: result.snapshot.profile.hair.thickness,
       shampooBucket: index === 12 ? "irritationen" : "does-not-match",
       scalpRoute: index === 12 ? "irritated" : "balanced",
@@ -952,6 +953,7 @@ test("keeps a matching Shampoo preview and an explicit fallback when another cat
     presentationImageUrl: "https://example.com/shampoo-profile-fit.webp",
     factFingerprint: "facts-shampoo",
     spec: {
+      weight: null,
       thickness: result.snapshot.profile.hair.thickness,
       shampooBucket: "normal",
       scalpRoute: "balanced",

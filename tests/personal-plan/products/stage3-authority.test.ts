@@ -107,6 +107,7 @@ function knownFacts(category: PersonalPlanCategory): Stage3CategoryProductFacts 
         // fit-verdict spec §2, ruled 2026-10-12: lifecycle includes recommendability.
         recommendable: true,
         spec: {
+          weight: "light",
           thickness: "normal",
           thicknesses: ["normal"],
           shampooBucket: "normal",
@@ -696,6 +697,7 @@ test("Shampoo with complete nonmatching semantic facts is a known mismatch, not 
   const shampooInput = input("shampoo", "known") as Stage3AuthorityInput<"shampoo">
   if (shampooInput.productFacts?.category !== "shampoo") throw new Error("expected Shampoo fixture")
   shampooInput.productFacts.spec = {
+    weight: null,
     thickness: null,
     shampooBucket: null,
     scalpRoute: null,
@@ -742,6 +744,7 @@ test("Shampoo known mismatch can use its exact verified supported-role protocol"
     },
   ]
   shampooInput.productFacts.spec = {
+    weight: null,
     thickness: null,
     shampooBucket: null,
     scalpRoute: null,

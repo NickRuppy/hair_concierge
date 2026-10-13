@@ -84,6 +84,8 @@ export type Stage3ShampooFacts = Stage3AuthorityCommonProductFacts & {
     supportedScalpRoutes: string[]
   }
   spec: {
+    /** Researched product weight; informational T7 check in scalp cells. */
+    weight: "light" | "moderate" | "heavy" | null
     thickness: string | null
     /** Contextual row(s) retained for distance-based fit evaluation. */
     thicknesses?: string[] | null

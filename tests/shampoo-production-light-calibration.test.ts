@@ -118,6 +118,7 @@ function evaluateProjectedRow(input: {
       ],
       factFingerprint: `facts-${input.productId}`,
       spec: {
+        weight: null,
         thickness: input.row.thickness,
         shampooBucket: input.row.shampoo_bucket,
         scalpRoute: input.row.scalp_route,

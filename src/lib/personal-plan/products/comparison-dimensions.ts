@@ -83,6 +83,19 @@ function singleCandidateEntry(
   }
 }
 
+/** R19: scalp weight cautions inform application; they cannot break ranking ties. */
+export function rankingCautionCount(
+  input: Pick<Stage3AuthorityInput, "category" | "role" | "categoryDecision">,
+  criteria: readonly Stage3CriterionResult[],
+): number {
+  const scalpCell =
+    input.category === "shampoo" &&
+    isScalpShampooTarget({ role: input.role, target: input.categoryDecision.target })
+  return criteria.filter(
+    (row) => row.result === "caution" && !(scalpCell && row.criterionId === "shampoo.thickness"),
+  ).length
+}
+
 export function candidateDimensionCoverage(
   input: Stage3AuthorityInput,
   candidate: Stage3CategoryProductFacts,
@@ -114,9 +127,7 @@ export function candidateDimensionCoverage(
             dimension.dimensionId === "shampoo.suitable_thicknesses" &&
             isScalpShampooTarget({ role: input.role, target: input.categoryDecision.target })
           )
-            return criteria.some(
-              (row) => row.criterionId === "shampoo.thickness" && row.result === "pass",
-            )
+            return criteria.some((row) => row.criterionId === "shampoo.thickness")
           const position = dimension.productPositions[0]?.position ?? { kind: "unknown" as const }
           return positionsOverlap(position, dimension.targetPosition!)
         }).length,

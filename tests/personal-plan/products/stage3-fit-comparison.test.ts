@@ -2179,6 +2179,7 @@ function factsFor<C extends PersonalPlanCategory>(
           ? { comparisonObservations: overrides.shampooObservations }
           : {}),
         spec: {
+          weight: overrides.weight === undefined ? "light" : overrides.weight,
           thickness: "normal",
           shampooBucket:
             overrides.shampooBucket ?? (role === "shampoo_dandruff" ? "schuppen" : "normal"),
