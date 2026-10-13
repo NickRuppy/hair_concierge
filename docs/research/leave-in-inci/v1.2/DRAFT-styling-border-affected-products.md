@@ -1,53 +1,57 @@
 # Styling-border addendum — affected products (DRAFT)
 
-Status: **DRAFT — not in force; queued for after Styling v1.0 lock (PH1-16); every product move needs owner approval.**
-Companion to `DRAFT-styling-border-addendum.md` (this folder). Amendment numbers (A1–A10) and open items (O-1…O-12) refer to that file.
-Drafted: 2026-10-13. Nothing here was applied to any standard, ledger, data file, catalog or database.
+Status: **DRAFT — not in force; queued after Styling v1.0 lock (LOCK-1); every move of an already-ruled Leave-in product needs owner approval.**
+Companion to `DRAFT-styling-border-addendum.md` (this folder); A1–A11 and the remaining §6 open items refer to that file.
+Refreshed: 2026-10-13 after LOCK-1. No standard, ledger, research data, catalog or database was changed.
 
 ## How this list was built
 
-- **Leave-in rulings searched:** `data/research/leave-in-inci/` (v1.0 corpus, v1.1 overlay records) and `docs/research/leave-in-inci/`. The only product-level Leave-in rulings are the **19 corpus records** (13 gold-set + 6 unseen-test), read from `data/research/leave-in-inci/v1.1/lab-fixture.json` (G0 state, INCI, tail marker, claims). Nine of them were enriched into the live catalog (`plans/leave-in-apply/leave-in-research-enrichment-manifest.json`; five re-applied under T20, `plans/leave-in-moisture-balanced/leave-in-research-enrichment-manifest-v2-t20.json`).
-- **Owner rulings that name a Leave-in route on the Styling side:** the Styling standard v0.4 §4.6 registry and `plans/styling-concept/02-rulings.md`. Ten products beyond the corpus (part A2).
-- **Held Styling products:** `boundary_reason` / `reason_code` = `pending_leave_in_addendum` in `data/research/styling-inci/v1.0/blind-lane-A-r3/results.json` and `…/blind-lane-B-r3/results.json`, plus the three products the round-3 rulings add to the hold (R3-Q4, R3-H2, PH1-14 with R3-H3).
-- **Others:** lane A round-3 records with pair rule `3.4(ii)` (PH2-1, Styling directly), plus the two products A6 and A9 reclassify.
-- **Counts** were computed with a scratch node script (not committed) over those files on 2026-10-13. Products were checked against each amendment from frozen INCI ranks, tail markers and the lanes' rule paths; no lane was re-run.
+- **Leave-in:** Node read the 19 products in `data/research/leave-in-inci/v1.1/lab-fixture.json`, checked v1.0 corpus/reference-key and v1.1 overlay records, and reconciled the locked Styling §4.6/ledger owner destinations. Ten distinct owner-only historic Leave-in rulings are added; EVO's owner row overlaps its corpus record and is counted once.
+- **Styling:** Node mapped each lane's opaque ids through its own `id_map` in `data/research/styling-inci/v1.0/r6/cohort.json` (143) and `r7/cohort.json` (69 targeted records). Read `blind-lane-A-r6/results.json`, `blind-lane-B-r6/results.json`, `blind-lane-A-r7/results.json`, `blind-lane-B-r7/results.json`. For each lane separately, r7 replaces r6 by source slug; non-targeted records retain r6. Do not merge the two lanes or treat r7's 69 as the full cohort.
+- **Hold predicate:** `boundary_reason` or `reason_code` equals `pending_leave_in_addendum`. Both r6 lanes held 18; both r7 lanes held 15 within their targeted population; the final 143-record merged set is **21**, identical by slug and lean subtype between lanes. R6-Q1 adds John Frieda Unendlich Smooth and the two NEQIs; R4-Q4's Balea Glattspray is already held in r6.
+- **Direct scope predicate:** final lane A selects actual committed Styling with `pair_rule: 3.4(ii)`, or (r7's representation without that field) `li_function: no` plus a 3.4(ii) path. Require actual `route: styling` and no hold; a rejected/counterfactual path is not a destination. Both lanes' final subtypes are checked. There are **46**, including already-excluded Alcina Föhn Lotion; part C1 lists the other **45**.
+- This is a source-data recount and rule/identity review, **not a new classification run**. Live catalog state was not queried.
 
-| Count (node) | Value |
+| Count (Node, unique products) | Value |
 |---|---|
-| Already-ruled Leave-in products checked | **29** (19 corpus + 10 Styling-side owner rulings) |
-| … of which would move | **0** |
-| Held Styling products the addendum releases | **17** (round-3 lanes: A 13, B 14, union 14; + 3 from R3-Q4 / R3-H2 / PH1-14 + R3-H3) |
-| Other products newly classified | **45** (43 PH2-1 scope + 1 A6 + 1 A9) |
-| Considered, not moved, not Leave-in-ruled | 17 (part D) |
+| Historic Leave-in audit universe | **29**: 19 corpus + 10 owner-only; 25 Leave-in-positive, 4 already excluded |
+| Already-ruled Leave-in moves | **2 — both NEQI moves ALREADY APPROVED**, R6-Q1, 2026-10-13 |
+| Other already-ruled Leave-in moves | **0** |
+| Historic audit records staying at their destination | **27**: 23 positive Leave-in rulings + 4 already excluded |
+| Held Styling products released on overlay approval | **21**, including those 2 NEQI moves; **19** have no prior Leave-in ruling |
+| Other explicit border statuses | **47**: 45 direct scope + 1 Polysilicone-9 + 1 GUHL 3in1 |
+| Further border products staying put | **16** (part D) |
+
+The two moves are included in the 21 holds; these are **not additive counts**. LOCK-1 resolves the old round-4 confirmation gates.
 
 ---
 
-## A. Already-ruled Leave-in products — owner approval needed for any move
+## A. Historic Leave-in rulings — moves and products staying put
 
-**Result: none of the 29 would move.** No owner approval of a product move is needed today. If the Styling confirmation round 4 or a re-capture changes one of these inputs, this part must be re-checked before approval.
+**Result: only NEQI Ultimate (D3/T15) and NEQI All (R2-Q4) move; both moves are ALREADY APPROVED by the owner under R6-Q1 on 2026-10-13. No other already-ruled Leave-in product would move.** Approval of the overlay and any catalog work remain separate.
 
 ### A1. The Leave-in corpus (19 records)
 
-Source of the current status: `data/research/leave-in-inci/v1.1/lab-fixture.json` (`g0.state`; standard v1.1). „Live" = enriched into the catalog by the manifests above.
+Source of the current status: `data/research/leave-in-inci/v1.1/lab-fixture.json` (`g0.state`; standard v1.1). “Historic catalog enrichment” refers to the Leave-in apply manifests; live state was not queried. The 19 records are 15 `in_category`, 2 `excluded_styling_first`, 2 `excluded_anhydrous`.
 
-| Product | Slug (`productId`) | Current Leave-in status | Outcome under the addendum | Amendments checked (why no move) | Already ruled ⇒ owner approval |
+| Product | Slug (`productId`) | Current Leave-in status | Outcome under the addendum | Amendments checked / reason | Already ruled ⇒ owner approval |
 |---|---|---|---|---|---|
-| alverde Leave-In Sprühkur Express 7in1 | `slot-01-alverde-naturkosmetik-leave-in-spruehkur-express-7in1` | `in_category` · live | `in_category`, unchanged | A1: care lead (C2 house brand). A2: Helianthus oil r2 above T_LI r9 = real care | yes — no move |
-| ISANA PROFESSIONAL Leave-In Conditioner Hyaluron & Panthenol | `slot-02-isana-professional-leave-in-conditioner-hyaluron-panthenol` | `in_category` · live | unchanged | A1: no C1/C2 promise captured ⇒ A1 (d). A2: Cetearyl Alcohol r2 = care | yes — no move |
-| Cantu Leave-In Haarkur Repair Creme | `slot-03-cantu-leave-in-haarkur-repair-creme` | `in_category` · live | unchanged | A1: repair lead. A2: Canola Oil r2 = care. A8: no wax/lanolin in the list | yes — no move |
+| alverde Leave-In Sprühkur Express 7in1 | `slot-01-alverde-naturkosmetik-leave-in-spruehkur-express-7in1` | `in_category` · historic catalog enrichment | `in_category`, unchanged | A1: care lead (C2 house brand). A2: Helianthus oil r2 above T_LI r9 = real care | yes — no move |
+| ISANA PROFESSIONAL Leave-In Conditioner Hyaluron & Panthenol | `slot-02-isana-professional-leave-in-conditioner-hyaluron-panthenol` | `in_category` · historic catalog enrichment | unchanged | A1: no C1/C2 promise captured ⇒ A1 (d). A2: Cetearyl Alcohol r2 = care | yes — no move |
+| Cantu Leave-In Haarkur Repair Creme | `slot-03-cantu-leave-in-haarkur-repair-creme` | `in_category` · historic catalog enrichment | unchanged | A1: repair lead. A2: Canola Oil r2 = care. A8: no wax/lanolin in the list | yes — no move |
 | alverde Nutri-Care 2-Phasen-Sprühkur Bio-Mandel, Bio-Argan | `slot-04-alverde-naturkosmetik-nutri-care-2-phasen-spruehkur-bio-mandel-bio-argan` | `in_category` | unchanged | A1: no C1/C2 promise. A2: soy oil r2 = care (marker `none_visible`, ordinal read) | yes — no move |
-| EVO Head Mistress Cuticle Sealer | `slot-05-evo-head-mistress-cuticle-sealer` | `in_category` · live | unchanged | A1: claims C5 only ⇒ (d); main directions towel-dried + blow-dry, so not R1-Q2. A2: Dimethicone r2 = care. Also a Styling-side D6 example (A10) | yes — no move |
-| Curlsmith Hydrate & Plump Leave-In | `slot-06-curlsmith-hydrate-plump-leave-in` | `in_category`, HOLD `incidental_film` · live | unchanged | **Closest A3 case:** PVP r32 above a vacuous marker r36 + COND high, but sold as „Leave-In" conditioner, not a curl cream ⇒ A3 limb 3 fails; no C1/C2 claims | yes — no move |
+| EVO Head Mistress Cuticle Sealer | `slot-05-evo-head-mistress-cuticle-sealer` | `in_category` · historic catalog enrichment | unchanged | A1: claims C5 only ⇒ (d); main directions towel-dried + blow-dry, so not R1-Q2. A2: Dimethicone r2 = care. Also a Styling-side D6 example (A10) | yes — no move |
+| Curlsmith Hydrate & Plump Leave-In | `slot-06-curlsmith-hydrate-plump-leave-in` | `in_category`, HOLD `incidental_film` · historic catalog enrichment | unchanged | **Closest A3 case:** PVP r32 above a vacuous marker r36 + COND high, but sold as „Leave-In" conditioner, not a curl cream ⇒ A3 limb 3 fails; no C1/C2 claims | yes — no move |
 | Maria Nila Curlicue Cream | `slot-07-maria-nila-curlicue-cream` | `excluded_styling_first` (T15) | excluded, unchanged | T15 stands (D3); Styling routes it `curl_cream` by the same pair rule | yes — no move |
-| Schwarzkopf GLISS Sprüh-Conditioner Express-Repair Ultimate Repair | `slot-08-schwarzkopf-gliss-sprueh-conditioner-express-repair-ultimate-repair` | `in_category` · live | unchanged | A1: care/combing/heat lead. A2: Dimethicone r3 = care. A7: PQ-16 r9 is not L5 | yes — no move |
-| Redken Extreme Anti-Snap Leave-In Treatment | `slot-09-redken-extreme-anti-snap-leave-in-treatment` | `in_category` · live | unchanged | A1: strengthening lead. A2: Amodimethicone r4 above the pH-adjuster yardstick (marker r3 implausible, T16); no styling-look promise | yes — no move |
-| Olaplex N°.6 Bond Smoother | `slot-10-olaplex-n-6-bond-smoother` | `in_category` · live | unchanged | A1: no C1/C2 promise (C3 only) ⇒ (d). A2: Cetearyl Alcohol r2 = care | yes — no move |
+| Schwarzkopf GLISS Sprüh-Conditioner Express-Repair Ultimate Repair | `slot-08-schwarzkopf-gliss-sprueh-conditioner-express-repair-ultimate-repair` | `in_category` · historic catalog enrichment | unchanged | A1: care/combing/heat lead. A2: Dimethicone r3 = care. A7: PQ-16 r9 is not L5 | yes — no move |
+| Redken Extreme Anti-Snap Leave-In Treatment | `slot-09-redken-extreme-anti-snap-leave-in-treatment` | `in_category` · historic catalog enrichment | unchanged | A1: strengthening lead. A2: Amodimethicone r4 above the pH-adjuster yardstick (marker r3 implausible, T16); no styling-look promise | yes — no move |
+| Olaplex N°.6 Bond Smoother | `slot-10-olaplex-n-6-bond-smoother` | `in_category` · historic catalog enrichment | unchanged | A1: no C1/C2 promise (C3 only) ⇒ (d). A2: Cetearyl Alcohol r2 = care | yes — no move |
 | Balea Leichtkämmspray Pure Styling | `slot-11-balea-leichtkaemmspray-pure-styling` | `in_category` | unchanged | A1: name job word „Leichtkämm-" (detangling). A2: Cetrimonium Chloride r4 = care | yes — no move |
 | Kevin Murphy Young.Again Oil | `slot-12-kevin-murphy-young-again-oil` | `excluded_anhydrous` | excluded, unchanged | not aqueous; the border amendments do not reach it | yes — no move |
-| Neqi Diamond Glass Ultimate Styling Spray | `slot-13-neqi-diamond-glass-ultimate-styling-spray` | `in_category`, HOLD `incidental_film` (T15) · live | unchanged | **Closest A4 case:** fixative r8 + care film, but not sold as a straightening/smoothing styler; D3/T15 named (A10) | yes — no move |
+| NEQI Diamond Glass Ultimate Styling Spray | `slot-13-neqi-diamond-glass-ultimate-styling-spray` (Styling slug `neqi-diamond-glass-ultimate-styling-spray`; GTIN 4063528094575) | `in_category`, historical D3/T15; v1.1 balanced/low · historic catalog enrichment | **excluded ⇒ Styling `smoothing_styler`** | A10/A11: R6-Q1 replaces D3; FX-1 r8 means explicit registry override, not the generic no-fixative rule | **MOVE ALREADY APPROVED — owner, R6-Q1, 2026-10-13** |
 | L'Oréal Paris Elvital Dream Length No Spliss Milk | `unseen-01-l-or-al-paris-elvital-elvital-dream-length-no-spliss-milk-retailer-listing-name-elvital-leave-in-dream-length` | `in_category` | unchanged | A1: repair lead. A2: Isopropyl Myristate r2 = care | yes — no move |
 | L'Oréal Paris Elvital ÖL Magique Veredelndes Haaröl | `unseen-02-l-or-al-paris-elvital-elvital-oel-magique-veredelndes-haaroel-retailer-listing-name-elvital-oel-magique-haaroel` | `excluded_anhydrous` | excluded, unchanged | Oil by D2 on the Styling side too | yes — no move |
-| Alcina (Professional) Föhn Lotion | `unseen-03-alcina-professional-foehn-lotion` | `excluded_styling_first` | excluded, state unchanged | A1 (b) also fires (C2 volume promise) — a second basis, same state; Styling `blowdry_lotion` (part C1 lists it too) | yes — no move |
+| Alcina (Professional) Föhn Lotion | `unseen-03-alcina-professional-foehn-lotion` | `excluded_styling_first` | excluded, state unchanged | A1 (b) also fires (C2 volume promise) — a second basis, same state; Styling `blowdry_lotion` (the 46 direct routes include it, but part C1 excludes this duplicate) | yes — no move |
 | Briogeo Superfoods Avocado + Kiwi Mega Moisture 3-in-1 Leave-In Spray | `unseen-04-briogeo-superfoods-avocado-kiwi-mega-moisture-3-in-1-leave-in-spray` | `in_category` | unchanged | A1: no C1/C2 promise (C4). A2: Cetearyl Alcohol r3 = care | yes — no move |
 | ISANA PROFESSIONAL Argan Leave-in Conditioner | `unseen-05-isana-professional-rossmann-house-brand-argan-leave-in-conditioner` | `in_category` | unchanged | A1: repair/anti-frizz lead, towel-dry directions (not R1-Q2). A2: castor oil r3 = care | yes — no move |
 | amika The Shield Anti-Humidity Spray | `unseen-06-amika-the-shield-anti-humidity-spray-german-retailer-listing-name-the-shield-anti-feuchtigkeits-spray` | `in_category` | unchanged | A1: protection lead (not a volume/hold/texture/shine job); directions „before heat styling", not R1-Q2. A2: sea-buckthorn oil r5 = care. A8: Ceresin r17 sits below the marker r16 | yes — no move |
@@ -56,152 +60,212 @@ No corpus record contains an FX-4 member (A5), Polysilicone-9 (A6) or Polyquater
 
 ### A2. Products ruled Leave-in by owner rulings on the Styling side (10)
 
-Source: Styling standard v0.4 §4.6 registry and the ledger. Nine are in the Styling round-3 cohort (both lanes `leave_in`); syoss Curl Control is excluded from the cohorts (not sold in Germany).
+Source: LOCKED Styling v1.0 §4.6 registry and the ledger. Nine are in the r6 cohort: final lanes retain eight Leave-in destinations and hold NEQI All as `smoothing_styler`; syoss Curl Control remains excluded from the DE cohort (not sold in Germany).
 
-| Product | Slug | Current Leave-in status | Outcome under the addendum | Why no move | Owner approval |
+| Product | Slug | Current Leave-in status | Outcome under the addendum | Reason | Owner approval |
 |---|---|---|---|---|---|
 | cantu Lockencreme Kokos | `cantu-lockencreme-kokos` | Leave-in by ruling (D7 scope, T15); no Leave-in engine record | Leave-in | no fixative ⇒ A3 limb 1 fails | ruled — no move |
-| HASK Lockencreme Curl Care | `hask-lockencreme-curl-care` | as above | Leave-in | no fixative | ruled — no move |
+| HASK „curls defining cream” (old title Lockencreme Curl Care) | `hask-lockencreme-curl-care` | as above | Leave-in | no fixative; named row overrides mixed care + definition (R4-Q6) | ruled — no move |
 | BALI CURLS Lockencreme Hydrating Curl Cream | `bali-curls-hydrating-curl-cream` | as above | Leave-in | no fixative | ruled — no move |
 | Balea PROFESSIONAL Definier Spray Traumlocken | `balea-professional-definier-spray-traumlocken` | Leave-in by PH1-10 | Leave-in | oils above T_LI = care ⇒ A2 limb 2 fails | ruled — no move |
 | Balea Haarserum Anti-Frizz Glatt & Glossy | `balea-haarserum-anti-frizz-glatt-und-glossy` | Leave-in by R2-Q2 | Leave-in | Behentrimonium Chloride above the yardstick = care | ruled — no move |
 | Redken One United All-in-One Multi-Benefit Treatment | `redken-one-united-all-in-one-multi-benefit-treatment` | Leave-in (D6 example) | Leave-in | real care; leave-on first (RG2-20) | ruled — no move |
 | GARNIER FRUCTIS Leave-In Spray Diamond Sleek Glättungsspray | `garnier-fructis-leave-in-spray-diamond-sleek-glaettungsspray` | Leave-in by PH2-1 | Leave-in | smoothing promise ⇒ A1 (a); real care; no fixative ⇒ A4 limb 1 fails | ruled — no move |
 | LANGHAARMÄDCHEN Lockenspray Natur Lockenwunder | `langhaarmaedchen-lockenspray-natur-lockenwunder` | Leave-in by PH2-11 (PH1-13) | Leave-in | cationic r4 above the preservative = care | ruled — no move |
-| NEQI Diamond Glass Styling Spray All | `neqi-diamond-glass-styling-spray-all` | Leave-in by R2-Q4 (R2-H4) | Leave-in | no hold polymer; D3 extended | ruled — no move |
+| NEQI Diamond Glass Styling Spray All | `neqi-diamond-glass-styling-spray-all` (GTIN 4063528078469) | historical Leave-in by R2-Q4; INCI complete (R2-H4) | **excluded ⇒ Styling `smoothing_styler`** | A11: Polysilicone-29 r7; first preservative r8; other care later; no FX; R6-Q1 replaces R2-Q4 | **MOVE ALREADY APPROVED — owner, R6-Q1, 2026-10-13** |
 | syoss Curl Control Hydrating Spray | `syoss-curl-control-hydrating-spray` | Leave-in by PH1-13, identity-blocked (dm.at INCI) | Leave-in once its DE identity clears | the ruling does not lift the identity block | ruled — no move |
 
 ---
 
-## B. Held Styling products (`pending_leave_in_addendum`) — released by the addendum
+## B. Held Styling products — released only when the addendum is approved (21)
 
-None of the 17 has a Leave-in engine ruling. „v1.1 letter" is the locked Leave-in G0 as the Styling lanes re-ran it in their §4.5 step, or as the concept-phase G0 lane read it (`data/research/styling-inci/concept-v0/round2/G0-border-verdicts.json`, research reads, not rulings). Under the addendum each product is excluded at Leave-in G0 (state label O-1). On approval its held Styling record becomes a committed Styling record (PH2-2). Because none is an already-ruled Leave-in product, PH1-16 does not require a separate per-product approval; the owner's approval of the addendum releases them. Live catalog category not checked (O-11).
+Final A/B lanes agree on every held destination and lean subtype below. Each is excluded at Leave-in G0 by the mirrored ruling. **Two were already ruled Leave-in (part A); nineteen were not.** Research reads of the old v1.1 G0 letter are not prior product rulings. PH1-16 does not require new individual approval for those nineteen; the overlay must still be approved to release the held profiles. Live catalog categories are unverified (O-11).
 
-| # | Product | Slug | Current Leave-in status | Styling round 3 (lane A / lane B) | Outcome under the addendum | Amendment | Note |
-|---|---|---|---|---|---|---|---|
-| 1 | BALI CURLS Haargel Strong Hold Flaxseed | `bali-curls-strong-hold-flaxseed-gel` | no ruling; v1.1 letter `in_category` (lanes) | held `gel` / held `gel` | excluded ⇒ Styling `gel` | A2 | Carrageenan r3 natural film; no care above T_LI Phenoxyethanol r8; hold level 4 (R3-H) |
-| 2 | alverde NATURKOSMETIK Locken Refresh-Spray | `alverde-locken-refresh-spray` | no ruling; v1.1 letter `in_category` (concept G0 lane; lanes) | held `refresher` / held `refresher` | excluded ⇒ Styling `refresher` | A2 | care only below the yardstick ⇒ `care_below_dose_yardstick` review (PH1-13) |
-| 3 | Balea Locken Revitalizing Spray | `balea-locken-revitalizing-spray` | no ruling; v1.1 letter `in_category` (concept G0 lane; lanes) | held `refresher` / held `refresher` | excluded ⇒ Styling `refresher` | A2 | A2 worked example; `inci_tail_defect` (r15) |
-| 4 | Balea Locken Crunchgel | `balea-locken-crunchgel` | no ruling; v1.1 letter `in_category` (lanes) | held `gel` / held `gel` | excluded ⇒ Styling `gel` | A2 | any format (PH2-3) |
-| 5 | cantu Lockenspray Comeback Curl Next Day | `cantu-lockenspray-comeback-curl-next-day` | no ruling; v1.1 letter `in_category` (lanes) | held `refresher` / held `refresher` | excluded ⇒ Styling `refresher` | A2 | Shea r10 below T_LI r4 |
-| 6 | Redken Refreshing Curl Mist | `redken-refreshing-curl-mist` | no ruling; v1.1 letter `in_category` (lanes) | held `refresher` / held `refresher` | excluded ⇒ Styling `refresher` | A2 | R2-Q1 case; PQ-6 below the yardstick |
-| 7 | BALI CURLS Volumizing Curl Spray | `bali-curls-volumizing-curl-spray-refreshing` | no ruling; v1.1 letter `in_category` (lane B) | committed `salt_spray` (3.4 (ii)) / held `refresher` | excluded ⇒ Styling `refresher` | A2 | lane split closed by RG3-1 (two job words ⇒ revival ⇒ held); **confirm in round 4** |
-| 8 | Balea Leave-In Spray Sea Salt Care & Define | `balea-leave-in-spray-sea-salt-care-define` | no ruling; v1.1 letter `in_category` (concept G0 lane) | held `salt_spray` / held `salt_spray` | excluded ⇒ Styling `salt_spray` | A2 + A10 | owner D6 ruling overrides the Styling-side `mixed` reading |
-| 9 | Balea PROFESSIONAL Styling Cream Traumlocken | `balea-professional-styling-cream-traumlocken` | no ruling; v1.1 letter `provisional_boundary` (concept G0 lane; lane A, LI §2.3.2 clause 2) | held `curl_cream` / held `curl_cream` | excluded ⇒ Styling `curl_cream` | A3 | VP/VA r3; LGN pair; PH1-12 / R2-H5 |
-| 10 | Wella Professionals EIMI Nutricurls Curl Shaper (Defining Gel Cream) | `wella-eimi-nutricurls-curl-shaper` | no ruling; v1.1 letter claims it (lane A) | held `curl_cream` / held `curl_cream` | excluded ⇒ Styling `curl_cream` | A3 | VP/VA r3 + Ethyl Ester of PVM/MA r8 (FX-4); D7 before the mixed stop |
-| 11 | Schwarzkopf taft Styling Balm LOCKEN Halt 3 | `schwarzkopf-taft-styling-balm-locken-halt-3` | no ruling; v1.1 letter `provisional_boundary` (concept G0 lane) | held `curl_cream` / held `curl_cream` | excluded ⇒ Styling `curl_cream` | A3 | A3 worked example |
-| 12 | Kevin.Murphy Killer.Curls (Leave-in Anti-Frizz Creme) | `kevin-murphy-killer-curls` | no ruling; v1.1 letter claims it (lanes) | held `curl_cream` / held `curl_cream` | excluded ⇒ Styling `curl_cream` | A3 | vacuous T_LI r39 (O-2); Lanolin Wax r2 (A8) |
-| 13 | KMS Thermashape Straightening Creme | `kms-thermashape-straightening-creme` | no ruling; v1.1 letter `in_category` (lane A) or `provisional_boundary` (lane B) | `leave_in` / `li_g0_provisional` (round 3 ran before R3-Q4) | excluded ⇒ Styling `smoothing_styler` | A4 | R3-Q4 case; vacuous T_LI r16 (O-2); **confirm in round 4** |
-| 14 | Wella Professionals EIMI Flowing Form (Glättungscreme / Anti-Frizz Smoothing Balm) | `wella-professionals-eimi-flowing-form` | no ruling; v1.1 letter `provisional_boundary` (lanes) | `li_g0_provisional` / `li_g0_provisional` (before R3-H2) | excluded ⇒ Styling `smoothing_styler` | A4 | R3-H2 (at commit `6c1e2b6c` the Styling standard §4.6 still showed the withdrawn „review" text; the working-copy amendment folds R3-H2); **confirm in round 4** |
-| 15 | COLOR WOW Dream Coat Supernatural Spray | `color-wow-dream-coat-supernatural-spray` | no ruling; v1.1 letter `in_category` (lane A) | held `smoothing_styler` / held `smoothing_styler` | excluded ⇒ Styling `smoothing_styler` | A10 | D2 corrected example; C3 claims only (`claim_authority_gap`). Also appears as a router-fixture output `heat_protectant` (`tests/fixtures/product-intake-router/real-production-outputs.json`) and as a rejected Leave-in unseen-test candidate — neither is a ruling |
-| 16 | L'ORÉAL PARiS Elnett Stylingspray Hitzeschutz 3 Tage Glatt | `loreal-paris-elnett-stylingspray-hitzeschutz-3-tage-glatt` | no ruling; v1.1 letter `in_category` (Styling §4.6) | evidence gate / evidence gate (no directions) | excluded ⇒ Styling `smoothing_styler` | A10 | PH1-14; directions from the L'Oréal article (R3-H3) still to be frozen; **confirm in round 4** |
-| 17 | John Frieda Lockencreme Traumlocken | `john-frieda-frizz-ease-traumlocken-lockencreme` | no ruling; v1.1 letter would be `provisional_boundary` (lane A: D6 unresolved) | held `curl_cream` / held `curl_cream` | excluded ⇒ Styling `curl_cream` | A10 | D7 naming; FX-2c not corroborated ⇒ HOLD stays a formula read (`ambiguous` on the Styling side; O-4) |
+| # | Brand + confirmed product name | Source slug | Final A / B | Amendment | Prior Leave-in ruling / release evidence |
+|---|---|---|---|---|---|
+| 1 | alverde NATURKOSMETIK Locken Refresh-Spray | `alverde-locken-refresh-spray` | held `refresher` / held `refresher` (r7) | A2 | No prior Leave-in ruling; held under PH1-16/PH2-2 |
+| 2 | Balea Glattspray Anti-Frizz | `balea-glattspray-anti-frizz` | held `smoothing_styler` / held `smoothing_styler` (r6) | A4 | No prior Leave-in ruling; R4-Q4 includes thin care |
+| 3 | Balea Leave-In Spray Sea Salt Care & Define | `balea-leave-in-spray-sea-salt-care-define` | held `salt_spray` / held `salt_spray` (r6) | A2 + A10 | No prior Leave-in ruling; held under PH1-16/PH2-2 |
+| 4 | Balea Locken Crunchgel | `balea-locken-crunchgel` | held `gel` / held `gel` (r7) | A2 | No prior Leave-in ruling; held under PH1-16/PH2-2 |
+| 5 | Balea Locken Revitalizing Spray | `balea-locken-revitalizing-spray` | held `refresher` / held `refresher` (r7) | A2 | No prior Leave-in ruling; held under PH1-16/PH2-2 |
+| 6 | Balea PROFESSIONAL Styling Cream Traumlocken | `balea-professional-styling-cream-traumlocken` | held `curl_cream` / held `curl_cream` (r7) | A3 | No prior Leave-in ruling; held under PH1-16/PH2-2 |
+| 7 | BALI CURLS Haargel Strong Hold Flaxseed | `bali-curls-strong-hold-flaxseed-gel` | held `gel` / held `gel` (r7) | A10 | No prior Leave-in ruling; registry wins over direct 3.4(ii) letter (R4-Q5) |
+| 8 | BALI CURLS Volumizing Curl Spray | `bali-curls-volumizing-curl-spray-refreshing` | held `refresher` / held `refresher` (r7) | A2 | No prior Leave-in ruling; held under PH1-16/PH2-2 |
+| 9 | cantu SHEA BUTTER COMEBACK CURL NEXT DAY CURL REVITALIZER | `cantu-lockenspray-comeback-curl-next-day` | held `refresher` / held `refresher` (r7) | A2 | No prior Leave-in ruling; held under PH1-16/PH2-2 |
+| 10 | COLOR WOW Dream Coat Supernatural Spray | `color-wow-dream-coat-supernatural-spray` | held `smoothing_styler` / held `smoothing_styler` (r7) | A10 | No prior Leave-in ruling; D2 owner route; C3 promise override, no evidence block lifted |
+| 11 | John Frieda Lockencreme Traumlocken (Frizz Ease Traumlocken Definierende Locken-Creme) | `john-frieda-frizz-ease-traumlocken-lockencreme` | held `curl_cream` / held `curl_cream` (r7) | A10 | No prior Leave-in ruling; D7 registry wins despite uncorroborated acrylates (R4-Q5) |
+| 12 | John Frieda Frizz Ease Unendlich Smooth Salon Blow-Out Spray | `john-frieda-frizz-ease-unendlich-smooth-blow-out-spray` | held `smoothing_styler` / held `smoothing_styler` (r7) | A11 | No prior Leave-in ruling; R6-Q1 smoothing film |
+| 13 | Kevin.Murphy Killer.Curls (Leave-in Anti-Frizz Creme) | `kevin-murphy-killer-curls` | held `curl_cream` / held `curl_cream` (r6) | A10 | No prior Leave-in ruling; registry wins over direct 3.4(ii) letter (R4-Q5) |
+| 14 | KMS Thermashape Straightening Creme | `kms-thermashape-straightening-creme` | held `smoothing_styler` / held `smoothing_styler` (r6) | A4 | No prior Leave-in ruling; R3-Q4/R3-H4(e), vacuous T_LI does not block |
+| 15 | L'ORÉAL PARiS Elnett Stylingspray Hitzeschutz 3 Tage Glatt | `loreal-paris-elnett-stylingspray-hitzeschutz-3-tage-glatt` | held `smoothing_styler` / held `smoothing_styler` (r6) | A10 | No prior Leave-in ruling; PH1-14/R3-H3; brand-article directions frozen |
+| 16 | NEQI Diamond Glass Styling Spray All | `neqi-diamond-glass-styling-spray-all` | held `smoothing_styler` / held `smoothing_styler` (r7) | A10 + A11 | **Leave-in move ALREADY APPROVED**, R6-Q1, 2026-10-13 |
+| 17 | NEQI Diamond Glass Ultimate Styling Spray | `neqi-diamond-glass-ultimate-styling-spray` | held `smoothing_styler` / held `smoothing_styler` (r7) | A10 + A11 | **Leave-in move ALREADY APPROVED**, R6-Q1, 2026-10-13 |
+| 18 | Redken Refreshing Curl Mist | `redken-refreshing-curl-mist` | held `refresher` / held `refresher` (r7) | A2 | No prior Leave-in ruling; held under PH1-16/PH2-2 |
+| 19 | Schwarzkopf taft Styling Balm LOCKEN Halt 3 | `schwarzkopf-taft-styling-balm-locken-halt-3` | held `curl_cream` / held `curl_cream` (r7) | A3 | No prior Leave-in ruling; held under PH1-16/PH2-2 |
+| 20 | Wella Professionals EIMI Nutricurls Curl Shaper (Defining Gel Cream) | `wella-eimi-nutricurls-curl-shaper` | held `curl_cream` / held `curl_cream` (r7) | A3 | No prior Leave-in ruling; held under PH1-16/PH2-2 |
+| 21 | Wella Professionals EIMI Flowing Form (Smooth Flowing Form) Glättungscreme / Anti-Frizz Smoothing Balm | `wella-professionals-eimi-flowing-form` | held `smoothing_styler` / held `smoothing_styler` (r6) | A4 | No prior Leave-in ruling; R3-H2 withdraws earlier review outcome |
 
-By amendment (node): A2 7 · A3 4 · A4 2 · A10 3 · A2 + A10 1 = **17**. By lean subtype: `curl_cream` 5 · `refresher` 5 (incl. Bali Volumizing) · `smoothing_styler` 4 · `gel` 2 · `salt_spray` 1 = 17.
+By lean subtype (Node): `smoothing_styler` 8 · `curl_cream` 5 · `refresher` 5 · `gel` 2 · `salt_spray` 1 = **21**.
 
 ---
 
-## C. Other products the addendum newly classifies (45)
+## C. Other explicit border statuses — destinations stay put (47)
 
-None has a Leave-in ruling; none moves on the Styling side. The addendum states their Leave-in status for the first time.
+### C1. Outside Leave-in's function scope — A1 / PH2-1 (45)
 
-### C1. Outside Leave-in's function scope — A1 (PH2-1) — 43 (+ Alcina Föhn Lotion, already ruled, part A1)
+These already-committed Styling products remain at their final subtype and become explicitly excluded at Leave-in G0 under A1. No prior Leave-in ruling was found. The 46th direct route, Alcina Föhn Lotion, is already excluded and appears only in A1 above. Ordinary 3.4(ii) and 3.5 routes are never held (R4-Q6); named §4.1(d) rows are handled in part B.
 
-Lane A round 3 routed each by pair rule `3.4(ii)` (C1/C2 promise volume, hold, texture, shaping/molding or shine only). Under the addendum each reads **excluded (Styling)**, `g0_basis: promise_outside_leave_in_function`; their Styling route is already committed. `hold_route` is the Styling F value (present = a fixative-class member above T_S). Lane B agrees on the Styling route for all but one (marked).
+| Brand + confirmed product name | Source slug | Final A / B subtype |
+|---|---|---|
+| ALCINA Ansatz Volumen Spray Aerosol | `alcina-ansatz-volumen-spray-aerosol` | `blowdry_lotion` / `blowdry_lotion` |
+| ALCINA Styling Mousse Aerosol | `alcina-styling-mousse-aerosol` | `mousse` / `mousse` |
+| alverde NATURKOSMETIK Beach Waves Spray Seaside Balance | `alverde-beach-waves-spray-seaside-balance` | `salt_spray` / `salt_spray` |
+| American Crew FIBER | `american-crew-fiber` | `molding` / `molding` |
+| Balea Ansatzvolumen Booster | `balea-ansatzvolumen-booster` | `mousse` / `mousse` |
+| Balea Föhnlotion Volume Effect | `balea-foehnlotion-volume-effect` | `blowdry_lotion` / `blowdry_lotion` |
+| Balea Haargel Hair Jelly (Styling Hair Jelly) | `balea-haargel-hair-jelly` | `gel` / `gel` |
+| Balea Haarpuder Volumen (Pomegranate) | `balea-haarpuder-volumen-pomegranate` | `hair_powder` / `hair_powder` |
+| Balea Styling Glow Wax | `balea-haarwachs-glow-wax` | `molding` / `molding` |
+| Balea MEN Styling Powder | `balea-men-styling-powder` | `hair_powder` / `hair_powder` |
+| Balea Sea Salt Texture Spray | `balea-sea-salt-texture-spray` | `salt_spray` / `salt_spray` |
+| Balea Styling Creme Power Flex (Forming Cream Power Flex) | `balea-styling-creme-power-flex` | `gel` / `gel` |
+| Balea Fixierungsbürste Styling Finishing Stick | `balea-styling-finishing-stick` | `shine_finish` / `shine_finish` |
+| Balea Styling Spray Ultra Volumen | `balea-styling-spray-ultra-volumen` | `blowdry_lotion` / `blowdry_lotion` |
+| Bali Curls Sleek Stick Brows & Edges | `bali-curls-sleek-stick-brows-and-edges` | `gel` / `gel` |
+| BALI GENTS VOLUMIZING STYLING POWDER | `bali-gents-haarpuder-volumizing-styling-powder` | `hair_powder` / `hair_powder` |
+| BALI GENTS Matt Paste | `bali-gents-matt-paste` | `molding` / `molding` |
+| BALI GENTS Sea Salt Spray | `bali-gents-sea-salt-spray` | `salt_spray` / `salt_spray` |
+| Bumble and bumble brilliantine | `bumble-and-bumble-brilliantine` | `shine_finish` / `shine_finish` |
+| Gard Haarspray extrastark (Pumpspray, ohne Treibgas) | `gard-haarspray-extrastark-pumpspray` | `hairspray` / `hairspray` |
+| got2b Kleber 4 Brows & Edges 2in1 Stylinggel | `got2b-kleber-4-brows-and-edges-2in1-stylinggel` | `gel` / `gel` |
+| got2b (Schwarzkopf) Styling Mattpaste Strand Matte | `got2b-styling-mattpaste-strand-matte` | `molding` / `molding` |
+| got2b (Schwarzkopf) Styling Paste iStyler Texture Clay | `got2b-styling-paste-istyler-texture-clay` | `molding` / `molding` |
+| got2b Styling Puder Volumen Powderfull | `got2b-styling-puder-volumen-powderfull` | `hair_powder` / `hair_powder` |
+| GUHL Föhn-Spray Langzeit Volumen (Föhn-Aktiv Styling Spray) | `guhl-foehn-spray-langzeit-volumen` | `blowdry_lotion` / `blowdry_lotion` |
+| Jean&Len Sea Salt Spray | `jean-und-len-sea-salt-spray` | `salt_spray` / `salt_spray` |
+| John Frieda Frizz Ease Zauberformel Seiden-Finish Creme | `john-frieda-frizz-ease-zauberformel-seiden-finish-creme` | `shine_finish` / `shine_finish` |
+| L'Oréal Men Expert Barber Club Styling Pomade Bart & Haar mit ätherischem Zedernholzöl | `loreal-men-expert-barber-club-styling-pomade` | `molding` / `molding` |
+| Moroccanoil Root Boost | `moroccanoil-root-boost` | `blowdry_lotion` / `blowdry_lotion` |
+| Moroccanoil Textur- & Volumenpuder fürs Haar (Texture & Volume Hair Powder) | `moroccanoil-textur-und-volumenpuder` | `hair_powder` / `hair_powder` |
+| Moroccanoil Volumizing Spray (Volumizing Mist) | `moroccanoil-volumizing-spray` | `blowdry_lotion` / `blowdry_lotion` |
+| NIVEA MEN Styling Cream Active | `nivea-men-styling-cream-active-craft-stylers` | `molding` / `molding` |
+| Schwarzkopf Professional OSiS Dust It | `osis-dust-it` | `hair_powder` / `hair_powder` |
+| Redken Powder Grip (03 Mattifying Hair Powder) | `redken-powder-grip-03` | `hair_powder` / `hair_powder` |
+| Schwarzkopf taft Föhn-Spray VOLUMEN Halt 3 | `schwarzkopf-taft-foehn-spray-volumen-halt-3` | `blowdry_lotion` / `blowdry_lotion` |
+| Schwarzkopf Taft Gel Wax Glanz (Strahlender Glanz) | `schwarzkopf-taft-gel-wax-glanz-halt-2` | `molding` / `molding` |
+| Schwarzkopf taft Haarpuder VOLUMEN | `schwarzkopf-taft-haarpuder-volumen` | `hair_powder` / `hair_powder` |
+| Schwarzkopf Taft Haargel MATT WAX Halt 5 | `schwarzkopf-taft-matt-wax-halt-5` | `molding` / `molding` |
+| Schwarzkopf taft Haargel POWER Halt 5 | `schwarzkopf-taft-power-haargel-halt-5` | `gel` / `gel` |
+| Schwarzkopf taft Schaumfestiger Volumen Halt 4, für feines Haar | `schwarzkopf-taft-schaumfestiger-volumen-halt-4-feines-haar` | `mousse` / `mousse` |
+| Syoss Max Hold Wax | `syoss-professional-performance-max-hold-power-wax` | `molding` / `molding` |
+| Syoss Schaumfestiger Volume | `syoss-schaumfestiger-volume` | `mousse` / `mousse` |
+| Schwarzkopf taft FORMING STYLING PASTE | `taft-styling-paste-forming-halt-5plus` | `molding` / `molding` |
+| Wella Professionals EIMI Volume Sugar Lift Volumenspray | `wella-eimi-sugar-lift` | `blowdry_lotion` / `blowdry_lotion` |
+| Wella Professionals EIMI Texture Ocean Spritz (Texturizing Salt Spray) | `wella-eimi-texture-ocean-spritz` | `salt_spray` / `salt_spray` |
 
-| Product | Slug | Styling subtype (lane A) | `hold_route` |
+R4-Q2: alverde Beach Waves is texture (`salt_spray`), not definition. R4-Q7: Taft Gel Wax Glanz remains molding; got2b Texture Clay's lead hold line supplies the main job. R4-H(3): unknown-position promise lines read in packet order. These text fixes do not create a new hold.
+
+### C2. Polysilicone-9 — A6 (1)
+
+John Frieda Frizz Ease **3-Tage-Glatt Styling-Spray** (`john-frieda-frizz-ease-3-tage-glatt-styling-spray`) remains `provisional_boundary (li_g0_provisional)` in both final lanes: Polysilicone-9 r3 leaves real hold unresolved; review `hair_fixing_silicone_unresolved`. **It is distinct from Unendlich Smooth Salon Blow-Out Spray**, which moves under R6-Q1 in part B. No prior Leave-in ruling was found.
+
+### C3. Care cream with an optional leave-in use — A9 (1)
+
+GUHL **LOCKEN PFLEGE & STYLING 3in1 LOCKENCREME, KUR & SPÜLUNG** (old title Haarkur, Conditioner & Lockencreme Pflege & Styling 3in1; `guhl-locken-pflege-und-styling-3in1`) **stays care in its current category**, as owner-ruled in R2-H2. Its first-named pack use is Spülung; the leave-in curl-cream use is recorded. Leave-in G0 under A9: `excluded_other_form`. Both final Styling lanes retain `provisional_boundary (mixed_promise)` with care/current-category ruling, never a Styling profile. It has no Leave-in engine ruling.
+
+---
+
+## D. Further border products staying put (16)
+
+| Product | Source slug | Final A / B destination | Reason |
 |---|---|---|---|
-| ALCINA Ansatz Volumen Spray Aerosol | `alcina-ansatz-volumen-spray-aerosol` | blowdry_lotion | present |
-| ALCINA Styling Mousse Aerosol | `alcina-styling-mousse-aerosol` | mousse | ambiguous (PQ-11, A7) |
-| alverde NATURKOSMETIK Beach Waves Spray Seaside Balance | `alverde-beach-waves-spray-seaside-balance` | salt_spray | absent |
-| Balea Ansatzvolumen Booster | `balea-ansatzvolumen-booster` | mousse | present (FX-4 only, A5) |
-| Balea Föhnlotion Volume Effect | `balea-foehnlotion-volume-effect` | blowdry_lotion | absent (A1 worked example) |
-| Balea Haargel Hair Jelly | `balea-haargel-hair-jelly` | gel | present |
-| Balea Haarpuder Volumen (Pomegranate) | `balea-haarpuder-volumen-pomegranate` | hair_powder | absent |
-| Balea Styling Glow Wax | `balea-haarwachs-glow-wax` | molding | absent |
-| Balea MEN Styling Powder | `balea-men-styling-powder` | hair_powder | absent |
-| Balea Sea Salt Texture Spray | `balea-sea-salt-texture-spray` | salt_spray | absent |
-| Balea Styling Creme Power Flex | `balea-styling-creme-power-flex` | gel | present (VP/DMAEMA, FX-4) |
-| Balea Fixierungsbürste Styling Finishing Stick | `balea-styling-finishing-stick` | shine_finish | present (A1 (c), R1-Q2) |
-| Balea Styling Spray Ultra Volumen | `balea-styling-spray-ultra-volumen` | blowdry_lotion | present |
-| Bali Curls Sleek Stick Brows & Edges | `bali-curls-sleek-stick-brows-and-edges` | gel | present |
-| BALI GENTS Haarpuder Volumizing Styling Powder | `bali-gents-haarpuder-volumizing-styling-powder` | hair_powder | absent |
-| BALI GENTS Matt Paste | `bali-gents-matt-paste` | molding | absent |
-| BALI GENTS Sea Salt Spray | `bali-gents-sea-salt-spray` | salt_spray | absent |
-| Gard Haarspray extrastark (Pumpspray) | `gard-haarspray-extrastark-pumpspray` | hairspray | present |
-| got2b Kleber 4 Brows & Edges 2in1 Stylinggel | `got2b-kleber-4-brows-and-edges-2in1-stylinggel` | gel | present |
-| got2b Styling Mattpaste Strand Matte | `got2b-styling-mattpaste-strand-matte` | molding | absent |
-| got2b Styling Paste iStyler Texture Clay | `got2b-styling-paste-istyler-texture-clay` | molding | present |
-| got2b Styling Puder Volumen Powderfull | `got2b-styling-puder-volumen-powderfull` | hair_powder | absent |
-| GUHL Föhn-Spray Langzeit Volumen | `guhl-foehn-spray-langzeit-volumen` | blowdry_lotion | absent |
-| Jean&Len Sea Salt Spray | `jean-und-len-sea-salt-spray` | salt_spray | absent |
-| John Frieda Frizz Ease Zauberformel Seiden-Finish Creme | `john-frieda-frizz-ease-zauberformel-seiden-finish-creme` | shine_finish | present — **lane B: `provisional_boundary`** (lane split, round 4) |
-| L'Oréal Men Expert Barber Club Styling Pomade | `loreal-men-expert-barber-club-styling-pomade` | molding | present |
-| Moroccanoil Root Boost | `moroccanoil-root-boost` | blowdry_lotion | present |
-| Moroccanoil Textur- & Volumenpuder | `moroccanoil-textur-und-volumenpuder` | hair_powder | absent |
-| Moroccanoil Volumizing Spray | `moroccanoil-volumizing-spray` | blowdry_lotion | present |
-| NIVEA MEN Styling Cream Active | `nivea-men-styling-cream-active-craft-stylers` | molding | present |
-| Schwarzkopf Professional OSiS Dust It | `osis-dust-it` | hair_powder | absent |
-| Redken Powder Grip 03 | `redken-powder-grip-03` | hair_powder | present |
-| Schwarzkopf taft Föhn-Spray VOLUMEN Halt 3 | `schwarzkopf-taft-foehn-spray-volumen-halt-3` | blowdry_lotion | present |
-| Schwarzkopf Taft Gel Wax Glanz | `schwarzkopf-taft-gel-wax-glanz-halt-2` | molding | absent |
-| Schwarzkopf taft Haarpuder VOLUMEN | `schwarzkopf-taft-haarpuder-volumen` | hair_powder | absent |
-| Schwarzkopf Taft MATT WAX Halt 5 | `schwarzkopf-taft-matt-wax-halt-5` | molding | absent |
-| Schwarzkopf taft Haargel POWER Halt 5 | `schwarzkopf-taft-power-haargel-halt-5` | gel | present |
-| Schwarzkopf taft Schaumfestiger Volumen Halt 4 (feines Haar) | `schwarzkopf-taft-schaumfestiger-volumen-halt-4-feines-haar` | mousse | absent |
-| Syoss Max Hold Wax | `syoss-professional-performance-max-hold-power-wax` | molding | present |
-| Syoss Schaumfestiger Volume | `syoss-schaumfestiger-volume` | mousse | absent |
-| Schwarzkopf taft Styling Paste Forming | `taft-styling-paste-forming-halt-5plus` | molding | present |
-| Wella Professionals EIMI Volume Sugar Lift | `wella-eimi-sugar-lift` | blowdry_lotion | present |
-| Wella Professionals EIMI Texture Ocean Spritz | `wella-eimi-texture-ocean-spritz` | salt_spray | present |
+| Wella Professionals EIMI Smooth Perfect Me (Balsam-Lotion) | `wella-eimi-smooth-perfect-me` | `leave_in` / same | Effective care; no firing A3/A4/A11 exclusion |
+| Balea PROFESSIONAL Haarserum Glow & Shine | `balea-professional-haarserum-glow-und-shine` | `leave_in` / same | R2-Q2 water-based-conditioner-serum exception; “Glow & Shine” line name is not a job |
+| Wella Professionals EIMI Nutricurls Fresh Up | `wella-eimi-nutricurls-fresh-up` | `leave_in` / same | PQ-10 above the post-preservative yardstick = care; “Nutricurls” line name never supplies a job |
+| got2b Anti-Frizz Lotion Schmusekatze | `got2b-anti-frizz-lotion-schmusekatze` | `leave_in` / same | Effective care; no firing A3/A4/A11 exclusion |
+| AUSSIE WORK THAT CURL LEAVE-IN CREAM | `aussie-leave-in-creme-work-that-curl` | `leave_in` / same | R4-Q3: “strong hair” is a result, not a care job; no fixative |
+| Schwarzkopf Professional OSiS+ CURL RETOUCH CURL ENHANCING SPRAY | `schwarzkopf-professional-osis-curl-retouch` | `leave_in` / same | Effective care; no firing A3/A4/A11 exclusion |
+| BALI CURLS Leave-In Spray Curl Defining (Curl Defining Spray) | `bali-curls-leave-in-spray-curl-defining` | `leave_in` / same | Effective care; no firing A3/A4/A11 exclusion |
+| Moroccanoil Anti-Frizz Schild-Spray (Frizz Shield Spray) | `moroccanoil-anti-frizz-schild-spray` | `leave_in` / same | Effective care; no firing A3/A4/A11 exclusion |
+| Balea Styling Locken Lotion | `balea-styling-locken-lotion` | `leave_in` / same | Effective care; no firing A3/A4/A11 exclusion |
+| Kérastase CURL MANIFESTO REFRESH ABSOLU Second day curl refreshing spray | `kerastase-curl-manifesto-refresh-absolu` | `leave_in` / same | R4-Q1: one-job C1 refreshing-spray name supplies promise; care keeps Leave-in |
+| syoss KERATIN Heat HITZESCHUTZ-SPRAY | `syoss-hitzeschutzspray-keratin-heat` | `heat_protectant` / same | Protection-first confirmed name; outside this addendum |
+| GUHL LOCKEN PFLEGE & STYLING 2in1 STYLING-SPRAY | `guhl-styling-spray-locken-pflege-und-styling-2in1` | `provisional_boundary (mixed_promise)` / same | Locked mixed-promise review; current category retained |
+| GARNIER FRUCTIS LOCKEN METHODE SHAPE REFRESH STEP 4 FEUCHTIGKEITS-BOOST SPRAY | `garnier-fructis-locken-methode-feuchtigkeitsboost-pflege-spray` | `provisional_boundary (mixed_promise)` / same | Locked mixed-promise review; current category retained |
+| John Frieda Traumlocken Belebender Wellenauffrischer | `john-frieda-traumlocken-belebender-wellenauffrischer` | `provisional_boundary (mixed_promise)` / same | Locked mixed-promise review; current category retained |
+| Moroccanoil Glättende Creme (Smoothing Lotion) | `moroccanoil-glaettende-creme-smoothing-lotion` | `provisional_boundary (mixed_promise)` / same | Locked mixed-promise review; current category retained |
+| Syoss Glaze Glanz & Schutz Primer | `syoss-glaze-glanz-und-schutz-primer` | `provisional_boundary (mixed_promise)` / same | Locked mixed-promise review; current category retained |
 
-By subtype (node, incl. Alcina Föhn Lotion = 44 rows of lane A `3.4(ii)` less Bali Volumizing, which is in part B): molding 10 · blowdry_lotion 9 · hair_powder 8 · gel 5 · salt_spray 5 · mousse 4 · shine_finish 2 · hairspray 1. `hold_route`: present 23 · absent 20 · ambiguous 1. Why they are listed: under the v1.1 letter a no-fixative volume/texture/shine product has no clean G0 state (no Leave-in function, no L5 route, not rinse-out), so v1.1 could only park it at `provisional_boundary`; A1 settles it.
-
-### C2. Polysilicone-9 — A6 — 1
-
-| Product | Slug | Current Leave-in status | Outcome under the addendum | Amendment |
-|---|---|---|---|---|
-| John Frieda Frizz Ease 3-Tage-Glatt Styling-Spray | `john-frieda-frizz-ease-3-tage-glatt-styling-spray` | no ruling; v1.1 letter would read Polysilicone-9 r3 as an L2 silicone ⇒ real care ⇒ `in_category` | `provisional_boundary`, review `hair_fixing_silicone_unresolved`; stays in its current category (both Styling lanes: `li_g0_provisional`) | A6 |
-
-### C3. Care cream with an optional leave-in use — A9 — 1
-
-| Product | Slug | Current Leave-in status | Outcome under the addendum | Amendment |
-|---|---|---|---|---|
-| GUHL Haarkur, Conditioner & Lockencreme Pflege & Styling 3in1 | `guhl-locken-pflege-und-styling-3in1` | no ruling; v1.1 §2.4 rule 2 consequence 2 (dual-use) would read `in_category` + review | stays care in its current category: `excluded_other_form`, `dual_use_directions` recorded, review (R2-H2) | A9 (scope O-7) |
+Wella EIMI Smooth Thermal Image stays Heat Protectant. Syoss Glaze **Topcoat** stays committed `shine_finish` (3.5, R4-Q2), distinct from the mixed Glaze **Primer** above. Balea Finishing Spray Glow & Care and taft x Gliss Silky Shine stay committed `shine_finish`; Barber Club Pomade (C1) and Redken Wax Spray stay committed Styling (R4-Q6). None is released from a Leave-in-addendum hold.
 
 ---
 
-## D. Considered, not moved (no Leave-in ruling) — 17
+## E. Complete Styling-cohort destination check
 
-Checked because they sit at the border; the addendum leaves their outcome where the Styling lanes put it.
+All **143** source slugs were checked. Four corpus identities use different Styling slugs; this crosswalk accounts for them without duplicate product counts:
 
-| Product | Slug | Styling round 3 (A / B) | Why the addendum does not move it |
-|---|---|---|---|
-| Wella EIMI Smooth Perfect Me | `wella-eimi-smooth-perfect-me` | leave_in / leave_in | real care (ester r3, Dimethicone r4); Polyacrylamide stays unenumerated |
-| Balea PROFESSIONAL Haarserum Glow & Shine | `balea-professional-haarserum-glow-und-shine` | leave_in / leave_in | water-based-serum exception ⇒ G0; real care |
-| Wella EIMI Nutricurls Fresh Up | `wella-eimi-nutricurls-fresh-up` | leave_in / leave_in | Polyquaternium-10 above the yardstick = care (R2-H1) |
-| John Frieda Frizz Ease Unendlich Smooth Blow-Out Spray | `john-frieda-frizz-ease-unendlich-smooth-blow-out-spray` | leave_in / leave_in | real care |
-| got2b Anti-Frizz Lotion Schmusekatze | `got2b-anti-frizz-lotion-schmusekatze` | leave_in / leave_in | real care |
-| AUSSIE Leave-In Creme Work That Curl | `aussie-leave-in-creme-work-that-curl` | leave_in / leave_in | real care, no fixative |
-| Schwarzkopf Professional OSiS+ Curl Retouch | `schwarzkopf-professional-osis-curl-retouch` | leave_in / leave_in | real care |
-| BALI CURLS Leave-In Spray Curl Defining | `bali-curls-leave-in-spray-curl-defining` | leave_in / leave_in | real care on the frozen list (formula-conflict history, Styling §2.2 A2) |
-| Moroccanoil Anti-Frizz Schild-Spray | `moroccanoil-anti-frizz-schild-spray` | leave_in / leave_in | real care |
-| Balea Styling Locken Lotion | `balea-styling-locken-lotion` | leave_in / leave_in | PQ-69 r4 + phenyl silicones = care (A7 worked example) |
-| Balea Glattspray Anti-Frizz | `balea-glattspray-anti-frizz` | li_g0_provisional / li_g0_provisional | fixative with **thin** conditioning ⇒ A4 limb 2 fails; LI §2.3.2 clause 2 unchanged |
-| syoss Hitzeschutzspray Keratin | `syoss-hitzeschutzspray-keratin-heat` | li_g0_provisional / heat_protectant | Heat Protectant under R3-Q2 (shop-title fallback); outside this addendum |
-| GUHL Styling Spray Locken Pflege & Styling 2in1 | `guhl-styling-spray-locken-pflege-und-styling-2in1` | mixed / mixed | R1-Q3 not mirrored (O-8) |
-| GARNIER FRUCTIS Pflege-Spray Locken Methode Feuchtigkeitsboost | `garnier-fructis-locken-methode-feuchtigkeitsboost-pflege-spray` | mixed / mixed | R1-Q3 not mirrored (O-8) |
-| John Frieda Traumlocken Belebender Wellenauffrischer | `john-frieda-traumlocken-belebender-wellenauffrischer` | mixed / mixed | R1-Q3 not mirrored (O-8) |
-| Moroccanoil Glättende Creme (Smoothing Lotion) | `moroccanoil-glaettende-creme-smoothing-lotion` | mixed / mixed | no L5 member (PQ-11 r9 is A7) ⇒ A3/A4 fail; R1-Q3 not mirrored; A8: Hydrogenated Vegetable Oil r12 does not change WT (LGN pair already `high`) |
-| Syoss Glaze Glanz & Schutz Primer | `syoss-glaze-glanz-und-schutz-primer` | mixed / mixed | mixed style + care + repair lead (O-8) |
+| Corpus product in part A1 | Styling source slug | Final Styling A / B destination |
+|---|---|---|
+| Alcina Föhn Lotion | `alcina-foehn-lotion` | committed `blowdry_lotion` / same; already excluded from Leave-in |
+| Maria Nila Curlicue Cream | `maria-nila-curlicue-cream` | committed `curl_cream` / same; already excluded from Leave-in |
+| Elvital Öl Magique | `loreal-elvital-haaroel-oel-magique-alle-haartypen` | `oil` / same; already excluded from Leave-in |
+| EVO Head Mistress Cuticle Sealer | `evo-head-mistress-cuticle-sealer` | `provisional_boundary (evidence_gate)` / same; owner Leave-in destination recorded, missing directions/promise in this Styling capture still block emission |
 
-Wella EIMI Smooth Thermal Image (mixed / heat_protectant) goes to Heat Protectant under RG3-4 and is outside this addendum.
+ The final set has **21 holds** and **122 without that hold**. Parts A–D name the border-relevant products; the table below lists the remaining cohort products so every unchanged destination is reviewable. Non-Styling routes and evidence/formula/mixed-review blocks are retained, not released by this overlay.
 
----
+| Remaining product | Source slug | Final A / B destination |
+|---|---|---|
+| American Crew Styling Pomade | `american-crew-pomade` | provisional_boundary (evidence_gate) / provisional_boundary (evidence_gate) |
+| Balea Finishing Spray Glow & Care | `balea-finishing-spray-glow-und-care` | styling shine_finish / styling shine_finish |
+| Balea Styling WAX STICK | `balea-haarwachs-styling-stick` | styling molding / styling molding |
+| Balea MEN Pomade Haar & Bart 2in1 | `balea-men-pomade-haar-bart-2in1` | styling molding / styling molding |
+| Balea Overnight Wellenspray | `balea-overnight-wellenspray` | styling gel / styling gel |
+| Balea PROFESSIONAL Leave-In Glow&Shine Finishing Spray | `balea-professional-glow-und-shine-finishing-spray` | styling shine_finish / styling shine_finish |
+| Balea Styling Spray Volumenpuder Pure Styling | `balea-pure-styling-volumenpuder-spray` | styling texture_spray / styling texture_spray |
+| Batiste TROCKENSHAMPOO ALL IN ONE fruchtig frischer Duft | `batiste-trockenshampoo-all-in-one` | dry_shampoo / dry_shampoo |
+| Bumble and bumble Surf Spray | `bumble-and-bumble-surf-spray` | provisional_boundary (evidence_gate) / provisional_boundary (evidence_gate) |
+| Cantu Shea Butter for Natural Hair Firm Hold Edge Stay Gel | `cantu-shea-butter-extra-hold-edge-stay-gel` | provisional_boundary (formula_conflict) / provisional_boundary (formula_conflict) |
+| feschi smooth & shine Anti Frizz Spray (Glanzspray) | `feschi-smooth-and-shine-anti-frizz-spray-glanzspray` | provisional_boundary (evidence_gate) / provisional_boundary (evidence_gate) |
+| GARNIER FRUCTIS SLEEK & STAY HEAT-ACTIVATED SERUM | `garnier-fructis-sleek-and-stay-heat-activated-serum` | oil / oil |
+| got2b (Schwarzkopf/Henkel) Glanz Spray got Gloss (gotGloss Glanz Spray) | `got2b-gotgloss-glanz-spray` | styling shine_finish / styling shine_finish |
+| got2b Schutz-engel Hitzeschutz Spray | `got2b-hitzeschutzspray-schutzengel` | heat_protectant / heat_protectant |
+| got2b Lockenspray Refresher Curlz (gotCURLZ Locken Refresher Spray) | `got2b-lockenspray-refresher-curlz` | styling refresher / styling refresher |
+| got2b SPRÜH KLEBER Freeze Haarlack | `got2b-spruehkleber-freeze-haarlack` | styling hairspray / styling hairspray |
+| got2b Trocken SHAMPOO Extra Volumen | `got2b-trockenshampoo-extra-volumen` | dry_shampoo / dry_shampoo |
+| ISANA PROFESSIONAL Styling Creme Locken Traum | `isana-professional-styling-creme-locken-traum` | provisional_boundary (evidence_gate) / provisional_boundary (evidence_gate) |
+| John Frieda Frizz Ease DER BÄNDIGER EXTRA STRONG SERUM | `john-frieda-haarserum-frizz-ease-der-baendiger` | oil / oil |
+| John Frieda Volume Lift Ansatz-Booster | `john-frieda-volume-lift-ansatz-booster` | provisional_boundary (formula_conflict) / provisional_boundary (formula_conflict) |
+| John Frieda Spray Volume Lift Pushed-up Dry Texture | `john-frieda-volume-lift-pushed-up-dry-texture-spray` | styling texture_spray / styling texture_spray |
+| Kevin.Murphy Powder.Puff Volume | `kevin-murphy-powder-puff-volume` | provisional_boundary (formula_conflict) / provisional_boundary (formula_conflict) |
+| KMS Thermashape 2-in-1 Spray | `kms-thermashape-2-in-1-spray` | styling smoothing_styler / styling smoothing_styler |
+| LANGHAARMÄDCHEN LOCKENHALT SPRAY Halt & Sprungkraft | `langhaarmaedchen-lockenspray-halt-sprungkraft` | provisional_boundary (evidence_gate) / provisional_boundary (evidence_gate) |
+| Living Proof Full Dry Volume & Texture Spray | `living-proof-full-dry-volume-texture-spray` | provisional_boundary (evidence_gate) / provisional_boundary (evidence_gate) |
+| L'ORÉAL PARiS Elnett Haarspray Extra Starker Halt | `loreal-paris-elnett-haarspray-extra-starker-halt` | styling hairspray / styling hairspray |
+| L'ORÉAL PARiS ELVITAL Volumenspray Big Hair Day (Erfrischendes Volumen Spray) | `loreal-paris-elvital-big-hair-day-erfrischendes-volumenspray` | dry_shampoo / dry_shampoo |
+| Moroccanoil Trockenes Texturspray (Dry Texture Spray) | `moroccanoil-dry-texture-spray` | styling texture_spray / styling texture_spray |
+| Schwarzkopf Professional OSiS Flatliner | `osis-flatliner` | heat_protectant / heat_protectant |
+| Schwarzkopf Professional OSiS Sparkler | `osis-sparkler` | styling shine_finish / styling shine_finish |
+| Schwarzkopf Professional OSiS Super Shield | `osis-super-shield` | heat_protectant / heat_protectant |
+| Redken Root Tease | `redken-root-tease` | styling texture_spray / styling texture_spray |
+| Redken BEACH SPRAY BEACHY TEXTURE SPRAY | `redken-styling-beach-spray` | provisional_boundary (evidence_gate) / provisional_boundary (evidence_gate) |
+| Redken Wax Spray (Redken Spray Wax) | `redken-wax-spray` | styling texture_spray / styling texture_spray |
+| Schwarzkopf taft Haarspray CLASSIC Halt 3 | `schwarzkopf-taft-haarspray-classic-halt-3` | styling hairspray / styling hairspray |
+| Schwarzkopf taft Haarspray GLANZ Halt 4 | `schwarzkopf-taft-haarspray-glanz-halt-4` | styling hairspray / styling hairspray |
+| Schwarzkopf taft Haarspray POWER Halt 5 | `schwarzkopf-taft-haarspray-power-halt-5` | styling hairspray / styling hairspray |
+| Schwarzkopf taft Texturspray Aloe Boost | `schwarzkopf-taft-texturspray-aloe-boost` | styling texture_spray / styling texture_spray |
+| Schwarzkopf taft (taft x GLISS) Glanz-Spray taft x Gliss Silky Shine | `schwarzkopf-taft-x-gliss-silky-shine-shine-coat` | styling shine_finish / styling shine_finish |
+| syoss Curl Cream Gel | `syoss-curl-cream-gel-3in1` | styling gel / styling gel |
+| Syoss Glaze Topcoat | `syoss-glaze-topcoat` | styling shine_finish / styling shine_finish |
+| syoss Haarspray Max Hold | `syoss-haarspray-max-hold` | styling hairspray / styling hairspray |
+| Schwarzkopf taft taft x GLISS Lovely Long MULTITASKING HITZESCHUTZ-SPRAY | `taft-x-gliss-hitzeschutzspray-lovely-long` | heat_protectant / heat_protectant |
+| Wella Professionals EIMI Glam Mist Shinespray | `wella-eimi-glam-mist-shine-spray` | styling shine_finish / styling shine_finish |
+| Wella Professionals EIMI Smooth Thermal Image (2-Phasen-Spray) | `wella-eimi-smooth-thermal-image` | heat_protectant / heat_protectant |
+| Wella Professionals EIMI Volume Dry Me (Trockenshampoo) | `wella-eimi-volume-dry-me` | dry_shampoo / dry_shampoo |
+| wellaflex Schaumfestiger Locken & Wellen, Starker Halt | `wellaflex-schaumfestiger-locken-und-wellen-starker-halt` | styling mousse / styling mousse |
 
-## E. Where no Leave-in ruling was found
+## F. Approval and evidence limits
 
-- **All 17 held products (part B) and all 45 products in part C** have no record under `data/research/leave-in-inci/` or `docs/research/leave-in-inci/`. Their „current Leave-in status" is the v1.1 letter as the Styling lanes re-ran it (round 3, §4.5 step) or, for five of them, the concept-phase G0 lane (`concept-v0/round2/G0-border-verdicts.json`: Taft Balm, Balea Pro Traumlocken, Balea Revitalizing, alverde Locken Refresh, Balea Sea Salt Care & Define). Those reads are research, not rulings.
-- **COLOR WOW Dream Coat** appears in Leave-in data only as an unseen-test candidate that was set aside (`data/research/leave-in-inci/v1.0/corpus/unseen-test/candidate-products.md`), and in a Product Intake router fixture as `heat_protectant` — neither is a Leave-in ruling.
-- **The ten Styling-side Leave-in rulings (part A2)** have no Leave-in engine record either; their status is the owner ruling.
-- **Live catalog category** was not checked for any product outside the nine catalog-enriched corpus records (O-11).
+- **No additional already-ruled Leave-in move was found** in the corpus plus owner registry. The 19 non-NEQI holds and 45 direct-scope products have no prior Leave-in ruling; GUHL 3in1 has an owner care ruling, not a Leave-in engine record.
+- Color Wow Dream Coat appears in Leave-in data as a rejected unseen-test candidate and in a Product Intake router fixture; neither is a Leave-in ruling.
+- The frozen v1.0/v1.1 records remain historical. The NEQI moves do not silently rewrite T15/T20 or release profiles today.
+- **O-11:** live categories and catalog identities need a separate check before any separately authorised migration. No Supabase or production query/write was performed.
