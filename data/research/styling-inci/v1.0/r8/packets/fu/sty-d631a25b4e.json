@@ -1,0 +1,60 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v0.5-r7amend",
+  "sample_id": "sty-d631a25b4e",
+  "format": "serum",
+  "inci": {
+    "inci_item_count": 9,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "DIMETHICONE"
+      },
+      {
+        "rank": 2,
+        "inci": "DIMETHICONOL"
+      },
+      {
+        "rank": 3,
+        "inci": "ORYZA SATIVA (RICE) BRAN OIL"
+      },
+      {
+        "rank": 4,
+        "inci": "TOCOPHEROL"
+      },
+      {
+        "rank": 5,
+        "inci": "FRAGRANCE/PARFUM"
+      },
+      {
+        "rank": 6,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 7,
+        "inci": "HEXYL CINNAMAL"
+      },
+      {
+        "rank": 8,
+        "inci": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+      },
+      {
+        "rank": 9,
+        "inci": "VANILLIN"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Für die Anwendung auf nassem Haar: Sparsam verwenden, 1 Pumpstoß des Serums in die Handfläche geben und verreiben. Gleichmäßig im feuchten Haar verteilen, den Ansatz aussparen. Je nach Haarlänge und -dicke mehr oder weniger verwenden. Nicht ausspülen. Für die Anwendung auf trockenem Haar: Eine kleine Menge auf gezielte Haarpartien auftragen.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

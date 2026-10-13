@@ -1,0 +1,117 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r7amend",
+  "sample_id": "sty-91c77fb1a4",
+  "brand": "Syoss",
+  "confirmed_name": "Glaze Topcoat",
+  "confirmed_name_tier": "C2",
+  "format": "aerosol",
+  "product_type_word": "aerosol",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "3 in 1 Formel: Style, pflege und repariere dein Haar für Looks mit einem Laminierungs-Effekt. Mit Vitamin-Komplex und Gloss Boost für ein glänzendes Finish.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "3in1 Style, Care, Shine",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Mit Laminierungs-Effekt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Bis zu 230°C Hitzeschutz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Mit Vitamin-Komplex und Gloss Boost für ein intensiv glänzendes Finish",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Reduziert Frizz bis zu 24h für seidig glattes Haar und schützt das Haar vor Luftfeuchtigkeit",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Umhüllt das Haar mit einem intensiv glänzenden Finish, ohne sichtbare Rückstände oder fettigen Effekt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Bändigt abstehende Haare und verleiht eine reflektierende Oberfläche für mehrschichtigen Glanz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "finish",
+      "text": "Mit Vitamin-Komplex und Gloss Boost für ein intensiv glänzendes Finish",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "duration",
+      "text": "Reduziert Frizz bis zu 24h",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "humidity",
+      "text": "schützt das Haar vor Luftfeuchtigkeit",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "heat_protection",
+      "text": "Bis zu 230°C Hitzeschutz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-12"
+    }
+  ]
+}

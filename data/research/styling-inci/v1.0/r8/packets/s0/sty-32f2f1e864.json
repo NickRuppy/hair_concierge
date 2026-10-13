@@ -1,0 +1,148 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r7amend",
+  "sample_id": "sty-32f2f1e864",
+  "product": {
+    "confirmed_name": "Styling Balm LOCKEN Halt [CLAIM]",
+    "confirmed_name_redacted": true,
+    "confirmed_name_tier": "C2",
+    "brand": "Schwarzkopf taft",
+    "format": "cream"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 26,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 2,
+        "inci": "Dicaprylyl Carbonate"
+      },
+      {
+        "rank": 3,
+        "inci": "Dicaprylyl Ether"
+      },
+      {
+        "rank": 4,
+        "inci": "PVP"
+      },
+      {
+        "rank": 5,
+        "inci": "Polyquaternium-37"
+      },
+      {
+        "rank": 6,
+        "inci": "Distearoylethyl Hydroxyethylmonium Methosulfate"
+      },
+      {
+        "rank": 7,
+        "inci": "Butyrospermum Parkii (Shea) Butter"
+      },
+      {
+        "rank": 8,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 9,
+        "inci": "Cetearyl Alcohol"
+      },
+      {
+        "rank": 10,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 11,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 12,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 13,
+        "inci": "Citric Acid"
+      },
+      {
+        "rank": 14,
+        "inci": "Isopropyl Alcohol"
+      },
+      {
+        "rank": 15,
+        "inci": "Benzyl Alcohol"
+      },
+      {
+        "rank": 16,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 17,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 18,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      },
+      {
+        "rank": 19,
+        "inci": "Terpineol"
+      },
+      {
+        "rank": 20,
+        "inci": "Dimethyl Phenethyl Acetate"
+      },
+      {
+        "rank": 21,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 22,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 23,
+        "inci": "Alpha-Isomethyl Ionone"
+      },
+      {
+        "rank": 24,
+        "inci": "Citrus Aurantium Peel Oil"
+      },
+      {
+        "rank": 25,
+        "inci": "Rose Ketones"
+      },
+      {
+        "rank": 26,
+        "inci": "Methyl Benzoate"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "In trockenes oder handtuchtrockenes Haar einarbeiten und Locken nach Wunsch modellieren. Für beste Ergebnisse, mit TAFT Haarspray fixieren.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Dieser Haarstyling-Balsam definiert Locken voller [CLAIM].",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-09",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

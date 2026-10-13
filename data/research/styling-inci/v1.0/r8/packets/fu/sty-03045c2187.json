@@ -1,0 +1,96 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v0.5-r7amend",
+  "sample_id": "sty-03045c2187",
+  "format": "aerosol",
+  "inci": {
+    "inci_item_count": 18,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Dimethyl Ether"
+      },
+      {
+        "rank": 2,
+        "inci": "Alcohol denat."
+      },
+      {
+        "rank": 3,
+        "inci": "C12-15 Alkyl Benzoate"
+      },
+      {
+        "rank": 4,
+        "inci": "Hydrogenated Ethylhexyl Olivate"
+      },
+      {
+        "rank": 5,
+        "inci": "Vinyl Caprolactam/VP/Dimethylaminoethyl Methacrylate Copolymer"
+      },
+      {
+        "rank": 6,
+        "inci": "AMP-Isostearoyl Wheat/Corn/Soy Amino Acids"
+      },
+      {
+        "rank": 7,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 8,
+        "inci": "Hydrogenated Olive Oil Unsaponifiables"
+      },
+      {
+        "rank": 9,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 10,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 11,
+        "inci": "C12-15 Alcohols"
+      },
+      {
+        "rank": 12,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      },
+      {
+        "rank": 13,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 14,
+        "inci": "Acetyl Cedrene"
+      },
+      {
+        "rank": 15,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 16,
+        "inci": "Linalyl Acetate"
+      },
+      {
+        "rank": 17,
+        "inci": "Alpha-Isomethyl Ionone"
+      },
+      {
+        "rank": 18,
+        "inci": "Juniperus Virginiana Oil"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Für optimalen Hitzeschutz vor dem Stylen aus 30 cm Abstand ins handtuchtrockene Haar sprühen und wie gewohnt föhnen. Für beste Ergebnisse mit [CLAIM] x [CLAIM] me [CLAIM] Haarspray fixieren.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "schwarzkopf.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

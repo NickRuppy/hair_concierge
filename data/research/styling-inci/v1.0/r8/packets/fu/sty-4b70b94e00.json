@@ -1,0 +1,100 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v0.5-r7amend",
+  "sample_id": "sty-4b70b94e00",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 19,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA"
+      },
+      {
+        "rank": 2,
+        "inci": "MAGNESIUM SULFATE"
+      },
+      {
+        "rank": 3,
+        "inci": "POLYGLYCERYL-6 CAPRYLATE"
+      },
+      {
+        "rank": 4,
+        "inci": "POLYGLYCERYL-4 CAPRATE"
+      },
+      {
+        "rank": 5,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 6,
+        "inci": "SODIUM BENZOATE"
+      },
+      {
+        "rank": 7,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 8,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 9,
+        "inci": "HYDROLYZED RICE PROTEIN"
+      },
+      {
+        "rank": 10,
+        "inci": "MARIS SAL"
+      },
+      {
+        "rank": 11,
+        "inci": "PANTHENOL"
+      },
+      {
+        "rank": 12,
+        "inci": "POTASSIUM SORBATE"
+      },
+      {
+        "rank": 13,
+        "inci": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+      },
+      {
+        "rank": 14,
+        "inci": "LACTIC ACID"
+      },
+      {
+        "rank": 15,
+        "inci": "HEXYL CINNAMAL"
+      },
+      {
+        "rank": 16,
+        "inci": "LINALYL ACETATE"
+      },
+      {
+        "rank": 17,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 18,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 19,
+        "inci": "ETHYL BENZOATE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "[CLAIM]: Gleichmäßig ins nasse oder handtuchtrockene Haar sprühen und sanft einkneten.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "bali-care.com",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

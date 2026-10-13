@@ -1,0 +1,162 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r7amend",
+  "sample_id": "sty-f3c09d13ab",
+  "brand": "NEQI",
+  "confirmed_name": "Diamond Glass Styling Spray All",
+  "confirmed_name_tier": "C2",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Das NEQI Diamond Glass All Styling Spray verleiht dem Haar einen intensiv glänzenden, glatten „Glass Hair“-Effekt. Es kombiniert Styling-Unterstützung mit Hitzeschutz, reduziert Frizz und schützt das Haar vor Feuchtigkeit – ohne es zu beschweren. Es ist also perfekt geeignet, für alle die ein minimalistisches Styling-Setup bevorzugen.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "neqi-hair.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Die hitzeaktivierten Polymere schaffen maximale Geschmeidigkeit und seidig glatte Haare. Feuchtigkeit? Kein Problem! Das Produkt bildet ein Schutzschild vor Feuchtigkeit und schützt deine Haare über mehrere Haarwäschen hinweg.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "neqi-hair.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Mit unserem DIAMOND GLASS Styling Spray ist der Glass-Hair-Haartrend ganz einfach nachzustylen, denn Wasser perlt nach der Anwendung an deinem spiegelglatten Haar einfach so ab.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "neqi-hair.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Styling + Hitzeschutz in einem",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "neqi-hair.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Leichte, aktivierbare Textur",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "neqi-hair.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Glättung + Versiegelung",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "neqi-hair.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Wasserabweisender Effekt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "neqi-hair.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Verbesserte Kämmbarkeit",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "neqi-hair.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Anti-Frizz Versiegelung",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Glättet die Haarstruktur",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Mit hitzeaktivierten Polymeren",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Ultimativer Feuchtigkeitsschutz",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Sofort seidige und glatte Haarstruktur",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "finish",
+      "text": "intensiv glänzenden, glatten „Glass Hair\"-Effekt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "neqi-hair.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "humidity",
+      "text": "schützt das Haar vor Feuchtigkeit",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "neqi-hair.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "heat_protection",
+      "text": "Es kombiniert Styling-Unterstützung mit Hitzeschutz, reduziert Frizz und schützt das Haar vor Feuchtigkeit – ohne es zu beschweren.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "neqi-hair.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "heat_protection",
+      "text": "Sofort seidige, glatte Textur mit unglaublichem Glanz & Hitzeschutz bis zu 230°C – für alle Haartypen.",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-12"
+    }
+  ]
+}

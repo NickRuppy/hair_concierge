@@ -1,0 +1,104 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r7amend",
+  "sample_id": "sty-d14403370a",
+  "product": {
+    "confirmed_name": "LOCKENHALT SPRAY Halt & Sprungkraft",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C1",
+    "brand": "LANGHAARMÄDCHEN",
+    "format": "spray_gel"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": [
+      {
+        "flag": "repaired_split_token: 'LEUCONOSTOC/RADISH ROOT FERMENT' + 'FILTRATE' -> 'LEUCONOSTOC/RADISH ROOT FERMENT FILTRATE'",
+        "defect_rank": 14
+      }
+    ]
+  },
+  "inci": {
+    "inci_item_count": 16,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA"
+      },
+      {
+        "rank": 2,
+        "inci": "PROPYLENE GLYCOL"
+      },
+      {
+        "rank": 3,
+        "inci": "HYDROLYZED CORN STARCH"
+      },
+      {
+        "rank": 4,
+        "inci": "POLYGLYCERYL-4 CAPRATE"
+      },
+      {
+        "rank": 5,
+        "inci": "POLYGLYCERYL-6 CAPRYLATE"
+      },
+      {
+        "rank": 6,
+        "inci": "BETAINE"
+      },
+      {
+        "rank": 7,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 8,
+        "inci": "SODIUM BENZOATE"
+      },
+      {
+        "rank": 9,
+        "inci": "SACCHAROMYCES CEREVISIAE EXTRACT"
+      },
+      {
+        "rank": 10,
+        "inci": "PANTHENOL"
+      },
+      {
+        "rank": 11,
+        "inci": "POTASSIUM SORBATE"
+      },
+      {
+        "rank": 12,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 13,
+        "inci": "LACTIC ACID"
+      },
+      {
+        "rank": 14,
+        "inci": "LEUCONOSTOC/RADISH ROOT FERMENT FILTRATE"
+      },
+      {
+        "rank": 15,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 16,
+        "inci": "LIMONENE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Vor dem Lockenstyling gut schütteln und ins handtuchtrockene oder trockene Haar sprühen, anschließend stylen. Kann auch nach dem Styling aufs Haar gesprüht werden, um Halt zu verleihen.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [],
+  "heat_protection_claims_c1_c2": []
+}

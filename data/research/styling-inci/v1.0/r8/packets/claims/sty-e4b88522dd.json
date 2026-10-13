@@ -1,0 +1,77 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r7amend",
+  "sample_id": "sty-e4b88522dd",
+  "brand": "Wella Professionals",
+  "confirmed_name": "EIMI Volume Dry Me (Trockenshampoo)",
+  "confirmed_name_tier": "C2",
+  "format": "aerosol",
+  "product_type_word": "aerosol",
+  "scale_info": {
+    "number": 1,
+    "scale_as_written": "Haltegrad: 1",
+    "scale_max": null,
+    "scale_max_stated": false,
+    "tier": "C2"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Erreiche Deinen Look mit Dry Me, einem Trockenshampoo, das Volumen und eine handhabbare, matte Textur schafft. Die Formel des Trockenshampoos mit Tapiokastärke erfrischt Ihr Haar und absorbiert Öl. Haltegrad: 1",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Professionelles volumengebendes Trockenshampoo für eine matte Textur",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Mit Tapiokastärke für frisches Haar",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Volumen",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Erfrischtes, voluminöses Haar",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Haltegrad: 1",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "number": 1,
+      "scale_as_written": "Haltegrad: 1",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null
+    }
+  ]
+}
