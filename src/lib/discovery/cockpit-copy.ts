@@ -4,7 +4,6 @@ import { scanReasonsLabel } from "@/lib/scan/result-presentation"
 import {
   SCAN_NOT_NEEDED_REASON_COPY,
   SCAN_SUBTITLE_WITHOUT_TARGETS,
-  SCAN_VERDICT_COPY,
   scanDeferredSubtitle,
   scanNotNeededHeadline,
   scanNotNeededSubtitle,
@@ -29,9 +28,6 @@ import {
 
 /** Scan verdict copy (`src/lib/scan/verdict-labels.ts`), keyed by the scan's own values. */
 const SCAN_VERDICT_TITLES: Array<[string, string]> = [
-  [SCAN_VERDICT_COPY.ideal.title, "Passt zum Haarprofil"],
-  [SCAN_VERDICT_COPY.supportive.title, "Passt mit Einschränkung zum Haarprofil"],
-  [SCAN_VERDICT_COPY.mismatch.title, "Passt nicht zum Haarprofil"],
   [SCAN_SUBTITLE_WITHOUT_TARGETS, "Basierend auf dem Haarprofil"],
   [scanReasonsLabel({ kind: "in_catalog", verdict: "ideal" }), "Warum das passt"],
 ]
@@ -71,6 +67,14 @@ export const COCKPIT_NOT_NEEDED_REASONS: Record<keyof typeof SCAN_NOT_NEEDED_REA
  * fails the test instead of silently falling back to the second person.
  */
 const LITERAL_ENTRIES: Array<[string, string]> = [
+  [
+    "Die Sensitivitätspositionierung passt nur eingeschränkt zu deiner Kopfhaut.",
+    "Die Sensitivitätspositionierung passt nur eingeschränkt zur Kopfhaut.",
+  ],
+  [
+    "Die Tönung passt nur eingeschränkt zu deiner Haarfarbe.",
+    "Die Tönung passt nur eingeschränkt zur Haarfarbe.",
+  ],
   // Idealplan step sentences — `src/lib/personal-plan/decision-presentation.ts`
   // (cockpit: „Schritt im Idealplan" depth and the verdict's „Warum"-block).
   [
@@ -180,12 +184,16 @@ const LITERAL_ENTRIES: Array<[string, string]> = [
     "Schützt dein Haar vor passender Hitze-Anwendung.",
     "Schützt das Haar vor passender Hitze-Anwendung.",
   ],
-  // Criterion explanation — `src/lib/personal-plan/products/authority/categories/conditioner.ts`
-  // (verdict criterion rows when no comparison table is available).
+  // Fit criteria and their reason lines (also rendered in the verdict banner).
+  ["Entspricht deinem Bedarf.", "Entspricht dem Bedarf."],
+  ["Für dein Haar eher schwer", "Für das Haar eher schwer"],
+  ["Für dein Haar eher leicht", "Für das Haar eher leicht"],
   [
-    "Keine Produktvariante deckt deine Haardicke und Pflegerichtung gemeinsam ab.",
-    "Keine Produktvariante deckt Haardicke und Pflegerichtung gemeinsam ab.",
+    "Mehr Feuchtigkeit als dein Haar gerade braucht",
+    "Mehr Feuchtigkeit als das Haar gerade braucht",
   ],
+  ["Mehr Protein als dein Haar gerade braucht", "Mehr Protein als das Haar gerade braucht"],
+  ["Weniger Reparatur, als dein Haar braucht", "Weniger Reparatur, als das Haar braucht"],
   // Verdict-section chrome — `src/components/scan/scan-verdict-sections.tsx`.
   [
     "Ändert sich dein Haar oder deine Routine, prüfen wir das für dich neu.",

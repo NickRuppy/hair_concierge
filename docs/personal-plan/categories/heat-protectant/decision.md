@@ -110,7 +110,7 @@ Heat Protection is a binary finished-product capability for V1:
 
 - verified `true`: may cover the role;
 - verified `false`: cannot cover the role;
-- `null`, missing row, missing source, or unresolved identity: `unknown` / `noch in Prüfung`;
+- `null`, missing row, missing source, or unresolved identity: `unknown` / `Nicht geprüft`;
 - the capability cannot be user-overridden from false or unknown to true.
 
 Standalone Heat Protectant has only these category-local product axes:
@@ -155,12 +155,9 @@ One confirmed product may cover several categories/roles, but the Heat allocatio
 
 ### Role-relative fit
 
-- `ideal` / `passt sehr gut`: identity resolved, verified Heat Protection is true, exact protocol is verified, shared safety/exclusion gates pass, and the product is available for the assigned event;
-- `supportive`: unused for Heat-specific fit in V1; format preference does not create a lesser fit;
-- `mismatch`: verified Heat Protection is false for the assigned role;
-- `unknown` / `noch in Prüfung`: identity, capability, or protocol is missing/unverified.
+Fit verdicts follow the [canonical fit-verdict model](../../fit-verdict-model.md) (§1–§5, ruled 2026-10-12): this category has gates only, with **Passt**, **Passt nicht**, or **Nicht geprüft** and no `supportive` verdict. Known hard-gate failures take precedence over missing required facts; owned mismatches retain the shared `acknowledge_override` and `leave_uncovered` actions without becoming verified coverage.
 
-The global `wechseln empfohlen` presentation is not used merely because another format exists or another verified product is available. A product that does not verify Heat Protection simply does not cover this role; the verified alternative remains available. False or unknown capability and missing protocol cannot be retained as informed Heat-coverage overrides.
+False or unknown heat capability cannot become verified Heat coverage through an override; format alone never changes fit.
 
 ### Owned-product comparison
 
@@ -221,7 +218,7 @@ Occurrence compilation:
 - integrated Leave-in/Oil: merge Heat coverage into that product's existing application step;
 - reapplication: add a second step only when the exact product protocol says it is required;
 - no exact confirmed in-hand product: keep the Heat event visibly uncovered/pending and do not compile a fake product step;
-- missing protocol: product remains `noch in Prüfung`, cannot be newly recommended, and cannot compile into an executable step. Show `Nach Produktangabe` as interim guidance rather than inventing timing.
+- missing protocol: product remains `Nicht geprüft`, cannot be newly recommended, and cannot compile into an executable step. Show `Nach Produktangabe` as interim guidance rather than inventing timing.
 
 Never invent sprays/pumps, amount, wait time, temperature, activation, section count, or reapplication. Exact verified product directions control these details but cannot override the binary Heat Protection requirement or silently add non-Heat Styling jobs.
 
@@ -260,9 +257,9 @@ Shared presentation owns final German reason templates and card-fact salience; i
 10. `heat-protectant-integrated-oil`: fitting Oil with verified Heat Protection covers the job and merges into its existing step.
 11. `heat-protectant-no-integrated-carrier`: no fitting combined carrier; one verified standalone recommendation is supplied.
 12. `heat-protectant-owned-identity-pending`: ideal alternative remains visible; unidentified owned product and unacquired alternative stay out of executable steps.
-13. `heat-protectant-capability-false`: product cannot cover the role and cannot be overridden; verified alternative remains available.
-14. `heat-protectant-capability-unknown`: product is `noch in Prüfung` and cannot be confidently recommended or compiled.
-15. `heat-protectant-protocol-missing`: verified capability without verified protocol remains `noch in Prüfung`; show label guidance only.
+13. `heat-protectant-capability-false`: product cannot cover the role; shared keep/leave-uncovered actions remain available without claiming verified coverage (canonical model §7b Q2).
+14. `heat-protectant-capability-unknown`: product is `Nicht geprüft` and cannot be confidently recommended or compiled.
+15. `heat-protectant-protocol-missing`: verified capability without verified protocol remains `Nicht geprüft`; show label guidance only.
 16. `heat-protectant-protocol-damp`: standalone step uses damp/towel-dried state.
 17. `heat-protectant-protocol-dry`: standalone step uses dry state.
 18. `heat-protectant-protocol-either`: exact product may compile in either supported state.

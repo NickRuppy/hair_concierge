@@ -125,6 +125,17 @@ export async function loadScanVerdictForProduct(
     perRoleFacts: roleSensitive ? Object.fromEntries(loadedFacts) : undefined,
     coverage: context.snapshot.coverage,
     hairThickness: context.snapshot.profile.hair.thickness,
+    dryShampooTarget:
+      category === "dry_shampoo"
+        ? {
+            scalpSensitivity: context.snapshot.profile.scalp
+              ? context.snapshot.profile.scalp.concerns.includes("irritated")
+                ? "sensitive"
+                : "normal"
+              : null,
+            hairColorFit: null,
+          }
+        : undefined,
     // No Stage3ProductDraft exists for scan — mirrors product-previews.ts's no-draft
     // default for heat-carrier coverage instead of computing a real one.
     heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },

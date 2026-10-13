@@ -2,7 +2,7 @@ import { createHash } from "node:crypto"
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs"
 import { basename, dirname, extname, join, relative, resolve } from "node:path"
 
-import sharp from "sharp"
+import sharp, { type Region } from "sharp"
 
 import { generateProductSearchThumbnail } from "./product-thumbnail"
 
@@ -159,7 +159,7 @@ function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value))
 }
 
-function contentBounds(data: Buffer, width: number, height: number): sharp.Region {
+function contentBounds(data: Buffer, width: number, height: number): Region {
   let left = width
   let top = height
   let right = -1
@@ -190,7 +190,7 @@ function contentBounds(data: Buffer, width: number, height: number): sharp.Regio
   return { left, top, width: right - left + 1, height: bottom - top + 1 }
 }
 
-function targetProductSize(bounds: sharp.Region): { width: number; height: number } {
+function targetProductSize(bounds: Region): { width: number; height: number } {
   const maxSideScale = Math.min(PRODUCT_MAX_SIZE / bounds.width, PRODUCT_MAX_SIZE / bounds.height)
   const areaScale = Math.sqrt(PRODUCT_TARGET_AREA / (bounds.width * bounds.height))
   const scale = Math.min(maxSideScale, areaScale)

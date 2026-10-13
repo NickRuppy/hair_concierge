@@ -1270,6 +1270,9 @@ function bondbuilder(
       productFormat: "cream_treatment",
       usageProtocol: "olaplex_3plus",
       relationship: "standalone" as const,
+      // fit-verdict spec §6, ruled 2026-10-12: reviewed technology fixture.
+      technologyFamily: "sulfur_targeting_dimaleate",
+      trustBasis: "owner_anchor",
       claimTrustLevel: options.trust,
     },
   }
@@ -1341,14 +1344,15 @@ test("B-INT-TRUST: Bis 5 € strict preselects nothing, trust order with cheaper
   assert.equal(review.fitComparison.budgetNotice, "strict_none_affordable")
 })
 
-test("B-INT-TRUST: uncapped and flag off both recommend K18 and rank by trust", async () => {
+// fit-verdict spec §6, ruled 2026-10-12: uncapped and flag-off use trust then price.
+test("B-INT-TRUST: uncapped and flag off both recommend Olaplex and rank by trust then price", async () => {
   for (const review of [await bondbuilderReview(UNCAPPED), await bondbuilderReview(null, false)]) {
     assert.equal(review.authorityEvaluation.status, "known")
     if (review.authorityEvaluation.status !== "known") return
-    assert.equal(review.authorityEvaluation.recommendation?.productId, K18_ID)
+    assert.equal(review.authorityEvaluation.recommendation?.productId, "olaplex-3plus")
     assert.deepEqual(
       review.fitComparison.alternatives.map((candidate) => candidate.productId),
-      [K18_ID, "olaplex-3plus", "epres"],
+      ["olaplex-3plus", "epres", K18_ID],
     )
   }
 })

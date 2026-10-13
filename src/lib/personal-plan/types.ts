@@ -353,6 +353,8 @@ export type PlanCategoryTarget =
         >
         tier: Exclude<PlanNeedTier, "not_needed">
         weight: PlanCareWeight | null
+        /** Ideal leave-on weights; omitted by legacy targets and pre-wash roles. */
+        acceptedTargets?: PlanCareWeight[]
         functionalBenefits: Array<{
           benefit: OilFunctionalBenefit
           priority: PlanFunctionPriority

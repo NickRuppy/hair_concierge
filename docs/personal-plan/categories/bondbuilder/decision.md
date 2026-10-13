@@ -231,8 +231,7 @@ Evaluate every product through these layers:
 - resolved reviewed identity;
 - active lifecycle for a new primary recommendation;
 - no `replaced_by` outgoing relationship;
-- no verified safety, exclusion, or suitable-thickness conflict;
-- `suitableThicknesses` contains the user's thickness.
+- no verified safety or hard exclusion conflict; technology approval follows the canonical model (§2 and §6), with no thickness hard gate.
 
 ### Layer 2 — standalone role
 
@@ -246,16 +245,9 @@ Evaluate every product through these layers:
 - amount may use only a safe non-numeric label fallback when the official directions genuinely permit it; never fabricate pumps or grams;
 - missing critical protocol keeps the product visible but out of precise recipes.
 
-Aggregate verdict:
+Fit verdicts follow the [canonical fit-verdict model](../../fit-verdict-model.md) (§1–§5, ruled 2026-10-12): this category has gates only, with **Passt**, **Passt nicht**, or **Nicht geprüft** and no `supportive` verdict. Known hard-gate failures take precedence over missing required facts; owned mismatches retain the shared `acknowledge_override` and `leave_uncovered` actions without becoming verified coverage.
 
-| Engine result | German verdict | Exact rule |
-|---|---|---|
-| `ideal` | `passt sehr gut` | Strict gates pass; product is an active standalone Bondbuilder; critical exact protocol is verified. |
-| `supportive` | `passt mit Einschränkung` | Product is a verified companion/add-on for the selected primary but cannot cover the role alone. |
-| `mismatch` | `wechseln empfohlen` | Verified safety/thickness conflict, wrong category/role, discontinued/replaced primary, or another known strict conflict. |
-| `unknown` | `noch in Prüfung` | Identity/pending state, strict suitability, lifecycle audit, or critical protocol is unresolved. |
-
-Precedence is known safety stop; unresolved identity/pending; lifecycle/relationship; strict thickness/exclusion; role; critical protocol; supportive companion; ideal. Every verdict retains its exact facts and limitation.
+Technology approval is a hard gate; companion/add-on products are not standalone candidates (§6).
 
 Need and fit remain separate. A fitting owned product at `not_needed` is “not necessary but compatible”: Stage 2 may offer removal or informed continuation. “Not recommended” is reserved for an actual mismatch or safety issue. Exact reusable UI/state transitions remain owned by the shared Stage-2 specification.
 
@@ -267,15 +259,7 @@ The current launch set contains three equally eligible primary concepts when all
 - K18 Leave-In Molecular Repair Hair Mask — post-wash leave-in treatment;
 - OLAPLEX Nº.3PLUS Complete Repair Treatment — pre-shampoo cream.
 
-Selection rules:
-
-1. filter safety, lifecycle, strict suitability, role, availability, and critical protocol gaps;
-2. preserve an already-saved primary while it remains ideal and the user's preference has not changed;
-3. when the user expresses a format/application preference, prefer the ideal product matching `applicationMode + productFormat`;
-4. otherwise return the remaining ideal products as an equal shortlist; do not manufacture a winner;
-5. mechanism, treatment marketing, damage type, product weight, formula richness, claimed repair pathway, and price do not rank the shortlist in V1;
-6. budget may remove unavailable choices but does not make a surviving product intrinsically better;
-7. if no ideal product survives, return `Empfehlung wird geprüft`; never promote supportive, mismatch, or unknown as the confident standalone recommendation.
+Selection follows the [canonical fit-verdict model](../../fit-verdict-model.md) (§6 and §7b Q6): rank by reviewed technology trust, then cheapest first among equally trusted candidates, with no preferred-step filter. The K18 house default is retired (2026-10-12); companion/add-on products remain excluded from standalone recommendations.
 
 Stage 2 may describe a product as pre-shampoo spray, pre-shampoo cream, or post-wash leave-in treatment. Exact “when and how” instructions remain Stage 3.
 
@@ -360,11 +344,11 @@ Every hard rule above maps to at least one fixture:
 17. `bondbuilder-v2-combined-migration`: historical combined concern → `split_ends`; supporting context only and no strong indicator.
 18. `bondbuilder-lea-untreated-rough`: natural, untreated, rough surface, no breakage/hair damage/snapping → `not_needed`, no Stage-1 card, and no chemical-stress copy.
 19. `bondbuilder-missing-required-profile`: typed incomplete-profile state.
-20. `bondbuilder-equal-shortlist`: Epres, K18, and Nº.3PLUS all pass with no preference → equal ideal shortlist.
-21. `bondbuilder-format-preference`: verified pre-wash spray preference selects Epres from otherwise equal ideal candidates.
+20. `bondbuilder-equal-trust-price-order`: Epres, K18, and Nº.3PLUS all pass with equal trust → cheapest first (canonical model §7b Q6).
+21. `bondbuilder-format-preference`: application/format preference does not filter or reorder equally trusted candidates (canonical model §6).
 22. `bondbuilder-mechanism-neutral`: peptide/crosslink values do not change person fit or rank.
 23. `bondbuilder-weight-ignored`: fine/volume-sensitive profile does not rank or demote the same eligible candidates.
-24. `bondbuilder-addon-supportive`: Nº.0 is supportive companion and cannot fill primary alone.
+24. `bondbuilder-addon-excluded`: Nº.0 is companion-only and cannot fill the standalone role; no supportive verdict (canonical model §6).
 25. `bondbuilder-discontinued-replaced`: legacy Nº.3 is mismatch/not primary-eligible despite stale flags.
 26. `bondbuilder-pending-product`: visible `unknown`, excluded from recipe.
 27. `bondbuilder-missing-protocol`: core role retained as unknown; no executable occurrence.
@@ -380,7 +364,7 @@ Every hard rule above maps to at least one fixture:
 37. `bondbuilder-epres-protocol`: exact dry-unwashed spray/wait/wash course compiles.
 38. `bondbuilder-mask-incompatible`: separate intensive-care variants; total wash cadence unchanged.
 39. `bondbuilder-adverse-reaction`: optimization suppressed and stop-use guidance emitted.
-40. `bondbuilder-stable-recompute`: unchanged facts retain tier, equal-shortlist status, and saved ideal primary.
+40. `bondbuilder-stable-recompute`: unchanged facts retain tier, trust/price ordering, and saved ideal primary.
 
 ## Catalog, data, implementation, and launch gates
 

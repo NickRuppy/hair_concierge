@@ -15,28 +15,23 @@ import type {
   Stage3EvaluationContext,
   Stage3KnownAuthorityEvaluation,
 } from "./authority/contracts"
-import {
-  careDirectionAxisFitResult,
-  orderedAxisFitResult,
-  repairSupportAxisFitResult,
-} from "./authority/categories/axis-fit"
-import {
-  BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
-  bondbuilderTrustRank,
-} from "./authority/categories/bondbuilder"
+import { bondbuilderTrustRank } from "./authority/categories/bondbuilder"
 import { evaluateStage3Authority } from "./authority/evaluate"
 import { supportiveOwnedRecommendation } from "./authority/supportive-owned-recommendation"
-import { compareRankableCandidates, type RankableCandidate } from "./candidate-ranking"
+import {
+  compareRankableCandidates,
+  shampooGentlenessRank,
+  type RankableCandidate,
+} from "./candidate-ranking"
 import {
   candidateDimensionCoverage,
   comparisonDimensions,
   positionLabel,
-  positionsOverlap,
+  criterionIdForDimension,
   renderedDimensions,
   targetPositionLabel,
   type ComparisonProductEntry,
   type Stage3FitComparisonDimension,
-  type Stage3FitComparisonPosition,
   type Stage3FitComparisonProduct,
 } from "./comparison-dimensions"
 import { compactCriterionSchema } from "./fit-comparison-schema"
@@ -142,6 +137,7 @@ type CandidateAssessment = Stage3SelectedComparisonCandidate & {
   targetMatchCount: number
   targetCount: number
   cautionCount: number
+  shampooGentleness?: number
   priceEur: number | null
 }
 
@@ -431,7 +427,7 @@ export function rankStage3ComparisonCandidates(
 
 /**
  * Bondbuilders rank by claim trust level inside the same verdict (Nick, 2026-10-09): verdict
- * first (trust never lifts a worse fit), then trust tier, then the K18 house default among equally
+ * first (trust never lifts a worse fit), then trust tier, then price among equally
  * trusted candidates. Everything else falls through to the shared comparator.
  */
 export function compareBondbuilderTrust(
@@ -442,9 +438,10 @@ export function compareBondbuilderTrust(
   if (verdictOrder !== 0) return verdictOrder
   const trustOrder = candidateTrustRank(left.facts) - candidateTrustRank(right.facts)
   if (trustOrder !== 0) return trustOrder
+  // Spec §6, ruled 2026-10-12: equal trust resolves by price before catalog order.
   return (
-    Number(right.productId === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID) -
-    Number(left.productId === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID)
+    (left.facts.priceEur ?? Number.MAX_SAFE_INTEGER) -
+    (right.facts.priceEur ?? Number.MAX_SAFE_INTEGER)
   )
 }
 
@@ -471,6 +468,7 @@ function toRankableCandidate(candidate: CandidateAssessment): RankableCandidate 
     verdict: candidate.verdict,
     targetMatchCount: candidate.targetMatchCount,
     cautionCount: candidate.cautionCount,
+    shampooGentleness: candidate.shampooGentleness,
     catalogSortOrder: candidate.catalogSortOrder,
     priceEur: candidate.priceEur,
     productId: candidate.productId,
@@ -479,9 +477,9 @@ function toRankableCandidate(candidate: CandidateAssessment): RankableCandidate 
 
 /**
  * Invariant: the authority's pinned recommendation only breaks ties among candidates already
- * equal on verdict, coverage, and cautions — it never overrides those fields. Implemented by
+ * equal on verdict, coverage, cautions, and shampoo gentleness — it never overrides those fields. Implemented by
  * running the shared comparator twice: once with catalogSortOrder/priceEur/productId neutralized
- * (isolating verdict/coverage/cautions), then — only on a genuine tie — the pin, then the full
+ * (isolating verdict/coverage/cautions/gentleness), then — only on a genuine tie — the pin, then the full
  * comparator (which restores catalogSortOrder/priceEur/productId) for the remaining tiebreaks.
  */
 function compareWithAuthorityPin(
@@ -523,13 +521,15 @@ function boundedSelectedComparisonCandidateAssessments(
   return [...bounded.slice(0, STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT - 1), kept]
 }
 
-/** Native carousel policy is presentation-only: verdict, then comparable EUR price, then ID. */
+/** Native carousel: verdict, R19 coarse scalp gentleness, comparable EUR price, then ID. */
 function compareNativePresentationCandidates(
   left: CandidateAssessment,
   right: CandidateAssessment,
 ): number {
   const verdict = left.verdict === right.verdict ? 0 : left.verdict === "ideal" ? -1 : 1
   if (verdict !== 0) return verdict
+  const gentleness = (left.shampooGentleness ?? 0) - (right.shampooGentleness ?? 0)
+  if (gentleness !== 0) return gentleness
   const price = (candidate: CandidateAssessment) =>
     candidate.facts.currency === "EUR" &&
     Number.isFinite(candidate.priceEur) &&
@@ -565,6 +565,7 @@ function assessCandidate(
     targetMatchCount: coverage.matches,
     targetCount: coverage.total,
     cautionCount: detached.criteria.filter((criterion) => criterion.result === "caution").length,
+    shampooGentleness: shampooGentlenessRank(input, candidate),
     priceEur: candidate.priceEur ?? null,
   }
 }
@@ -655,12 +656,7 @@ function evidenceRowsFromDimensions(
       return {
         productId,
         valueLabel: positionLabel(position, dimension.stops),
-        relation: dimensionRelation(
-          input,
-          dimension,
-          position,
-          criteriaByProduct.get(productId) ?? [],
-        ),
+        relation: dimensionRelation(dimension, criteriaByProduct.get(productId) ?? []),
       }
     }),
   }))
@@ -683,59 +679,14 @@ function criteriaByProductId(
 }
 
 function dimensionRelation(
-  input: Stage3AuthorityInput,
   dimension: Stage3FitComparisonDimension,
-  position: Stage3FitComparisonPosition,
   criteria: readonly Stage3CriterionResult[],
 ): Stage3FitEvidenceRelation {
-  if (position.kind === "unknown") return "unknown"
   if (!dimension.targetPosition || dimension.targetPosition.kind === "unknown") return "no_target"
-
-  const criterionId =
-    dimension.dimensionId === "oil.role_support" ? "oil.role" : dimension.dimensionId
-  const criterion = criteria.find((item) => item.criterionId === criterionId)
-  if (
-    criterion &&
-    (input.category === "mask" || input.category === "oil" || input.category === "bondbuilder")
+  const criterion = criteria.find(
+    (item) => item.criterionId === criterionIdForDimension(dimension.dimensionId),
   )
-    return stage3CriterionEvidenceRelation(criterion.result)
-
-  if (dimension.dimensionId.endsWith(".care_direction"))
-    return positionAxisRelation(position, dimension.targetPosition, careDirectionAxisFitResult)
-
-  if (
-    dimension.dimensionId.endsWith(".weight") ||
-    dimension.dimensionId === "shampoo.cleansing_intensity"
-  )
-    return positionAxisRelation(position, dimension.targetPosition, (product, target) =>
-      orderedAxisFitResult(
-        product,
-        target,
-        dimension.stops.map((stop) => stop.stopId),
-      ),
-    )
-
-  if (dimension.dimensionId.endsWith(".repair_support"))
-    return positionAxisRelation(position, dimension.targetPosition, (product, target) =>
-      repairSupportAxisFitResult(
-        product,
-        target,
-        dimension.stops.map((stop) => stop.stopId),
-      ),
-    )
-
-  return relationToTarget(position, dimension.targetPosition)
-}
-
-function positionAxisRelation(
-  product: Stage3FitComparisonPosition,
-  target: Stage3FitComparisonPosition,
-  resultFor: (product: string, target: string) => Stage3CriterionResult["result"],
-): Stage3FitEvidenceRelation {
-  if (product.kind === "unknown" || target.kind === "unknown") return "unknown"
-  if (product.kind !== "position" || target.kind !== "position")
-    return positionsOverlap(product, target) ? "in_target" : "outside_target"
-  return stage3CriterionEvidenceRelation(resultFor(product.stopId, target.stopId))
+  return stage3CriterionEvidenceRelation(criterion?.result)
 }
 
 function compactEvidenceRows(
@@ -775,15 +726,6 @@ function compactEvidenceRows(
   })
 }
 
-function relationToTarget(
-  product: Stage3FitComparisonPosition,
-  target: Stage3FitComparisonPosition | null,
-): Stage3FitEvidenceRelation {
-  if (product.kind === "unknown") return "unknown"
-  if (!target || target.kind === "unknown") return "no_target"
-  return positionsOverlap(product, target) ? "in_target" : "outside_target"
-}
-
 export function stage3CriterionEvidenceRelation(
   result: Stage3CriterionResult["result"] | undefined,
 ): Stage3FitEvidenceRelation {
@@ -805,7 +747,7 @@ function criterionResultLabel(result: Stage3CriterionResult["result"] | undefine
     case "pass":
       return "erfüllt"
     case "caution":
-      return "passt mit Einschränkung"
+      return "passt bedingt"
     case "fail":
       return "nicht erfüllt"
     default:

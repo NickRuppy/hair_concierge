@@ -61,7 +61,7 @@ function markPresentation(state: ScanComparisonRowState) {
       }
     case "partial":
       return {
-        ariaLabel: "Passt mit Einschränkung",
+        ariaLabel: "Passt bedingt",
         Icon: Minus,
         className: "border-[var(--status-pending-text)] text-[var(--status-pending-text)]",
       }
@@ -108,7 +108,17 @@ export function ScanMaskedAlternatives({
             key={`${alternative.verdict}-${index}`}
             className="overflow-hidden rounded-[12px] border border-border bg-card"
           >
-            <MaskedIdentityRow alternative={alternative} />
+            <MaskedIdentityRow
+              alternative={alternative}
+              isRecommendation={
+                index === 0 && !alternatives.some((item) => item.verdict === "ideal")
+              }
+            />
+            {alternative.verdict === "supportive" && alternative.reasonLines?.length ? (
+              <p className="px-3 pb-2 text-xs leading-relaxed text-muted-foreground">
+                {alternative.reasonLines.join(" · ")}
+              </p>
+            ) : null}
             <ComparisonTable comparison={alternative.comparison} />
           </li>
         ))}
@@ -139,7 +149,13 @@ export function ScanMaskedAlternatives({
   )
 }
 
-function MaskedIdentityRow({ alternative }: { alternative: ScanMaskedAlternative }) {
+function MaskedIdentityRow({
+  alternative,
+  isRecommendation,
+}: {
+  alternative: ScanMaskedAlternative
+  isRecommendation: boolean
+}) {
   return (
     <div className="flex items-center gap-3 px-3 py-2.5">
       {/* The placeholder stands in for a product image the response never carried; the
@@ -154,7 +170,9 @@ function MaskedIdentityRow({ alternative }: { alternative: ScanMaskedAlternative
           SCAN_STATUS_CLASS[alternative.verdict === "ideal" ? "ok" : "pending"],
         )}
       >
-        {alternative.verdictLabel}
+        {alternative.verdict === "supportive" && !isRecommendation
+          ? "Alternative · passt bedingt"
+          : alternative.verdictLabel}
       </span>
     </div>
   )

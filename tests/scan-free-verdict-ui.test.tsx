@@ -1,3 +1,4 @@
+// fit-verdict spec §1/§7b, ruled 2026-10-12: web labels and actions.
 import assert from "node:assert/strict"
 import test from "node:test"
 import React, { type ReactElement, type ReactNode } from "react"
@@ -108,7 +109,7 @@ const IN_CATALOG_BASE = {
   kind: "in_catalog" as const,
   verdict: "mismatch" as const,
   verdictLabel: "Passt nicht",
-  verdictTitle: "Passt nicht zu deinem Haar",
+  verdictTitle: "Passt nicht",
   status: "danger" as const,
   subtitle: "1 von 3 Zielbereichen getroffen",
   evaluatedRole: null,
@@ -199,7 +200,7 @@ test("free verdict: the masked alternative's comparison rows are fully readable"
   const markLabels = findAll(masked[0], (element) => element.props.role === "img").map(
     (element) => element.props["aria-label"],
   )
-  assert.deepEqual(markLabels, ["Im Ziel", "Im Ziel", "Passt mit Einschränkung", "Nicht bestätigt"])
+  assert.deepEqual(markLabels, ["Im Ziel", "Im Ziel", "Passt bedingt", "Nicht bestätigt"])
 
   assert.equal(text.includes("Lab Shampoo"), false)
   assert.equal(text.includes("9,99"), false)

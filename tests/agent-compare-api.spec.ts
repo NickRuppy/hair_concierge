@@ -93,7 +93,7 @@ test("POST validates the request body before calling compare execution", async (
     const response = await handleAgentCompareRequest(
       { userId: "", prompt: "" },
       {
-        listEligibleCompareUsers: async () => [],
+        listEligibleCompareUsers: async () => [{ id: "user-42", label: "Test", full_name: "Test" }],
         loadCompareUserSnapshot: async () => {
           throw new Error("not used")
         },
@@ -117,7 +117,7 @@ test("POST rejects whitespace-only prompts and turns before calling compare exec
     const response = await handleAgentCompareRequest(
       { userId: "user-42", prompt: "   ", turns: ["\t  "] },
       {
-        listEligibleCompareUsers: async () => [],
+        listEligibleCompareUsers: async () => [{ id: "user-42", label: "Test", full_name: "Test" }],
         loadCompareUserSnapshot: async () => {
           throw new Error("not used")
         },
@@ -146,7 +146,7 @@ test("handleAgentCompareRequest defaults to AgentV2 CareBalance production path"
         prompt: "Eigenes Prompt",
       },
       {
-        listEligibleCompareUsers: async () => [],
+        listEligibleCompareUsers: async () => [{ id: "user-42", label: "Test", full_name: "Test" }],
         loadCompareUserSnapshot: async () => {
           throw new Error("not used")
         },
@@ -205,7 +205,7 @@ test("handleAgentCompareRequest supports blinded multi-turn classic vs tool-loop
         systems: ["classic", "tool_loop"],
       },
       {
-        listEligibleCompareUsers: async () => [],
+        listEligibleCompareUsers: async () => [{ id: "user-42", label: "Test", full_name: "Test" }],
         loadCompareUserSnapshot: async () => {
           throw new Error("not used")
         },
@@ -279,7 +279,7 @@ test("handleAgentCompareRequest preserves AgentV2 request interpretation trace i
         systems: ["tool_loop", "agent_v2"],
       },
       {
-        listEligibleCompareUsers: async () => [],
+        listEligibleCompareUsers: async () => [{ id: "user-42", label: "Test", full_name: "Test" }],
         loadCompareUserSnapshot: async () => {
           throw new Error("not used")
         },
@@ -394,7 +394,7 @@ test("handleAgentCompareRequest compares AgentV2 baseline with AgentV2 CareBalan
         systems: ["agent_v2", "agent_v2_care_balance"],
       },
       {
-        listEligibleCompareUsers: async () => [],
+        listEligibleCompareUsers: async () => [{ id: "user-42", label: "Test", full_name: "Test" }],
         loadCompareUserSnapshot: async () => {
           throw new Error("not used")
         },
@@ -472,7 +472,7 @@ test("handleAgentCompareRequest can run AgentV2 CareBalance as the only compare 
         systems: ["agent_v2_care_balance"],
       },
       {
-        listEligibleCompareUsers: async () => [],
+        listEligibleCompareUsers: async () => [{ id: "user-42", label: "Test", full_name: "Test" }],
         loadCompareUserSnapshot: async () => {
           throw new Error("not used")
         },
@@ -1353,3 +1353,54 @@ test("AgentV2 trace display data separates warnings from fatal validation errors
   assert.deepEqual(display.warnings, ["Unnecessary tool call: load_advisor_guidance"])
   assert.deepEqual(display.validationErrors, ["known_product_ids"])
 })
+
+test("compare rejects unlisted user IDs before loading context or running paid models", async () =>
+  withNodeEnv("development", async () => {
+    const { handleAgentCompareGetRequest, handleAgentCompareRequest } = await importRoute()
+    let sensitiveCalls = 0
+    const forbidden = async (): Promise<never> => {
+      sensitiveCalls++
+      throw new Error("must not run")
+    }
+    const deps = {
+      listEligibleCompareUsers: async () => [{ id: "test-user", label: "Test", full_name: null }],
+      loadCompareUserSnapshot: forbidden,
+      runCurrentComparisonForUser: forbidden,
+      runShadowComparisonForUser: forbidden,
+      runAgentV2CareBalanceComparisonForUser: forbidden,
+    }
+    const get = await handleAgentCompareGetRequest(
+      new URL("http://localhost/api/labs/agent-compare?userId=real-user"),
+      deps,
+    )
+    const post = await handleAgentCompareRequest({ userId: "real-user", prompt: "Hallo" }, deps)
+    assert.equal(get.status, 403)
+    assert.equal(post.status, 403)
+    assert.equal(sensitiveCalls, 0)
+  }))
+
+test("compare API rejects remote request authorities in development", async () =>
+  withNodeEnv("development", async () => {
+    const { GET, POST } = await importRoute()
+    for (const headers of Array.of<Record<string, string>>(
+      { host: "evil.test" },
+      { host: "localhost", "x-forwarded-for": "192.168.1.23" },
+    )) {
+      assert.equal(
+        (await GET(new Request("http://localhost/api/labs/agent-compare", { headers }))).status,
+        404,
+      )
+      assert.equal(
+        (
+          await POST(
+            new Request("http://localhost/api/labs/agent-compare", {
+              method: "POST",
+              headers,
+              body: "{}",
+            }),
+          )
+        ).status,
+        404,
+      )
+    }
+  }))
