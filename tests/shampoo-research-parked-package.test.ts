@@ -44,7 +44,7 @@ function writeFixture(root: string, relativePath: string, content: string) {
   writeFileSync(target, content)
 }
 
-test("archive fingerprint guards every v1.4 file but ignores the v1.6, v1.6.1 and v1.6.2 packages and the living README", () => {
+test("archive fingerprint guards every v1.4 file but ignores the v1.6, v1.6.1 and v1.6.2 packages, the Track A rollout data and the living README", () => {
   const root = mkdtempSync(path.join(tmpdir(), "shampoo-parked-"))
   try {
     writeFixture(
@@ -66,6 +66,7 @@ test("archive fingerprint guards every v1.4 file but ignores the v1.6, v1.6.1 an
     writeFixture(root, "data/research/shampoo-inci/v1.6.1/test-round/run-log.md", "new")
     writeFixture(root, "docs/research/shampoo-inci/v1.6.2/classification-standard.md", "v1.6.2")
     writeFixture(root, "data/research/shampoo-inci/v1.6.2/test-round/run-log.md", "new")
+    writeFixture(root, "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/run-log.md", "new")
     assert.deepEqual(fingerprintArchiveContent(root), baseline)
 
     writeFixture(root, "docs/research/shampoo-inci/v1.4/classification-standard.md", "v1.4 edited")
