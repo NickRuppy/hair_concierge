@@ -33,6 +33,7 @@ function evaluateFacts(input: Stage3AuthorityInput<"leave_in">, facts: Stage3Lea
   const target = input.categoryDecision.target
   if (!target || target.category !== "leave_in") return evaluateCriteria(input, facts, [], [])
   const gates = commonFitGates(input, facts)
+  const protocol = facts.protocols.find((item) => item.role === input.role)
   const requiredFunctions = target.functions
     .filter((item) => item.ownership === "required")
     .map((item) => item.function)
@@ -54,13 +55,15 @@ function evaluateFacts(input: Stage3AuthorityInput<"leave_in">, facts: Stage3Lea
       outcome:
         facts.spec.applicationStages === null
           ? "unknown"
-          : (
-                input.role === "pre_heat_application"
-                  ? facts.spec.applicationStages.includes("pre_heat")
-                  : supportsPostWashApplication(facts.spec.applicationStages)
-              )
-            ? "pass"
-            : "fail",
+          : input.role === "pre_heat_application"
+            ? facts.spec.providesHeatProtection === null || protocol?.status !== "verified_complete"
+              ? "unknown"
+              : facts.spec.providesHeatProtection
+                ? "pass"
+                : "fail"
+            : supportsPostWashApplication(facts.spec.applicationStages)
+              ? "pass"
+              : "fail",
       reason:
         input.role === "pre_heat_application"
           ? "Die Anwendung vor Hitze ist nicht bestätigt."

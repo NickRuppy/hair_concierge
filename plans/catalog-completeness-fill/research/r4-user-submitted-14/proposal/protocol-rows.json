@@ -1,0 +1,1951 @@
+[
+  {
+    "product_id": "4f67cb6d-4b28-490b-9817-e8fc8e91b010",
+    "name": "Jean&Len Colorglow Granatapfel Rose Conditioner",
+    "category": "conditioner",
+    "role": "conditioner_rinse_out",
+    "cadence": null,
+    "application_stage": "post_cleanse_rinse_off",
+    "application_state": null,
+    "placement": "lengths_ends",
+    "contact_time_seconds": null,
+    "rinse_action": "rinse_out",
+    "reapplication": "not_stated",
+    "instruction_modifiers": [],
+    "application_family": "standard_rinse_out_conditioning",
+    "source_label": "Jean&Len Color Conditioner Granatapfel Rose – Hersteller-Anwendung",
+    "source_url": "https://www.jeanlen.de/color-conditioner-granatapfel-rose",
+    "source_text": "Nach der Haarwäsche ins feuchte Haar einmassieren und kurz einwirken lassen. Anschließend gründlich ausspülen.",
+    "guidance_payload": {
+      "schemaVersion": 1,
+      "protocolVersion": 1,
+      "locale": "de",
+      "guidanceKey": "product-conditioner-4f67cb6d-4b28-490b-9817-e8fc8e91b010",
+      "scope": {
+        "kind": "product",
+        "category": "conditioner",
+        "productId": "4f67cb6d-4b28-490b-9817-e8fc8e91b010"
+      },
+      "role": "condition",
+      "applicationFamily": "standard_rinse_out_conditioning",
+      "compatibleDayTypes": [
+        "wash_day"
+      ],
+      "exactGuidanceRequired": true,
+      "sequence": {
+        "anchor": "post_cleanse_rinse_off",
+        "before": [],
+        "after": [
+          "wet_cleanse"
+        ],
+        "conflictsWith": []
+      },
+      "requirements": {
+        "requiredCatalogFacts": [],
+        "requiredProtocolFacts": [],
+        "requiredProfileFacts": []
+      },
+      "protocolFacts": {
+        "applicationArea": "lengths_ends",
+        "rinse": "rinse_out",
+        "contactTimeSeconds": null,
+        "sharedTemplateContactTime": "include",
+        "conditionerRelationship": "not_applicable",
+        "reapplication": "none",
+        "amount": null,
+        "cautions": []
+      },
+      "steps": [
+        {
+          "stepKey": "apply-conditioner",
+          "action": "apply_product",
+          "copyTemplateDe": "Das Haar erst sanft ausdrücken, bis es nicht mehr tropft – sonst verdünnt Wasser den Conditioner. Dann in Längen und Spitzen einarbeiten, den Ansatz aussparen. Mit den Fingern oder einem grobzinkigen Kamm gleichmäßig verteilen."
+        },
+        {
+          "stepKey": "wait-conditioner",
+          "action": "wait",
+          "copyTemplateDe": "1–3 Minuten einwirken lassen."
+        },
+        {
+          "stepKey": "rinse-conditioner",
+          "action": "rinse",
+          "copyTemplateDe": "Gründlich ausspülen."
+        }
+      ],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.jeanlen.de/color-conditioner-granatapfel-rose",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        },
+        {
+          "sourceUrl": "https://www.dm.de/p/d/3086487/jean-und-len-conditioner-colorglow-granatapfel-rose",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "guidance_payload_v2": {
+      "schemaVersion": 2,
+      "contractKind": "product_pointer",
+      "scope": {
+        "kind": "product",
+        "category": "conditioner",
+        "productId": "4f67cb6d-4b28-490b-9817-e8fc8e91b010"
+      },
+      "sourceRole": "conditioner_rinse_out",
+      "role": "condition",
+      "applicationFamily": "standard_rinse_out_conditioning",
+      "facts": {
+        "applicationState": "wet_hair",
+        "applicationArea": "hair_lengths_ends",
+        "rinse": "rinse_out",
+        "contactTime": {
+          "kind": "range_seconds",
+          "minimumSeconds": 60,
+          "maximumSeconds": 180
+        },
+        "amount": null,
+        "heat": null,
+        "conditionerPolicy": "not_applicable"
+      },
+      "workflowId": null,
+      "requiredCompanionProductId": null,
+      "runtimeBlockerCode": null,
+      "exactSteps": [],
+      "cautionCodes": [],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.jeanlen.de/color-conditioner-granatapfel-rose",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        },
+        {
+          "sourceUrl": "https://www.dm.de/p/d/3086487/jean-und-len-conditioner-colorglow-granatapfel-rose",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "origin_of_row": "Sept draft candidate (ordinary-guidance-bindings-v1) re-verified against 2026-10-09 sources; shared category template, no bespoke steps"
+  },
+  {
+    "product_id": "5f4f1300-bc15-4ce0-9ed8-035feb606bde",
+    "name": "Neqi Diamond Glass Conditioner",
+    "category": "conditioner",
+    "role": "conditioner_rinse_out",
+    "cadence": null,
+    "application_stage": "post_cleanse_rinse_off",
+    "application_state": null,
+    "placement": "lengths_ends",
+    "contact_time_seconds": null,
+    "rinse_action": "rinse_out",
+    "reapplication": "not_stated",
+    "instruction_modifiers": [],
+    "application_family": "standard_rinse_out_conditioning",
+    "source_label": "Neqi Diamond Glass Conditioner – Hersteller-Anwendung",
+    "source_url": "https://neqi-hair.com/products/diamond-glass-conditioner",
+    "source_text": "Den Conditioner nach der Haarwäsche mit DIAMOND GLASS Shampoo in die Haarlängen einmassieren. 2-3 Minuten einwirken lassen. Gründlich ausspülen.",
+    "guidance_payload": {
+      "schemaVersion": 1,
+      "protocolVersion": 1,
+      "locale": "de",
+      "guidanceKey": "product-conditioner-5f4f1300-bc15-4ce0-9ed8-035feb606bde",
+      "scope": {
+        "kind": "product",
+        "category": "conditioner",
+        "productId": "5f4f1300-bc15-4ce0-9ed8-035feb606bde"
+      },
+      "role": "condition",
+      "applicationFamily": "standard_rinse_out_conditioning",
+      "compatibleDayTypes": [
+        "wash_day"
+      ],
+      "exactGuidanceRequired": true,
+      "sequence": {
+        "anchor": "post_cleanse_rinse_off",
+        "before": [],
+        "after": [
+          "wet_cleanse"
+        ],
+        "conflictsWith": []
+      },
+      "requirements": {
+        "requiredCatalogFacts": [],
+        "requiredProtocolFacts": [],
+        "requiredProfileFacts": []
+      },
+      "protocolFacts": {
+        "applicationArea": "lengths_ends",
+        "rinse": "rinse_out",
+        "contactTimeSeconds": null,
+        "sharedTemplateContactTime": "include",
+        "conditionerRelationship": "not_applicable",
+        "reapplication": "none",
+        "amount": null,
+        "cautions": []
+      },
+      "steps": [
+        {
+          "stepKey": "apply-conditioner",
+          "action": "apply_product",
+          "copyTemplateDe": "Das Haar erst sanft ausdrücken, bis es nicht mehr tropft – sonst verdünnt Wasser den Conditioner. Dann in Längen und Spitzen einarbeiten, den Ansatz aussparen. Mit den Fingern oder einem grobzinkigen Kamm gleichmäßig verteilen."
+        },
+        {
+          "stepKey": "wait-conditioner",
+          "action": "wait",
+          "copyTemplateDe": "1–3 Minuten einwirken lassen."
+        },
+        {
+          "stepKey": "rinse-conditioner",
+          "action": "rinse",
+          "copyTemplateDe": "Gründlich ausspülen."
+        }
+      ],
+      "evidence": [
+        {
+          "sourceUrl": "https://neqi-hair.com/products/diamond-glass-conditioner",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        },
+        {
+          "sourceUrl": "https://www.dm.de/p/d/3101240/neqi-conditioner-diamond-glass",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "guidance_payload_v2": {
+      "schemaVersion": 2,
+      "contractKind": "product_pointer",
+      "scope": {
+        "kind": "product",
+        "category": "conditioner",
+        "productId": "5f4f1300-bc15-4ce0-9ed8-035feb606bde"
+      },
+      "sourceRole": "conditioner_rinse_out",
+      "role": "condition",
+      "applicationFamily": "standard_rinse_out_conditioning",
+      "facts": {
+        "applicationState": "wet_hair",
+        "applicationArea": "hair_lengths_ends",
+        "rinse": "rinse_out",
+        "contactTime": {
+          "kind": "range_seconds",
+          "minimumSeconds": 60,
+          "maximumSeconds": 180
+        },
+        "amount": null,
+        "heat": null,
+        "conditionerPolicy": "not_applicable"
+      },
+      "workflowId": null,
+      "requiredCompanionProductId": null,
+      "runtimeBlockerCode": null,
+      "exactSteps": [],
+      "cautionCodes": [],
+      "evidence": [
+        {
+          "sourceUrl": "https://neqi-hair.com/products/diamond-glass-conditioner",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        },
+        {
+          "sourceUrl": "https://www.dm.de/p/d/3101240/neqi-conditioner-diamond-glass",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "origin_of_row": "Sept draft candidate (ordinary-guidance-bindings-v1) re-verified against 2026-10-09 sources; shared category template, no bespoke steps"
+  },
+  {
+    "product_id": "62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d",
+    "name": "John Frieda Frizz Ease Wunder-Reparatur Conditioner",
+    "category": "conditioner",
+    "role": "conditioner_rinse_out",
+    "cadence": null,
+    "application_stage": "post_cleanse_rinse_off",
+    "application_state": null,
+    "placement": "lengths_ends",
+    "contact_time_seconds": null,
+    "rinse_action": "rinse_out",
+    "reapplication": "not_stated",
+    "instruction_modifiers": [],
+    "application_family": "standard_rinse_out_conditioning",
+    "source_label": "John Frieda Frizz Ease Wunder-Reparatur Conditioner – Hersteller-Anwendung",
+    "source_url": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/wunder-reparatur/conditioner/",
+    "source_text": "Nach dem Shampoonieren überschüssiges Wasser ausdrücken. In Längen und Spitzen einarbeiten, wo das Haar besonders pflegebedürftig ist. Ausspülen, um kräftigeres und glänzenderes Haar zu erhalten. Nach jeder Haarwäsche anwenden.",
+    "guidance_payload": {
+      "schemaVersion": 1,
+      "protocolVersion": 1,
+      "locale": "de",
+      "guidanceKey": "product-conditioner-62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d",
+      "scope": {
+        "kind": "product",
+        "category": "conditioner",
+        "productId": "62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d"
+      },
+      "role": "condition",
+      "applicationFamily": "standard_rinse_out_conditioning",
+      "compatibleDayTypes": [
+        "wash_day"
+      ],
+      "exactGuidanceRequired": true,
+      "sequence": {
+        "anchor": "post_cleanse_rinse_off",
+        "before": [],
+        "after": [
+          "wet_cleanse"
+        ],
+        "conflictsWith": []
+      },
+      "requirements": {
+        "requiredCatalogFacts": [],
+        "requiredProtocolFacts": [],
+        "requiredProfileFacts": []
+      },
+      "protocolFacts": {
+        "applicationArea": "lengths_ends",
+        "rinse": "rinse_out",
+        "contactTimeSeconds": null,
+        "sharedTemplateContactTime": "include",
+        "conditionerRelationship": "not_applicable",
+        "reapplication": "none",
+        "amount": null,
+        "cautions": []
+      },
+      "steps": [
+        {
+          "stepKey": "apply-conditioner",
+          "action": "apply_product",
+          "copyTemplateDe": "Das Haar erst sanft ausdrücken, bis es nicht mehr tropft – sonst verdünnt Wasser den Conditioner. Dann in Längen und Spitzen einarbeiten, den Ansatz aussparen. Mit den Fingern oder einem grobzinkigen Kamm gleichmäßig verteilen."
+        },
+        {
+          "stepKey": "wait-conditioner",
+          "action": "wait",
+          "copyTemplateDe": "1–3 Minuten einwirken lassen."
+        },
+        {
+          "stepKey": "rinse-conditioner",
+          "action": "rinse",
+          "copyTemplateDe": "Gründlich ausspülen."
+        }
+      ],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/wunder-reparatur/conditioner/",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        },
+        {
+          "sourceUrl": "https://www.dm.de/p/d/3123413/john-frieda-conditioner-frizz-ease-wunder-reparatur",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "guidance_payload_v2": {
+      "schemaVersion": 2,
+      "contractKind": "product_pointer",
+      "scope": {
+        "kind": "product",
+        "category": "conditioner",
+        "productId": "62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d"
+      },
+      "sourceRole": "conditioner_rinse_out",
+      "role": "condition",
+      "applicationFamily": "standard_rinse_out_conditioning",
+      "facts": {
+        "applicationState": "wet_hair",
+        "applicationArea": "hair_lengths_ends",
+        "rinse": "rinse_out",
+        "contactTime": {
+          "kind": "range_seconds",
+          "minimumSeconds": 60,
+          "maximumSeconds": 180
+        },
+        "amount": null,
+        "heat": null,
+        "conditionerPolicy": "not_applicable"
+      },
+      "workflowId": null,
+      "requiredCompanionProductId": null,
+      "runtimeBlockerCode": null,
+      "exactSteps": [],
+      "cautionCodes": [],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/wunder-reparatur/conditioner/",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        },
+        {
+          "sourceUrl": "https://www.dm.de/p/d/3123413/john-frieda-conditioner-frizz-ease-wunder-reparatur",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "origin_of_row": "Sept draft candidate (ordinary-guidance-bindings-v1) re-verified against 2026-10-09 sources; shared category template, no bespoke steps"
+  },
+  {
+    "product_id": "7fb31d10-ff21-410b-9dc2-2d1ad34b9130",
+    "name": "Schwarzkopf GLISS Liquid Silk Spülung",
+    "category": "conditioner",
+    "role": "conditioner_rinse_out",
+    "cadence": null,
+    "application_stage": "post_cleanse_rinse_off",
+    "application_state": null,
+    "placement": "lengths_ends",
+    "contact_time_seconds": null,
+    "rinse_action": "rinse_out",
+    "reapplication": "not_stated",
+    "instruction_modifiers": [],
+    "application_family": "standard_rinse_out_conditioning",
+    "source_label": "Schwarzkopf GLISS Liquid Silk Spülung – Hersteller-Anwendung",
+    "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/liquid-silk/liquid-silk-spuelung.html",
+    "source_text": "Nach dem Waschen sanft im feuchten Haar verteilen. Gut ausspülen! Regelmäßig zur Haarpflege anwenden und für optimale Ergebnisse vorher das Liquid Silk Shampoo verwenden",
+    "guidance_payload": {
+      "schemaVersion": 1,
+      "protocolVersion": 1,
+      "locale": "de",
+      "guidanceKey": "product-conditioner-7fb31d10-ff21-410b-9dc2-2d1ad34b9130",
+      "scope": {
+        "kind": "product",
+        "category": "conditioner",
+        "productId": "7fb31d10-ff21-410b-9dc2-2d1ad34b9130"
+      },
+      "role": "condition",
+      "applicationFamily": "standard_rinse_out_conditioning",
+      "compatibleDayTypes": [
+        "wash_day"
+      ],
+      "exactGuidanceRequired": true,
+      "sequence": {
+        "anchor": "post_cleanse_rinse_off",
+        "before": [],
+        "after": [
+          "wet_cleanse"
+        ],
+        "conflictsWith": []
+      },
+      "requirements": {
+        "requiredCatalogFacts": [],
+        "requiredProtocolFacts": [],
+        "requiredProfileFacts": []
+      },
+      "protocolFacts": {
+        "applicationArea": "lengths_ends",
+        "rinse": "rinse_out",
+        "contactTimeSeconds": null,
+        "sharedTemplateContactTime": "include",
+        "conditionerRelationship": "not_applicable",
+        "reapplication": "none",
+        "amount": null,
+        "cautions": []
+      },
+      "steps": [
+        {
+          "stepKey": "apply-conditioner",
+          "action": "apply_product",
+          "copyTemplateDe": "Das Haar erst sanft ausdrücken, bis es nicht mehr tropft – sonst verdünnt Wasser den Conditioner. Dann in Längen und Spitzen einarbeiten, den Ansatz aussparen. Mit den Fingern oder einem grobzinkigen Kamm gleichmäßig verteilen."
+        },
+        {
+          "stepKey": "wait-conditioner",
+          "action": "wait",
+          "copyTemplateDe": "1–3 Minuten einwirken lassen."
+        },
+        {
+          "stepKey": "rinse-conditioner",
+          "action": "rinse",
+          "copyTemplateDe": "Gründlich ausspülen."
+        }
+      ],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.schwarzkopf.de/marken/haarpflege/gliss/liquid-silk/liquid-silk-spuelung.html",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        },
+        {
+          "sourceUrl": "https://www.dm.de/p/d/1430911/schwarzkopf-gliss-conditioner-liquid-silk",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "guidance_payload_v2": {
+      "schemaVersion": 2,
+      "contractKind": "product_pointer",
+      "scope": {
+        "kind": "product",
+        "category": "conditioner",
+        "productId": "7fb31d10-ff21-410b-9dc2-2d1ad34b9130"
+      },
+      "sourceRole": "conditioner_rinse_out",
+      "role": "condition",
+      "applicationFamily": "standard_rinse_out_conditioning",
+      "facts": {
+        "applicationState": "wet_hair",
+        "applicationArea": "hair_lengths_ends",
+        "rinse": "rinse_out",
+        "contactTime": {
+          "kind": "range_seconds",
+          "minimumSeconds": 60,
+          "maximumSeconds": 180
+        },
+        "amount": null,
+        "heat": null,
+        "conditionerPolicy": "not_applicable"
+      },
+      "workflowId": null,
+      "requiredCompanionProductId": null,
+      "runtimeBlockerCode": null,
+      "exactSteps": [],
+      "cautionCodes": [],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.schwarzkopf.de/marken/haarpflege/gliss/liquid-silk/liquid-silk-spuelung.html",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        },
+        {
+          "sourceUrl": "https://www.dm.de/p/d/1430911/schwarzkopf-gliss-conditioner-liquid-silk",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "origin_of_row": "Sept draft candidate (ordinary-guidance-bindings-v1) re-verified against 2026-10-09 sources; shared category template, no bespoke steps"
+  },
+  {
+    "product_id": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
+    "name": "Ultimate Shampoo",
+    "category": "shampoo",
+    "role": "shampoo_everyday",
+    "cadence": null,
+    "application_stage": "wet_cleanse",
+    "application_state": null,
+    "placement": "scalp_roots",
+    "contact_time_seconds": null,
+    "rinse_action": "rinse_out",
+    "reapplication": "not_stated",
+    "instruction_modifiers": [],
+    "application_family": "standard_rinse_out_cleanse",
+    "source_label": "L’Oréal Paris Elvital Glycolic Gloss Ultimate Shampoo – Hersteller-Anwendung",
+    "source_url": "https://www.loreal-paris.de/elvital/glycolic-gloss/shampoo",
+    "source_text": "Das Elvital Glycolic Gloss Ultimate Shampoo von L’Oréal Paris auf das nasse Haar auftragen und einmassieren, danach gründlich ausspülen.",
+    "guidance_payload": {
+      "schemaVersion": 1,
+      "protocolVersion": 1,
+      "locale": "de",
+      "guidanceKey": "product-shampoo-everyday-88c230c5-1020-4648-a10e-c2a1e8c87e0e",
+      "scope": {
+        "kind": "product",
+        "category": "shampoo",
+        "productId": "88c230c5-1020-4648-a10e-c2a1e8c87e0e"
+      },
+      "role": "cleanse",
+      "applicationFamily": "standard_rinse_out_cleanse",
+      "compatibleDayTypes": [
+        "wash_day"
+      ],
+      "exactGuidanceRequired": true,
+      "sequence": {
+        "anchor": "wet_cleanse",
+        "before": [
+          "post_cleanse_rinse_off"
+        ],
+        "after": [],
+        "conflictsWith": []
+      },
+      "requirements": {
+        "requiredCatalogFacts": [],
+        "requiredProtocolFacts": [],
+        "requiredProfileFacts": []
+      },
+      "protocolFacts": {
+        "applicationArea": "scalp_roots",
+        "rinse": "rinse_out",
+        "contactTimeSeconds": null,
+        "conditionerRelationship": "not_applicable",
+        "reapplication": "none",
+        "amount": null,
+        "cautions": []
+      },
+      "steps": [
+        {
+          "stepKey": "apply-shampoo",
+          "action": "apply_product",
+          "copyTemplateDe": "Das Shampoo mit etwas Wasser in den Handflächen aufschäumen. Auf der Kopfhaut verteilen und mit den Fingerkuppen sanft einmassieren."
+        },
+        {
+          "stepKey": "rinse-shampoo",
+          "action": "rinse",
+          "copyTemplateDe": "Gründlich lauwarm ausspülen – der ablaufende Schaum reinigt die Längen mit."
+        }
+      ],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.loreal-paris.de/elvital/glycolic-gloss/shampoo",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        },
+        {
+          "sourceUrl": "https://www.dm.de/p/d/1346429/l-oreal-paris-elvital-shampoo-glycolic-gloss",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "guidance_payload_v2": {
+      "schemaVersion": 2,
+      "contractKind": "product_pointer",
+      "scope": {
+        "kind": "product",
+        "category": "shampoo",
+        "productId": "88c230c5-1020-4648-a10e-c2a1e8c87e0e"
+      },
+      "sourceRole": "shampoo_everyday",
+      "role": "cleanse",
+      "applicationFamily": "standard_rinse_out_cleanse",
+      "facts": {
+        "applicationState": "wet_hair",
+        "applicationArea": "scalp_roots",
+        "rinse": "rinse_out",
+        "contactTime": null,
+        "amount": null,
+        "heat": null,
+        "conditionerPolicy": "not_applicable"
+      },
+      "workflowId": null,
+      "requiredCompanionProductId": null,
+      "runtimeBlockerCode": null,
+      "exactSteps": [],
+      "cautionCodes": [],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.loreal-paris.de/elvital/glycolic-gloss/shampoo",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        },
+        {
+          "sourceUrl": "https://www.dm.de/p/d/1346429/l-oreal-paris-elvital-shampoo-glycolic-gloss",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "origin_of_row": "Sept draft candidate (ordinary-guidance-bindings-v1) re-verified against 2026-10-09 sources; shared category template, no bespoke steps"
+  },
+  {
+    "product_id": "931892fb-cc29-4e50-b402-6aae0a494389",
+    "name": "Pantene Pro-V Moisture Boost Pflegespülung",
+    "category": "conditioner",
+    "role": "conditioner_rinse_out",
+    "cadence": null,
+    "application_stage": "post_cleanse_rinse_off",
+    "application_state": null,
+    "placement": "lengths_ends",
+    "contact_time_seconds": null,
+    "rinse_action": "rinse_out",
+    "reapplication": "not_stated",
+    "instruction_modifiers": [],
+    "application_family": "standard_rinse_out_conditioning",
+    "source_label": "Müller Pantene Pro-V Moisture Boost Pflegespülung (Bild-/Artikel-ID 08700216939140; 800 ml Pumpspender)",
+    "source_url": "https://www.mueller.de/p/pantene-pro-v-moisture-boost-pflegespuelung-PPN3150289/",
+    "source_text": "In die Längen deines Haares geben. Ausspülen ODER als leave-in verwenden",
+    "guidance_payload": {
+      "schemaVersion": 1,
+      "protocolVersion": 1,
+      "locale": "de",
+      "guidanceKey": "product-conditioner-931892fb-cc29-4e50-b402-6aae0a494389",
+      "scope": {
+        "kind": "product",
+        "category": "conditioner",
+        "productId": "931892fb-cc29-4e50-b402-6aae0a494389"
+      },
+      "role": "condition",
+      "applicationFamily": "standard_rinse_out_conditioning",
+      "compatibleDayTypes": [
+        "wash_day"
+      ],
+      "exactGuidanceRequired": true,
+      "sequence": {
+        "anchor": "post_cleanse_rinse_off",
+        "before": [],
+        "after": [
+          "wet_cleanse"
+        ],
+        "conflictsWith": []
+      },
+      "requirements": {
+        "requiredCatalogFacts": [],
+        "requiredProtocolFacts": [],
+        "requiredProfileFacts": []
+      },
+      "protocolFacts": {
+        "applicationArea": "lengths_ends",
+        "rinse": "rinse_out",
+        "contactTimeSeconds": null,
+        "sharedTemplateContactTime": "include",
+        "conditionerRelationship": "not_applicable",
+        "reapplication": "none",
+        "amount": null,
+        "cautions": []
+      },
+      "steps": [
+        {
+          "stepKey": "apply-conditioner",
+          "action": "apply_product",
+          "copyTemplateDe": "Das Haar erst sanft ausdrücken, bis es nicht mehr tropft – sonst verdünnt Wasser den Conditioner. Dann in Längen und Spitzen einarbeiten, den Ansatz aussparen. Mit den Fingern oder einem grobzinkigen Kamm gleichmäßig verteilen."
+        },
+        {
+          "stepKey": "wait-conditioner",
+          "action": "wait",
+          "copyTemplateDe": "1–3 Minuten einwirken lassen."
+        },
+        {
+          "stepKey": "rinse-conditioner",
+          "action": "rinse",
+          "copyTemplateDe": "Gründlich ausspülen."
+        }
+      ],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.mueller.de/p/pantene-pro-v-moisture-boost-pflegespuelung-PPN3150289/",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "guidance_payload_v2": {
+      "schemaVersion": 2,
+      "contractKind": "product_pointer",
+      "scope": {
+        "kind": "product",
+        "category": "conditioner",
+        "productId": "931892fb-cc29-4e50-b402-6aae0a494389"
+      },
+      "sourceRole": "conditioner_rinse_out",
+      "role": "condition",
+      "applicationFamily": "standard_rinse_out_conditioning",
+      "facts": {
+        "applicationState": "wet_hair",
+        "applicationArea": "hair_lengths_ends",
+        "rinse": "rinse_out",
+        "contactTime": {
+          "kind": "range_seconds",
+          "minimumSeconds": 60,
+          "maximumSeconds": 180
+        },
+        "amount": null,
+        "heat": null,
+        "conditionerPolicy": "not_applicable"
+      },
+      "workflowId": null,
+      "requiredCompanionProductId": null,
+      "runtimeBlockerCode": null,
+      "exactSteps": [],
+      "cautionCodes": [],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.mueller.de/p/pantene-pro-v-moisture-boost-pflegespuelung-PPN3150289/",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "origin_of_row": "Sept draft candidate (ordinary-guidance-bindings-v1) re-verified against 2026-10-09 sources; shared category template, no bespoke steps"
+  },
+  {
+    "product_id": "b761256d-c0d2-4413-9fa5-8ab950ef69bf",
+    "name": "Syoss Intense Fullness Shampoo",
+    "category": "shampoo",
+    "role": "shampoo_everyday",
+    "cadence": null,
+    "application_stage": "wet_cleanse",
+    "application_state": null,
+    "placement": "scalp_roots",
+    "contact_time_seconds": null,
+    "rinse_action": "rinse_out",
+    "reapplication": "not_stated",
+    "instruction_modifiers": [],
+    "application_family": "standard_rinse_out_cleanse",
+    "source_label": "Syoss Intense Fullness Shampoo – Hersteller-Anwendung (syoss.de)",
+    "source_url": "https://www.syoss.de/haarpflege/shampoo/syoss-intense-fullness-kraeftigendes-shampoo.html",
+    "source_text": "Sanft im nassen Haar verteilen und gründlich ausspülen",
+    "guidance_payload": {
+      "schemaVersion": 1,
+      "protocolVersion": 1,
+      "locale": "de",
+      "guidanceKey": "product-shampoo-everyday-b761256d-c0d2-4413-9fa5-8ab950ef69bf",
+      "scope": {
+        "kind": "product",
+        "category": "shampoo",
+        "productId": "b761256d-c0d2-4413-9fa5-8ab950ef69bf"
+      },
+      "role": "cleanse",
+      "applicationFamily": "standard_rinse_out_cleanse",
+      "compatibleDayTypes": [
+        "wash_day"
+      ],
+      "exactGuidanceRequired": true,
+      "sequence": {
+        "anchor": "wet_cleanse",
+        "before": [
+          "post_cleanse_rinse_off"
+        ],
+        "after": [],
+        "conflictsWith": []
+      },
+      "requirements": {
+        "requiredCatalogFacts": [],
+        "requiredProtocolFacts": [],
+        "requiredProfileFacts": []
+      },
+      "protocolFacts": {
+        "applicationArea": "scalp_roots",
+        "rinse": "rinse_out",
+        "contactTimeSeconds": null,
+        "conditionerRelationship": "not_applicable",
+        "reapplication": "none",
+        "amount": null,
+        "cautions": []
+      },
+      "steps": [
+        {
+          "stepKey": "apply-shampoo",
+          "action": "apply_product",
+          "copyTemplateDe": "Das Shampoo mit etwas Wasser in den Handflächen aufschäumen. Auf der Kopfhaut verteilen und mit den Fingerkuppen sanft einmassieren."
+        },
+        {
+          "stepKey": "rinse-shampoo",
+          "action": "rinse",
+          "copyTemplateDe": "Gründlich lauwarm ausspülen – der ablaufende Schaum reinigt die Längen mit."
+        }
+      ],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.syoss.de/haarpflege/shampoo/syoss-intense-fullness-kraeftigendes-shampoo.html",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "guidance_payload_v2": {
+      "schemaVersion": 2,
+      "contractKind": "product_pointer",
+      "scope": {
+        "kind": "product",
+        "category": "shampoo",
+        "productId": "b761256d-c0d2-4413-9fa5-8ab950ef69bf"
+      },
+      "sourceRole": "shampoo_everyday",
+      "role": "cleanse",
+      "applicationFamily": "standard_rinse_out_cleanse",
+      "facts": {
+        "applicationState": "wet_hair",
+        "applicationArea": "scalp_roots",
+        "rinse": "rinse_out",
+        "contactTime": null,
+        "amount": null,
+        "heat": null,
+        "conditionerPolicy": "not_applicable"
+      },
+      "workflowId": null,
+      "requiredCompanionProductId": null,
+      "runtimeBlockerCode": null,
+      "exactSteps": [],
+      "cautionCodes": [],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.syoss.de/haarpflege/shampoo/syoss-intense-fullness-kraeftigendes-shampoo.html",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "origin_of_row": "Sept draft candidate (ordinary-guidance-bindings-v1) re-verified against 2026-10-09 sources; shared category template, no bespoke steps"
+  },
+  {
+    "product_id": "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
+    "name": "Syoss Intense Volume Shampoo",
+    "category": "shampoo",
+    "role": "shampoo_everyday",
+    "cadence": null,
+    "application_stage": "wet_cleanse",
+    "application_state": null,
+    "placement": "scalp_roots",
+    "contact_time_seconds": null,
+    "rinse_action": "rinse_out",
+    "reapplication": "not_stated",
+    "instruction_modifiers": [],
+    "application_family": "standard_rinse_out_cleanse",
+    "source_label": "dm Produktseite, exakte GTIN 4015100860481 (Anwendung) + Syoss Hersteller",
+    "source_url": "https://www.dm.de/p/d/3047032/syoss-shampoo-intense-volume",
+    "source_text": "Sanft im nassen Haar verteilen und ausspülen.",
+    "guidance_payload": {
+      "schemaVersion": 1,
+      "protocolVersion": 1,
+      "locale": "de",
+      "guidanceKey": "product-shampoo-everyday-f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
+      "scope": {
+        "kind": "product",
+        "category": "shampoo",
+        "productId": "f8a8fd56-aeb0-4096-8d9d-5af484e3889f"
+      },
+      "role": "cleanse",
+      "applicationFamily": "standard_rinse_out_cleanse",
+      "compatibleDayTypes": [
+        "wash_day"
+      ],
+      "exactGuidanceRequired": true,
+      "sequence": {
+        "anchor": "wet_cleanse",
+        "before": [
+          "post_cleanse_rinse_off"
+        ],
+        "after": [],
+        "conflictsWith": []
+      },
+      "requirements": {
+        "requiredCatalogFacts": [],
+        "requiredProtocolFacts": [],
+        "requiredProfileFacts": []
+      },
+      "protocolFacts": {
+        "applicationArea": "scalp_roots",
+        "rinse": "rinse_out",
+        "contactTimeSeconds": null,
+        "conditionerRelationship": "not_applicable",
+        "reapplication": "none",
+        "amount": null,
+        "cautions": []
+      },
+      "steps": [
+        {
+          "stepKey": "apply-shampoo",
+          "action": "apply_product",
+          "copyTemplateDe": "Das Shampoo mit etwas Wasser in den Handflächen aufschäumen. Auf der Kopfhaut verteilen und mit den Fingerkuppen sanft einmassieren."
+        },
+        {
+          "stepKey": "rinse-shampoo",
+          "action": "rinse",
+          "copyTemplateDe": "Gründlich lauwarm ausspülen – der ablaufende Schaum reinigt die Längen mit."
+        }
+      ],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.dm.de/p/d/3047032/syoss-shampoo-intense-volume",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        },
+        {
+          "sourceUrl": "https://www.syoss.net/care/shampoo/syoss-intense-volume-deep-caring-shampoo.html",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "guidance_payload_v2": {
+      "schemaVersion": 2,
+      "contractKind": "product_pointer",
+      "scope": {
+        "kind": "product",
+        "category": "shampoo",
+        "productId": "f8a8fd56-aeb0-4096-8d9d-5af484e3889f"
+      },
+      "sourceRole": "shampoo_everyday",
+      "role": "cleanse",
+      "applicationFamily": "standard_rinse_out_cleanse",
+      "facts": {
+        "applicationState": "wet_hair",
+        "applicationArea": "scalp_roots",
+        "rinse": "rinse_out",
+        "contactTime": null,
+        "amount": null,
+        "heat": null,
+        "conditionerPolicy": "not_applicable"
+      },
+      "workflowId": null,
+      "requiredCompanionProductId": null,
+      "runtimeBlockerCode": null,
+      "exactSteps": [],
+      "cautionCodes": [],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.dm.de/p/d/3047032/syoss-shampoo-intense-volume",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        },
+        {
+          "sourceUrl": "https://www.syoss.net/care/shampoo/syoss-intense-volume-deep-caring-shampoo.html",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "origin_of_row": "Sept draft candidate (ordinary-guidance-bindings-v1) re-verified against 2026-10-09 sources; shared category template, no bespoke steps"
+  },
+  {
+    "category": "leave_in",
+    "role": "post_wash_leave_in",
+    "cadence": null,
+    "application_stage": "damp_leave_on",
+    "application_state": null,
+    "placement": "lengths_ends",
+    "contact_time_seconds": null,
+    "rinse_action": "leave_in",
+    "reapplication": "not_stated",
+    "instruction_modifiers": [],
+    "guidance_payload": {
+      "schemaVersion": 1,
+      "protocolVersion": 1,
+      "locale": "de",
+      "guidanceKey": "product-leave-in-ba326dab-99d8-4b82-a1c5-de9aee2578a4-post-wash",
+      "scope": {
+        "kind": "product",
+        "category": "leave_in",
+        "productId": "ba326dab-99d8-4b82-a1c5-de9aee2578a4"
+      },
+      "role": "leave_in",
+      "applicationFamily": "post_wash_damp_conditioning",
+      "compatibleDayTypes": [
+        "wash_day",
+        "intensive_care_day",
+        "styling_day"
+      ],
+      "exactGuidanceRequired": true,
+      "sequence": {
+        "anchor": "damp_leave_on",
+        "before": [],
+        "after": [
+          "post_rinse_towel_dry"
+        ],
+        "conflictsWith": []
+      },
+      "requirements": {
+        "requiredCatalogFacts": [],
+        "requiredProtocolFacts": [],
+        "requiredProfileFacts": []
+      },
+      "protocolFacts": {
+        "applicationArea": "lengths_ends",
+        "rinse": "leave_in",
+        "contactTimeSeconds": null,
+        "conditionerRelationship": "not_applicable",
+        "reapplication": "none",
+        "amount": null,
+        "cautions": []
+      },
+      "steps": [
+        {
+          "stepKey": "towel-dry",
+          "action": "section",
+          "copyTemplateDe": "Das Haar nach dem Waschen mit dem Handtuch sanft ausdrücken, nicht rubbeln – nasses Haar bricht leichter."
+        },
+        {
+          "stepKey": "apply",
+          "action": "apply_product",
+          "copyTemplateDe": "Eine kleine Menge in den Handflächen verreiben und in Längen und Spitzen einarbeiten, den Ansatz aussparen. Zum Verteilen mit einem grobzinkigen Kamm durchkämmen. Nicht ausspülen."
+        }
+      ],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.dm.de/p/d/3135991/aussie-leave-in-haarserum-100-hours-hydration",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "application_family": "post_wash_damp_conditioning",
+    "source_label": "dm Deutschland, exakte GTIN 8006530085724 (Anwendung)",
+    "source_url": "https://www.dm.de/p/d/3135991/aussie-leave-in-haarserum-100-hours-hydration",
+    "source_text": "Nach deiner Duschroutine oder unterwegs anwenden. Für feines bis mittleres Haar 1 mal drücken. Für dickes Haar 2 mal drücken. In den Händen verreiben und beobachten, wie es sich in Flüssigkeit verwandelt. Auf feuchtem oder trockenem Haar auftragen. Kein Ausspülen notwendig",
+    "guidance_payload_v2": {
+      "schemaVersion": 2,
+      "contractKind": "product_pointer",
+      "scope": {
+        "kind": "product",
+        "category": "leave_in",
+        "productId": "ba326dab-99d8-4b82-a1c5-de9aee2578a4"
+      },
+      "sourceRole": "post_wash_leave_in",
+      "role": "leave_in",
+      "applicationFamily": "post_wash_damp_conditioning",
+      "facts": {
+        "applicationState": "damp_hair",
+        "applicationArea": "hair_lengths_ends",
+        "rinse": "leave_in",
+        "contactTime": null,
+        "amount": null,
+        "heat": null,
+        "conditionerPolicy": "not_applicable"
+      },
+      "workflowId": null,
+      "requiredCompanionProductId": null,
+      "runtimeBlockerCode": null,
+      "exactSteps": [],
+      "cautionCodes": [],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.dm.de/p/d/3135991/aussie-leave-in-haarserum-100-hours-hydration",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "product_id": "ba326dab-99d8-4b82-a1c5-de9aee2578a4",
+    "name": "AUSSIE SOS Leave-In Haarserum 100 Hours Hydration, 160 ml",
+    "origin_of_row": "Sept manifest row, re-verified 2026-10-09 (dm MCP getProductDetails)"
+  },
+  {
+    "category": "leave_in",
+    "role": "post_wash_leave_in",
+    "cadence": null,
+    "application_stage": "damp_leave_on",
+    "application_state": null,
+    "placement": "lengths_ends",
+    "contact_time_seconds": null,
+    "rinse_action": "leave_in",
+    "reapplication": "not_stated",
+    "instruction_modifiers": [],
+    "guidance_payload": {
+      "schemaVersion": 1,
+      "protocolVersion": 1,
+      "locale": "de",
+      "guidanceKey": "product-leave-in-694c4568-9235-4893-ab54-96a75b3c4f27-post-wash",
+      "scope": {
+        "kind": "product",
+        "category": "leave_in",
+        "productId": "694c4568-9235-4893-ab54-96a75b3c4f27"
+      },
+      "role": "leave_in",
+      "applicationFamily": "post_wash_damp_conditioning",
+      "compatibleDayTypes": [
+        "wash_day",
+        "intensive_care_day",
+        "styling_day"
+      ],
+      "exactGuidanceRequired": true,
+      "sequence": {
+        "anchor": "damp_leave_on",
+        "before": [],
+        "after": [
+          "post_rinse_towel_dry"
+        ],
+        "conflictsWith": []
+      },
+      "requirements": {
+        "requiredCatalogFacts": [],
+        "requiredProtocolFacts": [],
+        "requiredProfileFacts": []
+      },
+      "protocolFacts": {
+        "applicationArea": "lengths_ends",
+        "rinse": "leave_in",
+        "contactTimeSeconds": null,
+        "conditionerRelationship": "not_applicable",
+        "reapplication": "none",
+        "amount": null,
+        "cautions": []
+      },
+      "steps": [
+        {
+          "stepKey": "towel-dry",
+          "action": "section",
+          "copyTemplateDe": "Das Haar nach dem Waschen mit dem Handtuch sanft ausdrücken, nicht rubbeln – nasses Haar bricht leichter."
+        },
+        {
+          "stepKey": "apply",
+          "action": "apply_product",
+          "copyTemplateDe": "Eine kleine Menge in den Handflächen verreiben und in Längen und Spitzen einarbeiten, den Ansatz aussparen. Zum Verteilen mit einem grobzinkigen Kamm durchkämmen. Nicht ausspülen."
+        }
+      ],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.bali-care.com/de-de/products/bonding-repair-leave-in-cream-n-3",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "application_family": "post_wash_damp_conditioning",
+    "source_label": "Bali Curls Hersteller (bali-care.com), Variante 150 ml GTIN 4262391991732",
+    "source_url": "https://www.bali-care.com/de-de/products/bonding-repair-leave-in-cream-n-3",
+    "source_text": "Nach der Haarwäsche eine kleine Menge in das feuchte Haar geben – vor allem in Längen und Spitzen. Nicht ausspülen. Ideal als letzter Schritt deiner Pflegeroutine – sorgt für Definition, Schutz & Feuchtigkeit.",
+    "guidance_payload_v2": {
+      "schemaVersion": 2,
+      "contractKind": "product_pointer",
+      "scope": {
+        "kind": "product",
+        "category": "leave_in",
+        "productId": "694c4568-9235-4893-ab54-96a75b3c4f27"
+      },
+      "sourceRole": "post_wash_leave_in",
+      "role": "leave_in",
+      "applicationFamily": "post_wash_damp_conditioning",
+      "facts": {
+        "applicationState": "damp_hair",
+        "applicationArea": "hair_lengths_ends",
+        "rinse": "leave_in",
+        "contactTime": null,
+        "amount": null,
+        "heat": null,
+        "conditionerPolicy": "not_applicable"
+      },
+      "workflowId": null,
+      "requiredCompanionProductId": null,
+      "runtimeBlockerCode": null,
+      "exactSteps": [],
+      "cautionCodes": [],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.bali-care.com/de-de/products/bonding-repair-leave-in-cream-n-3",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "product_id": "694c4568-9235-4893-ab54-96a75b3c4f27",
+    "name": "Bali Curls Bonding Repair Leave-In Cream N°3",
+    "origin_of_row": "Sept manifest row, re-verified 2026-10-09 (manufacturer page). dm listing for the same GTIN carries a different product's INCI/directions and is NOT used."
+  },
+  {
+    "category": "leave_in",
+    "role": "pre_heat_protection",
+    "cadence": null,
+    "application_stage": "damp_leave_on",
+    "application_state": "damp",
+    "placement": "lengths_ends",
+    "contact_time_seconds": null,
+    "rinse_action": "leave_in",
+    "reapplication": "required",
+    "instruction_modifiers": [],
+    "guidance_payload": {
+      "schemaVersion": 1,
+      "protocolVersion": 1,
+      "locale": "de",
+      "guidanceKey": "product-leave-in-694c4568-9235-4893-ab54-96a75b3c4f27-pre-heat",
+      "scope": {
+        "kind": "product",
+        "category": "leave_in",
+        "productId": "694c4568-9235-4893-ab54-96a75b3c4f27"
+      },
+      "role": "heat_protection",
+      "applicationFamily": "pre_heat_damp",
+      "compatibleDayTypes": [
+        "styling_day"
+      ],
+      "exactGuidanceRequired": true,
+      "sequence": {
+        "anchor": "damp_leave_on",
+        "before": [
+          "heat_tool"
+        ],
+        "after": [],
+        "conflictsWith": []
+      },
+      "requirements": {
+        "requiredCatalogFacts": [],
+        "requiredProtocolFacts": [],
+        "requiredProfileFacts": []
+      },
+      "protocolFacts": {
+        "applicationArea": "lengths_ends",
+        "rinse": "leave_in",
+        "contactTimeSeconds": null,
+        "conditionerRelationship": "not_applicable",
+        "reapplication": "each_separate_heat_event",
+        "amount": null,
+        "cautions": []
+      },
+      "steps": [
+        {
+          "stepKey": "apply-pre-heat",
+          "action": "apply_product",
+          "copyTemplateDe": "Vor dem Hitzestyling gleichmäßig ins handtuchtrockene Haar geben, in Längen und Spitzen verteilen und durchkämmen – nur Strähnen mit Produkt sind geschützt."
+        },
+        {
+          "stepKey": "tool-pre-heat",
+          "action": "tool",
+          "copyTemplateDe": "Danach mit Wärme stylen. Glätteisen oder Lockenstab nur auf komplett trockenem Haar verwenden. Vor jedem weiteren Hitzestyling erneut auftragen."
+        }
+      ],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.bali-care.com/de-de/products/bonding-repair-leave-in-cream-n-3",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "application_family": "pre_heat_damp",
+    "source_label": "Bali Curls Hersteller (bali-care.com), Variante 150 ml GTIN 4262391991732",
+    "source_url": "https://www.bali-care.com/de-de/products/bonding-repair-leave-in-cream-n-3",
+    "source_text": "Schützt vor äußeren Einflüssen wie UV-Strahlen, Hitze oder Luftfeuchtigkeit. Nach der Haarwäsche eine kleine Menge in das feuchte Haar geben – vor allem in Längen und Spitzen. Nicht ausspülen.",
+    "guidance_payload_v2": {
+      "schemaVersion": 2,
+      "contractKind": "product_pointer",
+      "scope": {
+        "kind": "product",
+        "category": "leave_in",
+        "productId": "694c4568-9235-4893-ab54-96a75b3c4f27"
+      },
+      "sourceRole": "pre_heat_protection",
+      "role": "heat_protection",
+      "applicationFamily": "pre_heat_damp",
+      "facts": {
+        "applicationState": "damp_hair",
+        "applicationArea": "hair_lengths_ends",
+        "rinse": "leave_in",
+        "contactTime": null,
+        "amount": null,
+        "heat": {
+          "supportedStates": [
+            "damp_hair"
+          ],
+          "activationRequired": false,
+          "maximumClaimedTemperatureC": null,
+          "reapplication": "each_separate_heat_event"
+        },
+        "conditionerPolicy": "not_applicable"
+      },
+      "workflowId": null,
+      "requiredCompanionProductId": null,
+      "runtimeBlockerCode": null,
+      "exactSteps": [],
+      "cautionCodes": [],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.bali-care.com/de-de/products/bonding-repair-leave-in-cream-n-3",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "product_id": "694c4568-9235-4893-ab54-96a75b3c4f27",
+    "name": "Bali Curls Bonding Repair Leave-In Cream N°3",
+    "origin_of_row": "Sept manifest row, re-verified 2026-10-09 (manufacturer page). dm listing for the same GTIN carries a different product's INCI/directions and is NOT used."
+  },
+  {
+    "category": "leave_in",
+    "role": "post_wash_leave_in",
+    "cadence": null,
+    "application_stage": "damp_leave_on",
+    "application_state": null,
+    "placement": "lengths_ends",
+    "contact_time_seconds": null,
+    "rinse_action": "leave_in",
+    "reapplication": "not_stated",
+    "instruction_modifiers": [],
+    "guidance_payload": {
+      "schemaVersion": 1,
+      "protocolVersion": 1,
+      "locale": "de",
+      "guidanceKey": "product-leave-in-ea88a333-b11c-45c3-bbda-c51f912ee56f-post-wash",
+      "scope": {
+        "kind": "product",
+        "category": "leave_in",
+        "productId": "ea88a333-b11c-45c3-bbda-c51f912ee56f"
+      },
+      "role": "leave_in",
+      "applicationFamily": "post_wash_damp_conditioning",
+      "compatibleDayTypes": [
+        "wash_day",
+        "intensive_care_day",
+        "styling_day"
+      ],
+      "exactGuidanceRequired": true,
+      "sequence": {
+        "anchor": "damp_leave_on",
+        "before": [],
+        "after": [
+          "post_rinse_towel_dry"
+        ],
+        "conflictsWith": []
+      },
+      "requirements": {
+        "requiredCatalogFacts": [],
+        "requiredProtocolFacts": [],
+        "requiredProfileFacts": []
+      },
+      "protocolFacts": {
+        "applicationArea": "lengths_ends",
+        "rinse": "leave_in",
+        "contactTimeSeconds": null,
+        "conditionerRelationship": "not_applicable",
+        "reapplication": "none",
+        "amount": null,
+        "cautions": []
+      },
+      "steps": [
+        {
+          "stepKey": "towel-dry",
+          "action": "section",
+          "copyTemplateDe": "Das Haar nach dem Waschen mit dem Handtuch sanft ausdrücken, nicht rubbeln – nasses Haar bricht leichter."
+        },
+        {
+          "stepKey": "apply",
+          "action": "apply_product",
+          "copyTemplateDe": "Eine kleine Menge in den Handflächen verreiben und in Längen und Spitzen einarbeiten, den Ansatz aussparen. Zum Verteilen mit einem grobzinkigen Kamm durchkämmen. Nicht ausspülen."
+        }
+      ],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.dm.de/p/d/3062765/balea-professional-leave-in-serum-brilliant-blond-hair-sealer",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        },
+        {
+          "sourceUrl": "https://www.duitsevoordeeldrogist.nl/balea-professional-leave-in-serum-brilliant-blond.html",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "application_family": "post_wash_damp_conditioning",
+    "source_label": "dm Deutschland, exakte GTIN 4070765027518 (Anwendung, Hitzeschutz-Merkmal)",
+    "source_url": "https://www.dm.de/p/d/3062765/balea-professional-leave-in-serum-brilliant-blond-hair-sealer",
+    "source_text": "2-3 Pumphübe zwischen den Handfächen verreiben und in die Längen und Spitzen des Haars verteilen. Nicht ausspülen.",
+    "guidance_payload_v2": {
+      "schemaVersion": 2,
+      "contractKind": "product_pointer",
+      "scope": {
+        "kind": "product",
+        "category": "leave_in",
+        "productId": "ea88a333-b11c-45c3-bbda-c51f912ee56f"
+      },
+      "sourceRole": "post_wash_leave_in",
+      "role": "leave_in",
+      "applicationFamily": "post_wash_damp_conditioning",
+      "facts": {
+        "applicationState": "damp_hair",
+        "applicationArea": "hair_lengths_ends",
+        "rinse": "leave_in",
+        "contactTime": null,
+        "amount": null,
+        "heat": null,
+        "conditionerPolicy": "not_applicable"
+      },
+      "workflowId": null,
+      "requiredCompanionProductId": null,
+      "runtimeBlockerCode": null,
+      "exactSteps": [],
+      "cautionCodes": [],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.dm.de/p/d/3062765/balea-professional-leave-in-serum-brilliant-blond-hair-sealer",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        },
+        {
+          "sourceUrl": "https://www.duitsevoordeeldrogist.nl/balea-professional-leave-in-serum-brilliant-blond.html",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "product_id": "ea88a333-b11c-45c3-bbda-c51f912ee56f",
+    "name": "Balea Professional Brilliant Blond Hair Sealer Leave-in Serum",
+    "origin_of_row": "Sept manifest row; DE/NL wording re-verified 2026-10-09. The damp-or-dry wording (dm Italia) could not be re-verified today (JS shell) and is NOT cited in this row."
+  },
+  {
+    "category": "leave_in",
+    "role": "pre_heat_protection",
+    "cadence": null,
+    "application_stage": "dry_pre_heat",
+    "application_state": "either",
+    "placement": "lengths_ends",
+    "contact_time_seconds": null,
+    "rinse_action": "leave_in",
+    "reapplication": "required",
+    "instruction_modifiers": [],
+    "guidance_payload": {
+      "schemaVersion": 1,
+      "protocolVersion": 1,
+      "locale": "de",
+      "guidanceKey": "product-leave-in-ea88a333-b11c-45c3-bbda-c51f912ee56f-pre-heat",
+      "scope": {
+        "kind": "product",
+        "category": "leave_in",
+        "productId": "ea88a333-b11c-45c3-bbda-c51f912ee56f"
+      },
+      "role": "heat_protection",
+      "applicationFamily": "either_state_protection",
+      "compatibleDayTypes": [
+        "styling_day"
+      ],
+      "exactGuidanceRequired": true,
+      "sequence": {
+        "anchor": "dry_pre_heat",
+        "before": [
+          "heat_tool"
+        ],
+        "after": [],
+        "conflictsWith": []
+      },
+      "requirements": {
+        "requiredCatalogFacts": [],
+        "requiredProtocolFacts": [],
+        "requiredProfileFacts": []
+      },
+      "protocolFacts": {
+        "applicationArea": "lengths_ends",
+        "rinse": "leave_in",
+        "contactTimeSeconds": null,
+        "conditionerRelationship": "not_applicable",
+        "reapplication": "each_separate_heat_event",
+        "amount": null,
+        "cautions": []
+      },
+      "steps": [
+        {
+          "stepKey": "apply-pre-heat",
+          "action": "apply_product",
+          "copyTemplateDe": "Vor dem Hitzestyling gleichmäßig ins feuchte oder trockene Haar geben, in Längen und Spitzen verteilen und durchkämmen – nur Strähnen mit Produkt sind geschützt."
+        },
+        {
+          "stepKey": "tool-pre-heat",
+          "action": "tool",
+          "copyTemplateDe": "Danach mit Wärme stylen. Glätteisen oder Lockenstab nur auf komplett trockenem Haar verwenden. Vor jedem weiteren Hitzestyling erneut auftragen."
+        }
+      ],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.dm.de/p/d/3062765/balea-professional-leave-in-serum-brilliant-blond-hair-sealer",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        },
+        {
+          "sourceUrl": "https://www.duitsevoordeeldrogist.nl/balea-professional-leave-in-serum-brilliant-blond.html",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "application_family": "either_state_protection",
+    "source_label": "dm Deutschland, exakte GTIN 4070765027518 (Anwendung, Hitzeschutz-Merkmal)",
+    "source_url": "https://www.dm.de/p/d/3062765/balea-professional-leave-in-serum-brilliant-blond-hair-sealer",
+    "source_text": "Hitzeschutz bis zu 230 °C. 2-3 Pumphübe zwischen den Handfächen verreiben und in die Längen und Spitzen des Haars verteilen. Nicht ausspülen.",
+    "guidance_payload_v2": {
+      "schemaVersion": 2,
+      "contractKind": "product_pointer",
+      "scope": {
+        "kind": "product",
+        "category": "leave_in",
+        "productId": "ea88a333-b11c-45c3-bbda-c51f912ee56f"
+      },
+      "sourceRole": "pre_heat_protection",
+      "role": "heat_protection",
+      "applicationFamily": "either_state_protection",
+      "facts": {
+        "applicationState": "damp_or_dry_hair",
+        "applicationArea": "hair_lengths_ends",
+        "rinse": "leave_in",
+        "contactTime": null,
+        "amount": null,
+        "heat": {
+          "supportedStates": [
+            "damp_hair",
+            "dry_hair"
+          ],
+          "activationRequired": false,
+          "maximumClaimedTemperatureC": null,
+          "reapplication": "each_separate_heat_event"
+        },
+        "conditionerPolicy": "not_applicable"
+      },
+      "workflowId": null,
+      "requiredCompanionProductId": null,
+      "runtimeBlockerCode": null,
+      "exactSteps": [],
+      "cautionCodes": [],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.dm.de/p/d/3062765/balea-professional-leave-in-serum-brilliant-blond-hair-sealer",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        },
+        {
+          "sourceUrl": "https://www.duitsevoordeeldrogist.nl/balea-professional-leave-in-serum-brilliant-blond.html",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "product_id": "ea88a333-b11c-45c3-bbda-c51f912ee56f",
+    "name": "Balea Professional Brilliant Blond Hair Sealer Leave-in Serum",
+    "origin_of_row": "Sept manifest row; DE/NL wording re-verified 2026-10-09. The damp-or-dry wording (dm Italia) could not be re-verified today (JS shell) and is NOT cited in this row."
+  },
+  {
+    "category": "leave_in",
+    "role": "post_wash_leave_in",
+    "cadence": null,
+    "application_stage": "damp_leave_on",
+    "application_state": null,
+    "placement": "lengths_ends",
+    "contact_time_seconds": null,
+    "rinse_action": "leave_in",
+    "reapplication": "not_stated",
+    "instruction_modifiers": [],
+    "guidance_payload": {
+      "schemaVersion": 1,
+      "protocolVersion": 1,
+      "locale": "de",
+      "guidanceKey": "product-leave-in-42a2fe20-bd7e-49a3-a880-8ae89015a5c9-post-wash",
+      "scope": {
+        "kind": "product",
+        "category": "leave_in",
+        "productId": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9"
+      },
+      "role": "leave_in",
+      "applicationFamily": "post_wash_damp_conditioning",
+      "compatibleDayTypes": [
+        "wash_day",
+        "intensive_care_day",
+        "styling_day"
+      ],
+      "exactGuidanceRequired": true,
+      "sequence": {
+        "anchor": "damp_leave_on",
+        "before": [],
+        "after": [
+          "post_rinse_towel_dry"
+        ],
+        "conflictsWith": []
+      },
+      "requirements": {
+        "requiredCatalogFacts": [],
+        "requiredProtocolFacts": [],
+        "requiredProfileFacts": []
+      },
+      "protocolFacts": {
+        "applicationArea": "lengths_ends",
+        "rinse": "leave_in",
+        "contactTimeSeconds": null,
+        "conditionerRelationship": "not_applicable",
+        "reapplication": "none",
+        "amount": null,
+        "cautions": []
+      },
+      "steps": [
+        {
+          "stepKey": "towel-dry",
+          "action": "section",
+          "copyTemplateDe": "Das Haar nach dem Waschen mit dem Handtuch sanft ausdrücken, nicht rubbeln – nasses Haar bricht leichter."
+        },
+        {
+          "stepKey": "apply",
+          "action": "apply_product",
+          "copyTemplateDe": "Eine kleine Menge in den Handflächen verreiben und in Längen und Spitzen einarbeiten, den Ansatz aussparen. Zum Verteilen mit einem grobzinkigen Kamm durchkämmen. Nicht ausspülen."
+        }
+      ],
+      "evidence": [
+        {
+          "sourceUrl": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        },
+        {
+          "sourceUrl": "https://www.dm.de/p/d/3080142/neqi-leave-in-spray-diamond-glass-ultimate",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "application_family": "post_wash_damp_conditioning",
+    "source_label": "Neqi Hersteller (neqi-hair.com) + dm exakte GTIN 4063528094575",
+    "source_url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+    "source_text": "Das Haar in Abschnitte unterteilen. Das Spray großzügig und gleichmäßig auf das handtuchtrockene (nicht nasse) Haar sprühen. Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.",
+    "guidance_payload_v2": {
+      "schemaVersion": 2,
+      "contractKind": "product_pointer",
+      "scope": {
+        "kind": "product",
+        "category": "leave_in",
+        "productId": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9"
+      },
+      "sourceRole": "post_wash_leave_in",
+      "role": "leave_in",
+      "applicationFamily": "post_wash_damp_conditioning",
+      "facts": {
+        "applicationState": "damp_hair",
+        "applicationArea": "hair_lengths_ends",
+        "rinse": "leave_in",
+        "contactTime": null,
+        "amount": null,
+        "heat": null,
+        "conditionerPolicy": "not_applicable"
+      },
+      "workflowId": null,
+      "requiredCompanionProductId": null,
+      "runtimeBlockerCode": null,
+      "exactSteps": [],
+      "cautionCodes": [],
+      "evidence": [
+        {
+          "sourceUrl": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        },
+        {
+          "sourceUrl": "https://www.dm.de/p/d/3080142/neqi-leave-in-spray-diamond-glass-ultimate",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+    "name": "Neqi Diamond Glass Ultimate Styling Spray",
+    "origin_of_row": "Rebuilt on the shared family templates (post_wash_damp_conditioning / pre_heat_damp), not on the archived bespoke prose of the Sept worksheet (which contained claims the sources do not make)."
+  },
+  {
+    "category": "leave_in",
+    "role": "pre_heat_protection",
+    "cadence": null,
+    "application_stage": "damp_leave_on",
+    "application_state": "damp",
+    "placement": "lengths_ends",
+    "contact_time_seconds": null,
+    "rinse_action": "leave_in",
+    "reapplication": "required",
+    "instruction_modifiers": [],
+    "guidance_payload": {
+      "schemaVersion": 1,
+      "protocolVersion": 1,
+      "locale": "de",
+      "guidanceKey": "product-leave-in-42a2fe20-bd7e-49a3-a880-8ae89015a5c9-pre-heat",
+      "scope": {
+        "kind": "product",
+        "category": "leave_in",
+        "productId": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9"
+      },
+      "role": "heat_protection",
+      "applicationFamily": "pre_heat_damp",
+      "compatibleDayTypes": [
+        "styling_day"
+      ],
+      "exactGuidanceRequired": true,
+      "sequence": {
+        "anchor": "damp_leave_on",
+        "before": [
+          "heat_tool"
+        ],
+        "after": [],
+        "conflictsWith": []
+      },
+      "requirements": {
+        "requiredCatalogFacts": [],
+        "requiredProtocolFacts": [],
+        "requiredProfileFacts": []
+      },
+      "protocolFacts": {
+        "applicationArea": "lengths_ends",
+        "rinse": "leave_in",
+        "contactTimeSeconds": null,
+        "conditionerRelationship": "not_applicable",
+        "reapplication": "each_separate_heat_event",
+        "amount": null,
+        "cautions": []
+      },
+      "steps": [
+        {
+          "stepKey": "apply-pre-heat",
+          "action": "apply_product",
+          "copyTemplateDe": "Vor dem Hitzestyling gleichmäßig ins handtuchtrockene Haar geben, in Längen und Spitzen verteilen und durchkämmen – nur Strähnen mit Produkt sind geschützt."
+        },
+        {
+          "stepKey": "tool-pre-heat",
+          "action": "tool",
+          "copyTemplateDe": "Danach mit Wärme stylen. Glätteisen oder Lockenstab nur auf komplett trockenem Haar verwenden. Vor jedem weiteren Hitzestyling erneut auftragen."
+        }
+      ],
+      "evidence": [
+        {
+          "sourceUrl": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        },
+        {
+          "sourceUrl": "https://www.dm.de/p/d/3080142/neqi-leave-in-spray-diamond-glass-ultimate",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "application_family": "pre_heat_damp",
+    "source_label": "Neqi Hersteller (neqi-hair.com) + dm exakte GTIN 4063528094575",
+    "source_url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+    "source_text": "Styling + intensiver Hitzeschutz (bis 230°) in einem. Das Haar in Abschnitte unterteilen. Das Spray großzügig und gleichmäßig auf das handtuchtrockene (nicht nasse) Haar sprühen. Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.",
+    "guidance_payload_v2": {
+      "schemaVersion": 2,
+      "contractKind": "product_pointer",
+      "scope": {
+        "kind": "product",
+        "category": "leave_in",
+        "productId": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9"
+      },
+      "sourceRole": "pre_heat_protection",
+      "role": "heat_protection",
+      "applicationFamily": "pre_heat_damp",
+      "facts": {
+        "applicationState": "damp_hair",
+        "applicationArea": "hair_lengths_ends",
+        "rinse": "leave_in",
+        "contactTime": null,
+        "amount": null,
+        "heat": {
+          "supportedStates": [
+            "damp_hair"
+          ],
+          "activationRequired": false,
+          "maximumClaimedTemperatureC": null,
+          "reapplication": "each_separate_heat_event"
+        },
+        "conditionerPolicy": "not_applicable"
+      },
+      "workflowId": null,
+      "requiredCompanionProductId": null,
+      "runtimeBlockerCode": null,
+      "exactSteps": [],
+      "cautionCodes": [],
+      "evidence": [
+        {
+          "sourceUrl": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        },
+        {
+          "sourceUrl": "https://www.dm.de/p/d/3080142/neqi-leave-in-spray-diamond-glass-ultimate",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+    "name": "Neqi Diamond Glass Ultimate Styling Spray",
+    "origin_of_row": "Rebuilt on the shared family templates (post_wash_damp_conditioning / pre_heat_damp), not on the archived bespoke prose of the Sept worksheet (which contained claims the sources do not make)."
+  },
+  {
+    "product_id": "e5cfad78-ea22-49a5-911a-cb1f3109fa1c",
+    "name": "Jean&Len Rosemary/Ginger Hair Mask Hydration Rosemary/Ginger",
+    "category": "mask",
+    "role": "intensive_conditioning_mask",
+    "cadence": null,
+    "application_stage": "post_cleanse_rinse_off",
+    "application_state": null,
+    "placement": "lengths_ends",
+    "contact_time_seconds": null,
+    "rinse_action": "rinse_out",
+    "reapplication": "not_stated",
+    "instruction_modifiers": [],
+    "application_family": "post_shampoo_rinse_out_mask",
+    "source_label": "Jean&Len Hersteller (jeanlen.de), Anwendung",
+    "source_url": "https://www.jeanlen.de/haarmaske-feuchtigkeit-rosemary-ginger",
+    "source_text": "Nach dem Waschen die Haarmaske Feuchtigkeit großzügig in Deine Haarlängen einmassieren, einwirken lassen und dann gründlich ausspülen. | Als Pflegeboost 5 Minuten und als Intensivpflege 30 Minuten im feuchten Haar einwirken lassen. Gründlich ausspülen.",
+    "guidance_payload": {
+      "role": "intensive_care",
+      "scope": {
+        "kind": "product",
+        "category": "mask",
+        "productId": "e5cfad78-ea22-49a5-911a-cb1f3109fa1c"
+      },
+      "steps": [
+        {
+          "action": "apply_product",
+          "stepKey": "apply-mask",
+          "copyTemplateDe": "Das Haar nach der Wäsche sanft ausdrücken, bis es nicht mehr tropft. In Längen und Spitzen einarbeiten, den Ansatz aussparen. Mit einem grobzinkigen Kamm durchkämmen, damit jede Strähne bedeckt ist."
+        },
+        {
+          "action": "wait",
+          "stepKey": "wait-mask",
+          "copyTemplateDe": "5–30 Minuten einwirken lassen."
+        },
+        {
+          "action": "rinse",
+          "stepKey": "rinse-mask",
+          "copyTemplateDe": "Gründlich ausspülen."
+        }
+      ],
+      "locale": "de",
+      "evidence": [
+        {
+          "sourceUrl": "https://www.jeanlen.de/haarmaske-feuchtigkeit-rosemary-ginger",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        }
+      ],
+      "sequence": {
+        "after": [
+          "wet_cleanse"
+        ],
+        "anchor": "post_cleanse_rinse_off",
+        "before": [],
+        "conflictsWith": []
+      },
+      "guidanceKey": "product-mask-e5cfad78-ea22-49a5-911a-cb1f3109fa1c",
+      "requirements": {
+        "requiredCatalogFacts": [],
+        "requiredProfileFacts": [],
+        "requiredProtocolFacts": []
+      },
+      "protocolFacts": {
+        "rinse": "rinse_out",
+        "amount": null,
+        "cautions": [],
+        "reapplication": "none",
+        "applicationArea": "lengths_ends",
+        "contactTimeSeconds": null,
+        "conditionerRelationship": "replaces_conditioner"
+      },
+      "schemaVersion": 1,
+      "protocolVersion": 1,
+      "applicationFamily": "post_shampoo_rinse_out_mask",
+      "compatibleDayTypes": [
+        "intensive_care_day"
+      ],
+      "exactGuidanceRequired": true
+    },
+    "guidance_payload_v2": {
+      "role": "intensive_care",
+      "facts": {
+        "heat": null,
+        "rinse": "rinse_out",
+        "amount": null,
+        "contactTime": {
+          "kind": "range_seconds",
+          "maximumSeconds": 1800,
+          "minimumSeconds": 300
+        },
+        "applicationArea": "hair_lengths_ends",
+        "applicationState": "wet_hair",
+        "conditionerPolicy": "replaces_conditioner"
+      },
+      "scope": {
+        "kind": "product",
+        "category": "mask",
+        "productId": "e5cfad78-ea22-49a5-911a-cb1f3109fa1c"
+      },
+      "evidence": [
+        {
+          "sourceUrl": "https://www.jeanlen.de/haarmaske-feuchtigkeit-rosemary-ginger",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        }
+      ],
+      "exactSteps": [],
+      "sourceRole": "intensive_conditioning_mask",
+      "workflowId": null,
+      "cautionCodes": [],
+      "contractKind": "product_pointer",
+      "schemaVersion": 2,
+      "applicationFamily": "post_shampoo_rinse_out_mask",
+      "runtimeBlockerCode": null,
+      "requiredCompanionProductId": null
+    },
+    "origin_of_row": "Built on the live TPL-MASK row shape (Alterra Intensiv Repair, range_seconds). Two stated dwell times (5 min Pflegeboost / 30 min Intensivpflege) expressed as the range 300-1800 s."
+  }
+]

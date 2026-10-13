@@ -1,0 +1,319 @@
+{
+  "meta": {
+    "lane": "r3-identity-cadence-duplicates",
+    "researched_at": "2026-10-09",
+    "db": "pqdkhefxsxkyeqelqegq (SELECT only)",
+    "writes_made": 0,
+    "source_access": {
+      "worked": ["dm.de PDP via browser pane (GTIN, Verwendungshinweise)", "products.dm.de tiles API", "garnier.de", "loreal-paris.de", "headandshoulders.de", "epres-hair.de", "epres.com", "office-partner.de", "rohlik.cz", "rawhair.com.au"],
+      "blocked": ["rossmann.de (Client Challenge bot wall, not bypassed)", "skinsort.com 403", "notino.de 403", "pantene.de product page (301 to haircode.io, product page removed)", "amazon.de (no usable content)", "codecheck Pantene page shows 100 ml and no barcode"]
+    },
+    "structural_facts": {
+      "gtin_single_owner": "idx_product_identifiers_canonical_gtin14_owner is a UNIQUE index on canonical_gtin14: one valid GTIN can belong to exactly one product row in the whole catalogue. A KEEP-BOTH pair can therefore carry the barcode on only one entry.",
+      "scan_lookup": "src/lib/scan/identifier-lookup.ts resolves a barcode to the owning product and filters out inactive/discontinued products, so a GTIN left on a retired entry would break scanning.",
+      "allowed_scalp_cadence_kinds": ["daily", "daily_or_twice_daily_as_needed", "weekly_range", "as_needed", "label_schedule"],
+      "cadence_shape": "{ kind, copy_de } only (no min/max fields); copy_de must be non-blank",
+      "non_schedule_kinds": "label_timing / label_suitability / label_daily_suitable never become a repeat schedule (plans/2026-08-12-personal-plan-routine-application-cadence.md L72)",
+      "lifecycle_values": ["active", "discontinued"],
+      "recommendable_constraint": "products_recommendable_requires_active_check: is_chaarlie_recommended requires is_active AND lifecycle_status='active'",
+      "existing_replaced_by_edges": "8 edges, all same-category, all source rows discontinued + inactive + non-recommended"
+    }
+  },
+  "part1_barcodes": [
+    {
+      "product_id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+      "label": "Garnier Hair Food Macadamia (conditioner)",
+      "gtin": "3600542511612",
+      "gs1_check_digit": {"expected": 2, "ok": true},
+      "source_url": "https://www.dm.de/p/d/1676326/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske",
+      "source_tier": "retailer PDP (dm), read live 2026-10-09; manufacturer garnier.de page has no GTIN",
+      "pack_size": {"db": "400 ml", "source": "400 ml", "match": true},
+      "gtin_already_in_db_on": {"product_id": "a72d630d-547a-465f-9846-3006b38af0a2", "category": "leave_in", "identifier_type": "ean"},
+      "same_sku_as_sibling": true,
+      "existing_identifiers_on_product": [],
+      "proposal": "Cannot attach the GTIN (single-owner index). KEEP-BOTH pair: GTIN stays on a72d630d; add retailer_sku 'dm:1676326' + retailer_url (dm) to 4c3e1a63."
+    },
+    {
+      "product_id": "0307c903-84f9-46b4-8f1f-a51c2b1f38ff",
+      "label": "Garnier Hair Food Aloe Vera (leave_in)",
+      "gtin": "3600542511049",
+      "gs1_check_digit": {"expected": 9, "ok": true},
+      "source_url": "https://www.dm.de/p/d/1676340/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar",
+      "source_tier": "retailer PDP (dm), read live 2026-10-09; tile API https://products.dm.de/product/products/tiles/DE/dans/1676340 returns the same gtin",
+      "pack_size": {"db": "400 ml", "source": "400 ml", "match": true},
+      "gtin_already_in_db_on": {"product_id": "52264c47-f339-49db-9fb2-207d1ad3b470", "category": "mask", "identifier_type": "ean"},
+      "same_sku_as_sibling": true,
+      "existing_identifiers_on_product": [],
+      "proposal": "KEEP-BOTH pair: GTIN stays on the mask 52264c47; add retailer_sku 'dm:1676340' + retailer_url to 0307c903."
+    },
+    {
+      "product_id": "6b01025d-9e72-4514-b42e-bbb6065fbe1c",
+      "label": "L'Oréal Paris Midnight Serum (leave_in)",
+      "gtin": "3600524135805",
+      "gs1_check_digit": {"expected": 5, "ok": true},
+      "source_url": "https://www.dm.de/p/d/1333706/l-oreal-paris-elvital-haarserum-oel-magique-midnight-serum",
+      "source_tier": "retailer PDP (dm), read live 2026-10-09; tile API agrees",
+      "pack_size": {"db": "100 ml", "source": "100 ml", "match": true},
+      "gtin_already_in_db_on": {"product_id": "21a94166-3813-4c0f-8912-508fb8f704f1", "category": "oil", "identifier_type": "gtin"},
+      "same_sku_as_sibling": true,
+      "existing_identifiers_on_product": [],
+      "proposal": "KEEP-ONE pair (leave_in is the keeper): MOVE the existing GTIN identifier row from the oil entry 21a94166 to 6b01025d (same transaction as retirement); otherwise scanning breaks. Add retailer_sku 'dm:1333706'."
+    },
+    {
+      "product_id": "f8f3b51d-8e64-487d-bad5-4a47c58862ed",
+      "label": "Pantene Pro-V Miracles 7in1 Haaröl Spray (leave_in)",
+      "gtin": "8700216178402",
+      "gs1_check_digit": {"expected": 2, "ok": true},
+      "source_url": "https://www.office-partner.de/pantene-pro-v-miracles-7-in-1-haaroel-145-ml-n2000020900",
+      "source_tier": "retailer listings only (office-partner EAN field, 0815.eu, buero-bedarf-thueringen, Rossmann URL slug; Rossmann page itself blocked). dm.de PDP 1552170 is delisted; manufacturer pantene.de product page removed. Confidence medium.",
+      "pack_size": {"db": "145 ml", "source": "145 ml", "match": true},
+      "gtin_already_in_db_on": {"product_id": "5827a3b9-a488-4c74-b13a-4d655f94f1c3", "category": "oil", "identifier_type": "gtin", "name": "Pantene Pro-V Miracles 7in1 Öl-Spray"},
+      "same_sku_as_sibling": true,
+      "existing_identifiers_on_product": [],
+      "other_gtin_seen": "8001841874555 = dm.de 100 ml variant (dm.at 1552170, 100 ml), NOT this product; not in DB",
+      "note": "Third duplicate pair that was not on Nick's list (oil 5827a3b9 vs leave_in f8f3b51d)."
+    },
+    {
+      "product_id": "c6e80f39-20ba-401e-b041-6ee7c89a5996",
+      "label": "Balea Aqua Hyaluron 3in1 (leave_in)",
+      "gtin": "4066447668315",
+      "gs1_check_digit": {"expected": 5, "ok": true},
+      "source_url": "https://www.dm.de/p/d/1417521/",
+      "source_tier": "brand-owner PDP (Balea is a dm own brand), read live 2026-10-09; dm shows 'Nicht lieferbar'",
+      "pack_size": {"db": null, "source": "150 ml", "match": "db is null; propose 150 ml (net_content_value/unit are a paired NOT-NULL check)"},
+      "gtin_already_in_db_on": {"product_id": "55727898-2a5e-4f01-ace1-bd91521d98ab", "category": "mask", "identifier_type": "ean", "name": "Balea Aqua Hyaluron 3 in 1"},
+      "same_sku_as_sibling": true,
+      "existing_identifiers_on_product": [],
+      "note": "Fourth duplicate pair that was not on Nick's list; both rows share the same legacy dm URL and neither is recommended. The mask row also has null net content.",
+      "proposal": "KEEP-BOTH: GTIN stays on mask 55727898; set net_content 150 ml on both rows; add retailer_sku 'dm:1417521' to c6e80f39."
+    },
+    {
+      "product_id": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+      "label": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung (mask)",
+      "gtin": "4072600703403",
+      "gs1_check_digit": {"expected": 3, "ok": true},
+      "source_url": "https://www.dm.de/p/d/2977200/",
+      "source_tier": "retailer PDP (dm), read live 2026-10-09; dm shows 'Nicht lieferbar'",
+      "pack_size": {"db": "200 ml", "source": "200 ml", "match": true},
+      "gtin_already_in_db_on": {"product_id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504", "category": "conditioner", "identifier_type": "gtin"},
+      "same_sku_as_sibling": true,
+      "existing_identifiers_on_product": [],
+      "other_gtin_seen": "4072600703465 on a Dutch retailer listing (deonlinedrogist.nl); not German-market evidence, not in DB, not used",
+      "proposal": "KEEP-BOTH: GTIN stays on conditioner 11d42d9d; add retailer_sku 'dm:2977200' to 8ef172f7."
+    },
+    {
+      "product_id": "0f71ff9d-bf1e-4d76-883a-e1a9e6a2094c",
+      "label": "Balea Tiefenreinigung (shampoo)",
+      "gtin": "4070765001020",
+      "gs1_check_digit": {"expected": 0, "ok": true},
+      "source_url": "https://www.dm.de/p/d/1536339/balea-professional-shampoo-tiefenreinigung",
+      "source_tier": "brand-owner PDP (Balea is a dm own brand), read live 2026-10-09",
+      "pack_size": {"db": "250 ml", "source": "250 ml", "match": true},
+      "gtin_already_in_db_on": {"product_id": "375ee7a0-3262-4b99-8e48-4f327c6e09aa", "category": "deep_cleansing_shampoo", "identifier_type": "ean"},
+      "same_sku_as_sibling": true,
+      "existing_identifiers_on_product": [],
+      "proposal": "KEEP-ONE pair (deep_cleansing 375ee7a0 is the keeper, already owns the GTIN): no barcode needed on the retired shampoo entry."
+    }
+  ],
+  "part2_epres": {
+    "product_id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+    "before": {"net_content_value": null, "net_content_unit": null},
+    "recommended_after": {"net_content_value": 30, "net_content_unit": "ml"},
+    "alternative_after": {"net_content_value": 300, "net_content_unit": "ml", "meaning": "ready-to-use treatment after mixing both vials with water"},
+    "facts": {
+      "kit": "1 spray bottle (150 ml) + 2 x Bond Repair Concentrate vials of 15 ml each",
+      "official_epres_com": "Standard kit '1x epres spray bottle + 2x Bond Repair Concentrate'; 'Pour one concentrate vial into epres spray bottle. Fill with ... water'. Refill-pack page (via search): 'Each vial creates 150ml of Bond Repair Treatment'. No ml for the vial on the starter-kit page.",
+      "vial_size_source": "shop.rawhair.com.au: '2 x Bond Repair Concentrates, 15 ml each', '1x spray bottle 150ml', 'Creates 300ml'; Cosmoprof US via search summary: '(2) Concentrates - .5 oz.' (about 15 ml)",
+      "german_page": "https://epres-hair.de/artikeldetails/CONSUMERKIT.aspx states no volume anywhere (page text and raw HTML checked)",
+      "gtin_in_db": "0850040615500 = UPC 850040615500 (check digit ok), matches Cosmoprof listing of the consumer 'Bond Repair Treatment Kit'",
+      "conflict": "Charlie Miller (UK) variant label '2x 30ml' contradicts 2 x 15 ml; treated as unverified"
+    },
+    "confidence": "medium",
+    "open_question": "Store product-in-pack (30 ml concentrate) or ready-to-use yield (300 ml)? Other bondbuilder rows store product sold, which argues for 30 ml."
+  },
+  "part3_scalp_cadences": [
+    {
+      "product_id": "e51cfce0-fd76-4873-a868-cc3ca0301cbc",
+      "label": "Balea Kopfhautpflege Peeling Tiefenreinigung",
+      "role": "scalp_exfoliant",
+      "directions_de_verbatim": "Das Peeling auf die Kopfhaut auftragen und anschließend leicht einmassieren. 15 - 20 Minuten einwirken lassen und anschließend mit Shampoo ausspülen",
+      "source_url": "https://www.dm.de/p/d/1700670/balea-professional-kopfhautpflege-peeling-tiefenreinigung",
+      "source_tier": "brand-owner PDP (dm own brand), read 2026-10-09",
+      "frequency_stated": false,
+      "cadence_before": null,
+      "cadence_after": null,
+      "proposed_kind": null,
+      "note": "No repeat frequency anywhere on the dm page or in other German sources. Existing source_text/contact_time 900 s understates the stated 15-20 min (lower bound; not wrong)."
+    },
+    {
+      "product_id": "2544de60-e295-47ec-98a1-6b4ca58ce4be",
+      "label": "Isana Kopfhautpeeling Tiefenreinigung",
+      "role": "scalp_exfoliant",
+      "directions_de_verbatim": null,
+      "directions_en_secondary": "Apply the peel to the scalp and gently massage in. Leave on for 15 to 20 minutes, then rinse out with shampoo. (rohlik.cz, retailer, English)",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-kopfhautpeeling-tiefenreinigung/p/4068134100023",
+      "source_tier": "Rossmann own-brand PDP BLOCKED (Client Challenge); only secondary retailer text read",
+      "frequency_stated": false,
+      "cadence_before": null,
+      "cadence_after": null,
+      "proposed_kind": null,
+      "note": "No manufacturer frequency found. A forum post suggesting 1x/week is a user opinion and was not used; theisana.com '1-2x per week' belongs to the facial AHA peeling."
+    },
+    {
+      "product_id": "c9b231ee-77b5-45b7-8127-7a85d3ae7dd0",
+      "label": "Head & Shoulders Kopfhaut-Feuchtigkeitspflege Leave-In Serum (Derma x Pro)",
+      "role": "scalp_comfort",
+      "directions_de_verbatim": "Auf die Kopfhaut auftragen und einwirken lassen. Halten Sie den Kopf aufrecht oder leicht nach hinten geneigt. Scheiteln Sie das Haar mit Hilfe des Applikators und tragen Sie eine moderate Menge direkt auf die Kopfhaut von der Vorder- zur Rückseite des Kopfes auf. Wiederholen Sie diesen Vorgang bis zu 5 Mal, um die Kopfhaut vollständig zu bedecken. Massieren Sie das Produkt ein. Nicht ausspülen. Das Haar wie gewohnt föhnen oder stylen. Kann sowohl auf trockenem als auch auf nassem Haar angewendet werden.",
+      "source_url": "https://www.headandshoulders.de/de-de/anti-schuppen-produkte/kopfhautseren-und-masken/dermaxpro-tiefenwirksame-feuchtigkeit/",
+      "source_tier": "manufacturer page (Tier 1), read 2026-10-09; dm PDP agrees: 'ideal für die Anwendung nach und zwischen den Haarwäschen' (an occasion, not a frequency)",
+      "frequency_stated": false,
+      "cadence_before": null,
+      "cadence_after": null,
+      "proposed_kind": null,
+      "optional_candidate_needs_nick_ruling": {"kind": "label_schedule", "copy_de": "Nach und zwischen den Haarwäschen anwenden.", "caveat": "Derived from dm marketing prose; names occasions, not a repeat count. 'bis zu 5 Mal' is applicator repeats within one application. Do not transfer 'up to twice daily' from the different Derma x Pro Revitaliser."}
+    },
+    {
+      "product_id": "35d2cc66-6d5a-49c1-9a9f-c03bf6942ab0",
+      "label": "Balea Kopfhautpflege Serum Sensitive",
+      "role": "scalp_comfort",
+      "directions_de_verbatim": "Das Serum im trockenen Haar abends direkt auf die betroffene Stellen auftragen. Leicht einmassieren und am nächsten Morgen wie gewohnt Haare waschen",
+      "source_url": "https://www.dm.de/p/d/1459196/balea-professional-kopfhautpflege-serum-sensitive",
+      "source_tier": "brand-owner PDP (dm own brand), read 2026-10-09. A delisted twin dm.de/p/d/1700671 'Pflegeserum Kopfhaut Sensitive' (not found) reportedly says rinse out next morning; a 'täglich' instruction found in search belongs to a different Balea serum.",
+      "frequency_stated": false,
+      "cadence_before": {"kind": "label_timing", "copy_de": "Abends anwenden; morgens auswaschen."},
+      "cadence_after": {"kind": "label_timing", "copy_de": "Abends anwenden; morgens auswaschen."},
+      "proposed_kind": null,
+      "note": "Directions give a time of day and a wash step, no repeat frequency. label_timing is correctly non-schedule; it falls back to 'Nach Herstellerangabe' exactly like null. Recommended: leave unchanged. Existing copy 'morgens auswaschen' is slightly off the dm wording ('am nächsten Morgen wie gewohnt Haare waschen').",
+      "optional_candidate_needs_nick_ruling": {"kind": "label_schedule", "copy_de": "Abends auf die betroffenen Stellen auftragen; am nächsten Morgen wie gewohnt die Haare waschen.", "caveat": "Would promote a timing statement to a schedule kind; the plan contract says timing-only never becomes a repeat schedule."}
+    }
+  ],
+  "part4_duplicate_pairs": [
+    {
+      "pair": "Balea Tiefenreinigung",
+      "members": [
+        {"id": "0f71ff9d-bf1e-4d76-883a-e1a9e6a2094c", "category": "shampoo", "recommended": true, "user_products": 0, "protocols": [{"role": "shampoo_everyday", "cadence": null}], "specs": {"shampoo_specs": 1, "thickness_eligibility": 1, "concern_eligibility": 1}, "image_assets": 1, "identifiers": [], "fact_evidence": 1},
+        {"id": "375ee7a0-3262-4b99-8e48-4f327c6e09aa", "category": "deep_cleansing_shampoo", "recommended": true, "user_products": 0, "protocols": [{"role": "residue_reset", "cadence": {"kind": "label_daily_suitable"}}], "specs": {"deep_cleansing_specs": 1, "thickness_eligibility": 3, "concern_eligibility": 1}, "image_assets": 0, "identifiers": ["ean 4070765001020"], "fact_evidence": 1}
+      ],
+      "same_sku": true,
+      "evidence": "Same dm URL, same 250 ml, same GTIN 4070765001020 (dm shows only this GTIN).",
+      "manufacturer_stated_uses_verbatim": "Tiefenreinigendes Shampoo für alle Haartypen ... Dank seiner pH-hautneutralen und silikonfreien Rezeptur ist das Shampoo für die tägliche Anwendung geeignet. | Verwendungshinweise: Sanft ins nasse Haar einmassieren, kurz einwirken lassen und sorgfältig mit lauwarmen Wasser ausspülen.",
+      "source_url": "https://www.dm.de/p/d/1536339/balea-professional-shampoo-tiefenreinigung",
+      "verdict": "KEEP ONE",
+      "keeper": "375ee7a0 (deep_cleansing_shampoo)",
+      "retire": "0f71ff9d",
+      "reason": "One use is named: a deep-cleansing shampoo ('Tiefenreinigung', removes styling residue and excess oil). 'Daily use suitable' is a tolerability claim, not a second named use; repo precedent keeps daily-suitable deep-cleansing products as Reset-Baustein only (375ee7a0's own cadence copy). Judgment call, medium confidence.",
+      "retirement_notes": "Keeper has no image_assets row (retired row has 1) and keeper holds thickness eligibility 3 rows; retired row is recommended. Spans repair slices shampoo_conditioner and remaining_categories_protocols (cross-category edge)."
+    },
+    {
+      "pair": "Garnier Fructis Hair Food Macadamia",
+      "members": [
+        {"id": "a72d630d-547a-465f-9846-3006b38af0a2", "category": "leave_in", "recommended": true, "user_products": 0, "protocols": 2, "identifiers": ["ean 3600542511612"]},
+        {"id": "4c3e1a63-4696-406a-be67-f2aacc678b0c", "category": "conditioner", "recommended": true, "user_products": 0, "protocols": 1, "identifiers": []}
+      ],
+      "same_sku": true,
+      "evidence": "Same Amazon link, 400 ml, GTIN 3600542511612; dm PDP 1676326 is a single SKU.",
+      "manufacturer_stated_uses_verbatim": "Drei Anwendungen – ein Produkt: Als Spülung: ... auf das nasse Haar auftragen und gründlich ausspülen. ... Als Maske: ... 3 Minuten einwirken lassen und gründlich ausspülen. Als Leave-In: Auf feuchtem oder trockenem Haar anwenden. Dafür eine kleine Menge in die Längen geben ...",
+      "source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/hair-food/3in1-maske-fuer-trockenes-haar-angereichert-mit-macadamia",
+      "verdict": "KEEP BOTH",
+      "reason": "Label names conditioner (Spülung) and leave-in explicitly (and a mask use, for which the catalogue has no entry).",
+      "barcode_consequence": "GTIN can stay on only one entry; stays on a72d630d. The conditioner entry is not scannable by barcode (open decision)."
+    },
+    {
+      "pair": "Garnier Fructis Hair Food Aloe Vera",
+      "members": [
+        {"id": "52264c47-f339-49db-9fb2-207d1ad3b470", "category": "mask", "recommended": true, "user_products": 0, "protocols": 1, "identifiers": ["ean 3600542511049"]},
+        {"id": "0307c903-84f9-46b4-8f1f-a51c2b1f38ff", "category": "leave_in", "recommended": true, "user_products": 1, "protocols": 2, "identifiers": []}
+      ],
+      "same_sku": true,
+      "evidence": "Same dm URL 1676340, 400 ml, GTIN 3600542511049.",
+      "manufacturer_stated_uses_verbatim": "Drei Anwendungen – ein Produkt: 1. Kopfmassage ... 2. Maske für die Längen: ... 5-10 Minuten einwirken lassen, dann gründlich ausspülen. 3. Leave-In: Eine kleine Menge in die handtuchtrockenen Haarspitzen einarbeiten und nicht ausspülen.",
+      "source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/hair-food/3in1-maske-fuer-normales-bis-trockenes-haar-angereichert-mit-aloe-vera",
+      "verdict": "KEEP BOTH",
+      "reason": "Mask and leave-in both explicitly named by the manufacturer (dm also says 'Spülung, Maske oder Leave-in').",
+      "barcode_consequence": "GTIN stays on the mask 52264c47; leave_in 0307c903 (1 owner) has no barcode."
+    },
+    {
+      "pair": "L'Oréal Elvital Öl Magique Midnight Serum",
+      "members": [
+        {"id": "21a94166-3813-4c0f-8912-508fb8f704f1", "category": "oil", "recommended": true, "user_products": 0, "protocols": [{"role": "dry_finish"}, {"role": "leave_on_fibre_conditioning"}], "specs": {"oil_specs": 1, "thickness_eligibility": 1, "concern_eligibility": 1}, "image_assets": 1, "identifiers": ["gtin 3600524135805"]},
+        {"id": "6b01025d-9e72-4514-b42e-bbb6065fbe1c", "category": "leave_in", "recommended": true, "user_products": 0, "protocols": 2, "specs": {"leave_in_specs": 1, "thickness_eligibility": 1, "concern_eligibility": 2}, "image_assets": 1, "identifiers": []}
+      ],
+      "same_sku": true,
+      "evidence": "Same dm URL 1333706, 100 ml, GTIN 3600524135805.",
+      "manufacturer_stated_uses_verbatim": "Für außergewöhnliches Haar direkt nach dem Aufwachen oder abends vor dem Schlafengehen auf das trockene oder nasse Haar auftragen. Nicht fettende Formel für ein sauberes Kopfkissen. Kein Ausspülen am Morgen erforderlich. | Manufacturer site lists it under 'Haarserum' (loreal-paris.de/haarpflege/haarserum) and NOT under 'Haaröl' (loreal-paris.de/haarpflege/haaroel). dm shelves it under Leave-In. Water-first emulsion (Aqua, Cetearyl Alcohol).",
+      "source_url": "https://www.loreal-paris.de/elvital/oel-magique/midnight-serum",
+      "verdict": "KEEP ONE",
+      "keeper": "6b01025d (leave_in)",
+      "retire": "21a94166 (oil)",
+      "reason": "Only one use is named: an overnight leave-on serum. 'Öl Magique' is the range name; the manufacturer does not list it as an oil.",
+      "retirement_notes": "Retired oil entry holds the GTIN: move the identifier row to 6b01025d in the same transaction. Slice leave_in_oil covers both categories. Retired row is recommended with 2 oil protocols."
+    },
+    {
+      "pair": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "members": [
+        {"id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504", "category": "conditioner", "recommended": true, "user_products": 0, "discovery_intake_items": 1, "protocols": 1, "identifiers": ["gtin 4072600703403"]},
+        {"id": "8ef172f7-8e95-4ac7-a6a9-235ad760155b", "category": "mask", "recommended": true, "user_products": 0, "protocols": 1, "identifiers": []}
+      ],
+      "same_sku": true,
+      "evidence": "Same iwonatec link, 200 ml, GTIN 4072600703403 (dm 2977200).",
+      "manufacturer_stated_uses_verbatim": "2IN1 ANWENDUNG: Spülung: Für sofortige Regeneration. Ins gewaschene, nasse Haar einmassieren, kurz einwirken lassen. Gut ausspülen. Kur: Für Tiefenregeneration. Ins gewaschene, nasse Haar einmassieren. 2-3 Minuten einwirken lassen und genießen. Gut ausspülen.",
+      "source_url": "https://www.dm.de/p/d/2977200/",
+      "source_tier": "retailer (dm) PDP; guhl.de product page not found",
+      "verdict": "KEEP BOTH",
+      "reason": "Spülung and Kur are both named ('2IN1').",
+      "barcode_consequence": "GTIN stays on conditioner 11d42d9d; mask 8ef172f7 has no barcode."
+    },
+    {
+      "pair": "Pantene Pro-V Miracles 7in1 Haaröl Spray (NOT on Nick's list)",
+      "members": [
+        {"id": "5827a3b9-a488-4c74-b13a-4d655f94f1c3", "category": "oil", "recommended": true, "user_products": 0, "protocols": 2, "fact_evidence": 2, "identifiers": ["gtin 8700216178402"], "affiliate_link": "mueller.de"},
+        {"id": "f8f3b51d-8e64-487d-bad5-4a47c58862ed", "category": "leave_in", "recommended": true, "user_products": 1, "protocols": [{"role": "post_wash_leave_in"}, {"role": "post_wash_leave_in"}, {"role": "pre_heat_protection"}], "identifiers": [], "affiliate_link": "rossmann.de"}
+      ],
+      "same_sku": true,
+      "evidence": "Both 145 ml; oil row already owns GTIN 8700216178402 and cites the Rossmann URL for it.",
+      "manufacturer_stated_uses_verbatim": "Retailer PDPs: 'Das Produkt auf feuchtem oder trockenem Haar auftragen. Wie gewünscht stylen. Nicht ausspülen.' (dm.de, since delisted); name on every shelf is 'Haaröl Spray'. pantene.de page removed, so no manufacturer text could be read.",
+      "source_url": "https://www.mytime.de/pantene_pro-v_miracles_7in1_haaroel_spray_4501127259.html",
+      "verdict": "KEEP ONE",
+      "keeper": "5827a3b9 (oil)",
+      "retire": "f8f3b51d (leave_in)",
+      "reason": "Named and sold as 'Haaröl Spray'; 'nicht ausspülen' is intrinsic to any oil, not a second labelled use. Confidence medium: no manufacturer page readable.",
+      "retirement_notes": "Retired row has 1 user_products owner and a pre_heat_protection protocol (heat-protection claim lost from catalogue unless re-evaluated in the heat-protectant lane). Description of f8f3b51d names a different product ('Keratin Protect 10-in-1')."
+    },
+    {
+      "pair": "Balea Aqua Hyaluron 3in1 (NOT on Nick's list)",
+      "members": [
+        {"id": "55727898-2a5e-4f01-ace1-bd91521d98ab", "category": "mask", "recommended": false, "user_products": 1, "protocols": 1, "identifiers": ["ean 4066447668315"]},
+        {"id": "c6e80f39-20ba-401e-b041-6ee7c89a5996", "category": "leave_in", "recommended": false, "user_products": 0, "protocols": 2, "identifiers": [], "product_submissions_previous_ref": 1}
+      ],
+      "same_sku": true,
+      "evidence": "Identical legacy dm URL ...-p4066447668315.html; same GTIN on mask row; dm PDP 1417521 (150 ml).",
+      "manufacturer_stated_uses_verbatim": "Die 3in1 Aqua Hyaluron Haarmaske von Balea Professional kann als Haarmaske, Leave-in-Pflege oder Over-Night-Pflege verwendet werden.",
+      "source_url": "https://www.dm.de/p/d/1417521/",
+      "verdict": "KEEP BOTH",
+      "reason": "Mask and leave-in both explicitly named by the brand owner. Neither row is recommended today; product is 'Nicht lieferbar' at dm."
+    }
+  ],
+  "retirement_mechanism": {
+    "fits": "Lifecycle + replaced_by tombstone (docs/catalog-authority.md; precedent docs/ops/catalog-repairs/2026-08-11-ogx-renewing-merge and 2026-08-15-catalog-authority-lifecycle).",
+    "steps_per_retired_row": [
+      "products: is_chaarlie_recommended=false, lifecycle_status='discontinued' (and is_active=false as in the 8 existing tombstones)",
+      "product_relationships: insert replaced_by (source=retired, target=keeper)",
+      "move user_products.catalog_product_id to the keeper where owners exist (Pantene f8f3b51d has 1)",
+      "move product_identifiers rows (GTIN) from retired to keeper where the retired row owns them (Midnight oil -> leave_in)",
+      "keep spec/protocol/evidence rows in place: the audit treats a retired + superseded row as a tombstone and skips completeness checks (isRetiredSuperseded in src/lib/catalog-authority/audit.ts)"
+    ],
+    "do_not": "Do not delete rows; do not use personal_plan_product_search_dispositions (that is for search-gap products, not duplicates).",
+    "caveats": [
+      "All 8 existing replaced_by edges are same-category; the three KEEP-ONE pairs here are cross-category (shampoo->deep_cleansing, oil->leave_in, leave_in->oil). Schema (CHECK source<>target only) and audit allow it, but src/lib/catalog-authority/repair.ts slices are category-bounded and the 2026-08-15 preflight demanded same category; Balea shampoo->deep_cleansing spans two slices.",
+      "selection.ts already excludes any product with an outgoing replaced_by edge from recommendation."
+    ]
+  },
+  "open_questions": [
+    "KEEP-BOTH pairs (Macadamia, Aloe, Guhl, Balea Aqua 3in1): the one-GTIN-one-product invariant means the second entry cannot be scanned. Accept GTIN on the current owner plus dm retailer_sku on the other, or collapse to one entry?",
+    "Pantene: confirm oil as keeper although the manufacturer page is gone; leave_in loses its pre_heat_protection protocol and has 1 owner.",
+    "Balea Tiefenreinigung: confirm deep_cleansing as keeper (label also says daily-use suitable).",
+    "Epres net content: 30 ml (concentrate) or 300 ml (ready-to-use)?",
+    "Scalp cadences: none of the four has a manufacturer frequency. Accept staying generic, or supply pack photo / Rossmann page (Isana) / dm customer service answer?",
+    "H&S and Balea Serum optional label_schedule copy: rule whether occasion/timing statements may be promoted to label_schedule."
+  ]
+}

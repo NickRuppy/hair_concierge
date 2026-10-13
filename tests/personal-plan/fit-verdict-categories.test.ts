@@ -983,12 +983,6 @@ for (const [gate, mutate] of [
     },
   ],
   [
-    "stage",
-    (input: any) => {
-      input.productFacts.spec.applicationStages = ["towel_dry"]
-    },
-  ],
-  [
     "heat",
     (input: any) => {
       input.productFacts.spec.providesHeatProtection = false
@@ -1016,6 +1010,20 @@ for (const [gate, mutate] of [
     assert.equal(result.status === "known" ? result.verdict : null, "mismatch")
   })
 }
+
+test("pre-heat leave-in: verified heat protection and protocol allow towel-dry application", () => {
+  const input = leaveIn({
+    roles: ["pre_heat_application"],
+    applicationStages: ["towel_dry"],
+    providesHeatProtection: true,
+  })
+  input.role = "pre_heat_application"
+  input.productFacts!.protocols = [
+    { role: input.role, status: "verified_complete", fingerprint: "protocol" },
+  ]
+  const result = evaluateStage3Authority(input)
+  assert.equal(result.status === "known" ? result.verdict : null, "ideal")
+})
 
 test("irritated-only scalp still rejects an anti-dandruff shampoo", () => {
   // fit-verdict spec §2.4 / §7b Q5, ruled 2026-10-12: only the combined intensity gate retires.
