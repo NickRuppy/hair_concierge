@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { UNKNOWN_SELECTION_PROFILE } from "../src/lib/personal-plan/products/authority/selection-profile"
 import { createHash } from "node:crypto"
 import test from "node:test"
 
@@ -146,6 +147,7 @@ function authorityInput(
       executionPauseReason: null,
       deferredFacts: [],
     },
+    selectionProfile: UNKNOWN_SELECTION_PROFILE,
     coverage: [],
     hairThickness: row.thickness,
     productFacts: {

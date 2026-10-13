@@ -314,6 +314,9 @@ function refinedInputHashFor(refinedVersionId: string): string {
 
 function createPersistence(world: World): Stage3ProductionPersistence {
   return {
+    async loadVisibleHairColor() {
+      return null
+    },
     async loadShoppingContext() {
       return { budget: null, currentConcerns: [], primaryConcern: null }
     },
@@ -401,6 +404,9 @@ function createPersistence(world: World): Stage3ProductionPersistence {
         profile: {
           source: { projection: "refined_post_plan" },
           hair: { thickness: "normal" },
+          scalp: { oiliness: "balanced", concerns: [] },
+          goals: [],
+          concerns: [],
         },
       } as never
     },
