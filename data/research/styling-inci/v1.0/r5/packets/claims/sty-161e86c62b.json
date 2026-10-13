@@ -1,0 +1,52 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-161e86c62b",
+  "brand": "Redken",
+  "confirmed_name": "Root Tease",
+  "confirmed_name_tier": "C2",
+  "format": "aerosol",
+  "product_type_word": "aerosol",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "REDKEN ROOT TEASE Volumen-Haarspray für Toupier-Effekt mit mattem Finish.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "redken.eu",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "ROOT TEASE ist ein Haarspray mit drei Vorteilen in einer Flasche: Volumen, Textur und Kontrolle. Dieses Spray hebt die Haarwurzel an für mehr Volumen und sorgt für einen Toupier-Effekt mit mattem Finish.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "redken.eu",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Volumen, Textur und Kontrolle",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "redken.eu",
+      "date": "2026-10-12",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "Kontrolle"
+    },
+    {
+      "type": "finish",
+      "text": "mattes Finish",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "redken.eu",
+      "date": "2026-10-12"
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-2b27f49deb",
+  "product": {
+    "confirmed_name": "EIMI Smooth Perfect Me (Balsam-Lotion)",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "Wella Professionals",
+    "format": "cream"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 17,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Water/Eau"
+      },
+      {
+        "rank": 2,
+        "inci": "Isohexadecane"
+      },
+      {
+        "rank": 3,
+        "inci": "Isopropyl Palmitate"
+      },
+      {
+        "rank": 4,
+        "inci": "Dimethicone"
+      },
+      {
+        "rank": 5,
+        "inci": "Polyacrylamide"
+      },
+      {
+        "rank": 6,
+        "inci": "Stearyl Alcohol"
+      },
+      {
+        "rank": 7,
+        "inci": "C13-14 Isoparaffin"
+      },
+      {
+        "rank": 8,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 9,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 10,
+        "inci": "Benzyl Alcohol"
+      },
+      {
+        "rank": 11,
+        "inci": "Steareth-21"
+      },
+      {
+        "rank": 12,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 13,
+        "inci": "Fragrance /Parfum"
+      },
+      {
+        "rank": 14,
+        "inci": "Peg-23M"
+      },
+      {
+        "rank": 15,
+        "inci": "Steareth-2"
+      },
+      {
+        "rank": 16,
+        "inci": "Laureth-7"
+      },
+      {
+        "rank": 17,
+        "inci": "Disodium Edta"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Verteile eine kleine Menge des Produkts auf feuchtem oder trockenem Haar in den mittleren Längen und Spitzen für ein luxuriöses Gefühl. Nach Belieben stylen.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "wella.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Professionelle Balsam-Lotion für natürliches Haarstyling",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "text": "Bändigt die Haare und verleiht Geschmeidigkeit",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-11",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": [
+    {
+      "text": "Spendet Feuchtigkeit und Hitzeschutz; schützt das Haar auch vor der Hitze von Stylinggeräten",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-11"
+    }
+  ]
+}

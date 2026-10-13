@@ -1,0 +1,44 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-04177447c0",
+  "brand": "Schwarzkopf Professional",
+  "confirmed_name": "OSiS Dust It",
+  "confirmed_name_tier": "C2",
+  "format": "powder_shaker",
+  "product_type_word": "powder_shaker",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "OSiS Dust It ist ein mattierendes Volumenpuder für unglaubliches Volumen, starken Halt und intensive Griffigkeit.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf-professional.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "PERFEKT FÜR TEXTUR VOLUMEN ANSATZVOLUMEN",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf-professional.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "starken Halt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf-professional.com",
+      "date": "2026-10-12",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "starken Halt"
+    }
+  ]
+}

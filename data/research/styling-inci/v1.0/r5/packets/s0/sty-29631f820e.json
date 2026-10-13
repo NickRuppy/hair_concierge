@@ -1,0 +1,163 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-29631f820e",
+  "product": {
+    "confirmed_name": "Powder.Puff Volume",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "Kevin.Murphy",
+    "format": "powder"
+  },
+  "identity": {
+    "identity_status": "inci_conflict",
+    "inci_alt": {
+      "items": [
+        {
+          "rank": 1,
+          "inci": "Water (Aqua) (Eau)"
+        },
+        {
+          "rank": 2,
+          "inci": "Silica Silylate"
+        },
+        {
+          "rank": 3,
+          "inci": "VP/VA Copolymer"
+        },
+        {
+          "rank": 4,
+          "inci": "Butylene Glycol"
+        },
+        {
+          "rank": 5,
+          "inci": "Nylon-12"
+        },
+        {
+          "rank": 6,
+          "inci": "Alaria Esculenta Extract"
+        },
+        {
+          "rank": 7,
+          "inci": "Phenoxyethanol"
+        },
+        {
+          "rank": 8,
+          "inci": "Sodium Benzoate"
+        },
+        {
+          "rank": 9,
+          "inci": "Citric Acid"
+        }
+      ],
+      "note": "second capture of the same product with a different list; the list in 'inci' is the one read from the newer/higher-tier source"
+    },
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 9,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Water (Aqua) (Eau)"
+      },
+      {
+        "rank": 2,
+        "inci": "Silica Silylate"
+      },
+      {
+        "rank": 3,
+        "inci": "VP/VA Copolymer"
+      },
+      {
+        "rank": 4,
+        "inci": "Butylene Glycol"
+      },
+      {
+        "rank": 5,
+        "inci": "Zinc Myristate"
+      },
+      {
+        "rank": 6,
+        "inci": "Undaria Pinnatifida Extract"
+      },
+      {
+        "rank": 7,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 8,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 9,
+        "inci": "Citric Acid"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "POWDER.PUFF Schütteln, stylen und staunen! Für sofortiges Volumen und Struktur einfach etwas Puder auf den Haaransatz ins feuchte oder trockene Haar geben.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "flaconi.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Fixierprodukt mit langanhaltendem Halt. Sorgt mühelos für Fülle",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-11",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": [],
+  "identity_status": "inci_conflict",
+  "inci_alt": {
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Water (Aqua) (Eau)"
+      },
+      {
+        "rank": 2,
+        "inci": "Silica Silylate"
+      },
+      {
+        "rank": 3,
+        "inci": "VP/VA Copolymer"
+      },
+      {
+        "rank": 4,
+        "inci": "Butylene Glycol"
+      },
+      {
+        "rank": 5,
+        "inci": "Nylon-12"
+      },
+      {
+        "rank": 6,
+        "inci": "Alaria Esculenta Extract"
+      },
+      {
+        "rank": 7,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 8,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 9,
+        "inci": "Citric Acid"
+      }
+    ],
+    "note": "second capture of the same product with a different list; the list in 'inci' is the one read from the newer/higher-tier source"
+  }
+}

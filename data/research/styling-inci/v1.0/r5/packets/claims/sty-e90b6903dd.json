@@ -1,0 +1,52 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-e90b6903dd",
+  "brand": "Schwarzkopf Professional",
+  "confirmed_name": "OSiS Sparkler",
+  "confirmed_name_tier": "C2",
+  "format": "aerosol",
+  "product_type_word": "aerosol",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "OSiS Sparkler ist ein Glanz-Spray für sofort glamouröses glänzendes Haar. Es verleiht dem Haar ein sofortiges, leichtes Finish, ohne zu beschweren. Der leichte Pflegeeffekt verbessert die Kämmbarkeit.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf-professional.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Bring den Glamour zum Vorschein! Dieses silikonfreie Glanzspray sorgt für einen leichten Pflegeeffekt und ein herrlich glänzendes Finish nach dem Föhnen. Es reduziert Frizz und entwirrt, während es gleichzeitig vor Feuchtigkeit und Hitze bis zu 230°C schützt.",
+      "tier": "C2",
+      "source_class": "manufacturer_pdf",
+      "source_host": "dm.henkel-dam.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Kein Halt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf-professional.com",
+      "date": "2026-10-12",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "Kein Halt"
+    },
+    {
+      "type": "heat_protection",
+      "text": "Es reduziert Frizz und entwirrt, während es gleichzeitig vor Feuchtigkeit und Hitze bis zu 230°C schützt.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "dm.henkel-dam.com",
+      "date": "2026-10-12"
+    }
+  ]
+}

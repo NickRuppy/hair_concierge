@@ -1,0 +1,82 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-bfbef3fc9f",
+  "brand": "American Crew",
+  "confirmed_name": "FIBER",
+  "confirmed_name_tier": "C2",
+  "format": "paste",
+  "product_type_word": "fiber",
+  "scale_info": {
+    "number": 9,
+    "scale_as_written": "Haltfaktor 9",
+    "scale_max": null,
+    "scale_max_stated": false,
+    "tier": "C3"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "starker aber variabler Halt und natürliches, mattes Finish",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "flaconi.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "American Crew Texture Fiber ist ein Stylingprodukt mit starkem Halt und wenig Glanz, das das Haar dicker erscheinen lässt, texturiert und für mehr Fülle sorgt.",
+      "tier": "C5",
+      "source_class": "non_DE_page",
+      "source_host": "americancrew.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Haltfaktor 9",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "flaconi.de",
+      "date": "2026-10-11",
+      "number": 9,
+      "scale_as_written": "Haltfaktor 9",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null
+    },
+    {
+      "type": "flexibility",
+      "text": "variabler Halt",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "flaconi.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "flexibility",
+      "text": "flexibel",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "flaconi.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "finish",
+      "text": "Glanzfaktor 1 / mattes Finish",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "flaconi.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "duration",
+      "text": "langem Halt",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "flaconi.de",
+      "date": "2026-10-11"
+    }
+  ]
+}

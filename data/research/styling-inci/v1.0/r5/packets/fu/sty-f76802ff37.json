@@ -1,0 +1,120 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-f76802ff37",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 24,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA / WATER"
+      },
+      {
+        "rank": 2,
+        "inci": "COCOS NUCIFERA OIL / COCONUT OIL"
+      },
+      {
+        "rank": 3,
+        "inci": "AMODIMETHICONE"
+      },
+      {
+        "rank": 4,
+        "inci": "POLYQUATERNIUM-37"
+      },
+      {
+        "rank": 5,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 6,
+        "inci": "PROPYLENE GLYCOL DICAPRYLATE/DICAPRATE"
+      },
+      {
+        "rank": 7,
+        "inci": "PARFUM / FRAGRANCE"
+      },
+      {
+        "rank": 8,
+        "inci": "ACETAMIDE MEA"
+      },
+      {
+        "rank": 9,
+        "inci": "LACTAMIDE MEA"
+      },
+      {
+        "rank": 10,
+        "inci": "DIMETHICONE PEG-7 PHOSPHATE"
+      },
+      {
+        "rank": 11,
+        "inci": "PPG-1 TRIDECETH-6"
+      },
+      {
+        "rank": 12,
+        "inci": "TRIDECETH-6"
+      },
+      {
+        "rank": 13,
+        "inci": "BEHENTRIMONIUM CHLORIDE"
+      },
+      {
+        "rank": 14,
+        "inci": "XYLOSE"
+      },
+      {
+        "rank": 15,
+        "inci": "LACTIC ACID"
+      },
+      {
+        "rank": 16,
+        "inci": "ETHYLHEXYLGLYCERIN"
+      },
+      {
+        "rank": 17,
+        "inci": "CETRIMONIUM CHLORIDE"
+      },
+      {
+        "rank": 18,
+        "inci": "HYDROLYZED VEGETABLE PROTEIN PG-PROPYL SILANETRIOL"
+      },
+      {
+        "rank": 19,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 20,
+        "inci": "GERANIOL"
+      },
+      {
+        "rank": 21,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 22,
+        "inci": "ALPHA-ISOMETHYL IONONE"
+      },
+      {
+        "rank": 23,
+        "inci": "VIOLA ODORATA EXTRACT - VIOLA ODORATA FLOWER/LEAF EXTRACT"
+      },
+      {
+        "rank": 24,
+        "inci": "SODIUM HYDROXIDE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "1. Variante: Nach der Haarwäsche ins handtuchtrockene Haar einarbeiten. Nicht ausspülen. Danach die Haare wie gewohnt stylen 2. Variante: Nach dem Shampoonieren mit einem Conditioner mischen und ins Haar einarbeiten. Anschliessend gründlich wieder ausspülen. 3. Variante: Nach der Haarwäsche mit einer Leave-In Pflege vermischen und ins Haar einarbeiten. Nicht ausspülen 4. Variante: Mit einem Stylingprodukt vermischen und ins Haar einarbeiten, um ein perfektes Finish zu erzielen. Bei Kontakt mit den Augen diese sofort gründlich ausspülen.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "redken.eu",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

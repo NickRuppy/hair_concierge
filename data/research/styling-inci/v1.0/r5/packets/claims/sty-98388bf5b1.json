@@ -1,0 +1,38 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-98388bf5b1",
+  "brand": "Moroccanoil",
+  "confirmed_name": "Root Boost",
+  "confirmed_name_tier": "C2",
+  "format": "aerosol",
+  "product_type_word": "aerosol",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Großes Volumen dank Fülle vom Ansatz an: Vor dem Föhnstyling sorgt Moroccanoil® Root Boost für eine starke Textur an den Haaransätzen und erzeugt so mühelos großes Volumen. Angereichert mit antioxidantienreichem Arganöl, verleiht dieser Ansatz-Booster normalem bis feinem Haar lang anhaltende Textur, Fülle und Bewegung. Unsere hochwirksame Formel kontrolliert statische Aufladung und sorgt für ein natürlich aussehendes Finish.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "finish",
+      "text": "natürlich aussehendes Finish",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "humidity",
+      "text": "kontrolliert statische Aufladung",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12"
+    }
+  ]
+}

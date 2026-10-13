@@ -1,0 +1,75 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-dcb6153a35",
+  "brand": "John Frieda",
+  "confirmed_name": "Volume Lift Ansatz-Booster",
+  "confirmed_name_tier": "C2",
+  "format": "pump_spray",
+  "product_type_word": "pump_spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Dieses Pre-Styling-Spray sorgt ab dem ersten Sprühstoß für sofortiges Volumen am Ansatz. Die leichte Formel mit Peptiden verleiht dem Haar griffige Textur und schützt es gleichzeitig vor Hitze bis zu 220 °C – für ein langanhaltendes, voluminöses Styling.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Mehr Volumen in nur einer Anwendung.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Leichte, schwerelose Formel.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Volumengebendes Leave-in-Spray",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Mit angenehmem Duft",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Für feines und plattes Haar",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "heat_protection",
+      "text": "schützt es gleichzeitig vor Hitze bis zu 220 °C",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-12"
+    }
+  ]
+}

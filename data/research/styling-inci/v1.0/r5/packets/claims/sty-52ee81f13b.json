@@ -1,0 +1,98 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-52ee81f13b",
+  "brand": "Wella Professionals",
+  "confirmed_name": "EIMI Texture Ocean Spritz (Texturizing Salt Spray)",
+  "confirmed_name_tier": "C2",
+  "format": "pump_spray",
+  "product_type_word": "pump_spray",
+  "scale_info": {
+    "number": 2,
+    "scale_as_written": "Haltegrad: 2",
+    "scale_max": null,
+    "scale_max_stated": false,
+    "tier": "C2"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Kreiere mit EIMI Ocean Spritz, einem natürlichen Mineralsalzspray, das das Haar vor Austrocknung und UV-Schäden schützt, eine lockere, strandähnliche Textur. Haltegrad: 2",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Professionelles Styling-Salzspray mit leichtem Halt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Mit natürlichem Mineralsalz für die Strandfrisur",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Schutz vor Austrocknung und UV-Schäden",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Beachy-Look",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Haltegrad: 2",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "number": 2,
+      "scale_as_written": "Haltegrad: 2",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null
+    },
+    {
+      "type": "hold",
+      "text": "leichtem Halt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": null,
+      "words": "leichtem Halt"
+    },
+    {
+      "type": "finish",
+      "text": "eine lockere, strandähnliche Textur",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12"
+    }
+  ]
+}

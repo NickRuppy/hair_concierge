@@ -1,0 +1,38 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-52dd62d933",
+  "brand": "Bumble and bumble",
+  "confirmed_name": "brilliantine",
+  "confirmed_name_tier": "C1",
+  "format": "cream",
+  "product_type_word": "brilliantine",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Definition & Glanz für lebendige Styles",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "douglas.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "finish",
+      "text": "fantastischen Glanz",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "douglas.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "duration",
+      "text": "Styles, die lange begeistern",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "douglas.de",
+      "date": "2026-10-11"
+    }
+  ]
+}

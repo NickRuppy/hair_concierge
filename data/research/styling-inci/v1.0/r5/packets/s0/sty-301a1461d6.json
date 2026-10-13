@@ -1,0 +1,128 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-301a1461d6",
+  "product": {
+    "confirmed_name": "Haarspray extrastark (Pumpspray, ohne Treibgas)",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C1",
+    "brand": "Gard",
+    "format": "pump_spray"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 21,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "ALCOHOL DENAT."
+      },
+      {
+        "rank": 2,
+        "inci": "AQUA"
+      },
+      {
+        "rank": 3,
+        "inci": "VP/VA COPOLYMER"
+      },
+      {
+        "rank": 4,
+        "inci": "ACRYLATES COPOLYMER"
+      },
+      {
+        "rank": 5,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 6,
+        "inci": "PANTHENOL"
+      },
+      {
+        "rank": 7,
+        "inci": "PROPYLENE GLYCOL"
+      },
+      {
+        "rank": 8,
+        "inci": "AMINOMETHYL PROPANOL"
+      },
+      {
+        "rank": 9,
+        "inci": "BUTYLENE GLYCOL"
+      },
+      {
+        "rank": 10,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 11,
+        "inci": "BAMBUSA VULGARIS SHOOT EXTRACT"
+      },
+      {
+        "rank": 12,
+        "inci": "BENZYL ALCOHOL"
+      },
+      {
+        "rank": 13,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 14,
+        "inci": "GERANIOL"
+      },
+      {
+        "rank": 15,
+        "inci": "GERANYL ACETATE"
+      },
+      {
+        "rank": 16,
+        "inci": "HEXYL CINNAMAL"
+      },
+      {
+        "rank": 17,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 18,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 19,
+        "inci": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+      },
+      {
+        "rank": 20,
+        "inci": "CI 42090"
+      },
+      {
+        "rank": 21,
+        "inci": "CI 17200"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Finishing: Aus ca. 25 cm Entfernung gleichmäßig auf das Haar sprühen. Mehr Volumen: Aus ca. 15 cm Entfernung kopfüber ins Haar oder direkt in den Haaransatz sprühen. Styling: Einzelne Haarsträhnen gezielt besprühen und mit den Fingern in Form bringen.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "verleiht dem Haar kraftvollen und zuverlässigen Halt - ohne zu beschweren",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-09",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

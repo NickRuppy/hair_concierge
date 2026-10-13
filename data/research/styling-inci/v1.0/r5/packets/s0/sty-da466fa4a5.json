@@ -1,0 +1,137 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-da466fa4a5",
+  "product": {
+    "confirmed_name": "[CLAIM] 4 Brows & Edges 2in1 Stylinggel",
+    "confirmed_name_redacted": true,
+    "confirmed_name_tier": "C2",
+    "brand": "got2b",
+    "format": "gel_tube_with_brush"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": [
+      {
+        "flag": "repaired_split_token: '1' + '2-Hexanediol' -> '1,2-Hexanediol'",
+        "defect_rank": 11
+      }
+    ]
+  },
+  "inci": {
+    "inci_item_count": 18,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 2,
+        "inci": "PVP"
+      },
+      {
+        "rank": 3,
+        "inci": "Acrylates/Hydroxyesters Acrylates Copolymer"
+      },
+      {
+        "rank": 4,
+        "inci": "Acrylates/Steareth-20 Methacrylate Crosspolymer"
+      },
+      {
+        "rank": 5,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 6,
+        "inci": "Aminomethyl Propanol"
+      },
+      {
+        "rank": 7,
+        "inci": "PEG-40 Hydrogenated Castor Oil"
+      },
+      {
+        "rank": 8,
+        "inci": "Caprylyl Glycol"
+      },
+      {
+        "rank": 9,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 10,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 11,
+        "inci": "1,2-Hexanediol"
+      },
+      {
+        "rank": 12,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 13,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 14,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 15,
+        "inci": "Benzyl Alcohol"
+      },
+      {
+        "rank": 16,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 17,
+        "inci": "Citrus Aurantium Peel Oil"
+      },
+      {
+        "rank": 18,
+        "inci": "Vanillin"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Die vielseitige Faserbürste ermöglicht ein einfaches und präzises Auftragen und Stylen. Verwende die breite Seite, um das Produkt auf die Augenbrauen und die Haare am Haaransatz aufzutragen. Verwende die flache Seite, um die Augenbrauen und Kanten zu stylen und zu fixieren. Nicht auf den Wimpern anwenden. Entferne das Produkt mit warmem Wasser und einer milden Seife von den Augenbrauen und Kanten.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "got2b.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Perfekte Augenbrauen und Haarkonturen! got2b 2in1 Stylinggel [CLAIM] 4 Brows & Edges ist der absolute Allrounder für deine Augenbrauen und Haarkonturen. Das schnell trocknende, nicht klebende, transparente Stylinggel sorgt für [CLAIM] und langanhaltenden Halt für unterwegs. Das Gel ist sanft zur Haut und für alle Haartypen geeignet.",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "got2b [CLAIM] 4 Brows & Edges 2in1 Stylinggel kannst du für Augenbrauen und Haarkonturen verwenden. Mit dem transparenten Gel bleiben deine Brauen und Konturen in Form. Vor dir liegt ein langer Tag? Keine Sorge, deine Brauen und Haarkonturen lassen dich nicht im Stich.",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "[CLAIM] ist für alle Haartypen – egal ob glattes, welliges, lockiges oder coily Haar, es funktioniert einfach! [CLAIM]-Produkte performen bei jedem Style und sind gleichzeitig sanft zu deiner Haut & Kopfhaut – dermatologisch getestet.",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

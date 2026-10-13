@@ -1,0 +1,80 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-fa394b5aef",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 14,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua [Water]"
+      },
+      {
+        "rank": 2,
+        "inci": "Gardenia taitensis flower extract"
+      },
+      {
+        "rank": 3,
+        "inci": "Lycium barbarum fruit extract"
+      },
+      {
+        "rank": 4,
+        "inci": "Malva sylvestris (Mallow) extract"
+      },
+      {
+        "rank": 5,
+        "inci": "Pentylene glycol"
+      },
+      {
+        "rank": 6,
+        "inci": "Dipropylene glycol"
+      },
+      {
+        "rank": 7,
+        "inci": "Polysilicone-29"
+      },
+      {
+        "rank": 8,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 9,
+        "inci": "Hydroxyacetophenone"
+      },
+      {
+        "rank": 10,
+        "inci": "Silicone quaternium-18"
+      },
+      {
+        "rank": 11,
+        "inci": "Trideceth-12"
+      },
+      {
+        "rank": 12,
+        "inci": "Trideceth-6"
+      },
+      {
+        "rank": 13,
+        "inci": "Propylene glycol"
+      },
+      {
+        "rank": 14,
+        "inci": "Glycerin"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "1. Das Haar in Abschnitte unterteilen. 2. Das Spray großzügig und gleichmäßig auf das handtuchtrockene (nicht nasse) Haar sprühen. 3. Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "neqi-hair.com",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-960cf0c564",
+  "brand": "NIVEA MEN",
+  "confirmed_name": "Styling Cream Active",
+  "confirmed_name_tier": "C1",
+  "format": "cream",
+  "product_type_word": "cream",
+  "scale_info": {
+    "number": 4,
+    "scale_as_written": "4 ... FLEXIBLE HOLD 1 2 3 4 5 6 (pack); 'Haltestufe 4' (nivea.de)",
+    "scale_max": 6,
+    "scale_max_stated": true,
+    "tier": "C1"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Starker Halt – ohne zu verkleben oder zu verhärten",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "4... FLEXIBLE HOLD 1 2 3 4 5 6; Haltestufe 4",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09",
+      "number": 4,
+      "scale_as_written": "4 ... FLEXIBLE HOLD 1 2 3 4 5 6 (pack); 'Haltestufe 4' (nivea.de)",
+      "scale_max": 6,
+      "scale_max_stated": true,
+      "words": "FLEXIBLE HOLD",
+      "mixed_source": true
+    },
+    {
+      "type": "hold",
+      "text": "Starker Halt",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": null,
+      "words": "Starker Halt"
+    },
+    {
+      "type": "flexibility",
+      "text": "Flexible Hold",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "flexibles Styling",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "formbarer Halt",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "ohne zu verhärten",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "kann nachgestylt werden",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "finish",
+      "text": "NON-STICKY FINISH / Natural Look",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-09"
+    }
+  ]
+}

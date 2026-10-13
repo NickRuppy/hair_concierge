@@ -1,0 +1,76 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-3a1171194e",
+  "format": "aerosol_spray",
+  "inci": {
+    "inci_item_count": 13,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Alcohol Denat."
+      },
+      {
+        "rank": 2,
+        "inci": "Dimethyl Ether"
+      },
+      {
+        "rank": 3,
+        "inci": "Acrylates Copolymer"
+      },
+      {
+        "rank": 4,
+        "inci": "Aminomethyl Propanol"
+      },
+      {
+        "rank": 5,
+        "inci": "Propylene Glycol"
+      },
+      {
+        "rank": 6,
+        "inci": "Polysorbate 80"
+      },
+      {
+        "rank": 7,
+        "inci": "Alcohol"
+      },
+      {
+        "rank": 8,
+        "inci": "Polysilicone-9"
+      },
+      {
+        "rank": 9,
+        "inci": "Water/Aqua/Eau"
+      },
+      {
+        "rank": 10,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 11,
+        "inci": "Punica Granatum Peel Extract"
+      },
+      {
+        "rank": 12,
+        "inci": "Citric Acid"
+      },
+      {
+        "rank": 13,
+        "inci": "Fragrance/Parfum"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Auf das trockene Haar sprühen, bevor Hot Tools verwendet werden. Für beste Ergebnisse Strähne für Strähne einsprühen. Als letzten Schritt erneut aufsprühen, um den Style zu fixieren.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "kmshair.com",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

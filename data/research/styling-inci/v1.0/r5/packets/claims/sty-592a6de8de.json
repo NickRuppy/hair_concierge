@@ -1,0 +1,44 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-592a6de8de",
+  "brand": "Bumble and bumble",
+  "confirmed_name": "Surf Spray",
+  "confirmed_name_tier": "C3",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Salzwasser verleiht Ihrem Haar Volumen, Halt und ein cooles, mattes Finish",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "lookfantastic.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Halt",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "lookfantastic.de",
+      "date": "2026-10-11",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "Halt"
+    },
+    {
+      "type": "finish",
+      "text": "mattes Finish",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "lookfantastic.de",
+      "date": "2026-10-11"
+    }
+  ],
+  "retailer_title_type_noun_agrees": false
+}

@@ -1,0 +1,108 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-95de3ff38d",
+  "brand": "Balea",
+  "confirmed_name": "Styling Creme Power Flex (Forming Cream Power Flex)",
+  "confirmed_name_tier": "C2_house_brand",
+  "format": "cream",
+  "product_type_word": "creme",
+  "scale_info": {
+    "number": 5,
+    "scale_as_written": "1 2 3 4 5 6 7",
+    "scale_max": 7,
+    "scale_max_stated": false,
+    "tier": "C1"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Formgebende Haarcreme",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "leicht auswaschbar und hinterlässt keine Rückstände",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Für flexiblen Halt",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "Für flexiblen Halt"
+    },
+    {
+      "type": "hold",
+      "text": "1 2 3 4 5 6 7",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "number": 5,
+      "scale_as_written": "1 2 3 4 5 6 7",
+      "scale_max": 7,
+      "scale_max_stated": false,
+      "words": null,
+      "display": {
+        "marks": 7,
+        "labels_as_printed": "1 2 3 4 5 6 7",
+        "highlighted": [
+          5
+        ],
+        "filled": [
+          5
+        ],
+        "caption_as_printed": null,
+        "description": "Lid text \"FORMING CREAM POWER FLEX\" above a row of seven numbered circles 1 2 3 4 5 6 7; the circle \"5\" is larger and highlighted (filled), the others are small outlined circles. Front label: \"FORMING CREAM POWER FLEX · kein Verkleben · für flexiblen Halt\"."
+      }
+    },
+    {
+      "type": "flexibility",
+      "text": "Flex",
+      "tier": "C2_house_brand",
+      "source_class": "product_name",
+      "source_host": null,
+      "date": null,
+      "from_product_name": true
+    },
+    {
+      "type": "finish",
+      "text": "natürlich aussehendes Finish",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "Zum Modellieren & Fixieren von Frisuren",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "Kein Verkleben oder Beschweren",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    }
+  ]
+}

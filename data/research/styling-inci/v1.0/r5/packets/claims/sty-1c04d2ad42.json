@@ -1,0 +1,30 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-1c04d2ad42",
+  "brand": "John Frieda",
+  "confirmed_name": "Spray Volume Lift Pushed-up Dry Texture",
+  "confirmed_name_tier": "C1",
+  "format": "aerosol",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Verleiht dem Haar sofort Textur, Fülle und Volumen.",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "duration",
+      "text": "langanhaltendes Volumen und Textur",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-11"
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-5",
+  "sample_id": "sty-babcf2277f",
+  "brand": "Cantu",
+  "confirmed_name": "Shea Butter for Natural Hair Firm Hold Edge Stay Gel",
+  "confirmed_name_tier": "C1",
+  "format": "gel",
+  "product_type_word": "gel",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "langanhaltender, schuppenfreier Halt; long-lasting, flake-free hold",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "m.media-amazon.com",
+      "date": "2026-10-11",
+      "position": "unknown",
+      "mixed_source": true
+    },
+    {
+      "type": "hold",
+      "text": "up to 48 hour firm hold",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "m.media-amazon.com",
+      "date": "2026-10-11",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "firm hold",
+      "flags": [
+        "non_german_wording"
+      ]
+    },
+    {
+      "type": "hold",
+      "text": "Firm Hold",
+      "tier": "C1",
+      "source_class": "product_name",
+      "source_host": null,
+      "date": null,
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null,
+      "from_product_name": true
+    },
+    {
+      "type": "finish",
+      "text": "flake-free; smooth styles & ponytails",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "m.media-amazon.com",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "duration",
+      "text": "up to 48 hour firm hold; up to 16HR firm hold",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "m.media-amazon.com",
+      "date": "2026-10-11",
+      "mixed_source": true,
+      "flags": [
+        "non_german_wording"
+      ]
+    }
+  ]
+}
