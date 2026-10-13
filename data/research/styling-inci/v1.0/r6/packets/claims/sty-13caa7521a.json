@@ -1,0 +1,31 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-13caa7521a",
+  "brand": "feschi",
+  "confirmed_name": "smooth & shine Anti Frizz Spray (Glanzspray)",
+  "confirmed_name_tier": "C3",
+  "format": "aerosol",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "bändigt fliegende Härchen und verleiht ein seidig glattes Finish",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "flaconi.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "finish",
+      "text": "seidiges Haargefühl & einzigartige Glanzreflexe",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "flaconi.de",
+      "date": "2026-10-11"
+    }
+  ],
+  "retailer_title_type_noun_agrees": false
+}

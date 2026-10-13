@@ -1,0 +1,98 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-4cc4a48bbd",
+  "brand": "Wella Professionals",
+  "confirmed_name": "EIMI Smooth Thermal Image (2-Phasen-Spray)",
+  "confirmed_name_tier": "C2",
+  "format": "two_phase_spray",
+  "product_type_word": "two_phase_spray",
+  "scale_info": {
+    "number": 2,
+    "scale_as_written": "Haltegrad: 2",
+    "scale_max": null,
+    "scale_max_stated": false,
+    "tier": "C2"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Unser EIMI Thermal Image 2-Phasen-Spray schützt Ihr Haar bei der Verwendung von heißen Geräten. Phase 1 pflegt das Haar und schützt es vor Hitze bis zu 220°C. Phase 2 glättet Ihr Haar für ein makelloses, glänzendes Ergebnis. Haltegrad: 2",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Professionelles Haarspray mit leichtem Halt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Hitzeschutz bis zu 220°C",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Sorgt für ein glattes und glänzendes Ergebnis",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Schützt das Haar während des Stylings vor Hitze",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Haltegrad: 2",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "number": 2,
+      "scale_as_written": "Haltegrad: 2",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null
+    },
+    {
+      "type": "hold",
+      "text": "leichtem Halt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": null,
+      "words": "leichtem Halt"
+    },
+    {
+      "type": "heat_protection",
+      "text": "Hitzeschutz bis zu 220°C",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "wella.com",
+      "date": "2026-10-12"
+    }
+  ]
+}

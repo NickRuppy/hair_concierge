@@ -1,0 +1,57 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-2ccc3b9183",
+  "brand": "Syoss",
+  "confirmed_name": "Schaumfestiger Volume",
+  "confirmed_name_tier": "C2",
+  "format": "foam",
+  "product_type_word": "schaumfestiger",
+  "scale_info": {
+    "number": 4,
+    "scale_as_written": "Bis zu 48h extra starken Halt (Haltegrad 4)",
+    "scale_max": null,
+    "scale_max_stated": false,
+    "tier": "C2"
+  },
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Intensives Volumen und Anti-Platt Effekt für langanhaltenden Lifting-Effekt direkt vom Haaransatz an",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-09",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Bis zu 48h extra starken Halt (Haltegrad 4)",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-09",
+      "number": 4,
+      "scale_as_written": "Bis zu 48h extra starken Halt (Haltegrad 4)",
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "Bis zu 48h extra starken Halt (Haltegrad 4)"
+    },
+    {
+      "type": "duration",
+      "text": "Bis zu 48h extra starken Halt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "humidity",
+      "text": "Schützt die Frisur vor Luftfeuchtigkeit",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "syoss.de",
+      "date": "2026-10-09"
+    }
+  ]
+}

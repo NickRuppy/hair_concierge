@@ -1,0 +1,112 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-2883856b45",
+  "product": {
+    "confirmed_name": "Föhn Lotion",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "ALCINA",
+    "format": "pump_spray"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 15,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA"
+      },
+      {
+        "rank": 2,
+        "inci": "ALCOHOL DENAT."
+      },
+      {
+        "rank": 3,
+        "inci": "VP/VA COPOLYMER"
+      },
+      {
+        "rank": 4,
+        "inci": "POLYQUATERNIUM-11"
+      },
+      {
+        "rank": 5,
+        "inci": "PEG-40 HYDROGENATED CASTOR OIL"
+      },
+      {
+        "rank": 6,
+        "inci": "TRIDECETH-9"
+      },
+      {
+        "rank": 7,
+        "inci": "BENZOPHENONE-4"
+      },
+      {
+        "rank": 8,
+        "inci": "PROPYLENE GLYCOL"
+      },
+      {
+        "rank": 9,
+        "inci": "TETRAHYDROXYPROPYL ETHYLENEDIAMINE"
+      },
+      {
+        "rank": 10,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 11,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 12,
+        "inci": "CITRAL"
+      },
+      {
+        "rank": 13,
+        "inci": "ANETHOLE"
+      },
+      {
+        "rank": 14,
+        "inci": "JUNIPERUS VIRGINIANA OIL"
+      },
+      {
+        "rank": 15,
+        "inci": "CI 42090"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Ins feuchte Haar sprühen. Haare wie gewohnt föhnen.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "alcina.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Sorgt für mehr Schwung & [CLAIM] im Haar",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-09",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": [
+    {
+      "text": "Schützt wirksam vor Föhnhitze",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-09"
+    }
+  ]
+}

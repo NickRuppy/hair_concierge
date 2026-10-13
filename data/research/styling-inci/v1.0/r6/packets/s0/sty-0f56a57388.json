@@ -1,0 +1,168 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-0f56a57388",
+  "product": {
+    "confirmed_name": "TROCKENSHAMPOO ALL IN ONE fruchtig frischer Duft",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C1",
+    "brand": "Batiste",
+    "format": "aerosol"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 19,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Butane"
+      },
+      {
+        "rank": 2,
+        "inci": "Isobutane"
+      },
+      {
+        "rank": 3,
+        "inci": "Propane"
+      },
+      {
+        "rank": 4,
+        "inci": "Oryza Sativa Starch"
+      },
+      {
+        "rank": 5,
+        "inci": "Alcohol Denat."
+      },
+      {
+        "rank": 6,
+        "inci": "Tapioca Starch"
+      },
+      {
+        "rank": 7,
+        "inci": "Silica"
+      },
+      {
+        "rank": 8,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 9,
+        "inci": "Cocoyl Hydrolyzed Keratin"
+      },
+      {
+        "rank": 10,
+        "inci": "Hydrolyzed Collagen"
+      },
+      {
+        "rank": 11,
+        "inci": "Distearyldimonium Chloride"
+      },
+      {
+        "rank": 12,
+        "inci": "Cetrimonium Chloride"
+      },
+      {
+        "rank": 13,
+        "inci": "Alpha Isomethyl-Ionone"
+      },
+      {
+        "rank": 14,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 15,
+        "inci": "Hexyl Cinnamal"
+      },
+      {
+        "rank": 16,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 17,
+        "inci": "Amyl Salicylate"
+      },
+      {
+        "rank": 18,
+        "inci": "Dimethyl Phenethyl Acetate"
+      },
+      {
+        "rank": 19,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Dose schütteln; Haar in Partien teilen, aus 30 cm in Richtung Ansatz sprühen; mit Fingerspitzen verteilen, Kopfhaut leicht massieren; leicht durchbürsten.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-11"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Zusätzlicher Volumenboost",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "text": "Entfernt sanft Fett",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "text": "trocknet das Haar nicht aus",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "text": "Sauber aussehendes Haar",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "text": "Lang anhaltende Frische",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "text": "Textur & Griffigkeit",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "text": "Revitalisiert das Haar",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

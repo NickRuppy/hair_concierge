@@ -1,0 +1,138 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-bfbf36af97",
+  "product": {
+    "confirmed_name": "EIMI Glam Mist Shinespray",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "Wella Professionals",
+    "format": "aerosol"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": [
+      {
+        "flag": "missing_spaces_as_printed: 'HexylCinnamal' (repaired)",
+        "defect_rank": null
+      },
+      {
+        "flag": "repaired_missing_space (rank 10): 'HexylCinnamal' -> 'Hexyl Cinnamal'",
+        "defect_rank": 10,
+        "status": "resolved"
+      }
+    ]
+  },
+  "inci": {
+    "inci_item_count": 15,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Butane"
+      },
+      {
+        "rank": 2,
+        "inci": "Disiloxane"
+      },
+      {
+        "rank": 3,
+        "inci": "Cyclopentasiloxane"
+      },
+      {
+        "rank": 4,
+        "inci": "Isobutane"
+      },
+      {
+        "rank": 5,
+        "inci": "Alcohol Denat."
+      },
+      {
+        "rank": 6,
+        "inci": "Dimethicone"
+      },
+      {
+        "rank": 7,
+        "inci": "Propane"
+      },
+      {
+        "rank": 8,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 9,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 10,
+        "inci": "Hexyl Cinnamal"
+      },
+      {
+        "rank": 11,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 12,
+        "inci": "Ethylhexyl Methoxycinnamate"
+      },
+      {
+        "rank": 13,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 14,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 15,
+        "inci": "Citronellol"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Sprühe das Glanzspray gleichmäßig auf dein Haar, um deinen Look mit schönem Glanz zu vollenden.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "wella.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Vollende deinen glamourösen Style mit diesem Glanzspray. Entwickelt auch zum Schutz des Haares vor Auswirkung von Feuchtigkeit und UV-Strahlen. [CLAIM]",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Professionelle Glanzpomade für ein glattes und [CLAIM] Finish",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Anti-Frizz-Effekt und Schutz vor Luftfeuchtigkeit",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "[CLAIM]",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

@@ -1,0 +1,69 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-05e442b60d",
+  "brand": "Redken",
+  "confirmed_name": "BEACH SPRAY BEACHY TEXTURE SPRAY",
+  "confirmed_name_tier": "C1",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Spray für strukturierte Beach Waves",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "easycosmetic.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "kommt ohne Meersalz aus, welches das Haar austrocknet",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "easycosmetic.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Für jeden Haartyp geeignet",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "easycosmetic.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "MITTLERER HALT",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "easycosmetic.de",
+      "date": "2026-10-11",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "mittlerer Halt"
+    },
+    {
+      "type": "finish",
+      "text": "Das matte Finish... hinterlässt einen coolen Strandlook",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "easycosmetic.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "other",
+      "text": "Pumpspray schenkt dem Haar Volumen und Griffigkeit",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "easycosmetic.de",
+      "date": "2026-10-11"
+    }
+  ]
+}

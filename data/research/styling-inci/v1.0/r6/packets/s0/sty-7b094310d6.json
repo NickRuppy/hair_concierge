@@ -1,0 +1,248 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-7b094310d6",
+  "product": {
+    "confirmed_name": "Haarserum Glow & Shine",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2_house_brand",
+    "brand": "Balea PROFESSIONAL",
+    "format": "serum"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 39,
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 2,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 3,
+        "inci": "Cetearyl Alcohol"
+      },
+      {
+        "rank": 4,
+        "inci": "Undecane"
+      },
+      {
+        "rank": 5,
+        "inci": "Behentrimonium Chloride"
+      },
+      {
+        "rank": 6,
+        "inci": "Ricinus Communis Seed Oil"
+      },
+      {
+        "rank": 7,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 8,
+        "inci": "Glycolic Acid"
+      },
+      {
+        "rank": 9,
+        "inci": "Tocopherol"
+      },
+      {
+        "rank": 10,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 11,
+        "inci": "Tridecane"
+      },
+      {
+        "rank": 12,
+        "inci": "Polyglyceryl-3 Caprate"
+      },
+      {
+        "rank": 13,
+        "inci": "Quaternium-87"
+      },
+      {
+        "rank": 14,
+        "inci": "Propylene Glycol"
+      },
+      {
+        "rank": 15,
+        "inci": "Silicone Quaternium-22"
+      },
+      {
+        "rank": 16,
+        "inci": "Isopropyl Alcohol"
+      },
+      {
+        "rank": 17,
+        "inci": "Dimethicone Propyl PG-Betaine"
+      },
+      {
+        "rank": 18,
+        "inci": "Dipropylene Glycol"
+      },
+      {
+        "rank": 19,
+        "inci": "Hydrolyzed Keratin"
+      },
+      {
+        "rank": 20,
+        "inci": "Cocamidopropyl Betaine"
+      },
+      {
+        "rank": 21,
+        "inci": "Palmitamidopropyltrimonium Chloride"
+      },
+      {
+        "rank": 22,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 23,
+        "inci": "Potassium Sorbate"
+      },
+      {
+        "rank": 24,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      },
+      {
+        "rank": 25,
+        "inci": "Hexyl Cinnamal"
+      },
+      {
+        "rank": 26,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 27,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 28,
+        "inci": "Pinene"
+      },
+      {
+        "rank": 29,
+        "inci": "Geranyl Acetate"
+      },
+      {
+        "rank": 30,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 31,
+        "inci": "Benzyl Benzoate"
+      },
+      {
+        "rank": 32,
+        "inci": "Terpineol"
+      },
+      {
+        "rank": 33,
+        "inci": "Sodium Hydroxide"
+      },
+      {
+        "rank": 34,
+        "inci": "Citric Acid"
+      },
+      {
+        "rank": 35,
+        "inci": "Synthetic Fluorphlogopite"
+      },
+      {
+        "rank": 36,
+        "inci": "Sodium Chloride"
+      },
+      {
+        "rank": 37,
+        "inci": "Tin Oxide"
+      },
+      {
+        "rank": 38,
+        "inci": "Mica"
+      },
+      {
+        "rank": 39,
+        "inci": "CI 77891"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Gleichmäßig in die Spitzen im feuchten oder trockenen Haar einarbeiten. Nicht ausspülen.",
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-11"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Mit Anti-Frizz-Effekt",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "text": "Formel mit Glykolsäure und Keratin",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "text": "Ideal zur intensiven Pflege der Haarspitzen",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "text": "Für ein strahlendes Finish - ideal auch zur intensiven Spitzenpflege",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "text": "stumpfes und glanzloses Haar",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "text": "ANTI-FRIZZ-EFFEKT",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "text": "Glossing-Technologie mit Glykolsäure und Keratin",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

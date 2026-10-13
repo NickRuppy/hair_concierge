@@ -1,0 +1,124 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-2b84e35a91",
+  "product": {
+    "confirmed_name": "Styling Powder",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2_house_brand",
+    "brand": "Balea MEN",
+    "format": "powder_shaker"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 14,
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 2,
+        "inci": "Silica Silylate"
+      },
+      {
+        "rank": 3,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 4,
+        "inci": "Carrageenan"
+      },
+      {
+        "rank": 5,
+        "inci": "Undecane"
+      },
+      {
+        "rank": 6,
+        "inci": "Potassium Sorbate"
+      },
+      {
+        "rank": 7,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 8,
+        "inci": "Citric Acid"
+      },
+      {
+        "rank": 9,
+        "inci": "Tridecane"
+      },
+      {
+        "rank": 10,
+        "inci": "Tocopherol"
+      },
+      {
+        "rank": 11,
+        "inci": "Linalyl Acetate"
+      },
+      {
+        "rank": 12,
+        "inci": "Acetyl Cedrene"
+      },
+      {
+        "rank": 13,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      },
+      {
+        "rank": 14,
+        "inci": "Pinene"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Eine kleine Menge Puder in den Handflächen verteilen und in das trockene Haar einarbeiten. Für maximales Volumen das Puder direkt am Haaransatz einmassieren und nach Wunsch stylen.",
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Stylingpuder für Männer",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Mit [CLAIM]-Effekt ohne sichtbare Rückstände",
+      "redacted": true,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Für Volumen & Textur",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Das Balea MEN Styling Powder verleiht dem Haar Volumen und einen [CLAIM] Effekt. Es sorgt für extra Fülle und Textur, ideal für ein perfektes Ansatzvolumen und voluminöse Looks. Die leichte Formel hinterlässt ein [CLAIM] Finish ohne sichtbare Rückstände und beschwert das Haar nicht. Für ein individuelles und [CLAIM] Styling kann das Styling Powder einfach im trockenen Haar verteilt und nach Wunsch modelliert werden.",
+      "redacted": true,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

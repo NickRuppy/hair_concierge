@@ -1,0 +1,70 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-771e26ae22",
+  "brand": "Balea",
+  "confirmed_name": "Haargel Hair Jelly (Styling Hair Jelly)",
+  "confirmed_name_tier": "C2_house_brand",
+  "format": "jelly",
+  "product_type_word": "gel",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Styling-Gelee für das Haar",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Für ein natürliches Haargefühl",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Ideal für Sleek-Looks & Locken",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "leichte, geleeartige Textur",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "flexiblen Halt",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "flexiblen Halt"
+    },
+    {
+      "type": "finish",
+      "text": "natürliches Haargefühl; lebendiges Styling",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    }
+  ]
+}

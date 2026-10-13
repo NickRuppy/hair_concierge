@@ -1,0 +1,102 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-a6033832d9",
+  "brand": "Balea",
+  "confirmed_name": "Styling WAX STICK",
+  "confirmed_name_tier": "C1",
+  "format": "stick",
+  "product_type_word": "wax",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Haarwachs-Stift für trendige Styles",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Praktische Anwendung",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Für ein glattes & glänzendes Finish",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Bändigt abstehende Babyhaare",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Für ein schnelles und unkompliziertes Haarstyling sorgt der Wax Styling Stick von Balea. Mit seiner Hilfe lassen sich trendige Looks im Handumdrehen umsetzen, ohne dass die Haare verkleben. Der Stift ermöglicht eine einfache und präzise Anwendung, ideal für den angesagten Sleek-Look oder um abstehende Babyhaare zu bändigen. Er verleiht dem Haar ein glattes und glänzendes Finish, das den ganzen Tag hält. Dank des praktischen Formats ist der Styling-Stick auch ein idealer Begleiter für unterwegs.",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "einfache Fixierung",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-12",
+      "position": "pack_front"
+    },
+    {
+      "type": "promise",
+      "text": "glattes, glänzendes Finish",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-12",
+      "position": "pack_front"
+    },
+    {
+      "type": "promise",
+      "text": "Ideal für den Sleek-Look",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-12",
+      "position": "pack_front"
+    },
+    {
+      "type": "promise",
+      "text": "Trendige Styles: schnelle und einfache Fixierung, ohne zu verkleben, auch gegen Babyhaare",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-12",
+      "position": "headline"
+    },
+    {
+      "type": "finish",
+      "text": "glattes & glänzendes Finish",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-12"
+    }
+  ]
+}

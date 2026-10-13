@@ -1,0 +1,112 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-46e3de0905",
+  "product": {
+    "confirmed_name": "Pomade Haar & Bart 2in1",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2_house_brand",
+    "brand": "Balea MEN",
+    "format": "pomade"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 13,
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "ETHYLHEXYL STEARATE"
+      },
+      {
+        "rank": 2,
+        "inci": "PETROLATUM"
+      },
+      {
+        "rank": 3,
+        "inci": "CERA MICROCRISTALLINA"
+      },
+      {
+        "rank": 4,
+        "inci": "PARAFFIN"
+      },
+      {
+        "rank": 5,
+        "inci": "BUTYROSPERMUM PARKII BUTTER"
+      },
+      {
+        "rank": 6,
+        "inci": "MACADAMIA TERNIFOLIA SEED OIL"
+      },
+      {
+        "rank": 7,
+        "inci": "SILICA"
+      },
+      {
+        "rank": 8,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 9,
+        "inci": "TOCOPHEROL"
+      },
+      {
+        "rank": 10,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 11,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 12,
+        "inci": "ALPHA-ISOMETHYL IONONE"
+      },
+      {
+        "rank": 13,
+        "inci": "BHT"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Eine kleine Menge Balea MEN Pomade 2in1 zwischen den Handflächen verreiben und gleichmäßig ins trockene oder feuchte Haar einarbeiten oder einzelne Strähnen modellieren.",
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "2in1 Pomade für Bart- & Haupthaar",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "text": "Mit pflegendem Macadamiaöl & Sheabutter",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "text": "Dermatologisch bestätigte Hautverträglichkeit",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": null,
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

@@ -1,0 +1,128 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-1e5a9c806b",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 26,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 2,
+        "inci": "Alcohol Denat."
+      },
+      {
+        "rank": 3,
+        "inci": "Polyquaternium-16"
+      },
+      {
+        "rank": 4,
+        "inci": "Polysorbate 20"
+      },
+      {
+        "rank": 5,
+        "inci": "Polyquaternium-68"
+      },
+      {
+        "rank": 6,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 7,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 8,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 9,
+        "inci": "Cetrimonium Chloride"
+      },
+      {
+        "rank": 10,
+        "inci": "Hydrolyzed Rice Protein"
+      },
+      {
+        "rank": 11,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 12,
+        "inci": "Alcohol"
+      },
+      {
+        "rank": 13,
+        "inci": "Lecithin"
+      },
+      {
+        "rank": 14,
+        "inci": "Tocopherol"
+      },
+      {
+        "rank": 15,
+        "inci": "Caffeine"
+      },
+      {
+        "rank": 16,
+        "inci": "Hyaluronic Acid"
+      },
+      {
+        "rank": 17,
+        "inci": "Tocopheryl Acetate"
+      },
+      {
+        "rank": 18,
+        "inci": "Biotin"
+      },
+      {
+        "rank": 19,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 20,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 21,
+        "inci": "Alpha-Isomethyl Ionone"
+      },
+      {
+        "rank": 22,
+        "inci": "Benzyl Salicylate"
+      },
+      {
+        "rank": 23,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 24,
+        "inci": "Hexyl Cinnamal"
+      },
+      {
+        "rank": 25,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 26,
+        "inci": "Linalool"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "1. Für mehr Volumen am Ansatz großzügig auf den Haaransatz des handtuchtrockenen Haares sprühen. Der gesamte Ansatz und die darunterliegenden Haarschichten sollten vollständig bedeckt sein. 2. Anschließend trocken föhnen und wie gewohnt stylen.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "johnfrieda.com",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

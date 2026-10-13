@@ -1,0 +1,73 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-6",
+  "sample_id": "sty-8b1f11d192",
+  "brand": "GUHL",
+  "confirmed_name": "LOCKEN PFLEGE & STYLING 2in1 STYLING-SPRAY",
+  "confirmed_name_tier": "C1",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Pflegendes Styling Spray für Locken & Wellen",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Spendet intensive Feuchtigkeit für ein unbeschwertes Haargefühl",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Ideal zur Auffrischung & Reaktivierung von Locken",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Du möchtest deine Locken definieren und ihnen zwischendurch neue Sprungkraft geben? Das Guhl Locken Pflege & Styling 2in1 pflegendes Stylingspray mit Aloe Vera und Duo-Pflege-Style-Komplex verbindet unbeschwerte Pflege mit einfachem Locken-Styling.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "guhl.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "finish",
+      "text": "unbeschwertes Haargefühl; kein Glanz-/Matt-Wort",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "heat_protection",
+      "text": "Mit integriertem Hitzeschutz bis 220 °C",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "other",
+      "text": "Aktiviert die Sprungkraft & schenkt Definition ohne zu verkleben",
+      "tier": "C3",
+      "source_class": "retailer_page",
+      "source_host": "products.dm.de",
+      "date": "2026-10-11"
+    }
+  ]
+}
