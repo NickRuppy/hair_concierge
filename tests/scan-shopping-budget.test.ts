@@ -803,13 +803,15 @@ test("S4: uncapped Bondbuilder scan keeps the ranked order (timing first inside 
 
 test("S4-02: native Bondbuilder alternatives keep the trust order without a cap (absent and uncapped)", () => {
   const expected = {
+    // Nick 2026-10-13: equally trusted Bondbuilders rank cheapest first; K18 house default retired.
     no_preference: [
-      K18_ID,
       "olaplex-3plus",
       "epres",
+      K18_ID,
       "loreal-elvital-bond",
       "redken-acidic-bonding",
     ],
+    // Timing outranks price: K18 is the after-wash product.
     after_wash: [K18_ID, "olaplex-3plus", "epres", "loreal-elvital-bond", "redken-acidic-bonding"],
     before_wash: ["olaplex-3plus", "epres", K18_ID, "loreal-elvital-bond", "redken-acidic-bonding"],
   } as const
