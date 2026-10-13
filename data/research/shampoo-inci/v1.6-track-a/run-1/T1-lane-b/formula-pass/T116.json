@@ -1,0 +1,134 @@
+{
+  "blindId": "T116",
+  "inciFingerprintSha256": "057ef537b8cb1c0e3bfe089504cba2f2348f6018980b584cd9e903664c0292dc",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "Packet canonicalInci used as normalized list (ID-2); positions are one-based on that list.",
+    "inciCount": 25,
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 3,
+    "identityConfidence": "high",
+    "e3ProminencePoint": "Parfum at 8: positions 1-7 prominent"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "C6: no strong anionic; earliest prominent surfactant is a mild anionic (Sodium Cocoyl Isethionate 2) with prominent amphoteric co-surfactants (3, 4) -> low.",
+      "neighboringAlternative": "none"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Cleansing-led: the only conditioning route is Polyquaternium-10 at 11, after Parfum; no silicone, lipid, protein or prominent humectant.",
+      "counterSignal": "PQ-10 can give noticeable wet slip even at modest levels.",
+      "neighboringAlternative": "moderate"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Single late cationic polymer (PQ-10, 11), no other family -> low even under weak reset.",
+      "neighboringAlternative": "none",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Polyquaternium-10 only."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "Single light polymer."
+        },
+        "resetCapacity": {
+          "value": "weak",
+          "rationale": "C6 mild isethionate/betaine system."
+        }
+      },
+      "whyThisBand": "One light family.",
+      "whyNotNeighborBand": "Single deposition family without reinforcement, listed after Parfum; no silicone or lipid to accumulate.",
+      "limitingFactor": "None material."
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Formula care-direction verdict recorded for reconciliation.",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "note": "No humectant or protein cluster."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2)."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Default regular; triggers (U2-U5, D1, U3) need graded claims."
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). SC1 positioning unknown. CSA formula half fails: no prominent comfort or humectant/refatting route (Glycerin 24 is late)."
+    }
+  },
+  "scalpGateFormulaHalves": "S-SENSITIVE / S-DRY fail. S-OILY clause fails on cleansingStrength low.",
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Cocoyl Isethionate",
+      "position": 2,
+      "role": "mild anionic (isethionate), earliest surfactant"
+    },
+    {
+      "ingredient": "Lauramidopropyl Betaine",
+      "position": 3,
+      "role": "amphoteric co-surfactant"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "amphoteric co-surfactant"
+    },
+    {
+      "ingredient": "Sodium Lauroyl Sarcosinate",
+      "position": 5,
+      "role": "mild anionic"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 8,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Polyquaternium-10",
+      "position": 11,
+      "role": "cationic_polymer, after Parfum (11)"
+    },
+    {
+      "ingredient": "Citrus Aurantium Peel Oil",
+      "position": 17,
+      "role": "essential oil, excluded"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 24,
+      "role": "humectant, late"
+    },
+    {
+      "ingredient": "Cocos Nucifera Fruit Juice",
+      "position": 25,
+      "role": "plant juice, not a humectant route"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

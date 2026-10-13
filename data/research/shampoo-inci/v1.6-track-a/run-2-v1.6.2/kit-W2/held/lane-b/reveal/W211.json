@@ -1,0 +1,28 @@
+{
+  "blindId": "W211",
+  "productName": "Schwarzkopf GLISS Shampoo Liquid Silk",
+  "brand": "Schwarzkopf GLISS",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer DE product page (Henkel / Schwarzkopf); JSON markup gtin 4015100813111; 'Größe 250 ml'",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Schutz & gesund aussehender Glanz | – Das GLISS Liquid Silk Shampoo schützt und stärkt das Haar, glättet die Haaroberfläche und verleiht Glanz und Geschmeidigkeit | Mit Ceramiden & Seide | – Bei sprödem, glanzlosem Haar glättet das Liquid Silk Shampoo mit Ceramiden und Seide die Haaroberfläche und sorgt für einen natürlichen Glanz | Liquid Silk | – Das Pflegeshampoo für stumpfes und sprödes Haar bietet intensive Pflege, die das Haar außergewöhnlich weich, glatt und seidig macht | auf einen Blick: Geeignet für: Stumpfes, sprödes und glanzloses Haar | Wirkung: Schützt und stärkt das Haar, glättet die Haaroberfläche, verleiht Glanz und Geschmeidigkeit | Schlüssel-Inhaltsstoffe: Ceramide und Seide (Hydrolyzed Silk, Sericin) | Größe: 250 ml",
+      "directionsVerbatim": "Sanft im feuchten Haar verteilen und gut ausspülen. Regelmäßig zur Haarpflege anwenden und für optimale Ergebnisse anschließend die Liquid Silk Spülung verwenden"
+    },
+    {
+      "sourceType": "dm.de PDP (browser tab, Inhaltsstoffe accordion expanded); Anschrift: Henkel AG & Co. KGaA",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Pflegendes Shampo | Mit Ceramiden & Seide | Glättet die Haaroberfläche | Verleiht Glanz und Geschmeidigkeit | Stumpfes und sprödes Haar ist dank des Liquid Silk Shampoos von Schwarzkopf GLISS ab sofort Geschichte. Die einwandfreie Textur mit Ceramiden und Seide sorgt für einen natürlichen Glanz und schöne Glättung auf der Haaroberfläche. Für mehr Geschmeidigkeit und Schutz. | Wirkung: Pflege, Glanz",
+      "directionsVerbatim": "Sanft im feuchten Haar verteilen. Gut ausspülen! Regelmäßig anwenden."
+    },
+    {
+      "sourceType": "Rossmann PDP (browser tab); JSON-LD sku 4015100813111; Rossmann Artikelnummer 154090; 250 ml; 2,49 EUR",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Gliss Shampoo Liquid Silk - Glanz-Shampoo für sprödes, stumpfes Haar. ... Speziell abgestimmt auf die Bedürfnisse von sprödem und glanzlosem Haar, glättet das Liquid Silk Pflegeshampoo mit Ceramiden und Seide die Haaroberfläche und schenkt natürlichen Glanz und Geschmeidigkeit – für Haare wie Seide und 100 % stärkeres Haar⁴. Ohne es zu beschweren, reinigt die Haarpflege das Haar. Die Formel ist silikonfrei. | ... das Shampoo zu 91 % aus Inhaltsstoffen natürlichen Ursprungs². Die Haarpflege ist von PETA zertifiziert³. | mit Ceramiden & Seide | reinigt ohne zu beschweren | schützt dein Haar | sehr weiches, glänzendes Haar | mit fruchtigem Duft (⁴ im Vergleich zu unbehandeltem Haar)",
+      "directionsVerbatim": "Sanft im feuchten Haar verteilen und gut ausspülen. Regelmäßig zur Haarpflege anwenden und für optimale Ergebnisse anschließend die Liquid Silk Spülung verwenden."
+    }
+  ]
+}

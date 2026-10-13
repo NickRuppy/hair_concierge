@@ -115,7 +115,7 @@
       "product.suitable_thicknesses": "Projected WT moderate selects its exact thickness row; fine-hair threshold is an explicit product prior, not a scientific constant. Use the named matrix row; do not interpolate from product marketing. No stronger recommendation or exclusion is inferred beyond that fixed row. Evidence: WT dimension high; projected weight moderate, COND high; R2 none_visible, Cetearyl Alcohol r2 + Cetrimonium Chloride r7: LGN pair, Guar Hydroxypropyltrimonium Chloride r5: independent cationic-polymer route. Limit: Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established. Broad deterministic fit prior; actual user fit also depends on hair, dose and routine. AD-5: only `recommended` thicknesses are written. Emitted: normal, coarse. Not emitted (conditional/neutral/caution): fine — conditional."
     },
     "projection_sha256": "24ed5e22b05bf4b505ad2f2b02d22dbc3ae0b86602eee4a814d29aa61af73673",
-    "research_input_sha256": "f764622d0726444fea1545dc357d6b547ec8c98513d35d9fb641bac13e553a1b",
+    "research_input_sha256": "0308d03fb9e0bd51e264c9b3b2b3f1c27d8832428468341bc8e689f2d828dbdc",
     "research_model_version": "leave-in-inci-v1.2",
     "suitable_thicknesses": [
       "normal",

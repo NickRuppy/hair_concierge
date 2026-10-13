@@ -98,7 +98,7 @@ test("activation is never heat protection, and activated products keep their car
     { thickness: "normal", need_bucket: "heat_protect", styling_context: "heat_style" },
     { thickness: "normal", need_bucket: "moisture_anti_frizz", styling_context: "heat_style" },
   ])
-  const heatGlow: ExpanderInput = {
+  const activatedCare: ExpanderInput = {
     thicknesses: ["normal"],
     roles: ["styling_prep"],
     care_benefits: ["moisture", "anti_frizz", "shine"],
@@ -106,7 +106,7 @@ test("activation is never heat protection, and activated products keep their car
     provides_heat_protection: true,
     heat_activation_required: true,
   }
-  assert.deepEqual(await sqlExpand(pg, heatGlow), [
+  assert.deepEqual(await sqlExpand(pg, activatedCare), [
     { thickness: "normal", need_bucket: "heat_protect", styling_context: "heat_style" },
     { thickness: "normal", need_bucket: "moisture_anti_frizz", styling_context: "heat_style" },
     { thickness: "normal", need_bucket: "shine_protect", styling_context: "heat_style" },

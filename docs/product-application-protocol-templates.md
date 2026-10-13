@@ -1009,10 +1009,11 @@ between-wash methods are synthesised for an activated product.
 }
 ```
 
-**Reviewed rows (S3, 2026-10-09).** Neqi Diamond Glass Ultimate Styling Spray
-(`42a2fe20`, one `pre_heat_damp` row, C2 neqi-hair.com) and Pantene HEAT&GLOW
-(`e781ca9e`, `pre_heat_damp` wash-day row + `pre_heat_dry` between-wash row, C1 German
-pack via the dm-hosted packshot). Copy and quotes live in the generator module.
+**Reviewed rows (S3, Q11=B, 2026-10-13).** Neqi Diamond Glass Ultimate Styling Spray
+(`42a2fe20`, one `pre_heat_damp` row, C2 neqi-hair.com) is the only reviewed activated
+product; its workflow requires blow-drying with brush/tension. Copy and quotes live
+in the generator module. The 2026-10-09 HEAT&GLOW activation rows are superseded by
+Q11=B: it is not heat-activated, and its existing roles and protocols remain unchanged.
 
 ---
 

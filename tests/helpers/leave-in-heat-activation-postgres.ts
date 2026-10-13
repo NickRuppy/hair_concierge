@@ -21,7 +21,7 @@ import { migratedDatabase } from "../scan-expansion-batch-postgres.test"
 const ROOT = new URL("../../", import.meta.url)
 
 export const S3_SCHEMA_MIGRATION =
-  "supabase/migrations/20261011160000_leave_in_heat_activation_schema.sql"
+  "supabase/migrations/20261013150000_leave_in_heat_activation_schema.sql"
 
 export const LIVE_DIGESTS = {
   expand: "797fc3dab95b3e6b80fcd40393f19df4a68191c59b3d6454fae77a882befcf7e",

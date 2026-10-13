@@ -1,21 +1,21 @@
 {
   "generator": "plans/catalog-completeness-fill/slice3/generate.ts",
-  "fingerprint": "228e3936d6ce976cfa4f8ca55e6c8952978da4f4ab46b63046e026f648e24a3d",
+  "fingerprint": "34cdc326aa29a7cfa5bb0c2476d5b6c69a3e68a9dcfaaaddf470d00783113cba",
   "inputs": {
     "plans/catalog-completeness-fill/slice3/inputs/prod-capture-2026-10-11.json": "236231ac4a689ed7865fbf7034bd391bb52159d55fcf5a5cfea96e98945ecb66",
     "plans/catalog-completeness-fill/slice3/inputs/slice1-writes-for-s3-products.json": "81b542ca6879897e0cc3fb0ef80dec2c06d1cc5a075efb66d3bc72d21150edc0",
-    "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/neqi-spray/envelope.json": "56f4118eab5962cf7dd2425cd1b6883c092a0a494ae3c04232440a1141044765",
-    "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/neqi-spray/adapter/production-projection.json": "242e1d85403ef83bd102142405b9e6c9343329e3be1fa61f0a245d00b9ef98e4",
-    "plans/catalog-completeness-fill/slice3/amendments/heat-glow-activation-amendment-v1.2.json": "30b5f071c8d1be3ff0664f6e292901e91a40753adcb9622cd59b3ffd07461430",
-    "src/lib/product-intake/catalog-enrichment/heat-activated-protocols.ts": "5f2111b37a6e409dd15588a6619d909de12378c1f0f69625f07bdfff43646fbb",
+    "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/neqi-spray/envelope.json": "46bafce822707df2187d3e7e95b099773e7a128a97c67e9e784e8c6cf7037f72",
+    "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/neqi-spray/adapter/production-projection.json": "bda0078473e82880249ed98322b5097a59cd886588f000ff28bccab7ee235f93",
+    "plans/catalog-completeness-fill/slice3/amendments/q11-b-heat-glow-superseded.md": "d846d4007d51b05e9a68c07d35a69925ed7924c4fad707a626a43a1978fb010c",
+    "src/lib/product-intake/catalog-enrichment/heat-activated-protocols.ts": "00d81e455c4f9d9b0b199efaac78ed771ab52e60eb63686c77e631e78783f579",
     "src/lib/heat-activation/contract.ts": "71d9acfa7c729de25c6fd6276bb1b5f6f70995257a684d967580f3c009445ef0",
-    "supabase/migrations/20261011160000_leave_in_heat_activation_schema.sql": "efe68808b6ae15ad22e8da5dc9ad4858b77b32ab0269256346fb1c9bba4efbfa"
+    "supabase/migrations/20261013150000_leave_in_heat_activation_schema.sql": "efe68808b6ae15ad22e8da5dc9ad4858b77b32ab0269256346fb1c9bba4efbfa"
   },
   "outputs": {
     "plans/catalog-completeness-fill/slice3/prestate.json": "1fd560ca116e7a8f2c9bc57e72fe836d69aef16c9d390b760173c6bcc3a43c24",
-    "plans/catalog-completeness-fill/slice3/target-state.json": "ac352903ca9003d6c602cd44aa85bc9ab92b4fef7f2825bff168cd4992cbe78c",
-    "plans/catalog-completeness-fill/slice3/verify.sql": "27bfc7885e4bf16b570d499e506f10c3ba7872172fc9617d962fe5e7b82f84d8",
-    "plans/catalog-completeness-fill/slice3/rollback.sql": "d6c0c1d281d5afd41b1560169b623b97e767a67439708b5f6f396df882a9b3e4",
-    "supabase/migrations/20261011161000_catalog_completeness_fill_slice3.sql": "57c05ac12d4b2350f8401d796452c4092cf9ab41da2b5fe5c36e69fdbe0835b8"
+    "plans/catalog-completeness-fill/slice3/target-state.json": "d8583e068ebb6e44ebda4efa0ba6eb1ab97deb180a290aa0b786514644d73866",
+    "plans/catalog-completeness-fill/slice3/verify.sql": "9e63cec4ad58e48c6dc6a4779a3eb2c0b2b353330c8bcf0db5f23ec7c466dbfe",
+    "plans/catalog-completeness-fill/slice3/rollback.sql": "2882f13215aa1e9d0091e1c17db11df24d27caa8616dab507864d84b8b236481",
+    "supabase/migrations/20261013151000_catalog_completeness_fill_slice3.sql": "b06c594059176745d4012136935b81ee8b7fad7bda0ec690bb6d5224f28b0562"
   }
 }

@@ -337,8 +337,10 @@ test("a stored volume direction is handed back as the legacy goal and kept", () 
 })
 
 // ---------------------------------------------------------------------------
-// Rows without a facts document: today's column + adapter path, unchanged (characterisation
-// recorded from the pre-fix code at 0fd36195).
+// Rows without a facts document: preserve the historical column + adapter path
+// (characterisation from 0fd36195), except concern vocabulary widening, ruled 2026-10-11.
+// Only V8/V11 (low_shine) and V12/V13 (neutral volume) derived-column entries change.
+// All main-era rows and old primary-concern slugs retain their original snapshots.
 // ---------------------------------------------------------------------------
 
 const CHARACTERISATION = JSON.parse(
@@ -348,7 +350,7 @@ const CHARACTERISATION = JSON.parse(
   ),
 ) as Record<string, unknown>
 
-test("rows without a facts document keep the column path exactly", async () => {
+test("rows without a facts document keep the column path except ruled NR2/NR3 widening", async () => {
   const { deriveDiagnosticsColumns } = await import("../src/lib/user-facts/derive-legacy-columns")
   const safe = (run: () => any) => {
     try {

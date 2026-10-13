@@ -4,7 +4,7 @@ import test from "node:test"
 import {
   buildHeatActivatedProtocolRow,
   NEQI_DIAMOND_GLASS_ULTIMATE_HEAT_ACTIVATED_ROW_INPUT,
-  PANTENE_HEAT_GLOW_HEAT_ACTIVATED_ROW_INPUTS,
+  reviewedHeatActivatedProtocolRows,
   type HeatActivatedProtocolRowInput,
 } from "../src/lib/product-intake/catalog-enrichment/heat-activated-protocols"
 import { buildProductApplicationPointerV2 } from "../src/lib/product-intake/catalog-enrichment/stage5-v2-builder"
@@ -18,35 +18,13 @@ import { productApplicationPointerV2Schema } from "../src/lib/routines/personal-
 import { SHARED_APPLICATION_TEMPLATES_V2 } from "../src/lib/routines/personal-plan/application/shared-templates-v2"
 
 const NEQI = "42a2fe20-bd7e-49a3-a880-8ae89015a5c9"
-const PANTENE = "e781ca9e-886d-40a1-bfe1-48177cfbf381"
-const PANTENE_PACK_URL =
-  "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow"
-
 const INPUTS: HeatActivatedProtocolRowInput[] = [
   NEQI_DIAMOND_GLASS_ULTIMATE_HEAT_ACTIVATED_ROW_INPUT,
-  ...PANTENE_HEAT_GLOW_HEAT_ACTIVATED_ROW_INPUTS,
 ]
 
-test("the three reviewed rows are Neqi damp, Pantene damp and Pantene dry", () => {
-  assert.deepEqual(
-    INPUTS.map((input) => [input.productId, input.applicationFamily]),
-    [
-      [NEQI, "pre_heat_damp"],
-      [PANTENE, "pre_heat_damp"],
-      [PANTENE, "pre_heat_dry"],
-    ],
-  )
-  assert.equal(
-    NEQI_DIAMOND_GLASS_ULTIMATE_HEAT_ACTIVATED_ROW_INPUT.sourceText,
-    "1. Das Haar in Abschnitte unterteilen. 2. Das Spray großzügig und gleichmäßig auf das handtuchtrockene (nicht nasse) Haar sprühen. 3. Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.",
-  )
-  for (const input of PANTENE_HEAT_GLOW_HEAT_ACTIVATED_ROW_INPUTS) {
-    assert.equal(
-      input.sourceText,
-      "1-2 Pumpstöße auf das gereinigte Haar auftragen. / Föhnen, um zu aktivieren. / Zwischen den Haarwäschen nutzen, um Frizz zu kontrollieren.",
-    )
-    assert.equal(input.sourceUrl, PANTENE_PACK_URL)
-  }
+test("Q11=B excludes HEAT&GLOW from reviewed heat-activated workflows", () => {
+  assert.deepEqual(reviewedHeatActivatedProtocolRows("e781ca9e-886d-40a1-bfe1-48177cfbf381"), [])
+  assert.equal(reviewedHeatActivatedProtocolRows(NEQI).length, 1)
 })
 
 test("generated rows are complete product_application_protocols rows", () => {
@@ -87,10 +65,6 @@ test("generated rows are complete product_application_protocols rows", () => {
     buildHeatActivatedProtocolRow(NEQI_DIAMOND_GLASS_ULTIMATE_HEAT_ACTIVATED_ROW_INPUT)
       .source_label,
     "Neqi Hersteller (neqi-hair.com)",
-  )
-  assert.equal(
-    buildHeatActivatedProtocolRow(PANTENE_HEAT_GLOW_HEAT_ACTIVATED_ROW_INPUTS[0]!).source_label,
-    "Pantene-Packung DE (Rückseite), Foto via dm",
   )
 })
 
@@ -333,7 +307,7 @@ function renderThroughV2(
         category: "leave_in",
         routineRole: "pre_heat_application",
         productId,
-        productName: productId === NEQI ? "Neqi Diamond Glass Ultimate" : "Pantene HEAT&GLOW",
+        productName: "Neqi Diamond Glass Ultimate",
         kind: "owned",
         executable: true,
         effectiveCadenceDe: "Vor dem Föhnen",
@@ -409,31 +383,9 @@ test("Neqi renders its three manufacturer steps on a wash day with a hair-dryer 
   assert.equal(stepsOn("refresh_day")?.length ?? 0, 0)
 })
 
-test("Pantene renders its wash-day row on a wash day and its between-wash row on a refresh day", () => {
-  const { result, stepsOn } = renderThroughV2(
-    PANTENE,
-    PANTENE_HEAT_GLOW_HEAT_ACTIVATED_ROW_INPUTS,
-    [HAIR_DRYER],
-  )
-  assert.deepEqual(result.pointerIssues, [])
-  assert.deepEqual(stepsOn("wash_day"), [
-    [
-      "1–2 Pumpstöße im frisch gewaschenen Haar verteilen.",
-      "Danach föhnen – erst die Wärme aktiviert die Pflege.",
-    ],
-  ])
-  assert.deepEqual(stepsOn("refresh_day"), [
-    [
-      "Zwischen den Haarwäschen gegen Frizz: die Creme im trockenen Haar verteilen.",
-      "Danach föhnen – erst die Wärme aktiviert die Pflege.",
-    ],
-  ])
-})
-
 test("a straightener-only profile renders no heat-activated occurrence", () => {
   for (const [productId, inputs] of [
     [NEQI, [NEQI_DIAMOND_GLASS_ULTIMATE_HEAT_ACTIVATED_ROW_INPUT]],
-    [PANTENE, PANTENE_HEAT_GLOW_HEAT_ACTIVATED_ROW_INPUTS],
   ] as const) {
     const { result } = renderThroughV2(productId, inputs, [STRAIGHTENER])
     assert.equal(
@@ -447,25 +399,4 @@ test("a straightener-only profile renders no heat-activated occurrence", () => {
       false,
     )
   }
-})
-
-test("HEAT&GLOW's between-wash row forms its own refresh day without any other refresh product", () => {
-  const { result, stepsOn } = renderThroughV2(
-    PANTENE,
-    PANTENE_HEAT_GLOW_HEAT_ACTIVATED_ROW_INPUTS,
-    [HAIR_DRYER],
-    { withDryShampoo: false },
-  )
-  assert.deepEqual(result.pointerIssues, [])
-  assert.deepEqual(stepsOn("refresh_day"), [
-    [
-      "Zwischen den Haarwäschen gegen Frizz: die Creme im trockenen Haar verteilen.",
-      "Danach föhnen – erst die Wärme aktiviert die Pflege.",
-    ],
-  ])
-  // Without a blow-dry event there is nothing to activate it, so no refresh day forms for it.
-  const noHeat = renderThroughV2(PANTENE, PANTENE_HEAT_GLOW_HEAT_ACTIVATED_ROW_INPUTS, [], {
-    withDryShampoo: false,
-  })
-  assert.equal(noHeat.stepsOn("refresh_day")?.length ?? 0, 0)
 })

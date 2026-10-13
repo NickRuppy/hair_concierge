@@ -1,3 +1,4 @@
+// fit-verdict spec §1/§7b, ruled 2026-10-12: web reason transport.
 import assert from "node:assert/strict"
 import test from "node:test"
 
@@ -228,6 +229,7 @@ test("scan reveal: a free user's first reveal consumes the credit and returns fu
       netContentLabel: "250 ml",
       verdict: "ideal",
       verdictLabel: "Passt",
+      reasonLines: [],
       brand: "Kérastase",
       purchaseUrl: "https://shop.test/b",
     },

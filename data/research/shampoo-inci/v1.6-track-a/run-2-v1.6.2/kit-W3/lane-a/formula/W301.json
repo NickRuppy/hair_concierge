@@ -1,0 +1,30 @@
+{
+  "blindId": "W301",
+  "packSize": "250 ml",
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Betaine",
+    "Melaleuca Alternifolia Leaf Oil",
+    "Sodium Chloride",
+    "PEG-7 Glyceryl Cocoate",
+    "Coco-Betaine",
+    "Benzyl Alcohol",
+    "Phenoxyethanol",
+    "Sodium Benzoate",
+    "Coco-Glucoside",
+    "Glycol Distearate",
+    "Citric Acid",
+    "Terpineol",
+    "Potassium Sorbate",
+    "Pinene",
+    "Limonene",
+    "Glycerin",
+    "Tocopherol"
+  ],
+  "inciFingerprintSha256": "fa74c91cc5f8d70b1c235670a06cded2f6b2285e95b63f24459c262283747419",
+  "normalization": "Runbook step 2: canonical list items lower-cased, trimmed, whitespace collapsed, joined with '|', SHA-256; split synonym entries (e.g. 'Aqua (Water, Eau)') merged before numbering.",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "moderate"
+}

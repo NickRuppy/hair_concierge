@@ -5,8 +5,8 @@
   "composition": "Standard v1.2 = the byte-frozen Standard v1.0 (normative_base) + the byte-frozen T20 overlay (previous_overlay) + the T21 heat-activation overlay (normative_overlay). v1.0 and v1.1 artifacts stay pinned by their own manifests and are re-verified in CI.",
   "normative_overlay": {
     "path": "docs/research/leave-in-inci/v1.2/leave-in-classification-overlay.v1.2.md",
-    "bytes": 19286,
-    "sha256": "e8d677dbad352ee808cdd7e878e9ce6e6c98fb474f1a32ab2658ad9ebdc2c833",
+    "bytes": 19849,
+    "sha256": "8847308ac4d518e6bb4c4bbd7174e9cf29990cdc9e0437f5a664ef8ffa71c806",
     "verification": "T21 heat-activation overlay; names the v1.1 overlay and the v1.0 base by sha256; pinned as the adapter research method policySha256"
   },
   "previous_overlay": {
@@ -43,77 +43,77 @@
   },
   "readme": {
     "path": "docs/research/leave-in-inci/README.md",
-    "bytes": 17551,
-    "sha256": "49211c28c275c3fd8e708958300db9a0aaa74a8eb3db15482b3dd46d2bda22da",
+    "bytes": 17763,
+    "sha256": "42958cc3e431a88c6b5af4a771943b4c46202533e9cbe239210289a4542a5c70",
     "verification": "README as of the v1.2 lock; recorded for provenance, not CI-enforced (living entry point)"
   },
   "logic_lock_receipt": {
     "path": "data/research/leave-in-inci/v1.2/v1.2-logic-lock-receipt.json",
-    "bytes": 9131,
-    "sha256": "27ec66921a0a9bbd122f3f5f77163d149cae2b18bd49c48df8bfb14d37bcba0a"
+    "bytes": 9168,
+    "sha256": "52d6ef4c49a12b95a693e4a178906e3ca72fb3c168c4f02bfea690960b7d9536"
   },
   "calibration": {
     "builder": "scripts/leave-in-research/build-v1.2-calibration.ts",
     "expected_projections": {
       "path": "data/research/leave-in-inci/v1.2/calibration-expected-projections.json",
       "bytes": 700473,
-      "sha256": "8bf52af166742b88ff69f19376fc54b542cc6ef16d1fadc7caba9d1d8b0c017f"
+      "sha256": "91828e0316d110fb6779491a628d50c65371ea08a879fd3c860d8cfe49f0864d"
     },
     "envelopes": [
       {
         "path": "data/research/leave-in-inci/v1.2/calibration-envelopes/slot-01.json",
         "bytes": 17359,
-        "sha256": "b9089b1134f6db357332ac50059a1d29833674d04836cdb14c697232cd467d96"
+        "sha256": "87d37399535c2669e5912ee2a0b8099cea916d12b2985ee15ad7e2257093db87"
       },
       {
         "path": "data/research/leave-in-inci/v1.2/calibration-envelopes/slot-02.json",
         "bytes": 17641,
-        "sha256": "1019fa8fd440ce6da3561b6bcd54c705777b28202ba9538c510b9fae1456c41e"
+        "sha256": "590e0f221c336453ae9e7e6bcae3eaee59f15b0c45ff9b8e91de1f7fda9f9df5"
       },
       {
         "path": "data/research/leave-in-inci/v1.2/calibration-envelopes/slot-03.json",
         "bytes": 18189,
-        "sha256": "ec26089b24b395853df5fc777bcd7d1d19f880a4e8eec364de6ac2e701eea07f"
+        "sha256": "7df8ab9e5cb821c889dd3383b85d820dfea1ff7290f3f964cab83d8be17a4eb4"
       },
       {
         "path": "data/research/leave-in-inci/v1.2/calibration-envelopes/slot-04.json",
         "bytes": 16552,
-        "sha256": "dc96eb8d53787027641a655d8aa882209c805e088517dcd8e8a1dd67a725c126"
+        "sha256": "df0a3c05c25bf89ce89968d33da26718a7d53b8488f9c80ed76e9cf58ad5c3be"
       },
       {
         "path": "data/research/leave-in-inci/v1.2/calibration-envelopes/slot-05.json",
         "bytes": 18554,
-        "sha256": "d10edca1025bbcd149998a960112fca56cc94bb242b6ac5614b96ef69ef536e1"
+        "sha256": "4fffd45b06ca910f2a3a8aafc03ea4eaecdeb3322e5d734ee22180d1918460f2"
       },
       {
         "path": "data/research/leave-in-inci/v1.2/calibration-envelopes/slot-06.json",
         "bytes": 18650,
-        "sha256": "c36b847f2c77181afb9a0f5dafebf2b0dc3c38be7b69adbc3fb8aed52e9f0baa"
+        "sha256": "2c3c24725704a881e092fe00aae2ece6e620e37202b4e5916f6f35a504d149e9"
       },
       {
         "path": "data/research/leave-in-inci/v1.2/calibration-envelopes/slot-08.json",
         "bytes": 20514,
-        "sha256": "3b1f2d6a2348afa8ad0acbff5dda0e0e2e1422ef17ca8b16b160f7bdd5a2980b"
+        "sha256": "0431a08c8b9adcb1f025f53787a7c58afac6d8d8d70afe28b89a995622b2cec6"
       },
       {
         "path": "data/research/leave-in-inci/v1.2/calibration-envelopes/slot-09.json",
         "bytes": 21874,
-        "sha256": "9038658a5fc6bd5c24e406abf0c94239a581dbdaac5228c9eecdb8a67443620f"
+        "sha256": "f91add917b82df9fab1b3c57918a820fe9b51136b9aa2962e92a370444080806"
       },
       {
         "path": "data/research/leave-in-inci/v1.2/calibration-envelopes/slot-10.json",
         "bytes": 24430,
-        "sha256": "09867736d3e44c83c4ebd1ade28385ed5c39839ca9e91bcf5f483a6e571a529a"
+        "sha256": "29d784e26844d1a7c4d413cfec94178bef9f1d40fcac600b234a8b37224f623e"
       },
       {
         "path": "data/research/leave-in-inci/v1.2/calibration-envelopes/slot-11.json",
         "bytes": 15646,
-        "sha256": "75881cb3747b50ef1f07699b09f8c66c0e04b8d4d1f51cd971046032436b366e"
+        "sha256": "208c4c4f5bcd3f6eb6a50fa145705e7fd8112c895102ac991661610c45a3b7cb"
       },
       {
         "path": "data/research/leave-in-inci/v1.2/calibration-envelopes/slot-13.json",
         "bytes": 21414,
-        "sha256": "f2105972f7aa66fcc03196a51e878aec570407d2dc99b5fadd4bac0cf5c053ca"
+        "sha256": "34b6083989bffaf4bc56ba21ca6397bde527105cd6857bb0dfb510460f4f2bcf"
       }
     ]
   },
@@ -155,42 +155,42 @@
       {
         "path": "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/aussie/envelope.json",
         "bytes": 16383,
-        "sha256": "3ecce34c86b4daa3e1420d9dce7b945a6cce30545b24f4a3b286bd1d55873b53"
+        "sha256": "a527c421923d03364145dc387fe76c4d23ced59ceb73c36090cff5dbfcf7b6f9"
       },
       {
         "path": "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/aussie/adapter/production-projection.json",
         "bytes": 56827,
-        "sha256": "629eac8429c704b69f684a13b63af8182406c3980c47cd16aff0c49404c65518"
+        "sha256": "09773f9f9b01455fd00d1cbc0583f7940a4883936aac424e5973b01cc01ed674"
       },
       {
         "path": "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/balea/envelope.json",
         "bytes": 17155,
-        "sha256": "e40d6ae7fa5b2db6cc6aaef6d2fbaf058d3cd2947173ce838b56d6a25a60e05d"
+        "sha256": "cfda8ea654be7f85dbfd24d0f495fdb2fee6c4046e9a7e804d80511845103c0c"
       },
       {
         "path": "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/balea/adapter/production-projection.json",
         "bytes": 52420,
-        "sha256": "037f67920b86378355a0232c7b6b111baaa8880f431f9fc4ed265efd721fe3e8"
+        "sha256": "3e491c6ddf652c9cfe6938f102b2de5ae9dabaa0b5b935fe8df116259d69fea7"
       },
       {
         "path": "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/bali/envelope.json",
         "bytes": 16341,
-        "sha256": "d8e1145048dc759dc1908f98fa6afaa8f26cd8215b5b838a32d35d80010b757e"
+        "sha256": "c87827a7df48372e08d4db9c654b8ab3addf7613ba8228cbc28e073a3f7fb83d"
       },
       {
         "path": "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/bali/adapter/production-projection.json",
         "bytes": 64511,
-        "sha256": "f9e7ed607a7a5383d49a053b7aa60d15e1bfddb2bcd1324b7b8d81e27607cd2e"
+        "sha256": "793ff3371949b667a2781c4322ccdcbba13da23156a41963c4eaadec13021cef"
       },
       {
         "path": "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/neqi-spray/envelope.json",
         "bytes": 21145,
-        "sha256": "56f4118eab5962cf7dd2425cd1b6883c092a0a494ae3c04232440a1141044765"
+        "sha256": "46bafce822707df2187d3e7e95b099773e7a128a97c67e9e784e8c6cf7037f72"
       },
       {
         "path": "plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.2/neqi-spray/adapter/production-projection.json",
         "bytes": 72148,
-        "sha256": "242e1d85403ef83bd102142405b9e6c9343329e3be1fa61f0a245d00b9ef98e4"
+        "sha256": "bda0078473e82880249ed98322b5097a59cd886588f000ff28bccab7ee235f93"
       }
     ]
   },

@@ -1,0 +1,47 @@
+{
+  "blindId": "T110",
+  "inciFingerprintSha256": "4eddf07f65699119e28271f06d3321a7a729de2b283c053a659895ef9dda3433",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {"normalization": "Packet list used as normalized; normalized one-based positions.", "completeness": "complete (ID-1)", "sourceTier": 2, "identityConfidence": "high", "e3ProminenceCutoff": "Parfum at 20 -> positions 1-19 prominent"},
+  "directProperties": {
+    "cleansingStrength": {"value": "moderate", "confidence": "high", "neighboringAlternative": "none",
+      "rationale": "C1: defining anionic Sodium Laureth Sulfate (2) with prominent buffers Cocamidopropyl Betaine (4) and Coco-Glucoside (11); no reinforcing route -> moderate.",
+      "counterSignals": "Refatters and guar; not convention-moving."},
+    "conditioningLevel": {"value": "moderate", "confidence": "moderate", "neighboringAlternative": "low",
+      "rationale": "One meaningful cationic system, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (13), plus light routes: Hydrolyzed Wheat Protein (7), weak refatters Glyceryl Oleate (12), Hydrogenated Palm Glycerides Citrate (16), Tocopherol (15), pearlizer PEG-3 Distearate (17), humectants Panthenol (9), Glycerin (19). C2 not met (no silicone, no prominent payload lipid).",
+      "counterSignals": "No silicone or payload lipid; refatters are weak."},
+    "weightPotential": {"value": "low", "confidence": "moderate", "neighboringAlternative": "moderate",
+      "rationale": "Guar, one hydrolyzed protein and weak refatters face an effective C1 reset; no silicone, lipid or film former.",
+      "subjudgments": {
+        "depositionLoad": {"value": "light", "rationale": "Guar (13), wheat protein (7), weak refatters (12, 15, 16)."},
+        "persistence": {"value": "low", "rationale": "No persistent silicone/lipid system."},
+        "resetCapacity": {"value": "moderate", "rationale": "SLES with betaine and glucoside buffers (C1 moderate)."}},
+      "evidenceByFamily": {"cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (13)"], "protein_film": ["Hydrolyzed Wheat Protein (7)"], "weak_refatter": ["Glyceryl Oleate (12)", "Tocopherol (15)", "Hydrogenated Palm Glycerides Citrate (16)"], "anionic_surfactant": ["Sodium Laureth Sulfate (2)"], "amphoteric_surfactant": ["Cocamidopropyl Betaine (4)"], "nonionic_surfactant": ["Coco-Glucoside (11)"], "humectant_context": ["Niacinamide (8)", "Panthenol (9)", "Pantolactone (10)", "Glycerin (19)"]},
+      "excluded": ["PEG-3 Distearate (17): pearlizer (6.4)", "Malva Sylvestris Flower Extract (5), Euterpe Oleracea Fruit Extract (6): extracts", "Magnesium Sulfate (14): salt", "Propylene Glycol (18): solvent"],
+      "unresolved": [],
+      "whyThisBand": "Light routes only against an effective reset.",
+      "whyNotNeighborBand": "W2: three families, but the only cationic route is one guar, the protein is hydrolyzed (low persistence) and the lipid-like routes are weak_refatters only; no silicone, payload lipid or film former; ordinary sulfate reset.",
+      "confidenceLimitingFactor": "Several light routes together could leave bounded residue (one step toward moderate)."},
+    "focusPrimary": {"value": "provisional:pending_claims", "confidence": "low", "neighboringAlternative": "general",
+      "rationale": "Formula-only: generic guar/protein/refatter care with humectants; neither repair nor moisture distinguished.",
+      "careDirectionVerdictProvisional": "nonspecific (could be dual_supported weakly)"},
+    "focusSecondary": {"value": [], "confidence": "low", "neighboringAlternative": ["shine"], "rationale": "Empty default pending claims."},
+    "usageRole": {"value": "regular", "confidence": "low", "neighboringAlternative": "frequent", "rationale": "Default; moderate cleansing excludes alternating."},
+    "scalpComfortTarget": {"value": "provisional:not_targeted", "confidence": "low", "neighboringAlternative": "targeted", "rationale": "Positioning unknown. CSA formula half met: prominent comfort routes Niacinamide (8), Panthenol (9); humectant routes Panthenol, Glycerin (19), Glyceryl Oleate (12)."},
+    "dandruffSupport": {"value": "not_supported", "confidence": "high", "neighboringAlternative": "none", "rationale": "Neither Piroctone Olamine nor Climbazole."}
+  },
+  "formulaFacts": [
+    {"ingredient": "Sodium Laureth Sulfate", "position": 2, "role": "defining anionic (ether type)"},
+    {"ingredient": "Cocamidopropyl Betaine", "position": 4, "role": "buffer"},
+    {"ingredient": "Hydrolyzed Wheat Protein", "position": 7, "role": "protein_film"},
+    {"ingredient": "Niacinamide", "position": 8, "role": "E4 comfort route"},
+    {"ingredient": "Panthenol", "position": 9, "role": "E4 comfort + humectant route"},
+    {"ingredient": "Coco-Glucoside", "position": 11, "role": "buffer"},
+    {"ingredient": "Glyceryl Oleate", "position": 12, "role": "weak_refatter; E4 refatting"},
+    {"ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride", "position": 13, "role": "cationic_polymer"},
+    {"ingredient": "PEG-3 Distearate", "position": 17, "role": "pearlizing route, excluded for weight"},
+    {"ingredient": "Glycerin", "position": 19, "role": "humectant"},
+    {"ingredient": "Parfum", "position": 20, "role": "E3 fragrance marker"}
+  ],
+  "unresolvedMaterialIngredients": []
+}

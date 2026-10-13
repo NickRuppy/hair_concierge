@@ -1,0 +1,552 @@
+{
+  "blindId": "T411",
+  "inciFingerprintSha256": "528ff372f5b35c8bbfffc4ad41b9d573b3969160005bb754aa85ccf31a8a5f5c",
+  "policyId": "shampoo-classification-v1.6",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaSourceTier": 3,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "moderate",
+    "productName": "Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege",
+    "market": "DE",
+    "identityNote": ""
+  },
+  "normalization": "ID-2 applied; normalized one-based positions; no split entries; raw positions = normalized positions",
+  "e3ProminenceMarker": "Parfum/Fragrance at 12",
+  "surfactantArchitecture": "SLES (2) defining; CAPB (4) buffer; SXS hydrotrope (3); TEA-DDBS (17) late; C1 -> moderate.",
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic"
+    },
+    {
+      "ingredient": "Sodium Xylenesulfonate",
+      "position": 3,
+      "role": "hydrotrope"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "amphoteric buffer"
+    },
+    {
+      "ingredient": "Piroctone Olamine",
+      "position": 6,
+      "role": "recognized anti-dandruff active"
+    },
+    {
+      "ingredient": "Dimethiconol",
+      "position": 7,
+      "role": "silicone, prominent"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 10,
+      "role": "pearlizer"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 12,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Dimethicone",
+      "position": 13,
+      "role": "silicone"
+    },
+    {
+      "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+      "position": 14,
+      "role": "cationic polymer"
+    },
+    {
+      "ingredient": "Menthol",
+      "position": 16,
+      "role": "cooling agent, not prominent"
+    },
+    {
+      "ingredient": "TEA-Dodecylbenzenesulfonate",
+      "position": 17,
+      "role": "strong anionic after E3 point"
+    },
+    {
+      "ingredient": "Aloe Barbadensis Leaf Juice",
+      "position": 24,
+      "role": "plant juice, not a C2 humectant"
+    }
+  ],
+  "claimGrading": [
+    {
+      "claim": "Beruhigende Pflege (name)",
+      "grade": "high",
+      "use": "non-scalp name word (F7 note) - names no role"
+    },
+    {
+      "claim": "Anti-Schuppen Wirkung mit Pirocton Olamin; Verhindert Trockenheit & Juckreiz verbunden mit Schuppen; Beruhigend bei trockener, juckender Kopfhaut (Juckreiz verbunden mit Schuppen)",
+      "grade": "moderate",
+      "use": "E2 dandruff units (absorb itch/dryness)"
+    },
+    {
+      "claim": "'gegen Kopfhautjucken, reinigt und stärkt die Kopfhautbarriere'; 'Sofortige Linderung juckender Kopfhaut'",
+      "grade": "moderate",
+      "use": "separate E2 sensitive units (not adjacent to a dandruff unit) - SC1 positioning; research-only on dandruff path (R15)"
+    },
+    {
+      "claim": "retailer 'speziell für trockene, juckende Kopfhaut'",
+      "grade": "low",
+      "use": "none"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: C1 ether/sulfonate chassis - defining anionic Sodium Laureth Sulfate (2) buffered by prominent Cocamidopropyl Betaine (4); no prominent reinforcing strong anionic (C3, C4, C1).",
+      "counterSignal": "A second strong anionic (TEA-Dodecylbenzenesulfonate) and the hydrotrope Sodium Xylenesulfonate (3) are present; the DDBS sits after the E3 point and is not a reinforcing route under C4, but it argues toward `strong`, so confidence is moderate.",
+      "neighboringAlternative": "strong",
+      "rulesApplied": [
+        "C3",
+        "C4",
+        "C1"
+      ],
+      "carriedFromBlind": true
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: C2 not met - early silicone Dimethiconol (7), pearlizing Glycol Distearate (10) and cationic Guar Hydroxypropyltrimonium Chloride (14) are present, but there is no deliberate humectant route from the closed C2 list (only Butylene Glycol, Triethylene Glycol, Propylene Glycol and Aloe Barbadensis Leaf Juice, which do not qualify, R11).",
+      "counterSignal": "The other three C2 elements are present (missing humectant is the counter-signal), plus a second silicone Dimethicone (13).",
+      "neighboringAlternative": "high",
+      "rulesApplied": [
+        "C2",
+        "R11"
+      ],
+      "carriedFromBlind": true
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: silicone-plus-guar deposition (two silicones) gives plausible, bounded residue; effective C1 reset, no W-RICH. W1 does not apply (no amodimethicone).",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "Two silicones (Dimethiconol 7 prominent, Dimethicone 13) with cationic guar (14)."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Coacervate-deposited silicone is moderately persistent; no waxy lipid or film former."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES/betaine chassis."
+        }
+      },
+      "evidenceByFamily": {
+        "silicone": [
+          [
+            "Dimethiconol",
+            7
+          ],
+          [
+            "Dimethicone",
+            13
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Guar Hydroxypropyltrimonium Chloride",
+            14
+          ]
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "protein_film": [],
+        "film_former": [],
+        "humectant_context": [
+          [
+            "Butylene Glycol",
+            23
+          ],
+          [
+            "Aloe Barbadensis Leaf Juice",
+            24
+          ]
+        ],
+        "reset": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ],
+          [
+            "Cocamidopropyl Betaine",
+            4
+          ],
+          [
+            "TEA-Dodecylbenzenesulfonate",
+            17
+          ]
+        ]
+      },
+      "excludedEvidence": [
+        [
+          "Glycol Distearate",
+          10,
+          "pearlizer, excluded (6.4)"
+        ],
+        [
+          "Cocamide MEA",
+          9,
+          "foam booster"
+        ],
+        [
+          "Oryza Sativa Bran Extract",
+          30,
+          "extract"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "Two silicones plus guar argue toward high.",
+      "whyThisBand": "Moderate: silicone-plus-guar deposition (two silicones) gives plausible, bounded residue; effective C1 reset, no W-RICH. W1 does not apply (no amodimethicone).",
+      "whyNotNeighborBand": "Not high: no rich lipid architecture or third converging family; effective reset. Not low: two families with a prominent silicone (W2).",
+      "confidenceLimitingFactor": "Silicone load unknown.",
+      "neighboringAlternative": "high",
+      "rulesApplied": [
+        "6.5",
+        "6.6"
+      ],
+      "carriedFromBlind": true
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "rationale": "scalp_active: anti-dandruff claims (moderate) + Piroctone Olamine (6); sensitive-scalp wording also points to scalp_active.",
+      "counterSignal": "C2-type conditioning without humectant; name word 'Beruhigende' names no scalp.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Piroctone Olamine",
+          "position": 6
+        }
+      ],
+      "sourceIds": [
+        "manufacturer_de"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty: 'feuchtigkeitsspendend' concerns the scalp and is bundled; no lengths route.",
+      "counterSignal": "See decision trace.",
+      "neighboringAlternative": [
+        "moisture"
+      ],
+      "formulaFacts": [],
+      "sourceIds": [],
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "candidatesConsidered": []
+      }
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "high",
+      "rationale": "U3.",
+      "counterSignal": "Trigger fires mechanically from graded claim plus final cleansingStrength.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "sourceIds": [],
+      "triggerCode": "recognized_active_problem_led",
+      "triggerEvidence": [
+        "'Anti-Schuppen Wirkung mit Pirocton Olamin' (manufacturer)",
+        "Piroctone Olamine (6)"
+      ],
+      "losingTriggers": [],
+      "decisionTrace": {
+        "default": "regular",
+        "triggerCode": "recognized_active_problem_led",
+        "triggerEvidence": [
+          "'Anti-Schuppen Wirkung mit Pirocton Olamin' (manufacturer)",
+          "Piroctone Olamine (6)"
+        ],
+        "rationale": "U3."
+      }
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "rationale": "not_targeted: SC1 holds (separate sensitive units 'gegen Kopfhautjucken', moderate), but CSA fails - no prominent E4 comfort or humectant route (Parfum 12; Aloe juice is not listed). Missing route named.",
+      "counterSignal": "Explicit anti-itch positioning; Menthol (16) after Parfum.",
+      "neighboringAlternative": "targeted",
+      "formulaFacts": [],
+      "sourceIds": [],
+      "csaFormulaHalf": false,
+      "sc1Positioning": true
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains Piroctone Olamine (6) (Section 11).",
+      "neighboringAlternative": "none",
+      "carriedFromBlind": true
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "not_applicable",
+      "routes": {},
+      "limitation": ""
+    },
+    "claimRole": "candidate",
+    "counterSignal": "-",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "anti-dandruff + itchy scalp",
+        "formulaCompatible": true,
+        "compatibleRoute": "Piroctone Olamine (6)",
+        "reason": "7.2 dandruff row; F7 step 2 (name names no role)"
+      }
+    }
+  },
+  "weightRecord": {
+    "value": "moderate",
+    "confidence": "moderate",
+    "rationale": "Moderate: silicone-plus-guar deposition (two silicones) gives plausible, bounded residue; effective C1 reset, no W-RICH. W1 does not apply (no amodimethicone).",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "moderate",
+        "rationale": "Two silicones (Dimethiconol 7 prominent, Dimethicone 13) with cationic guar (14)."
+      },
+      "persistence": {
+        "value": "moderate",
+        "rationale": "Coacervate-deposited silicone is moderately persistent; no waxy lipid or film former."
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C1 SLES/betaine chassis."
+      }
+    },
+    "evidenceByFamily": {
+      "silicone": [
+        [
+          "Dimethiconol",
+          7
+        ],
+        [
+          "Dimethicone",
+          13
+        ]
+      ],
+      "cationic_polymer": [
+        [
+          "Guar Hydroxypropyltrimonium Chloride",
+          14
+        ]
+      ],
+      "payload_lipid": [],
+      "weak_refatter": [],
+      "protein_film": [],
+      "film_former": [],
+      "humectant_context": [
+        [
+          "Butylene Glycol",
+          23
+        ],
+        [
+          "Aloe Barbadensis Leaf Juice",
+          24
+        ]
+      ],
+      "reset": [
+        [
+          "Sodium Laureth Sulfate",
+          2
+        ],
+        [
+          "Cocamidopropyl Betaine",
+          4
+        ],
+        [
+          "TEA-Dodecylbenzenesulfonate",
+          17
+        ]
+      ]
+    },
+    "excludedEvidence": [
+      [
+        "Glycol Distearate",
+        10,
+        "pearlizer, excluded (6.4)"
+      ],
+      [
+        "Cocamide MEA",
+        9,
+        "foam booster"
+      ],
+      [
+        "Oryza Sativa Bran Extract",
+        30,
+        "extract"
+      ]
+    ],
+    "unresolved": [],
+    "counterSignal": "Two silicones plus guar argue toward high.",
+    "whyThisBand": "Moderate: silicone-plus-guar deposition (two silicones) gives plausible, bounded residue; effective C1 reset, no W-RICH. W1 does not apply (no amodimethicone).",
+    "whyNotNeighborBand": "Not high: no rich lipid architecture or third converging family; effective reset. Not low: two families with a prominent silicone (W2).",
+    "confidenceLimitingFactor": "Silicone load unknown.",
+    "neighboringAlternative": "high",
+    "rulesApplied": [
+      "6.5",
+      "6.6"
+    ],
+    "formulaFingerprint": "528ff372f5b35c8bbfffc4ad41b9d573b3969160005bb754aa85ccf31a8a5f5c",
+    "sourceTier": 3,
+    "captureDate": "per frozen packet (not in lane kit)"
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "acceptable",
+        "t1Fit": "acceptable",
+        "t6Applied": false,
+        "confidence": "moderate",
+        "rationale": "acceptable: T1 (fine x W moderate) = acceptable; T2: thickness/texture claims ignored. Confidence = lowest input confidence (13.8)."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "t1Fit": "ideal",
+        "t6Applied": false,
+        "confidence": "moderate",
+        "rationale": "ideal: T1 (normal x W moderate) = ideal; T2: thickness/texture claims ignored. Confidence = lowest input confidence (13.8). T4: weightPotential neighbor high would lower the final tier -> review_thickness_boundary."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "t1Fit": "acceptable",
+        "t6Applied": false,
+        "confidence": "moderate",
+        "rationale": "acceptable: T1 (coarse x W moderate, C moderate) = acceptable; T2: thickness/texture claims ignored. Confidence = lowest input confidence (13.8)."
+      }
+    ],
+    "weight": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential moderate -> moderate; confidence = weightPotential confidence (13.8)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "dandruff",
+        "confidence": "moderate",
+        "rationale": "S-DANDRUFF: manufacturer dandruff claim (moderate) + supported; primary per S-PRIMARY; no secondary (R17.2)."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "moderate",
+      "rationale": "I1: cleansingStrength moderate, D1 false -> regular; I2 written unchanged to every row."
+    },
+    "positioning": {
+      "explicitResetPositioning": false
+    },
+    "explicitResetPositioning": {
+      "value": false,
+      "confidence": "high",
+      "rationale": "D1 false: no tiefenrein/deep clean/clarifying shampoo/detox-reinigung stem in name or graded claims, no occasional-use directions."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "moderate",
+      "rationale": "D2 not met: D1 false"
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_dandruff"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_thickness_boundary",
+        "detail": "normal: ideal; weightPotential neighbor high (T4, after T6)"
+      }
+    ],
+    "informationalNotes": [
+      {
+        "code": "dandruff_bundled_comfort_wording",
+        "detail": "'gegen Kopfhautjucken', 'Sofortige Linderung juckender Kopfhaut', 'Beruhigend bei ... juckender Kopfhaut' (manufacturer, moderate); S-SENSITIVE gate failed: CSA not met, no prominent E4 comfort route; unlisted_route_candidate:Aloe Barbadensis Leaf Juice (not prominent)"
+      }
+    ],
+    "researchCombinationTargets": [],
+    "researchCombinationRationale": "sensitive: wording moderate but gate fails (CSA); dry: dryness only inside dandruff units (absorbed); 'Wussten Sie ... trockene, juckende Kopfhaut' is a rhetorical question next to a dandruff unit (bundled); oily: none."
+  },
+  "blindToFinalChanges": [
+    {
+      "field": "focusPrimary",
+      "blind": "general",
+      "final": "scalp_active",
+      "evidence": "manufacturer dandruff claim",
+      "reason": "7.2"
+    },
+    {
+      "field": "usageRole",
+      "blind": "regular",
+      "final": "treatment",
+      "evidence": "dandruff claim moderate + Piroctone",
+      "reason": "U3"
+    },
+    {
+      "field": "scalpComfortTarget",
+      "blind": "not_targeted (low)",
+      "final": "not_targeted (moderate)",
+      "evidence": "SC1 met, CSA failed",
+      "reason": "CSA"
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeWeightSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "comparisonWithEarlierValuesDoneInLane": false,
+    "weightPotentialUnchangedAfterUnblind": true
+  },
+  "uncertainties": [
+    {
+      "reading": "Formula classified as given (source tier 3, identity moderate)",
+      "alternative": "material identity doubt would make properties low"
+    },
+    {
+      "reading": "the comfort-route note is recorded under dandruff_bundled_comfort_wording for both bundled and separate sensitive units (13.9 names R15 separate units under that code)",
+      "alternative": "none"
+    }
+  ]
+}

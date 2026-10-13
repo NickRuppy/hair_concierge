@@ -1,0 +1,124 @@
+{
+  "blindId": "T114",
+  "inciFingerprintSha256": "63ff429b1232526889e28ca4e04999b7b98cfcef5c7171ac2c375d4077114816",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "Packet canonicalInci used as normalized list (ID-2); positions are one-based on that list.",
+    "inciCount": 14,
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "e3ProminencePoint": "Parfum at 9: positions 1-8 prominent"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: SLES (2) defining, two prominent buffers (Lauryl Glucoside 3, Sodium Lauroyl Sarcosinate 4), no reinforcing anionic -> moderate.",
+      "neighboringAlternative": "none"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "One meaningful system: a prominent cationic starch (6) -> moderate at most; no silicone, lipid, protein or humectant.",
+      "counterSignal": "The cationic oxidized starch is a light conditioner and is the only route; reads close to cleansing-led low.",
+      "neighboringAlternative": "low"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Single light cationic starch, no reinforcing family, effective C1 reset -> low (no polymer floor).",
+      "neighboringAlternative": "none",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Only Hydroxypropyl Oxidized Starch PG-Trimonium Chloride (6)."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "Light cationic starch, weakly retained."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 buffered SLES chassis."
+        }
+      },
+      "whyThisBand": "One light family facing moderate reset.",
+      "whyNotNeighborBand": "A single deposition family without a reinforcing route, facing moderate reset, stays low (W2 single-family case).",
+      "limitingFactor": "None material."
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Piroctone Olamine (7) present -> supported.",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Formula care-direction verdict recorded for reconciliation.",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "note": "No repair or moisture route."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2)."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Default regular; triggers (U2-U5, D1, U3) need graded claims."
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). SC1 positioning unknown. CSA formula half fails: no prominent comfort or humectant route; prominent Menthol (8) is a counter-signal."
+    }
+  },
+  "scalpGateFormulaHalves": "S-SENSITIVE / S-DRY formula gates fail (no CSA). S-OILY clause passes.",
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic, ether type"
+    },
+    {
+      "ingredient": "Lauryl Glucoside",
+      "position": 3,
+      "role": "buffer, nonionic glucoside"
+    },
+    {
+      "ingredient": "Sodium Lauroyl Sarcosinate",
+      "position": 4,
+      "role": "buffer, mild anionic"
+    },
+    {
+      "ingredient": "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+      "position": 6,
+      "role": "cationic_polymer, prominent"
+    },
+    {
+      "ingredient": "Piroctone Olamine",
+      "position": 7,
+      "role": "recognized anti-dandruff active"
+    },
+    {
+      "ingredient": "Menthol",
+      "position": 8,
+      "role": "cooling agent, prominent (comfort counter-signal)"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 9,
+      "role": "E3 marker"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

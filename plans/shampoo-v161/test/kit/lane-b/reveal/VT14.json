@@ -1,0 +1,14 @@
+{
+  "blindId": "VT14",
+  "productName": "True Soft Shampoo",
+  "brand": "Maria Nila",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_de_marianila_shop",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Ein sanftes Shampoo für trockenes Haar, das geschmeidig macht, Feuchtigkeit spendet und die Haarstruktur stärkt. Weich machendes Arganöl reduziert Frizz und bekämpft elektrisches Aufladen.\nPerfekt für trockenes Haar\nEnthält pflegendes Arganöl\nStärkt und reduziert Frizz\n100 % vegan und tierfreundlich\n\nDas True Soft Shampoo ist ein sanftes, stärkendes und feuchtigkeitsspendendes Shampoo speziell für trockenes Haar. Während Arganöl das Haar zum Glänzen bringt, Geschmeidigkeit verleiht und gleichzeitig Frizz reduziert, schützt der Colour Guard Complex die Haare vor UV-Strahlen und sorgt für länger anhaltende, leuchtende Farbkraft.",
+      "directionsVerbatim": "Ins feuchte Haar einmassieren, ausspülen und anschließend wie gewohnt pflegen. Täglich anwendbar."
+    }
+  ]
+}

@@ -1,0 +1,326 @@
+{
+  "blindId": "W118",
+  "phase": "final record (post-unblind reconciliation, runbook step 4)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "brand": "Sebamed",
+    "productName": "Sebamed Every-Day Shampoo",
+    "packSize": "200 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "303653d5f86a174377761e891fefde597d7e15dc484437056bd83783230aa48f",
+    "normalization": "One entry per ingredient; normalized positions = packet positions (ID-2).",
+    "completeness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "e3ProminenceCutoff": "Parfum @7 (prominent = positions 1-6)"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "none (no strong anionic) -> C6",
+      "earliestProminentCleansing": "Decyl Glucoside @2 (nonionic glucoside)",
+      "reinforcingRoutes": [],
+      "buffers": [
+        "Disodium Laureth Sulfosuccinate @3 (mild anionic)",
+        "Sodium Lauryl Sulfoacetate @4 (mild anionic)"
+      ],
+      "notCleansing": [
+        "PEG-55 Propylene Glycol Oleate @5 (PEG ester thickener)"
+      ]
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": [
+        "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride @11 (not prominent; after fragrance and preservatives)"
+      ],
+      "silicone": [],
+      "payload_lipid": [],
+      "weak_refatter": [],
+      "pearlizingFattyRoute": [],
+      "humectants": [
+        "Sodium Lactate @14 (E4 humectant, late; not a C2 deliberate route)"
+      ]
+    },
+    "actives": [],
+    "exposure": {
+      "fragrance": "Parfum @7 (not prominent); no declared allergens",
+      "essentialOils": [],
+      "coolingAgents": []
+    },
+    "wLine": {
+      "cap": "e3Point Parfum @7",
+      "wLine": "Parfum @7",
+      "wLineClasses": [
+        "fragrance"
+      ],
+      "skippedCandidates": [],
+      "alphabeticalRun": "none (ascending run 10-14 has 5 entries)",
+      "codes": [],
+      "plausibility": "No candidate before the cap; Parfum @7 plausible ((i) Decyl Glucoside @2 before; (ii) Propylene Glycol @6 is not a structurant)",
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": []
+    },
+    "csaListedProminentRoutes": [],
+    "mildBase": "met: mild_base:Decyl Glucoside @2, Disodium Laureth Sulfosuccinate @3, Sodium Lauryl Sulfoacetate @4 (cleansingStrength low; no prominent strong anionic)"
+  },
+  "unresolvedMaterialIngredients": [],
+  "claimEvidence": [
+    "Product name 'Every-Day Shampoo' (high): U2 frequency wording ('Every-Day').",
+    "manufacturer_de (moderate): 'Schonende, seifenfreie Reinigung für empfindliche Kopfhaut' - read as a qualifying E2 sensitive unit (states the product is for sensitive scalp: 'für ... empfindliche Kopfhaut'); it is a headline of its own, not under a mildness heading.",
+    "manufacturer_de: 'seifenfreies Shampoo für die tägliche Haarwäsche', directions 'Für die tägliche Anwendung geeignet' (moderate, U2).",
+    "manufacturer_de: 'schützt Kopfhaut und Haar vor dem Austrocknen' (protective), 'stärken die Barrierefunktion der empfindlichen Haut' (brand-level skin claim), pH 5,5 statements (mildness).",
+    "Retailer (low): 'Seifenfrei & schonend zur Kopfhaut' (sparing wording, E2a).",
+    "ID-3: 'Zuckertensid-Formel' -> Decyl Glucoside @2; no conflict."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Low: no strong anionic; the earliest prominent cleansing surfactant is the nonionic Decyl Glucoside @2, followed by the mild anionics Disodium Laureth Sulfosuccinate @3 and Sodium Lauryl Sulfoacetate @4 (C3, C4, C6).",
+      "ruleIds": [
+        "C3",
+        "C4",
+        "C6"
+      ],
+      "counterSignal": "None material (C6 clear).",
+      "formulaPassValue": "low",
+      "formulaPassConfidence": "high"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low: the only conditioning route is a cationic starch (Hydroxypropyl Oxidized Starch PG-Trimonium Chloride @11) listed after the fragrance and preservatives (trace); no silicone, lipid, refatter or deliberate humectant. Cleansing-led (Section 5). The cationic makes moderate the neighbor.",
+      "ruleIds": [
+        "Section 5",
+        "N-ALT"
+      ],
+      "counterSignal": "Trace cationic starch.",
+      "formulaPassValue": "low",
+      "formulaPassConfidence": "moderate"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": [
+          "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride @11"
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": [
+          "Decyl Glucoside @2",
+          "Disodium Laureth Sulfosuccinate @3",
+          "Sodium Lauryl Sulfoacetate @4"
+        ],
+        "humectantContext": [
+          "Propylene Glycol @6 (solvent)",
+          "Sodium Lactate @14"
+        ],
+        "excluded": [
+          "PEG-55 Propylene Glycol Oleate @5 (PEG thickener, 6.4)"
+        ],
+        "unresolved": []
+      },
+      "depositionLoad": "light - one trace cationic starch",
+      "persistence": "low - nothing persistent besides a trace polymer",
+      "resetCapacity": "weak - glucoside/sulfosuccinate/sulfoacetate chassis",
+      "counterevidence": "Weak reset could let the polymer accumulate.",
+      "whyThisBand": "A single trace cationic polymer with no reinforcing family.",
+      "whyNotNeighborBand": "Not moderate: one deposition family only, listed after the fragrance and two preservatives, with no silicone, lipid, protein or refatter to converge with it (6.6; single family, W2 not triggered).",
+      "confidenceLimitingFactor": "Weak reset",
+      "rationale": "Low: single trace cationic starch (6.4, 6.6). Neighbor moderate.",
+      "ruleIds": [
+        "6.3",
+        "6.4",
+        "6.6",
+        "N-ALT"
+      ],
+      "counterSignal": "Weak reset.",
+      "formulaPassValue": "low",
+      "formulaPassConfidence": "moderate",
+      "wLineRecord": {
+        "cap": "e3Point Parfum @7",
+        "wLine": "Parfum @7",
+        "wLineClasses": [
+          "fragrance"
+        ],
+        "skippedCandidates": [],
+        "alphabeticalRun": "none (ascending run 10-14 has 5 entries)",
+        "codes": [],
+        "plausibility": "No candidate before the cap; Parfum @7 plausible ((i) Decyl Glucoside @2 before; (ii) Propylene Glycol @6 is not a structurant)",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      }
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "moderate",
+      "neighboringAlternative": "general",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride @11"
+        ],
+        "limitation": "Not a repair/moisture decision"
+      },
+      "claimRole": "candidate",
+      "counterSignal": "The sensitive-scalp unit sits among mildness wording; a sparing reading would leave only mildness (no focus).",
+      "decisionTrace": "Primary: claim direction sensitive scalp (manufacturer E2 unit, moderate) with scalpComfortTarget targeted (SC1 + CSA via MB) -> scalp_active; no lengths-care role claimed; decision scalp_active (7.2).",
+      "rationale": "scalp_active: explicit sensitive-scalp positioning with targeted (7.2).",
+      "ruleIds": [
+        "7.2",
+        "SC1",
+        "MB"
+      ],
+      "formulaPassValue": "general"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "volume"
+      ],
+      "decisionTrace": "Empty default; retailer 'mehr Fülle und Glanz' is low-graded.",
+      "rationale": "Empty.",
+      "ruleIds": [
+        "8",
+        "F2",
+        "F3"
+      ],
+      "formulaPassValue": []
+    },
+    "usageRole": {
+      "value": "frequent",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "explicit_frequent_non_strong",
+      "triggerEvidence": [
+        "Product name 'Every-Day Shampoo' (high)",
+        "manufacturer_de 'für die tägliche Haarwäsche' / directions 'Für die tägliche Anwendung geeignet' (moderate)"
+      ],
+      "losingTriggers": [],
+      "rationale": "Frequent: explicit frequency wording in the name and manufacturer text, cleansingStrength low (U2).",
+      "ruleIds": [
+        "9",
+        "U1",
+        "U2",
+        "CL-SRC"
+      ],
+      "formulaPassValue": "regular"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "not_targeted",
+      "rationale": "Targeted: SC1 - 'Schonende, seifenfreie Reinigung für empfindliche Kopfhaut' (manufacturer, moderate); CSA via MB (v1.6.2): mild_base:Decyl Glucoside @2, Disodium Laureth Sulfosuccinate @3, Sodium Lauryl Sulfoacetate @4 (cleansing low, no prominent strong anionic); no listed E4 route is prominent (Sodium Lactate @14 late). Confidence moderate (positioning grade; the unit borders on sparing wording).",
+      "ruleIds": [
+        "10",
+        "SC1",
+        "CSA",
+        "MB",
+        "E2",
+        "E2a",
+        "E4"
+      ],
+      "formulaPassValue": "not_targeted"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active (Section 11).",
+      "ruleIds": [
+        "11"
+      ],
+      "counterSignal": "None.",
+      "formulaPassValue": "not_supported",
+      "formulaPassConfidence": "high"
+    }
+  },
+  "reconciliation": [
+    "focusPrimary general -> scalp_active.",
+    "usageRole regular -> frequent ('Every-Day' name, daily directions).",
+    "scalpComfortTarget not_targeted (provisional) -> targeted via MB.",
+    "Formula properties unchanged."
+  ],
+  "projection": {
+    "status": "proposed_blocked_by_review_flags",
+    "thicknessFit": {
+      "fine": "ideal",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFitConfidence": {
+      "fine": "moderate",
+      "normal": "moderate",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": "T1 with W=low (moderate, neighbor moderate) and C=low (moderate, neighbor moderate): fine ideal, normal ideal, coarse acceptable; T6 applies (scalp-concern target) but lifts nothing; T4 checked against N-ALT neighbors after T6 (T2: thickness/texture claims not used).",
+    "weight": "light",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: weightPotential low -> light, written to every row; confidence = weightPotential confidence.",
+    "scalpTargets": {
+      "primary": {
+        "target": "sensitive",
+        "confidence": "moderate",
+        "rationale": "S-SENSITIVE: E2 sensitive unit (moderate) + targeted + MB (route clause, v1.6.2); cleansing low. Confidence = lowest of positioning (moderate) and scalpComfortTarget (moderate)."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "gentle",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength low, D1 False -> gentle. I3: neighbor none; irritationen expects gentle; no I3 flag (neighbor none, or current intensity already differs / neighbor matches equally).",
+    "explicitResetPositioning": false,
+    "explicitResetEvidence": "No D1 stem (tiefenrein, deep clean, clarifying shampoo, detox-reinigung) in the name, manufacturer/pack claims or directions; no occasional-use directions.",
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRecord": null,
+    "deepCleanserListingConfidence": "high",
+    "deepCleanserRationale": "D1 false -> not_flagged (D2).",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "gentle",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "gentle",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "gentle",
+        "weight": "light",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine"
+    ],
+    "informationalNotes": [],
+    "catalogDependent": "review_live_value_differs and the deep-cleanser record id are resolved by the orchestrator after freeze; the lane sees no catalog values."
+  },
+  "selfCheck": "6.11/selfCheck: fingerprint copied from and equal to the frozen stage-A packet; claims hidden during the formula pass (formula-pass file unchanged, hash-pinned); no ingredient, family count or position window assigned the weight band (W-line used only to gate payload_lipid legs); W-line derived per W-LINE with skipped candidates recorded; depositionLoad/persistence/resetCapacity present; whyNotNeighborBand specific; N-ALT neighbors consistent with confidence; projection computed mechanically from final properties; no comparison with earlier or live values inside the lane.",
+  "uncertainties": [
+    "'Schonende ... Reinigung für empfindliche Kopfhaut' could be read as sparing/mildness wording (E2a); then SC1 fails, scalpComfortTarget not_targeted, focus general and the target ordinary. Chosen reading: 'für empfindliche Kopfhaut' states the product's intended scalp state."
+  ]
+}

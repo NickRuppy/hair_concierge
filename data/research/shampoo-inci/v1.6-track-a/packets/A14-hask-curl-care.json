@@ -1,0 +1,91 @@
+{
+  "slot": "A14",
+  "productId": "c07a181b-3d55-4d47-ad68-9c1e324d4496",
+  "name": "Hask Curl Care Shampoo (dm/Müller: 'HASK Shampoo curls + coconut oil'; US: 'Curls + Coconut Oil, Argan Oil & Vitamin E Shampoo')",
+  "brand": "Hask",
+  "packSize": "473 ml",
+  "gtins": [
+    "071164341438"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/3123986/hask-shampoo-curls-coconut-oil",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "071164341438 (page text 'GTIN'; dm-Artikelnummer 3123986; 473 ml)",
+      "inciVerbatim": "Ingredients: Aqua/Water/Eau, Sodium C14-16 olefin sulfonate, Cocamide MIPA, Cocamidopropyl betaine, Glycerin, Sodium chloride, Cocos nucifera (coconut) oil, Argania spinosa (argan) kernel oil, Tocopheryl acetate (vitamin E), Panthenol, Coco-glucoside, Polyimide- 1*, Polyquaternium-10*, Hydrogenated palm glycerides citrate, Polyquaternium-7, Glyceryl oleate, Tocopherol, Guar hydroxypropyltrimonium chloride, Sodium hydroxide, Citric acid, Glycol distearate, Sodium benzoate, Sodium salicylate, Trisodium ethylenediamine disuccinate, Isopropanolamine, Parfum/Fragrance, Hexyl cinnamal, Tetramethyl acetyloctahydronaphthalenes (*Curl Activating Complex/ Complexe d'activation des boucles)",
+      "claimsVerbatim": "Lockenshampoo | Mit Kokosöl, Arganöl und Vitamin E | Feuchtigkeitsspendend | Für alle Lockentypen | Vegan | Das Shampoo curls + coconut oil von HASK reinigt sanft und pflegt lockiges Haar. Angereichert mit einer Mischung aus Kokosöl, Arganöl und Vitamin E, spendet die Formel intensive Feuchtigkeit und kann dabei helfen, die Locken vor Schäden zu schützen. Bei jeder Haarwäsche werden Ablagerungen schonend entfernt, ohne die natürlichen Öle des Haares anzugreifen. Das Shampoo kann dazu beitragen, die natürliche Lockenstruktur zu erhalten und zu verbessern - für schwungvolle und definierte Locken ohne Frizz. | Produkteigenschaften: ohne Silikone, ohne Sulfat",
+      "directionsVerbatim": "Auf das nasse Haar auftragen, einmassieren, aufschäumen und gründlich ausspülen. Ideal für die tägliche Haarwäsche."
+    },
+    {
+      "url": "https://www.mueller.de/p/hask-shampoo-curls-coconut-oil-argan-oil-vitamin-e-PPN3192035/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_mueller_de",
+      "sourceKind": "retailer",
+      "gtinShown": "071164341438 (structured data gtin; Inhalt 473 ml)",
+      "inciVerbatim": "Aqua/Water/Eau, Sodium C14-16 olefin sulfonate, Cocamide MIPA, Cocamidopropyl betaine, Glycerin, Sodium chloride, Cocos nucifera (coconut) oil, Argania spinosa (argan) kernel oil, Tocopheryl acetate (vitamin E), Panthenol, Coco-glucoside, Polyimide- 1*, Polyquaternium-10*, Hydrogenated palm glycerides citrate, Polyquaternium-7, Glyceryl oleate, Tocopherol, Guar hydroxypropyltrimonium chloride, Sodium hydroxide, Citric acid, Glycol distearate, Sodium benzoate, Sodium salicylate, Trisodium ethylenediamine disuccinate, Isopropanolamine, Parfum/Fragrance, Hexyl cinnamal, Tetramethyl acetyloctahydronaphthalenes (*Curl Activating Complex/ Complexe d'activation des boucles)",
+      "claimsVerbatim": "Starte deinen Tag mit dem HASK Curls Shampoo. Angereichert mit einer einzigartigen Mischung aus Kokosöl, Arganöl und Vitamin E, spendet diese Formel Feuchtigkeit und schützt Locken vor Schäden und Frizz. Jede Haarwäsche entfernt sanft Ablagerungen, ohne die natürlichen Öle zu entfernen, und sorgt für schwungvolle, schwerelose Locken. | Produkteigenschaft: pflegend|reinigend | Haartyp: lockiges Haar | Eigenschaften: ohne Sulfate|ohne Silikone|vegan",
+      "directionsVerbatim": null
+    },
+    {
+      "url": "https://haskbeauty.com/products/curls-arganoil-coconutoil-vitamin-e-shampoo",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_us",
+      "sourceKind": "manufacturer_foreign",
+      "gtinShown": null,
+      "inciVerbatim": "Aqua/Water/Eau, Sodium C14-16 olefin sulfonate, Cocamide MIPA, Cocamidopropyl betaine, Glycerin, Sodium chloride, Cocos nucifera (coconut) oil, Argania spinosa (argan) kernel oil, Tocopheryl acetate (vitamin E), Panthenol, Coco-glucoside, Polyimide-1*, Polyquaternium-10*, Hydrogenated palm glycerides citrate, Polyquaternium-7, Glyceryl oleate, Tocopherol, Guar hydroxypropyltrimonium chloride, Sodium hydroxide, Citric acid, Glycol distearate, Sodium benzoate, Sodium salicylate, Trisodium ethylenediamine disuccinate, Isopropanolamine, Parfum/Fragrance, Alpha isomethyl ionone, Hexyl cinnamal, Juniperus virginiana oil, Tetramethyl acetyloctahydronaphthalenes, Vanillin (*Curl Activating Complex/Complexe d'activation des boucles)",
+      "claimsVerbatim": "Start wash day with this moisturizing shampoo that gently removes build-up without stripping away natural oils, revealing bouncy, weightless curls. | MOISTURIZES | PROTECTS CURLS | FIGHTS FRIZZ | BEST FOR All curl patterns and textures | Cleanses to remove build-up without stripping away natural oils | Hydrates and protects curl texture from damage and frizz | Made with a Curl Activating Complex for long-lasting, frizz-free curl retention and definition | Free of sulfates, parabens, phthalates, silicone, gluten, drying alcohol and artificial colors. Vegan, cruelty free and color-safe.",
+      "directionsVerbatim": "Apply to wet hair, massage into a lather and rinse thoroughly. Gentle enough for daily use."
+    }
+  ],
+  "conflicts": [
+    "INCI divergence DE vs US: the US manufacturer page (haskbeauty.com, no pack size/GTIN shown) lists three extra fragrance-allergen items that the German retailer lists (dm.de, Müller; identical) omit: 'Alpha isomethyl ionone' (right after Parfum/Fragrance), 'Juniperus virginiana oil' (right after Hexyl cinnamal) and 'Vanillin' (last). Everything else is identical and in the same order. Most plausibly a market labelling difference (EU lists only allergens above the rinse-off threshold), but it is not proven from the pack.",
+    "Claim vs INCI: dm.de, Müller and the US page claim 'ohne Sulfat(e)' / 'Free of sulfates'. The INCI contains Sodium C14-16 Olefin Sulfonate as the lead surfactant (a sulfonate, not a sulfate, so technically defensible, but a strong anionic cleanser) - marketing wording, not an INCI contradiction.",
+    "Claim vs INCI: 'Curl Activating Complex' is a branded blend; the INCI footnote maps it to Polyimide-1* and Polyquaternium-10* (both present)."
+  ],
+  "canonicalInci": [
+    "Aqua/Water/Eau",
+    "Sodium C14-16 olefin sulfonate",
+    "Cocamide MIPA",
+    "Cocamidopropyl betaine",
+    "Glycerin",
+    "Sodium chloride",
+    "Cocos nucifera (coconut) oil",
+    "Argania spinosa (argan) kernel oil",
+    "Tocopheryl acetate (vitamin E)",
+    "Panthenol",
+    "Coco-glucoside",
+    "Polyimide-1*",
+    "Polyquaternium-10*",
+    "Hydrogenated palm glycerides citrate",
+    "Polyquaternium-7",
+    "Glyceryl oleate",
+    "Tocopherol",
+    "Guar hydroxypropyltrimonium chloride",
+    "Sodium hydroxide",
+    "Citric acid",
+    "Glycol distearate",
+    "Sodium benzoate",
+    "Sodium salicylate",
+    "Trisodium ethylenediamine disuccinate",
+    "Isopropanolamine",
+    "Parfum/Fragrance",
+    "Hexyl cinnamal",
+    "Tetramethyl acetyloctahydronaphthalenes"
+  ],
+  "canonicalReason": "Two independent German GTIN-anchored retailers (dm.de page text GTIN, Müller structured-data GTIN) agree verbatim and in order; the US manufacturer page differs only by three trailing fragrance-allergen entries, preserved as a conflict (market/labelling difference, not the German pack). The '(*Curl Activating Complex ...)' footnote is not an ingredient and is excluded from the list.",
+  "inciFingerprintSha256": "8c3575d78dbb8cccd4edf7ec1b0e2859980ec328ddca8923caeae347df5fcc90",
+  "normalization": "Split the canonical raw INCI on ',' (not on commas inside locants such as '1,2-'), merged split synonym entries such as 'Aqua (Water)' / 'Aqua/Water/Eau' into one item each; per ingredient: lower-case, trim, collapse internal whitespace, remove whitespace around '/'; drop a trailing period and any leading label such as 'Inhaltsstoffe:'; keep parentheses, asterisks and hyphens as published; join the normalized ingredients with '|' and sha256 the UTF-8 string.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 3,
+  "status": "frozen_with_conflict",
+  "blockReason": null,
+  "notes": [
+    "Prior v1.3/v1.4 capture (fingerprint 1d582e99e87d6b15eb65b3848a7b5c2de008f8a441def2869db40eb4b72c0ec2, comma-joined) used the same dm.de/Müller German list; German list unchanged.",
+    "GTIN is shown by DE retailers as the 12-digit UPC '071164341438' (GTIN-13 equivalent 0071164341438). No German Hask manufacturer page was reachable; haskbeauty.de did not respond. No Hask pack photo available to this worker.",
+    "Source tier is 3: the only manufacturer page is the US one (manufacturer_foreign), which is not the German pack list.",
+    "Asterisks on Polyimide-1* and Polyquaternium-10* are kept as published (they point at the 'Curl Activating Complex' footnote); the dm/Müller typographic space in 'Polyimide- 1*' was normalised to 'Polyimide-1*'."
+  ]
+}

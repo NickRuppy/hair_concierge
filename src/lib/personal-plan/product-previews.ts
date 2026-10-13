@@ -303,6 +303,17 @@ async function assessRole(
       coverage: input.snapshot.coverage,
       hairThickness: input.snapshot.profile.hair.thickness,
       heatRoutes: stage3HeatRoutesFromSnapshot(input.snapshot),
+      dryShampooTarget:
+        category === "dry_shampoo"
+          ? {
+              scalpSensitivity: input.snapshot.profile.scalp
+                ? input.snapshot.profile.scalp.concerns.includes("irritated")
+                  ? "sensitive"
+                  : "normal"
+                : null,
+              hairColorFit: null,
+            }
+          : undefined,
       productFacts: null,
       recommendationCandidates: candidates as never,
       heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },

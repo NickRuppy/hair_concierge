@@ -1,0 +1,622 @@
+{
+  "blindId": "T218",
+  "inciFingerprintSha256": "0c25d74bac27b0957b5743836d796c5845d98cc364ff615187b93a715246f880",
+  "policyId": "shampoo-classification-v1.6",
+  "identity": {
+    "productName": "LANGHAARMÄDCHEN Shampoo Beautiful Curls",
+    "brand": "Langhaarmädchen",
+    "market": "DE",
+    "packSize": "300 ml",
+    "formulaSourceTier": 3,
+    "identityConfidence": "moderate",
+    "normalization": "No split entries; positions = packet order (normalized, one-based).",
+    "identityNotes": []
+  },
+  "claimGrading": [
+    {
+      "claim": "Shampoo für Locken und Wellen; Curly Girl; Sprungkraft; definierte Locken",
+      "source": "retailer (dm PDP, dm-exclusive brand, sourceKind retailer)",
+      "grade": "low",
+      "use": "hair_texture, not a focus (T2)"
+    },
+    {
+      "claim": "gesunden Glanz und natürliches Volumen direkt am Ansatz",
+      "source": "retailer",
+      "grade": "low",
+      "use": "shine/volume side statements"
+    },
+    {
+      "claim": "Aminosäuren-Komplex; reinigt schonend",
+      "source": "retailer",
+      "grade": "low",
+      "use": "not a focus"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low (C6): no strong anionic; the earliest prominent cleansing surfactant is the amphoteric Cocamidopropyl Betaine (3), with the mild anionic Sodium Cocoyl Isethionate (4).",
+      "counterSignal": "Isethionate is an effective mild anionic; Coco-Glucoside (19) and Sodium Isethionate (18) are post-fragrance.",
+      "neighboringAlternative": "none",
+      "ruleIds": [
+        "C6",
+        "C3",
+        "C4"
+      ],
+      "sourceIds": [
+        "formula:T218:0c25d74bac27"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3
+        },
+        {
+          "ingredient": "Sodium Cocoyl Isethionate",
+          "position": 4
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate (bounded): one cationic system Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (17) plus several light routes: Glycol Distearate (16), Glyceryl Oleate (11), Glyceryl Stearate (21), Coconut Acid (15) and humectants Glycerin (10), Sodium PCA (20). C2 not met (no early silicone or prominent payload lipid).",
+      "counterSignal": "All care routes are post-fragrance; low is realistic.",
+      "neighboringAlternative": "low",
+      "ruleIds": [
+        "C2",
+        "Section 5 anchors"
+      ],
+      "sourceIds": [
+        "formula:T218:0c25d74bac27"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Aloe Barbadensis Leaf Juice",
+          "position": 2,
+          "role": "plant juice, not a humectant route (R11)"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 10,
+          "role": "humectant, non-prominent"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 11,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 16,
+          "role": "pearlizing route"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 17,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Sodium PCA",
+          "position": 20,
+          "role": "humectant"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: one post-fragrance guar and weak refatters; no silicone, oil, butter, protein or film former. Reset is weak (mild C6), but the deposition it faces is light.",
+      "formulaFacts": [
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 17,
+          "family": "cationic_polymer"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 11,
+          "family": "weak_refatter"
+        },
+        {
+          "ingredient": "Coconut Acid",
+          "position": 15,
+          "family": "weak_refatter"
+        },
+        {
+          "ingredient": "Glyceryl Stearate",
+          "position": 21,
+          "family": "weak_refatter"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "family": "reset"
+        },
+        {
+          "ingredient": "Sodium Cocoyl Isethionate",
+          "position": 4,
+          "family": "reset"
+        }
+      ],
+      "counterSignal": "Weak reset does not offset the guar (neighbor moderate).",
+      "neighboringAlternative": "moderate",
+      "weightRecord": {
+        "canonicalFormula": {
+          "blindId": "T218",
+          "inciFingerprintSha256": "0c25d74bac27b0957b5743836d796c5845d98cc364ff615187b93a715246f880",
+          "sourceTier": 3,
+          "completeness": "complete",
+          "identityConfidence": "moderate",
+          "captureDate": "not stated in the frozen packet",
+          "normalization": "No split entries; positions = packet order (normalized, one-based)."
+        },
+        "extractedEvidence": {
+          "cationic_polymer": [
+            {
+              "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+              "position": 17
+            }
+          ],
+          "weak_refatter": [
+            {
+              "ingredient": "Glyceryl Oleate",
+              "position": 11
+            },
+            {
+              "ingredient": "Coconut Acid",
+              "position": 15
+            },
+            {
+              "ingredient": "Glyceryl Stearate",
+              "position": 21
+            }
+          ],
+          "silicone": [],
+          "payload_lipid": [],
+          "protein_film": [],
+          "film_former": [],
+          "reset": [
+            {
+              "ingredient": "Cocamidopropyl Betaine",
+              "position": 3
+            },
+            {
+              "ingredient": "Sodium Cocoyl Isethionate",
+              "position": 4
+            }
+          ],
+          "excluded": [
+            {
+              "ingredient": "Glycol Distearate",
+              "position": 16,
+              "reason": "pearlizing wax"
+            },
+            {
+              "ingredient": "Linum Usitatissimum Seed Extract",
+              "position": 8,
+              "reason": "botanical extract"
+            }
+          ],
+          "context_humectants": [
+            {
+              "ingredient": "Glycerin",
+              "position": 10
+            },
+            {
+              "ingredient": "Sodium PCA",
+              "position": 20
+            },
+            {
+              "ingredient": "PCA",
+              "position": 12
+            },
+            {
+              "ingredient": "Amino acids (Arginine 6, Serine 7, Glycine 13, Histidine 14, Aspartic Acid 22 ...)",
+              "position": 6
+            }
+          ]
+        },
+        "subjudgments": {
+          "depositionLoad": {
+            "value": "light",
+            "rationale": "Guar (17), Glyceryl Oleate (11), Coconut Acid (15), Glyceryl Stearate (21)."
+          },
+          "persistence": {
+            "value": "low",
+            "rationale": "No persistent silicone, lipid or film system."
+          },
+          "resetCapacity": {
+            "value": "weak",
+            "rationale": "C6 betaine/isethionate system."
+          }
+        },
+        "w1Check": "W1 not cited.",
+        "counterevidence": "Weak reset does not offset the guar (neighbor moderate).",
+        "unresolvedFacts": [],
+        "proposedWeightPotential": "low",
+        "whyThisBand": "Only light routes, all post-fragrance: low anchor despite weak reset.",
+        "whyNotNeighborBand": "W2: two families present, but they are one post-fragrance guar and weak_refatter esters (glyceryl oleate/stearate, coconut acid) plus humectants and amino acids; no silicone, oil, butter or film converges, so even weak reset leaves no noticeable residue.",
+        "confidence": "moderate",
+        "limitingFactor": "Weak reset does not offset the guar (neighbor moderate).",
+        "neighboringAlternative": "moderate",
+        "claimsAfterUnblind": "Revealed claims do not move the band (6.5 step 5)."
+      },
+      "ruleIds": [
+        "6.3",
+        "6.4",
+        "6.6",
+        "6.7",
+        "6.8"
+      ],
+      "sourceIds": [
+        "formula:T218:0c25d74bac27"
+      ]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "neighboringAlternative": "moisture",
+      "rationale": "General: the dominant job is curl care (hair_texture, not a focus value); the only focus-type wording (shine, root volume) is low-graded side copy without independent formula support, and there is no moisture claim to pair with the moisture_supported formula verdict.",
+      "counterSignal": "Formula humectant cluster (Glycerin 10, Sodium PCA 20, PCA 12, amino acids) would support moisture if positioned.",
+      "formulaFacts": [
+        {
+          "ingredient": "Glycerin",
+          "position": 10
+        },
+        {
+          "ingredient": "Sodium PCA",
+          "position": 20
+        }
+      ],
+      "ruleIds": [
+        "7.2",
+        "CL-SRC"
+      ],
+      "sourceIds": [
+        "reveal:retailer_dm_de"
+      ],
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": [
+          "Glycerin 10",
+          "Sodium PCA 20",
+          "PCA 12",
+          "amino acids"
+        ],
+        "repairRoutes": [],
+        "sharedRoutes": [
+          "Guar 17",
+          "Glyceryl Oleate 11",
+          "Glycol Distearate 16"
+        ],
+        "limitation": "No moisture claim."
+      },
+      "claimRole": "not_applicable"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Empty.",
+      "counterSignal": "None.",
+      "formulaFacts": [],
+      "ruleIds": [
+        "8"
+      ],
+      "sourceIds": [
+        "reveal"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Regular.",
+      "counterSignal": "No competing trigger fired.",
+      "formulaFacts": [],
+      "ruleIds": [
+        "9",
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "CL-SRC"
+      ],
+      "sourceIds": [
+        "reveal"
+      ],
+      "triggerCode": "none"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no scalp claim.",
+      "counterSignal": "None.",
+      "formulaFacts": [],
+      "ruleIds": [
+        "10"
+      ],
+      "sourceIds": [
+        "reveal"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole in the complete INCI.",
+      "neighboringAlternative": "none",
+      "counterSignal": "None: Section 11 is mechanical on the complete INCI.",
+      "formulaFacts": [],
+      "ruleIds": [
+        "11"
+      ]
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "moisture_supported",
+      "moistureRoutes": [
+        "Glycerin 10",
+        "Sodium PCA 20",
+        "PCA 12",
+        "amino acids"
+      ],
+      "repairRoutes": [],
+      "sharedRoutes": [
+        "Guar 17",
+        "Glyceryl Oleate 11",
+        "Glycol Distearate 16"
+      ],
+      "limitation": "No moisture claim."
+    },
+    "claimRole": "not_applicable",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "curls (not a focus); shine/volume side claims (low)",
+        "formulaCompatible": null,
+        "compatibleRoute": null,
+        "decisionReason": "No focus-type positioning with independent support -> general."
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [],
+        "independentRoutes": [],
+        "whyDistinct": "None.",
+        "exceptionCode": null
+      },
+      "usage": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [
+          "No moderate/high claim."
+        ],
+        "losingTriggers": [],
+        "rationale": "Regular."
+      }
+    }
+  },
+  "weightRecord": {
+    "canonicalFormula": {
+      "blindId": "T218",
+      "inciFingerprintSha256": "0c25d74bac27b0957b5743836d796c5845d98cc364ff615187b93a715246f880",
+      "sourceTier": 3,
+      "completeness": "complete",
+      "identityConfidence": "moderate",
+      "captureDate": "not stated in the frozen packet",
+      "normalization": "No split entries; positions = packet order (normalized, one-based)."
+    },
+    "extractedEvidence": {
+      "cationic_polymer": [
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 17
+        }
+      ],
+      "weak_refatter": [
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 11
+        },
+        {
+          "ingredient": "Coconut Acid",
+          "position": 15
+        },
+        {
+          "ingredient": "Glyceryl Stearate",
+          "position": 21
+        }
+      ],
+      "silicone": [],
+      "payload_lipid": [],
+      "protein_film": [],
+      "film_former": [],
+      "reset": [
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3
+        },
+        {
+          "ingredient": "Sodium Cocoyl Isethionate",
+          "position": 4
+        }
+      ],
+      "excluded": [
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 16,
+          "reason": "pearlizing wax"
+        },
+        {
+          "ingredient": "Linum Usitatissimum Seed Extract",
+          "position": 8,
+          "reason": "botanical extract"
+        }
+      ],
+      "context_humectants": [
+        {
+          "ingredient": "Glycerin",
+          "position": 10
+        },
+        {
+          "ingredient": "Sodium PCA",
+          "position": 20
+        },
+        {
+          "ingredient": "PCA",
+          "position": 12
+        },
+        {
+          "ingredient": "Amino acids (Arginine 6, Serine 7, Glycine 13, Histidine 14, Aspartic Acid 22 ...)",
+          "position": 6
+        }
+      ]
+    },
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "light",
+        "rationale": "Guar (17), Glyceryl Oleate (11), Coconut Acid (15), Glyceryl Stearate (21)."
+      },
+      "persistence": {
+        "value": "low",
+        "rationale": "No persistent silicone, lipid or film system."
+      },
+      "resetCapacity": {
+        "value": "weak",
+        "rationale": "C6 betaine/isethionate system."
+      }
+    },
+    "w1Check": "W1 not cited.",
+    "counterevidence": "Weak reset does not offset the guar (neighbor moderate).",
+    "unresolvedFacts": [],
+    "proposedWeightPotential": "low",
+    "whyThisBand": "Only light routes, all post-fragrance: low anchor despite weak reset.",
+    "whyNotNeighborBand": "W2: two families present, but they are one post-fragrance guar and weak_refatter esters (glyceryl oleate/stearate, coconut acid) plus humectants and amino acids; no silicone, oil, butter or film converges, so even weak reset leaves no noticeable residue.",
+    "confidence": "moderate",
+    "limitingFactor": "Weak reset does not offset the guar (neighbor moderate).",
+    "neighboringAlternative": "moderate",
+    "claimsAfterUnblind": "Revealed claims do not move the band (6.5 step 5)."
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal; T4: neighbor weightPotential->moderate gives acceptable (lower tier) -> review_thickness_boundary"
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal; T4: no neighbor gives a lower final tier"
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W low, C moderate -> acceptable; T4: no neighbor gives a lower final tier"
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential low -> light (1:1)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "confidence": "moderate",
+        "sOrdinaryWays": [
+          1
+        ],
+        "rationale": "Ordinary (way 1): no E2 claim; retailer copy only -> moderate.",
+        "ruleIds": [
+          "S-ORDINARY",
+          "13.8"
+        ]
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "gentle",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength low, D1 false -> gentle."
+    },
+    "explicitResetPositioning": {
+      "value": false,
+      "confidence": "high",
+      "rationale": "D1 false: no tiefenrein/deep clean/clarifying shampoo/detox-reinigung stem in name or a manufacturer/pack claim, and no occasional-use directions."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "rationale": "D2 requires strong cleansing, clarifying focus, occasional_reset and D1 true; not met."
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "light",
+        "tier": "ideal",
+        "bucketExpectedIntensity": "regular",
+        "liveMatch": "supportive"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "light",
+        "tier": "ideal",
+        "bucketExpectedIntensity": "regular",
+        "liveMatch": "supportive"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "light",
+        "tier": "acceptable",
+        "bucketExpectedIntensity": "regular",
+        "liveMatch": "supportive"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine"
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "researchCombinationDetail": "Not a dandruff-primary product; E2b layer 2 does not apply."
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "moisture (provisional, low)",
+      "final": "general (moderate)",
+      "evidence": "reveal shows no moisture positioning; curl positioning only",
+      "reason": "A formula route without matching positioning does not create a focus."
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedBand": true,
+    "threeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "comparisonWithEarlierValuesOutsideLane": true,
+    "blindRecordUnchangedAfterFreeze": true
+  },
+  "uncertainties": []
+}

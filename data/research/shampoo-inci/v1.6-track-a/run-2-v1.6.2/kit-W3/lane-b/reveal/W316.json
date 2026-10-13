@@ -1,0 +1,28 @@
+{
+  "blindId": "W316",
+  "productName": "Syoss Intense Curls Locken Shampoo",
+  "brand": "Syoss",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "LOCKEN SHAMPOO INTENSE CURLS. Tiefenpflegende Formel mit 3% Panthenol-Feuchtigkeits-Komplex, stärkt das Haar von innen. Für rundum schönes und gesund aussehendes Haar. Produkt Details: Mit 3% Panthenol-Feuchtigkeits-Komplex; Reinigt sanft die Kopfhaut und welliges, lockiges Haar; Nährt und sorgt für definierte Locken und Wellen; Spendet langanhaltende Feuchtigkeit. (JSON-LD description: Für gewelltes, lockiges Haar)",
+      "directionsVerbatim": "Anwendung für professionelle Ergebnisse: Sanft im nassen Haar verteilen und gründlich ausspülen. Anschließend eine Tiefenspülung verwenden"
+    },
+    {
+      "sourceType": "retailer_rossmann_de_exact_gtin",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "SYOSS Shampoo Intense Curls – Locken Shampoo für gewelltes, lockiges Haar mit Panthenol-Feuchtigkeits-Komplex. Das SYOSS Intense Curls Shampoo gibt gewelltem und lockigem Haar Feuchtigkeit und Definition. Mit seinem 3% Panthenol-Feuchtigkeits-Komplex stärkt das Locken Shampoo Naturlocken und -wellen von innen. Beim Haarewaschen werden die Haare sanft gereinigt, genährt und erhalten langanhaltend Feuchtigkeit. Die Formel enthält 88% Inhaltsstoffe natürlichen Ursprungs inklusive Wasser und der Flaschenkörper des Shampoos besteht aus 100% recyceltem Plastik (Kappe ausgenommen).",
+      "directionsVerbatim": "Sanft im nassen Haar verteilen und ausspülen. Nutze anschließend eine Spülung."
+    },
+    {
+      "sourceType": "retailer_dm_de_exact_gtin",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Locken-Shampoo; Mit 3 % Panthenol-Feuchtigkeits-Komplex; Für definierte Locken und Wellen; Für Definition und Pflege. Das Intense Curls Shampoo von Syoss ist speziell für gewelltes und lockiges Haar entwickelt. Mit einem 3 % Panthenol-Feuchtigkeits-Komplex versorgt es die Haare mit intensiver Feuchtigkeit und sorgt gleichzeitig für eine klare Definition der Locken. Dieses Locken Shampoo stärkt Naturlocken und -wellen von innen, sodass sie voller Leben und Sprungkraft erscheinen. Die sanfte Reinigung sorgt für eine gründliche Pflege und spendet langanhaltende Feuchtigkeit. Ein unverzichtbares Produkt für alle, die ihre Locken optimal pflegen und zur Geltung bringen möchten.",
+      "directionsVerbatim": "Sanft im nassen Haar verteilen und ausspülen. Nutze anschließend eine Spülung."
+    }
+  ]
+}

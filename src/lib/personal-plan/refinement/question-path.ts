@@ -5,6 +5,7 @@ import type {
   DryShampooVisibleHairColor,
   HeatProtectionConsistency,
   NightProtection,
+  NightWear,
   OilPurpose,
   PersonalPlanRefinementAnswersV1,
   ProductFrequency,
@@ -27,6 +28,7 @@ import {
   DRY_SHAMPOO_VISIBLE_HAIR_COLORS,
   DRYING_ROUTES,
   HEAT_PROTECTION_CONSISTENCIES,
+  NIGHT_WEARS,
   OIL_PURPOSES,
   SCALP_IRRITATION_DETAILS,
   STAGE2_MODULES,
@@ -41,8 +43,27 @@ import { PRODUCT_FREQUENCIES } from "@/lib/vocabulary/frequencies"
 import {
   createStage2HeatEventId,
   getSelectedStage2HeatEventSources,
+  ignoresStoredStage2HeatProtection,
+  isDiffuserAnsweredWithoutProtection,
   requiresStage2HeatProtection,
+  stage2HeatRuleOptions,
 } from "./heat-events"
+import type { ToolFamily } from "@/lib/personal-plan/tools/contracts"
+import {
+  careFactsFromToolInventory,
+  dryingRouteOptionsFromToolInventory,
+  isToolOverviewAnswerValid,
+  isToolPageAnswerValid,
+  nightProtectionWithWear,
+  resolvedToolInventory,
+  type ToolDerivedCareFacts,
+} from "@/lib/personal-plan/tools/facts"
+import {
+  isToolFormPageKey,
+  toolFormPage,
+  toolFormPagesForFamilies,
+  type ToolFormPageKey,
+} from "@/lib/personal-plan/tools/labels"
 
 const BASE_QUESTION_IDS: Stage2QuestionId[] = ["current_product_categories", "wet_wash_frequency"]
 const END_QUESTION_IDS: Stage2QuestionId[] = [
@@ -97,6 +118,15 @@ export function pruneStage2Answers(input: PathInput): Stage2PrunedAnswers {
     remove("dryShampooVisibleHairColor")
   }
 
+  if (input.triggerContext.toolsEnabled === true) {
+    // Rev. 6: hair that cannot be tied is not asked how it is worn at night.
+    if (!isStage2NightWearApplicable(input.triggerContext)) remove("nightWear")
+    if (normalizeToolForms(answers)) prunedAnswerKeys.push("toolForms")
+    applyDerivedToolCareFacts(answers)
+  }
+  // Rollout off is non-destructive: tool answers are hidden from the path, never deleted, so a
+  // rollback cannot erase reported ownership on the next ordinary save.
+
   if (
     answers.towel &&
     (!answers.towel.material || answers.towel.material === "no_towel") &&
@@ -142,6 +172,22 @@ export function getOrderedQuestionIds(
     if (answers.dryShampooBridgePreference === "accept") ids.push("dry_shampoo_visible_hair_color")
   }
   if (categories.includes("oil")) ids.push("oil_purposes")
+  if (triggerContext.toolsEnabled === true) {
+    // Rev. 5: Deine Tools before Gewohnheiten, and the things are asked once — in the tools.
+    // Further heat tools and night protection are derived from the pages, so their
+    // Gewohnheiten questions leave the path; the towel question keeps the technique.
+    ids.push(...getToolQuestionIds(triggerContext, answers))
+    // „Kein Handtuch" derived from the textiles page leaves nothing to ask about the towel.
+    if (getStage2ToolDerivedCareFacts(triggerContext, answers)?.towelMaterial !== "no_towel") {
+      ids.push("towel_handling")
+    }
+    ids.push("drying_routes")
+    ids.push(...getSelectedStage2HeatEventSources(answers).map(createStage2HeatEventId))
+    // Rev. 6: Gewohnheiten closes with how the hair is worn at night (Abtrocknen → Trocknen →
+    // Hitze → Nachts).
+    if (isStage2NightWearApplicable(triggerContext)) ids.push("night_wear")
+    return ids
+  }
   ids.push(...END_QUESTION_IDS.slice(0, 3))
   ids.push(...getSelectedStage2HeatEventSources(answers).map(createStage2HeatEventId))
   ids.push(...END_QUESTION_IDS.slice(3))
@@ -149,10 +195,128 @@ export function getOrderedQuestionIds(
 }
 
 /**
+ * Whether `night_wear` is on the path: rollout on and a hair length that can be tied. A short
+ * (`very_short` / `short`) quiz length skips it; an unknown length asks.
+ */
+export function isStage2NightWearApplicable(triggerContext: Stage2TriggerContext): boolean {
+  if (triggerContext.toolsEnabled !== true) return false
+  return triggerContext.hairLength !== "very_short" && triggerContext.hairLength !== "short"
+}
+
+/**
+ * The tools block: the overview, then — once it is answered — one page per page key of every
+ * ticked family, in wash-day order. Empty while the rollout is off.
+ */
+export function getToolQuestionIds(
+  triggerContext: Stage2TriggerContext,
+  answers: PersonalPlanRefinementAnswersV1,
+): Stage2QuestionId[] {
+  if (triggerContext.toolsEnabled !== true) return []
+  const ids: Stage2QuestionId[] = ["tools_overview"]
+  if (!isToolOverviewAnswerValid(answers.toolFamiliesWithSomething)) return ids
+  for (const page of toolFormPagesForFamilies(answers.toolFamiliesWithSomething)) {
+    ids.push(`tools:${page.pageKey}`)
+  }
+  return ids
+}
+
+/**
+ * The care facts the settled tool pages derive (`careFactsFromToolInventory`), or `null` while
+ * the rollout is off. A key is present only once its source pages are settled.
+ */
+export function getStage2ToolDerivedCareFacts(
+  triggerContext: Stage2TriggerContext,
+  answers: PersonalPlanRefinementAnswersV1,
+): ToolDerivedCareFacts | null {
+  if (triggerContext.toolsEnabled !== true) return null
+  return careFactsFromToolInventory(resolvedToolInventory(answers))
+}
+
+/**
+ * The drying routes the Gewohnheiten page offers: with the rollout on and the airflow page
+ * settled, `air_dry` plus the routes the owned airflow forms back; otherwise every route.
+ * The UI renders exactly these options; a stored answer outside them is incomplete.
+ */
+export function getStage2DryingRouteOptions(
+  triggerContext: Stage2TriggerContext,
+  answers: PersonalPlanRefinementAnswersV1,
+): readonly DryingRoute[] {
+  if (triggerContext.toolsEnabled !== true) return DRYING_ROUTES
+  return dryingRouteOptionsFromToolInventory(resolvedToolInventory(answers)) ?? DRYING_ROUTES
+}
+
+/**
+ * Whether the towel material comes from the textiles page, so the towel question asks only
+ * the technique (and leaves the path entirely for a derived „kein Handtuch"). False while the
+ * rollout is off or the textiles family is not settled yet.
+ */
+export function isStage2TowelMaterialDerived(
+  triggerContext: Stage2TriggerContext,
+  answers: PersonalPlanRefinementAnswersV1,
+): boolean {
+  return getStage2ToolDerivedCareFacts(triggerContext, answers)?.towelMaterial !== undefined
+}
+
+/**
+ * Per-page normalization (rollout on): keys that are not a page are dropped (the August drafts
+ * stored one array per family), and once the overview is answered every page of an unticked
+ * family holds the explicit none it stands for. Mutates `answers`; reports whether it changed.
+ */
+function normalizeToolForms(answers: PersonalPlanRefinementAnswersV1): boolean {
+  if (!answers.toolForms) return false
+  const ticked = isToolOverviewAnswerValid(answers.toolFamiliesWithSomething)
+    ? new Set<ToolFamily>(answers.toolFamiliesWithSomething)
+    : null
+  let changed = false
+  const next: Partial<Record<ToolFormPageKey, (typeof answers.toolForms)[ToolFormPageKey]>> = {}
+  for (const [key, forms] of Object.entries(answers.toolForms)) {
+    if (!isToolFormPageKey(key)) {
+      changed = true
+      continue
+    }
+    const page = toolFormPage(key)
+    if (ticked && page && !ticked.has(page.family) && (forms?.length ?? 0) > 0) {
+      next[key] = []
+      changed = true
+      continue
+    }
+    next[key] = forms
+  }
+  if (changed) answers.toolForms = next
+  return changed
+}
+
+/**
+ * Writes the derived thing-fields into the answers (rollout on), so heat events, validation,
+ * the plan and the facts write all read one value. Before its source pages are settled a
+ * field keeps whatever the member answered earlier.
+ */
+function applyDerivedToolCareFacts(answers: PersonalPlanRefinementAnswersV1): void {
+  const derived = careFactsFromToolInventory(resolvedToolInventory(answers))
+  if (derived.additionalHeatTools) answers.additionalHeatTools = derived.additionalHeatTools
+  if (derived.nightProtection) {
+    // Things from the night page + the technique of `night_wear` (Rev. 6).
+    answers.nightProtection = nightProtectionWithWear(
+      derived.nightProtection,
+      isOneOf<NightWear>(answers.nightWear, NIGHT_WEARS) ? answers.nightWear : undefined,
+      answers.nightProtection,
+    )
+  }
+  if (derived.towelMaterial) {
+    const technique = answers.towel?.technique
+    answers.towel = {
+      material: derived.towelMaterial,
+      ...(technique !== undefined ? { technique } : {}),
+    }
+  }
+}
+
+/**
  * Total mapping from every canonical Stage 2 question id to its module. Source of truth for the
  * split: section A ("Was du heute benutzt") = products, section B ("Wie du dein Haar behandelst")
- * = habits. Derived heat-event questions (`heat:<source>`) belong to habits. Fixed two-value
- * model — no abstraction for hypothetical further modules.
+ * = habits. Derived heat-event questions (`heat:<source>`) belong to habits; the tool questions
+ * (`tools_overview`, `tools:<pageKey>`) belong to tools. Fixed model — no abstraction for
+ * hypothetical further modules.
  */
 const STAGE2_QUESTION_MODULE_BY_ID: Record<Stage2StaticQuestionId, Stage2Module> = {
   current_product_categories: "products",
@@ -165,10 +329,12 @@ const STAGE2_QUESTION_MODULE_BY_ID: Record<Stage2StaticQuestionId, Stage2Module>
   drying_routes: "habits",
   additional_heat_tools: "habits",
   night_protection: "habits",
+  night_wear: "habits",
 }
 
 export function getStage2QuestionModule(questionId: Stage2QuestionId): Stage2Module {
   if (questionId.startsWith("heat:")) return "habits"
+  if (questionId === "tools_overview" || questionId.startsWith("tools:")) return "tools"
   const questionModule = STAGE2_QUESTION_MODULE_BY_ID[questionId as Stage2StaticQuestionId]
   if (!questionModule) throw new Error(`Unmapped Stage 2 refinement question id: ${questionId}`)
   return questionModule
@@ -178,7 +344,8 @@ export function getStage2QuestionModule(questionId: Stage2QuestionId): Stage2Mod
  * Given the current dynamic ordered path and completed question ids, groups them per module:
  * its question ids (in path order), which are completed vs open, and a module status (`open`
  * when it has at least one unanswered question on the current path, `complete` once all its
- * current-path questions are answered). Pure/deterministic — no I/O.
+ * current-path questions are answered, `not_applicable` when it has no question on the path at
+ * all). Pure/deterministic — no I/O.
  */
 export function getStage2ModulePathStates(
   orderedQuestionIds: readonly Stage2QuestionId[],
@@ -189,10 +356,11 @@ export function getStage2ModulePathStates(
     questionIds: [],
     completedQuestionIds: [],
     openQuestionIds: [],
-    status: "complete",
+    status: "not_applicable",
   })
   const states: Record<Stage2Module, Stage2ModulePathState> = {
     products: emptyModuleState(),
+    tools: emptyModuleState(),
     habits: emptyModuleState(),
   }
 
@@ -204,10 +372,29 @@ export function getStage2ModulePathStates(
     )
   }
   for (const stage2Module of STAGE2_MODULES) {
-    states[stage2Module].status =
-      states[stage2Module].openQuestionIds.length > 0 ? "open" : "complete"
+    const state = states[stage2Module]
+    state.status =
+      state.questionIds.length === 0
+        ? "not_applicable"
+        : state.openQuestionIds.length > 0
+          ? "open"
+          : "complete"
   }
   return states
+}
+
+/**
+ * The closing check: every module is either answered (`complete`) or has nothing to ask
+ * (`not_applicable`). Only then does a module completion close the draft.
+ */
+export function areAllStage2ModulesSettled(
+  states: Record<Stage2Module, Stage2ModulePathState>,
+): boolean {
+  return STAGE2_MODULES.every(
+    (stage2Module) =>
+      states[stage2Module].status === "complete" ||
+      states[stage2Module].status === "not_applicable",
+  )
 }
 
 export function resolveStage2Path(input: PathInput): Stage2PathState {
@@ -220,7 +407,8 @@ export function resolveStage2RefinementContract(input: PathInput): Stage2Refinem
   const orderedQuestionIds = getOrderedQuestionIds(input.triggerContext, pruned.answers)
   const completedQuestionIds = orderedQuestionIds.filter(
     (id) =>
-      pruned.completedQuestionIds.includes(id) && isStage2QuestionAnswerValid(id, pruned.answers),
+      pruned.completedQuestionIds.includes(id) &&
+      isStage2QuestionAnswerValid(id, pruned.answers, input.triggerContext),
   )
   const firstUnresolvedQuestionId =
     orderedQuestionIds.find((id) => !completedQuestionIds.includes(id)) ?? null
@@ -232,7 +420,7 @@ export function resolveStage2RefinementContract(input: PathInput): Stage2Refinem
     prunedAnswerKeys: pruned.prunedAnswerKeys,
   }
   const validationErrors = orderedQuestionIds.flatMap((questionId) =>
-    isStage2QuestionAnswerValid(questionId, pruned.answers)
+    isStage2QuestionAnswerValid(questionId, pruned.answers, input.triggerContext)
       ? []
       : [`${questionId} is invalid or incomplete`],
   )
@@ -281,12 +469,27 @@ function isOrderedKnownArray<T extends string>(
  * Whether the stored answer for one canonical question is structurally usable.
  * The single validity oracle for the path model — also the resolver's test for
  * "this question is still open" (see `assumed-defaults.ts`).
+ *
+ * `triggerContext` matters only for the rollout-on drying filter: with the rollout on, a
+ * drying answer must stay within `getStage2DryingRouteOptions`. Without it the check is
+ * today's.
  */
 export function isStage2QuestionAnswerValid(
   questionId: Stage2QuestionId,
   answers: PersonalPlanRefinementAnswersV1,
+  triggerContext?: Stage2TriggerContext,
 ): boolean {
-  if (questionId.startsWith("heat:")) return isHeatEventAnswerValid(questionId, answers)
+  if (questionId.startsWith("heat:"))
+    return isHeatEventAnswerValid(questionId, answers, triggerContext)
+  if (questionId === "tools_overview") {
+    return isToolOverviewAnswerValid(answers.toolFamiliesWithSomething)
+  }
+  if (questionId.startsWith("tools:")) {
+    const pageKey = questionId.slice("tools:".length)
+    return (
+      isToolFormPageKey(pageKey) && isToolPageAnswerValid(pageKey, answers.toolForms?.[pageKey])
+    )
+  }
   switch (questionId) {
     case "current_product_categories":
       return isOrderedKnownArray(answers.currentProductCategories, STAGE2_PRODUCT_CATEGORIES)
@@ -312,7 +515,13 @@ export function isStage2QuestionAnswerValid(
     case "towel_handling":
       return isTowelHandlingValid(answers)
     case "drying_routes":
-      return isOrderedKnownArray<DryingRoute>(answers.dryingRoutes, DRYING_ROUTES)
+      return (
+        isOrderedKnownArray<DryingRoute>(answers.dryingRoutes, DRYING_ROUTES) &&
+        (triggerContext?.toolsEnabled !== true ||
+          answers.dryingRoutes.every((route) =>
+            getStage2DryingRouteOptions(triggerContext, answers).includes(route),
+          ))
+      )
     case "additional_heat_tools":
       return isOrderedKnownArray<AdditionalHeatTool>(
         answers.additionalHeatTools,
@@ -320,6 +529,8 @@ export function isStage2QuestionAnswerValid(
       )
     case "night_protection":
       return isOrderedKnownArray<NightProtection>(answers.nightProtection, NIGHT_PROTECTIONS)
+    case "night_wear":
+      return isOneOf<NightWear>(answers.nightWear, NIGHT_WEARS)
   }
   return false
 }
@@ -332,14 +543,28 @@ function isTowelHandlingValid(answers: PersonalPlanRefinementAnswersV1): boolean
     : isOneOf<TowelTechnique>(towel.technique, TOWEL_TECHNIQUES)
 }
 
+/**
+ * Heat-event validity. A Diffusor is plain blow-drying under the Diffusor rule: it needs no
+ * protection answer, and a stored one is ignored — never a reason to re-open the question. The
+ * read is tolerant everywhere: a Diffusor event WITHOUT a protection answer was answered under
+ * the rule (a rollout-off member's always carries one), so it stays complete in the rollout-off
+ * scanner context too; a stored answer is valid with the rule on or without a trigger context.
+ * (New rollout-off answers still must carry it: `saveStage2SessionAnswer`.)
+ */
 function isHeatEventAnswerValid(
   questionId: Stage2QuestionId,
   answers: PersonalPlanRefinementAnswersV1,
+  triggerContext?: Stage2TriggerContext,
 ): boolean {
   const source = questionId.slice("heat:".length) as Stage2HeatEventSource
   const event = answers.heatEvents?.[questionId]
   if (!event || !isOneOf<ProductFrequency>(event.frequency, PRODUCT_FREQUENCIES)) return false
-  return requiresStage2HeatProtection(source)
+  const rule = triggerContext
+    ? stage2HeatRuleOptions(triggerContext)
+    : ({ diffuserAsBlowDry: true } as const)
+  if (ignoresStoredStage2HeatProtection(source, rule)) return true
+  if (isDiffuserAnsweredWithoutProtection(source, event)) return true
+  return requiresStage2HeatProtection(source, rule)
     ? isOneOf<HeatProtectionConsistency>(event.protectionConsistency, HEAT_PROTECTION_CONSISTENCIES)
     : event.protectionConsistency === undefined
 }

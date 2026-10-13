@@ -525,7 +525,8 @@ test("ordinary lead capture ignores leftover migration cookies unless recovery i
       })) as never,
       createAdminClient: (() => ({
         ...existingLeadClient(),
-        rpc: async () => {
+        rpc: async (name: string) => {
+          if (name === "is_known_quiz_lead_email") return { data: false, error: null }
           migrationRpcCalled = true
           throw Error("ordinary flow must not call migration RPC")
         },
@@ -839,7 +840,8 @@ test("plain migration query parameters carry no authority without the signed coo
           }),
         }),
       }),
-      rpc: async () => {
+      rpc: async (name: string) => {
+        if (name === "is_known_quiz_lead_email") return { data: false, error: null }
         migrationRpcCalled = true
         throw Error("plain query must not call migration rpc")
       },

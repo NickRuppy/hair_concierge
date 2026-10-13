@@ -1,0 +1,313 @@
+{
+  "blindId": "VT23",
+  "lane": "lane-b",
+  "phase": "final (post-unblind reconciliation)",
+  "standard": "shampoo-classification-v1.6.1 candidate text (unlocked)",
+  "identity": {
+    "brand": "Davines",
+    "productName": "NaturalTech Purifying Shampoo",
+    "packSize": "250 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "d3dffe2380e8a781137164c899be8d8862b773c9122a91c8fac8668bc4d25462",
+    "normalization": "ID-2: AQUA / WATER / EAU, the two Taraxacum synonyms and PARFUM / FRAGRANCE each one entry; normalized one-based positions of the 21-entry list",
+    "completeness": "complete (source tier 2, identity confidence high)",
+    "e3ProminenceCutoff": "PARFUM / FRAGRANCE @21 -> positions 1-20 prominent",
+    "identityNotes": []
+  },
+  "formulaFacts": {
+    "surfactantSystem": [
+      "Cocamidopropyl Betaine @2 - amphoteric, earliest prominent cleansing surfactant",
+      "Sodium Lauryl Glucose Carboxylate @4 - mild anionic (carboxylate; assigned by chemistry, C3)",
+      "Lauryl Glucoside @6 - nonionic glucoside",
+      "Sodium Lauroyl Methyl Isethionate @7 - mild anionic",
+      "Coco-Glucoside @12 - nonionic glucoside",
+      "No strong anionic",
+      "Not cleansing: Polysorbate 20 @13, Acrylates/C10-30 Alkyl Acrylate Crosspolymer @8"
+    ],
+    "conditioningAndWeightRoutes": {
+      "silicone": [],
+      "cationic_polymer": [],
+      "cationic_conditioner": [],
+      "payload_lipid": [],
+      "weak_refatter": [
+        "Glyceryl Oleate @10"
+      ],
+      "protein_film": [],
+      "film_former": [],
+      "pearlizing_fatty_route_for_C2": [],
+      "humectantContext": [
+        "Glycerin @5",
+        "Propylene Glycol @3 (solvent)"
+      ],
+      "excluded": [
+        "Acrylates/C10-30 Alkyl Acrylate Crosspolymer @8 (anionic acrylate suspending agent, 6.4)",
+        "Polysorbate 20 @13 (solubilizer)",
+        "Taraxacum Officinale Root Extract @11 (extract)",
+        "Trisodium Ethylenediamine Disuccinate @17 (chelator)"
+      ]
+    },
+    "actives": [
+      "Selenium Sulfide @9 - recognized anti-dandruff active (DS1)"
+    ],
+    "scalpExposureFlags": [
+      "Parfum @21 last; Linalool @20; no cooling agent, no essential oil",
+      "mild C6 chassis",
+      "E4 comfort list: no route",
+      "E4 humectant/refatting routes prominent: Glycerin @5, Glyceryl Oleate @10"
+    ]
+  },
+  "claimEvidence": [
+    "pack_front (high): 'NATURALTECH / PURIFYING SHAMPOO / SHAMPOO FOR SCALP WITH OILY OR DRY DANDRUFF / ... WITH DANDELION PHYTOCEUTICALS'",
+    "manufacturer_foreign EN (low): 'Clarifying and detoxifying shampoo to fight microbial attacks and dandruff ... deep cleansed without causing irritation' / 'Intensive treatment: twice a week for maximum 3 weeks. Maintenance treatment: once a week for 6 weeks.'"
+  ],
+  "reconciliation": [
+    "focusPrimary general low -> scalp_active high (pack-front dandruff claim + Selenium Sulfide).",
+    "usageRole regular low -> treatment high (U3).",
+    "scalpComfortTarget not_targeted low -> high; focusSecondary [] low -> [] moderate.",
+    "'oily or dry dandruff' read as a dandruff claim only (E2 English: oily dandruff is dandruff) -> no oily/dry wording for E2b; researchCombinationTargets []. 'Dandelion' maps to Taraxacum Officinale Root Extract @11. Formula properties unchanged."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Low by C6: no strong anionic; the earliest prominent cleansing surfactant is the amphoteric Cocamidopropyl Betaine @2, followed by glucosides and mild anionics. No C3b member involved.",
+      "ruleIds": [
+        "C3",
+        "C4",
+        "C6"
+      ],
+      "counterSignal": "None material; betaine-led C6 chassis.",
+      "sourceIds": [
+        "formula-pass/VT23.json (hash-pinned blind record)",
+        "stage-A formula packet VT23"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Low: cleansing-led architecture with no silicone, cationic polymer, cationic conditioner or payload lipid; only Glycerin @5 and the weak refatter Glyceryl Oleate @10.",
+      "ruleIds": [
+        "5",
+        "C2"
+      ],
+      "counterSignal": "Glyceryl Oleate and glycerin give light refatting only.",
+      "sourceIds": [
+        "formula-pass/VT23.json (hash-pinned blind record)",
+        "stage-A formula packet VT23"
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "evidence": {
+        "silicone": [],
+        "cationic_polymer": [],
+        "cationic_conditioner": [],
+        "payload_lipid": [],
+        "weak_refatter": [
+          "Glyceryl Oleate @10"
+        ],
+        "protein_film": [],
+        "film_former": [],
+        "reset": [
+          "amphoteric @2",
+          "mild anionic @4, @7",
+          "nonionic @6, @12"
+        ],
+        "humectantContext": [
+          "Glycerin @5"
+        ],
+        "excluded": [
+          "Acrylates/C10-30 Alkyl Acrylate Crosspolymer @8",
+          "Polysorbate 20 @13"
+        ],
+        "unresolved": []
+      },
+      "depositionLoad": "light - only a weak refatter",
+      "persistence": "low - glyceryl oleate is lightly retained",
+      "resetCapacity": "weak - mild C6 chassis, but nothing substantive to remove",
+      "counterevidence": "Selenium sulfide particles are suspended by the acrylate crosspolymer and may deposit on the scalp, but that is an active, not a hair-conditioning residue family.",
+      "whyThisBand": "Low: deposition is absent apart from one weak refatter; no architecture supports reduced movement or lift.",
+      "whyNotNeighborBand": "Not moderate: no depositing system (silicone, cationic, lipid, protein, film former) is present; a single weak refatter plus humectant cannot plausibly leave noticeable residue even against weak reset.",
+      "confidenceLimitingFactor": "None material.",
+      "rationale": "Low: only Glyceryl Oleate @10; no payload lipid (W-line Sodium Benzoate @14).",
+      "ruleIds": [
+        "6.6",
+        "W-LINE",
+        "W2"
+      ],
+      "counterSignal": "Suspended selenium sulfide particles may deposit on the scalp (active, not a conditioning residue).",
+      "sourceIds": [
+        "formula-pass/VT23.json (hash-pinned blind record)",
+        "stage-A formula packet VT23"
+      ],
+      "wLineRecord": {
+        "wLine": "Sodium Benzoate @14",
+        "candidateClasses": [
+          "preservative_or_capped_active"
+        ],
+        "cap": "e3Point @21 (Parfum)",
+        "alphabeticalRun": "none",
+        "skipped": [
+          "w_line_skipped:Selenium Sulfide@9 - clause (ii) failed: cleansing surfactant Coco-Glucoside @12 listed after it and before the cap"
+        ],
+        "plausibilityOfWLine": "Sodium Benzoate @14: (i) cleansing surfactants before; (ii) between @14 and @21 only Citric Acid, Sodium Chloride, chelator, Potassium Sorbate, 2-Bromo-2-Nitropropane-1,3-Diol (not on list b), Linalool - no cleansing surfactant, alkanolamide or pearlizing wax",
+        "codes": [],
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      }
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Scalp_active: problem-led product with a recognized anti-dandruff active (Selenium Sulfide @9) and anti-dandruff positioning on the pack front ('SHAMPOO FOR SCALP WITH OILY OR DRY DANDRUFF', high; English pack text counts under E1/E2 v1.6.1).",
+      "ruleIds": [
+        "7.2",
+        "E1",
+        "E2",
+        "DS1"
+      ],
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [],
+        "limitation": "Scalp decision."
+      },
+      "claimRole": "candidate",
+      "counterSignal": "Purifying/clarifying wording ('Purifying' in the name; 'Clarifying and detoxifying', 'deep cleansed' on the foreign page, low).",
+      "decisionTrace": "Claim direction: anti-dandruff (pack front, high). Formula compatible: Selenium Sulfide @9 (supported). Decision: scalp_active."
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "clarifying"
+      ],
+      "rationale": "Empty: the clarifying/deep-cleansing and shine wording is only on the foreign manufacturer page (low), and 'Purifying' in the name does not state an oily-scalp or reset job; C6 low formula would not be F6-compatible for clarifying anyway.",
+      "ruleIds": [
+        "8",
+        "F6",
+        "CL-SRC"
+      ],
+      "decisionTrace": "Empty default considered; clarifying rejected (low-graded wording; cleansing low fails F6); shine rejected (low). No exception code."
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Treatment: dandruffSupport supported and a qualifying E2 dandruff claim on the pack front (high).",
+      "ruleIds": [
+        "9",
+        "U1",
+        "U3"
+      ],
+      "triggerCode": "recognized_active_problem_led",
+      "triggerEvidence": [
+        "pack_front (high): 'SHAMPOO FOR SCALP WITH OILY OR DRY DANDRUFF'",
+        "Selenium Sulfide @9"
+      ],
+      "losingTriggers": [
+        "occasional_reset: 'deep cleansed' and the twice/once-weekly regimen are on the foreign manufacturer page (low) - D1 false"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no sensitive or dry-scalp unit graded moderate or high ('dry dandruff' is a dandruff claim; 'without causing irritation' is protective wording on a low-graded page).",
+      "ruleIds": [
+        "10",
+        "SC1",
+        "E2",
+        "E2a"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Supported: Selenium Sulfide @9 (DS1).",
+      "ruleIds": [
+        "11",
+        "DS1"
+      ]
+    }
+  },
+  "projection": {
+    "status": "projected_proposal",
+    "thicknessFit": {
+      "fine": "ideal",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFitConfidence": {
+      "fine": "high",
+      "normal": "high",
+      "coarse": "high"
+    },
+    "thicknessRationale": "T1 W low, C low (high confidence): fine ideal, normal ideal, coarse acceptable; T6 lifts nothing. No T4 flags (neighbors none).",
+    "weight": "light",
+    "weightConfidence": "high",
+    "weightRationale": "W-LIVE: weightPotential low projects 1:1 to light; confidence = weightPotential confidence.",
+    "scalpTargets": {
+      "primary": {
+        "target": "dandruff",
+        "confidence": "high",
+        "rationale": "S-DANDRUFF passes: pack-front English dandruff claim (high, E1 pack text in any language; E2 English equivalents) + dandruffSupport supported (high). Dandruff-primary: no secondary target (R17.2)."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "gentle",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength low; D1 false -> gentle. I3 recomputed with neighbor none.",
+    "explicitResetPositioning": false,
+    "explicitResetPositioningEvidence": "No D1 stem in the name ('Purifying' is not D1) or on the pack; 'deep cleansed' and the weekly regimen appear only on the foreign manufacturer page (low), which cannot make D1 true.",
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserListingConfidence": "high",
+    "deepCleanserRationale": "D1 false -> not_flagged (D2).",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "gentle",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "gentle",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "gentle",
+        "weight": "light",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_dandruff"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [],
+    "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze (lane cannot see catalog)"
+  },
+  "selfCheck": "6.11/selfCheck: formula fingerprint matches the frozen stage-A packet; claims and identity were hidden during the formula pass and the hash-pinned formula-pass record was not edited after release; no ingredient, family count or position window assigned a band (the W-line only gated payload_lipid legs); W-line derived from the frozen list per W-LINE with every skipped candidate recorded; depositionLoad, persistence and resetCapacity present with rationales; counterevidence and whyNotNeighborBand specific (W2 where it applies); confidence names its limiting factor; N-ALT neighbors consistent with confidences; projection fields derived mechanically (T1, T6, T4, W-LIVE, I1, I3, D1-D3, 13.7, 13.8); no catalog, web or other-lane input.",
+  "uncertainties": [
+    "Sodium Lauryl Glucose Carboxylate assigned to mild anionic by its carboxylate chemistry (C3 unlisted-surfactant rule); does not affect C6 (betaine is earliest).",
+    "2-Bromo-2-Nitropropane-1,3-Diol @19 is a preservative not on W-LINE list b; not a candidate.",
+    "Intensity gentle differs from the schuppen expectation (regular): rows are amber and not ranked in the dandruff role - truthful trade-off (I2), no flag."
+  ]
+}

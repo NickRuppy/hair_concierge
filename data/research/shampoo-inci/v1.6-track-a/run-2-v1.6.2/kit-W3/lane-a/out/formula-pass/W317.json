@@ -1,0 +1,129 @@
+{
+  "blindId": "W317",
+  "inciFingerprintSha256": "d633b2a5de40d8c7c27d2bbaecfb9bea84a7243e5289c4f2ca815f549280804f",
+  "phase": "formula-pass (blind, stage A only)",
+  "policy": "shampoo-classification-v1.6.2",
+  "lane": "lane-a",
+  "identity": {
+    "packSize": "300 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "moderate",
+    "normalization": "No split synonym entries; packet positions = normalized positions (ID-2). 21 entries.",
+    "e3ProminenceCutoff": "Parfum @18. Prominent = positions 1-17."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis. Defining anionic Sodium Laureth Sulfate @2 with prominent buffers Cocamidopropyl Betaine @3 and Coco-Glucoside @10; no reinforcing strong anionic. Laureth-2 @17 is a low-EO thickener (not cleansing).",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "High: C2 met with a payload lipid in place of the silicone, all elements prominent: Argania Spinosa Kernel Oil @7 (and Hydrogenated Castor Oil @16); cationic polymer Guar Hydroxypropyltrimonium Chloride @8; pearlizing route Glycol Distearate @15; listed humectant Glycerin @5. Further complementary systems: cationic conditioner Bis-(Isostearoyl/Oleoyl Isopropyl) Dimonium Methosulfate @9 and Hydrolyzed Wheat Protein @6. Multiple complementary systems converge early in the list.",
+      "ruleIds": ["C2", "R11", "W-RICH", "Section 5 anchors"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @8"],
+        "payload_lipid": ["Argania Spinosa Kernel Oil @7 (material)", "Hydrogenated Castor Oil @16 (material, waxy)"],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": ["Hydrolyzed Wheat Protein @6"],
+        "film_former": [],
+        "cationic_conditioner": ["Bis-(Isostearoyl/Oleoyl Isopropyl) Dimonium Methosulfate @9"],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @3", "Coco-Glucoside @10"],
+        "humectantContext": ["Glycerin @5"],
+        "excluded": ["Glycol Distearate @15 (pearlizing wax)", "Laureth-2 @17 (low-EO thickener)", "Prunus Amygdalus Dulcis Flower Extract @11, Pisum Sativum Sprout Extract @12 (botanical)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "wLine": "@18 Parfum",
+        "classes": ["fragrance"],
+        "cap": "e3Point @18 (Parfum)",
+        "alphabeticalRun": "none (longest ascending run 5 entries, positions 14-18)",
+        "skipped": ["w_line_skipped:Benzoic Acid@14 (clause ii: pearlizing wax Glycol Distearate @15 after it and before the cap)"],
+        "codes": [],
+        "payloadLipidMaterial": ["Argania Spinosa Kernel Oil @7", "Hydrogenated Castor Oil @16"],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "moderate",
+      "persistence": "moderate",
+      "resetCapacity": "moderate",
+      "counterevidence": "W-RICH holds (material argan oil @7 + cationic guar @8 + cationic conditioner @9); four families converge (payload_lipid, cationic_polymer, cationic_conditioner, protein_film) and argue strongly for high.",
+      "whyThisBand": "Argan oil, guar, a conditioning quat and wheat protein plausibly leave noticeable residue; an ordinary three-surfactant C1 reset bounds it.",
+      "whyNotNeighborBand": "Not high: reset is not limited (C1 with two buffers, resetCapacity moderate), so W-RICH alone does not reach the high anchor; the depositing routes cluster at positions 6-9 directly after glycerin, a zone consistent with low-percentage care additions, and there is no silicone; the convergence is real but not strong enough for a coating/movement-loss conclusion. Not low: four converging families (W2). This band is close to the boundary (see confidence).",
+      "confidenceLimitingFactor": "Closely approaches the high boundary; doses unknown. If the boundary were judged balanced, W3 would require low confidence.",
+      "rationale": "Moderate: four converging families vs ordinary reset; W-RICH recorded as counter-signal, high as neighbor.",
+      "ruleIds": ["6.6", "W-RICH", "W-LINE", "W2", "W3", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "repair",
+      "provisional": "Claim-dependent; formula-only provisional value.",
+      "careDirection": {
+        "verdict": "dual_supported",
+        "moistureRoutes": ["Glycerin @5", "Argania Spinosa Kernel Oil @7"],
+        "repairRoutes": ["Hydrolyzed Wheat Protein @6", "Bis-(Isostearoyl/Oleoyl Isopropyl) Dimonium Methosulfate @9"],
+        "sharedConditioningRoutes": ["Guar Hydroxypropyltrimonium Chloride @8", "Glycol Distearate @15"],
+        "limitation": "Both directions supported; positioning must break the tie."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Ordinary SLES chassis.",
+      "decisionTrace": "Blind: no claim; dual_supported formula; provisional general.",
+      "rationale": "Provisional general; repair or moisture if claimed (tie-break by claim).",
+      "ruleIds": ["7.3", "F1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["shine"],
+      "provisional": "Claim-dependent.",
+      "rationale": "Empty default blind.",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "frequent",
+      "triggerCode": "none",
+      "provisional": "Claim-dependent.",
+      "rationale": "Default regular blind.",
+      "ruleIds": ["Section 9"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": "SC1 positioning claim-dependent.",
+      "csa": "CSA met via listed prominent humectant/refatting routes Glycerin @5, Argania Spinosa Kernel Oil @7, Hydrogenated Castor Oil @16. No prominent E4 comfort route; MB not met (Sodium Laureth Sulfate @2 prominent strong anionic). S-SENSITIVE formula half would fail (no comfort route, no MB); S-DRY formula half passes.",
+      "counterSignals": "None prominent.",
+      "rationale": "Provisional not_targeted pending SC1.",
+      "ruleIds": ["Section 10 CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": ["Sodium Laureth Sulfate @2 (defining)", "Cocamidopropyl Betaine @3", "Coco-Glucoside @10", "Laureth-2 @17 (thickener)"],
+    "conditioningRoutes": ["Hydrolyzed Wheat Protein @6", "Argania Spinosa Kernel Oil @7", "Guar Hydroxypropyltrimonium Chloride @8", "Bis-(Isostearoyl/Oleoyl Isopropyl) Dimonium Methosulfate @9", "Glycol Distearate @15", "Hydrogenated Castor Oil @16"],
+    "humectants": ["Glycerin @5"],
+    "actives": [],
+    "exposure": ["Parfum @18", "Hexyl Cinnamal @19"],
+    "preservatives": ["Benzoic Acid @14", "Sodium Benzoate @20", "Phenoxyethanol @21"]
+  },
+  "unresolvedMaterialIngredients": []
+}

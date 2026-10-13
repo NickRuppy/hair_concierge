@@ -1,0 +1,457 @@
+{
+  "blindId": "T406",
+  "inciFingerprintSha256": "ea15e539c6477bb039c7ba86cf7ceb1d8bcc429a2f5fe581850cd59e14e15b7c",
+  "identity": {
+    "brand": "Salthouse",
+    "productName": "Salthouse Anti Schuppen",
+    "market": "DE",
+    "packSize": "250 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": [
+      "Normalized positions = packet positions.",
+      "No Parfum declared; E3 cut at Sodium Benzoate (8); prominent = 2-7."
+    ]
+  },
+  "sourcesUsed": {
+    "formula": "formula/T406.json (fingerprint ea15e539c6477bb039c7ba86cf7ceb1d8bcc429a2f5fe581850cd59e14e15b7c, source tier 2, completeness complete)",
+    "positioning": [
+      "reveal/T406.json#positioningSources[0] (manufacturer_de, packet grade moderate)",
+      "reveal/T406.json#positioningSources[1] (retailer, packet grade low)"
+    ]
+  },
+  "claimGrading": {
+    "productName": "high",
+    "manufacturer_de": "moderate",
+    "Rossmann": "low"
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "general (provisional)",
+      "final": "scalp_active",
+      "evidence": "name",
+      "reason": "7.2"
+    },
+    {
+      "property": "usageRole",
+      "blind": "regular (provisional)",
+      "final": "treatment",
+      "evidence": "dandruff claim + active",
+      "reason": "U3/U1"
+    },
+    {
+      "property": "cleansingStrength/conditioningLevel/weightPotential/dandruffSupport",
+      "blind": "see formula-pass",
+      "final": "unchanged",
+      "evidence": "formula-only properties; no material formula conflict exposed by the reveal"
+    }
+  ],
+  "cleansingStrength": {
+    "value": "moderate",
+    "confidence": "high",
+    "rationale": "C1: defining anionic Sodium Laureth Sulfate (2) (ether/sulfonate type) with prominent buffer(s) Cocamidopropyl Betaine (3) and no prominent reinforcing strong anionic -> moderate. Dead Sea salt (9) and silt (19) are not routes. Unchanged after unblinding: claims never set cleansing strength (Section 4, 3.2).",
+    "formulaFacts": [
+      {
+        "ingredient": "Sodium Laureth Sulfate",
+        "position": 2,
+        "role": "defining anionic"
+      },
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 3,
+        "role": "buffer"
+      }
+    ],
+    "counterSignal": [
+      "none material"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "formula/T406.json (fingerprint ea15e539c6477bb039c7ba86cf7ceb1d8bcc429a2f5fe581850cd59e14e15b7c, source tier 2, completeness complete)"
+    ]
+  },
+  "conditioningLevel": {
+    "value": "moderate",
+    "confidence": "moderate",
+    "rationale": "One meaningful system: prominent Hydroxypropyl Guar HPTC (6) alone; Glycerin (11) late. No silicone, lipid or pearlizer -> moderate at most. Unchanged after unblinding: claims never raise or lower conditioning (3.2, C7).",
+    "formulaFacts": [
+      {
+        "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+        "position": 6,
+        "role": "cationic polymer"
+      },
+      {
+        "ingredient": "Glycerin",
+        "position": 11,
+        "role": "humectant (not prominent)"
+      }
+    ],
+    "counterSignal": [
+      "cleansing-led short formula; guar is the only conditioning route"
+    ],
+    "neighboringAlternative": "low",
+    "sources": [
+      "formula/T406.json (fingerprint ea15e539c6477bb039c7ba86cf7ceb1d8bcc429a2f5fe581850cd59e14e15b7c, source tier 2, completeness complete)"
+    ]
+  },
+  "weightPotential": {
+    "value": "low",
+    "confidence": "moderate",
+    "rationale": "low: single guar polymer facing a moderate C1 reset; no persistent system. Unchanged after unblinding (claims cannot decide the band, 6.5).",
+    "neighboringAlternative": "moderate",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "light",
+        "rationale": "Single deposition family: one HP guar (6)."
+      },
+      "persistence": {
+        "value": "low",
+        "rationale": "Single guar in rinse-off is weakly retained; no silicone/lipid."
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C1 SLES/CAPB chassis."
+      }
+    },
+    "extractedEvidenceByFamily": {
+      "cationic_polymer": [
+        [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          6
+        ]
+      ],
+      "silicone": [],
+      "payload_lipid": [],
+      "weak_refatter": [],
+      "protein_film": [],
+      "film_former": [],
+      "anionic_surfactant": [
+        [
+          "Sodium Laureth Sulfate",
+          2
+        ]
+      ],
+      "amphoteric_surfactant": [
+        [
+          "Cocamidopropyl Betaine",
+          3
+        ]
+      ],
+      "humectant_context": [
+        [
+          "Glycerin",
+          11
+        ]
+      ]
+    },
+    "excludedIngredients": [
+      [
+        "Melaleuca Alternifolia Leaf Oil",
+        12,
+        "essential oil, excluded (6.4)"
+      ],
+      [
+        "Citrus Limon Peel Oil",
+        16,
+        "essential oil"
+      ],
+      [
+        "Citrus Sinensis Peel Oil Expressed",
+        17,
+        "essential oil"
+      ],
+      [
+        "Litsea Cubeba Fruit Oil",
+        18,
+        "essential oil"
+      ],
+      [
+        "Maris Sal",
+        9,
+        "salt"
+      ],
+      [
+        "Silt",
+        19,
+        "mineral"
+      ],
+      [
+        "Aloe Barbadensis Leaf Juice Powder",
+        14,
+        "plant juice"
+      ]
+    ],
+    "whyThisBand": "low: single guar polymer facing a moderate C1 reset; no persistent system.",
+    "whyNotNeighborBand": "Not moderate: only one deposition family, no reinforcing route (W2 not triggered); essential oils excluded.",
+    "counterEvidence": [],
+    "confidenceLimitingFactor": "Guar level unknown.",
+    "formulaFacts": [
+      {
+        "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+        "position": 6,
+        "family": "cationic_polymer"
+      },
+      {
+        "ingredient": "Sodium Laureth Sulfate",
+        "position": 2,
+        "family": "anionic_surfactant"
+      },
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 3,
+        "family": "amphoteric_surfactant"
+      },
+      {
+        "ingredient": "Glycerin",
+        "position": 11,
+        "family": "humectant_context"
+      }
+    ],
+    "counterSignal": [
+      "none material"
+    ],
+    "canonicalFormula": {
+      "fingerprint": "ea15e539c6477bb039c7ba86cf7ceb1d8bcc429a2f5fe581850cd59e14e15b7c",
+      "sourceTier": 2,
+      "completeness": "complete",
+      "identityConfidence": "high",
+      "captureDate": "not stated in packet",
+      "normalization": "Normalized positions = packet positions."
+    },
+    "unresolvedFacts": [],
+    "sources": [
+      "formula/T406.json (fingerprint ea15e539c6477bb039c7ba86cf7ceb1d8bcc429a2f5fe581850cd59e14e15b7c, source tier 2, completeness complete)"
+    ]
+  },
+  "focusPrimary": {
+    "value": "scalp_active",
+    "confidence": "high",
+    "rationale": "'Anti Schuppen' in the exact name (high) plus Piroctone Olamine (5): problem-led anti-dandruff (7.2).",
+    "formulaFacts": [
+      {
+        "ingredient": "Piroctone Olamine",
+        "position": 5
+      }
+    ],
+    "counterSignal": [
+      "comfort wording (irritiert, Juckreiz, Spannungsgefühle) is bundled with dandruff"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources",
+      "formula packet"
+    ]
+  },
+  "focusSecondary": {
+    "value": [],
+    "confidence": "high",
+    "rationale": "No lengths-care positioning.",
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources"
+    ]
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "not_applicable"
+    },
+    "claimRole": "candidate",
+    "counterSignal": [
+      "comfort wording (irritiert, Juckreiz, Spannungsgefühle) is bundled with dandruff"
+    ],
+    "neighboringAlternative": "none",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "anti-dandruff (name)",
+        "formulaCompatible": true,
+        "compatibleRoute": "Piroctone Olamine (5)",
+        "decisionReason": "7.2 problem-led"
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [],
+        "independentRoutes": [],
+        "whyDistinctFromPrimary": "none",
+        "exceptionCode": null
+      },
+      "usageRole": {
+        "default": "regular",
+        "triggerCode": "recognized_active_problem_led",
+        "triggerEvidence": [
+          "name 'Anti Schuppen' (high)",
+          "'Anti-Schuppen Wirkstoff Pirocton Olamin' (manufacturer)",
+          "Piroctone Olamine (5)"
+        ],
+        "losingTriggers": [
+          "frequent: explicit_frequent_non_strong ('Für die tägliche Haarwäsche geeignet')"
+        ],
+        "rationale": "U3; U1 precedence over frequent ('Für die tägliche Haarwäsche geeignet', manufacturer moderate, cleansing not strong), which is recorded as losing."
+      }
+    }
+  },
+  "usageRole": {
+    "value": "treatment",
+    "confidence": "high",
+    "rationale": "U3; U1 precedence over frequent ('Für die tägliche Haarwäsche geeignet', manufacturer moderate, cleansing not strong), which is recorded as losing.",
+    "triggerCode": "recognized_active_problem_led",
+    "triggerEvidence": [
+      "name 'Anti Schuppen' (high)",
+      "'Anti-Schuppen Wirkstoff Pirocton Olamin' (manufacturer)",
+      "Piroctone Olamine (5)"
+    ],
+    "losingTriggers": [
+      "frequent: explicit_frequent_non_strong ('Für die tägliche Haarwäsche geeignet')"
+    ],
+    "formulaFacts": [],
+    "counterSignal": [
+      "frequent: explicit_frequent_non_strong ('Für die tägliche Haarwäsche geeignet')"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources"
+    ]
+  },
+  "scalpComfortTarget": {
+    "value": "not_targeted",
+    "confidence": "high",
+    "rationale": "Sensitive/dry wording sits inside or next to dandruff units ('irritierter, trockener und dadurch schuppenanfälliger Kopfhaut', 'Hautproblem: Juckreiz, ..., Schuppen, ..., Spannungsgefühle'), so it is bundled (E2a/E2b) and not SC1; 'Hauttyp: empfindliche ... Haut' names skin, not scalp, and is adjacent. CSA also fails (no prominent listed route).",
+    "formulaFacts": [],
+    "counterSignal": [
+      "comfort wording present but bundled"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources",
+      "formula packet"
+    ]
+  },
+  "dandruffSupport": {
+    "value": "supported",
+    "confidence": "high",
+    "rationale": "Complete INCI contains Piroctone Olamine (5) (Section 11) -> supported (formula only; dandruff target still needs an E2 dandruff claim, S-DANDRUFF/R17.3).",
+    "neighboringAlternative": "none",
+    "formulaFacts": [
+      {
+        "ingredient": "Piroctone Olamine",
+        "position": 5,
+        "role": "recognised anti-dandruff active"
+      }
+    ],
+    "counterSignal": [
+      "none"
+    ],
+    "sources": [
+      "formula/T406.json (fingerprint ea15e539c6477bb039c7ba86cf7ceb1d8bcc429a2f5fe581850cd59e14e15b7c, source tier 2, completeness complete)"
+    ]
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal. T2: thickness/texture claims do not change fit. T4: weightPotential neighbor moderate -> acceptable (lower tier) -> review_thickness_boundary."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal. T2: thickness/texture claims do not change fit."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W low, C moderate -> acceptable. T2: thickness/texture claims do not change fit."
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential low -> 1:1 projection; confidence = weightPotential confidence."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "dandruff",
+        "confidence": "high",
+        "rationale": "S-DANDRUFF: 'Anti Schuppen' in the name (high) + supported (high). Primary dandruff, no secondary (R17.2)."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate -> regular. I3: neighbor none (high confidence, no boundary check)"
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "rationale": "D1: no D1 stem (tiefenrein / deep clean / clarifying shampoo / detox-reinigung) in name or manufacturer/pack claims, no occasional-use directions."
+    },
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_dandruff"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine (weightPotential neighbor moderate -> acceptable)"
+    ],
+    "informationalNotes": [
+      "dandruff_bundled_comfort_wording ('wirkt wohltuend bei irritierter ... schuppenanfälliger Kopfhaut'; 'Juckreiz', 'Spannungsgefühle'; manufacturer, moderate; S-SENSITIVE formula gate failed: CSA fails and no prominent E4 comfort route)"
+    ],
+    "researchCombinationTargets": []
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsAndPriorLabelsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": "Guar level unknown.",
+    "comparisonWithEarlierValuesOnlyOutsideLane": true,
+    "formulaPropertiesChangedAfterUnblinding": false
+  },
+  "uncertainties": [
+    {
+      "reading": "conditioning moderate (lone prominent guar)",
+      "alternative": "low"
+    },
+    {
+      "reading": "Neurodermitis/Psoriasis 'Basispflege' wording treated as medical, out of scope",
+      "alternative": "none"
+    }
+  ]
+}

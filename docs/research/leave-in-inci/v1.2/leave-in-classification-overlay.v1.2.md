@@ -62,7 +62,7 @@ Production (`product_leave_in_specs`): the existing `heat_activation_required bo
 - **HA-1 Directions-led.** `heatActivation` is identity data transcribed from the product's own text, like `application_stage` (§7.13): never derived from the formula, the INCI, a polymer class or the product name alone; silence → `not_required`.
 - **HA-2 Two prongs, both required for `required`:**
   (a) an **activation statement**: the manufacturer says heat activates or releases the product's effect („hitzeaktiviert", „durch Hitze aktiviert", „bei Hitzeaktivierung", „…, um zu aktivieren" with a heat step);
-  (b) a **heat-step direction**: the directions name a heat tool step after application **without offering a non-heat finish** as an alternative. „Föhnen, stylen oder an der Luft trocknen lassen" (Urban Alchemy) offers one → `not_required`. A further use sentence that names no non-heat finish (HEAT&GLOW „Zwischen den Haarwäschen nutzen, um Frizz zu kontrollieren.") does not defeat (b): the pack's activation direction governs every use it lists (ruling D-c).
+  (b) a **heat-step direction**: the directions name a heat tool step after application **without offering a non-heat finish** as an alternative. „Föhnen, stylen oder an der Luft trocknen lassen" (Urban Alchemy) offers one → `not_required`. Q11=B (2026-10-13) supersedes the earlier HEAT&GLOW reading: the label allows non-heat use, so it is `not_required`.
 - **HA-3 Authority (D-d): manufacturer only.** Both prongs must come from **C1** (current German pack) or **C2** (manufacturer's German-market page), including §2.4.1 rule 6 (house brand on its own retailer page). **T14's `C2_cross_market_verified` does not apply** ("German page or pack"). C3–C5 wording may only corroborate; retailer-only activation wording → `not_required`, recorded in `counterSignals`, routed to review with note `activation_authority_gap`.
 - **HA-4 Route** is transcribed from prong (b)'s tool: Föhn/föhnen/Rundbürste → `airflow_shaping`; Glätteisen/Lockenstab → `direct_contact_heat`; both named as alternatives → `either_heat`.
 - **HA-5 Ambiguity** (one prong only, unclear tool, conflicting C1/C2) → `identityStatus: provisional_identity_conflict`, G5 preserved, human review; the record does not project (AD-2).
@@ -139,7 +139,7 @@ T21 was applied by one transcription lane: the eleven gold-set envelopes were re
 
 ## 7. Records outside the research corpus
 
-A catalogued Leave-In that was never engine-researched (for example Pantene HEAT&GLOW, a legacy curated row) is not re-researched to receive the field. It takes `heatActivation` through a field-scoped amendment that applies the same HA-1…HA-9 rule and the same production invariants (§1.4) through the shared helper, and changes no other legacy value. Its other legacy fields stay outside this standard until a full Leave-In research run covers them.
+A catalogued Leave-In that was never engine-researched (a legacy curated row) is not re-researched to receive the field. It takes `heatActivation` through a field-scoped amendment that applies the same HA-1…HA-9 rule and the same production invariants (§1.4) through the shared helper, and changes no other legacy value. Its other legacy fields stay outside this standard until a full Leave-In research run covers them.
 
 ## 8. Rule-change ledger — v1.2 block
 
@@ -148,6 +148,8 @@ The v1.0 ledger (`v1.0/rule-changes.md`) and the v1.1 block (v1.1 overlay §8) a
 ### Heat activation becomes a directions-led identity field (T21, 2026-10-09)
 
 **22. T21 — heat activation (A1, D-c, D-d, D-e; Nick, 2026-10-09).** What changed: the identity block gains `heatActivation` (`required | not_required`, a route, verbatim C1/C2 statements, C3–C5 counter-signals), governed by HA-1…HA-9. `required` needs both a manufacturer activation statement and a heat-only heat-step direction from a German pack or German-market manufacturer page; retailer wording only corroborates. Activation is a usage requirement, never a benefit claim, and is separate from heat protection. **Consequence:** one record moves — gold-set slot 13 (Neqi Diamond Glass Ultimate Styling Spray) is `required` / `airflow_shaping` and projects to the pre-heat slot only. The other fourteen in-category records are `not_required`. **T9 is not reopened** (HA-9). **Adapter:** AD-7 added the same day — activation overrides AD-3/AD-4 (roles `styling_prep`, `booster_only`, plan role `pre_heat_application` only, protocol role `pre_heat_protection` only) and refuses activation without a heat-protection claim (`plans/leave-in-inci/adapter-decisions.md`). That is an adapter decision, not a standard change. *Motivated by:* Nick's 2026-10-09 rulings that "needs heat to work" is a real property (A1), that the Neqi styling spray is never a conditioner replacement (A2), that HEAT&GLOW's between-wash use is covered by its activation direction (D-c), that activation evidence is manufacturer-only (D-d), and that activation and heat protection are separate properties (D-e). *Traces to:* `plans/catalog-completeness-fill/s3-heat-activation.md` §1.
+
+**Historical ruling superseded:** The HEAT&GLOW-specific D-c interpretation above records the 2026-10-09 decision. Q11=B superseded it on 2026-10-13: HEAT&GLOW is not heat-activated; its existing roles and protocols remain unchanged.
 
 **README index row:** `T21 | Heat activation is a directions-led identity field (v1.2 overlay, 2026-10-09) | required needs a C1/C2 activation statement and a heat-only heat-step direction; route from the named tool; never from formula or name; separate from heat protection; T9 not reopened. Moves Neqi Diamond Glass (slot 13) to the pre-heat slot only.`
 
@@ -160,3 +162,11 @@ The v1.0 ledger (`v1.0/rule-changes.md`) and the v1.1 block (v1.1 overlay §8) a
 - Neqi manufacturer page (C2): https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray (directions captured 2026-09-03, activation statement and directions re-read 2026-10-09).
 - Neqi dm.de listing (C3, counter-signal only): https://www.dm.de/p/d/3080142/neqi-leave-in-spray-diamond-glass-ultimate.
 - Neqi v1.1 envelope and adapter output it re-stamps: `plans/catalog-completeness-fill/research/r4-user-submitted-14/leave-in-v1.1/neqi-spray/`.
+
+## Q11=B supersession (2026-10-13)
+
+HEAT&GLOW is not heat-activated: the owner research found no heat-reactive ingredient
+and its label also allows use without heat. The earlier D-c product interpretation and
+field-scoped activation amendment are superseded. No activation, route, protocol or
+plan-role change applies to it. Neqi remains the only activated product and retains its
+blow-dry-with-tension route. Frozen v1.0/v1.1 artifacts remain historical evidence.

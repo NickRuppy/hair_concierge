@@ -1,0 +1,21 @@
+{
+  "blindId": "VT23",
+  "productName": "NaturalTech Purifying Shampoo",
+  "brand": "Davines",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_davines_international",
+      "sourceKind": "manufacturer_foreign",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Clarifying and detoxifying shampoo to fight microbial attacks and dandruff to establish a healthy environment for hair growth. Hair and scalp are healthy, flake-free and deep cleansed without causing irritation.\n\nBenefits: Shine Purifying Anti dandruff Cosmetic intensive treatment against dandruff. Quick resolution of flaking problems. Antioxidant action. Natural derived active ingredients.",
+      "directionsVerbatim": "Apply 20 gr. of product to the scalp with damp hair and massage in, especially on those areas most affected. Leave on for a few minutes. Rinse off thoroughly. Intensive treatment: twice a week for maximum 3 weeks. Maintenance treatment: once a week for 6 weeks. The maintenance treatment can be interrupted earlier than 6 weeks if the problem has been resolved."
+    },
+    {
+      "sourceType": "pack_front_photo",
+      "sourceKind": "pack_front",
+      "sourceGrade": "high",
+      "claimsVerbatim": "NATURALTECH™ / PURIFYING SHAMPOO / SHAMPOO FOR SCALP WITH OILY OR DRY DANDRUFF / SHAMPOO PER CUTE CON FORFORA GRASSA O SECCA / SHAMPOOING POUR CUIR CHEVELU AVEC PELLICULES GRASSES OU SÈCHES / WITH DANDELION PHYTOCEUTICALS / CON FITOCEUTICI DA TARASSACO / AUX PHYTOCEUTIQUES DE TARAXACUM / 250 ml e 8.45 fl.oz. U.S. / davines",
+      "directionsVerbatim": ""
+    }
+  ]
+}

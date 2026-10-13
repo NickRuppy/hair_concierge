@@ -1490,7 +1490,7 @@ test("heat_activated_verified_product compiles to damp_hair_protection with the 
   }
 })
 
-test("HEAT&GLOW dry variant appears only on refresh days with a blow-dry event", () => {
+test("generic activated dry variant appears only on refresh days with a blow-dry event", () => {
   const dryVariant = heatActivatedPointer("dry_hair", [
     {
       stepKey: "apply-between-washes",

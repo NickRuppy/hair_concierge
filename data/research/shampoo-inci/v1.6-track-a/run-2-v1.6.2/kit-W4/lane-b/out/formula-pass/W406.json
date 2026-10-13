@@ -1,0 +1,163 @@
+{
+  "blindId": "W406",
+  "inciFingerprintSha256": "ea15e539c6477bb039c7ba86cf7ceb1d8bcc429a2f5fe581850cd59e14e15b7c",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, stage A only)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "Packet list already one entry per ingredient (Maris Sal (Dead Sea Salt) is one entry); positions are normalized one-based positions (ID-2).",
+    "e3ProminenceCutoff": "No Parfum/Fragrance declared; E3 preservative fallback = Sodium Benzoate @8; prominent = positions 1-7"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionicEtherSulfonate": ["Sodium Laureth Sulfate @2 (defining anionic)"],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": [],
+      "amphoteric": ["Cocamidopropyl Betaine @3 (prominent buffer)"],
+      "nonionicCleansing": [],
+      "notCleansingNotBuffer": ["Sodium Chloride @4", "Citric Acid @7", "Maris Sal @9", "Silt @19 (mud/mineral)"],
+      "reinforcingRoutes": [],
+      "c1c5c6Reading": "C1: ether-sulfate defining anionic, one prominent buffer, no reinforcing route"
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6 (prominent)"],
+      "payload_lipid": [],
+      "weak_refatter": [],
+      "silicone": [],
+      "pearlizing_fatty_route": [],
+      "humectants": ["Glycerin @11 (after the E3 point)"],
+      "notHumectantRoute": ["Aloe Barbadensis Leaf Juice Powder @14"]
+    },
+    "wLine": {
+      "wLine": "Piroctone Olamine @5",
+      "wLineClasses": ["preservative_or_capped_active"],
+      "cap": "e3Point @8 (Sodium Benzoate, preservative fallback)",
+      "alphabeticalRun": "none",
+      "candidatesTested": ["Piroctone Olamine @5: (i) SLES @2 and betaine @3 before it ok; (ii) positions 6-7 (guar polymer, Citric Acid) contain no cleansing surfactant, alkanolamide or pearlizer -> plausible"],
+      "skipped": [],
+      "codes": [],
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": []
+    },
+    "actives": {
+      "dandruffActives": ["Piroctone Olamine @5"],
+      "comfortRoutesE4Prominent": [],
+      "humectantRefattingRoutesE4Prominent": [],
+      "humectantRefattingRoutesNotProminent": ["Glycerin @11"],
+      "coolingAgents": [],
+      "essentialOils": ["Melaleuca Alternifolia (Tea Tree) Leaf Oil @12", "Citrus Limon Peel Oil @16", "Citrus Sinensis Peel Oil Expressed @17", "Litsea Cubeba Fruit Oil @18 (all after the E3 point)"],
+      "fragranceMaterials": ["Limonene @13 (allergen; no Parfum declared)"],
+      "other": ["Silt @19", "Maris Sal @9", "Lactic Acid @15"]
+    },
+    "scalpGateFormulaFacts": {
+      "CSA": "not met: no prominent E4 comfort or humectant/refatting route (Glycerin @11 is after the E3 point) and no MB",
+      "MB": "not met: Sodium Laureth Sulfate @2 prominent strong anionic",
+      "S-SENSITIVE formula half": "fails",
+      "S-DRY formula half": "fails",
+      "S-OILY formula clause": "cleansing moderate, weight low, conditioning low -> clause passes",
+      "S-DANDRUFF formula half": "dandruffSupport supported"
+    }
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate @2 defining anionic buffered by prominent Cocamidopropyl Betaine @3, no reinforcing strong anionic. Salts, mud and late essential oils are not cleansing routes (C3).",
+      "ruleIds": ["C3", "C4", "C1"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low: cleansing-led architecture whose only conditioning route is one cationic guar (Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6); no silicone, lipid, refatter, pearlizer or protein, and the only humectant (Glycerin @11) is after the E3 point. C2 not met. Counter-signal: a prominent guar coacervate can give noticeable slip (moderate).",
+      "ruleIds": ["Section 5 anchors", "C2"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "evidence": {
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6"],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @3"],
+        "humectantContext": ["Glycerin @11", "Aloe Barbadensis Leaf Juice Powder @14"],
+        "excluded": ["Tea Tree Leaf Oil @12, Citrus Limon Peel Oil @16, Citrus Sinensis Peel Oil @17, Litsea Cubeba Fruit Oil @18 (essential oils, 6.4)", "Limonene @13 (fragrance allergen)", "Silt @19, Maris Sal @9, Sodium Chloride @4 (minerals/salts)", "Piroctone Olamine @5 (active)", "Citric Acid @7, Lactic Acid @15, Sodium Benzoate @8, Potassium Sorbate @10"],
+        "unresolved": []
+      },
+      "wLineRecord": "wLine Piroctone Olamine @5 (preservative_or_capped_active); cap e3Point @8 (Sodium Benzoate fallback); no alphabetical run; no skipped candidates; no codes; no payload_lipid present.",
+      "depositionLoad": "light: one cationic guar polymer, nothing else depositing.",
+      "persistence": "low: single guar; no silicone, lipid or film.",
+      "resetCapacity": "moderate: C1 SLES/betaine chassis.",
+      "counterevidence": "The guar is prominent (@6) and deposits by dilution deposition.",
+      "whyThisBand": "A single light cationic polymer facing an effective sulfate chassis does not plausibly reduce movement or lift.",
+      "whyNotNeighborBand": "Not moderate: one deposition family only, no reinforcing route (W2 does not require more); essential oils are fragrance materials, not payload.",
+      "confidenceLimitingFactor": "None material.",
+      "rationale": "Low: single guar against a moderate C1 reset; W-line @5 gates nothing because no payload_lipid exists.",
+      "ruleIds": ["6.3", "6.4", "6.6", "W2", "W-LINE"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6"],
+        "limitation": "No lengths-care cluster."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Recognized dandruff active Piroctone Olamine @5: with an anti-dandruff claim the focus would be scalp_active; F6 clarifying conditions are also met.",
+      "decisionTrace": "Blind: claim direction null; formula compatible with scalp_active (dandruff active) or clarifying (F6); provisional general.",
+      "rationale": "Provisional general (claim-dependent; formula-only).",
+      "ruleIds": ["3.1", "7.2", "F6"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["clarifying"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty (claim-dependent).",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "treatment",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional regular (default). dandruffSupport supported: a qualifying E2 dandruff claim graded moderate/high would fire treatment (U3).",
+      "ruleIds": ["Section 9", "U3"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted regardless of positioning: no CSA. No E4 comfort or humectant/refatting route is prominent (Glycerin @11 is after the E3 fallback point Sodium Benzoate @8) and MB fails (Sodium Laureth Sulfate @2 prominent). CSA route: none; missing route named: no prominent listed comfort/humectant route. Counter-signals: essential oils (tea tree, citrus, litsea; late).",
+      "ruleIds": ["Section 10", "CSA", "MB", "E3", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Supported: the complete INCI contains Piroctone Olamine @5.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "notes": ["No declared Parfum: E3 uses the preservative fallback (Sodium Benzoate @8); Limonene and essential oils are not the fragrance marker (E3).", "Claim-dependent properties (focus, usage) are provisional."]
+}

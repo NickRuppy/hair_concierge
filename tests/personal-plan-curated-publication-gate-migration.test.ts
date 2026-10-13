@@ -100,7 +100,7 @@ test("Leave-In v1.2 replaces the leave-in branch: pre-heat needs heat protection
   const sql = await readFile(
     path.join(
       process.cwd(),
-      "supabase/migrations/20261011160000_leave_in_heat_activation_schema.sql",
+      "supabase/migrations/20261013150000_leave_in_heat_activation_schema.sql",
     ),
     "utf8",
   )

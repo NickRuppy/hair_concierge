@@ -44,7 +44,7 @@ export const LEAVE_IN_PRODUCTION_ADAPTER_VERSION = "leave-in-production-adapter-
 export const LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD = {
   policyId: "leave-in-classification-v1.2",
   modelVersion: "leave-in-inci-v1.2",
-  policySha256: "e8d677dbad352ee808cdd7e878e9ce6e6c98fb474f1a32ab2658ad9ebdc2c833",
+  policySha256: "8847308ac4d518e6bb4c4bbd7174e9cf29990cdc9e0437f5a664ef8ffa71c806",
   runbookSha256: "dce7d84982e52f5094a0b29500105d13f42c31d44e04b1871bcbef1bda5e56ca",
 } as const
 
@@ -658,7 +658,7 @@ export function deriveLeaveInIngredientFlags(
 /**
  * Faithful TypeScript port of `public.expand_leave_in_eligibility`
  * (supabase/migrations/20260314234500_add_leave_in_eligibility_and_matcher.sql,
- * redefined by 20261011160000_leave_in_heat_activation_schema.sql — Leave-In v1.2).
+ * redefined by 20261013150000_leave_in_heat_activation_schema.sql — Leave-In v1.2).
  * Bucket order, context order and the cross-product loop order match the SQL
  * exactly, so a projected row set is byte-identical to what the RPC rebuilds.
  * Keep in sync with that migration.

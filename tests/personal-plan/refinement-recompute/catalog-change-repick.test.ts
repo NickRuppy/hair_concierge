@@ -29,7 +29,7 @@ import type { PlanProductRole } from "../../../src/lib/personal-plan/types"
 /**
  * Catalogue-change re-pick lane (Nick Q8, 2026-10-13; generalises S5 T5.5b): a
  * planned product that no longer fits its planned slot after a catalogue change
- * (S3: HEAT&GLOW activated ⇒ post-wash mismatch; S5: tombstoned `replaced_by`
+ * (role change ⇒ post-wash mismatch; S5: tombstoned `replaced_by`
  * source) is re-picked to the next-best product. Everything else is preserved;
  * an owned or explicitly chosen product is never replaced silently.
  */
@@ -37,7 +37,7 @@ import type { PlanProductRole } from "../../../src/lib/personal-plan/types"
 const USER_ID = "owner-a"
 const PLAN_ID = "plan-a"
 const REFINED = "refined-1"
-const HEAT_GLOW = "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+const ROLE_CHANGED_PRODUCT = "30000000-0000-4000-8000-0000000000b1"
 const NEXT_BEST = "olaplex-no-6"
 const PANTENE_7IN1 = "f8f3b51d-0000-4000-8000-000000000001"
 const LEAVE_IN_GAP = stage3DecisionKey("leave_in", "post_wash_leave_in", null)
@@ -249,7 +249,7 @@ const SHAMPOO_EVALUATION: Stage3AuthorityEvaluation = {
   recommendationFactFingerprint: null,
   coverageRuleIds: [],
 }
-/** HEAT&GLOW is gone from the post-wash candidates; the authority now recommends the next best. */
+/** Role-changed leave-in is gone from the post-wash candidates; the authority now recommends the next best. */
 const LEAVE_IN_EVALUATION: Stage3AuthorityEvaluation = {
   status: "known",
   category: "leave_in",
@@ -311,7 +311,7 @@ function harness(input: {
       } as never
     },
   }
-  const source = input.source ?? sourceDraft("plan_recommendation", HEAT_GLOW)
+  const source = input.source ?? sourceDraft("plan_recommendation", ROLE_CHANGED_PRODUCT)
   const deps: Stage3CatalogChangeDeps = {
     gateway,
     persistence: {
@@ -358,20 +358,22 @@ function harness(input: {
 const INPUT = {
   userId: USER_ID,
   personalPlanId: PLAN_ID,
-  productId: HEAT_GLOW,
+  productId: ROLE_CHANGED_PRODUCT,
   role: "post_wash_leave_in" as const,
 }
 
-test("HEAT&GLOW planned post-wash is re-picked to the next-best leave-in; other slots unchanged", async () => {
+test("Role-changed leave-in planned post-wash is re-picked to the next-best leave-in; other slots unchanged", async () => {
   const { deps, intents, calls } = harness({
-    starting: routine("routine-1", planned(HEAT_GLOW)),
+    starting: routine("routine-1", planned(ROLE_CHANGED_PRODUCT)),
     ending: routine("routine-2", planned(NEXT_BEST)),
   })
   const result = await recomputeRoutineAfterCatalogChange(deps, INPUT)
   assert.deepEqual(result, {
     status: "applied",
     routineVersionId: "routine-2",
-    repicked: [{ subjectKey: LEAVE_IN_GAP, fromProductId: HEAT_GLOW, toProductId: NEXT_BEST }],
+    repicked: [
+      { subjectKey: LEAVE_IN_GAP, fromProductId: ROLE_CHANGED_PRODUCT, toProductId: NEXT_BEST },
+    ],
   })
   assert.equal(calls.repair, 1)
   assert.equal(calls.complete, 1)
@@ -393,7 +395,7 @@ test("second run is unchanged and touches nothing", async () => {
 
 test("a product that still fits its slot is left alone without opening a draft", async () => {
   const { deps, calls } = harness({
-    starting: routine("routine-1", planned(HEAT_GLOW)),
+    starting: routine("routine-1", planned(ROLE_CHANGED_PRODUCT)),
     fit: "fits",
   })
   assert.deepEqual(await recomputeRoutineAfterCatalogChange(deps, INPUT), { status: "unchanged" })
@@ -402,12 +404,14 @@ test("a product that still fits its slot is left alone without opening a draft",
 
 test("an explicit user choice is never replaced silently — it is reported for attention", async () => {
   const { deps, calls } = harness({
-    starting: routine("routine-1", planned(HEAT_GLOW)),
-    source: sourceDraft("select_replacement", HEAT_GLOW),
+    starting: routine("routine-1", planned(ROLE_CHANGED_PRODUCT)),
+    source: sourceDraft("select_replacement", ROLE_CHANGED_PRODUCT),
   })
   assert.deepEqual(await recomputeRoutineAfterCatalogChange(deps, INPUT), {
     status: "needs_attention",
-    cases: [{ subjectKey: LEAVE_IN_GAP, productId: HEAT_GLOW, reason: "explicit_choice" }],
+    cases: [
+      { subjectKey: LEAVE_IN_GAP, productId: ROLE_CHANGED_PRODUCT, reason: "explicit_choice" },
+    ],
   })
   assert.equal(calls.repair, 0)
   assert.equal(calls.complete, 0)
@@ -419,8 +423,8 @@ test("an owned product is never replaced silently — it is reported for attenti
     {
       kind: "owned",
       capturedProductId: "capture-hg",
-      productId: HEAT_GLOW,
-      displayName: "HEAT&GLOW",
+      productId: ROLE_CHANGED_PRODUCT,
+      displayName: "Role-changed leave-in",
     },
     stage3DecisionKey("leave_in", "post_wash_leave_in", "capture-hg"),
   )
@@ -430,7 +434,7 @@ test("an owned product is never replaced silently — it is reported for attenti
     cases: [
       {
         subjectKey: stage3DecisionKey("leave_in", "post_wash_leave_in", "capture-hg"),
-        productId: HEAT_GLOW,
+        productId: ROLE_CHANGED_PRODUCT,
         reason: "owned",
       },
     ],
@@ -458,9 +462,9 @@ test("a tombstoned replaced_by source is re-picked the same way (S5 reuse)", asy
 
 test("the re-pick never plans the dropped product again, even if the authority still names it", async () => {
   const { deps, intents } = harness({
-    starting: routine("routine-1", planned(HEAT_GLOW)),
+    starting: routine("routine-1", planned(ROLE_CHANGED_PRODUCT)),
     ending: routine("routine-2", {
-      ...planned(HEAT_GLOW),
+      ...planned(ROLE_CHANGED_PRODUCT),
       product: { kind: "none", displayName: null },
     }),
   })
@@ -468,7 +472,7 @@ test("the re-pick never plans the dropped product again, even if the authority s
     SHAMPOO_EVALUATION,
     {
       ...LEAVE_IN_EVALUATION,
-      recommendation: { ...LEAVE_IN_EVALUATION.recommendation!, productId: HEAT_GLOW },
+      recommendation: { ...LEAVE_IN_EVALUATION.recommendation!, productId: ROLE_CHANGED_PRODUCT },
     } as Stage3AuthorityEvaluation,
   ]
   await recomputeRoutineAfterCatalogChange(deps, INPUT)
@@ -478,7 +482,7 @@ test("the re-pick never plans the dropped product again, even if the authority s
 
 test("repick script: --apply refuses without --confirm, dry run never needs it, hashes hide plan ids", async () => {
   const script = await import("../../../scripts/personal-plan/repick-planned-products")
-  const base = ["--product", HEAT_GLOW, "--role", "post_wash_leave_in"]
+  const base = ["--product", ROLE_CHANGED_PRODUCT, "--role", "post_wash_leave_in"]
   assert.throws(
     () => script.assertApplyAllowed(script.parseArgs([...base, "--apply"])),
     /--confirm/,

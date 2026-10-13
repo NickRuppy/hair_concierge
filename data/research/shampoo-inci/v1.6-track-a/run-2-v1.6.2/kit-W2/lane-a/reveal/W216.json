@@ -1,0 +1,28 @@
+{
+  "blindId": "W216",
+  "productName": "ISANA MED Ultra Sensitiv+ Anti-Schuppen Shampoo, 200 ml",
+  "brand": "ISANA (Rossmann-Eigenmarke, Dirk Rossmann GmbH)",
+  "positioningSources": [
+    {
+      "sourceType": "pack_back_photo (Open Beauty Facts community upload 2026-09-08, read by eye)",
+      "sourceKind": "pack_back",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Ultra sensitiv Produkte zeichnen sich durch anspruchsvolle Rezepturen aus, die ganz auf die besonderen Bedürfnisse sehr sensibler Haut abgestimmt sind. | WIRKUNG: Das ISANA MED SHAMPOO ist stark in der Wirkung gegen Schuppen und sanft zur Kopfhaut. Panthenol und Niacinamide, pH hautneutral | HAUTVERTRÄGLICHKEIT: *Allergie getestet - in dermatologischen Tests wurde die Hautverträglichkeit auf sehr empfindlicher, zu Allergien neigender Haut getestet und bestätigt. | vegan | Hergestellt in Deutschland (photo text partly cut off at the right edge)",
+      "directionsVerbatim": "(not on the back label photo)"
+    },
+    {
+      "sourceType": "open_beauty_facts_record (support only; ingredients_text_de, quantity 200ml)",
+      "sourceKind": "pack_back",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "(none)",
+      "directionsVerbatim": "(none)"
+    },
+    {
+      "sourceType": "retailer_rossmann_de_own_brand",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Ultra sensitiv Produkte zeichnen sich durch anspruchsvolle Rezepturen aus, die ganz auf die besonderen Bedürfnisse sehr sensibler Haut abgestimmt sind. Das ISANA MED SHAMPOO ist stark in der Wirkung gegen Schuppen und sanft zur Kopfhaut. | Panthenol und Niacinamide | stark & nachhaltig gegen Schuppen | 0% Parfüm, Farbstoffe, Silikon | pH hautneutral | Allergie getestet* | klinisch getestet | dermatologisch bestätigt | vegan | *in dermatologischen Tests wurde die Hautverträglichkeit auf sehr empfindlicher, zu Allergien neigender Haut getestet und bestätigt | Ursprungsland: Deutschland",
+      "directionsVerbatim": "(no Anwendung section on the page)"
+    }
+  ]
+}

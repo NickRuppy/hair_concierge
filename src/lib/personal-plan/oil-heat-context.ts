@@ -65,10 +65,8 @@ export function heatEventsFromNeedSnapshot(
  * heat-activated product (Leave-In v1.2, S3 Q3). Shaping airflow (diffuser, dryer brush,
  * hot-air styler) and hot tools count.
  *
- * PENDING RULING (Nick, S3 review R5): plain blow-drying (`ordinary_airflow`) does NOT count
- * today — it creates no pre-heat need, and Stage 5 places heat steps only on shaping or
- * hot-tool events. If Nick rules that plain blow-drying activates (e.g. HEAT&GLOW „Föhnen,
- * um zu aktivieren."), map `ordinary_airflow` to `airflow_shaping` here.
+ * Plain blow-drying (`ordinary_airflow`) does not count: Neqi's reviewed workflow
+ * requires blow-drying with brush/tension. Q11=B excludes HEAT&GLOW from activation.
  */
 export function activatingHeatRouteForEvent(
   event: Pick<PlanHeatToolUseEvent, "tool" | "route">,

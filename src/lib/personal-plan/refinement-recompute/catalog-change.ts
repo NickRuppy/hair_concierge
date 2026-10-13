@@ -19,8 +19,7 @@ import type {
  * The headless recompute's second reason, next to a habits completion: a product the
  * ACTIVE routine plans for a slot no longer fits that slot because the catalogue
  * changed — it was tombstoned as a `replaced_by` source (S5), or its current Stage-3
- * authority evaluation for the planned role is no longer ideal/supportive (S3:
- * Pantene HEAT&GLOW became heat-activated, so it cannot be a post-wash leave-in).
+ * authority evaluation no longer admits the planned role after a catalogue role change.
  *
  * The refined need did not change, so instead of a draft on a newer version this
  * lane opens the routine's own authority-repair draft on the SAME version

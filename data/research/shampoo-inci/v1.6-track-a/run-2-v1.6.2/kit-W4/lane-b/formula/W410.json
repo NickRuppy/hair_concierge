@@ -1,0 +1,30 @@
+{
+  "blindId": "W410",
+  "packSize": "200 ml",
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Betaine",
+    "Lauryl Lactate",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Glycol Distearate",
+    "Parfum",
+    "Menthol",
+    "Laureth-4",
+    "Maris Sal",
+    "Allantoin",
+    "Bisabolol",
+    "Sodium Benzoate",
+    "Potassium Sorbate",
+    "Sodium Chloride",
+    "Citric Acid",
+    "Glycerin",
+    "Formic Acid",
+    "Terpineol"
+  ],
+  "inciFingerprintSha256": "0a9ce49c3c9a71eeb4cd8e8ebc4dc4b2431235b5e08cbd0e096985e48ddbbda3",
+  "normalization": "Runbook step 2: canonical list items lower-cased, trimmed, whitespace collapsed, joined with '|', SHA-256; split synonym entries (e.g. 'Aqua (Water, Eau)') merged before numbering.",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 1,
+  "identityConfidence": "high"
+}

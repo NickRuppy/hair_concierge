@@ -86,6 +86,8 @@ export type Stage3ShampooFacts = Stage3AuthorityCommonProductFacts & {
   }
   spec: {
     thickness: string | null
+    /** Contextual row(s) retained for distance-based fit evaluation. */
+    thicknesses?: string[] | null
     shampooBucket: string | null
     scalpRoute: string | null
     cleansingIntensity: string | null
@@ -97,6 +99,8 @@ export type Stage3ConditionerFacts = Stage3AuthorityCommonProductFacts & {
   category: "conditioner"
   spec: {
     thickness: string | null
+    /** Contextual row(s) retained for distance-based fit evaluation. */
+    thicknesses?: string[] | null
     proteinMoistureBalance: string | null
     weight: string | null
     repairSupportLevel: string | null
@@ -139,6 +143,8 @@ export type Stage3OilFacts = Stage3AuthorityCommonProductFacts & {
   spec: {
     roleSupport: Partial<Record<PlanProductRole, boolean | null>>
     weight: string | null
+    /** Shared product thickness authority, kept as values rather than an exact-match flag. */
+    thicknesses?: string[] | null
     targetThicknessEligible: boolean | null
     providesHeatProtection: boolean | null
   }
@@ -224,6 +230,11 @@ export type Stage3AuthorityInput<C extends PersonalPlanCategory = PersonalPlanCa
   coverage: PlanPortfolioCoverageFact[]
   productFacts: Extract<Stage3CategoryProductFacts, { category: C }> | null
   recommendationCandidates: Array<Extract<Stage3CategoryProductFacts, { category: C }>>
+  /** Late-bound tint is absent from onboarding; universal products need no tint target. */
+  dryShampooTarget?: {
+    scalpSensitivity: "normal" | "sensitive" | null
+    hairColorFit: "blonde_light" | "brown" | "dark" | null
+  }
   hairThickness?: PlanHairThickness
   /**
    * The user's heat routes from the refined need snapshot

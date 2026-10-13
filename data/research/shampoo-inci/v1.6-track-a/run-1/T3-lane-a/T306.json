@@ -1,0 +1,890 @@
+{
+  "blindId": "T306",
+  "inciFingerprintSha256": "f63f993d63a9fa421eef25df232abb8f46d46bd5251f89608e49ba33a1f78fd5",
+  "identity": {
+    "productName": "OGX Rosemary Mint Shampoo",
+    "brand": "OGX",
+    "market": "DE",
+    "formulaBlock": {
+      "normalization": "'Aqua/Water/Eau' and 'Parfum/Fragrance' one entry each; positions = packet positions. E3: Parfum at 30; prominent = 1-29. Source tier 4 (corroborating retailer fallback).",
+      "formulaCompleteness": "complete",
+      "formulaSourceTier": 4,
+      "identityConfidence": "high",
+      "rawInciCount": 30
+    }
+  },
+  "claimSources": [
+    {
+      "id": "S1",
+      "sourceKind": "retailer",
+      "grade": "low"
+    },
+    {
+      "id": "S2",
+      "sourceKind": "pack_front",
+      "grade": "high"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "C6: no prominent strong anionic; earliest cleansing surfactant is the mild anionic Sodium Methyl Cocoyl Taurate (2) with prominent glucoside (Decyl Glucoside 3) and amphoteric (Cocamidopropyl Betaine 4) co-surfactants -> low.",
+      "neighboringAlternative": "none",
+      "counterSignal": "Three cleansing routes give real foam/cleansing; C6 convention holds the value.",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T306"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Methyl Cocoyl Taurate",
+          "position": 2,
+          "role": "mild anionic (taurate), earliest cleansing surfactant"
+        },
+        {
+          "ingredient": "Decyl Glucoside",
+          "position": 3,
+          "role": "nonionic glucoside co-surfactant"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "role": "amphoteric co-surfactant"
+        },
+        {
+          "ingredient": "Rosmarinus Officinalis Leaf Oil",
+          "position": 6,
+          "role": "essential oil, prominent"
+        },
+        {
+          "ingredient": "Mentha Piperita Oil",
+          "position": 7,
+          "role": "essential/cooling oil, prominent"
+        },
+        {
+          "ingredient": "Menthol",
+          "position": 8,
+          "role": "cooling agent, prominent"
+        },
+        {
+          "ingredient": "Menthyl Lactate",
+          "position": 9,
+          "role": "cooling agent, prominent"
+        },
+        {
+          "ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+          "position": 10,
+          "role": "anionic modified starch, emulsion stabiliser/light film former"
+        },
+        {
+          "ingredient": "Amodimethicone",
+          "position": 11,
+          "role": "silicone (amino), prominent"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 12,
+          "role": "glucoside"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 15,
+          "role": "weak_refatter; E4 humectant/refatting"
+        },
+        {
+          "ingredient": "Lecithin",
+          "position": 16,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Starch Hydroxypropyltrimonium Chloride",
+          "position": 17,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "PEG-150 Distearate",
+          "position": 18,
+          "role": "thickener, excluded"
+        },
+        {
+          "ingredient": "Sodium Lactate",
+          "position": 21,
+          "role": "pH buffer (F4); E4 humectant list"
+        },
+        {
+          "ingredient": "Hydrogenated Palm Glycerides Citrate",
+          "position": 23,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Urea",
+          "position": 25,
+          "role": "humectant; E4 comfort + humectant route (prominent: before Parfum 30)"
+        },
+        {
+          "ingredient": "Ascorbyl Palmitate",
+          "position": 29,
+          "role": "weak_refatter"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "One meaningful system (prominent Amodimethicone 11) plus light routes (Starch HPTC 17, weak refatters Glyceryl Oleate 15, Lecithin 16, HPGC 23). C2 not met: no pearlizing/fatty route and no payload lipid.",
+      "neighboringAlternative": "high",
+      "counterSignal": "Silicone + cationic starch are two complementary systems and the chassis is mild, which could read as high.",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T306"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Methyl Cocoyl Taurate",
+          "position": 2,
+          "role": "mild anionic (taurate), earliest cleansing surfactant"
+        },
+        {
+          "ingredient": "Decyl Glucoside",
+          "position": 3,
+          "role": "nonionic glucoside co-surfactant"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "role": "amphoteric co-surfactant"
+        },
+        {
+          "ingredient": "Rosmarinus Officinalis Leaf Oil",
+          "position": 6,
+          "role": "essential oil, prominent"
+        },
+        {
+          "ingredient": "Mentha Piperita Oil",
+          "position": 7,
+          "role": "essential/cooling oil, prominent"
+        },
+        {
+          "ingredient": "Menthol",
+          "position": 8,
+          "role": "cooling agent, prominent"
+        },
+        {
+          "ingredient": "Menthyl Lactate",
+          "position": 9,
+          "role": "cooling agent, prominent"
+        },
+        {
+          "ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+          "position": 10,
+          "role": "anionic modified starch, emulsion stabiliser/light film former"
+        },
+        {
+          "ingredient": "Amodimethicone",
+          "position": 11,
+          "role": "silicone (amino), prominent"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 12,
+          "role": "glucoside"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 15,
+          "role": "weak_refatter; E4 humectant/refatting"
+        },
+        {
+          "ingredient": "Lecithin",
+          "position": 16,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Starch Hydroxypropyltrimonium Chloride",
+          "position": 17,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "PEG-150 Distearate",
+          "position": 18,
+          "role": "thickener, excluded"
+        },
+        {
+          "ingredient": "Sodium Lactate",
+          "position": 21,
+          "role": "pH buffer (F4); E4 humectant list"
+        },
+        {
+          "ingredient": "Hydrogenated Palm Glycerides Citrate",
+          "position": 23,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Urea",
+          "position": 25,
+          "role": "humectant; E4 comfort + humectant route (prominent: before Parfum 30)"
+        },
+        {
+          "ingredient": "Ascorbyl Palmitate",
+          "position": 29,
+          "role": "weak_refatter"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Amino-silicone (11) + cationic starch (17) + several weak refatters face a weak C6 reset: plausible bounded residue; no W-RICH (no payload lipid) and the silicone sits after the essential oils/menthol.",
+      "neighboringAlternative": "high",
+      "counterSignal": "Weak reset with a substantive amino-silicone and a second cationic family could accumulate (high).",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "amodimethicone + cationic starch + weak refatters"
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "amodimethicone is substantive on damaged sites; other routes light"
+        },
+        "resetCapacity": {
+          "value": "weak",
+          "rationale": "C6 mild taurate/glucoside/betaine chassis"
+        }
+      },
+      "whyThisBand": "Converging silicone + cationic routes with weak reset make noticeable but bounded residue plausible.",
+      "whyNotNeighborBand": "high needs W-RICH with weak reset or clearly multiple persistent systems; there is no payload lipid, the silicone is mid-list after ~1% markers and the cationic starch is late. low would understate converging silicone + cationic residue under a weak reset (W2).",
+      "evidenceByFamily": {
+        "silicone": [
+          [
+            "Amodimethicone",
+            11
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Starch Hydroxypropyltrimonium Chloride",
+            17
+          ]
+        ],
+        "weak_refatter": [
+          [
+            "Glyceryl Oleate",
+            15
+          ],
+          [
+            "Lecithin",
+            16
+          ],
+          [
+            "Hydrogenated Palm Glycerides Citrate",
+            23
+          ],
+          [
+            "Ascorbyl Palmitate",
+            29
+          ]
+        ],
+        "film_former": [
+          [
+            "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+            10,
+            "anionic starch derivative; light, counted conservatively"
+          ]
+        ],
+        "context_humectant": [
+          [
+            "Urea",
+            25
+          ],
+          [
+            "Sodium Lactate",
+            21
+          ]
+        ],
+        "excluded": [
+          [
+            "Rosmarinus Officinalis Leaf Oil",
+            6,
+            "essential oil"
+          ],
+          [
+            "Mentha Piperita Oil",
+            7,
+            "essential oil"
+          ],
+          [
+            "Menthol",
+            8,
+            "cooling"
+          ],
+          [
+            "Menthyl Lactate",
+            9,
+            "cooling"
+          ],
+          [
+            "PEG-150 Distearate",
+            18,
+            "thickener (6.4)"
+          ],
+          [
+            "Coconut Acid",
+            13,
+            "fatty acid, co-surfactant/soap precursor"
+          ],
+          [
+            "Disodium Tetrapropenyl Succinate",
+            14,
+            "anionic hydrotrope/co-surfactant"
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Methyl Cocoyl Taurate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            4
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Decyl Glucoside",
+            3
+          ],
+          [
+            "Coco-Glucoside",
+            12
+          ]
+        ],
+        "unresolved": []
+      },
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T306"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Methyl Cocoyl Taurate",
+          "position": 2,
+          "role": "mild anionic (taurate), earliest cleansing surfactant"
+        },
+        {
+          "ingredient": "Decyl Glucoside",
+          "position": 3,
+          "role": "nonionic glucoside co-surfactant"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "role": "amphoteric co-surfactant"
+        },
+        {
+          "ingredient": "Rosmarinus Officinalis Leaf Oil",
+          "position": 6,
+          "role": "essential oil, prominent"
+        },
+        {
+          "ingredient": "Mentha Piperita Oil",
+          "position": 7,
+          "role": "essential/cooling oil, prominent"
+        },
+        {
+          "ingredient": "Menthol",
+          "position": 8,
+          "role": "cooling agent, prominent"
+        },
+        {
+          "ingredient": "Menthyl Lactate",
+          "position": 9,
+          "role": "cooling agent, prominent"
+        },
+        {
+          "ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+          "position": 10,
+          "role": "anionic modified starch, emulsion stabiliser/light film former"
+        },
+        {
+          "ingredient": "Amodimethicone",
+          "position": 11,
+          "role": "silicone (amino), prominent"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 12,
+          "role": "glucoside"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 15,
+          "role": "weak_refatter; E4 humectant/refatting"
+        },
+        {
+          "ingredient": "Lecithin",
+          "position": 16,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Starch Hydroxypropyltrimonium Chloride",
+          "position": 17,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "PEG-150 Distearate",
+          "position": 18,
+          "role": "thickener, excluded"
+        },
+        {
+          "ingredient": "Sodium Lactate",
+          "position": 21,
+          "role": "pH buffer (F4); E4 humectant list"
+        },
+        {
+          "ingredient": "Hydrogenated Palm Glycerides Citrate",
+          "position": 23,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Urea",
+          "position": 25,
+          "role": "humectant; E4 comfort + humectant route (prominent: before Parfum 30)"
+        },
+        {
+          "ingredient": "Ascorbyl Palmitate",
+          "position": 29,
+          "role": "weak_refatter"
+        }
+      ],
+      "formulaIdentifiers": {
+        "inciFingerprintSha256": "f63f993d63a9fa421eef25df232abb8f46d46bd5251f89608e49ba33a1f78fd5",
+        "sourceTier": 4,
+        "captureDate": "per frozen packet (not shown to lane)"
+      },
+      "confidenceLimitingFactor": "INCI-only: concentrations, charge density and deposition unknown"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "rationale": "Clarifying/buildup positioning (S2 'Clarifying blend visibly helps remove oils and residue to clear away buildup', 'ERFRISCHEND & KLAEREND') fails F6: cleansingStrength is low (C6). No other compatible job: 'Lipi Pro Shield' protection over a nonspecific formula is not repair (F1). -> general.",
+      "counterSignal": "Refreshing-scalp/buildup role is the evident marketing job.",
+      "neighboringAlternative": "clarifying",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Methyl Cocoyl Taurate",
+          "position": 2
+        }
+      ],
+      "claimRole": "not_applicable",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedRoutes": [
+          "Amodimethicone 11",
+          "Starch HPTC 17"
+        ],
+        "limitation": "Generic conditioning."
+      },
+      "decisionTrace": {
+        "claimDirection": "clarifying (buildup), refreshing scalp",
+        "formulaCompatible": "clarifying: no (F6 failed condition: cleansingStrength low)",
+        "compatibleRoute": "none",
+        "decisionReason": "-> general."
+      },
+      "sourceIds": [
+        "S1 Rossmann retailer (low); S2 pack front on Rossmann PDP (graded high in packet; English pack text, German marketing images)"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "No compatible second role.",
+      "counterSignal": "None.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "claims": [],
+        "routes": [],
+        "exception": null
+      },
+      "sourceIds": [
+        "S1 Rossmann retailer (low); S2 pack front on Rossmann PDP (graded high in packet; English pack text, German marketing images)"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Buildup/klaerend wording is reset intent (U4) but cleansing is low, so alternating cannot fire; no frequency wording; no D1 ('Clarifying blend' is not 'Clarifying Shampoo').",
+      "counterSignal": "None.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "decisionTrace": {
+        "default": "regular",
+        "trigger": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [
+          "strong_plus_reset_intent not met (cleansing low)"
+        ],
+        "rationale": "No trigger."
+      },
+      "sourceIds": [
+        "S1 Rossmann retailer (low); S2 pack front on Rossmann PDP (graded high in packet; English pack text, German marketing images)"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "No sensitive/dry-scalp claim ('refreshing scalp' names no scalp state).",
+      "counterSignal": "Prominent menthol, menthyl lactate, peppermint and rosemary oils.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Menthol",
+          "position": 8
+        }
+      ],
+      "sourceIds": [
+        "S1 Rossmann retailer (low); S2 pack front on Rossmann PDP (graded high in packet; English pack text, German marketing images)"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T306"
+      ]
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "nonspecific",
+      "moistureRoutes": [],
+      "repairRoutes": [],
+      "sharedRoutes": [
+        "Amodimethicone 11",
+        "Starch HPTC 17"
+      ],
+      "limitation": "Generic conditioning."
+    },
+    "claimRole": "not_applicable",
+    "counterSignal": "Refreshing-scalp/buildup role is the evident marketing job.",
+    "neighboringAlternative": "clarifying",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "clarifying (buildup), refreshing scalp",
+        "formulaCompatible": "clarifying: no (F6 failed condition: cleansingStrength low)",
+        "compatibleRoute": "none",
+        "decisionReason": "-> general."
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "claims": [],
+        "routes": [],
+        "exception": null
+      },
+      "usageRole": {
+        "default": "regular",
+        "trigger": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [
+          "strong_plus_reset_intent not met (cleansing low)"
+        ],
+        "rationale": "No trigger."
+      }
+    }
+  },
+  "weightRecord": {
+    "value": "moderate",
+    "confidence": "moderate",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "moderate",
+        "rationale": "amodimethicone + cationic starch + weak refatters"
+      },
+      "persistence": {
+        "value": "moderate",
+        "rationale": "amodimethicone is substantive on damaged sites; other routes light"
+      },
+      "resetCapacity": {
+        "value": "weak",
+        "rationale": "C6 mild taurate/glucoside/betaine chassis"
+      }
+    },
+    "evidenceByFamily": {
+      "silicone": [
+        [
+          "Amodimethicone",
+          11
+        ]
+      ],
+      "cationic_polymer": [
+        [
+          "Starch Hydroxypropyltrimonium Chloride",
+          17
+        ]
+      ],
+      "weak_refatter": [
+        [
+          "Glyceryl Oleate",
+          15
+        ],
+        [
+          "Lecithin",
+          16
+        ],
+        [
+          "Hydrogenated Palm Glycerides Citrate",
+          23
+        ],
+        [
+          "Ascorbyl Palmitate",
+          29
+        ]
+      ],
+      "film_former": [
+        [
+          "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+          10,
+          "anionic starch derivative; light, counted conservatively"
+        ]
+      ],
+      "context_humectant": [
+        [
+          "Urea",
+          25
+        ],
+        [
+          "Sodium Lactate",
+          21
+        ]
+      ],
+      "excluded": [
+        [
+          "Rosmarinus Officinalis Leaf Oil",
+          6,
+          "essential oil"
+        ],
+        [
+          "Mentha Piperita Oil",
+          7,
+          "essential oil"
+        ],
+        [
+          "Menthol",
+          8,
+          "cooling"
+        ],
+        [
+          "Menthyl Lactate",
+          9,
+          "cooling"
+        ],
+        [
+          "PEG-150 Distearate",
+          18,
+          "thickener (6.4)"
+        ],
+        [
+          "Coconut Acid",
+          13,
+          "fatty acid, co-surfactant/soap precursor"
+        ],
+        [
+          "Disodium Tetrapropenyl Succinate",
+          14,
+          "anionic hydrotrope/co-surfactant"
+        ]
+      ],
+      "anionic_surfactant": [
+        [
+          "Sodium Methyl Cocoyl Taurate",
+          2
+        ]
+      ],
+      "amphoteric_surfactant": [
+        [
+          "Cocamidopropyl Betaine",
+          4
+        ]
+      ],
+      "nonionic_surfactant": [
+        [
+          "Decyl Glucoside",
+          3
+        ],
+        [
+          "Coco-Glucoside",
+          12
+        ]
+      ],
+      "unresolved": []
+    },
+    "whyThisBand": "Converging silicone + cationic routes with weak reset make noticeable but bounded residue plausible.",
+    "whyNotNeighborBand": "high needs W-RICH with weak reset or clearly multiple persistent systems; there is no payload lipid, the silicone is mid-list after ~1% markers and the cationic starch is late. low would understate converging silicone + cationic residue under a weak reset (W2).",
+    "counterSignal": "Weak reset with a substantive amino-silicone and a second cationic family could accumulate (high).",
+    "neighboringAlternative": "high",
+    "formulaIdentifiers": {
+      "inciFingerprintSha256": "f63f993d63a9fa421eef25df232abb8f46d46bd5251f89608e49ba33a1f78fd5",
+      "sourceTier": 4,
+      "captureDate": "per frozen packet (not shown to lane)"
+    },
+    "confidenceLimitingFactor": "INCI-only: concentrations, charge density and deposition unknown"
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1 (fine, W moderate) = acceptable; ordinary target, T6 n/a; T4: neighbor would lower the tier -> review_thickness_boundary"
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1 (normal, W moderate) = ideal; ordinary target, T6 n/a; T4: neighbor would lower the tier -> review_thickness_boundary"
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1 (coarse, W moderate, C moderate) = acceptable; ordinary target, T6 n/a"
+      }
+    ],
+    "weight": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential moderate -> moderate."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "bucket": "normal",
+        "route": "balanced",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1: 'remove oils and residue' concerns hair, not the scalp/roots (E2 oily needs scalp or roots); no other E2 unit; pack source present."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "gentle",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength low, D1 False -> gentle."
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "evidence": "'Clarifying blend', 'KLAEREND' are not D1 stems (D1 'Not D1')."
+    },
+    "explicitResetPositioning": false,
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "moderate",
+      "rationale": "D2 not met: D1 false"
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "moderate",
+        "tier": "acceptable",
+        "display": "amber"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "moderate",
+        "tier": "ideal",
+        "display": "amber"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "moderate",
+        "tier": "acceptable",
+        "display": "amber"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_thickness_boundary",
+        "detail": "fine, normal"
+      }
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "catalogDependent": "review_live_value_differs not computed in lane (live rows unseen)."
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "general (provisional, low)",
+      "final": "general",
+      "evidence": "Clarifying/buildup positioning (S2 'Clarifying blend visibly helps remove oils and residue to clear away buildup', 'ERFRISCHEND & KLAEREND') fails F6: cleansingStrength is low (C6). No other compatible job: 'Lipi Pro Shield' protection over a nonspecific formula is not repair (F1). -> general."
+    },
+    {
+      "property": "focusSecondary",
+      "blind": "[] (provisional)",
+      "final": [],
+      "evidence": "No compatible second role."
+    },
+    {
+      "property": "usageRole",
+      "blind": "regular (provisional)",
+      "final": "regular",
+      "evidence": "Buildup/klaerend wording is reset intent (U4) but cleansing is low, so alternating cannot fire; no frequency wording; no D1 ('Clarifying blend' is not 'Clarifying Shampoo')."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blind": "unknown (positioning hidden)",
+      "final": "not_targeted",
+      "evidence": "No sensitive/dry-scalp claim ('refreshing scalp' names no scalp state)."
+    },
+    {
+      "property": "cleansingStrength/conditioningLevel/weightPotential/dandruffSupport",
+      "blind": "frozen",
+      "final": "unchanged",
+      "evidence": "Claims cannot assign these (3.2); no revealed formula conflict."
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "noComparisonWithEarlierValues": true
+  },
+  "uncertainties": [
+    {
+      "reading": "oily wording 'Oele und Rueckstaende entfernen' / retailer 'fettiges Haar'",
+      "chosen": "not an E2 oily scalp claim (no scalp/roots; retailer low)",
+      "alternative": "oily claim -> S-OILY fails (cleansing low) -> S-FAIL review"
+    },
+    {
+      "reading": "formula source tier 4",
+      "chosen": "accepted as complete per packet",
+      "alternative": "lower confidence"
+    }
+  ]
+}

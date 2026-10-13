@@ -9,7 +9,6 @@ import { evaluateStage3Authority } from "@/lib/personal-plan/products/authority/
 import {
   buildHeatActivatedProtocolRow,
   NEQI_DIAMOND_GLASS_ULTIMATE_HEAT_ACTIVATED_ROW_INPUT,
-  PANTENE_HEAT_GLOW_HEAT_ACTIVATED_ROW_INPUTS,
 } from "@/lib/product-intake/catalog-enrichment/heat-activated-protocols"
 
 import {
@@ -28,7 +27,7 @@ import {
  * is not proven here.
  */
 
-const MIGRATION = "supabase/migrations/20261011161000_catalog_completeness_fill_slice3.sql"
+const MIGRATION = "supabase/migrations/20261013151000_catalog_completeness_fill_slice3.sql"
 const SLICE = "plans/catalog-completeness-fill/slice3/"
 const NEQI = "42a2fe20-bd7e-49a3-a880-8ae89015a5c9"
 const HEAT_GLOW = "e781ca9e-886d-40a1-bfe1-48177cfbf381"
@@ -160,7 +159,7 @@ test("slice3 migrates, verifies, rolls back to the exact prestate, reapplies and
   const specs = Object.fromEntries(
     after.specs.map((row) => [(row.row as Row).product_id, row.row as Row]),
   )
-  for (const id of [NEQI, HEAT_GLOW]) {
+  for (const id of [NEQI]) {
     assert.equal(specs[id]!.heat_activation_required, true)
     assert.equal(specs[id]!.heat_activation_route, "airflow_shaping")
     assert.deepEqual(specs[id]!.plan_roles, ["pre_heat_application"])
@@ -177,21 +176,12 @@ test("slice3 migrates, verifies, rolls back to the exact prestate, reapplies and
       ["normal", "moisture_anti_frizz", "heat_style"],
     ],
   )
-  assert.deepEqual(
-    after.eligibility
-      .filter((row) => row.product_id === HEAT_GLOW)
-      .map((row) => [row.need_bucket, row.styling_context]),
-    [
-      ["heat_protect", "heat_style"],
-      ["moisture_anti_frizz", "heat_style"],
-      ["shine_protect", "heat_style"],
-    ],
-  )
-  // Q1: the legacy post-wash rows stay byte-identical.
-  assert.deepEqual(
-    after.protocols.filter((row) => row.role === "post_wash_leave_in"),
-    before.protocols.filter((row) => row.role === "post_wash_leave_in"),
-  )
+  // Q11=B: every captured HEAT&GLOW value survives, including roles and all protocols.
+  for (const key of ["specs", "fit", "eligibility", "protocols", "evidence"] as const) {
+    const forHeatGlow = (rows: Row[]) =>
+      rows.filter((row) => (row.row ? (row.row as Row).product_id : row.product_id) === HEAT_GLOW)
+    assert.deepEqual(forHeatGlow(after[key]), forHeatGlow(before[key]), key)
+  }
   await pg.query("SELECT public.assert_personal_plan_curated_publication($1::uuid)", [HEAT_GLOW])
 
   await pg.exec(rollback)
@@ -266,10 +256,10 @@ function pgliteClient(pg: PGlite) {
   }
 }
 
-test("after apply, Stage 3 keeps HEAT&GLOW out of post-wash and offers it pre-heat only to blow-dry users", async (t) => {
+test("after apply, Stage 3 keeps Neqi out of post-wash and offers it pre-heat only to blow-dry users", async (t) => {
   const pg = await seededDatabase(t)
   await pg.exec(await readRepoFile(MIGRATION))
-  const facts = await loadScanProductFacts(pgliteClient(pg) as never, "leave_in", HEAT_GLOW, {
+  const facts = await loadScanProductFacts(pgliteClient(pg) as never, "leave_in", NEQI, {
     hairThickness: "normal",
     role: "pre_heat_application",
     shampooTarget: null,
@@ -300,8 +290,8 @@ test("after apply, Stage 3 keeps HEAT&GLOW out of post-wash and offers it pre-he
           category: "leave_in",
           roles: [role],
           weight: "medium",
-          careDirection: "moisture",
-          repairSupportLevel: "medium",
+          careDirection: "balanced",
+          repairSupportLevel: "low",
           functions: [],
           conditionerReplacementEligible: false,
         },
@@ -339,11 +329,10 @@ test("applied protocol rows are exactly the reviewed rows Stage 5 renders (tests
        FROM public.product_application_protocols
       WHERE product_id = ANY($1::uuid[]) AND role = 'pre_heat_protection'
       ORDER BY product_id, application_family`,
-    [[NEQI, HEAT_GLOW]],
+    [[NEQI]],
   )
   const expected = [
     buildHeatActivatedProtocolRow(NEQI_DIAMOND_GLASS_ULTIMATE_HEAT_ACTIVATED_ROW_INPUT),
-    ...PANTENE_HEAT_GLOW_HEAT_ACTIVATED_ROW_INPUTS.map(buildHeatActivatedProtocolRow),
   ]
     .map((row) => ({
       product_id: row.product_id,
@@ -392,19 +381,19 @@ test("native protocol-column drift fails closed in apply, verify and rollback (S
   const pg = await seededDatabase(t)
   await pg.exec(migration)
   for (const [column, value] of [
-    ["application_state", "damp"],
+    ["application_state", "dry"],
     ["reapplication", "optional"],
     ["rinse_action", "rinse_out"],
   ] as const) {
     await pg.query(
-      `UPDATE public.product_application_protocols SET ${column} = $1 WHERE product_id = $2 AND role = 'pre_heat_protection' AND application_family = 'pre_heat_dry'`,
-      [value, HEAT_GLOW],
+      `UPDATE public.product_application_protocols SET ${column} = $1 WHERE product_id = $2 AND role = 'pre_heat_protection' AND application_family = 'pre_heat_damp'`,
+      [value, NEQI],
     )
     await assert.rejects(pg.exec(verify), /slice3 target protocols/, column)
     await assert.rejects(pg.exec(rollback), /slice3 target protocols/, column)
     await pg.exec("ROLLBACK").catch(() => undefined)
     await pg.exec(
-      `UPDATE public.product_application_protocols SET ${column} = ${column === "application_state" ? "'dry'" : column === "reapplication" ? "'required'" : "'leave_in'"} WHERE product_id = '${HEAT_GLOW}' AND role = 'pre_heat_protection' AND application_family = 'pre_heat_dry'`,
+      `UPDATE public.product_application_protocols SET ${column} = ${column === "application_state" ? "'damp'" : column === "reapplication" ? "'required'" : "'leave_in'"} WHERE product_id = '${NEQI}' AND role = 'pre_heat_protection' AND application_family = 'pre_heat_damp'`,
     )
     await pg.exec(verify)
   }

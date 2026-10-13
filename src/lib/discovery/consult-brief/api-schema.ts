@@ -1,4 +1,5 @@
 import type { ConsultInput } from "./input"
+import { CONSULT_LEVER_GAPS, CONSULT_LEVER_KINDS } from "./lever-scale"
 
 /**
  * The API-facing brief schema (consult-brief-hardening T3): a strict Structured Outputs
@@ -11,8 +12,6 @@ export const CONSULT_BRIEF_HEBEL_MIN = 3
 export const CONSULT_BRIEF_HEBEL_MAX = 5
 export const CONSULT_BRIEF_CALL_FRAGEN_MIN = 3
 export const CONSULT_BRIEF_CALL_FRAGEN_MAX = 5
-export const CONSULT_BRIEF_POINTS_MIN = 0.5
-export const CONSULT_BRIEF_POINTS_MAX = 2
 
 /** The swapReasons keys the model may use — the same set `buildConsultBriefPrompt` names. */
 export function consultBriefSwapKeys(input: ConsultInput): string[] {
@@ -62,15 +61,12 @@ export function consultBriefJsonSchemaFormat(
           items: {
             type: "object",
             additionalProperties: false,
-            required: ["title", "note", "points", "bucket"],
+            required: ["title", "note", "kind", "gap", "bucket"],
             properties: {
               title: { type: "string" },
               note: { type: "string" },
-              points: {
-                type: ["number", "null"],
-                minimum: CONSULT_BRIEF_POINTS_MIN,
-                maximum: CONSULT_BRIEF_POINTS_MAX,
-              },
+              kind: { type: "string", enum: [...CONSULT_LEVER_KINDS] },
+              gap: { type: "string", enum: [...CONSULT_LEVER_GAPS] },
               bucket: { type: "string", enum: ["produkt", "umgang"] },
             },
           },

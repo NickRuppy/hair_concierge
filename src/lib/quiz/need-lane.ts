@@ -1,4 +1,4 @@
-import { getOrderedGoals } from "@/lib/onboarding/goal-flow"
+import { getOrderedGoals } from "@/lib/vocabulary/onboarding-goals"
 import type { Goal, HairTexture } from "@/lib/vocabulary"
 import { GOALS } from "@/lib/vocabulary"
 

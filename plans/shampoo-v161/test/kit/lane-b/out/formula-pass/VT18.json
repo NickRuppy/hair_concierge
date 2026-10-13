@@ -1,0 +1,150 @@
+{
+  "blindId": "VT18",
+  "inciFingerprintSha256": "b0e2b65b9820cb98896157e9be265a953e96246e26b6ba348e8e062356d040ec",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, claims hidden)",
+  "standard": "shampoo-classification-v1.6.1 candidate text (unlocked)",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "moderate",
+    "normalization": "ID-2: Water/Aqua/Eau and Vinegar/Acetum/Vinaigre each one entry; normalized one-based positions of the 27-entry list",
+    "e3ProminenceCutoff": "Fragrance (Parfum) @17 -> positions 1-16 prominent"
+  },
+  "formulaFacts": {
+    "surfactantSystem": [
+      "Sodium Coco-Sulfate @2 - strong anionic, alkyl sulfate type, defining anionic",
+      "Babassuamidopropyl Betaine @4 - amphoteric, buffer",
+      "Cocamidopropylamine Oxide @16 - amphoteric, buffer only (C3b), prominent (before Fragrance @17)",
+      "No reinforcing strong anionic"
+    ],
+    "conditioningAndWeightRoutes": {
+      "silicone": [],
+      "cationic_polymer": ["Polyquaternium-4 @12"],
+      "cationic_conditioner": ["Stearamidopropyl Dimethylamine @10"],
+      "payload_lipid": ["Helianthus Annuus (Sunflower) Seed Oil @6"],
+      "weak_refatter": [],
+      "protein_film": [],
+      "film_former": [],
+      "pearlizing_fatty_route_for_C2": [],
+      "humectantContext": ["Glycerin @3"],
+      "excluded": ["Mentha Piperita (Peppermint) Oil @7 (essential oil, 6.4)", "Menthol @8, Camphor @9 (cooling/fragrance materials)", "Rosmarinus Officinalis Leaf Extract @5 (extract)", "Sodium Gluconate @11 (chelator)", "Vinegar @13, Citric Acid @15 (pH)", "terpene allergens @18-@24 (fragrance)"]
+    },
+    "actives": ["no recognized anti-dandruff active", "Menthol @8, Camphor @9, Peppermint Oil @7 (cooling/stimulating)"],
+    "scalpExposureFlags": ["Prominent cooling agents and essential oil: Peppermint Oil @7, Menthol @8, Camphor @9 (CSA counter-signals)", "Fragrance @17 plus terpene allergens", "E4 comfort list: no route", "E4 humectant/refatting routes prominent: Glycerin @3, Sunflower Seed Oil @6"]
+  },
+  "wLine": {
+    "wLine": "Fragrance (Parfum) @17",
+    "candidateClasses": ["fragrance"],
+    "cap": "e3Point @17 (Fragrance (Parfum))",
+    "alphabeticalRun": "none",
+    "skipped": [],
+    "plausibilityOfWLine": "No candidate of classes a-d before the cap; the E3 marker itself is the earliest candidate: (i) cleansing surfactants before; (ii) nothing between. W-line = cap, no fallback code",
+    "codes": [],
+    "payloadLipidMaterial": ["Sunflower Seed Oil @6"],
+    "payloadLipidNonMaterial": []
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "strong",
+      "rationale": "Moderate by C5: defining anionic Sodium Coco-Sulfate @2 (alkyl sulfate) with two prominent buffers, Babassuamidopropyl Betaine @4 and Cocamidopropylamine Oxide @16, and no reinforcing route. C3b: the amine oxide is the buffer that brings C5 down to moderate (with one buffer C5 gives strong), so confidence is at most moderate and the neighbor is strong (the value without it).",
+      "ruleIds": ["C5", "C3", "C3b", "C4", "N-ALT"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "rationale": "Moderate: C2 not met (no silicone; Sunflower Oil @6 could take its place, with Polyquaternium-4 @12 and Glycerin @3, but there is no pearlizing/fatty route). Routes: amidoamine conditioner Stearamidopropyl Dimethylamine @10 (cationic at acidic pH, vinegar/citric present), Polyquaternium-4 @12 (light, low-charge polymer), Sunflower Oil @6, Glycerin @3 - noticeable but bounded care. Neighbor high because three distinct conditioning kinds are present.",
+      "ruleIds": ["C2", "5", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "silicone": [],
+        "cationic_polymer": ["Polyquaternium-4 @12"],
+        "cationic_conditioner": ["Stearamidopropyl Dimethylamine @10"],
+        "payload_lipid": ["material: Helianthus Annuus Seed Oil @6 (before W-line @17)"],
+        "weak_refatter": [],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["strong anionic alkyl sulfate: Sodium Coco-Sulfate @2", "amphoteric: Babassuamidopropyl Betaine @4", "amphoteric buffer only: Cocamidopropylamine Oxide @16"],
+        "humectantContext": ["Glycerin @3"],
+        "excluded": ["Peppermint Oil @7", "Menthol @8", "Camphor @9", "Rosemary extract @5"],
+        "unresolved": []
+      },
+      "depositionLoad": "moderate - a liquid oil plus an amidoamine conditioner and a light cationic polymer",
+      "persistence": "moderate - amidoamine and liquid oil are moderately persistent; Polyquaternium-4 is a light, low-charge polymer",
+      "resetCapacity": "moderate - C5 sodium coco-sulfate chassis with two buffers (close to strong)",
+      "counterevidence": "W-RICH holds (material Sunflower Oil @6 converging with cationic deposition @10/@12), which argues for high.",
+      "whyThisBand": "Moderate: plausible deposition from oil + cationic conditioner + cationic polymer leaves noticeable but bounded residue.",
+      "whyNotNeighborBand": "Not high: W-RICH holds but reset is not limited (resetCapacity moderate, alkyl sulfate chassis), and the converging routes are light (liquid oil after an extract, low-charge Polyquaternium-4) and plausibly offset by the sulfate chassis; W-RICH recorded as counter-signal, high as neighbor.",
+      "confidenceLimitingFactor": "W-RICH counter-signal; oil and amidoamine doses unknown.",
+      "rationale": "Moderate: material Sunflower Oil @6 (W-line = Fragrance @17) makes W-RICH hold, but resetCapacity is moderate, so high is reached only if convergence is not offset - judged offset. W1 not applicable (no silicone).",
+      "ruleIds": ["6.6", "W-RICH", "W-LINE", "W1", "W2", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "clarifying",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "nonspecific (provisional)",
+        "moistureRoutes": ["Glycerin @3", "Sunflower Seed Oil @6"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Stearamidopropyl Dimethylamine @10", "Polyquaternium-4 @12"],
+        "limitation": "No protein or damage-care cluster; single humectant"
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "Cooling/stimulating botanicals (peppermint, menthol, camphor, rosemary) hint at a scalp or freshness role, but focus needs a claim.",
+      "decisionTrace": "Claim direction null (blind); formula F6-compatible with clarifying (moderate cleansing, conditioning and weight not high) if oily/reset positioning is revealed; provisional general.",
+      "rationale": "Provisional formula-only: general.",
+      "ruleIds": ["7.2", "F6", "3.1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["clarifying"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no positioning visible.",
+      "rationale": "Provisional [].",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": ["alternating impossible unless cleansingStrength becomes strong", "treatment impossible", "frequent needs U2 wording"],
+      "rationale": "Provisional default regular.",
+      "ruleIds": ["9", "U2", "U4"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: positioning hidden. CSA formula half met only via humectant/refatting routes (Glycerin @3, Sunflower Oil @6); no E4 comfort route; prominent cooling agents and essential oil (@7-@9) are counter-signals.",
+      "ruleIds": ["10", "CSA", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active; peppermint/rosemary/menthol never upgrade (Section 11).",
+      "ruleIds": ["11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "Packet identityConfidence is moderate; recorded, no formula effect in the blind pass.",
+    "weightPotential moderate vs high (W-RICH with moderate reset); alternative high.",
+    "conditioningLevel moderate vs high: amidoamine + polyquaternium + oil could be read as multiple complementary systems."
+  ]
+}

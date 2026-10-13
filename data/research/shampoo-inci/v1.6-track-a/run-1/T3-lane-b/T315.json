@@ -1,0 +1,526 @@
+{
+  "blindId": "T315",
+  "inciFingerprintSha256": "2a1ff767a69fcac5c26fe83c1b9704cfec8842d07b1eebd72c46e2178fbd4177",
+  "policy": "shampoo-classification-v1.6",
+  "identity": {
+    "productName": "Schwarzkopf GLISS Shampoo Total Repair",
+    "brand": "Schwarzkopf GLISS (Henkel)",
+    "market": "DE",
+    "packSize": "250 ml",
+    "identityConfidence": "high"
+  },
+  "normalizationNote": "'Aqua (Water, Eau)' one entry; positions as listed.",
+  "claimUnitsReviewed": [
+    {
+      "unit": "Total Repair (name)",
+      "source": "name",
+      "grade": "high",
+      "reading": "repair candidate"
+    },
+    {
+      "unit": "Tiefenreparatur der Haare, reduziert Haarbruch und stärkt die Haarfaser",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "reading": "repair; 'Tiefenreparatur' is not a D1 stem"
+    },
+    {
+      "unit": "Flüssiges Keratin & Blütennektar ... macht es geschmeidig und glänzend",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "reading": "'flüssiges Keratin' maps to Hydrolyzed Keratin (6); shine outcome"
+    },
+    {
+      "unit": "Geeignet für: Trockenes, geschädigtes Haar",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "reading": "lengths (not dry scalp)"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic Sodium Laureth Sulfate (2); prominent buffer Cocamidopropyl Betaine (3); no reinforcing route. E3 point Parfum (8).",
+      "neighboringAlternative": "none",
+      "counterSignal": "Single buffer; silicone deposition does not alter cleansing (C2).",
+      "sourceIds": [
+        "formula:2a1ff767a69f"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Dimethicone",
+          "position": 5,
+          "role": "silicone (early)"
+        },
+        {
+          "ingredient": "Hydrolyzed Keratin",
+          "position": 6,
+          "role": "protein_film"
+        },
+        {
+          "ingredient": "Combretum Farinosum Flower Nectar",
+          "position": 7,
+          "role": "botanical"
+        },
+        {
+          "ingredient": "Parfum (Fragrance)",
+          "position": 8,
+          "role": "E3 point"
+        },
+        {
+          "ingredient": "PEG-7 Glyceryl Cocoate",
+          "position": 10,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Amodimethicone",
+          "position": 12,
+          "role": "silicone (amino, late)"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 13,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 14,
+          "role": "pearlizing route"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 17,
+          "role": "humectant"
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 18,
+          "role": "payload_lipid, late"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "C2 met (settled pattern): early silicone Dimethicone (5, prominent) + cationic Guar Hydroxypropyltrimonium Chloride (13) + pearlizing Glycol Distearate (14) + humectant Glycerin (17); further routes Amodimethicone (12), Hydrolyzed Keratin (6), PEG-7 Glyceryl Cocoate (10).",
+      "neighboringAlternative": "none",
+      "counterSignal": "Guar, glycerin and amodimethicone are after Parfum.",
+      "sourceIds": [
+        "formula:2a1ff767a69f"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Dimethicone",
+          "position": 5,
+          "role": "silicone (early)"
+        },
+        {
+          "ingredient": "Hydrolyzed Keratin",
+          "position": 6,
+          "role": "protein_film"
+        },
+        {
+          "ingredient": "Combretum Farinosum Flower Nectar",
+          "position": 7,
+          "role": "botanical"
+        },
+        {
+          "ingredient": "Parfum (Fragrance)",
+          "position": 8,
+          "role": "E3 point"
+        },
+        {
+          "ingredient": "PEG-7 Glyceryl Cocoate",
+          "position": 10,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Amodimethicone",
+          "position": 12,
+          "role": "silicone (amino, late)"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 13,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 14,
+          "role": "pearlizing route"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 17,
+          "role": "humectant"
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 18,
+          "role": "payload_lipid, late"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Silicone/guar/late-amodimethicone set plus a prominent protein film (Hydrolyzed Keratin 6), so W1 condition (c) fails and the full method decides: two silicones and a guar converge with ordinary reset; no payload lipid (no W-RICH).",
+      "neighboringAlternative": "high",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "Dimethicone at 5 is substantial; amodimethicone, guar late; keratin prominent but light."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Dimethicone and amodimethicone are persistent; others light."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES + betaine."
+        }
+      },
+      "whyThisBand": "One meaningfully persistent silicone system plus light routes, offset by ordinary reset.",
+      "whyNotNeighborBand": "Not low: early dimethicone plus amodimethicone and guar (W2). Not high: no payload lipid/W-RICH, reset is an effective chassis, amodimethicone and guar are after Parfum; the extra family is a light hydrolyzed protein.",
+      "counterSignal": "Two silicones + guar + protein converge toward high; W1 cannot be cited because (c) fails.",
+      "excluded": [
+        "Glycol Distearate (14): pearlizer",
+        "PEG-120 Methyl Glucose Dioleate (16), Laureth-4/-23, Trideceth-10: thickeners/emulsifiers",
+        "Hydrogenated Castor Oil (18): late waxy lipid (after Parfum), recorded as payload_lipid minor",
+        "Citrus Aurantium Peel Oil (22): fragrance"
+      ],
+      "sourceIds": [
+        "formula:2a1ff767a69f"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Dimethicone",
+          "position": 5,
+          "role": "silicone (early)"
+        },
+        {
+          "ingredient": "Hydrolyzed Keratin",
+          "position": 6,
+          "role": "protein_film"
+        },
+        {
+          "ingredient": "Combretum Farinosum Flower Nectar",
+          "position": 7,
+          "role": "botanical"
+        },
+        {
+          "ingredient": "Parfum (Fragrance)",
+          "position": 8,
+          "role": "E3 point"
+        },
+        {
+          "ingredient": "PEG-7 Glyceryl Cocoate",
+          "position": 10,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Amodimethicone",
+          "position": 12,
+          "role": "silicone (amino, late)"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 13,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 14,
+          "role": "pearlizing route"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 17,
+          "role": "humectant"
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 18,
+          "role": "payload_lipid, late"
+        }
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none",
+      "sourceIds": [
+        "formula:2a1ff767a69f"
+      ],
+      "counterSignal": "Mechanical INCI check (Section 11); botanicals, salicylic acid or claims never change it.",
+      "formulaFacts": []
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "high",
+      "rationale": "Repair named in the product name (high) and formula repair_supported (Hydrolyzed Keratin 6 within a Dimethicone 5 / Amodimethicone 12 / guar 13 deposition cluster) -> repair (F1).",
+      "neighboringAlternative": "none",
+      "counterSignal": "Single protein; smoothing cluster also generic.",
+      "careDirection": {
+        "verdict": "repair_supported",
+        "repairRoutes": [
+          "Hydrolyzed Keratin 6",
+          "Amodimethicone 12",
+          "Dimethicone 5"
+        ],
+        "sharedConditioningRoutes": [
+          "Guar Hydroxypropyltrimonium Chloride 13"
+        ],
+        "moistureRoutes": [
+          "Glycerin 17 (late)"
+        ],
+        "limitation": "Rinse-off; one protein."
+      },
+      "claimRole": "candidate",
+      "decisionTrace": {
+        "primary": {
+          "claimDirection": "repair",
+          "formulaCompatible": true,
+          "compatibleRoute": "Hydrolyzed Keratin 6 + silicone deposition",
+          "decisionReason": "name-led compatible repair"
+        }
+      },
+      "sourceIds": [
+        "reveal:name",
+        "reveal:manufacturer_de",
+        "formula"
+      ],
+      "formulaFacts": []
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Shine ('geschmeidig und glänzend') is delivered by the same silicone smoothing/deposition route cited for repair (F2/F3); 'Blütennektar' is not a shine route; dry-hair wording has no moisture_supported route.",
+      "neighboringAlternative": [
+        "shine"
+      ],
+      "counterSignal": "Shine is explicitly claimed.",
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingClaims": [
+          "Glanz"
+        ],
+        "independentRoutes": [],
+        "whyNot": "F2 same route"
+      },
+      "sourceIds": [
+        "reveal:manufacturer_de"
+      ],
+      "formulaFacts": []
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "'Regelmäßig ... anwenden' is not U2 frequency wording; no other trigger.",
+      "neighboringAlternative": "none",
+      "counterSignal": "-",
+      "decisionTrace": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "'Regelmäßig ... anwenden' is not U2 frequency wording; no other trigger."
+      },
+      "sourceIds": [
+        "reveal:manufacturer_de"
+      ],
+      "formulaFacts": []
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "No sensitive/dry-scalp claim; CSA also fails (no prominent E4 route before Parfum 8).",
+      "neighboringAlternative": "none",
+      "counterSignal": "-",
+      "sourceIds": [
+        "reveal:manufacturer_de",
+        "formula"
+      ],
+      "formulaFacts": []
+    }
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "repair (low)",
+      "final": "repair (high)",
+      "evidence": "name 'Total Repair'",
+      "reason": "compatible claim"
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blind": "not_targeted (moderate)",
+      "final": "not_targeted (high)",
+      "evidence": "no E2 unit",
+      "reason": "-"
+    },
+    {
+      "property": "usageRole",
+      "blind": "regular (low)",
+      "final": "regular (high)",
+      "evidence": "-",
+      "reason": "-"
+    },
+    {
+      "property": "focusSecondary",
+      "blind": "[] (low)",
+      "final": "[] (moderate)",
+      "evidence": "shine claim",
+      "reason": "F2"
+    }
+  ],
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "acceptable",
+        "t1Fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate -> acceptable. Confidence = lowest T1 input (moderate). T4: neighbor weightPotential=high would give not_suited"
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "t1Fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate -> ideal. Confidence = lowest T1 input (moderate). T4: neighbor weightPotential=high would give acceptable"
+      },
+      {
+        "thickness": "coarse",
+        "fit": "ideal",
+        "t1Fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate, C high -> ideal. Confidence = lowest T1 input (moderate). T4: neighbor weightPotential=high would give ideal"
+      }
+    ],
+    "weight": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential moderate -> 1:1."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1: no qualifying E2 claim; manufacturer source -> high."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate -> regular."
+    },
+    "explicitResetPositioning": {
+      "value": false,
+      "confidence": "high",
+      "rationale": "D1: no tiefenrein/deep clean/clarifying shampoo/detox-reinigung stem and no occasional-use direction in name or manufacturer/pack claims ('Tiefenreparatur' is a care term (13.6 Not D1))."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged"
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable",
+        "liveVerdictExpectation": "supportive"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal",
+        "liveVerdictExpectation": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal",
+        "liveVerdictExpectation": "ideal"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_thickness_boundary",
+        "detail": "fine: acceptable -> not_suited if weightPotential=high (T4)"
+      },
+      {
+        "code": "review_thickness_boundary",
+        "detail": "normal: ideal -> acceptable if weightPotential=high (T4)"
+      }
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": {
+      "value": []
+    },
+    "catalogDependentFieldsNotComputed": [
+      "review_live_value_differs (requires live rows; orchestrator after freeze)"
+    ]
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeWeightSubjudgmentsPresent": true,
+    "counterEvidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "noComparisonWithEarlierValuesInsideLane": true,
+    "weightUnchangedAfterUnblind": true
+  },
+  "uncertainties": [
+    {
+      "reading": "weightPotential moderate; W1 not citable because Hydrolyzed Keratin (6) is a prominent protein film (condition c fails).",
+      "alternative": "high (N-ALT neighbor)"
+    }
+  ],
+  "status": "classified"
+}

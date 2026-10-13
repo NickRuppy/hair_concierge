@@ -217,83 +217,9 @@ export const NEQI_DIAMOND_GLASS_ULTIMATE_HEAT_ACTIVATED_ROW_INPUT: HeatActivated
   ],
 }
 
-const PANTENE_PACK_URL =
-  "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow"
-const PANTENE_DM_URL =
-  "https://www.dm.de/p/d/3088304/pantene-pro-v-leave-in-moisture-boost-heat-und-glow"
-const PANTENE_SOURCE_TEXT =
-  "1-2 Pumpstöße auf das gereinigte Haar auftragen. / Föhnen, um zu aktivieren. / Zwischen den Haarwäschen nutzen, um Frizz zu kontrollieren."
-const PANTENE_ACTIVATE_COPY = "Danach föhnen – erst die Wärme aktiviert die Pflege."
-
-const PANTENE_COMMON = {
-  productId: "e781ca9e-886d-40a1-bfe1-48177cfbf381",
-  productName: "Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW",
-  category: "leave_in",
-  placement: "all_hair",
-  sourceLabel: "Pantene-Packung DE (Rückseite), Foto via dm",
-  sourceUrl: PANTENE_PACK_URL,
-  sourceText: PANTENE_SOURCE_TEXT,
-  activationStatement: "Hitzeaktivierte Formel für extra Pflege",
-  evidence: [
-    { sourceUrl: PANTENE_PACK_URL, sourceType: "manufacturer", checkedAt: CHECKED_AT },
-    { sourceUrl: PANTENE_DM_URL, sourceType: "retailer", checkedAt: CHECKED_AT },
-  ],
-} as const satisfies Partial<HeatActivatedProtocolRowInput>
-
-/**
- * Pantene HEAT&GLOW — C1 current German pack (back; front for the activation statement),
- * read from the dm-hosted packshot (H3). Row 1 replaces the Boots-sourced wash-day row; row 2
- * is the pack's between-wash use (P13). The two legacy post-wash rows stay untouched (Q1).
- */
-export const PANTENE_HEAT_GLOW_HEAT_ACTIVATED_ROW_INPUTS: HeatActivatedProtocolRowInput[] = [
-  {
-    ...PANTENE_COMMON,
-    evidence: [...PANTENE_COMMON.evidence],
-    applicationFamily: "pre_heat_damp",
-    amount: { kind: "pumps", minimum: 1, maximum: 2 },
-    steps: [
-      {
-        stepKey: "apply",
-        action: "apply_product",
-        copyDe: "1–2 Pumpstöße im frisch gewaschenen Haar verteilen.",
-        sourceSentences: ["1-2 Pumpstöße auf das gereinigte Haar auftragen."],
-      },
-      {
-        stepKey: "activate",
-        action: "tool",
-        copyDe: PANTENE_ACTIVATE_COPY,
-        sourceSentences: ["Föhnen, um zu aktivieren.", "Hitzeaktivierte Formel für extra Pflege"],
-      },
-    ],
-  },
-  {
-    ...PANTENE_COMMON,
-    evidence: [...PANTENE_COMMON.evidence],
-    applicationFamily: "pre_heat_dry",
-    // The pack names no separate dose for the between-wash use.
-    amount: null,
-    steps: [
-      {
-        stepKey: "apply-between-washes",
-        action: "apply_product",
-        copyDe: "Zwischen den Haarwäschen gegen Frizz: die Creme im trockenen Haar verteilen.",
-        sourceSentences: ["Zwischen den Haarwäschen nutzen, um Frizz zu kontrollieren."],
-      },
-      {
-        stepKey: "activate",
-        action: "tool",
-        copyDe: PANTENE_ACTIVATE_COPY,
-        // D-c: the pack's activation direction governs every use it lists.
-        sourceSentences: ["Föhnen, um zu aktivieren."],
-      },
-    ],
-  },
-]
-
 /** Every reviewed heat-activated workflow input, keyed by catalogue product. */
 const REVIEWED_HEAT_ACTIVATED_ROW_INPUTS: readonly HeatActivatedProtocolRowInput[] = [
   NEQI_DIAMOND_GLASS_ULTIMATE_HEAT_ACTIVATED_ROW_INPUT,
-  ...PANTENE_HEAT_GLOW_HEAT_ACTIVATED_ROW_INPUTS,
 ]
 
 /**

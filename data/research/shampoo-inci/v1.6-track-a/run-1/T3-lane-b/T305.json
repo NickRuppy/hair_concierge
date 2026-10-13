@@ -1,0 +1,514 @@
+{
+  "blindId": "T305",
+  "inciFingerprintSha256": "4d21bc975505079b916aa495f148440be891511f6de5cfb207eb9bfeb79bd9a0",
+  "policy": "shampoo-classification-v1.6",
+  "identity": {
+    "productName": "Garnier Wahre Schätze Ausgleichendes Shampoo Anziehende Aktivkohle & Schwarzkümmelöl",
+    "brand": "Wahre Schätze (Garnier)",
+    "market": "DE",
+    "packSize": "300 ml (same formula 250 ml)",
+    "identityConfidence": "moderate"
+  },
+  "normalizationNote": "No split synonym entries; packet positions are normalized positions.",
+  "claimUnitsReviewed": [
+    {
+      "unit": "Das Garnier Wahre Schätze Ausgleichende Shampoo ist ein Tiefenreinigungsshampoo, das schnell fettende Kopfhaut reinigt ...",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "reading": "D1 stem 'tiefenrein'; E2 oily 'schnell fettende Kopfhaut'"
+    },
+    {
+      "unit": "Tiefenreinigungsshampoo gegen schnell fettende Kopfhaut und trockene Haarlängen",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "reading": "D1 + E2 oily; dry lengths (not a scalp claim)"
+    },
+    {
+      "unit": "... zieht Rückstände und Unreinheiten auf der Kopfhaut nahezu magnetisch an",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "reading": "U4 reset intent (Rückstände)"
+    },
+    {
+      "unit": "... trockenen Haarlängen bis zu 72 Stunden Feuchtigkeit",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "reading": "moisture candidate (lengths)"
+    },
+    {
+      "unit": "dm title 'fettige Kopfhaut'; 'Wirkt trockenen Haaren entgegen'",
+      "source": "dm retailer",
+      "grade": "low",
+      "reading": "low"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "high",
+      "rationale": "C5: defining anionic Ammonium Lauryl Sulfate (2, alkyl sulfate); only one prominent buffer (Cocamidopropyl Betaine 4); no second buffer, so C5 gives strong. Polyglyceryl-10 esters (12, 13) are not routes/buffers; Charcoal Powder (9) is not a cleansing route. E3 point Parfum (21).",
+      "neighboringAlternative": "none",
+      "counterSignal": "Nigella Sativa Seed Oil (5) and guar (8) refat/condition, but C5 is fixed.",
+      "sourceIds": [
+        "formula:4d21bc975505"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Ammonium Lauryl Sulfate",
+          "position": 2,
+          "role": "defining anionic, alkyl sulfate (C5)"
+        },
+        {
+          "ingredient": "Sodium Chloride",
+          "position": 3,
+          "role": "thickener"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "role": "single buffer"
+        },
+        {
+          "ingredient": "Nigella Sativa Seed Oil",
+          "position": 5,
+          "role": "payload_lipid"
+        },
+        {
+          "ingredient": "Triethyl Citrate",
+          "position": 6,
+          "role": "solvent"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 8,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Charcoal Powder",
+          "position": 9,
+          "role": "adsorbent, not a route"
+        },
+        {
+          "ingredient": "Polyglyceryl-10 Myristate",
+          "position": 12,
+          "role": "emulsifier"
+        },
+        {
+          "ingredient": "Polyglyceryl-10 Stearate",
+          "position": 13,
+          "role": "emulsifier"
+        },
+        {
+          "ingredient": "Parfum / Fragrance",
+          "position": 21,
+          "role": "E3 point"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "W-RICH: prominent payload lipid Nigella Sativa Seed Oil (5) converging with cationic Guar Hydroxypropyltrimonium Chloride (8); Section 5 counts W-RICH alone as a rich architecture. C2 itself is not met (no pearlizing/fatty route, no listed humectant).",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "C2 not met; single oil and single guar in a strong alkyl-sulfate chassis; no humectant or pearlizer.",
+      "sourceIds": [
+        "formula:4d21bc975505"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Ammonium Lauryl Sulfate",
+          "position": 2,
+          "role": "defining anionic, alkyl sulfate (C5)"
+        },
+        {
+          "ingredient": "Sodium Chloride",
+          "position": 3,
+          "role": "thickener"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "role": "single buffer"
+        },
+        {
+          "ingredient": "Nigella Sativa Seed Oil",
+          "position": 5,
+          "role": "payload_lipid"
+        },
+        {
+          "ingredient": "Triethyl Citrate",
+          "position": 6,
+          "role": "solvent"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 8,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Charcoal Powder",
+          "position": 9,
+          "role": "adsorbent, not a route"
+        },
+        {
+          "ingredient": "Polyglyceryl-10 Myristate",
+          "position": 12,
+          "role": "emulsifier"
+        },
+        {
+          "ingredient": "Polyglyceryl-10 Stearate",
+          "position": 13,
+          "role": "emulsifier"
+        },
+        {
+          "ingredient": "Parfum / Fragrance",
+          "position": 21,
+          "role": "E3 point"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Two converging families (payload lipid at 5, cationic guar at 8) make bounded residue plausible; W-RICH holds formally but resetCapacity is strong (C5 strong), so the rich route to high is not met.",
+      "neighboringAlternative": "high",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "Prominent fixed oil and guar."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "Liquid oil and one guar; no silicone, wax or film."
+        },
+        "resetCapacity": {
+          "value": "strong",
+          "rationale": "C5 ammonium lauryl sulfate chassis with a single buffer."
+        }
+      },
+      "whyThisBand": "Plausible bounded residue from oil + guar, strongly offset by reset.",
+      "whyNotNeighborBand": "Not low: two distinct families with a prominent oil (W2); the oil is not late/trace. Not high: strong reset is not limited (W-RICH limited-reset rule), no third persistent system.",
+      "counterSignal": "W-RICH recorded; neighbor high per W-RICH rule (strong reset argues the other way).",
+      "excluded": [
+        "Charcoal Powder (9): not deposition",
+        "Triethyl Citrate (6): solvent",
+        "Polyglycerin-10 (11), Polyglyceryl-10 Myristate/Stearate (12,13): emulsifier/solubilizer esters, recorded as weak_refatter-type context, not persistent"
+      ],
+      "sourceIds": [
+        "formula:4d21bc975505"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Ammonium Lauryl Sulfate",
+          "position": 2,
+          "role": "defining anionic, alkyl sulfate (C5)"
+        },
+        {
+          "ingredient": "Sodium Chloride",
+          "position": 3,
+          "role": "thickener"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "role": "single buffer"
+        },
+        {
+          "ingredient": "Nigella Sativa Seed Oil",
+          "position": 5,
+          "role": "payload_lipid"
+        },
+        {
+          "ingredient": "Triethyl Citrate",
+          "position": 6,
+          "role": "solvent"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 8,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Charcoal Powder",
+          "position": 9,
+          "role": "adsorbent, not a route"
+        },
+        {
+          "ingredient": "Polyglyceryl-10 Myristate",
+          "position": 12,
+          "role": "emulsifier"
+        },
+        {
+          "ingredient": "Polyglyceryl-10 Stearate",
+          "position": 13,
+          "role": "emulsifier"
+        },
+        {
+          "ingredient": "Parfum / Fragrance",
+          "position": 21,
+          "role": "E3 point"
+        }
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none",
+      "sourceIds": [
+        "formula:4d21bc975505"
+      ],
+      "counterSignal": "Mechanical INCI check (Section 11); botanicals, salicylic acid or claims never change it.",
+      "formulaFacts": []
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "rationale": "Candidate clarifying (deep-cleansing + oily-scalp positioning, moderate) fails F6: conditioningLevel is high (W-RICH: Nigella oil 5 + guar 8). Next candidate moisture (lengths hydration) is incompatible: care direction nonspecific (no humectant cluster). -> general; failed F6 condition named.",
+      "neighboringAlternative": "clarifying",
+      "counterSignal": "Strong C5 chassis, D1 wording and oily positioning all point to clarifying; only the conditioning clause blocks it.",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "limitation": "Oil + guar only; no humectant cluster."
+      },
+      "claimRole": "not_applicable",
+      "decisionTrace": {
+        "primary": {
+          "claimDirection": "clarifying (deep cleansing / oily scalp) then moisture",
+          "formulaCompatible": false,
+          "compatibleRoute": "none (F6 fails on conditioningLevel high; moisture verdict nonspecific)",
+          "decisionReason": "F6 failed condition: conditioningLevel high"
+        }
+      },
+      "sourceIds": [
+        "reveal:manufacturer_de",
+        "formula"
+      ],
+      "formulaFacts": []
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "No secondary with a compatible independent route (clarifying fails F6; moisture nonspecific).",
+      "neighboringAlternative": [
+        "clarifying"
+      ],
+      "counterSignal": "Deep-cleansing positioning.",
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingClaims": [
+          "clarifying",
+          "moisture"
+        ],
+        "independentRoutes": [],
+        "whyNot": "incompatible"
+      },
+      "sourceIds": [
+        "reveal:manufacturer_de"
+      ],
+      "formulaFacts": []
+    },
+    "usageRole": {
+      "value": "occasional_reset",
+      "confidence": "moderate",
+      "rationale": "D1 true (manufacturer 'Tiefenreinigungsshampoo', moderate) -> occasional_reset (U1 first). Alternating also fires (strong + reset intent) and loses.",
+      "neighboringAlternative": "alternating",
+      "counterSignal": "Directions do not limit frequency; D2 fails on focus.",
+      "decisionTrace": {
+        "default": "regular",
+        "triggerCode": "explicit_deep_cleansing",
+        "triggerEvidence": [
+          "'ist ein Tiefenreinigungsshampoo' (manufacturer_de)"
+        ],
+        "losingTriggers": [
+          {
+            "trigger": "strong_plus_reset_intent",
+            "evidence": "cleansingStrength strong + 'schnell fettende Kopfhaut', 'Rückstände' (manufacturer_de)"
+          }
+        ],
+        "rationale": "D1 true (manufacturer 'Tiefenreinigungsshampoo', moderate) -> occasional_reset (U1 first). Alternating also fires (strong + reset intent) and loses."
+      },
+      "sourceIds": [
+        "reveal:manufacturer_de"
+      ],
+      "formulaFacts": []
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "No E2 sensitive or dry-scalp claim; dryness wording concerns lengths only.",
+      "neighboringAlternative": "none",
+      "counterSignal": "-",
+      "sourceIds": [
+        "reveal:manufacturer_de"
+      ],
+      "formulaFacts": []
+    }
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "general (low)",
+      "final": "general (moderate)",
+      "evidence": "deep-cleansing/oily positioning",
+      "reason": "clarifying candidate fails F6 on conditioningLevel high"
+    },
+    {
+      "property": "usageRole",
+      "blind": "regular (low)",
+      "final": "occasional_reset (moderate)",
+      "evidence": "'Tiefenreinigungsshampoo'",
+      "reason": "D1 true"
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blind": "not_targeted (low)",
+      "final": "not_targeted (high)",
+      "evidence": "no sensitive/dry scalp claim",
+      "reason": "-"
+    },
+    {
+      "property": "focusSecondary",
+      "blind": "[] (low)",
+      "final": "[] (moderate)",
+      "evidence": "-",
+      "reason": "-"
+    }
+  ],
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "acceptable",
+        "t1Fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate -> acceptable. Confidence = lowest T1 input (moderate). T4: neighbor weightPotential=high would give not_suited"
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "t1Fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate -> ideal. Confidence = lowest T1 input (moderate). T4: neighbor weightPotential=high would give acceptable"
+      },
+      {
+        "thickness": "coarse",
+        "fit": "ideal",
+        "t1Fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate, C high -> ideal. Confidence = lowest T1 input (moderate). T4: neighbor weightPotential=high would give ideal; neighbor conditioningLevel=moderate would give acceptable"
+      }
+    ],
+    "weight": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential moderate -> 1:1."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "moderate",
+        "rationale": "S-ORDINARY way 4: E2 oily claim (manufacturer, moderate) fails the S-OILY formula clause because conditioningLevel is high (cleansing strong and weight moderate pass); no other specialist target; X1 does not apply. Rules: S-OILY, S-FAIL, S-ORDINARY, 13.8."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "clarifying",
+      "confidence": "moderate",
+      "rationale": "I1: cleansingStrength strong with D1 true -> clarifying."
+    },
+    "explicitResetPositioning": {
+      "value": true,
+      "confidence": "moderate",
+      "rationale": "D1: manufacturer claim 'Tiefenreinigungsshampoo'/'tiefenreinigende' (stem tiefenrein), manufacturer source graded moderate (E1/CL-SRC)."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "moderate",
+      "rationale": "D2 not met: focusPrimary is general (F6 failed), so no deep-cleanser entry; D3 raises review_reset_positioning_mismatch."
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "clarifying",
+        "weight": "moderate",
+        "tier": "acceptable",
+        "liveVerdictExpectation": "supportive"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "clarifying",
+        "weight": "moderate",
+        "tier": "ideal",
+        "liveVerdictExpectation": "supportive"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "clarifying",
+        "weight": "moderate",
+        "tier": "ideal",
+        "liveVerdictExpectation": "supportive"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_specialist_gate_failed",
+        "detail": "oily: S-OILY formula clause failed (conditioningLevel high)"
+      },
+      {
+        "code": "review_reset_positioning_mismatch",
+        "detail": "D1 true with cleansingStrength strong but D2 not met (focusPrimary general, F6 conditioning clause)"
+      },
+      {
+        "code": "review_thickness_boundary",
+        "detail": "fine: acceptable -> not_suited if weightPotential=high (T4)"
+      },
+      {
+        "code": "review_thickness_boundary",
+        "detail": "normal: ideal -> acceptable if weightPotential=high (T4)"
+      },
+      {
+        "code": "review_thickness_boundary",
+        "detail": "coarse: ideal -> acceptable if conditioningLevel=moderate (T4)"
+      }
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": {
+      "value": []
+    },
+    "catalogDependentFieldsNotComputed": [
+      "review_live_value_differs (requires live rows; orchestrator after freeze)"
+    ]
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeWeightSubjudgmentsPresent": true,
+    "counterEvidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "noComparisonWithEarlierValuesInsideLane": true,
+    "weightUnchangedAfterUnblind": true
+  },
+  "uncertainties": [
+    {
+      "reading": "conditioningLevel high because Section 5 counts W-RICH (prominent Nigella oil 5 + guar 8) as rich architecture, although C2 is not met.",
+      "alternative": "moderate (N-ALT neighbor). Then F6 passes: focus clarifying, D2 flagged (deep-cleanser entry needs_record), S-OILY passes -> oily target (coarse acceptable via T1), no S-FAIL/D3 flags. This is the pivotal reading for this product."
+    },
+    {
+      "reading": "weightPotential moderate with W-RICH neighbor high.",
+      "alternative": "low (strong reset)"
+    }
+  ],
+  "status": "classified"
+}

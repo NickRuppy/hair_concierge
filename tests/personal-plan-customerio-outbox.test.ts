@@ -194,3 +194,44 @@ test("transient Customer.io failures are recorded for retry instead of reported 
   assert.deepEqual(deps.delivered, [])
   assert.deepEqual(deps.failed, [{ error: "down", permanent: false }])
 })
+
+// PUB-3, security audit 2026-10-09, minimal fix ruled by Nick 2026-10-12.
+for (const allowed of [false, true]) {
+  test(`PUB-3 durable outbox identity permission ${allowed} survives dispatch/retry`, async () => {
+    const deps = dependencies({ row: row({ identity_traits_allowed: allowed } as never) })
+    const calls: Array<{ url: string; body: Record<string, any> }> = []
+    const originalFetch = globalThis.fetch
+    const originalKey = process.env.CUSTOMERIO_SERVER_WRITE_KEY
+    process.env.CUSTOMERIO_SERVER_WRITE_KEY = "test-key"
+    globalThis.fetch = (async (url: unknown, init?: RequestInit) => {
+      calls.push({ url: String(url), body: JSON.parse(String(init?.body)) })
+      return new Response("{}", { status: 200 })
+    }) as typeof fetch
+    try {
+      const { syncPersonalPlanLeadToCustomerIo } =
+        await import("../src/lib/personal-plan-quiz/customerio")
+      assert.equal(
+        await dispatchCustomerIoProfileSyncForLead({} as never, "lead-123", {
+          dependencies: { ...deps.value, deliver: syncPersonalPlanLeadToCustomerIo } as never,
+        }),
+        "delivered",
+      )
+      const traits = calls.find((call) => call.url.endsWith("/identify"))!.body.traits
+      assert.equal(traits.hair_texture, "wavy")
+      assert.equal("first_name" in traits, false)
+      assert.equal("marketing_consent" in traits, allowed)
+      assert.equal("consent_timestamp" in traits, allowed)
+      assert.equal("email" in traits, allowed)
+      assert.equal("commercial_automation_eligible" in traits, allowed)
+      assert.equal(
+        calls.find((call) => call.url.endsWith("/track"))!.body.event,
+        "personal_plan_profile_submitted",
+      )
+      if (allowed) assert.equal(traits.marketing_consent, true)
+    } finally {
+      globalThis.fetch = originalFetch
+      if (originalKey === undefined) delete process.env.CUSTOMERIO_SERVER_WRITE_KEY
+      else process.env.CUSTOMERIO_SERVER_WRITE_KEY = originalKey
+    }
+  })
+}

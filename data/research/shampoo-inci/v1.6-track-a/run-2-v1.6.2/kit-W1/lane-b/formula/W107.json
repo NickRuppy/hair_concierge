@@ -1,0 +1,32 @@
+{
+  "blindId": "W107",
+  "packSize": "250 ml",
+  "canonicalInci": [
+    "Aqua (Water)",
+    "Ammonium Lauryl Sulfate",
+    "Cocamidopropyl Betaine",
+    "Sodium Chloride",
+    "Hydrolyzed Corn Protein",
+    "Glycerin",
+    "Hydrolyzed Wheat Protein",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Hydrolyzed Soy Protein",
+    "Citric Acid",
+    "Alcohol",
+    "Benzoic Acid",
+    "Arginine",
+    "Betula Alba Leaf Extract*",
+    "Leuconostoc/Radish Root Ferment Filtrate",
+    "Aloe Barbadensis Leaf Juice Powder*",
+    "Levulinic Acid",
+    "Sodium Levulinate",
+    "Sodium Benzoate",
+    "Parfum (Fragrance)**",
+    "Vanillin**"
+  ],
+  "inciFingerprintSha256": "b4d05d43d9f88be1b079f69a1a0097118da48ed5d30dc75a6859b3a920018869",
+  "normalization": "Runbook step 2: canonical list items lower-cased, trimmed, whitespace collapsed, joined with '|', SHA-256; split synonym entries (e.g. 'Aqua (Water, Eau)') merged before numbering.",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "moderate"
+}

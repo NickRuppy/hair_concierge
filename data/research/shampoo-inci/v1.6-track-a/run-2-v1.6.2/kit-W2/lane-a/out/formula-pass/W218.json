@@ -1,0 +1,143 @@
+{
+  "blindId": "W218",
+  "inciFingerprintSha256": "0c25d74bac27b0957b5743836d796c5845d98cc364ff615187b93a715246f880",
+  "phase": "formula-pass (blind, stage A only; no claims seen)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "packSize": "300 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 3,
+    "identityConfidence": "moderate",
+    "normalization": "ID-2: no split synonym entries; packet positions equal normalized one-based positions.",
+    "e3ProminenceCutoff": "Parfum @9; positions 1-8 prominent"
+  },
+  "normalizedInci": ["1 Aqua", "2 Aloe Barbadensis Leaf Juice", "3 Cocamidopropyl Betaine", "4 Sodium Cocoyl Isethionate", "5 Sodium Chloride", "6 Arginine", "7 Serine", "8 Linum Usitatissimum Seed Extract", "9 Parfum", "10 Glycerin", "11 Glyceryl Oleate", "12 PCA", "13 Glycine", "14 Histidine", "15 Coconut Acid", "16 Glycol Distearate", "17 Hydroxypropyl Guar Hydroxypropyltrimonium Chloride", "18 Sodium Isethionate", "19 Coco-Glucoside", "20 Sodium PCA", "21 Glyceryl Stearate", "22 Aspartic Acid", "23 Alanine", "24 Valine", "25 Isoleucine", "26 Proline", "27 Threonine", "28 Phenylalanine", "29 Phenoxyethanol", "30 Ethylhexylglycerin", "31 Benzoic Acid", "32 Citric Acid", "33 Sodium Lactate"],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Low by C6: no strong anionic anywhere; the earliest prominent cleansing surfactant is the amphoteric Cocamidopropyl Betaine @3, with the mild anionic Sodium Cocoyl Isethionate @4. Coco-Glucoside @19 is post-E3; Sodium Isethionate @18 and Coconut Acid @15 are not cleansing routes.",
+      "ruleIds": ["C3", "C4", "C6"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low: no prominent conditioning system; every care route follows Parfum @9 (Glycerin @10, Glyceryl Oleate @11, Coconut Acid @15, Glycol Distearate @16, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @17, Sodium PCA @20, Glyceryl Stearate @21, amino acids @12-14/@22-28). C2 not met (no silicone, no prominent payload lipid). The number of light routes makes moderate the realistic neighbor.",
+      "ruleIds": ["5", "C2", "E3"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @17"],
+        "payload_lipid": [],
+        "weak_refatter": ["Glyceryl Oleate @11", "Coconut Acid @15 (fatty acid; refatter by analogy)", "Glyceryl Stearate @21 (glyceryl ester; read like Glyceryl Oleate)"],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Cocamidopropyl Betaine @3", "Sodium Cocoyl Isethionate @4", "Coco-Glucoside @19 (non-prominent)"],
+        "humectantContext": ["Glycerin @10", "Sodium PCA @20", "Sodium Lactate @33", "Aloe Barbadensis Leaf Juice @2 (not a closed-list humectant)", "amino acids @6-7, @12-14, @22-28"],
+        "excluded": ["Glycol Distearate @16 (pearlizing wax, 6.4)", "Sodium Isethionate @18 (salt/by-product)", "Linum Usitatissimum Seed Extract @8 (extract)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 9,
+        "inci": "Parfum",
+        "candidateClasses": ["fragrance"],
+        "cap": "e3Point @9 (Parfum)",
+        "alphabeticalRun": "none",
+        "skipped": [],
+        "codes": [],
+        "plausibility": "(i) Cocamidopropyl Betaine @3 before it; (ii) nothing between it and the cap (it is the cap). No a-c candidate precedes it.",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light: one late guar and weak refatters, all after Parfum @9.",
+      "persistence": "low: no silicone, lipid, protein or film.",
+      "resetCapacity": "weak: C6 betaine/isethionate chassis.",
+      "counterevidence": "Weak reset and several light families (cationic_polymer, weak_refatter).",
+      "whyThisBand": "Low: the deposition routes are light and trace.",
+      "whyNotNeighborBand": "Not moderate (W2): the only families are a cationic guar @17 and weak refatters (@11, @15, @21), all listed after Parfum @9 in the trace zone; no silicone, payload lipid, film or protein. Weak reset faces only these light routes.",
+      "confidenceLimitingFactor": "Weak reset with several light routes; cumulative residue cannot be fully excluded.",
+      "rationale": "Low: trace guar and weak refatters (W-line @9, no payload lipid); moderate is the neighbor because reset is weak.",
+      "ruleIds": ["6.3", "6.4", "6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": ["Glycerin @10", "Sodium PCA @20", "Aloe Barbadensis Leaf Juice @2", "amino acids (NMF-type)"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Glyceryl Oleate @11", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @17", "Glyceryl Stearate @21"],
+        "limitation": "Humectant cluster is post-E3 and conditioning support is trace; could read moisture_supported if the NMF-type amino-acid/PCA cluster is counted as coherent."
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "Light conditioning only.",
+      "decisionTrace": "Claim direction null (blind); mild formula with a humectant/NMF cluster; provisional general.",
+      "rationale": "Provisional (claim-dependent).",
+      "ruleIds": ["3.1", "7.2", "7.3"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["moisture"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional (claim-dependent).",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional: default regular; frequent possible with frequency wording (low cleansing).",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: no SC1 positioning visible blind. CSA formula half met via MB: mild_base:Cocamidopropyl Betaine @3, Sodium Cocoyl Isethionate @4 (cleansingStrength low, no strong anionic). No listed E4 route is prominent (Glycerin @10 and Glyceryl Oleate @11 are post-E3); prominent unlisted candidates rejected by R18: unlisted_route_candidate:Aloe Barbadensis Leaf Juice, unlisted_route_candidate:Arginine. Counter-signal: Parfum @9.",
+      "csaRoute": "MB (mild_base:Cocamidopropyl Betaine @3, Sodium Cocoyl Isethionate @4); no prominent listed route",
+      "ruleIds": ["10", "CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active in the complete INCI.",
+      "ruleIds": ["11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactantClasses": {
+      "strongAnionicEtherSulfonate": [],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": ["Sodium Cocoyl Isethionate @4"],
+      "amphoteric": ["Cocamidopropyl Betaine @3 (earliest prominent)"],
+      "nonionicCleansing": ["Coco-Glucoside @19 (non-prominent)"],
+      "notRouteNotBuffer": ["Sodium Isethionate @18", "Coconut Acid @15", "Glycol Distearate @16"]
+    },
+    "conditioningRoutes": ["Glyceryl Oleate @11", "Coconut Acid @15", "Glycol Distearate @16 (pearlizing)", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @17", "Glyceryl Stearate @21"],
+    "humectants": ["Glycerin @10", "Sodium PCA @20", "Sodium Lactate @33"],
+    "actives": ["Aloe Barbadensis Leaf Juice @2", "Arginine @6", "Serine @7", "Linum Usitatissimum Seed Extract @8", "amino acids @12-14, @22-28"],
+    "recognizedDandruffActives": [],
+    "exposureFlags": ["Parfum @9", "no fragrance allergens declared", "no cooling agent", "no essential oil"],
+    "chelatorsPhAdjusters": ["PCA @12", "Citric Acid @32", "Sodium Lactate @33"],
+    "preservatives": ["Phenoxyethanol @29", "Ethylhexylglycerin @30", "Benzoic Acid @31"]
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": ["Packet identityConfidence is moderate; no formula conflict visible.", "Glyceryl Stearate @21 recorded as weak_refatter (could be read as an emollient-ester payload_lipid); post-line either way, immaterial."]
+}

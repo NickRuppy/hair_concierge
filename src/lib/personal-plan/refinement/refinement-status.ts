@@ -5,7 +5,12 @@ import {
   type ModuleBannerDismissalState,
 } from "@/lib/personal-plan/lifecycle/repository"
 import { stage2ModuleStates, type Stage2ModuleStatusInput } from "./module-status"
-import { STAGE2_MODULES, type Stage2ModuleProjections } from "./types"
+import {
+  STAGE2_MODULES,
+  type Stage2Module,
+  type Stage2ModulePathState,
+  type Stage2ModuleProjections,
+} from "./types"
 
 /**
  * The read-only module-status contract PR 2's Routine banner and Profil tab
@@ -15,17 +20,23 @@ import { STAGE2_MODULES, type Stage2ModuleProjections } from "./types"
  *
  * Progress semantics (decision 4, Nick): the coarse "X von 4" counts
  * Haar-Analyse (quiz) and Idealplan as always done for a plan owner — a
- * `personal_plans` row cannot exist without both — plus the two Stage-2
+ * `personal_plans` row cannot exist without both — plus the APPLICABLE Stage-2
  * modules, counted done only once EVERY question the module currently has on
- * its path carries user provenance (see `module-status.ts`).
+ * its path carries user provenance (see `module-status.ts`). A `not_applicable`
+ * module (no question on the path, e.g. `tools` while its rollout is off) is
+ * neither a step nor a done step, so the meter still reads "x von 4" for
+ * everyone without tools and "x von 5" once the tools module applies.
  */
 
 const BASE_COMPLETED_STEPS = 2
-const TOTAL_STEPS = 4
+/** Quiz + Idealplan + every Stage-2 module. */
+const MAX_TOTAL_STEPS = BASE_COMPLETED_STEPS + STAGE2_MODULES.length
+/** A plan always has at least the products and habits modules. */
+const MIN_TOTAL_STEPS = MAX_TOTAL_STEPS - 1
 
 export const refinementModuleStatusSchema = z.object({
   module: z.enum(STAGE2_MODULES),
-  status: z.enum(["open", "complete"]),
+  status: z.enum(["open", "complete", "not_applicable"]),
   openQuestionCount: z.number().int().nonnegative(),
 })
 export type RefinementModuleStatus = z.infer<typeof refinementModuleStatusSchema>
@@ -41,8 +52,8 @@ export type RefinementStatusBanner = z.infer<typeof refinementStatusBannerSchema
 export const refinementStatusResponseSchema = z.object({
   modules: z.array(refinementModuleStatusSchema).length(STAGE2_MODULES.length),
   progress: z.object({
-    completedSteps: z.number().int().min(0).max(TOTAL_STEPS),
-    totalSteps: z.literal(TOTAL_STEPS),
+    completedSteps: z.number().int().min(0).max(MAX_TOTAL_STEPS),
+    totalSteps: z.number().int().min(MIN_TOTAL_STEPS).max(MAX_TOTAL_STEPS),
   }),
   /**
    * The persisted Modul-1 handoff marker (`module_projections.products.stage3Handoff`,
@@ -65,17 +76,31 @@ export function buildRefinementStatusResponse(input: {
   moduleProjections: Stage2ModuleProjections
   bannerDismissals: ModuleBannerDismissalState
 }): RefinementStatusResponse {
-  const states = stage2ModuleStates(input.moduleStatusInput)
+  return buildRefinementStatusFromModuleStates({
+    states: stage2ModuleStates(input.moduleStatusInput),
+    moduleProjections: input.moduleProjections,
+    bannerDismissals: input.bannerDismissals,
+  })
+}
+
+/** The derivation proper, over already-derived module states (also the unit-test seam). */
+export function buildRefinementStatusFromModuleStates(input: {
+  states: Record<Stage2Module, Stage2ModulePathState>
+  moduleProjections: Stage2ModuleProjections
+  bannerDismissals: ModuleBannerDismissalState
+}): RefinementStatusResponse {
+  const { states } = input
   const modules: RefinementModuleStatus[] = STAGE2_MODULES.map((stage2Module) => ({
     module: stage2Module,
     status: states[stage2Module].status,
     openQuestionCount: states[stage2Module].openQuestionIds.length,
   }))
   const completedModuleCount = modules.filter((entry) => entry.status === "complete").length
+  const applicableModuleCount = modules.filter((entry) => entry.status !== "not_applicable").length
 
   // The banner always points at the first open module in canonical order
-  // (products, then habits) — "the next open module" from module-status.ts's
-  // per-module dismissal contract.
+  // (products, tools, then habits; `not_applicable` modules never qualify) — "the next
+  // open module" from module-status.ts's per-module dismissal contract.
   const nextOpenModule =
     STAGE2_MODULES.find((stage2Module) => states[stage2Module].status === "open") ?? null
   const dismissed = nextOpenModule
@@ -86,7 +111,7 @@ export function buildRefinementStatusResponse(input: {
     modules,
     progress: {
       completedSteps: BASE_COMPLETED_STEPS + completedModuleCount,
-      totalSteps: TOTAL_STEPS,
+      totalSteps: BASE_COMPLETED_STEPS + applicableModuleCount,
     },
     module1HandedOff: input.moduleProjections.products?.stage3Handoff === true,
     banner: {

@@ -1,0 +1,532 @@
+{
+  "blindId": "T407",
+  "inciFingerprintSha256": "3ceb8d138cc94cdce820a16cf86f74de83c92a71ee006b43f1753fb4214f4e2a",
+  "policyId": "shampoo-classification-v1.6",
+  "identity": {
+    "packSize": "200 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "productName": "Sebamed Anti-Schuppen Shampoo",
+    "market": "DE",
+    "identityNote": ""
+  },
+  "normalization": "ID-2 applied; normalized one-based positions; no split entries; raw positions = normalized positions",
+  "e3ProminenceMarker": "Parfum/Fragrance at 11",
+  "surfactantArchitecture": "SLES (2) defining; Lauryl Glucoside (3), Sarcosinate (4) buffers; C1 -> moderate.",
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic"
+    },
+    {
+      "ingredient": "Lauryl Glucoside",
+      "position": 3,
+      "role": "nonionic buffer"
+    },
+    {
+      "ingredient": "Sodium Lauroyl Sarcosinate",
+      "position": 4,
+      "role": "mild anionic buffer"
+    },
+    {
+      "ingredient": "Piroctone Olamine",
+      "position": 6,
+      "role": "recognized anti-dandruff active"
+    },
+    {
+      "ingredient": "Sodium Lactate",
+      "position": 10,
+      "role": "E4 humectant route, prominent (pH buffer per F4/C2)"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 11,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 12,
+      "role": "pearlizer"
+    },
+    {
+      "ingredient": "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+      "position": 13,
+      "role": "cationic polymer"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 15,
+      "role": "amphoteric after E3 point"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 19,
+      "role": "humectant, late"
+    }
+  ],
+  "claimGrading": [
+    {
+      "claim": "Anti-Schuppen (name)",
+      "grade": "high",
+      "use": "E2 dandruff"
+    },
+    {
+      "claim": "'Das sebamed Anti-Schuppen Shampoo ist eine seifenfreie Pflege zur täglichen Reinigung, die speziell auf die Bedürfnisse empfindlicher Kopfhaut abgestimmt ist.'",
+      "grade": "moderate",
+      "use": "names dandruff -> dandruff unit; comfort wording absorbed/bundled (E2a/E2b)"
+    },
+    {
+      "claim": "Täglich oder 2-3x pro Woche anwenden",
+      "grade": "moderate",
+      "use": "U2 (loses to treatment)"
+    },
+    {
+      "claim": "Haartyp: schuppiges Haar, fettiges Haar",
+      "grade": "moderate",
+      "use": "'fettiges Haar' names hair, not scalp, not the lexicon stem 'schnell fettend' -> not oily-scalp wording"
+    },
+    {
+      "claim": "dm/Müller 'Für empfindliche Kopfhaut'",
+      "grade": "low",
+      "use": "none"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: C1 ether/sulfonate chassis - defining anionic Sodium Laureth Sulfate (2) buffered by prominent Lauryl Glucoside (3) and Sodium Lauroyl Sarcosinate (4); no prominent reinforcing strong anionic (C3, C4, C1).",
+      "counterSignal": "CAPB (15) is after Parfum (11) and not a buffer; two prominent buffers remain, no reinforcing anionic.",
+      "neighboringAlternative": "none",
+      "rulesApplied": [
+        "C3",
+        "C4",
+        "C1"
+      ],
+      "carriedFromBlind": true
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: cleansing-led architecture; the only conditioning routes are a late cationic starch (Hydroxypropyl Oxidized Starch PG-Trimonium Chloride 13), pearlizing Glycol Distearate (12) and late Glycerin (19), all after Parfum (11).",
+      "counterSignal": "A cationic polymer plus pearlizer give some slip; could read as one meaningful system (moderate).",
+      "neighboringAlternative": "moderate",
+      "rulesApplied": [
+        "5",
+        "C2 not met"
+      ],
+      "carriedFromBlind": true
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: one late, light cationic starch is the only deposition route; effective C1 reset.",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Single deposition family: one late cationic starch (13)."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "Cationic starch is a light, weakly retained polymer."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES with glucoside and sarcosinate buffers."
+        }
+      },
+      "evidenceByFamily": {
+        "silicone": [],
+        "cationic_polymer": [
+          [
+            "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+            13
+          ]
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "protein_film": [],
+        "film_former": [],
+        "humectant_context": [
+          [
+            "Sodium Lactate",
+            10
+          ],
+          [
+            "Glycerin",
+            19
+          ]
+        ],
+        "reset": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ],
+          [
+            "Lauryl Glucoside",
+            3
+          ],
+          [
+            "Sodium Lauroyl Sarcosinate",
+            4
+          ],
+          [
+            "Cocamidopropyl Betaine",
+            15
+          ]
+        ]
+      },
+      "excludedEvidence": [
+        [
+          "Glycol Distearate",
+          12,
+          "pearlizer, excluded (6.4)"
+        ],
+        [
+          "Laureth-4",
+          16,
+          "thickener"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "None beyond the single late polymer.",
+      "whyThisBand": "Low: one late, light cationic starch is the only deposition route; effective C1 reset.",
+      "whyNotNeighborBand": "Not moderate: single family, late, no silicone/lipid/protein/film to converge.",
+      "confidenceLimitingFactor": "None material.",
+      "neighboringAlternative": "none",
+      "rulesApplied": [
+        "6.5",
+        "6.6"
+      ],
+      "carriedFromBlind": true
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "rationale": "scalp_active: anti-dandruff name (high) + Piroctone Olamine (6).",
+      "counterSignal": "Mild positioning; cleansing moderate.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Piroctone Olamine",
+          "position": 6
+        }
+      ],
+      "sourceIds": [
+        "product name",
+        "manufacturer_de"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty: no distinct secondary positioning.",
+      "counterSignal": "See decision trace.",
+      "neighboringAlternative": [
+        "clarifying"
+      ],
+      "formulaFacts": [],
+      "sourceIds": [],
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "candidatesConsidered": []
+      }
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "high",
+      "rationale": "U3; U1 precedence.",
+      "counterSignal": "Trigger fires mechanically from graded claim plus final cleansingStrength.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "sourceIds": [],
+      "triggerCode": "recognized_active_problem_led",
+      "triggerEvidence": [
+        "name 'Anti-Schuppen'",
+        "Piroctone Olamine (6)"
+      ],
+      "losingTriggers": [
+        {
+          "code": "explicit_frequent_non_strong",
+          "evidence": "Täglich oder 2-3x pro Woche anwenden"
+        }
+      ],
+      "decisionTrace": {
+        "default": "regular",
+        "triggerCode": "recognized_active_problem_led",
+        "triggerEvidence": [
+          "name 'Anti-Schuppen'",
+          "Piroctone Olamine (6)"
+        ],
+        "rationale": "U3; U1 precedence."
+      }
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "rationale": "not_targeted: the only moderate 'empfindliche Kopfhaut' wording sits in a unit that names the anti-dandruff product (bundled, E2a/E2b) - not SC1; separate sensitive units are retailer-only (low). CSA formula half is met (Sodium Lactate 10).",
+      "counterSignal": "Sensitive-scalp intent is explicit on the manufacturer page.",
+      "neighboringAlternative": "targeted",
+      "formulaFacts": [],
+      "sourceIds": [],
+      "csaFormulaHalf": true,
+      "sc1Positioning": false
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains Piroctone Olamine (6) (Section 11).",
+      "neighboringAlternative": "none",
+      "carriedFromBlind": true
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "not_applicable",
+      "routes": {},
+      "limitation": ""
+    },
+    "claimRole": "candidate",
+    "counterSignal": "-",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "anti-dandruff",
+        "formulaCompatible": true,
+        "compatibleRoute": "Piroctone Olamine (6)",
+        "reason": "7.2"
+      }
+    }
+  },
+  "weightRecord": {
+    "value": "low",
+    "confidence": "high",
+    "rationale": "Low: one late, light cationic starch is the only deposition route; effective C1 reset.",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "light",
+        "rationale": "Single deposition family: one late cationic starch (13)."
+      },
+      "persistence": {
+        "value": "low",
+        "rationale": "Cationic starch is a light, weakly retained polymer."
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C1 SLES with glucoside and sarcosinate buffers."
+      }
+    },
+    "evidenceByFamily": {
+      "silicone": [],
+      "cationic_polymer": [
+        [
+          "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+          13
+        ]
+      ],
+      "payload_lipid": [],
+      "weak_refatter": [],
+      "protein_film": [],
+      "film_former": [],
+      "humectant_context": [
+        [
+          "Sodium Lactate",
+          10
+        ],
+        [
+          "Glycerin",
+          19
+        ]
+      ],
+      "reset": [
+        [
+          "Sodium Laureth Sulfate",
+          2
+        ],
+        [
+          "Lauryl Glucoside",
+          3
+        ],
+        [
+          "Sodium Lauroyl Sarcosinate",
+          4
+        ],
+        [
+          "Cocamidopropyl Betaine",
+          15
+        ]
+      ]
+    },
+    "excludedEvidence": [
+      [
+        "Glycol Distearate",
+        12,
+        "pearlizer, excluded (6.4)"
+      ],
+      [
+        "Laureth-4",
+        16,
+        "thickener"
+      ]
+    ],
+    "unresolved": [],
+    "counterSignal": "None beyond the single late polymer.",
+    "whyThisBand": "Low: one late, light cationic starch is the only deposition route; effective C1 reset.",
+    "whyNotNeighborBand": "Not moderate: single family, late, no silicone/lipid/protein/film to converge.",
+    "confidenceLimitingFactor": "None material.",
+    "neighboringAlternative": "none",
+    "rulesApplied": [
+      "6.5",
+      "6.6"
+    ],
+    "formulaFingerprint": "3ceb8d138cc94cdce820a16cf86f74de83c92a71ee006b43f1753fb4214f4e2a",
+    "sourceTier": 2,
+    "captureDate": "per frozen packet (not in lane kit)"
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "t1Fit": "ideal",
+        "t6Applied": false,
+        "confidence": "high",
+        "rationale": "ideal: T1 (fine x W low) = ideal; T2: thickness/texture claims ignored. Confidence = lowest input confidence (13.8)."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "t1Fit": "ideal",
+        "t6Applied": false,
+        "confidence": "high",
+        "rationale": "ideal: T1 (normal x W low) = ideal; T2: thickness/texture claims ignored. Confidence = lowest input confidence (13.8)."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "t1Fit": "acceptable",
+        "t6Applied": false,
+        "confidence": "moderate",
+        "rationale": "acceptable: T1 (coarse x W low, C low) = acceptable; T2: thickness/texture claims ignored. Confidence = lowest input confidence (13.8)."
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "high",
+      "rationale": "W-LIVE: weightPotential low -> light; confidence = weightPotential confidence (13.8)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "dandruff",
+        "confidence": "high",
+        "rationale": "S-DANDRUFF: name claim (high) + supported; no secondary (R17.2)."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate, D1 false -> regular; I2 written unchanged to every row."
+    },
+    "positioning": {
+      "explicitResetPositioning": false
+    },
+    "explicitResetPositioning": {
+      "value": false,
+      "confidence": "high",
+      "rationale": "D1 false: no tiefenrein/deep clean/clarifying shampoo/detox-reinigung stem in name or graded claims, no occasional-use directions."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "high",
+      "rationale": "D2 not met: D1 false"
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_dandruff"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [
+      {
+        "code": "dandruff_bundled_comfort_wording",
+        "detail": "'speziell auf die Bedürfnisse empfindlicher Kopfhaut abgestimmt' (manufacturer, moderate); S-SENSITIVE gate failed: CSA met (Sodium Lactate 10) but no prominent E4 comfort route"
+      }
+    ],
+    "researchCombinationTargets": [],
+    "researchCombinationRationale": "sensitive: gate fails (no prominent comfort route); dry: none; oily: 'fettiges Haar' not oily-scalp wording."
+  },
+  "blindToFinalChanges": [
+    {
+      "field": "focusPrimary",
+      "blind": "general",
+      "final": "scalp_active",
+      "evidence": "name",
+      "reason": "7.2"
+    },
+    {
+      "field": "usageRole",
+      "blind": "regular",
+      "final": "treatment",
+      "evidence": "name + Piroctone",
+      "reason": "U3"
+    },
+    {
+      "field": "scalpComfortTarget",
+      "blind": "not_targeted (low)",
+      "final": "not_targeted (moderate)",
+      "evidence": "bundled sensitive wording",
+      "reason": "SC1/E2b"
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeWeightSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "comparisonWithEarlierValuesDoneInLane": false,
+    "weightPotentialUnchangedAfterUnblind": true
+  },
+  "uncertainties": [
+    {
+      "reading": "CSA formula half met only via Sodium Lactate (10), which E4 lists as a humectant/refatting route though C2/F4 treat it as a pH buffer",
+      "alternative": "If Sodium Lactate were not counted, CSA would fail (no other prominent E4 route)"
+    },
+    {
+      "reading": "'Haartyp: fettiges Haar' not oily-scalp wording",
+      "alternative": "researchCombinationTargets ['oily'] (S-OILY clause passes: CS moderate, W low, C low)"
+    },
+    {
+      "reading": "'empfindlicher Kopfhaut' sentence bundled with dandruff",
+      "alternative": "separate unit -> still research-only on a dandruff-primary product; scalpComfortTarget would become targeted (CSA met)"
+    }
+  ]
+}

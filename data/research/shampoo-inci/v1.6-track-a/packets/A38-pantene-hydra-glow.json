@@ -1,0 +1,79 @@
+{
+  "slot": "A38",
+  "productId": "fcbc469f-93c8-4be5-85db-e789b09189c7",
+  "name": "PANTENE PRO-V Shampoo miracles Hydra Glow, 250 ml",
+  "brand": "Pantene Pro-V (Procter & Gamble)",
+  "packSize": "250 ml",
+  "gtins": [
+    "8700216170345"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/1647567/pantene-pro-v-shampoo-miracles-hydra-glow",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "8700216170345 (dm-Artikelnummer 1647567; 'Shampoo miracles Hydra Glow, 250 ml'; Anschrift Procter & Gamble, Schwalbach; lieferbar)",
+      "inciVerbatim": "Ingredients: Aqua, Sodium Laureth Sulfate, Sodium Citrate, Cocamidopropyl Betaine, Sodium Xylenesulfonate, Stearyl Alcohol, Sodium Chloride, Parfum, Cetyl Alcohol, Citric Acid, Sodium Benzoate, Glycerin, Sodium Salicylate, Polyquaternium-6, Guar Hydroxypropyltrimonium Chloride, Sodium Hydroxide, Trihydroxystearin, Tetrasodium EDTA, Limonene, Panthenol, Panthenyl Ethyl Ether, Histidine, Sodium Hyaluronate, Phenoxyethanol, Biotin",
+      "claimsVerbatim": "Intensive Feuchtigkeit | Nährende Rezeptur | Getestet & bestätigt vom Schweizerischen Vitamininstitut | Das feuchtigkeitsspendende Pantene Pro-V Miracles Hydra Glow Shampoo bringt selbst trockenstes Haar zum Glänzen. Mit der feuchtigkeitsspendenden Formel mit Biotin, Pro-Vitamin B5 und Baobab-Essenz sorgt es dafür, ganz ohne zu beschweren. Selbst chronisch trockenes Haar verwandelt das Shampoo wieder zu einem gepflegten Look. Die Flasche ist zudem aus 40 % recyceltem Material hergestellt (Verschluss ausgenommen) und zu 100 % recycelbar.. | Wirkung: Pflege, Glanz, Feuchtigkeit | Produkteigenschaften: ohne Silikone | Ohne Silikone",
+      "directionsVerbatim": "In das nasse Haar einmassieren und aufschäumen. Gut ausspülen"
+    },
+    {
+      "url": "https://www.mueller.de/p/pantene-pro-v-miracles-hydra-glow-shampoo-IPN2992239/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_mueller_de",
+      "sourceKind": "retailer",
+      "gtinShown": "8700216170345 (schema.org gtin; Müller Artikelnr. 2992239; Inhalt 250 ml; Hersteller Procter & Gamble, Schwalbach)",
+      "inciVerbatim": "Ingredients: Aqua, Sodium Laureth Sulfate, Sodium Citrate, Cocamidopropyl Betaine, Sodium Xylenesulfonate, Stearyl Alcohol, Sodium Chloride, Parfum, Cetyl Alcohol, Citric Acid, Sodium Benzoate, Glycerin, Sodium Salicylate, Polyquaternium-6, Guar Hydroxypropyltrimonium Chloride, Sodium Hydroxide, Trihydroxystearin, Tetrasodium EDTA, Limonene, Panthenol, Panthenyl Ethyl Ether, Histidine, Sodium Hyaluronate, Phenoxyethanol, Biotin",
+      "claimsVerbatim": "Das Pantene Pro-V Miracles Hydra Glow Shampoo reinigt das Haar und verleiht ihm ein gepflegtes Aussehen. Die Formel ist auf die Bedürfnisse von trockenem und glanzlosem Haar abgestimmt. | Formel mit Biotin und Hyaluronsäure | Für die tägliche Haarwäsche geeignet | Verleiht dem Haar ein geschmeidiges Gefühl | Unterstützt ein glänzendes Erscheinungsbild der Haare | Die Rezeptur dieses Shampoos kombiniert den bewährten Pro-V-Nährstoffkomplex mit Biotin und Hyaluronsäure. Bei der Anwendung entsteht ein reichhaltiger Schaum, der das Haar sanft reinigt und es auf die nachfolgende Pflege vorbereitet. Das Haar fühlt sich nach der Wäsche weich an und erhält ein strahlendes Aussehen. | Zielgruppe: Unisex",
+      "directionsVerbatim": "In das nasse Haar einmassieren und aufschäumen. Gut ausspülen; (Beschreibung:) Für die Anwendung wird eine kleine Menge in das nasse Haar einmassiert, aufgeschäumt und anschließend gründlich ausgespült."
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "claim_not_in_inci",
+      "quote": "dm.de: 'Mit der feuchtigkeitsspendenden Formel mit Biotin, Pro-Vitamin B5 und Baobab-Essenz' - no baobab ingredient (e.g. Adansonia Digitata) appears in the INCI. Biotin (last position), Panthenol/Panthenyl Ethyl Ether (Pro-V B5) and Sodium Hyaluronate are present.",
+      "resolution": "Recorded, not blocking. Müller's description does not mention baobab (only Biotin + Hyaluronsäure)."
+    }
+  ],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Sodium Citrate",
+    "Cocamidopropyl Betaine",
+    "Sodium Xylenesulfonate",
+    "Stearyl Alcohol",
+    "Sodium Chloride",
+    "Parfum",
+    "Cetyl Alcohol",
+    "Citric Acid",
+    "Sodium Benzoate",
+    "Glycerin",
+    "Sodium Salicylate",
+    "Polyquaternium-6",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Sodium Hydroxide",
+    "Trihydroxystearin",
+    "Tetrasodium EDTA",
+    "Limonene",
+    "Panthenol",
+    "Panthenyl Ethyl Ether",
+    "Histidine",
+    "Sodium Hyaluronate",
+    "Phenoxyethanol",
+    "Biotin"
+  ],
+  "canonicalReason": "dm.de and mueller.de, both GTIN 8700216170345 / 250 ml, publish the identical 25-item list (Procter & Gamble data); identical to the v1.3 capture of 2026-08-10. No pantene.de PDP for this shampoo was found by search; no pack photo. Tier 3 (two GTIN-anchored German retailers).",
+  "inciFingerprintSha256": "04a25bda52d67198d96cc864b3421d6fde98b6bc8c39f789a36aa09422e4194a",
+  "normalization": "Split the canonical INCI on ',' (or '|' / '•' separators where the source uses them; dm renders a non-breaking hyphen as '|' inside names, e.g. 'COCO|GLUCOSIDE' = 'Coco-Glucoside'); per ingredient: trim, collapse internal whitespace, merge split synonym entries (e.g. 'Aqua (Water, Eau)' stays one item), strip trailing full stop; canonicalInci keeps the published capitalisation/asterisks; for the hash each item is lower-cased; items joined with '|' and sha256 over the UTF-8 string.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 3,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Catalog name 'Pantene Hydra Glow Shampoo' = 'Pantene Pro-V miracles Hydra Glow Shampoo' (also sold at Rossmann; not opened).",
+    "Claim-INCI: Baobab claim is unsupported by the INCI (see conflicts); 'ohne Silikone' consistent (no silicone listed). Sodium Hyaluronate present (Müller 'Hyaluronsäure').",
+    "Müller page showed 'Lieferbar'; dm 'Lieferbar'."
+  ]
+}

@@ -9,13 +9,13 @@
  *     (S3's prestate is Slice 1's post-state; Slice 1 is NOT applied yet)
  *   - ../research/r4-user-submitted-14/leave-in-v1.2/neqi-spray/envelope.json
  *     (Neqi Leave-In v1.2 research envelope, re-projected here by the real adapter)
- *   - amendments/heat-glow-activation-amendment-v1.2.json (field-scoped amendment)
+ *   - amendments/q11-b-heat-glow-superseded.md (owner ruling; no HEAT&GLOW writes)
  *   - src/lib/product-intake/catalog-enrichment/heat-activated-protocols.ts
  *     (reviewed exact-workflow protocol rows, V1 + V2 by construction)
  * Outputs (deterministic):
  *   - prestate.json, target-state.json (writes, before→after table, fingerprint)
  *   - verify.sql (read-only proof), rollback.sql (prepared, not a migration)
- *   - ../../../supabase/migrations/20261011161000_catalog_completeness_fill_slice3.sql
+ *   - ../../../supabase/migrations/20261013151000_catalog_completeness_fill_slice3.sql
  *   - artifact-manifest.json (sha256 per input/output)
  *
  *   npx tsx plans/catalog-completeness-fill/slice3/generate.ts           # write
@@ -38,18 +38,11 @@ import { readFileSync, writeFileSync } from "node:fs"
 import { dirname, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 
-import {
-  applyHeatActivationToLeaveInProjection,
-  heatActivationCaptureSchema,
-} from "@/lib/heat-activation/contract"
-import {
-  expandLeaveInEligibility,
-  projectLeaveInForProduction,
-} from "@/lib/leave-in-research/production-adapter"
+import { heatActivationCaptureSchema } from "@/lib/heat-activation/contract"
+import { projectLeaveInForProduction } from "@/lib/leave-in-research/production-adapter"
 import {
   buildHeatActivatedProtocolRow,
   NEQI_DIAMOND_GLASS_ULTIMATE_HEAT_ACTIVATED_ROW_INPUT,
-  PANTENE_HEAT_GLOW_HEAT_ACTIVATED_ROW_INPUTS,
 } from "@/lib/product-intake/catalog-enrichment/heat-activated-protocols"
 
 const HERE = dirname(fileURLToPath(import.meta.url))
@@ -68,7 +61,7 @@ const PATHS = {
     HERE,
     "../research/r4-user-submitted-14/leave-in-v1.2/neqi-spray/adapter/production-projection.json",
   ),
-  amendment: resolve(HERE, "amendments/heat-glow-activation-amendment-v1.2.json"),
+  amendment: resolve(HERE, "amendments/q11-b-heat-glow-superseded.md"),
   protocolsModule: resolve(
     ROOT,
     "src/lib/product-intake/catalog-enrichment/heat-activated-protocols.ts",
@@ -76,11 +69,11 @@ const PATHS = {
   contractModule: resolve(ROOT, "src/lib/heat-activation/contract.ts"),
   schemaMigration: resolve(
     ROOT,
-    "supabase/migrations/20261011160000_leave_in_heat_activation_schema.sql",
+    "supabase/migrations/20261013150000_leave_in_heat_activation_schema.sql",
   ),
   migration: resolve(
     ROOT,
-    "supabase/migrations/20261011161000_catalog_completeness_fill_slice3.sql",
+    "supabase/migrations/20261013151000_catalog_completeness_fill_slice3.sql",
   ),
   prestate: resolve(HERE, "prestate.json"),
   target: resolve(HERE, "target-state.json"),
@@ -94,7 +87,8 @@ const CHECKED_AT = "2026-10-09"
 const NEQI = "42a2fe20-bd7e-49a3-a880-8ae89015a5c9"
 const HEAT_GLOW = "e781ca9e-886d-40a1-bfe1-48177cfbf381"
 const PRODUCT_IDS = [NEQI, HEAT_GLOW] as const
-/** HEAT&GLOW's existing pre-heat row (S1 rebuilt it from the pack); S3 replaces it in place. */
+const WRITE_PRODUCT_IDS = [NEQI] as const
+/** HEAT&GLOW's S1 pre-heat row is preserved unchanged under Q11=B. */
 const HEAT_GLOW_PRE_HEAT_ROW_ID = "b99799b7-1d23-47e0-9338-66923a690ae1"
 
 type Row = Record<string, unknown>
@@ -304,87 +298,20 @@ function neqiTarget(): ProductTarget {
   }
 }
 
-function heatGlowTarget(): ProductTarget {
-  const amendment = readJson(PATHS.amendment) as Row & {
-    productId: string
-    heatActivation: unknown
-    applicationStageConfirmation: { value: string[] }
-  }
-  assert(amendment.productId === HEAT_GLOW, "amendment names HEAT&GLOW")
-  const activation = heatActivationCaptureSchema.parse(amendment.heatActivation)
-  const before = preSpecs(HEAT_GLOW)
-  assert(
-    canonical(before.application_stage) === canonical(amendment.applicationStageConfirmation.value),
-    "amendment confirms the Slice 1 application_stage",
-  )
-  const outcome = applyHeatActivationToLeaveInProjection({
-    specs: before as Row & {
-      roles: string[]
-      plan_roles: string[]
-      application_stage: string[]
-      provides_heat_protection: boolean | null
-    },
-    fit: preFit(HEAT_GLOW) as Row & { conditioner_relationship: string },
-    activation,
-  })
-  assert(
-    outcome.status === "projected",
-    `HEAT&GLOW amendment must project (${JSON.stringify(outcome)})`,
-  )
-  const specs = outcome.specs as Row
-  const product = preProduct(HEAT_GLOW)
-  const eligibility = expandLeaveInEligibility({
-    thicknesses: product.suitable_thicknesses as string[],
-    roles: specs.roles as string[],
-    careBenefits: specs.care_benefits as string[],
-    applicationStage: specs.application_stage as string[],
-    providesHeatProtection: specs.provides_heat_protection === true,
-    heatActivationRequired: specs.heat_activation_required === true,
-  })
-  const direction = activation.statements.find((s) => s.kind === "heat_step_direction")!
-  return {
-    productId: HEAT_GLOW,
-    label: "Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW",
-    specs,
-    fit: outcome.fit as Row,
-    eligibility: sortEligibility(eligibility.map((row) => ({ product_id: HEAT_GLOW, ...row }))),
-    provenance: {
-      sourceUrl: direction.sourceUrl,
-      sourceLabel: "Pantene-Packung DE (Vorder- und Rückseite), Foto via dm",
-      sourceText: activation.statements.map((s) => `„${s.quote}“`).join(" / "),
-    },
-  }
-}
-
-const targets = [neqiTarget(), heatGlowTarget()]
+const targets = [neqiTarget()]
 
 // Protocol rows from the reviewed exact-workflow module.
 const neqiProtocol = buildHeatActivatedProtocolRow(
   NEQI_DIAMOND_GLASS_ULTIMATE_HEAT_ACTIVATED_ROW_INPUT,
 ) as Row
-const heatGlowProtocols = PANTENE_HEAT_GLOW_HEAT_ACTIVATED_ROW_INPUTS.map(
-  (input) => buildHeatActivatedProtocolRow(input) as Row,
-)
 const familyOf = (row: Row) =>
   String(
     (row.guidance_payload as Row).applicationFamily ??
       (row.guidance_payload_v2 as Row).applicationFamily,
   )
 assert(neqiProtocol.product_id === NEQI, "Neqi protocol scope")
-assert(
-  heatGlowProtocols.length === 2 &&
-    heatGlowProtocols.every((row) => row.product_id === HEAT_GLOW) &&
-    canonical(heatGlowProtocols.map(familyOf).sort()) ===
-      canonical(["pre_heat_damp", "pre_heat_dry"]),
-  "HEAT&GLOW gets exactly one damp and one dry exact row",
-)
 const protocolTargets: Array<{ mode: "insert" | "replace"; id: string | null; row: Row }> = [
   { mode: "insert", id: null, row: neqiProtocol },
-  ...heatGlowProtocols.map((row) =>
-    familyOf(row) === "pre_heat_damp"
-      ? { mode: "replace" as const, id: HEAT_GLOW_PRE_HEAT_ROW_ID, row }
-      : { mode: "insert" as const, id: null, row },
-  ),
 ]
 const PROTOCOL_COLUMNS = [
   "role",
@@ -540,10 +467,10 @@ function stateChecks(state: "target" | "prestate"): string[] {
   const checks: string[] = []
   for (const productId of PRODUCT_IDS) {
     const target = targets.find((t) => t.productId === productId)!
-    const specs = state === "target" ? target.specs : preSpecs(productId)
-    const fit = state === "target" ? target.fit : preFit(productId)
+    const specs = state === "target" && target ? target.specs : preSpecs(productId)
+    const fit = state === "target" && target ? target.fit : preFit(productId)
     const eligibility =
-      state === "target"
+      state === "target" && target
         ? target.eligibility
         : prestate.product_leave_in_eligibility.filter((row) => row.product_id === productId)
     const product = preProduct(productId)
@@ -568,13 +495,10 @@ function stateChecks(state: "target" | "prestate"): string[] {
   }
   // Protocol sets per product.
   const neqiProtocols = state === "target" ? [protocolKey(neqiProtocol)] : []
-  const heatGlowExpected =
-    state === "target"
-      ? [...heatGlowProtocols.map(protocolKey), ...prestate.kept_protocols.map(protocolKey)]
-      : [
-          ...prestate.guarded_protocols.map(protocolKey),
-          ...prestate.kept_protocols.map(protocolKey),
-        ]
+  const heatGlowExpected = [
+    ...prestate.guarded_protocols.map(protocolKey),
+    ...prestate.kept_protocols.map(protocolKey),
+  ]
   for (const [productId, rows] of [
     [NEQI, neqiProtocols],
     [HEAT_GLOW, heatGlowExpected],
@@ -675,7 +599,7 @@ function applyStatements(): string[] {
 
 function rollbackStatements(): string[] {
   const out: string[] = []
-  for (const productId of PRODUCT_IDS) {
+  for (const productId of WRITE_PRODUCT_IDS) {
     const before = preSpecs(productId)
     const changed = writes.specs.find((w) => w.productId === productId)!
     out.push(
@@ -727,7 +651,7 @@ function rollbackStatements(): string[] {
  * restored by rollback only when they changed; capture them for the review.
  */
 const replacedRowColumnNote =
-  "Rollback restores every column S3 writes on the S1 pre-heat row (b99799b7) to its Slice 1 post-state value."
+  "Rollback restores Neqi to its Slice 1 post-state; all HEAT&GLOW rows remain unchanged (Q11=B)."
 
 function header(kind: string): string {
   return `-- Catalogue completeness fill, Slice 3 — heat activation (${kind}).
@@ -737,8 +661,8 @@ function header(kind: string): string {
 -- PREPARED, NOT APPLIED. Generated by plans/catalog-completeness-fill/slice3/generate.ts
 -- (do not hand-edit; re-run the generator, \`--check\` verifies against artifact-manifest.json).
 -- Prestate = Slice 1 post-state (Slice 1 fingerprint ${slice1.slice1_fingerprint}) for
--- Neqi Diamond Glass Ultimate Styling Spray (${NEQI}) and
--- Pantene HEAT&GLOW (${HEAT_GLOW}). Requires 20261011160000_leave_in_heat_activation_schema.
+-- Neqi Diamond Glass Ultimate Styling Spray (${NEQI}); HEAT&GLOW is guarded unchanged (Q11=B).
+-- Requires 20261013150000_leave_in_heat_activation_schema.
 -- Apply only after Slice 1 and only after Nick approves this exact fingerprint.
 `
 }
@@ -761,7 +685,7 @@ BEGIN
     WHERE table_schema = 'public' AND table_name = 'product_leave_in_specs'
       AND column_name = 'heat_activation_route'
   ) THEN
-    RAISE EXCEPTION 'slice3 requires 20261011160000_leave_in_heat_activation_schema';
+    RAISE EXCEPTION 'slice3 requires 20261013150000_leave_in_heat_activation_schema';
   END IF;
   SELECT count(*) INTO v_present FROM public.products WHERE id = ANY (${ids});
   IF v_present = 0 THEN
@@ -899,8 +823,7 @@ beforeAfter.push(
     field: "protocols",
     before:
       "pre_heat_protection/pre_heat_damp (S1 pack row, generic) + post_wash_leave_in ×2 (legacy)",
-    after:
-      "pre_heat_protection/pre_heat_damp (exact, wash day) + pre_heat_protection/pre_heat_dry (exact, between washes) + post_wash_leave_in ×2 (kept, Q1)",
+    after: "unchanged (Q11=B): no activation, route, role, eligibility or protocol writes",
   },
 )
 
@@ -910,13 +833,14 @@ const targetState = {
   fingerprint,
   batch_id: SLICE3_BATCH_ID,
   prestate_basis: prestate.basis,
-  scope_product_ids: PRODUCT_IDS,
+  scope_product_ids: WRITE_PRODUCT_IDS,
+  unchanged_product_ids: [HEAT_GLOW],
   writes: { ...writes, evidence: evidenceWithFingerprint },
   before_after: beforeAfter,
   product_questions: {
-    Q1: "HEAT&GLOW's post_wash_leave_in rows kept; the 7 active plans change only at each member's next plan update.",
+    Q11: "B (2026-10-13): HEAT&GLOW is not heat-activated; all captured fields, plan_roles and protocol rows remain unchanged. No re-pick is required.",
     Q2: "Neqi stays user_submitted and not recommended (no promotion in S3).",
-    Q3: "Heat-activated products are offered only to users whose heat routine includes the activating route (blow-dry/airflow shaping for both products).",
+    Q3: "Neqi is offered only when the heat routine includes blow-drying with brush/tension (airflow_shaping).",
   },
   reference_inventory: capture.reference_inventory,
 }

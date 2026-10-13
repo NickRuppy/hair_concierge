@@ -1,0 +1,139 @@
+{
+  "blindId": "W301",
+  "inciFingerprintSha256": "fa74c91cc5f8d70b1c235670a06cded2f6b2285e95b63f24459c262283747419",
+  "phase": "formula-pass (blind, claims hidden)",
+  "formulaBlock": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "moderate",
+    "normalization": "No split synonym entries in the packet; packet positions = normalized ID-2 positions (19 entries).",
+    "e3Point": "No declared Parfum/Fragrance; E3 preservative fallback = Benzyl Alcohol @8. Prominent = positions 1-7."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate @2 (ether type) with prominent buffers Cocamidopropyl Betaine @3 and Coco-Betaine @7 and no reinforcing strong anionic. Coco-Glucoside @11 is after the E3 point (not prominent, C4). Counter-signal PEG-7 Glyceryl Cocoate @6 (refatter) does not move the convention.",
+      "ruleIds": ["C1", "C3", "C4", "E3"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Low: cleansing-led architecture with no cationic polymer, no silicone and no payload lipid; the only care routes are the weak refatter PEG-7 Glyceryl Cocoate @6, Glycol Distearate @12 (pearlizer, after E3) and late Glycerin @18. C2 not met (no silicone/lipid, no cationic).",
+      "ruleIds": ["C2", "E3"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "evidence": {
+        "silicone": [],
+        "cationic_polymer": [],
+        "cationic_conditioner": [],
+        "payload_lipid": [],
+        "weak_refatter": ["PEG-7 Glyceryl Cocoate @6"],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["Sodium Laureth Sulfate @2 (strong anionic, ether)", "Cocamidopropyl Betaine @3 (amphoteric)", "Coco-Betaine @7 (amphoteric)", "Coco-Glucoside @11 (nonionic glucoside, not prominent)"],
+        "humectantContext": ["Glycerin @18"],
+        "excluded": ["Melaleuca Alternifolia Leaf Oil @4 (essential oil, 6.4)", "Glycol Distearate @12 (pearlizing wax, 6.4)", "Terpineol @14, Pinene @16, Limonene @17 (fragrance components)", "Tocopherol @19 (trace antioxidant)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 8,
+        "inci": "Benzyl Alcohol",
+        "classes": ["fragrance", "preservative_or_capped_active"],
+        "cap": "e3Point @8 (Benzyl Alcohol, preservative fallback)",
+        "alphabeticalRun": null,
+        "skipped": [],
+        "codes": [],
+        "note": "No candidate before the cap; the E3 marker itself is plausible ((i) SLES @2 before it; (ii) nothing between it and the cap), so W-line = cap.",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light",
+      "persistence": "low",
+      "resetCapacity": "moderate",
+      "counterevidence": "Only one weak refatter at @6; no second family.",
+      "whyThisBand": "The only deposition family is a weak refatter facing an effective C1 ether-sulfate/betaine chassis; nothing hair-substantive or persistent is present.",
+      "whyNotNeighborBand": "Not moderate: there is no cationic, silicone or payload-lipid system at all, so no plausible noticeable residue; a single weak_refatter facing moderate reset can remain low (W2 single family).",
+      "confidenceLimitingFactor": "None material; complete formula, single weak family.",
+      "rationale": "Low: single weak_refatter (PEG-7 Glyceryl Cocoate @6) and no cationic/silicone/lipid route, against a moderate C1 reset.",
+      "ruleIds": ["6.3", "6.4", "6.6", "W2", "W-LINE"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": "formula-only; claims hidden",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": ["Glycerin @18 (late)"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["PEG-7 Glyceryl Cocoate @6"],
+        "limitation": "No humectant cluster or deposition support; neither repair nor moisture is formula-supported."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Prominent tea tree oil @4 is a scalp-type ingredient that hints at a scalp-positioned product, but it is not a focus route by itself.",
+      "decisionTrace": "Claim direction null (blind). Formula nonspecific for lengths care; no focus route without positioning -> provisional general.",
+      "rationale": "Provisional general: blind pass, no claims; formula is nonspecific.",
+      "ruleIds": ["7.2", "7.3", "3.1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": ["scalp_active"],
+      "provisional": "formula-only; claims hidden",
+      "decisionTrace": "Empty default considered; no claims visible, so no distinct secondary positioning.",
+      "rationale": "Provisional empty secondary.",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "frequent",
+      "provisional": "formula-only; claims hidden",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional default regular; cleansingStrength moderate keeps frequent possible if explicit frequency wording appears (U2); alternating impossible (not strong).",
+      "ruleIds": ["9", "U1", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "targeted",
+      "provisional": "formula-only; SC1 positioning not yet visible",
+      "rationale": "Provisional not_targeted pending SC1. Formula half: CSA met through prominent E4 humectant/refatting route PEG-7 Glyceryl Cocoate @6; no prominent E4 comfort route; MB excluded (prominent strong anionic Sodium Laureth Sulfate @2). Counter-signal: prominent essential oil Melaleuca Alternifolia Leaf Oil @4 (would cap targeted at moderate).",
+      "ruleIds": ["10", "CSA", "MB", "E4", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Complete INCI contains no Piroctone Olamine, Climbazole or Selenium Sulfide/Disulfide; tea tree oil does not upgrade (Section 11).",
+      "ruleIds": ["11", "DS1"]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionicEther": ["Sodium Laureth Sulfate @2"],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": [],
+      "amphoteric": ["Cocamidopropyl Betaine @3", "Coco-Betaine @7"],
+      "nonionicGlucoside": ["Coco-Glucoside @11 (after E3, not prominent)"],
+      "notCleansing": ["Sodium Chloride @5", "Citric Acid @13"]
+    },
+    "conditioningRoutes": ["PEG-7 Glyceryl Cocoate @6 (weak refatter)", "Glycol Distearate @12 (pearlizer, not prominent)"],
+    "weightRoutes": ["PEG-7 Glyceryl Cocoate @6 (weak_refatter)"],
+    "humectants": ["Glycerin @18"],
+    "actives": ["Melaleuca Alternifolia Leaf Oil @4 (essential oil; not a dandruff active)"],
+    "exposure": ["Melaleuca Alternifolia Leaf Oil @4 prominent essential oil", "Terpineol @14, Pinene @16, Limonene @17 (fragrance components)", "No declared Parfum"],
+    "mildBase": "excluded: prominent strong anionic Sodium Laureth Sulfate @2",
+    "preservatives": ["Benzyl Alcohol @8", "Phenoxyethanol @9", "Sodium Benzoate @10", "Potassium Sorbate @15"]
+  },
+  "unresolvedMaterialIngredients": []
+}

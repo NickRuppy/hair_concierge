@@ -101,7 +101,7 @@
       "product.suitable_thicknesses": "§10.3 hair_thickness_fit is weight-led; the `moderate` row yields fine=conditional, medium=recommended, coarse=recommended. weight_potential `moderate` selects the corresponding §10.3 row. §10.3: no second weight-derived field may additionally modify this table. Evidence: reference key slot 13, evidence_level: E2, evidence_scope: formula, anchor row: single_family. Limit: Broad product priors, not universal exclusions or efficacy claims; every fine-hair value carries the §7.5 judgment-call limitation. AD-5: only `recommended` thicknesses are written. Emitted: normal, coarse. Not emitted (conditional/neutral/caution): fine — conditional."
     },
     "projection_sha256": "1b00486a35e53250368747b3f483c7319862f05d7326561c526593695c09ba94",
-    "research_input_sha256": "7928dc7cdb3784653915a6680a527d1ed5c7b8b412fc23e2ef3db57c8cf86967",
+    "research_input_sha256": "c903a3ae98ca2919e6f18ac08cac8525a2e48e3e3c526969449fb906f61845ff",
     "research_model_version": "leave-in-inci-v1.2",
     "suitable_thicknesses": [
       "normal",

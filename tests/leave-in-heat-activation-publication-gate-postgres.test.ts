@@ -23,7 +23,7 @@ import {
 
 const ID = {
   gliss: "00000000-0000-4000-8000-00000000a001",
-  heatGlow: "00000000-0000-4000-8000-00000000a002",
+  activatedWithLegacyRows: "00000000-0000-4000-8000-00000000a002",
   olaplex: "00000000-0000-4000-8000-00000000a003",
   neqi: "00000000-0000-4000-8000-00000000a004",
   s1HeatGlow: "00000000-0000-4000-8000-00000000a005",
@@ -41,7 +41,7 @@ const GLISS_SHAPE: Omit<LeaveInSeed, "id"> = {
   protocols: [{ role: "pre_heat_protection" }],
 }
 
-const HEAT_GLOW_ACTIVATED: Omit<LeaveInSeed, "id"> = {
+const ACTIVATED_WITH_LEGACY_ROWS: Omit<LeaveInSeed, "id"> = {
   specs: {
     roles: ["styling_prep"],
     plan_roles: ["pre_heat_application"],
@@ -75,9 +75,12 @@ test("A1 Gliss/Redken heat-only shape: rejected before the migration, accepted a
   assert.equal(await seedCase(after, { id: ID.gliss, ...GLISS_SHAPE }), null)
 })
 
-test("A2 HEAT&GLOW activated shape with legacy post-wash rows is accepted", async (t) => {
+test("generic activated shape with legacy post-wash rows is accepted", async (t) => {
   const pg = await heatActivationDatabase(t)
-  assert.equal(await seedCase(pg, { id: ID.heatGlow, ...HEAT_GLOW_ACTIVATED }), null)
+  assert.equal(
+    await seedCase(pg, { id: ID.activatedWithLegacyRows, ...ACTIVATED_WITH_LEGACY_ROWS }),
+    null,
+  )
 })
 
 test("A3 Olaplex post-wash + pre-heat (not activated) stays accepted", async (t) => {
@@ -181,9 +184,9 @@ test("R1 activation with a post-wash plan role is rejected immediately", async (
   assert.match(
     (await seedCase(pg, {
       id: ID.bad,
-      ...HEAT_GLOW_ACTIVATED,
+      ...ACTIVATED_WITH_LEGACY_ROWS,
       specs: {
-        ...HEAT_GLOW_ACTIVATED.specs,
+        ...ACTIVATED_WITH_LEGACY_ROWS.specs,
         plan_roles: ["post_wash_leave_in", "pre_heat_application"],
       },
     })) ?? "accepted",
@@ -196,8 +199,8 @@ test("R2 activation without a pre_heat stage is rejected", async (t) => {
   assert.match(
     (await seedCase(pg, {
       id: ID.bad,
-      ...HEAT_GLOW_ACTIVATED,
-      specs: { ...HEAT_GLOW_ACTIVATED.specs, application_stage: ["towel_dry", "dry_hair"] },
+      ...ACTIVATED_WITH_LEGACY_ROWS,
+      specs: { ...ACTIVATED_WITH_LEGACY_ROWS.specs, application_stage: ["towel_dry", "dry_hair"] },
     })) ?? "accepted",
     /product_leave_in_specs_heat_activation_pre_heat_only/,
   )
@@ -208,8 +211,11 @@ test("R3 activation with a conditioner-replacement role is rejected", async (t) 
   assert.match(
     (await seedCase(pg, {
       id: ID.bad,
-      ...HEAT_GLOW_ACTIVATED,
-      specs: { ...HEAT_GLOW_ACTIVATED.specs, roles: ["replacement_conditioner", "styling_prep"] },
+      ...ACTIVATED_WITH_LEGACY_ROWS,
+      specs: {
+        ...ACTIVATED_WITH_LEGACY_ROWS.specs,
+        roles: ["replacement_conditioner", "styling_prep"],
+      },
     })) ?? "accepted",
     /product_leave_in_specs_heat_activation_pre_heat_only/,
   )
@@ -220,8 +226,8 @@ test("R4 route and activation must agree (route iff required)", async (t) => {
   assert.match(
     (await seedCase(pg, {
       id: ID.bad,
-      ...HEAT_GLOW_ACTIVATED,
-      specs: { ...HEAT_GLOW_ACTIVATED.specs, heat_activation_route: null },
+      ...ACTIVATED_WITH_LEGACY_ROWS,
+      specs: { ...ACTIVATED_WITH_LEGACY_ROWS.specs, heat_activation_route: null },
     })) ?? "accepted",
     /product_leave_in_specs_heat_activation_route_iff_required/,
   )
@@ -236,8 +242,8 @@ test("R4 route and activation must agree (route iff required)", async (t) => {
   assert.match(
     (await seedCase(pg, {
       id: ID.bad,
-      ...HEAT_GLOW_ACTIVATED,
-      specs: { ...HEAT_GLOW_ACTIVATED.specs, heat_activation_route: "hot_air" },
+      ...ACTIVATED_WITH_LEGACY_ROWS,
+      specs: { ...ACTIVATED_WITH_LEGACY_ROWS.specs, heat_activation_route: "hot_air" },
     })) ?? "accepted",
     /product_leave_in_specs_heat_activation_route_check/,
   )
@@ -248,8 +254,8 @@ test("R5 curated activated product without heat protection is rejected at COMMIT
   assert.match(
     (await seedCase(pg, {
       id: ID.bad,
-      ...HEAT_GLOW_ACTIVATED,
-      specs: { ...HEAT_GLOW_ACTIVATED.specs, provides_heat_protection: false },
+      ...ACTIVATED_WITH_LEGACY_ROWS,
+      specs: { ...ACTIVATED_WITH_LEGACY_ROWS.specs, provides_heat_protection: false },
     })) ?? "accepted",
     /curated publication requires complete category facts/,
   )
@@ -257,12 +263,15 @@ test("R5 curated activated product without heat protection is rejected at COMMIT
 
 test("R6 a fit row edited alone to replacement_capable is rejected at COMMIT", async (t) => {
   const pg = await heatActivationDatabase(t)
-  assert.equal(await seedCase(pg, { id: ID.heatGlow, ...HEAT_GLOW_ACTIVATED }), null)
+  assert.equal(
+    await seedCase(pg, { id: ID.activatedWithLegacyRows, ...ACTIVATED_WITH_LEGACY_ROWS }),
+    null,
+  )
   assert.match(
     (await transaction(pg, async (db) => {
       await db.query(
         "UPDATE public.product_leave_in_fit_specs SET conditioner_relationship = 'replacement_capable' WHERE product_id = $1",
-        [ID.heatGlow],
+        [ID.activatedWithLegacyRows],
       )
     })) ?? "accepted",
     /curated publication requires complete category facts/,
@@ -271,12 +280,15 @@ test("R6 a fit row edited alone to replacement_capable is rejected at COMMIT", a
 
 test("R7 deleting the activated product's pre-heat protocols is rejected at COMMIT", async (t) => {
   const pg = await heatActivationDatabase(t)
-  assert.equal(await seedCase(pg, { id: ID.heatGlow, ...HEAT_GLOW_ACTIVATED }), null)
+  assert.equal(
+    await seedCase(pg, { id: ID.activatedWithLegacyRows, ...ACTIVATED_WITH_LEGACY_ROWS }),
+    null,
+  )
   assert.match(
     (await transaction(pg, async (db) => {
       await db.query(
         "DELETE FROM public.product_application_protocols WHERE product_id = $1 AND role = 'pre_heat_protection'",
-        [ID.heatGlow],
+        [ID.activatedWithLegacyRows],
       )
     })) ?? "accepted",
     /curated publication requires complete category facts/,
@@ -318,7 +330,7 @@ test("R10 an activated curated product whose heat row is a shared template is re
   assert.match(
     (await seedCase(pg, {
       id: ID.bad,
-      ...HEAT_GLOW_ACTIVATED,
+      ...ACTIVATED_WITH_LEGACY_ROWS,
       protocols: [{ role: "pre_heat_protection", family: "pre_heat_damp", workflow: false }],
     })) ?? "accepted",
     /curated publication requires complete category facts/,

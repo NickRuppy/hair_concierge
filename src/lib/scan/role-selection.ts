@@ -13,7 +13,7 @@ export type ScanRoleEvaluation = {
  * Scan-specific rank. Unlike `compareRankableCandidates` (which only ever sees
  * ideal|supportive recommendation candidates), the scanned product can land on any
  * verdict, so `unknown` has to outrank `mismatch`: "does not fit role A, not enough data
- * for role B" must read as "Unklar" rather than claim a rejection the data cannot carry.
+ * for role B" must read as "Nicht geprüft" rather than claim a rejection the data cannot carry.
  */
 const VERDICT_RANK: Record<ScanVerdict, number> = {
   ideal: 0,

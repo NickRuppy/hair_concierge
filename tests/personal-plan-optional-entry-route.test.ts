@@ -39,6 +39,7 @@ function deps(overrides: Partial<Stage2OptionalEntryRouteDeps> = {}): Stage2Opti
     enabled: () => true,
     getUserId: async () => "owner-1",
     loadStage2Access: async () => stage2Access,
+    toolsEnabled: async () => false,
     openOptionalRefinement: async () => draft,
     ...overrides,
   }
@@ -97,7 +98,7 @@ test("optional Stage 2 entry accepts only the module body and derives the user s
   response = await handler(request({ module: "habits" }))
   assert.equal(response.status, 200)
   assert.match(response.headers.get("Server-Timing") ?? "", /operation;dur=/)
-  assert.deepEqual(calls, [{ userId: "owner-1", module: "habits" }])
+  assert.deepEqual(calls, [{ userId: "owner-1", module: "habits", toolsEnabled: false }])
   assert.deepEqual((await response.json()).answers, { currentProductCategories: ["shampoo"] })
 })
 
@@ -151,4 +152,62 @@ test("an optional-entry access failure is reported too", async () => {
 
   assert.equal(response.status, 503)
   assert.deepEqual(reports, ["stage2_optional_entry_access"])
+})
+
+test("optional Stage 2 entry accepts the tools body and rejects a not_applicable module as invalid_module", async () => {
+  const calls: unknown[] = []
+  let response = await createStage2OptionalEntryRouteHandler(
+    deps({
+      openOptionalRefinement: async (input) => {
+        calls.push(input)
+        return draft
+      },
+    }),
+  )(request({ module: "tools" }))
+  assert.equal(response.status, 200)
+  assert.deepEqual(calls, [{ userId: "owner-1", module: "tools", toolsEnabled: false }])
+
+  const reported: unknown[] = []
+  response = await createStage2OptionalEntryRouteHandler(
+    deps({
+      openOptionalRefinement: async () => {
+        throw new Stage2OptionalEntryError("invalid_module")
+      },
+      reportUnexpectedError: (_route, error) => reported.push(error),
+    }),
+  )(request({ module: "tools" }))
+  assert.deepEqual([response.status, await response.json()], [400, { error: "invalid_module" }])
+  // A caller error, not an outage: nothing is reported to Sentry.
+  assert.deepEqual(reported, [])
+})
+
+test("optional Stage 2 entry takes the Hair Tools rollout from the server, never from the body", async () => {
+  const calls: Array<{ toolsEnabled: boolean }> = []
+  const open = async (input: { toolsEnabled: boolean }) => {
+    calls.push(input)
+    return draft
+  }
+
+  const forged = await createStage2OptionalEntryRouteHandler(
+    deps({ openOptionalRefinement: open }),
+  )(request({ module: "tools", toolsEnabled: true }))
+  assert.deepEqual([forged.status, await forged.json()], [400, { error: "invalid_request" }])
+  assert.equal(calls.length, 0)
+
+  await createStage2OptionalEntryRouteHandler(
+    deps({ toolsEnabled: async () => true, openOptionalRefinement: open }),
+  )(request({ module: "tools" }))
+  await createStage2OptionalEntryRouteHandler(
+    deps({
+      toolsEnabled: async () => {
+        throw new Error("flag lookup failed")
+      },
+      openOptionalRefinement: open,
+    }),
+  )(request({ module: "tools" }))
+  assert.deepEqual(
+    calls.map((call) => call.toolsEnabled),
+    [true, false],
+    "the server decision is relayed; a failing lookup fails closed",
+  )
 })

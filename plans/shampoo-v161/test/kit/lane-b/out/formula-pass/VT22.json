@@ -1,0 +1,151 @@
+{
+  "blindId": "VT22",
+  "inciFingerprintSha256": "667bb736dc96760b8b9c2f7bb53340747ed7be081bd20ecc5c877feeb11c2408",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, claims hidden)",
+  "standard": "shampoo-classification-v1.6.1 candidate text (unlocked)",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 4,
+    "identityConfidence": "moderate",
+    "normalization": "ID-2: no split synonym entries; normalized one-based positions of the 35-entry list",
+    "e3ProminenceCutoff": "Parfum @11 -> positions 1-10 prominent"
+  },
+  "formulaFacts": {
+    "surfactantSystem": [
+      "Sodium Laureth Sulfate @2 - strong anionic, ether type, defining anionic",
+      "Sodium Lauryl Sulfate @3 - strong anionic, alkyl sulfate type, prominent reinforcing route",
+      "Cocamidopropyl Betaine @6 - amphoteric, buffer",
+      "TEA-Dodecylbenzenesulfonate @16 - strong anionic (alkylbenzene sulfonate) but after Parfum: recorded, not a route",
+      "Not cleansing: Sodium Xylenesulfonate @5 (hydrotrope), Glycol Distearate @7, Trideceth-10 @20, Sodium Chloride @4"
+    ],
+    "conditioningAndWeightRoutes": {
+      "silicone": ["Dimethiconol @10", "Dimethicone @13"],
+      "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @15"],
+      "cationic_conditioner": [],
+      "payload_lipid": [],
+      "weak_refatter": [],
+      "protein_film": [],
+      "film_former": [],
+      "pearlizing_fatty_route_for_C2": ["Glycol Distearate @7"],
+      "humectantContext": ["Panthenol @24", "Panthenyl Ethyl Ether @25", "Propylene Glycol @27, Triethylene Glycol @31 (solvents)"],
+      "excluded": ["Glycol Distearate @7 (pearlizing wax)", "Sodium Xylenesulfonate @5 (hydrotrope)", "Trideceth-10 @20 (emulsifier)", "Camellia Sinensis Leaf Extract @29 (extract)", "Magnesium Nitrate @28, Magnesium Chloride @34 (isothiazolinone stabilizer salts)"]
+    },
+    "actives": ["Piroctone Olamine @12 - recognized anti-dandruff active", "Niacinamide @30", "Panthenol @24"],
+    "scalpExposureFlags": ["Parfum @11 early; allergens after it; Methylchloroisothiazolinone/Methylisothiazolinone @33/@35", "strong cleansing", "no cooling agent", "E4 comfort list: Panthenol @24 and Niacinamide @30 not prominent - no prominent comfort route", "E4 humectant/refatting list: no prominent route"]
+  },
+  "wLine": {
+    "wLine": "Parfum @11",
+    "candidateClasses": ["fragrance"],
+    "cap": "e3Point @11 (Parfum)",
+    "alphabeticalRun": "none",
+    "skipped": [],
+    "plausibilityOfWLine": "No class a-d candidate before the cap; the E3 marker is the earliest candidate: (i) SLES @2 before; (ii) nothing between. W-line = cap, no fallback code",
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Strong by C1: defining anionic Sodium Laureth Sulfate @2 with a prominent reinforcing strong anionic, Sodium Lauryl Sulfate @3 (a reinforcing route gives strong regardless of the betaine buffer @6). Late TEA-Dodecylbenzenesulfonate @16 is recorded only.",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High by C2 as written: early (prominent) silicone Dimethiconol @10, a cationic polymer (Guar HPTC @15), a pearlizing route (Glycol Distearate @7) and a closed-list humectant entry (Panthenol @24); C2 supports high even in a strong chassis. Counter-signal: guar and panthenol are listed only after Parfum and the second silicone @13 is post-E3, so the complementary systems are plausibly low-dose; realistic unknowns could make care bounded (moderate).",
+      "ruleIds": ["C2", "E3", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "evidence": {
+        "silicone": ["Dimethiconol @10", "Dimethicone @13"],
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @15"],
+        "cationic_conditioner": [],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["strong anionic ether: Sodium Laureth Sulfate @2", "strong anionic alkyl sulfate: Sodium Lauryl Sulfate @3", "amphoteric: Cocamidopropyl Betaine @6", "late: TEA-Dodecylbenzenesulfonate @16"],
+        "humectantContext": ["Panthenol @24", "Panthenyl Ethyl Ether @25"],
+        "excluded": ["Glycol Distearate @7", "Sodium Xylenesulfonate @5", "Trideceth-10 @20"],
+        "unresolved": []
+      },
+      "depositionLoad": "moderate - a silicone/guar coacervate system (Dimethiconol @10, Dimethicone @13, Guar @15)",
+      "persistence": "moderate - silicones persist where they deposit; no lipid, no second cationic",
+      "resetCapacity": "strong - reinforced SLES + SLS chassis",
+      "counterevidence": "Strong reinforced sulfate reset; no lipid; guar after Parfum.",
+      "whyThisBand": "Moderate: a deliberate silicone + cationic guar deposition system is plausible enough that calling the product lightweight would understate residue risk.",
+      "whyNotNeighborBand": "Not low: W2 - two families (silicone, cationic polymer) form one coacervate deposition system and the dimethiconol is prominent, so they are not late/trace light routes. Not high: no W-RICH (no payload lipid), and two families face a strong reset that plausibly offsets them. W1 does not apply (no amodimethicone; the set is incomplete) and is not cited.",
+      "confidenceLimitingFactor": "Strong reset versus a silicone/guar system of unknown dose; could be one band lighter.",
+      "rationale": "Moderate: silicone + guar against a strong reinforced sulfate reset; W-line = Parfum @11, no payload lipid; W1 set not present (no amodimethicone), full method decides.",
+      "ruleIds": ["6.6", "W1", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "not_applicable (provisional)",
+        "moistureRoutes": ["Panthenol @24"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Dimethiconol @10", "Guar @15"],
+        "limitation": "Claims hidden"
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "Piroctone Olamine @12 suggests an anti-dandruff role, but the path needs a dandruff claim (R17.3).",
+      "decisionTrace": "Claim direction null (blind); formula compatible with scalp_active if anti-dandruff positioning is revealed; provisional general.",
+      "rationale": "Provisional formula-only: general.",
+      "ruleIds": ["7.2", "11", "3.1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["shine"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no positioning visible.",
+      "rationale": "Provisional [].",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "treatment",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": ["treatment possible if a qualifying dandruff claim is revealed", "alternating possible if reset intent is revealed (formula strong)", "frequent impossible (strong)"],
+      "rationale": "Provisional default regular.",
+      "ruleIds": ["9", "U1", "U3", "U4"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: positioning hidden. CSA formula half NOT met: no E4 comfort or humectant/refatting route is prominent (Panthenol @24 and Niacinamide @30 are after Parfum @11); strong cleansing is a counter-signal. Any sensitive/dry positioning would therefore end not_targeted.",
+      "ruleIds": ["10", "CSA", "E3", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Supported: the complete INCI contains Piroctone Olamine @12. Formula-only.",
+      "ruleIds": ["11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "Formula source tier 4 (fallback retailer) with identityConfidence moderate; packet states complete; recorded, no property capped on it in the blind pass.",
+    "conditioningLevel: C2 read literally (only the silicone must be prominent; guar @15 and panthenol @24 are post-Parfum). Alternative reading (all C2 elements prominent) gives moderate.",
+    "weightPotential moderate vs low under a strong reset."
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "blindId": "T119",
+  "inciFingerprintSha256": "34968b63d2da1cd95df156622b7491e30a8066f23c0502def5800573b9cf23a4",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {"normalization": "AQUA / WATER, CI 60730 / EXT. VIOLET 2 and PARFUM / FRAGRANCE one entry each; normalized one-based positions.", "completeness": "complete (ID-1)", "sourceTier": 2, "identityConfidence": "high", "e3ProminenceCutoff": "PARFUM / FRAGRANCE listed last (27) -> positions 1-26 mechanically prominent (atypical ordering; recorded)"},
+  "directProperties": {
+    "cleansingStrength": {"value": "moderate", "confidence": "high", "neighboringAlternative": "none",
+      "rationale": "C1: defining anionic Sodium Laureth Sulfate (2) with prominent buffers Cocamidopropyl Betaine (5) and Coco-Betaine (10); no reinforcing strong anionic -> moderate.",
+      "counterSignals": "Cocamide MEA (9) is a foam booster (not a route); Trideceth-10/-3 are emulsifiers."},
+    "conditioningLevel": {"value": "high", "confidence": "high", "neighboringAlternative": "none",
+      "rationale": "C2 met: early silicone Dimethicone (6), cationic polymer Guar Hydroxypropyltrimonium Chloride (8), pearlizing route Glycol Distearate (3), humectant Sodium Hyaluronate (13) as its own entry; plus late Amodimethicone (23). Multiple complementary systems.",
+      "counterSignals": "The humectant element rests only on Sodium Hyaluronate (trace in practice)."},
+    "weightPotential": {"value": "moderate", "confidence": "moderate", "neighboringAlternative": "high",
+      "rationale": "W1 applies: (a) C1 sulfate chassis with prominent buffers, cleansing moderate; (b) deposition evidence is exactly silicone (Dimethicone 6) + cationic guar (8) + late Amodimethicone (23); (c) no further persistent family converges (no prominent payload lipid, no second cationic, no film former, no protein) and no W-RICH -> moderate.",
+      "subjudgments": {
+        "depositionLoad": {"value": "moderate", "rationale": "Early dimethicone + guar coacervate + late amodimethicone."},
+        "persistence": {"value": "moderate", "rationale": "Silicones persist; nothing else reinforces."},
+        "resetCapacity": {"value": "moderate", "rationale": "SLES + two betaines (C1 moderate)."}},
+      "evidenceByFamily": {"silicone": ["Dimethicone (6)", "Amodimethicone (23)"], "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride (8)"], "anionic_surfactant": ["Sodium Laureth Sulfate (2)"], "amphoteric_surfactant": ["Cocamidopropyl Betaine (5)", "Coco-Betaine (10)"], "humectant_context": ["Sodium Hyaluronate (13)"]},
+      "excluded": ["Glycol Distearate (3): pearlizer (6.4)", "Cocamide MEA (9): foam booster", "Steareth-6 (14), PEG-100 Stearate (17), Trideceth-10 (18), Trideceth-3 (19): emulsifiers for the silicone", "Carbomer (24): anionic acrylate thickener (6.4)", "Hexylene Glycol (26): solvent", "CI 60730 (7): violet colorant", "Salicylic Acid (20), Acetic Acid (16), Fumaric Acid (22), Citric Acid (25): acids/pH"],
+      "unresolved": [],
+      "whyThisBand": "Settled W1 set within its conditions: silicone/guar/late-amodimethicone on an effective sulfate base is moderate.",
+      "whyNotNeighborBand": "Not high: W1 conditions all hold - no W-RICH, no extra converging persistent family, effective C1 reset. Not low: an early silicone with a cationic deposition polymer is a plausibly persistent system.",
+      "confidenceLimitingFactor": "Dimethicone is very early (6, before the guar); realistic unknowns could push toward high."},
+    "focusPrimary": {"value": "provisional:pending_claims", "confidence": "low", "neighboringAlternative": "general",
+      "rationale": "Formula-only: generic silicone/guar conditioning (nonspecific); violet colorant suggests a toning/colour role, which is not a focus value; shine plausible if positioned (silicone film, acids).",
+      "careDirectionVerdictProvisional": "nonspecific"},
+    "focusSecondary": {"value": [], "confidence": "low", "neighboringAlternative": ["shine"], "rationale": "Empty default pending claims."},
+    "usageRole": {"value": "regular", "confidence": "low", "neighboringAlternative": "frequent", "rationale": "Default; moderate cleansing excludes alternating."},
+    "scalpComfortTarget": {"value": "provisional:not_targeted", "confidence": "low", "neighboringAlternative": "targeted", "rationale": "Positioning unknown. CSA formula half met only mechanically: Sodium Hyaluronate (13) on the E4 humectant list is prominent because Parfum is listed last."},
+    "dandruffSupport": {"value": "not_supported", "confidence": "high", "neighboringAlternative": "none", "rationale": "Neither Piroctone Olamine nor Climbazole; Salicylic Acid (20) does not count (Section 11)."}
+  },
+  "formulaFacts": [
+    {"ingredient": "Sodium Laureth Sulfate", "position": 2, "role": "defining anionic (ether type)"},
+    {"ingredient": "Glycol Distearate", "position": 3, "role": "pearlizing route (C2)"},
+    {"ingredient": "Cocamidopropyl Betaine", "position": 5, "role": "buffer"},
+    {"ingredient": "Dimethicone", "position": 6, "role": "silicone, early (C2, W1)"},
+    {"ingredient": "Guar Hydroxypropyltrimonium Chloride", "position": 8, "role": "cationic_polymer (W1)"},
+    {"ingredient": "Coco-Betaine", "position": 10, "role": "buffer"},
+    {"ingredient": "Sodium Hyaluronate", "position": 13, "role": "humectant (C2 element)"},
+    {"ingredient": "Amodimethicone", "position": 23, "role": "late amino-silicone (W1)"},
+    {"ingredient": "Carbomer", "position": 24, "role": "acrylate thickener, excluded"},
+    {"ingredient": "Parfum / Fragrance", "position": 27, "role": "E3 fragrance marker (last)"}
+  ],
+  "unresolvedMaterialIngredients": []
+}

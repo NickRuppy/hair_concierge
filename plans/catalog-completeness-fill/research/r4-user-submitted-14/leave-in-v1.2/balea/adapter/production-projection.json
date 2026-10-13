@@ -99,7 +99,7 @@
       "product.suitable_thicknesses": "Projected WT high selects its exact thickness row; fine-hair threshold is an explicit product prior, not a scientific constant. Use the named matrix row; do not interpolate from product marketing. No stronger recommendation or exclusion is inferred beyond that fixed row. Evidence: WT dimension high; projected weight high, COND high; R2 none_visible, Dimethicone r4 + Dimethiconol r12: persistent silicone film, Cetyl Alcohol r5 + Cetrimonium Chloride r13: coherent LGN pair. Limit: Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established. Broad deterministic fit prior; actual user fit also depends on hair, dose and routine. AD-5: only `recommended` thicknesses are written. Emitted: coarse. Not emitted (conditional/neutral/caution): fine — caution, medium — conditional."
     },
     "projection_sha256": "02831bf042f101b83d8a255facd57751205ea9167fe05c8b121408c589985521",
-    "research_input_sha256": "984ac49de3f1b2edb7312389d804270876d1ca214f18bad37b5a04063168c377",
+    "research_input_sha256": "a45e674151a7f2fb20b800500771871744fd30b9985668cdee8af2864bae7163",
     "research_model_version": "leave-in-inci-v1.2",
     "suitable_thicknesses": [
       "coarse"

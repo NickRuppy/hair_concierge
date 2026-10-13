@@ -1,0 +1,108 @@
+{
+  "slot": "A07",
+  "productId": "4a45948b-53a6-48ac-9c02-20718c1d19c4",
+  "name": "Being Big Hair Shampoo (Volumen Shampoo)",
+  "brand": "Being",
+  "packSize": "354 ml",
+  "gtins": [
+    "4895248005872"
+  ],
+  "sources": [
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-being-big-hair-shampoo/p/4895248005872",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "Rossmann PDP (browser tab, online only); JSON-LD sku 4895248005872; Rossmann Artikelnummer 191379; 354 ml; 6,79 EUR; Kontaktdaten Zuru Germany GmbH, Düsseldorf",
+      "sourceKind": "retailer",
+      "gtinShown": "4895248005872 (URL path and JSON-LD sku)",
+      "inciVerbatim": "AQUA/WATER/EAU, COCAMIDOPROPYL BETAINE, SODIUM C14-16 OLEFIN SULFONATE, SODIUM CHLORIDE, COCO-GLUCOSIDE, GLYCERIN, SODIUM COCOYL ISETHIONATE, MACADAMIA INTEGRIFOLIA SEED OIL, PERSEA GRATISSIMA OIL, PHENOXYETHANOL, PROPYLENE GLYCOL, PARFUM (FRAGRANCE), SODIUM BENZOATE, ACRYLATES COPOLYMER, DISODIUM LAURETH SULFOSUCCINATE, PANTHENOL, POLYQUATERNIUM-10, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, DISODIUM EDTA, CYCLODEXTRIN, SODIUM STARCH OCTENYLSUCCINATE, CITRIC ACID, SODIUM CITRATE, HYDROXYPROPYL STARCH PHOSPHATE.",
+      "claimsVerbatim": "Das BIG HAIR Volumen Shampoo enthält belebendes Avocado- und Macadamiaöl für eine gründlich reinigende Haarwäsche. Das Haar fühlt sich leicht und voluminös an. | dermatologisch getestet | für glattes oder feines Haar",
+      "directionsVerbatim": "Auf das nasse Haar auftragen, aufschäumen und ausspülen."
+    },
+    {
+      "url": "https://www.hagel-shop.de/being-big-hair-volumen-shampoo-354-ml-12133562.html",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "Hagel-Shop PDP (German retailer; GPSR Hersteller ZURU Germany GmbH, Einführer ARTIS BEAUTY GmbH)",
+      "sourceKind": "retailer",
+      "gtinShown": "4895248005872 (labelled 'EAN' in Eigenschaften; 354 ml)",
+      "inciVerbatim": "AQUA/WATER/EAU, COCAMIDOPROPYL BETAINE, SODIUM C14-16 OLEFIN SULFONATE, SODIUM CHLORIDE, COCO-GLUCOSIDE, GLYCERIN, SODIUM COCOYL ISETHIONATE, MACADAMIA INTEGRIFOLIA SEED OIL, PERSEA GRATISSIMA OIL, PHENOXYETHANOL, PROPYLENE GLYCOL, PARFUM (FRAGRANCE), SODIUM BENZOATE, ACRYLATES COPOLYMER, DISODIUM LAURETH SULFOSUCCINATE, PANTHENOL, POLYQUATERNIUM-10, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, DISODIUM EDTA, CYCLODEXTRIN, SODIUM STARCH OCTENYLSUCCINATE, CITRIC ACID, SODIUM CITRATE, HYDROXYPROPYL STARCH PHOSPHATE.",
+      "claimsVerbatim": "Haartyp: feines Haar | Wirkung: Klärend, Kräftigend, Pflegend, Reinigend, Struktur, Volumen | Besonderheit: Dermatologisch getestet, Silikonfrei, Sulfatfrei",
+      "directionsVerbatim": "not shown on the page extract"
+    },
+    {
+      "url": "https://beinghaircare.com/product/big-hair-volumizing-shampoo/",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "brand global (US) product page, English, 12 FL OZ / 354 mL; 'Shop @ Walmart'; not the German/EU pack",
+      "sourceKind": "manufacturer_foreign",
+      "gtinShown": "none",
+      "inciVerbatim": "Aqua (Water), Cocamidopropyl Betaine, Sodium C14-16 Olefin Sulfonate, Sodium Chloride, Coco-Glucoside, Glycerin, Sodium Cocoyl Isethionate, Macadamia Integrifolia Seed Oil, Persea Gratissima (Avocado) Oil, Polyquaternium-10, Propylene Glycol, Disodium Laureth Sulfosuccinate, Acrylates Copolymer, Sodium Benzoate, Panthenol, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Disodium Edta, Cyclodextrin, Linoleamidopropyl PG-Dimonium Chloride Phosphate, Citric Acid, Sodium Starch Octenylsuccinate, Phenoxyethanol, Hydroxypropyl Starch Phosphate, Tocopheryl Acetate, Parfum (Fragrance).",
+      "claimsVerbatim": "Being BIG HAIR Volumizing Shampoo is ideal for type 1A-1C hair, including those with straight and/or thin and fine hair who are looking for more fullness and body. This dermatologically tested, sulfate-free and silicone-free formula contains naturally derived ingredients such as Avocado Oil and Macadamia Oil for a thorough, clarifying wash. Hair is left feeling balanced, plump and full of body. | Invigorating daily shampoo | For straight or fine hair | Provides fullness and body | Contains Avocado Oil and Macadamia Oil | No sulfates, silicones, parabens or phthalates | Dermatologically tested | Certified cruelty-free | AVOCADO OIL lightly hydrating natural oil | MACADAMIA OIL doesn't weigh hair down",
+      "directionsVerbatim": "Apply to wet hair, lather and rinse well. Pair with Being Volumizing Conditioner, or mix-and-match with another Conditioner from the Being line depending on your hair type and texture."
+    },
+    {
+      "url": "https://www.hagel-shop.de/being-big-hair-volumen-shampoo-354-ml-12133562.html (prior capture, plans/scan-db-expansion/research/shampoo-v14/pilot/waves/wave-01/being-big-hair/adapter-input.json)",
+      "retrievedAt": "2026-09-03 (prior evidence)",
+      "sourceType": "prior v1.4 pilot canonical (German retailer)",
+      "sourceKind": "retailer",
+      "gtinShown": "4895248005872",
+      "inciVerbatim": "AQUA/WATER/EAU, COCAMIDOPROPYL BETAINE, SODIUM C14-16 OLEFIN SULFONATE, SODIUM CHLORIDE, COCO-GLUCOSIDE, GLYCERIN, SODIUM COCOYL ISETHIONATE, MACADAMIA INTEGRIFOLIA SEED OIL, PERSEA GRATISSIMA OIL, PHENOXYETHANOL, PROPYLENE GLYCOL, PARFUM (FRAGRANCE), SODIUM BENZOATE, ACRYLATES COPOLYMER, DISODIUM LAURETH SULFOSUCCINATE, PANTHENOL, POLYQUATERNIUM-10, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, DISODIUM EDTA, CYCLODEXTRIN, SODIUM STARCH OCTENYLSUCCINATE, CITRIC ACID, SODIUM CITRATE, HYDROXYPROPYL STARCH PHOSPHATE, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "foreign_manufacturer_vs_german_retailers",
+      "summary": "Brand global (US) page lists a different 25-item formula: adds Linoleamidopropyl PG-Dimonium Chloride Phosphate and Tocopheryl Acetate, spells 'Persea Gratissima (Avocado) Oil', and orders Polyquaternium-10/Propylene Glycol/Phenoxyethanol differently; German retailers (Rossmann, Hagel-Shop, both with the EU importer/manufacturer ZURU Germany) list a different 24-item formula without those two. Different ingredient sets. German pack = EU formulation; US page is not the German pack.",
+      "listForeign_manufacturer": "Aqua (Water), Cocamidopropyl Betaine, Sodium C14-16 Olefin Sulfonate, Sodium Chloride, Coco-Glucoside, Glycerin, Sodium Cocoyl Isethionate, Macadamia Integrifolia Seed Oil, Persea Gratissima (Avocado) Oil, Polyquaternium-10, Propylene Glycol, Disodium Laureth Sulfosuccinate, Acrylates Copolymer, Sodium Benzoate, Panthenol, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Disodium Edta, Cyclodextrin, Linoleamidopropyl PG-Dimonium Chloride Phosphate, Citric Acid, Sodium Starch Octenylsuccinate, Phenoxyethanol, Hydroxypropyl Starch Phosphate, Tocopheryl Acetate, Parfum (Fragrance)."
+    },
+    {
+      "type": "change_vs_prior_capture",
+      "summary": "The v1.4 pilot (2026-09-03, Hagel-Shop) canonical list ended with an extra final item 'TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES' (25 items). Both German retailers today list 24 items without it. Either the fragrance-allergen-style tail was dropped or the earlier capture was a different batch label; cannot be settled without a pack.",
+      "listPrior": "AQUA/WATER/EAU, COCAMIDOPROPYL BETAINE, SODIUM C14-16 OLEFIN SULFONATE, SODIUM CHLORIDE, COCO-GLUCOSIDE, GLYCERIN, SODIUM COCOYL ISETHIONATE, MACADAMIA INTEGRIFOLIA SEED OIL, PERSEA GRATISSIMA OIL, PHENOXYETHANOL, PROPYLENE GLYCOL, PARFUM (FRAGRANCE), SODIUM BENZOATE, ACRYLATES COPOLYMER, DISODIUM LAURETH SULFOSUCCINATE, PANTHENOL, POLYQUATERNIUM-10, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, DISODIUM EDTA, CYCLODEXTRIN, SODIUM STARCH OCTENYLSUCCINATE, CITRIC ACID, SODIUM CITRATE, HYDROXYPROPYL STARCH PHOSPHATE, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+    },
+    {
+      "type": "claim_inci_note",
+      "summary": "'Sulfatfrei'/'No sulfates' claim vs INCI: no sulfate surfactant (no SLS/SLES), but Sodium C14-16 Olefin Sulfonate and Disodium Laureth Sulfosuccinate are sulfonate/sulfosuccinate surfactants. Consistent in the strict sense; 'Avocado- und Macadamiaöl' present (Persea Gratissima Oil, Macadamia Integrifolia Seed Oil)."
+    }
+  ],
+  "canonicalInci": [
+    "AQUA/WATER/EAU",
+    "COCAMIDOPROPYL BETAINE",
+    "SODIUM C14-16 OLEFIN SULFONATE",
+    "SODIUM CHLORIDE",
+    "COCO-GLUCOSIDE",
+    "GLYCERIN",
+    "SODIUM COCOYL ISETHIONATE",
+    "MACADAMIA INTEGRIFOLIA SEED OIL",
+    "PERSEA GRATISSIMA OIL",
+    "PHENOXYETHANOL",
+    "PROPYLENE GLYCOL",
+    "PARFUM (FRAGRANCE)",
+    "SODIUM BENZOATE",
+    "ACRYLATES COPOLYMER",
+    "DISODIUM LAURETH SULFOSUCCINATE",
+    "PANTHENOL",
+    "POLYQUATERNIUM-10",
+    "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+    "DISODIUM EDTA",
+    "CYCLODEXTRIN",
+    "SODIUM STARCH OCTENYLSUCCINATE",
+    "CITRIC ACID",
+    "SODIUM CITRATE",
+    "HYDROXYPROPYL STARCH PHOSPHATE"
+  ],
+  "canonicalReason": "Two independent GTIN-anchored German retailers (Rossmann.de and Hagel-Shop, both EAN 4895248005872, 354 ml) agree character for character on a 24-item list on 2026-10-10. The only manufacturer page found is the brand's US site (manufacturer_foreign), which describes a different formula and is preserved as a conflict, not merged. No EU/DE manufacturer page exists in the sources reachable.",
+  "inciFingerprintSha256": "7def5e2af9726079ed0af2f394b941672e8bd3f031cb15361f5cad35cf9c8a5c",
+  "normalization": "Canonical list split on ',' at parenthesis depth 0 (so synonym groups such as 'Aqua (Water, Eau)' stay one item), trailing full stop removed; per item: lower-case, trim, collapse internal whitespace; asterisks, parentheses and slashes kept as published; items joined with '|'; sha256 over the UTF-8 string.",
+  "identityConfidence": "moderate",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 3,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Differs from the v1.4 pilot canonical list by the missing trailing TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES (fragrance-related); v1.4 fingerprint e5044d605889525955db74baae6763d31653baa3ce5d6e8fe73586db1db139e6 (comma-joined, 25 items) therefore does not apply to this list.",
+    "Product is Rossmann 'Nur Online' and available in 5 variants; the 354 ml Big Hair variant is the one frozen.",
+    "Source INCI is published in ALL CAPS with a trailing full stop; canonicalInci keeps the published casing and the 'AQUA/WATER/EAU' slash group as one item (fingerprint lower-cases).",
+    "No pack photo read; if the pack carries the TMAO tail, retailers dropped it."
+  ]
+}

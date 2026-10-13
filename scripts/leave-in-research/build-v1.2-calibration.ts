@@ -528,7 +528,7 @@ function buildReceipt(readings: ReturnType<typeof buildCalibration>) {
     locked_at: RULING_DATE,
     decision: "approved_and_locked_for_reuse",
     ruling:
-      'T21 — Nick, 2026-10-09: A1 ("needs heat to work" is a real property set from manufacturer statements and directions; activated products are offered only in the heat-styling routine, never as conditioner replacement or plain post-wash leave-in), A2 (the Neqi styling spray is never a conditioner replacement), D-c (HEAT&GLOW\'s between-wash use is covered by its activation direction), D-d (activation evidence is manufacturer-only: German page or pack), D-e (activation and heat protection are separate properties).',
+      'T21 — Nick, 2026-10-09: A1 ("needs heat to work" is a real property set from manufacturer statements and directions; activated products are offered only in the heat-styling routine, never as conditioner replacement or plain post-wash leave-in), A2 (the Neqi styling spray is never a conditioner replacement), D-d (activation evidence is manufacturer-only: German page or pack), D-e (activation and heat protection are separate properties). Q11=B (2026-10-13) supersedes D-c: HEAT&GLOW is not activated; its existing roles and protocols stay unchanged.',
     normative_sources: {
       overlay: { ...pin(LEAVE_IN_OVERLAY_PATH) },
       previous_overlay: {

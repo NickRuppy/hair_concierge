@@ -1,0 +1,137 @@
+{
+  "blindId": "W310",
+  "inciFingerprintSha256": "105e7ebd0649e688f2427321a0648b9945d539dd1a158dcf0640d02303771f67",
+  "phase": "formula-pass (blind, claims hidden)",
+  "formulaBlock": {
+    "packSize": "400 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "'Aqua (Water, Eau)', 'Parfum (Fragrance)', 'CI 42053 (Green 3)' are single entries; packet positions = normalized ID-2 positions (20 entries).",
+    "e3Point": "Parfum (Fragrance) @18. Prominent = positions 1-17."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate @2 with prominent buffers Cocamidopropyl Betaine @4 and Coco-Glucoside @10, no reinforcing strong anionic. Laureth-4 @14 is a low-ethoxylate thickener (not a route).",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High by C2: prominent payload lipid Hydrogenated Castor Oil @9 in place of a silicone, prominent cationic Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6, pearlizing route Glycol Distearate @12, humectant route Panthenol @7; plus weak refatters Glyceryl Oleate @11, PEG-7 Glyceryl Cocoate @15. Counter-signal: the only lipid is a hydrogenated castor oil that often serves as opacifier/structurant at low dose, no silicone; moderate is the neighbor.",
+      "ruleIds": ["C2", "E3", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "silicone": [],
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6"],
+        "cationic_conditioner": [],
+        "payload_lipid": ["Hydrogenated Castor Oil @9 (material, waxy)"],
+        "weak_refatter": ["Glyceryl Oleate @11", "PEG-7 Glyceryl Cocoate @15"],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @4", "Coco-Glucoside @10"],
+        "humectantContext": ["Panthenol @7", "Propylene Glycol @13 (solvent)"],
+        "excluded": ["Glycol Distearate @12 (pearlizing wax, 6.4)", "Laureth-4 @14 (low-EO thickener)", "Aloe Barbadensis Leaf Extract @8 (botanical)", "Piroctone Olamine @5 (active)", "CI 42053 @20 (colourant)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 18,
+        "inci": "Parfum (Fragrance)",
+        "classes": ["fragrance"],
+        "cap": "e3Point @18 (Parfum)",
+        "alphabeticalRun": null,
+        "skipped": ["w_line_skipped:Piroctone Olamine@5 (clause ii failed: cleansing surfactant Coco-Glucoside @10 and pearlizing wax Glycol Distearate @12 listed after it before the cap)", "w_line_skipped:Panthenol@7 (clause ii failed: Coco-Glucoside @10 and Glycol Distearate @12 listed after it before the cap)"],
+        "codes": [],
+        "note": "The E3 marker @18 is the earliest plausible candidate, so W-line = cap. No 7-entry alphabetical run.",
+        "payloadLipidMaterial": ["Hydrogenated Castor Oil @9"],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "moderate",
+      "persistence": "moderate",
+      "resetCapacity": "moderate",
+      "counterevidence": "W-RICH holds (material waxy Hydrogenated Castor Oil @9 converging with prominent cationic guar @6); three deposition families; waxy lipids are more persistent.",
+      "whyThisBand": "A prominent cationic guar, a waxy hydrogenated lipid and weak refatters plausibly leave noticeable but bounded residue.",
+      "whyNotNeighborBand": "Not high: the rich route needs limited reset, but resetCapacity is moderate (C1 SLES with two buffers); only one lipid, which in shampoos is often a low-dose structurant, and a single light guar. Not low: material lipid + cationic polymer + refatters (W2).",
+      "confidenceLimitingFactor": "W-RICH with moderate reset; dose of the hydrogenated castor oil unknown; high is the realistic neighbor.",
+      "rationale": "Moderate: W-RICH (HCO @9 + guar @6) plus weak refatters, offset by moderate C1 reset; neighbor high.",
+      "ruleIds": ["6.6", "W-RICH", "W-LINE", "W2", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": "formula-only; claims hidden",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": ["Panthenol @7"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6", "Hydrogenated Castor Oil @9", "Glyceryl Oleate @11"],
+        "limitation": "Active-led formula (Piroctone Olamine @5)."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Recognized anti-dandruff active Piroctone Olamine @5 makes scalp_active likely if a dandruff claim appears.",
+      "decisionTrace": "Claim direction null (blind); the claim defines the dandruff path (R17.3); provisional general.",
+      "rationale": "Provisional general pending claims.",
+      "ruleIds": ["7.2", "R17.3", "3.1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": ["moisture"],
+      "provisional": "formula-only; claims hidden",
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty secondary.",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "treatment",
+      "provisional": "formula-only; claims hidden",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional default regular; treatment fires if a moderate/high-graded E2 dandruff claim appears (U3), since dandruffSupport is supported.",
+      "ruleIds": ["9", "U3"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "targeted",
+      "provisional": "formula-only; SC1 positioning not yet visible",
+      "rationale": "Provisional not_targeted pending SC1. Formula half: CSA met by prominent E4 comfort route Panthenol @7 and humectant/refatting routes Hydrogenated Castor Oil @9, Glyceryl Oleate @11, PEG-7 Glyceryl Cocoate @15. MB excluded (prominent Sodium Laureth Sulfate @2). No prominent cooling agent or essential oil.",
+      "ruleIds": ["10", "CSA", "MB", "E4", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Complete INCI contains Piroctone Olamine @5.",
+      "ruleIds": ["11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionicEther": ["Sodium Laureth Sulfate @2"],
+      "amphoteric": ["Cocamidopropyl Betaine @4"],
+      "nonionicGlucoside": ["Coco-Glucoside @10"],
+      "notCleansing": ["Sodium Chloride @3", "Laureth-4 @14", "Citric Acid @16", "Sodium Hydroxide @17"]
+    },
+    "conditioningRoutes": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6", "Hydrogenated Castor Oil @9", "Glyceryl Oleate @11", "Glycol Distearate @12", "PEG-7 Glyceryl Cocoate @15"],
+    "weightRoutes": ["cationic_polymer @6", "payload_lipid @9 (material)", "weak_refatter @11/@15"],
+    "humectants": ["Panthenol @7"],
+    "actives": ["Piroctone Olamine @5 (recognized anti-dandruff active)", "Panthenol @7 (E4 comfort)"],
+    "exposure": ["Parfum @18", "CI 42053 @20"],
+    "mildBase": "excluded: prominent strong anionic Sodium Laureth Sulfate @2",
+    "preservatives": ["Sodium Benzoate @19"]
+  },
+  "unresolvedMaterialIngredients": []
+}

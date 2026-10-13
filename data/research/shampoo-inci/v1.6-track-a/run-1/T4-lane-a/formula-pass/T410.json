@@ -1,0 +1,302 @@
+{
+  "blindId": "T410",
+  "inciFingerprintSha256": "ea583c276ba8648c7859a74cc4b46b845fa6743b80b4aeacd52f30a07f68f0b1",
+  "phase": "blind_formula_pass",
+  "identity": {
+    "packSize": "400 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high"
+  },
+  "formulaNotes": [
+    "ID-2: packet entries 'Aqua (Water' + 'Eau)' merged into one entry (position 1); all later positions are normalized (packet position minus 1).",
+    "E3 cut: Parfum at normalized 15; prominent = 2-14."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic Sodium Laureth Sulfate (2) (ether/sulfonate type) with prominent buffer(s) Cocamidopropyl Betaine (4) and no prominent reinforcing strong anionic -> moderate. Laureth-4/-23, Trideceth-10 are thickeners/solubilizers.",
+      "neighboringAlternative": "none",
+      "counterSignals": [
+        "PEG-7 Glyceryl Cocoate refatter (16), oil (7)"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "C2 met clearly: early silicones Amodimethicone (13) and Dimethicone (14) before Parfum (15) + cationic guar (5) + pearlizing Glycol Distearate (12) + humectants Panthenol (6) and Sorbitol (9); plus payload lipid Apricot Kernel Oil (7). Multiple complementary systems.",
+      "neighboringAlternative": "none"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "moderate: W-RICH holds (prominent apricot oil + silicone/guar), but reset is moderate (not limited), so the rest of the method decides: converging routes give noticeable but bounded residue in an ordinary SLES base.",
+      "neighboringAlternative": "high",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "Guar (5), apricot kernel oil (7), amodimethicone (13), dimethicone (14), weak refatter PEG-7 Glyceryl Cocoate (16), late HCO (21): several converging routes, each after the salt."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Amodimethicone is a persistent, damage-seeking silicone; oil and guar moderate; levels look modest (all after NaCl at 3)."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES/CAPB chassis: effective ordinary reset, not limited."
+        }
+      },
+      "extractedEvidenceByFamily": {
+        "silicone": [
+          [
+            "Amodimethicone",
+            13
+          ],
+          [
+            "Dimethicone",
+            14
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Guar Hydroxypropyltrimonium Chloride",
+            5
+          ]
+        ],
+        "payload_lipid": [
+          [
+            "Prunus Armeniaca (Apricot) Kernel Oil",
+            7
+          ],
+          [
+            "Hydrogenated Castor Oil",
+            21
+          ]
+        ],
+        "weak_refatter": [
+          [
+            "PEG-7 Glyceryl Cocoate",
+            16
+          ]
+        ],
+        "protein_film": [],
+        "film_former": [],
+        "anionic_surfactant": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            4
+          ]
+        ],
+        "humectant_context": [
+          [
+            "Panthenol",
+            6
+          ],
+          [
+            "Sorbitol",
+            9
+          ],
+          [
+            "Propylene Glycol",
+            20
+          ]
+        ]
+      },
+      "excludedIngredients": [
+        [
+          "Glycol Distearate",
+          12,
+          "pearlizer"
+        ],
+        [
+          "PEG-40 Hydrogenated Castor Oil",
+          17,
+          "solubilizer (6.4)"
+        ],
+        [
+          "Cocamide MEA",
+          10,
+          "thickener"
+        ],
+        [
+          "Cocos Nucifera (Coconut) Fruit Extract",
+          8,
+          "extract, not a payload lipid"
+        ],
+        [
+          "Laureth-4",
+          18,
+          "thickener"
+        ],
+        [
+          "Laureth-23",
+          19,
+          "solubilizer"
+        ],
+        [
+          "Trideceth-10",
+          22,
+          "solubilizer"
+        ]
+      ],
+      "whyThisBand": "moderate: W-RICH holds (prominent apricot oil + silicone/guar), but reset is moderate (not limited), so the rest of the method decides: converging routes give noticeable but bounded residue in an ordinary SLES base.",
+      "whyNotNeighborBand": "Not high: W-RICH with moderate reset is not the rich high route; all deposition sits after the salt and close to Parfum, so a heavy/coating conclusion is not well supported. W1 not applicable (prominent payload lipid converges). Not low: silicones incl. amodimethicone + guar + oil converge (W2).",
+      "counterEvidence": [
+        "W-RICH (high neighbor)",
+        "amodimethicone persistence"
+      ],
+      "confidenceLimitingFactor": "Silicone/oil levels unknown; could move one band up."
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Blind pass: claims hidden, so no positioned job can be confirmed; formula supports both moisture and repair; claims must break the tie.",
+      "formulaCompatibleCandidates": [
+        "moisture",
+        "repair",
+        "general"
+      ],
+      "careDirection": {
+        "verdict": "dual_supported",
+        "moistureRoutes": [
+          "Panthenol 6",
+          "Sorbitol 9",
+          "Apricot Kernel Oil 7"
+        ],
+        "repairRoutes": [
+          "Amodimethicone 13",
+          "Dimethicone 14",
+          "Guar 5",
+          "Apricot Kernel Oil 7"
+        ],
+        "sharedRoutes": [
+          "Guar 5",
+          "Apricot Kernel Oil 7"
+        ],
+        "limitation": "rinse-off; shared deposition routes"
+      },
+      "neighboringAlternative": "moisture"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Empty default; a secondary needs distinct exact-product positioning (Section 8), not visible blind.",
+      "neighboringAlternative": [
+        "moisture"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Default regular (Section 9); every non-default trigger needs a claim graded moderate/high, hidden in the blind pass. ",
+      "possibleClaimTriggeredValues": [
+        "frequent"
+      ],
+      "neighboringAlternative": "frequent"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Blind: no positioning visible (SC1). Formula half CSA PASSES (prominent E4 routes: Panthenol (6) comfort+humectant, Sorbitol (9) humectant, Apricot Kernel Oil (7) lipid). If an E2 sensitive/dry unit graded moderate/high appears after unblinding, targeted is reachable.",
+      "csaFormulaHalf": "pass",
+      "prominentE4Routes": [
+        "Panthenol (6) comfort+humectant",
+        "Sorbitol (9) humectant",
+        "Apricot Kernel Oil (7) lipid"
+      ],
+      "counterSignals": [],
+      "neighboringAlternative": "targeted"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11) -> not_supported.",
+      "neighboringAlternative": "none"
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic"
+    },
+    {
+      "ingredient": "Sodium Chloride",
+      "position": 3,
+      "role": "salt"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+      "position": 5,
+      "role": "cationic polymer"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 6,
+      "role": "humectant/comfort"
+    },
+    {
+      "ingredient": "Prunus Armeniaca (Apricot) Kernel Oil",
+      "position": 7,
+      "role": "payload lipid"
+    },
+    {
+      "ingredient": "Sorbitol",
+      "position": 9,
+      "role": "humectant"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 12,
+      "role": "pearlizer"
+    },
+    {
+      "ingredient": "Amodimethicone",
+      "position": 13,
+      "role": "early amino-silicone"
+    },
+    {
+      "ingredient": "Dimethicone",
+      "position": 14,
+      "role": "early silicone"
+    },
+    {
+      "ingredient": "Parfum (Fragrance)",
+      "position": 15,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "PEG-7 Glyceryl Cocoate",
+      "position": 16,
+      "role": "weak refatter"
+    },
+    {
+      "ingredient": "Hydrogenated Castor Oil",
+      "position": 21,
+      "role": "waxy lipid (late)"
+    }
+  ],
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    {
+      "reading": "weight moderate (W-RICH with moderate reset)",
+      "alternative": "high (multiple converging persistent systems incl. amodimethicone)"
+    }
+  ]
+}

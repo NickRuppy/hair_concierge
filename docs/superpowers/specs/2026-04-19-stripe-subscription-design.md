@@ -176,7 +176,6 @@ Stripe columns on `profiles` are read by the owner via existing `profiles_select
 - `src/app/pricing/checkout/page.tsx` — mounts `<EmbeddedCheckoutProvider>` with `fetchClientSecret` from `/api/stripe/create-checkout-session`.
 - `src/app/welcome/page.tsx` — server component; retrieves session, triggers magic link, shows confirmation UI.
 - `src/app/api/stripe/create-checkout-session/route.ts` — creates the Stripe Checkout Session, returns `client_secret`.
-- `src/app/api/stripe/session/route.ts` — returns session status for `/welcome`.
 - `src/app/api/stripe/portal-session/route.ts` — creates a Customer Portal session, redirects.
 - `src/components/profile/manage-subscription-button.tsx` — "Abo verwalten" button on `/profile`.
 - `src/lib/stripe/client.ts` — shared Stripe SDK init (`new Stripe(secret, { apiVersion })`).
@@ -213,7 +212,6 @@ Extend `src/lib/supabase/middleware.ts`. Gate matrix:
 | `/welcome`                     | no       | no          |
 | `/auth/*`                      | no       | no          |
 | `/api/stripe/webhook`          | no       | no          |
-| `/api/stripe/session`          | no       | no          |
 | `/onboarding`, `/onboarding/*` | **yes**  | **yes**     |
 | `/chat`, `/chat/*`             | **yes**  | **yes**     |
 | `/api/chat`                    | **yes**  | **yes**     |
@@ -330,7 +328,6 @@ Live mode IDs will be captured in Vercel env at launch; this file does not track
 - `src/lib/stripe/gating.ts`
 - `src/app/api/stripe/webhook/route.ts`
 - `src/app/api/stripe/create-checkout-session/route.ts`
-- `src/app/api/stripe/session/route.ts`
 - `src/app/api/stripe/portal-session/route.ts`
 - `src/app/pricing/page.tsx`
 - `src/app/pricing/checkout/page.tsx`

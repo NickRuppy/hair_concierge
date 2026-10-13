@@ -1,0 +1,333 @@
+{
+ "blindId": "W108",
+ "lane": "lane-b",
+ "policyId": "shampoo-classification-v1.6.2",
+ "formulaPassRecord": "out/formula-pass/W108.json (hash-pinned; not edited)",
+ "identity": {
+  "brand": "ISANA",
+  "productName": "ISANA MED Shampoo pH 5,5 hautneutral",
+  "packSize": "400 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "665d3815e74298d11968ebf3d989b3157a858499dcb4e7d5708e8756c36a803e",
+  "normalization": "22 entries as frozen; no split synonyms; normalized one-based positions cited (ID-2).",
+  "completeness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high",
+  "e3ProminenceCutoff": "Parfum@16 (prominent = positions 1-15)"
+ },
+ "formulaFacts": {
+  "surfactants": {
+   "definingAnionic": "Sodium Laureth Sulfate@2 (strong anionic, ether/sulfonate type)",
+   "reinforcingRoutes": [
+    "Sodium Laureth-8 Sulfate@9 (strong ether type, C3b high-EO counter-signal)",
+    "Magnesium Laureth Sulfate@11 (strong ether type)",
+    "Magnesium Laureth-8-Sulfate@12 (strong ether type, C3b)",
+    "Sodium Oleth Sulfate@14 (alkyl ether sulfate, strong ether type by chemistry)",
+    "Magnesium Oleth Sulfate@15 (alkyl ether sulfate, strong ether type by chemistry)"
+   ],
+   "buffers": [
+    "Cocamidopropyl Betaine@5 (amphoteric)",
+    "Sodium Cocoyl Glutamate@6 (mild anionic)",
+    "Disodium Cocoamphodiacetate@7 (amphoteric)"
+   ],
+   "nonCleansing": [
+    "Laureth-4@13 (low-ethoxylate thickener)"
+   ],
+   "c3bCheck": "Reading both laureth-8 sulfates as buffers would still leave Magnesium Laureth Sulfate@11, Sodium Oleth Sulfate@14 and Magnesium Oleth Sulfate@15 as reinforcing routes, so the C3b confidence cap does not decide the value."
+  },
+  "conditioningRoutes": [
+   "Urea@3 (humectant)",
+   "Panthenol@8 (humectant/comfort)",
+   "Glycol Distearate@10 (pearlizing route)",
+   "Glycerin@20 (humectant, post-E3)"
+  ],
+  "humectants": [
+   "Urea@3",
+   "Panthenol@8",
+   "Glycerin@20",
+   "Propylene Glycol@22 (solvent, not deliberate)"
+  ],
+  "actives": [],
+  "e4ComfortRoutesProminent": [
+   "Urea@3",
+   "Panthenol@8"
+  ],
+  "e4HumectantRoutesProminent": [
+   "Urea@3",
+   "Panthenol@8"
+  ],
+  "mildBase": "not met: prominent strong anionics (Sodium Laureth Sulfate@2 and reinforcing ether sulfates); cleansingStrength strong",
+  "exposureFlags": [
+   "Parfum@16",
+   "no allergens declared separately",
+   "no cooling agent"
+  ],
+  "preservatives": [
+   "Sodium Benzoate@18",
+   "Potassium Sorbate@19",
+   "Formic Acid@21"
+  ]
+ },
+ "claimUnits": [
+  "pack_front (high): 'ISANA MED · pH 5,5 HAUTNEUTRAL · SHAMPOO · 3% Urea · ohne Silikone · normales Haar · Klinisch getestet · dermatologisch bestätigt' - no scalp state",
+  "manufacturer_de (Rossmann own brand, moderate): 'Das ISANA MED SHAMPOO ist eine Spezialentwicklung für sensible Kopfhaut' - qualifying E2 sensitive unit",
+  "manufacturer_de (moderate): 'schützt Kopfhaut & Haar vor Austrocknung' (protective, not dry positioning); 'für jeden Tag' (U2 wording); 'Hautverträglichkeit dermatologisch bestätigt', 'pH-hautneutral' (protective)"
+ ],
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "strong",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "Strong: C1 - defining anionic Sodium Laureth Sulfate@2 with prominent reinforcing ether sulfates (Magnesium Laureth Sulfate@11, Sodium Oleth Sulfate@14, Magnesium Oleth Sulfate@15, plus the laureth-8 sulfates @9, @12). Counter-signal: three early buffers (Cocamidopropyl Betaine@5, Sodium Cocoyl Glutamate@6, Disodium Cocoamphodiacetate@7) precede every reinforcing route, which sit late in a mixed-salt blend; confidence lowered to moderate, neighbor moderate. The convention value is not moved.",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C3b",
+    "C4"
+   ],
+   "counterSignal": "see rationale (counter-signals recorded there; convention value unchanged by claims, 3.2)",
+   "sourceIds": [
+    "formula/W108.json (stage A, fingerprint 665d3815e742...)"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "Low: cleansing-led architecture with no cationic polymer, no silicone and no lipid; care is humectant-only (Urea@3, Panthenol@8, Glycerin@20) plus a pearlizer (Glycol Distearate@10), which give little substantive slip. Counter-signal: a prominent urea/panthenol humectant pair and a pearlizer could read as several light routes (moderate).",
+   "ruleIds": [
+    "5",
+    "C2"
+   ],
+   "counterSignal": "see rationale",
+   "sourceIds": [
+    "formula/W108.json (stage A, fingerprint 665d3815e742...)"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "evidence": {
+    "cationic_polymer": [],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Sodium Laureth Sulfate@2",
+     "Cocamidopropyl Betaine@5",
+     "Sodium Cocoyl Glutamate@6",
+     "Disodium Cocoamphodiacetate@7",
+     "Sodium Laureth-8 Sulfate@9",
+     "Magnesium Laureth Sulfate@11",
+     "Magnesium Laureth-8-Sulfate@12",
+     "Sodium Oleth Sulfate@14",
+     "Magnesium Oleth Sulfate@15"
+    ],
+    "humectantContext": [
+     "Urea@3",
+     "Panthenol@8",
+     "Glycerin@20"
+    ],
+    "excluded": [
+     "Glycol Distearate@10 (pearlizing wax, 6.4)",
+     "Laureth-4@13 (thickener)",
+     "Propylene Glycol@22 (solvent)",
+     "Parfum@16"
+    ],
+    "unresolved": []
+   },
+   "wLine": {
+    "position": 16,
+    "inci": "Parfum",
+    "classes": [
+     "fragrance"
+    ],
+    "e3Point": 16,
+    "alphabeticalRun": "none",
+    "skipped": [
+     "w_line_skipped:Panthenol@8 - clause (ii) failed: cleansing surfactants Sodium Laureth-8 Sulfate@9, Magnesium Laureth Sulfate@11, Magnesium Laureth-8-Sulfate@12, Sodium Oleth Sulfate@14, Magnesium Oleth Sulfate@15 and pearlizing wax Glycol Distearate@10 listed after it before the cap"
+    ],
+    "codes": [],
+    "plausibility": "Parfum@16: (i) Sodium Laureth Sulfate@2 before it; (ii) nothing between 16 and cap 16",
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "light - no deposition family at all; humectants only",
+   "persistence": "low - nothing substantive",
+   "resetCapacity": "strong - reinforced ether-sulfate chassis",
+   "counterevidence": "None material; the pearlizer is excluded from weight evidence.",
+   "whyThisBand": "Deposition is absent; humectants are context only.",
+   "whyNotNeighborBand": "Not moderate: there is no cationic, silicone, lipid, protein or film former; no depositing system exists that could leave noticeable residue.",
+   "confidenceLimitingFactor": "none material",
+   "rationale": "Low: no deposition family against a strong reset (6.6).",
+   "ruleIds": [
+    "6.3",
+    "6.6",
+    "W-LINE"
+   ],
+   "counterSignal": "see counterevidence / whyNotNeighborBand",
+   "sourceIds": [
+    "formula/W108.json (stage A, fingerprint 665d3815e742...)"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No recognized anti-dandruff active (Section 11).",
+   "ruleIds": [
+    "11"
+   ],
+   "counterSignal": "none (mechanical presence test, Section 11)",
+   "sourceIds": [
+    "formula/W108.json (stage A, fingerprint 665d3815e742...)"
+   ]
+  },
+  "focusPrimary": {
+   "value": "scalp_active",
+   "confidence": "moderate",
+   "neighboringAlternative": "general",
+   "claimRole": "candidate",
+   "counterSignal": "Strong reinforced ether-sulfate chassis is a counter-signal for a sensitive-scalp role.",
+   "decisionTrace": "Claim direction: sensitive scalp ('Spezialentwicklung für sensible Kopfhaut', moderate). Formula compatible: scalpComfortTarget targeted via prominent Urea@3 and Panthenol@8. No competing lengths claim. Decision: scalp_active.",
+   "rationale": "scalp_active: explicit sensitive-scalp positioning with targeted comfort (7.2).",
+   "ruleIds": [
+    "7.2",
+    "SC1"
+   ],
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": "chosen focus is not a repair/moisture decision; blind formula verdict was nonspecific."
+   }
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "decisionTrace": "Empty default considered; no distinct lengths positioning.",
+   "rationale": "Empty.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [
+    "explicit_frequent_non_strong: 'für jeden Tag' (moderate) fails because cleansingStrength is strong (U2)",
+    "strong_plus_reset_intent: no reset intent"
+   ],
+   "rationale": "Regular: frequency wording cannot fire frequent on a strong formula; no reset intent; no dandruff claim.",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U4"
+   ],
+   "decisionTrace": "Default regular considered; trigger none; losing: explicit_frequent_non_strong: 'für jeden Tag' (moderate) fails because cleansingStrength is strong (U2); strong_plus_reset_intent: no reset intent."
+  },
+  "scalpComfortTarget": {
+   "value": "targeted",
+   "confidence": "moderate",
+   "neighboringAlternative": "not_targeted",
+   "rationale": "Targeted: SC1 met ('für sensible Kopfhaut', manufacturer, moderate); CSA met by prominent E4 comfort/humectant routes Urea@3 and Panthenol@8. Counter-signal cleansingStrength strong does not veto (listed route present) and caps confidence at moderate (CSA).",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "SC1",
+    "E2a"
+   ]
+  }
+ },
+ "reconciliation": [
+  "focusPrimary general (low) -> scalp_active (moderate).",
+  "usageRole regular (low) -> regular (high): 'für jeden Tag' recorded as losing trigger (strong formula).",
+  "scalpComfortTarget not_targeted (provisional) -> targeted (moderate): SC1 + CSA.",
+  "No formula property changed."
+ ],
+ "projection": {
+  "status": "proposal_blocked_pending_review",
+  "thicknessFit": {
+   "fine": "ideal",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "high",
+   "normal": "high",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 with weightPotential low (high, neighbor none) and conditioningLevel low (moderate, neighbor moderate): fine ideal, normal ideal, coarse acceptable. T6 scalp-concern floor (sensitive): no not_suited fit to lift. T4: no neighbor yields a lower final tier. T2: thickness/volume claims ignored for fit.",
+  "weight": "light",
+  "weightConfidence": "high",
+  "weightRationale": "W-LIVE: weightPotential low -> weight light, 1:1; confidence = weightPotential confidence (high). Claims ('ohne zu beschweren', 'leicht') never lower it (6.5).",
+  "scalpTargets": {
+   "primary": {
+    "target": "sensitive",
+    "confidence": "moderate",
+    "rationale": "S-SENSITIVE: E2 sensitive unit (moderate); formula gate targeted + prominent comfort route Urea@3/Panthenol@8. cleansingStrength strong -> review_strong_cleansing_comfort_route. Confidence = min(positioning moderate, targeted moderate, cleansingStrength moderate)."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "moderate",
+  "cleansingIntensityRationale": "I1: cleansingStrength strong (moderate), D1 false -> regular. I3: neighbor moderate raises no flag (irritationen expects gentle).",
+  "explicitResetPositioning": false,
+  "explicitResetRationale": "No D1 stem (tiefenrein, deep clean, clarifying shampoo, detox-reinigung) in the name or a manufacturer/pack claim, and no occasional-use directions.",
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D2 not met (cleansingStrength strong, focusPrimary scalp_active, usageRole regular, D1 false) -> not_flagged.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "irritationen",
+    "scalp_route": "irritated",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "irritationen",
+    "scalp_route": "irritated",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "irritationen",
+    "scalp_route": "irritated",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   "review_strong_cleansing_comfort_route (S-SENSITIVE with cleansingStrength strong)"
+  ],
+  "informationalNotes": [],
+  "catalogDependent": "review_live_value_differs not evaluated in-lane (live rows unseen; orchestrator after freeze)."
+ },
+ "selfCheck": "6.11: fingerprint matches the stage-A packet; claims and labels were hidden during the formula pass (phase 1 frozen before reveal); no ingredient, family count or position window assigned the weight band; W-line derived per W-LINE with skipped candidates recorded; depositionLoad/persistence/resetCapacity present; whyNotNeighborBand specific; confidence names its limiting factor; no comparison with earlier values in-lane. Formula properties (cleansing, conditioning, weight, dandruff) unchanged after unblind (3.2: claims cannot move them). N-ALT checked: every high confidence has neighbor none, every moderate/low names one neighbor. Projection derived mechanically from final properties (T1/T6/T4/W-LIVE/I1/I3/D2/13.7/13.8).",
+ "uncertainties": [
+  "cleansingStrength strong (moderate confidence, neighbor moderate) - reinforcing ether sulfates all after three buffers; intensity regular either way, so no I3 effect.",
+  "'schützt Kopfhaut & Haar vor Austrocknung' read as protective wording (E2a), not a dry-scalp claim; alternative: dry claim -> S-DRY would pass (Urea@3) as secondary."
+ ]
+}

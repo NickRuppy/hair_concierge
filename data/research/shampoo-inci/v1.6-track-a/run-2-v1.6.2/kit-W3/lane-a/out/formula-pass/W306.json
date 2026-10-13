@@ -1,0 +1,130 @@
+{
+  "blindId": "W306",
+  "inciFingerprintSha256": "f63f993d63a9fa421eef25df232abb8f46d46bd5251f89608e49ba33a1f78fd5",
+  "phase": "formula-pass (blind, stage A only)",
+  "policy": "shampoo-classification-v1.6.2",
+  "lane": "lane-a",
+  "identity": {
+    "packSize": "385 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 4,
+    "identityConfidence": "high",
+    "normalization": "'Aqua/Water/Eau' and 'Parfum/Fragrance' are single entries; packet positions = normalized positions (ID-2). 30 entries.",
+    "e3ProminenceCutoff": "Parfum/Fragrance @30 (last). Prominent = positions 1-29."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Low: C6, no prominent strong anionic. Earliest prominent cleansing surfactant is the mild anionic Sodium Methyl Cocoyl Taurate @2 (taurate) with prominent co-surfactants Decyl Glucoside @3, Cocamidopropyl Betaine @4 and Coco-Glucoside @12. Disodium Tetrapropenyl Succinate @14 is in no named C3 class (a succinate, not a sulfosuccinate) and is not a strong anionic in any reading, so it cannot move C6.",
+      "ruleIds": ["C6", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "rationale": "Moderate: one meaningful system (Amodimethicone @11, prominent) plus light routes (Starch Hydroxypropyltrimonium Chloride @17, weak refatters Glyceryl Oleate @15, Lecithin @16, Hydrogenated Palm Glycerides Citrate @23; humectant Urea @25). C2 not met: no pearlizing wax or fatty-alcohol route. Counter-signal: early silicone + cationic polymer + humectant are three of the four C2 elements, so high is the neighbor.",
+      "ruleIds": ["C2", "R11", "Section 5 anchors"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "evidence": {
+        "cationic_polymer": ["Starch Hydroxypropyltrimonium Chloride @17"],
+        "payload_lipid": [],
+        "weak_refatter": ["Coconut Acid @13 (free fatty acid, refatting)", "Glyceryl Oleate @15", "Lecithin @16", "Hydrogenated Palm Glycerides Citrate @23", "Tocopherol @28", "Ascorbyl Palmitate @29"],
+        "silicone": ["Amodimethicone @11"],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Methyl Cocoyl Taurate @2 (mild anionic)", "Decyl Glucoside @3", "Cocamidopropyl Betaine @4", "Coco-Glucoside @12"],
+        "humectantContext": ["Urea @25", "Sodium Lactate @21 (pH buffer)", "Hexylene Glycol @19 (solvent)"],
+        "excluded": ["Rosmarinus Officinalis Leaf Oil @6, Mentha Piperita Oil @7 (essential oils, 6.4)", "Menthol @8, Menthyl Lactate @9 (cooling agents)", "PEG-150 Distearate @18 (PEG thickener, 6.4)"],
+        "unresolved": ["Sodium Hydrolyzed Potato Starch Dodecenylsuccinate @10: anionic modified starch (no cationic charge); most plausibly an emulsion stabiliser/thickener for the silicone emulsion; if it acted as a film former it would add a third converging family (toward high)"]
+      },
+      "wLine": {
+        "wLine": "@12 Coco-Glucoside",
+        "classes": ["alphabetical_tail"],
+        "cap": "e3Point @30 (Parfum/Fragrance)",
+        "alphabeticalRun": "positions 11-17 (Amodimethicone, Coco-Glucoside, Coconut Acid, Disodium Tetrapropenyl Succinate, Glyceryl Oleate, Lecithin, Starch Hydroxypropyltrimonium Chloride); does not contain the earliest cleansing surfactant (Sodium Methyl Cocoyl Taurate @2), so it is a tail; second entry Coco-Glucoside @12 is the candidate.",
+        "skipped": [],
+        "codes": [],
+        "plausibility": "Coco-Glucoside @12: (i) cleansing surfactants @2-4 before it; (ii) same-run entries ignored; after the run (18-29) no cleansing surfactant, alkanolamide or pearlizing wax (PEG-150 Distearate is not a (ii) structurant). No earlier a-c candidate (essential oils and menthol are not candidates).",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "moderate",
+      "persistence": "moderate",
+      "resetCapacity": "weak",
+      "counterevidence": "Toward low: both deposition families sit behind essential oils and cooling agents (Menthol @8, Menthyl Lactate @9, typically low-dose), so the amodimethicone and the cationic starch are likely small amounts. Toward high: two families with a weak mild-surfactant reset; unresolved anionic starch @10.",
+      "whyThisBand": "Amodimethicone (substantive amino-silicone) plus a cationic starch converge in a mild C6 chassis with weak reset; residue is plausible but bounded.",
+      "whyNotNeighborBand": "Not low: two distinct families (silicone + cationic_polymer) facing a weak reset; positions alone do not show the combined residue stays below noticeable (W2), and a late silicone is not made lighter by position. Not high: no rich architecture (no payload lipid at all), and both families sit after the low-dose cooling agents, so a coating conclusion is not supported.",
+      "confidenceLimitingFactor": "Silicone/cationic dose unknown; unresolved anionic starch @10.",
+      "rationale": "Moderate: silicone + cationic starch converge in a weak-reset mild base; late positions argue lighter.",
+      "ruleIds": ["6.6", "W2", "W3", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": "Claim-dependent; formula-only provisional value.",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": ["Urea @25"],
+        "repairRoutes": ["Amodimethicone @11"],
+        "sharedConditioningRoutes": ["Starch Hydroxypropyltrimonium Chloride @17", "Glyceryl Oleate @15", "Lecithin @16"],
+        "limitation": "Generic light conditioning; no coherent humectant or damage-care cluster."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Prominent mint/menthol/rosemary system points to a scalp-refresh role; low cleansing would fail F6 for clarifying.",
+      "decisionTrace": "Blind: no claim; formula nonspecific; provisional general.",
+      "rationale": "Provisional general.",
+      "ruleIds": ["7.2", "7.3", "F6"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["volume"],
+      "provisional": "Claim-dependent.",
+      "rationale": "Empty default blind.",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "frequent",
+      "triggerCode": "none",
+      "provisional": "Claim-dependent; low cleansing allows frequent with U2 wording.",
+      "rationale": "Default regular blind.",
+      "ruleIds": ["Section 9"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": "SC1 positioning claim-dependent.",
+      "csa": "CSA met two ways: listed prominent route Urea @25 (comfort and humectant; prominent because Parfum is last), Glyceryl Oleate @15 and Sodium Lactate @21 (humectant/refatting list); and MB: mild_base:Sodium Methyl Cocoyl Taurate @2, Decyl Glucoside @3, Cocamidopropyl Betaine @4, Coco-Glucoside @12 (cleansingStrength low, no prominent strong anionic). S-SENSITIVE formula half passes (Urea comfort route and MB); S-DRY formula half passes.",
+      "counterSignals": "Prominent cooling agents Menthol @8, Menthyl Lactate @9, Mentha Piperita Oil @7 and essential oil Rosmarinus Officinalis Leaf Oil @6: would cap targeted at moderate (neighbor not_targeted).",
+      "rationale": "Provisional not_targeted pending SC1.",
+      "ruleIds": ["Section 10 CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": ["Sodium Methyl Cocoyl Taurate @2 (mild anionic, earliest)", "Decyl Glucoside @3", "Cocamidopropyl Betaine @4", "Coco-Glucoside @12", "Disodium Tetrapropenyl Succinate @14 (no named C3 class)"],
+    "conditioningRoutes": ["Amodimethicone @11", "Starch Hydroxypropyltrimonium Chloride @17", "Glyceryl Oleate @15", "Lecithin @16", "Hydrogenated Palm Glycerides Citrate @23"],
+    "humectants": ["Urea @25", "Sodium Lactate @21"],
+    "actives": ["Menthol @8", "Menthyl Lactate @9"],
+    "exposure": ["Rosmarinus Officinalis Leaf Oil @6", "Mentha Piperita Oil @7", "Menthol @8", "Menthyl Lactate @9", "Parfum/Fragrance @30"],
+    "preservatives": ["Sodium Benzoate @26", "Benzoic Acid @27"]
+  },
+  "unresolvedMaterialIngredients": ["Sodium Hydrolyzed Potato Starch Dodecenylsuccinate @10 (weight role uncertain; non-cationic)", "Disodium Tetrapropenyl Succinate @14 (surfactant class unassigned; cannot change C6 low)"]
+}

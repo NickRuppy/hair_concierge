@@ -1,3 +1,4 @@
+// fit-verdict spec §1/§7b, ruled 2026-10-12: web labels and actions.
 import assert from "node:assert/strict"
 import test from "node:test"
 
@@ -546,7 +547,7 @@ test("a fitting product still offers alternatives (ruling R12)", () => {
   )
 
   assert.equal(payload.verdictLabel, "Passt")
-  assert.equal(payload.verdictTitle, "Passt zu deinem Haar")
+  assert.equal(payload.verdictTitle, "Passt")
   assert.equal(payload.status, "ok")
   assert.equal(payload.evaluatedRole, "conditioner_rinse_out")
   assert.equal(payload.evaluatedRoleLabel, "Pflege nach der Wäsche")
@@ -612,7 +613,7 @@ test("a mismatching product offers at most three alternatives", () => {
   assert.equal(payload.alternatives[0]?.imageUrl, "https://example.com/alt-1.jpg")
 
   assert.equal(payload.verdictLabel, "Passt nicht")
-  assert.equal(payload.verdictTitle, "Passt nicht zu deinem Haar")
+  assert.equal(payload.verdictTitle, "Passt nicht")
   assert.equal(payload.status, "danger")
   const weight = payload.dimensions.find(
     (dimension) => dimension.dimensionId === "conditioner.weight",
@@ -639,9 +640,14 @@ test("a supportive product still offers alternatives", () => {
   assert.equal(payload.kind, "in_catalog")
   if (payload.kind !== "in_catalog") return
   assert.equal(payload.verdict, "supportive")
-  assert.equal(payload.verdictLabel, "Passt mit Einschränkung")
-  assert.equal(payload.verdictTitle, "Passt mit Einschränkung zu deinem Haar")
+  assert.equal(payload.verdictLabel, "Passt bedingt")
+  assert.equal(payload.verdictTitle, "Passt bedingt")
   assert.equal(payload.status, "pending")
+  assert.equal(
+    payload.dimensions.find((row) => row.dimensionId === "conditioner.weight")?.state,
+    "supportive",
+  )
+  assert.deepEqual(payload.reasonLines, ["Für dein Haar eher schwer"])
   assert.ok(payload.alternatives.length > 0)
   assert.ok(payload.alternatives.length <= 3)
 })
@@ -684,12 +690,32 @@ test("a needed category with no evaluable role stays honestly unclear", () => {
   assert.equal(payload.kind, "in_catalog")
   if (payload.kind !== "in_catalog") return
   assert.equal(payload.verdict, "unknown")
-  assert.equal(payload.verdictLabel, "Unklar")
-  assert.equal(payload.verdictTitle, "Da sind wir noch nicht sicher")
+  assert.equal(payload.verdictLabel, "Nicht geprüft")
+  assert.equal(payload.verdictTitle, "Nicht geprüft")
   assert.equal(payload.status, "neutral")
   assert.equal(payload.evaluatedRole, null)
   assert.equal(payload.evaluatedRoleLabel, null)
   assert.deepEqual(payload.alternatives, [])
+})
+
+test("scanner target counts read criterion passes including repair above target (fit-verdict spec §7a.3, ruled 2026-10-12)", () => {
+  const payload = buildScanVerdict(
+    scanInput({
+      category: "conditioner",
+      decision: conditionerDecision(),
+      productFacts: factsFor("conditioner", "conditioner_rinse_out", "scanned", {
+        repairSupportLevel: "high",
+      }),
+    }),
+  )
+  assert.equal(payload.kind, "in_catalog")
+  if (payload.kind !== "in_catalog") return
+  assert.equal(
+    payload.dimensions.find((row) => row.dimensionId === "conditioner.repair_support")?.state,
+    "in_target",
+  )
+  assert.deepEqual(payload.coverage, { matches: 4, total: 4 })
+  assert.equal(payload.subtitle, "4 von 4 Zielbereichen getroffen")
 })
 
 /* ------------------------------------------------- heat activation (S3, Q3) */

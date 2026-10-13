@@ -1,0 +1,21 @@
+{
+  "blindId": "W108",
+  "productName": "ISANA MED Shampoo pH 5,5 hautneutral",
+  "brand": "ISANA",
+  "positioningSources": [
+    {
+      "sourceType": "Rossmann PDP (browser tab; Rossmann Dirk Rossmann GmbH is brand owner/Kontaktdaten of the ISANA private label); JSON-LD sku 4068134039743; Inhaltsstoffe accordion expanded",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Die pH-hautneutrale Formel hilft den Säureschutzmantel der Haut zu stabilisieren und die natürliche Schutzfunktion aufrecht zu erhalten. Das ISANA MED SHAMPOO ist eine Spezialentwicklung für sensible Kopfhaut. | Feuchtigkeits-Komplex | schützt Kopfhaut & Haar vor Austrocknung | für jeden Tag | 3% Urea | ohne Silikone | für normales Haar | Hautverträglichkeit dermatologisch bestätigt",
+      "directionsVerbatim": "No usage directions published. Only: 'unter 25 Grad Celsius lagern' (Aufbewahrungs- und Verwendungsbedingungen)."
+    },
+    {
+      "sourceType": "Rossmann pack-front image (prior track-b research isana-med-ph55.json)",
+      "sourceKind": "pack_front",
+      "sourceGrade": "high",
+      "claimsVerbatim": "ISANA MED · pH 5,5 HAUTNEUTRAL · SHAMPOO · 3% Urea · ohne Silikone · normales Haar · Klinisch getestet · dermatologisch bestätigt · ROSSMANN",
+      "directionsVerbatim": ""
+    }
+  ]
+}

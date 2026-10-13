@@ -35,11 +35,10 @@ type RoutineSubjectState =
 /**
  * Preservation order. Every non-`select_replacement` action must appear in the
  * evaluation's `allowedActions` (`production-persistence-gateway.ts:1164`), and
- * the real category authorities routinely allow exactly ONE action — an `ideal`
- * owned product allows only `keep_owned`, a `mismatch` one only
- * `acknowledge_override` (`authority/categories/mask.ts:316`,
- * `categories/shampoo.ts:248`). So every chain must keep walking rather than
- * assume `leave_uncovered` is always available.
+ * ideal owned products permit only `keep_owned`. Mismatches permit
+ * `acknowledge_override` and `leave_uncovered` (plus an available recommendation).
+ * Spec §5 / §7a.6, ruled 2026-10-12. Chains still walk when the requested action
+ * is unavailable, including unsupported and unknown evaluations.
  *
  * `keep_owned` ⇄ `acknowledge_override` are each other's fallback: the same
  * owned product, before and after the new verdict decided whether keeping it is

@@ -1,0 +1,101 @@
+{
+  "slot": "A34",
+  "productId": "3f3c7d89-9e7b-4e91-85f7-d3c58d304918",
+  "name": "OGX Biotin & Collagen Shampoo (retailers: 'Thick & Full Biotin & Collagen Shampoo')",
+  "brand": "OGX",
+  "packSize": "385 ml",
+  "gtins": [
+    "3574661800202"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/1443641/ogx-shampoo-thick-und-full-biotin-und-collagen",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "3574661800202 (page text 'GTIN'; dm-Artikelnummer 1443641; 'Shampoo thick & full, Biotin & Collagen, 385 ml')",
+      "inciVerbatim": "Ingredients: Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Biotin, Hydrolyzed Collagen, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Starch Hydroxypropyltrimonium Chloride, Amodimethicone, Coco-Glucoside, Glyceryl Oleate, Sodium Lactate, Lactic acid, Urea, Hydrogenated Palm Glycerides Citrate, Coconut Acid, Disodium Tetrapropenyl Succinate, Lecithin, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Hydroxide, Sodium Benzoate, Benzoic Acid, Tocopherol, Ascorbyl Palmitate, Parfum/Fragrance",
+      "claimsVerbatim": "Haarshampoo | Hinterlässt Volumen und ein seidiges Gefühl | Mit Vitamin B Biotin, Collagen und Weizenprotein | Nährt das Haar vom Ansatz bis zur Spitze | Mit LipiPro Shield Technolgie | Das OGX Biotin & Collagen Shampoo versorgt feines & dünnes Haar. Die reichhaltige Pflegeformel schenkt dem Haar bis zu 72 Stunden lang mehr Volumen und intensive Fülle. Die verbesserte Formel mit LipiPro Shield Technologie verleiht dem Haar einen atemberaubenden Glanz. Zudem hinterlässt das Shampoo einen verführerischen Duft. | Produkteigenschaften: Ohne Alkohol",
+      "directionsVerbatim": "Shampoo großzügig im nassen Haar verteilen und bis in die Haarspitzen aufschäumen, danach gründlich ausspülen. Anschließend Conditioner verwenden."
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-ogx-biotin-und-collagen-shampoo/p/3574661800202",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "gtinShown": "3574661800202 (product URL id; 385 ml shown on page)",
+      "inciVerbatim": "Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Biotin, Hydrolyzed Collagen, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Starch Hydroxypropyltrimonium Chloride, Amodimethicone, Coco-Glucoside, Glyceryl Oleate, Sodium Lactate, Lactic acid, Urea, Hydrogenated Palm Glycerides Citrate, Coconut Acid, Disodium Tetrapropenyl Succinate, Lecithin, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Hydroxide, Sodium Benzoate, Benzoic Acid, Tocopherol, Ascorbyl Palmitate, Parfum/ Fragrance",
+      "claimsVerbatim": "Das nährstoffreiche OGX Thick & Full Biotin & Collagen Shampoo mit innovativem Vitamin B7 Biotin, wertvollem Kollagen und hydrolysiertem Weizenprotein ist ein Must-have für feines Haar. Das kräftigende Haarpflege Shampoo lässt feines und dünnes Haar sofort deutlich fülliger, dicker und gesünder aussehen und verleiht dem Haar wieder verführerischen Glanz. Das Shampoo ohne Silikone, ohne sulfathaltige Tenside und ohne Parabene mit ausgewogenem pH-Wert verleiht selbst dünnstem Haar Volumen und Glanz.",
+      "directionsVerbatim": "Shampoo im nassen Haar verteilen und bis in die Haarspitzen aufschäumen, danach gründlich ausspülen. Anschließend eine Spülung verwenden"
+    },
+    {
+      "url": "https://www.mueller.de/p/ogx-thick-full-biotin-collagen-shampoo-385ml-107260/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_mueller_de",
+      "sourceKind": "retailer",
+      "gtinShown": "3574661800202 (structured data gtin; Inhalt 385 ml)",
+      "inciVerbatim": "Ingredients: Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Biotin, Hydrolyzed Collagen, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Starch Hydroxypropyltrimonium Chloride, Amodimethicone, Coco-Glucoside, Glyceryl Oleate, Sodium Lactate, Lactic acid, Urea, Hydrogenated Palm Glycerides Citrate, Coconut Acid, Disodium Tetrapropenyl Succinate, Lecithin, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Hydroxide, Sodium Benzoate, Benzoic Acid, Tocopherol, Ascorbyl Palmitate, Parfum/Fragrance",
+      "claimsVerbatim": "Das OGX Thick & Full + Biotin & Collagen Shampoo verleiht dem Haar ein fülligeres und voluminöseres Aussehen. Die nährstoffreiche Formel ist für die tägliche Haarwäsche bei allen Haartypen geeignet. | Formel mit Biotin und Kollagen | Verleiht dem Haar ein sichtbar volleres Erscheinungsbild | Für alle Haartypen geeignet | Ohne sulfathaltige Tenside | Die verbesserte Rezeptur dieses Shampoos kombiniert wertvolles Biotin, auch als Vitamin B7 bekannt, mit Kollagen. Diese Inhaltsstoffe sind dafür bekannt, das Haar zu ummanteln und ihm so optisch mehr Fülle zu geben. Das Haar fühlt sich nach der Anwendung griffiger an und erhält ein gesund aussehendes Volumen.",
+      "directionsVerbatim": "Shampoo großzügig im nassen Haar verteilen und bis in die Haarspitzen aufschäumen, danach gründlich ausspülen. Anschließend Conditioner verwenden."
+    },
+    {
+      "url": "https://www.ogxbeauty.com/products/thick-full-biotin-and-collagen-hair-thickening-shampoo",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_us",
+      "sourceKind": "manufacturer_foreign",
+      "gtinShown": null,
+      "inciVerbatim": "Water (Aqua), Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Biotin, Hydrolyzed Collagen, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Starch Hydroxypropyltrimonium Chloride, Amodimethicone, Coco-Glucoside, Glyceryl Oleate, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Hydroxide, Sodium Benzoate, Fragrance (Parfum)",
+      "claimsVerbatim": "Give hair 72+ hours of volume & body with this Biotin & Collagen shampoo. This nutrient-infused formula gives you healthy hair in just 1 wash. | Formulated without: Sulfated surfactants, Parabens, Phthalates, Microplastics, Dyes | Hair type: Fine | Sizes available: 13 fl oz, 25.4 fl oz | Our new & improved formula protects hair from excessive loss of lipids & proteins which creates frizz & breakage. Now with Lipi Pro Shield™ Technology ...",
+      "directionsVerbatim": "Apply shampoo generously to wet hair. Massage into a lather through to ends. Rinse the hair thoroughly. After shampooing, follow with conditioner."
+    }
+  ],
+  "conflicts": [
+    "INCI divergence DE vs US: the US manufacturer page (ogxbeauty.com, 13 fl oz / 25.4 fl oz sizes, no GTIN) lists a shorter 17-item formula without Sodium Chloride, Sodium Lactate, Lactic acid, Urea, Hydrogenated Palm Glycerides Citrate, Coconut Acid, Disodium Tetrapropenyl Succinate, Lecithin, Benzoic Acid, Tocopherol and Ascorbyl Palmitate (DE retailers list 28 items). Different market formula; the US page is not the German 385 ml pack.",
+    "Claim vs INCI: Rossmann claims 'ohne Silikone' but the INCI contains Amodimethicone (a silicone, listed #10). Amodimethicone is also listed in the US INCI. Retailer claim only; the OGX US page does not claim 'silicone-free'.",
+    "Claim vs INCI: dm.de ('Mit ... Weizenprotein') and Rossmann ('hydrolysiertem Weizenprotein') claim wheat protein, but no hydrolyzed wheat protein appears in any INCI (collagen and a potato-starch derivative are the only protein/starch items).",
+    "Wording: 'ohne sulfathaltige Tenside' is consistent with the INCI (taurate/glucoside/betaine surfactants; no sulfate)."
+  ],
+  "canonicalInci": [
+    "Aqua/Water/Eau",
+    "Sodium Methyl Cocoyl Taurate",
+    "Decyl Glucoside",
+    "Cocamidopropyl Betaine",
+    "Sodium Chloride",
+    "Biotin",
+    "Hydrolyzed Collagen",
+    "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+    "Starch Hydroxypropyltrimonium Chloride",
+    "Amodimethicone",
+    "Coco-Glucoside",
+    "Glyceryl Oleate",
+    "Sodium Lactate",
+    "Lactic acid",
+    "Urea",
+    "Hydrogenated Palm Glycerides Citrate",
+    "Coconut Acid",
+    "Disodium Tetrapropenyl Succinate",
+    "Lecithin",
+    "PEG-150 Distearate",
+    "Hexylene Glycol",
+    "Citric Acid",
+    "Sodium Hydroxide",
+    "Sodium Benzoate",
+    "Benzoic Acid",
+    "Tocopherol",
+    "Ascorbyl Palmitate",
+    "Parfum/Fragrance"
+  ],
+  "canonicalReason": "Three independent German GTIN-anchored retailers (dm.de page GTIN, Rossmann GTIN URL, Müller structured-data GTIN) agree item-for-item and in order (Rossmann has a typographic space in 'Parfum/ Fragrance'). The US manufacturer page is a different market formula and is preserved as a conflict, not selected. No German manufacturer page or pack photo exists to this worker, hence tier 3.",
+  "inciFingerprintSha256": "80709619cc5b860ba314a06f5d5cb7ec58d65b853e39abdb0e5ab3414ad68db7",
+  "normalization": "Split the canonical raw INCI on ',' (not on commas inside locants such as '1,2-'), merged split synonym entries such as 'Aqua (Water)' / 'Aqua/Water/Eau' into one item each; per ingredient: lower-case, trim, collapse internal whitespace, remove whitespace around '/'; drop a trailing period and any leading label such as 'Inhaltsstoffe:'; keep parentheses, asterisks and hyphens as published; join the normalized ingredients with '|' and sha256 the UTF-8 string.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 3,
+  "status": "frozen_with_conflict",
+  "blockReason": null,
+  "notes": [
+    "Prior v1.3/v1.4 capture used the same dm/Rossmann/Müller list (fingerprint b1c71405cd2bfc449d8a138c11c947dfd135a8cfcc63cb4920649af4b3ad4471, comma-joined); German list unchanged.",
+    "Status frozen_with_conflict because (a) the manufacturer's own US page diverges and (b) retailer claims contradict the INCI (silicone-free vs Amodimethicone; wheat protein absent). The German canonical list itself is unambiguous (3/3 agree).",
+    "No OGX German manufacturer page found: ogxbeauty.com/de-de returned 404 and ogxbeauty.de did not respond (one attempt each)."
+  ]
+}

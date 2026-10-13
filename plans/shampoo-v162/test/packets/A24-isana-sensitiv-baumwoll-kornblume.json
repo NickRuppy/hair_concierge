@@ -1,0 +1,85 @@
+{
+  "slot": "A24",
+  "productId": "86f44889-b2c9-40a1-9190-58d7f738b6ca",
+  "name": "ISANA Shampoo Sensitiv Baumwoll- & Kornblume (Rossmann: 'ISANA Shampoo Sensitiv')",
+  "brand": "ISANA",
+  "packSize": "300 ml",
+  "gtins": [
+    "4305615566184"
+  ],
+  "sources": [
+    {
+      "url": "https://www.rossmann.de/media-neu/557/MAM_55715372/MAM_55715372_SHOP_IMAGE_1.4.png (pack-back photo, 878x2400, in the gallery of the Rossmann product page; barcode 4 305615 566184, '300 ml' legible)",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "pack_photo_on_manufacturer_page",
+      "sourceKind": "pack_back",
+      "gtinShown": "4305615566184 (barcode printed on the pack-back photo)",
+      "inciVerbatim": "INGREDIENTS: Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Citric Acid, Parfum, Glyceryl Oleate, Coco-Glucoside, PEG-3 Distearate, Hydrolyzed Wheat Protein, Sodium Benzoate, Panthenol, Niacinamide, Potassium Sorbate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Benzoic Acid, Terpineol, Glycerin, Propylene Glycol, Pantolactone, Sodium Hydroxide, Phenoxyethanol, Tocopherol, Centaurea Cyanus Flower Extract, Hydrogenated Palm Glycerides Citrate, Gossypium Herbaceum Flower Extract.",
+      "claimsVerbatim": "Das ISANA SHAMPOO SENSITIV mit Baumwollblumen- und Kornblumen-Extrakt reinigt und pflegt besonders sanft. Durch seine milde Pflege-Formel mit beruhigenden Inhaltsstoffen sowie Panthenol ist es auch bei empfindlicher Kopfhaut bestens geeignet. | HAUTVERTRÄGLICHKEIT: dermatologisch bestätigt und pH-hautneutral | HINWEIS: Augenkontakt vermeiden | vegan | Hergestellt in der EU | Hergestellt für Dirk Rossmann GmbH, Isernhägener Str. 16, 30938 Burgwedel",
+      "directionsVerbatim": "In das feuchte Haar einmassieren. Gründlich ausspülen."
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-sensitiv/p/4305615566184",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de (Rossmann private label; Dirk Rossmann GmbH is brand owner)",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4305615566184 (product URL id; 300 ml (1 L = 2,17 €))",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Citric Acid, Parfum, Glyceryl Oleate, Coco-Glucoside, PEG-3 Distearate, Hydrolyzed Wheat Protein, Sodium Benzoate, Panthenol, Niacinamide, Potassium Sorbate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Benzoic Acid, Terpineol, Glycerin, Propylene Glycol, Pantolactone, Sodium Hydroxide, Phenoxyethanol, Tocopherol, Centaurea Cyanus Flower Extract, Hydrogenated Palm Glycerides Citrate, Gossypium Herbaceum Flower Extract.",
+      "claimsVerbatim": "Das ISANA SHAMPOO SENSITIV mit Baumwollblumen- und Kornblumen-Extrakt reinigt und pflegt besonders sanft. Durch seine milde Pflege-Formel mit beruhigenden Inhaltsstoffen sowie Panthenol ist es auch bei empfindlicher Kopfhaut bestens geeignet. | für empfindliche Kopfhaut & normales Haar | Baumwoll-& Kornblume | ohne Silikone | Hautverträglichkeit: dermatologisch bestätigt und pH-hautneutral",
+      "directionsVerbatim": "In das feuchte Haar einmassieren. Gründlich ausspülen."
+    },
+    {
+      "url": "https://www.rossmann.dk/da/pleje-og-duft-isana-shampoo-sensitiv/p/4305615566184",
+      "retrievedAt": "2026-09-02 (prior capture in plans/scan-db-expansion/research/shampoo-manifest-scannable-14.json; not re-fetched)",
+      "sourceType": "retailer_rossmann_dk_prior_capture",
+      "sourceKind": "retailer",
+      "gtinShown": "4305615566184",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Citric Acid, Parfum, Glyceryl Oleate, Coco-Glucoside, PEG-3 Distearate, Hydrolyzed Wheat Protein, Sodium Benzoate, Panthenol, Niacinamide, Potassium Sorbate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Benzoic Acid, Terpineol, Glycerin, Propylene Glycol, Pantolactone, Sodium Hydroxide, Phenoxyethanol, Tocopherol, Centaurea Cyanus Flower Extract, Hydrogenated Palm Glycerides Citrate, Gossypium Herbaceum Flower Extract",
+      "claimsVerbatim": null,
+      "directionsVerbatim": "Masseres ind i fugtigt hår. Skylles grundigt ud."
+    }
+  ],
+  "conflicts": [],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Betaine",
+    "Sodium Chloride",
+    "Citric Acid",
+    "Parfum",
+    "Glyceryl Oleate",
+    "Coco-Glucoside",
+    "PEG-3 Distearate",
+    "Hydrolyzed Wheat Protein",
+    "Sodium Benzoate",
+    "Panthenol",
+    "Niacinamide",
+    "Potassium Sorbate",
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+    "Benzoic Acid",
+    "Terpineol",
+    "Glycerin",
+    "Propylene Glycol",
+    "Pantolactone",
+    "Sodium Hydroxide",
+    "Phenoxyethanol",
+    "Tocopherol",
+    "Centaurea Cyanus Flower Extract",
+    "Hydrogenated Palm Glycerides Citrate",
+    "Gossypium Herbaceum Flower Extract"
+  ],
+  "canonicalReason": "Current pack-back photo (tier 1) and the Rossmann DE product page (private-label owner) give an identical 26-item list in the same order; the barcode on the photo equals the catalog GTIN and the 300 ml volume matches. The prior 2026-09-02 Rossmann DK capture is also identical.",
+  "inciFingerprintSha256": "67f890bcc445fdb931de50ce96290cf6c902dfc338f8ebebd46019bf413d661f",
+  "normalization": "Split the canonical raw INCI on ',' (not on commas inside locants such as '1,2-'), merged split synonym entries such as 'Aqua (Water)' / 'Aqua/Water/Eau' into one item each; per ingredient: lower-case, trim, collapse internal whitespace, remove whitespace around '/'; drop a trailing period and any leading label such as 'Inhaltsstoffe:'; keep parentheses, asterisks and hyphens as published; join the normalized ingredients with '|' and sha256 the UTF-8 string.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 1,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Prior capture (shampoo-manifest-scannable-14, 2026-09-02, rossmann.dk) carried the same list; list unchanged. The prior list had no trailing period; the DE page and the pack photo end 'Gossypium Herbaceum Flower Extract.' (period stripped).",
+    "I read the pack-back photo at screen resolution (displayed downscaled); the photo text and the page text agree item by item.",
+    "Claims 'Baumwollblumen- und Kornblumen-Extrakt' = Gossypium Herbaceum Flower Extract + Centaurea Cyanus Flower Extract (both present, last positions); 'Panthenol' present; 'ohne Silikone' consistent. Hydrolyzed Wheat Protein present (wheat-derived; no gluten-free claim made).",
+    "Retailer text on rossmann.de: 'ISANA Shampoo Sensitiv'; catalog name adds the 'Baumwoll- & Kornblume' variant descriptor from the front pack."
+  ]
+}

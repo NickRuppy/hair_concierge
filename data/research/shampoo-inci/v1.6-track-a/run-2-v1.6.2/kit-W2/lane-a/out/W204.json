@@ -1,0 +1,384 @@
+{
+ "blindId": "W204",
+ "identity": {
+  "brand": "Pantene",
+  "productName": "Pantene Grow Abundance",
+  "packSize": "290 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "ba2055737c216e5109c2301b01673fe3000b61b58772dab820c10c807332d7f5",
+  "normalization": "ID-2: no split synonym entries; packet positions equal normalized one-based positions.",
+  "completeness": "complete",
+  "formulaSourceTier": 3,
+  "identityConfidence": "moderate",
+  "e3ProminenceCutoff": "Parfum @7; positions 1-6 prominent"
+ },
+ "normalizedInci": [
+  "1 Aqua",
+  "2 Sodium Laureth Sulfate",
+  "3 Sodium Xylenesulfonate",
+  "4 Cocamidopropyl Betaine",
+  "5 Sodium Citrate",
+  "6 Piroctone Olamine",
+  "7 Parfum",
+  "8 Citric Acid",
+  "9 Sodium Chloride",
+  "10 Dimethiconol",
+  "11 Guar Hydroxypropyltrimonium Chloride",
+  "12 Menthol",
+  "13 Hexamethylindanopyran",
+  "14 Dimethicone",
+  "15 Sodium Salicylate",
+  "16 Sodium Benzoate",
+  "17 Tetrasodium EDTA",
+  "18 TEA-Dodecylbenzenesulfonate",
+  "19 Panthenol",
+  "20 Sodium Hydroxide",
+  "21 Coumarin",
+  "22 Hexyl Cinnamal",
+  "23 Trideceth-10",
+  "24 Citrus Aurantium Peel Oil",
+  "25 Linalyl Acetate",
+  "26 Tetramethyl Acetyloctahydronaphthalenes",
+  "27 Benzyl Salicylate",
+  "28 Linalool",
+  "29 Limonene",
+  "30 Niacinamide",
+  "31 Acetic Acid",
+  "32 Benzyl Alcohol",
+  "33 Propylene Glycol",
+  "34 Triethylene Glycol",
+  "35 CI 19140",
+  "36 CI 17200"
+ ],
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate @2, prominent buffer Cocamidopropyl Betaine @4, no prominent reinforcing route. Sodium Xylenesulfonate @3 is a hydrotrope (not a route). TEA-Dodecylbenzenesulfonate @18 is a strong anionic but listed after Parfum @7, so under C4 it is recorded only, never reinforcing.",
+   "ruleIds": [
+    "C3",
+    "C4",
+    "C1",
+    "E3"
+   ],
+   "counterSignal": "TEA-Dodecylbenzenesulfonate @18 is a strong anionic but non-prominent."
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "Moderate: one meaningful silicone/cationic conditioning system (Dimethiconol @10, Guar Hydroxypropyltrimonium Chloride @11, Dimethicone @14) plus Panthenol @19. C2 not met: the silicones are after Parfum @7 (not early, E3), no prominent payload lipid, no pearlizing/fatty route. All routes are post-E3, so low is the neighbor.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "E3"
+   ],
+   "counterSignal": "Silicones post-E3; no humectant cluster."
+  },
+  "weightPotential": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "high",
+   "evidence": {
+    "cationic_polymer": [
+     "Guar Hydroxypropyltrimonium Chloride @11"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "silicone": [
+     "Dimethiconol @10",
+     "Dimethicone @14"
+    ],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Sodium Laureth Sulfate @2",
+     "Cocamidopropyl Betaine @4",
+     "TEA-Dodecylbenzenesulfonate @18 (non-prominent)"
+    ],
+    "humectantContext": [
+     "Panthenol @19",
+     "Niacinamide @30"
+    ],
+    "excluded": [
+     "Sodium Xylenesulfonate @3 (hydrotrope)",
+     "Trideceth-10 @23 (nonionic emulsifier)",
+     "Citrus Aurantium Peel Oil @24 (essential oil)",
+     "Propylene Glycol @33, Triethylene Glycol @34 (solvents)",
+     "Parfum @7 and fragrance materials"
+    ],
+    "unresolved": []
+   },
+   "wLine": {
+    "position": 6,
+    "inci": "Piroctone Olamine",
+    "candidateClasses": [
+     "preservative_or_capped_active"
+    ],
+    "cap": "e3Point @7 (Parfum)",
+    "alphabeticalRun": "none",
+    "skipped": [],
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "moderate: two silicones plus a cationic guar, a classic coacervate deposition system, though listed after Parfum @7.",
+   "persistence": "moderate: silicone (dimethiconol/dimethicone) deposition is persistent and can accumulate; guar aids deposition.",
+   "resetCapacity": "moderate: C1 SLES/betaine chassis.",
+   "counterevidence": "Silicone and cationic polymer are two converging persistent families (convergence route of the high anchor); late listing does not make silicones light (W-LINE note).",
+   "whyThisBand": "Moderate: a persistent silicone/guar system plausibly leaves noticeable but bounded residue.",
+   "whyNotNeighborBand": "Not high: only one deposition system (silicone + guar, no amodimethicone, so W1 does not apply and gives no presumption), no payload lipid, film or protein reinforcing it, no W-RICH, and an effective SLES/betaine reset; not low: silicone plus cationic guar (W2) is more than a single light route.",
+   "confidenceLimitingFactor": "Silicone dose unknown; a high dimethiconol load (emulsion carried by TEA-Dodecylbenzenesulfonate) could make it heavy.",
+   "rationale": "Moderate: Dimethiconol @10, Dimethicone @14 and guar @11 converge against a moderate C1 reset; high is the cautious neighbor (equally realistic neighbors resolved to the heavier, N-ALT).",
+   "ruleIds": [
+    "6.3",
+    "6.6",
+    "W1",
+    "W2",
+    "W3",
+    "N-ALT"
+   ],
+   "counterSignal": "Silicone and cationic polymer are two converging persistent families (convergence route of the high anchor); late listing does not make silicones light (W-LINE note)."
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "repair",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Dimethiconol @10",
+     "Guar Hydroxypropyltrimonium Chloride @11",
+     "Dimethicone @14"
+    ],
+    "limitation": "Formula reads as a scalp-active chassis (Piroctone Olamine @6, Menthol @12); no lengths-care cluster."
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Hair-loss positioning dominates and is out of scope (F5); Piroctone Olamine @6 without a dandruff claim.",
+   "decisionTrace": "Claim direction: hair loss/density ('Anti-Haarverlust', 'dichteres Haar') ignored by F5. Remaining in-scope wording ('stärkt feines, schwaches Haar', 'verringert Haarbruch') is retailer-only (low) and the formula verdict is nonspecific (silicone/guar only), so no candidate (CL-SRC). Decision: general.",
+   "rationale": "General: dominant claim out of scope (F5); remaining claims low-graded over a nonspecific formula.",
+   "ruleIds": [
+    "7.2",
+    "F5",
+    "CL-SRC",
+    "F-TRACE"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "decisionTrace": "Empty default considered; no moderate/high positioning.",
+   "rationale": "Secondary empty.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3",
+    "F-TRACE"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [
+    "treatment not fired: dandruffSupport supported but no dandruff claim (U3)",
+    "'Verwende dieses Shampoo regelmäßig' is not frequency wording and is low-graded"
+   ],
+   "rationale": "Default regular: no non-default trigger from a moderate/high-graded source.",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "CL-SRC",
+    "F-TRACE"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "not_targeted: no SC1 claim (hair-root/Kopfhaut wording is hair-loss positioning, E2 exclusion). CSA would fail anyway (no prominent listed route; MB excluded by SLES @2).",
+   "csaRoute": "none: no prominent listed route; MB excluded by Sodium Laureth Sulfate @2",
+   "ruleIds": [
+    "10",
+    "SC1",
+    "CSA",
+    "MB",
+    "E4",
+    "E2a"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Complete INCI contains Piroctone Olamine @6.",
+   "ruleIds": [
+    "11"
+   ],
+   "counterSignal": "none (mechanical recognition, Section 11)"
+  }
+ },
+ "formulaFacts": {
+  "surfactantClasses": {
+   "strongAnionicEtherSulfonate": [
+    "Sodium Laureth Sulfate @2 (defining)",
+    "TEA-Dodecylbenzenesulfonate @18 (not prominent; recorded only)"
+   ],
+   "strongAnionicAlkylSulfate": [],
+   "mildAnionic": [],
+   "amphoteric": [
+    "Cocamidopropyl Betaine @4 (buffer)"
+   ],
+   "nonionicCleansing": [],
+   "notRouteNotBuffer": [
+    "Sodium Xylenesulfonate @3 (hydrotrope)",
+    "Trideceth-10 @23"
+   ]
+  },
+  "conditioningRoutes": [
+   "Dimethiconol @10",
+   "Guar Hydroxypropyltrimonium Chloride @11",
+   "Dimethicone @14"
+  ],
+  "humectants": [
+   "Panthenol @19"
+  ],
+  "actives": [
+   "Piroctone Olamine @6 (anti-dandruff)",
+   "Menthol @12 (cooling)",
+   "Panthenol @19",
+   "Niacinamide @30"
+  ],
+  "recognizedDandruffActives": [
+   "Piroctone Olamine @6"
+  ],
+  "exposureFlags": [
+   "Parfum @7 (early)",
+   "Menthol @12 (cooling agent, post-E3)",
+   "Citrus Aurantium Peel Oil @24",
+   "multiple allergens @21-29",
+   "colourants @35-36"
+  ],
+  "chelatorsPhAdjusters": [
+   "Sodium Citrate @5",
+   "Citric Acid @8",
+   "Tetrasodium EDTA @17",
+   "Sodium Hydroxide @20",
+   "Acetic Acid @31"
+  ],
+  "preservatives": [
+   "Sodium Salicylate @15",
+   "Sodium Benzoate @16",
+   "Benzyl Alcohol @32"
+  ]
+ },
+ "claimEvidence": [
+  {
+   "unit": "Anti-Haarverlust Shampoo / reduziert Haarverlust um bis zu 90%",
+   "source": "retailer_rossmann_de",
+   "grade": "low",
+   "use": "out of scope (F5, S-HAIRLOSS)"
+  },
+  {
+   "unit": "stärkt feines, schwaches Haar / verringert Haarbruch",
+   "source": "retailer_rossmann_de",
+   "grade": "low",
+   "use": "no candidate (formula nonspecific)"
+  },
+  {
+   "unit": "900mg PRO-V KOMPLEX und Niacinamiden",
+   "source": "retailer",
+   "grade": "low",
+   "use": "Niacinamide @30 maps; Panthenol @19 (pro-vitamin) maps; no conflict"
+  }
+ ],
+ "reconciliation": [
+  "focusPrimary: general unchanged (provisional neighbor scalp_active rejected: no dandruff claim; hair loss out of scope).",
+  "usageRole: regular unchanged (provisional neighbor treatment rejected, U3).",
+  "Formula properties unchanged; 'feines Haar' never changes weight or fit (T2)."
+ ],
+ "projection": {
+  "status": "proposal_blocked_pending_review",
+  "thicknessFit": {
+   "fine": "acceptable",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 from weightPotential moderate (moderate, N-ALT high) and conditioningLevel moderate (moderate, N-ALT low): fine acceptable, normal ideal, coarse acceptable; ordinary target, no T6; final fine acceptable, normal ideal, coarse acceptable. T4: review_thickness_boundary:fine (weightPotential neighbor -> not_suited); review_thickness_boundary:normal (weightPotential neighbor -> acceptable) T2: thickness/texture claims in the reveal were not used.",
+  "weight": "moderate",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential moderate -> weight moderate, 1:1, confidence = weightPotential confidence (moderate). Claims never move it (6.5 step 5).",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "confidence": "moderate",
+    "rationale": "S-ORDINARY ways 1, 2 and 3: no qualifying E2 claim unit; the only scalp-adjacent positioning is hair loss (S-HAIRLOSS, not evaluated); recognized active Piroctone Olamine @6 without a dandruff claim (R17.3). All sources are retailer (low). Confidence = lowest of the ways = moderate."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1: cleansingStrength moderate with D1 false -> regular. I3: no flag (cleansingStrength high confidence, neighbor none). Bucket expectations: normal expects regular.",
+  "explicitResetPositioning": false,
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D1 false: no Tiefenreinigung/Deep Clean/Clarifying Shampoo/Detox-Reinigung wording and no occasional-use directions from a manufacturer or pack source; D2 not met -> not_flagged.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "acceptable"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   "review_thickness_boundary:fine (weightPotential neighbor -> not_suited)",
+   "review_thickness_boundary:normal (weightPotential neighbor -> acceptable)"
+  ],
+  "informationalNotes": [
+   "hair_loss_claim_not_evaluated",
+   "active_without_dandruff_positioning (Piroctone Olamine @6)"
+  ],
+  "catalogDependent": "review_live_value_differs is resolved by the orchestrator against live rows after freeze (lane cannot see the catalog)."
+ },
+ "selfCheck": "6.11/standard self-check: fingerprint matches the frozen packet and the pinned formula-pass record (not edited); claims were hidden during the formula pass; no ingredient, family count or position window assigned the weight band (W-line only gates payload_lipid legs) and the W-line was derived from the frozen list with skipped candidates recorded; depositionLoad/persistence/resetCapacity present; whyNotNeighborBand is specific; N-ALT follows confidence for every property; claims graded per CL-SRC/E1 and none set cleansing, conditioning, weight, thickness fit or a formula gate; projection derived mechanically (T1/T6/T4, W-LIVE, I1/I3, D1-D3, 13.7 rows); no comparison with earlier values was made inside the lane.",
+ "uncertainties": [
+  "weightPotential moderate (neighbor high) raises T4 on fine and normal; alternative high would make fine not_suited and normal acceptable.",
+  "Packet identityConfidence moderate; all claim sources retailer-only."
+ ]
+}

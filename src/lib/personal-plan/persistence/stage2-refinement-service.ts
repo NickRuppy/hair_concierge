@@ -3,18 +3,24 @@ import { z } from "zod"
 import {
   createStage2RefinementSession,
   saveStage2SessionAnswer,
+  type Stage2PrefillCare,
   type Stage2RefinementHandoff,
   type Stage2RefinementSession,
 } from "@/lib/personal-plan/refinement/session"
-import { resolveStage2RefinementContract } from "@/lib/personal-plan/refinement/question-path"
+import {
+  areAllStage2ModulesSettled,
+  resolveStage2RefinementContract,
+} from "@/lib/personal-plan/refinement/question-path"
 import { stage2ModuleStates } from "@/lib/personal-plan/refinement/module-status"
 import {
   applyUserAnswerProvenance,
   userAnsweredQuestionIds,
 } from "@/lib/personal-plan/refinement/answer-provenance"
 import { resolveAssumedAnswers } from "@/lib/personal-plan/refinement/assumed-defaults"
+import { carryOverStage2NightAnswer } from "@/lib/personal-plan/refinement/night-wear-carry-over"
 import {
   STAGE2_MODULES,
+  type NightProtection,
   type PersonalPlanRefinementAnswersV1,
   type Stage2AnswerProvenance,
   type Stage2Module,
@@ -26,8 +32,17 @@ import {
   Stage2RefinementError,
   type Stage2ModuleCompletionResult,
 } from "@/lib/personal-plan/refinement/gateway"
-import { toCareHabitsPatch, toFieldProvenance } from "@/lib/user-facts/from-refinement-draft"
-import { CARE_HABITS_SCHEMA_VERSION } from "@/lib/user-facts/schema"
+import {
+  confirmedNightProtectionFromFacts,
+  nightMergeNeedsStoredFacts,
+  toCareHabitsPatch,
+  toFieldProvenance,
+} from "@/lib/user-facts/from-refinement-draft"
+import {
+  CARE_HABITS_SCHEMA_VERSION,
+  type CareHabitsV1,
+  type FieldProvenanceValue,
+} from "@/lib/user-facts/schema"
 import type { SaveUserFactsInput, SaveUserFactsResult } from "@/lib/user-facts/save"
 import type { JsonValue } from "./index"
 
@@ -39,6 +54,18 @@ import type { JsonValue } from "./index"
 export type SaveCareHabitsFacts = (
   input: Extract<SaveUserFactsInput, { domain: "care_habits" }>,
 ) => Promise<SaveUserFactsResult>
+
+/**
+ * Reads the member's currently stored `care_habits`, their field provenance and the facts
+ * revision, injected like `SaveCareHabitsFacts`. The facts write consults it for the Rev. 6
+ * night merge only, and only when the merge needs it (`nightMergeNeedsStoredFacts`).
+ */
+export type LoadStoredCareHabits = () => Promise<{
+  careHabits: Partial<CareHabitsV1> | null
+  fields?: Record<string, FieldProvenanceValue>
+  /** The facts revision this read saw; the write that used it is bound to it. */
+  revision?: number
+} | null>
 
 const MAX_REFINEMENT_PAYLOAD_BYTES = 64 * 1024
 
@@ -81,6 +108,11 @@ export type Stage2PersistedDraft = {
    * absent = the row predates the column.
    */
   directAcceptanceOwned?: boolean | null
+  /**
+   * Read-only UI pre-fill context (`Stage2PrefillCare`), attached by the gateway while the Tools
+   * rollout is on. Never written back: no save, completion or RPC reads it.
+   */
+  prefillCare?: Stage2PrefillCare
 }
 
 export type Stage2RefinementPersistence = {
@@ -159,9 +191,28 @@ export type Stage2RefinementSnapshotBuilder = (input: {
   computationVersion: string
 }
 
+/**
+ * A persisted draft as every reader interprets it: the earlier night answer of a Gewohnheiten
+ * finished before the night question existed carries over (`carryOverStage2NightAnswer`). The
+ * service works on this form, so the next save persists the carried-over answer.
+ */
+export function interpretStage2PersistedDraft(draft: Stage2PersistedDraft): Stage2PersistedDraft {
+  return carryOverStage2NightAnswer(draft.triggerContext, draft)
+}
+
+function assertWithinPayloadLimit(next: Stage2RefinementSession): void {
+  if (
+    JSON.stringify({ answers: next.answers, completedQuestionIds: next.completedQuestionIds })
+      .length > MAX_REFINEMENT_PAYLOAD_BYTES
+  ) {
+    throw new Stage2RefinementError("invalid_answer", "The refinement payload is too large")
+  }
+}
+
 export function stage2SessionFromPersistedDraft(
-  draft: Stage2PersistedDraft,
+  persisted: Stage2PersistedDraft,
 ): Stage2RefinementSession {
+  const draft = interpretStage2PersistedDraft(persisted)
   return createStage2RefinementSession({
     pathVersion: draft.pathVersion,
     triggerContext: draft.triggerContext,
@@ -173,6 +224,9 @@ export function stage2SessionFromPersistedDraft(
       draft.status === "complete" && draft.refinedVersionId
         ? { refinedVersionId: draft.refinedVersionId, nextHref: "/plan-start" }
         : undefined,
+    // A completed row whose path grew since stays loadable; its first save reopens it.
+    tolerateGrownPath: true,
+    ...(draft.prefillCare ? { prefillCare: draft.prefillCare } : {}),
   })
 }
 
@@ -207,6 +261,16 @@ export function createStage2RefinementService(input: {
    * silently skipped.
    */
   saveFacts?: SaveCareHabitsFacts
+  /**
+   * Review fix F1 (Rev. 6): the stored facts the night merge reads, so a member's „Nachts" change
+   * reaches the stored `nightProtection` even while the night page is still assumed (see
+   * `nightProtectionFact`). Read only when the merge's parts differ in provenance; a write that
+   * used a confirmed stored list is bound to the read's facts revision, and a failed read stops
+   * the completion as `temporarily_unavailable` before anything is written. Optional: a caller
+   * without it (direct acceptance, which publishes only assumptions) keeps the conservative
+   * `assumed` write, which never overwrites a confirmed list.
+   */
+  loadStoredCareHabits?: LoadStoredCareHabits
   /** Injected clock for `provenance.at` (M2). Defaults to the real time. */
   now?: () => Date
 }) {
@@ -232,10 +296,22 @@ export function createStage2RefinementService(input: {
         "stage2-refinement-service: completing a Feinschliff module or draft requires saveFacts",
       )
     }
+    // The rollout AT WRITE TIME: the trigger context is re-derived per request, so a flag turned
+    // off since the tools were answered stops their care keys from being published again.
+    const toolsEnabled = draft.triggerContext.toolsEnabled === true
+    const completion = {
+      completedQuestionIds: draft.completedQuestionIds,
+      answerProvenance: draft.answerProvenance,
+      toolsEnabled,
+    }
+    const stored = nightMergeNeedsStoredFacts(draft.answers, completion)
+      ? await loadStoredNightProtection()
+      : undefined
+    const confirmedNightProtection = stored?.confirmedNightProtection
     const facts = await input.saveFacts({
       userId: input.userId,
       domain: "care_habits",
-      patch: toCareHabitsPatch(draft.answers),
+      patch: toCareHabitsPatch(draft.answers, { ...completion, confirmedNightProtection }),
       provenance: {
         source: { kind: "feinschliff_draft", id: draft.id },
         schemaVersion: CARE_HABITS_SCHEMA_VERSION,
@@ -244,6 +320,8 @@ export function createStage2RefinementService(input: {
           completedQuestionIds: draft.completedQuestionIds,
           answerProvenance: draft.answerProvenance,
           answers: draft.answers,
+          toolsEnabled,
+          confirmedNightProtection,
         }),
       },
       draftBinding: {
@@ -251,6 +329,11 @@ export function createStage2RefinementService(input: {
         expectedDraftRevision: expectedRevision,
         expectedInitialVersionId: draft.baseInitialNeedVersionId,
       },
+      // The merge took a part from the stored list: bind the write to exactly that read, so a
+      // newer care-facts edit in between is a conflict (the member reloads), never overwritten.
+      ...(confirmedNightProtection !== undefined && stored?.revision !== undefined
+        ? { expectedRevision: stored.revision }
+        : {}),
     })
     if (facts.status === "draft_conflict" || facts.status === "revision_conflict") {
       cached = null
@@ -265,6 +348,33 @@ export function createStage2RefinementService(input: {
     }
   }
 
+  /**
+   * The stored night list the merge needs, with the facts revision it was read at. A failed read
+   * is recoverable: nothing has been written, the draft is untouched, and a retry reads again —
+   * never a silent fall back to the `assumed` write that would drop her change (review round 2).
+   */
+  async function loadStoredNightProtection(): Promise<
+    { confirmedNightProtection?: NightProtection[]; revision?: number } | undefined
+  > {
+    if (!input.loadStoredCareHabits) return undefined
+    let stored: Awaited<ReturnType<LoadStoredCareHabits>>
+    try {
+      stored = await input.loadStoredCareHabits()
+    } catch {
+      throw new Stage2RefinementError(
+        "temporarily_unavailable",
+        "The stored care facts the night merge needs are unavailable",
+      )
+    }
+    return {
+      confirmedNightProtection: confirmedNightProtectionFromFacts(
+        stored?.careHabits,
+        stored?.fields,
+      ),
+      revision: stored?.revision,
+    }
+  }
+
   async function loadDraft(): Promise<Stage2PersistedDraft> {
     const draft = await input.persistence.loadOrCreate(input.userId)
     // A stale row is historical only. The persistence boundary must create a fresh draft.
@@ -274,8 +384,8 @@ export function createStage2RefinementService(input: {
         "A fresh refinement draft is unavailable",
       )
     }
-    cached = draft
-    return draft
+    cached = interpretStage2PersistedDraft(draft)
+    return cached
   }
 
   /** Today's terminal completion, shared by `complete()` and the closing module. */
@@ -334,21 +444,25 @@ export function createStage2RefinementService(input: {
       const parsed = stage2AnswerSaveInputSchema.safeParse(raw)
       if (!parsed.success) throw new Stage2RefinementError("invalid_answer")
       let draft = cached ?? (await loadDraft())
+      const answer = {
+        questionId: parsed.data.questionId as Stage2QuestionId,
+        answer: parsed.data.answer,
+      }
+      // Validate before reopening: a rejected answer must never turn a completed draft into a
+      // fresh in-progress successor (review fix F2). Throws exactly what the save would throw.
+      assertWithinPayloadLimit(
+        saveStage2SessionAnswer(stage2SessionFromPersistedDraft(draft), answer),
+      )
       if (draft.status === "complete") {
-        draft = await input.persistence.reopen({ userId: input.userId, draft })
+        const reopened = interpretStage2PersistedDraft(
+          await input.persistence.reopen({ userId: input.userId, draft }),
+        )
+        // The successor row is new; the pre-fill context is the member's, so it carries over.
+        draft = draft.prefillCare ? { ...reopened, prefillCare: draft.prefillCare } : reopened
         cached = draft
       }
       if (draft.status !== "in_progress") throw new Stage2RefinementError("revision_conflict")
-      const next = saveStage2SessionAnswer(stage2SessionFromPersistedDraft(draft), {
-        questionId: parsed.data.questionId as Stage2QuestionId,
-        answer: parsed.data.answer,
-      })
-      if (
-        JSON.stringify({ answers: next.answers, completedQuestionIds: next.completedQuestionIds })
-          .length > MAX_REFINEMENT_PAYLOAD_BYTES
-      ) {
-        throw new Stage2RefinementError("invalid_answer", "The refinement payload is too large")
-      }
+      const next = saveStage2SessionAnswer(stage2SessionFromPersistedDraft(draft), answer)
       const nextAnswerProvenance = applyUserAnswerProvenance({
         previous: draft.answerProvenance,
         answeredQuestionId: parsed.data.questionId as Stage2QuestionId,
@@ -392,6 +506,28 @@ export function createStage2RefinementService(input: {
       if (!parsed.success) throw new Stage2RefinementError("completion_failed")
       const { module: stage2Module, expectedRevision } = parsed.data
       const draft = cached ?? (await loadDraft())
+      // Replay of a CLOSING completion whose response was lost: the draft is already `complete`
+      // and its final revision is the one the identical retry carries. The facts were written
+      // and the terminal version projected by that first call, so answer with the stored
+      // terminal handoff — a `revision_conflict` here would strand a completion that already
+      // happened. Only while the module is still settled on the draft's own path (a path that
+      // grew since must not claim a module done) and never for a different revision.
+      if (
+        draft.status === "complete" &&
+        draft.refinedVersionId &&
+        draft.revision === expectedRevision
+      ) {
+        const settled = stage2ModuleStates(draft)
+        if (settled[stage2Module].status === "complete" && areAllStage2ModulesSettled(settled)) {
+          return {
+            refinedVersionId: draft.refinedVersionId,
+            nextHref: "/plan-start",
+            module: stage2Module,
+            status: "complete",
+            stage3Handoff: stage2Module === "products",
+          }
+        }
+      }
       if (draft.status !== "in_progress") throw new Stage2RefinementError("revision_conflict")
 
       // Module status counts USER answers only; the projection input is user ∪
@@ -419,13 +555,13 @@ export function createStage2RefinementService(input: {
       }
 
       const stage3Handoff = stage2Module === "products"
-      // Both modules answered ⇒ the canonical path is complete by construction,
+      // Every module answered (or without questions) ⇒ the canonical path is complete by construction,
       // so the closing module delegates to the existing terminal completion
       // rather than teaching the module RPC a second way to close a draft. The
       // durable Stage-3 entry marker for that case stays today's `complete`
       // draft status, so nothing extra is persisted. `completeDraft` writes
       // `care_habits` facts itself (I1) — writing here too would double-publish.
-      if (STAGE2_MODULES.every((candidate) => moduleStates[candidate].status === "complete")) {
+      if (areAllStage2ModulesSettled(moduleStates)) {
         const handoff = await completeDraft(expectedRevision)
         return { ...handoff, module: stage2Module, status: "complete", stage3Handoff }
       }
@@ -435,7 +571,18 @@ export function createStage2RefinementService(input: {
       // (F04/F22), bound to the draft actually being closed, not the resolver's own
       // assumptions for this call (the merge keeps whatever an earlier write recorded for a
       // question the current path no longer asks).
-      await writeCareHabitsFacts(draft, expectedRevision)
+      //
+      // Except on a replay: this module's projection is already recorded at exactly this
+      // revision, so the first call wrote the facts (it writes them BEFORE the RPC records the
+      // lineage) and only its response was lost. A second write would double-publish the same
+      // draft state. The RPC below still runs on a replay — it answers `already_projected`
+      // from the stored lineage AFTER its own moved-source (`stale_source`) check — so every
+      // call keeps the lineage guard; only the redundant facts write is skipped.
+      const recordedProjection = draft.moduleProjections[stage2Module]
+      const isProjectionReplay =
+        recordedProjection?.needVersionId !== undefined &&
+        recordedProjection.projectedAtRevision === expectedRevision
+      if (!isProjectionReplay) await writeCareHabitsFacts(draft, expectedRevision)
 
       const snapshot = input.snapshotBuilder({
         baseInitialNeedVersionId: draft.baseInitialNeedVersionId,

@@ -101,7 +101,7 @@
       "product.suitable_thicknesses": "Projected WT moderate selects its exact thickness row; fine-hair threshold is an explicit product prior, not a scientific constant. Use the named matrix row; do not interpolate from product marketing. No stronger recommendation or exclusion is inferred beyond that fixed row. Evidence: WT dimension moderate; projected weight moderate, COND moderate; R2 none_visible, Silicone lubrication r2, Emollient lubrication r3. Limit: Formula-only potential at E2; concentration, dose, finished-product efficacy and measured duration are not established. Broad deterministic fit prior; actual user fit also depends on hair, dose and routine. AD-5: only `recommended` thicknesses are written. Emitted: normal, coarse. Not emitted (conditional/neutral/caution): fine — conditional."
     },
     "projection_sha256": "98f1b0e84d0429dd15e9a9e15aa773b42d7c89ece85adeb63a64da137b0a3b27",
-    "research_input_sha256": "96213e36c19d8c47d841f52c0fc12811356134ae851ad3fdd6676c0420200160",
+    "research_input_sha256": "84da8f6aaba9b15284ea0e3dfadf77e3f80d1f9d800392dfb8edd2044813281c",
     "research_model_version": "leave-in-inci-v1.2",
     "suitable_thicknesses": [
       "normal",

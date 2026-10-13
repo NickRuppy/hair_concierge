@@ -59,7 +59,7 @@ Consume canonical source answers directly for:
 
 Do not add a mandatory format-preference onboarding question. Format is a product comparison axis in Stage 2. Add a conditional clarification only when an existing answer cannot determine a material inclusion, safety, or application decision.
 
-Shared `suitable_thicknesses = null` cannot produce a confident exact recommendation. A non-empty verified array containing the user's thickness passes; a non-empty array excluding it is a mismatch. Empty arrays are invalid for active recommendable products, and legacy empty arrays remain `unknown` until researched. Missing elasticity follows the shared Conditioner clarification policy because care direction must not be diagnosed from weaker proxies. Missing product heat or replacement evidence produces a role-specific `unknown`, not optimistic fit.
+Shared `suitable_thicknesses = null` cannot produce a confident exact recommendation. A verified thickness set is evaluated by distance under the canonical model (§3–§4), not a binary exclusion. Empty arrays are invalid for active recommendable products, and legacy empty arrays remain `unknown` until researched. Missing elasticity follows the shared Conditioner clarification policy because care direction must not be diagnosed from weaker proxies. Missing product heat or replacement evidence produces a role-specific `unknown`, not optimistic fit.
 
 ## Inclusion and category ownership
 
@@ -193,7 +193,7 @@ Use a strong one-product bias:
 - recurring heat means `daily`, `several_weekly`, or `once_weekly`; `rarely` does not upgrade the regular Leave-in tier;
 - recurring heat plus a qualifying Leave-in care signal makes Leave-in `basis` and creates an event-based heat-protection requirement at portfolio level;
 - prefer one product combining verified heat protection with the required care functions when it passes all core fit gates;
-- the care job may be mild, but strict thickness, weight, care, and application fit still pass;
+- the care job may be mild, but thickness distance, weight, care, and application fit follow the canonical model;
 - an already-owned or otherwise suitable care Leave-in plus a separate suitable Heat protectant is equally valid coverage and does not require replacement merely to consolidate products;
 - if no suitable combined product exists, use a care Leave-in plus a dedicated Heat protectant;
 - heat need without a legitimate Leave-in care job routes directly to Heat protectant;
@@ -269,32 +269,7 @@ Do not retain `product_leave_in_fit_specs` or strict eligibility triples as inde
 
 ## Role-relative fit
 
-Use the shared four-state vocabulary:
-
-- `ideal` = `passt sehr gut`;
-- `supportive` = `passt mit Einschränkung`;
-- `mismatch` = `wechseln empfohlen`;
-- `unknown` = `noch in Prüfung`.
-
-### Global gates
-
-Apply before any role:
-
-- resolved identity and non-pending review;
-- safety and strong exclusions;
-- verified suitable thicknesses containing the user's thickness.
-
-Missing strict suitability is `unknown`; a verified exclusion is `mismatch`.
-
-### Core axes
-
-- same weight level = exact;
-- one level lighter/richer = supportive;
-- two levels apart = mismatch;
-- same care direction = exact;
-- `balanced` bridging a moisture/protein target or product = supportive;
-- direct moisture/protein opposition = mismatch when care direction is assigned as required;
-- format never rescues or breaks core fit.
+Fit verdicts and labels follow the [canonical fit-verdict model](../../fit-verdict-model.md) (§1–§5, ruled 2026-10-12): `ideal` = **Passt**, `supportive` = **Passt bedingt**, `mismatch` = **Passt nicht**, and `unknown` = **Nicht geprüft**. Thickness is a degree axis, never a hard gate; sum all axis distances (0 / 1 / ≥2 steps), let hard-gate failures take precedence, and allow a supportive recommendation with its evaluator reason when no ideal candidate exists in either Basis or optional tiers.
 
 ### Assigned-role requirements
 
@@ -302,9 +277,9 @@ Missing strict suitability is `unknown`; a verified exclusion is `mismatch`.
 - `pre_heat_application`: `provides_heat_protection = true` plus a verified protocol that supports the required damp, dry, or either application state for that occurrence;
 - Conditioner replacement: verified replacement capability, suitable conditioning profile, and replacement protocol.
 
-A product can be ideal for care and a mismatch for heat. The UI must say this directly, for example: “Passt sehr gut für deine Pflege nach dem Waschen. Nicht als Hitzeschutz geeignet.” If a secondary product covers heat, the primary care product does not need replacement. If the role remains uncovered, recommend a valid combined replacement or a separate Heat protectant.
+A product can be ideal for care and a mismatch for heat. The UI must say this directly, for example: “Passt für deine Pflege nach dem Waschen. Nicht als Hitzeschutz geeignet.” If a secondary product covers heat, the primary care product does not need replacement. If the role remains uncovered, recommend a valid combined replacement or a separate Heat protectant.
 
-Aggregate precedence follows unresolved/pending identity, safety/exclusions, strict thickness, hard assigned-role mismatch, missing required data, supportive deviations, then ideal. Retain every axis fact for expanded explanation.
+Retain evaluator axis facts and reason lines as required by the canonical model (§7a.3–§7a.4).
 
 ## Reconciliation and exact recommendation
 
@@ -388,7 +363,7 @@ The later shared presentation pass chooses the two or three card-level facts. It
 22. `leave-in-heat-only`: recurring heat without a Leave-in care signal = Leave-in `not_needed`; Heat protectant owns the job.
 23. `leave-in-definition-only`: wavy/curly definition or lost shape without care signal = `optional`; Styling owns hold.
 24. `leave-in-care-plus-definition`: patterned hair plus definition and care-led basis signal = Leave-in `basis` for care/shape preparation; no cast claim.
-25. `leave-in-strict-thickness-mismatch`: otherwise attractive product excludes the user's thickness = mismatch.
+25. `leave-in-thickness-distance`: otherwise attractive product is supportive at one step and mismatch at two steps (canonical model §3–§4).
 26. `leave-in-weight-near-match`: strict gate passes, target rich/product medium = supportive.
 27. `leave-in-missing-heat-proof`: product marketed for styling but explicit heat proof absent = unknown for pre-heat, still evaluated for care.
 28. `leave-in-owned-override`: mismatch product kept by user remains executable with role-specific non-blocking advice.

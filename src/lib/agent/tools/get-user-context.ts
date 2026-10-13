@@ -8,6 +8,8 @@ import { getVisibleProductUsageItems } from "@/lib/product-usage/shampoo-fallbac
 import { loadRoutineItemsForEngine } from "@/lib/recommendation-engine"
 import { loadUserMemoryContext } from "@/lib/chat-runtime/user-memory"
 import {
+  PROFILE_CONCERN_LABELS,
+  GOAL_LABELS,
   HAIR_TEXTURE_LABELS,
   HAIR_THICKNESS_LABELS,
   PRODUCT_FREQUENCY_LABELS,
@@ -82,6 +84,17 @@ function deriveConcernSignals(hairProfile: HairProfile | null): string[] {
   if (hairProfile?.concerns.includes("frizz")) {
     signals.push("Frizzige Längen")
   }
+
+  for (const concern of hairProfile?.concerns ?? []) {
+    if (
+      concern === "low_shine" ||
+      concern === "lost_shape" ||
+      concern === "low_volume_or_weighed_down"
+    ) {
+      signals.push(PROFILE_CONCERN_LABELS[concern])
+    }
+  }
+  if (hairProfile?.goals.includes("volume_balance")) signals.push(GOAL_LABELS.volume_balance)
 
   return signals
 }

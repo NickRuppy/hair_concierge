@@ -3,12 +3,12 @@
   "locked_standard_version": "1.2",
   "locked_at": "2026-10-09",
   "decision": "approved_and_locked_for_reuse",
-  "ruling": "T21 — Nick, 2026-10-09: A1 (\"needs heat to work\" is a real property set from manufacturer statements and directions; activated products are offered only in the heat-styling routine, never as conditioner replacement or plain post-wash leave-in), A2 (the Neqi styling spray is never a conditioner replacement), D-c (HEAT&GLOW's between-wash use is covered by its activation direction), D-d (activation evidence is manufacturer-only: German page or pack), D-e (activation and heat protection are separate properties).",
+  "ruling": "T21 — Nick, 2026-10-09: A1 (\"needs heat to work\" is a real property set from manufacturer statements and directions; activated products are offered only in the heat-styling routine, never as conditioner replacement or plain post-wash leave-in), A2 (the Neqi styling spray is never a conditioner replacement), D-d (activation evidence is manufacturer-only: German page or pack), D-e (activation and heat protection are separate properties). Q11=B (2026-10-13) supersedes D-c: HEAT&GLOW is not activated; its existing roles and protocols stay unchanged.",
   "normative_sources": {
     "overlay": {
       "path": "docs/research/leave-in-inci/v1.2/leave-in-classification-overlay.v1.2.md",
-      "bytes": 19286,
-      "sha256": "e8d677dbad352ee808cdd7e878e9ce6e6c98fb474f1a32ab2658ad9ebdc2c833"
+      "bytes": 19849,
+      "sha256": "8847308ac4d518e6bb4c4bbd7174e9cf29990cdc9e0437f5a664ef8ffa71c806"
     },
     "previous_overlay": {
       "version": "1.1",
@@ -36,7 +36,7 @@
   "research_method": {
     "policyId": "leave-in-classification-v1.2",
     "modelVersion": "leave-in-inci-v1.2",
-    "policySha256": "e8d677dbad352ee808cdd7e878e9ce6e6c98fb474f1a32ab2658ad9ebdc2c833",
+    "policySha256": "8847308ac4d518e6bb4c4bbd7174e9cf29990cdc9e0437f5a664ef8ffa71c806",
     "runbookSha256": "dce7d84982e52f5094a0b29500105d13f42c31d44e04b1871bcbef1bda5e56ca",
     "research_envelope_version": "leave-in-research-envelope-v1.0",
     "note": "policySha256 pins the v1.2 overlay, which names the v1.1 overlay and the v1.0 base by hash. The envelope version string is unchanged; the identity block gains the required heatActivation capture, and the adapter refuses v1.1-stamped envelopes with a re-stamp reason."

@@ -1,0 +1,21 @@
+{
+  "blindId": "VT07",
+  "productName": "DERMA Shampoo",
+  "brand": "GLYNT",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "DERMA Shampoo Anti-Schuppen-Shampoo für jeden Haartyp: wirkt effektiv gegen Schuppen und Hautirritationen mit Salicylsäure und Zink reinigt mild und reduziert eine zu starke Talgproduktion. Vegan. Dermatologically Tested. | DERMA Shampoo reinigt mild und reduziert eine zu starke Talgproduktion. Gleichzeitig wirkt es effektiv und wirksam gegen Schuppen und Irritationen wie zum Beispiel trockene oder gespannte Kopfhaut, Juckreiz oder ein fettender Haaransatz. Verwende das Shampoo lediglich solange wie die Irritation besteht, danach kannst du wieder das passende Shampoo für dein persönliches Haarbedürfnis verwendet.",
+      "directionsVerbatim": "Verteile eine kleine Menge DERMA Shampoo im nassen Haar und massiere es sanft in die Kopfhaut ein. Lasse das Shampoo kurz einwirken, damit Haar und Haut die pflegenden Inhaltsstoffe optimal aufnehmen können. Spüle das Shampoo anschließend gründlich aus. Um dein Haar nicht unnötig zu strapazieren, trockne es sanft ab und vermeide Reibung."
+    },
+    {
+      "sourceType": "retailer_beautycoach_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Regulierendes Anti-Schuppen Shampoo. Mit Zink und Salicylsäure. Speziell bei Schuppen oder irritierter Kopfhaut bedarfsweise einsetzen. 250ml Regulierendes Anti-Schuppen Shampoo mit Zink und Salicylsäure. Zur milden Reinigung der Kopfhaut. Speziell bei Schuppen oder irritierter Kopfhaut. Entspannt die Kopfhaut. Intervallweise einsetzen, sparsam verwenden und gründlich ausspülen.",
+      "directionsVerbatim": ""
+    }
+  ]
+}

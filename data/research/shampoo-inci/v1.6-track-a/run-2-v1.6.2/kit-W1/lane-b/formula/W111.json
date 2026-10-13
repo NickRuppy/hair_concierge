@@ -1,0 +1,31 @@
+{
+  "blindId": "W111",
+  "packSize": "200 ml",
+  "canonicalInci": [
+    "Aqua (Water, Eau)",
+    "Sodium Laureth Sulfate",
+    "Sodium Chloride",
+    "Cocamidopropyl Betaine",
+    "Pisum Sativum (Pea) Peptide",
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+    "Parfum (Fragrance)",
+    "Sodium Benzoate",
+    "Coco-Glucoside",
+    "Glyceryl Oleate",
+    "Citric Acid",
+    "PEG-7 Glyceryl Cocoate",
+    "Glycol Distearate",
+    "Laureth-4",
+    "Hydrogenated Castor Oil",
+    "PEG-120 Methyl Glucose Dioleate",
+    "Sodium Hydroxide",
+    "Benzyl Alcohol",
+    "Propylene Glycol",
+    "Leuconostoc/Radish Root Ferment Filtrate"
+  ],
+  "inciFingerprintSha256": "a9e06d6f02da0f35a9bbe7479a378b19dd687cdcbe8cdba3d26e1d7fdadb6b21",
+  "normalization": "Runbook step 2: canonical list items lower-cased, trimmed, whitespace collapsed, joined with '|', SHA-256; split synonym entries (e.g. 'Aqua (Water, Eau)') merged before numbering.",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 1,
+  "identityConfidence": "high"
+}

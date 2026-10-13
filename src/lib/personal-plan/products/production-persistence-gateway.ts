@@ -542,6 +542,17 @@ export function createProductionStage3ProductsGateway(
       coverage: effectiveStage3Coverage(draft),
       hairThickness: context.hairThickness,
       heatRoutes: stage3HeatRoutesFromSnapshot(context.refinedNeedSnapshot),
+      dryShampooTarget:
+        subject.category === "dry_shampoo"
+          ? {
+              scalpSensitivity: context.refinedNeedSnapshot.profile.scalp
+                ? context.refinedNeedSnapshot.profile.scalp.concerns.includes("irritated")
+                  ? "sensitive"
+                  : "normal"
+                : null,
+              hairColorFit: null,
+            }
+          : undefined,
       ...facts,
     } as Stage3AuthorityInput
     const authorityEvaluation = evaluateStage3Authority(authorityInput)

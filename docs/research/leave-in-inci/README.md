@@ -10,6 +10,8 @@ The folder `v1.0/` is the **artifact root version** (the frozen research package
 
 **Standard v1.1 (2026-09-29).** v1.1 is the byte-frozen v1.0 standard plus one normative overlay, [`v1.1/leave-in-classification-overlay.v1.1.md`](./v1.1/leave-in-classification-overlay.v1.1.md) (ruling T20: which species may set `care_direction`). Its artifacts live in sibling `v1.1/` roots (`docs/research/leave-in-inci/v1.1/`, `data/research/leave-in-inci/v1.1/`). That is not a new research package. It keeps every v1.0 path byte-identical: the v1.0 manifest and CI pin those files, and T20 added a re-derivation run (the `care_direction` records) and a new calibration envelope set that could not be written into the frozen root without changing it. Nothing under `v1.0/` was edited.
 
+**Q11=B correction (2026-10-13).** HEAT&GLOW is not heat-activated; its earlier D-c activation interpretation is superseded. Neqi remains the only activated product. Frozen v1.0/v1.1 artifacts remain untouched.
+
 **Standard v1.2 (2026-10-09).** v1.2 is v1.1 plus a second normative overlay, [`v1.2/leave-in-classification-overlay.v1.2.md`](./v1.2/leave-in-classification-overlay.v1.2.md) (ruling T21: the identity field `heatActivation`, HA-1…HA-9). Its artifacts live in sibling `v1.2/` roots (`docs/research/leave-in-inci/v1.2/`, `data/research/leave-in-inci/v1.2/`). Nothing under `v1.0/` or `v1.1/` was edited; the v1.1 overlay and its calibration set stay byte-frozen and are re-verified in CI.
 
 ## Start here

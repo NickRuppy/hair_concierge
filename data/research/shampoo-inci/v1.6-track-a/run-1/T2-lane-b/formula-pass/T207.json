@@ -1,0 +1,71 @@
+{
+  "blindId": "T207",
+  "inciFingerprintSha256": "b4166c95f70e93e461f681c730d02fac48aab6f16769696b7512f6c5fdd19eae",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "completeness": "complete",
+    "sourceTier": 2,
+    "identityConfidence": "moderate",
+    "normalization": "No split entries; positions = packet order (normalized, one-based).",
+    "prominenceCutoff": "E3: no fragrance declared; first listed preservative Sodium Benzoate at 17; positions 1-16 prominent."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate (C1): Sodium Laureth Sulfate (2) defining anionic, buffered by Cocamidopropyl Betaine (3) and Coco-Glucoside (4); no reinforcing strong anionic.",
+      "counterSignal": "Refatters Glyceryl Oleate (13), Hydrogenated Palm Glycerides Citrate (15) are minor.",
+      "neighboringAlternative": "none",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: one meaningful system, Guar Hydroxypropyltrimonium Chloride (8, prominent), plus light routes (Glyceryl Oleate 13, Hydrogenated Palm Glycerides Citrate 15) and humectants Panthenol (5), Glycerin (9). C2 not met: no silicone, payload lipid or pearlizing route.",
+      "counterSignal": "Single polymer with weak refatters; low is realistic.",
+      "neighboringAlternative": "low",
+      "ruleIds": ["C2", "Section 5 anchors"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: one light cationic guar and weak refatters against a buffered SLES chassis; nothing persistent.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {"value": "light", "rationale": "Guar (8) and two weak refatters (13, 15)."},
+        "persistence": {"value": "low", "rationale": "No silicone, lipid, protein or film former."},
+        "resetCapacity": {"value": "moderate", "rationale": "C1 SLES + betaine + glucoside."}
+      },
+      "extractedEvidence": {
+        "cationic_polymer": [{"ingredient": "Guar Hydroxypropyltrimonium Chloride", "position": 8}],
+        "weak_refatter": [{"ingredient": "Glyceryl Oleate", "position": 13}, {"ingredient": "Hydrogenated Palm Glycerides Citrate", "position": 15}],
+        "silicone": [], "payload_lipid": [], "protein_film": [], "film_former": [],
+        "reset": [{"ingredient": "Sodium Laureth Sulfate", "position": 2}, {"ingredient": "Cocamidopropyl Betaine", "position": 3}, {"ingredient": "Coco-Glucoside", "position": 4}],
+        "excluded": [{"ingredient": "Laureth-2", "position": 14, "reason": "low-ethoxylate thickener"}],
+        "context_humectants": [{"ingredient": "Panthenol", "position": 5}, {"ingredient": "Glycerin", "position": 9}]
+      },
+      "whyThisBand": "Single light polymer plus weak refatters with moderate reset: low anchor.",
+      "whyNotNeighborBand": "W2: the only families are one guar and weak_refatter esters (plus humectants); no silicone, lipid, protein or film converges and the SLES chassis offsets light residue.",
+      "limitingFactor": "Guar level unknown (neighbor moderate)."
+    },
+    "focusPrimary": {"value": "scalp_active", "confidence": "low", "provisional": true, "rationale": "Pending claims. Piroctone Olamine (10) plus prominent comfort routes Panthenol (5), Bisabolol (6), Niacinamide (7), fragrance-free: scalp-care architecture; needs a qualifying claim. Lengths care-direction: nonspecific."},
+    "focusSecondary": {"value": [], "confidence": "low", "provisional": true, "rationale": "Empty default pending claims."},
+    "usageRole": {"value": "regular", "confidence": "low", "provisional": true, "rationale": "Default; treatment possible with a qualifying dandruff claim."},
+    "scalpComfortTarget": {"value": "not_targeted", "confidence": "low", "provisional": true, "rationale": "No positioning yet. CSA formula half met: prominent comfort routes Panthenol (5), Bisabolol (6), Niacinamide (7); humectants Glycerin (9), Glyceryl Oleate (13). No fragrance or cooling agent."},
+    "dandruffSupport": {"value": "supported", "confidence": "high", "rationale": "Complete INCI contains Piroctone Olamine (10)."}
+  },
+  "formulaFacts": [
+    {"ingredient": "Sodium Laureth Sulfate", "position": 2, "role": "defining anionic (ether type)"},
+    {"ingredient": "Cocamidopropyl Betaine", "position": 3, "role": "amphoteric buffer"},
+    {"ingredient": "Coco-Glucoside", "position": 4, "role": "nonionic buffer"},
+    {"ingredient": "Panthenol", "position": 5, "role": "E4 comfort + humectant route"},
+    {"ingredient": "Bisabolol", "position": 6, "role": "E4 comfort route"},
+    {"ingredient": "Niacinamide", "position": 7, "role": "E4 comfort route"},
+    {"ingredient": "Guar Hydroxypropyltrimonium Chloride", "position": 8, "role": "cationic_polymer"},
+    {"ingredient": "Glycerin", "position": 9, "role": "humectant"},
+    {"ingredient": "Piroctone Olamine", "position": 10, "role": "recognized anti-dandruff active"},
+    {"ingredient": "Glyceryl Oleate", "position": 13, "role": "weak_refatter / E4 refatting route"},
+    {"ingredient": "Sodium Benzoate", "position": 17, "role": "E3 preservative fallback marker"}
+  ],
+  "unresolvedMaterialIngredients": []
+}

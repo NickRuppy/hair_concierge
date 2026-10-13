@@ -1,0 +1,396 @@
+{
+  "blindId": "T111",
+  "productName": "Schwarzkopf GLISS Sealing Miracle Versiegelndes Shampoo",
+  "inciFingerprintSha256": "a9e06d6f02da0f35a9bbe7479a378b19dd687cdcbe8cdba3d26e1d7fdadb6b21",
+  "normalization": "Packet canonicalInci is the normalized list (ID-2); all positions are normalized one-based positions on it. Parfum (Fragrance) at 7: positions 1-6 prominent",
+  "status": "classified",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: SLES (2) defining, one prominent buffer (Cocamidopropyl Betaine 4), no reinforcing anionic -> moderate.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic (C1)"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "role": "buffer"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "One meaningful system: a prominent cationic polymer (HP Guar HPTC 6) with a prominent peptide (5); refatters, pearlizer and hydrogenated castor oil are late -> moderate. No silicone; C2 not met.",
+      "counterSignal": "Only one cationic; everything else light or after Parfum.",
+      "neighboringAlternative": "low",
+      "formulaFacts": [
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 6,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Pisum Sativum (Pea) Peptide",
+          "position": 5,
+          "role": "protein"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "A single prominent guar plus a hydrolyzed peptide, with trace refatters/castor oil, under C1 reset -> low.",
+      "counterSignal": "Guar is prominent (6) and a second family (peptide) is present.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Guar 6 + pea peptide 5; refatters 10/12 and castor oil 15 after Parfum."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "No silicone or prominent lipid; peptide weakly retained."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 buffered SLES chassis."
+        }
+      },
+      "whyThisBand": "Light, low-persistence deposition.",
+      "whyNotNeighborBand": "W2: besides the single guar, the second family is a low-persistence hydrolyzed peptide, and the refatter and hydrogenated castor oil families are trace (after Parfum); no silicone or film former.",
+      "limitingFactor": "Guar level unknown; guar is relatively early.",
+      "canonicalFormula": {
+        "inciFingerprintSha256": "a9e06d6f02da0f35a9bbe7479a378b19dd687cdcbe8cdba3d26e1d7fdadb6b21",
+        "formulaSourceTier": 1,
+        "formulaCompleteness": "complete",
+        "captureDate": "not in packet",
+        "identityConfidence": "high"
+      },
+      "evidenceByFamily": {
+        "cationic_polymer": [
+          {
+            "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+            "position": 6,
+            "role": "prominent"
+          }
+        ],
+        "protein_film": [
+          {
+            "ingredient": "Pisum Sativum (Pea) Peptide",
+            "position": 5,
+            "role": "prominent"
+          }
+        ],
+        "weak_refatter": [
+          {
+            "ingredient": "Glyceryl Oleate",
+            "position": 10,
+            "role": "after Parfum"
+          },
+          {
+            "ingredient": "PEG-7 Glyceryl Cocoate",
+            "position": 12,
+            "role": "after Parfum"
+          }
+        ],
+        "payload_lipid": [
+          {
+            "ingredient": "Hydrogenated Castor Oil",
+            "position": 15,
+            "role": "after Parfum"
+          }
+        ],
+        "excluded": [
+          {
+            "ingredient": "Glycol Distearate",
+            "position": 13,
+            "role": "pearlizer"
+          },
+          {
+            "ingredient": "PEG-120 Methyl Glucose Dioleate",
+            "position": 16,
+            "role": "PEG thickener"
+          }
+        ],
+        "reset": [
+          {
+            "ingredient": "Sodium Laureth Sulfate",
+            "position": 2,
+            "role": "anionic"
+          },
+          {
+            "ingredient": "Cocamidopropyl Betaine",
+            "position": 4,
+            "role": "amphoteric"
+          }
+        ]
+      },
+      "formulaCounterevidence": "Guar is prominent (6) and a second family (peptide) is present.",
+      "unresolved": [],
+      "proposedWeightPotential": "low",
+      "confidenceLimitingFactor": "Guar level unknown; guar is relatively early.",
+      "postUnblindNote": "'Reinigt, ohne das Haar zu beschweren' (moderate) never lowers the band."
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "neighboringAlternative": "repair",
+      "rationale": "General: pack and manufacturer position repair ('Für splissgeschädigtes Haar', 'Für geschädigtes und splissanfälliges Haar', moderate), but the formula verdict is nonspecific: one peptide token plus a single guar is not a coherent repair cluster (7.3), and claims cannot turn a nonspecific verdict into a specialist focus (3.2).",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": [],
+        "repairRoutes": [
+          "Pea Peptide 5"
+        ],
+        "sharedConditioningRoutes": [
+          "Guar 6"
+        ],
+        "limitation": "One protein token; other routes after Parfum."
+      },
+      "claimRole": "not_applicable",
+      "formulaFacts": [
+        {
+          "ingredient": "Pisum Sativum (Pea) Peptide",
+          "position": 5,
+          "role": "single protein token"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 6,
+          "role": "generic conditioning"
+        }
+      ],
+      "counterSignal": "Clear, consistent repair positioning.",
+      "decisionTrace": {
+        "claimDirection": "repair",
+        "formulaCompatible": false,
+        "compatibleRoute": "none (single peptide token)",
+        "decisionReason": "Repair claim over a nonspecific verdict -> general (F1)."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Empty.",
+      "counterSignal": "None.",
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [],
+        "independentRoutes": [],
+        "whyDistinctFromPrimary": "",
+        "exceptionCode": null
+      }
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Default regular: 'Regelmäßig anwenden' is not U2 frequency wording.",
+      "counterSignal": "None.",
+      "decisionTrace": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "Default regular: 'Regelmäßig anwenden' is not U2 frequency wording."
+      }
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No scalp claim.",
+      "counterSignal": "None.",
+      "formulaFacts": []
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none",
+      "counterSignal": "None in formula; claims never upgrade this property.",
+      "formulaFacts": []
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic, ether type"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Pisum Sativum (Pea) Peptide",
+      "position": 5,
+      "role": "protein_film, prominent"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 6,
+      "role": "cationic_polymer, prominent"
+    },
+    {
+      "ingredient": "Parfum (Fragrance)",
+      "position": 7,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 9,
+      "role": "glucoside after E3 point"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 10,
+      "role": "weak_refatter, late"
+    },
+    {
+      "ingredient": "PEG-7 Glyceryl Cocoate",
+      "position": 12,
+      "role": "weak_refatter, late"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 13,
+      "role": "pearlizer, late"
+    },
+    {
+      "ingredient": "Hydrogenated Castor Oil",
+      "position": 15,
+      "role": "payload_lipid, late"
+    },
+    {
+      "ingredient": "PEG-120 Methyl Glucose Dioleate",
+      "position": 16,
+      "role": "PEG thickener, excluded"
+    }
+  ],
+  "blindToFinalChanges": [
+    {
+      "property": "provisional properties",
+      "blind": "general/[]/regular/not_targeted (low, provisional)",
+      "final": "see records",
+      "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+      "reason": "post-unblind reconciliation (3.2)"
+    }
+  ],
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal; T2: thickness/texture claims do not change the fit. T4: neighbor weightPotential=moderate -> acceptable would lower the final tier -> review_thickness_boundary."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal; T2: thickness/texture claims do not change the fit."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W low, C moderate -> acceptable; T2: thickness/texture claims do not change the fit."
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential low -> light (1:1)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1; manufacturer/pack sources present -> high."
+      },
+      "secondary": null,
+      "secondaryRationale": "No qualifying claim unit."
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate -> regular. I2: written unchanged to every row."
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "rationale": "'Versiegelnd' is not D1 wording."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "deepCleanserRecord": null,
+      "confidence": "high",
+      "rationale": "D2 not met (no D1) -> not_flagged."
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "intensityMatchesBucket": true
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "intensityMatchesBucket": true
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable",
+        "intensityMatchesBucket": true
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine"
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "researchCombinationRationale": "Not a dandruff-primary product: E2b layer 2 does not apply.",
+    "liveComparison": "review_live_value_differs is resolved by the orchestrator after freeze (lanes see no live rows)."
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientOrCountOrPositionAssignedWeightBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "comparisonWithEarlierValuesMadeInLane": false,
+    "nAltConsistent": true
+  },
+  "uncertainties": [
+    {
+      "reading": "careDirection nonspecific -> focus general",
+      "alternative": "repair_supported (prominent guar + peptide read as a deposition cluster) -> focus repair"
+    }
+  ]
+}

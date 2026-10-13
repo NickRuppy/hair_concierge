@@ -29,8 +29,8 @@ export function isStage2Module(value: unknown): value is Stage2Module {
 
 /**
  * `/plan-start?refine=…`. `1` keeps its old meaning of "re-enter the
- * Feinschliff", now resolved to the FIRST OPEN module; `products` / `habits`
- * are the module deep links the banner and the Profil rows use.
+ * Feinschliff", now resolved to the FIRST OPEN module; `products` / `tools` /
+ * `habits` are the module deep links the banner and the Profil rows use.
  */
 export function parseStage2RefineEntry(value: string | string[] | undefined): Stage2RefineEntry {
   const raw = Array.isArray(value) ? value[0] : value
@@ -74,7 +74,8 @@ export function scopeStage2SessionToModule(
 
 /**
  * The first module with an open question on the current path, in canonical
- * order (`products`, then `habits`). Null once every question is answered.
+ * order (`products`, `tools`, then `habits`). Null once every question is
+ * answered; a `not_applicable` module is never open.
  */
 export function firstOpenStage2Module(session: Stage2RefinementSession): Stage2Module | null {
   const states = getStage2ModulePathStates(
@@ -96,7 +97,13 @@ export function resolveStage2EntryModule(
 ): Stage2Module | null {
   if (!requested) return null
   if (requested === "first_open") return firstOpenStage2Module(session) ?? STAGE2_MODULES[0]
-  return requested
+  // An explicit entry into a module without questions on this path (`tools` while its
+  // rollout is off) resolves like no module entry at all (`refine: false`).
+  const states = getStage2ModulePathStates(
+    session.path.orderedQuestionIds,
+    session.path.completedQuestionIds,
+  )
+  return states[requested].status === "not_applicable" ? null : requested
 }
 
 /**
@@ -173,7 +180,7 @@ export function resolveStage2FlowEntryView(input: {
 }): Stage2FlowEntryView {
   const { session, moduleScope } = input
   const moduleScoped = moduleScope !== "none"
-  if (session.status === "complete" && moduleScope !== "explicit") {
+  if (isCompletedWithoutOpenQuestion(session) && moduleScope !== "explicit") {
     return {
       mode: "bridge",
       activeQuestionId: null,
@@ -219,6 +226,15 @@ export function resolveStage2FlowEntryView(input: {
  * unresolved question directly.
  */
 export function deriveStage2EntryMode(session: Stage2RefinementSession): "question" | "bridge" {
-  if (session.status === "complete") return "bridge"
-  return "question"
+  return isCompletedWithoutOpenQuestion(session) ? "bridge" : "question"
+}
+
+/**
+ * A `complete` session bridges into Stage 3 only while nothing on its path is unresolved. A
+ * persisted draft completed under an older path keeps its `complete` status after the path
+ * grew (see `tolerateGrownPath`); its new question is asked instead of bridged over, and the
+ * first save reopens the draft.
+ */
+function isCompletedWithoutOpenQuestion(session: Stage2RefinementSession): boolean {
+  return session.status === "complete" && session.path.firstUnresolvedQuestionId === null
 }

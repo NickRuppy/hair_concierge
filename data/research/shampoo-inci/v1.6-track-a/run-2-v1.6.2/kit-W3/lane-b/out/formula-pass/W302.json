@@ -1,0 +1,137 @@
+{
+  "blindId": "W302",
+  "inciFingerprintSha256": "b9564870c023e1c44e5c052c119b82d7aea1eeae3cd60526408174a222911572",
+  "phase": "formula-pass (blind, claims hidden)",
+  "formulaBlock": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "No split synonym entries; packet positions = normalized ID-2 positions (22 entries).",
+    "e3Point": "Parfum @22 (last). Prominent = positions 1-21."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate @2 with prominent buffers Cocamidopropyl Betaine @3, Decyl Glucoside @4, Coco-Glucoside @5 and no reinforcing strong anionic.",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High by C2: prominent payload lipids in place of a silicone (Squalane @9, Cocos Nucifera Oil @11, Dicaprylyl Ether @12, Hydrogenated Castor Oil @18), cationic polymer Guar Hydroxypropyltrimonium Chloride @13, pearlizing/fatty route Glycol Distearate @17 and the humectant route Panthenol @10 / Glycerin @15; also W-RICH (E3 reading) for Section 5. Counter-signal: Parfum is listed last, so E3 prominence is trivially met; all care routes sit after a botanical extract @8 and are likely low-dose, so moderate is the realistic neighbor.",
+      "ruleIds": ["C2", "W-RICH", "E3", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "silicone": [],
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @13"],
+        "cationic_conditioner": [],
+        "payload_lipid": ["Squalane @9 (material)", "Cocos Nucifera Oil @11 (material)", "Dicaprylyl Ether @12 (material)", "Hydrogenated Castor Oil @18 (material, waxy)"],
+        "weak_refatter": ["Glyceryl Oleate @14"],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @3", "Decyl Glucoside @4", "Coco-Glucoside @5"],
+        "humectantContext": ["Panthenol @10", "Glycerin @15", "Pantolactone @16"],
+        "excluded": ["Glycol Distearate @17 (pearlizing wax, 6.4)", "Gardenia Taitensis Flower Extract @8 (botanical extract)", "Tocopherol @20 (trace antioxidant)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 19,
+        "inci": "Sodium Benzoate",
+        "classes": ["preservative_or_capped_active"],
+        "cap": "e3Point @22 (Parfum)",
+        "alphabeticalRun": null,
+        "skipped": ["w_line_skipped:Panthenol@10 (clause ii failed: pearlizing wax Glycol Distearate @17 listed after it and before the cap)"],
+        "codes": [],
+        "note": "Candidates tested in order: Panthenol @10 (sub1_active) skipped; Sodium Benzoate @19 plausible ((i) SLES @2 before; (ii) only Tocopherol @20, Benzoic Acid @21 between it and the cap). No 7-entry alphabetical run.",
+        "payloadLipidMaterial": ["Squalane @9", "Cocos Nucifera Oil @11", "Dicaprylyl Ether @12", "Hydrogenated Castor Oil @18"],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "moderate",
+      "persistence": "moderate",
+      "resetCapacity": "moderate",
+      "counterevidence": "W-RICH holds (material payload lipids @9/@11/@12/@18 converging with cationic guar @13) and three deposition families are present, which argues for high; the hydrogenated castor oil is waxy and more persistent.",
+      "whyThisBand": "Material lipids plus one cationic guar and a weak refatter plausibly leave noticeable but bounded residue.",
+      "whyNotNeighborBand": "Not high: the rich route needs limited reset, but resetCapacity is moderate (C1 SLES chassis with three prominent buffers), so W-RICH alone does not reach high; the convergence route is judged offset because all deposition members sit after a botanical extract @8 and Panthenol @10 (likely low dose) with a single light guar polymer. Not low: three deposition families including material lipids (W2).",
+      "confidenceLimitingFactor": "W-RICH present with moderate reset; dose of the lipid/guar cluster is unknown from INCI order, so high is a realistic neighbor.",
+      "rationale": "Moderate: material payload lipids + cationic guar + weak refatter (W-RICH) against a moderate C1 reset; W-RICH recorded as counter-signal, neighbor high.",
+      "ruleIds": ["6.6", "W-RICH", "W-LINE", "W2", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "provisional": "formula-only; claims hidden",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": ["Panthenol @10", "Glycerin @15", "Pantolactone @16", "Squalane @9", "Cocos Nucifera Oil @11", "Dicaprylyl Ether @12"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Guar Hydroxypropyltrimonium Chloride @13", "Glyceryl Oleate @14", "Hydrogenated Castor Oil @18"],
+        "limitation": "Provisional verdict; no protein or bond route, so repair is not separately supported; lipid route could also read as nourishment."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Strong humectant-plus-emollient cluster points toward a moisture role that only claims can confirm.",
+      "decisionTrace": "Claim direction null (blind). Formula verdict provisionally moisture_supported; without positioning the focus stays general.",
+      "rationale": "Provisional general pending claims; formula would be compatible with moisture.",
+      "ruleIds": ["7.2", "7.3", "F1", "3.1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": ["shine"],
+      "provisional": "formula-only; claims hidden",
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty secondary.",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "frequent",
+      "provisional": "formula-only; claims hidden",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional default regular; frequent possible with explicit frequency wording (U2) since cleansing is moderate.",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "targeted",
+      "provisional": "formula-only; SC1 positioning not yet visible",
+      "rationale": "Provisional not_targeted pending SC1. Formula half: CSA met (prominent E4 comfort route Panthenol @10; humectant/refatting routes Glycerin @15, Glyceryl Oleate @14, Cocos Nucifera Oil @11, Hydrogenated Castor Oil @18). MB excluded (prominent Sodium Laureth Sulfate @2). No prominent cooling agent or essential oil.",
+      "ruleIds": ["10", "CSA", "MB", "E4", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active in the complete INCI.",
+      "ruleIds": ["11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionicEther": ["Sodium Laureth Sulfate @2"],
+      "amphoteric": ["Cocamidopropyl Betaine @3"],
+      "nonionicGlucoside": ["Decyl Glucoside @4", "Coco-Glucoside @5"],
+      "notCleansing": ["Sodium Chloride @6", "Citric Acid @7"]
+    },
+    "conditioningRoutes": ["Squalane @9", "Cocos Nucifera Oil @11", "Dicaprylyl Ether @12", "Guar Hydroxypropyltrimonium Chloride @13", "Glyceryl Oleate @14", "Glycol Distearate @17", "Hydrogenated Castor Oil @18"],
+    "weightRoutes": ["payload_lipid @9/@11/@12/@18 (all material)", "cationic_polymer @13", "weak_refatter @14"],
+    "humectants": ["Panthenol @10", "Glycerin @15", "Pantolactone @16"],
+    "actives": [],
+    "exposure": ["Parfum @22 (last)"],
+    "mildBase": "excluded: prominent strong anionic Sodium Laureth Sulfate @2",
+    "preservatives": ["Sodium Benzoate @19", "Benzoic Acid @21"]
+  },
+  "unresolvedMaterialIngredients": []
+}

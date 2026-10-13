@@ -1,0 +1,57 @@
+{
+  "slot": "A05",
+  "productId": "a79513be-e34b-4a1e-b7eb-b3d4b58160be",
+  "name": "Balea Ultra Sensitive",
+  "brand": "Balea",
+  "packSize": "250 ml",
+  "gtins": [
+    "4066447966008"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/1569035/balea-med-shampoo-ultra-sensitive",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de (dm-drogerie markt own brand; page names dm as 'Anschrift des Unternehmens')",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "GTIN: 4066447966008 (dm-Artikelnummer 1569035; 'Shampoo Ultra Sensitive, 250 ml', brand line 'Balea med')",
+      "inciVerbatim": "Ingredients : Aqua, Coco-Glucoside, Glycerin, Sodium Coco-Sulfate, Sodium Cocoamphoacetate, Citric Acid, Panthenol, Niacinamide, Tocopherol, Ascorbyl Palmitate, Glyceryl Oleate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Hydrogenated Palm Glycerides Citrate, Lecithin, Sodium Benzoate, Potassium Sorbate, Sodium Chloride, Sodium Hydroxide",
+      "claimsVerbatim": "Mildes Shampoo für empfindliche Kopfhaut | Mit Glycerin, Panthenol & Niacinamid | Besonders sanft | Ohne Silikone, Parfüm & Parabene | Das Balea med Shampoo Ultra Sensitive bietet eine besonders sanfte Reinigung für Haar und empfindliche Kopfhaut. Seine milde Pflegeformel mit 5 % Glycerin, Panthenol und Niacinamid spendet Feuchtigkeit und pflegt das Haar geschmeidig glänzend, ohne die Kopfhaut zu reizen. Dabei wurde bei der Rezeptur bewusst auf Silikone, Parfüm, Parabene und Farbstoffe verzichtet. Das Shampoo ist zudem ideal für die tägliche Haarwäsche bei sensibler Haut. | Produkteigenschaften: vegan, ohne Silikone",
+      "directionsVerbatim": "In das feuchte Haar einmassieren und kurz einwirken lassen. Gründlich ausspülen."
+    }
+  ],
+  "conflicts": [],
+  "canonicalInci": [
+    "Aqua",
+    "Coco-Glucoside",
+    "Glycerin",
+    "Sodium Coco-Sulfate",
+    "Sodium Cocoamphoacetate",
+    "Citric Acid",
+    "Panthenol",
+    "Niacinamide",
+    "Tocopherol",
+    "Ascorbyl Palmitate",
+    "Glyceryl Oleate",
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+    "Hydrogenated Palm Glycerides Citrate",
+    "Lecithin",
+    "Sodium Benzoate",
+    "Potassium Sorbate",
+    "Sodium Chloride",
+    "Sodium Hydroxide"
+  ],
+  "canonicalReason": "Balea is dm's own brand: dm.de is the manufacturer/brand-owner DE page for the exact 250 ml GTIN 4066447966008 (tier 2). No other German retailer sells Balea; the 2026-08-10 v1.3 capture (same dm URL, plus the travel-size page 3138409 with a different GTIN) has an identical list, so the formula is unchanged since August.",
+  "inciFingerprintSha256": "ad4168be859a6e0b1b7a76ae82e1e72040e87afa86dcf97031a6745545d783f4",
+  "normalization": "Canonical list = one entry per ingredient exactly as published on the winning source (case and punctuation kept in canonicalInci; trailing period stripped; bullet/asterisk/comma separators dropped; split synonym entries such as 'Aqua (Water, Eau)' kept as one item). Fingerprint: per ingredient lower-case, trim, collapse internal whitespace; join with '|'; sha256 of the UTF-8 string. Earlier v1.3/v1.4 fingerprints were computed over comma-joined lists and are not comparable.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Current dm product name is 'Balea med Shampoo Ultra Sensitive, 250 ml' (brand line Balea med); catalog row is 'Balea Ultra Sensitive' - same GTIN 4066447966008 as v1.3 formula-source.json, so identity is the same SKU.",
+    "sourceKind is manufacturer_de because dm-drogerie markt GmbH + Co. KG is the brand owner/responsible company; if the lane kit wants strict manufacturer-vs-retailer separation, treat this as tier 2 'own-brand retailer page' (no independent second source exists).",
+    "Claims 'Mit Glycerin, Panthenol & Niacinamid' and 'Ohne Parfüm' are consistent with the INCI (glycerin, panthenol, niacinamide present; no parfum).",
+    "Prior v1.3/v1.4 fingerprint (comma-joined) fae3f71fc606b2f418d97bdd9081ae9bcb7dd1e8f165cbba430f7e94ca8f0b64 - list unchanged (18 ingredients)."
+  ]
+}

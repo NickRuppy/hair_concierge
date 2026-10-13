@@ -1,0 +1,28 @@
+{
+  "blindId": "W212",
+  "productName": "Syoss Shampoo Intense Keratin",
+  "brand": "Syoss",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Syoss Intense Keratin Aufbau Shampoo | Tiefenpflegende Formel mit 5% Keratin-Aufbau-Komplex, stärkt das Haar von innen. Für rundum schönes und gesund aussehendes Haar. | Mit 5% Keratin-Aufbau-Komplex | Repariert schwaches, leicht brüchiges Haar | Füllt das Haar mit Keratin auf | Für bis zu 5x stärkeres Haar* | Professionelle Leistung | *im Vergleich zu unbehandeltem Haar",
+      "directionsVerbatim": "Sanft im nassen Haar verteilen und gründlich ausspülen. Anschließend eine Tiefenspülung verwenden."
+    },
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Haarshampoo | Ideal für brüchiges Haar | Mit 5 % Keratin-Komplex | Stärkt das Haar von innen | Das Intense Keratin Shampoo von Syoss ist speziell für schwaches und brüchiges Haar entwickelt. Mit einer Kombination aus pflegenden Inhaltsstoffen und 5 % Keratin bietet es eine intensive Haarpflege, die die Haare von innen stärkt. Keratin wirkt dabei unterstützend, um die Haarstruktur zu verbessern und die Widerstandsfähigkeit zu fördern. Dieses Shampoo reinigt sanft und schenkt dem Haar ein wunderschönes und vitales Aussehen. | Wirkung: leichte Kämmbarkeit, Pflege | Produkteigenschaften: Ohne Alkohol, ohne Ammoniak",
+      "directionsVerbatim": "Sanft im nassen Haar verteilen und ausspülen. Nutze anschließend eine Spülung."
+    },
+    {
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "SYOSS Shampoo Keratin – Keratin Shampoo für schwaches und brüchiges Haar mit Keratin-Aufbau-Komplex Das SYOSS Keratin Shampoo füllt schwaches und brüchiges Haar mit Keratin auf. Es kombiniert pflegende Inhaltsstoffe mit 5% Keratin-Aufbau-Komplex, welcher die Haare von innen auffüllt. Beim Haarewaschen werden die Haare für eine Tiefenreparatur aufgefüllt und gestärkt. Die Formel enthält 88% Inhaltsstoffe natürlichen Ursprungs inklusive Wasser und der Flaschenkörper des Shampoos besteht aus 100% recyceltem Plastik (Kappe ausgenommen). | für brüchiges Haar | Hair Repair Wirkung | starkes Haar – ... für bis zu 5x stärkeres Haar* | Inhaltsstoffe natürlichen Ursprungs – 88% | 100% recyceltes Plastik | *im Vergleich zu unbehandeltem Haar",
+      "directionsVerbatim": "Sanft im nassen Haar verteilen und ausspülen. Nutze anschließend eine Spülung."
+    }
+  ]
+}

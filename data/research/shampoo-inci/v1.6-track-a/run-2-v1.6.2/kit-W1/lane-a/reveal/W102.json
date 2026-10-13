@@ -1,0 +1,35 @@
+{
+  "blindId": "W102",
+  "productName": "Syoss Intense Volume Shampoo (dm: 'Shampoo Intense Volume'; syoss.de: 'Intense Volume Leichtes Shampoo')",
+  "brand": "Syoss",
+  "positioningSources": [
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Ideal für feines und plattes Haar | Verleiht bis zu 48 Stunden Volumen | 3 % Kollagen-Lift-Komplex | Für die tägliche Reinigung geeignet | Das Intense Volume Shampoo von Syoss ist die perfekte Wahl für feines und plattes Haar, das mehr Fülle benötigt. Es reinigt sanft und verleiht bis zu 48 Stunden Volumen, sodass das Haar lebendig und voller Schwung aussieht. Mit einem 3 % Kollagen-Lift-Komplex angereichert, stärkt es die Haare von innen und sorgt für eine verbesserte Haarstruktur. Dank der pflegenden Inhaltsstoffe und der milden Formulierung eignet sich dieses Shampoo hervorragend für die tägliche Anwendung und ist somit ideal für alle, die ihr Haar regelmäßig pflegen möchten. | Produkteigenschaften: Ohne Alkohol, ohne Silikone, ohne Ammoniak",
+      "directionsVerbatim": "Sanft im nassen Haar verteilen und ausspülen."
+    },
+    {
+      "sourceType": "retailer_mueller_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Das syoss Shampoo Intense Volume wurde speziell für die Bedürfnisse von feinem und plattem Haar konzipiert. Es reinigt die Haare sanft, ohne sie zu beschweren, und sorgt für ein Gefühl von Fülle. | Verleiht dem Haar ein sichtbar voluminöses Aussehen für bis zu 48 Stunden | Die Formel ist mit einem 3 % Kollagen-Lift-Komplex angereichert | Eignet sich dank der milden Zusammensetzung für die tägliche Haarwäsche | Besteht zu 93 % aus Inhaltsstoffen natürlichen Ursprungs, inklusive Wasser",
+      "directionsVerbatim": "Sanft im nassen Haar verteilen und ausspülen."
+    },
+    {
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "SYOSS Shampoo Intense Volume – Leichtes Shampoo für feines, plattes Haar mit Kollagen-Lift-Komplex Das SYOSS Intense Volume Shampoo reinigt feines und plattes Haar sanft und verleiht bis zu 48 h Volumen. Es kombiniert pflegende Inhaltsstoffe mit einem 3% Kollagen-Lift-Komplex und stärkt die Haare von innen. Dank seiner milden Formel eignet sich das Shampoo für die tägliche Haarwäsche. Die Formel enthält 93% Inhaltsstoffe natürlichen Ursprungs inklusive Wasser und der Flaschenkörper des Shampoos besteht aus 100% recyceltem Plastik (Kappe ausgenommen).",
+      "directionsVerbatim": ""
+    },
+    {
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "LEICHTES SHAMPOO INTENSE VOLUME | Tiefenpflegende Formel mit 3% Kollagen-Lift-Komplex, stärkt das Harr von innen. Für rundum schönes und gesund aussehendes Haar. | Mit 3% Kollagen-Lift-Komplex Reinigt feines, plattes Haar | Milde Formel für die tägliche Haarwäsche ohne zu beschweren | Bis zu 48 Stunden langanhaltendes Volumen | Professionelle Leistung",
+      "directionsVerbatim": "Sanft im nassen Haar verteilen und gründlich ausspülen"
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "slot": "A27",
+  "productId": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+  "name": "LANGHAARMÄDCHEN Shampoo Beautiful Curls",
+  "brand": "Langhaarmädchen",
+  "packSize": "300 ml",
+  "gtins": [
+    "4070765004649",
+    "4067796150735"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "dm.de PDP (browser tab, Inhaltsstoffe accordion expanded); dm-exclusive brand, Anschrift des Unternehmens = dm-drogerie markt GmbH + Co. KG",
+      "sourceKind": "retailer",
+      "gtinShown": "4070765004649 (page 'GTIN:' line; dm-Artikelnummer 1678985; title 'Shampoo Beautiful Curls, 300 ml'; Lieferbar). NOT the catalog/older GTIN 4067796150735.",
+      "inciVerbatim": "Ingredients: Aqua, Aloe Barbadensis Leaf Juice, Cocamidopropyl Betaine, Sodium Cocoyl Isethionate, Sodium Chloride, Arginine, Serine, Linum Usitatissimum Seed Extract, Parfum, Glycerin, Glyceryl Oleate, PCA, Glycine, Histidine, Coconut Acid, Glycol Distearate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Isethionate, Coco-Glucoside, Sodium PCA, Glyceryl Stearate, Aspartic Acid, Alanine, Valine, Isoleucine, Proline, Threonine, Phenylalanine, Phenoxyethanol, Ethylhexylglycerin, Benzoic Acid, Citric Acid, Sodium Lactate",
+      "claimsVerbatim": "Shampoo für Locken und Wellen | Mit Aloe Vera und Leinsamen-Extrakt | Ideal für die Curly Girl Methode geeignet | Verleiht Sprungkraft | Ohne Silikone und Sulfattenside | Das LANGHAARMÄDCHEN Shampoo Beautiful Curls reinigt schonend und pflegt natürlich gewelltes sowie gelocktes Haar. Die Formulierung mit Aloe Vera und Leinsamen-Extrakt verleiht den Locken eine beeindruckende Sprungkraft. Zusätzlich sorgt die Rezeptur für einen gesunden Glanz und natürliches Volumen direkt am Ansatz. Das Shampoo ist ideal für die Anwendung der Curly Girl Methode geeignet und verhilft zu einer definierten und gepflegten Lockenpracht. Dank des enthaltenen Aminosäuren-Komplexes ist es für alle Stufen der Haarporosität geeignet. | Wirkung: für Locken | Produkteigenschaften: vegan, ohne Silikone | Haartyp: lockiges Haar",
+      "directionsVerbatim": "Sanft ins Haar einmassieren, kurz einwirken lassen und gründlich ausspülen."
+    },
+    {
+      "url": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls (dm MCP detail record, docs/price-audit-rollouts/2026-10-03-hold-buckets/bucket3/dm-fresh.json)",
+      "retrievedAt": "2026-10-03T15:26Z (prior evidence, same dm source family, not independent)",
+      "sourceType": "dm MCP product detail",
+      "sourceKind": "retailer",
+      "gtinShown": "4070765004649",
+      "inciVerbatim": "Ingredients: Aqua, Aloe Barbadensis Leaf Juice, Cocamidopropyl Betaine, Sodium Cocoyl Isethionate, Sodium Chloride, Arginine, Serine, Linum Usitatissimum Seed Extract, Parfum, Glycerin, Glyceryl Oleate, PCA, Glycine, Histidine, Coconut Acid, Glycol Distearate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Isethionate, Coco-Glucoside, Sodium PCA, Glyceryl Stearate, Aspartic Acid, Alanine, Valine, Isoleucine, Proline, Threonine, Phenylalanine, Phenoxyethanol, Ethylhexylglycerin, Benzoic Acid, Citric Acid, Sodium Lactate",
+      "claimsVerbatim": null,
+      "directionsVerbatim": "Sanft ins Haar einmassieren, kurz einwirken lassen und gründlich ausspülen."
+    },
+    {
+      "url": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls (prior v1.3 capture)",
+      "retrievedAt": "2026-08-10 (data/research/shampoo-inci/v1.3/products/langhaarmaedchen-beautiful-curls/formula-source.json)",
+      "sourceType": "prior evidence; labelled exact_gtin 4067796150735 at the time",
+      "sourceKind": "retailer",
+      "gtinShown": "4067796150735 (older GTIN of the same 300 ml product, per v1.3 file)",
+      "inciVerbatim": "Aqua, Cocamidopropyl Betaine, Sodium Cocoyl Isethionate, Sodium Chloride, Aloe Barbadensis Leaf Juice Powder, Arginine, Serine, Linum Usitatissimum Seed Extract, Parfum, Glycerin, Glyceryl Oleate, PCA, Glycine, Histidine, Coconut Acid, Glycol Distearate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Isethionate, Coco-Glucoside, Sodium PCA, Glyceryl Stearate, Aspartic Acid, Alanine, Valine, Isoleucine, Proline, Threonine, Phenylalanine, Phenoxyethanol, Ethylhexylglycerin, Benzoic Acid, Citric Acid, Sodium Lactate",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    },
+    {
+      "url": "https://www.codecheck.info/p/kosmetik/haarpflege/shampoo/2842713816.html",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "codecheck user-entered record (support only; EAN search hit for 4070765004649)",
+      "sourceKind": "retailer",
+      "gtinShown": "search hit for 4070765004649",
+      "inciVerbatim": "Barbadensis Leaf Juice Powder,Aqua,Arginine,Aspartic Acid,Cocamidopropyl Betaine,Coco-Glucoside,Coconut Acid,Ethylhexylglycerin,Glycerin,Glycol Distearate,Histidine,Isoleucine,Linum Usitatissimum Seed Extract,Sodium Isethionate,Sodium Lactate,Parfum,glycerin (alphabetised, partial, user-entered; unusable)",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    },
+    {
+      "url": "https://www.langhaarmaedchen.de/pages/produkte-haarpflege",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "brand's own site (salon/online shop); no Beautiful Curls product page, links to dm.de/marken/langhaarmaedchen",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "none",
+      "inciVerbatim": "not published",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "gtin_version_change",
+      "summary": "Catalog/earlier GTIN 4067796150735 (list had 'Aloe Barbadensis Leaf Juice Powder' at position 5) vs current dm GTIN 4070765004649 (list has 'Aloe Barbadensis Leaf Juice' at position 2). Remaining 31 items identical in order. Same product name and 300 ml. Documented in docs/price-audit-rollouts/2026-10-03-hold-buckets/bucket3-formulas.md as a 'new formula evidence version' with no automatic alias.",
+      "listOld": "Aqua, Cocamidopropyl Betaine, Sodium Cocoyl Isethionate, Sodium Chloride, Aloe Barbadensis Leaf Juice Powder, Arginine, Serine, Linum Usitatissimum Seed Extract, Parfum, Glycerin, Glyceryl Oleate, PCA, Glycine, Histidine, Coconut Acid, Glycol Distearate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Isethionate, Coco-Glucoside, Sodium PCA, Glyceryl Stearate, Aspartic Acid, Alanine, Valine, Isoleucine, Proline, Threonine, Phenylalanine, Phenoxyethanol, Ethylhexylglycerin, Benzoic Acid, Citric Acid, Sodium Lactate"
+    },
+    {
+      "type": "claim_inci_note",
+      "summary": "Claim 'Ohne Silikone und Sulfattenside' consistent (no silicones; no SLS/SLES; Sodium Cocoyl Isethionate is the primary anionic). 'Aloe Vera' and 'Leinsamen-Extrakt' present (Aloe Barbadensis Leaf Juice; Linum Usitatissimum Seed Extract). No material mismatch."
+    }
+  ],
+  "canonicalInci": [
+    "Aqua",
+    "Aloe Barbadensis Leaf Juice",
+    "Cocamidopropyl Betaine",
+    "Sodium Cocoyl Isethionate",
+    "Sodium Chloride",
+    "Arginine",
+    "Serine",
+    "Linum Usitatissimum Seed Extract",
+    "Parfum",
+    "Glycerin",
+    "Glyceryl Oleate",
+    "PCA",
+    "Glycine",
+    "Histidine",
+    "Coconut Acid",
+    "Glycol Distearate",
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+    "Sodium Isethionate",
+    "Coco-Glucoside",
+    "Sodium PCA",
+    "Glyceryl Stearate",
+    "Aspartic Acid",
+    "Alanine",
+    "Valine",
+    "Isoleucine",
+    "Proline",
+    "Threonine",
+    "Phenylalanine",
+    "Phenoxyethanol",
+    "Ethylhexylglycerin",
+    "Benzoic Acid",
+    "Citric Acid",
+    "Sodium Lactate"
+  ],
+  "canonicalReason": "Current formula = dm.de PDP for the live GTIN 4070765004649 (2026-10-10, identical to the dm MCP detail of 2026-10-03). The only other full list is the 2026-08-10 capture for the older GTIN, which differs in the aloe declaration (powder at #5 vs juice at #2). dm is the sole channel (dm-exclusive brand; the brand's own site has no INCI), so no independent second source exists. Frozen with conflict because the catalog row's GTIN (4067796150735) is not the GTIN the live formula belongs to.",
+  "inciFingerprintSha256": "0c25d74bac27b0957b5743836d796c5845d98cc364ff615187b93a715246f880",
+  "normalization": "Canonical list split on ',' at parenthesis depth 0 (so synonym groups such as 'Aqua (Water, Eau)' stay one item), trailing full stop removed; per item: lower-case, trim, collapse internal whitespace; asterisks, parentheses and slashes kept as published; items joined with '|'; sha256 over the UTF-8 string.",
+  "identityConfidence": "moderate",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 3,
+  "status": "frozen_with_conflict",
+  "blockReason": null,
+  "notes": [
+    "NEEDS NICK: catalog productId 1623a993... still carries GTIN 4067796150735 (old); the live dm pack is 4070765004649 with the aloe-juice-at-#2 formula. Decide whether this is a continuity update (same product, new formula version) or a separate version, as already flagged in the price-audit B3-01 handover.",
+    "Tier 3 here means: exact-GTIN dm page for a dm-exclusive private-label-style brand; dm is retailer and distributor, brand site publishes no INCI. Single live source.",
+    "Fingerprint comparison: v1.3/v1.4 pinned a0797027e213ae6c61d9e405a4d50f050d239acdc8a85f9bf7a7b0249f60c5c8 (comma-joined, old list); the new list's fingerprint necessarily differs.",
+    "Old and new lists spell 'PCA' and 'Sodium PCA' as published.",
+    "No pack photo read."
+  ]
+}
