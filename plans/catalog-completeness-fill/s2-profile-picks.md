@@ -7,29 +7,43 @@
 
 ## Integration with main #669 (2026-10-13)
 
-Decision coverage is confirmed by Nick's integration request and follow-up: main's canonical gates, additive distance rule, labels and actions govern. Q1 remains A (universal and matching tint are equal fits); S2 profile transport, compact rows, shared ranking, soft deep-cleansing positioning and discovery colour are retained. Nick explicitly authorized updating the two uncovered dry-shampoo expectations to the selected candidate's canonical verdict, with #669 comments. No publication or live-data actions are authorized.
+Decision coverage for this repair is confirmed by **Nick 2026-10-13, ranking only** and the explicit F1–F4 repair brief. Main's canonical gates, additive distance rule, labels and actions govern. Q1 remains A (universal and matching tint are equal fits); S2 profile transport, compact rows, shared ranking, soft deep-cleansing positioning and discovery colour are retained. No publication or live-data actions are authorized.
 
-The three category adapters use `evaluateGateCriteria`; dry-shampoo sensitivity, tint and volume direction are binary distance axes. Two or more combined misses now produce `mismatch` rather than the pre-merge S2 `supportive`; the D1–D6 and surface-parity fixture winners remain unchanged. Missing root colour still adds one step for a tinted product under the pinned S2 rule. The optional legacy `dryShampooTarget` input retains #669's nullable-axis semantics; production callers use the shared profile.
+The three category adapters use `evaluateGateCriteria`; dry-shampoo sensitivity and answered tint are binary distance axes. Two combined misses produce `mismatch`. **Volume is ranking only:** it never excludes candidates or adds verdict steps. Its explicit tie key in the shared comparator follows match count and cautions, before catalogue order and price. Native reuses that comparator with its price-first tie policy, also putting volume before price. Unknown root colour is unscored for every product, including tints, matching #669's missing-user-target contract. The retired optional target input is removed; all callers use the required `selectionProfile`. The informational volume row stays passing. F4 restores short user-facing sensitivity explanations. Current verification is recorded separately below; the following integration receipt is historical.
 
 The additive schema-only migration is `supabase/migrations/20261013140000_deep_cleansing_target_scalp_types.sql`, ordered after main's `20261013120000`. It does not backfill targets or activate S2b. The focused integration run passed 684 tests, including S2, authority/comparison, scan/mobile, migration checks and the #669 category matrix. `npm run test:personal-plan` passed 3,718 tests with one real-PostgreSQL test skipped. The final `node node_modules/typescript/bin/tsc --noEmit` has only two local-environment blockers: installed Next 16.2.4 versus the merged manifest's ^16.3.8 (`agentRules` type unavailable), and stale `.next/types/validator.ts` referencing the removed Stripe session route. Five new #669 scanner fixtures now supply the required neutral S2 profile; the final focused rerun again passed all 684 tests. No network, external database, browser or Claude CLI verification was performed under the offline boundary.
 
+### F1–F4 repair verification (2026-10-13)
+
+Authorization: Nick's explicit repair brief and **Nick 2026-10-13, ranking only**. Decision coverage revalidated against the repaired authority, comparison/native sorting, profile transport and docs; no open product choice. Source/test/doc edits are intended for the orchestrator's commit. No staging, commit, push, network, external DB, or `.env.local` changes.
+
+- Red proof: shimmed focused matrix/profile regressions, 267 pass / 18 fail with the HEAD dry-shampoo adapter/comparators temporarily restored. Failures name the volume steps, unknown-tint scoring and sensitivity copy; repaired bytes restored afterwards.
+- Final focused authority/profile/surface-parity run: 300 pass / 0 fail. Neutralizing the volume key produced six ranking failures; restoring it returned all 300 to green.
+- `npx tsc --noEmit`: pass.
+- `npm run test:personal-plan:nested`: 1,625 pass / 0 fail.
+- `npm run test:personal-plan`: 3,720 pass / 0 fail / 1 skipped (real PostgreSQL concurrency test).
+- `node --import ./tests/server-only-register.cjs --import tsx --test tests/scan-resolve-verdict.test.ts tests/scan-alternative-comparison.test.ts tests/scan-result-presentation.test.ts tests/scan-presentation-rows.test.ts tests/scan-masked-alternative.test.ts tests/scan-shopping-budget.test.ts tests/mobile-scan-authority.test.ts tests/mobile-scan-presentation.test.ts tests/mobile-scan-contracts.test.ts tests/mobile-scan-dm-parity.test.ts tests/mobile-scan-submit.test.ts`: 107 pass / 0 fail.
+- `git diff --check`: pass. Exact retired-input search across source/tests: no matches. The unqualified substring search still finds an unrelated legacy chat cadence function and nine historical evidence artifacts; preserved rather than rewriting history.
+- Local correctness and structural review of the F1–F4 diff against HEAD `8c946550`: no blocking findings. Browser/live-state and external Claude review were not run under the offline boundary. Transient test/review logs remain outside the repository in `/tmp`.
+
 ## 0. Outcome in one paragraph
 
-Dry shampoo, deep-cleansing shampoo and scalp care stop picking "first in the catalogue for everyone". All three now go through the shared Stage-3 comparator (`candidate-ranking.ts`): **verdict (ideal before supportive) → targetMatchCount (more passed user-need rows) → fewer cautions → catalogue order → lower price → product id**. The profile answers each category needs reach the evaluator through one typed slice built in one place. Deep cleansing gets its scalp fit from Shampoo v1.6 §13.5 targets computed on the deep cleansers' formulas (D-a). The #654 budget policy runs afterwards, unchanged. There is no new screen. Users see different products, and the existing compact fit table gets up to three more rows.
+Dry shampoo, deep-cleansing shampoo and scalp care stop picking "first in the catalogue for everyone". All three now go through the shared Stage-3 comparator (`candidate-ranking.ts`): **verdict (ideal before supportive) → targetMatchCount (more passed user-need rows) → fewer cautions → dry-shampoo volume preference → catalogue order → lower price → product id**. The profile answers each category needs reach the evaluator through one typed slice built in one place. Deep cleansing gets its scalp fit from Shampoo v1.6 §13.5 targets computed on the deep cleansers' formulas (D-a). The #654 budget policy runs afterwards, unchanged. There is no new screen. Users see different products, and the existing compact fit table gets up to three more rows.
 
 ---
 
 ## 1. Behaviour per category
 
-### 1.1 Shared comparator semantics (unchanged code, new users)
+### 1.1 Shared comparator semantics (volume tie key, Nick 2026-10-13)
 
 `compareRankableCandidates` (`src/lib/personal-plan/products/candidate-ranking.ts:23-44`) gets each candidate's numbers from that category's single `evaluateFacts(input, facts)`:
 
 | Key | Source for these three (compact) categories |
 |---|---|
-| `verdict` | `ideal` = no `fail`/`unknown`/`caution` criterion; `supportive` = at least one `caution`, no `fail`/`unknown`. Only ideal and supportive are rankable. |
+| `verdict` | Canonical gate/axis evaluator: no gate failure and 0 axis steps = `ideal`; 1 step = `supportive`; 2+ steps or a failed gate = `mismatch`; required fact missing = `unknown`. Only ideal and supportive are rankable. Informational rows do not add steps. |
 | `targetMatchCount` | `candidateDimensionCoverage(input, candidate, criteria).matches` (`comparison-dimensions.ts:83-122`). These categories have no comparison dimensions (`comparison-dimensions.ts:187-191`), so it counts the `compactCriterionSchema(category, role)` rows whose criterion is `pass` (`fit-comparison-schema.ts`). **A user-need row only counts if it is in the compact schema.** |
 | `cautionCount` | every criterion with `result === "caution"`, rendered or not |
+| `dryShampooVolumePreference` | Dry shampoo only: 0 for the preferred effect, 1 otherwise; absent with no direction. Ranking only, after cautions and before catalogue order. |
 | `catalogSortOrder` | `products.sort_order`; null = last |
 | `priceEur` | `products.price_eur`; null = last |
 
@@ -48,11 +62,11 @@ The same function feeds the authority's own pick, the fit-comparison alternative
 |---|---|---|---|
 | `dry_shampoo.identity.active` „Aktive Produktidentität" | — | active, no known reaction | (fail → mismatch, as today) |
 | `dry_shampoo.sensitivity.verified` „Kopfhautverträglichkeit" | `sensitiveScalp` | not sensitive (either positioning); sensitive + `sensitive_ok` | sensitive + `normal_only` |
-| `dry_shampoo.tint.verified` „Farbpassung" **(newly rendered)** | `visibleHairColor` | `universal`; or the tint matches the colour (`blonde_light`↔`light_blonde`, `brown`↔`brown`, `dark`↔`dark`) | the tint does not match the colour; or a tinted product and the colour is unknown |
-| `dry_shampoo.styling.direction` „Volumen" **(new)** | `volumeDirection` | direction null; `more` + `volume_texture`; `less` + standard | `more` + standard; `less` + `volume_texture` |
+| `dry_shampoo.tint.verified` „Farbpassung" **(newly rendered)** | `visibleHairColor` | `universal`; or the tint matches the colour (`blonde_light`↔`light_blonde`, `brown`↔`brown`, `dark`↔`dark`) | an answered colour does not match the tint; unknown colour is unscored |
+| `dry_shampoo.styling.direction` „Volumen" **(new)** | `volumeDirection` | always informational and passing; preferred effect is a ranking key | never a caution or verdict step (Nick 2026-10-13) |
 | `dry_shampoo.protocol.verified` „Verifizierte Anwendung" | — | verified protocol | (missing → unknown, as today) |
 
-"Standard" means `classic_refresh` **or** legacy `sensitive_refresh`. The doc's schema cutover (`sensitive_refresh` → `standard_refresh`) stays out of scope. The adapter maps both values to standard, and sensitivity comes only from `scalp_sensitivity_fit`. A missing product fact still returns `unknown`, as today. Uncovered-role output keeps its current shape (`verdict: "unknown"` plus the `dry_shampoo.selection.uncovered_role` caution). Only the chosen `recommendation` changes. Rule id: `dry_shampoo.selection.shared_rank` (replaces `stable_first_entered_verified`).
+"Standard" means `classic_refresh` **or** legacy `sensitive_refresh`. The doc's schema cutover (`sensitive_refresh` → `standard_refresh`) stays out of scope. The adapter maps both values to standard, and sensitivity comes only from `scalp_sensitivity_fit`. A missing product fact still returns `unknown`, as today. Uncovered-role output keeps its current shape (selected candidate verdict plus the `dry_shampoo.selection.uncovered_role` caution). Only the chosen `recommendation` changes. Rule id: `dry_shampoo.selection.shared_rank` (replaces `stable_first_entered_verified`).
 
 **Live catalogue** (10 active recommended, 2026-10-09):
 
@@ -73,16 +87,16 @@ The same function feeds the authority's own pick, the fit-comparison alternative
 
 | # | Profile | Ideal set | Winner | Today |
 |---|---|---|---|---|
-| D1 | normal scalp, no volume direction, colour not answered | 9201–9207 (tinted 9208–9210 supportive: colour unknown) | **Batiste Original** (9201) | Batiste Original |
-| D2 | sensitive scalp (quiz `irritated`), no direction, brown | 9203, 9204, 9205 (all others supportive: `normal_only`) | **Balea Kopfhaut Sensitive** (9203, 1,95 €) | Batiste Original |
-| D3 | volume `more` (straight, fine, `volume_balance` or `low_volume_or_weighed_down`), normal scalp, brown | 9207 only | **got2b Extra Volumen** (3,95 €) | Batiste Original |
-| D4 | volume `more` + sensitive (2 live users) | none. 9203–9205 supportive (Volumen caution); 9207 supportive (sensitivity caution); 9201 etc. supportive with 2 cautions | tie on verdict, matches and cautions, so catalogue order → **Balea Kopfhaut Sensitive** (9203) | Batiste Original |
+| D1 | normal scalp, no volume direction, colour not answered | 9201–9210 (unknown colour unscored) | **Batiste Original** (9201) | Batiste Original |
+| D2 | sensitive scalp (quiz `irritated`), no direction, brown | 9203, 9204, 9205; normal-only universal/matching tints supportive; wrong tints 9208/9210 mismatch (tint + sensitivity) | **Balea Kopfhaut Sensitive** (9203, 1,95 €) | Batiste Original |
+| D3 | volume `more` (straight, fine, `volume_balance` or `low_volume_or_weighed_down`), normal scalp, brown | 9201–9207 and matching brown tint 9209 | **got2b Extra Volumen** (3,95 €) | Batiste Original |
+| D4 | volume `more` + sensitive (2 live users) | 9203–9205 ideal; 9201/9202/9206/9207 and tints supportive from sensitivity alone | ideal sensitivity verdict wins before volume, then catalogue order → **Balea Kopfhaut Sensitive** (9203) | Batiste Original |
 | D5 | brown, normal scalp, no direction | 9201–9207 + Brünett 9209; Blond/dunkel supportive | **Batiste Original** (catalogue order; see Q1) | Batiste Original |
-| D6 | volume `less` (curly/coily/coarse + `volume_balance`) | everything except 9207 and the wrong/unknown tints | **Batiste Original** | Batiste Original |
+| D6 | volume `less` (curly/coily/coarse + `volume_balance`) | all products when colour is unknown; otherwise exclude wrong tints from ideal only | **Batiste Original** | Batiste Original |
 | D7 | owns Batiste Brünett, colour `light_blonde` | owned verdict **supportive** („Farbpassung: passt mit Einschränkung"), `keep_owned` still allowed; replacement shown = D1 winner | — | ideal |
 | D8 | D3 + strict budget Bis 5 € | fit order 9207 (3,95 €, affordable) | **got2b Extra Volumen** (≤ 5 €) | — |
 
-D4 gives the order the doc wants (sensitivity before styling) only because of catalogue order. A named fixture pins it (T2.4). Live reach: 11 profiles use dry shampoo (10 own one, 1 accepted the bridge). Of these, 2 are sensitive, 5 have a volume goal (all straight/fine → `more`), and 2 are both. Visible colour answers (all `user` provenance): brown 6, light_blonde 4, dark 1.
+D4 ranks sensitivity-compatible ideal products before volume products with a sensitivity limitation. This follows verdict precedence, independent of catalogue order (Nick 2026-10-13, ranking only). A named fixture pins it (T2.4). Live reach: 11 profiles use dry shampoo (10 own one, 1 accepted the bridge). Of these, 2 are sensitive, 5 have a volume goal (all straight/fine → `more`), and 2 are both. Visible colour answers (all `user` provenance): brown 6, light_blonde 4, dark 1.
 
 ### 1.3 Deep-cleansing shampoo (`residue_reset`; `mineral_reset` unchanged)
 
@@ -224,8 +238,8 @@ export function buildStage3SelectionProfile(
 |---|---|---|
 | `scalpOiliness` | `snapshot.profile.scalp.oiliness` (`types.ts:148`; quiz `scalpOiliness`, required `oily\|balanced\|dry`, `personal-plan-quiz/persistence.ts:53`) | null only for `UNKNOWN_SELECTION_PROFILE` → no deep-cleansing target match (today's order) |
 | `sensitiveScalp` | `snapshot.profile.scalp.concerns.includes("irritated")` (`types.ts:149`; quiz `scalpConcerns`). Deliberately **not** `irritationState`, because the detail answer can be the assumed default `normal` (`assumed-defaults.ts:52`). Active symptoms already pause execution elsewhere, and the dry-shampoo doc ties sensitivity to „gereizt" (P3) | always boolean |
-| `volumeDirection` | `planVolumeDirection(profile)`, **extracted unchanged** from the conditioner weight rule (`personal-plan/categories/conditioner.ts:116-133`): `concerns ∋ low_volume_or_weighed_down` → `more`; else `goals ∋ volume_balance` → control route (curly/coily, coarse, or wavy + `shape_definition`/`lost_shape`) ? `less` : `more`; else null. Conditioner calls the shared helper (behaviour-preserving) | null = no styling-direction criterion caution |
-| `visibleHairColor` | `hair_profiles.care_habits.dryShampooVisibleHairColor` (`user-facts/schema.ts:332`) **only when** `facts_provenance.care_habits.fields.dryShampooVisibleHairColor === "user"` (live: 11/11 are `user`). Written by the refinement (`from-refinement-draft.ts`) and by profile edits. Not in the need snapshot (`PlanRoutineContext` has no field), so it is loaded next to the snapshot (P2) | null → tinted products get the tint caution (never ideal); universal unaffected |
+| `volumeDirection` | `planVolumeDirection(profile)`, **extracted unchanged** from the conditioner weight rule (`personal-plan/categories/conditioner.ts:116-133`): `concerns ∋ low_volume_or_weighed_down` → `more`; else `goals ∋ volume_balance` → control route (curly/coily, coarse, or wavy + `shape_definition`/`lost_shape`) ? `less` : `more`; else null. Conditioner calls the shared helper (behaviour-preserving) | null = no volume ranking preference |
+| `visibleHairColor` | `hair_profiles.care_habits.dryShampooVisibleHairColor` (`user-facts/schema.ts:332`) **only when** `facts_provenance.care_habits.fields.dryShampooVisibleHairColor === "user"` (live: 11/11 are `user`). Written by the refinement (`from-refinement-draft.ts`) and by profile edits. Not in the need snapshot (`PlanRoutineContext` has no field), so it is loaded next to the snapshot (P2) | null → colour axis unscored for every product (Nick 2026-10-13); informational row passes |
 
 Colour loader: `src/lib/user-facts/visible-hair-color.ts` → `readUserVisibleHairColor(careHabits: unknown, provenance: unknown): Stage3VisibleHairColor | null` (pure, zod-parsed; an invalid value returns null) plus `loadVisibleHairColor(client, userId)` (one `hair_profiles` select of `care_habits, facts_provenance`; read errors return null, logged; never blocks a plan or a scan).
 
@@ -324,7 +338,7 @@ Suggested PR split (P6): **PR S2a** = T2.0–T2.8 + schema migration (deep-clean
 - **R2 Colour outside the need version.** `visibleHairColor` comes from `care_habits`, not the snapshot, so `refinedInputHash` does not cover it. A colour edit can change a dry-shampoo verdict without a new need version. This is the same pattern as #654's budget, and the effect is limited to one soft row.
 - **R3 Fingerprint churn.** Adding `targetScalpTypes` to deep-cleansing facts changes all 5 fact fingerprints once (S2a deploy) and again at S2b. Previews loaded before and accepted after either change hit `seen_state_stale` once (normal catalogue-change behaviour).
 - **R4 Visible compact rows.** New rows („Farbpassung", „Volumen", „Kopfhauttyp") and changed scan subtitles („2 von 3 Kriterien erfüllt" on an ideal general deep cleanser). Intended (honest), but it is a presentation change. Check web + iOS rendering in T2.7.
-- **R5 Sensitivity vs volume** (D4) is decided by catalogue order, not by an explicit precedence. It holds for today's `sort_order`, and the fixture pins it. Re-check if dry-shampoo `sort_order` changes.
+- **R5 Sensitivity vs volume** (D4): verdict always precedes the volume ranking key. Nick 2026-10-13 settled volume as ranking only; catalogue order cannot lift a sensitivity-limited candidate above an ideal one.
 - **R6 Budget policy ignores `targetMatchCount`.** `fitComparable` (`budget-policy.ts:168-176`) compares verdict, cautions and need dimensions only. An uncapped swap could replace a scalp-matched deep cleanser with an unmatched one above 15 €. That is latent today, since all deep cleansers cost ≤ 12,99 €. Residual-ledger entry; #654 policy stays unchanged per §8b(c).
 - **R7 Engine may not confirm** Gliss oily / NEQI dry (formula gates, P0 conservatism). The outcome is then today's order (C4). No harm, and the slice is still done.
 - **R8 Legacy chat engine** keeps ranking on `scalp_type_focus` (Balea `oily`). Accepted non-goal; residual ledger.

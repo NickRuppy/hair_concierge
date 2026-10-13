@@ -56,6 +56,7 @@ function base(category: Category, role: string, target: unknown, spec: unknown) 
     },
     coverage: [],
     hairThickness: "coarse",
+    selectionProfile: UNKNOWN_SELECTION_PROFILE,
     productFacts: {
       productId: "owned",
       displayName: "Produkt",
@@ -1240,7 +1241,13 @@ for (const row of [
       hairColorFit: row.tint,
       scalpSensitivityFit: row.sensitivity,
     }) as any
-    input.dryShampooTarget = { scalpSensitivity: row.scalp, hairColorFit: row.color }
+    // Nick 2026-10-13: ranking only; volume never scores, unknown colour is unscored.
+    input.selectionProfile = {
+      ...input.selectionProfile,
+      sensitiveScalp: row.scalp === "sensitive",
+      visibleHairColor: row.color,
+      volumeDirection: "more",
+    }
     const result = evaluateStage3Authority(input)
     assert.equal(result.status === "known" ? result.verdict : result.status, row.verdict)
     if (result.status === "known") {
@@ -1249,7 +1256,7 @@ for (const row of [
       if (row.color === null) {
         assert.ok(cautions.every((c) => c.criterionId !== "dry_shampoo.tint.verified"))
         if (row.scalp === "sensitive")
-          assert.match(cautions[0]!.explanation, /Sensitivitätspositionierung.*Kopfhaut/)
+          assert.equal(cautions[0]!.explanation, "Nicht für empfindliche Kopfhaut ausgelobt.")
       }
       if (row.scalp === null && row.color === null) assert.deepEqual(cautions, [])
     }
@@ -1257,7 +1264,12 @@ for (const row of [
 }
 test("dry_shampoo: ideal wins, supportive is a reasoned fallback, catalog order stays stable", () => {
   const input = gateCategory("dry_shampoo") as any
-  input.dryShampooTarget = { scalpSensitivity: "sensitive", hairColorFit: "dark" }
+  input.selectionProfile = {
+    ...input.selectionProfile,
+    sensitiveScalp: true,
+    visibleHairColor: "dark",
+    volumeDirection: "more",
+  }
   input.capturedProductId = null
   input.subjectIdentity = null
   input.productFacts = null

@@ -6,6 +6,8 @@ export type RankableCandidate = {
   targetMatchCount: number // in-target dimensions, as the comparison table renders them
   cautionCount: number // criteria entries with result === "caution"
   shampooGentleness?: number
+  /** Ranking only after fit/coverage/cautions, before catalogue order; never a fit step. */
+  dryShampooVolumePreference?: number
   catalogSortOrder: number | null | undefined
   priceEur?: number | null
   productId: string
@@ -31,6 +33,18 @@ export function shampooGentlenessRank(
       : intensity === "clarifying" || intensity === "strong"
         ? 2
         : Number.MAX_SAFE_INTEGER
+}
+
+/** Nick 2026-10-13: volume changes dry-shampoo ordering only, within a verdict. */
+export function dryShampooVolumeRank(
+  input: Pick<Stage3AuthorityInput, "category" | "selectionProfile">,
+  facts: Stage3CategoryProductFacts,
+): number | undefined {
+  if (input.category !== "dry_shampoo" || facts.category !== "dry_shampoo") return undefined
+  const direction = input.selectionProfile.volumeDirection
+  if (direction === null) return undefined
+  const addsVolume = facts.spec.primaryEffect === "volume_texture"
+  return (direction === "more" ? addsVolume : !addsVolume) ? 0 : 1
 }
 
 const VERDICT_RANK: Record<RankableCandidate["verdict"], number> = {
@@ -61,6 +75,10 @@ export function compareRankableCandidates(
 
   const gentlenessDelta = (left.shampooGentleness ?? 0) - (right.shampooGentleness ?? 0)
   if (gentlenessDelta !== 0) return gentlenessDelta
+
+  const volumeDelta =
+    (left.dryShampooVolumePreference ?? 0) - (right.dryShampooVolumePreference ?? 0)
+  if (volumeDelta !== 0) return volumeDelta
 
   const sortOrderDelta =
     normalizedSortOrder(left.catalogSortOrder) - normalizedSortOrder(right.catalogSortOrder)

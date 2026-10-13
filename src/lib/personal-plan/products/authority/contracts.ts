@@ -227,11 +227,6 @@ export type Stage3AuthorityInput<C extends PersonalPlanCategory = PersonalPlanCa
   coverage: PlanPortfolioCoverageFact[]
   productFacts: Extract<Stage3CategoryProductFacts, { category: C }> | null
   recommendationCandidates: Array<Extract<Stage3CategoryProductFacts, { category: C }>>
-  /** Late-bound tint is absent from onboarding; universal products need no tint target. */
-  dryShampooTarget?: {
-    scalpSensitivity: "normal" | "sensitive" | null
-    hairColorFit: "blonde_light" | "brown" | "dark" | null
-  }
   hairThickness?: PlanHairThickness
   /**
    * The profile answers dry shampoo and deep cleansing rank by; built only by

@@ -98,7 +98,7 @@ const dryInput = (
 
 /* ------------------------------------------------------------- dry shampoo */
 
-test("D1 dry shampoo: normal scalp, no direction, colour unknown → Batiste Original; tints supportive", () => {
+test("D1 dry shampoo: normal scalp, no direction, colour unknown → Batiste Original; tints unscored", () => {
   const input = dryInput({ scalpOiliness: "oily" })
   assert.equal(pick(input), DRY.batisteOriginal.productId)
   assert.deepEqual(idealIds(input), [
@@ -109,10 +109,13 @@ test("D1 dry shampoo: normal scalp, no direction, colour unknown → Batiste Ori
     DRY.baleaSchaum.productId,
     DRY.got2bLiquid.productId,
     DRY.got2bVolumen.productId,
+    DRY.batisteBlond.productId,
+    DRY.batisteBruenett.productId,
+    DRY.batisteDunkel.productId,
   ])
   const all = verdicts(input)
   for (const tinted of [DRY.batisteBlond, DRY.batisteBruenett, DRY.batisteDunkel]) {
-    assert.equal(all.get(tinted.productId), "supportive")
+    assert.equal(all.get(tinted.productId), "ideal")
   }
   assert.equal(known(input).recommendation?.authorityRuleId, "dry_shampoo.selection.shared_rank")
 })
@@ -127,18 +130,46 @@ test("D2 dry shampoo: sensitive scalp, brown → Balea Kopfhaut Sensitive; norma
   ])
 })
 
-test("D3 dry shampoo: volume more, normal scalp, brown → got2b Extra Volumen only ideal", () => {
+test("D3 dry shampoo: volume more, normal scalp, brown → got2b Extra Volumen ranks first among ideal products", () => {
   const input = dryInput({ volumeDirection: "more", visibleHairColor: "brown" })
   assert.equal(pick(input), DRY.got2bVolumen.productId)
-  assert.deepEqual(idealIds(input), [DRY.got2bVolumen.productId])
+  assert.equal(verdicts(input).get(DRY.batisteOriginal.productId), "ideal")
+  assert.equal(known(input).recommendation?.displayName, "got2b Trockenshampoo Extra Volumen")
+  assert.equal(rankStage3ComparisonCandidates(input)[0]?.productId, DRY.got2bVolumen.productId)
 })
 
-test("D4 dry shampoo: volume more + sensitive → nobody ideal; catalogue order → Balea Kopfhaut Sensitive", () => {
+test("D4 dry shampoo: volume more + sensitive → sensitivity alone decides fit; Balea Kopfhaut Sensitive wins", () => {
   const input = dryInput({ volumeDirection: "more", sensitiveScalp: true })
-  assert.deepEqual(idealIds(input), [])
+  // Nick 2026-10-13: ranking only; volume never adds a verdict step.
+  assert.deepEqual(idealIds(input), [
+    DRY.baleaSensitive.productId,
+    DRY.batisteSensible.productId,
+    DRY.baleaSchaum.productId,
+  ])
+  for (const product of [
+    DRY.batisteOriginal,
+    DRY.isanaJedesHaar,
+    DRY.got2bLiquid,
+    DRY.got2bVolumen,
+  ]) {
+    assert.equal(verdicts(input).get(product.productId), "supportive")
+    const owned = dryInput(input.selectionProfile, product)
+    const evaluation = known(owned)
+    assert.equal(evaluation.verdict, "supportive")
+    assert.deepEqual(
+      evaluation.criteria.filter((row) => row.result === "caution").map((row) => row.criterionId),
+      ["dry_shampoo.sensitivity.verified"],
+    )
+    assert.equal(rankStage3ComparisonCandidates(owned)[0]?.productId, DRY.baleaSensitive.productId)
+    // A known reaction offers Wechseln; sensitivity fit still outranks the volume preference.
+    const reacted = known(dryInput(input.selectionProfile, { ...product, knownReaction: true }))
+    assert.equal(reacted.verdict, "mismatch")
+    assert.ok(reacted.allowedActions.includes("plan_recommendation"))
+    assert.equal(reacted.recommendation?.productId, DRY.baleaSensitive.productId)
+  }
   assert.equal(pick(input), DRY.baleaSensitive.productId)
   // #669: an uncovered role carries the recommended candidate's canonical verdict.
-  assert.equal(known(input).verdict, "supportive")
+  assert.equal(known(input).verdict, "ideal")
 })
 
 test("D5 dry shampoo (Q1 = A): brown roots → universal Batiste Original wins; Brünett equal, Blond/dunkel supportive", () => {
@@ -157,13 +188,13 @@ test("Q1 colour rule lives in one place: universal is a full fit, a matching tin
   assert.equal(dryShampooTintFit("brown", "brown"), "pass")
   assert.equal(dryShampooTintFit("dark", "dark"), "pass")
   assert.equal(dryShampooTintFit("brown", "light_blonde"), "caution")
-  assert.equal(dryShampooTintFit("dark", null), "caution")
+  assert.equal(dryShampooTintFit("dark", null), "pass")
 })
 
-test("D6 dry shampoo: volume less → Batiste Original; got2b Extra Volumen supportive", () => {
+test("D6 dry shampoo: volume less → Batiste Original; got2b Extra Volumen stays ideal", () => {
   const input = dryInput({ volumeDirection: "less" })
   assert.equal(pick(input), DRY.batisteOriginal.productId)
-  assert.equal(verdicts(input).get(DRY.got2bVolumen.productId), "supportive")
+  assert.equal(verdicts(input).get(DRY.got2bVolumen.productId), "ideal")
 })
 
 test("D7 dry shampoo: owned Batiste Brünett with light-blonde roots → supportive, keep allowed, replacement = D1 winner", () => {
@@ -378,7 +409,7 @@ function scanSubtitle(input: Stage3AuthorityInput, scannedId: string): string | 
 
 test("scan subtitle counts the S2 rows: dry shampoo 5 rows, deep cleansing 3 (residue)", () => {
   const volume = dryInput({ volumeDirection: "more", visibleHairColor: "brown" })
-  assert.equal(scanSubtitle(volume, DRY.batisteOriginal.productId), "4 von 5 Kriterien erfüllt")
+  assert.equal(scanSubtitle(volume, DRY.batisteOriginal.productId), "5 von 5 Kriterien erfüllt")
   assert.equal(scanSubtitle(volume, DRY.got2bVolumen.productId), "5 von 5 Kriterien erfüllt")
   const oily = deepInput("oily")
   assert.equal(scanSubtitle(oily, DEEP.gliss.productId), "3 von 3 Kriterien erfüllt")
@@ -404,4 +435,43 @@ test("partial profile winners: missing texture + volume goal keeps Batiste Origi
     pick(fromProfile({ concerns: ["low_volume_or_weighed_down"] })),
     DRY.got2bVolumen.productId,
   )
+})
+
+// Nick 2026-10-13: volume ranks only; missing colour is unscored as in #669.
+test("volume more + unknown colour: tints stay ideal; initial and replacement picks prefer got2b Extra Volumen", () => {
+  const profile = { volumeDirection: "more" as const, visibleHairColor: null }
+  const input = dryInput(profile)
+  assert.equal(pick(input), DRY.got2bVolumen.productId)
+  for (const product of [DRY.batisteBlond, DRY.batisteBruenett, DRY.batisteDunkel]) {
+    const owned = dryInput(profile, product)
+    const evaluation = known(owned)
+    assert.equal(evaluation.verdict, "ideal")
+    assert.equal(
+      evaluation.criteria.find((row) => row.criterionId === "dry_shampoo.tint.verified")?.result,
+      "pass",
+    )
+    const replacement = rankStage3ComparisonCandidates(owned)[0]
+    assert.equal(replacement?.productId, DRY.got2bVolumen.productId)
+    assert.equal(replacement?.facts.displayName, "got2b Trockenshampoo Extra Volumen")
+    const reacted = known(dryInput(profile, { ...product, knownReaction: true }))
+    assert.equal(reacted.verdict, "mismatch")
+    assert.ok(reacted.allowedActions.includes("plan_recommendation"))
+    assert.equal(reacted.recommendation?.productId, DRY.got2bVolumen.productId)
+  }
+})
+
+test("dry shampoo sensitivity explanations name the user's criterion", () => {
+  for (const [sensitiveScalp, product, verdict, explanation] of [
+    [true, DRY.baleaSensitive, "ideal", "Ausdrücklich für empfindliche Kopfhaut gedacht."],
+    [true, DRY.batisteOriginal, "supportive", "Nicht für empfindliche Kopfhaut ausgelobt."],
+    [false, DRY.batisteOriginal, "ideal", "Deine Kopfhaut braucht keine besonders milde Formel."],
+  ] as const) {
+    const result = known(dryInput({ sensitiveScalp }, product))
+    assert.equal(result.verdict, verdict)
+    assert.equal(
+      result.criteria.find((row) => row.criterionId === "dry_shampoo.sensitivity.verified")
+        ?.explanation,
+      explanation,
+    )
+  }
 })
