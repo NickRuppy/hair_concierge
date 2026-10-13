@@ -92,7 +92,6 @@ export type BuildScanVerdictInput = {
   hairThickness: PlanHairThickness
   /** The Stage-3 selection slice (`buildStage3SelectionProfile`), identical to the plan's. */
   selectionProfile: Stage3SelectionProfile
-  dryShampooTarget?: Stage3AuthorityInput["dryShampooTarget"]
   heatCarrierCoverage: {
     carrierCategory: Extract<PersonalPlanCategory, "leave_in" | "oil" | "heat_protectant"> | null
     verifiedRoutes: string[]
@@ -483,7 +482,6 @@ function scanAuthorityInput(
     recommendationCandidates,
     hairThickness: input.hairThickness,
     selectionProfile: input.selectionProfile,
-    dryShampooTarget: input.dryShampooTarget,
     heatCarrierCoverage: input.heatCarrierCoverage,
   }
 }

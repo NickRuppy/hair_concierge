@@ -28,6 +28,7 @@ import { supportiveOwnedRecommendation } from "./authority/supportive-owned-reco
 import {
   compareRankableCandidates,
   shampooGentlenessRank,
+  dryShampooVolumeRank,
   type RankableCandidate,
 } from "./candidate-ranking"
 import {
@@ -145,6 +146,7 @@ type CandidateAssessment = Stage3SelectedComparisonCandidate & {
   targetCount: number
   cautionCount: number
   shampooGentleness?: number
+  dryShampooVolumePreference?: number
   priceEur: number | null
 }
 
@@ -494,6 +496,7 @@ function toRankableCandidate(candidate: CandidateAssessment): RankableCandidate 
     targetMatchCount: candidate.targetMatchCount,
     cautionCount: candidate.cautionCount,
     shampooGentleness: candidate.shampooGentleness,
+    dryShampooVolumePreference: candidate.dryShampooVolumePreference,
     catalogSortOrder: candidate.catalogSortOrder,
     priceEur: candidate.priceEur,
     productId: candidate.productId,
@@ -502,9 +505,9 @@ function toRankableCandidate(candidate: CandidateAssessment): RankableCandidate 
 
 /**
  * Invariant: the authority's pinned recommendation only breaks ties among candidates already
- * equal on verdict, coverage, cautions, and shampoo gentleness — it never overrides those fields. Implemented by
+ * equal on verdict, coverage, cautions, shampoo gentleness and dry-shampoo volume preference — it never overrides those fields. Implemented by
  * running the shared comparator twice: once with catalogSortOrder/priceEur/productId neutralized
- * (isolating verdict/coverage/cautions/gentleness), then — only on a genuine tie — the pin, then the full
+ * (isolating verdict/coverage/cautions/gentleness/volume), then — only on a genuine tie — the pin, then the full
  * comparator (which restores catalogSortOrder/priceEur/productId) for the remaining tiebreaks.
  */
 function compareWithAuthorityPin(
@@ -551,26 +554,25 @@ function boundedSelectedComparisonCandidateAssessments(
   return [...bounded.slice(0, STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT - 1), kept]
 }
 
-/** Native carousel: verdict, R19 coarse scalp gentleness, comparable EUR price, then ID. */
+/** Native keeps its price-first tie policy, with the shared volume preference before price. */
 function compareNativePresentationCandidates(
   left: CandidateAssessment,
   right: CandidateAssessment,
 ): number {
-  const verdict = left.verdict === right.verdict ? 0 : left.verdict === "ideal" ? -1 : 1
-  if (verdict !== 0) return verdict
-  const gentleness = (left.shampooGentleness ?? 0) - (right.shampooGentleness ?? 0)
-  if (gentleness !== 0) return gentleness
-  const price = (candidate: CandidateAssessment) =>
-    candidate.facts.currency === "EUR" &&
-    Number.isFinite(candidate.priceEur) &&
-    candidate.priceEur !== null &&
-    candidate.priceEur >= 0
-      ? candidate.priceEur
-      : Number.POSITIVE_INFINITY
-  const leftPrice = price(left)
-  const rightPrice = price(right)
-  if (leftPrice !== rightPrice) return leftPrice - rightPrice
-  return left.productId.localeCompare(right.productId)
+  const rank = (candidate: CandidateAssessment): RankableCandidate => ({
+    ...toRankableCandidate(candidate),
+    targetMatchCount: 0,
+    cautionCount: 0,
+    catalogSortOrder: 0,
+    priceEur:
+      candidate.facts.currency === "EUR" &&
+      Number.isFinite(candidate.priceEur) &&
+      candidate.priceEur !== null &&
+      candidate.priceEur >= 0
+        ? candidate.priceEur
+        : null,
+  })
+  return compareRankableCandidates(rank(left), rank(right))
 }
 
 function assessCandidate(
@@ -596,6 +598,7 @@ function assessCandidate(
     targetCount: coverage.total,
     cautionCount: detached.criteria.filter((criterion) => criterion.result === "caution").length,
     shampooGentleness: shampooGentlenessRank(input, candidate),
+    dryShampooVolumePreference: dryShampooVolumeRank(input, candidate),
     priceEur: candidate.priceEur ?? null,
   }
 }

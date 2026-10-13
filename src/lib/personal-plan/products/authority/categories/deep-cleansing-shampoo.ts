@@ -92,7 +92,7 @@ function evaluateProduct(
     ),
   )
   // This is an S2 ranking signal, never a gate: a general cleanser stays Passt.
-  const scalpOiliness = input.selectionProfile?.scalpOiliness ?? null
+  const scalpOiliness = input.selectionProfile.scalpOiliness
   if (
     input.role === "residue_reset" &&
     scalpOiliness !== null &&

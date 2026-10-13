@@ -1,4 +1,8 @@
-import { compareRankableCandidates, type RankableCandidate } from "../../candidate-ranking"
+import {
+  compareRankableCandidates,
+  dryShampooVolumeRank,
+  type RankableCandidate,
+} from "../../candidate-ranking"
 import { candidateDimensionCoverage } from "../../comparison-dimensions"
 import type { Stage3VisibleHairColor } from "../selection-profile"
 import { evaluateGateCriteria } from "../fit-criteria"
@@ -33,15 +37,14 @@ const TINT_FOR_COLOR: Record<Stage3VisibleHairColor, string> = {
  * product fits every root colour fully; a tinted product fits fully only when its tint matches the
  * user's answered root colour. A matching tint is NOT an extra fulfilled need (option A), so
  * universal and matching tinted products tie and the shared comparator decides.
+ * Nick 2026-10-13: unknown colour is unscored, including for tinted products.
  */
 export function dryShampooTintFit(
   hairColorFit: string,
   visibleHairColor: Stage3VisibleHairColor | null,
 ): "pass" | "caution" {
-  if (hairColorFit === "universal") return "pass"
-  return visibleHairColor !== null && TINT_FOR_COLOR[visibleHairColor] === hairColorFit
-    ? "pass"
-    : "caution"
+  if (visibleHairColor === null || hairColorFit === "universal") return "pass"
+  return TINT_FOR_COLOR[visibleHairColor] === hairColorFit ? "pass" : "caution"
 }
 
 function productMissingFacts(input: DryShampooInput, facts: Stage3DryShampooFacts): string[] {
@@ -56,29 +59,16 @@ function productMissingFacts(input: DryShampooInput, facts: Stage3DryShampooFact
 
 function evaluateFacts(input: DryShampooInput, facts: Stage3DryShampooFacts) {
   const missing = productMissingFacts({ ...input, productFacts: facts }, facts)
-  // Legacy explicit targets retain #669 nullable-target semantics. Production callers use
-  // the shared profile and the pinned S2 rule: unknown root colour cannot confirm a tint.
-  const legacyTarget = input.dryShampooTarget
-  const scalpSensitivity = legacyTarget
-    ? legacyTarget.scalpSensitivity
-    : input.selectionProfile
-      ? input.selectionProfile.sensitiveScalp
-        ? "sensitive"
-        : "normal"
-      : null
-  const visibleHairColor: Stage3VisibleHairColor | null = legacyTarget
-    ? legacyTarget.hairColorFit === "blonde_light"
-      ? "light_blonde"
-      : legacyTarget.hairColorFit
-    : (input.selectionProfile?.visibleHairColor ?? null)
+  const { sensitiveScalp, visibleHairColor, volumeDirection: direction } = input.selectionProfile
   const sensitivity = facts.spec.scalpSensitivityFit
   const tint = facts.spec.hairColorFit
   const sensitivityMatch =
-    sensitivity === "sensitive_ok"
-      ? true
-      : sensitivity === "normal_only" && scalpSensitivity !== null
-        ? scalpSensitivity === "normal"
-        : null
+    sensitivity === null ? null : !sensitiveScalp || sensitivity === "sensitive_ok"
+  const sensitivityExplanation = !sensitiveScalp
+    ? "Deine Kopfhaut braucht keine besonders milde Formel."
+    : sensitivityMatch
+      ? "Ausdrücklich für empfindliche Kopfhaut gedacht."
+      : "Nicht für empfindliche Kopfhaut ausgelobt."
   const tintMatch = tint === null ? null : dryShampooTintFit(tint, visibleHairColor) === "pass"
   const tintExplanation =
     tint === "universal"
@@ -88,10 +78,8 @@ function evaluateFacts(input: DryShampooInput, facts: Stage3DryShampooFacts) {
         : tintMatch
           ? "Die Tönung passt zu deiner Ansatzfarbe."
           : "Die Tönung passt nicht zu deiner Ansatzfarbe."
-  const direction = input.selectionProfile?.volumeDirection ?? null
   // Legacy sensitive_refresh is a standard refresh; scalp fit comes from its own fact.
   const addsVolume = facts.spec.primaryEffect === "volume_texture"
-  const volumeMatch = direction === "more" ? addsVolume : !addsVolume
   const volumeExplanation =
     direction === null
       ? "Kein Volumenziel angegeben."
@@ -103,16 +91,16 @@ function evaluateFacts(input: DryShampooInput, facts: Stage3DryShampooFacts) {
           ? "Gibt zusätzliches Volumen – du möchtest eher weniger."
           : "Frischt auf, ohne aufzubauschen."
   const axes: FitAxis[] = []
-  if (scalpSensitivity !== null)
+  if (sensitiveScalp)
     axes.push({
       id: "dry_shampoo.sensitivity.verified",
       label: "Kopfhautverträglichkeit",
       scale: ["match", "other"],
       targetValue: "match",
       productValues: sensitivityMatch === null ? null : [sensitivityMatch ? "match" : "other"],
-      reason: () => "Die Sensitivitätspositionierung passt nur eingeschränkt zu deiner Kopfhaut.",
+      reason: () => sensitivityExplanation,
     })
-  if (legacyTarget ? visibleHairColor !== null : input.selectionProfile !== undefined)
+  if (visibleHairColor !== null)
     axes.push({
       id: "dry_shampoo.tint.verified",
       label: "Farbpassung",
@@ -121,15 +109,7 @@ function evaluateFacts(input: DryShampooInput, facts: Stage3DryShampooFacts) {
       productValues: tintMatch === null ? null : [tintMatch ? "match" : "other"],
       reason: () => tintExplanation,
     })
-  if (direction !== null)
-    axes.push({
-      id: "dry_shampoo.styling.direction",
-      label: "Volumen",
-      scale: ["match", "other"],
-      targetValue: "match",
-      productValues: facts.spec.primaryEffect === null ? null : [volumeMatch ? "match" : "other"],
-      reason: () => volumeExplanation,
-    })
+  // Nick 2026-10-13: volume is ranking only, never a degree axis.
   const criteria = [
     criterion(
       "dry_shampoo.identity.active",
@@ -141,7 +121,7 @@ function evaluateFacts(input: DryShampooInput, facts: Stage3DryShampooFacts) {
       "dry_shampoo.sensitivity.verified",
       "Kopfhautverträglichkeit",
       "pass",
-      "Die Sensitivitätspositionierung ist geprüft.",
+      sensitivityExplanation,
     ),
     criterion("dry_shampoo.tint.verified", "Farbpassung", "pass", tintExplanation),
     criterion("dry_shampoo.styling.direction", "Volumen", "pass", volumeExplanation),
@@ -191,6 +171,7 @@ function bestCandidate(input: DryShampooInput) {
                     result.criteria,
                   ).matches,
                   cautionCount: result.criteria.filter((row) => row.result === "caution").length,
+                  dryShampooVolumePreference: dryShampooVolumeRank(input, candidate),
                   catalogSortOrder: candidate.catalogSortOrder,
                   priceEur: candidate.priceEur ?? null,
                   productId: candidate.productId,

@@ -292,7 +292,9 @@ test("a root colour that differs between preview and acceptance would change a t
     return evaluation.status === "known" ? evaluation.verdict : evaluation.status
   }
   assert.equal(verdictFor("brown"), "ideal")
-  assert.equal(verdictFor(null), "supportive")
+  // Nick 2026-10-13: unknown colour is unscored; an answered wrong tint still limits fit.
+  assert.equal(verdictFor(null), "ideal")
+  assert.equal(verdictFor("light_blonde"), "supportive")
 })
 
 /* ---------------------------------------------- F3: real mobile scan service */
@@ -359,7 +361,7 @@ for (const example of examples) {
     assert.equal(result.verdict, web.verdict)
     // Web offers the plan winner first.
     assert.equal(web.alternatives[0]?.productId, example.winner)
-    // Native: verdict, then EUR price (documented exception; see `nativeHead`).
+    // Native: verdict, volume preference when present, then EUR price (documented exception; see `nativeHead`).
     assert.equal(result.alternatives[0]?.product.id, example.nativeHead)
   })
 }
