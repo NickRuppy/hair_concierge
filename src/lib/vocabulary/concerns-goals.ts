@@ -9,6 +9,9 @@ export const PROFILE_CONCERNS = [
   "frizz",
   "tangling",
   "thinning",
+  "low_shine",
+  "lost_shape",
+  "low_volume_or_weighed_down",
 ] as const
 export type ProfileConcern = (typeof PROFILE_CONCERNS)[number]
 
@@ -23,6 +26,10 @@ export const PROFILE_CONCERN_LABELS: Record<ProfileConcern, string> = {
   frizz: "Frizz",
   tangling: "Verknotungen",
   thinning: "Duenner werdendes Haar",
+  // Existing quiz labels (quiz-data.ts, default/wavy concern options).
+  low_shine: "Wenig Glanz",
+  lost_shape: "Meine Wellen verlieren schnell ihre Form",
+  low_volume_or_weighed_down: "Mein Ansatz wirkt flach oder meine Längen schnell beschwert",
 }
 
 export const PROFILE_CONCERN_OPTIONS = PROFILE_CONCERNS.map((value) => ({
@@ -46,7 +53,11 @@ export const GOALS = [
 ] as const
 export type Goal = (typeof GOALS)[number]
 
-export const GOAL_LABELS: Record<Goal, string> = {
+/** Engine/legacy columns retain a neutral goal; quiz-result Goal and its copy stay unchanged. */
+export const ENGINE_GOALS = [...GOALS, "volume_balance"] as const
+export type EngineGoal = (typeof ENGINE_GOALS)[number]
+
+export const GOAL_LABELS: Record<EngineGoal, string> = {
   volume: "Mehr Volumen",
   healthier_hair: "Gesünderes Haar",
   less_frizz: "Weniger Frizz",
@@ -59,6 +70,7 @@ export const GOAL_LABELS: Record<Goal, string> = {
   less_volume: "Weniger Volumen",
   strengthen: "Haare stärken",
   anti_breakage: "Anti-Haarbruch",
+  volume_balance: "Ausgewogenes Volumen",
 }
 
 export const GOAL_OPTIONS = GOALS.map((value) => ({

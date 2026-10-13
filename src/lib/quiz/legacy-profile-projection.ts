@@ -14,6 +14,19 @@ import type { QuizAnswers } from "./types"
  * golden/oracle tests and `scripts/mobile/profile-edit-postgres-check.ts`. Do not add new callers.
  */
 
+/** Historical writer reproduction for hand-edit detection. The widened live engine projection
+ * must not make an untouched old row appear edited because its writer dropped these answers. */
+export function projectQuizAnswersToHistoricalColumnVocabulary(answers: QuizAnswers) {
+  const projected = projectQuizAnswersToLegacyVocabulary(answers)
+  return {
+    concerns: projected.concerns.filter(
+      (value) =>
+        value !== "low_shine" && value !== "lost_shape" && value !== "low_volume_or_weighed_down",
+    ),
+    goals: projected.goals.filter((value) => value !== "volume_balance"),
+  }
+}
+
 export function resolveProfileDensityFromQuizAnswers(answers: QuizAnswers): string | undefined {
   if (answers.density) return answers.density
 
@@ -73,7 +86,7 @@ export function buildProfileDataFromQuizAnswers(answers: QuizAnswers): Record<st
     profileData.scalp_condition = null
   }
   if (answers.concerns !== undefined) {
-    profileData.concerns = projectQuizAnswersToLegacyVocabulary(answers).concerns
+    profileData.concerns = projectQuizAnswersToHistoricalColumnVocabulary(answers).concerns
   }
 
   // Map quiz chemical treatment keys to English
@@ -104,7 +117,7 @@ export function buildProfilePrimaryConcern(
 ): ProfileConcern | null {
   const stated = resolveStatedPrimaryConcern(answers)
   if (!stated) return null
-  return projectQuizAnswersToLegacyVocabulary({ concerns: [stated] }).concerns[0] ?? null
+  return projectQuizAnswersToHistoricalColumnVocabulary({ concerns: [stated] }).concerns[0] ?? null
 }
 
 export function buildProfileDataFromPersonalPlanCanonicalProfile(
@@ -119,7 +132,7 @@ export function buildProfileDataFromPersonalPlanCanonicalProfile(
   }
 
   const profileData = buildProfileDataFromQuizAnswers(answers)
-  const legacyVocabulary = projectQuizAnswersToLegacyVocabulary(answers)
+  const legacyVocabulary = projectQuizAnswersToHistoricalColumnVocabulary(answers)
   if (legacyVocabulary.goals.length > 0) {
     profileData.goals = legacyVocabulary.goals
   }
