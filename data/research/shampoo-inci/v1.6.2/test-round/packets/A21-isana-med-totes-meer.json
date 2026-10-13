@@ -1,0 +1,120 @@
+{
+  "slot": "A21",
+  "productId": "8a90f0fa-9cb1-458a-93f3-c2374e6d8f16",
+  "name": "ISANA MED Shampoo Totes Meer, 200 ml",
+  "brand": "ISANA",
+  "packSize": "200 ml",
+  "gtins": [
+    "4305615629230"
+  ],
+  "sources": [
+    {
+      "url": "https://www.rossmann.de/media-neu/567/MAM_56763627/MAM_56763627_SHOP_IMAGE_1.4.png",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "pack_back_image_on_rossmann_pdp",
+      "sourceKind": "pack_back",
+      "gtinShown": "not re-read in this session (prior intake 2026-10-06 read EAN 4305615629230 under the barcode on this same image); 200 ml per PDP",
+      "inciVerbatim": "INGREDIENTS: Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Lauryl Lactate, Guar Hydroxypropyltrimonium Chloride, Glycol Distearate, Parfum, Menthol, Laureth-4, Maris Sal, Allantoin, Bisabolol, Sodium Benzoate, Potassium Sorbate, Sodium Chloride, Citric Acid, Glycerin, Formic Acid, Terpineol (read visually from the pack-back image; ends '... Formic Acid, Terpineol.')",
+      "claimsVerbatim": "WIRKUNG: Das ISANA MED SHAMPOO ist eine Spezialentwicklung, die empfindliche und juckende Kopfhaut beruhigt. | Totes Meer Salz ist ein einzigartiger Mineralien-Komplex und besonders reich an naturreinen Spurenelementen. | Original Totes Meer Salz Mineralien | juckreizlindernder Wirkstoff-Komplex | Schutz vor Austrocknung für Kopfhaut & Haar | HAUTVERTRÄGLICHKEIT: dermatologisch bestätigt",
+      "directionsVerbatim": "(none seen on the pack back; none on DE PDP)"
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-totes-meer/p/4305615629230",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4305615629230 (PDP URL id + JSON-LD sku); 200 ml; 0,99 EUR; InStock; name \"Shampoo Totes Meer\"; brand owner Dirk Rossmann GmbH (private label), Ursprungsland Deutschland",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Lauryl Lactate, Guar Hydroxypropyltrimonium Chloride, Glycol Distearate, Parfum, Menthol, Laureth-4, Maris Sal, Allantoin, Bisabolol, Sodium Benzoate, Potassium Sorbate, Sodium Chloride, Citric Acid, Glycerin, Formic Acid",
+      "claimsVerbatim": "Das ISANA Med Shampoo ist eine Spezialentwicklung, die empfindliche und juckende Kopfhaut beruhigt. Totes Meer Salz ist ein einzigartiger Mineralien-Komplex und besonders reich an naturreinen Spurenelementen. | Original Totes Meer Salz Mineralien | juckreizlindernder Wirkstoff-Komplex | Schutz vor Austrocknung für Kopfhaut & Haar | Hautverträglichkeit: dermatologisch bestätigt. | naturreine Mineralien | Kopfhaut beruhigend | ohne Silikone | pH hautneutral | empfindliche Kopfhaut",
+      "directionsVerbatim": "(none on Rossmann PDP)"
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "inci_difference",
+      "severity": "minor",
+      "detail": "Pack back lists 19 items ending 'Formic Acid, Terpineol'; the Rossmann PDP text lists 18 items (no Terpineol). Items 1-18 identical and in the same order. Prior intake (2026-10-06) found the same split and the same stale PDP vs updated label reading; also seen in the older 2026-09-02 capture (18 items). Lists not merged.",
+      "packList": [
+        "Aqua",
+        "Sodium Laureth Sulfate",
+        "Cocamidopropyl Betaine",
+        "Lauryl Lactate",
+        "Guar Hydroxypropyltrimonium Chloride",
+        "Glycol Distearate",
+        "Parfum",
+        "Menthol",
+        "Laureth-4",
+        "Maris Sal",
+        "Allantoin",
+        "Bisabolol",
+        "Sodium Benzoate",
+        "Potassium Sorbate",
+        "Sodium Chloride",
+        "Citric Acid",
+        "Glycerin",
+        "Formic Acid",
+        "Terpineol"
+      ],
+      "pdpList": [
+        "Aqua",
+        "Sodium Laureth Sulfate",
+        "Cocamidopropyl Betaine",
+        "Lauryl Lactate",
+        "Guar Hydroxypropyltrimonium Chloride",
+        "Glycol Distearate",
+        "Parfum",
+        "Menthol",
+        "Laureth-4",
+        "Maris Sal",
+        "Allantoin",
+        "Bisabolol",
+        "Sodium Benzoate",
+        "Potassium Sorbate",
+        "Sodium Chloride",
+        "Citric Acid",
+        "Glycerin",
+        "Formic Acid"
+      ]
+    },
+    {
+      "type": "claim_inci_check",
+      "detail": "'Totes Meer Salz' = Maris Sal; 'ohne Silikone' consistent. 'juckreizlindernder Wirkstoff-Komplex' names no specific ingredient; Menthol, Allantoin, Bisabolol are the plausible members (not stated)."
+    }
+  ],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Betaine",
+    "Lauryl Lactate",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Glycol Distearate",
+    "Parfum",
+    "Menthol",
+    "Laureth-4",
+    "Maris Sal",
+    "Allantoin",
+    "Bisabolol",
+    "Sodium Benzoate",
+    "Potassium Sorbate",
+    "Sodium Chloride",
+    "Citric Acid",
+    "Glycerin",
+    "Formic Acid",
+    "Terpineol"
+  ],
+  "canonicalReason": "Current German pack back (tier 1) wins over the PDP text: 19 items incl. Terpineol, re-read this session from the Rossmann-hosted back image; identical to the 2026-10-06 intake reading. PDP text is the 18-item older/stale list. The back image is a retailer-hosted packshot (not a photo of a physical bottle).",
+  "inciFingerprintSha256": "0a9ce49c3c9a71eeb4cd8e8ebc4dc4b2431235b5e08cbd0e096985e48ddbbda3",
+  "normalization": "Canonical list = the ordered INCI items, each lower-cased, trimmed, internal whitespace collapsed; items joined with '|' and sha256 over the UTF-8 string. Split synonym entries (e.g. 'Aqua (Water, Eau)') are merged into one item before hashing; trailing full stops removed.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 1,
+  "status": "frozen_with_conflict",
+  "blockReason": null,
+  "notes": [
+    "Prior evidence: intake package d2f27a6f... and plans/shampoo-v16/track-b/isana-med-parallel-2026-10-07/isana-med-totes-meer.json (identity, front-pack claims 'ANTI JUCKREIZ SHAMPOO', 'Bisabolol & Allantoin', 'ohne Silikone', 'pH hautneutral', 'klinisch getestet' were read from the front image there; not re-viewed here).",
+    "Prior researcher fingerprint 0a9ce49c... used lower-case, trim, split on ',' joined '|' - same scheme as here; the list is unchanged, so the fingerprint should match.",
+    "codecheck.info shows 'nicht mehr erhältlich' (stale); Rossmann lists it InStock at 0,99 EUR. HU Rossmann and incidecoder (2021) carry the 18-item list; not re-fetched.",
+    "Medically adjacent claims ('juckende Kopfhaut', 'juckreizlindernd') kept verbatim, not classified.",
+    "orchestrator 2026-10-10: own-brand retailer page normalized to manufacturer_de (calibration convention); tier set to 2 unless pack-based."
+  ]
+}

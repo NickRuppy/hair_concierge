@@ -67,6 +67,8 @@
       "docs/research/shampoo-inci/v1.6/",
       "data/research/shampoo-inci/v1.6.1/",
       "docs/research/shampoo-inci/v1.6.1/",
+      "data/research/shampoo-inci/v1.6.2/",
+      "docs/research/shampoo-inci/v1.6.2/",
       "docs/research/shampoo-inci/README.md"
     ],
     "scopeExtensions": [
@@ -77,6 +79,14 @@
           "docs/research/shampoo-inci/v1.6.1/"
         ],
         "reason": "Shampoo v1.6.1 was locked next to this package with its own byte pins (data/research/shampoo-inci/v1.6.1/artifact-manifest.json, enforced by tests/shampoo-research-v1-6-1-lock.test.ts). Its two new directories did not exist at the 2026-10-10 re-pin, so excluding them leaves archiveContent unchanged (518 files, same SHA-256); no v1.4 file was touched."
+      },
+      {
+        "date": "2026-10-12",
+        "added": [
+          "data/research/shampoo-inci/v1.6.2/",
+          "docs/research/shampoo-inci/v1.6.2/"
+        ],
+        "reason": "Shampoo v1.6.2 was locked next to this package with its own byte pins (data/research/shampoo-inci/v1.6.2/artifact-manifest.json, enforced by tests/shampoo-research-v1-6-2-lock.test.ts). Its two new directories did not exist at the 2026-10-10 re-pin, so excluding them leaves archiveContent unchanged; no v1.4 file was touched."
       }
     ]
   },

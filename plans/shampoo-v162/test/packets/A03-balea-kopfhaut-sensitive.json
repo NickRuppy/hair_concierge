@@ -1,0 +1,69 @@
+{
+  "slot": "A03",
+  "productId": "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+  "name": "Balea PROFESSIONAL Shampoo Kopfhaut Sensitive",
+  "brand": "Balea PROFESSIONAL (dm-Eigenmarke)",
+  "packSize": "250 ml",
+  "gtins": [
+    "4070765001044"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/1701109/balea-professional-shampoo-kopfhaut-sensitive",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de_own_brand",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4070765001044 (dm-Artikelnummer 1701109; title 'Shampoo Kopfhaut Sensitive, 250 ml'; Anschrift des Unternehmens: dm-drogerie markt GmbH + Co. KG, Karlsruhe = brand owner/responsible company, hergestellt in Schweiz)",
+      "inciVerbatim": "AQUA | HYDROGENATED STARCH HYDROLYSATE | SODIUM LAURETH SULFATE | COCAMIDOPROPYL HYDROXYSULTAINE | GLYCERIN | SODIUM CHLORIDE | COCO|GLUCOSIDE | ALLANTOIN | BISABOLOL | ZINC PCA | PANTHENOL | HYDROLYZED KERATIN | CAMELLIA SINENSIS LEAF EXTRACT | GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE | CITRIC ACID | GLYCOL DISTEARATE | COCAMIDOPROPYL BETAINE | PARFUM | SODIUM BENZOATE",
+      "claimsVerbatim": "Beruhigendes Shampoo für empfindliche Kopfhaut | Mit Panthenol und Weißer-Tee-Extrakt | Kann Juckreiz und Spannungsgefühle mildern | Ohne Silikone | Das Shampoo Kopfhaut Sensitive von Balea PROFESSIONAL wurde speziell für die Bedürfnisse von sensibler und trockener Kopfhaut entwickelt. Die sanfte, pH-hautneutrale Formel reinigt schonend und wirkt mit Panthenol sowie Weißer-Tee-Extrakt beruhigend. Das Shampoo kann helfen, Juckreiz und Spannungsgefühle zu mildern. Das Haar wird sanft gepflegt und erhält einen seidigen Glanz. | Produkteigenschaften: Ohne Alkohol, ohne Silikone | Haartyp: glanzloses Haar",
+      "directionsVerbatim": "Sanft auf die Kopfhaut und ins Haar einmassieren. Kurz einwirken lassen und sorgfältig mit lauwarmen Wasser ausspülen."
+    },
+    {
+      "url": "https://world.openbeautyfacts.org/api/v2/product/4070765001044.json",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "open_beauty_facts_support",
+      "sourceKind": "retailer",
+      "gtinShown": "4070765001044 (brand Balea PROFESSIONAL, quantity 250 ml)",
+      "inciVerbatim": "AQUA | HYDROGENATED STARCH HYDROLYSATE | SODIUM LAURETH SULFATE | COCAMIDOPROPYL HYDROXYSULTAINE | GLYCERIN | SODIUM CHLORIDE | COCO|GLUCOSIDE | ALLANTOIN | BISABOLOL | ZINC PCA | PANTHENOL | HYDROLYZED KERATIN | CAMELLIA SINENSIS LEAF EXTRACT | GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE | CITRIC ACID | GLYCOL DISTEARATE | COCAMIDOPROPYL BETAINE | PARFUM | SODIUM BENZOATE",
+      "claimsVerbatim": "(none captured)",
+      "directionsVerbatim": "(none captured)"
+    }
+  ],
+  "conflicts": [],
+  "canonicalInci": [
+    "Aqua",
+    "Hydrogenated Starch Hydrolysate",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Hydroxysultaine",
+    "Glycerin",
+    "Sodium Chloride",
+    "Coco-Glucoside",
+    "Allantoin",
+    "Bisabolol",
+    "Zinc PCA",
+    "Panthenol",
+    "Hydrolyzed Keratin",
+    "Camellia Sinensis Leaf Extract",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Citric Acid",
+    "Glycol Distearate",
+    "Cocamidopropyl Betaine",
+    "Parfum",
+    "Sodium Benzoate"
+  ],
+  "canonicalReason": "Balea PROFESSIONAL is a dm own brand and the dm PDP (company address = dm) is the brand owner's own DE page for the exact GTIN 4070765001044 / 250 ml; the list is complete, byte-identical to the v1.3 capture of 2026-08-10 (no reformulation), and the Open Beauty Facts record repeats the same text (support only, probably derived from dm so not independent). No other retailer sells the brand. dm's '|' separators are rendering artefacts; 'COCO|GLUCOSIDE' read as Coco-Glucoside; upper case normalised to INCI title case.",
+  "inciFingerprintSha256": "4871d6edeb1c4a74bb8123dc09d22d76a8888bf42f570a16fd8b5f91ac931e73",
+  "normalization": "Split the canonical INCI on ',' (or '|' / '•' separators where the source uses them; dm renders a non-breaking hyphen as '|' inside names, e.g. 'COCO|GLUCOSIDE' = 'Coco-Glucoside'); per ingredient: trim, collapse internal whitespace, merge split synonym entries (e.g. 'Aqua (Water, Eau)' stays one item), strip trailing full stop; canonicalInci keeps the published capitalisation/asterisks; for the hash each item is lower-cased; items joined with '|' and sha256 over the UTF-8 string.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Catalog name 'Balea Kopfhaut Sensitive' = current dm name 'Balea PROFESSIONAL Shampoo Kopfhaut Sensitive, 250 ml'; GTIN matches the v1.3 formula-source (4070765001044).",
+    "Tier 2 assigned because dm is the brand owner of the Balea own brand (page is the 'manufacturer' DE page in effect); a stricter reader could rate it tier 3. No pack photo was inspected.",
+    "v1.3/v1.4 fingerprint 0c0e78f8... was computed on a different normalization; list content unchanged vs v1.3 (19 items).",
+    "Claim-INCI check: Panthenol, Camellia Sinensis Leaf Extract (Weißer-Tee-Extrakt) present; no silicones in list; 'ohne Alkohol' - no alcohol in list. No conflict.",
+    "orchestrator 2026-10-10: own-brand retailer page normalized to manufacturer_de (calibration convention); tier set to 2 unless pack-based."
+  ]
+}

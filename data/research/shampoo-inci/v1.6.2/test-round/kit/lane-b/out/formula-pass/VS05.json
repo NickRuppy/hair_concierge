@@ -1,0 +1,136 @@
+{
+  "blindId": "VS05",
+  "inciFingerprintSha256": "303653d5f86a174377761e891fefde597d7e15dc484437056bd83783230aa48f",
+  "phase": "formula_pass_blind",
+  "standard": "shampoo-classification-v1.6.2 (candidate)",
+  "formulaBlock": {
+    "packSize": "200 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "No split synonym entries; no markers. Normalized positions (ID-2) equal packet positions 1-14.",
+    "e3Point": "Parfum@7. Prominent = positions 1-6."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Low by C6: no strong anionic anywhere; the earliest prominent cleansing surfactant is the nonionic glucoside Decyl Glucoside@2, followed by the mild anionics Disodium Laureth Sulfosuccinate@3 (sulfosuccinate) and Sodium Lauryl Sulfoacetate@4 (sulfoacetate). PEG-55 Propylene Glycol Oleate@5 is a PEG thickener (not cleansing, not buffer). Formula-only.",
+      "ruleIds": ["C3", "C4", "C6"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low: cleansing-led architecture; the only conditioning route is the cationic starch Hydroxypropyl Oxidized Starch PG-Trimonium Chloride@11, listed after Parfum@7 and the preservatives (not prominent). No silicone, lipid, refatter, pearlizer or deliberate humectant (Propylene Glycol@6 is a solvent; Sodium Lactate@14 is a pH buffer, C2/F4). Neighbor moderate: the cationic starch could add noticeable slip.",
+      "ruleIds": ["C2", "Section 5 anchors", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "evidence": {
+        "cationic_polymer": ["Hydroxypropyl Oxidized Starch PG-Trimonium Chloride@11"],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Decyl Glucoside@2 (nonionic)", "Disodium Laureth Sulfosuccinate@3 (mild anionic)", "Sodium Lauryl Sulfoacetate@4 (mild anionic)"],
+        "humectantContext": ["Propylene Glycol@6 (solvent, not deliberate humectant)", "Sodium Lactate@14 (pH buffer)"],
+        "excluded": ["PEG-55 Propylene Glycol Oleate@5 (PEG thickener, 6.4)", "Citric Acid@10, Lactic Acid@12 (pH)", "Sodium Chloride@13 (salt)"],
+        "unresolved": []
+      },
+      "wLineRecord": {
+        "wLine": "Parfum@7",
+        "wLineClasses": ["fragrance"],
+        "cap": "e3Point Parfum@7",
+        "alphabeticalRun": "none (longest ascending run 10-14, five entries)",
+        "skippedCandidates": [],
+        "codes": [],
+        "plausibility": "No candidate before the cap; the E3 marker Parfum@7 is the earliest candidate: (i) Decyl Glucoside@2 before it; (ii) nothing between it and the cap. W-line = cap.",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light",
+      "persistence": "low",
+      "resetCapacity": "moderate",
+      "counterevidence": "Mild chassis gives less reset than a sulfate system; a cationic starch can deposit lightly.",
+      "whyThisBand": "One deposition family only: a cationic starch listed after Parfum and the preservatives; no silicone, lipid, refatter, protein or film former.",
+      "whyNotNeighborBand": "Not moderate: a single light, late cationic starch with no reinforcing route; there is nothing for even a mild-surfactant reset to offset, so noticeable residue is unlikely.",
+      "confidenceLimitingFactor": "None material; complete formula with a single late light route.",
+      "rationale": "Low (6.6 low anchor). Reset capacity read as moderate for this low-deposition architecture (mild surfactants but almost nothing to remove). W-line = cap Parfum@7; no payload_lipid to gate.",
+      "ruleIds": ["6.3", "6.4", "6.6", "W2", "W-LINE"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": "Claims hidden (3.1). Formula-only placeholder; claim-dependent.",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Hydroxypropyl Oxidized Starch PG-Trimonium Chloride@11"],
+        "limitation": "No deliberate humectant, lipid or protein route; formula distinguishes neither moisture nor repair."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "The only distinctive formula trait is a very mild, sulfate-free chassis (mildness is not a focus, 7.2); a sensitive-scalp role would need SC1 positioning.",
+      "decisionTrace": "Claim direction null (hidden). Lengths care nonspecific. Mild base (MB) makes a sensitive-scalp role formula-compatible if claimed. Provisional general.",
+      "rationale": "Provisional general pending claims.",
+      "ruleIds": ["3.1", "7.2", "7.3"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["scalp_active"],
+      "decisionTrace": "Empty default considered; no claims visible. Provisional.",
+      "rationale": "Provisional empty secondary; claim-dependent.",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional default regular: claims hidden. Cleansing low, so frequent fires with U2 frequency wording graded moderate/high.",
+      "ruleIds": ["Section 9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "csaRoute": "No listed prominent E4 comfort or humectant/refatting route (positions 1-6 hold none). CSA met only via MB (v1.6.2): cleansingStrength low and no prominent strong anionic -> mild_base:Decyl Glucoside@2, Disodium Laureth Sulfosuccinate@3, Sodium Lauryl Sulfoacetate@4. MB passes CSA and the S-SENSITIVE gate only, never S-DRY.",
+      "rationale": "Provisional not_targeted: SC1 positioning hidden. Formula half (CSA) met via MB only, so targeted is possible for a sensitive-scalp claim; a dry-scalp claim would fail S-DRY (no prominent humectant/refatting route). Fragrance declared (Parfum@7) is a supportive-signal absence, not a veto; no cooling agent.",
+      "ruleIds": ["Section 10", "CSA", "MB", "E3", "E4", "SC1", "S-SENSITIVE", "S-DRY"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no Piroctone Olamine, Climbazole, Selenium Sulfide or Selenium Disulfide (Section 11).",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactantClasses": {
+      "strongAnionicAlkylSulfate": [],
+      "strongAnionicEtherSulfonate": [],
+      "mildAnionic": ["Disodium Laureth Sulfosuccinate@3", "Sodium Lauryl Sulfoacetate@4"],
+      "amphoteric": [],
+      "nonionicCleansing": ["Decyl Glucoside@2 (earliest prominent cleansing surfactant, C6)"],
+      "notCleansingNotBuffer": ["PEG-55 Propylene Glycol Oleate@5 (PEG thickener)"]
+    },
+    "conditioningRoutes": ["Hydroxypropyl Oxidized Starch PG-Trimonium Chloride@11 (cationic polymer, not prominent)"],
+    "weightRoutes": ["cationic_polymer: cationic starch@11"],
+    "actives": [],
+    "preservatives": ["Phenoxyethanol@8", "Sodium Benzoate@9"],
+    "fragrance": "Parfum@7",
+    "coolingOrEssentialOils": []
+  },
+  "unresolvedMaterialIngredients": []
+}

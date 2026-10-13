@@ -1,0 +1,18 @@
+A05 VS01 lane-a: OK
+A05 VS01 lane-b: OK
+A06 VS02 lane-a: OK
+A06 VS02 lane-b: OK
+A40 VS03 lane-a: OK
+A40 VS03 lane-b: OK
+G01 VS04 lane-a: OK
+G01 VS04 lane-b: OK
+G03 VS05 lane-a: OK
+G03 VS05 lane-b: OK
+A24 VS06 lane-a: OK
+A24 VS06 lane-b: OK
+A43 VS07 lane-a: conditioningLevel: baseline low, got moderate | focusPrimary: baseline general, got repair
+A43 VS07 lane-b: conditioningLevel: baseline low, got moderate
+A21 VS08 lane-a: weightPotential: baseline low, got moderate | weight: baseline light, got moderate | fits: baseline {'fine': 'ideal', 'normal': 'ideal', 'coarse': 'acceptable'}, got {'fine': 'acceptable', 'normal': 'ideal', 'coarse': 'acceptable'}
+A21 VS08 lane-b: conditioningLevel: baseline moderate, got high | weightPotential: baseline low, got moderate | weight: baseline light, got moderate | fits: baseline {'fine': 'ideal', 'normal': 'ideal', 'coarse': 'acceptable'}, got {'fine': 'acceptable', 'normal': 'ideal', 'coarse': 'ideal'}
+A03 VS09 lane-a: OK
+A03 VS09 lane-b: OK
