@@ -1,6 +1,6 @@
 # Slice 1 — guarded one-shot catalogue migration
 
-Status: **prepared and rehearsed, NOT applied.** Production apply needs Nick's approval of this exact batch (fingerprint below).
+Status: **prepared and rehearsed, NOT applied.** The 2026-10-13 production attempt failed postflight and rolled back; no batch writes persisted. Production re-apply remains a separate authorized action (fingerprint below).
 
 | | |
 |---|---|
@@ -8,12 +8,32 @@ Status: **prepared and rehearsed, NOT applied.** Production apply needs Nick's a
 | Batch id (ledger receipts + evidence) | `S5R-06-catalog-completeness-slice1` |
 | Disposition batch (Garnier) | `S5-24-catalog-completeness-slice1` |
 | Content fingerprint | `565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa` |
-| Artifact manifest combined sha256 | `15e9ea852ff97a7554e5657548354a9f567a82794486e1844c94925e65011e00` |
+| Artifact manifest combined sha256 | `570809c2db4dd4770b68f07d40301e4c00f407dac8e46c1bc8474a2832d67d25` |
 | Prestate capture | `2026-10-13T08:44:08.15786Z` (read-only re-capture after #677 + price audit; prod `pqdkhefxsxkyeqelqegq`) |
 | Schema capture | `2026-10-11T13:52:02.549733Z` (`fixtures/prod-schema-2026-10-11.json`) |
 | Template capture (Codex F01) | `2026-10-11T14:29:45.064989Z`: `application_guidance_protocols` rows of `scalp.rinse-off.v2`, the table's schema + `reject_active_application_content_mutation()`, and the two rinse-off peeling pointers (read-only; ledger re-checked: 376 rows, unchanged) |
 
 Files: `generate.ts` (generator, no DB access) → `target-state.json`, `rollback.sql` (prepared, not a migration), `verify.sql` (read-only zero-row post-apply proof), the migration, `artifact-manifest.json`. Inputs: `prestate.json`, `fixtures/`, `amendments/`, `inputs/`, `../research/**`. Capture queries: `capture/`.
+
+## 2026-10-13 incident — schema additions after capture
+
+Production applied `20261013150000_leave_in_heat_activation_schema.sql` before S1 for #679. Its nullable `product_leave_in_specs.heat_activation_route` column added a JSON key absent from S1's 2026-10-11 schema capture. The S1 transaction failed with `P0001: catalog completeness slice1 postflight: product_leave_in_specs_written_rows_target` and rolled back.
+
+Every S1 whole-row comparison now uses generator-built `pg_catalog.jsonb_build_object` with explicit columns from that table's captured schema, retaining the existing timestamp exclusions and `products.embedding` exclusion. This applies to target/replay/verify images, guidance preimages, evidence/receipt images, rollback CAS and restoration checks. Explicit references retain captured NULLs and generated values, ignore later added keys, and fail closed if a compared captured column is removed. Key/stamp guards and selected-column preimages remain unchanged. No target data or writes changed; the content fingerprint stays `565d85db…21fa` because it hashes data, writes and captured preimages, not SQL text. SQL and manifest hashes change.
+
+S1 inserts no leave-in specs forward. Its rollback re-inserts captured specs with `heat_activation_required = false`; the generator now asserts this for every leave-in insert. Omitting the new nullable route yields NULL and satisfies S3's `heat_activation_required = (heat_activation_route IS NOT NULL)` CHECK. The production-order rehearsal runs the real predecessor eligibility migration and real S3 schema (lineage guards intact), then S1 → zero-row verify → replay → rollback → re-apply. A stamp-preserving captured-value revision is still reported by verify and refused by replay/rollback. The existing default-order rehearsal remains.
+
+Local verification: the production-order case was red on the original migration with the exact incident error (0/1 pass). After regeneration, `node --import ./tests/server-only-register.cjs --import tsx --test tests/catalog-completeness-fill-slice1-postgres.test.ts` passes 19/19 (no skips); `TSX_DISABLE_CACHE=1 node --import tsx plans/catalog-completeness-fill/slice1/generate.ts` and the same command with `--check` both report `validator: green`; `npx --no-install tsc --noEmit` and `git diff --check` pass. Migration sha256: `cf16c88950ccb0760bcdafc08a22ded6fb73a4ccdc63aaf220846088da9427eb`. No staging, commits, network or live DB access.
+
+Later-slice audit (local migration files only; no live schema access):
+
+| Artifact | Post-capture additions in the current apply order |
+|---|---|
+| S3 `20261013151000_catalog_completeness_fill_slice3.sql`, `slice3/verify.sql`, `slice3/rollback.sql` (`slice3/generate.ts`) | Leave-in specs/fit guards still use whole-row subtraction, but every expected specs image includes `heat_activation_route` (including NULL for HEAT&GLOW); S3 requires the route schema. No deep-cleansing table images. No mismatch from the known additions; unchanged. Future added specs/fit columns remain a reseal/hardening concern. |
+| S4 Aveda `20261013170000_bondbuilder_aveda_damage_cadence.sql`, `slice4/verify.sql`, `slice4/rollback.sql` (`slice4/generate.ts`) | Explicit protocol fields, payload hashes, cadence and receipts; no whole-row image. Unchanged. |
+| K18/Epres `slice4/k18-epres/20261011175000_bondbuilder_k18_epres_bundle_reseal.sql`, `verify.sql`, `rollback.sql` (`generate.ts`) | Versioned, lineage-pinned protected bundle uses `products`, `product_bondbuilder_specs`, `product_application_protocols`, not leave-in or deep-cleansing specs. Neither known addition enters it; unchanged. Future additions to those bundle tables require authority-level handling, including the curated-publication serializer, rather than weakening only this generator. |
+
+The post-capture additions found in repository migrations are `quiz_lead.identity_traits_allowed` (20261012153530), deep-cleansing `target_scalp_types` (20261013140000), and leave-in `heat_activation_route` (20261013150000). The first two do not enter these slices' whole-row images. Unknown production-only drift is not assessed offline. Projection tolerance does not promise preservation of unknown columns when the existing rollback deletes/re-inserts child rows; new defaults/constraints can still require separate compatibility review. PGlite does not prove concurrent lock behavior.
 
 ## F01 — recapture after #654/#655/#660
 

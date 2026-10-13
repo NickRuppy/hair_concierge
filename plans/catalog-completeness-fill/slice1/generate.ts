@@ -2135,10 +2135,19 @@ const keyIn = (table: string, keys: string[]) =>
     ? "false"
     : `${keyExpr(table)} IN (${keys.map((k) => `${sqlText(k)}::jsonb`).join(", ")})`
 
-const rowJson = (table: string) =>
-  table === "products" ? `(pg_catalog.to_jsonb(t) - 'embedding')` : `pg_catalog.to_jsonb(t)`
+/**
+ * Whole-row guards own only the captured schema. Explicit column references keep
+ * NULLs and generated values, ignore later additions, and fail closed on removed
+ * captured columns. Products embedding remains outside S1's existing contract.
+ */
+function rowJson(table: string, alias = "t", omit: string[] = []): string {
+  const columns = META[table]!.columns.map((column) => column.name).filter(
+    (column) => !omit.includes(column) && !(table === "products" && column === "embedding"),
+  )
+  return `pg_catalog.jsonb_build_object(${columns.map((column) => `${sqlText(column)}, ${alias}.${column}`).join(", ")})`
+}
 const contentJson = (table: string) =>
-  `(${rowJson(table)} - 'created_at' - 'updated_at' - 'reviewed_at')`
+  rowJson(table, "t", ["created_at", "updated_at", "reviewed_at"])
 
 /** Exact preimage: every scoped row's key + stamp, and the old value of every changed column. */
 function linkJson(table: LinkTable, withStamps: boolean): string {
@@ -2184,9 +2193,9 @@ const NEQI_REFERENCE_SET_CHECKS: Check[] = [
   },
 ]
 
-const GUIDANCE_KEY_ROWS = `(SELECT coalesce(pg_catalog.jsonb_agg(pg_catalog.to_jsonb(t) ORDER BY t.protocol_version, t.id), '[]'::jsonb) FROM public.${GUIDANCE_TABLE} t WHERE t.guidance_key = ${sqlText(GUIDANCE_KEY)})`
+const GUIDANCE_KEY_ROWS = `(SELECT coalesce(pg_catalog.jsonb_agg(${rowJson(GUIDANCE_TABLE)} ORDER BY t.protocol_version, t.id), '[]'::jsonb) FROM public.${GUIDANCE_TABLE} t WHERE t.guidance_key = ${sqlText(GUIDANCE_KEY)})`
 const guidanceRow = (id: unknown, minus: string[]) =>
-  `(SELECT pg_catalog.to_jsonb(t)${minus.map((c) => ` - '${c}'`).join("")} FROM public.${GUIDANCE_TABLE} t WHERE t.id = '${String(id)}'::uuid)`
+  `(SELECT ${rowJson(GUIDANCE_TABLE, "t", minus)} FROM public.${GUIDANCE_TABLE} t WHERE t.id = '${String(id)}'::uuid)`
 
 const PRESTATE_CHECKS: Check[] = [
   ...STATE_TABLES.map((table) => ({
@@ -2270,7 +2279,7 @@ function targetChecks(): Check[] {
   }
   checks.push({
     name: "fact_evidence_target",
-    predicate: `(SELECT coalesce(pg_catalog.jsonb_agg(pg_catalog.to_jsonb(t) - 'created_at' ORDER BY t.product_id::text COLLATE "C", t.fact_key COLLATE "C", t.source_url COLLATE "C"), '[]'::jsonb) FROM public.personal_plan_catalog_fact_evidence t WHERE t.batch_id = ${sqlText(BATCH_ID)}) = ${sqlJson(expectedEvidence)}`,
+    predicate: `(SELECT coalesce(pg_catalog.jsonb_agg(${rowJson("personal_plan_catalog_fact_evidence", "t", ["created_at"])} ORDER BY t.product_id::text COLLATE "C", t.fact_key COLLATE "C", t.source_url COLLATE "C"), '[]'::jsonb) FROM public.personal_plan_catalog_fact_evidence t WHERE t.batch_id = ${sqlText(BATCH_ID)}) = ${sqlJson(expectedEvidence)}`,
   })
   checks.push({
     name: "fact_evidence_stamped_at_apply",
@@ -2278,7 +2287,7 @@ function targetChecks(): Check[] {
   })
   checks.push({
     name: "receipts_target",
-    predicate: `(SELECT coalesce(pg_catalog.jsonb_agg(pg_catalog.to_jsonb(r) - 'created_at' ORDER BY r.product_key COLLATE "C"), '[]'::jsonb) FROM public.catalog_enrichment_applied_items r WHERE r.batch_id = ${sqlText(BATCH_ID)}) = ${sqlJson(expectedReceipts)}`,
+    predicate: `(SELECT coalesce(pg_catalog.jsonb_agg(${rowJson("catalog_enrichment_applied_items", "r", ["created_at"])} ORDER BY r.product_key COLLATE "C"), '[]'::jsonb) FROM public.catalog_enrichment_applied_items r WHERE r.batch_id = ${sqlText(BATCH_ID)}) = ${sqlJson(expectedReceipts)}`,
   })
   checks.push(
     linkRowCheck(
@@ -2406,6 +2415,11 @@ function keyWhere(table: string, key: Row): string {
 }
 
 function insertColumns(table: StateTable, row: Row): string[] {
+  // Forward S1 has no leave-in-spec inserts; rollback restores captured rows.
+  // Omitting the later nullable route is valid before and after S3 only while
+  // activation is false (S3 CHECK: required = (route IS NOT NULL)).
+  if (table === "product_leave_in_specs")
+    assert(row.heat_activation_required === false, "S1 leave-in insert must never activate heat")
   const meta = META[table]!
   const unknown = Object.keys(row).filter((col) => !meta.columns.some((c) => c.name === col))
   assert(unknown.length === 0, `${table} unmapped columns: ${unknown.join(", ")}`)
@@ -2537,7 +2551,7 @@ const guidanceApplySql = `  -- Retire the exact captured active version 2 (whole
   UPDATE public.${GUIDANCE_TABLE} t
   SET status = 'retired'
   WHERE t.id = '${String(GUIDANCE_V2.id)}'::uuid
-    AND pg_catalog.to_jsonb(t) = ${sqlJson(GUIDANCE_V2)};
+    AND ${rowJson(GUIDANCE_TABLE)} = ${sqlJson(GUIDANCE_V2)};
   GET DIAGNOSTICS v_rows = ROW_COUNT;
   IF v_rows <> 1 THEN RAISE EXCEPTION 'slice1 retire ${GUIDANCE_KEY} v2 touched % rows', v_rows; END IF;
   -- Normalise the retirement stamp (the trigger wrote clock_timestamp()) to the
@@ -2547,7 +2561,7 @@ const guidanceApplySql = `  -- Retire the exact captured active version 2 (whole
   SET updated_at = pg_catalog.now()
   WHERE t.id = '${String(GUIDANCE_V2.id)}'::uuid
     AND t.status = 'retired'
-    AND (pg_catalog.to_jsonb(t) - 'updated_at') = ${sqlJson(GUIDANCE_V2_RETIRED)};
+    AND ${rowJson(GUIDANCE_TABLE, "t", ["updated_at"])} = ${sqlJson(GUIDANCE_V2_RETIRED)};
   GET DIAGNOSTICS v_rows = ROW_COUNT;
   IF v_rows <> 1 THEN RAISE EXCEPTION 'slice1 stamp ${GUIDANCE_KEY} v2 retirement touched % rows', v_rows; END IF;
 
@@ -2877,7 +2891,7 @@ const FULL_RESTORE_CHECKS: Check[] = [
   ...eligibilityResetProducts.flatMap((id) =>
     (["product_thickness_eligibility", "product_concern_eligibility"] as const).map((table) => ({
       name: `${table}_${id.slice(0, 8)}_restored_byte_exact`,
-      predicate: `(SELECT coalesce(pg_catalog.jsonb_agg(pg_catalog.to_jsonb(t) ORDER BY ${orderExpr(table)}), '[]'::jsonb) FROM public.${table} t WHERE t.product_id = '${id}'::uuid) = ${sqlJson(PRE[table].filter((row) => row.product_id === id).sort(compareRows(table)))}`,
+      predicate: `(SELECT coalesce(pg_catalog.jsonb_agg(${rowJson(table)} ORDER BY ${orderExpr(table)}), '[]'::jsonb) FROM public.${table} t WHERE t.product_id = '${id}'::uuid) = ${sqlJson(PRE[table].filter((row) => row.product_id === id).sort(compareRows(table)))}`,
     })),
   ),
   linkRowCheck(
@@ -3066,13 +3080,13 @@ ${eligibilityCas}
   DELETE FROM public.personal_plan_catalog_fact_evidence t
   WHERE t.batch_id = '${BATCH_ID}' AND t.batch_fingerprint = '${FINGERPRINT}'
     AND t.created_at = v_applied_at
-    AND (pg_catalog.to_jsonb(t) - 'created_at') IN (SELECT pg_catalog.jsonb_array_elements(${sqlJson(expectedEvidence)}));
+    AND ${rowJson("personal_plan_catalog_fact_evidence", "t", ["created_at"])} IN (SELECT pg_catalog.jsonb_array_elements(${sqlJson(expectedEvidence)}));
   GET DIAGNOSTICS v_rows = ROW_COUNT;
   IF v_rows <> ${expectedEvidence.length} THEN RAISE EXCEPTION 'rollback: evidence is not the generated target (% rows)', v_rows; END IF;
   DELETE FROM public.catalog_enrichment_applied_items t
   WHERE t.batch_id = '${BATCH_ID}' AND t.batch_fingerprint = '${FINGERPRINT}'
     AND t.created_at = v_applied_at
-    AND (pg_catalog.to_jsonb(t) - 'created_at') IN (SELECT pg_catalog.jsonb_array_elements(${sqlJson(expectedReceipts)}));
+    AND ${rowJson("catalog_enrichment_applied_items", "t", ["created_at"])} IN (SELECT pg_catalog.jsonb_array_elements(${sqlJson(expectedReceipts)}));
   GET DIAGNOSTICS v_rows = ROW_COUNT;
   IF v_rows <> ${expectedReceipts.length} THEN RAISE EXCEPTION 'rollback: receipts are not the generated target (% rows)', v_rows; END IF;
 
@@ -3082,13 +3096,13 @@ ${eligibilityCas}
   UPDATE public.${GUIDANCE_TABLE} t
   SET status = 'retired'
   WHERE t.id = '${String(GUIDANCE_V3.id)}'::uuid
-    AND (pg_catalog.to_jsonb(t) - 'verified_at' - 'created_at' - 'updated_at') = ${sqlJson(GUIDANCE_V3)}
+    AND ${rowJson(GUIDANCE_TABLE, "t", ["verified_at", "created_at", "updated_at"])} = ${sqlJson(GUIDANCE_V3)}
     AND t.verified_at = v_applied_at AND t.created_at = v_applied_at AND t.updated_at = v_applied_at;
   GET DIAGNOSTICS v_rows = ROW_COUNT;
   IF v_rows <> 1 THEN RAISE EXCEPTION 'rollback: ${GUIDANCE_KEY} v3 is not its generated target (% rows)', v_rows; END IF;
   DELETE FROM public.${GUIDANCE_TABLE} t
   WHERE t.id = '${String(GUIDANCE_V3.id)}'::uuid
-    AND (pg_catalog.to_jsonb(t) - 'status' - 'verified_at' - 'created_at' - 'updated_at') = ${sqlJson(
+    AND ${rowJson(GUIDANCE_TABLE, "t", ["status", "verified_at", "created_at", "updated_at"])} = ${sqlJson(
       Object.fromEntries(Object.entries(GUIDANCE_V3).filter(([col]) => col !== "status")),
     )}
     AND t.status = 'retired' AND t.created_at = v_applied_at;
@@ -3097,7 +3111,7 @@ ${eligibilityCas}
   UPDATE public.${GUIDANCE_TABLE} t
   SET status = 'active', updated_at = ${sqlValue(GUIDANCE_TABLE, "updated_at", GUIDANCE_V2.updated_at)}
   WHERE t.id = '${String(GUIDANCE_V2.id)}'::uuid
-    AND (pg_catalog.to_jsonb(t) - 'updated_at') = ${sqlJson(GUIDANCE_V2_RETIRED)}
+    AND ${rowJson(GUIDANCE_TABLE, "t", ["updated_at"])} = ${sqlJson(GUIDANCE_V2_RETIRED)}
     AND t.updated_at = v_applied_at;
   GET DIAGNOSTICS v_rows = ROW_COUNT;
   IF v_rows <> 1 THEN RAISE EXCEPTION 'rollback: ${GUIDANCE_KEY} v2 is not its retired target (% rows)', v_rows; END IF;
