@@ -35,8 +35,12 @@ for b in BATCHES:
                           "rows":rows,"flags":flags,"combination":comb,"deepCleaner":dc}
 # run 1 (v1.6) for the delta
 with contextlib.redirect_stdout(io.StringIO()):
-    sys_argv=sys.argv; sys.argv=["x",D]; os.environ["CONSOLIDATE_NO_WRITE"]="1"
-    r1=runpy.run_path("plans/shampoo-v16-rollout/track-a/consolidate.py"); sys.argv=sys_argv; os.environ.pop("CONSOLIDATE_NO_WRITE",None)
+    sys_argv=sys.argv; prev=os.environ.get("CONSOLIDATE_NO_WRITE"); sys.argv=["x",D]; os.environ["CONSOLIDATE_NO_WRITE"]="1"
+    try: r1=runpy.run_path("plans/shampoo-v16-rollout/track-a/consolidate.py")
+    finally:
+        sys.argv=sys_argv
+        if prev is None: os.environ.pop("CONSOLIDATE_NO_WRITE",None)
+        else: os.environ["CONSOLIDATE_NO_WRITE"]=prev
 f1={f["slot"]:f for f in r1["final"].values()}
 rec=r1["recommended"]
 out=[]

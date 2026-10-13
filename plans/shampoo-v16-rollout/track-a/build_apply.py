@@ -59,9 +59,16 @@ rec_after=dict(rec); dermax=final[DERMAX]["productId"]; rec_after[dermax]=False
 # Passt bedingt (<= 1 step). Evaluator semantics (#669/#674): `normal` bucket = nearest-thickness steps +
 # intensity steps vs `regular`; scalp buckets = intensity steps vs the bucket default (thickness ignored).
 INT={"gentle":0,"regular":1,"clarifying":2}; DEF={"normal":"regular","dehydriert-fettig":"regular","schuppen":"regular","irritationen":"gentle","trocken":"gentle"}
+# Candidate set = the whole live shampoo catalog (as the SQL check): target + held Track A products + the products
+# outside Track A from the committed catalog-status file; filters = recommended AND active AND lifecycle active.
+status=json.load(open(f"{D}/catalog-status-2026-10-13.json"))
+inactive={x["id"] for x in status["inactive"]}
 held_rows=defaultdict(list)
 for pid,r,th,b,route,i in live["rows"]:
     if pid in guard_ids and pid not in target: held_rows[pid].append((th,b,route,i))
+for x in status["outsideTrackA"]:
+    held_rows[x["id"]]=[tuple(r) for r in x["rows"]]; rec_after[x["id"]]=x["is_chaarlie_recommended"]
+for pid in inactive: rec_after[pid]=False
 cells={}
 for th in ORDER:
     for b in DEF:
