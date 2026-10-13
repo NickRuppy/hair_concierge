@@ -1,0 +1,135 @@
+{
+  "version": "catalog-completeness-slice1-scalp-recategorisation-v1",
+  "product_id": "010cf825-4892-4f78-bf20-26ad72122c60",
+  "rulings": [
+    "U5 (2026-10-09): Neqi Smooth Strength Rosemary Oil moves to Scalp Care.",
+    "D-g (2026-10-09): role density_claim_tonic (recommendation accepted)."
+  ],
+  "research": "plans/catalog-completeness-fill/research/r6-scalp-oil-neqi/findings.md; plans/catalog-completeness-fill/research/r4-user-submitted-14/findings.json",
+  "copy_guardrails": "Guidance copy never repeats growth, blood-flow, minoxidil or peptide claims; the density role keeps its limited-evidence label and the cosmetic_claim_only caution.",
+  "products": {
+    "category_key": "scalp_care",
+    "category": "scalp_care",
+    "suitable_thicknesses": []
+  },
+  "product_scalp_care_specs": {
+    "primary_role": "density_claim_tonic",
+    "presentation_format": "oil",
+    "rinse_mode": "rinse_off",
+    "application_instructions": "Eine kleine Menge auf die Kopfhaut geben, in kreisenden Bewegungen einmassieren, mindestens 10 Minuten einwirken lassen und anschließend mit Shampoo auswaschen."
+  },
+  "protocol": {
+    "category": "scalp_care",
+    "role": "density_claim_tonic",
+    "cadence": null,
+    "application_stage": "pre_wash",
+    "application_state": null,
+    "placement": "scalp_roots",
+    "contact_time_seconds": 600,
+    "rinse_action": "rinse_out",
+    "reapplication": "not_stated",
+    "instruction_modifiers": [],
+    "source_label": "NEQI Hersteller-Anleitung (How-tos, DE)",
+    "source_url": "https://neqi-hair.com/pages/how-tos",
+    "source_text": "Eine kleine Menge des Rosmarinöls auf die Handflächen oder direkt auf die Kopfhaut auftragen. Lasse es mindestens 10 Minuten einwirken und shampooniere im Anschluss deine Haare.",
+    "guidance_payload": {
+      "schemaVersion": 1,
+      "guidanceKey": "product-scalp-care-010cf825-4892-4f78-bf20-26ad72122c60",
+      "protocolVersion": 1,
+      "locale": "de",
+      "scope": {
+        "kind": "product",
+        "category": "scalp_care",
+        "productId": "010cf825-4892-4f78-bf20-26ad72122c60"
+      },
+      "role": "scalp_care",
+      "applicationFamily": "rinse_off_scalp_care",
+      "compatibleDayTypes": ["wash_day"],
+      "exactGuidanceRequired": true,
+      "sequence": {
+        "anchor": "pre_wash",
+        "before": ["wet_cleanse"],
+        "after": [],
+        "conflictsWith": []
+      },
+      "requirements": {
+        "requiredCatalogFacts": ["primary_role", "rinse_mode"],
+        "requiredProtocolFacts": ["contact_time"],
+        "requiredProfileFacts": []
+      },
+      "protocolFacts": {
+        "applicationArea": "scalp_roots",
+        "rinse": "rinse_out",
+        "contactTimeSeconds": 600,
+        "contactTime": { "kind": "minimum_seconds", "minimumSeconds": 600 },
+        "conditionerRelationship": "not_applicable",
+        "reapplication": "none",
+        "amount": { "kind": "qualitative", "copyDe": "eine kleine Menge" },
+        "cautionCodes": ["cosmetic_claim_only"],
+        "cautions": []
+      },
+      "steps": [
+        {
+          "stepKey": "apply-neqi-rosemary-scalp",
+          "action": "apply_product",
+          "copyTemplateDe": "Eine kleine Menge direkt auf die Kopfhaut oder zuerst in die Handflächen geben."
+        },
+        {
+          "stepKey": "massage-neqi-rosemary-scalp",
+          "action": "tool",
+          "copyTemplateDe": "Mit den Fingerspitzen in kreisenden Bewegungen sanft einmassieren."
+        },
+        {
+          "stepKey": "wait-neqi-rosemary-scalp",
+          "action": "wait",
+          "copyTemplateDe": "Mindestens 10 Minuten einwirken lassen."
+        },
+        {
+          "stepKey": "rinse-neqi-rosemary-scalp",
+          "action": "rinse",
+          "copyTemplateDe": "Anschließend mit Shampoo auswaschen."
+        },
+        {
+          "stepKey": "caution-neqi-rosemary-scalp",
+          "action": "section",
+          "copyTemplateDe": "Die Anwendung ist kosmetische Pflege und keine medizinische Behandlung."
+        }
+      ],
+      "evidence": [
+        {
+          "sourceUrl": "https://neqi-hair.com/pages/how-tos",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-09"
+        },
+        {
+          "sourceUrl": "https://www.dm.de/p/d/2972764/neqi-rosmarin-oel-smooth-strength",
+          "sourceType": "retailer",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    }
+  },
+  "evidence": [
+    {
+      "fact_key": "product.category_key",
+      "source_label": "Ruling U5 / D-g (Nick, 2026-10-09) + R6 Fachprüfung",
+      "source_url": "https://github.com/NickRuppy/hair_concierge/blob/main/plans/catalog-completeness-fill/decisions.md",
+      "source_text": "U5. Neqi Smooth Strength Rosemary Oil moves to Scalp Care; role reviewed by hair-care expert (growth claims are medically adjacent). D-g. Neqi Rosemary Oil -> Scalp Care, role density_claim_tonic (recommendation accepted).",
+      "source_type": "internal_verified"
+    },
+    {
+      "fact_key": "scalp_care.authority_facts",
+      "source_label": "NEQI Hersteller-Anleitung (How-tos, DE)",
+      "source_url": "https://neqi-hair.com/pages/how-tos",
+      "source_text": "Eine kleine Menge des Rosmarinöls auf die Handflächen oder direkt auf die Kopfhaut auftragen. Lasse es mindestens 10 Minuten einwirken und shampooniere im Anschluss deine Haare. (Öl: presentation_format oil; Ausspülen mit Shampoo: rinse_mode rinse_off.)",
+      "source_type": "manufacturer"
+    },
+    {
+      "fact_key": "protocols.scalp_care.density_claim_tonic.massage",
+      "source_label": "dm.de Produktseite (exakte GTIN 4063528086280, DAN 2972764)",
+      "source_url": "https://www.dm.de/p/d/2972764/neqi-rosmarin-oel-smooth-strength",
+      "source_text": "Mit den Fingerspitzen in kreisenden Bewegungen sanft in die Kopfhaut einmassieren, um die Aufnahme zu fördern. Mindestens 10 Minuten einwirken lassen und das Haar im Anschluss shampoonieren.",
+      "source_type": "retailer"
+    }
+  ]
+}

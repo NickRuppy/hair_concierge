@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { UNKNOWN_SELECTION_PROFILE } from "../../../src/lib/personal-plan/products/authority/selection-profile"
 import test from "node:test"
 
 import { CATEGORY_ROLE_POLICIES } from "../../../src/lib/personal-plan/products/authorities"
@@ -43,6 +44,7 @@ function conditionerInput(target: {
       executionPauseReason: null,
       deferredFacts: [],
     } as never,
+    selectionProfile: UNKNOWN_SELECTION_PROFILE,
     coverage: [],
     productFacts: null,
     recommendationCandidates: [],

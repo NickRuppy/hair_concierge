@@ -1,3 +1,5 @@
+import { compareRankableCandidates, type RankableCandidate } from "../../candidate-ranking"
+import { candidateDimensionCoverage } from "../../comparison-dimensions"
 import { evaluateGateCriteria } from "../fit-criteria"
 import type {
   Stage3AuthorityInput,
@@ -90,11 +92,32 @@ function evaluateFacts(input: ScalpCareInput, facts: Stage3ScalpCareFacts) {
 
 function recommendationFor(input: ScalpCareInput) {
   if (coverageSuppressesPurchase(input)) return null
-  const candidate = [...input.recommendationCandidates]
-    .filter((facts) => facts.recommendable && evaluateFacts(input, facts).verdict === "ideal")
-    .sort((left, right) => left.productId.localeCompare(right.productId))[0]
+  const candidate = input.recommendationCandidates
+    .filter((facts) => facts.recommendable)
+    .flatMap((facts) => {
+      const assessment = evaluateFacts(input, facts)
+      return assessment.verdict === "ideal"
+        ? [
+            {
+              facts,
+              rank: {
+                verdict: assessment.verdict,
+                targetMatchCount: candidateDimensionCoverage(
+                  input as never,
+                  facts,
+                  assessment.criteria,
+                ).matches,
+                cautionCount: 0,
+                catalogSortOrder: facts.catalogSortOrder,
+                priceEur: facts.priceEur ?? null,
+                productId: facts.productId,
+              } satisfies RankableCandidate,
+            },
+          ]
+        : []
+    })
+    .sort((left, right) => compareRankableCandidates(left.rank, right.rank))[0]?.facts
   if (!candidate) return null
-
   return {
     recommendationId: `stage3:${input.subjectKey}:${candidate.productId}`,
     productId: candidate.productId,
@@ -108,10 +131,8 @@ function recommendationFor(input: ScalpCareInput) {
 
 export const evaluateScalpCareAuthority: Stage3CategoryAuthorityAdapter<"scalp_care"> = (input) => {
   if (isPendingIdentity(input as never)) return pendingEvaluation(input as never)
-  if (!hasValidTarget(input as never)) {
+  if (!hasValidTarget(input as never))
     return unsupportedEvaluation(input as never, "scalp_care_target_unavailable")
-  }
-
   const facts = input.productFacts
   if (!facts) {
     const purchaseSuppressed = coverageSuppressesPurchase(input)
@@ -143,7 +164,6 @@ export const evaluateScalpCareAuthority: Stage3CategoryAuthorityAdapter<"scalp_c
         : null,
     })
   }
-
   const result = evaluateFacts(input, facts)
   if (result.verdict === "unknown") return unknownEvaluation(input, result.missing, result.criteria)
   const recommendation = result.verdict === "mismatch" ? recommendationFor(input) : null

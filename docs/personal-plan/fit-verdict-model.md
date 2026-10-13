@@ -36,7 +36,9 @@ Exact = 0 steps ⇒ Passt. 1 step ⇒ Passt bedingt. 2+ steps ⇒ Passt nicht.
 | Care direction | protein – balanced – moisture | conditioner, mask, leave-in (a `balanced` user target vs a moisture product is 1 step ⇒ Passt bedingt if it is the only miss) |
 | Repair support vs need | at/above = 0; 1 below = 1; 2 below = 2 | conditioner, mask, leave-in |
 | Cleansing intensity | gentle – regular – strong | shampoo |
-| Tint / scalp sensitivity | match = 0; other = 1 | dry shampoo (per its decision doc; today has no middle level) |
+| Tint / scalp sensitivity | match = 0; other = 1 | dry shampoo (missing colour target is unscored; matching tint has no bonus) |
+
+**Nick 2026-10-13: ranking only.** Dry-shampoo volume preference never excludes a product or contributes to Passt bedingt / Passt nicht. Inside an equal verdict, the shared comparator uses match count → cautions → volume preference → catalogue order → price → id. Unknown visible hair colour is not scored, including for tinted products.
 
 Categories with no degree axis today (deep cleanser, scalp care, heat protectant) keep gates only; their verdict set is Passt / Passt nicht / Nicht geprüft. Shampoo stops dropping thickness-conditional products before evaluation: the research envelope's `conditional` thickness fit is emitted as a 1-step row, not discarded, so in the no-scalp-issue cell a thickness miss is reported as a thickness reason, never as "deckt die Shampoo-Aufgabe nicht ab". In scalp cells, thickness is informational and passing (R19, 2026-10-12).
 

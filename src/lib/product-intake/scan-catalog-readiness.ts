@@ -5,6 +5,7 @@
  * part of the runtime `/scan` request path — nothing under `src/app/api/scan/` imports this.
  */
 
+import { UNKNOWN_SELECTION_PROFILE } from "@/lib/personal-plan/products/authority/selection-profile"
 import type { CategorySelectionContext } from "@/lib/personal-plan/products/authority/catalog-facts"
 import type { Stage3CategoryProductFacts } from "@/lib/personal-plan/products/authority/contracts"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
@@ -322,6 +323,8 @@ export async function evaluateScanCatalogReadiness(input: {
           // Synthetic readiness profile heat-styles on every route, so a heat-activated
           // product is judged on its facts and protocol, not blocked by a missing route.
           heatRoutes: ["airflow_shaping", "direct_contact_heat"],
+          // No selection answers exist for these synthetic readiness profiles.
+          selectionProfile: UNKNOWN_SELECTION_PROFILE,
           heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
           refinedVersionId: "scanner-readiness-v1",
           refinedInputHash: "scanner-readiness-v1",

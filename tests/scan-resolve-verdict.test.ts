@@ -1,5 +1,6 @@
 // fit-verdict spec §1/§7b, ruled 2026-10-12: web labels and actions.
 import assert from "node:assert/strict"
+import { UNKNOWN_SELECTION_PROFILE } from "../src/lib/personal-plan/products/authority/selection-profile"
 import test from "node:test"
 
 import type { Stage3CategoryProductFacts } from "../src/lib/personal-plan/products/authority/contracts"
@@ -308,6 +309,7 @@ function scanInput(
   return {
     productFacts: null,
     recommendationCandidates: [],
+    selectionProfile: UNKNOWN_SELECTION_PROFILE,
     coverage: [],
     hairThickness: "normal",
     heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },

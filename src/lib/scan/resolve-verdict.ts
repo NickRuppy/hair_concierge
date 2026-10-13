@@ -8,6 +8,7 @@ import type {
   Stage3CategoryProductFacts,
 } from "@/lib/personal-plan/products/authority/contracts"
 import { evaluateStage3Authority } from "@/lib/personal-plan/products/authority/evaluate"
+import type { Stage3SelectionProfile } from "@/lib/personal-plan/products/authority/selection-profile"
 import {
   candidateDimensionCoverage,
   comparisonDimensions,
@@ -96,7 +97,8 @@ export type BuildScanVerdictInput = {
   hairThickness: PlanHairThickness
   /** The user's heat routes (`stage3HeatRoutesFromSnapshot`); read by heat-activated products. */
   heatRoutes?: readonly UserHeatRoute[]
-  dryShampooTarget?: Stage3AuthorityInput["dryShampooTarget"]
+  /** The Stage-3 selection slice (`buildStage3SelectionProfile`), identical to the plan's. */
+  selectionProfile: Stage3SelectionProfile
   heatCarrierCoverage: {
     carrierCategory: Extract<PersonalPlanCategory, "leave_in" | "oil" | "heat_protectant"> | null
     verifiedRoutes: string[]
@@ -495,7 +497,7 @@ function scanAuthorityInput(
     recommendationCandidates,
     hairThickness: input.hairThickness,
     ...(input.heatRoutes ? { heatRoutes: input.heatRoutes } : {}),
-    dryShampooTarget: input.dryShampooTarget,
+    selectionProfile: input.selectionProfile,
     heatCarrierCoverage: input.heatCarrierCoverage,
   }
 }

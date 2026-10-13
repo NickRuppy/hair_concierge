@@ -14,6 +14,10 @@ import type {
   Stage3CategoryProductFacts,
 } from "@/lib/personal-plan/products/authority/contracts"
 import { evaluateStage3Authority } from "@/lib/personal-plan/products/authority/evaluate"
+import {
+  buildStage3SelectionProfile,
+  type Stage3SelectionProfile,
+} from "@/lib/personal-plan/products/authority/selection-profile"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { createSupabaseStage3RoutineAuthorityRepairService } from "@/lib/personal-plan/products/stage3-routine-authority-repair-service"
 import { createSupabaseStage3ProductionPersistence } from "@/lib/personal-plan/products/stage3-persistence-supabase"
@@ -51,6 +55,7 @@ function simulated(
 type FitContext = {
   snapshot: InitialNeedPlanSnapshot
   decision: PlanCategoryDecision
+  selectionProfile: Stage3SelectionProfile
   selection: {
     hairThickness: string
     role: PlanProductRole
@@ -80,6 +85,10 @@ async function fitContext(
   return {
     snapshot,
     decision,
+    selectionProfile: buildStage3SelectionProfile(
+      snapshot,
+      await persistence.loadVisibleHairColor(input.userId),
+    ),
     selection: {
       hairThickness: snapshot.profile.hair.thickness,
       role: input.role,
@@ -119,6 +128,7 @@ function authorityInput(
     coverage: context.snapshot.coverage,
     hairThickness: context.snapshot.profile.hair.thickness,
     heatRoutes: stage3HeatRoutesFromSnapshot(context.snapshot),
+    selectionProfile: context.selectionProfile,
     productFacts: productFacts as never,
     recommendationCandidates: recommendationCandidates as never,
     heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },

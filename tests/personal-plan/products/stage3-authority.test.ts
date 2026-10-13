@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { UNKNOWN_SELECTION_PROFILE } from "../../../src/lib/personal-plan/products/authority/selection-profile"
 import test from "node:test"
 
 import { CATEGORY_ROLE_POLICIES } from "../../../src/lib/personal-plan/products/authorities"
@@ -234,7 +235,7 @@ function knownFacts(category: PersonalPlanCategory): Stage3CategoryProductFacts 
         recommendable: true,
         spec: {
           supportedResetRoles: ["residue_reset"],
-          scalpTypeFocus: "balanced",
+          targetScalpTypes: null,
           colorTreatedSuitability: "suitable",
         },
       }
@@ -322,6 +323,7 @@ function input(
       executionPauseReason: null,
       deferredFacts: [],
     } as never,
+    selectionProfile: UNKNOWN_SELECTION_PROFILE,
     coverage: [],
     hairThickness: "normal",
     productFacts:
@@ -448,7 +450,8 @@ function activatedLeaveInInput(
   // DB-drift shape on purpose: the plan role list still names post-wash.
   activated.productFacts.spec.roles = ["post_wash_leave_in", "pre_heat_application"]
   activated.productFacts.spec.providesHeatProtection = true
-  activated.productFacts.spec.applicationStages = ["towel_dry", "pre_heat"]
+  // Verified protection + pre-heat protocol suffice; no literal pre_heat stage is required.
+  activated.productFacts.spec.applicationStages = ["towel_dry"]
   activated.productFacts.spec.heatActivation = { route }
   activated.productFacts.protocols = [
     { role: "post_wash_leave_in", status: "verified_complete", fingerprint: "post-wash" },

@@ -1,0 +1,902 @@
+{
+ "task": "r1 leave-in heat protection + pre-heat stage, 9 products",
+ "researched": "2026-10-09",
+ "db_writes": "none (SELECT only)",
+ "contract": "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md §2.4, §2.4.1, §3.1.1, §5 L9, §7.8, §7.13, §13",
+ "commit_23a83cfa": {
+  "commit": "23a83cfa fix(leave-in): accept verified heat use without label timing (unmerged; only on codex/catalog-assessment-completeness; main HEAD 404db24f lacks it)",
+  "change": "Deletes the evaluator branch that returns mismatch 'Die Anwendung vor Hitze ist nicht bestätigt.' when role=pre_heat_application and application_stage lacks pre_heat; pre_heat_application now needs only providesHeatProtection=true + verified_complete protocol (+ the shared checks). Adds a test; implements Nick's 2026-09-18 ruling in plans/2026-09-17-scan-assessment-catalog-completeness.md.",
+  "relevant_to_group_B": "YES, decisive. Gliss, Olaplex, Redken have hp=true on a C2 claim and directions that are silent about heat (towel_dry/dry_hair only). §7.13 forbids inferring pre_heat, so the DB cannot be made to pass under the old evaluator without violating the contract; with 23a83cfa they pass with no DB change.",
+  "relevant_to_group_A": "Partly. It does nothing for hp=false (still 'Hitzeschutz ist nicht verifiziert'); the Group-A fix is hp false->true from the claim research. After that, Alcina, Neqi Build Boost, Neqi Moisture Mystery behave like Group B (stage silent) and need 23a83cfa; Pantene HEAT&GLOW (directions 'Föhnen, um zu aktivieren') and Urban Alchemy ('Föhnen, stylen oder an der Luft trocknen') carry pre_heat in their directions and pass either way; Pantene Bonding only if its page-only claim is accepted and 'Als Hitzeschutz für nasses Haar' is read as pre_heat.",
+  "contract_consistency": "Consistent with §7.13 (stage stays a pure directions transcription, never derived) and §13.3 / adapter doc (adapter already emits pre_heat_application and required role pre_heat_protection from the heat binary alone). The residual product risk: a claim-only heat binary (no L9 member, 8 of 9 products) now suffices for a pre-heat recommendation with shared protocol timing. That is Nick's stated ruling, not a reviewer proposal."
+ },
+ "products": [
+  {
+   "short": "9b664b11",
+   "group": "A",
+   "full_id": "9b664b11-fd11-47e3-9b7e-76e34736b43e",
+   "brand": "Alcina",
+   "name": "Alcina Hyaluron 2.0",
+   "official_name": "ALCINA Hyaluron 2.0 Spray, Leave-In Pflege für trockenes Haar",
+   "gtin": [
+    "4008666199522"
+   ],
+   "pack": "125 ml",
+   "identity_check": "Manufacturer page JSON-LD gtin13 4008666199522 == DB ean; 125 ML; page flags 'Dieser Artikel ist ein Nachfolge-Produkt' (successor SKU; GTIN still matches DB).",
+   "db_before": {
+    "provides_heat_protection": false,
+    "application_stage": [
+     "towel_dry"
+    ],
+    "plan_roles": [
+     "post_wash_leave_in",
+     "pre_heat_application"
+    ],
+    "roles": [
+     "extension_conditioner"
+    ],
+    "suitable_thicknesses": [
+     "fine"
+    ],
+    "protocol_pre_heat_source": "alcina.com/de-de (manufacturer, DE)"
+   },
+   "claims": [
+    {
+     "tier": "C2",
+     "url": "https://www.alcina.com/de-de/haar/haarpflege/leave-in-pflege/hyaluron-20-spray-f19952/",
+     "accessed": "2026-10-09",
+     "quotes": [
+      "Integrierter Hitzeschutz bis zu 230 °C",
+      "Der Anti-Heat-Factor verhindert Hitzeschäden bis zu 230°C."
+     ],
+     "note": "German-language, de-DE market, manufacturer shop; page sells at EUR price. 230 degC = use-condition text, never a protection level (FS-14)."
+    }
+   ],
+   "counter_signals": [],
+   "retailer_copy": [],
+   "inci": {
+    "source": "https://www.alcina.com/de-de/haar/haarpflege/leave-in-pflege/hyaluron-20-spray-f19952/ (C2)",
+    "raw": "AQUA, AMODIMETHICONE, PROPYLENE GLYCOL, PANTHENOL, SILICONE QUATERNIUM-22, PEG-40 HYDROGENATED CASTOR OIL, DIPROPYLENE GLYCOL, POLYGLYCERYL-3 CAPRATE, BUTYLENE GLYCOL, CETRIMONIUM CHLORIDE, ETHYLHEXYL METHOXYCINNAMATE, TRIDECETH-15, TRIDECETH-3, POLYQUATERNIUM-16, COCAMIDOPROPYL BETAINE, HELIANTHUS ANNUUS SEED EXTRACT, VP/VA COPOLYMER, PEG-14 DIMETHICONE, GLYCERIN, SODIUM HYALURONATE, PALMITAMIDOPROPYLTRIMONIUM CHLORIDE, POLYQUATERNIUM-10, ETHYLHEXYLGLYCERIN, ACETIC ACID, OPUNTIA FICUS-INDICA STEM EXTRACT, BHT, PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE, PHENOXYETHANOL, METHYLPARABEN, ETHYLPARABEN, PROPYLPARABEN, PARFUM, ALPHA-ISOMETHYL IONONE, GERANIOL, CITRONELLOL, LINALOOL",
+    "n_ingredients": 36,
+    "tail_marker": "ETHYLHEXYLGLYCERIN",
+    "tail_marker_rank": 23,
+    "l9_members": [],
+    "l9_note": "No closed-list member. PQ-16 / PQ-10 / VP/VA Copolymer are not L9 (membership is by exact species)."
+   },
+   "directions": {
+    "source": "same page (C2)",
+    "verbatim": "Nach der Haarwäsche je nach Haarlänge 10-15 Sprühhübe ins feuchte Haar sprühen und durchkämmen. Nicht ausspülen.",
+    "application_stage_transcribed": [
+     "towel_dry"
+    ],
+    "pre_heat_in_directions": false,
+    "note": "No heat tool named; 'ins feuchte Haar' = towel_dry. Heat use is only on the claim line, not in the directions."
+   },
+   "projection": {
+    "provides_heat_protection": true,
+    "trace_state": "claim_only",
+    "review_flags": [
+     "claim looks formula-unsupported (no L9 member) - mandatory review per §13.3 rule 2"
+    ],
+    "claim_tier": "C2"
+   },
+   "proposal": "KEEP pre-heat role + protocol. products spec: provides_heat_protection false -> true (C2 claim exists). application_stage stays [towel_dry] (directions are silent on heat; must NOT add pre_heat). Passes the Stage-3 pre-heat evaluator only with commit 23a83cfa (stage requirement dropped).",
+   "db_changes": [
+    {
+     "table": "product_leave_in_specs",
+     "field": "provides_heat_protection",
+     "before": false,
+     "after": true
+    }
+   ],
+   "confidence": "high (claim, identity); medium on how the evaluator is to treat silent-stage products",
+   "human": [
+    "Confirm that §13.3 'claim without L9 member' (claim_only) is accepted as true for this binary (it is by rule).",
+    "Decide whether to land 23a83cfa (otherwise this product cannot keep the pre-heat role without an inferred stage)."
+   ]
+  },
+  {
+   "short": "9f94c225",
+   "group": "A",
+   "full_id": "9f94c225-61ec-455d-b303-f39e885e222a",
+   "brand": "Neqi",
+   "name": "Neqi Build Boost Leave-In Balm",
+   "official_name": "Build Boost Leave-In Balm",
+   "gtin": [
+    "4063528097651"
+   ],
+   "pack": "75 ml",
+   "identity_check": "neqi-hair.com page JSON gtin/barcode 4063528097651 == DB ean; 'Inhalt: 75ml'.",
+   "db_before": {
+    "provides_heat_protection": false,
+    "application_stage": [
+     "towel_dry"
+    ],
+    "plan_roles": [
+     "post_wash_leave_in",
+     "pre_heat_application"
+    ],
+    "roles": [
+     "styling_prep"
+    ],
+    "suitable_thicknesses": [
+     "fine",
+     "normal",
+     "coarse"
+    ],
+    "protocol_pre_heat_source": "en.neqi-hair.com (English page; non-German-market tier C5 by rule 3)",
+    "ingredient_flags": []
+   },
+   "claims": [
+    {
+     "tier": "C2",
+     "url": "https://neqi-hair.com/products/build-boost-balm",
+     "accessed": "2026-10-09",
+     "quotes": [
+      "Diese stärkende und reparierende Formel versiegelt die Haarstruktur sofort und bietet einen wirksamen Hitzeschutz.",
+      "Mit Hitzeschutz"
+     ],
+     "note": "German-language DACH storefront (EUR, German retailer list dm/Rossmann/Müller). Same tier the gold set gave neqi-hair.com for slot 13. No °C figure."
+    },
+    {
+     "tier": "C5",
+     "url": "https://en.neqi-hair.com/products/build-boost-balm",
+     "accessed": "2026-10-09",
+     "quotes": [
+      "This strengthening and repairing formula immediately seals the hair structure and provides effective heat protection."
+     ],
+     "note": "English page - mirror, not claim-creating by itself (rule 3). DB protocol row currently cites this URL; re-point to the German page."
+    }
+   ],
+   "counter_signals": [
+    "Page copy never mentions blow-drying or flat ironing; only a customer review does (user content, ignored)."
+   ],
+   "retailer_copy": [],
+   "inci": {
+    "source": "https://neqi-hair.com/products/build-boost-balm (C2)",
+    "raw": "Aqua [Water], Cetearyl alcohol, Propanediol, Behentrimonium chloride, Glycerin, PEG-40/PPG-8 methylaminopropyl/Hydroxypropyl dimethicone copolymer, Maleic acid, Gardenia taitensis flower extract, Lycium barbarum fruit extract, Malva sylvestris (Mallow) extract, Avena sativa (Oat) peptide, Juniperus virginiana oil, C13-15 alkane, Polyporus umbellatus (Mushroom) extract, Silicone quaternium-16/glycidoxy dimethicone crosspolymer, Phenoxyethanol, Dipropylene glycol, Isopropyl alcohol, Undeceth-11, Undeceth-5, Fructose, Tetramethyl acetyloctahydronaphthalenes, Ethylhexylglycerin, Pentylene glycol, Sodium citrate, Citrus aurantium peel oil, Propylene glycol, Linalyl acetate, Sodium hyaluronate, 1,2-Hexanediol, Caprylyl glycol, Parfum [Fragrance], Hexyl cinnamal, Limonene, Linalool",
+    "n_ingredients": 35,
+    "tail_marker": "Phenoxyethanol",
+    "tail_marker_rank": 16,
+    "l9_members": [],
+    "l9_note": "No closed-list member (Avena sativa peptide is not hydrolyzed wheat protein)."
+   },
+   "directions": {
+    "source": "https://neqi-hair.com/products/build-boost-balm (C2)",
+    "verbatim": "1. Nach der Haarwäsche mit BUILD BOOST Shampoo und Conditioner den Leave-In Balm großzügig und gleichmäßig auf die Spitzen auftragen und ins Haar einarbeiten. 2. Nicht ausspülen. 3. Wie gewohnt stylen.",
+    "application_stage_transcribed": [
+     "towel_dry"
+    ],
+    "pre_heat_in_directions": false,
+    "note": "Directions state 'nach der Haarwäsche' but neither damp nor dry; the DB's towel_dry is the closest closed-vocabulary reading ('freshly washed'), not verbatim - same situation Nick ruled on for Balea 2026-09-18 (treated as no explicit stage)."
+   },
+   "projection": {
+    "provides_heat_protection": true,
+    "trace_state": "claim_only",
+    "review_flags": [
+     "claim looks formula-unsupported (no L9 member)",
+     "directions stage not explicit (damp/dry unstated)"
+    ],
+    "claim_tier": "C2"
+   },
+   "proposal": "KEEP pre-heat role + protocol. provides_heat_protection false -> true. application_stage unchanged [towel_dry] pending human OK on the 'nach der Haarwäsche' reading (alternative: empty). Re-point the pre_heat_protection protocol source_url from en.neqi-hair.com to neqi-hair.com. Needs 23a83cfa to pass the evaluator.",
+   "db_changes": [
+    {
+     "table": "product_leave_in_specs",
+     "field": "provides_heat_protection",
+     "before": false,
+     "after": true
+    },
+    {
+     "table": "product_application_protocols(pre_heat_protection)",
+     "field": "source_url",
+     "before": "https://en.neqi-hair.com/products/build-boost-balm",
+     "after": "https://neqi-hair.com/products/build-boost-balm",
+     "optional": true
+    }
+   ],
+   "side_observations": [
+    "ingredient_flags is [] although INCI carries PEG-40/PPG-8 methylaminopropyl/hydroxypropyl dimethicone copolymer and silicone quaternium-16/glycidoxy dimethicone crosspolymer (silicones); roles=['styling_prep'] has no hold-polymer basis visible in INCI - outside this task, flag for the property lane."
+   ],
+   "confidence": "high (claim, identity); medium on application_stage reading",
+   "human": [
+    "Accept 'Nach der Haarwäsche' -> towel_dry or leave stage empty.",
+    "Land 23a83cfa or the product cannot keep pre_heat_application."
+   ]
+  },
+  {
+   "short": "e6896862",
+   "group": "A",
+   "full_id": "e6896862-523b-42b3-967d-41cbd16acf64",
+   "brand": "Neqi",
+   "name": "Neqi Moisture Mystery",
+   "official_name": "MOISTURE MYSTERY Leave-In Cream",
+   "gtin": [
+    "4063528078346"
+   ],
+   "pack": "200 ml",
+   "identity_check": "neqi-hair.com page JSON gtin/barcode 4063528078346 == DB ean; 'Inhalt: 200ml'.",
+   "db_before": {
+    "provides_heat_protection": false,
+    "application_stage": [
+     "towel_dry"
+    ],
+    "plan_roles": [
+     "post_wash_leave_in",
+     "pre_heat_application"
+    ],
+    "roles": [
+     "extension_conditioner"
+    ],
+    "suitable_thicknesses": [
+     "normal"
+    ],
+    "protocol_pre_heat_source": "en.neqi-hair.com (English page)",
+    "ingredient_flags": [
+     "silicones",
+     "humectants"
+    ]
+   },
+   "claims": [
+    {
+     "tier": "C2",
+     "url": "https://neqi-hair.com/products/moisture-mystery-leave-in-cream",
+     "accessed": "2026-10-09",
+     "quotes": [
+      "Entdecke die stärkende MOISTURE MYSTERY Leave-In Cream mit Hitzeschutz",
+      "Mit Hitzeschutz bis 230°C"
+     ],
+     "note": "German-language DACH storefront, EUR; figure is a use-condition text (FS-14)."
+    },
+    {
+     "tier": "C5",
+     "url": "https://en.neqi-hair.com/products/moisture-mystery-leave-in-cream",
+     "accessed": "2026-10-09",
+     "quotes": [],
+     "note": "English mirror cited by the DB protocol row; not re-fetched verbatim."
+    }
+   ],
+   "counter_signals": [],
+   "retailer_copy": [
+    "dm.de listing (the DB's affiliate link) not readable by plain fetch; not needed because C2 exists."
+   ],
+   "inci": {
+    "source": "https://neqi-hair.com/products/moisture-mystery-leave-in-cream (C2)",
+    "raw": "Aqua [Water], Glycerin, Cetearyl alcohol, Behentrimonium chloride, Isoamyl laurate, Algin, Avena sativa (Oat) peptide, Gardenia taitensis flower extract, Lycium barbarum fruit extract, Malva sylvestris (Mallow) extract, Juniperus virginiana oil, Citrus aurantium peel oil, Cetrimonium chloride, Phenoxyethanol, Tetramethyl acetyloctahydronaphthalenes, C13-15 alkane, Ethylhexylglycerin, Propylene glycol, Linalyl acetate, Sodium methoxy PEG-16 maleate/styrene sulfonate copolymer, 1,2-Hexanediol, Caprylyl glycol, Parfum [Fragrance], Hexyl cinnamal, Limonene, Linalool",
+    "n_ingredients": 26,
+    "tail_marker": "Phenoxyethanol",
+    "tail_marker_rank": 14,
+    "l9_members": [],
+    "l9_note": "No closed-list member."
+   },
+   "directions": {
+    "source": "same page (C2)",
+    "verbatim": "1. Nach der Haarwäsche mit dem MOISTURE MYSTERY Shampoo und Conditioner die Leave-In Cream großzügig und gleichmäßig auf die Spitzen auftragen und in das Haar einarbeiten. 2. Nicht ausspülen. 3. Wie gewohnt stylen.",
+    "application_stage_transcribed": [
+     "towel_dry"
+    ],
+    "pre_heat_in_directions": false,
+    "note": "Same wording as Build Boost; stage not explicit."
+   },
+   "projection": {
+    "provides_heat_protection": true,
+    "trace_state": "claim_only",
+    "review_flags": [
+     "claim looks formula-unsupported (no L9 member)",
+     "directions stage not explicit"
+    ],
+    "claim_tier": "C2"
+   },
+   "proposal": "KEEP pre-heat role + protocol. provides_heat_protection false -> true. application_stage unchanged (see Build Boost note). Re-point protocol source to the German page. Needs 23a83cfa.",
+   "db_changes": [
+    {
+     "table": "product_leave_in_specs",
+     "field": "provides_heat_protection",
+     "before": false,
+     "after": true
+    },
+    {
+     "table": "product_application_protocols(pre_heat_protection)",
+     "field": "source_url",
+     "before": "https://en.neqi-hair.com/products/moisture-mystery-leave-in-cream",
+     "after": "https://neqi-hair.com/products/moisture-mystery-leave-in-cream",
+     "optional": true
+    }
+   ],
+   "side_observations": [
+    "ingredient_flags contains 'silicones' but the C2 INCI has no silicone ingredient - verify against the INCI the flags were derived from."
+   ],
+   "confidence": "high (claim, identity); medium on stage",
+   "human": [
+    "Same two questions as Build Boost."
+   ]
+  },
+  {
+   "short": "35a372b6",
+   "group": "A",
+   "full_id": "35a372b6-c7ef-45cb-be0b-99cef476f247",
+   "brand": "Pantene",
+   "name": "Pantene Bonding Leave-In",
+   "official_name": "PANTENE PRO-V Miracles Molecular Bond Repair Wunder Haarcreme, Leave-In, 90 ml (haircode.io: 'Pantene Bond Repair Leave In Haarcreme')",
+   "gtin": [
+    "8700216637374"
+   ],
+   "pack": "90 ml",
+   "identity_check": "dm.de lists GTIN 8700216637374 (== DB ean), 90 ml; manufacturer page haircode.io JSON-LD gtin13 8700216637374; pack back photo (dm packshot) shows barcode 8 700216 637374 and '90 ml'.",
+   "db_before": {
+    "provides_heat_protection": false,
+    "application_stage": [
+     "towel_dry"
+    ],
+    "plan_roles": [
+     "post_wash_leave_in",
+     "pre_heat_application"
+    ],
+    "roles": [
+     "extension_conditioner"
+    ],
+    "suitable_thicknesses": [
+     "normal"
+    ],
+    "protocol_pre_heat_source": "boots.com (UK retailer, English) - weak source"
+   },
+   "claims": [
+    {
+     "tier": "C2",
+     "url": "https://www.haircode.io/produkte-die-wir-lieben/haar-und-kopfhautpflege/pantene-bond-repair-leave-in-haarcreme",
+     "accessed": "2026-10-09",
+     "quotes": [
+      "HITZESCHUTZ: Diese tägliche Leave-in-Creme repariert* nicht nur Ihr Haar, sondern beugt auch Schäden vor, da sie als Hitzeschutz verwendet werden kann",
+      "2) Als Hitzeschutz für nasses Haar."
+     ],
+     "note": "haircode.io is the P&G German site: pantene.de 301-redirects to it, footer links are pg.com legal pages (termsandconditions.pg.com/de-de, privacypolicy.pg.com/de), Rossmann imprint names www.pantene.de for P&G. German-language, exact GTIN in JSON-LD -> C2. Tier ruling for this host is a human confirmation item (new host, not previously used in the gold set)."
+    }
+   ],
+   "counter_signals": [
+    "The CURRENT GERMAN PACK (back of pack photo, dm packshot) carries NO heat statement: 'Haar Regeneration* ... Anwendung: Als letzten Schritt auf trockenem oder nassem Haar verwenden. Zwischen den Händen verreiben & auf das Haar auftragen. Einwirken lassen. Für tägliche Anwendung geeignet.' The heat claim therefore rests on the manufacturer web page alone (C2), not on the pack (C1). Silence is not a rule-2 conflict, but it is the weakest heat claim in the batch."
+   ],
+   "retailer_copy": [
+    {
+     "tier": "C3",
+     "url": "https://www.dm.de/p/d/3057700/pantene-pro-v-miracles-molecular-bond-repair-wunder-haarcreme-leave-in",
+     "quote": "Zudem schützt die Creme das Haar vor Hitzeschäden, was es zur idealen Wahl für die tägliche Anwendung macht.",
+     "note": "exact-GTIN German retailer; corroborates only. UK Boots page (C5) carries the matching 'For heat protection, on wet hair' directions."
+    }
+   ],
+   "inci": {
+    "source": "https://www.dm.de/p/d/3057700/... (C3, rendered) - same list on pack back photo",
+    "raw": "Aqua, Hexyldecanol, Stearyl Alcohol, Silicone Quaternium-26, Behentrimonium Methosulfate, Triethylhexanoin, Cetyl Alcohol, Caprylic/Capric Triglyceride, Isopropyl Alcohol, Sorbitan Caprylate, Benzyl Alcohol, Phenoxyethanol, Sodium Benzoate, Parfum, Disodium EDTA, Citric Acid, Laureth-7, Panthenol, Panthenyl Ethyl Ether, Hexyl Cinnamal, Histidine, Citrus Aurantium Peel Oil, Terpineol, Hexamethylindanopyran, Linalool, CI 77492, Citronellol, Limonene, Tetramethyl Acetyloctahydronaphthalenes, Hydroxycitronellal, Pelargonium Graveolens Flower Oil, Geraniol, Tocopheryl Acetate, Rose Ketones, Biotin, Methicone",
+    "n_ingredients": 36,
+    "tail_marker": "Benzyl Alcohol",
+    "tail_marker_rank": 11,
+    "l9_members": [],
+    "l9_note": "No closed-list member."
+   },
+   "directions": {
+    "source": "pack back (C1-equivalent packshot) + dm.de Verwendungshinweise (C3) + haircode.io (C2)",
+    "verbatim": "Pack/dm: 'Als letzten Schritt auf trockenem oder nassem Haar verwenden. Zwischen den Händen verreiben auf das Haar auftragen. Einwirken lassen. Zur täglichen Anwendung geeignet.'  haircode.io: 'VERWENDUNG: 2 Möglichkeiten des Gebrauchs. 1) Für die Pflege des Haares, als Abschluss der Routine auf trockenem oder nassem Haar 2) Als Hitzeschutz für nasses Haar.'",
+    "application_stage_transcribed": [
+     "towel_dry",
+     "dry_hair"
+    ],
+    "pre_heat_in_directions": "ambiguous",
+    "note": "'trockenem oder nassem Haar' = towel_dry + dry_hair (DB currently only towel_dry). The page's 'Als Hitzeschutz für nasses Haar' names a heat-protection use but no heat tool or sequence; ambiguous -> identity-conflict review per §7.13 rather than a forced pre_heat. If a human accepts it as 'positions application before heat as a routine stage', pre_heat may be added."
+   },
+   "projection": {
+    "provides_heat_protection": true,
+    "trace_state": "claim_only",
+    "review_flags": [
+     "claim looks formula-unsupported (no L9 member)",
+     "claim page-only: current pack silent on heat",
+     "host tier confirmation (haircode.io)"
+    ],
+    "claim_tier": "C2 (page only)"
+   },
+   "proposal": "KEEP pre-heat role + protocol, conditional on human accepting haircode.io as C2. provides_heat_protection false -> true; application_stage [towel_dry] -> [towel_dry, dry_hair] (+ pre_heat only if the human reads 'Als Hitzeschutz für nasses Haar' as a pre-heat stage). Re-point pre_heat_protection source from boots.com to the haircode.io page. If the human rejects haircode.io as C2 (or pack silence as decisive), result is hp stays false -> DROP pre-heat role + protocol (product stays post-wash leave-in).",
+   "db_changes": [
+    {
+     "table": "product_leave_in_specs",
+     "field": "provides_heat_protection",
+     "before": false,
+     "after": true
+    },
+    {
+     "table": "product_leave_in_specs",
+     "field": "application_stage",
+     "before": [
+      "towel_dry"
+     ],
+     "after": [
+      "towel_dry",
+      "dry_hair"
+     ],
+     "note": "+ 'pre_heat' only on human OK"
+    },
+    {
+     "table": "product_application_protocols(pre_heat_protection)",
+     "field": "source_url",
+     "before": "https://www.boots.com/pantene-molecular-bond-repair-leave-in-cream-90ml-for-damaged-hair-10355757",
+     "after": "https://www.haircode.io/produkte-die-wir-lieben/haar-und-kopfhautpflege/pantene-bond-repair-leave-in-haarcreme",
+     "optional": true
+    }
+   ],
+   "confidence": "medium (identity high; claim authority medium)",
+   "human": [
+    "Is haircode.io (pantene.de redirect, pg.com legal footer) the manufacturer German page = C2?",
+    "Is a page-only heat claim acceptable when the current pack is silent?",
+    "Is 'Als Hitzeschutz für nasses Haar' a pre_heat stage?"
+   ]
+  },
+  {
+   "short": "e781ca9e",
+   "group": "A",
+   "full_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+   "brand": "Pantene",
+   "name": "Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW",
+   "official_name": "PANTENE PRO-V Leave-In Moisture Boost HEAT&GLOW, 135 ml (pack: 'Moisture Boost Heat & Glow Leave-in Creme')",
+   "gtin": [
+    "8700216939768"
+   ],
+   "pack": "135 ml",
+   "identity_check": "dm.de GTIN 8700216939768 == DB ean; 135 ml; pack back photo barcode 8 700216 939768, '135 ml'.",
+   "db_before": {
+    "provides_heat_protection": false,
+    "application_stage": [
+     "towel_dry"
+    ],
+    "plan_roles": [
+     "post_wash_leave_in",
+     "pre_heat_application"
+    ],
+    "roles": [
+     "extension_conditioner"
+    ],
+    "suitable_thicknesses": [
+     "normal"
+    ],
+    "protocol_pre_heat_source": "boots.com UK ('Moisture Recharge' name) / dunnesstoresgrocery.com IE - non-German sources"
+   },
+   "claims": [
+    {
+     "tier": "C1 (pack photo; judgment: retailer-hosted packshot of the current German-language pack)",
+     "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+     "accessed": "2026-10-09",
+     "quotes": [
+      "Unsere Pro-V Formel bringt bei Hitzeaktivierung noch mehr feuchtigkeitsspendende Nährstoffe ins Haar und versiegelt es. Sie schützt vor Feuchtigkeit, Frizz und Hitze bis zu 230 °C.",
+      "Hitzeaktivierte Formel für extra Pflege (front)"
+     ],
+     "note": "Back-of-pack text read from the image (DE/AT/CH pack: Procter & Gamble, 65823 Schwalbach/Ts.). No German manufacturer product page found (haircode.io has no HEAT&GLOW page; P&G press release presseportal.de/pm/13483/6123401 returned HTTP 503 twice - unreachable, not read)."
+    }
+   ],
+   "counter_signals": [],
+   "retailer_copy": [
+    {
+     "tier": "C3",
+     "url": "https://www.dm.de/p/d/3088304/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+     "quote": "Schützt vor Hitze bis 230 °C & Luftfeuchtigkeit",
+     "note": "also 'Leave-In-Creme mit hitzeaktivierter Pflege'; corroborates the pack."
+    }
+   ],
+   "inci": {
+    "source": "dm.de (C3, rendered) and pack back photo",
+    "raw": "Aqua, Stearyl Alcohol, Cetyl Alcohol, Stearamidopropyl Dimethylamine, Dimethicone, Glutamic Acid, Oleic Acid, Benzyl Alcohol, Phenoxyethanol, Sodium Benzoate, CI 77891, Parfum, Polysorbate 20, Mica, Citric Acid, Panthenol, EDTA, Hexamethylindanopyran, Silica, Dimethyl Phenethyl Acetate, Histidine, Sodium Chloride, Hexyl Cinnamal, Tetramethyl Acetyloctahydronaphthalenes, Tin Oxide, Vanillin, Hydroxycitronellal, Limonene, CI 17200",
+    "n_ingredients": 29,
+    "tail_marker": "Benzyl Alcohol",
+    "tail_marker_rank": 8,
+    "l9_members": [],
+    "l9_note": "No closed-list member (generic silicone only)."
+   },
+   "directions": {
+    "source": "pack back (C1) = dm.de Verwendungshinweise (C3)",
+    "verbatim": "1-2 Pumpstöße auf das gereinigte Haar auftragen. / Föhnen, um zu aktivieren. / Zwischen den Haarwäschen nutzen, um Frizz zu kontrollieren.",
+    "application_stage_transcribed": [
+     "towel_dry",
+     "pre_heat",
+     "dry_hair"
+    ],
+    "pre_heat_in_directions": true,
+    "note": "'Föhnen, um zu aktivieren' names the heat tool and positions it after application -> pre_heat (same evidence shape as gold slots 5 and 13). 'gereinigte Haar' -> towel_dry (freshly washed); 'zwischen den Haarwäschen' -> dry_hair. DB currently only [towel_dry] (copied from the Irish Dunnes page 'towel-dried')."
+   },
+   "projection": {
+    "provides_heat_protection": true,
+    "trace_state": "claim_only",
+    "review_flags": [
+     "claim looks formula-unsupported (no L9 member)",
+     "claim tier rests on a retailer-hosted pack photo (C1 by judgment) - tier confirmation"
+    ],
+    "claim_tier": "C1 (pack photo, judgment)"
+   },
+   "proposal": "KEEP pre-heat role + protocol. provides_heat_protection false -> true; application_stage [towel_dry] -> [towel_dry, pre_heat, dry_hair]. Passes the pre-heat evaluator WITHOUT 23a83cfa. Re-point protocol sources to the pack/dm instead of Boots UK / Dunnes IE. Fallback if the human refuses the packshot as C1: dm (C3) alone is retailer-only -> hp false, claim_authority_gap -> DROP.",
+   "db_changes": [
+    {
+     "table": "product_leave_in_specs",
+     "field": "provides_heat_protection",
+     "before": false,
+     "after": true
+    },
+    {
+     "table": "product_leave_in_specs",
+     "field": "application_stage",
+     "before": [
+      "towel_dry"
+     ],
+     "after": [
+      "towel_dry",
+      "pre_heat",
+      "dry_hair"
+     ]
+    }
+   ],
+   "confidence": "medium-high (pack text is unambiguous; tier of a retailer packshot is the only judgment)",
+   "human": [
+    "Accept the dm-hosted packshot of the current German pack as C1?",
+    "Optionally obtain the P&G press release (503 at time of research) as C2 corroboration."
+   ]
+  },
+  {
+   "short": "45f4fe15",
+   "group": "A",
+   "full_id": "45f4fe15-c439-476d-8a86-3b2aac5053bd",
+   "brand": "Urban Alchemy",
+   "name": "Urban Alchemy Repair & Revive Leave-In Spray",
+   "official_name": "Repair Revive Leave-in Spray 150 ml (Urban Alchemy / 'Beyond Care')",
+   "gtin": [
+    "4063528079923"
+   ],
+   "pack": "150 ml",
+   "identity_check": "urban-alchemy.com page JSON gtin/barcode 4063528079923 == DB ean; 'Inhalt: 150ml'; page is German-language, EUR/CHF ('Offizieller Urban Alchemy Online Shop').",
+   "db_before": {
+    "provides_heat_protection": false,
+    "application_stage": [
+     "towel_dry"
+    ],
+    "plan_roles": [
+     "post_wash_leave_in",
+     "pre_heat_application"
+    ],
+    "roles": [
+     "extension_conditioner"
+    ],
+    "suitable_thicknesses": [
+     "normal"
+    ],
+    "protocol_pre_heat_source": "urban-alchemy.com (same C2 page)",
+    "ingredient_flags": [
+     "silicones"
+    ]
+   },
+   "claims": [
+    {
+     "tier": "C2",
+     "url": "https://urban-alchemy.com/products/repair-revive-leave-in-spray-150-ml",
+     "accessed": "2026-10-09",
+     "quotes": [
+      "Für beschädigtes Haar – Stärkt die Haarstruktur und bietet sofortige Widerstandskraft mit Hitzeschutz",
+      "Biotin und Arganöl sorgen für gesund aussehendes Haar und bieten gleichzeitig effektiven Hitzeschutz.",
+      "Hitzeschutz (benefit tag)"
+     ],
+     "note": "German-language manufacturer shop. NB the INCI contains no argan oil (no Argania Spinosa entry)."
+    }
+   ],
+   "counter_signals": [
+    "Claim attributes the heat effect to 'Biotin und Arganöl' but the INCI has no argan oil - strengthens the 'claim formula-unsupported by the named ingredients' note (the L9 member present is hydrolyzed wheat protein, which the page does not name)."
+   ],
+   "retailer_copy": [],
+   "inci": {
+    "source": "https://urban-alchemy.com/products/repair-revive-leave-in-spray-150-ml (C2)",
+    "raw": "Aqua [Water], C13-15 alkane, Myristyl alcohol, Cetrimonium chloride, Eclipta prostrata extract, Camellia oleifera seed oil, Opuntia ficus-indica fruit extract, Triticum vulgare (Wheat) bran extract, Triticum vulgare (Wheat) germ extract, Triticum vulgare (Wheat) germ oil, Hydrolyzed soy protein, Biotin, Hydrolyzed wheat protein, Dipropylene glycol, Phenoxyethanol, Polysilicone-29, Ethylhexylglycerin, Sodium methoxy PEG-16 maleate/styrene sulfonate copolymer, Citric acid, Cetearyl nonanoate, Hydroxycitronellal, Caprylic/capric triglyceride, Alpha-isomethyl ionone, Linoleic acid, Pentylene glycol, Saccharomyces ferment lysate filtrate, Phospholipids, Lactobacillus ferment, Sphingolipids, Citronellol, Arginine, Glycerin, Parfum [Fragrance], Limonene, Linalool",
+    "n_ingredients": 35,
+    "tail_marker": "Phenoxyethanol",
+    "tail_marker_rank": 15,
+    "l9_members": [
+     {
+      "rank": 13,
+      "name": "Hydrolyzed wheat protein"
+     }
+    ],
+    "l9_note": "Hydrolyzed wheat protein is an L9 member at rank 13, ABOVE the tail marker (Phenoxyethanol rank 15; marker plausible - aqua/alkane/myristyl alcohol/cetrimonium sit above it; non-vacuous tail incl. Polysilicone-29, ceramides, triglyceride). With the C2 claim this is the only product in the batch reaching formula_plausible (E2, low). Mandatory limitation: the published result is one hydrolysate at a defined concentration in a model system (§5 L9 rule 4)."
+   },
+   "directions": {
+    "source": "same page (C2)",
+    "verbatim": "Nach dem Waschen das Leave-in-Spray großzügig und gleichmäßig auf die Längen und Spitzen auftragen. Nicht ausspülen. Föhnen, stylen oder an der Luft trocknen lassen.",
+    "application_stage_transcribed": [
+     "towel_dry",
+     "pre_heat"
+    ],
+    "pre_heat_in_directions": "arguable",
+    "note": "'Föhnen' is a named heat tool placed after application, but as one of three alternatives (… oder an der Luft trocknen). Under §7.13 an option list is ambiguous -> review as identity conflict; pre_heat is defensible by the gold-slot precedent (EVO, Neqi Diamond Glass). 'Nach dem Waschen' does not say damp - towel_dry is the closest vocabulary term."
+   },
+   "projection": {
+    "provides_heat_protection": true,
+    "trace_state": "formula_plausible",
+    "review_flags": [
+     "tail-position check passed; L9 member is hydrolyzed wheat protein at defined-concentration model-system limitation",
+     "directions option list (Föhnen/stylen/Luft) ambiguous"
+    ],
+    "claim_tier": "C2"
+   },
+   "proposal": "KEEP pre-heat role + protocol. provides_heat_protection false -> true (C2 claim + L9 above tail = formula_plausible). application_stage [towel_dry] -> [towel_dry, pre_heat] if the human accepts 'Föhnen' as the pre-heat transcription; otherwise leave [towel_dry] and rely on 23a83cfa.",
+   "db_changes": [
+    {
+     "table": "product_leave_in_specs",
+     "field": "provides_heat_protection",
+     "before": false,
+     "after": true
+    },
+    {
+     "table": "product_leave_in_specs",
+     "field": "application_stage",
+     "before": [
+      "towel_dry"
+     ],
+     "after": [
+      "towel_dry",
+      "pre_heat"
+     ],
+     "note": "human-gated"
+    }
+   ],
+   "side_observations": [
+    "ingredient_flags ['silicones'] omits 'proteins' although INCI has hydrolyzed soy protein and hydrolyzed wheat protein."
+   ],
+   "confidence": "high (claim, L9); medium (stage reading)",
+   "human": [
+    "Accept 'Föhnen, stylen oder an der Luft trocknen lassen' as pre_heat?"
+   ]
+  },
+  {
+   "short": "5dc2fae3",
+   "group": "B",
+   "full_id": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
+   "brand": "Gliss",
+   "name": "Gliss Ultimate Repair Sprüh-Conditioner",
+   "official_name": "Ultimate Repair Express-Repair-Spülung (spray), 200 ml - dm: 'Sprüh-Conditioner Express-Repair Ultimate Repair'",
+   "gtin": [
+    "4015100813494"
+   ],
+   "pack": "200 ml",
+   "identity_check": "schwarzkopf.de JSON gtin 4015100813494 == DB ean; '200 ml'; INCI identical to the gold-set slot 8 freeze (21 ingredients).",
+   "db_before": {
+    "provides_heat_protection": true,
+    "application_stage": [
+     "towel_dry",
+     "dry_hair"
+    ],
+    "plan_roles": [
+     "post_wash_leave_in",
+     "pre_heat_application"
+    ],
+    "roles": [
+     "replacement_conditioner"
+    ],
+    "suitable_thicknesses": [
+     "coarse",
+     "normal"
+    ],
+    "protocol_pre_heat_source": "schwarzkopf.ch (Swiss page; C5)"
+   },
+   "claims": [
+    {
+     "tier": "C2",
+     "url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/ultimate-repair/ultimate-repair-express-repair-spuelung.html",
+     "accessed": "2026-10-09",
+     "quotes": [
+      "Das Ultimate Repair Gliss Spray sorgt für leichte Kämmbarkeit, Hitzeschutz bis zu 230 °C und verleiht dem Haar mehr Widerstandskraft und gesunden Glanz",
+      "Die Keratin Haarpflege bietet Hitzeschutz bis zu 230 °C"
+     ],
+     "note": "Henkel AG, German-market page; matches gold-set slot 8 (re-confirmed live)."
+    }
+   ],
+   "counter_signals": [],
+   "retailer_copy": [],
+   "inci": {
+    "source": "same page, Inhaltsstoffe (C2)",
+    "raw": "Aqua (Water, Eau), Trisiloxane, Dimethicone, Prunus Armeniaca (Apricot) Kernel Oil, Phenyl Trimethicone, Hydrolyzed Keratin, Hydrolyzed Pearl, Dimethiconol, Polyquaternium-16, Cetyl PEG/PPG-10/1 Dimethicone, Cetrimonium Chloride, Parfum (Fragrance), Lactic Acid, Sodium Benzoate, Glycerin, Tetramethyl Acetyloctahydronaphthalenes, Citrus Aurantium Peel Oil, Limonene, Potassium Sorbate, Phenoxyethanol, Geranyl Acetate",
+    "n_ingredients": 21,
+    "tail_marker": "Sodium Benzoate",
+    "tail_marker_rank": 15,
+    "l9_members": [],
+    "l9_note": "No closed-list member (Polyquaternium-16 is not -55; Hydrolyzed Keratin is not wheat protein). Marker Sodium Benzoate rank 14 of 21 (my script mis-split 'Aqua (Water, Eau)'; gold set agrees on 14/21)."
+   },
+   "directions": {
+    "source": "same page, Anwendung (C2)",
+    "verbatim": "Vor Gebrauch schütteln! Nach jeder Haarwäsche in das handtuchtrockene oder trockene Haar sprühen. Nicht ausspülen! Regelmäßig anwenden. Rückstände vom Boden entfernen. Nicht in die Augen sprühen!",
+    "application_stage_transcribed": [
+     "towel_dry",
+     "dry_hair"
+    ],
+    "pre_heat_in_directions": false,
+    "note": "No heat tool in the directions; DB [towel_dry, dry_hair] is already the correct transcription."
+   },
+   "projection": {
+    "provides_heat_protection": true,
+    "trace_state": "claim_only",
+    "review_flags": [
+     "claim looks formula-unsupported (no L9 member)"
+    ],
+    "claim_tier": "C2"
+   },
+   "proposal": "KEEP pre-heat role + protocol; NO field change (hp true already correct; application_stage must not gain pre_heat). Needs 23a83cfa to pass the evaluator. Optional: re-point protocol source from schwarzkopf.ch to schwarzkopf.de.",
+   "db_changes": [
+    {
+     "table": "product_application_protocols(pre_heat_protection)",
+     "field": "source_url",
+     "before": "https://www.schwarzkopf.ch/de/marken/haarpflege/gliss/ultimate-repair/ultimate-repair-express-repair-spuelung-200-ml.html",
+     "after": "https://www.schwarzkopf.de/marken/haarpflege/gliss/ultimate-repair/ultimate-repair-express-repair-spuelung.html",
+     "optional": true
+    }
+   ],
+   "confidence": "high",
+   "human": [
+    "Land 23a83cfa."
+   ]
+  },
+  {
+   "short": "4e99706a",
+   "group": "B",
+   "full_id": "4e99706a-2232-4ee6-ba1b-9ca1029a7364",
+   "brand": "Olaplex",
+   "name": "Olaplex No.6 Bond Smoother",
+   "official_name": "Original OLAPLEX® N°6 Bond Smoother, 100 ml",
+   "gtin": [
+    "850018802796"
+   ],
+   "pack": "100 ml",
+   "identity_check": "olaplex.de variant barcode 850018802796 == DB ean; single variant, 100 ml, EUR 32.00. (gold set still carried this GTIN as 'unresolved' between 896364002602/896364002619; olaplex.de now settles 850018802796 for the DACH product.) INCI on olaplex.de has 45 entries vs the 46-entry frozen douglas capture (olaplex.de omits Etidronic Acid, Geraniol, Hydroxycitronellal and others on its list) - formula-set difference preserved, irrelevant to heat.",
+   "db_before": {
+    "provides_heat_protection": true,
+    "application_stage": [
+     "towel_dry"
+    ],
+    "plan_roles": [
+     "post_wash_leave_in",
+     "pre_heat_application"
+    ],
+    "roles": [
+     "replacement_conditioner"
+    ],
+    "suitable_thicknesses": [
+     "coarse"
+    ],
+    "protocol_pre_heat_source": "olaplex.com/products/olaplex-n-6-bond-smoother-us (US/English; C5)"
+   },
+   "claims": [
+    {
+     "tier": "C2",
+     "url": "https://olaplex.de/products/olaplex-no-6-bond-smoother",
+     "accessed": "2026-10-09",
+     "quotes": [
+      "Hitzeschutz bei 450ºF/232ºC",
+      "die vor Haarbruch und Hitze bis zu 232 °C schützt"
+     ],
+     "note": "NEW since the gold set: olaplex.de is now a live German-language DACH Olaplex storefront ('OLAPLEX®: Das Original in Deutschland, Österreich, Schweiz', Impressum/AGB, '© 2026, OLAPLEX', EUR). The gold-set record (2026-09-13) found no olaplex.de and admitted the claim via T14 C2_cross_market_verified; it is now a plain C2 claim. Engine result unchanged (hp true)."
+    }
+   ],
+   "counter_signals": [],
+   "retailer_copy": [
+    "douglas.de C3 'bis zu einer Hitze von 232 °C vor Stylingschäden geschützt' (from gold-set freeze, not re-fetched: bot-walled)."
+   ],
+   "inci": {
+    "source": "https://olaplex.de/products/olaplex-no-6-bond-smoother (C2)",
+    "raw": "Wasser/Aqua/Eau, Cetearyl Alcohol, Dimethicone, Isohexadecane, Coco-Caprylate, Neopentyl Glycol Diheptanoate, Behentrimonium Chloride, Isododecane, Phenyl Trimethicone, Propanediol, Bis-Aminopropyl Diglycol Dimaleate, Cetrimonium Chloride, Glyceryl Stearate, Isopropyl Alcohol, Hydroxyethylcellulose, Hydroxypropyl Guar, Sodium Stearoyl Lactylate, Hydroxypropyl Cyclodextrin, Hydrolyzed Vegetable Protein PG-Propyl Silanetriol, Disodium EDTA, Silica Dimethyl Silylate, Gigartina Stellata Extract, Glyoxal, Chondrus Crispus (Carrageenan) Extrakt, Tocopherol, Helianthus Annuus (Sunflower) Seed Oil, Ascorbinsäure, Cocos Nucifera (Coconut) Oil, Phytantriol, Pseudozyma Epicola/Camellia Sinensis Seed Oil Ferment Extract Filtrate, Tocopheryl Acetate, Vitis Vinifera (Traubenkernöl), Aloe Barbadensis Leaf Juice, Panthenol, Zitronensäure, Phenoxyethanol, Iodopropynyl Butylcarbamate, Kaliumsorbat, Natriumbenzoat, Parfüm (Parfum), Hexyl Cinnamal, Limonene, Citral, Linalool, Citronellol",
+    "n_ingredients": 45,
+    "tail_marker": "Phenoxyethanol",
+    "tail_marker_rank": 36,
+    "l9_members": [],
+    "l9_note": "No closed-list member (Hydrolyzed Vegetable Protein PG-Propyl Silanetriol is not hydrolyzed wheat protein)."
+   },
+   "directions": {
+    "source": "same page, Anwendung (C2)",
+    "verbatim": "1. Einen Pumpstoß auf das saubere, feuchte Haar auftragen. 2. Durchkämmen und wie gewünscht stylen.",
+    "application_stage_transcribed": [
+     "towel_dry"
+    ],
+    "pre_heat_in_directions": false,
+    "note": "Directions mention neither a heat tool nor drying method (the US page's 'blow dry' hint is not on the German page)."
+   },
+   "projection": {
+    "provides_heat_protection": true,
+    "trace_state": "claim_only",
+    "review_flags": [
+     "claim looks formula-unsupported (no L9 member)"
+    ],
+    "claim_tier": "C2"
+   },
+   "proposal": "KEEP pre-heat role + protocol; NO field change. Needs 23a83cfa. Re-point protocol source_url from the US olaplex.com page to olaplex.de (C2).",
+   "db_changes": [
+    {
+     "table": "product_application_protocols(pre_heat_protection)",
+     "field": "source_url",
+     "before": "https://olaplex.com/products/olaplex-n-6-bond-smoother-us",
+     "after": "https://olaplex.de/products/olaplex-no-6-bond-smoother",
+     "optional": true
+    }
+   ],
+   "confidence": "high",
+   "human": [
+    "Land 23a83cfa.",
+    "Update the gold-set record's claim tier note (C2_cross_market_verified -> C2) in the next research pass - out of scope here."
+   ]
+  },
+  {
+   "short": "2b7db7e3",
+   "group": "B",
+   "full_id": "2b7db7e3-2058-4178-8a03-7d05f4a1d447",
+   "brand": "Redken",
+   "name": "Redken Extreme Anti-Snap",
+   "official_name": "EXTREME ANTI-SNAP TREATMENT (Leave-In Treatment), redken.eu de-de",
+   "gtin": [
+    "884486453402"
+   ],
+   "pack": "250 ml",
+   "identity_check": "redken.eu/de-de page product images are named 884486453402_*.jpg (== DB gtin); the page's own SKU is 884486320605 (L'Oréal internal) and the JSON-LD gtin13 884486373687 belongs to a different product (Blondage); pack size 250 ml not stated on the page - from DB/gold set. Competing code 884486210777 (hautschutzengel) remains unresolved in the gold set.",
+   "db_before": {
+    "provides_heat_protection": true,
+    "application_stage": [
+     "towel_dry"
+    ],
+    "plan_roles": [
+     "post_wash_leave_in",
+     "pre_heat_application"
+    ],
+    "roles": [
+     "replacement_conditioner"
+    ],
+    "suitable_thicknesses": [
+     "coarse",
+     "normal"
+    ],
+    "protocol_pre_heat_source": "redken.eu/de-de (manufacturer, DE)"
+   },
+   "claims": [
+    {
+     "tier": "C2",
+     "url": "https://www.redken.eu/de-de/produkte/haarpflege/extreme/extreme-anti-snap",
+     "accessed": "2026-10-09",
+     "quotes": [
+      "Es stärkt und glättet die Schuppenschicht. Außerdem reduziert es Haarbruch und Spliss und bietet gleichzeitig einen Hitzeschutz."
+     ],
+     "note": "German-language, de-DE page. Generic claim, no °C figure."
+    }
+   ],
+   "counter_signals": [],
+   "retailer_copy": [
+    "douglas.de C3 'effektiven Hitzeschutz' (gold-set freeze) corroborates."
+   ],
+   "inci": {
+    "source": "same page (C2)",
+    "raw": "AQUA/WATER/EAU, POLYACRYLAMIDE, PHENOXYETHANOL, AMODIMETHICONE, C13-14 ISOPARAFFIN, ISOPROPYL MYRISTATE, PARFUM/FRAGRANCE LAURETH-7, XYLOSE, HYDROLYZED SOY PROTEIN, TRIDECETH-6, HYDROLYZED VEGETABLE PROTEIN PG-PROPYL SILANETRIOL, ARGININE, CITRIC ACID, CETYL ALCOHOL, CETRIMONIUM CHLORIDE, BEHENTRIMONIUM METHOSULFATE, BENZYL BENZOATE, QUATERNIUM-33, LIMONENE, BENZYL ALCOHOL, LINALOOL, 2-OLEAMIDO-1,3-OCTADECANEDIOL (D162261/2)",
+    "n_ingredients": 22,
+    "tail_marker": "PHENOXYETHANOL",
+    "tail_marker_rank": 3,
+    "l9_members": [],
+    "l9_note": "No closed-list member (Quaternium-33 is not -70; hydrolyzed soy / silanetriol hydrolysate are not wheat protein). Tail marker Phenoxyethanol at rank 3 is the documented implausible-marker stress case (§3.1.1 cl.5) - irrelevant here because heat is claim-led."
+   },
+   "directions": {
+    "source": "same page (C2)",
+    "verbatim": "Nach dem Extreme Shampoo und Conditioner anwenden. Ins handtuchtrockenen Haar geben. Nicht ausspülen. Wie gewohnt stylen.",
+    "application_stage_transcribed": [
+     "towel_dry"
+    ],
+    "pre_heat_in_directions": false,
+    "note": "No heat tool or heat step."
+   },
+   "projection": {
+    "provides_heat_protection": true,
+    "trace_state": "claim_only",
+    "review_flags": [
+     "claim looks formula-unsupported (no L9 member)",
+     "tail_marker_implausible",
+     "GTIN conflict (preserved, gold set)"
+    ],
+    "claim_tier": "C2"
+   },
+   "proposal": "KEEP pre-heat role + protocol; NO field change. Needs 23a83cfa.",
+   "db_changes": [],
+   "confidence": "high (claim); GTIN identity medium (inherited gold-set conflict)",
+   "human": [
+    "Land 23a83cfa."
+   ]
+  }
+ ]
+}

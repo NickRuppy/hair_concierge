@@ -1,5 +1,7 @@
-import { evaluateGateCriteria } from "../fit-criteria"
+import { compareRankableCandidates, type RankableCandidate } from "../../candidate-ranking"
+import { candidateDimensionCoverage } from "../../comparison-dimensions"
 import type { Stage3CriterionResult } from "../../contracts"
+import { evaluateGateCriteria } from "../fit-criteria"
 import type {
   Stage3AuthorityEvaluation,
   Stage3AuthorityInput,
@@ -89,6 +91,21 @@ function evaluateProduct(
         : "Das Protokoll ist nicht vollständig verifiziert.",
     ),
   )
+  // This is an S2 ranking signal, never a gate: a general cleanser stays Passt.
+  const scalpOiliness = input.selectionProfile.scalpOiliness
+  if (
+    input.role === "residue_reset" &&
+    scalpOiliness !== null &&
+    product.spec.targetScalpTypes?.includes(scalpOiliness)
+  )
+    criteria.push(
+      criterion(
+        "deep_cleansing.scalp_target",
+        "Kopfhauttyp",
+        "pass",
+        "Passt zu deinem Kopfhauttyp.",
+      ),
+    )
   const missing = commonUnknownFacts(
     { ...input, productFacts: product },
     { requiresSuitableThickness: false },
@@ -117,10 +134,30 @@ export function evaluateDeepCleansingAuthority(
   if (!input.productFacts) {
     const candidate = input.recommendationCandidates
       .filter((item) => item.recommendable && item.isActive && item.lifecycleStatus === "active")
-      .find((item) => evaluateProduct(input, item)?.verdict === "ideal")
+      .flatMap((item) => {
+        const assessment = evaluateProduct(input, item)
+        return assessment?.verdict === "ideal"
+          ? [
+              {
+                item,
+                rank: {
+                  verdict: assessment.verdict,
+                  targetMatchCount: candidateDimensionCoverage(
+                    sharedInput,
+                    item,
+                    assessment.criteria,
+                  ).matches,
+                  cautionCount: 0,
+                  catalogSortOrder: item.catalogSortOrder,
+                  priceEur: item.priceEur ?? null,
+                  productId: item.productId,
+                } satisfies RankableCandidate,
+              },
+            ]
+          : []
+      })
+      .sort((left, right) => compareRankableCandidates(left.rank, right.rank))[0]?.item
     return knownEvaluation(sharedInput, {
-      // A recommendation can be ideal; an absent owned product cannot be.
-      // Keep the uncovered state explicit when the catalog yields no candidate.
       verdict: candidate ? "ideal" : "unknown",
       criteria: [],
       allowedActions: candidate ? ["plan_recommendation", "leave_uncovered"] : ["leave_uncovered"],
@@ -131,9 +168,8 @@ export function evaluateDeepCleansingAuthority(
   }
   const assessment = evaluateProduct(input, input.productFacts)
   if (!assessment) return unsupportedEvaluation(sharedInput, "deep_cleansing_target_unavailable")
-  if (assessment.verdict === "unknown") {
+  if (assessment.verdict === "unknown")
     return unknownEvaluation(sharedInput, assessment.missing, assessment.criteria)
-  }
   const replacement =
     assessment.verdict === "mismatch"
       ? evaluateDeepCleansingAuthority({

@@ -58,6 +58,14 @@ const wetScalpCleanse: Step[] = [
   { stepKey: "rinse", action: "rinse", copyTemplateDe: "Gründlich ausspülen." },
 ]
 
+function rinseOffScalpSteps(applyCopy: string, rinseCopy: string): Step[] {
+  return [
+    { stepKey: "apply", action: "apply_product", copyTemplateDe: applyCopy },
+    { stepKey: "wait", action: "wait", copyTemplateDe: "{{contact_time_de}} einwirken lassen." },
+    { stepKey: "rinse", action: "rinse", copyTemplateDe: rinseCopy },
+  ]
+}
+
 const heatDays: ApplicationDayTypeKey[] = [
   "wash_day",
   "intensive_care_day",
@@ -541,19 +549,14 @@ export const SHARED_APPLICATION_TEMPLATES_V2 = [
     applicationFamily: "rinse_off_scalp_care",
     compatibleDayTypes: ["wash_day"],
     anchor: "pre_wash",
-    steps: [
-      {
-        stepKey: "apply",
-        action: "apply_product",
-        copyTemplateDe: "Scheitelweise auf die Kopfhaut geben und sanft verteilen.",
-      },
-      {
-        stepKey: "wait",
-        action: "wait",
-        copyTemplateDe: "{{contact_time_de}} einwirken lassen.",
-      },
-      { stepKey: "rinse", action: "rinse", copyTemplateDe: "Gründlich ausspülen." },
-    ],
+    // v3 (catalogue completeness Slice 1, F03): every rinse-off scalp product is a
+    // pre-wash treatment its manufacturer says to massage in and wash out with shampoo
+    // (both scalp peelings and the Neqi rosemary scalp oil).
+    protocolVersion: 3,
+    steps: rinseOffScalpSteps(
+      "Scheitelweise auf die Kopfhaut geben und sanft einmassieren.",
+      "Anschließend mit Shampoo auswaschen.",
+    ),
   }),
 ] as const
 
@@ -573,7 +576,8 @@ const REFRESH_DAY_OIL_TEMPLATE_KEYS = new Set([
  * (data/catalog-enrichment/personal-plan-stage5-v2). Its bytes are fingerprinted by
  * reviewed pointer deltas, so templates revised after the freeze keep their superseded
  * version here: the four between-wash Oil families before ruling O4 (2026-09-29)
- * still allowed the Refresh-Tag as protocol version 2.
+ * still allowed the Refresh-Tag as protocol version 2, and the rinse-off scalp family
+ * before Slice 1 F03 (2026-10-09) still spread the product and rinsed without shampoo.
  */
 export const SHARED_APPLICATION_TEMPLATES_AT_ARTIFACT_FREEZE_V2: readonly ApplicationFamilyTemplateV2[] =
   SHARED_APPLICATION_TEMPLATES_V2.map((entry) =>
@@ -583,5 +587,14 @@ export const SHARED_APPLICATION_TEMPLATES_AT_ARTIFACT_FREEZE_V2: readonly Applic
           protocolVersion: 2,
           compatibleDayTypes: ["refresh_day", "between_wash_care_day"],
         })
-      : entry,
+      : entry.guidanceKey === "scalp.rinse-off.v2"
+        ? applicationFamilyTemplateV2Schema.parse({
+            ...entry,
+            protocolVersion: 2,
+            steps: rinseOffScalpSteps(
+              "Scheitelweise auf die Kopfhaut geben und sanft verteilen.",
+              "Gründlich ausspülen.",
+            ),
+          })
+        : entry,
   )

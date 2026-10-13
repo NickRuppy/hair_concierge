@@ -1,0 +1,50 @@
+{
+  "version": "catalog-completeness-protocol-cadence-amendment-v1",
+  "status": "blocked",
+  "blocked_reason": "K18 is a reference anchor whose curated-publication authority is its reviewed preserved bundle (personal_plan_catalog_fact_evidence 'bondbuilder_research_preserved_bundle', bondbuilder_curated_facts_ready_v1): the exact product + protocol rows, cadence and updated_at included. Its v0.5 profile still carries protocol holds, so the strict fallback refuses it. Any write to the protocol row voids the bundle and the deferred gate rejects the migration. The DE cadence needs the Bondbuilder research lane (re-sealed preserved bundle or hold adjudication), planned with S4.",
+  "mode": "replace_reviewed",
+  "product_id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+  "protocol_id": "ef3f1639-cab4-4a1b-bbcc-54b8e436af39",
+  "ruling": "B3 (Nick, 2026-10-09): K18 schedule copy from the German official manufacturer page.",
+  "research_profile": {
+    "rewritten": false,
+    "profile_sha256": "26005fee342e0141fb0f29e33101a617ca5ba2b06f06b54de71aa99c7c01bb57",
+    "cadence_source_id": "C03-P02-1",
+    "cadence_value": {
+      "status": "source_stated",
+      "initial": {
+        "kind": "consecutive_washes",
+        "count": 4
+      },
+      "branches": [],
+      "maintenance": {
+        "kind": "every_n_washes",
+        "minimum": 4,
+        "maximum": 4
+      }
+    },
+    "note": "The frozen v0.5 profile already selects the DE cadence (four consecutive washes, then every fourth wash) and keeps the US four-to-six-wash variant unselected; only the runtime protocol copy still carried the US variant. The profile is not rewritten."
+  },
+  "before": {
+    "cadence": {
+      "kind": "label_course",
+      "copy_de": "Nach einer Salonbehandlung vier bis sechs Haarwäschen hintereinander, danach nach Bedarf."
+    }
+  },
+  "after": {
+    "cadence": {
+      "kind": "label_course",
+      "copy_de": "Die ersten vier Haarwäschen hintereinander anwenden, danach bei jeder vierten Haarwäsche."
+    }
+  },
+  "kind_rationale": "label_course: a fixed initial course (four consecutive washes) followed by a maintenance rhythm (every fourth wash). wash_event would drop the initial course; label_schedule has no course semantics.",
+  "source": {
+    "label": "K18 Leave-In Molecular Repair Hair Mask – deutscher Marken-Shop (Kevin Murphy GmbH)",
+    "url": "https://k18-hair.de/k18-hair/k18-oil/Leave-In-Molecular-Repair-Hair-Mask-50ml.aspx",
+    "type": "manufacturer",
+    "market": "DE",
+    "verbatim": "Für bestmögliche Ergebnisse empfiehlt es sich, die Maske zunächst an vier aufeinanderfolgenden Haarwäschen zu verwenden. Danach genügt es, sie alle vier Wäschen zu wiederholen, um den reparierenden Langzeiteffekt zu erhalten und das Haar dauerhaft zu stärken.",
+    "read": "Read live 2026-10-09; matches profile source C03-P02-1 (checked 2026-10-03).",
+    "checked_at": "2026-10-09"
+  }
+}

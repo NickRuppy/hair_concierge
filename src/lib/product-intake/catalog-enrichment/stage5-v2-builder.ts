@@ -83,7 +83,9 @@ const ALLOWED_FAMILIES_BY_SOURCE_ROLE: Record<
   specialized_bond_treatment: ["pre_shampoo_single_treatment", "post_shampoo_timed_leave_in"],
   scalp_comfort: ["leave_on_scalp_care"],
   scalp_flake_oil_adjunct: ["leave_on_scalp_care"],
-  density_claim_tonic: ["leave_on_scalp_care"],
+  // A density tonic is leave-on by default; a manufacturer pre-wash scalp oil that is
+  // washed out with shampoo keeps its stated rinse-off family (Slice 1 F03, Neqi).
+  density_claim_tonic: ["leave_on_scalp_care", "rinse_off_scalp_care"],
   scalp_exfoliant: ["rinse_off_scalp_care"],
 }
 

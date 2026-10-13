@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { UNKNOWN_SELECTION_PROFILE } from "../src/lib/personal-plan/products/authority/selection-profile"
 import { readFileSync } from "node:fs"
 import path from "node:path"
 import test from "node:test"
@@ -231,6 +232,7 @@ test("an active nonrecommendable research-only Bondbuilder stays unverified with
     decision: bondbuilderDecision(),
     productFacts: facts,
     recommendationCandidates: [],
+    selectionProfile: UNKNOWN_SELECTION_PROFILE,
     coverage: [],
     hairThickness: "normal",
     heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },

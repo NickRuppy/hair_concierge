@@ -1,3 +1,10 @@
+import {
+  compareRankableCandidates,
+  dryShampooVolumeRank,
+  type RankableCandidate,
+} from "../../candidate-ranking"
+import { candidateDimensionCoverage } from "../../comparison-dimensions"
+import type { Stage3VisibleHairColor } from "../selection-profile"
 import { evaluateGateCriteria } from "../fit-criteria"
 import type { FitAxis } from "../fit-evaluator"
 import type {
@@ -19,6 +26,27 @@ import {
 
 type DryShampooInput = Stage3AuthorityInput<"dry_shampoo">
 
+const TINT_FOR_COLOR: Record<Stage3VisibleHairColor, string> = {
+  light_blonde: "blonde_light",
+  brown: "brown",
+  dark: "dark",
+}
+
+/**
+ * Q1 = A (ruled by Nick): the confirmed dry-shampoo rule. A colourless (`universal`)
+ * product fits every root colour fully; a tinted product fits fully only when its tint matches the
+ * user's answered root colour. A matching tint is NOT an extra fulfilled need (option A), so
+ * universal and matching tinted products tie and the shared comparator decides.
+ * Nick 2026-10-13: unknown colour is unscored, including for tinted products.
+ */
+export function dryShampooTintFit(
+  hairColorFit: string,
+  visibleHairColor: Stage3VisibleHairColor | null,
+): "pass" | "caution" {
+  if (visibleHairColor === null || hairColorFit === "universal") return "pass"
+  return TINT_FOR_COLOR[visibleHairColor] === hairColorFit ? "pass" : "caution"
+}
+
 function productMissingFacts(input: DryShampooInput, facts: Stage3DryShampooFacts): string[] {
   const missing = commonUnknownFacts(input, { requiresSuitableThickness: false })
   if (facts.spec.primaryEffect === null) missing.push("styling_effect")
@@ -31,41 +59,57 @@ function productMissingFacts(input: DryShampooInput, facts: Stage3DryShampooFact
 
 function evaluateFacts(input: DryShampooInput, facts: Stage3DryShampooFacts) {
   const missing = productMissingFacts({ ...input, productFacts: facts }, facts)
-  const target = input.dryShampooTarget
+  const { sensitiveScalp, visibleHairColor, volumeDirection: direction } = input.selectionProfile
   const sensitivity = facts.spec.scalpSensitivityFit
   const tint = facts.spec.hairColorFit
   const sensitivityMatch =
-    sensitivity === "sensitive_ok"
-      ? true
-      : sensitivity === "normal_only" && target?.scalpSensitivity
-        ? target.scalpSensitivity === "normal"
-        : null
-  const tintMatch =
+    sensitivity === null ? null : !sensitiveScalp || sensitivity === "sensitive_ok"
+  const sensitivityExplanation = !sensitiveScalp
+    ? "Deine Kopfhaut braucht keine besonders milde Formel."
+    : sensitivityMatch
+      ? "Ausdrücklich für empfindliche Kopfhaut gedacht."
+      : "Nicht für empfindliche Kopfhaut ausgelobt."
+  const tintMatch = tint === null ? null : dryShampooTintFit(tint, visibleHairColor) === "pass"
+  const tintExplanation =
     tint === "universal"
-      ? true
-      : tint && ["blonde_light", "brown", "dark"].includes(tint) && target?.hairColorFit
-        ? tint === target.hairColorFit
-        : null
-  // Missing user targets leave an axis unscored. Product facts are still required above.
+      ? "Farblos – passt zu jeder Haarfarbe."
+      : visibleHairColor === null
+        ? "Getöntes Produkt – deine Ansatzfarbe ist noch nicht bekannt."
+        : tintMatch
+          ? "Die Tönung passt zu deiner Ansatzfarbe."
+          : "Die Tönung passt nicht zu deiner Ansatzfarbe."
+  // Legacy sensitive_refresh is a standard refresh; scalp fit comes from its own fact.
+  const addsVolume = facts.spec.primaryEffect === "volume_texture"
+  const volumeExplanation =
+    direction === null
+      ? "Kein Volumenziel angegeben."
+      : direction === "more"
+        ? addsVolume
+          ? "Gibt zusätzliches Volumen."
+          : "Frischt auf, gibt aber kein zusätzliches Volumen."
+        : addsVolume
+          ? "Gibt zusätzliches Volumen – du möchtest eher weniger."
+          : "Frischt auf, ohne aufzubauschen."
   const axes: FitAxis[] = []
-  if (target?.scalpSensitivity != null)
+  if (sensitiveScalp)
     axes.push({
       id: "dry_shampoo.sensitivity.verified",
       label: "Kopfhautverträglichkeit",
       scale: ["match", "other"],
       targetValue: "match",
       productValues: sensitivityMatch === null ? null : [sensitivityMatch ? "match" : "other"],
-      reason: () => "Die Sensitivitätspositionierung passt nur eingeschränkt zu deiner Kopfhaut.",
+      reason: () => sensitivityExplanation,
     })
-  if (target?.hairColorFit != null)
+  if (visibleHairColor !== null)
     axes.push({
       id: "dry_shampoo.tint.verified",
       label: "Farbpassung",
       scale: ["match", "other"],
       targetValue: "match",
       productValues: tintMatch === null ? null : [tintMatch ? "match" : "other"],
-      reason: () => "Die Tönung passt nur eingeschränkt zu deiner Haarfarbe.",
+      reason: () => tintExplanation,
     })
+  // Nick 2026-10-13: volume is ranking only, never a degree axis.
   const criteria = [
     criterion(
       "dry_shampoo.identity.active",
@@ -77,9 +121,10 @@ function evaluateFacts(input: DryShampooInput, facts: Stage3DryShampooFacts) {
       "dry_shampoo.sensitivity.verified",
       "Kopfhautverträglichkeit",
       "pass",
-      "Die Sensitivitätspositionierung ist geprüft.",
+      sensitivityExplanation,
     ),
-    criterion("dry_shampoo.tint.verified", "Farbpassung", "pass", "Die Farbpassung ist geprüft."),
+    criterion("dry_shampoo.tint.verified", "Farbpassung", "pass", tintExplanation),
+    criterion("dry_shampoo.styling.direction", "Volumen", "pass", volumeExplanation),
     criterion(
       "dry_shampoo.format.verified",
       "Verifiziertes Format",
@@ -108,17 +153,34 @@ function evaluateFacts(input: DryShampooInput, facts: Stage3DryShampooFacts) {
 }
 
 function bestCandidate(input: DryShampooInput) {
-  // Spec §§3–5, ruled 2026-10-12: verdict first; stable first-entered order inside it.
-  const assessed = input.recommendationCandidates
-    .filter((candidate) => candidate.recommendable)
-    .map((candidate) => ({
-      candidate,
-      result: evaluateFacts(input, candidate),
-    }))
   return (
-    assessed.find((entry) => entry.result.verdict === "ideal") ??
-    assessed.find((entry) => entry.result.verdict === "supportive") ??
-    null
+    input.recommendationCandidates
+      .filter((candidate) => candidate.recommendable)
+      .map((candidate) => ({ candidate, result: evaluateFacts(input, candidate) }))
+      .flatMap(({ candidate, result }) =>
+        result.verdict === "ideal" || result.verdict === "supportive"
+          ? [
+              {
+                candidate,
+                result,
+                rank: {
+                  verdict: result.verdict,
+                  targetMatchCount: candidateDimensionCoverage(
+                    input as never,
+                    candidate,
+                    result.criteria,
+                  ).matches,
+                  cautionCount: result.criteria.filter((row) => row.result === "caution").length,
+                  dryShampooVolumePreference: dryShampooVolumeRank(input, candidate),
+                  catalogSortOrder: candidate.catalogSortOrder,
+                  priceEur: candidate.priceEur ?? null,
+                  productId: candidate.productId,
+                } satisfies RankableCandidate,
+              },
+            ]
+          : [],
+      )
+      .sort((left, right) => compareRankableCandidates(left.rank, right.rank))[0] ?? null
   )
 }
 
@@ -136,7 +198,7 @@ function recommendationFor(input: DryShampooInput) {
       result.verdict === "supportive"
         ? result.criteria.find((row) => row.result === "caution")!.explanation
         : "Verifizierte Auffrischungs-, Farb-, Kopfhaut- und Formatangaben liegen vor.",
-    authorityRuleId: "dry_shampoo.selection.stable_first_entered_verified",
+    authorityRuleId: "dry_shampoo.selection.shared_rank",
   }
 }
 

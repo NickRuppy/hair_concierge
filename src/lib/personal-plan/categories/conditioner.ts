@@ -11,6 +11,7 @@ import type {
   PlanReasonFact,
   PlanRepairSupportLevel,
 } from "../types"
+import { planVolumeDirection } from "./volume-direction"
 
 const WEIGHT_ORDER: readonly PlanCareWeight[] = ["light", "medium", "rich"] as const
 
@@ -112,25 +113,10 @@ function targetWeight(profile: PlanProfile): {
         : "medium"
   const ruleIds = ["conditioner.weight.thickness"]
 
-  if (has(profile.concerns, "low_volume_or_weighed_down")) {
-    return {
-      weight: shiftWeight(weight, -1),
-      ruleIds: [...ruleIds, "conditioner.weight.volume_up"],
-    }
-  }
-
-  if (has(profile.goals, "volume_balance")) {
-    const controlRoute =
-      profile.hair.texture === "curly" ||
-      profile.hair.texture === "coily" ||
-      profile.hair.thickness === "coarse" ||
-      (profile.hair.texture === "wavy" &&
-        (has(profile.goals, "shape_definition") || has(profile.concerns, "lost_shape")))
-
-    weight = shiftWeight(weight, controlRoute ? 1 : -1)
-    ruleIds.push(controlRoute ? "conditioner.weight.control" : "conditioner.weight.volume_up")
-  }
-
+  const direction = planVolumeDirection(profile)
+  if (direction === null) return { weight, ruleIds }
+  weight = shiftWeight(weight, direction === "less" ? 1 : -1)
+  ruleIds.push(direction === "less" ? "conditioner.weight.control" : "conditioner.weight.volume_up")
   return { weight, ruleIds }
 }
 

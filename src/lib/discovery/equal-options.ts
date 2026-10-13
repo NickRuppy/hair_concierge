@@ -2,6 +2,7 @@ import { stage3HeatRoutesFromSnapshot } from "@/lib/personal-plan/oil-heat-conte
 import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
 import type { Stage3CategoryProductFacts } from "@/lib/personal-plan/products/authority/contracts"
 import { evaluateStage3Authority } from "@/lib/personal-plan/products/authority/evaluate"
+import type { Stage3SelectionProfile } from "@/lib/personal-plan/products/authority/selection-profile"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { bondbuilderApplication } from "@/lib/personal-plan/products/fit-comparison"
 import { presentCatalogCommerce } from "@/lib/personal-plan/routine/commerce"
@@ -60,6 +61,8 @@ export function discoveryEqualOptions(input: {
   candidates: readonly Stage3CategoryProductFacts[]
   /** The preview's pick — never repeated as an option. */
   selectedProductId: string
+  /** The same selection slice the preview used (parity with `computeStage1ProductExamplePreviews`). */
+  selectionProfile: Stage3SelectionProfile
 }): DiscoveryEqualOption[] {
   const authorityInput = {
     category: input.category,
@@ -74,6 +77,7 @@ export function discoveryEqualOptions(input: {
     coverage: input.snapshot.coverage,
     hairThickness: input.snapshot.profile.hair.thickness,
     heatRoutes: stage3HeatRoutesFromSnapshot(input.snapshot),
+    selectionProfile: input.selectionProfile,
     productFacts: null,
     recommendationCandidates: input.candidates as never,
     heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },

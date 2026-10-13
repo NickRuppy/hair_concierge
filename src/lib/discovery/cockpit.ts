@@ -1,5 +1,7 @@
 import "server-only"
 
+import type { Stage3VisibleHairColor } from "@/lib/personal-plan/products/authority/selection-profile"
+import { loadVisibleHairColor } from "@/lib/user-facts/visible-hair-color"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import { parseDiscoveryPriceLabel } from "@/components/discovery/cockpit/swap-sort"
@@ -492,6 +494,11 @@ export type DiscoveryCockpitDependencies = {
     client: DiscoveryCockpitAdminClient,
     userId: string,
   ) => Promise<Stage1ProductExamplePreviewBudget | null>
+  /** Her user-answered visible root colour (care habits, `user` provenance); fail-open. */
+  loadVisibleHairColor: (
+    client: DiscoveryCockpitAdminClient,
+    userId: string,
+  ) => Promise<Stage3VisibleHairColor | null>
 }
 
 /**
@@ -534,6 +541,7 @@ export const DISCOVERY_COCKPIT_DEPENDENCIES: DiscoveryCockpitDependencies = {
   loadApplication: loadDiscoveryApplication,
   loadRecommendationRows: loadDiscoveryRecommendationPropertyRows,
   loadShoppingBudget: (client, userId) => loadDiscoveryShoppingBudget(client, userId),
+  loadVisibleHairColor: (client, userId) => loadVisibleHairColor(client as never, userId),
 }
 
 /**
@@ -583,9 +591,18 @@ export async function loadDiscoveryCockpitModel(
   } catch (error) {
     console.error("[discovery] shopping budget lookup failed:", error)
   }
+  // Her user-answered root colour, read once (fail-open): previews, verdicts and recommendation
+  // rows grade exactly like her own scanner and plan.
+  let visibleHairColor: Stage3VisibleHairColor | null = null
+  try {
+    visibleHairColor = await deps.loadVisibleHairColor(admin, input.userId)
+  } catch (error) {
+    console.error("[discovery] visible hair colour lookup failed:", error)
+  }
   const idealOptions = {
     ...(routineOverride ? { routineOverride } : {}),
     ...(shopping ? { budget: shopping } : {}),
+    ...(visibleHairColor ? { visibleHairColor } : {}),
   }
   const ideal = await deps.loadIdealRoutine(
     admin,
@@ -620,6 +637,7 @@ export async function loadDiscoveryCockpitModel(
     ideal.context,
     undefined,
     shopping?.budget ?? null,
+    ...(visibleHairColor ? [visibleHairColor] : []),
   )
   const decisions = await deps.loadDecisions(input.intakeId, admin)
   const swapProductIds = new Set(discoverySwapProductIds(decisions))
@@ -651,11 +669,16 @@ export async function loadDiscoveryCockpitModel(
   )
   let recommendationPropertyRows = new Map<string, DiscoveryPropertyRow[]>()
   try {
-    recommendationPropertyRows = await deps.loadRecommendationRows(
-      admin,
-      ideal.steps.filter((step) => recommendationRowKeys.has(step.decisionKey)),
-      ideal.context,
-    )
+    const rowSteps = ideal.steps.filter((step) => recommendationRowKeys.has(step.decisionKey))
+    recommendationPropertyRows = visibleHairColor
+      ? await deps.loadRecommendationRows(
+          admin,
+          rowSteps,
+          ideal.context,
+          undefined,
+          visibleHairColor,
+        )
+      : await deps.loadRecommendationRows(admin, rowSteps, ideal.context)
   } catch (error) {
     console.error("[discovery] recommendation rows unavailable:", error)
   }

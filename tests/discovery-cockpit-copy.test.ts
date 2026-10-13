@@ -51,12 +51,12 @@ const SOURCES = [
 
 test("known shared strings map to their neutral variant", () => {
   assert.equal(
-    cockpitVoice("Die Sensitivitätspositionierung passt nur eingeschränkt zu deiner Kopfhaut."),
-    "Die Sensitivitätspositionierung passt nur eingeschränkt zur Kopfhaut.",
+    cockpitVoice("Deine Kopfhaut braucht keine besonders milde Formel."),
+    "Die Kopfhaut braucht keine besonders milde Formel.",
   )
   assert.equal(
-    cockpitVoice("Die Tönung passt nur eingeschränkt zu deiner Haarfarbe."),
-    "Die Tönung passt nur eingeschränkt zur Haarfarbe.",
+    cockpitVoice("Die Tönung passt nicht zu deiner Ansatzfarbe."),
+    "Die Tönung passt nicht zur Ansatzfarbe.",
   )
   assert.equal(cockpitVoice("Für dein Haar eher schwer"), "Für das Haar eher schwer")
   assert.equal(cockpitVoice("Entspricht deinem Bedarf."), "Entspricht dem Bedarf.")

@@ -3,6 +3,7 @@ import test from "node:test"
 
 import {
   classifyBondbuilderRelationship,
+  deepCleansingTargetScalpTypes,
   loadScanProductFacts,
   stage3IntegratedHeatCarrierRoutes,
   stage3AuthorityFactFingerprint,
@@ -235,4 +236,80 @@ test("activation without protection is no heat carrier; an activated carrier cov
     stage3IntegratedHeatCarrierRoutes(plain, ["airflow_shaping", "direct_contact_heat"]),
     ["airflow_shaping", "direct_contact_heat"],
   )
+})
+
+async function loadDeepCleanser(targetScalpTypes: unknown) {
+  const spec: Record<string, unknown> = {
+    product_id: "catalog-deep",
+    reset_focus: "product_sebum_buildup",
+    scalp_type_focus: "oily",
+    color_treated_suitability: "unsuitable_or_unknown",
+  }
+  if (targetScalpTypes !== undefined) spec.target_scalp_types = targetScalpTypes
+  const client = {
+    from(table: string) {
+      const data =
+        table === "products"
+          ? {
+              id: "catalog-deep",
+              name: "Tiefenreinigung",
+              category_key: "deep_cleansing_shampoo",
+              is_active: true,
+              lifecycle_status: "active",
+              is_chaarlie_recommended: true,
+              suitable_thicknesses: ["normal"],
+            }
+          : table === "product_deep_cleansing_shampoo_specs"
+            ? spec
+            : []
+      const result = { data, error: null }
+      const chain = {
+        select: () => chain,
+        eq: () => chain,
+        order: () => chain,
+        limit: () => chain,
+        maybeSingle: async () => result,
+        then: (resolve: (value: typeof result) => unknown) => Promise.resolve(result).then(resolve),
+      }
+      return chain
+    },
+  }
+  const facts = await loadScanProductFacts(
+    client as never,
+    "deep_cleansing_shampoo",
+    "catalog-deep",
+    {
+      hairThickness: "normal",
+      role: "residue_reset",
+      shampooTarget: null,
+      conditionerTarget: null,
+    },
+  )
+  assert.equal(facts?.category, "deep_cleansing_shampoo")
+  if (facts?.category !== "deep_cleansing_shampoo") throw new Error("expected deep cleansing facts")
+  return facts
+}
+
+test("deep-cleansing facts read target_scalp_types, never the legacy scalp_type_focus", async () => {
+  assert.equal((await loadDeepCleanser(null)).spec.targetScalpTypes, null)
+  assert.equal((await loadDeepCleanser(undefined)).spec.targetScalpTypes, null)
+  assert.deepEqual((await loadDeepCleanser([])).spec.targetScalpTypes, [])
+  assert.deepEqual((await loadDeepCleanser(["oily"])).spec.targetScalpTypes, ["oily"])
+  assert.equal("scalpTypeFocus" in (await loadDeepCleanser(null)).spec, false)
+})
+
+test("invalid scalp targets fail closed to null (no soft rank)", () => {
+  assert.equal(deepCleansingTargetScalpTypes(["oily", "dry"]), null)
+  assert.equal(deepCleansingTargetScalpTypes(["oily", "oily"]), null)
+  assert.equal(deepCleansingTargetScalpTypes(["sensitive"]), null)
+  assert.equal(deepCleansingTargetScalpTypes("oily"), null)
+  assert.deepEqual(deepCleansingTargetScalpTypes(["dry", "balanced"]), ["balanced", "dry"])
+})
+
+test("the deep-cleansing fact fingerprint covers the scalp targets", async () => {
+  const unassessed = await loadDeepCleanser(null)
+  const ordinary = await loadDeepCleanser([])
+  const oily = await loadDeepCleanser(["oily"])
+  assert.notEqual(unassessed.factFingerprint, ordinary.factFingerprint)
+  assert.notEqual(ordinary.factFingerprint, oily.factFingerprint)
 })
