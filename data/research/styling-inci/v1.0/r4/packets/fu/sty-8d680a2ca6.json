@@ -1,0 +1,92 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-8d680a2ca6",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 17,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 2,
+        "inci": "Polyglyceryl-3 Betainate Acetate"
+      },
+      {
+        "rank": 3,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 4,
+        "inci": "Propylene Glycol"
+      },
+      {
+        "rank": 5,
+        "inci": "Fructose"
+      },
+      {
+        "rank": 6,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 7,
+        "inci": "Triethyl Citrate"
+      },
+      {
+        "rank": 8,
+        "inci": "PEG-60 Hydrogenated Castor Oil"
+      },
+      {
+        "rank": 9,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 10,
+        "inci": "Pentylene Glycol"
+      },
+      {
+        "rank": 11,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 12,
+        "inci": "Lactic Acid"
+      },
+      {
+        "rank": 13,
+        "inci": "Sodium Citrate"
+      },
+      {
+        "rank": 14,
+        "inci": "Linalyl Acetate"
+      },
+      {
+        "rank": 15,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      },
+      {
+        "rank": 16,
+        "inci": "Hydrolyzed Keratin"
+      },
+      {
+        "rank": 17,
+        "inci": "Eucalyptus Globulus Oil"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Mit seinem leichten Halt kann [CLAIM] auch als Fixierspray verwendet werden, bevor die Haare geföhnt werden, um mehr Volumen im Haar zu erzeugen.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "schwarzkopf-professional.com",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

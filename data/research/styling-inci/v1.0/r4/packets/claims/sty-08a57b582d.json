@@ -1,0 +1,61 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-08a57b582d",
+  "brand": "Balea",
+  "confirmed_name": "Locken Crunchgel",
+  "confirmed_name_tier": "C2_house_brand",
+  "format": "gel",
+  "product_type_word": "gel",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Haargel für definierte Locken",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Mit Anti-Frizz-Effekt, ohne zu beschweren",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Rezeptur mit Panthenol & Betain",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "finish",
+      "text": "einen schönen Glanz",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "Für definierte Locken voller Sprungkraft",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "Das Haar erhält eine flexible Struktur und einen schönen Glanz",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    }
+  ]
+}

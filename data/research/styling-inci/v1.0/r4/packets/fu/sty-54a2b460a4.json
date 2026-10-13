@@ -1,0 +1,80 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-54a2b460a4",
+  "format": "stick",
+  "inci": {
+    "inci_item_count": 14,
+    "tier": "C1",
+    "source_class": "pack",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "PRUNUS AMYGDALUS DULCIS OIL"
+      },
+      {
+        "rank": 2,
+        "inci": "MANGIFERA INDICA SEED BUTTER"
+      },
+      {
+        "rank": 3,
+        "inci": "STEARYL ALCOHOL"
+      },
+      {
+        "rank": 4,
+        "inci": "COCOS NUCIFERA OIL"
+      },
+      {
+        "rank": 5,
+        "inci": "BUTYROSPERMUM PARKII BUTTER"
+      },
+      {
+        "rank": 6,
+        "inci": "COPERNICIA CERIFERA CERA"
+      },
+      {
+        "rank": 7,
+        "inci": "HYDROGENATED RAPESEED OIL"
+      },
+      {
+        "rank": 8,
+        "inci": "HYDROGENATED PALM OIL"
+      },
+      {
+        "rank": 9,
+        "inci": "PERSEA GRATISSIMA OIL"
+      },
+      {
+        "rank": 10,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 11,
+        "inci": "TOCOPHEROL"
+      },
+      {
+        "rank": 12,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 13,
+        "inci": "DIMETHYL PHENETHYL ACETATE"
+      },
+      {
+        "rank": 14,
+        "inci": "VANILLIN"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "ANWENDUNG Mit dem Stick sparsam über das trockene Haar streichen, um abstehende Härchen zu fixieren.",
+    "tier": "C1",
+    "source_class": "pack",
+    "source_host": "products.dm-static.com",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

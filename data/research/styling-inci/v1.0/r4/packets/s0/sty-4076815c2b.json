@@ -1,0 +1,130 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-4076815c2b",
+  "product": {
+    "confirmed_name": "Refreshing Curl Mist",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "Redken",
+    "format": "pump_spray"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 20,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA / WATER"
+      },
+      {
+        "rank": 2,
+        "inci": "PROPYLENE GLYCOL"
+      },
+      {
+        "rank": 3,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 4,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 5,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 6,
+        "inci": "OLETH-20"
+      },
+      {
+        "rank": 7,
+        "inci": "POLYQUATERNIUM-6"
+      },
+      {
+        "rank": 8,
+        "inci": "PARFUM / FRAGRANCE"
+      },
+      {
+        "rank": 9,
+        "inci": "ETHYLHEXYLGLYCERIN"
+      },
+      {
+        "rank": 10,
+        "inci": "TRISODIUM ETHYLENEDIAMINE DISUCCINATE"
+      },
+      {
+        "rank": 11,
+        "inci": "SIMMONDSIA CHINENSIS SEED OIL / JOJOBA SEED OIL"
+      },
+      {
+        "rank": 12,
+        "inci": "SQUALANE"
+      },
+      {
+        "rank": 13,
+        "inci": "HEXYL CINNAMAL"
+      },
+      {
+        "rank": 14,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 15,
+        "inci": "ALPHA-ISOMETHYL IONONE"
+      },
+      {
+        "rank": 16,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 17,
+        "inci": "GERANIOL"
+      },
+      {
+        "rank": 18,
+        "inci": "BENZYL ALCOHOL"
+      },
+      {
+        "rank": 19,
+        "inci": "TETRASODIUM EDTA"
+      },
+      {
+        "rank": 20,
+        "inci": "TOCOPHEROL"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "In die trockenen Längen und Spitzen sprühen und sanft einkneten. Anschließend entweder lufttrocknen lassen oder föhnen. Für optimale Ergebnisse wird die Anwendung der Acidic Bonding Curls Lockenpflege-Serie sowie der Curls Stylers von Redken empfohlen. Bei Kontakt mit den Augen diese sofort gründlich ausspülen. Außer Reichweite von Kindern aufbewahren.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "redken.eu",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "REDKEN REFRESHING CURL MIST LOCKEN REVITALISIERT UND REAKTIVIERT LOCKEN (NEU)",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Das silikonfreie Refreshing Curl Mist von Redken sorgt für eine sofortige Revitalisierung von Locken bis zum 7. Tag, ohne Haarwäsche. Das mit Squalan und Jojoba-Öl angereicherte Lockenspray stellt die Lockenstruktur, die Sprungkraft und die natürliche Bewegung von Locken wieder her. Für langanhaltend gestylte und gepflegte Locken.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

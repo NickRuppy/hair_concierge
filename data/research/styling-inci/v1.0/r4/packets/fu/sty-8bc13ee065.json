@@ -1,0 +1,112 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-8bc13ee065",
+  "format": "paste",
+  "inci": {
+    "inci_item_count": 22,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 2,
+        "inci": "Rhus Verniciflua Peel Cera (Rhus Verniciflua Peel Wax)"
+      },
+      {
+        "rank": 3,
+        "inci": "Stearic Acid"
+      },
+      {
+        "rank": 4,
+        "inci": "Palmitic Acid"
+      },
+      {
+        "rank": 5,
+        "inci": "VP/VA Copolymer"
+      },
+      {
+        "rank": 6,
+        "inci": "Cera Carnauba (Copernicia Cerifera (Carnauba) Wax, Cire de Carnauba)"
+      },
+      {
+        "rank": 7,
+        "inci": "Steareth-21"
+      },
+      {
+        "rank": 8,
+        "inci": "Steareth-2"
+      },
+      {
+        "rank": 9,
+        "inci": "Propylene Glycol"
+      },
+      {
+        "rank": 10,
+        "inci": "PPG-5- Ceteth-20"
+      },
+      {
+        "rank": 11,
+        "inci": "Cetyl Ethylhexanoate"
+      },
+      {
+        "rank": 12,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 13,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 14,
+        "inci": "Caramel"
+      },
+      {
+        "rank": 15,
+        "inci": "Aminomethyl Propanol"
+      },
+      {
+        "rank": 16,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 17,
+        "inci": "Benzyl Alcohol"
+      },
+      {
+        "rank": 18,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 19,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      },
+      {
+        "rank": 20,
+        "inci": "Tropolone"
+      },
+      {
+        "rank": 21,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 22,
+        "inci": "Rose Ketones"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Kleine Menge zwischen den Handflächen verreiben, ins trockene oder feuchte Haar einarbeiten, nach Belieben stylen; einzelne Strähnen mit Fingerspitzen definieren; neu stylbar; für beste Ergebnisse mit [CLAIM] Haarspray fixieren.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-11",
+    "masked_with": "[CLAIM]"
+  }
+}

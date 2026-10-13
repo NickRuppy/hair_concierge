@@ -1,0 +1,77 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-c5d4b6fae6",
+  "brand": "Schwarzkopf taft (taft x GLISS)",
+  "confirmed_name": "Glanz-Spray taft x Gliss Silky Shine",
+  "confirmed_name_tier": "C2",
+  "format": "aerosol",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Mit veganem Keratin, Styling & Pflege in einem",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Bis zu 72 h Anti-Frizz-Effekt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Hitzeschutz bis 230°C",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "Für alle Haartypen",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": null
+    },
+    {
+      "type": "promise",
+      "text": "versiegelt brüchige Spitzen",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": null
+    },
+    {
+      "type": "finish",
+      "text": "Strahlender Glanz ohne Frizz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": null
+    },
+    {
+      "type": "heat_protection",
+      "text": "Hitzeschutz bis zu 230°C (Föhnen, Glätten, Lockenbürste)",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": null
+    },
+    {
+      "type": "other",
+      "text": "Leave-In Spray für sofortigen Glanz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf.de",
+      "date": null
+    }
+  ]
+}

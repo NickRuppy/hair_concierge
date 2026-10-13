@@ -1,0 +1,108 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-08c0663e50",
+  "format": "wax_jar",
+  "inci": {
+    "inci_item_count": 21,
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA"
+      },
+      {
+        "rank": 2,
+        "inci": "CETEARETH-20"
+      },
+      {
+        "rank": 3,
+        "inci": "PROPYLENE GLYCOL"
+      },
+      {
+        "rank": 4,
+        "inci": "POLYSORBATE 80"
+      },
+      {
+        "rank": 5,
+        "inci": "MICA"
+      },
+      {
+        "rank": 6,
+        "inci": "PEG-7 GLYCERYL COCOATE"
+      },
+      {
+        "rank": 7,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 8,
+        "inci": "HYDROXYACETOPHENONE"
+      },
+      {
+        "rank": 9,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 10,
+        "inci": "SYNTHETIC FLUORPHLOGOPITE"
+      },
+      {
+        "rank": 11,
+        "inci": "DICAPRYLYL ETHER"
+      },
+      {
+        "rank": 12,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 13,
+        "inci": "CI 77491"
+      },
+      {
+        "rank": 14,
+        "inci": "HEXYL CINNAMAL"
+      },
+      {
+        "rank": 15,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 16,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 17,
+        "inci": "LINALYL ACETATE"
+      },
+      {
+        "rank": 18,
+        "inci": "GERANYL ACETATE"
+      },
+      {
+        "rank": 19,
+        "inci": "GERANIOL"
+      },
+      {
+        "rank": 20,
+        "inci": "SODIUM HYDROXIDE"
+      },
+      {
+        "rank": 21,
+        "inci": "TOCOPHEROL"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Eine kleine Menge auf dem trockenen Haar verteilen und wie gewohnt stylen.",
+    "tier": "C1",
+    "source_class": "pack",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

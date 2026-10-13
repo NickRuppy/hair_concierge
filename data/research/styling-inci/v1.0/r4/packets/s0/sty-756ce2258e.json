@@ -1,0 +1,170 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-756ce2258e",
+  "product": {
+    "confirmed_name": "Styling Creme Locken Traum",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C3",
+    "brand": "ISANA PROFESSIONAL",
+    "format": "cream",
+    "confirmed_name_from_retailer_title": true,
+    "retailer_title_type_noun_agrees": true
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 35,
+    "tier": "C4",
+    "source_class": "other_retailer_or_database",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA"
+      },
+      {
+        "rank": 2,
+        "inci": "CETEARYL ALCOHOL"
+      },
+      {
+        "rank": 3,
+        "inci": "ISOPROPYL PALMITATE"
+      },
+      {
+        "rank": 4,
+        "inci": "SORBITOL"
+      },
+      {
+        "rank": 5,
+        "inci": "PVP"
+      },
+      {
+        "rank": 6,
+        "inci": "BUTYROSPERMUM PARKII BUTTER"
+      },
+      {
+        "rank": 7,
+        "inci": "GLYCERYL STEARATE"
+      },
+      {
+        "rank": 8,
+        "inci": "PANTHENOL"
+      },
+      {
+        "rank": 9,
+        "inci": "TRITICUM VULGARE GERM OIL"
+      },
+      {
+        "rank": 10,
+        "inci": "TRITICUM VULGARE BRAN EXTRACT"
+      },
+      {
+        "rank": 11,
+        "inci": "TRITICUM VULGARE GERM EXTRACT"
+      },
+      {
+        "rank": 12,
+        "inci": "CAMELLIA OLEIFERA SEED OIL"
+      },
+      {
+        "rank": 13,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 14,
+        "inci": "TOCOPHERYL ACETATE"
+      },
+      {
+        "rank": 15,
+        "inci": "TOCOPHEROL"
+      },
+      {
+        "rank": 16,
+        "inci": "QUARTZ POWDER"
+      },
+      {
+        "rank": 17,
+        "inci": "CAPRYLIC/CAPRIC TRIGLYCERIDE"
+      },
+      {
+        "rank": 18,
+        "inci": "SODIUM CETEARYL SULFATE"
+      },
+      {
+        "rank": 19,
+        "inci": "DICAPRYLYL CARBONATE"
+      },
+      {
+        "rank": 20,
+        "inci": "CETEARYL NONANOATE"
+      },
+      {
+        "rank": 21,
+        "inci": "XANTHAN GUM"
+      },
+      {
+        "rank": 22,
+        "inci": "LACTIC ACID"
+      },
+      {
+        "rank": 23,
+        "inci": "LINOLEIC ACID"
+      },
+      {
+        "rank": 24,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 25,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 26,
+        "inci": "HEXYL CINNAMAL"
+      },
+      {
+        "rank": 27,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 28,
+        "inci": "BENZYL ALCOHOL"
+      },
+      {
+        "rank": 29,
+        "inci": "SODIUM HYDROXIDE"
+      },
+      {
+        "rank": 30,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 31,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 32,
+        "inci": "BENZOIC ACID"
+      },
+      {
+        "rank": 33,
+        "inci": "DEHYDROACETIC ACID"
+      },
+      {
+        "rank": 34,
+        "inci": "SODIUM BENZOATE"
+      },
+      {
+        "rank": 35,
+        "inci": "POTASSIUM SORBATE"
+      }
+    ]
+  },
+  "directions_status": "missing",
+  "directions": null,
+  "promise_claims_c1_c2": [],
+  "heat_protection_claims_c1_c2": []
+}

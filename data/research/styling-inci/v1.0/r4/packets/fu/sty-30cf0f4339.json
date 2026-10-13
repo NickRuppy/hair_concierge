@@ -1,0 +1,144 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-30cf0f4339",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 30,
+    "tier": "C1",
+    "source_class": "pack",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 2,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 3,
+        "inci": "Methyl Glucose Sesquistearate"
+      },
+      {
+        "rank": 4,
+        "inci": "Stearamidopropyl Dimethylamine"
+      },
+      {
+        "rank": 5,
+        "inci": "Arginine"
+      },
+      {
+        "rank": 6,
+        "inci": "Serine"
+      },
+      {
+        "rank": 7,
+        "inci": "Opuntia Ficus-Indica Flower Extract"
+      },
+      {
+        "rank": 8,
+        "inci": "Prunus Amygdalus Dulcis Seed Extract"
+      },
+      {
+        "rank": 9,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 10,
+        "inci": "Dicaprylyl Carbonate"
+      },
+      {
+        "rank": 11,
+        "inci": "PCA"
+      },
+      {
+        "rank": 12,
+        "inci": "Glycine"
+      },
+      {
+        "rank": 13,
+        "inci": "Histidine"
+      },
+      {
+        "rank": 14,
+        "inci": "Glycol Distearate"
+      },
+      {
+        "rank": 15,
+        "inci": "Sodium PCA"
+      },
+      {
+        "rank": 16,
+        "inci": "Aspartic Acid"
+      },
+      {
+        "rank": 17,
+        "inci": "Alanine"
+      },
+      {
+        "rank": 18,
+        "inci": "Valine"
+      },
+      {
+        "rank": 19,
+        "inci": "Isoleucine"
+      },
+      {
+        "rank": 20,
+        "inci": "Proline"
+      },
+      {
+        "rank": 21,
+        "inci": "Threonine"
+      },
+      {
+        "rank": 22,
+        "inci": "Phenylalanine"
+      },
+      {
+        "rank": 23,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 24,
+        "inci": "Potassium Sorbate"
+      },
+      {
+        "rank": 25,
+        "inci": "Linalyl Acetate"
+      },
+      {
+        "rank": 26,
+        "inci": "Terpineol"
+      },
+      {
+        "rank": 27,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      },
+      {
+        "rank": 28,
+        "inci": "Geranyl Acetate"
+      },
+      {
+        "rank": 29,
+        "inci": "Lactic Acid"
+      },
+      {
+        "rank": 30,
+        "inci": "Sodium Lactate"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Nach dem Waschen ins nasse Haar sprühen und sanft einkneten. Für den Frischekick zwischendurch kurz auf das trockenen Haar aufsprühen und durchkneten - fertig.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

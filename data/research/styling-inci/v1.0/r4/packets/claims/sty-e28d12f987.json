@@ -1,0 +1,45 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-e28d12f987",
+  "brand": "Moroccanoil",
+  "confirmed_name": "Glättende Creme (Smoothing Lotion)",
+  "confirmed_name_tier": "C2",
+  "format": "pump_bottle_lotion",
+  "product_type_word": "creme",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Diese pflegende und dennoch leichte Stylingcreme bändigt krauses und widerspenstiges Haar und verleiht ihm den ganzen Tag lang Geschmeidigkeit und Definition. Sie ist mit Arganöl, Arganbutter, Vitamin E und essentiellen Fettsäuren angereichert, um trockenes Haar zu pflegen und es fühlbar weich und spürbar glatt zu machen. Ideal für lockiges, mittelstarkes und grobes Haar.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "• Macht das Haar um 58% glatter*",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "• Reduziert Bruch um 72 %.*",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "promise",
+      "text": "Parfümiert mit dem typischen Moroccanoil-Duft, einer mediterran inspirierten Mischung aus würzigem Amber und süßen Blumennoten.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12"
+    }
+  ]
+}

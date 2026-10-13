@@ -1,0 +1,156 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-ebca67b954",
+  "product": {
+    "confirmed_name": "Volumizing Curl Spray",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "BALI CURLS",
+    "format": "pump_spray"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 23,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA"
+      },
+      {
+        "rank": 2,
+        "inci": "MAGNESIUM SULFATE"
+      },
+      {
+        "rank": 3,
+        "inci": "POLYGLYCERYL-6 CAPRYLATE"
+      },
+      {
+        "rank": 4,
+        "inci": "POLYGLYCERYL-4 CAPRATE"
+      },
+      {
+        "rank": 5,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 6,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 7,
+        "inci": "SODIUM BENZOATE"
+      },
+      {
+        "rank": 8,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 9,
+        "inci": "HYDROLYZED RICE PROTEIN"
+      },
+      {
+        "rank": 10,
+        "inci": "MARIS SAL"
+      },
+      {
+        "rank": 11,
+        "inci": "PANTHENOL"
+      },
+      {
+        "rank": 12,
+        "inci": "POTASSIUM SORBATE"
+      },
+      {
+        "rank": 13,
+        "inci": "LACTIC ACID"
+      },
+      {
+        "rank": 14,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 15,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 16,
+        "inci": "AMYL SALICYLATE"
+      },
+      {
+        "rank": 17,
+        "inci": "LINALYL ACETATE"
+      },
+      {
+        "rank": 18,
+        "inci": "GERANIOL"
+      },
+      {
+        "rank": 19,
+        "inci": "GERANYL ACETATE"
+      },
+      {
+        "rank": 20,
+        "inci": "CANANGA ODORATA FLOWER EXTRACT"
+      },
+      {
+        "rank": 21,
+        "inci": "BENZOIC ACID"
+      },
+      {
+        "rank": 22,
+        "inci": "VANILLIN"
+      },
+      {
+        "rank": 23,
+        "inci": "METHYL BENZOATE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Das Refreshing Curl Spray kann täglich auf nassem oder trockenem Haar angewendet werden, um die Wellen/Locken zu erfrischen und zu revitalisieren. Sprühe den Spray gleichmäßig in das feucht oder nasse Haar, beginnend an den Spitzen, und arbeite dich zum Ansatz vor. Bei dickerem Haar kann es hilfreich sein das Haar in Abschnitten aufzuteilen. Unser Tipp: Style deine Haar im nassen Zustand, dies reduziert Frizz und verleiht deinem Haar mehr Definition. Nutze Im Anschluss bei Bedarf nochmal eine kleine Menge des Curl Defining Gel.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "bali-care.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Das vegane VOLUMIZING CURL SPRAY mit Reisprotein und Ylang-Ylang-Extrakt erfrischt deine Locken und verleiht einen wundervollen und voluminösen Beachlook. Der einzigartige Duft bringt dir das Sommergefühl aus Bali direkt nach Hause in dein Badezimmer.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Curly Method konform",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Mit natürlichen & pflegenden Inhaltsstoffen",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    },
+    {
+      "text": "Für Locken, Wellen & alle Haartypen geeignet",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

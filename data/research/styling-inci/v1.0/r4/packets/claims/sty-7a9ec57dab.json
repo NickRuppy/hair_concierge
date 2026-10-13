@@ -1,0 +1,72 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-7a9ec57dab",
+  "brand": "BALI CURLS",
+  "confirmed_name": "Haargel Strong Hold Flaxseed",
+  "confirmed_name_tier": "C2",
+  "format": "gel",
+  "product_type_word": "gel",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Extra-starker Halt für definierte, langanhaltende Locken",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "bali-care.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "hold",
+      "text": "Extra-starker Halt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "bali-care.com",
+      "date": "2026-10-09",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "Extra-starker Halt"
+    },
+    {
+      "type": "hold",
+      "text": "Strong Hold",
+      "tier": "C2",
+      "source_class": "product_name",
+      "source_host": null,
+      "date": null,
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null,
+      "from_product_name": true
+    },
+    {
+      "type": "flexibility",
+      "text": "Flexibler Halt ohne Verkleben oder Verhärten",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "bali-care.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "finish",
+      "text": "schenkt natürlichen Glanz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "bali-care.com",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "duration",
+      "text": "langanhaltende Definition und natürlichen Glanz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "bali-care.com",
+      "date": "2026-10-09"
+    }
+  ]
+}

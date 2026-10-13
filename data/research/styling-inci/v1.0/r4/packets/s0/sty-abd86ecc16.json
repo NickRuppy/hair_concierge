@@ -1,0 +1,349 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v1.0-cohort-4",
+  "sample_id": "sty-abd86ecc16",
+  "product": {
+    "confirmed_name": "Shea Butter for Natural Hair [CLAIM] Hold Edge Stay Gel",
+    "confirmed_name_redacted": true,
+    "confirmed_name_tier": "C1",
+    "brand": "Cantu",
+    "format": "gel"
+  },
+  "identity": {
+    "identity_status": "inci_conflict",
+    "inci_alt": {
+      "items": [
+        {
+          "rank": 1,
+          "inci": "Aqua"
+        },
+        {
+          "rank": 2,
+          "inci": "Ceteareth-25"
+        },
+        {
+          "rank": 3,
+          "inci": "PEG-7 Glyceryl Cocoate"
+        },
+        {
+          "rank": 4,
+          "inci": "PEG-40 Hydrogenated Castor Oil"
+        },
+        {
+          "rank": 5,
+          "inci": "Glycerin"
+        },
+        {
+          "rank": 6,
+          "inci": "Caramel"
+        },
+        {
+          "rank": 7,
+          "inci": "Butyrospermum Parkii (Shea) Butter"
+        },
+        {
+          "rank": 8,
+          "inci": "Phenoxyethanol"
+        },
+        {
+          "rank": 9,
+          "inci": "Parfum"
+        },
+        {
+          "rank": 10,
+          "inci": "Benzoic Acid"
+        },
+        {
+          "rank": 11,
+          "inci": "Simmondsia Chinensis (Jojoba) Seed Oil"
+        },
+        {
+          "rank": 12,
+          "inci": "Panthenol"
+        },
+        {
+          "rank": 13,
+          "inci": "Glycereth-2 Cocoate"
+        },
+        {
+          "rank": 14,
+          "inci": "Ethylhexylglycerin"
+        },
+        {
+          "rank": 15,
+          "inci": "Silk Amino Acids"
+        },
+        {
+          "rank": 16,
+          "inci": "Theobroma Cacao (Cocoa) Seed Butter"
+        },
+        {
+          "rank": 17,
+          "inci": "Benzyl Alcohol"
+        },
+        {
+          "rank": 18,
+          "inci": "Sodium Benzoate"
+        },
+        {
+          "rank": 19,
+          "inci": "Potassium Sorbate"
+        },
+        {
+          "rank": 20,
+          "inci": "Benzyl Benzoate"
+        },
+        {
+          "rank": 21,
+          "inci": "Coumarin"
+        },
+        {
+          "rank": 22,
+          "inci": "Hexyl Cinnamal"
+        }
+      ],
+      "note": "second capture of the same product with a different list; the list in 'inci' is the one read from the newer/higher-tier source"
+    },
+    "inci_flags": [
+      {
+        "flag": "non_german_wording: the only pack (INCI panel and directions) is the English US-style pack with EU RP",
+        "defect_rank": null
+      }
+    ]
+  },
+  "inci": {
+    "inci_item_count": 30,
+    "tier": "C1",
+    "source_class": "pack",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Water (Aqua/Eau)"
+      },
+      {
+        "rank": 2,
+        "inci": "Ceteareth-25"
+      },
+      {
+        "rank": 3,
+        "inci": "PEG-7 Glyceryl Cocoate"
+      },
+      {
+        "rank": 4,
+        "inci": "PEG-40 Hydrogenated Castor Oil"
+      },
+      {
+        "rank": 5,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 6,
+        "inci": "Butyrospermum Parkii (Shea) Butter"
+      },
+      {
+        "rank": 7,
+        "inci": "Theobroma Cacao (Cocoa) Seed Butter"
+      },
+      {
+        "rank": 8,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 9,
+        "inci": "Simmondsia Chinensis (Jojoba) Seed Oil"
+      },
+      {
+        "rank": 10,
+        "inci": "Caramel"
+      },
+      {
+        "rank": 11,
+        "inci": "Biotin (Vitamin B7)"
+      },
+      {
+        "rank": 12,
+        "inci": "Cyanocobalamin (Vitamin B12)"
+      },
+      {
+        "rank": 13,
+        "inci": "Folic Acid (Vitamin B9)"
+      },
+      {
+        "rank": 14,
+        "inci": "Niacin (Vitamin B3)"
+      },
+      {
+        "rank": 15,
+        "inci": "Pantothenic Acid (Vitamin B5)"
+      },
+      {
+        "rank": 16,
+        "inci": "Pyridoxine HCL (Vitamin B6)"
+      },
+      {
+        "rank": 17,
+        "inci": "Riboflavin (Vitamin B2)"
+      },
+      {
+        "rank": 18,
+        "inci": "Thiamine HCL (Vitamin B1)"
+      },
+      {
+        "rank": 19,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 20,
+        "inci": "Glycereth-2 Cocoate"
+      },
+      {
+        "rank": 21,
+        "inci": "Silk Amino Acids"
+      },
+      {
+        "rank": 22,
+        "inci": "Leuconostoc/Radish Root Ferment Filtrate"
+      },
+      {
+        "rank": 23,
+        "inci": "Potassium Sorbate"
+      },
+      {
+        "rank": 24,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 25,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 26,
+        "inci": "Fragrance (Parfum)"
+      },
+      {
+        "rank": 27,
+        "inci": "Benzyl Benzoate"
+      },
+      {
+        "rank": 28,
+        "inci": "Benzoic Acid"
+      },
+      {
+        "rank": 29,
+        "inci": "Coumarin"
+      },
+      {
+        "rank": 30,
+        "inci": "Hexyl Cinnamal"
+      }
+    ]
+  },
+  "directions_status": "missing",
+  "directions": null,
+  "promise_claims_c1_c2": [
+    {
+      "text": "langanhaltender, schuppenfreier Halt; long-lasting, flake-free hold",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-11",
+      "mixed_source": true
+    }
+  ],
+  "heat_protection_claims_c1_c2": [],
+  "identity_status": "inci_conflict",
+  "inci_alt": {
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 2,
+        "inci": "Ceteareth-25"
+      },
+      {
+        "rank": 3,
+        "inci": "PEG-7 Glyceryl Cocoate"
+      },
+      {
+        "rank": 4,
+        "inci": "PEG-40 Hydrogenated Castor Oil"
+      },
+      {
+        "rank": 5,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 6,
+        "inci": "Caramel"
+      },
+      {
+        "rank": 7,
+        "inci": "Butyrospermum Parkii (Shea) Butter"
+      },
+      {
+        "rank": 8,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 9,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 10,
+        "inci": "Benzoic Acid"
+      },
+      {
+        "rank": 11,
+        "inci": "Simmondsia Chinensis (Jojoba) Seed Oil"
+      },
+      {
+        "rank": 12,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 13,
+        "inci": "Glycereth-2 Cocoate"
+      },
+      {
+        "rank": 14,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 15,
+        "inci": "Silk Amino Acids"
+      },
+      {
+        "rank": 16,
+        "inci": "Theobroma Cacao (Cocoa) Seed Butter"
+      },
+      {
+        "rank": 17,
+        "inci": "Benzyl Alcohol"
+      },
+      {
+        "rank": 18,
+        "inci": "Sodium Benzoate"
+      },
+      {
+        "rank": 19,
+        "inci": "Potassium Sorbate"
+      },
+      {
+        "rank": 20,
+        "inci": "Benzyl Benzoate"
+      },
+      {
+        "rank": 21,
+        "inci": "Coumarin"
+      },
+      {
+        "rank": 22,
+        "inci": "Hexyl Cinnamal"
+      }
+    ],
+    "note": "second capture of the same product with a different list; the list in 'inci' is the one read from the newer/higher-tier source"
+  }
+}
