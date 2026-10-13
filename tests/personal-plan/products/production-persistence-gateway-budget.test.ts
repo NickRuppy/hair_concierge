@@ -208,6 +208,8 @@ function persistence(
         profile: {
           source: { projection: "refined_post_plan" },
           hair: { thickness: "normal" },
+          scalp: { oiliness: "balanced", concerns: [] },
+          goals: [],
           concerns: [],
         },
       }) as never,
@@ -216,6 +218,7 @@ function persistence(
     loadAuthorityFacts: async (input) =>
       typeof options.facts === "function" ? options.facts(input.subject.category) : options.facts,
     loadDraft: async (input) => (input.userId === "owner-a" ? draft : null),
+    loadVisibleHairColor: async () => null,
     loadShoppingContext: async () => {
       options.onBudgetRead?.()
       return {

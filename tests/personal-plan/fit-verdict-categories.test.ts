@@ -19,6 +19,7 @@ import { COMPLETE_V3_PLAN_ENVELOPE } from "./fixtures"
 import { CATEGORY_ROLE_POLICIES } from "../../src/lib/personal-plan/products/authorities"
 import { evaluateStage3Authority } from "../../src/lib/personal-plan/products/authority/evaluate"
 import type { Stage3AuthorityInput } from "../../src/lib/personal-plan/products/authority/contracts"
+import { UNKNOWN_SELECTION_PROFILE } from "../../src/lib/personal-plan/products/authority/selection-profile"
 
 type Category = Stage3AuthorityInput["category"]
 type Verdict = "ideal" | "supportive" | "mismatch"
@@ -55,6 +56,7 @@ function base(category: Category, role: string, target: unknown, spec: unknown) 
     },
     coverage: [],
     hairThickness: "coarse",
+    selectionProfile: UNKNOWN_SELECTION_PROFILE,
     productFacts: {
       productId: "owned",
       displayName: "Produkt",
@@ -299,6 +301,7 @@ test("R19 shampoo scalp thickness row stays green in plan and scanner", () => {
     "in_target",
   )
   const scan = buildScanVerdict({
+    selectionProfile: UNKNOWN_SELECTION_PROFILE,
     category: input.category,
     decision: input.categoryDecision,
     productFacts: input.productFacts,
@@ -795,6 +798,7 @@ for (const row of [
           `${role}: ${weight}`,
         )
         const scanned = buildScanVerdict({
+          selectionProfile: UNKNOWN_SELECTION_PROFILE,
           category: "oil",
           decision: { ...decision, roles: [role] },
           productFacts: input.productFacts,
@@ -1245,7 +1249,13 @@ for (const row of [
       hairColorFit: row.tint,
       scalpSensitivityFit: row.sensitivity,
     }) as any
-    input.dryShampooTarget = { scalpSensitivity: row.scalp, hairColorFit: row.color }
+    // Nick 2026-10-13: ranking only; volume never scores, unknown colour is unscored.
+    input.selectionProfile = {
+      ...input.selectionProfile,
+      sensitiveScalp: row.scalp === "sensitive",
+      visibleHairColor: row.color,
+      volumeDirection: "more",
+    }
     const result = evaluateStage3Authority(input)
     assert.equal(result.status === "known" ? result.verdict : result.status, row.verdict)
     if (result.status === "known") {
@@ -1254,7 +1264,7 @@ for (const row of [
       if (row.color === null) {
         assert.ok(cautions.every((c) => c.criterionId !== "dry_shampoo.tint.verified"))
         if (row.scalp === "sensitive")
-          assert.match(cautions[0]!.explanation, /Sensitivitätspositionierung.*Kopfhaut/)
+          assert.equal(cautions[0]!.explanation, "Nicht für empfindliche Kopfhaut ausgelobt.")
       }
       if (row.scalp === null && row.color === null) assert.deepEqual(cautions, [])
     }
@@ -1262,7 +1272,12 @@ for (const row of [
 }
 test("dry_shampoo: ideal wins, supportive is a reasoned fallback, catalog order stays stable", () => {
   const input = gateCategory("dry_shampoo") as any
-  input.dryShampooTarget = { scalpSensitivity: "sensitive", hairColorFit: "dark" }
+  input.selectionProfile = {
+    ...input.selectionProfile,
+    sensitiveScalp: true,
+    visibleHairColor: "dark",
+    volumeDirection: "more",
+  }
   input.capturedProductId = null
   input.subjectIdentity = null
   input.productFacts = null
@@ -1448,6 +1463,7 @@ test("mismatch passing axes render green in the real plan comparison and scanner
   assert.match(thicknessRow, /status-ok-text/)
   assert.match(thicknessRow, /Im Ziel/)
   const scan = buildScanVerdict({
+    selectionProfile: UNKNOWN_SELECTION_PROFILE,
     category: input.category,
     decision: input.categoryDecision,
     productFacts: input.productFacts,
@@ -1529,6 +1545,7 @@ for (const [category, create] of categoryFactories) {
     input.productFacts!.recommendable = false
     assert.equal(fitVerdict(input), "ideal", "owned product")
     const scan = buildScanVerdict({
+      selectionProfile: UNKNOWN_SELECTION_PROFILE,
       category: input.category,
       decision: input.categoryDecision,
       productFacts: input.productFacts,
@@ -1578,6 +1595,7 @@ for (const [heat, state] of [
       heat === true ? "in_target" : heat === false ? "outside_target" : "unknown",
     )
     const scan = buildScanVerdict({
+      selectionProfile: UNKNOWN_SELECTION_PROFILE,
       category: input.category,
       decision: input.categoryDecision,
       productFacts: input.productFacts,

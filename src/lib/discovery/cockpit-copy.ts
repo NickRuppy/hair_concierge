@@ -68,13 +68,11 @@ export const COCKPIT_NOT_NEEDED_REASONS: Record<keyof typeof SCAN_NOT_NEEDED_REA
  */
 const LITERAL_ENTRIES: Array<[string, string]> = [
   [
-    "Die Sensitivitätspositionierung passt nur eingeschränkt zu deiner Kopfhaut.",
-    "Die Sensitivitätspositionierung passt nur eingeschränkt zur Kopfhaut.",
+    "Deine Kopfhaut braucht keine besonders milde Formel.",
+    "Die Kopfhaut braucht keine besonders milde Formel.",
   ],
-  [
-    "Die Tönung passt nur eingeschränkt zu deiner Haarfarbe.",
-    "Die Tönung passt nur eingeschränkt zur Haarfarbe.",
-  ],
+  ["Die Tönung passt zu deiner Ansatzfarbe.", "Die Tönung passt zur Ansatzfarbe."],
+  ["Die Tönung passt nicht zu deiner Ansatzfarbe.", "Die Tönung passt nicht zur Ansatzfarbe."],
   // Idealplan step sentences — `src/lib/personal-plan/decision-presentation.ts`
   // (cockpit: „Schritt im Idealplan" depth and the verdict's „Warum"-block).
   [

@@ -28,6 +28,11 @@ import type {
 } from "./products/authority/contracts"
 import { evaluateStage3Authority } from "./products/authority/evaluate"
 import {
+  buildStage3SelectionProfile,
+  type Stage3SelectionProfile,
+  type Stage3VisibleHairColor,
+} from "./products/authority/selection-profile"
+import {
   allocateBudgetPortfolio,
   type BudgetRoleAllocation,
   type BudgetRoleInput,
@@ -133,8 +138,18 @@ export async function computeStage1ProductExamplePreviews(input: {
   budget?: Stage1ProductExamplePreviewBudget | null
   /** Drogerie/Profi badge gate; off unless the caller turns it on. */
   marketSegmentDisplayEnabled?: boolean
+  /**
+   * The user-answered visible root colour (`loadVisibleHairColor`). Direct acceptance evaluates
+   * through the production gateway, which reads the same loader — keep them identical or a
+   * previewed dry shampoo goes `seen_state_stale`. Omitted = unknown.
+   */
+  visibleHairColor?: Stage3VisibleHairColor | null
 }): Promise<Stage1ProductExamplePreviewResponse> {
   const roleTasks = stage1PreviewRoleTasks(input.snapshot)
+  const selectionProfile = buildStage3SelectionProfile(
+    input.snapshot,
+    input.visibleHairColor ?? null,
+  )
 
   // One candidate load per category (Shampoo: per role — see
   // ROLE_SENSITIVE_CANDIDATE_CATEGORIES above), reused across every role
@@ -161,7 +176,9 @@ export async function computeStage1ProductExamplePreviews(input: {
   // whole proposal, so one flexible allowance and one no-ceiling mix cover all roles together —
   // exactly as Stage 3 and direct acceptance allocate them.
   const assessments = await Promise.all(
-    roleTasks.map((task) => assessRole(task, input, loadCandidatesForTask(task))),
+    roleTasks.map((task) =>
+      assessRole(task, { ...input, selectionProfile }, loadCandidatesForTask(task)),
+    ),
   )
   const allocations = input.budget
     ? allocateProposal(assessments, input.budget, input.snapshot)
@@ -281,6 +298,7 @@ async function assessRole(
   input: {
     sourceNeedVersionId: string
     snapshot: InitialNeedPlanSnapshot
+    selectionProfile: Stage3SelectionProfile
   },
   loadCandidates: Promise<Stage3CategoryProductFacts[]>,
 ): Promise<RoleAssessment> {
@@ -301,17 +319,7 @@ async function assessRole(
       categoryDecision: decision as never,
       coverage: input.snapshot.coverage,
       hairThickness: input.snapshot.profile.hair.thickness,
-      dryShampooTarget:
-        category === "dry_shampoo"
-          ? {
-              scalpSensitivity: input.snapshot.profile.scalp
-                ? input.snapshot.profile.scalp.concerns.includes("irritated")
-                  ? "sensitive"
-                  : "normal"
-                : null,
-              hairColorFit: null,
-            }
-          : undefined,
+      selectionProfile: input.selectionProfile,
       productFacts: null,
       recommendationCandidates: candidates as never,
       heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },

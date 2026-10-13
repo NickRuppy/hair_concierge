@@ -265,6 +265,8 @@ For each uncovered role:
 9. verified finished-product evidence may break a remaining density-role tie; otherwise do not invent efficacy differences;
 10. curated catalog priority and then stable product ID resolve a final tie.
 
+**Amendment (S1, 2026-10-09; implemented in S2a):** within a role every verified candidate is equally ideal, so the shared Stage-3 comparator decides by catalogue `sort_order`, then lower price, then product id (previously raw product-ID order). The #654 budget policy applies afterwards, unchanged (an uncapped budget may still nudge to a fit-comparable product above 15 €).
+
 Opening a shopping link does not mark acquisition. Availability and budget never rescue a mismatch or unknown product.
 
 ### Multiple products and role assignment

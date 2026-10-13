@@ -51,8 +51,9 @@ zugunsten desselben Comparators. Gilt für Covered- und Uncovered-Zweig.
 | Maske | Caution-Count-Sort → Comparator; **Optional-only-Restriktion aufgehoben**: auch required Slots bekommen supportive Fallback (`mask.ts:261`) |
 | Shampoo | **Neu: supportive Fallback** (Scalp-Route passt, Reinigungsintensität eine Stufe daneben, `shampoo.ts:195`), Coverage-gerankt — **außer `shampoo_dandruff`: bleibt ideal-only** (medizinisch angrenzend, konservativ) |
 | Bondbuilder | Bleibt ideal-only — `add_on`-Produkte erfüllen die Rolle nicht eigenständig; kein Fallback |
-| Deep-Cleansing | Bleibt ideal-only — kein supportive-Gradient vorhanden; nichts erfinden |
-| Dry Shampoo, Scalp Care, Heat Protectant | **Unberührt** — binäre Kriterien, dokumentiert bewusste Designs (stable-first-entered; Heat-Protectant verweigert bei Gleichstand) |
+| Deep-Cleansing | Bleibt ideal-only — kein supportive-Gradient vorhanden; nichts erfinden. **Durch S1 2026-10-09 ersetzt:** gemeinsamer Comparator über die ideal-Kandidaten; ein passendes Kopfhaut-Ziel (`target_scalp_types`, Shampoo v1.6 §13.5) zählt als zusätzliche erfüllte Zeile (`plans/catalog-completeness-fill/s2-profile-picks.md`) |
+| Dry Shampoo, Scalp Care | **Durch S1 2026-10-09 ersetzt:** gemeinsamer Comparator; Trockenshampoo mit Profil-Kriterien (Kopfhautverträglichkeit, Farbpassung, Volumen), Scalp Care: Katalogreihenfolge, dann Preis (`plans/catalog-completeness-fill/s2-profile-picks.md`) |
+| Heat Protectant | **Unberührt** — binäre Kriterien, verweigert bei Gleichstand |
 
 ## Implementierung
 

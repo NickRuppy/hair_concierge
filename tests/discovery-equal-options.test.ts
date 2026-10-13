@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { UNKNOWN_SELECTION_PROFILE } from "../src/lib/personal-plan/products/authority/selection-profile"
 import test from "node:test"
 
 import { discoveryEqualOptions } from "../src/lib/discovery/equal-options"
@@ -88,6 +89,7 @@ const base = {
   snapshot,
   sourceNeedVersionId: "need-1",
   selectedProductId: K18,
+  selectionProfile: UNKNOWN_SELECTION_PROFILE,
 }
 
 test("a tied shortlist lists every other equally ideal product, by name, never the default", () => {

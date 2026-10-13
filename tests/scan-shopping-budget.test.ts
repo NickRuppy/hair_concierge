@@ -1,5 +1,6 @@
 // fit-verdict spec §1/§7b, ruled 2026-10-12: reasonLines extend the web transport.
 import assert from "node:assert/strict"
+import { UNKNOWN_SELECTION_PROFILE } from "../src/lib/personal-plan/products/authority/selection-profile"
 import test from "node:test"
 import React from "react"
 import { renderToStaticMarkup } from "react-dom/server"
@@ -97,6 +98,7 @@ function input(overrides: Partial<BuildScanVerdictInput> = {}): BuildScanVerdict
     },
     productFacts: conditioner("scanned", 0, { priceEur: 8 }),
     recommendationCandidates: candidates(),
+    selectionProfile: UNKNOWN_SELECTION_PROFILE,
     coverage: [],
     hairThickness: "normal",
     heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
