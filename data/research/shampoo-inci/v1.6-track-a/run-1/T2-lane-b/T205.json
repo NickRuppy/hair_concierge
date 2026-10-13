@@ -1,0 +1,698 @@
+{
+  "blindId": "T205",
+  "inciFingerprintSha256": "cb12321175c1cf9a3f9455fab2e6c51d09b6cb0f3700439be148e708e310ec21",
+  "policyId": "shampoo-classification-v1.6",
+  "identity": {
+    "productName": "Sebamed Urea 5%",
+    "brand": "Sebamed",
+    "market": "DE",
+    "packSize": "200 ml",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "No split entries; positions = packet order (normalized, one-based).",
+    "identityNotes": []
+  },
+  "claimGrading": [
+    {
+      "claim": "Anti-Juckreiz Akut Shampoo (headline)",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "use": "E2 sensitive claim unit (Juckreiz)"
+    },
+    {
+      "claim": "gezielte Akutpflege für juckende Kopfhaut und trockenes Haar",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "use": "E2 sensitive unit (juckende Kopfhaut); 'trockenes Haar' is lengths, not dry scalp"
+    },
+    {
+      "claim": "Trockenheit der Kopfhaut um bis zu 63 % reduziert",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "use": "E2 dry-scalp unit (reduziert)"
+    },
+    {
+      "claim": "Haartyp: trockene/sehr trockene Kopfhaut, trockenes/strapaziertes Haar",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "use": "E2 dry-scalp unit; lengths wording noted"
+    },
+    {
+      "claim": "Polidocanol wirkt juckreizlindernd ... Beruhigung der Kopfhaut",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "use": "claim name 'Polidocanol' maps to INCI Laureth-9 (5); corroborates sensitive"
+    },
+    {
+      "claim": "Shampoo mit Urea für sehr trockene Kopfhaut; empfindliche Kopfhaut",
+      "source": "retailer_dm_de / rossmann",
+      "grade": "low",
+      "use": "corroboration only"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate (C1): the earliest prominent strong anionic is Sodium Laureth Sulfate (7, ether type), so it is the defining anionic; it is buffered by the prominent mild anionics Disodium Laureth Sulfosuccinate (3) and Sodium Lauryl Sulfoacetate (4) and the glucoside Lauryl Glucoside (6); no reinforcing strong anionic.",
+      "counterSignal": "SLES is listed last among the surfactants, behind two mild anionics and a glucoside, with Urea (2) high in the list: the chassis is mild-led and argues for low. Laureth-9 (5) recorded as an alcohol ethoxylate, not a C3 cleansing class/buffer.",
+      "neighboringAlternative": "low",
+      "ruleIds": [
+        "C1",
+        "C3",
+        "C4"
+      ],
+      "sourceIds": [
+        "formula:T205:cb12321175c1"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Disodium Laureth Sulfosuccinate",
+          "position": 3
+        },
+        {
+          "ingredient": "Sodium Lauryl Sulfoacetate",
+          "position": 4
+        },
+        {
+          "ingredient": "Lauryl Glucoside",
+          "position": 6
+        },
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 7
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate (bounded): one cationic conditioning polymer, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride (15), plus trace Helianthus Annuus Seed Oil (21) and Urea (2) as humectant. C2 not met (no silicone, no prominent lipid, no pearlizing route).",
+      "counterSignal": "The only polymer sits after Sodium Benzoate and the oil is last: little substantive slip is realistic (neighbor low).",
+      "neighboringAlternative": "low",
+      "ruleIds": [
+        "C2",
+        "Section 5 anchors"
+      ],
+      "sourceIds": [
+        "formula:T205:cb12321175c1"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Urea",
+          "position": 2,
+          "role": "humectant; E4 comfort and humectant route"
+        },
+        {
+          "ingredient": "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+          "position": 15,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Helianthus Annuus Seed Oil",
+          "position": 21,
+          "role": "payload_lipid (trace)"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: the only deposition routes are one late cationic starch polymer and a trace sunflower oil in last position, facing a buffered SLES/sulfosuccinate system.",
+      "formulaFacts": [
+        {
+          "ingredient": "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+          "position": 15,
+          "family": "cationic_polymer"
+        },
+        {
+          "ingredient": "Helianthus Annuus Seed Oil",
+          "position": 21,
+          "family": "payload_lipid"
+        },
+        {
+          "ingredient": "Disodium Laureth Sulfosuccinate",
+          "position": 3,
+          "family": "reset"
+        },
+        {
+          "ingredient": "Sodium Lauryl Sulfoacetate",
+          "position": 4,
+          "family": "reset"
+        },
+        {
+          "ingredient": "Lauryl Glucoside",
+          "position": 6,
+          "family": "reset"
+        },
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 7,
+          "family": "reset"
+        }
+      ],
+      "counterSignal": "Polymer level/charge unknown.",
+      "neighboringAlternative": "moderate",
+      "weightRecord": {
+        "canonicalFormula": {
+          "blindId": "T205",
+          "inciFingerprintSha256": "cb12321175c1cf9a3f9455fab2e6c51d09b6cb0f3700439be148e708e310ec21",
+          "sourceTier": 2,
+          "completeness": "complete",
+          "identityConfidence": "high",
+          "captureDate": "not stated in the frozen packet",
+          "normalization": "No split entries; positions = packet order (normalized, one-based)."
+        },
+        "extractedEvidence": {
+          "cationic_polymer": [
+            {
+              "ingredient": "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+              "position": 15
+            }
+          ],
+          "payload_lipid": [
+            {
+              "ingredient": "Helianthus Annuus Seed Oil",
+              "position": 21
+            }
+          ],
+          "silicone": [],
+          "weak_refatter": [],
+          "protein_film": [],
+          "film_former": [],
+          "reset": [
+            {
+              "ingredient": "Disodium Laureth Sulfosuccinate",
+              "position": 3
+            },
+            {
+              "ingredient": "Sodium Lauryl Sulfoacetate",
+              "position": 4
+            },
+            {
+              "ingredient": "Lauryl Glucoside",
+              "position": 6
+            },
+            {
+              "ingredient": "Sodium Laureth Sulfate",
+              "position": 7
+            }
+          ],
+          "excluded": [
+            {
+              "ingredient": "PEG-120 Methyl Glucose Dioleate",
+              "position": 9,
+              "reason": "PEG thickener (6.4)"
+            },
+            {
+              "ingredient": "PEG/PPG-120/10 Trimethylolpropane Trioleate",
+              "position": 13,
+              "reason": "PEG thickener"
+            },
+            {
+              "ingredient": "Laureth-2",
+              "position": 12,
+              "reason": "low-ethoxylate thickener"
+            },
+            {
+              "ingredient": "Laureth-9",
+              "position": 5,
+              "reason": "ethoxylated nonionic, no deposition role"
+            }
+          ],
+          "context_humectants": [
+            {
+              "ingredient": "Urea",
+              "position": 2
+            }
+          ]
+        },
+        "subjudgments": {
+          "depositionLoad": {
+            "value": "light",
+            "rationale": "Cationic starch (15, after preservative) and sunflower oil (21, last)."
+          },
+          "persistence": {
+            "value": "low",
+            "rationale": "Light polysaccharide polymer and trace liquid oil are weakly retained."
+          },
+          "resetCapacity": {
+            "value": "moderate",
+            "rationale": "Buffered C1 system with broad mild-anionic co-surfactants."
+          }
+        },
+        "w1Check": "W1 not cited.",
+        "counterevidence": "Polymer level/charge unknown.",
+        "unresolvedFacts": [],
+        "proposedWeightPotential": "low",
+        "whyThisBand": "Only light, late routes with moderate reset: low anchor.",
+        "whyNotNeighborBand": "W2: two families present, but the cationic starch sits after a preservative and the oil is the last ingredient (both trace), with no silicone, film or protein; combined residue is unlikely to be noticeable.",
+        "confidence": "moderate",
+        "limitingFactor": "Polymer level/charge unknown.",
+        "neighboringAlternative": "moderate",
+        "claimsAfterUnblind": "Revealed claims do not move the band (6.5 step 5)."
+      },
+      "ruleIds": [
+        "6.3",
+        "6.4",
+        "6.6",
+        "6.7",
+        "6.8"
+      ],
+      "sourceIds": [
+        "formula:T205:cb12321175c1"
+      ]
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "moderate",
+      "neighboringAlternative": "moisture",
+      "rationale": "Scalp_active: explicit itchy and dry-scalp positioning (manufacturer, moderate) with scalpComfortTarget targeted; F7 step 2 (the name 'Urea 5%' names neither role) makes the problem-led scalp role primary over the 'trockenes Haar' lengths claim.",
+      "counterSignal": "Lengths-care wording ('trockenes/strapaziertes Haar') competes; Parfum (8) present; cleansing moderate rather than low.",
+      "formulaFacts": [
+        {
+          "ingredient": "Urea",
+          "position": 2
+        },
+        {
+          "ingredient": "Laureth-9 (polidocanol)",
+          "position": 5
+        }
+      ],
+      "ruleIds": [
+        "7.2",
+        "F7",
+        "SC1",
+        "CSA"
+      ],
+      "sourceIds": [
+        "reveal:manufacturer_de"
+      ],
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedRoutes": [],
+        "limitation": "Scalp role chosen; Urea is cited for the scalp route, so it cannot also carry a moisture route (F3)."
+      },
+      "claimRole": "candidate"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "moisture"
+      ],
+      "rationale": "Empty: the dry-lengths claim ('trockenes Haar') is distinct positioning, but its only humectant route, Urea (2), is already cited by the scalp_active route (F3); the remaining routes (late cationic starch, trace sunflower oil) are no humectant cluster.",
+      "counterSignal": "Moderate-graded dry-hair wording exists.",
+      "formulaFacts": [
+        {
+          "ingredient": "Urea",
+          "position": 2
+        }
+      ],
+      "ruleIds": [
+        "8",
+        "F3"
+      ],
+      "sourceIds": [
+        "reveal:manufacturer_de"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Regular.",
+      "counterSignal": "No competing trigger fired.",
+      "formulaFacts": [],
+      "ruleIds": [
+        "9",
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "CL-SRC"
+      ],
+      "sourceIds": [
+        "reveal"
+      ],
+      "triggerCode": "none"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "not_targeted",
+      "rationale": "Targeted: SC1 positioning (sensitive 'juckende Kopfhaut' and dry 'trockene Kopfhaut' units, manufacturer, moderate) plus CSA (prominent Urea 2, on both E4 lists; Laureth-9/polidocanol 5 comfort route).",
+      "counterSignal": "Parfum (8) declared; cleansing moderate (SLES 7). No cooling agent.",
+      "formulaFacts": [
+        {
+          "ingredient": "Urea",
+          "position": 2
+        },
+        {
+          "ingredient": "Laureth-9",
+          "position": 5
+        }
+      ],
+      "ruleIds": [
+        "10",
+        "SC1",
+        "CSA",
+        "E4"
+      ],
+      "sourceIds": [
+        "reveal:manufacturer_de"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole in the complete INCI.",
+      "neighboringAlternative": "none",
+      "counterSignal": "None: Section 11 is mechanical on the complete INCI.",
+      "formulaFacts": [],
+      "ruleIds": [
+        "11"
+      ]
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "not_applicable",
+      "moistureRoutes": [],
+      "repairRoutes": [],
+      "sharedRoutes": [],
+      "limitation": "Scalp role chosen; Urea is cited for the scalp route, so it cannot also carry a moisture route (F3)."
+    },
+    "claimRole": "candidate",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "itchy/dry scalp (moderate)",
+        "formulaCompatible": true,
+        "compatibleRoute": "Urea 2 + polidocanol (Laureth-9) 5, targeted",
+        "decisionReason": "F7 step 2: name names neither role -> scalp_active."
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [
+          "trockenes/strapaziertes Haar (moisture)"
+        ],
+        "independentRoutes": [],
+        "whyDistinct": "Only route (Urea) already cited by primary (F3).",
+        "exceptionCode": null
+      },
+      "usage": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [
+          "No U2 frequency wording ('Akutpflege' is not frequency); no dandruff claim."
+        ],
+        "losingTriggers": [],
+        "rationale": "Regular."
+      }
+    }
+  },
+  "weightRecord": {
+    "canonicalFormula": {
+      "blindId": "T205",
+      "inciFingerprintSha256": "cb12321175c1cf9a3f9455fab2e6c51d09b6cb0f3700439be148e708e310ec21",
+      "sourceTier": 2,
+      "completeness": "complete",
+      "identityConfidence": "high",
+      "captureDate": "not stated in the frozen packet",
+      "normalization": "No split entries; positions = packet order (normalized, one-based)."
+    },
+    "extractedEvidence": {
+      "cationic_polymer": [
+        {
+          "ingredient": "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+          "position": 15
+        }
+      ],
+      "payload_lipid": [
+        {
+          "ingredient": "Helianthus Annuus Seed Oil",
+          "position": 21
+        }
+      ],
+      "silicone": [],
+      "weak_refatter": [],
+      "protein_film": [],
+      "film_former": [],
+      "reset": [
+        {
+          "ingredient": "Disodium Laureth Sulfosuccinate",
+          "position": 3
+        },
+        {
+          "ingredient": "Sodium Lauryl Sulfoacetate",
+          "position": 4
+        },
+        {
+          "ingredient": "Lauryl Glucoside",
+          "position": 6
+        },
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 7
+        }
+      ],
+      "excluded": [
+        {
+          "ingredient": "PEG-120 Methyl Glucose Dioleate",
+          "position": 9,
+          "reason": "PEG thickener (6.4)"
+        },
+        {
+          "ingredient": "PEG/PPG-120/10 Trimethylolpropane Trioleate",
+          "position": 13,
+          "reason": "PEG thickener"
+        },
+        {
+          "ingredient": "Laureth-2",
+          "position": 12,
+          "reason": "low-ethoxylate thickener"
+        },
+        {
+          "ingredient": "Laureth-9",
+          "position": 5,
+          "reason": "ethoxylated nonionic, no deposition role"
+        }
+      ],
+      "context_humectants": [
+        {
+          "ingredient": "Urea",
+          "position": 2
+        }
+      ]
+    },
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "light",
+        "rationale": "Cationic starch (15, after preservative) and sunflower oil (21, last)."
+      },
+      "persistence": {
+        "value": "low",
+        "rationale": "Light polysaccharide polymer and trace liquid oil are weakly retained."
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "Buffered C1 system with broad mild-anionic co-surfactants."
+      }
+    },
+    "w1Check": "W1 not cited.",
+    "counterevidence": "Polymer level/charge unknown.",
+    "unresolvedFacts": [],
+    "proposedWeightPotential": "low",
+    "whyThisBand": "Only light, late routes with moderate reset: low anchor.",
+    "whyNotNeighborBand": "W2: two families present, but the cationic starch sits after a preservative and the oil is the last ingredient (both trace), with no silicone, film or protein; combined residue is unlikely to be noticeable.",
+    "confidence": "moderate",
+    "limitingFactor": "Polymer level/charge unknown.",
+    "neighboringAlternative": "moderate",
+    "claimsAfterUnblind": "Revealed claims do not move the band (6.5 step 5)."
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal; T4: neighbor weightPotential->moderate gives acceptable (lower tier) -> review_thickness_boundary"
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal; T4: no neighbor gives a lower final tier"
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W low, C moderate -> acceptable; T4: no neighbor gives a lower final tier"
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential low -> light (1:1)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "sensitive",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "confidence": "moderate",
+        "positioningConfidence": "moderate",
+        "rationale": "Sensitive (S-SENSITIVE): E2 units 'Anti-Juckreiz', 'für juckende Kopfhaut' (manufacturer, moderate); formula gate: targeted and prominent comfort route Urea (2) (and Laureth-9 = polidocanol, 5). S-PRIMARY: the frozen name 'Sebamed Urea 5%' names no target, so sensitive precedes dry. Confidence min(positioning moderate, scalpComfortTarget moderate).",
+        "ruleIds": [
+          "S-SENSITIVE",
+          "S-PRIMARY",
+          "E2",
+          "E4",
+          "13.8"
+        ]
+      },
+      "secondary": {
+        "target": "dry",
+        "shampoo_bucket": "trocken",
+        "scalp_route": "dry",
+        "confidence": "moderate",
+        "positioningConfidence": "moderate",
+        "rationale": "Dry (S-DRY, secondary): its own E2 units 'trockene/sehr trockene Kopfhaut', 'Trockenheit der Kopfhaut ... reduziert' (manufacturer, moderate); formula gate: targeted and prominent humectant route Urea (2). Sensitive + dry is a permitted pair (S-SECONDARY).",
+        "ruleIds": [
+          "S-DRY",
+          "S-SECONDARY",
+          "E2",
+          "E4",
+          "13.8"
+        ]
+      }
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "moderate",
+      "rationale": "I1: cleansingStrength moderate, D1 false -> regular."
+    },
+    "explicitResetPositioning": {
+      "value": false,
+      "confidence": "high",
+      "rationale": "D1 false: no tiefenrein/deep clean/clarifying shampoo/detox-reinigung stem in name or a manufacturer/pack claim, and no occasional-use directions."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "rationale": "D2 requires strong cleansing, clarifying focus, occasional_reset and D1 true; not met."
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "bucketExpectedIntensity": "gentle",
+        "liveMatch": "supportive"
+      },
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "trocken",
+        "scalp_route": "dry",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "bucketExpectedIntensity": "gentle",
+        "liveMatch": "supportive"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "bucketExpectedIntensity": "gentle",
+        "liveMatch": "supportive"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "trocken",
+        "scalp_route": "dry",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "bucketExpectedIntensity": "gentle",
+        "liveMatch": "supportive"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable",
+        "bucketExpectedIntensity": "gentle",
+        "liveMatch": "supportive"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "trocken",
+        "scalp_route": "dry",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable",
+        "bucketExpectedIntensity": "gentle",
+        "liveMatch": "supportive"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine"
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "researchCombinationDetail": "Not a dandruff-primary product; E2b layer 2 does not apply."
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "scalpComfortTarget",
+      "blind": "not_targeted (provisional, low)",
+      "final": "targeted (moderate)",
+      "evidence": "manufacturer 'Anti-Juckreiz', 'juckende Kopfhaut', 'trockene Kopfhaut'",
+      "reason": "SC1 positioning revealed; CSA half was already met."
+    },
+    {
+      "property": "focusPrimary",
+      "blind": "scalp_active (provisional, low)",
+      "final": "scalp_active (moderate)",
+      "evidence": "same",
+      "reason": "Confirmed."
+    },
+    {
+      "property": "Laureth-9 synonym",
+      "blind": "read as polidocanol (uncertainty)",
+      "final": "corroborated",
+      "evidence": "manufacturer names 'Polidocanol'; claim name maps to INCI Laureth-9 (ID-3 mapping)",
+      "reason": "Claim-to-INCI mapping."
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedBand": true,
+    "threeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "comparisonWithEarlierValuesOutsideLane": true,
+    "blindRecordUnchangedAfterFreeze": true
+  },
+  "uncertainties": [
+    "The dm headline 'TROCKENE HAUT' range name does not name the scalp and was not treated as a name-level dry target (S-PRIMARY falls back to sensitive, dry order).",
+    "Whether the manufacturer headline 'Anti-Juckreiz Akut Shampoo Urea 5%' is the exact product name (would grade sensitive high); the frozen productName 'Sebamed Urea 5%' was used, so positioning stays moderate.",
+    "Laureth-9 read as the INCI name of polidocanol (E4 comfort list names 'Polidocanol'); immaterial because prominent Urea already satisfies both E4 lists."
+  ]
+}

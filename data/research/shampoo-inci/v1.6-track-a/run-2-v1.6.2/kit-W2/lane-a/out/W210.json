@@ -1,0 +1,412 @@
+{
+ "blindId": "W210",
+ "identity": {
+  "brand": "ISANA",
+  "productName": "ISANA MED Shampoo Anti Schuppen",
+  "packSize": "200 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "ed76225ec79293dce5791880a50de40ba3ca27ba02c5e1e885ebed5214948b83",
+  "normalization": "ID-2: no split synonym entries; packet positions equal normalized one-based positions.",
+  "completeness": "complete",
+  "formulaSourceTier": 1,
+  "identityConfidence": "high",
+  "e3ProminenceCutoff": "Parfum @21; positions 1-20 prominent"
+ },
+ "normalizedInci": [
+  "1 Aqua",
+  "2 Sodium Laureth Sulfate",
+  "3 Cocamidopropyl Betaine",
+  "4 Sodium Chloride",
+  "5 Coco-Glucoside",
+  "6 Sodium Cocoyl Glutamate",
+  "7 Glyceryl Oleate",
+  "8 Piroctone Olamine",
+  "9 Sodium Salicylate",
+  "10 Panthenol",
+  "11 Caffeine",
+  "12 Menthol",
+  "13 Glycerin",
+  "14 Sodium Laureth-8 Sulfate",
+  "15 Glycol Distearate",
+  "16 Magnesium Laureth Sulfate",
+  "17 Magnesium Laureth-8 Sulfate",
+  "18 Laureth-4",
+  "19 Sodium Oleth Sulfate",
+  "20 Magnesium Oleth Sulfate",
+  "21 Parfum",
+  "22 Hydrogenated Vegetable Glycerides Citrate",
+  "23 Tocopherol",
+  "24 Citric Acid",
+  "25 Sodium Citrate",
+  "26 Propylene Glycol",
+  "27 Formic Acid",
+  "28 Sodium Benzoate",
+  "29 Potassium Sorbate"
+ ],
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "strong",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "Strong by C1: defining anionic Sodium Laureth Sulfate @2 (ether type) with prominent reinforcing strong anionics of the same type: Sodium Laureth-8 Sulfate @14 and Magnesium Laureth-8 Sulfate @17 (C3b, strong ether type with high-EO counter-signal), Magnesium Laureth Sulfate @16, Sodium Oleth Sulfate @19 and Magnesium Oleth Sulfate @20 (alkyl ether sulfates). A reinforcing route makes C1 strong regardless of buffers. The C3b laureth-8 cap does not apply (the formula stays strong even if the laureth-8 sulfates were read as buffers, because Magnesium Laureth Sulfate @16 and the oleth sulfates still reinforce). Counter-signals lower confidence to moderate: the reinforcing ether sulfates are all listed late (@14-20, after Menthol @12 and Glycerin @13, i.e. a minor co-surfactant blend), and the chassis is well buffered (Cocamidopropyl Betaine @3, Coco-Glucoside @5, Sodium Cocoyl Glutamate @6) with Glyceryl Oleate @7 refatting; moderate is the neighbor.",
+   "ruleIds": [
+    "C3",
+    "C3b",
+    "C4",
+    "C1",
+    "N-ALT"
+   ],
+   "counterSignal": "Reinforcing ether sulfates are late (@14-20) and the chassis is buffered (betaine @3, glucoside @5, glutamate @6) with Glyceryl Oleate @7."
+  },
+  "conditioningLevel": {
+   "value": "low",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Low: cleansing-led architecture with no cationic polymer, silicone or payload lipid; only weak refatters (Glyceryl Oleate @7, Hydrogenated Vegetable Glycerides Citrate @22), a pearlizer (Glycol Distearate @15) and humectants (Panthenol @10, Glycerin @13). C2 not met (no silicone/lipid, no cationic polymer).",
+   "ruleIds": [
+    "5",
+    "C2"
+   ],
+   "counterSignal": "None material."
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "evidence": {
+    "cationic_polymer": [],
+    "payload_lipid": [],
+    "weak_refatter": [
+     "Glyceryl Oleate @7",
+     "Hydrogenated Vegetable Glycerides Citrate @22"
+    ],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Sodium Laureth Sulfate @2",
+     "Cocamidopropyl Betaine @3",
+     "Coco-Glucoside @5",
+     "Sodium Cocoyl Glutamate @6",
+     "Sodium Laureth-8 Sulfate @14",
+     "Magnesium Laureth Sulfate @16",
+     "Magnesium Laureth-8 Sulfate @17",
+     "Sodium Oleth Sulfate @19",
+     "Magnesium Oleth Sulfate @20"
+    ],
+    "humectantContext": [
+     "Panthenol @10",
+     "Glycerin @13"
+    ],
+    "excluded": [
+     "Glycol Distearate @15 (pearlizing wax, 6.4)",
+     "Laureth-4 @18 (low-ethoxylate)",
+     "Tocopherol @23 (antioxidant)",
+     "Propylene Glycol @26 (solvent)",
+     "Menthol @12, Caffeine @11, Piroctone Olamine @8 (actives)"
+    ],
+    "unresolved": []
+   },
+   "wLine": {
+    "position": 21,
+    "inci": "Parfum",
+    "candidateClasses": [
+     "fragrance"
+    ],
+    "cap": "e3Point @21 (Parfum)",
+    "alphabeticalRun": "none",
+    "skipped": [
+     "w_line_skipped:Piroctone Olamine@8 (ii: cleansing surfactants @14/@16/@17/@19/@20 and Glycol Distearate @15 listed after it before the cap)",
+     "w_line_skipped:Sodium Salicylate@9 (ii: same)",
+     "w_line_skipped:Panthenol@10 (ii: same)",
+     "w_line_skipped:Caffeine@11 (ii: same)"
+    ],
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "light: weak refatters only.",
+   "persistence": "low: no persistent system.",
+   "resetCapacity": "strong: reinforced ether-sulfate chassis (C1 strong).",
+   "counterevidence": "None material; Glycol Distearate pearl is excluded from weight.",
+   "whyThisBand": "Low: no deposition family beyond weak refatters, facing a strong reset.",
+   "whyNotNeighborBand": "Not moderate: the only deposition family is weak_refatter (Glyceryl Oleate @7, Hydrogenated Vegetable Glycerides Citrate @22) with humectants; no polymer, silicone, lipid, protein or film.",
+   "confidenceLimitingFactor": "None material.",
+   "rationale": "Low with high confidence: weak refatters only, strong reset.",
+   "ruleIds": [
+    "6.3",
+    "6.4",
+    "6.6",
+    "W2",
+    "W-LINE"
+   ],
+   "counterSignal": "None material; Glycol Distearate pearl is excluded from weight."
+  },
+  "focusPrimary": {
+   "value": "scalp_active",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [
+     "Panthenol @10",
+     "Glycerin @13"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Glyceryl Oleate @7"
+    ],
+    "limitation": "Formula reads as a scalp-active chassis (Piroctone Olamine @8, Menthol @12, Caffeine @11); no lengths-care cluster."
+   },
+   "claimRole": "candidate",
+   "counterSignal": "Prominent Menthol @12 and strong cleansing; oily-hair wording.",
+   "decisionTrace": "Claim direction dandruff: 'Anti Schuppen' in the exact product name (high), 'Anti Schuppenformel mit Piroctone Olamine' (pack back, moderate). Formula compatible: Piroctone Olamine @8. Decision: scalp_active.",
+   "rationale": "scalp_active: named anti-dandruff product with a recognized active.",
+   "ruleIds": [
+    "7.2",
+    "F7",
+    "S-DANDRUFF",
+    "F-TRACE"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "clarifying"
+   ],
+   "decisionTrace": "Empty default considered; 'reinigt schnell fettendes Haar' (pack, moderate) is distinct oily positioning, but its only route is the strong cleansing chassis, i.e. a restatement of cleansingStrength (Section 8 criterion 3, invalid pattern 'clarifying only because cleansing is strong').",
+   "rationale": "Secondary empty; clarifying is the neighbor.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3",
+    "F-TRACE"
+   ]
+  },
+  "usageRole": {
+   "value": "treatment",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "recognized_active_problem_led",
+   "triggerEvidence": [
+    "Piroctone Olamine @8",
+    "'ISANA MED Shampoo Anti Schuppen' (name, high)",
+    "'befreit das Haar ... von störenden Schuppen' (pack back/manufacturer, moderate)"
+   ],
+   "losingTriggers": [
+    "alternating (strong_plus_reset_intent): cleansing strong + oily reset intent 'reinigt schnell fettendes Haar' (moderate) also fires; loses to treatment (U1)"
+   ],
+   "rationale": "treatment wins by U1.",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U3",
+    "U4",
+    "F-TRACE"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "moderate",
+   "neighboringAlternative": "targeted",
+   "rationale": "not_targeted: the only dry-scalp unit ('Coffein & Menthol gegen trockene Kopfhaut') is the consecutive list entry after 'Piroctone Olamine wirkt nachhaltig gegen Schuppen' on the same manufacturer source, so it is bundled and not SC1 (E2b, P0). 'Menthol erfrischt die Kopfhaut' is not lexicon wording. CSA would be met (Panthenol @10, Glycerin @13, Glyceryl Oleate @7) with counter-signals strong cleansing and Menthol @12.",
+   "csaRoute": "listed route (Panthenol @10, Glycerin @13, Glyceryl Oleate @7); MB excluded by Sodium Laureth Sulfate @2 and strong cleansing",
+   "ruleIds": [
+    "10",
+    "SC1",
+    "E2b",
+    "CSA"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Complete INCI contains Piroctone Olamine @8.",
+   "ruleIds": [
+    "11"
+   ],
+   "counterSignal": "none (mechanical recognition, Section 11)"
+  }
+ },
+ "formulaFacts": {
+  "surfactantClasses": {
+   "strongAnionicEtherSulfonate": [
+    "Sodium Laureth Sulfate @2 (defining)",
+    "Sodium Laureth-8 Sulfate @14 (reinforcing, C3b)",
+    "Magnesium Laureth Sulfate @16 (reinforcing)",
+    "Magnesium Laureth-8 Sulfate @17 (reinforcing, C3b)",
+    "Sodium Oleth Sulfate @19 (reinforcing)",
+    "Magnesium Oleth Sulfate @20 (reinforcing)"
+   ],
+   "strongAnionicAlkylSulfate": [],
+   "mildAnionic": [
+    "Sodium Cocoyl Glutamate @6 (buffer)"
+   ],
+   "amphoteric": [
+    "Cocamidopropyl Betaine @3 (buffer)"
+   ],
+   "nonionicCleansing": [
+    "Coco-Glucoside @5 (buffer)"
+   ],
+   "notRouteNotBuffer": [
+    "Glycol Distearate @15",
+    "Laureth-4 @18"
+   ]
+  },
+  "conditioningRoutes": [
+   "Glyceryl Oleate @7",
+   "Glycol Distearate @15 (pearlizing)",
+   "Hydrogenated Vegetable Glycerides Citrate @22"
+  ],
+  "humectants": [
+   "Panthenol @10",
+   "Glycerin @13"
+  ],
+  "actives": [
+   "Piroctone Olamine @8 (anti-dandruff)",
+   "Caffeine @11",
+   "Menthol @12 (cooling)",
+   "Panthenol @10"
+  ],
+  "recognizedDandruffActives": [
+   "Piroctone Olamine @8"
+  ],
+  "exposureFlags": [
+   "Menthol @12 (prominent cooling agent)",
+   "Parfum @21",
+   "no essential oil"
+  ],
+  "chelatorsPhAdjusters": [
+   "Citric Acid @24",
+   "Sodium Citrate @25",
+   "Formic Acid @27"
+  ],
+  "preservatives": [
+   "Sodium Salicylate @9",
+   "Sodium Benzoate @28",
+   "Potassium Sorbate @29"
+  ]
+ },
+ "claimEvidence": [
+  {
+   "unit": "ISANA MED Shampoo Anti Schuppen (product name)",
+   "source": "name",
+   "grade": "high",
+   "use": "E2 dandruff"
+  },
+  {
+   "unit": "Anti Schuppenformel mit Piroctone Olamine ... gegen lästige Schuppen",
+   "source": "pack_back",
+   "grade": "moderate",
+   "use": "E2 dandruff"
+  },
+  {
+   "unit": "reinigt schnell fettendes Haar",
+   "source": "pack_back",
+   "grade": "moderate",
+   "use": "E2 oily (v1.6.1 oily-hair term) -> research combination oily; U4 reset intent (loses)"
+  },
+  {
+   "unit": "Coffein & Menthol gegen trockene Kopfhaut",
+   "source": "manufacturer_de",
+   "grade": "moderate",
+   "use": "bundled dryness wording (next to the dandruff unit): absorbed, no dry combination"
+  },
+  {
+   "unit": "Coffein hilft die Haarwurzel zu stärken",
+   "source": "manufacturer_de",
+   "grade": "moderate",
+   "use": "root-strengthening wording; not a focus route (F5-adjacent), no target"
+  },
+  {
+   "unit": "ohne Silikone & pH 5,5 hautneutral / dermatologisch bestätigt",
+   "source": "pack/manufacturer",
+   "grade": "moderate",
+   "use": "protective/mildness wording"
+  }
+ ],
+ "reconciliation": [
+  "focusPrimary: general (provisional; neighbor scalp_active) -> scalp_active (high).",
+  "usageRole: regular (provisional; neighbor treatment) -> treatment.",
+  "scalpComfortTarget: not_targeted unchanged (dry-scalp unit bundled).",
+  "Formula properties unchanged (cleansing strong by C1 reinforcing ether sulfates; claims cannot move it)."
+ ],
+ "projection": {
+  "status": "proposal_ready_no_review_flags",
+  "thicknessFit": {
+   "fine": "ideal",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "high",
+   "normal": "high",
+   "coarse": "high"
+  },
+  "thicknessRationale": "T1 from weightPotential low (high, N-ALT none) and conditioningLevel low (high, N-ALT none): fine ideal, normal ideal, coarse acceptable; T6 scalp-concern floor applies (targets dandruff); final fine ideal, normal ideal, coarse acceptable. T4: no neighbor lowers a final tier. T2: thickness/texture claims in the reveal were not used.",
+  "weight": "light",
+  "weightConfidence": "high",
+  "weightRationale": "W-LIVE: weightPotential low -> weight light, 1:1, confidence = weightPotential confidence (high). Claims never move it (6.5 step 5).",
+  "scalpTargets": {
+   "primary": {
+    "target": "dandruff",
+    "confidence": "high",
+    "rationale": "S-DANDRUFF passes: dandruff claim in the exact product name (high) and on the pack back (moderate); dandruffSupport supported (Piroctone Olamine @8). Primary dandruff (R17.1), no secondary (R17.2)."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [
+   "oily"
+  ],
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "moderate",
+  "cleansingIntensityRationale": "I1: cleansingStrength strong with D1 false -> regular. I3: no flag (neighbor intensity does not turn a matching bucket into a mismatch, or the bucket is already amber). Bucket expectations: schuppen expects regular.",
+  "explicitResetPositioning": false,
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D1 false: no Tiefenreinigung/Deep Clean/Clarifying Shampoo/Detox-Reinigung wording and no occasional-use directions from a manufacturer or pack source; D2 not met -> not_flagged.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "schuppen",
+    "scalp_route": "dandruff",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "schuppen",
+    "scalp_route": "dandruff",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "schuppen",
+    "scalp_route": "dandruff",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_dandruff"
+  ],
+  "reviewFlags": [],
+  "informationalNotes": [
+   "suits_dandruff_with_oily_scalp ('reinigt schnell fettendes Haar', pack back, moderate; S-OILY clause: cleansingStrength strong, weightPotential low, conditioningLevel low)"
+  ],
+  "catalogDependent": "review_live_value_differs is resolved by the orchestrator against live rows after freeze (lane cannot see the catalog)."
+ },
+ "selfCheck": "6.11/standard self-check: fingerprint matches the frozen packet and the pinned formula-pass record (not edited); claims were hidden during the formula pass; no ingredient, family count or position window assigned the weight band (W-line only gates payload_lipid legs) and the W-line was derived from the frozen list with skipped candidates recorded; depositionLoad/persistence/resetCapacity present; whyNotNeighborBand is specific; N-ALT follows confidence for every property; claims graded per CL-SRC/E1 and none set cleansing, conditioning, weight, thickness fit or a formula gate; projection derived mechanically (T1/T6/T4, W-LIVE, I1/I3, D1-D3, 13.7 rows); no comparison with earlier values was made inside the lane.",
+ "uncertainties": [
+  "'Coffein & Menthol gegen trockene Kopfhaut' read as bundled (consecutive manufacturer list entry next to a dandruff unit). If read as separate: scalpComfortTarget targeted (moderate) and the dry combination would conflict with oily -> both dropped as contradictory_scalp_states (P0).",
+  "'Coffein hilft die Haarwurzel zu stärken' not treated as hair-loss lexicon; if it were, only the note hair_loss_claim_not_evaluated would be added.",
+  "cleansingStrength strong at moderate confidence (neighbor moderate); I1 gives regular either way."
+ ]
+}

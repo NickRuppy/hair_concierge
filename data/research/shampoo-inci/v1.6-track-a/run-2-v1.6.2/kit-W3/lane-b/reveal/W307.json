@@ -1,0 +1,21 @@
+{
+  "blindId": "W307",
+  "productName": "Lavera Basis Sensitiv (Pflegeshampoo basis sensitive Hydrate & Care)",
+  "brand": "Lavera",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Pflegeshampoo basis sensitive Hydrate & Care, 250 ml | 100% bestätigen: Sanft zur Kopfhaut¹ (¹Anwenderstudie: 30 Teilnehmer, 28 Tage) | Für normales und trockenes Haar | Ohne Silikone | Spendet intensive Feuchtigkeit | pH-hautneutrale Formel | Für Veganer:innen geeignet. Nach PETA-Kriterien zertifiziert | Meine sanfte Haarpflege. Natürliche Feuchtigkeitspflege für dein Haar: Bio-Aloe Vera und Hyaluron schenken dem Haar intensive Frische und milde Pflege. Bio-Aloe Vera, bekannt für ihre beruhigende Wirkung, spendet wertvolle Feuchtigkeit – für ein angenehm erfrischtes Haargefühl. Hyaluron pflegt das Haar bis in die Spitzen und hilft, Trockenheit spürbar zu mildern. Für die extra Portion Feuchtigkeit – Tag für Tag. | Natürlich: Bio-Aloe Vera ist bekannt dafür, die Kopfhaut zu beruhigen; Hyaluron spendet intensive Feuchtigkeit | Mild: pH-hautneutrale Formel; Schont empfindliche Kopfhaut; Für normales und trockenes Haar | 99 % natürlicher Ursprung im Gesamtprodukt | 10 % Bio-Anteil am Gesamtprodukt | COSMOS ORGANIC nach dem COSMOS Standard durch Ecocert Greenlife zertifiziert",
+      "directionsVerbatim": "Anwendung tab on the page is rendered as an image; only the closing sentence was captured as text: \"...empfehlen wir den lavera Conditioner basis sensitive Hydrate & Care.\" (full text equals dm directions, below, but not verified as page text)"
+    },
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Haartyp: normales Haar, trockenes Haar (Produktmerkmale); no description text captured",
+      "directionsVerbatim": "Shampoo im nassen Haar aufschäumen und einmassieren. Danach gründlich mit Wasser ausspülen. Für ein noch besseres Ergebnis empfehlen wir den lavera Conditioner basis sensitive Hydrate Care."
+    }
+  ]
+}

@@ -1,0 +1,1323 @@
+{
+  "VS01": {
+    "identity": {
+      "brand": "Balea",
+      "productName": "Balea Ultra Sensitive (claim text: 'Balea med Shampoo Ultra Sensitive')"
+    },
+    "claims": [
+      {
+        "unit": "Mildes Shampoo für empfindliche Kopfhaut",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "E2 sensitive claim unit ('für empfindliche Kopfhaut', E2a 'für …'); SC1 positioning"
+      },
+      {
+        "unit": "Das Balea med Shampoo Ultra Sensitive bietet eine besonders sanfte Reinigung für Haar und empfindliche Kopfhaut.",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "E2 sensitive ('für … empfindliche Kopfhaut')"
+      },
+      {
+        "unit": "Seine milde Pflegeformel mit 5 % Glycerin, Panthenol und Niacinamid spendet Feuchtigkeit und pflegt das Haar geschmeidig glänzend, ohne die Kopfhaut zu reizen.",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "lengths moisture claim (focus candidate); 'ohne die Kopfhaut zu reizen' protective (E2a); named ingredients all present (Glycerin@3, Panthenol@7, Niacinamide@8)"
+      },
+      {
+        "unit": "Das Shampoo ist zudem ideal für die tägliche Haarwäsche bei sensibler Haut.",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "U2 frequency wording ('tägliche') -> frequent"
+      },
+      {
+        "unit": "Ohne Silikone, Parfüm & Parabene",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "consistent with INCI (no silicone, no Parfum); supportive signal only (CSA)"
+      },
+      {
+        "unit": "Product name 'Ultra Sensitive'",
+        "source": "name",
+        "grade": "high",
+        "reading": "non-scalp name word; names no role (F7, SC1)"
+      }
+    ],
+    "reconciliation": [
+      "focusPrimary: general (provisional) -> scalp_active: sensitive-scalp claim (moderate) + scalpComfortTarget targeted (F7 step 2).",
+      "focusSecondary: [] -> [moisture]: distinct lengths-moisture claim (moderate) with independent Glycerin@3 route (Section 8, F3).",
+      "usageRole: regular -> frequent: U2 'tägliche Haarwäsche' (manufacturer, moderate), cleansingStrength moderate (not strong).",
+      "scalpComfortTarget: not_targeted (provisional) -> targeted: SC1 units graded moderate + CSA already met in the blind pass via listed routes.",
+      "cleansingStrength, conditioningLevel, weightPotential, dandruffSupport: unchanged (formula-only)."
+    ],
+    "counter": {
+      "cleansingStrength": "Glucoside-led order (Coco-Glucoside@2 and Glycerin@3 before Sodium Coco-Sulfate@4) and four weak refatters argue for low.",
+      "conditioningLevel": "Only one substantive route (guar@12, late in the prominent zone); otherwise cleansing-led.",
+      "weightPotential": "Two deposition families (guar + weak refatters, W2); guar dose unknown.",
+      "dandruffSupport": "none"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "moderate",
+      "neighboringAlternative": "moisture",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": [
+          "Glycerin@3",
+          "Panthenol@7 (shared)"
+        ],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@12",
+          "Glyceryl Oleate@11",
+          "Hydrogenated Palm Glycerides Citrate@13",
+          "Lecithin@14"
+        ],
+        "limitation": "Verdict recorded blind (formula pass) and unchanged; it governs the secondary moisture value, not the primary."
+      },
+      "claimRole": "candidate",
+      "counterSignal": "A lengths-moisture claim with a coherent glycerin route competes (F7); the sensitive-scalp claims are manufacturer-graded moderate only and partly mildness wording.",
+      "decisionTrace": "Primary: claim direction sensitive scalp ('Mildes Shampoo für empfindliche Kopfhaut', manufacturer_de, moderate). F7: product name 'Ultra Sensitive' is a non-scalp name word and names no role; neither role in the name -> step 2: scalp_active primary because it is formula-compatible (scalpComfortTarget targeted: SC1 + CSA). Compatible route: listed prominent comfort routes Panthenol@7, Niacinamide@8. Decision reason: F7 step 2 / 7.2 row 'explicit sensitive scalp positioning with targeted'.",
+      "rationale": "scalp_active (moderate): explicit sensitive-scalp positioning graded moderate and targeted via listed prominent comfort routes; moisture is the competing lengths role.",
+      "ruleIds": [
+        "7.2",
+        "F7",
+        "SC1",
+        "CSA",
+        "CL-SRC",
+        "N-ALT"
+      ]
+    },
+    "focusSecondary": {
+      "value": [
+        "moisture"
+      ],
+      "confidence": "moderate",
+      "neighboringAlternative": [],
+      "decisionTrace": "Empty default considered. Selected: moisture. Matching distinct claim: 'spendet Feuchtigkeit und pflegt das Haar geschmeidig glänzend' with '5 % Glycerin' (manufacturer_de, moderate). Independent route: Glycerin@3 humectant + guar@12 + glyceride refatters (care verdict moisture_supported), not cited by the primary route (Panthenol@7, Niacinamide@8; F3). Distinct from primary: lengths hydration vs scalp comfort. One value only; 'glänzend' gives no independent shine route (F2).",
+      "rationale": "[moisture] (moderate): distinct lengths-moisture positioning with its own glycerin route; neighbor [] because the moisture sentence sits inside a mildness-led description.",
+      "ruleIds": [
+        "Section 8",
+        "F2",
+        "F3",
+        "F1",
+        "N-ALT"
+      ]
+    },
+    "usageRole": {
+      "value": "frequent",
+      "confidence": "moderate",
+      "neighboringAlternative": "regular",
+      "triggerCode": "explicit_frequent_non_strong",
+      "triggerEvidence": [
+        "'ideal für die tägliche Haarwäsche bei sensibler Haut' (manufacturer_de, moderate)"
+      ],
+      "losingTriggers": [],
+      "rationale": "frequent (moderate): U2 'tägliche' wording from a moderate source and cleansingStrength moderate (not strong). Default regular considered; confidence capped by the moderate source.",
+      "ruleIds": [
+        "Section 9",
+        "U1",
+        "U2",
+        "CL-SRC",
+        "F-TRACE"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "not_targeted",
+      "rationale": "targeted (moderate). Positioning half (SC1): 'Mildes Shampoo für empfindliche Kopfhaut' and 'sanfte Reinigung für Haar und empfindliche Kopfhaut' (manufacturer_de, moderate). Formula half (CSA) route used: listed prominent E4 routes (comfort Panthenol@7, Niacinamide@8; humectant/refatting Glycerin@3, Panthenol@7, Glyceryl Oleate@11). MB not met (Sodium Coco-Sulfate@4 prominent). Supportive signals: no fragrance, no cooling, no essential oils. Confidence moderate because the positioning is graded moderate.",
+      "ruleIds": [
+        "Section 10",
+        "SC1",
+        "CSA",
+        "MB",
+        "E4",
+        "E2a"
+      ]
+    },
+    "primary": {
+      "target": "sensitive",
+      "confidence": "moderate",
+      "rationale": "S-SENSITIVE passes: E2 sensitive claim 'für empfindliche Kopfhaut' (manufacturer_de, moderate; E1) + scalpComfortTarget targeted + prominent E4 comfort route Panthenol@7/Niacinamide@8. cleansingStrength moderate -> no review_strong_cleansing_comfort_route. No dry, oily or dandruff claim unit. Confidence = lowest of positioning (moderate) and scalpComfortTarget (moderate)."
+    },
+    "secondary": null,
+    "rct": [],
+    "notes": [],
+    "uncertainties": [
+      "focusSecondary [moisture] vs []: the moisture sentence could be read as a generic care outcome inside mildness copy; kept moisture because it names a glycerin percentage and a distinct route.",
+      "cleansingStrength C5 moderate with neighbor low (glucoside-led order); with the neighbor the irritationen bucket would match gentle, but current intensity regular already differs, so no I3 flag (I3 direction rule).",
+      "'Mildes Shampoo für empfindliche Kopfhaut' read as qualifying 'für …' positioning, not as sparing/tolerance wording ('auch für empfindliche Kopfhaut geeignet' type). Alternative: mildness only -> no SC1, ordinary target, focus moisture."
+    ]
+  },
+  "VS02": {
+    "identity": {
+      "brand": "Balea Med",
+      "productName": "Balea Med Anti Schuppen"
+    },
+    "claims": [
+      {
+        "unit": "Product name 'Balea Med Anti Schuppen'",
+        "source": "name",
+        "grade": "high",
+        "reading": "E2 dandruff claim ('Anti Schuppen' as named problem)"
+      },
+      {
+        "unit": "Shampoo gegen Schuppen",
+        "source": "manufacturer_de (dm own brand; packet sourceKind manufacturer_de)",
+        "grade": "moderate",
+        "reading": "E2 dandruff claim unit"
+      },
+      {
+        "unit": "Für empfindliche & trockene Kopfhaut",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "comfort + dryness wording; consecutive entry of the same bullet list as 'Shampoo gegen Schuppen' -> bundled (E2b); not SC1"
+      },
+      {
+        "unit": "Kann Juckreiz mildern & die Kopfhaut beruhigen",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "comfort wording, bundled (same bullet list) -> feeds research-only sensitive combination"
+      },
+      {
+        "unit": "Das Balea med Shampoo Anti Schuppen wurde speziell für die Bedürfnisse von empfindlicher und trockener Kopfhaut entwickelt. Es befreit Kopfhaut und Haar sanft von Schuppen und kann dabei helfen, Juckreiz zu mildern.",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "sentence names the product 'Anti Schuppen' and sits directly before a dandruff sentence -> bundled"
+      },
+      {
+        "unit": "… eine sanfte Pflege für jeden Tag.",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "U2 frequency wording ('für jeden Tag') -> frequent trigger fires but loses to treatment (U1)"
+      },
+      {
+        "unit": "Wirkung: Pflege, Feuchtigkeit, Glanz",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "attribute listing; not a distinct lengths positioning"
+      },
+      {
+        "unit": "Ohne Parfum, Parabene & Farbstoffe",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "consistent with INCI"
+      }
+    ],
+    "reconciliation": [
+      "focusPrimary: general (provisional) -> scalp_active: anti-dandruff positioning (name, high) + recognized active Piroctone Olamine@10 (7.2 problem-led row).",
+      "usageRole: regular -> treatment: dandruffSupport supported + E2 dandruff claim graded high (U3); frequent ('für jeden Tag') loses under U1.",
+      "scalpComfortTarget: provisional not_targeted -> not_targeted confirmed: all sensitive/dry wording is bundled with dandruff units (E2b), so not SC1.",
+      "cleansingStrength, conditioningLevel, weightPotential, dandruffSupport: unchanged."
+    ],
+    "counter": {
+      "cleansingStrength": "none material (two prominent buffers).",
+      "conditioningLevel": "Only one substantive route (guar@8); no C2.",
+      "weightPotential": "Two deposition families (guar + weak refatters, W2); guar at position 8.",
+      "dandruffSupport": "none"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [
+          "Panthenol@5",
+          "Glycerin@9"
+        ],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "Guar Hydroxypropyltrimonium Chloride@8"
+        ],
+        "limitation": "Chosen focus is not a repair/moisture decision; blind verdict was moisture_supported (recorded in the formula pass)."
+      },
+      "claimRole": "candidate",
+      "counterSignal": "A 'Feuchtigkeit/Glanz' attribute listing and a humectant route exist for the lengths but are not positioned as a distinct role.",
+      "decisionTrace": "Primary: claim direction dandruff ('Anti Schuppen' in the product name, high; 'Shampoo gegen Schuppen', moderate). Formula compatible: Piroctone Olamine@10 -> dandruffSupport supported. Route: recognized active. Reason: 7.2 'problem-led product with recognized dandruff active and anti-dandruff positioning' -> scalp_active.",
+      "rationale": "scalp_active (high): anti-dandruff name plus recognized active.",
+      "ruleIds": [
+        "7.2",
+        "7.1",
+        "Section 11",
+        "CL-SRC"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "moisture"
+      ],
+      "decisionTrace": "Empty default considered and kept. Candidate moisture: only 'Wirkung: Pflege, Feuchtigkeit, Glanz' (attribute listing) and 'gepflegtes sowie geschmeidig-glänzendes Haar' (generic care outcome); no distinct exact-product moisture positioning (Section 8 item 1). Shine: no independent route (F2/F4).",
+      "rationale": "[] (moderate): no distinct secondary positioning; neighbor [moisture] from the attribute listing.",
+      "ruleIds": [
+        "Section 8",
+        "F2",
+        "N-ALT"
+      ]
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "recognized_active_problem_led",
+      "triggerEvidence": [
+        "Product name 'Balea Med Anti Schuppen' (high)",
+        "'Shampoo gegen Schuppen' (manufacturer_de, moderate)",
+        "Piroctone Olamine@10 (dandruffSupport supported)"
+      ],
+      "losingTriggers": [
+        "explicit_frequent_non_strong: 'eine sanfte Pflege für jeden Tag' (moderate) - loses to treatment under U1"
+      ],
+      "rationale": "treatment (high): U3 conditions met with a high-graded dandruff claim; U1 precedence over frequent.",
+      "ruleIds": [
+        "Section 9",
+        "U1",
+        "U2",
+        "U3",
+        "F-TRACE"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "targeted",
+      "rationale": "not_targeted (moderate). Formula half (CSA) is met via listed prominent routes (comfort Panthenol@5, Bisabolol@6, Niacinamide@7; humectant Panthenol@5, Glycerin@9, Glyceryl Oleate@13; MB not met, SLES@2). Positioning half fails: every sensitive/dry/itch unit is bundled with a dandruff unit - 'Für empfindliche & trockene Kopfhaut' and 'Kann Juckreiz mildern …' are consecutive entries of the bullet list that starts with 'Shampoo gegen Schuppen', and the body sentence on empfindliche/trockene Kopfhaut names the product 'Anti Schuppen' and directly precedes 'befreit … von Schuppen'; bundled wording is never SC1 (SC1, E2b; P0: unclear -> bundled). Neighbor targeted if the bullet 'Für empfindliche & trockene Kopfhaut' were read as a separate unit.",
+      "ruleIds": [
+        "Section 10",
+        "SC1",
+        "E2a",
+        "E2b",
+        "CSA",
+        "P0"
+      ]
+    },
+    "primary": {
+      "target": "dandruff",
+      "confidence": "high",
+      "rationale": "S-DANDRUFF passes: E2 dandruff claim in the product name ('Anti Schuppen', high) and 'Shampoo gegen Schuppen' (moderate); formula dandruffSupport supported (Piroctone Olamine@10). Dandruff path (R17.1): primary dandruff, no secondary target (R17.2). Confidence = min(positioning high, dandruffSupport high). Bundled dryness wording ('trockene Kopfhaut' in the same bullet list / sentence as the dandruff claim) is absorbed by layer 1: no dry target and no dry combination value (E2b; no note applies to bundled dryness wording)."
+    },
+    "secondary": null,
+    "rct": [
+      "sensitive"
+    ],
+    "notes": [
+      "suits_dandruff_with_irritated_scalp: bundled comfort wording 'Kann Juckreiz mildern & die Kopfhaut beruhigen' / 'Für empfindliche … Kopfhaut' (manufacturer_de, moderate) + S-SENSITIVE formula gate read as CSA (listed prominent routes) and prominent comfort route Panthenol@5/Bisabolol@6/Niacinamide@7 -> passed. Research-only, never projected. Confidence moderate (lowest of dandruff target high and wording grade moderate)."
+    ],
+    "uncertainties": [
+      "Bundled vs separate: 'Für empfindliche & trockene Kopfhaut' could be read as a separate bullet. Then sensitive would still only feed the combination (dandruff-primary, R15), and a separate dry unit would be tested for the dry combination: S-DRY gate (CSA + prominent humectant Glycerin@9/Panthenol@5) passes -> 'dry' would be added and scalpComfortTarget would become targeted. Chosen: bundled (P0, consecutive entries of one bullet list).",
+      "Identity confidence moderate in the stage-A packet; source labelled retailer_dm_de but sourceKind manufacturer_de (dm own brand); graded moderate as given. Product name grade high is unaffected.",
+      "Confidence of the combination value is moderate (wording graded moderate)."
+    ]
+  },
+  "VS03": {
+    "identity": {
+      "brand": "Salthouse",
+      "productName": "Salthouse Anti Juckreiz (Totes Meer Therapie Anti-Juckreiz Shampoo)"
+    },
+    "claims": [
+      {
+        "unit": "Product name 'Salthouse Anti Juckreiz' / 'Totes Meer Therapie Anti-Juckreiz Shampoo'",
+        "source": "name",
+        "grade": "high",
+        "reading": "E2 sensitive lexicon term 'Juckreiz' as the named problem ('Anti-'); names the sensitive role (F7 step 1, S-PRIMARY)"
+      },
+      {
+        "unit": "Anti-Juckreiz Shampoo – beruhigend bei juckender und empfindlicher Kopfhaut",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "E2 sensitive claim unit (bei juckender/empfindlicher Kopfhaut)"
+      },
+      {
+        "unit": "Die kopfhautberuhigende Formel … mit … wirkaktivem Polidocanol mildert das Juckreizempfinden auf der Kopfhaut.",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "E2 sensitive; Polidocanol maps to Laureth-9@3 (E4, v1.6.2 L3) - no conflict"
+      },
+      {
+        "unit": "Der natürliche Menthol-Komplex schenkt kühlende Entspannung, während Urea und Panthenol den Feuchtigkeitsgehalt der Kopfhaut regulieren.",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "cooling positioning (Menthol@12, Mentha Arvensis Leaf Oil@16 present); Urea@6, Panthenol@14 present; scalp moisture, not lengths"
+      },
+      {
+        "unit": "Das Anti-Juckreiz Shampoo ist speziell für die Bedürfnisse von juckender, trockener und empfindlicher Kopfhaut entwickelt.",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "E2 sensitive + E2 dry claim unit (two non-dandruff states, counts for both, E2a)"
+      },
+      {
+        "unit": "Hautproblem: Juckreiz, Neurodermitis, Schuppenflechte, Spannungsgefühle | Auch als Basispflege für Hauttypen mit Neurodermitis und Psoriasis (Schuppenflechte)",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "diagnosed-disease wording (atopic dermatitis, psoriasis): out of scope (Scope, 3.2); 'Schuppenflechte' is psoriasis, not a dandruff claim - see uncertainties"
+      },
+      {
+        "unit": "pH-hautneutral | Dermatologisch bestätigt | Sehr gute Hautverträglichkeit bei Problemhaut",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "protective/tolerance wording (E2a), not positioning"
+      },
+      {
+        "unit": "Directions: 'Für die tägliche Haarwäsche geeignet.'",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "U2 frequency wording -> frequent"
+      },
+      {
+        "unit": "Laureth-9: 'Lokalanästhetikum - lindert Juckreiz' (site glossary)",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "ingredient-reputation sentence (E2a); not positioning, ignored"
+      },
+      {
+        "unit": "Rossmann / dm retailer copy",
+        "source": "retailer",
+        "grade": "low",
+        "reading": "corroboration only; 'Mildert Juckreiz sofort' etc. not used for triggers"
+      }
+    ],
+    "reconciliation": [
+      "focusPrimary: general (provisional) -> scalp_active: itch/sensitive-scalp positioning in the name + targeted.",
+      "usageRole: regular -> frequent: 'Für die tägliche Haarwäsche geeignet' (manufacturer directions, moderate), cleansingStrength moderate.",
+      "scalpComfortTarget: not_targeted (provisional) -> targeted: SC1 units (name high, manufacturer moderate) + CSA met blind via Laureth-9@3 (Polidocanol) and Urea@6.",
+      "cleansingStrength, conditioningLevel, weightPotential, dandruffSupport: unchanged."
+    ],
+    "counter": {
+      "cleansingStrength": "Single buffer (Cocamidopropyl Betaine@5); Laureth-9@3 not counted as a buffer.",
+      "conditioningLevel": "Only one substantive route (guar@7 at the E3 boundary) in a salt-heavy base.",
+      "weightPotential": "Single guar route; dose unknown.",
+      "dandruffSupport": "none"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "moderate",
+      "neighboringAlternative": "general",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [
+          "Urea@6",
+          "Glycerin@9",
+          "Panthenol@14"
+        ],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@7"
+        ],
+        "limitation": "Chosen focus is not a repair/moisture decision; blind verdict moisture_supported recorded."
+      },
+      "claimRole": "candidate",
+      "counterSignal": "Positioned menthol cooling (Menthol@12, Mentha Arvensis Leaf Oil@16) is an irritation counter-signal; strong cleansing absent.",
+      "decisionTrace": "Primary: claim direction sensitive/itchy scalp ('Anti Juckreiz' in the name, high; 'beruhigend bei juckender und empfindlicher Kopfhaut', moderate). Formula compatible: scalpComfortTarget targeted (CSA via Laureth-9@3 = Polidocanol, Urea@6). Route: comfort routes Laureth-9@3, Urea@6. Reason: 7.2 'explicit sensitive/itchy scalp positioning with targeted'. No competing lengths-care claim (moisture claims concern the scalp).",
+      "rationale": "scalp_active (moderate): itch/sensitive-scalp product with listed prominent comfort routes; confidence limited by the moderate-graded targeted value.",
+      "ruleIds": [
+        "7.2",
+        "SC1",
+        "CSA",
+        "E4",
+        "N-ALT"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "moisture"
+      ],
+      "decisionTrace": "Empty default considered and kept. Moisture wording concerns the scalp ('Feuchtigkeitsgehalt der Kopfhaut'), not the lengths; 'Wirkung: Pflege, Feuchtigkeit' is retailer-only (low). Dry scalp is part of scalp_active, not a separate focus value.",
+      "rationale": "[] (moderate): no distinct lengths positioning.",
+      "ruleIds": [
+        "Section 8",
+        "CL-SRC",
+        "N-ALT"
+      ]
+    },
+    "usageRole": {
+      "value": "frequent",
+      "confidence": "moderate",
+      "neighboringAlternative": "regular",
+      "triggerCode": "explicit_frequent_non_strong",
+      "triggerEvidence": [
+        "Directions 'Für die tägliche Haarwäsche geeignet.' (manufacturer_de, moderate)"
+      ],
+      "losingTriggers": [],
+      "rationale": "frequent (moderate): U2 wording in manufacturer directions; cleansingStrength moderate.",
+      "ruleIds": [
+        "Section 9",
+        "U2",
+        "CL-SRC",
+        "F-TRACE"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "not_targeted",
+      "rationale": "targeted (moderate). SC1: name 'Anti Juckreiz' (high) together with manufacturer units 'beruhigend bei juckender und empfindlicher Kopfhaut' and 'für … trockener und empfindlicher Kopfhaut' (moderate). CSA route used: listed prominent E4 comfort routes Laureth-9@3 (INCI of Polidocanol, v1.6.2) and Urea@6 (also humectant route). MB not met (SLES@2). Counter-signal recorded: positioned cooling menthol complex (Menthol@12, Mentha Arvensis Leaf Oil@16), not prominent under E3 so not a formal CSA cap; confidence held at moderate given the dry-scalp units' moderate grade.",
+      "ruleIds": [
+        "Section 10",
+        "SC1",
+        "CSA",
+        "MB",
+        "E4"
+      ]
+    },
+    "primary": {
+      "target": "sensitive",
+      "confidence": "moderate",
+      "rationale": "S-SENSITIVE passes: E2 sensitive claim (name 'Anti Juckreiz', high; manufacturer units moderate) + scalpComfortTarget targeted + prominent comfort route Laureth-9@3/Urea@6. S-DRY also passes. S-PRIMARY: the target named in the exact product name ('Juckreiz' = sensitive lexicon) is primary. cleansingStrength moderate -> no review. Confidence = lowest of positioning (high) and scalpComfortTarget (moderate)."
+    },
+    "secondary": {
+      "target": "dry",
+      "confidence": "moderate",
+      "rationale": "S-DRY passes: E2 dry claim unit 'speziell für die Bedürfnisse von juckender, trockener und empfindlicher Kopfhaut entwickelt' (manufacturer_de, moderate; a unit naming two non-dandruff states counts for both, E2a) + scalpComfortTarget targeted + prominent humectant/refatting route Urea@6. Own formula gate passed; not a dandruff product; dry+sensitive is a permitted pair (S-SECONDARY). Confidence = min(positioning moderate, scalpComfortTarget moderate)."
+    },
+    "rct": [],
+    "notes": [],
+    "uncertainties": [
+      "'Schuppenflechte' (psoriasis) and 'Neurodermitis' are diagnosed-disease wording, out of scope; not read as an E2 dandruff claim ('Schuppen' as the product's problem). Alternative: stem match on 'Schuppen' -> a dandruff claim that fails S-DANDRUFF (no active); E2a/E2b layer 1 would then absorb bundled comfort wording only in the 'Hautproblem'/'Basispflege' units, the separate headline units would still pass, and claimed_target_not_projected:dandruff would be noted. Projected targets would be unchanged.",
+      "Secondary dry vs none: the dry wording shares one unit with the sensitive wording; E2a counts it for both. Alternative reading 'same unit as primary, not distinct' would drop the dry secondary (more conservative).",
+      "Menthol cooling is positioned but listed after the E3 point; read strictly as non-prominent (no formal CSA counter-signal cap)."
+    ]
+  },
+  "VS04": {
+    "identity": {
+      "brand": "Guhl",
+      "productName": "Guhl Anti Schuppen"
+    },
+    "claims": [
+      {
+        "unit": "Product name 'Guhl Anti Schuppen'",
+        "source": "name",
+        "grade": "high",
+        "reading": "E2 dandruff claim"
+      },
+      {
+        "unit": "Bei Schuppen und juckender Kopfhaut",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "dandruff unit; itch absorbed (E2a), feeds sensitive combination"
+      },
+      {
+        "unit": "Befreie dich mit unserem Anti-Schuppen Shampoo effektiv von Schuppen und einer juckenden, spannenden Kopfhaut*.",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "dandruff unit with comfort/tension wording (absorbed; combination only)"
+      },
+      {
+        "unit": "Die hochwirksame Formel mit blauer Malve und hochwirksamem Zink PCA bekämpft bei regelmäßiger Anwendung wirksam die Ursache von Schuppen und schützt vor Neubildung.",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "dandruff unit; claims Zinc PCA (present @11, not a recognized active - claims cannot upgrade, Section 11); Malva@16 present; 'regelmäßig' is not U2 wording"
+      },
+      {
+        "unit": "Deine juckende Kopfhaut wird beruhigt und das Spannungsgefühl reduziert.",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "comfort wording directly after a dandruff sentence -> bundled (E2b)"
+      },
+      {
+        "unit": "… dermatologisch bestätigt und sanft zur Kopfhaut …",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "protective/sparing wording (E2a)"
+      },
+      {
+        "unit": "erfrischender Duft …",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "fragrance (Parfum@19); no cooling agent"
+      }
+    ],
+    "reconciliation": [
+      "focusPrimary: general (provisional) -> scalp_active: anti-dandruff name + Piroctone Olamine@6.",
+      "usageRole: regular -> treatment: U3 met (dandruff claim high + active).",
+      "scalpComfortTarget: provisional not_targeted -> not_targeted confirmed (all comfort wording is inside or bundled with dandruff units).",
+      "Formula properties unchanged."
+    ],
+    "counter": {
+      "cleansingStrength": "none material (two prominent buffers).",
+      "conditioningLevel": "Only one substantive route (guar@9).",
+      "weightPotential": "Two deposition families (guar + weak refatters at 7-8, W2).",
+      "dandruffSupport": "none"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@9"
+        ],
+        "limitation": "Chosen focus is not a repair/moisture decision; blind verdict nonspecific."
+      },
+      "claimRole": "candidate",
+      "counterSignal": "Fragrance-led freshness copy; claim credits Zinc PCA rather than the recognized active.",
+      "decisionTrace": "Primary: claim direction dandruff (name 'Anti Schuppen', high). Formula compatible: Piroctone Olamine@6. Reason: 7.2 problem-led row -> scalp_active.",
+      "rationale": "scalp_active (high): anti-dandruff name plus recognized active.",
+      "ruleIds": [
+        "7.2",
+        "Section 11",
+        "CL-SRC"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": [],
+      "decisionTrace": "Empty default considered and kept: no lengths-care or reset positioning ('reichhaltige, feine Schaum' and freshness are sensory copy).",
+      "rationale": "[] (high).",
+      "ruleIds": [
+        "Section 8"
+      ]
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "recognized_active_problem_led",
+      "triggerEvidence": [
+        "Product name 'Guhl Anti Schuppen' (high)",
+        "Piroctone Olamine@6 (dandruffSupport supported)"
+      ],
+      "losingTriggers": [],
+      "rationale": "treatment (high): U3; no other trigger fires ('bei regelmäßiger Anwendung' is not U2 wording; no directions captured).",
+      "ruleIds": [
+        "Section 9",
+        "U1",
+        "U3",
+        "F-TRACE"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "not_targeted (high). CSA formula half met (Panthenol@12 comfort; Glyceryl Oleate@7, Panthenol@12, Glycerin@14 humectant/refatting; MB not met, SLES@2), but there is no SC1 unit: every itch/tension/soothing unit names dandruff or directly follows a dandruff sentence (bundled, E2b), and 'sanft zur Kopfhaut' is sparing wording (E2a).",
+      "ruleIds": [
+        "Section 10",
+        "SC1",
+        "E2a",
+        "E2b",
+        "CSA"
+      ]
+    },
+    "primary": {
+      "target": "dandruff",
+      "confidence": "high",
+      "rationale": "S-DANDRUFF passes: name 'Anti Schuppen' (high) + Piroctone Olamine@6 (supported). Dandruff path (R17.1); no secondary target (R17.2). Confidence = min(high, high)."
+    },
+    "secondary": null,
+    "rct": [
+      "sensitive"
+    ],
+    "notes": [
+      "suits_dandruff_with_irritated_scalp: bundled comfort wording 'Deine juckende Kopfhaut wird beruhigt und das Spannungsgefühl reduziert' / 'juckende, spannende Kopfhaut' (manufacturer_de, moderate) + S-SENSITIVE formula gate (CSA + prominent comfort route Panthenol@12) passed. Research-only. Confidence moderate."
+    ],
+    "uncertainties": [
+      "Claim credits 'hochwirksames Zink PCA' against dandruff; Zinc PCA is not a recognized active and is not counted. dandruffSupport rests on Piroctone Olamine@6, which the claims do not name (not a conflict: it is present in the frozen INCI).",
+      "No usage directions captured; usageRole relies on the name claim only."
+    ]
+  },
+  "VS05": {
+    "identity": {
+      "brand": "Sebamed",
+      "productName": "Sebamed Every-Day Shampoo"
+    },
+    "claims": [
+      {
+        "unit": "Product name 'Sebamed Every-Day Shampoo'",
+        "source": "name",
+        "grade": "high",
+        "reading": "U2 'Every-Day' frequency wording -> frequent"
+      },
+      {
+        "unit": "Schonende, seifenfreie Reinigung für empfindliche Kopfhaut",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "E2 sensitive claim unit ('für empfindliche Kopfhaut'); read as positioning, not as sparing wording - see uncertainties"
+      },
+      {
+        "unit": "Die sebamed Hautreinigungs- und Pflegeprodukte sind besonders hautverträglich und stärken die Barrierefunktion der empfindlichen Haut …",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "range-level claim (E1: does not count); tolerance wording"
+      },
+      {
+        "unit": "… schützt Kopfhaut und Haar vor dem Austrocknen …",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "protective wording (E2a) - not a dry-scalp claim"
+      },
+      {
+        "unit": "Directions: 'Für die tägliche Anwendung geeignet.'",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "U2 'tägliche Anwendung'"
+      },
+      {
+        "unit": "pH-Wert 5,5 …",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "supportive signal only (CSA: acidic pH never sufficient)"
+      },
+      {
+        "unit": "dm copy: 'mehr Fülle und Glanz', 'schonend zur Kopfhaut'",
+        "source": "retailer",
+        "grade": "low",
+        "reading": "not usable for focus or triggers"
+      }
+    ],
+    "reconciliation": [
+      "focusPrimary: general (provisional) -> scalp_active: sensitive-scalp positioning (moderate) + targeted via MB.",
+      "usageRole: regular -> frequent: name 'Every-Day' (high) + directions (moderate); cleansingStrength low.",
+      "scalpComfortTarget: not_targeted (provisional) -> targeted: SC1 (moderate) + CSA via MB (v1.6.2), the only formula route.",
+      "Formula properties unchanged."
+    ],
+    "counter": {
+      "cleansingStrength": "Two prominent mild anionics (sulfosuccinate, sulfoacetate) with no refatting buffer argue for moderate.",
+      "conditioningLevel": "A recognized cationic starch polymer (6.4) could give noticeable slip.",
+      "weightPotential": "Weak reset (mild chassis) leaves what little deposits.",
+      "dandruffSupport": "none"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "moderate",
+      "neighboringAlternative": "general",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [],
+        "limitation": "Chosen focus is not a repair/moisture decision; blind verdict nonspecific."
+      },
+      "claimRole": "candidate",
+      "counterSignal": "Positioning is largely mildness/pH; the only formula route is the mild base (MB), with no listed comfort ingredient.",
+      "decisionTrace": "Primary: claim direction sensitive scalp ('Schonende, seifenfreie Reinigung für empfindliche Kopfhaut', manufacturer_de, moderate). Formula compatible: scalpComfortTarget targeted (SC1 + CSA via MB). Route: mild base Decyl Glucoside@2 / Disodium Laureth Sulfosuccinate@3 / Sodium Lauryl Sulfoacetate@4. Reason: 7.2 'explicit sensitive scalp positioning with targeted'. Mildness and every-day positioning are not a focus (7.2).",
+      "rationale": "scalp_active (moderate): sensitive-scalp product targeted via the mild-base route; neighbor general if the unit were read as mildness only.",
+      "ruleIds": [
+        "7.2",
+        "SC1",
+        "CSA",
+        "MB",
+        "N-ALT"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "volume"
+      ],
+      "decisionTrace": "Empty default considered and kept: 'mehr Fülle und Glanz' is retailer-only (low, CL-SRC) and has no independent route; mildness is not a focus.",
+      "rationale": "[] (moderate).",
+      "ruleIds": [
+        "Section 8",
+        "CL-SRC",
+        "N-ALT"
+      ]
+    },
+    "usageRole": {
+      "value": "frequent",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "explicit_frequent_non_strong",
+      "triggerEvidence": [
+        "Product name 'Every-Day' (high)",
+        "Directions 'Für die tägliche Anwendung geeignet.' (manufacturer_de, moderate)"
+      ],
+      "losingTriggers": [],
+      "rationale": "frequent (high): U2 wording in the product name; cleansingStrength low (neighbor moderate), never strong.",
+      "ruleIds": [
+        "Section 9",
+        "U2",
+        "F-TRACE"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "not_targeted",
+      "rationale": "targeted (moderate). SC1: 'Schonende, seifenfreie Reinigung für empfindliche Kopfhaut' (manufacturer_de, moderate). CSA route used: MB (v1.6.2) - mild_base:Decyl Glucoside@2, Disodium Laureth Sulfosuccinate@3, Sodium Lauryl Sulfoacetate@4 (cleansingStrength low, no prominent strong anionic). No listed prominent E4 route. Supportive signals: pH 5.5 (not sufficient alone). No cooling/essential-oil counter-signal; Parfum@7 declared. Evidence boundary: MB is a plausibility filter, never user copy that the base 'soothes'.",
+      "ruleIds": [
+        "Section 10",
+        "SC1",
+        "CSA",
+        "MB",
+        "E4"
+      ]
+    },
+    "primary": {
+      "target": "sensitive",
+      "confidence": "moderate",
+      "rationale": "S-SENSITIVE passes via MB: E2 sensitive claim (manufacturer_de, moderate) + scalpComfortTarget targeted + MB (no prominent comfort route needed, v1.6.2). cleansingStrength low -> no review. No dry claim ('schützt … vor dem Austrocknen' is protective). Confidence = lowest of positioning (moderate), scalpComfortTarget (moderate) and cleansingStrength used by MB (moderate)."
+    },
+    "secondary": null,
+    "rct": [],
+    "notes": [],
+    "uncertainties": [
+      "'Schonende … Reinigung für empfindliche Kopfhaut' read as 'für …' positioning. Alternative: sparing/mildness wording (E2a, like 'schonend zur Kopfhaut') -> no SC1 -> scalpComfortTarget not_targeted, ordinary target (S-ORDINARY way 1), focus general.",
+      "cleansingStrength low at moderate confidence (neighbor moderate) raises review_intensity_boundary for irritationen; MB would still hold at moderate."
+    ]
+  },
+  "VS06": {
+    "identity": {
+      "brand": "ISANA",
+      "productName": "ISANA Shampoo Sensitiv Baumwoll- & Kornblume (Rossmann: 'ISANA Shampoo Sensitiv')"
+    },
+    "claims": [
+      {
+        "unit": "Product name 'Shampoo Sensitiv'",
+        "source": "name",
+        "grade": "high",
+        "reading": "non-scalp name word; counts only with a scalp-naming manufacturer unit (SC1)"
+      },
+      {
+        "unit": "… ist es auch bei empfindlicher Kopfhaut bestens geeignet.",
+        "source": "pack_back / manufacturer_de",
+        "grade": "moderate",
+        "reading": "tolerance wording ('auch … geeignet', E2a) - not positioning"
+      },
+      {
+        "unit": "für empfindliche Kopfhaut & normales Haar",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "E2 sensitive claim unit ('für empfindliche Kopfhaut'); SC1 positioning together with the name word"
+      },
+      {
+        "unit": "milde Pflege-Formel mit beruhigenden Inhaltsstoffen sowie Panthenol",
+        "source": "pack_back",
+        "grade": "moderate",
+        "reading": "Panthenol@12 present (not prominent); cotton/cornflower extracts present @26/@24"
+      },
+      {
+        "unit": "dermatologisch bestätigt und pH-hautneutral",
+        "source": "pack_back",
+        "grade": "moderate",
+        "reading": "protective wording"
+      }
+    ],
+    "reconciliation": [
+      "focusPrimary: general (provisional) -> general (final): sensitive-scalp claim present but scalp_active is formula-incompatible (not targeted); remaining claims are mildness only.",
+      "scalpComfortTarget: not_targeted unchanged: SC1 met, CSA fails (blind).",
+      "usageRole: regular unchanged (no frequency wording).",
+      "Formula properties unchanged."
+    ],
+    "counter": {
+      "cleansingStrength": "Only one prominent buffer; Coco-Glucoside@8 is post-fragrance.",
+      "conditioningLevel": "All care routes are listed after Parfum@6 (argues low).",
+      "weightPotential": "Three light deposition families (W2).",
+      "dandruffSupport": "none"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "neighboringAlternative": "scalp_active",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": [
+          "Panthenol@12",
+          "Glycerin@18"
+        ],
+        "repairRoutes": [
+          "Hydrolyzed Wheat Protein@10"
+        ],
+        "sharedConditioningRoutes": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@15",
+          "Glyceryl Oleate@7"
+        ],
+        "limitation": "Blind verdict unchanged; no lengths-care claim to test."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Explicit sensitive-scalp claim exists; it fails only on the formula half.",
+      "decisionTrace": "Primary: claim direction sensitive scalp ('für empfindliche Kopfhaut & normales Haar', moderate). Formula compatible: no - scalpComfortTarget not_targeted (CSA fails). Other claims: 'reinigt und pflegt besonders sanft' (mildness, not a focus, 7.2). Reason: no specialist focus with a coherent claim-plus-formula case -> general.",
+      "rationale": "general (moderate): the only specialist claim is formula-incompatible.",
+      "ruleIds": [
+        "7.2",
+        "SC1",
+        "CSA",
+        "N-ALT"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": [],
+      "decisionTrace": "Empty default considered and kept; no distinct secondary positioning.",
+      "rationale": "[] (high).",
+      "ruleIds": [
+        "Section 8"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "regular (high): no frequency, reset or dandruff trigger; directions 'In das feuchte Haar einmassieren. Gründlich ausspülen.'",
+      "ruleIds": [
+        "Section 9",
+        "F-TRACE"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "not_targeted (high). SC1 met ('für empfindliche Kopfhaut & normales Haar', manufacturer_de, moderate, with the name word 'Sensitiv'), but CSA fails: no listed E4 route is prominent (Glyceryl Oleate@7, Panthenol@12, Niacinamide@13, Glycerin@18 all after Parfum@6) and MB is excluded by the prominent strong anionic Sodium Laureth Sulfate@2. No prominent unlisted route candidate (prominent zone holds only Aqua, SLES, Cocamidopropyl Betaine, Sodium Chloride, Citric Acid).",
+      "ruleIds": [
+        "Section 10",
+        "SC1",
+        "CSA",
+        "MB",
+        "E4"
+      ]
+    },
+    "primary": {
+      "target": "ordinary",
+      "confidence": "moderate",
+      "rationale": "S-ORDINARY way 4: the claimed sensitive target fails S-SENSITIVE on the formula gate (scalpComfortTarget not_targeted; no prominent comfort route; no MB) and nothing else passes -> ordinary with review_specialist_gate_failed. Confidence moderate (way 4)."
+    },
+    "secondary": null,
+    "rct": [],
+    "notes": [],
+    "extraFlags": [
+      "review_specialist_gate_failed: sensitive - formula gate failed (scalpComfortTarget not_targeted: CSA has no prominent listed E4 route and MB is excluded by Sodium Laureth Sulfate@2; comfort routes Panthenol@12/Niacinamide@13 are after Parfum@6); no unlisted_route_candidate in the prominent zone"
+    ],
+    "uncertainties": [
+      "'für empfindliche Kopfhaut & normales Haar' could be read as a hair-type style attribute rather than a claim unit. Then no SC1 -> ordinary via way 1 (no review flag). Chosen: claim unit (manufacturer bullet with 'für …'), which routes to review (P0)."
+    ]
+  },
+  "VS07": {
+    "identity": {
+      "brand": "Sante (LOGOCOS Naturkosmetik)",
+      "productName": "SANTE Sensitive Care Shampoo Probiotika + 3-fach Protein Komplex, 250 ml"
+    },
+    "claims": [
+      {
+        "unit": "Product name 'Sensitive Care Shampoo Probiotika + 3-fach Protein Komplex'",
+        "source": "name",
+        "grade": "high",
+        "reading": "'Sensitive' non-scalp name word; '3-fach Protein Komplex' and 'Probiotika' are ingredient names, not roles (F7 step 1 names no role)"
+      },
+      {
+        "unit": "Für sensibles Haar und empfindliche Kopfhaut",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "E2 sensitive claim unit"
+      },
+      {
+        "unit": "… hochwirksame Pflegeformel für sensible Kopfhaut …",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "E2 sensitive"
+      },
+      {
+        "unit": "Reduziert Spannungs- & Trockenheitsgefühle und unterstützt den natürlichen pH-Wert der Kopfhaut.",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "E2 dry-scalp unit (tension/dryness of the scalp)"
+      },
+      {
+        "unit": "Wohltuend für die Kopfhaut | Fördert den Erhalt einer intakten Hautbarriere | Hält den natürlichen pH-Wert der Kopfhaut in Balance",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "outside the E2 lexicon; noted"
+      },
+      {
+        "unit": "Der 3-fach Protein Komplex stärkt, pflegt & schützt das Haar … Der hydratisierende Pflege-Komplex füllt & baut das Haar auf …",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "lengths repair claim (strengthen/rebuild); proteins @13-15 present; 'Probiotika' -> Lactococcus Ferment Lysate@9"
+      },
+      {
+        "unit": "… pflegt die Haare besonders sanft, ohne zu beschweren.",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "never lowers weight (6.5)"
+      },
+      {
+        "unit": "Directions: conditioner afterwards",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "no usage trigger"
+      }
+    ],
+    "reconciliation": [
+      "focusPrimary: general (provisional) -> repair: F7 - scalp_active formula-incompatible (not targeted), so the compatible lengths-care role (repair claim + blind repair_supported protein cluster) is primary.",
+      "scalpComfortTarget: not_targeted unchanged (CSA fails).",
+      "usageRole: regular unchanged.",
+      "Formula properties unchanged."
+    ],
+    "counter": {
+      "cleansingStrength": "Defining anionic is an alkyl sulfate at position 2.",
+      "conditioningLevel": "No cationic polymer or lipid; arginate late (argues low).",
+      "weightPotential": "Two families (proteins + cationic arginate, W2).",
+      "dandruffSupport": "none"
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "moderate",
+      "neighboringAlternative": "general",
+      "careDirection": {
+        "verdict": "repair_supported",
+        "moistureRoutes": [],
+        "repairRoutes": [
+          "Hydrolyzed Corn Protein@13",
+          "Hydrolyzed Wheat Protein@14",
+          "Hydrolyzed Soy Protein@15",
+          "Arginine@10"
+        ],
+        "sharedConditioningRoutes": [
+          "PCA Ethyl Cocoyl Arginate@19"
+        ],
+        "limitation": "Protein-only cluster, no deposition polymer or lipid; moisture claim ('hydratisierend') has no listed humectant route, so moisture is not supported."
+      },
+      "claimRole": "candidate",
+      "counterSignal": "Sensitive-scalp positioning dominates the copy but is formula-incompatible; repair support is light (hydrolysates only).",
+      "decisionTrace": "Primary: claims sensitive/dry scalp (moderate) and lengths repair ('stärkt … baut das Haar auf', moderate). F7 step 1: the name names no role ('Sensitive' non-scalp word; protein complex is an ingredient). Step 2: scalp_active is not formula-compatible (scalpComfortTarget not_targeted, CSA fails) -> lengths-care role primary if compatible: repair, care verdict repair_supported (blind). Compatible route: three hydrolysed proteins @13-15. Reason: F7 step 2 fallback.",
+      "rationale": "repair (moderate): repair claim graded moderate on a protein-cluster formula; neighbor general because the cluster is light.",
+      "ruleIds": [
+        "F7",
+        "7.3",
+        "F1",
+        "CL-SRC",
+        "N-ALT"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "moisture"
+      ],
+      "decisionTrace": "Empty default considered and kept. scalp_active fails formula compatibility; moisture ('hydratisierend') has no independent listed humectant route (F3).",
+      "rationale": "[] (moderate).",
+      "ruleIds": [
+        "Section 8",
+        "F3",
+        "N-ALT"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "regular (high): no U2, reset or dandruff trigger.",
+      "ruleIds": [
+        "Section 9",
+        "F-TRACE"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "not_targeted (high). SC1 met (sensitive and dry-scalp units, manufacturer_de, moderate), but CSA fails: no listed E4 comfort or humectant/refatting route anywhere, MB excluded by Sodium Coco-Sulfate@2 (prominent alkyl sulfate). Prominent unlisted candidates Aloe Barbadensis Leaf Juice@6, Lactococcus Ferment Lysate@9, Arginine@10 do not count (closed lists; rejected by R18).",
+      "ruleIds": [
+        "Section 10",
+        "SC1",
+        "CSA",
+        "MB",
+        "E4",
+        "R18"
+      ]
+    },
+    "primary": {
+      "target": "ordinary",
+      "confidence": "moderate",
+      "rationale": "S-ORDINARY way 4: claimed sensitive and dry targets fail their formula gates (scalpComfortTarget not_targeted; no prominent comfort or humectant route; no MB); nothing passes -> ordinary with review_specialist_gate_failed. Confidence moderate."
+    },
+    "secondary": null,
+    "rct": [],
+    "notes": [],
+    "extraFlags": [
+      "review_specialist_gate_failed: sensitive and dry - formula gates failed (CSA: no listed E4 route, MB excluded by Sodium Coco-Sulfate@2); unlisted_route_candidate:Aloe Barbadensis Leaf Juice; unlisted_route_candidate:Lactococcus Ferment Lysate; unlisted_route_candidate:Arginine"
+    ],
+    "uncertainties": [
+      "focusPrimary repair vs general: the repair claim is strengthening/rebuilding wording on a hydrolysate-only formula; alternative general (nonspecific).",
+      "Dry-scalp unit 'Reduziert Spannungs- & Trockenheitsgefühle …' read as E2 dry; if not, only the sensitive target fails. Projection unchanged."
+    ]
+  },
+  "VS08": {
+    "identity": {
+      "brand": "ISANA",
+      "productName": "ISANA MED Shampoo Totes Meer, 200 ml"
+    },
+    "claims": [
+      {
+        "unit": "Das ISANA MED SHAMPOO ist eine Spezialentwicklung, die empfindliche und juckende Kopfhaut beruhigt.",
+        "source": "pack_back",
+        "grade": "moderate",
+        "reading": "E2 sensitive claim unit ('beruhigt … Kopfhaut')"
+      },
+      {
+        "unit": "juckreizlindernder Wirkstoff-Komplex",
+        "source": "pack_back",
+        "grade": "moderate",
+        "reading": "E2 sensitive (Juckreiz/lindert); no named INCI to map"
+      },
+      {
+        "unit": "Schutz vor Austrocknung für Kopfhaut & Haar",
+        "source": "pack_back",
+        "grade": "moderate",
+        "reading": "protective wording (E2a) - not a dry claim"
+      },
+      {
+        "unit": "Original Totes Meer Salz Mineralien",
+        "source": "pack_back",
+        "grade": "moderate",
+        "reading": "Maris Sal@10 present"
+      },
+      {
+        "unit": "Kopfhaut beruhigend | empfindliche Kopfhaut | pH hautneutral | ohne Silikone",
+        "source": "manufacturer_de (Rossmann own brand)",
+        "grade": "moderate",
+        "reading": "E2 sensitive; protective wording"
+      }
+    ],
+    "reconciliation": [
+      "focusPrimary: general (provisional) -> general (final): sensitive claim present but scalp_active formula-incompatible (CSA fails); no other role claimed.",
+      "scalpComfortTarget: not_targeted unchanged (CSA fails blind).",
+      "usageRole: regular unchanged (no directions).",
+      "Formula properties unchanged."
+    ],
+    "counter": {
+      "cleansingStrength": "Single prominent buffer; early refatting ester Lauryl Lactate@4.",
+      "conditioningLevel": "If Lauryl Lactate@4 is a payload_lipid, C2 is met (-> high).",
+      "weightPotential": "Payload_lipid reading of Lauryl Lactate@4 would establish W-RICH (-> high neighbor); moderate reset.",
+      "dandruffSupport": "none"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "neighboringAlternative": "scalp_active",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": [
+          "Glycerin@17"
+        ],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "Guar Hydroxypropyltrimonium Chloride@5",
+          "Lauryl Lactate@4",
+          "Glycol Distearate@6"
+        ],
+        "limitation": "Blind verdict unchanged; no lengths-care claim."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Explicit sensitive/itchy-scalp positioning exists; it fails on the formula half only.",
+      "decisionTrace": "Primary: claim direction sensitive/itchy scalp (pack back, moderate). Formula compatible: no - scalpComfortTarget not_targeted (CSA fails: listed comfort routes Allantoin@11/Bisabolol@12 are after Parfum@7; MB excluded). No other in-scope role claimed. Reason: general fallback.",
+      "rationale": "general (moderate): the only specialist claim is formula-incompatible.",
+      "ruleIds": [
+        "7.2",
+        "SC1",
+        "CSA",
+        "N-ALT"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": [],
+      "decisionTrace": "Empty default considered and kept; no distinct secondary positioning.",
+      "rationale": "[] (high).",
+      "ruleIds": [
+        "Section 8"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "regular (high): no directions captured, no frequency/reset/dandruff wording.",
+      "ruleIds": [
+        "Section 9",
+        "F-TRACE"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "not_targeted (high). SC1 met ('… die empfindliche und juckende Kopfhaut beruhigt', pack back, moderate), but CSA fails: no listed E4 route is prominent (Allantoin@11, Bisabolol@12, Glycerin@17 all after Parfum@7), MB excluded by Sodium Laureth Sulfate@2. Prominent Lauryl Lactate@4 is unlisted (rejected by R18). Counter-signal: Menthol@8 (just after Parfum, not prominent).",
+      "ruleIds": [
+        "Section 10",
+        "SC1",
+        "CSA",
+        "MB",
+        "E4",
+        "R18"
+      ]
+    },
+    "primary": {
+      "target": "ordinary",
+      "confidence": "moderate",
+      "rationale": "S-ORDINARY way 4: the claimed sensitive target fails S-SENSITIVE on the formula gate (not_targeted; no prominent comfort route; no MB); nothing else claimed -> ordinary with review_specialist_gate_failed. Confidence moderate."
+    },
+    "secondary": null,
+    "rct": [],
+    "notes": [],
+    "extraFlags": [
+      "review_specialist_gate_failed: sensitive - formula gate failed (CSA: listed comfort routes Allantoin@11/Bisabolol@12 and humectant Glycerin@17 only after Parfum@7; MB excluded by Sodium Laureth Sulfate@2); no unlisted_route_candidate named because no single unlisted prominent ingredient would make both CSA and the comfort-route clause pass (Lauryl Lactate@4 would be refatting only)"
+    ],
+    "uncertainties": [
+      "Lauryl Lactate@4 family (carried from the formula pass): weak_refatter chosen; payload_lipid alternative recorded through the conditioning and weight neighbors (both high), which drive the T4 flags for fine and normal.",
+      "Whether to name unlisted_route_candidate:Lauryl Lactate in the S-FAIL detail: not named, because it would satisfy CSA's refatting list at most and S-SENSITIVE would still fail its comfort-route/MB clause (the rule names a candidate only when the gate fails solely for its absence)."
+    ]
+  },
+  "VS09": {
+    "identity": {
+      "brand": "Balea PROFESSIONAL (dm-Eigenmarke)",
+      "productName": "Balea PROFESSIONAL Shampoo Kopfhaut Sensitive"
+    },
+    "claims": [
+      {
+        "unit": "Product name 'Shampoo Kopfhaut Sensitive'",
+        "source": "name",
+        "grade": "high",
+        "reading": "E2 sensitive ('Kopfhaut Sensitive') in the exact name"
+      },
+      {
+        "unit": "Beruhigendes Shampoo für empfindliche Kopfhaut",
+        "source": "manufacturer_de (dm own brand)",
+        "grade": "moderate",
+        "reading": "E2 sensitive"
+      },
+      {
+        "unit": "Kann Juckreiz und Spannungsgefühle mildern",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "E2 sensitive (Juckreiz)"
+      },
+      {
+        "unit": "Das Shampoo Kopfhaut Sensitive … wurde speziell für die Bedürfnisse von sensibler und trockener Kopfhaut entwickelt.",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "E2 sensitive + E2 dry claim unit (counts for both, E2a)"
+      },
+      {
+        "unit": "Mit Panthenol und Weißer-Tee-Extrakt",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "Panthenol@11, Camellia Sinensis Leaf Extract@13 present"
+      },
+      {
+        "unit": "Das Haar wird sanft gepflegt und erhält einen seidigen Glanz. | Haartyp: glanzloses Haar",
+        "source": "manufacturer_de",
+        "grade": "moderate",
+        "reading": "shine outcome / listing attribute; no independent positioned route"
+      }
+    ],
+    "reconciliation": [
+      "focusPrimary: general (provisional) -> scalp_active: 'Kopfhaut Sensitive' in the name + targeted.",
+      "scalpComfortTarget: not_targeted (provisional) -> targeted: SC1 (name high) + CSA via listed prominent routes (blind).",
+      "usageRole: regular unchanged (no trigger wording).",
+      "Formula properties unchanged."
+    ],
+    "counter": {
+      "cleansingStrength": "none material (three prominent buffers).",
+      "conditioningLevel": "Guar@14 and pearlizer@16 late in the prominent zone; no silicone/lipid.",
+      "weightPotential": "Two families (guar + keratin, W2).",
+      "dandruffSupport": "none"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [
+          "Hydrogenated Starch Hydrolysate@2",
+          "Glycerin@5",
+          "Panthenol@11"
+        ],
+        "repairRoutes": [
+          "Hydrolyzed Keratin@12"
+        ],
+        "sharedConditioningRoutes": [
+          "Guar Hydroxypropyltrimonium Chloride@14"
+        ],
+        "limitation": "Chosen focus is not a repair/moisture decision; blind verdict moisture_supported recorded."
+      },
+      "claimRole": "candidate",
+      "counterSignal": "A shine/care outcome for the lengths ('seidigen Glanz') competes weakly.",
+      "decisionTrace": "Primary: claim direction sensitive (and dry) scalp; 'Kopfhaut Sensitive' is in the exact product name (high). F7 step 1: role named in the name -> scalp_active, formula-compatible (scalpComfortTarget targeted). Route: listed prominent comfort routes Allantoin@8, Bisabolol@9, Panthenol@11.",
+      "rationale": "scalp_active (high): scalp role in the name, targeted via listed prominent comfort routes.",
+      "ruleIds": [
+        "F7",
+        "7.2",
+        "SC1",
+        "CSA"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "shine"
+      ],
+      "decisionTrace": "Empty default considered and kept. Shine: 'erhält einen seidigen Glanz' is a care outcome and 'Haartyp: glanzloses Haar' a listing attribute; the only route would be the shared guar conditioning (F2), and pH adjusters cannot create shine (F4).",
+      "rationale": "[] (moderate).",
+      "ruleIds": [
+        "Section 8",
+        "F2",
+        "F4",
+        "N-ALT"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "regular (high): no U2, reset or dandruff trigger.",
+      "ruleIds": [
+        "Section 9",
+        "F-TRACE"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "targeted (high). SC1: name 'Kopfhaut Sensitive' (high) plus manufacturer units 'Beruhigendes Shampoo für empfindliche Kopfhaut', 'Kann Juckreiz … mildern' (moderate). CSA route used: listed prominent E4 routes (comfort Allantoin@8, Bisabolol@9, Panthenol@11; humectant Glycerin@5, Panthenol@11). MB not met (SLES@3). No cooling, essential-oil or strong-cleansing counter-signal.",
+      "ruleIds": [
+        "Section 10",
+        "SC1",
+        "CSA",
+        "MB",
+        "E4"
+      ]
+    },
+    "primary": {
+      "target": "sensitive",
+      "confidence": "high",
+      "rationale": "S-SENSITIVE passes: E2 sensitive claim in the exact name (high) + targeted + prominent comfort route Allantoin@8/Bisabolol@9/Panthenol@11. S-PRIMARY: sensitive is named in the product name. cleansingStrength moderate -> no review. Confidence = min(positioning high, scalpComfortTarget high)."
+    },
+    "secondary": {
+      "target": "dry",
+      "confidence": "moderate",
+      "rationale": "S-DRY passes: E2 dry claim unit 'speziell für die Bedürfnisse von sensibler und trockener Kopfhaut entwickelt' (manufacturer_de, moderate) + targeted + prominent humectant route Glycerin@5/Panthenol@11. Not a dandruff product; sensitive+dry permitted (S-SECONDARY). Confidence = min(positioning moderate, scalpComfortTarget high)."
+    },
+    "rct": [],
+    "notes": [],
+    "uncertainties": [
+      "Secondary dry rests on one unit that also names the sensitive state (E2a counts it for both). Alternative: treat as part of the primary positioning -> no secondary (more conservative)."
+    ]
+  }
+}

@@ -1,0 +1,307 @@
+{
+  "blindId": "VS03",
+  "identity": {
+    "brand": "Salthouse",
+    "productName": "Salthouse Anti Juckreiz (Totes Meer Therapie Anti-Juckreiz Shampoo)",
+    "packSize": "250 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "5f982bf87555a931d4def50368197813a82e944030a1c2e9d63dff77fa1d141e",
+    "normalization": "No split entries; 'Maris Sal (Dead Sea Salt)' one entry; normalized positions = packet positions 1-16.",
+    "completeness": "complete (tier 2, stage-A packet)",
+    "e3ProminenceCutoff": "No Parfum; E3 fallback Sodium Benzoate@8; prominent 1-7."
+  },
+  "formulaPassReference": {
+    "file": "/Users/nick/AI_work/hair_conscierge/.worktrees/shampoo-v162/plans/shampoo-v162/test/kit/lane-b/out/formula-pass/VS03.json",
+    "note": "hash-pinned blind record, not edited"
+  },
+  "claimGrading": [
+    "manufacturer_de: moderate (claims and directions).",
+    "Rossmann and dm retailer copy: low (corroboration only).",
+    "Product name 'Anti Juckreiz': names itch but not the scalp; not relied on as a high-graded scalp claim (E1/E2); the qualifying units are the manufacturer's (moderate)."
+  ],
+  "reconciliation": [
+    "focusPrimary general -> scalp_active: manufacturer sensitive/itch units ('beruhigend bei juckender und empfindlicher Kopfhaut') plus targeted.",
+    "usageRole regular -> frequent: 'Für die tägliche Haarwäsche geeignet' (manufacturer, moderate; U2); cleansing not strong.",
+    "scalpComfortTarget not_targeted -> targeted: SC1 positioning revealed; CSA via Laureth-9@3 (Polidocanol, v1.6.2 L3) and Urea@6 already met blind.",
+    "Claim-to-INCI: 'Polidocanol' -> Laureth-9@3 (E4 L3); 'Totes Meer Mineralien' -> Maris Sal@10; 'Urea und Panthenol' -> Urea@6, Panthenol@14; 'Menthol-Komplex'/'Minzöl' -> Menthol@12, Mentha Arvensis Leaf Oil@16. No conflict.",
+    "Formula-only properties unchanged."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic is the ether-type Sodium Laureth Sulfate@2, buffered by prominent Cocamidopropyl Betaine@5, no reinforcing strong anionic (settled C1 core). Laureth-9@3 (Polidocanol) is an alcohol ethoxylate in no named C3 class, so it is read neither as cleansing route nor buffer; reading it as a buffer would not change the value. Betaine after NaCl@4 is a common pattern and not a material counter-signal.",
+      "ruleIds": [
+        "C1",
+        "C3",
+        "C4"
+      ],
+      "counterSignal": "Single prominent buffer (CAPB@5) listed after NaCl@4; Laureth-9 in no C3 class (does not change the value).",
+      "blindToFinal": "unchanged (formula-only property; claims may not move it, 3.2)"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: one meaningful conditioning system (cationic Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@7, prominent) plus humectants (Urea@6, Glycerin@9, Panthenol@14). C2 not met: no silicone, no payload_lipid, no pearlizing/fatty route. Neighbor low: the guar is the only substantive route.",
+      "ruleIds": [
+        "C2",
+        "Section 5 anchors",
+        "N-ALT"
+      ],
+      "counterSignal": "Guar is the only substantive route (neighbor low).",
+      "blindToFinal": "unchanged (formula-only property; claims may not move it, 3.2)"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "evidence": {
+        "cationic_polymer": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@7"
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": [
+          "Sodium Laureth Sulfate@2 (strong anionic, ether type)",
+          "Cocamidopropyl Betaine@5 (amphoteric)"
+        ],
+        "humectantContext": [
+          "Urea@6",
+          "Glycerin@9",
+          "Panthenol@14"
+        ],
+        "excluded": [
+          "Laureth-9@3 (alcohol ethoxylate; no deposition family)",
+          "Menthol@12 (cooling agent)",
+          "Mentha Arvensis Leaf Oil@16 (essential oil, 6.4)",
+          "Maris Sal (Dead Sea Salt)@10, Sodium Chloride@4 (salts)",
+          "Citric Acid@11, Lactic Acid@15 (pH)"
+        ],
+        "unresolved": []
+      },
+      "wLineRecord": {
+        "wLine": "Sodium Benzoate@8",
+        "wLineClasses": [
+          "preservative_or_capped_active"
+        ],
+        "cap": "e3Point Sodium Benzoate@8",
+        "alphabeticalRun": "none",
+        "skippedCandidates": [],
+        "codes": [],
+        "plausibility": "No candidate before the cap; the E3 marker Sodium Benzoate@8 is itself the earliest candidate: (i) Sodium Laureth Sulfate@2 before it; (ii) nothing between it and the cap. W-line = cap.",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light",
+      "persistence": "low",
+      "resetCapacity": "moderate",
+      "counterevidence": "The guar is prominent (@7), so a light film is possible.",
+      "whyThisBand": "One deposition family only (a single cationic guar), no silicone, no lipid, no refatter, no protein or film former, facing a buffered SLES chassis.",
+      "whyNotNeighborBand": "Not moderate: a single deposition family without a reinforcing route, facing moderate reset, stays low (W2 'no polymer floor'); nothing converges with the guar.",
+      "confidenceLimitingFactor": "None material; complete tier-2 formula with a single light route.",
+      "rationale": "Low (6.6 low anchor: a single light conditioning polymer with moderate reset). W-line = cap Sodium Benzoate@8; no payload_lipid to gate.",
+      "ruleIds": [
+        "6.3",
+        "6.6",
+        "W2",
+        "W-LINE"
+      ],
+      "counterSignal": "None material; single light family.",
+      "blindToFinal": "unchanged (formula-only property; claims may not move it, 3.2)",
+      "formulaIdentifiers": {
+        "fingerprint": "5f982bf87555a931d4def50368197813a82e944030a1c2e9d63dff77fa1d141e",
+        "sourceTier": 2,
+        "completeness": "complete",
+        "captureDate": "not given in the stage-A packet"
+      }
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@7"
+        ],
+        "limitation": "Scalp role; hydration claims are about the scalp, not the lengths."
+      },
+      "claimRole": "candidate",
+      "counterSignal": "Menthol cooling (not prominent) and medically adjacent wording (Neurodermitis, Psoriasis) are outside scope; no lengths claim competes.",
+      "decisionTrace": "Claim direction: itchy/sensitive/dry scalp (manufacturer, moderate). Formula compatible: targeted (CSA via Laureth-9@3, Urea@6). Route: Laureth-9@3, Urea@6. Decision: 7.2 sensitive/itchy/dry-feeling scalp with targeted -> scalp_active.",
+      "rationale": "scalp_active: explicit itch/sensitive-scalp product with comfort routes.",
+      "ruleIds": [
+        "7.2",
+        "SC1",
+        "CSA"
+      ],
+      "blindToFinal": "general -> scalp_active"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "decisionTrace": "Empty default considered and kept: no lengths-care claim from a moderate/high source (retailer 'Wirkung: Pflege, Feuchtigkeit' is low and a listing attribute).",
+      "rationale": "No secondary candidate.",
+      "counterSignal": "None.",
+      "ruleIds": [
+        "Section 8",
+        "CL-SRC"
+      ],
+      "blindToFinal": "unchanged []"
+    },
+    "usageRole": {
+      "value": "frequent",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "explicit_frequent_non_strong",
+      "triggerEvidence": [
+        "manufacturer_de (moderate): 'Für die tägliche Haarwäsche geeignet.'"
+      ],
+      "losingTriggers": [],
+      "rationale": "Default regular considered; trigger code explicit_frequent_non_strong; evidence: 'tägliche Haarwäsche' (U2); cleansingStrength moderate (high confidence).",
+      "counterSignal": "None.",
+      "ruleIds": [
+        "Section 9",
+        "U2"
+      ],
+      "blindToFinal": "regular -> frequent"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "csaRoute": "Listed prominent routes: comfort Laureth-9@3 (= Polidocanol, v1.6.2 L3), Urea@6; humectant Urea@6. MB not used (excluded by Sodium Laureth Sulfate@2).",
+      "rationale": "targeted: SC1 units 'Anti-Juckreiz Shampoo – beruhigend bei juckender und empfindlicher Kopfhaut' and 'speziell für die Bedürfnisse von juckender, trockener und empfindlicher Kopfhaut entwickelt' (manufacturer, moderate) plus CSA via prominent listed comfort routes. Cooling agents Menthol@12 and Mentha Arvensis Leaf Oil@16 are not prominent, so they do not cap confidence (CSA). 'pH-hautneutral', 'Hautverträglichkeit' are protective only.",
+      "counterSignal": "Menthol/mint cooling present (not prominent).",
+      "ruleIds": [
+        "Section 10",
+        "CSA",
+        "SC1",
+        "E4"
+      ],
+      "blindToFinal": "not_targeted -> targeted"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no Piroctone Olamine, Climbazole, Selenium Sulfide or Selenium Disulfide in the complete INCI (Section 11).",
+      "ruleIds": [
+        "Section 11"
+      ],
+      "counterSignal": "None.",
+      "blindToFinal": "unchanged (formula-only property; claims may not move it, 3.2)"
+    }
+  },
+  "projection": {
+    "status": "proposal",
+    "thicknessFit": {
+      "fine": "ideal",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFitConfidence": {
+      "fine": "high",
+      "normal": "high",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": "T1 with W=low, C=moderate; T6 applies to scalp-concern targets (no not_suited fit to lift); T4 checked with N-ALT neighbors after T6. Claims about hair type never change fit (T2).",
+    "weight": "light",
+    "weightConfidence": "high",
+    "weightRationale": "W-LIVE: weightPotential low -> light, 1:1, written to every row.",
+    "scalpTargets": {
+      "primary": {
+        "target": "sensitive",
+        "confidence": "moderate",
+        "rationale": "S-SENSITIVE passes: E2 sensitive units (manufacturer, moderate) and formula targeted + prominent comfort routes Laureth-9@3, Urea@6. S-PRIMARY: the name word 'Anti Juckreiz' is read as naming no scalp, so the order sensitive, dry decides -> sensitive (same result if the name counted). cleansing moderate -> no strong-cleansing flag. Confidence = min(E1 moderate, targeted high) = moderate."
+      },
+      "secondary": {
+        "target": "dry",
+        "confidence": "moderate",
+        "rationale": "S-DRY passes: E2 dry unit 'für die Bedürfnisse von juckender, trockener und empfindlicher Kopfhaut' (manufacturer, moderate; a unit naming two non-dandruff states counts for both, E2a) and formula targeted + prominent humectant route Urea@6. S-SECONDARY: one secondary, not oily+dry, no dandruff path. Confidence moderate."
+      }
+    },
+    "researchCombinationTargets": [],
+    "researchCombinationConfidence": null,
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength moderate -> regular; D1 false. I3 recomputed with neighbor 'none'.",
+    "explicitResetPositioning": false,
+    "explicitResetRationale": "D1 false: no 'Tiefenrein', 'Deep Clean', 'Clarifying Shampoo' or 'Detox-Reinigung' stem in the name or manufacturer/pack claims, and no occasional-use direction.",
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserListingConfidence": "high",
+    "deepCleanserRationale": "D2 not met: D1 false and cleansingStrength not strong; no deep-cleanser record applies (deepCleanserRecord not applicable).",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "trocken",
+        "scalp_route": "dry",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "trocken",
+        "scalp_route": "dry",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "trocken",
+        "scalp_route": "dry",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [],
+    "catalogDependent": "review_live_value_differs is resolved by the orchestrator after freeze (lanes never see live rows); no deep-cleanser record id needed."
+  },
+  "selfCheck": "Fingerprint matches the frozen packet (asserted by the builder); formula-pass judged with claims hidden and is hash-pinned, not edited; no ingredient, family count or position window assigned a band (the W-line gated only payload_lipid legs); W-line derived exactly per W-LINE with skipped candidates recorded; depositionLoad, persistence and resetCapacity present with rationales; counterevidence and whyNotNeighborBand specific (W2 where it applies); confidence names its limiting uncertainty; neighbors follow N-ALT; projection fields derived mechanically (T1/T6/T4, W-LIVE, I1/I3, 13.7, 13.8); no catalog or live value used.",
+  "uncertainties": [
+    "'Schuppenflechte' (psoriasis) in 'Hautproblem: ... Schuppenflechte' and 'Basispflege für ... Psoriasis (Schuppenflechte)': read as a diagnosed skin disease (out of scope), not as an E2 dandruff claim ('Schuppen' as the product's problem). Alternative: a dandruff unit; S-DANDRUFF would still fail (dandruffSupport not_supported) and those units are not adjacent to the sensitive/dry units, so the projection would not change.",
+    "Name word 'Anti Juckreiz': 'Juckreiz' is a sensitive lexicon term but the name does not name the scalp; graded via the manufacturer units (moderate) instead of high. Alternative: high positioning confidence; no row change.",
+    "Medically adjacent wording (Neurodermitis, Psoriasis, 'Lokalanästhetikum') is outside scope and not used; no user copy implied (Section 16).",
+    "Intensity regular vs expected gentle for irritationen and trocken -> amber rows (I2); no I3 flag (cleansing high confidence)."
+  ]
+}

@@ -1,0 +1,435 @@
+{
+ "batches": [
+  "W1",
+  "W2",
+  "W3",
+  "W4"
+ ],
+ "products": 74,
+ "changed": [
+  {
+   "slot": "A15b",
+   "name": "Hask Repair + Argan Oil Shampoo",
+   "recommended": true,
+   "needsResearch": false,
+   "needsResearchLanes": [],
+   "run1NeedsResearch": "not researched",
+   "delta": {
+    "added": [
+     [
+      "coarse",
+      "normal"
+     ],
+     [
+      "fine",
+      "normal"
+     ],
+     [
+      "normal",
+      "normal"
+     ]
+    ],
+    "removed": [],
+    "changed": []
+   },
+   "combination": [],
+   "combinationRun1": null,
+   "laneFlags": []
+  },
+  {
+   "slot": "A21",
+   "name": "ISANA MED Shampoo Totes Meer, 200 ml",
+   "recommended": false,
+   "needsResearch": false,
+   "needsResearchLanes": [],
+   "run1NeedsResearch": false,
+   "delta": {
+    "added": [],
+    "removed": [],
+    "changed": [
+     [
+      [
+       "coarse",
+       "normal"
+      ],
+      [
+       "regular",
+       "light",
+       "acceptable"
+      ],
+      [
+       "regular",
+       "moderate",
+       "acceptable"
+      ]
+     ],
+     [
+      [
+       "fine",
+       "normal"
+      ],
+      [
+       "regular",
+       "light",
+       "ideal"
+      ],
+      [
+       "regular",
+       "moderate",
+       "acceptable"
+      ]
+     ],
+     [
+      [
+       "normal",
+       "normal"
+      ],
+      [
+       "regular",
+       "light",
+       "ideal"
+      ],
+      [
+       "regular",
+       "moderate",
+       "ideal"
+      ]
+     ]
+    ]
+   },
+   "combination": [],
+   "combinationRun1": [],
+   "laneFlags": []
+  },
+  {
+   "slot": "A29",
+   "name": "Monday Haircare Volume Kraft & Fülle Shampoo",
+   "recommended": true,
+   "needsResearch": false,
+   "needsResearchLanes": [],
+   "run1NeedsResearch": false,
+   "delta": {
+    "added": [
+     [
+      "fine",
+      "normal"
+     ]
+    ],
+    "removed": [],
+    "changed": [
+     [
+      [
+       "coarse",
+       "normal"
+      ],
+      [
+       "gentle",
+       "heavy",
+       "ideal"
+      ],
+      [
+       "gentle",
+       "moderate",
+       "acceptable"
+      ]
+     ],
+     [
+      [
+       "normal",
+       "normal"
+      ],
+      [
+       "gentle",
+       "heavy",
+       "acceptable"
+      ],
+      [
+       "gentle",
+       "moderate",
+       "ideal"
+      ]
+     ]
+    ]
+   },
+   "combination": [],
+   "combinationRun1": [],
+   "laneFlags": []
+  },
+  {
+   "slot": "A45",
+   "name": "schauma Shampoo Repair & Pflege",
+   "recommended": false,
+   "needsResearch": false,
+   "needsResearchLanes": [],
+   "run1NeedsResearch": false,
+   "delta": {
+    "added": [],
+    "removed": [
+     [
+      "fine",
+      "normal"
+     ]
+    ],
+    "changed": [
+     [
+      [
+       "coarse",
+       "normal"
+      ],
+      [
+       "regular",
+       "moderate",
+       "acceptable"
+      ],
+      [
+       "regular",
+       "heavy",
+       "ideal"
+      ]
+     ],
+     [
+      [
+       "normal",
+       "normal"
+      ],
+      [
+       "regular",
+       "moderate",
+       "ideal"
+      ],
+      [
+       "regular",
+       "heavy",
+       "acceptable"
+      ]
+     ]
+    ]
+   },
+   "combination": [],
+   "combinationRun1": [],
+   "laneFlags": [
+    "weight ('coarse', 'normal'): A heavy / B moderate -> heavy",
+    "row ('fine', 'normal') only in lane B -> dropped",
+    "weight ('normal', 'normal'): A heavy / B moderate -> heavy"
+   ]
+  },
+  {
+   "slot": "A47",
+   "name": "Schwarzkopf GLISS Shampoo Liquid Silk",
+   "recommended": false,
+   "needsResearch": false,
+   "needsResearchLanes": [],
+   "run1NeedsResearch": false,
+   "delta": {
+    "added": [],
+    "removed": [],
+    "changed": [
+     [
+      [
+       "coarse",
+       "normal"
+      ],
+      [
+       "regular",
+       "light",
+       "acceptable"
+      ],
+      [
+       "regular",
+       "moderate",
+       "acceptable"
+      ]
+     ],
+     [
+      [
+       "fine",
+       "normal"
+      ],
+      [
+       "regular",
+       "light",
+       "ideal"
+      ],
+      [
+       "regular",
+       "moderate",
+       "acceptable"
+      ]
+     ],
+     [
+      [
+       "normal",
+       "normal"
+      ],
+      [
+       "regular",
+       "light",
+       "ideal"
+      ],
+      [
+       "regular",
+       "moderate",
+       "ideal"
+      ]
+     ]
+    ]
+   },
+   "combination": [],
+   "combinationRun1": [],
+   "laneFlags": []
+  },
+  {
+   "slot": "G03",
+   "name": "Sebamed Every-Day Shampoo",
+   "recommended": true,
+   "needsResearch": false,
+   "needsResearchLanes": [],
+   "run1NeedsResearch": false,
+   "delta": {
+    "added": [
+     [
+      "coarse",
+      "irritationen"
+     ],
+     [
+      "fine",
+      "irritationen"
+     ],
+     [
+      "normal",
+      "irritationen"
+     ]
+    ],
+    "removed": [
+     [
+      "coarse",
+      "normal"
+     ],
+     [
+      "fine",
+      "normal"
+     ],
+     [
+      "normal",
+      "normal"
+     ]
+    ],
+    "changed": []
+   },
+   "combination": [],
+   "combinationRun1": [],
+   "laneFlags": []
+  },
+  {
+   "slot": "G08",
+   "name": "Cantu Shampoo Locken Pflege",
+   "recommended": true,
+   "needsResearch": false,
+   "needsResearchLanes": [],
+   "run1NeedsResearch": false,
+   "delta": {
+    "added": [],
+    "removed": [],
+    "changed": [
+     [
+      [
+       "coarse",
+       "normal"
+      ],
+      [
+       "regular",
+       "light",
+       "acceptable"
+      ],
+      [
+       "regular",
+       "moderate",
+       "acceptable"
+      ]
+     ],
+     [
+      [
+       "fine",
+       "normal"
+      ],
+      [
+       "regular",
+       "light",
+       "ideal"
+      ],
+      [
+       "regular",
+       "moderate",
+       "acceptable"
+      ]
+     ],
+     [
+      [
+       "normal",
+       "normal"
+      ],
+      [
+       "regular",
+       "light",
+       "ideal"
+      ],
+      [
+       "regular",
+       "moderate",
+       "ideal"
+      ]
+     ]
+    ]
+   },
+   "combination": [],
+   "combinationRun1": [],
+   "laneFlags": [
+    "weight ('coarse', 'normal'): A light / B moderate -> moderate",
+    "weight ('fine', 'normal'): A light / B moderate -> moderate",
+    "weight ('normal', 'normal'): A light / B moderate -> moderate"
+   ]
+  },
+  {
+   "slot": "U1",
+   "name": "Balea PROFESSIONAL Shampoo Tiefenreinigung, 250 ml",
+   "recommended": true,
+   "needsResearch": false,
+   "needsResearchLanes": [],
+   "run1NeedsResearch": false,
+   "delta": {
+    "added": [
+     [
+      "coarse",
+      "normal"
+     ],
+     [
+      "fine",
+      "normal"
+     ],
+     [
+      "normal",
+      "normal"
+     ]
+    ],
+    "removed": [
+     [
+      "coarse",
+      "dehydriert-fettig"
+     ],
+     [
+      "fine",
+      "dehydriert-fettig"
+     ],
+     [
+      "normal",
+      "dehydriert-fettig"
+     ]
+    ],
+    "changed": []
+   },
+   "combination": [],
+   "combinationRun1": [],
+   "laneFlags": []
+  }
+ ]
+}

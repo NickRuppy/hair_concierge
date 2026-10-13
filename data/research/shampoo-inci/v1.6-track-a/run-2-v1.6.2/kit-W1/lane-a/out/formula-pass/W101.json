@@ -1,0 +1,147 @@
+{
+  "blindId": "W101",
+  "inciFingerprintSha256": "eef000f8a7dc826481f7acb578e7b176abe38a6664108469cd96bfbd4ca9a841",
+  "phase": "formula-pass (blind; stage-A packet only; no claims seen)",
+  "standard": "shampoo-classification-v1.6.2",
+  "formulaIdentity": {
+    "packSize": "250 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "Packet list already one entry per ingredient; no split synonyms to merge; normalized positions = packet positions (ID-2).",
+    "e3Point": "Parfum @20 (prominent = positions 1-19)"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "Sodium Laureth Sulfate @2 (strong anionic, ether/sulfonate type)",
+      "reinforcingRoutes": [],
+      "buffers": ["Coco-Glucoside @3 (nonionic glucoside)", "Cocamidopropyl Betaine @4 (amphoteric)"],
+      "notCleansing": ["Sorbitan Caprylate @10 (preservative booster/emulsifier, no C3 cleansing class)"]
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @9 (prominent)"],
+      "payload_lipid": ["Hydrogenated Vegetable Oil @6 (prominent; waxy/hydrogenated lipid, 6.4)"],
+      "weak_refatter": ["Glyceryl Oleate @8"],
+      "silicone": [],
+      "pearlizingFattyRoute": [],
+      "humectants": ["Erythritol @11 (not a C2 list member)", "Glycerin @12", "Panthenol @13", "Hydrolyzed Hyaluronic Acid @17", "Sodium Hyaluronate @18"]
+    },
+    "actives": ["Piroctone Olamine @15 (recognized anti-dandruff active, Section 11)"],
+    "exposure": {
+      "fragrance": "Parfum @20 (not prominent)",
+      "essentialOils": [],
+      "coolingAgents": [],
+      "otherNotes": "Tetrasodium Glutamate Diacetate @14 chelator; CI 45100 @22, CI 60730 @23 colourants"
+    },
+    "wLine": {
+      "cap": "e3Point Parfum @20",
+      "wLine": "Panthenol @13",
+      "wLineClasses": ["sub1_active"],
+      "skippedCandidates": [],
+      "alphabeticalRun": "none (longest ascending run 11-14, 4 entries)",
+      "codes": [],
+      "plausibility": "Panthenol @13: (i) SLES @2 before it; (ii) no cleansing surfactant, alkanolamide or pearlizing wax at 14-19",
+      "payloadLipidMaterial": ["Hydrogenated Vegetable Oil @6 (6 < 13)"],
+      "payloadLipidNonMaterial": []
+    },
+    "csaListedProminentRoutes": ["Panthenol @13 (comfort + humectant)", "Glycerin @12 (humectant)", "Glyceryl Oleate @8 (humectant/refatting)", "Hydrogenated Vegetable Oil @6 (hydrogenated lipid, humectant/refatting list)"],
+    "mildBase": "not met: prominent strong anionic Sodium Laureth Sulfate @2"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 ether-sulfate chassis (Sodium Laureth Sulfate @2) with two prominent buffers (Coco-Glucoside @3, Cocamidopropyl Betaine @4) and no reinforcing strong anionic (C3, C4, C1). Refatting (Glyceryl Oleate @8, Hydrogenated Vegetable Oil @6) is a counter-signal only and does not move the convention.",
+      "ruleIds": ["C3", "C4", "C1"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High: a prominent payload lipid (Hydrogenated Vegetable Oil @6) converges with a prominent cationic polymer (Guar Hydroxypropyltrimonium Chloride @9) = W-RICH rich architecture for conditioning (E3 reading), supported by weak refatter Glyceryl Oleate @8 and humectants Glycerin @12, Panthenol @13, Sodium Hyaluronate @18 (Section 5 high anchor, W-RICH). C2 itself is not met (no separate pearlizing/fatty route), and the lipid sits right after the salt, so its share is likely small; moderate is the realistic neighbor.",
+      "ruleIds": ["Section 5", "W-RICH", "C2", "E3", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @9"],
+        "payload_lipid": ["Hydrogenated Vegetable Oil @6 (material, W-line @13)"],
+        "weak_refatter": ["Glyceryl Oleate @8"],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Coco-Glucoside @3", "Cocamidopropyl Betaine @4"],
+        "humectantContext": ["Erythritol @11", "Glycerin @12", "Panthenol @13", "Hydrolyzed Hyaluronic Acid @17", "Sodium Hyaluronate @18"],
+        "excluded": ["Sorbitan Caprylate @10 (preservative booster, no deposition role)", "Tetrasodium Glutamate Diacetate @14 (chelator)"],
+        "unresolved": []
+      },
+      "depositionLoad": "moderate - one cationic guar plus a material hydrogenated lipid and a weak refatter",
+      "persistence": "moderate - hydrogenated lipid is more substantive than a liquid oil; guar is retained moderately in rinse-off",
+      "resetCapacity": "moderate - buffered C1 ether-sulfate chassis",
+      "counterevidence": "W-RICH is established for weight (material Hydrogenated Vegetable Oil @6 + guar @9) - argues toward high; but reset is not limited.",
+      "whyThisBand": "Noticeable but bounded residue is plausible from guar plus a material hydrogenated lipid (6.6 moderate anchor).",
+      "whyNotNeighborBand": "Not high: W-RICH is present but resetCapacity is moderate (effective ordinary C1 chassis), so the rich route needs limited reset and fails; the convergence route rests on one guar and one lipid listed just after the salt, which the buffered sulfate chassis plausibly offsets (W-RICH limited-reset clause). Not low: two deposition families including a material lipid make 'lightweight' an understatement (W2).",
+      "confidenceLimitingFactor": "W-RICH with moderate reset is a recorded counter-signal; true lipid share unknown",
+      "rationale": "Moderate: guar + material hydrogenated lipid (W-line Panthenol @13) give W-RICH, but the buffered SLES chassis is not limited reset, so the high anchor is not reached (6.6, W-RICH, W-LINE, W2). Neighbor high (N-ALT).",
+      "ruleIds": ["6.3", "6.6", "W-RICH", "W-LINE", "W2", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": ["Glycerin @12", "Panthenol @13", "Sodium Hyaluronate @18", "Hydrolyzed Hyaluronic Acid @17", "Erythritol @11"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Guar Hydroxypropyltrimonium Chloride @9", "Hydrogenated Vegetable Oil @6", "Glyceryl Oleate @8"],
+        "limitation": "Formula-only verdict; humectants mostly mid/late list"
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Recognized dandruff active Piroctone Olamine @15 suggests a scalp role if a dandruff claim exists",
+      "decisionTrace": "PROVISIONAL (formula-only, claims hidden): no claim direction available; formula is compatible with moisture and, with a dandruff claim, scalp_active. Placeholder general until reconciliation (3.2).",
+      "rationale": "Provisional general: focus is claim-dependent (7.2); the formula alone supports moisture_supported care direction and carries a dandruff active.",
+      "ruleIds": ["3.1", "7.2", "7.3"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["moisture"],
+      "decisionTrace": "PROVISIONAL: empty default; secondary requires distinct positioning (Section 8), not visible blind.",
+      "rationale": "Provisional empty (claim-dependent).",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "treatment",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "PROVISIONAL: default regular; treatment would fire if a moderate/high dandruff claim exists (dandruffSupport supported, U3); frequent possible with frequency wording (cleansing not strong, U2).",
+      "ruleIds": ["9", "U1", "U2", "U3"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "rationale": "PROVISIONAL (positioning hidden): formula half CSA is met via listed prominent routes Panthenol @13 (comfort), Glycerin @12, Glyceryl Oleate @8, Hydrogenated Vegetable Oil @6 (humectant/refatting); MB not met (prominent Sodium Laureth Sulfate @2). targeted only if an E2 sensitive/dry claim unit graded moderate/high exists (SC1).",
+      "ruleIds": ["10", "CSA", "MB", "SC1", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Supported: complete INCI contains Piroctone Olamine @15 (Section 11). Formula-only; whether a dandruff target projects depends on a claim (R17.3).",
+      "ruleIds": ["11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "C2 'pearlizing/fatty route': read as absent (no pearlizer, no separate fatty alcohol); Glyceryl Oleate treated as weak refatter, not a fatty route. Conditioning high rests on W-RICH instead.",
+    "Sorbitan Caprylate classed as preservative booster (no deposition, not a C3 surfactant)."
+  ]
+}

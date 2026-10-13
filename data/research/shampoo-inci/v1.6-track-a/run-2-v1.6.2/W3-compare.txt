@@ -1,0 +1,4 @@
+agreement 303/306 = 99.0% over 18 products
+DIFF W302 focusPrimary "moisture" "repair" 
+DIFF W302 focusSecondary [] ["moisture"] 
+DIFF W307 usageRole "regular" "frequent" 

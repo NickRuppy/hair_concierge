@@ -1,0 +1,32 @@
+{
+  "blindId": "W317",
+  "packSize": "300 ml",
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Betaine",
+    "Sodium Chloride",
+    "Glycerin",
+    "Hydrolyzed Wheat Protein",
+    "Argania Spinosa Kernel Oil",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Bis-(Isostearoyl/Oleoyl Isopropyl) Dimonium Methosulfate",
+    "Coco-Glucoside",
+    "Prunus Amygdalus Dulcis Flower Extract",
+    "Pisum Sativum Sprout Extract",
+    "Citric Acid",
+    "Benzoic Acid",
+    "Glycol Distearate",
+    "Hydrogenated Castor Oil",
+    "Laureth-2",
+    "Parfum",
+    "Hexyl Cinnamal",
+    "Sodium Benzoate",
+    "Phenoxyethanol"
+  ],
+  "inciFingerprintSha256": "d633b2a5de40d8c7c27d2bbaecfb9bea84a7243e5289c4f2ca815f549280804f",
+  "normalization": "Runbook step 2: canonical list items lower-cased, trimmed, whitespace collapsed, joined with '|', SHA-256; split synonym entries (e.g. 'Aqua (Water, Eau)') merged before numbering.",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "moderate"
+}

@@ -1,0 +1,27 @@
+{
+  "blindId": "W309",
+  "packSize": "200 ml",
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Glycerin",
+    "Cocamidopropyl Hydroxysultaine",
+    "Sodium Chloride",
+    "Coco-Glucoside",
+    "Glyceryl Oleate",
+    "Panthenol",
+    "Allantoin",
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+    "Hydrogenated Vegetable Glycerides Citrate",
+    "Tocopherol",
+    "Sodium Citrate",
+    "Sodium Sulfate",
+    "Citric Acid",
+    "Sodium Benzoate"
+  ],
+  "inciFingerprintSha256": "42d23057f1c7cc44bcd54e6daf5cf4f74665b06b45b7a455daba19641aa8188d",
+  "normalization": "Runbook step 2: canonical list items lower-cased, trimmed, whitespace collapsed, joined with '|', SHA-256; split synonym entries (e.g. 'Aqua (Water, Eau)') merged before numbering.",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high"
+}

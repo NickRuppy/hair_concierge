@@ -61,7 +61,11 @@ const ARCHIVE_EXCLUSIONS = new Set([
 // tests/shampoo-research-v1-6-lock.test.ts), the locked v1.6.1 package
 // (scope extended 2026-10-12; its own byte pins in
 // data/research/shampoo-inci/v1.6.1/artifact-manifest.json, enforced by
-// tests/shampoo-research-v1-6-1-lock.test.ts), and the shared top-level README,
+// tests/shampoo-research-v1-6-1-lock.test.ts), the locked v1.6.2 package
+// (scope extended 2026-10-12; byte pins in
+// data/research/shampoo-inci/v1.6.2/artifact-manifest.json, enforced by
+// tests/shampoo-research-v1-6-2-lock.test.ts), the Track A rollout data (v1.6/v1.6.2
+// research of the live catalog, its own git-tracked evidence), and the shared top-level README,
 // which is the living entry point for every version. Every other file under
 // the archive roots stays fingerprinted byte-for-byte.
 export const ARCHIVE_SCOPE_EXCLUSIONS = [
@@ -69,6 +73,9 @@ export const ARCHIVE_SCOPE_EXCLUSIONS = [
   "docs/research/shampoo-inci/v1.6/",
   "data/research/shampoo-inci/v1.6.1/",
   "docs/research/shampoo-inci/v1.6.1/",
+  "data/research/shampoo-inci/v1.6.2/",
+  "docs/research/shampoo-inci/v1.6.2/",
+  "data/research/shampoo-inci/v1.6-track-a/",
   "docs/research/shampoo-inci/README.md",
 ] as const
 

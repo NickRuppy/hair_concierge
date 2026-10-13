@@ -1,0 +1,35 @@
+{
+  "blindId": "W112",
+  "productName": "OGX Biotin & Collagen Shampoo (retailers: 'Thick & Full Biotin & Collagen Shampoo')",
+  "brand": "OGX",
+  "positioningSources": [
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Haarshampoo | Hinterlässt Volumen und ein seidiges Gefühl | Mit Vitamin B Biotin, Collagen und Weizenprotein | Nährt das Haar vom Ansatz bis zur Spitze | Mit LipiPro Shield Technolgie | Das OGX Biotin & Collagen Shampoo versorgt feines & dünnes Haar. Die reichhaltige Pflegeformel schenkt dem Haar bis zu 72 Stunden lang mehr Volumen und intensive Fülle. Die verbesserte Formel mit LipiPro Shield Technologie verleiht dem Haar einen atemberaubenden Glanz. Zudem hinterlässt das Shampoo einen verführerischen Duft. | Produkteigenschaften: Ohne Alkohol",
+      "directionsVerbatim": "Shampoo großzügig im nassen Haar verteilen und bis in die Haarspitzen aufschäumen, danach gründlich ausspülen. Anschließend Conditioner verwenden."
+    },
+    {
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Das nährstoffreiche OGX Thick & Full Biotin & Collagen Shampoo mit innovativem Vitamin B7 Biotin, wertvollem Kollagen und hydrolysiertem Weizenprotein ist ein Must-have für feines Haar. Das kräftigende Haarpflege Shampoo lässt feines und dünnes Haar sofort deutlich fülliger, dicker und gesünder aussehen und verleiht dem Haar wieder verführerischen Glanz. Das Shampoo ohne Silikone, ohne sulfathaltige Tenside und ohne Parabene mit ausgewogenem pH-Wert verleiht selbst dünnstem Haar Volumen und Glanz.",
+      "directionsVerbatim": "Shampoo im nassen Haar verteilen und bis in die Haarspitzen aufschäumen, danach gründlich ausspülen. Anschließend eine Spülung verwenden"
+    },
+    {
+      "sourceType": "retailer_mueller_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Das OGX Thick & Full + Biotin & Collagen Shampoo verleiht dem Haar ein fülligeres und voluminöseres Aussehen. Die nährstoffreiche Formel ist für die tägliche Haarwäsche bei allen Haartypen geeignet. | Formel mit Biotin und Kollagen | Verleiht dem Haar ein sichtbar volleres Erscheinungsbild | Für alle Haartypen geeignet | Ohne sulfathaltige Tenside | Die verbesserte Rezeptur dieses Shampoos kombiniert wertvolles Biotin, auch als Vitamin B7 bekannt, mit Kollagen. Diese Inhaltsstoffe sind dafür bekannt, das Haar zu ummanteln und ihm so optisch mehr Fülle zu geben. Das Haar fühlt sich nach der Anwendung griffiger an und erhält ein gesund aussehendes Volumen.",
+      "directionsVerbatim": "Shampoo großzügig im nassen Haar verteilen und bis in die Haarspitzen aufschäumen, danach gründlich ausspülen. Anschließend Conditioner verwenden."
+    },
+    {
+      "sourceType": "manufacturer_us",
+      "sourceKind": "manufacturer_foreign",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Give hair 72+ hours of volume & body with this Biotin & Collagen shampoo. This nutrient-infused formula gives you healthy hair in just 1 wash. | Formulated without: Sulfated surfactants, Parabens, Phthalates, Microplastics, Dyes | Hair type: Fine | Sizes available: 13 fl oz, 25.4 fl oz | Our new & improved formula protects hair from excessive loss of lipids & proteins which creates frizz & breakage. Now with Lipi Pro Shield™ Technology ...",
+      "directionsVerbatim": "Apply shampoo generously to wet hair. Massage into a lather through to ends. Rinse the hair thoroughly. After shampooing, follow with conditioner."
+    }
+  ]
+}

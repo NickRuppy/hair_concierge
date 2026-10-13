@@ -1,0 +1,63 @@
+{
+  "slot": "A50",
+  "productId": "7e95671b-41a7-4f5c-9188-e535e46678ba",
+  "name": "Sebamed Anti Schuppen Plus (Anti-Schuppen Shampoo PLUS)",
+  "brand": "Sebamed",
+  "packSize": "200 ml",
+  "gtins": [
+    "4103040051677"
+  ],
+  "sources": [
+    {
+      "url": "https://sebamed.de/de/p/antischuppen-shampoo-plus/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "EAN 4103040051677 (PZN 11158135, Inhalt 200 ml)",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Lauryl Glucoside, Sodium Lauroyl Sarcosinate, Sodium Chloride, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Piroctone Olamine, Menthol, Parfum, Citric Acid, Phenoxyethanol, Sodium Benzoate, CI 42090, CI 47005",
+      "claimsVerbatim": "Anti-Schuppen Shampoo PLUS 200 ml | Nach 4 Wochen bis zu 95% weniger Schuppen, für fettendes Haar | Das sebamed Anti‑Schuppen Shampoo PLUS ist ein seifenfreies Shampoo, das speziell zur nachhaltigen Bekämpfung von Schuppen bei schnell fettendem Haar und Juckreiz entwickelt wurde. Es reinigt die Kopfhaut schonend und unterstützt gleichzeitig ihr natürliches Gleichgewicht. Bereits nach vier Wochen Anwendung kann die Schuppenbildung um bis zu 95 % reduziert werden.* | * Studie “Antischuppen-Wirkung” Institut Dr. Schrader Creachem GmbH 2015, bei regelmäßiger Anwendung und mindestens drei Anwendungen pro Woche | pH-Wert 5,5 | Haartyp: schuppiges Haar, fettiges Haar, fettendes Haar | Allgemeiner Hinweis: Die aufgeführten Inhaltsstoffe entsprechenden dem aktuellen Stand der Produktion ... Daher sind immer die Informationen auf dem Produkt ausschlaggebend.",
+      "directionsVerbatim": "Shampoo in der Handinnenfläche aufschäumen und unter leichtem Massieren auf die Kopfhaut auftragen. Ausspülen. Täglich oder 2-3x pro Woche anwenden."
+    },
+    {
+      "url": "https://www.dm.de/p/d/1585729/sebamed-shampoo-anti-schuppen-plus",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "GTIN: 4103040051677 (dm-Artikelnummer 1585729; 'Shampoo Anti-Schuppen Plus, 200 ml')",
+      "inciVerbatim": "Ingredients: Aqua, Sodium Laureth Sulfate, Lauryl Glucoside, Sodium Lauroyl Sarcosinate, Sodium Chloride, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Piroctone Olamine, Menthol, Parfum, Citric Acid, Phenoxyethanol, Sodium Benzoate, CI 42090, CI 47005.",
+      "claimsVerbatim": "Anti-Schuppen Shampoo für schnell fettendes Haar | Kann Schuppenbildung vorbeugen | Für die tägliche Anwendung geeignet | Ohne Mikroplastik & Silikone | Das Shampoo Anti-Schuppen Plus von sebamed wurde speziell für schnell fettendes, schuppendes Haar entwickelt. Mit Piroctone Olamine kann es helfen, Schuppen effektiv zu bekämpfen, während es die Neubildung von Schuppen verhindert. Die milde Formel ist zudem frei von Mikroplastik und Silikonen. Ideal für die tägliche Pflege, sorgt es für ein frisches Haargefühl und ein angenehmes Gefühl der Kopfhaut.",
+      "directionsVerbatim": "Das Haar anfeuchten, Shampoo in der Handinnenfläche verreiben, aufschäumen und unter leichtem Massieren auf die Kopfhaut auftragen. Gründlich ausspülen."
+    }
+  ],
+  "conflicts": [],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Lauryl Glucoside",
+    "Sodium Lauroyl Sarcosinate",
+    "Sodium Chloride",
+    "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+    "Piroctone Olamine",
+    "Menthol",
+    "Parfum",
+    "Citric Acid",
+    "Phenoxyethanol",
+    "Sodium Benzoate",
+    "CI 42090",
+    "CI 47005"
+  ],
+  "canonicalReason": "Manufacturer DE page (sebamed.de, EAN 4103040051677 shown) and dm.de (same GTIN) agree verbatim on all 14 entries; identical to the 2026-08-10 v1.3 capture. Rossmann/Müller not queried (two agreeing sources suffice). Tier 2.",
+  "inciFingerprintSha256": "63ff429b1232526889e28ca4e04999b7b98cfcef5c7171ac2c375d4077114816",
+  "normalization": "Canonical list = one entry per ingredient exactly as published on the winning source (case and punctuation kept in canonicalInci; trailing period stripped; bullet/asterisk/comma separators dropped; split synonym entries such as 'Aqua (Water, Eau)' kept as one item). Fingerprint: per ingredient lower-case, trim, collapse internal whitespace; join with '|'; sha256 of the UTF-8 string. Earlier v1.3/v1.4 fingerprints were computed over comma-joined lists and are not comparable.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Prior v1.3/v1.4 fingerprint (comma-joined) 0feac03a572453326568640ca50d3482bc3dcefd225f07c8f17a3293c924a31f - list unchanged.",
+    "Manufacturer states ingredient lists reflect 'dem aktuellen Stand der Produktion' and that the pack is authoritative (generic reformulation caveat); no pack photo was read.",
+    "Claims-vs-INCI: Piroctone Olamine present (dm names it explicitly); Menthol present. Medically adjacent anti-dandruff claims ('bis zu 95% weniger Schuppen', study cited) are verbatim marketing claims. 'seifenfrei' - no soap in list; 'Ohne Mikroplastik & Silikone' - no silicones in list.",
+    "Manufacturer address differs between sources (sebamed.de: Bad Salzig; dm: Boppard) - same company, Sebapharma GmbH & Co. KG."
+  ]
+}

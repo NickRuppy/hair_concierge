@@ -1,0 +1,333 @@
+{
+  "blindId": "T109",
+  "productName": "Herbal Essences Tiefenreinigung & Glanz Shampoo Limettenduft",
+  "inciFingerprintSha256": "20cb4c26791b1441afb3fa4d89877d1d0247cdd726fe68a236ee26b5caf09067",
+  "normalization": "Packet canonicalInci is the normalized list (ID-2); all positions are normalized one-based positions on it. Parfum at 4: positions 1-3 prominent",
+  "status": "classified",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "moderate",
+      "rationale": "C1 without a prominent buffer: SLES (2) is the defining anionic and Parfum (4) precedes the only amphoteric (Cocamidopropyl Betaine 5), so no buffer counts -> strong.",
+      "counterSignal": "The betaine sits directly after the early Parfum; in practice it buffers the SLES.",
+      "neighboringAlternative": "moderate",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic, no prominent buffer"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 5,
+          "role": "after Parfum"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "No conditioning system: no cationic polymer, silicone, lipid, protein or humectant route -> low.",
+      "neighboringAlternative": "none",
+      "formulaFacts": []
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "No deposition family (HPMC thickener and citrus oil excluded) and strong reset -> low.",
+      "neighboringAlternative": "none",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "No depositing ingredient."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "Nothing persistent."
+        },
+        "resetCapacity": {
+          "value": "strong",
+          "rationale": "Unbuffered (by convention) SLES chassis."
+        }
+      },
+      "whyThisBand": "Absent deposition.",
+      "whyNotNeighborBand": "Nothing could leave noticeable residue.",
+      "limitingFactor": "None material.",
+      "canonicalFormula": {
+        "inciFingerprintSha256": "20cb4c26791b1441afb3fa4d89877d1d0247cdd726fe68a236ee26b5caf09067",
+        "formulaSourceTier": 3,
+        "formulaCompleteness": "complete",
+        "captureDate": "not in packet",
+        "identityConfidence": "high"
+      },
+      "evidenceByFamily": {
+        "excluded": [
+          {
+            "ingredient": "Hydroxypropyl Methylcellulose",
+            "position": 13,
+            "role": "nonionic thickener"
+          },
+          {
+            "ingredient": "Citrus Aurantium Peel Oil",
+            "position": 11,
+            "role": "essential oil"
+          }
+        ],
+        "reset": [
+          {
+            "ingredient": "Sodium Laureth Sulfate",
+            "position": 2,
+            "role": "anionic"
+          },
+          {
+            "ingredient": "Cocamidopropyl Betaine",
+            "position": 5,
+            "role": "amphoteric, after Parfum"
+          }
+        ]
+      },
+      "formulaCounterevidence": null,
+      "unresolved": [],
+      "proposedWeightPotential": "low",
+      "confidenceLimitingFactor": "None material."
+    },
+    "focusPrimary": {
+      "value": "clarifying",
+      "confidence": "moderate",
+      "neighboringAlternative": "shine",
+      "rationale": "Clarifying: 'Tiefenreinigung' is in the exact product name (high, D1) and the formula is compatible (cleansingStrength strong, conditioning low, weight low; F6).",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [],
+        "limitation": ""
+      },
+      "claimRole": "candidate",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "reset chassis"
+        }
+      ],
+      "counterSignal": "'Glanz' is also in the name.",
+      "decisionTrace": {
+        "claimDirection": "deep cleansing",
+        "formulaCompatible": true,
+        "compatibleRoute": "Unbuffered (by convention) SLES chassis with no deposition",
+        "decisionReason": "Explicit deep-cleansing name with compatible architecture (7.2)."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "shine"
+      ],
+      "rationale": "Empty: 'Glanz' is in the name but there is no independent shine route (no smoothing/film; acids cannot create a secondary shine, F4).",
+      "counterSignal": "Shine in the name.",
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [
+          "Glanz (name)"
+        ],
+        "independentRoutes": [],
+        "whyDistinctFromPrimary": "No route besides pH adjusters (F4).",
+        "exceptionCode": null
+      }
+    },
+    "usageRole": {
+      "value": "occasional_reset",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "occasional_reset: D1 true from the product name (high). Directions do not limit or extend frequency.",
+      "counterSignal": "No occasional-use directions; strong + reset intent would also fire alternating.",
+      "decisionTrace": {
+        "default": "regular",
+        "triggerCode": "explicit_deep_cleansing",
+        "triggerEvidence": [
+          "product name: 'Tiefenreinigung & Glanz'"
+        ],
+        "losingTriggers": [
+          "alternating (strong_plus_reset_intent) loses under U1"
+        ],
+        "rationale": "occasional_reset: D1 true from the product name (high). Directions do not limit or extend frequency."
+      }
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No scalp claim. Complete ordinary formula.",
+      "counterSignal": "None.",
+      "formulaFacts": []
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none",
+      "counterSignal": "None in formula; claims never upgrade this property.",
+      "formulaFacts": []
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic, ether type"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 4,
+      "role": "E3 marker (early)"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 5,
+      "role": "amphoteric after E3 point: recorded, not a buffer (C4)"
+    },
+    {
+      "ingredient": "Sodium Xylenesulfonate",
+      "position": 6,
+      "role": "hydrotrope"
+    },
+    {
+      "ingredient": "Citrus Aurantium Peel Oil",
+      "position": 11,
+      "role": "essential oil, excluded"
+    },
+    {
+      "ingredient": "Hydroxypropyl Methylcellulose",
+      "position": 13,
+      "role": "nonionic cellulose thickener, excluded"
+    },
+    {
+      "ingredient": "Tetrasodium EDTA",
+      "position": 18,
+      "role": "chelator"
+    }
+  ],
+  "blindToFinalChanges": [
+    {
+      "property": "provisional properties",
+      "blind": "general/[]/regular/not_targeted (low, provisional)",
+      "final": "see records",
+      "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+      "reason": "post-unblind reconciliation (3.2)"
+    }
+  ],
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "high",
+        "rationale": "T1: W low -> ideal; T2: thickness/texture claims do not change the fit."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "high",
+        "rationale": "T1: W low -> ideal; T2: thickness/texture claims do not change the fit."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "high",
+        "rationale": "T1: W low, C low -> acceptable; T2: thickness/texture claims do not change the fit."
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "high",
+      "rationale": "W-LIVE: weightPotential low -> light (1:1)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "moderate",
+        "rationale": "S-ORDINARY way 1: no qualifying E2 claim (no oily/scalp wording); packet has retailer copy only -> moderate."
+      },
+      "secondary": null,
+      "secondaryRationale": "No qualifying claim unit."
+    },
+    "observedCleansingIntensity": {
+      "value": "clarifying",
+      "confidence": "moderate",
+      "rationale": "I1: cleansingStrength strong with D1 true -> clarifying. I2: written unchanged to every row."
+    },
+    "positioning": {
+      "explicitResetPositioning": true,
+      "confidence": "high",
+      "rationale": "D1 true: 'Tiefenreinigung' (stem tiefenrein) in the exact product name (high)."
+    },
+    "deepCleanserListing": {
+      "value": "flagged",
+      "deepCleanserRecord": "needs_record",
+      "confidence": "moderate",
+      "rationale": "D2: strong + clarifying + occasional_reset + D1 -> flagged; regular-shampoo entry kept."
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "clarifying",
+        "weight": "light",
+        "tier": "ideal",
+        "intensityMatchesBucket": false
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "clarifying",
+        "weight": "light",
+        "tier": "ideal",
+        "intensityMatchesBucket": false
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "clarifying",
+        "weight": "light",
+        "tier": "acceptable",
+        "intensityMatchesBucket": false
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [
+      "deep_cleanser_listing:needs_record"
+    ],
+    "researchCombinationTargets": [],
+    "researchCombinationRationale": "Not a dandruff-primary product: E2b layer 2 does not apply.",
+    "liveComparison": "review_live_value_differs is resolved by the orchestrator after freeze (lanes see no live rows)."
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientOrCountOrPositionAssignedWeightBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "comparisonWithEarlierValuesMadeInLane": false,
+    "nAltConsistent": true
+  },
+  "uncertainties": [
+    {
+      "reading": "cleansingStrength strong (betaine after the early Parfum does not buffer, C4)",
+      "alternative": "moderate -> D2 would fail; D3 ordinary-strength note instead of a deep-cleanser flag; intensity regular"
+    },
+    {
+      "reading": "ordinary confidence moderate (retailer copy only; the name is not a source)",
+      "alternative": "high"
+    }
+  ]
+}

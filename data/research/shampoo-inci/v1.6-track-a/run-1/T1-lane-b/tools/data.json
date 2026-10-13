@@ -1,0 +1,4040 @@
+{
+ "T101": {
+  "name": "Guhl Hyaluron+ Pflege Feuchtigkeits-Shampoo",
+  "facts": {
+   "cs": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "defining anionic (C1)"
+    },
+    {
+     "ingredient": "Coco-Glucoside",
+     "position": 3,
+     "role": "buffer"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 4,
+     "role": "buffer"
+    }
+   ],
+   "cl": [
+    {
+     "ingredient": "Hydrogenated Vegetable Oil",
+     "position": 6,
+     "role": "payload_lipid (W-RICH)"
+    },
+    {
+     "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+     "position": 9,
+     "role": "cationic_polymer"
+    },
+    {
+     "ingredient": "Glyceryl Oleate",
+     "position": 8,
+     "role": "weak_refatter"
+    },
+    {
+     "ingredient": "Glycerin",
+     "position": 12,
+     "role": "humectant"
+    },
+    {
+     "ingredient": "Panthenol",
+     "position": 13,
+     "role": "humectant"
+    },
+    {
+     "ingredient": "Sodium Hyaluronate",
+     "position": 18,
+     "role": "humectant"
+    }
+   ],
+   "ds": [
+    {
+     "ingredient": "Piroctone Olamine",
+     "position": 15,
+     "role": "recognized anti-dandruff active"
+    }
+   ]
+  },
+  "weightFamilies": {
+   "payload_lipid": [
+    {
+     "ingredient": "Hydrogenated Vegetable Oil",
+     "position": 6,
+     "role": "waxy/hydrogenated, prominent"
+    }
+   ],
+   "cationic_polymer": [
+    {
+     "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+     "position": 9,
+     "role": "prominent"
+    }
+   ],
+   "weak_refatter": [
+    {
+     "ingredient": "Glyceryl Oleate",
+     "position": 8,
+     "role": "light refatter"
+    }
+   ],
+   "reset": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "anionic"
+    },
+    {
+     "ingredient": "Coco-Glucoside",
+     "position": 3,
+     "role": "nonionic"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 4,
+     "role": "amphoteric"
+    }
+   ],
+   "humectant_context": [
+    {
+     "ingredient": "Glycerin",
+     "position": 12,
+     "role": ""
+    },
+    {
+     "ingredient": "Panthenol",
+     "position": 13,
+     "role": ""
+    },
+    {
+     "ingredient": "Hydrolyzed Hyaluronic Acid",
+     "position": 17,
+     "role": ""
+    },
+    {
+     "ingredient": "Sodium Hyaluronate",
+     "position": 18,
+     "role": ""
+    }
+   ]
+  },
+  "weightNote": "Claims 'ohne zu beschweren' (retailer, low) recorded; they never lower the band (6.5 step 5).",
+  "focusP": {
+   "value": "moisture",
+   "confidence": "moderate",
+   "neighboringAlternative": "general",
+   "rationale": "Moisture: the exact product name says 'Feuchtigkeits-Shampoo' (high) and the manufacturer page positions it for 'feuchtigkeitsbedürftiges', dry hair (moderate); the formula verdict is moisture_supported (humectant cluster plus emollient/cationic deposition).",
+   "careDirection": {
+    "verdict": "moisture_supported",
+    "moistureRoutes": [
+     "Glycerin 12",
+     "Panthenol 13",
+     "Hydrolyzed Hyaluronic Acid 17",
+     "Sodium Hyaluronate 18"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Hydrogenated Vegetable Oil 6",
+     "Guar 9",
+     "Glyceryl Oleate 8"
+    ],
+    "limitation": "No protein/damage cluster; humectant amounts unknown."
+   },
+   "claimRole": "candidate",
+   "formulaFacts": [
+    {
+     "ingredient": "Glycerin",
+     "position": 12,
+     "role": "humectant"
+    },
+    {
+     "ingredient": "Panthenol",
+     "position": 13,
+     "role": "humectant"
+    },
+    {
+     "ingredient": "Sodium Hyaluronate",
+     "position": 18,
+     "role": "humectant"
+    },
+    {
+     "ingredient": "Hydrogenated Vegetable Oil",
+     "position": 6,
+     "role": "emollient support"
+    }
+   ],
+   "counterSignal": "The deposition route (hydrogenated oil + guar) is generic conditioning; humectants are mid-list (12-18).",
+   "decisionTrace": {
+    "claimDirection": "moisture",
+    "formulaCompatible": true,
+    "compatibleRoute": "Glycerin 12 + Panthenol 13 + Sodium Hyaluronate 18 with Hydrogenated Vegetable Oil 6 and Guar 9",
+    "decisionReason": "Dominant name claim plus moisture_supported verdict (F1)."
+   }
+  },
+  "focusS": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "shine"
+   ],
+   "rationale": "Empty: the shine wording ('gesund glänzende Längen') is an outcome of the same moisture/deposition route (F2); no independent shine route.",
+   "counterSignal": "Shine is mentioned by the manufacturer.",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingDistinctClaims": [],
+    "independentRoutes": [],
+    "whyDistinctFromPrimary": "Shine would reuse the primary route (F3).",
+    "exceptionCode": null
+   }
+  },
+  "usage": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Default regular: no non-default trigger. No D1, no dandruff claim, no frequency wording from a moderate/high source.",
+   "counterSignal": "None.",
+   "decisionTrace": {
+    "default": "regular",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": [],
+    "rationale": "Default regular: no non-default trigger. No D1, no dandruff claim, no frequency wording from a moderate/high source."
+   }
+  },
+  "sct": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No E2 sensitive or dry-scalp claim unit; 'sanft zur Kopfhaut' (retailer, low) is mildness wording (E2a). Complete ordinary formula.",
+   "counterSignal": "The formula half (CSA) would pass (Panthenol 13 prominent), but there is no positioning.",
+   "formulaFacts": [
+    {
+     "ingredient": "Panthenol",
+     "position": 13,
+     "role": "E4 comfort route (unused)"
+    }
+   ]
+  },
+  "D1": {
+   "value": false,
+   "confidence": "high",
+   "rationale": "No D1 wording in name, claims or directions.",
+   "dailyDirections": false
+  },
+  "targets": {
+   "primary": "ordinary",
+   "pconf": "moderate",
+   "prat": "S-ORDINARY ways 1 (no qualifying E2 claim; manufacturer source -> high) and 3 (Piroctone Olamine without any dandruff claim -> moderate); lowest = moderate. S-DANDRUFF: no dandruff claim, so no dandruff target (R17.3).",
+   "noSecondary": "No second qualifying claim unit."
+  },
+  "notes": [
+   "active_without_dandruff_positioning"
+  ],
+  "changes": [
+   {
+    "property": "provisional properties",
+    "blind": "general/[]/regular/not_targeted (low, provisional)",
+    "final": "see records",
+    "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+    "reason": "post-unblind reconciliation (3.2)"
+   }
+  ],
+  "uncertainties": [
+   {
+    "reading": "conditioningLevel high via W-RICH (prominent hydrogenated vegetable oil + guar) although C2 is not met",
+    "alternative": "moderate (one meaningful system plus light routes) if the hydrogenated oil is read as trace"
+   },
+   {
+    "reading": "weightPotential moderate (W-RICH with moderate reset is not limited reset)",
+    "alternative": "high if the lipid/guar system is read as multiple converging persistent systems"
+   },
+   {
+    "reading": "focusSecondary [] (shine is an outcome of the moisture route, F2)",
+    "alternative": "['shine']"
+   }
+  ]
+ },
+ "T102": {
+  "name": "Syoss Intense Volume Shampoo (syoss.de: Intense Volume Leichtes Shampoo)",
+  "facts": {
+   "cs": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "defining anionic (C1)"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 4,
+     "role": "buffer"
+    }
+   ],
+   "cl": [
+    {
+     "ingredient": "Hydrolyzed Keratin",
+     "position": 5,
+     "role": "protein_film"
+    },
+    {
+     "ingredient": "Hydrolyzed Collagen",
+     "position": 6,
+     "role": "protein_film"
+    },
+    {
+     "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+     "position": 19,
+     "role": "cationic_polymer, after Parfum"
+    }
+   ]
+  },
+  "weightFamilies": {
+   "protein_film": [
+    {
+     "ingredient": "Hydrolyzed Keratin",
+     "position": 5,
+     "role": "prominent"
+    },
+    {
+     "ingredient": "Hydrolyzed Collagen",
+     "position": 6,
+     "role": "prominent"
+    }
+   ],
+   "cationic_polymer": [
+    {
+     "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+     "position": 19,
+     "role": "after Parfum"
+    }
+   ],
+   "weak_refatter": [
+    {
+     "ingredient": "Glyceryl Oleate",
+     "position": 10,
+     "role": "after Parfum"
+    },
+    {
+     "ingredient": "PEG-7 Glyceryl Cocoate",
+     "position": 12,
+     "role": "after Parfum"
+    }
+   ],
+   "payload_lipid": [
+    {
+     "ingredient": "Hydrogenated Castor Oil",
+     "position": 16,
+     "role": "after Parfum"
+    }
+   ],
+   "excluded": [
+    {
+     "ingredient": "Glycol Distearate",
+     "position": 13,
+     "role": "pearlizer (6.4)"
+    },
+    {
+     "ingredient": "PEG-120 Methyl Glucose Dioleate",
+     "position": 15,
+     "role": "PEG thickener (6.4)"
+    },
+    {
+     "ingredient": "Laureth-4",
+     "position": 14,
+     "role": "thickener"
+    }
+   ],
+   "reset": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "anionic"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 4,
+     "role": "amphoteric"
+    }
+   ]
+  },
+  "weightNote": "'Leichtes Shampoo' / 'ohne zu beschweren' (moderate) corroborate but never lower the band.",
+  "focusP": {
+   "value": "volume",
+   "confidence": "moderate",
+   "neighboringAlternative": "repair",
+   "rationale": "Volume: 'Intense Volume' is the exact product name (high) and the manufacturer positions it for fine, flat hair with up to 48 h volume (moderate); the low-weight, low-conditioning formula is compatible.",
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": ""
+   },
+   "claimRole": "candidate",
+   "formulaFacts": [
+    {
+     "ingredient": "Hydrolyzed Collagen",
+     "position": 6,
+     "role": "film/body"
+    },
+    {
+     "ingredient": "Hydrolyzed Keratin",
+     "position": 5,
+     "role": "film/body"
+    }
+   ],
+   "counterSignal": "The 'Kollagen-Lift-Komplex ... stärkt das Haar von innen' claim and two prominent proteins point to a repair-like route.",
+   "decisionTrace": {
+    "claimDirection": "volume",
+    "formulaCompatible": true,
+    "compatibleRoute": "Light architecture: weightPotential low, conditioningLevel low; Hydrolyzed Collagen 6 / Keratin 5 as body-giving film",
+    "decisionReason": "One dominant name claim with compatible formula (7.2)."
+   }
+  },
+  "focusS": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "repair"
+   ],
+   "rationale": "Empty: 'stärkt das Haar von innen' is generic strengthening, not damage/breakage positioning, and the only route (the two proteins) is the one the volume route cites (F3).",
+   "counterSignal": "Collagen strengthening claim (moderate).",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingDistinctClaims": [
+     "stärkt das Haar von innen (manufacturer)"
+    ],
+    "independentRoutes": [],
+    "whyDistinctFromPrimary": "Would reuse the protein route.",
+    "exceptionCode": null
+   }
+  },
+  "usage": {
+   "value": "frequent",
+   "confidence": "moderate",
+   "neighboringAlternative": "regular",
+   "rationale": "frequent: explicit frequency wording 'Milde Formel für die tägliche Haarwäsche' from the manufacturer (moderate, U2) and cleansingStrength moderate (not strong).",
+   "counterSignal": "The frequency wording is a suitability statement; retailer copies repeat it (low).",
+   "decisionTrace": {
+    "default": "regular",
+    "triggerCode": "explicit_frequent_non_strong",
+    "triggerEvidence": [
+     "manufacturer_de: 'Milde Formel für die tägliche Haarwäsche ohne zu beschweren'"
+    ],
+    "losingTriggers": [],
+    "rationale": "frequent: explicit frequency wording 'Milde Formel für die tägliche Haarwäsche' from the manufacturer (moderate, U2) and cleansingStrength moderate (not strong)."
+   }
+  },
+  "sct": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No E2 scalp claim; 'mild' is mildness wording. Complete ordinary formula.",
+   "counterSignal": "None.",
+   "formulaFacts": []
+  },
+  "D1": {
+   "value": false,
+   "confidence": "high",
+   "rationale": "'Tiefenpflegende Formel' is a care term, not D1 (13.6 Not D1).",
+   "dailyDirections": false
+  },
+  "targets": {
+   "primary": "ordinary",
+   "pconf": "high",
+   "prat": "S-ORDINARY way 1: no qualifying E2 claim unit; packet has a manufacturer source -> high.",
+   "noSecondary": "No qualifying claim unit."
+  },
+  "notes": [],
+  "changes": [
+   {
+    "property": "provisional properties",
+    "blind": "general/[]/regular/not_targeted (low, provisional)",
+    "final": "see records",
+    "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+    "reason": "post-unblind reconciliation (3.2)"
+   }
+  ],
+  "uncertainties": [
+   {
+    "reading": "conditioningLevel low (only late guar; hydrolyzed proteins give little slip)",
+    "alternative": "moderate (several light routes)"
+   },
+   {
+    "reading": "'tägliche Haarwäsche' counts as U2 frequency wording",
+    "alternative": "regular if only the exact U2 phrases count"
+   },
+   {
+    "reading": "focusSecondary []",
+    "alternative": "['repair'] on the collagen strengthening claim"
+   }
+  ]
+ },
+ "T103": {
+  "name": "hair biology Shampoo Revitalize & Soothe (Meno Balance)",
+  "facts": {
+   "cs": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "defining anionic"
+    },
+    {
+     "ingredient": "Sodium Lauryl Sulfate",
+     "position": 3,
+     "role": "reinforcing route"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 6,
+     "role": "buffer"
+    }
+   ],
+   "cl": [
+    {
+     "ingredient": "Dimethiconol",
+     "position": 10,
+     "role": "early silicone"
+    },
+    {
+     "ingredient": "Glycol Distearate",
+     "position": 7,
+     "role": "pearlizing route"
+    },
+    {
+     "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+     "position": 15,
+     "role": "cationic_polymer"
+    },
+    {
+     "ingredient": "Panthenol",
+     "position": 24,
+     "role": "humectant (C2)"
+    }
+   ],
+   "ds": [
+    {
+     "ingredient": "Piroctone Olamine",
+     "position": 12,
+     "role": "recognized anti-dandruff active"
+    }
+   ]
+  },
+  "weightFamilies": {
+   "silicone": [
+    {
+     "ingredient": "Dimethiconol",
+     "position": 10,
+     "role": "prominent"
+    },
+    {
+     "ingredient": "Dimethicone",
+     "position": 13,
+     "role": "after Parfum"
+    }
+   ],
+   "cationic_polymer": [
+    {
+     "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+     "position": 15,
+     "role": "after Parfum"
+    }
+   ],
+   "excluded": [
+    {
+     "ingredient": "Glycol Distearate",
+     "position": 7,
+     "role": "pearlizer (6.4)"
+    }
+   ],
+   "reset": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "anionic"
+    },
+    {
+     "ingredient": "Sodium Lauryl Sulfate",
+     "position": 3,
+     "role": "anionic"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 6,
+     "role": "amphoteric"
+    },
+    {
+     "ingredient": "TEA-Dodecylbenzenesulfonate",
+     "position": 16,
+     "role": "anionic, late"
+    }
+   ]
+  },
+  "weightNote": "'ohne das Haar zu beschweren' (retailer, low) never lowers the band.",
+  "focusP": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "moisture",
+   "rationale": "General: every source is retailer copy graded low (dm.de and an Austrian pharmacy); the moisture claim ('Spendet trockenem Haar Feuchtigkeit') may act as candidate only with an independently supporting verdict, and the verdict is nonspecific. Thinning/density claims are ignored (F5).",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Dimethiconol 10",
+     "Dimethicone 13",
+     "Guar 15"
+    ],
+    "limitation": "No humectant cluster (Panthenol 24 trace)."
+   },
+   "claimRole": "not_applicable",
+   "formulaFacts": [
+    {
+     "ingredient": "Dimethiconol",
+     "position": 10,
+     "role": "generic conditioning"
+    },
+    {
+     "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+     "position": 15,
+     "role": "generic conditioning"
+    }
+   ],
+   "counterSignal": "Low-graded moisture and scalp-soothing claims; a C2 conditioning system exists.",
+   "decisionTrace": {
+    "claimDirection": "moisture (low-graded)",
+    "formulaCompatible": false,
+    "compatibleRoute": "none specific",
+    "decisionReason": "Low-graded claim over a nonspecific verdict -> general (CL-SRC, F1, F5)."
+   }
+  },
+  "focusS": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Empty: no moderate/high-graded distinct positioning.",
+   "counterSignal": "None.",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingDistinctClaims": [],
+    "independentRoutes": [],
+    "whyDistinctFromPrimary": "",
+    "exceptionCode": null
+   }
+  },
+  "usage": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Default regular. 'für den täglichen Gebrauch geeignet' is retailer copy (low) and cleansing is strong anyway, so frequent cannot fire.",
+   "counterSignal": "Daily-use wording (low).",
+   "decisionTrace": {
+    "default": "regular",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": [],
+    "rationale": "Default regular. 'für den täglichen Gebrauch geeignet' is retailer copy (low) and cleansing is strong anyway, so frequent cannot fire."
+   }
+  },
+  "sct": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not targeted: the dry-scalp and 'beruhigt die ... Kopfhaut' claim units are retailer-only (low, SC1 fails) and the formula has no prominent E4 comfort or humectant route (CSA fails); both halves fail.",
+   "counterSignal": "Sensitive/dry scalp wording exists (low).",
+   "formulaFacts": [
+    {
+     "ingredient": "Panthenol",
+     "position": 24,
+     "role": "comfort route, after Parfum"
+    },
+    {
+     "ingredient": "Niacinamide",
+     "position": 30,
+     "role": "comfort route, after Parfum"
+    }
+   ]
+  },
+  "D1": {
+   "value": false,
+   "confidence": "high",
+   "rationale": "No D1 wording.",
+   "dailyDirections": false
+  },
+  "targets": {
+   "primary": "ordinary",
+   "pconf": "moderate",
+   "prat": "S-ORDINARY ways 2/3/4: sensitive ('Beruhigt die aus dem Gleichgewicht geratene Kopfhaut') and dry ('trockener Kopfhaut') claim units exist but only in retailer copy graded low, so both gates fail (S-FAIL, no other specialist target passes); Piroctone Olamine without dandruff claim (R17.3); thinning/density positioning ignored (S-HAIRLOSS). Confidence moderate.",
+   "noSecondary": "No passing specialist target."
+  },
+  "flags": [
+   "review_specialist_gate_failed:sensitive(positioning low; formula: CSA fails, no prominent E4 comfort route),dry(positioning low; formula: CSA fails, no prominent E4 humectant route)"
+  ],
+  "notes": [
+   "active_without_dandruff_positioning",
+   "hair_loss_claim_not_evaluated"
+  ],
+  "changes": [
+   {
+    "property": "provisional properties",
+    "blind": "general/[]/regular/not_targeted (low, provisional)",
+    "final": "see records",
+    "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+    "reason": "post-unblind reconciliation (3.2)"
+   }
+  ],
+  "uncertainties": [
+   {
+    "reading": "S-FAIL for low-graded sensitive/dry units (review flag)",
+    "alternative": "treat as no qualifying unit (way 1, no flag) — rejected because S-FAIL explicitly covers units whose only grade is low"
+   },
+   {
+    "reading": "'dünner werdendes Haar ... dichtes, volleres Haar' = hair-density positioning (F5)",
+    "alternative": "cosmetic volume claim"
+   },
+   {
+    "reading": "conditioningLevel high via C2 with a trace Panthenol humectant element",
+    "alternative": "moderate"
+   }
+  ]
+ },
+ "T104": {
+  "name": "Garnier Wahre Schätze Shampoo Honig Schätze (Reparierendes Shampoo Honig Schätze)",
+  "over": {
+   "conditioningLevel": {
+    "confidence": "low",
+    "neighboringAlternative": "high",
+    "rationale": "Moderate from the frozen formula (one meaningful system: HP Guar 17 plus light routes), but confidence low: retailer copy repeatedly claims 'Bienenwachs' (beeswax), which has no INCI match; a beeswax payload lipid, if present, converges with the guar (W-RICH) and could move conditioning to high (ID-3 material conflict).",
+    "counterSignal": "Unresolved beeswax claim (ID-3); guar is the only cationic."
+   },
+   "weightPotential": {
+    "confidence": "low",
+    "neighboringAlternative": "moderate",
+    "rationale": "Low from the frozen formula (single light guar, weak refatters, C5 moderate reset), but confidence low: the unmatched beeswax claim names a waxy payload lipid that could add a persistent family and move the band to moderate (ID-3).",
+    "limitingFactor": "Material conflict: 'Bienenwachs' claimed in three retailer copies, absent from the frozen INCI."
+   }
+  },
+  "facts": {
+   "cs": [
+    {
+     "ingredient": "Sodium Lauryl Sulfate",
+     "position": 2,
+     "role": "defining anionic (C5)"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 3,
+     "role": "buffer"
+    },
+    {
+     "ingredient": "Coco-Betaine",
+     "position": 14,
+     "role": "buffer"
+    },
+    {
+     "ingredient": "Coco-Glucoside",
+     "position": 15,
+     "role": "buffer"
+    }
+   ],
+   "cl": [
+    {
+     "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+     "position": 17,
+     "role": "cationic_polymer"
+    },
+    {
+     "ingredient": "Glycerin",
+     "position": 8,
+     "role": "humectant"
+    },
+    {
+     "ingredient": "Glyceryl Oleate",
+     "position": 9,
+     "role": "weak_refatter"
+    },
+    {
+     "ingredient": "Mel/Honey",
+     "position": 5,
+     "role": "humectant-type context"
+    }
+   ]
+  },
+  "weightFamilies": {
+   "cationic_polymer": [
+    {
+     "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+     "position": 17,
+     "role": "position 17 of 30"
+    }
+   ],
+   "weak_refatter": [
+    {
+     "ingredient": "Glyceryl Oleate",
+     "position": 9,
+     "role": ""
+    },
+    {
+     "ingredient": "Lecithin",
+     "position": 12,
+     "role": ""
+    },
+    {
+     "ingredient": "Hydrogenated Palm Glycerides Citrate",
+     "position": 16,
+     "role": ""
+    },
+    {
+     "ingredient": "Ascorbyl Palmitate",
+     "position": 21,
+     "role": ""
+    }
+   ],
+   "excluded": [
+    {
+     "ingredient": "Carbomer",
+     "position": 7,
+     "role": "anionic acrylate thickener (6.4)"
+    },
+    {
+     "ingredient": "Glycol Distearate",
+     "position": 10,
+     "role": "pearlizer (6.4)"
+    }
+   ],
+   "reset": [
+    {
+     "ingredient": "Sodium Lauryl Sulfate",
+     "position": 2,
+     "role": "anionic"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 3,
+     "role": "amphoteric"
+    },
+    {
+     "ingredient": "Coco-Betaine",
+     "position": 14,
+     "role": "amphoteric"
+    },
+    {
+     "ingredient": "Coco-Glucoside",
+     "position": 15,
+     "role": "nonionic"
+    }
+   ],
+   "humectant_context": [
+    {
+     "ingredient": "Mel/Honey",
+     "position": 5,
+     "role": ""
+    },
+    {
+     "ingredient": "Glycerin",
+     "position": 8,
+     "role": ""
+    }
+   ]
+  },
+  "weightNote": "ID-3: 'Bienenwachs' (dm, Rossmann, dm; graded low) has no INCI entry; a waxy payload lipid would be weight-relevant, so the conflict is material and confidence drops to low (needs_research).",
+  "focusP": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "repair",
+   "rationale": "General: the product name ('Reparierendes Shampoo', high) and manufacturer copy position damage repair (Spliss, Haarbruch), but the formula verdict is moisture_supported, not repair_supported or dual (no protein, silicone, lipid or damage-care cluster), so repair is incompatible (F1); no moisture positioning exists to use the actual verdict.",
+   "careDirection": {
+    "verdict": "moisture_supported",
+    "moistureRoutes": [
+     "Mel/Honey 5",
+     "Glycerin 8"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Guar 17",
+     "Glyceryl Oleate 9",
+     "Lecithin 12"
+    ],
+    "limitation": "No damage-care cluster; beeswax claim unresolved."
+   },
+   "claimRole": "not_applicable",
+   "formulaFacts": [
+    {
+     "ingredient": "Mel/Honey",
+     "position": 5,
+     "role": "humectant-type"
+    },
+    {
+     "ingredient": "Glycerin",
+     "position": 8,
+     "role": "humectant"
+    },
+    {
+     "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+     "position": 17,
+     "role": "light conditioning"
+    }
+   ],
+   "counterSignal": "Strong repair positioning in name and manufacturer copy.",
+   "decisionTrace": {
+    "claimDirection": "repair",
+    "formulaCompatible": false,
+    "compatibleRoute": "none (repair route absent)",
+    "decisionReason": "Claim incompatible with formula -> general (7.2, F1)."
+   }
+  },
+  "focusS": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Empty: no second distinct positioned role with an independent route.",
+   "counterSignal": "None.",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingDistinctClaims": [],
+    "independentRoutes": [],
+    "whyDistinctFromPrimary": "",
+    "exceptionCode": null
+   }
+  },
+  "usage": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Default regular: no trigger.",
+   "counterSignal": "None.",
+   "decisionTrace": {
+    "default": "regular",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": [],
+    "rationale": "Default regular: no trigger."
+   }
+  },
+  "sct": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No scalp claim unit at all. Complete ordinary formula.",
+   "counterSignal": "None.",
+   "formulaFacts": []
+  },
+  "D1": {
+   "value": false,
+   "confidence": "high",
+   "rationale": "No D1 wording.",
+   "dailyDirections": false
+  },
+  "targets": {
+   "primary": "ordinary",
+   "pconf": "high",
+   "prat": "S-ORDINARY way 1: no qualifying E2 claim; manufacturer source present -> high.",
+   "noSecondary": "No qualifying claim unit."
+  },
+  "notes": [],
+  "changes": [
+   {
+    "property": "provisional properties",
+    "blind": "general/[]/regular/not_targeted (low, provisional)",
+    "final": "see records",
+    "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+    "reason": "post-unblind reconciliation (3.2)"
+   },
+   {
+    "property": "conditioningLevel",
+    "blind": "moderate / moderate / neighbor low",
+    "final": "moderate / low / neighbor high",
+    "evidence": "Retailer copy (dm.de x2, rossmann.de): 'Bienenwachs hat schützende Eigenschaften', 'nachhaltig bezogener Akazienhonig & Bienenwachs'; no Cera Alba in the frozen INCI.",
+    "reason": "ID-3 material conflict: a waxy payload lipid could create W-RICH with the guar."
+   },
+   {
+    "property": "weightPotential",
+    "blind": "low / moderate",
+    "final": "low / low",
+    "evidence": "Same beeswax claims.",
+    "reason": "ID-3: a prominent waxy lipid could move the band to moderate."
+   }
+  ],
+  "uncertainties": [
+   {
+    "reading": "Beeswax claim is a material conflict (ID-3) -> low confidence, needs_research",
+    "alternative": "note only (retailer marketing, canonical tier-2 manufacturer INCI wins) -> conditioning moderate/moderate, weight low/moderate, classified"
+   },
+   {
+    "reading": "focusPrimary general (repair claim incompatible with a moisture_supported verdict)",
+    "alternative": "repair if the guar/refatter/honey set is read as dual_supported"
+   }
+  ]
+ },
+ "T105": {
+  "name": "Balea (med) Shampoo Ultra Sensitive",
+  "facts": {
+   "cs": [
+    {
+     "ingredient": "Sodium Coco-Sulfate",
+     "position": 4,
+     "role": "defining anionic (C5)"
+    },
+    {
+     "ingredient": "Coco-Glucoside",
+     "position": 2,
+     "role": "buffer"
+    },
+    {
+     "ingredient": "Sodium Cocoamphoacetate",
+     "position": 5,
+     "role": "buffer"
+    }
+   ],
+   "cl": [
+    {
+     "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+     "position": 12,
+     "role": "cationic_polymer"
+    },
+    {
+     "ingredient": "Glyceryl Oleate",
+     "position": 11,
+     "role": "weak_refatter"
+    },
+    {
+     "ingredient": "Glycerin",
+     "position": 3,
+     "role": "humectant"
+    },
+    {
+     "ingredient": "Panthenol",
+     "position": 7,
+     "role": "humectant"
+    }
+   ]
+  },
+  "weightFamilies": {
+   "cationic_polymer": [
+    {
+     "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+     "position": 12,
+     "role": ""
+    }
+   ],
+   "weak_refatter": [
+    {
+     "ingredient": "Glyceryl Oleate",
+     "position": 11,
+     "role": ""
+    },
+    {
+     "ingredient": "Hydrogenated Palm Glycerides Citrate",
+     "position": 13,
+     "role": ""
+    },
+    {
+     "ingredient": "Lecithin",
+     "position": 14,
+     "role": ""
+    },
+    {
+     "ingredient": "Ascorbyl Palmitate",
+     "position": 10,
+     "role": ""
+    }
+   ],
+   "reset": [
+    {
+     "ingredient": "Coco-Glucoside",
+     "position": 2,
+     "role": "nonionic"
+    },
+    {
+     "ingredient": "Sodium Coco-Sulfate",
+     "position": 4,
+     "role": "anionic"
+    },
+    {
+     "ingredient": "Sodium Cocoamphoacetate",
+     "position": 5,
+     "role": "amphoteric"
+    }
+   ],
+   "humectant_context": [
+    {
+     "ingredient": "Glycerin",
+     "position": 3,
+     "role": ""
+    },
+    {
+     "ingredient": "Panthenol",
+     "position": 7,
+     "role": ""
+    }
+   ]
+  },
+  "focusP": {
+   "value": "scalp_active",
+   "confidence": "moderate",
+   "neighboringAlternative": "general",
+   "rationale": "scalp_active: 'Mildes Shampoo für empfindliche Kopfhaut' is an E2 sensitive claim unit (manufacturer, moderate) and scalpComfortTarget is targeted; under F7 neither role is in the product name ('Ultra Sensitive' does not name the scalp), so the problem-led scalp role is primary.",
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": ""
+   },
+   "claimRole": "candidate",
+   "formulaFacts": [
+    {
+     "ingredient": "Panthenol",
+     "position": 7,
+     "role": "comfort route"
+    },
+    {
+     "ingredient": "Niacinamide",
+     "position": 8,
+     "role": "comfort route"
+    }
+   ],
+   "counterSignal": "Mildness/'ohne die Kopfhaut zu reizen' wording is protective, and the moisture claim competes as a lengths role.",
+   "decisionTrace": {
+    "claimDirection": "sensitive scalp",
+    "formulaCompatible": true,
+    "compatibleRoute": "Panthenol 7 + Niacinamide 8 comfort routes in a mild-led C5 chassis, fragrance-free",
+    "decisionReason": "F7 step 2: scalp_active primary when neither role is named."
+   }
+  },
+  "focusS": {
+   "value": [
+    "moisture"
+   ],
+   "confidence": "moderate",
+   "neighboringAlternative": [],
+   "rationale": "moisture: distinct manufacturer claim 'Pflegeformel mit 5 % Glycerin ... spendet Feuchtigkeit und pflegt das Haar geschmeidig' with an independent route (Glycerin 3 + Guar 12 + Glyceryl Oleate 11) not cited by the scalp route (Panthenol, Niacinamide).",
+   "counterSignal": "The same sentence also credits Panthenol and Niacinamide; the moisture verdict is weak.",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [
+     "moisture"
+    ],
+    "matchingDistinctClaims": [
+     "spendet Feuchtigkeit (manufacturer)"
+    ],
+    "independentRoutes": [
+     "Glycerin 3",
+     "Guar 12",
+     "Glyceryl Oleate 11"
+    ],
+    "whyDistinctFromPrimary": "Lengths hydration vs. scalp comfort; different ingredients (F3).",
+    "exceptionCode": null
+   }
+  },
+  "usage": {
+   "value": "frequent",
+   "confidence": "moderate",
+   "neighboringAlternative": "regular",
+   "rationale": "frequent: 'ideal für die tägliche Haarwäsche bei sensibler Haut' (manufacturer, moderate, U2) and cleansingStrength moderate.",
+   "counterSignal": "Suitability wording.",
+   "decisionTrace": {
+    "default": "regular",
+    "triggerCode": "explicit_frequent_non_strong",
+    "triggerEvidence": [
+     "manufacturer_de: 'ideal für die tägliche Haarwäsche'"
+    ],
+    "losingTriggers": [],
+    "rationale": "frequent: 'ideal für die tägliche Haarwäsche bei sensibler Haut' (manufacturer, moderate, U2) and cleansingStrength moderate."
+   }
+  },
+  "sct": {
+   "value": "targeted",
+   "confidence": "moderate",
+   "neighboringAlternative": "not_targeted",
+   "rationale": "Targeted: SC1 holds ('Mildes Shampoo für empfindliche Kopfhaut', manufacturer, moderate) and CSA holds (prominent Panthenol 7, Niacinamide 8, Glycerin 3); fragrance-free, mild-led chassis as supportive signals.",
+   "counterSignal": "Positioning only at moderate grade; C5 sulfate present.",
+   "formulaFacts": [
+    {
+     "ingredient": "Panthenol",
+     "position": 7,
+     "role": "comfort"
+    },
+    {
+     "ingredient": "Niacinamide",
+     "position": 8,
+     "role": "comfort"
+    },
+    {
+     "ingredient": "Glycerin",
+     "position": 3,
+     "role": "humectant"
+    }
+   ]
+  },
+  "D1": {
+   "value": false,
+   "confidence": "high",
+   "rationale": "No D1 wording.",
+   "dailyDirections": false
+  },
+  "targets": {
+   "primary": "sensitive",
+   "pconf": "moderate",
+   "prat": "S-SENSITIVE: E2 sensitive unit (moderate) + targeted + prominent comfort routes (Panthenol 7, Niacinamide 8). Confidence = min(positioning moderate, scalpComfortTarget moderate).",
+   "noSecondary": "No dry-scalp, oily or dandruff unit ('ohne die Kopfhaut zu reizen' is protective wording)."
+  },
+  "notes": [],
+  "changes": [
+   {
+    "property": "provisional properties",
+    "blind": "general/[]/regular/not_targeted (low, provisional)",
+    "final": "see records",
+    "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+    "reason": "post-unblind reconciliation (3.2)"
+   }
+  ],
+  "uncertainties": [
+   {
+    "reading": "cleansingStrength moderate (C5: two buffers) with neighbor low",
+    "alternative": "neighbor value low as the real-world mildness; no value change by convention"
+   },
+   {
+    "reading": "focusSecondary ['moisture']",
+    "alternative": "[] if the moisture sentence is read as part of the sensitive-care positioning"
+   }
+  ]
+ },
+ "T106": {
+  "name": "Neqi Moisture Mystery Shampoo",
+  "facts": {
+   "cs": [
+    {
+     "ingredient": "Disodium laureth sulfosuccinate",
+     "position": 2,
+     "role": "mild anionic"
+    },
+    {
+     "ingredient": "Cocamidopropyl betaine",
+     "position": 3,
+     "role": "amphoteric"
+    },
+    {
+     "ingredient": "Cocamidopropyl hydroxysultaine",
+     "position": 4,
+     "role": "amphoteric"
+    }
+   ],
+   "cl": [
+    {
+     "ingredient": "PEG-18 glyceryl oleate/cocoate",
+     "position": 5,
+     "role": "weak_refatter"
+    },
+    {
+     "ingredient": "Guar hydroxypropyltrimonium chloride",
+     "position": 18,
+     "role": "cationic_polymer, late"
+    }
+   ]
+  },
+  "weightFamilies": {
+   "weak_refatter": [
+    {
+     "ingredient": "PEG-18 glyceryl oleate/cocoate",
+     "position": 5,
+     "role": "prominent"
+    }
+   ],
+   "cationic_polymer": [
+    {
+     "ingredient": "Guar hydroxypropyltrimonium chloride",
+     "position": 18,
+     "role": "after Parfum"
+    }
+   ],
+   "protein_film": [
+    {
+     "ingredient": "Avena sativa (Oat) peptide",
+     "position": 8,
+     "role": "after Parfum"
+    }
+   ],
+   "unresolved_light_emollient": [
+    {
+     "ingredient": "C13-15 alkane",
+     "position": 21,
+     "role": "hemisqualane, late"
+    }
+   ],
+   "excluded": [
+    {
+     "ingredient": "Algin",
+     "position": 7,
+     "role": "thickener"
+    },
+    {
+     "ingredient": "Juniperus virginiana oil",
+     "position": 12,
+     "role": "essential oil (6.4)"
+    },
+    {
+     "ingredient": "Citrus aurantium peel oil",
+     "position": 13,
+     "role": "essential oil"
+    },
+    {
+     "ingredient": "Glycol distearate",
+     "position": 14,
+     "role": "pearlizer"
+    }
+   ],
+   "reset": [
+    {
+     "ingredient": "Disodium laureth sulfosuccinate",
+     "position": 2,
+     "role": "mild anionic"
+    },
+    {
+     "ingredient": "Cocamidopropyl betaine",
+     "position": 3,
+     "role": "amphoteric"
+    },
+    {
+     "ingredient": "Cocamidopropyl hydroxysultaine",
+     "position": 4,
+     "role": "amphoteric"
+    }
+   ]
+  },
+  "weightNote": "Claim 'Hemisqualan' maps to C13-15 Alkane (21); 'Monoi' to Gardenia Taitensis (9); 'Goji' to Lycium (10); 'Peptide aus Hafer' to Avena Sativa Peptide (8). No conflict.",
+  "focusP": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "moisture",
+   "rationale": "General: 'Moisture' is in the product name (high), but the formula verdict is nonspecific (no humectant cluster: Glycerin 23 is late; only a prominent PEG refatter), so moisture is not supported (F1).",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": "No coherent humectant cluster."
+   },
+   "claimRole": "not_applicable",
+   "formulaFacts": [
+    {
+     "ingredient": "PEG-18 glyceryl oleate/cocoate",
+     "position": 5,
+     "role": "refatter"
+    },
+    {
+     "ingredient": "Glycerin",
+     "position": 23,
+     "role": "humectant, late"
+    }
+   ],
+   "counterSignal": "Strong moisture positioning in the name.",
+   "decisionTrace": {
+    "claimDirection": "moisture",
+    "formulaCompatible": false,
+    "compatibleRoute": "none",
+    "decisionReason": "Moisture claim over a nonspecific verdict -> general (F1)."
+   }
+  },
+  "focusS": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Empty: no supported second role (repair/shine wording sits on a manufacturer page that may be the Swiss storefront and has no independent route).",
+   "counterSignal": "None.",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingDistinctClaims": [],
+    "independentRoutes": [],
+    "whyDistinctFromPrimary": "",
+    "exceptionCode": null
+   }
+  },
+  "usage": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Default regular: no trigger.",
+   "counterSignal": "None.",
+   "decisionTrace": {
+    "default": "regular",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": [],
+    "rationale": "Default regular: no trigger."
+   }
+  },
+  "sct": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No E2 scalp claim ('sanfte Reinigung von Haaren und Kopfhaut, ohne zu strapazieren' is protective); 'fettiges Haar' appears only in a suitable-for-all-hair-types list, not as a for/against unit.",
+   "counterSignal": "None.",
+   "formulaFacts": []
+  },
+  "D1": {
+   "value": false,
+   "confidence": "high",
+   "rationale": "No D1 wording.",
+   "dailyDirections": false
+  },
+  "targets": {
+   "primary": "ordinary",
+   "pconf": "high",
+   "prat": "S-ORDINARY way 1: no qualifying E2 unit; packet contains a manufacturer source -> high.",
+   "noSecondary": "'fettiges ... Haar' is a hair-type suitability list, not an oily-scalp claim unit."
+  },
+  "notes": [],
+  "changes": [
+   {
+    "property": "provisional properties",
+    "blind": "general/[]/regular/not_targeted (low, provisional)",
+    "final": "see records",
+    "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+    "reason": "post-unblind reconciliation (3.2)"
+   }
+  ],
+  "uncertainties": [
+   {
+    "reading": "German-language NEQI page priced in CHF treated per E1 as possibly foreign-market (claims effectively low) — irrelevant to the outcome because the name carries moisture",
+    "alternative": "moderate manufacturer page"
+   },
+   {
+    "reading": "conditioningLevel low",
+    "alternative": "moderate (several light routes)"
+   }
+  ]
+ },
+ "T107": {
+  "name": "SANTE Glossy Shine Shampoo Birke + 3-fach Protein Komplex",
+  "facts": {
+   "cs": [
+    {
+     "ingredient": "Ammonium Lauryl Sulfate",
+     "position": 2,
+     "role": "defining anionic (C5)"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 3,
+     "role": "only buffer"
+    }
+   ],
+   "cl": [
+    {
+     "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+     "position": 8,
+     "role": "cationic_polymer"
+    },
+    {
+     "ingredient": "Hydrolyzed Corn Protein",
+     "position": 5,
+     "role": "protein"
+    },
+    {
+     "ingredient": "Hydrolyzed Wheat Protein",
+     "position": 7,
+     "role": "protein"
+    },
+    {
+     "ingredient": "Hydrolyzed Soy Protein",
+     "position": 9,
+     "role": "protein"
+    },
+    {
+     "ingredient": "Glycerin",
+     "position": 6,
+     "role": "humectant"
+    }
+   ]
+  },
+  "weightFamilies": {
+   "cationic_polymer": [
+    {
+     "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+     "position": 8,
+     "role": "prominent"
+    }
+   ],
+   "protein_film": [
+    {
+     "ingredient": "Hydrolyzed Corn Protein",
+     "position": 5,
+     "role": ""
+    },
+    {
+     "ingredient": "Hydrolyzed Wheat Protein",
+     "position": 7,
+     "role": ""
+    },
+    {
+     "ingredient": "Hydrolyzed Soy Protein",
+     "position": 9,
+     "role": ""
+    }
+   ],
+   "reset": [
+    {
+     "ingredient": "Ammonium Lauryl Sulfate",
+     "position": 2,
+     "role": "anionic"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 3,
+     "role": "amphoteric"
+    }
+   ],
+   "humectant_context": [
+    {
+     "ingredient": "Glycerin",
+     "position": 6,
+     "role": ""
+    }
+   ]
+  },
+  "weightNote": "Claim '3-fach Protein Komplex' maps to corn/wheat/soy proteins; 'Bio-Birkenblattextrakt' to Betula Alba Leaf Extract. No conflict.",
+  "focusP": {
+   "value": "shine",
+   "confidence": "moderate",
+   "neighboringAlternative": "repair",
+   "rationale": "Shine: 'Glossy Shine' is the product name (high) and the manufacturer positions it for 'glanzloses und stumpfes Haar'; the formula is compatible through a light smoothing route (Guar 8) and acidic alignment (Citric Acid 10), with low weight.",
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": ""
+   },
+   "claimRole": "candidate",
+   "formulaFacts": [
+    {
+     "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+     "position": 8,
+     "role": "smoothing"
+    },
+    {
+     "ingredient": "Citric Acid",
+     "position": 10,
+     "role": "acidic alignment (supports primary shine only, F4)"
+    }
+   ],
+   "counterSignal": "The protein complex claim ('stärkt ... baut das Haar auf') is a competing repair role.",
+   "decisionTrace": {
+    "claimDirection": "shine",
+    "formulaCompatible": true,
+    "compatibleRoute": "Guar 8 smoothing + Citric Acid 10 acidic alignment, low weight",
+    "decisionReason": "Dominant name claim with compatible formula (7.1 shine)."
+   }
+  },
+  "focusS": {
+   "value": [
+    "repair"
+   ],
+   "confidence": "moderate",
+   "neighboringAlternative": [],
+   "rationale": "repair: distinct manufacturer positioning ('Der 3-fach Protein Komplex stärkt, pflegt & schützt das Haar', 'füllt & baut das Haar auf') with an independent route (three hydrolyzed proteins 5, 7, 9) not cited by the shine route; repair_supported protein cluster.",
+   "counterSignal": "Strengthening wording is softer than damage/breakage positioning.",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [
+     "repair"
+    ],
+    "matchingDistinctClaims": [
+     "3-fach Protein Komplex stärkt ... baut das Haar auf (manufacturer)"
+    ],
+    "independentRoutes": [
+     "Hydrolyzed Corn Protein 5",
+     "Hydrolyzed Wheat Protein 7",
+     "Hydrolyzed Soy Protein 9"
+    ],
+    "whyDistinctFromPrimary": "Proteins vs. guar/acid smoothing (F3).",
+    "exceptionCode": null
+   }
+  },
+  "usage": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Default regular: strong cleansing but no reset intent (U4) and no other trigger.",
+   "counterSignal": "None.",
+   "decisionTrace": {
+    "default": "regular",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": [],
+    "rationale": "Default regular: strong cleansing but no reset intent (U4) and no other trigger."
+   }
+  },
+  "sct": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No scalp claim ('Verträglichkeit dermatologisch getestet' is protective).",
+   "counterSignal": "None.",
+   "formulaFacts": []
+  },
+  "D1": {
+   "value": false,
+   "confidence": "high",
+   "rationale": "No D1 wording.",
+   "dailyDirections": false
+  },
+  "targets": {
+   "primary": "ordinary",
+   "pconf": "high",
+   "prat": "S-ORDINARY way 1; manufacturer source present -> high.",
+   "noSecondary": "No qualifying claim unit."
+  },
+  "notes": [],
+  "changes": [
+   {
+    "property": "provisional properties",
+    "blind": "general/[]/regular/not_targeted (low, provisional)",
+    "final": "see records",
+    "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+    "reason": "post-unblind reconciliation (3.2)"
+   }
+  ],
+  "uncertainties": [
+   {
+    "reading": "focusSecondary ['repair']",
+    "alternative": "[] if 'stärkt/baut auf' is not read as damage positioning"
+   },
+   {
+    "reading": "weightPotential low (strong reset faces light routes)",
+    "alternative": "moderate (guar 8 + three proteins)"
+   }
+  ]
+ },
+ "T108": {
+  "name": "ISANA MED Shampoo pH 5,5 hautneutral",
+  "facts": {
+   "cs": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "defining anionic"
+    },
+    {
+     "ingredient": "Sodium Laureth-8 Sulfate",
+     "position": 9,
+     "role": "reinforcing"
+    },
+    {
+     "ingredient": "Magnesium Laureth Sulfate",
+     "position": 11,
+     "role": "reinforcing"
+    },
+    {
+     "ingredient": "Sodium Oleth Sulfate",
+     "position": 14,
+     "role": "reinforcing"
+    }
+   ],
+   "cl": [
+    {
+     "ingredient": "Urea",
+     "position": 3,
+     "role": "humectant"
+    },
+    {
+     "ingredient": "Panthenol",
+     "position": 8,
+     "role": "humectant"
+    },
+    {
+     "ingredient": "Glycol Distearate",
+     "position": 10,
+     "role": "pearlizer"
+    }
+   ]
+  },
+  "weightFamilies": {
+   "excluded": [
+    {
+     "ingredient": "Glycol Distearate",
+     "position": 10,
+     "role": "pearlizer"
+    },
+    {
+     "ingredient": "Laureth-4",
+     "position": 13,
+     "role": "thickener"
+    }
+   ],
+   "humectant_context": [
+    {
+     "ingredient": "Urea",
+     "position": 3,
+     "role": ""
+    },
+    {
+     "ingredient": "Panthenol",
+     "position": 8,
+     "role": ""
+    },
+    {
+     "ingredient": "Glycerin",
+     "position": 20,
+     "role": ""
+    }
+   ],
+   "reset": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "anionic"
+    },
+    {
+     "ingredient": "Sodium Laureth-8 Sulfate",
+     "position": 9,
+     "role": "anionic"
+    },
+    {
+     "ingredient": "Magnesium Laureth Sulfate",
+     "position": 11,
+     "role": "anionic"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 5,
+     "role": "amphoteric"
+    }
+   ]
+  },
+  "focusP": {
+   "value": "scalp_active",
+   "confidence": "moderate",
+   "neighboringAlternative": "general",
+   "rationale": "scalp_active: 'Das ISANA MED SHAMPOO ist eine Spezialentwicklung für sensible Kopfhaut' (manufacturer/own-brand, moderate) is an E2 sensitive claim unit; scalpComfortTarget targeted via Urea 3 / Panthenol 8. No competing lengths role.",
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": ""
+   },
+   "claimRole": "candidate",
+   "formulaFacts": [
+    {
+     "ingredient": "Urea",
+     "position": 3,
+     "role": "comfort route"
+    },
+    {
+     "ingredient": "Panthenol",
+     "position": 8,
+     "role": "comfort route"
+    }
+   ],
+   "counterSignal": "Strong (convention) ether-sulfate cleansing is a comfort counter-signal.",
+   "decisionTrace": {
+    "claimDirection": "sensitive scalp",
+    "formulaCompatible": true,
+    "compatibleRoute": "Urea 3 + Panthenol 8 comfort routes",
+    "decisionReason": "Explicit sensitive-scalp positioning with targeted (7.2)."
+   }
+  },
+  "focusS": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "moisture"
+   ],
+   "rationale": "Empty: 'Feuchtigkeits-Komplex' / 'schützt Kopfhaut & Haar vor Austrocknung' is protective wording, and the moisture verdict is nonspecific (no deposition support); the humectants are already the primary route (F3).",
+   "counterSignal": "Moisture complex wording.",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingDistinctClaims": [],
+    "independentRoutes": [],
+    "whyDistinctFromPrimary": "Would reuse Urea/Panthenol.",
+    "exceptionCode": null
+   }
+  },
+  "usage": {
+   "value": "regular",
+   "confidence": "moderate",
+   "neighboringAlternative": "frequent",
+   "rationale": "regular: 'für jeden Tag' (manufacturer, moderate) is U2 wording, but cleansingStrength is strong, so frequent does not fire; no reset intent.",
+   "counterSignal": "Explicit daily wording; frequent would fire if cleansing were moderate (the cleansing neighbor).",
+   "decisionTrace": {
+    "default": "regular",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": [
+     "explicit_frequent_non_strong blocked: cleansingStrength strong"
+    ],
+    "rationale": "regular: 'für jeden Tag' (manufacturer, moderate) is U2 wording, but cleansingStrength is strong, so frequent does not fire; no reset intent."
+   }
+  },
+  "sct": {
+   "value": "targeted",
+   "confidence": "moderate",
+   "neighboringAlternative": "not_targeted",
+   "rationale": "Targeted: SC1 holds (sensible Kopfhaut unit, moderate) and CSA holds (prominent Urea 3, Panthenol 8). Strong cleansing is a counter-signal -> confidence moderate.",
+   "counterSignal": "cleansingStrength strong (CSA counter-signal).",
+   "formulaFacts": [
+    {
+     "ingredient": "Urea",
+     "position": 3,
+     "role": "comfort/humectant"
+    },
+    {
+     "ingredient": "Panthenol",
+     "position": 8,
+     "role": "comfort/humectant"
+    }
+   ]
+  },
+  "D1": {
+   "value": false,
+   "confidence": "high",
+   "rationale": "No D1 wording.",
+   "dailyDirections": false
+  },
+  "targets": {
+   "primary": "sensitive",
+   "pconf": "moderate",
+   "prat": "S-SENSITIVE: E2 sensitive unit (moderate) + targeted + prominent comfort route (Urea 3, Panthenol 8); cleansingStrength strong -> review_strong_cleansing_comfort_route. 'schützt ... vor Austrocknung' is protective, so no dry target.",
+   "noSecondary": "No dry-scalp unit (protective wording only)."
+  },
+  "flags": [
+   "review_strong_cleansing_comfort_route"
+  ],
+  "notes": [],
+  "changes": [
+   {
+    "property": "provisional properties",
+    "blind": "general/[]/regular/not_targeted (low, provisional)",
+    "final": "see records",
+    "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+    "reason": "post-unblind reconciliation (3.2)"
+   }
+  ],
+  "uncertainties": [
+   {
+    "reading": "cleansingStrength strong by C1 reinforcement (Mg laureth/oleth sulfates)",
+    "alternative": "moderate (mild blend); would make usage frequent and remove the strong-cleansing review flag"
+   }
+  ]
+ },
+ "T109": {
+  "name": "Herbal Essences Tiefenreinigung & Glanz Shampoo Limettenduft",
+  "facts": {
+   "cs": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "defining anionic, no prominent buffer"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 5,
+     "role": "after Parfum"
+    }
+   ],
+   "cl": []
+  },
+  "weightFamilies": {
+   "excluded": [
+    {
+     "ingredient": "Hydroxypropyl Methylcellulose",
+     "position": 13,
+     "role": "nonionic thickener"
+    },
+    {
+     "ingredient": "Citrus Aurantium Peel Oil",
+     "position": 11,
+     "role": "essential oil"
+    }
+   ],
+   "reset": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "anionic"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 5,
+     "role": "amphoteric, after Parfum"
+    }
+   ]
+  },
+  "focusP": {
+   "value": "clarifying",
+   "confidence": "moderate",
+   "neighboringAlternative": "shine",
+   "rationale": "Clarifying: 'Tiefenreinigung' is in the exact product name (high, D1) and the formula is compatible (cleansingStrength strong, conditioning low, weight low; F6).",
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": ""
+   },
+   "claimRole": "candidate",
+   "formulaFacts": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "reset chassis"
+    }
+   ],
+   "counterSignal": "'Glanz' is also in the name.",
+   "decisionTrace": {
+    "claimDirection": "deep cleansing",
+    "formulaCompatible": true,
+    "compatibleRoute": "Unbuffered (by convention) SLES chassis with no deposition",
+    "decisionReason": "Explicit deep-cleansing name with compatible architecture (7.2)."
+   }
+  },
+  "focusS": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "shine"
+   ],
+   "rationale": "Empty: 'Glanz' is in the name but there is no independent shine route (no smoothing/film; acids cannot create a secondary shine, F4).",
+   "counterSignal": "Shine in the name.",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingDistinctClaims": [
+     "Glanz (name)"
+    ],
+    "independentRoutes": [],
+    "whyDistinctFromPrimary": "No route besides pH adjusters (F4).",
+    "exceptionCode": null
+   }
+  },
+  "usage": {
+   "value": "occasional_reset",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "occasional_reset: D1 true from the product name (high). Directions do not limit or extend frequency.",
+   "counterSignal": "No occasional-use directions; strong + reset intent would also fire alternating.",
+   "decisionTrace": {
+    "default": "regular",
+    "triggerCode": "explicit_deep_cleansing",
+    "triggerEvidence": [
+     "product name: 'Tiefenreinigung & Glanz'"
+    ],
+    "losingTriggers": [
+     "alternating (strong_plus_reset_intent) loses under U1"
+    ],
+    "rationale": "occasional_reset: D1 true from the product name (high). Directions do not limit or extend frequency."
+   }
+  },
+  "sct": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No scalp claim. Complete ordinary formula.",
+   "counterSignal": "None.",
+   "formulaFacts": []
+  },
+  "D1": {
+   "value": true,
+   "confidence": "high",
+   "rationale": "D1 true: 'Tiefenreinigung' (stem tiefenrein) in the exact product name (high).",
+   "dailyDirections": false
+  },
+  "targets": {
+   "primary": "ordinary",
+   "pconf": "moderate",
+   "prat": "S-ORDINARY way 1: no qualifying E2 claim (no oily/scalp wording); packet has retailer copy only -> moderate.",
+   "noSecondary": "No qualifying claim unit."
+  },
+  "notes": [],
+  "changes": [
+   {
+    "property": "provisional properties",
+    "blind": "general/[]/regular/not_targeted (low, provisional)",
+    "final": "see records",
+    "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+    "reason": "post-unblind reconciliation (3.2)"
+   }
+  ],
+  "uncertainties": [
+   {
+    "reading": "cleansingStrength strong (betaine after the early Parfum does not buffer, C4)",
+    "alternative": "moderate -> D2 would fail; D3 ordinary-strength note instead of a deep-cleanser flag; intensity regular"
+   },
+   {
+    "reading": "ordinary confidence moderate (retailer copy only; the name is not a source)",
+    "alternative": "high"
+   }
+  ]
+ },
+ "T110": {
+  "name": "ISANA Shampoo & Spülung 2in1 Volumen (Malve & Acai)",
+  "facts": {
+   "cs": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "defining anionic (C1)"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 4,
+     "role": "buffer"
+    },
+    {
+     "ingredient": "Coco-Glucoside",
+     "position": 11,
+     "role": "buffer"
+    }
+   ],
+   "cl": [
+    {
+     "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+     "position": 13,
+     "role": "cationic_polymer"
+    },
+    {
+     "ingredient": "Hydrolyzed Wheat Protein",
+     "position": 7,
+     "role": "protein"
+    },
+    {
+     "ingredient": "Glyceryl Oleate",
+     "position": 12,
+     "role": "weak_refatter"
+    }
+   ]
+  },
+  "weightFamilies": {
+   "cationic_polymer": [
+    {
+     "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+     "position": 13,
+     "role": ""
+    }
+   ],
+   "protein_film": [
+    {
+     "ingredient": "Hydrolyzed Wheat Protein",
+     "position": 7,
+     "role": ""
+    }
+   ],
+   "weak_refatter": [
+    {
+     "ingredient": "Glyceryl Oleate",
+     "position": 12,
+     "role": ""
+    },
+    {
+     "ingredient": "Hydrogenated Palm Glycerides Citrate",
+     "position": 16,
+     "role": ""
+    }
+   ],
+   "excluded": [
+    {
+     "ingredient": "PEG-3 Distearate",
+     "position": 17,
+     "role": "PEG ester pearlizer"
+    }
+   ],
+   "reset": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "anionic"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 4,
+     "role": "amphoteric"
+    },
+    {
+     "ingredient": "Coco-Glucoside",
+     "position": 11,
+     "role": "nonionic"
+    }
+   ]
+  },
+  "weightNote": "'2in1' / 'Spülung' never raises conditioning or weight (C7).",
+  "focusP": {
+   "value": "volume",
+   "confidence": "moderate",
+   "neighboringAlternative": "general",
+   "rationale": "Volume: 'Volumen' is in the exact product name (high) and the own-brand page claims volume for 'kraftloses & feines Haar'; low weight is compatible.",
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": ""
+   },
+   "claimRole": "candidate",
+   "formulaFacts": [
+    {
+     "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+     "position": 13,
+     "role": "light conditioning"
+    }
+   ],
+   "counterSignal": "2-in-1 conditioning (guar) is a trade-off for volume.",
+   "decisionTrace": {
+    "claimDirection": "volume",
+    "formulaCompatible": true,
+    "compatibleRoute": "weightPotential low; light guar/protein architecture",
+    "decisionReason": "Name claim with compatible formula."
+   }
+  },
+  "focusS": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Empty: 2-in-1 care is a restatement of conditioning (C7), not a role.",
+   "counterSignal": "None.",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingDistinctClaims": [],
+    "independentRoutes": [],
+    "whyDistinctFromPrimary": "",
+    "exceptionCode": null
+   }
+  },
+  "usage": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Default regular: no trigger.",
+   "counterSignal": "None.",
+   "decisionTrace": {
+    "default": "regular",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": [],
+    "rationale": "Default regular: no trigger."
+   }
+  },
+  "sct": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No scalp claim ('pH-hautneutral', 'dermatologisch bestätigt' are protective).",
+   "counterSignal": "CSA formula half would pass.",
+   "formulaFacts": []
+  },
+  "D1": {
+   "value": false,
+   "confidence": "high",
+   "rationale": "No D1 wording.",
+   "dailyDirections": false
+  },
+  "targets": {
+   "primary": "ordinary",
+   "pconf": "high",
+   "prat": "S-ORDINARY way 1; manufacturer (own-brand) source present -> high.",
+   "noSecondary": "No qualifying claim unit."
+  },
+  "notes": [],
+  "changes": [
+   {
+    "property": "provisional properties",
+    "blind": "general/[]/regular/not_targeted (low, provisional)",
+    "final": "see records",
+    "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+    "reason": "post-unblind reconciliation (3.2)"
+   }
+  ],
+  "uncertainties": [
+   {
+    "reading": "weightPotential low",
+    "alternative": "moderate (three light families)"
+   }
+  ]
+ },
+ "T111": {
+  "name": "Schwarzkopf GLISS Sealing Miracle Versiegelndes Shampoo",
+  "facts": {
+   "cs": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "defining anionic (C1)"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 4,
+     "role": "buffer"
+    }
+   ],
+   "cl": [
+    {
+     "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+     "position": 6,
+     "role": "cationic_polymer"
+    },
+    {
+     "ingredient": "Pisum Sativum (Pea) Peptide",
+     "position": 5,
+     "role": "protein"
+    }
+   ]
+  },
+  "weightFamilies": {
+   "cationic_polymer": [
+    {
+     "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+     "position": 6,
+     "role": "prominent"
+    }
+   ],
+   "protein_film": [
+    {
+     "ingredient": "Pisum Sativum (Pea) Peptide",
+     "position": 5,
+     "role": "prominent"
+    }
+   ],
+   "weak_refatter": [
+    {
+     "ingredient": "Glyceryl Oleate",
+     "position": 10,
+     "role": "after Parfum"
+    },
+    {
+     "ingredient": "PEG-7 Glyceryl Cocoate",
+     "position": 12,
+     "role": "after Parfum"
+    }
+   ],
+   "payload_lipid": [
+    {
+     "ingredient": "Hydrogenated Castor Oil",
+     "position": 15,
+     "role": "after Parfum"
+    }
+   ],
+   "excluded": [
+    {
+     "ingredient": "Glycol Distearate",
+     "position": 13,
+     "role": "pearlizer"
+    },
+    {
+     "ingredient": "PEG-120 Methyl Glucose Dioleate",
+     "position": 16,
+     "role": "PEG thickener"
+    }
+   ],
+   "reset": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "anionic"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 4,
+     "role": "amphoteric"
+    }
+   ]
+  },
+  "weightNote": "'Reinigt, ohne das Haar zu beschweren' (moderate) never lowers the band.",
+  "focusP": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "repair",
+   "rationale": "General: pack and manufacturer position repair ('Für splissgeschädigtes Haar', 'Für geschädigtes und splissanfälliges Haar', moderate), but the formula verdict is nonspecific: one peptide token plus a single guar is not a coherent repair cluster (7.3), and claims cannot turn a nonspecific verdict into a specialist focus (3.2).",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [],
+    "repairRoutes": [
+     "Pea Peptide 5"
+    ],
+    "sharedConditioningRoutes": [
+     "Guar 6"
+    ],
+    "limitation": "One protein token; other routes after Parfum."
+   },
+   "claimRole": "not_applicable",
+   "formulaFacts": [
+    {
+     "ingredient": "Pisum Sativum (Pea) Peptide",
+     "position": 5,
+     "role": "single protein token"
+    },
+    {
+     "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+     "position": 6,
+     "role": "generic conditioning"
+    }
+   ],
+   "counterSignal": "Clear, consistent repair positioning.",
+   "decisionTrace": {
+    "claimDirection": "repair",
+    "formulaCompatible": false,
+    "compatibleRoute": "none (single peptide token)",
+    "decisionReason": "Repair claim over a nonspecific verdict -> general (F1)."
+   }
+  },
+  "focusS": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Empty.",
+   "counterSignal": "None.",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingDistinctClaims": [],
+    "independentRoutes": [],
+    "whyDistinctFromPrimary": "",
+    "exceptionCode": null
+   }
+  },
+  "usage": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Default regular: 'Regelmäßig anwenden' is not U2 frequency wording.",
+   "counterSignal": "None.",
+   "decisionTrace": {
+    "default": "regular",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": [],
+    "rationale": "Default regular: 'Regelmäßig anwenden' is not U2 frequency wording."
+   }
+  },
+  "sct": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No scalp claim.",
+   "counterSignal": "None.",
+   "formulaFacts": []
+  },
+  "D1": {
+   "value": false,
+   "confidence": "high",
+   "rationale": "'Versiegelnd' is not D1 wording.",
+   "dailyDirections": false
+  },
+  "targets": {
+   "primary": "ordinary",
+   "pconf": "high",
+   "prat": "S-ORDINARY way 1; manufacturer/pack sources present -> high.",
+   "noSecondary": "No qualifying claim unit."
+  },
+  "notes": [],
+  "changes": [
+   {
+    "property": "provisional properties",
+    "blind": "general/[]/regular/not_targeted (low, provisional)",
+    "final": "see records",
+    "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+    "reason": "post-unblind reconciliation (3.2)"
+   }
+  ],
+  "uncertainties": [
+   {
+    "reading": "careDirection nonspecific -> focus general",
+    "alternative": "repair_supported (prominent guar + peptide read as a deposition cluster) -> focus repair"
+   }
+  ]
+ },
+ "T112": {
+  "name": "OGX Biotin & Collagen Shampoo (Thick & Full)",
+  "facts": {
+   "cs": [
+    {
+     "ingredient": "Sodium Methyl Cocoyl Taurate",
+     "position": 2,
+     "role": "mild anionic"
+    },
+    {
+     "ingredient": "Decyl Glucoside",
+     "position": 3,
+     "role": "glucoside"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 4,
+     "role": "amphoteric"
+    }
+   ],
+   "cl": [
+    {
+     "ingredient": "Amodimethicone",
+     "position": 10,
+     "role": "amino-silicone"
+    },
+    {
+     "ingredient": "Starch Hydroxypropyltrimonium Chloride",
+     "position": 9,
+     "role": "cationic_polymer"
+    },
+    {
+     "ingredient": "Hydrolyzed Collagen",
+     "position": 7,
+     "role": "protein"
+    },
+    {
+     "ingredient": "Urea",
+     "position": 15,
+     "role": "humectant"
+    }
+   ]
+  },
+  "weightFamilies": {
+   "silicone": [
+    {
+     "ingredient": "Amodimethicone",
+     "position": 10,
+     "role": "prominent"
+    }
+   ],
+   "cationic_polymer": [
+    {
+     "ingredient": "Starch Hydroxypropyltrimonium Chloride",
+     "position": 9,
+     "role": ""
+    }
+   ],
+   "protein_film": [
+    {
+     "ingredient": "Hydrolyzed Collagen",
+     "position": 7,
+     "role": ""
+    }
+   ],
+   "possible_film_former": [
+    {
+     "ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+     "position": 8,
+     "role": "recognition gap"
+    }
+   ],
+   "weak_refatter": [
+    {
+     "ingredient": "Glyceryl Oleate",
+     "position": 12,
+     "role": ""
+    },
+    {
+     "ingredient": "Hydrogenated Palm Glycerides Citrate",
+     "position": 16,
+     "role": ""
+    },
+    {
+     "ingredient": "Lecithin",
+     "position": 19,
+     "role": ""
+    }
+   ],
+   "excluded": [
+    {
+     "ingredient": "PEG-150 Distearate",
+     "position": 20,
+     "role": "PEG thickener"
+    }
+   ],
+   "reset": [
+    {
+     "ingredient": "Sodium Methyl Cocoyl Taurate",
+     "position": 2,
+     "role": "mild anionic"
+    },
+    {
+     "ingredient": "Decyl Glucoside",
+     "position": 3,
+     "role": "nonionic"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 4,
+     "role": "amphoteric"
+    },
+    {
+     "ingredient": "Coco-Glucoside",
+     "position": 11,
+     "role": "nonionic"
+    }
+   ]
+  },
+  "weightNote": "Retailer claims 'Weizenprotein'/'hydrolysiertem Weizenprotein' have no INCI match; a light hydrolyzed protein would not move the band (moderate), so the conflict is a note (ID-3). 'Ohne Silikone' (Rossmann, low) conflicts with Amodimethicone 10: the frozen INCI wins; recorded.",
+  "focusP": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "volume",
+   "rationale": "General: all positioning is retailer copy or a US manufacturer page (low). Volume/fullness ('Thick & Full', 'mehr Volumen') is the dominant claim but a low claim may act only with an independently supporting formula verdict, and a moderate-weight amino-silicone/cationic formula does not independently support volume. The repair_supported verdict has no matching German positioning.",
+   "careDirection": {
+    "verdict": "repair_supported",
+    "moistureRoutes": [],
+    "repairRoutes": [
+     "Amodimethicone 10",
+     "Hydrolyzed Collagen 7",
+     "Starch HPTC 9"
+    ],
+    "sharedConditioningRoutes": [],
+    "limitation": "Positioning low-graded only."
+   },
+   "claimRole": "not_applicable",
+   "formulaFacts": [
+    {
+     "ingredient": "Amodimethicone",
+     "position": 10,
+     "role": "deposition"
+    },
+    {
+     "ingredient": "Hydrolyzed Collagen",
+     "position": 7,
+     "role": "protein"
+    }
+   ],
+   "counterSignal": "Volume is the clearly dominant (low-graded) claim; formula has a repair-type route.",
+   "decisionTrace": {
+    "claimDirection": "volume (low-graded)",
+    "formulaCompatible": false,
+    "compatibleRoute": "none independently supporting volume",
+    "decisionReason": "Low-graded claim without independent formula support -> general (CL-SRC, 7.2)."
+   }
+  },
+  "focusS": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Empty: no moderate/high positioning.",
+   "counterSignal": "None.",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingDistinctClaims": [],
+    "independentRoutes": [],
+    "whyDistinctFromPrimary": "",
+    "exceptionCode": null
+   }
+  },
+  "usage": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Default regular: 'für die tägliche Haarwäsche' is Müller copy (low) and cannot fire frequent.",
+   "counterSignal": "Daily wording (low).",
+   "decisionTrace": {
+    "default": "regular",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": [],
+    "rationale": "Default regular: 'für die tägliche Haarwäsche' is Müller copy (low) and cannot fire frequent."
+   }
+  },
+  "sct": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No scalp claim.",
+   "counterSignal": "CSA formula half would pass (Urea 15).",
+   "formulaFacts": []
+  },
+  "D1": {
+   "value": false,
+   "confidence": "high",
+   "rationale": "No D1 wording.",
+   "dailyDirections": false
+  },
+  "targets": {
+   "primary": "ordinary",
+   "pconf": "moderate",
+   "prat": "S-ORDINARY way 1: no qualifying E2 claim; the only manufacturer source is a foreign (US) page graded like retailer copy (E1), so retailer-only -> moderate.",
+   "noSecondary": "No qualifying claim unit."
+  },
+  "notes": [],
+  "changes": [
+   {
+    "property": "provisional properties",
+    "blind": "general/[]/regular/not_targeted (low, provisional)",
+    "final": "see records",
+    "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+    "reason": "post-unblind reconciliation (3.2)"
+   }
+  ],
+  "uncertainties": [
+   {
+    "reading": "ordinary confidence moderate (US manufacturer page treated as retailer-equivalent)",
+    "alternative": "high (a manufacturer source exists)"
+   },
+   {
+    "reading": "focusPrimary general",
+    "alternative": "volume (low claim) or repair (formula route)"
+   },
+   {
+    "reading": "conditioningLevel moderate / weightPotential moderate",
+    "alternative": "high / high (amodimethicone + cationic under weak reset)"
+   },
+   {
+    "reading": "Weizenprotein and 'ohne Silikone' retailer conflicts are notes, not material",
+    "alternative": "material conflict -> low confidence"
+   }
+  ]
+ },
+ "T113": {
+  "name": "OGX Strength & Length + Keratin Oil Shampoo",
+  "facts": {
+   "cs": [
+    {
+     "ingredient": "Sodium Methyl Cocoyl Taurate",
+     "position": 2,
+     "role": "mild anionic"
+    },
+    {
+     "ingredient": "Decyl Glucoside",
+     "position": 3,
+     "role": "glucoside"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 4,
+     "role": "amphoteric"
+    }
+   ],
+   "cl": [
+    {
+     "ingredient": "Argania Spinosa Kernel Oil",
+     "position": 7,
+     "role": "payload_lipid"
+    },
+    {
+     "ingredient": "Amodimethicone",
+     "position": 10,
+     "role": "silicone"
+    },
+    {
+     "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+     "position": 11,
+     "role": "cationic_polymer"
+    },
+    {
+     "ingredient": "Hydrogenated Castor Oil",
+     "position": 12,
+     "role": "payload_lipid"
+    },
+    {
+     "ingredient": "Glycol Distearate",
+     "position": 15,
+     "role": "pearlizer"
+    }
+   ]
+  },
+  "weightFamilies": {
+   "payload_lipid": [
+    {
+     "ingredient": "Argania Spinosa Kernel Oil",
+     "position": 7,
+     "role": "prominent"
+    },
+    {
+     "ingredient": "Hydrogenated Castor Oil",
+     "position": 12,
+     "role": "waxy"
+    }
+   ],
+   "silicone": [
+    {
+     "ingredient": "Amodimethicone",
+     "position": 10,
+     "role": "prominent"
+    }
+   ],
+   "cationic_polymer": [
+    {
+     "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+     "position": 11,
+     "role": ""
+    }
+   ],
+   "protein_film": [
+    {
+     "ingredient": "Hydrolyzed Keratin",
+     "position": 6,
+     "role": ""
+    }
+   ],
+   "possible_film_former": [
+    {
+     "ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+     "position": 8,
+     "role": "recognition gap"
+    }
+   ],
+   "excluded": [
+    {
+     "ingredient": "Glycol Distearate",
+     "position": 15,
+     "role": "pearlizer"
+    },
+    {
+     "ingredient": "PEG-150 Distearate",
+     "position": 16,
+     "role": "PEG thickener"
+    }
+   ],
+   "reset": [
+    {
+     "ingredient": "Sodium Methyl Cocoyl Taurate",
+     "position": 2,
+     "role": "mild anionic"
+    },
+    {
+     "ingredient": "Decyl Glucoside",
+     "position": 3,
+     "role": "nonionic"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 4,
+     "role": "amphoteric"
+    }
+   ]
+  },
+  "weightNote": "Claims 'Arganöl' and 'Keratin' map to Argania Spinosa Kernel Oil 7 and Hydrolyzed Keratin 6.",
+  "focusP": {
+   "value": "repair",
+   "confidence": "moderate",
+   "neighboringAlternative": "general",
+   "rationale": "Repair: retailer copy (low) positions anti-breakage/split-end care for 'strapaziertes Haar'; the formula verdict is independently repair_supported (keratin + amodimethicone + argan oil + guar), so the low claim may act as candidate with confidence capped at moderate (CL-SRC).",
+   "careDirection": {
+    "verdict": "repair_supported",
+    "moistureRoutes": [],
+    "repairRoutes": [
+     "Hydrolyzed Keratin 6",
+     "Amodimethicone 10",
+     "Argania Spinosa Kernel Oil 7"
+    ],
+    "sharedConditioningRoutes": [
+     "Guar 11",
+     "Hydrogenated Castor Oil 12"
+    ],
+    "limitation": "Claims low-graded."
+   },
+   "claimRole": "candidate",
+   "formulaFacts": [
+    {
+     "ingredient": "Hydrolyzed Keratin",
+     "position": 6,
+     "role": "protein"
+    },
+    {
+     "ingredient": "Amodimethicone",
+     "position": 10,
+     "role": "damage-selective deposition"
+    },
+    {
+     "ingredient": "Argania Spinosa Kernel Oil",
+     "position": 7,
+     "role": "lipid"
+    }
+   ],
+   "counterSignal": "Positioning is low-graded only; heavy weight.",
+   "decisionTrace": {
+    "claimDirection": "repair",
+    "formulaCompatible": true,
+    "compatibleRoute": "Hydrolyzed Keratin 6 + Amodimethicone 10 + Argan Oil 7 + Guar 11",
+    "decisionReason": "Low claim plus independently supporting repair_supported verdict."
+   }
+  },
+  "focusS": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Empty: shine/elasticity claims are outcomes of the same repair/deposition route (F2) and low-graded.",
+   "counterSignal": "None.",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingDistinctClaims": [],
+    "independentRoutes": [],
+    "whyDistinctFromPrimary": "",
+    "exceptionCode": null
+   }
+  },
+  "usage": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Default regular: no trigger.",
+   "counterSignal": "None.",
+   "decisionTrace": {
+    "default": "regular",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": [],
+    "rationale": "Default regular: no trigger."
+   }
+  },
+  "sct": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No scalp claim.",
+   "counterSignal": "None.",
+   "formulaFacts": []
+  },
+  "D1": {
+   "value": false,
+   "confidence": "high",
+   "rationale": "No D1 wording.",
+   "dailyDirections": false
+  },
+  "targets": {
+   "primary": "ordinary",
+   "pconf": "moderate",
+   "prat": "S-ORDINARY way 1: no qualifying E2 claim; retailer copy only -> moderate.",
+   "noSecondary": "No qualifying claim unit."
+  },
+  "notes": [],
+  "changes": [
+   {
+    "property": "provisional properties",
+    "blind": "general/[]/regular/not_targeted (low, provisional)",
+    "final": "see records",
+    "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+    "reason": "post-unblind reconciliation (3.2)"
+   }
+  ],
+  "uncertainties": [
+   {
+    "reading": "weightPotential high (W-RICH + weak reset)",
+    "alternative": "moderate (rinse-off context, unknown argan/amodimethicone levels)"
+   },
+   {
+    "reading": "conditioningLevel high via W-RICH although C2 lacks a closed-list humectant",
+    "alternative": "moderate"
+   }
+  ]
+ },
+ "T114": {
+  "name": "Sebamed Anti-Schuppen Shampoo PLUS",
+  "facts": {
+   "cs": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "defining anionic (C1)"
+    },
+    {
+     "ingredient": "Lauryl Glucoside",
+     "position": 3,
+     "role": "buffer"
+    },
+    {
+     "ingredient": "Sodium Lauroyl Sarcosinate",
+     "position": 4,
+     "role": "buffer"
+    }
+   ],
+   "cl": [
+    {
+     "ingredient": "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+     "position": 6,
+     "role": "cationic_polymer"
+    }
+   ],
+   "ds": [
+    {
+     "ingredient": "Piroctone Olamine",
+     "position": 7,
+     "role": "recognized anti-dandruff active"
+    }
+   ]
+  },
+  "weightFamilies": {
+   "cationic_polymer": [
+    {
+     "ingredient": "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+     "position": 6,
+     "role": "single family"
+    }
+   ],
+   "reset": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "anionic"
+    },
+    {
+     "ingredient": "Lauryl Glucoside",
+     "position": 3,
+     "role": "nonionic"
+    },
+    {
+     "ingredient": "Sodium Lauroyl Sarcosinate",
+     "position": 4,
+     "role": "mild anionic"
+    }
+   ]
+  },
+  "focusP": {
+   "value": "scalp_active",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "scalp_active: anti-dandruff positioning in the exact product name ('Anti-Schuppen', high) with a recognized active (Piroctone Olamine 7).",
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": ""
+   },
+   "claimRole": "candidate",
+   "formulaFacts": [
+    {
+     "ingredient": "Piroctone Olamine",
+     "position": 7,
+     "role": "anti-dandruff active"
+    }
+   ],
+   "counterSignal": "Prominent Menthol (8) and oily-hair positioning compete as secondary roles.",
+   "decisionTrace": {
+    "claimDirection": "dandruff",
+    "formulaCompatible": true,
+    "compatibleRoute": "Piroctone Olamine 7",
+    "decisionReason": "Problem-led product with recognized active and anti-dandruff positioning (7.2)."
+   }
+  },
+  "focusS": {
+   "value": [
+    "clarifying"
+   ],
+   "confidence": "moderate",
+   "neighboringAlternative": [],
+   "rationale": "clarifying: distinct oily positioning ('für fettendes Haar', 'bei schnell fettendem Haar', manufacturer, moderate) with a compatible architecture (moderate cleansing, conditioning not high, weight low; F6) resting on the surfactant chassis, which the anti-dandruff route (Piroctone) does not cite.",
+   "counterSignal": "The oily wording sits inside/next to dandruff units; a route resting on the cleansing chassis is close to the invalid 'clarifying only because cleansing is strong' pattern.",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [
+     "clarifying"
+    ],
+    "matchingDistinctClaims": [
+     "für fettendes Haar (manufacturer headline)",
+     "Bekämpfung von Schuppen bei schnell fettendem Haar (manufacturer)"
+    ],
+    "independentRoutes": [
+     "SLES 2 + Lauryl Glucoside 3 + Sarcosinate 4 low-deposition chassis"
+    ],
+    "whyDistinctFromPrimary": "Oil control vs. anti-dandruff active (F3).",
+    "exceptionCode": null
+   }
+  },
+  "usage": {
+   "value": "treatment",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "treatment: dandruffSupport supported and a qualifying E2 dandruff claim in the product name (high) (U3).",
+   "counterSignal": "Directions 'Täglich oder 2-3x pro Woche' also fire frequent, which loses under U1.",
+   "decisionTrace": {
+    "default": "regular",
+    "triggerCode": "recognized_active_problem_led",
+    "triggerEvidence": [
+     "name: 'Anti-Schuppen'",
+     "Piroctone Olamine 7"
+    ],
+    "losingTriggers": [
+     "frequent (explicit_frequent_non_strong: 'Täglich oder 2-3x pro Woche anwenden') loses under U1"
+    ],
+    "rationale": "treatment: dandruffSupport supported and a qualifying E2 dandruff claim in the product name (high) (U3)."
+   }
+  },
+  "sct": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not targeted: 'Juckreiz' occurs only inside a dandruff claim unit (E2a, a dandruff symptom, not SC1) and CSA fails (no prominent E4 comfort or humectant route; prominent Menthol 8).",
+   "counterSignal": "Itch wording inside the dandruff unit.",
+   "formulaFacts": [
+    {
+     "ingredient": "Menthol",
+     "position": 8,
+     "role": "cooling counter-signal"
+    }
+   ]
+  },
+  "D1": {
+   "value": false,
+   "confidence": "high",
+   "rationale": "No D1 wording.",
+   "dailyDirections": false
+  },
+  "targets": {
+   "primary": "dandruff",
+   "pconf": "high",
+   "prat": "S-DANDRUFF: E2 dandruff claim in the product name (high) + dandruffSupport supported (Piroctone 7) -> dandruff primary (S-PRIMARY, R17.1). Confidence = min(positioning high, dandruffSupport high).",
+   "noSecondary": "Dandruff-primary: no secondary target (R17.2); itch and oily wording go to the research-only combination (E2b)."
+  },
+  "rct": [
+   "oily"
+  ],
+  "rctRat": "E2b layer 2: sensitive — bundled comfort wording 'Juckreiz' (manufacturer, moderate) but the S-SENSITIVE formula gate fails (CSA: no prominent E4 comfort/humectant route; Menthol 8) -> not recorded, note dandruff_bundled_comfort_wording. dry — no dry-scalp unit. oily — 'bei schnell fettendem Haar' / 'für fettendes Haar' (manufacturer, moderate) + S-OILY clause passes (cleansing moderate, weight low, conditioning moderate) -> 'oily', note suits_dandruff_with_oily_scalp; confidence min(dandruff high, wording moderate) = moderate.",
+  "notes": [
+   "suits_dandruff_with_oily_scalp",
+   "dandruff_bundled_comfort_wording:'Bekämpfung von Schuppen bei schnell fettendem Haar und Juckreiz' — S-SENSITIVE formula gate failed (CSA: no prominent E4 comfort or humectant route; prominent Menthol 8)"
+  ],
+  "changes": [
+   {
+    "property": "provisional properties",
+    "blind": "general/[]/regular/not_targeted (low, provisional)",
+    "final": "see records",
+    "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+    "reason": "post-unblind reconciliation (3.2)"
+   }
+  ],
+  "uncertainties": [
+   {
+    "reading": "focusSecondary ['clarifying'] on oily positioning",
+    "alternative": "[] (oily wording absorbed by dandruff units; route = chassis only)"
+   },
+   {
+    "reading": "conditioningLevel moderate (prominent cationic starch)",
+    "alternative": "low"
+   }
+  ]
+ },
+ "T115": {
+  "name": "Balea med Duschgel & Shampoo 5% Urea 2in1",
+  "facts": {
+   "cs": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "defining anionic (C1)"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 4,
+     "role": "buffer"
+    }
+   ],
+   "cl": [
+    {
+     "ingredient": "Urea",
+     "position": 3,
+     "role": "humectant"
+    },
+    {
+     "ingredient": "Glycerin",
+     "position": 5,
+     "role": "humectant"
+    },
+    {
+     "ingredient": "Panthenol",
+     "position": 8,
+     "role": "humectant"
+    },
+    {
+     "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+     "position": 17,
+     "role": "cationic, after Parfum"
+    }
+   ],
+   "ds": [
+    {
+     "ingredient": "Piroctone Olamine",
+     "position": 22,
+     "role": "recognized anti-dandruff active (late, preservative-level)"
+    }
+   ]
+  },
+  "weightFamilies": {
+   "cationic_polymer": [
+    {
+     "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+     "position": 17,
+     "role": "after Parfum"
+    }
+   ],
+   "weak_refatter": [
+    {
+     "ingredient": "Glyceryl Oleate",
+     "position": 13,
+     "role": "after Parfum"
+    },
+    {
+     "ingredient": "Hydrogenated Palm Glycerides Citrate",
+     "position": 18,
+     "role": "after Parfum"
+    },
+    {
+     "ingredient": "Lecithin",
+     "position": 19,
+     "role": "after Parfum"
+    },
+    {
+     "ingredient": "Ascorbyl Palmitate",
+     "position": 11,
+     "role": ""
+    }
+   ],
+   "excluded": [
+    {
+     "ingredient": "Glycol Distearate",
+     "position": 15,
+     "role": "pearlizer"
+    },
+    {
+     "ingredient": "Laureth-4",
+     "position": 16,
+     "role": "thickener"
+    }
+   ],
+   "reset": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "anionic"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 4,
+     "role": "amphoteric"
+    }
+   ],
+   "humectant_context": [
+    {
+     "ingredient": "Urea",
+     "position": 3,
+     "role": ""
+    },
+    {
+     "ingredient": "Glycerin",
+     "position": 5,
+     "role": ""
+    },
+    {
+     "ingredient": "Sodium Lactate",
+     "position": 7,
+     "role": ""
+    },
+    {
+     "ingredient": "Panthenol",
+     "position": 8,
+     "role": ""
+    }
+   ]
+  },
+  "focusP": {
+   "value": "scalp_active",
+   "confidence": "moderate",
+   "neighboringAlternative": "moisture",
+   "rationale": "scalp_active: 'speziell für trockene sowie empfindliche Haut und Kopfhaut entwickelt' and 'schützt zudem vor Juckreiz' (dm own-brand page, moderate) are E2 dry and sensitive scalp units; scalpComfortTarget targeted. F7: neither role in the product name -> scalp role primary.",
+   "careDirection": {
+    "verdict": "moisture_supported",
+    "moistureRoutes": [
+     "Urea 3",
+     "Glycerin 5",
+     "Sodium Lactate 7",
+     "Panthenol 8"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": "Humectants are the scalp route."
+   },
+   "claimRole": "candidate",
+   "formulaFacts": [
+    {
+     "ingredient": "Urea",
+     "position": 3,
+     "role": "comfort/humectant"
+    },
+    {
+     "ingredient": "Panthenol",
+     "position": 8,
+     "role": "comfort"
+    },
+    {
+     "ingredient": "Allantoin",
+     "position": 9,
+     "role": "comfort"
+    }
+   ],
+   "counterSignal": "Body-wash/2-in-1 positioning; moisture wording for skin and hair competes.",
+   "decisionTrace": {
+    "claimDirection": "sensitive + dry scalp",
+    "formulaCompatible": true,
+    "compatibleRoute": "Urea 3 + Panthenol 8 + Allantoin 9 comfort routes; Glycerin 5 humectant",
+    "decisionReason": "F7 step 2."
+   }
+  },
+  "focusS": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "moisture"
+   ],
+   "rationale": "Empty: the lengths-moisture wording ('dem Austrocknen von Haut und Haar entgegenwirken') would rest on the same Urea/Glycerin/Panthenol route the scalp role cites (F3); the only other routes are late guar/refatters.",
+   "counterSignal": "Moisture wording.",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingDistinctClaims": [],
+    "independentRoutes": [],
+    "whyDistinctFromPrimary": "Shared humectant route.",
+    "exceptionCode": null
+   }
+  },
+  "usage": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Default regular: no frequency wording, no dandruff claim, no reset intent.",
+   "counterSignal": "None.",
+   "decisionTrace": {
+    "default": "regular",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": [],
+    "rationale": "Default regular: no frequency wording, no dandruff claim, no reset intent."
+   }
+  },
+  "sct": {
+   "value": "targeted",
+   "confidence": "moderate",
+   "neighboringAlternative": "not_targeted",
+   "rationale": "Targeted: SC1 (dry and sensitive scalp unit, moderate) and CSA (prominent Urea 3, Panthenol 8, Allantoin 9, Glycerin 5) both hold; Parfum is declared (counter-signal).",
+   "counterSignal": "Declared Parfum; moderate-grade positioning.",
+   "formulaFacts": [
+    {
+     "ingredient": "Urea",
+     "position": 3,
+     "role": "comfort/humectant"
+    },
+    {
+     "ingredient": "Allantoin",
+     "position": 9,
+     "role": "comfort"
+    },
+    {
+     "ingredient": "Glycerin",
+     "position": 5,
+     "role": "humectant"
+    }
+   ]
+  },
+  "D1": {
+   "value": false,
+   "confidence": "high",
+   "rationale": "No D1 wording.",
+   "dailyDirections": false
+  },
+  "targets": {
+   "primary": "sensitive",
+   "pconf": "moderate",
+   "prat": "S-SENSITIVE passes (E2 sensitive unit 'empfindliche ... Kopfhaut', moderate; targeted; comfort routes Urea/Panthenol/Allantoin). S-DRY also passes (same unit names 'trockene ... Kopfhaut'; humectant routes). No name preference -> S-PRIMARY order puts sensitive first. Piroctone Olamine without dandruff claim does not restrict these paths (R17.3).",
+   "secondary": "dry",
+   "sconf": "moderate",
+   "srat": "S-DRY: dry-scalp unit (moderate) + targeted + prominent humectant route (Urea 3, Glycerin 5, Panthenol 8); a unit naming two non-dandruff states counts for both (E2a)."
+  },
+  "notes": [
+   "active_without_dandruff_positioning"
+  ],
+  "changes": [
+   {
+    "property": "provisional properties",
+    "blind": "general/[]/regular/not_targeted (low, provisional)",
+    "final": "see records",
+    "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+    "reason": "post-unblind reconciliation (3.2)"
+   }
+  ],
+  "uncertainties": [
+   {
+    "reading": "A combined 'Duschgel & Shampoo' is classified as a regular shampoo",
+    "alternative": "identity/scope question for the orchestrator"
+   },
+   {
+    "reading": "one unit names both dry and sensitive scalp -> two targets",
+    "alternative": "sensitive only"
+   },
+   {
+    "reading": "conditioningLevel low",
+    "alternative": "moderate (humectant cluster + late guar/refatters)"
+   }
+  ]
+ },
+ "T116": {
+  "name": "Herbal Essences Shampoo Fiji (Schwerelose Feuchtigkeit)",
+  "facts": {
+   "cs": [
+    {
+     "ingredient": "Sodium Cocoyl Isethionate",
+     "position": 2,
+     "role": "mild anionic"
+    },
+    {
+     "ingredient": "Lauramidopropyl Betaine",
+     "position": 3,
+     "role": "amphoteric"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 4,
+     "role": "amphoteric"
+    }
+   ],
+   "cl": [
+    {
+     "ingredient": "Polyquaternium-10",
+     "position": 11,
+     "role": "cationic, after Parfum"
+    }
+   ]
+  },
+  "weightFamilies": {
+   "cationic_polymer": [
+    {
+     "ingredient": "Polyquaternium-10",
+     "position": 11,
+     "role": "after Parfum"
+    }
+   ],
+   "excluded": [
+    {
+     "ingredient": "Citrus Aurantium Peel Oil",
+     "position": 17,
+     "role": "essential oil"
+    }
+   ],
+   "reset": [
+    {
+     "ingredient": "Sodium Cocoyl Isethionate",
+     "position": 2,
+     "role": "mild anionic"
+    },
+    {
+     "ingredient": "Lauramidopropyl Betaine",
+     "position": 3,
+     "role": "amphoteric"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 4,
+     "role": "amphoteric"
+    },
+    {
+     "ingredient": "Sodium Lauroyl Sarcosinate",
+     "position": 5,
+     "role": "mild anionic"
+    }
+   ]
+  },
+  "weightNote": "'schwerelose Feuchtigkeit' / 'ohne zu beschweren' never lowers the band. 'Kokosnussextrakt' maps to Cocos Nucifera Fruit Juice (25).",
+  "focusP": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "moisture",
+   "rationale": "General: moisture positioning ('Shampoo für schwerelose Feuchtigkeit', manufacturer, moderate; 'Feuchtigkeitsshampoo', retailer) over a nonspecific formula (no humectant cluster: Glycerin 24 late; only PQ-10 after Parfum) -> F1 general.",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": ""
+   },
+   "claimRole": "not_applicable",
+   "formulaFacts": [
+    {
+     "ingredient": "Polyquaternium-10",
+     "position": 11,
+     "role": "light conditioning"
+    },
+    {
+     "ingredient": "Glycerin",
+     "position": 24,
+     "role": "late humectant"
+    }
+   ],
+   "counterSignal": "Consistent moisture positioning.",
+   "decisionTrace": {
+    "claimDirection": "moisture",
+    "formulaCompatible": false,
+    "compatibleRoute": "none",
+    "decisionReason": "Moisture claim over a nonspecific verdict -> general."
+   }
+  },
+  "focusS": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Empty.",
+   "counterSignal": "None.",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingDistinctClaims": [],
+    "independentRoutes": [],
+    "whyDistinctFromPrimary": "",
+    "exceptionCode": null
+   }
+  },
+  "usage": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Default regular.",
+   "counterSignal": "None.",
+   "decisionTrace": {
+    "default": "regular",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": [],
+    "rationale": "Default regular."
+   }
+  },
+  "sct": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No scalp claim.",
+   "counterSignal": "None.",
+   "formulaFacts": []
+  },
+  "D1": {
+   "value": false,
+   "confidence": "high",
+   "rationale": "No D1 wording.",
+   "dailyDirections": false
+  },
+  "targets": {
+   "primary": "ordinary",
+   "pconf": "high",
+   "prat": "S-ORDINARY way 1; manufacturer source present -> high.",
+   "noSecondary": "No qualifying claim unit."
+  },
+  "notes": [],
+  "changes": [
+   {
+    "property": "provisional properties",
+    "blind": "general/[]/regular/not_targeted (low, provisional)",
+    "final": "see records",
+    "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+    "reason": "post-unblind reconciliation (3.2)"
+   }
+  ],
+  "uncertainties": [
+   {
+    "reading": "focusPrimary general (nonspecific verdict)",
+    "alternative": "moisture"
+   }
+  ]
+ },
+ "T117": {
+  "name": "PANTENE PRO-V Shampoo miracles Hydra Glow",
+  "facts": {
+   "cs": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "defining anionic (C1)"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 4,
+     "role": "buffer"
+    }
+   ],
+   "cl": [
+    {
+     "ingredient": "Stearyl Alcohol",
+     "position": 6,
+     "role": "payload_lipid"
+    },
+    {
+     "ingredient": "Cetyl Alcohol",
+     "position": 9,
+     "role": "fatty route"
+    },
+    {
+     "ingredient": "Polyquaternium-6",
+     "position": 14,
+     "role": "cationic_polymer"
+    },
+    {
+     "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+     "position": 15,
+     "role": "cationic_polymer"
+    },
+    {
+     "ingredient": "Glycerin",
+     "position": 12,
+     "role": "humectant"
+    }
+   ]
+  },
+  "weightFamilies": {
+   "payload_lipid": [
+    {
+     "ingredient": "Stearyl Alcohol",
+     "position": 6,
+     "role": "prominent"
+    },
+    {
+     "ingredient": "Cetyl Alcohol",
+     "position": 9,
+     "role": ""
+    },
+    {
+     "ingredient": "Trihydroxystearin",
+     "position": 17,
+     "role": "waxy rheology lipid"
+    }
+   ],
+   "cationic_polymer": [
+    {
+     "ingredient": "Polyquaternium-6",
+     "position": 14,
+     "role": ""
+    },
+    {
+     "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+     "position": 15,
+     "role": ""
+    }
+   ],
+   "reset": [
+    {
+     "ingredient": "Sodium Laureth Sulfate",
+     "position": 2,
+     "role": "anionic"
+    },
+    {
+     "ingredient": "Cocamidopropyl Betaine",
+     "position": 4,
+     "role": "amphoteric"
+    }
+   ],
+   "humectant_context": [
+    {
+     "ingredient": "Glycerin",
+     "position": 12,
+     "role": ""
+    },
+    {
+     "ingredient": "Panthenol",
+     "position": 20,
+     "role": ""
+    },
+    {
+     "ingredient": "Sodium Hyaluronate",
+     "position": 23,
+     "role": ""
+    }
+   ]
+  },
+  "weightNote": "'ganz ohne zu beschweren' (retailer, low) never lowers the band. 'Baobab-Essenz' has no INCI match (botanical marketing name, no property role -> note, ID-3).",
+  "focusP": {
+   "value": "moisture",
+   "confidence": "moderate",
+   "neighboringAlternative": "general",
+   "rationale": "Moisture: 'Hydra' in the exact product name (high) plus retailer moisture copy; formula verdict moisture_supported (Glycerin, Panthenol, Sodium Hyaluronate with fatty-alcohol/cationic support).",
+   "careDirection": {
+    "verdict": "moisture_supported",
+    "moistureRoutes": [
+     "Glycerin 12",
+     "Panthenol 20",
+     "Sodium Hyaluronate 23"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Stearyl Alcohol 6",
+     "Cetyl Alcohol 9",
+     "Polyquaternium-6 14",
+     "Guar 15"
+    ],
+    "limitation": "Humectants late."
+   },
+   "claimRole": "candidate",
+   "formulaFacts": [
+    {
+     "ingredient": "Glycerin",
+     "position": 12,
+     "role": "humectant"
+    },
+    {
+     "ingredient": "Sodium Hyaluronate",
+     "position": 23,
+     "role": "humectant"
+    },
+    {
+     "ingredient": "Stearyl Alcohol",
+     "position": 6,
+     "role": "emollient support"
+    }
+   ],
+   "counterSignal": "Humectants are after Parfum; 'Glow' (shine) also in the name.",
+   "decisionTrace": {
+    "claimDirection": "moisture",
+    "formulaCompatible": true,
+    "compatibleRoute": "Glycerin 12 + Panthenol 20 + Sodium Hyaluronate 23 with Stearyl Alcohol 6 / PQ-6 14 / Guar 15",
+    "decisionReason": "Name claim with moisture_supported verdict (F1)."
+   }
+  },
+  "focusS": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "shine"
+   ],
+   "rationale": "Empty: 'Glow' shine is delivered by the same fatty-alcohol/cationic smoothing route as the moisture role (F2).",
+   "counterSignal": "Shine in the name.",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingDistinctClaims": [
+     "Glow (name)"
+    ],
+    "independentRoutes": [],
+    "whyDistinctFromPrimary": "Same smoothing route (F2/F3).",
+    "exceptionCode": null
+   }
+  },
+  "usage": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Default regular: daily-use wording only in Müller copy (low).",
+   "counterSignal": "Daily wording (low).",
+   "decisionTrace": {
+    "default": "regular",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": [],
+    "rationale": "Default regular: daily-use wording only in Müller copy (low)."
+   }
+  },
+  "sct": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No scalp claim.",
+   "counterSignal": "None.",
+   "formulaFacts": []
+  },
+  "D1": {
+   "value": false,
+   "confidence": "high",
+   "rationale": "No D1 wording.",
+   "dailyDirections": false
+  },
+  "targets": {
+   "primary": "ordinary",
+   "pconf": "moderate",
+   "prat": "S-ORDINARY way 1: no qualifying E2 claim; retailer copy only -> moderate.",
+   "noSecondary": "No qualifying claim unit."
+  },
+  "notes": [],
+  "changes": [
+   {
+    "property": "provisional properties",
+    "blind": "general/[]/regular/not_targeted (low, provisional)",
+    "final": "see records",
+    "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+    "reason": "post-unblind reconciliation (3.2)"
+   }
+  ],
+  "uncertainties": [
+   {
+    "reading": "weightPotential moderate (W-RICH, moderate reset)",
+    "alternative": "high"
+   },
+   {
+    "reading": "conditioningLevel high via C2 (fatty alcohol in place of silicone)",
+    "alternative": "moderate if the fatty alcohols are read as opacifiers"
+   }
+  ]
+ },
+ "T118": {
+  "name": "Sebamed Every-Day Shampoo",
+  "facts": {
+   "cs": [
+    {
+     "ingredient": "Decyl Glucoside",
+     "position": 2,
+     "role": "earliest surfactant, glucoside"
+    },
+    {
+     "ingredient": "Disodium Laureth Sulfosuccinate",
+     "position": 3,
+     "role": "mild anionic"
+    },
+    {
+     "ingredient": "Sodium Lauryl Sulfoacetate",
+     "position": 4,
+     "role": "mild anionic"
+    }
+   ],
+   "cl": [
+    {
+     "ingredient": "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+     "position": 11,
+     "role": "cationic, after Parfum"
+    }
+   ]
+  },
+  "weightFamilies": {
+   "cationic_polymer": [
+    {
+     "ingredient": "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+     "position": 11,
+     "role": "after Parfum"
+    }
+   ],
+   "excluded": [
+    {
+     "ingredient": "PEG-55 Propylene Glycol Oleate",
+     "position": 5,
+     "role": "PEG thickener"
+    }
+   ],
+   "reset": [
+    {
+     "ingredient": "Decyl Glucoside",
+     "position": 2,
+     "role": "nonionic"
+    },
+    {
+     "ingredient": "Disodium Laureth Sulfosuccinate",
+     "position": 3,
+     "role": "mild anionic"
+    },
+    {
+     "ingredient": "Sodium Lauryl Sulfoacetate",
+     "position": 4,
+     "role": "mild anionic"
+    }
+   ]
+  },
+  "focusP": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "scalp_active",
+   "rationale": "General: the sensitive-scalp unit exists, but scalpComfortTarget is not_targeted (CSA fails), so scalp_active is incompatible; 'Every-Day'/mild positioning is not a focus (7.2).",
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": ""
+   },
+   "claimRole": "not_applicable",
+   "formulaFacts": [
+    {
+     "ingredient": "Decyl Glucoside",
+     "position": 2,
+     "role": "mild chassis"
+    }
+   ],
+   "counterSignal": "Explicit 'für empfindliche Kopfhaut' headline.",
+   "decisionTrace": {
+    "claimDirection": "sensitive scalp",
+    "formulaCompatible": false,
+    "compatibleRoute": "none (no listed prominent comfort/humectant route)",
+    "decisionReason": "Incompatible scalp claim; mildness not a focus -> general."
+   }
+  },
+  "focusS": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Empty.",
+   "counterSignal": "None.",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingDistinctClaims": [],
+    "independentRoutes": [],
+    "whyDistinctFromPrimary": "",
+    "exceptionCode": null
+   }
+  },
+  "usage": {
+   "value": "frequent",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "frequent: 'Every-Day' in the exact product name (high), 'für die tägliche Haarwäsche' and 'Für die tägliche Anwendung geeignet' (manufacturer, moderate); cleansingStrength low (not strong).",
+   "counterSignal": "None.",
+   "decisionTrace": {
+    "default": "regular",
+    "triggerCode": "explicit_frequent_non_strong",
+    "triggerEvidence": [
+     "name: 'Every-Day'",
+     "manufacturer: 'seifenfreies Shampoo für die tägliche Haarwäsche'",
+     "directions: 'Für die tägliche Anwendung geeignet'"
+    ],
+    "losingTriggers": [],
+    "rationale": "frequent: 'Every-Day' in the exact product name (high), 'für die tägliche Haarwäsche' and 'Für die tägliche Anwendung geeignet' (manufacturer, moderate); cleansingStrength low (not strong)."
+   }
+  },
+  "sct": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not targeted: SC1 holds ('Schonende, seifenfreie Reinigung für empfindliche Kopfhaut', manufacturer, moderate) but CSA fails — no prominent E4 comfort or humectant/refatting route (Sodium Lactate 14 is after Parfum); a mild chassis and pH 5.5 are not sufficient (CSA).",
+   "counterSignal": "Mild glucoside chassis, pH 5.5 (supportive signals only).",
+   "formulaFacts": [
+    {
+     "ingredient": "Sodium Lactate",
+     "position": 14,
+     "role": "humectant list, after Parfum"
+    }
+   ]
+  },
+  "D1": {
+   "value": false,
+   "confidence": "high",
+   "rationale": "No D1 wording.",
+   "dailyDirections": false
+  },
+  "targets": {
+   "primary": "ordinary",
+   "pconf": "moderate",
+   "prat": "S-ORDINARY way 4 (S-FAIL): the sensitive unit's formula gate fails (scalpComfortTarget not_targeted, no prominent comfort route) and no other specialist target passes -> ordinary proposed with review_specialist_gate_failed. Confidence moderate.",
+   "noSecondary": "'schützt Kopfhaut und Haar vor dem Austrocknen' is protective (no dry unit)."
+  },
+  "flags": [
+   "review_specialist_gate_failed:sensitive(formula gate: scalpComfortTarget not_targeted — no prominent E4 comfort or humectant route)"
+  ],
+  "notes": [],
+  "changes": [
+   {
+    "property": "provisional properties",
+    "blind": "general/[]/regular/not_targeted (low, provisional)",
+    "final": "see records",
+    "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+    "reason": "post-unblind reconciliation (3.2)"
+   }
+  ],
+  "uncertainties": [
+   {
+    "reading": "'Schonende ... Reinigung für empfindliche Kopfhaut' qualifies as a 'für …' sensitive unit (SC1) -> S-FAIL review",
+    "alternative": "sparing/tolerance wording under a gentle-cleansing heading (E2a) -> no unit, S-ORDINARY way 1 (high), no flag"
+   }
+  ]
+ },
+ "T119": {
+  "name": "L'Oréal Paris Elvital Hydra Hyaluronic 72H Feuchtigkeit-Auffüllendes Shampoo",
+  "facts": {
+   "cs": [
+    {
+     "ingredient": "SODIUM LAURETH SULFATE",
+     "position": 2,
+     "role": "defining anionic (C1)"
+    },
+    {
+     "ingredient": "COCAMIDOPROPYL BETAINE",
+     "position": 5,
+     "role": "buffer"
+    },
+    {
+     "ingredient": "COCO-BETAINE",
+     "position": 10,
+     "role": "buffer"
+    }
+   ],
+   "cl": [
+    {
+     "ingredient": "DIMETHICONE",
+     "position": 6,
+     "role": "early silicone"
+    },
+    {
+     "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+     "position": 8,
+     "role": "cationic"
+    },
+    {
+     "ingredient": "GLYCOL DISTEARATE",
+     "position": 3,
+     "role": "pearlizing route"
+    },
+    {
+     "ingredient": "SODIUM HYALURONATE",
+     "position": 13,
+     "role": "humectant (C2)"
+    }
+   ]
+  },
+  "weightFamilies": {
+   "silicone": [
+    {
+     "ingredient": "DIMETHICONE",
+     "position": 6,
+     "role": "prominent"
+    },
+    {
+     "ingredient": "AMODIMETHICONE",
+     "position": 23,
+     "role": "late"
+    }
+   ],
+   "cationic_polymer": [
+    {
+     "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+     "position": 8,
+     "role": ""
+    }
+   ],
+   "excluded": [
+    {
+     "ingredient": "GLYCOL DISTEARATE",
+     "position": 3,
+     "role": "pearlizer"
+    },
+    {
+     "ingredient": "PEG-100 STEARATE",
+     "position": 17,
+     "role": "PEG emulsifier"
+    },
+    {
+     "ingredient": "STEARETH-6",
+     "position": 14,
+     "role": "emulsifier"
+    },
+    {
+     "ingredient": "CARBOMER",
+     "position": 24,
+     "role": "anionic acrylate thickener (6.4)"
+    }
+   ],
+   "reset": [
+    {
+     "ingredient": "SODIUM LAURETH SULFATE",
+     "position": 2,
+     "role": "anionic"
+    },
+    {
+     "ingredient": "COCAMIDOPROPYL BETAINE",
+     "position": 5,
+     "role": "amphoteric"
+    },
+    {
+     "ingredient": "COCO-BETAINE",
+     "position": 10,
+     "role": "amphoteric"
+    }
+   ]
+  },
+  "weightNote": "'ganz ohne zu Beschweren' (moderate) never lowers the band; W1 decides.",
+  "focusP": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "moisture",
+   "rationale": "General: the name ('Hydra', 'Feuchtigkeit-Auffüllendes', high) positions moisture, but the formula verdict is nonspecific — a single (probably trace) Sodium Hyaluronate is not a coherent humectant cluster; the silicone/guar system is generic conditioning (F1).",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "Sodium Hyaluronate 13"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Dimethicone 6",
+     "Guar 8",
+     "Amodimethicone 23"
+    ],
+    "limitation": "One humectant token."
+   },
+   "claimRole": "not_applicable",
+   "formulaFacts": [
+    {
+     "ingredient": "SODIUM HYALURONATE",
+     "position": 13,
+     "role": "single humectant"
+    },
+    {
+     "ingredient": "DIMETHICONE",
+     "position": 6,
+     "role": "generic conditioning"
+    }
+   ],
+   "counterSignal": "Strong, consistent moisture positioning.",
+   "decisionTrace": {
+    "claimDirection": "moisture",
+    "formulaCompatible": false,
+    "compatibleRoute": "none (single humectant token)",
+    "decisionReason": "Moisture claim over a nonspecific verdict -> general."
+   }
+  },
+  "focusS": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Empty: shine/Schwung are outcomes of the silicone route (F2).",
+   "counterSignal": "None.",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingDistinctClaims": [],
+    "independentRoutes": [],
+    "whyDistinctFromPrimary": "",
+    "exceptionCode": null
+   }
+  },
+  "usage": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Default regular.",
+   "counterSignal": "None.",
+   "decisionTrace": {
+    "default": "regular",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": [],
+    "rationale": "Default regular."
+   }
+  },
+  "sct": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No E2 scalp claim ('versorgt Kopfhaut und Längen mit Feuchtigkeit' does not name a dry/sensitive scalp state).",
+   "counterSignal": "Scalp-moisture wording.",
+   "formulaFacts": []
+  },
+  "D1": {
+   "value": false,
+   "confidence": "high",
+   "rationale": "No D1 wording.",
+   "dailyDirections": false
+  },
+  "targets": {
+   "primary": "ordinary",
+   "pconf": "high",
+   "prat": "S-ORDINARY way 1; manufacturer source present -> high.",
+   "noSecondary": "No qualifying claim unit."
+  },
+  "notes": [],
+  "changes": [
+   {
+    "property": "provisional properties",
+    "blind": "general/[]/regular/not_targeted (low, provisional)",
+    "final": "see records",
+    "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+    "reason": "post-unblind reconciliation (3.2)"
+   }
+  ],
+  "uncertainties": [
+   {
+    "reading": "focusPrimary general (single hyaluronate is nonspecific)",
+    "alternative": "moisture (dual/moisture_supported if the silicone/guar system is accepted as conditioning support for one humectant)"
+   }
+  ]
+ }
+}

@@ -1,0 +1,347 @@
+{
+  "blindId": "W306",
+  "identity": {
+    "brand": "OGX",
+    "productName": "OGX Rosemary Mint Shampoo",
+    "packSize": "385 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "f63f993d63a9fa421eef25df232abb8f46d46bd5251f89608e49ba33a1f78fd5",
+    "normalization": "'Aqua/Water/Eau' and 'Parfum/Fragrance' are single slash-synonym entries; packet positions = normalized ID-2 positions (30 entries).",
+    "completeness": "complete; source tier 4; identity confidence high",
+    "e3ProminenceCutoff": "Parfum/Fragrance @30 (last). Prominent = positions 1-29.",
+    "identityNotes": "Formula source tier 4; positioning only from Rossmann PDP and pack-front images."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Low by C6: no prominent strong anionic; earliest prominent cleansing surfactant is the mild anionic Sodium Methyl Cocoyl Taurate @2 with prominent glucoside/amphoteric co-surfactants Decyl Glucoside @3, Cocamidopropyl Betaine @4 (and Coco-Glucoside @12). Coconut Acid @13 (soap with Sodium Hydroxide) and Disodium Tetrapropenyl Succinate @14 are carboxylate-type co-ingredients outside the strong-anionic classes and do not change C6.",
+      "ruleIds": [
+        "C6",
+        "C3",
+        "C4"
+      ],
+      "counterSignal": "Coconut Acid @13 soap and Disodium Tetrapropenyl Succinate @14 add some anionic cleansing; C6 convention unchanged.",
+      "sourceIds": [
+        "formula packet W306"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "rationale": "Moderate: an early (E3-prominent) Amodimethicone @11 plus cationic Starch Hydroxypropyltrimonium Chloride @17 and light refatters (Glyceryl Oleate @15, Lecithin @16, Hydrogenated Palm Glycerides Citrate @23), humectant Urea @25. C2 not met: no pearlizing wax or payload lipid/fatty alcohol as the pearlizing/fatty element (weak refatters do not fill it). Counter-signal: silicone + cationic + refatters + humectant come close to C2, so high is the neighbor; but both systems sit in the sub-1 % alphabetical zone (11-17), behind menthol/essential oils.",
+      "ruleIds": [
+        "C2",
+        "5",
+        "E3",
+        "N-ALT"
+      ],
+      "counterSignal": "See rationale.",
+      "sourceIds": [
+        "formula packet W306"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "evidence": {
+        "silicone": [
+          "Amodimethicone @11"
+        ],
+        "cationic_polymer": [
+          "Starch Hydroxypropyltrimonium Chloride @17"
+        ],
+        "cationic_conditioner": [],
+        "payload_lipid": [],
+        "weak_refatter": [
+          "Glyceryl Oleate @15",
+          "Lecithin @16",
+          "Hydrogenated Palm Glycerides Citrate @23",
+          "Ascorbyl Palmitate @29"
+        ],
+        "protein_film": [],
+        "film_former": [],
+        "reset": [
+          "Sodium Methyl Cocoyl Taurate @2 (mild anionic)",
+          "Decyl Glucoside @3",
+          "Cocamidopropyl Betaine @4",
+          "Coco-Glucoside @12",
+          "Coconut Acid @13 (soap, with NaOH)"
+        ],
+        "humectantContext": [
+          "Urea @25",
+          "Sodium Lactate @21"
+        ],
+        "excluded": [
+          "Rosmarinus Officinalis Leaf Oil @6, Mentha Piperita Oil @7 (essential oils, 6.4)",
+          "Menthol @8, Menthyl Lactate @9 (cooling agents)",
+          "PEG-150 Distearate @18 (PEG thickener, 6.4)",
+          "Hexylene Glycol @19 (solvent)",
+          "Tocopherol @28 (trace antioxidant)"
+        ],
+        "unresolved": [
+          "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate @10 (anionic modified-starch emulsifier/stabilizer; no cationic charge; not judged to move the band)",
+          "Disodium Tetrapropenyl Succinate @14 (anionic succinate co-surfactant/hydrotrope; reset side, no deposition)"
+        ]
+      },
+      "wLine": {
+        "position": 12,
+        "inci": "Coco-Glucoside",
+        "classes": [
+          "alphabetical_tail"
+        ],
+        "cap": "e3Point @30 (Parfum/Fragrance)",
+        "alphabeticalRun": {
+          "first": 11,
+          "last": 17,
+          "entries": "Amodimethicone, Coco-Glucoside, Coconut Acid, Disodium Tetrapropenyl Succinate, Glyceryl Oleate, Lecithin, Starch Hydroxypropyltrimonium Chloride"
+        },
+        "skipped": [],
+        "codes": [],
+        "note": "Run 11-17 does not contain the earliest cleansing surfactant (Sodium Methyl Cocoyl Taurate @2), so its second entry Coco-Glucoside @12 is the tail candidate. Plausible: (i) taurate @2 before it; (ii) run entries ignored; after the run no cleansing surfactant, alkanolamide or pearlizing wax before the cap (PEG-150 Distearate @18 is not a structurant for (ii)). No candidate in positions 1-11.",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "moderate",
+      "persistence": "moderate",
+      "resetCapacity": "weak",
+      "counterevidence": "Both deposition systems (Amodimethicone @11, Starch HPTC @17) lie inside an alphabetical sub-1 % zone and behind menthol/essential oils, i.e. likely trace-to-low dose (argues low); against that, amodimethicone is a persistent amino-silicone and the mild C6 chassis gives weak reset (argues heavier).",
+      "whyThisBand": "Two distinct deposition families (amino-silicone + cationic starch polymer) plus weak refatters in a mild low-reset chassis plausibly leave noticeable but bounded residue.",
+      "whyNotNeighborBand": "Not low: two families converge with weak reset, so 'one light polymer' is not available as a reason (W2). Not high: no payload lipid or rich architecture, and both systems are at low dose in the alphabetical tail zone, so a strongly coating result is not supported.",
+      "confidenceLimitingFactor": "Dose of the late silicone/polymer unknown (alphabetical zone); low is the more realistic neighbor than high.",
+      "rationale": "Moderate: amodimethicone @11 + cationic starch @17 + weak refatters with weak C6 reset; neighbor low.",
+      "ruleIds": [
+        "6.6",
+        "W2",
+        "W-LINE",
+        "N-ALT"
+      ],
+      "counterSignal": "See counterevidence.",
+      "sourceIds": [
+        "formula packet W306"
+      ],
+      "formulaFacts": "see evidence and wLine"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "neighboringAlternative": "clarifying",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": [
+          "Urea @25",
+          "Sodium Lactate @21"
+        ],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "Amodimethicone @11",
+          "Starch Hydroxypropyltrimonium Chloride @17",
+          "Glyceryl Oleate @15"
+        ],
+        "limitation": "Generic conditioning; no repair or moisture cluster."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Clarifying positioning is strong on the pack but the chassis is low (F6).",
+      "decisionTrace": "Claim direction clarifying (pack front, high: 'Clarifying blend visibly helps remove oils and residue to clear away buildup', 'ERFRISCHEND & KLÄREND'). F6: cleansingStrength low FAILS -> incompatible. Next: 'LIPI PRO SHIELD ... Lipid- und Proteinschutz' / 'geschädigte Haarfaser' (pack images) over a nonspecific verdict -> F1 general. 'refreshing scalp' is not a lexicon term. Decision general; failed condition F6 cleansingStrength low.",
+      "rationale": "General: clarifying claim incompatible (low cleansing, F6); damage-protection claim over a nonspecific formula.",
+      "ruleIds": [
+        "7.2",
+        "F6",
+        "F1"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "decisionTrace": "Empty default considered.",
+      "rationale": "Empty.",
+      "ruleIds": [
+        "8",
+        "F2",
+        "F3"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Default regular considered. Reset intent present ('klärend', 'Rückstände', 'Ablagerungen', pack high) but alternating needs cleansingStrength strong (low); no D1 stem ('Clarifying blend' is not 'Clarifying Shampoo'); no frequency wording.",
+      "ruleIds": [
+        "9",
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "CL-SRC"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No E2 sensitive/dry scalp claim ('refreshing scalp' is not a lexicon term). CSA/MB would be met (Urea @25, mild base) but positioning is absent.",
+      "ruleIds": [
+        "10",
+        "SC1",
+        "CSA",
+        "MB",
+        "E2a",
+        "E4"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active; rosemary/mint/menthol do not upgrade.",
+      "ruleIds": [
+        "11"
+      ],
+      "counterSignal": "None.",
+      "sourceIds": [
+        "formula packet W306"
+      ]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "mildAnionic": [
+        "Sodium Methyl Cocoyl Taurate @2"
+      ],
+      "nonionicGlucoside": [
+        "Decyl Glucoside @3",
+        "Coco-Glucoside @12"
+      ],
+      "amphoteric": [
+        "Cocamidopropyl Betaine @4"
+      ],
+      "otherAnionicCarboxylate": [
+        "Coconut Acid @13 (soap with Sodium Hydroxide @22)",
+        "Disodium Tetrapropenyl Succinate @14"
+      ],
+      "notCleansing": [
+        "Sodium Chloride @5",
+        "PEG-150 Distearate @18"
+      ]
+    },
+    "conditioningRoutes": [
+      "Amodimethicone @11",
+      "Starch Hydroxypropyltrimonium Chloride @17",
+      "Glyceryl Oleate @15",
+      "Lecithin @16",
+      "Hydrogenated Palm Glycerides Citrate @23"
+    ],
+    "weightRoutes": [
+      "silicone @11",
+      "cationic_polymer @17",
+      "weak_refatter @15/@16/@23/@29"
+    ],
+    "humectants": [
+      "Urea @25",
+      "Sodium Lactate @21"
+    ],
+    "actives": [
+      "Menthol @8",
+      "Menthyl Lactate @9",
+      "Urea @25"
+    ],
+    "exposure": [
+      "Rosmarinus Officinalis Leaf Oil @6",
+      "Mentha Piperita Oil @7",
+      "Menthol @8",
+      "Menthyl Lactate @9",
+      "Parfum @30"
+    ],
+    "mildBase": "mild_base:Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Coco-Glucoside",
+    "preservatives": [
+      "Sodium Benzoate @26",
+      "Benzoic Acid @27"
+    ]
+  },
+  "projection": {
+    "status": "proposal_blocked_by_review_flags",
+    "thicknessFit": {
+      "fine": "acceptable",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFitConfidence": {
+      "fine": "moderate",
+      "normal": "moderate",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": "T1 from weightPotential moderate and conditioningLevel moderate (ordinary target, no T6); T4 checked with neighbors W=low, C=high after T6. ",
+    "weight": "moderate",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE 1:1 from weightPotential moderate (confidence moderate).",
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "moderate",
+        "rationale": "S-ORDINARY way 4: the only oily claim unit ('befreit Ihr fettiges Haar von Ablagerungen') is Rossmann retailer copy graded low (positioning gate fails, E1); the S-OILY formula clause also fails (cleansingStrength low). Pack 'remove oils and residue' is not an English oily lexicon term."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "gentle",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength low, D1 false -> gentle. I3: neighbor none (high confidence, no I3 check).",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserListingConfidence": "high",
+    "deepCleanserRationale": "D1 false: 'Clarifying blend' / 'KLÄREND' are not D1 stems ('clarifying shampoo' needed); not_flagged.",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "moderate",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "moderate",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "moderate",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_specialist_gate_failed:oily(positioning gate: only retailer-graded low claim 'fettiges Haar'; formula gate S-OILY: cleansingStrength low)"
+    ],
+    "informationalNotes": [],
+    "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; not evaluated in lane."
+  },
+  "reconciliation": [
+    "focusPrimary provisional general -> general.",
+    "usageRole regular confirmed, confidence high.",
+    "scalpComfortTarget not_targeted confirmed (no SC1).",
+    "Direct formula properties unchanged."
+  ],
+  "selfCheck": "Fingerprint matches the frozen packet (f63f993d63a9). Formula judgments (cleansing, conditioning, weight, dandruff) were made blind and are unchanged from the hash-pinned formula pass; claims were used only per 3.2/CL-SRC. No ingredient, family count or position window assigned the weight band; the W-line was derived from the frozen list and only gates payload_lipid legs; every skipped candidate is recorded. Three weight subjudgments present; whyNotNeighborBand names the specific boundary; confidence names its limiting factor. Neighbors follow N-ALT. Projection derived mechanically (T1/T6/T4, W-LIVE, I1/I3, D1-D3, S-gates). No comparison with earlier values made in lane.",
+  "uncertainties": [
+    "D1: 'Clarifying blend' read as not matching the 'clarifying shampoo' stem; if read as D1, usage would be occasional_reset and the D3 note deep_cleansing_name_ordinary_formula would apply (low cleansing).",
+    "S-FAIL raised for an oily claim graded only low; alternative reading treats a low-only claim as no claim (way 1, no flag) - flag kept as the more conservative outcome.",
+    "weightPotential moderate, neighbor low (both systems in the alphabetical sub-1 % zone)."
+  ]
+}

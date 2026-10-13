@@ -1,0 +1,572 @@
+{
+  "blindId": "T410",
+  "inciFingerprintSha256": "ea583c276ba8648c7859a74cc4b46b845fa6743b80b4aeacd52f30a07f68f0b1",
+  "identity": {
+    "brand": "schauma",
+    "productName": "schauma Shampoo Repair & Pflege",
+    "market": "DE",
+    "packSize": "400 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": [
+      "ID-2: packet entries 'Aqua (Water' + 'Eau)' merged into one entry (position 1); all later positions are normalized (packet position minus 1).",
+      "E3 cut: Parfum at normalized 15; prominent = 2-14."
+    ]
+  },
+  "sourcesUsed": {
+    "formula": "formula/T410.json (fingerprint ea583c276ba8648c7859a74cc4b46b845fa6743b80b4aeacd52f30a07f68f0b1, source tier 2, completeness complete)",
+    "positioning": [
+      "reveal/T410.json#positioningSources[0] (manufacturer_de, packet grade moderate)",
+      "reveal/T410.json#positioningSources[1] (retailer, packet grade low)",
+      "reveal/T410.json#positioningSources[2] (retailer, packet grade low)"
+    ]
+  },
+  "claimGrading": {
+    "productName": "high",
+    "manufacturer_de": "moderate",
+    "dm.de": "low",
+    "rossmann.de": "low"
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "general (provisional; verdict dual_supported)",
+      "final": "repair",
+      "evidence": "name 'Repair & Pflege'",
+      "reason": "tie_breaker"
+    },
+    {
+      "property": "cleansingStrength/conditioningLevel/weightPotential/dandruffSupport",
+      "blind": "see formula-pass",
+      "final": "unchanged",
+      "evidence": "formula-only properties; no material formula conflict exposed by the reveal"
+    }
+  ],
+  "cleansingStrength": {
+    "value": "moderate",
+    "confidence": "high",
+    "rationale": "C1: defining anionic Sodium Laureth Sulfate (2) (ether/sulfonate type) with prominent buffer(s) Cocamidopropyl Betaine (4) and no prominent reinforcing strong anionic -> moderate. Laureth-4/-23, Trideceth-10 are thickeners/solubilizers. Unchanged after unblinding: claims never set cleansing strength (Section 4, 3.2).",
+    "formulaFacts": [
+      {
+        "ingredient": "Sodium Laureth Sulfate",
+        "position": 2,
+        "role": "defining anionic"
+      },
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 4,
+        "role": "buffer"
+      }
+    ],
+    "counterSignal": [
+      "PEG-7 Glyceryl Cocoate refatter (16), oil (7)"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "formula/T410.json (fingerprint ea583c276ba8648c7859a74cc4b46b845fa6743b80b4aeacd52f30a07f68f0b1, source tier 2, completeness complete)"
+    ]
+  },
+  "conditioningLevel": {
+    "value": "high",
+    "confidence": "high",
+    "rationale": "C2 met clearly: early silicones Amodimethicone (13) and Dimethicone (14) before Parfum (15) + cationic guar (5) + pearlizing Glycol Distearate (12) + humectants Panthenol (6) and Sorbitol (9); plus payload lipid Apricot Kernel Oil (7). Multiple complementary systems. Unchanged after unblinding: claims never raise or lower conditioning (3.2, C7).",
+    "formulaFacts": [
+      {
+        "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+        "position": 5,
+        "role": "cationic polymer"
+      },
+      {
+        "ingredient": "Panthenol",
+        "position": 6,
+        "role": "humectant/comfort"
+      },
+      {
+        "ingredient": "Prunus Armeniaca (Apricot) Kernel Oil",
+        "position": 7,
+        "role": "payload lipid"
+      },
+      {
+        "ingredient": "Sorbitol",
+        "position": 9,
+        "role": "humectant"
+      },
+      {
+        "ingredient": "Glycol Distearate",
+        "position": 12,
+        "role": "pearlizer"
+      },
+      {
+        "ingredient": "Amodimethicone",
+        "position": 13,
+        "role": "early amino-silicone"
+      },
+      {
+        "ingredient": "Dimethicone",
+        "position": 14,
+        "role": "early silicone"
+      },
+      {
+        "ingredient": "PEG-7 Glyceryl Cocoate",
+        "position": 16,
+        "role": "weak refatter"
+      },
+      {
+        "ingredient": "Hydrogenated Castor Oil",
+        "position": 21,
+        "role": "waxy lipid (late)"
+      }
+    ],
+    "counterSignal": [
+      "none material"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "formula/T410.json (fingerprint ea583c276ba8648c7859a74cc4b46b845fa6743b80b4aeacd52f30a07f68f0b1, source tier 2, completeness complete)"
+    ]
+  },
+  "weightPotential": {
+    "value": "moderate",
+    "confidence": "moderate",
+    "rationale": "moderate: W-RICH holds (prominent apricot oil + silicone/guar), but reset is moderate (not limited), so the rest of the method decides: converging routes give noticeable but bounded residue in an ordinary SLES base. Unchanged after unblinding (claims cannot decide the band, 6.5).",
+    "neighboringAlternative": "high",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "moderate",
+        "rationale": "Guar (5), apricot kernel oil (7), amodimethicone (13), dimethicone (14), weak refatter PEG-7 Glyceryl Cocoate (16), late HCO (21): several converging routes, each after the salt."
+      },
+      "persistence": {
+        "value": "moderate",
+        "rationale": "Amodimethicone is a persistent, damage-seeking silicone; oil and guar moderate; levels look modest (all after NaCl at 3)."
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C1 SLES/CAPB chassis: effective ordinary reset, not limited."
+      }
+    },
+    "extractedEvidenceByFamily": {
+      "silicone": [
+        [
+          "Amodimethicone",
+          13
+        ],
+        [
+          "Dimethicone",
+          14
+        ]
+      ],
+      "cationic_polymer": [
+        [
+          "Guar Hydroxypropyltrimonium Chloride",
+          5
+        ]
+      ],
+      "payload_lipid": [
+        [
+          "Prunus Armeniaca (Apricot) Kernel Oil",
+          7
+        ],
+        [
+          "Hydrogenated Castor Oil",
+          21
+        ]
+      ],
+      "weak_refatter": [
+        [
+          "PEG-7 Glyceryl Cocoate",
+          16
+        ]
+      ],
+      "protein_film": [],
+      "film_former": [],
+      "anionic_surfactant": [
+        [
+          "Sodium Laureth Sulfate",
+          2
+        ]
+      ],
+      "amphoteric_surfactant": [
+        [
+          "Cocamidopropyl Betaine",
+          4
+        ]
+      ],
+      "humectant_context": [
+        [
+          "Panthenol",
+          6
+        ],
+        [
+          "Sorbitol",
+          9
+        ],
+        [
+          "Propylene Glycol",
+          20
+        ]
+      ]
+    },
+    "excludedIngredients": [
+      [
+        "Glycol Distearate",
+        12,
+        "pearlizer"
+      ],
+      [
+        "PEG-40 Hydrogenated Castor Oil",
+        17,
+        "solubilizer (6.4)"
+      ],
+      [
+        "Cocamide MEA",
+        10,
+        "thickener"
+      ],
+      [
+        "Cocos Nucifera (Coconut) Fruit Extract",
+        8,
+        "extract, not a payload lipid"
+      ],
+      [
+        "Laureth-4",
+        18,
+        "thickener"
+      ],
+      [
+        "Laureth-23",
+        19,
+        "solubilizer"
+      ],
+      [
+        "Trideceth-10",
+        22,
+        "solubilizer"
+      ]
+    ],
+    "whyThisBand": "moderate: W-RICH holds (prominent apricot oil + silicone/guar), but reset is moderate (not limited), so the rest of the method decides: converging routes give noticeable but bounded residue in an ordinary SLES base.",
+    "whyNotNeighborBand": "Not high: W-RICH with moderate reset is not the rich high route; all deposition sits after the salt and close to Parfum, so a heavy/coating conclusion is not well supported. W1 not applicable (prominent payload lipid converges). Not low: silicones incl. amodimethicone + guar + oil converge (W2).",
+    "counterEvidence": [
+      "W-RICH (high neighbor)",
+      "amodimethicone persistence"
+    ],
+    "confidenceLimitingFactor": "Silicone/oil levels unknown; could move one band up.",
+    "formulaFacts": [
+      {
+        "ingredient": "Amodimethicone",
+        "position": 13,
+        "family": "silicone"
+      },
+      {
+        "ingredient": "Dimethicone",
+        "position": 14,
+        "family": "silicone"
+      },
+      {
+        "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+        "position": 5,
+        "family": "cationic_polymer"
+      },
+      {
+        "ingredient": "Prunus Armeniaca (Apricot) Kernel Oil",
+        "position": 7,
+        "family": "payload_lipid"
+      },
+      {
+        "ingredient": "Hydrogenated Castor Oil",
+        "position": 21,
+        "family": "payload_lipid"
+      },
+      {
+        "ingredient": "PEG-7 Glyceryl Cocoate",
+        "position": 16,
+        "family": "weak_refatter"
+      },
+      {
+        "ingredient": "Sodium Laureth Sulfate",
+        "position": 2,
+        "family": "anionic_surfactant"
+      },
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 4,
+        "family": "amphoteric_surfactant"
+      },
+      {
+        "ingredient": "Panthenol",
+        "position": 6,
+        "family": "humectant_context"
+      },
+      {
+        "ingredient": "Sorbitol",
+        "position": 9,
+        "family": "humectant_context"
+      },
+      {
+        "ingredient": "Propylene Glycol",
+        "position": 20,
+        "family": "humectant_context"
+      }
+    ],
+    "counterSignal": [
+      "W-RICH (high neighbor)",
+      "amodimethicone persistence"
+    ],
+    "canonicalFormula": {
+      "fingerprint": "ea583c276ba8648c7859a74cc4b46b845fa6743b80b4aeacd52f30a07f68f0b1",
+      "sourceTier": 2,
+      "completeness": "complete",
+      "identityConfidence": "high",
+      "captureDate": "not stated in packet",
+      "normalization": "ID-2: packet entries 'Aqua (Water' + 'Eau)' merged into one entry (position 1); all later positions are normalized (packet position minus 1)."
+    },
+    "unresolvedFacts": [],
+    "sources": [
+      "formula/T410.json (fingerprint ea583c276ba8648c7859a74cc4b46b845fa6743b80b4aeacd52f30a07f68f0b1, source tier 2, completeness complete)"
+    ]
+  },
+  "focusPrimary": {
+    "value": "repair",
+    "confidence": "moderate",
+    "rationale": "'Repair' in the exact name (high) and damage positioning ('repariert intensiv geschädigtes ... Haar', manufacturer). The formula verdict is dual_supported; the repair positioning breaks the tie (F1).",
+    "formulaFacts": [
+      {
+        "ingredient": "Amodimethicone",
+        "position": 13
+      },
+      {
+        "ingredient": "Dimethicone",
+        "position": 14
+      },
+      {
+        "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+        "position": 5
+      },
+      {
+        "ingredient": "Prunus Armeniaca (Apricot) Kernel Oil",
+        "position": 7
+      }
+    ],
+    "counterSignal": [
+      "'trockenes Haar' and moisture routes (Panthenol 6, Sorbitol 9) make moisture plausible"
+    ],
+    "neighboringAlternative": "moisture",
+    "sources": [
+      "reveal positioning sources",
+      "formula packet"
+    ]
+  },
+  "focusSecondary": {
+    "value": [],
+    "confidence": "moderate",
+    "rationale": "Moisture considered: 'trockenes Haar' appears only bundled into the repair claims ('Für strapaziertes & trockenes Haar', 'repariert ... geschädigtes und trockenes Haar'); 'spendet Feuchtigkeit' is retailer-only. No distinct exact-product moisture positioning (Section 8.1).",
+    "formulaFacts": [],
+    "counterSignal": [
+      "positioning not distinct from the repair claim"
+    ],
+    "neighboringAlternative": [
+      "moisture"
+    ],
+    "sources": [
+      "reveal positioning sources"
+    ]
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "dual_supported",
+      "repairRoutes": [
+        "Amodimethicone 13",
+        "Dimethicone 14",
+        "Guar 5",
+        "Apricot Kernel Oil 7"
+      ],
+      "moistureRoutes": [
+        "Panthenol 6",
+        "Sorbitol 9"
+      ],
+      "sharedRoutes": [
+        "Guar 5",
+        "Apricot Kernel Oil 7"
+      ],
+      "limitation": "rinse-off"
+    },
+    "claimRole": "tie_breaker",
+    "counterSignal": [
+      "'trockenes Haar' and moisture routes (Panthenol 6, Sorbitol 9) make moisture plausible"
+    ],
+    "neighboringAlternative": "moisture",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "repair (name, high) with dry-hair co-claim",
+        "formulaCompatible": true,
+        "compatibleRoute": "amodimethicone/dimethicone/guar/oil deposition cluster",
+        "decisionReason": "dual_supported tie broken by name"
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [
+          "trockenes Haar (inside repair claims)"
+        ],
+        "independentRoutes": [
+          "Panthenol 6",
+          "Sorbitol 9"
+        ],
+        "whyDistinctFromPrimary": "positioning not distinct from the repair claim",
+        "exceptionCode": null
+      },
+      "usageRole": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "No trigger."
+      }
+    }
+  },
+  "usageRole": {
+    "value": "regular",
+    "confidence": "high",
+    "rationale": "No trigger.",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": [],
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources"
+    ]
+  },
+  "scalpComfortTarget": {
+    "value": "not_targeted",
+    "confidence": "high",
+    "rationale": "No scalp claims.",
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources",
+      "formula packet"
+    ]
+  },
+  "dandruffSupport": {
+    "value": "not_supported",
+    "confidence": "high",
+    "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11) -> not_supported.",
+    "neighboringAlternative": "none",
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "sources": [
+      "formula/T410.json (fingerprint ea583c276ba8648c7859a74cc4b46b845fa6743b80b4aeacd52f30a07f68f0b1, source tier 2, completeness complete)"
+    ]
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate -> acceptable. T2: thickness/texture claims do not change fit. T4: weightPotential neighbor high -> not_suited (lower tier) -> review_thickness_boundary."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate -> ideal. T2: thickness/texture claims do not change fit. T4: weightPotential neighbor high -> acceptable (lower tier) -> review_thickness_boundary."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate, C high -> ideal. T2: thickness/texture claims do not change fit."
+      }
+    ],
+    "weight": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential moderate -> 1:1 projection; confidence = weightPotential confidence."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1 with manufacturer source."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate -> regular. I3: neighbor none (high confidence, no boundary check)"
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "rationale": "D1: no D1 stem (tiefenrein / deep clean / clarifying shampoo / detox-reinigung) in name or manufacturer/pack claims, no occasional-use directions."
+    },
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine (weightPotential neighbor high -> not_suited)",
+      "review_thickness_boundary:normal (weightPotential neighbor high -> acceptable)"
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": []
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsAndPriorLabelsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": "Silicone/oil levels unknown; could move one band up.",
+    "comparisonWithEarlierValuesOnlyOutsideLane": true,
+    "formulaPropertiesChangedAfterUnblinding": false
+  },
+  "uncertainties": [
+    {
+      "reading": "weight moderate (W-RICH with moderate reset)",
+      "alternative": "high (multiple converging persistent systems incl. amodimethicone)"
+    },
+    {
+      "reading": "secondary []",
+      "alternative": "['moisture']"
+    }
+  ]
+}

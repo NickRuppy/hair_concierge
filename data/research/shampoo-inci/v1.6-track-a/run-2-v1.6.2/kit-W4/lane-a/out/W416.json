@@ -1,0 +1,336 @@
+{
+ "blindId": "W416",
+ "lane": "lane-a",
+ "phase": "2-final",
+ "policyId": "shampoo-classification-v1.6.2",
+ "formulaPassSha256": "b8662454854db3a06ba14b6de45fdee80727eadb4091e6766ba8f36f8007d20e",
+ "identity": {
+  "brand": "Guhl (Kao)",
+  "productName": "Guhl Kraft & Fülle Shampoo (kräftigendes Shampoo)",
+  "packSize": "250 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "ad0a21d7dce660496131f9d83955fa89e099faca051e206bf1fb5766c6231d8b",
+  "normalization": "Packet list already normalized (synonym variants are single entries); positions cited are normalized one-based positions (ID-2), identical to the packet order.",
+  "completeness": "complete (formula source tier 2, identity confidence high)",
+  "e3ProminenceCutoff": "Parfum@25 (fragrance marker); prominent = positions 1-24",
+  "identityNotes": [
+   "Claims 'Rosmarin' -> Rosmarinus Officinalis Leaf Extract@14, 'Biotin' -> Biotin@22: present."
+  ]
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`moderate` by C1: defining anionic Sodium Laureth Sulfate@2, prominent buffers Cocamidopropyl Betaine@3 and Coco-Glucoside@4, no reinforcing strong anionic. Sorbitan Caprylate@8 is in no C3 cleansing class (emulsifier/preservative booster).",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "E3"
+   ],
+   "counterSignal": "Betaine and glucoside buffers; refatters. Convention value.",
+   "formulaFacts": [
+    "Sodium Laureth Sulfate@2 strong anionic ether type (defining)",
+    "Cocamidopropyl Betaine@3 amphoteric (buffer)",
+    "Coco-Glucoside@4 nonionic glucoside (buffer)",
+    "Sorbitan Caprylate@8 (no C3 class)"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "`moderate`: one meaningful conditioning system — prominent cationic Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@6 — plus light routes (weak refatters Glyceryl Oleate@7, Lecithin@17; humectants Panthenol@9, Glycerin@13). C2 not met (no early silicone, no payload lipid, no pearlizing/fatty route). Neighbor `low`: the refatters and humectants are light, so the guar may be the only noticeable slip route.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "N-ALT"
+   ],
+   "counterSignal": "Refatters/humectants light; guar the only system.",
+   "formulaFacts": [
+    "cationic: Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@6",
+    "weak refatter: Glyceryl Oleate@7, Lecithin@17",
+    "humectant: Panthenol@9, Glycerin@13"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "cationic_polymer": [
+     "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@6"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [
+     "Glyceryl Oleate@7",
+     "Lecithin@17",
+     "Tocopheryl Acetate@21",
+     "Tocopherol@23"
+    ],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "anionic: Sodium Laureth Sulfate@2",
+     "amphoteric: Cocamidopropyl Betaine@3",
+     "nonionic: Coco-Glucoside@4"
+    ],
+    "humectantContext": [
+     "Panthenol@9",
+     "Glycerin@13"
+    ],
+    "excluded": [
+     "Sorbitan Caprylate@8 (emulsifier/preservative booster, no deposition role)",
+     "Tetrasodium Glutamate Diacetate@10 (chelator)",
+     "Menthol@11 (cooling agent)",
+     "Caffeine@12, Biotin@22, Dimethylhydroxy Dihydroflavone@16 (actives, no deposition role)",
+     "Rosmarinus Officinalis Leaf Extract@14, Leuconostoc/Radish Root Ferment Filtrate@20 (extract/ferment)",
+     "Alcohol@15 (solvent)",
+     "Lactic Acid@5, Citric Acid@19",
+     "allergens Limonene@26, Linalool@27; Tetramethyl Acetyloctahydronaphthalenes@28"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": "9 Panthenol",
+    "candidateClasses": [
+     "sub1_active"
+    ],
+    "cap": "e3Point 25 (Parfum)",
+    "alphabeticalRun": "none",
+    "skipped": [],
+    "testedCandidate": "Panthenol@9: (i) Sodium Laureth Sulfate@2 before it; (ii) entries 10-24 contain no cleansing surfactant, alkanolamide or pearlizing wax -> plausible",
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "light — one guar plus light glyceride/phospholipid refatters; no silicone, no payload lipid.",
+   "persistence": "low — refatters are weakly retained; single guar.",
+   "resetCapacity": "moderate — C1 ether-sulfate chassis with betaine and glucoside buffers.",
+   "counterevidence": "Two deposition families present (cationic_polymer, weak_refatter); guar prominent at @6.",
+   "whyThisBand": "Light, low-persistence routes in an ordinary buffered sulfate chassis.",
+   "whyNotNeighborBand": "Not `moderate` (W2 specific evidence): the second family is only weak refatters (Glyceryl Oleate@7, Lecithin@17, trace tocopherols) — light glyceride/phospholipid additives with low retention — beside a single guar; no silicone, payload lipid, protein or film former converges, and a three-surfactant buffered sulfate reset faces only these light routes.",
+   "confidenceLimitingFactor": "two families present (W2); guar dose/charge density unknown.",
+   "rationale": "`low`: single guar + weak refatters under an ordinary reset; W2 reasoning recorded. Neighbor `moderate`.",
+   "ruleIds": [
+    "6.6",
+    "W2",
+    "W-LINE",
+    "N-ALT"
+   ],
+   "counterSignal": "Two deposition families present (cationic_polymer, weak_refatter); guar prominent at @6."
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "volume",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "Panthenol@9",
+     "Glycerin@13"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@6",
+     "Glyceryl Oleate@7",
+     "Lecithin@17"
+    ],
+    "limitation": "no coherent lengths-care cluster"
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "'Kraft & Fülle' name words could be read as cosmetic volume.",
+   "decisionTrace": "Claim direction: hair loss / hair growth / thinning ('Für dünner-werdendes, zu Haarausfall neigendes Haar', 'unterstütze das natürliche Haarwachstum', 'stimuliert die Haarwurzel', manufacturer moderate). F5: hair-loss, growth and density claims never select a focus. 'Kraft & Fülle' in this product is the fullness of thinning hair (density), tied to the hair-loss claim and the Tonikum -> also F5. Remaining in-scope claims: 'reinigt sanft und gründlich', 'ohne es zu beschweren' (no focus). Decision: general.",
+   "rationale": "`general`: the dominant claims are hair loss/growth/density (F5, out of scope); no in-scope job remains.",
+   "ruleIds": [
+    "7.2",
+    "F5",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "decisionTrace": "Empty default; no in-scope distinct positioning.",
+   "rationale": "`[]`.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3",
+    "F4",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Default `regular`: no U2 wording; the 2-minute contact direction is not a trigger; hair-loss positioning never fires treatment (U3, F5).",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "U5",
+    "CL-SRC",
+    "F-TRACE"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "csaRoute": "MET (Panthenol@9 comfort; Glyceryl Oleate@7, Glycerin@13 humectant/refatting); MB excluded (Sodium Laureth Sulfate@2)",
+   "rationale": "`not_targeted`: no SC1 unit ('regt die Durchblutung der Kopfhaut an' is a hair-growth claim, out of scope).",
+   "counterSignal": "Menthol@11 prominent cooling agent.",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "MB",
+    "SC1",
+    "E2a",
+    "E3",
+    "E4"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`not_supported`: the complete INCI contains none of Piroctone Olamine, Climbazole, Selenium Sulfide or Selenium Disulfide (Section 11, DS1).",
+   "ruleIds": [
+    "11",
+    "DS1",
+    "ID-1"
+   ],
+   "counterSignal": "none — mechanical recognition of the closed active list",
+   "formulaFacts": [
+    "Caffeine@12",
+    "Biotin@22",
+    "Dimethylhydroxy Dihydroflavone@16",
+    "no recognized anti-dandruff active"
+   ]
+  }
+ },
+ "formulaFacts": {
+  "surfactants": [
+   "Sodium Laureth Sulfate@2 strong anionic ether type (defining)",
+   "Cocamidopropyl Betaine@3 amphoteric (buffer)",
+   "Coco-Glucoside@4 nonionic glucoside (buffer)",
+   "Sorbitan Caprylate@8 (no C3 class)"
+  ],
+  "conditioningRoutes": [
+   "cationic: Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@6",
+   "weak refatter: Glyceryl Oleate@7, Lecithin@17",
+   "humectant: Panthenol@9, Glycerin@13"
+  ],
+  "comfortRoutes": "E4 comfort list: Panthenol@9 (prominent); E4 humectant/refatting: Glyceryl Oleate@7, Panthenol@9, Glycerin@13 (prominent)",
+  "actives": [
+   "Caffeine@12",
+   "Biotin@22",
+   "Dimethylhydroxy Dihydroflavone@16",
+   "no recognized anti-dandruff active"
+  ],
+  "exposureFlags": [
+   "Parfum@25",
+   "Menthol@11 (prominent cooling agent)",
+   "Rosmarinus Officinalis Leaf Extract@14 (extract, not essential oil)",
+   "allergens Limonene@26, Linalool@27"
+  ],
+  "preservatives": [
+   "Sodium Benzoate@24",
+   "Leuconostoc/Radish Root Ferment Filtrate@20"
+  ]
+ },
+ "projection": {
+  "status": "proposal_blocked_by_review_flags",
+  "thicknessFit": {
+   "fine": "ideal",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 from weightPotential `low` and conditioningLevel `moderate` (coarse reads C); ordinary target: T1 unchanged (no T6); T4 checked against the N-ALT neighbors of W (all thicknesses) and C (coarse), after T6. T2: claims about hair type/texture ('feines, dünner werdendes Haar (retailer)') never change fit.",
+  "weight": "light",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential `low` -> `light` 1:1; confidence = weightPotential confidence.",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "confidence": "moderate",
+    "rationale": "S-ORDINARY way 2 (S-HAIRLOSS): the only scalp-adjacent positioning is hair loss/growth ('zu Haarausfall neigendes Haar', 'Haarwachstum', 'Durchblutung der Kopfhaut'); not evaluated for targets; also way 1 (no qualifying E2 unit). Confidence = lowest of the ways = moderate."
+   },
+   "secondary": null,
+   "secondaryRationale": "No secondary target: no second qualifying distinct E2 claim unit with a passing gate (S-SECONDARY)."
+  },
+  "researchCombinationTargets": [],
+  "researchCombinationRationale": "Not a dandruff-primary product: research-only combination does not apply (E2b).",
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1: cleansingStrength `moderate` -> `regular` (formula plus D1 only; focus and usage role are not inputs). I3 checked with the N-ALT neighbor `none`.",
+  "explicitResetPositioning": false,
+  "explicitResetRationale": "D1 false: no D1 stem (tiefenrein, deep clean, clarifying shampoo, detox-reinigung) in the name or any manufacturer/pack claim, and no occasional-use direction.",
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserRecord": null,
+  "deepCleanserListingConfidence": "high",
+  "deepCleanserRationale": "D2 not satisfied (requires cleansingStrength strong, focus clarifying, usageRole occasional_reset and D1 true) -> not_flagged.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   "review_thickness_boundary:fine"
+  ],
+  "informationalNotes": [
+   "hair_loss_claim_not_evaluated: 'Für dünner-werdendes, zu Haarausfall neigendes Haar' / 'unterstütze das natürliche Haarwachstum'"
+  ],
+  "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; this lane sees no catalog values."
+ },
+ "reconciliation": [
+  "focusPrimary: provisional `general` (low, neighbor scalp_active) -> `general` (moderate); F5.",
+  "Scalp target ordinary via S-HAIRLOSS with note.",
+  "Formula properties unchanged."
+ ],
+ "selfCheck": "6.11: fingerprint equals the frozen formula packet and the hash-pinned formula pass; claims were hidden during the formula judgment (formula pass written before reveal, not edited); no ingredient, count or position window assigned the weight band; the W-line was derived exactly per W-LINE with skipped candidates recorded; all three subjudgments present; whyNotNeighborBand specific (W2 where two families); confidence names its limiting factor. Cleansing, conditioning, weight and dandruff values are unchanged from the blind pass (claims cannot move them, 3.2). Projection fields computed mechanically from final properties (T1/T6/T4, W-LIVE, I1/I3, 13.7).",
+ "uncertainties": [
+  "Focus `general` vs `volume` (neighbor): 'Kraft & Fülle' (name) read as density positioning tied to hair loss (F5); as cosmetic fullness it would be `volume` (formula compatible, weight low). No projection effect.",
+  "Weight `low` vs `moderate` (guar + weak refatters, W2)."
+ ]
+}

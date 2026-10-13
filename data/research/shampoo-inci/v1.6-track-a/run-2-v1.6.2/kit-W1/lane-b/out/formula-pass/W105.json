@@ -1,0 +1,140 @@
+{
+  "blindId": "W105",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, Section 3.1)",
+  "policyId": "shampoo-classification-v1.6.2",
+  "inciFingerprintSha256": "ad4168be859a6e0b1b7a76ae82e1e72040e87afa86dcf97031a6745545d783f4",
+  "formulaPacket": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "18 entries as frozen; no split synonyms; normalized one-based positions cited (ID-2)."
+  },
+  "e3Point": "no fragrance declared; preservative fallback Sodium Benzoate@15 (prominent = positions 1-14)",
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "Sodium Coco-Sulfate@4 (strong anionic, alkyl sulfate type)",
+      "reinforcingRoutes": [],
+      "buffers": ["Coco-Glucoside@2 (nonionic glucoside, listed first)", "Sodium Cocoamphoacetate@5 (amphoteric)"],
+      "nonCleansing": []
+    },
+    "conditioningRoutes": ["Glycerin@3 (humectant)", "Panthenol@7", "Tocopherol@9, Ascorbyl Palmitate@10 (weak_refatter, lipid-like antioxidants)", "Glyceryl Oleate@11 (weak_refatter)", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@12 (cationic_polymer, prominent)", "Hydrogenated Palm Glycerides Citrate@13, Lecithin@14 (weak_refatter)"],
+    "humectants": ["Glycerin@3", "Panthenol@7"],
+    "actives": ["Niacinamide@8"],
+    "e4ComfortRoutesProminent": ["Panthenol@7", "Niacinamide@8"],
+    "e4HumectantRoutesProminent": ["Glycerin@3", "Panthenol@7", "Glyceryl Oleate@11"],
+    "mildBase": "not met: Sodium Coco-Sulfate@4 is a prominent strong anionic (alkyl sulfate type)",
+    "exposureFlags": ["no fragrance, no allergens, no essential oils, no cooling agent declared"],
+    "preservatives": ["Sodium Benzoate@15", "Potassium Sorbate@16"]
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: C5 - defining anionic Sodium Coco-Sulfate@4 (alkyl sulfate) with two prominent buffers (Coco-Glucoside@2, Sodium Cocoamphoacetate@5) and no reinforcing route. Counter-signal: the glucoside is the first-listed surfactant and the sulfate sits after glycerin, which argues for a milder net system; recorded as the counter-signal, neighbor low. The convention value is not moved.",
+      "ruleIds": ["C5", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: one meaningful system (prominent cationic Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@12) plus light routes (Glycerin@3, Panthenol@7, weak refatters @9-11, @13-14). No silicone, payload lipid or pearlizing route, so C2 is not met; high not supported. Low is the neighbor because the cationic is a single light guar.",
+      "ruleIds": ["C2", "5"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@12"],
+        "payload_lipid": [],
+        "weak_refatter": ["Tocopherol@9", "Ascorbyl Palmitate@10", "Glyceryl Oleate@11", "Hydrogenated Palm Glycerides Citrate@13", "Lecithin@14"],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Coco-Glucoside@2", "Sodium Coco-Sulfate@4", "Sodium Cocoamphoacetate@5"],
+        "humectantContext": ["Glycerin@3", "Panthenol@7", "Niacinamide@8 (active)"],
+        "excluded": [],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 7,
+        "inci": "Panthenol",
+        "classes": ["sub1_active"],
+        "e3Point": 15,
+        "alphabeticalRun": "none",
+        "skipped": [],
+        "codes": [],
+        "plausibility": "(i) Coco-Glucoside@2 and Sodium Coco-Sulfate@4 before it; (ii) no cleansing surfactant, alkanolamide or pearlizing wax at 8-14",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light - one guar plus weak refatters",
+      "persistence": "low - weak refatters and a single guar",
+      "resetCapacity": "moderate - C5 moderate chassis (sulfate buffered by glucoside and amphoacetate)",
+      "counterevidence": "Two families (cationic_polymer, weak_refatter); guar is prominent; reset is softened by the glucoside lead.",
+      "whyThisBand": "Deposition limited to one light cationic and weak refatters; no persistent system.",
+      "whyNotNeighborBand": "Not moderate (W2): the only second family is weak_refatter (plus humectants); no silicone, payload lipid, protein or second cationic; a single guar after the actives and antioxidants against an effective sulfate chassis keeps residue below noticeable.",
+      "confidenceLimitingFactor": "Guar dose unknown; somewhat softened reset.",
+      "rationale": "Low: single light guar + weak refatters (6.6, W2).",
+      "ruleIds": ["6.3", "6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": ["Glycerin@3", "Panthenol@7"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@12", "Glyceryl Oleate@11", "Hydrogenated Palm Glycerides Citrate@13", "Lecithin@14"],
+        "limitation": "light cluster; rinse-off"
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "Fragrance-free mild-leaning formula with comfort routes could also support a sensitive-scalp role (scalp_active) if positioned.",
+      "decisionTrace": "Formula-only: claim direction null; moisture_supported; also CSA-compatible for scalp comfort; provisional general.",
+      "rationale": "Provisional general pending claims.",
+      "ruleIds": ["7.2", "7.3"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["moisture"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty.",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional regular; frequent possible with explicit frequency wording (cleansing not strong).",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: positioning unknown. CSA met via prominent E4 comfort routes Panthenol@7, Niacinamide@8 and humectant routes Glycerin@3, Glyceryl Oleate@11; fragrance-free is a supportive signal. MB not met (Sodium Coco-Sulfate@4 prominent).",
+      "ruleIds": ["CSA", "MB", "E4", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active (Section 11).",
+      "ruleIds": ["11"]
+    }
+  },
+  "unresolvedMaterialIngredients": []
+}

@@ -1,0 +1,352 @@
+{
+  "blindId": "W413",
+  "lane": "lane-b",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "brand": "Salthouse",
+    "productName": "Salthouse Totes Meer Therapie Anti-Fett Shampoo, 250 ml",
+    "packSize": "250 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "4e2a1a3a11734216beb515e709cb3495d71325daf1d5875446391b6aafa2f077",
+    "normalization": "Packet list already one entry per ingredient; positions are normalized one-based positions (ID-2).",
+    "completeness": "complete (packet; source tier 2, identity confidence high)",
+    "e3ProminenceCutoff": "No Parfum/Fragrance declared; E3 preservative fallback = Sodium Benzoate @5; prominent = positions 1-4"
+  },
+  "formulaPassReference": "out/formula-pass/W413.json (hash-pinned; not edited)",
+  "claimEvidence": [
+    "Name 'Anti-Fett' (oily lexicon, high).",
+    "manufacturer_de (moderate): 'Anti-Fett Shampoo ausgleichend und klärend bei schnell fettender Kopfhaut'; 'befreit Kopfhaut und Haar von überschüssigem Fett'; 'Die klärende Formel reguliert die Talgabsonderung'; 'Panthenol sorgt für einen ausgeglichenen Feuchtigkeitshaushalt'; 'Lemongrass und Minze ... Frische'; basis-care wording (Neurodermitis, Psoriasis); directions 'Für die tägliche Haarwäsche geeignet'.",
+    "retailers (low): schnell fettende/problematische Kopfhaut; 'schützt die Kopfhaut vor Reizeffekten'; 'ohne das Haar zu beschweren'."
+  ],
+  "reconciliation": [
+    "S-OILY passes: positioning 'Anti-Fett' (name, high) and 'bei schnell fettender Kopfhaut' (moderate); formula clause cleansing moderate, weight low, conditioning low -> oily primary (no other specialist target).",
+    "focusPrimary -> clarifying (oily-scalp positioning, F6 compatible).",
+    "usageRole -> frequent (manufacturer 'Für die tägliche Haarwäsche geeignet', moderate; cleansing not strong). 'klärend' is U4 reset intent but alternating needs a strong formula.",
+    "No D1 ('klärend' is not D1).",
+    "cleansingStrength, conditioningLevel, weightPotential and dandruffSupport unchanged from the hash-pinned blind pass (formula-only; claims cannot move them, 3.2)."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate @2 defining anionic buffered by prominent Cocamidopropyl Betaine @3, no reinforcing strong anionic.",
+      "ruleIds": [
+        "C3",
+        "C4",
+        "C1"
+      ],
+      "counterSignal": "none material.",
+      "formulaFacts": {
+        "strongAnionicEtherSulfonate": [
+          "Sodium Laureth Sulfate @2 (defining anionic)"
+        ],
+        "strongAnionicAlkylSulfate": [],
+        "mildAnionic": [],
+        "amphoteric": [
+          "Cocamidopropyl Betaine @3 (prominent buffer)"
+        ],
+        "nonionicCleansing": [],
+        "notCleansingNotBuffer": [
+          "Sodium Chloride @4",
+          "Maris Sal (Dead Sea Salt) @7",
+          "Citric Acid @9"
+        ],
+        "reinforcingRoutes": [],
+        "c1c5c6Reading": "C1: ether-sulfate defining anionic, one prominent buffer, no reinforcing route"
+      },
+      "blindToFinal": "unchanged: formula-only property; claims may not set or move it (3.2)"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low: cleansing-led architecture whose only conditioning route is one cationic guar (Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6); no silicone, lipid, refatter, pearlizer or protein; humectants Panthenol @11 and Glycerin @16 are late. C2 not met. Counter-signal: the guar plus panthenol could give noticeable slip (moderate).",
+      "ruleIds": [
+        "Section 5 anchors",
+        "C2"
+      ],
+      "counterSignal": "Guar plus Panthenol could give noticeable slip (moderate).",
+      "formulaFacts": {
+        "cationic_polymer": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6"
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "pearlizing_fatty_route": [],
+        "humectants": [
+          "Panthenol @11",
+          "Glycerin @16"
+        ],
+        "notHumectantRoute": [
+          "Butylene Glycol @8"
+        ]
+      },
+      "blindToFinal": "unchanged: formula-only property; claims may not set or move it (3.2)"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "evidence": {
+        "cationic_polymer": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6"
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": [
+          "Sodium Laureth Sulfate @2",
+          "Cocamidopropyl Betaine @3"
+        ],
+        "humectantContext": [
+          "Panthenol @11",
+          "Glycerin @16",
+          "Butylene Glycol @8"
+        ],
+        "excluded": [
+          "Orange Peel Oil @12, Mentha Arvensis Leaf Oil @15 (essential oils, 6.4)",
+          "Limonene @13, Menthol @14",
+          "Botanical extracts @17-@21",
+          "Maris Sal @7, Sodium Chloride @4, Citric Acid @9, Sodium Benzoate @5, Potassium Sorbate @10"
+        ],
+        "unresolved": []
+      },
+      "wLineRecord": "wLine Sodium Benzoate @5 (preservative_or_capped_active) = cap e3Point @5 (fallback); no alphabetical run; no skipped candidates; no codes; no payload_lipid present.",
+      "depositionLoad": "light: single cationic guar.",
+      "persistence": "low: no silicone, lipid or film.",
+      "resetCapacity": "moderate: C1 SLES/betaine chassis.",
+      "counterevidence": "The guar deposits by dilution deposition.",
+      "whyThisBand": "A single light cationic polymer facing an effective sulfate chassis does not plausibly reduce movement or lift.",
+      "whyNotNeighborBand": "Not moderate: one deposition family only (W2 not triggered); essential oils are fragrance materials, not payload.",
+      "confidenceLimitingFactor": "None material.",
+      "rationale": "Low: single guar against moderate C1 reset.",
+      "ruleIds": [
+        "6.3",
+        "6.4",
+        "6.6",
+        "W2",
+        "W-LINE"
+      ],
+      "counterSignal": "The guar deposits by dilution deposition.",
+      "formulaFacts": {
+        "wLine": "Sodium Benzoate @5 (= cap)",
+        "wLineClasses": [
+          "preservative_or_capped_active"
+        ],
+        "cap": "e3Point @5 (Sodium Benzoate, preservative fallback)",
+        "alphabeticalRun": "none before the cap",
+        "candidatesTested": [
+          "Sodium Benzoate @5: (i) SLES @2, betaine @3 before it ok; (ii) nothing between -> plausible"
+        ],
+        "skipped": [],
+        "codes": [],
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "identifiers": {
+        "formulaFingerprintSha256": "4e2a1a3a11734216beb515e709cb3495d71325daf1d5875446391b6aafa2f077",
+        "sourceTier": 2,
+        "captureDate": "not stated in the frozen packet"
+      },
+      "blindToFinal": "unchanged: weight is formula-only; claims cannot decide the band (6.5 step 5)"
+    },
+    "focusPrimary": {
+      "value": "clarifying",
+      "confidence": "moderate",
+      "neighboringAlternative": "general",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6"
+        ],
+        "limitation": "Not a repair/moisture decision."
+      },
+      "claimRole": "candidate",
+      "counterSignal": "Cleansing is an ordinary C1 chassis (moderate), not a strong reset; hair-loss-type botanicals present but no hair-loss claim.",
+      "decisionTrace": "Claim direction oily scalp (name 'Anti-Fett', high). Formula compatible under F6: cleansing moderate, conditioning low, weight low. Route: SLES @2/betaine chassis, low deposition. Decision clarifying (F6).",
+      "rationale": "Clarifying: oily-scalp positioning with F6-compatible architecture (7.1, F6).",
+      "formulaFacts": null,
+      "ruleIds": [
+        "7.1",
+        "F6",
+        "CL-SRC"
+      ],
+      "blindToFinal": "provisional general -> clarifying (oily-scalp positioning in name with F6-compatible formula)"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "decisionTrace": "Empty default considered; freshness/moisture wording (Panthenol, mint) is not distinct lengths-care positioning with an independent compatible route (Panthenol is after the E3 point; mint is cooling).",
+      "rationale": "Empty: no distinct secondary positioning with an independent compatible route (Section 8, F2, F3).",
+      "counterSignal": "none",
+      "formulaFacts": [],
+      "ruleIds": [
+        "Section 8",
+        "F2",
+        "F3"
+      ],
+      "blindToFinal": "provisional [] -> []"
+    },
+    "usageRole": {
+      "value": "frequent",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "explicit_frequent_non_strong",
+      "triggerEvidence": [
+        "manufacturer directions: 'Für die tägliche Haarwäsche geeignet' (moderate)",
+        "cleansingStrength moderate (not strong)"
+      ],
+      "losingTriggers": [
+        "alternating not fired: reset intent present ('klärend', 'befreit ... von überschüssigem Fett', oily lexicon) but cleansingStrength is not strong (U4)"
+      ],
+      "rationale": "Frequent: explicit daily-use wording graded moderate on a non-strong formula (U2).",
+      "counterSignal": "none beyond losing triggers",
+      "formulaFacts": "cleansingStrength moderate (high); dandruffSupport not_supported",
+      "ruleIds": [
+        "Section 9",
+        "U1",
+        "U2",
+        "U4"
+      ],
+      "decisionTrace": "Default regular; frequent fires; alternating blocked (moderate formula).",
+      "blindToFinal": "provisional regular -> frequent"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no E2 sensitive or dry scalp claim unit graded moderate/high exists (SC1), so the product is not explicitly positioned; CSA not met (Panthenol @11 and Glycerin @16 are after the E3 fallback point Sodium Benzoate @5; MB fails on SLES @2). 'schützt die Kopfhaut vor Reizeffekten' (retailer, low) is protective wording.",
+      "counterSignal": "none; mildness/protective wording is not targeting (E2a)",
+      "formulaFacts": {
+        "CSA": "not met: no prominent listed comfort or humectant/refatting route (Panthenol @11, Glycerin @16 after the E3 fallback point) and no MB",
+        "MB": "not met: Sodium Laureth Sulfate @2 prominent strong anionic",
+        "S-SENSITIVE formula half": "fails",
+        "S-DRY formula half": "fails",
+        "S-OILY formula clause": "cleansing moderate, weight low, conditioning low -> clause passes"
+      },
+      "csaRoute": "CSA not met (Panthenol @11 and Glycerin @16 are after the E3 fallback point Sodium Benzoate @5; MB fails on SLES @2).",
+      "ruleIds": [
+        "Section 10",
+        "SC1",
+        "E2a",
+        "CSA",
+        "MB"
+      ],
+      "blindToFinal": "unchanged; claims show no SC1 positioning"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active in the complete INCI.",
+      "ruleIds": [
+        "Section 11"
+      ],
+      "counterSignal": "none (mechanical table, Section 11)",
+      "formulaFacts": [],
+      "blindToFinal": "unchanged (formula-only)"
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "not_applicable",
+      "moistureRoutes": [],
+      "repairRoutes": [],
+      "sharedConditioningRoutes": [
+        "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6"
+      ],
+      "limitation": "Not a repair/moisture decision."
+    },
+    "claimRole": "candidate",
+    "decisionTrace": {
+      "primary": "Claim direction oily scalp (name 'Anti-Fett', high). Formula compatible under F6: cleansing moderate, conditioning low, weight low. Route: SLES @2/betaine chassis, low deposition. Decision clarifying (F6).",
+      "secondary": "Empty default considered; freshness/moisture wording (Panthenol, mint) is not distinct lengths-care positioning with an independent compatible route (Panthenol is after the E3 point; mint is cooling).",
+      "usageRole": "Default regular; frequent fires; alternating blocked (moderate formula)."
+    }
+  },
+  "weightRecord": "see directProperties.weightPotential (6.8 fields: evidence by family, wLineRecord/formulaFacts, subjudgments, counterevidence, whyThisBand, whyNotNeighborBand, confidence and limiting factor, neighbor)",
+  "projection": {
+    "status": "proposal_ready",
+    "thicknessFitT1": {
+      "fine": "ideal",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFit": {
+      "fine": "ideal",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFitConfidence": {
+      "fine": "high",
+      "normal": "high",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": " T1 with W=low (high, neighbor none) and C=low (moderate, neighbor moderate): fine ideal, normal ideal, coarse acceptable; target oily -> T6 floor applies (nothing to lift). T4 computed from N-ALT neighbors after T6; T2: thickness/texture claims never change fit.",
+    "weight": "light",
+    "weightConfidence": "high",
+    "weightRationale": "W-LIVE: weightPotential low projects 1:1 to light; confidence = weightPotential confidence.",
+    "scalpTargets": {
+      "primary": {
+        "target": "oily",
+        "confidence": "moderate",
+        "rationale": "S-OILY: positioning 'Anti-Fett' (name, high) / 'bei schnell fettender Kopfhaut' (manufacturer, moderate); formula cleansingStrength moderate, weightPotential low (not high), conditioningLevel low (not high) -> oily primary. Confidence = lowest of positioning (high) and the gate properties (cleansing high, weight high, conditioning moderate) = moderate. No other qualifying scalp claim (protective and medical wording excluded)."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength moderate, D1 false -> regular. I3: neighbor none (high confidence, no I3 review).",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserListingConfidence": "moderate",
+    "deepCleanserRationale": "D2 not met: D1 false (no D1 lexicon term in name, manufacturer/pack claims or directions); not_flagged.",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "dehydriert-fettig",
+        "scalp_route": "oily",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "dehydriert-fettig",
+        "scalp_route": "oily",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "dehydriert-fettig",
+        "scalp_route": "oily",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [],
+    "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; lanes never see catalog ids."
+  },
+  "unresolvedMaterialIngredients": [],
+  "selfCheck": "6.11: fingerprint 4e2a1a3a1173... matches the frozen packet; claims were hidden during the formula pass (formula-pass file hash-pinned before release); no ingredient, family count or position window assigned the weight band; W-line derived per W-LINE with every skipped candidate recorded; three subjudgments present; whyNotNeighborBand specific (W2 where it applies); confidence names its limiting factor; no comparison with earlier values inside the lane. N-ALT: every high confidence has neighbor none, every moderate/low names one neighbor. Projection derived mechanically from final properties; P0 applied where readings were uncertain.",
+  "uncertainties": [
+    "Medical basis-care wording (Neurodermitis, Psoriasis) is out of scope.",
+    "Hair-loss-associated botanicals (Cimicifuga, Lepidium, Silybum, Urtica) appear in the INCI but no hair-loss claim is made; no S-HAIRLOSS note."
+  ]
+}

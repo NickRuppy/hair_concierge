@@ -1,0 +1,136 @@
+{
+  "blindId": "VS07",
+  "inciFingerprintSha256": "e7bbbca05138a36c9232d3bcfa024431c19776c252a065267ee03808404354e1",
+  "phase": "formula_pass_blind",
+  "standard": "shampoo-classification-v1.6.2 (candidate)",
+  "formulaBlock": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "'Aqua (Water)' is one entry (ID-2); marker characters stripped and kept as provenance: '*' on Aloe Barbadensis Leaf Juice@6, '**' on Parfum (Fragrance)@22, Linalool@23, Benzyl Salicylate@24, Vanillin@25. No split entries; normalized positions equal packet positions 1-25.",
+    "e3Point": "Parfum (Fragrance)@22. Prominent = positions 1-21."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C5: defining anionic is the alkyl-sulfate-type Sodium Coco-Sulfate@2, buffered by four prominent buffers (Lauryl Glucoside@3, Coco-Glucoside@4 nonionic glucosides; Disodium Cocoyl Glutamate@8, Sodium Cocoyl Glutamate@11 mild anionics), no reinforcing strong anionic. Well above the two-buffer requirement. Formula-only.",
+      "ruleIds": ["C5", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate (several light routes): three hydrolyzed proteins (Corn@13, Wheat@14, Soy@15), the cationic conditioning surfactant PCA Ethyl Cocoyl Arginate@19, Arginine@10 and Aloe Barbadensis Leaf Juice@6. No silicone, cationic polymer, payload_lipid, pearlizer or deliberate C2 humectant (aloe juice is excluded from the C2 humectant element), so C2 is not met. Counter-signal: all routes are light and the cationic sits just before the preservatives; low is the realistic neighbor.",
+      "ruleIds": ["C2", "Section 5 anchors", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": [],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": ["Hydrolyzed Corn Protein@13", "Hydrolyzed Wheat Protein@14", "Hydrolyzed Soy Protein@15"],
+        "film_former": [],
+        "cationic_conditioner": ["PCA Ethyl Cocoyl Arginate@19 (cationic arginine-ester conditioning surfactant, not a polymer; assignment stated)"],
+        "reset": ["Sodium Coco-Sulfate@2 (strong anionic, alkyl sulfate type)", "Lauryl Glucoside@3, Coco-Glucoside@4 (nonionic)", "Disodium Cocoyl Glutamate@8, Sodium Cocoyl Glutamate@11 (mild anionic)"],
+        "humectantContext": ["Aloe Barbadensis Leaf Juice@6 (plant juice, not a C2 humectant)", "Arginine@10 (amino acid)"],
+        "excluded": ["Maris Sal (Sea Salt)@5, Sodium Chloride@18 (salts)", "Citric Acid@7, Lactic Acid@17 (pH)", "Phytic Acid@12 (chelator)", "Lactococcus Ferment Lysate@9, Leuconostoc/Radish Root Ferment Filtrate@16 (ferments, no deposition role)", "Linalool@23, Benzyl Salicylate@24, Vanillin@25 (fragrance materials)"],
+        "unresolved": []
+      },
+      "wLineRecord": {
+        "wLine": "Potassium Sorbate@20",
+        "wLineClasses": ["preservative_or_capped_active"],
+        "cap": "e3Point Parfum (Fragrance)@22",
+        "alphabeticalRun": "none (no run of seven)",
+        "skippedCandidates": [],
+        "codes": [],
+        "plausibility": "(i) Sodium Coco-Sulfate@2 and other cleansing surfactants before it; (ii) between @20 and the cap only Sodium Benzoate@21 (no surfactant, alkanolamide or pearlizing wax).",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light",
+      "persistence": "low",
+      "resetCapacity": "moderate",
+      "counterevidence": "Two deposition families (protein film and a cationic conditioner).",
+      "whyThisBand": "Only light routes: three hydrolyzed proteins after salt, acid and ferments, and a cationic arginate ester just before the preservatives; no silicone, cationic polymer, payload_lipid or film former; a C5 sulfate chassis with four buffers gives moderate reset.",
+      "whyNotNeighborBand": "Not moderate (W2): both families are late and light (hydrolyzed proteins @13-15, a non-polymeric cationic surfactant @19 one place before the W-line @20), so their combined residue plausibly stays below noticeable against a moderate reset.",
+      "confidenceLimitingFactor": "W2 boundary; the cationic arginate's deposition is not characterized in this standard (family assignment by chemistry).",
+      "rationale": "Low (6.6): two light, late families against moderate reset; W2 reason recorded; no W-RICH.",
+      "ruleIds": ["6.3", "6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "repair",
+      "provisional": "Claims hidden (3.1). Formula-only placeholder; claim-dependent.",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": ["Aloe Barbadensis Leaf Juice@6", "Arginine@10"],
+        "repairRoutes": ["Hydrolyzed Corn Protein@13", "Hydrolyzed Wheat Protein@14", "Hydrolyzed Soy Protein@15"],
+        "sharedConditioningRoutes": ["PCA Ethyl Cocoyl Arginate@19"],
+        "limitation": "Three hydrolyzed proteins form a small cluster but are late and light; no deposition system to carry them. Borderline toward repair_supported; no deliberate humectant route for moisture."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Light, late conditioning; protein cluster without supporting deposition.",
+      "decisionTrace": "Claim direction null (hidden). Formula nonspecific (borderline repair). Provisional general.",
+      "rationale": "Provisional general pending claims.",
+      "ruleIds": ["3.1", "7.2", "7.3", "F1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["repair"],
+      "decisionTrace": "Empty default considered; no claims visible. Provisional.",
+      "rationale": "Provisional empty secondary; claim-dependent.",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional default regular: claims hidden. Cleansing moderate, so frequent fires with U2 wording graded moderate/high.",
+      "ruleIds": ["Section 9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "csaRoute": "CSA not met: no listed E4 comfort or humectant/refatting route anywhere in the formula, and MB is excluded by the prominent strong anionic Sodium Coco-Sulfate@2 (alkyl sulfate type). Prominent unlisted candidates (all rejected by R18): unlisted_route_candidate:Aloe Barbadensis Leaf Juice, unlisted_route_candidate:Lactococcus Ferment Lysate, unlisted_route_candidate:Arginine.",
+      "rationale": "not_targeted regardless of claims: CSA fails (no listed prominent route, no MB), so even SC1 positioning would leave it not_targeted and any S-SENSITIVE/S-DRY gate would fail (S-FAIL) naming the unlisted candidates.",
+      "ruleIds": ["Section 10", "CSA", "MB", "E3", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no Piroctone Olamine, Climbazole, Selenium Sulfide or Selenium Disulfide (Section 11).",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactantClasses": {
+      "strongAnionicAlkylSulfate": ["Sodium Coco-Sulfate@2 (defining anionic)"],
+      "strongAnionicEtherSulfonate": [],
+      "mildAnionic": ["Disodium Cocoyl Glutamate@8 (buffer)", "Sodium Cocoyl Glutamate@11 (buffer)"],
+      "amphoteric": [],
+      "nonionicCleansing": ["Lauryl Glucoside@3 (buffer)", "Coco-Glucoside@4 (buffer)"],
+      "noC3Class": ["PCA Ethyl Cocoyl Arginate@19 (cationic)"]
+    },
+    "conditioningRoutes": ["Hydrolyzed Corn Protein@13, Hydrolyzed Wheat Protein@14, Hydrolyzed Soy Protein@15 (protein film)", "PCA Ethyl Cocoyl Arginate@19 (cationic conditioner)", "Arginine@10, Aloe Barbadensis Leaf Juice@6 (unlisted humectant-type context)"],
+    "weightRoutes": ["protein_film: @13, @14, @15", "cationic_conditioner: @19"],
+    "actives": ["Lactococcus Ferment Lysate@9", "Leuconostoc/Radish Root Ferment Filtrate@16"],
+    "preservatives": ["Potassium Sorbate@20", "Sodium Benzoate@21"],
+    "fragrance": "Parfum (Fragrance)@22; allergens Linalool@23, Benzyl Salicylate@24; Vanillin@25",
+    "coolingOrEssentialOils": []
+  },
+  "unresolvedMaterialIngredients": []
+}

@@ -1,0 +1,152 @@
+{
+  "blindId": "T308",
+  "inciFingerprintSha256": "67f890bcc445fdb931de50ce96290cf6c902dfc338f8ebebd46019bf413d661f",
+  "phase": "blind_formula_pass",
+  "normalizationNote": "No split synonym entries; packet positions are normalized positions.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic Sodium Laureth Sulfate (2); prominent buffer Cocamidopropyl Betaine (3); Parfum at 6 makes Coco-Glucoside (8) non-prominent; no reinforcing route.",
+      "neighboringAlternative": "none",
+      "counterSignal": "Single prominent buffer; little refatting before Parfum."
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Several light routes, all after Parfum (6): weak refatter Glyceryl Oleate (7), Hydrolyzed Wheat Protein (10), Panthenol (12), Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (15), Glycerin (18). No silicone or payload lipid; C2 not met.",
+      "neighboringAlternative": "low",
+      "counterSignal": "Every route is after Parfum, so amounts are small; could read as cleansing-led (low)."
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Light, late families only (weak refatter 7, protein 10, guar 15, all after Parfum at 6) facing an ordinary C1 reset.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "All depositing routes after Parfum."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "Light ester, hydrolyzed protein, one late guar."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES + betaine."
+        }
+      },
+      "whyThisBand": "Light/late routes; ordinary reset.",
+      "whyNotNeighborBand": "W2: three families present, but each is late (after Parfum at 6) and light (weak refatter, hydrolyzed protein, single late guar); no silicone or lipid, so combined residue stays below noticeable.",
+      "counterSignal": "Multiple light families together.",
+      "excluded": [
+        "PEG-3 Distearate (9): pearlizing PEG ester",
+        "Propylene Glycol (19): solvent",
+        "Centaurea/Gossypium extracts: botanical"
+      ]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "rationale": "Provisional. Nonspecific light care (protein, panthenol, niacinamide, guar all late); no specialist route coherent from formula alone.",
+      "neighboringAlternative": "repair",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "limitation": "Single late protein token; no deposition cluster."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "rationale": "Provisional empty default.",
+      "neighboringAlternative": [
+        "moisture"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "rationale": "Provisional default.",
+      "neighboringAlternative": "frequent"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "rationale": "CSA formula half fails: E3 point is Parfum (6); Glyceryl Oleate (7), Panthenol (12), Niacinamide (13), Glycerin (18) are all non-prominent. Positioning cannot make it targeted.",
+      "neighboringAlternative": "targeted",
+      "csaFormulaHalf": "fail",
+      "prominentComfortRoute": false,
+      "prominentHumectantRefattingRoute": false
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none"
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 3,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 6,
+      "role": "E3 point"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 7,
+      "role": "weak_refatter (non-prominent)"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 8,
+      "role": "non-prominent glucoside"
+    },
+    {
+      "ingredient": "PEG-3 Distearate",
+      "position": 9,
+      "role": "pearlizer"
+    },
+    {
+      "ingredient": "Hydrolyzed Wheat Protein",
+      "position": 10,
+      "role": "protein_film"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 12,
+      "role": "humectant/comfort, non-prominent"
+    },
+    {
+      "ingredient": "Niacinamide",
+      "position": 13,
+      "role": "comfort route, non-prominent"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 15,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 18,
+      "role": "humectant"
+    },
+    {
+      "ingredient": "Hydrogenated Palm Glycerides Citrate",
+      "position": 25,
+      "role": "weak_refatter"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

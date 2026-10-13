@@ -1,0 +1,163 @@
+{
+  "blindId": "W401",
+  "inciFingerprintSha256": "da8236c75707925b9697352fca702d873b6d0f1b1b186fdc2381434cc9dbb5a9",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, stage A only)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "packSize": "400 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "Packet list already one entry per ingredient (no split synonyms); positions are normalized one-based positions (ID-2).",
+    "e3ProminenceCutoff": "Parfum @18 (E3 marker); prominent = positions 1-17"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionicEtherSulfonate": ["Sodium Laureth Sulfate @2 (defining anionic, C4)"],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": [],
+      "amphoteric": ["Cocamidopropyl Betaine @3 (prominent buffer)"],
+      "nonionicCleansing": ["Decyl Glucoside @4 (prominent buffer)", "Coco-Glucoside @5 (prominent buffer)"],
+      "notCleansingNotBuffer": ["Sodium Chloride @6", "Citric Acid @7"],
+      "reinforcingRoutes": [],
+      "c1c5c6Reading": "C1: ether-sulfate defining anionic, three prominent buffers, no reinforcing route"
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @9 (prominent)"],
+      "payload_lipid": ["Dicaprylyl Ether @10 (prominent; emollient ether)", "Hydrogenated Castor Oil @14 (prominent; waxy hydrogenated lipid)"],
+      "weak_refatter": ["Glyceryl Oleate @11"],
+      "silicone": [],
+      "pearlizing_fatty_route": ["Glycol Distearate @13"],
+      "humectants": ["Glycerin @12 (C2 humectant element, own entry)"],
+      "notHumectantRoute": ["Aloe Barbadensis Leaf Juice Powder @8 (plant juice, not a C2 humectant route)"]
+    },
+    "wLine": {
+      "wLine": "Sodium Benzoate @15",
+      "wLineClasses": ["preservative_or_capped_active"],
+      "cap": "e3Point @18 (Parfum)",
+      "alphabeticalRun": "none (longest ascending run 12-15, 4 entries)",
+      "candidatesTested": ["Sodium Benzoate @15: (i) surfactant before (SLES @2) ok; (ii) nothing cleansing/alkanolamide/pearlizer between 16 and cap -> plausible"],
+      "skipped": [],
+      "codes": [],
+      "payloadLipidMaterial": ["Dicaprylyl Ether @10", "Hydrogenated Castor Oil @14"],
+      "payloadLipidNonMaterial": []
+    },
+    "actives": {
+      "dandruffActives": [],
+      "comfortRoutesE4Prominent": [],
+      "humectantRefattingRoutesE4Prominent": ["Glyceryl Oleate @11", "Glycerin @12", "Hydrogenated Castor Oil @14 (hydrogenated plant lipid)"],
+      "coolingAgents": [],
+      "essentialOils": [],
+      "fragranceMaterials": ["Tetramethyl Acetyloctahydronaphthalenes @17 (fragrance material, not on the closed allergen list)", "Parfum @18"]
+    },
+    "scalpGateFormulaFacts": {
+      "CSA": "met via prominent E4 humectant/refatting routes (Glyceryl Oleate @11, Glycerin @12, Hydrogenated Castor Oil @14)",
+      "MB": "not met: Sodium Laureth Sulfate @2 is a prominent strong anionic (ether type)",
+      "S-SENSITIVE formula half": "no prominent E4 comfort route and no MB -> would fail (unlisted_route_candidate: none obvious; Aloe Barbadensis Leaf Juice Powder @8 is a rejected candidate, R18)",
+      "S-DRY formula half": "prominent humectant/refatting route present -> would pass if targeted",
+      "S-OILY formula clause": "cleansing moderate, conditioning high -> clause fails (conditioningLevel high)"
+    }
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 ether/sulfonate chassis with Sodium Laureth Sulfate @2 as the defining anionic (C4), three prominent buffers (Cocamidopropyl Betaine @3, Decyl Glucoside @4, Coco-Glucoside @5) and no reinforcing strong anionic, so C1 yields moderate. Counter-signal toward low (glucoside-rich buffering) does not move a C1 value; no C3b member decides it.",
+      "ruleIds": ["C3", "C4", "C1"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High: C2 is met with a prominent payload_lipid in place of the early silicone (Dicaprylyl Ether @10, Hydrogenated Castor Oil @14), a cationic polymer (Guar Hydroxypropyltrimonium Chloride @9), a pearlizing/fatty route (Glycol Distearate @13) and a deliberate humectant (Glycerin @12); prominent lipid plus cationic is also W-RICH for conditioning (E3 reading). Counter-signal: every care route sits after Sodium Chloride @6, only one cationic polymer, no silicone, and Dicaprylyl Ether is a light emollient, so realistic unknowns could make it moderate.",
+      "ruleIds": ["C2", "W-RICH", "Section 5 anchors"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @9"],
+        "payload_lipid": ["Dicaprylyl Ether @10 (material, < W-line 15)", "Hydrogenated Castor Oil @14 (material, < W-line 15)"],
+        "weak_refatter": ["Glyceryl Oleate @11"],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2 (anionic)", "Cocamidopropyl Betaine @3 (amphoteric)", "Decyl Glucoside @4 (nonionic)", "Coco-Glucoside @5 (nonionic)"],
+        "humectantContext": ["Glycerin @12", "Aloe Barbadensis Leaf Juice Powder @8"],
+        "excluded": ["Glycol Distearate @13 (pearlizing wax, 6.4)", "Tetramethyl Acetyloctahydronaphthalenes @17 (fragrance material)", "Parfum @18 (fragrance)", "Sodium Chloride @6, Citric Acid @7, Sodium Benzoate @15, Benzoic Acid @16 (non-deposition)"],
+        "unresolved": []
+      },
+      "wLineRecord": "wLine Sodium Benzoate @15 (preservative_or_capped_active); cap e3Point @18; no alphabetical run; no skipped candidates; no fallback codes; material payload_lipid: Dicaprylyl Ether @10, Hydrogenated Castor Oil @14; non-material: none.",
+      "depositionLoad": "moderate: one cationic guar plus two material lipids (one light ether, one waxy) and a weak refatter, all after the salt.",
+      "persistence": "moderate: the waxy Hydrogenated Castor Oil and guar can persist, Dicaprylyl Ether is a light emollient with low persistence; no silicone or film former.",
+      "resetCapacity": "moderate: effective C1 chassis (SLES buffered by betaine and two glucosides), not limited and not strong.",
+      "counterevidence": "W-RICH holds (material payload_lipid converging with a cationic polymer) and two deposition families (cationic_polymer + material payload_lipid) converge, which argues for high; against it, resetCapacity is moderate (not limited reset) and each route is single and mid-list.",
+      "whyThisBand": "One meaningful cationic system plus material but light-to-moderate lipids leaves plausible, bounded conditioning residue; an effective ordinary sulfate chassis rinses it.",
+      "whyNotNeighborBand": "Not high: W-RICH is present but resetCapacity is moderate, so the rich route is not open (W-RICH limited reset), and the convergence of one guar with a light ether lipid and a mid-list waxy lipid is not strong enough for a coating conclusion that the C1 reset fails to offset. Not low: two deposition families including material lipids make 'lightweight' an understatement (W2).",
+      "confidenceLimitingFactor": "W-RICH with moderate reset: realistic unknowns (lipid and guar dose, guar charge density) could move it to high.",
+      "rationale": "Moderate: W-RICH holds but reset is moderate, so per W-RICH limited-reset the band is moderate with W-RICH as counter-signal and high as neighbor; the convergence route is judged insufficient against the C1 reset. Not W1 (no silicone/amodimethicone set).",
+      "ruleIds": ["6.3", "6.4", "6.6", "W-LINE", "W-RICH", "W2", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": ["Glycerin @12", "Glyceryl Oleate @11", "Dicaprylyl Ether @10", "Hydrogenated Castor Oil @14"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Guar Hydroxypropyltrimonium Chloride @9", "Glycol Distearate @13"],
+        "limitation": "Humectant cluster is thin (Glycerin only as a listed humectant; aloe powder is not a C2 route); no protein or damage-care cluster, so repair is not supported."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Formula-only pass: no claims visible, so no focus candidate exists yet; moisture-leaning lipid/humectant routes are a possible candidate route.",
+      "decisionTrace": "Blind: claim direction null; formula compatible with moisture (moisture_supported provisional) or general; provisional general pending the reveal (3.1, 3.2).",
+      "rationale": "Provisional general (claim-dependent; formula-only). The formula would support a moisture candidate if the claims name one.",
+      "ruleIds": ["3.1", "7.2", "7.3", "F1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["moisture"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible in the blind pass.",
+      "rationale": "Provisional empty (claim-dependent; formula-only).",
+      "ruleIds": ["Section 8", "F2", "F3"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional regular (default). Claim-dependent: cleansingStrength moderate would allow frequent with explicit frequency wording (U2); alternating is impossible on a moderate formula; treatment impossible (no dandruff active).",
+      "ruleIds": ["Section 9", "U2", "U3", "U4"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional not_targeted (claims hidden; SC1 positioning undecided). Formula half: CSA met via prominent E4 humectant/refatting routes (Glyceryl Oleate @11, Glycerin @12, Hydrogenated Castor Oil @14); MB not met (Sodium Laureth Sulfate @2 prominent strong anionic). CSA route used: listed humectant/refatting route. If an E2 sensitive or dry scalp claim graded moderate/high appears, the value would become targeted.",
+      "ruleIds": ["Section 10", "CSA", "MB", "SC1", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: the complete INCI contains no Piroctone Olamine, Climbazole, Selenium Sulfide or Selenium Disulfide.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "notes": [
+    "Claim-dependent properties (focusPrimary, focusSecondary, usageRole, scalpComfortTarget) are provisional and formula-only; they will be reconciled after the reveal (3.2)."
+  ]
+}

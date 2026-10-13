@@ -1,0 +1,43 @@
+{
+  "blindId": "T114",
+  "inciFingerprintSha256": "63ff429b1232526889e28ca4e04999b7b98cfcef5c7171ac2c375d4077114816",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {"normalization": "Packet list used as normalized; normalized one-based positions.", "completeness": "complete (ID-1)", "sourceTier": 2, "identityConfidence": "high", "e3ProminenceCutoff": "Parfum at 9 -> positions 1-8 prominent"},
+  "directProperties": {
+    "cleansingStrength": {"value": "moderate", "confidence": "high", "neighboringAlternative": "none",
+      "rationale": "C1: defining anionic Sodium Laureth Sulfate (2) with prominent buffers Lauryl Glucoside (3) and Sodium Lauroyl Sarcosinate (4, mild anionic); no reinforcing route -> moderate.",
+      "counterSignals": "None material."},
+    "conditioningLevel": {"value": "moderate", "confidence": "moderate", "neighboringAlternative": "low",
+      "rationale": "One meaningful conditioning system: prominent cationic Hydroxypropyl Oxidized Starch PG-Trimonium Chloride (6). C2 not met; no other route.",
+      "counterSignals": "It is the only conditioning ingredient; no silicone, lipid, refatter, protein or humectant - a single polymer could read as low."},
+    "weightPotential": {"value": "low", "confidence": "high", "neighboringAlternative": "none",
+      "rationale": "A single cationic starch polymer with no reinforcing route, facing an effective C1 reset.",
+      "subjudgments": {
+        "depositionLoad": {"value": "light", "rationale": "One cationic starch (6) only."},
+        "persistence": {"value": "low", "rationale": "Starch-based cationic, no silicone/lipid to carry."},
+        "resetCapacity": {"value": "moderate", "rationale": "SLES with glucoside and sarcosinate buffers (C1 moderate)."}},
+      "evidenceByFamily": {"cationic_polymer": ["Hydroxypropyl Oxidized Starch PG-Trimonium Chloride (6)"], "anionic_surfactant": ["Sodium Laureth Sulfate (2)", "Sodium Lauroyl Sarcosinate (4, mild)"], "nonionic_surfactant": ["Lauryl Glucoside (3)"]},
+      "excluded": ["Menthol (8): cooling agent", "CI 42090 (13), CI 47005 (14): colorants"],
+      "unresolved": [],
+      "whyThisBand": "Single light family with ordinary reset; no polymer floor.",
+      "whyNotNeighborBand": "Only one deposition family, no reinforcing route, facing moderate reset (W2 permits low); nothing else could converge.",
+      "confidenceLimitingFactor": "None material."},
+    "focusPrimary": {"value": "provisional:pending_claims", "confidence": "low", "neighboringAlternative": "general",
+      "rationale": "Formula-only candidate: scalp_active (Piroctone Olamine 7, needs an E2 dandruff claim); menthol cooling; no lengths-care route.",
+      "careDirectionVerdictProvisional": "not_applicable"},
+    "focusSecondary": {"value": [], "confidence": "low", "neighboringAlternative": ["clarifying"], "rationale": "Empty default pending claims."},
+    "usageRole": {"value": "regular", "confidence": "low", "neighboringAlternative": "treatment", "rationale": "Default; treatment if a qualifying dandruff claim is revealed."},
+    "scalpComfortTarget": {"value": "provisional:not_targeted", "confidence": "low", "neighboringAlternative": "targeted", "rationale": "CSA not met: no E4 comfort or humectant route in positions 1-8. Counter-signal: prominent Menthol (8)."},
+    "dandruffSupport": {"value": "supported", "confidence": "high", "neighboringAlternative": "none", "rationale": "Complete INCI contains Piroctone Olamine (7)."}
+  },
+  "formulaFacts": [
+    {"ingredient": "Sodium Laureth Sulfate", "position": 2, "role": "defining anionic (ether type)"},
+    {"ingredient": "Lauryl Glucoside", "position": 3, "role": "buffer"},
+    {"ingredient": "Sodium Lauroyl Sarcosinate", "position": 4, "role": "buffer (mild anionic)"},
+    {"ingredient": "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride", "position": 6, "role": "cationic_polymer"},
+    {"ingredient": "Piroctone Olamine", "position": 7, "role": "recognized anti-dandruff active"},
+    {"ingredient": "Menthol", "position": 8, "role": "prominent cooling agent (CSA counter-signal)"},
+    {"ingredient": "Parfum", "position": 9, "role": "E3 fragrance marker"}
+  ],
+  "unresolvedMaterialIngredients": []
+}

@@ -1,0 +1,166 @@
+{
+  "blindId": "T106",
+  "inciFingerprintSha256": "8ac366dcf15f4a714a1b6b1f885ac3e675e5eecc5ed1a5ef118237bb290d5110",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "Packet canonicalInci used as normalized list (ID-2); positions are one-based on that list.",
+    "inciCount": 34,
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 3,
+    "identityConfidence": "moderate",
+    "e3ProminencePoint": "Parfum [Fragrance] at 6: positions 1-5 prominent"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "C6: no prominent strong anionic; the earliest prominent surfactant is a mild anionic (Disodium Laureth Sulfosuccinate 2) with prominent amphoteric co-surfactants (Cocamidopropyl Betaine 3, Cocamidopropyl Hydroxysultaine 4) -> low.",
+      "neighboringAlternative": "none"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Cleansing-led: the only prominent conditioning-adjacent route is a PEG ester refatter (5); guar (18), oat peptide (8), pearlizer (14) and C13-15 alkane (21) are after Parfum. No silicone, no prominent cationic.",
+      "counterSignal": "Several light late routes together might give bounded slip.",
+      "neighboringAlternative": "moderate"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Deposition is light and late: one prominent weak refatter; guar, peptide and alkane are trace -> low, despite mild reset.",
+      "counterSignal": "Mild C6 chassis gives weak reset.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "PEG-18 Glyceryl Oleate/Cocoate (5) prominent; guar 18, oat peptide 8, C13-15 alkane 21 after Parfum."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "No silicone, waxy lipid or persistent polymer at a meaningful level."
+        },
+        "resetCapacity": {
+          "value": "weak",
+          "rationale": "C6 low: sulfosuccinate + betaine/sultaine."
+        }
+      },
+      "whyThisBand": "Light, low-persistence routes even under weak reset.",
+      "whyNotNeighborBand": "W2: the only prominent family is a weak refatter; the cationic guar (18), oat peptide (8) and alkane (21) are all after Parfum (trace), so combined residue stays below noticeable even though reset is weak.",
+      "limitingFactor": "Weak reset leaves some doubt about accumulation of the late guar."
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Formula care-direction verdict recorded for reconciliation.",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "note": "No humectant cluster (glycerin late), no protein cluster (single late peptide)."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2)."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Default regular; triggers (U2-U5, D1, U3) need graded claims."
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). SC1 positioning unknown. CSA formula half fails: no prominent E4 comfort or humectant/refatting route (unlisted_route_candidate:PEG-18 Glyceryl Oleate/Cocoate at 5; Avena sativa peptide is not the listed Kernel Extract/Flour and is after Parfum)."
+    }
+  },
+  "scalpGateFormulaHalves": "S-SENSITIVE / S-DRY formula gates fail. S-OILY clause fails on cleansingStrength low.",
+  "formulaFacts": [
+    {
+      "ingredient": "Disodium laureth sulfosuccinate",
+      "position": 2,
+      "role": "mild anionic (sulfosuccinate), earliest surfactant"
+    },
+    {
+      "ingredient": "Cocamidopropyl betaine",
+      "position": 3,
+      "role": "amphoteric co-surfactant"
+    },
+    {
+      "ingredient": "Cocamidopropyl hydroxysultaine",
+      "position": 4,
+      "role": "amphoteric co-surfactant"
+    },
+    {
+      "ingredient": "PEG-18 glyceryl oleate/cocoate",
+      "position": 5,
+      "role": "PEG ester refatter/thickener, weak_refatter"
+    },
+    {
+      "ingredient": "Parfum [Fragrance]",
+      "position": 6,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Algin",
+      "position": 7,
+      "role": "thickener, excluded"
+    },
+    {
+      "ingredient": "Avena sativa (Oat) peptide",
+      "position": 8,
+      "role": "protein_film, after Parfum"
+    },
+    {
+      "ingredient": "Juniperus virginiana oil",
+      "position": 12,
+      "role": "essential oil, excluded (6.4)"
+    },
+    {
+      "ingredient": "Citrus aurantium peel oil",
+      "position": 13,
+      "role": "essential oil, excluded"
+    },
+    {
+      "ingredient": "Glycol distearate",
+      "position": 14,
+      "role": "pearlizer, late"
+    },
+    {
+      "ingredient": "Guar hydroxypropyltrimonium chloride",
+      "position": 18,
+      "role": "cationic_polymer, late (18)"
+    },
+    {
+      "ingredient": "Cocamide MEA",
+      "position": 19,
+      "role": "foam booster, not a route"
+    },
+    {
+      "ingredient": "C13-15 alkane",
+      "position": 21,
+      "role": "light emollient hydrocarbon, late"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 23,
+      "role": "humectant, late"
+    }
+  ],
+  "unresolvedMaterialIngredients": [
+    {
+      "ingredient": "C13-15 alkane",
+      "position": 21,
+      "note": "Light hydrocarbon emollient; late, not weight-material."
+    }
+  ]
+}

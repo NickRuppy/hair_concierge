@@ -1,0 +1,56 @@
+[
+  {
+    "blindId": "VS01",
+    "slot": "A05",
+    "productId": "a79513be-e34b-4a1e-b7eb-b3d4b58160be",
+    "fingerprint": "ad4168be859a6e0b1b7a76ae82e1e72040e87afa86dcf97031a6745545d783f4"
+  },
+  {
+    "blindId": "VS02",
+    "slot": "A06",
+    "productId": "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
+    "fingerprint": "b4166c95f70e93e461f681c730d02fac48aab6f16769696b7512f6c5fdd19eae"
+  },
+  {
+    "blindId": "VS03",
+    "slot": "A40",
+    "productId": "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+    "fingerprint": "5f982bf87555a931d4def50368197813a82e944030a1c2e9d63dff77fa1d141e"
+  },
+  {
+    "blindId": "VS04",
+    "slot": "G01",
+    "productId": "744de604-d266-453b-a56b-eea92c5ca565",
+    "fingerprint": "2c79251eb5b8c7ff1b1f626154c752255ac0d7d43384f1ee90d444652876c9bf"
+  },
+  {
+    "blindId": "VS05",
+    "slot": "G03",
+    "productId": "e7bfd306-b128-4735-a9f8-0eeacdbd5013",
+    "fingerprint": "303653d5f86a174377761e891fefde597d7e15dc484437056bd83783230aa48f"
+  },
+  {
+    "blindId": "VS06",
+    "slot": "A24",
+    "productId": "86f44889-b2c9-40a1-9190-58d7f738b6ca",
+    "fingerprint": "67f890bcc445fdb931de50ce96290cf6c902dfc338f8ebebd46019bf413d661f"
+  },
+  {
+    "blindId": "VS07",
+    "slot": "A43",
+    "productId": "678119a0-9070-4faf-b9ed-7c0ac008767e",
+    "fingerprint": "e7bbbca05138a36c9232d3bcfa024431c19776c252a065267ee03808404354e1"
+  },
+  {
+    "blindId": "VS08",
+    "slot": "A21",
+    "productId": "8a90f0fa-9cb1-458a-93f3-c2374e6d8f16",
+    "fingerprint": "0a9ce49c3c9a71eeb4cd8e8ebc4dc4b2431235b5e08cbd0e096985e48ddbbda3"
+  },
+  {
+    "blindId": "VS09",
+    "slot": "A03",
+    "productId": "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+    "fingerprint": "4871d6edeb1c4a74bb8123dc09d22d76a8888bf42f570a16fd8b5f91ac931e73"
+  }
+]

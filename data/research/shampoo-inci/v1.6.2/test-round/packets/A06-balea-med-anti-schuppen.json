@@ -1,0 +1,66 @@
+{
+  "slot": "A06",
+  "productId": "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
+  "name": "Balea Med Anti Schuppen",
+  "brand": "Balea Med",
+  "packSize": "250 ml",
+  "gtins": [
+    "4066447972528"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/2968885/balea-med-shampoo-anti-schuppen-ultra-sensitive",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4066447972528 (page text + JSON-LD; dm-Artikelnummer 2968885; \"Shampoo Anti-Schuppen Ultra Sensitive, 250 ml\"; brand Balea med; company dm-drogerie markt GmbH + Co. KG; Hergestellt in Schweiz)",
+      "inciVerbatim": "Ingredients: AQUA | SODIUM LAURETH SULFATE | COCAMIDOPROPYL BETAINE | COCO|GLUCOSIDE | PANTHENOL | BISABOLOL | NIACINAMIDE | GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE | GLYCERIN | PIROCTONE OLAMINE | TOCOPHEROL | SODIUM CHLORIDE | GLYCERYL OLEATE | LAURETH|2 | HYDROGENATED PALM GLYCERIDES CITRATE | CITRIC ACID | SODIUM BENZOATE.",
+      "claimsVerbatim": "Shampoo gegen Schuppen | Für empfindliche & trockene Kopfhaut | Kann Juckreiz mildern & die Kopfhaut beruhigen | Ohne Parfum, Parabene & Farbstoffe | Das Balea med Shampoo Anti Schuppen wurde speziell für die Bedürfnisse von empfindlicher und trockener Kopfhaut entwickelt. Es befreit Kopfhaut und Haar sanft von Schuppen und kann dabei helfen, Juckreiz zu mildern. Die milde Formulierung beruhigt die Kopfhaut und sorgt für gepflegtes sowie geschmeidig-glänzendes Haar. Dank der Rezeptur ohne Parfum, Parabene und Farbstoffe ist das Anti-Schuppen Shampoo eine sanfte Pflege für jeden Tag. Für ein angenehmes Haargefühl und eine beruhigte Kopfhaut. | Wirkung: Pflege, Feuchtigkeit, Glanz | Produkteigenschaften: vegan, Ohne Alkohol, ohne Parfüm, ohne Silikone",
+      "directionsVerbatim": "in das feuchte Haar und die feuchte Kopfhaut einmassieren und kurz einwirken lassen. Gründlich ausspülen."
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "gtin_differs_from_prior_capture",
+      "detail": "Current dm.de page (dm article 2968885) shows GTIN 4066447972528. v1.3 capture (2026-08-10) and the catalog affiliate link carry GTIN 4066447785425 for the same dm article. Likely EAN/pack change; INCI identical, so formula impact is nil."
+    },
+    {
+      "type": "source_formatting_artifact",
+      "detail": "dm renders hyphens inside names as '|' in this data field ('COCO|GLUCOSIDE', 'LAURETH|2') and uses ' | ' as the list delimiter. Canonical list restores them as Coco-Glucoside and Laureth-2 (standard INCI names); the verbatim source string is preserved above."
+    }
+  ],
+  "canonicalInci": [
+    "AQUA",
+    "SODIUM LAURETH SULFATE",
+    "COCAMIDOPROPYL BETAINE",
+    "COCO-GLUCOSIDE",
+    "PANTHENOL",
+    "BISABOLOL",
+    "NIACINAMIDE",
+    "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+    "GLYCERIN",
+    "PIROCTONE OLAMINE",
+    "TOCOPHEROL",
+    "SODIUM CHLORIDE",
+    "GLYCERYL OLEATE",
+    "LAURETH-2",
+    "HYDROGENATED PALM GLYCERIDES CITRATE",
+    "CITRIC ACID",
+    "SODIUM BENZOATE"
+  ],
+  "canonicalReason": "Single current source: dm.de exact product page (Balea is dm's own brand). Full 17-item list, identical in order and content to the v1.3 capture of 2026-08-10. Hyphen/pipe artifact normalized (documented). No second GTIN-anchored retailer or pack photo read; tier 2 (brand-owner page), identity moderate because the GTIN changed vs earlier captures.",
+  "inciFingerprintSha256": "b4166c95f70e93e461f681c730d02fac48aab6f16769696b7512f6c5fdd19eae",
+  "normalization": "Canonical list = the ordered INCI items, each lower-cased, trimmed, internal whitespace collapsed; items joined with '|' and sha256 over the UTF-8 string. Split synonym entries (e.g. 'Aqua (Water, Eau)') are merged into one item before hashing; trailing full stops removed.",
+  "identityConfidence": "moderate",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Canonical list is written in upper case as published by dm; fingerprint lower-cases anyway.",
+    "'ohne Parfüm' claim matches INCI (no Parfum). 'Mit Bisabolol/Niacinamide/Panthenol' present.",
+    "The catalog name 'Balea Med Anti Schuppen' maps to dm 'Shampoo Anti-Schuppen Ultra Sensitive'. Made in Switzerland per dm.",
+    "Claim 'sanfte Pflege für jeden Tag' appears on dm page (daily-use claim).",
+    "Prior v1.3 fingerprint fed59701... used a different hash scheme and kept the pipe artifacts (laureth|2); the new canonical list restores hyphens, so any comparison with the old normalizedInci will differ on 'coco-glucoside'/'laureth-2'."
+  ]
+}

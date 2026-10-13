@@ -1,0 +1,92 @@
+{
+  "slot": "A47",
+  "productId": "3405f33b-ae5f-4185-b72b-68c9a87f7c06",
+  "name": "Schwarzkopf GLISS Shampoo Liquid Silk",
+  "brand": "Schwarzkopf GLISS",
+  "packSize": "250 ml",
+  "gtins": [
+    "4015100813111"
+  ],
+  "sources": [
+    {
+      "url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/liquid-silk/liquid-silk-shampoo.html",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "manufacturer DE product page (Henkel / Schwarzkopf); JSON markup gtin 4015100813111; 'Größe 250 ml'",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4015100813111 (page markup 'gtin'; productID 3064747)",
+      "inciVerbatim": "Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Glycosphingolipids, Hydrolyzed Silk, Sericin, Parfum (Fragrance), PEG-7 Glyceryl Cocoate, Polyquaternium-10, Sodium Benzoate, PEG-120 Methyl Glucose Dioleate, Coco-Glucoside, Citric Acid, Glyceryl Oleate, PEG-40 Hydrogenated Castor Oil, Glycol Distearate, Hydrogenated Castor Oil, Butylene Glycol, Laureth-4, Prunus Armeniaca (Apricot) Kernel Oil, Propylene Glycol, Sodium Hydroxide, Benzyl Alcohol, Phenoxyethanol, Potassium Sorbate, Methylparaben",
+      "claimsVerbatim": "Schutz & gesund aussehender Glanz | – Das GLISS Liquid Silk Shampoo schützt und stärkt das Haar, glättet die Haaroberfläche und verleiht Glanz und Geschmeidigkeit | Mit Ceramiden & Seide | – Bei sprödem, glanzlosem Haar glättet das Liquid Silk Shampoo mit Ceramiden und Seide die Haaroberfläche und sorgt für einen natürlichen Glanz | Liquid Silk | – Das Pflegeshampoo für stumpfes und sprödes Haar bietet intensive Pflege, die das Haar außergewöhnlich weich, glatt und seidig macht | auf einen Blick: Geeignet für: Stumpfes, sprödes und glanzloses Haar | Wirkung: Schützt und stärkt das Haar, glättet die Haaroberfläche, verleiht Glanz und Geschmeidigkeit | Schlüssel-Inhaltsstoffe: Ceramide und Seide (Hydrolyzed Silk, Sericin) | Größe: 250 ml",
+      "directionsVerbatim": "Sanft im feuchten Haar verteilen und gut ausspülen. Regelmäßig zur Haarpflege anwenden und für optimale Ergebnisse anschließend die Liquid Silk Spülung verwenden"
+    },
+    {
+      "url": "https://www.dm.de/p/d/1430803/schwarzkopf-gliss-shampoo-liquid-silk",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "dm.de PDP (browser tab, Inhaltsstoffe accordion expanded); Anschrift: Henkel AG & Co. KGaA",
+      "sourceKind": "retailer",
+      "gtinShown": "4015100813111 (page 'GTIN:' line; dm-Artikelnummer 1430803; title 'Shampoo Liquid Silk, 250 ml'; Lieferbar)",
+      "inciVerbatim": "Ingredients: Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Glycosphingolipids, Hydrolyzed Silk, Sericin, Parfum (Fragrance), PEG-7 Glyceryl Cocoate, Polyquaternium-10, Sodium Benzoate, PEG-120 Methyl Glucose Dioleate, Coco-Glucoside, Citric Acid, Glyceryl Oleate, PEG-40 Hydrogenated Castor Oil, Glycol Distearate, Hydrogenated Castor Oil, Butylene Glycol, Laureth-4, Prunus Armeniaca (Apricot) Kernel Oil, Propylene Glycol, Sodium Hydroxide, Benzyl Alcohol, Phenoxyethanol, Potassium Sorbate, Methylparaben",
+      "claimsVerbatim": "Pflegendes Shampo | Mit Ceramiden & Seide | Glättet die Haaroberfläche | Verleiht Glanz und Geschmeidigkeit | Stumpfes und sprödes Haar ist dank des Liquid Silk Shampoos von Schwarzkopf GLISS ab sofort Geschichte. Die einwandfreie Textur mit Ceramiden und Seide sorgt für einen natürlichen Glanz und schöne Glättung auf der Haaroberfläche. Für mehr Geschmeidigkeit und Schutz. | Wirkung: Pflege, Glanz",
+      "directionsVerbatim": "Sanft im feuchten Haar verteilen. Gut ausspülen! Regelmäßig anwenden."
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-gliss-liquid-silk-shampoo/p/4015100813111",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "Rossmann PDP (browser tab); JSON-LD sku 4015100813111; Rossmann Artikelnummer 154090; 250 ml; 2,49 EUR",
+      "sourceKind": "retailer",
+      "gtinShown": "4015100813111 (URL path and JSON-LD sku)",
+      "inciVerbatim": "Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Glycosphingolipids, Hydrolyzed Silk, Sericin, Hydrolyzed Keratin, Parfum (Fragrance), PEG-7 Glyceryl Cocoate, Polyquaternium-10, Sodium Benzoate, PEG-120 Methyl Glucose Dioleate, Coco-Glucoside, Glyceryl Oleate, Citric Acid, PEG-40 Hydrogenated Castor Oil, Glycol Distearate, Hydrogenated Castor Oil, Butylene Glycol, Laureth-4, Prunus Armeniaca (Apricot) Kernel Oil, Propylene Glycol, Sodium Hydroxide, Benzyl Alcohol, Phenoxyethanol, Potassium Sorbate, Methylparaben, Propylparaben",
+      "claimsVerbatim": "Gliss Shampoo Liquid Silk - Glanz-Shampoo für sprödes, stumpfes Haar. ... Speziell abgestimmt auf die Bedürfnisse von sprödem und glanzlosem Haar, glättet das Liquid Silk Pflegeshampoo mit Ceramiden und Seide die Haaroberfläche und schenkt natürlichen Glanz und Geschmeidigkeit – für Haare wie Seide und 100 % stärkeres Haar⁴. Ohne es zu beschweren, reinigt die Haarpflege das Haar. Die Formel ist silikonfrei. | ... das Shampoo zu 91 % aus Inhaltsstoffen natürlichen Ursprungs². Die Haarpflege ist von PETA zertifiziert³. | mit Ceramiden & Seide | reinigt ohne zu beschweren | schützt dein Haar | sehr weiches, glänzendes Haar | mit fruchtigem Duft (⁴ im Vergleich zu unbehandeltem Haar)",
+      "directionsVerbatim": "Sanft im feuchten Haar verteilen und gut ausspülen. Regelmäßig zur Haarpflege anwenden und für optimale Ergebnisse anschließend die Liquid Silk Spülung verwenden."
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "formula_conflict_rossmann_older",
+      "summary": "Rossmann (same GTIN, 250 ml) publishes an older-looking list that adds 'Hydrolyzed Keratin' (after Sericin) and 'Propylparaben' (end), and swaps Glyceryl Oleate/Citric Acid order. Manufacturer and dm agree on the shorter list. Same conflict as recorded in the v1.4 pilot (2026-09-03), where the manufacturer/dm list was kept canonical and Rossmann retained as stale. Material for keratin (protein) and parabens.",
+      "listRossmann": "Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Glycosphingolipids, Hydrolyzed Silk, Sericin, Hydrolyzed Keratin, Parfum (Fragrance), PEG-7 Glyceryl Cocoate, Polyquaternium-10, Sodium Benzoate, PEG-120 Methyl Glucose Dioleate, Coco-Glucoside, Glyceryl Oleate, Citric Acid, PEG-40 Hydrogenated Castor Oil, Glycol Distearate, Hydrogenated Castor Oil, Butylene Glycol, Laureth-4, Prunus Armeniaca (Apricot) Kernel Oil, Propylene Glycol, Sodium Hydroxide, Benzyl Alcohol, Phenoxyethanol, Potassium Sorbate, Methylparaben, Propylparaben"
+    }
+  ],
+  "canonicalInci": [
+    "Aqua (Water, Eau)",
+    "Sodium Laureth Sulfate",
+    "Sodium Chloride",
+    "Cocamidopropyl Betaine",
+    "Glycosphingolipids",
+    "Hydrolyzed Silk",
+    "Sericin",
+    "Parfum (Fragrance)",
+    "PEG-7 Glyceryl Cocoate",
+    "Polyquaternium-10",
+    "Sodium Benzoate",
+    "PEG-120 Methyl Glucose Dioleate",
+    "Coco-Glucoside",
+    "Citric Acid",
+    "Glyceryl Oleate",
+    "PEG-40 Hydrogenated Castor Oil",
+    "Glycol Distearate",
+    "Hydrogenated Castor Oil",
+    "Butylene Glycol",
+    "Laureth-4",
+    "Prunus Armeniaca (Apricot) Kernel Oil",
+    "Propylene Glycol",
+    "Sodium Hydroxide",
+    "Benzyl Alcohol",
+    "Phenoxyethanol",
+    "Potassium Sorbate",
+    "Methylparaben"
+  ],
+  "canonicalReason": "Manufacturer DE page (GTIN-anchored, exact 250 ml) and dm.de (GTIN-anchored) agree character for character on a 27-item list; identical to the v1.4 pilot's canonical list (2026-09-03). Rossmann's different list is preserved as a conflict (appears stale; Rossmann still shows 'Hydrolyzed Keratin' and 'Propylparaben'). Claims backed: 'Ceramide' = Glycosphingolipids, 'Seide' = Hydrolyzed Silk/Sericin; 'silikonfrei' consistent (no silicone).",
+  "inciFingerprintSha256": "d5f7e210079ae4b8e0fa1afcb15470223370382bdb75d32d7d564076d52ba30a",
+  "normalization": "Canonical list split on ',' at parenthesis depth 0 (so synonym groups such as 'Aqua (Water, Eau)' stay one item), trailing full stop removed; per item: lower-case, trim, collapse internal whitespace; asterisks, parentheses and slashes kept as published; items joined with '|'; sha256 over the UTF-8 string.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Rossmann text (not manufacturer) claims 'Die Formel ist silikonfrei' and '100 % stärkeres Haar'; not cross-checked against pack.",
+    "The manufacturer page shows the INCI under 'Inhaltsstoffe' with a heading for the 250 ml pack ('Größe 250 ml').",
+    "Prior v1.4 pilot normalized hash (', '-joined) not re-derived here; list is identical to pilot source-packet.json canonical raw_inci.",
+    "No pack photo read; if Rossmann stock is old pack, an older version with keratin/propylparaben may still circulate."
+  ]
+}

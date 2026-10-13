@@ -1,0 +1,21 @@
+{
+  "blindId": "W306",
+  "productName": "OGX Rosemary Mint Shampoo",
+  "brand": "OGX",
+  "positioningSources": [
+    {
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Erfrischen und klären Sie Ihr Haar mit dem Rosmarin-Minz-Shampoo. Dieses Shampoo mit Rosmarinöl und Pfefferminzextrakt entfernt sichtbar Öl und Rückstände und befreit Ihr fettiges Haar von Ablagerungen. | Warnhinweise: Bitte die Anwendungshinweise beachten. Darf nicht in die Augen gelangen. Bei Kontakt mit den Augen sofort ausspülen. Von Kindern fernhalten.",
+      "directionsVerbatim": "(none: 'Anwendung und Gebrauch' section empty on Rossmann PDP)"
+    },
+    {
+      "sourceType": "pack_front_image_on_rossmann_pdp",
+      "sourceKind": "pack_front",
+      "sourceGrade": "high",
+      "claimsVerbatim": "Pack front: 'refreshing scalp', 'rosemary mint SHAMPOO', 'Clarifying blend visibly helps remove oils and residue to clear away buildup.', 'SULPHATE-FREE SURFACTANTS', 'LIPI PRO SHIELD' badge, 'NEU'. Marketing images: 'FÜR GESÜNDERES HAAR IN NUR EINER WÄSCHE*' | 'Rosemary Mint HILFT SICHTBAR, ÖLE UND RÜCKSTÄNDE ZU ENTFERNEN UND ABLAGERUNGEN ZU BESEITIGEN' | 'JETZT MIT LIPI PRO SHIELD 2x MEHR Lipid- und Proteinschutz*' | 'FÜR ALLE Haartypen' | 'ERFRISCHEND & KLÄREND' | 'VORHER Strapazierte, geschädigte Haarfaser / NACHHER Geschützte Haarfaser JETZT MIT LIPI PRO SHIELD 2X MEHR Lipid- und Proteinschutz*' (*vs. nicht-pflegendem Shampoo, bei kontinuierlicher Anwendung)",
+      "directionsVerbatim": "(none)"
+    }
+  ]
+}

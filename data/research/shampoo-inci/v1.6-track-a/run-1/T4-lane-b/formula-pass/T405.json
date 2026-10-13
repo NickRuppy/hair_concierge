@@ -1,0 +1,286 @@
+{
+  "blindId": "T405",
+  "inciFingerprintSha256": "d34e3d5a3b567d4779ae3dde69539e2d07abb7b1a44a1fa438f1396c24b0b46f",
+  "phase": "blind_formula_pass",
+  "identity": {
+    "packSize": "350 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high"
+  },
+  "normalization": "ID-2 applied; normalized one-based positions; no split entries; raw positions = normalized positions",
+  "normalizedInciCount": 33,
+  "e3ProminenceMarker": "Parfum/Fragrance at 12",
+  "prominentThroughPosition": 11,
+  "surfactantArchitecture": "Sulfate-free: CAPB (2) amphoteric first, then mild anionics sulfosuccinate (3), isethionate (4), sarcosinate (9); C6 -> low.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: C6 - no prominent strong anionic; the earliest prominent cleansing surfactant is the amphoteric Cocamidopropyl Betaine (2), followed by the mild anionics Disodium Laureth Sulfosuccinate (3), Sodium Cocoyl Isethionate (4) and Sodium Lauroyl Sarcosinate (9).",
+      "counterSignal": "Three prominent mild anionics give a broad surfactant system that argues toward moderate.",
+      "neighboringAlternative": "moderate",
+      "rulesApplied": [
+        "C3",
+        "C4",
+        "C6"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High: rich architecture (W-RICH) - prominent payload lipid Cocos Nucifera (Coconut) Oil (11) converging with four cationic polymers (Polyquaternium-10 13, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride 20, Polyquaternium-7 21, Polyquaternium-11 22), plus Glyceryl Oleate (15) and Glycerin (26): multiple complementary systems.",
+      "counterSignal": "No silicone and no pearlizer; all cationic polymers sit after Parfum (12) and the coconut oil after two preservatives, so absolute levels are likely low.",
+      "neighboringAlternative": "moderate",
+      "rulesApplied": [
+        "5",
+        "W-RICH"
+      ]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High: W-RICH (prominent coconut oil + cationic deposition) with limited reset (resetCapacity weak, C6 low chassis) meets the rich route of the high anchor; four converging cationic polymers make cumulative residue likely.",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "Coconut oil (11) plus four cationic polymers (13, 20, 21, 22) plus refatter; each likely at low level."
+        },
+        "persistence": {
+          "value": "high",
+          "rationale": "Several cationic polymers (incl. Polyquaternium-7/-10, known to accumulate) and a penetrating oil in a mild chassis are plausibly retained and cumulative."
+        },
+        "resetCapacity": {
+          "value": "weak",
+          "rationale": "C6 mild amphoteric/mild-anionic chassis (cleansingStrength low): limited reset."
+        }
+      },
+      "evidenceByFamily": {
+        "silicone": [],
+        "cationic_polymer": [
+          [
+            "Polyquaternium-10",
+            13
+          ],
+          [
+            "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+            20
+          ],
+          [
+            "Polyquaternium-7",
+            21
+          ],
+          [
+            "Polyquaternium-11",
+            22
+          ]
+        ],
+        "payload_lipid": [
+          [
+            "Cocos Nucifera (Coconut) Oil",
+            11
+          ]
+        ],
+        "weak_refatter": [
+          [
+            "Glyceryl Oleate",
+            15
+          ]
+        ],
+        "protein_film": [],
+        "film_former": [],
+        "humectant_context": [
+          [
+            "Glycerin",
+            26
+          ],
+          [
+            "Butylene Glycol",
+            25
+          ]
+        ],
+        "reset": [
+          [
+            "Cocamidopropyl Betaine",
+            2
+          ],
+          [
+            "Disodium Laureth Sulfosuccinate",
+            3
+          ],
+          [
+            "Sodium Cocoyl Isethionate",
+            4
+          ],
+          [
+            "Sodium Lauroyl Sarcosinate",
+            9
+          ],
+          [
+            "Coco-Glucoside",
+            14
+          ]
+        ]
+      },
+      "excludedEvidence": [
+        [
+          "Acrylates Copolymer",
+          17,
+          "anionic acrylate thickener, excluded (6.4)"
+        ],
+        [
+          "Cocamide MIPA",
+          6,
+          "thickener/foam booster"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "Each deposition route is listed late; no silicone.",
+      "whyThisBand": "High: W-RICH (prominent coconut oil + cationic deposition) with limited reset (resetCapacity weak, C6 low chassis) meets the rich route of the high anchor; four converging cationic polymers make cumulative residue likely.",
+      "whyNotNeighborBand": "Not moderate: the W-RICH limited-reset condition is met and multiple persistent cationic systems converge with nothing strong to remove them; calling it moderate would understate buildup risk.",
+      "confidenceLimitingFactor": "All deposition routes are late (after preservatives/Parfum), so actual load may be lower; realistic unknowns could move it to moderate.",
+      "neighboringAlternative": "moderate",
+      "rulesApplied": [
+        "6.5",
+        "6.6",
+        "W-RICH",
+        "W2"
+      ]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional only: focus needs exact-product claims (7.2); blind default is the honest fallback `general`. ",
+      "neighboringAlternative": "moisture"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: secondary requires distinct exact-product positioning (Section 8); none visible blind."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional default `regular` (Section 9); triggers need graded claims.  `alternating` impossible: cleansingStrength is not strong."
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: positioning half (SC1) hidden until unblind. CSA formula half is met.",
+      "csaFormulaHalf": true
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11).",
+      "neighboringAlternative": "none"
+    }
+  },
+  "scalpGateFormulaFacts": {
+    "e4ComfortRoutes": [],
+    "e4HumectantRefattingRoutes": [
+      {
+        "ingredient": "COCOS NUCIFERA (COCONUT) OIL",
+        "position": 11,
+        "prominent": true
+      },
+      {
+        "ingredient": "GLYCERYL OLEATE",
+        "position": 15,
+        "prominent": false
+      },
+      {
+        "ingredient": "GLYCERIN",
+        "position": 26,
+        "prominent": false
+      }
+    ],
+    "coolingAgents": [],
+    "promComfortRoute": false,
+    "promHumectantRoute": true,
+    "csaFormulaHalf": true
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 2,
+      "role": "amphoteric, earliest prominent cleansing surfactant"
+    },
+    {
+      "ingredient": "Disodium Laureth Sulfosuccinate",
+      "position": 3,
+      "role": "mild anionic"
+    },
+    {
+      "ingredient": "Sodium Cocoyl Isethionate",
+      "position": 4,
+      "role": "mild anionic"
+    },
+    {
+      "ingredient": "Phenoxyethanol",
+      "position": 7,
+      "role": "preservative"
+    },
+    {
+      "ingredient": "Sodium Lauroyl Sarcosinate",
+      "position": 9,
+      "role": "mild anionic"
+    },
+    {
+      "ingredient": "Cocos Nucifera (Coconut) Oil",
+      "position": 11,
+      "role": "payload lipid, prominent; E4 refatting route"
+    },
+    {
+      "ingredient": "Parfum (Fragrance)",
+      "position": 12,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Polyquaternium-10",
+      "position": 13,
+      "role": "cationic polymer"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 14,
+      "role": "nonionic (after E3 point)"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 15,
+      "role": "weak refatter"
+    },
+    {
+      "ingredient": "Acrylates Copolymer",
+      "position": 17,
+      "role": "excluded thickener"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 20,
+      "role": "cationic polymer"
+    },
+    {
+      "ingredient": "Polyquaternium-7",
+      "position": 21,
+      "role": "cationic polymer"
+    },
+    {
+      "ingredient": "Polyquaternium-11",
+      "position": 22,
+      "role": "cationic polymer"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 26,
+      "role": "humectant, late"
+    }
+  ],
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": []
+}

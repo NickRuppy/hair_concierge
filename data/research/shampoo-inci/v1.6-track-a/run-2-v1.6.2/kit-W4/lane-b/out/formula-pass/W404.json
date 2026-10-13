@@ -1,0 +1,163 @@
+{
+  "blindId": "W404",
+  "inciFingerprintSha256": "3abc85e9d0d10aa7a4a09ed68635d66990e6389dbd33f9d7278ef1107576678f",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, stage A only)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "packSize": "300 ml",
+    "formulaSourceTier": 3,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "Packet list already one entry per ingredient; positions are normalized one-based positions (ID-2).",
+    "e3ProminenceCutoff": "Parfum @7; prominent = positions 1-6"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionicEtherSulfonate": ["Sodium Laureth Sulfate @2 (defining anionic)", "TEA-Dodecylbenzenesulfonate @16 (after E3 point: recorded, not a reinforcing route)"],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": [],
+      "amphoteric": ["Cocamidopropyl Betaine @4 (prominent buffer)"],
+      "nonionicCleansing": [],
+      "notCleansingNotBuffer": ["Sodium Xylenesulfonate @3 (hydrotrope)", "Cocamide MEA @9 (alkanolamide)", "Trideceth-10 @18 (ethoxylate solubilizer, late)", "Sodium Chloride @12", "Tetrasodium EDTA @19"],
+      "reinforcingRoutes": [],
+      "c1c5c6Reading": "C1: ether-sulfate defining anionic, one prominent buffer, no prominent reinforcing route"
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @13 (not prominent)"],
+      "payload_lipid": [],
+      "weak_refatter": [],
+      "silicone": ["Dimethiconol @6 (prominent, early)", "Dimethicone @11 (not prominent)"],
+      "pearlizing_fatty_route": ["Glycol Distearate @10"],
+      "humectants": ["Panthenol @20 (own entry; C2 humectant element)"],
+      "notHumectantRoute": ["Triethylene Glycol @24", "Propylene Glycol @25"]
+    },
+    "wLine": {
+      "wLine": "Parfum @7 (= cap)",
+      "wLineClasses": ["fragrance"],
+      "cap": "e3Point @7",
+      "alphabeticalRun": "none (longest ascending run 1-3)",
+      "candidatesTested": ["Parfum @7: (i) surfactant before ok; (ii) nothing between candidate and cap -> plausible"],
+      "skipped": [],
+      "codes": [],
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": []
+    },
+    "actives": {
+      "dandruffActives": ["Piroctone Olamine @14"],
+      "comfortRoutesE4Prominent": [],
+      "comfortRoutesNotProminent": ["Panthenol @20"],
+      "humectantRefattingRoutesE4Prominent": [],
+      "coolingAgents": [],
+      "essentialOils": [],
+      "fragranceMaterials": ["Parfum @7", "Hexyl Cinnamal @22", "Benzyl Alcohol @26"],
+      "other": ["Histidine @23 (free amino acid, trace; chelating role, not a film route)", "Sodium Salicylate @17 (preservative)"]
+    },
+    "scalpGateFormulaFacts": {
+      "CSA": "not met: no prominent E4 comfort or humectant/refatting route (Panthenol @20 is after the E3 point) and no MB",
+      "MB": "not met: Sodium Laureth Sulfate @2 prominent strong anionic",
+      "S-SENSITIVE formula half": "fails (no CSA, no comfort route, no MB)",
+      "S-DRY formula half": "fails (no CSA, no prominent humectant route)",
+      "S-OILY formula clause": "cleansing moderate, weight moderate, conditioning high -> clause fails (conditioningLevel high)",
+      "S-DANDRUFF formula half": "dandruffSupport supported"
+    }
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate @2 defining anionic buffered by prominent Cocamidopropyl Betaine @4; TEA-Dodecylbenzenesulfonate @16 is after the E3 point, so it is recorded but is not a reinforcing route (C4); Sodium Xylenesulfonate @3 is a hydrotrope, not a cleansing route.",
+      "ruleIds": ["C3", "C4", "C1"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High: C2 met with an early (prominent) silicone Dimethiconol @6, a cationic polymer Guar Hydroxypropyltrimonium Chloride @13, a pearlizing/fatty route Glycol Distearate @10 and a deliberate humectant Panthenol @20 (own entry), plus a second silicone Dimethicone @11; the settled C2 precedent pattern. Counter-signal: guar, Dimethicone and Panthenol are all after the E3 point and Panthenol is near the end of the list, so realistic unknowns could make it moderate.",
+      "ruleIds": ["C2", "R11", "Section 5 anchors"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @13"],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": ["Dimethiconol @6", "Dimethicone @11"],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @4", "TEA-Dodecylbenzenesulfonate @16 (late)"],
+        "humectantContext": ["Panthenol @20", "Triethylene Glycol @24", "Propylene Glycol @25"],
+        "excluded": ["Glycol Distearate @10 (pearlizing wax, 6.4)", "Cocamide MEA @9 (alkanolamide thickener)", "Sodium Xylenesulfonate @3 (hydrotrope)", "Trideceth-10 @18 (ethoxylate solubilizer)", "Histidine @23 (trace free amino acid, chelating role; not a film route)", "Parfum @7, Hexyl Cinnamal @22, Benzyl Alcohol @26 (fragrance/preservative)"],
+        "unresolved": []
+      },
+      "wLineRecord": "wLine Parfum @7 (fragrance) = cap e3Point @7; no alphabetical run; no skipped candidates; no codes; no payload_lipid present.",
+      "depositionLoad": "moderate: two silicones (one early dimethiconol) plus a cationic guar form a classic coacervate deposition system.",
+      "persistence": "moderate: dimethiconol/dimethicone are persistent and can build up with guar, but no lipid, film former or protein reinforces them.",
+      "resetCapacity": "moderate: effective C1 sulfate chassis with a betaine buffer.",
+      "counterevidence": "Two deposition families (silicone + cationic_polymer) converge and silicones are persistent; the convergence route toward high is plausible.",
+      "whyThisBand": "Silicone plus guar plausibly leaves noticeable but bounded conditioning residue that an effective ordinary sulfate chassis largely rinses.",
+      "whyNotNeighborBand": "Not high: no W-RICH (no payload lipid at all), reset is moderate, and the deposition is one silicone system plus one late guar without further converging families; it is not the W1 set (no amodimethicone), so W1 is not cited. Not low: two converging families with an early silicone make 'lightweight' an understatement (W2).",
+      "confidenceLimitingFactor": "Silicone dose and guar charge density unknown; two converging families keep high realistic.",
+      "rationale": "Moderate: silicone (Dimethiconol @6, Dimethicone @11) plus cationic guar @13 against a moderate C1 reset; full method 6.6 (W1 not applicable without amodimethicone).",
+      "ruleIds": ["6.3", "6.6", "W1 (not applicable: set without amodimethicone)", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Dimethiconol @6", "Dimethicone @11", "Guar Hydroxypropyltrimonium Chloride @13", "Glycol Distearate @10"],
+        "limitation": "Generic silicone/guar conditioning; if a lengths-care claim appears the verdict would be nonspecific."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Recognized dandruff active Piroctone Olamine @14 is present; with an anti-dandruff claim the focus would be scalp_active (7.2).",
+      "decisionTrace": "Blind: claim direction null; formula compatible with scalp_active (dandruff active) if dandruff positioning appears; provisional general.",
+      "rationale": "Provisional general (claim-dependent; formula-only).",
+      "ruleIds": ["3.1", "7.2"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["shine"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty (claim-dependent).",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "treatment",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional regular (default). dandruffSupport is supported, so a qualifying E2 dandruff claim graded moderate/high would fire treatment (U3); moderate formula cannot be alternating.",
+      "ruleIds": ["Section 9", "U3"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted regardless of positioning: no CSA. No E4 comfort or humectant/refatting route is prominent (Panthenol @20 is after Parfum @7) and MB fails because Sodium Laureth Sulfate @2 is a prominent strong anionic; without a listed prominent route and without MB even an explicitly positioned product is not_targeted (Section 10). CSA route: none (missing route named: no prominent listed route; Panthenol present only after the E3 point).",
+      "ruleIds": ["Section 10", "CSA", "MB", "E3", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Supported: the complete INCI contains Piroctone Olamine @14 (Section 11; position not checked).",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "notes": ["Claim-dependent properties (focus, usage) are provisional; scalpComfortTarget is decided by the formula half alone here (CSA fails)."]
+}

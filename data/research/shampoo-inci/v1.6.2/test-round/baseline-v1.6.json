@@ -1,0 +1,857 @@
+{
+ "A21": {
+  "blindIdV16": "T403",
+  "lanes": {
+   "a": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "low",
+    "dandruffSupport": "not_supported",
+    "focusPrimary": "general",
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "focusSecondary": [],
+    "weight": "light",
+    "fits": {
+     "fine": "ideal",
+     "normal": "ideal",
+     "coarse": "acceptable"
+    },
+    "primaryTarget": "ordinary",
+    "secondaryTarget": null,
+    "intensity": "regular",
+    "deepCleanser": "not_flagged",
+    "combination": [],
+    "rows": [
+     [
+      "coarse",
+      "normal",
+      "regular"
+     ],
+     [
+      "fine",
+      "normal",
+      "regular"
+     ],
+     [
+      "normal",
+      "normal",
+      "regular"
+     ]
+    ],
+    "reviewFlags": [
+     "review_specialist_gate_failed",
+     "review_thickness_boundary"
+    ]
+   },
+   "b": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "low",
+    "dandruffSupport": "not_supported",
+    "focusPrimary": "general",
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "focusSecondary": [],
+    "weight": "light",
+    "fits": {
+     "fine": "ideal",
+     "normal": "ideal",
+     "coarse": "acceptable"
+    },
+    "primaryTarget": "ordinary",
+    "secondaryTarget": null,
+    "intensity": "regular",
+    "deepCleanser": "not_flagged",
+    "combination": [],
+    "rows": [
+     [
+      "coarse",
+      "normal",
+      "regular"
+     ],
+     [
+      "fine",
+      "normal",
+      "regular"
+     ],
+     [
+      "normal",
+      "normal",
+      "regular"
+     ]
+    ],
+    "reviewFlags": [
+     "review_specialist_gate_failed",
+     "review_thickness_boundary"
+    ]
+   }
+  }
+ },
+ "A06": {
+  "blindIdV16": "T207",
+  "lanes": {
+   "a": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "low",
+    "dandruffSupport": "supported",
+    "focusPrimary": "scalp_active",
+    "usageRole": "treatment",
+    "scalpComfortTarget": "not_targeted",
+    "focusSecondary": [],
+    "weight": "light",
+    "fits": {
+     "fine": "ideal",
+     "normal": "ideal",
+     "coarse": "acceptable"
+    },
+    "primaryTarget": "dandruff",
+    "secondaryTarget": null,
+    "intensity": "regular",
+    "deepCleanser": "not_flagged",
+    "combination": [
+     "sensitive"
+    ],
+    "rows": [
+     [
+      "coarse",
+      "schuppen",
+      "regular"
+     ],
+     [
+      "fine",
+      "schuppen",
+      "regular"
+     ],
+     [
+      "normal",
+      "schuppen",
+      "regular"
+     ]
+    ],
+    "reviewFlags": [
+     "review_thickness_boundary"
+    ]
+   },
+   "b": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "low",
+    "dandruffSupport": "supported",
+    "focusPrimary": "scalp_active",
+    "usageRole": "treatment",
+    "scalpComfortTarget": "not_targeted",
+    "focusSecondary": [],
+    "weight": "light",
+    "fits": {
+     "fine": "ideal",
+     "normal": "ideal",
+     "coarse": "acceptable"
+    },
+    "primaryTarget": "dandruff",
+    "secondaryTarget": null,
+    "intensity": "regular",
+    "deepCleanser": "not_flagged",
+    "combination": [
+     "sensitive"
+    ],
+    "rows": [
+     [
+      "coarse",
+      "schuppen",
+      "regular"
+     ],
+     [
+      "fine",
+      "schuppen",
+      "regular"
+     ],
+     [
+      "normal",
+      "schuppen",
+      "regular"
+     ]
+    ],
+    "reviewFlags": [
+     "review_thickness_boundary"
+    ]
+   }
+  }
+ },
+ "A43": {
+  "blindIdV16": "T209",
+  "lanes": {
+   "a": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "low",
+    "weightPotential": "low",
+    "dandruffSupport": "not_supported",
+    "focusPrimary": "general",
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "focusSecondary": [],
+    "weight": "light",
+    "fits": {
+     "fine": "ideal",
+     "normal": "ideal",
+     "coarse": "acceptable"
+    },
+    "primaryTarget": "ordinary",
+    "secondaryTarget": null,
+    "intensity": "regular",
+    "deepCleanser": "not_flagged",
+    "combination": [],
+    "rows": [
+     [
+      "coarse",
+      "normal",
+      "regular"
+     ],
+     [
+      "fine",
+      "normal",
+      "regular"
+     ],
+     [
+      "normal",
+      "normal",
+      "regular"
+     ]
+    ],
+    "reviewFlags": [
+     "review_specialist_gate_failed"
+    ]
+   },
+   "b": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "low",
+    "weightPotential": "low",
+    "dandruffSupport": "not_supported",
+    "focusPrimary": "general",
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "focusSecondary": [],
+    "weight": "light",
+    "fits": {
+     "fine": "ideal",
+     "normal": "ideal",
+     "coarse": "acceptable"
+    },
+    "primaryTarget": "ordinary",
+    "secondaryTarget": null,
+    "intensity": "regular",
+    "deepCleanser": "not_flagged",
+    "combination": [],
+    "rows": [
+     [
+      "coarse",
+      "normal",
+      "regular"
+     ],
+     [
+      "fine",
+      "normal",
+      "regular"
+     ],
+     [
+      "normal",
+      "normal",
+      "regular"
+     ]
+    ],
+    "reviewFlags": [
+     "review_specialist_gate_failed"
+    ]
+   }
+  }
+ },
+ "A05": {
+  "blindIdV16": "T105",
+  "lanes": {
+   "a": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "low",
+    "dandruffSupport": "not_supported",
+    "focusPrimary": "scalp_active",
+    "usageRole": "frequent",
+    "scalpComfortTarget": "targeted",
+    "focusSecondary": [],
+    "weight": "light",
+    "fits": {
+     "fine": "ideal",
+     "normal": "ideal",
+     "coarse": "acceptable"
+    },
+    "primaryTarget": "sensitive",
+    "secondaryTarget": null,
+    "intensity": "regular",
+    "deepCleanser": "not_flagged",
+    "combination": [],
+    "rows": [
+     [
+      "coarse",
+      "irritationen",
+      "regular"
+     ],
+     [
+      "fine",
+      "irritationen",
+      "regular"
+     ],
+     [
+      "normal",
+      "irritationen",
+      "regular"
+     ]
+    ],
+    "reviewFlags": [
+     "review_thickness_boundary"
+    ]
+   },
+   "b": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "low",
+    "dandruffSupport": "not_supported",
+    "focusPrimary": "scalp_active",
+    "usageRole": "frequent",
+    "scalpComfortTarget": "targeted",
+    "focusSecondary": [
+     "moisture"
+    ],
+    "weight": "light",
+    "fits": {
+     "fine": "ideal",
+     "normal": "ideal",
+     "coarse": "acceptable"
+    },
+    "primaryTarget": "sensitive",
+    "secondaryTarget": null,
+    "intensity": "regular",
+    "deepCleanser": "not_flagged",
+    "combination": [],
+    "rows": [
+     [
+      "coarse",
+      "irritationen",
+      "regular"
+     ],
+     [
+      "fine",
+      "irritationen",
+      "regular"
+     ],
+     [
+      "normal",
+      "irritationen",
+      "regular"
+     ]
+    ],
+    "reviewFlags": [
+     "review_thickness_boundary"
+    ]
+   }
+  }
+ },
+ "G03": {
+  "blindIdV16": "T118",
+  "lanes": {
+   "a": {
+    "cleansingStrength": "low",
+    "conditioningLevel": "low",
+    "weightPotential": "low",
+    "dandruffSupport": "not_supported",
+    "focusPrimary": "general",
+    "usageRole": "frequent",
+    "scalpComfortTarget": "not_targeted",
+    "focusSecondary": [],
+    "weight": "light",
+    "fits": {
+     "fine": "ideal",
+     "normal": "ideal",
+     "coarse": "acceptable"
+    },
+    "primaryTarget": "ordinary",
+    "secondaryTarget": null,
+    "intensity": "gentle",
+    "deepCleanser": "not_flagged",
+    "combination": [],
+    "rows": [
+     [
+      "coarse",
+      "normal",
+      "gentle"
+     ],
+     [
+      "fine",
+      "normal",
+      "gentle"
+     ],
+     [
+      "normal",
+      "normal",
+      "gentle"
+     ]
+    ],
+    "reviewFlags": [
+     "review_specialist_gate_failed"
+    ]
+   },
+   "b": {
+    "cleansingStrength": "low",
+    "conditioningLevel": "low",
+    "weightPotential": "low",
+    "dandruffSupport": "not_supported",
+    "focusPrimary": "general",
+    "usageRole": "frequent",
+    "scalpComfortTarget": "not_targeted",
+    "focusSecondary": [],
+    "weight": "light",
+    "fits": {
+     "fine": "ideal",
+     "normal": "ideal",
+     "coarse": "acceptable"
+    },
+    "primaryTarget": "ordinary",
+    "secondaryTarget": null,
+    "intensity": "gentle",
+    "deepCleanser": "not_flagged",
+    "combination": [],
+    "rows": [
+     [
+      "coarse",
+      "normal",
+      "gentle"
+     ],
+     [
+      "fine",
+      "normal",
+      "gentle"
+     ],
+     [
+      "normal",
+      "normal",
+      "gentle"
+     ]
+    ],
+    "reviewFlags": [
+     "review_specialist_gate_failed"
+    ]
+   }
+  }
+ },
+ "A40": {
+  "blindIdV16": "T303",
+  "lanes": {
+   "a": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "low",
+    "dandruffSupport": "not_supported",
+    "focusPrimary": "scalp_active",
+    "usageRole": "frequent",
+    "scalpComfortTarget": "targeted",
+    "focusSecondary": [],
+    "weight": "light",
+    "fits": {
+     "fine": "ideal",
+     "normal": "ideal",
+     "coarse": "acceptable"
+    },
+    "primaryTarget": "sensitive",
+    "secondaryTarget": "dry",
+    "intensity": "regular",
+    "deepCleanser": "not_flagged",
+    "combination": [],
+    "rows": [
+     [
+      "coarse",
+      "irritationen",
+      "regular"
+     ],
+     [
+      "coarse",
+      "trocken",
+      "regular"
+     ],
+     [
+      "fine",
+      "irritationen",
+      "regular"
+     ],
+     [
+      "fine",
+      "trocken",
+      "regular"
+     ],
+     [
+      "normal",
+      "irritationen",
+      "regular"
+     ],
+     [
+      "normal",
+      "trocken",
+      "regular"
+     ]
+    ],
+    "reviewFlags": []
+   },
+   "b": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "low",
+    "dandruffSupport": "not_supported",
+    "focusPrimary": "scalp_active",
+    "usageRole": "frequent",
+    "scalpComfortTarget": "targeted",
+    "focusSecondary": [],
+    "weight": "light",
+    "fits": {
+     "fine": "ideal",
+     "normal": "ideal",
+     "coarse": "acceptable"
+    },
+    "primaryTarget": "sensitive",
+    "secondaryTarget": "dry",
+    "intensity": "regular",
+    "deepCleanser": "not_flagged",
+    "combination": [],
+    "rows": [
+     [
+      "coarse",
+      "irritationen",
+      "regular"
+     ],
+     [
+      "coarse",
+      "trocken",
+      "regular"
+     ],
+     [
+      "fine",
+      "irritationen",
+      "regular"
+     ],
+     [
+      "fine",
+      "trocken",
+      "regular"
+     ],
+     [
+      "normal",
+      "irritationen",
+      "regular"
+     ],
+     [
+      "normal",
+      "trocken",
+      "regular"
+     ]
+    ],
+    "reviewFlags": [
+     "review_thickness_boundary"
+    ]
+   }
+  }
+ },
+ "A24": {
+  "blindIdV16": "T308",
+  "lanes": {
+   "a": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "low",
+    "dandruffSupport": "not_supported",
+    "focusPrimary": "general",
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "focusSecondary": [],
+    "weight": "light",
+    "fits": {
+     "fine": "ideal",
+     "normal": "ideal",
+     "coarse": "acceptable"
+    },
+    "primaryTarget": "ordinary",
+    "secondaryTarget": null,
+    "intensity": "regular",
+    "deepCleanser": "not_flagged",
+    "combination": [],
+    "rows": [
+     [
+      "coarse",
+      "normal",
+      "regular"
+     ],
+     [
+      "fine",
+      "normal",
+      "regular"
+     ],
+     [
+      "normal",
+      "normal",
+      "regular"
+     ]
+    ],
+    "reviewFlags": [
+     "review_specialist_gate_failed",
+     "review_thickness_boundary"
+    ]
+   },
+   "b": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "low",
+    "dandruffSupport": "not_supported",
+    "focusPrimary": "general",
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "focusSecondary": [],
+    "weight": "light",
+    "fits": {
+     "fine": "ideal",
+     "normal": "ideal",
+     "coarse": "acceptable"
+    },
+    "primaryTarget": "ordinary",
+    "secondaryTarget": null,
+    "intensity": "regular",
+    "deepCleanser": "not_flagged",
+    "combination": [],
+    "rows": [
+     [
+      "coarse",
+      "normal",
+      "regular"
+     ],
+     [
+      "fine",
+      "normal",
+      "regular"
+     ],
+     [
+      "normal",
+      "normal",
+      "regular"
+     ]
+    ],
+    "reviewFlags": [
+     "review_specialist_gate_failed",
+     "review_thickness_boundary"
+    ]
+   }
+  }
+ },
+ "G01": {
+  "blindIdV16": "T311",
+  "lanes": {
+   "a": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "low",
+    "dandruffSupport": "supported",
+    "focusPrimary": "scalp_active",
+    "usageRole": "treatment",
+    "scalpComfortTarget": "not_targeted",
+    "focusSecondary": [],
+    "weight": "light",
+    "fits": {
+     "fine": "ideal",
+     "normal": "ideal",
+     "coarse": "acceptable"
+    },
+    "primaryTarget": "dandruff",
+    "secondaryTarget": null,
+    "intensity": "regular",
+    "deepCleanser": "not_flagged",
+    "combination": [
+     "sensitive"
+    ],
+    "rows": [
+     [
+      "coarse",
+      "schuppen",
+      "regular"
+     ],
+     [
+      "fine",
+      "schuppen",
+      "regular"
+     ],
+     [
+      "normal",
+      "schuppen",
+      "regular"
+     ]
+    ],
+    "reviewFlags": [
+     "review_thickness_boundary"
+    ]
+   },
+   "b": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "low",
+    "dandruffSupport": "supported",
+    "focusPrimary": "scalp_active",
+    "usageRole": "treatment",
+    "scalpComfortTarget": "not_targeted",
+    "focusSecondary": [],
+    "weight": "light",
+    "fits": {
+     "fine": "ideal",
+     "normal": "ideal",
+     "coarse": "acceptable"
+    },
+    "primaryTarget": "dandruff",
+    "secondaryTarget": null,
+    "intensity": "regular",
+    "deepCleanser": "not_flagged",
+    "combination": [
+     "sensitive"
+    ],
+    "rows": [
+     [
+      "coarse",
+      "schuppen",
+      "regular"
+     ],
+     [
+      "fine",
+      "schuppen",
+      "regular"
+     ],
+     [
+      "normal",
+      "schuppen",
+      "regular"
+     ]
+    ],
+    "reviewFlags": [
+     "review_thickness_boundary"
+    ]
+   }
+  }
+ },
+ "A03": {
+  "blindIdV16": "T314",
+  "lanes": {
+   "a": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "low",
+    "dandruffSupport": "not_supported",
+    "focusPrimary": "scalp_active",
+    "usageRole": "regular",
+    "scalpComfortTarget": "targeted",
+    "focusSecondary": [],
+    "weight": "light",
+    "fits": {
+     "fine": "ideal",
+     "normal": "ideal",
+     "coarse": "acceptable"
+    },
+    "primaryTarget": "sensitive",
+    "secondaryTarget": "dry",
+    "intensity": "regular",
+    "deepCleanser": "not_flagged",
+    "combination": [],
+    "rows": [
+     [
+      "coarse",
+      "irritationen",
+      "regular"
+     ],
+     [
+      "coarse",
+      "trocken",
+      "regular"
+     ],
+     [
+      "fine",
+      "irritationen",
+      "regular"
+     ],
+     [
+      "fine",
+      "trocken",
+      "regular"
+     ],
+     [
+      "normal",
+      "irritationen",
+      "regular"
+     ],
+     [
+      "normal",
+      "trocken",
+      "regular"
+     ]
+    ],
+    "reviewFlags": [
+     "review_thickness_boundary"
+    ]
+   },
+   "b": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "low",
+    "dandruffSupport": "not_supported",
+    "focusPrimary": "scalp_active",
+    "usageRole": "regular",
+    "scalpComfortTarget": "targeted",
+    "focusSecondary": [],
+    "weight": "light",
+    "fits": {
+     "fine": "ideal",
+     "normal": "ideal",
+     "coarse": "acceptable"
+    },
+    "primaryTarget": "sensitive",
+    "secondaryTarget": "dry",
+    "intensity": "regular",
+    "deepCleanser": "not_flagged",
+    "combination": [],
+    "rows": [
+     [
+      "coarse",
+      "irritationen",
+      "regular"
+     ],
+     [
+      "coarse",
+      "trocken",
+      "regular"
+     ],
+     [
+      "fine",
+      "irritationen",
+      "regular"
+     ],
+     [
+      "fine",
+      "trocken",
+      "regular"
+     ],
+     [
+      "normal",
+      "irritationen",
+      "regular"
+     ],
+     [
+      "normal",
+      "trocken",
+      "regular"
+     ]
+    ],
+    "reviewFlags": [
+     "review_thickness_boundary"
+    ]
+   }
+  }
+ }
+}

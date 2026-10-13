@@ -1,0 +1,70 @@
+{
+  "slot": "A32",
+  "productId": "eb99d805-20d4-4dbb-9651-17c9e954a769",
+  "name": "NIVEA Power Repair Reparatur Shampoo",
+  "brand": "NIVEA",
+  "packSize": "250 ml",
+  "gtins": [
+    "4006000192543"
+  ],
+  "sources": [
+    {
+      "url": "https://www.nivea.de/produkte/power-repair-reparatur-shampoo-250ml-40060001925430001.html",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "manufacturer DE product page (Beiersdorf); structured data ean/gtin/sku 4006000192543(000)",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4006000192543 (JSON 'ean' and 'gtin'; productID/sku 4006000192543000; 'Größe 250 ML')",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Decyl Glucoside, Coco-Glucoside, Sodium Chloride, Citric Acid, Gardenia Taitensis Flower Extract, Squalane, Panthenol, Cocos Nucifera Oil, Dicaprylyl Ether, Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Glycerin, Pantolactone, Glycol Distearate, Hydrogenated Castor Oil, Sodium Benzoate, Tocopherol, Benzoic Acid, Parfum",
+      "claimsVerbatim": "Das Power Repair Reparatur Shampoo mit der einzigartigen Kombination aus hochwirksamen Squalan Serum und natürlichen Monoi-Öl unterstützt die gesunde Reparatur der Haare und verleiht mehr Widerstandskraft. | Attribut: Strapaziertes Haar | Silikonfrei | Mikroplastikfreie Formel gemäß UNEP-Definition | Ohne Inhaltsstoffe tierischen Ursprungs | Squalan Serum | Monoi-Öl | Produktvorteile: Unterstützt die gesunde Reparatur der Haare | Verleiht dem Haar mehr Widerstandskraft | Versorgt das Haar mit lang anhaltender Feuchtigkeit | Reinigt sanft die Kopfhaut | Pflegt das Haar, ohne zu beschweren | Mit hochwirksamem Squalan-Serum und natürlichem Monoi-Öl | Hautverträglichkeit dermatologisch bestätigt | 0% Silikone - maximale Wirksamkeit (vereint wirksame Reinigung mit zusätzlichen Pflegeeigenschaften speziell entwickelt für dein Haar) | Vegane Formel (keine Inhaltsstoffe tierischen Ursprungs) | Das pflegende NIVEA Power Repair Reparatur Shampoo spendet dem Haar Feuchtigkeit, beugt Spliss vor und unterstützt die gesunde Reparatur der Haare. Die Pflegeformel vereint hochwirksames Squalan-Serum und natürliches Monoi-Öl für rundum repariertes, gesund strahlendes Haar mit mehr Widerstandskraft. Das Shampoo für Strukturaufbau und Anti-Haarbruch reinigt sanft die Kopfhaut, kräftigt und pflegt das Haar intensiv, ohne zu beschweren. Aus Liebe zu Haar und Umwelt ist die Formel: ohne Silikone, ohne Mikroplastikpartikel (gemäß UNEP-Definition), zu 99% biologisch abbaubar (gemäß OECD oder gleichwertigen Standards) und mit veganer Formel (ohne Inhaltsstoffe tierischen Ursprungs). Die Hautverträglichkeit des Shampoos ist dermatologisch bestätigt und es eignet sich für alle Haartypen.",
+      "directionsVerbatim": "Auftragen: Shampoo im nassen Haar verteilen und aufschäumen. Ausspülen: Danach gründlich mit warmen Wasser ausspülen"
+    },
+    {
+      "url": "https://www.dm.de/p/d/1620988/nivea-shampoo-power-repair",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "dm.de PDP (browser tab, Inhaltsstoffe accordion expanded); Anschrift: Beiersdorf AG",
+      "sourceKind": "retailer",
+      "gtinShown": "4006000192543 (page 'GTIN:' line; dm-Artikelnummer 1620988; title 'Shampoo Power Repair, 250 ml'; Lieferbar)",
+      "inciVerbatim": "Ingredients: Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Decyl Glucoside, Coco-Glucoside, Sodium Chloride, Citric Acid, Gardenia Taitensis Flower Extract, Squalane, Panthenol, Cocos Nucifera Oil, Dicaprylyl Ether, Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Glycerin, Pantolactone, Glycol Distearate, Hydrogenated Castor Oil, Sodium Benzoate, Tocopherol, Benzoic Acid, Parfum",
+      "claimsVerbatim": "Mit Squalan-Serum & Monoi-Öl angereichert | Spendet langanhaltende Feuchtigkeit | Pflegt intensiv, ohne zu beschweren | Reinigt sanft & stärkt die Widerstandskraft | Das Power Repair Shampoo von NIVEA verbindet hochwirksames Squalan-Serum mit natürlichem Monoi-Öl, um strukturgeschädigtes Haar gezielt zu unterstützen. Die pflegende Formel spendet langanhaltende Feuchtigkeit und verleiht dem Haar spürbar mehr Widerstandskraft. Durch die sanfte Reinigung wird die Kopfhaut geschont, während das Haar intensiv gepflegt und gleichzeitig vor Haarbruch geschützt wird. Ohne zu beschweren, sorgt das Shampoo für geschmeidiges Haar mit einem natürlichen, gepflegten Aussehen. Die dermatologisch bestätigte Verträglichkeit macht es für alle Haartypen geeignet. | Hauttyp: alle Hauttyp | Haartyp: geschädigtes Haar",
+      "directionsVerbatim": "Shampoo im nassen Haar verteilen und aufschäumen. Danach gründlich mit warmen Wasser ausspülen"
+    }
+  ],
+  "conflicts": [],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Betaine",
+    "Decyl Glucoside",
+    "Coco-Glucoside",
+    "Sodium Chloride",
+    "Citric Acid",
+    "Gardenia Taitensis Flower Extract",
+    "Squalane",
+    "Panthenol",
+    "Cocos Nucifera Oil",
+    "Dicaprylyl Ether",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Glyceryl Oleate",
+    "Glycerin",
+    "Pantolactone",
+    "Glycol Distearate",
+    "Hydrogenated Castor Oil",
+    "Sodium Benzoate",
+    "Tocopherol",
+    "Benzoic Acid",
+    "Parfum"
+  ],
+  "canonicalReason": "Manufacturer DE page and dm.de, both showing GTIN 4006000192543 / 250 ml on 2026-10-10, publish a character-identical 22-item list; identical to the v1.4 pilot packet (2026-09-03, normalized hash a053d47a...). Claims backed by INCI: 'Squalan-Serum' = Squalane (pos 9), 'Monoi-Öl' = Cocos Nucifera Oil + Gardenia Taitensis Flower Extract (pos 8, 11), 'silikonfrei' consistent. 'Vegan': no animal-derived ingredient evident.",
+  "inciFingerprintSha256": "b9564870c023e1c44e5c052c119b82d7aea1eeae3cd60526408174a222911572",
+  "normalization": "Canonical list split on ',' at parenthesis depth 0 (so synonym groups such as 'Aqua (Water, Eau)' stay one item), trailing full stop removed; per item: lower-case, trim, collapse internal whitespace; asterisks, parentheses and slashes kept as published; items joined with '|'; sha256 over the UTF-8 string.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Same list as plans/scan-db-expansion/research/shampoo-v14/pilot/waves/wave-01/nivea-power-repair/source-packet.json (v1.4 pilot): unchanged since 2026-09-03.",
+    "Prior v1.4 pilot fingerprint (', '-joined normalized string) a053d47a346dc36db94461cc422e214892c0014f425ee419cc2333e293d037cf; this packet uses the '|' method.",
+    "No pack photo read; NIVEA page states 'Größe 250 ML'."
+  ]
+}

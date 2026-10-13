@@ -1,0 +1,459 @@
+{
+  "blindId": "T403",
+  "inciFingerprintSha256": "0a9ce49c3c9a71eeb4cd8e8ebc4dc4b2431235b5e08cbd0e096985e48ddbbda3",
+  "identity": {
+    "brand": "ISANA",
+    "productName": "ISANA MED Shampoo Totes Meer, 200 ml",
+    "market": "DE",
+    "packSize": "200 ml",
+    "formulaSourceTier": 1,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": [
+      "Normalized positions = packet positions.",
+      "E3 cut: Parfum at 7; prominent = 2-6."
+    ]
+  },
+  "sourcesUsed": {
+    "formula": "formula/T403.json (fingerprint 0a9ce49c3c9a71eeb4cd8e8ebc4dc4b2431235b5e08cbd0e096985e48ddbbda3, source tier 1, completeness complete)",
+    "positioning": [
+      "reveal/T403.json#positioningSources[0] (pack_back, packet grade moderate)",
+      "reveal/T403.json#positioningSources[1] (manufacturer_de, packet grade moderate)"
+    ]
+  },
+  "claimGrading": {
+    "pack back": "moderate",
+    "Rossmann (labelled manufacturer_de)": "moderate"
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "general (provisional)",
+      "final": "general",
+      "evidence": "sensitive-scalp claims",
+      "reason": "scalp_active incompatible (CSA fails)"
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blind": "not_targeted (provisional; CSA fail)",
+      "final": "not_targeted",
+      "evidence": "SC1 positioning present, CSA fails",
+      "reason": "CSA"
+    },
+    {
+      "property": "cleansingStrength/conditioningLevel/weightPotential/dandruffSupport",
+      "blind": "see formula-pass",
+      "final": "unchanged",
+      "evidence": "formula-only properties; no material formula conflict exposed by the reveal"
+    }
+  ],
+  "cleansingStrength": {
+    "value": "moderate",
+    "confidence": "high",
+    "rationale": "C1: defining anionic Sodium Laureth Sulfate (2) (ether/sulfonate type) with prominent buffer(s) Cocamidopropyl Betaine (3) and no prominent reinforcing strong anionic -> moderate. Laureth-4 (9) is a low-ethoxylate thickener (no route). Unchanged after unblinding: claims never set cleansing strength (Section 4, 3.2).",
+    "formulaFacts": [
+      {
+        "ingredient": "Sodium Laureth Sulfate",
+        "position": 2,
+        "role": "defining anionic (ether)"
+      },
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 3,
+        "role": "buffer"
+      }
+    ],
+    "counterSignal": [
+      "none material"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "formula/T403.json (fingerprint 0a9ce49c3c9a71eeb4cd8e8ebc4dc4b2431235b5e08cbd0e096985e48ddbbda3, source tier 1, completeness complete)"
+    ]
+  },
+  "conditioningLevel": {
+    "value": "moderate",
+    "confidence": "moderate",
+    "rationale": "Prominent cationic guar (5) + pearlizing Glycol Distearate (6) + light refatting ester Lauryl Lactate (4) = one meaningful system plus light routes. C2 not met: no early silicone and Lauryl Lactate read as weak_refatter (light lactate ester), which cannot replace the silicone. Unchanged after unblinding: claims never raise or lower conditioning (3.2, C7).",
+    "formulaFacts": [
+      {
+        "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+        "position": 5,
+        "role": "cationic polymer"
+      },
+      {
+        "ingredient": "Glycol Distearate",
+        "position": 6,
+        "role": "pearlizing route"
+      },
+      {
+        "ingredient": "Glycerin",
+        "position": 17,
+        "role": "R11 humectant"
+      }
+    ],
+    "counterSignal": [
+      "if Lauryl Lactate (4) is read as a payload_lipid emollient ester, C2 would be met (guar, GD, Glycerin 17) -> high"
+    ],
+    "neighboringAlternative": "high",
+    "sources": [
+      "formula/T403.json (fingerprint 0a9ce49c3c9a71eeb4cd8e8ebc4dc4b2431235b5e08cbd0e096985e48ddbbda3, source tier 1, completeness complete)"
+    ]
+  },
+  "weightPotential": {
+    "value": "low",
+    "confidence": "moderate",
+    "rationale": "low: one guar polymer plus one light refatting ester facing an ordinary C1 reset; combined residue unlikely to be noticeable. Unchanged after unblinding (claims cannot decide the band, 6.5).",
+    "neighboringAlternative": "moderate",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "light",
+        "rationale": "Guar (5) plus a light refatting ester (Lauryl Lactate 4); no silicone, butter, oil or film former."
+      },
+      "persistence": {
+        "value": "low",
+        "rationale": "Light ester and a single guar are weakly retained in rinse-off; nothing persistent to accumulate."
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C1 SLES/CAPB chassis; sea salt and menthol give no extra reset."
+      }
+    },
+    "extractedEvidenceByFamily": {
+      "cationic_polymer": [
+        [
+          "Guar Hydroxypropyltrimonium Chloride",
+          5
+        ]
+      ],
+      "weak_refatter": [
+        [
+          "Lauryl Lactate",
+          4
+        ]
+      ],
+      "silicone": [],
+      "payload_lipid": [],
+      "protein_film": [],
+      "film_former": [],
+      "anionic_surfactant": [
+        [
+          "Sodium Laureth Sulfate",
+          2
+        ]
+      ],
+      "amphoteric_surfactant": [
+        [
+          "Cocamidopropyl Betaine",
+          3
+        ]
+      ],
+      "humectant_context": [
+        [
+          "Glycerin",
+          17
+        ]
+      ]
+    },
+    "excludedIngredients": [
+      [
+        "Glycol Distearate",
+        6,
+        "pearlizer, excluded for weight"
+      ],
+      [
+        "Laureth-4",
+        9,
+        "thickener"
+      ],
+      [
+        "Menthol",
+        8,
+        "cooling agent"
+      ],
+      [
+        "Maris Sal",
+        10,
+        "salt"
+      ],
+      [
+        "Terpineol",
+        19,
+        "fragrance"
+      ]
+    ],
+    "whyThisBand": "low: one guar polymer plus one light refatting ester facing an ordinary C1 reset; combined residue unlikely to be noticeable.",
+    "whyNotNeighborBand": "W2 (two families): kept low because the second family is only a light, non-persistent lactate ester (weak_refatter) and the polymer is a single guar with no silicone/lipid convergence; no persistent system to build up.",
+    "counterEvidence": [
+      "guar and ester are both prominent (4-5)",
+      "Lauryl Lactate could be read as payload_lipid"
+    ],
+    "confidenceLimitingFactor": "Family reading of Lauryl Lactate and guar level could move it to moderate.",
+    "formulaFacts": [
+      {
+        "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+        "position": 5,
+        "family": "cationic_polymer"
+      },
+      {
+        "ingredient": "Lauryl Lactate",
+        "position": 4,
+        "family": "weak_refatter"
+      },
+      {
+        "ingredient": "Sodium Laureth Sulfate",
+        "position": 2,
+        "family": "anionic_surfactant"
+      },
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 3,
+        "family": "amphoteric_surfactant"
+      },
+      {
+        "ingredient": "Glycerin",
+        "position": 17,
+        "family": "humectant_context"
+      }
+    ],
+    "counterSignal": [
+      "guar and ester are both prominent (4-5)",
+      "Lauryl Lactate could be read as payload_lipid"
+    ],
+    "canonicalFormula": {
+      "fingerprint": "0a9ce49c3c9a71eeb4cd8e8ebc4dc4b2431235b5e08cbd0e096985e48ddbbda3",
+      "sourceTier": 1,
+      "completeness": "complete",
+      "identityConfidence": "high",
+      "captureDate": "not stated in packet",
+      "normalization": "Normalized positions = packet positions."
+    },
+    "unresolvedFacts": [],
+    "sources": [
+      "formula/T403.json (fingerprint 0a9ce49c3c9a71eeb4cd8e8ebc4dc4b2431235b5e08cbd0e096985e48ddbbda3, source tier 1, completeness complete)"
+    ]
+  },
+  "focusPrimary": {
+    "value": "general",
+    "confidence": "moderate",
+    "rationale": "The only role claimed is sensitive/itchy scalp ('beruhigt empfindliche und juckende Kopfhaut', pack back, moderate), but scalp_active needs scalpComfortTarget targeted (7.2), which fails CSA; no lengths-care claim remains ('Schutz vor Austrocknung' is protective). -> general.",
+    "formulaFacts": [],
+    "counterSignal": [
+      "explicit sensitive-scalp positioning that the formula half does not support"
+    ],
+    "neighboringAlternative": "scalp_active",
+    "sources": [
+      "reveal positioning sources",
+      "formula packet"
+    ]
+  },
+  "focusSecondary": {
+    "value": [],
+    "confidence": "high",
+    "rationale": "No other distinct positioning.",
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources"
+    ]
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "not_applicable"
+    },
+    "claimRole": "not_applicable",
+    "counterSignal": [
+      "explicit sensitive-scalp positioning that the formula half does not support"
+    ],
+    "neighboringAlternative": "scalp_active",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "sensitive scalp (pack back, moderate)",
+        "formulaCompatible": false,
+        "compatibleRoute": "none: no prominent E4 comfort route",
+        "decisionReason": "positioned specialist role formula-incompatible -> general"
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [],
+        "independentRoutes": [],
+        "whyDistinctFromPrimary": "none",
+        "exceptionCode": null
+      },
+      "usageRole": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "No frequency wording, no D1, no active."
+      }
+    }
+  },
+  "usageRole": {
+    "value": "regular",
+    "confidence": "high",
+    "rationale": "No frequency wording, no D1, no active.",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": [],
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources"
+    ]
+  },
+  "scalpComfortTarget": {
+    "value": "not_targeted",
+    "confidence": "moderate",
+    "rationale": "SC1 holds (E2 sensitive units graded moderate: 'beruhigt empfindliche und juckende Kopfhaut', 'juckreizlindernder Wirkstoff-Komplex'), but CSA fails: no listed E4 route is prominent (Allantoin 11, Bisabolol 12, Glycerin 17 are after Parfum 7); the prominent unlisted Lauryl Lactate (4) cannot count (closed lists, R16.4).",
+    "formulaFacts": [
+      {
+        "ingredient": "Allantoin",
+        "position": 11
+      },
+      {
+        "ingredient": "Bisabolol",
+        "position": 12
+      },
+      {
+        "ingredient": "Lauryl Lactate",
+        "position": 4
+      }
+    ],
+    "counterSignal": [
+      "explicit sensitive positioning",
+      "unlisted_route_candidate:Lauryl Lactate"
+    ],
+    "neighboringAlternative": "targeted",
+    "sources": [
+      "reveal positioning sources",
+      "formula packet"
+    ]
+  },
+  "dandruffSupport": {
+    "value": "not_supported",
+    "confidence": "high",
+    "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11) -> not_supported.",
+    "neighboringAlternative": "none",
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "sources": [
+      "formula/T403.json (fingerprint 0a9ce49c3c9a71eeb4cd8e8ebc4dc4b2431235b5e08cbd0e096985e48ddbbda3, source tier 1, completeness complete)"
+    ]
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal. T2: thickness/texture claims do not change fit. T4: weightPotential neighbor moderate -> acceptable (lower tier) -> review_thickness_boundary."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal. T2: thickness/texture claims do not change fit."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W low, C moderate -> acceptable. T2: thickness/texture claims do not change fit."
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential low -> 1:1 projection; confidence = weightPotential confidence."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "moderate",
+        "rationale": "S-ORDINARY way 4: the claimed sensitive target failed its formula gate (S-SENSITIVE: not targeted, no prominent comfort route) and nothing else passed -> ordinary proposed with review_specialist_gate_failed."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate -> regular. I3: neighbor none (high confidence, no boundary check)"
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "rationale": "D1: no D1 stem (tiefenrein / deep clean / clarifying shampoo / detox-reinigung) in name or manufacturer/pack claims, no occasional-use directions."
+    },
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_specialist_gate_failed:sensitive (formula gate: scalpComfortTarget not targeted (CSA) and no prominent E4 comfort route; Allantoin 11/Bisabolol 12 after Parfum; unlisted_route_candidate:Lauryl Lactate)",
+      "review_thickness_boundary:fine (weightPotential neighbor moderate -> acceptable)"
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": []
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsAndPriorLabelsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": "Family reading of Lauryl Lactate and guar level could move it to moderate.",
+    "comparisonWithEarlierValuesOnlyOutsideLane": true,
+    "formulaPropertiesChangedAfterUnblinding": false
+  },
+  "uncertainties": [
+    {
+      "reading": "Lauryl Lactate (4) = weak_refatter",
+      "alternative": "payload_lipid (emollient ester per 6.3) -> C2 met -> conditioning high; weight still low/moderate boundary"
+    },
+    {
+      "reading": "unlisted_route_candidate:Lauryl Lactate for E4 humectant/refatting list (prominent, not listed)",
+      "alternative": "n/a (lists closed, R16.4)"
+    },
+    {
+      "reading": "'Schutz vor Austrocknung für Kopfhaut & Haar' = protective wording, not an E2 dry unit",
+      "alternative": "dry unit -> S-DRY would also fail (CSA)"
+    }
+  ]
+}

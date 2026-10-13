@@ -1,0 +1,331 @@
+{
+ "blindId": "W119",
+ "lane": "lane-b",
+ "policyId": "shampoo-classification-v1.6.2",
+ "formulaPassRecord": "out/formula-pass/W119.json (hash-pinned; not edited)",
+ "identity": {
+  "brand": "L'Oréal Paris Elvital",
+  "productName": "L'Oréal Paris Elvital Hydra Hyaluronic 72H Feuchtigkeit-Auffüllendes Shampoo",
+  "packSize": "1000 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "34968b63d2da1cd95df156622b7491e30a8066f23c0502def5800573b9cf23a4",
+  "normalization": "Upper-case list read case-insensitively; AQUA / WATER, CI 60730 / EXT. VIOLET 2 and PARFUM / FRAGRANCE are single entries (ID-2); 27 entries; normalized one-based positions cited.",
+  "completeness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high",
+  "e3ProminenceCutoff": "Parfum/Fragrance@27 (declared last; prominent = positions 1-26)"
+ },
+ "formulaFacts": {
+  "surfactants": {
+   "definingAnionic": "Sodium Laureth Sulfate@2 (strong anionic, ether/sulfonate type)",
+   "reinforcingRoutes": [],
+   "buffers": [
+    "Cocamidopropyl Betaine@5 (amphoteric)",
+    "Coco-Betaine@10 (amphoteric)"
+   ],
+   "nonCleansing": [
+    "Cocamide MEA@9 (alkanolamide thickener)",
+    "Steareth-6@14, PEG-100 Stearate@17 (emulsifiers)",
+    "Trideceth-10@18, Trideceth-3@19 (ethoxylates/thickeners, no C3 cleansing class)"
+   ]
+  },
+  "conditioningRoutes": [
+   "Glycol Distearate@3 (pearlizing route)",
+   "Dimethicone@6 (silicone, prominent = early)",
+   "Guar Hydroxypropyltrimonium Chloride@8 (cationic_polymer)",
+   "Sodium Hyaluronate@13 (humectant)",
+   "Amodimethicone@23 (silicone, late)"
+  ],
+  "humectants": [
+   "Sodium Hyaluronate@13",
+   "Hexylene Glycol@26 (solvent)"
+  ],
+  "actives": [
+   "Salicylic Acid@20 (not a recognized dandruff active alone)"
+  ],
+  "e4ComfortRoutesProminent": [],
+  "e4HumectantRoutesProminent": [
+   "Sodium Hyaluronate@13"
+  ],
+  "mildBase": "not met: Sodium Laureth Sulfate@2 prominent strong anionic",
+  "exposureFlags": [
+   "Parfum/Fragrance@27 (last)",
+   "Limonene@21",
+   "colourant CI 60730 / Ext. Violet 2@7 (violet toning dye)"
+  ],
+  "otherIngredients": [
+   "Acetic Acid@16, Fumaric Acid@22, Citric Acid@25 (acids)",
+   "Carbomer@24 (acrylate thickener)"
+  ],
+  "preservatives": [
+   "Sodium Benzoate@11",
+   "Phenoxyethanol@15"
+  ]
+ },
+ "claimUnits": [
+  "name (high): 'Hydra Hyaluronic 72H Feuchtigkeit-Auffüllendes Shampoo' - moisture",
+  "manufacturer_de (moderate): 'für feuchtigkeitsbedürftiges Haar'; 'versorgt sowohl die Kopfhaut, als auch die Längen für 72 Stunden mit der nötigen Feuchtigkeit' (names the scalp but no E2 dry-scalp state - not a qualifying dry unit); 'ganz ohne zu Beschweren'; 'Haartyp: Bedürftiges & Trockenes Haar'",
+  "retailer dm (low): 'Für trockenes und strapaziertes Haar geeignet'"
+ ],
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Moderate: C1 - defining anionic Sodium Laureth Sulfate@2 with two prominent amphoteric buffers (Cocamidopropyl Betaine@5, Coco-Betaine@10) and no reinforcing strong anionic.",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4"
+   ],
+   "counterSignal": "see rationale (counter-signals recorded there; convention value unchanged by claims, 3.2)",
+   "sourceIds": [
+    "formula/W119.json (stage A, fingerprint 34968b63d2da...)"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "high",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "High: C2 met - early silicone Dimethicone@6, cationic polymer Guar Hydroxypropyltrimonium Chloride@8, pearlizing route Glycol Distearate@3 and a deliberate humectant entry Sodium Hyaluronate@13; supporting late Amodimethicone@23. Counter-signal: the humectant is a single trace hyaluronate; moderate is the neighbor.",
+   "ruleIds": [
+    "C2",
+    "E3"
+   ],
+   "counterSignal": "see rationale",
+   "sourceIds": [
+    "formula/W119.json (stage A, fingerprint 34968b63d2da...)"
+   ]
+  },
+  "weightPotential": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "high",
+   "evidence": {
+    "cationic_polymer": [
+     "Guar Hydroxypropyltrimonium Chloride@8"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "silicone": [
+     "Dimethicone@6",
+     "Amodimethicone@23 (late)"
+    ],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Sodium Laureth Sulfate@2",
+     "Cocamidopropyl Betaine@5",
+     "Coco-Betaine@10"
+    ],
+    "humectantContext": [
+     "Sodium Hyaluronate@13"
+    ],
+    "excluded": [
+     "Glycol Distearate@3 (pearlizing wax, 6.4)",
+     "Cocamide MEA@9 (alkanolamide thickener)",
+     "Steareth-6@14, PEG-100 Stearate@17 (emulsifiers, not payload)",
+     "Trideceth-10@18, Trideceth-3@19 (ethoxylates)",
+     "Carbomer@24 (anionic acrylate rheology polymer, 6.4)",
+     "Hexylene Glycol@26 (solvent)",
+     "Parfum@27, Limonene@21"
+    ],
+    "unresolved": []
+   },
+   "wLine": {
+    "position": 11,
+    "inci": "Sodium Benzoate",
+    "classes": [
+     "preservative_or_capped_active"
+    ],
+    "e3Point": 27,
+    "alphabeticalRun": "none (longest ordered run 23-27, 5 entries)",
+    "skipped": [],
+    "codes": [],
+    "plausibility": "(i) Sodium Laureth Sulfate@2 before it; (ii) no cleansing surfactant (Trideceth-n and Steareth-6 are in no C3 cleansing class), no alkanolamide (Cocamide MEA@9 is before it) and no pearlizing wax after it before the cap",
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "moderate - early dimethicone with guar coacervate plus a late amodimethicone",
+   "persistence": "moderate - silicone/guar deposition plausibly retained",
+   "resetCapacity": "moderate - C1 SLES chassis with two betaine buffers",
+   "counterevidence": "Dimethicone is early (@6, before the guar), which argues toward high.",
+   "whyThisBand": "W1 applies: (a) C1 sulfate chassis with prominent buffers, cleansingStrength moderate; (b) deposition is exactly silicone + cationic guar + late amodimethicone; (c) no further persistent family converges (no payload lipid, second cationic, film former or protein) and no rich architecture.",
+   "whyNotNeighborBand": "Not high: W1's settled set without W-RICH or any further converging family is moderate; the effective SLES/betaine reset bounds the silicone/guar deposit. Not low: the early silicone + guar system is plausible enough that calling it lightweight would understate residue.",
+   "confidenceLimitingFactor": "Early Dimethicone@6 dose unknown.",
+   "rationale": "Moderate: W1 set in an effective C1 chassis (6.7 W1).",
+   "ruleIds": [
+    "W1",
+    "6.6",
+    "W2",
+    "W-LINE",
+    "N-ALT"
+   ],
+   "counterSignal": "see counterevidence / whyNotNeighborBand",
+   "sourceIds": [
+    "formula/W119.json (stage A, fingerprint 34968b63d2da...)"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No recognized anti-dandruff active; Salicylic Acid@20 alone does not upgrade the property (Section 11).",
+   "ruleIds": [
+    "11"
+   ],
+   "counterSignal": "none (mechanical presence test, Section 11)",
+   "sourceIds": [
+    "formula/W119.json (stage A, fingerprint 34968b63d2da...)"
+   ]
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "moisture",
+   "claimRole": "not_applicable",
+   "counterSignal": "Strong moisture positioning (name + manufacturer) that the formula does not separately support.",
+   "decisionTrace": "Claim direction: moisture (name, high). Formula verdict nonspecific: one trace humectant (Sodium Hyaluronate@13) with generic silicone/guar conditioning - no coherent humectant cluster. F1: moisture language over a nonspecific formula stays general.",
+   "rationale": "General: moisture positioning over a nonspecific formula (F1).",
+   "ruleIds": [
+    "7.2",
+    "7.3",
+    "F1"
+   ],
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "Sodium Hyaluronate@13 (single trace humectant)"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Dimethicone@6",
+     "Guar Hydroxypropyltrimonium Chloride@8",
+     "Glycol Distearate@3",
+     "Amodimethicone@23"
+    ],
+    "limitation": "generic silicone/guar conditioning; violet dye @7 suggests a toning role outside the focus vocabulary"
+   }
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "decisionTrace": "Empty default considered; 'glänzendes ... Haar' is an outcome of the silicone route (F2, holdout-v3 precedent).",
+   "rationale": "Empty.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Regular: no frequency wording ('täglich strapaziert' describes the hair, not use).",
+   "ruleIds": [
+    "9",
+    "U1"
+   ],
+   "decisionTrace": "Default regular considered; trigger none; no losing trigger."
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not targeted: no E2 sensitive or dry-scalp state is named ('versorgt ... die Kopfhaut mit Feuchtigkeit' names no condition).",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "SC1",
+    "E2a"
+   ]
+  }
+ },
+ "reconciliation": [
+  "focusPrimary general (low) -> general (moderate): moisture name claim rejected by F1 (nonspecific formula).",
+  "usageRole/scalpComfortTarget confirmed (high).",
+  "Claim mapping: Hyaluronsäure -> Sodium Hyaluronate@13.",
+  "No formula property changed; weightPotential moderate follows W1 (the holdout-v3 precedent formula type)."
+ ],
+ "projection": {
+  "status": "proposal_blocked_pending_review",
+  "thicknessFit": {
+   "fine": "acceptable",
+   "normal": "ideal",
+   "coarse": "ideal"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 with weightPotential moderate (moderate, neighbor high) and conditioningLevel high (moderate, neighbor moderate): fine acceptable, normal ideal, coarse ideal. Target ordinary: T6 not applied. T4: review_thickness_boundary:fine (weightPotential neighbor high -> not_suited); review_thickness_boundary:normal (weightPotential neighbor high -> acceptable); review_thickness_boundary:coarse (conditioningLevel neighbor moderate -> acceptable). T2: thickness/volume claims ignored for fit.",
+  "weight": "moderate",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential moderate -> weight moderate, 1:1; confidence = weightPotential confidence (moderate). Claims ('ohne zu beschweren', 'leicht') never lower it (6.5).",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "confidence": "high",
+    "rationale": "S-ORDINARY way 1; manufacturer source present."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1: cleansingStrength moderate (high), D1 false -> regular. I3: neighbor none raises no flag (normal expects regular).",
+  "explicitResetPositioning": false,
+  "explicitResetRationale": "No D1 stem (tiefenrein, deep clean, clarifying shampoo, detox-reinigung) in the name or a manufacturer/pack claim, and no occasional-use directions.",
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D2 not met (cleansingStrength moderate, focusPrimary general, usageRole regular, D1 false) -> not_flagged.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "acceptable"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "ideal"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   "review_thickness_boundary:fine (weightPotential neighbor high -> not_suited)",
+   "review_thickness_boundary:normal (weightPotential neighbor high -> acceptable)",
+   "review_thickness_boundary:coarse (conditioningLevel neighbor moderate -> acceptable)"
+  ],
+  "informationalNotes": [],
+  "catalogDependent": "review_live_value_differs not evaluated in-lane (live rows unseen; orchestrator after freeze)."
+ },
+ "selfCheck": "6.11: fingerprint matches the stage-A packet; claims and labels were hidden during the formula pass (phase 1 frozen before reveal); no ingredient, family count or position window assigned the weight band; W-line derived per W-LINE with skipped candidates recorded; depositionLoad/persistence/resetCapacity present; whyNotNeighborBand specific; confidence names its limiting factor; no comparison with earlier values in-lane. Formula properties (cleansing, conditioning, weight, dandruff) unchanged after unblind (3.2: claims cannot move them). N-ALT checked: every high confidence has neighbor none, every moderate/low names one neighbor. Projection derived mechanically from final properties (T1/T6/T4/W-LIVE/I1/I3/D2/13.7/13.8).",
+ "uncertainties": [
+  "Moisture verdict: a single hyaluronate is not a humectant cluster; alternative moisture_supported -> focus moisture.",
+  "'versorgt ... die Kopfhaut mit Feuchtigkeit' read as not naming a dry-scalp state; alternative dry claim -> S-DRY would pass (SH@13 prominent) only with targeted, which needs CSA (met) and SC1."
+ ]
+}

@@ -1,0 +1,93 @@
+{
+  "slot": "A31",
+  "productId": "64fb44d5-8701-46ab-bcba-f1747f071e48",
+  "name": "Neqi Volume Victory",
+  "brand": "Neqi",
+  "packSize": "330 ml",
+  "gtins": [
+    "4063528078377"
+  ],
+  "sources": [
+    {
+      "url": "https://neqi-hair.com/products/volume-victory-shampoo",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_ch_shop_de_language",
+      "sourceKind": "manufacturer_foreign",
+      "gtinShown": "4063528078377 (product JSON-LD gtin); Inhalt: 330ml; page lang=de, prices in CHF (Swiss storefront), \"Hergestellt in Italien\"",
+      "inciVerbatim": "Aqua [Water], Disodium laureth sulfosuccinate, Cocamidopropyl hydroxysultaine, Cocamidopropyl betaine, PEG-18 glyceryl oleate/cocoate, Parfum [Fragrance], Panthenol, Avena sativa (Oat) peptide, Gardenia taitensis flower extract, Lycium barbarum fruit extract, Malva sylvestris (Mallow) extract, Juniperus virginiana oil, Citrus aurantium peel oil, Glycol distearate, Citric acid, Tetramethyl acetyloctahydronaphthalenes, Polyquaternium-11, Cocamide MEA, Laureth-10, Propylene glycol, C13-15 alkane, Glycerin, Linalyl acetate, Methylchloroisothiazolinone, Methylisothiazolinone, 1,2-Hexanediol, Caprylyl glycol, Hexyl cinnamal, Linalool, Limonene",
+      "claimsVerbatim": "Entdecke das stärkende VOLUME VICTORY Shampoo mit Pro-Vitamin B5 – deine professionelle Haarpflege für Zuhause! Die schwerelose, aufbauende Reinigung ist speziell für feines und dünnes Haar geeignet. Angereichert mit Pro-Vitamin B5 spendet das Shampoo viel Feuchtigkeit, stärkt die Haarstruktur und sorgt für spürbar volleres Haar. | Frei von Sulfaten | Für effektive Stärkung und Aufbau des Haares | VEGAN UND SULFATFREI | SIGNATURE DUFT | PROFESSIONELLE PERFORMANCE | 94 % mögen den Geruch des VOLUME VICTORY Shampoos* | 91 % stimmen zu, dass sich das Haar nach der Anwendung sanft gereinigt anfühlt* (*Verbraucherumfrage von 31 Personen) | Signature Blend Wirkstoffkomplex",
+      "directionsVerbatim": "1. Shampoo auf das nasse Haar auftragen. 2. Sanft in das Haar einmassieren und aufschäumen. Gründlich ausspülen. 3. Für die Extraportion Pflege und Volumen, VOLUME VICTORY Conditioner und Styling Mousse verwenden."
+    },
+    {
+      "url": "https://www.notino.de/neqi/volume-victory-shampoo-fuer-feines-und-schlaffes-haar/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_notino_de",
+      "sourceKind": "retailer",
+      "gtinShown": "4063528078377 (page structured data); 330 ml; Notino code NEQ02466; status \"Das Produkt ist derzeit nicht auf Lager\" / Ausverkauft",
+      "inciVerbatim": "AQUA [WATER], DISODIUM LAURETH SULFOSUCCINATE, COCAMIDOPROPYL HYDROXYSULTAINE, COCAMIDOPROPYL BETAINE, PEG-18 GLYCERYL OLEATE/COCOATE, PARFUM [FRAGRANCE], PANTHENOL, AVENA SATIVA (OAT) PEPTIDE, GARDENIA TAITENSIS FLOWER EXTRACT, LYCIUM BARBARUM FRUIT EXTRACT, MALVA SYLVESTRIS (MALLOW) EXTRACT, JUNIPERUS VIRGINIANA OIL, CITRUS AURANTIUM PEEL OIL, GLYCOL DISTEARATE, CITRIC ACID, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, POLYQUATERNIUM-11, COCAMIDE MEA, LAURETH-10, PROPYLENE GLYCOL, C13-15 ALKANE, GLYCERIN, LINALYL ACETATE, METHYLCHLOROISOTHIAZOLINONE, METHYLISOTHIAZOLINONE, 1,2-HEXANEDIOL, CAPRYLYL GLYCOL, HEXYL CINNAMAL, LINALOOL, LIMONENE. Für die Zusammensetzung des Produktes ist der Hersteller verantwortlich. Aufgrund möglicher Änderungen empfehlen wir, die Zusammensetzung des Produktes direkt auf der Verpackung zu überprüfen.",
+      "claimsVerbatim": "Haartyp: feines Haar, alle Haartypen | Wirkung: Haarvolumen | Kopfhaut-typ: alle Arten von Kopfhaut | Das Shampoo NEQI Volume Victory ist in der Lage, zusammengefallenes Haar ohne jegliches Volumen wieder fit zu machen. Seine leichten, regenerierenden Inhaltsstoffe reinigen sanft, stärken die Haarstruktur und lassen Ihre Frisuren voller aussehen. Provitamin B5 hydratisiert das Haar wie erforderlich und fördert zudem dessen Festigkeit und Elastizität. | reinigt das Haar sanft und hinterlässt es frisch und hydratisiert | verbessert die Haarstruktur und fördert die Haardichte | verleiht dem Haar Leichtigkeit und Volumen | stärkt feines und zusammengefallenes Haar | pflegt das Haar und belastet es dabei nicht | für feines Haar ohne Volumen geeignet | Signature Blend Komplex (Peptide, Hemisqualan, Auszüge aus Gojibeeren, Malve und Tahiti-Gardenie) | Provitamin B5 | frei von Sulfaten | vegane Zusammensetzung",
+      "directionsVerbatim": "Anwendung: Das Shampoo NEQI Volume Victory auf das feuchte Haar auftr[agen ... (text truncated in capture; remainder not read)]"
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "non_material_case_and_formatting",
+      "detail": "Manufacturer list in sentence case, Notino in upper case with trailing period; Notino 'C13-15 ALKANE' = manufacturer 'C13-15 alkane'. Identical items and order (30 items)."
+    },
+    {
+      "type": "claim_inci_check",
+      "detail": "'Frei von Sulfaten' vs INCI: no sulfate (Sodium Laureth Sulfate) but Disodium Laureth Sulfosuccinate (a sulfosuccinate) is the lead surfactant. Not a conflict on its face; flag only if the product is ever described as 'free of sulfate-type surfactants'. 'Pro-Vitamin B5' = Panthenol present; Signature Blend (Peptide, Hemisqualan, Gojibeere, Malve, Tahiti-Gardenie) = Avena sativa peptide, C13-15 alkane, Lycium barbarum, Malva sylvestris, Gardenia taitensis all present."
+    },
+    {
+      "type": "availability",
+      "detail": "Rossmann.de: PDP for GTIN 4063528078377 redirects to 'Produkt nicht verfügbar'; GTIN search and 'neqi shampoo' search return other Neqi shampoos (Repair Reveal, Diamond Glass, Moisture Mystery, Deep Cleansing) but no Volume Victory. Notino DE: ausverkauft. Only the manufacturer's CH shop lists it as buyable."
+    }
+  ],
+  "canonicalInci": [
+    "Aqua [Water]",
+    "Disodium laureth sulfosuccinate",
+    "Cocamidopropyl hydroxysultaine",
+    "Cocamidopropyl betaine",
+    "PEG-18 glyceryl oleate/cocoate",
+    "Parfum [Fragrance]",
+    "Panthenol",
+    "Avena sativa (Oat) peptide",
+    "Gardenia taitensis flower extract",
+    "Lycium barbarum fruit extract",
+    "Malva sylvestris (Mallow) extract",
+    "Juniperus virginiana oil",
+    "Citrus aurantium peel oil",
+    "Glycol distearate",
+    "Citric acid",
+    "Tetramethyl acetyloctahydronaphthalenes",
+    "Polyquaternium-11",
+    "Cocamide MEA",
+    "Laureth-10",
+    "Propylene glycol",
+    "C13-15 alkane",
+    "Glycerin",
+    "Linalyl acetate",
+    "Methylchloroisothiazolinone",
+    "Methylisothiazolinone",
+    "1,2-Hexanediol",
+    "Caprylyl glycol",
+    "Hexyl cinnamal",
+    "Linalool",
+    "Limonene"
+  ],
+  "canonicalReason": "Manufacturer product page (GTIN 4063528078377 in structured data; German language, Swiss storefront) and Notino DE (same GTIN) agree item-for-item; identical to the v1.3 capture. Bracketed glosses 'Aqua [Water]' and 'Parfum [Fragrance]' kept as one item each (synonym merged, not split). Formula tier is 4 only because no DE/EU manufacturer page and only one German retailer carried the list; no conflict between the two sources.",
+  "inciFingerprintSha256": "add2a5261bec16c0e65c307a8d8b0d2c59883a946969bd260a455a950295a5af",
+  "normalization": "Canonical list = the ordered INCI items, each lower-cased, trimmed, internal whitespace collapsed; items joined with '|' and sha256 over the UTF-8 string. Split synonym entries (e.g. 'Aqua (Water, Eau)') are merged into one item before hashing; trailing full stops removed.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 4,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "NEEDS NICK: Volume Victory appears delisted at Rossmann DE (catalog affiliate link https://www.rossmann.de/de/pflege-und-duft-neqi-volume-victory-shampoo/p/4063528078377 returns 'Produkt nicht verfügbar') and is sold out at Notino DE. Still on the manufacturer's CH shop. Check whether it should remain a live recommendation in DE.",
+    "Tier rationale: the manufacturer page is the Swiss storefront (sourceKind manufacturer_foreign), Notino is one German retailer; the brief's tier 2 needs a DE/EU manufacturer page and tier 3 needs two German retailers. If Nick accepts the CH German-language manufacturer page as the brand's own page, this is tier 2.",
+    "Contains Methylchloroisothiazolinone + Methylisothiazolinone in a rinse-off (permitted rinse-off use) - factual, not classified.",
+    "Notino directions text was truncated in my capture; manufacturer directions are complete.",
+    "Previous v1.3 capture used en.neqi-hair.com; the German-language page has the same list."
+  ]
+}

@@ -1,0 +1,212 @@
+{
+  "blindId": "T308",
+  "inciFingerprintSha256": "67f890bcc445fdb931de50ce96290cf6c902dfc338f8ebebd46019bf413d661f",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "No split synonym entries. E3: Parfum at 6; prominent = 1-5.",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 1,
+    "identityConfidence": "high",
+    "rawInciCount": 26
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: SLES (2) defining, buffered by Cocamidopropyl Betaine (3); Coco-Glucoside (8) is after Parfum and not counted -> moderate.",
+      "neighboringAlternative": "none",
+      "counterSignal": "Only one counted buffer; does not move C1."
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Several light routes, all after Parfum: weak refatter (Glyceryl Oleate 7), protein (Hydrolyzed Wheat Protein 10), pearlizer (PEG-3 Distearate 9), guar (15), panthenol/glycerin.",
+      "neighboringAlternative": "low",
+      "counterSignal": "Everything conditioning sits after Parfum (6); could be cleansing-led with little slip (low)."
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Three light families (weak refatter, late protein, late guar) all after Parfum, facing an effective C1 reset.",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "Three distinct deposition families present (W2).",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "every deposition route is after Parfum"
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "protein, guar and refatter are light, low-retention routes"
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES + betaine"
+        }
+      },
+      "whyThisBand": "Only light/late routes; no persistent system.",
+      "whyNotNeighborBand": "W2: the three families (Glyceryl Oleate 7, Hydrolyzed Wheat Protein 10, guar 15) are all after Parfum at trace-like levels and face a moderate SLES reset; no silicone or payload lipid.",
+      "evidenceByFamily": {
+        "weak_refatter": [
+          [
+            "Glyceryl Oleate",
+            7
+          ],
+          [
+            "Hydrogenated Palm Glycerides Citrate",
+            25
+          ]
+        ],
+        "protein_film": [
+          [
+            "Hydrolyzed Wheat Protein",
+            10
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+            15
+          ]
+        ],
+        "context_humectant": [
+          [
+            "Panthenol",
+            12
+          ],
+          [
+            "Glycerin",
+            18
+          ],
+          [
+            "Pantolactone",
+            20
+          ]
+        ],
+        "excluded": [
+          [
+            "PEG-3 Distearate",
+            9,
+            "pearlizer/thickener"
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            3
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Coco-Glucoside",
+            8
+          ]
+        ],
+        "unresolved": []
+      }
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "rationale": "Nonspecific formula."
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low"
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low"
+    },
+    "scalpComfortTarget": {
+      "value": "unknown",
+      "confidence": "low",
+      "rationale": "CSA fails: prominent zone is 1-5 only; Panthenol 12, Niacinamide 13, Glycerin 18, Glyceryl Oleate 7 are all after Parfum."
+    }
+  },
+  "careDirection": {
+    "verdict": "nonspecific",
+    "rationale": "One late protein token and late humectants: neither repair nor moisture cluster."
+  },
+  "formulaGateFacts": {
+    "csa": "fail",
+    "promComfortRoute": false,
+    "promHumectantRoute": false,
+    "sOilyFormulaClause": "pass"
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic, ether type"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 3,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 6,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 7,
+      "role": "weak_refatter (after Parfum)"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 8,
+      "role": "glucoside, not prominent"
+    },
+    {
+      "ingredient": "PEG-3 Distearate",
+      "position": 9,
+      "role": "pearlizer/thickener, excluded"
+    },
+    {
+      "ingredient": "Hydrolyzed Wheat Protein",
+      "position": 10,
+      "role": "protein_film"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 12,
+      "role": "humectant/comfort, not prominent"
+    },
+    {
+      "ingredient": "Niacinamide",
+      "position": 13,
+      "role": "comfort list, not prominent"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 15,
+      "role": "cationic_polymer, late"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 18,
+      "role": "humectant, late"
+    },
+    {
+      "ingredient": "Hydrogenated Palm Glycerides Citrate",
+      "position": 25,
+      "role": "weak_refatter, trace"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

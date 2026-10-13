@@ -1,0 +1,78 @@
+{
+  "slot": "A02",
+  "productId": "ead1333b-6839-464d-b272-673d39bb95a4",
+  "name": "Balea PROFESSIONAL Shampoo Aqua Hyaluron",
+  "brand": "Balea",
+  "packSize": "250 ml",
+  "gtins": [
+    "4070765001648"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/1675524/balea-professional-shampoo-aqua-hyaluron",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "dm.de PDP, dm own brand (Anschrift des Unternehmens: dm-drogerie markt GmbH + Co. KG, Karlsruhe)",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4070765001648 (page 'GTIN:' line; dm-Artikelnummer 1675524; title 'Shampoo Aqua Hyaluron, 250 ml')",
+      "inciVerbatim": "AQUA, SODIUM LAURETH SULFATE, COCAMIDOPROPYL BETAINE, SODIUM CHLORIDE, PARFUM, SODIUM BENZOATE, CITRIC ACID, COCO-GLUCOSIDE, GLYCERYL OLEATE, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, ALOE BARBADENSIS LEAF JUICE POWDER, POTASSIUM SORBATE, SODIUM HYALURONATE, TOCOPHEROL, HYDROGENATED PALM GLYCERIDES CITRATE, LECITHIN, ASCORBYL PALMITATE.",
+      "claimsVerbatim": "Feuchtigkeitsspendendes Shampoo | Mit Hyaluron & Aloe Vera | Für trockenes & feuchtigkeitsbedürftiges Haar | Verleiht Geschmeidigkeit | Ohne Silikone | Das Balea PROFESSIONAL Aqua Hyaluron Shampoo pflegt trockenes und feuchtigkeitsbedürftiges Haar intensiv. Die Formel mit Hyaluron und Aloe Vera spendet Feuchtigkeit, ohne das Haar zu beschweren. Dank der milden, pH-hautneutralen Rezeptur wird das Haar sanft gereinigt und die Kopfhaut geschont. Das Ergebnis ist ein schönes Haargefühl und spürbare Geschmeidigkeit vom Ansatz bis in die Spitzen. | Produkteigenschaften: vegan",
+      "directionsVerbatim": "Sanft ins nasse Haar einmassieren und sorgfältig mit lauwarmem Wasser ausspülen."
+    },
+    {
+      "url": "https://www.codecheck.info/p/kosmetik/haarpflege/shampoo/2842920194.html",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "codecheck (support only; EAN found via codecheck search q=4070765001648)",
+      "sourceKind": "retailer",
+      "gtinShown": "search hit for 4070765001648 (EAN not printed in page text)",
+      "inciVerbatim": "AQUA, SODIUM LAURETH SULFATE, COCAMIDOPROPYL BETAINE, SODIUM CHLORIDE, PARFUM, SODIUM BENZOATE, CITRIC ACID, COCO-GLUCOSIDE, GLYCERYL OLEATE, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, ALOE BARBADENSIS LEAF JUICE POWDER, POTASSIUM SORBATE, SODIUM HYALURONATE, TOCOPHEROL, HYDROGENATED PALM GLYCERIDES CITRATE, LECITHIN, ASCORBYL PALMITATE.",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    },
+    {
+      "url": "https://www.dm.de/p/d/1675524/balea-professional-shampoo-aqua-hyaluron (prior v1.3 capture 2026-08-10) + dm-drogeriemarkt.bg PDP",
+      "retrievedAt": "2026-08-10 (prior evidence data/research/shampoo-inci/v1.3/products/balea-aqua-hyaluron/formula-source.json)",
+      "sourceType": "prior evidence (dm DE + dm BG)",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4070765001648",
+      "inciVerbatim": "AQUA, SODIUM LAURETH SULFATE, COCAMIDOPROPYL BETAINE, SODIUM CHLORIDE, PARFUM, SODIUM BENZOATE, CITRIC ACID, COCO-GLUCOSIDE, GLYCERYL OLEATE, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, ALOE BARBADENSIS LEAF JUICE POWDER, POTASSIUM SORBATE, SODIUM HYALURONATE, TOCOPHEROL, HYDROGENATED PALM GLYCERIDES CITRATE, LECITHIN, ASCORBYL PALMITATE. (identical, dm DE and dm BG)",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    }
+  ],
+  "conflicts": [],
+  "canonicalInci": [
+    "AQUA",
+    "SODIUM LAURETH SULFATE",
+    "COCAMIDOPROPYL BETAINE",
+    "SODIUM CHLORIDE",
+    "PARFUM",
+    "SODIUM BENZOATE",
+    "CITRIC ACID",
+    "COCO-GLUCOSIDE",
+    "GLYCERYL OLEATE",
+    "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+    "ALOE BARBADENSIS LEAF JUICE POWDER",
+    "POTASSIUM SORBATE",
+    "SODIUM HYALURONATE",
+    "TOCOPHEROL",
+    "HYDROGENATED PALM GLYCERIDES CITRATE",
+    "LECITHIN",
+    "ASCORBYL PALMITATE"
+  ],
+  "canonicalReason": "Single owner-source: Balea is dm's own brand and dm.de is the brand owner's German product page (recorded as retailer, tier 3, see notes) for the exact 250 ml GTIN. List is character-identical to the 2026-08-10 v1.3 capture (dm DE and dm BG) and to codecheck, so the formula is unchanged. No claim-vs-INCI contradiction: Hyaluron (Sodium Hyaluronate) and Aloe Vera (Aloe Barbadensis Leaf Juice Powder) claims are both in the list; 'ohne Silikone' consistent (no silicones).",
+  "inciFingerprintSha256": "0d5d537d9861521620fc808ebb0fe6b3b88decc120aff9d099b9890fc0c22fb1",
+  "normalization": "Canonical list split on ',' at parenthesis depth 0 (so synonym groups such as 'Aqua (Water, Eau)' stay one item), trailing full stop removed; per item: lower-case, trim, collapse internal whitespace; asterisks, parentheses and slashes kept as published; items joined with '|'; sha256 over the UTF-8 string.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Tier rationale: dm.de is simultaneously retailer and brand owner of Balea (Anschrift des Unternehmens = dm), so there is no separate manufacturer page. Recorded conservatively as sourceKind retailer / tier 3 (same convention the ISANA MED prior research used for Rossmann private label); it could be argued as tier 2 (brand owner's own DE page). INCI is unchanged vs v1.3 (dm DE + dm BG) and matches codecheck.",
+    "No pack photo or pack back text was read in this pass.",
+    "dm page lists product as 'Lieferbar' (live) on 2026-10-10.",
+    "Source INCI is published in ALL CAPS and with a trailing full stop; canonicalInci keeps the published casing, fingerprint lower-cases it.",
+    "Prior v1.4 fingerprint (comma-joined) e99417ccdf7eaae5ef0f93c3fe220bbafc736f57e146a81c224303e74daf5816 - list unchanged.",
+    "orchestrator 2026-10-10: own-brand retailer page normalized to manufacturer_de (calibration convention); tier set to 2 unless pack-based."
+  ]
+}

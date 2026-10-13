@@ -1,0 +1,228 @@
+{
+ "blindId": "W403",
+ "inciFingerprintSha256": "723f7c1a8786cbc8b2d2414a5bfa1cdd8238be027319aea858bbfef9d03cebd0",
+ "lane": "lane-a",
+ "phase": "1-blind-formula-pass",
+ "policyId": "shampoo-classification-v1.6.2",
+ "formulaBlock": {
+  "packSize": "250 ml",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high",
+  "normalization": "Packet list already normalized (synonym variants are single entries); positions cited are normalized one-based positions (ID-2), identical to the packet order.",
+  "normalizedInci": [
+   "1. Aqua",
+   "2. Sodium Laureth Sulfate",
+   "3. Cocamidopropyl Hydroxysultaine",
+   "4. Sodium Chloride",
+   "5. Coco-Glucoside",
+   "6. Sodium Hyaluronate",
+   "7. Niacinamide",
+   "8. Kaolin",
+   "9. Guar Hydroxypropyltrimonium Chloride",
+   "10. Citric Acid",
+   "11. Parfum",
+   "12. Methyl Benzoate",
+   "13. Sodium Benzoate"
+  ],
+  "e3Point": "Parfum@11 (fragrance marker); prominent = positions 1-10"
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`moderate` by C1: defining anionic Sodium Laureth Sulfate@2, prominent buffers Cocamidopropyl Hydroxysultaine@3 (amphoteric) and Coco-Glucoside@5 (nonionic glucoside), no reinforcing strong anionic. Kaolin@8 is clay, not a cleansing route (C3).",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "E3"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "`moderate`: one meaningful conditioning system — prominent cationic Guar Hydroxypropyltrimonium Chloride@9 — with light humectant support (Sodium Hyaluronate@6). C2 not met (no early silicone, no payload lipid, no pearlizing/fatty route). Neighbor `low`: the guar is the only slip route in a short, cleansing-led 13-entry formula that also carries Kaolin@8.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "cationic_polymer": [
+     "Guar Hydroxypropyltrimonium Chloride@9"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "anionic: Sodium Laureth Sulfate@2",
+     "amphoteric: Cocamidopropyl Hydroxysultaine@3",
+     "nonionic: Coco-Glucoside@5"
+    ],
+    "humectantContext": [
+     "Sodium Hyaluronate@6",
+     "Niacinamide@7 (active, context)"
+    ],
+    "excluded": [
+     "Kaolin@8 (absorbent clay; not a deposition family, C3 'clay')",
+     "Methyl Benzoate@12 (fragrance/solvent ester after the cap)",
+     "Sodium Chloride@4, Citric Acid@10"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": "6 Sodium Hyaluronate",
+    "candidateClasses": [
+     "sub1_active"
+    ],
+    "cap": "e3Point 11 (Parfum)",
+    "alphabeticalRun": "none",
+    "skipped": [],
+    "testedCandidate": "Sodium Hyaluronate@6: (i) Sodium Laureth Sulfate@2 before it; (ii) entries 7-10 (Niacinamide, Kaolin, Guar Hydroxypropyltrimonium Chloride, Citric Acid) contain no cleansing surfactant, alkanolamide or pearlizing wax -> plausible",
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "light — a single cationic guar; nothing else deposits.",
+   "persistence": "low — no silicone, lipid, protein or film former.",
+   "resetCapacity": "moderate — C1 ether-sulfate chassis with two buffers; Kaolin adds oil-absorbing character, not deposition.",
+   "counterevidence": "Guar is prominent (@9) and a coacervate with SLES can deposit; charge density unknown.",
+   "whyThisBand": "One light conditioning polymer facing an effective ordinary reset; 6.6 low anchor explicitly allows a single light polymer.",
+   "whyNotNeighborBand": "Not `moderate`: single deposition family, no second family to converge (W2 not triggered), no silicone or lipid; the ordinary buffered sulfate reset offsets one guar.",
+   "confidenceLimitingFactor": "guar dose/charge density unknown (INCI order only).",
+   "rationale": "`low`: single light cationic route, moderate reset (6.6). No polymer floor.",
+   "ruleIds": [
+    "6.6",
+    "W-LINE",
+    "W2",
+    "N-ALT"
+   ]
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "low",
+   "neighboringAlternative": "moisture",
+   "provisional": true,
+   "careDirection": {
+    "verdict": "nonspecific (provisional)",
+    "moistureRoutes": [
+     "Sodium Hyaluronate@6"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Guar Hydroxypropyltrimonium Chloride@9"
+    ],
+    "limitation": "one humectant plus one cationic polymer; Kaolin@8 suggests an oil-absorbing/clarifying role that claims must confirm"
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Claims are hidden in the blind pass; focus is claim-led (7.2) and cannot be set from the formula alone.",
+   "decisionTrace": "Blind pass: claim direction null (hidden). Placeholder `general` (7.1 honest fallback) until reveal; formula routes recorded for reconciliation (3.2).",
+   "rationale": "Provisional (formula-only): `general` because no claim is visible; the formula care-direction verdict is recorded before claims (7.3) and the neighbor names the most plausible formula-compatible focus.",
+   "ruleIds": [
+    "3.1",
+    "7.2",
+    "7.3",
+    "F1",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "low",
+   "neighboringAlternative": [
+    "moisture"
+   ],
+   "provisional": true,
+   "decisionTrace": "Blind pass: empty default considered; no distinct positioning visible (claims hidden), so no secondary can be selected (Section 8).",
+   "rationale": "Provisional (formula-only): `[]` — Section 8 requires distinct exact-product positioning, which is hidden in the blind pass.",
+   "ruleIds": [
+    "3.1",
+    "8",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "low",
+   "neighboringAlternative": "frequent",
+   "provisional": true,
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Provisional (formula-only): default `regular` (Section 9); every non-default trigger needs a moderate/high-graded claim or direction, all hidden in the blind pass. cleansingStrength `moderate` fixes which triggers remain possible: `alternating` impossible (not strong); `frequent` possible with U2 wording; `treatment` impossible (no active).",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "CL-SRC"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "low",
+   "neighboringAlternative": "targeted",
+   "provisional": true,
+   "csaRoute": "comfort list: Niacinamide@7; humectant/refatting list: Sodium Hyaluronate@6 (both prominent)",
+   "mildBase": "excluded — Sodium Laureth Sulfate@2 is a prominent strong anionic",
+   "rationale": "Provisional `not_targeted` (positioning half SC1 hidden in the blind pass). Formula half CSA is MET via listed prominent route(s): comfort list: Niacinamide@7; humectant/refatting list: Sodium Hyaluronate@6 (both prominent). MB: excluded — Sodium Laureth Sulfate@2 is a prominent strong anionic. If reveal shows a moderate/high-graded E2 sensitive or dry-scalp unit, the value becomes `targeted`.",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "MB",
+    "E3",
+    "E4",
+    "SC1"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`not_supported`: the complete INCI contains none of Piroctone Olamine, Climbazole, Selenium Sulfide or Selenium Disulfide (Section 11, DS1).",
+   "ruleIds": [
+    "11",
+    "DS1",
+    "ID-1"
+   ]
+  }
+ },
+ "formulaFacts": {
+  "surfactants": [
+   "Sodium Laureth Sulfate@2 strong anionic ether type (defining)",
+   "Cocamidopropyl Hydroxysultaine@3 amphoteric (buffer)",
+   "Coco-Glucoside@5 nonionic glucoside (buffer)"
+  ],
+  "conditioningRoutes": [
+   "cationic: Guar Hydroxypropyltrimonium Chloride@9",
+   "humectant: Sodium Hyaluronate@6"
+  ],
+  "comfortRoutes": "E4 comfort list: Niacinamide@7 (prominent); E4 humectant/refatting: Sodium Hyaluronate@6 (prominent)",
+  "actives": [
+   "Niacinamide@7",
+   "Kaolin@8 (clay)",
+   "no recognized anti-dandruff active"
+  ],
+  "exposureFlags": [
+   "Parfum@11",
+   "no declared allergens, no cooling agent, no essential oil"
+  ],
+  "preservatives": [
+   "Sodium Benzoate@13"
+  ]
+ },
+ "unresolvedMaterialIngredients": [],
+ "notes": []
+}

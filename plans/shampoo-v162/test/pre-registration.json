@@ -1,0 +1,75 @@
+{
+ "standard": "plans/shampoo-v162/candidate/classification-standard.md",
+ "baseline": "Track A run-1 lane records (v1.6), rollout branch codex/shampoo-v16-rollout data/research/shampoo-inci/v1.6-track-a/run-1; extracted to baseline-v1.6.json",
+ "rule": "Every field not listed under moves must equal a v1.6 baseline lane value (either lane where the v1.6 lanes differed). reviewFlags are compared on code; review_thickness_boundary is not scored (boundary flags vary by lane in v1.6).",
+ "products": {
+  "A21": {
+   "expected": "SAME",
+   "moves": {},
+   "why": "Sodium Laureth Sulfate @2 -> no MB; Allantoin/Bisabolol after Parfum @7 -> stays ordinary + review_specialist_gate_failed"
+  },
+  "A06": {
+   "expected": "SAME",
+   "moves": {},
+   "why": "dandruff path; sensitive combination via listed route; SLES -> no MB; unchanged"
+  },
+  "A43": {
+   "expected": "SAME",
+   "moves": {},
+   "why": "Sodium Coco-Sulfate @2 is a prominent strong anionic (alkyl sulfate type) -> no MB; no listed comfort route -> stays ordinary + review_specialist_gate_failed"
+  },
+  "A05": {
+   "expected": "SAME",
+   "moves": {},
+   "why": "passes via listed Panthenol/Niacinamide; Sodium Coco-Sulfate prominent -> no MB; unchanged"
+  },
+  "G03": {
+   "expected": "MOVE",
+   "moves": {
+    "scalpComfortTarget": "targeted (SC1 'Schonende, seifenfreie Reinigung für empfindliche Kopfhaut', manufacturer; CSA via MB: Decyl Glucoside @2, Disodium Laureth Sulfosuccinate @3, Sodium Lauryl Sulfoacetate @4, no prominent strong anionic; cleansingStrength low)",
+    "primaryTarget": "sensitive (S-SENSITIVE via MB)",
+    "rows": [
+     [
+      "coarse",
+      "irritationen",
+      "gentle"
+     ],
+     [
+      "fine",
+      "irritationen",
+      "gentle"
+     ],
+     [
+      "normal",
+      "irritationen",
+      "gentle"
+     ]
+    ],
+    "reviewFlags": "review_specialist_gate_failed absent",
+    "focusPrimary": "scalp_active expected (7.2: SC1 + targeted); general would be a deviation to explain",
+    "unchanged": "cleansingStrength low, weight light, fits fine ideal / normal ideal / coarse acceptable, intensity gentle, usageRole frequent"
+   }
+  },
+  "A40": {
+   "expected": "SAME",
+   "moves": {
+    "notes": "no unlisted_route_candidate:Laureth-9 note; Laureth-9 @3 recorded as Polidocanol (listed comfort route). No value change."
+   }
+  },
+  "A24": {
+   "expected": "SAME",
+   "moves": {},
+   "why": "Sodium Laureth Sulfate @2 -> no MB; Panthenol/Niacinamide after Parfum @6 -> stays ordinary + review_specialist_gate_failed"
+  },
+  "G01": {
+   "expected": "SAME",
+   "moves": {},
+   "why": "dandruff path; sensitive combination via listed route; SLES -> no MB; unchanged"
+  },
+  "A03": {
+   "expected": "SAME",
+   "moves": {},
+   "why": "passes via listed Allantoin/Bisabolol/Panthenol; SLES -> no MB; unchanged"
+  }
+ }
+}

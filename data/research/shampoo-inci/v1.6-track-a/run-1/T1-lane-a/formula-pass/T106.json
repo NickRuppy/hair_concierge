@@ -1,0 +1,45 @@
+{
+  "blindId": "T106",
+  "inciFingerprintSha256": "8ac366dcf15f4a714a1b6b1f885ac3e675e5eecc5ed1a5ef118237bb290d5110",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {"normalization": "Aqua [Water] and Parfum [Fragrance] are one entry each; normalized one-based positions.", "completeness": "complete (ID-1)", "sourceTier": 3, "identityConfidence": "moderate", "e3ProminenceCutoff": "Parfum [Fragrance] at 6 -> positions 1-5 prominent"},
+  "directProperties": {
+    "cleansingStrength": {"value": "low", "confidence": "high", "neighboringAlternative": "none",
+      "rationale": "C6: no prominent strong anionic. The earliest cleansing surfactant is Disodium Laureth Sulfosuccinate (2, mild anionic) with prominent amphoteric co-surfactants Cocamidopropyl Betaine (3) and Cocamidopropyl Hydroxysultaine (4) -> low.",
+      "counterSignals": "None material; Cocamide MEA (19) is a foam booster (not a route)."},
+    "conditioningLevel": {"value": "moderate", "confidence": "moderate", "neighboringAlternative": "low",
+      "rationale": "Several light routes: weak refatter PEG-18 Glyceryl Oleate/Cocoate (5), oat peptide (8), late Guar Hydroxypropyltrimonium Chloride (18), light emollient C13-15 Alkane (21), pearlizer Glycol Distearate (14). C2 not met.",
+      "counterSignals": "The only cationic route is late (after salt); no silicone or payload lipid; cleansing-led mild formula could read low."},
+    "weightPotential": {"value": "low", "confidence": "moderate", "neighboringAlternative": "moderate",
+      "rationale": "All deposition routes are light, weak or late; no silicone or rich lipid.",
+      "subjudgments": {
+        "depositionLoad": {"value": "light", "rationale": "Weak refatter (5), peptide (8), late guar (18), late light alkane (21)."},
+        "persistence": {"value": "low", "rationale": "No persistent silicone/waxy lipid; light, partly volatile alkane."},
+        "resetCapacity": {"value": "moderate", "rationale": "Mild sulfosuccinate/betaine/sultaine chassis (C6 low) but nothing heavy to remove; complete foaming system."}},
+      "evidenceByFamily": {"weak_refatter": ["PEG-18 Glyceryl Oleate/Cocoate (5)"], "protein_film": ["Avena Sativa (Oat) Peptide (8)"], "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride (18)"], "payload_lipid": ["C13-15 Alkane (21, light emollient hydrocarbon, late)"], "anionic_surfactant": ["Disodium Laureth Sulfosuccinate (2, mild)"], "amphoteric_surfactant": ["Cocamidopropyl Betaine (3)", "Cocamidopropyl Hydroxysultaine (4)"], "humectant_context": ["Glycerin (23)"]},
+      "excluded": ["Algin (7): anionic polysaccharide thickener", "Juniperus Virginiana Oil (12), Citrus Aurantium Peel Oil (13): fragrance oils (6.4)", "Glycol Distearate (14): pearlizer", "Cocamide MEA (19): foam booster", "Laureth-10 (20): solubilizer", "Ethylhexyl Methoxycinnamate (24), Diethylamino Hydroxybenzoyl Hexyl Benzoate (25): product-protection UV filters, trace", "Propylene Glycol (22), 1,2-Hexanediol (30), Caprylyl Glycol (31): solvents/preservative boosters"],
+      "unresolved": [],
+      "whyThisBand": "Light, late or weak routes only; no noticeable residue expected.",
+      "whyNotNeighborBand": "W2: four families present, but the guar and the alkane are late (after salt), the refatter is weak and the peptide is a low-persistence film route; no silicone or waxy lipid. Combined residue plausibly below noticeable even with a mild reset.",
+      "confidenceLimitingFactor": "Mild chassis gives limited reset; the number of light routes leaves a realistic step toward moderate."},
+    "focusPrimary": {"value": "provisional:pending_claims", "confidence": "low", "neighboringAlternative": "general",
+      "rationale": "Formula-only: botanical extracts and peptide, mild chassis; no specialist route stands out (nonspecific).",
+      "careDirectionVerdictProvisional": "nonspecific"},
+    "focusSecondary": {"value": [], "confidence": "low", "neighboringAlternative": ["shine"], "rationale": "Empty default pending claims."},
+    "usageRole": {"value": "regular", "confidence": "low", "neighboringAlternative": "frequent", "rationale": "Default; frequent possible with explicit frequency wording."},
+    "scalpComfortTarget": {"value": "provisional:not_targeted", "confidence": "low", "neighboringAlternative": "targeted", "rationale": "CSA not met: no E4 comfort or humectant/refatting route in positions 1-5. unlisted_route_candidate:PEG-18 Glyceryl Oleate/Cocoate (5) (similar to listed PEG-7 Glyceryl Cocoate but not on the closed list). Counter-signal: Parfum at 6 plus fragrance oils."},
+    "dandruffSupport": {"value": "not_supported", "confidence": "high", "neighboringAlternative": "none", "rationale": "Neither Piroctone Olamine nor Climbazole."}
+  },
+  "formulaFacts": [
+    {"ingredient": "Disodium Laureth Sulfosuccinate", "position": 2, "role": "earliest cleansing surfactant (mild anionic)"},
+    {"ingredient": "Cocamidopropyl Betaine", "position": 3, "role": "amphoteric co-surfactant"},
+    {"ingredient": "Cocamidopropyl Hydroxysultaine", "position": 4, "role": "amphoteric co-surfactant"},
+    {"ingredient": "PEG-18 Glyceryl Oleate/Cocoate", "position": 5, "role": "weak_refatter (unlisted for E4)"},
+    {"ingredient": "Parfum [Fragrance]", "position": 6, "role": "E3 fragrance marker"},
+    {"ingredient": "Avena Sativa (Oat) Peptide", "position": 8, "role": "protein_film"},
+    {"ingredient": "Glycol Distearate", "position": 14, "role": "pearlizing route"},
+    {"ingredient": "Guar Hydroxypropyltrimonium Chloride", "position": 18, "role": "cationic_polymer, late"},
+    {"ingredient": "C13-15 Alkane", "position": 21, "role": "light emollient, late"}
+  ],
+  "unresolvedMaterialIngredients": []
+}

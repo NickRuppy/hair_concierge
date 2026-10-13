@@ -1,0 +1,145 @@
+{
+  "blindId": "W116",
+  "inciFingerprintSha256": "057ef537b8cb1c0e3bfe089504cba2f2348f6018980b584cd9e903664c0292dc",
+  "phase": "formula-pass (blind; stage-A packet only; no claims seen)",
+  "standard": "shampoo-classification-v1.6.2",
+  "formulaIdentity": {
+    "packSize": "350 ml",
+    "formulaSourceTier": 3,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "One entry per ingredient; normalized positions = packet positions (ID-2).",
+    "e3Point": "Parfum @8 (prominent = positions 1-7)"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "none (no strong anionic) -> C6",
+      "earliestProminentCleansing": "Sodium Cocoyl Isethionate @2 (mild anionic, isethionate)",
+      "reinforcingRoutes": [],
+      "buffers": ["Lauramidopropyl Betaine @3 (amphoteric)", "Cocamidopropyl Betaine @4 (amphoteric)", "Sodium Lauroyl Sarcosinate @5 (mild anionic)"],
+      "notCleansing": []
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": ["Polyquaternium-10 @11 (not prominent)"],
+      "silicone": [],
+      "payload_lipid": [],
+      "weak_refatter": [],
+      "pearlizingFattyRoute": [],
+      "humectants": ["Glycerin @24 (late)"]
+    },
+    "actives": [],
+    "exposure": {
+      "fragrance": "Parfum @8; allergens Linalool @15, Coumarin @20, Limonene @21; other fragrance materials Hexamethylindanopyran @14, Linalyl Acetate @16, Vanillin @22, Terpineol @23",
+      "essentialOils": ["Citrus Aurantium Peel Oil @17 (not prominent)"],
+      "coolingAgents": [],
+      "otherNotes": "Sodium Salicylate @10 preservative; Histidine @18; Cocos Nucifera Fruit Juice @25 (coconut water, not a lipid)"
+    },
+    "wLine": {
+      "cap": "e3Point Parfum @8",
+      "wLine": "Parfum @8",
+      "wLineClasses": ["fragrance"],
+      "skippedCandidates": [],
+      "alphabeticalRun": "none",
+      "codes": [],
+      "plausibility": "No candidate before the cap; Parfum @8 plausible ((i) isethionate @2 before; (ii) nothing between)",
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": []
+    },
+    "csaListedProminentRoutes": [],
+    "mildBase": "met: mild_base:Sodium Cocoyl Isethionate @2, Lauramidopropyl Betaine @3, Cocamidopropyl Betaine @4, Sodium Lauroyl Sarcosinate @5 (cleansingStrength low; no prominent strong anionic)"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Low: no strong anionic; earliest prominent cleansing surfactant is the mild anionic Sodium Cocoyl Isethionate @2 with prominent amphoteric co-surfactants Lauramidopropyl Betaine @3 and Cocamidopropyl Betaine @4 (C3, C4, C6).",
+      "ruleIds": ["C3", "C4", "C6"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low: the only conditioning route is Polyquaternium-10 @11, after the fragrance and preservatives (trace), plus a late Glycerin @24. Cleansing-led architecture with little substantive slip (Section 5). The cationic polymer makes moderate the realistic neighbor.",
+      "ruleIds": ["Section 5", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Polyquaternium-10 @11"],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Cocoyl Isethionate @2", "Lauramidopropyl Betaine @3", "Cocamidopropyl Betaine @4", "Sodium Lauroyl Sarcosinate @5"],
+        "humectantContext": ["Glycerin @24"],
+        "excluded": ["Citrus Aurantium Peel Oil @17 (fragrance oil, 6.4)", "Histidine @18 (amino acid additive)", "Cocos Nucifera Fruit Juice @25 (aqueous juice)"],
+        "unresolved": []
+      },
+      "depositionLoad": "light - one trace cationic polymer",
+      "persistence": "low-to-moderate - PQ-10 can build up, but only at trace level",
+      "resetCapacity": "weak - mild isethionate/betaine/sarcosinate chassis",
+      "counterevidence": "Weak reset lets even a small PQ-10 accumulate.",
+      "whyThisBand": "A single trace cationic polymer with no reinforcing family.",
+      "whyNotNeighborBand": "Not moderate: one deposition family only (Polyquaternium-10 @11, post-fragrance and post-preservative trace), no silicone, lipid, protein or refatter to converge with it; one route kind is not a moderate floor (6.6).",
+      "confidenceLimitingFactor": "Weak reset could allow PQ-10 buildup",
+      "rationale": "Low: single trace PQ-10, weak reset recorded as counter-signal (6.6, W2). Neighbor moderate.",
+      "ruleIds": ["6.3", "6.6", "W2", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": ["Glycerin @24 (late)"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Polyquaternium-10 @11"],
+        "limitation": "No care cluster"
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Mild base could support a sensitive-scalp or gentle positioning if claimed",
+      "decisionTrace": "PROVISIONAL (formula-only): no claim direction; nonspecific. Placeholder general until claims.",
+      "rationale": "Provisional general (claim-dependent, 7.2).",
+      "ruleIds": ["3.1", "7.2"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["volume"],
+      "decisionTrace": "PROVISIONAL: empty default (Section 8).",
+      "rationale": "Provisional empty (claim-dependent).",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "PROVISIONAL: default regular; frequent possible with explicit frequency wording (cleansing low, U2).",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "rationale": "PROVISIONAL: CSA formula half met via MB only (mild_base: Sodium Cocoyl Isethionate, Lauramidopropyl Betaine, Cocamidopropyl Betaine, Sodium Lauroyl Sarcosinate); no listed E4 route is prominent (Glycerin @24 is late). MB passes S-SENSITIVE's route clause but never S-DRY. Citrus peel oil is post-fragrance (not prominent). targeted needs SC1 positioning.",
+      "ruleIds": ["10", "CSA", "MB", "SC1", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active; Sodium Salicylate @10 is a preservative (Section 11).",
+      "ruleIds": ["11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": []
+}

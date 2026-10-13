@@ -1,0 +1,548 @@
+{
+  "blindId": "T416",
+  "inciFingerprintSha256": "571fec0717ab082a937b7fcadf0e886dc73b356c7d45f4c33fb1fbcde5b83742",
+  "identity": {
+    "brand": "Dejan Garz",
+    "productName": "Dejan Garz The Foundation Shampoo (catalog: Dejan Garz Shampoo)",
+    "market": "DE",
+    "packSize": "300 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": [
+      "Normalized positions = packet positions.",
+      "E3 cut: Parfum at 21; prominent = 2-20."
+    ]
+  },
+  "sourcesUsed": {
+    "formula": "formula/T416.json (fingerprint 571fec0717ab082a937b7fcadf0e886dc73b356c7d45f4c33fb1fbcde5b83742, source tier 2, completeness complete)",
+    "positioning": [
+      "reveal/T416.json#positioningSources[0] (manufacturer_de, packet grade moderate)",
+      "reveal/T416.json#positioningSources[1] (retailer, packet grade low)",
+      "reveal/T416.json#positioningSources[2] (retailer, packet grade low)"
+    ]
+  },
+  "claimGrading": {
+    "manufacturer_de": "moderate",
+    "dm.de/rossmann.de": "low"
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "general (provisional; verdict moisture_supported)",
+      "final": "moisture",
+      "evidence": "Deep Hydration, Feuchtigkeit",
+      "reason": "F1"
+    },
+    {
+      "property": "cleansingStrength/conditioningLevel/weightPotential/dandruffSupport",
+      "blind": "see formula-pass",
+      "final": "unchanged",
+      "evidence": "formula-only properties; no material formula conflict exposed by the reveal"
+    }
+  ],
+  "cleansingStrength": {
+    "value": "moderate",
+    "confidence": "high",
+    "rationale": "C1: defining anionic Sodium Laureth Sulfate (2) (ether/sulfonate type) with prominent buffer(s) Cocamidopropyl Betaine (3), Coco-Glucoside (5) and no prominent reinforcing strong anionic -> moderate. Unchanged after unblinding: claims never set cleansing strength (Section 4, 3.2).",
+    "formulaFacts": [
+      {
+        "ingredient": "Sodium Laureth Sulfate",
+        "position": 2,
+        "role": "defining anionic"
+      },
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 3,
+        "role": "buffer"
+      },
+      {
+        "ingredient": "Coco-Glucoside",
+        "position": 5,
+        "role": "buffer"
+      }
+    ],
+    "counterSignal": [
+      "none material"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "formula/T416.json (fingerprint 571fec0717ab082a937b7fcadf0e886dc73b356c7d45f4c33fb1fbcde5b83742, source tier 2, completeness complete)"
+    ]
+  },
+  "conditioningLevel": {
+    "value": "moderate",
+    "confidence": "moderate",
+    "rationale": "Several light routes: HP guar (10) and cationic conditioner Quaternium-80 (12), weak refatters Glyceryl Oleate (8), Hydrogenated Palm Glycerides Citrate (11), Lecithin (15), humectants Glycerin (4), Panthenol (6), Sodium Hyaluronate (9). No silicone, payload lipid or pearlizer -> C2 not met; moderate. Unchanged after unblinding: claims never raise or lower conditioning (3.2, C7).",
+    "formulaFacts": [
+      {
+        "ingredient": "Glycerin",
+        "position": 4,
+        "role": "humectant"
+      },
+      {
+        "ingredient": "Panthenol",
+        "position": 6,
+        "role": "humectant/comfort"
+      },
+      {
+        "ingredient": "Glyceryl Oleate",
+        "position": 8,
+        "role": "weak refatter"
+      },
+      {
+        "ingredient": "Sodium Hyaluronate",
+        "position": 9,
+        "role": "humectant"
+      },
+      {
+        "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+        "position": 10,
+        "role": "cationic polymer"
+      },
+      {
+        "ingredient": "Hydrogenated Palm Glycerides Citrate",
+        "position": 11,
+        "role": "weak refatter"
+      },
+      {
+        "ingredient": "Quaternium-80",
+        "position": 12,
+        "role": "cationic conditioner"
+      }
+    ],
+    "counterSignal": [
+      "two cationic routes plus four refatters and three humectants approach multiple complementary systems"
+    ],
+    "neighboringAlternative": "high",
+    "sources": [
+      "formula/T416.json (fingerprint 571fec0717ab082a937b7fcadf0e886dc73b356c7d45f4c33fb1fbcde5b83742, source tier 2, completeness complete)"
+    ]
+  },
+  "weightPotential": {
+    "value": "moderate",
+    "confidence": "moderate",
+    "rationale": "moderate: interacting light/moderate routes (guar + Quaternium-80 + several refatters) plausibly leave noticeable but bounded residue. Unchanged after unblinding (claims cannot decide the band, 6.5).",
+    "neighboringAlternative": "low",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "moderate",
+        "rationale": "Two cationic routes (HP guar 10, Quaternium-80 12) interacting with four weak refatters."
+      },
+      "persistence": {
+        "value": "moderate",
+        "rationale": "Quaternium-80 (silicone quat) is substantive; guar and refatters light."
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C1 SLES/CAPB/glucoside chassis."
+      }
+    },
+    "extractedEvidenceByFamily": {
+      "cationic_polymer": [
+        [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          10
+        ]
+      ],
+      "cationic_conditioner": [
+        [
+          "Quaternium-80",
+          12
+        ]
+      ],
+      "weak_refatter": [
+        [
+          "Glyceryl Oleate",
+          8
+        ],
+        [
+          "Hydrogenated Palm Glycerides Citrate",
+          11
+        ],
+        [
+          "Lecithin",
+          15
+        ],
+        [
+          "Ascorbyl Palmitate",
+          16
+        ]
+      ],
+      "silicone": [],
+      "payload_lipid": [],
+      "protein_film": [],
+      "film_former": [],
+      "anionic_surfactant": [
+        [
+          "Sodium Laureth Sulfate",
+          2
+        ]
+      ],
+      "amphoteric_surfactant": [
+        [
+          "Cocamidopropyl Betaine",
+          3
+        ]
+      ],
+      "nonionic_surfactant": [
+        [
+          "Coco-Glucoside",
+          5
+        ]
+      ],
+      "humectant_context": [
+        [
+          "Glycerin",
+          4
+        ],
+        [
+          "Panthenol",
+          6
+        ],
+        [
+          "Sodium Hyaluronate",
+          9
+        ],
+        [
+          "Propylene Glycol",
+          13
+        ]
+      ]
+    },
+    "excludedIngredients": [
+      [
+        "Salicylic Acid",
+        7,
+        "acid"
+      ],
+      [
+        "Tocopherol",
+        14,
+        "antioxidant"
+      ]
+    ],
+    "whyThisBand": "moderate: interacting light/moderate routes (guar + Quaternium-80 + several refatters) plausibly leave noticeable but bounded residue.",
+    "whyNotNeighborBand": "Not low: three deposition families incl. two cationic routes; W2 gives no specific reason to keep combined residue below noticeable (reset is only moderate, not strong). Not high: no silicone, payload lipid or W-RICH.",
+    "counterEvidence": [
+      "each route light; refatters weak"
+    ],
+    "confidenceLimitingFactor": "Levels unknown; low is the realistic neighbor.",
+    "formulaFacts": [
+      {
+        "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+        "position": 10,
+        "family": "cationic_polymer"
+      },
+      {
+        "ingredient": "Quaternium-80",
+        "position": 12,
+        "family": "cationic_conditioner"
+      },
+      {
+        "ingredient": "Glyceryl Oleate",
+        "position": 8,
+        "family": "weak_refatter"
+      },
+      {
+        "ingredient": "Hydrogenated Palm Glycerides Citrate",
+        "position": 11,
+        "family": "weak_refatter"
+      },
+      {
+        "ingredient": "Lecithin",
+        "position": 15,
+        "family": "weak_refatter"
+      },
+      {
+        "ingredient": "Ascorbyl Palmitate",
+        "position": 16,
+        "family": "weak_refatter"
+      },
+      {
+        "ingredient": "Sodium Laureth Sulfate",
+        "position": 2,
+        "family": "anionic_surfactant"
+      },
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 3,
+        "family": "amphoteric_surfactant"
+      },
+      {
+        "ingredient": "Coco-Glucoside",
+        "position": 5,
+        "family": "nonionic_surfactant"
+      },
+      {
+        "ingredient": "Glycerin",
+        "position": 4,
+        "family": "humectant_context"
+      },
+      {
+        "ingredient": "Panthenol",
+        "position": 6,
+        "family": "humectant_context"
+      },
+      {
+        "ingredient": "Sodium Hyaluronate",
+        "position": 9,
+        "family": "humectant_context"
+      },
+      {
+        "ingredient": "Propylene Glycol",
+        "position": 13,
+        "family": "humectant_context"
+      }
+    ],
+    "counterSignal": [
+      "each route light; refatters weak"
+    ],
+    "canonicalFormula": {
+      "fingerprint": "571fec0717ab082a937b7fcadf0e886dc73b356c7d45f4c33fb1fbcde5b83742",
+      "sourceTier": 2,
+      "completeness": "complete",
+      "identityConfidence": "high",
+      "captureDate": "not stated in packet",
+      "normalization": "Normalized positions = packet positions."
+    },
+    "unresolvedFacts": [],
+    "sources": [
+      "formula/T416.json (fingerprint 571fec0717ab082a937b7fcadf0e886dc73b356c7d45f4c33fb1fbcde5b83742, source tier 2, completeness complete)"
+    ]
+  },
+  "focusPrimary": {
+    "value": "moisture",
+    "confidence": "moderate",
+    "rationale": "'Deep Hydration' and 'mit Panthenol und Glycerin Feuchtigkeit spendet' (manufacturer, moderate) over a moisture_supported formula (Glycerin 4, Panthenol 6, Sodium Hyaluronate 9 + guar/Quaternium-80/refatters).",
+    "formulaFacts": [
+      {
+        "ingredient": "Glycerin",
+        "position": 4
+      },
+      {
+        "ingredient": "Panthenol",
+        "position": 6
+      },
+      {
+        "ingredient": "Sodium Hyaluronate",
+        "position": 9
+      }
+    ],
+    "counterSignal": [
+      "'Effektive Reinigung', 'Lightweight', 'Regulates Oil Production', 'Anti Frizz' compete; name names no role"
+    ],
+    "neighboringAlternative": "general",
+    "sources": [
+      "reveal positioning sources",
+      "formula packet"
+    ]
+  },
+  "focusSecondary": {
+    "value": [],
+    "confidence": "moderate",
+    "rationale": "Clarifying considered for 'Regulates Oil Production on the Scalp', but the English wording is outside the E2 oily lexicon (7.2 requires the E2 oily lexicon); 'Anti Frizz' has no independent route.",
+    "formulaFacts": [],
+    "counterSignal": [
+      "not lexicon positioning"
+    ],
+    "neighboringAlternative": [
+      "clarifying"
+    ],
+    "sources": [
+      "reveal positioning sources"
+    ]
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "moisture_supported",
+      "moistureRoutes": [
+        "Glycerin 4",
+        "Panthenol 6",
+        "Sodium Hyaluronate 9"
+      ],
+      "sharedRoutes": [
+        "HP Guar 10",
+        "Quaternium-80 12",
+        "Glyceryl Oleate 8"
+      ],
+      "limitation": "rinse-off"
+    },
+    "claimRole": "candidate",
+    "counterSignal": [
+      "'Effektive Reinigung', 'Lightweight', 'Regulates Oil Production', 'Anti Frizz' compete; name names no role"
+    ],
+    "neighboringAlternative": "general",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "moisture (manufacturer)",
+        "formulaCompatible": true,
+        "compatibleRoute": "humectant cluster Glycerin 4 / Panthenol 6 / Sodium Hyaluronate 9",
+        "decisionReason": "F1 moisture claim + moisture_supported"
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [
+          "Regulates Oil Production on the Scalp"
+        ],
+        "independentRoutes": [],
+        "whyDistinctFromPrimary": "not lexicon positioning",
+        "exceptionCode": null
+      },
+      "usageRole": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "'Verwende das Shampoo bei jeder Haarwäsche' is not U2 frequency wording; no other trigger."
+      }
+    }
+  },
+  "usageRole": {
+    "value": "regular",
+    "confidence": "high",
+    "rationale": "'Verwende das Shampoo bei jeder Haarwäsche' is not U2 frequency wording; no other trigger.",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": [],
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "neighboringAlternative": "frequent",
+    "sources": [
+      "reveal positioning sources"
+    ]
+  },
+  "scalpComfortTarget": {
+    "value": "not_targeted",
+    "confidence": "high",
+    "rationale": "'ohne deine Kopfhaut auszutrocknen' and retailer 'schützt/schont die Kopfhaut' are protective (E2a).",
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources",
+      "formula packet"
+    ]
+  },
+  "dandruffSupport": {
+    "value": "not_supported",
+    "confidence": "high",
+    "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11) -> not_supported. Salicylic Acid (7) alone does not count.",
+    "neighboringAlternative": "none",
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "sources": [
+      "formula/T416.json (fingerprint 571fec0717ab082a937b7fcadf0e886dc73b356c7d45f4c33fb1fbcde5b83742, source tier 2, completeness complete)"
+    ]
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate -> acceptable. T2: thickness/texture claims do not change fit."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate -> ideal. T2: thickness/texture claims do not change fit."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate, C moderate -> acceptable. T2: thickness/texture claims do not change fit."
+      }
+    ],
+    "weight": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential moderate -> 1:1 projection; confidence = weightPotential confidence."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1: no qualifying E2 unit ('Regulates Oil Production on the Scalp' is English and outside the oily lexicon; noted). Manufacturer source -> high."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate -> regular. I3: neighbor none (high confidence, no boundary check)"
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "rationale": "D1: no D1 stem (tiefenrein / deep clean / clarifying shampoo / detox-reinigung) in name or manufacturer/pack claims, no occasional-use directions."
+    },
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [],
+    "researchCombinationTargets": []
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsAndPriorLabelsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": "Levels unknown; low is the realistic neighbor.",
+    "comparisonWithEarlierValuesOnlyOutsideLane": true,
+    "formulaPropertiesChangedAfterUnblinding": false
+  },
+  "uncertainties": [
+    {
+      "reading": "weight moderate",
+      "alternative": "low (all routes light; W2 low would need a specific reason, not found)"
+    },
+    {
+      "reading": "English 'Regulates Oil Production on the Scalp' not an E2 oily unit",
+      "alternative": "qualifies -> S-OILY passes (cleansing moderate, W moderate, C moderate) -> oily target, clarifying secondary/primary question; flagged here as the main uncertainty"
+    },
+    {
+      "reading": "'Lightweight Formula' does not lower weight (6.5)",
+      "alternative": "n/a"
+    }
+  ]
+}

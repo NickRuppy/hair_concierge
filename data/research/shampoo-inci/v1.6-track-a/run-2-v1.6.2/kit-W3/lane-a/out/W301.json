@@ -1,0 +1,296 @@
+{
+  "blindId": "W301",
+  "policy": "shampoo-classification-v1.6.2",
+  "lane": "lane-a",
+  "phase": "final (post-unblind reconciliation)",
+  "formulaPassRecord": "out/formula-pass/W301.json (hash-pinned, unedited)",
+  "identity": {
+    "brand": "Swiss-O-Par",
+    "productName": "Swiss-O-Par Teebaumöl Shampoo (Kurshampoo)",
+    "packSize": "250 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "fa74c91cc5f8d70b1c235670a06cded2f6b2285e95b63f24459c262283747419",
+    "normalization": "No split synonym entries; packet positions = normalized positions (ID-2). 19 entries.",
+    "completeness": "complete; formula source tier 2; identity confidence moderate",
+    "e3ProminenceCutoff": "No Parfum/Fragrance declared; E3 preservative fallback = Benzyl Alcohol @8. Prominent = positions 1-7.",
+    "positioningSources": [
+      "manufacturer_de (moderate): Rufin Cosmetic DE page",
+      "retailer dm (low)",
+      "retailer Rossmann (low, GTIN 4104260076501, 250 ml)",
+      "retailer Müller (low)"
+    ]
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 ether-sulfate chassis. Defining anionic Sodium Laureth Sulfate @2 (ether/sulfonate type), buffered by two prominent amphoterics Cocamidopropyl Betaine @3 and Coco-Betaine @7, no reinforcing strong anionic. Coco-Glucoside @11 is after the E3 point (C4: recorded, not a buffer). Counter-signal: PEG-7 Glyceryl Cocoate @6 refatting (does not move the C1 value).",
+      "ruleIds": [
+        "C1",
+        "C3",
+        "C4",
+        "E3"
+      ],
+      "counterSignal": "PEG-7 Glyceryl Cocoate @6 refatting (does not move C1)."
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Low: cleansing-led architecture. No cationic polymer, no silicone, no payload lipid. Only light routes: PEG-7 Glyceryl Cocoate @6 (weak refatter), Glycol Distearate @12 (pearlizer after E3), Glycerin @18 (late humectant). C2 not met (no early silicone/payload lipid, no cationic).",
+      "ruleIds": [
+        "C2",
+        "Section 5 anchors"
+      ],
+      "counterSignal": "Light routes PEG-7 Glyceryl Cocoate @6 and post-E3 Glycol Distearate @12; none substantive."
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "evidence": {
+        "cationic_polymer": [],
+        "payload_lipid": [],
+        "weak_refatter": [
+          "PEG-7 Glyceryl Cocoate @6",
+          "Tocopherol @19 (antioxidant trace)"
+        ],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": [
+          "Sodium Laureth Sulfate @2 (anionic, strong ether type)",
+          "Cocamidopropyl Betaine @3 (amphoteric)",
+          "Coco-Betaine @7 (amphoteric)",
+          "Coco-Glucoside @11 (nonionic, post-E3)"
+        ],
+        "humectantContext": [
+          "Glycerin @18"
+        ],
+        "excluded": [
+          "Melaleuca Alternifolia Leaf Oil @4 (essential oil, 6.4)",
+          "Glycol Distearate @12 (pearlizing wax, 6.4)",
+          "Terpineol @14, Pinene @16, Limonene @17 (fragrance materials)"
+        ],
+        "unresolved": []
+      },
+      "wLine": {
+        "wLine": "@8 Benzyl Alcohol",
+        "classes": [
+          "fragrance (listed allergen)",
+          "preservative_or_capped_active"
+        ],
+        "cap": "e3Point @8 (Benzyl Alcohol, preservative fallback)",
+        "alphabeticalRun": "none",
+        "skipped": [],
+        "codes": [],
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light",
+      "persistence": "low",
+      "resetCapacity": "moderate",
+      "counterevidence": "PEG-7 Glyceryl Cocoate @6 is a prominent light refatter; Glycol Distearate @12 adds opacity but is excluded from weight evidence.",
+      "whyThisBand": "Only one deposition family (weak_refatter) is present; no cationic, silicone, protein or payload lipid; an ordinary C1 chassis resets it.",
+      "whyNotNeighborBand": "Not moderate: no depositing system plausible enough to leave noticeable residue; the only family is a light refatting ester plus a late humectant (W2 single-family case).",
+      "confidenceLimitingFactor": "None material; complete formula, single light family.",
+      "rationale": "Low: absent deposition architecture (weak refatter only) facing a moderate reset; W-line @8, no payload_lipid to test.",
+      "ruleIds": [
+        "6.3",
+        "6.4",
+        "6.6",
+        "W2",
+        "W-LINE"
+      ],
+      "counterSignal": "PEG-7 Glyceryl Cocoate @6 is a prominent light refatter; Glycol Distearate @12 adds opacity but is excluded from weight evidence."
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "neighboringAlternative": "clarifying",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": [
+          "Glycerin @18 (late)"
+        ],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "PEG-7 Glyceryl Cocoate @6"
+        ],
+        "limitation": "No conditioning system."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Oily wording (\"fettiges Haar\", \"Fettabsonderung\", \"Fett\") and a moderate, low-conditioning, low-weight formula would make clarifying formula-compatible (F6) if the oily wording stood in its own unit.",
+      "decisionTrace": "Claim direction: anti-dandruff scalp product (\"Gegen Kopfhautreizungen, Schuppen und fettiges Haar\", manufacturer, moderate). Formula compatible? No: 7.2 requires a recognized dandruff active for anti-dandruff scalp_active; dandruffSupport not_supported (tea tree oil does not count, Section 11). The irritation and oily words all sit inside units that name Schuppen, so E2a absorbs them: no separate sensitive claim (scalp_active via SC1) and no separate oily claim (clarifying via F6). No lengths-care claim. Decision: general (7.2 unsupported/contradictory claims).",
+      "rationale": "General: the dominant anti-dandruff positioning is incompatible with a formula without a recognized active; absorbed comfort/oily words open no other focus.",
+      "ruleIds": [
+        "7.2",
+        "F6",
+        "E2a",
+        "Section 11"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "clarifying"
+      ],
+      "decisionTrace": "Empty default considered; no distinct secondary positioning outside the dandruff units.",
+      "rationale": "Empty.",
+      "ruleIds": [
+        "Section 8"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Default regular: no U2 frequency wording (\"Ausreichend für 25 bis 30 Haarwäschen\" and the 3-minute 'Kurshampoo' leave-on are not frequency wording), no D1, no dandruff active (treatment impossible), cleansing moderate (alternating impossible).",
+      "ruleIds": [
+        "Section 9",
+        "U1",
+        "U2",
+        "U3",
+        "U4"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "targeted",
+      "rationale": "Not targeted: no SC1 positioning. \"Kopfhautreizungen\"/\"Reizungen\" occur only inside units that name Schuppen (E2a/SC1: dandruff symptoms); the soothing sentences are retailer-only (low). Formula half: CSA met via PEG-7 Glyceryl Cocoate @6 (listed refatting route), MB excluded by prominent Sodium Laureth Sulfate @2; counter-signal prominent tea-tree oil @4.",
+      "ruleIds": [
+        "Section 10",
+        "SC1",
+        "CSA",
+        "MB",
+        "E2a",
+        "CL-SRC"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: complete INCI contains no Piroctone Olamine, Climbazole or Selenium (Di)Sulfide; tea tree oil does not upgrade (Section 11).",
+      "ruleIds": [
+        "Section 11"
+      ],
+      "counterSignal": "None: recognition is a closed-list lookup on the complete INCI."
+    }
+  },
+  "formulaFacts": {
+    "surfactants": [
+      "Sodium Laureth Sulfate @2 (strong anionic, ether type, defining)",
+      "Cocamidopropyl Betaine @3 (amphoteric, buffer)",
+      "Coco-Betaine @7 (amphoteric, buffer)",
+      "Coco-Glucoside @11 (nonionic, post-E3, not counted)"
+    ],
+    "conditioningRoutes": [
+      "PEG-7 Glyceryl Cocoate @6 (weak refatter)",
+      "Glycol Distearate @12 (pearlizer, post-E3)"
+    ],
+    "humectants": [
+      "Glycerin @18"
+    ],
+    "actives": [
+      "Melaleuca Alternifolia Leaf Oil @4 (essential oil; not a dandruff active)",
+      "Tocopherol @19"
+    ],
+    "exposure": [
+      "No declared Parfum; Benzyl Alcohol @8 (allergen/preservative), Terpineol @14, Pinene @16, Limonene @17; prominent essential oil @4"
+    ],
+    "preservatives": [
+      "Benzyl Alcohol @8",
+      "Phenoxyethanol @9",
+      "Sodium Benzoate @10",
+      "Potassium Sorbate @15"
+    ]
+  },
+  "unresolvedMaterialIngredients": [],
+  "reconciliation": [
+    "focusPrimary: blind provisional general (low) -> final general (moderate); revealed anti-dandruff claim cannot select scalp_active without a recognized active (7.2).",
+    "usageRole: blind provisional regular (moderate) -> final regular (high); no trigger in the revealed directions.",
+    "scalpComfortTarget: blind provisional not_targeted (low) -> final not_targeted (moderate); comfort wording is absorbed into dandruff units.",
+    "cleansingStrength, conditioningLevel, weightPotential, dandruffSupport: unchanged (formula-only)."
+  ],
+  "projection": {
+    "status": "proposal_blocked_pending_review",
+    "thicknessFit": {
+      "fine": "ideal",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFitConfidence": {
+      "fine": "high",
+      "normal": "high",
+      "coarse": "high"
+    },
+    "thicknessRationale": "T1 (ordinary target): W=low, C=low -> fine ideal, normal ideal, coarse acceptable. T4 with N-ALT neighbors (W neighbor none at high confidence; C neighbor none at high confidence): no lower final tier, no flag. T2: thickness/texture claims ignored.",
+    "weight": "light",
+    "weightConfidence": "high",
+    "weightRationale": "W-LIVE: weightPotential low -> weight light; confidence = weightPotential confidence (high). Claims never adjust it.",
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "moderate",
+        "rationale": "S-ORDINARY way 4 (S-FAIL): the product has a qualifying E2 dandruff claim (\"Gegen Kopfhautreizungen, Schuppen und fettiges Haar\", \"Effektiv gegen Schuppen, Reizungen und Fett\", manufacturer, moderate) but fails the S-DANDRUFF formula gate (dandruffSupport not_supported). Comfort and oily wording inside those units is absorbed (E2a/E2b layer 1) and no separate qualifying unit graded moderate or high exists; no other specialist target passes -> ordinary with review_specialist_gate_failed."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength moderate, D1 false -> regular. I2: written unchanged to every row (bucket expectation normal expects regular). I3: cleansingStrength confidence high (neighbor none) -> no review_intensity_boundary.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserListingConfidence": "high",
+    "deepCleanserRationale": "D1 false: \"Kurshampoo\" and the directions contain no D1 stem; cleansing moderate. D2 not met -> not_flagged.",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_specialist_gate_failed: dandruff (formula gate S-DANDRUFF failed: dandruffSupport not_supported; tea tree oil is not a recognized active)"
+    ],
+    "informationalNotes": [],
+    "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; lanes never see catalog ids."
+  },
+  "selfCheck": "6.11: fingerprint fa74c91cc5f8 matches the frozen stage-A packet; claims were hidden during the formula pass (formula-pass record hash-pinned before release, not edited); no ingredient, family count or position window assigned the weight band, the W-line only gated payload_lipid legs; the W-line was derived from the frozen normalized list and every skipped candidate is recorded; depositionLoad/persistence/resetCapacity present with rationales; whyNotNeighborBand is specific (W2 where it applies); confidence names its limiting factor; no comparison with earlier values was made inside the lane. N-ALT neighbors follow confidence on every property; projection derived mechanically from final properties (T1/T6/T4, W-LIVE, I1-I3, S-gates, 13.7 row assembly, 13.8 confidence).",
+  "uncertainties": [
+    "Unit reading: \"Gegen Kopfhautreizungen, Schuppen und fettiges Haar.\" read as one dandruff claim unit (E2a absorbs the irritation and oily words). Alternative: if the oily words were a separate unit, an oily target would be tested (S-OILY clause would pass: moderate/low/low) and the primary target would become oily instead of ordinary + S-FAIL; rejected because every oily phrase on the manufacturer page shares its unit with Schuppen.",
+    "Talgdrüsen/Fettabsonderung wording is not a closed E2 oily lexicon term except via 'fettiges Haar'; retailer-only bullets (Müller) are low and cannot qualify.",
+    "Identity confidence moderate: manufacturer page carries no GTIN/pack size; retailers corroborate the 250 ml GTIN."
+  ]
+}
