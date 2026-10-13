@@ -33,8 +33,9 @@ import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contract
  * for fixture loading. Then the REAL migration chain runs with every trigger live:
  * 20261011120000_bondbuilder_retire_bond_repair_intensity.sql (the one migration
  * that sorts before Slice 1 and is not yet in the captured production ledger),
- * then the Slice 1 migration, verify.sql and rollback.sql. One test also applies
- * Slice 1 directly on the captured schema (step 2 still pending in production).
+ * then the Slice 1 migration, verify.sql and rollback.sql. The production-order
+ * regression applies the real S3 heat-activation schema before Slice 1. One test
+ * also applies Slice 1 directly on the captured schema (step 2 still pending).
  * PGlite is single-connection: lock contention is not proven here.
  */
 
@@ -44,6 +45,8 @@ const MIGRATION = "supabase/migrations/20261013130000_catalog_completeness_fill_
 /** #660 step 2: in the repo chain before Slice 1, not yet applied in production at capture. */
 const CHAIN_BEFORE =
   "supabase/migrations/20261011120000_bondbuilder_retire_bond_repair_intensity.sql"
+const HEAT_ACTIVATION_SCHEMA =
+  "supabase/migrations/20261013150000_leave_in_heat_activation_schema.sql"
 const BATCH_ID = "S5R-06-catalog-completeness-slice1"
 const read = (path: string) => readFile(new URL(path, ROOT), "utf8")
 
@@ -354,6 +357,65 @@ const one = async <T extends Row>(pg: PGlite, sql: string, params: unknown[] = [
 // ---------------------------------------------------------------------------
 // Migration rehearsal
 // ---------------------------------------------------------------------------
+
+test("production order: S3 heat-activation schema before Slice 1 supports apply, verify, rollback and re-apply", async (t) => {
+  const { pg, migration, verify, rollback } = await database(t)
+  // The S1 capture includes trigger dependencies, but omits this pure function.
+  // Load its real predecessor so S3's production lineage check runs unchanged.
+  await run(pg, await read("supabase/migrations/20260314235000_secure_leave_in_eligibility.sql"))
+  await run(pg, await read(HEAT_ACTIVATION_SCHEMA))
+  const before = await snapshot(pg)
+  await run(pg, migration)
+  await verifyZeroRows(pg, verify)
+  const applied = await snapshot(pg)
+  await run(pg, migration)
+  assert.deepEqual(await snapshot(pg), applied, "production-order replay is a no-op")
+  // Ignoring the new route key must not hide captured content drift, even when
+  // the stamp is unchanged. All three target guards must see the captured value.
+  const original = await one<{ heat_protection_max_c: number | null }>(
+    pg,
+    "SELECT heat_protection_max_c FROM public.product_leave_in_specs WHERE product_id = $1",
+    [ID.alcina],
+  )
+  await pg.exec("SET session_replication_role = replica")
+  await pg.exec(
+    `UPDATE public.product_leave_in_specs SET heat_protection_max_c = COALESCE(heat_protection_max_c, 0) + 1 WHERE product_id = '${ID.alcina}'`,
+  )
+  await pg.exec("SET session_replication_role = origin")
+  const drifted = await snapshot(pg)
+  const failures = (await pg.exec(verify)).flatMap((result) => result.rows)
+  assert.ok(failures.some((row) => row.check_name === "product_leave_in_specs_written_rows_target"))
+  await assert.rejects(
+    run(pg, migration),
+    /catalog completeness slice1 postflight: product_leave_in_specs_written_rows_target/,
+  )
+  await assert.rejects(
+    run(pg, rollback),
+    /rollback refused:.*product_leave_in_specs_written_rows_target/,
+  )
+  assert.deepEqual(await snapshot(pg), drifted, "drift refusals write nothing")
+  await pg.exec("SET session_replication_role = replica")
+  await pg.query(
+    "UPDATE public.product_leave_in_specs SET heat_protection_max_c = $1 WHERE product_id = $2",
+    [original.heat_protection_max_c, ID.alcina],
+  )
+  await pg.exec("SET session_replication_role = origin")
+  await run(pg, rollback)
+  assert.deepEqual(
+    await snapshot(pg),
+    before,
+    "rollback restores every captured column and NULL route",
+  )
+  await run(pg, migration)
+  await verifyZeroRows(pg, verify)
+  const activation = await pg.query<{
+    heat_activation_required: boolean
+    heat_activation_route: string | null
+  }>("SELECT heat_activation_required, heat_activation_route FROM public.product_leave_in_specs")
+  assert.ok(activation.rows.length > 0)
+  for (const row of activation.rows)
+    assert.deepEqual(row, { heat_activation_required: false, heat_activation_route: null })
+})
 
 test("Slice 1 applies onto the frozen prestate and reaches the exact generated target", async (t) => {
   const { pg, migration, verify } = await database(t)
