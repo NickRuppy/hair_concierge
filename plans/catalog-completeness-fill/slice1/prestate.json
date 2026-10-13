@@ -1,6 +1,6 @@
 {
- "captured_at": "2026-10-11T13:48:49.533788+00:00",
- "source": "prod pqdkhefxsxkyeqelqegq, read-only SELECT (capture/prestate.sql), TimeZone UTC. First capture 2026-10-09T21:11:56Z after #654/#655 reached prod; recaptured 2026-10-11T13:48:49Z after #660 step 1 (20261011132316) reached prod (F01): md5 of every section's jsonb text equals the first capture (products differ only by numeric scale lost in JSON transport, e.g. net_content_value 75.0 vs 75; updated_at stamps identical), so the row bytes are unchanged. Guidance sections added by a targeted read-only capture at 2026-10-11T14:29:45.064989+00:00 (Codex F01): application_guidance_protocols = every row of guidance_key scalp.rinse-off.v2 (one: version 2, active, contract 2); rinse_off_scalp_care_pointers = every product_application_protocols row whose application_family is rinse_off_scalp_care (Balea and Isana Kopfhautpeeling; context only, never written)",
+ "captured_at": "2026-10-13T08:44:08.15786+00:00",
+ "source": "prod pqdkhefxsxkyeqelqegq, read-only SELECT (capture/prestate.sql), TimeZone UTC. First capture 2026-10-09T21:11:56Z after #654/#655 reached prod; recaptured 2026-10-11T13:48:49Z after #660 step 1 (20261011132316) reached prod (F01): md5 of every section's jsonb text equals the first capture (products differ only by numeric scale lost in JSON transport, e.g. net_content_value 75.0 vs 75; updated_at stamps identical), so the row bytes are unchanged. Guidance sections added by a targeted read-only capture at 2026-10-11T14:29:45.064989+00:00 (Codex F01): application_guidance_protocols = every row of guidance_key scalp.rinse-off.v2 (one: version 2, active, contract 2); rinse_off_scalp_care_pointers = every product_application_protocols row whose application_family is rinse_off_scalp_care (Balea and Isana Kopfhautpeeling; context only, never written). RECAPTURE 2026-10-13T08:44:08Z (after main #677 shampoo v1.6.2 Track A, #660 step 2, price audit 2026-10-12): per-section md5 of every section (numeric-scale-normalised) compared against the previous capture; changed: products (10 rows), product_shampoo_specs, product_thickness_eligibility, product_bondbuilder_specs (bond_repair_intensity column dropped by 20261012054724). All other sections byte-identical. Guidance sections re-verified at the same time.",
  "application_guidance_protocols": [
   {
    "id": "13c993b5-369e-5087-8454-d0f2ac7de02f",
@@ -65,7 +65,7 @@
    "application_family": "rinse_off_scalp_care"
   }
  ],
- "application_guidance_protocols_captured_at": "2026-10-11T14:29:45.064989+00:00",
+ "application_guidance_protocols_captured_at": "2026-10-13T08:44:08.15786+00:00",
  "catalog_enrichment_applied_items_for_batch": [],
  "gtin_owners": [
   [
@@ -7004,8 +7004,7 @@
     }
    },
    "claim_trust_level": "low",
-   "technology_family": "gluconamide_gluconate",
-   "bond_repair_intensity": null
+   "technology_family": "gluconamide_gluconate"
   },
   {
    "created_at": "2026-10-04T08:37:58.60683+00:00",
@@ -8845,8 +8844,7 @@
     }
    },
    "claim_trust_level": "medium",
-   "technology_family": "acid_calcium_management",
-   "bond_repair_intensity": null
+   "technology_family": "acid_calcium_management"
   },
   {
    "created_at": "2026-10-04T08:37:55.642259+00:00",
@@ -10707,8 +10705,7 @@
     }
    },
    "claim_trust_level": "low",
-   "technology_family": "gluconamide_gluconate",
-   "bond_repair_intensity": null
+   "technology_family": "gluconamide_gluconate"
   },
   {
    "created_at": "2026-05-03T12:15:54.095301+00:00",
@@ -12590,8 +12587,7 @@
     }
    },
    "claim_trust_level": "high",
-   "technology_family": "designed_peptide",
-   "bond_repair_intensity": "intensive"
+   "technology_family": "designed_peptide"
   },
   {
    "created_at": "2026-10-04T08:37:55.358559+00:00",
@@ -14350,8 +14346,7 @@
     }
    },
    "claim_trust_level": "medium",
-   "technology_family": "acid_calcium_management",
-   "bond_repair_intensity": null
+   "technology_family": "acid_calcium_management"
   },
   {
    "created_at": "2026-10-04T08:37:19.548173+00:00",
@@ -16152,8 +16147,7 @@
     }
    },
    "claim_trust_level": "medium",
-   "technology_family": "acid_calcium_management",
-   "bond_repair_intensity": null
+   "technology_family": "acid_calcium_management"
   },
   {
    "created_at": "2026-05-03T12:15:54.280299+00:00",
@@ -18017,8 +18011,7 @@
     }
    },
    "claim_trust_level": "high",
-   "technology_family": "maleate_ester",
-   "bond_repair_intensity": "intensive"
+   "technology_family": "maleate_ester"
   }
  ],
  "product_concern_eligibility": [
@@ -20970,20 +20963,10 @@
  "product_scalp_care_specs": [],
  "product_shampoo_specs": [
   {
-   "thickness": "coarse",
-   "created_at": "2026-07-03T14:18:11.388297+00:00",
-   "product_id": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
-   "updated_at": "2026-07-03T14:18:11.388297+00:00",
-   "scalp_route": "balanced",
-   "category_key": "shampoo",
-   "shampoo_bucket": "normal",
-   "cleansing_intensity": "regular"
-  },
-  {
    "thickness": "fine",
-   "created_at": "2026-07-03T14:18:11.388297+00:00",
+   "created_at": "2026-10-13T08:25:22.529391+00:00",
    "product_id": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
-   "updated_at": "2026-07-03T14:18:11.388297+00:00",
+   "updated_at": "2026-10-13T08:25:22.529391+00:00",
    "scalp_route": "balanced",
    "category_key": "shampoo",
    "shampoo_bucket": "normal",
@@ -20991,19 +20974,19 @@
   },
   {
    "thickness": "normal",
-   "created_at": "2026-07-03T14:18:11.388297+00:00",
+   "created_at": "2026-10-13T08:25:22.529391+00:00",
    "product_id": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
-   "updated_at": "2026-07-03T14:18:11.388297+00:00",
+   "updated_at": "2026-10-13T08:25:22.529391+00:00",
    "scalp_route": "balanced",
    "category_key": "shampoo",
    "shampoo_bucket": "normal",
    "cleansing_intensity": "regular"
   },
   {
-   "thickness": "fine",
-   "created_at": "2026-06-29T15:23:22.525951+00:00",
+   "thickness": "normal",
+   "created_at": "2026-10-13T08:25:22.529391+00:00",
    "product_id": "b761256d-c0d2-4413-9fa5-8ab950ef69bf",
-   "updated_at": "2026-06-29T15:23:22.525951+00:00",
+   "updated_at": "2026-10-13T08:25:22.529391+00:00",
    "scalp_route": "balanced",
    "category_key": "shampoo",
    "shampoo_bucket": "normal",
@@ -21011,13 +20994,23 @@
   },
   {
    "thickness": "fine",
-   "created_at": "2026-06-27T12:36:27.979994+00:00",
+   "created_at": "2026-10-13T08:25:22.529391+00:00",
    "product_id": "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
-   "updated_at": "2026-06-27T12:36:27.979994+00:00",
+   "updated_at": "2026-10-13T08:25:22.529391+00:00",
    "scalp_route": "balanced",
    "category_key": "shampoo",
    "shampoo_bucket": "normal",
-   "cleansing_intensity": "gentle"
+   "cleansing_intensity": "regular"
+  },
+  {
+   "thickness": "normal",
+   "created_at": "2026-10-13T08:25:22.529391+00:00",
+   "product_id": "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
+   "updated_at": "2026-10-13T08:25:22.529391+00:00",
+   "scalp_route": "balanced",
+   "category_key": "shampoo",
+   "shampoo_bucket": "normal",
+   "cleansing_intensity": "regular"
   }
  ],
  "product_thickness_eligibility": [
@@ -21244,12 +21237,6 @@
    "category_key": "conditioner"
   },
   {
-   "thickness": "coarse",
-   "created_at": "2026-08-15T08:56:39.94203+00:00",
-   "product_id": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
-   "category_key": "shampoo"
-  },
-  {
    "thickness": "fine",
    "created_at": "2026-08-15T08:56:39.94203+00:00",
    "product_id": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
@@ -21316,8 +21303,8 @@
    "category_key": "leave_in"
   },
   {
-   "thickness": "fine",
-   "created_at": "2026-08-15T08:56:39.94203+00:00",
+   "thickness": "normal",
+   "created_at": "2026-10-13T08:25:22.529391+00:00",
    "product_id": "b761256d-c0d2-4413-9fa5-8ab950ef69bf",
    "category_key": "shampoo"
   },
@@ -21414,6 +21401,12 @@
   {
    "thickness": "fine",
    "created_at": "2026-08-15T08:56:39.94203+00:00",
+   "product_id": "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
+   "category_key": "shampoo"
+  },
+  {
+   "thickness": "normal",
+   "created_at": "2026-10-13T08:25:22.529391+00:00",
    "product_id": "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
    "category_key": "shampoo"
   }
@@ -21752,7 +21745,7 @@
    "price_eur": 22.9,
    "created_at": "2026-03-03T12:34:08.749089+00:00",
    "sort_order": 62,
-   "updated_at": "2026-10-03T11:48:40.137199+00:00",
+   "updated_at": "2026-10-12T02:52:35.562913+00:00",
    "description": "Urban Alchemy Repair (Silikone) ist ein Leave-in von Urban Alchemy, empfohlen für mittelstarkes Haar bei Proteinbedarf.",
    "category_key": "leave_in",
    "affiliate_link": "https://urban-alchemy.com/products/repair-revive-leave-in-spray-150-ml",
@@ -21760,7 +21753,7 @@
    "product_line_id": null,
    "lifecycle_status": "active",
    "net_content_unit": "ml",
-   "price_checked_at": "2026-10-03T11:38:37.884407+00:00",
+   "price_checked_at": "2026-10-12T02:52:35.442+00:00",
    "net_content_value": 150,
    "short_description": null,
    "suitable_concerns": [
@@ -21794,7 +21787,7 @@
    "price_eur": 32,
    "created_at": "2026-03-03T12:34:11.260258+00:00",
    "sort_order": 70,
-   "updated_at": "2026-10-03T11:48:40.137199+00:00",
+   "updated_at": "2026-10-12T02:51:36.187955+00:00",
    "description": "Olaplex No.6 Bond Smoother (Silikone) ist ein Leave-in von Olaplex, empfohlen für mittelstarkes Haar bei Performance-Pflege.",
    "category_key": "leave_in",
    "affiliate_link": "https://olaplex.de/products/olaplex-no-6-bond-smoother",
@@ -21802,7 +21795,7 @@
    "product_line_id": null,
    "lifecycle_status": "active",
    "net_content_unit": "ml",
-   "price_checked_at": "2026-10-03T11:38:36.80893+00:00",
+   "price_checked_at": "2026-10-12T02:51:35.983+00:00",
    "net_content_value": 100,
    "short_description": null,
    "suitable_concerns": [
@@ -22128,7 +22121,7 @@
   },
   {
    "id": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
-   "name": "Ultimate Shampoo",
+   "name": "L'Oréal Paris Elvital Glycolic Gloss Shampoo",
    "tags": [],
    "brand": "L'Oréal Paris",
    "origin": "user_submitted",
@@ -22141,7 +22134,7 @@
    "price_eur": 6.95,
    "created_at": "2026-07-03T14:18:11.388297+00:00",
    "sort_order": 0,
-   "updated_at": "2026-10-03T11:48:40.137199+00:00",
+   "updated_at": "2026-10-13T08:25:22.529391+00:00",
    "description": null,
    "category_key": "shampoo",
    "affiliate_link": "https://www.dm.de/p/d/1346429/l-oreal-paris-elvital-shampoo-glycolic-gloss",
@@ -22156,7 +22149,6 @@
    "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/191b2698129c8c1fe149203188724ee8d58173a8911ecfc31b26364a43a16cd3.webp",
    "purchase_link_status": "available",
    "suitable_thicknesses": [
-    "coarse",
     "fine",
     "normal"
    ],
@@ -22178,7 +22170,7 @@
    "price_eur": 8.95,
    "created_at": "2026-07-05T17:54:10.60653+00:00",
    "sort_order": 0,
-   "updated_at": "2026-10-05T02:37:15.170634+00:00",
+   "updated_at": "2026-10-12T02:37:53.413024+00:00",
    "description": null,
    "category_key": "conditioner",
    "affiliate_link": "https://www.mueller.de/p/pantene-pro-v-moisture-boost-pflegespuelung-PPN3150289/",
@@ -22186,7 +22178,7 @@
    "product_line_id": "129eb15a-bbe1-4054-9a8a-148ad27c14f4",
    "lifecycle_status": "active",
    "net_content_unit": "ml",
-   "price_checked_at": "2026-10-05T02:37:15.142+00:00",
+   "price_checked_at": "2026-10-12T02:37:53.383+00:00",
    "net_content_value": 200,
    "short_description": null,
    "suitable_concerns": [],
@@ -22197,7 +22189,7 @@
     "normal"
    ],
    "is_chaarlie_recommended": false,
-   "purchase_link_checked_at": "2026-10-05T02:37:15.142+00:00"
+   "purchase_link_checked_at": "2026-10-12T02:37:53.383+00:00"
   },
   {
    "id": "9b664b11-fd11-47e3-9b7e-76e34736b43e",
@@ -22216,7 +22208,7 @@
    "price_eur": 12.6,
    "created_at": "2026-03-03T12:34:05.588718+00:00",
    "sort_order": 52,
-   "updated_at": "2026-10-03T11:48:40.137199+00:00",
+   "updated_at": "2026-10-12T02:48:09.898139+00:00",
    "description": "Acina Hyaluron 2.0 (Silikone) ist ein Leave-in von Acina, empfohlen für feines Haar bei Feuchtigkeitsbedarf.",
    "category_key": "leave_in",
    "affiliate_link": "https://www.number-one.de/Alcina-Hyaluron-20-Spray-125-ml",
@@ -22224,7 +22216,7 @@
    "product_line_id": null,
    "lifecycle_status": "active",
    "net_content_unit": "ml",
-   "price_checked_at": "2026-10-03T11:38:34.545777+00:00",
+   "price_checked_at": "2026-10-12T02:48:09.819+00:00",
    "net_content_value": 125,
    "short_description": null,
    "suitable_concerns": [
@@ -22335,7 +22327,7 @@
    "price_eur": 3.99,
    "created_at": "2026-06-29T15:23:22.525951+00:00",
    "sort_order": 0,
-   "updated_at": "2026-10-03T11:48:40.137199+00:00",
+   "updated_at": "2026-10-13T08:25:22.529391+00:00",
    "description": null,
    "category_key": "shampoo",
    "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-syoss-shampoo-intense-fullness/p/4015100860429/",
@@ -22350,7 +22342,7 @@
    "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/1db3778ea171f61666010dd6111d1dd93a43a8a1a76f277c379c1b9ad5b1cbf1.webp",
    "purchase_link_status": "available",
    "suitable_thicknesses": [
-    "fine"
+    "normal"
    ],
    "is_chaarlie_recommended": false,
    "purchase_link_checked_at": "2026-06-29T13:18:07+00:00"
@@ -22408,7 +22400,7 @@
    "price_eur": 7.99,
    "created_at": "2026-03-03T12:34:44.130148+00:00",
    "sort_order": 163,
-   "updated_at": "2026-10-03T11:48:40.137199+00:00",
+   "updated_at": "2026-10-12T02:46:20.521059+00:00",
    "description": "Garnier Fructis Sleek & Stay Öl (Silikone) ist ein Öle von Garnier, empfohlen für dickes Haar bei trocken-oel.",
    "category_key": "oil",
    "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-sleek-und-stay-heat-activated-serum/p/3600542638852",
@@ -22416,7 +22408,7 @@
    "product_line_id": "adc10cac-41cd-4742-b225-47e4f092bb22",
    "lifecycle_status": "active",
    "net_content_unit": "ml",
-   "price_checked_at": "2026-10-03T11:36:58.753+00:00",
+   "price_checked_at": "2026-10-12T02:46:20.376+00:00",
    "net_content_value": 50,
    "short_description": null,
    "suitable_concerns": [
@@ -22519,7 +22511,7 @@
    "price_eur": 8.95,
    "created_at": "2026-10-04T08:37:19.548173+00:00",
    "sort_order": 0,
-   "updated_at": "2026-10-07T09:52:51.582864+00:00",
+   "updated_at": "2026-10-12T02:37:22.190448+00:00",
    "description": null,
    "category_key": "bondbuilder",
    "affiliate_link": "https://www.mueller.de/p/elvital-pre-shampoo-bond-repair-2868614/",
@@ -22527,7 +22519,7 @@
    "product_line_id": "432f0dc7-2fbc-4208-b0ff-78876c248fd9",
    "lifecycle_status": "active",
    "net_content_unit": "ml",
-   "price_checked_at": "2026-10-03T13:37:52+00:00",
+   "price_checked_at": "2026-10-12T02:37:22.147+00:00",
    "net_content_value": 200,
    "short_description": null,
    "suitable_concerns": [],
@@ -22539,7 +22531,7 @@
     "coarse"
    ],
    "is_chaarlie_recommended": true,
-   "purchase_link_checked_at": "2026-10-03T13:37:52+00:00"
+   "purchase_link_checked_at": "2026-10-12T02:37:22.147+00:00"
   },
   {
    "id": "e6896862-523b-42b3-967d-41cbd16acf64",
@@ -22558,7 +22550,7 @@
    "price_eur": 9.95,
    "created_at": "2026-03-03T12:33:55.50179+00:00",
    "sort_order": 67,
-   "updated_at": "2026-10-03T11:48:40.137199+00:00",
+   "updated_at": "2026-10-12T02:55:41.033728+00:00",
    "description": "Neqi Moisture Mystery (Silikone) ist ein Leave-in von Neqi, empfohlen für mittelstarkes Haar bei Feuchtigkeitsbedarf.",
    "category_key": "leave_in",
    "affiliate_link": "https://www.dm.de/p/d/1455206/neqi-leave-in-creme-moisture-mystery",
@@ -22566,7 +22558,7 @@
    "product_line_id": null,
    "lifecycle_status": "active",
    "net_content_unit": "ml",
-   "price_checked_at": "2026-10-03T11:38:57.415+00:00",
+   "price_checked_at": "2026-10-12T02:55:40.928+00:00",
    "net_content_value": 200,
    "short_description": null,
    "suitable_concerns": [
@@ -22720,7 +22712,7 @@
    "price_eur": 3.95,
    "created_at": "2026-06-27T12:36:27.979994+00:00",
    "sort_order": 0,
-   "updated_at": "2026-10-03T11:48:40.137199+00:00",
+   "updated_at": "2026-10-13T08:25:22.529391+00:00",
    "description": null,
    "category_key": "shampoo",
    "affiliate_link": "https://www.dm.de/p/d/3047032/syoss-shampoo-intense-volume",
@@ -22735,7 +22727,8 @@
    "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/87f8cd2ff69046d91f4457365d1f85287a88a2fcc32c557950c30c651d3af352.webp",
    "purchase_link_status": "available",
    "suitable_thicknesses": [
-    "fine"
+    "fine",
+    "normal"
    ],
    "is_chaarlie_recommended": false,
    "purchase_link_checked_at": "2026-06-27T00:00:00+00:00"

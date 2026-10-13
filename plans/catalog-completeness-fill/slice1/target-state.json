@@ -1,5 +1,5 @@
 {
-  "fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+  "fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
   "summary": {
     "groups": {
       "A-leave-in-heat": {
@@ -5209,7 +5209,7 @@
     ]
   },
   "preimage": {
-    "captured_at": "2026-10-11T13:48:49.533788+00:00",
+    "captured_at": "2026-10-13T08:44:08.15786+00:00",
     "stamps": {
       "products": [
         [
@@ -5242,11 +5242,11 @@
         ],
         [
           "45f4fe15-c439-476d-8a86-3b2aac5053bd",
-          "2026-10-03T11:48:40.137199+00:00"
+          "2026-10-12T02:52:35.562913+00:00"
         ],
         [
           "4e99706a-2232-4ee6-ba1b-9ca1029a7364",
-          "2026-10-03T11:48:40.137199+00:00"
+          "2026-10-12T02:51:36.187955+00:00"
         ],
         [
           "4f67cb6d-4b28-490b-9817-e8fc8e91b010",
@@ -5282,15 +5282,15 @@
         ],
         [
           "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
-          "2026-10-03T11:48:40.137199+00:00"
+          "2026-10-13T08:25:22.529391+00:00"
         ],
         [
           "931892fb-cc29-4e50-b402-6aae0a494389",
-          "2026-10-05T02:37:15.170634+00:00"
+          "2026-10-12T02:37:53.413024+00:00"
         ],
         [
           "9b664b11-fd11-47e3-9b7e-76e34736b43e",
-          "2026-10-03T11:48:40.137199+00:00"
+          "2026-10-12T02:48:09.898139+00:00"
         ],
         [
           "9e5da870-1ab8-40f3-a74c-7088cbb31b2f",
@@ -5302,7 +5302,7 @@
         ],
         [
           "b761256d-c0d2-4413-9fa5-8ab950ef69bf",
-          "2026-10-03T11:48:40.137199+00:00"
+          "2026-10-13T08:25:22.529391+00:00"
         ],
         [
           "ba326dab-99d8-4b82-a1c5-de9aee2578a4",
@@ -5310,7 +5310,7 @@
         ],
         [
           "c574ee6f-ad22-45c0-b936-57b847d93433",
-          "2026-10-03T11:48:40.137199+00:00"
+          "2026-10-12T02:46:20.521059+00:00"
         ],
         [
           "c6e80f39-20ba-401e-b041-6ee7c89a5996",
@@ -5322,11 +5322,11 @@
         ],
         [
           "e5fd7ff9-f7d7-44d5-a600-f44bdec939a8",
-          "2026-10-07T09:52:51.582864+00:00"
+          "2026-10-12T02:37:22.190448+00:00"
         ],
         [
           "e6896862-523b-42b3-967d-41cbd16acf64",
-          "2026-10-03T11:48:40.137199+00:00"
+          "2026-10-12T02:55:41.033728+00:00"
         ],
         [
           "e781ca9e-886d-40a1-bfe1-48177cfbf381",
@@ -5338,7 +5338,7 @@
         ],
         [
           "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
-          "2026-10-03T11:48:40.137199+00:00"
+          "2026-10-13T08:25:22.529391+00:00"
         ]
       ],
       "product_leave_in_specs": [
@@ -6586,33 +6586,33 @@
       "product_shampoo_specs": [
         [
           "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
-          "coarse",
-          "normal",
-          "2026-07-03T14:18:11.388297+00:00"
-        ],
-        [
-          "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
           "fine",
           "normal",
-          "2026-07-03T14:18:11.388297+00:00"
+          "2026-10-13T08:25:22.529391+00:00"
         ],
         [
           "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
           "normal",
           "normal",
-          "2026-07-03T14:18:11.388297+00:00"
+          "2026-10-13T08:25:22.529391+00:00"
         ],
         [
           "b761256d-c0d2-4413-9fa5-8ab950ef69bf",
-          "fine",
           "normal",
-          "2026-06-29T15:23:22.525951+00:00"
+          "normal",
+          "2026-10-13T08:25:22.529391+00:00"
         ],
         [
           "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
           "fine",
           "normal",
-          "2026-06-27T12:36:27.979994+00:00"
+          "2026-10-13T08:25:22.529391+00:00"
+        ],
+        [
+          "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
+          "normal",
+          "normal",
+          "2026-10-13T08:25:22.529391+00:00"
         ]
       ],
       "product_conditioner_specs": [
@@ -7068,12 +7068,6 @@
         [
           "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
           "shampoo",
-          "coarse",
-          "2026-08-15T08:56:39.94203+00:00"
-        ],
-        [
-          "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
-          "shampoo",
           "fine",
           "2026-08-15T08:56:39.94203+00:00"
         ],
@@ -7140,8 +7134,8 @@
         [
           "b761256d-c0d2-4413-9fa5-8ab950ef69bf",
           "shampoo",
-          "fine",
-          "2026-08-15T08:56:39.94203+00:00"
+          "normal",
+          "2026-10-13T08:25:22.529391+00:00"
         ],
         [
           "ba326dab-99d8-4b82-a1c5-de9aee2578a4",
@@ -7220,6 +7214,12 @@
           "shampoo",
           "fine",
           "2026-08-15T08:56:39.94203+00:00"
+        ],
+        [
+          "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
+          "shampoo",
+          "normal",
+          "2026-10-13T08:25:22.529391+00:00"
         ]
       ],
       "product_concern_eligibility": [
@@ -9531,7 +9531,7 @@
       }
     ]
   },
-  "garnier_disposition_source_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+  "garnier_disposition_source_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
   "blocked": [
     {
       "item": "k18 protocol cadence (B3 (Nick, 2026-10-09))",
@@ -9578,248 +9578,248 @@
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:010cf825-4892-4f78-bf20-26ad72122c60",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "010cf825-4892-4f78-bf20-26ad72122c60",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:04a83f16-e610-4883-b44d-038d3a343787",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "04a83f16-e610-4883-b44d-038d3a343787",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:21a94166-3813-4c0f-8912-508fb8f704f1",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "21a94166-3813-4c0f-8912-508fb8f704f1",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:2490911e-1c8c-413b-924c-0604f3f922e0",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "2490911e-1c8c-413b-924c-0604f3f922e0",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:2c809d0d-fbce-435a-bbde-aa4270aaf48d",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "2c809d0d-fbce-435a-bbde-aa4270aaf48d",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:35a372b6-c7ef-45cb-be0b-99cef476f247",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "35a372b6-c7ef-45cb-be0b-99cef476f247",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:45f4fe15-c439-476d-8a86-3b2aac5053bd",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "45f4fe15-c439-476d-8a86-3b2aac5053bd",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:4e99706a-2232-4ee6-ba1b-9ca1029a7364",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "4e99706a-2232-4ee6-ba1b-9ca1029a7364",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:4f67cb6d-4b28-490b-9817-e8fc8e91b010",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "4f67cb6d-4b28-490b-9817-e8fc8e91b010",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:55727898-2a5e-4f01-ace1-bd91521d98ab",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "55727898-2a5e-4f01-ace1-bd91521d98ab",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:5f4f1300-bc15-4ce0-9ed8-035feb606bde",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "5f4f1300-bc15-4ce0-9ed8-035feb606bde",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:694c4568-9235-4893-ab54-96a75b3c4f27",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "694c4568-9235-4893-ab54-96a75b3c4f27",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:6b01025d-9e72-4514-b42e-bbb6065fbe1c",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "6b01025d-9e72-4514-b42e-bbb6065fbe1c",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:7fb31d10-ff21-410b-9dc2-2d1ad34b9130",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "7fb31d10-ff21-410b-9dc2-2d1ad34b9130",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:88c230c5-1020-4648-a10e-c2a1e8c87e0e",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:931892fb-cc29-4e50-b402-6aae0a494389",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "931892fb-cc29-4e50-b402-6aae0a494389",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:9b664b11-fd11-47e3-9b7e-76e34736b43e",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "9b664b11-fd11-47e3-9b7e-76e34736b43e",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:9e5da870-1ab8-40f3-a74c-7088cbb31b2f",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "9e5da870-1ab8-40f3-a74c-7088cbb31b2f",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:9f94c225-61ec-455d-b303-f39e885e222a",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "9f94c225-61ec-455d-b303-f39e885e222a",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:b761256d-c0d2-4413-9fa5-8ab950ef69bf",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "b761256d-c0d2-4413-9fa5-8ab950ef69bf",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:ba326dab-99d8-4b82-a1c5-de9aee2578a4",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "ba326dab-99d8-4b82-a1c5-de9aee2578a4",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:c574ee6f-ad22-45c0-b936-57b847d93433",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "c574ee6f-ad22-45c0-b936-57b847d93433",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:c6e80f39-20ba-401e-b041-6ee7c89a5996",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "c6e80f39-20ba-401e-b041-6ee7c89a5996",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:e5cfad78-ea22-49a5-911a-cb1f3109fa1c",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "e5cfad78-ea22-49a5-911a-cb1f3109fa1c",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:e5fd7ff9-f7d7-44d5-a600-f44bdec939a8",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "e5fd7ff9-f7d7-44d5-a600-f44bdec939a8",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:e6896862-523b-42b3-967d-41cbd16acf64",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "e6896862-523b-42b3-967d-41cbd16acf64",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:e781ca9e-886d-40a1-bfe1-48177cfbf381",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:ea88a333-b11c-45c3-bbda-c51f912ee56f",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "ea88a333-b11c-45c3-bbda-c51f912ee56f",
       "reviewed_by": "nick"
     },
     {
       "batch_id": "S5R-06-catalog-completeness-slice1",
       "product_key": "catalog-completeness-slice1:f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
-      "batch_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
-      "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+      "batch_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
+      "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
       "product_id": "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
       "reviewed_by": "nick"
     }

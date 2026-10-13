@@ -1,9 +1,9 @@
 {
   "schema": "catalog-completeness-fill-slice1-artifact-manifest-v1",
   "generator": "plans/catalog-completeness-fill/slice1/generate.ts",
-  "content_fingerprint": "bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823",
+  "content_fingerprint": "565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa",
   "inputs": {
-    "plans/catalog-completeness-fill/slice1/prestate.json": "327dd431052472ae33976f6f950ac1b070162fcc06119ab822006e086106bd1f",
+    "plans/catalog-completeness-fill/slice1/prestate.json": "e60141c77c1138d272679980d71ecf0fb37631cb2f91b9602d989efc33e4169a",
     "plans/catalog-completeness-fill/slice1/fixtures/prod-schema-2026-10-11.json": "440040ad2044c97cccdda368596bbc421b69a5dc2e6c86212cad2ff1bde010c5",
     "plans/catalog-completeness-fill/research/r1-leave-in-heat/findings.json": "b5cb21fea5269a24a8db023c950f5486be664f45a201f2ca5c42072f1e84b196",
     "plans/catalog-completeness-fill/research/r4-user-submitted-14/proposal/protocol-rows.json": "7e4e860a9309904cbe23131fb02ecaddfdbbed4462742fff14f6faa0c9156c87",
@@ -17,10 +17,10 @@
     "plans/catalog-completeness-fill/slice1/inputs/neqi-rosemary-scalp-care.json": "ef770bc09c0b9c3c28d01c68e31b32ace439f5a1f9a364d5013849baeb662d47"
   },
   "outputs": {
-    "plans/catalog-completeness-fill/slice1/target-state.json": "cbdbef0b8c292a8a3680e409a3801007772fd936f1a11fa12fcb12d2008ff2f2",
-    "supabase/migrations/20261013130000_catalog_completeness_fill_slice1.sql": "695be2f8ae77740b44a4c32359d56ce7886615f4556c4c662f43ffbcf4e55f68",
-    "plans/catalog-completeness-fill/slice1/rollback.sql": "aa8c7940636433f404d29596a0422cc845d71ae2e6c2920d1eccb67f6d8ddbe0",
-    "plans/catalog-completeness-fill/slice1/verify.sql": "d706d76926ab02a7d6f7570139ec5b85d7053bac97b3f61c2a4b09c0861be453"
+    "plans/catalog-completeness-fill/slice1/target-state.json": "884249fd8c1213b76ef0cd1cd9e443a42344731813a888b56635d3a6d569b9fc",
+    "supabase/migrations/20261013130000_catalog_completeness_fill_slice1.sql": "45698db87a8d97d862d35c771e9014b74064adef1285f549c955d75c302061a4",
+    "plans/catalog-completeness-fill/slice1/rollback.sql": "c143c000e9dc51a7cbbd0b7025b052aae76139287dd0ff3402549029b98ec3ff",
+    "plans/catalog-completeness-fill/slice1/verify.sql": "521ec82bf1cb42d0fceb649a5dae613204654b0c4dcfecd6741628a44cb19bc6"
   },
-  "combined_sha256": "d25413b2ff1a41c0141424a22177f1f5b071598268e0702dc26074a4887d0ae7"
+  "combined_sha256": "15e9ea852ff97a7554e5657548354a9f567a82794486e1844c94925e65011e00"
 }

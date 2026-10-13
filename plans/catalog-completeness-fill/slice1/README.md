@@ -7,9 +7,9 @@ Status: **prepared and rehearsed, NOT applied.** Production apply needs Nick's a
 | Migration | `supabase/migrations/20261013130000_catalog_completeness_fill_slice1.sql` (sorts after main's latest `20261013120000`) |
 | Batch id (ledger receipts + evidence) | `S5R-06-catalog-completeness-slice1` |
 | Disposition batch (Garnier) | `S5-24-catalog-completeness-slice1` |
-| Content fingerprint | `bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823` |
-| Artifact manifest combined sha256 | `d25413b2ff1a41c0141424a22177f1f5b071598268e0702dc26074a4887d0ae7` |
-| Prestate capture | `2026-10-11T13:48:49.533788Z` (read-only, prod `pqdkhefxsxkyeqelqegq`) |
+| Content fingerprint | `565d85db8842b3c22fe37bbdcbfc051189f3bdd61531f54b62759d8d3e4821fa` |
+| Artifact manifest combined sha256 | `15e9ea852ff97a7554e5657548354a9f567a82794486e1844c94925e65011e00` |
+| Prestate capture | `2026-10-13T08:44:08.15786Z` (read-only re-capture after #677 + price audit; prod `pqdkhefxsxkyeqelqegq`) |
 | Schema capture | `2026-10-11T13:52:02.549733Z` (`fixtures/prod-schema-2026-10-11.json`) |
 | Template capture (Codex F01) | `2026-10-11T14:29:45.064989Z`: `application_guidance_protocols` rows of `scalp.rinse-off.v2`, the table's schema + `reject_active_application_content_mutation()`, and the two rinse-off peeling pointers (read-only; ledger re-checked: 376 rows, unchanged) |
 
@@ -105,7 +105,7 @@ The migration moves both member rows to `scalp_care` in the same transaction (un
 | OGX Bond Protein Repair | Rhythmus | – | „Ein- bis zweimal pro Woche anwenden." | ogxbeauty.co.uk (B2) |
 | L'Oréal Midnight Serum (Öl-Zeile) | Status | aktiv, empfohlen | ausgelaufen, ersetzt durch die Leave-in-Zeile; Barcode 3600524135805 → Leave-in | loreal-paris.de, dm |
 | Garnier Fructis Sleek & Stay | Empfehlung | empfohlen | nicht mehr im Plan (an Styling übergeben) | garnier.de |
-| Syoss Fullness, Syoss Volume, Elvital Ultimate Shampoo | Anwendung | keine (Scan: „Noch nicht einschätzbar") | Standard-Shampoo-Anleitung | Hersteller / dm |
+| Syoss Fullness, Syoss Volume, L'Oréal Elvital Glycolic Gloss Shampoo (ehem. „Ultimate Shampoo") | Anwendung | keine (Scan: „Noch nicht einschätzbar") | Standard-Shampoo-Anleitung | Hersteller / dm |
 | Jean&Len Colorglow, John Frieda, Neqi Diamond Glass, Pantene Moisture Boost, GLISS Liquid Silk | Anwendung | keine | Standard-Spülungs-Anleitung | Hersteller / Müller |
 | Pantene Moisture Boost Pflegespülung | Barcode | 08700216939140 (800-ml-Pumpe) | 8700216939508 (200 ml) | dm (U3) |
 | AUSSIE SOS Leave-In | Leave-in-Profil | Booster, kein Pflegeprofil | ersetzt Spülung, ausgewogen, normal/kräftig; Nach-dem-Waschen-Anleitung | Leave-In v1.1 (U2), dm |
@@ -140,7 +140,9 @@ The 18 rehearsal tests cover:
 - Stage-3: Group A pre-heat and Bali post-wash only; Group D unknown → known; Neqi scalp guidance;
 - the prerequisite chain incl. #660, both #660 orders, and the F04 refusals.
 
-## Apply (only after Nick approves fingerprint `bfc8bb73…2c823`)
+## Apply (only after Nick approves fingerprint `565d85db…21fa`)
+
+Note: product rows include price-audit columns, so the weekly price audit invalidates the preimage (the migration then refuses, fail-closed). Re-capture + regenerate immediately before applying if a price-audit run happened since the capture.
 
 1. Confirm the prod ledger still matches. Step 2 of #660 may be applied before or after this migration.
 2. Apply the migration. Run `verify.sql` and expect zero rows.
