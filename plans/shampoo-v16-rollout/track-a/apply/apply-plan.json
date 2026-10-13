@@ -273,35 +273,6 @@
     "coarse"
    ]
   },
-  "7e95671b-41a7-4f5c-9188-e535e46678ba": {
-   "slot": "A50",
-   "name": "Sebamed Anti Schuppen Plus",
-   "rows": [
-    [
-     "fine",
-     "schuppen",
-     "dandruff",
-     "regular"
-    ],
-    [
-     "normal",
-     "schuppen",
-     "dandruff",
-     "regular"
-    ],
-    [
-     "coarse",
-     "schuppen",
-     "dandruff",
-     "regular"
-    ]
-   ],
-   "suitable": [
-    "fine",
-    "normal",
-    "coarse"
-   ]
-  },
   "b000d235-1fc6-434c-9ba1-f1207d36cded": {
    "slot": "A01",
    "name": "Balea 2 in 1 Urea 5%",
@@ -3264,42 +3235,6 @@
    "notes": []
   },
   {
-   "slot": "A50",
-   "name": "Sebamed Anti Schuppen Plus",
-   "productId": "7e95671b-41a7-4f5c-9188-e535e46678ba",
-   "recommended": true,
-   "recommendedAfter": true,
-   "old": [
-    [
-     "fine",
-     "dehydriert-fettig",
-     "oily",
-     "regular"
-    ]
-   ],
-   "new": [
-    [
-     "fine",
-     "schuppen",
-     "dandruff",
-     "regular"
-    ],
-    [
-     "normal",
-     "schuppen",
-     "dandruff",
-     "regular"
-    ],
-    [
-     "coarse",
-     "schuppen",
-     "dandruff",
-     "regular"
-    ]
-   ],
-   "notes": []
-  },
-  {
    "slot": "A51",
    "name": "Sebamed Urea 5%",
    "productId": "51a0b647-2794-49a3-96e1-e7695432561e",
@@ -4094,149 +4029,24 @@
    "notes": []
   }
  ],
- "coverage": {
-  "normalxnormal": [
-   "A02",
-   "A04",
-   "A08",
-   "A12",
-   "A14",
-   "A15b",
-   "A27",
-   "A28",
-   "A29",
-   "A30",
-   "A31",
-   "A33",
-   "A34",
-   "A36",
-   "A38",
-   "A39",
-   "A42",
-   "A43",
-   "A52",
-   "G04",
-   "G08",
-   "G09",
-   "G11",
-   "G13",
-   "U4"
-  ],
-  "finexirritationen": [
-   "A01",
-   "A03",
-   "A05",
-   "A11",
-   "A40",
-   "A51",
-   "G03",
-   "G05"
-  ],
-  "normalxirritationen": [
-   "A01",
-   "A03",
-   "A05",
-   "A11",
-   "A40",
-   "A51",
-   "G03",
-   "G05"
-  ],
-  "coarsexirritationen": [
-   "A01",
-   "A03",
-   "A05",
-   "A11",
-   "A40",
-   "A51",
-   "G03",
-   "G05"
-  ],
-  "finexnormal": [
-   "A02",
-   "A04",
-   "A12",
-   "A27",
-   "A30",
-   "A31",
-   "A39",
-   "A42",
-   "A43",
-   "A52"
-  ],
-  "coarsexnormal": [
-   "A35",
-   "U6"
-  ],
-  "finexschuppen": [
-   "A06",
-   "A16",
-   "A37",
-   "A41",
-   "A44",
-   "A49",
-   "A50",
-   "G01",
-   "G02"
-  ],
-  "normalxschuppen": [
-   "A06",
-   "A16",
-   "A37",
-   "A41",
-   "A44",
-   "A49",
-   "A50",
-   "G01",
-   "G02"
-  ],
-  "coarsexschuppen": [
-   "A06",
-   "A16",
-   "A37",
-   "A41",
-   "A44",
-   "A49",
-   "A50",
-   "G01",
-   "G02"
-  ],
-  "finextrocken": [
-   "A01",
-   "A03",
-   "A11",
-   "A40",
-   "A51"
-  ],
-  "normalxtrocken": [
-   "A01",
-   "A03",
-   "A11",
-   "A40",
-   "A51"
-  ],
-  "coarsextrocken": [
-   "A01",
-   "A03",
-   "A11",
-   "A40",
-   "A51"
-  ],
-  "finexdehydriert-fettig": [
-   "A10",
-   "G06",
-   "U1"
-  ],
-  "normalxdehydriert-fettig": [
-   "A10",
-   "G06",
-   "U1"
-  ],
-  "coarsexdehydriert-fettig": [
-   "A10",
-   "A29",
-   "G06",
-   "U1"
-  ]
- }
+ "coverageBestSteps": {
+  "finexnormal": 0,
+  "finexdehydriert-fettig": 0,
+  "finexschuppen": 0,
+  "finexirritationen": 0,
+  "finextrocken": 1,
+  "normalxnormal": 0,
+  "normalxdehydriert-fettig": 0,
+  "normalxschuppen": 0,
+  "normalxirritationen": 0,
+  "normalxtrocken": 1,
+  "coarsexnormal": 1,
+  "coarsexdehydriert-fettig": 0,
+  "coarsexschuppen": 0,
+  "coarsexirritationen": 0,
+  "coarsextrocken": 1
+ },
+ "held": [
+  "A50"
+ ]
 }

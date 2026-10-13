@@ -1,9 +1,10 @@
 """Track A run 2 (locked v1.6.2): conservative lane merge (same P0 rules as consolidate.py), then the
 delta against run 1 (v1.6) — the state Nick reviewed on 2026-10-12 — so only changed lines go back to him.
-Usage: python3 consolidate_run2.py <kits-root> [W1 W2 ...]"""
+Usage: python3 consolidate_run2.py [<kits-root>] [W1 W2 ...]  (default: the committed run-2 archive)
+As a library (runpy) it only computes; the delta report is written only when run as a script."""
 import glob,io,json,os,sys,runpy,contextlib
 from collections import defaultdict
-KR=sys.argv[1]; BATCHES=sys.argv[2:] or ["W1","W2","W3","W4"]
+KR=sys.argv[1] if len(sys.argv)>1 else "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2"; BATCHES=sys.argv[2:] or ["W1","W2","W3","W4"]
 D="data/research/shampoo-inci/v1.6-track-a"
 TIER={"not_suited":0,"acceptable":1,"ideal":2}; WEIGHT={"light":0,"moderate":1,"heavy":2}
 T7={"fine":{"light"},"normal":{"light","moderate"},"coarse":{"heavy"}}
@@ -34,7 +35,8 @@ for b in BATCHES:
                           "rows":rows,"flags":flags,"combination":comb,"deepCleaner":dc}
 # run 1 (v1.6) for the delta
 with contextlib.redirect_stdout(io.StringIO()):
-    sys_argv=sys.argv; sys.argv=["x",D]; r1=runpy.run_path("plans/shampoo-v16-rollout/track-a/consolidate.py"); sys.argv=sys_argv
+    sys_argv=sys.argv; sys.argv=["x",D]; os.environ["CONSOLIDATE_NO_WRITE"]="1"
+    r1=runpy.run_path("plans/shampoo-v16-rollout/track-a/consolidate.py"); sys.argv=sys_argv; os.environ.pop("CONSOLIDATE_NO_WRITE",None)
 f1={f["slot"]:f for f in r1["final"].values()}
 rec=r1["recommended"]
 out=[]
@@ -48,7 +50,8 @@ for s,f in sorted(final.items()):
     entry={"slot":s,"name":name,"recommended":bool(rec.get(f["productId"])),"needsResearch":f["needsResearch"],"needsResearchLanes":f["needsResearchLanes"],
            "run1NeedsResearch":(o["needsResearch"] if o else "not researched"),"delta":ch,"combination":f["combination"],"combinationRun1":comb_old,"laneFlags":f["flags"]}
     if ch["added"] or ch["removed"] or ch["changed"] or f["needsResearch"]!=(o["needsResearch"] if o else None) or f["combination"]!=comb_old: out.append(entry)
-json.dump({"batches":BATCHES,"products":len(final),"changed":out},open(f"{KR}/run2-delta.json","w"),indent=1,default=str,ensure_ascii=False)
+if __name__=="__main__" and os.environ.get("CONSOLIDATE_NO_WRITE")!="1":
+    json.dump({"batches":BATCHES,"products":len(final),"changed":out},open(f"{KR}/run2-delta.json","w"),indent=1,default=str,ensure_ascii=False)
 print(f"products {len(final)}; changed vs run 1: {len(out)}")
 for e in out:
     d=e["delta"]; print(f"{e['slot']} {'R' if e['recommended'] else '-'} {e['name'][:38]:38} +{len(d['added'])} -{len(d['removed'])} ~{len(d['changed'])} nr:{e['run1NeedsResearch']}->{e['needsResearch']} comb:{e['combinationRun1']}->{e['combination']}")

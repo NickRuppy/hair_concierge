@@ -113,7 +113,8 @@ cov = {"before_any": coverage(before, False), "after_any": coverage(after, False
 
 out = {"products": len(final), "adjudications": adjudications, "diff": diff,
        "coverage": {k: {f"{c[0]}×{c[1]}": n for c, n in sorted(v.items())} for k, v in cov.items()}}
-json.dump(out, open(os.path.join(ROOT, "consolidation.json"), "w"), indent=1, default=str)
+if os.environ.get("CONSOLIDATE_NO_WRITE") != "1":
+    json.dump(out, open(os.path.join(ROOT, "consolidation.json"), "w"), indent=1, default=str)
 print(f"products {len(final)}; adjudications {len(adjudications)}; needs_research {sum(1 for f in final.values() if f['needsResearch'])}")
 for th in ["fine", "normal", "coarse"]:
     print(th, {r: (cov['before_any'].get((th, r), 0), cov['after_any'].get((th, r), 0), cov['after_green_t7'].get((th, r), 0))
