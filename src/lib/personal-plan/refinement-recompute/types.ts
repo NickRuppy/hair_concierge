@@ -95,6 +95,18 @@ export type Stage3RecomputeIntentInput = {
   reviewBundles: readonly Stage3DecisionReviewBundle[]
   /** The routine version currently active for the person. */
   routine: RoutinePayloadV1
+  /**
+   * Catalogue-change lane only: planned products that no longer fit their slot.
+   * Their subjects are re-picked to the authority's next-best product (Nick Q8).
+   */
+  repickProductIds?: readonly string[]
+}
+
+export type Stage3RecomputeRepick = {
+  subjectKey: string
+  fromProductId: string
+  /** `null`: no buyable next-best product — the slot becomes a visible gap. */
+  toProductId: string | null
 }
 
 /**
@@ -123,6 +135,8 @@ export type Stage3RecomputeIntentPlan = {
   /** In evaluation order; safe to hand to `resolveDecisions` as a batch. */
   intents: Stage3AuthoritySemanticIntent[]
   blocked: Stage3RecomputeBlockedSubject[]
+  /** Present only when `repickProductIds` was given. */
+  repicked?: Stage3RecomputeRepick[]
 }
 
 /**
