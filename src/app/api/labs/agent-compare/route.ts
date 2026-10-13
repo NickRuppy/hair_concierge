@@ -1,3 +1,4 @@
+import { isLocalDevLoginHost } from "@/lib/dev/local-login"
 import { DEFAULT_AGENT_COMPARE_TOOL_LOOP_VARIANT } from "@/lib/agent/compare/tool-loop-variants"
 import type {
   AgentCompareUserOption,
@@ -138,13 +139,12 @@ export async function handleAgentCompareGetRequest(
   }
 
   try {
-    const [users, selectedUser] = await Promise.all([
-      deps.listEligibleCompareUsers(),
-      (async () => {
-        const userId = requestUrl.searchParams.get("userId")?.trim()
-        return userId ? deps.loadCompareUserSnapshot(userId) : null
-      })(),
-    ])
+    const users = await deps.listEligibleCompareUsers()
+    const userId = requestUrl.searchParams.get("userId")?.trim()
+    if (userId && !users.some((user) => user.id === userId)) {
+      return NextResponse.json({ error: "Nur Testkonten sind erlaubt." }, { status: 403 })
+    }
+    const selectedUser = userId ? await deps.loadCompareUserSnapshot(userId) : null
 
     return NextResponse.json({ users, selectedUser })
   } catch (error) {
@@ -184,6 +184,11 @@ export async function handleAgentCompareRequest(
         },
         { status: 400 },
       )
+    }
+
+    const users = await deps.listEligibleCompareUsers()
+    if (!users.some((user) => user.id === parsed.data.userId)) {
+      return NextResponse.json({ error: "Nur Testkonten sind erlaubt." }, { status: 403 })
     }
 
     const prompt = turns.at(-1) ?? ""
@@ -270,10 +275,17 @@ export async function handleAgentCompareRequest(
 }
 
 export async function GET(request: Request) {
+  if (!isLocalDevLoginHost(request.headers.get("host"), request)) return createDevOnlyResponse()
   return handleAgentCompareGetRequest(new URL(request.url))
 }
 
 export async function POST(request: Request) {
+  if (
+    process.env.NODE_ENV !== "development" ||
+    !isLocalDevLoginHost(request.headers.get("host"), request)
+  ) {
+    return createDevOnlyResponse()
+  }
   let body: unknown
   try {
     body = await request.json()

@@ -1,8 +1,10 @@
+// fit-verdict spec §1/§7b, ruled 2026-10-12: web labels and actions.
 import assert from "node:assert/strict"
 import test from "node:test"
 import React, { type ReactElement, type ReactNode } from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 
+import { ScanMaskedAlternatives } from "../src/components/scan/scan-masked-alternatives"
 import { ScanResultCard } from "../src/components/scan/scan-result-card"
 import {
   ScanAlternativesList,
@@ -139,10 +141,10 @@ test("R3: the banner shows verdictTitle for in_catalog and headline for not_need
   const inCatalog = renderToStaticMarkup(
     <ScanVerdictSections result={SCAN_PARITY_PREMIUM_RESULT} />,
   )
-  assert.ok(inCatalog.includes("Passt nicht zu deinem Haar"))
-  assert.ok(inCatalog.includes("1 von 3 Zielbereichen getroffen"))
-  // `verdictLabel` is the pill copy elsewhere — the banner never uses it.
-  assert.ok(!inCatalog.includes(">Passt nicht<"))
+  assert.ok(inCatalog.includes("Passt nicht"))
+  assert.ok(inCatalog.includes("Für dein Haar eher schwer"))
+  // The ruled label is identical in banner and verdict pill.
+  assert.ok(inCatalog.includes(">Passt nicht<"))
 
   const notNeeded = renderToStaticMarkup(
     <ScanVerdictSections result={SCAN_PARITY_NOT_NEEDED_RESULT} />,
@@ -281,7 +283,7 @@ test("R8: the re-scan link stays last, and the alternatives list is inert withou
   )
   // The identity and the verdict pill still read; only the affordances are gone.
   assert.ok(readOnlyMarkup.includes("Lab Shampoo Gamma"))
-  assert.ok(readOnlyMarkup.includes("Passt mit Einschränkung"))
+  assert.ok(readOnlyMarkup.includes("Alternative · passt bedingt"))
   assert.ok(!readOnlyMarkup.includes("Kaufen"))
 })
 
@@ -297,4 +299,39 @@ test("without a title override the scan header is unchanged; the override is coc
   assert.ok(titled.includes(">Marke Linie Name</h2>"))
   // The composed title already names the brand; the sub-line keeps only the category.
   if (product.brand) assert.ok(!titled.includes(`${product.brand} · `))
+})
+
+test("scanner recommends the first supportive pick without an Alternative prefix when no Passt exists", () => {
+  const alternatives = SCAN_PARITY_ALTERNATIVES.map((alternative) => ({
+    ...alternative,
+    verdict: "supportive" as const,
+    verdictLabel: "Passt bedingt",
+    reasonLines: ["Für dein Haar eher schwer"],
+  }))
+  const markup = renderToStaticMarkup(<ScanAlternativesList alternatives={alternatives} />)
+  assert.match(markup, />Passt bedingt<\/span>/)
+  assert.equal((markup.match(/>Alternative · passt bedingt<\/span>/g) ?? []).length, 1)
+  assert.match(markup, /Für dein Haar eher schwer/)
+})
+
+test("masked scanner recommendations use the same supportive label before reveal", () => {
+  const alternatives = SCAN_PARITY_MASKED_RESULT.alternatives.map((alternative) => ({
+    ...alternative,
+    verdict: "supportive" as const,
+    verdictLabel: "Passt bedingt",
+  }))
+  const markup = renderToStaticMarkup(
+    <ScanMaskedAlternatives
+      alternatives={alternatives}
+      cta="reveal"
+      revealPending={false}
+      onReveal={noop}
+      onPremium={noop}
+    />,
+  )
+  assert.match(markup, />Passt bedingt<\/span>/)
+  assert.equal(
+    (markup.match(/>Alternative · passt bedingt<\/span>/g) ?? []).length,
+    alternatives.length - 1,
+  )
 })

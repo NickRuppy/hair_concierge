@@ -19,7 +19,11 @@ export type ScanVerdict = "ideal" | "supportive" | "mismatch" | "unknown"
 /** Maps onto the `--status-*` design tokens the result banner is painted with. */
 export type ScanStatusToken = "ok" | "pending" | "danger" | "neutral"
 
+/** Historical state union also consumed by the native adapter; C1 leaves it unchanged. */
 export type ScanDimensionState = "in_target" | "outside_target" | "no_target" | "unknown"
+
+/** Web rows preserve the evaluator's one-step caution outcome. */
+export type ScanWebDimensionState = ScanDimensionState | "supportive"
 
 export type ScanDimensionStop = {
   stopId: string
@@ -40,6 +44,9 @@ export type ScanDimension = {
   state: ScanDimensionState
 }
 
+/** Web-only row states; the native dimension contract keeps its historical union. */
+export type ScanWebDimension = Omit<ScanDimension, "state"> & { state: ScanWebDimensionState }
+
 export type ScanAlternative = {
   productId: string
   displayName: string
@@ -48,6 +55,8 @@ export type ScanAlternative = {
   netContentLabel: string | null
   verdict: Extract<ScanVerdict, "ideal" | "supportive">
   verdictLabel: string
+  /** Evaluator explanations for supportive/mismatch; absent on older stored payloads. */
+  reasonLines?: string[]
   /**
    * Shopping budget (Task 7). Present only when the user has a saved budget and the budget
    * flag is on: `overBudget` only for a capped budget (true = the package costs more than
@@ -109,12 +118,14 @@ export type ScanInCatalogVerdictPayload = {
   kind: "in_catalog"
   verdict: ScanVerdict
   verdictLabel: string
+  /** Evaluator explanations for supportive/mismatch; absent on older stored payloads. */
+  reasonLines?: string[]
   verdictTitle: string
   status: ScanStatusToken
   subtitle: string
   evaluatedRole: PlanProductRole | null
   evaluatedRoleLabel: string | null
-  dimensions: ScanDimension[]
+  dimensions: ScanWebDimension[]
   /** Criterion-row fallback for compact categories without dimensions. */
   criteria: Stage3CriterionResult[]
   coverage: { matches: number; total: number } | null

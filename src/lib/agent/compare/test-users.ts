@@ -5,6 +5,7 @@ import type { AgentCompareUserOption, AgentCompareUserSnapshot } from "./types"
 type EligibleCompareUserRow = {
   id: string
   full_name: string | null
+  email: string | null
   onboarding_completed: boolean
   has_hair_profile: boolean
   hair_texture?: string | null
@@ -13,7 +14,10 @@ type EligibleCompareUserRow = {
 }
 
 export function filterEligibleCompareUsers(rows: EligibleCompareUserRow[]): EligibleCompareUserRow[] {
-  return rows.filter((row) => row.onboarding_completed && row.has_hair_profile)
+  return rows.filter((row) =>
+    row.email?.toLowerCase().endsWith("@hairconscierge.test") &&
+    row.onboarding_completed && row.has_hair_profile,
+  )
 }
 
 export function buildCompareUserLabel(row: {
@@ -57,13 +61,17 @@ export async function listEligibleCompareUsers(): Promise<AgentCompareUserOption
   const admin = createAdminClient()
   const { data: profiles, error: profileError } = await admin
     .from("profiles")
-    .select("id, full_name, onboarding_completed")
+    .select("id, email, full_name, onboarding_completed")
+    .ilike("email", "%@hairconscierge.test")
 
   if (profileError) {
     throw new Error(`Failed to load compare users: ${profileError.message}`)
   }
 
-  const userIds = (profiles ?? []).map((profile) => profile.id)
+  const testProfiles = (profiles ?? []).filter((profile) =>
+    profile.email?.toLowerCase().endsWith("@hairconscierge.test"),
+  )
+  const userIds = testProfiles.map((profile) => profile.id)
   if (userIds.length === 0) {
     return []
   }
@@ -80,11 +88,12 @@ export async function listEligibleCompareUsers(): Promise<AgentCompareUserOption
   const hairByUserId = new Map((hairProfiles ?? []).map((profile) => [profile.user_id, profile]))
 
   return filterEligibleCompareUsers(
-    (profiles ?? []).map((profile) => {
+    testProfiles.map((profile) => {
       const hairProfile = hairByUserId.get(profile.id)
       return {
         id: profile.id,
         full_name: profile.full_name,
+        email: profile.email,
         onboarding_completed: profile.onboarding_completed,
         has_hair_profile: Boolean(hairProfile),
         hair_texture: hairProfile?.hair_texture ?? null,

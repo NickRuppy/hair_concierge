@@ -14,6 +14,7 @@ import type {
 } from "@/lib/personal-plan/products/contracts"
 import type { PlanProductRole } from "@/lib/personal-plan/types"
 import type { ScanDimension } from "@/lib/scan/types"
+import { SCAN_VERDICT_COPY } from "@/lib/scan/verdict-labels"
 
 import type { MobileScanRow } from "./scan-contracts"
 
@@ -380,15 +381,9 @@ export function mobileAssessmentRows(
 
 export function mobileVerdictTitle(
   verdict: "ideal" | "supportive" | "mismatch",
-  rows: readonly MobileScanRow[],
+  _rows: readonly MobileScanRow[],
 ): string {
-  if (verdict === "ideal") return "Passt zu deinem Haar"
-  if (verdict === "supportive") return "Passt mit Einschränkung"
-  return rows.some(
-    (row) => row.dimensionId === "shampoo.scalp_route" && row.displayStatus === "red",
-  )
-    ? "Passt nicht zu deiner Kopfhaut"
-    : "Passt nicht zu deinem Haar"
+  return SCAN_VERDICT_COPY[verdict].title
 }
 
 /** One off-target row as „<Eigenschaft>: <Produktwert> statt <Zielwert>". */
