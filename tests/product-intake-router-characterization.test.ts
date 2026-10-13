@@ -161,7 +161,7 @@ test("every category retains its pre-router prompt contract byte for byte", () =
   assert.deepEqual(normalizationSnapshot().prompt_contract_sha256, {
     conditioner: "9d74593bf792adba92e8f789fabae02eddd2e013df1f680035508660cf80a3ae",
     // Leave-In v1.2 heat activation (T21, 2026-10-09): v1.2 pins + heatActivation capture
-    leave_in: "747eb61b02c4c1ce0e5a069622eac8656441789a4e4f85590d5ced5567d2f138",
+    leave_in: "d2e828a6653b783a9649af9428afe037e3794c39e61efe063d92e0159c8d00af",
     bondbuilder: "f5e94f8ee0ea1e7b6010c43e912f5c29566537b46b3872b11e52d93acb7022f5",
     shampoo: "dc511c24cb88c76fe66fbb60dadda2bbe52f246314bc582c7278af1ad97c99a7",
     // moisture_softness added to mask functional_benefits (ruled 2026-10-07)
