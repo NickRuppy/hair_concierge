@@ -1,4 +1,4 @@
-import { deriveLeaveInCareDirectionT20 } from "/Users/nick/AI_work/hair_conscierge/.worktrees/catalog-completeness-fill/src/lib/leave-in-research/care-direction-t20"
+import { deriveLeaveInCareDirectionT20 } from "@/lib/leave-in-research/care-direction-t20"
 const S = (rank: number, inci: string, speciesClass: string) => ({ rank, inci, speciesClass })
 const cases: Record<string, unknown> = {
   aussie_A_marker_plausible_PL_lipid: {

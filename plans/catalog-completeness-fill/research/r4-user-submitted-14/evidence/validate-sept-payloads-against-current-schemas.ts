@@ -1,8 +1,7 @@
 import fs from "node:fs"
-import { applicationGuidanceProtocolSchema } from "/Users/nick/AI_work/hair_conscierge/.worktrees/catalog-completeness-fill/src/lib/routines/personal-plan/application/contracts"
-import { productApplicationPointerV2Schema } from "/Users/nick/AI_work/hair_conscierge/.worktrees/catalog-completeness-fill/src/lib/routines/personal-plan/application/contracts-v2"
-const OLD =
-  "/Users/nick/AI_work/hair_conscierge/.worktrees/catalog-assessment-completeness/plans/catalog-assessment-completeness"
+import { applicationGuidanceProtocolSchema } from "@/lib/routines/personal-plan/application/contracts"
+import { productApplicationPointerV2Schema } from "@/lib/routines/personal-plan/application/contracts-v2"
+const OLD = "../catalog-assessment-completeness/plans/catalog-assessment-completeness"
 const cand = JSON.parse(
   fs.readFileSync(OLD + "/ordinary-guidance-bindings-v1/candidate.json", "utf8"),
 )

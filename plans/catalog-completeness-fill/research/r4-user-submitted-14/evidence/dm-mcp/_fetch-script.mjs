@@ -1,5 +1,5 @@
-import { Client } from "/Users/nick/AI_work/hair_conscierge/.worktrees/catalog-completeness-fill/node_modules/@modelcontextprotocol/sdk/dist/esm/client/index.js"
-import { StreamableHTTPClientTransport } from "/Users/nick/AI_work/hair_conscierge/.worktrees/catalog-completeness-fill/node_modules/@modelcontextprotocol/sdk/dist/esm/client/streamableHttp.js"
+import { Client } from "@modelcontextprotocol/sdk/client/index.js"
+import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js"
 const [tool, arg] = process.argv.slice(2)
 const client = new Client({ name: "r4-readonly", version: "1.0.0" }, { capabilities: {} })
 await client.connect(new StreamableHTTPClientTransport(new URL("https://mcp.dm.de/mcp")))

@@ -3,7 +3,7 @@ import crypto from "node:crypto"
 import {
   maskFormulaFingerprintSha256,
   normalizeMaskInciTokens,
-} from "/Users/nick/AI_work/hair_conscierge/.worktrees/catalog-completeness-fill/src/lib/mask-research/production-adapter"
+} from "@/lib/mask-research/production-adapter"
 
 const OUT = process.env.OUT!
 const rawInci =
