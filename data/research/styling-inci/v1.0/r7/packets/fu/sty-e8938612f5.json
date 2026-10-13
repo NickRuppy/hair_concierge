@@ -1,0 +1,140 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v0.5-r6amend",
+  "sample_id": "sty-e8938612f5",
+  "format": "cream",
+  "inci": {
+    "inci_item_count": 29,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 2,
+        "inci": "Propylene Glycol"
+      },
+      {
+        "rank": 3,
+        "inci": "Persea Gratissima Oil"
+      },
+      {
+        "rank": 4,
+        "inci": "Phenyl Trimethicone"
+      },
+      {
+        "rank": 5,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 6,
+        "inci": "C12-15 Alkyl Benzoate"
+      },
+      {
+        "rank": 7,
+        "inci": "Glyceryl Stearate"
+      },
+      {
+        "rank": 8,
+        "inci": "Isostearyl Palmitate"
+      },
+      {
+        "rank": 9,
+        "inci": "PVP"
+      },
+      {
+        "rank": 10,
+        "inci": "Ethylhexyl Methoxycinnamate"
+      },
+      {
+        "rank": 11,
+        "inci": "Acrylates/C10-30 Alkyl Acrylate Crosspolymer"
+      },
+      {
+        "rank": 12,
+        "inci": "Triethanolamine"
+      },
+      {
+        "rank": 13,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 14,
+        "inci": "Sorbitan Oleate"
+      },
+      {
+        "rank": 15,
+        "inci": "Cocamidopropyl PG-Dimonium Chloride Phosphate"
+      },
+      {
+        "rank": 16,
+        "inci": "Caprylhydroxamic Acid"
+      },
+      {
+        "rank": 17,
+        "inci": "Methylpropanediol"
+      },
+      {
+        "rank": 18,
+        "inci": "Steardimonium Hydroxypropyl Hydrolyzed WheatProtein"
+      },
+      {
+        "rank": 19,
+        "inci": "BHT"
+      },
+      {
+        "rank": 20,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 21,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 22,
+        "inci": "Citrus Aurantium Peel Oil"
+      },
+      {
+        "rank": 23,
+        "inci": "Citrus Limon Peel Oil"
+      },
+      {
+        "rank": 24,
+        "inci": "Hexamethylindanopyran"
+      },
+      {
+        "rank": 25,
+        "inci": "Hexyl Cinnamal"
+      },
+      {
+        "rank": 26,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 27,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 28,
+        "inci": "Linalyl Acetate"
+      },
+      {
+        "rank": 29,
+        "inci": "Tetramethyl Acetyloctahydronaphthalenes"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "1. Eine kleine Menge zwischen den Handflächen verreiben. 2. Im trockenen Haar verteilen und dabei besonders auf abstehende Härchen und ungleichmäßige Spitzen achten. 3. Einfach in die Handtasche stecken und jederzeit bei Bedarf anwenden.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "johnfrieda.com",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

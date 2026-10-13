@@ -1,0 +1,263 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r6amend",
+  "sample_id": "sty-e67f128dca",
+  "product": {
+    "confirmed_name": "Styling Cream Traumlocken",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2_house_brand",
+    "brand": "Balea PROFESSIONAL",
+    "format": "cream"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 33,
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA"
+      },
+      {
+        "rank": 2,
+        "inci": "CETEARYL ALCOHOL"
+      },
+      {
+        "rank": 3,
+        "inci": "VP/VA COPOLYMER"
+      },
+      {
+        "rank": 4,
+        "inci": "ISOPROPYL PALMITATE"
+      },
+      {
+        "rank": 5,
+        "inci": "DICAPRYLYL CARBONATE"
+      },
+      {
+        "rank": 6,
+        "inci": "CAPRYLIC/CAPRIC TRIGLYCERIDE"
+      },
+      {
+        "rank": 7,
+        "inci": "PROPYLENE GLYCOL"
+      },
+      {
+        "rank": 8,
+        "inci": "POLYQUATERNIUM-37"
+      },
+      {
+        "rank": 9,
+        "inci": "CETRIMONIUM CHLORIDE"
+      },
+      {
+        "rank": 10,
+        "inci": "SODIUM BENZOATE"
+      },
+      {
+        "rank": 11,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 12,
+        "inci": "DIMETHICONE"
+      },
+      {
+        "rank": 13,
+        "inci": "TRIMETHYLSILOXYPHENYL DIMETHICONE"
+      },
+      {
+        "rank": 14,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 15,
+        "inci": "HYDROLYZED KERATIN"
+      },
+      {
+        "rank": 16,
+        "inci": "POTASSIUM SORBATE"
+      },
+      {
+        "rank": 17,
+        "inci": "BUTYROSPERMUM PARKII BUTTER"
+      },
+      {
+        "rank": 18,
+        "inci": "PANTHENOL"
+      },
+      {
+        "rank": 19,
+        "inci": "DIMETHICONOL"
+      },
+      {
+        "rank": 20,
+        "inci": "TOCOPHEROL"
+      },
+      {
+        "rank": 21,
+        "inci": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+      },
+      {
+        "rank": 22,
+        "inci": "LAURYL GLUCOSIDE"
+      },
+      {
+        "rank": 23,
+        "inci": "ALPHA-ISOMETHYL IONONE"
+      },
+      {
+        "rank": 24,
+        "inci": "ACRYLATES/STEARYL METHACRYLATE COPOLYMER"
+      },
+      {
+        "rank": 25,
+        "inci": "SORBITAN OLEATE"
+      },
+      {
+        "rank": 26,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 27,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 28,
+        "inci": "TERPINEOL"
+      },
+      {
+        "rank": 29,
+        "inci": "VANILLIN"
+      },
+      {
+        "rank": 30,
+        "inci": "TETRASODIUM EDTA"
+      },
+      {
+        "rank": 31,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 32,
+        "inci": "ISOEUGENYL ACETATE"
+      },
+      {
+        "rank": 33,
+        "inci": "PINENE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Eine kleine Menge auf den Händen verteilen und sanft ins handtuchtrockene oder trockene Haar einarbeiten. Nicht ausspülen.",
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Für definierte lebendige Locken",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "text": "Schützt effektiv vor Frizz",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "text": "Verbesserte Geschmeidigkeit",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "text": "Anti-Statik-Formel verhindert Frizz",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "text": "Perfekt definierte, [CLAIM] Locken und Hitzeschutz bis 220 °C",
+      "redacted": true,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12",
+      "position": "pack_front"
+    },
+    {
+      "text": "PFLEGE-FORMEL MIT SHEABUTTER UND KERATIN",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12",
+      "position": "pack_front"
+    },
+    {
+      "text": "LEISTUNGSSTARKE FORMEL FÜR DEFINIERTE, LEBENDIGE LOCKEN VOLLER SPRUNGKRAFT UND [CLAIM] GLANZ",
+      "redacted": true,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12",
+      "position": "body"
+    },
+    {
+      "text": "SCHWUNGVOLL. DEFINIERT. VERWÖHNT.",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12",
+      "position": "body"
+    },
+    {
+      "text": "Anti-Statik-Formel schützt effektiv vor Frizz, für definierte Locken und gewelltes Haar.",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12",
+      "position": "body"
+    },
+    {
+      "text": "Locken-Forming-System für Geschmeidigkeit und verbesserte Kämmbarkeit.",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12",
+      "position": "body"
+    }
+  ],
+  "heat_protection_claims_c1_c2": [
+    {
+      "text": "Hitzeschutz bis zu 220 °C",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": null
+    },
+    {
+      "text": "Hitzeschutz bis 220 °C",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12"
+    }
+  ]
+}

@@ -1,0 +1,153 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r6amend",
+  "sample_id": "sty-7fe9b5bae0",
+  "product": {
+    "confirmed_name": "Glaze Topcoat",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "Syoss",
+    "format": "aerosol"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 11,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Butane"
+      },
+      {
+        "rank": 2,
+        "inci": "Isododecane"
+      },
+      {
+        "rank": 3,
+        "inci": "Alcohol denat."
+      },
+      {
+        "rank": 4,
+        "inci": "Caprylic/Capric Triglyceride"
+      },
+      {
+        "rank": 5,
+        "inci": "Dicaprylyl Carbonate"
+      },
+      {
+        "rank": 6,
+        "inci": "Isobutane"
+      },
+      {
+        "rank": 7,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 8,
+        "inci": "Niacinamide"
+      },
+      {
+        "rank": 9,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 10,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 11,
+        "inci": "Terpineol"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Auf trockenem Haar wie folgt anwenden:\nVor dem Styling mit Glätteisen oder Lockenstab – Mit Hitzeschutz für ein [CLAIM] Ergebnis\nNach dem Styling – Zur Verstärkung des Glaze-Effekts für mehrschichtigen Glanz",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "syoss.de",
+    "date": "2026-10-12",
+    "redacted_with": "[CLAIM]"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "3 in 1 Formel: Style, pflege und repariere dein Haar für Looks mit einem Laminierungs-Effekt. Mit Vitamin-Komplex und Gloss Boost für ein [CLAIM] Finish.",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "3in1 Style, Care, Shine",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Mit Laminierungs-Effekt",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Bis zu 230°C Hitzeschutz",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Mit Vitamin-Komplex und Gloss Boost für ein [CLAIM] Finish",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Reduziert Frizz bis zu 24h für seidig glattes Haar und schützt das Haar vor Luftfeuchtigkeit",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Umhüllt das Haar mit einem [CLAIM] Finish, ohne sichtbare Rückstände oder fettigen Effekt",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Bändigt abstehende Haare und verleiht eine reflektierende Oberfläche für mehrschichtigen Glanz",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": [
+    {
+      "text": "Bis zu 230°C Hitzeschutz",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    }
+  ]
+}

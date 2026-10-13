@@ -1,0 +1,105 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r6amend",
+  "sample_id": "sty-718ed3bfd1",
+  "product": {
+    "confirmed_name": "Full Dry Volume & Texture Spray",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C3",
+    "brand": "Living Proof",
+    "format": "aerosol",
+    "confirmed_name_from_retailer_title": true,
+    "retailer_title_type_noun_agrees": true
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 17,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Dimethyl Ether"
+      },
+      {
+        "rank": 2,
+        "inci": "Alcohol Denat."
+      },
+      {
+        "rank": 3,
+        "inci": "VP/VA Copolymer"
+      },
+      {
+        "rank": 4,
+        "inci": "VA/Crotonates/Vinyl Neodecanoate Copolymer"
+      },
+      {
+        "rank": 5,
+        "inci": "Calcium Sodium Borosilicate"
+      },
+      {
+        "rank": 6,
+        "inci": "Water/Aqua/Eau"
+      },
+      {
+        "rank": 7,
+        "inci": "Cyclodextrin"
+      },
+      {
+        "rank": 8,
+        "inci": "Zeolite"
+      },
+      {
+        "rank": 9,
+        "inci": "Fragrance (Parfum)"
+      },
+      {
+        "rank": 10,
+        "inci": "Ethylcellulose"
+      },
+      {
+        "rank": 11,
+        "inci": "Propylene Glycol Dibenzoate"
+      },
+      {
+        "rank": 12,
+        "inci": "Aminomethyl Propanol"
+      },
+      {
+        "rank": 13,
+        "inci": "Ammonium Glycyrrhizate"
+      },
+      {
+        "rank": 14,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 15,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 16,
+        "inci": "Citral"
+      },
+      {
+        "rank": 17,
+        "inci": "Limonene"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "- Vor jedem Sprühstoß die Dose gut schütteln.\n- Halten Sie die Dose fünf bis zehn Zentimeter vom trockenen Haar entfernt. Eine Haarpartie anheben und von der Wurzel bis zu den Spitzen auftragen.\n- Das Haar mit den Fingern zerzausen. Wiederholen Sie den Vorgang, bis die gewünschte Frisur erreicht ist, und schütteln Sie die Dose zwischen den einzelnen Sprühstößen.\n- Sprühen Sie die fertige Frisur für zusätzliche Textur und Halt ein.\nTipps und Tricks: Drehen Sie den Kopf zur Seite oder auf den Kopf und sprühen Sie das Produkt in kleinen Stößen in die Längen, um mehr Textur zu erhalten.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "flaconi.de",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [],
+  "heat_protection_claims_c1_c2": []
+}

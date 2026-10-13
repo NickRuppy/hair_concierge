@@ -1,0 +1,184 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r6amend",
+  "sample_id": "sty-632024691b",
+  "product": {
+    "confirmed_name": "Glättende Creme (Smoothing Lotion)",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "Moroccanoil",
+    "format": "pump_bottle_lotion"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 29,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "WATER/AQUA"
+      },
+      {
+        "rank": 2,
+        "inci": "CYCLOMETHICONE"
+      },
+      {
+        "rank": 3,
+        "inci": "DIMETHICONE"
+      },
+      {
+        "rank": 4,
+        "inci": "CETEARYL ALCOHOL"
+      },
+      {
+        "rank": 5,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 6,
+        "inci": "FRAGRANCE"
+      },
+      {
+        "rank": 7,
+        "inci": "BEHENTRIMONIUM CHLORIDE"
+      },
+      {
+        "rank": 8,
+        "inci": "POLYQUATERNIUM-70"
+      },
+      {
+        "rank": 9,
+        "inci": "POLYQUATERNIUM-11"
+      },
+      {
+        "rank": 10,
+        "inci": "STEARETH-2"
+      },
+      {
+        "rank": 11,
+        "inci": "ARGANIA SPINOSA (ARGAN) KERNEL OIL"
+      },
+      {
+        "rank": 12,
+        "inci": "HYDROGENATED VEGETABLE OIL"
+      },
+      {
+        "rank": 13,
+        "inci": "TILIA TOMENTOSA BUD EXTRACT"
+      },
+      {
+        "rank": 14,
+        "inci": "CAPRYLYL GLYCOL"
+      },
+      {
+        "rank": 15,
+        "inci": "DIPROPYLENE GLYCOL"
+      },
+      {
+        "rank": 16,
+        "inci": "ISOPROPYL ALCOHOL"
+      },
+      {
+        "rank": 17,
+        "inci": "GLYCERYL STEARATE"
+      },
+      {
+        "rank": 18,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 19,
+        "inci": "OLETH-10"
+      },
+      {
+        "rank": 20,
+        "inci": "CHLORPHENESIN"
+      },
+      {
+        "rank": 21,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 22,
+        "inci": "POTASSIUM SORBATE"
+      },
+      {
+        "rank": 23,
+        "inci": "SODIUM BENZOATE"
+      },
+      {
+        "rank": 24,
+        "inci": "D&C RED NO. 17 (CI 26100)"
+      },
+      {
+        "rank": 25,
+        "inci": "D&C YELLOW NO.11 (CI 47000)"
+      },
+      {
+        "rank": 26,
+        "inci": "ALPHA-ISOMETHYL IONONE"
+      },
+      {
+        "rank": 27,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 28,
+        "inci": "HYDROXYCITRONELLAL"
+      },
+      {
+        "rank": 29,
+        "inci": "BENZYL BENZOATE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Eine kleine Menge Moroccanoil® Glättende Lotion ins feuchte Haar geben. Wie gewünscht föhnen. Kann als Leave-in-Kur verwendet werden, die das Haar länger frisch aussehen lässt. TIPP: Für einen glatten Look mit großem Volumen 1-2 Pumpstöße Moroccanoil® Behandlung mit 1-2 Pumpstößen Moroccanoil Glättende Lotion und einer golfballgroßen Menge Moroccanoil® Volumenschaum vermischen.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "de.moroccanoil.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Diese pflegende und dennoch leichte Stylingcreme bändigt krauses und widerspenstiges Haar und verleiht ihm den ganzen Tag lang Geschmeidigkeit und Definition. Sie ist mit Arganöl, Arganbutter, Vitamin E und essentiellen Fettsäuren angereichert, um trockenes Haar zu pflegen und es fühlbar weich und spürbar glatt zu machen. Ideal für lockiges, mittelstarkes und grobes Haar.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "• Macht das Haar um 58% glatter*",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "• Reduziert Bruch um 72 %.*",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Parfümiert mit dem typischen Moroccanoil-Duft, einer mediterran inspirierten Mischung aus würzigem Amber und süßen Blumennoten.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

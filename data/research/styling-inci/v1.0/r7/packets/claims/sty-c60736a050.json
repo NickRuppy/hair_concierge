@@ -1,0 +1,99 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r6amend",
+  "sample_id": "sty-c60736a050",
+  "brand": "John Frieda",
+  "confirmed_name": "Frizz Ease Unendlich Smooth Salon Blow-Out Spray",
+  "confirmed_name_tier": "C2",
+  "format": "pump_spray",
+  "product_type_word": "spray",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Salon Blow-Out Spray",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Styling-Spray mit Schutz vor Hitze und Luftfeuchtigkeit für den perfekten Blow-Out.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Dieses Styling-Spray verwandelt Frizz in seidig-glattes, hochglänzendes Haar – ganz ohne zu beschweren. Mit Hitzeschutz bis 230 °C bilden Keratin und unser Humidity Shield Complex einen leichten Schutzfilm um jede einzelne Haarsträhne, der Feuchtigkeit abhält und dein Styling bis zu drei Haarwäschen lang geschmeidig hält. Das Ergebnis: ein glänzender, müheloser Blowout, wie frisch aus dem Salon.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Schützt das Haar vor Feuchtigkiet und Umwelteinflüssen.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Bändigt Frizz und verleiht Glanz.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Die schwerelose Formel hinterlässt keine Spuren.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "finish",
+      "text": "verwandelt Frizz in seidig-glattes, hochglänzendes Haar",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "duration",
+      "text": "dein Styling bis zu drei Haarwäschen lang geschmeidig hält",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "humidity",
+      "text": "Schützt das Haar vor Feuchtigkiet und Umwelteinflüssen.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "heat_protection",
+      "text": "Mit Hitzeschutz bis 230 °C",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "johnfrieda.com",
+      "date": "2026-10-12"
+    }
+  ]
+}
