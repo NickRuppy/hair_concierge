@@ -195,6 +195,8 @@ export async function resolveMobileScan(
     })
   }
   if (verdict.verdict === "unknown") {
+    // fit-verdict spec §7a.5 is pending the native decoder adding ScanVerdict.unknown.
+    // Preserve v1 failure shapes: installed iOS clients cannot decode an unknown assessment.
     const failure = mobileAuthorityFailure(verdict)
     return parse({
       contractVersion: MOBILE_SCAN_CONTRACT_VERSION,
@@ -234,6 +236,7 @@ export async function resolveMobileScan(
         verdict: alternative.verdict,
         verdictLabel: alternative.verdictLabel,
         verdictTitle: mobileVerdictTitle(alternative.verdict, rows),
+        reasonLines: alternative.reasonLines ?? [],
         mismatchSummary: mobileMismatchSummary(rows),
         rows,
         categoryFit: verdict.fitNarrative?.fit ?? null,
@@ -256,6 +259,7 @@ export async function resolveMobileScan(
     verdict: verdict.verdict,
     verdictLabel: verdict.verdictLabel,
     verdictTitle: mobileVerdictTitle(verdict.verdict, rows),
+    reasonLines: verdict.reasonLines ?? [],
     subtitle: verdict.subtitle,
     mismatchSummary: mobileMismatchSummary(rows),
     rows,

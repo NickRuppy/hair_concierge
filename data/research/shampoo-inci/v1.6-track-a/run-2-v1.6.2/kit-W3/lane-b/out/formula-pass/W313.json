@@ -1,0 +1,136 @@
+{
+  "blindId": "W313",
+  "inciFingerprintSha256": "22bedf0cd1a87fec074e6fba8724488bdfc5b3c97a6aa424e3512c022d440014",
+  "phase": "formula-pass (blind, claims hidden)",
+  "formulaBlock": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "moderate",
+    "normalization": "Slash-synonym entries ('AQUA / WATER', 'GLYCINE SOJA OIL / SOYBEAN OIL', 'AVENA SATIVA KERNEL EXTRACT / OAT KERNEL EXTRACT', 'ORYZA SATIVA STARCH / RICE STARCH', 'PARFUM / FRAGRANCE') are single entries; the fragrance code '(F.I.L. C253486/1)' is provenance. Packet positions = normalized ID-2 positions (27 entries).",
+    "e3Point": "PARFUM / FRAGRANCE @27 (last). Prominent = positions 1-26."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate @2 with prominent buffer Coco-Betaine @3, no reinforcing strong anionic. PPG-5-Ceteth-20 @10 and PEG-55 Propylene Glycol Oleate @11 are thickeners/solubilizers (C3 not-cleansing).",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High by C2: prominent payload lipid Glycine Soja Oil @6 (plus Dicaprylyl Ether @13) in place of a silicone, cationic polymers Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @19 and Polyquaternium-7 @22, pearlizing route Glycol Distearate @4, humectant Glycerin @5. Counter-signal: both cationics are late (after Sodium Hydroxide @17 and Propylene Glycol @18) and only prominent because Parfum is last; moderate is the neighbor.",
+      "ruleIds": ["C2", "E3", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "silicone": [],
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @19", "Polyquaternium-7 @22"],
+        "cationic_conditioner": [],
+        "payload_lipid": ["Glycine Soja Oil @6 (material)", "Dicaprylyl Ether @13 (material)"],
+        "weak_refatter": [],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Coco-Betaine @3"],
+        "humectantContext": ["Glycerin @5", "Aloe Barbadensis Leaf Juice @7", "Propylene Glycol @18 (solvent)"],
+        "excluded": ["Glycol Distearate @4 (pearlizing wax, 6.4)", "PPG-5-Ceteth-20 @10, PEG-55 Propylene Glycol Oleate @11 (PEG/PPG thickeners/solubilizers, 6.4)", "PEG-60 Hydrogenated Castor Oil @12 (solubilizer, 6.4)", "Carbomer @15 (anionic acrylate thickener, 6.4)", "Xanthan Gum @21 (thickener)", "Oryza Sativa Starch @9 (absorbent starch)", "Dilauryl Thiodipropionate @14 (antioxidant)", "Tocopherol @23 (antioxidant)", "Salicylic Acid @26"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 23,
+        "inci": "TOCOPHEROL",
+        "classes": ["sub1_active"],
+        "cap": "e3Point @27 (PARFUM / FRAGRANCE)",
+        "alphabeticalRun": null,
+        "skipped": [],
+        "codes": [],
+        "note": "Tocopherol @23 is the earliest candidate and plausible: (i) SLES @2 before it; (ii) only Potassium Sorbate @24, Sodium Benzoate @25, Salicylic Acid @26 between it and the cap. No 7-entry alphabetical run.",
+        "payloadLipidMaterial": ["Glycine Soja Oil @6", "Dicaprylyl Ether @13"],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "moderate",
+      "persistence": "moderate",
+      "resetCapacity": "moderate",
+      "counterevidence": "W-RICH holds (material soybean oil @6 + dicaprylyl ether @13 converging with two cationic polymers @19/@22); a fairly early plant oil.",
+      "whyThisBand": "Material plant oil plus emollient ether and two cationic polymers plausibly leave noticeable but bounded residue.",
+      "whyNotNeighborBand": "Not high: the rich route needs limited reset, but resetCapacity is moderate (C1 SLES/coco-betaine chassis); both cationic polymers are listed late after Sodium Hydroxide @17 and Propylene Glycol @18, so the converging systems are judged offset. Not low: material lipid + cationic polymers (W2).",
+      "confidenceLimitingFactor": "W-RICH with moderate reset; soybean oil @6 dose unknown; high is the realistic neighbor.",
+      "rationale": "Moderate: W-RICH (soy oil @6, dicaprylyl ether @13 + guar @19, PQ-7 @22) offset by moderate C1 reset; neighbor high.",
+      "ruleIds": ["6.6", "W-RICH", "W-LINE", "W2", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "provisional": "formula-only; claims hidden",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": ["Glycerin @5", "Aloe Barbadensis Leaf Juice @7", "Glycine Soja Oil @6", "Dicaprylyl Ether @13"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @19", "Polyquaternium-7 @22"],
+        "limitation": "Provisional; no protein or bond route; oat extract @8 and salicylic acid @26 also hint at a scalp role."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Oat kernel extract @8 (E4 comfort route) and salicylic acid suggest possible scalp-comfort positioning.",
+      "decisionTrace": "Claim direction null (blind); provisional general.",
+      "rationale": "Provisional general pending claims.",
+      "ruleIds": ["7.2", "7.3", "3.1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": ["scalp_active"],
+      "provisional": "formula-only; claims hidden",
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty secondary.",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "frequent",
+      "provisional": "formula-only; claims hidden",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional default regular; frequent possible with frequency wording (moderate cleansing).",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "targeted",
+      "provisional": "formula-only; SC1 positioning not yet visible",
+      "rationale": "Provisional not_targeted pending SC1. Formula half: CSA met by prominent E4 comfort route Avena Sativa Kernel Extract @8 and humectant/refatting routes Glycerin @5, Glycine Soja Oil @6. MB excluded (prominent Sodium Laureth Sulfate @2). Aloe juice @7 unlisted. No cooling agent or essential oil.",
+      "ruleIds": ["10", "CSA", "MB", "E4", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active; Salicylic Acid @26 alone does not upgrade (Section 11).",
+      "ruleIds": ["11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionicEther": ["Sodium Laureth Sulfate @2"],
+      "amphoteric": ["Coco-Betaine @3"],
+      "notCleansing": ["PPG-5-Ceteth-20 @10", "PEG-55 Propylene Glycol Oleate @11", "Sodium Chloride @16"]
+    },
+    "conditioningRoutes": ["Glycol Distearate @4", "Glycine Soja Oil @6", "Dicaprylyl Ether @13", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @19", "Polyquaternium-7 @22"],
+    "weightRoutes": ["payload_lipid @6/@13 (material)", "cationic_polymer @19/@22"],
+    "humectants": ["Glycerin @5", "Aloe Barbadensis Leaf Juice @7 (not on closed lists)"],
+    "actives": ["Avena Sativa Kernel Extract @8 (E4 comfort)", "Salicylic Acid @26"],
+    "exposure": ["Parfum @27 (last)"],
+    "mildBase": "excluded: prominent strong anionic Sodium Laureth Sulfate @2",
+    "preservatives": ["Potassium Sorbate @24", "Sodium Benzoate @25"]
+  },
+  "unresolvedMaterialIngredients": []
+}

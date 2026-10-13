@@ -1,0 +1,147 @@
+{
+  "blindId": "VT10",
+  "inciFingerprintSha256": "f70e5b306799545949560113893c7598ef335f04956a536381f421db2145d2a5",
+  "phase": "formula_pass_blind",
+  "standard": "classification-standard.md (candidate shampoo-classification-v1.6.1, scrubbed lane copy)",
+  "identity": {
+    "packSize": "295 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 4,
+    "identityConfidence": "high",
+    "normalization": "Packet list already ID-2 normalized (Aqua/Water one entry); normalized one-based positions; 34 entries. Source anomaly: PEG-40 Hydrogenated Castor Oil appears twice (@26 and @30); kept as listed, not material (excluded ingredient).",
+    "e3ProminenceCutoff": "Fragrance/Parfum @11; entries 1-10 prominent"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "provisional": false,
+      "rationale": "low by C6: no strong anionic; the earliest prominent cleansing surfactant is Sodium Methyl 2-Sulfolaurate @2 (mild anionic by C3b) with prominent amphoteric co-surfactants Cocamidopropyl Hydroxysultaine @3 and Sodium Lauroamphoacetate @6; further mild anionics Sodium Cocoyl Isethionate @4, Sodium Lauryl Sulfoacetate @5, Sodium Methyl Cocoyl Taurate @7, Disodium 2-Sulfolaurate @10. C3b limit: a sulfolaurate is the earliest prominent cleansing surfactant, so confidence at most moderate and neighbor the next stronger value, moderate.",
+      "ruleIds": ["C3", "C3b", "C4", "C6", "N-ALT"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "provisional": false,
+      "rationale": "low: cleansing-led architecture; the only conditioning polymer is Polyquaternium-22 @15 after the E3 point; Hydrolyzed Wheat Protein @24 is late; humectants Glycerin @8 and Sodium PCA @13 add moisture but little slip. No silicone, no payload lipid, no pearlizer. Counter-signal: one cationic polymer plus prominent glycerin; neighbor moderate.",
+      "ruleIds": ["5", "C2", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "provisional": false,
+      "rationale": "low: the only deposition families are a single cationic polymer (Polyquaternium-22 @15, after the fragrance) and a late protein (Hydrolyzed Wheat Protein @24, after preservatives Chlorphenesin @17, Benzoic Acid @19, Dehydroacetic Acid @21). W2: both families are late/trace, so combined residue is plausibly below noticeable; moderate confidence because the reset is weak (C6 low), neighbor moderate.",
+      "evidence": {
+        "silicone": [],
+        "cationic_polymer": ["Polyquaternium-22 @15"],
+        "cationic_conditioner": [],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "protein_film": ["Hydrolyzed Wheat Protein @24"],
+        "film_former": [],
+        "reset": ["Sodium Methyl 2-Sulfolaurate @2", "Cocamidopropyl Hydroxysultaine @3", "Sodium Cocoyl Isethionate @4", "Sodium Lauryl Sulfoacetate @5", "Sodium Lauroamphoacetate @6", "Sodium Methyl Cocoyl Taurate @7", "Disodium 2-Sulfolaurate @10", "Sodium Cocoyl Glycinate @12 (not prominent)"],
+        "humectantContext": ["Glycerin @8", "Sodium PCA @13", "Butylene Glycol @25"],
+        "excluded": ["PEG-150 Distearate @14 (PEG thickener, 6.4)", "PPG-2 Hydroxyethyl Cocamide @18 (alkanolamide thickener)", "PEG-40 Hydrogenated Castor Oil @26 and @30 (solubilizer, 6.4)", "PPG-26-Buteth-26 @29 (solubilizer)", "Hydrolyzed Wheat Starch @23 (no deposition family)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 11,
+        "inci": "Fragrance/Parfum",
+        "classes": ["fragrance"],
+        "cap": "e3Point @11 (Fragrance/Parfum)",
+        "alphabeticalRuns": [],
+        "skipped": [
+          "w_line_skipped:Phenoxyethanol@9 (clause ii: cleansing surfactant Disodium 2-Sulfolaurate @10 listed after it before the cap)"
+        ],
+        "codes": [],
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light",
+      "depositionLoadRationale": "One post-fragrance polymer and one late protein.",
+      "persistence": "low",
+      "persistenceRationale": "No silicone or lipid; weakly retained routes.",
+      "resetCapacity": "weak",
+      "resetCapacityRationale": "C6 low chassis.",
+      "counterevidence": "Weak reset; Polyquaternium-22 is a cationic polymer.",
+      "whyThisBand": "Deposition light and low-persistence.",
+      "whyNotNeighborBand": "W2: both families are late/trace (polymer after the fragrance, protein after three preservatives), so their combined residue stays below noticeable; moderate remains the realistic neighbor because reset is weak.",
+      "confidenceLimitingFactor": "Weak reset; polymer level unknown.",
+      "ruleIds": ["6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "provisional": true,
+      "rationale": "Provisional, claim-dependent: claims hidden. Hair-loss-type actives (Apigenin @31, Oleanolic Acid @32, Biotinoyl Tripeptide-1 @33) are never a focus route (F5); lengths-care routes are thin (Glycerin @8, Sodium PCA @13, late protein); provisional verdict nonspecific.",
+      "careDirection": {
+        "verdict": "nonspecific (provisional)",
+        "moistureRoutes": ["Glycerin @8", "Sodium PCA @13"],
+        "repairRoutes": ["Hydrolyzed Wheat Protein @24 (late)"],
+        "sharedConditioningRoutes": ["Polyquaternium-22 @15"],
+        "limitation": "No claims; light conditioning."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "No claims visible in the blind pass.",
+      "ruleIds": ["3.1", "7.2", "F5"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["volume"],
+      "provisional": true,
+      "rationale": "Provisional empty default.",
+      "ruleIds": ["8", "N-ALT"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "rationale": "Provisional default regular; not strong, no dandruff active; only frequency wording (U2) could move it.",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: positioning hidden. CSA met through prominent humectant Glycerin @8 (Sodium PCA @13 after E3); no listed comfort route prominent; Aloe Barbadensis Leaf Extract @16 is not a listed route.",
+      "ruleIds": ["10", "CSA", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "provisional": false,
+      "rationale": "not_supported: complete INCI contains no recognized anti-dandruff active.",
+      "ruleIds": ["11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionic": [],
+      "mildAnionic": ["Sodium Methyl 2-Sulfolaurate @2 (C3b)", "Sodium Cocoyl Isethionate @4", "Sodium Lauryl Sulfoacetate @5", "Sodium Methyl Cocoyl Taurate @7", "Disodium 2-Sulfolaurate @10 (C3b)", "Sodium Cocoyl Glycinate @12 (not prominent)"],
+      "amphoteric": ["Cocamidopropyl Hydroxysultaine @3", "Sodium Lauroamphoacetate @6"],
+      "nonionicCleansing": [],
+      "notCleansing": ["PEG-150 Distearate @14", "PPG-2 Hydroxyethyl Cocamide @18", "PEG-40 Hydrogenated Castor Oil @26/@30", "PPG-26-Buteth-26 @29"],
+      "c6Reading": "earliest prominent sulfolaurate (mild anionic) @2 with prominent amphoterics @3/@6 -> low (C3b confidence cap)"
+    },
+    "conditioningRoutes": ["Polyquaternium-22 @15", "Hydrolyzed Wheat Protein @24"],
+    "humectants": ["Glycerin @8", "Sodium PCA @13"],
+    "actives": ["Aloe Barbadensis Leaf Extract @16", "Tocopheryl Acetate @27", "Apigenin @31", "Oleanolic Acid @32", "Biotinoyl Tripeptide-1 @33"],
+    "scalpExposure": ["Fragrance/Parfum @11"],
+    "recognizedDandruffActives": [],
+    "preservatives": ["Phenoxyethanol @9", "Chlorphenesin @17", "Benzoic Acid @19", "Dehydroacetic Acid @21", "Potassium Sorbate @34"]
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "Tier-4 formula source with completeness marked complete; duplicate PEG-40 Hydrogenated Castor Oil entry suggests a transcription artefact (not material to any property).",
+    "conditioningLevel low vs moderate and weightPotential low vs moderate: single post-fragrance cationic polymer; chose low for both with moderate confidence."
+  ]
+}

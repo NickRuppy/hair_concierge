@@ -1,0 +1,537 @@
+{
+  "blindId": "T212",
+  "inciFingerprintSha256": "de1c1328234632643df7eaba5f5f27d554680f3efa2ed25ce77e6dcaa59ddc40",
+  "identity": {
+    "productName": "Syoss Shampoo Intense Keratin",
+    "brand": "Syoss",
+    "market": "DE",
+    "packSize": "440 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "Packet splits 'Aqua (Water' and 'Eau)' into two entries; merged into one (ID-2). Normalized positions = packet position minus 1 from 'Sodium Laureth Sulfate' onward (Aqua/Water/Eau merged; normalized positions).",
+    "sourceIds": [
+      "formula:T212 (tier 2, complete)",
+      "reveal:T212#0 manufacturer_de [manufacturer_de, grade moderate]",
+      "reveal:T212#1 retailer_dm_de [retailer, grade low]",
+      "reveal:T212#2 retailer_rossmann_de [retailer, grade low]"
+    ]
+  },
+  "status": "classified",
+  "policy": "shampoo-classification-v1.6",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic is ether/sulfonate type with at least one prominent buffer and no prominent reinforcing strong anionic -> moderate. SLES (2) buffered by CAPB (3).",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3
+        }
+      ],
+      "counterSignal": "Silicone conditioning; no move.",
+      "neighboringAlternative": "none",
+      "sourceIds": [
+        "formula:T212 (tier 2, complete)"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Early silicone Dimethicone (7, prominent), cationic Guar Hydroxypropyltrimonium Chloride (12), pearlizing Glycol Distearate (14), plus Amodimethicone (11), Hydrolyzed Keratin (6), PEG-7 Glyceryl Cocoate (5), late lipids (13, 20). C2 not met: no deliberate humectant route (no Glycerin/Panthenol etc.; Propylene Glycol 25 does not count). No W-RICH (no prominent payload lipid). One silicone/guar system plus light routes -> moderate.",
+      "formulaFacts": [
+        {
+          "ingredient": "Hydrolyzed Keratin",
+          "position": 6
+        },
+        {
+          "ingredient": "Dimethicone",
+          "position": 7
+        },
+        {
+          "ingredient": "Amodimethicone",
+          "position": 11
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 12
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 14
+        }
+      ],
+      "counterSignal": "The other three C2 elements are present; missing humectant is the counter-signal and high is the neighbor (C2/R11).",
+      "neighboringAlternative": "high",
+      "sourceIds": [
+        "formula:T212 (tier 2, complete)"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: silicone (dimethicone + late amodimethicone) with cationic guar, reinforced by a prominent keratin protein, is a persistent depositing system; no W-RICH and an effective C1 reset keep it bounded.",
+      "neighboringAlternative": "high",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "Dimethicone (7), Amodimethicone (11), guar (12), Hydrolyzed Keratin (6), weak refatter (5); lipids trace (13, 20)."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Dimethicone and amino-silicone are persistent; keratin hydrolysate rinses mostly."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 moderate SLES/betaine chassis."
+        }
+      },
+      "evidenceByFamily": {
+        "silicone": [
+          [
+            "Dimethicone",
+            7
+          ],
+          [
+            "Amodimethicone",
+            11
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Guar Hydroxypropyltrimonium Chloride",
+            12
+          ]
+        ],
+        "protein_film": [
+          [
+            "Hydrolyzed Keratin",
+            6
+          ]
+        ],
+        "weak_refatter": [
+          [
+            "PEG-7 Glyceryl Cocoate",
+            5
+          ]
+        ],
+        "payload_lipid": [
+          [
+            "Hydrogenated Castor Oil",
+            13
+          ],
+          [
+            "Prunus Armeniaca Kernel Oil",
+            20
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            3
+          ]
+        ]
+      },
+      "excluded": [
+        [
+          "Glycol Distearate",
+          14,
+          "pearlizer"
+        ],
+        [
+          "PEG-40 Hydrogenated Castor Oil",
+          16,
+          "solubilizer"
+        ],
+        [
+          "PEG-120 Methyl Glucose Dioleate",
+          17,
+          "PEG thickener"
+        ],
+        [
+          "Laureth-4",
+          15,
+          "thickener"
+        ],
+        [
+          "Laureth-23",
+          19,
+          "emulsifier"
+        ],
+        [
+          "Trideceth-10",
+          21,
+          "emulsifier"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "A prominent protein film reinforces the silicone/guar/amodimethicone set, so W1 does not apply; heavier is realistic.",
+      "whyThisBand": "A persistent silicone + amino-silicone + guar system plus a protein: calling it light would understate residue.",
+      "whyNotNeighborBand": "Not high: no W-RICH (lipids only at 13 and 20, post-fragrance), reset is an effective SLES/betaine chassis, and the extra family is a water-soluble keratin hydrolysate rather than a second persistent polymer or film former. W1 is not cited (condition (c) fails on the prominent protein); the full method decides.",
+      "confidenceLimitingFactor": "Silicone/amino-silicone levels unknown; high is the realistic neighbor.",
+      "ruleNotes": [
+        "W1 not applicable: condition (c) prominent protein film (Hydrolyzed Keratin 6)",
+        "W2",
+        "W3 considered: not closely balanced"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Dimethicone",
+          "position": 7,
+          "family": "silicone"
+        },
+        {
+          "ingredient": "Amodimethicone",
+          "position": 11,
+          "family": "silicone"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 12,
+          "family": "cationic_polymer"
+        },
+        {
+          "ingredient": "Hydrolyzed Keratin",
+          "position": 6,
+          "family": "protein_film"
+        },
+        {
+          "ingredient": "PEG-7 Glyceryl Cocoate",
+          "position": 5,
+          "family": "weak_refatter"
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 13,
+          "family": "payload_lipid"
+        },
+        {
+          "ingredient": "Prunus Armeniaca Kernel Oil",
+          "position": 20,
+          "family": "payload_lipid"
+        },
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "family": "anionic_surfactant"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "family": "amphoteric_surfactant"
+        }
+      ],
+      "canonicalFormula": {
+        "inciFingerprintSha256": "de1c1328234632643df7eaba5f5f27d554680f3efa2ed25ce77e6dcaa59ddc40",
+        "sourceTier": 2,
+        "completeness": "complete",
+        "identityConfidence": "high",
+        "captureDate": "not in sealed packet"
+      },
+      "sourceIds": [
+        "formula:T212 (tier 2, complete)"
+      ]
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "moderate",
+      "neighboringAlternative": "general",
+      "rationale": "Repair: manufacturer_de (moderate) claims 'Repariert schwaches, leicht brüchiges Haar', 'Füllt das Haar mit Keratin auf', with a repair_supported frozen verdict (Hydrolyzed Keratin 6, Dimethicone 7, Amodimethicone 11, guar 12).",
+      "counterSignal": "Moderate weight; no humectant; '5% Keratin-Aufbau-Komplex' unprovable from INCI.",
+      "formulaFacts": [
+        {
+          "ingredient": "Hydrolyzed Keratin",
+          "position": 6
+        },
+        {
+          "ingredient": "Dimethicone",
+          "position": 7
+        },
+        {
+          "ingredient": "Amodimethicone",
+          "position": 11
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 12
+        }
+      ],
+      "claimRole": "candidate",
+      "sourceIds": [
+        "formula:T212 (tier 2, complete)",
+        "reveal:T212#0 manufacturer_de [manufacturer_de, grade moderate]",
+        "reveal:T212#1 retailer_dm_de [retailer, grade low]",
+        "reveal:T212#2 retailer_rossmann_de [retailer, grade low]"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Empty: no distinct second role.",
+      "counterSignal": "Secondary candidates fail Section 8 (distinct graded positioning plus independent route).",
+      "formulaFacts": [],
+      "sourceIds": [
+        "formula:T212 (tier 2, complete)",
+        "reveal:T212#0 manufacturer_de [manufacturer_de, grade moderate]",
+        "reveal:T212#1 retailer_dm_de [retailer, grade low]",
+        "reveal:T212#2 retailer_rossmann_de [retailer, grade low]"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Regular: no trigger. 'Tiefenpflegende Formel' is a care term, explicitly not D1.",
+      "counterSignal": "None.",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "formulaFacts": [],
+      "sourceIds": [
+        "formula:T212 (tier 2, complete)",
+        "reveal:T212#0 manufacturer_de [manufacturer_de, grade moderate]",
+        "reveal:T212#1 retailer_dm_de [retailer, grade low]",
+        "reveal:T212#2 retailer_rossmann_de [retailer, grade low]"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no scalp claim.",
+      "counterSignal": "None.",
+      "formulaFacts": [],
+      "sourceIds": [
+        "formula:T212 (tier 2, complete)",
+        "reveal:T212#0 manufacturer_de [manufacturer_de, grade moderate]",
+        "reveal:T212#1 retailer_dm_de [retailer, grade low]",
+        "reveal:T212#2 retailer_rossmann_de [retailer, grade low]"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11).",
+      "counterSignal": "None; formula complete (ID-1).",
+      "neighboringAlternative": "none",
+      "sourceIds": [
+        "formula:T212 (tier 2, complete)"
+      ]
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "repair_supported",
+      "moistureRoutes": [],
+      "repairRoutes": [
+        "Hydrolyzed Keratin 6",
+        "Amodimethicone 11",
+        "Dimethicone 7"
+      ],
+      "sharedConditioningRoutes": [
+        "Guar Hydroxypropyltrimonium Chloride 12"
+      ],
+      "limitation": "Protein concentration unknown."
+    },
+    "claimRole": "candidate",
+    "counterSignal": "No humectant; claimed 5% complex unverifiable.",
+    "neighboringAlternative": "general"
+  },
+  "decisionTrace": {
+    "primaryFocus": {
+      "claimDirection": "repair (manufacturer_de, moderate)",
+      "formulaCompatible": true,
+      "compatibleRoute": "Hydrolyzed Keratin 6 + Amodimethicone 11",
+      "decisionReason": "Dominant repair claim plus repair_supported verdict -> repair"
+    },
+    "secondaryFocus": {
+      "emptyDefaultConsidered": true,
+      "selectedValues": [],
+      "matchingDistinctClaims": [],
+      "independentRoutes": [],
+      "whyDistinctFromPrimary": "n/a",
+      "exceptionCode": null
+    },
+    "usageRole": {
+      "default": "regular",
+      "nonDefaultTriggerCode": "none",
+      "triggerEvidence": [],
+      "rationale": "No trigger."
+    }
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W=moderate, C=moderate -> acceptable for fine. Confidence = lowest of inputs (13.8): moderate. T2: thickness/texture claims ignored."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W=moderate, C=moderate -> ideal for normal. Confidence = lowest of inputs (13.8): moderate. T2: thickness/texture claims ignored."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W=moderate, C=moderate -> acceptable for coarse. Confidence = lowest of inputs (13.8): moderate. T2: thickness/texture claims ignored."
+      }
+    ],
+    "weight": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential moderate -> moderate, 1:1; confidence = weightPotential confidence (13.8)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "sOrdinaryWays": [
+          1
+        ],
+        "rationale": "S-ORDINARY way 1; manufacturer_de source -> high."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate, D1 false -> regular. I3 checked against neighbor none for each projected bucket."
+    },
+    "positioning": {
+      "explicitResetPositioning": {
+        "value": false,
+        "confidence": "high",
+        "rationale": "D1 false: 'Tiefenpflegende Formel' and 'Tiefenspülung' share the prefix but are care terms, explicitly Not D1 (13.6)."
+      }
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "moderate",
+      "rationale": "D2 not met: D1 false (or formula not strong)."
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable",
+        "expectedIntensity": "regular",
+        "liveMatch": "supportive"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal",
+        "expectedIntensity": "regular",
+        "liveMatch": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable",
+        "expectedIntensity": "regular",
+        "liveMatch": "supportive"
+      }
+    ],
+    "required_protocol_roles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_thickness_boundary",
+        "detail": "fine: acceptable; weightPotential neighbor high -> not_suited"
+      },
+      {
+        "code": "review_thickness_boundary",
+        "detail": "normal: ideal; weightPotential neighbor high -> acceptable"
+      }
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "researchCombinationConfidence": null,
+    "liveComparison": "review_live_value_differs not computed in the lane (catalog-dependent, resolved by the orchestrator after freeze, 14)."
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "general (provisional, low)",
+      "final": "repair",
+      "evidence": "manufacturer_de repair claims",
+      "reason": "Post-unblind reconciliation (3.2): claims identify/confirm the candidate job; formula compatibility checked against the frozen verdict."
+    },
+    {
+      "property": "focusSecondary",
+      "blind": "[] (provisional, low)",
+      "final": "[] -> unchanged",
+      "evidence": "Revealed positioning",
+      "reason": "Section 8 / F2-F3 checked."
+    },
+    {
+      "property": "usageRole",
+      "blind": "regular (provisional, low)",
+      "final": "regular",
+      "evidence": "no trigger",
+      "reason": "Section 9 triggers checked mechanically with CL-SRC grades."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blind": "not_targeted (provisional, low; CSA recorded)",
+      "final": "not_targeted",
+      "evidence": "no scalp claim",
+      "reason": "SC1 positioning plus CSA formula half (Section 10)."
+    },
+    {
+      "property": "cleansingStrength / conditioningLevel / weightPotential / dandruffSupport",
+      "blind": "frozen formula values",
+      "final": "unchanged",
+      "evidence": "Claims may not assign or move formula properties (3.2, 6.5 step 5, C7).",
+      "reason": "No formula error found on reconciliation."
+    }
+  ],
+  "claimToInciChecks": [
+    {
+      "claim": "Keratin / 5% Keratin-Aufbau-Komplex",
+      "inci": "Hydrolyzed Keratin (6)",
+      "result": "match; the 5% figure is a concentration claim the INCI cannot prove (3.2)"
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "formulaPassFile": "out/formula-pass/T212.json (frozen before reveal)",
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeWeightSubjudgmentsPresent": true,
+    "whyNotNeighborBandSpecific": true,
+    "w2AppliedWhereTwoOrMoreFamilies": true,
+    "confidenceNamesLimitingUncertainty": "Silicone/amino-silicone levels unknown; high is the realistic neighbor.",
+    "comparisonWithEarlierValuesMadeInLane": false,
+    "noWebUsed": true
+  },
+  "uncertainties": [
+    "W1 read as not applicable because Hydrolyzed Keratin (6) is a prominent protein film reinforcing the set; if W1 applied, band would still be moderate."
+  ]
+}

@@ -316,6 +316,8 @@ export function createRoutineProposalService(input: {
 
 export function createSupabaseRoutineProposalService(input: {
   client: PersonalPlanRoutineReadClient & { rpc: RoutineTransitionRpc }
+  /** Server-resolved Hair Tools rollout for this user; browser input never reaches it. */
+  toolsEnabled: (userId: string) => Promise<boolean>
 }) {
   const cadenceAuthorityReader = createSupabaseRoutineCadenceAuthorityReader(
     input.client as unknown as RoutineCadenceAuthorityReadClient,
@@ -324,8 +326,10 @@ export function createSupabaseRoutineProposalService(input: {
     // Read on the (rare) accept path only, never on the Routine page's hot
     // read: a missing draft means no refinement exists, so nothing is assumed.
     assumptionsActive: async (userId) => {
+      const toolsEnabled = await input.toolsEnabled(userId).catch(() => false)
       const draft = await createSupabaseStage2RefinementPersistence(
         input.client as unknown as SupabaseClient,
+        { toolsEnabled },
       ).loadExisting(userId)
       return draft ? stage2AssumptionsActive(draft) : false
     },

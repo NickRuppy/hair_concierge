@@ -749,7 +749,7 @@ test("states non-executable conditions plainly and keeps editing global", () => 
   )
 
   assert.match(html, /Empfohlen, aber nicht eingeplant/)
-  assert.match(html, /Noch in Prüfung/)
+  assert.match(html, /Nicht geprüft/)
   assert.match(html, /Nicht empfohlen · von dir eingeplant/)
   assert.match(html, /Offen/)
   assert.match(html, /Für diesen Basis-Baustein fehlt noch ein Produkt/)
@@ -1126,6 +1126,40 @@ test("fresh state (products open, 2 von 4): banner renders above the routine blo
   assert.equal(refined, 1)
 })
 
+test("banner copy for the tools module and for habits after tools (x von 5)", () => {
+  const view = activeViewFor(payload([item()]))
+  const render = (banner: {
+    module: "tools" | "habits"
+    completedSteps: number
+    totalSteps: number
+  }) =>
+    renderToStaticMarkup(
+      <RoutinePage
+        view={view}
+        refinementBanner={banner}
+        onDismissRefinementBanner={() => undefined}
+        onRefineFromBanner={() => undefined}
+      />,
+    )
+
+  const tools = render({ module: "tools", completedSteps: 3, totalSteps: 5 })
+  assert.match(tools, /Als Nächstes: Deine Tools\./)
+  assert.match(tools, />3 von 5</)
+  assert.match(tools, /Weiter · 3 Min\./)
+  assert.ok(tools.indexOf("Als Nächstes: Deine Tools.") < tools.indexOf("Deine Basis"))
+
+  const habitsAfterTools = render({ module: "habits", completedSteps: 4, totalSteps: 5 })
+  assert.match(habitsAfterTools, /Letzter Schritt: deine Gewohnheiten\./)
+  assert.match(habitsAfterTools, />4 von 5</)
+  assert.match(habitsAfterTools, /Weiter · 3 Min\./)
+  assert.doesNotMatch(habitsAfterTools, /Noch ein Schritt/)
+
+  // Tools not applicable (x von 4): today's habits copy.
+  const habitsWithoutTools = render({ module: "habits", completedSteps: 3, totalSteps: 4 })
+  assert.match(habitsWithoutTools, /Noch ein Schritt: deine Gewohnheiten\./)
+  assert.doesNotMatch(habitsWithoutTools, /Letzter Schritt/)
+})
+
 test("Task 2.6: the plan-updated toast is absent without the signal", () => {
   const routine = payload([item()])
   const view = activeViewFor(routine)
@@ -1181,4 +1215,43 @@ test("Task 2.6: the plan-updated toast and the refinement banner can render on t
   // Toast at the very top, banner further down (mockup screen 3): the two
   // never fight for the same slot.
   assert.ok(html.indexOf("Plan aktualisiert") < html.indexOf("Noch ein Schritt"))
+})
+
+test("Deine Tools renders after the product sections iff the view carries a tool section", () => {
+  const routine = payload([item()])
+  const comb = {
+    assetKey: "asset:brushes_combs:wide_tooth_comb",
+    family: "brushes_combs",
+    productTypes: ["wide_tooth_comb"],
+    capabilities: ["detangle"],
+    ownership: "owned_generic",
+    presentationState: "use_yours",
+    routeKeys: ["tool:brushes_combs:detangling_foundation"],
+    labelKey: "Grobzinkiger Kamm",
+    purposeKey: "Zum sanften Entwirren",
+    imageKey: "wide_tooth_comb",
+  } as const
+  const withTools = renderToStaticMarkup(
+    <RoutinePage
+      view={{
+        ...activeViewFor(routine),
+        toolSection: {
+          assets: [
+            {
+              ...comb,
+              productTypes: [...comb.productTypes],
+              capabilities: [...comb.capabilities],
+              routeKeys: [...comb.routeKeys],
+            },
+          ],
+          derivedAssetKeys: [],
+        },
+      }}
+    />,
+  )
+  assert.ok(withTools.includes("data-routine-tool-section"))
+  assert.ok(withTools.indexOf("Deine Basis") < withTools.indexOf("data-routine-tool-section"))
+  const without = renderToStaticMarkup(<RoutinePage view={activeViewFor(routine)} />)
+  assert.equal(without.includes("data-routine-tool-section"), false)
+  assert.equal(without.includes("Deine Tools"), false)
 })

@@ -44,9 +44,9 @@ const HAIR_LOSS_ALSO =
   "Auch angegeben: Haarausfall oder dünner werdendes Haar — nur Grenze, kein Produktrezept: ärztliche Abklärung empfehlen."
 
 const EVIDENCE_LABEL: Record<ConcernRecipeEvidence, string> = {
-  strong: "stark belegt",
-  moderate: "mäßig belegt",
-  weak: "schwach belegt",
+  strong: "gut belegt",
+  moderate: "laborbasiert",
+  weak: "Erfahrungswert",
   unknown: "unklar",
 }
 

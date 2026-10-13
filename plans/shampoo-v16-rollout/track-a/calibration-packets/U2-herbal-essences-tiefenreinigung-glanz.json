@@ -1,0 +1,84 @@
+{
+  "slot": "U2",
+  "productId": "41b99629-5a1c-402f-a486-d41780e89e66",
+  "name": "Herbal Essences Tiefenreinigung & Glanz Shampoo Limettenduft (dm: 'Shampoo Limettenduft, Tiefenreinigung & Glanz, 350 ml'; Rossmann: 'Haarshampoo Tiefenreinugung & Glanz Limettenduft')",
+  "brand": "Herbal Essences",
+  "packSize": "350 ml",
+  "gtins": [
+    "8006530123556"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/3115708/herbal-essences-shampoo-limettenduft-tiefenreinigung-und-glanz",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "german_retailer_exact_gtin_shown_on_page",
+      "gtinShown": "8006530123556 ('GTIN: 8006530123556', dm-Artikelnummer 3115708)",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Sodium Chloride, Parfum, Cocamidopropyl Betaine, Sodium Xylenesulfonate, Citric Acid, Sodium Benzoate, Sodium Citrate, Limonene, Citrus Aurantium Peel Oil, Sodium Salicylate, Hydroxypropyl Methylcellulose, Hexamethylindanopyran, Linalool, Dimethyl Phenethyl Acetate, Sodium Hydroxide, Tetrasodium EDTA, Hexyl Cinnamal, Geranyl Acetate, Histidine, Glyoxal",
+      "claimsVerbatim": "Tiefenreinigendes Shampoo | Verleiht dem Haar Glanz | Mit belebendem Limettenduft | Vegane und silikonfreie Formel || Das Herbal Essences Tiefenreinigung & Glanz Shampoo mit Limettenduft reinigt das Haar gründlich und entfernt Ablagerungen. Die silikonfreie Formel sorgt dafür, dass sich das Haar leicht, sauber und glänzend anfühlt. Angereichert mit einem frischen Limettenduft, belebt das Shampoo die Sinne und sorgt für ein energiegeladenes Gefühl. Die vegane Formel mit 99 % Inhaltsstoffen natürlichen Ursprungs* reinigt und erfrischt Haar und Geist. *bezieht sich auf die Inhaltsstoffe der Formel || Produktmerkmale: Wirkung: Pflege, Glanz; Produkteigenschaften: ohne Silikone",
+      "directionsVerbatim": "Großzügig auftragen, aufschäumen und danach ausspülen. Anschließend die Pflegespülung verwenden",
+      "note": "Rendered in Browser pane. 3,95 EUR, 0,35 l. Company: Procter & Gamble, 65823 Schwalbach/Ts. Directions on page have no final full stop."
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarshampoo-tiefenreinugung-und-glanz-limettenduft/p/8006530123556",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "german_retailer_exact_gtin_url",
+      "gtinShown": "8006530123556 (URL ends /p/8006530123556); Rossmann Artikelnummer 210215",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Sodium Chloride, Parfum, Cocamidopropyl Betaine, Sodium Xylenesulfonate, Citric Acid, Sodium Benzoate, Sodium Citrate, Limonene, Citrus Aurantium Peel Oil, Sodium Salicylate, Hydroxypropyl Methylcellulose, Hexamethylindanopyran, Linalool, Dimethyl Phenethyl Acetate, Sodium Hydroxide, Tetrasodium EDTA, Hexyl Cinnamal, Geranyl Acetate, Histidine, Glyoxal",
+      "claimsVerbatim": "Erwecke deine Sinne mit den erfrischenden Aromen der Limette. Das Herbal Essences Tiefenreinugung & Glanz Limettenduft Shampoo reinigt und entfernt Ablagerungen, sodass sich das Haar leicht, sauber und glänzend anfühlt. Angereichert mit einem frischen Limettenduft belebt diese vegane, silikonfreie Formel deine Sinne und sorgt für ein energiegeladenes Gefühl. Reinige und erfrische dein Haar und Geist mit der Kraft des Limettendufts. Für das beste Ergebnis verwende unser Tiefenreinugung & Pflegespülung. | SOFORTIG TIEFENREINIGUNG MIT NUR EINER ANWENDUNG. Entdecke Haare, die sich leicht und frisch anfühlen, umhüllt von einem Limettenduft mit unserer vollständigen Tiefenreinigung & Glanz Pflegeroutine | TIEFENREINIGENDES SHAMPOO. Diese Formel reinigt das Haar gründlich und verleiht ihm Glanz für ein strahlendes Finish | REINIGT* & BELEBT. Ein Spritzer Zitrusduft verwandelt deine Dusche in eine revitalisierende Auszeit | BELEBEND FRISCH. Der lebhafte Limettenduft ist wissenschaftlich erwiesen*, um dir ein energiegeladenes Gefühl zu verleihen | 99% NATÜRLICHER URSPRUNG* FORMEL. Dieses Shampoo ist silikonfrei, tierversuchsfrei und vegan | KLÄREN & GLÄNZEN. Verwende Shampoo und Pflegespülung zusammen für saubereres, leichteres, strahlenderes Haar von der Wurzel bis zur Spitze | *durch multimodale Forschung",
+      "directionsVerbatim": "Großzügig auftragen, aufschäumen und danach ausspülen. Anschließend die Pflegespülung verwenden.",
+      "note": "350 ml (1 L = 11,40 EUR), 3,99 EUR. First load showed a client challenge that cleared after a few seconds of normal page load; accordions 'Inhaltsstoffe' and 'Anwendung und Gebrauch' expanded to read."
+    },
+    {
+      "url": "https://www.codecheck.info/p/kosmetik/haarpflege/shampoo/2842907176.html",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "codecheck",
+      "gtinShown": "Found via search by 8006530123556 (barcode field blank in extracted text)",
+      "inciVerbatim": "Aqua , Sodium Laureth Sulfate , Sodium Chloride , Parfum , Cocamidopropyl Betaine , Sodium Xylenesulfonate , Citric Acid , Sodium Benzoate , Sodium Citrate , Limonene , Citrus Aurantium Peel Oil, Sodium Salicylate , Hydroxypropyl Methylcellulose , Hexamethylindanopyran, Linalool , Dimethyl Phenethyl Acetate , Sodium Hydroxide , Tetrasodium EDTA , Hexyl Cinnamal , Geranyl Acetate , Histidine , Glyoxal",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null,
+      "note": "User-entered, 350 ml, manufacturer P&G; supporting only. Same sequence; differs only in spaces before commas."
+    },
+    {
+      "url": "https://herbalessences.de/de-de/marken/herbal-essences/Herbal-Essences-Limettenduft-Shampoo",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "manufacturer_de_attempt",
+      "gtinShown": null,
+      "inciVerbatim": null,
+      "claimsVerbatim": null,
+      "directionsVerbatim": null,
+      "note": "herbalessences.de redirects to the for-me-online.de brand listing (no ingredient list or product page for this item). No manufacturer DE PDP available."
+    }
+  ],
+  "conflicts": [],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Sodium Chloride",
+    "Parfum",
+    "Cocamidopropyl Betaine",
+    "Sodium Xylenesulfonate",
+    "Citric Acid",
+    "Sodium Benzoate",
+    "Sodium Citrate",
+    "Limonene",
+    "Citrus Aurantium Peel Oil",
+    "Sodium Salicylate",
+    "Hydroxypropyl Methylcellulose",
+    "Hexamethylindanopyran",
+    "Linalool",
+    "Dimethyl Phenethyl Acetate",
+    "Sodium Hydroxide",
+    "Tetrasodium EDTA",
+    "Hexyl Cinnamal",
+    "Geranyl Acetate",
+    "Histidine",
+    "Glyoxal"
+  ],
+  "canonicalReason": "Two independent German retailers with the exact GTIN (dm shows GTIN on page, Rossmann in URL) give identical lists; codecheck agrees.",
+  "inciFingerprintSha256": "20cb4c26791b1441afb3fa4d89877d1d0247cdd726fe68a236ee26b5caf09067",
+  "normalization": "Split verbatim INCI on commas; per item trim, lower-case, collapse internal whitespace; join items with '|'; sha256 (utf-8) hex. Original-case ingredient list is kept in canonicalInci[].",
+  "identityConfidence": "high",
+  "status": "frozen",
+  "blockReason": null,
+  "notes": "Scanner ledger matched this barcode as a deep-cleansing candidate (per gold-set-proposal risk 2); category ownership is Nick/catalog-authority, not decided here. Pack wording 'Tiefenreinigung' is part of the product name; claims text 'TIEFENREINIGENDES SHAMPOO ... Diese Formel reinigt das Haar gründlich'. Rossmann's own listing spells 'Tiefenreinugung' (typo, verbatim). UK 'Clarify & Shine' variant has a different EAN (8006530123082) per a search snippet and was not used."
+}

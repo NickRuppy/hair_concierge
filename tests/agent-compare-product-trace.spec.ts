@@ -141,14 +141,21 @@ test("AgentV2 review prompt pack covers the prioritized manual QA prompts", () =
 test("compare route preserves the agent product trace for lab debugging", async () =>
   withNodeEnv("development", async () => {
     const { handleAgentCompareRequest } = await importCompareRoute()
+    // ADM-2, security audit 2026-10-09: compare runs require an eligible test account.
+    const testUser = {
+      id: "user-42",
+      email: "lea@hairconscierge.test",
+      label: "Lea · fine",
+      full_name: "Lea",
+    }
     const response = await handleAgentCompareRequest(
       {
-        userId: "user-42",
+        userId: testUser.id,
         prompt: "Welches Shampoo passt am besten zu mir?",
         systems: ["current", "agent"],
       },
       {
-        listEligibleCompareUsers: async () => [],
+        listEligibleCompareUsers: async () => [testUser],
         loadCompareUserSnapshot: async () => {
           throw new Error("not used")
         },

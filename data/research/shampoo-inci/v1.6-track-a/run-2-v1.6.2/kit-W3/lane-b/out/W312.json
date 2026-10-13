@@ -1,0 +1,347 @@
+{
+  "blindId": "W312",
+  "identity": {
+    "brand": "Guhl",
+    "productName": "Guhl Kopfhaut Sensitive",
+    "packSize": "250 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "389e6c9ab6edb330ef33566bb360461478df9f3d653a9f68ee0a94905a0d5d7c",
+    "normalization": "No split synonym entries; packet positions = normalized ID-2 positions (23 entries).",
+    "completeness": "complete; source tier 2; identity confidence high",
+    "e3ProminenceCutoff": "Parfum @21. Prominent = positions 1-20.",
+    "identityNotes": ""
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate @2 with prominent buffers Cocamidopropyl Betaine @3 and Coco-Glucoside @4, no reinforcing strong anionic. Betaine @5 is the humectant (not an alkyl betaine surfactant).",
+      "ruleIds": [
+        "C1",
+        "C3",
+        "C4"
+      ],
+      "counterSignal": "Refatting/conditioning co-ingredients argue slightly milder; convention (C1) unchanged.",
+      "sourceIds": [
+        "formula packet W312"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: one meaningful system, prominent cationic Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @9, with weak refatter Glyceryl Oleate @10 and a humectant cluster Betaine @5, Glycerin @6, Panthenol @7. C2 not met (no silicone/payload lipid, no pearlizing/fatty route). Counter-signal: the guar follows the sub-1 % active Panthenol @7; low is the neighbor.",
+      "ruleIds": [
+        "5",
+        "C2"
+      ],
+      "counterSignal": "See rationale (counter-signal recorded there).",
+      "sourceIds": [
+        "formula packet W312"
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "silicone": [],
+        "cationic_polymer": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @9"
+        ],
+        "cationic_conditioner": [],
+        "payload_lipid": [],
+        "weak_refatter": [
+          "Glyceryl Oleate @10"
+        ],
+        "protein_film": [],
+        "film_former": [],
+        "reset": [
+          "Sodium Laureth Sulfate @2",
+          "Cocamidopropyl Betaine @3",
+          "Coco-Glucoside @4"
+        ],
+        "humectantContext": [
+          "Betaine @5",
+          "Glycerin @6",
+          "Panthenol @7",
+          "Erythritol @12"
+        ],
+        "excluded": [
+          "Sorbitan Caprylate @11 (preservative booster/co-emulsifier)",
+          "Tetrasodium Glutamate Diacetate @14 (chelator)",
+          "Piroctone Olamine @15 (active)",
+          "Maltodextrin @16 (water-soluble carrier carbohydrate, non-cationic, no hair-substantive film)",
+          "Mentha Aquatica Leaf Extract @18, Tilia Cordata Flower Extract @19 (extracts)",
+          "CI 42090 @22, Caramel @23 (colourants)"
+        ],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 7,
+        "inci": "Panthenol",
+        "classes": [
+          "sub1_active"
+        ],
+        "cap": "e3Point @21 (Parfum)",
+        "alphabeticalRun": null,
+        "skipped": [],
+        "codes": [],
+        "note": "Panthenol @7 plausible: (i) SLES @2 before it; (ii) no cleansing surfactant, alkanolamide or pearlizing wax after it before the cap. No 7-entry alphabetical run.",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light",
+      "persistence": "low",
+      "resetCapacity": "moderate",
+      "counterevidence": "Two deposition families (cationic guar + weak refatter).",
+      "whyThisBand": "One light hydroxypropyl guar and one weak refatter against an effective C1 chassis.",
+      "whyNotNeighborBand": "Not moderate (W2 named evidence): the second family is a weak_refatter only (Glyceryl Oleate @10), and the only polymer @9 follows the W-line sub-1 % active Panthenol @7, i.e. at low dose; moderate reset faces only light routes.",
+      "confidenceLimitingFactor": "Cationic guar dose/charge density unknown; moderate realistic neighbor.",
+      "rationale": "Low: guar @9 + weak refatter @10 vs moderate C1 reset; neighbor moderate.",
+      "ruleIds": [
+        "6.6",
+        "W2",
+        "W-LINE",
+        "N-ALT"
+      ],
+      "counterSignal": "See counterevidence field.",
+      "sourceIds": [
+        "formula packet W312"
+      ],
+      "formulaFacts": "see evidence and wLine"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [],
+        "limitation": "Scalp-led."
+      },
+      "claimRole": "candidate",
+      "counterSignal": "SLES chassis (MB excluded); Piroctone Olamine present without a dandruff claim.",
+      "decisionTrace": "Claim direction sensitive scalp (name 'Kopfhaut Sensitive', high; 'Für trockene und empfindliche Kopfhaut', 'beruhigen die empfindliche Kopfhaut sofort und mildern Juckreiz', moderate). Formula compatible: targeted (Panthenol @7, Betaine @5, Glycerin @6). Decision scalp_active.",
+      "rationale": "scalp_active: name-level sensitive-scalp positioning + targeted formula.",
+      "ruleIds": [
+        "7.2",
+        "SC1",
+        "CSA"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "decisionTrace": "Empty default considered; no lengths-care claim.",
+      "rationale": "Empty.",
+      "ruleIds": [
+        "8",
+        "F2",
+        "F3"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [
+        "treatment: not fired (Piroctone Olamine present but no dandruff claim, U3/R17.3)"
+      ],
+      "rationale": "Default regular considered. FAQ 'für die regelmäßige Anwendung' is not U2 frequency wording.",
+      "ruleIds": [
+        "9",
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "CL-SRC"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Targeted: SC1 (name 'Kopfhaut Sensitive', high; manufacturer units) and CSA via prominent comfort route Panthenol @7 and humectant routes Betaine @5, Glycerin @6. No prominent cooling agent or essential oil (Mentha Aquatica Leaf Extract @18 is an extract).",
+      "ruleIds": [
+        "10",
+        "SC1",
+        "CSA",
+        "MB",
+        "E2a",
+        "E4"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Complete INCI contains Piroctone Olamine @15.",
+      "ruleIds": [
+        "11"
+      ],
+      "counterSignal": "None; mechanical table lookup.",
+      "sourceIds": [
+        "formula packet W312"
+      ]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionicEther": [
+        "Sodium Laureth Sulfate @2"
+      ],
+      "amphoteric": [
+        "Cocamidopropyl Betaine @3"
+      ],
+      "nonionicGlucoside": [
+        "Coco-Glucoside @4"
+      ],
+      "notCleansing": [
+        "Lactic Acid @8",
+        "Sorbitan Caprylate @11",
+        "Sodium Chloride @13"
+      ]
+    },
+    "conditioningRoutes": [
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @9",
+      "Glyceryl Oleate @10"
+    ],
+    "weightRoutes": [
+      "cationic_polymer @9",
+      "weak_refatter @10"
+    ],
+    "humectants": [
+      "Betaine @5",
+      "Glycerin @6",
+      "Panthenol @7",
+      "Erythritol @12 (not on closed lists)"
+    ],
+    "actives": [
+      "Piroctone Olamine @15 (recognized anti-dandruff active)",
+      "Panthenol @7 (E4 comfort)"
+    ],
+    "exposure": [
+      "Parfum @21",
+      "Mentha Aquatica Leaf Extract @18"
+    ],
+    "mildBase": "excluded: prominent strong anionic Sodium Laureth Sulfate @2",
+    "preservatives": [
+      "Sodium Benzoate @20"
+    ]
+  },
+  "projection": {
+    "status": "proposal_blocked_by_review_flags",
+    "thicknessFit": {
+      "fine": "ideal",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFitConfidence": {
+      "fine": "moderate",
+      "normal": "moderate",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": "T1 from weightPotential low and conditioningLevel moderate, T6 applied (scalp-concern targets); T4 checked with neighbors W=moderate, C=low after T6. ",
+    "weight": "light",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE 1:1 from weightPotential low (confidence moderate).",
+    "scalpTargets": {
+      "primary": {
+        "target": "sensitive",
+        "confidence": "high",
+        "rationale": "S-SENSITIVE: name 'Kopfhaut Sensitive' (high); formula targeted + prominent comfort route Panthenol @7. S-PRIMARY: name names sensitive."
+      },
+      "secondary": {
+        "target": "dry",
+        "confidence": "moderate",
+        "rationale": "S-DRY: own unit 'Für trockene und empfindliche Kopfhaut' (manufacturer, moderate); formula targeted + prominent humectant routes Betaine @5, Glycerin @6, Panthenol @7."
+      }
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength moderate, D1 false -> regular. I3: neighbor none (high confidence, no I3 check).",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserListingConfidence": "high",
+    "deepCleanserRationale": "D1 false; not_flagged.",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "trocken",
+        "scalp_route": "dry",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "trocken",
+        "scalp_route": "dry",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "trocken",
+        "scalp_route": "dry",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine"
+    ],
+    "informationalNotes": [
+      "active_without_dandruff_positioning: Piroctone Olamine @15 present, no dandruff claim (R17.3)"
+    ],
+    "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; not evaluated in lane."
+  },
+  "reconciliation": [
+    "focusPrimary provisional general -> scalp_active.",
+    "usageRole regular confirmed (treatment needs a dandruff claim).",
+    "scalpComfortTarget provisional not_targeted -> targeted.",
+    "Direct formula properties unchanged; dandruffSupport stays supported (formula-only)."
+  ],
+  "selfCheck": "Fingerprint matches the frozen packet (389e6c9ab6ed). Formula judgments (cleansing, conditioning, weight, dandruff) were made blind and are unchanged from the hash-pinned formula pass; claims were used only per 3.2/CL-SRC. No ingredient, family count or position window assigned the weight band; the W-line was derived from the frozen list and only gates payload_lipid legs; every skipped candidate is recorded. Three weight subjudgments present; whyNotNeighborBand names the specific boundary; confidence names its limiting factor. Neighbors follow N-ALT. Projection derived mechanically (T1/T6/T4, W-LIVE, I1/I3, D1-D3, S-gates). No comparison with earlier values made in lane.",
+  "uncertainties": [
+    "Piroctone Olamine without a dandruff claim -> regular shampoo path (R17.3); no dandruff target.",
+    "'beugt Irritationen vor' and 'mildern Juckreiz' both qualify sensitive; dry from one unit only (moderate)."
+  ]
+}

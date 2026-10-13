@@ -1,0 +1,257 @@
+{
+  "blindId": "T205",
+  "inciFingerprintSha256": "cb12321175c1cf9a3f9455fab2e6c51d09b6cb0f3700439be148e708e310ec21",
+  "fingerprintRecomputedMatches": true,
+  "formulaSource": {
+    "tier": 2,
+    "completeness": "complete",
+    "identityConfidence": "high"
+  },
+  "normalization": "No split synonym entries; packet positions equal normalized positions.",
+  "prominenceCutoff": "Parfum at 8 -> positions 1-7 prominent (E3).",
+  "surfactantArchitecture": "Disodium Laureth Sulfosuccinate (3) and Sodium Lauryl Sulfoacetate (4) mild anionics; Laureth-9 (5) nonionic ethoxylate (not a glucoside, not a buffer under C4); Lauryl Glucoside (6) buffer; Sodium Laureth Sulfate (7) earliest prominent strong anionic -> defining (C4); no reinforcing.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "C1: defining anionic is ether/sulfonate type with at least one prominent buffer and no prominent reinforcing strong anionic -> moderate. SLES (7) is the only prominent strong anionic; buffers Disodium Laureth Sulfosuccinate (3), Sodium Lauryl Sulfoacetate (4), Lauryl Glucoside (6).",
+      "counterSignal": "SLES is the last prominent surfactant, after three milder surfactants and very high Urea (2); the chassis is mild-led, so low is realistic. Convention keeps moderate; confidence lowered.",
+      "neighboringAlternative": "low",
+      "formulaFacts": [
+        {
+          "ingredient": "Disodium Laureth Sulfosuccinate",
+          "position": 3
+        },
+        {
+          "ingredient": "Sodium Lauryl Sulfoacetate",
+          "position": 4
+        },
+        {
+          "ingredient": "Lauryl Glucoside",
+          "position": 6
+        },
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 7
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Cleansing-led architecture with little substantive slip: only a late cationic starch (Hydroxypropyl Oxidized Starch PG-Trimonium Chloride 15) and trace Helianthus Annuus Seed Oil (21); Urea (2) is a humectant, not a slip route.",
+      "counterSignal": "Cationic starch is a real conditioning polymer; moderate is the realistic neighbor.",
+      "neighboringAlternative": "moderate",
+      "formulaFacts": [
+        {
+          "ingredient": "Urea",
+          "position": 2
+        },
+        {
+          "ingredient": "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+          "position": 15
+        },
+        {
+          "ingredient": "Helianthus Annuus Seed Oil",
+          "position": 21
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: one late cationic starch and a trace oil (last ingredient) against a buffered SLES/sulfosuccinate reset.",
+      "neighboringAlternative": "none",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Cationic starch (15) after Parfum and sunflower oil (21) at the end of the list."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "No silicone, no prominent lipid, no film former."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "Several prominent surfactants including SLES; ordinary reset."
+        }
+      },
+      "evidenceByFamily": {
+        "cationic_polymer": [
+          [
+            "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+            15
+          ]
+        ],
+        "payload_lipid": [
+          [
+            "Helianthus Annuus Seed Oil",
+            21
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Disodium Laureth Sulfosuccinate",
+            3
+          ],
+          [
+            "Sodium Lauryl Sulfoacetate",
+            4
+          ],
+          [
+            "Sodium Laureth Sulfate",
+            7
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Lauryl Glucoside",
+            6
+          ],
+          [
+            "Laureth-9",
+            5
+          ]
+        ],
+        "humectant_context": [
+          [
+            "Urea",
+            2
+          ]
+        ]
+      },
+      "excluded": [
+        [
+          "PEG-120 Methyl Glucose Dioleate",
+          9,
+          "PEG thickener (6.4)"
+        ],
+        [
+          "PEG/PPG-120/10 Trimethylolpropane Trioleate",
+          13,
+          "PEG thickener"
+        ],
+        [
+          "Laureth-2",
+          12,
+          "low-ethoxylate thickener"
+        ],
+        [
+          "Tocopherol",
+          20,
+          "antioxidant"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "Two deposition families present.",
+      "whyThisBand": "Deposition is absent except a late cationic starch and a trace oil.",
+      "whyNotNeighborBand": "Not moderate (W2): both families are late/trace (starch 15 after Parfum, oil last at 21); no silicone, no prominent lipid, ordinary reset faces only light routes.",
+      "confidenceLimitingFactor": "None material.",
+      "ruleNotes": [
+        "W2"
+      ]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Very prominent Urea suggests a dry/itchy-scalp product; scalp_active compatible if SC1 positioning appears.",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "basis": "Urea (2) is a strong humectant but conditioning/emollient support is minimal, so moisture_supported for lengths is not reached; no repair cluster."
+      },
+      "formulaCompatibleRoutes": [
+        "scalp_active-compatible: Urea 2 (comfort + humectant, E4), Laureth-9 5 (= polidocanol, E4 comfort, reading noted)",
+        "moisture (weak): Urea 2"
+      ],
+      "counterSignal": "Low conditioning; SLES present.",
+      "neighboringAlternative": "scalp_active"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Empty default; a secondary needs distinct positioning (Section 8), not visible yet.",
+      "counterSignal": "Positioning unknown.",
+      "neighboringAlternative": [
+        "shine"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Default regular (Section 9); triggers need graded claims. frequent possible (cleansing not strong) with explicit frequency wording.",
+      "counterSignal": "No claims.",
+      "neighboringAlternative": "frequent"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). SC1 positioning not visible. CSA formula half: passes: Urea (2) prominent comfort and humectant route; Laureth-9 (5) is the INCI name of polidocanol (E4 comfort list names Polidocanol).",
+      "counterSignal": "SLES present; fragrance declared.",
+      "neighboringAlternative": "targeted",
+      "csaPasses": true
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11).",
+      "counterSignal": "None; formula complete (ID-1).",
+      "neighboringAlternative": "none"
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Urea",
+      "position": 2,
+      "role": "humectant + comfort route (E4, C2)"
+    },
+    {
+      "ingredient": "Disodium Laureth Sulfosuccinate",
+      "position": 3,
+      "role": "mild anionic buffer"
+    },
+    {
+      "ingredient": "Sodium Lauryl Sulfoacetate",
+      "position": 4,
+      "role": "mild anionic buffer"
+    },
+    {
+      "ingredient": "Laureth-9",
+      "position": 5,
+      "role": "nonionic ethoxylate; polidocanol (E4 comfort)"
+    },
+    {
+      "ingredient": "Lauryl Glucoside",
+      "position": 6,
+      "role": "nonionic buffer"
+    },
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 7,
+      "role": "defining anionic (only prominent strong anionic)"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 8,
+      "role": "E3 cutoff"
+    },
+    {
+      "ingredient": "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+      "position": 15,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Helianthus Annuus Seed Oil",
+      "position": 21,
+      "role": "payload_lipid trace"
+    }
+  ],
+  "unresolvedMaterialIngredients": [],
+  "blindUncertainties": [
+    "Laureth-9 read as polidocanol for the E4 comfort list (same INCI substance); alternative: not listed. Urea alone already satisfies CSA, so no gate depends on it.",
+    "cleansingStrength moderate (C1) vs low (mild-led chassis, SLES last): convention moderate; confidence moderate, neighbor low."
+  ]
+}

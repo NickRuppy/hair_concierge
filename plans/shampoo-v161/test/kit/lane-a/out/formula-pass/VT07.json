@@ -1,0 +1,139 @@
+{
+  "blindId": "VT07",
+  "inciFingerprintSha256": "20012397ea815f52b539698536d537afcc6f42029e6c345f14aca92b2b0e1681",
+  "phase": "formula_pass_blind",
+  "standard": "shampoo-classification-v1.6.1 candidate (lane-a scrubbed copy); not a locked policy id",
+  "formulaBlock": {
+    "packSize": "250 ml",
+    "normalization": "ID-2: no synonym or split entries; 36 normalized entries; normalized positions",
+    "completeness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "moderate",
+    "e3Point": "Parfum @32; prominent = positions 1-31"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "moderate by C5: defining anionic Sodium Coco-Sulfate @2 (alkyl sulfate type) with at least two prominent buffers (Cocamidopropyl Betaine @3, Disodium Lauryl Sulfosuccinate @4, Sodium Methyl Oleoyl Taurate @5, Heptyl Glucoside @14, Disodium Cocoamphodiacetate @17) and no reinforcing strong anionic. Sulfated Castor Oil @16 is not a cleansing route (C3b). Counter-signal: alkyl sulfate chassis; four or more buffers make the C5 value robust.",
+      "ruleIds": ["C3", "C3b", "C4", "C5"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "high by C2 with the payload-lipid substitution: no silicone, but a prominent payload lipid takes its place (Hydrogenated Castor Oil @23, plus the emollient ester Lauryl/Myristyl Polyricinoleate @12), cationic polymer Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10, pearlizing route Glycol Distearate @7, deliberate humectants Glycerin @29 and Sorbitol @31 (both before Parfum @32); plus cationic conditioner Behenoyl PG-Trimonium Chloride @11. Counter-signal: no silicone; the lipid and humectant elements sit late (after Piroctone Olamine @19); neighbor moderate.",
+      "ruleIds": ["C2", "E3", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "silicone": [],
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10"],
+        "cationic_conditioner": ["Behenoyl PG-Trimonium Chloride @11"],
+        "payload_lipid": {"material": ["Lauryl/Myristyl Polyricinoleate @12 (emollient ester; read as payload_lipid, P0)"], "nonMaterial": ["Hydrogenated Castor Oil @23 (waxy; after the W-line)", "Stearic Acid @24, Palmitic Acid @25 (fatty acids; after the W-line)"]},
+        "weak_refatter": [],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["strong anionic alkyl sulfate Sodium Coco-Sulfate @2", "amphoteric Cocamidopropyl Betaine @3, Disodium Cocoamphodiacetate @17", "mild anionic Disodium Lauryl Sulfosuccinate @4, Sodium Methyl Oleoyl Taurate @5", "nonionic Heptyl Glucoside @14"],
+        "humectantContext": ["Xylitylglucoside @13", "Hexylene Glycol @18", "Propylene Glycol @27", "Glycerin @29", "Sorbitol @31"],
+        "excluded": ["Cocamide MIPA @6 (alkanolamide thickener)", "Glycol Distearate @7 (pearlizing wax, 6.4)", "Mentha Piperita Oil @9 (essential oil, 6.4)", "Sulfated Castor Oil @16 (no weight family, 6.4 v1.6.1)", "Cetyl Hydroxyethylcellulose @26 (nonionic cellulose thickener, no cationic charge)", "Zinc Oxide @28 (mineral particle, not a deposition family)", "Citrus Aurantium Peel Oil @33 (fragrance oil)"],
+        "unresolved": []
+      },
+      "wLineRecord": {
+        "wLine": {"position": 19, "inci": "Piroctone Olamine", "classes": ["preservative_or_capped_active"]},
+        "cap": {"e3Point": 32, "inci": "Parfum"},
+        "alphabeticalRun": null,
+        "skipped": [],
+        "codes": [],
+        "note": "No a-c candidate before @19 (no fragrance allergen, preservative or sub-1 % active earlier). Piroctone Olamine @19: (i) surfactants before; (ii) between @20 and @31 no cleansing surfactant (Capryloyl Glycine @21 is in no C3 class), no alkanolamide, no pearlizing wax. Salicylic Acid @20 is never a candidate."
+      },
+      "depositionLoad": "moderate",
+      "persistence": "moderate",
+      "resetCapacity": "moderate",
+      "counterevidence": "W-RICH is formally established for weight (material emollient ester @12 converging with cationic guar @10 and a behenyl quat @11), and a waxy Hydrogenated Castor Oil @23 plus fatty acids @24-25 are present after the W-line.",
+      "whyThisBand": "Plausible, bounded residue from a cationic guar, a behenoyl quat and an emollient ester; the C5 coco-sulfate chassis with four buffers is an effective ordinary reset (resetCapacity moderate), so W-RICH does not reach the high anchor's rich route (limited reset = weak).",
+      "whyNotNeighborBand": "high: W-RICH is present but reset is not limited; the convergence route (cationic polymer + cationic conditioner + one material ester) is not strong enough to overcome an effective alkyl-sulfate chassis, and the waxy Hydrogenated Castor Oil @23 is after the W-line, so it cannot add a lipid leg. low: two cationic families plus an emollient ester are a plausible depositing system (W2).",
+      "confidenceLimitingFactor": "W-LINE item 6: the post-line Hydrogenated Castor Oil @23 is part of what keeps the band from high (confidence at most moderate, neighbor high); W-RICH recorded as counter-signal.",
+      "rationale": "moderate: W-RICH with moderate reset falls to the rest of the method (6.7 W-RICH limited reset); confidence moderate, neighbor high.",
+      "ruleIds": ["6.3", "6.6", "W-RICH", "W-LINE", "W2", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "not_applicable",
+        "repairRoutes": [],
+        "moistureRoutes": ["Glycerin @29", "Sorbitol @31", "Xylitylglucoside @13"],
+        "sharedConditioningRoutes": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10", "Behenoyl PG-Trimonium Chloride @11", "Lauryl/Myristyl Polyricinoleate @12"],
+        "limitation": "formula-only; scalp-type actives dominate the formula character"
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Piroctone Olamine @19, Salicylic Acid @20, Salix Alba Bark Extract @8, Mentha Piperita Oil @9 point to a scalp/dandruff role, which needs positioning.",
+      "decisionTrace": "Blind pass: claim direction null; provisional general.",
+      "rationale": "provisional general (formula-only).",
+      "ruleIds": ["7.2", "3.1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["clarifying"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "provisional [] (Section 8).",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "treatment",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "provisional regular; treatment if a qualifying dandruff claim appears (U3); frequent possible with U2 wording (cleansing moderate).",
+      "ruleIds": ["9", "U3"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "provisional not_targeted (no positioning visible). CSA formula half met by prominent humectant/refatting routes Glycerin @29, Sorbitol @31 and the hydrogenated lipid Hydrogenated Castor Oil @23; no prominent E4 comfort route (an S-SENSITIVE gate would fail). Counter-signals: prominent cooling essential oil Mentha Piperita Oil @9 and Salicylic Acid @20; with a listed route present they cap targeted at moderate.",
+      "ruleIds": ["10", "CSA", "SC1", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "supported: Piroctone Olamine @19 in a complete formula (Section 11). Salicylic Acid and Zinc Oxide do not count.",
+      "ruleIds": ["11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactantClasses": {
+      "strongAnionicEther": [],
+      "strongAnionicAlkylSulfate": ["Sodium Coco-Sulfate @2 (defining)"],
+      "mildAnionic": ["Disodium Lauryl Sulfosuccinate @4", "Sodium Methyl Oleoyl Taurate @5"],
+      "amphoteric": ["Cocamidopropyl Betaine @3", "Disodium Cocoamphodiacetate @17"],
+      "nonionicCleansing": ["Heptyl Glucoside @14 (assigned by its glucoside name; short-chain, see uncertainties)"],
+      "notCleansing": ["Cocamide MIPA @6 (alkanolamide)", "Glycol Distearate @7", "Sodium Chloride @15", "Sulfated Castor Oil @16 (C3b)", "Capryloyl Glycine @21 (no C3 class)"],
+      "c4": "defining Sodium Coco-Sulfate @2; buffers @3, @4, @5, @14, @17; no reinforcing route"
+    },
+    "conditioningRoutes": ["@10 HP guar", "@11 Behenoyl PG-Trimonium Chloride", "@12 Lauryl/Myristyl Polyricinoleate", "@7 Glycol Distearate", "@23 Hydrogenated Castor Oil", "@29 Glycerin", "@31 Sorbitol"],
+    "actives": ["Salix Alba Bark Extract @8", "Mentha Piperita Oil @9", "Piroctone Olamine @19", "Salicylic Acid @20", "Capryloyl Glycine @21", "Zinc Oxide @28"],
+    "scalpExposure": ["Mentha Piperita Oil @9 (prominent cooling essential oil)", "Salicylic Acid @20", "Parfum @32", "Citrus Aurantium Peel Oil @33", "Limonene @34"],
+    "recognizedDandruffActives": ["Piroctone Olamine @19"]
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "Lauryl/Myristyl Polyricinoleate @12: read as payload_lipid (emollient ester, 6.3) under P0; alternative weak_refatter. With the alternative there is no material payload_lipid and no W-RICH; the band stays moderate but its counter-signal weakens.",
+    "Heptyl Glucoside @14 assigned nonionic cleansing by its glucoside name (C3 name rule); it is a short-chain hydrotrope in practice. It changes nothing: C5 already has three or more other buffers and it lies before the W-line candidate.",
+    "conditioningLevel high rests on C2 lipid substitution with the lipid and humectant elements in the late prominent zone; alternative moderate."
+  ]
+}

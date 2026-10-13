@@ -676,7 +676,10 @@ function evaluateFixtureDecision(
         explanation: mismatch ? "Die Passung weicht ab." : "Der Bedarf wird erfüllt.",
       },
     ],
-    allowedActions: mismatch ? ["plan_recommendation", "acknowledge_override"] : ["keep_owned"],
+    // Spec §5 / §7a.6, ruled 2026-10-12: Labs uses the same owned-mismatch actions.
+    allowedActions: mismatch
+      ? ["acknowledge_override", "plan_recommendation", "leave_uncovered"]
+      : ["keep_owned"],
     recommendation,
     productFactFingerprint: `fixture-facts:${subject.decisionKey}`,
     recommendationFactFingerprint: recommendation
@@ -998,7 +1001,7 @@ function fixtureCompactEvidenceRows(
             result === "pass"
               ? "erfüllt"
               : result === "caution"
-                ? "passt mit Einschränkung"
+                ? "passt bedingt"
                 : result === "fail"
                   ? "nicht erfüllt"
                   : "nicht bestätigt",

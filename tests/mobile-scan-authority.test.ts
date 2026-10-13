@@ -1,8 +1,10 @@
 import assert from "node:assert/strict"
 import { UNKNOWN_SELECTION_PROFILE } from "../src/lib/personal-plan/products/authority/selection-profile"
 import test from "node:test"
+import { readFile } from "node:fs/promises"
 import { buildScanVerdict, type BuildScanVerdictInput } from "../src/lib/scan/resolve-verdict"
 import { mobileAuthorityFailure } from "../src/lib/mobile/scan-service"
+import { mobileScanResolveResultSchema } from "../src/lib/mobile/scan-contracts"
 import {
   mobileAssessmentRows,
   mobileCriterionRows,
@@ -69,6 +71,23 @@ function input(): BuildScanVerdictInput {
 }
 
 test("machine authority distinguishes missing product facts and unavailable personal targets", () => {
+  // These field names cross the scanner/native wire boundary.
+  for (const [field, missingKey] of [
+    ["thickness", "thickness"],
+    ["weight", "weight"],
+    ["proteinMoistureBalance", "protein_moisture_balance"],
+    ["repairSupportLevel", "repair_support_level"],
+  ] as const) {
+    const fixture = input()
+    ;(fixture.productFacts as Stage3ConditionerFacts).spec[field] = null
+    const verdict = buildScanVerdict(fixture)
+    assert.equal(verdict.kind, "in_catalog")
+    if (verdict.kind === "in_catalog")
+      assert.deepEqual(mobileAuthorityFailure(verdict), {
+        kind: "submission_required",
+        missingFacts: [missingKey],
+      })
+  }
   const value = input()
   ;(value.productFacts as Stage3ConditionerFacts).spec.weight = null
   const incomplete = buildScanVerdict(value)
@@ -193,7 +212,7 @@ test("native alternatives sort full eligible pool by verdict EUR price then id b
   if (web.kind === "in_catalog") assert.equal(web.alternatives.length, 3)
 })
 
-test("native title specializes an authoritative scalp-row failure", () => {
+test("native title uses the ruled label for an authoritative scalp-row failure", () => {
   const rows = mobileCriterionRows(
     "shampoo",
     "shampoo_everyday",
@@ -207,7 +226,24 @@ test("native title specializes an authoritative scalp-row failure", () => {
     ],
     null,
   )
-  assert.equal(mobileVerdictTitle("mismatch", rows), "Passt nicht zu deiner Kopfhaut")
+  // fit-verdict spec §1, ruled 2026-10-12: titles use the same four labels on every surface.
+  assert.equal(mobileVerdictTitle("mismatch", rows), "Passt nicht")
+})
+
+test("native v1 contract preserves additive reason lines for the product and alternatives", async () => {
+  const fixture = JSON.parse(
+    await readFile(new URL("./fixtures/mobile/scan-v1.json", import.meta.url), "utf8"),
+  )
+  // Old v1 responses remain valid without the additive fields.
+  assert.equal(mobileScanResolveResultSchema.parse(fixture).contractVersion, 1)
+  fixture.reasonLines = ["Für feines Haar eher schwer"]
+  fixture.alternatives[0].verdict = "supportive"
+  fixture.alternatives[0].reasonLines = ["Eine Stufe unter deinem Repair-Ziel"]
+  const parsed = mobileScanResolveResultSchema.parse(fixture)
+  assert.equal(parsed.kind, "assessment")
+  if (parsed.kind !== "assessment") throw new Error("expected assessment")
+  assert.deepEqual(parsed.reasonLines, ["Für feines Haar eher schwer"])
+  assert.deepEqual(parsed.alternatives[0].reasonLines, ["Eine Stufe unter deinem Repair-Ziel"])
 })
 
 test("D3 reasons are explicitly distinguished from technical unavailable authority", () => {

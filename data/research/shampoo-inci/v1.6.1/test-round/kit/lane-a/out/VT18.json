@@ -1,0 +1,366 @@
+{
+ "blindId": "VT18",
+ "identity": {
+  "brand": "Aveda",
+  "productName": "Rosemary Mint Purifying Shampoo",
+  "packSize": "250 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "b0e2b65b9820cb98896157e9be265a953e96246e26b6ba348e8e062356d040ec",
+  "normalization": "Split synonym entries merged into one item (ID-2); every position cited is the normalized one-based position. lower-case, trim, collapse whitespace, join with |; split synonym entries merged into one item",
+  "completeness": "complete (formula source tier 2, identity confidence moderate)",
+  "e3ProminenceCutoff": "Fragrance (Parfum)@17",
+  "note": "Market DE; identity confidence moderate per packet."
+ },
+ "formulaPassRef": {
+  "file": "out/formula-pass/VT18.json",
+  "note": "hash-pinned blind record; not edited after release"
+ },
+ "formulaFacts": {
+  "e3Point": {
+   "position": 17,
+   "inci": "Fragrance (Parfum)"
+  },
+  "surfactants": [
+   {
+    "inci": "Sodium Coco-Sulfate",
+    "position": 2,
+    "class": "strong anionic, alkyl sulfate type (defining anionic)",
+    "prominent": true
+   },
+   {
+    "inci": "Babassuamidopropyl Betaine",
+    "position": 4,
+    "class": "amphoteric (buffer)",
+    "prominent": true
+   },
+   {
+    "inci": "Cocamidopropylamine Oxide",
+    "position": 16,
+    "class": "amphoteric, buffer only (C3b)",
+    "prominent": true
+   }
+  ],
+  "conditioningRoutes": {
+   "payload_lipid": [
+    "Helianthus Annuus (Sunflower) Seed Oil@6"
+   ],
+   "cationic_conditioner": [
+    "Stearamidopropyl Dimethylamine@10"
+   ],
+   "cationic_polymer": [
+    "Polyquaternium-4@12"
+   ],
+   "silicone": [],
+   "pearlizing_fatty_route": [],
+   "humectants": [
+    "Glycerin@3"
+   ]
+  },
+  "actives": [
+   "Menthol@8",
+   "Camphor@9",
+   "Mentha Piperita (Peppermint) Oil@7",
+   "Rosmarinus Officinalis (Rosemary) Leaf Extract@5",
+   "Vinegar/Acetum/Vinaigre@13"
+  ],
+  "scalpRelevant": {
+   "e4ComfortRoutesProminent": [],
+   "e4HumectantRefattingProminent": [
+    "Glycerin@3",
+    "Helianthus Annuus (Sunflower) Seed Oil@6"
+   ],
+   "coolingAgents": [
+    "Mentha Piperita (Peppermint) Oil@7",
+    "Menthol@8",
+    "Camphor@9 (all prominent)"
+   ],
+   "essentialOilsOrAllergens": [
+    "Mentha Piperita (Peppermint) Oil@7 (prominent)",
+    "Linalool@18",
+    "Limonene@19",
+    "Pinene@20",
+    "Carvone@21",
+    "Beta-Caryophyllene@22",
+    "Terpineol@23",
+    "Linalyl Acetate@24"
+   ],
+   "recognizedDandruffActives": []
+  },
+  "preservatives": [
+   "Benzoic Acid@25",
+   "Phenoxyethanol@26",
+   "Sodium Benzoate@27"
+  ],
+  "chelators": [
+   "Sodium Gluconate@11"
+  ]
+ },
+ "wLineRecord": {
+  "wLine": {
+   "position": 17,
+   "inci": "Fragrance (Parfum)",
+   "classes": [
+    "fragrance"
+   ]
+  },
+  "cap": {
+   "e3Point": 17
+  },
+  "alphabeticalRun": null,
+  "skipped": [],
+  "codes": [],
+  "payloadLipidMaterial": [
+   "Helianthus Annuus (Sunflower) Seed Oil@6"
+  ],
+  "payloadLipidNonMaterial": [],
+  "derivation": "No class a/b/c candidate precedes the E3 marker (Menthol, Camphor and essential oils are not on the closed lists; Linalool/Limonene follow the cap); no alphabetical run. The marker Fragrance (Parfum)@17 is itself a class a candidate: (i) Sodium Coco-Sulfate@2 before it; (ii) nothing between it and the cap -> W-line = cap = 17, no fallback code."
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "strong",
+   "rationale": "moderate by C5: the defining anionic is Sodium Coco-Sulfate@2 (alkyl sulfate type) with two prominent buffers (Babassuamidopropyl Betaine@4, Cocamidopropylamine Oxide@16) and no reinforcing strong anionic. C3b: Cocamidopropylamine Oxide is the buffer that brings C5 down to moderate (with one buffer C5 yields strong), so confidence is at most moderate and the neighbor is strong.",
+   "ruleIds": [
+    "C3",
+    "C3b",
+    "C4",
+    "C5",
+    "N-ALT"
+   ],
+   "counterSignal": "See rationale (counter-signal stated there).",
+   "formulaFacts": "see formulaFacts block (normalized positions)"
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "moderate: one meaningful system - the cationic conditioner Stearamidopropyl Dimethylamine@10 with Polyquaternium-4@12 - plus the prominent liquid oil Sunflower Seed Oil@6 and Glycerin@3. C2 is not met: no silicone (the oil may take its place) but no pearlizing/fatty route. Counter-signal: Polyquaternium-4 is a low-substantivity polymer and the chassis is cleansing-led (sulfate, essential oils, vinegar); low and high are not equally realistic - low is the realistic neighbor (and the lower value per N-ALT tie rule).",
+   "ruleIds": [
+    "C2",
+    "5",
+    "N-ALT"
+   ],
+   "counterSignal": "See rationale (counter-signal stated there).",
+   "formulaFacts": "see formulaFacts block (normalized positions)"
+  },
+  "weightPotential": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "high",
+   "rationale": "moderate: W-RICH is established (material Sunflower Seed Oil@6, before the W-line Fragrance@17, converging with cationic deposition Stearamidopropyl Dimethylamine@10 / Polyquaternium-4@12), but the C5 sodium coco-sulfate chassis gives moderate reset, so the rich route does not reach high; the convergence route is not convincingly met because the routes are light (liquid oil, low-charge PQ-4). W-RICH recorded as counter-signal, high as neighbor.",
+   "ruleIds": [
+    "6.6",
+    "6.7",
+    "W-RICH",
+    "W-LINE",
+    "W2",
+    "N-ALT"
+   ],
+   "evidence": {
+    "cationic_polymer": [
+     "Polyquaternium-4@12"
+    ],
+    "payload_lipid": [
+     "Helianthus Annuus (Sunflower) Seed Oil@6 (material, liquid oil)"
+    ],
+    "weak_refatter": [],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [
+     "Stearamidopropyl Dimethylamine@10"
+    ],
+    "reset": [
+     "Sodium Coco-Sulfate@2 (strong anionic, alkyl sulfate)",
+     "Babassuamidopropyl Betaine@4 (amphoteric buffer)",
+     "Cocamidopropylamine Oxide@16 (C3b buffer only)"
+    ],
+    "humectantContext": [
+     "Glycerin@3"
+    ],
+    "excluded": [
+     "Mentha Piperita (Peppermint) Oil@7 (essential oil, 6.4)",
+     "Menthol@8, Camphor@9 (cooling/fragrance materials)",
+     "Rosmarinus Officinalis Leaf Extract@5 (botanical extract)",
+     "Vinegar@13, Citric Acid@15 (acids)",
+     "terpene allergens @18-24 (fragrance)"
+    ],
+    "unresolved": []
+   },
+   "depositionLoad": "moderate",
+   "persistence": "moderate",
+   "resetCapacity": "moderate",
+   "counterevidence": "Three deposition families (payload_lipid, cationic_conditioner, cationic_polymer) and W-RICH are present; the amidoamine conditioner is a genuinely substantive cationic.",
+   "whyThisBand": "An amidoamine conditioner plus a prominent oil plausibly leaves bounded residue (not lightweight), but an alkyl-sulfate chassis with buffers resets it and no silicone or waxy lipid is present.",
+   "whyNotNeighborBand": "high needs W-RICH with weak reset or converging persistent systems that reset does not offset; reset is moderate (alkyl sulfate) and the converging routes are light (liquid oil, PQ-4).",
+   "confidenceLimitingFactor": "W-RICH is formally present; the oil and amidoamine levels are unknown and could move the band to high.",
+   "counterSignal": "Three deposition families (payload_lipid, cationic_conditioner, cationic_polymer) and W-RICH are present; the amidoamine conditioner is a genuinely substantive cationic.",
+   "formulaFacts": "see formulaFacts block (normalized positions)"
+  },
+  "focusPrimary": {
+   "value": "clarifying",
+   "confidence": "moderate",
+   "neighboringAlternative": "general",
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": "Clarifying/oily role, not a repair/moisture decision."
+   },
+   "claimRole": "candidate",
+   "counterSignal": "The cleansing is only moderate (C5 brought down by the C3b amine oxide), and \"sanft gereinigt\" softens the reset message; shine (\"voller Glanz\") is also claimed.",
+   "decisionTrace": "Claim direction: clarifying / oily hair (manufacturer_de, moderate: \"Normales bis fettiges Haar wird mit diesem ... klärenden Shampoo sanft gereinigt\", \"Mizellen entfernen sanft Produktrückstände und Verunreinigungen\"). F6 compatibility: cleansingStrength moderate, conditioningLevel moderate (not high), weightPotential moderate (not high) -> compatible. Compatible route: Sodium Coco-Sulfate@2 chassis with micellar co-surfactants and Vinegar@13. Decision: clarifying.",
+   "rationale": "clarifying: oily-hair (E2 oily term \"normales bis fettiges Haar\", v1.6.1) and clarifying/buildup positioning on an F6-compatible formula. Confidence moderate (manufacturer-only, wayback capture).",
+   "ruleIds": [
+    "7.2",
+    "F6",
+    "E2",
+    "CL-SRC",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "shine"
+   ],
+   "decisionTrace": "Empty default considered. Shine (\"voller Glanz\") has no independent route: Vinegar@13/Citric Acid@15 are pH adjusters/acids that cannot create a secondary shine (F4). Volume appears only in retailer copy (low). Kept [].",
+   "rationale": "[] (Section 8, F4).",
+   "ruleIds": [
+    "8",
+    "F4",
+    "CL-SRC",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "moderate",
+   "neighboringAlternative": "alternating",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [
+    "alternating not fired: reset intent present (\"klärenden\", \"entfernen ... Produktrückstände\", oily-hair wording; manufacturer, moderate) but cleansingStrength is moderate, not strong (U4)"
+   ],
+   "rationale": "regular: reset intent exists but alternating needs cleansingStrength strong; no frequency wording, no D1 (\"Purifying\", \"klärend\" are not D1 stems), no active. Confidence moderate because the cleansing neighbor is strong (neighbor alternating).",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U4",
+    "D1",
+    "N-ALT"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "not_targeted: no E2 sensitive or dry-scalp claim unit.",
+   "ruleIds": [
+    "10",
+    "SC1"
+   ],
+   "counterSignal": "Prominent cooling agents/essential oil (Peppermint Oil@7, Menthol@8, Camphor@9)."
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "not_supported: the complete INCI contains none of Piroctone Olamine, Climbazole, Selenium Sulfide or Selenium Disulfide (Section 11 table). Formula complete per packet (ID-1).",
+   "ruleIds": [
+    "11",
+    "DS1",
+    "ID-1",
+    "N-ALT"
+   ],
+   "counterSignal": "See rationale (counter-signal stated there).",
+   "formulaFacts": "see formulaFacts block (normalized positions)"
+  }
+ },
+ "reconciliation": [
+  "Blind-to-final: focusPrimary general -> clarifying (oily-hair + clarifying positioning, F6 compatible).",
+  "Blind-to-final: focusSecondary neighbor [\"clarifying\"] -> [\"shine\"] (clarifying became primary).",
+  "Blind-to-final: usageRole regular kept, neighbor frequent -> alternating (reset intent with a moderate formula whose neighbor is strong).",
+  "Blind-to-final: scalpComfortTarget not_targeted kept (low -> high).",
+  "The oily target relies on the v1.6.1 oily-hair term (\"normales bis fettiges Haar\", S3); under v1.6 it would have been ordinary."
+ ],
+ "projection": {
+  "status": "projected proposal, blocked by review flags",
+  "thicknessFit": {
+   "fine": "acceptable",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 with W=moderate, C=moderate then T6 (scalp-concern targets); T4 checked with N-ALT neighbors after T6.",
+  "weight": "moderate",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential moderate -> moderate (1:1).",
+  "scalpTargets": {
+   "primary": {
+    "target": "oily",
+    "confidence": "moderate",
+    "rationale": "S-OILY passes: positioning \"Normales bis fettiges Haar wird mit diesem ... klärenden Shampoo sanft gereinigt\" (E2 oily-hair term, v1.6.1; manufacturer_de, moderate); formula: cleansingStrength moderate, weightPotential moderate (not high), conditioningLevel moderate (not high). Confidence = min(positioning moderate, cleansing moderate, weight moderate, conditioning moderate) = moderate."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "moderate",
+  "cleansingIntensityRationale": "I1: cleansingStrength moderate, D1 false -> regular. I3 checked against neighbor strong.",
+  "explicitResetPositioning": false,
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D2 not met (no explicit deep-cleanser positioning with a strong formula).",
+  "deepCleanserRecord": "not_applicable",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "dehydriert-fettig",
+    "scalp_route": "oily",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "acceptable"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "dehydriert-fettig",
+    "scalp_route": "oily",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "dehydriert-fettig",
+    "scalp_route": "oily",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   "review_thickness_boundary:normal"
+  ],
+  "informationalNotes": [],
+  "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; lanes never see catalog ids."
+ },
+ "selfCheck": "6.11 self-check: fingerprint matches the frozen packet (re-read by exact path); claims and labels were hidden during the blind formula pass (formula-pass record frozen before reveal); no ingredient, family count or position window assigned the weight band (W-line used only to gate payload_lipid legs); W-line derived from the frozen list per W-LINE and every skipped candidate recorded; depositionLoad, persistence and resetCapacity present with rationales; counterevidence and whyNotNeighborBand specific (W2 where applicable); confidence names its limiting factor; no comparison with earlier or catalog values was made inside the lane.",
+ "uncertainties": [
+  "Oily claim unit reading: \"Normales bis fettiges Haar wird ... gereinigt\" read as the product being for oily hair (E2a \"für/bei\"); alternative: a hair-type description only, which would make the target ordinary (way 1).",
+  "Manufacturer source is a Wayback capture (2026-04-16) of the DE page; graded moderate as manufacturer_de per packet.",
+  "cleansingStrength moderate rests on Cocamidopropylamine Oxide@16 as the second buffer (C3b); neighbor strong would fire alternating (U4) and S-OILY still passes; I1 stays regular (no D1).",
+  "weightPotential neighbor high would fail the S-OILY weight clause; no rule raises a flag for that, recorded here.",
+  "Retailer claims (volume for fine hair, \"ohne zu beschweren\", \"schwerelos\") are low and cannot move anything."
+ ]
+}

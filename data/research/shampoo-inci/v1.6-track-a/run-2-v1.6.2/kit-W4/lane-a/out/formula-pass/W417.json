@@ -1,0 +1,258 @@
+{
+ "blindId": "W417",
+ "inciFingerprintSha256": "571fec0717ab082a937b7fcadf0e886dc73b356c7d45f4c33fb1fbcde5b83742",
+ "lane": "lane-a",
+ "phase": "1-blind-formula-pass",
+ "policyId": "shampoo-classification-v1.6.2",
+ "formulaBlock": {
+  "packSize": "300 ml",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high",
+  "normalization": "Packet list already normalized (synonym variants are single entries); positions cited are normalized one-based positions (ID-2), identical to the packet order.",
+  "normalizedInci": [
+   "1. Aqua",
+   "2. Sodium Laureth Sulfate",
+   "3. Cocamidopropyl Betaine",
+   "4. Glycerin",
+   "5. Coco-Glucoside",
+   "6. Panthenol",
+   "7. Salicylic Acid",
+   "8. Glyceryl Oleate",
+   "9. Sodium Hyaluronate",
+   "10. Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+   "11. Hydrogenated Palm Glycerides Citrate",
+   "12. Quaternium-80",
+   "13. Propylene Glycol",
+   "14. Tocopherol",
+   "15. Lecithin",
+   "16. Ascorbyl Palmitate",
+   "17. Citric Acid",
+   "18. Sodium Chloride",
+   "19. Sodium Benzoate",
+   "20. Potassium Sorbate",
+   "21. Parfum",
+   "22. Hexyl Cinnamal",
+   "23. Linalool"
+  ],
+  "e3Point": "Parfum@21 (fragrance marker); prominent = positions 1-20"
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`moderate` by C1: defining anionic Sodium Laureth Sulfate@2, prominent buffers Cocamidopropyl Betaine@3 and Coco-Glucoside@5, no reinforcing strong anionic. Salicylic Acid@7 is an acid (no route).",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "E3"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "high",
+   "rationale": "`moderate`: interacting light routes — cationic Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@10, cationic conditioner Quaternium-80@12, weak refatters (Glyceryl Oleate@8, Hydrogenated Palm Glycerides Citrate@11, Lecithin@15, Ascorbyl Palmitate@16), humectants Glycerin@4, Panthenol@6, Sodium Hyaluronate@9. C2 not met: no early silicone (Quaternium-80 is recorded as a cationic conditioner, 6.4), no payload lipid, no pearlizing/fatty route. Neighbor `high`: two cationic routes plus a dense humectant/refatter cluster come close to 'multiple complementary systems'.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "6.4",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "evidence": {
+    "cationic_polymer": [
+     "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@10"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [
+     "Glyceryl Oleate@8",
+     "Hydrogenated Palm Glycerides Citrate@11",
+     "Tocopherol@14",
+     "Lecithin@15",
+     "Ascorbyl Palmitate@16"
+    ],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [
+     "Quaternium-80@12"
+    ],
+    "reset": [
+     "anionic: Sodium Laureth Sulfate@2",
+     "amphoteric: Cocamidopropyl Betaine@3",
+     "nonionic: Coco-Glucoside@5"
+    ],
+    "humectantContext": [
+     "Glycerin@4",
+     "Panthenol@6",
+     "Sodium Hyaluronate@9",
+     "Propylene Glycol@13 (solvent)"
+    ],
+    "excluded": [
+     "Salicylic Acid@7, Citric Acid@17 (acids)",
+     "Hexyl Cinnamal@22, Linalool@23 (after cap)"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": "6 Panthenol",
+    "candidateClasses": [
+     "sub1_active"
+    ],
+    "cap": "e3Point 21 (Parfum)",
+    "alphabeticalRun": "none",
+    "skipped": [],
+    "testedCandidate": "Panthenol@6: (i) Sodium Laureth Sulfate@2 before it; (ii) entries 7-20 contain no cleansing surfactant, alkanolamide or pearlizing wax (Glyceryl Oleate and the glyceride citrate are refatters in no C3 cleansing class) -> plausible",
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "moderate — two cationic routes (guar polymer and Quaternium-80 conditioner) plus several weak refatters.",
+   "persistence": "moderate — Quaternium-80 (silicone-quat conditioner) and guar can deposit; refatters weakly retained; no payload lipid.",
+   "resetCapacity": "moderate — C1 ether-sulfate chassis with betaine and glucoside buffers.",
+   "counterevidence": "Every route is individually light and sits mid-to-late in the list; ordinary reset.",
+   "whyThisBand": "Three interacting deposition families (cationic_polymer, cationic_conditioner, weak_refatter) plausibly leave noticeable but bounded residue.",
+   "whyNotNeighborBand": "Not `low`: two distinct cationic families plus a refatter cluster converge, so calling it lightweight would understate residue (W2 — no single family is trace, and the reset is only ordinary). Not `high`: no silicone system, no payload lipid, no W-RICH; the cationic routes are single light members.",
+   "confidenceLimitingFactor": "doses of guar and Quaternium-80 unknown; all routes light, so `low` is realistic.",
+   "rationale": "`moderate`: interacting light cationic + refatter routes under an ordinary reset (6.6, W2). Neighbor `low` (more realistic than `high`: no silicone or lipid).",
+   "ruleIds": [
+    "6.6",
+    "6.4",
+    "W2",
+    "W-LINE",
+    "N-ALT"
+   ]
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "low",
+   "neighboringAlternative": "moisture",
+   "provisional": true,
+   "careDirection": {
+    "verdict": "moisture_supported (provisional)",
+    "moistureRoutes": [
+     "Glycerin@4",
+     "Panthenol@6",
+     "Sodium Hyaluronate@9"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@10",
+     "Quaternium-80@12",
+     "Glyceryl Oleate@8",
+     "Hydrogenated Palm Glycerides Citrate@11",
+     "Lecithin@15"
+    ],
+    "limitation": "coherent humectant cluster with cationic/refatter support; Salicylic Acid@7 suggests a scalp role that claims must show"
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Claims are hidden in the blind pass; focus is claim-led (7.2) and cannot be set from the formula alone.",
+   "decisionTrace": "Blind pass: claim direction null (hidden). Placeholder `general` (7.1 honest fallback) until reveal; formula routes recorded for reconciliation (3.2).",
+   "rationale": "Provisional (formula-only): `general` because no claim is visible; the formula care-direction verdict is recorded before claims (7.3) and the neighbor names the most plausible formula-compatible focus.",
+   "ruleIds": [
+    "3.1",
+    "7.2",
+    "7.3",
+    "F1",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "low",
+   "neighboringAlternative": [
+    "scalp_active"
+   ],
+   "provisional": true,
+   "decisionTrace": "Blind pass: empty default considered; no distinct positioning visible (claims hidden), so no secondary can be selected (Section 8).",
+   "rationale": "Provisional (formula-only): `[]` — Section 8 requires distinct exact-product positioning, which is hidden in the blind pass.",
+   "ruleIds": [
+    "3.1",
+    "8",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "low",
+   "neighboringAlternative": "frequent",
+   "provisional": true,
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Provisional (formula-only): default `regular` (Section 9); every non-default trigger needs a moderate/high-graded claim or direction, all hidden in the blind pass. cleansingStrength `moderate` fixes which triggers remain possible: `frequent` possible with U2 wording; `alternating` impossible (not strong); `treatment` impossible (no active).",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "CL-SRC"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "low",
+   "neighboringAlternative": "targeted",
+   "provisional": true,
+   "csaRoute": "comfort list: Panthenol@6; humectant/refatting list: Glycerin@4, Panthenol@6, Glyceryl Oleate@8, Sodium Hyaluronate@9 (all prominent)",
+   "mildBase": "excluded — Sodium Laureth Sulfate@2 is a prominent strong anionic",
+   "rationale": "Provisional `not_targeted` (positioning half SC1 hidden in the blind pass). Formula half CSA is MET via listed prominent route(s): comfort list: Panthenol@6; humectant/refatting list: Glycerin@4, Panthenol@6, Glyceryl Oleate@8, Sodium Hyaluronate@9 (all prominent). MB: excluded — Sodium Laureth Sulfate@2 is a prominent strong anionic. If reveal shows a moderate/high-graded E2 sensitive or dry-scalp unit, the value becomes `targeted`.",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "MB",
+    "E3",
+    "E4",
+    "SC1"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`not_supported`: the complete INCI contains none of Piroctone Olamine, Climbazole, Selenium Sulfide or Selenium Disulfide (Section 11, DS1).",
+   "ruleIds": [
+    "11",
+    "DS1",
+    "ID-1"
+   ]
+  }
+ },
+ "formulaFacts": {
+  "surfactants": [
+   "Sodium Laureth Sulfate@2 strong anionic ether type (defining)",
+   "Cocamidopropyl Betaine@3 amphoteric (buffer)",
+   "Coco-Glucoside@5 nonionic glucoside (buffer)"
+  ],
+  "conditioningRoutes": [
+   "cationic polymer: Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@10",
+   "cationic conditioner: Quaternium-80@12",
+   "weak refatters: Glyceryl Oleate@8, Hydrogenated Palm Glycerides Citrate@11, Lecithin@15, Ascorbyl Palmitate@16",
+   "humectants: Glycerin@4, Panthenol@6, Sodium Hyaluronate@9"
+  ],
+  "comfortRoutes": "E4 comfort list: Panthenol@6 (prominent); E4 humectant/refatting: Glycerin@4, Panthenol@6, Glyceryl Oleate@8, Sodium Hyaluronate@9 (prominent)",
+  "actives": [
+   "Salicylic Acid@7 (not a recognized dandruff active)",
+   "no recognized anti-dandruff active"
+  ],
+  "exposureFlags": [
+   "Parfum@21",
+   "Hexyl Cinnamal@22, Linalool@23",
+   "no cooling agent, no essential oil"
+  ],
+  "preservatives": [
+   "Sodium Benzoate@19",
+   "Potassium Sorbate@20"
+  ]
+ },
+ "unresolvedMaterialIngredients": [],
+ "notes": []
+}

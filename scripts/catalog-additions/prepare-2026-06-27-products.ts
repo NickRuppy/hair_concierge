@@ -1211,7 +1211,7 @@ async function applyApprovedPackages(supabase: SupabaseClient): Promise<void> {
       : await supabase.from("products").insert(productWritePayload).select("id").single()
     if (productError) throw productError
 
-    const specPayload = { product_id: saved.id, ...payload.spec.value }
+    const specPayload: Record<string, unknown> = { product_id: saved.id, ...payload.spec.value }
     const { error: specError } = await supabase
       .from(payload.spec.table)
       .upsert(specPayload, { onConflict: "product_id" })

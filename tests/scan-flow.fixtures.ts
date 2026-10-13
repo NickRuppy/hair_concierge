@@ -46,7 +46,8 @@ function inCatalogResult(productId: string, name: string): ScanResolvedVerdictRe
     kind: "in_catalog",
     verdict: "ideal",
     verdictLabel: "Passt",
-    verdictTitle: "Passt zu deinem Haar",
+    // fit-verdict spec §1/§7b, ruled 2026-10-12
+    verdictTitle: "Passt",
     status: "ok",
     subtitle: "3 von 3 Zielbereichen getroffen",
     evaluatedRole: null,
@@ -107,7 +108,8 @@ function maskedResult(freeRevealAvailable: boolean): ScanMaskedVerdictResult {
     savedState: NOT_SAVED,
     verdict: "mismatch",
     verdictLabel: "Passt nicht",
-    verdictTitle: "Passt nicht zu deinem Haar",
+    // fit-verdict spec §1/§7b, ruled 2026-10-12
+    verdictTitle: "Passt nicht",
     status: "danger",
     subtitle: "1 von 3 Zielbereichen getroffen",
     alternatives: [

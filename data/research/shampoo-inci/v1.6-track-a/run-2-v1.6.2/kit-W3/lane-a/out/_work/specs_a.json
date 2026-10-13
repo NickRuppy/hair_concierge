@@ -1,0 +1,603 @@
+{
+ "W301": {
+  "brand": "Swiss-O-Par",
+  "name": "Swiss-O-Par Teebaumöl Shampoo (Kurshampoo)",
+  "sources": [
+   "manufacturer_de (moderate): Rufin Cosmetic DE page",
+   "retailer dm (low)",
+   "retailer Rossmann (low, GTIN 4104260076501, 250 ml)",
+   "retailer Müller (low)"
+  ],
+  "csCounter": "PEG-7 Glyceryl Cocoate @6 refatting (does not move C1).",
+  "clCounter": "Light routes PEG-7 Glyceryl Cocoate @6 and post-E3 Glycol Distearate @12; none substantive.",
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "clarifying",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "Glycerin @18 (late)"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "PEG-7 Glyceryl Cocoate @6"
+    ],
+    "limitation": "No conditioning system."
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Oily wording (\"fettiges Haar\", \"Fettabsonderung\", \"Fett\") and a moderate, low-conditioning, low-weight formula would make clarifying formula-compatible (F6) if the oily wording stood in its own unit.",
+   "decisionTrace": "Claim direction: anti-dandruff scalp product (\"Gegen Kopfhautreizungen, Schuppen und fettiges Haar\", manufacturer, moderate). Formula compatible? No: 7.2 requires a recognized dandruff active for anti-dandruff scalp_active; dandruffSupport not_supported (tea tree oil does not count, Section 11). The irritation and oily words all sit inside units that name Schuppen, so E2a absorbs them: no separate sensitive claim (scalp_active via SC1) and no separate oily claim (clarifying via F6). No lengths-care claim. Decision: general (7.2 unsupported/contradictory claims).",
+   "rationale": "General: the dominant anti-dandruff positioning is incompatible with a formula without a recognized active; absorbed comfort/oily words open no other focus.",
+   "ruleIds": [
+    "7.2",
+    "F6",
+    "E2a",
+    "Section 11"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "clarifying"
+   ],
+   "decisionTrace": "Empty default considered; no distinct secondary positioning outside the dandruff units.",
+   "rationale": "Empty.",
+   "ruleIds": [
+    "Section 8"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Default regular: no U2 frequency wording (\"Ausreichend für 25 bis 30 Haarwäschen\" and the 3-minute 'Kurshampoo' leave-on are not frequency wording), no D1, no dandruff active (treatment impossible), cleansing moderate (alternating impossible).",
+   "ruleIds": [
+    "Section 9",
+    "U1",
+    "U2",
+    "U3",
+    "U4"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "moderate",
+   "neighboringAlternative": "targeted",
+   "rationale": "Not targeted: no SC1 positioning. \"Kopfhautreizungen\"/\"Reizungen\" occur only inside units that name Schuppen (E2a/SC1: dandruff symptoms); the soothing sentences are retailer-only (low). Formula half: CSA met via PEG-7 Glyceryl Cocoate @6 (listed refatting route), MB excluded by prominent Sodium Laureth Sulfate @2; counter-signal prominent tea-tree oil @4.",
+   "ruleIds": [
+    "Section 10",
+    "SC1",
+    "CSA",
+    "MB",
+    "E2a",
+    "CL-SRC"
+   ]
+  },
+  "primary": {
+   "target": "ordinary",
+   "confidence": "moderate",
+   "rationale": "S-ORDINARY way 4 (S-FAIL): the product has a qualifying E2 dandruff claim (\"Gegen Kopfhautreizungen, Schuppen und fettiges Haar\", \"Effektiv gegen Schuppen, Reizungen und Fett\", manufacturer, moderate) but fails the S-DANDRUFF formula gate (dandruffSupport not_supported). Comfort and oily wording inside those units is absorbed (E2a/E2b layer 1) and no separate qualifying unit graded moderate or high exists; no other specialist target passes -> ordinary with review_specialist_gate_failed."
+  },
+  "secondary": null,
+  "extraFlags": [
+   "review_specialist_gate_failed: dandruff (formula gate S-DANDRUFF failed: dandruffSupport not_supported; tea tree oil is not a recognized active)"
+  ],
+  "notes": [],
+  "d1": false,
+  "d1Grade": "moderate",
+  "dclRat": "D1 false: \"Kurshampoo\" and the directions contain no D1 stem; cleansing moderate. D2 not met -> not_flagged.",
+  "reconciliation": [
+   "focusPrimary: blind provisional general (low) -> final general (moderate); revealed anti-dandruff claim cannot select scalp_active without a recognized active (7.2).",
+   "usageRole: blind provisional regular (moderate) -> final regular (high); no trigger in the revealed directions.",
+   "scalpComfortTarget: blind provisional not_targeted (low) -> final not_targeted (moderate); comfort wording is absorbed into dandruff units.",
+   "cleansingStrength, conditioningLevel, weightPotential, dandruffSupport: unchanged (formula-only)."
+  ],
+  "uncertainties": [
+   "Unit reading: \"Gegen Kopfhautreizungen, Schuppen und fettiges Haar.\" read as one dandruff claim unit (E2a absorbs the irritation and oily words). Alternative: if the oily words were a separate unit, an oily target would be tested (S-OILY clause would pass: moderate/low/low) and the primary target would become oily instead of ordinary + S-FAIL; rejected because every oily phrase on the manufacturer page shares its unit with Schuppen.",
+   "Talgdrüsen/Fettabsonderung wording is not a closed E2 oily lexicon term except via 'fettiges Haar'; retailer-only bullets (Müller) are low and cannot qualify.",
+   "Identity confidence moderate: manufacturer page carries no GTIN/pack size; retailers corroborate the 250 ml GTIN."
+  ]
+ },
+ "W302": {
+  "brand": "NIVEA",
+  "name": "NIVEA Power Repair Reparatur Shampoo",
+  "sources": [
+   "manufacturer_de (moderate): Beiersdorf page, GTIN 4006000192543",
+   "retailer dm (low)"
+  ],
+  "csCounter": "Refatting/conditioning load (lipids, guar) does not move C1.",
+  "clCounter": "Conditioning elements sit mid/late (positions 9-18); bounded care (moderate) realistic.",
+  "focusPrimary": {
+   "value": "moisture",
+   "confidence": "moderate",
+   "neighboringAlternative": "repair",
+   "careDirection": {
+    "verdict": "moisture_supported",
+    "moistureRoutes": [
+     "Panthenol @10",
+     "Glycerin @15",
+     "Cocos Nucifera Oil @11",
+     "Squalane @9",
+     "Dicaprylyl Ether @12"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Guar Hydroxypropyltrimonium Chloride @13",
+     "Glyceryl Oleate @14"
+    ],
+    "limitation": "Blind verdict kept (recorded before claims): humectant + emollient cluster; no protein or bond route, so repair is not independently supported."
+   },
+   "claimRole": "candidate",
+   "counterSignal": "The product name and dominant positioning are repair (\"Power Repair Reparatur\", \"Strukturaufbau und Anti-Haarbruch\"); the formula has a C2-level deposition cluster that a dual_supported reading would credit to repair.",
+   "decisionTrace": "Claim direction: repair dominates (name \"Power Repair Reparatur\", high). Formula compatible with repair? No: the blind verdict, fixed before claims (7.3), is moisture_supported, and F1 maps damage positioning to repair only for repair_supported or dual_supported. Next dominant compatible job: moisture, explicitly claimed (\"Versorgt das Haar mit lang anhaltender Feuchtigkeit\", \"spendet dem Haar Feuchtigkeit\", manufacturer moderate) and supported (Panthenol @10, Glycerin @15 with lipids/guar). Decision: moisture.",
+   "rationale": "Moisture: the repair name is not supported by the moisture_supported verdict; the manufacturer moisture claim is.",
+   "ruleIds": [
+    "7.2",
+    "7.3",
+    "F1",
+    "CL-SRC"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "repair"
+   ],
+   "decisionTrace": "Empty default considered. Repair positioning exists but has no independent supported route (verdict moisture_supported; one ingredient never carries two routes, F3).",
+   "rationale": "Empty.",
+   "ruleIds": [
+    "Section 8",
+    "F3"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Default regular: no U2 frequency wording; \"reinigt sanft\" is mildness only.",
+   "ruleIds": [
+    "Section 9",
+    "U2"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not targeted: no SC1 positioning (\"Reinigt sanft die Kopfhaut\", \"Hautverträglichkeit dermatologisch bestätigt\" are mildness/protective wording, E2a). CSA would be met (Panthenol @10 comfort route) but positioning is absent.",
+   "ruleIds": [
+    "Section 10",
+    "SC1",
+    "E2a"
+   ]
+  },
+  "primary": {
+   "target": "ordinary",
+   "confidence": "high",
+   "rationale": "S-ORDINARY way 1: no qualifying E2 scalp claim unit; manufacturer source present (13.8)."
+  },
+  "secondary": null,
+  "notes": [],
+  "d1": false,
+  "d1Grade": "moderate",
+  "dclRat": "D1 false (no D1 stem). not_flagged.",
+  "reconciliation": [
+   "focusPrimary: blind provisional general (low, neighbor moisture, verdict moisture_supported) -> final moisture (moderate, claim candidate). The revealed repair name was not allowed to re-read the blind verdict.",
+   "focusSecondary: blind [] -> final [] (repair claim lacks an independent supported route).",
+   "usageRole and scalpComfortTarget: provisional -> final unchanged values with higher confidence.",
+   "\"Pflegt das Haar, ohne zu beschweren\" does not lower weightPotential (6.5 step 5). Formula properties unchanged."
+  ],
+  "uncertainties": [
+   "Care-direction verdict: kept moisture_supported from the blind pass. A dual_supported reading (guar + material lipids as a repair deposition cluster) would let the name break the tie to repair, with moisture as a possible secondary. Projection is unaffected.",
+   "Weight moderate vs high: W-RICH holds with ordinary reset; high is the neighbor (T4 flags all three thicknesses)."
+  ]
+ },
+ "W303": {
+  "brand": "Salthouse",
+  "name": "Salthouse Anti Juckreiz (Totes Meer Therapie Anti-Juckreiz Shampoo)",
+  "sources": [
+   "manufacturer_de (moderate)",
+   "retailer Rossmann (low)",
+   "retailer dm (low)"
+  ],
+  "csCounter": "Laureth-9 @3 and Urea @6 add mildness signals; not buffers (C3).",
+  "clCounter": "Single guar plus humectants; light care (low) realistic.",
+  "focusPrimary": {
+   "value": "scalp_active",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": "Scalp focus; repair/moisture decision not applicable."
+   },
+   "claimRole": "candidate",
+   "counterSignal": "Ordinary SLES/betaine chassis (moderate cleansing) rather than a mild base; menthol and mint oil (post-E3) are irritation counter-signals.",
+   "decisionTrace": "Claim direction: sensitive/itchy scalp (product name \"Anti Juckreiz\", high; \"beruhigend bei juckender und empfindlicher Kopfhaut\", manufacturer moderate). Formula compatible: scalpComfortTarget targeted (Polidocanol = Laureth-9 @3, Urea @6). Route: Laureth-9 @3 + Urea @6. No competing lengths-care claim (F7 not needed). Decision: scalp_active.",
+   "rationale": "scalp_active: explicit anti-itch sensitive-scalp product with listed comfort routes.",
+   "ruleIds": [
+    "7.2",
+    "SC1",
+    "E4"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": [],
+   "decisionTrace": "Empty default considered; the dry-scalp wording is part of the scalp_active role, no lengths-care positioning.",
+   "rationale": "Empty.",
+   "ruleIds": [
+    "Section 8"
+   ]
+  },
+  "usageRole": {
+   "value": "frequent",
+   "confidence": "moderate",
+   "neighboringAlternative": "regular",
+   "triggerCode": "explicit_frequent_non_strong",
+   "triggerEvidence": [
+    "\"Für die tägliche Haarwäsche geeignet.\" (manufacturer directions, moderate)"
+   ],
+   "losingTriggers": [],
+   "rationale": "Frequent: explicit U2 wording ('tägliche') from a moderate source and cleansingStrength moderate (not strong).",
+   "ruleIds": [
+    "Section 9",
+    "U2",
+    "CL-SRC"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Targeted: SC1 positioning (name \"Anti Juckreiz\", high; \"beruhigend bei juckender und empfindlicher Kopfhaut\", \"für die Bedürfnisse von juckender, trockener und empfindlicher Kopfhaut\", moderate) and CSA via listed prominent routes Laureth-9 @3 (Polidocanol) and Urea @6. MB not met (SLES @2). Cooling agents Menthol @12 and Mentha Arvensis Leaf Oil @16 are after the E3 point, so no prominent counter-signal caps confidence.",
+   "ruleIds": [
+    "Section 10",
+    "SC1",
+    "CSA",
+    "E4"
+   ]
+  },
+  "primary": {
+   "target": "sensitive",
+   "confidence": "high",
+   "rationale": "S-SENSITIVE passes: E2 sensitive claim in the product name (\"Anti Juckreiz\", high) and manufacturer units; formula gate: scalpComfortTarget targeted and prominent comfort routes Laureth-9 @3 / Urea @6; cleansing moderate (no review). S-PRIMARY: both sensitive and dry pass; the product name names Juckreiz (sensitive) -> primary sensitive."
+  },
+  "secondary": {
+   "target": "dry",
+   "confidence": "moderate",
+   "rationale": "S-DRY passes: E2 dry claim \"speziell für die Bedürfnisse von juckender, trockener und empfindlicher Kopfhaut entwickelt\" (manufacturer, moderate; a unit naming two non-dandruff states counts for both, E2a) plus \"Spannungs- und Trockenheitsgefühle werden gemildert\"; formula: targeted and prominent humectant route Urea @6. Not contradictory with sensitive; one secondary only."
+  },
+  "notes": [],
+  "d1": false,
+  "d1Grade": "moderate",
+  "dclRat": "D1 false. not_flagged.",
+  "reconciliation": [
+   "focusPrimary: blind provisional general (low, neighbor scalp_active) -> final scalp_active (high) on revealed name-level anti-itch positioning.",
+   "usageRole: blind regular -> final frequent (U2 'tägliche Haarwäsche', manufacturer directions).",
+   "scalpComfortTarget: blind not_targeted (low, CSA already met) -> final targeted (high) once SC1 positioning is revealed.",
+   "Formula properties unchanged."
+  ],
+  "uncertainties": [
+   "Medical positioning (\"Basispflege für Hauttypen mit Neurodermitis und Psoriasis\", \"Hautproblem: Neurodermitis, Schuppenflechte\") is outside scope: not used for any target or focus; recorded only.",
+   "Dry secondary relies on a unit that names dry and sensitive together; read as counting for both (E2a). If a strictly separate dry unit were required, secondary would be none (more conservative).",
+   "Weight low (moderate confidence): fine fit ideal is flagged by T4 (neighbor moderate)."
+  ]
+ },
+ "W304": {
+  "brand": "Head & Shoulders",
+  "name": "Head & Shoulders Anti Schuppen Sensitive",
+  "sources": [
+   "manufacturer_de (moderate; includes pack-front image text)",
+   "retailer dm (low)",
+   "retailer Rossmann (low)"
+  ],
+  "csCounter": "None material; hydrotrope and alkanolamide are not routes.",
+  "clCounter": "Guar @12 + pearlizer @8 could read as several light routes (moderate).",
+  "dsCounter": "None: Piroctone Olamine @9 on the closed list.",
+  "focusPrimary": {
+   "value": "scalp_active",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": "Active-led scalp focus."
+   },
+   "claimRole": "candidate",
+   "counterSignal": "No credible supportive architecture for the 'sensitive' wording (CSA fails); lengths care is light.",
+   "decisionTrace": "Claim direction: anti-dandruff (name \"Anti Schuppen\", high). Formula compatible: recognized active Piroctone Olamine @9 (dandruffSupport supported). Route: Piroctone Olamine @9. Decision: scalp_active (7.2 problem-led row).",
+   "rationale": "scalp_active: anti-dandruff product with a recognized active.",
+   "ruleIds": [
+    "7.2",
+    "Section 11"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": [],
+   "decisionTrace": "Empty default considered; no lengths-care positioning.",
+   "rationale": "Empty.",
+   "ruleIds": [
+    "Section 8"
+   ]
+  },
+  "usageRole": {
+   "value": "treatment",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "recognized_active_problem_led",
+   "triggerEvidence": [
+    "Name \"Anti Schuppen\" (high) + Piroctone Olamine @9 (dandruffSupport supported)"
+   ],
+   "losingTriggers": [
+    "explicit_frequent_non_strong (\"ideal für die tägliche Anwendung\", manufacturer moderate; cleansing moderate)"
+   ],
+   "rationale": "Treatment wins by U1 precedence over frequent.",
+   "ruleIds": [
+    "Section 9",
+    "U1",
+    "U3"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not targeted: the sensitive/itch wording sits inside dandruff units (\"SENSITIVE KOPFHAUT Anti-Schuppen Shampoo\", \"Juckreiz im Zusammenhang mit Schuppen\") and is dandruff symptom wording, not SC1; and CSA is not met in any case (no prominent E4 comfort or humectant route, MB excluded by SLES @2).",
+   "ruleIds": [
+    "Section 10",
+    "SC1",
+    "CSA",
+    "E2a",
+    "E2b"
+   ]
+  },
+  "primary": {
+   "target": "dandruff",
+   "confidence": "high",
+   "rationale": "S-DANDRUFF passes: E2 dandruff claim in the product name (\"Anti Schuppen\", high) + dandruffSupport supported (Piroctone Olamine @9). S-PRIMARY (R17.1): dandruff is primary; R17.2: no secondary target."
+  },
+  "secondary": null,
+  "rct": [
+   "oily"
+  ],
+  "notes": [
+   "suits_dandruff_with_oily_scalp: oily-scalp wording \"fettige Kopfhaut\" / \"Öl\" inside the 3X Schutz dandruff units (manufacturer, moderate); S-OILY clause passes (cleansing moderate, weight low, conditioning low). Research-only, confidence moderate.",
+   "dandruff_bundled_comfort_wording: \"SENSITIVE KOPFHAUT Anti-Schuppen Shampoo\", \"Juckreiz im Zusammenhang mit Schuppen\" (manufacturer, moderate); S-SENSITIVE formula gate failed: CSA not met (no prominent E4 comfort or humectant/refatting route; MB excluded by Sodium Laureth Sulfate @2)."
+  ],
+  "d1": false,
+  "d1Grade": "moderate",
+  "dclRat": "D1 false. not_flagged.",
+  "reconciliation": [
+   "focusPrimary: blind provisional general (low, neighbor scalp_active) -> final scalp_active (high).",
+   "usageRole: blind regular (low, neighbor treatment) -> final treatment.",
+   "scalpComfortTarget: unchanged not_targeted (CSA fails).",
+   "Formula properties unchanged."
+  ],
+  "uncertainties": [
+   "The pack-front sentences are reported inside the manufacturer source; graded moderate per the packet. Name grade high carries the dandruff target either way.",
+   "Oily combination value relies on oiliness words inside dandruff units, which R17.2 lets feed the combination."
+  ]
+ },
+ "W305": {
+  "brand": "Wahre Schätze (Garnier)",
+  "name": "Garnier Wahre Schätze Ausgleichendes Shampoo Anziehende Aktivkohle & Schwarzkümmelöl",
+  "sources": [
+   "manufacturer_de (moderate)",
+   "retailer exact GTIN (low)",
+   "retailer, different 250 ml GTIN (low; corroboration only)"
+  ],
+  "csCounter": "Nigella oil @5 and guar @8 refatting/conditioning do not move C5.",
+  "clCounter": "Only two systems; no pearlizer or listed humectant; strong ALS chassis; bounded care (moderate) realistic.",
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "clarifying",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "Nigella Sativa Seed Oil @5",
+     "Polyglycerin-10 @11 (unlisted humectant)"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Guar Hydroxypropyltrimonium Chloride @8"
+    ],
+    "limitation": "No coherent humectant cluster for the lengths-moisture claim."
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Dominant deep-cleansing/oily-scalp positioning is formula-compatible on cleansing (strong) and weight (moderate) but fails F6 only on conditioningLevel high; with conditioning at its moderate neighbor, focus would be clarifying.",
+   "decisionTrace": "Claim direction: clarifying (\"Tiefenreinigungsshampoo gegen schnell fettende Kopfhaut\", manufacturer moderate). Formula compatible? F6 requires cleansing moderate/strong (strong: pass), weightPotential not high (moderate: pass) and conditioningLevel not high (high: FAIL). Next job: lengths moisture (\"Spendet bis zu 72 h Feuchtigkeit\") needs moisture_supported; verdict nonspecific (only one unlisted polyglycerin humectant). Decision: general; failed condition named: F6 conditioningLevel high.",
+   "rationale": "General: clarifying fails F6 on conditioningLevel high; moisture not supported by the formula.",
+   "ruleIds": [
+    "7.2",
+    "F6",
+    "F1",
+    "7.3"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "moisture"
+   ],
+   "decisionTrace": "Empty default considered; moisture claim has no supported route (verdict nonspecific).",
+   "rationale": "Empty.",
+   "ruleIds": [
+    "Section 8"
+   ]
+  },
+  "usageRole": {
+   "value": "occasional_reset",
+   "confidence": "moderate",
+   "neighboringAlternative": "alternating",
+   "triggerCode": "explicit_deep_cleansing",
+   "triggerEvidence": [
+    "\"Das Garnier Wahre Schätze Ausgleichende Shampoo ist ein Tiefenreinigungsshampoo\" (manufacturer, moderate; D1 stem 'tiefenrein')"
+   ],
+   "losingTriggers": [
+    "strong_plus_reset_intent (cleansing strong + \"schnell fettende Kopfhaut\", \"Rückstände\" reset intent, U4)"
+   ],
+   "rationale": "D1 true fires occasional_reset, which wins by U1 over alternating. No daily-use directions.",
+   "ruleIds": [
+    "Section 9",
+    "U1",
+    "U4",
+    "D1"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not targeted: no E2 sensitive or dry-scalp positioning (\"trockene Haarlängen\" is lengths). CSA would be met via Nigella Sativa Seed Oil @5; MB excluded (strong ALS).",
+   "ruleIds": [
+    "Section 10",
+    "SC1"
+   ]
+  },
+  "primary": {
+   "target": "ordinary",
+   "confidence": "moderate",
+   "rationale": "S-ORDINARY way 4 (S-FAIL): E2 oily claim \"schnell fettende Kopfhaut\" (manufacturer, moderate) passes positioning, but the S-OILY formula gate fails on conditioningLevel high (cleansing strong: pass; weightPotential moderate: pass). No other specialist target -> ordinary with review_specialist_gate_failed."
+  },
+  "secondary": null,
+  "extraFlags": [
+   "review_specialist_gate_failed: oily (S-OILY formula clause failed: conditioningLevel high)",
+   "review_reset_positioning_mismatch (D3: D1 true and cleansingStrength strong, but D2 not met because focusPrimary is general, not clarifying)"
+  ],
+  "notes": [],
+  "d1": true,
+  "d1Grade": "moderate",
+  "dcl": "not_flagged",
+  "dclConf": "moderate",
+  "dclRat": "D1 true (\"Tiefenreinigungsshampoo\", manufacturer, moderate). D2 requires cleansing strong (yes), usageRole occasional_reset (yes), D1 (yes) and focusPrimary clarifying (NO: general, F6 fails on conditioning high) -> not_flagged; D3 raises review_reset_positioning_mismatch. Confidence moderate (D1 grade, focus confidence).",
+  "reconciliation": [
+   "focusPrimary: blind provisional general (low, neighbor clarifying) -> final general (moderate); clarifying claim revealed but F6 fails on conditioningLevel high.",
+   "usageRole: blind regular (low) -> final occasional_reset (D1 'Tiefenreinigungsshampoo').",
+   "explicitResetPositioning true; observed intensity clarifying (I1).",
+   "Formula properties unchanged; conditioningLevel high is formula-only and is not re-judged after unblinding (3.2)."
+  ],
+  "uncertainties": [
+   "Pivotal: conditioningLevel high (W-RICH Section 5 reading with Parfum-last E3 prominence: Nigella Sativa Seed Oil @5 + guar @8), moderate confidence, neighbor moderate. With conditioning moderate the product would pass F6 and S-OILY: focus clarifying, primary target oily, D2 flagged (deep-cleanser entry), and no S-FAIL/D3 flags. Both lanes should be compared on this property; the cautious current value routes the product to review.",
+   "Retailer copy for a different 250 ml GTIN is not used except as corroboration.",
+   "Identity confidence moderate (packet)."
+  ]
+ },
+ "W306": {
+  "brand": "OGX",
+  "name": "OGX Rosemary Mint Shampoo",
+  "sources": [
+   "retailer Rossmann (low)",
+   "pack front / marketing images on Rossmann PDP (packet kind pack_front, high)"
+  ],
+  "csCounter": "None: no strong anionic anywhere.",
+  "clCounter": "Three of four C2 elements (early silicone, cationic, humectant) argue for high.",
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "clarifying",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "Urea @25"
+    ],
+    "repairRoutes": [
+     "Amodimethicone @11"
+    ],
+    "sharedConditioningRoutes": [
+     "Starch Hydroxypropyltrimonium Chloride @17",
+     "Glyceryl Oleate @15",
+     "Lecithin @16"
+    ],
+    "limitation": "Generic light conditioning."
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Buildup/residue-removal ('Clarifying blend ... clear away buildup', 'KLÄREND') positioning on the pack.",
+   "decisionTrace": "Claim direction: clarifying (pack: 'Clarifying blend visibly helps remove oils and residue to clear away buildup', 'ERFRISCHEND & KLÄREND'). Formula compatible? F6 needs cleansing moderate/strong: cleansingStrength low -> FAIL. Next: 'LIPI PRO SHIELD ... geschädigte Haarfaser' protection claim vs formula verdict nonspecific -> no repair. Decision: general.",
+   "rationale": "General: clarifying positioning on a low-cleansing (C6) formula fails F6; no other supported job.",
+   "ruleIds": [
+    "7.2",
+    "F6",
+    "7.3"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "repair"
+   ],
+   "decisionTrace": "Empty default considered; no supported secondary route.",
+   "rationale": "Empty.",
+   "ruleIds": [
+    "Section 8"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Regular: reset intent (KLÄREND, Rückstände, buildup) exists but alternating needs cleansing strong (U4); no D1 stem ('Clarifying blend' is not 'Clarifying Shampoo'); no frequency wording.",
+   "ruleIds": [
+    "Section 9",
+    "U4",
+    "D1"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not targeted: no SC1 positioning ('refreshing scalp' is not an E2 sensitive/dry term). Formula: CSA would be met (Urea @25; MB mild_base: Sodium Methyl Cocoyl Taurate @2, Decyl Glucoside @3, Cocamidopropyl Betaine @4, Coco-Glucoside @12) with prominent cooling counter-signals.",
+   "ruleIds": [
+    "Section 10",
+    "SC1",
+    "MB"
+   ]
+  },
+  "primary": {
+   "target": "ordinary",
+   "confidence": "moderate",
+   "rationale": "S-ORDINARY way 4 (S-FAIL): the only qualifying oily unit is retailer copy (\"befreit Ihr fettiges Haar von Ablagerungen\", Rossmann, low) -> positioning gate fails (E1); the S-OILY formula clause would also fail (cleansingStrength low). Pack wording 'remove oils and residue' / 'ÖLE UND RÜCKSTÄNDE' is not an E2 oily lexicon term. No other specialist target -> ordinary with review_specialist_gate_failed."
+  },
+  "secondary": null,
+  "extraFlags": [
+   "review_specialist_gate_failed: oily (positioning gate: only low-graded retailer unit \"fettiges Haar\"; formula clause also fails: cleansingStrength low)"
+  ],
+  "notes": [],
+  "d1": false,
+  "d1Grade": "high",
+  "dclRat": "D1 false: 'Clarifying blend' and 'KLÄREND' are not D1 stems. not_flagged.",
+  "reconciliation": [
+   "focusPrimary: blind provisional general (low) -> final general (moderate); revealed clarifying positioning fails F6 on cleansing low.",
+   "usageRole / scalpComfortTarget: provisional values confirmed.",
+   "Formula properties unchanged."
+  ],
+  "uncertainties": [
+   "The 'marketing images' are listed inside the pack_front source; graded high per packet. None of it matches an E2 or D1 term, so the grade does not change any outcome.",
+   "S-FAIL raised from a low-graded retailer oily unit; if a low-graded unit were not treated as a claimed target, the primary would be ordinary via way 1 (high) without a flag. Kept S-FAIL as the conservative reading (S-FAIL text: 'only qualifying claim units are graded low').",
+   "Formula source tier 4 (packet); identity high."
+  ]
+ }
+}

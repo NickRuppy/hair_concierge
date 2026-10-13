@@ -137,7 +137,8 @@ test("D4 dry shampoo: volume more + sensitive → nobody ideal; catalogue order 
   const input = dryInput({ volumeDirection: "more", sensitiveScalp: true })
   assert.deepEqual(idealIds(input), [])
   assert.equal(pick(input), DRY.baleaSensitive.productId)
-  assert.equal(known(input).verdict, "unknown")
+  // #669: an uncovered role carries the recommended candidate's canonical verdict.
+  assert.equal(known(input).verdict, "supportive")
 })
 
 test("D5 dry shampoo (Q1 = A): brown roots → universal Batiste Original wins; Brünett equal, Blond/dunkel supportive", () => {
@@ -195,9 +196,10 @@ test("dry shampoo: a missing product fact stays unknown, a known reaction is a m
   assert.equal(known(dryInput({}, reaction)).verdict, "mismatch")
 })
 
-test("dry shampoo: the uncovered role keeps its shape (verdict unknown + uncovered caution)", () => {
+test("dry shampoo: the uncovered role carries the candidate verdict + uncovered caution", () => {
   const evaluation = known(dryInput({ sensitiveScalp: true }))
-  assert.equal(evaluation.verdict, "unknown")
+  // #669: an uncovered role carries the recommended candidate's canonical verdict.
+  assert.equal(evaluation.verdict, "ideal")
   assert.deepEqual(
     evaluation.criteria.map((criterion) => criterion.criterionId),
     ["dry_shampoo.selection.uncovered_role"],

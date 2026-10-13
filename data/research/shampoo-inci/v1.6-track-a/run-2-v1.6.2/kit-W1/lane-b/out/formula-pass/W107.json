@@ -1,0 +1,141 @@
+{
+  "blindId": "W107",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, Section 3.1)",
+  "policyId": "shampoo-classification-v1.6.2",
+  "inciFingerprintSha256": "b4d05d43d9f88be1b079f69a1a0097118da48ed5d30dc75a6859b3a920018869",
+  "formulaPacket": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "moderate",
+    "normalization": "Aqua (Water) and Parfum (Fragrance) single entries (ID-2); marker characters * and ** stripped from Betula Alba Leaf Extract@14, Aloe Barbadensis Leaf Juice Powder@16, Parfum (Fragrance)@20, Vanillin@21 and kept as provenance; 21 entries; normalized positions cited."
+  },
+  "e3Point": "Parfum (Fragrance)@20 (prominent = positions 1-19)",
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "Ammonium Lauryl Sulfate@2 (strong anionic, alkyl sulfate type)",
+      "reinforcingRoutes": [],
+      "buffers": ["Cocamidopropyl Betaine@3 (amphoteric)"],
+      "nonCleansing": []
+    },
+    "conditioningRoutes": ["Hydrolyzed Corn Protein@5, Hydrolyzed Wheat Protein@7, Hydrolyzed Soy Protein@9 (protein_film)", "Glycerin@6 (humectant)", "Guar Hydroxypropyltrimonium Chloride@8 (cationic_polymer, prominent)"],
+    "humectants": ["Glycerin@6"],
+    "actives": ["Arginine@13 (amino acid; rejected E4 candidate under R18)"],
+    "e4ComfortRoutesProminent": [],
+    "e4HumectantRoutesProminent": ["Glycerin@6"],
+    "mildBase": "not met: Ammonium Lauryl Sulfate@2 prominent strong anionic; cleansingStrength strong",
+    "exposureFlags": ["Alcohol@11 (ethanol)", "Parfum (Fragrance)@20 (marker **)", "Vanillin@21"],
+    "otherIngredients": ["Betula Alba Leaf Extract@14", "Leuconostoc/Radish Root Ferment Filtrate@15", "Aloe Barbadensis Leaf Juice Powder@16 (not a C2/E4 route)", "Levulinic Acid@17, Sodium Levulinate@18 (preservatives, not on W-line list b)", "Benzoic Acid@12, Sodium Benzoate@19 (preservatives)"]
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Strong: C5 alkyl-sulfate chassis - defining anionic Ammonium Lauryl Sulfate@2 with only one prominent buffer (Cocamidopropyl Betaine@3); C5 needs two buffers for moderate. Proteins and glycerin are counter-signals but do not move the convention.",
+      "ruleIds": ["C5", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: one meaningful system - prominent cationic Guar Hydroxypropyltrimonium Chloride@8 - with light routes (three hydrolyzed proteins @5, @7, @9; Glycerin@6). No silicone, payload lipid or pearlizing route, so C2 is not met. Counter-signal: strong ALS chassis and only one cationic; low is the neighbor.",
+      "ruleIds": ["C2", "5"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride@8"],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": ["Hydrolyzed Corn Protein@5", "Hydrolyzed Wheat Protein@7", "Hydrolyzed Soy Protein@9"],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Ammonium Lauryl Sulfate@2", "Cocamidopropyl Betaine@3"],
+        "humectantContext": ["Glycerin@6"],
+        "excluded": ["Alcohol@11 (solvent)", "Betula Alba Leaf Extract@14, Leuconostoc/Radish Root Ferment Filtrate@15, Aloe Barbadensis Leaf Juice Powder@16 (botanicals/ferment, no deposition role)", "Arginine@13 (amino acid, no deposition family)", "Parfum@20, Vanillin@21"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 12,
+        "inci": "Benzoic Acid",
+        "classes": ["preservative_or_capped_active"],
+        "e3Point": 20,
+        "alphabeticalRun": "none (longest ordered run 3 entries)",
+        "skipped": [],
+        "codes": [],
+        "plausibility": "(i) Ammonium Lauryl Sulfate@2 before it; (ii) no cleansing surfactant, alkanolamide or pearlizing wax at 13-19",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light - one guar plus hydrolyzed proteins",
+      "persistence": "low - hydrolyzed proteins are low-substantivity; single guar",
+      "resetCapacity": "strong - ALS with a single betaine buffer (C5 strong)",
+      "counterevidence": "Guar is fairly prominent (@8) and proteins are repeated three times.",
+      "whyThisBand": "A strong reset faces only light routes.",
+      "whyNotNeighborBand": "Not moderate (W2): the second family is hydrolyzed protein film (low persistence), there is no silicone, payload lipid or second cationic, and the strong ALS reset (one buffer) offsets a single guar; combined residue plausibly below noticeable.",
+      "confidenceLimitingFactor": "Guar dose and coacervate deposition from a sulfate chassis unknown.",
+      "rationale": "Low: strong reset vs. single guar + hydrolyzed proteins (6.6, W2).",
+      "ruleIds": ["6.3", "6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "repair",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "repair_supported",
+        "moistureRoutes": ["Glycerin@6"],
+        "repairRoutes": ["Hydrolyzed Corn Protein@5", "Hydrolyzed Wheat Protein@7", "Hydrolyzed Soy Protein@9", "Guar Hydroxypropyltrimonium Chloride@8"],
+        "sharedConditioningRoutes": ["Guar Hydroxypropyltrimonium Chloride@8"],
+        "limitation": "protein cluster in a strong sulfate chassis; moisture route is glycerin only (dual possible)"
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "Strong ALS chassis; only one cationic.",
+      "decisionTrace": "Formula-only: claim direction null; three proteins + guar make repair_supported (moisture partly via glycerin); provisional general until claims.",
+      "rationale": "Provisional general; repair or volume likely candidate if positioned.",
+      "ruleIds": ["7.2", "7.3", "F1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["volume"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty.",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "alternating",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional regular. Strong formula: alternating if a moderate/high reset-intent claim exists (U4); frequent excluded (strong).",
+      "ruleIds": ["9", "U4"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: positioning unknown. CSA met via prominent humectant route Glycerin@6 (E4); no E4 comfort route (Arginine@13 and aloe are not listed); MB not met. Counter-signal: strong cleansing and ethanol@11.",
+      "ruleIds": ["CSA", "MB", "E4", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active (Section 11).",
+      "ruleIds": ["11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "notes": ["identityConfidence moderate per packet; no material conflict visible."]
+}

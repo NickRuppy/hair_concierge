@@ -199,6 +199,7 @@ test("returns the refinement answers bound to the current refined need version",
   const res = await createRefinementPresentationRouteHandlers({
     getUserId: async () => ids.user,
     client: () => client as never,
+    toolsEnabled: async () => false,
   }).GET()
   const body = await res.json()
 
@@ -239,6 +240,7 @@ test("returns null answers when no complete draft matches the pointer", async ()
   const res = await createRefinementPresentationRouteHandlers({
     getUserId: async () => ids.user,
     client: () => client as never,
+    toolsEnabled: async () => false,
   }).GET()
   const body = await res.json()
 
@@ -296,6 +298,7 @@ test("returns included routine products of the active version", async () => {
   const res = await createRefinementPresentationRouteHandlers({
     getUserId: async () => ids.user,
     client: () => client as never,
+    toolsEnabled: async () => false,
   }).GET()
   const body = await res.json()
 
@@ -342,6 +345,7 @@ test("routineProducts is null when the active routine is authority_repair_requir
   const res = await createRefinementPresentationRouteHandlers({
     getUserId: async () => ids.user,
     client: () => client as never,
+    toolsEnabled: async () => false,
   }).GET()
   const body = await res.json()
 
@@ -355,6 +359,173 @@ test("refinement presentation API rejects unauthenticated reads", async () => {
     client: () => {
       throw new Error("must not construct client")
     },
+    toolsEnabled: async () => {
+      throw new Error("must not resolve the flag")
+    },
   }).GET()
   assert.equal(res.status, 401)
+})
+
+// ---------------------------------------------------------------------------
+// Hair Tools: the `tools` block (Profil „Deine Tools")
+// ---------------------------------------------------------------------------
+
+const AT = "2026-10-09T10:00:00.000Z"
+
+function hairProfileRow(
+  careHabits: Record<string, unknown> | null,
+  fields: Record<string, "user" | "assumed">,
+) {
+  return {
+    user_id: ids.user,
+    diagnostics: null,
+    care_habits: careHabits,
+    quiz_context: null,
+    facts_provenance: careHabits
+      ? { care_habits: { source: { kind: "feinschliff_draft" }, schemaVersion: 1, at: AT, fields } }
+      : {},
+    facts_revision: 3,
+    density: null,
+    hair_length: null,
+  }
+}
+
+async function presentation(
+  rows: Record<string, Row[]>,
+  options: { toolsEnabled: boolean | "throws" } = { toolsEnabled: true },
+) {
+  const res = await createRefinementPresentationRouteHandlers({
+    getUserId: async () => ids.user,
+    client: () => makeClient(rows) as never,
+    toolsEnabled: async () => {
+      if (options.toolsEnabled === "throws") throw new Error("flag read failed")
+      return options.toolsEnabled
+    },
+  }).GET()
+  return { res, body: await res.json() }
+}
+
+const LENA_CARE = {
+  toolFamiliesWithSomething: ["drying_textiles", "brushes_combs", "airflow", "night_protection"],
+  toolForms_drying_textiles_1: ["microfiber_towel"],
+  toolForms_brushes_combs_1: ["wide_tooth_comb"],
+  toolForms_brushes_combs_2: ["round_brush"],
+  toolForms_airflow_1: ["hair_dryer", "hot_air_brush"],
+  toolForms_night_protection_1: ["pillowcase"],
+}
+const LENA_USER_FIELDS = Object.fromEntries(Object.keys(LENA_CARE).map((key) => [key, "user"])) as {
+  [key: string]: "user"
+}
+
+test("tools block: flag on groups the member's own tools by family in wash-day order, with photo urls", async () => {
+  const { res, body } = await presentation({
+    hair_profiles: [hairProfileRow(LENA_CARE, LENA_USER_FIELDS)],
+  })
+
+  assert.equal(res.status, 200)
+  assert.deepEqual(
+    body.tools.groups.map((group: { family: string }) => group.family),
+    ["drying_textiles", "brushes_combs", "airflow", "night_protection"],
+  )
+  assert.deepEqual(
+    body.tools.groups.map((group: { sectionKey: string }) => group.sectionKey),
+    ["abtrocknen_entwirren", "abtrocknen_entwirren", "trocknen_stylen", "nachtschutz"],
+  )
+  const brushes = body.tools.groups[1]
+  assert.equal(brushes.label, "Bürsten & Kämme")
+  assert.deepEqual(
+    brushes.items.map((item: { label: string }) => item.label),
+    ["Grobzinkiger Kamm", "Rundbürste"],
+  )
+  assert.equal(brushes.items[1].imageSrc, "/images/tools/round.webp")
+  assert.equal(body.tools.count, 6)
+  // The existing response keys are untouched.
+  assert.equal(body.answers, null)
+  assert.equal(body.routineProducts, null)
+})
+
+test("tools block: flag off omits the key and never reads the member's facts", async () => {
+  let readFacts = false
+  const base = makeClient({ hair_profiles: [hairProfileRow(LENA_CARE, LENA_USER_FIELDS)] })
+  const res = await createRefinementPresentationRouteHandlers({
+    getUserId: async () => ids.user,
+    client: () =>
+      ({
+        from(table: string) {
+          if (table === "hair_profiles") readFacts = true
+          return base.from(table)
+        },
+      }) as never,
+    toolsEnabled: async () => false,
+  }).GET()
+  const body = await res.json()
+
+  assert.equal(res.status, 200)
+  assert.equal("tools" in body, false)
+  assert.equal(readFacts, false)
+})
+
+test("tools block: a failing flag read behaves like the flag off", async () => {
+  const { res, body } = await presentation(
+    { hair_profiles: [hairProfileRow(LENA_CARE, LENA_USER_FIELDS)] },
+    { toolsEnabled: "throws" },
+  )
+  assert.equal(res.status, 200)
+  assert.equal("tools" in body, false)
+})
+
+test("tools block: only user-provenance pages count; assumed and derived answers stay out", async () => {
+  const { body } = await presentation({
+    hair_profiles: [
+      hairProfileRow(LENA_CARE, {
+        ...LENA_USER_FIELDS,
+        // A direct-accept assumption and a derived page: never ownership (D5).
+        toolForms_airflow_1: "assumed",
+        toolForms_night_protection_1: "assumed",
+        toolFamiliesWithSomething: "user",
+      }),
+    ],
+  })
+
+  assert.deepEqual(
+    body.tools.groups.map((group: { family: string }) => group.family),
+    ["drying_textiles", "brushes_combs"],
+  )
+  assert.equal(body.tools.count, 3)
+})
+
+test("tools block: nothing confirmed by the member is null, not an empty list", async () => {
+  const assumedOnly = await presentation({
+    hair_profiles: [
+      hairProfileRow(
+        LENA_CARE,
+        Object.fromEntries(Object.keys(LENA_CARE).map((k) => [k, "assumed"])),
+      ),
+    ],
+  })
+  assert.equal(assumedOnly.body.tools, null)
+
+  const noFacts = await presentation({ hair_profiles: [] })
+  assert.equal(noFacts.body.tools, null)
+
+  const noCareHabits = await presentation({ hair_profiles: [hairProfileRow(null, {})] })
+  assert.equal(noCareHabits.body.tools, null)
+})
+
+test("tools block: every family answered „Nichts davon“ is an empty block, not null", async () => {
+  const { body } = await presentation({
+    hair_profiles: [
+      hairProfileRow({ toolFamiliesWithSomething: [] }, { toolFamiliesWithSomething: "user" }),
+    ],
+  })
+  assert.deepEqual(body.tools, { count: 0, groups: [] })
+})
+
+test("tools block: unreadable facts drop only the tools key, the rest of the response stands", async () => {
+  const { res, body } = await presentation({
+    hair_profiles: [{ ...hairProfileRow(LENA_CARE, LENA_USER_FIELDS), care_habits: { bogus: 1 } }],
+  })
+  assert.equal(res.status, 200)
+  assert.equal("tools" in body, false)
+  assert.equal(body.routineProducts, null)
 })

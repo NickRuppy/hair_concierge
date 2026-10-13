@@ -1,0 +1,14 @@
+{
+  "blindId": "VS01",
+  "productName": "Balea Ultra Sensitive",
+  "brand": "Balea",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_de (dm-drogerie markt own brand; page names dm as 'Anschrift des Unternehmens')",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Mildes Shampoo für empfindliche Kopfhaut | Mit Glycerin, Panthenol & Niacinamid | Besonders sanft | Ohne Silikone, Parfüm & Parabene | Das Balea med Shampoo Ultra Sensitive bietet eine besonders sanfte Reinigung für Haar und empfindliche Kopfhaut. Seine milde Pflegeformel mit 5 % Glycerin, Panthenol und Niacinamid spendet Feuchtigkeit und pflegt das Haar geschmeidig glänzend, ohne die Kopfhaut zu reizen. Dabei wurde bei der Rezeptur bewusst auf Silikone, Parfüm, Parabene und Farbstoffe verzichtet. Das Shampoo ist zudem ideal für die tägliche Haarwäsche bei sensibler Haut. | Produkteigenschaften: vegan, ohne Silikone",
+      "directionsVerbatim": "In das feuchte Haar einmassieren und kurz einwirken lassen. Gründlich ausspülen."
+    }
+  ]
+}

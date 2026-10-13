@@ -1,0 +1,21 @@
+{
+  "blindId": "W403",
+  "productName": "Balea Professional Shampoo Hydra Volume, 250 ml",
+  "brand": "Balea",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_de (dm-Eigenmarke; dm drogerie markt GmbH + Co. KG is brand owner and listed 'Anschrift des Unternehmens')",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Volumenshampoo | Für feines Haar mit platten Ansatz & trockenen Spitzen | Feuchtigkeitsspendend | pH-hautneutrale Formel | Hautverträglichkeit dermatologisch bestätigt | Das Hydra Volume Shampoo von Balea PROFESSIONAL bietet eine gründliche Reinigung für den Haaransatz und versorgt das Haar mit Feuchtigkeit bis in die Spitzen. Es wurde speziell für die Bedürfnisse von feinem Haar mit einem platten Ansatz und trockenen Spitzen entwickelt. Die pH-hautneutrale Formel reinigt sanft und kann dem Haar zu mehr Fülle verhelfen. Für ein gepflegtes und voluminöses Haargefühl sorgt das Shampoo und unterstützt ein frisches Aussehen der Haare. | Produktmerkmale: Wirkung: Pflege, Volumen; Produkteigenschaften: ohne Silikone, Ohne Alkohol, vegan",
+      "directionsVerbatim": "Sanft auf die Kopfhaut und ins nasse Haar einmassieren und sorgfältig mit lauwarmen Wasser ausspülen."
+    },
+    {
+      "sourceType": "database_user_uploaded (support only)",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Volumizing shampoo. (user upload 06/23/2026, listing text only)",
+      "directionsVerbatim": ""
+    }
+  ]
+}

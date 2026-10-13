@@ -1,0 +1,386 @@
+{
+  "blindId": "VT13",
+  "lane": "lane-b",
+  "phase": "final (post-unblind reconciliation)",
+  "standard": "shampoo-classification-v1.6.1 candidate text (unlocked)",
+  "identity": {
+    "brand": "Kevin.Murphy",
+    "productName": "Hydrate-Me.Wash",
+    "packSize": "250 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "99422deac4534805dc08e5e6b4a3a06e9bacc0c0072971b058368c9844da05c0",
+    "normalization": "ID-2: packet entries already merged (Water (Aqua) (Eau) = one entry); all positions are normalized one-based positions of the 48-entry list",
+    "completeness": "complete (source tier 2, identity confidence high)",
+    "e3ProminenceCutoff": "Fragrance (Parfum) @45 -> positions 1-44 prominent",
+    "identityNotes": [
+      "Manufacturer page shows a 'Made in U.S.A.' and a 'Made in EU' list; the frozen INCI is the EU block (truncated by the shop at 'Benzyl Alcoho'). The US list was not provided; recorded as a market-variant note (ID-3), not resolvable in-lane.",
+      "Retailer copy names 'Hydrolisierte Seidenextrakte'; no hydrolyzed silk in the frozen INCI (Hydrolyzed Milk Protein @26 instead). Low-graded claim, no gating role -> note only (ID-3)."
+    ]
+  },
+  "formulaFacts": {
+    "surfactantSystem": [
+      "Sodium Cocoyl Isethionate @2 - mild anionic (isethionate), earliest prominent cleansing surfactant",
+      "Disodium Laureth Sulfosuccinate @3 - mild anionic (sulfosuccinate), buffer",
+      "Cocamidopropyl Hydroxysultaine @5 - amphoteric, buffer",
+      "Sodium Lauryl Sulfoacetate @6 - mild anionic (sulfoacetate), buffer",
+      "Sodium Methyl Cocoyl Taurate @33 - mild anionic (taurate), prominent (before Fragrance) but late",
+      "Not cleansing/not buffer (C3): Cocamide MIPA @4 (alkanolamide), Glycol Distearate @7 (pearlizer), Trideceth-6 @34, Trideceth-12 @35, Polysorbate 20 @36",
+      "No strong anionic of either type anywhere in the list"
+    ],
+    "conditioningAndWeightRoutes": {
+      "silicone": [
+        "Amodimethicone @30",
+        "Silicone Quaternium-18 @31 (quaternized silicone)"
+      ],
+      "cationic_polymer": [
+        "Polyquaternium-10 @37"
+      ],
+      "cationic_conditioner": [
+        "Cetrimonium Chloride @29",
+        "Quaternium-95 @32 (quaternary conditioning agent, recognition note in uncertainties)"
+      ],
+      "payload_lipid": [
+        "Butyrospermum Parkii (Shea) Butter @19",
+        "Oenothera Biennis (Evening Primrose) Oil @20",
+        "Rosa Canina Fruit Oil @24",
+        "Jojoba Esters @25"
+      ],
+      "weak_refatter": [
+        "Ascorbyl Palmitate @14"
+      ],
+      "protein_film": [
+        "Hydrolyzed Milk Protein @26"
+      ],
+      "film_former": [],
+      "pearlizing_fatty_route_for_C2": [
+        "Glycol Distearate @7"
+      ],
+      "humectantContext": [
+        "Glycerin @8",
+        "Panthenol @11",
+        "Butylene Glycol @27 (solvent, not a C2 humectant)",
+        "Propanediol @28 (solvent)"
+      ],
+      "excluded": [
+        "Glycol Distearate @7 (pearlizing wax, excluded from weight, 6.4)",
+        "Cocamide MIPA @4 (alkanolamide thickener)",
+        "Trideceth-6 @34, Trideceth-12 @35, Polysorbate 20 @36 (emulsifiers/solubilizers, likely silicone-emulsion carriers)",
+        "Retinyl Palmitate @9, Tocopherol @12, Tocopheryl Acetate @15 (vitamin actives/antioxidants, not deposition routes)",
+        "Bergamot fruit extract @17 and botanical extracts @18, @21-23 (extracts)",
+        "Fragrance @45 and allergens @46-48"
+      ]
+    },
+    "actives": [
+      "Panthenol @11",
+      "Biotin @13",
+      "Retinyl Palmitate @9",
+      "Ascorbic Acid @10",
+      "Pyridoxine HCl @16",
+      "no recognized anti-dandruff active (no Piroctone Olamine, Climbazole, Selenium Sulfide/Disulfide)"
+    ],
+    "scalpExposureFlags": [
+      "Fragrance @45 (not prominent)",
+      "Bergamot fruit extract @17 (extract, not an essential oil)",
+      "no cooling agent",
+      "E4 comfort route prominent: Panthenol @11",
+      "E4 humectant/refatting routes prominent: Glycerin @8, Panthenol @11, Shea Butter @19, Evening Primrose Oil @20, Rosa Canina Fruit Oil @24"
+    ]
+  },
+  "claimEvidence": [
+    "manufacturer_de (moderate): 'Gib stumpfem, sprödem und trockenem Haar einen pflegenden Feuchtigkeitskick' / 'super glättendes, feuchtigkeitsspendendes WASH Produkt' / 'ideal für von Natur aus trockenes Haar' / 'gesunden Glanz'",
+    "product name (high): 'Hydrate-Me.Wash'",
+    "retailer hagel (low): smoothing, silk extracts, 'Für normales bis trockenes Haar'",
+    "retailer amazon (low) directions: 'Kann täglich ... verwendet werden'"
+  ],
+  "reconciliation": [
+    "focusPrimary general (low, provisional) -> moisture (moderate): name + manufacturer moisture positioning breaks the dual_supported tie (F1).",
+    "focusSecondary [] low -> [] moderate: shine wording judged an outcome of the primary route (F2).",
+    "usageRole regular low -> regular moderate: daily-use wording is retailer-only (low).",
+    "scalpComfortTarget not_targeted low -> not_targeted high: no scalp positioning revealed.",
+    "No formula-derived property changed (cleansing, conditioning, weight, dandruff unchanged)."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low by C6: no prominent strong anionic; the earliest prominent cleansing surfactant is the mild anionic Sodium Cocoyl Isethionate @2 with a prominent amphoteric co-surfactant (Cocamidopropyl Hydroxysultaine @5). Counter-signal lowering confidence: the chassis is anionic-dominated (three mild anionics @2, @3, @6, plus taurate @33) and the only amphoteric comes fourth, after the alkanolamide @4, so realistic concentration unknowns could make the net cleansing moderate. Convention value kept (C1-C6 preamble).",
+      "ruleIds": [
+        "C3",
+        "C4",
+        "C6",
+        "N-ALT"
+      ],
+      "counterSignal": "Anionic-dominated mild chassis: three mild anionics (@2, @3, @6) precede the only amphoteric (@5 after the alkanolamide @4).",
+      "sourceIds": [
+        "formula-pass/VT13.json (hash-pinned blind record)",
+        "stage-A formula packet VT13"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High by C2: prominent silicones (Amodimethicone @30, Silicone Quaternium-18 @31; prominent because before Fragrance @45) plus a cationic polymer (Polyquaternium-10 @37) plus a pearlizing route (Glycol Distearate @7) plus a closed-list humectant route (Glycerin @8, Panthenol @11); further routes: Cetrimonium Chloride @29, Quaternium-95 @32, material payload lipids @19/@20/@24/@25, Hydrolyzed Milk Protein @26. Counter-signal: every conditioning route sits after trace vitamins (Biotin @13), so each is plausibly at a low level; realistic unknowns could make the rinse-off care bounded (moderate).",
+      "ruleIds": [
+        "C2",
+        "E3",
+        "N-ALT"
+      ],
+      "counterSignal": "Every conditioning route sits after trace vitamins (Biotin @13); doses unknown, care could be bounded.",
+      "sourceIds": [
+        "formula-pass/VT13.json (hash-pinned blind record)",
+        "stage-A formula packet VT13"
+      ]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "silicone": [
+          "Amodimethicone @30",
+          "Silicone Quaternium-18 @31"
+        ],
+        "cationic_polymer": [
+          "Polyquaternium-10 @37"
+        ],
+        "cationic_conditioner": [
+          "Cetrimonium Chloride @29",
+          "Quaternium-95 @32"
+        ],
+        "payload_lipid": [
+          "material: Shea Butter @19, Evening Primrose Oil @20, Rosa Canina Fruit Oil @24, Jojoba Esters @25 (all before W-line @40)"
+        ],
+        "weak_refatter": [
+          "Ascorbyl Palmitate @14"
+        ],
+        "protein_film": [
+          "Hydrolyzed Milk Protein @26"
+        ],
+        "film_former": [],
+        "reset": [
+          "mild anionic: Sodium Cocoyl Isethionate @2, Disodium Laureth Sulfosuccinate @3, Sodium Lauryl Sulfoacetate @6, Sodium Methyl Cocoyl Taurate @33",
+          "amphoteric: Cocamidopropyl Hydroxysultaine @5"
+        ],
+        "humectantContext": [
+          "Glycerin @8",
+          "Panthenol @11"
+        ],
+        "excluded": [
+          "Glycol Distearate @7 (pearlizing wax)",
+          "Cocamide MIPA @4 (alkanolamide)",
+          "Trideceth-6 @34, Trideceth-12 @35, Polysorbate 20 @36 (emulsifiers)",
+          "vitamin actives @9, @12, @15"
+        ],
+        "unresolved": [
+          "Quaternium-95 @32 - read as a quaternary conditioning agent; not band-moving because cationic deposition is already present"
+        ]
+      },
+      "depositionLoad": "moderate - six deposition families converge (two silicones incl. amodimethicone, polyquaternium-10, two quats, four material lipids, protein), but each is listed after trace-level vitamins, so the absolute dose of each route is plausibly small",
+      "persistence": "high - amodimethicone and a quaternized silicone with cationic polymer/quats are substantive, plausibly persistent routes; waxy shea butter and jojoba esters add persistence",
+      "resetCapacity": "weak - C6 low mild-anionic/amphoteric chassis, no strong anionic",
+      "counterevidence": "All deposition routes sit after Biotin @13 and other trace vitamins (likely sub-1 % zone); silicones appear with their emulsion carriers (Trideceth-6/-12, Cetrimonium Chloride), suggesting small silicone dose; ordinary rinse-off context.",
+      "whyThisBand": "High: W-RICH holds (material payload lipids @19/@20/@24/@25 converge with silicone and cationic deposition) and reset is limited (resetCapacity weak), which is the rich route of the high anchor; the convergence route also holds (silicone + cationic polymer + cationic conditioner + material lipid + protein).",
+      "whyNotNeighborBand": "Not moderate: the anchor's rich route (W-RICH with weak reset) and the convergence route both hold; a moderate call would rest only on the unknown absolute dose of late routes, which is the realistic unknown that sets confidence at moderate rather than a reason for the lighter band (P0).",
+      "confidenceLimitingFactor": "Position of all deposition routes after trace-level actives; absolute doses unknown, so realistic unknowns could move the band one step to moderate.",
+      "rationale": "High: W-RICH (material lipids before W-line Phenoxyethanol @40 plus silicones/cationics) with weak reset from a C6 low mild chassis, plus multi-family convergence. Confidence moderate because every route is late. W1 not applicable (no C1/C5 sulfate chassis).",
+      "ruleIds": [
+        "6.3",
+        "6.4",
+        "6.6",
+        "W-RICH",
+        "W-LINE",
+        "W1",
+        "W2",
+        "W3",
+        "N-ALT"
+      ],
+      "counterSignal": "All deposition routes are late (after Biotin @13); silicones arrive with their emulsion carriers; ordinary rinse-off.",
+      "sourceIds": [
+        "formula-pass/VT13.json (hash-pinned blind record)",
+        "stage-A formula packet VT13"
+      ],
+      "wLineRecord": {
+        "wLine": "Phenoxyethanol @40",
+        "candidateClasses": [
+          "preservative_or_capped_active"
+        ],
+        "cap": "e3Point @45 (Fragrance (Parfum))",
+        "alphabeticalRun": "none (no run of >=7 consecutive ascending entries)",
+        "skipped": [
+          "w_line_skipped:Panthenol@11 - clause (ii) failed: cleansing surfactant Sodium Methyl Cocoyl Taurate @33 listed after it and before the cap",
+          "w_line_skipped:Tocopherol@12 - clause (ii) failed: Sodium Methyl Cocoyl Taurate @33 after it",
+          "w_line_skipped:Biotin@13 - clause (ii) failed: Sodium Methyl Cocoyl Taurate @33 after it",
+          "w_line_skipped:Tocopheryl Acetate@15 - clause (ii) failed: Sodium Methyl Cocoyl Taurate @33 after it"
+        ],
+        "plausibilityOfWLine": "Phenoxyethanol @40: (i) cleansing surfactants listed before (@2); (ii) between @40 and the cap @45 only Chlorphenesin, Potassium Sorbate, Sodium Benzoate, Citric Acid - no cleansing surfactant, alkanolamide or pearlizing wax",
+        "codes": [],
+        "payloadLipidMaterial": [
+          "Shea Butter @19",
+          "Evening Primrose Oil @20",
+          "Rosa Canina Fruit Oil @24",
+          "Jojoba Esters @25"
+        ],
+        "payloadLipidNonMaterial": []
+      }
+    },
+    "focusPrimary": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "neighboringAlternative": "repair",
+      "rationale": "Moisture: the exact product name ('Hydrate-Me') and the manufacturer DE text ('superglättendes, feuchtigkeitsspendendes WASH Produkt', 'für stumpfes, sprödes und trockenes Haar', 'ideal für von Natur aus trockenes Haar') position hydration of dry lengths; the formula verdict is dual_supported, so the claim breaks the tie (F1).",
+      "ruleIds": [
+        "7.2",
+        "7.3",
+        "F1",
+        "CL-SRC",
+        "E1"
+      ],
+      "careDirection": {
+        "verdict": "dual_supported",
+        "moistureRoutes": [
+          "Glycerin @8",
+          "Panthenol @11",
+          "Shea Butter @19",
+          "Evening Primrose Oil @20",
+          "Rosa Canina Fruit Oil @24",
+          "Jojoba Esters @25"
+        ],
+        "repairRoutes": [
+          "Amodimethicone @30",
+          "Silicone Quaternium-18 @31",
+          "Hydrolyzed Milk Protein @26",
+          "Polyquaternium-10 @37",
+          "Cetrimonium Chloride @29"
+        ],
+        "sharedConditioningRoutes": [
+          "Glycol Distearate @7",
+          "Quaternium-95 @32"
+        ],
+        "limitation": "All routes after trace vitamins; rinse-off; one protein token."
+      },
+      "claimRole": "tie_breaker",
+      "counterSignal": "'spröde' (brittle) and smoothing wording point toward repair; the formula also carries amodimethicone, a silicone quat and a protein (repair routes).",
+      "decisionTrace": "Claim direction: moisture (name 'Hydrate-Me', high; manufacturer DE, moderate). Formula compatible: dual_supported. Compatible route: Glycerin @8 + Panthenol @11 + material lipids @19/@20/@24/@25. Decision: claim breaks the dual tie toward moisture (F1)."
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "shine"
+      ],
+      "rationale": "Empty: 'Glanz' and 'glättend' are outcomes of the same moisture/smoothing care (F2); no separately positioned secondary job with an independent route.",
+      "ruleIds": [
+        "8",
+        "F2",
+        "F3"
+      ],
+      "decisionTrace": "Empty default considered. Candidate shine ('super glättendes', 'gesunder Glanz', moderate) rejected: positioned as the result of moisture/antioxidant care and delivered by the same conditioning routes (F2/F3). No exception code."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "frequent",
+      "rationale": "Regular: no non-default trigger fires. The only frequency wording ('Kann täglich ... verwendet werden') is retailer copy (Amazon brand content) graded low, which cannot fire a trigger (CL-SRC).",
+      "ruleIds": [
+        "9",
+        "U1",
+        "U2",
+        "CL-SRC"
+      ],
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [
+        "frequent: 'Kann täglich und im Rahmen des Hydrate-Programms verwendet werden' - retailer, low grade, cannot fire"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no E2 sensitive or dry-scalp claim unit in any source (the only scalp mention is an application direction); complete ordinary formula.",
+      "ruleIds": [
+        "10",
+        "SC1",
+        "E2"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: none of Piroctone Olamine, Climbazole, Selenium Sulfide or Selenium Disulfide in the complete INCI (formula-only; unchanged by the reveal).",
+      "ruleIds": [
+        "11",
+        "DS1"
+      ]
+    }
+  },
+  "projection": {
+    "status": "projected_proposal",
+    "thicknessFit": {
+      "fine": "not_suited",
+      "normal": "acceptable",
+      "coarse": "ideal"
+    },
+    "thicknessFitConfidence": {
+      "fine": "moderate",
+      "normal": "moderate",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": "T1 with weightPotential high and conditioningLevel high: fine not_suited, normal acceptable, coarse ideal (ordinary target, no T6). T4: weight neighbor moderate would raise fine/normal and keep coarse ideal; conditioning neighbor moderate keeps coarse ideal (W high) - no flag.",
+    "weight": "heavy",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: weightPotential high projects 1:1 to heavy; confidence = weightPotential confidence.",
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1: no qualifying E2 claim unit; the packet contains a manufacturer source, so confidence high (13.8)."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "gentle",
+    "cleansingIntensityConfidence": "moderate",
+    "cleansingIntensityRationale": "I1: cleansingStrength low; D1 false -> gentle. I3 recomputed with neighbor moderate.",
+    "explicitResetPositioning": false,
+    "explicitResetPositioningEvidence": "No D1 stem (tiefenrein, deep clean, clarifying shampoo, detox-reinigung) in the product name or any manufacturer/pack claim; no directions limiting use to occasional resets.",
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserListingConfidence": "moderate",
+    "deepCleanserRationale": "D1 false -> not_flagged (D2).",
+    "rows": [
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "heavy",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "heavy",
+        "tier": "ideal"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [],
+    "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze (lane cannot see catalog)"
+  },
+  "selfCheck": "6.11/selfCheck: formula fingerprint matches the frozen stage-A packet; claims and identity were hidden during the formula pass and the hash-pinned formula-pass record was not edited after release; no ingredient, family count or position window assigned a band (the W-line only gated payload_lipid legs); W-line derived from the frozen list per W-LINE with every skipped candidate recorded; depositionLoad, persistence and resetCapacity present with rationales; counterevidence and whyNotNeighborBand specific (W2 where it applies); confidence names its limiting factor; N-ALT neighbors consistent with confidences; projection fields derived mechanically (T1, T6, T4, W-LIVE, I1, I3, D1-D3, 13.7, 13.8); no catalog, web or other-lane input.",
+  "uncertainties": [
+    "cleansingStrength confidence moderate rather than high: anionic-dominated mild chassis; alternative reading high confidence on the pure C6 convention.",
+    "weightPotential high vs moderate: W-RICH and convergence hold on the rules, but all routes are late; alternative moderate with high as neighbor.",
+    "Retinyl Palmitate @9 and Jojoba Esters @25: Retinyl Palmitate read as a vitamin active (excluded), Jojoba Esters as an emollient ester (payload_lipid).",
+    "If the US/EU formula variants differ materially, the weight/conditioning reading would need re-research; treated as a note because the packet marks identity high and the EU list complete.",
+    "Secondary shine rejected under F2; alternative ['shine'] if 'glättend/Glanz' were read as separate positioning with Silicone Quaternium-18 as an independent route."
+  ]
+}

@@ -1,0 +1,432 @@
+{
+  "blindId": "T106",
+  "productName": "Neqi Moisture Mystery Shampoo",
+  "inciFingerprintSha256": "8ac366dcf15f4a714a1b6b1f885ac3e675e5eecc5ed1a5ef118237bb290d5110",
+  "normalization": "Packet canonicalInci is the normalized list (ID-2); all positions are normalized one-based positions on it. Parfum [Fragrance] at 6: positions 1-5 prominent",
+  "status": "classified",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "C6: no prominent strong anionic; the earliest prominent surfactant is a mild anionic (Disodium Laureth Sulfosuccinate 2) with prominent amphoteric co-surfactants (Cocamidopropyl Betaine 3, Cocamidopropyl Hydroxysultaine 4) -> low.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Disodium laureth sulfosuccinate",
+          "position": 2,
+          "role": "mild anionic"
+        },
+        {
+          "ingredient": "Cocamidopropyl betaine",
+          "position": 3,
+          "role": "amphoteric"
+        },
+        {
+          "ingredient": "Cocamidopropyl hydroxysultaine",
+          "position": 4,
+          "role": "amphoteric"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Cleansing-led: the only prominent conditioning-adjacent route is a PEG ester refatter (5); guar (18), oat peptide (8), pearlizer (14) and C13-15 alkane (21) are after Parfum. No silicone, no prominent cationic.",
+      "counterSignal": "Several light late routes together might give bounded slip.",
+      "neighboringAlternative": "moderate",
+      "formulaFacts": [
+        {
+          "ingredient": "PEG-18 glyceryl oleate/cocoate",
+          "position": 5,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Guar hydroxypropyltrimonium chloride",
+          "position": 18,
+          "role": "cationic_polymer, late"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Deposition is light and late: one prominent weak refatter; guar, peptide and alkane are trace -> low, despite mild reset.",
+      "counterSignal": "Mild C6 chassis gives weak reset.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "PEG-18 Glyceryl Oleate/Cocoate (5) prominent; guar 18, oat peptide 8, C13-15 alkane 21 after Parfum."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "No silicone, waxy lipid or persistent polymer at a meaningful level."
+        },
+        "resetCapacity": {
+          "value": "weak",
+          "rationale": "C6 low: sulfosuccinate + betaine/sultaine."
+        }
+      },
+      "whyThisBand": "Light, low-persistence routes even under weak reset.",
+      "whyNotNeighborBand": "W2: the only prominent family is a weak refatter; the cationic guar (18), oat peptide (8) and alkane (21) are all after Parfum (trace), so combined residue stays below noticeable even though reset is weak.",
+      "limitingFactor": "Weak reset leaves some doubt about accumulation of the late guar.",
+      "canonicalFormula": {
+        "inciFingerprintSha256": "8ac366dcf15f4a714a1b6b1f885ac3e675e5eecc5ed1a5ef118237bb290d5110",
+        "formulaSourceTier": 3,
+        "formulaCompleteness": "complete",
+        "captureDate": "not in packet",
+        "identityConfidence": "moderate"
+      },
+      "evidenceByFamily": {
+        "weak_refatter": [
+          {
+            "ingredient": "PEG-18 glyceryl oleate/cocoate",
+            "position": 5,
+            "role": "prominent"
+          }
+        ],
+        "cationic_polymer": [
+          {
+            "ingredient": "Guar hydroxypropyltrimonium chloride",
+            "position": 18,
+            "role": "after Parfum"
+          }
+        ],
+        "protein_film": [
+          {
+            "ingredient": "Avena sativa (Oat) peptide",
+            "position": 8,
+            "role": "after Parfum"
+          }
+        ],
+        "unresolved_light_emollient": [
+          {
+            "ingredient": "C13-15 alkane",
+            "position": 21,
+            "role": "hemisqualane, late"
+          }
+        ],
+        "excluded": [
+          {
+            "ingredient": "Algin",
+            "position": 7,
+            "role": "thickener"
+          },
+          {
+            "ingredient": "Juniperus virginiana oil",
+            "position": 12,
+            "role": "essential oil (6.4)"
+          },
+          {
+            "ingredient": "Citrus aurantium peel oil",
+            "position": 13,
+            "role": "essential oil"
+          },
+          {
+            "ingredient": "Glycol distearate",
+            "position": 14,
+            "role": "pearlizer"
+          }
+        ],
+        "reset": [
+          {
+            "ingredient": "Disodium laureth sulfosuccinate",
+            "position": 2,
+            "role": "mild anionic"
+          },
+          {
+            "ingredient": "Cocamidopropyl betaine",
+            "position": 3,
+            "role": "amphoteric"
+          },
+          {
+            "ingredient": "Cocamidopropyl hydroxysultaine",
+            "position": 4,
+            "role": "amphoteric"
+          }
+        ]
+      },
+      "formulaCounterevidence": "Mild C6 chassis gives weak reset.",
+      "unresolved": [
+        {
+          "ingredient": "C13-15 alkane",
+          "position": 21,
+          "note": "Light hydrocarbon emollient; late, not weight-material."
+        }
+      ],
+      "proposedWeightPotential": "low",
+      "confidenceLimitingFactor": "Weak reset leaves some doubt about accumulation of the late guar.",
+      "postUnblindNote": "Claim 'Hemisqualan' maps to C13-15 Alkane (21); 'Monoi' to Gardenia Taitensis (9); 'Goji' to Lycium (10); 'Peptide aus Hafer' to Avena Sativa Peptide (8). No conflict."
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "neighboringAlternative": "moisture",
+      "rationale": "General: 'Moisture' is in the product name (high), but the formula verdict is nonspecific (no humectant cluster: Glycerin 23 is late; only a prominent PEG refatter), so moisture is not supported (F1).",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [],
+        "limitation": "No coherent humectant cluster."
+      },
+      "claimRole": "not_applicable",
+      "formulaFacts": [
+        {
+          "ingredient": "PEG-18 glyceryl oleate/cocoate",
+          "position": 5,
+          "role": "refatter"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 23,
+          "role": "humectant, late"
+        }
+      ],
+      "counterSignal": "Strong moisture positioning in the name.",
+      "decisionTrace": {
+        "claimDirection": "moisture",
+        "formulaCompatible": false,
+        "compatibleRoute": "none",
+        "decisionReason": "Moisture claim over a nonspecific verdict -> general (F1)."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Empty: no supported second role (repair/shine wording sits on a manufacturer page that may be the Swiss storefront and has no independent route).",
+      "counterSignal": "None.",
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [],
+        "independentRoutes": [],
+        "whyDistinctFromPrimary": "",
+        "exceptionCode": null
+      }
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Default regular: no trigger.",
+      "counterSignal": "None.",
+      "decisionTrace": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "Default regular: no trigger."
+      }
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No E2 scalp claim ('sanfte Reinigung von Haaren und Kopfhaut, ohne zu strapazieren' is protective); 'fettiges Haar' appears only in a suitable-for-all-hair-types list, not as a for/against unit.",
+      "counterSignal": "None.",
+      "formulaFacts": []
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none",
+      "counterSignal": "None in formula; claims never upgrade this property.",
+      "formulaFacts": []
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Disodium laureth sulfosuccinate",
+      "position": 2,
+      "role": "mild anionic (sulfosuccinate), earliest surfactant"
+    },
+    {
+      "ingredient": "Cocamidopropyl betaine",
+      "position": 3,
+      "role": "amphoteric co-surfactant"
+    },
+    {
+      "ingredient": "Cocamidopropyl hydroxysultaine",
+      "position": 4,
+      "role": "amphoteric co-surfactant"
+    },
+    {
+      "ingredient": "PEG-18 glyceryl oleate/cocoate",
+      "position": 5,
+      "role": "PEG ester refatter/thickener, weak_refatter"
+    },
+    {
+      "ingredient": "Parfum [Fragrance]",
+      "position": 6,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Algin",
+      "position": 7,
+      "role": "thickener, excluded"
+    },
+    {
+      "ingredient": "Avena sativa (Oat) peptide",
+      "position": 8,
+      "role": "protein_film, after Parfum"
+    },
+    {
+      "ingredient": "Juniperus virginiana oil",
+      "position": 12,
+      "role": "essential oil, excluded (6.4)"
+    },
+    {
+      "ingredient": "Citrus aurantium peel oil",
+      "position": 13,
+      "role": "essential oil, excluded"
+    },
+    {
+      "ingredient": "Glycol distearate",
+      "position": 14,
+      "role": "pearlizer, late"
+    },
+    {
+      "ingredient": "Guar hydroxypropyltrimonium chloride",
+      "position": 18,
+      "role": "cationic_polymer, late (18)"
+    },
+    {
+      "ingredient": "Cocamide MEA",
+      "position": 19,
+      "role": "foam booster, not a route"
+    },
+    {
+      "ingredient": "C13-15 alkane",
+      "position": 21,
+      "role": "light emollient hydrocarbon, late"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 23,
+      "role": "humectant, late"
+    }
+  ],
+  "blindToFinalChanges": [
+    {
+      "property": "provisional properties",
+      "blind": "general/[]/regular/not_targeted (low, provisional)",
+      "final": "see records",
+      "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+      "reason": "post-unblind reconciliation (3.2)"
+    }
+  ],
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal; T2: thickness/texture claims do not change the fit. T4: neighbor weightPotential=moderate -> acceptable would lower the final tier -> review_thickness_boundary."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal; T2: thickness/texture claims do not change the fit."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W low, C low -> acceptable; T2: thickness/texture claims do not change the fit."
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential low -> light (1:1)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1: no qualifying E2 unit; packet contains a manufacturer source -> high."
+      },
+      "secondary": null,
+      "secondaryRationale": "'fettiges ... Haar' is a hair-type suitability list, not an oily-scalp claim unit."
+    },
+    "observedCleansingIntensity": {
+      "value": "gentle",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength low -> gentle. I2: written unchanged to every row."
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "rationale": "No D1 wording."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "deepCleanserRecord": null,
+      "confidence": "high",
+      "rationale": "D2 not met (no D1) -> not_flagged."
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "light",
+        "tier": "ideal",
+        "intensityMatchesBucket": false
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "light",
+        "tier": "ideal",
+        "intensityMatchesBucket": false
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "light",
+        "tier": "acceptable",
+        "intensityMatchesBucket": false
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine"
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "researchCombinationRationale": "Not a dandruff-primary product: E2b layer 2 does not apply.",
+    "liveComparison": "review_live_value_differs is resolved by the orchestrator after freeze (lanes see no live rows)."
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientOrCountOrPositionAssignedWeightBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "comparisonWithEarlierValuesMadeInLane": false,
+    "nAltConsistent": true
+  },
+  "uncertainties": [
+    {
+      "reading": "German-language NEQI page priced in CHF treated per E1 as possibly foreign-market (claims effectively low) — irrelevant to the outcome because the name carries moisture",
+      "alternative": "moderate manufacturer page"
+    },
+    {
+      "reading": "conditioningLevel low",
+      "alternative": "moderate (several light routes)"
+    }
+  ]
+}

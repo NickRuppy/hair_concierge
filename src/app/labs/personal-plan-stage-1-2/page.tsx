@@ -17,7 +17,10 @@ export default function PersonalPlanStage1Stage2LabPage() {
   })
   if (result.status !== "ready") notFound()
 
-  const triggerContext = deriveStage2TriggerContext(result.snapshot)
+  const triggerContext = deriveStage2TriggerContext(result.snapshot, {
+    // Tools-off: this lab previews the product-only Stage 1-3 journey.
+    toolsEnabled: false,
+  })
 
   return <PersonalPlanStage1To3JourneyClient triggerContext={triggerContext} />
 }

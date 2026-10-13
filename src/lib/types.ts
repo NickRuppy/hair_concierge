@@ -9,6 +9,7 @@ import type {
   HeatStyling,
   ProfileConcern,
   Goal,
+  EngineGoal,
   StylingTool,
   CuticleCondition,
   ProteinMoistureBalance,
@@ -94,6 +95,7 @@ export type {
   HeatStyling,
   ProfileConcern,
   Goal,
+  EngineGoal,
   StylingTool,
   CuticleCondition,
   ProteinMoistureBalance,
@@ -159,11 +161,13 @@ export interface HairProfile {
   hair_length: HairLength | null
   density: HairDensity | null
   concerns: ProfileConcern[]
+  /** Nullable persisted column; optional for historical profile fixtures/readers. */
+  primary_concern?: ProfileConcern | null
   products_used: string | null
   shampoo_frequency: ProductFrequency | null
   heat_styling: HeatStyling | null
   styling_tools: StylingTool[] | null
-  goals: Goal[]
+  goals: EngineGoal[]
   cuticle_condition: CuticleCondition | null
   protein_moisture_balance: ProteinMoistureBalance | null
   scalp_type: ScalpType | null
@@ -734,7 +738,7 @@ export interface RoutineContext {
   cuticle_condition: CuticleCondition | null
   protein_moisture_balance: ProteinMoistureBalance | null
   concerns: ProfileConcern[]
-  goals: Goal[]
+  goals: EngineGoal[]
   chemical_treatment: ChemicalTreatment[]
   current_routine_products: RoutineProduct[]
   products_used: string | null

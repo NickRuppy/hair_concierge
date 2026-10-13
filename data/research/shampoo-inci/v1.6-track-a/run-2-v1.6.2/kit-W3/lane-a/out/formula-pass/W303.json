@@ -1,0 +1,129 @@
+{
+  "blindId": "W303",
+  "inciFingerprintSha256": "5f982bf87555a931d4def50368197813a82e944030a1c2e9d63dff77fa1d141e",
+  "phase": "formula-pass (blind, stage A only)",
+  "policy": "shampoo-classification-v1.6.2",
+  "lane": "lane-a",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "No split synonym entries; 'Maris Sal (Dead Sea Salt)' is one entry. Packet positions = normalized positions (ID-2). 16 entries.",
+    "e3ProminenceCutoff": "No Parfum declared; E3 preservative fallback = Sodium Benzoate @8. Prominent = positions 1-7."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis. Defining anionic Sodium Laureth Sulfate @2 buffered by prominent Cocamidopropyl Betaine @5; no reinforcing strong anionic. Laureth-9 @3 (Polidocanol) is a fatty-alcohol ethoxylate in no C3 cleansing class (not a glucoside/betaine/acylate): recorded, not a buffer.",
+      "ruleIds": ["C1", "C3", "C4", "E3"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: one meaningful conditioning system, the prominent cationic Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @7, plus humectants Urea @6, Glycerin @9, Panthenol @14. No silicone, no payload lipid, no pearlizer, so C2 not met and high not reachable. Counter-signal: a single guar with humectants could read as low (light care).",
+      "ruleIds": ["C2", "Section 5 anchors"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @7"],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @5"],
+        "humectantContext": ["Urea @6", "Glycerin @9", "Panthenol @14"],
+        "excluded": ["Laureth-9 @3 (polidocanol; nonionic ethoxylate, no weight family)", "Menthol @12, Mentha Arvensis Leaf Oil @16 (cooling/essential oil, 6.4)", "Maris Sal @10 (salt)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "wLine": "@8 Sodium Benzoate",
+        "classes": ["preservative_or_capped_active"],
+        "cap": "e3Point @8 (Sodium Benzoate, preservative fallback)",
+        "alphabeticalRun": "none",
+        "skipped": [],
+        "codes": [],
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light",
+      "persistence": "low",
+      "resetCapacity": "moderate",
+      "counterevidence": "The guar is prominent (@7, before the preservative), so a noticeable deposit cannot be excluded.",
+      "whyThisBand": "A single cationic polymer is the only deposition family; humectants are context only; the C1 chassis resets it.",
+      "whyNotNeighborBand": "Not moderate: one deposition family without a reinforcing route faces a moderate reset (W2 single-family case, no polymer floor); no silicone, lipid or protein converges.",
+      "confidenceLimitingFactor": "Guar level/charge density unknown; prominent position keeps moderate realistic.",
+      "rationale": "Low: lone cationic guar, no converging family, ordinary reset.",
+      "ruleIds": ["6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": "Claim-dependent; formula-only provisional value.",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": ["Urea @6", "Glycerin @9", "Panthenol @14"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @7"],
+        "limitation": "The humectant cluster (urea, polidocanol, menthol) reads as a scalp-comfort architecture as much as lengths moisture."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Polidocanol (Laureth-9 @3), Urea @6 and Menthol @12 point to a scalp (anti-itch) role rather than lengths care.",
+      "decisionTrace": "Blind: no claim; formula compatible with scalp_active if sensitive/itch positioning appears; provisional general.",
+      "rationale": "Provisional general; scalp_active is the likely candidate if claimed.",
+      "ruleIds": ["7.2", "7.3"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["moisture"],
+      "provisional": "Claim-dependent.",
+      "rationale": "Empty default blind.",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "frequent",
+      "triggerCode": "none",
+      "provisional": "Claim-dependent; moderate cleansing allows frequent with U2 wording.",
+      "rationale": "Default regular blind.",
+      "ruleIds": ["Section 9"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": "SC1 positioning claim-dependent.",
+      "csa": "CSA met via listed prominent comfort routes Laureth-9 @3 (= Polidocanol, E4 v1.6.2) and Urea @6 (comfort and humectant list). MB not met: Sodium Laureth Sulfate @2 prominent strong anionic. S-SENSITIVE formula half passes (comfort route); S-DRY formula half passes (Urea humectant).",
+      "counterSignals": "Menthol @12 and Mentha Arvensis Leaf Oil @16 are after the E3 point (not prominent): recorded, no confidence cap.",
+      "rationale": "Provisional not_targeted pending SC1; formula half (CSA) clearly present.",
+      "ruleIds": ["Section 10 CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active; urea/polidocanol/menthol do not upgrade.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": ["Sodium Laureth Sulfate @2 (defining)", "Cocamidopropyl Betaine @5 (buffer)", "Laureth-9 @3 (no C3 cleansing class)"],
+    "conditioningRoutes": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @7"],
+    "humectants": ["Urea @6", "Glycerin @9", "Panthenol @14"],
+    "actives": ["Laureth-9 @3 (Polidocanol, E4 comfort)", "Urea @6", "Menthol @12 (cooling, post-E3)", "Maris Sal @10"],
+    "exposure": ["No declared Parfum", "Menthol @12", "Mentha Arvensis Leaf Oil @16"],
+    "preservatives": ["Sodium Benzoate @8", "Potassium Sorbate @13"]
+  },
+  "unresolvedMaterialIngredients": []
+}

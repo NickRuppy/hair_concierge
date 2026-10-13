@@ -1,0 +1,21 @@
+{
+  "blindId": "W401",
+  "productName": "NIVEA 2in1 Express Shampoo & Spülung, 400 ml (dm: Shampoo & Conditioner Express 2in1)",
+  "brand": "Nivea (Beiersdorf)",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Das 2in1 Express Shampoo & Spülung mit der einzigartigen Kombination aus Glanz-Serum und natürlichen Aloe Vera-Extrakt verleiht deinem Haar intensive Pflege in kürzester Zeit. | Pflegt in Expresszeit | Stärkt die Haarstruktur für verbesserte Widerstandsfähigkeit | Verbessert die Kämmbarkeit | Reinigt sanft die Kopfhaut | Sorgt für natürlichen Glanz | Mit natürlichem Aloe Vera Extrakt | Hautverträglichkeit dermatologisch bestätigt | 0% Silikone - maximale Wirksamkeit | Vegane Formel (keine Inhaltsstoffe tierischen Ursprungs) | Nicht enthalten: Silikonfrei, Mikroplastikfreie Formel gemäß UNEP-Definition, Ohne Inhaltsstoffe tierischen Ursprungs | Das regenerierende NIVEA 2in1 Express Shampoo & Spülung reinigt mild und pflegt das Haar intensiv in kürzester Zeit. Die 2in1-Formel vereint hochwirksames Glanz-Serum und natürlichen Aloe Vera-Extrakt für eine verbesserte Kämmbarkeit und Geschmeidigkeit. Das pflegende Shampoo reinigt sanft die Kopfhaut, schützt vor Haarbruch und stärkt die Haarstruktur für mehr Widerstandsfähigkeit, ohne zu beschweren. Aus Liebe zu Haar und Umwelt ist die Formel: ohne Silikone, ohne Mikroplastikpartikel (gemäß UNEP-Definition), zu 99% biologisch abbaubar (gemäß OECD oder gleichwertigen Standards) und mit veganer Formel (ohne Inhaltsstoffe tierischen Ursprungs). Die Hautverträglichkeit des Shampoos ist dermatologisch bestätigt und es eignet sich für alle Haartypen. (text truncated at this point in capture) | Attribut: Alle Haartypen, Silikonfrei",
+      "directionsVerbatim": "1 Auftragen: Shampoo im nassen Haar verteilen und aufschäumen. 2 Ausspülen: Danach gründlich mit warmen Wasser ausspülen."
+    },
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "2in1 Shampoo & Spülung | Mit natürlichem Aloe Vera Extrakt angereichert | Sorgt für geschmeidiges & glänzendes Haar | Stärkt die Haarstruktur & schützt vor Haarbruch | Frei von tierischen Inhaltsstoffen | Das Express Pflege 2in1 Shampoo von NIVEA vereint Reinigung und Pflege in einem Schritt und spart dadurch wertvolle Zeit im Alltag. Durch die Kombination aus natürlichem Aloe Vera Extrakt und einem Glanz-Serum wird das Haar intensiv gepflegt und erhält eine geschmeidige Struktur. Die milde Formel reinigt die Kopfhaut sanft, stärkt das Haar und schützt es vor Haarbruch. Nach der Anwendung lässt sich das Haar leichter kämmen und überzeugt durch einen natürlichen Glanz. Für alle Haartypen geeignet und ideal bei wenig Zeit. | Haartyp: alle Haartypen",
+      "directionsVerbatim": "Shampoo im nassen Haar verteilen und aufschäumen. Danach gründlich mit warmen Wasser ausspülen."
+    }
+  ]
+}

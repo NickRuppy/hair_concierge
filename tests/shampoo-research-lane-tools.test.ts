@@ -15,10 +15,15 @@ import path from "node:path"
 import test from "node:test"
 
 import {
+  blindPackSize,
   buildLaneKit,
+  cliFlag,
   inciFingerprint,
   releaseReveal,
   resolveInside,
+  resolveStandardPath,
+  scrubStandard,
+  STAGE_A_NORMALIZATION,
   type FreezePacket,
 } from "../scripts/shampoo-research/build-lane-kit"
 import { compareLaneDirs, comparisonFields } from "../scripts/shampoo-research/compare-lanes"
@@ -147,6 +152,32 @@ test("the lane kit splits each product into a blind formula packet and a held-ba
   })
 })
 
+test("stage-A normalization carries only the runbook rule, never freeze-worker notes (v1.6.2 seal fix)", () => {
+  withTempDir((out) => {
+    const { mapping } = buildLaneKit({
+      packets: [
+        {
+          ...packet(),
+          normalization:
+            "Split on ','; dm renders a non-breaking hyphen as '|' inside names; Mustermarke list pinned",
+        },
+      ],
+      standardText: STANDARD,
+      outDir: out,
+      seed: 7,
+    })
+    const id = mapping[0]!.blindId
+    for (const lane of ["lane-a", "lane-b"]) {
+      const formula = JSON.parse(
+        readFileSync(path.join(out, lane, "formula", `${id}.json`), "utf8"),
+      )
+      assert.equal(formula.normalization, STAGE_A_NORMALIZATION)
+      for (const hidden of ["dm ", "Mustermarke"])
+        assert.ok(!formula.normalization.includes(hidden))
+    }
+  })
+})
+
 test("the lane kit fails closed on missing evidence inputs, a wrong fingerprint or a leaking standard", () => {
   withTempDir((out) => {
     const build = (p: FreezePacket, standardText = STANDARD) =>
@@ -162,11 +193,152 @@ test("the lane kit fails closed on missing evidence inputs, a wrong fingerprint 
     const unknownKind = packet()
     unknownKind.sources[0]!.sourceKind = "blog" as never
     assert.throws(() => build(unknownKind), /sourceKind/)
-    assert.throws(() => build(packet(), `${STANDARD}\nMustermarke appears here`), /Mustermarke/)
+    // A name the scrub cannot replace on word boundaries (here an inflected form) still fails closed.
+    assert.throws(() => build(packet(), `${STANDARD}\nMustermarkes Pflegeserie`), /Mustermarke/)
     assert.throws(
-      () => build(packet(), `${STANDARD}\nsee Glanzwunder Shampoo`),
+      () => build(packet(), `${STANDARD}\nsee Glanzwunder Shampoos`),
       /Glanzwunder Shampoo/,
     )
+  })
+})
+
+const SCRUB_UUID = "6dc65df2-2466-43e4-bdc2-3a05803f305c"
+const SCRUB_STANDARD = [
+  "# Standard",
+  "Hair that is being treated needs care; being conservative is the default.",
+  "### 13.9 Review flags",
+  "flags",
+  "### 13.10 Worked examples (non-normative)",
+  "| Mustermarke Glanzwunder Shampoo | example row |",
+  "### 13.11 No-gap invariant",
+  "Heavy shampoos stay out unless the register says so.",
+  "### 13.12 Exception register",
+  `| X1 | Mustermarke Glanzwunder Shampoo (\`${SCRUB_UUID}\`) | coarse x oily |`,
+  "Mustermarke's volume row stays; Mustermarke Volumenwunder is the sibling.",
+  "The Being Big Hair Shampoo is a second case, and Being as a brand stands alone here.",
+  "Monday Volume keeps working under the register.",
+].join("\n")
+
+function scrubBatch() {
+  return [
+    packet({ productId: SCRUB_UUID }),
+    packet({ slot: "T02", productId: "catalog-2", brand: "Being", name: "Being Big Hair Shampoo" }),
+    packet({
+      slot: "T03",
+      productId: "catalog-3",
+      brand: "Monday Haircare",
+      name: "Monday Haircare Volume",
+    }),
+  ]
+}
+
+test("the standard scrub replaces batch names with a placeholder and drops 13.10", () => {
+  const scrubbed = scrubStandard(SCRUB_STANDARD, scrubBatch())
+  assert.ok(!scrubbed.includes("13.10 Worked examples"))
+  assert.ok(scrubbed.includes("### 13.11 No-gap invariant"))
+  assert.ok(scrubbed.includes("### 13.12 Exception register"))
+  assert.ok(!scrubbed.includes(SCRUB_UUID), "product uuid is replaced")
+  for (const name of ["Mustermarke", "Glanzwunder", "Being Big Hair", "Being as a brand", "Monday"])
+    assert.ok(!scrubbed.includes(name), `${name} is scrubbed`)
+  assert.ok(scrubbed.includes("[catalog product]"))
+  assert.match(scrubbed, /\| X1 \| (\[catalog product\] ?)+\(`\[catalog product\]`\)/)
+})
+
+test("the standard scrub keeps ordinary words that only share a brand's spelling", () => {
+  const scrubbed = scrubStandard(SCRUB_STANDARD, scrubBatch())
+  assert.ok(scrubbed.includes("is being treated needs care; being conservative"))
+  assert.ok(scrubbed.includes("Heavy shampoos stay out"))
+})
+
+test("the standard scrub fails closed when a batch name survives replacement", () => {
+  assert.throws(
+    () => scrubStandard(`${SCRUB_STANDARD}\nMustermarkes Serie`, scrubBatch()),
+    /scrubbed standard still names batch products: .*Mustermarke/,
+  )
+})
+
+test("the locked standard's holdout example product does not leak into a Vichy batch's lane copy", () => {
+  const locked = readFileSync("docs/research/shampoo-inci/v1.6/classification-standard.md", "utf8")
+  const batch = [packet({ brand: "Vichy", name: "Dercos Anti-Schuppen Shampoo" })]
+  const scrubbed = scrubStandard(locked, batch)
+  assert.doesNotMatch(scrubbed, /\bVichy\b|\bVICHY\b/)
+  assert.match(scrubbed, /Secondary `gentle` alongside primary `scalp_active`/)
+})
+
+test("a lower-case brand slug is scrubbed whole, case-insensitively (v1.6.1 seal incident 3)", () => {
+  for (const standard of [
+    "docs/research/shampoo-inci/v1.6/classification-standard.md",
+    "docs/research/shampoo-inci/v1.6.1/classification-standard.md",
+    "docs/research/shampoo-inci/v1.6.2/classification-standard.md",
+  ]) {
+    const locked = readFileSync(standard, "utf8")
+    const batch = [packet({ brand: "Vichy", name: "Dercos Anti-Schuppen Shampoo" })]
+    const scrubbed = scrubStandard(locked, batch)
+    assert.doesNotMatch(scrubbed, /vichy/i, `${standard}: no brand in any case`)
+    assert.doesNotMatch(
+      scrubbed,
+      /dercos-anti-schuppen-sensitiv/,
+      `${standard}: slug replaced whole`,
+    )
+  }
+})
+
+test("a slug built from a multi-word product name is replaced whole, ordinary words stay", () => {
+  const scrubbed = scrubStandard(
+    `${SCRUB_STANDARD}\nHoldout \`being-big-hair-shampoo-v2\` read as mild; well-being matters.`,
+    scrubBatch(),
+  )
+  assert.ok(scrubbed.includes("Holdout `[catalog product]` read as mild"))
+  assert.ok(scrubbed.includes("well-being matters"))
+  assert.ok(scrubbed.includes("is being treated needs care; being conservative"))
+})
+
+test("the kit builds against the locked standard by default and against an explicit candidate path", () => {
+  assert.equal(
+    resolveStandardPath(undefined),
+    "docs/research/shampoo-inci/v1.6.2/classification-standard.md",
+  )
+  assert.equal(
+    resolveStandardPath("plans/shampoo-v161/candidate/classification-standard.md"),
+    "plans/shampoo-v161/candidate/classification-standard.md",
+  )
+  assert.throws(() => resolveStandardPath(""), /standard/)
+})
+
+test("a CLI flag without a value fails instead of silently selecting the default", () => {
+  assert.equal(cliFlag(["in", "out", "--seed", "7"], "--standard"), undefined)
+  assert.equal(cliFlag(["in", "out", "--standard", "x.md", "--seed", "7"], "--standard"), "x.md")
+  assert.throws(
+    () => cliFlag(["in", "out", "--seed", "7", "--standard"], "--standard"),
+    /--standard needs a value/,
+  )
+  assert.throws(
+    () => cliFlag(["in", "out", "--standard", "--seed", "7"], "--standard"),
+    /--standard needs a value/,
+  )
+})
+
+test("stage-A packets carry only the bare pack size, never identity notes from the freeze", () => {
+  assert.equal(blindPackSize("250 ml"), "250 ml")
+  assert.equal(
+    blindPackSize("300ml (the same formula is published for a 250 ml pack, GTIN 3600542512534)"),
+    "300 ml",
+  )
+  assert.equal(
+    blindPackSize(
+      "UNRESOLVED: prior record says 250 ml bound to GTIN 3600542461658, but Garnier DE and dm show 300 ml",
+    ),
+    "250 ml",
+  )
+  assert.equal(blindPackSize("1,5 L"), "1.5 l")
+  assert.equal(blindPackSize("unbekannt"), "unknown")
+  withTempDir((out) => {
+    const leaky = packet({ packSize: "250 ml — Mustermarke DE page shows GTIN 4000000000001" })
+    buildLaneKit({ packets: [leaky], standardText: STANDARD, outDir: path.join(out, "k"), seed: 1 })
+    const ids = readdirSync(path.join(out, "k", "lane-a", "formula"))
+    const stageA = readFileSync(path.join(out, "k", "lane-a", "formula", ids[0]!), "utf8")
+    assert.doesNotMatch(stageA, /Mustermarke|4000000000001/)
+    assert.match(stageA, /"packSize": ?"250 ml"/)
   })
 })
 

@@ -1,0 +1,25 @@
+{
+  "blindId": "VS05",
+  "packSize": "200 ml",
+  "canonicalInci": [
+    "Aqua",
+    "Decyl Glucoside",
+    "Disodium Laureth Sulfosuccinate",
+    "Sodium Lauryl Sulfoacetate",
+    "PEG-55 Propylene Glycol Oleate",
+    "Propylene Glycol",
+    "Parfum",
+    "Phenoxyethanol",
+    "Sodium Benzoate",
+    "Citric Acid",
+    "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+    "Lactic Acid",
+    "Sodium Chloride",
+    "Sodium Lactate"
+  ],
+  "inciFingerprintSha256": "303653d5f86a174377761e891fefde597d7e15dc484437056bd83783230aa48f",
+  "normalization": "Runbook step 2: canonical list items lower-cased, trimmed, whitespace collapsed, joined with '|', SHA-256; split synonym entries (e.g. 'Aqua (Water, Eau)') merged before numbering.",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high"
+}

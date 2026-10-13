@@ -104,11 +104,13 @@ function deriveScalpCondition(scalpConcerns: readonly string[] | undefined): str
 function deriveVolumeBalanceGoal(diagnostics: DiagnosticsV1): string | null {
   if (diagnostics.volumeDirection === "more") return "volume"
   if (diagnostics.volumeDirection === "less") return "less_volume"
-  return resolveVolumeBalanceGoal({
-    thickness: diagnostics.thickness,
-    density: diagnostics.density,
-    structure: diagnostics.texture,
-  })
+  return (
+    resolveVolumeBalanceGoal({
+      thickness: diagnostics.thickness,
+      density: diagnostics.density,
+      structure: diagnostics.texture,
+    }) ?? "volume_balance"
+  )
 }
 
 function deriveGoals(diagnostics: DiagnosticsV1): string[] {
@@ -134,8 +136,8 @@ function deriveGoals(diagnostics: DiagnosticsV1): string[] {
  * `hair_profiles.primary_concern` (main #611, F1), mirroring `buildProfilePrimaryConcern`
  * (`src/lib/quiz/link-to-profile.ts`), which the quiz link used to write directly: her explicit
  * pick while it is one of `currentConcerns`, else her only concern, else nothing — projected
- * into the same legacy vocabulary as `concerns`, `null` when it has no legacy equivalent
- * (low_shine, lost_shape, low_volume_or_weighed_down). Absent `currentConcerns` -> `null`
+ * into the same engine vocabulary as `concerns`, including the three v3-native values.
+ * Absent `currentConcerns` -> `null`
  * (the `concerns` column is `[]` then, and the column's trigger would drop any pick anyway).
  */
 function derivePrimaryConcern(diagnostics: DiagnosticsV1): string | null {

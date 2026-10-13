@@ -61,7 +61,7 @@ function labTriggerContext(): Stage2TriggerContext {
   })
   assert.equal(initial.status, "ready")
   if (initial.status !== "ready") throw new Error("unreachable")
-  return deriveStage2TriggerContext(initial.snapshot)
+  return deriveStage2TriggerContext(initial.snapshot, { toolsEnabled: false })
 }
 
 const TRIGGER_CONTEXT_VARIANTS: Array<{ name: string; triggerContext: Stage2TriggerContext }> = [
@@ -1413,6 +1413,7 @@ function acceptRoute(
       personalPlanId: PERSONAL_PLAN_ID,
     }),
     checkRateLimit: (async () => ({ allowed: true })) as never,
+    toolsEnabled: async () => false,
     accept: async (_userId, input) => {
       received.push(input)
       return {

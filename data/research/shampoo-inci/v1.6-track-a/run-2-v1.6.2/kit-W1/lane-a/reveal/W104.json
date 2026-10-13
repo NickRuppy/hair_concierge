@@ -1,0 +1,42 @@
+{
+  "blindId": "W104",
+  "productName": "Garnier Wahre Schätze Shampoo Honig Schätze (Reparierendes Shampoo Honig Schätze)",
+  "brand": "Garnier Wahre Schätze",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Speziell für die Bedürfnisse von strapaziertem und brüchigem Haar entwickelt, repariert und kräftigt das Garnier Wahre Schätze Reparierendes Shampoo Honig Schätze das Haar bis in die Spitzen. Die stärkenden und pflegenden Eigenschaften von Akazien-, Manuka- und Lavendelhonig im Honig Shampoo wirken Haarschäden wie Spliss, Haarbruch und Haarriss entgegen. Der reparierende Akazienhonig pflegt das Haar nachhaltig und macht es spürbar geschmeidig und leichter kämmbar.",
+      "directionsVerbatim": "So wendest Du das Honig Shampoo für strapaziertes und brüchiges Haar an: 1. Die Haare nass machen und waschen.  2. Das Honig Shampoo ins feuchte Haar einmassieren und im gesamten Haar verteilen.  3. Zum Schluss gründlich ausspülen."
+    },
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Intensive Pflege für strapaziertes & brüchiges Haar | Mit reparierendem Akazienhonig | Bienenwachs hat schützende Eigenschaften | Nachhaltig bezogener Akazienhonig & Bienenwachs | Garnier Wahre Schätze Reparierendes Shampoo Honig Schätze vereint die Kraft von Schätzen aus dem Bienenstock, um das geschädigte Haar zu reparieren und wieder aufzubauen. Sowohl der reparierende Akazienhonig als auch das schützende Bienenwachs sind nachhaltig bezogen. Repariert und gekräftigt bis in die Spitzen wird das Haar spürbar geschmeidig und leicht zu kämmen. Bonus: der wunderbare Honigduft.",
+      "directionsVerbatim": "Für gesund aussehendes, strahlend schönes Haar das Garnier Wahre Schätze Shampoo Honig Schätze sanft ins feuchte Haar einmassieren und im gesamten Haar verteilen. Zum Schluss gründlich ausspülen."
+    },
+    {
+      "sourceType": "retailer_mueller_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Das GARNIER Wahre Schätze Shampoo Honig Schätze bietet eine aufbauende Pflege für strapaziertes und brüchiges Haar. Es reinigt sanft und verleiht dem Haar ein geschmeidiges Gefühl. | Formel mit Akazienhonig und Bienenwachs für eine aufbauende Pflege | Speziell für die Bedürfnisse von strapaziertem und brüchigem Haar | Verleiht dem Haar ein spürbar geschmeidiges Gefühl und erleichtert die Kämmbarkeit | Flaschenkörper besteht zu 100 % aus recyceltem Kunststoff und ist recycelbar | Die Rezeptur, angereichert mit wertvollen Extrakten aus dem Bienenstock, unterstützt das Haar dabei, gekräftigt auszusehen.",
+      "directionsVerbatim": "Für gesund aussehendes; strahlend schönes Haar das Garnier Wahre Schätze Shampoo Honig Schätze sanft ins feuchte Haar einmassieren und im gesamten Haar verteilen. Zum Schluss gründlich ausspülen."
+    },
+    {
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Strapaziertes, brüchiges Haar adé – Garnier Wahre Schätze Reparierendes Shampoo Honig Schätze vereint die Kraft von Schätzen aus dem Bienenstock, um das geschädigte Haar zu reparieren und wieder aufzubauen. Sowohl der reparierende Akazienhonig als auch das schützende Bienenwachs sind nachhaltig bezogen. | das Shampoo bietet intensive Pflege für strapaziertes; brüchiges Haar | aufbauende Rezeptur mit reparierendem Akazienhonig | Bienenwachs hat schützende Eigenschaften | nachhaltig bezogener Akazienhonig und Bienenwachs | Flaschenkörper aus 100% recyceltem Plastik & recycelbar. Nachfüllbar",
+      "directionsVerbatim": "Für gesund aussehendes, strahlend schönes Haar das Garnier Wahre Schätze Shampoo Honig Schätze sanft ins feuchte Haar einmassieren und im gesamten Haar verteilen. Zum Schluss gründlich ausspülen."
+    },
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Aufbauendes Shampoo mit Honigduft | Mit Akazienhonig und Bienenwachs | Pflegende Formel | Kräftigt das Haar bis in die Spitzen | Mit der Kraft von Schätzen aus dem Bienenstock pflegt das GARNIER Wahre Schätze Reparierendes Shampoo Honig Schätze strapaziertes und brüchiges Haar intensiv. Die aufbauende Rezeptur vereint nachhaltig bezogenen, reparierenden Akazienhonig mit schützendem Bienenwachs.",
+      "directionsVerbatim": "Für gesund aussehendes; strahlend schönes Haar das Garnier Wahre Schätze Shampoo Honig Schätze sanft ins feuchte Haar einmassieren und im gesamten Haar verteilen. Zum Schluss gründlich ausspülen."
+    }
+  ]
+}

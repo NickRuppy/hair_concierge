@@ -1,0 +1,258 @@
+{
+ "blindId": "W205",
+ "inciFingerprintSha256": "cb12321175c1cf9a3f9455fab2e6c51d09b6cb0f3700439be148e708e310ec21",
+ "phase": "formula-pass (blind, stage A only; no reveal opened)",
+ "standard": "shampoo-classification-v1.6.2",
+ "lane": "lane-b",
+ "identity": {
+  "packSize": "200 ml",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high",
+  "normalization": "No synonym or split entries; normalized positions = packet positions (ID-2).",
+  "e3ProminenceCutoff": "Parfum @8; prominent = positions 1-7 (E3)."
+ },
+ "formulaFacts": {
+  "surfactants": {
+   "definingAnionic": "Sodium Laureth Sulfate @7 (strong anionic, ether type; earliest prominent strong anionic although listed after the mild routes)",
+   "reinforcingRoutes": [],
+   "buffers": [
+    "Disodium Laureth Sulfosuccinate @3 (mild anionic)",
+    "Sodium Lauryl Sulfoacetate @4 (mild anionic)",
+    "Lauryl Glucoside @6 (nonionic glucoside)"
+   ],
+   "notCleansing": [
+    "Laureth-9 @5 (= Polidocanol, E4 comfort route; alcohol ethoxylate, read as in no C3 cleansing class)",
+    "PEG-120 Methyl Glucose Dioleate @9 (PEG thickener)",
+    "Laureth-2 @12 (low-ethoxylate thickener)",
+    "PEG/PPG-120/10 Trimethylolpropane Trioleate @13 (PEG thickener)"
+   ],
+   "c3aOrC3b": "none"
+  },
+  "conditioningRoutes": {
+   "cationic_polymer": [
+    "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride @15"
+   ],
+   "payload_lipid": [
+    "Helianthus Annuus Seed Oil @21"
+   ],
+   "silicone": [],
+   "weak_refatter": [],
+   "pearlizing": []
+  },
+  "humectants": [
+   "Urea @2"
+  ],
+  "actives": [
+   "Urea @2",
+   "Laureth-9 (Polidocanol) @5",
+   "Tocopherol @20"
+  ],
+  "recognizedDandruffActives": [],
+  "exposure": {
+   "fragrance": "Parfum @8, Tetramethyl Acetyloctahydronaphthalenes @17",
+   "coolingAgents": [],
+   "essentialOils": []
+  },
+  "csa": {
+   "listedComfortRoutesProminent": [
+    "Urea @2",
+    "Laureth-9 (Polidocanol) @5"
+   ],
+   "listedHumectantRefattingRoutesProminent": [
+    "Urea @2"
+   ],
+   "mildBase": "no: prominent Sodium Laureth Sulfate @7 excludes MB",
+   "csaHolds": true
+  },
+  "preservativesAndOther": [
+   "Phenoxyethanol @10",
+   "Citric Acid @11",
+   "Sodium Benzoate @14",
+   "Sodium Citrate @16",
+   "Sodium Chloride @18",
+   "Lactic Acid @19"
+  ]
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "Moderate: C1 - the earliest prominent strong anionic is Sodium Laureth Sulfate @7, buffered by prominent mild anionics (Disodium Laureth Sulfosuccinate @3, Sodium Lauryl Sulfoacetate @4) and Lauryl Glucoside @6, with no reinforcing route. Counter-signal: SLES is the last prominent surfactant, behind three mild routes, so the net system may be milder than the convention reads; confidence moderate, neighbor low (value stays at the convention).",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "E3",
+    "N-ALT"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "Low: cleansing-led architecture - the only deposition is a late cationic starch (@15, after the preservatives) and a trace Sunflower Oil @21; Urea @2 is a humectant, not slip. C2 not met (no silicone, payload lipid, pearlizer early). Neighbor moderate: Urea at a high position plus the cationic starch could give noticeable softness.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "E3",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "Low: one late cationic starch polymer and a trace post-line sunflower oil against an effective C1 reset.",
+   "ruleIds": [
+    "6.6",
+    "W-LINE",
+    "W2",
+    "W3",
+    "N-ALT"
+   ],
+   "evidence": {
+    "cationic_polymer": [
+     "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride @15"
+    ],
+    "payload_lipid": [
+     "Helianthus Annuus Seed Oil @21 (non-material: after W-line @8)"
+    ],
+    "weak_refatter": [],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Disodium Laureth Sulfosuccinate @3",
+     "Sodium Lauryl Sulfoacetate @4",
+     "Lauryl Glucoside @6",
+     "Sodium Laureth Sulfate @7"
+    ],
+    "humectantContext": [
+     "Urea @2"
+    ],
+    "excluded": [
+     "PEG-120 Methyl Glucose Dioleate @9, PEG/PPG-120/10 Trimethylolpropane Trioleate @13 (PEG thickeners, 6.4)",
+     "Laureth-9 @5, Laureth-2 @12 (ethoxylates, not deposition)",
+     "Tocopherol @20 (antioxidant)"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": {
+     "position": 8,
+     "inci": "Parfum",
+     "classes": [
+      "fragrance"
+     ]
+    },
+    "cap": {
+     "e3Point": 8
+    },
+    "alphabeticalRun": null,
+    "skipped": [],
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": [
+     "Helianthus Annuus Seed Oil @21"
+    ]
+   },
+   "depositionLoad": "light",
+   "persistence": "low",
+   "resetCapacity": "moderate",
+   "counterevidence": "Two families (cationic_polymer, payload_lipid) are present (W2).",
+   "whyThisBand": "Deposition is limited to a single late cationic starch and a trace oil.",
+   "whyNotNeighborBand": "Not moderate: both families are late/trace - the cationic starch sits after Sodium Benzoate @14 and the oil is the last entry @21, after the W-line - and they face a broad sulfosuccinate/sulfoacetate/glucoside/SLES reset (W2 reason: each family late/trace).",
+   "confidenceLimitingFactor": "Cationic starch deposition at low dose is possible; INCI-only."
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "low",
+   "neighboringAlternative": "scalp_active",
+   "rationale": "Provisional, formula-only (claims hidden, 3.1): no exact-product claim is visible, so no focus candidate exists and 7.2 (\"unsupported/absent claims\") gives general. Formula care-direction verdict: nonspecific. Neighbor scalp_active: prominent Urea and Laureth-9 (Polidocanol) are listed comfort routes, so a dry/itchy-scalp positioning is the most plausible specialist role. Final focus is decided only after the reveal (3.2, 7.2, F1-F7).",
+   "ruleIds": [
+    "3.1",
+    "7.2",
+    "7.3",
+    "F1",
+    "N-ALT"
+   ],
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "Urea @2"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride @15"
+    ],
+    "limitation": "Strong humectant (Urea) but little conditioning/emollient support for a moisture verdict."
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "No claim visible in the blind pass; formula verdict only. Strong humectant (Urea) but little conditioning/emollient support for a moisture verdict.",
+   "decisionTrace": "Blind: claim direction null; formula verdict nonspecific; decision reason: no candidate claim, provisional general."
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "low",
+   "neighboringAlternative": [
+    "scalp_active"
+   ],
+   "rationale": "Provisional, formula-only: secondary needs distinct exact-product positioning (Section 8), which is hidden in the blind pass; empty default.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3",
+    "N-ALT"
+   ],
+   "decisionTrace": "Empty default considered; no claims visible; no secondary selected."
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "low",
+   "neighboringAlternative": "frequent",
+   "rationale": "Provisional, formula-only: usage triggers need moderate/high-graded claims or directions (Section 9, CL-SRC), hidden in the blind pass; default regular. Neighbor: cleansingStrength is not strong, so explicit frequency wording (U2) could fire frequent.",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U4",
+    "CL-SRC",
+    "N-ALT"
+   ],
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": []
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "low",
+   "neighboringAlternative": "targeted",
+   "rationale": "Provisional, formula-only: positioning (SC1) is hidden, so the default is not_targeted. CSA holds via prominent listed comfort routes Urea @2 and Laureth-9 (Polidocanol) @5 and humectant route Urea @2; MB does not apply (prominent SLES @7). A sensitive/dry-scalp claim graded moderate/high would make it targeted.",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "MB",
+    "SC1",
+    "E4",
+    "N-ALT"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not supported: the complete INCI contains no Piroctone Olamine, Climbazole or Selenium (Di)Sulfide (Section 11).",
+   "ruleIds": [
+    "11",
+    "DS1"
+   ]
+  }
+ },
+ "unresolvedMaterialIngredients": [],
+ "notes": [
+  "Laureth-9 class: read as in no C3 cleansing class (alcohol ethoxylate; C3 nonionic cleansing lists only alkyl glucosides). If it were read as a nonionic cleansing buffer, C1 would still give moderate (buffers already present) and no W-line or MB reading changes."
+ ]
+}

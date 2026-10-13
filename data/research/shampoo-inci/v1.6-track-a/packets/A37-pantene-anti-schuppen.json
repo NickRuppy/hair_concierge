@@ -1,0 +1,84 @@
+{
+  "slot": "A37",
+  "productId": "5effc311-25d7-44dd-8c16-b93c182068d3",
+  "name": "PANTENE PRO-V Shampoo Anti Schuppen Active Nutri-Plex",
+  "brand": "Pantene",
+  "packSize": "300 ml",
+  "gtins": [
+    "8700216558037"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/1561902/pantene-pro-v-shampoo-anti-schuppen-active-nutri-plex",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "dm.de PDP (browser tab, Inhaltsstoffe accordion expanded); Anschrift: Procter & Gamble, Schwalbach",
+      "sourceKind": "retailer",
+      "gtinShown": "8700216558037 (page 'GTIN:' line; dm-Artikelnummer 1561902; title 'Shampoo Anti Schuppen Active Nutri-Plex, 300 ml'; Lieferbar)",
+      "inciVerbatim": "Ingredients: Aqua, Sodium Laureth Sulfate, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Sodium Citrate, Dimethiconol, Parfum, Citric Acid, Cocamide MEA, Glycol Distearate, Dimethicone, Sodium Chloride, Guar Hydroxypropyltrimonium Chloride, Piroctone Olamine, Sodium Benzoate, TEA-Dodecylbenzenesulfonate, Sodium Salicylate, Trideceth-10, Tetrasodium EDTA, Panthenol, Sodium Hydroxide, Hexyl Cinnamal, Histidine, Triethylene Glycol, Propylene Glycol, Benzyl Alcohol",
+      "claimsVerbatim": "Sanfte Reinigung | Pflegende Wirkung auf die Kopfhaut | Ohne Mineralöle und Farbstoffe | Das Anti Schuppen Shampoo Active Nutri-Plex von PANTENE PRO-V ist das Geheimnis für wunderschön gepflegtes Haar und eine gesunde Kopfhaut. Mit seiner sanften Formel reinigt es das Haar gründlich und sorgt gleichzeitig dafür, dass es mit wichtigen Nährstoffen versorgt wird. Dieses Shampoo ist ideal für die tägliche Anwendung und unterstützt die Haarpflege, um ein strahlendes und gesundes Aussehen zu fördern. Perfekt für alle, die Wert auf eine umfassende Pflege ihrer Haare legen. | Wirkung: Pflege, Glanz, Anti-Schuppen",
+      "directionsVerbatim": "In das nasse Haar einmassieren und aufschäumen. Gut ausspülen"
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-anti-schuppen-shampoo/p/8700216558037",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "Rossmann PDP (browser tab); JSON-LD sku 8700216558037; Rossmann Artikelnummer 180706; 300 ml; 3,29 EUR",
+      "sourceKind": "retailer",
+      "gtinShown": "8700216558037 (URL path and JSON-LD sku)",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Sodium Citrate, Dimethiconol, Parfum, Citric Acid, Cocamide MEA, Glycol Distearate, Dimethicone, Sodium Chloride, Guar Hydroxypropyltrimonium Chloride, Piroctone Olamine, Sodium Benzoate, TEA-Dodecylbenzenesulfonate, Sodium Salicylate, Trideceth-10, Tetrasodium EDTA, Panthenol, Sodium Hydroxide, Hexyl Cinnamal, Histidine, Triethylene Glycol, Propylene Glycol, Benzyl Alcohol",
+      "claimsVerbatim": "Entdecke das Pantene Pro-V Anti-Schuppen Shampoo, das Geheimnis für stärkeres* Haar und eine gesunde Kopfhaut. Die sanfte Formel mit PRO-V und der innovativen ACTIVE NUTRI-PLEX-Technologie reinigt das Haar und versorgt es gleichzeitig mit wichtigen Nährstoffen. Es bekämpft Schuppen** und hilft, Schuppen vorzubeugen, so dass dein Haar und deine Kopfhaut sauber und rein aussehen und einen gesunden Glanz erhalten. Getestet vom Schweizerischen Vitamininstitut. Erlebe den ultimativen Haarpflegegenuss mit dem Pantene Pro-V Active Nutri-Plex Shampoo. | *Gegen Stylingschäden im Vergleich zum Volumen Pur Shampoo. **Reduktion sichtbarer Schuppen bei regelmäßiger Anwendung. | reinigt dein Haar sanft und versorgt es mit Nährstoffen",
+      "directionsVerbatim": "In das nasse Haar einmassieren und aufschäumen. Gut ausspülen. | Warnhinweise: Kontakt mit den Augen vermeiden. Bei Kontakt, gründlich mit Wasser spülen."
+    },
+    {
+      "url": "https://www.pantene.de/de-de/produkte/shampoo",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "manufacturer DE site (P&G) - not retrievable: redirects to haircode.io; no Anti-Schuppen product page found in two attempts",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "none",
+      "inciVerbatim": "not retrieved",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    }
+  ],
+  "conflicts": [],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Sodium Xylenesulfonate",
+    "Cocamidopropyl Betaine",
+    "Sodium Citrate",
+    "Dimethiconol",
+    "Parfum",
+    "Citric Acid",
+    "Cocamide MEA",
+    "Glycol Distearate",
+    "Dimethicone",
+    "Sodium Chloride",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Piroctone Olamine",
+    "Sodium Benzoate",
+    "TEA-Dodecylbenzenesulfonate",
+    "Sodium Salicylate",
+    "Trideceth-10",
+    "Tetrasodium EDTA",
+    "Panthenol",
+    "Sodium Hydroxide",
+    "Hexyl Cinnamal",
+    "Histidine",
+    "Triethylene Glycol",
+    "Propylene Glycol",
+    "Benzyl Alcohol"
+  ],
+  "canonicalReason": "dm.de and Rossmann.de, two independent German retailers both anchored to GTIN 8700216558037 / 300 ml on 2026-10-10, publish a character-identical 26-item list; also identical to the 2026-08-10 (dm) and 2026-08-23 (Rossmann) v1.3 captures. Manufacturer page not reachable (pantene.de redirects to haircode.io). Claim 'Ohne Mineralöle und Farbstoffe' is consistent (no mineral oil, no CI colourants); Piroctone Olamine (anti-dandruff active) present at #14 though not named in claims text.",
+  "inciFingerprintSha256": "3abc85e9d0d10aa7a4a09ed68635d66990e6389dbd33f9d7278ef1107576678f",
+  "normalization": "Canonical list split on ',' at parenthesis depth 0 (so synonym groups such as 'Aqua (Water, Eau)' stay one item), trailing full stop removed; per item: lower-case, trim, collapse internal whitespace; asterisks, parentheses and slashes kept as published; items joined with '|'; sha256 over the UTF-8 string.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 3,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Name caution: dm title is 'PANTENE PRO-V Shampoo Anti Schuppen Active Nutri-Plex, 300 ml'; Rossmann 'Pantene Pro-V Anti Schuppen Shampoo'. Same GTIN.",
+    "Prior v1.4 fingerprint (comma-joined) 7a8423301829ac6ba462b14808039344b5b958320a68a432f9c7e0d01d1e5a88 - list unchanged.",
+    "Rossmann text mentions 'Getestet vom Schweizerischen Vitamininstitut'; irrelevant to INCI."
+  ]
+}

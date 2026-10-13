@@ -1,0 +1,77 @@
+{
+  "slot": "A11",
+  "productId": "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+  "name": "Guhl Kopfhaut Sensitive",
+  "brand": "Guhl",
+  "packSize": "250 ml",
+  "gtins": [
+    "4072600283172"
+  ],
+  "sources": [
+    {
+      "url": "https://www.guhl.com/produkt/kopfhaut-sensitiv/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4072600283172 (gtin13 in page JSON-LD; 250 ml in page description/image name)",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Betaine, Glycerin, Panthenol, Lactic Acid, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Sorbitan Caprylate, Erythritol, Sodium Chloride, Tetrasodium Glutamate Diacetate, Piroctone Olamine, Maltodextrin, Citric Acid, Mentha Aquatica Leaf Extract, Tilia Cordata Flower Extract, Sodium Benzoate, Parfum, CI 42090, Caramel",
+      "claimsVerbatim": "Mildes Shampoo | MIT LINDENBLÜTE UND WASSERMINZE | ohne Silikone | Für trockene und empfindliche Kopfhaut | Das pH-hautneutrale Shampoo in einem zarten Türkis reinigt sanft und pflegt nachhaltig. Die Formulierung mit Lindenblüte, wohltuender Wasserminze und Panthenol beruhigen die empfindliche Kopfhaut sofort und mildern Juckreiz. Regelmäßig angewendet, beugt unser Shampoo Irritationen vor. Entspanne beim Einmassieren des reichhaltigen Schaums und erlebe den frischen Blütenduft mit pinker Grapefruit und zarter Kornblume. Unsere Rezeptur ist silikonfrei und ECARF-zertifiziert. Das Shampoo schenkt dir mit jeder Anwendung eine ausgeglichene Kopfhaut und ein gepflegtes Haargefühl. | Inhaltsstoffe zu 93% natürlichen Ursprungs* und zu 99% biologisch abbaubar** | ohne Silikone | keine Parabene | keine Mikroplastik | Guhl Kopfhaut Sensitiv ist ein mildes, pH-hautneutrales Shampoo (250 ml) für trockene und empfindliche Kopfhaut, mit Lindenblüte, Wasserminze und Panthenol. ECARF-zertifiziert, ohne Silikone, vegan, hergestellt in Deutschland. | FAQ: Das Shampoo ist dermatologisch bestätigt und wird in Deutschland hergestellt.",
+      "directionsVerbatim": "(none on manufacturer page; FAQ says regular use is suitable: 'Ja, das Guhl Kopfhaut Sensitiv Shampoo eignet sich für die regelmäßige Anwendung')"
+    },
+    {
+      "url": "https://www.dm.de/p/d/1446989/guhl-shampoo-kopfhaut-sensitiv",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "4072600283172 (page text + JSON-LD; dm-Artikelnummer 1446989; 250 ml)",
+      "inciVerbatim": "INGREDIENTS: Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Betaine, Glycerin, Panthenol, Lactic Acid, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Sorbitan Caprylate, Erythritol, Sodium Chloride, Tetrasodium Glutamate Diacetate, Piroctone Olamine, Maltodextrin, Citric Acid, Mentha Aquatica Leaf Extract, Tilia Cordata Flower Extract, Sodium Benzoate, Parfum, CI 42090, Caramel",
+      "claimsVerbatim": "Inhaltsstoffe zu 91 % natürlichen Ursprungs - Flaschenkörper zu 99 % recycelt | Milde Reinigung | Allergikerfreundlich (qualitätsgeprüft und mit dem ECARF-Siegel ausgezeichnet) | Mit Lindenblüte, Wasserminze & Panthenol | Dermatologisch bestätigt | Die Formulierung des Guhl Shampoo Kopfhaut Sensitiv punktet mit einer veganen Rezeptur, die gleichzeitig zu 99 % biologisch abbaubar ist. Die Inhaltsstoffe ohne Silikone haben dabei überwiegend einen natürlichen Ursprung. Auch der Flaschenkörper selbst kann recycelt werden und wird somit wieder Teil des Wertstoffkreislaufes. Verwöhnen Sie Ihr Haar und Ihre Kopfhaut mit viel Feuchtigkeit sowie einer sanften Pflege mit unserer nachhaltigen Kopfhaut-Sensitiv-Serie und tun Sie zugleich etwas Positives für die Umwelt. | Wirkung: Pflege | Haartyp: normales Haar, sensible Kopfhaut",
+      "directionsVerbatim": "Anwendung: Eine kleine Menge sanft ins nasse Haar einmassieren. Gut ausspülen."
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "non_material_claim_difference",
+      "detail": "dm says 'Inhaltsstoffe zu 91 % natürlichen Ursprungs' and 'Haartyp: normales Haar'; manufacturer page says '93%' and 'Für trockene und empfindliche Kopfhaut'. Claim wording only; INCI identical."
+    }
+  ],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Betaine",
+    "Coco-Glucoside",
+    "Betaine",
+    "Glycerin",
+    "Panthenol",
+    "Lactic Acid",
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+    "Glyceryl Oleate",
+    "Sorbitan Caprylate",
+    "Erythritol",
+    "Sodium Chloride",
+    "Tetrasodium Glutamate Diacetate",
+    "Piroctone Olamine",
+    "Maltodextrin",
+    "Citric Acid",
+    "Mentha Aquatica Leaf Extract",
+    "Tilia Cordata Flower Extract",
+    "Sodium Benzoate",
+    "Parfum",
+    "CI 42090",
+    "Caramel"
+  ],
+  "canonicalReason": "Manufacturer DE page (GTIN 4072600283172 in JSON-LD) and dm.de (same GTIN) agree verbatim, 23 items; identical to v1.3 capture (2026-08-10). No pack photo read.",
+  "inciFingerprintSha256": "389e6c9ab6edb330ef33566bb360461478df9f3d653a9f68ee0a94905a0d5d7c",
+  "normalization": "Canonical list = the ordered INCI items, each lower-cased, trimmed, internal whitespace collapsed; items joined with '|' and sha256 over the UTF-8 string. Split synonym entries (e.g. 'Aqua (Water, Eau)') are merged into one item before hashing; trailing full stops removed.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Prior v1.3/v1.4 fingerprint 681964e5... was a different (comma-joined / lower-case-array) hash; list unchanged vs formula-source.json.",
+    "Manufacturer page carries no usage directions; dm directions recorded.",
+    "Pack front/back not read; tier 2 (manufacturer page + GTIN-anchored dm).",
+    "No claim-INCI conflict: 'Lindenblüte' = Tilia Cordata Flower Extract, 'Wasserminze' = Mentha Aquatica Leaf Extract, 'Panthenol' present."
+  ]
+}

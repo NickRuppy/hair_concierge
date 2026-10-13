@@ -1,0 +1,282 @@
+{
+ "blindId": "W206",
+ "inciFingerprintSha256": "add2a5261bec16c0e65c307a8d8b0d2c59883a946969bd260a455a950295a5af",
+ "phase": "formula-pass (blind, stage A only; no reveal opened)",
+ "standard": "shampoo-classification-v1.6.2",
+ "lane": "lane-b",
+ "identity": {
+  "packSize": "330 ml",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 4,
+  "identityConfidence": "high",
+  "normalization": "Aqua [Water] and Parfum [Fragrance] are single entries (ID-2); no split entries; normalized positions = packet positions.",
+  "e3ProminenceCutoff": "Parfum [Fragrance] @6; prominent = positions 1-5 (E3)."
+ },
+ "formulaFacts": {
+  "surfactants": {
+   "definingAnionic": null,
+   "c6EarliestProminentCleansing": "Disodium Laureth Sulfosuccinate @2 (mild anionic)",
+   "prominentCoSurfactants": [
+    "Cocamidopropyl Hydroxysultaine @3 (amphoteric)",
+    "Cocamidopropyl Betaine @4 (amphoteric)"
+   ],
+   "reinforcingRoutes": [],
+   "buffers": [
+    "Cocamidopropyl Hydroxysultaine @3",
+    "Cocamidopropyl Betaine @4"
+   ],
+   "notCleansing": [
+    "PEG-18 Glyceryl Oleate/Cocoate @5 (PEG glyceryl ester refatter)",
+    "Glycol Distearate @14",
+    "Cocamide MEA @18 (alkanolamide)",
+    "Laureth-10 @19 (ethoxylate, not a C3 cleansing class)"
+   ],
+   "c3aOrC3b": "none"
+  },
+  "conditioningRoutes": {
+   "weak_refatter": [
+    "PEG-18 Glyceryl Oleate/Cocoate @5"
+   ],
+   "protein_film": [
+    "Avena Sativa (Oat) Peptide @8"
+   ],
+   "cationic_polymer": [
+    "Polyquaternium-11 @17"
+   ],
+   "payload_lipid": [
+    "C13-15 Alkane @21 (emollient hydrocarbon)"
+   ],
+   "pearlizing": [
+    "Glycol Distearate @14 (after E3)"
+   ],
+   "silicone": []
+  },
+  "humectants": [
+   "Panthenol @7",
+   "Glycerin @22"
+  ],
+  "actives": [
+   "Panthenol @7",
+   "Avena Sativa (Oat) Peptide @8"
+  ],
+  "recognizedDandruffActives": [],
+  "exposure": {
+   "fragrance": "Parfum @6, Tetramethyl Acetyloctahydronaphthalenes @16, Linalyl Acetate @23, Hexyl Cinnamal @28, Linalool @29, Limonene @30",
+   "coolingAgents": [],
+   "essentialOils": [
+    "Juniperus Virginiana Oil @12",
+    "Citrus Aurantium Peel Oil @13 (both after Parfum, not prominent)"
+   ]
+  },
+  "csa": {
+   "listedComfortRoutesProminent": [],
+   "listedHumectantRefattingRoutesProminent": [],
+   "mildBase": "mild_base:Disodium Laureth Sulfosuccinate @2, Cocamidopropyl Hydroxysultaine @3, Cocamidopropyl Betaine @4 (cleansingStrength low, no prominent strong anionic)",
+   "csaHolds": true,
+   "unlistedRouteCandidates": [
+    "unlisted_route_candidate:PEG-18 Glyceryl Oleate/Cocoate (prominent @5; rejected by R18, not on the E4 humectant/refatting list)"
+   ],
+   "note": "CSA holds via MB only; Panthenol @7 (listed comfort/humectant) is after Parfum, so not prominent. MB never passes S-DRY."
+  },
+  "preservativesAndOther": [
+   "Gardenia Taitensis Flower Extract @9",
+   "Lycium Barbarum Fruit Extract @10",
+   "Malva Sylvestris Extract @11",
+   "Citric Acid @15",
+   "Propylene Glycol @20",
+   "Methylchloroisothiazolinone @24",
+   "Methylisothiazolinone @25",
+   "1,2-Hexanediol @26",
+   "Caprylyl Glycol @27"
+  ]
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "low",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Low: C6 - no prominent strong anionic; the earliest prominent cleansing surfactant is the mild anionic Disodium Laureth Sulfosuccinate @2 with prominent amphoteric co-surfactants Cocamidopropyl Hydroxysultaine @3 and Cocamidopropyl Betaine @4.",
+   "ruleIds": [
+    "C6",
+    "C3",
+    "C4",
+    "E3"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "Low: little substantive slip - the only prominent route is the refatter PEG-18 Glyceryl Oleate/Cocoate @5; Oat Peptide @8, Glycol Distearate @14 and a single film-forming cationic Polyquaternium-11 @17 are all after Parfum. C2 not met. Neighbor moderate: these several light routes could add up to noticeable care.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "E3",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "Low: deposition is light - one prominent PEG glyceryl ester refatter, with a late oat peptide, a late Polyquaternium-11 and a trace alkane; the mild chassis gives weak reset but there is little to offset.",
+   "ruleIds": [
+    "6.6",
+    "W-LINE",
+    "W2",
+    "W3",
+    "N-ALT"
+   ],
+   "evidence": {
+    "cationic_polymer": [
+     "Polyquaternium-11 @17"
+    ],
+    "payload_lipid": [
+     "C13-15 Alkane @21 (non-material: after W-line @6)"
+    ],
+    "weak_refatter": [
+     "PEG-18 Glyceryl Oleate/Cocoate @5"
+    ],
+    "silicone": [],
+    "protein_film": [
+     "Avena Sativa (Oat) Peptide @8"
+    ],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Disodium Laureth Sulfosuccinate @2",
+     "Cocamidopropyl Hydroxysultaine @3",
+     "Cocamidopropyl Betaine @4"
+    ],
+    "humectantContext": [
+     "Panthenol @7",
+     "Glycerin @22"
+    ],
+    "excluded": [
+     "Glycol Distearate @14 (pearlizing wax, 6.4)",
+     "Juniperus Virginiana Oil @12, Citrus Aurantium Peel Oil @13 (fragrance oils, 6.4)",
+     "Cocamide MEA @18 (alkanolamide)",
+     "Laureth-10 @19"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": {
+     "position": 6,
+     "inci": "Parfum [Fragrance]",
+     "classes": [
+      "fragrance"
+     ]
+    },
+    "cap": {
+     "e3Point": 6
+    },
+    "alphabeticalRun": null,
+    "skipped": [],
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": [
+     "C13-15 Alkane @21"
+    ]
+   },
+   "depositionLoad": "light",
+   "persistence": "low",
+   "resetCapacity": "weak",
+   "counterevidence": "Four families present (weak_refatter, protein_film, cationic_polymer, payload_lipid) and the mild C6 chassis gives weak reset (W2).",
+   "whyThisBand": "The only prominent deposition is a light PEG glyceryl ester refatter; the other routes are post-Parfum traces.",
+   "whyNotNeighborBand": "Not moderate: each non-refatter family is late/trace - Oat Peptide @8, Polyquaternium-11 @17 (after Glycol Distearate and Cocamide MEA) and C13-15 Alkane @21 (after the W-line) - and the only prominent route is a weak_refatter, so even weak reset faces only light routes (W2 reason: late/trace families).",
+   "confidenceLimitingFactor": "Weak reset means even light routes could accumulate; INCI-only."
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "low",
+   "neighboringAlternative": "scalp_active",
+   "rationale": "Provisional, formula-only (claims hidden, 3.1): no exact-product claim is visible, so no focus candidate exists and 7.2 (\"unsupported/absent claims\") gives general. Formula care-direction verdict: nonspecific. Neighbor scalp_active: a mild base with oat peptide and panthenol is most compatible with a sensitive-scalp positioning. Final focus is decided only after the reveal (3.2, 7.2, F1-F7).",
+   "ruleIds": [
+    "3.1",
+    "7.2",
+    "7.3",
+    "F1",
+    "N-ALT"
+   ],
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "Panthenol @7"
+    ],
+    "repairRoutes": [
+     "Avena Sativa (Oat) Peptide @8"
+    ],
+    "sharedConditioningRoutes": [
+     "PEG-18 Glyceryl Oleate/Cocoate @5",
+     "Polyquaternium-11 @17"
+    ],
+    "limitation": "Light routes; no coherent repair or moisture cluster."
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "No claim visible in the blind pass; formula verdict only. Light routes; no coherent repair or moisture cluster.",
+   "decisionTrace": "Blind: claim direction null; formula verdict nonspecific; decision reason: no candidate claim, provisional general."
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "low",
+   "neighboringAlternative": [
+    "scalp_active"
+   ],
+   "rationale": "Provisional, formula-only: secondary needs distinct exact-product positioning (Section 8), which is hidden in the blind pass; empty default.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3",
+    "N-ALT"
+   ],
+   "decisionTrace": "Empty default considered; no claims visible; no secondary selected."
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "low",
+   "neighboringAlternative": "frequent",
+   "rationale": "Provisional, formula-only: usage triggers need moderate/high-graded claims or directions (Section 9, CL-SRC), hidden in the blind pass; default regular. Neighbor: cleansingStrength is not strong, so explicit frequency wording (U2) could fire frequent.",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U4",
+    "CL-SRC",
+    "N-ALT"
+   ],
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": []
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "low",
+   "neighboringAlternative": "targeted",
+   "rationale": "Provisional, formula-only: positioning (SC1) is hidden, so the default is not_targeted. CSA holds via MB (mild_base: Disodium Laureth Sulfosuccinate @2, Cocamidopropyl Hydroxysultaine @3, Cocamidopropyl Betaine @4); no listed comfort or humectant route is prominent (Panthenol @7 after Parfum @6), so an S-DRY gate would fail (unlisted_route_candidate:PEG-18 Glyceryl Oleate/Cocoate) while S-SENSITIVE can pass via MB. A sensitive/dry-scalp claim graded moderate/high would make it targeted.",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "MB",
+    "SC1",
+    "E4",
+    "N-ALT"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not supported: the complete INCI contains no Piroctone Olamine, Climbazole or Selenium (Di)Sulfide (Section 11).",
+   "ruleIds": [
+    "11",
+    "DS1"
+   ]
+  }
+ },
+ "unresolvedMaterialIngredients": [],
+ "notes": [
+  "C13-15 Alkane read as an emollient hydrocarbon in payload_lipid (conservative); it is post-line either way.",
+  "PEG-18 Glyceryl Oleate/Cocoate read as weak_refatter by analogy with PEG-7 Glyceryl Cocoate (6.3); it is not on the E4 list (R18 rejection)."
+ ]
+}

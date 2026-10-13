@@ -1,0 +1,28 @@
+{
+  "blindId": "VT18",
+  "productName": "Rosemary Mint Purifying Shampoo",
+  "brand": "Aveda",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_aveda_de_wayback_capture_2026-04-16",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Normales bis fettiges Haar wird mit diesem 97% natürlich gewonnenen* klärenden Shampoo sanft gereinigt. Das Haar ist anschließend blitzsauber, erfrischt und voller Glanz. Purifying Shampoo reinigt sanft das Haar und hinterlässt es blitzsauber, erfrischt und voller Glanz. Zu 97 % natürlich gewonnen.* *Aus Pflanzen, nicht-erdölbasierten Mineralien und Wasser. Wir aktualisieren unsere Verpackungen. Aber keine Sorge, die Produktformel bleibt gleich. Hauptzutaten: Mizellen entfernen sanft Produktrückstände und Verunreinigungen. Weißer Essig trägt zur Reinigung bei.",
+      "directionsVerbatim": "Ins feuchte Haar massieren. Ausspülen. Verwende anschließend den Rosemary Mint Weightless Conditioner."
+    },
+    {
+      "sourceType": "retailer_lookfantastic_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Ein schwereloses, pflegendes Shampoo, das das Haar reinigt und klärt, indem es Schmutz, Öl und Produktablagerungen entfernt und gleichzeitig die notwendige Feuchtigkeit bewahrt. Reinigendes Shampoo aus 97% natürlich gewonnenen Inhaltsstoffen* - formuliert aus Mizellen und weißem Essig, reinigt es sanft und gründlich, während das belebende Aroma mit Rosmarin, Pfefferminze und Grüner Minze aus kontrolliert biologischem Anbau die Sinne belebt und die Konzentration verbessert. Für ein quitschend sauberes Haargefühl bei tollem Glanz, ganz ohne zu beschweren. Silikonfrei.",
+      "directionsVerbatim": "Reinigt das Haar sanft und gründlich."
+    },
+    {
+      "sourceType": "retailer_shop_apotheke_de_unavailable",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Rosmarin-Minze-Shampoo verleiht feinem Haar Volumen und wirkt antistatisch, ohne es zu beschweren. Die einzigartige Formel enthält erfrischende Minze und Rosmarin, um das Haar vor schädlichen Umwelteinflüssen zu schützen. Purifying-Formel mit Rosmarinblatt-Extrakt und Pfefferminzöl für ein gereinigtes, frisches Gefühl. Menthol und Kampfer verstärken die Frischewirkung.",
+      "directionsVerbatim": "Auf nassem Haar anwenden, einmassieren, aufschäumen und gründlich ausspülen. Bei Bedarf wiederholen."
+    }
+  ]
+}

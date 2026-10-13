@@ -1,0 +1,72 @@
+{
+  "blindId": "T203",
+  "inciFingerprintSha256": "9ed40828cb9c2c6d4b23d508b6f6cfad1455175d2dd943cdd969e6c7f7f1271d",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "completeness": "complete",
+    "sourceTier": 4,
+    "identityConfidence": "high",
+    "normalization": "AQUA (WATER) one entry; positions = packet order (normalized, one-based).",
+    "prominenceCutoff": "E3: PARFUM (FRAGRANCE) at 9; positions 1-8 prominent."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate (C1): Sodium C14-16 Olefin Sulfonate (2) defining anionic, buffered by Cocamidopropyl Betaine (3); no reinforcing strong anionic.",
+      "counterSignal": "Only one buffer; olefin sulfonate is a robust cleanser. Convention unchanged.",
+      "neighboringAlternative": "none",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: several light routes, all after Parfum: Butyrospermum Parkii Butter (10), Polyester-37 (11), Glycol Distearate (13), Guar Hydroxypropyltrimonium Chloride (15), Polyquaternium-39 (19), with Glycerin (5) and Panthenol (14). C2 not met (no early silicone, butter not prominent).",
+      "counterSignal": "Every conditioning route is post-fragrance; a cleansing-led low reading is realistic.",
+      "neighboringAlternative": "low",
+      "ruleIds": ["C2", "Section 5 anchors"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: deposition families are present (butter, film former, two cationic polymers) but each sits after Parfum at trace-like level, facing an effective C1 olefin-sulfonate chassis.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {"value": "light", "rationale": "Shea butter 10, Polyester-37 11, guar 15, Polyquaternium-39 19, all after the fragrance marker."},
+        "persistence": {"value": "moderate", "rationale": "Waxy butter and a film former are more persistent per unit than liquid oils, but at low level."},
+        "resetCapacity": {"value": "moderate", "rationale": "C1 chassis with betaine buffer."}
+      },
+      "extractedEvidence": {
+        "payload_lipid": [{"ingredient": "Butyrospermum Parkii (Shea) Butter", "position": 10}],
+        "film_former": [{"ingredient": "Polyester-37", "position": 11}],
+        "cationic_polymer": [{"ingredient": "Guar Hydroxypropyltrimonium Chloride", "position": 15}, {"ingredient": "Polyquaternium-39", "position": 19}],
+        "silicone": [], "protein_film": [], "weak_refatter": [],
+        "reset": [{"ingredient": "Sodium C14-16 Olefin Sulfonate", "position": 2}, {"ingredient": "Cocamidopropyl Betaine", "position": 3}],
+        "excluded": [{"ingredient": "Acrylates Copolymer", "position": 6, "reason": "anionic acrylate rheology polymer (6.4)"}, {"ingredient": "PEG-150 Distearate", "position": 8, "reason": "PEG thickener (6.4)"}, {"ingredient": "Glycol Distearate", "position": 13, "reason": "pearlizing wax (6.4)"}, {"ingredient": "Steareth-4", "position": 18, "reason": "emulsifier"}, {"ingredient": "Polysorbate 20", "position": 22, "reason": "solubilizer"}, {"ingredient": "Cocamide DIPA", "position": 4, "reason": "alkanolamide thickener"}],
+        "context_humectants": [{"ingredient": "Glycerin", "position": 5}, {"ingredient": "Panthenol (Vitamin B5)", "position": 14}]
+      },
+      "whyThisBand": "Light, trace-positioned routes against moderate reset fit the low anchor.",
+      "whyNotNeighborBand": "W2: three deposition families are present, but every one is listed after Parfum (each likely well below 1%), there is no silicone and no prominent lipid, and the effective C1 chassis removes light residue; combined residue is unlikely to be noticeable.",
+      "limitingFactor": "Number of families (butter + film former + two polymers) keeps moderate realistic."
+    },
+    "focusPrimary": {"value": "general", "confidence": "low", "provisional": true, "rationale": "Pending claims. Care-direction verdict provisional: nonspecific (late butter, film former and polymers do not distinguish repair or moisture). Polyester-37 is a possible shine/volume film route."},
+    "focusSecondary": {"value": [], "confidence": "low", "provisional": true, "rationale": "Empty default pending claims."},
+    "usageRole": {"value": "regular", "confidence": "low", "provisional": true, "rationale": "Default; moderate cleansing excludes alternating."},
+    "scalpComfortTarget": {"value": "not_targeted", "confidence": "low", "provisional": true, "rationale": "No positioning yet. CSA formula half met only through prominent Glycerin (5) humectant route; no prominent comfort route (Panthenol 14 is post-fragrance)."},
+    "dandruffSupport": {"value": "not_supported", "confidence": "high", "rationale": "Neither Piroctone Olamine nor Climbazole in the complete INCI."}
+  },
+  "formulaFacts": [
+    {"ingredient": "Sodium C14-16 Olefin Sulfonate", "position": 2, "role": "defining anionic (sulfonate type)"},
+    {"ingredient": "Cocamidopropyl Betaine", "position": 3, "role": "amphoteric buffer"},
+    {"ingredient": "Glycerin", "position": 5, "role": "humectant"},
+    {"ingredient": "Acrylates Copolymer", "position": 6, "role": "suspending/thickening, excluded"},
+    {"ingredient": "Parfum (Fragrance)", "position": 9, "role": "E3 fragrance marker"},
+    {"ingredient": "Butyrospermum Parkii (Shea) Butter", "position": 10, "role": "payload_lipid (waxy), non-prominent"},
+    {"ingredient": "Polyester-37", "position": 11, "role": "film_former"},
+    {"ingredient": "Glycol Distearate", "position": 13, "role": "pearlizing route"},
+    {"ingredient": "Panthenol (Vitamin B5)", "position": 14, "role": "humectant / comfort route, non-prominent"},
+    {"ingredient": "Guar Hydroxypropyltrimonium Chloride", "position": 15, "role": "cationic_polymer"},
+    {"ingredient": "Polyquaternium-39", "position": 19, "role": "cationic_polymer"}
+  ],
+  "unresolvedMaterialIngredients": []
+}

@@ -6,6 +6,8 @@ import { createPersonalPlanRoutineRouteHandlers } from "../src/app/api/personal-
 import { createPersonalPlanRoutineProposalRouteHandlers } from "../src/app/api/personal-plan/routine/proposals/route"
 import { createPersonalPlanRoutineResolveRouteHandlers } from "../src/app/api/personal-plan/routine/proposals/[proposalId]/resolve/route"
 import type { PersonalPlanRoutineReadClient } from "../src/lib/personal-plan/routine/repository"
+import { computeNeedPlan } from "../src/lib/personal-plan/compute-stage1"
+import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
 
 const ids = {
   plan: "11111111-1111-4111-8111-111111111111",
@@ -299,4 +301,53 @@ test("initial proposal rejection remains a typed unambiguous non-mutating error"
     [response.status, await response.json()],
     [422, { error: "initial_proposal_not_rejectable" }],
   )
+})
+
+test("routine read, Tools on: the V1 payload is untouched and the tool section is present iff a view exists", async () => {
+  const facts = {
+    careHabits: { dryingRoutes: ["ordinary_blow_dry" as const] },
+    fieldProvenance: { dryingRoutes: "user" as const },
+  }
+  const computed = computeNeedPlan({
+    rawEnvelope: COMPLETE_V3_PLAN_ENVELOPE,
+    artifactId: "artifact-1",
+    projection: "initial_quiz",
+    computationVersion: "test",
+    createdAt: "2026-10-10T00:00:00.000Z",
+  })
+  if (computed.status !== "ready") throw new Error("unreachable")
+  const rowsWith = (outputSnapshot: unknown) =>
+    client({
+      personal_plans: {
+        id: ids.plan,
+        revision: 4,
+        source_revision: 7,
+        active_routine_version_id: ids.version,
+        pending_routine_proposal_id: null,
+      },
+      personal_plan_routine_versions: { id: ids.version, payload },
+      personal_plan_need_versions: { id: ids.refined, output_snapshot: outputSnapshot },
+    })
+  const read = async (outputSnapshot: unknown, toolsEnabled: boolean) => {
+    const response = await createPersonalPlanRoutineRouteHandlers({
+      ...routeDeps({ client: () => rowsWith(outputSnapshot) }),
+      toolsEnabled: async () => toolsEnabled,
+      tools: { loadFacts: async () => facts },
+    }).GET()
+    return response.json()
+  }
+
+  // A refined snapshot the engine can read: section on, payload byte-identical.
+  const usable = { ...computed.snapshot, renderedOrder: [] }
+  const on = await read(usable, true)
+  assert.deepEqual(on.activeVersion.payload, payload)
+  assert.ok(on.toolSection.assets.length > 0)
+  const off = await read(usable, false)
+  assert.deepEqual(off.activeVersion.payload, payload)
+  assert.equal("toolSection" in off, false)
+
+  // No readable profile in the refined source: no view, so no section — never a broken read.
+  const unusable = await read({ renderedOrder: [] }, true)
+  assert.equal(unusable.status, "active")
+  assert.equal("toolSection" in unusable, false)
 })

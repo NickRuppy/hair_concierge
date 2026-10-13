@@ -1,0 +1,5 @@
+agreement 319/323 = 98.8% over 19 products
+DIFF W105 focusSecondary [] ["moisture"] 
+DIFF W107 focusSecondary ["repair"] [] 
+DIFF W114 conditioningLevel "moderate" "low" 
+DIFF W117 focusPrimary "general" "moisture" 

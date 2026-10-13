@@ -1,0 +1,250 @@
+{
+  "blindId": "T313",
+  "inciFingerprintSha256": "22bedf0cd1a87fec074e6fba8724488bdfc5b3c97a6aa424e3512c022d440014",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "Slash synonym entries ('AQUA / WATER', 'GLYCINE SOJA OIL / SOYBEAN OIL', 'AVENA SATIVA KERNEL EXTRACT / OAT KERNEL EXTRACT', 'ORYZA SATIVA STARCH / RICE STARCH', 'PARFUM / FRAGRANCE') are one entry each; F.I.L. code dropped. E3: Parfum at 27; prominent = 1-26. Pack size/GTIN binding unresolved in packet; formula stated identical across sizes (not material to the formula).",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "moderate",
+    "rawInciCount": 27
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: SLES (2) defining, buffered by Coco-Betaine (3); no reinforcing anionic -> moderate.",
+      "neighboringAlternative": "none",
+      "counterSignal": "Glycol distearate, oil and glycerin early argue milder feel; C1 holds."
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "C2 met with a payload lipid in place of the silicone: prominent Soybean Oil (6) + cationic polymers (guar 19, Polyquaternium-7 22) + pearlizing Glycol Distearate (4) + Glycerin (5); also W-RICH.",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "No silicone; both cationics are late (after Sodium Chloride/Citric Acid), so care could be bounded (moderate)."
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-RICH (Soybean Oil 6 + Dicaprylyl Ether 13 converging with two cationic polymers) but reset is a moderate C1 chassis -> not limited reset; the cationics are late, the oil is liquid -> moderate.",
+      "neighboringAlternative": "high",
+      "counterSignal": "W-RICH plus two distinct cationic polymers (second cationic family member) could converge toward a coating result.",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "fairly early soybean oil + ether + two late cationics"
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Polyquaternium-7 and guar can build up; liquid oil light"
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES + Coco-Betaine"
+        }
+      },
+      "whyThisBand": "Converging lipid + cationic routes with effective reset: noticeable but bounded residue.",
+      "whyNotNeighborBand": "high needs W-RICH with weak reset or multiple persistent systems not offset; reset is moderate, cationics are late, no silicone. low is excluded by the converging prominent oil + two cationics (W2).",
+      "evidenceByFamily": {
+        "payload_lipid": [
+          [
+            "Glycine Soja Oil / Soybean Oil",
+            6
+          ],
+          [
+            "Dicaprylyl Ether",
+            13
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+            19
+          ],
+          [
+            "Polyquaternium-7",
+            22
+          ]
+        ],
+        "context_humectant": [
+          [
+            "Glycerin",
+            5
+          ],
+          [
+            "Aloe Barbadensis Leaf Juice",
+            7
+          ]
+        ],
+        "excluded": [
+          [
+            "Glycol Distearate",
+            4,
+            "pearlizer"
+          ],
+          [
+            "Oryza Sativa Starch",
+            9,
+            "starch"
+          ],
+          [
+            "PPG-5-Ceteth-20",
+            10,
+            "solubilizer"
+          ],
+          [
+            "PEG-55 Propylene Glycol Oleate",
+            11,
+            "thickener"
+          ],
+          [
+            "PEG-60 Hydrogenated Castor Oil",
+            12,
+            "solubilizer (6.4)"
+          ],
+          [
+            "Carbomer",
+            15,
+            "acrylate thickener (6.4)"
+          ],
+          [
+            "Xanthan Gum",
+            21,
+            "thickener"
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Coco-Betaine",
+            3
+          ]
+        ],
+        "unresolved": []
+      }
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole; Salicylic Acid (26) does not upgrade.",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "moisture",
+      "confidence": "low",
+      "rationale": "Formula supports moisture; oat extract also gives a scalp-comfort route; needs claims."
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low"
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low"
+    },
+    "scalpComfortTarget": {
+      "value": "unknown",
+      "confidence": "low",
+      "rationale": "CSA passes (Avena Sativa Kernel Extract 8 comfort; Glycerin 5, Soybean Oil 6 humectant/refatting)."
+    }
+  },
+  "careDirection": {
+    "verdict": "moisture_supported",
+    "rationale": "Glycerin (5) + aloe + oat with emollient soybean oil/ether and cationic support: coherent moisture/nourish cluster; no protein."
+  },
+  "formulaGateFacts": {
+    "csa": "pass",
+    "promComfortRoute": true,
+    "promHumectantRoute": true,
+    "sOilyFormulaClause": "fail (conditioning high)"
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic, ether type"
+    },
+    {
+      "ingredient": "Coco-Betaine",
+      "position": 3,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 4,
+      "role": "pearlizing route; excluded for weight"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 5,
+      "role": "humectant; E4"
+    },
+    {
+      "ingredient": "Glycine Soja Oil / Soybean Oil",
+      "position": 6,
+      "role": "payload_lipid (6.4 alias)"
+    },
+    {
+      "ingredient": "Aloe Barbadensis Leaf Juice",
+      "position": 7,
+      "role": "plant juice"
+    },
+    {
+      "ingredient": "Avena Sativa Kernel Extract",
+      "position": 8,
+      "role": "E4 comfort route"
+    },
+    {
+      "ingredient": "Oryza Sativa Starch",
+      "position": 9,
+      "role": "starch, excluded"
+    },
+    {
+      "ingredient": "PPG-5-Ceteth-20",
+      "position": 10,
+      "role": "solubilizer, not a route"
+    },
+    {
+      "ingredient": "PEG-55 Propylene Glycol Oleate",
+      "position": 11,
+      "role": "thickener, not a route"
+    },
+    {
+      "ingredient": "PEG-60 Hydrogenated Castor Oil",
+      "position": 12,
+      "role": "solubilizer, excluded"
+    },
+    {
+      "ingredient": "Dicaprylyl Ether",
+      "position": 13,
+      "role": "payload_lipid (emollient ether)"
+    },
+    {
+      "ingredient": "Carbomer",
+      "position": 15,
+      "role": "anionic acrylate thickener, excluded (6.4)"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 19,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Polyquaternium-7",
+      "position": 22,
+      "role": "cationic_polymer (second)"
+    },
+    {
+      "ingredient": "Salicylic Acid",
+      "position": 26,
+      "role": "not a dandruff active"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

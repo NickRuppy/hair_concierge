@@ -1,0 +1,590 @@
+{
+  "blindId": "T416",
+  "inciFingerprintSha256": "571fec0717ab082a937b7fcadf0e886dc73b356c7d45f4c33fb1fbcde5b83742",
+  "policyId": "shampoo-classification-v1.6",
+  "identity": {
+    "packSize": "300 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "productName": "Dejan Garz The Foundation Shampoo",
+    "market": "DE",
+    "identityNote": ""
+  },
+  "normalization": "ID-2 applied; normalized one-based positions; no split entries; raw positions = normalized positions",
+  "e3ProminenceMarker": "Parfum/Fragrance at 21",
+  "surfactantArchitecture": "SLES (2) defining; CAPB (3), Coco-Glucoside (5) buffers; C1 -> moderate.",
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 3,
+      "role": "amphoteric buffer"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 4,
+      "role": "humectant, prominent E4"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 5,
+      "role": "nonionic buffer"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 6,
+      "role": "E4 comfort + humectant, prominent"
+    },
+    {
+      "ingredient": "Salicylic Acid",
+      "position": 7,
+      "role": "acid (not a dandruff active)"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 8,
+      "role": "weak refatter"
+    },
+    {
+      "ingredient": "Sodium Hyaluronate",
+      "position": 9,
+      "role": "humectant"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 10,
+      "role": "cationic polymer"
+    },
+    {
+      "ingredient": "Hydrogenated Palm Glycerides Citrate",
+      "position": 11,
+      "role": "weak refatter"
+    },
+    {
+      "ingredient": "Quaternium-80",
+      "position": 12,
+      "role": "cationic conditioner (6.4)"
+    },
+    {
+      "ingredient": "Lecithin",
+      "position": 15,
+      "role": "weak refatter"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 21,
+      "role": "E3 marker"
+    }
+  ],
+  "claimGrading": [
+    {
+      "claim": "Leichtgewicht, das mit Panthenol und Glycerin Feuchtigkeit spendet, ohne deine Kopfhaut auszutrocknen",
+      "grade": "moderate",
+      "use": "moisture candidate; scalp part protective (E2a)"
+    },
+    {
+      "claim": "English badges on the DE page: Deep Hydration, Lightweight Formula, Regulates Oil Production on the Scalp, Anti Frizz",
+      "grade": "low",
+      "use": "English wording without a German repeat (E1) - oily unit low"
+    },
+    {
+      "claim": "Verwende das Shampoo bei jeder Haarwäsche",
+      "grade": "moderate",
+      "use": "not U2 wording"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: C1 ether/sulfonate chassis - defining anionic Sodium Laureth Sulfate (2) buffered by prominent Cocamidopropyl Betaine (3) and Coco-Glucoside (5); no prominent reinforcing strong anionic (C3, C4, C1).",
+      "counterSignal": "Salicylic Acid (7) is an acid, not a surfactant; refatters are counter-signals only.",
+      "neighboringAlternative": "none",
+      "rulesApplied": [
+        "C3",
+        "C4",
+        "C1"
+      ],
+      "carriedFromBlind": true
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: several light routes - cationic Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (10), cationic conditioner Quaternium-80 (12), refatters Glyceryl Oleate (8), Hydrogenated Palm Glycerides Citrate (11), Lecithin (15), and humectants Glycerin (4), Panthenol (6), Sodium Hyaluronate (9). No early silicone or payload lipid and no pearlizer, so C2 is not met.",
+      "counterSignal": "Two cationic routes plus a dense humectant/refatter cluster argue toward high.",
+      "neighboringAlternative": "high",
+      "rulesApplied": [
+        "5",
+        "C2 not met"
+      ],
+      "carriedFromBlind": true
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: the deposition routes are all light types (one guar, one conditioning quat, glyceride/lecithin refatters) with no silicone, payload lipid, protein, pearlizer or film former, against an effective C1 reset.",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Guar (10) + Quaternium-80 (12) + weak refatters (8, 11, 15, 16)."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "Glyceride/lecithin refatters and a single guar are weakly retained; Quaternium-80 is a low-level conditioning quat, no free silicone or oil."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES with betaine and glucoside."
+        }
+      },
+      "evidenceByFamily": {
+        "silicone": [],
+        "cationic_polymer": [
+          [
+            "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+            10
+          ]
+        ],
+        "cationic_conditioner": [
+          [
+            "Quaternium-80",
+            12
+          ]
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [
+          [
+            "Glyceryl Oleate",
+            8
+          ],
+          [
+            "Hydrogenated Palm Glycerides Citrate",
+            11
+          ],
+          [
+            "Lecithin",
+            15
+          ],
+          [
+            "Ascorbyl Palmitate",
+            16
+          ]
+        ],
+        "protein_film": [],
+        "film_former": [],
+        "humectant_context": [
+          [
+            "Glycerin",
+            4
+          ],
+          [
+            "Panthenol",
+            6
+          ],
+          [
+            "Sodium Hyaluronate",
+            9
+          ],
+          [
+            "Propylene Glycol",
+            13
+          ]
+        ],
+        "reset": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ],
+          [
+            "Cocamidopropyl Betaine",
+            3
+          ],
+          [
+            "Coco-Glucoside",
+            5
+          ]
+        ]
+      },
+      "excludedEvidence": [
+        [
+          "Salicylic Acid",
+          7,
+          "acid, not deposition"
+        ],
+        [
+          "Tocopherol",
+          14,
+          "antioxidant"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "Two cationic routes (guar + Quaternium-80) plus several refatters.",
+      "whyThisBand": "Low: the deposition routes are all light types (one guar, one conditioning quat, glyceride/lecithin refatters) with no silicone, payload lipid, protein, pearlizer or film former, against an effective C1 reset.",
+      "whyNotNeighborBand": "W2 (three families): combined residue stays below noticeable because the only persistent-capable routes are a single guar and a single quat, both listed after the refatters and salicylic acid, and the rest is weak_refatter plus humectants; nothing rich or film-forming converges.",
+      "confidenceLimitingFactor": "Two cationic routes; Quaternium-80 level unknown - moderate is a realistic neighbor.",
+      "neighboringAlternative": "moderate",
+      "rulesApplied": [
+        "6.5",
+        "6.6",
+        "6.4",
+        "W2"
+      ],
+      "carriedFromBlind": true
+    },
+    "focusPrimary": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "rationale": "moisture: German manufacturer claim 'spendet Feuchtigkeit' with a moisture_supported formula - humectant cluster Glycerin (4), Panthenol (6), Sodium Hyaluronate (9) plus guar, Quaternium-80 and refatters.",
+      "counterSignal": "Headline is 'Effektive Reinigung' / foundation shampoo; claims are broad.",
+      "neighboringAlternative": "general",
+      "formulaFacts": [
+        {
+          "ingredient": "Glycerin",
+          "position": 4
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 6
+        },
+        {
+          "ingredient": "Sodium Hyaluronate",
+          "position": 9
+        }
+      ],
+      "sourceIds": [
+        "manufacturer_de"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty: oily-scalp badge graded low; Anti Frizz is low and shares the conditioning route.",
+      "counterSignal": "See decision trace.",
+      "neighboringAlternative": [
+        "clarifying"
+      ],
+      "formulaFacts": [],
+      "sourceIds": [],
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "candidatesConsidered": [
+          "clarifying",
+          "shine"
+        ]
+      }
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "'bei jeder Haarwäsche' is not U2 frequency wording.",
+      "counterSignal": "Usage triggers are conjunctive and mechanical (Section 9); see trace.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "sourceIds": [],
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "decisionTrace": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [],
+        "rationale": "'bei jeder Haarwäsche' is not U2 frequency wording."
+      }
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "not_targeted: 'ohne deine Kopfhaut auszutrocknen' is protective (E2a); retailer refatting/scalp wording low.",
+      "counterSignal": "CSA formula half met.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "sourceIds": [],
+      "csaFormulaHalf": true,
+      "sc1Positioning": false
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11).",
+      "neighboringAlternative": "none",
+      "carriedFromBlind": true
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "moisture_supported",
+      "routes": {
+        "moisture": [
+          "Glycerin (4)",
+          "Panthenol (6)",
+          "Sodium Hyaluronate (9)"
+        ],
+        "shared": [
+          "Guar (10)",
+          "Quaternium-80 (12)",
+          "Glyceryl Oleate (8)"
+        ]
+      },
+      "limitation": ""
+    },
+    "claimRole": "candidate",
+    "counterSignal": "Broad multi-claim positioning.",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "moisture",
+        "formulaCompatible": true,
+        "compatibleRoute": "humectant cluster",
+        "reason": "F1"
+      }
+    }
+  },
+  "weightRecord": {
+    "value": "low",
+    "confidence": "moderate",
+    "rationale": "Low: the deposition routes are all light types (one guar, one conditioning quat, glyceride/lecithin refatters) with no silicone, payload lipid, protein, pearlizer or film former, against an effective C1 reset.",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "light",
+        "rationale": "Guar (10) + Quaternium-80 (12) + weak refatters (8, 11, 15, 16)."
+      },
+      "persistence": {
+        "value": "low",
+        "rationale": "Glyceride/lecithin refatters and a single guar are weakly retained; Quaternium-80 is a low-level conditioning quat, no free silicone or oil."
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C1 SLES with betaine and glucoside."
+      }
+    },
+    "evidenceByFamily": {
+      "silicone": [],
+      "cationic_polymer": [
+        [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          10
+        ]
+      ],
+      "cationic_conditioner": [
+        [
+          "Quaternium-80",
+          12
+        ]
+      ],
+      "payload_lipid": [],
+      "weak_refatter": [
+        [
+          "Glyceryl Oleate",
+          8
+        ],
+        [
+          "Hydrogenated Palm Glycerides Citrate",
+          11
+        ],
+        [
+          "Lecithin",
+          15
+        ],
+        [
+          "Ascorbyl Palmitate",
+          16
+        ]
+      ],
+      "protein_film": [],
+      "film_former": [],
+      "humectant_context": [
+        [
+          "Glycerin",
+          4
+        ],
+        [
+          "Panthenol",
+          6
+        ],
+        [
+          "Sodium Hyaluronate",
+          9
+        ],
+        [
+          "Propylene Glycol",
+          13
+        ]
+      ],
+      "reset": [
+        [
+          "Sodium Laureth Sulfate",
+          2
+        ],
+        [
+          "Cocamidopropyl Betaine",
+          3
+        ],
+        [
+          "Coco-Glucoside",
+          5
+        ]
+      ]
+    },
+    "excludedEvidence": [
+      [
+        "Salicylic Acid",
+        7,
+        "acid, not deposition"
+      ],
+      [
+        "Tocopherol",
+        14,
+        "antioxidant"
+      ]
+    ],
+    "unresolved": [],
+    "counterSignal": "Two cationic routes (guar + Quaternium-80) plus several refatters.",
+    "whyThisBand": "Low: the deposition routes are all light types (one guar, one conditioning quat, glyceride/lecithin refatters) with no silicone, payload lipid, protein, pearlizer or film former, against an effective C1 reset.",
+    "whyNotNeighborBand": "W2 (three families): combined residue stays below noticeable because the only persistent-capable routes are a single guar and a single quat, both listed after the refatters and salicylic acid, and the rest is weak_refatter plus humectants; nothing rich or film-forming converges.",
+    "confidenceLimitingFactor": "Two cationic routes; Quaternium-80 level unknown - moderate is a realistic neighbor.",
+    "neighboringAlternative": "moderate",
+    "rulesApplied": [
+      "6.5",
+      "6.6",
+      "6.4",
+      "W2"
+    ],
+    "formulaFingerprint": "571fec0717ab082a937b7fcadf0e886dc73b356c7d45f4c33fb1fbcde5b83742",
+    "sourceTier": 2,
+    "captureDate": "per frozen packet (not in lane kit)"
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "t1Fit": "ideal",
+        "t6Applied": false,
+        "confidence": "moderate",
+        "rationale": "ideal: T1 (fine x W low) = ideal; T2: thickness/texture claims ignored. Confidence = lowest input confidence (13.8). T4: weightPotential neighbor moderate would lower the final tier -> review_thickness_boundary."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "t1Fit": "ideal",
+        "t6Applied": false,
+        "confidence": "moderate",
+        "rationale": "ideal: T1 (normal x W low) = ideal; T2: thickness/texture claims ignored. Confidence = lowest input confidence (13.8)."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "t1Fit": "acceptable",
+        "t6Applied": false,
+        "confidence": "moderate",
+        "rationale": "acceptable: T1 (coarse x W low, C moderate) = acceptable; T2: thickness/texture claims ignored. Confidence = lowest input confidence (13.8)."
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential low -> light; confidence = weightPotential confidence (13.8)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "moderate",
+        "rationale": "S-ORDINARY way 4: the oily unit ('Regulates Oil Production on the Scalp') is English-language and graded low (E1), so S-OILY positioning fails although its formula clause passes; nothing else passes.",
+        "sOrdinaryWays": [
+          4
+        ]
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate, D1 false -> regular; I2 written unchanged to every row."
+    },
+    "positioning": {
+      "explicitResetPositioning": false
+    },
+    "explicitResetPositioning": {
+      "value": false,
+      "confidence": "high",
+      "rationale": "D1 false: no tiefenrein/deep clean/clarifying shampoo/detox-reinigung stem in name or graded claims, no occasional-use directions."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "high",
+      "rationale": "D2 not met: D1 false"
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_specialist_gate_failed",
+        "detail": "oily: positioning gate failed - only unit is the English badge 'Regulates Oil Production on the Scalp' (graded low, no German repeat, E1); formula clause would pass"
+      },
+      {
+        "code": "review_thickness_boundary",
+        "detail": "fine: ideal; weightPotential neighbor moderate (T4, after T6)"
+      }
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "researchCombinationRationale": "Not applicable: primary target is not dandruff (E2b)."
+  },
+  "blindToFinalChanges": [
+    {
+      "field": "focusPrimary",
+      "blind": "general",
+      "final": "moisture",
+      "evidence": "'spendet Feuchtigkeit' + humectant cluster",
+      "reason": "F1"
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeWeightSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "comparisonWithEarlierValuesDoneInLane": false,
+    "weightPotentialUnchangedAfterUnblind": true
+  },
+  "uncertainties": [
+    {
+      "reading": "English badge on the German manufacturer page graded low under E1",
+      "alternative": "graded moderate -> oily target passes S-OILY, focus clarifying would then be needed (S-FOCUS)"
+    }
+  ]
+}

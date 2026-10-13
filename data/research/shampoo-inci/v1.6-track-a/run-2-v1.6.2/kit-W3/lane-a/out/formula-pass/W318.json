@@ -1,0 +1,130 @@
+{
+  "blindId": "W318",
+  "inciFingerprintSha256": "7def5e2af9726079ed0af2f394b941672e8bd3f031cb15361f5cad35cf9c8a5c",
+  "phase": "formula-pass (blind, stage A only)",
+  "policy": "shampoo-classification-v1.6.2",
+  "lane": "lane-a",
+  "identity": {
+    "packSize": "354 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 3,
+    "identityConfidence": "moderate",
+    "normalization": "'AQUA/WATER/EAU' and 'PARFUM (FRAGRANCE)' single entries; packet positions = normalized positions (ID-2). 24 entries.",
+    "e3ProminenceCutoff": "PARFUM (FRAGRANCE) @12. Prominent = positions 1-11."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis. Defining anionic Sodium C14-16 Olefin Sulfonate @3 (alpha-olefin sulfonate, ether/sulfonate type) with three prominent buffers (Cocamidopropyl Betaine @2, Coco-Glucoside @5, mild anionic Sodium Cocoyl Isethionate @7) and no reinforcing strong anionic. Disodium Laureth Sulfosuccinate @15 is after Parfum (recorded, not counted).",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High: rich architecture (Section 5 reading of W-RICH, E3 prominence): prominent payload lipids Macadamia Integrifolia Seed Oil @8 and Persea Gratissima Oil @9 converge with the cationic polymers Polyquaternium-10 @17 and Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @18; humectants Glycerin @6, Panthenol @16. C2 itself is not met (no pearlizing wax or fatty-alcohol route). Counter-signal: both cationics are after Parfum and there is no pearlizer/silicone, so bounded care (moderate) is realistic.",
+      "ruleIds": ["W-RICH", "C2", "R11", "Section 5 anchors"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "cationic_polymer": ["Polyquaternium-10 @17", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @18"],
+        "payload_lipid": ["Macadamia Integrifolia Seed Oil @8 (material)", "Persea Gratissima Oil @9 (material, at W-line - 1)"],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Cocamidopropyl Betaine @2", "Sodium C14-16 Olefin Sulfonate @3", "Coco-Glucoside @5", "Sodium Cocoyl Isethionate @7", "Disodium Laureth Sulfosuccinate @15 (post-E3)"],
+        "humectantContext": ["Glycerin @6", "Panthenol @16", "Propylene Glycol @11 (solvent)"],
+        "excluded": ["Acrylates Copolymer @14 (anionic acrylate thickener, 6.4)", "Cyclodextrin @20, Sodium Starch Octenylsuccinate @21, Hydroxypropyl Starch Phosphate @24 (non-cationic starch/encapsulant thickeners)", "Disodium EDTA @19 (chelator)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "wLine": "@10 Phenoxyethanol",
+        "classes": ["preservative_or_capped_active"],
+        "cap": "e3Point @12 (PARFUM (FRAGRANCE))",
+        "alphabeticalRun": "none (longest ascending runs 4 entries)",
+        "skipped": [],
+        "codes": [],
+        "plausibility": "(i) CAPB @2, AOS @3 etc. before it; (ii) only Propylene Glycol @11 between it and the cap - no cleansing surfactant, alkanolamide or pearlizing wax.",
+        "payloadLipidMaterial": ["Macadamia Integrifolia Seed Oil @8", "Persea Gratissima Oil @9"],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "moderate",
+      "persistence": "moderate",
+      "resetCapacity": "moderate",
+      "counterevidence": "W-RICH holds for weight (material oils @8/@9 + two present cationic polymers); payload_lipid and cationic_polymer converge.",
+      "whyThisBand": "Two plant oils just before the preservative plus two late cationic polymers plausibly leave noticeable but bounded residue.",
+      "whyNotNeighborBand": "Not high: reset is not limited (C1 sulfonate chassis with three buffers, resetCapacity moderate), so W-RICH does not reach the high anchor; both cationics are after Parfum and the oils sit at the W-line boundary (@8, @9 vs line @10); no silicone, protein or cationic conditioner. Not low: material oils + cationics are two families (W2).",
+      "confidenceLimitingFactor": "Oil doses unknown (avocado oil at W-line - 1); W-RICH near the high boundary.",
+      "rationale": "Moderate: W-RICH recorded as counter-signal; ordinary reset.",
+      "ruleIds": ["6.6", "W-RICH", "W-LINE", "W2", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "provisional": "Claim-dependent; formula-only provisional value.",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": ["Glycerin @6", "Macadamia Integrifolia Seed Oil @8", "Persea Gratissima Oil @9", "Panthenol @16"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Polyquaternium-10 @17", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @18"],
+        "limitation": "Cationics late; no protein/bond route."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Moderate cleansing; cationics post-fragrance.",
+      "decisionTrace": "Blind: no claim; moisture_supported; provisional general.",
+      "rationale": "Provisional general; moisture if claimed.",
+      "ruleIds": ["7.3", "F1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["shine"],
+      "provisional": "Claim-dependent.",
+      "rationale": "Empty default blind.",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "frequent",
+      "triggerCode": "none",
+      "provisional": "Claim-dependent.",
+      "rationale": "Default regular blind.",
+      "ruleIds": ["Section 9"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": "SC1 positioning claim-dependent.",
+      "csa": "CSA met via listed prominent humectant/refatting routes Glycerin @6, Macadamia Integrifolia Seed Oil @8, Persea Gratissima Oil @9. No prominent E4 comfort route (Panthenol @16 after Parfum). MB not met: Sodium C14-16 Olefin Sulfonate @3 is a prominent strong anionic (alpha-olefin sulfonate). S-SENSITIVE formula half would fail (no comfort route, no MB); S-DRY formula half passes.",
+      "counterSignals": "None prominent.",
+      "rationale": "Provisional not_targeted pending SC1.",
+      "ruleIds": ["Section 10 CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": ["Cocamidopropyl Betaine @2 (buffer)", "Sodium C14-16 Olefin Sulfonate @3 (strong ether/sulfonate type, defining)", "Coco-Glucoside @5 (buffer)", "Sodium Cocoyl Isethionate @7 (mild anionic, buffer)", "Disodium Laureth Sulfosuccinate @15 (mild anionic, post-E3)"],
+    "conditioningRoutes": ["Macadamia Integrifolia Seed Oil @8", "Persea Gratissima Oil @9", "Polyquaternium-10 @17", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @18"],
+    "humectants": ["Glycerin @6", "Panthenol @16"],
+    "actives": [],
+    "exposure": ["PARFUM (FRAGRANCE) @12"],
+    "preservatives": ["Phenoxyethanol @10", "Sodium Benzoate @13"]
+  },
+  "unresolvedMaterialIngredients": []
+}

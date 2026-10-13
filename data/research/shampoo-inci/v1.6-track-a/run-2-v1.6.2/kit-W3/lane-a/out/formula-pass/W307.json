@@ -1,0 +1,129 @@
+{
+  "blindId": "W307",
+  "inciFingerprintSha256": "38d60eb914c0fbbc85d1f4ecb3bb98f4815256077c20874ad004f0bda105591b",
+  "phase": "formula-pass (blind, stage A only)",
+  "policy": "shampoo-classification-v1.6.2",
+  "lane": "lane-a",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "'Water (Aqua)' one entry; marker characters '*' and '**' stripped and kept as provenance (organic/natural-origin markers). Packet positions = normalized positions (ID-2). 39 entries.",
+    "e3ProminenceCutoff": "Fragrance (Parfum) @28. Prominent = positions 1-27."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C5 alkyl-sulfate chassis. Defining anionic Sodium Coco-Sulfate @3 with three prominent buffers (Cocamidopropyl Betaine @5, Lauryl Glucoside @6, Coco-Glucoside @24) and no reinforcing route. Sodium Cetearyl Sulfate @19 pairs with Cetearyl Alcohol @15 (C3a emulsifier-grade): not a cleansing route, not reinforcing.",
+      "ruleIds": ["C5", "C3", "C3a", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High: C2 met with a payload lipid in place of the silicone: prominent Helianthus Annuus Seed Oil @11; cationic polymer Guar Hydroxypropyltrimonium Chloride @21; fatty route Cetearyl Alcohol @15; listed humectants Glycerin @4, Sodium Hyaluronate @10, Betaine @17. Counter-signal: the guar is late (@21) and the oil/fatty alcohol sit behind botanical extracts, so bounded care (moderate) is realistic.",
+      "ruleIds": ["C2", "R11", "Section 5 anchors"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @21"],
+        "payload_lipid": ["Helianthus Annuus Seed Oil @11 (material)", "Cetearyl Alcohol @15 (material)"],
+        "weak_refatter": ["PCA Glyceryl Oleate @16", "Tocopherol @12"],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Coco-Sulfate @3", "Cocamidopropyl Betaine @5", "Lauryl Glucoside @6", "Coco-Glucoside @24"],
+        "humectantContext": ["Aloe Barbadensis Leaf Juice @2", "Glycerin @4", "Sodium Hyaluronate @10", "Betaine @17", "Arginine @22"],
+        "excluded": ["Sodium Cetearyl Sulfate @19 (C3a emulsifier pairing; no deposition family)", "Tridecane @23, Undecane @25 (volatile alkanes, not nonvolatile payload)", "Citrus/lavender peel and essential oils @30, @32, @36, @39 (fragrance, 6.4)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "wLine": "@28 Fragrance (Parfum)",
+        "classes": ["fragrance"],
+        "cap": "e3Point @28 (Fragrance (Parfum))",
+        "alphabeticalRun": "none (longest ascending run 4 entries, positions 7-10)",
+        "skipped": ["w_line_skipped:Sodium Hyaluronate@10 (clause ii: cleansing surfactant Coco-Glucoside @24 listed after it and before the cap)", "w_line_skipped:Tocopherol@12 (clause ii: Coco-Glucoside @24 after it and before the cap)"],
+        "codes": [],
+        "payloadLipidMaterial": ["Helianthus Annuus Seed Oil @11", "Cetearyl Alcohol @15"],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "moderate",
+      "persistence": "moderate",
+      "resetCapacity": "moderate",
+      "counterevidence": "W-RICH holds (material sunflower oil and cetearyl alcohol + present cationic guar); two families converge.",
+      "whyThisBand": "A plant oil, a fatty alcohol and a late guar plausibly leave noticeable but bounded residue.",
+      "whyNotNeighborBand": "Not high: reset is not limited (C5 sulfate chassis with three buffers, resetCapacity moderate), so W-RICH does not reach the high anchor; the oil sits behind botanical extracts, the cetearyl alcohol is part of an emulsifying-wax pair with Sodium Cetearyl Sulfate, and the only cationic is late (@21). Not low: two families with material lipids would be understated as lightweight.",
+      "confidenceLimitingFactor": "Doses unknown; W-RICH with moderate reset sits near the high boundary.",
+      "rationale": "Moderate: W-RICH recorded as counter-signal; ordinary reset.",
+      "ruleIds": ["6.6", "W-RICH", "W-LINE", "W2", "C3a", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "provisional": "Claim-dependent; formula-only provisional value.",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": ["Glycerin @4", "Sodium Hyaluronate @10", "Betaine @17", "Helianthus Annuus Seed Oil @11"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Cetearyl Alcohol @15", "Guar Hydroxypropyltrimonium Chloride @21"],
+        "limitation": "Cationic support late; no protein/bond route."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Moderate sulfate chassis; guar late.",
+      "decisionTrace": "Blind: no claim; moisture_supported formula; provisional general.",
+      "rationale": "Provisional general; moisture if claimed.",
+      "ruleIds": ["7.3", "F1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["shine"],
+      "provisional": "Claim-dependent.",
+      "rationale": "Empty default blind.",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "frequent",
+      "triggerCode": "none",
+      "provisional": "Claim-dependent.",
+      "rationale": "Default regular blind.",
+      "ruleIds": ["Section 9"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": "SC1 positioning claim-dependent.",
+      "csa": "CSA met via listed prominent humectant/refatting routes Glycerin @4, Sodium Hyaluronate @10, Helianthus Annuus Seed Oil @11, Betaine @17. No prominent E4 comfort route. MB not met: Sodium Coco-Sulfate @3 is a prominent strong anionic (alkyl sulfate). S-SENSITIVE formula half would fail (no comfort route, no MB); unlisted_route_candidate:Aloe Barbadensis Leaf Juice (rejected by R18), unlisted_route_candidate:Arginine (rejected by R18). S-DRY formula half passes.",
+      "counterSignals": "Many fragrance allergens and citrus/lavender oils after Parfum (not prominent).",
+      "rationale": "Provisional not_targeted pending SC1.",
+      "ruleIds": ["Section 10 CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": ["Sodium Coco-Sulfate @3 (strong alkyl sulfate, defining)", "Cocamidopropyl Betaine @5", "Lauryl Glucoside @6", "Coco-Glucoside @24", "Sodium Cetearyl Sulfate @19 (C3a with Cetearyl Alcohol @15)"],
+    "conditioningRoutes": ["Helianthus Annuus Seed Oil @11", "Cetearyl Alcohol @15", "PCA Glyceryl Oleate @16", "Guar Hydroxypropyltrimonium Chloride @21"],
+    "humectants": ["Glycerin @4", "Sodium Hyaluronate @10", "Betaine @17", "Aloe Barbadensis Leaf Juice @2 (not a listed route)", "Arginine @22"],
+    "actives": ["Tocopherol @12"],
+    "exposure": ["Fragrance (Parfum) @28", "Limonene @29", "Citrus Aurantium Peel Oil @30", "Linalool @31", "Citrus Limon Peel Oil @32", "Linalyl Acetate @33", "Pinene @34", "Citronellol @35", "Bergamot Peel Oil @36", "Geraniol @37", "Citral @38", "Lavandula Oil/Extract @39"],
+    "preservatives": ["Levulinic Acid @14", "Sodium Levulinate @18", "Sodium Anisate @20 (none on the E3 or W-LINE lists)"]
+  },
+  "unresolvedMaterialIngredients": []
+}

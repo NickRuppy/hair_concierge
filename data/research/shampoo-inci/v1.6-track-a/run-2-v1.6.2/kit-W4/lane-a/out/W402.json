@@ -1,0 +1,325 @@
+{
+ "blindId": "W402",
+ "lane": "lane-a",
+ "phase": "2-final",
+ "policyId": "shampoo-classification-v1.6.2",
+ "formulaPassSha256": "7443328f16cfd5200b337556c3b1d33c9638c14a6a09a3097e0d7cdcd3c9a7cb",
+ "identity": {
+  "brand": "L'Oréal Paris",
+  "productName": "Elvital Glycolic Gloss Shampoo, 200 ml (catalog: Ultimate Shampoo)",
+  "packSize": "200 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "d781cb2007e39fd64fe62e6bd73b3c65117915bcde182f6daf8d22763dfca1dc",
+  "normalization": "Packet list already normalized (synonym variants are single entries); positions cited are normalized one-based positions (ID-2), identical to the packet order.",
+  "completeness": "complete (formula source tier 4, identity confidence moderate)",
+  "e3ProminenceCutoff": "PARFUM / FRAGRANCE@8 (fragrance marker); prominent = positions 1-7",
+  "identityNotes": [
+   "Formula from tier-4 retailer capture; identity confidence moderate. The only manufacturer source in the reveal is a DIFFERENT SKU (sulfate-based 300 ml, GTIN 3600524230548) and is not evidence for this product (E1). The retailer copy says 'Sulfatfrei'/'ohne Sulfat', consistent with the frozen INCI (olefin sulfonate, no alkyl or ether sulfate), so no material conflict is visible (ID-3: note only)."
+  ]
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`moderate` by C1: defining anionic Sodium C14-16 Olefin Sulfonate@2 (ether/sulfonate type), prominent buffers Cocamidopropyl Betaine@5 (amphoteric) and Sodium Lauroyl Sarcosinate@7 (mild anionic), no reinforcing strong anionic. Coco-Betaine@12 is after the E3 point (recorded, not a buffer). Cocamide MEA@3 is a foam booster, not a route or buffer (C3).",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "E3"
+   ],
+   "counterSignal": "Sarcosinate and betaine buffers plus Cocamide MEA; Glycerin@4 high in the list. None moves the C1 value.",
+   "formulaFacts": [
+    "Sodium C14-16 Olefin Sulfonate@2 strong anionic ether/sulfonate type (defining)",
+    "Cocamidopropyl Betaine@5 amphoteric (buffer)",
+    "Sodium Lauroyl Sarcosinate@7 mild anionic (buffer)",
+    "Coco-Betaine@12 amphoteric (after E3, not prominent)",
+    "Cocamide MEA@3 alkanolamide (not a route)"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "`moderate`: several light routes — two cationic polymers (Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@16, Polyquaternium-7@20), pearlizing Glycol Distearate@6, humectant Glycerin@4. C2 not met (no early silicone and no prominent payload lipid). Confidence moderate, neighbor `low`: both cationic polymers sit after the fragrance marker and after Sodium Benzoate@15, so the formula may be essentially cleansing-led.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "E3",
+    "N-ALT"
+   ],
+   "counterSignal": "Two cationic polymers (late) could add noticeable slip; neighbor `low` because they sit after the preservative.",
+   "formulaFacts": [
+    "cationic: Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@16, Polyquaternium-7@20",
+    "pearlizing: Glycol Distearate@6",
+    "humectant: Glycerin@4"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "cationic_polymer": [
+     "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@16",
+     "Polyquaternium-7@20"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "anionic: Sodium C14-16 Olefin Sulfonate@2, Sodium Lauroyl Sarcosinate@7",
+     "amphoteric: Cocamidopropyl Betaine@5, Coco-Betaine@12 (non-prominent)"
+    ],
+    "humectantContext": [
+     "Glycerin@4",
+     "Hexylene Glycol@9, Propylene Glycol@27 (solvents)"
+    ],
+    "excluded": [
+     "Glycol Distearate@6 (pearlizing wax, 6.4)",
+     "Cocamide MEA@3 (alkanolamide thickener)",
+     "PEG-55 Propylene Glycol Oleate@18 (PEG thickener, 6.4)",
+     "Carbomer@28 (anionic acrylate thickener, 6.4)",
+     "Citrus Limon Peel Oil@33, Pinene@24, Carvone@29, Linalyl Acetate@26, Geranyl Acetate@30 and labelled allergens (fragrance materials, 6.4)",
+     "Salicylic Acid@19, Glycolic Acid@35, Citric Acid@31 (acids)"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": "8 PARFUM / FRAGRANCE",
+    "candidateClasses": [
+     "fragrance"
+    ],
+    "cap": "e3Point 8 (Parfum/Fragrance)",
+    "alphabeticalRun": "none",
+    "skipped": [],
+    "testedCandidate": "Parfum@8 is the only candidate up to the cap: (i) Sodium C14-16 Olefin Sulfonate@2 before it; (ii) nothing between it and the cap -> plausible; the W-line is the cap, no fallback code",
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "light — one deposition family (two cationic polymers), both listed late (16, 20) after the preservative.",
+   "persistence": "low — no silicone, no lipid; cationic polymers at trace-like positions.",
+   "resetCapacity": "moderate — C1 olefin-sulfonate chassis with betaine and sarcosinate buffers.",
+   "counterevidence": "Two cationic polymers (guar + PQ-7) can co-deposit; Glycerin@4 is high in the list (humectant, not deposition).",
+   "whyThisBand": "A single deposition family at late positions facing an effective ordinary reset does not support a noticeable reduction in movement.",
+   "whyNotNeighborBand": "Not `moderate`: only one deposition family (cationic_polymer) is present, both members after Sodium Benzoate@15, with no silicone, lipid, protein or film former to converge; an ordinary sulfonate reset offsets it (W2 does not apply — single family).",
+   "confidenceLimitingFactor": "cationic charge density/dose unknown; two cationic polymers could co-deposit noticeably.",
+   "rationale": "`low`: late single-family cationic deposition, moderate reset (6.6 low anchor; no polymer floor).",
+   "ruleIds": [
+    "6.6",
+    "W-LINE",
+    "W2",
+    "N-ALT"
+   ],
+   "counterSignal": "Two cationic polymers (guar + PQ-7) can co-deposit; Glycerin@4 is high in the list (humectant, not deposition)."
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "shine",
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@16",
+     "Polyquaternium-7@20"
+    ],
+    "limitation": "no coherent repair/moisture cluster"
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Shine claims ('Glanz', 'spiegelglatt', 'für stumpfes und glanzloses Haar') exist only in retailer copy (low); the manufacturer page belongs to another SKU.",
+   "decisionTrace": "Claim direction: shine, but only low-graded (retailer). CL-SRC: a low claim may be a candidate only where the formula independently supports the focus; the only shine-type routes are pH acids (Glycolic Acid@35 trace, Citric Acid@31), which F4 says are never an independent route, plus late cationic polymers (generic). Decision: general.",
+   "rationale": "`general`: the shine positioning is retailer-only (low) and the formula has no independent shine route (F4).",
+   "ruleIds": [
+    "7.2",
+    "CL-SRC",
+    "F4",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "decisionTrace": "Empty default; no moderate/high positioning for any role.",
+   "rationale": "`[]`.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3",
+    "F4",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Default `regular`: no trigger; only low-graded retailer sources (CL-SRC).",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "U5",
+    "CL-SRC",
+    "F-TRACE"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "csaRoute": "MET (Glycerin@4); MB excluded (Sodium C14-16 Olefin Sulfonate@2)",
+   "rationale": "`not_targeted`: no E2 sensitive/dry claim unit in any source.",
+   "counterSignal": "none",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "MB",
+    "SC1",
+    "E2a",
+    "E3",
+    "E4"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`not_supported`: the complete INCI contains none of Piroctone Olamine, Climbazole, Selenium Sulfide or Selenium Disulfide (Section 11, DS1).",
+   "ruleIds": [
+    "11",
+    "DS1",
+    "ID-1"
+   ],
+   "counterSignal": "none — mechanical recognition of the closed active list",
+   "formulaFacts": [
+    "Salicylic Acid@19 (not a recognized dandruff active)",
+    "Glycolic Acid@35"
+   ]
+  }
+ },
+ "formulaFacts": {
+  "surfactants": [
+   "Sodium C14-16 Olefin Sulfonate@2 strong anionic ether/sulfonate type (defining)",
+   "Cocamidopropyl Betaine@5 amphoteric (buffer)",
+   "Sodium Lauroyl Sarcosinate@7 mild anionic (buffer)",
+   "Coco-Betaine@12 amphoteric (after E3, not prominent)",
+   "Cocamide MEA@3 alkanolamide (not a route)"
+  ],
+  "conditioningRoutes": [
+   "cationic: Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@16, Polyquaternium-7@20",
+   "pearlizing: Glycol Distearate@6",
+   "humectant: Glycerin@4"
+  ],
+  "comfortRoutes": "E4 comfort list: none; E4 humectant/refatting: Glycerin@4 (prominent)",
+  "actives": [
+   "Salicylic Acid@19 (not a recognized dandruff active)",
+   "Glycolic Acid@35"
+  ],
+  "exposureFlags": [
+   "Parfum@8",
+   "essential oils/terpenes: Pinene@24, Carvone@29, Citrus Limon Peel Oil@33 (non-prominent)",
+   "allergens: Hydroxycitronellal@17, Limonene@21, Linalool@23, Benzyl Benzoate@25, Hexyl Cinnamal@34",
+   "colourants CI 17200@10, CI 19140@11"
+  ],
+  "preservatives": [
+   "Sodium Benzoate@15",
+   "Benzoic Acid@22"
+  ]
+ },
+ "projection": {
+  "status": "proposal_blocked_by_review_flags",
+  "thicknessFit": {
+   "fine": "ideal",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 from weightPotential `low` and conditioningLevel `moderate` (coarse reads C); ordinary target: T1 unchanged (no T6); T4 checked against the N-ALT neighbors of W (all thicknesses) and C (coarse), after T6. T2: claims about hair type/texture ('trockenes Haar, glanzloses Haar (retailer attribute)') never change fit.",
+  "weight": "light",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential `low` -> `light` 1:1; confidence = weightPotential confidence.",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "confidence": "moderate",
+    "rationale": "S-ORDINARY way 1: no qualifying E2 claim unit. The only manufacturer source is for a different SKU, so the packet effectively has retailer copy only -> confidence moderate (13.8)."
+   },
+   "secondary": null,
+   "secondaryRationale": "No secondary target: no second qualifying distinct E2 claim unit with a passing gate (S-SECONDARY)."
+  },
+  "researchCombinationTargets": [],
+  "researchCombinationRationale": "Not a dandruff-primary product: research-only combination does not apply (E2b).",
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1: cleansingStrength `moderate` -> `regular` (formula plus D1 only; focus and usage role are not inputs). I3 checked with the N-ALT neighbor `none`.",
+  "explicitResetPositioning": false,
+  "explicitResetRationale": "D1 false: no D1 stem (tiefenrein, deep clean, clarifying shampoo, detox-reinigung) in the name or any manufacturer/pack claim, and no occasional-use direction.",
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserRecord": null,
+  "deepCleanserListingConfidence": "high",
+  "deepCleanserRationale": "D2 not satisfied (requires cleansingStrength strong, focus clarifying, usageRole occasional_reset and D1 true) -> not_flagged.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   "review_thickness_boundary:fine"
+  ],
+  "informationalNotes": [],
+  "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; this lane sees no catalog values."
+ },
+ "reconciliation": [
+  "focusPrimary: provisional `general` (low) -> `general` (moderate); shine claims are retailer-only (low) with no independent formula route.",
+  "usageRole `regular` and scalpComfortTarget `not_targeted` confirmed (no qualifying claims).",
+  "Identity note added: manufacturer page is a different SKU; 'sulfatfrei' retailer claim is consistent with the INCI.",
+  "Formula properties unchanged."
+ ],
+ "selfCheck": "6.11: fingerprint equals the frozen formula packet and the hash-pinned formula pass; claims were hidden during the formula judgment (formula pass written before reveal, not edited); no ingredient, count or position window assigned the weight band; the W-line was derived exactly per W-LINE with skipped candidates recorded; all three subjudgments present; whyNotNeighborBand specific (W2 where two families); confidence names its limiting factor. Cleansing, conditioning, weight and dandruff values are unchanged from the blind pass (claims cannot move them, 3.2). Projection fields computed mechanically from final properties (T1/T6/T4, W-LIVE, I1/I3, 13.7).",
+ "uncertainties": [
+  "Ordinary-target confidence read as `moderate` (retailer-only effective sources) rather than `high`; alternative: `high` if the different-SKU manufacturer page counted as 'a manufacturer source' — no value effect.",
+  "Focus `general` vs `shine` (neighbor).",
+  "Identity confidence moderate / tier-4 formula source kept as a note, not a confidence cap."
+ ]
+}

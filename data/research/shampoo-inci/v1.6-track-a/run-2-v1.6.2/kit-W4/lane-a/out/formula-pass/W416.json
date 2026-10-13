@@ -1,0 +1,262 @@
+{
+ "blindId": "W416",
+ "inciFingerprintSha256": "ad0a21d7dce660496131f9d83955fa89e099faca051e206bf1fb5766c6231d8b",
+ "lane": "lane-a",
+ "phase": "1-blind-formula-pass",
+ "policyId": "shampoo-classification-v1.6.2",
+ "formulaBlock": {
+  "packSize": "250 ml",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high",
+  "normalization": "Packet list already normalized (synonym variants are single entries); positions cited are normalized one-based positions (ID-2), identical to the packet order.",
+  "normalizedInci": [
+   "1. Aqua",
+   "2. Sodium Laureth Sulfate",
+   "3. Cocamidopropyl Betaine",
+   "4. Coco-Glucoside",
+   "5. Lactic Acid",
+   "6. Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+   "7. Glyceryl Oleate",
+   "8. Sorbitan Caprylate",
+   "9. Panthenol",
+   "10. Tetrasodium Glutamate Diacetate",
+   "11. Menthol",
+   "12. Caffeine",
+   "13. Glycerin",
+   "14. Rosmarinus Officinalis Leaf Extract",
+   "15. Alcohol",
+   "16. Dimethylhydroxy Dihydroflavone",
+   "17. Lecithin",
+   "18. Sodium Chloride",
+   "19. Citric Acid",
+   "20. Leuconostoc/Radish Root Ferment Filtrate",
+   "21. Tocopheryl Acetate",
+   "22. Biotin",
+   "23. Tocopherol",
+   "24. Sodium Benzoate",
+   "25. Parfum",
+   "26. Limonene",
+   "27. Linalool",
+   "28. Tetramethyl Acetyloctahydronaphthalenes"
+  ],
+  "e3Point": "Parfum@25 (fragrance marker); prominent = positions 1-24"
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`moderate` by C1: defining anionic Sodium Laureth Sulfate@2, prominent buffers Cocamidopropyl Betaine@3 and Coco-Glucoside@4, no reinforcing strong anionic. Sorbitan Caprylate@8 is in no C3 cleansing class (emulsifier/preservative booster).",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "E3"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "`moderate`: one meaningful conditioning system — prominent cationic Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@6 — plus light routes (weak refatters Glyceryl Oleate@7, Lecithin@17; humectants Panthenol@9, Glycerin@13). C2 not met (no early silicone, no payload lipid, no pearlizing/fatty route). Neighbor `low`: the refatters and humectants are light, so the guar may be the only noticeable slip route.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "cationic_polymer": [
+     "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@6"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [
+     "Glyceryl Oleate@7",
+     "Lecithin@17",
+     "Tocopheryl Acetate@21",
+     "Tocopherol@23"
+    ],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "anionic: Sodium Laureth Sulfate@2",
+     "amphoteric: Cocamidopropyl Betaine@3",
+     "nonionic: Coco-Glucoside@4"
+    ],
+    "humectantContext": [
+     "Panthenol@9",
+     "Glycerin@13"
+    ],
+    "excluded": [
+     "Sorbitan Caprylate@8 (emulsifier/preservative booster, no deposition role)",
+     "Tetrasodium Glutamate Diacetate@10 (chelator)",
+     "Menthol@11 (cooling agent)",
+     "Caffeine@12, Biotin@22, Dimethylhydroxy Dihydroflavone@16 (actives, no deposition role)",
+     "Rosmarinus Officinalis Leaf Extract@14, Leuconostoc/Radish Root Ferment Filtrate@20 (extract/ferment)",
+     "Alcohol@15 (solvent)",
+     "Lactic Acid@5, Citric Acid@19",
+     "allergens Limonene@26, Linalool@27; Tetramethyl Acetyloctahydronaphthalenes@28"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": "9 Panthenol",
+    "candidateClasses": [
+     "sub1_active"
+    ],
+    "cap": "e3Point 25 (Parfum)",
+    "alphabeticalRun": "none",
+    "skipped": [],
+    "testedCandidate": "Panthenol@9: (i) Sodium Laureth Sulfate@2 before it; (ii) entries 10-24 contain no cleansing surfactant, alkanolamide or pearlizing wax -> plausible",
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "light — one guar plus light glyceride/phospholipid refatters; no silicone, no payload lipid.",
+   "persistence": "low — refatters are weakly retained; single guar.",
+   "resetCapacity": "moderate — C1 ether-sulfate chassis with betaine and glucoside buffers.",
+   "counterevidence": "Two deposition families present (cationic_polymer, weak_refatter); guar prominent at @6.",
+   "whyThisBand": "Light, low-persistence routes in an ordinary buffered sulfate chassis.",
+   "whyNotNeighborBand": "Not `moderate` (W2 specific evidence): the second family is only weak refatters (Glyceryl Oleate@7, Lecithin@17, trace tocopherols) — light glyceride/phospholipid additives with low retention — beside a single guar; no silicone, payload lipid, protein or film former converges, and a three-surfactant buffered sulfate reset faces only these light routes.",
+   "confidenceLimitingFactor": "two families present (W2); guar dose/charge density unknown.",
+   "rationale": "`low`: single guar + weak refatters under an ordinary reset; W2 reasoning recorded. Neighbor `moderate`.",
+   "ruleIds": [
+    "6.6",
+    "W2",
+    "W-LINE",
+    "N-ALT"
+   ]
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "low",
+   "neighboringAlternative": "scalp_active",
+   "provisional": true,
+   "careDirection": {
+    "verdict": "nonspecific (provisional)",
+    "moistureRoutes": [
+     "Panthenol@9",
+     "Glycerin@13"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@6",
+     "Glyceryl Oleate@7",
+     "Lecithin@17"
+    ],
+    "limitation": "Caffeine@12, Biotin@22, Dimethylhydroxy Dihydroflavone@16, Menthol@11 suggest hair-loss/scalp positioning; hair-loss claims are out of scope (F5)"
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Claims are hidden in the blind pass; focus is claim-led (7.2) and cannot be set from the formula alone.",
+   "decisionTrace": "Blind pass: claim direction null (hidden). Placeholder `general` (7.1 honest fallback) until reveal; formula routes recorded for reconciliation (3.2).",
+   "rationale": "Provisional (formula-only): `general` because no claim is visible; the formula care-direction verdict is recorded before claims (7.3) and the neighbor names the most plausible formula-compatible focus.",
+   "ruleIds": [
+    "3.1",
+    "7.2",
+    "7.3",
+    "F1",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "low",
+   "neighboringAlternative": [
+    "moisture"
+   ],
+   "provisional": true,
+   "decisionTrace": "Blind pass: empty default considered; no distinct positioning visible (claims hidden), so no secondary can be selected (Section 8).",
+   "rationale": "Provisional (formula-only): `[]` — Section 8 requires distinct exact-product positioning, which is hidden in the blind pass.",
+   "ruleIds": [
+    "3.1",
+    "8",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "low",
+   "neighboringAlternative": "frequent",
+   "provisional": true,
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Provisional (formula-only): default `regular` (Section 9); every non-default trigger needs a moderate/high-graded claim or direction, all hidden in the blind pass. cleansingStrength `moderate` fixes which triggers remain possible: `frequent` possible with U2 wording; `alternating` impossible (not strong); `treatment` impossible (no active).",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "CL-SRC"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "low",
+   "neighboringAlternative": "targeted",
+   "provisional": true,
+   "csaRoute": "comfort list: Panthenol@9; humectant/refatting list: Glyceryl Oleate@7, Panthenol@9, Glycerin@13 (all prominent)",
+   "mildBase": "excluded — Sodium Laureth Sulfate@2 is a prominent strong anionic",
+   "rationale": "Provisional `not_targeted` (positioning half SC1 hidden in the blind pass). Formula half CSA is MET via listed prominent route(s): comfort list: Panthenol@9; humectant/refatting list: Glyceryl Oleate@7, Panthenol@9, Glycerin@13 (all prominent). MB: excluded — Sodium Laureth Sulfate@2 is a prominent strong anionic. Counter-signal: prominent cooling agent Menthol@11 -> a `targeted` value would be at most moderate (neighbor not_targeted). If reveal shows a moderate/high-graded E2 sensitive or dry-scalp unit, the value becomes `targeted`.",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "MB",
+    "E3",
+    "E4",
+    "SC1"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`not_supported`: the complete INCI contains none of Piroctone Olamine, Climbazole, Selenium Sulfide or Selenium Disulfide (Section 11, DS1).",
+   "ruleIds": [
+    "11",
+    "DS1",
+    "ID-1"
+   ]
+  }
+ },
+ "formulaFacts": {
+  "surfactants": [
+   "Sodium Laureth Sulfate@2 strong anionic ether type (defining)",
+   "Cocamidopropyl Betaine@3 amphoteric (buffer)",
+   "Coco-Glucoside@4 nonionic glucoside (buffer)",
+   "Sorbitan Caprylate@8 (no C3 class)"
+  ],
+  "conditioningRoutes": [
+   "cationic: Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@6",
+   "weak refatter: Glyceryl Oleate@7, Lecithin@17",
+   "humectant: Panthenol@9, Glycerin@13"
+  ],
+  "comfortRoutes": "E4 comfort list: Panthenol@9 (prominent); E4 humectant/refatting: Glyceryl Oleate@7, Panthenol@9, Glycerin@13 (prominent)",
+  "actives": [
+   "Caffeine@12",
+   "Biotin@22",
+   "Dimethylhydroxy Dihydroflavone@16",
+   "no recognized anti-dandruff active"
+  ],
+  "exposureFlags": [
+   "Parfum@25",
+   "Menthol@11 (prominent cooling agent)",
+   "Rosmarinus Officinalis Leaf Extract@14 (extract, not essential oil)",
+   "allergens Limonene@26, Linalool@27"
+  ],
+  "preservatives": [
+   "Sodium Benzoate@24",
+   "Leuconostoc/Radish Root Ferment Filtrate@20"
+  ]
+ },
+ "unresolvedMaterialIngredients": [],
+ "notes": []
+}

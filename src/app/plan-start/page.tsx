@@ -6,7 +6,10 @@ import type {
   PlanStartInitialJourney,
   PlanStartReadyViewModel,
 } from "@/components/personal-plan-start/plan-start-flow"
-import { adaptInitialNeedSnapshotToPlanStartViewModel } from "@/components/personal-plan-start/snapshot-adapter"
+import {
+  adaptInitialNeedSnapshotToPlanStartViewModel,
+  planStartHasOptionalPage,
+} from "@/components/personal-plan-start/snapshot-adapter"
 import {
   canAccessPersonalPlanJourneyStage,
   type PersonalPlanJourneyAccess,
@@ -33,6 +36,11 @@ import {
   isPersonalPlanStage4Enabled,
   isShoppingBudgetEnabled,
 } from "@/lib/personal-plan/release"
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
+import {
+  loadToolFactsSource,
+  withReadTimeStage1ToolCards,
+} from "@/lib/personal-plan/tools/read-view-facts"
 import { createSupabaseStage3ProductionPersistence } from "@/lib/personal-plan/products/stage3-persistence-supabase"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
@@ -54,8 +62,20 @@ export type PlanStartPageDeps = {
   stage4Enabled?: () => boolean
   getUserId: () => Promise<string | null>
   loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
-  loadExistingRefinementSession: (userId: string) => Promise<Stage2RefinementSession | null>
-  loadStage1Plan?: (userId: string) => Promise<PlanStartReadyViewModel | null>
+  /**
+   * Server-resolved Hair Tools rollout, read once per request and handed to every loader below
+   * that derives the Stage-2 question path. Fail closed: an unwired or failing dep means off.
+   * Browser input (query params included) never reaches it.
+   */
+  toolsEnabled?: (userId: string) => Promise<boolean>
+  loadExistingRefinementSession: (
+    userId: string,
+    options: { toolsEnabled: boolean },
+  ) => Promise<Stage2RefinementSession | null>
+  loadStage1Plan?: (
+    userId: string,
+    options: { toolsEnabled: boolean },
+  ) => Promise<PlanStartReadyViewModel | null>
   /**
    * Task 2.5: the persisted Modul-1 → Stage-3 handoff (Task 1.4) plus its still
    * open Stage-3 draft. Completing the `products` module leaves the refinement
@@ -63,7 +83,10 @@ export type PlanStartPageDeps = {
    * Stage 2 instead of the Stage 3 the user was in. Optional and
    * failure-tolerant: an unwired or failing dep keeps today's fall-through.
    */
-  loadModule1Stage3Resume?: (userId: string) => Promise<{ refinedVersionId: string } | null>
+  loadModule1Stage3Resume?: (
+    userId: string,
+    options: { toolsEnabled: boolean },
+  ) => Promise<{ refinedVersionId: string } | null>
   /**
    * The coarse "X von 4" the Routine banner shows, for the module flow's own
    * slim meter (field test 26.08.2026). Read from the SAME `refinement-status`
@@ -73,6 +96,7 @@ export type PlanStartPageDeps = {
    */
   loadRefinementProgress?: (
     userId: string,
+    options: { toolsEnabled: boolean },
   ) => Promise<{ completedSteps: number; totalSteps: number } | null>
   /**
    * Whether the Idealplan CTA must ask the budget question before accepting: the
@@ -143,9 +167,12 @@ export async function resolvePlanStartPageState(
     if (!canAccessPersonalPlanJourneyStage(access, "stage1")) {
       return { state: "unavailable" }
     }
+    const toolsEnabled = deps.toolsEnabled
+      ? await deps.toolsEnabled(userId).catch(() => false)
+      : false
     let initialPlan: PlanStartReadyViewModel | null | undefined
     try {
-      initialPlan = await deps.loadStage1Plan?.(userId)
+      initialPlan = await deps.loadStage1Plan?.(userId, { toolsEnabled })
     } catch {
       // Preserve the existing client retry path when only the optional server
       // preload fails; access/auth failures still resolve through the outer gate.
@@ -213,7 +240,7 @@ export async function resolvePlanStartPageState(
       )
     }
 
-    const refinement = await deps.loadExistingRefinementSession(userId)
+    const refinement = await deps.loadExistingRefinementSession(userId, { toolsEnabled })
     if (!refinement) {
       return production({ stage: "stage1", ...directAcceptance })
     }
@@ -226,7 +253,7 @@ export async function resolvePlanStartPageState(
       // Every module entry request carries the meter — `first_open` included,
       // since it resolves to a module entry end to end (relic removal 28.08.2026).
       const moduleProgress = options.refineModule
-        ? await deps.loadRefinementProgress?.(userId).catch(() => null)
+        ? await deps.loadRefinementProgress?.(userId, { toolsEnabled }).catch(() => null)
         : null
       return production(
         {
@@ -287,7 +314,9 @@ export async function resolvePlanStartPageState(
     // (founder ruling 27.08.2026).
     if (refinement.status === "in_progress" && access.allowed.stage3) {
       // An absent dep short-circuits the whole optional chain to `undefined`.
-      const resumed = await deps.loadModule1Stage3Resume?.(userId).catch(() => null)
+      const resumed = await deps
+        .loadModule1Stage3Resume?.(userId, { toolsEnabled })
+        .catch(() => null)
       if (resumed) {
         return production(
           {
@@ -351,20 +380,26 @@ export default async function PlanStartPage({
       stage4Enabled: isPersonalPlanStage4Enabled,
       getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
       loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
-      loadExistingRefinementSession: async (userId) =>
+      toolsEnabled: async (userId) =>
+        isPersonalPlanToolsEnabledForUser(userId, createAdminClient()),
+      loadExistingRefinementSession: async (userId, { toolsEnabled }) =>
         loadExistingStage2RefinementSession({
           userId,
-          persistence: createSupabaseStage2RefinementPersistence(createAdminClient()),
+          persistence: createSupabaseStage2RefinementPersistence(createAdminClient(), {
+            toolsEnabled,
+          }),
         }),
-      loadModule1Stage3Resume: async (userId) =>
+      loadModule1Stage3Resume: async (userId, { toolsEnabled }) =>
         loadModule1Stage3Resume(
           createAdminClient() as unknown as Module1Stage3ResumeClient,
           userId,
+          { toolsEnabled },
         ),
-      loadRefinementProgress: async (userId) => {
+      loadRefinementProgress: async (userId, { toolsEnabled }) => {
         const status = await loadRefinementStatusForUser(
           createAdminClient() as unknown as Parameters<typeof loadRefinementStatusForUser>[0],
           userId,
+          { toolsEnabled },
         )
         return status.status === "ok" ? status.data.progress : null
       },
@@ -375,12 +410,22 @@ export default async function PlanStartPage({
             userId,
           )
         ).budget === null,
-      loadStage1Plan: async (userId) => {
+      loadStage1Plan: async (userId, { toolsEnabled }) => {
         const result = await createStage1PersistenceService(
           createStage1SupabaseDependencies(createAdminClient() as never),
         ).loadOrCreate({ userId })
         if (result.status !== "completed") return null
-        const plan = adaptInitialNeedSnapshotToPlanStartViewModel(result.outputSnapshot)
+        // Flag on: the read-time Tool cards (presentation only) ride on the snapshot the
+        // adapter reads, exactly like the Stage-1 route's response.
+        const snapshot = toolsEnabled
+          ? await withReadTimeStage1ToolCards(result.outputSnapshot, {
+              loadFacts: () => loadToolFactsSource(createAdminClient(), userId),
+              hasOptionalPage: planStartHasOptionalPage(result.outputSnapshot),
+            })
+          : result.outputSnapshot
+        const plan = adaptInitialNeedSnapshotToPlanStartViewModel(snapshot, {
+          toolsEnabled,
+        })
         return plan ? { ...plan, personalPlanId: result.personalPlanId } : null
       },
     },

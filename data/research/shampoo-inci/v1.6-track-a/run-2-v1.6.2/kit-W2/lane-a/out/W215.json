@@ -1,0 +1,343 @@
+{
+ "blindId": "W215",
+ "identity": {
+  "brand": "Balea Professional",
+  "productName": "Balea Professional Shampoo Ultimate Volume",
+  "packSize": "250 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "926b4f48400d27a381a3854afd2573d0e1c4e1d435d55a78e60691c1f68f60ba",
+  "normalization": "ID-2: no split synonym entries; packet positions equal normalized one-based positions.",
+  "completeness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high",
+  "e3ProminenceCutoff": "Parfum @13; positions 1-12 prominent"
+ },
+ "normalizedInci": [
+  "1 Aqua",
+  "2 Sodium Laureth Sulfate",
+  "3 Cocamidopropyl Hydroxysultaine",
+  "4 Sodium Chloride",
+  "5 Coco-Glucoside",
+  "6 Hydrolyzed Wheat Protein",
+  "7 Biotin",
+  "8 Oryza Sativa Extract",
+  "9 Glycerin",
+  "10 Guar Hydroxypropyltrimonium Chloride",
+  "11 Citric Acid",
+  "12 Laureth-2",
+  "13 Parfum",
+  "14 Tetramethyl Acetyloctahydronaphthalenes",
+  "15 Linalool",
+  "16 Hexyl Cinnamal",
+  "17 Linalyl Acetate",
+  "18 Sodium Benzoate"
+ ],
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate @2, prominent buffers Cocamidopropyl Hydroxysultaine @3 and Coco-Glucoside @5, no reinforcing strong anionic. Laureth-2 @12 is a thickener.",
+   "ruleIds": [
+    "C3",
+    "C4",
+    "C1"
+   ],
+   "counterSignal": "None."
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "Moderate: one meaningful system (Guar Hydroxypropyltrimonium Chloride @10, prominent) plus light routes (Hydrolyzed Wheat Protein @6, Glycerin @9). C2 not met (no silicone, payload lipid or pearlizing route). Low is the neighbor if the guar dose is small.",
+   "ruleIds": [
+    "5",
+    "C2"
+   ],
+   "counterSignal": "Guar dose unknown."
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "cationic_polymer": [
+     "Guar Hydroxypropyltrimonium Chloride @10"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "silicone": [],
+    "protein_film": [
+     "Hydrolyzed Wheat Protein @6"
+    ],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Sodium Laureth Sulfate @2",
+     "Cocamidopropyl Hydroxysultaine @3",
+     "Coco-Glucoside @5"
+    ],
+    "humectantContext": [
+     "Glycerin @9"
+    ],
+    "excluded": [
+     "Biotin @7 (vitamin)",
+     "Oryza Sativa Extract @8 (extract)",
+     "Laureth-2 @12 (thickener)"
+    ],
+    "unresolved": []
+   },
+   "wLine": {
+    "position": 7,
+    "inci": "Biotin",
+    "candidateClasses": [
+     "sub1_active"
+    ],
+    "cap": "e3Point @13 (Parfum)",
+    "alphabeticalRun": "none",
+    "skipped": [],
+    "codes": [],
+    "plausibility": "(i) cleansing surfactants @2/@3/@5 before it; (ii) no cleansing surfactant, alkanolamide or pearlizing wax after @7 up to the cap (Laureth-2 @12 is not a structurant for (ii)).",
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "light: one cationic guar after a wheat protein; both after Biotin @7 or close to it.",
+   "persistence": "low: guar alone with a protein film; no silicone or lipid.",
+   "resetCapacity": "moderate: C1 SLES/sultaine/glucoside chassis.",
+   "counterevidence": "Two families present (cationic_polymer, protein_film).",
+   "whyThisBand": "Low: a single guar and a single protein face an effective reset.",
+   "whyNotNeighborBand": "Not moderate (W2): the guar @10 sits after the sub-1 % marker Biotin @7 (trace zone), the protein @6 is a light film route, there is no silicone, lipid or film former, and the SLES chassis faces only these light routes.",
+   "confidenceLimitingFactor": "Unknown guar dose.",
+   "rationale": "Low: light guar @10 plus wheat protein @6; no payload lipid (W-line @7 irrelevant).",
+   "ruleIds": [
+    "6.3",
+    "6.6",
+    "W2",
+    "W-LINE",
+    "N-ALT"
+   ],
+   "counterSignal": "Two families present (cationic_polymer, protein_film)."
+  },
+  "focusPrimary": {
+   "value": "volume",
+   "confidence": "moderate",
+   "neighboringAlternative": "general",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "Glycerin @9"
+    ],
+    "repairRoutes": [
+     "Hydrolyzed Wheat Protein @6 (single token)"
+    ],
+    "sharedConditioningRoutes": [
+     "Guar Hydroxypropyltrimonium Chloride @10"
+    ],
+    "limitation": "One protein token is not repair_supported; one humectant with light conditioning is not a coherent moisture cluster."
+   },
+   "claimRole": "candidate",
+   "counterSignal": "Light guar and protein; 'kräftigt die Haarstruktur' strength wording over a nonspecific formula.",
+   "decisionTrace": "Claim direction volume: 'Volume' in the exact product name (high), 'Volumen Shampoo', 'Mit Anti-Platt-Effekt' (dm own brand, moderate). Formula compatible: weightPotential low, conditioningLevel moderate (not high). Route: light protein/guar architecture without silicone or lipid. Decision: volume.",
+   "rationale": "Volume: name plus manufacturer volume positioning on a light formula.",
+   "ruleIds": [
+    "7.2",
+    "CL-SRC",
+    "F-TRACE"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "repair"
+   ],
+   "decisionTrace": "Empty default considered; 'kräftigt die Haarstruktur' relies on the single protein token @6 (nonspecific) and 'gesund glänzt' has no independent route.",
+   "rationale": "Secondary empty.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3",
+    "F-TRACE"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Default regular: no non-default trigger from a moderate/high-graded source.",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "CL-SRC",
+    "F-TRACE"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "not_targeted: no E2 sensitive or dry-scalp claim unit graded moderate/high (SC1 not met); CSA formula half recorded in the formula pass (listed route Glycerin @9 met).",
+   "csaRoute": "listed route (Glycerin @9); MB excluded by Sodium Laureth Sulfate @2",
+   "ruleIds": [
+    "10",
+    "SC1",
+    "CSA",
+    "MB",
+    "E4",
+    "E2a"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No recognized anti-dandruff active in the complete INCI.",
+   "ruleIds": [
+    "11"
+   ],
+   "counterSignal": "none (mechanical recognition, Section 11)"
+  }
+ },
+ "formulaFacts": {
+  "surfactantClasses": {
+   "strongAnionicEtherSulfonate": [
+    "Sodium Laureth Sulfate @2 (defining)"
+   ],
+   "strongAnionicAlkylSulfate": [],
+   "mildAnionic": [],
+   "amphoteric": [
+    "Cocamidopropyl Hydroxysultaine @3 (buffer)"
+   ],
+   "nonionicCleansing": [
+    "Coco-Glucoside @5 (buffer)"
+   ],
+   "notRouteNotBuffer": [
+    "Laureth-2 @12"
+   ]
+  },
+  "conditioningRoutes": [
+   "Hydrolyzed Wheat Protein @6",
+   "Guar Hydroxypropyltrimonium Chloride @10"
+  ],
+  "humectants": [
+   "Glycerin @9"
+  ],
+  "actives": [
+   "Biotin @7",
+   "Oryza Sativa Extract @8"
+  ],
+  "recognizedDandruffActives": [],
+  "exposureFlags": [
+   "Parfum @13",
+   "allergens @15-16",
+   "no cooling agent",
+   "no essential oil"
+  ],
+  "chelatorsPhAdjusters": [
+   "Citric Acid @11"
+  ],
+  "preservatives": [
+   "Sodium Benzoate @18"
+  ]
+ },
+ "claimEvidence": [
+  {
+   "unit": "Ultimate Volume (product name) / Volumen Shampoo / Anti-Platt-Effekt",
+   "source": "name; manufacturer_de",
+   "grade": "high/moderate",
+   "use": "volume focus"
+  },
+  {
+   "unit": "Für feines, plattes Haar / ohne es zu beschweren",
+   "source": "manufacturer_de",
+   "grade": "moderate",
+   "use": "T2; never lowers weight"
+  },
+  {
+   "unit": "Pflege-Formel mit Biotin & Reis-Extrakt",
+   "source": "manufacturer_de",
+   "grade": "moderate",
+   "use": "maps to Biotin @7, Oryza Sativa Extract @8"
+  }
+ ],
+ "reconciliation": [
+  "focusPrimary: general (provisional; neighbor repair) -> volume; reason: name and moderate volume positioning on a light formula.",
+  "Other properties unchanged."
+ ],
+ "projection": {
+  "status": "proposal_blocked_pending_review",
+  "thicknessFit": {
+   "fine": "ideal",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 from weightPotential low (moderate, N-ALT moderate) and conditioningLevel moderate (moderate, N-ALT low): fine ideal, normal ideal, coarse acceptable; ordinary target, no T6; final fine ideal, normal ideal, coarse acceptable. T4: review_thickness_boundary:fine (weightPotential neighbor -> acceptable) T2: thickness/texture claims in the reveal were not used.",
+  "weight": "light",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential low -> weight light, 1:1, confidence = weightPotential confidence (moderate). Claims never move it (6.5 step 5).",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "confidence": "high",
+    "rationale": "S-ORDINARY way 1: no qualifying E2 claim unit; manufacturer (dm own brand) source present, confidence high."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1: cleansingStrength moderate with D1 false -> regular. I3: no flag (cleansingStrength high confidence, neighbor none). Bucket expectations: normal expects regular.",
+  "explicitResetPositioning": false,
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D1 false: no Tiefenreinigung/Deep Clean/Clarifying Shampoo/Detox-Reinigung wording and no occasional-use directions from a manufacturer or pack source; D2 not met -> not_flagged.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   "review_thickness_boundary:fine (weightPotential neighbor -> acceptable)"
+  ],
+  "informationalNotes": [],
+  "catalogDependent": "review_live_value_differs is resolved by the orchestrator against live rows after freeze (lane cannot see the catalog)."
+ },
+ "selfCheck": "6.11/standard self-check: fingerprint matches the frozen packet and the pinned formula-pass record (not edited); claims were hidden during the formula pass; no ingredient, family count or position window assigned the weight band (W-line only gates payload_lipid legs) and the W-line was derived from the frozen list with skipped candidates recorded; depositionLoad/persistence/resetCapacity present; whyNotNeighborBand is specific; N-ALT follows confidence for every property; claims graded per CL-SRC/E1 and none set cleansing, conditioning, weight, thickness fit or a formula gate; projection derived mechanically (T1/T6/T4, W-LIVE, I1/I3, D1-D3, 13.7 rows); no comparison with earlier values was made inside the lane.",
+ "uncertainties": [
+  "Packet notes the product is delisted at dm and replaced by another product; classification is of the frozen formula and identity only. Catalog handling is for the orchestrator.",
+  "weightPotential low (moderate, neighbor moderate) raises T4 on fine."
+ ]
+}

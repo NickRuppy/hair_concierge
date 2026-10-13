@@ -34,3 +34,15 @@ export function expectedShampooSpecTarget(input: { role: PlanProductRole; target
     cleansingIntensity: shampooCleansingIntensity(shampooBucket),
   }
 }
+
+/** R19, ruled 2026-10-12: only the normal/balanced cell scores hair thickness. */
+export function isScalpShampooTarget(input: {
+  role: PlanProductRole
+  target: PlanCategoryTarget | null
+}): boolean {
+  const expected =
+    input.target?.category === "shampoo"
+      ? expectedShampooSpecTarget({ role: input.role, target: input.target })
+      : null
+  return expected !== null && expected.shampooBucket !== "normal"
+}

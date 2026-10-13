@@ -1,0 +1,10 @@
+{
+ "source": "prod products joined product_shampoo_specs, read-only, 2026-10-13 (Supabase MCP)",
+ "shampooProductsWithSpecs": 75,
+ "activeAndLifecycleActive": 75,
+ "inactive": [],
+ "outsideTrackA": [
+  {"id": "01307e13-5746-4620-a2f8-f525bd58a8da", "name": "L'Oréal Paris Elvital Full Resist Stärkendes Aufbau-Shampoo", "origin": "user_submitted", "is_chaarlie_recommended": false,
+   "rows": [["fine","normal","balanced","regular"],["normal","normal","balanced","regular"],["coarse","normal","balanced","regular"]]}
+ ]
+}

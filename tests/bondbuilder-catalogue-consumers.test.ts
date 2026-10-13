@@ -217,7 +217,8 @@ test("scan facts retain each frozen profile but recommendation candidates exclud
   )
 })
 
-test("a real Bondbuilder category decision keeps a research-only scanned product unknown", async () => {
+// Lifecycle describes active availability; missing application facts still prevent a fit verdict.
+test("an active nonrecommendable research-only Bondbuilder stays unverified without its protocol", async () => {
   const { reviewed, tables } = catalogueTables()
   const { client } = strictCatalogClient(tables)
   const facts = await loadScanProductFacts(client, "bondbuilder", reviewed[0]!.id, {
@@ -245,5 +246,11 @@ test("a real Bondbuilder category decision keeps a research-only scanned product
   assert.notEqual(verdict.verdict, "ideal")
   assert.notEqual(verdict.verdict, "supportive")
   assert.ok(verdict.mobileAuthority)
-  assert.ok(verdict.mobileAuthority.missingFacts.length > 0)
+  assert.ok(verdict.mobileAuthority.missingFacts.includes("bondbuilder_fit_or_protocol"))
+  assert.equal(
+    verdict.criteria.find((row) => row.criterionId === "bondbuilder.lifecycle")?.result,
+    "pass",
+  )
+  assert.ok(verdict.criteria.some((row) => row.result === "unknown"))
+  assert.ok(verdict.criteria.every((row) => row.result !== "fail"))
 })

@@ -6,8 +6,7 @@ import type {
 
 import type { ScanSavedState, ScanSavedStatePayload } from "./saved-state"
 import type {
-  ScanDimension,
-  ScanDimensionState,
+  ScanWebDimension,
   ScanNeedMode,
   ScanProductHeader,
   ScanStatusToken,
@@ -59,22 +58,18 @@ export function scanFooterActions(input: ScanFooterInput): ScanFooterAction[] {
   const save: ScanFooterAction = {
     kind: "save",
     label: scanSaveButtonLabel(input.savedState.state),
-    tone: input.kind === "not_needed" ? "plum-solid" : "plum-outline",
+    tone: "plum-outline",
   }
   const url = input.product.purchaseUrl
   if (!url) return [save]
 
-  const ideal = input.kind === "in_catalog" && input.verdict === "ideal"
-  const buy: ScanFooterAction = ideal
-    ? {
-        kind: "buy",
-        label: input.product.priceLabel ? `Kaufen · ${input.product.priceLabel}` : "Kaufen",
-        tone: "coral-solid",
-        url,
-      }
-    : { kind: "buy", label: "Trotzdem kaufen", tone: "coral-outline", url }
-
-  return input.kind === "not_needed" ? [save, buy] : [buy, save]
+  const buy: ScanFooterAction = {
+    kind: "buy",
+    label: input.product.priceLabel ? `Kaufen · ${input.product.priceLabel}` : "Kaufen",
+    tone: "coral-solid",
+    url,
+  }
+  return [buy, save]
 }
 
 /* -------------------------------------------------------------- dimensions */
@@ -91,7 +86,7 @@ export type ScanDimensionSegment = {
   dot: "primary" | "secondary" | null
 }
 
-export function scanDimensionSegments(dimension: ScanDimension): ScanDimensionSegment[] {
+export function scanDimensionSegments(dimension: ScanWebDimension): ScanDimensionSegment[] {
   const targets = new Set(dimension.targetStopIds)
   const covered = new Set(dimension.productStopIds)
   let primaryPlaced = false
@@ -106,20 +101,26 @@ export function scanDimensionSegments(dimension: ScanDimension): ScanDimensionSe
 }
 
 export type ScanDimensionSummary = {
-  marker: "✓" | "✕" | null
+  marker: "✓" | "!" | "✕" | null
   text: string
-  state: ScanDimensionState
+  state: ScanWebDimension["state"]
 }
 
 const NO_PRODUCT_VALUE_TEXT = "Keine Angabe"
 
-export function scanDimensionSummary(dimension: ScanDimension): ScanDimensionSummary {
+export function scanDimensionSummary(dimension: ScanWebDimension): ScanDimensionSummary {
   const labels = dimension.stops
     .filter((stop) => dimension.productStopIds.includes(stop.stopId))
     .map((stop) => stop.label)
   const text = labels.length > 0 ? labels.join(" · ") : NO_PRODUCT_VALUE_TEXT
   const marker =
-    dimension.state === "in_target" ? "✓" : dimension.state === "outside_target" ? "✕" : null
+    dimension.state === "in_target"
+      ? "✓"
+      : dimension.state === "supportive"
+        ? "!"
+        : dimension.state === "outside_target"
+          ? "✕"
+          : null
   return { marker, text, state: dimension.state }
 }
 
@@ -163,9 +164,9 @@ const CATEGORY_ACCUSATIVE_NEGATION: Record<PersonalPlanCategory, string> = {
 
 const VERDICT_REASON_LABELS: Record<ScanVerdict, string> = {
   ideal: "Warum das zu deinem Haar passt",
-  supportive: "Warum das nur eingeschränkt passt",
+  supportive: "Warum das bedingt passt",
   mismatch: "Warum nicht",
-  unknown: "Warum wir uns nicht sicher sind",
+  unknown: "Warum das noch nicht geprüft ist",
 }
 
 export type ScanReasonsLabelInput =

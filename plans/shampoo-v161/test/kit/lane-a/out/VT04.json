@@ -1,0 +1,370 @@
+{
+ "blindId": "VT04",
+ "identity": {
+  "brand": "Maria Nila",
+  "productName": "Pure Volume Shampoo",
+  "packSize": "350 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "1be03cbd54a1c200191dd75353289d693de9ce603fc87def5de78ebc4f4bd5ce",
+  "normalization": "ID-2: 'Aqua/Water/Eau' one entry; colour entries one each; 35 normalized entries; normalized positions",
+  "completeness": "complete",
+  "e3ProminenceCutoff": "Parfum/Fragrance @33; prominent = positions 1-32 (the declared allergens @27-31 precede Parfum in this list)",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high",
+  "identityNotes": [
+   "Claim names \"Moringaöl\"; no Moringa Oleifera Seed Oil in the frozen INCI. ID-3: an additional plant oil could not change any property (weight and conditioning are already high, CSA already met), so it is a note, not a material conflict."
+  ],
+  "formulaPassRecord": {
+   "path": "lane-a/out/formula-pass/VT04.json",
+   "sha256": "afac2bce9a8a1dc19e94d112ad37292073e64ccfe8b6573798132f804814423b"
+  }
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "low",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "low by C6: no strong anionic; earliest prominent cleansing surfactant is the mild anionic Sodium Lauroyl Methyl Isethionate @2 with prominent amphoteric Cocamidopropyl Betaine @3; further mild anionics Disodium Laureth Sulfosuccinate @4, Sodium Lauryl Sulfoacetate @5. Counter-signal: three mild anionic routes.",
+   "ruleIds": [
+    "C3",
+    "C4",
+    "C6"
+   ],
+   "counterSignal": "three mild anionic routes",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  },
+  "conditioningLevel": {
+   "value": "high",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "high by the Section 5 high anchor (multiple complementary systems): prominent amino-silicone copolymer @12, two cationic polymers (Ethyltrimonium Chloride Methacrylate/Hydrolyzed Wheat Protein Copolymer @9, Guar Hydroxypropyltrimonium Chloride @18), cationic conditioner Quaternium-95 @16, three protein routes (@9, @11, @13), payload lipid Sunflower Seed Oil @8, humectants Glycerin @6, Panthenol @7. C2 itself is not cleanly met (no pearlizing wax or fatty alcohol; a plant oil is read as the payload lipid, not as the pearlizing/fatty element). Counter-signal: everything after Panthenol @7 is plausibly sub-1 %; neighbor moderate.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "N-ALT"
+   ],
+   "counterSignal": "everything after Panthenol @7 plausibly sub-1 %",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  },
+  "weightPotential": {
+   "value": "high",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "silicone": [
+     "Amodimethicone/Morpholinomethyl Silsesquioxane Copolymer @12"
+    ],
+    "cationic_polymer": [
+     "Ethyltrimonium Chloride Methacrylate/Hydrolyzed Wheat Protein Copolymer @9",
+     "Guar Hydroxypropyltrimonium Chloride @18"
+    ],
+    "cationic_conditioner": [
+     "Quaternium-95 @16 (quaternary by name)"
+    ],
+    "payload_lipid": {
+     "material": [
+      "Helianthus Annuus (Sunflower) Seed Oil @8"
+     ],
+     "nonMaterial": []
+    },
+    "weak_refatter": [],
+    "protein_film": [
+     "Hydrolyzed Wheat Protein @11",
+     "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol @13",
+     "(protein part of the cationic copolymer @9)"
+    ],
+    "film_former": [],
+    "reset": [
+     "mild anionic Sodium Lauroyl Methyl Isethionate @2, Disodium Laureth Sulfosuccinate @4, Sodium Lauryl Sulfoacetate @5",
+     "amphoteric Cocamidopropyl Betaine @3"
+    ],
+    "humectantContext": [
+     "Glycerin @6",
+     "Panthenol @7",
+     "Propanediol @19"
+    ],
+    "excluded": [
+     "Trideceth-5 @14 (ethoxylate solubilizer)",
+     "PEG-150 Pentaerythrityl Tetrastearate @15 (PEG thickener)",
+     "PPG-2 Hydroxyethyl Cocamide @17 (alkanolamide thickener)",
+     "Phyllostachys Nigra Leaf Extract @10 (extract)"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": {
+     "position": 21,
+     "inci": "Potassium Sorbate",
+     "classes": [
+      "preservative_or_capped_active"
+     ]
+    },
+    "cap": {
+     "e3Point": 33,
+     "inci": "Parfum/Fragrance"
+    },
+    "alphabeticalRun": null,
+    "skipped": [
+     "w_line_skipped:Panthenol@7 (ii) alkanolamide-type thickener PPG-2 Hydroxyethyl Cocamide@17 listed after it before the cap"
+    ],
+    "codes": [],
+    "note": "No a-c candidate between @8 and @20 besides Panthenol @7. Potassium Sorbate @21: (i) surfactants before; (ii) nothing of the structurant classes between @22 and @32. Sunflower Seed Oil @8 is material."
+   },
+   "depositionLoad": "moderate",
+   "persistence": "high",
+   "resetCapacity": "weak",
+   "counterevidence": "All deposition after Panthenol @7 (typically about 1 % or less) is plausibly small; the material status of the oil @8 depends on the alkanolamide skip of Panthenol.",
+   "whyThisBand": "W-RICH holds: material Sunflower Seed Oil @8 converging with a persistent amino-silicone copolymer @12 and cationic polymers @9/@18 (plus Quaternium-95 @16); reset is limited (C6 low, resetCapacity weak). The convergence route (silicone, two cationic polymers, cationic conditioner, protein film, material lipid) also holds.",
+   "whyNotNeighborBand": "moderate would need reset to offset five converging families; a mild C6 chassis does not. The case for moderate rests only on unknown small amounts.",
+   "confidenceLimitingFactor": "amounts in the probable sub-1 % zone; W-line one skip away from excluding the oil",
+   "rationale": "high: W-RICH with limited reset and multiple converging persistent families (6.6, 6.7); moderate confidence, neighbor moderate.",
+   "ruleIds": [
+    "6.3",
+    "6.6",
+    "W-RICH",
+    "W-LINE",
+    "P0",
+    "N-ALT"
+   ],
+   "counterSignal": "All deposition after Panthenol @7 (typically about 1 % or less) is plausibly small; the material status of the oil @8 depends on the alkanolamide skip of Panthenol.",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "volume",
+   "careDirection": {
+    "verdict": "dual_supported",
+    "repairRoutes": [
+     "@9 cationic wheat protein copolymer",
+     "Hydrolyzed Wheat Protein @11",
+     "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol @13",
+     "amino-silicone copolymer @12"
+    ],
+    "moistureRoutes": [
+     "Glycerin @6",
+     "Panthenol @7",
+     "Sunflower Seed Oil @8"
+    ],
+    "sharedConditioningRoutes": [
+     "Guar Hydroxypropyltrimonium Chloride @18",
+     "Quaternium-95 @16"
+    ],
+    "limitation": "no damage/breakage or dryness claim to select either direction"
+   },
+   "claimRole": "candidate",
+   "counterSignal": "the dominant claim is volume for fine hair (product name, high), but the formula is weightPotential high, which is incompatible with lift",
+   "decisionTrace": {
+    "claimDirection": "volume (\"Pure Volume\" in name, high; \"volumengebend\", \"für feines Haar\", moderate); secondary claim \"stärkend\"",
+    "formulaCompatible": false,
+    "compatibleRoute": null,
+    "decisionReason": "volume needs a formula compatible with lift; weightPotential high (noticeable loss of root lift likely) is not compatible, so the claim cannot override the formula (3.2). \"stärkend/kräftigt\" is not damage/breakage positioning (F1), so repair is not selected; general."
+   },
+   "rationale": "general: volume claim over an incompatible heavy formula; no other compatible specialist job (7.1, 7.2, 3.2, F1).",
+   "ruleIds": [
+    "7.1",
+    "7.2",
+    "3.2",
+    "F1",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingClaims": [
+     "\"stärkend\"",
+     "\"Colour Guard Complex ... UV\""
+    ],
+    "independentRoutes": [],
+    "whyDistinct": "no distinct qualifying positioning with a compatible route",
+    "exceptionCode": null
+   },
+   "rationale": "[] (Section 8).",
+   "ruleIds": [
+    "8"
+   ]
+  },
+  "usageRole": {
+   "value": "frequent",
+   "confidence": "moderate",
+   "neighboringAlternative": "regular",
+   "triggerCode": "explicit_frequent_non_strong",
+   "triggerEvidence": [
+    "\"Täglich anwendbar\" (manufacturer DE directions, moderate)",
+    "cleansingStrength low"
+   ],
+   "losingTriggers": [],
+   "counterSignal": "wording is in the directions only (moderate)",
+   "decisionTrace": {
+    "default": "regular",
+    "nonDefaultTrigger": "explicit_frequent_non_strong",
+    "triggerEvidence": [
+     "\"Täglich anwendbar\""
+    ],
+    "rationale": "U2 wording + non-strong cleansing"
+   },
+   "rationale": "frequent: U2 daily-use wording (moderate) with cleansingStrength low.",
+   "ruleIds": [
+    "9",
+    "U2",
+    "CL-SRC"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "counterSignal": "CSA formula half met but no positioning",
+   "rationale": "not_targeted: no E2 sensitive/dry claim unit (SC1).",
+   "ruleIds": [
+    "10",
+    "SC1"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "not_supported: complete formula with no Piroctone Olamine, Climbazole or Selenium Sulfide/Disulfide.",
+   "ruleIds": [
+    "11"
+   ],
+   "counterSignal": "none",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  }
+ },
+ "formulaFacts": {
+  "surfactantClasses": {
+   "strongAnionicEther": [],
+   "strongAnionicAlkylSulfate": [],
+   "mildAnionic": [
+    "Sodium Lauroyl Methyl Isethionate @2",
+    "Disodium Laureth Sulfosuccinate @4",
+    "Sodium Lauryl Sulfoacetate @5"
+   ],
+   "amphoteric": [
+    "Cocamidopropyl Betaine @3"
+   ],
+   "nonionicCleansing": [],
+   "notCleansing": [
+    "Trideceth-5 @14",
+    "PEG-150 Pentaerythrityl Tetrastearate @15",
+    "PPG-2 Hydroxyethyl Cocamide @17 (alkanolamide-type)",
+    "Sodium Chloride @23"
+   ],
+   "c4": "no defining anionic; C6 earliest prominent = Sodium Lauroyl Methyl Isethionate @2 with amphoteric @3"
+  },
+  "conditioningRoutes": [
+   "@9 cationic protein copolymer",
+   "@12 amino-silicone copolymer",
+   "@16 Quaternium-95",
+   "@18 guar",
+   "@8 sunflower oil",
+   "@11, @13 proteins",
+   "@6 Glycerin, @7 Panthenol"
+  ],
+  "actives": [
+   "Panthenol @7",
+   "proteins @9, @11, @13"
+  ],
+  "scalpExposure": [
+   "Benzyl Alcohol @27, Linalool @28, Hexyl Cinnamal @29, Benzyl Salicylate @30, Citronellol @31",
+   "Parfum/Fragrance @33"
+  ],
+  "recognizedDandruffActives": []
+ },
+ "unresolvedMaterialIngredients": [],
+ "claimUnitsAndGrades": [
+  "product name \"Pure Volume Shampoo\" (high): volume",
+  "manufacturer_de (moderate): \"Ein volumengebendes Shampoo, das feines Haar fülliger macht ... die Haarstruktur stärkt\"; \"Für feines Haar\"; \"Mit Provitamin B5, Weizenprotein und Moringaöl\"; directions \"Täglich anwendbar\""
+ ],
+ "reconciliation": [
+  {
+   "property": "focusPrimary",
+   "blind": "general (provisional)",
+   "final": "general",
+   "evidence": "volume claim (name) vs weightPotential high",
+   "reason": "claim cannot override incompatible formula"
+  },
+  {
+   "property": "usageRole",
+   "blind": "regular (provisional)",
+   "final": "frequent",
+   "evidence": "\"Täglich anwendbar\"",
+   "reason": "U2"
+  }
+ ],
+ "projection": {
+  "status": "proposal",
+  "statusReasons": [],
+  "thicknessFit": {
+   "fine": "not_suited",
+   "normal": "acceptable",
+   "coarse": "ideal"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 with W=high (neighbor moderate), C=high (neighbor moderate): fine not_suited, normal acceptable, coarse ideal; ordinary target, no T6; T4 checked against the N-ALT neighbors after T6; thickness claims never change fit (T2).",
+  "weight": "heavy",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential high -> heavy, confidence moderate.",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "confidence": "high",
+    "rationale": "S-ORDINARY way 1: no qualifying E2 claim; manufacturer source present."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "researchCombinationConfidence": null,
+  "cleansingIntensity": "gentle",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1: cleansingStrength low with D1 false -> gentle; bucket expects regular (amber row, I2); I3 neighbor none.",
+  "explicitResetPositioning": false,
+  "explicitResetEvidence": "no D1 term",
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserRecord": null,
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D2 not met (D1 false)",
+  "rows": [
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "gentle",
+    "weight": "heavy",
+    "tier": "acceptable"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "gentle",
+    "weight": "heavy",
+    "tier": "ideal"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [],
+  "informationalNotes": [],
+  "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; lanes never see catalog ids."
+ },
+ "selfCheck": "6.11: fingerprint matches the frozen packet; claims and labels were hidden during the formula pass (frozen before reveal, sha256 above); no ingredient, family count or position window assigned the weight band, the W-line only gated payload_lipid legs; the W-line was derived from the frozen list and every skipped candidate is recorded; depositionLoad/persistence/resetCapacity present; counterevidence and whyNotNeighborBand are specific; confidence names its limiting factor; no comparison with earlier values was made in this lane. Projection derived mechanically from final properties (T1/T6/T4, W-LIVE, I1/I3, D1-D3, 13.7, 13.8); N-ALT neighbors consistent with confidences.",
+ "uncertainties": [
+  "Focus: alternative volume (if a heavy formula is read as still compatible with a volume claim). Projection unaffected.",
+  "\"Für feines Haar\" claim vs fine not_suited (W high): T2 forbids the claim changing fit; recorded as a contradiction for review, not a flag.",
+  "C2 'pearlizing/fatty route': no pearlizing wax or fatty alcohol; I did not let the sunflower oil fill both the lipid and the fatty element. conditioningLevel high is reached by the high anchor's multiple complementary systems instead; alternative moderate (neighbor).",
+  "weightPotential high vs moderate as in VT03-type formulas: formally W-RICH plus weak reset; amounts plausibly small; moderate confidence."
+ ]
+}

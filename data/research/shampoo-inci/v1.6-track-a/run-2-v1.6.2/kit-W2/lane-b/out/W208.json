@@ -1,0 +1,385 @@
+{
+ "blindId": "W208",
+ "standard": "shampoo-classification-v1.6.2",
+ "lane": "lane-b",
+ "identity": {
+  "brand": "Plantur 39 (Dr. Kurt Wolff)",
+  "productName": "Plantur 39 Phyto-Coffein-Shampoo für feines, brüchiges Haar",
+  "packSize": "250 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "10bad7dd846d5f9d98b6fd278514e1ea952c56ca98277bb09bf38d263a7f1512",
+  "normalization": "No synonym or split entries; normalized positions = packet positions (ID-2).",
+  "completeness": "complete (packet; formula source tier 2, identity confidence moderate)",
+  "e3ProminenceCutoff": "Parfum @21; prominent = positions 1-20 (E3)."
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Moderate: C1 - defining anionic Sodium Laureth Sulfate @2 with prominent mild-anionic buffers Disodium Laureth Sulfosuccinate @5 and Sodium Lauroyl Glutamate @7, no reinforcing route; Laureth-2 @3 is not a buffer.",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "E3"
+   ],
+   "counterSignal": "Buffers are mild anionics only (no amphoteric).",
+   "formulaFacts": {
+    "definingAnionic": "Sodium Laureth Sulfate @2 (strong anionic, ether type)",
+    "reinforcingRoutes": [],
+    "buffers": [
+     "Disodium Laureth Sulfosuccinate @5 (mild anionic)",
+     "Sodium Lauroyl Glutamate @7 (mild anionic)"
+    ],
+    "notCleansing": [
+     "Laureth-2 @3 (low-ethoxylate thickener)",
+     "PEG-120 Methyl Glucose Dioleate @10 (PEG thickener)"
+    ],
+    "c3aOrC3b": "none",
+    "note": "No amphoteric or glucoside; both buffers are mild anionics."
+   }
+  },
+  "conditioningLevel": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "Low: cleansing-led - the only conditioning polymer is the light Polyquaternium-7 @13 (after salt, acids and the PEG thickener), plus a late Hydrolyzed Wheat Protein @17 and humectant Panthenol @4. C2 not met. Neighbor moderate: PQ-7 plus protein and panthenol could be read as several light routes.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "E3",
+    "N-ALT"
+   ],
+   "counterSignal": "PQ-7 is a light polymer; protein late.",
+   "formulaFacts": {
+    "cationic_polymer": [
+     "Polyquaternium-7 @13"
+    ],
+    "protein_film": [
+     "Hydrolyzed Wheat Protein @17"
+    ],
+    "payload_lipid": [],
+    "silicone": [],
+    "weak_refatter": [],
+    "pearlizing": []
+   }
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "cationic_polymer": [
+     "Polyquaternium-7 @13"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "silicone": [],
+    "protein_film": [
+     "Hydrolyzed Wheat Protein @17"
+    ],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Sodium Laureth Sulfate @2",
+     "Disodium Laureth Sulfosuccinate @5",
+     "Sodium Lauroyl Glutamate @7"
+    ],
+    "humectantContext": [
+     "Panthenol @4"
+    ],
+    "excluded": [
+     "PEG-120 Methyl Glucose Dioleate @10 (PEG thickener, 6.4)",
+     "Laureth-2 @3",
+     "Caffeine @9, Zinc PCA @15, Niacinamide @16, Camellia Sinensis Leaf Extract @14 (actives/extracts)",
+     "Propylene Glycol @8 (solvent)"
+    ],
+    "unresolved": []
+   },
+   "depositionLoad": "light",
+   "persistence": "low",
+   "resetCapacity": "moderate",
+   "counterevidence": "Two families (cationic_polymer + protein_film, W2).",
+   "whyThisBand": "Deposition is limited to one light polymer and a late hydrolyzed protein.",
+   "whyNotNeighborBand": "Not moderate: both families are light/late - Polyquaternium-7 @13 is a single light polymer after salt and acids, the wheat protein @17 is after the W-line-region actives and just before the preservatives - and they face an SLES-led reset (W2 reason: a moderate reset faces only light, late routes).",
+   "confidenceLimitingFactor": "PQ-7 deposition at low dose; INCI-only.",
+   "rationale": "Low: one light cationic polymer and a late protein against an effective C1 reset; no silicone, lipid or film former.",
+   "ruleIds": [
+    "6.6",
+    "W-LINE",
+    "W2",
+    "W3",
+    "N-ALT"
+   ],
+   "wLineRecord": {
+    "wLine": {
+     "position": 9,
+     "inci": "Caffeine",
+     "classes": [
+      "sub1_active"
+     ]
+    },
+    "cap": {
+     "e3Point": 21
+    },
+    "alphabeticalRun": null,
+    "skipped": [
+     "w_line_skipped:Panthenol@4 (clause ii: Disodium Laureth Sulfosuccinate@5 and Sodium Lauroyl Glutamate@7 cleansing surfactants listed after it before the cap)"
+    ],
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "counterSignal": "Two families (cationic_polymer + protein_film, W2).",
+   "formulaIdentifiers": {
+    "fingerprint": "10bad7dd846d5f9d98b6fd278514e1ea952c56ca98277bb09bf38d263a7f1512",
+    "sourceTier": 2,
+    "captureDate": "not in stage-A packet (packet field absent)"
+   }
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "volume",
+   "rationale": "General: hair-loss positioning is ignored (F5); the brittle-hair repair claim lacks a repair_supported verdict (F1); no other dominant compatible job.",
+   "ruleIds": [
+    "7.2",
+    "F1",
+    "F5",
+    "N-ALT"
+   ],
+   "counterSignal": "Name claim \"brüchiges Haar\" (repair direction) is in the product name but the formula verdict is nonspecific, so F1 keeps it general; volume-retention wording is secondary in the copy.",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "Panthenol @4"
+    ],
+    "repairRoutes": [
+     "Hydrolyzed Wheat Protein @17"
+    ],
+    "sharedConditioningRoutes": [
+     "Polyquaternium-7 @13"
+    ],
+    "limitation": "One protein token; no repair cluster."
+   },
+   "claimRole": "not_applicable",
+   "decisionTrace": "Dominant claim hair loss/caffeine (out of scope, F5). Next: \"für feines, brüchiges Haar\" (name, high) -> repair direction, formula verdict nonspecific (one late protein) -> not repair (F1). Volume-keeping wording (\"damit die Frisur ihr Volumen behält\", manufacturer moderate) is a light-formula statement, not the dominant role. Decision: general."
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "volume"
+   ],
+   "rationale": "Empty.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3",
+    "N-ALT"
+   ],
+   "counterSignal": "n/a",
+   "decisionTrace": "Empty default considered. Volume-keeping wording is a lightness statement whose only route is the low-deposition architecture (a restatement of weight), not an independent route."
+  },
+  "usageRole": {
+   "value": "frequent",
+   "confidence": "moderate",
+   "neighboringAlternative": "regular",
+   "rationale": "Frequent: explicit frequency wording \"Täglich anwenden\" in manufacturer directions (moderate, U2) and cleansingStrength is not strong. Confidence moderate (claim grade).",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "CL-SRC",
+    "F-TRACE",
+    "N-ALT"
+   ],
+   "counterSignal": "none",
+   "triggerCode": "explicit_frequent_non_strong",
+   "triggerEvidence": [
+    "\"Täglich anwenden\" / \"Bei jeder Haarwäsche benutzen\" (manufacturer DE directions, moderate)",
+    "cleansingStrength moderate (not strong)"
+   ],
+   "losingTriggers": []
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not targeted: no sensitive/dry-scalp claim unit (\"stärken die Widerstandskraft von Kopfhaut\" is not lexicon wording).",
+   "ruleIds": [
+    "10",
+    "SC1",
+    "CSA",
+    "E2",
+    "E2a",
+    "CL-SRC"
+   ],
+   "counterSignal": "none"
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not supported: the complete INCI contains no Piroctone Olamine, Climbazole or Selenium (Di)Sulfide (Section 11).",
+   "ruleIds": [
+    "11",
+    "DS1"
+   ],
+   "counterSignal": "none (mechanical lookup, Section 11)"
+  }
+ },
+ "projection": {
+  "status": "proposal",
+  "thicknessFit": {
+   "fine": "ideal",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 with W=low (moderate, neighbor moderate), C=low (moderate, neighbor moderate); ordinary target, no T6; T4 checked against N-ALT neighbors after T6. ",
+  "weight": "light",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential low -> weight light, confidence = weightPotential confidence.",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "confidence": "moderate",
+    "rationale": "S-ORDINARY ways 1 and 2: no qualifying E2 claim (manufacturer source present -> way 1 high) and hair loss is the only scalp-adjacent positioning (way 2, moderate); lowest = moderate (13.8)."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1: cleansingStrength moderate, D1 false -> regular. I3 checked with neighbor none against each projected bucket expectation (normal expects regular).",
+  "explicitResetPositioning": false,
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "No D1 term in the product name, a manufacturer/pack claim or usage directions (13.6). D2 not met -> not_flagged.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   "review_thickness_boundary:fine (neighbor weightPotential=moderate gives acceptable)"
+  ],
+  "informationalNotes": [
+   "hair_loss_claim_not_evaluated: \"Beugt menopausalem Haarausfall vor\", \"Phyto-Coffein-Complex ... gegen Haarausfall\", \"regt das Haarwachstum an\""
+  ],
+  "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze (13.9, D2 lane visibility); not computed in the lane."
+ },
+ "formulaFacts": {
+  "surfactants": {
+   "definingAnionic": "Sodium Laureth Sulfate @2 (strong anionic, ether type)",
+   "reinforcingRoutes": [],
+   "buffers": [
+    "Disodium Laureth Sulfosuccinate @5 (mild anionic)",
+    "Sodium Lauroyl Glutamate @7 (mild anionic)"
+   ],
+   "notCleansing": [
+    "Laureth-2 @3 (low-ethoxylate thickener)",
+    "PEG-120 Methyl Glucose Dioleate @10 (PEG thickener)"
+   ],
+   "c3aOrC3b": "none",
+   "note": "No amphoteric or glucoside; both buffers are mild anionics."
+  },
+  "conditioningRoutes": {
+   "cationic_polymer": [
+    "Polyquaternium-7 @13"
+   ],
+   "protein_film": [
+    "Hydrolyzed Wheat Protein @17"
+   ],
+   "payload_lipid": [],
+   "silicone": [],
+   "weak_refatter": [],
+   "pearlizing": []
+  },
+  "humectants": [
+   "Panthenol @4"
+  ],
+  "actives": [
+   "Panthenol @4",
+   "Caffeine @9 (hair-loss-type ingredient; never a focus route, F5)",
+   "Zinc PCA @15 (not a recognized dandruff active)",
+   "Niacinamide @16"
+  ],
+  "recognizedDandruffActives": [],
+  "exposure": {
+   "fragrance": "Parfum @21, Hexyl Cinnamal @22, Limonene @23, Tetramethyl Acetyloctahydronaphthalenes @24, Linalool @25, Linalyl Acetate @27",
+   "coolingAgents": [],
+   "essentialOils": [
+    "Citrus Aurantium Peel Oil @26 (after Parfum)"
+   ]
+  },
+  "csa": {
+   "listedComfortRoutesProminent": [
+    "Panthenol @4",
+    "Niacinamide @16"
+   ],
+   "listedHumectantRefattingRoutesProminent": [
+    "Panthenol @4"
+   ],
+   "mildBase": "no: prominent Sodium Laureth Sulfate @2",
+   "csaHolds": true
+  },
+  "preservativesAndOther": [
+   "Sodium Chloride @6",
+   "Propylene Glycol @8",
+   "Citric Acid @11",
+   "Sodium Citrate @12",
+   "Camellia Sinensis Leaf Extract @14",
+   "Potassium Sorbate @18",
+   "Sodium Benzoate @19",
+   "Phenoxyethanol @20"
+  ]
+ },
+ "unresolvedMaterialIngredients": [],
+ "reconciliation": {
+  "formulaPassFile": "out/formula-pass/W208.json (hash-pinned, unchanged)",
+  "blindToFinalChanges": [
+   "focusPrimary general (low) -> general (moderate).",
+   "usageRole regular (low) -> frequent (moderate): daily-use directions, manufacturer DE.",
+   "scalpComfortTarget not_targeted (low) -> not_targeted (high).",
+   "No formula-derived property changed."
+  ]
+ },
+ "selfCheck": "6.11: fingerprint 10bad7dd846d5f9d98b6fd278514e1ea952c56ca98277bb09bf38d263a7f1512 matches the stage-A packet and the formula pass; claims and identity were hidden during the formula judgment (formula pass frozen before the reveal); no ingredient, family count or position window assigned the weight band (the W-line only gated payload_lipid legs); W-line derived from the frozen list as W-LINE states, skipped candidates recorded; depositionLoad/persistence/resetCapacity present with rationales; counterevidence and whyNotNeighborBand specific (W2 addressed where two or more families); confidence names its limiting factor; no comparison with any earlier or live value was made in the lane. Projection flags recomputed mechanically from this record (T4/I3 via N-ALT).",
+ "uncertainties": [
+  "Focus general vs volume: the manufacturer volume-keeping sentence could be read as a volume candidate (formula compatible); chosen general because the claim describes lightness, and the name role (brittle hair) fails F1.",
+  "Identity confidence moderate in the packet."
+ ]
+}

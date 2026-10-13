@@ -1,0 +1,148 @@
+{
+  "blindId": "T310",
+  "inciFingerprintSha256": "105e7ebd0649e688f2427321a0648b9945d539dd1a158dcf0640d02303771f67",
+  "phase": "blind_formula_pass",
+  "normalizationNote": "'Aqua (Water, Eau)' is one entry; positions as listed.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic Sodium Laureth Sulfate (2); prominent buffers Cocamidopropyl Betaine (4), Coco-Glucoside (10); no reinforcing route. Laureth-4 (14) is a low-ethoxylate thickener. E3 point Parfum (18).",
+      "neighboringAlternative": "none",
+      "counterSignal": "Betaine after salt; nothing argues low."
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "C2 met with payload lipid in place of silicone: Hydrogenated Castor Oil (9, waxy payload_lipid) + cationic Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (6) + pearlizing Glycol Distearate (12) + humectant Panthenol (7); weak refatters Glyceryl Oleate (11), PEG-7 Glyceryl Cocoate (15). W-RICH holds formally.",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "Hydrogenated castor oil often acts as an opacifier/structurant at low level; no silicone; a single cationic."
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Cationic guar (6) + waxy payload lipid (9) + weak refatters converge; W-RICH holds formally but resetCapacity is moderate (C1), so the rich route to high is not met.",
+      "neighboringAlternative": "high",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "Early guar, prominent hydrogenated castor oil, two weak refatters."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Waxy lipid more substantive (6.4); guar coacervate."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES + two buffers."
+        }
+      },
+      "whyThisBand": "Bounded residue from interacting routes; ordinary reset.",
+      "whyNotNeighborBand": "Not low: guar at 6 plus a waxy payload lipid at 9 (W2), not late/trace. Not high: no silicone/second cationic; W-RICH but reset not limited.",
+      "counterSignal": "W-RICH recorded; neighbor high per W-RICH rule.",
+      "excluded": [
+        "Glycol Distearate (12): pearlizer",
+        "Laureth-4 (14): thickener",
+        "Propylene Glycol (13): solvent",
+        "Aloe Barbadensis Leaf Extract (8): extract"
+      ]
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "low",
+      "rationale": "Provisional: recognized anti-dandruff active Piroctone Olamine (5); needs a qualifying dandruff claim (R17.3).",
+      "neighboringAlternative": "general",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "limitation": "Active-led candidate."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "rationale": "Provisional empty default.",
+      "neighboringAlternative": [
+        "moisture"
+      ]
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "low",
+      "rationale": "Provisional: dandruffSupport supported; treatment requires a qualifying dandruff claim (U3).",
+      "neighboringAlternative": "regular"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "rationale": "Provisional pending SC1. CSA formula half passes: Panthenol (7) prominent comfort route; Glyceryl Oleate, PEG-7 Glyceryl Cocoate, Hydrogenated Castor Oil prominent refatting routes.",
+      "neighboringAlternative": "targeted",
+      "csaFormulaHalf": "pass",
+      "prominentComfortRoute": true,
+      "prominentHumectantRefattingRoute": true
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains Piroctone Olamine (5).",
+      "neighboringAlternative": "none"
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Piroctone Olamine",
+      "position": 5,
+      "role": "recognized anti-dandruff active"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 6,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 7,
+      "role": "humectant; E4 comfort"
+    },
+    {
+      "ingredient": "Hydrogenated Castor Oil",
+      "position": 9,
+      "role": "payload_lipid (waxy)"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 10,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 11,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 12,
+      "role": "pearlizing route"
+    },
+    {
+      "ingredient": "PEG-7 Glyceryl Cocoate",
+      "position": 15,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Parfum (Fragrance)",
+      "position": 18,
+      "role": "E3 point"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

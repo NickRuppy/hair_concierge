@@ -1,0 +1,710 @@
+{
+  "blindId": "T317",
+  "inciFingerprintSha256": "d633b2a5de40d8c7c27d2bbaecfb9bea84a7243e5289c4f2ca815f549280804f",
+  "identity": {
+    "productName": "LANGHAARMÄDCHEN Shampoo Lovely Long, 300 ml",
+    "brand": "Langhaarmädchen (dm-Eigenmarke)",
+    "market": "DE",
+    "formulaBlock": {
+      "normalization": "No split synonym entries. E3: Parfum at 18; prominent = 1-17.",
+      "formulaCompleteness": "complete",
+      "formulaSourceTier": 2,
+      "identityConfidence": "moderate",
+      "rawInciCount": 21
+    }
+  },
+  "claimSources": [
+    {
+      "id": "S1",
+      "sourceKind": "retailer",
+      "grade": "low"
+    },
+    {
+      "id": "S2",
+      "sourceKind": "retailer",
+      "grade": "low"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: SLES (2) defining, buffered by Cocamidopropyl Betaine (3) and Coco-Glucoside (10) -> moderate.",
+      "neighboringAlternative": "none",
+      "counterSignal": "None material.",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T317"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic, ether type"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 5,
+          "role": "humectant; E4"
+        },
+        {
+          "ingredient": "Hydrolyzed Wheat Protein",
+          "position": 6,
+          "role": "protein_film, prominent"
+        },
+        {
+          "ingredient": "Argania Spinosa Kernel Oil",
+          "position": 7,
+          "role": "payload_lipid; E4 humectant/refatting"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 8,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Bis-(Isostearoyl/Oleoyl Isopropyl) Dimonium Methosulfate",
+          "position": 9,
+          "role": "cationic_conditioner (quaternary)"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 10,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 15,
+          "role": "pearlizing route"
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 16,
+          "role": "payload_lipid (waxy)"
+        },
+        {
+          "ingredient": "Laureth-2",
+          "position": 17,
+          "role": "thickener, not a route"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "C2 met with a payload lipid in place of the silicone: prominent Argan Oil (7) + cationic guar (8) + pearlizing Glycol Distearate (15) + Glycerin (5); plus a quaternary conditioner (9) and wheat protein (6); W-RICH.",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "No silicone; routes sit after the extracts/Citric Acid at plausibly low levels (moderate).",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T317"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic, ether type"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 5,
+          "role": "humectant; E4"
+        },
+        {
+          "ingredient": "Hydrolyzed Wheat Protein",
+          "position": 6,
+          "role": "protein_film, prominent"
+        },
+        {
+          "ingredient": "Argania Spinosa Kernel Oil",
+          "position": 7,
+          "role": "payload_lipid; E4 humectant/refatting"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 8,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Bis-(Isostearoyl/Oleoyl Isopropyl) Dimonium Methosulfate",
+          "position": 9,
+          "role": "cationic_conditioner (quaternary)"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 10,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 15,
+          "role": "pearlizing route"
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 16,
+          "role": "payload_lipid (waxy)"
+        },
+        {
+          "ingredient": "Laureth-2",
+          "position": 17,
+          "role": "thickener, not a route"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-RICH (argan oil + hydrogenated castor oil converging with guar and a cationic quat) but a moderate C1 reset -> not limited reset; routes are plausibly low-level liquid oil and light cationics -> moderate.",
+      "neighboringAlternative": "high",
+      "counterSignal": "Four deposition families converge (payload_lipid, cationic_polymer, cationic_conditioner, protein_film); a heavier band is the realistic alternative.",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "oil + guar + quat + protein, mid-list"
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "quat and waxy HCO somewhat substantive; argan liquid"
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES + betaine + glucoside"
+        }
+      },
+      "whyThisBand": "Several interacting light/moderate routes; effective reset bounds residue.",
+      "whyNotNeighborBand": "high needs W-RICH plus weak reset, or multiple clearly persistent systems not offset; there is no silicone, reset is moderate and the waxy lipid is late. low is excluded by converging lipid + two cationic routes (W2).",
+      "evidenceByFamily": {
+        "payload_lipid": [
+          [
+            "Argania Spinosa Kernel Oil",
+            7
+          ],
+          [
+            "Hydrogenated Castor Oil",
+            16
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Guar Hydroxypropyltrimonium Chloride",
+            8
+          ]
+        ],
+        "cationic_conditioner": [
+          [
+            "Bis-(Isostearoyl/Oleoyl Isopropyl) Dimonium Methosulfate",
+            9
+          ]
+        ],
+        "protein_film": [
+          [
+            "Hydrolyzed Wheat Protein",
+            6
+          ]
+        ],
+        "context_humectant": [
+          [
+            "Glycerin",
+            5
+          ]
+        ],
+        "excluded": [
+          [
+            "Glycol Distearate",
+            15,
+            "pearlizer"
+          ],
+          [
+            "Laureth-2",
+            17,
+            "thickener"
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            3
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Coco-Glucoside",
+            10
+          ]
+        ],
+        "unresolved": []
+      },
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T317"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic, ether type"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 5,
+          "role": "humectant; E4"
+        },
+        {
+          "ingredient": "Hydrolyzed Wheat Protein",
+          "position": 6,
+          "role": "protein_film, prominent"
+        },
+        {
+          "ingredient": "Argania Spinosa Kernel Oil",
+          "position": 7,
+          "role": "payload_lipid; E4 humectant/refatting"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 8,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Bis-(Isostearoyl/Oleoyl Isopropyl) Dimonium Methosulfate",
+          "position": 9,
+          "role": "cationic_conditioner (quaternary)"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 10,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 15,
+          "role": "pearlizing route"
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 16,
+          "role": "payload_lipid (waxy)"
+        },
+        {
+          "ingredient": "Laureth-2",
+          "position": 17,
+          "role": "thickener, not a route"
+        }
+      ],
+      "formulaIdentifiers": {
+        "inciFingerprintSha256": "d633b2a5de40d8c7c27d2bbaecfb9bea84a7243e5289c4f2ca815f549280804f",
+        "sourceTier": 2,
+        "captureDate": "per frozen packet (not shown to lane)"
+      },
+      "confidenceLimitingFactor": "INCI-only: concentrations, charge density and deposition unknown"
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "moderate",
+      "rationale": "Repair claim ('Kann Haarbruch reduzieren und das Haar reparieren', low) acts as candidate because the formula independently supports repair (wheat protein 6, argan oil 7, guar 8, cationic quat 9); CL-SRC caps confidence at moderate. Hair-growth/hair-loss claims ignored (F5).",
+      "counterSignal": "All claims are retailer-graded low; the product's lead claim is hair growth (out of scope).",
+      "neighboringAlternative": "general",
+      "formulaFacts": [
+        {
+          "ingredient": "Hydrolyzed Wheat Protein",
+          "position": 6
+        },
+        {
+          "ingredient": "Argania Spinosa Kernel Oil",
+          "position": 7
+        },
+        {
+          "ingredient": "Bis-(Isostearoyl/Oleoyl Isopropyl) Dimonium Methosulfate",
+          "position": 9
+        }
+      ],
+      "claimRole": "candidate",
+      "careDirection": {
+        "verdict": "repair_supported",
+        "moistureRoutes": [
+          "Glycerin 5"
+        ],
+        "repairRoutes": [
+          "Hydrolyzed Wheat Protein 6",
+          "Argania Spinosa Kernel Oil 7",
+          "Bis-(Isostearoyl/Oleoyl Isopropyl) Dimonium Methosulfate 9"
+        ],
+        "sharedRoutes": [
+          "Guar HPTC 8"
+        ],
+        "limitation": "Rinse-off."
+      },
+      "decisionTrace": {
+        "claimDirection": "repair (low); hair growth (ignored, F5)",
+        "formulaCompatible": "yes (repair_supported)",
+        "compatibleRoute": "protein + lipid + cationic cluster",
+        "decisionReason": "Low claim allowed as candidate with independent formula support; capped moderate."
+      },
+      "sourceIds": [
+        "S1 dm own-brand retailer DE (low); S2 dm AT (low)"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Shine ('natuerlichen Glanz', low) has no independent route.",
+      "counterSignal": "None.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "claims": [],
+        "routes": [],
+        "exception": null
+      },
+      "sourceIds": [
+        "S1 dm own-brand retailer DE (low); S2 dm AT (low)"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Default; low claims never trigger.",
+      "counterSignal": "None.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "decisionTrace": {
+        "default": "regular",
+        "trigger": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "No trigger."
+      },
+      "sourceIds": [
+        "S1 dm own-brand retailer DE (low); S2 dm AT (low)"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "No scalp-comfort positioning.",
+      "counterSignal": "None.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "sourceIds": [
+        "S1 dm own-brand retailer DE (low); S2 dm AT (low)"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T317"
+      ]
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "repair_supported",
+      "moistureRoutes": [
+        "Glycerin 5"
+      ],
+      "repairRoutes": [
+        "Hydrolyzed Wheat Protein 6",
+        "Argania Spinosa Kernel Oil 7",
+        "Bis-(Isostearoyl/Oleoyl Isopropyl) Dimonium Methosulfate 9"
+      ],
+      "sharedRoutes": [
+        "Guar HPTC 8"
+      ],
+      "limitation": "Rinse-off."
+    },
+    "claimRole": "candidate",
+    "counterSignal": "All claims are retailer-graded low; the product's lead claim is hair growth (out of scope).",
+    "neighboringAlternative": "general",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "repair (low); hair growth (ignored, F5)",
+        "formulaCompatible": "yes (repair_supported)",
+        "compatibleRoute": "protein + lipid + cationic cluster",
+        "decisionReason": "Low claim allowed as candidate with independent formula support; capped moderate."
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "claims": [],
+        "routes": [],
+        "exception": null
+      },
+      "usageRole": {
+        "default": "regular",
+        "trigger": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "No trigger."
+      }
+    }
+  },
+  "weightRecord": {
+    "value": "moderate",
+    "confidence": "moderate",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "moderate",
+        "rationale": "oil + guar + quat + protein, mid-list"
+      },
+      "persistence": {
+        "value": "moderate",
+        "rationale": "quat and waxy HCO somewhat substantive; argan liquid"
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C1 SLES + betaine + glucoside"
+      }
+    },
+    "evidenceByFamily": {
+      "payload_lipid": [
+        [
+          "Argania Spinosa Kernel Oil",
+          7
+        ],
+        [
+          "Hydrogenated Castor Oil",
+          16
+        ]
+      ],
+      "cationic_polymer": [
+        [
+          "Guar Hydroxypropyltrimonium Chloride",
+          8
+        ]
+      ],
+      "cationic_conditioner": [
+        [
+          "Bis-(Isostearoyl/Oleoyl Isopropyl) Dimonium Methosulfate",
+          9
+        ]
+      ],
+      "protein_film": [
+        [
+          "Hydrolyzed Wheat Protein",
+          6
+        ]
+      ],
+      "context_humectant": [
+        [
+          "Glycerin",
+          5
+        ]
+      ],
+      "excluded": [
+        [
+          "Glycol Distearate",
+          15,
+          "pearlizer"
+        ],
+        [
+          "Laureth-2",
+          17,
+          "thickener"
+        ]
+      ],
+      "anionic_surfactant": [
+        [
+          "Sodium Laureth Sulfate",
+          2
+        ]
+      ],
+      "amphoteric_surfactant": [
+        [
+          "Cocamidopropyl Betaine",
+          3
+        ]
+      ],
+      "nonionic_surfactant": [
+        [
+          "Coco-Glucoside",
+          10
+        ]
+      ],
+      "unresolved": []
+    },
+    "whyThisBand": "Several interacting light/moderate routes; effective reset bounds residue.",
+    "whyNotNeighborBand": "high needs W-RICH plus weak reset, or multiple clearly persistent systems not offset; there is no silicone, reset is moderate and the waxy lipid is late. low is excluded by converging lipid + two cationic routes (W2).",
+    "counterSignal": "Four deposition families converge (payload_lipid, cationic_polymer, cationic_conditioner, protein_film); a heavier band is the realistic alternative.",
+    "neighboringAlternative": "high",
+    "formulaIdentifiers": {
+      "inciFingerprintSha256": "d633b2a5de40d8c7c27d2bbaecfb9bea84a7243e5289c4f2ca815f549280804f",
+      "sourceTier": 2,
+      "captureDate": "per frozen packet (not shown to lane)"
+    },
+    "confidenceLimitingFactor": "INCI-only: concentrations, charge density and deposition unknown"
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1 (fine, W moderate) = acceptable; ordinary target, T6 n/a; T4: neighbor would lower the tier -> review_thickness_boundary"
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1 (normal, W moderate) = ideal; ordinary target, T6 n/a; T4: neighbor would lower the tier -> review_thickness_boundary"
+      },
+      {
+        "thickness": "coarse",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1 (coarse, W moderate, C high) = ideal; ordinary target, T6 n/a; T4: neighbor would lower the tier -> review_thickness_boundary"
+      }
+    ],
+    "weight": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential moderate -> moderate."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "bucket": "normal",
+        "route": "balanced",
+        "confidence": "moderate",
+        "rationale": "S-ORDINARY ways 1 and 2: no qualifying E2 unit; only scalp-adjacent positioning is hair growth/loss (S-HAIRLOSS, not evaluated); retailer copy only."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate, D1 False -> regular."
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "evidence": "No D1 wording."
+    },
+    "explicitResetPositioning": false,
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "moderate",
+      "rationale": "D2 not met: D1 false"
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable",
+        "display": "amber"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal",
+        "display": "green"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal",
+        "display": "green"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_thickness_boundary",
+        "detail": "fine, normal, coarse"
+      }
+    ],
+    "informationalNotes": [
+      {
+        "code": "hair_loss_claim_not_evaluated",
+        "detail": "'Wirkung: gegen Haarausfall', 'das Haarwachstum zu stimulieren', 'fuer dichteres Haar' (S1/S2)."
+      }
+    ],
+    "researchCombinationTargets": [],
+    "catalogDependent": "review_live_value_differs not computed in lane (live rows unseen)."
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "repair (provisional, low)",
+      "final": "repair",
+      "evidence": "Repair claim ('Kann Haarbruch reduzieren und das Haar reparieren', low) acts as candidate because the formula independently supports repair (wheat protein 6, argan oil 7, guar 8, cationic quat 9); CL-SRC caps confidence at moderate. Hair-growth/hair-loss claims ignored (F5)."
+    },
+    {
+      "property": "focusSecondary",
+      "blind": "[] (provisional)",
+      "final": [],
+      "evidence": "Shine ('natuerlichen Glanz', low) has no independent route."
+    },
+    {
+      "property": "usageRole",
+      "blind": "regular (provisional)",
+      "final": "regular",
+      "evidence": "Default; low claims never trigger."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blind": "unknown (positioning hidden)",
+      "final": "not_targeted",
+      "evidence": "No scalp-comfort positioning."
+    },
+    {
+      "property": "cleansingStrength/conditioningLevel/weightPotential/dandruffSupport",
+      "blind": "frozen",
+      "final": "unchanged",
+      "evidence": "Claims cannot assign these (3.2); no revealed formula conflict."
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "noComparisonWithEarlierValues": true
+  },
+  "uncertainties": [
+    {
+      "reading": "low-graded repair claim as candidate",
+      "chosen": "repair (moderate)",
+      "alternative": "general"
+    }
+  ]
+}

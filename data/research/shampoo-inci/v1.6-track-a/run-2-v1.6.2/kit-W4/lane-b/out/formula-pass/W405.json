@@ -1,0 +1,166 @@
+{
+  "blindId": "W405",
+  "inciFingerprintSha256": "d34e3d5a3b567d4779ae3dde69539e2d07abb7b1a44a1fa438f1396c24b0b46f",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, stage A only)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "packSize": "350 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "AQUA/ WATER/ EAU and PARFUM (FRAGRANCE) are single entries; positions are normalized one-based positions (ID-2).",
+    "e3ProminenceCutoff": "PARFUM (FRAGRANCE) @12; prominent = positions 1-11"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionicEtherSulfonate": [],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": ["Disodium Laureth Sulfosuccinate @3 (sulfosuccinate, prominent)", "Sodium Cocoyl Isethionate @4 (prominent)", "Sodium Lauroyl Sarcosinate @9 (prominent)"],
+      "amphoteric": ["Cocamidopropyl Betaine @2 (earliest prominent cleansing surfactant)"],
+      "nonionicCleansing": ["Coco-Glucoside @14 (after E3 point: recorded, not counted)"],
+      "notCleansingNotBuffer": ["Sodium Chloride @5", "Cocamide MIPA @6 (alkanolamide)", "Acrylates Copolymer @17 (rheology polymer)"],
+      "reinforcingRoutes": [],
+      "c1c5c6Reading": "C6: no prominent strong anionic; earliest prominent cleansing surfactant is the amphoteric Cocamidopropyl Betaine @2 -> low"
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": ["Polyquaternium-10 @13", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @20", "Polyquaternium-7 @21", "Polyquaternium-11 @22 (all after the E3 point)"],
+      "payload_lipid": ["Cocos Nucifera (Coconut) Oil @11 (prominent under E3; non-material under W-LINE)"],
+      "weak_refatter": ["Glyceryl Oleate @15", "Tocopheryl Acetate @24 (trace)", "Tocopherol @33 (trace antioxidant)"],
+      "silicone": [],
+      "pearlizing_fatty_route": [],
+      "humectants": ["Glycerin @26 (own entry)"],
+      "notHumectantRoute": ["Butylene Glycol @25", "1,2-Hexanediol @30", "Ethyl Hexanediol @32"]
+    },
+    "wLine": {
+      "wLine": "Sodium Benzoate @10",
+      "wLineClasses": ["preservative_or_capped_active"],
+      "cap": "e3Point @12 (PARFUM (FRAGRANCE))",
+      "alphabeticalRun": "none before the cap (runs 1-4 and 6-9, 4 entries each; 18-22 is after the cap)",
+      "candidatesTested": [
+        "Phenoxyethanol @7: (i) ok; (ii) FAILS - cleansing surfactant Sodium Lauroyl Sarcosinate @9 listed after it and before the cap",
+        "Sodium Benzoate @10: (i) ok; (ii) only Cocos Nucifera Oil @11 before the cap -> plausible"
+      ],
+      "skipped": ["w_line_skipped:Phenoxyethanol@7 (clause ii: Sodium Lauroyl Sarcosinate @9 after it)"],
+      "codes": [],
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": ["Cocos Nucifera (Coconut) Oil @11 (at/after W-line 10)"]
+    },
+    "actives": {
+      "dandruffActives": [],
+      "comfortRoutesE4Prominent": [],
+      "humectantRefattingRoutesE4Prominent": ["Cocos Nucifera (Coconut) Oil @11 (nonvolatile plant oil)"],
+      "humectantRefattingRoutesNotProminent": ["Glyceryl Oleate @15", "Glycerin @26"],
+      "coolingAgents": [],
+      "essentialOils": [],
+      "fragranceMaterials": ["Parfum @12", "Benzyl Alcohol @18", "Hexyl Cinnamal @23", "Linalool @27"],
+      "other": ["Zingiber Officinale (Ginger) Root Extract @28", "Isopropyl Alcohol @31"]
+    },
+    "scalpGateFormulaFacts": {
+      "CSA": "met via MB (mild_base: Cocamidopropyl Betaine @2, Disodium Laureth Sulfosuccinate @3, Sodium Cocoyl Isethionate @4, Sodium Lauroyl Sarcosinate @9) and via prominent E4 refatting route Cocos Nucifera Oil @11",
+      "MB": "met: cleansingStrength low and no prominent strong anionic of either C3 type",
+      "S-SENSITIVE formula half": "MB present -> would pass if targeted",
+      "S-DRY formula half": "prominent refatting route Coconut Oil @11 -> would pass if targeted",
+      "S-OILY formula clause": "cleansing low -> clause fails"
+    }
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low: no prominent strong anionic; under C6 the earliest prominent cleansing surfactant is the amphoteric Cocamidopropyl Betaine @2, so the value is low. Counter-signal: three prominent mild anionics (Disodium Laureth Sulfosuccinate @3, Sodium Cocoyl Isethionate @4, Sodium Lauroyl Sarcosinate @9) form a fairly broad anionic cleansing system, so realistic unknowns could make it moderate.",
+      "ruleIds": ["C3", "C4", "C6", "N-ALT"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High: the Section 5 rich architecture (W-RICH, conditioning reading with E3) holds - a prominent payload lipid (Cocos Nucifera Oil @11) converges with a cationic deposition system of four cationic polymers (Polyquaternium-10 @13, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @20, Polyquaternium-7 @21, Polyquaternium-11 @22), plus Glyceryl Oleate @15 and Glycerin @26 in a mild chassis. C2 itself is not met (no separate pearlizing/fatty route). Counter-signal: the oil sits right before Parfum after two preservatives and every cationic polymer is after the E3 point, so realistic unknowns could make it moderate.",
+      "ruleIds": ["Section 5 anchors", "W-RICH", "C2"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "cationic_polymer": ["Polyquaternium-10 @13", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @20", "Polyquaternium-7 @21", "Polyquaternium-11 @22"],
+        "payload_lipid": ["Cocos Nucifera (Coconut) Oil @11 (non-material, at/after W-line 10)"],
+        "weak_refatter": ["Glyceryl Oleate @15", "Tocopheryl Acetate @24", "Tocopherol @33"],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Cocamidopropyl Betaine @2", "Disodium Laureth Sulfosuccinate @3", "Sodium Cocoyl Isethionate @4", "Sodium Lauroyl Sarcosinate @9", "Coco-Glucoside @14"],
+        "humectantContext": ["Glycerin @26", "Butylene Glycol @25"],
+        "excluded": ["Acrylates Copolymer @17 (anionic acrylate rheology polymer, 6.4)", "Cocamide MIPA @6 (alkanolamide thickener)", "Parfum @12 and fragrance allergens", "Ginger Root Extract @28 (botanical extract)", "Phenoxyethanol @7, Sodium Benzoate @10, Benzyl Alcohol @18, Ethylhexylglycerin @19 (preservation)"],
+        "unresolved": []
+      },
+      "wLineRecord": "wLine Sodium Benzoate @10 (preservative_or_capped_active); cap e3Point @12; no alphabetical run before the cap; skipped w_line_skipped:Phenoxyethanol@7 (clause ii, Sodium Lauroyl Sarcosinate @9); no codes; material payload_lipid: none; non-material: Cocos Nucifera Oil @11.",
+      "depositionLoad": "moderate: four cationic polymers (one family, all after Parfum) plus a weak refatter and a post-line coconut oil.",
+      "persistence": "moderate: Polyquaternium-10/-7/-11 can accumulate under a mild chassis; the oil and refatters are light at these positions.",
+      "resetCapacity": "weak: C6 low chassis (betaine-led with mild anionics).",
+      "counterevidence": "Weak reset and a stack of four cationic polymers argue for high; the coconut oil is just past the W-line.",
+      "whyThisBand": "A multi-polymer cationic system in a mild chassis plausibly leaves noticeable but bounded residue.",
+      "whyNotNeighborBand": "Not high: W-RICH for weight fails because the only payload lipid, Cocos Nucifera Oil @11, is at/after the W-line (@10) and therefore not material; the convergence route has only one plausibly persistent family (cationic_polymer) since the post-line oil cannot count and the weak refatters are light. Not low: a persistent cationic stack facing weak reset makes 'lightweight' an understatement (W2: cationic plus refatter/lipid families present).",
+      "confidenceLimitingFactor": "W-LINE item 6: the band falls short of high because a payload_lipid at/after the W-line (Coconut Oil @11) is excluded from the lipid leg -> confidence at most moderate, neighbor high.",
+      "rationale": "Moderate: cationic stack with weak reset; W-RICH and the convergence route are not open because the coconut oil is non-material under W-LINE.",
+      "ruleIds": ["6.3", "6.4", "6.6", "W-LINE", "W-RICH", "W2", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": ["Cocos Nucifera Oil @11", "Glyceryl Oleate @15", "Glycerin @26"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Polyquaternium-10 @13", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @20", "Polyquaternium-7 @21", "Polyquaternium-11 @22"],
+        "limitation": "Humectant cluster is weak (Glycerin only, late); lipid/cationic conditioning is generic; no protein or damage-care cluster."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Blind pass. Mild base (MB) would support a sensitive-scalp role if positioned.",
+      "decisionTrace": "Blind: claim direction null; formula nonspecific for lengths care; scalp_active possible if SC1 positioning appears (CSA met); provisional general.",
+      "rationale": "Provisional general (claim-dependent; formula-only).",
+      "ruleIds": ["3.1", "7.2", "7.3"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["scalp_active"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty (claim-dependent).",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional regular (default). Low formula: frequent would fire with U2 wording; alternating impossible.",
+      "ruleIds": ["Section 9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional not_targeted (claims hidden). Formula half: CSA met via MB (mild_base: Cocamidopropyl Betaine @2, Disodium Laureth Sulfosuccinate @3, Sodium Cocoyl Isethionate @4, Sodium Lauroyl Sarcosinate @9) and via the prominent E4 refatting route Cocos Nucifera Oil @11. Would become targeted with an SC1 claim graded moderate/high.",
+      "ruleIds": ["Section 10", "CSA", "MB", "E4", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active in the complete INCI.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "notes": ["Claim-dependent properties are provisional and formula-only."]
+}

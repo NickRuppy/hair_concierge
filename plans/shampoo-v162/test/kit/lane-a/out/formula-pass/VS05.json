@@ -1,0 +1,158 @@
+{
+  "blindId": "VS05",
+  "inciFingerprintSha256": "303653d5f86a174377761e891fefde597d7e15dc484437056bd83783230aa48f",
+  "phase": "formula-pass (blind; stage A packet only; no claims seen)",
+  "standard": "shampoo-classification-v1.6.2 (candidate)",
+  "identity": {
+    "packSize": "200 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "Canonical list one entry per ingredient; no split synonyms; no markers. Normalized one-based positions (ID-2) = packet positions.",
+    "e3ProminenceCutoff": "Parfum @7 is the E3 marker. Prominent = positions 1-6."
+  },
+  "normalizedInci": ["1 Aqua", "2 Decyl Glucoside", "3 Disodium Laureth Sulfosuccinate", "4 Sodium Lauryl Sulfoacetate", "5 PEG-55 Propylene Glycol Oleate", "6 Propylene Glycol", "7 Parfum", "8 Phenoxyethanol", "9 Sodium Benzoate", "10 Citric Acid", "11 Hydroxypropyl Oxidized Starch PG-Trimonium Chloride", "12 Lactic Acid", "13 Sodium Chloride", "14 Sodium Lactate"],
+  "formulaFacts": {
+    "surfactants": [
+      {"inci": "Decyl Glucoside", "position": 2, "c3Class": "nonionic cleansing (alkyl glucoside)", "role": "earliest prominent cleansing surfactant (C6)"},
+      {"inci": "Disodium Laureth Sulfosuccinate", "position": 3, "c3Class": "mild anionic (sulfosuccinate)", "role": "prominent mild anionic"},
+      {"inci": "Sodium Lauryl Sulfoacetate", "position": 4, "c3Class": "mild anionic (sulfoacetate)", "role": "prominent mild anionic"},
+      {"inci": "PEG-55 Propylene Glycol Oleate", "position": 5, "c3Class": "not a cleansing route and not a buffer (PEG ester thickener)", "role": "none"}
+    ],
+    "reinforcingRoutes": [],
+    "definingAnionic": "none (no prominent strong anionic; C6 applies)",
+    "conditioningRoutes": {
+      "cationic_polymer": ["Hydroxypropyl Oxidized Starch PG-Trimonium Chloride@11 (not prominent; after Parfum and both preservatives)"],
+      "silicone": [],
+      "payload_lipid": [],
+      "pearlizingFattyRoute": [],
+      "weak_refatter": [],
+      "protein_film": [],
+      "film_former": [],
+      "humectants": []
+    },
+    "actives": [],
+    "recognizedDandruffActives": [],
+    "exposure": {"fragrance": "Parfum@7 (E3 marker)", "fragranceAllergens": "none declared", "coolingAgents": "none", "essentialOils": "none"},
+    "phBuffers": ["Citric Acid@10", "Lactic Acid@12", "Sodium Lactate@14 (pH buffer, F4; not a C2 humectant)"],
+    "e4ProminentRoutes": {
+      "comfort": [],
+      "humectantRefatting": []
+    },
+    "mildBase": "Met: mild_base:Decyl Glucoside@2, Disodium Laureth Sulfosuccinate@3, Sodium Lauryl Sulfoacetate@4 (cleansingStrength low; no prominent strong anionic of either C3 type).",
+    "csa": "Met via MB only (v1.6.2). No prominent E4 comfort or humectant/refatting route (Sodium Lactate@14 is listed on E4 humectant list but not prominent; Propylene Glycol@6 is a glycol, not a listed route). Consequence: S-SENSITIVE formula gate can pass via MB; S-DRY cannot (MB never passes S-DRY; no prominent humectant route).",
+    "wLine": {
+      "wLine": {"position": 7, "inci": "Parfum", "classes": ["fragrance"]},
+      "cap": {"e3Point": 7, "inci": "Parfum"},
+      "alphabeticalRun": "none (positions 10-14 Citric Acid..Sodium Lactate are in order but only five entries)",
+      "skippedCandidates": [],
+      "plausibility": "No candidate at positions 1-6. E3 marker Parfum@7 (class a): (i) Decyl Glucoside@2 etc. listed before; (ii) nothing between it and the cap. Plausible; W-line = cap.",
+      "codes": [],
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": [],
+      "note": "No payload_lipid; the W-line gates nothing here."
+    }
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low by C6: no prominent strong anionic; the earliest prominent cleansing surfactant is the alkyl glucoside Decyl Glucoside@2. Counter-signal toward moderate: two prominent mild anionics (Disodium Laureth Sulfosuccinate@3, Sodium Lauryl Sulfoacetate@4) carry much of the cleansing, and there is no refatting or conditioning buffer in the prominent zone; this lowers confidence to moderate (neighbor moderate) but does not move the C6 value.",
+      "ruleIds": ["C3", "C4", "C6", "N-ALT"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low: cleansing-led architecture; the only conditioning route is one cationic starch polymer@11 after Parfum and both preservatives. No silicone, lipid, refatter, protein, pearlizing route or listed humectant. Neighbor moderate: a cationic starch is a recognized conditioning polymer (6.4) and could give noticeable slip.",
+      "ruleIds": ["Section 5 anchors", "C2", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "evidence": {
+        "cationic_polymer": ["Hydroxypropyl Oxidized Starch PG-Trimonium Chloride@11"],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Decyl Glucoside@2 (nonionic)", "Disodium Laureth Sulfosuccinate@3 (mild anionic)", "Sodium Lauryl Sulfoacetate@4 (mild anionic)"],
+        "humectantContext": ["Sodium Lactate@14 (pH buffer)"],
+        "excluded": ["PEG-55 Propylene Glycol Oleate@5 (PEG thickener, 6.4)", "Propylene Glycol@6 (solvent)", "Citric Acid@10, Lactic Acid@12 (pH)", "Sodium Chloride@13 (salt)", "Phenoxyethanol@8, Sodium Benzoate@9 (preservatives)"],
+        "unresolved": []
+      },
+      "wLine": "Parfum@7 (fragrance; = cap); no payload_lipid to split.",
+      "depositionLoad": "light - a single cationic starch listed after Parfum and both preservatives; nothing else deposits.",
+      "persistence": "low - one late polysaccharide polymer; no silicone, lipid or film system.",
+      "resetCapacity": "weak - C6 low mild chassis (glucoside + two mild anionics).",
+      "counterevidence": "Reset is weak, so the little that deposits is not actively removed.",
+      "whyThisBand": "Low anchor: deposition is essentially absent (one late cationic starch only); there is nothing for a weak reset to fail to offset.",
+      "whyNotNeighborBand": "Not moderate: there is a single deposition family, represented by one polymer listed after the fragrance and both preservatives; no second family, no silicone, lipid, refatter, protein or film former, so no plausible noticeable residue even with weak reset.",
+      "confidenceLimitingFactor": "None material: complete exact formula; dose/charge of a single late starch polymer cannot plausibly reach noticeable residue.",
+      "rationale": "Low (high confidence): near-absent deposition (one late cationic starch).",
+      "ruleIds": ["6.4", "6.6", "W2", "W-LINE", "6.9"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Hydroxypropyl Oxidized Starch PG-Trimonium Chloride@11"],
+        "limitation": "Blind; no humectant or protein cluster at all."
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "Mild base (MB met) could support a sensitive-scalp role if positioned; mildness alone is not a focus (7.2).",
+      "decisionTrace": "Claim direction: null (blind). Formula-compatible routes: scalp_active only via SC1 + CSA (MB). Decision: provisional general pending claims.",
+      "rationale": "Provisional (claim-dependent): general.",
+      "ruleIds": ["3.1", "7.2"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["scalp_active"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional (claim-dependent): empty.",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional (claim-dependent): default regular; cleansing not strong, so frequent fires with U2 frequency wording graded moderate/high.",
+      "ruleIds": ["Section 9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional (claim-dependent): no positioning visible. CSA route used: MB (mild_base:Decyl Glucoside@2, Disodium Laureth Sulfosuccinate@3, Sodium Lauryl Sulfoacetate@4); no listed prominent E4 route. No cooling/essential-oil counter-signal; Parfum@7 declared. A sensitive SC1 unit would make it targeted via MB; a dry-scalp unit would also make it targeted (CSA via MB) but S-DRY would fail (no prominent humectant route).",
+      "ruleIds": ["Section 10", "CSA", "MB", "E4", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "cleansingStrength confidence: C6 gives low mechanically; recorded moderate (neighbor moderate) because two prominent mild anionics without refatting could cleanse at an ordinary level. Alternative: high confidence (pure convention).",
+    "Disodium Laureth Sulfosuccinate contains 'laureth' and 'sulf' in its name but is a sulfosuccinate (C3 mild anionic), not an alkyl ether sulfate; it does not exclude MB."
+  ]
+}

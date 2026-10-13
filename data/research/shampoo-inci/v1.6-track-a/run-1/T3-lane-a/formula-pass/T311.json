@@ -1,0 +1,208 @@
+{
+  "blindId": "T311",
+  "inciFingerprintSha256": "2c79251eb5b8c7ff1b1f626154c752255ac0d7d43384f1ee90d444652876c9bf",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "No split synonym entries. E3: Parfum at 19; prominent = 1-18.",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "rawInciCount": 21
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: SLES (2) defining, buffered by Cocamidopropyl Betaine (3) and Coco-Glucoside (4) -> moderate.",
+      "neighboringAlternative": "none",
+      "counterSignal": "Chelator (13) is not a route; none material."
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "One meaningful system (prominent guar 9) plus light routes (Glyceryl Oleate 7, Panthenol 12, Glycerin 14); C2 not met (no silicone/lipid/pearlizer).",
+      "neighboringAlternative": "low",
+      "counterSignal": "Single light guar could read as little slip (low)."
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Light guar (9) plus one weak refatter (7) facing an effective C1 chassis.",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "Two deposition families (W2).",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "guar + weak refatter"
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "no persistent system"
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES + betaine + glucoside"
+        }
+      },
+      "whyThisBand": "Light routes only.",
+      "whyNotNeighborBand": "W2: the only families are a weak refatter (Glyceryl Oleate 7) and one light guar (9) with humectants, facing moderate reset.",
+      "evidenceByFamily": {
+        "cationic_polymer": [
+          [
+            "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+            9
+          ]
+        ],
+        "weak_refatter": [
+          [
+            "Glyceryl Oleate",
+            7
+          ]
+        ],
+        "context_humectant": [
+          [
+            "Panthenol",
+            12
+          ],
+          [
+            "Glycerin",
+            14
+          ]
+        ],
+        "excluded": [
+          [
+            "Sorbitan Caprylate",
+            8,
+            "preservative booster"
+          ],
+          [
+            "Zinc PCA",
+            11,
+            "salt"
+          ],
+          [
+            "Tetrasodium Glutamate Diacetate",
+            13,
+            "chelator"
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            3
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Coco-Glucoside",
+            4
+          ]
+        ],
+        "unresolved": []
+      }
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Piroctone Olamine (6) present.",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "low",
+      "rationale": "Piroctone Olamine (6); needs E2 dandruff claim."
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low"
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low"
+    },
+    "scalpComfortTarget": {
+      "value": "unknown",
+      "confidence": "low",
+      "rationale": "CSA passes (Panthenol 12; Glyceryl Oleate 7, Glycerin 14)."
+    }
+  },
+  "careDirection": {
+    "verdict": "not_applicable",
+    "rationale": "Active-led formula."
+  },
+  "formulaGateFacts": {
+    "csa": "pass",
+    "promComfortRoute": true,
+    "promHumectantRoute": true,
+    "sOilyFormulaClause": "pass"
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic, ether type"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 3,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 4,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Lactic Acid",
+      "position": 5,
+      "role": "pH adjuster"
+    },
+    {
+      "ingredient": "Piroctone Olamine",
+      "position": 6,
+      "role": "recognized anti-dandruff active"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 7,
+      "role": "weak_refatter; E4"
+    },
+    {
+      "ingredient": "Sorbitan Caprylate",
+      "position": 8,
+      "role": "preservative booster/emulsifier, no deposition role"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 9,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Zinc PCA",
+      "position": 11,
+      "role": "sebum-regulating salt; not on any E4 list"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 12,
+      "role": "E4 comfort route"
+    },
+    {
+      "ingredient": "Tetrasodium Glutamate Diacetate",
+      "position": 13,
+      "role": "chelator"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 14,
+      "role": "humectant; E4"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

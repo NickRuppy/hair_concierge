@@ -1,0 +1,142 @@
+{
+  "blindId": "W211",
+  "inciFingerprintSha256": "d5f7e210079ae4b8e0fa1afcb15470223370382bdb75d32d7d564076d52ba30a",
+  "phase": "formula-pass (blind, stage A only; no claims seen)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "ID-2: 'Aqua (Water, Eau)' one entry; no split entries; packet positions equal normalized one-based positions.",
+    "e3ProminenceCutoff": "Parfum (Fragrance) @8; positions 1-7 prominent"
+  },
+  "normalizedInci": ["1 Aqua (Water, Eau)", "2 Sodium Laureth Sulfate", "3 Sodium Chloride", "4 Cocamidopropyl Betaine", "5 Glycosphingolipids", "6 Hydrolyzed Silk", "7 Sericin", "8 Parfum (Fragrance)", "9 PEG-7 Glyceryl Cocoate", "10 Polyquaternium-10", "11 Sodium Benzoate", "12 PEG-120 Methyl Glucose Dioleate", "13 Coco-Glucoside", "14 Citric Acid", "15 Glyceryl Oleate", "16 PEG-40 Hydrogenated Castor Oil", "17 Glycol Distearate", "18 Hydrogenated Castor Oil", "19 Butylene Glycol", "20 Laureth-4", "21 Prunus Armeniaca (Apricot) Kernel Oil", "22 Propylene Glycol", "23 Sodium Hydroxide", "24 Benzyl Alcohol", "25 Phenoxyethanol", "26 Potassium Sorbate", "27 Methylparaben"],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate @2, prominent buffer Cocamidopropyl Betaine @4, no reinforcing strong anionic. Coco-Glucoside @13 is after Parfum @8 (recorded, not a buffer).",
+      "ruleIds": ["C3", "C4", "C1", "E3"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: one meaningful cationic system (Polyquaternium-10 @10) plus several light routes: prominent proteins (Hydrolyzed Silk @6, Sericin @7) and lipid-like Glycosphingolipids @5, and post-E3 refatters (PEG-7 Glyceryl Cocoate @9, Glyceryl Oleate @15), pearlizer Glycol Distearate @17, Hydrogenated Castor Oil @18, Apricot Kernel Oil @21. C2 not met: no silicone, no prominent payload lipid, no closed-list humectant. Low is the neighbor because Polyquaternium-10 sits after the E3 point.",
+      "ruleIds": ["5", "C2", "E3"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "evidence": {
+        "cationic_polymer": ["Polyquaternium-10 @10"],
+        "payload_lipid": ["Hydrogenated Castor Oil @18 (waxy; non-material, after W-line 8)", "Prunus Armeniaca (Apricot) Kernel Oil @21 (non-material)"],
+        "weak_refatter": ["Glycosphingolipids @5 (lipid-like additive, 6.3 weak_refatter by analogy with Lecithin)", "PEG-7 Glyceryl Cocoate @9", "Glyceryl Oleate @15"],
+        "silicone": [],
+        "protein_film": ["Hydrolyzed Silk @6", "Sericin @7"],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @4", "Coco-Glucoside @13 (non-prominent)"],
+        "humectantContext": ["Butylene Glycol @19 (solvent, not a deliberate humectant)"],
+        "excluded": ["PEG-120 Methyl Glucose Dioleate @12 (PEG thickener)", "PEG-40 Hydrogenated Castor Oil @16 (solubilizer, 6.4)", "Glycol Distearate @17 (pearlizing wax, 6.4)", "Laureth-4 @20", "Propylene Glycol @22"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 8,
+        "inci": "Parfum (Fragrance)",
+        "candidateClasses": ["fragrance"],
+        "cap": "e3Point @8 (Parfum (Fragrance))",
+        "alphabeticalRun": "none",
+        "skipped": [],
+        "codes": [],
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": ["Hydrogenated Castor Oil @18", "Prunus Armeniaca (Apricot) Kernel Oil @21"]
+      },
+      "depositionLoad": "moderate-light: Polyquaternium-10 @10 with prominent protein films @6-7 and three weak refatters; lipids only post-line.",
+      "persistence": "moderate: Polyquaternium-10 deposition with protein film is plausibly retained; no silicone; waxy castor oil is trace.",
+      "resetCapacity": "moderate: C1 SLES/betaine chassis.",
+      "counterevidence": "Every family except proteins and one refatter sits after Parfum @8; no silicone; a single cationic polymer.",
+      "whyThisBand": "Moderate: four interacting light routes (cationic polymer, protein film, weak refatters, trace waxy lipid) plausibly leave noticeable but bounded residue (W2: low would understate it).",
+      "whyNotNeighborBand": "Not high: the converging families are light (one post-E3 Polyquaternium-10 and hydrolyzed proteins, no silicone, no film former), there is no rich architecture, and the moderate C1 reset offsets them; this holds independently of the post-line lipids, since even material lipids would not give W-RICH limited reset. Not low: the families interact rather than standing alone, and the proteins @6-7 are prominent.",
+      "confidenceLimitingFactor": "Polyquaternium-10 and protein doses unknown; trace doses would make it low.",
+      "rationale": "Moderate: interacting light routes (Polyquaternium-10 @10, Hydrolyzed Silk @6, Sericin @7, refatters) against a moderate reset; lipids post W-line @8.",
+      "ruleIds": ["6.3", "6.4", "6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "shine",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": [],
+        "repairRoutes": ["Hydrolyzed Silk @6", "Sericin @7"],
+        "sharedConditioningRoutes": ["Polyquaternium-10 @10", "Glycosphingolipids @5", "PEG-7 Glyceryl Cocoate @9", "Glyceryl Oleate @15"],
+        "limitation": "Silk proteins are a smoothing/film cluster, not a coherent damage-care cluster; no closed-list humectant."
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "SLES chassis; protein film only.",
+      "decisionTrace": "Claim direction null (blind); silk/sericin film is compatible with shine or a smoothing role; provisional general.",
+      "rationale": "Provisional (claim-dependent).",
+      "ruleIds": ["3.1", "7.2", "7.3"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["repair"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional (claim-dependent).",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional: default regular; frequent possible with frequency wording.",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional and formula-limited: CSA is NOT met. Prominent positions 1-7 hold no E4 comfort or humectant/refatting route (PEG-7 Glyceryl Cocoate @9 and Glyceryl Oleate @15 are listed routes but after Parfum @8). MB excluded: Sodium Laureth Sulfate @2 is a prominent strong anionic. Prominent unlisted candidate rejected by R18: unlisted_route_candidate:Glycosphingolipids.",
+      "csaRoute": "none: listed routes only post-E3; MB excluded by Sodium Laureth Sulfate @2",
+      "ruleIds": ["10", "CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active in the complete INCI.",
+      "ruleIds": ["11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactantClasses": {
+      "strongAnionicEtherSulfonate": ["Sodium Laureth Sulfate @2 (defining)"],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": [],
+      "amphoteric": ["Cocamidopropyl Betaine @4 (buffer)"],
+      "nonionicCleansing": ["Coco-Glucoside @13 (non-prominent)"],
+      "notRouteNotBuffer": ["PEG-120 Methyl Glucose Dioleate @12", "PEG-40 Hydrogenated Castor Oil @16", "Glycol Distearate @17", "Laureth-4 @20"]
+    },
+    "conditioningRoutes": ["Glycosphingolipids @5", "Hydrolyzed Silk @6", "Sericin @7", "PEG-7 Glyceryl Cocoate @9", "Polyquaternium-10 @10", "Glyceryl Oleate @15", "Glycol Distearate @17 (pearlizing)", "Hydrogenated Castor Oil @18", "Prunus Armeniaca Kernel Oil @21"],
+    "humectants": [],
+    "actives": [],
+    "recognizedDandruffActives": [],
+    "exposureFlags": ["Parfum @8 (early)", "no cooling agent", "no essential oil"],
+    "chelatorsPhAdjusters": ["Citric Acid @14", "Sodium Hydroxide @23"],
+    "preservatives": ["Sodium Benzoate @11", "Benzyl Alcohol @24", "Phenoxyethanol @25", "Potassium Sorbate @26", "Methylparaben @27"]
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": ["Glycosphingolipids @5 family: assigned weak_refatter (lipid-like additive) rather than payload_lipid; even as payload_lipid it would be material (< W-line 8) but W-RICH would still lack limited reset (moderate), so the band would not move to high on that alone."]
+}

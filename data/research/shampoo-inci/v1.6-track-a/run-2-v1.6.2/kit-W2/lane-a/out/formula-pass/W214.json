@@ -1,0 +1,141 @@
+{
+  "blindId": "W214",
+  "inciFingerprintSha256": "9b5e9427f281529f077e16f49cad7fe8f7383361a917fd3de236c76e46e7b6ca",
+  "phase": "formula-pass (blind, stage A only; no claims seen)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "packSize": "500 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 3,
+    "identityConfidence": "high",
+    "normalization": "ID-2: no split synonym entries; packet positions equal normalized one-based positions.",
+    "e3ProminenceCutoff": "Parfum @6; positions 1-5 prominent"
+  },
+  "normalizedInci": ["1 Aqua", "2 Sodium Laureth Sulfate", "3 Cocamidopropyl Betaine", "4 Sodium Xylenesulfonate", "5 Sodium Chloride", "6 Parfum", "7 Citric Acid", "8 Sodium Benzoate", "9 Sodium Citrate", "10 Sodium Salicylate", "11 Hydroxypropyl Methylcellulose", "12 Sodium Hydroxide", "13 Panthenol", "14 Tetrasodium EDTA", "15 Hexyl Cinnamal", "16 Histidine", "17 Glyoxal"],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate @2, prominent buffer Cocamidopropyl Betaine @3, no reinforcing strong anionic. Sodium Xylenesulfonate @4 is a hydrotrope (not a route).",
+      "ruleIds": ["C3", "C4", "C1"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Low: purely cleansing-led; no cationic polymer, silicone, lipid, refatter, protein or pearlizer. The only care ingredient is a trace Panthenol @13 after Parfum @6; Hydroxypropyl Methylcellulose @11 is a nonionic thickener.",
+      "ruleIds": ["5", "C2"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "evidence": {
+        "cationic_polymer": [],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @3"],
+        "humectantContext": ["Panthenol @13"],
+        "excluded": ["Sodium Xylenesulfonate @4 (hydrotrope)", "Hydroxypropyl Methylcellulose @11 (nonionic cellulose thickener, no cationic charge)", "Histidine @16 (amino acid)", "Glyoxal @17 (cellulose processing aid)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 6,
+        "inci": "Parfum",
+        "candidateClasses": ["fragrance"],
+        "cap": "e3Point @6 (Parfum)",
+        "alphabeticalRun": "none",
+        "skipped": [],
+        "codes": [],
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light: no deposition family.",
+      "persistence": "low: nothing to persist.",
+      "resetCapacity": "moderate: C1 SLES/betaine chassis.",
+      "counterevidence": "None.",
+      "whyThisBand": "Low: deposition is absent.",
+      "whyNotNeighborBand": "Not moderate: no deposition family at all (no polymer, silicone, lipid, refatter, protein or film).",
+      "confidenceLimitingFactor": "None.",
+      "rationale": "Low with high confidence: no deposition evidence.",
+      "ruleIds": ["6.3", "6.6"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "volume",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [],
+        "limitation": "Basic cleansing formula with no care cluster; Histidine @16 is a trace amino acid."
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "No conditioning route at all.",
+      "decisionTrace": "Claim direction null (blind); formula nonspecific, compatible with a light/volume or everyday role; provisional general.",
+      "rationale": "Provisional (claim-dependent).",
+      "ruleIds": ["3.1", "7.2", "7.3"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["clarifying"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional (claim-dependent).",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional: default regular; frequent possible with frequency wording.",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional and formula-limited: CSA is NOT met. No E4 comfort or humectant/refatting route is prominent (Panthenol @13 is after Parfum @6); MB excluded because Sodium Laureth Sulfate @2 is a prominent strong anionic. Counter-signal: early Parfum @6.",
+      "csaRoute": "none: Panthenol only post-E3; MB excluded by Sodium Laureth Sulfate @2",
+      "ruleIds": ["10", "CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active in the complete INCI.",
+      "ruleIds": ["11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactantClasses": {
+      "strongAnionicEtherSulfonate": ["Sodium Laureth Sulfate @2 (defining)"],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": [],
+      "amphoteric": ["Cocamidopropyl Betaine @3 (buffer)"],
+      "nonionicCleansing": [],
+      "notRouteNotBuffer": ["Sodium Xylenesulfonate @4 (hydrotrope)"]
+    },
+    "conditioningRoutes": [],
+    "humectants": ["Panthenol @13 (post-E3)"],
+    "actives": ["Panthenol @13", "Histidine @16"],
+    "recognizedDandruffActives": [],
+    "exposureFlags": ["Parfum @6 (early)", "Hexyl Cinnamal @15", "no cooling agent", "no essential oil"],
+    "chelatorsPhAdjusters": ["Citric Acid @7", "Sodium Citrate @9", "Sodium Hydroxide @12", "Tetrasodium EDTA @14"],
+    "preservatives": ["Sodium Benzoate @8", "Sodium Salicylate @10"]
+  },
+  "unresolvedMaterialIngredients": []
+}

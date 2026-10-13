@@ -1,0 +1,46 @@
+{
+  "blindId": "T112",
+  "inciFingerprintSha256": "80709619cc5b860ba314a06f5d5cb7ec58d65b853e39abdb0e5ab3414ad68db7",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {"normalization": "Aqua/Water/Eau and Parfum/Fragrance one entry each; normalized one-based positions.", "completeness": "complete (ID-1)", "sourceTier": 3, "identityConfidence": "high", "e3ProminenceCutoff": "Parfum/Fragrance listed last (28) -> positions 1-27 mechanically prominent (atypical ordering; recorded)"},
+  "directProperties": {
+    "cleansingStrength": {"value": "low", "confidence": "high", "neighboringAlternative": "none",
+      "rationale": "C6: no strong anionic. Earliest cleansing surfactant Sodium Methyl Cocoyl Taurate (2, mild anionic) with prominent glucoside Decyl Glucoside (3) and amphoteric Cocamidopropyl Betaine (4) -> low.",
+      "counterSignals": "Disodium Tetrapropenyl Succinate (18) is a minor anionic succinate co-surfactant/hydrotrope (assigned mild/not a strong route by chemistry); does not change C6."},
+    "conditioningLevel": {"value": "high", "confidence": "moderate", "neighboringAlternative": "moderate",
+      "rationale": "Multiple complementary systems: prominent amino-silicone Amodimethicone (10), cationic Starch Hydroxypropyltrimonium Chloride (9), Hydrolyzed Collagen (7), modified-starch film (8), refatters Glyceryl Oleate (12), Hydrogenated Palm Glycerides Citrate (16), Lecithin (19), fatty acid Coconut Acid (17), humectant Urea (15). C2 reading: early silicone + cationic polymer + humectant (Urea) present; the pearlizing/fatty element rests on Coconut Acid (17), a fatty acid rather than a pearlizer or fatty alcohol.",
+      "counterSignals": "The fatty-route element is debatable (no pearlizer, no fatty alcohol); cationic is a starch, lighter than guar; amodimethicone after salt and proteins."},
+    "weightPotential": {"value": "moderate", "confidence": "moderate", "neighboringAlternative": "high",
+      "rationale": "Amino-silicone plus cationic starch plus protein converge, and a mild sulfate-free chassis offers weak reset; no prominent payload lipid, so no W-RICH.",
+      "subjudgments": {
+        "depositionLoad": {"value": "moderate", "rationale": "Amodimethicone (10), Starch HPTC (9), Hydrolyzed Collagen (7), weak refatters (12, 16, 17, 19)."},
+        "persistence": {"value": "moderate", "rationale": "Amodimethicone deposits selectively and persists; starch cationic and refatters are light."},
+        "resetCapacity": {"value": "weak", "rationale": "Taurate/glucoside/betaine mild chassis (C6 low)."}},
+      "evidenceByFamily": {"silicone": ["Amodimethicone (10)"], "cationic_polymer": ["Starch Hydroxypropyltrimonium Chloride (9)"], "protein_film": ["Hydrolyzed Collagen (7)"], "weak_refatter": ["Glyceryl Oleate (12)", "Hydrogenated Palm Glycerides Citrate (16)", "Coconut Acid (17)", "Lecithin (19)", "Tocopherol (26)", "Ascorbyl Palmitate (27)"], "anionic_surfactant": ["Sodium Methyl Cocoyl Taurate (2, mild)", "Disodium Tetrapropenyl Succinate (18, minor)"], "nonionic_surfactant": ["Decyl Glucoside (3)", "Coco-Glucoside (11)"], "amphoteric_surfactant": ["Cocamidopropyl Betaine (4)"], "humectant_context": ["Biotin (6)", "Urea (15)"]},
+      "excluded": ["PEG-150 Distearate (20): PEG thickener", "Hexylene Glycol (21): solvent", "Sodium Lactate (13), Lactic Acid (14), Citric Acid (22): pH buffers"],
+      "unresolved": ["Sodium Hydrolyzed Potato Starch Dodecenylsuccinate (8): amphiphilic anionic modified starch (emulsion stabilizer / light film); no cationic charge; judged not band-moving on its own, recorded rather than counted"],
+      "whyThisBand": "A plausibly persistent amino-silicone + cationic system with weak reset makes calling it light an understatement.",
+      "whyNotNeighborBand": "Not high: no W-RICH (no prominent payload lipid), the cationic is a light starch polymer and the other routes are weak refatters/hydrolyzed protein; amodimethicone sits after salt. Not low: two persistent families converge against weak reset (W2).",
+      "confidenceLimitingFactor": "Weak reset plus converging silicone/cationic/protein routes leaves high a realistic neighbor; modified starch (8) role not fully resolved."},
+    "focusPrimary": {"value": "provisional:pending_claims", "confidence": "low", "neighboringAlternative": "general",
+      "rationale": "Formula-only candidate: repair (collagen + amodimethicone + cationic starch: a substantive damage-care cluster); biotin is not a route.",
+      "careDirectionVerdictProvisional": "repair_supported"},
+    "focusSecondary": {"value": [], "confidence": "low", "neighboringAlternative": ["volume"], "rationale": "Empty default pending claims."},
+    "usageRole": {"value": "regular", "confidence": "low", "neighboringAlternative": "frequent", "rationale": "Default; low cleansing excludes alternating."},
+    "scalpComfortTarget": {"value": "provisional:not_targeted", "confidence": "low", "neighboringAlternative": "targeted", "rationale": "Positioning unknown. CSA formula half met mechanically: Urea (15) comfort + humectant, Sodium Lactate (13), Glyceryl Oleate (12) prominent because Parfum is listed last."},
+    "dandruffSupport": {"value": "not_supported", "confidence": "high", "neighboringAlternative": "none", "rationale": "Neither Piroctone Olamine nor Climbazole."}
+  },
+  "formulaFacts": [
+    {"ingredient": "Sodium Methyl Cocoyl Taurate", "position": 2, "role": "earliest cleansing surfactant (mild anionic)"},
+    {"ingredient": "Decyl Glucoside", "position": 3, "role": "glucoside co-surfactant"},
+    {"ingredient": "Cocamidopropyl Betaine", "position": 4, "role": "amphoteric co-surfactant"},
+    {"ingredient": "Hydrolyzed Collagen", "position": 7, "role": "protein_film"},
+    {"ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate", "position": 8, "role": "modified starch, unresolved/non-material"},
+    {"ingredient": "Starch Hydroxypropyltrimonium Chloride", "position": 9, "role": "cationic_polymer"},
+    {"ingredient": "Amodimethicone", "position": 10, "role": "silicone (amino), prominent"},
+    {"ingredient": "Urea", "position": 15, "role": "humectant (C2/E4), E4 comfort"},
+    {"ingredient": "Coconut Acid", "position": 17, "role": "fatty acid (refatter; contested C2 fatty element)"},
+    {"ingredient": "Parfum/Fragrance", "position": 28, "role": "E3 fragrance marker (last)"}
+  ],
+  "unresolvedMaterialIngredients": []
+}

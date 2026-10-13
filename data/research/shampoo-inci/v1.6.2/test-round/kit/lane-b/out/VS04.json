@@ -1,0 +1,288 @@
+{
+  "blindId": "VS04",
+  "identity": {
+    "brand": "Guhl",
+    "productName": "Guhl Anti Schuppen",
+    "packSize": "250 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "2c79251eb5b8c7ff1b1f626154c752255ac0d7d43384f1ee90d444652876c9bf",
+    "normalization": "No split entries; normalized positions = packet positions 1-21.",
+    "completeness": "complete (tier 2, stage-A packet)",
+    "e3ProminenceCutoff": "Parfum@19; prominent 1-18."
+  },
+  "formulaPassReference": {
+    "file": "/Users/nick/AI_work/hair_conscierge/.worktrees/shampoo-v162/plans/shampoo-v162/test/kit/lane-b/out/formula-pass/VS04.json",
+    "note": "hash-pinned blind record, not edited"
+  },
+  "claimGrading": [
+    "Product name 'Guhl Anti Schuppen': high (dandruff).",
+    "manufacturer_de: moderate. No directions captured."
+  ],
+  "reconciliation": [
+    "focusPrimary general -> scalp_active: dandruff claim (name, high) plus Piroctone Olamine@6.",
+    "usageRole regular -> treatment (U3).",
+    "scalpComfortTarget stays not_targeted (low -> high): all itch/tension wording is inside or in the same paragraph as dandruff units (E2a/E2b) and is not SC1.",
+    "Claim-to-INCI: 'blaue Malve' -> Malva Sylvestris Flower Extract@16; 'Zink PCA' -> Zinc PCA@11 (present; not a recognized active, Section 11); 'Duft' -> Parfum@19. No conflict; the claim crediting Zinc PCA does not change dandruffSupport (supported via Piroctone Olamine@6).",
+    "Formula-only properties unchanged."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic is the ether-type Sodium Laureth Sulfate@2, buffered by prominent Cocamidopropyl Betaine@3 and Coco-Glucoside@4, no reinforcing strong anionic (settled C1 core). Sodium Sulfate@17 is an inorganic salt, not a surfactant. Formula-only.",
+      "ruleIds": [
+        "C1",
+        "C3",
+        "C4"
+      ],
+      "counterSignal": "None material (settled C1 core).",
+      "blindToFinal": "unchanged (formula-only property; claims may not move it, 3.2)"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: one meaningful conditioning system (cationic Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@9, prominent) plus light routes (weak refatter Glyceryl Oleate@7; humectants Panthenol@12, Glycerin@14). C2 not met: no silicone, no payload_lipid, no pearlizing/fatty route. Neighbor low: the guar is the only substantive route.",
+      "ruleIds": [
+        "C2",
+        "Section 5 anchors",
+        "N-ALT"
+      ],
+      "counterSignal": "Guar is the only substantive route (neighbor low).",
+      "blindToFinal": "unchanged (formula-only property; claims may not move it, 3.2)"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@9"
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [
+          "Glyceryl Oleate@7"
+        ],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": [
+          "Sodium Laureth Sulfate@2 (strong anionic, ether type)",
+          "Cocamidopropyl Betaine@3 (amphoteric)",
+          "Coco-Glucoside@4 (nonionic)"
+        ],
+        "humectantContext": [
+          "Panthenol@12",
+          "Glycerin@14"
+        ],
+        "excluded": [
+          "Sorbitan Caprylate@8 (C8 sorbitan ester used as preservation booster/co-emulsifier; not a persistent lipid, no deposition family)",
+          "Zinc PCA@11 (zinc salt, no deposition family)",
+          "Tetrasodium Glutamate Diacetate@13 (chelator)",
+          "Malva Sylvestris Flower Extract@16 (botanical extract)",
+          "Lactic Acid@5, Citric Acid@15 (pH)",
+          "Sodium Chloride@10, Sodium Sulfate@17 (salts)",
+          "CI 15510@20, CI 42090@21 (colourants)",
+          "Piroctone Olamine@6 (active)"
+        ],
+        "unresolved": []
+      },
+      "wLineRecord": {
+        "wLine": "Piroctone Olamine@6",
+        "wLineClasses": [
+          "preservative_or_capped_active"
+        ],
+        "cap": "e3Point Parfum@19",
+        "alphabeticalRun": "none (longest ascending run 3-6)",
+        "skippedCandidates": [],
+        "codes": [],
+        "plausibility": "(i) Sodium Laureth Sulfate@2 before it; (ii) positions 7-18 hold no C3 cleansing surfactant (Sorbitan Caprylate is in no C3 class), no alkanolamide, no pearlizing wax.",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light",
+      "persistence": "low",
+      "resetCapacity": "moderate",
+      "counterevidence": "Two deposition families present (cationic guar plus a weak refatter); guar prominent.",
+      "whyThisBand": "Single cationic guar and one weak refatter; no silicone, payload_lipid, protein or film former; buffered SLES chassis with two buffers gives moderate reset.",
+      "whyNotNeighborBand": "Not moderate (W2): the second family is a single weak_refatter (Glyceryl Oleate@7), and the only real depositing system, guar@9, is listed after the capped active Piroctone Olamine@6 and faces a C1 moderate reset with nothing converging, so combined residue plausibly stays below noticeable.",
+      "confidenceLimitingFactor": "W2 boundary; guar level unknown.",
+      "rationale": "Low (6.6): one light cationic system plus a weak refatter against moderate reset; W2 reason recorded; no W-RICH.",
+      "ruleIds": [
+        "6.3",
+        "6.4",
+        "6.6",
+        "W2",
+        "W-LINE",
+        "N-ALT"
+      ],
+      "counterSignal": "Guar plus a weak refatter - W2 boundary (neighbor moderate).",
+      "blindToFinal": "unchanged (formula-only property; claims may not move it, 3.2)",
+      "formulaIdentifiers": {
+        "fingerprint": "2c79251eb5b8c7ff1b1f626154c752255ac0d7d43384f1ee90d444652876c9bf",
+        "sourceTier": 2,
+        "completeness": "complete",
+        "captureDate": "not given in the stage-A packet"
+      }
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@9"
+        ],
+        "limitation": "Scalp role."
+      },
+      "claimRole": "candidate",
+      "counterSignal": "Foam/fragrance wording only; no lengths-care claim.",
+      "decisionTrace": "Claim direction: dandruff ('Anti Schuppen' name, high). Formula compatible: Piroctone Olamine@6. Route: Piroctone Olamine@6. Decision: 7.2 problem-led anti-dandruff -> scalp_active.",
+      "rationale": "scalp_active: anti-dandruff product with a recognized active.",
+      "ruleIds": [
+        "7.2",
+        "S-DANDRUFF"
+      ],
+      "blindToFinal": "general -> scalp_active"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "decisionTrace": "Empty default considered and kept: no lengths-care claim.",
+      "rationale": "No secondary candidate.",
+      "counterSignal": "None.",
+      "ruleIds": [
+        "Section 8"
+      ],
+      "blindToFinal": "unchanged []"
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "recognized_active_problem_led",
+      "triggerEvidence": [
+        "Name 'Guhl Anti Schuppen' (high)",
+        "'Bei Schuppen und juckender Kopfhaut' (moderate)",
+        "Piroctone Olamine@6"
+      ],
+      "losingTriggers": [],
+      "rationale": "Default regular considered; trigger code recognized_active_problem_led; evidence: dandruff claim + Piroctone Olamine@6; 'bei regelmäßiger Anwendung' is not U2 frequency wording.",
+      "counterSignal": "None.",
+      "ruleIds": [
+        "Section 9",
+        "U3"
+      ],
+      "blindToFinal": "regular -> treatment"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "csaRoute": "CSA met (listed prominent Panthenol@12, Glyceryl Oleate@7, Glycerin@14); MB excluded by Sodium Laureth Sulfate@2. Positioning half missing.",
+      "rationale": "not_targeted: the only comfort wording ('Bei Schuppen und juckender Kopfhaut'; 'von Schuppen und einer juckenden, spannenden Kopfhaut'; 'Deine juckende Kopfhaut wird beruhigt und das Spannungsgefühl reduziert') is inside a dandruff unit or in the same paragraph (E2a, E2b), so it is a dandruff symptom, not SC1. 'sanft zur Kopfhaut' is sparing wording (E2a). No separate sensitive/dry unit.",
+      "counterSignal": "None.",
+      "ruleIds": [
+        "Section 10",
+        "SC1",
+        "E2a",
+        "E2b"
+      ],
+      "blindToFinal": "not_targeted (low) -> not_targeted (high)"
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Supported: the complete INCI contains Piroctone Olamine@6 (Section 11). Zinc PCA@11 is not a recognized active and adds nothing.",
+      "ruleIds": [
+        "Section 11"
+      ],
+      "counterSignal": "None.",
+      "blindToFinal": "unchanged (formula-only property; claims may not move it, 3.2)"
+    }
+  },
+  "projection": {
+    "status": "proposal_blocked_by_review_flags",
+    "thicknessFit": {
+      "fine": "ideal",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFitConfidence": {
+      "fine": "moderate",
+      "normal": "moderate",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": "T1 with W=low, C=moderate; T6 applies to scalp-concern targets (no not_suited fit to lift); T4 checked with N-ALT neighbors after T6. Claims about hair type never change fit (T2).",
+    "weight": "light",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: weightPotential low -> light, 1:1, written to every row.",
+    "scalpTargets": {
+      "primary": {
+        "target": "dandruff",
+        "confidence": "high",
+        "rationale": "S-DANDRUFF passes: dandruff in the name (high), dandruffSupport supported (Piroctone Olamine@6). Primary dandruff, no secondary (R17.1, R17.2). Confidence high."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [
+      "sensitive"
+    ],
+    "researchCombinationConfidence": "moderate",
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength moderate -> regular; D1 false. I3 recomputed with neighbor 'none'.",
+    "explicitResetPositioning": false,
+    "explicitResetRationale": "D1 false: no 'Tiefenrein', 'Deep Clean', 'Clarifying Shampoo' or 'Detox-Reinigung' stem in the name or manufacturer/pack claims, and no occasional-use direction.",
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserListingConfidence": "high",
+    "deepCleanserRationale": "D2 not met: D1 false and cleansingStrength not strong; no deep-cleanser record applies (deepCleanserRecord not applicable).",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_dandruff"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine"
+    ],
+    "informationalNotes": [
+      "suits_dandruff_with_irritated_scalp: bundled comfort wording 'Deine juckende Kopfhaut wird beruhigt und das Spannungsgefühl reduziert' / 'juckenden, spannenden Kopfhaut' (moderate) and a passed S-SENSITIVE formula gate (CSA met; prominent comfort route Panthenol@12)"
+    ],
+    "catalogDependent": "review_live_value_differs is resolved by the orchestrator after freeze (lanes never see live rows); no deep-cleanser record id needed."
+  },
+  "selfCheck": "Fingerprint matches the frozen packet (asserted by the builder); formula-pass judged with claims hidden and is hash-pinned, not edited; no ingredient, family count or position window assigned a band (the W-line gated only payload_lipid legs); W-line derived exactly per W-LINE with skipped candidates recorded; depositionLoad, persistence and resetCapacity present with rationales; counterevidence and whyNotNeighborBand specific (W2 where it applies); confidence names its limiting uncertainty; neighbors follow N-ALT; projection fields derived mechanically (T1/T6/T4, W-LIVE, I1/I3, 13.7, 13.8); no catalog or live value used.",
+  "uncertainties": [
+    "Tension wording ('spannenden Kopfhaut', 'Spannungsgefühl') read as comfort wording feeding the sensitive combination (13.3 E2b note), not as dryness; no dry value."
+  ]
+}

@@ -1,0 +1,277 @@
+{
+  "blindId": "T417",
+  "inciFingerprintSha256": "2a4f486823aac7756eaf4825fed441c60bb4b95178d1478510fdc8420ad57138",
+  "phase": "blind_formula_pass",
+  "identity": {
+    "packSize": "200 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high"
+  },
+  "normalization": "ID-2 applied; normalized one-based positions; no split entries; raw positions = normalized positions",
+  "normalizedInciCount": 28,
+  "e3ProminenceMarker": "Parfum/Fragrance at 8",
+  "prominentThroughPosition": 7,
+  "surfactantArchitecture": "AOS (2) defining; CAPB (5), sarcosinate (7) buffers; C1 -> moderate.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: C1 ether/sulfonate chassis - defining anionic Sodium C14-16 Olefin Sulfonate (2) buffered by prominent Cocamidopropyl Betaine (5) and Sodium Lauroyl Sarcosinate (7); no prominent reinforcing strong anionic (C3, C4, C1).",
+      "counterSignal": "Cocamide MEA (3) foam booster; Coco-Betaine (17) after Parfum.",
+      "neighboringAlternative": "none",
+      "rulesApplied": [
+        "C3",
+        "C4",
+        "C1"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: pearlizing Glycol Distearate (6) and prominent Glycerin (4) with Shea Butter (10), Sodium Hyaluronate (14) and two late cationic polymers (Hydroxypropyl Guar Hydroxypropyltrimonium Chloride 19, Polyquaternium-7 21): one meaningful system plus light routes. Shea butter follows Parfum (8), so it cannot replace the early silicone and C2 is not met.",
+      "counterSignal": "Shea butter plus two cationic polymers could read as a richer architecture (high); polymers are late, arguing low. Both neighbors plausible; tie rule picks the lower.",
+      "neighboringAlternative": "low",
+      "rulesApplied": [
+        "5",
+        "C2 not met",
+        "N-ALT"
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: shea butter after Parfum and two cationic polymers after salt give light deposition against an effective C1 reset; no silicone, protein or film former.",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Shea Butter (10) after Parfum; two cationic polymers (19, 21) after salt."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Shea butter is waxy and Polyquaternium-7 can accumulate, but both are late."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 AOS chassis with betaine and sarcosinate."
+        }
+      },
+      "evidenceByFamily": {
+        "silicone": [],
+        "cationic_polymer": [
+          [
+            "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+            19
+          ],
+          [
+            "Polyquaternium-7",
+            21
+          ]
+        ],
+        "payload_lipid": [
+          [
+            "Butyrospermum Parkii Butter / Shea Butter",
+            10
+          ]
+        ],
+        "weak_refatter": [],
+        "protein_film": [],
+        "film_former": [],
+        "humectant_context": [
+          [
+            "Glycerin",
+            4
+          ],
+          [
+            "Hexylene Glycol",
+            9
+          ],
+          [
+            "Sodium Hyaluronate",
+            14
+          ],
+          [
+            "Propylene Glycol",
+            18
+          ]
+        ],
+        "reset": [
+          [
+            "Sodium C14-16 Olefin Sulfonate",
+            2
+          ],
+          [
+            "Cocamidopropyl Betaine",
+            5
+          ],
+          [
+            "Sodium Lauroyl Sarcosinate",
+            7
+          ],
+          [
+            "Coco-Betaine",
+            17
+          ]
+        ]
+      },
+      "excludedEvidence": [
+        [
+          "Glycol Distearate",
+          6,
+          "pearlizer, excluded"
+        ],
+        [
+          "Carbomer",
+          11,
+          "anionic acrylate thickener, excluded (6.4)"
+        ],
+        [
+          "PEG-55 Propylene Glycol Oleate",
+          12,
+          "PEG thickener, excluded"
+        ],
+        [
+          "Arginine",
+          16,
+          "amino acid, not a film"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "Waxy payload lipid plus two cationic polymers.",
+      "whyThisBand": "Low: shea butter after Parfum and two cationic polymers after salt give light deposition against an effective C1 reset; no silicone, protein or film former.",
+      "whyNotNeighborBand": "W2 (two families): combined residue stays below noticeable because each family is late - shea butter after Parfum and both polymers after sodium chloride - and no silicone or prominent lipid converges; W-RICH is not established.",
+      "confidenceLimitingFactor": "Waxy shea and Polyquaternium-7 levels unknown; moderate is a realistic neighbor.",
+      "neighboringAlternative": "moderate",
+      "rulesApplied": [
+        "6.5",
+        "6.6",
+        "W2"
+      ]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional only: focus needs exact-product claims (7.2); blind default is the honest fallback `general`. ",
+      "neighboringAlternative": "moisture"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: secondary requires distinct exact-product positioning (Section 8); none visible blind."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional default `regular` (Section 9); triggers need graded claims.  `alternating` impossible: cleansingStrength is not strong."
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: positioning half (SC1) hidden until unblind. CSA formula half is met.",
+      "csaFormulaHalf": true
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11).",
+      "neighboringAlternative": "none"
+    }
+  },
+  "scalpGateFormulaFacts": {
+    "e4ComfortRoutes": [],
+    "e4HumectantRefattingRoutes": [
+      {
+        "ingredient": "GLYCERIN",
+        "position": 4,
+        "prominent": true
+      },
+      {
+        "ingredient": "BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER",
+        "position": 10,
+        "prominent": false
+      },
+      {
+        "ingredient": "SODIUM HYALURONATE",
+        "position": 14,
+        "prominent": false
+      }
+    ],
+    "coolingAgents": [],
+    "promComfortRoute": false,
+    "promHumectantRoute": true,
+    "csaFormulaHalf": true
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium C14-16 Olefin Sulfonate",
+      "position": 2,
+      "role": "defining anionic (sulfonate)"
+    },
+    {
+      "ingredient": "Cocamide MEA",
+      "position": 3,
+      "role": "foam booster"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 4,
+      "role": "humectant, prominent E4"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 5,
+      "role": "amphoteric buffer"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 6,
+      "role": "pearlizer"
+    },
+    {
+      "ingredient": "Sodium Lauroyl Sarcosinate",
+      "position": 7,
+      "role": "mild anionic buffer"
+    },
+    {
+      "ingredient": "Parfum / Fragrance",
+      "position": 8,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Butyrospermum Parkii Butter / Shea Butter",
+      "position": 10,
+      "role": "payload lipid (waxy), not prominent"
+    },
+    {
+      "ingredient": "Carbomer",
+      "position": 11,
+      "role": "excluded thickener"
+    },
+    {
+      "ingredient": "Sodium Hyaluronate",
+      "position": 14,
+      "role": "humectant"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 19,
+      "role": "cationic polymer"
+    },
+    {
+      "ingredient": "Polyquaternium-7",
+      "position": 21,
+      "role": "cationic polymer"
+    },
+    {
+      "ingredient": "Salicylic Acid",
+      "position": 23,
+      "role": "acid"
+    }
+  ],
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": []
+}

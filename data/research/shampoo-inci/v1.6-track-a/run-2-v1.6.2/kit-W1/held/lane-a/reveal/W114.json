@@ -1,0 +1,21 @@
+{
+  "blindId": "W114",
+  "productName": "Sebamed Anti Schuppen Plus (Anti-Schuppen Shampoo PLUS)",
+  "brand": "Sebamed",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Anti-Schuppen Shampoo PLUS 200 ml | Nach 4 Wochen bis zu 95% weniger Schuppen, für fettendes Haar | Das sebamed Anti‑Schuppen Shampoo PLUS ist ein seifenfreies Shampoo, das speziell zur nachhaltigen Bekämpfung von Schuppen bei schnell fettendem Haar und Juckreiz entwickelt wurde. Es reinigt die Kopfhaut schonend und unterstützt gleichzeitig ihr natürliches Gleichgewicht. Bereits nach vier Wochen Anwendung kann die Schuppenbildung um bis zu 95 % reduziert werden.* | * Studie “Antischuppen-Wirkung” Institut Dr. Schrader Creachem GmbH 2015, bei regelmäßiger Anwendung und mindestens drei Anwendungen pro Woche | pH-Wert 5,5 | Haartyp: schuppiges Haar, fettiges Haar, fettendes Haar | Allgemeiner Hinweis: Die aufgeführten Inhaltsstoffe entsprechenden dem aktuellen Stand der Produktion ... Daher sind immer die Informationen auf dem Produkt ausschlaggebend.",
+      "directionsVerbatim": "Shampoo in der Handinnenfläche aufschäumen und unter leichtem Massieren auf die Kopfhaut auftragen. Ausspülen. Täglich oder 2-3x pro Woche anwenden."
+    },
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Anti-Schuppen Shampoo für schnell fettendes Haar | Kann Schuppenbildung vorbeugen | Für die tägliche Anwendung geeignet | Ohne Mikroplastik & Silikone | Das Shampoo Anti-Schuppen Plus von sebamed wurde speziell für schnell fettendes, schuppendes Haar entwickelt. Mit Piroctone Olamine kann es helfen, Schuppen effektiv zu bekämpfen, während es die Neubildung von Schuppen verhindert. Die milde Formel ist zudem frei von Mikroplastik und Silikonen. Ideal für die tägliche Pflege, sorgt es für ein frisches Haargefühl und ein angenehmes Gefühl der Kopfhaut.",
+      "directionsVerbatim": "Das Haar anfeuchten, Shampoo in der Handinnenfläche verreiben, aufschäumen und unter leichtem Massieren auf die Kopfhaut auftragen. Gründlich ausspülen."
+    }
+  ]
+}

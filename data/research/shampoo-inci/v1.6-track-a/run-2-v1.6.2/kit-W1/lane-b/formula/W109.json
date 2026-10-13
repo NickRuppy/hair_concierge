@@ -1,0 +1,33 @@
+{
+  "blindId": "W109",
+  "packSize": "350 ml",
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Sodium Chloride",
+    "Parfum",
+    "Cocamidopropyl Betaine",
+    "Sodium Xylenesulfonate",
+    "Citric Acid",
+    "Sodium Benzoate",
+    "Sodium Citrate",
+    "Limonene",
+    "Citrus Aurantium Peel Oil",
+    "Sodium Salicylate",
+    "Hydroxypropyl Methylcellulose",
+    "Hexamethylindanopyran",
+    "Linalool",
+    "Dimethyl Phenethyl Acetate",
+    "Sodium Hydroxide",
+    "Tetrasodium EDTA",
+    "Hexyl Cinnamal",
+    "Geranyl Acetate",
+    "Histidine",
+    "Glyoxal"
+  ],
+  "inciFingerprintSha256": "20cb4c26791b1441afb3fa4d89877d1d0247cdd726fe68a236ee26b5caf09067",
+  "normalization": "Runbook step 2: canonical list items lower-cased, trimmed, whitespace collapsed, joined with '|', SHA-256; split synonym entries (e.g. 'Aqua (Water, Eau)') merged before numbering.",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 3,
+  "identityConfidence": "high"
+}

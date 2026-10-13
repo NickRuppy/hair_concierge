@@ -88,21 +88,21 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         {
           category: "shampoo",
           why: "Mildes Shampoo gezielt auf die Kopfhaut; die Längen werden nur vom ausgespülten Schaum mitgereinigt. Waschrhythmus richtet sich nach der Kopfhaut, nicht nach den Längen.",
-          evidence: "strong",
+          evidence: "weak",
         },
       ],
       levers: [
         {
           lever: "Handtuch: ausdrücken statt rubbeln",
-          evidence: "strong",
+          evidence: "weak",
         },
         {
-          lever: "Hitze reduzieren: seltener, niedrigere Stufe, weniger Durchgänge",
-          evidence: "strong",
+          lever: "Hitze schonender: niedrigere Stufe, weniger Durchgänge, seltener wo möglich",
+          evidence: "moderate",
         },
         {
           lever: "Längen beim Waschen nicht schrubben, nur Kopfhaut massieren",
-          evidence: "strong",
+          evidence: "weak",
         },
         {
           lever:
@@ -119,7 +119,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
           thickness: ["coarse"],
         },
         why: "Grobes Haar verträgt reichhaltigere Pflege; Maske ersetzt an dem Waschtag den Conditioner.",
-        evidence: "moderate",
+        evidence: "weak",
       },
       {
         category: "mask",
@@ -127,7 +127,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
           hair_texture: ["curly", "coily"],
         },
         why: "Locken und Coils brauchen erfahrungsgemäß mehr Gleitfähigkeit; Maske ersetzt an dem Waschtag den Conditioner.",
-        evidence: "moderate",
+        evidence: "weak",
       },
       {
         category: "mask",
@@ -136,7 +136,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
           thickness: ["normal", "coarse"],
         },
         why: "Chemisch/thermisch strapazierte Längen sind rauer und poröser; reichhaltigere Pflege glättet spürbar. Bei feinem Haar stattdessen beim leichten Leave-in bleiben.",
-        evidence: "moderate",
+        evidence: "weak",
       },
       {
         category: "oil",
@@ -159,7 +159,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         when: {
           heat_styling: true,
         },
-        why: "Reduziert messbaren Hitzeschaden, ersetzt aber nicht weniger Hitze.",
+        why: "Reduziert messbaren Hitzeschaden, ersetzt aber keinen schonenden Umgang mit Hitze.",
         evidence: "moderate",
       },
       {
@@ -189,7 +189,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
       "Ist die Kopfhaut auch trocken, oder nur die Längen?",
     ],
     domainReview: [],
-    evidence: "strong",
+    evidence: "moderate",
   },
   {
     code: "frizz_flyaways",
@@ -205,12 +205,12 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         {
           category: "conditioner",
           why: "Senkt Reibung und statische Aufladung, glättet die Oberfläche – der am besten belegte erste Schritt gegen Frizz.",
-          evidence: "strong",
+          evidence: "moderate",
         },
         {
           category: "leave_in",
           why: "Reduziert Frizz, Flyaways und statische Aufladung zwischen den Wäschen. Gewicht an die Haardicke anpassen: feines Haar = leichte Sprühformel, grobes/lockiges Haar = cremiger.",
-          evidence: "strong",
+          evidence: "moderate",
         },
       ],
       levers: [
@@ -220,15 +220,15 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         },
         {
           lever: "Wellen, Locken, Coils nicht trocken bürsten; im nassen Haar mit Pflege entwirren",
-          evidence: "strong",
-        },
-        {
-          lever: "Produkte im nassen/feuchten Haar einarbeiten und beim Trocknen wenig anfassen",
           evidence: "moderate",
         },
         {
-          lever: "Hitze reduzieren; Föhn mit Abstand und in Bewegung",
-          evidence: "strong",
+          lever: "Produkte im nassen/feuchten Haar einarbeiten und beim Trocknen wenig anfassen",
+          evidence: "weak",
+        },
+        {
+          lever: "Hitze schonender; Föhn mit Abstand und in Bewegung",
+          evidence: "moderate",
         },
         {
           lever:
@@ -245,7 +245,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
           hair_texture: ["curly", "coily"],
         },
         why: "Mehr Gleitfähigkeit für Locken/Coils; Maske ersetzt an dem Waschtag den Conditioner.",
-        evidence: "moderate",
+        evidence: "weak",
       },
       {
         category: "mask",
@@ -254,7 +254,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
           thickness: ["normal", "coarse"],
         },
         why: "Geschädigte Längen reagieren stärker auf Feuchtigkeit und sind rauer; reichhaltigere Pflege glättet.",
-        evidence: "moderate",
+        evidence: "weak",
       },
       {
         category: "oil",
@@ -278,7 +278,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         when: {
           heat_styling: true,
         },
-        why: "Hitze macht die Oberfläche rauer und feuchtigkeitsempfindlicher; Schutz unterstützt, weniger Hitze bleibt wichtiger.",
+        why: "Hitze macht die Oberfläche rauer und feuchtigkeitsempfindlicher; Schutz unterstützt, schonender Umgang mit Hitze bleibt wichtiger.",
         evidence: "moderate",
       },
     ],
@@ -290,7 +290,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
       "Versprechen, dass ein Produkt Frizz bei Luftfeuchtigkeit komplett verhindert",
     ],
     boundary:
-      "Sind die „abstehenden Haare“ kurze abgebrochene Stücke, gilt das Rezept breakage. Viele neue kurze Haare am Haaransatz nach einer Phase mit starkem Ausfall sind meist nachwachsendes Haar – kosmetisch unkritisch, aber wenn der Ausfall selbst Thema ist, gilt die Grenze von hair_loss_or_thinning.",
+      "Sind die „abstehenden Haare“ kurze abgebrochene Stücke, gilt das Rezept breakage. Viele neue kurze Haare am Haaransatz nach einer Phase mit starkem Ausfall sind meist nachwachsendes Haar – kosmetisch unkritisch, aber wenn der Ausfall selbst Thema ist, gilt die Grenze bei Haarausfall und dünner werdendem Haar.",
     conflicts: ["lost_shape", "low_volume_or_weighed_down"],
     talkingPointDe:
       "So gehen wir es an: Frizz hat meist mehrere Ursachen – wir glätten zuerst die Oberfläche mit Conditioner und einem passenden Leave-in und ändern ein, zwei Handgriffe beim Abtrocknen und Stylen. Wie reichhaltig das sein darf, richten wir nach deiner Haardicke, damit nichts beschwert.",
@@ -321,11 +321,11 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
       levers: [
         {
           lever: "Schonend waschen: Shampoo auf die Kopfhaut, Längen nicht schrubben",
-          evidence: "strong",
+          evidence: "weak",
         },
         {
-          lever: "Reibung und Hitze reduzieren (Handtuch, Bürste, Glätteisen)",
-          evidence: "strong",
+          lever: "Reibung mindern, Hitze schonender einsetzen (Handtuch, Bürste, Glätteisen)",
+          evidence: "moderate",
         },
         {
           lever:
@@ -335,7 +335,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         {
           lever:
             "Gefärbtes Haar: unnötige Wäschen, Sonne und Hitze reduzieren – Glanzverlust ist oft verblassende Farbe",
-          evidence: "strong",
+          evidence: "moderate",
         },
         {
           lever:
@@ -369,14 +369,14 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
           thickness: ["normal", "coarse"],
         },
         why: "Raue, strapazierte Längen streuen Licht; reichhaltigere Pflege glättet sichtbar.",
-        evidence: "moderate",
+        evidence: "weak",
       },
       {
         category: "heat_protectant",
         when: {
           heat_styling: true,
         },
-        why: "Hitze raut die Oberfläche auf und lässt Farbe verblassen; Schutz unterstützt, weniger Hitze bleibt wichtiger.",
+        why: "Hitze raut die Oberfläche auf und lässt Farbe verblassen; Schutz unterstützt, schonender Umgang mit Hitze bleibt wichtiger.",
         evidence: "moderate",
       },
     ],
@@ -416,7 +416,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         {
           category: "conditioner",
           why: "Gleitfähigkeit ist die Grundlage für Definition bei Wellen/Locken; bei glattem Haar leicht und nur in Längen und Spitzen, damit nichts runterzieht.",
-          evidence: "moderate",
+          evidence: "weak",
         },
       ],
       levers: [
@@ -459,7 +459,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
           hair_texture: ["wavy", "curly", "coily"],
         },
         why: "Im nassen Haar eingearbeitet hilft es, Strähnen zu Gruppen zu formen, und reduziert Frizz. Bei feinen Wellen leichte Formel, sonst hängen sie aus. Nächste Kategorie zu Curl-Cremes.",
-        evidence: "moderate",
+        evidence: "weak",
       },
       {
         category: "dry_shampoo",
@@ -475,7 +475,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         when: {
           heat_styling: true,
         },
-        why: "Hitzeschaden kann das Lockenmuster dauerhaft lockern; Schutz unterstützt, weniger Hitze bleibt wichtiger.",
+        why: "Hitzeschaden kann das Lockenmuster dauerhaft lockern; Schutz unterstützt, schonender Umgang mit Hitze bleibt wichtiger.",
         evidence: "moderate",
       },
     ],
@@ -500,7 +500,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
       "The best-supported product lever (hold: gel/mousse/styling cream, `moderate`) is outside our recommendable categories (styling_* keys exist in CanonicalProductCategoryKey but are not recommended). The recipe falls back to leave_in; decide whether the call may name gel/mousse generically.",
       'Straight-hair variant ("Form und Halt") has only practice-level evidence (weak).',
     ],
-    evidence: "moderate",
+    evidence: "weak",
   },
   {
     code: "low_volume_or_weighed_down",
@@ -529,7 +529,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         {
           lever:
             "Gewicht rausnehmen: weniger Produkt, nichts am Ansatz, schwere Schritte weglassen",
-          evidence: "moderate",
+          evidence: "weak",
         },
         {
           lever: "Ansatz vollständig trocknen und dabei gegen die Fallrichtung anheben",
@@ -582,7 +582,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
       "Wachstums- oder Verdichtungsversprechen",
     ],
     boundary:
-      "Wenn „platt“ eigentlich heißt, dass das Haar weniger dicht wird, der Scheitel breiter wirkt oder mehr Kopfhaut durchscheint, gilt die Grenze von hair_loss_or_thinning – nicht dieses Rezept.",
+      "Wenn „platt“ eigentlich heißt, dass das Haar weniger dicht wird, der Scheitel breiter wirkt oder mehr Kopfhaut durchscheint, gilt die Grenze bei Haarausfall und dünner werdendem Haar – nicht dieses Rezept.",
     conflicts: [
       "dry_lengths",
       "frizz_flyaways",
@@ -605,7 +605,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
       "Maps to research goal `volume` (quiz goal `volume_balance`), not a concern in goal-concern-levers.",
       "For curly/coily the quiz label means uneven shape/volume distribution, which is largely cut and styling; evidence for a product recipe there is weak. Confirm the call should lead with cut/styling for curly/coily.",
     ],
-    evidence: "moderate",
+    evidence: "weak",
   },
   {
     code: "hair_damage",
@@ -626,13 +626,13 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         {
           category: "leave_in",
           why: "Gleitfähigkeit und Schutz zwischen den Wäschen; feines Haar: leichte Formel, sparsam.",
-          evidence: "strong",
+          evidence: "moderate",
         },
       ],
       levers: [
         {
           lever:
-            "Schadensquelle zuerst reduzieren: weniger Hitze, niedrigere Stufe, weniger Durchgänge",
+            "Schadensquelle zuerst entschärfen: Hitze schonender – niedrigere Stufe, weniger Durchgänge, seltener wo möglich",
           evidence: "strong",
         },
         {
@@ -642,7 +642,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         {
           lever:
             "Sanft entwirren: abschnittsweise, von den Spitzen nach oben, breiter Kamm oder Finger",
-          evidence: "strong",
+          evidence: "moderate",
         },
         {
           lever: "Strukturell kaputte Spitzen schneiden lassen",
@@ -662,7 +662,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
           chemical_treatment: ["lightened", "permed", "chemically_straightened"],
         },
         why: "Für chemisch geschädigtes Haar gibt es Hinweise auf mehr Festigkeit und weniger Bruch (vor allem Labor-/In-vitro-Daten); als Unterstützung, nicht als Reparatur.",
-        evidence: "moderate",
+        evidence: "weak",
       },
       {
         category: "mask",
@@ -670,7 +670,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
           thickness: ["normal", "coarse"],
         },
         why: "Reichhaltigere Pflege glättet raue Längen; Maske ersetzt an dem Waschtag den Conditioner. Bei feinem Haar beim leichten Leave-in bleiben.",
-        evidence: "moderate",
+        evidence: "weak",
       },
       {
         category: "mask",
@@ -678,14 +678,14 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
           hair_texture: ["curly", "coily"],
         },
         why: "Locken/Coils brauchen mehr Gleitfähigkeit; Maske ersetzt an dem Waschtag den Conditioner.",
-        evidence: "moderate",
+        evidence: "weak",
       },
       {
         category: "heat_protectant",
         when: {
           heat_styling: true,
         },
-        why: "Reduziert messbaren Hitzeschaden; steht aber hinter „weniger Hitze“.",
+        why: "Reduziert messbaren Hitzeschaden; steht aber hinter schonendem Umgang mit Hitze.",
         evidence: "moderate",
       },
       {
@@ -706,10 +706,10 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
       "Tiefenreinigung als Standard",
     ],
     boundary:
-      "Kommt zum strapazierten Haar vermehrter Ausfall mit Wurzel, lichter werdendes Haar oder Kopfhautbeschwerden hinzu, gilt die Grenze von hair_loss_or_thinning. Brennen, Wunden oder starke Reaktion der Kopfhaut nach Färben/Blondieren → ärztlich abklären lassen.",
+      "Kommt zum strapazierten Haar vermehrter Ausfall mit Wurzel, lichter werdendes Haar oder Kopfhautbeschwerden hinzu, gilt die Grenze bei Haarausfall und dünner werdendem Haar. Brennen, Wunden oder starke Reaktion der Kopfhaut nach Färben/Blondieren → ärztlich abklären lassen.",
     conflicts: ["lost_shape", "low_volume_or_weighed_down"],
     talkingPointDe:
-      "So gehen wir es an: Geschädigte Längen kann man nicht heilen, aber wir können sie deutlich geschmeidiger machen und vor allem verhindern, dass neuer Schaden dazukommt – weniger Hitze und Belastung, konsequent Conditioner und Leave-in, und bei blondiertem Haar gezielt ein Bondbuilder. Was wirklich kaputt ist, nehmen wir beim nächsten Schnitt mit.",
+      "So gehen wir es an: Geschädigte Längen kann man nicht heilen, aber wir können sie deutlich geschmeidiger machen und vor allem verhindern, dass neuer Schaden dazukommt – schonender mit Hitze, weniger Belastung, konsequent Conditioner und Leave-in, und bei blondiertem Haar gezielt ein Bondbuilder. Was wirklich kaputt ist, nehmen wir beim nächsten Schnitt mit.",
     callQuestionsDe: [
       "Was glaubst du, woher der Schaden kommt – Blondieren, Färben, Hitze, Kämmen?",
       "Wie oft blondierst oder färbst du, und wann war die letzte Behandlung?",
@@ -718,7 +718,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
     domainReview: [
       "Should `colored` (permanent color without lightening) count as `damaged`? Currently only lightened/permed/chemically_straightened unlock bondbuilder.",
     ],
-    evidence: "strong",
+    evidence: "moderate",
   },
   {
     code: "hair_loss_or_thinning",
@@ -793,7 +793,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         {
           category: "leave_in",
           why: "Gleitfähigkeit beim Entwirren und Stylen; weniger Kraft beim Kämmen = weniger Bruch.",
-          evidence: "strong",
+          evidence: "moderate",
         },
       ],
       levers: [
@@ -805,11 +805,11 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         {
           lever:
             "Entwirren: abschnittsweise, von den Spitzen nach oben, breiter Kamm oder Finger; Locken/Coils nur nass mit Pflege",
-          evidence: "strong",
+          evidence: "moderate",
         },
         {
           lever:
-            "Hitze reduzieren: seltener, niedriger, weniger Durchgänge; Glätteisen nur auf trockenes Haar",
+            "Hitze schonender: niedriger, weniger Durchgänge, seltener wo möglich; Glätteisen nur auf trockenes Haar",
           evidence: "strong",
         },
         {
@@ -818,11 +818,11 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         },
         {
           lever: "Lockere Frisuren, keine straffen Gummis; Handtuch ausdrücken statt rubbeln",
-          evidence: "strong",
+          evidence: "weak",
         },
         {
           lever: "Reibung nachts reduzieren (lockerer Zopf, glatter Bezug)",
-          evidence: "moderate",
+          evidence: "weak",
         },
         {
           lever: "Die am stärksten geschädigten Spitzen schneiden",
@@ -837,14 +837,14 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
           chemical_treatment: ["lightened", "permed", "chemically_straightened"],
         },
         why: "Hinweise auf weniger Bruch und mehr Festigkeit bei chemisch geschädigtem Haar (überwiegend Labor-/In-vitro-Daten); Unterstützung, keine Umkehr.",
-        evidence: "moderate",
+        evidence: "weak",
       },
       {
         category: "heat_protectant",
         when: {
           heat_styling: true,
         },
-        why: "Reduziert Hitzeschaden und Bruch in Tests; steht hinter „weniger Hitze“.",
+        why: "Reduziert Hitzeschaden und Bruch in Tests; steht hinter schonendem Umgang mit Hitze.",
         evidence: "moderate",
       },
       {
@@ -854,7 +854,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
           thickness: ["normal", "coarse"],
         },
         why: "Mehr Gleitfähigkeit für raue, strapazierte Längen; Maske ersetzt an dem Waschtag den Conditioner.",
-        evidence: "moderate",
+        evidence: "weak",
       },
       {
         category: "mask",
@@ -862,7 +862,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
           hair_texture: ["curly", "coily"],
         },
         why: "Locken/Coils brechen vor allem beim Entwirren; mehr Gleitfähigkeit hilft.",
-        evidence: "moderate",
+        evidence: "weak",
       },
       {
         category: "oil",
@@ -891,7 +891,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
       "Sind deine Längen blondiert, dauergewellt oder chemisch geglättet?",
     ],
     domainReview: [],
-    evidence: "strong",
+    evidence: "moderate",
   },
   {
     code: "split_ends",
@@ -907,7 +907,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         {
           category: "conditioner",
           why: "Senkt Reibung und beugt neuem Spliss vor; bestehender Spliss wird nur optisch geglättet.",
-          evidence: "strong",
+          evidence: "moderate",
         },
         {
           category: "leave_in",
@@ -922,15 +922,15 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         },
         {
           lever: "Wer Länge behalten will: regelmäßig nur wenige Millimeter schneiden",
-          evidence: "moderate",
+          evidence: "weak",
         },
         {
           lever: "Hitze, chemische Belastung und Reibung reduzieren",
-          evidence: "strong",
+          evidence: "moderate",
         },
         {
           lever: "Sanft entwirren, von den Spitzen nach oben",
-          evidence: "strong",
+          evidence: "moderate",
         },
       ],
     },
@@ -948,7 +948,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         when: {
           heat_styling: true,
         },
-        why: "Hitze ist ein Haupttreiber für neuen Spliss; Schutz unterstützt, weniger Hitze bleibt wichtiger.",
+        why: "Hitze ist ein Haupttreiber für neuen Spliss; Schutz unterstützt, schonender Umgang mit Hitze bleibt wichtiger.",
         evidence: "moderate",
       },
       {
@@ -976,7 +976,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
       "Wie oft nutzt du Hitze, und sind die Spitzen blondiert?",
     ],
     domainReview: [],
-    evidence: "strong",
+    evidence: "moderate",
   },
   {
     code: "tangling",
@@ -996,26 +996,26 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
         {
           category: "leave_in",
           why: "Wirkt als Entwirrhilfe zwischen den Wäschen; feines Haar: leichte Sprühformel.",
-          evidence: "strong",
+          evidence: "moderate",
         },
       ],
       levers: [
         {
           lever: "In Abschnitten entwirren, von den Spitzen nach oben, breiter Kamm oder Finger",
-          evidence: "strong",
+          evidence: "moderate",
         },
         {
           lever:
             "Locken/Coils nur nass mit Pflege entwirren; glattes Haar kann angetrocknet mit breitem Kamm entwirrt werden",
-          evidence: "strong",
+          evidence: "moderate",
         },
         {
           lever: "Handtuch ausdrücken statt rubbeln; nachts lockerer Zopf oder glatter Bezug",
-          evidence: "moderate",
+          evidence: "weak",
         },
         {
           lever: "Spitzen, die immer wieder hängen bleiben, schneiden lassen",
-          evidence: "moderate",
+          evidence: "weak",
         },
         {
           lever:
@@ -1032,7 +1032,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
           hair_texture: ["curly", "coily"],
         },
         why: "Mehr Gleitfähigkeit für Locken/Coils; Maske ersetzt an dem Waschtag den Conditioner.",
-        evidence: "moderate",
+        evidence: "weak",
       },
       {
         category: "mask",
@@ -1041,7 +1041,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
           thickness: ["normal", "coarse"],
         },
         why: "Raue, strapazierte Längen haken stärker ineinander; reichhaltigere Pflege glättet.",
-        evidence: "moderate",
+        evidence: "weak",
       },
       {
         category: "oil",
@@ -1078,7 +1078,7 @@ export const CONCERN_RECIPES: readonly ConcernRecipe[] = [
       "Bleiben die Knoten vor allem in den Spitzen hängen?",
     ],
     domainReview: [],
-    evidence: "strong",
+    evidence: "moderate",
   },
 ]
 

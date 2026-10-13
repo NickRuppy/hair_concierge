@@ -29,7 +29,17 @@ import {
   type ApplicationRoutineReadClient,
 } from "@/lib/personal-plan/routine/application-adapter"
 import { loadPersonalPlanActiveRoutineVersion } from "@/lib/personal-plan/routine/load-view"
-import type { PersonalPlanRoutineReadClient } from "@/lib/personal-plan/routine/repository"
+import {
+  loadOwnerRefinedNeedSnapshot,
+  type PersonalPlanRoutineReadClient,
+} from "@/lib/personal-plan/routine/repository"
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
+import {
+  buildToolViewForRoutine,
+  type ToolApplicationGuidance,
+  type ToolFactsSource,
+} from "@/lib/personal-plan/tools/read-view"
+import { loadToolFactsSource } from "@/lib/personal-plan/tools/read-view-facts"
 import { compileApplicationViewV2 } from "@/lib/routines/personal-plan/application/compiler-v2"
 import { applicationFamilyTemplateV2Schema } from "@/lib/routines/personal-plan/application/contracts-v2"
 import { projectApplicationCadenceByDay } from "@/lib/routines/personal-plan/application/cadence-projector"
@@ -71,6 +81,22 @@ export type AnwendungResolverDeps = {
    * instead was rejected. Only ever consulted in keepsake mode.
    */
   loadKeepsakeContent?: (userId: string) => Promise<PersonalPlanKeepsakeContent | null>
+  /**
+   * Hair Tools rollout, resolved server-side per member. Absent or false: no facts read, no
+   * extra query, and the page is exactly what it was without Tools.
+   */
+  toolsEnabled?: (userId: string) => Promise<boolean>
+  /** The two reads behind the read-time Tool guidance; only called while `toolsEnabled` is true. */
+  tools?: {
+    /** The member's current care facts (`loadToolFactsSource`). */
+    loadFacts: (userId: string) => Promise<ToolFactsSource>
+    /** The refined need snapshot (`output_snapshot`) the active Routine was compiled from. */
+    loadRefinedOutputSnapshot: (
+      userId: string,
+      planId: string,
+      refinedVersionId: string,
+    ) => Promise<unknown>
+  }
 }
 
 // Only Stage 5's own throw codes may become a Sentry tag. A database or Zod
@@ -141,6 +167,15 @@ export async function resolveAnwendungPage(
       }
     }
     const client = deps.createReadClient()
+    // The facts read starts here so it overlaps the routine, day and protocol reads. It runs only
+    // for a member who reached this point (the stage gate above) and only while the rollout is on.
+    const toolFacts: Promise<ToolFactsSource | null> =
+      deps.toolsEnabled && deps.tools
+        ? deps
+            .toolsEnabled(userId)
+            .then((enabled) => (enabled ? deps.tools!.loadFacts(userId) : null))
+            .catch(() => null)
+        : Promise.resolve(null)
     const contractVersion = PERSONAL_PLAN_STAGE5_CONTRACT_VERSION
     const content = deps.loadContent(contractVersion)
     const [activeVersion, dayDefinitions, protocols] = await Promise.all([
@@ -154,7 +189,7 @@ export async function resolveAnwendungPage(
       routineVersionId: activeVersion.id,
       refinedVersionId: activeVersion.payload.source.refinedVersionId,
     }
-    const [accepted, profile] = await Promise.all([
+    const [accepted, profile, tools] = await Promise.all([
       deps.adaptRoutine({ client, activeVersion, contractVersion }),
       deps.loadProfile({
         client,
@@ -162,6 +197,28 @@ export async function resolveAnwendungPage(
         planId: source.personalPlanId,
         refinedVersionId: activeVersion.payload.source.refinedVersionId,
       }),
+      // Derived on every read from the member's current facts; never stored, never part of the
+      // compiled Routine payload or the Anwendung compiler inputs. Any failure means no Tools.
+      (async (): Promise<ToolApplicationGuidance | null> => {
+        const facts = await toolFacts
+        if (!facts || !deps.tools) return null
+        try {
+          const refinedOutputSnapshot = await deps.tools.loadRefinedOutputSnapshot(
+            userId,
+            source.personalPlanId,
+            activeVersion.payload.source.refinedVersionId,
+          )
+          return (
+            buildToolViewForRoutine({
+              facts,
+              refinedOutputSnapshot,
+              routine: activeVersion.payload,
+            })?.applicationGuidance ?? null
+          )
+        } catch {
+          return null
+        }
+      })(),
     ])
     const familyPayloads = protocols.map((protocol) =>
       applicationFamilyTemplateV2Schema.parse(protocol.payload),
@@ -221,6 +278,7 @@ export async function resolveAnwendungPage(
         routineItems: accepted.routineItems,
         compiledDayKeys: compiled.days.map((day) => day.key),
       }),
+      ...(tools ? { tools } : {}),
     })
     if (selectedDayType) {
       if (view.state === "ready" && view.days.some((day) => day.dayType === selectedDayType)) {
@@ -264,6 +322,19 @@ const defaultDeps: AnwendungResolverDeps = {
   stage4Enabled: isPersonalPlanStage4Enabled,
   reportFailure: capturePersonalPlanApplicationFailure,
   loadKeepsakeContent: loadPersonalPlanKeepsakeContentForUser,
+  toolsEnabled: (userId) => isPersonalPlanToolsEnabledForUser(userId, createAdminClient()),
+  tools: {
+    loadFacts: (userId) => loadToolFactsSource(createAdminClient(), userId),
+    loadRefinedOutputSnapshot: async (userId, planId, refinedVersionId) =>
+      (
+        await loadOwnerRefinedNeedSnapshot(
+          createAdminReadClient(),
+          userId,
+          planId,
+          refinedVersionId,
+        )
+      )?.output_snapshot,
+  },
 }
 
 async function resolveDefaultAnwendungPage(

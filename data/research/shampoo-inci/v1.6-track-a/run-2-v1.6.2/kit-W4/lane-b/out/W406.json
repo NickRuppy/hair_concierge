@@ -1,0 +1,359 @@
+{
+  "blindId": "W406",
+  "lane": "lane-b",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "brand": "Salthouse",
+    "productName": "Salthouse Totes Meer Therapie Anti-Schuppen Shampoo (catalog: Salthouse Anti Schuppen)",
+    "packSize": "250 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "ea15e539c6477bb039c7ba86cf7ceb1d8bcc429a2f5fe581850cd59e14e15b7c",
+    "normalization": "Packet list already one entry per ingredient (Maris Sal (Dead Sea Salt) is one entry); positions are normalized one-based positions (ID-2).",
+    "completeness": "complete (packet; source tier 2, identity confidence high)",
+    "e3ProminenceCutoff": "No Parfum/Fragrance declared; E3 preservative fallback = Sodium Benzoate @8; prominent = positions 1-7"
+  },
+  "formulaPassReference": "out/formula-pass/W406.json (hash-pinned; not edited)",
+  "claimEvidence": [
+    "Product name 'Anti Schuppen' (high).",
+    "manufacturer_de (moderate): 'Anti-Schuppen Shampoo ... wirkt wohltuend bei irritierter, trockener und dadurch schuppenanfälliger Kopfhaut'; 'Anti-Schuppen Wirkstoff Pirocton Olamin, der trockene Schuppen nachhaltig reduziert'; 'Für eine schuppenfreie, entspannte Kopfhaut'; attribute lists 'Hautproblem: Juckreiz, Neurodermitis, Schuppen, Schuppenflechte, Spannungsgefühle', 'Hauttyp: empfindliche und sensible Haut ...'; medical basis-care wording (Neurodermitis, Psoriasis); directions 'Für die tägliche Haarwäsche geeignet'.",
+    "retailer Rossmann (low): 'wirkt wohltuend bei Irritationen auf der Kopfhaut', same active."
+  ],
+  "reconciliation": [
+    "focusPrimary provisional general -> scalp_active (anti-dandruff named + Piroctone Olamine @5).",
+    "usageRole -> treatment (name dandruff claim high + active); frequent also fires (manufacturer 'Für die tägliche Haarwäsche geeignet', moderate; cleansing not strong) and loses under U1.",
+    "Comfort wording ('irritierter ... schuppenanfälliger Kopfhaut', 'Juckreiz', 'Spannungsgefühle') sits in or next to dandruff units -> bundled (E2a/E2b layer 1); S-SENSITIVE formula gate fails (no CSA) -> no 'sensitive' combination; note dandruff_bundled_comfort_wording.",
+    "Dryness wording is inside the dandruff unit (absorbed, no note). Medical wording (Neurodermitis, Psoriasis) is out of scope and creates nothing.",
+    "cleansingStrength, conditioningLevel, weightPotential and dandruffSupport unchanged from the hash-pinned blind pass (formula-only; claims cannot move them, 3.2)."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate @2 defining anionic buffered by prominent Cocamidopropyl Betaine @3, no reinforcing strong anionic. Salts, mud and late essential oils are not cleansing routes (C3).",
+      "ruleIds": [
+        "C3",
+        "C4",
+        "C1"
+      ],
+      "counterSignal": "none material.",
+      "formulaFacts": {
+        "strongAnionicEtherSulfonate": [
+          "Sodium Laureth Sulfate @2 (defining anionic)"
+        ],
+        "strongAnionicAlkylSulfate": [],
+        "mildAnionic": [],
+        "amphoteric": [
+          "Cocamidopropyl Betaine @3 (prominent buffer)"
+        ],
+        "nonionicCleansing": [],
+        "notCleansingNotBuffer": [
+          "Sodium Chloride @4",
+          "Citric Acid @7",
+          "Maris Sal @9",
+          "Silt @19 (mud/mineral)"
+        ],
+        "reinforcingRoutes": [],
+        "c1c5c6Reading": "C1: ether-sulfate defining anionic, one prominent buffer, no reinforcing route"
+      },
+      "blindToFinal": "unchanged: formula-only property; claims may not set or move it (3.2)"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low: cleansing-led architecture whose only conditioning route is one cationic guar (Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6); no silicone, lipid, refatter, pearlizer or protein, and the only humectant (Glycerin @11) is after the E3 point. C2 not met. Counter-signal: a prominent guar coacervate can give noticeable slip (moderate).",
+      "ruleIds": [
+        "Section 5 anchors",
+        "C2"
+      ],
+      "counterSignal": "A prominent guar coacervate can give noticeable slip (moderate).",
+      "formulaFacts": {
+        "cationic_polymer": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6 (prominent)"
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "pearlizing_fatty_route": [],
+        "humectants": [
+          "Glycerin @11 (after the E3 point)"
+        ],
+        "notHumectantRoute": [
+          "Aloe Barbadensis Leaf Juice Powder @14"
+        ]
+      },
+      "blindToFinal": "unchanged: formula-only property; claims may not set or move it (3.2)"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "evidence": {
+        "cationic_polymer": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6"
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": [
+          "Sodium Laureth Sulfate @2",
+          "Cocamidopropyl Betaine @3"
+        ],
+        "humectantContext": [
+          "Glycerin @11",
+          "Aloe Barbadensis Leaf Juice Powder @14"
+        ],
+        "excluded": [
+          "Tea Tree Leaf Oil @12, Citrus Limon Peel Oil @16, Citrus Sinensis Peel Oil @17, Litsea Cubeba Fruit Oil @18 (essential oils, 6.4)",
+          "Limonene @13 (fragrance allergen)",
+          "Silt @19, Maris Sal @9, Sodium Chloride @4 (minerals/salts)",
+          "Piroctone Olamine @5 (active)",
+          "Citric Acid @7, Lactic Acid @15, Sodium Benzoate @8, Potassium Sorbate @10"
+        ],
+        "unresolved": []
+      },
+      "wLineRecord": "wLine Piroctone Olamine @5 (preservative_or_capped_active); cap e3Point @8 (Sodium Benzoate fallback); no alphabetical run; no skipped candidates; no codes; no payload_lipid present.",
+      "depositionLoad": "light: one cationic guar polymer, nothing else depositing.",
+      "persistence": "low: single guar; no silicone, lipid or film.",
+      "resetCapacity": "moderate: C1 SLES/betaine chassis.",
+      "counterevidence": "The guar is prominent (@6) and deposits by dilution deposition.",
+      "whyThisBand": "A single light cationic polymer facing an effective sulfate chassis does not plausibly reduce movement or lift.",
+      "whyNotNeighborBand": "Not moderate: one deposition family only, no reinforcing route (W2 does not require more); essential oils are fragrance materials, not payload.",
+      "confidenceLimitingFactor": "None material.",
+      "rationale": "Low: single guar against a moderate C1 reset; W-line @5 gates nothing because no payload_lipid exists.",
+      "ruleIds": [
+        "6.3",
+        "6.4",
+        "6.6",
+        "W2",
+        "W-LINE"
+      ],
+      "counterSignal": "The guar is prominent (@6) and deposits by dilution deposition.",
+      "formulaFacts": {
+        "wLine": "Piroctone Olamine @5",
+        "wLineClasses": [
+          "preservative_or_capped_active"
+        ],
+        "cap": "e3Point @8 (Sodium Benzoate, preservative fallback)",
+        "alphabeticalRun": "none",
+        "candidatesTested": [
+          "Piroctone Olamine @5: (i) SLES @2 and betaine @3 before it ok; (ii) positions 6-7 (guar polymer, Citric Acid) contain no cleansing surfactant, alkanolamide or pearlizer -> plausible"
+        ],
+        "skipped": [],
+        "codes": [],
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "identifiers": {
+        "formulaFingerprintSha256": "ea15e539c6477bb039c7ba86cf7ceb1d8bcc429a2f5fe581850cd59e14e15b7c",
+        "sourceTier": 2,
+        "captureDate": "not stated in the frozen packet"
+      },
+      "blindToFinal": "unchanged: weight is formula-only; claims cannot decide the band (6.5 step 5)"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6"
+        ],
+        "limitation": "Not a repair/moisture decision."
+      },
+      "claimRole": "candidate",
+      "counterSignal": "Moisture/aloe wording is ingredient description; no competing role.",
+      "decisionTrace": "Claim direction anti-dandruff (name high, manufacturer moderate). Formula compatible: Piroctone Olamine @5. Decision scalp_active (7.2).",
+      "rationale": "scalp_active: anti-dandruff positioning plus recognized active (7.2).",
+      "formulaFacts": null,
+      "ruleIds": [
+        "7.2",
+        "S-DANDRUFF",
+        "CL-SRC"
+      ],
+      "blindToFinal": "provisional general -> scalp_active (dandruff named in product name + recognized active)"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "decisionTrace": "Empty default considered; no distinct lengths-care positioning.",
+      "rationale": "Empty: no distinct secondary positioning with an independent compatible route (Section 8, F2, F3).",
+      "counterSignal": "none",
+      "formulaFacts": [],
+      "ruleIds": [
+        "Section 8",
+        "F2",
+        "F3"
+      ],
+      "blindToFinal": "provisional [] -> []"
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "recognized_active_problem_led",
+      "triggerEvidence": [
+        "Product name 'Anti Schuppen' (high)",
+        "manufacturer: 'Anti-Schuppen Wirkstoff Pirocton Olamin' (moderate)",
+        "Piroctone Olamine @5"
+      ],
+      "losingTriggers": [
+        "frequent (explicit_frequent_non_strong): manufacturer 'Für die tägliche Haarwäsche geeignet' (moderate), cleansing moderate - loses to treatment (U1)"
+      ],
+      "rationale": "Treatment: recognized active plus qualifying dandruff claim graded high (U3); frequent also fired and lost (U1).",
+      "counterSignal": "none beyond losing triggers",
+      "formulaFacts": "cleansingStrength moderate (high); dandruffSupport supported",
+      "ruleIds": [
+        "Section 9",
+        "U1",
+        "U2",
+        "U3"
+      ],
+      "decisionTrace": "Default regular; triggers treatment and frequent fire; U1 precedence -> treatment.",
+      "blindToFinal": "provisional regular -> treatment"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: whatever the positioning, CSA fails (no prominent listed comfort/humectant route (Glycerin @11 after the E3 fallback point Sodium Benzoate @8); MB fails on prominent SLES @2); without a listed prominent route and without MB a positioned product is not_targeted (Section 10). Comfort wording is bundled with dandruff units and is not SC1 positioning anyway (SC1, E2b).",
+      "counterSignal": "none",
+      "formulaFacts": {
+        "CSA": "not met: no prominent E4 comfort or humectant/refatting route (Glycerin @11 is after the E3 point) and no MB",
+        "MB": "not met: Sodium Laureth Sulfate @2 prominent strong anionic",
+        "S-SENSITIVE formula half": "fails",
+        "S-DRY formula half": "fails",
+        "S-OILY formula clause": "cleansing moderate, weight low, conditioning low -> clause passes",
+        "S-DANDRUFF formula half": "dandruffSupport supported"
+      },
+      "csaRoute": "none (no prominent listed comfort/humectant route (Glycerin @11 after the E3 fallback point Sodium Benzoate @8); MB fails on prominent SLES @2)",
+      "ruleIds": [
+        "Section 10",
+        "CSA",
+        "MB",
+        "SC1",
+        "E3",
+        "E4"
+      ],
+      "blindToFinal": "unchanged; formula half already decided it in the blind pass"
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Supported: the complete INCI contains Piroctone Olamine @5.",
+      "ruleIds": [
+        "Section 11"
+      ],
+      "counterSignal": "none (mechanical table, Section 11)",
+      "formulaFacts": [
+        "Piroctone Olamine @5"
+      ],
+      "blindToFinal": "unchanged (formula-only)"
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "not_applicable",
+      "moistureRoutes": [],
+      "repairRoutes": [],
+      "sharedConditioningRoutes": [
+        "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6"
+      ],
+      "limitation": "Not a repair/moisture decision."
+    },
+    "claimRole": "candidate",
+    "decisionTrace": {
+      "primary": "Claim direction anti-dandruff (name high, manufacturer moderate). Formula compatible: Piroctone Olamine @5. Decision scalp_active (7.2).",
+      "secondary": "Empty default considered; no distinct lengths-care positioning.",
+      "usageRole": "Default regular; triggers treatment and frequent fire; U1 precedence -> treatment."
+    }
+  },
+  "weightRecord": "see directProperties.weightPotential (6.8 fields: evidence by family, wLineRecord/formulaFacts, subjudgments, counterevidence, whyThisBand, whyNotNeighborBand, confidence and limiting factor, neighbor)",
+  "projection": {
+    "status": "proposal_ready",
+    "thicknessFitT1": {
+      "fine": "ideal",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFit": {
+      "fine": "ideal",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFitConfidence": {
+      "fine": "high",
+      "normal": "high",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": " T1 with W=low (high, neighbor none) and C=low (moderate, neighbor moderate): fine ideal, normal ideal, coarse acceptable; target dandruff -> T6 floor applies (nothing to lift). T4 computed from N-ALT neighbors after T6; T2: thickness/texture claims never change fit.",
+    "weight": "light",
+    "weightConfidence": "high",
+    "weightRationale": "W-LIVE: weightPotential low projects 1:1 to light; confidence = weightPotential confidence.",
+    "scalpTargets": {
+      "primary": {
+        "target": "dandruff",
+        "confidence": "high",
+        "rationale": "S-DANDRUFF: 'Anti Schuppen' in the product name (high) + dandruffSupport supported (Piroctone Olamine @5) -> dandruff primary (R17.1), no secondary (R17.2). Bundled comfort wording feeds only E2b layer 2, where the S-SENSITIVE gate fails."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength moderate, D1 false -> regular. I3: neighbor none (high confidence, no I3 review).",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserListingConfidence": "high",
+    "deepCleanserRationale": "D2 not met: D1 false (no D1 lexicon term in name, manufacturer/pack claims or directions); not_flagged.",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_dandruff"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [
+      "dandruff_bundled_comfort_wording: 'wirkt wohltuend bei irritierter, trockener und dadurch schuppenanfälliger Kopfhaut'; 'Hautproblem: Juckreiz ... Spannungsgefühle' (manufacturer, moderate). Failed clause: S-SENSITIVE formula gate - CSA not met (no prominent listed comfort or humectant/refatting route; no MB, SLES @2 prominent); no prominent unlisted route candidate."
+    ],
+    "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; lanes never see catalog ids."
+  },
+  "unresolvedMaterialIngredients": [],
+  "selfCheck": "6.11: fingerprint ea15e539c647... matches the frozen packet; claims were hidden during the formula pass (formula-pass file hash-pinned before release); no ingredient, family count or position window assigned the weight band; W-line derived per W-LINE with every skipped candidate recorded; three subjudgments present; whyNotNeighborBand specific (W2 where it applies); confidence names its limiting factor; no comparison with earlier values inside the lane. N-ALT: every high confidence has neighbor none, every moderate/low names one neighbor. Projection derived mechanically from final properties; P0 applied where readings were uncertain.",
+  "uncertainties": [
+    "The 'Hauttyp: empfindliche und sensible Haut' attribute names skin, not scalp, and is a listing attribute; not read as a separate sensitive-scalp unit. Either way the S-SENSITIVE gate fails (no CSA), so the outcome is unchanged.",
+    "Medical claims (Neurodermitis, Psoriasis basis care) are outside scope and were not evaluated."
+  ]
+}

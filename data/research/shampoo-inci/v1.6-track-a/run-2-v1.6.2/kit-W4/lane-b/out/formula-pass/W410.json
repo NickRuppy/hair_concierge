@@ -1,0 +1,163 @@
+{
+  "blindId": "W410",
+  "inciFingerprintSha256": "0a9ce49c3c9a71eeb4cd8e8ebc4dc4b2431235b5e08cbd0e096985e48ddbbda3",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, stage A only)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "packSize": "200 ml",
+    "formulaSourceTier": 1,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "Packet list already one entry per ingredient; positions are normalized one-based positions (ID-2).",
+    "e3ProminenceCutoff": "Parfum @7; prominent = positions 1-6"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionicEtherSulfonate": ["Sodium Laureth Sulfate @2 (defining anionic)"],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": [],
+      "amphoteric": ["Cocamidopropyl Betaine @3 (prominent buffer)"],
+      "nonionicCleansing": [],
+      "notCleansingNotBuffer": ["Lauryl Lactate @4 (emollient ester; not a lactylate surfactant)", "Laureth-4 @9 (low-ethoxylate thickener)", "Maris Sal @10", "Sodium Chloride @15"],
+      "reinforcingRoutes": [],
+      "c1c5c6Reading": "C1: ether-sulfate defining anionic, one prominent buffer, no reinforcing route"
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @5 (prominent)"],
+      "payload_lipid": [],
+      "weak_refatter": ["Lauryl Lactate @4 (prominent; light refatting ester - family assignment uncertain, alternative payload_lipid as an emollient ester)"],
+      "silicone": [],
+      "pearlizing_fatty_route": ["Glycol Distearate @6"],
+      "humectants": ["Glycerin @17 (own entry, after the E3 point)"]
+    },
+    "wLine": {
+      "wLine": "Parfum @7 (= cap)",
+      "wLineClasses": ["fragrance"],
+      "cap": "e3Point @7",
+      "alphabeticalRun": "none",
+      "candidatesTested": ["Parfum @7: (i) ok; (ii) nothing between candidate and cap -> plausible (no a-c candidate earlier)"],
+      "skipped": [],
+      "codes": [],
+      "payloadLipidMaterial": ["(conditional) Lauryl Lactate @4 would be material if read as payload_lipid"],
+      "payloadLipidNonMaterial": []
+    },
+    "actives": {
+      "dandruffActives": [],
+      "comfortRoutesE4Prominent": [],
+      "comfortRoutesNotProminent": ["Allantoin @11", "Bisabolol @12"],
+      "humectantRefattingRoutesE4Prominent": [],
+      "humectantRefattingRoutesNotProminent": ["Glycerin @17"],
+      "coolingAgents": ["Menthol @8 (directly after the E3 point; not prominent)"],
+      "essentialOils": [],
+      "fragranceMaterials": ["Parfum @7", "Terpineol @19"]
+    },
+    "scalpGateFormulaFacts": {
+      "CSA": "not met: no prominent listed E4 comfort or humectant/refatting route (Allantoin @11, Bisabolol @12, Glycerin @17 are after the E3 point) and no MB; unlisted_route_candidate:Lauryl Lactate (prominent @4; rejected candidate under R18)",
+      "MB": "not met: Sodium Laureth Sulfate @2 prominent strong anionic",
+      "S-SENSITIVE formula half": "fails (unlisted_route_candidate:Lauryl Lactate)",
+      "S-DRY formula half": "fails (unlisted_route_candidate:Lauryl Lactate)",
+      "S-OILY formula clause": "cleansing moderate, weight moderate, conditioning moderate -> clause passes"
+    }
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate @2 defining anionic buffered by prominent Cocamidopropyl Betaine @3, no reinforcing strong anionic. Lauryl Lactate @4 is an emollient ester (not a lactylate surfactant) and Laureth-4 @9 a thickener; neither is a cleansing route.",
+      "ruleIds": ["C3", "C4", "C1"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "rationale": "Moderate: one meaningful cationic system (prominent Guar Hydroxypropyltrimonium Chloride @5) plus light routes (refatting ester Lauryl Lactate @4, pearlizing Glycol Distearate @6). C2 is not met under the weak_refatter reading of Lauryl Lactate (no early silicone or prominent payload lipid). Counter-signal: if Lauryl Lactate is read as a payload_lipid (emollient ester), C2 would be met (with Glycerin @17 as humectant) and W-RICH would hold, so high is the neighbor.",
+      "ruleIds": ["Section 5 anchors", "C2", "W-RICH"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "evidence": {
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @5"],
+        "payload_lipid": [],
+        "weak_refatter": ["Lauryl Lactate @4 (alternative reading: payload_lipid, then material because < W-line 7)"],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @3"],
+        "humectantContext": ["Glycerin @17", "Allantoin @11", "Bisabolol @12"],
+        "excluded": ["Glycol Distearate @6 (pearlizing wax, 6.4)", "Laureth-4 @9 (low-ethoxylate thickener)", "Menthol @8 (cooling agent)", "Parfum @7, Terpineol @19 (fragrance)", "Maris Sal @10, Sodium Chloride @15, Citric Acid @16, Formic Acid @18, Sodium Benzoate @13, Potassium Sorbate @14"],
+        "unresolved": []
+      },
+      "wLineRecord": "wLine Parfum @7 (fragrance) = cap e3Point @7; no alphabetical run; no skipped candidates; no codes; payload_lipid: none under the weak_refatter reading; Lauryl Lactate @4 would be material under the payload_lipid reading.",
+      "depositionLoad": "moderate: a prominent guar plus an early refatting ester (Lauryl Lactate @4, listed right after the betaine).",
+      "persistence": "moderate-to-low: guar can persist; lauryl lactate is a light ester; no silicone or waxy lipid.",
+      "resetCapacity": "moderate: C1 SLES/betaine chassis.",
+      "counterevidence": "Toward low: no silicone, no waxy lipid, ester is light. Toward high: under the payload_lipid reading, material lipid plus cationic is W-RICH (but reset is moderate, so the rich route stays closed).",
+      "whyThisBand": "Two prominent deposition routes (guar and an early refatting ester) make calling the product lightweight an understatement; reset is ordinary.",
+      "whyNotNeighborBand": "Not low (W2): two distinct families are both prominent and the ester sits early (@4, before the guar), so the 'only weak_refatter plus humectants' or 'late/trace' reasons do not hold. Not high: under either reading reset is moderate (no limited reset for W-RICH) and there is no silicone or second persistent system for the convergence route.",
+      "confidenceLimitingFactor": "Family assignment of Lauryl Lactate (weak_refatter vs payload_lipid) and dose of a light ester; low is the more realistic neighbor under the primary weak_refatter reading.",
+      "rationale": "Moderate: guar plus early refatting ester against a moderate C1 reset; band robust to the Lauryl Lactate family reading (payload reading gives W-RICH with moderate reset = moderate too).",
+      "ruleIds": ["6.3", "6.6", "W2", "W-RICH", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": ["Lauryl Lactate @4", "Glycerin @17"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Guar Hydroxypropyltrimonium Chloride @5", "Glycol Distearate @6"],
+        "limitation": "No humectant cluster (Glycerin late) and no repair cluster."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Blind pass. Allantoin/Bisabolol/Menthol (late) suggest scalp-comfort or refresh positioning, but CSA is not met.",
+      "decisionTrace": "Blind: claim direction null; formula nonspecific; scalp_active would fail without CSA unless dandruff (no active); provisional general.",
+      "rationale": "Provisional general (claim-dependent; formula-only).",
+      "ruleIds": ["3.1", "7.2", "7.3"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["clarifying"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty (claim-dependent).",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional regular (default); moderate formula cannot be alternating; no dandruff active.",
+      "ruleIds": ["Section 9"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted regardless of positioning: no CSA. The listed comfort routes Allantoin @11 and Bisabolol @12 and the humectant Glycerin @17 are all after Parfum @7 (not prominent, E3), and MB fails (Sodium Laureth Sulfate @2 prominent). The only prominent candidate is unlisted: unlisted_route_candidate:Lauryl Lactate (rejected under R18). CSA route: none.",
+      "ruleIds": ["Section 10", "CSA", "MB", "E3", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active in the complete INCI.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [
+    "Lauryl Lactate @4: weight-family assignment (weak_refatter, used here, vs payload_lipid emollient ester); does not move weightPotential (moderate under both readings) but sets the conditioningLevel neighbor (high)."
+  ],
+  "notes": ["Claim-dependent properties (focus, usage) are provisional; scalpComfortTarget is decided by the formula half (CSA fails)."]
+}

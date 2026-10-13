@@ -3,7 +3,10 @@ import type { PlanProductRole } from "@/lib/personal-plan/types"
 import type { PersonalPlanCategory, Stage3CriterionResult } from "./contracts"
 import type { Stage3AuthorityInput, Stage3CategoryProductFacts } from "./authority/contracts"
 import { maskAcceptedCareDirections } from "./authority/categories/axis-fit"
-import { expectedShampooSpecTarget } from "./authority/categories/shampoo-spec-target"
+import {
+  expectedShampooSpecTarget,
+  isScalpShampooTarget,
+} from "./authority/categories/shampoo-spec-target"
 import { compactCriterionSchema } from "./fit-comparison-schema"
 import { BUDGET_NEED_DIMENSIONS, type BudgetCandidateView } from "./budget-policy"
 
@@ -106,6 +109,14 @@ export function candidateDimensionCoverage(
       matches:
         applicationMatches +
         targetDimensions.filter((dimension) => {
+          // R19: the informational thickness row must not penalize scalp-cell ranking.
+          if (
+            dimension.dimensionId === "shampoo.suitable_thicknesses" &&
+            isScalpShampooTarget({ role: input.role, target: input.categoryDecision.target })
+          )
+            return criteria.some(
+              (row) => row.criterionId === "shampoo.thickness" && row.result === "pass",
+            )
           const position = dimension.productPositions[0]?.position ?? { kind: "unknown" as const }
           return positionsOverlap(position, dimension.targetPosition!)
         }).length,
@@ -363,6 +374,16 @@ function leaveInDimensions(
       "Die Pflegerichtung kommt aus Zielprofil und exakten Produktfakten.",
     ),
     third,
+    dimension(
+      "leave_in.suitable_thicknesses",
+      "Geeignete Haardicke",
+      "set",
+      THICKNESS_STOPS,
+      input.hairThickness ?? null,
+      entries,
+      (facts) => facts.suitableThicknesses,
+      "Die Haardicken-Eignung nutzt nur gespeicherte Katalogwerte.",
+    ),
   ]
 }
 
@@ -402,6 +423,16 @@ function maskDimensions(
       entries,
       (facts) => (facts.category === "mask" ? facts.spec.repairSupportLevel : null),
       "Die Repair-Unterstützung bleibt eine explizite Katalogachse.",
+    ),
+    dimension(
+      "mask.suitable_thicknesses",
+      "Geeignete Haardicke",
+      "set",
+      THICKNESS_STOPS,
+      input.hairThickness ?? null,
+      entries,
+      (facts) => facts.suitableThicknesses,
+      "Die Haardicken-Eignung nutzt nur gespeicherte Katalogwerte.",
     ),
   ]
 }
@@ -460,7 +491,7 @@ function oilDimensions(
       "Pflegegewicht",
       "ordered",
       WEIGHT_STOPS,
-      roleTarget?.weight ?? null,
+      roleTarget?.acceptedTargets ?? (roleTarget?.weight ? [roleTarget.weight] : null),
       entries,
       (facts) => (facts.category === "oil" ? facts.spec.weight : null),
       "Das Öl-Gewicht wird nur für Leave-on-Rollen als Zielachse genutzt.",
@@ -632,4 +663,20 @@ export function positionLabel(
   const ids = position.kind === "position" ? [position.stopId] : position.stopIds
   const labels = ids.map((id) => stops.find((stop) => stop.stopId === id)?.label ?? id)
   return labels.join(", ")
+}
+
+/** Display row IDs are stable; authority criterion IDs own their fit state. */
+export function criterionIdForDimension(dimensionId: string): string {
+  const aliases: Record<string, string> = {
+    "shampoo.suitable_thicknesses": "shampoo.thickness",
+    "conditioner.suitable_thicknesses": "conditioner.thickness",
+    "conditioner.care_direction": "conditioner.balance",
+    "conditioner.repair_support": "conditioner.repair",
+    "leave_in.suitable_thicknesses": "leave_in.thickness",
+    "leave_in.heat_protection": "leave_in.heat",
+    "mask.suitable_thicknesses": "mask.thickness",
+    "oil.suitable_thicknesses": "oil.thickness",
+    "oil.role_support": "oil.role",
+  }
+  return aliases[dimensionId] ?? dimensionId
 }

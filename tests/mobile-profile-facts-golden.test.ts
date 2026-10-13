@@ -50,6 +50,8 @@ import {
  *        what the old, untouched column did (while it is still one of her concerns).
  *  E3 canonical array order: array columns are compared as sets.
  *  E4 `[]` instead of NULL for chemical_treatment / concerns / goals.
+ *  E5 concern vocabulary widening, ruled 2026-10-11: the three v3 concerns and their main
+ *     problem survive; unresolved volume_balance remains a goal with no volume direction.
  */
 
 const OWNER = id(1, 1)
@@ -117,6 +119,19 @@ async function fixtureAnswers(): Promise<Array<[string, QuizAnswers]>> {
     ["scalp issue", { ...BASE, has_scalp_issue: true, scalp_condition: "gereizt" }],
     // tests/mobile-registration-publication-postgres.test.ts replace fixture
     ["registration replace", { ...BASE, thickness: "coarse" }],
+    // E5: concern vocabulary widening, ruled 2026-10-11, including directionless volume.
+    [
+      "E5 widened concerns and neutral volume",
+      {
+        ...BASE,
+        structure: "straight",
+        thickness: "normal",
+        density: "medium",
+        concerns: ["low_shine", "lost_shape", "low_volume_or_weighed_down"],
+        primary_concern: "lost_shape",
+        goals: ["volume_balance"],
+      },
+    ],
     // Synthetic: exercises E1 (not an existing iOS fixture).
     ["E1 legacy goals", { ...BASE, goals: ["healthier_hair", "color_protection", "less_frizz"] }],
   ]
@@ -130,7 +145,10 @@ function expectedPrimaryConcern(
   handEdit: boolean,
 ) {
   const concerns = projectQuizAnswersToLegacyVocabulary({ concerns: answers.concerns }).concerns
-  if (answers.primary_concern !== undefined) return buildProfilePrimaryConcern(answers)
+  if (answers.primary_concern !== undefined) {
+    if (concerns.includes(answers.primary_concern as never)) return answers.primary_concern // E5
+    return buildProfilePrimaryConcern(answers)
+  }
   const storedPick = before.primary_concern
   if (handEdit && typeof storedPick === "string" && concerns.includes(storedPick as never))
     return storedPick
@@ -149,6 +167,25 @@ function expectedColumns(
     let value = column in patch ? patch[column] : before[column]
     if (column === "goals" && Array.isArray(value)) {
       value = [...new Set(value.map((goal: string) => MIGRATION_TABLE_M[goal] ?? goal))] // E1
+    }
+    // E5: add only the ruled values to the historical patch's independent expectation.
+    if (column === "concerns" && Array.isArray(value)) {
+      const widened = (answers.concerns ?? []).filter((concern) =>
+        ["low_shine", "lost_shape", "low_volume_or_weighed_down"].includes(concern),
+      )
+      value = [...new Set([...value, ...widened])]
+    }
+    if (
+      column === "goals" &&
+      Array.isArray(value) &&
+      answers.goals?.includes("volume_balance") &&
+      answers.thickness !== "fine" &&
+      answers.density !== "low" &&
+      answers.thickness !== "coarse" &&
+      answers.density !== "high" &&
+      !["wavy", "curly", "coily"].includes(answers.structure ?? "")
+    ) {
+      value = [...new Set([...value, "volume_balance"])]
     }
     if (column === "primary_concern") value = expectedPrimaryConcern(answers, before, handEdit)
     if (E4_ARRAY_COLUMNS.has(column) && value === null) value = [] // E4
@@ -207,7 +244,7 @@ const PICK_FIXTURES: Array<[string, QuizAnswers, Partial<QuizAnswers>]> = [
   ],
 ]
 
-test("golden (task 3): iOS edit fixtures derive today's columns up to E1-E4", async (t) => {
+test("golden (task 3): iOS edit fixtures derive today's columns up to E1-E5", async (t) => {
   const cases: Array<[string, QuizAnswers, Partial<QuizAnswers>]> = [
     ...(await fixtureAnswers()).map(
       ([name, answers]) => [name, answers, {}] as [string, QuizAnswers, Partial<QuizAnswers>],
@@ -288,7 +325,7 @@ async function registration(
   await completeMobileRegistration(client as never, OWNER, input.submission.email, input as never)
 }
 
-test("golden (task 4): registration create and replace derive today's columns up to E1-E4", async (t) => {
+test("golden (task 4): registration create and replace derive today's columns up to E1-E5", async (t) => {
   for (const [name, answers] of REGISTRATION_FIXTURES) {
     const created = await mobileFactsDatabase(t)
     await insertProfile(created, OWNER)
@@ -323,7 +360,7 @@ test("golden (task 4): registration create and replace derive today's columns up
   }
 })
 
-test("golden (task 4): profile completion (missing) derives today's columns up to E1-E4", async (t) => {
+test("golden (task 4): profile completion (missing) derives today's columns up to E1-E5", async (t) => {
   const cases: Array<[string, (pg: PersonalPlanTestDb) => Promise<void>, Partial<QuizAnswers>]> = [
     [
       "legacy row without facts, hair length missing",

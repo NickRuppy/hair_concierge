@@ -1,0 +1,28 @@
+{
+  "blindId": "W111",
+  "productName": "Schwarzkopf GLISS Sealing Miracle Versiegelndes Shampoo",
+  "brand": "Schwarzkopf GLISS",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_pack_back_image_de",
+      "sourceKind": "pack_back",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Wirkt wie ein Reißverschluss für das Haar • Schützt das Haar • Für splissgeschädigtes Haar",
+      "directionsVerbatim": "Anwendung: Sanft im feuchten Haar verteilen. Gut ausspülen! Regelmäßig anwenden."
+    },
+    {
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Versiegelndes Shampoo für ein gesünderes und kräftigeres Haargefühl mit Zip & Seal-Technologie | Für geschädigtes und splissanfälliges Haar | Bis zu 94 % weniger Spliss* | Reinigt, ohne das Haar zu beschweren | Vegane und silikonfreie Formel** | Für alle Haartypen | * Im Vergleich zu unbehandeltem Haar bei Anwendung in Kombination mit dem GLISS Sealing Miracle Spray. ** Frei von Inhaltsstoffen tierischen Ursprungs.",
+      "directionsVerbatim": "(Anwendung tab text not rendered; pack back says: Sanft im feuchten Haar verteilen. Gut ausspülen! Regelmäßig anwenden.)"
+    },
+    {
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "GLISS Sealing Miracle Shampoo – Reinigung und Pflege für splissgeschädigtes Haar. Tägliches Styling, Hitze und Umwelteinflüsse können die Haarstruktur angreifen und zu Spliss führen. Das GLISS Sealing Miracle Shampoo wurde speziell entwickelt, um geschädigtes Haar gezielt zu pflegen und zu schützen. Dank der innovativen Zip & Seal Technologie wirkt die Formel des Shampoos wie ein Reißverschluss für die Haarfaser und kann langfristig sichtbar Spliss entfernen*. Das Pflegeshampoo reinigt und pflegt das Haar gründlich, ohne es zu beschweren. Die Formel besteht zu 92 % aus Inhaltsstoffen natürlichen Ursprungs (inkl. Wasser) und ist silikonfrei sowie vegan**. | Anti-Spliss Effekt | Zip & Seal Technologie – ... reduziert Spliss um bis zu 94 % (entgegen unbehandeltem Haar, kombiniert mit dem Sealing Miracle Spray) | Vegane Formel | Einfache Anwendung – ... einfach sanft im feuchten Haar verteilen und anschließend gut ausspülen. Regelmäßig anwenden",
+      "directionsVerbatim": "einfach sanft im feuchten Haar verteilen und anschließend gut ausspülen. Regelmäßig anwenden"
+    }
+  ]
+}
