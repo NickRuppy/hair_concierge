@@ -16,7 +16,7 @@ import type {
   Stage3KnownAuthorityEvaluation,
 } from "./authority/contracts"
 import {
-  BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+  compareBondbuilderTieOrder,
   bondbuilderMatchesTiming,
   bondbuilderTimingBucket,
   bondbuilderTimingOf,
@@ -435,11 +435,8 @@ export function rankStage3ComparisonCandidates(
 }
 
 /**
- * Bondbuilders rank by claim trust level inside the same verdict (Nick, 2026-10-09): verdict
- * first (trust never lifts a worse fit), then trust tier, then the stated timing (S4: products used
- * the way the person asked for first — never across trust levels), then the K18 house default
- * among equally trusted candidates. Everything else falls through to the shared comparator, whose
- * authority pin and catalogue → price tail reproduce the authority's Q1 tie order.
+ * Bondbuilders rank by verdict, reviewed trust, timing, then price, catalogue order and id.
+ * The capped budget policy consumes this order afterwards. Trust and timing always precede price.
  */
 export function compareBondbuilderTrust(
   left: Pick<CandidateAssessment, "verdict" | "facts" | "productId">,
@@ -453,9 +450,9 @@ export function compareBondbuilderTrust(
   const timingOrder =
     candidateTimingRank(left.facts, timing) - candidateTimingRank(right.facts, timing)
   if (timingOrder !== 0) return timingOrder
-  return (
-    Number(right.productId === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID) -
-    Number(left.productId === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID)
+  return compareBondbuilderTieOrder(
+    { ...left.facts, productId: left.productId },
+    { ...right.facts, productId: right.productId },
   )
 }
 
@@ -479,7 +476,7 @@ export function candidateTrustRank(facts: Stage3CategoryProductFacts): number {
 }
 
 /**
- * The authority adapter's own recommendation (e.g. Bondbuilder's K18 tie-default) is the
+ * The authority adapter's own recommendation (e.g. Bondbuilder's cheapest tie option) is the
  * product `evaluateStage3Authority` would hand back for this exact input. Reuses an
  * already-computed evaluation when the caller has one to avoid evaluating twice.
  */
@@ -536,8 +533,8 @@ function boundedSelectedComparisonCandidateAssessments(
 ): CandidateAssessment[] {
   const candidates = rankStage3ComparisonCandidates(input, subjectEvaluation, selection)
   if (selection === "native") {
-    // Bondbuilders keep the authority order (Nick's ruling S2: verdict → trust → timing → K18 /
-    // tie order); a price-first presentation would put medium-trust products ahead (S4-02).
+    // Bondbuilders keep the authority order (Nick's ruling S2: verdict → trust → timing → price /
+    // catalogue order / id); a price-only presentation would put medium-trust products ahead (S4-02).
     // Other categories keep the native verdict → price presentation.
     return (
       input.category === "bondbuilder"

@@ -21,7 +21,7 @@ import type {
 } from "@/lib/types"
 import { getBondbuilderUsageHint } from "@/lib/bondbuilder/usage-protocols"
 import {
-  BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+  compareBondbuilderTieOrder,
   bondbuilderTrustRank,
 } from "@/lib/personal-plan/products/authority/categories/bondbuilder"
 import type { ProductConditionerRerankSpecs } from "@/lib/conditioner/constants"
@@ -1254,8 +1254,8 @@ const BONDBUILDER_FIT_ORDER: Record<CategoryFitStatus, number> = {
 }
 
 /**
- * Fit bucket first (trust never lifts a worse fit), then claim trust level, then the K18 house
- * default among equally trusted products, then message relevance, catalog order and id.
+ * Fit bucket first (trust never lifts a worse fit), then claim trust level, then lower price,
+ * catalogue order and id (Nick, 2026-10-13).
  */
 function compareBondbuilderProducts(
   left: ScoredEngineProduct & { _trustRank: number },
@@ -1266,14 +1266,10 @@ function compareBondbuilderProducts(
     BONDBUILDER_FIT_ORDER[right._fitStatus ?? "unknown"]
   if (fitOrder !== 0) return fitOrder
   if (left._trustRank !== right._trustRank) return left._trustRank - right._trustRank
-  const tieDefault =
-    Number(right.id === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID) -
-    Number(left.id === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID)
-  if (tieDefault !== 0) return tieDefault
-  const relevance = toBaseScore(right) - toBaseScore(left)
-  if (relevance !== 0) return relevance
-  if (left.sort_order !== right.sort_order) return left.sort_order - right.sort_order
-  return left.id.localeCompare(right.id)
+  return compareBondbuilderTieOrder(
+    { productId: left.id, priceEur: left.price_eur, catalogSortOrder: left.sort_order },
+    { productId: right.id, priceEur: right.price_eur, catalogSortOrder: right.sort_order },
+  )
 }
 
 type RequestedBondbuilderBrand = "k18" | "olaplex" | "epres"

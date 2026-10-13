@@ -294,7 +294,7 @@ function bondbuilderTieCandidates(thickness: PlanHairThickness): Stage3Bondbuild
     isActive: true,
     lifecycleStatus: "active",
     recommendable: true,
-    // Real prices differ; the S4 equal-trust default still joins in both lanes.
+    // fit-verdict spec §6, ruled 2026-10-12: price decides equal trust in both joins.
     priceEur: productId === "olaplex-no3" ? 34 : productId === "epres" ? 48 : 56.25,
     // Deliberately pinned to the initial snapshot's thickness rather than made
     // universally suitable: a thickness drift between the two snapshots must
@@ -367,7 +367,7 @@ function acceptChainBondbuilderEvaluation(
   } as never)
 }
 
-// S4 owner ruling: the house default joins identically across preview and acceptance.
+// fit-verdict spec §6, ruled 2026-10-12: cheaper equal-trust option joins identically.
 test("the Bondbuilder tie cohort joins on product identity, not only on role keys", async () => {
   const envelope = CALM_SCALP_ENVELOPE
   const initial = initialSnapshot(envelope)
@@ -387,10 +387,10 @@ test("the Bondbuilder tie cohort joins on product identity, not only on role key
   assert.equal(
     preview.kind,
     "recommendation",
-    "the tie default must resolve to a buyable product, not a fallback",
+    "the trust/price pick must resolve to a buyable product, not a fallback",
   )
   if (preview.kind !== "recommendation") throw new Error("unreachable")
-  assert.equal(preview.productId, K18_PRODUCT_ID)
+  assert.equal(preview.productId, "olaplex-no3")
 
   const server = acceptChainBondbuilderEvaluation(envelope, candidates)
   assert.equal(server.status, "known")

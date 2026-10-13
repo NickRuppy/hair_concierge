@@ -12,7 +12,10 @@ import {
 } from "../src/lib/mobile/result-presentation"
 import { presentScanVerdictPayload } from "../src/lib/scan/product-presentation"
 import { maskScanVerdictPayload } from "../src/lib/scan/masked-alternative"
-import type { Stage3ConditionerFacts } from "../src/lib/personal-plan/products/authority/contracts"
+import type {
+  Stage3BondbuilderFacts,
+  Stage3ConditionerFacts,
+} from "../src/lib/personal-plan/products/authority/contracts"
 
 function input(): BuildScanVerdictInput {
   const facts: Stage3ConditionerFacts = {
@@ -280,5 +283,90 @@ test("all compact category schemas remain visible and missing criteria are never
     const rows = mobileCriterionRows(category, role, [], null)
     assert.equal(rows.length, count)
     assert.ok(rows.every((row) => row.displayStatus === "neutral"))
+  }
+})
+
+// The native presentation used to re-sort by price alone; capped scan uses a separate builder.
+// Exercise both paths so a cheaper low-trust product cannot displace the reviewed trust/timing order.
+test("Bondbuilder web and native scan keep trust, timing and cheapest-first order under a cap", () => {
+  const role = "specialized_bond_treatment" as const
+  const candidate = (
+    productId: string,
+    priceEur: number,
+    trust: "high" | "medium",
+    afterWash = false,
+  ): Stage3BondbuilderFacts => ({
+    productId,
+    displayName: productId,
+    category: "bondbuilder",
+    isActive: true,
+    lifecycleStatus: "active",
+    recommendable: true,
+    knownReaction: false,
+    suitableThicknesses: ["normal"],
+    protocols: [{ role, status: "verified_complete", fingerprint: `protocol-${productId}` }],
+    factFingerprint: `facts-${productId}`,
+    catalogSortOrder: afterWash ? 0 : 10,
+    priceEur,
+    purchaseLinkStatus: "available",
+    spec: {
+      applicationMode: afterWash ? "post_wash_leave_in" : "pre_shampoo",
+      treatmentMode: afterWash ? "leave_in" : "rinse_out",
+      usageProtocol: "course",
+      productFormat: "treatment",
+      relationship: "standalone",
+      technologyFamily: "sulfur_targeting_dimaleate",
+      trustBasis: "owner_anchor",
+      claimTrustLevel: trust,
+    },
+  })
+  const k18 = "38dace91-0fba-49ee-a93f-ac36e488fe4b"
+  const candidates = [
+    candidate(k18, 56.25, "high", true),
+    candidate("epres", 48, "high"),
+    candidate("olaplex", 34, "high"),
+    candidate("elvital", 8.95, "medium"),
+  ]
+  for (const alternativeSelection of ["web", "native"] as const) {
+    for (const row of [
+      { timing: "no_preference", capped: false, expected: ["olaplex", "epres", k18] },
+      { timing: "after_wash", capped: false, expected: [k18, "olaplex", "epres"] },
+      { timing: "no_preference", capped: true, expected: ["elvital", "olaplex", "epres"] },
+      { timing: "after_wash", capped: true, expected: ["elvital", k18, "olaplex"] },
+    ] as const) {
+      const value = input()
+      const verdict = buildScanVerdict({
+        ...value,
+        category: "bondbuilder",
+        decision: {
+          ...value.decision,
+          category: "bondbuilder",
+          roles: [role],
+          target: {
+            category: "bondbuilder",
+            roles: [role],
+            requiredFunction: "support_stressed_hair_resilience",
+            mechanismTarget: "mechanism_neutral",
+          },
+        },
+        productFacts: candidate("scanned", 52, "medium"),
+        recommendationCandidates: candidates,
+        selectionProfile: { ...UNKNOWN_SELECTION_PROFILE, bondbuilderTiming: row.timing },
+        alternativeSelection,
+        ...(row.capped
+          ? { budget: { kind: "capped", limitEur: 15, allowExceptions: false } as const }
+          : {}),
+      })
+      assert.equal(verdict.kind, "in_catalog")
+      if (verdict.kind !== "in_catalog") throw new Error("expected an assessment")
+      for (const presented of [verdict, presentScanVerdictPayload(verdict, [])]) {
+        if (presented.kind !== "in_catalog") throw new Error("expected presented assessment")
+        assert.deepEqual(
+          presented.alternatives.slice(0, 3).map((option) => option.productId),
+          row.expected,
+          `${alternativeSelection}/${row.timing}/capped=${row.capped}`,
+        )
+      }
+    }
   }
 })

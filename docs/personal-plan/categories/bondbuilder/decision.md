@@ -261,7 +261,7 @@ The current launch set contains three equally eligible primary concepts when all
 - K18 Leave-In Molecular Repair Hair Mask — post-wash leave-in treatment;
 - OLAPLEX Nº.3PLUS Complete Repair Treatment — pre-shampoo cream.
 
-Selection rules (current implementation; Nick's rulings 2026-10-09 S2/X1 and S4, superseding the original V1 "no winner" rule):
+Selection rules (current implementation; Nick's rulings 2026-10-09 S2/X1 and 2026-10-13 S4, superseding the original V1 "no winner" rule):
 
 The [canonical fit-verdict model](../../fit-verdict-model.md) supplies the fit evaluator and technology admission gates. The S4 owner rulings retain the following timing and tie policy for this branch.
 
@@ -269,13 +269,14 @@ The [canonical fit-verdict model](../../fit-verdict-model.md) supplies the fit e
 2. **claim trust** (`product_bondbuilder_specs.claim_trust_level`: high > medium > low > none) — only the most trusted ideal level forms the shortlist; nothing lifts a less trusted product above it;
 3. **timing** — the Feinschliff answer `bondbuilderTiming` (`before_wash` | `after_wash` | `no_preference`, carried in `Stage3SelectionProfile.bondbuilderTiming`) narrows the most trusted level to the products used that way (`application_mode`: `pre_shampoo` → before, `post_wash_leave_in` → after, `bedtime_leave_in` → overnight, which matches neither answer). If none matches, the whole most-trusted level stays and the pick carries `bondbuilder.stage3.timing_unmet.<requested>.<actual>`;
 4. **budget** (capped only, `trust_pair` mode) — cheaper first only inside one (verdict, trust, usage) run; the default is the best affordable product next to the best product overall;
-5. **K18 house default** (`38dace91…`) when it is in the remaining tie (`bondbuilder.stage3.tie_default`);
-6. **Q1 tie order** otherwise: catalogue order, then lower price, then product id (`compareBondbuilderTieOrder`, `bondbuilder.stage3.tie_ordered`; e.g. „Vor dem Waschen" → OLAPLEX No.3PLUS before Epres). The other tied products stay visible as equal options and the `bondbuilder.equal_shortlist` caution stays;
-7. if no ideal product survives, return `Empfehlung wird geprüft`; never promote supportive, mismatch, or unknown as the confident standalone recommendation.
+5. **Cheapest first** within an equal trust/timing tie (unknown prices last), then catalogue order, then product id (`compareBondbuilderTieOrder`, `bondbuilder.stage3.tie_ordered`; e.g. „Vor dem Waschen" → OLAPLEX No.3PLUS before Epres). The other tied products stay visible as equal options and the `bondbuilder.equal_shortlist` caution stays;
+6. if no ideal product survives, return `Empfehlung wird geprüft`; never promote supportive, mismatch, or unknown as the confident standalone recommendation.
 
-Rule ids on the recommendation: `validated_standalone` (single pick, or any explicit user pick — an explicit `select_replacement` never persists `timing_unmet`), `tie_default`, `tie_ordered`, `timing_unmet.<requested>.<actual>`. The same order drives the comparison list (`compareBondbuilderTrust`: verdict → trust → timing → K18 → shared tail; ranked[0] equals the authority pick), the Stage-1 previews, the gateway budget allocation and the scan alternatives through one builder (`budget-role-ranking.ts`); cockpit equal options are exactly the authority's tie set (`bondbuilderShortlist`).
+Nick retired the K18 house default on 2026-10-13, superseding Q1's catalogue-first tail. Lena, with damaged hair and no timing preference: OLAPLEX No.3PLUS (€34) is picked; Epres (€48) and K18 (€56.25) are equal options.
 
-Timing question (`bondbuilder_timing`, products module, X1): asked after the wash-frequency question only when Stage 1 put Bondbuilder in the plan, the user does not report an owned Bondbuilder, and she washes wet. Unanswered or „Ist mir egal" = `no_preference`, which keeps today's trust → K18 selection value for value; completed drafts from before the question are normalized to the assumed `no_preference`.
+Rule ids on the recommendation: `validated_standalone` (single pick, or any explicit user pick — an explicit `select_replacement` never persists `timing_unmet`), `tie_ordered`, `timing_unmet.<requested>.<actual>`. The same order drives the comparison list (`compareBondbuilderTrust`: verdict → trust → timing → price → catalogue order → id; ranked[0] equals the authority pick), the Stage-1 previews, the gateway budget allocation and the scan alternatives through one builder (`budget-role-ranking.ts`); cockpit equal options are exactly the authority's tie set (`bondbuilderShortlist`).
+
+Timing question retained per Nick 2026-10-13 (`bondbuilder_timing`, products module, X1): asked after the wash-frequency question only when Stage 1 put Bondbuilder in the plan, the user does not report an owned Bondbuilder, and she washes wet. Unanswered or „Ist mir egal" = `no_preference`, which uses trust → cheapest first without inventing a timing preference; completed drafts from before the question are normalized to the assumed `no_preference`.
 
 Routine card: no extra line when the answer is met; a planned product carrying `timing_unmet.*` shows one neutral line, e.g. „Nach dem Waschen gerade nicht möglich. Kommt vor dem Waschen ins Haar." (`routine/bondbuilder-timing-note.ts`). Owned products never show it.
 

@@ -1,3 +1,5 @@
+import { discoveryEqualOptions } from "../../src/lib/discovery/equal-options"
+import { buildStage3SelectionProfile } from "../../src/lib/personal-plan/products/authority/selection-profile"
 import assert from "node:assert/strict"
 import test from "node:test"
 
@@ -823,6 +825,7 @@ test("a tied Bondbuilder shortlist previews the cheapest reviewed option, not an
     lifecycleStatus: "active",
     recommendable: true,
     priceEur: productId === "olaplex" ? 34 : productId === "epres" ? 48 : 56.25,
+    currency: "EUR",
     suitableThicknesses: [result.snapshot.profile.hair.thickness],
     knownReaction: false,
     protocols: [{ role, status: "verified_complete", fingerprint: `protocol-${productId}` }],
@@ -862,6 +865,14 @@ test("a tied Bondbuilder shortlist previews the cheapest reviewed option, not an
     sourceNeedVersionId: "need-1",
     snapshot: {
       ...result.snapshot,
+      assessments: {
+        ...result.snapshot.assessments,
+        damage: {
+          ...result.snapshot.assessments.damage,
+          knowledgeState: "known" as const,
+          structuralLevel: "high" as const,
+        },
+      },
       decisions: [decision],
       renderedOrder: ["bondbuilder" as const],
     },
@@ -907,6 +918,23 @@ test("a tied Bondbuilder shortlist previews the cheapest reviewed option, not an
   assert.equal(recommendation.productId, "38dace91-0fba-49ee-a93f-ac36e488fe4b")
   assert.equal(recommendation.imageUrl, "https://example.com/k18.webp")
   assert.equal(recommendation.verdict, "ideal")
+  // Lena (Nick, 2026-10-13): damaged hair, all three reviewed high-trust products fit.
+  const options = discoveryEqualOptions({
+    category: "bondbuilder",
+    role,
+    decision,
+    snapshot: previewInput.snapshot,
+    sourceNeedVersionId: previewInput.sourceNeedVersionId,
+    candidates: tiedCandidates,
+    selectedProductId: tied.productId,
+    selectionProfile: buildStage3SelectionProfile(previewInput.snapshot, null),
+  })
+  assert.deepEqual(
+    options.map((option) => option.productId),
+    ["epres", "38dace91-0fba-49ee-a93f-ac36e488fe4b"],
+  )
+  assert.match(options[0]!.priceLabel ?? "", /48,00/)
+  assert.match(options[1]!.priceLabel ?? "", /56,25/)
 })
 
 test("keeps a matching Shampoo preview and an explicit fallback when another category candidate load fails", async () => {

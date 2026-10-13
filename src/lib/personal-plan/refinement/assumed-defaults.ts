@@ -75,7 +75,7 @@ import type {
 
 /** Most common wash rhythm; conservative between daily and weekly cleansing. */
 export const STAGE2_ASSUMED_WET_WASH_FREQUENCY: ProductFrequency & WetWashFrequency = "weekly_2x"
-/** Leaves today's Bondbuilder selection (trust tier, then the K18 house default) untouched. */
+/** Leaves today's Bondbuilder selection (trust tier, then cheapest first) untouched. */
 export const STAGE2_ASSUMED_BONDBUILDER_TIMING: BondbuilderTiming = "no_preference"
 /** Gentle handling, so no mechanical-exposure signal is assumed. */
 export const STAGE2_ASSUMED_TOWEL_MATERIAL: TowelMaterial = "mikrofaser"
@@ -161,7 +161,7 @@ export const STAGE2_ASSUMPTION_RULES: readonly Stage2AssumptionRule[] = [
     condition:
       "Stage-1 Bondbuilder need (basis or optional), the user does not report an owned Bondbuilder, and she washes wet",
     rationale:
-      "`no_preference` is the only value that leaves today's selection untouched (trust tier, then the K18 house default); assuming a timing would silently swap the product the Idealplan showed.",
+      "`no_preference` is the only value that leaves today's selection untouched (trust tier, then cheapest first); assuming a timing would silently swap the product the Idealplan showed.",
     write: ({ answers }) => ({ ...answers, bondbuilderTiming: STAGE2_ASSUMED_BONDBUILDER_TIMING }),
   },
   {

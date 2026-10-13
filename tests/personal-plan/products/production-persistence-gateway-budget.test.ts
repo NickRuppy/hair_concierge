@@ -2,7 +2,6 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { CATEGORY_ROLE_POLICIES } from "../../../src/lib/personal-plan/products/authorities"
-import { BONDBUILDER_TIE_DEFAULT_PRODUCT_ID } from "../../../src/lib/personal-plan/products/authority/categories/bondbuilder"
 import type { Stage3AuthorityFactBundle } from "../../../src/lib/personal-plan/products/authority/catalog-facts"
 import type {
   Stage3CategoryRequirement,
@@ -1297,7 +1296,7 @@ function bondbuilder(
 }
 
 // The production catalogue on 2026-10-09 (recommended + active), in catalogue order.
-const K18_ID = BONDBUILDER_TIE_DEFAULT_PRODUCT_ID
+const K18_ID = "38dace91-0fba-49ee-a93f-ac36e488fe4b"
 const PRODUCTION_BONDBUILDERS: Stage3AuthorityFactBundle = {
   productFacts: null,
   recommendationCandidates: [
@@ -1377,15 +1376,15 @@ test("B-INT-TRUST: Bis 5 € strict preselects nothing, trust order with cheaper
   assert.equal(review.fitComparison.budgetNotice, "strict_none_affordable")
 })
 
-// S4 owner ruling: uncapped and flag-off retain the K18 default within equal trust/timing.
-test("B-INT-TRUST: uncapped and flag off both recommend K18 and rank by trust", async () => {
+// Nick 2026-10-13: uncapped and flag-off use trust, timing, then cheapest first.
+test("B-INT-TRUST: uncapped and flag off both recommend Olaplex and rank by trust then price", async () => {
   for (const review of [await bondbuilderReview(UNCAPPED), await bondbuilderReview(null, false)]) {
     assert.equal(review.authorityEvaluation.status, "known")
     if (review.authorityEvaluation.status !== "known") return
-    assert.equal(review.authorityEvaluation.recommendation?.productId, K18_ID)
+    assert.equal(review.authorityEvaluation.recommendation?.productId, "olaplex-3plus")
     assert.deepEqual(
       review.fitComparison.alternatives.map((candidate) => candidate.productId),
-      [K18_ID, "olaplex-3plus", "epres"],
+      ["olaplex-3plus", "epres", K18_ID],
     )
   }
 })
@@ -1575,12 +1574,13 @@ test('S4: an explicit pick of Olaplex under „Nach dem Waschen" persists valida
 })
 
 test("S4 P14: a timing change re-picks a non-explicit preserved K18 under a budget", async () => {
-  // Accepted (not hand-picked) K18 from the „Ist mir egal" plan.
+  // Accepted (not hand-picked) K18 from the „Nach dem Waschen" plan.
   const draft = conditionerAndBondbuilderDraft()
   const saved: Stage3ProductDraft[] = []
   await gateway(draft, {
     budget: null,
     enabled: false,
+    bondbuilderTiming: "after_wash",
     facts: bondbuilderAndConditionerFacts,
     saved,
   }).resolveDecisions({
@@ -1595,8 +1595,8 @@ test("S4 P14: a timing change re-picks a non-explicit preserved K18 under a budg
   const stored = accepted.decisions.find((entry) => entry.decisionKey === BONDBUILDER_KEY)
   assert.equal(stored?.recommendation?.productId, K18_ID)
 
-  // „Ist mir egal" keeps it; „Vor dem Waschen" re-picks Olaplex instead of preserving K18.
-  const kept = await bondbuilderReview(UNCAPPED, true, "no_preference", accepted)
+  // „Nach dem Waschen" keeps it; „Vor dem Waschen" re-picks Olaplex instead of preserving K18.
+  const kept = await bondbuilderReview(UNCAPPED, true, "after_wash", accepted)
   assert.equal(kept.fitComparison.defaultProductId, K18_ID)
   const changed = await bondbuilderReview(UNCAPPED, true, "before_wash", accepted)
   assert.equal(changed.fitComparison.defaultProductId, "olaplex-3plus")
@@ -1605,12 +1605,13 @@ test("S4 P14: a timing change re-picks a non-explicit preserved K18 under a budg
   assert.equal(changed.authorityEvaluation.recommendation?.productId, "olaplex-3plus")
 })
 
-test("S4 T4.6: a changed answer makes an accepted K18 non-current; „Ist mir egal“ keeps it", async () => {
+test("S4 T4.6: a changed answer makes an accepted K18 non-current; „Nach dem Waschen“ keeps it", async () => {
   const draft = conditionerAndBondbuilderDraft()
   const saved: Stage3ProductDraft[] = []
   await gateway(draft, {
     budget: null,
     enabled: false,
+    bondbuilderTiming: "after_wash",
     facts: bondbuilderAndConditionerFacts,
     saved,
   }).resolveDecisions({
@@ -1622,7 +1623,7 @@ test("S4 T4.6: a changed answer makes an accepted K18 non-current; „Ist mir eg
     ],
   })
   const accepted = saved.at(-1)!
-  const complete = async (bondbuilderTiming?: "before_wash" | "no_preference") => {
+  const complete = async (bondbuilderTiming?: "before_wash" | "after_wash") => {
     let stageCalls = 0
     const completion = await gateway(
       accepted,
@@ -1631,6 +1632,6 @@ test("S4 T4.6: a changed answer makes an accepted K18 non-current; „Ist mir eg
     ).complete({ draftId: accepted.draftId, expectedRevision: accepted.revision })
     return { status: completion.status, stageCalls }
   }
-  assert.deepEqual(await complete("no_preference"), { status: "ready_for_routine", stageCalls: 1 })
+  assert.deepEqual(await complete("after_wash"), { status: "ready_for_routine", stageCalls: 1 })
   assert.deepEqual(await complete("before_wash"), { status: "not_ready", stageCalls: 0 })
 })

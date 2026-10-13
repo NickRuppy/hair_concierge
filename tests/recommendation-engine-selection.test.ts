@@ -38,13 +38,14 @@ import {
   rerankShampooProductsWithEngine,
 } from "../src/lib/recommendation-engine"
 import { createChatBudgetEngineOrder } from "../src/lib/agent/tools/chat-budget"
-import { BONDBUILDER_TIE_DEFAULT_PRODUCT_ID } from "../src/lib/personal-plan/products/authority/categories/bondbuilder"
 import type { MatchedProduct } from "../src/lib/product-matching/matcher"
 import {
   LOW_DAMAGE_PROFILE,
   SEVERE_DAMAGE_PROFILE,
 } from "./recommendation-engine-foundation.fixtures"
 import type { HairProfile } from "../src/lib/types"
+
+const K18_PRODUCT_ID = "38dace91-0fba-49ee-a93f-ac36e488fe4b"
 
 function createMatchedProduct(
   id: string,
@@ -2096,11 +2097,14 @@ test("engine bondbuilder reranking exposes protocol metadata without ranking by 
     decision,
   })
 
-  assert.equal(reranked[0]?.id, "supportive")
-  assert.equal(reranked[0]?.recommendation_meta?.category, "bondbuilder")
+  const leaveIn = reranked.find((product) => product.id === "supportive")
+  assert.deepEqual(
+    reranked.map((product) => product.id),
+    ["ideal", "supportive"],
+  )
+  assert.equal(leaveIn?.recommendation_meta?.category, "bondbuilder")
   assert.equal(
-    (reranked[0]?.recommendation_meta as BondbuilderRecommendationMetadata | undefined)
-      ?.usage_protocol,
+    (leaveIn?.recommendation_meta as BondbuilderRecommendationMetadata | undefined)?.usage_protocol,
     "k18_leave_in",
   )
 })
@@ -2168,7 +2172,7 @@ test("engine bondbuilder reranking orders by a capped budget before the cut of t
       { id: "third", score: 0.88, price: 4.5, axis: "disulfide_crosslink" },
     ],
   )
-  assert.deepEqual(rerank(false), ["first", "second"])
+  assert.deepEqual(rerank(false), ["third", "second"])
   // Equally trusted (all unrated) products are ordered cheaper first under a cap.
   assert.deepEqual(rerank(true), ["third", "second"])
 })
@@ -2180,7 +2184,7 @@ test("engine bondbuilder ranking ignores the repair lane: no forced pick per lan
     { id: "crosslink-cheap", score: 0.88, price: 4.5, axis: "disulfide_crosslink" },
   ])
   // Type is worthless for ranking (Nick, 2026-10-09): no lane bonus, no dual-lane pick.
-  assert.deepEqual(rerank(false), ["crosslink-pricey", "crosslink-cheap"])
+  assert.deepEqual(rerank(false), ["crosslink-cheap", "peptide-pricey"])
   // With a cap: best affordable next to the cheapest equally trusted product, regardless of lane.
   assert.deepEqual(rerank(true), ["crosslink-cheap", "peptide-pricey"])
 })
@@ -2236,7 +2240,7 @@ const REAL_BONDBUILDERS: Array<{
     score: 0.93,
   },
   {
-    id: BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+    id: K18_PRODUCT_ID,
     price: 56.25,
     trust: "high",
     axis: "peptide_chain",
@@ -2304,21 +2308,18 @@ function realBondbuilderRerank(options: {
   }).map((product) => product.id)
 }
 
-test("engine bondbuilder ranking orders by trust, K18 among equals, not by relevance", () => {
-  // Without a budget: high trust first (K18 house default among the three high products), even
-  // though K18 has the lowest relevance.
-  assert.deepEqual(realBondbuilderRerank({}), [BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "olaplex-3plus"])
+test("engine bondbuilder ranking orders by trust, then cheapest first among equals", () => {
+  // Without a budget: high trust first, then cheapest first regardless of relevance.
+  assert.deepEqual(realBondbuilderRerank({}), ["olaplex-3plus", "epres"])
   assert.deepEqual(realBondbuilderRerank({ mixedOrSevereCombo: true }), [
-    BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
     "olaplex-3plus",
     "epres",
+    K18_PRODUCT_ID,
   ])
 })
 
-test("engine bondbuilder ranking without K18 keeps trust order and breaks ties by relevance", () => {
-  const withoutK18 = REAL_BONDBUILDERS.filter(
-    (product) => product.id !== BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
-  )
+test("engine bondbuilder ranking without K18 keeps trust order and breaks ties by price", () => {
+  const withoutK18 = REAL_BONDBUILDERS.filter((product) => product.id !== K18_PRODUCT_ID)
   assert.deepEqual(realBondbuilderRerank({ products: withoutK18, mixedOrSevereCombo: true }), [
     "olaplex-3plus",
     "epres",
@@ -2526,9 +2527,9 @@ test("engine bondbuilder reranking attaches optional add-ons for severe combo ca
   }
 
   const candidates = [
-    createMatchedProduct("olaplex-3plus", "Bondbuilder", { combined_score: 0.7 }),
-    createMatchedProduct("epres", "Bondbuilder", { combined_score: 0.68 }),
-    createMatchedProduct("k18", "Bondbuilder", { combined_score: 0.66 }),
+    createMatchedProduct("olaplex-3plus", "Bondbuilder", { price_eur: 34, combined_score: 0.7 }),
+    createMatchedProduct("epres", "Bondbuilder", { price_eur: 48, combined_score: 0.68 }),
+    createMatchedProduct("k18", "Bondbuilder", { price_eur: 56.25, combined_score: 0.66 }),
   ]
 
   const specs: ProductBondbuilderSpecs[] = [
@@ -2632,16 +2633,19 @@ test("engine bondbuilder reranking scopes named K18 and OLAPLEX comparisons", ()
     createMatchedProduct("olaplex-3plus", "Bondbuilder", {
       brand: "OLAPLEX",
       name: "OLAPLEX No.3PLUS Complete Repair Treatment",
+      price_eur: 34,
       combined_score: 0.7,
     }),
     createMatchedProduct("epres", "Bondbuilder", {
       brand: "Epres",
       name: "Epres Bond Repair Treatment",
+      price_eur: 48,
       combined_score: 0.68,
     }),
     createMatchedProduct("k18", "Bondbuilder", {
       brand: "K18",
       name: "K18 Leave-In Molecular Repair Hair Mask",
+      price_eur: 56.25,
       combined_score: 0.66,
     }),
   ]

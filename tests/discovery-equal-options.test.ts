@@ -178,10 +178,12 @@ function production(timing: "before_wash" | "after_wash" | "no_preference") {
   }
 }
 
-test("S4 G1: options are the authority's tie set — OLAPLEX and Epres, never the lower trust levels", () => {
+test("S4 G1: the cheapest pick offers Epres and K18, never the lower trust levels", () => {
   assert.deepEqual(
-    discoveryEqualOptions(production("no_preference")).map((option) => option.productId),
-    ["epres", "olaplex"],
+    discoveryEqualOptions({ ...production("no_preference"), selectedProductId: "olaplex" }).map(
+      (option) => option.productId,
+    ),
+    ["epres", K18],
   )
 })
 

@@ -4,7 +4,6 @@ import test from "node:test"
 
 import { CATEGORY_ROLE_POLICIES } from "../../../src/lib/personal-plan/products/authorities"
 import {
-  BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
   bondbuilderShortlist,
   compareBondbuilderTieOrder,
 } from "../../../src/lib/personal-plan/products/authority/categories/bondbuilder"
@@ -16,6 +15,8 @@ import type {
   Stage3CategoryProductFacts,
 } from "../../../src/lib/personal-plan/products/authority/contracts"
 import type { PersonalPlanCategory } from "../../../src/lib/personal-plan/products/contracts"
+
+const K18_PRODUCT_ID = "38dace91-0fba-49ee-a93f-ac36e488fe4b"
 
 const TARGETS: Record<PersonalPlanCategory, unknown> = {
   shampoo: {
@@ -514,7 +515,7 @@ function bondbuilderCandidate(productId: string, displayName: string) {
     displayName,
     recommendable: true,
     priceEur:
-      productId === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID
+      productId === K18_PRODUCT_ID
         ? 56.25
         : productId.startsWith("olaplex")
           ? 34
@@ -534,11 +535,8 @@ function bondbuilderGapInput(candidates: ReturnType<typeof bondbuilderCandidate>
   return gap
 }
 
-test("a Bondbuilder tie defaults to K18 without claiming it is the better product", () => {
-  const k18 = bondbuilderCandidate(
-    BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
-    "K18 Leave-In Molecular Repair Hair Mask",
-  )
+test("a Bondbuilder tie selects the cheapest option without claiming it is the better product", () => {
+  const k18 = bondbuilderCandidate(K18_PRODUCT_ID, "K18 Leave-In Molecular Repair Hair Mask")
   const result = evaluateStage3Authority(
     bondbuilderGapInput([
       bondbuilderCandidate("olaplex-no3", "OLAPLEX No.3PLUS Complete Repair Treatment"),
@@ -550,13 +548,13 @@ test("a Bondbuilder tie defaults to K18 without claiming it is the better produc
   assert.equal(result.status, "known")
   if (result.status !== "known") return
   assert.equal(result.verdict, "ideal")
-  assert.equal(result.recommendation?.productId, BONDBUILDER_TIE_DEFAULT_PRODUCT_ID)
-  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.tie_default")
+  assert.equal(result.recommendation?.productId, "olaplex-no3")
+  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.tie_ordered")
   assert.equal(
     result.recommendation?.reason,
-    "Unsere Standardwahl, wenn mehrere Produkte gleich gut passen.",
+    "Gleich gut passende Produkte; wir nennen zuerst das günstigste.",
   )
-  assert.equal(result.recommendationFactFingerprint, k18.factFingerprint)
+  assert.equal(result.recommendationFactFingerprint, "facts-olaplex-no3")
   assert.deepEqual(result.allowedActions, ["plan_recommendation", "leave_uncovered"])
   // The "several equally suitable products" fact stays visible: the default is
   // a choice among equals, not a superiority claim.
@@ -567,7 +565,7 @@ test("a Bondbuilder tie defaults to K18 without claiming it is the better produc
   )
 })
 
-test("Q1: a Bondbuilder tie without the default product resolves by catalogue order, then price", () => {
+test("a Bondbuilder tie without K18 resolves by price, then catalogue order", () => {
   const olaplex = Object.assign(
     bondbuilderCandidate("olaplex-no3", "OLAPLEX No.3PLUS Complete Repair Treatment"),
     { catalogSortOrder: 0, priceEur: 34 },
@@ -585,7 +583,7 @@ test("Q1: a Bondbuilder tie without the default product resolves by catalogue or
   assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.tie_ordered")
   assert.equal(
     result.recommendation?.reason,
-    "Gleich gut passende Produkte; wir nennen das erste nach Katalogreihenfolge und Preis.",
+    "Gleich gut passende Produkte; wir nennen zuerst das günstigste.",
   )
   assert.equal(result.recommendationFactFingerprint, "facts-olaplex-no3")
   assert.deepEqual(result.allowedActions, ["plan_recommendation", "leave_uncovered"])
@@ -594,15 +592,12 @@ test("Q1: a Bondbuilder tie without the default product resolves by catalogue or
 })
 
 test("a single ideal Bondbuilder candidate keeps the standalone rule, not the tie default", () => {
-  const only = bondbuilderCandidate(
-    BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
-    "K18 Leave-In Molecular Repair Hair Mask",
-  )
+  const only = bondbuilderCandidate(K18_PRODUCT_ID, "K18 Leave-In Molecular Repair Hair Mask")
   const result = evaluateStage3Authority(bondbuilderGapInput([only]))
 
   assert.equal(result.status, "known")
   if (result.status !== "known") return
-  assert.equal(result.recommendation?.productId, BONDBUILDER_TIE_DEFAULT_PRODUCT_ID)
+  assert.equal(result.recommendation?.productId, K18_PRODUCT_ID)
   assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.validated_standalone")
   assert.ok(result.criteria.every((entry) => entry.criterionId !== "bondbuilder.equal_shortlist"))
 })
@@ -616,7 +611,7 @@ function trustedBondbuilder(productId: string, claimTrustLevel: string | null) {
 test("a more trusted ideal Bondbuilder wins outright, without the tie default or shortlist", () => {
   const result = evaluateStage3Authority(
     bondbuilderGapInput([
-      trustedBondbuilder(BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "medium"),
+      trustedBondbuilder(K18_PRODUCT_ID, "medium"),
       trustedBondbuilder("olaplex-no3", "high"),
       trustedBondbuilder("loreal", "low"),
     ]),
@@ -631,7 +626,7 @@ test("a more trusted ideal Bondbuilder wins outright, without the tie default or
   assert.ok(result.criteria.every((entry) => entry.criterionId !== "bondbuilder.equal_shortlist"))
 })
 
-test("the production Bondbuilder set resolves to K18 among the three high-trust products", () => {
+test("the production Bondbuilder set resolves to OLAPLEX among the three high-trust products", () => {
   const result = evaluateStage3Authority(
     bondbuilderGapInput([
       trustedBondbuilder("loreal-elvital-bond", "medium"),
@@ -640,15 +635,15 @@ test("the production Bondbuilder set resolves to K18 among the three high-trust 
       trustedBondbuilder("olaplex-3plus", "high"),
       trustedBondbuilder("epres", "high"),
       trustedBondbuilder("aveda", "low"),
-      trustedBondbuilder(BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "high"),
+      trustedBondbuilder(K18_PRODUCT_ID, "high"),
       trustedBondbuilder("kerastase-premiere", "medium"),
     ]),
   )
 
   assert.equal(result.status, "known")
   if (result.status !== "known") return
-  assert.equal(result.recommendation?.productId, BONDBUILDER_TIE_DEFAULT_PRODUCT_ID)
-  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.tie_default")
+  assert.equal(result.recommendation?.productId, "olaplex-3plus")
+  assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.tie_ordered")
   assert.ok(result.criteria.some((entry) => entry.criterionId === "bondbuilder.equal_shortlist"))
 })
 
@@ -657,7 +652,7 @@ test("Q1: a high-trust tie without K18 never falls back to the less trusted K18"
     bondbuilderGapInput([
       Object.assign(trustedBondbuilder("olaplex-no3", "high"), { priceEur: null }),
       Object.assign(trustedBondbuilder("epres", "high"), { priceEur: null }),
-      trustedBondbuilder(BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "medium"),
+      trustedBondbuilder(K18_PRODUCT_ID, "medium"),
     ]),
   )
 
@@ -2821,8 +2816,7 @@ function productionBondbuilder(
 const PROD = {
   olaplex: () => productionBondbuilder("olaplex-3plus", "high", "pre_shampoo", 34),
   epres: () => productionBondbuilder("epres", "high", "pre_shampoo", 48),
-  k18: () =>
-    productionBondbuilder(BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "high", "post_wash_leave_in", 56.25),
+  k18: () => productionBondbuilder(K18_PRODUCT_ID, "high", "post_wash_leave_in", 56.25),
   elvital: () => productionBondbuilder("loreal-elvital-bond", "medium", "pre_shampoo", 8.95),
   redken: () => productionBondbuilder("redken-acidic-bonding", "medium", "pre_shampoo", 25.5),
   kerastase: () => productionBondbuilder("kerastase-premiere", "medium", "pre_shampoo", 56.29),
@@ -2857,21 +2851,21 @@ const hasShortlistCaution = (result: ReturnType<typeof knownResult>) =>
     (entry) => entry.criterionId === "bondbuilder.equal_shortlist" && entry.result === "caution",
   )
 
-test("S4 E1: no preference keeps K18 as the tie default with the shortlist caution", () => {
+test("S4 E1: no preference picks OLAPLEX as the cheapest tie option with the shortlist caution", () => {
   for (const input of [
     timed(productionSet(), "no_preference"),
     bondbuilderGapInput(productionSet()),
   ]) {
     const result = knownResult(input)
-    assert.equal(result.recommendation?.productId, BONDBUILDER_TIE_DEFAULT_PRODUCT_ID)
-    assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.tie_default")
+    assert.equal(result.recommendation?.productId, "olaplex-3plus")
+    assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.tie_ordered")
     assert.ok(hasShortlistCaution(result))
   }
 })
 
 test("S4 E2: after the wash → K18 alone, validated_standalone without a tie caution", () => {
   const result = knownResult(timed(productionSet(), "after_wash"))
-  assert.equal(result.recommendation?.productId, BONDBUILDER_TIE_DEFAULT_PRODUCT_ID)
+  assert.equal(result.recommendation?.productId, K18_PRODUCT_ID)
   assert.equal(result.recommendation?.authorityRuleId, "bondbuilder.stage3.validated_standalone")
   assert.equal(hasShortlistCaution(result), false)
 })
@@ -2951,8 +2945,8 @@ test("S4: the exported shortlist is the authority's own tie set", () => {
     }
   }
   assert.deepEqual(ids("no_preference"), {
-    pool: [BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "epres", "olaplex-3plus"].sort(),
-    selected: BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+    pool: [K18_PRODUCT_ID, "epres", "olaplex-3plus"].sort(),
+    selected: "olaplex-3plus",
     timingUnmet: false,
   })
   assert.deepEqual(ids("before_wash"), {
@@ -2961,8 +2955,8 @@ test("S4: the exported shortlist is the authority's own tie set", () => {
     timingUnmet: false,
   })
   assert.deepEqual(ids("after_wash"), {
-    pool: [BONDBUILDER_TIE_DEFAULT_PRODUCT_ID],
-    selected: BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+    pool: [K18_PRODUCT_ID],
+    selected: K18_PRODUCT_ID,
     timingUnmet: false,
   })
   assert.deepEqual(ids("after_wash", true), {
@@ -2972,22 +2966,26 @@ test("S4: the exported shortlist is the authority's own tie set", () => {
   })
 })
 
-test("Q1 pin: the tie order is catalogue order, then lower price (unpriced last), then id", () => {
+test("tie order is lower price (unpriced last), then catalogue order, then id", () => {
   const order = (...candidates: ProductionBondbuilder[]) =>
     [...candidates].sort(compareBondbuilderTieOrder).map((candidate) => candidate.productId)
   const withOrder = (candidate: ProductionBondbuilder, sort: number | null, price: number | null) =>
     Object.assign(candidate, { catalogSortOrder: sort, priceEur: price })
-  // Catalogue order beats price.
+  // Price beats catalogue order.
   assert.deepEqual(order(withOrder(PROD.olaplex(), 2, 34), withOrder(PROD.epres(), 1, 48)), [
-    "epres",
     "olaplex-3plus",
+    "epres",
   ])
   // Same catalogue order (production: all 0) → the cheaper one.
   assert.deepEqual(order(PROD.epres(), PROD.olaplex()), ["olaplex-3plus", "epres"])
-  // Missing order or price ranks last; equal everything → product id.
-  assert.deepEqual(order(withOrder(PROD.olaplex(), null, 34), withOrder(PROD.epres(), 0, 48)), [
+  assert.deepEqual(order(withOrder(PROD.olaplex(), 2, 40), withOrder(PROD.epres(), 1, 40)), [
     "epres",
     "olaplex-3plus",
+  ])
+  // Missing order or price ranks last; equal everything → product id.
+  assert.deepEqual(order(withOrder(PROD.olaplex(), null, 34), withOrder(PROD.epres(), 0, 48)), [
+    "olaplex-3plus",
+    "epres",
   ])
   assert.deepEqual(order(withOrder(PROD.olaplex(), 0, null), withOrder(PROD.epres(), 0, 48)), [
     "epres",

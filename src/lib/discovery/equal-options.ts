@@ -18,9 +18,8 @@ import type {
 /**
  * Equal-fit options for one Idealplan step (Nomi consult finish, plan T1).
  *
- * When an authority resolves a tie with a house default (Bondbuilder:
- * `bondbuilder.stage3.tie_default` → K18, or the Q1 order `tie_ordered`), the default is only one
- * of several products that
+ * When an authority resolves an equal tie (Bondbuilder: cheapest first, `tie_ordered`),
+ * the selected product is only one of several products that
  * evaluate exactly as well. The call may pick any of them — so the cockpit lists the others
  * next to the default. They come from the SAME candidate list and the SAME authority input
  * the preview used: no new ranking, no new rule, and nothing printed or hashed until a

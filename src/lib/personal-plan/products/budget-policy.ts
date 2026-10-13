@@ -258,7 +258,7 @@ export function orderStandaloneAlternatives(
  * 2026-10-09: Olaplex and K18 share the top trust level, so a budget shows Olaplex); unpriced ones
  * close their run. Only consecutive runs move, so verdict, trust and usage (S4 timing) order stay
  * intact — a run is one (verdict, trust, usage) group. Without a
- * cap the ranked order (K18 house default) is kept.
+ * cap the ranked order (trust, timing, then cheapest first) is kept.
  */
 function trustTiesByPrice(ranked: BudgetCandidate[]): BudgetCandidate[] {
   const result: BudgetCandidate[] = []

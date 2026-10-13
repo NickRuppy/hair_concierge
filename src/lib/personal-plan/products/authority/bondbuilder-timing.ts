@@ -5,7 +5,7 @@ import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
  * The Bondbuilder timing a selection must respect, read from the (refined) Need snapshot.
  * Anything but a stated before/after-wash answer — an initial snapshot, a refined version from
  * before the question existed, „Ist mir egal“ — is `no_preference`, which leaves today's
- * selection (trust tier, then the K18 house default) untouched.
+ * selection (trust tier, then cheapest first) untouched.
  */
 export function bondbuilderTimingFromSnapshot(
   snapshot: Pick<InitialNeedPlanSnapshot, "profile"> | null | undefined,

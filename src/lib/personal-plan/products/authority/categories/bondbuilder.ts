@@ -19,9 +19,6 @@ import {
   unsupportedEvaluation,
 } from "../shared"
 
-// S4 owner ruling: K18 remains the house default within an equal trust/timing tie.
-export const BONDBUILDER_TIE_DEFAULT_PRODUCT_ID = "38dace91-0fba-49ee-a93f-ac36e488fe4b"
-
 const BONDBUILDER_TRUST_RANKS: Readonly<Record<string, number>> = { high: 0, medium: 1, low: 2 }
 
 /**
@@ -45,24 +42,11 @@ export function recommendationForBondbuilder(product: Stage3BondbuilderFacts) {
   }
 }
 
-/** The house default within an equally trusted and equally timed shortlist. */
-function tieDefaultRecommendationForBondbuilder(product: Stage3BondbuilderFacts) {
-  return {
-    ...recommendationForBondbuilder(product),
-    reason: "Unsere Standardwahl, wenn mehrere Produkte gleich gut passen.",
-    authorityRuleId: "bondbuilder.stage3.tie_default",
-  }
-}
-
-/**
- * Q1 (S4 owner ruling): an equally trusted tie
- * without the K18 house default names the first product by catalogue order, then the lower price.
- * The other tied products stay visible as equal options (the shortlist caution stays).
- */
+/** Equally trusted and equally timed options rank cheapest first (Nick, 2026-10-13). */
 function tieOrderedRecommendationForBondbuilder(product: Stage3BondbuilderFacts) {
   return {
     ...recommendationForBondbuilder(product),
-    reason: "Gleich gut passende Produkte; wir nennen das erste nach Katalogreihenfolge und Preis.",
+    reason: "Gleich gut passende Produkte; wir nennen zuerst das günstigste.",
     authorityRuleId: "bondbuilder.stage3.tie_ordered",
   }
 }
@@ -123,8 +107,8 @@ export function bondbuilderTimingOf(input: Pick<Stage3AuthorityInput, "selection
 }
 
 /**
- * Q1 tie order among equally trusted, equally timed Bondbuilders: catalogue order, then the lower
- * price (unknown last), then the product id. One function so the ruling is pinned by one test.
+ * Tie order among equally trusted, equally timed Bondbuilders: lower price (unknown last),
+ * then catalogue order, then product id. Nick retired the K18 preference on 2026-10-13.
  */
 export function compareBondbuilderTieOrder(
   left: Pick<Stage3BondbuilderFacts, "catalogSortOrder" | "priceEur" | "productId">,
@@ -132,8 +116,8 @@ export function compareBondbuilderTieOrder(
 ): number {
   const order = (value: number | null | undefined) => value ?? Number.MAX_SAFE_INTEGER
   return (
-    order(left.catalogSortOrder) - order(right.catalogSortOrder) ||
     order(left.priceEur) - order(right.priceEur) ||
+    order(left.catalogSortOrder) - order(right.catalogSortOrder) ||
     left.productId.localeCompare(right.productId)
   )
 }
@@ -276,8 +260,8 @@ function evaluateProduct(
 /**
  * The recommendation shortlist (S2 + X1, plan §2.3): ideal candidates → the most trusted level
  * (Nick, 2026-10-09) → those matching the stated timing, unless none does (then the whole most
- * trusted level, flagged `timingUnmet`). Timing never lifts a less trusted product. A tie picks K18
- * when it is in the pool, otherwise the Q1 order. Exported so equal options list exactly this tie.
+ * trusted level, flagged `timingUnmet`). Timing never lifts a less trusted product. A tie picks the
+ * cheapest product. Exported so equal options list exactly this tie.
  */
 export function bondbuilderShortlist(input: Stage3AuthorityInput<"bondbuilder">): {
   ideal: Stage3BondbuilderFacts[]
@@ -302,13 +286,7 @@ export function bondbuilderShortlist(input: Stage3AuthorityInput<"bondbuilder">)
     bondbuilderMatchesTiming(bondbuilderTimingBucket(candidate.spec), timing),
   )
   const pool = matching.length > 0 ? matching : mostTrusted
-  const selected =
-    pool.length === 0
-      ? null
-      : pool.length === 1
-        ? pool[0]!
-        : (pool.find((candidate) => candidate.productId === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID) ??
-          [...pool].sort(compareBondbuilderTieOrder)[0]!)
+  const selected = [...pool].sort(compareBondbuilderTieOrder)[0] ?? null
   return {
     ideal,
     pool,
@@ -357,9 +335,7 @@ export function evaluateBondbuilderAuthority(
           ? timingUnmetRecommendationForBondbuilder(selected, timing)
           : !multiple
             ? recommendationForBondbuilder(selected)
-            : selected.productId === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID
-              ? tieDefaultRecommendationForBondbuilder(selected)
-              : tieOrderedRecommendationForBondbuilder(selected),
+            : tieOrderedRecommendationForBondbuilder(selected),
       productFactFingerprint: null,
       recommendationFactFingerprint: selected?.factFingerprint ?? null,
     })

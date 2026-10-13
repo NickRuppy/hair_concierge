@@ -27,8 +27,9 @@ import {
   STAGE3_RENDERED_DIMENSION_CAP,
   type Stage3FitComparisonDimension,
 } from "../../../src/lib/personal-plan/products/comparison-dimensions"
-import { BONDBUILDER_TIE_DEFAULT_PRODUCT_ID } from "../../../src/lib/personal-plan/products/authority/categories/bondbuilder"
 import type { PlanProductRole } from "../../../src/lib/personal-plan/types"
+
+const K18_PRODUCT_ID = "38dace91-0fba-49ee-a93f-ac36e488fe4b"
 
 const RICH_COMPARISON_CATEGORY_ROLES = new Set<string>([
   "shampoo/shampoo_everyday",
@@ -1427,20 +1428,23 @@ test("Bondbuilder Anwendung does not invent a leave-in instruction for a rinse-o
   assert.equal(contradictoryValue.valueLabel, "Ausspülen")
 })
 
-// Regression for the reintroduced authority-recommendation tiebreak (PR #444's K18 tie-default):
-// three standalone candidates tie on verdict, coverage, and cautions, so only the pin can decide
-// between them. K18 carries the worst catalogSortOrder of the three, so this only passes when the
-// pin is applied strictly after verdict/coverage/cautions and strictly before catalog order.
-test("Bondbuilder tie-default pin decides the order only after verdict, coverage, and cautions tie", () => {
+test("Bondbuilder ties rank by price before catalogue order", () => {
   const input = authorityInput("bondbuilder", "specialized_bond_treatment", {
     productFacts: null,
     capturedProductId: null,
     subjectIdentity: null,
     candidates: [
-      factsFor("bondbuilder", "specialized_bond_treatment", "olaplex-no3", { sortOrder: 1 }),
-      factsFor("bondbuilder", "specialized_bond_treatment", "epres", { sortOrder: 2 }),
-      factsFor("bondbuilder", "specialized_bond_treatment", BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, {
-        sortOrder: 3, // worse catalog order than both alternatives above
+      factsFor("bondbuilder", "specialized_bond_treatment", "olaplex-no3", {
+        sortOrder: 3,
+        priceEur: 34,
+      }),
+      factsFor("bondbuilder", "specialized_bond_treatment", "epres", {
+        sortOrder: 2,
+        priceEur: 48,
+      }),
+      factsFor("bondbuilder", "specialized_bond_treatment", K18_PRODUCT_ID, {
+        sortOrder: 1,
+        priceEur: 56.25, // best catalogue order cannot beat a lower price
       }),
     ],
   })
@@ -1449,7 +1453,7 @@ test("Bondbuilder tie-default pin decides the order only after verdict, coverage
 
   assert.deepEqual(
     comparison.alternatives.map((candidate) => candidate.productId),
-    [BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "olaplex-no3", "epres"],
+    ["olaplex-no3", "epres", K18_PRODUCT_ID],
   )
 })
 
@@ -1462,7 +1466,7 @@ function trustedBondbuilderFacts(
   return { ...facts, spec: { ...facts.spec, claimTrustLevel } }
 }
 
-test("Bondbuilder comparison ranks by trust tier, then the K18 default, before catalog order", () => {
+test("Bondbuilder comparison ranks by trust tier, then price, before catalog order", () => {
   const input = authorityInput("bondbuilder", "specialized_bond_treatment", {
     productFacts: null,
     capturedProductId: null,
@@ -1474,7 +1478,7 @@ test("Bondbuilder comparison ranks by trust tier, then the K18 default, before c
       trustedBondbuilderFacts("olaplex-3plus", "high", { sortOrder: 4, priceEur: 34 }),
       trustedBondbuilderFacts("epres", "high", { sortOrder: 5, priceEur: 48 }),
       trustedBondbuilderFacts("aveda", "low", { sortOrder: 6, priceEur: 52 }),
-      trustedBondbuilderFacts(BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "high", {
+      trustedBondbuilderFacts(K18_PRODUCT_ID, "high", {
         sortOrder: 7,
         priceEur: 56.25,
       }),
@@ -1487,9 +1491,9 @@ test("Bondbuilder comparison ranks by trust tier, then the K18 default, before c
       (candidate) => candidate.productId,
     ),
     [
-      BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
       "olaplex-3plus",
       "epres",
+      K18_PRODUCT_ID,
       "loreal-elvital-bond",
       "redken-acidic-bonding",
       "kerastase-premiere",
@@ -2506,11 +2510,11 @@ function s4ProductionBondbuilders(options: { withoutK18?: boolean; sortOrders?: 
     ["olaplex-3plus", "high", "pre_shampoo", 34],
     ["epres", "high", "pre_shampoo", 48],
     ["aveda", "low", "pre_shampoo", 52],
-    [BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "high", "post_wash_leave_in", 56.25],
+    [K18_PRODUCT_ID, "high", "post_wash_leave_in", 56.25],
     ["kerastase-premiere", "medium", "pre_shampoo", 56.29],
   ]
   return rows
-    .filter(([id]) => !(options.withoutK18 && id === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID))
+    .filter(([id]) => !(options.withoutK18 && id === K18_PRODUCT_ID))
     .map(([id, trust, applicationMode, priceEur], index) =>
       trustedBondbuilderFacts(id, trust, {
         sortOrder: options.sortOrders ? index + 1 : 0,
@@ -2556,13 +2560,13 @@ test("S4: ranked[0] equals the authority pick for all three timings", () => {
   }
 })
 
-test("S4 E2/E3: exact comparison order — trust, then timing, then K18, then catalogue/price", () => {
+test("S4 E2/E3: exact comparison order — trust, then timing, then price/catalogue", () => {
   const order = (timing: S4Timing) =>
     rankStage3ComparisonCandidates(s4Input(timing, s4ProductionBondbuilders())).map(
       (candidate) => candidate.productId,
     )
   assert.deepEqual(order("after_wash"), [
-    BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+    K18_PRODUCT_ID,
     "olaplex-3plus",
     "epres",
     "loreal-elvital-bond",
@@ -2574,18 +2578,18 @@ test("S4 E2/E3: exact comparison order — trust, then timing, then K18, then ca
   assert.deepEqual(order("before_wash"), [
     "olaplex-3plus",
     "epres",
-    BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+    K18_PRODUCT_ID,
     "loreal-elvital-bond",
     "redken-acidic-bonding",
     "kerastase-premiere",
     "aveda",
     "ogx-sealing-serum",
   ])
-  // „Ist mir egal" is today's order, value for value.
+  // „Ist mir egal" ranks all equal-trust options cheapest first.
   assert.deepEqual(order("no_preference"), [
-    BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
     "olaplex-3plus",
     "epres",
+    K18_PRODUCT_ID,
     "loreal-elvital-bond",
     "redken-acidic-bonding",
     "kerastase-premiere",
@@ -2598,7 +2602,7 @@ test("S4: a comparison alternative that misses the timing carries the unmet rule
   const ranked = rankStage3ComparisonCandidates(s4Input("after_wash", s4ProductionBondbuilders()))
   const byId = new Map(ranked.map((candidate) => [candidate.productId, candidate]))
   assert.equal(
-    byId.get(BONDBUILDER_TIE_DEFAULT_PRODUCT_ID)?.recommendation.authorityRuleId,
+    byId.get(K18_PRODUCT_ID)?.recommendation.authorityRuleId,
     "bondbuilder.stage3.validated_standalone",
   )
   assert.equal(

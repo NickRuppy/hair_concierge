@@ -557,21 +557,21 @@ const K18 = "38dace91-0fba-49ee-a93f-ac36e488fe4b"
 
 test("S4 G2: Bondbuilder previews allocate the trust pair exactly like the gateway", async () => {
   // Same expectations as production-persistence-gateway-budget.test.ts (B-INT-TRUST*, S4 E4).
-  assert.equal(await previewBondbuilder(null), K18)
-  assert.equal(await previewBondbuilder(uncapped), K18)
+  assert.equal(await previewBondbuilder(null), "olaplex-3plus")
+  assert.equal(await previewBondbuilder(uncapped), "olaplex-3plus")
   assert.equal(
     await previewBondbuilder({ budget: { kind: "capped", limitEur: 15, allowExceptions: false } }),
     "loreal-elvital-bond",
   )
   // Bis 5 € flexible, required need: the gap fill is the cheapest MOST TRUSTED product (trust
-  // pair), never the first ranked over-budget product (K18) of the plain policy.
+  // pair), while preserving trust and timing precedence.
   assert.equal(await previewBondbuilder(flexible5), "olaplex-3plus")
 })
 
 test("S4: the refined timing reaches the preview (before the wash → OLAPLEX, after → K18)", async () => {
   assert.equal(await previewBondbuilder(null, "before_wash"), "olaplex-3plus")
   assert.equal(await previewBondbuilder(null, "after_wash"), K18)
-  assert.equal(await previewBondbuilder(null, "no_preference"), K18)
+  assert.equal(await previewBondbuilder(null, "no_preference"), "olaplex-3plus")
   // Bis 5 € flexible after the wash: the gap fill keeps the matching K18 (usage run first).
   assert.equal(await previewBondbuilder(flexible5, "after_wash"), K18)
 })

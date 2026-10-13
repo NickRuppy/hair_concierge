@@ -1274,7 +1274,7 @@ test("dry_shampoo: ideal wins, supportive is a reasoned fallback, catalog order 
   assert.equal(result.status === "known" ? result.verdict : null, "supportive")
   assert.ok(result.status === "known" && result.recommendation?.reason)
 })
-test("bondbuilder: trust then S4 catalogue tie order; add-ons never supportive or standalone candidates", () => {
+test("bondbuilder: trust then price; add-ons never supportive or standalone candidates; timing retained", () => {
   const input = gateCategory("bondbuilder") as any
   input.capturedProductId = null
   input.subjectIdentity = null
@@ -1305,10 +1305,7 @@ test("bondbuilder: trust then S4 catalogue tie order; add-ons never supportive o
     },
   ]
   const result = evaluateStage3Authority(input)
-  assert.equal(
-    result.status === "known" ? result.recommendation?.productId : null,
-    "expensive-high",
-  )
+  assert.equal(result.status === "known" ? result.recommendation?.productId : null, "cheap-high")
   for (const relationship of ["standalone", "add_on", null]) {
     const owned = evaluateStage3Authority(gateCategory("bondbuilder", { relationship }))
     assert.notEqual(owned.status === "known" ? owned.verdict : owned.status, "supportive")

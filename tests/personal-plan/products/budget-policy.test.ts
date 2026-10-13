@@ -741,16 +741,16 @@ test("B-FLX-10 closer to target counts, overshooting does not", () => {
 /* ---------------------------------------------------------------- Bondbuilder trust pair */
 
 // Nick, 2026-10-09: Bondbuilders rank by claim trust level (high 0 < medium 1 < low 2). The input
-// below is the production catalogue in trust order (K18 first as the house default among the
-// three high-trust products), exactly as the Stage-3 ranking hands it to the policy.
+// below is the catalogue in trust order, then cheapest first (Nick, 2026-10-13),
+// exactly as the Stage-3 ranking hands it to the policy.
 function trusted(productId: string, priceEur: number | null, trustRank: number): BudgetCandidate {
   return candidate(productId, priceEur, {}, { verdict: "ideal", trustRank })
 }
 
 const BONDBUILDERS_BY_TRUST = [
-  trusted("k18", 56.25, 0),
   trusted("olaplex-3plus", 34, 0),
   trusted("epres", 48, 0),
+  trusted("k18", 56.25, 0),
   trusted("loreal", 8.95, 1),
   trusted("redken", 25.5, 1),
   trusted("kerastase", 56.29, 1),
@@ -762,8 +762,8 @@ const bondbuilderRole = (overrides: Partial<Omit<BudgetRoleInput, "roleKey" | "r
   role("bondbuilder", BONDBUILDERS_BY_TRUST, { displayMode: "trust_pair", ...overrides })
 
 // Under a cap, equally trusted products are ordered cheaper first (Nick, 2026-10-09: Olaplex and K18
-// share the top trust level, so the budget comparison shows Olaplex); K18 stays the house default
-// only without a cap.
+// share the top trust level, so the budget comparison shows Olaplex); uncapped input
+// already ranks by trust, timing and price.
 test("B-TRUST-1 Bis 15 € strict: L'Oréal is the default next to the cheapest most trusted Olaplex", () => {
   const [allocation] = allocate(CAP15_STRICT, [bondbuilderRole()]).roles
   assert.equal(allocation!.defaultProductId, "loreal")
@@ -845,14 +845,14 @@ test("B-TRUST-6 an unpriced product never counts as affordable in the trust pair
 })
 
 test("B-TRUST-7 uncapped: the price-mix swap never trades trust down", () => {
-  // Uncapped with one role: the 60 % target for N = 1 is round(0.6) = 1, already met by K18, so no
+  // Uncapped with one role: the 60 % target for N = 1 is round(0.6) = 1, already met by OLAPLEX, so no
   // swap; a second, cheap default would pull the target down — still no swap to lower trust.
   const result = allocate(UNCAPPED, [
     bondbuilderRole(),
     role("conditioner", [candidate("c-cheap", 4), candidate("c-pricey", 25)]),
   ])
-  assert.equal(result.roles[0]!.defaultProductId, "k18")
-  assert.deepEqual(ids(result.roles[0]!.candidates), ["k18", "olaplex-3plus", "epres"])
+  assert.equal(result.roles[0]!.defaultProductId, "olaplex-3plus")
+  assert.deepEqual(ids(result.roles[0]!.candidates), ["olaplex-3plus", "epres", "k18"])
 
   // Lowering: three high-price roles push the target down; the Bondbuilder would only swap to a
   // fit-comparable product at or below 15 €, and the only one (L'Oréal) is less trusted.
@@ -861,7 +861,7 @@ test("B-TRUST-7 uncapped: the price-mix swap never trades trust down", () => {
     role("mask", [candidate("m-pricey", 30), candidate("m-other", 32)]),
     role("oil", [candidate("o-pricey", 30), candidate("o-other", 31)]),
   ])
-  assert.equal(lowered.roles[0]!.defaultProductId, "k18")
+  assert.equal(lowered.roles[0]!.defaultProductId, "olaplex-3plus")
   // Without the trust ranks the same pool would swap down to L'Oréal.
   const blind = allocate(UNCAPPED, [
     role(
@@ -884,8 +884,8 @@ test("B-TRUST-8 standalone trust pair (chat) under a cap and uncapped", () => {
     "epres",
   ])
   assert.deepEqual(ids(orderTrustPairAlternatives(BONDBUILDERS_BY_TRUST, UNCAPPED, 2)), [
-    "k18",
     "olaplex-3plus",
+    "epres",
   ])
 })
 
@@ -896,8 +896,8 @@ test("B-TRUST-UNCAPPED-UNPRICED uncapped trust pair starts from the most trusted
   const [allocation] = allocate(UNCAPPED, [
     role("bondbuilder", unpricedHighTrust, { displayMode: "trust_pair" }),
   ]).roles
-  assert.equal(allocation!.defaultProductId, "k18")
-  assert.deepEqual(ids(allocation!.candidates), ["k18", "olaplex-3plus", "epres"])
+  assert.equal(allocation!.defaultProductId, "olaplex-3plus")
+  assert.deepEqual(ids(allocation!.candidates), ["olaplex-3plus", "epres", "k18"])
 
   // Default mode keeps its first-priced start for every other category: it skips the unpriced
   // products, starts from L'Oréal and the 60 % nudge (N = 1, target 1) then lifts it to the next
