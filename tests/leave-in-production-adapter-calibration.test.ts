@@ -11,11 +11,16 @@ import {
   type LeaveInProductionAdapterOutcome,
 } from "../src/lib/leave-in-research/production-adapter"
 
-// Standard v1.1 (v1.0 + the T20 overlay) is the live calibration set. The v1.0
-// envelopes and golden projections stay byte-frozen as the historical record of
-// calibration batch v1; they are compared below, never regenerated.
-const ENVELOPE_DIR = path.resolve("data/research/leave-in-inci/v1.1/calibration-envelopes")
+// Standard v1.2 (v1.0 + the T20 overlay + the T21 heat-activation overlay) is
+// the live calibration set. The v1.0 and v1.1 envelopes and golden projections
+// stay byte-frozen as the historical record; they are compared below, never
+// regenerated.
+const ENVELOPE_DIR = path.resolve("data/research/leave-in-inci/v1.2/calibration-envelopes")
 const EXPECTED_PATH = path.resolve(
+  "data/research/leave-in-inci/v1.2/calibration-expected-projections.json",
+)
+const V11_ENVELOPE_DIR = path.resolve("data/research/leave-in-inci/v1.1/calibration-envelopes")
+const V11_EXPECTED_PATH = path.resolve(
   "data/research/leave-in-inci/v1.1/calibration-expected-projections.json",
 )
 const V10_ENVELOPE_DIR = path.resolve("data/research/leave-in-inci/v1.0/calibration-envelopes")
@@ -45,7 +50,7 @@ const envelopeFiles = readdirSync(ENVELOPE_DIR)
   .filter((file) => file.endsWith(".json"))
   .sort()
 
-test("the v1.1 calibration corpus holds all 11 in-category gold-set envelopes", () => {
+test("the v1.2 calibration corpus holds all 11 in-category gold-set envelopes", () => {
   assert.equal(envelopeFiles.length, 11)
   const expected = readJson<ExpectedFile>(EXPECTED_PATH)
   assert.equal(expected.adapter_version, "leave-in-production-adapter-v1")
@@ -89,21 +94,41 @@ test("the golden projections stay inside the intake vocabularies", () => {
     assert.ok(eligibility.length > 0, `${file}: eligibility`)
 
     assert.ok(!("heat_protection_max_c" in specs), `${file}: AD-6`)
-    assert.equal(specs.heat_activation_required, false, `${file}: AD-3`)
+    // AD-7 (v1.2): only gold slot 13 (Neqi) is heat-activated.
+    const activated = file === "slot-13.json"
+    assert.equal(specs.heat_activation_required, activated, `${file}: AD-7 activation`)
+    assert.equal(
+      specs.heat_activation_route,
+      activated ? "airflow_shaping" : null,
+      `${file}: AD-7 route iff activation`,
+    )
     assert.equal(fit.weight, specs.weight, `${file}: fit_specs.weight === specs.weight`)
     assert.ok(!specs.roles.includes("oil_replacement"), `${file}: oil_replacement is never emitted`)
-    assert.equal(
-      specs.plan_roles.includes("pre_heat_application"),
-      specs.provides_heat_protection,
-      `${file}: pre_heat_application follows the heat binary`,
-    )
-    assert.deepEqual(
-      outcome.requiredProtocolRoles,
-      specs.provides_heat_protection
-        ? ["post_wash_leave_in", "pre_heat_protection"]
-        : ["post_wash_leave_in"],
-      `${file}: required protocol roles`,
-    )
+    if (activated) {
+      assert.deepEqual(specs.roles, ["styling_prep"], `${file}: I3`)
+      assert.deepEqual(specs.plan_roles, ["pre_heat_application"], `${file}: I2`)
+      assert.equal(fit.conditioner_relationship, "booster_only", `${file}: I4`)
+      assert.equal(specs.provides_heat_protection, true, `${file}: I5`)
+      assert.ok(specs.application_stage.includes("pre_heat"), `${file}: I1`)
+      assert.ok(
+        eligibility.every((row) => row.styling_context === "heat_style"),
+        `${file}: I7`,
+      )
+      assert.deepEqual(outcome.requiredProtocolRoles, ["pre_heat_protection"], `${file}: I8`)
+    } else {
+      assert.equal(
+        specs.plan_roles.includes("pre_heat_application"),
+        specs.provides_heat_protection,
+        `${file}: pre_heat_application follows the heat binary`,
+      )
+      assert.deepEqual(
+        outcome.requiredProtocolRoles,
+        specs.provides_heat_protection
+          ? ["post_wash_leave_in", "pre_heat_protection"]
+          : ["post_wash_leave_in"],
+        `${file}: required protocol roles`,
+      )
+    }
     for (const row of eligibility) {
       assert.ok(
         projection.suitable_thicknesses.includes(row.thickness),
@@ -240,7 +265,7 @@ test("v1.1 envelopes carry every v1.0 field unchanged except the T20 care_direct
     .sort()
   assert.deepEqual(envelopeFiles, v10Files)
   for (const file of envelopeFiles) {
-    const v11 = readJson<EnvelopeShape>(path.join(ENVELOPE_DIR, file))
+    const v11 = readJson<EnvelopeShape>(path.join(V11_ENVELOPE_DIR, file))
     const v10 = readJson<EnvelopeShape>(path.join(V10_ENVELOPE_DIR, file))
     const { researchMethod: m11, profile: p11, ...rest11 } = v11
     const { researchMethod: m10, profile: p10, ...rest10 } = v10
@@ -265,7 +290,7 @@ test("v1.1 envelopes carry every v1.0 field unchanged except the T20 care_direct
   }
 })
 
-test("every v1.1 envelope's care direction is its T20 record, low reads flagged uncertain", () => {
+test("every live envelope's care direction is its T20 record, low reads flagged uncertain", () => {
   const records = readJson<{
     records: Array<{
       slot: number | string
@@ -285,7 +310,7 @@ test("every v1.1 envelope's care direction is its T20 record, low reads flagged 
   }
 })
 
-test("the v1.1 adapter refuses every frozen v1.0 envelope (T20 reopened care_direction)", () => {
+test("the adapter refuses every frozen v1.0 envelope (T20 reopened care_direction)", () => {
   for (const file of envelopeFiles) {
     const outcome = projectLeaveInForProduction(
       readJson<unknown>(path.join(V10_ENVELOPE_DIR, file)),
@@ -300,7 +325,7 @@ test("the v1.1 adapter refuses every frozen v1.0 envelope (T20 reopened care_dir
 test("the v1.0 -> v1.1 production delta is exactly the ruled one", () => {
   type Projection = Extract<LeaveInProductionAdapterOutcome, { status: "projection_ready" }>
   const v10 = readJson<{ projections: Record<string, Projection> }>(V10_EXPECTED_PATH).projections
-  const v11 = readJson<ExpectedFile>(EXPECTED_PATH).projections as Record<string, Projection>
+  const v11 = readJson<ExpectedFile>(V11_EXPECTED_PATH).projections as Record<string, Projection>
   const changedFields = (file: string) => {
     const before = v10[file].productionProjection
     const after = v11[file].productionProjection
@@ -367,5 +392,207 @@ test("the v1.0 -> v1.1 production delta is exactly the ruled one", () => {
   for (const file of envelopeFiles) {
     assert.deepEqual(changedFields(file), expected[file], `${file}: production delta`)
     assert.equal(v11[file].productionProjection.research_model_version, "leave-in-inci-v1.1", file)
+  }
+})
+
+// ---------------------------------------------------------------------------
+// Standard v1.2 (T21, heat activation) against the frozen v1.1 calibration set
+// ---------------------------------------------------------------------------
+
+test("the v1.2 adapter refuses every frozen v1.1 envelope with the re-stamp reason", () => {
+  for (const file of envelopeFiles) {
+    const outcome = projectLeaveInForProduction(
+      readJson<unknown>(path.join(V11_ENVELOPE_DIR, file)),
+    )
+    assert.equal(outcome.status, "needs_research", file)
+    if (outcome.status === "needs_research") {
+      assert.match(
+        outcome.reasons.join(" "),
+        /v1\.2 added identity\.heatActivation; re-stamp required/,
+        file,
+      )
+    }
+  }
+})
+
+test("v1.2 envelopes carry every v1.1 field unchanged except the T21 heatActivation capture", () => {
+  for (const file of envelopeFiles) {
+    const v12 = readJson<EnvelopeShape & { identity: Record<string, unknown> }>(
+      path.join(ENVELOPE_DIR, file),
+    )
+    const v11 = readJson<EnvelopeShape & { identity: Record<string, unknown> }>(
+      path.join(V11_ENVELOPE_DIR, file),
+    )
+    const { researchMethod: m12, identity: i12, profile: p12, ...rest12 } = v12
+    const { researchMethod: m11, identity: i11, profile: p11, ...rest11 } = v11
+    assert.deepEqual(rest12, rest11, `${file}: version/formula/legacy unchanged`)
+    assert.equal(m11.policyId, "leave-in-classification-v1.1", file)
+    assert.equal(m12.policyId, "leave-in-classification-v1.2", file)
+    const { heatActivation, ...identityRest } = i12
+    assert.deepEqual(identityRest, i11, `${file}: every other identity field carried`)
+    assert.deepEqual(
+      Object.keys(i12),
+      [...Object.keys(i11)].flatMap((key) =>
+        key === "applicationStage" ? [key, "heatActivation"] : [key],
+      ),
+      `${file}: heatActivation sits next to applicationStage`,
+    )
+    assert.ok(heatActivation, `${file}: capture present`)
+    const { assumptionNotes: a12, ...other12 } = p12
+    const { assumptionNotes: a11, ...other11 } = p11
+    assert.deepEqual(other12, other11, `${file}: every profile field is carried byte-for-byte`)
+    assert.deepEqual(a12.slice(0, a11.length), a11, `${file}: v1.1 notes kept`)
+    assert.equal(a12.length, a11.length + 1, `${file}: exactly one T21 note added`)
+    assert.match(a12.at(-1)!, /^Standard v1\.2 \(T21, 2026-10-09\): identity\.heatActivation/)
+    const capture = heatActivation as { value: string; route: string | null }
+    if (file === "slot-13.json") {
+      assert.equal(capture.value, "required")
+      assert.equal(capture.route, "airflow_shaping")
+    } else {
+      assert.equal(capture.value, "not_required", file)
+      assert.equal(capture.route, null, file)
+    }
+  }
+  // Slot 5 (EVO, pre_heat in its stage) was checked explicitly.
+  const evo = readJson<EnvelopeShape>(path.join(ENVELOPE_DIR, "slot-05.json"))
+  assert.match(evo.profile.assumptionNotes.at(-1)!, /checked explicitly/)
+})
+
+test("v1.2 changes only slot 13", () => {
+  type Projection = Extract<LeaveInProductionAdapterOutcome, { status: "projection_ready" }>
+  const v11 = readJson<ExpectedFile>(V11_EXPECTED_PATH).projections as Record<string, Projection>
+  const v12 = readJson<ExpectedFile>(EXPECTED_PATH).projections as Record<string, Projection>
+  assert.deepEqual(Object.keys(v12).sort(), Object.keys(v11).sort())
+
+  // Production fields only (rationale text and hashes are reviewed separately).
+  const changedFields = (file: string) => {
+    const before = v11[file].productionProjection
+    const after = v12[file].productionProjection
+    const changes: Record<string, [unknown, unknown]> = {}
+    if (JSON.stringify(before.suitable_thicknesses) !== JSON.stringify(after.suitable_thicknesses))
+      changes.suitable_thicknesses = [before.suitable_thicknesses, after.suitable_thicknesses]
+    for (const table of ["product_leave_in_specs", "product_leave_in_fit_specs"] as const) {
+      const b = before.category_specs[table] as Record<string, unknown>
+      const a = after.category_specs[table] as Record<string, unknown>
+      for (const key of new Set([...Object.keys(b), ...Object.keys(a)])) {
+        if (JSON.stringify(b[key]) !== JSON.stringify(a[key]))
+          changes[`${table}.${key}`] = [b[key], a[key]]
+      }
+    }
+    if (
+      JSON.stringify(before.category_specs.product_leave_in_eligibility) !==
+      JSON.stringify(after.category_specs.product_leave_in_eligibility)
+    )
+      changes.product_leave_in_eligibility = [
+        before.category_specs.product_leave_in_eligibility,
+        after.category_specs.product_leave_in_eligibility,
+      ]
+    if (
+      JSON.stringify(v11[file].requiredProtocolRoles) !==
+      JSON.stringify(v12[file].requiredProtocolRoles)
+    )
+      changes.requiredProtocolRoles = [
+        v11[file].requiredProtocolRoles,
+        v12[file].requiredProtocolRoles,
+      ]
+    if (JSON.stringify(v11[file].warnings) !== JSON.stringify(v12[file].warnings))
+      changes.warnings = [v11[file].warnings, v12[file].warnings]
+    return changes
+  }
+
+  const routeOnly = { "product_leave_in_specs.heat_activation_route": [undefined, null] }
+  for (const file of envelopeFiles) {
+    assert.equal(v12[file].productionProjection.research_model_version, "leave-in-inci-v1.2", file)
+    if (file === "slot-13.json") continue
+    assert.deepEqual(changedFields(file), routeOnly, `${file}: only the new null route key`)
+  }
+
+  const slot13 = changedFields("slot-13.json")
+  const v11Rows =
+    v11["slot-13.json"].productionProjection.category_specs.product_leave_in_eligibility
+  assert.deepEqual(slot13, {
+    "product_leave_in_specs.roles": [["replacement_conditioner", "styling_prep"], ["styling_prep"]],
+    "product_leave_in_specs.heat_activation_required": [false, true],
+    "product_leave_in_specs.plan_roles": [
+      ["post_wash_leave_in", "pre_heat_application"],
+      ["pre_heat_application"],
+    ],
+    "product_leave_in_specs.heat_activation_route": [undefined, "airflow_shaping"],
+    "product_leave_in_fit_specs.conditioner_relationship": ["replacement_capable", "booster_only"],
+    product_leave_in_eligibility: [
+      v11Rows,
+      [
+        { thickness: "normal", need_bucket: "heat_protect", styling_context: "heat_style" },
+        { thickness: "normal", need_bucket: "moisture_anti_frizz", styling_context: "heat_style" },
+        { thickness: "coarse", need_bucket: "heat_protect", styling_context: "heat_style" },
+        { thickness: "coarse", need_bucket: "moisture_anti_frizz", styling_context: "heat_style" },
+      ],
+    ],
+    requiredProtocolRoles: [["post_wash_leave_in", "pre_heat_protection"], ["pre_heat_protection"]],
+    warnings: [
+      v11["slot-13.json"].warnings,
+      [
+        ...v11["slot-13.json"].warnings,
+        "heat_activation_required: heat activation is required (route airflow_shaping); every required value routes to human review before approval (HA-8).",
+      ],
+    ],
+  })
+  assert.equal(v11Rows.length, 6)
+})
+
+test("the re-stamped S1 user-submitted envelopes keep their projections; Neqi moves to pre-heat only", () => {
+  type Projection = Extract<LeaveInProductionAdapterOutcome, { status: "projection_ready" }>
+  const root = path.resolve("plans/catalog-completeness-fill/research/r4-user-submitted-14")
+  for (const name of ["aussie", "balea", "bali", "neqi-spray"]) {
+    const envelope = readJson<unknown>(path.join(root, "leave-in-v1.2", name, "envelope.json"))
+    const outcome = projectLeaveInForProduction(envelope)
+    assert.equal(outcome.status, "projection_ready", name)
+    if (outcome.status !== "projection_ready") continue
+    const stored = readJson<Projection>(
+      path.join(root, "leave-in-v1.2", name, "adapter/production-projection.json"),
+    )
+    assert.deepEqual(stored, JSON.parse(JSON.stringify(outcome)), `${name}: stored projection`)
+    const v11 = readJson<Projection>(
+      path.join(root, "leave-in-v1.1", name, "adapter/production-projection.json"),
+    )
+    const specs = outcome.productionProjection.category_specs
+    if (name === "neqi-spray") {
+      assert.deepEqual(specs.product_leave_in_specs.roles, ["styling_prep"])
+      assert.equal(specs.product_leave_in_fit_specs.conditioner_relationship, "booster_only")
+      assert.deepEqual(specs.product_leave_in_specs.plan_roles, ["pre_heat_application"])
+      assert.equal(specs.product_leave_in_specs.heat_activation_required, true)
+      assert.equal(specs.product_leave_in_specs.heat_activation_route, "airflow_shaping")
+      assert.deepEqual(
+        specs.product_leave_in_eligibility.map(
+          (row) => `${row.thickness}|${row.need_bucket}|${row.styling_context}`,
+        ),
+        [
+          "normal|heat_protect|heat_style",
+          "normal|moisture_anti_frizz|heat_style",
+          "coarse|heat_protect|heat_style",
+          "coarse|moisture_anti_frizz|heat_style",
+        ],
+      )
+      assert.deepEqual(outcome.requiredProtocolRoles, ["pre_heat_protection"])
+      continue
+    }
+    assert.equal(specs.product_leave_in_specs.heat_activation_route, null, name)
+    const { heat_activation_route: _route, ...specsWithoutRoute } = specs.product_leave_in_specs
+    assert.deepEqual(
+      specsWithoutRoute,
+      v11.productionProjection.category_specs.product_leave_in_specs,
+      `${name}: specs unchanged`,
+    )
+    assert.deepEqual(
+      specs.product_leave_in_fit_specs,
+      v11.productionProjection.category_specs.product_leave_in_fit_specs,
+      name,
+    )
+    assert.deepEqual(
+      specs.product_leave_in_eligibility,
+      v11.productionProjection.category_specs.product_leave_in_eligibility,
+      name,
+    )
+    assert.deepEqual(outcome.requiredProtocolRoles, v11.requiredProtocolRoles, name)
   }
 })

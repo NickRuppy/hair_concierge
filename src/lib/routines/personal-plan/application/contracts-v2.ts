@@ -18,6 +18,11 @@ import {
   exactConditionerSequenceSchema,
   shampooAfterTreatmentSchema,
   BONDBUILDER_APPLICATION_FAMILIES,
+  HEAT_ACTIVATED_APPLICATION_FAMILIES,
+  HEAT_ACTIVATED_WORKFLOW_CATEGORIES,
+  HEAT_ACTIVATED_WORKFLOW_RUNTIME,
+  heatActivatedStepIssue,
+  isHeatActivatedApplicationFamily,
 } from "./contracts"
 
 export {
@@ -75,6 +80,7 @@ const EXACT_WORKFLOW_FAMILIES = {
   k18_leave_in_molecular_repair: ["post_shampoo_timed_leave_in"],
   olaplex_no3plus_complete_repair: ["pre_shampoo_single_treatment"],
   bondbuilder_verified_product: BONDBUILDER_APPLICATION_FAMILIES,
+  heat_activated_verified_product: HEAT_ACTIVATED_APPLICATION_FAMILIES,
 } as const satisfies Record<
   (typeof EXACT_APPLICATION_WORKFLOW_IDS_V2)[number],
   readonly ApplicationFamily[]
@@ -407,6 +413,36 @@ export const productApplicationPointerV2Schema = z
         })
       }
     }
+    if (value.workflowId === "heat_activated_verified_product") {
+      const issue = (path: (string | number)[], message: string) =>
+        context.addIssue({ code: "custom", path, message })
+      if (
+        !(HEAT_ACTIVATED_WORKFLOW_CATEGORIES as readonly string[]).includes(value.scope.category) ||
+        value.sourceRole !== "pre_heat_protection" ||
+        value.role !== "heat_protection"
+      )
+        issue(["role"], "Heat-activated workflow requires the pre-heat protection role")
+      const heat = value.facts.heat
+      if (!heat || heat.activationRequired !== true) {
+        issue(["facts", "heat"], "Heat-activated workflow requires activationRequired")
+      } else if (isHeatActivatedApplicationFamily(value.applicationFamily)) {
+        const state = HEAT_ACTIVATED_WORKFLOW_RUNTIME[value.applicationFamily].applicationState
+        if (
+          heat.supportedStates.length !== 1 ||
+          heat.supportedStates[0] !== state ||
+          value.facts.applicationState !== state
+        )
+          issue(["facts", "heat", "supportedStates"], "Heat-activated state must match its family")
+      }
+      if (value.facts.rinse !== "leave_in")
+        issue(["facts", "rinse"], "Heat-activated products are left in")
+      const stepIssue = heatActivatedStepIssue(value.exactSteps)
+      if (stepIssue) issue(["exactSteps"], stepIssue)
+      if (!value.evidence.some((source) => source.sourceType === "manufacturer"))
+        issue(["evidence"], "Heat-activated directions require manufacturer evidence (D-d)")
+      if (value.requiredCompanionProductId !== null || value.runtimeBlockerCode !== null)
+        issue(["requiredCompanionProductId"], "Heat-activated workflow has no companion")
+    }
     if (value.requiredCompanionProductId !== null && value.runtimeBlockerCode !== null) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
@@ -428,3 +464,17 @@ export const productApplicationPointerV2Schema = z
 
 export type ApplicationFamilyTemplateV2 = z.infer<typeof applicationFamilyTemplateV2Schema>
 export type ProductApplicationPointerV2 = z.infer<typeof productApplicationPointerV2Schema>
+
+/**
+ * Routine (plan) role → catalogue protocol source role. Stage 4 files a Leave-in's
+ * heat slot as the plan role `pre_heat_application`; its protocol rows carry the
+ * protocol role `pre_heat_protection` (the curated-publication gate and the
+ * Stage-3 fact loader map it the same way). Every other role binds 1:1.
+ */
+const PROTOCOL_SOURCE_ROLE_BY_ROUTINE_ROLE: Readonly<Record<string, string>> = {
+  pre_heat_application: "pre_heat_protection",
+}
+
+export function protocolSourceRoleForRoutineRole(routineRole: string): string {
+  return PROTOCOL_SOURCE_ROLE_BY_ROUTINE_ROLE[routineRole] ?? routineRole
+}

@@ -719,3 +719,65 @@ test("scanner target counts read criterion passes including repair above target 
   assert.deepEqual(payload.coverage, { matches: 4, total: 4 })
   assert.equal(payload.subtitle, "4 von 4 Zielbereichen getroffen")
 })
+
+/* ------------------------------------------------- heat activation (S3, Q3) */
+
+function neqiActivated(): Stage3CategoryProductFacts {
+  const facts = factsFor("leave_in", "pre_heat_application", "neqi-diamond-glass-ultimate", {
+    providesHeatProtection: true,
+  })
+  if (facts.category !== "leave_in") throw new Error("fixture")
+  facts.spec.applicationStages = ["towel_dry", "pre_heat"]
+  facts.spec.heatActivation = { route: "airflow_shaping" }
+  return facts
+}
+
+function postWashOnlyDecision(): PlanCategoryDecision {
+  const decision = leaveInDecision()
+  decision.roles = ["post_wash_leave_in"]
+  if (decision.target?.category === "leave_in") decision.target.roles = ["post_wash_leave_in"]
+  return decision
+}
+
+test("Neqi scan for a no-heat profile shows the activation reason", () => {
+  const payload = buildScanVerdict(
+    scanInput({
+      category: "leave_in",
+      decision: postWashOnlyDecision(),
+      heatRoutes: [],
+      productFacts: neqiActivated(),
+    }),
+  )
+  assert.equal(payload.kind, "in_catalog")
+  if (payload.kind !== "in_catalog") return
+  assert.equal(payload.evaluatedRole, "post_wash_leave_in")
+  assert.equal(payload.verdict, "mismatch")
+  assert.match(
+    JSON.stringify(payload),
+    /Wirkt erst mit Hitze – nicht als Leave-in nach jeder Wäsche gedacht\./,
+  )
+})
+
+test("Neqi scan for a blow-dry profile evaluates the pre-heat role", () => {
+  const payload = buildScanVerdict(
+    scanInput({
+      category: "leave_in",
+      decision: leaveInDecision(),
+      heatRoutes: ["airflow_shaping"],
+      productFacts: neqiActivated(),
+    }),
+  )
+  assert.equal(payload.kind, "in_catalog")
+  if (payload.kind !== "in_catalog") return
+  assert.equal(payload.evaluatedRole, "pre_heat_application")
+  assert.notEqual(payload.verdict, "mismatch")
+  const straightenerOnly = buildScanVerdict(
+    scanInput({
+      category: "leave_in",
+      decision: leaveInDecision(),
+      heatRoutes: ["direct_contact_heat"],
+      productFacts: neqiActivated(),
+    }),
+  )
+  assert.equal(straightenerOnly.kind === "in_catalog" && straightenerOnly.verdict, "mismatch")
+})

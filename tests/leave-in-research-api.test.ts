@@ -75,11 +75,14 @@ test("Leave-In queue API returns the queue and the selected detail in developmen
     assert.equal(data.summary.reviewCounts.needsReview, 19)
     // Approval persistence key: kept at the v1.0-fixture stamp so approvals survive.
     assert.equal(data.meta.standardVersion, "leave-in-inci-v0.4")
-    // The visible standard is the effective one (v1.1 = v1.0 + T20 overlay).
-    assert.equal(data.meta.effectiveStandard, "leave-in-inci-v1.1 (Standard v1.0 + T20-Overlay)")
+    // The visible standard is the effective one (v1.2 = v1.0 + T20 + T21 overlays).
+    assert.equal(
+      data.meta.effectiveStandard,
+      "leave-in-inci-v1.2 (Standard v1.0 + T20- und T21-Overlay)",
+    )
     assert.equal(
       data.meta.effectiveStandardOverlay,
-      "docs/research/leave-in-inci/v1.1/leave-in-classification-overlay.v1.1.md",
+      "docs/research/leave-in-inci/v1.2/leave-in-classification-overlay.v1.2.md",
     )
     assert.equal(data.initialDetail.effectiveStandard, data.meta.effectiveStandard)
     assert.equal(data.meta.keyVersion, "reference-key-2026-09-05-r4")
@@ -246,4 +249,27 @@ test("Leave-In review API rejects an unknown product and an unknown property", a
       ).status,
       404,
     )
+  }))
+
+test("Leave-In Lab shows Neqi's v1.2 heat-activation row for HA-8 review", async () =>
+  withReviewStore(async () => {
+    const { GET } = await importQueueRoute()
+    const response = await GET(
+      new Request(
+        "http://localhost/api/labs/leave-in-research/queue?productId=slot-13-neqi-diamond-glass-ultimate-styling-spray",
+      ),
+    )
+    assert.equal(response.status, 200)
+    const data: import("../src/lib/labs/leave-in-research-access").LeaveInResearchLabData & {
+      detail: import("../src/lib/labs/leave-in-research-access").LeaveInResearchProductDetail
+    } = await response.json()
+    const detail = data.detail
+    assert.equal(detail.productId, "slot-13-neqi-diamond-glass-ultimate-styling-spray")
+    const activation = detail.properties.find((property) => property.path === "heat_activation")
+    assert.ok(activation, "Neqi carries the heat-activation property")
+    assert.equal(activation.value, "required · airflow_shaping")
+    assert.ok(detail.reviewRouting.triggers.includes("heat_activation_required"))
+    // Nothing else in the queue gains an activation row (only slot 13 moves under v1.2).
+    const others = data.queueItems.filter((item) => item.slot !== 13)
+    assert.equal(others.length, 18)
   }))

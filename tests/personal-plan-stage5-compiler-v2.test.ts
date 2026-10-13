@@ -1360,3 +1360,239 @@ test("without a mask in the routine the shampoo stays wash-day only", () => {
     false,
   )
 })
+
+// ---------------------------------------------------------------------------------------------
+// S3 §5.1 — reviewed exact workflow `heat_activated_verified_product` (T3.7).
+
+const dryShampooProductId = "30000000-0000-4000-8000-000000000003"
+
+const NEQI_STEPS = [
+  {
+    stepKey: "section",
+    action: "section" as const,
+    copyDe: "Das handtuchtrockene Haar in Partien teilen – es sollte nicht mehr nass sein.",
+  },
+  {
+    stepKey: "apply",
+    action: "apply_product" as const,
+    copyDe: "Das Spray großzügig und gleichmäßig auf jede Partie sprühen.",
+  },
+  {
+    stepKey: "activate",
+    action: "tool" as const,
+    copyDe: "Jede Partie mit Hitze und unter Spannung föhnen. Erst die Wärme aktiviert das Spray.",
+  },
+]
+
+function heatActivatedPointer(state: "damp_hair" | "dry_hair", exactSteps = NEQI_STEPS) {
+  return pointer({
+    scope: { kind: "product", category: "leave_in", productId },
+    sourceRole: "pre_heat_protection",
+    role: "heat_protection",
+    applicationFamily: state === "damp_hair" ? "pre_heat_damp" : "pre_heat_dry",
+    facts: {
+      ...pointer().facts,
+      applicationState: state,
+      applicationArea: "hair_lengths_ends",
+      rinse: "leave_in",
+      heat: {
+        supportedStates: [state],
+        activationRequired: true,
+        maximumClaimedTemperatureC: null,
+        reapplication: "each_separate_heat_event",
+      },
+    },
+    workflowId: "heat_activated_verified_product",
+    exactSteps,
+  })
+}
+
+function dryShampooPointer() {
+  return pointer({
+    scope: { kind: "product", category: "dry_shampoo", productId: dryShampooProductId },
+    sourceRole: "root_refresh_bridge",
+    role: "refresh",
+    applicationFamily: "aerosol_spray",
+    facts: { ...pointer().facts, applicationState: "dry_hair", rinse: "leave_in" },
+  })
+}
+
+function heatActivatedInput(
+  heatEvents: Array<{ id: string; tool: string; route: string }>,
+  options: { role?: string; sourceRoutineRole?: string; withDryShampoo?: boolean } = {},
+) {
+  const base = input("leave_in", options.role ?? "heat_protection") as never as {
+    routineItems: Array<Record<string, unknown>>
+    profile: Record<string, unknown>
+  }
+  const heatItem = base.routineItems.find((item) => item.productId === productId)!
+  heatItem.catalogFacts = {
+    heatActivationRequired: true,
+    heatActivationRoute: "airflow_shaping",
+  }
+  if (options.sourceRoutineRole) heatItem.sourceRoutineRole = options.sourceRoutineRole
+  if (options.withDryShampoo) {
+    base.routineItems.push({
+      itemId: "item-dry-shampoo",
+      productId: dryShampooProductId,
+      productName: "Trockenshampoo",
+      category: "dry_shampoo",
+      role: "refresh",
+      inclusion: "included",
+      availability: "owned",
+      executable: true,
+      applicationInstanceKey: "item-dry-shampoo",
+      catalogFacts: {},
+    })
+  }
+  base.profile = { heatEvents }
+  return base as never
+}
+
+const heatBlocks = (result: ReturnType<typeof compileApplicationViewV2>, key: string) =>
+  result.days
+    .find((day) => day.key === key)
+    ?.productBlocks.filter((block) => block.productId === productId) ?? []
+
+test("heat_activated_verified_product compiles to damp_hair_protection with the three Neqi steps on a wash day with a hair-dryer event", () => {
+  const composed = composeProductApplicationProtocolsV2(
+    heatActivatedPointer("damp_hair"),
+    SHARED_APPLICATION_TEMPLATES_V2,
+  )
+  assert.equal(composed.status, "resolved")
+  assert.ok(composed.status === "resolved")
+  assert.equal(composed.protocols.length, 1)
+  assert.equal(composed.protocols[0]!.applicationFamily, "damp_hair_protection")
+  assert.equal(composed.protocols[0]!.sequence.anchor, "damp_leave_on")
+  assert.deepEqual(composed.protocols[0]!.requirements.requiredProfileFacts, ["heatEvents"])
+  assert.deepEqual(composed.protocols[0]!.compatibleDayTypes, [
+    "wash_day",
+    "intensive_care_day",
+    "bond_repair_day",
+    "clarifying_wash_day",
+    "styling_day",
+  ])
+
+  const result = compileApplicationViewV2({
+    input: heatActivatedInput([{ id: "dryer", tool: "hair_dryer", route: "airflow_shaping" }], {
+      sourceRoutineRole: "pre_heat_application",
+    }),
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: [supportingShampooPointer(), heatActivatedPointer("damp_hair")],
+  })
+  assert.deepEqual(result.pointerIssues, [])
+  const wash = heatBlocks(result, "wash_day")
+  assert.equal(wash.length, 1)
+  assert.deepEqual(wash[0]!.steps, NEQI_STEPS)
+  assert.deepEqual(wash[0]!.heatEventIds, ["dryer"])
+  for (const key of ["refresh_day", "between_wash_care_day"]) {
+    assert.equal(heatBlocks(result, key).length, 0, key)
+  }
+})
+
+test("generic activated dry variant appears only on refresh days with a blow-dry event", () => {
+  const dryVariant = heatActivatedPointer("dry_hair", [
+    {
+      stepKey: "apply-between-washes",
+      action: "apply_product",
+      copyDe: "Zwischen den Haarwäschen gegen Frizz: die Creme im trockenen Haar verteilen.",
+    },
+    {
+      stepKey: "activate",
+      action: "tool",
+      copyDe: "Danach föhnen – erst die Wärme aktiviert die Pflege.",
+    },
+  ])
+  const pointers = [
+    supportingShampooPointer(),
+    dryShampooPointer(),
+    heatActivatedPointer("damp_hair"),
+    dryVariant,
+  ]
+  const blowDry = compileApplicationViewV2({
+    input: heatActivatedInput([{ id: "dryer", tool: "hair_dryer", route: "airflow_shaping" }], {
+      withDryShampoo: true,
+    }),
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: pointers,
+  })
+  assert.deepEqual(blowDry.pointerIssues, [])
+  const refresh = heatBlocks(blowDry, "refresh_day")
+  assert.equal(refresh.length, 1)
+  assert.deepEqual(
+    refresh[0]!.steps.map((step) => step.stepKey),
+    ["apply-between-washes", "activate"],
+  )
+  for (const day of blowDry.days) {
+    if (day.key === "refresh_day") continue
+    assert.equal(
+      heatBlocks(blowDry, day.key).some((block) =>
+        block.steps.some((step) => step.stepKey === "apply-between-washes"),
+      ),
+      false,
+      day.key,
+    )
+  }
+  // A direct-heat event alone never reaches the airflow-activated dry variant.
+  const ironOnly = compileApplicationViewV2({
+    input: heatActivatedInput(
+      [{ id: "iron", tool: "straightener", route: "direct_contact_heat" }],
+      {
+        withDryShampoo: true,
+      },
+    ),
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: pointers,
+  })
+  assert.equal(heatBlocks(ironOnly, "refresh_day").length, 0)
+})
+
+test("no universal between-wash methods for activated products", () => {
+  // A frozen routine may still carry an activated product as its post-wash Leave-in (S3 Q1):
+  // its sourced post-wash row stays, but no generic between-wash copy is synthesised for it.
+  const postWash = pointer({
+    scope: { kind: "product", category: "leave_in", productId },
+    sourceRole: "post_wash_leave_in",
+    role: "leave_in",
+    applicationFamily: "post_wash_damp_conditioning",
+    facts: {
+      ...pointer().facts,
+      applicationState: "damp_hair",
+      applicationArea: "hair_lengths_ends",
+      rinse: "leave_in",
+    },
+  })
+  const result = compileApplicationViewV2({
+    input: heatActivatedInput([], { role: "leave_in" }),
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: [supportingShampooPointer(), postWash],
+  })
+  assert.deepEqual(result.pointerIssues, [])
+  assert.equal(heatBlocks(result, "wash_day").length, 1)
+  for (const key of ["refresh_day", "between_wash_care_day"]) {
+    assert.equal(heatBlocks(result, key).length, 0, key)
+  }
+})
+
+test("straightener-only profile yields no Neqi occurrence", () => {
+  const result = compileApplicationViewV2({
+    input: heatActivatedInput(
+      [{ id: "iron", tool: "straightener", route: "direct_contact_heat" }],
+      {
+        sourceRoutineRole: "pre_heat_application",
+      },
+    ),
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: [supportingShampooPointer(), heatActivatedPointer("damp_hair")],
+  })
+  assert.equal(
+    result.days.some((day) =>
+      day.outerSequence.some(
+        (entry) =>
+          (entry.kind === "product" || entry.kind === "unresolved_product") &&
+          entry.block.productId === productId,
+      ),
+    ),
+    false,
+  )
+})

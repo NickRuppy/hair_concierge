@@ -74,6 +74,8 @@ interface LeaveInSpecForm {
   weight: string
   conditioner_relationship: string
   care_benefits: string[]
+  /** Read-only (Leave-In v1.2): set only through research or a reviewed amendment. */
+  heat_activation_required: boolean
 }
 
 interface MaskSpecForm {
@@ -149,6 +151,7 @@ const emptyLeaveInSpecs: LeaveInSpecForm = {
   weight: "light",
   conditioner_relationship: "replacement_capable",
   care_benefits: [],
+  heat_activation_required: false,
 }
 
 const emptyMaskSpecs: MaskSpecForm = {
@@ -280,6 +283,7 @@ export default function AdminProductsPage() {
               ? "replacement_capable"
               : "booster_only"),
           care_benefits: product.leave_in_specs.care_benefits || [],
+          heat_activation_required: product.leave_in_specs.heat_activation_required === true,
         }
       : isLeaveInCategory(product.category || "")
         ? { ...emptyLeaveInSpecs }
@@ -1139,6 +1143,7 @@ export default function AdminProductsPage() {
                     </label>
                     <select
                       value={form.leave_in_specs.conditioner_relationship}
+                      disabled={form.leave_in_specs.heat_activation_required}
                       onChange={(e) =>
                         setForm((prev) => ({
                           ...prev,
@@ -1158,6 +1163,12 @@ export default function AdminProductsPage() {
                         </option>
                       ))}
                     </select>
+                    {form.leave_in_specs.heat_activation_required ? (
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Wirkt erst mit Hitze – nur vor dem Föhnen oder Stylen, nie als
+                        Conditioner-Ersatz.
+                      </p>
+                    ) : null}
                   </div>
                 </div>
 

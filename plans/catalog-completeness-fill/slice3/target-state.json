@@ -1,0 +1,381 @@
+{
+  "fingerprint": "34cdc326aa29a7cfa5bb0c2476d5b6c69a3e68a9dcfaaaddf470d00783113cba",
+  "batch_id": "S3-catalog-completeness-slice3-heat-activation",
+  "prestate_basis": {
+    "production_capture_at": "2026-10-11T14:08:01.30101+00:00",
+    "slice1_fingerprint": "4398744e32e5b643a6e509969d09d936aed0260bbb7c4e5bc1dca6cc33647ca9",
+    "slice1_batch_id": "S5R-06-catalog-completeness-slice1",
+    "note": "Slice 1 post-state for the two S3 products = production capture + Slice 1 writes. Apply S3 only after Slice 1."
+  },
+  "scope_product_ids": [
+    "42a2fe20-bd7e-49a3-a880-8ae89015a5c9"
+  ],
+  "unchanged_product_ids": [
+    "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+  ],
+  "writes": {
+    "specs": [
+      {
+        "productId": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+        "set": {
+          "roles": [
+            "styling_prep"
+          ],
+          "plan_roles": [
+            "pre_heat_application"
+          ],
+          "heat_activation_required": true,
+          "heat_activation_route": "airflow_shaping"
+        }
+      }
+    ],
+    "fit": [
+      {
+        "productId": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+        "set": {
+          "conditioner_relationship": "booster_only"
+        }
+      }
+    ],
+    "eligibility": [
+      {
+        "productId": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+        "rows": [
+          {
+            "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+            "thickness": "coarse",
+            "need_bucket": "heat_protect",
+            "styling_context": "heat_style"
+          },
+          {
+            "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+            "thickness": "coarse",
+            "need_bucket": "moisture_anti_frizz",
+            "styling_context": "heat_style"
+          },
+          {
+            "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+            "thickness": "normal",
+            "need_bucket": "heat_protect",
+            "styling_context": "heat_style"
+          },
+          {
+            "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+            "thickness": "normal",
+            "need_bucket": "moisture_anti_frizz",
+            "styling_context": "heat_style"
+          }
+        ]
+      }
+    ],
+    "protocols": [
+      {
+        "mode": "insert",
+        "id": null,
+        "row": {
+          "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+          "category": "leave_in",
+          "role": "pre_heat_protection",
+          "application_stage": "damp_leave_on",
+          "application_state": "damp",
+          "placement": "lengths_ends",
+          "rinse_action": "leave_in",
+          "reapplication": "required",
+          "contact_time_seconds": null,
+          "instruction_modifiers": [],
+          "source_label": "Neqi Hersteller (neqi-hair.com)",
+          "source_url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+          "source_text": "1. Das Haar in Abschnitte unterteilen. 2. Das Spray großzügig und gleichmäßig auf das handtuchtrockene (nicht nasse) Haar sprühen. 3. Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.",
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "heat-activated-verified-product-42a2fe20-bd7e-49a3-a880-8ae89015a5c9-pre_heat_damp",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "leave_in",
+              "productId": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9"
+            },
+            "role": "heat_protection",
+            "applicationFamily": "pre_heat_damp",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "bond_repair_day",
+              "clarifying_wash_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [
+                "heat_tool"
+              ],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": [
+                "heatEvents"
+              ]
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "each_separate_heat_event",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "großzügig"
+              },
+              "workflowId": "heat_activated_verified_product",
+              "heatActivationRequired": true,
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "section",
+                "action": "section",
+                "copyTemplateDe": "Das handtuchtrockene Haar in Partien teilen – es sollte nicht mehr nass sein."
+              },
+              {
+                "stepKey": "apply",
+                "action": "apply_product",
+                "copyTemplateDe": "Das Spray großzügig und gleichmäßig auf jede Partie sprühen."
+              },
+              {
+                "stepKey": "activate",
+                "action": "tool",
+                "copyTemplateDe": "Jede Partie mit Hitze und unter Spannung föhnen. Erst die Wärme aktiviert das Spray."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-10-09"
+              },
+              {
+                "sourceUrl": "https://www.dm.de/p/d/3080142/neqi-leave-in-spray-diamond-glass-ultimate",
+                "sourceType": "retailer",
+                "checkedAt": "2026-10-09"
+              }
+            ]
+          },
+          "guidance_payload_v2": {
+            "schemaVersion": 2,
+            "contractKind": "product_pointer",
+            "scope": {
+              "kind": "product",
+              "category": "leave_in",
+              "productId": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9"
+            },
+            "sourceRole": "pre_heat_protection",
+            "role": "heat_protection",
+            "applicationFamily": "pre_heat_damp",
+            "facts": {
+              "applicationState": "damp_hair",
+              "applicationArea": "hair_lengths_ends",
+              "rinse": "leave_in",
+              "contactTime": null,
+              "amount": {
+                "kind": "qualitative",
+                "value": "generous"
+              },
+              "heat": {
+                "supportedStates": [
+                  "damp_hair"
+                ],
+                "activationRequired": true,
+                "maximumClaimedTemperatureC": null,
+                "reapplication": "each_separate_heat_event"
+              },
+              "conditionerPolicy": "not_applicable"
+            },
+            "workflowId": "heat_activated_verified_product",
+            "requiredCompanionProductId": null,
+            "runtimeBlockerCode": null,
+            "exactSteps": [
+              {
+                "stepKey": "section",
+                "action": "section",
+                "copyDe": "Das handtuchtrockene Haar in Partien teilen – es sollte nicht mehr nass sein."
+              },
+              {
+                "stepKey": "apply",
+                "action": "apply_product",
+                "copyDe": "Das Spray großzügig und gleichmäßig auf jede Partie sprühen."
+              },
+              {
+                "stepKey": "activate",
+                "action": "tool",
+                "copyDe": "Jede Partie mit Hitze und unter Spannung föhnen. Erst die Wärme aktiviert das Spray."
+              }
+            ],
+            "cautionCodes": [],
+            "evidence": [
+              {
+                "sourceUrl": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-10-09"
+              },
+              {
+                "sourceUrl": "https://www.dm.de/p/d/3080142/neqi-leave-in-spray-diamond-glass-ultimate",
+                "sourceType": "retailer",
+                "checkedAt": "2026-10-09"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "evidence": [
+      {
+        "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+        "fact_key": "leave_in.heat_activation_required",
+        "fact_value": true,
+        "source_label": "Neqi Hersteller (neqi-hair.com)",
+        "source_url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+        "source_text": "„Noch mehr hitzeaktivierte Polymere als im goldenen Diamond Glass Styling Spray“ / „Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.“",
+        "source_type": "manufacturer",
+        "checked_at": "2026-10-09",
+        "batch_id": "S3-catalog-completeness-slice3-heat-activation",
+        "batch_fingerprint": "34cdc326aa29a7cfa5bb0c2476d5b6c69a3e68a9dcfaaaddf470d00783113cba",
+        "content_fingerprint": "72f8d9cab2c89873a02c741c8a89d50d5fbcce85423e45bbf8da98cd43b22da4"
+      },
+      {
+        "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+        "fact_key": "leave_in.heat_activation_route",
+        "fact_value": "airflow_shaping",
+        "source_label": "Neqi Hersteller (neqi-hair.com)",
+        "source_url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+        "source_text": "„Noch mehr hitzeaktivierte Polymere als im goldenen Diamond Glass Styling Spray“ / „Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.“",
+        "source_type": "manufacturer",
+        "checked_at": "2026-10-09",
+        "batch_id": "S3-catalog-completeness-slice3-heat-activation",
+        "batch_fingerprint": "34cdc326aa29a7cfa5bb0c2476d5b6c69a3e68a9dcfaaaddf470d00783113cba",
+        "content_fingerprint": "2ec11aaa5aff92b767ef4fa399ecce1c13947eaedcf53148b1ba361651f66aa9"
+      },
+      {
+        "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+        "fact_key": "leave_in.plan_roles",
+        "fact_value": [
+          "pre_heat_application"
+        ],
+        "source_label": "Neqi Hersteller (neqi-hair.com)",
+        "source_url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+        "source_text": "„Noch mehr hitzeaktivierte Polymere als im goldenen Diamond Glass Styling Spray“ / „Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.“",
+        "source_type": "manufacturer",
+        "checked_at": "2026-10-09",
+        "batch_id": "S3-catalog-completeness-slice3-heat-activation",
+        "batch_fingerprint": "34cdc326aa29a7cfa5bb0c2476d5b6c69a3e68a9dcfaaaddf470d00783113cba",
+        "content_fingerprint": "564fdc3f6242cc97888f82f6a347b9cf654f4b314fa011d3960c159c6039ecda"
+      },
+      {
+        "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+        "fact_key": "leave_in.roles",
+        "fact_value": [
+          "styling_prep"
+        ],
+        "source_label": "Neqi Hersteller (neqi-hair.com)",
+        "source_url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+        "source_text": "„Noch mehr hitzeaktivierte Polymere als im goldenen Diamond Glass Styling Spray“ / „Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.“",
+        "source_type": "manufacturer",
+        "checked_at": "2026-10-09",
+        "batch_id": "S3-catalog-completeness-slice3-heat-activation",
+        "batch_fingerprint": "34cdc326aa29a7cfa5bb0c2476d5b6c69a3e68a9dcfaaaddf470d00783113cba",
+        "content_fingerprint": "e75a63dd119feb1b021539d0a508364e5ff344ba5a8c09b3a88dbef7a05d39dd"
+      }
+    ]
+  },
+  "before_after": [
+    {
+      "product": "Neqi Diamond Glass Ultimate Styling Spray",
+      "field": "specs.roles",
+      "before": "{replacement_conditioner, styling_prep}",
+      "after": "{styling_prep}"
+    },
+    {
+      "product": "Neqi Diamond Glass Ultimate Styling Spray",
+      "field": "specs.plan_roles",
+      "before": "{post_wash_leave_in, pre_heat_application}",
+      "after": "{pre_heat_application}"
+    },
+    {
+      "product": "Neqi Diamond Glass Ultimate Styling Spray",
+      "field": "specs.heat_activation_required",
+      "before": "false",
+      "after": "true"
+    },
+    {
+      "product": "Neqi Diamond Glass Ultimate Styling Spray",
+      "field": "specs.heat_activation_route",
+      "before": "∅",
+      "after": "airflow_shaping"
+    },
+    {
+      "product": "Neqi Diamond Glass Ultimate Styling Spray",
+      "field": "specs.conditioner_relationship (generated)",
+      "before": "replacement_capable",
+      "after": "booster_only"
+    },
+    {
+      "product": "Neqi Diamond Glass Ultimate Styling Spray",
+      "field": "fit.conditioner_relationship",
+      "before": "replacement_capable",
+      "after": "booster_only"
+    },
+    {
+      "product": "Neqi Diamond Glass Ultimate Styling Spray",
+      "field": "eligibility",
+      "before": "coarse|heat_protect|heat_style; coarse|moisture_anti_frizz|air_dry; coarse|moisture_anti_frizz|non_heat_style; normal|heat_protect|heat_style; normal|moisture_anti_frizz|air_dry; normal|moisture_anti_frizz|non_heat_style",
+      "after": "coarse|heat_protect|heat_style; coarse|moisture_anti_frizz|heat_style; normal|heat_protect|heat_style; normal|moisture_anti_frizz|heat_style"
+    },
+    {
+      "product": "Neqi Diamond Glass Ultimate Styling Spray",
+      "field": "protocols",
+      "before": "none",
+      "after": "pre_heat_protection/pre_heat_damp (exact workflow heat_activated_verified_product)"
+    },
+    {
+      "product": "Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW",
+      "field": "protocols",
+      "before": "pre_heat_protection/pre_heat_damp (S1 pack row, generic) + post_wash_leave_in ×2 (legacy)",
+      "after": "unchanged (Q11=B): no activation, route, role, eligibility or protocol writes"
+    }
+  ],
+  "product_questions": {
+    "Q11": "B (2026-10-13): HEAT&GLOW is not heat-activated; all captured fields, plan_roles and protocol rows remain unchanged. No re-pick is required.",
+    "Q2": "Neqi stays user_submitted and not recommended (no promotion in S3).",
+    "Q3": "Neqi is offered only when the heat routine includes blow-drying with brush/tension (airflow_shaping)."
+  },
+  "reference_inventory": {
+    "42a2fe20-bd7e-49a3-a880-8ae89015a5c9": {
+      "owners": 0,
+      "drafts_by_status": {},
+      "routine_versions": 0,
+      "portfolio_versions": 0,
+      "active_routines": 0
+    },
+    "e781ca9e-886d-40a1-bfe1-48177cfbf381": {
+      "owners": 0,
+      "drafts_by_status": {
+        "completed": 10
+      },
+      "routine_versions": 11,
+      "portfolio_versions": 10,
+      "active_routines": 7,
+      "active_routines_post_wash_slot": 7,
+      "active_routines_pre_heat_slot": 0
+    },
+    "intake_queue_leave_in_v1_1_artifacts": {
+      "note": "submissions whose research artifacts carry leave-in-inci-v1.1 and are not finished",
+      "researching_job_blocked": 1,
+      "researching_job_failed": 1,
+      "ready_for_review": 0
+    }
+  }
+}

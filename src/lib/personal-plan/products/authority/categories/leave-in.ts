@@ -1,3 +1,4 @@
+import { heatActivationRouteServes } from "@/lib/heat-activation/contract"
 import type { FitAxis } from "../fit-evaluator"
 import {
   commonFitGates,
@@ -34,6 +35,31 @@ function evaluateFacts(input: Stage3AuthorityInput<"leave_in">, facts: Stage3Lea
   if (!target || target.category !== "leave_in") return evaluateCriteria(input, facts, [], [])
   const gates = commonFitGates(input, facts)
   const protocol = facts.protocols.find((item) => item.role === input.role)
+  // Activated leave-ins only serve the pre-heat slot, even if stale catalog roles
+  // still advertise post-wash care. Canonical gates make this known failure win
+  // over incomplete facts, as in the fit-verdict model.
+  const activation = facts.spec.heatActivation
+  if (activation) {
+    const roleServed = input.role === "pre_heat_application"
+    gates.push({
+      id: "leave_in.heat_activation",
+      label: "Hitzeaktivierung",
+      outcome: !roleServed
+        ? "fail"
+        : activation.route === null || input.heatRoutes === undefined
+          ? "unknown"
+          : heatActivationRouteServes(activation.route, input.heatRoutes)
+            ? "pass"
+            : "fail",
+      reason: !roleServed
+        ? "Wirkt erst mit Hitze – nicht als Leave-in nach jeder Wäsche gedacht."
+        : activation.route === "direct_contact_heat"
+          ? "Wirkt erst mit Glätteisen oder Lockenstab – dieser Schritt fehlt in deiner Routine."
+          : activation.route === "either_heat"
+            ? "Wirkt erst beim Hitzestyling – dieser Schritt fehlt in deiner Routine."
+            : "Wirkt erst beim Föhn-Styling mit Bürste oder Diffusor – dieser Schritt fehlt in deiner Routine.",
+    })
+  }
   const requiredFunctions = target.functions
     .filter((item) => item.ownership === "required")
     .map((item) => item.function)
@@ -138,6 +164,10 @@ function evaluateFacts(input: Stage3AuthorityInput<"leave_in">, facts: Stage3Lea
     "leave_in.application": ["application_stage"],
     "leave_in.heat": ["provides_heat_protection"],
     "leave_in.functions": ["care_benefits"],
+    "leave_in.heat_activation": [
+      ...(activation?.route === null ? ["heat_activation_route"] : []),
+      ...(input.heatRoutes === undefined ? ["heat_routes"] : []),
+    ],
   })
   if (result.verdict !== "mismatch")
     result.criteria.unshift(

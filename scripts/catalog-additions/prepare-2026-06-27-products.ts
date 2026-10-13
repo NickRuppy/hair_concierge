@@ -74,7 +74,8 @@ type ProductDraft = {
           roles: string[]
           provides_heat_protection: boolean
           heat_protection_max_c: number | null
-          heat_activation_required: boolean
+          heat_activation_required: false
+          heat_activation_route: null
           care_benefits: string[]
           ingredient_flags: string[]
           application_stage: string[]
@@ -327,7 +328,9 @@ export const PRODUCT_DRAFTS: ProductDraft[] = [
         roles: ["extension_conditioner", "styling_prep"],
         provides_heat_protection: true,
         heat_protection_max_c: null,
+        // Leave-In v1.2: activation is set only through research or an amendment.
         heat_activation_required: false,
+        heat_activation_route: null,
         care_benefits: ["moisture", "detangling", "anti_frizz", "shine"],
         ingredient_flags: ["silicones", "proteins", "humectants", "oils"],
         application_stage: ["towel_dry", "dry_hair", "pre_heat"],
@@ -481,6 +484,7 @@ async function runLiveSchemaPreflight(supabase: SupabaseClient) {
         "provides_heat_protection",
         "heat_protection_max_c",
         "heat_activation_required",
+        "heat_activation_route",
         "care_benefits",
         "ingredient_flags",
         "application_stage",

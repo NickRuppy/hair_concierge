@@ -256,7 +256,12 @@ function amount(
   if (amountFact?.kind === "pumps") {
     return { kind: "pumps", minimum: amountFact.minimum, maximum: amountFact.maximum }
   }
-  if (protocol.scope.category !== "oil" || amountFact?.kind !== "qualitative") return null
+  if (
+    (protocol.scope.category !== "oil" &&
+      protocol.protocolFacts.workflowId !== "heat_activated_verified_product") ||
+    amountFact?.kind !== "qualitative"
+  )
+    return null
   const copy = amountFact.copyDe
   if (/\b1 Tropfen\b/i.test(copy)) return { kind: "qualitative", value: "one_drop" }
   if (/wenige|ein paar Tropfen/i.test(copy)) {
@@ -284,7 +289,8 @@ function heatFacts(
   const temperature = allCopy.match(/\b(\d{3})\s*°?\s*C\b/i)?.[1]
   return {
     supportedStates: [...supportedStates],
-    activationRequired: /aktivier/i.test(allCopy),
+    // The reviewed catalog fact (Leave-In v1.2), never a copy heuristic (S3 P15).
+    activationRequired: protocol.protocolFacts.heatActivationRequired === true,
     maximumClaimedTemperatureC: temperature ? Number(temperature) : null,
     reapplication:
       protocol.protocolFacts.reapplication === "each_separate_heat_event"

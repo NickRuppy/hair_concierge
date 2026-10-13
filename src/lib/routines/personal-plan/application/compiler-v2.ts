@@ -1,4 +1,8 @@
-import { applicationGuidanceProtocolSchema } from "./contracts"
+import {
+  applicationGuidanceProtocolSchema,
+  HEAT_ACTIVATED_WORKFLOW_RUNTIME,
+  isHeatActivatedApplicationFamily,
+} from "./contracts"
 import type {
   ApplicationGuidanceProtocolV1,
   NormalizedApplicationInput,
@@ -6,6 +10,7 @@ import type {
 } from "./contracts"
 import {
   productApplicationPointerV2Schema,
+  protocolSourceRoleForRoutineRole,
   type ApplicationFamilyTemplateV2,
   type ProductApplicationPointerV2,
 } from "./contracts-v2"
@@ -190,7 +195,66 @@ function requiredFactIssue(
   return null
 }
 
+/**
+ * A reviewed heat-activated product (S3 §5.1) runs like a heat protection: its runtime family
+ * is the heat-state family the occurrence materialiser assigns per heat event, and it needs the
+ * profile's heat events. Steps are the manufacturer's directions, verbatim from the pointer.
+ */
+function heatActivatedProtocol(
+  pointer: ProductApplicationPointerV2,
+): ApplicationGuidanceProtocolV1 {
+  if (!isHeatActivatedApplicationFamily(pointer.applicationFamily)) {
+    throw new Error(`heat_activated_family_unsupported:${pointer.applicationFamily}`)
+  }
+  const runtime = HEAT_ACTIVATED_WORKFLOW_RUNTIME[pointer.applicationFamily]
+  return applicationGuidanceProtocolSchema.parse({
+    schemaVersion: 1,
+    guidanceKey: `v2-exact-${pointer.workflowId}-${pointer.scope.productId}-${pointer.applicationFamily}`,
+    protocolVersion: 2,
+    locale: "de",
+    scope: pointer.scope,
+    role: pointer.role,
+    applicationFamily: runtime.runtimeFamily,
+    compatibleDayTypes: runtime.compatibleDayTypes,
+    exactGuidanceRequired: true,
+    sequence: { anchor: runtime.anchor, before: [], after: [], conflictsWith: [] },
+    requirements: {
+      requiredCatalogFacts: [],
+      requiredProtocolFacts: [],
+      requiredProfileFacts: ["heatEvents"],
+    },
+    protocolFacts: {
+      applicationArea: applicationArea(pointer.facts.applicationArea),
+      rinse: "leave_in",
+      contactTimeSeconds: null,
+      conditionerRelationship: conditionerRelationship(pointer.facts.conditionerPolicy),
+      reapplication:
+        pointer.facts.heat?.reapplication === "each_separate_heat_event"
+          ? "each_separate_heat_event"
+          : "none",
+      amount: amount(pointer.facts.amount),
+      cautions: [],
+    },
+    steps: [
+      ...pointer.exactSteps.map((step) => ({
+        stepKey: step.stepKey,
+        action: step.action,
+        copyTemplateDe: step.copyDe,
+      })),
+      ...pointer.cautionCodes.map((code) => ({
+        stepKey: `caution-${code}`,
+        action: "section" as const,
+        copyTemplateDe: CAUTION_COPY_DE[code],
+      })),
+    ],
+    evidence: pointer.evidence,
+  })
+}
+
 function exactProtocol(pointer: ProductApplicationPointerV2): ApplicationGuidanceProtocolV1 {
+  if (pointer.workflowId === "heat_activated_verified_product") {
+    return heatActivatedProtocol(pointer)
+  }
   const generic = pointer.workflowId === "bondbuilder_verified_product"
   const workflow = generic
     ? {
@@ -353,7 +417,8 @@ export function composeProductApplicationProtocolsV2(
   | { status: "resolved"; protocols: ApplicationGuidanceProtocolV1[] }
   | { status: "unresolved"; reason: ProductPointerIssueV2["reason"] } {
   if (
-    pointer.workflowId === "bondbuilder_verified_product" &&
+    (pointer.workflowId === "bondbuilder_verified_product" ||
+      pointer.workflowId === "heat_activated_verified_product") &&
     !productApplicationPointerV2Schema.safeParse(pointer).success
   ) {
     return { status: "unresolved", reason: "invalid_pointer" }
@@ -417,6 +482,29 @@ function itemWithPointerFacts(
   }
 }
 
+/** Catalog fact (Leave-In v1.2): the product needs a named heat step to work. */
+function isHeatActivatedItem(item: NormalizedRoutineItem): boolean {
+  return (
+    item.catalogFacts.heatActivationRequired === true ||
+    typeof item.catalogFacts.heatActivationRoute === "string"
+  )
+}
+
+/**
+ * A pointer serves a routine item when its source role is the protocol role of the
+ * item's routine role (`protocolSourceRoleForRoutineRole`: the Leave-in heat slot
+ * `pre_heat_application` binds `pre_heat_protection` rows; every other role 1:1).
+ */
+function pointerServesRoutineRole(
+  item: NormalizedRoutineItem,
+  pointer: ProductApplicationPointerV2,
+): boolean {
+  return (
+    item.sourceRoutineRole === undefined ||
+    pointer.sourceRole === protocolSourceRoleForRoutineRole(item.sourceRoutineRole)
+  )
+}
+
 function withUniversalBetweenWashMethods(
   item: NormalizedRoutineItem,
   pointers: readonly ProductApplicationPointerV2[],
@@ -426,6 +514,9 @@ function withUniversalBetweenWashMethods(
   const isConventionalOilRole =
     item.category === "oil" && (item.role === "finish" || item.role === "leave_in")
   if (!isLeaveIn && !isConventionalOilRole) return [...pointers]
+  // A heat-activated product only works with its named heat step: no generic damp or dry
+  // refresh copy is synthesised for it (S3 §5.1).
+  if (isHeatActivatedItem(item)) return [...pointers]
   // O3: an Oil reaches non-wash days only through a sourced dry-hair use.
   if (
     isConventionalOilRole &&
@@ -527,7 +618,7 @@ export function compileApplicationViewV2({
           pointer.scope.productId === item.productId &&
           pointer.scope.category === item.category &&
           pointer.role === item.role &&
-          (item.sourceRoutineRole === undefined || pointer.sourceRole === item.sourceRoutineRole),
+          pointerServesRoutineRole(item, pointer),
       )
       .sort((left, right) => left.applicationFamily.localeCompare(right.applicationFamily))
     if (matches.length === 0) {

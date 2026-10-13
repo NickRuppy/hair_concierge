@@ -1,0 +1,194 @@
+{
+ "source": "plans/catalog-completeness-fill/slice1/target-state.json (worktree catalog-completeness-fill, untracked, NOT applied as of 2026-10-11)",
+ "slice1_fingerprint": "4398744e32e5b643a6e509969d09d936aed0260bbb7c4e5bc1dca6cc33647ca9",
+ "slice1_batch_id": "S5R-06-catalog-completeness-slice1",
+ "writes": [
+  {
+   "group": "A-leave-in-heat",
+   "kind": "update",
+   "table": "product_leave_in_specs",
+   "key": {
+    "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+   },
+   "set": {
+    "provides_heat_protection": true,
+    "application_stage": [
+     "towel_dry",
+     "pre_heat",
+     "dry_hair"
+    ]
+   }
+  },
+  {
+   "group": "A-leave-in-heat",
+   "kind": "insert",
+   "table": "product_leave_in_eligibility",
+   "row": {
+    "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+    "thickness": "normal",
+    "need_bucket": "heat_protect",
+    "styling_context": "heat_style",
+    "category_key": "leave_in"
+   }
+  },
+  {
+   "group": "A-leave-in-heat",
+   "kind": "update",
+   "table": "product_application_protocols",
+   "key": {
+    "id": "b99799b7-1d23-47e0-9338-66923a690ae1"
+   },
+   "set": {
+    "source_label": "Pantene HEAT&GLOW – deutsche Packungsrückseite (Produktbild)",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+    "source_text": "Hitzeschutz: \"Unsere Pro-V Formel bringt bei Hitzeaktivierung noch mehr feuchtigkeitsspendende Nährstoffe ins Haar und versiegelt es. Sie schützt vor Feuchtigkeit, Frizz und Hitze bis zu 230 °C.\" \"Hitzeaktivierte Formel für extra Pflege (front)\" Anwendung: \"1-2 Pumpstöße auf das gereinigte Haar auftragen. / Föhnen, um zu aktivieren. / Zwischen den Haarwäschen nutzen, um Frizz zu kontrollieren.\"",
+    "guidance_payload": {
+     "role": "heat_protection",
+     "scope": {
+      "kind": "product",
+      "category": "leave_in",
+      "productId": "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+     },
+     "steps": [
+      {
+       "action": "apply_product",
+       "stepKey": "apply-pantene-before-heat",
+       "copyTemplateDe": "Vor Wärme 1–2 Pumpstöße auf sauberes, handtuchtrockenes Haar geben und verteilen."
+      },
+      {
+       "action": "tool",
+       "stepKey": "blowdry-pantene-heat-glow",
+       "copyTemplateDe": "Föhnen, um den Hitzeschutz-Schritt abzuschließen."
+      }
+     ],
+     "locale": "de",
+     "evidence": [
+      {
+       "sourceUrl": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+       "sourceType": "manufacturer",
+       "checkedAt": "2026-10-09"
+      }
+     ],
+     "sequence": {
+      "after": [],
+      "anchor": "damp_leave_on",
+      "before": [
+       "heat_tool"
+      ],
+      "conflictsWith": []
+     },
+     "guidanceKey": "product-leave-in-e781ca9e-886d-40a1-bfe1-48177cfbf381-heat",
+     "requirements": {
+      "requiredCatalogFacts": [
+       "leave_in.plan_roles"
+      ],
+      "requiredProfileFacts": [],
+      "requiredProtocolFacts": []
+     },
+     "protocolFacts": {
+      "rinse": "leave_in",
+      "amount": {
+       "kind": "qualitative",
+       "copyDe": "1–2 Pumpstöße verwenden."
+      },
+      "cautions": [],
+      "reapplication": "none",
+      "applicationArea": "all_hair",
+      "contactTimeSeconds": null,
+      "conditionerRelationship": "not_applicable"
+     },
+     "schemaVersion": 1,
+     "protocolVersion": 1,
+     "applicationFamily": "pre_heat_damp",
+     "compatibleDayTypes": [
+      "styling_day"
+     ],
+     "exactGuidanceRequired": true
+    },
+    "guidance_payload_v2": {
+     "schemaVersion": 2,
+     "contractKind": "product_pointer",
+     "scope": {
+      "kind": "product",
+      "category": "leave_in",
+      "productId": "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+     },
+     "sourceRole": "pre_heat_protection",
+     "role": "heat_protection",
+     "applicationFamily": "pre_heat_damp",
+     "facts": {
+      "applicationState": "damp_hair",
+      "applicationArea": "root_to_tip_hair",
+      "rinse": "leave_in",
+      "contactTime": null,
+      "amount": null,
+      "heat": {
+       "supportedStates": [
+        "damp_hair"
+       ],
+       "activationRequired": false,
+       "maximumClaimedTemperatureC": null,
+       "reapplication": "none"
+      },
+      "conditionerPolicy": "not_applicable"
+     },
+     "workflowId": null,
+     "requiredCompanionProductId": null,
+     "runtimeBlockerCode": null,
+     "exactSteps": [],
+     "cautionCodes": [],
+     "evidence": [
+      {
+       "sourceUrl": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+       "sourceType": "manufacturer",
+       "checkedAt": "2026-10-09"
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "fact_evidence": [
+  {
+   "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+   "fact_key": "leave_in.provides_heat_protection",
+   "fact_value": {
+    "provides_heat_protection": true
+   },
+   "source_label": "Pantene HEAT&GLOW – deutsche Packungsrückseite (Produktbild)",
+   "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+   "source_text": "\"Unsere Pro-V Formel bringt bei Hitzeaktivierung noch mehr feuchtigkeitsspendende Nährstoffe ins Haar und versiegelt es. Sie schützt vor Feuchtigkeit, Frizz und Hitze bis zu 230 °C.\" \"Hitzeaktivierte Formel für extra Pflege (front)\"",
+   "source_type": "manufacturer",
+   "checked_at": "2026-10-09"
+  },
+  {
+   "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+   "fact_key": "leave_in.application_stage",
+   "fact_value": {
+    "application_stage": [
+     "towel_dry",
+     "pre_heat",
+     "dry_hair"
+    ]
+   },
+   "source_label": "Pantene HEAT&GLOW – deutsche Packungsrückseite (Produktbild)",
+   "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+   "source_text": "Anwendung: \"1-2 Pumpstöße auf das gereinigte Haar auftragen. / Föhnen, um zu aktivieren. / Zwischen den Haarwäschen nutzen, um Frizz zu kontrollieren.\"",
+   "source_type": "manufacturer",
+   "checked_at": "2026-10-09"
+  },
+  {
+   "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+   "fact_key": "protocols.leave_in.pre_heat_protection.source",
+   "fact_value": {
+    "protocol_id": "b99799b7-1d23-47e0-9338-66923a690ae1",
+    "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow"
+   },
+   "source_label": "Pantene HEAT&GLOW – deutsche Packungsrückseite (Produktbild)",
+   "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+   "source_text": "Anwendung: \"1-2 Pumpstöße auf das gereinigte Haar auftragen. / Föhnen, um zu aktivieren. / Zwischen den Haarwäschen nutzen, um Frizz zu kontrollieren.\"",
+   "source_type": "manufacturer",
+   "checked_at": "2026-10-09"
+  }
+ ]
+}

@@ -18,6 +18,21 @@ export type ReviewedProductApplicationProtocolRow = {
   updated_at: string
 }
 
+/**
+ * A generic reviewed workflow (Bondbuilder, heat activation) carries the manufacturer's own
+ * directions: it binds only to a row that keeps that source text and names one of its
+ * evidence URLs as the row's `source_url`.
+ */
+function isBoundToReviewedSource(
+  row: ReviewedProductApplicationProtocolRow,
+  evidence: ReadonlyArray<{ sourceUrl: string }>,
+): boolean {
+  return (
+    Boolean(row.source_text?.trim()) &&
+    evidence.some((source) => source.sourceUrl === row.source_url)
+  )
+}
+
 export function adaptReviewedProductApplicationPointersV2(
   rows: readonly ReviewedProductApplicationProtocolRow[],
 ): ProductApplicationPointerV2[] {
@@ -28,9 +43,17 @@ export function adaptReviewedProductApplicationPointersV2(
       if (!parsed.success) return []
       const pointer = parsed.data
       if (
-        pointer.workflowId === "bondbuilder_verified_product" &&
-        (!row.source_text?.trim() ||
-          !pointer.evidence.some((source) => source.sourceUrl === row.source_url))
+        (pointer.workflowId === "bondbuilder_verified_product" ||
+          pointer.workflowId === "heat_activated_verified_product") &&
+        !isBoundToReviewedSource(row, pointer.evidence)
+      )
+        return []
+      if (
+        pointer.workflowId === "heat_activated_verified_product" &&
+        (row.role !== "pre_heat_protection" ||
+          !pointer.evidence.some(
+            (source) => source.sourceType === "manufacturer" && source.sourceUrl === row.source_url,
+          ))
       )
         return []
       return pointer.scope.productId === row.product_id &&
@@ -59,8 +82,17 @@ export function adaptReviewedProductApplicationProtocols(
         payload.protocolFacts.workflowId === "bondbuilder_verified_product" &&
         (row.role !== "specialized_bond_treatment" ||
           payload.role !== "bond_repair" ||
-          !row.source_text?.trim() ||
-          !payload.evidence.some((source) => source.sourceUrl === row.source_url))
+          !isBoundToReviewedSource(row, payload.evidence))
+      )
+        continue
+      if (
+        payload.protocolFacts.workflowId === "heat_activated_verified_product" &&
+        (row.role !== "pre_heat_protection" ||
+          payload.role !== "heat_protection" ||
+          !isBoundToReviewedSource(row, payload.evidence) ||
+          !payload.evidence.some(
+            (source) => source.sourceType === "manufacturer" && source.sourceUrl === row.source_url,
+          ))
       )
         continue
       if (

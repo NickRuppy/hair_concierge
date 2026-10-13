@@ -1,0 +1,597 @@
+{
+  "basis": {
+    "production_capture_at": "2026-10-11T14:08:01.30101+00:00",
+    "slice1_fingerprint": "4398744e32e5b643a6e509969d09d936aed0260bbb7c4e5bc1dca6cc33647ca9",
+    "slice1_batch_id": "S5R-06-catalog-completeness-slice1",
+    "note": "Slice 1 post-state for the two S3 products = production capture + Slice 1 writes. Apply S3 only after Slice 1."
+  },
+  "products": [
+    {
+      "id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+      "name": "Neqi Diamond Glass Ultimate Styling Spray",
+      "brand": "Neqi",
+      "origin": "user_submitted",
+      "category": "Leave-in",
+      "is_active": true,
+      "category_key": "leave_in",
+      "lifecycle_status": "active",
+      "suitable_thicknesses": [
+        "coarse",
+        "normal"
+      ],
+      "is_chaarlie_recommended": false
+    },
+    {
+      "id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+      "name": "Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW",
+      "brand": "Pantene",
+      "origin": "curated",
+      "category": "Leave-in",
+      "is_active": true,
+      "category_key": "leave_in",
+      "lifecycle_status": "active",
+      "suitable_thicknesses": [
+        "normal"
+      ],
+      "is_chaarlie_recommended": true
+    }
+  ],
+  "product_leave_in_specs": [
+    {
+      "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+      "format": "spray",
+      "weight": "medium",
+      "roles": [
+        "replacement_conditioner",
+        "styling_prep"
+      ],
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "category_key": "leave_in",
+      "care_benefits": [
+        "anti_frizz"
+      ],
+      "care_direction": "balanced",
+      "ingredient_flags": [
+        "silicones",
+        "humectants"
+      ],
+      "application_stage": [
+        "towel_dry",
+        "pre_heat"
+      ],
+      "functional_benefits": [
+        "smooth_anti_frizz",
+        "heat_protect"
+      ],
+      "repair_support_level": "low",
+      "heat_protection_max_c": null,
+      "conditioner_relationship": "replacement_capable",
+      "heat_activation_required": false,
+      "provides_heat_protection": true,
+      "heat_activation_route": null
+    },
+    {
+      "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+      "format": "lotion",
+      "weight": "medium",
+      "roles": [
+        "extension_conditioner"
+      ],
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "category_key": "leave_in",
+      "care_benefits": [
+        "moisture",
+        "anti_frizz",
+        "shine"
+      ],
+      "care_direction": "moisture",
+      "ingredient_flags": [
+        "silicones"
+      ],
+      "application_stage": [
+        "towel_dry",
+        "pre_heat",
+        "dry_hair"
+      ],
+      "functional_benefits": [
+        "curl_shape_support",
+        "heat_protect",
+        "moisture_softness",
+        "repair_support",
+        "shine_support",
+        "smooth_anti_frizz"
+      ],
+      "repair_support_level": "medium",
+      "heat_protection_max_c": null,
+      "conditioner_relationship": "booster_only",
+      "heat_activation_required": false,
+      "provides_heat_protection": true,
+      "heat_activation_route": null
+    }
+  ],
+  "product_leave_in_fit_specs": [
+    {
+      "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+      "weight": "medium",
+      "care_benefits": [
+        "heat_protect",
+        "detangle_smooth"
+      ],
+      "conditioner_relationship": "replacement_capable"
+    },
+    {
+      "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+      "weight": "medium",
+      "care_benefits": [
+        "detangle_smooth"
+      ],
+      "conditioner_relationship": "booster_only"
+    }
+  ],
+  "product_leave_in_eligibility": [
+    {
+      "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+      "thickness": "coarse",
+      "need_bucket": "heat_protect",
+      "styling_context": "heat_style"
+    },
+    {
+      "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+      "thickness": "coarse",
+      "need_bucket": "moisture_anti_frizz",
+      "styling_context": "air_dry"
+    },
+    {
+      "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+      "thickness": "coarse",
+      "need_bucket": "moisture_anti_frizz",
+      "styling_context": "non_heat_style"
+    },
+    {
+      "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+      "thickness": "normal",
+      "need_bucket": "heat_protect",
+      "styling_context": "heat_style"
+    },
+    {
+      "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+      "thickness": "normal",
+      "need_bucket": "heat_protect",
+      "styling_context": "heat_style"
+    },
+    {
+      "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+      "thickness": "normal",
+      "need_bucket": "moisture_anti_frizz",
+      "styling_context": "air_dry"
+    },
+    {
+      "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+      "thickness": "normal",
+      "need_bucket": "moisture_anti_frizz",
+      "styling_context": "air_dry"
+    },
+    {
+      "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+      "thickness": "normal",
+      "need_bucket": "moisture_anti_frizz",
+      "styling_context": "non_heat_style"
+    },
+    {
+      "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+      "thickness": "normal",
+      "need_bucket": "moisture_anti_frizz",
+      "styling_context": "non_heat_style"
+    },
+    {
+      "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+      "thickness": "normal",
+      "need_bucket": "shine_protect",
+      "styling_context": "air_dry"
+    },
+    {
+      "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+      "thickness": "normal",
+      "need_bucket": "shine_protect",
+      "styling_context": "non_heat_style"
+    }
+  ],
+  "guarded_protocols": [
+    {
+      "id": "b99799b7-1d23-47e0-9338-66923a690ae1",
+      "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+      "category": "leave_in",
+      "role": "pre_heat_protection",
+      "application_family": "pre_heat_damp",
+      "cadence": null,
+      "instruction_modifiers": [],
+      "application_stage": "damp_leave_on",
+      "application_state": "damp",
+      "placement": "all_hair",
+      "contact_time_seconds": null,
+      "rinse_action": "leave_in",
+      "reapplication": "not_stated",
+      "source_label": "Pantene HEAT&GLOW – deutsche Packungsrückseite (Produktbild)",
+      "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+      "source_text": "Hitzeschutz: \"Unsere Pro-V Formel bringt bei Hitzeaktivierung noch mehr feuchtigkeitsspendende Nährstoffe ins Haar und versiegelt es. Sie schützt vor Feuchtigkeit, Frizz und Hitze bis zu 230 °C.\" \"Hitzeaktivierte Formel für extra Pflege (front)\" Anwendung: \"1-2 Pumpstöße auf das gereinigte Haar auftragen. / Föhnen, um zu aktivieren. / Zwischen den Haarwäschen nutzen, um Frizz zu kontrollieren.\"",
+      "guidance_payload": {
+        "role": "heat_protection",
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+        },
+        "steps": [
+          {
+            "action": "apply_product",
+            "stepKey": "apply-pantene-before-heat",
+            "copyTemplateDe": "Vor Wärme 1–2 Pumpstöße auf sauberes, handtuchtrockenes Haar geben und verteilen."
+          },
+          {
+            "action": "tool",
+            "stepKey": "blowdry-pantene-heat-glow",
+            "copyTemplateDe": "Föhnen, um den Hitzeschutz-Schritt abzuschließen."
+          }
+        ],
+        "locale": "de",
+        "evidence": [
+          {
+            "sourceUrl": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-10-09"
+          }
+        ],
+        "sequence": {
+          "after": [],
+          "anchor": "damp_leave_on",
+          "before": [
+            "heat_tool"
+          ],
+          "conflictsWith": []
+        },
+        "guidanceKey": "product-leave-in-e781ca9e-886d-40a1-bfe1-48177cfbf381-heat",
+        "requirements": {
+          "requiredCatalogFacts": [
+            "leave_in.plan_roles"
+          ],
+          "requiredProfileFacts": [],
+          "requiredProtocolFacts": []
+        },
+        "protocolFacts": {
+          "rinse": "leave_in",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "1–2 Pumpstöße verwenden."
+          },
+          "cautions": [],
+          "reapplication": "none",
+          "applicationArea": "all_hair",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable"
+        },
+        "schemaVersion": 1,
+        "protocolVersion": 1,
+        "applicationFamily": "pre_heat_damp",
+        "compatibleDayTypes": [
+          "styling_day"
+        ],
+        "exactGuidanceRequired": true
+      },
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+        },
+        "sourceRole": "pre_heat_protection",
+        "role": "heat_protection",
+        "applicationFamily": "pre_heat_damp",
+        "facts": {
+          "applicationState": "damp_hair",
+          "applicationArea": "root_to_tip_hair",
+          "rinse": "leave_in",
+          "contactTime": null,
+          "amount": null,
+          "heat": {
+            "supportedStates": [
+              "damp_hair"
+            ],
+            "activationRequired": false,
+            "maximumClaimedTemperatureC": null,
+            "reapplication": "none"
+          },
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-10-09"
+          }
+        ]
+      }
+    }
+  ],
+  "kept_protocols": [
+    {
+      "id": "5003179e-d828-4a26-b25c-7e20646329e0",
+      "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+      "category": "leave_in",
+      "role": "post_wash_leave_in",
+      "application_stage": "dry_hair",
+      "application_state": "dry",
+      "placement": "lengths_ends",
+      "rinse_action": "do_not_rinse",
+      "reapplication": "not_stated",
+      "contact_time_seconds": null,
+      "source_label": "Händler",
+      "source_url": "https://www.boots.com/pantene-moisture-leave-on-hair-treatment-135ml-10374854",
+      "source_text": "Auf handtuchtrockenem Haar oder trocken zwischen Haarwäschen anwenden.",
+      "guidance_payload": {
+        "role": "leave_in",
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+        },
+        "steps": [
+          {
+            "action": "apply_product",
+            "stepKey": "dry-care",
+            "copyTemplateDe": "Mit einer sehr kleinen Menge in trockenen Längen und Spitzen beginnen und nur bei Bedarf ergänzen."
+          }
+        ],
+        "locale": "de",
+        "evidence": [
+          {
+            "checkedAt": "2026-08-14",
+            "sourceUrl": "https://www.boots.com/pantene-moisture-leave-on-hair-treatment-135ml-10374854",
+            "sourceType": "retailer"
+          }
+        ],
+        "sequence": {
+          "after": [],
+          "anchor": "dry_finish",
+          "before": [],
+          "conflictsWith": []
+        },
+        "guidanceKey": "leave-in-use-case-2026-08-14-e781ca9e-886d-40a1-bfe1-48177cfbf381-between_wash_dry_care",
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProfileFacts": [],
+          "requiredProtocolFacts": []
+        },
+        "protocolFacts": {
+          "rinse": "leave_in",
+          "amount": null,
+          "cautions": [],
+          "reapplication": "none",
+          "applicationArea": "lengths_ends",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable"
+        },
+        "schemaVersion": 1,
+        "protocolVersion": 1,
+        "applicationFamily": "between_wash_dry_care",
+        "compatibleDayTypes": [
+          "refresh_day",
+          "between_wash_care_day"
+        ],
+        "exactGuidanceRequired": true
+      },
+      "guidance_payload_v2": {
+        "role": "leave_in",
+        "facts": {
+          "heat": null,
+          "rinse": "leave_in",
+          "amount": null,
+          "contactTime": null,
+          "applicationArea": "hair_lengths_ends",
+          "applicationState": "dry_hair",
+          "conditionerPolicy": "not_applicable"
+        },
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+        },
+        "evidence": [
+          {
+            "checkedAt": "2026-08-14",
+            "sourceUrl": "https://www.boots.com/pantene-moisture-leave-on-hair-treatment-135ml-10374854",
+            "sourceType": "retailer"
+          }
+        ],
+        "exactSteps": [],
+        "sourceRole": "post_wash_leave_in",
+        "workflowId": null,
+        "cautionCodes": [],
+        "contractKind": "product_pointer",
+        "schemaVersion": 2,
+        "applicationFamily": "between_wash_dry_care",
+        "runtimeBlockerCode": null,
+        "requiredCompanionProductId": null
+      },
+      "cadence": null,
+      "instruction_modifiers": []
+    },
+    {
+      "id": "6b50c77e-c658-40f7-818b-1a64547e41ba",
+      "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+      "category": "leave_in",
+      "role": "post_wash_leave_in",
+      "application_stage": "damp_leave_on",
+      "application_state": null,
+      "placement": "all_hair",
+      "rinse_action": "leave_in",
+      "reapplication": "not_stated",
+      "contact_time_seconds": null,
+      "source_label": "Dunnes Produktseite",
+      "source_url": "https://www.dunnesstoresgrocery.com/product/pantene-prov-moisture-recharge-heat-%26-glow-leavein-cream-135ml-heat-%26-frizz-protectant-id-100333234",
+      "source_text": "Apply 1-2 pumps on clean towel-dried hair; use dry between washes for frizz or curl definition.",
+      "guidance_payload": {
+        "role": "leave_in",
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+        },
+        "steps": [
+          {
+            "action": "apply_product",
+            "stepKey": "apply-pantene-heat-glow",
+            "copyTemplateDe": "1–2 Pumpstöße auf sauberes, handtuchtrockenes Haar geben."
+          },
+          {
+            "action": "section",
+            "stepKey": "distribute-pantene-heat-glow",
+            "copyTemplateDe": "Gleichmäßig verteilen und nicht ausspülen."
+          }
+        ],
+        "locale": "de",
+        "evidence": [
+          {
+            "checkedAt": "2026-08-11",
+            "sourceUrl": "https://www.dunnesstoresgrocery.com/product/pantene-prov-moisture-recharge-heat-%26-glow-leavein-cream-135ml-heat-%26-frizz-protectant-id-100333234",
+            "sourceType": "retailer"
+          }
+        ],
+        "sequence": {
+          "after": [
+            "post_cleanse_rinse_off"
+          ],
+          "anchor": "damp_leave_on",
+          "before": [],
+          "conflictsWith": []
+        },
+        "guidanceKey": "product-leave-in-e781ca9e-886d-40a1-bfe1-48177cfbf381-post-wash",
+        "requirements": {
+          "requiredCatalogFacts": [
+            "leave_in.plan_roles"
+          ],
+          "requiredProfileFacts": [],
+          "requiredProtocolFacts": []
+        },
+        "protocolFacts": {
+          "rinse": "leave_in",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "1–2 Pumpstöße verwenden."
+          },
+          "cautions": [],
+          "reapplication": "none",
+          "applicationArea": "all_hair",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable"
+        },
+        "schemaVersion": 1,
+        "protocolVersion": 1,
+        "applicationFamily": "post_wash_damp_conditioning",
+        "compatibleDayTypes": [
+          "wash_day",
+          "styling_day",
+          "between_wash_care_day"
+        ],
+        "exactGuidanceRequired": true
+      },
+      "guidance_payload_v2": {
+        "role": "leave_in",
+        "facts": {
+          "heat": null,
+          "rinse": "leave_in",
+          "amount": null,
+          "contactTime": null,
+          "applicationArea": "hair_lengths_ends",
+          "applicationState": "damp_hair",
+          "conditionerPolicy": "not_applicable"
+        },
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "e781ca9e-886d-40a1-bfe1-48177cfbf381"
+        },
+        "evidence": [
+          {
+            "checkedAt": "2026-08-11",
+            "sourceUrl": "https://www.dunnesstoresgrocery.com/product/pantene-prov-moisture-recharge-heat-%26-glow-leavein-cream-135ml-heat-%26-frizz-protectant-id-100333234",
+            "sourceType": "retailer"
+          }
+        ],
+        "exactSteps": [],
+        "sourceRole": "post_wash_leave_in",
+        "workflowId": null,
+        "cautionCodes": [],
+        "contractKind": "product_pointer",
+        "schemaVersion": 2,
+        "applicationFamily": "post_wash_damp_conditioning",
+        "runtimeBlockerCode": null,
+        "requiredCompanionProductId": null
+      },
+      "cadence": null,
+      "instruction_modifiers": []
+    }
+  ],
+  "personal_plan_catalog_fact_evidence": [
+    {
+      "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+      "fact_key": "leave_in.authority_facts",
+      "source_url": "https://www.boots.com/pantene-moisture-leave-on-hair-treatment-135ml-10374854",
+      "batch_id": "S5-15-leave-in-exact-02",
+      "source_type": "retailer"
+    },
+    {
+      "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+      "fact_key": "leave_in.provides_heat_protection",
+      "fact_value": {
+        "provides_heat_protection": true
+      },
+      "source_label": "Pantene HEAT&GLOW – deutsche Packungsrückseite (Produktbild)",
+      "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+      "source_text": "\"Unsere Pro-V Formel bringt bei Hitzeaktivierung noch mehr feuchtigkeitsspendende Nährstoffe ins Haar und versiegelt es. Sie schützt vor Feuchtigkeit, Frizz und Hitze bis zu 230 °C.\" \"Hitzeaktivierte Formel für extra Pflege (front)\"",
+      "source_type": "manufacturer",
+      "checked_at": "2026-10-09"
+    },
+    {
+      "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+      "fact_key": "leave_in.application_stage",
+      "fact_value": {
+        "application_stage": [
+          "towel_dry",
+          "pre_heat",
+          "dry_hair"
+        ]
+      },
+      "source_label": "Pantene HEAT&GLOW – deutsche Packungsrückseite (Produktbild)",
+      "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+      "source_text": "Anwendung: \"1-2 Pumpstöße auf das gereinigte Haar auftragen. / Föhnen, um zu aktivieren. / Zwischen den Haarwäschen nutzen, um Frizz zu kontrollieren.\"",
+      "source_type": "manufacturer",
+      "checked_at": "2026-10-09"
+    },
+    {
+      "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+      "fact_key": "protocols.leave_in.pre_heat_protection.source",
+      "fact_value": {
+        "protocol_id": "b99799b7-1d23-47e0-9338-66923a690ae1",
+        "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow"
+      },
+      "source_label": "Pantene HEAT&GLOW – deutsche Packungsrückseite (Produktbild)",
+      "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754980497/assets/pas/images/73c6eac9-e216-44b2-96ef-6de93449814d/pantene-pro-v-leave-in-moisture-boost-heat-und-glow",
+      "source_text": "Anwendung: \"1-2 Pumpstöße auf das gereinigte Haar auftragen. / Föhnen, um zu aktivieren. / Zwischen den Haarwäschen nutzen, um Frizz zu kontrollieren.\"",
+      "source_type": "manufacturer",
+      "checked_at": "2026-10-09"
+    }
+  ]
+}

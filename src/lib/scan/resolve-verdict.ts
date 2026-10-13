@@ -1,3 +1,4 @@
+import type { UserHeatRoute } from "@/lib/heat-activation/contract"
 import { fitReasonLines } from "./verdict-labels"
 import { CATEGORY_COPY, ROLE_COPY } from "@/components/personal-plan-products/stage3-product-copy"
 import { presentationFor } from "@/lib/personal-plan/decision-presentation"
@@ -90,6 +91,8 @@ export type BuildScanVerdictInput = {
   perRoleFacts?: Partial<Record<PlanProductRole, ScanRoleFacts>>
   coverage: PlanPortfolioCoverageFact[]
   hairThickness: PlanHairThickness
+  /** The user's heat routes (`stage3HeatRoutesFromSnapshot`); read by heat-activated products. */
+  heatRoutes?: readonly UserHeatRoute[]
   /** The Stage-3 selection slice (`buildStage3SelectionProfile`), identical to the plan's. */
   selectionProfile: Stage3SelectionProfile
   heatCarrierCoverage: {
@@ -481,6 +484,7 @@ function scanAuthorityInput(
     productFacts: facts,
     recommendationCandidates,
     hairThickness: input.hairThickness,
+    ...(input.heatRoutes ? { heatRoutes: input.heatRoutes } : {}),
     selectionProfile: input.selectionProfile,
     heatCarrierCoverage: input.heatCarrierCoverage,
   }

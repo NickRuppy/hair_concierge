@@ -1,6 +1,10 @@
 import { z } from "zod"
 import { requiredProtocolRoles } from "@/lib/product-intake/category-validators"
 import {
+  HEAT_ACTIVATED_WORKFLOW_ID,
+  reviewedHeatActivatedProtocolRows,
+} from "@/lib/product-intake/catalog-enrichment/heat-activated-protocols"
+import {
   buildExpansionProtocolRow,
   type ExpansionProtocolEvidence,
   type ExpansionTemplateSlots,
@@ -186,6 +190,33 @@ export function runProtocolStage(input: {
   // X6: pump-spray format is a sourced draft slot, not a canonical oil-spec column.
   if (categoryKey === "oil" && draft?.oil_spray_format === true) {
     blockers.push("protocol_parked_spray_oil (X6)")
+  }
+
+  // Leave-In v1.2 (AD-7, S3 review R1): a heat-activated product only works with its
+  // manufacturer's heat step, so no shared template may be stamped for it. It gets its
+  // reviewed exact workflow rows, or stays blocked for review.
+  if (
+    categoryKey === "leave_in" &&
+    asRecord(categorySpecs.product_leave_in_specs).heat_activation_required === true
+  ) {
+    const reviewed = reviewedHeatActivatedProtocolRows(input.productId)
+    if (reviewed.length === 0)
+      blockers.push(
+        `protocol_heat_activated_requires_reviewed_workflow: heat-activated Leave-in needs its reviewed manufacturer workflow (${HEAT_ACTIVATED_WORKFLOW_ID}); shared templates are never stamped (AD-7, HA-8)`,
+      )
+    if (blockers.length) return { status: "blocked", templateIds: [], rows: [], blockers, notes }
+    return {
+      status: "templated",
+      templateIds: [HEAT_ACTIVATED_WORKFLOW_ID],
+      // Intake row shape: the approval validator rebuilds V2 from V1 and the
+      // catalogue product id is bound at publication.
+      rows: reviewed.map(({ product_id: _productId, guidance_payload_v2: _v2, ...row }) => ({
+        ...row,
+        cadence: null,
+      })),
+      blockers: [],
+      notes: ["protocol_heat_activated_reviewed_workflow"],
+    }
   }
 
   const sources = Array.isArray(input.sources) ? input.sources.map(asRecord) : []

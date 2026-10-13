@@ -1,3 +1,4 @@
+import { stage3HeatRoutesFromSnapshot } from "@/lib/personal-plan/oil-heat-context"
 import { buildStage3EntryContext } from "./stage2-entry-adapter"
 import type {
   PersonalPlanCategory,
@@ -550,6 +551,7 @@ export function createProductionStage3ProductsGateway(
       categoryDecision,
       coverage: effectiveStage3Coverage(draft),
       hairThickness: context.hairThickness,
+      heatRoutes: stage3HeatRoutesFromSnapshot(context.refinedNeedSnapshot),
       selectionProfile: context.selectionProfile,
       ...facts,
     } as Stage3AuthorityInput

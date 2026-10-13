@@ -1,3 +1,4 @@
+import { stage3HeatRoutesFromSnapshot } from "@/lib/personal-plan/oil-heat-context"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import { ROLE_SENSITIVE_CANDIDATE_CATEGORIES } from "@/lib/personal-plan/product-previews"
@@ -134,6 +135,7 @@ export async function loadScanVerdictForProduct(
     perRoleFacts: roleSensitive ? Object.fromEntries(loadedFacts) : undefined,
     coverage: context.snapshot.coverage,
     hairThickness: context.snapshot.profile.hair.thickness,
+    heatRoutes: stage3HeatRoutesFromSnapshot(context.snapshot),
     selectionProfile: buildStage3SelectionProfile(context.snapshot, visibleHairColor),
     // No Stage3ProductDraft exists for scan — mirrors product-previews.ts's no-draft
     // default for heat-carrier coverage instead of computing a real one.

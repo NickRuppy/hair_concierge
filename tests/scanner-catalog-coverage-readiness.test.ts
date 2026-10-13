@@ -10,7 +10,10 @@ import {
   evaluateScanCatalogReadiness,
   scanReadinessRoles,
 } from "../src/lib/product-intake/scan-catalog-readiness"
-import type { Stage3ShampooFacts } from "../src/lib/personal-plan/products/authority/contracts"
+import type {
+  Stage3LeaveInFacts,
+  Stage3ShampooFacts,
+} from "../src/lib/personal-plan/products/authority/contracts"
 
 function shampooFacts(
   shampooBucket: string | null,
@@ -245,4 +248,49 @@ test("fingerprint excludes export time and sorts object keys", () => {
     schema_version: 2,
   })
   assert.equal(one, two)
+})
+
+function neqiActivatedFacts(): Stage3LeaveInFacts {
+  return {
+    productId: "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+    displayName: "Neqi Diamond Glass Ultimate Styling Spray",
+    category: "leave_in",
+    isActive: true,
+    lifecycleStatus: "active",
+    recommendable: false,
+    suitableThicknesses: ["normal", "coarse"],
+    knownReaction: false,
+    protocols: [
+      { role: "pre_heat_application", status: "verified_complete", fingerprint: "neqi-heat" },
+    ],
+    factFingerprint: "neqi-v1.2",
+    spec: {
+      format: "spray",
+      weight: "medium",
+      careDirection: "balanced",
+      repairSupportLevel: "low",
+      roles: ["pre_heat_application"],
+      providesHeatProtection: true,
+      careBenefits: ["smooth_anti_frizz", "heat_protect"],
+      applicationStages: ["towel_dry", "pre_heat"],
+      heatActivation: { route: "airflow_shaping" },
+    },
+  }
+}
+
+test("activated leave-in needs only the pre-heat protocol", async () => {
+  assert.deepEqual(scanReadinessRoles(neqiActivatedFacts()), ["pre_heat_application"])
+  const result = await evaluateScanCatalogReadiness({
+    category: "leave_in",
+    productId: "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+    loadFacts: async () => neqiActivatedFacts(),
+  })
+  assert.equal(result.protocolsComplete, true)
+  assert.deepEqual(
+    [...new Set(result.verdicts.map((entry) => entry.role))],
+    ["pre_heat_application"],
+  )
+  assert.ok(
+    result.verdicts.every((entry) => entry.verdict !== "unknown" && entry.verdict !== "error"),
+  )
 })

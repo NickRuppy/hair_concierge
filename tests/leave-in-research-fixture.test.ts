@@ -471,8 +471,8 @@ test("Leave-In fixture keeps rationale verbatim and flags every extraction gap",
     }
     // Gold-set (13 records, T12 trim): 295. Unseen-test (batch 2, 6
     // records — 4 in-category × 25 properties + 2 excluded × 1 property):
-    // 102. Total 397.
-    assert.equal(total, 397)
+    // 102. Total 397, plus slot 13's v1.2 heat-activation row (T21, HA-8) = 398.
+    assert.equal(total, 398)
     assert.equal(gaps, data.summary.rationaleGaps)
     // `care_direction` on each of the 4 in-category unseen-test products has
     // no per-field prose in the lane-a record itself — but per Nick's
@@ -516,8 +516,8 @@ test("Leave-In fixture carries a short reasoning line on every property", async 
     }
 
     // See the rationale-gap test above for the 295 (gold-set) + 102
-    // (unseen-test) = 397 breakdown.
-    assert.equal(total, 397)
+    // (unseen-test) = 397 breakdown, + 1 v1.2 heat-activation row = 398.
+    assert.equal(total, 398)
   }))
 
 test("Leave-In fixture captures application_stage as identity data, not a reviewed row (T12)", async () =>

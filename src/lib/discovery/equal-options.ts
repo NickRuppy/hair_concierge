@@ -1,3 +1,4 @@
+import { stage3HeatRoutesFromSnapshot } from "@/lib/personal-plan/oil-heat-context"
 import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
 import { bondbuilderShortlist } from "@/lib/personal-plan/products/authority/categories/bondbuilder"
 import type {
@@ -79,6 +80,7 @@ export function discoveryEqualOptions(input: {
     categoryDecision: input.decision as never,
     coverage: input.snapshot.coverage,
     hairThickness: input.snapshot.profile.hair.thickness,
+    heatRoutes: stage3HeatRoutesFromSnapshot(input.snapshot),
     selectionProfile: input.selectionProfile,
     productFacts: null,
     recommendationCandidates: input.candidates as never,

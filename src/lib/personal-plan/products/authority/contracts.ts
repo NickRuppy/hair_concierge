@@ -5,6 +5,7 @@ import type {
   PlanPortfolioCoverageFact,
   PlanProductRole,
 } from "@/lib/personal-plan/types"
+import type { HeatActivationRoute, UserHeatRoute } from "@/lib/heat-activation/contract"
 import type { ShoppingBudget } from "@/lib/user-facts/schema"
 
 import type {
@@ -120,6 +121,13 @@ export type Stage3LeaveInFacts = Stage3AuthorityCommonProductFacts & {
     providesHeatProtection: boolean | null
     careBenefits: string[] | null
     applicationStages: string[] | null
+    /**
+     * Leave-In v1.2 heat activation (S3). The key is present ONLY when the
+     * catalogue says the product needs heat to work, so every non-activated
+     * product keeps its pre-S3 fact fingerprint. `route: null` = drifted row
+     * without a route (fails closed as unknown).
+     */
+    heatActivation?: { route: HeatActivationRoute | null }
   }
 }
 
@@ -228,6 +236,12 @@ export type Stage3AuthorityInput<C extends PersonalPlanCategory = PersonalPlanCa
   productFacts: Extract<Stage3CategoryProductFacts, { category: C }> | null
   recommendationCandidates: Array<Extract<Stage3CategoryProductFacts, { category: C }>>
   hairThickness?: PlanHairThickness
+  /**
+   * The user's heat routes from the refined need snapshot
+   * (`stage3HeatRoutesFromSnapshot`). Read only by heat-activated products;
+   * `undefined` = not supplied by the builder (fails closed as unknown).
+   */
+  heatRoutes?: readonly UserHeatRoute[]
   /**
    * The profile answers dry shampoo and deep cleansing rank by; built only by
    * `buildStage3SelectionProfile` (or `UNKNOWN_SELECTION_PROFILE` for synthetic callers).

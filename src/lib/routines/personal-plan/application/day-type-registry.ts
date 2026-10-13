@@ -124,6 +124,16 @@ function heatOccurrenceBelongsToDay(
   item: NormalizedRoutineItem,
 ): boolean {
   if (item.role !== "heat_protection") return true
+  // A heat-activated product's between-wash (dry-state) use belongs to the refresh day only
+  // (S3 §5.1); its damp use follows the event's day context like any heat occurrence.
+  if (
+    item.heatEventId !== undefined &&
+    item.catalogFacts.applicationState === "dry" &&
+    (item.catalogFacts.heatActivationRequired === true ||
+      typeof item.catalogFacts.heatActivationRoute === "string")
+  ) {
+    return key === "refresh_day"
+  }
   const tool = item.catalogFacts.heatEventTool
   const route = item.catalogFacts.heatEventRoute
   if (typeof tool !== "string" || typeof route !== "string") return true

@@ -231,3 +231,134 @@ test("reviewed Leave-in post-style use remains a distinct dry-hair pointer", () 
   assert.equal(pointer.applicationFamily, "post_style_finish")
   assert.equal(pointer.facts.applicationState, "dry_hair")
 })
+
+// S3 §5.1 / P15 — heat-activated leave-ins (T3.7).
+
+const HEAT_ACTIVATED_PRODUCT = "42a2fe20-bd7e-49a3-a880-8ae89015a5c9"
+
+function heatProtocol(
+  protocolFacts: Partial<ApplicationGuidanceProtocolV1["protocolFacts"]>,
+  steps: ApplicationGuidanceProtocolV1["steps"],
+  overrides: Omit<Partial<ApplicationGuidanceProtocolV1>, "protocolFacts" | "steps"> = {},
+) {
+  return protocol({
+    scope: { kind: "product", category: "leave_in", productId: HEAT_ACTIVATED_PRODUCT },
+    role: "heat_protection",
+    applicationFamily: "pre_heat_damp",
+    compatibleDayTypes: [
+      "wash_day",
+      "intensive_care_day",
+      "bond_repair_day",
+      "clarifying_wash_day",
+      "styling_day",
+    ],
+    sequence: { anchor: "damp_leave_on", before: ["heat_tool"], after: [], conflictsWith: [] },
+    evidence: [
+      {
+        sourceUrl: "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+        sourceType: "manufacturer",
+        checkedAt: "2026-10-09",
+      },
+    ],
+    ...overrides,
+    steps,
+    protocolFacts: {
+      applicationArea: "lengths_ends",
+      rinse: "leave_in",
+      reapplication: "each_separate_heat_event",
+      ...protocolFacts,
+    },
+  })
+}
+
+const NEQI_V1_STEPS: ApplicationGuidanceProtocolV1["steps"] = [
+  {
+    stepKey: "section",
+    action: "section",
+    copyTemplateDe: "Das handtuchtrockene Haar in Partien teilen – es sollte nicht mehr nass sein.",
+  },
+  {
+    stepKey: "apply",
+    action: "apply_product",
+    copyTemplateDe: "Das Spray großzügig und gleichmäßig auf jede Partie sprühen.",
+  },
+  {
+    stepKey: "activate",
+    action: "tool",
+    copyTemplateDe:
+      "Jede Partie mit Hitze und unter Spannung föhnen. Erst die Wärme aktiviert das Spray.",
+  },
+]
+
+test("activationRequired comes from the catalog fact, not the copy", () => {
+  // Activated by the reviewed fact even though no step says „aktivier…".
+  const activated = buildProductApplicationPointerV2({
+    sourceRole: "pre_heat_protection",
+    applicationState: "damp",
+    guidancePayload: heatProtocol(
+      {
+        workflowId: "heat_activated_verified_product",
+        heatActivationRequired: true,
+        amount: { kind: "qualitative", copyDe: "großzügig" },
+      },
+      [
+        { stepKey: "apply", action: "apply_product", copyTemplateDe: "Großzügig sprühen." },
+        { stepKey: "activate", action: "tool", copyTemplateDe: "Danach föhnen." },
+      ],
+    ),
+  })
+  assert.equal(activated.facts.heat?.activationRequired, true)
+  assert.deepEqual(activated.facts.amount, { kind: "qualitative", value: "generous" })
+
+  // „aktiviert" in ordinary heat-protection copy no longer flips the fact.
+  const ordinary = buildProductApplicationPointerV2({
+    sourceRole: "pre_heat_protection",
+    applicationState: "damp",
+    guidancePayload: heatProtocol(
+      { reapplication: "none" },
+      [
+        {
+          stepKey: "apply",
+          action: "apply_product",
+          copyTemplateDe: "Vor dem Föhnen sprühen – die Wärme aktiviert den Schutz.",
+        },
+      ],
+      {
+        guidanceKey: "ordinary-heat",
+        compatibleDayTypes: ["styling_day"],
+        sequence: { anchor: "damp_leave_on", before: ["heat_tool"], after: [], conflictsWith: [] },
+      },
+    ),
+  })
+  assert.equal(ordinary.workflowId, null)
+  assert.equal(ordinary.facts.heat?.activationRequired, false)
+})
+
+test("exact steps survive V1→V2", () => {
+  const pointer = buildProductApplicationPointerV2({
+    sourceRole: "pre_heat_protection",
+    applicationState: "damp",
+    guidancePayload: heatProtocol(
+      { workflowId: "heat_activated_verified_product", heatActivationRequired: true },
+      NEQI_V1_STEPS,
+    ),
+  })
+  assert.equal(pointer.workflowId, "heat_activated_verified_product")
+  assert.equal(pointer.applicationFamily, "pre_heat_damp")
+  assert.equal(pointer.facts.applicationArea, "hair_lengths_ends")
+  assert.equal(pointer.facts.rinse, "leave_in")
+  assert.deepEqual(pointer.facts.heat, {
+    supportedStates: ["damp_hair"],
+    activationRequired: true,
+    maximumClaimedTemperatureC: null,
+    reapplication: "each_separate_heat_event",
+  })
+  assert.deepEqual(
+    pointer.exactSteps,
+    NEQI_V1_STEPS.map((step) => ({
+      stepKey: step.stepKey,
+      action: step.action,
+      copyDe: step.copyTemplateDe,
+    })),
+  )
+})

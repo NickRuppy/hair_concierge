@@ -3134,3 +3134,55 @@ test("engine selectors keep baseline conditioner active when shared engine is ot
   assert.equal(runtime.categories.dryShampoo.relevant, false)
   assert.equal(runtime.categories.peeling.relevant, false)
 })
+
+test("no heat need → activated leave-in is a hard mismatch", () => {
+  const profile = {
+    ...SEVERE_DAMAGE_PROFILE,
+    heat_styling: "never" as const,
+    styling_tools: [] as HairProfile["styling_tools"],
+  }
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(profile, [])
+  const decision = runtime.categories.leaveIn
+  const base = {
+    format: "spray" as const,
+    weight: "medium" as const,
+    care_benefits: ["protein", "repair", "anti_frizz"] as ProductLeaveInSpecs["care_benefits"],
+    ingredient_flags: [] as ProductLeaveInSpecs["ingredient_flags"],
+  }
+  const reranked = rerankLeaveInProductsWithEngine({
+    candidates: [
+      createMatchedProduct("plain", "Leave-in", {
+        combined_score: 0.7,
+        suitable_thicknesses: ["fine"],
+      }),
+      createMatchedProduct("activated", "Leave-in", {
+        combined_score: 0.99,
+        suitable_thicknesses: ["fine"],
+      }),
+    ],
+    specs: [
+      {
+        ...base,
+        product_id: "plain",
+        roles: ["replacement_conditioner"],
+        provides_heat_protection: false,
+        heat_activation_required: false,
+        application_stage: ["towel_dry"],
+      },
+      {
+        ...base,
+        product_id: "activated",
+        roles: ["styling_prep"],
+        provides_heat_protection: true,
+        heat_activation_required: true,
+        application_stage: ["towel_dry", "pre_heat"],
+      },
+    ],
+    decision,
+    hairProfile: profile,
+  })
+  assert.deepEqual(
+    reranked.map((product) => product.id),
+    ["plain"],
+  )
+})

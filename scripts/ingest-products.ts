@@ -436,12 +436,10 @@ function inferLeaveInSpecs(
     normalizedName.includes("7in1") ||
     normalizedName.includes("5-in-1")
 
-  const heatActivationRequired =
-    normalizedName.includes("heat activated") ||
-    normalizedName.includes("fohn") ||
-    normalizedName.includes("blow dry")
-
-  if (providesHeatProtection || heatActivationRequired || inferredFormat === "spray") {
+  // Leave-In v1.2 (D-e, S3 plan §2.4): no name heuristic for heat activation.
+  // Activation is set only through Leave-In research or a field-scoped
+  // amendment, and it never implies heat protection.
+  if (providesHeatProtection || inferredFormat === "spray") {
     careBenefits.add("heat_protect")
   }
   if (normalizedName.includes("curl")) {
