@@ -1,0 +1,4242 @@
+{
+ "fingerprint": "b6885a73fac70975cd93d28c9ebc0665",
+ "target": {
+  "16ebefbe-48d8-4c7f-9c81-b903651a6e03": {
+   "slot": "G11",
+   "name": "Guhl Hyaluron+ Pflege Feuchtigkeits-Shampoo",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "f8a8fd56-aeb0-4096-8d9d-5af484e3889f": {
+   "slot": "A54",
+   "name": "Syoss Intense Volume Shampoo",
+   "rows": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal"
+   ]
+  },
+  "a06cfc4d-c4f5-457e-a94e-26559f96f0e9": {
+   "slot": "A13",
+   "name": "hair biology Shampoo Revitalize & Soothe",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "0017381a-84ba-46dd-9b6e-7ef457e8b5b4": {
+   "slot": "A09",
+   "name": "Garnier Wahre Schätze Shampoo Honig Schätze",
+   "rows": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal"
+   ]
+  },
+  "a79513be-e34b-4a1e-b7eb-b3d4b58160be": {
+   "slot": "A05",
+   "name": "Balea Ultra Sensitive",
+   "rows": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "coarse",
+     "irritationen",
+     "irritated",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "a7ff335a-7e81-4cf4-9c20-9209bff4386b": {
+   "slot": "A30",
+   "name": "Neqi Moisture Mystery",
+   "rows": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "gentle"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal"
+   ]
+  },
+  "57bae8c8-0ebd-4722-b955-c760d8ffcdbb": {
+   "slot": "A42",
+   "name": "SANTE Glossy Shine Shampoo Birke + 3-fach Protein Komplex",
+   "rows": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal"
+   ]
+  },
+  "94829f16-b21d-4061-9dcc-cbd43dcb4274": {
+   "slot": "A22",
+   "name": "ISANA MED Shampoo pH 5,5 hautneutral",
+   "rows": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "coarse",
+     "irritationen",
+     "irritated",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "41b99629-5a1c-402f-a486-d41780e89e66": {
+   "slot": "U2",
+   "name": "Herbal Essences Tiefenreinigung & Glanz Shampoo Limettenduft",
+   "rows": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "clarifying"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "clarifying"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal"
+   ]
+  },
+  "22f95dcb-12de-4d62-b206-f03dbd6e94a0": {
+   "slot": "G07",
+   "name": "ISANA Shampoo & Spülung 2in1 Volumen",
+   "rows": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal"
+   ]
+  },
+  "e859d6e0-e991-4081-84b5-b81862c82475": {
+   "slot": "A46",
+   "name": "Schwarzkopf GLISS Sealing Miracle Versiegelndes Shampoo",
+   "rows": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal"
+   ]
+  },
+  "3f3c7d89-9e7b-4e91-85f7-d3c58d304918": {
+   "slot": "A34",
+   "name": "OGX Biotin & Collagen Shampoo",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "bef4f219-2c1f-4e02-8e3a-93056b95465a": {
+   "slot": "U6",
+   "name": "OGX Strength & Length + Keratin Oil Shampoo",
+   "rows": [
+    [
+     "coarse",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "suitable": [
+    "coarse"
+   ]
+  },
+  "7e95671b-41a7-4f5c-9188-e535e46678ba": {
+   "slot": "A50",
+   "name": "Sebamed Anti Schuppen Plus",
+   "rows": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "b000d235-1fc6-434c-9ba1-f1207d36cded": {
+   "slot": "A01",
+   "name": "Balea 2 in 1 Urea 5%",
+   "rows": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "fine",
+     "trocken",
+     "dry",
+     "regular"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "normal",
+     "trocken",
+     "dry",
+     "regular"
+    ],
+    [
+     "coarse",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "coarse",
+     "trocken",
+     "dry",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "2e887538-3b92-4344-9bbd-1761383ba4a6": {
+   "slot": "A18",
+   "name": "Herbal Essences Shampoo Fiji",
+   "rows": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "gentle"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal"
+   ]
+  },
+  "fcbc469f-93c8-4be5-85db-e789b09189c7": {
+   "slot": "A38",
+   "name": "PANTENE PRO-V Shampoo miracles Hydra Glow, 250 ml",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "e7bfd306-b128-4735-a9f8-0eeacdbd5013": {
+   "slot": "G03",
+   "name": "Sebamed Every-Day Shampoo",
+   "rows": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "gentle"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "gentle"
+    ],
+    [
+     "coarse",
+     "irritationen",
+     "irritated",
+     "gentle"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "cc9318d2-13af-4c83-8b5e-7effb687c92f": {
+   "slot": "A26",
+   "name": "L'Oréal Paris Elvital Hydra Hyaluronic 72H Feuchtigkeit-Auffüllendes Shampoo",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "c07a181b-3d55-4d47-ad68-9c1e324d4496": {
+   "slot": "A14",
+   "name": "Hask Curl Care Shampoo",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf": {
+   "slot": "A10",
+   "name": "Guhl Frische und Leichtigkeit",
+   "rows": [
+    [
+     "fine",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ],
+    [
+     "normal",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ],
+    [
+     "coarse",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "a1c3dc8d-2638-497f-8c7f-9b491c9003b0": {
+   "slot": "G08",
+   "name": "Cantu Shampoo Locken Pflege",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "7373656d-5fd7-46e8-81a3-2ef29e3c4c18": {
+   "slot": "G04",
+   "name": "Pantene Grow Abundance",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "51a0b647-2794-49a3-96e1-e7695432561e": {
+   "slot": "A51",
+   "name": "Sebamed Urea 5%",
+   "rows": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "fine",
+     "trocken",
+     "dry",
+     "regular"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "normal",
+     "trocken",
+     "dry",
+     "regular"
+    ],
+    [
+     "coarse",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "coarse",
+     "trocken",
+     "dry",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "64fb44d5-8701-46ab-bcba-f1747f071e48": {
+   "slot": "A31",
+   "name": "Neqi Volume Victory",
+   "rows": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "gentle"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal"
+   ]
+  },
+  "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace": {
+   "slot": "A06",
+   "name": "Balea Med Anti Schuppen",
+   "rows": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "0d341836-96b3-4364-9319-a7f0884b3da9": {
+   "slot": "U3",
+   "name": "Plantur 39 Phyto-Coffein-Shampoo für feines, brüchiges Haar",
+   "rows": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal"
+   ]
+  },
+  "678119a0-9070-4faf-b9ed-7c0ac008767e": {
+   "slot": "A43",
+   "name": "SANTE Sensitive Care Shampoo Probiotika + 3-fach Protein Komplex, 250 ml",
+   "rows": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal"
+   ]
+  },
+  "a836ef4f-f406-4557-b908-0155919e2c4f": {
+   "slot": "A19",
+   "name": "ISANA MED Shampoo Anti Schuppen, 200 ml",
+   "rows": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "3405f33b-ae5f-4185-b72b-68c9a87f7c06": {
+   "slot": "A47",
+   "name": "Schwarzkopf GLISS Shampoo Liquid Silk",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "0ab645f9-d46d-4cf2-96a5-b5e00f74cae2": {
+   "slot": "A55",
+   "name": "Syoss Shampoo Intense Keratin",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "2ecd3c9d-90f6-45a3-a72c-daefed50be10": {
+   "slot": "A35",
+   "name": "OGX Renewing + Argan Oil of Morocco Shampoo",
+   "rows": [
+    [
+     "coarse",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "suitable": [
+    "coarse"
+   ]
+  },
+  "6fde3fe2-3850-4502-b9f2-ebb17eb13bad": {
+   "slot": "A39",
+   "name": "Pantene Pro-V Volumen Pur Shampoo",
+   "rows": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal"
+   ]
+  },
+  "d01de47e-e360-4b31-9924-e3e5bc31ccdc": {
+   "slot": "G12",
+   "name": "Balea Professional Shampoo Ultimate Volume, 250 ml",
+   "rows": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal"
+   ]
+  },
+  "34697aec-761c-45e7-9a92-986f786dd022": {
+   "slot": "A23",
+   "name": "ISANA MED Ultra Sensitiv+ Anti-Schuppen Shampoo, 200 ml",
+   "rows": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "ead1333b-6839-464d-b272-673d39bb95a4": {
+   "slot": "A02",
+   "name": "Balea PROFESSIONAL Shampoo Aqua Hyaluron",
+   "rows": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal"
+   ]
+  },
+  "1623a993-3ff4-43be-82c1-95a1ee57ec52": {
+   "slot": "A27",
+   "name": "LANGHAARMÄDCHEN Shampoo Beautiful Curls",
+   "rows": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "gentle"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal"
+   ]
+  },
+  "515de93c-1c77-465d-ae0d-2a8d6ddb3d73": {
+   "slot": "A52",
+   "name": "Swiss-O-Par Teebaumöl Shampoo",
+   "rows": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal"
+   ]
+  },
+  "eb99d805-20d4-4dbb-9651-17c9e954a769": {
+   "slot": "A32",
+   "name": "NIVEA Power Repair Reparatur Shampoo",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "1ef2be82-259c-4a1f-af2e-3ac3403f9731": {
+   "slot": "A40",
+   "name": "Salthouse Anti Juckreiz",
+   "rows": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "fine",
+     "trocken",
+     "dry",
+     "regular"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "normal",
+     "trocken",
+     "dry",
+     "regular"
+    ],
+    [
+     "coarse",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "coarse",
+     "trocken",
+     "dry",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "716a4f4e-6ba4-4742-a1cf-75e90ae1da3f": {
+   "slot": "A16",
+   "name": "Head & Shoulders Anti Schuppen Sensitive",
+   "rows": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "7200bb0b-7463-433b-86c8-744f5c1431de": {
+   "slot": "U4",
+   "name": "Garnier Wahre Schätze Ausgleichendes Shampoo Anziehende Aktivkohle & Schwarzkümmelöl",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "clarifying"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "7b5ec424-d21f-4eb8-999e-7aed98e94b86": {
+   "slot": "A36",
+   "name": "OGX Rosemary Mint Shampoo",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "3d94c017-9edb-4ba0-accd-4772e262f012": {
+   "slot": "G13",
+   "name": "Lavera Basis Sensitiv",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "86f44889-b2c9-40a1-9190-58d7f738b6ca": {
+   "slot": "A24",
+   "name": "ISANA Shampoo Sensitiv Baumwoll- & Kornblume",
+   "rows": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal"
+   ]
+  },
+  "a1451c9b-fb55-406d-a81f-c513cc4ddcdf": {
+   "slot": "A20",
+   "name": "ISANA MED Shampoo Jeden Tag",
+   "rows": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "coarse",
+     "irritationen",
+     "irritated",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "9d8d4709-4041-495e-98ee-e0261fa30e27": {
+   "slot": "A44",
+   "name": "Schauma Anti-Schuppen Classic Shampoo",
+   "rows": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "744de604-d266-453b-a56b-eea92c5ca565": {
+   "slot": "G01",
+   "name": "Guhl Anti Schuppen",
+   "rows": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "02afbd03-1c7d-467c-8a07-a8b226d6f535": {
+   "slot": "A11",
+   "name": "Guhl Kopfhaut Sensitive",
+   "rows": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "fine",
+     "trocken",
+     "dry",
+     "regular"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "normal",
+     "trocken",
+     "dry",
+     "regular"
+    ],
+    [
+     "coarse",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "coarse",
+     "trocken",
+     "dry",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33": {
+   "slot": "G05",
+   "name": "Wahre Schätze Sanfte Hafermilch",
+   "rows": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "coarse",
+     "irritationen",
+     "irritated",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d": {
+   "slot": "A03",
+   "name": "Balea PROFESSIONAL Shampoo Kopfhaut Sensitive",
+   "rows": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "fine",
+     "trocken",
+     "dry",
+     "regular"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "normal",
+     "trocken",
+     "dry",
+     "regular"
+    ],
+    [
+     "coarse",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "coarse",
+     "trocken",
+     "dry",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "bb1b029f-a8fa-4276-8268-f6ce418128c7": {
+   "slot": "A48",
+   "name": "Schwarzkopf GLISS Shampoo Total Repair, 250 ml",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946": {
+   "slot": "G09",
+   "name": "Syoss Intense Curls Locken Shampoo",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "e76e0ed4-bd20-40cd-84ae-e93030610d40": {
+   "slot": "A28",
+   "name": "LANGHAARMÄDCHEN Shampoo Lovely Long, 300 ml",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "4a45948b-53a6-48ac-9c02-20718c1d19c4": {
+   "slot": "A07",
+   "name": "Being Big Hair Shampoo",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "f033afbe-281a-419e-a245-3ad83d721bd0": {
+   "slot": "A33",
+   "name": "NIVEA 2in1 Express Shampoo & Spülung, 400 ml",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "88c230c5-1020-4648-a10e-c2a1e8c87e0e": {
+   "slot": "A25",
+   "name": "Ultimate Shampoo",
+   "rows": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal"
+   ]
+  },
+  "1311e51c-7941-4d2c-b9b4-7a450ee37f15": {
+   "slot": "A04",
+   "name": "Balea Professional Shampoo Hydra Volume, 250 ml",
+   "rows": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal"
+   ]
+  },
+  "5effc311-25d7-44dd-8c16-b93c182068d3": {
+   "slot": "A37",
+   "name": "PANTENE PRO-V Shampoo Anti Schuppen Active Nutri-Plex",
+   "rows": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "6dc65df2-2466-43e4-bdc2-3a05803f305c": {
+   "slot": "A29",
+   "name": "Monday Haircare Volume Kraft & Fülle Shampoo",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "gentle"
+    ],
+    [
+     "coarse",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "normal",
+    "coarse"
+   ]
+  },
+  "261e5c9f-d312-4206-82da-fbd0ab6f3614": {
+   "slot": "A41",
+   "name": "Salthouse Anti Schuppen",
+   "rows": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "b761256d-c0d2-4413-9fa5-8ab950ef69bf": {
+   "slot": "A53",
+   "name": "Syoss Intense Fullness Kräftigendes Shampoo",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "088b1427-ed22-424e-8cfd-ea2578120ae6": {
+   "slot": "G02",
+   "name": "Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege",
+   "rows": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "0f71ff9d-bf1e-4d76-883a-e1a9e6a2094c": {
+   "slot": "U1",
+   "name": "Balea PROFESSIONAL Shampoo Tiefenreinigung, 250 ml",
+   "rows": [
+    [
+     "fine",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ],
+    [
+     "normal",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ],
+    [
+     "coarse",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "8a90f0fa-9cb1-458a-93f3-c2374e6d8f16": {
+   "slot": "A21",
+   "name": "ISANA MED Shampoo Totes Meer, 200 ml",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "e4e4fd05-33fd-4048-9553-76815bff5d43": {
+   "slot": "A45",
+   "name": "schauma Shampoo Repair & Pflege",
+   "rows": [
+    [
+     "coarse",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "coarse"
+   ]
+  },
+  "1e61a644-94b0-4356-ab55-f58572fa1e18": {
+   "slot": "U5",
+   "name": "head & shoulders Anti-Schuppen Shampoo Classic Clean",
+   "rows": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "03b847e5-01b9-40e5-950a-98efc73abb3a": {
+   "slot": "G06",
+   "name": "Salthouse Totes Meer Therapie Anti-Fett Shampoo",
+   "rows": [
+    [
+     "fine",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ],
+    [
+     "normal",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ],
+    [
+     "coarse",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "d408aca9-cd16-4cb0-90e7-bab26a698000": {
+   "slot": "A17",
+   "name": "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "303b4c0c-53a4-46de-883d-c29e448ee590": {
+   "slot": "A49",
+   "name": "Sebamed Anti-Schuppen Shampoo",
+   "rows": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal",
+    "coarse"
+   ]
+  },
+  "9bfad335-a086-45a0-9af7-f26b36b4ecff": {
+   "slot": "A12",
+   "name": "Guhl Kraft & Fülle Shampoo",
+   "rows": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal"
+   ]
+  },
+  "1f51a69f-c946-4898-9091-2fd2c59fb467": {
+   "slot": "A08",
+   "name": "Dejan Garz The Foundation Shampoo",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  },
+  "286071ba-9c9a-4c60-979c-7e51df949fbf": {
+   "slot": "G10",
+   "name": "Garnier Fructis Locken Methode Feuchtigkeitsauffüllendes Shampoo",
+   "rows": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "fine",
+    "normal"
+   ]
+  },
+  "17b6d50e-ca5b-4f66-bdd7-39bd19afe748": {
+   "slot": "A15b",
+   "name": "Hask Repair + Argan Oil Shampoo",
+   "rows": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "suitable": [
+    "normal"
+   ]
+  }
+ },
+ "changes": [
+  {
+   "slot": "A01",
+   "name": "Balea 2 in 1 Urea 5%",
+   "productId": "b000d235-1fc6-434c-9ba1-f1207d36cded",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "trocken",
+     "dry",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "fine",
+     "trocken",
+     "dry",
+     "regular"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "normal",
+     "trocken",
+     "dry",
+     "regular"
+    ],
+    [
+     "coarse",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "coarse",
+     "trocken",
+     "dry",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A02",
+   "name": "Balea PROFESSIONAL Shampoo Aqua Hyaluron",
+   "productId": "ead1333b-6839-464d-b272-673d39bb95a4",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A03",
+   "name": "Balea PROFESSIONAL Shampoo Kopfhaut Sensitive",
+   "productId": "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "fine",
+     "trocken",
+     "dry",
+     "regular"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "normal",
+     "trocken",
+     "dry",
+     "regular"
+    ],
+    [
+     "coarse",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "coarse",
+     "trocken",
+     "dry",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A04",
+   "name": "Balea Professional Shampoo Hydra Volume, 250 ml",
+   "productId": "1311e51c-7941-4d2c-b9b4-7a450ee37f15",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A05",
+   "name": "Balea Ultra Sensitive",
+   "productId": "a79513be-e34b-4a1e-b7eb-b3d4b58160be",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "coarse",
+     "irritationen",
+     "irritated",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A06",
+   "name": "Balea Med Anti Schuppen",
+   "productId": "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A07",
+   "name": "Being Big Hair Shampoo",
+   "productId": "4a45948b-53a6-48ac-9c02-20718c1d19c4",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A08",
+   "name": "Dejan Garz The Foundation Shampoo",
+   "productId": "1f51a69f-c946-4898-9091-2fd2c59fb467",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A10",
+   "name": "Guhl Frische und Leichtigkeit",
+   "productId": "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "normal",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ],
+    [
+     "normal",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ],
+    [
+     "coarse",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A11",
+   "name": "Guhl Kopfhaut Sensitive",
+   "productId": "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "fine",
+     "trocken",
+     "dry",
+     "regular"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "normal",
+     "trocken",
+     "dry",
+     "regular"
+    ],
+    [
+     "coarse",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "coarse",
+     "trocken",
+     "dry",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A12",
+   "name": "Guhl Kraft & Fülle Shampoo",
+   "productId": "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "normal",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A13",
+   "name": "hair biology Shampoo Revitalize & Soothe",
+   "productId": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "normal",
+     "trocken",
+     "dry",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A14",
+   "name": "Hask Curl Care Shampoo",
+   "productId": "c07a181b-3d55-4d47-ad68-9c1e324d4496",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "coarse",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A15b",
+   "name": "Hask Repair + Argan Oil Shampoo",
+   "productId": "17b6d50e-ca5b-4f66-bdd7-39bd19afe748",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "coarse",
+     "trocken",
+     "dry",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A16",
+   "name": "Head & Shoulders Anti Schuppen Sensitive",
+   "productId": "716a4f4e-6ba4-4742-a1cf-75e90ae1da3f",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A17",
+   "name": "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+   "productId": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+   "recommended": true,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "coarse",
+     "irritationen",
+     "irritated",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A18",
+   "name": "Herbal Essences Shampoo Fiji",
+   "productId": "2e887538-3b92-4344-9bbd-1761383ba4a6",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "gentle"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A19",
+   "name": "ISANA MED Shampoo Anti Schuppen, 200 ml",
+   "productId": "a836ef4f-f406-4557-b908-0155919e2c4f",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "fine",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ],
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A20",
+   "name": "ISANA MED Shampoo Jeden Tag",
+   "productId": "a1451c9b-fb55-406d-a81f-c513cc4ddcdf",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "coarse",
+     "irritationen",
+     "irritated",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A21",
+   "name": "ISANA MED Shampoo Totes Meer, 200 ml",
+   "productId": "8a90f0fa-9cb1-458a-93f3-c2374e6d8f16",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A22",
+   "name": "ISANA MED Shampoo pH 5,5 hautneutral",
+   "productId": "94829f16-b21d-4061-9dcc-cbd43dcb4274",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "coarse",
+     "irritationen",
+     "irritated",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A23",
+   "name": "ISANA MED Ultra Sensitiv+ Anti-Schuppen Shampoo, 200 ml",
+   "productId": "34697aec-761c-45e7-9a92-986f786dd022",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A24",
+   "name": "ISANA Shampoo Sensitiv Baumwoll- & Kornblume",
+   "productId": "86f44889-b2c9-40a1-9190-58d7f738b6ca",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A25",
+   "name": "Ultimate Shampoo",
+   "productId": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "coarse",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A26",
+   "name": "L'Oréal Paris Elvital Hydra Hyaluronic 72H Feuchtigkeit-Auffüllendes Shampoo",
+   "productId": "cc9318d2-13af-4c83-8b5e-7effb687c92f",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "coarse",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A27",
+   "name": "LANGHAARMÄDCHEN Shampoo Beautiful Curls",
+   "productId": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "coarse",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "gentle"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A29",
+   "name": "Monday Haircare Volume Kraft & Fülle Shampoo",
+   "productId": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "normal",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ],
+    [
+     "coarse",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "gentle"
+    ],
+    [
+     "coarse",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ]
+   ],
+   "notes": [
+    "X1 kept by Nick: coarse x oily override"
+   ]
+  },
+  {
+   "slot": "A30",
+   "name": "Neqi Moisture Mystery",
+   "productId": "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "trocken",
+     "dry",
+     "gentle"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "gentle"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A31",
+   "name": "Neqi Volume Victory",
+   "productId": "64fb44d5-8701-46ab-bcba-f1747f071e48",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "gentle"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A32",
+   "name": "NIVEA Power Repair Reparatur Shampoo",
+   "productId": "eb99d805-20d4-4dbb-9651-17c9e954a769",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "coarse",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A33",
+   "name": "NIVEA 2in1 Express Shampoo & Spülung, 400 ml",
+   "productId": "f033afbe-281a-419e-a245-3ad83d721bd0",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "normal",
+     "trocken",
+     "dry",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A34",
+   "name": "OGX Biotin & Collagen Shampoo",
+   "productId": "3f3c7d89-9e7b-4e91-85f7-d3c58d304918",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A35",
+   "name": "OGX Renewing + Argan Oil of Morocco Shampoo",
+   "productId": "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "coarse",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A36",
+   "name": "OGX Rosemary Mint Shampoo",
+   "productId": "7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "normal",
+     "dehydriert-fettig",
+     "oily",
+     "clarifying"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A37",
+   "name": "PANTENE PRO-V Shampoo Anti Schuppen Active Nutri-Plex",
+   "productId": "5effc311-25d7-44dd-8c16-b93c182068d3",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A38",
+   "name": "PANTENE PRO-V Shampoo miracles Hydra Glow, 250 ml",
+   "productId": "fcbc469f-93c8-4be5-85db-e789b09189c7",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A39",
+   "name": "Pantene Pro-V Volumen Pur Shampoo",
+   "productId": "6fde3fe2-3850-4502-b9f2-ebb17eb13bad",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A40",
+   "name": "Salthouse Anti Juckreiz",
+   "productId": "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "fine",
+     "trocken",
+     "dry",
+     "regular"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "normal",
+     "trocken",
+     "dry",
+     "regular"
+    ],
+    [
+     "coarse",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "coarse",
+     "trocken",
+     "dry",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A41",
+   "name": "Salthouse Anti Schuppen",
+   "productId": "261e5c9f-d312-4206-82da-fbd0ab6f3614",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A42",
+   "name": "SANTE Glossy Shine Shampoo Birke + 3-fach Protein Komplex",
+   "productId": "57bae8c8-0ebd-4722-b955-c760d8ffcdbb",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A43",
+   "name": "SANTE Sensitive Care Shampoo Probiotika + 3-fach Protein Komplex, 250 ml",
+   "productId": "678119a0-9070-4faf-b9ed-7c0ac008767e",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "coarse",
+     "irritationen",
+     "irritated",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A44",
+   "name": "Schauma Anti-Schuppen Classic Shampoo",
+   "productId": "9d8d4709-4041-495e-98ee-e0261fa30e27",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A46",
+   "name": "Schwarzkopf GLISS Sealing Miracle Versiegelndes Shampoo",
+   "productId": "e859d6e0-e991-4081-84b5-b81862c82475",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "coarse",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A47",
+   "name": "Schwarzkopf GLISS Shampoo Liquid Silk",
+   "productId": "3405f33b-ae5f-4185-b72b-68c9a87f7c06",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "coarse",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A48",
+   "name": "Schwarzkopf GLISS Shampoo Total Repair, 250 ml",
+   "productId": "bb1b029f-a8fa-4276-8268-f6ce418128c7",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "coarse",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A49",
+   "name": "Sebamed Anti-Schuppen Shampoo",
+   "productId": "303b4c0c-53a4-46de-883d-c29e448ee590",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A50",
+   "name": "Sebamed Anti Schuppen Plus",
+   "productId": "7e95671b-41a7-4f5c-9188-e535e46678ba",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A51",
+   "name": "Sebamed Urea 5%",
+   "productId": "51a0b647-2794-49a3-96e1-e7695432561e",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "gentle"
+    ],
+    [
+     "fine",
+     "trocken",
+     "dry",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "fine",
+     "trocken",
+     "dry",
+     "regular"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "normal",
+     "trocken",
+     "dry",
+     "regular"
+    ],
+    [
+     "coarse",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "coarse",
+     "trocken",
+     "dry",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A52",
+   "name": "Swiss-O-Par Teebaumöl Shampoo",
+   "productId": "515de93c-1c77-465d-ae0d-2a8d6ddb3d73",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A53",
+   "name": "Syoss Intense Fullness Kräftigendes Shampoo",
+   "productId": "b761256d-c0d2-4413-9fa5-8ab950ef69bf",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A54",
+   "name": "Syoss Intense Volume Shampoo",
+   "productId": "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "A55",
+   "name": "Syoss Shampoo Intense Keratin",
+   "productId": "0ab645f9-d46d-4cf2-96a5-b5e00f74cae2",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "coarse",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "G01",
+   "name": "Guhl Anti Schuppen",
+   "productId": "744de604-d266-453b-a56b-eea92c5ca565",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "G02",
+   "name": "Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege",
+   "productId": "088b1427-ed22-424e-8cfd-ea2578120ae6",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "gentle"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "G03",
+   "name": "Sebamed Every-Day Shampoo",
+   "productId": "e7bfd306-b128-4735-a9f8-0eeacdbd5013",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "gentle"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "gentle"
+    ],
+    [
+     "coarse",
+     "irritationen",
+     "irritated",
+     "gentle"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "G04",
+   "name": "Pantene Grow Abundance",
+   "productId": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "G05",
+   "name": "Wahre Schätze Sanfte Hafermilch",
+   "productId": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "normal",
+     "trocken",
+     "dry",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "regular"
+    ],
+    [
+     "coarse",
+     "irritationen",
+     "irritated",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "G06",
+   "name": "Salthouse Totes Meer Therapie Anti-Fett Shampoo",
+   "productId": "03b847e5-01b9-40e5-950a-98efc73abb3a",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "dehydriert-fettig",
+     "oily",
+     "clarifying"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ],
+    [
+     "normal",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ],
+    [
+     "coarse",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "G07",
+   "name": "ISANA Shampoo & Spülung 2in1 Volumen",
+   "productId": "22f95dcb-12de-4d62-b206-f03dbd6e94a0",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "G08",
+   "name": "Cantu Shampoo Locken Pflege",
+   "productId": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "coarse",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "G09",
+   "name": "Syoss Intense Curls Locken Shampoo",
+   "productId": "4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "coarse",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "G10",
+   "name": "Garnier Fructis Locken Methode Feuchtigkeitsauffüllendes Shampoo",
+   "productId": "286071ba-9c9a-4c60-979c-7e51df949fbf",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "coarse",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "G11",
+   "name": "Guhl Hyaluron+ Pflege Feuchtigkeits-Shampoo",
+   "productId": "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "G12",
+   "name": "Balea Professional Shampoo Ultimate Volume, 250 ml",
+   "productId": "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "G13",
+   "name": "Lavera Basis Sensitiv",
+   "productId": "3d94c017-9edb-4ba0-accd-4772e262f012",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "normal",
+     "irritationen",
+     "irritated",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "U1",
+   "name": "Balea PROFESSIONAL Shampoo Tiefenreinigung, 250 ml",
+   "productId": "0f71ff9d-bf1e-4d76-883a-e1a9e6a2094c",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "fine",
+     "dehydriert-fettig",
+     "oily",
+     "clarifying"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ],
+    [
+     "normal",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ],
+    [
+     "coarse",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ]
+   ],
+   "notes": [
+    "R20.1 oily-scalp lexicon gap override"
+   ]
+  },
+  {
+   "slot": "U2",
+   "name": "Herbal Essences Tiefenreinigung & Glanz Shampoo Limettenduft",
+   "productId": "41b99629-5a1c-402f-a486-d41780e89e66",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "clarifying"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "clarifying"
+    ],
+    [
+     "coarse",
+     "normal",
+     "balanced",
+     "clarifying"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "clarifying"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "clarifying"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "U3",
+   "name": "Plantur 39 Phyto-Coffein-Shampoo für feines, brüchiges Haar",
+   "productId": "0d341836-96b3-4364-9319-a7f0884b3da9",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "normal",
+     "balanced",
+     "regular"
+    ],
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "U4",
+   "name": "Garnier Wahre Schätze Ausgleichendes Shampoo Anziehende Aktivkohle & Schwarzkümmelöl",
+   "productId": "7200bb0b-7463-433b-86c8-744f5c1431de",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "normal",
+     "dehydriert-fettig",
+     "oily",
+     "clarifying"
+    ]
+   ],
+   "new": [
+    [
+     "normal",
+     "normal",
+     "balanced",
+     "clarifying"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "U5",
+   "name": "head & shoulders Anti-Schuppen Shampoo Classic Clean",
+   "productId": "1e61a644-94b0-4356-ab55-f58572fa1e18",
+   "recommended": false,
+   "recommendedAfter": false,
+   "old": [
+    [
+     "fine",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ],
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "dehydriert-fettig",
+     "oily",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "new": [
+    [
+     "fine",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "normal",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ],
+    [
+     "coarse",
+     "schuppen",
+     "dandruff",
+     "regular"
+    ]
+   ],
+   "notes": []
+  },
+  {
+   "slot": "U6",
+   "name": "OGX Strength & Length + Keratin Oil Shampoo",
+   "productId": "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+   "recommended": true,
+   "recommendedAfter": true,
+   "old": [
+    [
+     "coarse",
+     "trocken",
+     "dry",
+     "gentle"
+    ]
+   ],
+   "new": [
+    [
+     "coarse",
+     "normal",
+     "balanced",
+     "gentle"
+    ]
+   ],
+   "notes": []
+  }
+ ],
+ "coverage": {
+  "normalxnormal": [
+   "A02",
+   "A04",
+   "A08",
+   "A12",
+   "A14",
+   "A15b",
+   "A27",
+   "A28",
+   "A29",
+   "A30",
+   "A31",
+   "A33",
+   "A34",
+   "A36",
+   "A38",
+   "A39",
+   "A42",
+   "A43",
+   "A52",
+   "G04",
+   "G08",
+   "G09",
+   "G11",
+   "G13",
+   "U4"
+  ],
+  "finexirritationen": [
+   "A01",
+   "A03",
+   "A05",
+   "A11",
+   "A40",
+   "A51",
+   "G03",
+   "G05"
+  ],
+  "normalxirritationen": [
+   "A01",
+   "A03",
+   "A05",
+   "A11",
+   "A40",
+   "A51",
+   "G03",
+   "G05"
+  ],
+  "coarsexirritationen": [
+   "A01",
+   "A03",
+   "A05",
+   "A11",
+   "A40",
+   "A51",
+   "G03",
+   "G05"
+  ],
+  "finexnormal": [
+   "A02",
+   "A04",
+   "A12",
+   "A27",
+   "A30",
+   "A31",
+   "A39",
+   "A42",
+   "A43",
+   "A52"
+  ],
+  "coarsexnormal": [
+   "A35",
+   "U6"
+  ],
+  "finexschuppen": [
+   "A06",
+   "A16",
+   "A37",
+   "A41",
+   "A44",
+   "A49",
+   "A50",
+   "G01",
+   "G02"
+  ],
+  "normalxschuppen": [
+   "A06",
+   "A16",
+   "A37",
+   "A41",
+   "A44",
+   "A49",
+   "A50",
+   "G01",
+   "G02"
+  ],
+  "coarsexschuppen": [
+   "A06",
+   "A16",
+   "A37",
+   "A41",
+   "A44",
+   "A49",
+   "A50",
+   "G01",
+   "G02"
+  ],
+  "finextrocken": [
+   "A01",
+   "A03",
+   "A11",
+   "A40",
+   "A51"
+  ],
+  "normalxtrocken": [
+   "A01",
+   "A03",
+   "A11",
+   "A40",
+   "A51"
+  ],
+  "coarsextrocken": [
+   "A01",
+   "A03",
+   "A11",
+   "A40",
+   "A51"
+  ],
+  "finexdehydriert-fettig": [
+   "A10",
+   "G06",
+   "U1"
+  ],
+  "normalxdehydriert-fettig": [
+   "A10",
+   "G06",
+   "U1"
+  ],
+  "coarsexdehydriert-fettig": [
+   "A10",
+   "A29",
+   "G06",
+   "U1"
+  ]
+ }
+}
