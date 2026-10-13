@@ -499,6 +499,72 @@ Diagnosis-dependent; do not claim a routine can stop thinning or regrow hair.
 ### Do Not
 Do not sell cosmetic volume as treatment.
 
+## Concern: Wenig Glanz / `low_shine`
+### First Split
+Dry/rough surface vs coated/heavy buildup vs damage, color, or heat.
+### Likely Levers
+Smooth the surface with conditioner, light leave-in/finish, reduced friction, and gentle cleansing.
+### Secondary Or Conditional Levers
+Reset if dullness is coated/waxy/heavy; styling alignment or light serum for finish.
+### Weak First Levers
+Heavy oil/mask for everyone; repair-to-virgin-hair claims.
+### Profile Modifiers
+Fine/volume-seeking hair needs very light finish. Damage, color, heat, and buildup can reduce shine for different reasons.
+### Common Conflicts
+Volume, oily scalp, buildup, color protection.
+### Missing Data
+Ask whether hair feels dry/rough or coated/heavy.
+### Safety / Scope Boundary
+Products smooth, coat, and protect; they do not fully reverse severe cuticle damage.
+### German Answer Shape
+`Glanz kommt meist über eine glattere Oberfläche: passende Spülung, kleines Leave-in oder Finish, und weniger Reibung.`
+### Do Not
+Do not make shine equal to lots of Pflege.
+
+## Concern: Wellen verlieren die Form / `lost_shape`
+### First Split
+Too little hold/technique vs product weight or buildup pulling the pattern flat vs dry brushing/friction.
+### Likely Levers
+Gleitfähigkeit/conditioning, product on wet/damp hair, even sectioning, appropriate hold, minimal touching while drying.
+### Secondary Or Conditional Levers
+Clarify if buildup suppresses the pattern; diffuse/air-dry with low friction; adjust hold vs moisture.
+### Weak First Levers
+Dry brushing, heavy oils/butters for fine waves, strong clarifying by default.
+### Profile Modifiers
+Fine waves need light hold. Curly/coily/thick/high-density hair may need more Gleitfähigkeit, sectioning, and hold.
+### Common Conflicts
+Volume, moisture overload, low maintenance, frizz.
+### Missing Data
+Ask wave/curl pattern, thickness, current styling product, dry brushing, and buildup signs.
+### Safety / Scope Boundary
+Do not treat natural curl pattern as damage.
+### German Answer Shape
+`Damit Wellen ihre Form halten: nass/feucht einarbeiten, leichten Halt nutzen, nicht trocken ausbürsten und beim Trocknen möglichst wenig stören.`
+### Do Not
+Do not make "more moisture" the only answer for waves losing shape.
+
+## Concern: Flacher Ansatz oder beschwerte Längen / `low_volume_or_weighed_down`
+### First Split
+Oily/coated roots vs too-heavy care in the lengths vs true thinning.
+### Likely Levers
+Clean scalp/roots, conditioner only in lengths/ends, lightweight leave-in if needed, small amounts, fully dried roots, and styling hold/root lift.
+### Secondary Or Conditional Levers
+Reset if buildup weighs hair down; mousse, spray, dry shampoo as short-term oil absorber, haircut/layers, or drying technique.
+### Weak First Levers
+Heavy masks, oils, rich creams, scalp oils, OWC, supplements, or growth/thickening claims.
+### Profile Modifiers
+Fine or low-density hair needs the lightest smoothing possible. Oily scalp points to wash cadence/root cleansing. Long hair can hang flatter.
+### Common Conflicts
+Frizz, shine, moisture, and less volume may need smoothing that can reduce lift.
+### Missing Data
+Ask roots vs lengths, oily/coated roots, and whether the user means volume or thinning.
+### Safety / Scope Boundary
+If the issue is visible thinning, widening part, sudden loss, or density loss, use the hair-loss/thinning safety lane.
+### German Answer Shape
+`Wenn Ansatz flach oder Längen schnell beschwert wirken: Ansatz sauber halten, Pflege leicht und nur in die Längen, Halt eher über Trocknen und Styling.`
+### Do Not
+Do not imply products increase real density.
+
 ## Missing Required Data
 Ask one material question only if the first lever or safety boundary changes. Prefer answering with a sensible default and offering a focused follow-up.
 
