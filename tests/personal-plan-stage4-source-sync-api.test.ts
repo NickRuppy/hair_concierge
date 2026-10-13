@@ -1536,6 +1536,97 @@ test("successor cadence authority binds the acquired exact Bondbuilder course", 
   assert.equal(resolved.source.authorityVersions.routine, "personal-plan-routine-compiler.v2")
 })
 
+function bondbuilderSuccessor(): RoutineCompiledPayload {
+  const successor = structuredClone(acquisitionBase().routine)
+  successor.items = [
+    {
+      ...successor.items[0]!,
+      category: "bondbuilder",
+      role: "specialized_bond_treatment",
+      product: {
+        kind: "planned",
+        plannedPurchaseId: "planned-aveda",
+        productId: "product-aveda",
+        displayName: "Aveda Botanical Repair",
+      },
+      cadence: {
+        recommended: { kind: "product_protocol_course", role: "specialized_bond_treatment" },
+        userOverride: null,
+        displayKey: "personal_plan.cadence.product_protocol_course",
+      },
+    },
+  ] as RoutineCompiledPayload["items"]
+  return successor
+}
+
+const AVEDA_DAMAGE_BRANCHED = {
+  kind: "damage_branched",
+  branches: [
+    { structural_levels: ["moderate"], copy_de: "Einmal pro Woche anwenden." },
+    { structural_levels: ["high", "severe"], copy_de: "An jedem Waschtag anwenden." },
+  ],
+}
+
+test("S4: successor sync reads the refined version's damage band for a damage-branched cadence", async () => {
+  const successor = bondbuilderSuccessor()
+  const levelReads: unknown[] = []
+  const resolved = await resolveSuccessorRoutineCadences({
+    routine: successor,
+    authorityReader: {
+      async load() {
+        return [
+          {
+            productId: "product-aveda",
+            category: "bondbuilder",
+            role: "specialized_bond_treatment",
+            cadence: AVEDA_DAMAGE_BRANCHED,
+          },
+        ]
+      },
+      async loadStructuralDamageLevel(input) {
+        levelReads.push(input)
+        return "moderate"
+      },
+    },
+  })
+
+  assert.deepEqual(levelReads, [
+    { planId: successor.planId, refinedVersionId: successor.source.refinedVersionId },
+  ])
+  assert.deepEqual(resolved.items[0]?.cadence.resolved, {
+    copyDe: "Einmal pro Woche anwenden.",
+    source: "exact_product_protocol",
+  })
+})
+
+test("S4: successor sync without a damage-branched fact never reads the snapshot", async () => {
+  let levelReads = 0
+  const resolved = await resolveSuccessorRoutineCadences({
+    routine: bondbuilderSuccessor(),
+    authorityReader: {
+      async load() {
+        return [
+          {
+            productId: "product-aveda",
+            category: "bondbuilder",
+            role: "specialized_bond_treatment",
+            cadence: { kind: "label_course", copy_de: "Alle ein bis drei Haarwäschen anwenden." },
+          },
+        ]
+      },
+      async loadStructuralDamageLevel() {
+        levelReads += 1
+        return "severe"
+      },
+    },
+  })
+  assert.equal(levelReads, 0)
+  assert.equal(
+    resolved.items[0]?.cadence.resolved?.copyDe,
+    "Alle ein bis drei Haarwäschen anwenden.",
+  )
+})
+
 test("sync route authenticates before admin service construction and respects the composed gate", async () => {
   let constructed = false
   let response = await createPersonalPlanRoutineSyncRouteHandlers({

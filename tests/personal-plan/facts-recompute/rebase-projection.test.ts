@@ -26,6 +26,7 @@ import {
   getStage2ModulePathStates,
   resolveStage2RefinementContract,
 } from "@/lib/personal-plan/refinement/question-path"
+import { stage2ModuleStates } from "@/lib/personal-plan/refinement/module-status"
 import { deriveStage2TriggerContext } from "@/lib/personal-plan/refinement/stage1-adapter"
 import type {
   PersonalPlanRefinementAnswersV1,
@@ -97,8 +98,13 @@ test("fixture sanity: the two parents differ exactly in the irritated-scalp trig
 const PRODUCTS_ANSWERS: PersonalPlanRefinementAnswersV1 = {
   currentProductCategories: [],
   wetWashFrequency: "daily_1x",
+  bondbuilderTiming: "before_wash",
 }
-const PRODUCTS_IDS: Stage2QuestionId[] = ["current_product_categories", "wet_wash_frequency"]
+const PRODUCTS_IDS: Stage2QuestionId[] = [
+  "current_product_categories",
+  "wet_wash_frequency",
+  "bondbuilder_timing",
+]
 const HABITS_ANSWERS: PersonalPlanRefinementAnswersV1 = {
   towel: { material: "frottee", technique: "rough_rubbing" },
   dryingRoutes: ["air_dry"],
@@ -775,4 +781,68 @@ test("rollout on: an in-progress source with tools done keeps the tools module c
   assert.equal(modules.tools.status, "complete")
   assert.equal(modules.habits.status, "open")
   assert.ok(projection.refined, "the module lane still projects")
+})
+/* ── S4: the Bondbuilder need appears or disappears through a facts edit ───── */
+
+/** Smooth, untreated, elastic hair: no Bondbuilder need, so no timing question. */
+const NO_BONDBUILDER_NEED = parentFrom({
+  ...COMPLETE_V3_PLAN_ENVELOPE,
+  answers: {
+    ...COMPLETE_V3_PLAN_ENVELOPE.answers,
+    hairSurface: "smooth",
+    chemicalTreatments: ["natural"],
+    elasticResponse: "stretches_bounces",
+  },
+})
+
+test("S4: a Bondbuilder need that appears via a facts edit is assumed „Ist mir egal“, the module stays finished", async () => {
+  assert.equal(NO_BONDBUILDER_NEED.triggerContext.relevantCategories.includes("bondbuilder"), false)
+  assert.ok(PLAIN.triggerContext.relevantCategories.includes("bondbuilder"))
+  const productsAnswers = { currentProductCategories: [], wetWashFrequency: "daily_1x" as const }
+  const ids: Stage2QuestionId[] = [
+    "current_product_categories",
+    "wet_wash_frequency",
+    ...HABITS_IDS,
+  ]
+  const draft = source({
+    status: "complete",
+    answers: { ...productsAnswers, ...HABITS_ANSWERS },
+    completedQuestionIds: ids,
+    answerProvenance: provenance(ids),
+  })
+  const projection = project(draft, PLAIN)
+
+  assert.equal(projection.clone.answers.bondbuilderTiming, "no_preference")
+  assert.equal(projection.clone.answerProvenance.bondbuilder_timing, "assumed")
+  const states = stage2ModuleStates({ triggerContext: PLAIN.triggerContext, ...projection.clone })
+  assert.equal(states.products.status, "complete")
+  assert.equal(states.habits.status, "complete")
+  assert.ok(projection.refined)
+  assert.equal("bondbuilderTiming" in projection.refined.outputSnapshot.profile.routine, false)
+  assert.equal(projection.careHabits?.provenance.fields?.bondbuilderTiming, "assumed")
+})
+
+test("S4: a Bondbuilder need that disappears via a facts edit prunes her timing from clone and snapshot", async () => {
+  const ids: Stage2QuestionId[] = [...PRODUCTS_IDS, ...HABITS_IDS]
+  const draft = source({
+    status: "complete",
+    answers: { ...PRODUCTS_ANSWERS, ...HABITS_ANSWERS },
+    completedQuestionIds: ids,
+    answerProvenance: provenance(ids),
+  })
+  const kept = project(draft, PLAIN)
+  assert.deepEqual(kept.refined?.outputSnapshot.profile.routine.bondbuilderTiming, {
+    state: "known",
+    value: "before_wash",
+  })
+
+  const projection = project(draft, NO_BONDBUILDER_NEED)
+  const real = await realTerminalCompletion(NO_BONDBUILDER_NEED, draft)
+  assertSameRefined(projection.refined, real.completion)
+  assert.equal("bondbuilderTiming" in projection.clone.answers, false)
+  assert.equal(projection.clone.completedQuestionIds.includes("bondbuilder_timing"), false)
+  assert.equal(
+    "bondbuilderTiming" in (projection.refined?.outputSnapshot.profile.routine ?? {}),
+    false,
+  )
 })

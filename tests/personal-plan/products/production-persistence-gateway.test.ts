@@ -3849,6 +3849,7 @@ test("S2: the evaluation context carries the selection slice (refined profile + 
       sensitiveScalp: true,
       volumeDirection: "more",
       visibleHairColor: "brown",
+      bondbuilderTiming: "no_preference",
     })
   }
 })

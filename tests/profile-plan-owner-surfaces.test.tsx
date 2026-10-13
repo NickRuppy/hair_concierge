@@ -476,9 +476,9 @@ test("Deine Tools shows the member's photo chips grouped in wash-day order with 
     "Föhn",
     "Warmluftbürste",
     "Glätteisen",
-    "Glatter Kissenbezug",
+    "Glatter Kissenbezug (z.\u00A0B. Seide, Satin)",
   ]) {
-    assert.match(html, new RegExp(label))
+    assert.ok(html.includes(label), label)
   }
   for (const photo of ["microfiber_towel", "round", "dryer_brush", "straightener", "pillowcase"]) {
     assert.match(html, new RegExp(`/images/tools/${photo}\\.webp`))

@@ -86,22 +86,22 @@ const STYLING_DAYS = new Set<ApplicationDayTypeKey>([
  */
 const CAPABILITY_ACTIONS_DE: Record<ToolCapability, string[]> = {
   detangle: [
-    "Beginne in den Spitzen und arbeite dich nach oben.",
-    "Löse Knoten sanft; zieh nicht durch.",
+    "Fang in den Spitzen an und arbeite dich nach oben.",
+    "Lös Knoten sanft; zieh nicht durch.",
   ],
-  distribute_product: ["Verteile das Produkt gleichmäßig durch die Längen."],
-  dry_hair: ["Halte etwas Abstand und bewege den Luftstrom."],
+  distribute_product: ["Verteil das Produkt gleichmäßig durch die Längen."],
+  dry_hair: ["Halt etwas Abstand und beweg den Luftstrom."],
   diffuse_airflow: [
     "Nimm den Diffusor-Aufsatz, wenn dein Gerät einen hat.",
-    "Führe die Längen locker in den Aufsatz, statt sie zu bewegen.",
+    "Führ die Längen locker in den Aufsatz, statt sie zu bewegen.",
   ],
   concentrate_airflow: [
     "Setz die Stylingdüse auf und richte den Luftstrom auf eine Partie.",
-    "Führe ihn von oben nach unten mit.",
+    "Führ ihn von oben nach unten mit.",
   ],
   air_shape: ["Arbeite in Partien und lass jede Partie kurz auskühlen."],
   airflow_shape: [
-    "Führe die Bürste mit dem Luftstrom durch eine Partie.",
+    "Führ die Bürste mit dem Luftstrom durch eine Partie.",
     "Lass jede Partie kurz auskühlen, bevor du sie loslässt.",
   ],
   straighten: [
@@ -110,7 +110,7 @@ const CAPABILITY_ACTIONS_DE: Record<ToolCapability, string[]> = {
   ],
   smooth: ["Arbeite in Partien von oben nach unten, ohne Druck."],
   curl: [
-    "Wickle eine Partie auf und halte sie nur kurz.",
+    "Wickle eine Partie auf und halt sie nur kurz.",
     "Lass jede Locke auskühlen, bevor du sie anfasst.",
   ],
   wave: ["Arbeite in Partien und setz die Wellen locker.", "Lass sie vollständig auskühlen."],
@@ -118,35 +118,37 @@ const CAPABILITY_ACTIONS_DE: Record<ToolCapability, string[]> = {
     "Arbeite in Partien und heb sie am Ansatz leicht ab.",
     "Lass die Form vollständig auskühlen oder trocknen, bevor du sie löst.",
   ],
-  set_style: ["Setze in Partien und lass die Form vollständig auskühlen oder trocknen."],
+  set_style: ["Setz in Partien und lass die Form vollständig auskühlen oder trocknen."],
   define_pattern: [
     "Arbeite in Partien und stör das Muster so wenig wie möglich.",
     "Fass es danach so wenig wie möglich an.",
   ],
   preserve_shape: ["Leg die Form locker ab, damit sie erhalten bleibt."],
   section_hair: [
-    "Teile das Haar in Partien, damit du überall gleichmäßig arbeiten kannst.",
+    "Teil das Haar in Partien, damit du überall gleichmäßig arbeiten kannst.",
     // C04: the low-tension fallback belongs to the step itself, not to a note
     // somewhere else. Proactive guidance — no claim about how you clip today.
     "Nur so fest wie nötig — lös es, setz es um oder nimm es ab, wenn es zieht oder wehtut.",
   ],
   secure_gently: [
-    "Binde locker; nimm es ab, sobald es zieht.",
+    "Bind locker; nimm es ab, sobald es zieht.",
     "Nur so fest wie nötig — lös es, setz es um oder nimm es ab, wenn es zieht oder wehtut.",
   ],
-  hold_hair: ["Halte die Partie locker; nichts soll spannen."],
-  apply_product: ["Setze das Produkt gezielt am Ansatz oder auf der Kopfhaut auf."],
+  hold_hair: ["Halt die Partie locker; nichts soll spannen."],
+  apply_product: ["Setz das Produkt gezielt am Ansatz oder auf der Kopfhaut auf."],
   wash_scalp_assist: ["Arbeite mit leichtem Druck in kreisenden Bewegungen."],
   // N06: comfortable coverage, loose fit, and loosen/reposition/remove on
   // pulling or pain. Containment and style preservation only — no repair,
-  // growth or breakage-prevention claim.
+  // growth or breakage-prevention claim. One text for all four night forms
+  // (pillowcase, bonnet, length sleeve, soft tie): „Schlaf wie gewohnt" fits
+  // the pillowcase, „was du trägst" the three worn forms.
   reduce_surface_friction: [
-    "Deck den gewünschten Bereich bequem ab; getragene Formen sitzen locker am Ansatz.",
-    "Lös es, setz es um oder nimm es ab, wenn es zieht oder wehtut.",
+    "Schlaf wie gewohnt — was du trägst, sitzt bequem und locker am Ansatz.",
+    "Wenn etwas zieht oder wehtut: lös es, setz es um oder lass es weg.",
   ],
-  contain_hair: ["Halte die Längen locker zusammen; nichts soll spannen."],
-  absorb_water: ["Drücke das Wasser sanft aus, statt zu rubbeln."],
-  plop: ["Lege die Längen locker in das Tuch und wickle es ohne Zug ein."],
+  contain_hair: ["Halt die Längen locker zusammen; nichts soll spannen."],
+  absorb_water: ["Drück das Wasser sanft aus, statt zu rubbeln."],
+  plop: ["Leg die Längen locker in das Tuch und wickle es ohne Zug ein."],
 }
 
 const CONDITIONAL_NOTES_DE: Record<ToolConditionalReason, string> = {

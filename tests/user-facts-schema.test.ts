@@ -145,6 +145,7 @@ test("diagnosticsSourceSchema accepts a legacy_columns source with or without le
 const FULL_CARE_HABITS = {
   currentProductCategories: ["shampoo", "conditioner"],
   wetWashFrequency: "weekly_2x",
+  bondbuilderTiming: "after_wash",
   scalpIrritationDetail: "normal",
   dryShampooBridgePreference: "accept",
   dryShampooVisibleHairColor: "brown",
@@ -180,6 +181,23 @@ test("careHabitsV1Schema rejects a duplicate array value", () => {
     currentProductCategories: ["shampoo", "shampoo"],
   })
   assert.equal(result.success, false)
+})
+
+test("careHabitsV1Schema accepts each Bondbuilder timing and rejects any other value", () => {
+  for (const bondbuilderTiming of ["before_wash", "after_wash", "no_preference"]) {
+    assert.equal(
+      careHabitsV1Schema.safeParse({ bondbuilderTiming }).success,
+      true,
+      bondbuilderTiming,
+    )
+  }
+  for (const bondbuilderTiming of ["overnight", "", null]) {
+    assert.equal(
+      careHabitsV1Schema.safeParse({ bondbuilderTiming }).success,
+      false,
+      String(bondbuilderTiming),
+    )
+  }
 })
 
 test("careHabitsV1Schema rejects an unknown heatEvents key", () => {

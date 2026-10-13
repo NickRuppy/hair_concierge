@@ -1255,3 +1255,36 @@ test("Deine Tools renders after the product sections iff the view carries a tool
   assert.equal(without.includes("data-routine-tool-section"), false)
   assert.equal(without.includes("Deine Tools"), false)
 })
+test("S4: a Bondbuilder card shows one muted line only when the timing cannot be met", () => {
+  const bondbuilder = (authorityRuleIds: string[]) =>
+    item({
+      itemKey: "item:bondbuilder:specialized_bond_treatment:planned",
+      category: "bondbuilder",
+      role: "specialized_bond_treatment",
+      purposeKey: "specialized_bond_treatment",
+      state: {
+        systemAssessment: "basis",
+        inclusion: "included",
+        availability: "planned",
+        fitDecision: "standard",
+      },
+      product: {
+        kind: "planned",
+        plannedPurchaseId: "planned:bond",
+        productId: "44444444-4444-4444-8444-444444444444",
+        displayName: "OLAPLEX No.3PLUS",
+      },
+      authorityRuleIds,
+      executable: false,
+    })
+  const render = (authorityRuleIds: string[]) =>
+    renderToStaticMarkup(
+      <RoutinePage
+        view={proposalView(payload([bondbuilder(authorityRuleIds)]))}
+        onItemDetail={() => undefined}
+      />,
+    )
+  const line = "Nach dem Waschen gerade nicht möglich. Kommt vor dem Waschen ins Haar."
+  assert.ok(render(["bondbuilder.stage3.timing_unmet.after_wash.before_wash"]).includes(line))
+  assert.ok(!render(["bondbuilder.stage3.tie_ordered"]).includes("gerade nicht möglich"))
+})

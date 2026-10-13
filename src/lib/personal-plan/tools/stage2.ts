@@ -7,6 +7,7 @@ import {
 } from "./contracts"
 import {
   TOOL_ANSWER_ONLY_FORM_HINTS,
+  TOOL_CARD_LABELS,
   TOOL_FAMILY_LABELS,
   TOOL_FAMILY_PAGE_TITLES,
   TOOL_FORM_PAGES,
@@ -79,6 +80,8 @@ export const TOOL_NOTHING_DESCRIPTION = "Ich habe hier nichts davon."
 export type ToolFormOption = {
   value: ToolReportedForm
   label: string
+  /** Line-break-ready card text (`TOOL_CARD_LABELS`); display only. */
+  cardLabel?: string
   hint?: string
   imageUrl: string
   imageAlt: string
@@ -124,6 +127,7 @@ export function toolFormPagePresentation(pageKey: string): ToolFormPagePresentat
     options: (page.forms as readonly ToolReportedForm[]).map((form) => ({
       value: form,
       label: toolReportedFormLabel(form),
+      ...(TOOL_CARD_LABELS[form] ? { cardLabel: TOOL_CARD_LABELS[form] } : {}),
       // Only the answer-only cards („Nur Finger") need a clarifying line; a
       // product card is named by its own form.
       ...(isToolAnswerOnlyForm(form) && TOOL_ANSWER_ONLY_FORM_HINTS[form]

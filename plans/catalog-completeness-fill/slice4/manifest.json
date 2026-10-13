@@ -1,0 +1,145 @@
+{
+  "version": "catalog-completeness-slice4-manifest-v1",
+  "status": "prepared, rehearsed, NOT applied — prod apply needs Nick's approval of this exact batch",
+  "batch_id": "S4-catalog-completeness-aveda-damage-cadence",
+  "migration": "supabase/migrations/20261013170000_bondbuilder_aveda_damage_cadence.sql",
+  "content_fingerprint": "92dcb1acf4b736765167ad1f1bdd98cc30307d106d0c07991532f60272fda4f0",
+  "inputs": {
+    "profile": {
+      "path": "data/research/bondbuilder-inci/v1.0/recommendation-promotion-2026-10-06/P07.json",
+      "review_sha256": "293275baa809e81344ba17652202aec67585f850561a7726b6c9bb0ceabc6ca0",
+      "canonical_sha256": "d2473aa129092e261c5a876db90a2eb3e4dc0ce5f3b2fd918192a8287f938de4"
+    },
+    "binding": {
+      "path": "data/research/bondbuilder-inci/v1.0/s4-aveda-cadence-binding/aveda-damage-binding.json",
+      "sha256": "bb320d89e629a8f776ca821858a1a06bf4160536eda3e69c92ab056abede0869"
+    },
+    "prestate": {
+      "path": "plans/catalog-completeness-fill/slice4/prestate.json",
+      "sha256": "c9d9353392553ec6e6d7b2571b34d1d1f4e1cd0a69b89bb68523d15d2aea459a"
+    }
+  },
+  "guarded": {
+    "protocol_id": "f8d9cf57-9266-465a-8f09-d603e5065701",
+    "product_id": "04a83f16-e610-4883-b44d-038d3a343787",
+    "category": "bondbuilder",
+    "role": "specialized_bond_treatment",
+    "source_label": "Reviewed product directions",
+    "source_url": "https://www.aveda.de/product/botanical-repair-bond-building-pre-shampoo-treatment",
+    "source_text": "DE pre-shampoo: gel-cream, root-to-tip application, conditional frequency and manufacturer diameter positioning",
+    "guidance_payload_sha256": "b6fb9c29421794804d4e11259d85f6ec4a1e21b6590c94db9bfe1d5f79e08288",
+    "guidance_payload_v2_sha256": "38062df5950dc70166199df6b593f0eec5c5a73e11181108c1abac27cd6f9e73",
+    "profile_canonical_sha256": "d2473aa129092e261c5a876db90a2eb3e4dc0ce5f3b2fd918192a8287f938de4",
+    "protocol_updated_at": "2026-10-07T09:52:51.582864+00:00"
+  },
+  "write": {
+    "protocol_id": "f8d9cf57-9266-465a-8f09-d603e5065701",
+    "before": {
+      "cadence": null
+    },
+    "after": {
+      "cadence": {
+        "kind": "damage_branched",
+        "branches": [
+          {
+            "structural_levels": [
+              "moderate"
+            ],
+            "copy_de": "Einmal pro Woche anwenden.",
+            "maintenance": {
+              "kind": "times_per_week",
+              "minimum": 1,
+              "maximum": 1
+            },
+            "source_ids": [
+              "C03-P07-1"
+            ]
+          },
+          {
+            "structural_levels": [
+              "high",
+              "severe"
+            ],
+            "copy_de": "An jedem Waschtag anwenden.",
+            "maintenance": {
+              "kind": "every_n_washes",
+              "minimum": 1,
+              "maximum": 1
+            },
+            "source_ids": [
+              "C03-P07-1"
+            ]
+          }
+        ],
+        "source_ids": [
+          "C03-P07-1"
+        ],
+        "binding_ruling": "decisions.md B1/D-b (Nick, 2026-10-09)"
+      }
+    }
+  },
+  "evidence": {
+    "product_id": "04a83f16-e610-4883-b44d-038d3a343787",
+    "fact_key": "bondbuilder.protocol.cadence",
+    "fact_value": {
+      "protocol_id": "f8d9cf57-9266-465a-8f09-d603e5065701",
+      "cadence": {
+        "kind": "damage_branched",
+        "branches": [
+          {
+            "structural_levels": [
+              "moderate"
+            ],
+            "copy_de": "Einmal pro Woche anwenden.",
+            "maintenance": {
+              "kind": "times_per_week",
+              "minimum": 1,
+              "maximum": 1
+            },
+            "source_ids": [
+              "C03-P07-1"
+            ]
+          },
+          {
+            "structural_levels": [
+              "high",
+              "severe"
+            ],
+            "copy_de": "An jedem Waschtag anwenden.",
+            "maintenance": {
+              "kind": "every_n_washes",
+              "minimum": 1,
+              "maximum": 1
+            },
+            "source_ids": [
+              "C03-P07-1"
+            ]
+          }
+        ],
+        "source_ids": [
+          "C03-P07-1"
+        ],
+        "binding_ruling": "decisions.md B1/D-b (Nick, 2026-10-09)"
+      },
+      "binding": "data/research/bondbuilder-inci/v1.0/s4-aveda-cadence-binding/aveda-damage-binding.json",
+      "profile_sha256": "293275baa809e81344ba17652202aec67585f850561a7726b6c9bb0ceabc6ca0",
+      "ruling": "decisions.md B1/D-b (Nick, 2026-10-09)"
+    },
+    "source_label": "Aveda Hersteller-Produktseite (DE), Rulings B1/D-b",
+    "source_url": "https://www.aveda.de/product/botanical-repair-bond-building-pre-shampoo-treatment",
+    "source_text": "\"For mild-to-moderate damage, use weekly; for moderate-to-severe damage, use each wash day.\" (profile source C03-P07-1; decisions.md B1/D-b (Nick, 2026-10-09))",
+    "source_type": "manufacturer",
+    "checked_at": "2026-10-06"
+  },
+  "receipt": {
+    "batch_id": "S4-catalog-completeness-aveda-damage-cadence",
+    "product_key": "P07",
+    "product_id": "04a83f16-e610-4883-b44d-038d3a343787",
+    "reviewed_by": "nick"
+  },
+  "artifacts_sha256": {
+    "supabase/migrations/20261013170000_bondbuilder_aveda_damage_cadence.sql": "3d86fe4f051a99e692bc1603130ced4add4234c84c6b815615793ddce419d91d",
+    "plans/catalog-completeness-fill/slice4/rollback.sql": "9048fb15f838fc39bb4a0fe12335928a0836700284a94b4de31313d7c9d2d899",
+    "plans/catalog-completeness-fill/slice4/verify.sql": "9752a408779d506a31814adb9b54409dcc9776499ecd646a0304a63a54b9c969"
+  }
+}

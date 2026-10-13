@@ -294,6 +294,9 @@ function replaceQuestionAnswer(
     case "wet_wash_frequency":
       next.wetWashFrequency = answer as PersonalPlanRefinementAnswersV1["wetWashFrequency"]
       break
+    case "bondbuilder_timing":
+      next.bondbuilderTiming = answer as PersonalPlanRefinementAnswersV1["bondbuilderTiming"]
+      break
     case "scalp_irritation_detail":
       next.scalpIrritationDetail =
         answer as PersonalPlanRefinementAnswersV1["scalpIrritationDetail"]

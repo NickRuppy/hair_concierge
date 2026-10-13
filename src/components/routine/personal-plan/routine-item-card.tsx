@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { effectiveRoutineCadenceCopyDe } from "@/lib/personal-plan/routine/cadence"
+import { bondbuilderTimingNoteDe } from "@/lib/personal-plan/routine/bondbuilder-timing-note"
 import {
   routineCategoryLabel,
   routineDeferralCopyFor,
@@ -224,6 +225,7 @@ export function RoutineItemCard({
   const status = getRoutineStatus(item).label
   const fit = routineFitLabel(item, presentation)
   const timing = routineTimingLabel(item)
+  const timingNote = bondbuilderTimingNoteDe(item)
   const accessibleName = `Zweck: ${purpose}; Kategorie: ${category}; Produkt: ${product}; Status: ${status}; Rhythmus: ${cadence}`
 
   return (
@@ -274,6 +276,7 @@ export function RoutineItemCard({
             <p className="mt-0.5 font-semibold text-foreground">{timing}</p>
           </div>
         </div>
+        {timingNote ? <p className="text-xs text-muted-foreground">{timingNote}</p> : null}
         {item.state.availability === "none" && item.state.systemAssessment === "basis" ? (
           <p className="rounded-[14px] bg-[var(--status-danger-bg)] px-3 py-2 text-sm font-medium text-[var(--status-danger-text)]">
             Für diesen Basis-Baustein fehlt noch ein Produkt.
@@ -417,6 +420,7 @@ export function RoutineCategoryCard({
     const verifiedOilHeatProtection = hasVerifiedLeaveOnOilHeatProtection(item, productPresentation)
     const missingBasisProduct =
       item.state.availability === "none" && item.state.systemAssessment === "basis"
+    const timingNote = bondbuilderTimingNoteDe(item)
     const accessibleName = `Zweck: ${purpose}; Produkt: ${product}; Kategorie: ${label}; Status: ${status}; Rhythmus: ${cadence}${
       verifiedOilHeatProtection ? "; Hitzeschutz: bestätigt" : ""
     }${missingBasisProduct ? "; Für diesen Basis-Baustein fehlt noch ein Produkt" : ""}`
@@ -477,6 +481,9 @@ export function RoutineCategoryCard({
             {verifiedOilHeatProtection ? " · Hitzeschutz: bestätigt" : ""} ·{" "}
             <span className={statusClassName(item, status)}>{status}</span>
           </span>
+          {timingNote ? (
+            <span className="mt-1 block text-[11px] leading-snug text-[#665e58]">{timingNote}</span>
+          ) : null}
           {missingBasisProduct ? (
             <span className="mt-1.5 block text-[11px] font-bold leading-snug text-[var(--status-danger-text)]">
               Für diesen Basis-Baustein fehlt noch ein Produkt.

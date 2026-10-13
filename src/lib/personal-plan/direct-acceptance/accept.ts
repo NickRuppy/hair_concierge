@@ -15,6 +15,7 @@ import type {
 import type { PersonalPlanCategory, Stage3DecisionDeferralReason } from "../products/contracts"
 import type { Stage3AuthorityProductionGateway } from "../products/production-persistence-gateway"
 import { createPersistedStage2RefinementGateway } from "../refinement/production-persistence-gateway"
+import { normalizeLateAddedQuestions } from "../refinement/assumed-defaults"
 import { Stage2RefinementError } from "../refinement/gateway"
 import type { Stage2RefinementHandoff } from "../refinement/session"
 import { semanticHash } from "../routine/canonicalize"
@@ -500,7 +501,10 @@ async function completeSyntheticRefinement(deps: AcceptIdealPlanDeps): Promise<{
   previewedRoleKeys: ReadonlySet<string>
   refinementRequiredCategories: ReadonlySet<PersonalPlanCategory>
 }> {
-  const draft = await deps.refinementPersistence.loadOrCreate(deps.userId)
+  // Idempotent with the Supabase mapper: a pre-S4 snapshot gains the assumed Bondbuilder timing.
+  const draft = normalizeLateAddedQuestions(
+    await deps.refinementPersistence.loadOrCreate(deps.userId),
+  )
   // `save` replaces the whole answer object, so a partially answered real
   // Stage 2 would be silently overwritten — and the CAS would happily pass,
   // because the revision is current.

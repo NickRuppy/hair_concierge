@@ -1894,3 +1894,55 @@ test("a pre-column row holding the defaults but marked as her answers is not re-
       error instanceof DirectAcceptanceError && error.code === "refinement_in_progress",
   )
 })
+
+/** A direct-acceptance snapshot as it was written before S4 added `bondbuilder_timing`. */
+function preS4Snapshot() {
+  const snapshot = buildDirectAcceptanceStage2Defaults(labTriggerContext())
+  assert.ok(
+    snapshot.completedQuestionIds.includes("bondbuilder_timing"),
+    "lab plan needs a Bondbuilder",
+  )
+  const answers = { ...snapshot.answers }
+  delete answers.bondbuilderTiming
+  const answerProvenance = { ...snapshot.answerProvenance }
+  delete answerProvenance.bondbuilder_timing
+  return {
+    answers,
+    completedQuestionIds: snapshot.completedQuestionIds.filter((id) => id !== "bondbuilder_timing"),
+    answerProvenance,
+  }
+}
+
+test("S4: an interrupted pre-S4 accept resumes with the assumed Bondbuilder timing", async () => {
+  const db = createRefinementDb()
+  db.insertDraft({ ...preS4Snapshot(), revision: 1, directAcceptanceOwned: true })
+  const harness = createHarness({ db, knownCareAnswers: { answers: {}, questionIds: [] } })
+
+  const result = await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+
+  assert.equal(result.status, "accepted")
+  assert.equal(db.drafts.length, 1)
+  assert.equal(db.drafts[0]!.status, "complete")
+  assert.equal(db.drafts[0]!.answers.bondbuilderTiming, "no_preference")
+  assert.equal(db.drafts[0]!.answerProvenance.bondbuilder_timing, "assumed")
+})
+
+test("S4: a complete pre-S4 accept draft from before the owner column is still recognised", async () => {
+  const db = createRefinementDb()
+  db.insertDraft({
+    ...preS4Snapshot(),
+    status: "complete",
+    revision: 2,
+    resultRefinedNeedVersionId: REFINED_NEED_VERSION_ID,
+  })
+  const harness = createHarness({
+    db,
+    knownCareAnswers: { answers: {}, questionIds: [] },
+    activeRoutineVersionId: "routine-1",
+  })
+  harness.planState.unrefinedDirectAccept = true
+
+  // The idempotent double-accept replay: recognised as its own, so not `plan_already_accepted`.
+  const result = await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+  assert.equal(result.status, "accepted")
+})

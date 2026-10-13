@@ -2,7 +2,6 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { CATEGORY_ROLE_POLICIES } from "../../../src/lib/personal-plan/products/authorities"
-import { BONDBUILDER_TIE_DEFAULT_PRODUCT_ID } from "../../../src/lib/personal-plan/products/authority/categories/bondbuilder"
 import type { Stage3AuthorityFactBundle } from "../../../src/lib/personal-plan/products/authority/catalog-facts"
 import type {
   Stage3CategoryRequirement,
@@ -178,6 +177,8 @@ function persistence(
     primaryConcern?: string | null
     prices?: Stage3CatalogPackagePrice[]
     onPriceRead?: (productIds: string[]) => void
+    /** S4: the refined snapshot's Bondbuilder answer; omitted = pre-S4 snapshot (key absent). */
+    bondbuilderTiming?: "before_wash" | "after_wash" | "no_preference"
   },
 ): Stage3ProductionPersistence {
   return {
@@ -211,6 +212,13 @@ function persistence(
           scalp: { oiliness: "balanced", concerns: [] },
           goals: [],
           concerns: [],
+          ...(options.bondbuilderTiming
+            ? {
+                routine: {
+                  bondbuilderTiming: { state: "known", value: options.bondbuilderTiming },
+                },
+              }
+            : {}),
         },
       }) as never,
     loadSourceRevision: async () => 7,
@@ -1243,8 +1251,14 @@ function conditionerAndBondbuilderDraft(): Stage3ProductDraft {
 
 function bondbuilder(
   productId: string,
-  options: { priceEur: number; sortOrder: number; trust: "high" | "medium" | "low" },
+  options: {
+    priceEur: number
+    sortOrder: number
+    trust: "high" | "medium" | "low"
+    mode?: "pre_shampoo" | "post_wash_leave_in" | "bedtime_leave_in"
+  },
 ) {
+  const mode = options.mode ?? "pre_shampoo"
   return {
     productId,
     displayName: productId,
@@ -1268,8 +1282,8 @@ function bondbuilder(
     purchaseLinkStatus: "available" as const,
     currency: "EUR",
     spec: {
-      applicationMode: "pre_shampoo",
-      treatmentMode: "rinse_out",
+      applicationMode: mode,
+      treatmentMode: mode === "pre_shampoo" ? "rinse_out" : "leave_in",
       productFormat: "cream_treatment",
       usageProtocol: "olaplex_3plus",
       relationship: "standalone" as const,
@@ -1282,17 +1296,27 @@ function bondbuilder(
 }
 
 // The production catalogue on 2026-10-09 (recommended + active), in catalogue order.
-const K18_ID = BONDBUILDER_TIE_DEFAULT_PRODUCT_ID
+const K18_ID = "38dace91-0fba-49ee-a93f-ac36e488fe4b"
 const PRODUCTION_BONDBUILDERS: Stage3AuthorityFactBundle = {
   productFacts: null,
   recommendationCandidates: [
     bondbuilder("loreal-elvital-bond", { priceEur: 8.95, sortOrder: 1, trust: "medium" }),
-    bondbuilder("ogx-sealing-serum", { priceEur: 18.68, sortOrder: 2, trust: "low" }),
+    bondbuilder("ogx-sealing-serum", {
+      priceEur: 18.68,
+      sortOrder: 2,
+      trust: "low",
+      mode: "bedtime_leave_in",
+    }),
     bondbuilder("redken-acidic-bonding", { priceEur: 25.5, sortOrder: 3, trust: "medium" }),
     bondbuilder("olaplex-3plus", { priceEur: 34, sortOrder: 4, trust: "high" }),
     bondbuilder("epres", { priceEur: 48, sortOrder: 5, trust: "high" }),
     bondbuilder("aveda", { priceEur: 52, sortOrder: 6, trust: "low" }),
-    bondbuilder(K18_ID, { priceEur: 56.25, sortOrder: 7, trust: "high" }),
+    bondbuilder(K18_ID, {
+      priceEur: 56.25,
+      sortOrder: 7,
+      trust: "high",
+      mode: "post_wash_leave_in",
+    }),
     bondbuilder("kerastase-premiere", { priceEur: 56.29, sortOrder: 8, trust: "medium" }),
   ] as never,
   heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
@@ -1301,12 +1325,17 @@ const PRODUCTION_BONDBUILDERS: Stage3AuthorityFactBundle = {
 const bondbuilderAndConditionerFacts = (category: string) =>
   category === "bondbuilder" ? PRODUCTION_BONDBUILDERS : ONE_PRICEY_THREE_AFFORDABLE
 
-async function bondbuilderReview(budget: ShoppingBudget | null, enabled = true) {
-  const draft = conditionerAndBondbuilderDraft()
+async function bondbuilderReview(
+  budget: ShoppingBudget | null,
+  enabled = true,
+  bondbuilderTiming?: "before_wash" | "after_wash" | "no_preference",
+  draft: Stage3ProductDraft = conditionerAndBondbuilderDraft(),
+) {
   const reviews = await gateway(draft, {
     budget,
     enabled,
     facts: bondbuilderAndConditionerFacts,
+    bondbuilderTiming,
   }).reviewDecisionBundles({ draftId: draft.draftId })
   const review = reviews.find((entry) => entry.fitComparison.subjectKey === BONDBUILDER_KEY)
   assert.ok(review)
@@ -1347,7 +1376,7 @@ test("B-INT-TRUST: Bis 5 € strict preselects nothing, trust order with cheaper
   assert.equal(review.fitComparison.budgetNotice, "strict_none_affordable")
 })
 
-// fit-verdict spec §6, ruled 2026-10-12: uncapped and flag-off use trust then price.
+// Nick 2026-10-13: uncapped and flag-off use trust, timing, then cheapest first.
 test("B-INT-TRUST: uncapped and flag off both recommend Olaplex and rank by trust then price", async () => {
   for (const review of [await bondbuilderReview(UNCAPPED), await bondbuilderReview(null, false)]) {
     assert.equal(review.authorityEvaluation.status, "known")
@@ -1474,4 +1503,135 @@ test("B-INT-TRUST-STORED: a stored replacement with changed facts is no longer c
   )
   assert.equal(result.status, "not_ready")
   assert.equal(result.stageCalls, 0)
+})
+
+/* ------------------------------------------------ S4: Bondbuilder timing (plan §2.5–2.6, P14) */
+
+test("S4 E4: Bis 15 € after the wash — L'Oréal default carries the unmet rule, K18 is best overall", async () => {
+  const review = await bondbuilderReview(STRICT_15, true, "after_wash")
+  assert.equal(review.authorityEvaluation.status, "known")
+  if (review.authorityEvaluation.status !== "known") return
+  assert.equal(review.authorityEvaluation.recommendation?.productId, "loreal-elvital-bond")
+  assert.equal(
+    review.authorityEvaluation.recommendation?.authorityRuleId,
+    "bondbuilder.stage3.timing_unmet.after_wash.before_wash",
+  )
+  assert.equal(review.fitComparison.defaultProductId, "loreal-elvital-bond")
+  assert.deepEqual(
+    review.fitComparison.alternatives.map((candidate) => candidate.productId),
+    ["loreal-elvital-bond", K18_ID, "olaplex-3plus"],
+  )
+})
+
+test("S4 E5/E3: before the wash — Bis 15 € shows L'Oréal next to Olaplex; uncapped plans Olaplex", async () => {
+  const capped = await bondbuilderReview(STRICT_15, true, "before_wash")
+  assert.equal(capped.fitComparison.defaultProductId, "loreal-elvital-bond")
+  assert.deepEqual(
+    capped.fitComparison.alternatives.map((candidate) => candidate.productId),
+    ["loreal-elvital-bond", "olaplex-3plus", "epres"],
+  )
+  for (const review of [
+    await bondbuilderReview(UNCAPPED, true, "before_wash"),
+    await bondbuilderReview(null, false, "before_wash"),
+  ]) {
+    assert.equal(review.authorityEvaluation.status, "known")
+    if (review.authorityEvaluation.status !== "known") return
+    assert.equal(review.authorityEvaluation.recommendation?.productId, "olaplex-3plus")
+    assert.equal(
+      review.authorityEvaluation.recommendation?.authorityRuleId,
+      "bondbuilder.stage3.tie_ordered",
+    )
+  }
+})
+
+test('S4: an explicit pick of Olaplex under „Nach dem Waschen" persists validated_standalone', async () => {
+  const draft = conditionerAndBondbuilderDraft()
+  const saved: Stage3ProductDraft[] = []
+  const result = await gateway(draft, {
+    budget: null,
+    enabled: false,
+    facts: bondbuilderAndConditionerFacts,
+    bondbuilderTiming: "after_wash",
+    saved,
+  }).resolveDecisions({
+    draftId: draft.draftId,
+    expectedRevision: draft.revision,
+    intents: [
+      { type: "resolve_decision", subjectKey: GAP_KEY, action: "plan_recommendation" },
+      {
+        type: "resolve_decision",
+        subjectKey: BONDBUILDER_KEY,
+        action: "select_replacement",
+        selectedCandidateId: "olaplex-3plus",
+        selectedCandidateFactFingerprint: "facts-olaplex-3plus",
+      },
+    ],
+  })
+  assert.equal(result.status, "saved")
+  const decision = saved.at(-1)!.decisions.find((entry) => entry.decisionKey === BONDBUILDER_KEY)
+  assert.equal(decision?.recommendation?.productId, "olaplex-3plus")
+  assert.equal(decision?.recommendation?.authorityRuleId, "bondbuilder.stage3.validated_standalone")
+})
+
+test("S4 P14: a timing change re-picks a non-explicit preserved K18 under a budget", async () => {
+  // Accepted (not hand-picked) K18 from the „Nach dem Waschen" plan.
+  const draft = conditionerAndBondbuilderDraft()
+  const saved: Stage3ProductDraft[] = []
+  await gateway(draft, {
+    budget: null,
+    enabled: false,
+    bondbuilderTiming: "after_wash",
+    facts: bondbuilderAndConditionerFacts,
+    saved,
+  }).resolveDecisions({
+    draftId: draft.draftId,
+    expectedRevision: draft.revision,
+    intents: [
+      { type: "resolve_decision", subjectKey: GAP_KEY, action: "plan_recommendation" },
+      { type: "resolve_decision", subjectKey: BONDBUILDER_KEY, action: "plan_recommendation" },
+    ],
+  })
+  const accepted = saved.at(-1)!
+  const stored = accepted.decisions.find((entry) => entry.decisionKey === BONDBUILDER_KEY)
+  assert.equal(stored?.recommendation?.productId, K18_ID)
+
+  // „Nach dem Waschen" keeps it; „Vor dem Waschen" re-picks Olaplex instead of preserving K18.
+  const kept = await bondbuilderReview(UNCAPPED, true, "after_wash", accepted)
+  assert.equal(kept.fitComparison.defaultProductId, K18_ID)
+  const changed = await bondbuilderReview(UNCAPPED, true, "before_wash", accepted)
+  assert.equal(changed.fitComparison.defaultProductId, "olaplex-3plus")
+  assert.equal(changed.authorityEvaluation.status, "known")
+  if (changed.authorityEvaluation.status !== "known") return
+  assert.equal(changed.authorityEvaluation.recommendation?.productId, "olaplex-3plus")
+})
+
+test("S4 T4.6: a changed answer makes an accepted K18 non-current; „Nach dem Waschen“ keeps it", async () => {
+  const draft = conditionerAndBondbuilderDraft()
+  const saved: Stage3ProductDraft[] = []
+  await gateway(draft, {
+    budget: null,
+    enabled: false,
+    bondbuilderTiming: "after_wash",
+    facts: bondbuilderAndConditionerFacts,
+    saved,
+  }).resolveDecisions({
+    draftId: draft.draftId,
+    expectedRevision: draft.revision,
+    intents: [
+      { type: "resolve_decision", subjectKey: GAP_KEY, action: "plan_recommendation" },
+      { type: "resolve_decision", subjectKey: BONDBUILDER_KEY, action: "plan_recommendation" },
+    ],
+  })
+  const accepted = saved.at(-1)!
+  const complete = async (bondbuilderTiming?: "before_wash" | "after_wash") => {
+    let stageCalls = 0
+    const completion = await gateway(
+      accepted,
+      { budget: null, enabled: false, facts: bondbuilderAndConditionerFacts, bondbuilderTiming },
+      completingPipeline(() => (stageCalls += 1)),
+    ).complete({ draftId: accepted.draftId, expectedRevision: accepted.revision })
+    return { status: completion.status, stageCalls }
+  }
+  assert.deepEqual(await complete("after_wash"), { status: "ready_for_routine", stageCalls: 1 })
+  assert.deepEqual(await complete("before_wash"), { status: "not_ready", stageCalls: 0 })
 })

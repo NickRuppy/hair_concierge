@@ -741,16 +741,16 @@ test("B-FLX-10 closer to target counts, overshooting does not", () => {
 /* ---------------------------------------------------------------- Bondbuilder trust pair */
 
 // Nick, 2026-10-09: Bondbuilders rank by claim trust level (high 0 < medium 1 < low 2). The input
-// below is the production catalogue in trust order (K18 first as the house default among the
-// three high-trust products), exactly as the Stage-3 ranking hands it to the policy.
+// below is the catalogue in trust order, then cheapest first (Nick, 2026-10-13),
+// exactly as the Stage-3 ranking hands it to the policy.
 function trusted(productId: string, priceEur: number | null, trustRank: number): BudgetCandidate {
   return candidate(productId, priceEur, {}, { verdict: "ideal", trustRank })
 }
 
 const BONDBUILDERS_BY_TRUST = [
-  trusted("k18", 56.25, 0),
   trusted("olaplex-3plus", 34, 0),
   trusted("epres", 48, 0),
+  trusted("k18", 56.25, 0),
   trusted("loreal", 8.95, 1),
   trusted("redken", 25.5, 1),
   trusted("kerastase", 56.29, 1),
@@ -762,8 +762,8 @@ const bondbuilderRole = (overrides: Partial<Omit<BudgetRoleInput, "roleKey" | "r
   role("bondbuilder", BONDBUILDERS_BY_TRUST, { displayMode: "trust_pair", ...overrides })
 
 // Under a cap, equally trusted products are ordered cheaper first (Nick, 2026-10-09: Olaplex and K18
-// share the top trust level, so the budget comparison shows Olaplex); K18 stays the house default
-// only without a cap.
+// share the top trust level, so the budget comparison shows Olaplex); uncapped input
+// already ranks by trust, timing and price.
 test("B-TRUST-1 Bis 15 € strict: L'Oréal is the default next to the cheapest most trusted Olaplex", () => {
   const [allocation] = allocate(CAP15_STRICT, [bondbuilderRole()]).roles
   assert.equal(allocation!.defaultProductId, "loreal")
@@ -845,14 +845,14 @@ test("B-TRUST-6 an unpriced product never counts as affordable in the trust pair
 })
 
 test("B-TRUST-7 uncapped: the price-mix swap never trades trust down", () => {
-  // Uncapped with one role: the 60 % target for N = 1 is round(0.6) = 1, already met by K18, so no
+  // Uncapped with one role: the 60 % target for N = 1 is round(0.6) = 1, already met by OLAPLEX, so no
   // swap; a second, cheap default would pull the target down — still no swap to lower trust.
   const result = allocate(UNCAPPED, [
     bondbuilderRole(),
     role("conditioner", [candidate("c-cheap", 4), candidate("c-pricey", 25)]),
   ])
-  assert.equal(result.roles[0]!.defaultProductId, "k18")
-  assert.deepEqual(ids(result.roles[0]!.candidates), ["k18", "olaplex-3plus", "epres"])
+  assert.equal(result.roles[0]!.defaultProductId, "olaplex-3plus")
+  assert.deepEqual(ids(result.roles[0]!.candidates), ["olaplex-3plus", "epres", "k18"])
 
   // Lowering: three high-price roles push the target down; the Bondbuilder would only swap to a
   // fit-comparable product at or below 15 €, and the only one (L'Oréal) is less trusted.
@@ -861,7 +861,7 @@ test("B-TRUST-7 uncapped: the price-mix swap never trades trust down", () => {
     role("mask", [candidate("m-pricey", 30), candidate("m-other", 32)]),
     role("oil", [candidate("o-pricey", 30), candidate("o-other", 31)]),
   ])
-  assert.equal(lowered.roles[0]!.defaultProductId, "k18")
+  assert.equal(lowered.roles[0]!.defaultProductId, "olaplex-3plus")
   // Without the trust ranks the same pool would swap down to L'Oréal.
   const blind = allocate(UNCAPPED, [
     role(
@@ -884,8 +884,8 @@ test("B-TRUST-8 standalone trust pair (chat) under a cap and uncapped", () => {
     "epres",
   ])
   assert.deepEqual(ids(orderTrustPairAlternatives(BONDBUILDERS_BY_TRUST, UNCAPPED, 2)), [
-    "k18",
     "olaplex-3plus",
+    "epres",
   ])
 })
 
@@ -896,12 +896,129 @@ test("B-TRUST-UNCAPPED-UNPRICED uncapped trust pair starts from the most trusted
   const [allocation] = allocate(UNCAPPED, [
     role("bondbuilder", unpricedHighTrust, { displayMode: "trust_pair" }),
   ]).roles
-  assert.equal(allocation!.defaultProductId, "k18")
-  assert.deepEqual(ids(allocation!.candidates), ["k18", "olaplex-3plus", "epres"])
+  assert.equal(allocation!.defaultProductId, "olaplex-3plus")
+  assert.deepEqual(ids(allocation!.candidates), ["olaplex-3plus", "epres", "k18"])
 
   // Default mode keeps its first-priced start for every other category: it skips the unpriced
   // products, starts from L'Oréal and the 60 % nudge (N = 1, target 1) then lifts it to the next
   // fit-comparable product above 15 € (Redken) — never to an unpriced one.
   const [defaultMode] = allocate(UNCAPPED, [role("conditioner", unpricedHighTrust)]).roles
   assert.equal(defaultMode!.defaultProductId, "redken")
+})
+
+/* ---------------------------------------------------- S4: Bondbuilder timing (usage runs) */
+
+// The Stage-3 ranking with a stated timing: within one trust level the products used the way the
+// person asked for come first (`usageRank` 0), the others after (1). A cap re-sorts by price only
+// inside one (verdict, trust, usage) run, so it never mixes matching and non-matching products.
+function timedBondbuilder(
+  productId: string,
+  priceEur: number | null,
+  trustRank: number,
+  usageRank: number,
+): BudgetCandidate {
+  return candidate(productId, priceEur, {}, { verdict: "ideal", trustRank, usageRank })
+}
+
+// E4/E7 ranking: „Nach dem Waschen" → K18 alone matches at the top trust level.
+const AFTER_WASH_RANKED = [
+  timedBondbuilder("k18", 56.25, 0, 0),
+  timedBondbuilder("olaplex-3plus", 34, 0, 1),
+  timedBondbuilder("epres", 48, 0, 1),
+  timedBondbuilder("loreal", 8.95, 1, 1),
+  timedBondbuilder("redken", 25.5, 1, 1),
+  timedBondbuilder("kerastase", 56.29, 1, 1),
+  timedBondbuilder("ogx", 18.68, 2, 1),
+  timedBondbuilder("aveda", 52, 2, 1),
+]
+
+// E5 ranking: „Vor dem Waschen" → OLAPLEX and Epres match; K18 and OGX do not.
+const BEFORE_WASH_RANKED = [
+  timedBondbuilder("olaplex-3plus", 34, 0, 0),
+  timedBondbuilder("epres", 48, 0, 0),
+  timedBondbuilder("k18", 56.25, 0, 1),
+  timedBondbuilder("loreal", 8.95, 1, 0),
+  timedBondbuilder("redken", 25.5, 1, 0),
+  timedBondbuilder("kerastase", 56.29, 1, 0),
+  timedBondbuilder("aveda", 52, 2, 0),
+  timedBondbuilder("ogx", 18.68, 2, 1),
+]
+
+const timedRole = (ranked: BudgetCandidate[]) =>
+  role("bondbuilder", ranked, { displayMode: "trust_pair" })
+
+test("S4 B-USAGE-1 usage runs are never merged by the price sort (E4: Bis 15 €, after the wash)", () => {
+  for (const budget of [CAP15_STRICT, CAP15_FLEX]) {
+    const [allocation] = allocate(budget, [timedRole(AFTER_WASH_RANKED)]).roles
+    assert.equal(allocation!.defaultProductId, "loreal")
+    // The best overall product is the matching K18, not the cheaper non-matching Olaplex.
+    assert.deepEqual(allocation!.candidates, [
+      { productId: "loreal", overBudget: false, label: "within_budget" },
+      { productId: "k18", overBudget: true, label: "alternative" },
+      { productId: "olaplex-3plus", overBudget: true, label: "alternative" },
+    ])
+  }
+})
+
+test("S4 B-USAGE-2 E5: Bis 15 €, before the wash → L'Oréal next to Olaplex, then Epres", () => {
+  const [allocation] = allocate(CAP15_STRICT, [timedRole(BEFORE_WASH_RANKED)]).roles
+  assert.equal(allocation!.defaultProductId, "loreal")
+  assert.deepEqual(ids(allocation!.candidates), ["loreal", "olaplex-3plus", "epres"])
+})
+
+test("S4 B-USAGE-3 E6: no preference (no usage rank) is today's trust pair, value for value", () => {
+  const [allocation] = allocate(CAP15_STRICT, [bondbuilderRole()]).roles
+  assert.equal(allocation!.defaultProductId, "loreal")
+  assert.deepEqual(ids(allocation!.candidates), ["loreal", "olaplex-3plus", "epres"])
+})
+
+test("S4 B-USAGE-4 E7: Bis 5 € strict preselects nothing; cheaper first only inside a usage run", () => {
+  const [allocation] = allocate(CAP5_STRICT, [timedRole(AFTER_WASH_RANKED)], {
+    displayLimit: 8,
+  }).roles
+  assert.equal(allocation!.defaultProductId, null)
+  assert.equal(allocation!.notice, "strict_none_affordable")
+  assert.deepEqual(ids(allocation!.candidates), [
+    "k18",
+    "olaplex-3plus",
+    "epres",
+    "loreal",
+    "redken",
+    "kerastase",
+    "ogx",
+    "aveda",
+  ])
+})
+
+test("S4 B-USAGE-5 cap boundaries: 15,00 € is affordable, 15,01 € is not", () => {
+  const atCap = [timedBondbuilder("k18", 56.25, 0, 0), timedBondbuilder("edge", 15, 1, 1)]
+  assert.equal(allocate(CAP15_STRICT, [timedRole(atCap)]).roles[0]!.defaultProductId, "edge")
+  const overCap = [timedBondbuilder("k18", 56.25, 0, 0), timedBondbuilder("edge", 15.01, 1, 1)]
+  assert.equal(allocate(CAP15_STRICT, [timedRole(overCap)]).roles[0]!.defaultProductId, null)
+})
+
+test("S4 B-USAGE-6 standalone trust pair (scan, chat) keeps the usage runs", () => {
+  assert.deepEqual(ids(orderTrustPairAlternatives(AFTER_WASH_RANKED, CAP15_STRICT, 3)), [
+    "loreal",
+    "k18",
+    "olaplex-3plus",
+  ])
+  assert.deepEqual(ids(orderTrustPairAlternatives(AFTER_WASH_RANKED, UNCAPPED, 3)), [
+    "k18",
+    "olaplex-3plus",
+    "epres",
+  ])
+})
+
+test("S4 B-USAGE-7 uncapped price mix never swaps a matching product for a non-matching one", () => {
+  const ranked = [
+    timedBondbuilder("k18", 56.25, 0, 0),
+    timedBondbuilder("cheap-high-prewash", 12, 0, 1),
+  ]
+  const result = allocate(UNCAPPED, [
+    timedRole(ranked),
+    role("mask", [candidate("m-pricey", 30), candidate("m-other", 32)]),
+    role("oil", [candidate("o-pricey", 30), candidate("o-other", 31)]),
+  ])
+  assert.equal(result.roles[0]!.defaultProductId, "k18")
 })

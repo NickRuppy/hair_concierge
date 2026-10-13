@@ -1294,7 +1294,7 @@ test("dry_shampoo: ideal wins, supportive is a reasoned fallback, catalog order 
   assert.equal(result.status === "known" ? result.verdict : null, "supportive")
   assert.ok(result.status === "known" && result.recommendation?.reason)
 })
-test("bondbuilder: trust then price; add-ons never supportive or standalone candidates; no preferred-step filter", () => {
+test("bondbuilder: trust then price; add-ons never supportive or standalone candidates; timing retained", () => {
   const input = gateCategory("bondbuilder") as any
   input.capturedProductId = null
   input.subjectIdentity = null

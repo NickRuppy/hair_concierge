@@ -83,3 +83,18 @@ test("no care facts → nothing known", () => {
     questionIds: [],
   })
 })
+
+test("a user Bondbuilder timing is known; an assumed one is not", () => {
+  const user = knownCareAnswers({
+    careHabits: { bondbuilderTiming: "after_wash" },
+    fields: { bondbuilderTiming: "user" },
+  })
+  assert.deepEqual(user.answers, { bondbuilderTiming: "after_wash" })
+  assert.deepEqual(user.questionIds, ["bondbuilder_timing"])
+
+  const assumed = knownCareAnswers({
+    careHabits: { bondbuilderTiming: "no_preference" },
+    fields: { bondbuilderTiming: "assumed" },
+  })
+  assert.deepEqual(assumed, { answers: {}, questionIds: [] })
+})

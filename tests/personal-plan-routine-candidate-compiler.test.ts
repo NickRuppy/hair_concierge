@@ -346,6 +346,87 @@ test("freezes matching delegated exact cadence into the initial Routine and fing
   assert.notEqual(candidate.sourceFingerprint, changed.sourceFingerprint)
 })
 
+test("S4: the refined plan's damage band picks the damage-branched Bondbuilder cadence", async () => {
+  const bondPortfolio = {
+    ...portfolio(),
+    categoryResolutions: [
+      {
+        decisionKey: "decision:bondbuilder:specialized_bond_treatment:owned-bond",
+        category: "bondbuilder",
+        role: "specialized_bond_treatment",
+        verdict: "ideal",
+        choiceState: "owned_active",
+        capturedProductId: "captured-bond",
+        executable: true,
+        gapPreserved: false,
+      },
+    ],
+    ownedProducts: [
+      {
+        capturedProductId: "captured-bond",
+        userProductId: "user-product-bond",
+        productId: "product-bond",
+        displayName: "Bondbuilder",
+        category: "bondbuilder",
+        role: "specialized_bond_treatment",
+        frequencyRange: null,
+        choiceState: "owned_active",
+        sourceDecisionKey: "decision:bondbuilder:specialized_bond_treatment:owned-bond",
+      },
+    ],
+    plannedPurchases: [],
+    pendingProducts: [],
+    uncoveredRoles: [],
+  } as unknown as ProposedProductPortfolio
+  const snapshotAt = (structuralLevel: string) =>
+    ({
+      ...refinedNeedSnapshot,
+      assessments: { damage: { structuralLevel } },
+      decisions: [
+        {
+          category: "bondbuilder",
+          needTier: "optional",
+          roles: ["specialized_bond_treatment"],
+          frequency: { kind: "product_protocol_course" },
+          reasons: [{ id: "bond.protocol.v1" }],
+        },
+      ],
+      renderedOrder: ["bondbuilder"],
+    }) as unknown as InitialNeedPlanSnapshot
+  const cadenceAt = async (structuralLevel: string) => {
+    const candidate = await compileInitialRoutineCandidate({
+      ...compilerInput(),
+      portfolioSnapshot: bondPortfolio as never,
+      refinedNeedSnapshot: snapshotAt(structuralLevel),
+      cadenceAuthorityFacts: [
+        {
+          productId: "product-bond",
+          category: "bondbuilder",
+          role: "specialized_bond_treatment",
+          cadence: {
+            kind: "damage_branched",
+            branches: [
+              { structural_levels: ["moderate"], copy_de: "Einmal pro Woche anwenden." },
+              { structural_levels: ["high", "severe"], copy_de: "An jedem Waschtag anwenden." },
+            ],
+          },
+        },
+      ],
+    })
+    return (candidate.payload as Record<string, any>).items[0]?.cadence.resolved
+  }
+
+  assert.deepEqual(await cadenceAt("moderate"), {
+    copyDe: "Einmal pro Woche anwenden.",
+    source: "exact_product_protocol",
+  })
+  assert.deepEqual(await cadenceAt("severe"), {
+    copyDe: "An jedem Waschtag anwenden.",
+    source: "exact_product_protocol",
+  })
+  assert.equal((await cadenceAt("low")).source, "safe_generic_fallback")
+})
+
 test("source revision participates in the compiler fingerprint", async () => {
   const first = await compileInitialRoutineCandidate(compilerInput(7))
   const later = await compileInitialRoutineCandidate(compilerInput(8))

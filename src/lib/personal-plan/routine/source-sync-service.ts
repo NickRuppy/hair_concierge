@@ -176,6 +176,19 @@ export async function resolveSuccessorRoutineCadences(input: {
     .map(productIdForCadence)
     .filter((productId): productId is string => Boolean(productId))
   const authorityFacts = await input.authorityReader.load({ productIds })
+  // Only a damage-branched Bondbuilder cadence (S4) needs the plan's damage band.
+  const structuralDamageLevel =
+    input.authorityReader.loadStructuralDamageLevel &&
+    authorityFacts.some(
+      (fact) =>
+        fact.category === "bondbuilder" &&
+        (fact.cadence as { kind?: unknown } | null)?.kind === "damage_branched",
+    )
+      ? await input.authorityReader.loadStructuralDamageLevel({
+          planId: input.routine.planId,
+          refinedVersionId: input.routine.source.refinedVersionId,
+        })
+      : null
   const routine = structuredClone(input.routine)
   routine.source.compilerVersion = PERSONAL_PLAN_ROUTINE_COMPILER_VERSION
   routine.source.authorityVersions.routine = PERSONAL_PLAN_ROUTINE_COMPILER_VERSION
@@ -188,6 +201,7 @@ export async function resolveSuccessorRoutineCadences(input: {
       userOverride:
         typeof item.cadence.userOverride === "string" ? item.cadence.userOverride : null,
       authorityFacts,
+      structuralDamageLevel,
     })
     return {
       ...item,

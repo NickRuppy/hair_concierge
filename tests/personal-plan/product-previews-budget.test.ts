@@ -462,3 +462,116 @@ test("preview route passes the saved budget through and fails closed when it can
   })
   assert.deepEqual(unreadable, { status: 503, body: { error: "temporarily_unavailable" } })
 })
+
+/* ------------------------------------------- S4: Bondbuilder previews = gateway allocation */
+
+const BOND_ROLE = "specialized_bond_treatment" as const
+
+function bondbuilderDecision(): PlanCategoryDecision {
+  return {
+    category: "bondbuilder",
+    resolution: "resolved",
+    needTier: "basis",
+    roles: [BOND_ROLE],
+    target: {
+      category: "bondbuilder",
+      roles: [BOND_ROLE],
+      requiredFunction: "support_stressed_hair_resilience",
+      mechanismTarget: "mechanism_neutral",
+    },
+    frequency: null,
+    reasons: [],
+    executionState: "available",
+    executionPauseReason: null,
+    deferredFacts: [],
+  } as unknown as PlanCategoryDecision
+}
+
+/** The production Bondbuilders as the gateway budget test fixture lists them (same values). */
+function productionBondbuilders(): Stage3CategoryProductFacts[] {
+  const rows: Array<[string, "high" | "medium" | "low", string, number, number]> = [
+    ["loreal-elvital-bond", "medium", "pre_shampoo", 8.95, 1],
+    ["ogx-sealing-serum", "low", "bedtime_leave_in", 18.68, 2],
+    ["redken-acidic-bonding", "medium", "pre_shampoo", 25.5, 3],
+    ["olaplex-3plus", "high", "pre_shampoo", 34, 4],
+    ["epres", "high", "pre_shampoo", 48, 5],
+    ["aveda", "low", "pre_shampoo", 52, 6],
+    ["38dace91-0fba-49ee-a93f-ac36e488fe4b", "high", "post_wash_leave_in", 56.25, 7],
+    ["kerastase-premiere", "medium", "pre_shampoo", 56.29, 8],
+  ]
+  return rows.map(([id, trust, applicationMode, priceEur, sortOrder]) => ({
+    productId: id,
+    displayName: id,
+    category: "bondbuilder",
+    isActive: true,
+    lifecycleStatus: "active",
+    recommendable: true,
+    suitableThicknesses: ["fine", "normal", "coarse"],
+    knownReaction: false,
+    protocols: [{ role: BOND_ROLE, status: "verified_complete", fingerprint: `p-${id}` }],
+    presentationImageUrl: `https://example.com/${id}.webp`,
+    factFingerprint: `facts-${id}`,
+    catalogSortOrder: sortOrder,
+    ...commerce(priceEur),
+    spec: {
+      applicationMode,
+      treatmentMode: applicationMode === "pre_shampoo" ? "rinse_out" : "leave_in",
+      productFormat: "cream_treatment",
+      usageProtocol: "verified_course",
+      relationship: "standalone",
+      claimTrustLevel: trust,
+    },
+  })) as Stage3CategoryProductFacts[]
+}
+
+async function previewBondbuilder(
+  budget: Stage1ProductExamplePreviewBudget | null,
+  timing?: "before_wash" | "after_wash" | "no_preference",
+) {
+  const snapshot = baseSnapshot()
+  const withDecision: InitialNeedPlanSnapshot = {
+    ...snapshot,
+    decisions: [bondbuilderDecision()],
+    renderedOrder: ["bondbuilder"],
+    profile: timing
+      ? {
+          ...snapshot.profile,
+          routine: {
+            ...snapshot.profile.routine,
+            bondbuilderTiming: { state: "known", value: timing },
+          },
+        }
+      : snapshot.profile,
+  }
+  const response = await computeStage1ProductExamplePreviews({
+    personalPlanId: "plan-1",
+    sourceNeedVersionId: "need-1",
+    snapshot: withDecision,
+    loadCandidates: async () => productionBondbuilders(),
+    budget,
+  })
+  return recommendations(response.previews).get("bondbuilder")?.productId ?? null
+}
+
+const K18 = "38dace91-0fba-49ee-a93f-ac36e488fe4b"
+
+test("S4 G2: Bondbuilder previews allocate the trust pair exactly like the gateway", async () => {
+  // Same expectations as production-persistence-gateway-budget.test.ts (B-INT-TRUST*, S4 E4).
+  assert.equal(await previewBondbuilder(null), "olaplex-3plus")
+  assert.equal(await previewBondbuilder(uncapped), "olaplex-3plus")
+  assert.equal(
+    await previewBondbuilder({ budget: { kind: "capped", limitEur: 15, allowExceptions: false } }),
+    "loreal-elvital-bond",
+  )
+  // Bis 5 € flexible, required need: the gap fill is the cheapest MOST TRUSTED product (trust
+  // pair), while preserving trust and timing precedence.
+  assert.equal(await previewBondbuilder(flexible5), "olaplex-3plus")
+})
+
+test("S4: the refined timing reaches the preview (before the wash → OLAPLEX, after → K18)", async () => {
+  assert.equal(await previewBondbuilder(null, "before_wash"), "olaplex-3plus")
+  assert.equal(await previewBondbuilder(null, "after_wash"), K18)
+  assert.equal(await previewBondbuilder(null, "no_preference"), "olaplex-3plus")
+  // Bis 5 € flexible after the wash: the gap fill keeps the matching K18 (usage run first).
+  assert.equal(await previewBondbuilder(flexible5, "after_wash"), K18)
+})
