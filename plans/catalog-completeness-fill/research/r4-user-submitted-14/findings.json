@@ -1,0 +1,1170 @@
+{
+  "task": "r4-user-submitted-14: refresh Sept catalog-assessment-completeness research against prod and sources of 2026-10-09",
+  "generated": "2026-10-09",
+  "base": {
+    "worktree": "catalog-completeness-fill",
+    "main_sha": "404db24f",
+    "prod_project": "pqdkhefxsxkyeqelqegq (SELECT only)",
+    "old_branch": "codex/catalog-assessment-completeness @ dd799f29 (read only)"
+  },
+  "boundaries_respected": "No DB writes, no apply/publish scripts, no repo edits outside plans/catalog-completeness-fill/research/r4-user-submitted-14/, no commits, old branch untouched. Only local read-only replays (adapter CLIs, schema parse) wrote into the output folder.",
+  "drift": {
+    "summary_verdict": "Sept 2026-09-18 manifest/candidates are NOT applicable as written. Ordinary-8 candidate payloads are still valid (re-based onto today's evidence); the 3 leave-in manifest entries, the Neqi worksheet, and the Mask/Oil plans are superseded.",
+    "unchanged": [
+      "All 14 rows still exist, active, lifecycle active, origin user_submitted, is_chaarlie_recommended=false; still 0 rows in product_application_protocols and 0 in application_guidance_protocols for every one.",
+      "GTIN/EAN identifiers unchanged for the 12 rows that Sept pinned (canonical_gtin14 equal to the Sept pins). Balea still has none; the mask EAN 4262401735639 is new (appears added 2026-10-03).",
+      "Category facts for the 8 shampoo/conditioner rows still present (shampoo_specs 3 products, conditioner_specs + rerank 5 products).",
+      "Live protocol convention (V1 payload + V2 product_pointer, shared family steps) unchanged: Balea Hydra Volume (2026-10-05) and OLAPLEX Nº.5 (2026-10-09) were inserted in exactly this shape; all 8 Sept ordinary candidate payloads and the Sept leave-in protocol payloads still parse against today's applicationGuidanceProtocolSchema and productApplicationPointerV2Schema.",
+      "No new blocker among the other user_submitted rows (11 newer active user_submitted rows all have >=1 protocol)."
+    ],
+    "changed": [
+      {
+        "what": "Neqi spray facts applied",
+        "when": "2026-09-29",
+        "detail": "Specs, fit, 6 eligibility rows, thickness normal+coarse were written by the leave-in calibration lane (batches v1 and v2-t20, reviewed_by nick). Only the protocols are missing now. The Sept worksheet's 'moisture / moisture_softness' candidate is superseded by T20 (balanced)."
+      },
+      {
+        "what": "Leave-In standard moved to v1.1 (T20) and AD-3a revised",
+        "when": "2026-09-29 (PR #626)",
+        "detail": "care_direction counts only directional species; moisture_softness requires care_direction=moisture. The production adapter now REFUSES v1.0 envelopes, so the Sept Aussie/Bali/Balea envelopes cannot be replayed. Re-derived: Aussie moisture->balanced, Balea moisture->balanced, Bali stays moisture."
+      },
+      {
+        "what": "Mask engine v1.0 + adapter",
+        "when": "2026-10-07 (PR #651)",
+        "detail": "Sept plan said 'no Mask engine'. Now used."
+      },
+      {
+        "what": "Price-audit bulk update",
+        "when": "2026-10-03 11:48:40 UTC",
+        "detail": "197 products rows touched (14 user_submitted). Bali and Balea affiliate_link now dm.de (manifest pinned bali-care.com / duitsevoordeeldrogist.nl) -> the manifest's identity block and therefore expectedOldFingerprint of Bali and Balea no longer match live. Aussie identity unchanged. Spec/fit/eligibility/thickness/identifier blocks of the 3 manifest products still equal live."
+      },
+      {
+        "what": "Jean&Len mask EAN appears added",
+        "when": "2026-10-03 14:06 UTC (row updated_at)",
+        "detail": "identifier source label 'price-audit-approved-2026-10-03-identity'."
+      },
+      {
+        "what": "Pantene row touched",
+        "when": "2026-10-05 02:37 UTC",
+        "detail": "net_content 200 ml while GTIN/SKU/link are the 800 ml pump pack -> identity flag."
+      },
+      {
+        "what": "Evaluator fix from the Sept branch is not on main",
+        "when": "-",
+        "detail": "main's leave-in.ts still requires application_stage to include 'pre_heat' for the pre_heat_application role; Sept commit 23a83cfa (not merged) removed that. Affects Bali and Balea pre-heat roles."
+      },
+      {
+        "what": "Apply executors",
+        "when": "-",
+        "detail": "The user-submitted repair executor/manifest generator built in the Sept branch (leave-in-repair, ordinary-guidance-bindings, CLI) is not on main; the Stage-5 lane is curated-only. No apply path for these 14 exists on main."
+      }
+    ],
+    "counts": {
+      "active_user_submitted_rows_today": 25,
+      "of_which_in_these_14": 14,
+      "other_user_submitted_rows_all_with_protocols": 11
+    }
+  },
+  "products": [
+    {
+      "id": "b761256d-c0d2-4413-9fa5-8ab950ef69bf",
+      "name": "Syoss Intense Fullness Shampoo",
+      "category": "Shampoo",
+      "gap_before": {
+        "F": [],
+        "P": [
+          "shampoo_everyday"
+        ],
+        "note": "product_shampoo_specs row present (thickness fine, scalp_route balanced, bucket normal, intensity regular)"
+      },
+      "engine": "none needed (facts exist; Shampoo Production Light not re-run)",
+      "identity": "GTIN 4015100860429 confirmed (Rossmann URL/article 179947 via web search); dm does not list this GTIN (MCP found:false) - not needed",
+      "sources": [
+        {
+          "url": "https://www.syoss.de/haarpflege/shampoo/syoss-intense-fullness-kraeftigendes-shampoo.html",
+          "verbatim": "Sanft im nassen Haar verteilen und gründlich ausspülen",
+          "tier": "T1 manufacturer (DE)",
+          "checked": "2026-10-09"
+        }
+      ],
+      "proposal": [
+        {
+          "table": "product_application_protocols",
+          "op": "insert (1 row)",
+          "row_ref": "proposal/protocol-rows.json -> product_id=b761256d role=shampoo_everyday",
+          "before": "0 rows in product_application_protocols, 0 rows in application_guidance_protocols",
+          "after": "1 row: V1 guidance_payload + V2 product_pointer on the shared family template, no bespoke steps"
+        }
+      ],
+      "category_doubt": null,
+      "status": "ready",
+      "open_questions": []
+    },
+    {
+      "id": "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
+      "name": "Syoss Intense Volume Shampoo",
+      "category": "Shampoo",
+      "gap_before": {
+        "F": [],
+        "P": [
+          "shampoo_everyday"
+        ],
+        "note": "specs present (fine, balanced, normal, gentle)"
+      },
+      "engine": "none needed",
+      "identity": "GTIN 4015100860481 = dm DAN 3047032 'Shampoo Intense Volume, 440 ml', syoss (dm MCP, 2026-10-09)",
+      "sources": [
+        {
+          "url": "https://www.dm.de/p/d/3047032/syoss-shampoo-intense-volume",
+          "verbatim": "Sanft im nassen Haar verteilen und ausspülen.",
+          "tier": "T2/T3 exact-GTIN retailer (dm.de via dm MCP getProductDetails)",
+          "checked": "2026-10-09"
+        },
+        {
+          "url": "https://www.syoss.net/care/shampoo/syoss-intense-volume-deep-caring-shampoo.html",
+          "verbatim": "Apply thoroughly to wet hair and rinse",
+          "tier": "T1 manufacturer (EN page)",
+          "checked": "2026-10-09"
+        }
+      ],
+      "proposal": [
+        {
+          "table": "product_application_protocols",
+          "op": "insert (1 row)",
+          "row_ref": "proposal/protocol-rows.json -> product_id=f8a8fd56 role=shampoo_everyday",
+          "before": "0 rows in product_application_protocols, 0 rows in application_guidance_protocols",
+          "after": "1 row: V1 guidance_payload + V2 product_pointer on the shared family template, no bespoke steps"
+        }
+      ],
+      "category_doubt": null,
+      "status": "ready",
+      "open_questions": []
+    },
+    {
+      "id": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
+      "name": "Ultimate Shampoo (L'Oréal Elvital Glycolic Gloss)",
+      "category": "Shampoo",
+      "gap_before": {
+        "F": [],
+        "P": [
+          "shampoo_everyday"
+        ],
+        "note": "specs present for fine/normal/coarse; one user_products owner link exists (web-search gate)"
+      },
+      "engine": "none needed",
+      "identity": "EAN 3600524128005 = dm DAN 1346429 'Shampoo Glycolic Gloss, 200 ml', L'ORÉAL PARiS ELVITAL (dm MCP). Display name 'Ultimate Shampoo' is generic; manufacturer page title 'Elvital Glycolic Gloss Ultimate Shampoo'. Name reconciliation is a separate identity step (not part of this repair).",
+      "sources": [
+        {
+          "url": "https://www.loreal-paris.de/elvital/glycolic-gloss/shampoo",
+          "verbatim": "Das Elvital Glycolic Gloss Ultimate Shampoo von L’Oréal Paris auf das nasse Haar auftragen und einmassieren, danach gründlich ausspülen.",
+          "tier": "T1 manufacturer (DE)",
+          "checked": "2026-10-09"
+        },
+        {
+          "url": "https://www.dm.de/p/d/1346429/l-oreal-paris-elvital-shampoo-glycolic-gloss",
+          "verbatim": "Auf das nasse Haar auftragen und einmassieren, danach ausspülen.",
+          "tier": "T2/T3 exact-GTIN retailer (dm.de via dm MCP getProductDetails)",
+          "checked": "2026-10-09"
+        }
+      ],
+      "proposal": [
+        {
+          "table": "product_application_protocols",
+          "op": "insert (1 row)",
+          "row_ref": "proposal/protocol-rows.json -> product_id=88c230c5 role=shampoo_everyday",
+          "before": "0 rows in product_application_protocols, 0 rows in application_guidance_protocols",
+          "after": "1 row: V1 guidance_payload + V2 product_pointer on the shared family template, no bespoke steps"
+        }
+      ],
+      "category_doubt": null,
+      "status": "ready",
+      "open_questions": [
+        "Optional separate identity step: rename 'Ultimate Shampoo' to the manufacturer name (Nick, Sept ruling: keep name in this repair)."
+      ]
+    },
+    {
+      "id": "4f67cb6d-4b28-490b-9817-e8fc8e91b010",
+      "name": "Jean&Len Colorglow Granatapfel Rose Conditioner",
+      "category": "Conditioner",
+      "gap_before": {
+        "F": [],
+        "P": [
+          "conditioner_rinse_out"
+        ],
+        "note": "product_conditioner_specs rows (fine, normal x 3 balance values) + rerank spec present"
+      },
+      "engine": "none needed",
+      "identity": "GTIN 4262401738883 = dm DAN 3086487 'Conditioner Colorglow Granatapfel Rose, 300 ml' (dm MCP)",
+      "sources": [
+        {
+          "url": "https://www.jeanlen.de/color-conditioner-granatapfel-rose",
+          "verbatim": "Nach der Haarwäsche ins feuchte Haar einmassieren und kurz einwirken lassen. Anschließend gründlich ausspülen.",
+          "tier": "T1 manufacturer (DE)",
+          "checked": "2026-10-09"
+        },
+        {
+          "url": "https://www.dm.de/p/d/3086487/jean-und-len-conditioner-colorglow-granatapfel-rose",
+          "verbatim": "Nach der Haarwäsche ins feuchte Haar einmassieren und kurz einwirken lassen. Anschließend gründlich ausspülen.",
+          "tier": "T2/T3 exact-GTIN retailer (dm.de via dm MCP getProductDetails)",
+          "checked": "2026-10-09"
+        }
+      ],
+      "proposal": [
+        {
+          "table": "product_application_protocols",
+          "op": "insert (1 row)",
+          "row_ref": "proposal/protocol-rows.json -> product_id=4f67cb6d role=conditioner_rinse_out",
+          "before": "0 rows in product_application_protocols, 0 rows in application_guidance_protocols",
+          "after": "1 row: V1 guidance_payload + V2 product_pointer on the shared family template, no bespoke steps"
+        }
+      ],
+      "category_doubt": null,
+      "status": "ready",
+      "open_questions": []
+    },
+    {
+      "id": "62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d",
+      "name": "John Frieda Frizz Ease Wunder-Reparatur Conditioner",
+      "category": "Conditioner",
+      "gap_before": {
+        "F": [],
+        "P": [
+          "conditioner_rinse_out"
+        ],
+        "note": "specs present (coarse, normal)"
+      },
+      "engine": "none needed",
+      "identity": "GTIN 5037156298697 = dm DAN 3123413 'Conditioner Frizz Ease Wunder-Reparatur, 250 ml' (dm MCP)",
+      "sources": [
+        {
+          "url": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/wunder-reparatur/conditioner/",
+          "verbatim": "Nach dem Shampoonieren überschüssiges Wasser ausdrücken. In Längen und Spitzen einarbeiten, wo das Haar besonders pflegebedürftig ist. Ausspülen, um kräftigeres und glänzenderes Haar zu erhalten. Nach jeder Haarwäsche anwenden.",
+          "tier": "T1 manufacturer (DE)",
+          "checked": "2026-10-09"
+        },
+        {
+          "url": "https://www.dm.de/p/d/3123413/john-frieda-conditioner-frizz-ease-wunder-reparatur",
+          "verbatim": "Anwendung: Haare mit Frizz Ease Wunder-Reparatur Shampoo waschen. Anschließend Conditioner auf das nasse Haar auftragen und in die Längen und Spitzen einmassieren. Gut ausspülen.",
+          "tier": "T2/T3 exact-GTIN retailer (dm.de via dm MCP getProductDetails)",
+          "checked": "2026-10-09"
+        }
+      ],
+      "proposal": [
+        {
+          "table": "product_application_protocols",
+          "op": "insert (1 row)",
+          "row_ref": "proposal/protocol-rows.json -> product_id=62ff4f08 role=conditioner_rinse_out",
+          "before": "0 rows in product_application_protocols, 0 rows in application_guidance_protocols",
+          "after": "1 row: V1 guidance_payload + V2 product_pointer on the shared family template, no bespoke steps"
+        }
+      ],
+      "category_doubt": null,
+      "status": "ready",
+      "open_questions": []
+    },
+    {
+      "id": "5f4f1300-bc15-4ce0-9ed8-035feb606bde",
+      "name": "Neqi Diamond Glass Conditioner",
+      "category": "Conditioner",
+      "gap_before": {
+        "F": [],
+        "P": [
+          "conditioner_rinse_out"
+        ],
+        "note": "specs present (coarse, fine, normal)"
+      },
+      "engine": "none needed",
+      "identity": "GTIN 4063528097613 = dm DAN 3101240 'Conditioner Diamond Glass, 250 ml', NEQI (dm MCP)",
+      "sources": [
+        {
+          "url": "https://neqi-hair.com/products/diamond-glass-conditioner",
+          "verbatim": "Den Conditioner nach der Haarwäsche mit DIAMOND GLASS Shampoo in die Haarlängen einmassieren. | 2-3 Minuten einwirken lassen. | Gründlich ausspülen.",
+          "tier": "T1 manufacturer (DE)",
+          "checked": "2026-10-09"
+        },
+        {
+          "url": "https://www.dm.de/p/d/3101240/neqi-conditioner-diamond-glass",
+          "verbatim": "Nach der Haarwäsche den Conditioner in die Längen einmassieren. 2-3 Minuten einwirken lassen. Dann gründlich ausspülen.",
+          "tier": "T2/T3 exact-GTIN retailer (dm.de via dm MCP getProductDetails)",
+          "checked": "2026-10-09"
+        }
+      ],
+      "proposal": [
+        {
+          "table": "product_application_protocols",
+          "op": "insert (1 row)",
+          "row_ref": "proposal/protocol-rows.json -> product_id=5f4f1300 role=conditioner_rinse_out",
+          "before": "0 rows in product_application_protocols, 0 rows in application_guidance_protocols",
+          "after": "1 row: V1 guidance_payload + V2 product_pointer on the shared family template, no bespoke steps",
+          "note": "Label dwell 2-3 min stays in source_text; displayed timing is the ruled category window 1-3 min (Sept ruling R-C), no Neqi-only step."
+        }
+      ],
+      "category_doubt": null,
+      "status": "ready",
+      "open_questions": []
+    },
+    {
+      "id": "931892fb-cc29-4e50-b402-6aae0a494389",
+      "name": "Pantene Pro-V Moisture Boost Pflegespülung",
+      "category": "Conditioner",
+      "gap_before": {
+        "F": [],
+        "P": [
+          "conditioner_rinse_out"
+        ],
+        "note": "specs present (fine, normal)"
+      },
+      "engine": "none needed",
+      "identity": "IDENTITY FLAG: stored GTIN 08700216939140 belongs to the 800 ml PUMP pack (Müller article 3150289 shows 'Inhalt: 800 ml', product images keyed 8700216939140; web search: Rossmann 'pumpspender' 800 ml). The row says net_content 200 ml (updated 2026-10-05). The 200 ml Moisture Boost conditioner has a different GTIN 8700216939508 (dm DAN 3088166, 3,95 EUR). dm MCP has no listing for 8700216939140.",
+      "sources": [
+        {
+          "url": "https://www.mueller.de/p/pantene-pro-v-moisture-boost-pflegespuelung-PPN3150289/",
+          "verbatim": "In die Längen deines Haares geben. Ausspülen ODER als leave-in verwenden",
+          "tier": "T3 retailer",
+          "checked": "2026-10-09",
+          "note": "Rossmann page for the same GTIN is a JS shell today and could not be re-read; Müller used instead."
+        }
+      ],
+      "proposal": [
+        {
+          "table": "product_application_protocols",
+          "op": "insert (1 row)",
+          "row_ref": "proposal/protocol-rows.json -> product_id=931892fb role=conditioner_rinse_out",
+          "before": "0 rows in product_application_protocols, 0 rows in application_guidance_protocols",
+          "after": "1 row: V1 guidance_payload + V2 product_pointer on the shared family template, no bespoke steps",
+          "note": "Bind the rinse-out role only; the optional leave-in mode is recorded in evidence but enables no new role."
+        }
+      ],
+      "category_doubt": null,
+      "status": "ready (protocol); identity flag open",
+      "open_questions": [
+        "Pack identity: is this the 800 ml pump (GTIN 08700216939140, Müller link, SKU 3150289) or the 200 ml bottle (GTIN 8700216939508)? Row currently mixes them. Does not change the rinse-out protocol, but should be fixed in a separate identity step (net_content_value 200 vs 800)."
+      ]
+    },
+    {
+      "id": "7fb31d10-ff21-410b-9dc2-2d1ad34b9130",
+      "name": "Schwarzkopf GLISS Liquid Silk Spülung",
+      "category": "Conditioner",
+      "gap_before": {
+        "F": [],
+        "P": [
+          "conditioner_rinse_out"
+        ],
+        "note": "specs present (coarse, normal)"
+      },
+      "engine": "none needed",
+      "identity": "EAN 4015100812350 = dm DAN 1430911 'Conditioner Liquid Silk, 200 ml', Schwarzkopf GLISS (dm MCP)",
+      "sources": [
+        {
+          "url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/liquid-silk/liquid-silk-spuelung.html",
+          "verbatim": "Nach dem Waschen sanft im feuchten Haar verteilen. Gut ausspülen!",
+          "tier": "T1 manufacturer (DE)",
+          "checked": "2026-10-09"
+        },
+        {
+          "url": "https://www.dm.de/p/d/1430911/schwarzkopf-gliss-conditioner-liquid-silk",
+          "verbatim": "Nach dem Waschen sanft im feuchten Haar verteilen. Gut ausspülen! Regelmäßig anwenden. Vor Kälte schützen.",
+          "tier": "T2/T3 exact-GTIN retailer (dm.de via dm MCP getProductDetails)",
+          "checked": "2026-10-09"
+        }
+      ],
+      "proposal": [
+        {
+          "table": "product_application_protocols",
+          "op": "insert (1 row)",
+          "row_ref": "proposal/protocol-rows.json -> product_id=7fb31d10 role=conditioner_rinse_out",
+          "before": "0 rows in product_application_protocols, 0 rows in application_guidance_protocols",
+          "after": "1 row: V1 guidance_payload + V2 product_pointer on the shared family template, no bespoke steps"
+        }
+      ],
+      "category_doubt": null,
+      "status": "ready",
+      "open_questions": []
+    },
+    {
+      "id": "ba326dab-99d8-4b82-a1c5-de9aee2578a4",
+      "name": "AUSSIE SOS Leave-In Haarserum 100 Hours Hydration, 160 ml",
+      "category": "Leave-in",
+      "gap_before": {
+        "F": [
+          "care_direction",
+          "repair_support_level",
+          "plan_roles",
+          "functional_benefits",
+          "(legacy roles/care_benefits/conditioner relationship are pre-v1.1)"
+        ],
+        "P": [
+          "post_wash_leave_in"
+        ],
+        "note": "heat protection false (no heat claim)"
+      },
+      "engine": "Leave-In Standard v1.1 (v1.0 + T20) + Production Adapter v1; envelope re-issued from the 2026-09-18 v1.0 record (formula unchanged, care_direction re-derived). Adapter: projection_ready. Output: leave-in-v1.1/aussie/",
+      "identity": "GTIN 8006530085724 = dm DAN 3135991 'Leave-In Haarserum 100 Hours Hydration, 160 ml', AUSSIE. dm INCI byte-identical to the frozen 2026-09-18 INCI (22 ingredients).",
+      "sources": [
+        {
+          "url": "https://www.dm.de/p/d/3135991/aussie-leave-in-haarserum-100-hours-hydration",
+          "verbatim": "Nach deiner Duschroutine oder unterwegs anwenden. Für feines bis mittleres Haar 1 mal drücken. Für dickes Haar 2 mal drücken. In den Händen verreiben und beobachten, wie es sich in Flüssigkeit verwandelt. Auf feuchtem oder trockenem Haar auftragen. Kein Ausspülen notwendig",
+          "tier": "T2/T3 exact-GTIN retailer (dm.de via dm MCP getProductDetails)",
+          "checked": "2026-10-09",
+          "note": "Manufacturer page not located; retailer is exact-GTIN."
+        }
+      ],
+      "proposal": [
+        {
+          "table": "product_leave_in_specs",
+          "op": "update",
+          "before": {
+            "care_direction": null,
+            "repair_support_level": null,
+            "plan_roles": null,
+            "functional_benefits": null,
+            "care_benefits": [
+              "anti_frizz",
+              "detangling",
+              "moisture",
+              "shine"
+            ],
+            "roles": [
+              "extension_conditioner",
+              "styling_prep"
+            ],
+            "ingredient_flags": [
+              "humectants",
+              "oils",
+              "polymers",
+              "silicones"
+            ],
+            "weight": "medium",
+            "application_stage": [
+              "dry_hair",
+              "towel_dry"
+            ],
+            "provides_heat_protection": false
+          },
+          "after": {
+            "care_direction": "balanced",
+            "repair_support_level": "low",
+            "plan_roles": [
+              "post_wash_leave_in"
+            ],
+            "functional_benefits": [
+              "smooth_anti_frizz"
+            ],
+            "care_benefits": [
+              "anti_frizz"
+            ],
+            "roles": [
+              "replacement_conditioner"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "oils",
+              "humectants"
+            ],
+            "weight": "medium",
+            "application_stage": [
+              "towel_dry",
+              "dry_hair"
+            ],
+            "provides_heat_protection": false
+          },
+          "notes": "roles drops styling_prep per Nick's 2026-09-18 ruling (Polyacrylamide is not a hold/styling use); the adapter itself still emits [replacement_conditioner, styling_prep]. product_leave_in_specs.conditioner_relationship is GENERATED from roles (booster_only -> replacement_capable) and must not be written."
+        },
+        {
+          "table": "product_leave_in_fit_specs",
+          "op": "update",
+          "before": {
+            "weight": "medium",
+            "care_benefits": [
+              "detangle_smooth"
+            ],
+            "conditioner_relationship": "booster_only"
+          },
+          "after": {
+            "weight": "medium",
+            "care_benefits": [
+              "detangle_smooth"
+            ],
+            "conditioner_relationship": "replacement_capable"
+          }
+        },
+        {
+          "table": "product_leave_in_eligibility",
+          "op": "delete 4 rows",
+          "before": "8 rows (normal+coarse x {moisture_anti_frizz, shine_protect} x {air_dry, non_heat_style})",
+          "after": "4 rows (normal+coarse x moisture_anti_frizz x {air_dry, non_heat_style}); shine_protect rows removed"
+        },
+        {
+          "table": "product_thickness_eligibility / products.suitable_thicknesses",
+          "op": "none",
+          "before": [
+            "normal",
+            "coarse"
+          ],
+          "after": [
+            "normal",
+            "coarse"
+          ]
+        },
+        {
+          "table": "product_application_protocols",
+          "op": "insert (1 row)",
+          "row_ref": "proposal/protocol-rows.json -> ba326dab post_wash_leave_in",
+          "before": "0",
+          "after": "1 row, shared family post_wash_damp_conditioning"
+        }
+      ],
+      "category_doubt": null,
+      "status": "ready for Nick review (T20 flip)",
+      "open_questions": [
+        "T20 changes the Sept result: care_direction moisture(low) -> balanced(low). Because DIMETHICONE r2 (film) outranks the humectant/mineral-oil candidates, `moisture` and the moisture_softness benefit are gone; care_benefits loses moisture/detangling/shine. Accept?",
+        "conditioner_relationship booster_only -> replacement_capable (adapter policy: conditioning moderate + persistence moderate) - same open product-policy question as in Sept (not measured efficacy)."
+      ],
+      "engine_confidence_note": "care_direction confidence low; routes moisture_leg_subordinate review. Marker (Phenoxyethanol r4) is early; all three readings give balanced."
+    },
+    {
+      "id": "ea88a333-b11c-45c3-bbda-c51f912ee56f",
+      "name": "Balea Professional Brilliant Blond Hair Sealer Leave-in Serum",
+      "category": "Leave-in",
+      "gap_before": {
+        "F": [
+          "care_direction",
+          "repair_support_level",
+          "plan_roles",
+          "functional_benefits"
+        ],
+        "P": [
+          "post_wash_leave_in",
+          "pre_heat_protection"
+        ],
+        "note": "no GTIN on the row (only an NL retailer URL identifier); legacy application_stage [towel_dry, pre_heat] is not verbatim from directions"
+      },
+      "engine": "Leave-In Standard v1.1 + Production Adapter v1; envelope = Sept revision-1 record (identity verified_with_minor_source_difference) with care_direction re-derived. Adapter: projection_ready. Output: leave-in-v1.1/balea/",
+      "identity": "FOUND & VERIFIED: dm DAN 3062765 'Leave-In Serum Brilliant Blond Hair Sealer, 100 ml', Balea PROFESSIONAL, GTIN 4070765027518 (dm MCP + dm search API, 2026-10-09). Price 2,75 EUR = row price_eur 2.75; row affiliate_link already points to dm 3062765. dm INCI (18 ingredients) is identical in order to the NL retailer page the row was created from (propyleenglycol/Fenoxyethanol are Dutch spellings). dm Italia lists the same DAN with GTIN 4067796154160 (alternate market code, still live in dm search API) - not proposed as a barcode.",
+      "sources": [
+        {
+          "url": "https://www.dm.de/p/d/3062765/balea-professional-leave-in-serum-brilliant-blond-hair-sealer",
+          "verbatim": "2-3 Pumphübe zwischen den Handfächen verreiben und in die Längen und Spitzen des Haars verteilen. Nicht ausspülen.",
+          "tier": "T2/T3 exact-GTIN retailer (dm.de via dm MCP getProductDetails)",
+          "checked": "2026-10-09",
+          "note": "dm MCP applicationInstructions."
+        },
+        {
+          "url": "https://www.dm.de/p/d/3062765/balea-professional-leave-in-serum-brilliant-blond-hair-sealer",
+          "verbatim": "Mit seinem integrierten Hitzeschutz bis zu 230 Grad kann es das Haar vor Schäden durch Stylinggeräte wie Föhn oder Glätteisen bewahren. | Hitzeschutz bis zu 230 °C",
+          "tier": "T2/T3 exact-GTIN retailer (dm.de via dm MCP getProductDetails)",
+          "checked": "2026-10-09",
+          "note": "dm is the brand owner (house brand): claim tier C1/C2-equivalent as in the Sept record (claim_tier_basis house_brand)."
+        },
+        {
+          "url": "https://www.duitsevoordeeldrogist.nl/balea-professional-leave-in-serum-brilliant-blond.html",
+          "verbatim": "Wrijf 2-3 pompjes tussen je handpalmen en verdeel het over de lengtes en punten van je haar. Niet uitspoelen. | Hittebescherming tot 230 graden Celsius",
+          "tier": "T3 retailer",
+          "checked": "2026-10-09",
+          "note": "Original source of the row. Page does not say damp or dry."
+        },
+        {
+          "url": "https://www.dm-drogeriemarkt.it/p/d/3062765/balea-professional-fluido-sigillante-leave-in-brilliant-blond",
+          "verbatim": "Applica il fluido sigillante Brillant Blond di Balea sui capelli umidi o asciutti",
+          "tier": "T3 retailer (dm Italia, same DAN)",
+          "checked": "2026-10-09",
+          "note": "NOT re-verifiable today (JS shell, web search returned no hit). Sept 2026-09-18 capture only."
+        }
+      ],
+      "proposal": [
+        {
+          "table": "product_leave_in_specs",
+          "op": "update",
+          "before": {
+            "care_direction": null,
+            "repair_support_level": null,
+            "plan_roles": null,
+            "functional_benefits": null,
+            "care_benefits": [
+              "repair",
+              "protein",
+              "shine",
+              "anti_frizz"
+            ],
+            "roles": [
+              "styling_prep",
+              "extension_conditioner"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "oils",
+              "proteins",
+              "humectants"
+            ],
+            "weight": "medium",
+            "application_stage": [
+              "towel_dry",
+              "pre_heat"
+            ],
+            "provides_heat_protection": true
+          },
+          "after": {
+            "care_direction": "balanced",
+            "repair_support_level": "low",
+            "plan_roles": [
+              "post_wash_leave_in",
+              "pre_heat_application"
+            ],
+            "functional_benefits": [
+              "smooth_anti_frizz",
+              "heat_protect"
+            ],
+            "care_benefits": [
+              "anti_frizz"
+            ],
+            "roles": [
+              "replacement_conditioner"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "polymers",
+              "oils",
+              "proteins",
+              "humectants"
+            ],
+            "weight": "rich",
+            "application_stage": [
+              "towel_dry",
+              "dry_hair"
+            ],
+            "provides_heat_protection": true
+          },
+          "notes": "application_stage rests on the Italian same-article page (damp OR dry) which cannot be re-read today; the German pages are silent on hair state."
+        },
+        {
+          "table": "product_leave_in_fit_specs",
+          "op": "update",
+          "before": {
+            "weight": "medium",
+            "care_benefits": [
+              "detangle_smooth",
+              "heat_protect",
+              "repair"
+            ],
+            "conditioner_relationship": "booster_only"
+          },
+          "after": {
+            "weight": "rich",
+            "care_benefits": [
+              "heat_protect",
+              "detangle_smooth"
+            ],
+            "conditioner_relationship": "replacement_capable"
+          }
+        },
+        {
+          "table": "product_leave_in_eligibility",
+          "op": "delete 18 rows",
+          "before": "21 rows (fine/normal/coarse x heat_protect, moisture_anti_frizz, repair, shine_protect ...)",
+          "after": "3 rows (coarse x heat_protect/heat_style, moisture_anti_frizz/air_dry, moisture_anti_frizz/non_heat_style)"
+        },
+        {
+          "table": "product_thickness_eligibility + products.suitable_thicknesses",
+          "op": "update",
+          "before": [
+            "fine",
+            "normal",
+            "coarse"
+          ],
+          "after": [
+            "coarse"
+          ]
+        },
+        {
+          "table": "product_identifiers",
+          "op": "insert (1 row)",
+          "before": "only retailer_url (NL)",
+          "after": "+ gtin 4070765027518 (source dm.de/p/d/3062765; canonical_gtin14 04070765027518), optionally + retailer_sku 3062765"
+        },
+        {
+          "table": "product_application_protocols",
+          "op": "insert (2 rows)",
+          "row_ref": "proposal/protocol-rows.json -> ea88a333 post_wash_leave_in + pre_heat_protection",
+          "before": "0",
+          "after": "2 rows (post_wash_damp_conditioning; pre-heat on the shared either_state_protection family, as in the Sept manifest)"
+        }
+      ],
+      "category_doubt": null,
+      "status": "blocked on 2 decisions",
+      "open_questions": [
+        "application_stage: German dm and NL pages say nothing about damp vs dry. The Sept [towel_dry, dry_hair] rests on the dm Italia sentence, which I could not re-read today. Accept the Sept capture, or have it re-captured by a human?",
+        "pre_heat role: main's evaluator (leave-in.ts) answers 'mismatch - Die Anwendung vor Hitze ist nicht bestätigt' unless application_stage contains pre_heat. Sept fix 23a83cfa (accept verified heat claim + verified heat protocol without label timing) is NOT on main. Port it, or accept pre-heat staying mismatch.",
+        "T20 changes Sept: care_direction moisture(low) -> balanced(low; glycol_only_leg + moisture_leg_subordinate review); moisture_softness benefit dropped.",
+        "Weight rich + coarse-only thickness (projection) is unchanged from Sept; dm's Italian 'light texture' wording stays a lower-authority claim."
+      ]
+    },
+    {
+      "id": "694c4568-9235-4893-ab54-96a75b3c4f27",
+      "name": "Bali Curls Bonding Repair Leave-In Cream N°3",
+      "category": "Leave-in",
+      "gap_before": {
+        "F": [
+          "care_direction",
+          "repair_support_level",
+          "plan_roles",
+          "functional_benefits"
+        ],
+        "P": [
+          "post_wash_leave_in",
+          "pre_heat_protection"
+        ],
+        "note": "provides_heat_protection currently false"
+      },
+      "engine": "Leave-In Standard v1.1 + Production Adapter v1; envelope re-issued, care_direction re-derived (unchanged moisture, moisture_led). Adapter: projection_ready. Output: leave-in-v1.1/bali/",
+      "identity": "GTIN 4262391991732 = Bali Curls 150 ml variant (bali-care.com .js variant barcode, sku 1010053) and dm DAN 3120011 'Leave-In Cream Bonding Repair, 150 ml'. CONFLICT: the dm listing for that GTIN carries the INCI and directions of Bali Curls' oil ('ETHYLHEXYL STEARATE, UNDECANE, ...', 'Ein paar Tropfen des Öls ...'), while its description is the cream. The manufacturer page INCI (25 ingredients, AQUA, CETEARYL ALCOHOL, GLYCERIN, ...) is identical to the frozen Sept INCI. Manufacturer wins (T1); dm data on this GTIN is not used.",
+      "sources": [
+        {
+          "url": "https://www.bali-care.com/de-de/products/bonding-repair-leave-in-cream-n-3",
+          "verbatim": "Nach der Haarwäsche eine kleine Menge in das feuchte Haar geben – vor allem in Längen und Spitzen. Nicht ausspülen.",
+          "tier": "T1 manufacturer (DE)",
+          "checked": "2026-10-09"
+        },
+        {
+          "url": "https://www.bali-care.com/de-de/products/bonding-repair-leave-in-cream-n-3",
+          "verbatim": "schützt vor äußeren Einflüssen wie UV-Strahlen, Hitze oder Luftfeuchtigkeit",
+          "tier": "T1 manufacturer (DE)",
+          "checked": "2026-10-09",
+          "note": "Generic ambient 'Hitze'; no heat-styling wording, no temperature. Sept 2026-09-18 Nick ruling treats this as sufficient for the heat binary."
+        }
+      ],
+      "proposal": [
+        {
+          "table": "product_leave_in_specs",
+          "op": "update",
+          "before": {
+            "care_direction": null,
+            "repair_support_level": null,
+            "plan_roles": null,
+            "functional_benefits": null,
+            "care_benefits": [
+              "moisture",
+              "protein",
+              "repair",
+              "detangling",
+              "anti_frizz",
+              "shine",
+              "curl_definition"
+            ],
+            "roles": [
+              "extension_conditioner",
+              "styling_prep"
+            ],
+            "ingredient_flags": [
+              "polymers",
+              "proteins",
+              "humectants"
+            ],
+            "weight": "light",
+            "application_stage": [
+              "towel_dry"
+            ],
+            "provides_heat_protection": false
+          },
+          "after": {
+            "care_direction": "moisture",
+            "repair_support_level": "low",
+            "plan_roles": [
+              "post_wash_leave_in",
+              "pre_heat_application"
+            ],
+            "functional_benefits": [
+              "moisture_softness",
+              "smooth_anti_frizz",
+              "heat_protect"
+            ],
+            "care_benefits": [
+              "moisture",
+              "anti_frizz"
+            ],
+            "roles": [
+              "replacement_conditioner"
+            ],
+            "ingredient_flags": [
+              "polymers",
+              "humectants"
+            ],
+            "weight": "medium",
+            "application_stage": [
+              "towel_dry"
+            ],
+            "provides_heat_protection": true
+          }
+        },
+        {
+          "table": "product_leave_in_fit_specs",
+          "op": "update",
+          "before": {
+            "weight": "light",
+            "care_benefits": [
+              "curl_definition",
+              "repair",
+              "detangle_smooth"
+            ],
+            "conditioner_relationship": "booster_only"
+          },
+          "after": {
+            "weight": "medium",
+            "care_benefits": [
+              "heat_protect",
+              "detangle_smooth"
+            ],
+            "conditioner_relationship": "replacement_capable"
+          }
+        },
+        {
+          "table": "product_leave_in_eligibility",
+          "op": "replace 24 -> 6 rows",
+          "before": "24 rows (fine/normal/coarse x curl_definition, moisture_anti_frizz, repair, shine_protect)",
+          "after": "6 rows (normal+coarse x {heat_protect/heat_style, moisture_anti_frizz/air_dry, moisture_anti_frizz/non_heat_style})"
+        },
+        {
+          "table": "product_thickness_eligibility + products.suitable_thicknesses",
+          "op": "update",
+          "before": [
+            "fine",
+            "normal",
+            "coarse"
+          ],
+          "after": [
+            "normal",
+            "coarse"
+          ]
+        },
+        {
+          "table": "product_application_protocols",
+          "op": "insert (2 rows)",
+          "row_ref": "proposal/protocol-rows.json -> 694c4568 post_wash_leave_in + pre_heat_protection",
+          "before": "0",
+          "after": "2 rows (post_wash_damp_conditioning, pre_heat_damp)"
+        }
+      ],
+      "category_doubt": null,
+      "status": "ready for post-wash; pre-heat has one code dependency",
+      "open_questions": [
+        "Heat claim is the generic ambient 'Hitze'; Nick ruled it sufficient on 2026-09-18 (binary, claim-led). Reconfirm, given no heat-styling wording.",
+        "Pre-heat role: same evaluator dependency as Balea (needs sept fix 23a83cfa, or 'pre_heat' in application_stage which would not be verbatim).",
+        "Weight: formula WT is high; projected medium via the C2 light-finish conflict rule (unchanged from Sept).",
+        "dm listing for this GTIN carries the oil's INCI/directions: report to the dm data owner / do not use dm as a source for this row.",
+        "Everbond 'bond repair' claims are not credited (repair_support_level low)."
+      ]
+    },
+    {
+      "id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+      "name": "Neqi Diamond Glass Ultimate Styling Spray",
+      "category": "Leave-in",
+      "gap_before": {
+        "F": [],
+        "P": [
+          "post_wash_leave_in",
+          "pre_heat_protection"
+        ],
+        "note": "FACTS ARE ALREADY LIVE: catalog_enrichment_applied_items shows batches leave-in-research-calibration-v1 (2026-09-29 04:43 UTC) and leave-in-research-calibration-v2-t20 (2026-09-29 14:28 UTC), reviewed_by 'nick'. Zero protocol rows."
+      },
+      "engine": "Leave-In Standard v1.1 + Adapter v1 replay of the repo's slot-13 envelope: projection equals the live row field-for-field (care_direction balanced, functional [smooth_anti_frizz, heat_protect], weight medium, thickness normal+coarse, 6 eligibility rows). Output: leave-in-v1.1/neqi-spray/",
+      "identity": "GTIN 4063528094575 = dm DAN 3080142 'Leave-In Spray Diamond Glass Ultimate, 180 ml', NEQI. Manufacturer INCI (15 ingredients incl. VP/Methacrylamide/Vinyl Imidazole Copolymer) matches the frozen slot-13 INCI; the dm INCI list omits that fixative (retailer transcription gap, manufacturer wins).",
+      "sources": [
+        {
+          "url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+          "verbatim": "Das Haar in Abschnitte unterteilen. | Das Spray großzügig und gleichmäßig auf das handtuchtrockene (nicht nasse) Haar sprühen. | Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.",
+          "tier": "T1 manufacturer (DE)",
+          "checked": "2026-10-09"
+        },
+        {
+          "url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+          "verbatim": "Styling + intensiver Hitzeschutz (bis 230°) in einem",
+          "tier": "T1 manufacturer (DE)",
+          "checked": "2026-10-09"
+        },
+        {
+          "url": "https://www.dm.de/p/d/3080142/neqi-leave-in-spray-diamond-glass-ultimate",
+          "verbatim": "Jeden Abschnitt unter Hitze und Spannung föhnen, um den leistungsstarken Feuchtigkeitsschutz zu aktivieren und die besten Ergebnisse zu erzielen.",
+          "tier": "T2/T3 exact-GTIN retailer (dm.de via dm MCP getProductDetails)",
+          "checked": "2026-10-09",
+          "note": "Also: 'Formel mit hitzeaktivierten Polymeren'."
+        }
+      ],
+      "proposal": [
+        {
+          "table": "product_leave_in_specs / fit / eligibility / thickness",
+          "op": "none - already applied 2026-09-29",
+          "before": "live = projection",
+          "after": "unchanged"
+        },
+        {
+          "table": "product_application_protocols",
+          "op": "insert (2 rows)",
+          "row_ref": "proposal/protocol-rows.json -> 42a2fe20 post_wash_leave_in + pre_heat_protection",
+          "before": "0",
+          "after": "2 rows on shared families (post_wash_damp_conditioning, pre_heat_damp) - NOT the Sept worksheet's bespoke prose"
+        }
+      ],
+      "category_doubt": null,
+      "status": "ready (protocols) - confirm 3 points",
+      "open_questions": [
+        "See section 4 of findings.md (plain-language restatement)."
+      ]
+    },
+    {
+      "id": "e5cfad78-ea22-49a5-911a-cb1f3109fa1c",
+      "name": "Jean&Len Rosemary/Ginger Hair Mask Hydration Rosemary/Ginger",
+      "category": "Maske",
+      "gap_before": {
+        "F": [
+          "suitable_thicknesses = []",
+          "repair_support_level null",
+          "functional_benefits null"
+        ],
+        "P": [
+          "intensive_conditioning_mask"
+        ],
+        "note": "weight medium, concentration high, balance moisture present from the July intake (legacy)"
+      },
+      "engine": "Mask Standard v1.0 + Production Adapter v1 (local replay). Mask engine did not exist in Sept. G0 eligible. Adapter: projection_ready with 4 uncertainty warnings. Output: mask/",
+      "identity": "EAN 4262401735639 = Jean&Len Hair Mask Rosemary & Ginger 200 ml (docmorris/medpex/shop-apotheke listings via search, 2026-10-09; identifier added to the row 2026-10-03). jeanlen.de article 2900101127. dm does not list it.",
+      "sources": [
+        {
+          "url": "https://www.jeanlen.de/haarmaske-feuchtigkeit-rosemary-ginger",
+          "verbatim": "Als Pflegeboost 5 Minuten und als Intensivpflege 30 Minuten im feuchten Haar einwirken lassen. Gründlich ausspülen.",
+          "tier": "T1 manufacturer (DE)",
+          "checked": "2026-10-09"
+        },
+        {
+          "url": "https://www.jeanlen.de/haarmaske-feuchtigkeit-rosemary-ginger",
+          "verbatim": "Nach dem Waschen die Haarmaske Feuchtigkeit großzügig in Deine Haarlängen einmassieren, einwirken lassen und dann gründlich ausspülen.",
+          "tier": "T1 manufacturer (DE)",
+          "checked": "2026-10-09"
+        },
+        {
+          "url": "https://www.jeanlen.de/haarmaske-feuchtigkeit-rosemary-ginger",
+          "verbatim": "aqua, cetearyl alcohol, glycerin, isopropyl palmitate, parfum, cetrimonium chloride, helianthus annuus seed oil, hydrolyzed rice protein, behentrimonium methosulfate, ... bht.",
+          "tier": "T1 manufacturer (DE)",
+          "checked": "2026-10-09",
+          "note": "Complete 32-ingredient INCI is in mask/envelope.json."
+        }
+      ],
+      "proposal": [
+        {
+          "table": "product_mask_specs",
+          "op": "update",
+          "before": {
+            "weight": "medium",
+            "concentration": "high",
+            "balance_direction": "moisture",
+            "repair_support_level": null,
+            "functional_benefits": null,
+            "ingredient_flags": [
+              "polymers",
+              "oils",
+              "proteins",
+              "humectants"
+            ]
+          },
+          "after": {
+            "weight": "medium",
+            "concentration": "medium",
+            "balance_direction": "moisture",
+            "repair_support_level": "low",
+            "functional_benefits": [
+              "detangling_slip",
+              "moisture_softness"
+            ],
+            "ingredient_flags": [
+              "oils",
+              "proteins",
+              "humectants"
+            ]
+          },
+          "notes": "concentration high -> medium is a research correction of the July legacy value (conditioning_level moderate on every reading)."
+        },
+        {
+          "table": "products.suitable_thicknesses + product_thickness_eligibility",
+          "op": "update + insert 3 rows",
+          "before": [],
+          "after": [
+            "fine",
+            "normal",
+            "coarse"
+          ]
+        },
+        {
+          "table": "product_application_protocols",
+          "op": "insert (1 row)",
+          "row_ref": "proposal/protocol-rows.json -> e5cfad78 intensive_conditioning_mask",
+          "before": "0",
+          "after": "1 row TPL-MASK shape, contact time range 300-1800 s (5 min Pflegeboost / 30 min Intensivpflege)"
+        }
+      ],
+      "category_doubt": null,
+      "status": "ready for review (unresolved-marker call)",
+      "open_questions": [
+        "Tail marker: Parfum r5 sits before the mask's only cationics (r6, r9) -> marker 'unresolved' (same shape as cohort #02/#06). conditioning_level and weight_potential come out moderate on every reading; care_direction/repair_support_level are set to the conservative moisture/low (confidence low). The ordinal reading would give protein/medium (Hydrolyzed Rice Protein r8). Lab/Nick call.",
+        "Two stated dwell times (5 min and 30 min): proposed as the range 5-30 min. Alternative: only the 5 min 'Pflegeboost'."
+      ]
+    },
+    {
+      "id": "010cf825-4892-4f78-bf20-26ad72122c60",
+      "name": "Neqi Smooth Strength Smooth Strength Rosemary Oil",
+      "category": "Öle",
+      "gap_before": {
+        "F": [
+          "no product_oil_specs row"
+        ],
+        "P": [
+          "no declared oil role / protocol"
+        ],
+        "note": "only legacy product_oil_eligibility rows (oil_purpose pre_wash_oiling, oil_subtype styling-oel) and thickness eligibility fine/normal/coarse"
+      },
+      "engine": "No oil engine; ordinary Product Intake research (docs/product-intake-research-ops.md). No spec proposed.",
+      "identity": "EAN 4063528086280 = dm DAN 2972764 'Rosmarin Öl Smooth Strength, 75 ml', NEQI (dm MCP) and cosmeterie 'NEQI Smooth Strength Rosemary Oil, 75 ml'.",
+      "sources": [
+        {
+          "url": "https://neqi-hair.com/pages/how-tos",
+          "verbatim": "Eine kleine Menge des Rosmarinöls auf die Handflächen oder direkt auf die Kopfhaut auftragen. | Lasse es mindestens 10 Minuten einwirken und shampooniere im Anschluss deine Haare.",
+          "tier": "T1 manufacturer (DE)",
+          "checked": "2026-10-09",
+          "note": "Scalp massage with circular motions; also 'kann sowohl ins trockene, als auch ins feuchte Haar aufgetragen werden'. Lengths are not mentioned in the directions."
+        },
+        {
+          "url": "https://www.dm.de/p/d/2972764/neqi-rosmarin-oel-smooth-strength",
+          "verbatim": "Mit den Fingerspitzen in kreisenden Bewegungen sanft in die Kopfhaut einmassieren, um die Aufnahme zu fördern. Mindestens 10 Minuten einwirken lassen und das Haar im Anschluss shampoonieren.",
+          "tier": "T2/T3 exact-GTIN retailer (dm.de via dm MCP getProductDetails)",
+          "checked": "2026-10-09"
+        },
+        {
+          "url": "https://neqi-hair.com/products/smooth-strength-rosemary-oil",
+          "verbatim": "Aims to reduce breakage and support hair growth; intended for thinning or damaged hair, dry or irritated scalp ... the product is not a medical device (page paraphrase)",
+          "tier": "T1 manufacturer (DE)",
+          "checked": "2026-10-09",
+          "note": "INCI: sweet almond, castor, safflower oil, rosemary leaf oil, wild mint oil, lavender, camphor, menthol ... (cooling/irritant-capable actives)."
+        },
+        {
+          "url": "https://www.cosmeterie.com/neqi/smooth-strength-rosemary-oil",
+          "verbatim": "Apply a small amount of oil to the palms of your hands or directly to the scalp. | Leave it on for at least 10 minutes. | Then rinse thoroughly.",
+          "tier": "T3 retailer",
+          "checked": "2026-10-09",
+          "note": "Description line says the oil strengthens hair 'from the roots to the ends' (marketing, not directions)."
+        }
+      ],
+      "proposal": [
+        {
+          "table": "(none)",
+          "op": "NO fact patch",
+          "before": "no oil spec",
+          "after": "unchanged - stopped on category doubt"
+        }
+      ],
+      "category_doubt": {
+        "finding": "Manufacturer and retailer directions describe a pre-wash SCALP treatment (apply to palms or scalp, massage the scalp, leave >= 10 min, shampoo/rinse). The Oil authority's roles (pre_wash_fibre_treatment, leave_on_fibre_conditioning, dry_finish) are fibre roles; a scalp-only use cannot be mapped to them without inventing fibre support. Claims include hair-growth support/thinning hair (medically adjacent) and actives (menthol, camphor, wild mint oil) with irritation potential.",
+        "options": [
+          {
+            "id": "B (recommended to evaluate)",
+            "text": "Re-categorise to Scalp Care: product_scalp_care_specs {primary_role: density_claim_tonic (claim-led: growth/thinning wording) or scalp_comfort (dry/irritated scalp wording) - needs decision, presentation_format: oil, rinse_mode: rinse_off, application_instructions from the directions} + a scalp_care protocol (pre-wash, rinse_off_scalp_care family). Moves category_key/category and drops the legacy oil eligibility rows. Needs Nick + hair-care-expert on the role and the cosmetic-vs-medical wording (CLAUDE.md: separate cosmetic from medically adjacent hair-loss guidance)."
+          },
+          {
+            "id": "A",
+            "text": "Keep in Oil and add a new scalp-only oil role to the Oil authority (code + contract change). Larger change; only worthwhile if more scalp oils are expected."
+          },
+          {
+            "id": "C",
+            "text": "Keep unassessable on purpose (no spec), i.e. leave 'Noch nicht einschätzbar' until the category/role decision."
+          }
+        ],
+        "not_proposed": "A product_oil_specs row or an oil protocol: would require fibre-role support the sources do not give."
+      },
+      "status": "blocked (category decision)",
+      "open_questions": [
+        "Which category/role (A/B/C above)? If B: density_claim_tonic vs scalp_comfort, and how the growth wording is handled."
+      ]
+    }
+  ],
+  "neqi_spray_decision": {
+    "status": "already applied to prod 2026-09-29 (reviewed_by nick); restated for confirmation",
+    "before_sept_state": {
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "weight": "light",
+      "roles": [
+        "styling_prep"
+      ],
+      "conditioner_relationship": "booster_only",
+      "care_direction": null,
+      "repair_support_level": null,
+      "functional_benefits": null,
+      "plan_roles": null,
+      "heat_activation_required": true
+    },
+    "live_now": {
+      "suitable_thicknesses": [
+        "coarse",
+        "normal"
+      ],
+      "weight": "medium",
+      "fit_weight": "medium",
+      "roles": [
+        "replacement_conditioner",
+        "styling_prep"
+      ],
+      "conditioner_relationship": "replacement_capable",
+      "care_direction": "balanced",
+      "repair_support_level": "low",
+      "functional_benefits": [
+        "smooth_anti_frizz",
+        "heat_protect"
+      ],
+      "care_benefits": [
+        "anti_frizz"
+      ],
+      "plan_roles": [
+        "post_wash_leave_in",
+        "pre_heat_application"
+      ],
+      "application_stage": [
+        "towel_dry",
+        "pre_heat"
+      ],
+      "provides_heat_protection": true,
+      "heat_activation_required": false,
+      "eligibility_rows": 6
+    },
+    "sept_worksheet_candidate_superseded": {
+      "care_direction": "moisture",
+      "functional_benefits": [
+        "moisture_softness",
+        "smooth_anti_frizz",
+        "heat_protect"
+      ],
+      "care_benefits": [
+        "moisture",
+        "anti_frizz"
+      ]
+    }
+  },
+  "artifacts": {
+    "leave_in_envelopes_v1_1": "leave-in-v1.1/{aussie,bali,balea,neqi-spray}/{envelope.json,adapter/*}",
+    "mask_envelope": "mask/{envelope.json,adapter/*}",
+    "protocol_rows": "proposal/protocol-rows.json (16 rows, all parse against current V1+V2 schemas: proposal/protocol-schema-validation.json)",
+    "raw_evidence": "evidence/dm-mcp/*.json and generator scripts"
+  },
+  "cross_cutting": {
+    "no_apply_path": "User-submitted executor/generator exists only on codex/catalog-assessment-completeness; Stage-5 lane is curated-only. Sept prestate fingerprints are void for Bali and Balea (affiliate_link changed 2026-10-03).",
+    "evaluator_dependency": "main leave-in.ts requires 'pre_heat' in application_stage for pre_heat_application; Sept fix 23a83cfa (not merged) removes it. Affects Bali and Balea.",
+    "category_label_risk": "Some live conditioner rows use category 'Conditioner (Drogerie)' (e.g. OLAPLEX Nº.5 created 2026-10-09); the five here use 'Conditioner'. A conditioner-category-label-cleanup worktree exists. Key any apply on category_key + product id and re-read before apply.",
+    "single_lane_caveats": "T20 re-derivations (Aussie, Bali, Balea) and the Mask run are single-lane (not sealed two-lane); uncertainFields and review triggers are carried in the envelopes.",
+    "not_verified": [
+      "dm Italia sentence for Balea (JS shell, not re-readable)",
+      "Rossmann pages (JS shells)",
+      "runtime buildReadinessBaseline oracle and web-search readiness RPC not run",
+      "no Stage-3 evaluation of the proposed rows was executed; gates read from leave-in.ts, mask.ts, catalog-facts.ts",
+      "category facts of the 8 ordinary rows checked for presence only"
+    ],
+    "findings_md_note": "findings.md was NOT written: the harness refused a Write of a report .md from this subagent session; the narrative is in the subagent's final message and in this JSON."
+  }
+}
