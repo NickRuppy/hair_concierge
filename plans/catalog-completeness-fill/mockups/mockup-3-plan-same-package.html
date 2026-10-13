@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ein Produkt, zwei Schritte</title>
+<meta name="description" content="Personal Plan, wenn eine Packung zwei Produktarten abdeckt.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Tokens mirror src/app/globals.css (light mode). */
+:root {
+  --bg: #fbf9f7;
+  --fg: #3b3735;
+  --card: #ffffff;
+  --border: #e6e1dc;
+  --muted: #efeaf7;
+  --muted-fg: #68615e;
+  --plum: #6b50a0;
+  --plum-dark: #3d2a62;
+  --plum-darkest: #2a1845;
+  --plum-light: #c8b8e0;
+  --plum-ice: #f2eefa;
+  --coral: #d4616a;
+  --coral-dark: #c0555d;
+  --coral-light: #fdeef0;
+  --ok-bg: #edf7ef;
+  --ok: #356b45;
+  --pending-bg: #fff5df;
+  --pending: #805a16;
+  --danger-bg: #fff0f1;
+  --danger: #9a3f48;
+  --neutral-bg: #f3f0f6;
+  --neutral: #574b61;
+  --text-body: #3a3835;
+  --text-sub: #6a6560;
+  --display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --body: "Plus Jakarta Sans", Arial, Helvetica, sans-serif;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: #ece8e3;
+  color: var(--fg);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.5;
+}
+p, h1, h2, h3, h4 { margin: 0; }
+a { color: inherit; }
+
+/* ---------- review canvas ---------- */
+.canvas-head { max-width: 1360px; margin: 0 auto; padding: 32px 24px 0; }
+.canvas-head .crumb { font-size: 12px; color: var(--text-sub); }
+.canvas-head .crumb a { color: var(--plum); }
+.canvas-head h1 {
+  margin-top: 6px;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 1.2;
+  color: var(--plum-darkest);
+}
+.canvas-head .lede { margin-top: 6px; max-width: 760px; font-size: 14px; color: var(--text-sub); }
+.group { max-width: 1360px; margin: 0 auto; padding: 28px 24px 8px; }
+.group > h2 {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--plum-dark);
+  border-top: 1px solid rgba(42, 24, 69, 0.12);
+  padding-top: 16px;
+}
+.row { display: flex; flex-wrap: wrap; gap: 36px 32px; padding-top: 16px; align-items: flex-start; }
+.variant { width: 390px; max-width: 100%; }
+.variant .tag { font-size: 13px; font-weight: 800; color: var(--plum-darkest); }
+.variant .cap { margin: 2px 0 12px; min-height: 40px; font-size: 13px; line-height: 1.5; color: var(--text-sub); }
+@media (max-width: 480px) {
+  .canvas-head, .group { padding-left: 16px; padding-right: 16px; }
+  .variant { width: 100%; }
+  .phone { transform: scale(0.88); transform-origin: top left; margin-bottom: -100px; }
+}
+
+/* ---------- phone frame ---------- */
+.phone {
+  position: relative;
+  width: 390px;
+  height: 844px;
+  overflow: hidden;
+  border-radius: 30px;
+  background: var(--bg);
+  color: var(--text-body);
+  box-shadow: 0 0 0 1px rgba(42, 24, 69, 0.08), 0 28px 60px -34px rgba(42, 24, 69, 0.5);
+}
+
+/* ---------- journey header (personal-plan-journey/journey-header.tsx) ---------- */
+.jh { border-bottom: 1px solid rgba(107, 80, 160, 0.1); background: rgba(253, 251, 249, 0.96); padding: 10px 16px 12px; }
+.jh-grid { display: grid; grid-template-columns: 48px minmax(0, 1fr) 7rem; align-items: center; gap: 8px; min-height: 48px; }
+.back {
+  display: grid; place-items: center; width: 48px; height: 48px; border-radius: 12px;
+  border: 1px solid rgba(107, 80, 160, 0.16); background: var(--plum-ice); color: var(--plum);
+  box-shadow: 0 3px 10px rgba(42, 24, 69, 0.08);
+}
+.wordmark { text-align: center; font-family: var(--display); font-weight: 500; font-size: 20px; color: var(--plum-darkest); }
+.savestate { text-align: right; font-size: 10px; font-weight: 700; color: var(--ok); }
+
+/* ---------- refinement question (refinement-question.tsx) ---------- */
+.q { padding: 24px 20px 140px; }
+.section-label { margin-bottom: 6px; font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--plum); }
+.trigger { display: inline-flex; margin-bottom: 12px; border-radius: 999px; background: var(--plum-ice); padding: 6px 12px; font-size: 9px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--plum); }
+.q-title { font-family: var(--display); font-weight: 500; font-size: 28px; line-height: 1.25; color: var(--plum-darkest); }
+.q-lead { margin-top: 8px; font-size: 14px; line-height: 24px; color: var(--text-sub); }
+.opts { display: grid; gap: 10px; margin-top: 20px; }
+.opt {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px;
+  border: 1px solid var(--plum-light); border-radius: 16px; background: var(--card); padding: 16px;
+  box-shadow: 0 12px 34px -28px rgba(107, 80, 160, 0.6);
+}
+.opt.noicon { grid-template-columns: minmax(0, 1fr) auto; }
+.opt.on { border-color: var(--plum); box-shadow: 0 0 0 2px rgba(107, 80, 160, 0.2), 0 16px 40px -30px rgba(107, 80, 160, 0.72); }
+.opt .ico { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--plum-ice); color: var(--plum); }
+.opt .lbl { font-size: 15px; font-weight: 600; line-height: 1.375; color: var(--plum-darkest); }
+.opt .desc { margin-top: 4px; font-size: 14px; line-height: 20px; color: var(--text-sub); }
+.radio { width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--plum-light); background: #fff; }
+.radio.on { display: grid; place-items: center; border-color: var(--plum); background: var(--plum); color: #fff; }
+.dock { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 16px 22px; border-top: 1px solid rgba(231, 224, 217, 0.9); background: rgba(253, 251, 249, 0.97); }
+.cta { display: flex; align-items: center; justify-content: center; min-height: 56px; border-radius: 999px; background: var(--coral); padding: 0 24px; font-size: 16px; font-weight: 700; color: #fff; }
+
+/* ---------- routine page (routine/personal-plan/routine-page.tsx + routine-item-card.tsx) ---------- */
+.rp { height: 100%; background: linear-gradient(180deg, #fffaf7 0%, var(--bg) 38%, #fff 100%); }
+.rp-main { display: flex; flex-direction: column; gap: 20px; padding: 16px 12px 110px; }
+.rp-head { border-bottom: 1px solid rgba(107, 80, 160, 0.14); padding: 0 2px 16px; }
+.overline-ok { font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ok); }
+.rp-h1row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: 4px; }
+.rp-h1 { font-family: var(--display); font-weight: 500; font-size: 23px; line-height: 1.14; color: #291a43; }
+.link-sm { font-size: 12px; font-weight: 600; color: var(--plum); text-decoration: underline; text-underline-offset: 2px; }
+.rp-sub { margin-top: 4px; font-size: 11.5px; line-height: 1.6; color: #706a65; }
+.sec-h { padding: 0 2px; margin-bottom: 10px; font-size: 13px; font-weight: 700; color: #291a43; }
+.cards { display: grid; gap: 10px; }
+.rc { overflow: hidden; border: 1px solid; border-radius: 19px; box-shadow: 0 3px 11px rgba(43, 26, 67, 0.035); }
+.rc.shampoo { border-color: #e2d4b8; background: #f5f0e5; } .rc.shampoo .dot { background: #a77d31; }
+.rc.conditioner { border-color: #cfdee3; background: #edf3f5; } .rc.conditioner .dot { background: #4c8ea8; }
+.rc.leave_in { border-color: #cedfd5; background: #edf4f0; } .rc.leave_in .dot { background: #56866b; }
+.rc.mask { border-color: #dcd3e5; background: #f1eef5; } .rc.mask .dot { background: #7d67a8; }
+.rc.bondbuilder { border-color: #e2d1df; background: #f4edf3; } .rc.bondbuilder .dot { background: #985d8f; }
+.dot { display: inline-block; flex: none; width: 6px; height: 6px; border-radius: 50%; }
+.rc-row { display: grid; grid-template-columns: 58px minmax(0, 1fr) 16px; align-items: center; gap: 10px; min-height: 104px; padding: 10px; }
+.tile { position: relative; display: grid; place-items: center; width: 58px; height: 76px; border-radius: 14px; background: #f3efe8; box-shadow: inset 0 0 0 1px rgba(31, 26, 20, 0.04); }
+.tile svg { width: 78%; height: 94%; }
+.cat { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; line-height: 1.2; color: #6b50a0; }
+.pname { display: block; margin-top: 4px; font-size: 13.5px; font-weight: 700; line-height: 1.18; color: #291a43; }
+.purpose { display: block; margin-top: 2px; font-size: 11.5px; line-height: 1.32; color: #5f5954; }
+.meta { display: block; margin-top: 6px; border-top: 1px solid rgba(67, 55, 48, 0.09); padding-top: 6px; font-size: 11px; font-weight: 700; line-height: 1.35; color: #665e58; }
+.meta .st { color: var(--ok); }
+.chev { width: 16px; height: 16px; color: rgba(31, 26, 20, 0.38); }
+
+/* ---------- bottom nav (layout/personal-plan-navigation.tsx) ---------- */
+.nav {
+  position: absolute; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
+  min-height: 80px; padding-bottom: 8px; border-top: 1px solid var(--border); background: rgba(251, 249, 247, 0.95);
+  box-shadow: 0 -12px 30px -26px rgba(107, 80, 160, 0.55);
+}
+.nav span { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 11px; font-weight: 600; color: var(--muted-fg); }
+.nav span.on { color: #6a4fa0; }
+.nav svg { width: 20px; height: 20px; }
+
+/* ---------- scan sheet (scan/scan-result-sheet.tsx, scan-verdict-sections.tsx) ---------- */
+.cam { position: absolute; inset: 0; background:
+  radial-gradient(120px 90px at 50% 58px, rgba(240, 200, 196, 0.55), transparent 70%),
+  radial-gradient(260px 160px at 30% 20px, rgba(120, 104, 92, 0.6), transparent 70%),
+  linear-gradient(180deg, #3a332f 0%, #231f22 100%); }
+.cam::after { content: ""; position: absolute; left: 50%; top: 12px; width: 150px; height: 66px; transform: translateX(-50%);
+  border: 2px solid rgba(255, 255, 255, 0.55); border-radius: 14px; }
+.backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.2); }
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; top: 92px; display: flex; flex-direction: column; border-radius: 16px 16px 0 0; background: var(--bg); box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.3); }
+.grab { flex: none; width: 40px; height: 6px; margin: 12px auto 4px; border-radius: 999px; background: rgba(104, 97, 94, 0.3); }
+.x { position: absolute; right: 12px; top: 8px; display: grid; place-items: center; width: 40px; height: 40px; color: var(--fg); opacity: 0.7; }
+.sheet-body { position: relative; flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: 16px; padding: 4px 16px 20px; }
+.sheet-body.fade::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 18px; background: linear-gradient(180deg, rgba(251, 249, 247, 0), var(--bg)); }
+.sheet-foot { flex: none; display: flex; gap: 8px; border-top: 1px solid var(--border); background: var(--bg); padding: 12px 16px 24px; }
+.slot { display: flex; flex: 1; min-width: 0; min-height: 48px; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; border-radius: 12px; padding: 0 12px; font-size: 14px; font-weight: 600; }
+.slot.coral-solid { background: var(--coral); color: #fff; }
+.slot.coral-outline { border: 1.5px solid var(--coral); color: var(--coral-dark); }
+.slot.plum-outline { border: 1.5px solid var(--plum-light); background: var(--plum-ice); color: var(--plum-dark); }
+.slot svg { width: 16px; height: 16px; }
+.ph { display: flex; align-items: center; gap: 12px; padding-right: 36px; }
+.thumb { flex: none; display: grid; place-items: center; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: #f3efe8; }
+.thumb.s48 { width: 48px; height: 48px; } .thumb.s40 { width: 40px; height: 40px; }
+.thumb svg { width: 86%; height: 86%; }
+.ph h4 { font-size: 15px; font-weight: 700; line-height: 1.375; color: var(--fg); }
+.ph .sub { margin-top: 2px; font-size: 12px; color: var(--muted-fg); }
+.ph .sub b { font-weight: 600; color: var(--plum); }
+.banner { border-radius: 14px; padding: 14px 16px; }
+.banner .t { font-size: 17px; font-weight: 700; line-height: 1.375; }
+.banner .s { margin-top: 4px; font-size: 13px; line-height: 20px; opacity: 0.9; }
+.ok-tone { background: var(--ok-bg); color: var(--ok); }
+.pending-tone { background: var(--pending-bg); color: var(--pending); }
+.danger-tone { background: var(--danger-bg); color: var(--danger); }
+.neutral-tone { background: var(--neutral-bg); color: var(--neutral); }
+.dims { border: 1px solid var(--border); border-radius: 14px; background: var(--card); padding: 4px 16px; }
+.dim { padding: 8px 0; }
+.dim + .dim { border-top: 1px solid var(--border); }
+.dim-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.dim-l { font-size: 13px; font-weight: 600; color: var(--fg); }
+.dim-v { font-size: 12px; font-weight: 500; }
+.dim-v.in { color: var(--ok); } .dim-v.out { color: var(--danger); }
+.track { display: flex; gap: 4px; margin-top: 8px; }
+.seg { position: relative; flex: 1; height: 10px; border-radius: 999px; background: var(--muted); }
+.seg.t { background: var(--ok-bg); box-shadow: inset 0 0 0 1.5px var(--ok); }
+.seg i { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 0 2px var(--bg); }
+.seg i.in { background: var(--ok); } .seg i.out { background: var(--danger); }
+.stops { display: flex; gap: 4px; margin-top: 6px; }
+.stops span { flex: 1; text-align: center; font-size: 10px; line-height: 1.2; color: var(--muted-fg); }
+.stops span.t { font-weight: 600; color: var(--ok); }
+.whycard { border-radius: 14px; background: var(--plum-ice); padding: 14px 16px; }
+.whycard .l { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--plum); }
+.whycard .p1 { margin-top: 8px; font-size: 14px; line-height: 24px; color: var(--fg); }
+.whycard .p2 { margin-top: 8px; font-size: 13px; line-height: 24px; color: var(--muted-fg); }
+.alts-h { margin-bottom: 8px; font-size: 13px; font-weight: 700; color: var(--fg); }
+.alts { display: flex; flex-direction: column; gap: 8px; }
+.alt { display: flex; align-items: center; gap: 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--card); padding: 10px 12px; }
+.alt .nm { flex: 1; min-width: 0; }
+.alt .nm b { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 13px; font-weight: 600; color: var(--fg); }
+.alt .nm span { display: block; margin-top: 2px; font-size: 12px; color: var(--muted-fg); }
+.alt .rt { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.chip { border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.buy { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: var(--coral-dark); }
+.rescan { align-self: center; min-height: 44px; display: flex; align-items: center; font-size: 14px; font-weight: 600; color: var(--plum); }
+
+
+.linkbadge { position: absolute; right: -5px; bottom: -5px; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--plum); color: #fff; box-shadow: 0 0 0 2px #f1eef5; }
+.same { display: flex; align-items: center; gap: 5px; margin-top: 2px; font-size: 11.5px; font-weight: 600; line-height: 1.32; color: var(--plum); }
+.sheet.detail { top: auto; max-height: 85%; }
+.detail .sheet-body { flex: none; gap: 20px; padding: 4px 24px 24px; }
+.d-cat { font-size: 14px; font-weight: 600; color: var(--plum); }
+.d-name { margin-top: 8px; font-size: 24px; font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; color: var(--fg); }
+.d-box { border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+.d-box .k { font-size: 12px; font-weight: 500; color: var(--muted-fg); }
+.d-use { margin-top: 10px; }
+.d-use b { display: block; font-size: 14px; font-weight: 600; color: var(--fg); }
+.d-use span { display: block; margin-top: 2px; font-size: 14px; color: var(--muted-fg); }
+.d-price { margin-top: 6px; font-size: 14px; font-weight: 600; }
+.d-line { margin-top: 4px; font-size: 14px; color: var(--muted-fg); }
+.d-cta { display: flex; align-items: center; justify-content: center; min-height: 56px; border-radius: 999px; background: var(--coral); font-size: 16px; font-weight: 700; color: #fff; }
+
+</style>
+</head>
+<body>
+<header class="canvas-head"><p class="crumb"><a href="index.html">Mockups</a> · Katalog-Vollständigkeit</p><h1>Plan: ein Produkt in zwei Schritten</h1><p class="lede">Beispiel Garnier Hair Food Macadamia als Conditioner und als Maske. Die Routine zählt Packungen, nicht Schritte; gekauft wird einmal.</p></header><section class="group"><h2>Routine und Produktblatt</h2><div class="row"><div class="variant"><p class="tag">Routine</p><p class="cap">Jede Anwendung behält ihren Platz. Die Maske verweist auf dieselbe Packung. Kopfzeile zählt 4 Produkte.</p><div class="phone"><div class="rp"><main class="rp-main"><header class="rp-head"><p class="overline-ok">&#10003; Routine aktiv</p><div class="rp-h1row"><h3 class="rp-h1">Deine Routine</h3><span class="link-sm">Anpassen</span></div><p class="rp-sub">Deine Routine mit 4 Produkten.</p></header><section><h4 class="sec-h">Deine Basis</h4><div class="cards"><div class="rc shampoo"><div class="rc-row"><span class="tile"><svg viewBox="0 0 60 100" aria-hidden="true"><rect x="23" y="8" width="14" height="12" rx="2" fill="#a77d31"/><rect x="14" y="18" width="32" height="76" rx="9" fill="#efe3c9" stroke="#dccaa5"/><rect x="20" y="44" width="20" height="22" rx="3" fill="#ffffff" opacity=".7"/></svg></span><span style="min-width:0"><span class="cat"><i class="dot"></i>Shampoo</span><b class="pname">Pantene Pro-V Repair &amp; Care Shampoo</b><span class="purpose">Regelmäßige Reinigung</span><span class="meta">2x/Woche · Haarwäsche · <span class="st">Aktiv</span></span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></div></div><div class="rc conditioner"><div class="rc-row"><span class="tile"><svg viewBox="0 0 60 100" aria-hidden="true"><rect x="8" y="33" width="44" height="13" rx="3" fill="#e79aa0"/><rect x="6" y="44" width="48" height="44" rx="8" fill="#f6d3d3" stroke="#e9b8b9"/><text x="30" y="62" font-family="Arial, sans-serif" font-weight="700" font-size="7" text-anchor="middle" fill="#8a3c47">HAIR</text><text x="30" y="71" font-family="Arial, sans-serif" font-weight="700" font-size="7" text-anchor="middle" fill="#8a3c47">FOOD</text><circle cx="30" cy="80" r="3" fill="#c98a5c"/></svg></span><span style="min-width:0"><span class="cat"><i class="dot"></i>Conditioner</span><b class="pname">Garnier Hair Food Macadamia</b><span class="purpose">Pflege nach der Reinigung</span><span class="meta">2x/Woche · Nach Shampoo · <span class="st">Aktiv</span></span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></div></div><div class="rc leave_in"><div class="rc-row"><span class="tile"><svg viewBox="0 0 60 100" aria-hidden="true"><rect x="24" y="4" width="11" height="8" rx="1.5" fill="#bdb8b2"/><path d="M34 7h8" stroke="#bdb8b2" stroke-width="3" stroke-linecap="round"/><rect x="22" y="11" width="16" height="8" rx="2" fill="#56866b"/><rect x="16" y="18" width="28" height="76" rx="8" fill="#d6e8dc" stroke="#b8d3c1"/><rect x="21" y="44" width="18" height="22" rx="3" fill="#fff" opacity=".7"/></svg></span><span style="min-width:0"><span class="cat"><i class="dot"></i>Leave-in</span><b class="pname">Balea Hair Sealer</b><span class="purpose">Pflege ohne Ausspülen</span><span class="meta">2x/Woche · Nach der Wäsche · <span class="st">Aktiv</span></span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></div></div></div></section><section><h4 class="sec-h">Optional</h4><div class="cards"><div class="rc mask"><div class="rc-row"><span class="tile"><svg viewBox="0 0 60 100" aria-hidden="true"><rect x="8" y="33" width="44" height="13" rx="3" fill="#e79aa0"/><rect x="6" y="44" width="48" height="44" rx="8" fill="#f6d3d3" stroke="#e9b8b9"/><text x="30" y="62" font-family="Arial, sans-serif" font-weight="700" font-size="7" text-anchor="middle" fill="#8a3c47">HAIR</text><text x="30" y="71" font-family="Arial, sans-serif" font-weight="700" font-size="7" text-anchor="middle" fill="#8a3c47">FOOD</text><circle cx="30" cy="80" r="3" fill="#c98a5c"/></svg><span class="linkbadge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg></span></span><span style="min-width:0"><span class="cat"><i class="dot"></i>Maske</span><b class="pname">Garnier Hair Food Macadamia</b><span class="same"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>Dieselbe Packung wie beim Conditioner</span><span class="meta">1x/Woche · Nach Shampoo · <span class="st">Aktiv</span></span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></div></div></div></section></main></div><nav class="nav" aria-label="Navigation"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/></svg>Chat</span><span class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 2 2 4-4M3 7l2 2 4-4M13 6h8M13 12h8M13 18h8"/></svg>Routine</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 12h10"/></svg>Scan</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M21 9H3M21 15H3"/></svg>Anwendung</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>Profil</span></nav></div></div><div class="variant"><p class="tag">Produktblatt</p><p class="cap">Antippen einer der beiden Karten öffnet dasselbe Blatt: beide Anwendungen, ein Preis, ein Kauf-Button.</p><div class="phone"><div class="rp"><main class="rp-main"><header class="rp-head"><p class="overline-ok">&#10003; Routine aktiv</p><div class="rp-h1row"><h3 class="rp-h1">Deine Routine</h3><span class="link-sm">Anpassen</span></div><p class="rp-sub">Deine Routine mit 4 Produkten.</p></header><section><h4 class="sec-h">Deine Basis</h4><div class="cards"><div class="rc shampoo"><div class="rc-row"><span class="tile"><svg viewBox="0 0 60 100" aria-hidden="true"><rect x="23" y="8" width="14" height="12" rx="2" fill="#a77d31"/><rect x="14" y="18" width="32" height="76" rx="9" fill="#efe3c9" stroke="#dccaa5"/><rect x="20" y="44" width="20" height="22" rx="3" fill="#ffffff" opacity=".7"/></svg></span><span style="min-width:0"><span class="cat"><i class="dot"></i>Shampoo</span><b class="pname">Pantene Pro-V Repair &amp; Care Shampoo</b><span class="purpose">Regelmäßige Reinigung</span><span class="meta">2x/Woche · Haarwäsche · <span class="st">Aktiv</span></span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></div></div><div class="rc conditioner"><div class="rc-row"><span class="tile"><svg viewBox="0 0 60 100" aria-hidden="true"><rect x="8" y="33" width="44" height="13" rx="3" fill="#e79aa0"/><rect x="6" y="44" width="48" height="44" rx="8" fill="#f6d3d3" stroke="#e9b8b9"/><text x="30" y="62" font-family="Arial, sans-serif" font-weight="700" font-size="7" text-anchor="middle" fill="#8a3c47">HAIR</text><text x="30" y="71" font-family="Arial, sans-serif" font-weight="700" font-size="7" text-anchor="middle" fill="#8a3c47">FOOD</text><circle cx="30" cy="80" r="3" fill="#c98a5c"/></svg></span><span style="min-width:0"><span class="cat"><i class="dot"></i>Conditioner</span><b class="pname">Garnier Hair Food Macadamia</b><span class="purpose">Pflege nach der Reinigung</span><span class="meta">2x/Woche · Nach Shampoo · <span class="st">Aktiv</span></span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></div></div><div class="rc leave_in"><div class="rc-row"><span class="tile"><svg viewBox="0 0 60 100" aria-hidden="true"><rect x="24" y="4" width="11" height="8" rx="1.5" fill="#bdb8b2"/><path d="M34 7h8" stroke="#bdb8b2" stroke-width="3" stroke-linecap="round"/><rect x="22" y="11" width="16" height="8" rx="2" fill="#56866b"/><rect x="16" y="18" width="28" height="76" rx="8" fill="#d6e8dc" stroke="#b8d3c1"/><rect x="21" y="44" width="18" height="22" rx="3" fill="#fff" opacity=".7"/></svg></span><span style="min-width:0"><span class="cat"><i class="dot"></i>Leave-in</span><b class="pname">Balea Hair Sealer</b><span class="purpose">Pflege ohne Ausspülen</span><span class="meta">2x/Woche · Nach der Wäsche · <span class="st">Aktiv</span></span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></div></div></div></section><section><h4 class="sec-h">Optional</h4><div class="cards"><div class="rc mask"><div class="rc-row"><span class="tile"><svg viewBox="0 0 60 100" aria-hidden="true"><rect x="8" y="33" width="44" height="13" rx="3" fill="#e79aa0"/><rect x="6" y="44" width="48" height="44" rx="8" fill="#f6d3d3" stroke="#e9b8b9"/><text x="30" y="62" font-family="Arial, sans-serif" font-weight="700" font-size="7" text-anchor="middle" fill="#8a3c47">HAIR</text><text x="30" y="71" font-family="Arial, sans-serif" font-weight="700" font-size="7" text-anchor="middle" fill="#8a3c47">FOOD</text><circle cx="30" cy="80" r="3" fill="#c98a5c"/></svg><span class="linkbadge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg></span></span><span style="min-width:0"><span class="cat"><i class="dot"></i>Maske</span><b class="pname">Garnier Hair Food Macadamia</b><span class="same"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>Dieselbe Packung wie beim Conditioner</span><span class="meta">1x/Woche · Nach Shampoo · <span class="st">Aktiv</span></span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></div></div></div></section></main></div><nav class="nav" aria-label="Navigation"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/></svg>Chat</span><span class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 2 2 4-4M3 7l2 2 4-4M13 6h8M13 12h8M13 18h8"/></svg>Routine</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 12h10"/></svg>Scan</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M21 9H3M21 15H3"/></svg>Anwendung</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>Profil</span></nav><div class="backdrop"></div><div class="sheet detail"><div class="grab"></div><span class="x"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></span><div class="sheet-body"><header><p class="d-cat">Conditioner · Maske</p><h4 class="d-name">Garnier Hair Food Macadamia</h4></header><div class="d-box"><p class="k">So nutzt du es</p><div class="d-use"><b>Als Conditioner</b><span>2x/Woche nach dem Shampoo, kurz einwirken lassen, ausspülen.</span></div><div class="d-use"><b>Als Maske</b><span>1x/Woche statt Conditioner, 5 Min. einwirken lassen, ausspülen.</span></div></div><div class="d-box"><p class="k">Aktuelle Produktdaten</p><p class="d-price">5,95 € · 400 ml</p><p class="d-line">Eine Packung für beide Anwendungen.</p></div><span class="d-cta">Zum Produkt</span></div></div></div></div></div></section>
+</body>
+</html>
