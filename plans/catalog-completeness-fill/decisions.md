@@ -75,7 +75,7 @@ None. Production applies remain separate per-batch approvals.
 
 
 ## Nick's answers to the 11 open questions (2026-10-13)
-1. Bondbuilder tie without K18 → catalogue order, then price (OLAPLEX), Epres shown as equal option. ✔
+1. Bondbuilder tie without K18 → catalogue order, then price (OLAPLEX), Epres shown as equal option. ✔ **Superseded 2026-10-13 (Nick):** equally trusted, equally timed Bondbuilders rank cheapest first; the K18 house default is retired everywhere (timing question stays).
 2. 68 already-finished drafts → silent assumed „Ist mir egal", nothing reopens. ✔
 3. „Shampoo & Spülung" 2-in-1 → no extra conditioner row. ✔
 4. iOS: only the „Auch nutzbar als" line + per-use view, no save sheet — OK for now, to be fixed later (iOS product saving = own project).
